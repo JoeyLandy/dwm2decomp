@@ -1971,7 +1971,7 @@ Func_0F1_4D4E:: ; address name
     ld [wD7F1], a
     ld a, $08
     ld [wD7F2], a
-    call Func_0F1_58FA
+    call CopyScreenBufferRectWithAttrs_F1
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2348,7 +2348,7 @@ Jump_0F1_4FAA:: ; address name
     ret
 
 Jump_0F1_4FC9::
-    call Func_0F1_5842
+    call HandleThreeChoiceCursorInput_F1
     and a, a
     ret z
     cp a, $FE
@@ -2838,7 +2838,7 @@ Jump_0F1_52B7:: ; address name
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2910,7 +2910,7 @@ Jump_0F1_531F:: ; address name
 RunWD780StateWhenNotFading_F1_Case0D_Case01::
 Jump_0F1_532D:: ; address name
     farcall ShowString10Bank0EAtTiles2020ThenDefault
-    farcall Func_01F_7375
+    farcall LoadSixteenGlyphTilesFromTable73BC
     call DrawShortStringWCA2CAtTiles1500
 
 ; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
@@ -3142,7 +3142,7 @@ Jump_0F1_5478:: ; address name
     ld [wD7F3], a
     ld a, $C7
     ld [wD7F4], a
-    farcall Func_0F2_50E2
+    farcall DrawFamilyIconAndCountForWCA38
     farcall Func_0F2_4B05
     ld a, [wD781]
     inc a
@@ -3250,7 +3250,7 @@ Jump_0F1_5532:: ; address name
 ; writes: wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case18::
 Jump_0F1_5540:: ; address name
-    farcall Func_01F_7591
+    farcall ClearTilesAndDrawRects6C5FAnd6D37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3396,7 +3396,7 @@ Jump_0F1_561B:: ; address name
     xor a, a
     ld [wD7F7], a
     call DrawTileRectAtHLFromDE_BankF1
-    farcall Func_0F2_4E76
+    farcall DecompressWCA2BSpeciesGraphics
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3692,7 +3692,7 @@ Func_0F1_5812:: ; address name
     ld [wD7F1], a
     ld a, $09
     ld [wD7F2], a
-    call Func_0F1_58FA
+    call CopyScreenBufferRectWithAttrs_F1
     call BGMapAddressAtScroll_BankF1
     ld bc, $140D
     ld de, $01CC
@@ -3710,10 +3710,12 @@ Func_0F1_5834:: ; address name
     farcall BeginStringDisplay_Bank0E
     ret
 
+; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
 ; 3 call sites from 3 routines (e.g. RunWD780StateWhenNotFading_F1_Case04_Case18, ScriptCommandEF_Run_Bank1B_Case05_Case07, Func_033_5215_Table2_Case05_Case06)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wD783
-Func_0F1_5842::
+HandleThreeChoiceCursorInput_F1::
+Func_0F1_5842:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_0F1_5860
@@ -3780,7 +3782,7 @@ Jump_0F1_58AA::
     ret
 
 ; once the joypad repeat timer reaches $14, cycles wD783 through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
-; 1 call site from 1 routine (e.g. Func_0F1_5842)
+; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_F1)
 ; reads: wJoypadRepeatTimer, wD783, wTwoChoiceCursor
 ; writes: wD783
 BlinkCursorWD783_BankF1::
@@ -3799,7 +3801,7 @@ Func_0F1_58B0:: ; address name
     ld [wD783], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. Func_0F1_5842)
+; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_F1)
 ; reads: wTwoChoiceCursor
 DrawCursorTileBB_BankF1::
 Func_0F1_58CA:: ; address name
@@ -3807,7 +3809,7 @@ Func_0F1_58CA:: ; address name
     jr Jump_0F1_58D4
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. Func_0F1_5842)
+; 2 call sites from 1 routine (e.g. HandleThreeChoiceCursorInput_F1)
 ; reads: wTwoChoiceCursor
 DrawBlankTileC3_BankF1::
 Func_0F1_58CE:: ; address name
@@ -3815,7 +3817,7 @@ Func_0F1_58CE:: ; address name
     jr Jump_0F1_58D4
 
 ; B = $BC, then writes B at the scroll position + Data_0F1_58F4[wTwoChoiceCursor] (E-0124)
-; 1 call site from 1 routine (e.g. Func_0F1_5842)
+; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_F1)
 ; reads: wTwoChoiceCursor
 DrawArrowTileBCAtTwoChoiceEntry_BankF1::
 Func_0F1_58D2:: ; address name
@@ -3844,10 +3846,12 @@ Jump_0F1_58D4::
 Data_0F1_58F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EC, $00, $2C, $01, $6C, $01
 
+; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 2 call sites from 2 routines (e.g. RunFunc58FAAt024FAndDrawBox_BankF1, RunFunc58FAAt0278AndStep_BankF1)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
-Func_0F1_58FA::
+CopyScreenBufferRectWithAttrs_F1::
+Func_0F1_58FA:: ; address name
     push bc
     push hl
     push de
@@ -3903,11 +3907,11 @@ Jump_0F1_593B::
 
 Jump_0F1_594A::
     dec c
-    jr nz, Func_0F1_58FA
+    jr nz, CopyScreenBufferRectWithAttrs_F1
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 1 call site from 1 routine (e.g. Func_0F1_58FA)
+; 1 call site from 1 routine (e.g. CopyScreenBufferRectWithAttrs_F1)
 CopyBytesDEToHL_BankF1::
 Func_0F1_594E:: ; address name
     ld a, [de]
@@ -3920,7 +3924,7 @@ Func_0F1_594E:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 1 call site from 1 routine (e.g. Func_0F1_58FA)
+; 1 call site from 1 routine (e.g. CopyScreenBufferRectWithAttrs_F1)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_BankF1::
 Func_0F1_5957:: ; address name
@@ -4214,7 +4218,7 @@ Jump_0F1_5B45::
     ret
 
 Jump_0F1_5B56::
-    farcall Func_01D_5C35
+    farcall DrawWD789Cell5SpeciesSprite
     ret
 
 Jump_0F1_5B5D::

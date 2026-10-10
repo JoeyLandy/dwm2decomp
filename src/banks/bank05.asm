@@ -18,7 +18,7 @@ Func_005_4006:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, HPBandOfSlotHFFC6, CompareHPWithThreeQuartersMax, Func_005_6556, ...)
+; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, HPBandOfSlotHFFC6, CompareHPWithThreeQuartersMax, FailIfTwoAlliesBelowHalfHP, ...)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank05::
 Func_005_400B:: ; address name
@@ -50,7 +50,7 @@ Func_005_401A:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0064)
-; 10 call sites from 8 routines (e.g. AIScore_SquallHit_Sub01_Sub01, AIScore_Speed_Sub01_Sub01_Sub01, AverageAGLOfSideA, Func_005_4B97, ...)
+; 10 call sites from 8 routines (e.g. AIScore_SquallHit_Sub01_Sub01, AIScore_Speed_Sub01_Sub01_Sub01, AverageAGLOfSideA, FastestFoeAGLAbove31PercentOfActor, ...)
 ; points at: wBattleAGL
 GetBattleAGL_Bank05::
 Func_005_401F:: ; address name
@@ -58,7 +58,7 @@ Func_005_401F:: ; address name
     jr Jump_005_402E
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 6 call sites from 5 routines (e.g. Func_005_6556, Func_005_667F, AIScore_Berserker_Sub01, AIScore_Ramming_Sub01, ...)
+; 6 call sites from 5 routines (e.g. FailIfTwoAlliesBelowHalfHP, Func_005_667F, AIScore_Berserker_Sub01, AIScore_Ramming_Sub01, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank05_4024:: ; heuristic: follows a terminator; C0
 Func_005_4024:: ; address name
@@ -660,10 +660,12 @@ Jump_005_43EF::
     ld c, $01
     ret
 
+; C = $FF when wCFEF is 0 or an occupied foe's resistance field for skill wCFEF is below 3, else $00 (E-0127)
 ; 11 call sites from 11 routines (e.g. AIFireSkillUsable, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, AIAttackSkillUsable_74D1, ...)
 ; reads: wCFEF, wBattleActor
 ; points at: wDA72
-Func_005_43F2::
+AnyFoeNotFullyResistant::
+Func_005_43F2:: ; address name
     ld a, [wCFEF]
     or a, a
     jr z, Jump_005_4438
@@ -2291,9 +2293,11 @@ Jump_005_4B94::
     ld c, $FF
     ret
 
+; C = $FF when the fastest occupied foe's AGL exceeds 31 percent of the actor's AGL, else $00 (E-0127)
 ; 4 call sites from 4 routines (e.g. AIScore_SquallHit_Sub01, AIScore_Speed, AIScore_Slow, AIScore_PsycheUp)
 ; reads: wBattleActor
-Func_005_4B97:: ; heuristic: follows a terminator; C0
+FastestFoeAGLAbove31PercentOfActor:: ; heuristic: follows a terminator; C0
+Func_005_4B97:: ; address name
     ld a, [wBattleActor]
     call GetBattleAGL_Bank05
     ld b, h
@@ -3891,10 +3895,12 @@ Jump_005_53F7::
     ld c, $FF
     ret
 
+; C = 1 when the AI mode is below 2; otherwise $00 when an occupied foe without status bit 7 knows skill $42, $43, $46 or $47, else $FF (E-0127)
 ; 7 call sites from 7 routines (e.g. AIScore_Barrier, AIScore_BeDragon, AIScore_MouthShut, AIScore_TailWind, ...)
 ; reads: wBattleActor
 ; points at: wD80D, wD989
-Func_005_53FA:: ; heuristic: follows a terminator; C0
+FailIfFoeKnowsSkills42To47:: ; heuristic: follows a terminator; C0
+Func_005_53FA:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -5778,10 +5784,12 @@ Func_005_5F2A:: ; address name
     cp a, $0C
     ret
 
+; C = 1 when the AI mode is below 4; with wD2CC set, $00 when another ally that can act knows skill $63 or $64 with enough MP; otherwise $FF (E-0127)
 ; 2 call sites from 2 routines (e.g. AIScoreB_TwinHits, AIScore_TwinHits)
 ; reads: wBattleActor, wD2CC
 ; points at: wD80D, wDA5B
-Func_005_5F3D:: ; heuristic: follows a terminator; C0
+FailIfAllyCanUseSkill63Or64:: ; heuristic: follows a terminator; C0
+Func_005_5F3D:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $04
@@ -5836,7 +5844,7 @@ Jump_005_5F8A::
     ret
 
 ; carry unless slot C knows skill $63 with at least 3 MP or $64 with at least 6 MP (E-0125)
-; 1 call site from 1 routine (e.g. Func_005_5F3D)
+; 1 call site from 1 routine (e.g. FailIfAllyCanUseSkill63Or64)
 ; points at: wD989, wBattleMP
 SlotCLacksSkill63Or64WithMP::
 Func_005_5F8D:: ; address name
@@ -6855,11 +6863,13 @@ Jump_005_64FB::
     ld c, $FF
     ret
 
+; C = 1 when the AI mode is below 2; otherwise $00 when an occupied foe's resistance field for skill wCFEF is 3; $FF when wCFEF is 0 or none is (E-0127)
 ; 21 call sites from 21 routines (e.g. AIScore_Firebal, AIScore_Beat, AIScore_Sacrifice, AIScore_Sap, ...)
 ; reads: wBattleActor, wCFEF, hFFC6
 ; writes: hFFC6, hFFC7
 ; points at: wDA72
-Func_005_64FE:: ; heuristic: follows a terminator; C0
+FailIfAnyFoeFullyResistant:: ; heuristic: follows a terminator; C0
+Func_005_64FE:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $02
@@ -6918,10 +6928,12 @@ Jump_005_6553::
     ld c, $01
     ret
 
+; C = 1 when the AI mode is below 3 or the actor knows a heal-all skill; otherwise $00 when two or more allies have HP below half, else $FF (E-0127)
 ; 5 call sites from 5 routines (e.g. AIScore_Heal, AIScore_HealUs, AIScore_Hustle, AIScore_Meditate, ...)
 ; reads: wBattleActor
 ; points at: wD988
-Func_005_6556:: ; heuristic: follows a terminator; C0
+FailIfTwoAlliesBelowHalfHP:: ; heuristic: follows a terminator; C0
+Func_005_6556:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05_4024
     cp a, $03
@@ -6976,7 +6988,7 @@ Jump_005_65A9::
     ret
 
 ; walks B skill numbers at every other byte from HL + 1: Z set as soon as one is $19, $1A, $7C or $A1; otherwise A = 1 and Z clear (E-0117)
-; 1 call site from 1 routine (e.g. Func_005_6556)
+; 1 call site from 1 routine (e.g. FailIfTwoAlliesBelowHalfHP)
 SkillListHas19Or1AOr7COrA1::
 Func_005_65AC:: ; address name
     inc hl
@@ -7964,7 +7976,7 @@ Func_005_6B07:: ; address name
     ret
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 31 call sites from 31 routines (e.g. CheckFoeStatus7Bit2, Func_005_5500, Func_005_6A6B, Func_005_64FE, ...)
+; 31 call sites from 31 routines (e.g. CheckFoeStatus7Bit2, Func_005_5500, Func_005_6A6B, FailIfAnyFoeFullyResistant, ...)
 ; points at: wDA53
 ReadWDA53Indexed_Bank05::
 Func_005_6B16:: ; address name
@@ -8267,7 +8279,7 @@ Jump_005_6C7E::
     ret
 
 ; E = field number: A = bits 1-0 of [HL] for field 0, bits 3-2 for 1, bits 5-4 for 2, bits 7-6 for 3 (moved down to bits 1-0) (E-0092)
-; 8 call sites from 8 routines (e.g. Func_005_43F2, Func_005_69F5, Func_005_5052, Func_005_6A6B, ...)
+; 8 call sites from 8 routines (e.g. AnyFoeNotFullyResistant, Func_005_69F5, Func_005_5052, Func_005_6A6B, ...)
 Get2BitFieldEOfHL::
 Func_005_6C86:: ; address name
     ld a, e
@@ -9098,7 +9110,7 @@ Func_005_708C:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_70C5
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_70C5
@@ -9136,7 +9148,7 @@ Func_005_70C9:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7105
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_7105
@@ -9182,7 +9194,7 @@ Func_005_7109:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_715B
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_715B
@@ -9669,7 +9681,7 @@ Func_005_7370:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7393
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_7393
@@ -9945,7 +9957,7 @@ Func_005_74D1:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_74F5
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_74F5
@@ -10344,7 +10356,7 @@ Func_005_76A3:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_76CA
-    call Func_005_4B97
+    call FastestFoeAGLAbove31PercentOfActor
     ld a, c
     and a, a
     jr z, Jump_005_76CA
@@ -10413,7 +10425,7 @@ Func_005_76F8:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_7706
@@ -10580,7 +10592,7 @@ Func_005_77C7:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_77DC
@@ -10796,7 +10808,7 @@ Func_005_78CC:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_78E8
@@ -10848,7 +10860,7 @@ Func_005_790D:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_791B
@@ -11046,7 +11058,7 @@ Func_005_7A0D:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7A23
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_7A23
@@ -11322,7 +11334,7 @@ Func_005_7B5C:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7B80
-    call Func_005_43F2
+    call AnyFoeNotFullyResistant
     ld a, c
     and a, a
     jr z, Jump_005_7B80

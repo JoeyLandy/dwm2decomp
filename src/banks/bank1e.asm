@@ -178,7 +178,7 @@ Jump_01E_40E4:: ; address name
 ; writes: wD781
 ScriptCommandE8_Run_Case01_Case02::
 Jump_01E_40F2:: ; address name
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -514,7 +514,7 @@ Jump_01E_42D1::
     ret
 
 Jump_01E_430D::
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     ld hl, wC378
     ld c, $28
     call ScriptCommandE8_Run_Shared07
@@ -596,7 +596,7 @@ Jump_01E_43C2:: ; address name
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -691,7 +691,7 @@ Jump_01E_4463:: ; address name
     ld [wD7F1], a
     ld a, $0C
     ld [wD7F2], a
-    call Func_01E_75F2
+    call CopyScreenBufferRectWithAttrs_1E
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1075,7 +1075,7 @@ Func_01E_46E5:: ; address name
     ld [wD7F1], a
     ld a, $08
     ld [wD7F2], a
-    call Func_01E_75F2
+    call CopyScreenBufferRectWithAttrs_1E
     ld a, [wD7AB]
     ld b, $C3
     ld hl, $7880
@@ -1138,7 +1138,7 @@ Jump_01E_473B:: ; address name
     ld [wC6FD], a
 
 Jump_01E_4774::
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     ld hl, wD789
     ld de, wC6FE
     ld b, $03
@@ -1463,7 +1463,7 @@ Jump_01E_49F2:: ; address name
 ; points at: wC42E, wC42F
 ScriptCommandE8_Run_Shared02::
 Func_01E_49F8:: ; address name
-    call Func_01E_7163
+    call ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_01E_4A2A
@@ -1532,7 +1532,7 @@ Jump_01E_4A5E:: ; address name
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1626,7 +1626,7 @@ Jump_01E_4AE0:: ; address name
 ScriptCommandE8_Run_Case04_Case21::
 Jump_01E_4AF1:: ; address name
     farcall DrawRecordListNameTiles_Bank1D
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1806,7 +1806,7 @@ Jump_01E_4BE1:: ; address name
     pop hl
     ld a, [hl]
     ld [wC6FE], a
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -2007,7 +2007,7 @@ Jump_01E_4D5B:: ; address name
     ld [wC6FD], a
     xor a, a
     ld [rRAMG2], a
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -2223,7 +2223,7 @@ Jump_01E_4EFE:: ; address name
     ld [wD781], a
     ld a, $01
     ld [wTwoChoiceCursor], a
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     ld hl, wC52D
     xor a, a
     ld [hl+], a
@@ -2412,7 +2412,7 @@ Jump_01E_4FF7:: ; address name
     ld [wD7B4], a
     xor a, a
     ld [rRAMG2], a
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -2647,7 +2647,7 @@ Jump_01E_51E6:: ; address name
     ld [wD7F1], a
     ld a, $0D
     ld [wD7F2], a
-    call Func_01E_75F2
+    call CopyScreenBufferRectWithAttrs_1E
     ld a, [wD786]
     ld b, $C3
     ld hl, $7880
@@ -2797,7 +2797,7 @@ Jump_01E_5300:: ; address name
     ld [wD7F1], a
     ld a, $0C
     ld [wD7F2], a
-    call Func_01E_75F2
+    call CopyScreenBufferRectWithAttrs_1E
     ld de, $5343
     ld hl, wC40B
     ld bc, $0D03
@@ -2914,7 +2914,7 @@ Jump_01E_540F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE8_Run_Case06_Case15::
 Jump_01E_5429:: ; address name
-    farcall Func_01D_6C9F
+    farcall LoadTileList6DC4SixPerFrame
     ret
 
 ; entry 22 of the `rst $00` table in ScriptCommandE8_Run_Case06
@@ -2989,7 +2989,7 @@ Jump_01E_5518:: ; address name
     ld hl, wC36B
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank1E
-    call Func_01E_71E1
+    call ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_01E_5556
@@ -3458,7 +3458,7 @@ Jump_01E_586E:: ; address name
     ld [rRAMG2], a
     ld [wD7F2], a
     farcall Func_014_7E96
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     farcall Func_004_4AA8
     ld a, $7F
     ld [wC527], a
@@ -3601,7 +3601,7 @@ Jump_01E_592B:: ; address name
 ScriptCommandE8_Run_Case07_Case30::
 Jump_01E_5994:: ; address name
     farcall ListRecordsInUseWithByte6ESet
-    call Func_01E_71E1
+    call ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_01E_59CC
@@ -3685,7 +3685,7 @@ Jump_01E_5A16:: ; address name
     ld [rRAMG2], a
     ld [wD7F2], a
     farcall Func_014_7E96
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     call ScriptCommandE8_Run_Shared03
     xor a, a
     ld [wD7AB], a
@@ -3713,7 +3713,7 @@ Func_01E_5A4D:: ; address name
     ld [wD7F1], a
     ld a, $0D
     ld [wD7F2], a
-    call Func_01E_75F2
+    call CopyScreenBufferRectWithAttrs_1E
     ld a, [wD7AB]
     ld b, $C3
     ld hl, $7880
@@ -4003,7 +4003,7 @@ Func_01E_5C37:: ; address name
 ; writes: wD781, wD782
 RedrawRecordListAndNextStep::
 Func_01E_5C63:: ; address name
-    call Func_01E_7163
+    call ClampRecordListPageCursor5
     call CallFunc5C15InBank1F
     ld a, [wD781]
     dec a
@@ -4124,7 +4124,7 @@ Jump_01E_5D2B:: ; address name
     ld a, [wGameMode]
     cp a, $05
     jr z, Jump_01E_5D38
-    farcall Func_01D_5C35
+    farcall DrawWD789Cell5SpeciesSprite
 
 Jump_01E_5D38::
     xor a, a
@@ -5347,7 +5347,7 @@ Jump_01E_6519:: ; address name
     ld hl, wC36B
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank1E
-    call Func_01E_71E1
+    call ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_01E_6552
@@ -5781,7 +5781,7 @@ Func_01E_6810:: ; address name
     ld a, [wD780]
     cp a, $08
     jr nz, Jump_01E_681F
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     jr Jump_01E_6825
 
 Jump_01E_681F::
@@ -5829,7 +5829,7 @@ Jump_01E_685A:: ; address name
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -5842,7 +5842,7 @@ Jump_01E_685A:: ; address name
 ; points at: wC52D
 ScriptCommandE8_Run_Case08_Case0D::
 Jump_01E_6870:: ; address name
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     call GetWD789Cell4Address
     ld a, [hl]
     ld b, a
@@ -6381,7 +6381,7 @@ Jump_01E_6C1F:: ; address name
     pop bc
     ld a, b
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld de, Data_01F_4AD0
     ld hl, vTiles2 + $6F0
     ld b, $1F
@@ -7209,10 +7209,12 @@ Jump_01E_7155::
     ei
     ret
 
+; wD7B0 = the number of 5-entry pages of wD7A9 records; clamps the page wD7AF and the cursor wD7AB to the last page (wD7B1) (E-0127)
 ; 12 call sites from 12 routines (e.g. ScriptCommandE8_Run_Shared02, RedrawRecordListAndNextStep, ScriptCommandEB_Run_Shared01, ScriptCommandED_Run_Case04_Case02, ...)
 ; reads: wD7A9, wD7AF, wD7AB
 ; writes: wD7B0, wD7AF, wD7B1, wD7AB
-Func_01E_7163::
+ClampRecordListPageCursor5::
+Func_01E_7163:: ; address name
     ld a, [wD7A9]
     ld l, a
     ld h, $00
@@ -7270,7 +7272,7 @@ Jump_01E_71B4::
     ret
 
 ; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $71D7 + 2 * wD7AB (E-0120)
-; 1 call site from 1 routine (e.g. Func_01E_7163)
+; 1 call site from 1 routine (e.g. ClampRecordListPageCursor5)
 ; reads: wD7AB
 EraseCursorAt71D7ForWD7AB::
 Func_01E_71B5:: ; address name
@@ -7295,10 +7297,12 @@ Func_01E_71B5:: ; address name
     ret
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
+; wD7B0 = the number of 4-entry pages of wD7A9 records; clamps the page wD7AF and the cursor wD7AB to the last page (wD7B1) (E-0127)
 ; 11 call sites from 11 routines (e.g. ScriptCommandE8_Run_Case07_Case30, ScriptCommandE8_Run_Case06_Case18, ScriptCommandE8_Run_Case0D_Case0E, DrawBox5022WithPageIndicator, ...)
 ; reads: wD7A9, wD7AF, wD7AB
 ; writes: wD7B0, wD7AF, wD7B1, wD7AB
-Func_01E_71E1::
+ClampRecordListPageCursor4::
+Func_01E_71E1:: ; address name
     ld a, [wD7A9]
     ld l, a
     ld h, $00
@@ -7356,7 +7360,7 @@ Jump_01E_7232::
     ret
 
 ; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $7255 + 2 * wD7AB (E-0120)
-; 1 call site from 1 routine (e.g. Func_01E_71E1)
+; 1 call site from 1 routine (e.g. ClampRecordListPageCursor4)
 ; reads: wD7AB
 EraseCursorAt7255ForWD7AB::
 Func_01E_7233:: ; address name
@@ -7722,7 +7726,7 @@ Func_01E_741A:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 4 call sites from 4 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case00, ScriptCommandE8_Run_Case04_Case12_Sub01_Sub01, Func_01E_75F2)
+; 4 call sites from 4 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case00, ScriptCommandE8_Run_Case04_Case12_Sub01_Sub01, CopyScreenBufferRectWithAttrs_1E)
 CopyBytesDEToHL_Bank1E::
 Func_01E_7428:: ; address name
     ld a, [de]
@@ -7735,7 +7739,7 @@ Func_01E_7428:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 3 call sites from 3 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case00, Func_01E_75F2)
+; 3 call sites from 3 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case00, CopyScreenBufferRectWithAttrs_1E)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank1E::
 Func_01E_7431:: ; address name
@@ -8119,10 +8123,12 @@ Func_01E_75EB:: ; address name
     farcall Func_01D_5B4D
     ret
 
+; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 5 call sites from 5 routines (e.g. DrawBox4718AndMenuAndStep_1E, ScriptCommandE8_Run_Shared03, ScriptCommandE8_Run_Case04_Case06, ScriptCommandE8_Run_Case06_Case0D, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
-Func_01E_75F2::
+CopyScreenBufferRectWithAttrs_1E::
+Func_01E_75F2:: ; address name
     push bc
     push hl
     push de
@@ -8178,7 +8184,7 @@ Jump_01E_7633::
 
 Jump_01E_7642::
     dec c
-    jr nz, Func_01E_75F2
+    jr nz, CopyScreenBufferRectWithAttrs_1E
     ret
 
 ; only called from routines of ScriptCommandE8_Run (E-0098)

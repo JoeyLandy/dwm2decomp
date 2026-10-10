@@ -315,7 +315,7 @@ Jump_019_424D::
     inc c
     dec b
     jr nz, Jump_019_424D
-    call Func_019_43ED
+    call AdjustSkillsForBattleStart
     ld de, wD8A7
     ld bc, $0800
 
@@ -353,9 +353,11 @@ Jump_019_4291::
     jr nz, Jump_019_425D
     ret
 
+; wDA53[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
 ; 8 call sites from 8 routines (e.g. Func_019_4CF8, Func_019_4BA8, RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ...)
 ; points at: wDA53, wBattleINT
-Func_019_4298::
+SetSlotAIModeFromINT::
+Func_019_4298:: ; address name
     push bc
     ld a, c
     ld hl, wDA53
@@ -433,9 +435,11 @@ Func_019_42EE:: ; address name
     pop bc
     ret
 
+; outside link and special battles stores a random value between 80 and 100 percent of the word at HL into BC's target (E-0127)
 ; 1 call site from 1 routine (e.g. Func_019_4CF8)
 ; reads: wCFC5, wC58A, wC5E7, wC5E8
-Func_019_42FD::
+RandomizeWordBetween80And100Percent::
+Func_019_42FD:: ; address name
     ld a, [wCFC5]
     cp a, $02
     ret z
@@ -621,13 +625,15 @@ Jump_019_43E4::
     pop af
     ld [wD868], a
     or a, a
-    call nz, Func_019_43ED
+    call nz, AdjustSkillsForBattleStart
     ret
 
+; replaces skill $8F by $AA for slots without wD8AF set; outside link battles marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_019_434D, GameMode4_Init_Sub01_Sub04)
 ; reads: wC58A
 ; points at: wD8AF, wD9C9, wD989
-Func_019_43ED::
+AdjustSkillsForBattleStart::
+Func_019_43ED:: ; address name
     ld bc, $0800
     ld hl, wD8AF
 
@@ -687,7 +693,7 @@ Jump_019_4430::
     ret
 
 ; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
-; 1 call site from 1 routine (e.g. Func_019_43ED)
+; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart)
 ; points at: wD989
 ReplaceSkill8FWithAAInSlotC::
 Func_019_4440:: ; address name
@@ -719,14 +725,14 @@ Jump_019_445B::
     ret
 
 ; [HL] = $AD (E-0114)
-; 1 call site from 1 routine (e.g. Func_019_43ED)
+; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart)
 StoreTileADAtHL::
 Func_019_4462:: ; address name
     ld [hl], $AD
     ret
 
 ; [HL] = $AE (E-0114)
-; 1 call site from 1 routine (e.g. Func_019_43ED)
+; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart)
 StoreTileAEAtHL::
 Func_019_4465:: ; address name
     ld [hl], $AE
@@ -835,8 +841,10 @@ Func_019_44B9:: ; address name
     ld a, [wD86B]
     ld d, a
 
+; packs the 2-bit fields at HL (and bits 0-1 of byte $1A) into the 7-byte wDA72-style record at DE (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_019_4CF8, Func_019_4BA8)
-Func_019_44C9::
+PackResistanceFieldsToDE::
+Func_019_44C9:: ; address name
     push hl
     ld a, $1A
     add_a_to_hl
@@ -925,7 +933,7 @@ Jump_019_452D::
     ret
 
 ; HL = (HL * 8) / 10 with 16-bit arithmetic (the multiply can overflow above 8191); BC and DE kept (E-0118)
-; 1 call site from 1 routine (e.g. Func_019_42FD)
+; 1 call site from 1 routine (e.g. RandomizeWordBetween80And100Percent)
 ScaleHLToEightTenths_Bank19::
 Func_019_4537:: ; address name
     push bc
@@ -1567,10 +1575,12 @@ Jump_019_491F::
     pop bc
     jr Jump_019_494B
 
+; multiplies by 6 (or 12 when wD869 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD869, hFFC8, hFFC9
 ; writes: hFFC8, hFFC9
-Func_019_4931:: ; heuristic: follows a terminator; C0
+ScaleWordBy6Or12Capped10000:: ; heuristic: follows a terminator; C0
+Func_019_4931:: ; address name
     ld a, [wD869]
     cp a, $01
     ld a, $06
@@ -1821,7 +1831,7 @@ Jump_019_4A68::
     ret
 
 ; DEHL = A * EHL (a 24-bit by 8-bit multiply from three Multiply8 calls) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_019_49B1, Func_019_4931)
+; 2 call sites from 2 routines (e.g. Func_019_49B1, ScaleWordBy6Or12Capped10000)
 Multiply24By8::
 Func_019_4A74:: ; address name
     push af
@@ -2322,9 +2332,9 @@ Jump_019_4CE2::
 
 Jump_019_4CEF::
     push bc
-    call Func_019_44C9
+    call PackResistanceFieldsToDE
     pop bc
-    call Func_019_4298
+    call SetSlotAIModeFromINT
     ret
 
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
@@ -2428,7 +2438,7 @@ Jump_019_4D6F::
     ld a, d
     sbc a, $00
     ld h, a
-    call Func_019_42FD
+    call RandomizeWordBetween80And100Percent
     pop hl
     pop de
     ld de, wBattleMaxHP
@@ -2495,9 +2505,9 @@ Jump_019_4DEF::
 
 Jump_019_4DFC::
     push bc
-    call Func_019_44C9
+    call PackResistanceFieldsToDE
     pop bc
-    call Func_019_4298
+    call SetSlotAIModeFromINT
     ret
 
 ; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL = wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the field offset) (E-0067) (the same 23 bytes appear in 2 banks)
@@ -2584,7 +2594,7 @@ Jump_019_4E5A::
     INCBIN "dwm2-cobi-us.gbc", $064E60, $2520
 
 ; copies the 3 bytes at $4E60 + $129 * hFFC6 + 3 * hFFC7 into hFFC8-hFFCA (E-0120)
-; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, ScriptCommandE8_Run_Case09_Case13_Sub01, Func_031_6D28, Func_0F2_4B05)
+; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, ScriptCommandE8_Run_Case09_Case13_Sub01, RecordReachedNextLevelExp, Func_0F2_4B05)
 ; reads: hFFC6, hFFC7
 ; writes: hFFC8, hFFC9, hFFCA
 LoadTable4E60EntryToHFFC8::
@@ -2656,7 +2666,7 @@ Func_019_73A2:: ; address name
     ret
 
 ; loads species record [wCA36] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wCA81] - 1)) to wCA83 (E-0121)
-; 1 call site from 1 routine (e.g. Func_037_5C4E)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 ; reads: wCA36, wCA37, wD00F, wCA81
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wCA83

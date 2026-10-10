@@ -430,7 +430,7 @@ Jump_033_51DC::
     ret
 
 Jump_033_51ED::
-    farcall Func_01D_5C35
+    farcall DrawWD789Cell5SpeciesSprite
     ret
 
 Jump_033_51F4::
@@ -450,7 +450,7 @@ Jump_033_5207::
     ret
 
 Jump_033_520E::
-    farcall Func_0F2_4EDD
+    farcall DrawWCA2BSpeciesSprites
     ret
 
 ; only called from RunWC582State_450D_Case01 (E-0047)
@@ -528,14 +528,14 @@ Func_033_5215_Case01::
 Jump_033_5287:: ; address name
     xor a, a
     ld [wC594], a
-    call Func_033_6197
+    call WriteGoldDigitsToWC1BA
     ld de, wC895
     ld hl, wC1DB
     call RunFunc6204FourTimes
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $0000
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     ld hl, wD06B
     inc [hl]
     ret
@@ -731,7 +731,7 @@ Jump_033_53AC:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $0000
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     ld a, $08
     call BeginString_Bank07_Cat5
     ld hl, wD06C
@@ -1247,7 +1247,7 @@ Jump_033_563B:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_033_63EF
@@ -1369,7 +1369,7 @@ Jump_033_56FC:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     call SetDefaultStringWindow_Bank33
     xor a, a
     ld [wD7AD], a
@@ -1401,7 +1401,7 @@ Jump_033_574F:: ; address name
 Jump_033_576D::
     xor a, a
     ld [wD7F5], a
-    farcall Func_00D_4D24
+    farcall HandleTwoChoiceCursorInput_0D
     ld a, [wD7F5]
     and a, a
     ret z
@@ -1454,7 +1454,7 @@ Jump_033_57B2:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     ld a, $08
     call BeginString_Bank07_Cat5
     ld a, [wD781]
@@ -1471,7 +1471,7 @@ Jump_033_57DC:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     ld hl, wD7DC
     inc [hl]
     ld a, $0C
@@ -1768,7 +1768,7 @@ Jump_033_59B9:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     ld a, $0D
     call BeginString_Bank07_Cat5
     xor a, a
@@ -1799,7 +1799,7 @@ Jump_033_59D3:: ; address name
     ret
 
 Jump_033_59F1::
-    farcall Func_0F1_5842
+    farcall HandleThreeChoiceCursorInput_F1
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -1991,7 +1991,7 @@ Jump_033_5AF9:: ; address name
     ld [wD09E], a
     ld a, [wGoldHi]
     ld [wD09F], a
-    farcall Func_002_760B
+    farcall VerifySaveChecksum
     ld a, [wD09D]
     ld [wGoldLo], a
     ld a, [wD09E]
@@ -2198,7 +2198,7 @@ Jump_033_5C4F:: ; address name
 ; points at: wC364
 Func_033_5215_Table2_Case0E_Case00::
 Jump_033_5C63:: ; address name
-    farcall Func_01B_7205
+    farcall ClearRecordPanelTiles
     ld de, Data_033_6331
     ld hl, wC364
     ld bc, $0A0B
@@ -2425,13 +2425,13 @@ Jump_033_5E23:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     call BGMapAddressAtScroll_Bank33
     ld de, $01A0
     add hl, de
     ld bc, $1405
     ld de, $0168
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     ld a, $70
     ldh [hFFBA], a
     xor a, a
@@ -2466,7 +2466,7 @@ Jump_033_5E57:: ; address name
 ; points at: wC364
 Func_033_5215_Table2_Case0F_Case00::
 Jump_033_5E6B:: ; address name
-    farcall Func_01B_7205
+    farcall ClearRecordPanelTiles
     ld de, Data_033_6438
     ld hl, wC364
     ld bc, $080B
@@ -2496,7 +2496,7 @@ Jump_033_5E93:: ; address name
 Func_033_5215_Table2_Case0F_Case01::
 Jump_033_5E97:: ; address name
     call Func_033_5F99
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_033_5EBE
@@ -2591,13 +2591,13 @@ Jump_033_5F37:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $01CC
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     call BGMapAddressAtScroll_Bank33
     ld de, $01A0
     add hl, de
     ld bc, $1405
     ld de, $0168
-    call Func_033_60FC
+    call DrawScreenBufferRectToBGMap_33
     ld a, $70
     ldh [hFFBA], a
     xor a, a
@@ -2911,11 +2911,13 @@ Jump_033_60F7::
     ld h, a
     ret
 
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 11 call sites from 9 routines (e.g. Func_033_5215_Case01, Func_033_5215_Case06_Case01, Func_033_5215_Table2_Case04_Case0C, Func_033_5215_Table2_Case04_Case0B, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_033_60FC::
+DrawScreenBufferRectToBGMap_33::
+Func_033_60FC:: ; address name
     push de
     push bc
     push hl
@@ -3041,11 +3043,13 @@ Jump_033_617F::
     ldh [rSVBK], a
     ret
 
+; writes the gold as up to five decimal digit tiles without leading zeros at wC1BA (E-0127)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Case01)
 ; reads: wGoldLo, wGoldMid, wGoldHi, hFFC8, hFFC7, hFFC6
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: wC1BA
-Func_033_6197::
+WriteGoldDigitsToWC1BA::
+Func_033_6197:: ; address name
     ld a, [wGoldLo]
     ld l, a
     ld a, [wGoldMid]

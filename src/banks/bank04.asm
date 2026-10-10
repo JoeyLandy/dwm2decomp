@@ -453,7 +453,7 @@ Jump_004_4309::
     ret
 
 ; hFFC6/hFFC7 = graphics number, hFFCA/hFFCB = VRAM destination: with hFFC8 = 0 the source and bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not read) (E-0093)
-; 25 call sites from 15 routines (e.g. Func_004_4B2D, Func_004_4AA8, Func_004_4129, ScriptCommand41_Run_Case09, ...)
+; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, Func_004_4AA8, Func_004_4129, ScriptCommand41_Run_Case09, ...)
 ; reads: hFFC8, hFFC6, hFFC7, hFFCA, hFFCB, wIsCGB, hFFC9
 ; points at: wOBJPaletteBuffer
 DecompressGraphicsHFFC6ToHFFCA::
@@ -962,7 +962,7 @@ Jump_004_465C::
     ld b, a
     ld a, [hl]
     ld c, a
-    call Func_004_4904
+    call IsTileUnderCellBlocking
     cp a, $01
     jr z, Jump_004_46F7
     call UpdateSpriteSlots_Shared01
@@ -1004,7 +1004,7 @@ Jump_004_46B9::
     ld b, a
     ld a, [hl]
     ld c, a
-    call Func_004_4904
+    call IsTileUnderCellBlocking
     cp a, $01
     jr z, Jump_004_46F7
     call UpdateSpriteSlots_Shared01
@@ -1297,7 +1297,7 @@ Func_004_4852:: ; address name
     and a, $0F
     cp a, $0A
     jr z, Jump_004_485F
-    call Func_004_4904
+    call IsTileUnderCellBlocking
     ret
 
 Jump_004_485F::
@@ -1411,10 +1411,12 @@ Jump_004_48CD::
     db $00, $10, $01, $0E, $02, $0E, $01, $0E, $02, $0E, $00, $20, $06, $0E, $07, $20
     db $06, $0E, $FF, $FF, $00, $0E, $01, $0E, $02, $0E, $01, $0E, $FF, $FF
 
+; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wC910-wC913; A = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
 ; 3 call sites from 2 routines (e.g. RunWC935Type0AOrOther, UpdateSpriteSlots_Case02)
 ; reads: wMaxBlockingTile
 ; points at: wScreenTileBuffer, wC910
-Func_004_4904::
+IsTileUnderCellBlocking::
+Func_004_4904:: ; address name
     push bc
     push de
     ld a, c
@@ -1694,14 +1696,14 @@ Jump_004_4AD2::
     ldh a, [hFF8B]
     or a, a
     jr nz, Jump_004_4ADE
-    call Func_004_4B2D
+    call LoadPlayerSpriteGraphics
     call Func_000_228A
     ret
 
 Jump_004_4ADE::
     dec a
     jr nz, Jump_004_4B23
-    call Func_004_4B2D
+    call LoadPlayerSpriteGraphics
     ld de, $0000
     call TestFlagBit
     jr c, Jump_004_4AF0
@@ -1741,15 +1743,17 @@ Jump_004_4AF1::
     ret
 
 Jump_004_4B23::
-    call Func_004_4B2D
+    call LoadPlayerSpriteGraphics
     call Func_000_228A
     call LoadAltObjectGraphicsIfHFF8CBit3
     ret
 
+; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream named by hFF94/hFF95 when bit 7 of hFF93 is set (E-0127)
 ; 5 call sites from 3 routines (e.g. Func_004_4AA8, ScriptCommandA0_Run_Case04, ScriptCommandA1_Run_Case02)
 ; reads: hFF93, hFF94, hFF95
 ; writes: hFFC6, hFF8A, hFFC7, hFFC9, hFFC8, hFFCA, hFFCB
-Func_004_4B2D::
+LoadPlayerSpriteGraphics::
+Func_004_4B2D:: ; address name
     ldh a, [hFF93]
     bit 7, a
     jr nz, Jump_004_4B5E
@@ -9459,7 +9463,7 @@ Jump_004_7B82:: ; address name
     jr Jump_004_7B9C
 
 Jump_004_7B91::
-    call Func_004_7BAB
+    call IsPlayerAtWCD0BTriggerColumn
     or a, a
     ret z
     ld hl, $65B1
@@ -9475,9 +9479,11 @@ Jump_004_7B9C::
     ld [wDataBank], a
     ret
 
+; A = 1 when the player stands on one of the trigger columns for wCD0B (1, 7, 8 or 9) on the matching map screen, else 0 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_004_7B29_Case02)
 ; reads: wCD0B, hMapScreenX, hPlayerX
-Func_004_7BAB::
+IsPlayerAtWCD0BTriggerColumn::
+Func_004_7BAB:: ; address name
     ld a, [wCD0B]
     cp a, $01
     jr nz, Jump_004_7BC3

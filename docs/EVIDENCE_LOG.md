@@ -1419,6 +1419,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Names.** About 55 fall-through and mid-routine entry points are named (StartThreeSoundTracks and StartTwoSoundTracks, which rely on StartSound returning A + 1; TryAddSkillIfPrerequisitesKnown …). Unnamed routines: 391 to 316.
 - Binary verification: build/run88 PASS, 0 differing bytes; 142 tests OK (3 skipped).
 
+### E-0127 — Routines of 46-60 instructions
+
+- Kind: OBSERVATION (full reading; C1).
+- **What is named.** About 120 routines of 46-60 instructions are named; the unnamed count goes from 316 to 191. These include:
+  - level-up stat gains, their 999 cap and their application (1A:6418, 1A:6587, 31:6A2D, 31:6BCA), and the next-level EXP check (31:6D28);
+  - the AI mode taken from INT (19:4298: modes 0-4 below 30, 100, 550, 900, or more);
+  - the AI's highest-weight action choice (30:4C00);
+  - save checksum verification (02:760B) and the record backup to SRAM bank 1 (02:741B);
+  - party stat-total events (12:7693, 12:76F1, 12:774F) and the repeated-digit HP event (12:7B45);
+  - child resistance rolls for breeding (0E:5CB2) and the resistance refresh from species (0E:5C50);
+  - key-world monster selection (60:4698, 60:4724).
+- Field $57 is read as the level cap next to field $56 (31:6D28, 03:4ACE). C1.
+- Binary verification: build/run89 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

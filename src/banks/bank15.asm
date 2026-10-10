@@ -497,7 +497,7 @@ Jump_015_4363:: ; address name
     farcall ListRecordsInUseWithByte6EClear
 
 Jump_015_4369::
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_015_43A4
@@ -603,7 +603,7 @@ Jump_015_4418:: ; address name
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2251,11 +2251,13 @@ Jump_015_4F36::
     ld [wD782], a
     ret
 
+; removes record B from the party list wC6FE (wC6FD -= 1), compacts the three entries and zeroes the unused ones (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD
 ; writes: wC6FD
 ; points at: wC6FE
-Func_015_4F4C:: ; heuristic: follows a terminator; C0
+RemoveRecordBFromParty:: ; heuristic: follows a terminator; C0
+Func_015_4F4C:: ; address name
     ld hl, wC6FE
     ld c, $00
 
@@ -2601,7 +2603,7 @@ Jump_015_5165:: ; address name
     ld hl, wC3BB
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank15
-    farcall Func_01E_71E1
+    farcall ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_015_51AC
@@ -3952,7 +3954,7 @@ Jump_015_5ACA:: ; address name
     ld [wD78C], a
     ld a, $04
     ld [wD7A9], a
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4037,7 +4039,7 @@ Jump_015_5B62:: ; address name
     ld l, a
     ld a, [hl]
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -4803,7 +4805,7 @@ Jump_015_6074:: ; address name
     ld hl, wC3BB
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank15
-    farcall Func_01E_71E1
+    farcall ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_015_60A4
@@ -5103,7 +5105,7 @@ Jump_015_6276:: ; address name
     call FillTilesBxC
     ld a, [wD7B4]
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     call ScriptCommandED_Run_Shared06
     ld a, [wD781]
     inc a
@@ -5183,7 +5185,7 @@ Jump_015_62F1:: ; address name
     farcall ListRecordsInUseWithByte6EClear
 
 Jump_015_62F7::
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_015_631B
@@ -5307,7 +5309,7 @@ Jump_015_63AE::
     ret
 
 ; DecompressGraphicsWD7F1ToWD7F4 with graphics number $00A4 and destination $8000 (vTiles0) (E-0117)
-; 2 call sites from 2 routines (e.g. Func_015_6B00, Func_016_777B)
+; 2 call sites from 2 routines (e.g. Func_015_6B00, DecompressA4GraphicsAndContinue)
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5
 DecompressGraphicsA4ToTiles0::
 Func_015_63B8:: ; address name

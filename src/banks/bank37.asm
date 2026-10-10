@@ -726,7 +726,7 @@ Jump_037_4D80:: ; address name
     ld de, Data_037_647D
     ld hl, wC36C
     ld bc, $0C05
-    call Func_037_5AFA
+    call CopyRectToScreenBufferAndClearAttributes_37
     pop af
     ld [wD7F1], a
     ld hl, wC386
@@ -893,7 +893,7 @@ Jump_037_4E94::
     call BGMapAddressAtScroll_Bank37
     ld bc, $140D
     ld de, $01CC
-    call Func_037_5B3F
+    call DrawScreenBufferRectToBGMap_37
     ret
 
 ; entry 19 of the `rst $00` table in Func_037_4AFD_Case04
@@ -999,7 +999,7 @@ Jump_037_4F49:: ; address name
     ret nz
     xor a, a
     ld [wC58C], a
-    call Func_037_5C4E
+    call UnpackLinkRecordToWCA2B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1124,11 +1124,11 @@ Jump_037_4FFD:: ; address name
     ld de, Data_037_64D7
     ld hl, wC3E7
     ld bc, $0907
-    call Func_037_5AFA
+    call CopyRectToScreenBufferAndClearAttributes_37
     call BGMapAddressAtScroll_Bank37
     ld bc, $140D
     ld de, $01CC
-    call Func_037_5B3F
+    call DrawScreenBufferRectToBGMap_37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1158,7 +1158,7 @@ Jump_037_5041:: ; address name
     ret
 
 Jump_037_5065::
-    call Func_037_59A3
+    call HandleThreeChoiceCursorInput_37
     and a, a
     ret z
     cp a, $FE
@@ -1249,11 +1249,11 @@ Jump_037_50D9:: ; address name
     ld de, Data_037_64B9
     ld hl, wC412
     ld bc, $0605
-    call Func_037_5AFA
+    call CopyRectToScreenBufferAndClearAttributes_37
     call BGMapAddressAtScroll_Bank37
     ld bc, $140D
     ld de, $01CC
-    call Func_037_5B3F
+    call DrawScreenBufferRectToBGMap_37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1686,7 +1686,7 @@ Jump_037_539F:: ; address name
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1758,7 +1758,7 @@ Jump_037_5407:: ; address name
 Func_037_4AFD_Case0D_Case01::
 Jump_037_5415:: ; address name
     farcall ShowString10Bank0EAtTiles2020ThenDefault
-    farcall Func_01F_7375
+    farcall LoadSixteenGlyphTilesFromTable73BC
     call DrawWCA2CNameAtTiles1500
 
 ; entry 2 of the `rst $00` table in Func_037_4AFD_Case0D
@@ -2023,7 +2023,7 @@ Jump_037_55A0:: ; address name
     ld [wD7F3], a
     ld a, $C7
     ld [wD7F4], a
-    farcall Func_0F2_50E2
+    farcall DrawFamilyIconAndCountForWCA38
     farcall Func_0F2_4B05
     ld a, [wD781]
     inc a
@@ -2131,7 +2131,7 @@ Jump_037_565A:: ; address name
 ; writes: wD781
 Func_037_4AFD_Case0D_Case18::
 Jump_037_5668:: ; address name
-    farcall Func_01F_7591
+    farcall ClearTilesAndDrawRects6C5FAnd6D37
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2288,7 +2288,7 @@ Jump_037_5760:: ; address name
     xor a, a
     ld [wD7F7], a
     call DrawTileRectAtHLFromDE_Bank37
-    farcall Func_0F2_4E76
+    farcall DecompressWCA2BSpeciesGraphics
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2418,7 +2418,7 @@ Jump_037_5821:: ; address name
     ld de, Data_037_64D7
     ld hl, wC3E7
     ld bc, $0907
-    call Func_037_5AFA
+    call CopyRectToScreenBufferAndClearAttributes_37
     ld a, $0F
     ld [wStringIndex], a
     xor a, a
@@ -2599,7 +2599,7 @@ Func_037_5976:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld bc, $140D
     ld de, $01CC
-    call Func_037_5B3F
+    call DrawScreenBufferRectToBGMap_37
     ret
 
 ; wStringIndex = A (wStringCategory unchanged), then far-calls BeginStringDisplay_Bank0E (E-0066)
@@ -2611,10 +2611,12 @@ Func_037_5999:: ; address name
     farcall BeginStringDisplay_Bank0E
     ret
 
+; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case18)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wD783
-Func_037_59A3::
+HandleThreeChoiceCursorInput_37::
+Func_037_59A3:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_037_59C1
@@ -2681,7 +2683,7 @@ Jump_037_5A0B::
     ret
 
 ; once the joypad repeat timer reaches $14, cycles wD783 through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
-; 1 call site from 1 routine (e.g. Func_037_59A3)
+; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_37)
 ; reads: wJoypadRepeatTimer, wD783, wTwoChoiceCursor
 ; writes: wD783
 BlinkCursorWD783_Bank37::
@@ -2700,7 +2702,7 @@ Func_037_5A11:: ; address name
     ld [wD783], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. Func_037_59A3)
+; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_37)
 ; reads: wTwoChoiceCursor
 DrawCursorTileBB_Bank37::
 Func_037_5A2B:: ; address name
@@ -2708,7 +2710,7 @@ Func_037_5A2B:: ; address name
     jr Jump_037_5A35
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. Func_037_59A3)
+; 2 call sites from 1 routine (e.g. HandleThreeChoiceCursorInput_37)
 ; reads: wTwoChoiceCursor
 DrawBlankTileC3_Bank37::
 Func_037_5A2F:: ; address name
@@ -2716,7 +2718,7 @@ Func_037_5A2F:: ; address name
     jr Jump_037_5A35
 
 ; B = $BC, then writes B at the scroll position + Data_037_5A57[wTwoChoiceCursor] (E-0124)
-; 1 call site from 1 routine (e.g. Func_037_59A3)
+; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_37)
 ; reads: wTwoChoiceCursor
 DrawArrowTileBCAtTwoChoiceEntry_Bank37::
 Func_037_5A33:: ; address name
@@ -2871,10 +2873,12 @@ Func_037_5AD3:: ; address name
     ld [rRAMG2], a
     ret
 
+; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows in WRAM bank 2 (E-0127)
 ; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case04_Case19, Func_037_4AFD_Case04_Case17, Func_037_4AFD_Case0E_Case08, Func_037_4AFD_Case04_Case04)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_037_5AFA::
+CopyRectToScreenBufferAndClearAttributes_37::
+Func_037_5AFA:: ; address name
     push hl
     push bc
 
@@ -2935,11 +2939,13 @@ Jump_037_5B27::
     ldh [rSVBK], a
     ret
 
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case04_Case19, RunFunc5A5DAt024FAndDrawBox, Func_037_4AFD_Case04_Case17, Func_037_4AFD_Case04_Case12)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_037_5B3F::
+DrawScreenBufferRectToBGMap_37::
+Func_037_5B3F:: ; address name
     push de
     push bc
     push hl
@@ -3047,14 +3053,14 @@ Func_037_5BC6::
     ld a, [de]
     ld [hl+], a
     inc de
-    call Func_037_5D5E
+    call ConvertNameBytesFromLinkFormat
     call AppendTable6175ByteForWordAtDE
     call FamilyNibbleOrSpeciesFamily
     ld a, [de]
     and a, $01
     ld [hl+], a
     inc de
-    call Func_037_5D5E
+    call ConvertNameBytesFromLinkFormat
     ld a, [de]
     ld [hl+], a
     inc de
@@ -3073,17 +3079,17 @@ Func_037_5BC6::
 Jump_037_5BF5::
     call AppendTable6175ByteForWordAtDE
     call AppendTable6175ByteForWordAtDE
-    call Func_037_5D5E
+    call ConvertNameBytesFromLinkFormat
     ld a, [de]
     ld [hl+], a
     inc de
-    call Func_037_5D5E
+    call ConvertNameBytesFromLinkFormat
     ld a, [de]
     ld [hl+], a
     inc de
 
 Jump_037_5C07::
-    call Func_037_5DEB
+    call MapAndCompactSkillList63D3
     ld b, $12
     call CopyBBytesHLToDE_Bank37
     call Func_037_5E3E
@@ -3117,11 +3123,11 @@ Jump_037_5C07::
     jr Jump_037_5C47
 
 Jump_037_5C3C::
-    call Func_037_5D5E
+    call ConvertNameBytesFromLinkFormat
     ld a, [de]
     ld [hl+], a
     inc de
-    call Func_037_5D5E
+    call ConvertNameBytesFromLinkFormat
     ld a, [de]
     ld [hl], a
 
@@ -3129,10 +3135,12 @@ Jump_037_5C47::
     farcall LoadTable555DEntryForWD0A6ToWD0EA
     ret
 
+; unpacks the received record at wD132 into wCA2B: names, species ids from Data_037_5FC7, family, parents, skills and scaled stats (E-0127)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case15)
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wD043
 ; points at: wCA2B, wD132
-Func_037_5C4E::
+UnpackLinkRecordToWCA2B::
+Func_037_5C4E:: ; address name
     ld hl, wCA2B
     ld de, wD132
     ld a, [de]
@@ -3174,7 +3182,7 @@ Jump_037_5C80::
     inc de
 
 Jump_037_5C95::
-    call Func_037_5EF7
+    call MapAndCompactSkillList62F5
     ld b, $12
     call CopyBBytesHLToDE_Bank37
     call ScaleStatWordsForDisplay_5F4A
@@ -3239,7 +3247,7 @@ Func_037_5CCB:: ; address name
     ret
 
 ; DE += 2, writes four $FF bytes, then WriteBlankName10_Bank37 (and falls into it) (E-0126)
-; 1 call site from 1 routine (e.g. Func_037_5C4E)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 WriteFFQuadAndBlankName::
 Func_037_5CE6:: ; address name
     inc de
@@ -3277,7 +3285,7 @@ Func_037_5CF1:: ; address name
     ret
 
 ; copies B bytes from HL to DE; HL and DE advance, B = 0 (E-0115)
-; 5 call sites from 3 routines (e.g. Func_037_5C4E, Copy26BytesThenWD034, Func_037_5BC6)
+; 5 call sites from 3 routines (e.g. UnpackLinkRecordToWCA2B, Copy26BytesThenWD034, Func_037_5BC6)
 CopyBBytesHLToDE_Bank37::
 Func_037_5D08:: ; address name
     ld a, [de]
@@ -3350,8 +3358,10 @@ Jump_037_5D5B::
 Jump_037_5D5D::
     ret
 
+; converts 8 name bytes at DE to the game's glyphs ($0A-$3D + $1A, special marks $93-$95, $AB, $B5), padding after the fourth with $F0 (E-0127)
 ; 6 call sites from 1 routine (e.g. Func_037_5BC6)
-Func_037_5D5E::
+ConvertNameBytesFromLinkFormat::
+Func_037_5D5E:: ; address name
     ld c, $00
     ld b, $08
 
@@ -3471,9 +3481,11 @@ Jump_037_5DE9::
     ld [hl+], a
     ret
 
+; maps $21 bytes through Data_037_63D3 and compacts the 8- and $19-entry lists, dropping $FE/$FF entries (E-0127)
 ; 1 call site from 1 routine (e.g. Func_037_5BC6)
 ; points at: wD21D, wD225
-Func_037_5DEB::
+MapAndCompactSkillList63D3::
+Func_037_5DEB:: ; address name
     ld b, $21
     push hl
 
@@ -3650,7 +3662,7 @@ Jump_037_5EBA::
     ret
 
 ; converts 8 bytes from DE through Func_037_5D0F into HL, then appends two $F0 bytes (E-0122)
-; 6 call sites from 1 routine (e.g. Func_037_5C4E)
+; 6 call sites from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 ConvertEightBytesAndPadF0::
 Func_037_5EC0:: ; address name
     ld b, $08
@@ -3668,7 +3680,7 @@ Jump_037_5EC2::
     ret
 
 ; reads a byte index at DE (DE += 1) and appends the word at $5FC7 + 2 * index to [HL]; HL ends after the word, C = low byte (E-0121)
-; 3 call sites from 1 routine (e.g. Func_037_5C4E)
+; 3 call sites from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 AppendTable5FC7WordForByteAtDE::
 Func_037_5ED0:: ; address name
     ld a, [de]
@@ -3693,7 +3705,7 @@ Func_037_5ED0:: ; address name
     ret
 
 ; LoadSpeciesRecord (id already in wSpeciesIdLo/Hi), then stores its family at HL; HL += 1, DE += 1 (E-0118)
-; 1 call site from 1 routine (e.g. Func_037_5C4E)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 ; reads: wSpeciesRecord
 StoreSpeciesFamilyAtHL::
 Func_037_5EE7:: ; address name
@@ -3707,9 +3719,11 @@ Func_037_5EE7:: ; address name
     inc de
     ret
 
-; 1 call site from 1 routine (e.g. Func_037_5C4E)
+; maps $21 bytes through Data_037_62F5 and compacts the 8- and $19-entry lists, dropping $FF entries (E-0127)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 ; points at: wD21D, wD225
-Func_037_5EF7::
+MapAndCompactSkillList62F5::
+Func_037_5EF7:: ; address name
     ld b, $21
     push hl
 
@@ -3780,7 +3794,7 @@ Jump_037_5F42::
     ret
 
 ; reads a word at DE: $01FF becomes 999, otherwise word * $C3 / 100 rounded up; stores it at HL and continues with the next word (ScaleStatWordsForDisplay_5F78) (E-0125)
-; 1 call site from 1 routine (e.g. Func_037_5C4E)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 ScaleStatWordsForDisplay_5F4A::
 Func_037_5F4A:: ; address name
     push hl
@@ -3869,7 +3883,7 @@ Jump_037_5FA7::
     ret
 
 ; copies $1A bytes (CopyBBytesHLToDE_Bank37), then appends wD034 as the 27th byte (E-0115)
-; 1 call site from 1 routine (e.g. Func_037_5C4E)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 ; reads: wD034
 Copy26BytesThenWD034::
 Func_037_5FAD:: ; address name
@@ -3881,7 +3895,7 @@ Func_037_5FAD:: ; address name
     ret
 
 ; far-calls Func_081_4001, preserving all registers (E-0122)
-; 1 call site from 1 routine (e.g. Func_037_5C4E)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
 CallFunc4001InBank81KeepRegs::
 Func_037_5FB8:: ; address name
     push af

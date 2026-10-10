@@ -767,7 +767,7 @@ Func_0F0_4CA0_Table2_Case07::
 Jump_0F0_4E11:: ; address name
     ld a, $02
     ld [wD7F2], a
-    call Func_0F0_6709
+    call HandleTwoChoiceCursorInput_F0
     ld a, [wMenuInputResult]
     cp a, $FF
     jr z, Jump_0F0_4E25
@@ -939,7 +939,7 @@ Func_0F0_4CA0_Table3_Case03::
 Jump_0F0_4F22:: ; address name
     xor a, a
     ld [wD7F2], a
-    call Func_0F0_6709
+    call HandleTwoChoiceCursorInput_F0
     ld a, [wMenuInputResult]
     cp a, $FF
     jr z, Jump_0F0_4F35
@@ -1251,7 +1251,7 @@ Jump_0F0_50D7:: ; address name
     ld [wD7F1], a
     ld a, $0D
     ld [wD7F2], a
-    call Func_0F0_63EE
+    call CopyScreenBufferRectWithAttrs_F0
     ld de, Data_01F_4A60
     ld hl, vTiles1 + $6A0
     ld b, $1F
@@ -1328,7 +1328,7 @@ Func_0F0_4CA0_Table4_Case05::
 Jump_0F0_5176:: ; address name
     ld a, $02
     ld [wD7F2], a
-    call Func_0F0_6709
+    call HandleTwoChoiceCursorInput_F0
     ld a, [wMenuInputResult]
     cp a, $FF
     jr z, Jump_0F0_518A
@@ -3038,7 +3038,7 @@ Func_0F0_5B50:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunWD781Step_F0_5B50_Case00::
 Jump_0F0_5B68:: ; address name
-    farcall Func_01D_6C9F
+    farcall LoadTileList6DC4SixPerFrame
     ret
 
 ; entry 1 of the `rst $00` table in RunWD781Step_F0_5B50
@@ -3115,7 +3115,7 @@ Jump_0F0_5C57:: ; address name
     ld hl, wC36B
     ld bc, $0D09
     call CopyRectTo20ByteRows_BankF0
-    farcall Func_01E_71E1
+    farcall ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_0F0_5C98
@@ -3243,7 +3243,7 @@ Jump_0F0_5D29:: ; address name
     ld [wD7F1], a
     ld a, $0D
     ld [wD7F2], a
-    call Func_0F0_63EE
+    call CopyScreenBufferRectWithAttrs_F0
     ld de, Data_0F0_5D51
     ld hl, wC411
     ld bc, $0701
@@ -3819,7 +3819,7 @@ Jump_0F0_6129:: ; address name
     ld hl, wC36B
     ld bc, $0D09
     call CopyRectTo20ByteRows_BankF0
-    farcall Func_01E_71E1
+    farcall ClampRecordListPageCursor4
     jr Jump_0F0_6160
 
 ; with two or more pages draws the bracket and page-of-pages indicator at wC412; wD781 += 1 (E-0124)
@@ -4311,7 +4311,7 @@ Func_0F0_63BA:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 1 call site from 1 routine (e.g. Func_0F0_63EE)
+; 1 call site from 1 routine (e.g. CopyScreenBufferRectWithAttrs_F0)
 CopyBytesDEToHL_BankF0::
 Func_0F0_63D3:: ; address name
     ld a, [de]
@@ -4324,7 +4324,7 @@ Func_0F0_63D3:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 1 call site from 1 routine (e.g. Func_0F0_63EE)
+; 1 call site from 1 routine (e.g. CopyScreenBufferRectWithAttrs_F0)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_BankF0::
 Func_0F0_63DC:: ; address name
@@ -4344,10 +4344,12 @@ Jump_0F0_63E0::
     ldh [rSVBK], a
     ret
 
+; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 2 call sites from 2 routines (e.g. RunWD781Step_F0_5B50_Case07, Func_0F0_4CA0_Table4_Case00)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
-Func_0F0_63EE::
+CopyScreenBufferRectWithAttrs_F0::
+Func_0F0_63EE:: ; address name
     push bc
     push hl
     push de
@@ -4403,7 +4405,7 @@ Jump_0F0_642F::
 
 Jump_0F0_643E::
     dec c
-    jr nz, Func_0F0_63EE
+    jr nz, CopyScreenBufferRectWithAttrs_F0
     ret
 
 Data_0F0_6442:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4516,10 +4518,12 @@ Func_0F0_66FB:: ; address name
     ld [de], a
     ret
 
+; up/down moves wD7B7 between two entries (sound $69); A selects (wMenuInputResult = $FF), B cancels ($FE); otherwise blinks the cursor (E-0127)
 ; 3 call sites from 3 routines (e.g. Func_0F0_4CA0_Table2_Case07, Func_0F0_4CA0_Table3_Case03, Func_0F0_4CA0_Table4_Case05)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7B7
 ; writes: wMenuInputResult, wD7B7
-Func_0F0_6709::
+HandleTwoChoiceCursorInput_F0::
+Func_0F0_6709:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_0F0_673E
@@ -4582,7 +4586,7 @@ Jump_0F0_675C::
     ret
 
 ; once the joypad repeat timer reaches $14, cycles wD7B8 through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
-; 1 call site from 1 routine (e.g. Func_0F0_6709)
+; 1 call site from 1 routine (e.g. HandleTwoChoiceCursorInput_F0)
 ; reads: wJoypadRepeatTimer, wD7B8, wD7F2, wD7B7
 ; writes: wD7B8
 BlinkCursorWD7B8_BankF0::
@@ -4601,7 +4605,7 @@ Func_0F0_676D:: ; address name
     ld [wD7B8], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. Func_0F0_6709)
+; 1 call site from 1 routine (e.g. HandleTwoChoiceCursorInput_F0)
 ; reads: wD7F2, wD7B7
 DrawCursorTileBB_BankF0::
 Func_0F0_6787:: ; address name
@@ -4609,7 +4613,7 @@ Func_0F0_6787:: ; address name
     jr Jump_0F0_6791
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. Func_0F0_6709)
+; 2 call sites from 1 routine (e.g. HandleTwoChoiceCursorInput_F0)
 ; reads: wD7F2, wD7B7
 DrawBlankTileC3_BankF0::
 Func_0F0_678B:: ; address name
@@ -4617,7 +4621,7 @@ Func_0F0_678B:: ; address name
     jr Jump_0F0_6791
 
 ; B = $BC, then writes B at the scroll position + the offset from Data_0F0_67C0[wD7F2] entry wD7B7 (E-0125)
-; 2 call sites from 1 routine (e.g. Func_0F0_6709)
+; 2 call sites from 1 routine (e.g. HandleTwoChoiceCursorInput_F0)
 ; reads: wD7F2, wD7B7
 DrawArrowTileBCAtWD7F2Entry_F0::
 Func_0F0_678F:: ; address name

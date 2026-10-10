@@ -36,7 +36,7 @@ Jump_0F2_4013::
     call BGMapAddressAtScroll_BankF2
     ld bc, $140D
     ld de, $01CC
-    call GameMode8_Init_Sub01
+    call DrawScreenBufferRectToBGMap_1B_BankF2
     farcall LoadPalette0FromData53C6
     farcall Func_002_5F9B
     ld hl, vTiles1
@@ -520,12 +520,12 @@ Func_0F2_434E:: ; address name
     add_a_to_hl
     ret
 
-; only called from GameMode8_Init (E-0047)
+; the same 84 bytes as DrawScreenBufferRectToBGMap_1B (1B:6277)
 ; 1 call site from 1 routine (e.g. GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
-GameMode8_Init_Sub01::
+DrawScreenBufferRectToBGMap_1B_BankF2::
 Func_0F2_436F:: ; address name
     push de
     push bc
@@ -1546,7 +1546,7 @@ Data_0F2_4E3A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $A3, $1C, $1A, $98, $1A
 
 ; A = byte offset: hFFC6/hFFC7 = the word at wCA2B + A (E-0079)
-; 5 call sites from 3 routines (e.g. Func_0F2_4EDD, RunF24C3DAnd4D72_Sub02, RunF24C3DAnd4D72_Sub01)
+; 5 call sites from 3 routines (e.g. DrawWCA2BSpeciesSprites, RunF24C3DAnd4D72_Sub02, RunF24C3DAnd4D72_Sub01)
 ; writes: hFFC6, hFFC7
 ; points at: wCA2B
 LoadHFFC6WordFromWCA2B::
@@ -1607,11 +1607,13 @@ Jump_0F2_4E68::
     jr nz, Jump_0F2_4E68
     ret
 
+; for the three species words of wCA2B (offsets Data_0F2_4F41 or 4F44 by bit 4 of wCA38) decompresses their graphics to the targets in Data_0F2_4ED4 (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1E, RunWD780StateWhenNotFading_F1_Case0D_Case1E)
 ; reads: wCA38, hFFC6, hFFC7
 ; writes: hFFC6, hFFC7, wD7F1, wD7F2
 ; points at: wCA2B, wD7F3
-Func_0F2_4E76::
+DecompressWCA2BSpeciesGraphics::
+Func_0F2_4E76:: ; address name
     ld c, $00
 
 Jump_0F2_4E78::
@@ -1683,11 +1685,13 @@ Jump_0F2_4ECC::
 Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
+; for the three species words of wCA2B draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
 ; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wCA38, hFFC7, hFFC6
 ; writes: hFFC6, wD7F1, wD7F2
 ; points at: wD7F3
-Func_0F2_4EDD::
+DrawWCA2BSpeciesSprites::
+Func_0F2_4EDD:: ; address name
     ld c, $00
 
 Jump_0F2_4EDF::
@@ -2054,11 +2058,13 @@ Func_0F2_50C6:: ; address name
     pop bc
     jp Jump_0F2_50F8
 
+; loads the family icon of wCA38 & $0F into tile wD7F4; the next entry draws tile $1E and the count wCA2B[wD7F1] at the scroll offset wD7F2/3 (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
 ; reads: wCA38, wD7F4, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2
 ; writes: wD09D, wD09E
 ; points at: wCA2B
-Func_0F2_50E2::
+DrawFamilyIconAndCountForWCA38::
+Func_0F2_50E2:: ; address name
     push bc
     ld a, [wCA38]
     and a, $0F
@@ -2118,7 +2124,7 @@ Jump_0F2_5141::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 8 call sites from 6 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn, Func_0F2_4B05, Func_0F2_50E2, ...)
+; 8 call sites from 6 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn, Func_0F2_4B05, DrawFamilyIconAndCountForWCA38, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_BankF2_514D::
 Func_0F2_514D:: ; address name

@@ -262,7 +262,7 @@ Jump_0A0_4196::
     inc c
     dec b
     jr nz, Jump_0A0_4196
-    call Func_0A0_41F2
+    call AdjustSkillsForBattleStart_A0
     ld de, wD8A7
     ld bc, $0800
 
@@ -315,9 +315,11 @@ Func_0A0_41E3:: ; address name
     pop bc
     ret
 
+; replaces skill $8F by $AA for slots without wD8AF set and marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_Sub03)
 ; points at: wD8AF, wD9C9, wD989
-Func_0A0_41F2::
+AdjustSkillsForBattleStart_A0::
+Func_0A0_41F2:: ; address name
     ld bc, $0800
     ld hl, wD8AF
 
@@ -374,7 +376,7 @@ Jump_0A0_4230::
     ret
 
 ; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
-; 1 call site from 1 routine (e.g. Func_0A0_41F2)
+; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart_A0)
 ; points at: wD989
 ReplaceSkill8FWithAAInSlotC_A0::
 Func_0A0_4240:: ; address name
@@ -406,14 +408,14 @@ Jump_0A0_425B::
     ret
 
 ; [HL] = $AD (E-0116)
-; 1 call site from 1 routine (e.g. Func_0A0_41F2)
+; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart_A0)
 StoreTileADAtHL_BankA0::
 Func_0A0_4262:: ; address name
     ld [hl], $AD
     ret
 
 ; [HL] = $AE (E-0116)
-; 1 call site from 1 routine (e.g. Func_0A0_41F2)
+; 1 call site from 1 routine (e.g. AdjustSkillsForBattleStart_A0)
 StoreTileAEAtHL_BankA0::
 Func_0A0_4265:: ; address name
     ld [hl], $AE
@@ -943,7 +945,7 @@ Jump_0A0_4550::
     ld [wD86B], a
     farcall LoadWD868PointersThenRun44C9
     pop bc
-    farcall Func_019_4298
+    farcall SetSlotAIModeFromINT
     ret
 
 ; only called from RunA04410Or456FBySlotC (E-0047)
@@ -1117,7 +1119,7 @@ Jump_0A0_466B::
     ld [wD86B], a
     farcall LoadWD868PointersThenRun44C9
     pop bc
-    farcall Func_019_4298
+    farcall SetSlotAIModeFromINT
     ret
 
 ; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL = wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the field offset) (E-0067) (the same 23 bytes appear in 2 banks)
@@ -1443,7 +1445,7 @@ Jump_0A0_4860::
 
 Jump_0A0_4863::
     push bc
-    call Func_0A0_4874
+    call PickEncounterMonsterForSlotC
     pop bc
     inc c
     dec b
@@ -1462,10 +1464,12 @@ Func_0A0_486D:: ; address name
     ld d, a
     ret
 
+; picks a monster for slot C from the band row Data_0A0_6D57 (PickRandomBand0To10, wCFE4) by a weighted roll and stores its id in wCFDD[C] (E-0127)
 ; 1 call site from 1 routine (e.g. Func_0A0_46CC)
 ; reads: wCFE4
 ; points at: wC5E7, wCFDD
-Func_0A0_4874::
+PickEncounterMonsterForSlotC::
+Func_0A0_4874:: ; address name
     push bc
     call PickRandomBand0To10
     add a, a
@@ -1528,10 +1532,10 @@ Jump_0A0_48C6::
 Jump_0A0_48CC::
     pop hl
     pop bc
-    jr Func_0A0_4874
+    jr PickEncounterMonsterForSlotC
 
 ; draws a random value and returns its band in the 11-entry threshold table Data_0A0_48F5; band 10 is redrawn while wCFE4 < 6 (E-0124)
-; 1 call site from 1 routine (e.g. Func_0A0_4874)
+; 1 call site from 1 routine (e.g. PickEncounterMonsterForSlotC)
 ; reads: wC5E7, wCFE4
 PickRandomBand0To10::
 Func_0A0_48D0:: ; address name
@@ -3791,7 +3795,7 @@ Jump_0A0_5772:: ; address name
     xor a, a
     ldh [hFFC8], a
     ld hl, wC150
-    call Func_000_2ECF
+    call WriteNumber24AsDecimalString
     ld a, $05
     ld [wStringCategory], a
     ld a, $16
@@ -3869,7 +3873,7 @@ Jump_0A0_57C8:: ; address name
     call WriteUnknownNamePlaceholder
     ld a, $FF
     ld [wCA5E], a
-    call Func_0A0_5939
+    call AppendMappedSkillsToWCA67
     xor a, a
     ld [wCA80], a
     ld a, $01
@@ -4026,9 +4030,11 @@ Func_0A0_591A:: ; address name
     ld [hl], a
     ret
 
+; appends the eight skills at wCA5F (mapped through the pair list Data_0A0_597A) to the first free slot of wCA67, then clears wCA5F (E-0127)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case09_Case01)
 ; points at: wCA67, wCA5F
-Func_0A0_5939::
+AppendMappedSkillsToWCA67::
+Func_0A0_5939:: ; address name
     ld de, wCA67
     ld b, $19
 

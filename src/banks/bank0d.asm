@@ -540,7 +540,7 @@ ScriptCommandEF_Run_Case05_Case0C::
 Jump_00D_47F7:: ; address name
     xor a, a
     ld [wD7F5], a
-    call Func_00D_4D24
+    call HandleTwoChoiceCursorInput_0D
     ld a, [wD7F5]
     and a, a
     ret z
@@ -701,7 +701,7 @@ Func_00D_491A:: ; address name
     ld hl, wC3BB
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank0D
-    farcall Func_01E_71E1
+    farcall ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_00D_494A
@@ -1392,10 +1392,12 @@ Func_00D_4CF4:: ; address name
     add_a_to_hl
     ret
 
+; up/down moves wD7AD between two entries; A sets wD7F5 = $FF (with sound $69 and the arrow tile), B sets $FE; otherwise blinks the cursor and wD7F5 = 0 (E-0127)
 ; 5 call sites from 5 routines (e.g. ScriptCommandEF_Run_Case05_Case0C, ScriptCommandEF_Run_Bank1B_Case04_Case0A, GameMode6_Update_Case04_Case0A, GameMode6_Update_Case05_Case08, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD7AD
 ; writes: wD7F5, wD7AD
-Func_00D_4D24::
+HandleTwoChoiceCursorInput_0D::
+Func_00D_4D24:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_00D_4D44
@@ -1457,7 +1459,7 @@ Jump_00D_4D80::
     ret
 
 ; once the joypad repeat timer reaches $14, cycles wD7AE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
-; 1 call site from 1 routine (e.g. Func_00D_4D24)
+; 1 call site from 1 routine (e.g. HandleTwoChoiceCursorInput_0D)
 ; reads: wJoypadRepeatTimer, wD7AE, wD7AD
 ; writes: wD7AE
 BlinkCursorWD7AE_Bank0D::
@@ -1476,7 +1478,7 @@ Func_00D_4D86:: ; address name
     ld [wD7AE], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. Func_00D_4D24)
+; 1 call site from 1 routine (e.g. HandleTwoChoiceCursorInput_0D)
 ; reads: wD7AD
 DrawCursorTileBB_Bank0D::
 Func_00D_4DA0:: ; address name
@@ -1484,7 +1486,7 @@ Func_00D_4DA0:: ; address name
     jr Jump_00D_4DAA
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. Func_00D_4D24)
+; 2 call sites from 1 routine (e.g. HandleTwoChoiceCursorInput_0D)
 ; reads: wD7AD
 DrawBlankTileC3_Bank0D::
 Func_00D_4DA4:: ; address name
@@ -1492,7 +1494,7 @@ Func_00D_4DA4:: ; address name
     jr Jump_00D_4DAA
 
 ; B = $BC, then writes B at the scroll position + Data_00D_4DC7[wD7AD] (the shared tile-at-entry draw) (E-0124)
-; 1 call site from 1 routine (e.g. Func_00D_4D24)
+; 1 call site from 1 routine (e.g. HandleTwoChoiceCursorInput_0D)
 ; reads: wD7AD
 DrawArrowTileBCAtWD7ADEntry::
 Func_00D_4DA8:: ; address name
@@ -1660,7 +1662,7 @@ Func_00D_4E5A:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 6 call sites from 5 routines (e.g. Func_00D_4ED5, ScriptCommandF3_Run_Case00, ScriptCommandF2_Run_Case00, ScriptCommandEF_Run_Case00, ...)
+; 6 call sites from 5 routines (e.g. CopyScreenBufferRectWithAttrs_0D, ScriptCommandF3_Run_Case00, ScriptCommandF2_Run_Case00, ScriptCommandEF_Run_Case00, ...)
 CopyBytesDEToHL_Bank0D::
 Func_00D_4E7B:: ; address name
     ld a, [de]
@@ -1673,7 +1675,7 @@ Func_00D_4E7B:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 6 call sites from 5 routines (e.g. Func_00D_4ED5, ScriptCommandF3_Run_Case00, ScriptCommandF2_Run_Case00, ScriptCommandEF_Run_Case00, ...)
+; 6 call sites from 5 routines (e.g. CopyScreenBufferRectWithAttrs_0D, ScriptCommandF3_Run_Case00, ScriptCommandF2_Run_Case00, ScriptCommandEF_Run_Case00, ...)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank0D::
 Func_00D_4E84:: ; address name
@@ -1753,10 +1755,12 @@ Func_00D_4EC7:: ; address name
     ld [hl], a
     ret
 
+; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 4 call sites from 4 routines (e.g. ScriptCommandF3_Run_Case04, ScriptCommandF0_Run_Case03_Case00, ScriptCommandF2_Run_Case03_Case10, RunFunc4ED5At0278AndStep_0D)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
-Func_00D_4ED5::
+CopyScreenBufferRectWithAttrs_0D::
+Func_00D_4ED5:: ; address name
     push bc
     push hl
     push de
@@ -1812,7 +1816,7 @@ Jump_00D_4F16::
 
 Jump_00D_4F25::
     dec c
-    jr nz, Func_00D_4ED5
+    jr nz, CopyScreenBufferRectWithAttrs_0D
     ret
 
 ; stores tile $C3 at the addresses of entries 0 to C - 1 of the word table at HL (StoreBAtWordTableEntry_Bank0D) (E-0122)
@@ -2146,7 +2150,7 @@ Jump_00D_522B:: ; address name
     ld [wD7F1], a
     ld a, $06
     ld [wD7F2], a
-    call Func_00D_4ED5
+    call CopyScreenBufferRectWithAttrs_0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -2955,7 +2959,7 @@ Jump_00D_57F5:: ; address name
     call CopyRectTo20ByteRows_Bank0D
     xor a, a
     ld [wD7F5], a
-    call Func_00D_5C87
+    call ClampKeyListPageCursor
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_00D_583D
@@ -3518,7 +3522,7 @@ Jump_00D_5BDF:: ; address name
     ld [wD7F1], a
     ld a, $14
     ld [wD7F2], a
-    call Func_00D_4ED5
+    call CopyScreenBufferRectWithAttrs_0D
     call DrawGoldBoxAndStep
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
@@ -3616,10 +3620,12 @@ Jump_00D_5C83::
     ld a, $FF
     ret
 
+; wD7B0 = the number of 4-entry pages of wD7A9 keys; clamps the page wD7AF and the cursor wD7AB to the last page's size (wD7B1) (E-0127)
 ; 3 call sites from 3 routines (e.g. ScriptCommandF2_Run_Case03_Case02, ScriptCommandF3_Run_Case05_Case02, RunWD780StateWhenNotFading_1B_Case01_Case02)
 ; reads: wD7A9, wD7AF, wD7AB
 ; writes: wD7B0, wD7AF, wD7B1, wD7AB
-Func_00D_5C87::
+ClampKeyListPageCursor::
+Func_00D_5C87:: ; address name
     ld a, [wD7A9]
     ld l, a
     ld h, $00
@@ -3677,7 +3683,7 @@ Jump_00D_5CD8::
     ret
 
 ; writes blank $C3 at the scroll position + the cursor offset for wD7AB from table Data_00D_5D0E, 5D16 or 5D1E (by wD7F5) (E-0125)
-; 1 call site from 1 routine (e.g. Func_00D_5C87)
+; 1 call site from 1 routine (e.g. ClampKeyListPageCursor)
 ; reads: wD7F5, wD7AB
 EraseCursorForWD7F5Layout::
 Func_00D_5CD9:: ; address name
@@ -4770,7 +4776,7 @@ Jump_00D_6590::
     ld [wD7F1], a
     ld a, $06
     ld [wD7F2], a
-    call Func_00D_4ED5
+    call CopyScreenBufferRectWithAttrs_0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
     ld de, $01CC
@@ -4905,7 +4911,7 @@ Jump_00D_6681::
     call CopyRectTo20ByteRows_Bank0D
     ld a, $01
     ld [wD7F5], a
-    call Func_00D_5C87
+    call ClampKeyListPageCursor
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_00D_669C
@@ -6502,7 +6508,7 @@ Func_00D_720E:: ; address name
     ld [wD7F1], a
     ld a, $08
     ld [wD7F2], a
-    call Func_00D_4ED5
+    call CopyScreenBufferRectWithAttrs_0D
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -7133,7 +7139,7 @@ Jump_00D_76AF:: ; address name
     ld a, [hl]
     ld b, a
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a

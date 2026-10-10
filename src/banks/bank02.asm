@@ -1129,8 +1129,8 @@ Func_002_4628::
     xor a, a
     ldh [rIF], a
     ei
-    call Func_002_5E85
-    call Func_002_5E85
+    call MoveIncapacitatedPartyMembersBack
+    call MoveIncapacitatedPartyMembersBack
     farcall Func_060_639D
     farcall Func_060_62F9
     call WritePlayerNameWithFlag0SuffixToWC130
@@ -1168,7 +1168,7 @@ Jump_002_46BC::
     call DrawFullScreenBufferToBGMap
     xor a, a
     ld [wCBCF], a
-    farcall Func_012_6A6A
+    farcall PlaceSpecialMapObjectsOnEntry
     xor a, a
     ld [wC8CB], a
     ld [wC8CC], a
@@ -4498,7 +4498,7 @@ Jump_002_5C4E::
 Jump_002_5C54::
     xor a, a
     ld [wCBCF], a
-    farcall Func_012_6A6A
+    farcall PlaceSpecialMapObjectsOnEntry
     ret
 
 ; entry 1 of the `rst $00` table in RunWC468ActionIfBit7
@@ -4845,12 +4845,14 @@ Jump_002_5E6C::
 ; writes: rRAMG, wC6FE, wC6FF, wC700
 RunFunc5E85Twice::
 Func_002_5E82:: ; address name
-    call Func_002_5E85
+    call MoveIncapacitatedPartyMembersBack
 
+; reorders the party list so a member with bit 7 of field $55 set moves behind one without it (second/third and first/second pairs) (E-0127)
 ; 19 call sites from 10 routines (e.g. Func_002_4628, RunFunc5E85Twice, ScriptCommand58_Run_Case22, ScriptCommand9B_Run_Case05, ...)
 ; reads: wC6FD, wC6FE, hFFC6, wC6FF, wC700
 ; writes: rRAMG, wC6FE, wC6FF, wC700
-Func_002_5E85::
+MoveIncapacitatedPartyMembersBack::
+Func_002_5E85:: ; address name
     ld a, [wC6FD]
     dec a
     ret z
@@ -5707,11 +5709,11 @@ Jump_002_6549::
     ld de, Data_002_6606
     ld hl, wC300
     ld bc, $0C05
-    call Func_002_65C3
+    call CopyRectToScreenBufferAndClearAttributes_65C3
     ld de, Data_002_6642
     ld hl, wC30C
     ld bc, $0803
-    call Func_002_65C3
+    call CopyRectToScreenBufferAndClearAttributes_65C3
     ldh a, [hScrollY]
     and a, $F8
     ld e, a
@@ -5771,10 +5773,12 @@ Jump_002_65AD::
     ld [wC46B], a
     ret
 
+; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows in WRAM bank 2 (E-0127)
 ; 2 call sites from 1 routine (e.g. Func_002_64E5)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_002_65C3::
+CopyRectToScreenBufferAndClearAttributes_65C3::
+Func_002_65C3:: ; address name
     push hl
     push bc
 
@@ -6024,25 +6028,25 @@ Jump_002_6753::
     ld de, Data_002_68E6
     ld hl, wC364
     ld bc, $0706
-    call Func_002_68A3
+    call CopyRectToScreenBufferAndClearAttributes_68A3
     jr Jump_002_677B
 
 Jump_002_6761::
     ld de, Data_002_6910
     ld hl, wC364
     ld bc, $0D06
-    call Func_002_68A3
+    call CopyRectToScreenBufferAndClearAttributes_68A3
     jr Jump_002_677B
 
 Jump_002_676F::
     ld de, Data_002_695E
     ld hl, wC364
     ld bc, $1306
-    call Func_002_68A3
+    call CopyRectToScreenBufferAndClearAttributes_68A3
 
 Jump_002_677B::
     call Func_002_6788
-    call Func_002_6841
+    call DrawBottomWindowWC364AtScroll
     farcall LoadTilesForPartyRecords
     ret
 
@@ -6170,11 +6174,13 @@ Jump_002_6829::
 Data_002_6835:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $54, $2B, $3F, $51, $5A, $31, $45, $57, $60, $37, $4B, $5D
 
+; draws the 20 x 6 window wC364 at the scroll position + $180 (and its CGB attributes from wD1CC) (E-0127)
 ; 1 call site from 1 routine (e.g. Func_002_66CC)
 ; reads: hScrollY, hScrollX, wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wC364, wD1CC
-Func_002_6841::
+DrawBottomWindowWC364AtScroll::
+Func_002_6841:: ; address name
     ldh a, [hScrollY]
     and a, $F8
     ld e, a
@@ -6236,10 +6242,12 @@ Jump_002_6869::
     ldh [rVBK], a
     ret
 
+; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows in WRAM bank 2 (E-0127)
 ; 3 call sites from 1 routine (e.g. Func_002_66CC)
 ; reads: wIsCGB
 ; writes: rSVBK
-Func_002_68A3::
+CopyRectToScreenBufferAndClearAttributes_68A3::
+Func_002_68A3:: ; address name
     push hl
     push bc
 
@@ -7848,7 +7856,7 @@ Func_002_7347:: ; address name
 
 Jump_002_7359::
     call RunSaveGameSteps_7347_Sub01
-    call Func_002_741B
+    call BackupRecordsToSRAMBank1
     call SaveWCE9BBlockToSRAMBank1
     jr Jump_002_7377
 
@@ -8007,10 +8015,12 @@ Func_002_73E6:: ; address name
     inc [hl]
     ret
 
+; copies the SRAM bank-0 records from sB356 (and the bank-1 record at sA000) to the backup area at sAD71 in SRAM bank 1 (E-0127)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_Sub01)
 ; writes: rRAMB
 ; points at: sB356, sAD71, sA000
-Func_002_741B::
+BackupRecordsToSRAMBank1::
+Func_002_741B:: ; address name
     ld hl, sB356
     ld de, sAD71
     ld bc, $0309
@@ -8368,11 +8378,13 @@ Data_002_75F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $8A, $FF, $0E, $00, $0C, $C6, $91, $02, $D7, $CB, $6B, $00, $42, $CC, $B5, $00
     db $00, $00, $00, $00
 
+; SRAM bank 1: C = $FF when sBB00 is not $55 or the checksum of the four saved blocks plus $9753 differs from sBF98; otherwise loads them and returns with C unchanged (E-0127)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case05_Case0C)
 ; reads: sBB00, hFFC8, hFFC9, sBF98, sBF99
 ; writes: rRAMG, rRAMB, hFFC8, hFFC9
 ; points at: sBB01, hFF8A, wC60C, wCBD7, wCC42
-Func_002_760B::
+VerifySaveChecksum::
+Func_002_760B:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, $01
@@ -8430,7 +8442,7 @@ Jump_002_766D::
     ret
 
 ; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in hFFC8/hFFC9; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
-; 4 call sites from 1 routine (e.g. Func_002_760B)
+; 4 call sites from 1 routine (e.g. VerifySaveChecksum)
 ; reads: hFFC8, hFFC9
 ; writes: hFFC8, hFFC9
 CopyBytesWithChecksum_Bank02_7674::
@@ -8559,7 +8571,7 @@ Func_002_7718:: ; address name
     jr nz, Jump_002_772A
     inc a
     ld [wC8C3], a
-    call Func_002_741B
+    call BackupRecordsToSRAMBank1
 
 Jump_002_772A::
     call SaveStepCopyBank1RecordWC8C4

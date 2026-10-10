@@ -1541,7 +1541,7 @@ Jump_00E_59C4::
     ld [hl], a
     call RollWCADEFromSpeciesFlag
     call Func_00E_5EE8
-    call Func_00E_5CB2
+    call RollChildResistancesToWCB43
     call BuildWCB0CCandidateList
     ld a, [wCFA8]
     inc a
@@ -1918,11 +1918,13 @@ Func_00E_5C2B:: ; address name
     ld [wD7F7], a
     ret
 
+; for each of the 30 SRAM records stores the 27 two-bit resistance levels of its species at record + $73 (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5
 ; writes: rRAMG2, rRAMB, wD7F2, wSpeciesIdLo, wD7F3, wSpeciesIdHi, wD7F4, rRAMG
 ; points at: sA000
-Func_00E_5C50:: ; heuristic: follows a terminator; C0
+RefreshRecordResistancesFromSpecies:: ; heuristic: follows a terminator; C0
+Func_00E_5C50:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -1978,11 +1980,13 @@ Jump_00E_5CA1::
     ld [rRAMG], a
     ret
 
+; for each of the 27 resistances of species wCADB: levels below 3 may rise by the parent rolls (RollWCB3DForCaseB_5D16 or 5D77); stores the result at wCB43 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_00E_5688)
 ; reads: wD7F5
 ; writes: wD7F2, wSpeciesIdLo, wD7F3, wSpeciesIdHi, wD7F4
 ; points at: wCADB, wCB43
-Func_00E_5CB2::
+RollChildResistancesToWCB43::
+Func_00E_5CB2:: ; address name
     ld hl, wCADB
     ld a, [hl+]
     ld [wD7F2], a
@@ -2042,7 +2046,7 @@ Jump_00E_5D0B::
     ret
 
 ; when wCB3D is set rolls RollWCB3DChanceOrIncWD7F5 with factor 1, 3 or 10 (then 3) for B = 3, 4, 5, or 5 after counting otherwise (E-0125)
-; 1 call site from 1 routine (e.g. Func_00E_5CB2)
+; 1 call site from 1 routine (e.g. RollChildResistancesToWCB43)
 ; reads: wD7F5
 ; writes: wD7F5
 ; points at: wCB3D
@@ -2127,7 +2131,7 @@ Jump_00E_5D6E::
     ret
 
 ; when wCB3D is set: B = 5 rolls a random value against wCB3D (A = $FF on success), other values roll factor 2 (E-0125)
-; 1 call site from 1 routine (e.g. Func_00E_5CB2)
+; 1 call site from 1 routine (e.g. RollChildResistancesToWCB43)
 ; reads: wD7F5
 ; writes: wD7F5
 ; points at: wCB3D
@@ -2178,7 +2182,7 @@ Jump_00E_5DA5::
     ret
 
 ; B = Func_00E_5DCD(wC9F9) + Func_00E_5DCD(wCA9E) when both are valid and the sum is at least B; otherwise B = $FF (E-0124)
-; 2 call sites from 1 routine (e.g. Func_00E_5CB2)
+; 2 call sites from 1 routine (e.g. RollChildResistancesToWCB43)
 ; points at: wC9F9, wCA9E
 SumFunc5DCDOfWC9F9AndWCA9E::
 Func_00E_5DAF:: ; address name
@@ -2247,7 +2251,7 @@ Data_00E_5E02:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $09, $0A, $0B, $15, $16, $17, $18, $19, $1A, $0C, $0D
 
 ; wD7F5 = the byte at wD01A + wD7F4 (E-0114)
-; 3 call sites from 3 routines (e.g. Func_00E_5CB2, Func_00E_5C50, CopyWD01ABytesFromIndexCToDE)
+; 3 call sites from 3 routines (e.g. RollChildResistancesToWCB43, RefreshRecordResistancesFromSpecies, CopyWD01ABytesFromIndexCToDE)
 ; reads: wD7F4
 ; writes: wD7F5
 ; points at: wD01A

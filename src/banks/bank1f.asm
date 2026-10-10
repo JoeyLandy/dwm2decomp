@@ -812,7 +812,7 @@ Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
 ; parameters wD7F1/wD7F2 = source (high, low), wD7F3 = width, wD7F4 = rows, wD7F5/wD7F6 = BG map destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wD7F7 is 0, also zero-fills the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
-; 25 call sites from 18 routines (e.g. Func_01F_73EC, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, Func_01F_7591, ...)
+; 25 call sites from 18 routines (e.g. Func_01F_73EC, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ClearTilesAndDrawRects6C5FAnd6D37, ...)
 ; reads: wD7F6, rSTAT, wIsCGB, wD7F7
 ; writes: rVBK
 ; points at: wD7F1
@@ -1099,8 +1099,10 @@ Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $12, $B4
     INCBIN "dwm2-cobi-us.gbc", $07F1EE, $187
 
+; copies 16 glyph tiles (Data_01F_73BC) from bank $1F to the VRAM addresses in Data_01F_73CC (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, RunWD780StateWhenNotFading_F1_Case0D_Case01)
-Func_01F_7375::
+LoadSixteenGlyphTilesFromTable73BC::
+Func_01F_7375:: ; address name
     ld c, $00
 
 Jump_01F_7377::
@@ -1375,9 +1377,11 @@ Func_01F_753A:: ; address name
     call DrawTileRectFromWD7F1Params
     ret
 
+; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles Data_01F_6C5F (12 x 18) and Data_01F_6D37 (8 x 7) (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case18, RunWD780StateWhenNotFading_F1_Case0D_Case18)
 ; writes: wC52D, wC52E, wC52F, wC530, wD7F5, wD7F6, wD7F1, wD7F2, ...
-Func_01F_7591::
+ClearTilesAndDrawRects6C5FAnd6D37::
+Func_01F_7591:: ; address name
     ld hl, vTiles2 + $200
     ld a, l
     ld [wC52D], a

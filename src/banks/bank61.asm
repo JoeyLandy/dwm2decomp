@@ -837,14 +837,16 @@ Jump_061_44BF::
     ret z
 
 Jump_061_44D7::
-    call Func_061_44DB
+    call DrawDoorTilesForWCC45
     ret
 
+; writes a 2 x 2 tile block ($1A or $1C by the wCDAF entry, then $1E) at wC244, with CGB attribute 5 (E-0127)
 ; 3 call sites from 3 routines (e.g. Func_061_4472_Case06, ScriptCommand86_Run_Case04, ScriptCommand86_Run_Case02)
 ; reads: wCC45, wIsCGB
 ; writes: rSVBK
 ; points at: wCDAF, wC244
-Func_061_44DB::
+DrawDoorTilesForWCC45::
+Func_061_44DB:: ; address name
     ld a, [wCC45]
     swap a
     ld de, wCDAF
@@ -1020,14 +1022,16 @@ Jump_061_454E::
 
 Jump_061_45E1::
     call Func_061_474C
-    call Func_061_45E8
+    call CheckTwoWCDB0EntriesForWCC43
     ret
 
+; for the two wCDB0 entries of wCC45 matching wCC43 runs Func_061_462F with C = $80 or the stored value (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_061_4472_Case05, ScriptCommand81_Run_Case02)
 ; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wCDB0, wCDAD
-Func_061_45E8::
+CheckTwoWCDB0EntriesForWCC43::
+Func_061_45E8:: ; address name
     ld a, [wCC45]
     swap a
     ld hl, wCDB0
@@ -1056,7 +1060,7 @@ Jump_061_460A::
 
 Jump_061_460E::
     push hl
-    call Func_061_462F
+    call CheckTwoWCDB0EntriesForWCC43_Sub01
     pop hl
 
 Jump_061_4613::
@@ -1078,7 +1082,7 @@ Jump_061_4613::
     or a, a
     jr z, Jump_061_462B
     ld c, $80
-    jr Func_061_462F
+    jr CheckTwoWCDB0EntriesForWCC43_Sub01
 
 Jump_061_462B::
     dec hl
@@ -1086,11 +1090,13 @@ Jump_061_462B::
     ld a, [hl]
     ld c, a
 
-; 1 call site from 1 routine (e.g. Func_061_45E8)
+; only called from CheckTwoWCDB0EntriesForWCC43 (E-0047)
+; 1 call site from 1 routine (e.g. CheckTwoWCDB0EntriesForWCC43)
 ; reads: hMapScreenX, hMapScreenY, wCC45, wCC43, wIsCGB
 ; writes: rSVBK
 ; points at: wCDAD
-Func_061_462F::
+CheckTwoWCDB0EntriesForWCC43_Sub01::
+Func_061_462F:: ; address name
     ld a, b
     ld hl, Data_061_4810
     add_a_to_hl
@@ -2135,7 +2141,7 @@ Jump_061_577D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_061_5764_Case02::
 Jump_061_5780:: ; address name
-    call Func_061_585A
+    call WarpByWCD78EntryAtScreenRow1
     ret
 
 ; entry 3 of the `rst $00` table in Func_061_5764
@@ -2156,7 +2162,7 @@ Jump_061_5788:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_061_5764_Case05::
 Jump_061_578C:: ; address name
-    call Func_061_57A4
+    call WarpByWCD89EntryAtScreen14
     ret
 
 ; entry 7 of the `rst $00` table in Func_061_5764
@@ -2181,11 +2187,13 @@ Jump_061_579D::
     farcall WarpToLinkedMapForCurrentMap
     ret
 
+; when wCC43 is 0, the wCD89 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case05)
 ; reads: wCC43, wCC45, hMapScreenX, hMapScreenY, hFF8C
 ; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hFF8C, ...
 ; points at: wCD89
-Func_061_57A4::
+WarpByWCD89EntryAtScreen14::
+Func_061_57A4:: ; address name
     ld a, [wCC43]
     or a, a
     jr z, Jump_061_57AD
@@ -2286,11 +2294,13 @@ Jump_061_5810::
     ld c, $01
     ret
 
+; on screen row 1: warps to the screen in the wCD78 entry of wCC45 and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case02)
 ; reads: hMapScreenY, wCC45, hFF8C
 ; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hFF8C, ...
 ; points at: wCD78
-Func_061_585A::
+WarpByWCD78EntryAtScreenRow1::
+Func_061_585A:: ; address name
     ldh a, [hMapScreenY]
     cp a, $01
     jr z, Jump_061_5863

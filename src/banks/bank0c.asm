@@ -5910,7 +5910,7 @@ Func_00C_75BC:: ; address name
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
-    farcall Func_01C_45B0
+    farcall AddWD7F1ToGoldCapped99999
     ret
 
 Data_00C_75D2:: ; heuristic: pointer load in the same bank (bank assumed); C0

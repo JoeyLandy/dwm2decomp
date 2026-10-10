@@ -1519,7 +1519,7 @@ Jump_0E0_4AF8::
     xor a, a
     ld [wC5FE], a
     call DrawHexByteAtBGMap8A_Sub02
-    call Func_0E0_4F28
+    call DrawSlotStatusBitsDebug
     xor a, a
     ld [wC5FF], a
     call ReadBGTileAtWC5FFCell
@@ -1566,7 +1566,7 @@ Jump_0E0_4B54:: ; address name
     ld [hl], a
 
 Jump_0E0_4B69::
-    call Func_0E0_4F28
+    call DrawSlotStatusBitsDebug
     xor a, a
     ld [wC5FF], a
     call ReadBGTileAtWC5FFCell
@@ -1982,11 +1982,13 @@ Func_0E0_4EFD:: ; address name
     ld [wMenuRowCount], a
     ret
 
+; debug: draws the four-tile strip for wC5FE, then the 9 status bytes of slot wC5FE as rows of 0/1 digit tiles from vBGMap0 + $89 (E-0127)
 ; 2 call sites from 2 routines (e.g. RunWC5FDState_E0_Case0B, DrawHexByteAtBGMap8A)
 ; reads: wC5FE, wD868, wD869
 ; writes: wD868, wD869
 ; points at: wBattleStatus
-Func_0E0_4F28::
+DrawSlotStatusBitsDebug::
+Func_0E0_4F28:: ; address name
     ld a, [wC5FE]
     call DrawFourTileStripForA
     ld hl, vBGMap0 + $89
@@ -2045,7 +2047,7 @@ Jump_0E0_4F47::
     ret
 
 ; copies a 4 x 1 tile strip from bank $E0 (address from the word table at $4F9E + 2 * A) to vBGMap0 + $27 (CopyRectFromBankToVRAM) (E-0118)
-; 1 call site from 1 routine (e.g. Func_0E0_4F28)
+; 1 call site from 1 routine (e.g. DrawSlotStatusBitsDebug)
 DrawFourTileStripForA::
 Func_0E0_4F86:: ; address name
     add a, a
@@ -3327,7 +3329,7 @@ Jump_0E0_5CD1:: ; address name
     call DrawSpriteSlots
     ld a, $02
     ld de, $6030
-    call Func_0E0_74D8
+    call StepSpriteSlotTowardDE
     ret nz
     call StepWD0A2Mod15
     ret nz
@@ -6995,11 +6997,13 @@ Func_0E0_74C5:: ; address name
     ld [hl], c
     ret
 
+; moves sprite slot A's position bytes toward D and E by the steps $7535/$7542 indexed by wD0A7; NZ while still moving (E-0127)
 ; 1 call site from 1 routine (e.g. Func_0E0_5AD3_Case00_Case06)
 ; reads: wD0A7
 ; writes: wD0A7
 ; points at: wSpriteSlots
-Func_0E0_74D8::
+StepSpriteSlotTowardDE::
+Func_0E0_74D8:: ; address name
     ld c, $00
     swap a
     srl a

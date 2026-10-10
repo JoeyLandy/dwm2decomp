@@ -411,10 +411,12 @@ Jump_016_4249:: ; address name
     ld [wItemId], a
     ret
 
+; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to wC160 and wD08E = $32 + their count; otherwise wItemId = $FF (E-0127)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0B)
 ; reads: wC6FD
 ; writes: wItemId, wD08E
-Func_016_425E::
+ListPartyMembersWithField55Bit0::
+Func_016_425E:: ; address name
     ld a, [wC6FD]
     and a, a
     jr z, Jump_016_42A6
@@ -472,7 +474,7 @@ Jump_016_42AC::
     ret
 
 ; if record A (< wC6FD) has field $55 bit 7 clear and bit 0 set, copies its name and marks (field 1) to wC160 + 16 * D and increments D (E-0121)
-; 3 call sites from 1 routine (e.g. Func_016_425E)
+; 3 call sites from 1 routine (e.g. ListPartyMembersWithField55Bit0)
 ; reads: wD083
 ; writes: wD083
 ; points at: wC6FD, wC160
@@ -1176,7 +1178,7 @@ Func_016_4633:: ; address name
     ld a, [wD083]
 
 ; A = record (SRAMRecordAddressMapped, offset $55; SRAM must be enabled): returns Z set when bit 7 of that byte is clear; when it is set, wItemId = $FF, A = $FF and Z is clear. What the bit means is not known (E-0066)
-; 3 call sites from 1 routine (e.g. Func_016_425E)
+; 3 call sites from 1 routine (e.g. ListPartyMembersWithField55Bit0)
 ; writes: wItemId
 CheckRecordFlag55Bit7::
 Func_016_4636:: ; address name
@@ -2836,7 +2838,7 @@ Jump_016_532C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_016_52C9_Case0B::
 Jump_016_5333:: ; address name
-    call Func_016_425E
+    call ListPartyMembersWithField55Bit0
     call SetWD08D12IfItemRefused
     ret
 
@@ -3475,7 +3477,7 @@ Jump_016_568E:: ; address name
 ; writes: wD08D, wItemId
 Func_016_53E6_Case13::
 Jump_016_569E:: ; address name
-    farcall Func_0A1_44C9
+    farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1C
     ld [wD08D], a
     ld a, $FF
@@ -3537,7 +3539,7 @@ Func_016_56E4::
     ret
 
 Jump_016_56F2::
-    call Func_016_5766
+    call AddressOfWCD10EntryForCurrentScreen
     ld de, wD09F
     ld b, $08
 
@@ -3631,10 +3633,12 @@ Jump_016_5759::
     ld [wD09E], a
     ret
 
+; HL = wCD10 + 2 * an index from the current map screen and the wCD70 table (index $20 when bit 3 of hFF8C is set) (E-0127)
 ; 1 call site from 1 routine (e.g. Func_016_56E4)
 ; reads: hFF8C, wCC44, hMapScreenY, hMapScreenX, wCC45
 ; points at: wCD70, wCD10, wCD88
-Func_016_5766::
+AddressOfWCD10EntryForCurrentScreen::
+Func_016_5766:: ; address name
     ldh a, [hFF8C]
     bit 3, a
     jr nz, Jump_016_57C4
@@ -5008,7 +5012,7 @@ Jump_016_6017:: ; address name
     ld [wD7AB], a
     ld a, [wC470]
     ld [wD7AF], a
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     farcall SaveAndHideSpriteState_Bank1E
     ld a, $0C
     ld [wD780], a
@@ -5259,7 +5263,7 @@ Jump_016_61D2:: ; address name
     ld [wStringIndex], a
     call ShowStringCategory5Immediate_Bank16
     call CountRecordsByField6E
-    call Func_016_65B1
+    call ListRecordsWithField6EToWD789
     ld a, [wC0A1]
     ld [wD7A9], a
     dec a
@@ -5471,7 +5475,7 @@ Jump_016_637E:: ; address name
     ld [wD7AB], a
     ld a, [wC471]
     ld [wD7AF], a
-    farcall Func_01E_71E1
+    farcall ClampRecordListPageCursor4
     farcall SaveAndHideSpriteState_Bank1E
     ld a, $0D
     ld [wD780], a
@@ -5530,7 +5534,7 @@ Jump_016_63B9:: ; address name
     ld [wC323], a
 
 Jump_016_640E::
-    call Func_016_65B1
+    call ListRecordsWithField6EToWD789
     call DrawFourListEntriesForPageWCFD1
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -5787,11 +5791,13 @@ Jump_016_658A::
 Jump_016_65B0::
     ret
 
+; fills wD789 ($1E bytes) with $FF, then lists the indexes of the first Data_016_75EB[wC7C7] SRAM records that have field $6E set (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case16)
 ; reads: wC7C7
 ; writes: rRAMG, rRAMB
 ; points at: wD789, sA000
-Func_016_65B1::
+ListRecordsWithField6EToWD789::
+Func_016_65B1:: ; address name
     ld hl, wD789
     ld bc, $001E
     ld a, $FF
@@ -6039,7 +6045,7 @@ Func_016_6705::
     add_a_to_hl
     ld b, $05
     ld de, vTiles2 + $3B0
-    call Func_016_67E0
+    call ShowRecordNamesListFromHL
     pop hl
     ld a, l
     ld [wC52F], a
@@ -6122,7 +6128,7 @@ Func_016_67A5:: ; address name
     ld hl, wD868
     ld b, $04
     ld de, vTiles2 + $3B0
-    call Func_016_67E0
+    call ShowRecordNamesListFromHL
     pop hl
     ld a, l
     ld [wC52F], a
@@ -6135,10 +6141,12 @@ Func_016_67A5:: ; address name
     ld [wC52E], a
     ret
 
+; for B record indexes at HL shows each record name (or an empty one for $FF) as string 5 of category 8 at successive window rows from DE (E-0127)
 ; 2 call sites from 2 routines (e.g. DrawWD868ValuesAtTiles23B0, Func_016_6705)
 ; writes: rRAMG, rRAMB, wStringCategory, wStringIndex, wC52D, wC52E
 ; points at: wC130
-Func_016_67E0::
+ShowRecordNamesListFromHL::
+Func_016_67E0:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -7333,7 +7341,7 @@ Jump_016_6F01::
     ld [wD7AB], a
     ld a, $00
     ld [wD7AF], a
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     farcall SaveAndHideSpriteState_Bank1E
     ld a, $0E
     ld [wD780], a
@@ -7467,7 +7475,7 @@ Jump_016_7008:: ; address name
     ld hl, wD868
     add_a_to_hl
     ld a, [hl]
-    call Func_016_7082
+    call RestoreRecordAFully
     ld [hl], $FF
     ld hl, wD868
     ld de, wC6FE
@@ -7529,9 +7537,11 @@ Func_016_7078:: ; address name
     call DrawWD868ValuesAtTiles23B0
     ret
 
+; for record A: field 0 = 1, field $55 = 0, HP (field $5B) = max HP ($5D), MP ($5F) = max MP ($61) (E-0127)
 ; 1 call site from 1 routine (e.g. Func_016_6C16_Case12)
 ; writes: rRAMG, rRAMB
-Func_016_7082::
+RestoreRecordAFully::
+Func_016_7082:: ; address name
     push hl
     ld c, $00
     call SRAMRecordAddress
@@ -8134,9 +8144,11 @@ Jump_016_752B::
     add_a_to_hl
     ret
 
+; copies a tile to vTiles1 + $6D0, shows strings 6, 7 and 8 of category 2 (bank 09) at vTiles1 + $6D0, $750 and $7D0, then restores the default window (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wC52F, wC530, wC52D, wC52E, wStringCategory, wStringIndex
-Func_016_756F:: ; heuristic: follows a terminator; C0
+ShowStrings6To8Bank09InRows:: ; heuristic: follows a terminator; C0
+Func_016_756F:: ; address name
     ld de, vTiles1 + $2F0
     ld hl, vTiles1 + $6D0
     ld b, $10
@@ -8236,7 +8248,7 @@ Jump_016_760B::
     ld [wD09E], a
     ld a, d
     ld [wD09F], a
-    call Func_016_76BD
+    call BuildRecordSummaryForWD09D
     pop af
     cp a, $01
     jr z, Jump_016_767E
@@ -8248,7 +8260,7 @@ Jump_016_760B::
     ld [wD09E], a
     ld a, d
     ld [wD09F], a
-    call Func_016_76BD
+    call BuildRecordSummaryForWD09D
     pop af
     cp a, $02
     jr z, Jump_016_767E
@@ -8259,7 +8271,7 @@ Jump_016_760B::
     ld [wD09E], a
     ld a, d
     ld [wD09F], a
-    call Func_016_76BD
+    call BuildRecordSummaryForWD09D
 
 Jump_016_767E::
     ld a, [sBD3A]
@@ -8300,10 +8312,12 @@ Func_016_76B6:: ; address name
     jr nz, CopyBytesDEFromHL_Bank16
     ret
 
+; for SRAM bank-1 record wD09D writes its family nibble, a packed field from bytes $21/$27 (Func_016_7720) and field $62 & $7F to the buffer at wD09E (E-0127)
 ; 3 call sites from 1 routine (e.g. Func_016_75EE)
 ; reads: wD09D, wD09E, wD09F, wD0A0, wD0A1
 ; writes: wD0A0, wD0A1
-Func_016_76BD::
+BuildRecordSummaryForWD09D::
+Func_016_76BD:: ; address name
     ld a, [wD09D]
     ld c, $6F
     call Multiply8
@@ -8345,7 +8359,7 @@ Func_016_76BD::
     ld a, [wD0A1]
     adc a, $00
     ld h, a
-    call Func_016_7720
+    call BuildRecordSummaryForWD09D_Sub01
     ld a, [wD0A0]
     add a, $62
     ld l, a
@@ -8363,8 +8377,10 @@ Func_016_76BD::
     ld [de], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_016_76BD)
-Func_016_7720::
+; only called from BuildRecordSummaryForWD09D (E-0047)
+; 1 call site from 1 routine (e.g. BuildRecordSummaryForWD09D)
+BuildRecordSummaryForWD09D_Sub01::
+Func_016_7720:: ; address name
     push de
     ld a, $F0
     ld [de], a
@@ -8450,11 +8466,13 @@ Jump_016_776C::
 Jump_016_777A::
     ret
 
+; far-calls DecompressGraphicsA4ToTiles0 and continues at Jump_016_77A6 (E-0127)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_Sub01, RunWD06BSubState_60E9_Case02_Case00_Case00)
 ; reads: wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
 ; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
 ; points at: wC1D9, wC219, wC25C, wC29C, wD0D6, wC1E5, wC225, wC1E9, ...
-Func_016_777B::
+DecompressA4GraphicsAndContinue::
+Func_016_777B:: ; address name
     farcall DecompressGraphicsA4ToTiles0
     jr Jump_016_77A6
 
@@ -8613,7 +8631,7 @@ Jump_016_788B::
     ld hl, wD0FE
     call Func_016_78F9
     call BlankTwoTileCellByGameMode
-    call Func_016_79B5
+    call ShowKeyNameOrStringForWD10B
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -8801,11 +8819,13 @@ Jump_016_79A6::
     ld [wC288], a
     ret
 
+; window at vTiles2 + $3B0 (or + $5B0 in game mode 5): shows string wD10C + $0A, or builds a two-word key name from wD10E/wD10F (E-0127)
 ; 1 call site from 1 routine (e.g. Func_016_7783)
 ; reads: wGameMode, wD10B, wD10C, wD110, wD10E, wD10F, wD10D
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
 ; points at: wC130
-Func_016_79B5::
+ShowKeyNameOrStringForWD10B::
+Func_016_79B5:: ; address name
     ld hl, vTiles2 + $3B0
     ld a, [wGameMode]
     cp a, $05
@@ -8856,7 +8876,7 @@ Jump_016_79EF::
     ret
 
 ; calls CopyKeyNameWordToDE (bank $00) (E-0114)
-; 2 call sites from 1 routine (e.g. Func_016_79B5)
+; 2 call sites from 1 routine (e.g. ShowKeyNameOrStringForWD10B)
 CopyKeyNameWordToDE_Bank16::
 Func_016_7A1E:: ; address name
     call CopyKeyNameWordToDE

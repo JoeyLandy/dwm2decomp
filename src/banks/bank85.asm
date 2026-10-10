@@ -168,8 +168,8 @@ Jump_085_40C3:: ; address name
     add_a_to_hl
     ld a, [wD7F5]
     ld [hl], a
-    farcall Func_002_5E85
-    farcall Func_002_5E85
+    farcall MoveIncapacitatedPartyMembersBack
+    farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
@@ -440,8 +440,8 @@ Jump_085_429B:: ; address name
     add_a_to_hl
     ld a, [wD7F5]
     ld [hl], a
-    farcall Func_002_5E85
-    farcall Func_002_5E85
+    farcall MoveIncapacitatedPartyMembersBack
+    farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
@@ -3248,7 +3248,7 @@ Jump_085_53A2:: ; address name
 Jump_085_53B0::
     xor a, a
     ldh [hFFC6], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -3378,7 +3378,7 @@ Jump_085_5455::
     ldh [hFFC7], a
     ld a, $00
     ldh [hFFC6], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z

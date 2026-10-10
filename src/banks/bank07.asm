@@ -1455,10 +1455,12 @@ Jump_007_4F96:: ; address name
     farcall GameMode5_Update_Case07_Sub01
     ret
 
+; blinks the cursor of the list entry [HL] every 8 frames; up/down moves it (wrapping over wC46F entries) with sound $69 (E-0127)
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_Case01_Case01, RunWD06AState_6C12_Case01, RunWD06BSubState_60E9_Case01, RunWD06AState_6C12_Case03_Case17, ...)
 ; reads: wFrameCounterLo, wC46F, wJoypadPressedRepeat
 ; writes: wFrameCounterLo
-Func_007_4F9D::
+MoveVerticalCursorInListHL::
+Func_007_4F9D:: ; address name
     ld a, [wFrameCounterLo]
     and a, $07
     jr nz, Jump_007_4FB3
@@ -1575,7 +1577,7 @@ Jump_007_5036::
     ret
 
 ; C = [HL]; writes the cursor tile $BB at the VRAM address in entry C of the word table at DE, waiting for VRAM access (E-0124)
-; 6 call sites from 3 routines (e.g. Func_007_4F9D, RunWD06AState_6C12_Shared01, RunWD06AState_6C12_Case03_Case1A_Sub02)
+; 6 call sites from 3 routines (e.g. MoveVerticalCursorInListHL, RunWD06AState_6C12_Shared01, RunWD06AState_6C12_Case03_Case1A_Sub02)
 ; reads: rSTAT
 WriteBBTileAtWordTableEntryC_Bank07::
 Func_007_5046:: ; address name
@@ -1607,14 +1609,14 @@ Jump_007_505C::
     ret
 
 ; C = [HL], then falls into WriteC3TileAtWordTableEntryC_Bank07 (E-0126)
-; 5 call sites from 5 routines (e.g. GameMode5_Update_Case01_Case08, Func_007_4F9D, RunWD06BSubState_60E9_Case01, RunWD06AState_6C12_Shared01, ...)
+; 5 call sites from 5 routines (e.g. GameMode5_Update_Case01_Case08, MoveVerticalCursorInListHL, RunWD06BSubState_60E9_Case01, RunWD06AState_6C12_Shared01, ...)
 ; reads: rSTAT
 EraseCursorAtEntryHL_Bank07::
 Func_007_5066:: ; address name
     ld c, [hl]
 
 ; writes the blank tile $C3 at the VRAM address in entry C of the word table at DE, waiting for VRAM access (E-0124)
-; 3 call sites from 3 routines (e.g. Func_007_4F9D, RunWD06AState_6C12_Shared01, RunWD06AState_6C12_Case03_Case1A_Sub02)
+; 3 call sites from 3 routines (e.g. MoveVerticalCursorInListHL, RunWD06AState_6C12_Shared01, RunWD06AState_6C12_Case03_Case1A_Sub02)
 ; reads: rSTAT
 WriteC3TileAtWordTableEntryC_Bank07::
 Func_007_5067:: ; address name
@@ -3277,7 +3279,7 @@ Jump_007_61F8::
     call nz, EraseCursorAtEntryHL_Bank07
     ld a, [wC471]
     ld [hl], a
-    call Func_007_4F9D
+    call MoveVerticalCursorInListHL
     ld a, [wC46B]
     ld [wC471], a
 
@@ -3377,7 +3379,7 @@ Jump_007_6262:: ; address name
     ld [wC530], a
     ld hl, $5367
     call CopyRecordRectToScreenBuffer_Bank07
-    farcall Func_016_777B
+    farcall DecompressA4GraphicsAndContinue
     ld a, $BC
     ld [wC1B9], a
     call DrawScreenBufferToBGMap0_Bank07
@@ -3861,7 +3863,7 @@ Jump_007_65C5:: ; address name
     ld hl, wD09D
     ld [hl], $00
     ld de, $5086
-    call Func_007_4F9D
+    call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -4729,7 +4731,7 @@ Jump_007_6B7D::
     ret
 
 Jump_007_6B8E::
-    farcall Func_01D_5C35
+    farcall DrawWD789Cell5SpeciesSprite
     ret
 
 Jump_007_6B95::
@@ -4749,7 +4751,7 @@ Jump_007_6BA8::
     ret
 
 Jump_007_6BAF::
-    farcall Func_0F2_4EDD
+    farcall DrawWCA2BSpeciesSprites
     ret
     db $C9
 
@@ -4798,7 +4800,7 @@ Jump_007_6BD9::
     ret
 
 Jump_007_6BEA::
-    farcall Func_01D_5C35
+    farcall DrawWD789Cell5SpeciesSprite
     ret
 
 Jump_007_6BF1::
@@ -4818,7 +4820,7 @@ Jump_007_6C04::
     ret
 
 Jump_007_6C0B::
-    farcall Func_0F2_4EDD
+    farcall DrawWCA2BSpeciesSprites
     ret
 
 ; runs the routine for wD06A (jump table of nine states) (E-0122)
@@ -5026,7 +5028,7 @@ Jump_007_6D2A::
 Jump_007_6D32::
     ld de, $5096
     ld hl, wC46B
-    call Func_007_4F9D
+    call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_007_6D90
@@ -5518,7 +5520,7 @@ RunWD06AState_6C12_Case03_Case01::
 Jump_007_7010:: ; address name
     ld hl, wC46C
     ld de, $509E
-    call Func_007_4F9D
+    call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_7021
@@ -5939,7 +5941,7 @@ RunWD06AState_6C12_Case03_Case0D::
 Jump_007_7284:: ; address name
     ld hl, wC46E
     ld de, $50C2
-    call Func_007_4F9D
+    call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_007_72AE
@@ -6278,7 +6280,7 @@ RunWD06AState_6C12_Case03_Case17::
 Jump_007_7498:: ; address name
     ld hl, wC46E
     ld de, $50FA
-    call Func_007_4F9D
+    call MoveVerticalCursorInListHL
     ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_007_7514
@@ -7835,7 +7837,7 @@ Jump_007_7DAB::
     ret
 
 Jump_007_7DBC::
-    farcall Func_01D_5C35
+    farcall DrawWD789Cell5SpeciesSprite
     ret
 
 Jump_007_7DC3::
@@ -7855,7 +7857,7 @@ Jump_007_7DD6::
     ret
 
 Jump_007_7DDD::
-    farcall Func_0F2_4EDD
+    farcall DrawWCA2BSpeciesSprites
     ret
     db $C9
 

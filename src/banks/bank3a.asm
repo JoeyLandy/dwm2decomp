@@ -2814,7 +2814,7 @@ Func_03A_6157:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    call Func_03A_66A9
+    call RedrawChangedSlotPanels
     ld a, [wD802]
     cp a, $FF
     jr z, Jump_03A_6172
@@ -2831,7 +2831,7 @@ Jump_03A_6172::
     dw RunBattleActions_Case01
     dw RunBattleActions_Case02
     dw RunBattleActions_Case03
-    dw Func_03A_61F8
+    dw RunActionSpecificPostStep
     dw RunBattleActions_Case05
     dw RunBattleActions_Case06
     dw RunBattleActions_Case07
@@ -2918,11 +2918,13 @@ Jump_03A_61F4::
     call Func_03A_6846
     ret
 
+; after an action: actions $4E/$4F with wDABA clear the actor's wD812 bit 0 (text $81); $B9 clears it (text $86); $D6 stores the actor in wC982; $15 and $D6 jump to resolve step $0E; otherwise wBattleSubPhase += 1 (E-0127)
 ; 1 call site from 1 routine (e.g. RunBattleStep4_Case04)
 ; reads: wBattleActionId, wBattleActor, wDABA
 ; writes: wC982, wC983, wBattleSubPhase, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleSubPhase, wCFCF, wD812
-Func_03A_61F8::
+RunActionSpecificPostStep::
+Func_03A_61F8:: ; address name
     ld a, [wBattleActionId]
     cp a, $4E
     jr z, Jump_03A_6211
@@ -3538,7 +3540,7 @@ RunBattleActions_Case09_Case03::
 Jump_03A_6584:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    farcall Func_032_5AB3
+    farcall BlankTargetMonsterPicture
     ld d, $90
     farcall ShowBattleText
     call CheckActionBDOrRun63B2And63D2
@@ -3726,10 +3728,12 @@ Jump_03A_6698:: ; address name
     ld [wBattleResolveStep], a
     ret
 
+; for each shown slot redraws the HP, MP and status parts flagged in bits 0-2 of wD095[slot] and clears the flags (E-0127)
 ; 2 call sites from 2 routines (e.g. RunBattleActions, RunBattleStep4)
 ; reads: wC58A, wC57F, wD88F
 ; points at: wD095
-Func_03A_66A9::
+RedrawChangedSlotPanels::
+Func_03A_66A9:: ; address name
     ld a, [wC58A]
     cp a, $01
     jr nz, Jump_03A_66B7
@@ -4086,7 +4090,7 @@ Func_03A_68C9:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
-    call Func_03A_66A9
+    call RedrawChangedSlotPanels
     ld a, [wD802]
     cp a, $FF
     jr z, Jump_03A_68E4
@@ -4175,7 +4179,7 @@ Jump_03A_6940::
 ; no direct call (reached through a table, a jump or a vector)
 RunBattleStep4_Case04::
 Jump_03A_6944:: ; address name
-    call Func_03A_61F8
+    call RunActionSpecificPostStep
     ret
 
 ; entry 5 of the `rst $00` table in RunBattleStep4
@@ -4963,7 +4967,7 @@ Data_03A_6EA5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $97, $FF, $FF, $FF, $0D, $A9, $28, $D6
 
 ; D = message index. The same as ShowBattleText, but it stores 0 in wStringCategory: the entry at Data_03A_6F06 + 2 * D is called first when non-zero, then BeginStringDisplay_Bank2F shows category 0 (E-0056)
-; 22 call sites from 14 routines (e.g. RunBattleResolveStep_43C4_Case01, Func_032_4ADC_Case00_Case01, Func_032_4ADC_Case00_Case03, Func_032_4C3E, ...)
+; 22 call sites from 14 routines (e.g. RunBattleResolveStep_43C4_Case01, Func_032_4ADC_Case00_Case01, Func_032_4ADC_Case00_Case03, ShowActorStatusRecoveryMessage, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleTextCategory0::
 Func_03A_6EE5:: ; address name
@@ -6013,7 +6017,7 @@ Jump_03A_7ADD::
     ld [hl], a
     ret
 
-; 6 call sites from 5 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, Func_03B_4711, Func_03B_4C95, ...)
+; 6 call sites from 5 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, Func_03B_4711, ApplyTargetWD93FReduction, ...)
 ; reads: wC58A, wC57F
 ; points at: wC0A0, wBattleMonsterId, wC0A8
 Func_03A_7AE3::

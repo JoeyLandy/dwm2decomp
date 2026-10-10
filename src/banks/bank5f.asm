@@ -577,11 +577,13 @@ Func_05F_6BCD:: ; address name
 Data_05F_6BE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
+; for $78 frames blinks object hFFC6 by alternating byte wCB8B[16 * obj] between hFFC7 and $E0 (hidden) at a slowing rate; hFFC6 = 1 when done (E-0127)
 ; 20 call sites from 19 routines (e.g. ScriptCommand5E_Run_Case00, ScriptCommand4E_Run_Case04, ScriptCommand4A_Run_Case08, ScriptCommand66_Run_Case08, ...)
 ; reads: wScriptParam0, hFFC6, hFFC7
 ; writes: wScriptParam0, hFFC6
 ; points at: wCB8B
-Func_05F_6BF8::
+ScriptStepBlinkObjectHFFC6::
+Func_05F_6BF8:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
     jr nc, Jump_05F_6C05
@@ -2301,8 +2303,8 @@ Jump_05F_7631:: ; address name
     ret
 
 Jump_05F_7646::
-    farcall Func_002_5E85
-    farcall Func_002_5E85
+    farcall MoveIncapacitatedPartyMembersBack
+    farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F

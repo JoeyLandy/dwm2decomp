@@ -566,7 +566,7 @@ Jump_0A1_4433::
     ret
 
 ; on map type $80 sets the bit for the current map screen in the visited-screen bitmap wCE93 (E-0125)
-; 6 call sites from 3 routines (e.g. Func_0A1_44C9, RunWC468ActionIfBit7_Case01, RunWC46BMenuState_Case05)
+; 6 call sites from 3 routines (e.g. MarkVisitedScreens5x5AroundPlayer, RunWC468ActionIfBit7_Case01, RunWC46BMenuState_Case05)
 ; reads: wCC44, hMapScreenY, hMapScreenX
 ; points at: wCE93
 MarkVisitedMapScreenInWCE93::
@@ -674,11 +674,13 @@ Jump_0A1_44C5::
     ld [hl], a
     ret
 
+; marks the 5 x 5 map screens around the current one (within wCD0D x wCD0E) as visited (E-0127)
 ; 1 call site from 1 routine (e.g. Func_016_53E6_Case13)
 ; reads: hMapScreenX, hMapScreenY, wCD0E, wCD0D, hFFC6, hFFC7
 ; writes: hFFC6, hMapScreenX, hFFC7, hMapScreenY
 ; points at: hMapScreenX, hMapScreenY
-Func_0A1_44C9::
+MarkVisitedScreens5x5AroundPlayer::
+Func_0A1_44C9:: ; address name
     ldh a, [hMapScreenX]
     ldh [hFFC6], a
     dec a

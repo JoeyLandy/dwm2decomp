@@ -2198,7 +2198,7 @@ Jump_032_4BAD::
     jr Jump_032_4BE0
 
 Jump_032_4BC6::
-    call Func_032_4C3E
+    call ShowActorStatusRecoveryMessage
     jr nc, Jump_032_4BD1
     ld hl, wBattleSubStep
     inc [hl]
@@ -2289,10 +2289,12 @@ Jump_032_4C30:: ; address name
     ld [wBattleSubStep], a
     ret
 
+; shows battle text $16-$1C for the first set status bit of the actor (status 6/7, byte 3 bits 0-5) and clears status 3 bits 0-5; carry when none (E-0127)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case00_Case01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-Func_032_4C3E::
+ShowActorStatusRecoveryMessage::
+Func_032_4C3E:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -2304,7 +2306,7 @@ Func_032_4C3E::
 Jump_032_4C4F::
     bit 7, [hl]
     jr z, Jump_032_4C5A
-    call Func_032_4E51
+    call ShowActorStatusRecoveryMessage_Sub01
     jr c, Jump_032_4C91
     jr Jump_032_4C97
 
@@ -2652,11 +2654,13 @@ Func_032_4E29:: ; address name
     ld [wC970], a
     ret
 
-; 1 call site from 1 routine (e.g. Func_032_4C3E)
+; only called from ShowActorStatusRecoveryMessage (E-0047)
+; 1 call site from 1 routine (e.g. ShowActorStatusRecoveryMessage)
 ; reads: wC5E7, wBattleActor, wBattleTarget, wD871
 ; writes: wD871, wBattleTarget
 ; points at: wD80F, wBattleActionChoice
-Func_032_4E51::
+ShowActorStatusRecoveryMessage_Sub01::
+Func_032_4E51:: ; address name
     ld a, [hl]
     and a, $0C
     jr z, Jump_032_4E6A
@@ -2765,7 +2769,7 @@ Jump_032_4EDB::
     ret
 
 ; keeps only bits 7-6 of the actor's status byte 3 (E-0115)
-; 1 call site from 1 routine (e.g. Func_032_4C3E)
+; 1 call site from 1 routine (e.g. ShowActorStatusRecoveryMessage)
 ; reads: wBattleActor
 ; points at: wD80F
 ClearActorStatus3Bits0To5::
@@ -4057,7 +4061,7 @@ Jump_032_5793:: ; address name
     ld a, [wBattleActor]
     ld [wBattleTarget], a
     call DefeatTarget
-    call Func_032_5AB3
+    call BlankTargetMonsterPicture
     call LoadBattleActor
     ld d, $8A
     cp a, $04
@@ -4579,7 +4583,7 @@ Jump_032_5A44:: ; address name
 ; points at: wBattleSubStep2
 RunDefeatSequence_Case01::
 Jump_032_5A5B:: ; address name
-    call Func_032_5AB3
+    call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
     ret
@@ -4646,9 +4650,11 @@ Jump_032_5AA9::
     sbc a, $03
     ret
 
+; for the target's picture slot fills $24 tiles at vTiles2 + $140, $380 or $5C0 with the pattern $FF, $00 (E-0127)
 ; 11 call sites from 11 routines (e.g. RunBattleSubStep2_6764_Case01, Func_032_4ADC_Case09_Case00, RunDefeatSequence_Case01, RunBattleSubStep2_66F1_Case01, ...)
 ; reads: wC58A, wC57F, wBattleTarget, rSTAT
-Func_032_5AB3::
+BlankTargetMonsterPicture::
+Func_032_5AB3:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_032_5AD4
@@ -5000,7 +5006,7 @@ Jump_032_5CCA::
     ld [hl], b
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_019_4298
+    farcall SetSlotAIModeFromINT
     ld a, [wBattleTarget]
     ld c, a
     farcall SlotField17OrMonsterCFF5
@@ -5675,7 +5681,7 @@ Jump_032_6194:: ; address name
 ; points at: wCFCE
 RunWCFCEStep_618A_Case01::
 Jump_032_61A9:: ; address name
-    call Func_032_5AB3
+    call BlankTargetMonsterPicture
     ld hl, wCFCE
     inc [hl]
     ret
@@ -5849,7 +5855,7 @@ Jump_032_6286:: ; address name
 ; points at: wCFCE
 Func_032_627C_Case01::
 Jump_032_629B:: ; address name
-    call Func_032_5AB3
+    call BlankTargetMonsterPicture
     ld hl, wCFCE
     inc [hl]
     ret
@@ -6079,7 +6085,7 @@ Jump_032_63CC:: ; address name
 ; points at: wCFCE
 RunWCFCEStep_63C2_Case01::
 Jump_032_63E1:: ; address name
-    call Func_032_5AB3
+    call BlankTargetMonsterPicture
     ld hl, wCFCE
     inc [hl]
     ret
@@ -6328,7 +6334,7 @@ Jump_032_6538:: ; address name
 ; points at: wCFCE
 RunWCFCEStep_652E_Case01::
 Jump_032_654D:: ; address name
-    call Func_032_5AB3
+    call BlankTargetMonsterPicture
     ld hl, wCFCE
     inc [hl]
     ret
@@ -6643,7 +6649,7 @@ Jump_032_66FB:: ; address name
 ; points at: wBattleSubStep2
 RunBattleSubStep2_66F1_Case01::
 Jump_032_6710:: ; address name
-    call Func_032_5AB3
+    call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
     ret
@@ -6737,7 +6743,7 @@ Jump_032_676E:: ; address name
 ; points at: wBattleSubStep2
 RunBattleSubStep2_6764_Case01::
 Jump_032_6785:: ; address name
-    call Func_032_5AB3
+    call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
     ret

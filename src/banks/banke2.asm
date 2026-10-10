@@ -229,7 +229,7 @@ Jump_0E2_419C::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_41B0::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_41C4
@@ -308,7 +308,7 @@ Jump_0E2_4226::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_423A::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_424E
@@ -408,7 +408,7 @@ Jump_0E2_42E8::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_42FB::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_430F
@@ -429,7 +429,7 @@ Func_0E2_4310:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_6556
+    farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
     jr z, AIScore_HealUs_Sub01
@@ -507,7 +507,7 @@ Func_0E2_438D:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_43A9::
-    farcall Func_005_6556
+    farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
     jr z, Jump_0E2_43BD
@@ -708,7 +708,7 @@ Jump_0E2_44DD::
 
 Jump_0E2_44F3::
     call WeighWD044RuleBit5
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_450A
@@ -749,7 +749,7 @@ Func_0E2_4536:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4B97
+    farcall FastestFoeAGLAbove31PercentOfActor
     ld a, c
     and a, a
     jr nz, Jump_0E2_454F
@@ -788,7 +788,7 @@ Func_0E2_4567:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4584::
-    farcall Func_005_4B97
+    farcall FastestFoeAGLAbove31PercentOfActor
     ld a, c
     and a, a
     jr nz, Jump_0E2_4594
@@ -817,7 +817,7 @@ Jump_0E2_45A8::
 
 Jump_0E2_45BE::
     call WeighWD044RuleBit5
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_45D5
@@ -857,7 +857,7 @@ Func_0E2_45FE:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_5F3D
+    farcall FailIfAllyCanUseSkill63Or64
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4618
@@ -906,7 +906,7 @@ Jump_0E2_464A::
 
 Jump_0E2_465A::
     call WeighWD044RuleBit5
-    farcall Func_005_5F3D
+    farcall FailIfAllyCanUseSkill63Or64
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4671
@@ -976,7 +976,7 @@ Jump_0E2_46D1::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_46E4::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_46F8
@@ -1146,7 +1146,7 @@ Jump_0E2_4804::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4818::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_482C
@@ -1195,7 +1195,7 @@ Func_0E2_4855:: ; address name
 
 Jump_0E2_486E::
     call WeighWD044RuleBit5
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4885
@@ -1284,7 +1284,7 @@ Func_0E2_48FD:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_53FA
+    farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
     jr z, Jump_0E2_491A
@@ -1365,7 +1365,7 @@ Func_0E2_4984:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_53FA
+    farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
     jr z, Jump_0E2_49A1
@@ -1606,7 +1606,7 @@ Jump_0E2_4B46::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4B56::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4B6A
@@ -1709,7 +1709,7 @@ Jump_0E2_4C0B::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4C1B::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4C2F
@@ -1812,7 +1812,7 @@ Jump_0E2_4CBD::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4CD1::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4CE5
@@ -1891,7 +1891,7 @@ Jump_0E2_4D56::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4D66::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4D7A
@@ -2023,7 +2023,7 @@ Jump_0E2_4E48::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4E5C::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4E70
@@ -2122,7 +2122,7 @@ Jump_0E2_4F07::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F1B::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4F2F
@@ -2765,7 +2765,7 @@ Func_0E2_5385:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_53A2
@@ -2885,7 +2885,7 @@ Func_0E2_545D:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4B97
+    farcall FastestFoeAGLAbove31PercentOfActor
     ld a, c
     and a, a
     jr nz, Jump_0E2_5476
@@ -3461,7 +3461,7 @@ Jump_0E2_5892::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_58A2::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_58B6
@@ -3614,7 +3614,7 @@ Jump_0E2_5995::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_59A8::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_59BC
@@ -3683,7 +3683,7 @@ Jump_0E2_5A17::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A2B::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5A3F
@@ -3753,7 +3753,7 @@ Jump_0E2_5A91::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5AA4::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5AB8
@@ -3894,7 +3894,7 @@ Jump_0E2_5B9C::
 
 Jump_0E2_5BAC::
     call WeighWD044RuleBit2
-    farcall Func_005_6556
+    farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5BC3
@@ -4012,7 +4012,7 @@ Jump_0E2_5C75::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C85::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5C99
@@ -4081,7 +4081,7 @@ Jump_0E2_5CED::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5D00::
-    farcall Func_005_64FE
+    farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5D14
@@ -4622,7 +4622,7 @@ Func_0E2_60A6:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_53FA
+    farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
     jr z, Jump_0E2_60C3
@@ -4761,7 +4761,7 @@ Func_0E2_618D:: ; address name
     ret z
 
 Jump_0E2_619A::
-    farcall Func_005_53FA
+    farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
     jr z, Jump_0E2_61AE
@@ -4822,7 +4822,7 @@ Func_0E2_61E0:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_61F9::
-    farcall Func_005_53FA
+    farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
     jr z, Jump_0E2_620D
@@ -4892,7 +4892,7 @@ Jump_0E2_6266::
 Jump_0E2_6276::
     ld a, [wBattleActor]
     call AIScore_SuckAll_Sub02
-    farcall Func_005_53FA
+    farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6290
@@ -4931,7 +4931,7 @@ Func_0E2_62A4:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_62C1::
-    farcall Func_005_53FA
+    farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
     jr z, Jump_0E2_62D5
@@ -4994,7 +4994,7 @@ Jump_0E2_6322::
 
 Jump_0E2_6338::
     call WeighWD044RuleBit4
-    farcall Func_005_6556
+    farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
     jr z, Jump_0E2_634F
@@ -5085,7 +5085,7 @@ Jump_0E2_63C6::
 
 Jump_0E2_63E2::
     call WeighWD044RuleBit4
-    farcall Func_005_6556
+    farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
     jr z, Jump_0E2_63F9

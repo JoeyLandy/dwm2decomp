@@ -2747,7 +2747,7 @@ Jump_00F_5175:: ; address name
     ldh [hFFC6], a
     ld a, $30
     ldh [hFFC7], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -2983,8 +2983,8 @@ Jump_00F_54D5:: ; address name
 ScriptCommand58_Run_Case22::
 Jump_00F_54E0:: ; address name
     farcall FullyHealParty
-    farcall Func_002_5E85
-    farcall Func_002_5E85
+    farcall MoveIncapacitatedPartyMembersBack
+    farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
@@ -3115,7 +3115,7 @@ Jump_00F_55A7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand58_Run_Case21::
 Jump_00F_55AC:: ; address name
-    farcall Func_012_653F
+    farcall ScriptStepFlashScreenNegative
     ret
 
 ; entry 32 of the `rst $00` table in ScriptCommand58_Run
@@ -3372,7 +3372,7 @@ Jump_00F_56DB:: ; address name
     ldh [hFFC7], a
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -3918,7 +3918,7 @@ Jump_00F_5A13:: ; address name
     ldh [hFFC7], a
     ld a, $01
     ldh [hFFC6], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -4033,7 +4033,7 @@ Jump_00F_5A9C::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand4A_Run_Case01::
 Jump_00F_5AB2:: ; address name
-    farcall Func_012_653F
+    farcall ScriptStepFlashScreenNegative
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand4A_Run
@@ -4158,7 +4158,7 @@ Jump_00F_5B5F:: ; address name
     ldh [hFFC6], a
     ld a, $20
     ldh [hFFC7], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -4533,7 +4533,7 @@ Jump_00F_5DCC:: ; address name
     ldh [hFFC6], a
     ld a, $30
     ldh [hFFC7], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -5121,7 +5121,7 @@ ScriptCommand41_Run_Case07::
 Jump_00F_6140:: ; address name
     ld a, $E0
     ld [wCB8A], a
-    farcall Func_012_653F
+    farcall ScriptStepFlashScreenNegative
     ret
 
 ; entry 6 of the `rst $00` table in ScriptCommand41_Run
@@ -5317,7 +5317,7 @@ Jump_00F_6283:: ; address name
     ldh [hFFC6], a
     ld a, $40
     ldh [hFFC7], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -7615,7 +7615,7 @@ Jump_00F_7099:: ; address name
     ldh [hFFC6], a
     ld a, $20
     ldh [hFFC7], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -7630,7 +7630,7 @@ Jump_00F_70BD::
     ldh [hFFC6], a
     ld a, $40
     ldh [hFFC7], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z
@@ -8493,7 +8493,7 @@ Jump_00F_7601:: ; address name
     ldh [hFFC6], a
     ld a, $10
     ldh [hFFC7], a
-    farcall Func_05F_6BF8
+    farcall ScriptStepBlinkObjectHFFC6
     ldh a, [hFFC6]
     or a, a
     ret z

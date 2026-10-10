@@ -1781,7 +1781,7 @@ Func_003_4A84:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    call Func_003_4ACE
+    call BuildRecordLevelAndStatusRow
     call WithSRAMDraw4ACEAnd4B52_Sub01
     xor a, a
     ld [rRAMG], a
@@ -1796,7 +1796,7 @@ Func_003_4A98:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    call Func_003_4ACE
+    call BuildRecordLevelAndStatusRow
     call WithSRAMDraw4ACEAnd4BE8_Sub01
     xor a, a
     ld [rRAMG], a
@@ -1830,11 +1830,13 @@ Func_003_4ABD:: ; address name
     ld [rRAMG], a
     ret
 
+; writes record wC46D's level (field $56, marked with tile $14 at the cap in field $57), status marks from field $55 and the field $0E mark into the row at wC1C1 (E-0127)
 ; 2 call sites from 2 routines (e.g. WithSRAMDraw4ACEAnd4B52, WithSRAMDraw4ACEAnd4BE8)
 ; reads: wC46D
 ; writes: wC1C1, wC1CA
 ; points at: wC1C1, wC1C4
-Func_003_4ACE::
+BuildRecordLevelAndStatusRow::
+Func_003_4ACE:: ; address name
     ld hl, wC1C1
     ld a, $C3
     ld [hl+], a
@@ -1896,7 +1898,7 @@ Jump_003_4B27::
     ret
 
 ; wC1C8 = $C2; AF kept (E-0119)
-; 1 call site from 1 routine (e.g. Func_003_4ACE)
+; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
 ; writes: wC1C8
 SetWC1C8TileC2::
 Func_003_4B3A:: ; address name
@@ -1907,7 +1909,7 @@ Func_003_4B3A:: ; address name
     ret
 
 ; wC1C6 = $C0; AF kept (E-0119)
-; 1 call site from 1 routine (e.g. Func_003_4ACE)
+; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
 ; writes: wC1C6
 SetWC1C6TileC0::
 Func_003_4B42:: ; address name
@@ -1918,7 +1920,7 @@ Func_003_4B42:: ; address name
     ret
 
 ; wC1C7 = $C1; AF kept (E-0119)
-; 1 call site from 1 routine (e.g. Func_003_4ACE)
+; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
 ; writes: wC1C7
 SetWC1C7TileC1::
 Func_003_4B4A:: ; address name
@@ -2734,7 +2736,7 @@ Jump_003_5057::
     pop bc
 
 Jump_003_50AC::
-    call Func_003_50DD
+    call DrawRecordHPMPAndLevelForRowC
     call ShowRecordSpeciesNameForRowC
     call DrawRecordByte0EMarkTile
     inc c
@@ -2758,8 +2760,10 @@ Jump_003_50AC::
     ld [wC526], a
     ret
 
+; for record C writes HP (field $5B), MP (field $5F) and level (field $56) as digits at the screen-buffer position Data_003_519E[C] (E-0127)
 ; 1 call site from 1 routine (e.g. Func_003_4FBB_Case01)
-Func_003_50DD::
+DrawRecordHPMPAndLevelForRowC::
+Func_003_50DD:: ; address name
     push bc
     ld a, c
     ld hl, Data_003_519E
@@ -8506,7 +8510,7 @@ Func_003_776C:: ; address name
     call FillTilesFromRequest
     ld e, $10
     farcall CopyBlockToTileBuffer
-    farcall Func_016_777B
+    farcall DecompressA4GraphicsAndContinue
     ret
 
 ; copies screen block $2B into the tile buffer (E-0114)

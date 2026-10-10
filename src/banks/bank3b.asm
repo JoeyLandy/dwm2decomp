@@ -1541,7 +1541,7 @@ Func_03B_48E9:: ; address name
     ret
 
 ; the target's wD93F word -= Data_03B_492A[action - $19], floored at 0 (E-0124)
-; 2 call sites from 2 routines (e.g. Func_03B_4D1C, Func_03B_4C95)
+; 2 call sites from 2 routines (e.g. Func_03B_4D1C, ApplyTargetWD93FReduction)
 ; reads: wBattleTarget, wBattleActionId
 ; points at: wD93F
 SubtractActionAmountFromTargetWD93F::
@@ -1581,7 +1581,7 @@ Data_03B_492A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $00, $0A, $00, $14, $00, $64, $00, $05, $00
 
 ; adds the word Data_03B_4949[action - $19] to wD89F, capped at 1800 (E-0122)
-; 2 call sites from 2 routines (e.g. Func_03B_4D1C, Func_03B_4C95)
+; 2 call sites from 2 routines (e.g. Func_03B_4D1C, ApplyTargetWD93FReduction)
 ; reads: wBattleActionId
 AddActionAmountToWD89F::
 Func_03B_4934:: ; address name
@@ -1978,10 +1978,10 @@ Func_03B_4B02:: ; address name
     dw ApplyTargetMaxHPIfPresent
     db $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C
     db $94, $4C, $94, $4C, $94, $4C, $94, $4C
-    dw Func_03B_4C95
-    dw Func_03B_4C95
-    dw Func_03B_4C95
-    dw Func_03B_4C95
+    dw ApplyTargetWD93FReduction
+    dw ApplyTargetWD93FReduction
+    dw ApplyTargetWD93FReduction
+    dw ApplyTargetWD93FReduction
     dw Func_03B_4D1C
     dw SetWD894AndMessage98
     dw JumpToEffectFailurePath4F15
@@ -2169,11 +2169,13 @@ Jump_03B_4C91::
     jp Jump_03B_4F15
     db $C9
 
+; for local targets adds the action amount to wD89F; for others checks status, block and resistance and subtracts the amount from the target's wD93F; then stores message $95 or $FD (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC0, wDAC1, wDAC3
 ; points at: wBattleStatus
-Func_03B_4C95:: ; heuristic: target of a pointer table; C0
+ApplyTargetWD93FReduction:: ; heuristic: target of a pointer table; C0
+Func_03B_4C95:: ; address name
     call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_4C9F
     call AddActionAmountToWD89F
@@ -2543,7 +2545,7 @@ Jump_03B_4F6E::
     ret
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
-; 3 call sites from 3 routines (e.g. Func_03B_42F4_Case02, Func_03B_4D1C, Func_03B_4C95)
+; 3 call sites from 3 routines (e.g. Func_03B_42F4_Case02, Func_03B_4D1C, ApplyTargetWD93FReduction)
 ; reads: wC58A, wC57F, wBattleTarget
 TargetOnLocalSide_Bank3B::
 Func_03B_4F74:: ; address name

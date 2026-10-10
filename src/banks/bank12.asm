@@ -2689,7 +2689,7 @@ Jump_012_5007:: ; address name
     ldh a, [hFF93]
     or a, $80
     ldh [hFF93], a
-    farcall Func_004_4B2D
+    farcall LoadPlayerSpriteGraphics
     ld a, $7F
     ld [wC527], a
 
@@ -2779,7 +2779,7 @@ Jump_012_5080::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandA0_Run_Case01::
 Jump_012_5090:: ; address name
-    farcall Func_012_653F
+    farcall ScriptStepFlashScreenNegative
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommandA0_Run
@@ -2821,7 +2821,7 @@ ScriptCommandA1_Run_Case02::
 Jump_012_50BD:: ; address name
     xor a, a
     ldh [hFF93], a
-    farcall Func_004_4B2D
+    farcall LoadPlayerSpriteGraphics
     ld a, $7F
     ld [wC527], a
     ld a, $80
@@ -3122,7 +3122,7 @@ Func_012_550E:: ; address name
     dw ScriptCommand9B_Run_Case00
     dw ScriptCommand9B_Run_Case01
     dw ScriptCommand9B_Run_Case02
-    dw Func_012_653F
+    dw ScriptStepFlashScreenNegative
     dw ScriptCommand9B_Run_Case04
     dw ScriptCommand9B_Run_Case05
     dw ScriptCommand9B_Run_Case06
@@ -3155,7 +3155,7 @@ Func_012_5534:: ; address name
     dw ScriptCommand89_Run_Case01
     dw ScriptCommand9B_Run_Case01
     dw ScriptCommand9B_Run_Case02
-    dw Func_012_653F
+    dw ScriptStepFlashScreenNegative
     dw ScriptCommand9B_Run_Case04
     dw ScriptCommand9B_Run_Case05
     dw ScriptCommand9B_Run_Case06
@@ -3275,7 +3275,7 @@ Func_012_55E8:: ; address name
     rst $00
     dw ScriptCommand88_Run_Case00
     dw ScriptCommand9B_Run_Case02
-    dw Func_012_653F
+    dw ScriptStepFlashScreenNegative
     dw ScriptCommand9B_Run_Case04
     dw ScriptCommand9B_Run_Case05
     dw ScriptCommand9B_Run_Case06
@@ -3443,8 +3443,8 @@ Jump_012_56DB::
 ; points at: wScriptStep
 ScriptCommand9B_Run_Case05::
 Jump_012_56E8:: ; address name
-    farcall Func_002_5E85
-    farcall Func_002_5E85
+    farcall MoveIncapacitatedPartyMembersBack
+    farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
@@ -3829,7 +3829,7 @@ Jump_012_58E4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand85_Run_Case03::
 Jump_012_58EF:: ; address name
-    farcall Func_012_653F
+    farcall ScriptStepFlashScreenNegative
     ret
 
 ; entry 2 of the `rst $00` table in ScriptCommand85_Run
@@ -4118,7 +4118,7 @@ Jump_012_5A89:: ; address name
     ld [wC8C2], a
     call Number24ToPackedBCD
     ld de, wC17E
-    call Func_000_23CA
+    call WritePackedBCDNoLeadingZeros
     ld a, $05
     call StartMessageA
     xor a, a
@@ -5402,7 +5402,7 @@ Jump_012_621F:: ; address name
     add_a_to_hl
     ld a, $FF
     ld [hl], a
-    farcall Func_061_44DB
+    farcall DrawDoorTilesForWCC45
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -5441,7 +5441,7 @@ Jump_012_6257::
     jr Jump_012_6279
 
 Jump_012_6279::
-    farcall Func_061_44DB
+    farcall DrawDoorTilesForWCC45
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -5573,7 +5573,7 @@ Jump_012_6328::
     inc hl
     ld [hl], $01
     farcall AppendItemWC928ToInventory
-    farcall Func_061_45E8
+    farcall CheckTwoWCDB0EntriesForWCC43
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -5811,7 +5811,7 @@ Jump_012_6467::
     ld [wC8C2], a
     call Number24ToPackedBCD
     ld de, wC17E
-    call Func_000_23CA
+    call WritePackedBCDNoLeadingZeros
     ld a, $05
     call StartMessageA
     ld a, $02
@@ -5933,11 +5933,13 @@ Jump_012_6504::
     ld [rRAMG], a
     ret
 
+; for 30 frames alternates every 4 frames between the normal palettes and their inverse (DMG palettes $D2/$E2 and $2D/$1D), then advances wScriptStep (E-0127)
 ; 7 call sites from 7 routines (e.g. ScriptCommand58_Run_Case21, ScriptCommand4A_Run_Case01, ScriptCommand41_Run_Case07, ScriptCommandA0_Run_Case01, ...)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wC526, wScriptParam0
 ; points at: wC5E9, wC0F0, wBGPaletteBuffer, wScriptStep
-Func_012_653F::
+ScriptStepFlashScreenNegative::
+Func_012_653F:: ; address name
     ld a, [wScriptParam0]
     srl a
     srl a
@@ -6035,8 +6037,8 @@ Jump_012_65B6:: ; address name
     ret
 
 Jump_012_65C5::
-    farcall Func_002_5E85
-    farcall Func_002_5E85
+    farcall MoveIncapacitatedPartyMembersBack
+    farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
     farcall Func_004_4AA8
     ld a, $7F
@@ -6829,7 +6831,7 @@ Func_012_69B0::
 
 Jump_012_69C9::
     push hl
-    farcall Func_084_4C84
+    farcall ClearWC88EForMatchingKeyEntry
     pop hl
     dec hl
     dec hl
@@ -6947,10 +6949,12 @@ Jump_012_6A5D::
     dec [hl]
     ret
 
+; on map $7F or $92 at screen (0, 0), or with wCC44 = $82, runs field command $12 and places objects at wCBD3/4 and wCBCF (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_002_4628, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY
 ; writes: hFFC6, wCBD3, wCBD4, wCBCF
-Func_012_6A6A::
+PlaceSpecialMapObjectsOnEntry::
+Func_012_6A6A:: ; address name
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_012_6ABC
@@ -7126,7 +7130,7 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
 ; runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)
-; 51 call sites from 49 routines (e.g. Func_012_6A6A, Func_002_4628, RunWC8C7Phase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
+; 51 call sites from 49 routines (e.g. PlaceSpecialMapObjectsOnEntry, Func_002_4628, RunWC8C7Phase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
 ; reads: hFFC6
 RunFieldCommandHFFC6::
 Func_012_6B98:: ; address name
@@ -8421,7 +8425,7 @@ Jump_012_7376::
     dec c
 
 Jump_012_7377::
-    call Func_012_7536
+    call IsPlayerOnTriggerCell
     or a, a
     jr z, Jump_012_73A0
     ld a, $0F
@@ -8464,7 +8468,7 @@ Func_012_73A1:: ; address name
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call Func_012_7536
+    call IsPlayerOnTriggerCell
     or a, a
     jr z, Jump_012_73F2
     ld a, [wScriptRunning]
@@ -8692,9 +8696,11 @@ Jump_012_7508::
 Data_012_752E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $10, $12, $13, $20, $21, $23, $32
 
+; A = 1 when the player cell (B, C high nibbles) equals the trigger cell wC8FF (or its Data_012_7581 entry on special maps), else 0 (E-0127)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Shared02, CheckStepTriggerAndDispatchTalk)
 ; reads: wCC44, wC8FF
-Func_012_7536::
+IsPlayerOnTriggerCell::
+Func_012_7536:: ; address name
     push bc
     jr Jump_012_753C
 
@@ -8839,13 +8845,13 @@ Jump_012_7624::
     ld [wC832], a
     call EventCheckGoldAtLeast10000
     ret c
-    call Func_012_7693
+    call TriggerEventCDIfPartyHPTotalBelow100
     ret c
-    call Func_012_76F1
+    call TriggerEventCEIfPartyMPTotalBelow100
     ret c
-    call Func_012_774F
+    call TriggerEventCFIfPartyLevelTotalBelow100
     ret c
-    call Func_012_7B45
+    call TriggerEventC0IfHPDigitsRepeat
     ret c
     call Func_012_7AD0
     ret c
@@ -8904,11 +8910,13 @@ Jump_012_7691::
     sub a, a
     ret
 
+; with story flag $195 set and $196 clear: when the party's total HP is below 100, wC935 = $CD and carry (E-0127)
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: hFFC8, hFFC9, rRAMG, wC935
 ; points at: wC6FE
-Func_012_7693::
+TriggerEventCDIfPartyHPTotalBelow100::
+Func_012_7693:: ; address name
     ld de, $0195
     call TestFlagBit
     jr nc, Jump_012_76EF
@@ -8967,11 +8975,13 @@ Jump_012_76EF::
     sub a, a
     ret
 
+; with story flag $198 set and $199 clear: when the party's total MP is below 100, wC935 = $CE and carry (E-0127)
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9
 ; writes: hFFC8, hFFC9, rRAMG, wC935
 ; points at: wC6FE
-Func_012_76F1::
+TriggerEventCEIfPartyMPTotalBelow100::
+Func_012_76F1:: ; address name
     ld de, $0198
     call TestFlagBit
     jr nc, Jump_012_774D
@@ -9030,11 +9040,13 @@ Jump_012_774D::
     sub a, a
     ret
 
+; with story flag $19B set and $19C clear: when the party's total level is below 100, wC935 = $CF and carry (E-0127)
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wC6FD, hFFC6, hFFC8, hFFC9
 ; writes: hFFC8, hFFC9, rRAMG, wC935
 ; points at: wC6FE
-Func_012_774F::
+TriggerEventCFIfPartyLevelTotalBelow100::
+Func_012_774F:: ; address name
     ld de, $019B
     call TestFlagBit
     jr nc, Jump_012_77AA
@@ -9735,11 +9747,13 @@ Jump_012_7B3E::
     scf
     ret
 
+; when a party member's HP has all decimal digits equal (for example 77 or 333), wC935 = $C0 and carry (E-0127)
 ; 1 call site from 1 routine (e.g. Func_012_75E0)
 ; reads: wC6FD, hFFC6, hFFC7, wC8C0, wC8C1, wC8C2
 ; writes: rRAMG, wC935
 ; points at: wC6FE
-Func_012_7B45::
+TriggerEventC0IfHPDigitsRepeat::
+Func_012_7B45:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wC6FD]

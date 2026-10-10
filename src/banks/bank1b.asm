@@ -976,11 +976,13 @@ Jump_01B_45DD::
     ld a, $F3
     jp StartSerialTransferInternalClock
 
+; link: reads the received byte into wC560 and updates the joypad state; byte $F3 restores the saved joypad state and counts down wC595 (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC57F, wC58C, rSB, wC560, wC586, wC56A, wC56B, wC594, ...
 ; writes: wC586, wC561, wC560, wC582, wJoypadHeld, wJoypadHeldPrev, wC595, wC596
 ; points at: wC5ED
-Func_01B_45EF:: ; heuristic: follows a terminator; C0
+LinkReceiveJoypadByte:: ; heuristic: follows a terminator; C0
+Func_01B_45EF:: ; address name
     ld a, [wC57F]
     bit 1, a
     jr nz, LinkHandshakeSendFAOrFB
@@ -2077,7 +2079,7 @@ Jump_01B_54CB:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     xor a, a
     ld [wD7AB], a
     ld [wD7AF], a
@@ -2142,7 +2144,7 @@ Jump_01B_5588:: ; address name
     call CopyRectTo20ByteRows
     ld a, $02
     ld [wD7F5], a
-    farcall Func_00D_5C87
+    farcall ClampKeyListPageCursor
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_01B_55D4
@@ -2171,7 +2173,7 @@ Jump_01B_55D4::
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2203,7 +2205,7 @@ Jump_01B_5611:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_01B_65DD
@@ -2433,7 +2435,7 @@ Jump_01B_574E:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wD781]
@@ -3202,7 +3204,7 @@ Jump_01B_5B3E:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3229,7 +3231,7 @@ Jump_01B_5B7E:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wD781]
@@ -3332,7 +3334,7 @@ Func_01B_5C3B:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wD781]
@@ -3422,7 +3424,7 @@ Jump_01B_5CD3:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, [wD781]
     sub a, $03
     ld [wD781], a
@@ -3964,7 +3966,7 @@ Jump_01B_6024::
     ld [wDataBank], a
     ld a, [wC5B8]
     inc a
-    call Func_01B_60BA
+    call CopyDataBankString4078ToWC130
     ld hl, wC8CF
     ld de, wC130
 
@@ -3983,7 +3985,7 @@ Jump_01B_6047::
     ld a, [wC5B9]
     inc a
     add a, $10
-    call Func_01B_60BA
+    call CopyDataBankString4078ToWC130
     pop hl
     ld de, wC130
 
@@ -4044,9 +4046,11 @@ Jump_01B_607D::
     ld [wC530], a
     ret
 
+; copies the 16-byte string named by the word table $4078 + 2 * A (in bank 9) to wC130; the next entry copies a key name word to wC8CF (E-0127)
 ; 2 call sites from 1 routine (e.g. RunWD780StateWhenNotFading_1B_Case01_Case12_Sub01)
 ; points at: wC130
-Func_01B_60BA::
+CopyDataBankString4078ToWC130::
+Func_01B_60BA:: ; address name
     sla a
     ld hl, $4078
     add_a_to_hl
@@ -4282,7 +4286,7 @@ Func_01B_6203:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0
@@ -4351,11 +4355,13 @@ Jump_01B_625F::
     ldh [rSVBK], a
     ret
 
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 18 call sites from 17 routines (e.g. RunWD780StateWhenNotFading_1B_Case01_Case17, RunWD780StateWhenNotFading_1B_Case01_Case13, RunWD780StateWhenNotFading_1B_Case01_Case12, RunWD780StateWhenNotFading_1B_Shared01, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_01B_6277::
+DrawScreenBufferRectToBGMap_1B::
+Func_01B_6277:: ; address name
     push de
     push bc
     push hl
@@ -4900,7 +4906,7 @@ Jump_01B_6682:: ; address name
     xor a, a
     ld [wStringCategory], a
     call ShowStringA10_Bank1B
-    call Func_01B_74DC
+    call ClearTileRowsFromWD7DC
     ld a, [wD780]
     inc a
     ld [wD780], a
@@ -5089,7 +5095,7 @@ Jump_01B_6753:: ; address name
 DrawRecordListPageIndicators_1B::
 Func_01B_675F:: ; address name
     call Func_01B_7399
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_01B_679D
@@ -5222,7 +5228,7 @@ Jump_01B_683D:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_01B_786F
@@ -5305,7 +5311,7 @@ Jump_01B_68DE::
     call ShowStringA10_Bank1B
 
 Jump_01B_68E6::
-    call Func_01B_74DC
+    call ClearTileRowsFromWD7DC
     xor a, a
     ld [wD7AB], a
     ld [wD7AF], a
@@ -5387,7 +5393,7 @@ Jump_01B_6940:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -5428,7 +5434,7 @@ Jump_01B_69A9:: ; address name
 Jump_01B_69C7::
     xor a, a
     ld [wD7F5], a
-    farcall Func_00D_4D24
+    farcall HandleTwoChoiceCursorInput_0D
     ld a, [wD7F5]
     and a, a
     ret z
@@ -5530,7 +5536,7 @@ Jump_01B_6A71::
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, [wD781]
     sub a, $03
     ld [wD781], a
@@ -5549,11 +5555,11 @@ Jump_01B_6A89:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, [wD7DC]
     inc a
     ld [wD7DC], a
-    call Func_01B_74DC
+    call ClearTileRowsFromWD7DC
     call Func_01B_7537
     ld a, [wD781]
     inc a
@@ -5637,7 +5643,7 @@ Jump_01B_6B0B:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, [wD782]
     cp a, $01
     jr z, Jump_01B_6B3F
@@ -6106,7 +6112,7 @@ Jump_01B_6DB3:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     call SetDefaultStringWindow_Bank1B
     xor a, a
     ld [wTwoChoiceCursor], a
@@ -6136,7 +6142,7 @@ Jump_01B_6E09:: ; address name
     ret
 
 Jump_01B_6E27::
-    farcall Func_0F1_5842
+    farcall HandleThreeChoiceCursorInput_F1
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -6456,7 +6462,7 @@ Jump_01B_7019:: ; address name
 ; points at: wC364
 ScriptCommandEF_Run_Bank1B_Case0E_Case00::
 Jump_01B_702D:: ; address name
-    call Func_01B_7205
+    call ClearRecordPanelTiles
     ld de, Data_01B_7928
     ld hl, wC364
     ld bc, $080B
@@ -6478,7 +6484,7 @@ Jump_01B_702D:: ; address name
 ScriptCommandEF_Run_Bank1B_Case0E_Case01::
 Jump_01B_704F:: ; address name
     call Func_01B_7399
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_01B_7076
@@ -6596,13 +6602,13 @@ Jump_01B_710B:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     call BGMapAddressAtScroll_Bank1B
     ld de, $01A0
     add hl, de
     ld bc, $1405
     ld de, $0168
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ld a, $70
     ldh [hFFBA], a
     xor a, a
@@ -6759,10 +6765,12 @@ Func_01B_71FE:: ; address name
     jr nz, CopyEBytesBCToHL
     ret
 
+; clears the tile rows at vTiles1 + $500, $700, $780, $240 and $4E0, then the rows from wD7DC = 0 and from the saved wD7DC (E-0127)
 ; 3 call sites from 3 routines (e.g. ScriptCommandEF_Run_Bank1B_Case0E_Case00, Func_033_5215_Table2_Case0E_Case00, Func_033_5215_Table2_Case0F_Case00)
 ; reads: wD7DC
 ; writes: wC52D, wC52E, wC52F, wC530, wD7DC
-Func_01B_7205::
+ClearRecordPanelTiles::
+Func_01B_7205:: ; address name
     ld hl, vTiles1 + $500
     ld a, l
     ld [wC52D], a
@@ -6817,7 +6825,7 @@ Func_01B_7205::
     push af
     xor a, a
     ld [wD7DC], a
-    call Func_01B_74DC
+    call ClearTileRowsFromWD7DC
     pop af
     ld [wD7DC], a
     call Func_01B_7537
@@ -6993,7 +7001,7 @@ Jump_01B_736A::
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
-    call Func_01B_6277
+    call DrawScreenBufferRectToBGMap_1B
     ret
 
 ; only called from routines of ScriptCommandEF_Run_Bank1B (E-0098)
@@ -7154,7 +7162,7 @@ Func_01B_7439:: ; address name
     ret
 
 ; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
-; 4 call sites from 4 routines (e.g. Func_01B_74DC, ScriptCommandEF_Run_Bank1B_Case04_Case07, ScriptCommandEF_Run_Bank1B_Case05_Case06, ScriptCommandEF_Run_Bank1B_Case0E_Case06)
+; 4 call sites from 4 routines (e.g. ClearTileRowsFromWD7DC, ScriptCommandEF_Run_Bank1B_Case04_Case07, ScriptCommandEF_Run_Bank1B_Case05_Case06, ScriptCommandEF_Run_Bank1B_Case0E_Case06)
 ; writes: wC52D, wC52E, wC52F, wC530
 SetDefaultStringWindow_Bank1B::
 Func_01B_7449:: ; address name
@@ -7247,10 +7255,12 @@ Func_01B_7487:: ; address name
     ld [hl], a
     ret
 
-; 4 call sites from 4 routines (e.g. ScriptCommandEF_Run_Bank1B_Case00, Func_01B_7205, ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case04_Case08)
+; clears the 6-tile rows of vTiles2 + $100-$220 from row wD7DC onward, then restores the default window (E-0127)
+; 4 call sites from 4 routines (e.g. ScriptCommandEF_Run_Bank1B_Case00, ClearRecordPanelTiles, ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case04_Case08)
 ; reads: wD7DC
 ; writes: wC52F, wC530, wC52D, wC52E
-Func_01B_74DC::
+ClearTileRowsFromWD7DC::
+Func_01B_74DC:: ; address name
     ld hl, $0601
     ld a, l
     ld [wC52F], a
@@ -7303,7 +7313,7 @@ Jump_01B_7533::
     call SetDefaultStringWindow_Bank1B
     ret
 
-; 3 call sites from 3 routines (e.g. Func_01B_7205, ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case05_Case00)
+; 3 call sites from 3 routines (e.g. ClearRecordPanelTiles, ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case05_Case00)
 ; reads: wD7DC
 ; writes: rRAMG2, rRAMB, wC8D9, wD7F1
 ; points at: wD7DD

@@ -1884,7 +1884,7 @@ Jump_00A_4E82::
 
 Jump_00A_4E91::
     ld de, Data_00A_588E
-    call Func_00A_5071
+    call LoadEncounterMonsterIdsToWD09D
     ret
 
 Jump_00A_4E98::
@@ -1898,7 +1898,7 @@ Jump_00A_4E98::
 
 Jump_00A_4EA7::
     ld de, Data_00A_5A3B
-    call Func_00A_5071
+    call LoadEncounterMonsterIdsToWD09D
     ret
 
 Jump_00A_4EAE::
@@ -1966,7 +1966,7 @@ Jump_00A_4EFF::
 
 Jump_00A_4F0E::
     ld de, Data_00A_5D4E
-    call Func_00A_5071
+    call LoadEncounterMonsterIdsToWD09D
     ret
 
 Jump_00A_4F15::
@@ -1977,7 +1977,7 @@ Jump_00A_4F15::
 
 Jump_00A_4F1E::
     ld de, Data_00A_5D8C
-    call Func_00A_5071
+    call LoadEncounterMonsterIdsToWD09D
     ret
 
 Jump_00A_4F25::
@@ -2206,11 +2206,13 @@ Func_00A_5057:: ; address name
     ld a, [hl]
     ld d, a
 
+; DE += 2; wD09D = the number of non-zero entries (up to 5); copies their monster ids to wD09F and replaces each with two bytes of its monster table entry (E-0127)
 ; 4 call sites from 1 routine (e.g. Func_00A_4D5E)
 ; reads: wD09D, hFFC6, hFFC7
 ; writes: wD09D, wD09E, wMonsterId, wCFE7, hFFC6
 ; points at: wD09F, hFFC6
-Func_00A_5071::
+LoadEncounterMonsterIdsToWD09D::
+Func_00A_5071:: ; address name
     inc de
     inc de
     push de

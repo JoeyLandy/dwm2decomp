@@ -1891,7 +1891,7 @@ Jump_036_4C07::
     ld [hl], b
     ld a, [wBattleTarget]
     ld c, a
-    farcall Func_019_4298
+    farcall SetSlotAIModeFromINT
     ld a, [wBattleTarget]
     ld c, a
     farcall SlotField17OrMonsterCFF5
@@ -2364,9 +2364,11 @@ Jump_036_4F65::
     dec b
     jr nz, Jump_036_4F54
 
-; 1 call site from 1 routine (e.g. Func_036_4F69)
+; A = a random one of the first E bytes at wD86D (no carry); the next entry lists the target's other occupied ally slots there and carries when none (E-0127)
+; 1 call site from 1 routine (e.g. PickRandomEntryOfWD86D)
 ; points at: wD86D
-Func_036_4F69::
+PickRandomEntryOfWD86D::
+Func_036_4F69:: ; address name
     ld hl, $0000
     ld b, $00
     dec e
@@ -2413,7 +2415,7 @@ Jump_036_4FAE::
     ld a, e
     or a, a
     jr z, Jump_036_4FBA
-    call Func_036_4F69
+    call PickRandomEntryOfWD86D
     ret
 
 Jump_036_4FBA::
@@ -3636,9 +3638,11 @@ Jump_036_5622::
     call RollChanceByHLBits6And7
     ret
 
+; level = bits 2-3 of the target's wDA72 byte 2 (wD86A; forced to 4): carry at 4, otherwise RollChanceByFlagsAtHL (E-0127)
 ; 2 call sites from 2 routines (e.g. ActionEffect_OddDance, ActionEffect_RobMagic)
 ; writes: wD86A
-Func_036_5626::
+RollTargetWDA72Byte2Bits23Chance::
+Func_036_5626:: ; address name
     call HLToWD814EntryOfWD8A5_Bank36
     call GetTargetWDA72Byte2
     rrca
@@ -3661,7 +3665,7 @@ Jump_036_563C::
 ; points at: wBattleMP, wD8F0
 ActionEffect_RobMagic_Sub01::
 Func_036_5640:: ; address name
-    call Func_036_5671
+    call DrainTargetMPAmount
     ld a, [wBattleActor]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
@@ -3695,11 +3699,13 @@ Jump_036_566B::
 Jump_036_5670::
     ret
 
+; takes MP from the target: up to wD8B7[actor] / 4 + 5 (or wC982 for action $DF), limited by its MP; the amount is stored as damage (E-0127)
 ; 2 call sites from 2 routines (e.g. ActionEffect_OddDance, ActionEffect_RobMagic_Sub01)
 ; reads: wBattleTarget, wBattleActionId, wC982, wC983, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wBattleMP, wD8B7
-Func_036_5671::
+DrainTargetMPAmount::
+Func_036_5671:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
@@ -4705,7 +4711,7 @@ Func_036_5BC4:: ; address name
     call ActionEffect_TatsuCall_Sub01_Sub02
     ld a, [wD871]
     ld c, a
-    farcall Func_019_4298
+    farcall SetSlotAIModeFromINT
     ld a, [wRecordBuffer]
     ld l, a
     ld a, [wCFED]
@@ -5173,7 +5179,7 @@ Jump_036_5F32::
     farcall LoadSpeciesRecord
     ld a, [wBattleActor]
     ld c, a
-    farcall Func_019_4298
+    farcall SetSlotAIModeFromINT
     ld hl, wD01A
     ld a, l
     ld [wD868], a
@@ -5555,7 +5561,7 @@ Func_036_61AB:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 2 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA74 + 7 * target); DE points at it (E-0095)
-; 5 call sites from 5 routines (e.g. RollTargetWDA72Byte2Bits45Chance, ActionEffect_EerieLite_Sub01, Func_036_5626, ActionEffect_StopSpell_Sub01, ...)
+; 5 call sites from 5 routines (e.g. RollTargetWDA72Byte2Bits45Chance, ActionEffect_EerieLite_Sub01, RollTargetWDA72Byte2Bits23Chance, ActionEffect_StopSpell_Sub01, ...)
 ; reads: wBattleTarget
 ; points at: wDA74
 GetTargetWDA72Byte2::
@@ -8147,7 +8153,7 @@ Jump_036_6F23::
     jr nc, Jump_036_6F93
 
 Jump_036_6F2D::
-    call Func_036_5626
+    call RollTargetWDA72Byte2Bits23Chance
     jr nc, Jump_036_6F93
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -9169,9 +9175,9 @@ Func_036_745D:: ; address name
     ld a, [hl+]
     or a, [hl]
     jr z, Jump_036_747B
-    call Func_036_5626
+    call RollTargetWDA72Byte2Bits23Chance
     jp nc, Jump_036_7CB7
-    call Func_036_5671
+    call DrainTargetMPAmount
     ld l, $57
     ld bc, $4090
     jp Jump_036_7CA3
@@ -10160,7 +10166,7 @@ Func_036_7A18:: ; address name
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    farcall Func_032_5AB3
+    farcall BlankTargetMonsterPicture
     ld a, [wBattleActionId]
     cp a, $B2
     ld d, $8F
@@ -10461,7 +10467,7 @@ Func_036_7BC9:: ; address name
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    farcall Func_032_5AB3
+    farcall BlankTargetMonsterPicture
 
 Jump_036_7BF5::
     jp Jump_036_7CD3

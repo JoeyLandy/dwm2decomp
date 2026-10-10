@@ -69,7 +69,7 @@ Jump_024_4057::
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     farcall LoadPalette0FromData53C6
     farcall Func_002_5F9B
     ld hl, vTiles1
@@ -236,7 +236,7 @@ Jump_024_418D::
     call BGMapAddressAtScroll_Bank24
     ld bc, $1406
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -257,7 +257,7 @@ Jump_024_41C0::
     call BGMapAddressAtScroll_Bank24
     ld bc, $1406
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -327,7 +327,7 @@ Jump_024_4225:: ; address name
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wD092]
     and a, $01
     add a, $01
@@ -493,7 +493,7 @@ Jump_024_4326:: ; address name
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wD781]
@@ -563,7 +563,7 @@ Jump_024_4394:: ; address name
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wD781]
@@ -618,7 +618,7 @@ Jump_024_43F1::
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     xor a, a
     ld b, $C3
     ld hl, Data_024_5AAA
@@ -690,7 +690,7 @@ Jump_024_4477::
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld de, Data_024_5942
     ld hl, wC300
     ld bc, $1405
@@ -701,7 +701,7 @@ Jump_024_4477::
     add hl, de
     ld bc, $1405
     ld de, $0168
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -738,7 +738,7 @@ Jump_024_44BA::
     add hl, de
     ld bc, $1405
     ld de, $0168
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wTwoChoiceCursor]
     add a, $08
     call ShowStringAInDefaultWindow_Bank24
@@ -904,7 +904,7 @@ Jump_024_459D:: ; address name
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_024_5AAE
@@ -1029,7 +1029,7 @@ Jump_024_4678::
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wTwoChoiceCursor]
     ld b, $C3
     ld hl, Data_024_5AAA
@@ -1063,7 +1063,7 @@ GameMode6_Update_Case04_Case0A::
 Jump_024_46BA:: ; address name
     xor a, a
     ld [wD7F5], a
-    farcall Func_00D_4D24
+    farcall HandleTwoChoiceCursorInput_0D
     ld a, [wD7F5]
     and a, a
     ret z
@@ -1136,7 +1136,7 @@ Jump_024_4724:: ; address name
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_024_5AAE
@@ -1263,7 +1263,7 @@ Jump_024_47F6:: ; address name
 ; points at: wC40B, wC40C
 GameMode6_Update_Case05_Case02::
 Jump_024_480A:: ; address name
-    farcall Func_01E_71E1
+    farcall ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_024_482E
@@ -1280,7 +1280,7 @@ Jump_024_482E::
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1423,7 +1423,7 @@ Jump_024_48EA:: ; address name
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld hl, vTiles1
     ld a, l
     ld [wC52D], a
@@ -1449,7 +1449,7 @@ GameMode6_Update_Case05_Case08::
 Jump_024_494E:: ; address name
     xor a, a
     ld [wD7F5], a
-    farcall Func_00D_4D24
+    farcall HandleTwoChoiceCursorInput_0D
     ld a, [wD7F5]
     and a, a
     ret z
@@ -1514,7 +1514,7 @@ Jump_024_49AF:: ; address name
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_024_5AAE
@@ -1704,7 +1704,7 @@ Jump_024_4AEF::
 GameMode6_Update_Case0E_Case01::
 Jump_024_4B0E:: ; address name
     farcall ListRecordsInUseWithByte6ESet
-    farcall Func_01E_71E1
+    farcall ClampRecordListPageCursor4
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_024_4B38
@@ -1802,13 +1802,13 @@ Jump_024_4BB0:: ; address name
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
     ld de, $01CC
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     call BGMapAddressAtScroll_Bank24
     ld de, $01A0
     add hl, de
     ld bc, $1405
     ld de, $0168
-    call Func_024_4E57
+    call DrawScreenBufferRectToBGMap_24
     ld a, $70
     ldh [hFFBA], a
     xor a, a
@@ -1922,7 +1922,7 @@ Jump_024_4C81::
 GameMode6_Update_Case0F_Case01::
 Jump_024_4CA0:: ; address name
     farcall ListRecordsInUseWithByte6EClear
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_024_4CCA
@@ -2215,11 +2215,13 @@ Jump_024_4E3F::
     ldh [rSVBK], a
     ret
 
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 18 call sites from 15 routines (e.g. GameMode6_Init, GameMode6_Update_Case01, GameMode6_Update_Case00_Case00, GameMode6_Update_Case02_Case0C, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_024_4E57::
+DrawScreenBufferRectToBGMap_24::
+Func_024_4E57:: ; address name
     push de
     push bc
     push hl

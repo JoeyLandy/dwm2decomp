@@ -78,12 +78,12 @@ Func_060_4035:: ; address name
 DebugAutomap_Update_Sub01_Sub01_Sub01::
 Func_060_4076:: ; address name
     call LoadWC969TripleForWCD05
-    call Func_060_436B
+    call LoadKeyWorldParamsForWC833
     call Func_060_408F
     call FillWCD11LevelsForWCD05
     call Func_060_4274
-    call Func_060_42F2
-    call Func_060_4698
+    call FillWCD51LevelsSlope
+    call RollKeyWorldMonsterIds
     call Func_060_4597
     ret
 
@@ -363,10 +363,12 @@ Jump_060_42D4::
     jp nz, Jump_060_4286
     ret
 
+; for 8 entries from wCD51 ORs 2 * min(wC969 + 15 * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wC969, wCD05
 ; points at: wCD11
-Func_060_42F2::
+FillWCD51LevelsSlope::
+Func_060_42F2:: ; address name
     ld b, $08
     ld a, $40
     ld de, wCD11
@@ -463,11 +465,13 @@ Jump_060_435E::
     jr nz, Jump_060_4356
     ret
 
+; from the wC708 entry wC833: wCD02 = Data_060_43C7[byte 0] plus a row adjustment, and copies the $FF-terminated list of Data_060_43D7 row byte 1 to wCCF7 (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wC833, wCD02
 ; writes: wCD02
 ; points at: wCCF7
-Func_060_436B::
+LoadKeyWorldParamsForWC833::
+Func_060_436B:: ; address name
     ld a, [wC833]
     ld l, a
     ld h, $00
@@ -593,7 +597,7 @@ Jump_060_45B6::
 
 Jump_060_45E7::
     call PickRandomWCCF7Entry
-    call Func_060_4724
+    call PickRandomMonsterFromBandList
     jr nc, Jump_060_45E7
     ld l, e
     ld h, d
@@ -700,7 +704,7 @@ Jump_060_4672::
 
 Jump_060_4678::
     call PickRandomWCCF7Entry
-    call Func_060_4724
+    call PickRandomMonsterFromBandList
     jr nc, Jump_060_4678
     ld l, e
     ld h, d
@@ -724,17 +728,19 @@ Jump_060_4678::
     inc hl
     jp Jump_060_4626
 
+; picks random monster ids for the key world from the wCCF7 lists by band (Func_060_4724) into wCE72-wCE79, and wCE74/wCE77/wCE7A from wC96B (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
 ; reads: wCD05, wCD03, wC96B, hFFC6
 ; writes: hFFC6, wCE72, wCE73, wCE75, wCE76, wCE78, wCE79, wCE74, ...
-Func_060_4698::
+RollKeyWorldMonsterIds::
+Func_060_4698:: ; address name
     ld a, [wCD05]
     call BandForA_4773
     ldh [hFFC6], a
 
 Jump_060_46A0::
     call PickRandomWCCF7Entry
-    call Func_060_4724
+    call PickRandomMonsterFromBandList
     jr nc, Jump_060_46A0
     ld a, e
     ld [wCE72], a
@@ -766,7 +772,7 @@ Jump_060_46CF::
 Jump_060_46D8::
     ldh [hFFC6], a
     call PickRandomWCCF7Entry
-    call Func_060_4724
+    call PickRandomMonsterFromBandList
     jr nc, Jump_060_46A0
     ld a, e
     ld [wCE75], a
@@ -794,7 +800,7 @@ Jump_060_46FE::
     ret
 
 ; hFFC7 = wCCF7[random & 1], stepping back over $FF entries (E-0124)
-; 4 call sites from 3 routines (e.g. Func_060_4597, Func_060_4698, Func_060_4607)
+; 4 call sites from 3 routines (e.g. Func_060_4597, RollKeyWorldMonsterIds, Func_060_4607)
 ; reads: wCD03
 ; writes: hFFC7
 ; points at: wCCF7
@@ -820,9 +826,11 @@ Jump_060_4721::
     ldh [hFFC7], a
     ret
 
-; 4 call sites from 3 routines (e.g. Func_060_4597, Func_060_4698, Func_060_4607)
+; DE = a random entry of the list Data_060_6D6D[16 * hFFC7 + 2 * hFFC6]; carry when valid, no carry for an empty list or ids $A4, $A5 and $174 (E-0127)
+; 4 call sites from 3 routines (e.g. Func_060_4597, RollKeyWorldMonsterIds, Func_060_4607)
 ; reads: hFFC7, hFFC6, wCD04
-Func_060_4724::
+PickRandomMonsterFromBandList::
+Func_060_4724:: ; address name
     ldh a, [hFFC7]
     swap a
     ld de, Data_060_6D6D
@@ -891,7 +899,7 @@ Jump_060_476C::
     ret
 
 ; A = 2-7 by thresholds 20, 40, 60, 70, 80, 90, 95 (E-0125)
-; 3 call sites from 3 routines (e.g. Func_060_4597, Func_060_4698, Func_060_4607)
+; 3 call sites from 3 routines (e.g. Func_060_4597, RollKeyWorldMonsterIds, Func_060_4607)
 BandForA_4773::
 Func_060_4773:: ; address name
     cp a, $14

@@ -1745,11 +1745,13 @@ Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $02, $02, $03, $03, $03, $03, $04, $05, $05, $06, $07, $03, $04, $05
     db $06, $07, $08, $04, $05, $06, $07, $07, $08, $0B, $0C, $0D, $0C, $0C, $0E, $10
 
+; for record wD869 below its level cap: computes the stat gains from its species growth rows (table $6616) into wD095-wD09A (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_031_67AA_Case02_Case01, Func_031_67AA_Case07)
 ; reads: wD869, wD014, wD015, wD016, wD017, wD018, wD019
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wD095, wD096, wD097, wD098, wD099, wD09A
 ; points at: wD095
-Func_01A_6418::
+ComputeLevelUpStatGainsForWD869::
+Func_01A_6418:: ; address name
     ld hl, wD095
     ld bc, $0008
     xor a, a
@@ -1774,7 +1776,7 @@ Func_01A_6418::
     cp a, [hl]
     jr nc, Jump_01A_64A1
     ld d, a
-    call Func_01A_64A2
+    call ComputeLevelUpStatGainsForWD869_Sub01
     ld a, [wD014]
     call ReadByteTable6616Row
     ld b, $00
@@ -1805,16 +1807,18 @@ Func_01A_6418::
     ld b, $05
     call AddWD09CIfWD09BMatchesB
     ld [wD09A], a
-    call Func_01A_6587
+    call ClampLevelUpGainsTo999
 
 Jump_01A_64A1::
     ret
 
-; 1 call site from 1 routine (e.g. Func_01A_6418)
+; only called from ComputeLevelUpStatGainsForWD869 (E-0047)
+; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
 ; reads: wD869, wD09B
 ; writes: wD09B, wD09C
 ; points at: wD095
-Func_01A_64A2::
+ComputeLevelUpStatGainsForWD869_Sub01::
+Func_01A_64A2:: ; address name
     push de
     ld a, [wD869]
     ld c, $A4
@@ -1938,7 +1942,7 @@ Jump_01A_654C::
     ret
 
 ; if bit 0 of E is set, C += 1 when bit 0 of [HL] is set; otherwise B += 1 when bit 0 of [HL] is clear (E-0122)
-; 8 call sites from 1 routine (e.g. Func_01A_64A2)
+; 8 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForWD869_Sub01)
 CountBit0MatchOfEAndHL::
 Func_01A_6551:: ; address name
     bit 0, e
@@ -1957,7 +1961,7 @@ Jump_01A_6561::
     ret
 
 ; C = the byte at $6616 + $63 * A + D (a table with $63-byte rows); DE kept (E-0119)
-; 6 call sites from 1 routine (e.g. Func_01A_6418)
+; 6 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
 ReadByteTable6616Row::
 Func_01A_6562:: ; address name
     push de
@@ -1976,7 +1980,7 @@ Func_01A_6562:: ; address name
     ret
 
 ; A = C + (wD09C when wD09B = B, else 0) (E-0078)
-; 6 call sites from 1 routine (e.g. Func_01A_6418)
+; 6 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
 ; reads: wD09B, wD09C
 AddWD09CIfWD09BMatchesB::
 Func_01A_6579:: ; address name
@@ -1993,10 +1997,12 @@ Jump_01A_6585::
     add a, c
     ret
 
-; 1 call site from 1 routine (e.g. Func_01A_6418)
+; limits each gain in wD095-wD09A so the record's stat words from field $5D stay at or below 999 (E-0127)
+; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
 ; reads: wD869, wD095, wD096, wD097, wD098, wD099, wD09A
 ; writes: wD095, wD096, wD097, wD098, wD099, wD09A
-Func_01A_6587::
+ClampLevelUpGainsTo999::
+Func_01A_6587:: ; address name
     ld a, [wD869]
     ld c, $5D
     call SRAMRecordAddress
@@ -2057,7 +2063,7 @@ Func_01A_6587::
     ret
 
 ; C = the amount that still fits under 999 for the word at HL plus C (0 when the word is already 999) (E-0126)
-; 6 call sites from 1 routine (e.g. Func_01A_6587)
+; 6 call sites from 1 routine (e.g. ClampLevelUpGainsTo999)
 ClampDeltaTo999::
 Func_01A_65F4:: ; address name
     push hl

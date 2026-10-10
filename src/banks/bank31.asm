@@ -6919,7 +6919,7 @@ Jump_031_67F7::
     ldh [hFFC8], a
     ld [wDA6D], a
     ld hl, wC130
-    call Func_000_2ECF
+    call WriteNumber24AsDecimalString
     ld hl, $0500
     call ShowStringHL_Bank31
     ld hl, wBattleSubPhase
@@ -7038,7 +7038,7 @@ Jump_031_68C0:: ; address name
     ld hl, wC6FE
     add_a_to_hl
     ld a, [hl]
-    call Func_031_6D28
+    call RecordReachedNextLevelExp
     bit 0, c
     jr nz, Jump_031_6901
 
@@ -7096,7 +7096,7 @@ Jump_031_6925:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld [wD869], a
-    farcall Func_01A_6418
+    farcall ComputeLevelUpStatGainsForWD869
     pop hl
     call WriteRecordField4BAndStatsDecimal
     ld hl, $0501
@@ -7240,7 +7240,7 @@ Jump_031_6A0A:: ; address name
     xor a, a
     ld [rRAMB], a
     call StoreWD09DToRecordSkills
-    call Func_031_6A2D
+    call ApplyLevelUpToRecordWD868
     call ShowString0ACat5IfField56AtLeast57
     xor a, a
     ld [rRAMG], a
@@ -7252,9 +7252,11 @@ Jump_031_6A0A:: ; address name
     ld [wBattleResolveStep], a
     ret
 
+; record wD868: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case04)
 ; reads: wD868, wD095, wD096, wD097, wD098, wD099, wD09A
-Func_031_6A2D::
+ApplyLevelUpToRecordWD868::
+Func_031_6A2D:: ; address name
     ld a, [wD868]
     ld c, $56
     call SRAMRecordAddressMapped
@@ -7310,7 +7312,7 @@ Func_031_6A2D::
     ret
 
 ; the word at HL += A (unsigned); HL ends on the high byte; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
-; 6 call sites from 1 routine (e.g. Func_031_6A2D)
+; 6 call sites from 1 routine (e.g. ApplyLevelUpToRecordWD868)
 AddAToWordAtHL_Bank31_6A8B::
 Func_031_6A8B:: ; address name
     add a, [hl]
@@ -7512,7 +7514,7 @@ Jump_031_6B6C::
     push hl
     push bc
     ld a, c
-    call Func_031_6D28
+    call RecordReachedNextLevelExp
     bit 0, c
     pop bc
     pop hl
@@ -7555,8 +7557,8 @@ Jump_031_6BAC:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    farcall Func_01A_6418
-    call Func_031_6BCA
+    farcall ComputeLevelUpStatGainsForWD869
+    call ApplyLevelUpToRecordWD869
     call CopyRecordFields5DTo5BAnd61To5F
     xor a, a
     ld [rRAMG], a
@@ -7564,9 +7566,11 @@ Jump_031_6BAC:: ; address name
     dec [hl]
     ret
 
+; record wD869: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case07)
 ; reads: wD869, wD095, wD096, wD097, wD098, wD099, wD09A
-Func_031_6BCA::
+ApplyLevelUpToRecordWD869::
+Func_031_6BCA:: ; address name
     ld a, [wD869]
     ld c, $56
     call SRAMRecordAddress
@@ -7622,7 +7626,7 @@ Func_031_6BCA::
     ret
 
 ; the word at HL += A (unsigned); HL ends on the high byte; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
-; 6 call sites from 1 routine (e.g. Func_031_6BCA)
+; 6 call sites from 1 routine (e.g. ApplyLevelUpToRecordWD869)
 AddAToWordAtHL_Bank31::
 Func_031_6C28:: ; address name
     add a, [hl]
@@ -7824,10 +7828,12 @@ Func_031_6D1F:: ; address name
     add hl, bc
     ret
 
+; record A below its level cap: C = 1 when its EXP (field $58) has reached the next level's total from the species growth table, else 0 (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_031_67AA_Case06, Func_031_67AA_Case02_Case00)
 ; reads: wD00F, hFFC8, hFFC9, hFFCA
 ; writes: rRAMG, rRAMB, hFFC7, wSpeciesIdLo, wSpeciesIdHi, hFFC6
-Func_031_6D28::
+RecordReachedNextLevelExp::
+Func_031_6D28:: ; address name
     push af
     ld a, $0A
     ld [rRAMG], a
@@ -9586,7 +9592,7 @@ Jump_031_7805::
     ret
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: writes the slot's HP (wBattleHP) as decimal digit tiles (HLToDecimalDigits) into wScreenTileBuffer at the position from Data_031_7AC8 (E-0111)
-; 6 call sites from 5 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, Func_03A_66A9, ...)
+; 6 call sites from 5 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, RedrawChangedSlotPanels, ...)
 ; reads: wC58A, wC57F
 ; points at: wBattleHP, wScreenTileBuffer
 DrawSlotHPDigits::
@@ -9645,7 +9651,7 @@ Jump_031_785D::
     ret
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: writes the slot's MP (wBattleMP) as decimal digit tiles into wScreenTileBuffer at the slot's position (E-0111)
-; 6 call sites from 5 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, Func_03A_66A9, ...)
+; 6 call sites from 5 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, RedrawChangedSlotPanels, ...)
 ; reads: wC58A, wC57F
 ; points at: wBattleMP, wScreenTileBuffer
 DrawSlotMPDigits::
@@ -9765,7 +9771,7 @@ Jump_031_7912::
     ret
 
 ; copies three tiles at offset Data_031_7AC8[slot] from the screen buffer to vBGMap0 for the shown side (CopySlotPanelPart6D47ToVRAM in mode 2) (E-0125)
-; 6 call sites from 5 routines (e.g. CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, Func_03A_66A9, ...)
+; 6 call sites from 5 routines (e.g. CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, RedrawChangedSlotPanels, ...)
 ; reads: wC58A, wC57F
 ; points at: wScreenTileBuffer
 CopySlotPanelPart7AC8ToVRAM::
@@ -9821,7 +9827,7 @@ Jump_031_7964::
     ret
 
 ; copies three tiles at offset Data_031_7ACE[slot] from the screen buffer to vBGMap0 for the shown side (CopySlotPanelPart6D4BToVRAM in mode 2) (E-0125)
-; 6 call sites from 5 routines (e.g. CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, Func_03A_66A9, ...)
+; 6 call sites from 5 routines (e.g. CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, RedrawChangedSlotPanels, ...)
 ; reads: wC58A, wC57F
 ; points at: wScreenTileBuffer
 CopySlotPanelPart7ACEToVRAM::

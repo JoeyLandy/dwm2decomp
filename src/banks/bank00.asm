@@ -1643,7 +1643,7 @@ Func_000_0A61:: ; address name
     ret
 
 ; wJoypadPressed = buttons newly held since the last poll; wJoypadPressedRepeat = the same, plus an auto-repeat that fires after $14 frames and then every 6 (timer in wJoypadRepeatTimer)
-; 9 call sites from 5 routines (e.g. VBlankHandler, Func_01B_4736, Func_01B_468A, Func_01B_45EF, ...)
+; 9 call sites from 5 routines (e.g. VBlankHandler, Func_01B_4736, Func_01B_468A, LinkReceiveJoypadByte, ...)
 ; reads: wC58A, wC55D, wJoypadPressed, wC566, wC560, wJoypadHeld
 ; writes: wC560, wC561, wJoypadPressedRepeat, wJoypadPressed, wJoypadRepeatTimer, wC567, wC566, wC568
 ; points at: wJoypadHeld, wC560, wC568, wJoypadRepeatTimer
@@ -3726,7 +3726,7 @@ Jump_000_1606::
     ret
 
 ; A = ROM bank, DE = source in that bank, B = width, C = rows, HL = BG map address: switches to the bank and copies the rectangle with WriteVRAMByteInc (interrupts off per byte), wrapping columns inside each 32-entry row and rows inside $9800-$9BFF (H &= $9B); restores the bank (E-0090)
-; 8 call sites from 4 routines (e.g. Func_002_6841, CopyScreenRectToBGMapSetWC554, Func_033_60FC, Func_037_5B3F)
+; 8 call sites from 4 routines (e.g. DrawBottomWindowWC364AtScroll, CopyScreenRectToBGMapSetWC554, DrawScreenBufferRectToBGMap_33, DrawScreenBufferRectToBGMap_37)
 ; writes: rROMB0
 CopyRectFromBankToBGMapWrapped::
 Func_000_160B:: ; address name
@@ -3882,7 +3882,7 @@ Jump_000_16A5::
     ret
 
 ; E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E
-; 64 call sites from 53 routines (e.g. MultiplyHLByAPercent, Func_005_4B97, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
+; 64 call sites from 53 routines (e.g. MultiplyHLByAPercent, FastestFoeAGLAbove31PercentOfActor, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
 Multiply8By16::
 Func_000_16AA:: ; address name
     push af
@@ -3951,7 +3951,7 @@ Jump_000_16DE::
     ret
 
 ; E:H:L = E:H:L / A (24-bit quotient), A = remainder; clobbers B, D
-; 36 call sites from 30 routines (e.g. MultiplyHLByAPercent, Func_005_4B97, Func_005_667F, AIScore_BiAttack_Sub01, ...)
+; 36 call sites from 30 routines (e.g. MultiplyHLByAPercent, FastestFoeAGLAbove31PercentOfActor, Func_005_667F, AIScore_BiAttack_Sub01, ...)
 Divide24ByA::
 Func_000_16E2:: ; address name
     ld d, $18
@@ -3976,7 +3976,7 @@ Jump_000_16F1::
     ret
 
 ; HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones
-; 116 call sites from 78 routines (e.g. DebugResultsDisplay_Update_Sub02, PackTwoDigitsOfCAsBCD, Func_002_6788, Func_003_50DD, ...)
+; 116 call sites from 78 routines (e.g. DebugResultsDisplay_Update_Sub02, PackTwoDigitsOfCAsBCD, Func_002_6788, DrawRecordHPMPAndLevelForRowC, ...)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1, wC8C2
 ; points at: hFF9C, hFFF6
@@ -4284,7 +4284,7 @@ Jump_000_1870::
     jr Jump_000_1870
 
 ; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
-; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF7_Run_Case27_Sub02_Sub01, DecompressGraphicsWD7F1ToWD7F4, Func_01D_6915, ...)
+; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF7_Run_Case27_Sub02_Sub01, DecompressGraphicsWD7F1ToWD7F4, LoadSpeciesSpriteGraphicsAndPalette, ...)
 ; writes: rROMB0
 ReadByteInBank::
 Func_000_1872:: ; address name
@@ -5550,7 +5550,7 @@ Jump_000_1F77::
     ret
 
 ; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
-; 102 call sites from 78 routines (e.g. Func_000_228A, PersonalityIndexOfRecord, Func_002_5E85, Func_002_6788, ...)
+; 102 call sites from 78 routines (e.g. Func_000_228A, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, Func_002_6788, ...)
 ; writes: hFFC6
 LoadSRAMRecordByte::
 Func_000_1F80:: ; address name
@@ -5856,7 +5856,7 @@ Jump_000_20DF::
     ds $24, $00
 
 ; DE = destination: writes wC8C1 as tile $E0 + digit, or blank tile $C3 when it is 0, then wC8C2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
-; 7 call sites from 7 routines (e.g. Func_002_6788, Func_003_50DD, PauseMenu_State3_Shared02, WriteByteAAsTwoDigitTiles, ...)
+; 7 call sites from 7 routines (e.g. Func_002_6788, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_Shared02, WriteByteAAsTwoDigitTiles, ...)
 ; points at: wC8C1
 WriteTwoDigitTilesFromWC8C1::
 Func_000_210D:: ; address name
@@ -5881,7 +5881,7 @@ Jump_000_211B::
     ret
 
 ; DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third
-; 36 call sites from 19 routines (e.g. Func_002_6788, Func_003_50DD, PauseMenu_State3_Shared02, PauseMenu_State3_Case05_Case00, ...)
+; 36 call sites from 19 routines (e.g. Func_002_6788, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_Shared02, PauseMenu_State3_Case05_Case00, ...)
 ; points at: wC8C0
 WriteDecimalDigitTiles::
 Func_000_2123:: ; address name
@@ -6397,10 +6397,12 @@ Func_000_23BD:: ; address name
     inc c
     ret
 
+; writes the packed BCD number in hFFC6-hFFC9 (most significant byte last) as digits at DE without leading zeros, then $F0; zero writes a single 0 (E-0127)
 ; 9 call sites from 7 routines (e.g. ScriptCommand84_Run_Case06, ScriptCommand80_Run_Case00, ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Case03_Case00, ...)
 ; reads: hFFC6, hFFC7, hFFC8, hFFC9
 ; points at: hFFC8
-Func_000_23CA::
+WritePackedBCDNoLeadingZeros::
+Func_000_23CA:: ; address name
     ldh a, [hFFC6]
     or a, a
     jr nz, Jump_000_23E4
@@ -8401,10 +8403,12 @@ Jump_000_2EC7::
     inc hl
     ret
 
+; writes the 24-bit number in hFFC6-hFFC8 as decimal digits from the millions down (dividing by 1,000,000, 100,000 and 10,000), then the 16-bit remainder through the shared writer (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_031_67AA_Case00, RunBattlePhaseWhenTextIdle_A0_Case03_Case08)
 ; reads: hFFC6, hFFC7
 ; writes: hFFCC
-Func_000_2ECF::
+WriteNumber24AsDecimalString::
+Func_000_2ECF:: ; address name
     ld a, $0F
     ldh [hFFCC], a
     ld e, $40
@@ -8462,7 +8466,7 @@ Jump_000_2F1F::
     jp Jump_000_2FA7
 
 ; Divide24ByHFFCCDE with hFFC6-hFFC8 restored afterwards (A = the quotient); uses wC0A0, wC0A1 and wMenuRowCount as scratch, so wMenuRowCount is overwritten (E-0090)
-; 3 call sites from 1 routine (e.g. Func_000_2ECF)
+; 3 call sites from 1 routine (e.g. WriteNumber24AsDecimalString)
 ; reads: hFFC6, hFFC7, hFFC8, wC0A0, wC0A1, wMenuRowCount
 ; writes: wC0A0, wC0A1, wMenuRowCount, hFFC6, hFFC7, hFFC8
 Quotient24ByHFFCCDE::
@@ -8485,7 +8489,7 @@ Func_000_2F36:: ; address name
     ret
 
 ; A = the 24-bit hFFC8:hFFC7:hFFC6 divided by the 24-bit hFFCC:D:E (repeated subtraction; the quotient must fit in 8 bits); the remainder is left in hFFC6-hFFC8; HL kept (E-0090)
-; 4 call sites from 2 routines (e.g. Func_000_2ECF, Quotient24ByHFFCCDE)
+; 4 call sites from 2 routines (e.g. WriteNumber24AsDecimalString, Quotient24ByHFFCCDE)
 ; reads: hFFCC, hFFC6, hFFC7, hFFC8
 ; writes: hFFC6, hFFC7, hFFC8
 Divide24ByHFFCCDE::
@@ -8591,7 +8595,7 @@ Jump_000_2FCA::
     ret
 
 ; [HL] = A, HL += 1, [HL] = $F0 (string terminator) (E-0077)
-; 7 call sites from 2 routines (e.g. RunBattleActions_Case09_Case04_Sub01, Func_000_2ECF)
+; 7 call sites from 2 routines (e.g. RunBattleActions_Case09_Case04_Sub01, WriteNumber24AsDecimalString)
 StoreAThenTerminator::
 Func_000_2FDC:: ; address name
     ld [hl+], a

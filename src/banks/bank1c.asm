@@ -37,7 +37,7 @@ Jump_01C_403D::
     call BGMapAddressAtScroll_Bank1C
     ld bc, $1408
     ld de, $0168
-    call Func_01C_449F
+    call DrawScreenBufferRectToBGMap_1C
     ld bc, $001A
     ld hl, wD780
 
@@ -180,7 +180,7 @@ Jump_01C_413A::
     call BGMapAddressAtScroll_Bank1C
     ld bc, $1408
     ld de, $0168
-    call Func_01C_449F
+    call DrawScreenBufferRectToBGMap_1C
     xor a, a
     ld [wC46B], a
     ld hl, wD780
@@ -793,11 +793,13 @@ Jump_01C_449B::
     ld [de], a
     ret
 
+; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 5 call sites from 5 routines (e.g. ScriptCommandE1_Run, ScriptCommandE3_Run_Case00_Sub01, ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, ...)
 ; reads: wIsCGB
 ; writes: wC554, wC555, rSVBK
 ; points at: wScreenTileBuffer, wD000
-Func_01C_449F::
+DrawScreenBufferRectToBGMap_1C::
+Func_01C_449F:: ; address name
     push de
     push bc
     push hl
@@ -952,17 +954,19 @@ Jump_01C_458B::
     call BGMapAddressAtScroll_Bank1C
     ld bc, $1408
     ld de, $0168
-    call Func_01C_449F
+    call DrawScreenBufferRectToBGMap_1C
     ret
 
 Data_01C_4598:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
+; adds the 24-bit wD7F1-wD7F3 to the gold, capped at 99,999 ($01869F) (E-0127)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE2_Run_Case04_Case0D, ScriptCommandF7_Run_Shared06)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wD7F1, wD7F2, wD7F3
 ; writes: wGoldHi, wGoldMid, wGoldLo
-Func_01C_45B0::
+AddWD7F1ToGoldCapped99999::
+Func_01C_45B0:: ; address name
     ld a, [wGoldLo]
     ld e, a
     ld a, [wGoldMid]
@@ -1198,7 +1202,7 @@ ScriptCommandE2_Run_Case01_Case01::
 Jump_01C_4706:: ; address name
     ld hl, Data_01C_5F86
     ld de, Data_01C_5FE8
-    call Func_01C_69D5
+    call CopyTileListFromBank1F_1C
     ret
 
 ; entry 2 of the `rst $00` table in ScriptCommandE2_Run_Case01
@@ -3437,7 +3441,7 @@ Jump_01C_54A6::
     jr c, Jump_01C_549D
     ld a, c
     ld [wD7B0], a
-    call Func_01C_689A
+    call ListDistinctInventoryItemsToWD7D5
     ld hl, wD7D5
     ld b, $00
     ld c, $00
@@ -4945,7 +4949,7 @@ Jump_01C_5E1B:: ; address name
     ld [wD7F2], a
     ld a, [wD7CE]
     ld [wD7F1], a
-    call Func_01C_45B0
+    call AddWD7F1ToGoldCapped99999
     call Func_01C_6919
     ld hl, wInventory
     ld b, $00
@@ -5877,11 +5881,13 @@ Jump_01C_6881::
 Jump_01C_6899::
     ret
 
+; clears wD7D5 ($18 bytes) and lists each item id 1-$62 present in the inventory, counting them in wD785 (E-0127)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE2_Run_Case04_Case02, DrawRect0140AtBGMap13E0AndStep)
 ; reads: wD785
 ; writes: wD785, wD786
 ; points at: wD7D5, wInventory
-Func_01C_689A::
+ListDistinctInventoryItemsToWD7D5::
+Func_01C_689A:: ; address name
     push af
     push bc
     push de
@@ -6112,11 +6118,13 @@ Jump_01C_69C1::
     ld [wD7D3], a
     ret
 
+; for each entry from wD783 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then wD781 += 1 (E-0127)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE2_Run_Case01_Case01, ScriptCommandE5_Run_Case01_Case01)
 ; reads: wD783
 ; writes: wD784, wD783
 ; points at: wD781
-Func_01C_69D5::
+CopyTileListFromBank1F_1C::
+Func_01C_69D5:: ; address name
     xor a, a
     ld [wD784], a
 
@@ -6240,7 +6248,7 @@ Func_01C_6A71:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld bc, $140D
     ld de, $01CC
-    call Func_01C_449F
+    call DrawScreenBufferRectToBGMap_1C
     ld hl, wD781
     inc [hl]
     ret
@@ -6287,7 +6295,7 @@ Jump_01C_6ACA::
     call BGMapAddressAtScroll_Bank1C_67AF
     ld bc, $140D
     ld de, $01CC
-    call Func_01C_449F
+    call DrawScreenBufferRectToBGMap_1C
     ld hl, wD787
     inc [hl]
     ret
@@ -6640,7 +6648,7 @@ ScriptCommandE5_Run_Case01_Case01::
 Jump_01C_6D73:: ; address name
     ld hl, Data_01C_5F86
     ld de, Data_01C_604A
-    call Func_01C_69D5
+    call CopyTileListFromBank1F_1C
     ret
 
 ; entry 2 of the `rst $00` table in ScriptCommandE5_Run_Case01
@@ -7232,7 +7240,7 @@ Jump_01C_7118::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE5_Run_Case03_Case0F::
 Jump_01C_7128:: ; address name
-    call Func_01C_7252
+    call InitItemListWD788AndDraw
     farcall ScriptCommandE5_Run_Case03_Case0F_Sub01
     ret
 
@@ -7320,7 +7328,7 @@ Func_01C_7196:: ; address name
     ld hl, vTiles2 + $700
     ld de, vTiles1 + $4C0
     call CopyTileBytesToVRAM_Bank1C
-    call Func_01C_7252
+    call InitItemListWD788AndDraw
     ld a, $03
     ld [wD781], a
     ld a, $02
@@ -7423,11 +7431,13 @@ Jump_01C_724B:: ; address name
     farcall ScriptCommandE5_Run_Case04_Case15_Sub01
     ret
 
+; copies $20 bytes from Data_01C_5F5E to wD788, counts the inventory items into wD7B0 and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)
 ; 2 call sites from 2 routines (e.g. ClearRect147AndAskTwoChoice, ScriptCommandE5_Run_Case03_Case0F)
 ; reads: wC8C1, wC8C2
 ; writes: wD7B0, wD7A5, wD7A6
 ; points at: wD788, wD792, wInventory
-Func_01C_7252::
+InitItemListWD788AndDraw::
+Func_01C_7252:: ; address name
     ld hl, wD788
     ld de, Data_01C_5F5E
     ld bc, $0020

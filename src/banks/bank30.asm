@@ -993,7 +993,7 @@ Func_030_45DA:: ; address name
     ld [wDA41], a
     ld a, $03
     ld [wDA42], a
-    call Func_030_4617
+    call AddCommandWeightToWDA3C
     call AddActorPersonalityTensToWDA3C
     call Func_030_46BA
     call AddRandomPersonalityWeights
@@ -1002,10 +1002,12 @@ Func_030_45DA:: ; address name
     ld [wD871], a
     ret
 
+; for player-side actors: with battle command 1 adds $2D to wDA3C[actor's wDA43 mode] (unless 3), otherwise $14 to wDA3C[wDA4B & 3] (E-0127)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wC58A, wBattleActor, wC46B, wDAE9
 ; points at: wDA3C, wDA4B, wDAE9
-Func_030_4617::
+AddCommandWeightToWDA3C::
+Func_030_4617:: ; address name
     ld a, [wC58A]
     or a, a
     jr z, Jump_030_4646
@@ -1698,7 +1700,7 @@ Jump_030_4B6F::
     call QuarterWordAtDEUnlessBit15
 
 Jump_030_4B72::
-    call Func_030_4C00
+    call ChooseHighestWeightedAction
     ret
 
 ; doubles the word at DE unless its bit 15 is already set (E-0122)
@@ -1828,11 +1830,13 @@ Jump_030_4BFA::
 Jump_030_4BFF::
     ret
 
+; picks the largest of the ten wD2AD weights (ties at random); index 8 chooses action 0, 9 chooses $AC, others the actor's skill in that slot (E-0127)
 ; 1 call site from 1 routine (e.g. Func_030_4AD3)
 ; reads: wC5E7, wBattleActor, hFFC6
 ; writes: hFFC6
 ; points at: wD2AD, wD989
-Func_030_4C00::
+ChooseHighestWeightedAction::
+Func_030_4C00:: ; address name
     xor a, a
     ldh [hFFC6], a
     ld hl, $0000
@@ -2887,7 +2891,7 @@ Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
 
 ; A = wDA43[wBattleActor] & 3 (E-0072)
-; 13 call sites from 12 routines (e.g. AddWeightsForSkillD_Sub01, AddRandomPersonalityWeights, Func_030_46BA, Func_030_4617, ...)
+; 13 call sites from 12 routines (e.g. AddWeightsForSkillD_Sub01, AddRandomPersonalityWeights, Func_030_46BA, AddCommandWeightToWDA3C, ...)
 ; reads: wBattleActor
 ; points at: wDA43
 GetActorWDA43Low2::
@@ -2987,7 +2991,7 @@ Func_030_5472:: ; address name
     ld a, $03
     ld [wDA42], a
     call AIChooseActionForActor_Sub01_Sub01
-    call Func_030_4617
+    call AddCommandWeightToWDA3C
     call AddActorPersonalityTensToWDA3C
     call Func_030_46BA
     call AIChooseActionForActor_Sub01_Sub02

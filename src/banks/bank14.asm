@@ -230,7 +230,7 @@ Jump_014_413E:: ; address name
 ; writes: wD781
 ScriptCommandEB_Run_Case01_Case02::
 Jump_014_414F:: ; address name
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -593,10 +593,12 @@ Jump_014_43B1::
     ld [wScriptStartRequest], a
     ret
 
+; lists the records; with none sets wTwoChoiceCursor = 1 and wD780 = 2, otherwise wD780 += 3; then requests script $80 (the next entry does the same with CountFlaggedSRAMRecords) (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7A9, wD780
 ; writes: wTwoChoiceCursor, wD780, wD781, wD782, wScriptCommandType, wScriptStartRequest
-Func_014_43CC:: ; heuristic: follows a terminator; C0
+StartRecordListOrNoneMessage:: ; heuristic: follows a terminator; C0
+Func_014_43CC:: ; address name
     farcall ListRecordsState1WithByte6EClear
     ld a, [wD7A9]
     and a, a
@@ -1001,7 +1003,7 @@ Jump_014_46C6::
     ld [wD7B5], a
     ld [wD7B6], a
     ld [wD7B4], a
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wD7AB], a
@@ -1070,7 +1072,7 @@ Jump_014_4742:: ; address name
     ld [wD7F1], a
     ld a, $0C
     ld [wD7F2], a
-    call Func_014_5925
+    call CopyScreenBufferRectWithAttrs_Bank14
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1377,7 +1379,7 @@ Func_014_4932:: ; address name
     ld [wD7F1], a
     ld a, $08
     ld [wD7F2], a
-    call Func_014_5925
+    call CopyScreenBufferRectWithAttrs_Bank14
     ld a, [wD7AB]
     ld b, $C3
     ld hl, Data_014_5B1E
@@ -1613,7 +1615,7 @@ Jump_014_4B92:: ; address name
 ; points at: wC42E, wC42F
 ScriptCommandEB_Run_Shared01::
 Func_014_4BA0:: ; address name
-    farcall Func_01E_7163
+    farcall ClampRecordListPageCursor5
     ld a, [wD7B0]
     cp a, $02
     jr c, Jump_014_4BDB
@@ -1688,7 +1690,7 @@ Jump_014_4C1C:: ; address name
     ld l, a
     ld a, [hl]
     ld [wD7F1], a
-    farcall Func_01D_5CD7
+    farcall DrawRecordNameAndSpeciesNameTiles
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1784,7 +1786,7 @@ Jump_014_4CA8:: ; address name
 ScriptCommandEB_Run_Case05_Case0E::
 Jump_014_4CBC:: ; address name
     farcall DrawRecordListNameTiles_Bank1D
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2417,7 +2419,7 @@ Jump_014_514B::
     inc a
     inc a
     ld [wD781], a
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wD7AB], a
@@ -2471,7 +2473,7 @@ Jump_014_5171:: ; address name
     ld [rRAMG2], a
     ld [wD7F2], a
     farcall Func_014_7E96
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wD7AB], a
@@ -2844,7 +2846,7 @@ Jump_014_5464::
     ld [wD7B5], a
     ld [wD7B6], a
     ld [wD7B4], a
-    farcall Func_01D_5E79
+    farcall ListPartyRecordsWithState2ToWD789
     call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wD7AB], a
@@ -2995,7 +2997,7 @@ Func_014_556D:: ; address name
     ld [wD7F1], a
     ld a, $0C
     ld [wD7F2], a
-    call Func_014_5925
+    call CopyScreenBufferRectWithAttrs_Bank14
     ld de, Data_014_5595
     ld hl, wC40D
     ld bc, $0B01
@@ -3383,7 +3385,7 @@ Jump_014_57D6::
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 5 call sites from 5 routines (e.g. ScriptCommandEC_Run_Case00, ScriptCommandEB_Run_Case00, Func_014_5925, ScriptCommandEB_Run_Shared02_Sub01, ...)
+; 5 call sites from 5 routines (e.g. ScriptCommandEC_Run_Case00, ScriptCommandEB_Run_Case00, CopyScreenBufferRectWithAttrs_Bank14, ScriptCommandEB_Run_Shared02_Sub01, ...)
 CopyBytesDEToHL_Bank14::
 Func_014_57E5:: ; address name
     ld a, [de]
@@ -3396,7 +3398,7 @@ Func_014_57E5:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 3 call sites from 3 routines (e.g. ScriptCommandEC_Run_Case00, ScriptCommandEB_Run_Case00, Func_014_5925)
+; 3 call sites from 3 routines (e.g. ScriptCommandEC_Run_Case00, ScriptCommandEB_Run_Case00, CopyScreenBufferRectWithAttrs_Bank14)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank14::
 Func_014_57EE:: ; address name
@@ -3655,13 +3657,15 @@ Func_014_5910:: ; address name
     ld [wD7F1], a
     ld a, $08
     ld [wD7F2], a
-    call Func_014_5925
+    call CopyScreenBufferRectWithAttrs_Bank14
     ret
 
+; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 4 call sites from 4 routines (e.g. RunFunc5925At0280, DrawBox4965AndMenuAndStep, ScriptCommandEB_Run_Case05_Case09, DrawBox1D4AndCopyRect5595)
 ; reads: wD7F1, wD7F2, wIsCGB
 ; points at: wScreenTileBuffer, wD000
-Func_014_5925::
+CopyScreenBufferRectWithAttrs_Bank14::
+Func_014_5925:: ; address name
     push bc
     push hl
     push de
@@ -3717,7 +3721,7 @@ Jump_014_5966::
 
 Jump_014_5975::
     dec c
-    jr nz, Func_014_5925
+    jr nz, CopyScreenBufferRectWithAttrs_Bank14
     ret
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWD09D (E-0122)
