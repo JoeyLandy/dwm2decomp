@@ -2123,5 +2123,15 @@
     "name": "ScriptCommandF8_Run",
     "note": "implements script command type F8; reached through ScriptCommandF8 in bank $10 (E-0038)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
+  },
+  "00:1FE3": {
+    "name": "LoadMonsterPicture",
+    "note": "DE = monster id, HL = VRAM destination, C = palette slot: decompresses the id's picture stream (MonsterPictureTable, bank $38) to HL; on CGB also copies the 16-byte palette from MonsterPaletteTable (bank $7B) to slot C of wC49F",
+    "evidence": "reading + execution (E-0041)"
+  },
+  "00:2090": {
+    "name": "LoadMonsterPictureAttributes",
+    "note": "DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)",
+    "evidence": "reading + execution (E-0041)"
   }
 }

@@ -1352,7 +1352,7 @@ Func_031_47DD::
     ld d, [hl]
     ld hl, vTiles2 + $140
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld a, $7F
     ld [wC526], a
     call UploadBGPalettes
@@ -8705,7 +8705,7 @@ Func_031_7379::
     ld d, a
     pop af
     ld e, a
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
     pop de
     ret
 

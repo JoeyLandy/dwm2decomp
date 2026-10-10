@@ -265,7 +265,7 @@ Func_019_4219::
     ld d, a
     pop af
     ld e, a
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ret
 
 ; 1 call site from 1 routine (e.g. Func_019_4001)

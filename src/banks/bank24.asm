@@ -2590,7 +2590,7 @@ Func_024_5064::
     call Func_024_5174
     add hl, de
     pop de
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
     ld a, [wD7BD]
     cp a, $01
     jr z, Jump_024_50F0
@@ -2611,7 +2611,7 @@ Func_024_5064::
     call Func_024_5174
     add hl, de
     pop de
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
     ld a, [wD7BD]
     cp a, $02
     jr z, Jump_024_50F0
@@ -2632,7 +2632,7 @@ Func_024_5064::
     call Func_024_5174
     add hl, de
     pop de
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_024_50F0::
     ld a, [wD092]
@@ -2816,7 +2816,7 @@ Func_024_5201::
     ld d, [hl]
     ld hl, vTiles2 + $200
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld a, $01
     ld [wD7BD], a
     ret
@@ -2830,7 +2830,7 @@ Jump_024_5222::
     ld d, [hl]
     ld hl, vTiles2
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld hl, wD12D
     ld de, wD217
     call Func_024_51F7
@@ -2850,7 +2850,7 @@ Jump_024_524C::
     ld d, [hl]
     ld hl, vTiles2 + $240
     ld c, $03
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld hl, wD17B
     ld de, wD265
     call Func_024_51F7
@@ -2870,7 +2870,7 @@ Jump_024_526D::
     ld d, [hl]
     ld hl, vTiles2 + $480
     ld c, $05
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld a, $03
     ld [wD7BD], a
     ret
@@ -2905,7 +2905,7 @@ Func_024_527E::
     push de
     ld hl, vTiles2 + $200
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     pop de
     pop hl
     xor a, a

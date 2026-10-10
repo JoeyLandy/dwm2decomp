@@ -3587,7 +3587,7 @@ Jump_0F0_5FA3:: ; address name
     push de
     ld hl, vTiles2 + $480
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     pop de
     pop hl
     xor a, a
@@ -3624,7 +3624,7 @@ Jump_0F0_5FDD::
     ld de, $0041
     add hl, de
     pop de
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_0F0_6014::
     pop hl

@@ -2150,7 +2150,7 @@ Jump_036_4E46::
     ld d, a
     ld e, b
     push de
-    call Func_000_1FE3
+    call LoadMonsterPicture
     pop de
     pop bc
     ld a, [wIsCGB]
@@ -2194,7 +2194,7 @@ Jump_036_4E9F::
     add a, b
     add a, a
     add_a_to_hl
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_036_4EB0::
     ret

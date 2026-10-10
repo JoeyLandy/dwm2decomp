@@ -1069,8 +1069,10 @@ class Rom:
                     p += sz
             for a in list(dl):
                 if addr < a < end and a not in bounds:
-                    if "pointer load" in self.dreason.get((bank, a), ""):
-                        del dl[a]  # a guessed address constant (C0) inside a table the config proves
+                    why = self.dreason.get((bank, a), "")
+                    if not why or any(k in why for k in ("pointer load", "stream", "monotone pointer table")):
+                        del dl[a]  # a guess (C0) inside a table the configuration proves
+                        self.streams.pop((bank, a), None)
                         continue
                     raise AssertionError(f"label {dl[a]} falls inside a field of table {t['label']}")
             for k in [k for k in dt if addr <= k < end]:

@@ -1693,7 +1693,7 @@ Func_003_4A36::
     push de
     ld hl, vTiles2 + $5C0
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     pop de
     ld a, [wIsCGB]
     or a, a
@@ -2622,7 +2622,7 @@ Jump_003_5057::
     add_a_to_hl
     deref_hl
     push de
-    call Func_000_1FE3
+    call LoadMonsterPicture
     pop de
     pop bc
     ld a, [wIsCGB]

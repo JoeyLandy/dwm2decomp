@@ -2290,8 +2290,779 @@ Jump_004_4E69::
     db $00, $40, $58, $80, $7A, $00, $01, $40, $00, $28, $7A, $00, $01, $50, $10, $28
     db $7A, $00, $01, $30, $38, $48, $FF
 
+; E-0041 (C1: the debug monster viewer's second pane decompresses the stream for its id to vTiles0 + $200; all 384 entries parse). Far pointers: address, bank.
+; record: compressed small-sprite stream (32 or 256 bytes); ROM bank of that data
+MonsterSpriteTable::
 Data_004_4EAA:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $010EAA, $711
+    dw Data_020_4001 ; id 0
+    db $20
+    dw Data_020_4001 ; id 1
+    db $20
+    dw Data_020_40D1 ; id 2
+    db $20
+    dw Data_020_41BA ; id 3
+    db $20
+    dw Data_020_4274 ; id 4
+    db $20
+    dw Data_020_4323 ; id 5
+    db $20
+    dw Data_020_4408 ; id 6
+    db $20
+    dw Data_020_44E6 ; id 7
+    db $20
+    dw Data_020_45A2 ; id 8
+    db $20
+    dw Data_020_4624 ; id 9
+    db $20
+    dw Data_020_46E4 ; id 10
+    db $20
+    dw Data_020_474A ; id 11
+    db $20
+    dw Data_020_47F8 ; id 12
+    db $20
+    dw Data_020_48D9 ; id 13
+    db $20
+    dw Data_020_49BB ; id 14
+    db $20
+    dw Data_020_4A7E ; id 15
+    db $20
+    dw Data_020_4B2B ; id 16
+    db $20
+    dw Data_020_4BE3 ; id 17
+    db $20
+    dw Data_020_4C49 ; id 18
+    db $20
+    dw Data_020_4D05 ; id 19
+    db $20
+    dw Data_020_4DE7 ; id 20
+    db $20
+    dw Data_020_4EB8 ; id 21
+    db $20
+    dw Data_020_4FA4 ; id 22
+    db $20
+    dw Data_020_502F ; id 23
+    db $20
+    dw Data_020_50E7 ; id 24
+    db $20
+    dw Data_020_5179 ; id 25
+    db $20
+    dw Data_020_5203 ; id 26
+    db $20
+    dw Data_020_4001 ; id 27
+    db $20
+    dw Data_020_4001 ; id 28
+    db $20
+    dw Data_020_4001 ; id 29
+    db $20
+    dw Data_020_4001 ; id 30
+    db $20
+    dw Data_020_4001 ; id 31
+    db $20
+    dw Data_020_4001 ; id 32
+    db $20
+    dw Data_020_4001 ; id 33
+    db $20
+    dw Data_020_4001 ; id 34
+    db $20
+    dw Data_020_4001 ; id 35
+    db $20
+    dw Data_020_52AC ; id 36
+    db $20
+    dw Data_020_5374 ; id 37
+    db $20
+    dw Data_020_5458 ; id 38
+    db $20
+    dw Data_020_5535 ; id 39
+    db $20
+    dw Data_020_562B ; id 40
+    db $20
+    dw Data_020_5709 ; id 41
+    db $20
+    dw Data_020_57F6 ; id 42
+    db $20
+    dw Data_020_58EB ; id 43
+    db $20
+    dw Data_020_59DD ; id 44
+    db $20
+    dw Data_020_5ACB ; id 45
+    db $20
+    dw Data_020_5BA0 ; id 46
+    db $20
+    dw Data_020_5C86 ; id 47
+    db $20
+    dw Data_020_5D82 ; id 48
+    db $20
+    dw Data_020_5E69 ; id 49
+    db $20
+    dw Data_020_5F39 ; id 50
+    db $20
+    dw Data_020_5FFB ; id 51
+    db $20
+    dw Data_020_60E2 ; id 52
+    db $20
+    dw Data_020_61C9 ; id 53
+    db $20
+    dw Data_020_6294 ; id 54
+    db $20
+    dw Data_020_6356 ; id 55
+    db $20
+    dw Data_020_643A ; id 56
+    db $20
+    dw Data_020_6529 ; id 57
+    db $20
+    dw Data_020_6615 ; id 58
+    db $20
+    dw Data_020_66ED ; id 59
+    db $20
+    dw Data_020_67DB ; id 60
+    db $20
+    dw Data_020_68D0 ; id 61
+    db $20
+    dw Data_020_69B8 ; id 62
+    db $20
+    dw Data_020_6AB7 ; id 63
+    db $20
+    dw Data_020_6BAC ; id 64
+    db $20
+    dw Data_020_6CAB ; id 65
+    db $20
+    dw Data_020_6D8E ; id 66
+    db $20
+    dw Data_020_4001 ; id 67
+    db $20
+    dw Data_020_4001 ; id 68
+    db $20
+    dw Data_020_4001 ; id 69
+    db $20
+    dw Data_020_4001 ; id 70
+    db $20
+    dw Data_020_6E7D ; id 71
+    db $20
+    dw Data_020_6F65 ; id 72
+    db $20
+    dw Data_020_704F ; id 73
+    db $20
+    dw Data_020_712B ; id 74
+    db $20
+    dw Data_020_71F6 ; id 75
+    db $20
+    dw Data_020_729E ; id 76
+    db $20
+    dw Data_020_7391 ; id 77
+    db $20
+    dw Data_020_7472 ; id 78
+    db $20
+    dw Data_020_756F ; id 79
+    db $20
+    dw Data_020_7649 ; id 80
+    db $20
+    dw Data_020_7727 ; id 81
+    db $20
+    dw Data_020_7823 ; id 82
+    db $20
+    dw Data_020_791A ; id 83
+    db $20
+    dw Data_020_7A00 ; id 84
+    db $20
+    dw Data_020_7AB9 ; id 85
+    db $20
+    dw Data_020_7B8F ; id 86
+    db $20
+    dw Data_020_7C63 ; id 87
+    db $20
+    dw Data_020_7D3B ; id 88
+    db $20
+    dw Data_020_7DEC ; id 89
+    db $20
+    dw Data_021_4001 ; id 90
+    db $21
+    dw Data_021_40F4 ; id 91
+    db $21
+    dw Data_021_41B3 ; id 92
+    db $21
+    dw Data_021_429A ; id 93
+    db $21
+    dw Data_021_4352 ; id 94
+    db $21
+    dw Data_021_4427 ; id 95
+    db $21
+    dw Data_021_4524 ; id 96
+    db $21
+    dw Data_021_460D ; id 97
+    db $21
+    dw Data_021_46E4 ; id 98
+    db $21
+    dw Data_021_47B8 ; id 99
+    db $21
+    dw Data_021_489A ; id 100
+    db $21
+    dw Data_021_498F ; id 101
+    db $21
+    dw Data_021_4A6A ; id 102
+    db $21
+    dw Data_020_4001 ; id 103
+    db $20
+    dw Data_020_4001 ; id 104
+    db $20
+    dw Data_020_4001 ; id 105
+    db $20
+    dw Data_021_4B59 ; id 106
+    db $21
+    dw Data_021_4C2A ; id 107
+    db $21
+    dw Data_021_4CE6 ; id 108
+    db $21
+    dw Data_021_4DDE ; id 109
+    db $21
+    dw Data_021_4ED0 ; id 110
+    db $21
+    dw Data_021_4F52 ; id 111
+    db $21
+    dw Data_021_503F ; id 112
+    db $21
+    dw Data_021_50F9 ; id 113
+    db $21
+    dw Data_021_516C ; id 114
+    db $21
+    dw Data_021_5247 ; id 115
+    db $21
+    dw Data_021_5308 ; id 116
+    db $21
+    dw Data_021_53D5 ; id 117
+    db $21
+    dw Data_021_54B0 ; id 118
+    db $21
+    dw Data_021_557D ; id 119
+    db $21
+    dw Data_021_566E ; id 120
+    db $21
+    dw Data_021_574A ; id 121
+    db $21
+    dw Data_021_5826 ; id 122
+    db $21
+    dw Data_021_58D9 ; id 123
+    db $21
+    dw Data_021_59BD ; id 124
+    db $21
+    dw Data_021_5AA2 ; id 125
+    db $21
+    dw Data_021_5B86 ; id 126
+    db $21
+    dw Data_021_5C4E ; id 127
+    db $21
+    dw Data_021_5D41 ; id 128
+    db $21
+    dw Data_021_5E26 ; id 129
+    db $21
+    dw Data_021_5EF8 ; id 130
+    db $21
+    dw Data_021_5FCD ; id 131
+    db $21
+    dw Data_021_60A4 ; id 132
+    db $21
+    dw Data_020_4001 ; id 133
+    db $20
+    dw Data_020_4001 ; id 134
+    db $20
+    dw Data_020_4001 ; id 135
+    db $20
+    dw Data_020_4001 ; id 136
+    db $20
+    dw Data_020_4001 ; id 137
+    db $20
+    dw Data_020_4001 ; id 138
+    db $20
+    dw Data_020_4001 ; id 139
+    db $20
+    dw Data_020_4001 ; id 140
+    db $20
+    dw Data_021_617E ; id 141
+    db $21
+    dw Data_021_625A ; id 142
+    db $21
+    dw Data_021_6351 ; id 143
+    db $21
+    dw Data_021_63FA ; id 144
+    db $21
+    dw Data_021_64DC ; id 145
+    db $21
+    dw Data_021_65C4 ; id 146
+    db $21
+    dw Data_021_666E ; id 147
+    db $21
+    dw Data_021_6729 ; id 148
+    db $21
+    dw Data_021_6820 ; id 149
+    db $21
+    dw Data_021_6902 ; id 150
+    db $21
+    dw Data_021_69E2 ; id 151
+    db $21
+    dw Data_021_6AC7 ; id 152
+    db $21
+    dw Data_021_6BA7 ; id 153
+    db $21
+    dw Data_021_6C52 ; id 154
+    db $21
+    dw Data_021_6D25 ; id 155
+    db $21
+    dw Data_021_6DD8 ; id 156
+    db $21
+    dw Data_021_6E98 ; id 157
+    db $21
+    dw Data_021_6F8C ; id 158
+    db $21
+    dw Data_021_7045 ; id 159
+    db $21
+    dw Data_021_713D ; id 160
+    db $21
+    dw Data_021_71E8 ; id 161
+    db $21
+    dw Data_021_72B1 ; id 162
+    db $21
+    dw Data_021_738E ; id 163
+    db $21
+    dw Data_021_7473 ; id 164
+    db $21
+    dw Data_021_7548 ; id 165
+    db $21
+    dw Data_021_7641 ; id 166
+    db $21
+    dw Data_021_76E8 ; id 167
+    db $21
+    dw Data_020_4001 ; id 168
+    db $20
+    dw Data_020_4001 ; id 169
+    db $20
+    dw Data_020_4001 ; id 170
+    db $20
+    dw Data_020_4001 ; id 171
+    db $20
+    dw Data_020_4001 ; id 172
+    db $20
+    dw Data_020_4001 ; id 173
+    db $20
+    dw Data_020_4001 ; id 174
+    db $20
+    dw Data_020_4001 ; id 175
+    db $20
+    dw Data_021_77CC ; id 176
+    db $21
+    dw Data_021_78B2 ; id 177
+    db $21
+    dw Data_021_79A6 ; id 178
+    db $21
+    dw Data_021_7A61 ; id 179
+    db $21
+    dw Data_021_7B1C ; id 180
+    db $21
+    dw Data_021_7BBC ; id 181
+    db $21
+    dw Data_021_7C90 ; id 182
+    db $21
+    dw Data_021_7D82 ; id 183
+    db $21
+    dw Data_022_4001 ; id 184
+    db $22
+    dw Data_022_40D3 ; id 185
+    db $22
+    dw Data_022_419A ; id 186
+    db $22
+    dw Data_022_424F ; id 187
+    db $22
+    dw Data_022_432F ; id 188
+    db $22
+    dw Data_022_4404 ; id 189
+    db $22
+    dw Data_022_44F1 ; id 190
+    db $22
+    dw Data_022_45C0 ; id 191
+    db $22
+    dw Data_022_4693 ; id 192
+    db $22
+    dw Data_022_475E ; id 193
+    db $22
+    dw Data_022_483A ; id 194
+    db $22
+    dw Data_022_490B ; id 195
+    db $22
+    dw Data_022_49F5 ; id 196
+    db $22
+    dw Data_022_4AAC ; id 197
+    db $22
+    dw Data_022_4B8F ; id 198
+    db $22
+    dw Data_022_4C85 ; id 199
+    db $22
+    dw Data_022_4D78 ; id 200
+    db $22
+    dw Data_022_4E69 ; id 201
+    db $22
+    dw Data_020_4001 ; id 202
+    db $20
+    dw Data_020_4001 ; id 203
+    db $20
+    dw Data_020_4001 ; id 204
+    db $20
+    dw Data_020_4001 ; id 205
+    db $20
+    dw Data_020_4001 ; id 206
+    db $20
+    dw Data_020_4001 ; id 207
+    db $20
+    dw Data_020_4001 ; id 208
+    db $20
+    dw Data_020_4001 ; id 209
+    db $20
+    dw Data_020_4001 ; id 210
+    db $20
+    dw Data_022_4F65 ; id 211
+    db $22
+    dw Data_022_5020 ; id 212
+    db $22
+    dw Data_022_510D ; id 213
+    db $22
+    dw Data_022_51ED ; id 214
+    db $22
+    dw Data_022_52B6 ; id 215
+    db $22
+    dw Data_022_537B ; id 216
+    db $22
+    dw Data_022_5445 ; id 217
+    db $22
+    dw Data_022_5515 ; id 218
+    db $22
+    dw Data_022_5616 ; id 219
+    db $22
+    dw Data_022_56E5 ; id 220
+    db $22
+    dw Data_022_57C0 ; id 221
+    db $22
+    dw Data_022_586E ; id 222
+    db $22
+    dw Data_022_595A ; id 223
+    db $22
+    dw Data_022_5A58 ; id 224
+    db $22
+    dw Data_022_5B39 ; id 225
+    db $22
+    dw Data_022_5C37 ; id 226
+    db $22
+    dw Data_022_5D20 ; id 227
+    db $22
+    dw Data_022_5DFB ; id 228
+    db $22
+    dw Data_022_5EE3 ; id 229
+    db $22
+    dw Data_022_5FCA ; id 230
+    db $22
+    dw Data_022_60A6 ; id 231
+    db $22
+    dw Data_022_61A6 ; id 232
+    db $22
+    dw Data_022_62A1 ; id 233
+    db $22
+    dw Data_022_6392 ; id 234
+    db $22
+    dw Data_022_6483 ; id 235
+    db $22
+    dw Data_022_657B ; id 236
+    db $22
+    dw Data_022_6659 ; id 237
+    db $22
+    dw Data_022_674D ; id 238
+    db $22
+    dw Data_022_684C ; id 239
+    db $22
+    dw Data_022_6934 ; id 240
+    db $22
+    dw Data_020_4001 ; id 241
+    db $20
+    dw Data_020_4001 ; id 242
+    db $20
+    dw Data_020_4001 ; id 243
+    db $20
+    dw Data_020_4001 ; id 244
+    db $20
+    dw Data_020_4001 ; id 245
+    db $20
+    dw Data_022_69F9 ; id 246
+    db $22
+    dw Data_022_6ABE ; id 247
+    db $22
+    dw Data_022_6BBF ; id 248
+    db $22
+    dw Data_022_6CA0 ; id 249
+    db $22
+    dw Data_022_6D85 ; id 250
+    db $22
+    dw Data_022_6E61 ; id 251
+    db $22
+    dw Data_022_6F2B ; id 252
+    db $22
+    dw Data_022_7002 ; id 253
+    db $22
+    dw Data_022_70B6 ; id 254
+    db $22
+    dw Data_022_719F ; id 255
+    db $22
+    dw Data_022_7277 ; id 256
+    db $22
+    dw Data_022_735F ; id 257
+    db $22
+    dw Data_022_744D ; id 258
+    db $22
+    dw Data_022_751E ; id 259
+    db $22
+    dw Data_022_75D4 ; id 260
+    db $22
+    dw Data_022_76B6 ; id 261
+    db $22
+    dw Data_022_77A5 ; id 262
+    db $22
+    dw Data_022_7894 ; id 263
+    db $22
+    dw Data_022_798D ; id 264
+    db $22
+    dw Data_023_4001 ; id 265
+    db $23
+    dw Data_023_40F8 ; id 266
+    db $23
+    dw Data_023_41CA ; id 267
+    db $23
+    dw Data_023_42CA ; id 268
+    db $23
+    dw Data_023_43A2 ; id 269
+    db $23
+    dw Data_023_449F ; id 270
+    db $23
+    dw Data_023_4581 ; id 271
+    db $23
+    dw Data_023_4650 ; id 272
+    db $23
+    dw Data_020_4001 ; id 273
+    db $20
+    dw Data_020_4001 ; id 274
+    db $20
+    dw Data_020_4001 ; id 275
+    db $20
+    dw Data_020_4001 ; id 276
+    db $20
+    dw Data_020_4001 ; id 277
+    db $20
+    dw Data_020_4001 ; id 278
+    db $20
+    dw Data_020_4001 ; id 279
+    db $20
+    dw Data_020_4001 ; id 280
+    db $20
+    dw Data_023_4745 ; id 281
+    db $23
+    dw Data_023_4839 ; id 282
+    db $23
+    dw Data_023_48FE ; id 283
+    db $23
+    dw Data_023_49D8 ; id 284
+    db $23
+    dw Data_023_4A98 ; id 285
+    db $23
+    dw Data_023_4B4C ; id 286
+    db $23
+    dw Data_023_4C1E ; id 287
+    db $23
+    dw Data_023_4CE9 ; id 288
+    db $23
+    dw Data_023_4DC4 ; id 289
+    db $23
+    dw Data_023_4E75 ; id 290
+    db $23
+    dw Data_023_4F55 ; id 291
+    db $23
+    dw Data_023_4FE5 ; id 292
+    db $23
+    dw Data_023_50C3 ; id 293
+    db $23
+    dw Data_023_51B3 ; id 294
+    db $23
+    dw Data_023_527D ; id 295
+    db $23
+    dw Data_023_530D ; id 296
+    db $23
+    dw Data_023_5400 ; id 297
+    db $23
+    dw Data_023_54CB ; id 298
+    db $23
+    dw Data_023_5582 ; id 299
+    db $23
+    dw Data_023_560F ; id 300
+    db $23
+    dw Data_023_56D9 ; id 301
+    db $23
+    dw Data_023_57A5 ; id 302
+    db $23
+    dw Data_023_5871 ; id 303
+    db $23
+    dw Data_023_5938 ; id 304
+    db $23
+    dw Data_023_5A2A ; id 305
+    db $23
+    dw Data_023_5B0D ; id 306
+    db $23
+    dw Data_023_5BF9 ; id 307
+    db $23
+    dw Data_023_5CFC ; id 308
+    db $23
+    dw Data_023_5D82 ; id 309
+    db $23
+    dw Data_023_5E79 ; id 310
+    db $23
+    dw Data_023_5EFE ; id 311
+    db $23
+    dw Data_023_5FDB ; id 312
+    db $23
+    dw Data_020_4001 ; id 313
+    db $20
+    dw Data_020_4001 ; id 314
+    db $20
+    dw Data_020_4001 ; id 315
+    db $20
+    dw Data_023_60AE ; id 316
+    db $23
+    dw Data_023_618F ; id 317
+    db $23
+    dw Data_023_626E ; id 318
+    db $23
+    dw Data_023_634E ; id 319
+    db $23
+    dw Data_023_643D ; id 320
+    db $23
+    dw Data_023_64FF ; id 321
+    db $23
+    dw Data_023_65BD ; id 322
+    db $23
+    dw Data_023_6696 ; id 323
+    db $23
+    dw Data_023_672D ; id 324
+    db $23
+    dw Data_023_6816 ; id 325
+    db $23
+    dw Data_023_689B ; id 326
+    db $23
+    dw Data_023_696A ; id 327
+    db $23
+    dw Data_023_6A67 ; id 328
+    db $23
+    dw Data_023_6B43 ; id 329
+    db $23
+    dw Data_023_6C20 ; id 330
+    db $23
+    dw Data_023_6D0A ; id 331
+    db $23
+    dw Data_023_6DE1 ; id 332
+    db $23
+    dw Data_023_6EDC ; id 333
+    db $23
+    dw Data_023_6FA8 ; id 334
+    db $23
+    dw Data_023_7082 ; id 335
+    db $23
+    dw Data_023_7179 ; id 336
+    db $23
+    dw Data_023_725F ; id 337
+    db $23
+    dw Data_023_731E ; id 338
+    db $23
+    dw Data_023_7406 ; id 339
+    db $23
+    dw Data_023_74E9 ; id 340
+    db $23
+    dw Data_023_75DE ; id 341
+    db $23
+    dw Data_023_767B ; id 342
+    db $23
+    dw Data_023_7757 ; id 343
+    db $23
+    dw Data_023_7835 ; id 344
+    db $23
+    dw Data_023_7925 ; id 345
+    db $23
+    dw Data_023_7A0D ; id 346
+    db $23
+    dw Data_023_7AF0 ; id 347
+    db $23
+    dw Data_020_4001 ; id 348
+    db $20
+    dw Data_020_4001 ; id 349
+    db $20
+    dw Data_020_4001 ; id 350
+    db $20
+    dw Data_091_4001 ; id 351
+    db $91
+    dw Data_091_40F1 ; id 352
+    db $91
+    dw Data_091_41E7 ; id 353
+    db $91
+    dw Data_091_42CA ; id 354
+    db $91
+    dw Data_091_43B7 ; id 355
+    db $91
+    dw Data_091_4480 ; id 356
+    db $91
+    dw Data_091_4565 ; id 357
+    db $91
+    dw Data_091_4642 ; id 358
+    db $91
+    dw Data_091_4715 ; id 359
+    db $91
+    dw Data_091_47DC ; id 360
+    db $91
+    dw Data_091_48B2 ; id 361
+    db $91
+    dw Data_091_4994 ; id 362
+    db $91
+    dw Data_091_4A83 ; id 363
+    db $91
+    dw Data_091_4B4D ; id 364
+    db $91
+    dw Data_091_4C23 ; id 365
+    db $91
+    dw Data_091_4D0F ; id 366
+    db $91
+    dw Data_091_4DE5 ; id 367
+    db $91
+    dw Data_091_4EDD ; id 368
+    db $91
+    dw Data_091_4F94 ; id 369
+    db $91
+    dw Data_091_5093 ; id 370
+    db $91
+    dw Data_091_5171 ; id 371
+    db $91
+    dw Data_091_5257 ; id 372
+    db $91
+    dw Data_020_4001 ; id 373
+    db $20
+    dw Data_020_4001 ; id 374
+    db $20
+    dw Data_020_4001 ; id 375
+    db $20
+    dw Data_020_4001 ; id 376
+    db $20
+    dw Data_020_4001 ; id 377
+    db $20
+    dw Data_020_4001 ; id 378
+    db $20
+    dw Data_020_4001 ; id 379
+    db $20
+    dw Data_022_7A62 ; id 380
+    db $22
+    dw Data_022_7B34 ; id 381
+    db $22
+    dw Data_022_7C16 ; id 382
+    db $22
+    dw $5347 ; id 383
+    db $8C
+    INCBIN "dwm2-cobi-us.gbc", $01132A, $291
 
 ; HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
 ; 316 call sites from 163 routines (e.g. Func_004_7B29_Case06, Func_004_7B29_Case05, Func_004_7B29_Case04, Func_004_6A35_Case1B, ...)

@@ -2558,7 +2558,7 @@ Jump_0A0_50F2:: ; address name
     ld hl, vBGMap0 + $E1
     ld a, $01
     ldh [hFFC6], a
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_0A0_5105::
     ld a, [wD960]
@@ -2567,7 +2567,7 @@ Jump_0A0_5105::
     ld d, a
     ld hl, vTiles2 + $140
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld a, $7F
     ld [wC526], a
     ld hl, wCFC9
@@ -2606,7 +2606,7 @@ Jump_0A0_5144::
     ld e, a
     ld a, [wD961]
     ld d, a
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_0A0_5153::
     ld hl, wCFC9
@@ -2652,7 +2652,7 @@ Jump_0A0_5182:: ; address name
     ld d, a
     ld hl, vTiles2 + $380
     ld c, $03
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld a, $7F
     ld [wC526], a
     ld hl, wCFC9
@@ -2694,7 +2694,7 @@ Jump_0A0_51C9::
     ld e, a
     ld a, [wD963]
     ld d, a
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_0A0_51D8::
     ld hl, wCFC9
@@ -2740,7 +2740,7 @@ Jump_0A0_5207:: ; address name
     ld d, a
     ld hl, vTiles2 + $5C0
     ld c, $05
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld a, $7F
     ld [wC526], a
     ld hl, wCFC9
@@ -2767,7 +2767,7 @@ Jump_0A0_5221:: ; address name
     ld e, a
     ld a, [wD965]
     ld d, a
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_0A0_5241::
     ld hl, wCFC9

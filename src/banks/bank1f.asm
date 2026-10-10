@@ -1187,7 +1187,7 @@ Func_01F_73EC::
     ld d, a
     ld hl, vTiles2 + $200
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -1211,7 +1211,7 @@ Jump_01F_7436::
     ld de, $0161
     add hl, de
     pop de
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_01F_745C::
     call BGMapAddressAtScroll_Bank1F

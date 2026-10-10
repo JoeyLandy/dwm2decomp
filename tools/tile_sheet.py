@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draw compressed streams as 2bpp tile sheets: tile_sheet.py OUT.png BANK:ADDR [BANK:ADDR ...]
+"""Draw compressed streams as 2bpp tile sheets: tile_sheet.py [--cols=N] OUT.png BANK:ADDR [BANK:ADDR ...]
 
 Each stream is decompressed (tools/lzss_gfx.py) and drawn as 8x8 tiles, 16 tiles per row, in four
 grays, one stream under the other. For looking at what an asset is, not for conversion."""
@@ -39,6 +39,10 @@ def sheet(streams: list[bytes], per_row: int = 16):
 
 
 def main(argv: list[str]) -> int:
+    cols = 16
+    if argv and argv[0].startswith("--cols="):
+        cols = int(argv[0][7:])
+        argv = argv[1:]
     if len(argv) < 2:
         print(__doc__)
         return 2
@@ -47,7 +51,7 @@ def main(argv: list[str]) -> int:
     for spec in argv[1:]:
         bank, addr = (int(x, 16) for x in spec.split(":"))
         streams.append(decompress(rom, bank, addr)[0])
-    w, h, rgb = sheet(streams)
+    w, h, rgb = sheet(streams, cols)
     render_frame.write_png(argv[0], w, h, rgb, 3)
     return 0
 

@@ -215,7 +215,7 @@
         {
           "type": "db",
           "size": 2,
-          "name": "16-bit value, at most $0179 (meaning not established)"
+          "name": "picture number: index into MonsterPictureTable, MonsterAttributeMapTable and MonsterPaletteTable (at most $0179; ids 1, 2, 3 = Slime, SpotSlime, CactiBall use pictures 10, 2, 145)"
         },
         {
           "type": "db",
@@ -303,7 +303,7 @@
           "name": "byte 25: personality axis copied to offset $72 (weight 3)"
         }
       ],
-      "note": "E-0033 (C1: LoadMonsterRecord copies a 26-byte record from here by 16-bit id (wCFE6/wCFE7); ids at or above $250 use bank $A2 instead, so this table has 592 records; record 1 holds 25, 0, 10, 7, 8, 7 and then $C8 $C8 $64 $C8, exactly the values the opening monster's save record shows for its HP, MP, ATK, DEF, AGL, INT and next four bytes; the order of the six stat words is the game's usual order and is assumed). Skill ids stay below 175 (one record, id 88, has $C8 in the fourth slot). Bytes 22-25 equal the save record's bytes at offsets $6F-$72 for the opening monster (E-0034); the three used by PersonalityIndexOfRecord are the personality axes."
+      "note": "E-0033 (C1: LoadMonsterRecord copies a 26-byte record from here by 16-bit id (wCFE6/wCFE7); ids at or above $250 use bank $A2 instead, so this table has 592 records; record 1 holds 25, 0, 10, 7, 8, 7 and then $C8 $C8 $64 $C8, exactly the values the opening monster's save record shows for its HP, MP, ATK, DEF, AGL, INT and next four bytes; the order of the six stat words is the game's usual order and is assumed). Skill ids stay below 175 (one record, id 88, has $C8 in the fourth slot). Bytes 22-25 equal the save record's bytes at offsets $6F-$72 for the opening monster (E-0034); the three used by PersonalityIndexOfRecord are the personality axes. The first word is the picture number (E-0041): drawing the pictures it names gave a slime for monster 1 ('Slime'), another slime for monster 2 ('SpotSlime') and a spiky ball for monster 3 ('CactiBall'); monster names are the strings of bank $88 (category = id >> 8, index = id & $FF)."
     },
     {
       "bank": "16",
@@ -439,6 +439,84 @@
         }
       ],
       "note": "E-0039 (C1: the inline table after FetchScriptCommand's `rst $00`, indexed by the script byte; 249 words, 49 distinct handlers: opcodes 0-12 each have their own, and most others share ScriptFetchGeneric, which makes the opcode byte the command type and starts the command (the command then reads its own arguments from the script pointer); a zero word is an unused opcode)."
+    },
+    {
+      "bank": "38",
+      "addr": "4001",
+      "label": "MonsterPictureTable",
+      "count": 383,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "compressed picture stream (36 tiles, drawn 6 x 6)",
+          "reason": "monster picture stream"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank of that data"
+        }
+      ],
+      "note": "E-0041 (C1: Func_000_1FE3 indexes it with the monster id and decompresses the stream to VRAM; the debug monster viewer shows the picture; every one of the 383 entries parses as a 576-byte stream; entry 0 is a placeholder). Each entry is a 3-byte far pointer: address, then bank."
+    },
+    {
+      "bank": "38",
+      "addr": "447E",
+      "label": "MonsterAttributeMapTable",
+      "count": 383,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "raw 6 x 6 attribute map for the picture (a zero entry selects a default)",
+          "reason": "monster picture attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank of that data"
+        }
+      ],
+      "note": "E-0041 (C1: Func_000_2090 indexes it with the monster id; the 36 bytes it points at are added to hFFC6 and written to VRAM bank 1 as the picture's tile attributes). Far pointers: address, bank."
+    },
+    {
+      "bank": "04",
+      "addr": "4EAA",
+      "label": "MonsterSpriteTable",
+      "count": 384,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "compressed small-sprite stream (32 or 256 bytes)",
+          "reason": "monster sprite stream"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank of that data"
+        }
+      ],
+      "note": "E-0041 (C1: the debug monster viewer's second pane decompresses the stream for its id to vTiles0 + $200; all 384 entries parse). Far pointers: address, bank."
+    },
+    {
+      "bank": "7B",
+      "addr": "4209",
+      "label": "MonsterPaletteTable",
+      "count": 383,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "CGB colours of the monster picture (two 4-colour palettes, 16 bytes)"
+        }
+      ],
+      "note": "E-0041 (C1: Func_000_1FE3 copies 16 bytes from bank $7B, $4209 + 16 * monster id to the palette buffer wC49F on CGB; the count matches the picture table)."
     }
   ]
 }

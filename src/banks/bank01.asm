@@ -4436,7 +4436,7 @@ Jump_001_634E::
     ld d, a
     ld hl, vTiles2 + $200
     ld c, $01
-    call Func_000_1FE3
+    call LoadMonsterPicture
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_001_6387
@@ -4447,7 +4447,7 @@ Jump_001_634E::
     ld e, a
     ld a, [wC5FA]
     ld d, a
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
     ld a, $7F
     ld [wC526], a
 

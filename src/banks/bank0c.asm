@@ -1314,7 +1314,7 @@ Jump_00C_490A:: ; address name
     push de
     ld hl, vTiles2 + $20
     ld c, $04
-    call Func_000_1FE3
+    call LoadMonsterPicture
     pop de
     ld a, [wD782]
     inc a
@@ -1338,7 +1338,7 @@ Jump_00C_4957::
     ld de, $0021
     add hl, de
     pop de
-    call Func_000_2090
+    call LoadMonsterPictureAttributes
 
 Jump_00C_497A::
     call BGMapAddressAtScroll_Bank0C

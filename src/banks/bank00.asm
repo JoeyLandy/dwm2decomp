@@ -1702,7 +1702,7 @@ Func_000_0B0D::
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B and copies C bytes from [DE] to [HL] (C = 0 copies 256), then restores the caller's bank.
-; 24 call sites from 18 routines (e.g. Func_000_1FE3, Func_000_228A, Func_000_24E5, Func_004_431F, ...)
+; 24 call sites from 18 routines (e.g. LoadMonsterPicture, Func_000_228A, Func_000_24E5, Func_004_431F, ...)
 ; writes: rROMB0
 CopyFromBank::
 Func_000_0B18:: ; address name
@@ -2138,7 +2138,7 @@ Jump_000_0CF0::
     ret
 
 ; C2 (E-0016): the same expansion as Func_000_0C69 but for VRAM destinations: each store waits for STAT ($FF41) bit 1 to clear with interrupts disabled, back-references read the already-written VRAM, and the lock byte $FFD6 is taken on entry and cleared on exit.
-; 126 call sites from 74 routines (e.g. Func_000_1FE3, Func_000_228A, LoadMapScreen, Func_000_1C0C, ...)
+; 126 call sites from 74 routines (e.g. LoadMonsterPicture, Func_000_228A, LoadMapScreen, Func_000_1C0C, ...)
 ; reads: hDecompressLock, rSTAT, hFFC5, hFFBF, hFFC0, hDecompressDestLo, hDecompressDestHi, hFFC2, ...
 ; writes: hDecompressLock, hFFC5, rROMB0, hFFC0, hFFBF
 ; points at: hDecompressMarker
@@ -3024,7 +3024,7 @@ Jump_000_1214::
     ret
 
 ; like WriteVRAMByte but stores at [HL] and increments HL
-; 145 call sites from 81 routines (e.g. Func_000_2950_Case0E, Func_000_2090, Func_000_1E29, Func_000_1CF9, ...)
+; 145 call sites from 81 routines (e.g. Func_000_2950_Case0E, LoadMonsterPictureAttributes, Func_000_1E29, Func_000_1CF9, ...)
 ; reads: rSTAT, hFFD1
 ; writes: hFFD1
 WriteVRAMByteInc::
@@ -5559,11 +5559,13 @@ Func_000_1FD1:: ; address name
     add_a_to_hl
     ret
 
+; DE = monster id, HL = VRAM destination, C = palette slot: decompresses the id's picture stream (MonsterPictureTable, bank $38) to HL; on CGB also copies the 16-byte palette from MonsterPaletteTable (bank $7B) to slot C of wC49F
 ; 19 call sites from 16 routines (e.g. GameMode0_Update_Case04, Func_003_4A36, Func_003_4FBB_Case01, Func_00C_45DA_Case02, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
 ; points at: wC49F
-Func_000_1FE3::
+LoadMonsterPicture::
+Func_000_1FE3:: ; address name
     push bc
     push de
     push hl
@@ -5687,10 +5689,12 @@ Jump_000_2087::
     ld [rROMB0], a
     ret
 
+; DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)
 ; 15 call sites from 13 routines (e.g. GameMode0_Update_Case04, Func_00C_45DA_Case02, Func_01E_6074_Table6_Case06, Func_01E_5A4D_Case05, ...)
 ; reads: hFFC6
 ; writes: rROMB0, rVBK
-Func_000_2090::
+LoadMonsterPictureAttributes::
+Func_000_2090:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $38
