@@ -55,7 +55,16 @@ Forcing skips set-up, so the screens are partial. The routines are `GameMode0_In
 - **Super Game Boy:** `SendSGBPacketSet`, `SGBTransferCompressed`, `SGBTransferRaw` follow the documented packet
   protocol and are skipped unless `wSGBActive`.
 - **Saves:** records of `$A5` bytes at `sA000` (`SRAMRecordAddress`).
-- **Data:** bank 6 is a table of `$36`-byte rows of 27 signed words read by `ReadBank6TableWord`.
+- **Data tables (E-0031 to E-0033):**
+  - `SkillTable` (bank `$1A`, 175 records of 17 bytes) and `MonsterTable` (bank `$34`, 592 records of 26 bytes, with the
+    base HP, MP, ATK, DEF, AGL and INT words and four skill ids) are emitted field by field in `src/`; loaders are
+    `LoadSkillRecord` and `LoadMonsterRecord` (ids from `$250` use bank `$A2`).
+  - Bank 6 is a table of `$36`-byte rows of 27 signed words, one column per personality, read by `ReadBank6TableWord`;
+    `PersonalityIndexOfRecord` and `PersonalityIndexOfSlot` compute the column (0-26, the 27 personality names).
+  - Strings: bank `$08` holds categories 0-8; categories `$09`-`$14` (skill descriptions, tactics, targets, skill families,
+    types, usability) live in bank `$95`; monster names are in bank `$88` (category = id high byte).
+- **Debug mode (mode 0):** a developer menu reachable by forcing the mode: program launcher, message test, skill viewer,
+  monster viewer, sound test, automap. It is the quickest route to the tables above.
 
 ## Not yet known
 
