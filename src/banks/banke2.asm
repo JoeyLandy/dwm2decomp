@@ -25,7 +25,7 @@ Jump_0E2_401A::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_402A::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_403A
@@ -379,7 +379,7 @@ Jump_0E2_42B2::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_42C2::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_42D2
@@ -485,7 +485,7 @@ Jump_0E2_4373::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4389::
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 25 HealUs, 26 HealUsAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -589,7 +589,7 @@ Func_0E2_4420:: ; address name
     ret z
     ld bc, $002A
     call AccumulateBank6WordToDA6E
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 34 DeChaos. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -602,7 +602,7 @@ Func_0E2_4433:: ; address name
     ret z
     ld bc, $002A
     call AccumulateBank6WordToDA6E
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 35 NumbOff. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -615,7 +615,7 @@ Func_0E2_4446:: ; address name
     ret z
     ld bc, $002A
     call AccumulateBank6WordToDA6E
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 36 CurseOff. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -628,7 +628,7 @@ Func_0E2_4459:: ; address name
     ret z
     ld bc, $002A
     call AccumulateBank6WordToDA6E
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 37 Upper, 38 Increase. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -639,7 +639,7 @@ Func_0E2_446C:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4485
@@ -647,7 +647,7 @@ Func_0E2_446C:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4485::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     call AIScore_Upper_Sub02
     farcall SetCToZero
     ld a, c
@@ -667,7 +667,7 @@ Func_0E2_449C:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_44B5
@@ -705,7 +705,7 @@ Jump_0E2_44DD::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_44F3::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_64FE
     ld a, c
     cp a, $01
@@ -765,7 +765,7 @@ Jump_0E2_454F::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4563::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 43 Slow, 44 SlowAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -814,7 +814,7 @@ Jump_0E2_45A8::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_45BE::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_64FE
     ld a, c
     cp a, $01
@@ -901,7 +901,7 @@ Jump_0E2_464A::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_465A::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_5F3D
     ld a, c
     cp a, $01
@@ -933,7 +933,7 @@ Func_0E2_4674:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4691::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_46A1
@@ -963,7 +963,7 @@ Jump_0E2_46B5::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_46D1::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_585D
     ld a, c
     and a, a
@@ -1040,7 +1040,7 @@ Jump_0E2_4752::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_4762::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_69F5
     ld a, c
     cp a, $01
@@ -1079,7 +1079,7 @@ Func_0E2_478E:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_47A7::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 50 RobMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1100,7 +1100,7 @@ Func_0E2_47AB:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_47CA::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 51 StopSpell. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1121,7 +1121,7 @@ Func_0E2_47CE:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_47EB::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall SetCToZero
     ld a, c
     and a, a
@@ -1190,7 +1190,7 @@ Func_0E2_4855:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_486E::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_64FE
     ld a, c
     cp a, $01
@@ -1241,7 +1241,7 @@ Func_0E2_48AE:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_48CB::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 54 MagicBack, 55 Bounce. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1290,7 +1290,7 @@ Func_0E2_48FD:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_491A::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 57 MagicWall. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1301,7 +1301,7 @@ Func_0E2_491E:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_57A1
     ld a, c
     cp a, $01
@@ -1350,7 +1350,7 @@ Jump_0E2_4970::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4980::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 59 BeDragon. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1371,7 +1371,7 @@ Func_0E2_4984:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_49A1::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall AIScore_BeDragon_Sub01
     ld a, c
     and a, a
@@ -1416,7 +1416,7 @@ Jump_0E2_49DE::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_49F4::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_5758
     ld a, c
     and a, a
@@ -1443,7 +1443,7 @@ Func_0E2_4A08:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4A21::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4A31
@@ -1559,7 +1559,7 @@ Jump_0E2_4AEF::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4AFF::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_5731
     ld a, c
     and a, a
@@ -1678,7 +1678,7 @@ Jump_0E2_4BD4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BE4::
-    call Func_0E2_6876
+    call WeighWD044RuleBit3
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -1736,7 +1736,7 @@ Func_0E2_4C30:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_Vacuum)
 AIScore_Vacuum_Sub01::
 Func_0E2_4C49:: ; address name
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4C59
@@ -1768,7 +1768,7 @@ Jump_0E2_4C79::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4C89::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_5D44
     ld a, c
     cp a, $01
@@ -1828,7 +1828,7 @@ Func_0E2_4CE6:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4CFF
@@ -1860,7 +1860,7 @@ Jump_0E2_4D1F::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4D2F::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -1907,7 +1907,7 @@ Func_0E2_4D7B:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4D94
@@ -1939,7 +1939,7 @@ Jump_0E2_4DB4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4DC4::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -1968,7 +1968,7 @@ Func_0E2_4DEC:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4E05
@@ -2000,7 +2000,7 @@ Jump_0E2_4E25::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4E35::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -2039,7 +2039,7 @@ Func_0E2_4E71:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4E8A
@@ -2089,7 +2089,7 @@ Jump_0E2_4ED0::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4EE0::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -2138,7 +2138,7 @@ Func_0E2_4F30:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_4F49
@@ -2188,7 +2188,7 @@ Jump_0E2_4F8D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F9D::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_6481
     ld a, c
     and a, a
@@ -2235,7 +2235,7 @@ Func_0E2_4FE1:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FF0::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5000
@@ -2261,7 +2261,7 @@ Jump_0E2_5014::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5024::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_6481
     ld a, c
     and a, a
@@ -2434,7 +2434,7 @@ Jump_0E2_512B::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_513B::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_6481
     ld a, c
     and a, a
@@ -2549,7 +2549,7 @@ Func_0E2_51F6:: ; address name
     ret z
     call Func_0E2_67A5
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5213
@@ -2565,7 +2565,7 @@ Jump_0E2_5213::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5223::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_5C8C
     ld a, c
     and a, a
@@ -2611,7 +2611,7 @@ Func_0E2_526D:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5286
@@ -2635,7 +2635,7 @@ Jump_0E2_5296::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_52A6::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -2714,7 +2714,7 @@ Jump_0E2_5327::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_533D::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -2769,7 +2769,7 @@ Func_0E2_5385:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_53A2::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_53B2
@@ -2801,7 +2801,7 @@ Jump_0E2_53D2::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_53E2::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -2868,7 +2868,7 @@ Jump_0E2_5443::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5459::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 105 PsycheUp. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2887,7 +2887,7 @@ Func_0E2_545D:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5476::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5486
@@ -2923,7 +2923,7 @@ Jump_0E2_54AA::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_54C0::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 106 HighJump. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2934,7 +2934,7 @@ Func_0E2_54C4:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_54DD
@@ -2970,7 +2970,7 @@ Jump_0E2_5505::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5515::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
@@ -3005,7 +3005,7 @@ Jump_0E2_5542::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5552::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5562
@@ -3049,7 +3049,7 @@ Jump_0E2_559A::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_55AA::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall AIScore_EvilSlash_Sub01
     ld a, c
     and a, a
@@ -3084,7 +3084,7 @@ Func_0E2_55CE:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_55E7::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_55F7
@@ -3100,7 +3100,7 @@ Jump_0E2_55F7::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5607::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
@@ -3127,7 +3127,7 @@ Func_0E2_561B:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5634::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5644
@@ -3181,7 +3181,7 @@ Jump_0E2_568C::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_56A2::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_6452
     ld a, c
     and a, a
@@ -3226,7 +3226,7 @@ Jump_0E2_56E3::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_56F3::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5703
@@ -3280,7 +3280,7 @@ Jump_0E2_574B::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5761::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_5758
     ld a, c
     and a, a
@@ -3352,7 +3352,7 @@ Jump_0E2_57D2::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_57E6::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_57F6
@@ -3388,7 +3388,7 @@ Jump_0E2_581C::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5832::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     farcall Func_005_6452
     ld a, c
     and a, a
@@ -3444,7 +3444,7 @@ Func_0E2_5876:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_588F::
-    call Func_0E2_6876
+    call WeighWD044RuleBit3
 
 Jump_0E2_5892::
     farcall FewerThanTwoFoesPresent
@@ -3533,7 +3533,7 @@ Func_0E2_5900:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5919::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     jp Jump_0E2_5892
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 118 OddDance, 119 RobDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3556,7 +3556,7 @@ Func_0E2_591F:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5944::
-    call Func_0E2_6887
+    call WeighWD044RuleBit2
     farcall Func_005_69F5
     ld a, c
     cp a, $01
@@ -3599,7 +3599,7 @@ Func_0E2_5970:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5995::
-    call Func_0E2_6887
+    call WeighWD044RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -3658,7 +3658,7 @@ Func_0E2_59E5:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5A04::
-    call Func_0E2_6887
+    call WeighWD044RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -3736,7 +3736,7 @@ Func_0E2_5A72:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5A91::
-    call Func_0E2_6887
+    call WeighWD044RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -3797,7 +3797,7 @@ Func_0E2_5AE6:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5B05::
-    call Func_0E2_6887
+    call WeighWD044RuleBit2
     farcall Func_005_5758
     ld a, c
     and a, a
@@ -3885,7 +3885,7 @@ Jump_0E2_5B9C::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5BAC::
-    call Func_0E2_6887
+    call WeighWD044RuleBit2
     farcall Func_005_6556
     ld a, c
     cp a, $01
@@ -3914,7 +3914,7 @@ Func_0E2_5BC4:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5BDD::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5BED
@@ -3940,7 +3940,7 @@ Jump_0E2_5C01::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5C11::
-    call Func_0E2_6887
+    call WeighWD044RuleBit2
     farcall Func_005_585D
     ld a, c
     and a, a
@@ -3961,7 +3961,7 @@ Func_0E2_5C25:: ; address name
     ret z
 
 Jump_0E2_5C2E::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5C3E
@@ -3987,7 +3987,7 @@ Jump_0E2_5C52::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5C62::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -4064,7 +4064,7 @@ Func_0E2_5CCE:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5CED::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -4123,7 +4123,7 @@ Func_0E2_5D3D:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5D5C::
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 130 UltraDown. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4144,7 +4144,7 @@ Func_0E2_5D60:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5D7F::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 131 DeMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4175,7 +4175,7 @@ Jump_0E2_5DA2::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5DB8::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 132 ThickFog. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4194,7 +4194,7 @@ Func_0E2_5DBC:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5DD5::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_57A1
     ld a, c
     cp a, $01
@@ -4223,7 +4223,7 @@ Func_0E2_5DED:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5E06::
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5E16
@@ -4243,7 +4243,7 @@ Jump_0E2_5E16::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5E32::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_5758
     ld a, c
     and a, a
@@ -4262,7 +4262,7 @@ Func_0E2_5E46:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5E5F
@@ -4278,7 +4278,7 @@ Jump_0E2_5E5F::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5E6F::
-    call Func_0E2_6876
+    call WeighWD044RuleBit3
     farcall Func_005_5D31
     ld a, c
     and a, a
@@ -4297,7 +4297,7 @@ Func_0E2_5E83:: ; address name
     ld a, c
     and a, a
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_5E9C
@@ -4315,7 +4315,7 @@ Jump_0E2_5E9C::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5EB2::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
@@ -4343,7 +4343,7 @@ Func_0E2_5EC0:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5ED9::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_69F5
     ld a, c
     cp a, $01
@@ -4412,7 +4412,7 @@ Jump_0E2_5F4B::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5F5B::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_69F5
     ld a, c
     cp a, $01
@@ -4461,7 +4461,7 @@ Func_0E2_5F94:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5FAD::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_69F5
     ld a, c
     cp a, $01
@@ -4517,7 +4517,7 @@ Func_0E2_5FE8:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_6013::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_69F5
     ld a, c
     cp a, $01
@@ -4558,7 +4558,7 @@ Func_0E2_6044:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_605D::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_69F5
     ld a, c
     cp a, $01
@@ -4597,7 +4597,7 @@ Func_0E2_6089:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_60A2::
-    call Func_0E2_6887
+    call WeighWD044RuleBit2
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 147 MouthShut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4626,7 +4626,7 @@ Jump_0E2_60C3::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_60D3::
-    call Func_0E2_6876
+    call WeighWD044RuleBit3
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 148 StrongD. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4660,7 +4660,7 @@ Jump_0E2_60FA::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_610E::
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 149 Dodge. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4683,7 +4683,7 @@ Func_0E2_6112:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_6135::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 150 BladeD. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4706,7 +4706,7 @@ Func_0E2_6139:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_615C::
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 151 Cover, 152 Guardian. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4732,7 +4732,7 @@ Func_0E2_6160:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_6189::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 153 TailWind. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4765,7 +4765,7 @@ Jump_0E2_61AE::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_61BE::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 154 StormWind. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4789,7 +4789,7 @@ Func_0E2_61CD:: ; address name
     ret z
     ld a, [wBattleActor]
     call AIScore_AquaWall_Sub02
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 156 SealPray. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4836,7 +4836,7 @@ Jump_0E2_621D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_6231::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_57A1
     ld a, c
     cp a, $01
@@ -4888,7 +4888,7 @@ Jump_0E2_6276::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_6290::
-    call Func_0E2_6876
+    call WeighWD044RuleBit3
     farcall Func_005_5D20
     ld a, c
     and a, a
@@ -4909,7 +4909,7 @@ Func_0E2_62A4:: ; address name
     ret z
     call Func_0E2_67CF
     ret z
-    farcall Func_005_4C5D
+    farcall CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr nz, Jump_0E2_62C1
@@ -4937,7 +4937,7 @@ Jump_0E2_62D5::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_62EB::
-    call Func_0E2_6854
+    call WeighWD044RuleBit5
     farcall Func_005_57A1
     ld a, c
     cp a, $01
@@ -4979,7 +4979,7 @@ Jump_0E2_6322::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_6338::
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     farcall Func_005_6556
     ld a, c
     cp a, $01
@@ -5010,7 +5010,7 @@ Func_0E2_6350:: ; address name
     call AccumulateBank6WordToDA70
 
 Jump_0E2_636F::
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     farcall Func_005_667F
     ld a, c
     cp a, $01
@@ -5070,7 +5070,7 @@ Jump_0E2_63C6::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_63E2::
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     farcall Func_005_6556
     ld a, c
     cp a, $01
@@ -5106,7 +5106,7 @@ Func_0E2_6401:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_641A::
-    call Func_0E2_6898
+    call WeighWD044RuleBit1
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 171 ZoneOut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -5778,7 +5778,7 @@ Func_0E2_67CF::
 
 ; 2 call sites from 2 routines (e.g. AIScore_Vivify, AIScore_Farewell)
 Func_0E2_67D5::
-    call Func_0E2_6865
+    call WeighWD044RuleBit4
     farcall Func_005_5758
     ld a, c
     and a, a
@@ -5855,9 +5855,11 @@ Func_0E2_6843:: ; address name
 Jump_0E2_6853::
     ret
 
+; far-calls CheckWD044RuleBit5; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 36 call sites from 36 routines (e.g. AIScore_Upper, AIScore_Sap, AIScore_Speed, AIScore_Slow, ...)
-Func_0E2_6854:: ; heuristic: follows a terminator; C0
-    farcall Func_005_55F3
+WeighWD044RuleBit5:: ; heuristic: follows a terminator; C0
+Func_0E2_6854:: ; address name
+    farcall CheckWD044RuleBit5
     ld a, c
     and a, a
     jr nz, Jump_0E2_6864
@@ -5867,9 +5869,11 @@ Func_0E2_6854:: ; heuristic: follows a terminator; C0
 Jump_0E2_6864::
     ret
 
+; far-calls CheckWD044RuleBit4; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 12 call sites from 12 routines (e.g. AIScore_HealUs_Sub01, Func_0E2_67D5, AIScore_Antidote, AIScore_DeChaos, ...)
-Func_0E2_6865:: ; heuristic: follows a terminator; C0
-    farcall Func_005_5628
+WeighWD044RuleBit4:: ; heuristic: follows a terminator; C0
+Func_0E2_6865:: ; address name
+    farcall CheckWD044RuleBit4
     ld a, c
     and a, a
     jr nz, Jump_0E2_6875
@@ -5879,9 +5883,11 @@ Func_0E2_6865:: ; heuristic: follows a terminator; C0
 Jump_0E2_6875::
     ret
 
+; far-calls CheckWD044RuleBit3; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 5 call sites from 5 routines (e.g. AIScore_FireAir, AIScore_SleepAir, AIScore_SuckAir, AIScore_MouthShut, ...)
-Func_0E2_6876:: ; heuristic: follows a terminator; C0
-    farcall Func_005_565D
+WeighWD044RuleBit3:: ; heuristic: follows a terminator; C0
+Func_0E2_6876:: ; address name
+    farcall CheckWD044RuleBit3
     ld a, c
     and a, a
     jr nz, Jump_0E2_6886
@@ -5891,9 +5897,11 @@ Func_0E2_6876:: ; heuristic: follows a terminator; C0
 Jump_0E2_6886::
     ret
 
+; far-calls CheckWD044RuleBit2; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 8 call sites from 8 routines (e.g. AIScore_OddDance, AIScore_PaniDance, AIScore_KODance, AIScore_LureDance, ...)
-Func_0E2_6887:: ; heuristic: follows a terminator; C0
-    farcall Func_005_5692
+WeighWD044RuleBit2:: ; heuristic: follows a terminator; C0
+Func_0E2_6887:: ; address name
+    farcall CheckWD044RuleBit2
     ld a, c
     and a, a
     jr nz, Jump_0E2_6897
@@ -5903,9 +5911,11 @@ Func_0E2_6887:: ; heuristic: follows a terminator; C0
 Jump_0E2_6897::
     ret
 
+; far-calls CheckWD044RuleBit1; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
 ; 22 call sites from 22 routines (e.g. AIScore_BigBang, AIScore_Vacuum_Sub01, AIScore_RockThrow, AIScore_Watershot, ...)
-Func_0E2_6898:: ; heuristic: follows a terminator; C0
-    farcall Func_005_56C7
+WeighWD044RuleBit1:: ; heuristic: follows a terminator; C0
+Func_0E2_6898:: ; address name
+    farcall CheckWD044RuleBit1
     ld a, c
     and a, a
     jr nz, Jump_0E2_68A8

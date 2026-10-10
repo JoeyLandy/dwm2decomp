@@ -34,7 +34,7 @@ Func_005_4010:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
-; 25 call sites from 21 routines (e.g. Func_005_6494, Func_005_4C5D, AIScore_Meditate_Sub01_Sub01, Func_005_5317, ...)
+; 25 call sites from 21 routines (e.g. Func_005_6494, CheckLoneFoeHPNotBelowWD2C1, AIScore_Meditate_Sub01_Sub01, Func_005_5317, ...)
 ; points at: wBattleHP
 GetBattleHP_Bank05::
 Func_005_4015:: ; address name
@@ -2398,10 +2398,12 @@ Jump_005_4C5A::
     ld c, $FF
     ret
 
+; counts the present slots among the actor's three opposite slots (D = the last one found); when fewer than two are present and that foe's HP (GetBattleHP_Bank05) is below the word wD2C1[2 * (slot & 3)], C = 0; otherwise C = $FF. With no foe present D is not set by this routine (E-0091)
 ; 32 call sites from 32 routines (e.g. AIScore_ChargeUp_Sub01, Func_005_7397, AIScore_Dodge_Sub01_Sub01, AIScore_Skill00, ...)
 ; reads: wBattleActor
 ; points at: wD2C1
-Func_005_4C5D::
+CheckLoneFoeHPNotBelowWD2C1::
+Func_005_4C5D:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4160,10 +4162,12 @@ Jump_005_55F0::
     ld c, $FF
     ret
 
-; 2 call sites from 2 routines (e.g. AIScore_MagicBack_Sub01, Func_0E2_6854)
+; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 5 are set, and either wD045 bit 5 is clear or bit 5 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; 2 call sites from 2 routines (e.g. AIScore_MagicBack_Sub01, WeighWD044RuleBit5)
 ; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
-Func_005_55F3:: ; heuristic: follows a terminator; C0
+CheckWD044RuleBit5:: ; heuristic: follows a terminator; C0
+Func_005_55F3:: ; address name
     ld a, [wC58A]
     and a, a
     jr z, Jump_005_5625
@@ -4194,10 +4198,12 @@ Jump_005_5625::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6865)
+; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 4 are set, and either wD045 bit 4 is clear or bit 4 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; 1 call site from 1 routine (e.g. WeighWD044RuleBit4)
 ; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
-Func_005_5628:: ; heuristic: follows a terminator; C0
+CheckWD044RuleBit4:: ; heuristic: follows a terminator; C0
+Func_005_5628:: ; address name
     ld a, [wC58A]
     and a, a
     jr z, Jump_005_565A
@@ -4228,10 +4234,12 @@ Jump_005_565A::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6876)
+; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 3 are set, and either wD045 bit 3 is clear or bit 3 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; 1 call site from 1 routine (e.g. WeighWD044RuleBit3)
 ; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
-Func_005_565D:: ; heuristic: follows a terminator; C0
+CheckWD044RuleBit3:: ; heuristic: follows a terminator; C0
+Func_005_565D:: ; address name
     ld a, [wC58A]
     and a, a
     jr z, Jump_005_568F
@@ -4262,10 +4270,12 @@ Jump_005_568F::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6887)
+; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 2 are set, and either wD045 bit 2 is clear or bit 2 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; 1 call site from 1 routine (e.g. WeighWD044RuleBit2)
 ; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
-Func_005_5692:: ; heuristic: follows a terminator; C0
+CheckWD044RuleBit2:: ; heuristic: follows a terminator; C0
+Func_005_5692:: ; address name
     ld a, [wC58A]
     and a, a
     jr z, Jump_005_56C4
@@ -4296,10 +4306,12 @@ Jump_005_56C4::
     ld c, $FF
     ret
 
-; 1 call site from 1 routine (e.g. Func_0E2_6898)
+; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 1 are set, and either wD045 bit 1 is clear or bit 1 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
+; 1 call site from 1 routine (e.g. WeighWD044RuleBit1)
 ; reads: wC58A, wBattleActor
 ; points at: wD044, wD057
-Func_005_56C7:: ; heuristic: follows a terminator; C0
+CheckWD044RuleBit1:: ; heuristic: follows a terminator; C0
+Func_005_56C7:: ; address name
     ld a, [wC58A]
     and a, a
     jr z, Jump_005_56F9
@@ -9751,7 +9763,7 @@ Func_005_7397:: ; heuristic: follows a terminator; C0
     ld a, c
     and a, a
     jr z, Jump_005_73D3
-    call Func_005_4C5D
+    call CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr z, Jump_005_73D3
@@ -9805,7 +9817,7 @@ Jump_005_73EF::
     ld a, c
     and a, a
     jr z, Jump_005_740C
-    call Func_005_55F3
+    call CheckWD044RuleBit5
     ld a, c
     and a, a
     jr z, Jump_005_740C
@@ -10487,7 +10499,7 @@ Func_005_772B:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_774B
-    call Func_005_4C5D
+    call CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr z, Jump_005_774B
@@ -11444,7 +11456,7 @@ Func_005_7BEE:: ; address name
     ld a, c
     and a, a
     ret z
-    call Func_005_4C5D
+    call CheckLoneFoeHPNotBelowWD2C1
     ld a, c
     and a, a
     jr z, Jump_005_7C0E

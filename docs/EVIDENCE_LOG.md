@@ -966,6 +966,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - the 24-bit divide pair Divide24ByHFFCCDE and Quotient24ByHFFCCDE. The latter overwrites wMenuRowCount as scratch.
 - Binary verification: pending; see the commit.
 
+### E-0091 — AI rule checks on wD044 and their weight wrappers
+
+- Kind: OBSERVATION (full reading only; C1).
+- **The five checks.** `05:55F3`, `5628`, `565D`, `5692` and `56C7` are one routine each for bits 5, 4, 3, 2 and 1 of wD044, named CheckWD044RuleBitN.
+  - Each fails (C = 0) when wC58A is neither 0 nor 2, wD044 bit 7 and bit N are set, and either wD045 bit N is clear or the actor side's wD057 byte has bit N set.
+- **The wrappers.** `E2:6854`-`6898` far-call one check each and add weight entry $0E to wDA70 on failure. They are used by many AIScore routines (36 references to the bit-5 one) and are named WeighWD044RuleBitN.
+- **Also named:** CheckLoneFoeHPNotBelowWD2C1 (`05:4C5D`, 32 references).
+- **Unknowns.** What the wD044/wD045/wD057 bits mean. Player-set battle orders or AI tactics would fit the shape of the checks, but this is not checked.
+- Binary verification: pending; see the commit.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
