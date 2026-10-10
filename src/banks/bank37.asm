@@ -288,7 +288,7 @@ Jump_037_4B44::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     ret
@@ -1313,7 +1313,7 @@ Jump_037_52CF::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     xor a, a

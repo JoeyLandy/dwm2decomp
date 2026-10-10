@@ -33,9 +33,9 @@ Func_001_4001:: ; address name
     jp Jump_000_077A
 
 ; 1 call site from 1 routine (e.g. GameMode0_Init)
-; reads: wC5DC
+; reads: wModeState
 Func_001_4045::
-    ld a, [wC5DC]
+    ld a, [wModeState]
     rst $00
     dw Jump_001_45EA
     dw Jump_001_45EA
@@ -445,11 +445,11 @@ Jump_001_461E::
     ld [wC5F9], a
     ldh a, [hFF8F]
     ld [wC5FA], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC5FB], a
     ldh a, [hFF92]
     ld [wC5FC], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC5FD], a
     ld a, $01
     ld [wC5FE], a
@@ -773,10 +773,10 @@ Data_001_4ACC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; per-frame routine for wGameMode = 0
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate)
-; reads: wC5DC
+; reads: wModeState
 GameMode0_Update::
 Func_001_4AD4:: ; address name
-    ld a, [wC5DC]
+    ld a, [wModeState]
     rst $00
     dw Jump_001_616A
     dw Jump_001_616A
@@ -1122,7 +1122,7 @@ Jump_001_4D44::
     and a, $02
     jr z, Jump_001_4D54
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -1296,7 +1296,7 @@ Jump_001_4ED4::
     jr z, Jump_001_4EE7
     xor a, a
     ld [wGameMode], a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -1542,7 +1542,7 @@ Jump_001_50ED::
     jr z, Jump_001_5100
     xor a, a
     ld [wGameMode], a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -2917,7 +2917,7 @@ Jump_001_59BA::
     ld [wC5FE], a
     ld [wC5FF], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -3290,7 +3290,7 @@ Jump_001_5C18::
     ld a, $01
     ld [wGameMode], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -3311,7 +3311,7 @@ Jump_001_5C5B::
     ld a, $01
     ld [wGameMode], a
     ld a, $05
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -3322,7 +3322,7 @@ Jump_001_5C8D::
     ld a, $00
     ld [wGameMode], a
     ld a, $00
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -3498,7 +3498,7 @@ Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 1 call site from 1 routine (e.g. Func_001_5BE8)
 ; reads: wC5FA, wC5F9, wC5FD, hFFC6, hFFC7, hFFC8, hFFC9, wCD0D, ...
-; writes: hFFC6, wC833, wCC42, wCD05, wC190, wC191, hFF98, hFF8F, ...
+; writes: hFFC6, wC833, wCC42, wCD05, wC190, wC191, hPlayerFacing, hFF8F, ...
 ; points at: wModeChangeRequest
 Func_001_5DBA::
     ld a, [wC5FA]
@@ -3549,7 +3549,7 @@ Jump_001_5DF3::
     ld a, [wCD0E]
     ld [wC191], a
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld a, [wCD08]
     swap a
     and a, $0F
@@ -3558,18 +3558,18 @@ Jump_001_5DF3::
     and a, $0F
     ldh [hFF92], a
     ld a, [wCD09]
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, [wCD0A]
-    ldh [hFF91], a
-    ldh a, [hFF98]
+    ldh [hPlayerY], a
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
@@ -3578,7 +3578,7 @@ Jump_001_5DF3::
     ld a, $01
     ld [wGameMode], a
     ld a, $05
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -3737,17 +3737,17 @@ Jump_001_601F::
     ld a, [wC5FA]
     ldh [hFF8F], a
     ld a, [wC5FB]
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, [wC5FC]
     ldh [hFF92], a
     ld a, [wC5FD]
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     xor a, a
     ld [wC8C7], a
     ld a, $00
     ld [wGameMode], a
     ld a, $00
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -3973,7 +3973,7 @@ Jump_001_61C3::
     ld a, $00
     ld [wGameMode], a
     ld a, $02
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -3984,7 +3984,7 @@ Jump_001_61D5::
     ld a, $00
     ld [wGameMode], a
     ld a, $03
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -3995,7 +3995,7 @@ Jump_001_61E7::
     ld a, $00
     ld [wGameMode], a
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $80
     ld [wC8C5], a
     ld hl, wModeChangeRequest
@@ -4008,7 +4008,7 @@ Jump_001_61FE::
     ld a, $00
     ld [wGameMode], a
     ld a, $05
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4019,7 +4019,7 @@ Jump_001_6210::
     ld a, $00
     ld [wGameMode], a
     ld a, $06
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4030,7 +4030,7 @@ Jump_001_6222::
     ld a, $00
     ld [wGameMode], a
     ld a, $07
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4041,7 +4041,7 @@ Jump_001_6234::
     ld a, $00
     ld [wGameMode], a
     ld a, $08
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4052,7 +4052,7 @@ Jump_001_6246::
     ld a, $00
     ld [wGameMode], a
     ld a, $09
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4063,7 +4063,7 @@ Jump_001_6258::
     ld a, $00
     ld [wGameMode], a
     ld a, $0A
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4074,7 +4074,7 @@ Jump_001_626A::
     ld a, $00
     ld [wGameMode], a
     ld a, $0B
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4109,7 +4109,7 @@ Jump_001_62A6::
     ld a, $00
     ld [wGameMode], a
     ld a, $00
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4380,7 +4380,7 @@ Jump_001_645E::
     ldh [hSpriteTileOffset], a
     ldh a, [hScrollX]
     ld c, a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     ld b, a
     ld a, c
     add a, $70
@@ -4391,10 +4391,10 @@ Jump_001_645E::
     ld a, c
     ldh [hSpriteOriginX], a
     ld a, b
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ldh a, [hScrollY]
     ld c, a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     ld b, a
     ld a, c
     add a, $60
@@ -4405,7 +4405,7 @@ Jump_001_645E::
     ld a, c
     ldh [hSpriteOriginY], a
     ld a, b
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
     ld a, [wC5FB]
     and a, $7F
     ldh [hSpriteSetIndex], a
@@ -4511,7 +4511,7 @@ Jump_001_654F::
     and a, $02
     jr z, Jump_001_655F
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4642,7 +4642,7 @@ Jump_001_6696::
     ld a, $04
     ld [wGameMode], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $04
     call StartPaletteFade
     ld hl, wModeChangeRequest
@@ -4724,7 +4724,7 @@ Jump_001_6701::
     xor a, a
     ld [wC46B], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -5269,7 +5269,7 @@ Func_001_6A98::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_001_6880, Func_001_65A0)
-; writes: hFF90, hFF8F, hFF92, hFF8E, hFF91, wC8EF, wC8F0, wC8F1, ...
+; writes: hFF90, hFF8F, hFF92, hPlayerX, hPlayerY, wC8EF, wC8F0, wC8F1, ...
 Func_001_6ABE::
     ld a, $00
     ldh [hFF90], a
@@ -5278,9 +5278,9 @@ Func_001_6ABE::
     ld a, $00
     ldh [hFF92], a
     ld a, $40
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, $40
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld a, $00
     ld [wC8EF], a
     ld a, $40

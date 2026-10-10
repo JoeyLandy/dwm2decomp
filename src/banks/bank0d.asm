@@ -6946,14 +6946,14 @@ Func_00D_778C:: ; address name
 
 ; 1 call site from 1 routine (e.g. Func_00D_74F1)
 ; reads: wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, wC93F, ...
-; writes: hFF8E, hFF91, hFF98, wC8EF, wC8F0, wC8F1, wC8F4, wC8F5, ...
+; writes: hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, wC8F5, ...
 Func_00D_77C2::
     ld a, [wC938]
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, [wC939]
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld a, [wC93A]
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld a, [wC93B]
     ld [wC8EF], a
     ld a, [wC93C]

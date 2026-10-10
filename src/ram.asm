@@ -477,7 +477,7 @@ DEF wC5C9 EQU $C5C9
 DEF wC5CB EQU $C5CB
 DEF wC5D7 EQU $C5D7
 DEF wGameMode EQU $C5DB ; index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot (reading)
-DEF wC5DC EQU $C5DC
+DEF wModeState EQU $C5DC ; per-mode sub-state; low nibble indexes the jump table in GameMode1_Update (E-0030) (reading)
 DEF wC5DD EQU $C5DD
 DEF wC5DE EQU $C5DE
 DEF wModeChangeRequest EQU $C5DF ; non-zero makes the main loop leave its wait and run RunGameModeInit again (reading)
@@ -574,11 +574,11 @@ DEF wC7CC EQU $C7CC
 DEF wC7FB EQU $C7FB
 DEF wC7FC EQU $C7FC
 DEF wC82C EQU $C82C
-DEF wC82D EQU $C82D
-DEF wC82E EQU $C82E
-DEF wC82F EQU $C82F
-DEF wC830 EQU $C830
-DEF wC831 EQU $C831
+DEF wPlayFrames EQU $C82D ; frame count 0-59 of the play-time counter (reading)
+DEF wPlaySeconds EQU $C82E ; seconds 0-59 of the play-time counter (reading)
+DEF wPlayMinutes EQU $C82F ; minutes 0-59 of the play-time counter (reading)
+DEF wPlayHoursLo EQU $C830 ; low byte of the 16-bit play-time hours (reading)
+DEF wPlayHoursHi EQU $C831 ; high byte of the 16-bit play-time hours (reading)
 DEF wC832 EQU $C832
 DEF wC833 EQU $C833
 DEF wC834 EQU $C834
@@ -1653,17 +1653,17 @@ DEF hFF8A EQU $FF8A
 DEF hFF8B EQU $FF8B
 DEF hFF8C EQU $FF8C
 DEF hFF8D EQU $FF8D
-DEF hFF8E EQU $FF8E
+DEF hPlayerX EQU $FF8E ; position along the axis that facings 1 and 3 change in CheckInteractionInFront (reading)
 DEF hFF8F EQU $FF8F
 DEF hFF90 EQU $FF90
-DEF hFF91 EQU $FF91
+DEF hPlayerY EQU $FF91 ; position along the axis that facings 0 and 2 change in CheckInteractionInFront (reading)
 DEF hFF92 EQU $FF92
 DEF hFF93 EQU $FF93
 DEF hFF94 EQU $FF94
 DEF hFF95 EQU $FF95
 DEF hFF96 EQU $FF96
 DEF hFF97 EQU $FF97
-DEF hFF98 EQU $FF98
+DEF hPlayerFacing EQU $FF98 ; 0, 1, 2, 3: CheckInteractionInFront adds +16 to hFF91, +16 to hFF8E, -16 to hFF91, -16 to hFF8E for these values (reading)
 DEF hFF99 EQU $FF99
 DEF hFF9A EQU $FF9A
 DEF hFF9B EQU $FF9B
@@ -1673,13 +1673,13 @@ DEF hFF9E EQU $FF9E
 DEF hFF9F EQU $FF9F
 DEF hFFA0 EQU $FFA0
 DEF hScrollX EQU $FFA1 ; copied to rSCX by Func_000_07E0 and by the LCD handler (reading)
-DEF hFFA2 EQU $FFA2
+DEF hScrollXHi EQU $FFA2 ; high byte of the 16-bit horizontal scroll that starts at hScrollX (reading)
 DEF hScrollY EQU $FFA5 ; copied to rSCY by Func_000_07E0 and by the LCD handler (reading)
-DEF hFFA6 EQU $FFA6
+DEF hScrollYHi EQU $FFA6 ; high byte of the 16-bit vertical scroll that starts at hScrollY (reading)
 DEF hSpriteOriginX EQU $FFA9 ; added to each entry's X (+8) by BuildOamFromSpriteTable (reading)
-DEF hFFAA EQU $FFAA
+DEF hSpriteOriginXHi EQU $FFAA ; high byte of the 16-bit sprite X position (hSpriteOriginX is the low byte) (reading)
 DEF hSpriteOriginY EQU $FFAB ; added to each entry's Y (+$10) by BuildOamFromSpriteTable (reading)
-DEF hFFAC EQU $FFAC
+DEF hSpriteOriginYHi EQU $FFAC ; high byte of the 16-bit sprite Y position (hSpriteOriginY is the low byte) (reading)
 DEF hSpriteSetIndex EQU $FFAD ; first-level index into the table BuildOamFromSpriteTable reads (reading)
 DEF hSpriteSubIndex EQU $FFAE ; second-level index into the table BuildOamFromSpriteTable reads (reading)
 DEF hSpriteTileOffset EQU $FFAF ; added to each entry's tile number by BuildOamFromSpriteTable (reading)
@@ -1715,10 +1715,10 @@ DEF hFFCE EQU $FFCE
 DEF hFFCF EQU $FFCF
 DEF hFFD0 EQU $FFD0
 DEF hFFD1 EQU $FFD1
-DEF hFFD2 EQU $FFD2
-DEF hFFD3 EQU $FFD3
-DEF hFFD4 EQU $FFD4
-DEF hFFD5 EQU $FFD5
+DEF hSpriteScrollXLo EQU $FFD2 ; low byte of -(scroll X - 9) - 1, computed each frame by ComputeSpriteScrollOffsets (reading)
+DEF hSpriteScrollXHi EQU $FFD3 ; high byte of that value (reading)
+DEF hSpriteScrollYLo EQU $FFD4 ; low byte of -(scroll Y - $11) - 1 (reading)
+DEF hSpriteScrollYHi EQU $FFD5 ; high byte of that value (reading)
 DEF hDecompressLock EQU $FFD6 ; non-zero while the decompressor is running (E-0016)
 DEF hTrackPosLo EQU $FFD8 ; low byte of the current track position, counted in 2-byte events (E-0019)
 DEF hTrackPosHi EQU $FFD9 ; high byte of the current track position (E-0019)

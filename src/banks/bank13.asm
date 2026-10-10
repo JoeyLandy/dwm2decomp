@@ -3,7 +3,7 @@ SECTION "Bank 13", ROMX[$4000], BANK[$13]
 
 ; HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
 ; 697 call sites from 48 routines (e.g. Func_013_5EF4, Func_013_5C0B, Func_013_5922, Func_013_49D5, ...)
-; writes: wC921, wC922, wC919, wC5DC, wC920, wC91F, wC923
+; writes: wC921, wC922, wC919, wModeState, wC920, wC91F, wC923
 SetRequestPtrC921_B13::
 Func_013_4001:: ; address name
     ld a, l
@@ -13,7 +13,7 @@ Func_013_4001:: ; address name
     ld a, $80
     ld [wC919], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $09
     ld [wC920], a
     ld a, $01
@@ -25,7 +25,7 @@ Func_013_4001:: ; address name
 
 ; DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
 ; 33 call sites from 18 routines (e.g. Func_013_5EF4, Func_013_49D5, Func_013_405C, Func_013_7DEC, ...)
-; writes: wC924, wC925, wC919, wC5DC, wC920, wC91F, wC923
+; writes: wC924, wC925, wC919, wModeState, wC920, wC91F, wC923
 SetRequestPtrC924FromDE_B13::
 Func_013_4025:: ; address name
     ld a, e
@@ -35,7 +35,7 @@ Func_013_4025:: ; address name
     ld a, $80
     ld [wC919], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $0A
     ld [wC920], a
     ld a, $01
@@ -47,7 +47,7 @@ Func_013_4025:: ; address name
 
 ; HL is stored in wC91A (low) and wC91B (high); then wC919 = $80 and wC5DC = 1
 ; 215 call sites from 22 routines (e.g. Func_013_5922, Func_013_5EF4, Func_013_5C0B, Func_013_49D5, ...)
-; writes: wC91A, wC91B, wC919, wC5DC
+; writes: wC91A, wC91B, wC919, wModeState
 SetRequestPtrC91A_B13::
 Func_013_4049:: ; address name
     ld a, l
@@ -57,12 +57,12 @@ Func_013_4049:: ; address name
     ld a, $80
     ld [wC919], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ret
 
 ; 39 call sites from 23 routines (e.g. Func_002_4745, Func_002_4E9E, Func_002_4ED6, Func_002_5B2A, ...)
 ; reads: wCC44, wC917, wCC45, wC916
-; writes: wC919, wC5DC, wC917, wC916, wC921, wC922, wC920, wC91F, ...
+; writes: wC919, wModeState, wC917, wC916, wC921, wC922, wC920, wC91F, ...
 ; points at: wCD89, wCDAE
 Func_013_405C::
     ld a, [wCC44]
@@ -97,7 +97,7 @@ Jump_013_409E::
     ld a, $80
     ld [wC919], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, [wCC45]
     swap a
     ld hl, wCDAE
@@ -1372,7 +1372,7 @@ Jump_013_4970::
 Jump_013_4977::
     xor a, a
     ld [wCB96], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $70
     ret z
     ld hl, $618B
@@ -1464,7 +1464,7 @@ Jump_013_4A02::
     xor a, a
     ld [wC914], a
     ld a, $06
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC46B], a
     ld [wC46C], a
@@ -2898,7 +2898,7 @@ Jump_013_53CD::
     ret
 
 Jump_013_53D4::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $30
     jr nz, Jump_013_53E1
     ld hl, $0ADA
@@ -3143,7 +3143,7 @@ Jump_013_5563::
     ret
 
 Jump_013_5582::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $41
     jr nc, Jump_013_558F
     ld hl, $5F26
@@ -8453,16 +8453,16 @@ Jump_013_7FAE::
     ret
 
 ; 8 call sites from 6 routines (e.g. Func_013_5EF4, Func_013_7E9F, Func_013_7E05, Func_013_76DF, ...)
-; reads: wCB86, hFF8E, hFF91, hFF98, wC8EF, wC8F0, wC8F1, wC8F4, ...
+; reads: wCB86, hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, ...
 ; writes: wC937, wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, ...
 Func_013_7FB0::
     ld a, [wCB86]
     ld [wC937], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC938], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC939], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC93A], a
     ld a, [wC8EF]
     ld [wC93B], a

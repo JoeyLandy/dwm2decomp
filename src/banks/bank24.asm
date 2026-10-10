@@ -1778,7 +1778,7 @@ Func_024_4DA8::
 
 ; 6 call sites from 1 routine (e.g. GameMode6_Update)
 ; reads: wD092
-; writes: wC94B, wGameMode, wC5DC, wModeChangeRequest
+; writes: wC94B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wD780
 Func_024_4DEB::
     ld hl, wD780
@@ -1796,7 +1796,7 @@ Jump_024_4DF1::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     ld a, [wD092]
@@ -3074,7 +3074,7 @@ Func_024_567C::
     ld a, [wCA99]
     and a, a
     ret z
-    farcall Func_012_6EC6
+    farcall DrawFieldSprites
     ret
 
 ; 2 call sites from 1 routine (e.g. GameMode6_Update)

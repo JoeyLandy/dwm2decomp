@@ -1,8 +1,8 @@
 SECTION "Bank 11", ROMX[$4000], BANK[$11]
     db $11, $C9
 
-; 6 call sites from 1 routine (e.g. Func_002_541B)
-; reads: wCC44, hFF90, hFF98, hFF8F, hFF92, hFF8E, hFF91, wC8CA, ...
+; 6 call sites from 1 routine (e.g. UpdatePlayerMovement)
+; reads: wCC44, hFF90, hPlayerFacing, hFF8F, hFF92, hPlayerX, hPlayerY, wC8CA, ...
 ; writes: wC8CA, wCCEA, hFF90, hFF8F, hFF92, wC8C8, wC8C9, hFF8C, ...
 ; points at: wC5E0
 Func_011_4002::
@@ -42,7 +42,7 @@ Jump_011_4029::
     cp a, $FF
     jr z, Jump_011_4066
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, c
     jr nz, Jump_011_407D
     ld a, [de]
@@ -64,13 +64,13 @@ Jump_011_4029::
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, c
     jr nz, Jump_011_407D
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     jr nz, Jump_011_407D
     jr Jump_011_4088
@@ -151,12 +151,12 @@ Jump_011_40D2::
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     add a, c
     ld [wC8C8], a
     ld a, [de]
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     add a, c
     ld [wC8C9], a
     dec de
@@ -191,7 +191,7 @@ Jump_011_4105::
     ld hl, wC5E0
     inc [hl]
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -203,7 +203,7 @@ Jump_011_4105::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4C4E, Func_002_56DC, Func_002_5BD7)
-; reads: wCC44, hFF90, hFF8C, hFF8F, hFF92, hFF8E, hFF91, wC8C9
+; reads: wCC44, hFF90, hFF8C, hFF8F, hFF92, hPlayerX, hPlayerY, wC8C9
 ; writes: hFF8C, wC8CA, wCCEA, hFF90, hFF8F, hFF92, wC8C8, wC8C9, ...
 ; points at: wC5E0
 Func_011_4130::
@@ -247,10 +247,10 @@ Jump_011_4152::
     ldh a, [hFF92]
     cp a, $05
     jr nz, Jump_011_4190
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr nz, Jump_011_4190
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $50
     jr nz, Jump_011_4190
     ld de, $0076
@@ -295,13 +295,13 @@ Jump_011_419F::
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, c
     jr nz, Jump_011_41DA
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     jr z, Jump_011_41CD
     add a, $F8
@@ -392,7 +392,7 @@ Jump_011_4235::
     xor a, a
     ld [wC8C7], a
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -405,7 +405,7 @@ Jump_011_4235::
     ld c, $01
     ret
 
-; 2 call sites from 2 routines (e.g. Func_002_541B, Func_061_5794)
+; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, Func_061_5794)
 ; reads: wCC44, hFF90, wC88E, wC891, wCC42, wC88F, wC890, wCD09, ...
 ; writes: hFF90, wC8C8, wC8C9, hFF8F, hFF92
 ; points at: wC88F
@@ -532,7 +532,7 @@ Jump_011_431E::
 
 ; 1 call site from 1 routine (e.g. Func_011_4268)
 ; reads: hFF8C
-; writes: wCCEA, wC8C8, wC8C9, hFF8F, hFF92, wC8C6, wC5DC, wC8C5, ...
+; writes: wCCEA, wC8C8, wC8C9, hFF8F, hFF92, wC8C6, wModeState, wC8C5, ...
 ; points at: wC5E0
 Func_011_4340::
     ld a, $01
@@ -562,7 +562,7 @@ Func_011_4340::
     ld hl, wC5E0
     inc [hl]
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -576,7 +576,7 @@ Func_011_4340::
 
 ; 2 call sites from 1 routine (e.g. Func_011_42AC)
 ; reads: hFF8C
-; writes: wC8CA, wC5DC, wC8C5, hFF8C, wC8C6
+; writes: wC8CA, wModeState, wC8C5, hFF8C, wC8C6
 Func_011_438F::
     ld a, $F0
     ld [wC8CA], a
@@ -585,7 +585,7 @@ Func_011_438F::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -653,14 +653,14 @@ Jump_011_43F3::
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_011_43BB)
-; reads: hFF8E, hFF91, hFF8F, hFF92, hFF8C
+; reads: hPlayerX, hPlayerY, hFF8F, hFF92, hFF8C
 ; writes: wCCEA, hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC88B, wC8C6, ...
 ; points at: wC5E0
 Func_011_43FA::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     and a, $F0
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     and a, $F0
     swap a
     or a, c
@@ -721,7 +721,7 @@ Jump_011_442B::
     xor a, a
     ld [wC8C7], a
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]

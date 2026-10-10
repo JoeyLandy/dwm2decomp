@@ -612,8 +612,8 @@ Func_004_449F::
     ret
 
 ; 5 call sites from 5 routines (e.g. Func_004_4001, Func_014_6804, Func_024_567C, Func_0F1_5B8E, ...)
-; reads: wC468, wSpriteSlotCount, hScrollX, hFFA2, hScrollY, hFFA6, hSpriteAttrXor, hFFC6
-; writes: hFFC6, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSubIndex, ...
+; reads: wC468, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hFFC6
+; writes: hFFC6, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
 ; points at: wSpriteSlots
 Func_004_44CE::
     ld a, [wC468]
@@ -651,18 +651,18 @@ Jump_004_44E3::
     ldh a, [hScrollX]
     add a, d
     ldh [hSpriteOriginX], a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     adc a, $00
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ld a, [hl+]
     add a, $10
     ld d, a
     ldh a, [hScrollY]
     add a, d
     ldh [hSpriteOriginY], a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     adc a, $00
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
     inc hl
     ld a, [hl]
     bit 7, a
@@ -1504,7 +1504,7 @@ Jump_004_49AC::
     ret
 
 ; 6 call sites from 1 routine (e.g. Func_004_456D)
-; reads: hFF8E, hFFC7, hFF91, hFFC6, wC6FD
+; reads: hPlayerX, hFFC7, hPlayerY, hFFC6, wC6FD
 ; writes: hFFC6, hFFC7
 ; points at: wC8F0
 Func_004_49B0::
@@ -1517,14 +1517,14 @@ Func_004_49B0::
     swap a
     and a, $0F
     ldh [hFFC7], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     swap a
     and a, $0F
     ld c, a
     ldh a, [hFFC7]
     cp a, c
     jr z, Jump_004_49D9
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     add a, $0F
     swap a
     and a, $0F
@@ -1534,14 +1534,14 @@ Func_004_49B0::
     jr nz, Jump_004_49F7
 
 Jump_004_49D9::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     swap a
     and a, $0F
     ld c, a
     ldh a, [hFFC6]
     cp a, c
     jr z, Jump_004_49F3
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     add a, $0F
     swap a
     and a, $0F
@@ -1826,19 +1826,19 @@ Jump_004_4BDD::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_4BB0)
-; reads: hSpriteOriginY, hFFAC, hSpriteAttrXor, hFF8C
-; writes: hSpriteOriginY, hFFAC, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex
+; reads: hSpriteOriginY, hSpriteOriginYHi, hSpriteAttrXor, hFF8C
+; writes: hSpriteOriginY, hSpriteOriginYHi, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex
 Func_004_4BE4::
     ldh a, [hSpriteOriginY]
     ld l, a
-    ldh a, [hFFAC]
+    ldh a, [hSpriteOriginYHi]
     ld h, a
     ld a, $08
     add_a_to_hl
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, h
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
     ld a, $70
     ldh [hSpriteTileOffset], a
     ldh a, [hSpriteAttrXor]
@@ -1852,7 +1852,7 @@ Func_004_4BE4::
     ldh [hSpriteSetIndex], a
     xor a, a
     ldh [hSpriteSubIndex], a
-    farcall Func_07F_700A
+    farcall DrawMetaSprite
     ret
 
 Jump_004_4C17::
@@ -1860,12 +1860,12 @@ Jump_004_4C17::
     ldh [hSpriteSetIndex], a
     xor a, a
     ldh [hSpriteSubIndex], a
-    farcall Func_07F_700A
+    farcall DrawMetaSprite
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_4BB0)
-; reads: hFF8D, hFF8A, wC8F0, wC8F1, hFF99, hScrollX, hFFA2, hScrollY, ...
-; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
+; reads: hFF8D, hFF8A, wC8F0, wC8F1, hFF99, hScrollX, hScrollXHi, hScrollY, ...
+; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 Func_004_4C25::
     ldh a, [hFF8D]
     bit 1, a
@@ -1914,24 +1914,24 @@ Jump_004_4C5B::
     ldh a, [hScrollX]
     add a, l
     ldh [hSpriteOriginX], a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     adc a, $00
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ld a, [wC8F1]
     add a, $10
     ld l, a
     ldh a, [hScrollY]
     add a, l
     ldh [hSpriteOriginY], a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     adc a, $00
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
     farcall Func_07F_4001
     ret
 
 ; 3 call sites from 1 routine (e.g. Func_004_4BB0)
-; reads: hFF8D, hFF8A, hFF8E, hFF91, hFF99, hScrollX, hFFA2, hScrollY, ...
-; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
+; reads: hFF8D, hFF8A, hPlayerX, hPlayerY, hFF99, hScrollX, hScrollXHi, hScrollY, ...
+; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 Func_004_4C96::
     ldh a, [hFF8D]
     bit 0, a
@@ -1940,9 +1940,9 @@ Func_004_4C96::
     ldh [hSpriteSetIndex], a
     ld a, $00
     ldh [hSpriteAttrXor], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld c, a
     call Func_004_4E0F
     or a, a
@@ -1951,7 +1951,7 @@ Func_004_4C96::
     jr Jump_004_4CBF
 
 Jump_004_4CB3::
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, $03
     jr nz, Jump_004_4CBF
     ld a, $20
@@ -1969,25 +1969,25 @@ Jump_004_4CBF::
     ldh [hSpriteSubIndex], a
     ld a, $00
     ldh [hSpriteTileOffset], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     add a, $08
     ld l, a
     ldh a, [hScrollX]
     add a, l
     ldh [hSpriteOriginX], a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     adc a, $00
-    ldh [hFFAA], a
-    ldh a, [hFF91]
+    ldh [hSpriteOriginXHi], a
+    ldh a, [hPlayerY]
     add a, $10
     ld l, a
     ldh a, [hScrollY]
     add a, l
     ldh [hSpriteOriginY], a
     ld l, a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     adc a, $00
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
     ld h, a
     ldh a, [hFF8B]
     cp a, $02
@@ -2001,7 +2001,7 @@ Jump_004_4CBF::
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, h
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
 
 Jump_004_4D06::
     ldh a, [hFF93]
@@ -2041,8 +2041,8 @@ Jump_004_4D3C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_4BB0)
-; reads: wC6FD, hFFCF, hFF8D, hFF99, hFFC6, hScrollX, hFFA2, hScrollY, ...
-; writes: hFFCF, hFFC6, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, ...
+; reads: wC6FD, hFFCF, hFF8D, hFF99, hFFC6, hScrollX, hScrollXHi, hScrollY, ...
+; writes: hFFCF, hFFC6, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, ...
 ; points at: wC8EF, wC701
 Func_004_4D43::
     ld a, $02
@@ -2110,18 +2110,18 @@ Jump_004_4D89::
     ldh a, [hScrollX]
     add a, c
     ldh [hSpriteOriginX], a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     adc a, $00
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ld a, [hl+]
     add a, $10
     ld c, a
     ldh a, [hScrollY]
     add a, c
     ldh [hSpriteOriginY], a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     adc a, $00
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
     inc de
     ld a, [de]
     dec de
@@ -2129,7 +2129,7 @@ Jump_004_4D89::
     jr nz, Jump_004_4DCB
     ld a, $19
     ldh [hSpriteSetIndex], a
-    farcall Func_07F_700A
+    farcall DrawMetaSprite
     jr Jump_004_4DF3
 
 Jump_004_4DCB::
@@ -2173,7 +2173,7 @@ Jump_004_4DF3::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_004_4C96, Func_004_4C25, Func_004_4D43)
-; reads: wFadeState, hFF90, hFF8F, hFF92, hFF91
+; reads: wFadeState, hFF90, hFF8F, hFF92, hPlayerY
 Func_004_4E0F::
     ld a, [wFadeState]
     or a, a
@@ -2187,7 +2187,7 @@ Func_004_4E0F::
     ldh a, [hFF92]
     or a, a
     jr nz, Jump_004_4E2E
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $80
     jr nz, Jump_004_4E2E
     ld a, $01
@@ -2262,7 +2262,7 @@ Data_004_4EAA:: ; heuristic: argument of a bank-switching copy helper; C0
 
 ; HL is stored in wC921 (low) and wC922 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
 ; 316 call sites from 44 routines (e.g. Func_004_7BAB, Func_004_6A35, Func_004_5D14, Func_004_58C2, ...)
-; writes: wC921, wC922, wC919, wC5DC, wC920, wC91F, wC923
+; writes: wC921, wC922, wC919, wModeState, wC920, wC91F, wC923
 SetRequestPtrC921_B04::
 Func_004_55BB:: ; address name
     ld a, l
@@ -2272,7 +2272,7 @@ Func_004_55BB:: ; address name
     ld a, $80
     ld [wC919], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $09
     ld [wC920], a
     ld a, $01
@@ -2284,7 +2284,7 @@ Func_004_55BB:: ; address name
 
 ; DE is stored in wC924 (low) and wC925 (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
 ; 99 call sites from 58 routines (e.g. Func_004_6A35, Func_004_5D14, Func_004_58C2, Func_004_612B, ...)
-; writes: wC924, wC925, wC919, wC5DC, wC920, wC91F, wC923
+; writes: wC924, wC925, wC919, wModeState, wC920, wC91F, wC923
 SetRequestPtrC924FromDE_B04::
 Func_004_55DF:: ; address name
     ld a, e
@@ -2294,7 +2294,7 @@ Func_004_55DF:: ; address name
     ld a, $80
     ld [wC919], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $0A
     ld [wC920], a
     ld a, $01
@@ -2306,7 +2306,7 @@ Func_004_55DF:: ; address name
 
 ; HL is stored in wC91A (low) and wC91B (high); then wC919 = $80 and wC5DC = 1
 ; 177 call sites from 32 routines (e.g. Func_004_5616, Func_004_7BAB, Func_004_7B29, Func_004_6A35, ...)
-; writes: wC91A, wC91B, wC919, wC5DC
+; writes: wC91A, wC91B, wC919, wModeState
 SetRequestPtrC91A_B04::
 Func_004_5603:: ; address name
     ld a, l
@@ -2316,7 +2316,7 @@ Func_004_5603:: ; address name
     ld a, $80
     ld [wC919], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_013_405C)
@@ -3596,14 +3596,14 @@ Jump_004_5F53::
     ret
 
 Jump_004_5F5A::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $30
     ret nz
     ld de, $007B
     call SetFlagBit
     ld hl, $5CD1
     call SetRequestPtrC91A_B04
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $50
     ret nz
     ld a, $40
@@ -4042,7 +4042,7 @@ Jump_004_627C::
     ret
 
 Jump_004_6283::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $30
     jr nz, Jump_004_628E
     ld a, $02
@@ -5028,7 +5028,7 @@ Jump_004_6953::
     ld a, [wC94D]
     or a, a
     ret z
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -5046,7 +5046,7 @@ Jump_004_696C::
     ld a, [wC6FD]
     dec a
     ret z
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -5066,7 +5066,7 @@ Jump_004_698B::
     ret z
     dec a
     ret z
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -6455,12 +6455,12 @@ Func_004_73C7:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8E
+; reads: hPlayerX
 ; writes: wCB86, wDataBank
 Func_004_73D8:: ; heuristic: target of a pointer table; C0
     xor a, a
     ld [wCB86], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $30
     jr z, Jump_004_73E7
     ld a, $01
@@ -7558,7 +7558,7 @@ Jump_004_7B91::
     call SetRequestPtrC91A_B04
 
 Jump_004_7B9C::
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -7568,7 +7568,7 @@ Jump_004_7B9C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_004_7B29)
-; reads: wCD0B, hFF8F, hFF8E
+; reads: wCD0B, hFF8F, hPlayerX
 Func_004_7BAB::
     ld a, [wCD0B]
     cp a, $01
@@ -7576,7 +7576,7 @@ Func_004_7BAB::
     ldh a, [hFF8F]
     or a, a
     jr nz, Jump_004_7BF5
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr z, Jump_004_7BF2
     cp a, $20
@@ -7589,7 +7589,7 @@ Jump_004_7BC3::
     ldh a, [hFF8F]
     or a, a
     jr nz, Jump_004_7BF5
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr z, Jump_004_7BF2
     jr Jump_004_7BF5
@@ -7600,7 +7600,7 @@ Jump_004_7BD4::
     ldh a, [hFF8F]
     or a, a
     jr nz, Jump_004_7BF5
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $10
     jr z, Jump_004_7BF2
     cp a, $30

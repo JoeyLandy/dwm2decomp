@@ -3,7 +3,7 @@ SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
 
 ; 1 call site from 1 routine (e.g. Func_002_4C4E)
 ; reads: wC46B, wC46C, wC915, wCC44
-; writes: wC46B, rRAMG, wC916, wC917, wC5DC
+; writes: wC46B, rRAMG, wC916, wC917, wModeState
 Func_00A_4001::
     call Func_00A_4196
     ld a, [wC46B]
@@ -42,12 +42,12 @@ Jump_00A_4042::
     bit 7, a
     jr nz, Jump_00A_404F
     ld a, $00
-    ld [wC5DC], a
+    ld [wModeState], a
     ret
 
 Jump_00A_404F::
     ld a, $05
-    ld [wC5DC], a
+    ld [wModeState], a
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_00A_4001)
@@ -450,9 +450,9 @@ Jump_00A_427B::
     ld a, [wD069]
     or a, a
     ret nz
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld c, a
     call Func_00A_461E
     ldh a, [hFFC7]
@@ -473,15 +473,15 @@ Jump_00A_427B::
 
 Jump_00A_42AF::
     ld a, $07
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC46B], a
     ld [wC46C], a
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_002_56DC, Func_002_5BD7)
-; reads: hFF8C, wC5DC, wCC44, hFF90, wC6FD, wC88C
-; writes: rRAMG, wC88C, wC902, wC5DC, wC46B, wC46C, wC915
+; reads: hFF8C, wModeState, wCC44, hFF90, wC6FD, wC88C
+; writes: rRAMG, wC88C, wC902, wModeState, wC46B, wC46C, wC915
 ; points at: wC6FE
 Func_00A_42BC::
     ldh a, [hFF8C]
@@ -492,11 +492,11 @@ Func_00A_42BC::
     ld de, $0002
     call TestFlagBit
     ret nc
-    ld a, [wC5DC]
+    ld a, [wModeState]
     and a, $0F
     dec a
     ret z
-    ld a, [wC5DC]
+    ld a, [wModeState]
     cp a, $07
     ret z
     ld a, [wCC44]
@@ -551,7 +551,7 @@ Jump_00A_431E::
 
 Jump_00A_4321::
     pop bc
-    ld a, [wC5DC]
+    ld a, [wModeState]
     cp a, $03
     jr nz, Jump_00A_432D
     xor a, a
@@ -559,7 +559,7 @@ Jump_00A_4321::
 
 Jump_00A_432D::
     ld a, $07
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC46B], a
     ld a, $01
@@ -657,8 +657,8 @@ Jump_00A_43DC::
     ret
 
 ; 3 call sites from 3 routines (e.g. Func_002_4C4E, Func_002_56DC, Func_002_5BD7)
-; reads: wFadeState, wC91F, hFF8C, wC5DC, wC901, wD091, wC902, wCC44, ...
-; writes: wC901, wD091, wC916, wC917, wC902, wC903, wC5DC, wC904, ...
+; reads: wFadeState, wC91F, hFF8C, wModeState, wC901, wD091, wC902, wCC44, ...
+; writes: wC901, wD091, wC916, wC917, wC902, wC903, wModeState, wC904, ...
 Func_00A_43EC::
     ld a, [wFadeState]
     or a, a
@@ -671,7 +671,7 @@ Func_00A_43EC::
     ret nz
     bit 5, a
     ret nz
-    ld a, [wC5DC]
+    ld a, [wModeState]
     cp a, $04
     ret z
     cp a, $01
@@ -694,7 +694,7 @@ Jump_00A_4414::
     ld [wD091], a
     or a, a
     ret nz
-    ld a, [wC5DC]
+    ld a, [wModeState]
     cp a, $01
     jr nz, Jump_00A_4432
     ld a, $01
@@ -739,9 +739,9 @@ Jump_00A_4451::
     or a, a
     jr nz, Jump_00A_44AD
     push hl
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld c, a
     call Func_00A_461E
     pop hl
@@ -809,7 +809,7 @@ Jump_00A_44C3::
 Jump_00A_44D3::
     farcall Func_002_5B9E
     ld a, $03
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC904], a
     call NextRandomSeed
@@ -1090,7 +1090,7 @@ Jump_00A_47F6::
 
 Jump_00A_47FB::
     ld a, $03
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC904], a
     ld a, $01
@@ -2483,7 +2483,7 @@ Jump_00A_525C::
     ld a, $04
     ld [wGameMode], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld [wC5DD], a
     ld [wC5DE], a
     ld hl, wModeChangeRequest

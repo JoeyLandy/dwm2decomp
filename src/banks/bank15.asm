@@ -6319,14 +6319,14 @@ Data_015_6E0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; 2 call sites from 2 routines (e.g. Func_015_570C, Func_015_54C0)
 ; reads: wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, wC93F, ...
-; writes: hFF8E, hFF91, hFF98, wC8EF, wC8F0, wC8F1, wC8F4, wC8F5, ...
+; writes: hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, wC8F5, ...
 Func_015_6E14::
     ld a, [wC938]
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, [wC939]
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld a, [wC93A]
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld a, [wC93B]
     ld [wC8EF], a
     ld a, [wC93C]

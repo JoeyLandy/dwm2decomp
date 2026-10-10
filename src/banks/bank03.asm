@@ -18,7 +18,7 @@ Func_003_4001:: ; address name
 
 ; per-frame routine for wGameMode = 2
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate)
-; reads: wC5DD, wC5DC, wIsCGB, hScrollY, hScrollX, wC933, wCC37, wSpriteSlotCount
+; reads: wC5DD, wModeState, wIsCGB, hScrollY, hScrollX, wC933, wCC37, wSpriteSlotCount
 ; writes: wSpriteSlotCount, wC526, rVBK, hScrollX, hScrollY, wC46D, wC46E, wC46F, ...
 ; points at: wC49F, wBGMapShadow, wC5DD, wC0A0, wD09D
 GameMode2_Update::
@@ -27,7 +27,7 @@ Func_003_4015:: ; address name
     bit 7, a
     jr z, Jump_003_4036
     call Func_003_4596
-    ld a, [wC5DC]
+    ld a, [wModeState]
     and a, $07
     rst $00
     dw Jump_003_4692
@@ -209,17 +209,17 @@ Jump_003_414C::
     set 6, a
     ld [wCC37], a
     ld a, $02
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
     ld a, $60
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
     ld a, $50
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
@@ -263,9 +263,9 @@ Jump_003_414C::
     ret
 
 ; 1 call site from 1 routine (e.g. GameMode2_Update)
-; reads: wC5DC
+; reads: wModeState
 Func_003_4208::
-    ld a, [wC5DC]
+    ld a, [wModeState]
     and a, $07
     rst $00
     dw Jump_003_4218
@@ -305,7 +305,7 @@ Jump_003_423F::
     ret
 
 Jump_003_4259::
-    ld a, [wC5DC]
+    ld a, [wModeState]
     bit 3, a
     jr z, Jump_003_427D
     ld de, $0025
@@ -502,14 +502,14 @@ Func_003_432F::
     ret
 
 ; 12 call sites from 7 routines (e.g. Func_003_4659, Func_003_6A60, Func_003_6B5E, Func_003_5E68, ...)
-; reads: hFF8E, hFF91, wIsCGB
+; reads: hPlayerX, hPlayerY, wIsCGB
 ; writes: wC8C8, wC8C9, wC8CA, rRAMG, wC526, wC5E0, wGameMode
 ; points at: wC49F, wBGMapShadow, wC5E0
 Func_003_4339::
     call Func_003_4389
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8C8], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8C9], a
     xor a, a
     ld [wC8CA], a
@@ -877,9 +877,9 @@ Func_003_454C::
     db $C5, $E1, $7D, $EA, $2D, $C5, $7C, $EA, $2E, $C5, $C9
 
 ; 1 call site from 1 routine (e.g. GameMode2_Update)
-; reads: wCE9B, wC830, wC831, wC82F, wCE9C, wCE9D
+; reads: wCE9B, wPlayHoursLo, wPlayHoursHi, wPlayMinutes, wCE9C, wCE9D
 ; writes: wCE9B, wCE9C, wCE9D
-; points at: wC82D
+; points at: wPlayFrames
 Func_003_4596::
     ld a, [wCE9B]
     inc a
@@ -913,9 +913,9 @@ Jump_003_45C5::
     ld [wCE9D], a
 
 Jump_003_45C9::
-    ld a, [wC830]
+    ld a, [wPlayHoursLo]
     ld l, a
-    ld a, [wC831]
+    ld a, [wPlayHoursHi]
     ld h, a
     ld bc, $03E7
     ld a, l
@@ -928,12 +928,12 @@ Jump_003_45C9::
     or a, l
     or a, a
     jr nz, Jump_003_45E5
-    ld a, [wC82F]
+    ld a, [wPlayMinutes]
     cp a, $3B
     ret z
 
 Jump_003_45E5::
-    ld hl, wC82D
+    ld hl, wPlayFrames
     ld a, [hl]
     inc a
     ld [hl], a
@@ -5950,7 +5950,7 @@ Jump_003_6C52::
     xor a, a
     ld [wC0A0], a
     ld [wC0A1], a
-    ld a, [wC5DC]
+    ld a, [wModeState]
     bit 3, a
     ret z
     ld a, $40
@@ -6097,7 +6097,7 @@ Jump_003_6D39::
     ld a, [hl]
     cp a, $FE
     jr nz, Jump_003_6D60
-    ld a, [wC5DC]
+    ld a, [wModeState]
     bit 3, a
     jr z, Jump_003_6D5C
     ld a, $40
@@ -6108,7 +6108,7 @@ Jump_003_6D5C::
     jr Jump_003_6D69
 
 Jump_003_6D60::
-    ld a, [wC5DC]
+    ld a, [wModeState]
     bit 3, a
     jr nz, Jump_003_6D73
     ld a, $09
@@ -6140,7 +6140,7 @@ Jump_003_6D90::
     ret nz
     xor a, a
     ld [wC0A1], a
-    ld a, [wC5DC]
+    ld a, [wModeState]
     bit 3, a
     ret z
     call Func_003_4339
@@ -7029,14 +7029,14 @@ Jump_003_73A0::
     call Func_003_4414
     ld hl, vTiles2 + $300
     call Func_003_43CC
-    ld a, [wC830]
+    ld a, [wPlayHoursLo]
     ld l, a
-    ld a, [wC831]
+    ld a, [wPlayHoursHi]
     ld h, a
     call HLToDecimalDigits
     ld de, wC200
     call Func_003_74DA
-    ld a, [wC82F]
+    ld a, [wPlayMinutes]
     call Func_003_74CA
     ld de, wC204
     call Func_003_74E2
@@ -7107,19 +7107,19 @@ Jump_003_7487::
     ld a, [wJoypadPressed]
     and a, $03
     jr nz, Jump_003_74C2
-    ld a, [wC82D]
+    ld a, [wPlayFrames]
     or a, a
     ret nz
-    ld a, [wC82E]
+    ld a, [wPlaySeconds]
     or a, a
     ret nz
-    ld a, [wC82F]
+    ld a, [wPlayMinutes]
     call Func_003_74CA
     ld de, wC204
     call Func_003_74E2
-    ld a, [wC830]
+    ld a, [wPlayHoursLo]
     ld l, a
-    ld a, [wC831]
+    ld a, [wPlayHoursHi]
     ld h, a
     call HLToDecimalDigits
     ld de, wC200
@@ -7284,7 +7284,7 @@ Jump_003_75A4::
     ret
 
 Jump_003_75D7::
-    ld a, [wC5DC]
+    ld a, [wModeState]
     bit 3, a
     jr nz, Jump_003_7633
     xor a, a
@@ -7327,7 +7327,7 @@ Jump_003_7617::
     ret
 
 Jump_003_7621::
-    ld a, [wC5DC]
+    ld a, [wModeState]
     bit 3, a
     jr nz, Jump_003_7633
     xor a, a
@@ -7350,7 +7350,7 @@ Jump_003_7633::
 
 ; 7 call sites from 1 routine (e.g. Func_003_74E2)
 ; reads: wD0D5, wD10A
-; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hFFAA, ...
+; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
 Func_003_7647::
     ld a, $0A
     ld [rRAMG], a
@@ -7372,17 +7372,17 @@ Func_003_7647::
     ld a, l
     ldh [hSpriteOriginX], a
     ld a, h
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ld hl, $0030
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, h
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
     xor a, a
     ld [rRAMB], a
     xor a, a
     ld [rRAMG], a
-    farcall Func_07F_700A
+    farcall DrawMetaSprite
     ret
 
 Jump_003_7689::

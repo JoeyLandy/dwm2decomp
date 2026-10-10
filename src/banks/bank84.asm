@@ -695,7 +695,7 @@ Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $210461, $361
 
 ; 1 call site from 1 routine (e.g. Func_016_4454)
-; reads: hFF8C, wCC44, hFF90, hFF8F, hFF92, hFF8E, hFF91, wC88E, ...
+; reads: hFF8C, wCC44, hFF90, hFF8F, hFF92, hPlayerX, hPlayerY, wC88E, ...
 ; writes: hFFD0, wC83B, wC83C, wC83D, wC83E, wC88E, wC88F, wC890, ...
 ; points at: wCD7B, wCD8B
 Func_084_47C2::
@@ -727,10 +727,10 @@ Jump_084_47E0::
     ldh a, [hFF92]
     or a, c
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     and a, $F0
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     and a, $F0
     swap a
     or a, b
@@ -851,10 +851,10 @@ Jump_084_48A9::
     ldh a, [hFF92]
     or a, c
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr nz, Jump_084_48E4
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_084_48E4
     ld hl, wCD7B
@@ -884,7 +884,7 @@ Jump_084_48E3::
     pop hl
 
 Jump_084_48E4::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_084_491A
     ld hl, wCD8B
@@ -900,7 +900,7 @@ Jump_084_48ED::
     ld a, [hl]
     cp a, c
     jr nz, Jump_084_4912
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jp z, Jump_084_499F
     inc hl
@@ -909,7 +909,7 @@ Jump_084_48ED::
     jr z, Jump_084_4912
     cp a, $05
     jr z, Jump_084_4912
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $50
     jp z, Jump_084_499F
 
@@ -943,10 +943,10 @@ Jump_084_491A::
     ld a, [wCC42]
     cp a, b
     jr nz, Jump_084_495F
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     and a, $F0
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     and a, $F0
     swap a
     or a, b
@@ -965,21 +965,21 @@ Jump_084_495F::
     jr nz, Jump_084_4978
     ld a, [wCD09]
     ld b, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, b
     jr nz, Jump_084_4978
     ld a, [wCD0A]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, b
     jr nz, Jump_084_4978
     ret
 
 Jump_084_4978::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     and a, $F0
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     and a, $F0
     swap a
     or a, b
@@ -1005,15 +1005,15 @@ Data_084_49A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $2109A1, $C9
 
 ; 2 call sites from 1 routine (e.g. Func_084_47C2)
-; reads: wC8FE, hFF8E, hFF91, wC8FF
+; reads: wC8FE, hPlayerX, hPlayerY, wC8FF
 Func_084_4A6A::
     ld a, [wC8FE]
     cp a, $FF
     jr z, Jump_084_4A87
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     and a, $F0
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     swap a
     and a, $0F
     or a, c

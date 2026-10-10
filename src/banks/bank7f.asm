@@ -104,33 +104,33 @@ Data_07F_4008:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $74, $62, $74, $62, $26, $6F, $74, $62, $98, $6F
 
 ; 1 call site from 1 routine (e.g. Func_07F_4001)
-; reads: hOamNextEntry, hFFD4, hFFD5, hSpriteOriginY, hFFAC, hFFD2, hFFD3, hSpriteOriginX, ...
+; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_07F_40CC::
     ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
-    ldh a, [hFFD4]
+    ldh a, [hSpriteScrollYLo]
     ld c, a
-    ldh a, [hFFD5]
+    ldh a, [hSpriteScrollYHi]
     ld b, a
     ldh a, [hSpriteOriginY]
     add a, c
     ldh [hFFB3], a
-    ldh a, [hFFAC]
+    ldh a, [hSpriteOriginYHi]
     adc a, b
     ldh [hFFB4], a
-    ldh a, [hFFD2]
+    ldh a, [hSpriteScrollXLo]
     ld c, a
-    ldh a, [hFFD3]
+    ldh a, [hSpriteScrollXHi]
     ld b, a
     ld hl, hFFB5
     ldh a, [hSpriteOriginX]
     add a, c
     ld c, a
     ld [hl+], a
-    ldh a, [hFFAA]
+    ldh a, [hSpriteOriginXHi]
     adc a, b
     ld b, a
     ld [hl+], a
@@ -927,10 +927,12 @@ Data_07F_6E42:: ; heuristic: target of a monotone pointer table; C0
 Data_07F_6EB4:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $1FEEB4, $156
 
+; DE = Data_07F_7011 (the table of meta-sprite sets), then DrawMetaSpriteAt
 ; 25 call sites from 20 routines (e.g. Func_003_7647, Func_004_4BE4, Func_004_4D43, Func_007_5DD6, ...)
-Func_07F_700A::
+DrawMetaSprite::
+Func_07F_700A:: ; address name
     ld de, Data_07F_7011
-    call Func_07F_7065
+    call DrawMetaSpriteAt
     ret
 
 Data_07F_7011:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -977,34 +979,36 @@ Data_07F_7011:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_07F_7B1D
     dw Data_07F_7B24
 
-; 1 call site from 1 routine (e.g. Func_07F_700A)
-; reads: hOamNextEntry, hFFD4, hFFD5, hSpriteOriginY, hFFAC, hFFD2, hFFD3, hSpriteOriginX, ...
+; DE = table of set pointers: returns at once when hOamNextEntry is $27 or more; otherwise converts the 16-bit position (hSpriteOriginX with hFFAA, hSpriteOriginY with hFFAC) to screen coordinates by adding the scroll-offset words hSpriteScrollXLo/Hi and hSpriteScrollYLo/Hi, and writes OAM entries for the sprite chosen by hSpriteSetIndex and hSpriteSubIndex (tile += hSpriteTileOffset, attribute ^= hSpriteAttrXor)
+; 1 call site from 1 routine (e.g. DrawMetaSprite)
+; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
-Func_07F_7065::
+DrawMetaSpriteAt::
+Func_07F_7065:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
-    ldh a, [hFFD4]
+    ldh a, [hSpriteScrollYLo]
     ld c, a
-    ldh a, [hFFD5]
+    ldh a, [hSpriteScrollYHi]
     ld b, a
     ldh a, [hSpriteOriginY]
     add a, c
     ldh [hFFB3], a
-    ldh a, [hFFAC]
+    ldh a, [hSpriteOriginYHi]
     adc a, b
     ldh [hFFB4], a
-    ldh a, [hFFD2]
+    ldh a, [hSpriteScrollXLo]
     ld c, a
-    ldh a, [hFFD3]
+    ldh a, [hSpriteScrollXHi]
     ld b, a
     ld hl, hFFB5
     ldh a, [hSpriteOriginX]
     add a, c
     ld c, a
     ld [hl+], a
-    ldh a, [hFFAA]
+    ldh a, [hSpriteOriginXHi]
     adc a, b
     ld b, a
     ld [hl+], a
@@ -1444,7 +1448,7 @@ Jump_07F_728B::
     jr nz, Jump_07F_7230
     ret
 
-; 2 call sites from 1 routine (e.g. Func_07F_7065)
+; 2 call sites from 1 routine (e.g. DrawMetaSpriteAt)
 ; reads: hScrollY, hScrollX, hFFBA, rSTAT
 Func_07F_72AB::
     push hl

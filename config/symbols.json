@@ -46,5 +46,22 @@
   "C5F0": {"name": "wFrameCounterLo", "note": "low byte of the 16-bit frame counter the VBlank handler increments", "evidence": "reading"},
   "C5F1": {"name": "wFrameCounterHi", "note": "high byte of the 16-bit frame counter", "evidence": "reading"},
   "C60A": {"name": "wMusicRequest", "note": "music id waiting for ProcessSoundQueue; $FF = none", "evidence": "reading"},
-  "C60B": {"name": "wSoundEffectRequest", "note": "sound effect id waiting for ProcessSoundQueue; $FF = none", "evidence": "reading"}
+  "C60B": {"name": "wSoundEffectRequest", "note": "sound effect id waiting for ProcessSoundQueue; $FF = none", "evidence": "reading"},
+  "C5DC": {"name": "wModeState", "note": "per-mode sub-state; low nibble indexes the jump table in GameMode1_Update (E-0030)", "evidence": "reading"},
+  "FFA2": {"name": "hScrollXHi", "note": "high byte of the 16-bit horizontal scroll that starts at hScrollX", "evidence": "reading"},
+  "FFA6": {"name": "hScrollYHi", "note": "high byte of the 16-bit vertical scroll that starts at hScrollY", "evidence": "reading"},
+  "FFAA": {"name": "hSpriteOriginXHi", "note": "high byte of the 16-bit sprite X position (hSpriteOriginX is the low byte)", "evidence": "reading"},
+  "FFAC": {"name": "hSpriteOriginYHi", "note": "high byte of the 16-bit sprite Y position (hSpriteOriginY is the low byte)", "evidence": "reading"},
+  "FFD2": {"name": "hSpriteScrollXLo", "note": "low byte of -(scroll X - 9) - 1, computed each frame by ComputeSpriteScrollOffsets", "evidence": "reading"},
+  "FFD3": {"name": "hSpriteScrollXHi", "note": "high byte of that value", "evidence": "reading"},
+  "FFD4": {"name": "hSpriteScrollYLo", "note": "low byte of -(scroll Y - $11) - 1", "evidence": "reading"},
+  "FFD5": {"name": "hSpriteScrollYHi", "note": "high byte of that value", "evidence": "reading"},
+  "FF98": {"name": "hPlayerFacing", "note": "0, 1, 2, 3: CheckInteractionInFront adds +16 to hFF91, +16 to hFF8E, -16 to hFF91, -16 to hFF8E for these values", "evidence": "reading"},
+  "FF8E": {"name": "hPlayerX", "note": "position along the axis that facings 1 and 3 change in CheckInteractionInFront", "evidence": "reading"},
+  "FF91": {"name": "hPlayerY", "note": "position along the axis that facings 0 and 2 change in CheckInteractionInFront", "evidence": "reading"},
+  "C82D": {"name": "wPlayFrames", "note": "frame count 0-59 of the play-time counter", "evidence": "reading"},
+  "C82E": {"name": "wPlaySeconds", "note": "seconds 0-59 of the play-time counter", "evidence": "reading"},
+  "C82F": {"name": "wPlayMinutes", "note": "minutes 0-59 of the play-time counter", "evidence": "reading"},
+  "C830": {"name": "wPlayHoursLo", "note": "low byte of the 16-bit play-time hours", "evidence": "reading"},
+  "C831": {"name": "wPlayHoursHi", "note": "high byte of the 16-bit play-time hours", "evidence": "reading"}
 }

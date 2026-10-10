@@ -966,5 +966,35 @@
     "name": "GameMode8_Update",
     "note": "per-frame routine for wGameMode = 8",
     "evidence": "reading + execution (E-0029)"
+  },
+  "02:5F59": {
+    "name": "IncrementPlayTime",
+    "note": "counts frames wC82D (0-59), seconds wC82E (0-59), minutes wC82F (0-59) and a 16-bit hour count wC830/wC831; stops at 999:59:59 ($03E7 hours)",
+    "evidence": "reading + execution (E-0030)"
+  },
+  "02:541B": {
+    "name": "UpdatePlayerMovement",
+    "note": "does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hFF9A, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)",
+    "evidence": "reading + execution (E-0030)"
+  },
+  "02:4FE8": {
+    "name": "CheckInteractionInFront",
+    "note": "when A is newly pressed and no fade, load or move is in progress: finds the position one step ahead of the player (hPlayerX or hPlayerY +/- 16 chosen by hPlayerFacing), looks it up with Func_002_59CD, and compares the result with the four ids at wC910 to pick an interaction",
+    "evidence": "reading + execution (E-0030)"
+  },
+  "12:6EC6": {
+    "name": "DrawFieldSprites",
+    "note": "unless the map is loading or wCBCF bit 7 is clear: reads the sprite entries starting at wCBCF (tile offset, set index with bit 7 selecting a sub index, attribute, position bytes), sets the hSprite inputs and 16-bit positions from them plus the scroll, and draws each with DrawMetaSprite",
+    "evidence": "reading + execution (E-0030)"
+  },
+  "7F:700A": {
+    "name": "DrawMetaSprite",
+    "note": "DE = Data_07F_7011 (the table of meta-sprite sets), then DrawMetaSpriteAt",
+    "evidence": "reading + execution (E-0030)"
+  },
+  "7F:7065": {
+    "name": "DrawMetaSpriteAt",
+    "note": "DE = table of set pointers: returns at once when hOamNextEntry is $27 or more; otherwise converts the 16-bit position (hSpriteOriginX with hFFAA, hSpriteOriginY with hFFAC) to screen coordinates by adding the scroll-offset words hSpriteScrollXLo/Hi and hSpriteScrollYLo/Hi, and writes OAM entries for the sprite chosen by hSpriteSetIndex and hSpriteSubIndex (tile += hSpriteTileOffset, attribute ^= hSpriteAttrXor)",
+    "evidence": "reading + execution (E-0030)"
   }
 }

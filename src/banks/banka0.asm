@@ -2199,7 +2199,7 @@ Data_0A0_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; start-up for wGameMode = 7; forcing this mode on the emulator shows: two monster panels when forced (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit)
 ; reads: wSGBActive, wIsCGB
-; writes: wC51F, wC520, hScrollX, hFFA2, hScrollY, hFFA6, rVBK, wC554, ...
+; writes: wC51F, wC520, hScrollX, hScrollXHi, hScrollY, hScrollYHi, rVBK, wC554, ...
 GameMode7_Init::
 Func_0A0_4ECF:: ; address name
     call Func_000_08A6
@@ -2217,10 +2217,10 @@ Func_0A0_4ECF:: ; address name
 Jump_0A0_4EED::
     xor a, a
     ldh [hScrollX], a
-    ldh [hFFA2], a
+    ldh [hScrollXHi], a
     xor a, a
     ldh [hScrollY], a
-    ldh [hFFA6], a
+    ldh [hScrollYHi], a
     ld hl, vBGMap0
     ld bc, $0400
     ld a, $C3
@@ -3580,7 +3580,7 @@ Jump_0A0_57C8::
     ld a, $06
     ld [wGameMode], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld [wC5DD], a
     ld [wC5DE], a
     ld [wD780], a
@@ -3730,7 +3730,7 @@ Jump_0A0_59EB::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC5DD], a
     ld [wC5DE], a

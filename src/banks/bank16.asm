@@ -819,13 +819,13 @@ Jump_016_44FB::
     ldh a, [hFF92]
     cp a, $01
     jr nz, Jump_016_4542
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr nz, Jump_016_4528
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $30
     jr nz, Jump_016_4542
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, $01
     jr nz, Jump_016_4542
     jr Jump_016_4538
@@ -833,10 +833,10 @@ Jump_016_44FB::
 Jump_016_4528::
     cp a, $50
     jr nz, Jump_016_4542
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_016_4542
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, $02
     jr nz, Jump_016_4542
 
@@ -865,13 +865,13 @@ Jump_016_4548::
     ldh a, [hFF92]
     or a, b
     jr nz, Jump_016_457D
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_016_457D
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, $02
     jr nz, Jump_016_457D
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr c, Jump_016_457D
     cp a, $51
@@ -900,13 +900,13 @@ Jump_016_4583::
     ldh a, [hFF92]
     or a, b
     jr nz, Jump_016_45BC
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr nz, Jump_016_45BC
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_016_45BC
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, $02
     jr nz, Jump_016_45BC
     ld de, $01E4
@@ -939,13 +939,13 @@ Jump_016_45C3::
     ldh a, [hFF92]
     or a, b
     jr nz, Jump_016_45F4
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr nz, Jump_016_45F4
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_016_45F4
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, $02
     jr nz, Jump_016_45F4
     ld de, $01E1

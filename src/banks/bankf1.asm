@@ -1462,7 +1462,7 @@ Jump_0F1_4B17::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     ret
@@ -3724,7 +3724,7 @@ Func_0F1_5B8E::
     ld a, [wD7F1]
     and a, a
     ret z
-    farcall Func_012_6EC6
+    farcall DrawFieldSprites
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F1_5AD5)

@@ -962,7 +962,7 @@ Jump_085_4725::
     ld a, $02
     ld [wGameMode], a
     ld a, $0C
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC5DD], a
     xor a, a
@@ -1035,7 +1035,7 @@ Jump_085_47AB::
 
 Jump_085_47B1::
     ld a, $E0
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
@@ -1133,13 +1133,13 @@ Jump_085_4844::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E90)
-; reads: hFF8E, hFF98
+; reads: hPlayerX, hPlayerFacing
 ; writes: wC919
 Func_085_4858::
     ld b, $00
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, $01
     jr z, Jump_085_4869
     cp a, $03
@@ -1446,7 +1446,7 @@ Jump_085_4A58::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E74)
-; reads: wC923, hFF8E
+; reads: wC923, hPlayerX
 ; writes: wC919, hFF8F, hFF92, wC8C9, wC8C6, hFF90, wC8C8
 Func_085_4A6D::
     ld a, [wC923]
@@ -1464,7 +1464,7 @@ Jump_085_4A79::
     ld [wC8C9], a
     ld a, $03
     ld [wC8C6], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $20
     jr nz, Jump_085_4ABC
     ld a, $0F
@@ -2167,8 +2167,8 @@ Jump_085_4FBE::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_085_4F14)
-; reads: wFrameCounterLo, hScrollX, hFFA2, wC921
-; writes: hScrollX, hFFA2, wC921
+; reads: wFrameCounterLo, hScrollX, hScrollXHi, wC921
+; writes: hScrollX, hScrollXHi, wC921
 ; points at: wC923
 Func_085_4FD8::
     ld a, [wFrameCounterLo]
@@ -2186,18 +2186,18 @@ Func_085_4FD8::
     ldh a, [hScrollX]
     sub a, c
     ldh [hScrollX], a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     sbc a, $00
-    ldh [hFFA2], a
+    ldh [hScrollXHi], a
     jr Jump_085_5003
 
 Jump_085_4FF8::
     ldh a, [hScrollX]
     add a, c
     ldh [hScrollX], a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     adc a, $00
-    ldh [hFFA2], a
+    ldh [hScrollXHi], a
 
 Jump_085_5003::
     ld a, [wC921]
@@ -2207,7 +2207,7 @@ Jump_085_5003::
     ret nz
     xor a, a
     ldh [hScrollX], a
-    ldh [hFFA2], a
+    ldh [hScrollXHi], a
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -2251,10 +2251,10 @@ Jump_085_5038::
     db $DC, $52, $DD, $53, $DE, $54, $DF, $55, $FF
 
 ; 1 call site from 1 routine (e.g. Func_010_4E89)
-; reads: hFF98
+; reads: hPlayerFacing
 ; writes: wC8EF, wC919
 Func_085_505A::
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld a, $80
     ld [wC919], a
@@ -3258,11 +3258,11 @@ Jump_085_571A::
     call StoreHLInWC924_B85
     ld hl, wC923
     inc [hl]
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     or a, a
     jr nz, Jump_085_574E
     ld a, $01
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld a, $03
     ld [wCB86], a
@@ -3272,7 +3272,7 @@ Jump_085_571A::
 
 Jump_085_574E::
     ld a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld a, $01
     ld [wCB86], a

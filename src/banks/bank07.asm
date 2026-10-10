@@ -453,7 +453,7 @@ Data_007_482A:: ; heuristic: target of a monotone pointer table; C0
 
 ; start-up for wGameMode = 5; forcing this mode on the emulator shows: title screen; also sparkles and a victory screen when forced (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit)
-; reads: wC5DC
+; reads: wModeState
 ; writes: wC554, wC555, wC58C
 ; points at: wC46B, wC52D, wD06A
 GameMode5_Init::
@@ -478,7 +478,7 @@ Func_007_486E:: ; address name
     call Func_000_08A6
     xor a, a
     ld [wC58C], a
-    ld a, [wC5DC]
+    ld a, [wModeState]
     rst $00
     dw Jump_007_48B2
     dw Jump_007_4952
@@ -1371,10 +1371,10 @@ Jump_007_4F38::
 
 ; per-frame routine for wGameMode = 5
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate)
-; reads: wC5DC
+; reads: wModeState
 GameMode5_Update::
 Func_007_4F7B:: ; address name
-    ld a, [wC5DC]
+    ld a, [wModeState]
     rst $00
     dw Jump_007_5902
     dw Jump_007_6090
@@ -2405,7 +2405,7 @@ Func_007_5DD6::
     ldh [hSpriteSubIndex], a
     ldh [hSpriteTileOffset], a
     ldh [hSpriteAttrXor], a
-    farcall Func_07F_700A
+    farcall DrawMetaSprite
     ret
 
 ; 2 call sites from 1 routine (e.g. Func_007_5B14)
@@ -2558,7 +2558,7 @@ Func_007_5E80::
     inc hl
     inc hl
     push hl
-    farcall Func_07F_700A
+    farcall DrawMetaSprite
     pop hl
     ret
 
@@ -2721,7 +2721,7 @@ Jump_007_5FCF::
     ld a, $04
     call StartPaletteFade
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $00
     ld [wC5DD], a
     ld a, $00
@@ -2732,7 +2732,7 @@ Jump_007_5FCF::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hFFAA, hFFAC, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginY
+; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginXHi, hSpriteOriginYHi, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginY
 Func_007_5FE8:: ; heuristic: follows a terminator; C0
     ld a, [wIsCGB]
     or a, a
@@ -2744,8 +2744,8 @@ Func_007_5FE8:: ; heuristic: follows a terminator; C0
     ldh [hSpriteSubIndex], a
     xor a, a
     ldh [hSpriteTileOffset], a
-    ldh [hFFAA], a
-    ldh [hFFAC], a
+    ldh [hSpriteOriginXHi], a
+    ldh [hSpriteOriginYHi], a
     ldh [hSpriteAttrXor], a
     ld a, $38
     ldh [hSpriteOriginX], a
@@ -3170,15 +3170,15 @@ Jump_007_6319::
     ld [wD069], a
     ld [wD091], a
     farcall Func_004_449F
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
@@ -3190,7 +3190,7 @@ Jump_007_6319::
 
 ; 3 call sites from 1 routine (e.g. Func_007_6213)
 ; reads: wD0D5, wD10A
-; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hFFAA, ...
+; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
 Func_007_635A::
     ld a, $0A
     ld [rRAMG], a
@@ -3212,17 +3212,17 @@ Func_007_635A::
     ld a, l
     ldh [hSpriteOriginX], a
     ld a, h
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ld hl, $0040
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, h
-    ldh [hFFAC], a
+    ldh [hSpriteOriginYHi], a
     xor a, a
     ld [rRAMB], a
     xor a, a
     ld [rRAMG], a
-    farcall Func_07F_700A
+    farcall DrawMetaSprite
     ret
 
 Jump_007_639C::
@@ -3950,13 +3950,13 @@ Jump_007_6919::
     ldh [hFF8F], a
     ldh [hFF92], a
     ld a, $E0
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld [wC8F0], a
     xor a, a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld [wC8F1], a
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld a, $00
     ld [wC6FD], a
@@ -4262,9 +4262,9 @@ Jump_007_6B23::
     farcall Func_013_405C
     farcall Func_010_4008
     ld a, $E0
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, $00
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ldh [hFF8F], a
     ldh [hFF92], a
     ld a, $14
@@ -6963,9 +6963,9 @@ Jump_007_7D43::
     farcall Func_013_405C
     farcall Func_010_4008
     ld a, $E0
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, $00
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ldh [hFF8F], a
     ldh [hFF92], a
     ld a, $14

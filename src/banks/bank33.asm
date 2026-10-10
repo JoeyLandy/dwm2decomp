@@ -1814,7 +1814,7 @@ Jump_033_5BE9::
     ld a, $07
     ld [wGameMode], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld [wC5DD], a
     ld [wC5DE], a
     ld a, $01

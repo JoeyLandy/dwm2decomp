@@ -9,7 +9,7 @@ Func_010_4001::
 
 ; 5 call sites from 5 routines (e.g. Func_010_4001, Func_002_4745, Func_002_6CD4, Func_007_6ADC, ...)
 ; reads: wFadeState, wC919, wC91A, wC91B, wD7FD, wCC44
-; writes: wC919, wC91F, wC920, wD7FD, wC5DC
+; writes: wC919, wC91F, wC920, wD7FD, wModeState
 Func_010_4008::
     ld a, [wFadeState]
     or a, a
@@ -49,12 +49,12 @@ Jump_010_4033::
     bit 7, a
     jr nz, Jump_010_404E
     ld a, $00
-    ld [wC5DC], a
+    ld [wModeState], a
     ret
 
 Jump_010_404E::
     ld a, $05
-    ld [wC5DC], a
+    ld [wModeState], a
     ret
 
 Jump_010_4054::
@@ -551,7 +551,7 @@ Func_010_43FD:: ; heuristic: target of a pointer table; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC91A, wC91B, wD7FD, wCC44
-; writes: wC91A, wC91B, wC91F, wC920, wD7FD, wC5DC
+; writes: wC91A, wC91B, wC91F, wC920, wD7FD, wModeState
 ; points at: wCB8B
 Func_010_4414:: ; heuristic: target of a pointer table; C0
     pop hl
@@ -590,7 +590,7 @@ Func_010_442E:: ; heuristic: target of a pointer table; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC91A, wC91B, wD7FD, wCC44
-; writes: hFFC6, hFFC7, wC91A, wC91B, wC91F, wC920, wD7FD, wC5DC
+; writes: hFFC6, hFFC7, wC91A, wC91B, wC91F, wC920, wD7FD, wModeState
 Func_010_4445:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, [hl+]
@@ -606,7 +606,7 @@ Func_010_4445:: ; heuristic: target of a pointer table; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC91A, wC91B, wD7FD, wCC44
-; writes: wC91A, wC91B, wC91F, wC920, wD7FD, wC5DC
+; writes: wC91A, wC91B, wC91F, wC920, wD7FD, wModeState
 Func_010_445D:: ; heuristic: target of a pointer table; C0
     pop hl
     ld a, [hl+]
@@ -642,11 +642,11 @@ Func_010_4486:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF98
+; reads: hPlayerFacing
 ; writes: wC8EF, wC920, wC924, wC925, wC926
 Func_010_4490:: ; heuristic: target of a pointer table; C0
     pop hl
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -1322,7 +1322,7 @@ Jump_010_4A27::
     ld [wC8CC], a
     ld a, $02
     ldh [hFFB9], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_010_4A62
     ld a, $81
@@ -1368,7 +1368,7 @@ Jump_010_4A84::
     ld [wC8CB], a
     ld a, $00
     ld [wC8CC], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_010_4AAE
     ld a, $82

@@ -6537,15 +6537,15 @@ Jump_000_2528::
 
 ; hFFD2/hFFD3 = -(hScrollX - 9) - 1 and hFFD4/hFFD5 = -(hScrollY - $11) - 1 as 16-bit values; returns early in game mode 1 when wC5DC & $0F = 6
 ; 11 call sites from 3 routines (e.g. GameFrameUpdate, Func_002_5BD7, Func_00F_7BC3)
-; reads: wGameMode, wC5DC
-; writes: hFFD2, hFFD3, hFFD4, hFFD5
+; reads: wGameMode, wModeState
+; writes: hSpriteScrollXLo, hSpriteScrollXHi, hSpriteScrollYLo, hSpriteScrollYHi
 ; points at: hScrollX, hScrollY
 ComputeSpriteScrollOffsets::
 Func_000_252D:: ; address name
     ld a, [wGameMode]
     cp a, $01
     jr nz, Jump_000_253C
-    ld a, [wC5DC]
+    ld a, [wModeState]
     and a, $0F
     cp a, $06
     ret z
@@ -6555,20 +6555,20 @@ Jump_000_253C::
     ld a, [hl+]
     sub a, $09
     cpl
-    ldh [hFFD2], a
+    ldh [hSpriteScrollXLo], a
     ld a, [hl]
     sbc a, $00
     cpl
-    ldh [hFFD3], a
+    ldh [hSpriteScrollXHi], a
     ld hl, hScrollY
     ld a, [hl+]
     sub a, $11
     cpl
-    ldh [hFFD4], a
+    ldh [hSpriteScrollYLo], a
     ld a, [hl]
     sbc a, $00
     cpl
-    ldh [hFFD5], a
+    ldh [hSpriteScrollYHi], a
     ret
 
 Jump_000_255B::

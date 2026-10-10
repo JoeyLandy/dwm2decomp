@@ -2,7 +2,7 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
 ; 1 call site from 1 routine (e.g. Func_002_4AE0)
-; reads: wC8CB, wC468, hFF8C, wC918, hFF90, hFF8F, hFF92, wC5DC, ...
+; reads: wC8CB, wC468, hFF8C, wC918, hFF90, hFF8F, hFF92, wModeState, ...
 ; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_087_4001::
     ld a, [wC8CB]
@@ -69,12 +69,12 @@ Jump_087_4031::
 
 Jump_087_4057::
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, c
     jr nz, Jump_087_4096
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     jr nz, Jump_087_4096
 
@@ -101,7 +101,7 @@ Jump_087_4078::
     ld a, [hl]
     ld [wC917], a
     farcall Func_013_405C
-    ld a, [wC5DC]
+    ld a, [wModeState]
     cp a, $01
     jr nz, Jump_087_4094
     xor a, a
@@ -143,7 +143,7 @@ Jump_087_4096::
     ds $A6, $00
 
 ; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
-; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wSpriteSlotCount, hFF8E, hFF91, hFF98, ...
+; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_087_42A0::
     ld a, [wC8CB]
@@ -161,11 +161,11 @@ Func_087_42A0::
     ld a, [wSpriteSlotCount]
     or a, a
     jp z, Jump_087_43FC
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_087_42D2
     dec a
@@ -247,7 +247,7 @@ Jump_087_432B::
     ld [hl], a
     dec hl
     dec hl
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     add a, $02
     and a, $03
     ld [hl], a
@@ -346,7 +346,7 @@ Jump_087_43D7::
 
 Jump_087_43DC::
     farcall Func_013_405C
-    ld a, [wC5DC]
+    ld a, [wModeState]
     cp a, $01
     ret nz
     xor a, a
@@ -420,7 +420,7 @@ Jump_087_443D::
     jp nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     dec a
     jp nz, Jump_087_445D
     ld a, c
@@ -437,12 +437,12 @@ Jump_087_445D::
     ld c, a
 
 Jump_087_4466::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, c
     jp nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr nz, Jump_087_4479
     ld a, c
@@ -459,7 +459,7 @@ Jump_087_4479::
     ld c, a
 
 Jump_087_4481::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     jp nz, Jump_087_44FC
     jr Jump_087_44BD
@@ -467,7 +467,7 @@ Jump_087_4481::
 Jump_087_4489::
     dec a
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, c
     jr nz, Jump_087_44FC
     inc hl
@@ -494,12 +494,12 @@ Jump_087_449F::
     jr nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, c
     jr nz, Jump_087_44FC
     ld a, [hl+]
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     jr nz, Jump_087_44FC
 
@@ -526,7 +526,7 @@ Jump_087_44D1::
     ld a, [hl]
     ld [wC917], a
     farcall Func_013_405C
-    ld a, [wC5DC]
+    ld a, [wModeState]
     cp a, $01
     jr nz, Jump_087_44FC
     xor a, a

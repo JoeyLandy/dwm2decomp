@@ -2069,7 +2069,7 @@ Jump_061_579D::
 
 ; 1 call site from 1 routine (e.g. Func_061_5764)
 ; reads: wCC43, wCC45, hFF8F, hFF92, hFF8C
-; writes: hFF8F, hFF92, wC8C8, wC8C9, wC8CA, wC5DC, wC8C5, hFF8C, ...
+; writes: hFF8F, hFF92, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hFF8C, ...
 ; points at: wCD89
 Func_061_57A4::
     ld a, [wCC43]
@@ -2113,7 +2113,7 @@ Jump_061_57AD::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -2126,7 +2126,7 @@ Jump_061_57AD::
 
 ; 1 call site from 1 routine (e.g. Func_061_5764)
 ; reads: hFF92, wCC45, hFF8C
-; writes: hFF8F, hFF92, wC8C8, wC8C9, wC8CA, wCC44, wC5DC, wC8C5, ...
+; writes: hFF8F, hFF92, wC8C8, wC8C9, wC8CA, wCC44, wModeState, wC8C5, ...
 ; points at: wCDAD
 Func_061_5807::
     ldh a, [hFF92]
@@ -2159,7 +2159,7 @@ Jump_061_5810::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -2172,7 +2172,7 @@ Jump_061_5810::
 
 ; 1 call site from 1 routine (e.g. Func_061_5764)
 ; reads: hFF92, wCC45, hFF8C
-; writes: hFF8F, hFF92, wC8C8, wC8C9, wC8CA, wC5DC, wC8C5, hFF8C, ...
+; writes: hFF8F, hFF92, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hFF8C, ...
 ; points at: wCD78
 Func_061_585A::
     ldh a, [hFF92]
@@ -2211,7 +2211,7 @@ Jump_061_587C::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -2227,7 +2227,7 @@ Jump_061_587C::
 
 ; 1 call site from 1 routine (e.g. Func_061_5764)
 ; reads: wCC45, hFF8F, hFF92, hFF8C
-; writes: wC8CA, wC8C8, wC8C9, hFF8F, hFF92, wC5DC, wC8C5, hFF8C, ...
+; writes: wC8CA, wC8C8, wC8C9, hFF8F, hFF92, wModeState, wC8C5, hFF8C, ...
 ; points at: wCDAC, wCD88
 Func_061_58BC::
     ld a, [wCC45]
@@ -2331,7 +2331,7 @@ Jump_061_594D::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -2396,11 +2396,11 @@ Jump_061_59A6::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_061_596F)
-; reads: hFF8E, hFF91, wCC45, wCC43, hFF8C
+; reads: hPlayerX, hPlayerY, wCC45, wCC43, hFF8C
 ; writes: wCC43, hFF8F, hFF92, wC8C8, wC8C9, wC8CA, wCC44, wCCEA, ...
 ; points at: wCDAD, wCE2D
 Func_061_59AA::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr z, Jump_061_59B3
 
@@ -2409,7 +2409,7 @@ Jump_061_59B0::
     ret
 
 Jump_061_59B3::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_061_59B0
     ld a, [wCC45]
@@ -2461,7 +2461,7 @@ Jump_061_59DD::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -2476,11 +2476,11 @@ Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
 ; 1 call site from 1 routine (e.g. Func_061_596F)
-; reads: hFF8E, hFF8C, hFF91, wCC45, wCC43, hFF8F, hFF92, hFFC7, ...
+; reads: hPlayerX, hFF8C, hPlayerY, wCC45, wCC43, hFF8F, hFF92, hFFC7, ...
 ; writes: hFF8C, hFFC6, hFFC7, wCC43, wCC44, hFF8F, hFF92, wC8C8, ...
 ; points at: wCD89, wCDAC, wCE2D, wCD88
 Func_061_5A33::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr z, Jump_061_5A42
 
@@ -2492,7 +2492,7 @@ Jump_061_5A39::
     ret
 
 Jump_061_5A42::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_061_5A39
     ld a, [wCC45]
@@ -2589,7 +2589,7 @@ Jump_061_5AB5::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -2637,7 +2637,7 @@ Jump_061_5B18::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     xor a, a
@@ -2678,7 +2678,7 @@ Jump_061_5B6B::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -2695,10 +2695,10 @@ Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
 ; 1 call site from 1 routine (e.g. Func_061_596F)
-; reads: hFF8E, hFF91, wC955, wCC45, hFF8C
-; writes: wC955, wCC45, wC8C8, wC8C9, wC8CA, wC914, wC5DC, wC46B, ...
+; reads: hPlayerX, hPlayerY, wC955, wCC45, hFF8C
+; writes: wC955, wCC45, wC8C8, wC8C9, wC8CA, wC914, wModeState, wC46B, ...
 Func_061_5BBB::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr z, Jump_061_5BC4
 
@@ -2707,7 +2707,7 @@ Jump_061_5BC1::
     ret
 
 Jump_061_5BC4::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $30
     jr nz, Jump_061_5BC1
     ld a, [wC955]
@@ -2727,7 +2727,7 @@ Jump_061_5BC4::
     xor a, a
     ld [wC914], a
     ld a, $06
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC46B], a
     ld [wC46C], a
@@ -2739,8 +2739,8 @@ Jump_061_5BC4::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_061_596F)
-; reads: wCC45, hFF8C, hFF8F, hFF92, hFF8E, hFF91
-; writes: hFF8C, wC8CA, hFF8F, hFF92, wC8C8, wC8C9, wCC44, wC5DC, ...
+; reads: wCC45, hFF8C, hFF8F, hFF92, hPlayerX, hPlayerY
+; writes: hFF8C, wC8CA, hFF8F, hFF92, wC8C8, wC8C9, wCC44, wModeState, ...
 ; points at: wCDAC
 Func_061_5C07::
     ld a, [wCC45]
@@ -2798,13 +2798,13 @@ Jump_061_5C3D::
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, c
     jr nz, Jump_061_5C73
     ld a, [de]
     inc de
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     jr nz, Jump_061_5C73
     ldh a, [hFF8C]
@@ -2856,7 +2856,7 @@ Jump_061_5C7E::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -2878,7 +2878,7 @@ Func_061_5CCF::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_061_596F)
-; reads: hFF8C, hFF8E, hFF91, hFF8F, hFF92, hFFC8, hFFC7
+; reads: hFF8C, hPlayerX, hPlayerY, hFF8F, hFF92, hFFC8, hFFC7
 ; writes: hFFC7, hFF8C, hFFC8, wCC45, wCC44, hFF8F, hFF92, wC8C8, ...
 ; points at: wCD8B, wCDAC, wCDAD, wCE2D
 Func_061_5CD0::
@@ -2911,7 +2911,7 @@ Jump_061_5CE6::
     jr z, Jump_061_5D11
     cp a, $05
     jr z, Jump_061_5D11
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     swap a
     and a, $0F
     cp a, $04
@@ -2920,7 +2920,7 @@ Jump_061_5CE6::
     jr nz, Jump_061_5D0E
 
 Jump_061_5D02::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     swap a
     and a, $0F
     cp a, $04
@@ -2931,12 +2931,12 @@ Jump_061_5D0E::
     jp Jump_061_5E7A
 
 Jump_061_5D11::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     swap a
     and a, $0F
     cp a, $04
     jr nz, Jump_061_5D0E
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     swap a
     and a, $0F
     cp a, $04
@@ -2993,7 +2993,7 @@ Jump_061_5D25::
     ld h, c
     ld a, $0C
     add_a_to_hl
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr z, Jump_061_5D92
     inc hl
@@ -3028,7 +3028,7 @@ Jump_061_5D92::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -3102,7 +3102,7 @@ Jump_061_5E44::
     ld a, $04
     call StartPaletteFade
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC8C5], a
     ldh a, [hFF8C]
@@ -3128,8 +3128,8 @@ Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
 ; 1 call site from 1 routine (e.g. Func_061_596F)
-; reads: wC88E, wC891, wCC42, hFF8F, hFF92, wC890, hFF8E, hFF91, ...
-; writes: wC8C7, wC8C5, wC5DC, hFF8C, wCC44, hFF8F, hFF92, wC8C8, ...
+; reads: wC88E, wC891, wCC42, hFF8F, hFF92, wC890, hPlayerX, hPlayerY, ...
+; writes: wC8C7, wC8C5, wModeState, hFF8C, wCC44, hFF8F, hFF92, wC8C8, ...
 Func_061_5E8D::
     ld a, [wC88E]
     or a, a
@@ -3151,10 +3151,10 @@ Func_061_5E8D::
     ld a, [wC890]
     cp a, c
     jr nz, Jump_061_5EC7
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     and a, $F0
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     and a, $F0
     swap a
     or a, c
@@ -3185,12 +3185,12 @@ Jump_061_5ECF::
     jr nz, Jump_061_5EC7
     ld a, [wCD09]
     ld c, a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, c
     jr nz, Jump_061_5EC7
     ld a, [wCD0A]
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     jr nz, Jump_061_5EC7
 
@@ -3207,7 +3207,7 @@ Jump_061_5EF0::
     xor a, a
     ld [wC8C5], a
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     ldh a, [hFF8C]
     or a, $20
     ldh [hFF8C], a
@@ -3229,13 +3229,13 @@ Jump_061_5EF0::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_061_596F)
-; reads: hFF8E, hFF91, hFF8F, hFF92, hFF8C
-; writes: wC8C8, wC8C9, wC8CA, wC8C7, wC8C5, wC5DC, hFF8C, wCC45, ...
+; reads: hPlayerX, hPlayerY, hFF8F, hFF92, hFF8C
+; writes: wC8C8, wC8C9, wC8CA, wC8C7, wC8C5, wModeState, hFF8C, wCC45, ...
 ; points at: wCD7B
 Func_061_5F39::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     jr nz, Jump_061_5F51
     swap a
@@ -3295,7 +3295,7 @@ Jump_061_5F56::
     xor a, a
     ld [wC8C5], a
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     ldh a, [hFF8C]
     or a, $80
     ldh [hFF8C], a
@@ -3368,7 +3368,7 @@ Jump_061_5FE0::
     xor a, a
     ld [wC8C5], a
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     ldh a, [hFF8C]
     or a, $80
     ldh [hFF8C], a

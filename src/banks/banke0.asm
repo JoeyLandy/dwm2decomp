@@ -5978,13 +5978,13 @@ Jump_0E0_72DB::
     xor a, a
     ldh [hFF92], a
     ld a, $B0
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld [wC8F0], a
     ld a, $40
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld [wC8F1], a
     ld a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld a, [wC6FD]
     ld [wC933], a
     ld de, $019F
@@ -5992,7 +5992,7 @@ Jump_0E0_72DB::
     ld a, $01
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret

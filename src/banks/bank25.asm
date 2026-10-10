@@ -158,33 +158,33 @@ Data_025_411E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $09411E, $80
 
 ; 1 call site from 1 routine (e.g. Func_025_4001)
-; reads: hOamNextEntry, hFFD4, hFFD5, hSpriteOriginY, hFFAC, hFFD2, hFFD3, hSpriteOriginX, ...
+; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hFFB3, hFFB4, hOamNextEntry
 ; points at: hFFB5
 Func_025_419E::
     ldh a, [hOamNextEntry]
     cp a, $27
     ret nc
-    ldh a, [hFFD4]
+    ldh a, [hSpriteScrollYLo]
     ld c, a
-    ldh a, [hFFD5]
+    ldh a, [hSpriteScrollYHi]
     ld b, a
     ldh a, [hSpriteOriginY]
     add a, c
     ldh [hFFB3], a
-    ldh a, [hFFAC]
+    ldh a, [hSpriteOriginYHi]
     adc a, b
     ldh [hFFB4], a
-    ldh a, [hFFD2]
+    ldh a, [hSpriteScrollXLo]
     ld c, a
-    ldh a, [hFFD3]
+    ldh a, [hSpriteScrollXHi]
     ld b, a
     ld hl, hFFB5
     ldh a, [hSpriteOriginX]
     add a, c
     ld c, a
     ld [hl+], a
-    ldh a, [hFFAA]
+    ldh a, [hSpriteOriginXHi]
     adc a, b
     ld b, a
     ld [hl+], a

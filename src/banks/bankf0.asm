@@ -1041,7 +1041,7 @@ Jump_0F0_5061::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     ret

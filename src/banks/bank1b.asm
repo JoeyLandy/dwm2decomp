@@ -465,7 +465,7 @@ Jump_01B_438C::
     ret
 
 ; 6 call sites from 1 routine (e.g. Func_01B_4001)
-; reads: wC588, wD06B, wGameMode, wC5DC, wD06A, wD06C
+; reads: wC588, wD06B, wGameMode, wModeState, wD06A, wD06C
 ; writes: wD783
 Func_01B_4394::
     ld [wD783], a
@@ -482,7 +482,7 @@ Jump_01B_43A7::
     ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_01B_43CC
-    ld a, [wC5DC]
+    ld a, [wModeState]
     cp a, $01
     jr nz, Jump_01B_43CC
     ld a, [wD06A]
@@ -2180,7 +2180,7 @@ Jump_01B_5737::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     ret
@@ -3479,7 +3479,7 @@ Jump_01B_5FBA::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     ret
@@ -4515,7 +4515,7 @@ Jump_01B_6708::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     ret
@@ -5638,7 +5638,7 @@ Jump_01B_6F68::
     ld a, $04
     ld [wGameMode], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld [wC5DD], a
     ld [wC5DE], a
     ld a, $01

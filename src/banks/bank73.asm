@@ -2061,7 +2061,7 @@ Jump_073_4F02::
     ld [wC8CC], a
     ld a, $02
     ldh [hFFB9], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_073_4F37
     ld a, $81
@@ -2109,7 +2109,7 @@ Jump_073_4F6D::
     ld [wC8CC], a
     ld a, $00
     ldh [hFFB9], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_073_4F8B
     ld a, $82
@@ -2479,7 +2479,7 @@ Jump_073_5194::
     ld a, $01
     ld [wC905], a
     ld a, $03
-    ld [wC5DC], a
+    ld [wModeState], a
     xor a, a
     ld [wC904], a
     ld a, $02
@@ -2709,10 +2709,10 @@ Jump_073_53D8::
     call SetBit2AtHL_B73
     ld hl, wC923
     inc [hl]
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $30
     jr nz, Jump_073_53EE
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $20
     jr z, Jump_073_5412
 
@@ -2824,7 +2824,7 @@ Jump_073_5488::
     ld a, [wC92C]
     or a, a
     ret z
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -2883,10 +2883,10 @@ Jump_073_54E6::
     ret
 
 Jump_073_5509::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr nz, Jump_073_5515
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr z, Jump_073_5541
 
@@ -3552,9 +3552,9 @@ Jump_073_59AF::
     dec [hl]
     ld hl, wC8FB
     dec [hl]
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     dec a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $C0
     ret nz
     ld hl, hFF8C
@@ -3633,11 +3633,11 @@ Jump_073_5A48::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4E3C)
-; reads: hFF8E, wC6FD, wC92C
+; reads: hPlayerX, wC6FD, wC92C
 ; writes: wC92A, wC928, wC929, wC919
 ; points at: wC8F0
 Func_073_5A57:: ; heuristic: follows a terminator; C0
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $40
     jr z, Jump_073_5A9C
     cp a, $60
@@ -3922,7 +3922,7 @@ Jump_073_5C13::
     ret
 
 Jump_073_5C1F::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     swap a
     and a, $0F
     sub a, $05
@@ -3946,14 +3946,14 @@ Jump_073_5C1F::
     db $03, $F0, $00, $00, $02, $00, $F0, $00, $00, $00, $10, $00, $01, $10, $00, $00
 
 ; 1 call site from 1 routine (e.g. Func_010_4DA9)
-; reads: hFF8E, hFF91, wC1EA, wC1F8, wC28A, wC298, wCC3B
+; reads: hPlayerX, hPlayerY, wC1EA, wC1F8, wC28A, wC298, wCC3B
 ; writes: wCC3B, wC919
 ; points at: wC1EA, wC28A, wC298, wC1C8, wC1F8
 Func_073_5C5F::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $30
     jr nz, Jump_073_5C8D
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $30
     jr nz, Jump_073_5C7F
     ld hl, wC1EA
@@ -3972,7 +3972,7 @@ Jump_073_5C7F::
     jr Jump_073_5CAD
 
 Jump_073_5C8D::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $30
     jr nz, Jump_073_5CA1
     ld hl, wC1F8
@@ -4216,12 +4216,12 @@ Jump_073_5E20::
     inc [hl]
     call Func_073_5E73
     add a, $10
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
     ld a, [wCB8A]
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
@@ -4742,7 +4742,7 @@ Func_073_61A7::
 Jump_073_61BF::
     ld a, $80
     ld [wC919], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -4965,7 +4965,7 @@ Func_073_630F::
 Jump_073_633B::
     ld a, $80
     ld [wC919], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -5310,7 +5310,7 @@ Jump_073_653D::
     ld [wC939], a
     ld hl, wSpriteSlotCount
     dec [hl]
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr nz, Jump_073_657E
     ld hl, wC923
@@ -5656,7 +5656,7 @@ Jump_073_6729::
     ld [wC938], a
     ld a, [hl]
     ld [wC939], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $50
     jr nz, Jump_073_6767
 
@@ -5666,7 +5666,7 @@ Jump_073_6762::
     ret
 
 Jump_073_6767::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $30
     jr nz, Jump_073_6773
 
@@ -5750,7 +5750,7 @@ Jump_073_67D5::
     xor a, a
     ldh [hFF8F], a
     ldh [hFF92], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8C8], a
     ld a, $40
     ld [wC8C9], a
@@ -5858,7 +5858,7 @@ Jump_073_6896::
 Jump_073_689E::
     ld a, $30
     ldh [hFF90], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8C8], a
     ld a, $E0
     ld [wC8C9], a
@@ -6014,9 +6014,9 @@ Jump_073_69AB::
     ret
 
 Jump_073_69C8::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $40
     ret nz
     ld a, $40
@@ -6041,11 +6041,11 @@ Jump_073_69E3::
     cp a, $30
     ret nz
     ld a, $40
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, $30
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -6053,7 +6053,7 @@ Jump_073_69E3::
     ret
 
 Jump_073_6A0B::
-    farcall Func_002_541B
+    farcall UpdatePlayerMovement
     farcall Func_002_5BD7
     ld a, [wC468]
     bit 7, a
@@ -6091,7 +6091,7 @@ Jump_073_6A2B::
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    farcall Func_002_541B
+    farcall UpdatePlayerMovement
     farcall Func_002_5BD7
     xor a, a
     ld [wC921], a
@@ -6399,8 +6399,8 @@ Jump_073_6C6C::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6B5B)
-; reads: hFF8E
-; writes: wC8EF, wC8F4, wC8F9, hFF98, hFF8E, wC921, wCB9A
+; reads: hPlayerX
+; writes: wC8EF, wC8F4, wC8F9, hPlayerFacing, hPlayerX, wC921, wCB9A
 ; points at: hFF8C, wC8F0, wC8F6, wC8FB, wC923
 Func_073_6C77::
     ld hl, hFF8C
@@ -6412,20 +6412,20 @@ Func_073_6C77::
     ld a, $02
     ld [wC8F9], a
     ld a, $01
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld hl, wC8F0
     dec [hl]
     ld hl, wC8F6
     inc [hl]
     ld hl, wC8FB
     dec [hl]
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     inc a
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     cp a, $70
     ret nz
     ld a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -6455,20 +6455,20 @@ Jump_073_6CD1::
     xor a, a
     ld [wC8F9], a
     ld a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld hl, wC8F0
     inc [hl]
     ld hl, wC8F6
     dec [hl]
     ld hl, wC8FB
     inc [hl]
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     dec a
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     cp a, $60
     ret nz
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -6486,7 +6486,7 @@ Jump_073_6D1B::
     ret
 
 Jump_073_6D22::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $40
     jr z, Jump_073_6D34
     ld a, $40
@@ -6495,7 +6495,7 @@ Jump_073_6D22::
     ret
 
 Jump_073_6D34::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $70
     jr z, Jump_073_6D4D
     ld a, $70
@@ -6505,7 +6505,7 @@ Jump_073_6D34::
     or a, a
     ret z
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
 
 Jump_073_6D4D::
     ld hl, wC923
@@ -6529,11 +6529,11 @@ Jump_073_6E23::
     ret
 
 Jump_073_6E29::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8C8], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8C9], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     ld [wC8C6], a
     farcall Func_05F_6C5A
@@ -6617,11 +6617,11 @@ Jump_073_6EC8::
     ld a, [wCC38]
     or a, $02
     ld [wCC38], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8C8], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8C9], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     ld [wC8C6], a
     farcall Func_05F_6C5A
@@ -6657,11 +6657,11 @@ Jump_073_6F04::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C1A)
-; reads: hFF8E, hFF91, wCBD4
+; reads: hPlayerX, hPlayerY, wCBD4
 ; writes: wCBCF, wCBD3, wCBD4, wC919
 ; points at: wCBD3, wCBD4
 Func_073_6F14::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $50
     jr nz, Jump_073_6F24
     ld hl, wCBD3
@@ -6680,7 +6680,7 @@ Jump_073_6F24::
     jr Jump_073_6F40
 
 Jump_073_6F32::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $20
     jr z, Jump_073_6F40
     ld a, [wCBD4]
@@ -6744,7 +6744,7 @@ Jump_073_6F88::
     ret nz
     ld a, $72
     call QueueSoundEffect
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
@@ -6883,7 +6883,7 @@ Jump_073_706E::
     or a, a
     ret z
     ld a, $02
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld de, $000C
     call SetFlagBit
@@ -6911,7 +6911,7 @@ Jump_073_70A9::
     or a, a
     ret z
     ld a, $02
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld hl, wC923
     inc [hl]
     ret
@@ -7091,9 +7091,9 @@ Jump_073_7223::
     ret nc
     ld de, $000B
     call SetFlagBit
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8C8], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8C9], a
     ld a, $04
     ld [wC8C6], a
@@ -7369,7 +7369,7 @@ Jump_073_7429::
     farcall AddStepDeltaToPointedByte
     pop af
     ld [wC921], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $00
     jr nz, Jump_073_746A
     ld hl, hFF8C
@@ -7381,7 +7381,7 @@ Jump_073_7429::
 Jump_073_746A::
     dec a
     dec a
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, [wCBAA]
     inc a
     inc a
@@ -7431,9 +7431,9 @@ Jump_073_74F9::
     ld a, [wCBAA]
     add a, c
     ld [wCBAA], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     add a, c
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, [wC8F0]
     add a, c
     ld [wC8F0], a
@@ -7473,16 +7473,16 @@ Jump_073_7566::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_4C05)
-; reads: wC923, hFF8E, hFF91
+; reads: wC923, hPlayerX, hPlayerY
 ; writes: wCBD3, wCBD4, wCBCF, wC919
 ; points at: wC923, wCBD3, wCBD4
 Func_073_758C:: ; heuristic: follows a terminator; C0
     ld a, [wC923]
     or a, a
     jr nz, Jump_073_75A6
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wCBD3], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wCBD4], a
     ld a, $80
     ld [wCBCF], a
@@ -7491,7 +7491,7 @@ Func_073_758C:: ; heuristic: follows a terminator; C0
     ret
 
 Jump_073_75A6::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $30
     jr nz, Jump_073_75B2
     ld hl, wCBD3
@@ -7506,7 +7506,7 @@ Jump_073_75B2::
     jr Jump_073_75CC
 
 Jump_073_75BC::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $20
     jr nz, Jump_073_75C8
     ld hl, wCBD4
@@ -7546,12 +7546,12 @@ Jump_073_75E9::
     ret
 
 Jump_073_75F5::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     cp a, $00
     jr z, Jump_073_760B
     dec a
     dec a
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, [wC8F0]
     cp a, $00
     jr z, Jump_073_760B

@@ -309,7 +309,7 @@ Jump_0F2_4219::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_0F2_41BA)
-; writes: wC94B, wGameMode, wC5DC, wModeChangeRequest
+; writes: wC94B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wD780
 Func_0F2_4227::
     ld hl, wD780
@@ -327,7 +327,7 @@ Jump_0F2_422D::
     ld a, $05
     ld [wGameMode], a
     ld a, $01
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     ret
@@ -532,7 +532,7 @@ Func_0F2_436F::
 ; 1 call site from 1 routine (e.g. GameMode8_Update)
 Func_0F2_43C3::
     farcall Func_004_44CE
-    farcall Func_012_6EC6
+    farcall DrawFieldSprites
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay

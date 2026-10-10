@@ -155,17 +155,17 @@ Func_012_40B8:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91
-; writes: hFF98, hFF91
-; points at: hFF91, wC8F1, wC8F6, wC8FB
+; reads: hPlayerY
+; writes: hPlayerFacing, hPlayerY
+; points at: hPlayerY, wC8F1, wC8F6, wC8FB
 Func_012_40E1:: ; heuristic: target of a pointer table; C0
     xor a, a
-    ldh [hFF98], a
-    ld de, hFF91
+    ldh [hPlayerFacing], a
+    ld de, hPlayerY
     call Func_012_42B5
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld hl, wC8F1
     inc [hl]
     ld hl, wC8F6
@@ -175,25 +175,25 @@ Func_012_40E1:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91
-; writes: hFF91
+; reads: hPlayerY
+; writes: hPlayerY
 ; points at: wC8FB, wC8F6, wC8F1, wC923
 Func_012_40FC:: ; heuristic: target of a pointer table; C0
     ld hl, wC8FB
     inc [hl]
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91
-; writes: hFF91
+; reads: hPlayerY
+; writes: hPlayerY
 ; points at: wC8F6, wC8F1, wC923
 Func_012_4100:: ; heuristic: target of a pointer table; C0
     ld hl, wC8F6
     inc [hl]
     ld hl, wC8F1
     inc [hl]
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $20
     ret nz
     ld hl, wC923
@@ -201,11 +201,11 @@ Func_012_4100:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFF98, wC8EF, wC8F4, wC8F9, wC8F1, wC8F6, wC8FB
+; writes: hPlayerFacing, wC8EF, wC8F4, wC8F9, wC8F1, wC8F6, wC8FB
 ; points at: hFF8C, wC923
 Func_012_4115:: ; heuristic: target of a pointer table; C0
     ld a, $02
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -224,11 +224,11 @@ Func_012_4115:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8FB
 ; writes: wC8F9, wC8FB, hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6
-; points at: hFF91, wC8F1, wC8F6
+; points at: hPlayerY, wC8F1, wC8F6
 Func_012_413C:: ; heuristic: target of a pointer table; C0
     ld a, $02
     ld [wC8F9], a
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
     ld hl, wC8F1
     inc [hl]
@@ -257,11 +257,11 @@ Func_012_413C:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC921
 ; writes: wC8F9, wC8EF, wC8F4, wC928, wC929, wC921
-; points at: hFF91, wC8F1, wC8F6, wC8FA, wC8FB, wC923
+; points at: hPlayerY, wC8F1, wC8F6, wC8FA, wC8FB, wC923
 Func_012_4177:: ; heuristic: target of a pointer table; C0
     ld a, $01
     ld [wC8F9], a
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
     ld hl, wC8F1
     inc [hl]
@@ -282,15 +282,15 @@ Func_012_4177:: ; heuristic: target of a pointer table; C0
     jp Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91, wC921
+; reads: hPlayerY, wC921
 ; writes: wC8EF, wC928, wC929, wC921
-; points at: hFF91, wC8F6, wC923
+; points at: hPlayerY, wC8F6, wC923
 Func_012_41AA:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
     ld a, $02
     ld [wC8EF], a
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
     ld de, wC8F6
     ld a, e
@@ -301,15 +301,15 @@ Func_012_41AA:: ; heuristic: target of a pointer table; C0
     jp Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91, wC921
-; writes: hFF98, wC928, wC929, wC921
-; points at: hFF91, wC8F1, wC923
+; reads: hPlayerY, wC921
+; writes: hPlayerFacing, wC928, wC929, wC921
+; points at: hPlayerY, wC8F1, wC923
 Func_012_41CC:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
     ld a, $02
-    ldh [hFF98], a
-    ld hl, hFF91
+    ldh [hPlayerFacing], a
+    ld hl, hPlayerY
     inc [hl]
     ld de, wC8F1
     ld a, e
@@ -320,21 +320,21 @@ Func_012_41CC:: ; heuristic: target of a pointer table; C0
     jp Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8E, wC921
+; reads: hPlayerX, wC921
 ; writes: wC928, wC929, wC921
-; points at: hFF8C, hFF91, hFF8E, wC923
+; points at: hFF8C, hPlayerY, hPlayerX, wC923
 Func_012_41ED:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
     call SetBit2AtHL_B12
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     call Func_012_65FF
-    ld de, hFF91
+    ld de, hPlayerY
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld hl, hFF8E
+    ld hl, hPlayerX
     inc [hl]
     jp Jump_012_43C6
 
@@ -431,17 +431,17 @@ Func_012_426F:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8E
-; writes: hFF98, hFF8E
-; points at: hFF91, wC8F1, wC8F6, wC8FB
+; reads: hPlayerX
+; writes: hPlayerFacing, hPlayerX
+; points at: hPlayerY, wC8F1, wC8F6, wC8FB
 Func_012_4299:: ; heuristic: target of a pointer table; C0
     ld a, $03
-    ldh [hFF98], a
-    ld de, hFF91
+    ldh [hPlayerFacing], a
+    ld de, hPlayerY
     call Func_012_42B5
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     dec a
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld hl, wC8F1
     dec [hl]
     ld hl, wC8F6
@@ -473,15 +473,15 @@ Func_012_42B5::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91
-; writes: hFF91
+; reads: hPlayerY
+; writes: hPlayerY
 ; points at: wC923
 Func_012_42D7:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     dec a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $50
     ret nz
     ld hl, wC923
@@ -489,11 +489,11 @@ Func_012_42D7:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFF98, wC8EF, wC8F4, wC8F9, wC8F1, wC8F6, wC8FB
+; writes: hPlayerFacing, wC8EF, wC8F4, wC8F9, wC8F1, wC8F6, wC8FB
 ; points at: hFF8C, wC923
 Func_012_42E9:: ; heuristic: target of a pointer table; C0
     ld a, $02
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -512,9 +512,9 @@ Func_012_42E9:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8FB
 ; writes: wC8FB, hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6
-; points at: hFF91, wC8F1, wC8F6
+; points at: hPlayerY, wC8F1, wC8F6
 Func_012_4310:: ; heuristic: target of a pointer table; C0
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
     ld hl, wC8F1
     dec [hl]
@@ -543,11 +543,11 @@ Func_012_4310:: ; heuristic: target of a pointer table; C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC921
 ; writes: wC8F9, wC928, wC929, wC921
-; points at: hFF91, wC8F1, wC8F6, wC8FB, wC923
+; points at: hPlayerY, wC8F1, wC8F6, wC8FB, wC923
 Func_012_4346:: ; heuristic: target of a pointer table; C0
     ld a, $02
     ld [wC8F9], a
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
     ld hl, wC8F1
     dec [hl]
@@ -564,13 +564,13 @@ Func_012_4346:: ; heuristic: target of a pointer table; C0
     jr Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91, wC921
+; reads: hPlayerY, wC921
 ; writes: wC928, wC929, wC921
-; points at: hFF91, wC8F6, wC923
+; points at: hPlayerY, wC8F6, wC923
 Func_012_436E:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
     ld de, wC8F6
     ld a, e
@@ -581,13 +581,13 @@ Func_012_436E:: ; heuristic: target of a pointer table; C0
     jr Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91, wC921
+; reads: hPlayerY, wC921
 ; writes: wC928, wC929, wC921
-; points at: hFF91, wC8F1, wC923
+; points at: hPlayerY, wC8F1, wC923
 Func_012_438A:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
     ld de, wC8F1
     ld a, e
@@ -598,21 +598,21 @@ Func_012_438A:: ; heuristic: target of a pointer table; C0
     jr Jump_012_43C6
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91, wC921
+; reads: hPlayerY, wC921
 ; writes: wC928, wC929, wC921
-; points at: hFF8C, hFF91, wC923
+; points at: hFF8C, hPlayerY, wC923
 Func_012_43A6:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
     call SetBit2AtHL_B12
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ld de, hFF91
+    ld de, hPlayerY
     ld a, e
     ld [wC928], a
     ld a, d
     ld [wC929], a
     farcall AddStepDeltaToPointedByte
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
 
 Jump_012_43C6::
@@ -730,7 +730,7 @@ Jump_012_446D::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFF8D, hFF98, wC8F1, wC8F4, wC8F9, hFF8E, wC8F0, wC8F5, ...
+; writes: hFF8D, hPlayerFacing, wC8F1, wC8F4, wC8F9, hPlayerX, wC8F0, wC8F5, ...
 ; points at: hFF8C, wC94A, wC923
 Func_012_447A:: ; heuristic: target of a pointer table; C0
     ld a, $0E
@@ -741,12 +741,12 @@ Func_012_447A:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
     call SetBit2AtHL_B12
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8F1], a
     ld [wC8F4], a
     ld [wC8F9], a
     ld a, $40
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
@@ -1172,8 +1172,8 @@ Func_012_473C:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC924, wC921, hFF91, hFF8E, wC922
-; writes: wC924, hFF8D, hFF91, hFF98, hFF8E, wC8EF, wC8F4, wC8F9, ...
+; reads: wC924, wC921, hPlayerY, hPlayerX, wC922
+; writes: wC924, hFF8D, hPlayerY, hPlayerFacing, hPlayerX, wC8EF, wC8F4, wC8F9, ...
 ; points at: hFF8C, wC921, wC923
 Func_012_474A:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
@@ -1206,11 +1206,11 @@ Jump_012_4776::
     ld a, [wC921]
     or a, a
     jr nz, Jump_012_478E
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $20
     ret nz
     ld hl, wC921
@@ -1220,13 +1220,13 @@ Jump_012_4776::
 Jump_012_478E::
     dec a
     jr nz, Jump_012_47A7
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     call Func_012_65FF
     ld a, $03
-    ldh [hFF98], a
-    ldh a, [hFF8E]
+    ldh [hPlayerFacing], a
+    ldh a, [hPlayerX]
     dec a
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     cp a, $30
     ret nz
     ld hl, wC921
@@ -1236,13 +1236,13 @@ Jump_012_478E::
 Jump_012_47A7::
     dec a
     jr nz, Jump_012_47BF
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
     xor a, a
-    ldh [hFF98], a
-    ldh a, [hFF91]
+    ldh [hPlayerFacing], a
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $40
     ret nz
     ld hl, wC921
@@ -1252,13 +1252,13 @@ Jump_012_47A7::
 Jump_012_47BF::
     dec a
     jr nz, Jump_012_47D8
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     call Func_012_65FF
     ld a, $03
-    ldh [hFF98], a
-    ldh a, [hFF8E]
+    ldh [hPlayerFacing], a
+    ldh a, [hPlayerX]
     dec a
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     cp a, $20
     ret nz
     ld hl, wC921
@@ -1267,16 +1267,16 @@ Jump_012_47BF::
 
 Jump_012_47D8::
     ld a, $02
-    ldh [hFF98], a
-    ldh a, [hFF91]
+    ldh [hPlayerFacing], a
+    ldh a, [hPlayerY]
     dec a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $30
     ret nz
     ld hl, hFF8C
     call ClearBit2AtHL_Bank12
     ld a, $01
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -1296,7 +1296,7 @@ Jump_012_47D8::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC90D
-; writes: hFF98, wC8F1, wC8F4, wC8F9, hFF8E, wC8F0, wC8F5, wC8FA, ...
+; writes: hPlayerFacing, wC8F1, wC8F4, wC8F9, hPlayerX, wC8F0, wC8F5, wC8FA, ...
 ; points at: hFF8C, wC923
 Func_012_4814:: ; heuristic: target of a pointer table; C0
     xor a, a
@@ -1305,12 +1305,12 @@ Func_012_4814:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
     call SetBit2AtHL_B12
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld [wC8F1], a
     ld [wC8F4], a
     ld [wC8F9], a
     ld a, $40
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
@@ -1438,14 +1438,14 @@ Func_012_4919::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC965
-; writes: wC88D, wGameMode, wC5DC, wModeChangeRequest, wC91F
+; writes: wC88D, wGameMode, wModeState, wModeChangeRequest, wC91F
 Func_012_494B:: ; heuristic: target of a pointer table; C0
     ld a, [wC965]
     ld [wC88D], a
     ld a, $08
     ld [wGameMode], a
     ld a, $00
-    ld [wC5DC], a
+    ld [wModeState], a
     ld a, $01
     ld [wModeChangeRequest], a
     xor a, a
@@ -1639,7 +1639,7 @@ Func_012_4A9A::
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC91C, wC91D, wC91E
-; writes: hFF90, hFF8F, hFF92, hFF8E, hFF91, wCBCF, wSpriteSlotCount, wC90D, ...
+; writes: hFF90, hFF8F, hFF92, hPlayerX, hPlayerY, wCBCF, wSpriteSlotCount, wC90D, ...
 Func_012_4AC0:: ; heuristic: target of a pointer table; C0
     ld a, $0D
     ldh [hFF90], a
@@ -1648,9 +1648,9 @@ Func_012_4AC0:: ; heuristic: target of a pointer table; C0
     xor a, a
     ldh [hFF92], a
     ld a, $40
-    ldh [hFF8E], a
+    ldh [hPlayerX], a
     ld a, $40
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     xor a, a
     ld [wCBCF], a
     xor a, a
@@ -2147,17 +2147,17 @@ Func_012_4DDC:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB86, hFF8E, hFF91, hFF98, wC8EF, wC8F0, wC8F1, wC8F4, ...
+; reads: wCB86, hPlayerX, hPlayerY, hPlayerFacing, wC8EF, wC8F0, wC8F1, wC8F4, ...
 ; writes: wC937, wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, ...
 ; points at: wC923
 Func_012_4DFB:: ; heuristic: follows a terminator; C0
     ld a, [wCB86]
     ld [wC937], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC938], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC939], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC93A], a
     ld a, [wC8EF]
     ld [wC93B], a
@@ -2202,8 +2202,8 @@ Func_012_4E55::
     dw Func_012_4F2E
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8F6, wC8FB, wC8F1, hFF91
-; writes: wC8EF, wC8F4, wC8F9, wC8FB, wC8F6, wC8F1, hFF91
+; reads: wC8F6, wC8FB, wC8F1, hPlayerY
+; writes: wC8EF, wC8F4, wC8F9, wC8FB, wC8F6, wC8F1, hPlayerY
 ; points at: hFF8C, wC923
 Func_012_4E63:: ; heuristic: target of a pointer table; C0
     ld hl, hFF8C
@@ -2230,7 +2230,7 @@ Jump_012_4E82::
     ld [wC8F6], a
 
 Jump_012_4E91::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $E0
     jr nc, Jump_012_4E9F
     ld a, [wC8F1]
@@ -2239,10 +2239,10 @@ Jump_012_4E91::
     ld [wC8F1], a
 
 Jump_012_4E9F::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $50
     ret nz
     ld hl, wC923
@@ -2250,7 +2250,7 @@ Jump_012_4E9F::
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8E
+; reads: hPlayerX
 ; writes: hFF90, hFF8F, hFF92, wC8C8, wC8C9, wC8C6
 Func_012_4EAD:: ; heuristic: target of a pointer table; C0
     ld a, $01
@@ -2259,7 +2259,7 @@ Func_012_4EAD:: ; heuristic: target of a pointer table; C0
     ldh [hFF8F], a
     xor a, a
     ldh [hFF92], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8C8], a
     ld a, $F0
     ld [wC8C9], a
@@ -2281,19 +2281,19 @@ Func_012_4ECE::
     dw Func_012_4F2E
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91
-; writes: hFF91
-; points at: hFF91, wC923
+; reads: hPlayerY
+; writes: hPlayerY
+; points at: hPlayerY, wC923
 Func_012_4EDE:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $20
     ret nz
     ld hl, wC923
@@ -2310,15 +2310,15 @@ Func_012_4EF9::
     dw Func_012_4F2E
 
 Jump_012_4F03::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $60
     ret nz
     ld hl, wC923
@@ -2338,13 +2338,13 @@ Func_012_4F1E::
     dw Func_012_4F2E
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91, wC6FD
+; reads: hPlayerY, wC6FD
 ; writes: wC919
 ; points at: wC8F1, hFF8C
 Func_012_4F2E:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
     ld a, [wC6FD]
     dec a
@@ -2356,7 +2356,7 @@ Func_012_4F2E:: ; heuristic: target of a pointer table; C0
     add_a_to_hl
     ld a, [hl]
     ld c, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, c
     ret nz
     ld hl, hFF8C
@@ -2366,19 +2366,19 @@ Func_012_4F2E:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91
-; writes: hFF91
-; points at: hFF91, wC923
+; reads: hPlayerY
+; writes: hPlayerY
+; points at: hPlayerY, wC923
 Func_012_4F5C:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $50
     ret nz
     ld hl, wC923
@@ -2389,7 +2389,7 @@ Func_012_4F5C:: ; heuristic: target of a pointer table; C0
 ; reads: wC468
 ; points at: wC923
 Func_012_4F77:: ; heuristic: target of a pointer table; C0
-    farcall Func_002_541B
+    farcall UpdatePlayerMovement
     farcall Func_002_5BD7
     ld a, [wC468]
     bit 7, a
@@ -2417,26 +2417,26 @@ Func_012_4F8E:: ; heuristic: target of a pointer table; C0
     ldh [hFF9D], a
     ld a, h
     ldh [hFF9E], a
-    farcall Func_002_541B
+    farcall UpdatePlayerMovement
     farcall Func_002_5BD7
     ld hl, wC923
     inc [hl]
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91
-; writes: hFF91
-; points at: hFF91, wC923
+; reads: hPlayerY
+; writes: hPlayerY
+; points at: hPlayerY, wC923
 Func_012_4FBC:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     call Func_012_65FF
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     inc a
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     cp a, $80
     ret nz
     ld hl, wC923
@@ -2444,11 +2444,11 @@ Func_012_4FBC:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFF98
+; writes: hPlayerFacing
 ; points at: hFF8C, wC923
 Func_012_4FD7:: ; heuristic: target of a pointer table; C0
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld hl, hFF8C
     call SetBit1AtHL_Bank12
     ld a, $65
@@ -2481,8 +2481,8 @@ Func_012_4FFE:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, hFF93, hFF98
-; writes: hFF93, wC527, wC921, hFF98
+; reads: wC921, hFF93, hPlayerFacing
+; writes: hFF93, wC527, wC921, hPlayerFacing
 ; points at: wC923
 Func_012_5007:: ; heuristic: target of a pointer table; C0
     ld a, [wC921]
@@ -2496,8 +2496,8 @@ Func_012_5007:: ; heuristic: target of a pointer table; C0
     ld [wC527], a
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC921, hFF98
-; writes: wC921, hFF98
+; reads: wC921, hPlayerFacing
+; writes: wC921, hPlayerFacing
 ; points at: wC923
 Func_012_501E:: ; heuristic: target of a pointer table; C0
     ld a, [wC921]
@@ -2505,10 +2505,10 @@ Func_012_501E:: ; heuristic: target of a pointer table; C0
     ld [wC921], a
     cp a, $03
     ret nz
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     and a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -2517,11 +2517,11 @@ Func_012_501E:: ; heuristic: target of a pointer table; C0
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlotCount, wCD04, hFF93, hFF94, hFF95
-; writes: hFF98, hFF93, hFF94, hFF95, hFF96, hFF97, wC921
+; writes: hPlayerFacing, hFF93, hFF94, hFF95, hFF96, hFF97, wC921
 ; points at: wCB8A, wC923
 Func_012_5038:: ; heuristic: target of a pointer table; C0
     xor a, a
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld a, [wSpriteSlotCount]
     ld c, a
 
@@ -2719,7 +2719,7 @@ Jump_012_519E::
 
 ; 2 call sites from 1 routine (e.g. Func_012_50E5)
 ; reads: hFF8C
-; writes: wC8C8, wC8C9, hFF8F, hFF92, wC8C5, wC8C6, wC5DC, hFF8C
+; writes: wC8C8, wC8C9, hFF8F, hFF92, wC8C5, wC8C6, wModeState, hFF8C
 ; points at: wC5E0
 Func_012_51B1::
     ld a, [de]
@@ -2733,7 +2733,7 @@ Func_012_51B1::
 
 ; 1 call site from 1 routine (e.g. Func_012_50E5)
 ; reads: hFF8C
-; writes: hFF8F, hFF92, wC8C5, wC8C6, wC5DC, hFF8C
+; writes: hFF8F, hFF92, wC8C5, wC8C6, wModeState, hFF8C
 ; points at: wC5E0
 Func_012_51C0::
     ld a, [de]
@@ -2753,7 +2753,7 @@ Func_012_51C0::
     ld hl, wC5E0
     inc [hl]
     ld a, $04
-    ld [wC5DC], a
+    ld [wModeState], a
     ldh a, [hFF8C]
     and a, $F7
     ldh [hFF8C], a
@@ -2900,12 +2900,12 @@ Jump_012_5520::
     ld hl, wC923
     inc [hl]
     ld a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld de, $0025
     call TestFlagBit
     ret nc
     ld a, $02
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ret
 
 ; 1 call site from 1 routine (e.g. Func_010_49C5)
@@ -2958,19 +2958,19 @@ Func_012_5573:: ; heuristic: target of a pointer table; C0
     ret
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF91, wC921, wC8F1, hFF98, wC8F6, wC8FB, hFF8C
-; writes: hFF91, hFF98, wC8F1, wC8EF, wC8F6, wC8F4, wC8FB, wC8F9, ...
+; reads: hPlayerY, wC921, wC8F1, hPlayerFacing, wC8F6, wC8FB, hFF8C
+; writes: hPlayerY, hPlayerFacing, wC8F1, wC8EF, wC8F6, wC8F4, wC8FB, wC8F9, ...
 ; points at: wC923
 Func_012_557C:: ; heuristic: target of a pointer table; C0
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $E0
     jr z, Jump_012_558F
     sub a, $04
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld a, [wC921]
     srl a
     and a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
 
 Jump_012_558F::
     ld a, [wC921]
@@ -2981,7 +2981,7 @@ Jump_012_558F::
     jr z, Jump_012_55A7
     sub a, $04
     ld [wC8F1], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
 
 Jump_012_55A7::
@@ -2993,7 +2993,7 @@ Jump_012_55A7::
     jr z, Jump_012_55BF
     sub a, $04
     ld [wC8F6], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8F4], a
 
 Jump_012_55BF::
@@ -3005,7 +3005,7 @@ Jump_012_55BF::
     jr z, Jump_012_55D7
     sub a, $04
     ld [wC8FB], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8F9], a
 
 Jump_012_55D7::
@@ -3968,8 +3968,8 @@ Jump_012_5BCB::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_5B9A)
-; reads: wC195, wC922, hScrollX, hFFA2, wC924, hScrollY, hFFA6, wC925
-; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
+; reads: wC195, wC922, hScrollX, hScrollXHi, wC924, hScrollY, hScrollYHi, wC925
+; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 Func_012_5BD9::
     ld a, [wC195]
     ld a, $10
@@ -3986,7 +3986,7 @@ Func_012_5BD9::
     ldh [hSpriteTileOffset], a
     ldh a, [hScrollX]
     ld l, a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     ld h, a
     ld a, [wC924]
     add a, $08
@@ -3994,10 +3994,10 @@ Func_012_5BD9::
     ld a, l
     ldh [hSpriteOriginX], a
     ld a, h
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ldh a, [hScrollY]
     ld l, a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     ld h, a
     ld a, [wC925]
     add a, $10
@@ -4005,8 +4005,8 @@ Func_012_5BD9::
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, h
-    ldh [hFFAC], a
-    farcall Func_07F_700A
+    ldh [hSpriteOriginYHi], a
+    farcall DrawMetaSprite
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6126)
@@ -4019,7 +4019,7 @@ Func_012_5C27::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_073_6126)
-; reads: wC195, wIsCGB, hFF8E, hFF91, hFF98
+; reads: wC195, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wC921
 ; points at: wC4DF, wC923
 Func_012_5C31::
@@ -4031,7 +4031,7 @@ Func_012_5C31::
     jr Jump_012_5C4E
 
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wC195, hFF8E, hFF91, hFF98
+; reads: wIsCGB, wC195, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wC527, wC924, wC925, wC8EF, wC8F4, wC8F9, wC921
 ; points at: wC4DF, wC923
 Func_012_5C3F:: ; heuristic: follows a terminator; C0
@@ -4080,11 +4080,11 @@ Jump_012_5C4E::
     ld [wC527], a
 
 Jump_012_5C92::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld d, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld e, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_5CAF
     dec a
@@ -4122,7 +4122,7 @@ Jump_012_5CC7::
     ld [wC925], a
 
 Jump_012_5CD1::
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -4171,9 +4171,9 @@ Jump_012_5D09::
     ldh [hFF8D], a
     xor a, a
     ldh [hFF8B], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     sub a, $08
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -4181,7 +4181,7 @@ Jump_012_5D09::
     ret
 
 Jump_012_5D25::
-    ld de, hFF91
+    ld de, hPlayerY
     ld a, e
     ld [wC928], a
     ld a, d
@@ -4190,7 +4190,7 @@ Jump_012_5D25::
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5D41
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
 
 Jump_012_5D41::
@@ -4199,15 +4199,15 @@ Jump_012_5D41::
     ld [wC921], a
     cp a, $20
     jr nz, Jump_012_5D91
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -4234,29 +4234,29 @@ Jump_012_5D91::
     ld a, [wC921]
     and a, $01
     ret z
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_5DA7
     dec a
     jr z, Jump_012_5DAC
     dec a
     jr z, Jump_012_5DB1
-    ld hl, hFF8E
+    ld hl, hPlayerX
     dec [hl]
     ret
 
 Jump_012_5DA7::
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
     ret
 
 Jump_012_5DAC::
-    ld hl, hFF8E
+    ld hl, hPlayerX
     inc [hl]
     ret
 
 Jump_012_5DB1::
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
     ret
 
@@ -4280,7 +4280,7 @@ Func_012_5DB6::
     dw Jump_012_5DD3
 
 Jump_012_5DD3::
-    ld de, hFF91
+    ld de, hPlayerY
     ld a, e
     ld [wC928], a
     ld a, d
@@ -4289,7 +4289,7 @@ Jump_012_5DD3::
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5DEF
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
 
 Jump_012_5DEF::
@@ -4298,10 +4298,10 @@ Jump_012_5DEF::
     ld [wC921], a
     cp a, $20
     jr nz, Jump_012_5E14
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     add a, $08
     and a, $F0
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ldh a, [hFF8C]
     or a, $08
     and a, $5F
@@ -4317,29 +4317,29 @@ Jump_012_5E14::
     ld a, [wC921]
     and a, $01
     ret z
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_5E2D
     dec a
     jr z, Jump_012_5E32
     dec a
     jr z, Jump_012_5E37
-    ld hl, hFF8E
+    ld hl, hPlayerX
     dec [hl]
     ret
 
 Jump_012_5E2D::
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
     ret
 
 Jump_012_5E32::
-    ld hl, hFF8E
+    ld hl, hPlayerX
     inc [hl]
     ret
 
 Jump_012_5E37::
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
     ret
 
@@ -4394,11 +4394,11 @@ Jump_012_5E64::
     call CopyFromBank
     ld a, $7F
     ld [wC527], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld d, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld e, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_5EAD
     dec a
@@ -4438,7 +4438,7 @@ Jump_012_5EC5::
 Jump_012_5ECF::
     ld a, $0E
     ldh [hFF8D], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -4477,7 +4477,7 @@ Jump_012_5F06::
     ret
 
 Jump_012_5F11::
-    ld de, hFF91
+    ld de, hPlayerY
     ld a, e
     ld [wC928], a
     ld a, d
@@ -4486,10 +4486,10 @@ Jump_012_5F11::
     ld a, [wC921]
     and a, $01
     jr nz, Jump_012_5F30
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     and a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
 
 Jump_012_5F30::
     ld a, [wC921]
@@ -4498,7 +4498,7 @@ Jump_012_5F30::
     cp a, $20
     ret nz
     ld a, [wC8EF]
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     ld a, $7A
     call QueueSoundEffect
     xor a, a
@@ -4513,7 +4513,7 @@ Jump_012_5F4D::
     ldh a, [hFF8C]
     or a, $A0
     ldh [hFF8C], a
-    ld de, hFF91
+    ld de, hPlayerY
     ld a, e
     ld [wC928], a
     ld a, d
@@ -4522,7 +4522,7 @@ Jump_012_5F4D::
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_5F74
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
 
 Jump_012_5F74::
@@ -4534,15 +4534,15 @@ Jump_012_5F74::
     ldh a, [hFF8C]
     and a, $5F
     ldh [hFF8C], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -4576,11 +4576,11 @@ Jump_012_5FC9::
     ldh a, [hFF8C]
     bit 0, a
     ret nz
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_5FF5
     dec a
@@ -4660,9 +4660,9 @@ Jump_012_6049::
     jr c, Jump_012_606A
     xor a, a
     ldh [hFF8B], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     sub a, $08
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     xor a, a
     ld [wC921], a
     ld hl, wC923
@@ -4675,17 +4675,17 @@ Jump_012_6066::
     ret
 
 Jump_012_606A::
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     inc a
     inc a
     and a, $03
-    ldh [hFF98], a
+    ldh [hPlayerFacing], a
     xor a, a
     ld [wJoypadHeld], a
     ret
 
 Jump_012_6077::
-    ld de, hFF91
+    ld de, hPlayerY
     ld a, e
     ld [wC928], a
     ld a, d
@@ -4694,7 +4694,7 @@ Jump_012_6077::
     ld a, [wC921]
     and a, $03
     jr nz, Jump_012_6093
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
 
 Jump_012_6093::
@@ -4703,10 +4703,10 @@ Jump_012_6093::
     ld [wC921], a
     cp a, $20
     jr nz, Jump_012_60B3
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     add a, $08
     and a, $F0
-    ldh [hFF91], a
+    ldh [hPlayerY], a
     ld a, $02
     ldh [hFF8B], a
     xor a, a
@@ -4720,29 +4720,29 @@ Jump_012_60B3::
     ld a, [wC921]
     and a, $01
     ret z
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_60CC
     dec a
     jr z, Jump_012_60D1
     dec a
     jr z, Jump_012_60D6
-    ld hl, hFF8E
+    ld hl, hPlayerX
     dec [hl]
     ret
 
 Jump_012_60CC::
-    ld hl, hFF91
+    ld hl, hPlayerY
     inc [hl]
     ret
 
 Jump_012_60D1::
-    ld hl, hFF8E
+    ld hl, hPlayerX
     inc [hl]
     ret
 
 Jump_012_60D6::
-    ld hl, hFF91
+    ld hl, hPlayerY
     dec [hl]
     ret
 
@@ -4785,8 +4785,8 @@ Jump_012_60FD::
     ret
 
 ; 4 call sites from 2 routines (e.g. Func_012_5EE7, Func_012_5DB6)
-; reads: wC195, hFF98, hScrollX, hFFA2, wC924, hScrollY, hFFA6, wC925
-; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
+; reads: wC195, hPlayerFacing, hScrollX, hScrollXHi, wC924, hScrollY, hScrollYHi, wC925
+; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 ; points at: hSpriteSetIndex
 Func_012_6114::
     ld a, $21
@@ -4801,7 +4801,7 @@ Func_012_6114::
 Jump_012_6124::
     ld a, $07
     ldh [hSpriteAttrXor], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     cp a, $01
     jr nz, Jump_012_6132
     ld a, $27
@@ -4814,7 +4814,7 @@ Jump_012_6132::
     ldh [hSpriteTileOffset], a
     ldh a, [hScrollX]
     ld l, a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     ld h, a
     ld a, [wC924]
     add a, $08
@@ -4822,10 +4822,10 @@ Jump_012_6132::
     ld a, l
     ldh [hSpriteOriginX], a
     ld a, h
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ldh a, [hScrollY]
     ld l, a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     ld h, a
     ld a, [wC925]
     add a, $10
@@ -4833,8 +4833,8 @@ Jump_012_6132::
     ld a, l
     ldh [hSpriteOriginY], a
     ld a, h
-    ldh [hFFAC], a
-    farcall Func_07F_700A
+    ldh [hSpriteOriginYHi], a
+    farcall DrawMetaSprite
     ret
 
 Jump_012_616C::
@@ -4857,11 +4857,11 @@ Jump_012_616C::
     call CopyFromBank
     ld a, $7F
     ld [wC527], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld d, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld e, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_61B5
     dec a
@@ -4901,7 +4901,7 @@ Jump_012_61CD::
 Jump_012_61D7::
     ld a, $0E
     ldh [hFF8D], a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
@@ -5650,7 +5650,7 @@ Jump_012_662D::
     ldh [hFFB9], a
 
 Jump_012_6659::
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_6668
     ld a, $81
@@ -5698,7 +5698,7 @@ Jump_012_669E::
     ld [wC8CC], a
     ld a, $00
     ldh [hFFB9], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_66BC
     ld a, $82
@@ -5766,7 +5766,7 @@ Jump_012_66F7::
     ld [wC8CC], a
     ld a, $02
     ldh [hFFB9], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_672C
     ld a, $81
@@ -5815,7 +5815,7 @@ Jump_012_6764::
     ld [wC8CC], a
     ld a, $00
     ldh [hFFB9], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_6782
     ld a, $82
@@ -5860,7 +5860,7 @@ Jump_012_67A4::
     ld [wC8CC], a
     ld a, $02
     ldh [hFFB9], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_67CD
     ld a, $81
@@ -5898,7 +5898,7 @@ Jump_012_67EE::
     ld [wC8CC], a
     ld a, $00
     ldh [hFFB9], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_680E
     ld a, $82
@@ -6534,7 +6534,7 @@ Jump_012_6B4A::
     ld a, [wC949]
     add a, $10
     ldh [hSpriteOriginY], a
-    farcall Func_07F_700A
+    farcall DrawMetaSprite
     ret
 
 Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6741,10 +6741,10 @@ Jump_012_6CC2::
     inc hl
     ld [hl], $04
     inc hl
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [hl], a
     inc hl
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [hl], a
     xor a, a
     ld [wCBCF], a
@@ -7059,8 +7059,8 @@ Jump_012_6EB4::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_012_6893)
-; reads: wC468, hScrollX, hFFA2, hScrollY, hFFA6
-; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSubIndex
+; reads: wC468, hScrollX, hScrollXHi, hScrollY, hScrollYHi
+; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex
 ; points at: wCBCF
 Func_012_6EB7::
     ld a, [wC468]
@@ -7072,11 +7072,13 @@ Func_012_6EB7::
     ret z
     jr Jump_012_6ED3
 
+; unless the map is loading or wCBCF bit 7 is clear: reads the sprite entries starting at wCBCF (tile offset, set index with bit 7 selecting a sub index, attribute, position bytes), sets the hSprite inputs and 16-bit positions from them plus the scroll, and draws each with DrawMetaSprite
 ; 9 call sites from 5 routines (e.g. Func_002_4AE0, Func_002_4C4E, Func_024_567C, Func_0F1_5B8E, ...)
-; reads: wC468, hScrollX, hFFA2, hScrollY, hFFA6
-; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC, hSpriteSubIndex
+; reads: wC468, hScrollX, hScrollXHi, hScrollY, hScrollYHi
+; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex
 ; points at: wCBCF
-Func_012_6EC6::
+DrawFieldSprites::
+Func_012_6EC6:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
@@ -7116,9 +7118,9 @@ Jump_012_6EEA::
     ldh a, [hScrollX]
     add a, d
     ldh [hSpriteOriginX], a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     adc a, $00
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     inc hl
     ld a, [hl]
     add a, $10
@@ -7126,13 +7128,13 @@ Jump_012_6EEA::
     ldh a, [hScrollY]
     add a, d
     ldh [hSpriteOriginY], a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     adc a, $00
-    ldh [hFFAC], a
-    farcall Func_07F_700A
+    ldh [hSpriteOriginYHi], a
+    farcall DrawMetaSprite
     ret
 
-; 1 call site from 1 routine (e.g. Func_012_6EC6)
+; 1 call site from 1 routine (e.g. DrawFieldSprites)
 ; reads: wCBD6
 ; writes: hSpriteSubIndex
 ; points at: wCBD5
@@ -7511,8 +7513,8 @@ Data_012_71E8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B1E8, $42
 
 ; 2 call sites from 2 routines (e.g. Func_012_6893, Func_002_4C4E)
-; reads: wC468, wC8FE, wC956, wCCE9, wCC44, hScrollX, hFFA2, wC8FF, ...
-; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hFFAA, hSpriteOriginY, hFFAC
+; reads: wC468, wC8FE, wC956, wCCE9, wCC44, hScrollX, hScrollXHi, wC8FF, ...
+; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 Func_012_722A::
     ld a, [wC468]
     bit 7, a
@@ -7543,7 +7545,7 @@ Func_012_722A::
 Jump_012_7261::
     ldh a, [hScrollX]
     ld e, a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     ld d, a
     ld a, [wC8FF]
     and a, $F0
@@ -7557,10 +7559,10 @@ Jump_012_7273::
     ld a, e
     ldh [hSpriteOriginX], a
     ld a, d
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ldh a, [hScrollY]
     ld e, a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     ld d, a
     ld a, [wC8FF]
     and a, $0F
@@ -7575,8 +7577,8 @@ Jump_012_728D::
     ld a, e
     ldh [hSpriteOriginY], a
     ld a, d
-    ldh [hFFAC], a
-    farcall Func_07F_700A
+    ldh [hSpriteOriginYHi], a
+    farcall DrawMetaSprite
     ret
 
 Jump_012_729A::
@@ -7586,7 +7588,7 @@ Jump_012_729A::
     add_a_to_hl
     ldh a, [hScrollX]
     ld e, a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     ld d, a
     ld a, [hl+]
     add a, $08
@@ -7599,10 +7601,10 @@ Jump_012_72B4::
     ld a, e
     ldh [hSpriteOriginX], a
     ld a, d
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ldh a, [hScrollY]
     ld e, a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     ld d, a
     ld a, [hl+]
     add a, $10
@@ -7615,14 +7617,14 @@ Jump_012_72C8::
     ld a, e
     ldh [hSpriteOriginY], a
     ld a, d
-    ldh [hFFAC], a
-    farcall Func_07F_700A
+    ldh [hSpriteOriginYHi], a
+    farcall DrawMetaSprite
     ret
 
 Jump_012_72D5::
     ldh a, [hScrollX]
     ld e, a
-    ldh a, [hFFA2]
+    ldh a, [hScrollXHi]
     ld d, a
     ld a, [wC8FF]
     add a, $08
@@ -7635,10 +7637,10 @@ Jump_012_72E5::
     ld a, e
     ldh [hSpriteOriginX], a
     ld a, d
-    ldh [hFFAA], a
+    ldh [hSpriteOriginXHi], a
     ldh a, [hScrollY]
     ld e, a
-    ldh a, [hFFA6]
+    ldh a, [hScrollYHi]
     ld d, a
     ld a, [wC900]
     add a, $10
@@ -7651,8 +7653,8 @@ Jump_012_72FB::
     ld a, e
     ldh [hSpriteOriginY], a
     ld a, d
-    ldh [hFFAC], a
-    farcall Func_07F_700A
+    ldh [hSpriteOriginYHi], a
+    farcall DrawMetaSprite
     ret
 
 Data_012_7308:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -7663,7 +7665,7 @@ Data_012_7313:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
 
 ; 2 call sites from 2 routines (e.g. Func_002_4AE0, Func_002_4C4E)
-; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wC8FE, hFF8E, hFF91, hFF98, ...
+; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wC8FE, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_012_7333::
     ld a, [wC8CB]
@@ -7686,11 +7688,11 @@ Func_012_7333::
     ret
 
 Jump_012_7356::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_736A
     dec a
@@ -7737,7 +7739,7 @@ Jump_012_73A0::
     ret
 
 ; 2 call sites from 2 routines (e.g. Func_002_4C4E, Func_002_56DC)
-; reads: wC951, wC8BF, wC8FE, hFF8E, hFF91, wC91F, wC917, wC916
+; reads: wC951, wC8BF, wC8FE, hPlayerX, hPlayerY, wC91F, wC917, wC916
 ; writes: wD091, wC916, wC917, wJoypadHeld, wJoypadPressed
 Func_012_73A1::
     ld a, [wC951]
@@ -7753,9 +7755,9 @@ Func_012_73A1::
     ret z
     cp a, $03
     ret z
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld c, a
     call Func_012_7536
     or a, a
@@ -7786,7 +7788,7 @@ Jump_012_73F2::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_002_4C4E)
-; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wCC44, hFF8E, hFF91, hFF98, ...
+; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wCC44, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC921, wC922, wC916, wC917, wJoypadHeld, wJoypadPressed
 ; points at: wCDB0, wCE8B
 Func_012_73F3::
@@ -7811,11 +7813,11 @@ Func_012_73F3::
     ret nz
 
 Jump_012_7417::
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld b, a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld c, a
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     or a, a
     jr z, Jump_012_742E
     dec a

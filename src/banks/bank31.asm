@@ -4,7 +4,7 @@ SECTION "Bank 31", ROMX[$4000], BANK[$31]
 ; start-up for wGameMode = 4; forcing this mode on the emulator shows: sparkles on black (incomplete when forced) (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit)
 ; reads: wSGBActive, wIsCGB
-; writes: wC51F, wC520, hScrollX, hFFA2, hScrollY, hFFA6, rVBK, wC554, ...
+; writes: wC51F, wC520, hScrollX, hScrollXHi, hScrollY, hScrollYHi, rVBK, wC554, ...
 GameMode4_Init::
 Func_031_4001:: ; address name
     call Func_000_08A6
@@ -22,10 +22,10 @@ Func_031_4001:: ; address name
 Jump_031_401F::
     xor a, a
     ldh [hScrollX], a
-    ldh [hFFA2], a
+    ldh [hScrollXHi], a
     xor a, a
     ldh [hScrollY], a
-    ldh [hFFA6], a
+    ldh [hScrollYHi], a
     ld hl, vBGMap0
     ld bc, $0400
     ld a, $C3
@@ -1299,7 +1299,7 @@ Jump_031_4893::
     ld a, $01
     ld [wGameMode], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld [wC5DD], a
     ld [wC5DE], a
     ld [wD068], a
@@ -1316,18 +1316,18 @@ Jump_031_4893::
     ret
 
 ; 1 call site from 1 routine (e.g. Func_031_47DD)
-; reads: hFF98, hFF8E, hFF91
+; reads: hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wC8EF, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
 Func_031_48C3::
-    ldh a, [hFF98]
+    ldh a, [hPlayerFacing]
     ld [wC8EF], a
     ld [wC8F4], a
     ld [wC8F9], a
-    ldh a, [hFF8E]
+    ldh a, [hPlayerX]
     ld [wC8F0], a
     ld [wC8F5], a
     ld [wC8FA], a
-    ldh a, [hFF91]
+    ldh a, [hPlayerY]
     ld [wC8F1], a
     ld [wC8F6], a
     ld [wC8FB], a
@@ -1390,7 +1390,7 @@ Jump_031_4931::
     ld a, $06
     ld [wGameMode], a
     xor a, a
-    ld [wC5DC], a
+    ld [wModeState], a
     ld [wC5DD], a
     ld [wC5DE], a
     ld [wD780], a
@@ -1540,12 +1540,12 @@ Jump_031_4A22::
     ret
 
 ; 1 call site from 1 routine (e.g. GameMode4_Update)
-; reads: wC830, wC831, wC82F
-; points at: wC82D
+; reads: wPlayHoursLo, wPlayHoursHi, wPlayMinutes
+; points at: wPlayFrames
 Func_031_4A23::
-    ld a, [wC830]
+    ld a, [wPlayHoursLo]
     ld l, a
-    ld a, [wC831]
+    ld a, [wPlayHoursHi]
     ld h, a
     ld bc, $03E7
     ld a, l
@@ -1558,12 +1558,12 @@ Func_031_4A23::
     or a, l
     or a, a
     jr nz, Jump_031_4A3F
-    ld a, [wC82F]
+    ld a, [wPlayMinutes]
     cp a, $3B
     ret z
 
 Jump_031_4A3F::
-    ld hl, wC82D
+    ld hl, wPlayFrames
     ld a, [hl]
     inc a
     ld [hl], a
