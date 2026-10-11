@@ -5134,7 +5134,7 @@ Func_01C_5F26:: ; address name
     ld d, $00
     sla e
     rl d
-    ld hl, Data_0F2_5643
+    ld hl, ScreenNumberListTable
     add hl, de
     ld e, l
     ld d, h

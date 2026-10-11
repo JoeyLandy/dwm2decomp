@@ -2625,203 +2625,1227 @@ Data_0F2_51C3:: ; address name
     db $00, $01, $02 ; id 382 Kagebou
     db $00, $01, $02 ; id 383 ?
 
-; address loaded by ReadF2FarPointerForScreenTableIndex
-Data_0F2_5643:: ; heuristic: argument of a bank-switching copy helper; C0
-    dw Data_0F2_5673
-    dw Data_0F2_577B
-    dw Data_0F2_580B
-    dw Data_0F2_589B
-    dw Data_0F2_592B
-    dw Data_0F2_59BB
-    dw Data_0F2_5A4B
-    dw Data_0F2_5ADB
-    dw Data_0F2_5B6B
-    dw Data_0F2_5BFB
-    dw Data_0F2_5C8B
-    dw Data_0F2_5CEB
-    dw Data_0F2_5D7B
-    dw Data_0F2_5E0B
-    dw Data_0F2_5E9B
-    dw Data_0F2_5F2B
-    dw Data_0F2_5FBB
-    dw Data_0F2_604B
-    dw Data_0F2_60DB
-    dw Data_0F2_616B
-    db $BB, $59, $BB, $59, $BB, $59, $FB, $61
+; E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ScriptCommandE2_Run_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed).
+; record: list of 24-bit numbers for this wScreenTableIndex
+ScreenNumberListTable::
+Data_0F2_5643:: ; address name
+    dw ScreenNumberList000 ; id 0
+    dw ScreenNumberList001 ; id 1
+    dw ScreenNumberList002 ; id 2
+    dw ScreenNumberList003 ; id 3
+    dw ScreenNumberList004 ; id 4
+    dw ScreenNumberList005 ; id 5
+    dw ScreenNumberList006 ; id 6
+    dw ScreenNumberList007 ; id 7
+    dw ScreenNumberList008 ; id 8
+    dw ScreenNumberList009 ; id 9
+    dw ScreenNumberList00A ; id 10
+    dw ScreenNumberList00B ; id 11
+    dw ScreenNumberList00C ; id 12
+    dw ScreenNumberList00D ; id 13
+    dw ScreenNumberList00E ; id 14
+    dw ScreenNumberList00F ; id 15
+    dw ScreenNumberList010 ; id 16
+    dw ScreenNumberList011 ; id 17
+    dw ScreenNumberList012 ; id 18
+    dw ScreenNumberList013 ; id 19
+    dw ScreenNumberList005 ; id 20
+    dw ScreenNumberList005 ; id 21
+    dw ScreenNumberList005 ; id 22
+    dw ScreenNumberList017 ; id 23
 
-Data_0F2_5673:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $0A, $00, $00, $32, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $04
-    ds $38, $00
-    db $0A, $00, $00, $28
-    ds $2C, $00
-    db $19, $00, $00, $00, $00, $00, $32
-    ds $77, $00
-    db $14, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $00 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList000::
+Data_0F2_5673:: ; address name
+    d24 0 ; id 0
+    d24 10 ; id 1
+    d24 50 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 4 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 10 ; id 25
+    d24 40 ; id 26
+    d24 0 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 25 ; id 41
+    d24 0 ; id 42
+    d24 50 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
+    d24 0 ; id 48
+    d24 0 ; id 49
+    d24 0 ; id 50
+    d24 0 ; id 51
+    d24 0 ; id 52
+    d24 0 ; id 53
+    d24 0 ; id 54
+    d24 0 ; id 55
+    d24 0 ; id 56
+    d24 0 ; id 57
+    d24 0 ; id 58
+    d24 0 ; id 59
+    d24 0 ; id 60
+    d24 0 ; id 61
+    d24 0 ; id 62
+    d24 0 ; id 63
+    d24 0 ; id 64
+    d24 0 ; id 65
+    d24 0 ; id 66
+    d24 0 ; id 67
+    d24 0 ; id 68
+    d24 0 ; id 69
+    d24 0 ; id 70
+    d24 0 ; id 71
+    d24 0 ; id 72
+    d24 0 ; id 73
+    d24 0 ; id 74
+    d24 0 ; id 75
+    d24 0 ; id 76
+    d24 0 ; id 77
+    d24 0 ; id 78
+    d24 0 ; id 79
+    d24 0 ; id 80
+    d24 0 ; id 81
+    d24 0 ; id 82
+    d24 20 ; id 83
+    d24 0 ; id 84
+    d24 0 ; id 85
+    d24 0 ; id 86
+    d24 0 ; id 87
 
-Data_0F2_577B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $F4, $01, $00, $C8, $00, $00, $00
-    db $00, $00, $00, $00, $00, $14, $00, $00, $14, $00, $00, $14, $00, $00, $14
-    ds $32, $00
-    db $C8
-    ds $2F, $00
-    db $32, $00, $00, $00, $00, $00, $00, $00, $00, $32, $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $01 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList001::
+Data_0F2_577B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 0 ; id 2
+    d24 500 ; id 3
+    d24 200 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 20 ; id 7
+    d24 20 ; id 8
+    d24 20 ; id 9
+    d24 20 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 200 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 0 ; id 41
+    d24 0 ; id 42
+    d24 50 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 50 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_580B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $D0
-    db $07
-    ds $10, $00
-    db $E8, $03, $00, $E8, $03
-    ds $2E, $00
-    db $E8, $03, $00, $00, $00, $00, $00, $00, $00, $20, $03, $00, $00, $00, $00, $E8
-    db $03, $00, $BC, $02, $00, $20, $03, $00, $DC, $05, $00, $B8, $0B
-    ds $16, $00
-    db $20, $4E, $00, $00, $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $02 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList002::
+Data_0F2_580B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 0 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 2000 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 1000 ; id 11
+    d24 1000 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 0 ; id 27
+    d24 1000 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 800 ; id 31
+    d24 0 ; id 32
+    d24 1000 ; id 33
+    d24 700 ; id 34
+    d24 800 ; id 35
+    d24 1500 ; id 36
+    d24 3000 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 0 ; id 41
+    d24 0 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 20000 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_589B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $0A, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $04, $00, $00, $00, $00, $00, $00, $00, $00, $14
-    ds $2F, $00
-    db $0A
-    ds $2F, $00
-    db $1E
-    ds $14, $00
+; E-0199 (derived: list for entry $03 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList003::
+Data_0F2_589B:: ; address name
+    d24 0 ; id 0
+    d24 10 ; id 1
+    d24 0 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 4 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 20 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 10 ; id 25
+    d24 0 ; id 26
+    d24 0 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 30 ; id 41
+    d24 0 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_592B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $0A, $00, $00, $32, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $04, $00, $00, $00, $00, $00, $00, $00, $00, $14
-    ds $32, $00
-    db $28
-    ds $2C, $00
-    db $1E, $00, $00, $00, $00, $00, $32, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $04 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList004::
+Data_0F2_592B:: ; address name
+    d24 0 ; id 0
+    d24 10 ; id 1
+    d24 50 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 4 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 20 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 40 ; id 26
+    d24 0 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 30 ; id 41
+    d24 0 ; id 42
+    d24 50 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_59BB:: ; heuristic: target of a monotone pointer table; C0
-    ds $90, $00
+; E-0199 (derived: list for entry $05 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList005::
+Data_0F2_59BB:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 0 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 0 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 0 ; id 41
+    d24 0 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5A4B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $32, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $04, $00, $00, $00, $00, $00, $00, $00, $00, $14
-    ds $32, $00
-    db $28, $00, $00, $C8
-    ds $26, $00
-    db $32, $00, $00, $00, $00, $00, $32, $00, $00, $32, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $06 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList006::
+Data_0F2_5A4B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 50 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 4 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 20 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 40 ; id 26
+    d24 200 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 50 ; id 40
+    d24 0 ; id 41
+    d24 50 ; id 42
+    d24 50 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5ADB:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $41, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $05, $00, $00, $14, $00, $00, $14
-    ds $35, $00
-    db $32, $00, $00, $FA
-    ds $26, $00
-    db $32, $00, $00, $00, $00, $00, $64, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $32, $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $07 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList007::
+Data_0F2_5ADB:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 65 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 5 ; id 6
+    d24 20 ; id 7
+    d24 20 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 50 ; id 26
+    d24 250 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 50 ; id 40
+    d24 0 ; id 41
+    d24 100 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 50 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5B6B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $41, $00, $00, $EE, $02, $00, $2C, $01
-    ds $10, $00
-    db $1E
-    ds $2F, $00
-    db $32
-    ds $29, $00
-    db $32, $00, $00, $00, $00, $00, $64
-    ds $11, $00
+; E-0199 (derived: list for entry $08 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList008::
+Data_0F2_5B6B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 65 ; id 2
+    d24 750 ; id 3
+    d24 300 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 30 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 50 ; id 26
+    d24 0 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 50 ; id 40
+    d24 0 ; id 41
+    d24 100 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5BFB:: ; heuristic: target of a monotone pointer table; C0
-    ds $18, $00
-    db $14, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $DC, $05
-    ds $2B, $00
-    db $C8, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $03, $00, $00
-    db $00, $00, $B0, $04
-    ds $1C, $00
-    db $64, $00, $00, $00, $00, $00, $20, $4E, $00, $64, $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $09 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList009::
+Data_0F2_5BFB:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 0 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 20 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 1500 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 200 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 800 ; id 31
+    d24 0 ; id 32
+    d24 1200 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 0 ; id 41
+    d24 0 ; id 42
+    d24 100 ; id 43
+    d24 0 ; id 44
+    d24 20000 ; id 45
+    d24 100 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5C8B:: ; heuristic: target of a monotone pointer table; C0
-    ds $39, $00
-    db $10, $27, $00, $10, $27, $00, $10, $27, $00, $10, $27, $00, $10, $27, $00, $10
-    db $27
-    ds $16, $00
+; E-0199 (derived: list for entry $0A of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList00A::
+Data_0F2_5C8B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 0 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 10000 ; id 19
+    d24 10000 ; id 20
+    d24 10000 ; id 21
+    d24 10000 ; id 22
+    d24 10000 ; id 23
+    d24 10000 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 0 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
 
-Data_0F2_5CEB:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $4B, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $2D, $00, $00, $00, $00, $00, $00, $00, $00, $1E
-    ds $32, $00
-    db $2C, $01
-    ds $28, $00
-    db $1E, $00, $00, $96, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $32
-    db $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $0B of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList00B::
+Data_0F2_5CEB:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 75 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 45 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 30 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 300 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 30 ; id 41
+    d24 150 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 50 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5D7B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $32, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $2D, $00, $00, $00, $00, $00, $00, $00, $00, $1E
-    ds $32, $00
-    db $C8
-    ds $26, $00
-    db $64, $00, $00, $00, $00, $00, $64, $00, $00, $64, $00, $00, $00, $00, $00, $00
-    db $00, $00, $32, $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $0C of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList00C::
+Data_0F2_5D7B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 50 ; id 2
+    d24 0 ; id 3
+    d24 0 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 45 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 30 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 200 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 100 ; id 40
+    d24 0 ; id 41
+    d24 100 ; id 42
+    d24 100 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 50 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5E0B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $3C, $00, $00, $58, $02, $00, $FA
-    ds $44, $00
-    db $C8, $00, $00, $DC, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $78
-    ds $17, $00
-    db $64, $00, $00, $00, $00, $00, $64
-    ds $11, $00
+; E-0199 (derived: list for entry $0D of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList00D::
+Data_0F2_5E0B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 60 ; id 2
+    d24 600 ; id 3
+    d24 250 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 200 ; id 27
+    d24 1500 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 120 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 100 ; id 40
+    d24 0 ; id 41
+    d24 100 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5E9B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $4B, $00, $00, $EE, $02, $00, $2C, $01
-    ds $16, $00
-    db $E8, $03
-    ds $2E, $00
-    db $DC, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2C, $01
-    ds $16, $00
-    db $96, $00, $00, $00, $00, $00, $96, $00, $00, $64, $00, $00, $00, $00, $00, $00
-    db $00, $00, $32, $00, $00, $00, $00, $00
+; E-0199 (derived: list for entry $0E of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList00E::
+Data_0F2_5E9B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 75 ; id 2
+    d24 750 ; id 3
+    d24 300 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 1000 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 0 ; id 27
+    d24 1500 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 300 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 150 ; id 40
+    d24 0 ; id 41
+    d24 150 ; id 42
+    d24 100 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 50 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5F2B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $0F, $00, $00, $4B, $00, $00, $EE, $02, $00, $2C, $01, $00, $00
-    db $00, $00, $0F, $00, $00, $2D, $00, $00, $4B, $00, $00, $00, $00, $00, $1E
-    ds $32, $00
-    db $2C, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $64
-    ds $17, $00
-    db $96, $00, $00, $00, $00, $00, $96
-    ds $11, $00
+; E-0199 (derived: list for entry $0F of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList00F::
+Data_0F2_5F2B:: ; address name
+    d24 0 ; id 0
+    d24 15 ; id 1
+    d24 75 ; id 2
+    d24 750 ; id 3
+    d24 300 ; id 4
+    d24 0 ; id 5
+    d24 15 ; id 6
+    d24 45 ; id 7
+    d24 75 ; id 8
+    d24 0 ; id 9
+    d24 30 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 300 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 100 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 150 ; id 40
+    d24 0 ; id 41
+    d24 150 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_5FBB:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $0F, $00, $00, $4B, $00, $00, $EE, $02, $00, $00, $00, $00, $B8
-    db $0B, $00, $0F, $00, $00, $2D, $00, $00, $4B
-    ds $5C, $00
-    db $4C, $1D
-    ds $19, $00
+; E-0199 (derived: list for entry $10 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList010::
+Data_0F2_5FBB:: ; address name
+    d24 0 ; id 0
+    d24 15 ; id 1
+    d24 75 ; id 2
+    d24 750 ; id 3
+    d24 0 ; id 4
+    d24 3000 ; id 5
+    d24 15 ; id 6
+    d24 45 ; id 7
+    d24 75 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 0 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 0 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 7500 ; id 39
+    d24 0 ; id 40
+    d24 0 ; id 41
+    d24 0 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_604B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $4B, $00, $00, $00, $00, $00, $2C, $01
-    ds $13, $00
-    db $DC, $05
-    ds $31, $00
-    db $DC, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2C, $01, $00, $DC
-    db $05
-    ds $2B, $00
+; E-0199 (derived: list for entry $11 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList011::
+Data_0F2_604B:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 75 ; id 2
+    d24 0 ; id 3
+    d24 300 ; id 4
+    d24 0 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 1500 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 0 ; id 27
+    d24 1500 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 300 ; id 32
+    d24 1500 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 0 ; id 40
+    d24 0 ; id 41
+    d24 0 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_60DB:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $4B, $00, $00, $EE, $02, $00, $00, $00, $00, $D0
-    db $07
-    ds $43, $00
-    db $DC, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2C, $01, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $DC, $05, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $96, $00, $00, $00, $00, $00, $96
-    ds $11, $00
+; E-0199 (derived: list for entry $12 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList012::
+Data_0F2_60DB:: ; address name
+    d24 0 ; id 0
+    d24 0 ; id 1
+    d24 75 ; id 2
+    d24 750 ; id 3
+    d24 0 ; id 4
+    d24 2000 ; id 5
+    d24 0 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 0 ; id 27
+    d24 1500 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 300 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 1500 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 150 ; id 40
+    d24 0 ; id 41
+    d24 150 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
 
-Data_0F2_616B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $0F, $00, $00, $4B, $00, $00, $00, $00, $00, $2C, $01, $00, $00
-    db $00, $00, $0F
-    ds $3E, $00
-    db $2C, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2C
-    db $01
-    ds $16, $00
-    db $96, $00, $00, $00, $00, $00, $96
-    ds $11, $00
-    INCBIN "dwm2-cobi-us.gbc", $3CA1FB, $138
+; E-0199 (derived: list for entry $13 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList013::
+Data_0F2_616B:: ; address name
+    d24 0 ; id 0
+    d24 15 ; id 1
+    d24 75 ; id 2
+    d24 0 ; id 3
+    d24 300 ; id 4
+    d24 0 ; id 5
+    d24 15 ; id 6
+    d24 0 ; id 7
+    d24 0 ; id 8
+    d24 0 ; id 9
+    d24 0 ; id 10
+    d24 0 ; id 11
+    d24 0 ; id 12
+    d24 0 ; id 13
+    d24 0 ; id 14
+    d24 0 ; id 15
+    d24 0 ; id 16
+    d24 0 ; id 17
+    d24 0 ; id 18
+    d24 0 ; id 19
+    d24 0 ; id 20
+    d24 0 ; id 21
+    d24 0 ; id 22
+    d24 0 ; id 23
+    d24 0 ; id 24
+    d24 0 ; id 25
+    d24 0 ; id 26
+    d24 300 ; id 27
+    d24 0 ; id 28
+    d24 0 ; id 29
+    d24 0 ; id 30
+    d24 0 ; id 31
+    d24 300 ; id 32
+    d24 0 ; id 33
+    d24 0 ; id 34
+    d24 0 ; id 35
+    d24 0 ; id 36
+    d24 0 ; id 37
+    d24 0 ; id 38
+    d24 0 ; id 39
+    d24 150 ; id 40
+    d24 0 ; id 41
+    d24 150 ; id 42
+    d24 0 ; id 43
+    d24 0 ; id 44
+    d24 0 ; id 45
+    d24 0 ; id 46
+    d24 0 ; id 47
+
+; E-0199 (derived: list for entry $17 of ScreenNumberListTable; it runs to the next list)
+; record: 24-bit number
+ScreenNumberList017::
+Data_0F2_61FB:: ; address name
+    d24 1 ; id 0
+    d24 1 ; id 1
+    d24 1 ; id 2
+    d24 1 ; id 3
+    d24 1 ; id 4
+    d24 1 ; id 5
+    d24 1 ; id 6
+    d24 1 ; id 7
+    d24 1 ; id 8
+    d24 1 ; id 9
+    d24 1 ; id 10
+    d24 1 ; id 11
+    d24 1 ; id 12
+    d24 1 ; id 13
+    d24 1 ; id 14
+    d24 1 ; id 15
+    d24 1 ; id 16
+    d24 1 ; id 17
+    d24 1 ; id 18
+    d24 1 ; id 19
+    d24 1 ; id 20
+    d24 1 ; id 21
+    d24 1 ; id 22
+    d24 1 ; id 23
+    d24 1 ; id 24
+    d24 1 ; id 25
+    d24 1 ; id 26
+    d24 1 ; id 27
+    d24 1 ; id 28
+    d24 1 ; id 29
+    d24 1 ; id 30
+    d24 1 ; id 31
+    d24 1 ; id 32
+    d24 1 ; id 33
+    d24 1 ; id 34
+    d24 1 ; id 35
+    d24 1 ; id 36
+    d24 1 ; id 37
+    d24 1 ; id 38
+    d24 1 ; id 39
+    d24 1 ; id 40
+    d24 1 ; id 41
+    d24 1 ; id 42
+    d24 1 ; id 43
+    d24 1 ; id 44
+    d24 1 ; id 45
+    d24 1 ; id 46
+    d24 1 ; id 47
+    d24 1 ; id 48
+    d24 1 ; id 49
+    d24 1 ; id 50
+    d24 1 ; id 51
+    d24 1 ; id 52
+    d24 1 ; id 53
+    d24 1 ; id 54
+    d24 1 ; id 55
+    d24 1 ; id 56
+    d24 1 ; id 57
+    d24 1 ; id 58
+    d24 1 ; id 59
+    d24 1 ; id 60
+    d24 1 ; id 61
+    d24 1 ; id 62
+    d24 1 ; id 63
+    d24 1 ; id 64
+    d24 1 ; id 65
+    d24 1 ; id 66
+    d24 1 ; id 67
+    d24 1 ; id 68
+    d24 1 ; id 69
+    d24 1 ; id 70
+    d24 1 ; id 71
+    d24 1 ; id 72
+    d24 1 ; id 73
+    d24 1 ; id 74
+    d24 1 ; id 75
+    d24 1 ; id 76
+    d24 1 ; id 77
+    d24 1 ; id 78
+    d24 1 ; id 79
+    d24 1 ; id 80
+    d24 1 ; id 81
+    d24 1 ; id 82
+    d24 1 ; id 83
+    d24 1 ; id 84
+    d24 1 ; id 85
+    d24 1 ; id 86
+    d24 1 ; id 87
+    d24 1 ; id 88
+    d24 1 ; id 89
+    d24 1 ; id 90
+    d24 1 ; id 91
+    d24 1 ; id 92
+    d24 1 ; id 93
+    d24 1 ; id 94
+    d24 1 ; id 95
+    d24 1 ; id 96
+    d24 1 ; id 97
+    d24 1 ; id 98
+    d24 1 ; id 99
+    d24 1 ; id 100
+    d24 1 ; id 101
+    d24 1 ; id 102
+    d24 1 ; id 103
 
 ; a bare ret (E-0116)
 ; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_1B_Case01_Case05)

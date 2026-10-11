@@ -12537,6 +12537,66 @@
         }
       ],
       "note": "E-0206 (C1: ScriptCommandF6_Run_Case10_Case01_Sub01 reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174)."
+    },
+    {
+      "bank": "19",
+      "addr": "741C",
+      "label": "SpeciesNewRecordByteTable",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "value 1-7 stored in a new monster record"
+        }
+      ],
+      "note": "E-0208 (C1: while GameMode4_Init_Sub01_Sub07_Sub01 builds a new monster record, the code reads the byte at $741C + wSpeciesId and stores it at the next record byte, right after the zero that follows the copied name; 384 bytes, one per species, values 1-7; what the field means is not read)."
+    },
+    {
+      "bank": "30",
+      "addr": "55F3",
+      "label": "SkillAIBaseWeightTable",
+      "count": 201,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "decimal": true,
+          "name": "base weight (0 = none)"
+        }
+      ],
+      "note": "E-0208 (C1: AddSkillBaseWeightAndLoadSkill (from ScoreSkillForAI) adds the word at $55F3 + 2 * skill to the score at DE when it is non-zero, then Func_030_4CDB adds a random adjustment; 201 words end at the far-pointer table at $5785; most weights are 50-110)."
+    },
+    {
+      "bank": "F2",
+      "addr": "5643",
+      "label": "ScreenNumberListTable",
+      "count": 24,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of 24-bit numbers for this wScreenTableIndex",
+          "reason": "screen number list"
+        }
+      ],
+      "lists": {
+        "until": "6333",
+        "size": 3,
+        "label": "ScreenNumberList",
+        "fields": [
+          {
+            "type": "u24",
+            "size": 3,
+            "name": "24-bit number"
+          }
+        ],
+        "record": "24-bit number"
+      },
+      "note": "E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ScriptCommandE2_Run_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed)."
     }
   ]
 }

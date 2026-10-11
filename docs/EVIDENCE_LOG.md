@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0208 — Species record byte, AI skill weights, screen number lists
+
+- Kind: OBSERVATION (reading; C1).
+- **SpeciesNewRecordByteTable (19:$741C).** 384 bytes, values 1-7. GameMode4_Init_Sub01_Sub07_Sub01 stores the byte at $741C + wSpeciesId into a new monster record, right after the zero that follows the copied name. It is not the family, which FamilyForSpeciesIdArg6 computes from id ranges.
+- **SkillAIBaseWeightTable (30:$55F3).** 201 words. AddSkillBaseWeightAndLoadSkill (from ScoreSkillForAI) adds the word at $55F3 + 2 * skill to the score when it is non-zero. The table ends at the far-pointer table at $5785.
+- **ScreenNumberListTable (F2:$5643).** 24 words indexed by wScreenTableIndex (ReadF2FarPointerForScreenTableIndex in bank $1C). Each points at a list of 24-bit numbers that Jump_01C_4AFA indexes by 3 * entry and shows in digits.
+  - The lists (ScreenNumberListNN, `lists` with `until`) run contiguously to ReturnStub_6333.
+  - They may be prices; that is not confirmed, hence the neutral name.
+- Binary verification: build/run237 PASS, 0 differing bytes; tests OK.
+
 ### E-0207 — `rst $00` tables longer than 128 words, with unused indexes
 
 - Kind: TOOL (C1 per table).
