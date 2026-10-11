@@ -32,7 +32,7 @@ Jump_01A_401B::
 
 ; like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead
 ; 17 call sites from 16 routines (e.g. DebugSkillViewer_Update, AIScore_TakeMagic_Sub01_Sub01, SlotCSkillFlagMatchD, SlotHasSkillWithFlagD, ...)
-; reads: wRecordBuffer, wD868, wD869, wD86A, wD86B
+; reads: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 LoadSkillRecordPart::
 Func_01A_4022:: ; address name
     ld a, [wRecordBuffer]
@@ -50,13 +50,13 @@ Func_01A_4022:: ; address name
     ld a, h
     adc a, $40
     ld h, a
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     add_a_to_hl
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     ld b, a
-    ld a, [wD86A]
+    ld a, [wBattleArg2]
     ld e, a
-    ld a, [wD86B]
+    ld a, [wBattleArg3]
     ld d, a
 
 Jump_01A_4050::
@@ -68,11 +68,11 @@ Jump_01A_4050::
     ret
 
 Jump_01A_4057::
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     ld b, a
-    ld a, [wD86A]
+    ld a, [wBattleArg2]
     ld l, a
-    ld a, [wD86B]
+    ld a, [wBattleArg3]
     ld h, a
 
 Jump_01A_4063::
@@ -88,8 +88,8 @@ Jump_01A_4063::
 ; only called from ComputeDamageEstimateForAction (E-0047)
 ; 1 call site from 1 routine (e.g. ComputeDamageEstimateForAction)
 ; reads: wBattleActionId, wLinkMode, wBattleActor
-; writes: wBattleDamageLo, wD873
-; points at: wDA53
+; writes: wBattleDamageLo, wBattleDamageHi
+; points at: wSlotAIMode
 ComputeDamageEstimateForAction_Sub01::
 Func_01A_408F:: ; address name
     ld a, [wBattleActionId]
@@ -116,7 +116,7 @@ Jump_01A_40B6::
     add hl, bc
     ld a, [wBattleActor]
     push hl
-    ld hl, wDA53
+    ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -129,7 +129,7 @@ Jump_01A_40CB::
     ld a, [hl+]
     ld [wBattleDamageLo], a
     ld a, [hl]
-    ld [wD873], a
+    ld [wBattleDamageHi], a
     ret
 
 ; E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10).
@@ -817,8 +817,8 @@ Data_01A_5F9C:: ; heuristic: target of a monotone pointer table; C0
 
 ; copies the record's eight skills to wD09D and, for each skill in Data_01A_4FF8, checks the level and stat requirements; learnable skills go into the list (E-0131)
 ; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_Sub01)
-; reads: wD86A, wD86B
-; writes: wD86C
+; reads: wBattleArg2, wBattleArg3
+; writes: wNameSlot
 ; points at: wWorkBuf
 CheckSkillsLearnableAtLevel::
 Func_01A_5FA7:: ; address name
@@ -826,10 +826,10 @@ Func_01A_5FA7:: ; address name
     ld bc, $0038
     ld a, $FF
     call FillBytes
-    ld a, [wD86A]
+    ld a, [wBattleArg2]
     add a, $0E
     ld e, a
-    ld a, [wD86B]
+    ld a, [wBattleArg3]
     adc a, $00
     ld d, a
     ld hl, wWorkBuf
@@ -843,16 +843,16 @@ Jump_01A_5FC3::
     inc de
     dec b
     jr nz, Jump_01A_5FC3
-    ld a, [wD86A]
+    ld a, [wBattleArg2]
     add a, $17
     ld e, a
-    ld a, [wD86B]
+    ld a, [wBattleArg3]
     adc a, $00
     ld d, a
     ld hl, Data_01A_4FF8
     ld c, $00
     ld a, $04
-    ld [wD86C], a
+    ld [wNameSlot], a
 
 Jump_01A_5FE2::
     push de
@@ -997,10 +997,10 @@ Jump_01A_6094::
     pop de
     pop bc
     push bc
-    ld a, [wD86A]
+    ld a, [wBattleArg2]
     add a, $0E
     ld l, a
-    ld a, [wD86B]
+    ld a, [wBattleArg3]
     adc a, $00
     ld h, a
     ld b, $08
@@ -1029,10 +1029,10 @@ Jump_01A_60B9::
     push bc
     dec hl
     ld e, [hl]
-    ld a, [wD86A]
+    ld a, [wBattleArg2]
     add a, $0E
     ld l, a
-    ld a, [wD86B]
+    ld a, [wBattleArg3]
     adc a, $00
     ld h, a
     ld b, $08
@@ -1087,11 +1087,11 @@ Jump_01A_60E8::
 
 ; for record wD868 finds the skills of Data_01A_4FF8 not yet known whose level and stat requirements its stats now meet (E-0131)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case03_Case01)
-; reads: wD868, hTemp6
+; reads: wBattleArg0, hTemp6
 ; writes: hTemp6, hTemp3, hTemp4, hTemp5
 FindNewlyLearnableSkills::
 Func_01A_60F1:: ; address name
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld c, $56
     call SRAMRecordAddressMapped
     ld d, h
@@ -1750,7 +1750,7 @@ Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; for record wD869 below its level cap: computes the stat gains from its species growth rows (table $6616) into wD095-wD09A (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_031_67AA_Case02_Case01, Func_031_67AA_Case07)
-; reads: wD869, wSpeciesRecord
+; reads: wBattleArg1, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wLevelUpGains
 ; points at: wLevelUpGains
 ComputeLevelUpStatGainsForWD869::
@@ -1759,7 +1759,7 @@ Func_01A_6418:: ; address name
     ld bc, $0008
     xor a, a
     call FillBytes
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     ld c, $0B
     call SRAMRecordAddress
     push hl
@@ -1817,13 +1817,13 @@ Jump_01A_64A1::
 
 ; only called from ComputeLevelUpStatGainsForWD869 (E-0047)
 ; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
-; reads: wD869, wGrowthTemp0
+; reads: wBattleArg1, wGrowthTemp0
 ; writes: wGrowthTemp0, wGrowthTemp1
 ; points at: wLevelUpGains
 ComputeLevelUpStatGainsForWD869_Sub01::
 Func_01A_64A2:: ; address name
     push de
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     ld c, $A4
     call SRAMRecordAddress
     ld bc, $0000
@@ -2002,11 +2002,11 @@ Jump_01A_6585::
 
 ; limits each gain in wD095-wD09A so the record's stat words from field $5D stay at or below 999 (E-0127)
 ; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
-; reads: wD869, wLevelUpGains
+; reads: wBattleArg1, wLevelUpGains
 ; writes: wLevelUpGains
 ClampLevelUpGainsTo999::
 Func_01A_6587:: ; address name
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     ld c, $5D
     call SRAMRecordAddress
     ld a, [wLevelUpGains]

@@ -2,44 +2,28 @@
 ; address names (no meaning claimed); any other name cites its evidence.
 
 ; SRAM ($A000-$BFFF)
-DEF sA000 EQU $A000
-DEF sA00D EQU $A00D
-DEF sA00F EQU $A00F
-DEF sA01E EQU $A01E
-DEF sA029 EQU $A029
-DEF sA040 EQU $A040
-DEF sA06F EQU $A06F
-DEF sA070 EQU $A070
-DEF sA08E EQU $A08E
-DEF sA099 EQU $A099
-DEF sA0A5 EQU $A0A5
-DEF sAD71 EQU $AD71
-DEF sAF36 EQU $AF36
-DEF sAFAF EQU $AFAF
-DEF sB356 EQU $B356
-DEF sB3C5 EQU $B3C5
-DEF sB535 EQU $B535
-DEF sB58E EQU $B58E
-DEF sB58F EQU $B58F
-DEF sBA73 EQU $BA73
-DEF sBB00 EQU $BB00
-DEF sBB01 EQU $BB01
-DEF sBB07 EQU $BB07
-DEF sBB0F EQU $BB0F
-DEF sBC00 EQU $BC00
-DEF sBC01 EQU $BC01
-DEF sBC02 EQU $BC02
-DEF sBC03 EQU $BC03
-DEF sBC0A EQU $BC0A
-DEF sBD30 EQU $BD30
-DEF sBD36 EQU $BD36
-DEF sBD3A EQU $BD3A
-DEF sBD97 EQU $BD97
-DEF sBE0D EQU $BE0D
-DEF sBEC0 EQU $BEC0
-DEF sBEF3 EQU $BEF3
-DEF sBF98 EQU $BF98
-DEF sBF99 EQU $BF99
+DEF sRecords EQU $A000 ; SRAM bank 0: the monster records, $A5 bytes each from here (SRAMRecordAddress, LoadSRAMRecordByte); in SRAM bank 1 the extra record $1D sits here (RecordAddressWithBank1Slot1D) (E-0137)
+DEF sBank1Records EQU $A06F ; SRAM bank 1: compact $6F-byte records (SRAMBank1RecordAddress); the bank-1 checksum covers $29A * 10 bytes from here (E-0137)
+DEF sRecord1 EQU $A0A5 ; second $A5-byte record (DeleteSRAMRecordAndCompact moves the records from here down) (E-0137)
+DEF sRecordBackup EQU $AD71 ; SRAM bank 1: backup of the compact records and the bank-1 record (BackupRecordsToSRAMBank1, RestoreRecordsFromSRAMBank1Backup) (E-0137)
+DEF sCompactRecords EQU $B356 ; SRAM bank 0: 29 compact $6F-byte records after the 30 full records (RecordAddressWithBank1Slot1D, CountFlaggedSRAMRecords) (E-0137)
+DEF sBank1Checksum EQU $BA73 ; SRAM bank 1: complement of the record sum plus $4321 (ComputeSRAMBank1RecordChecksum, VerifySaveBank1Checksum) (E-0137)
+DEF sSaveSignature EQU $BB00 ; SRAM bank 1: $55 when a save exists (CheckSaveData) (E-0137)
+DEF sSaveData EQU $BB01 ; SRAM bank 1: the saved blocks in order: hFF8A ($0E bytes), wPlayerName block ($291), wStoryFlags ($6B), wKeyWorldSlot block ($B5) (SaveGameToSRAMWithChecksum) (E-0137)
+DEF sSavedMapId EQU $BB07 ; saved hMapId (sSaveData + $6) (E-0137)
+DEF sSavedPlayerName EQU $BB0F ; saved wPlayerName (start of the $291-byte block) (E-0137)
+DEF sSavedPartyCount EQU $BC00 ; saved wPartyCount (E-0137)
+DEF sSavedPartyList EQU $BC01 ; saved wPartyList (party record indexes) (E-0137)
+DEF sSavedKeyList EQU $BC0A ; saved wKeyList (4-byte key entries) (E-0137)
+DEF sSavedPlayTime EQU $BD30 ; saved play time from wPlayFrames (5 bytes) (E-0137)
+DEF sSavedKeyIndex EQU $BD36 ; saved wCurrentKeyIndex (E-0137)
+DEF sSavedArenaByte37 EQU $BD3A ; saved wArenaByte37 (E-0137)
+DEF sSavedLinkByte94 EQU $BD97 ; saved wLinkByte94 (E-0137)
+DEF sSavedMapType EQU $BE0D ; saved wMapType (the title screen shows a key name for special maps) (E-0137)
+DEF sSavedCE9BBlock EQU $BEC0 ; SRAM bank 1: copy of the $D8-byte block at wGM2TimerFrames (SaveWCE9BBlockToSRAMBank1) (E-0137)
+DEF sSavedGM2Mode EQU $BEF3 ; saved wGM2Mode (sSavedCE9BBlock + $33) (E-0137)
+DEF sSaveChecksumLo EQU $BF98 ; SRAM bank 1: low byte of the saved blocks sum + $9753 (E-0137)
+DEF sSaveChecksumHi EQU $BF99 ; high byte of that checksum (E-0137)
 
 ; WRAM ($C000-$DFFF)
 DEF wShadowOAM EQU $C000 ; shadow OAM: 40 four-byte sprite entries that the OAM DMA routine copies from $C000 (OamDmaRoutineTemplate starts DMA with source $C0); ClearShadowOAM clears its $A0 bytes (E-0132)
@@ -124,7 +108,7 @@ DEF wTextRepeatCount EQU $C53B ; countdown of a repeated text control (E-0133)
 DEF wTextDelayCounter EQU $C53C ; countdown before the next glyph is drawn (E-0133)
 DEF wStringDestLo EQU $C53D ; low byte of the destination CopyStringToBuffer writes the string to (E-0059) (reading (E-0059))
 DEF wStringDestHi EQU $C53E ; high byte of the destination CopyStringToBuffer writes the string to (E-0059) (reading (E-0059))
-DEF wC53F EQU $C53F
+DEF wPlayerNameText EQU $C53F ; the player name copied with a $F0 terminator for text output (Func_000_2950_Case16) (E-0137)
 DEF wTextLineCount EQU $C54F ; lines drawn since the window was cleared (E-0133)
 DEF wTextLastChar EQU $C550 ; last string byte handled ($E6 and $FF are special) (E-0133)
 DEF wTextYesNoResult EQU $C552 ; result of a text yes/no prompt (0 = first choice); AcknowledgeTextPrompt clears it, StartChoiceMessageByWC552 branches on it (E-0133)
@@ -149,8 +133,6 @@ DEF wFadeState EQU $C56C ; palette fade state set by StartPaletteFade; GameFrame
 DEF wFadeMode EQU $C56D ; fade mode bits: bit 7 = toward black, bits 0-2 select which palettes fade (7 = all) (E-0133)
 DEF wFadeMask EQU $C56E ; fade selection bits ($1F = all); bit 1 also picks the step size (E-0133)
 DEF wFadeDMGPalettes EQU $C56F ; three DMG palette bytes the fade lightens (LightenSelectedDMGPalettes) (E-0133)
-DEF wC570 EQU $C570
-DEF wC571 EQU $C571
 DEF wFadeLevel EQU $C572 ; the 5-bit level the fade routines apply to each colour component (E-0076) (reading (E-0076))
 DEF wFadeDelay EQU $C573 ; frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_Sub01 and reloaded by StepCGBFade (E-0077) (reading (E-0077))
 DEF wFadeDelayCounter EQU $C574 ; counts down to the next CGB fade step (StepCGBFade) (E-0077) (reading (E-0077))
@@ -449,7 +431,7 @@ DEF wKeyWorldFloor EQU $CC45 ; floor or room index within the special map (E-013
 DEF wKeyWorldByte46 EQU $CC46 ; key-world byte (E-0134)
 DEF wMapObjectCount EQU $CC47 ; number of 8-byte map objects at wMapObjects (E-0134)
 DEF wMapObjects EQU $CC48 ; map objects (8 bytes each) of town and key-world maps (E-0134)
-DEF wCCCD EQU $CCCD
+DEF wNameBufUnknown EQU $CCCD ; name buffer picked when a name starts with the $98 placeholder (PickNameBufferForFirstByte) (E-0137)
 DEF wScreenTriggerCount EQU $CCE9 ; number of 4-byte screen trigger entries at wScreenTriggers (FindTriggerEntryForCurrentScreen_WCCEB) (E-0135)
 DEF wWarpPending EQU $CCEA ; set by the warp routines (CheckWarpAtPlayer, ScriptWarpToMapFromBytesAtDE); read by the transition state (E-0135)
 DEF wScreenTriggers EQU $CCEB ; screen trigger entries (4 bytes each: flags, cell, ...) (E-0135)
@@ -494,11 +476,11 @@ DEF wRollState EQU $CEC1 ; state byte of the bank-$F0 roll (RollWCEC2ChanceAndRu
 DEF wRollCounter EQU $CEC2 ; counter for the bank-$F0 roll (up to $0F) (E-0135)
 DEF wFamilyScores EQU $CEC3 ; 11 scores (one per family) ranked by RankWCEC3ScoresIntoWCF7E (E-0135)
 DEF wGM2Mode EQU $CECE ; mode byte of the $CE9B block (0 or 1 allow saving it) (E-0135)
-DEF wCECF EQU $CECF
+DEF wTopSpeciesName EQU $CECF ; name of the picked species, copied from wNameGlyphBuf (GameMode5_Update_Case07_Sub01_Sub04) (E-0137)
 DEF wTopSpeciesLo EQU $CED9 ; species picked from the ranking, low byte (E-0135)
 DEF wTopSpeciesHi EQU $CEDA ; species picked from the ranking, high byte (E-0135)
 DEF wTopSpeciesByte EQU $CEDB ; byte stored with the picked species (E-0135)
-DEF wCEDC EQU $CEDC
+DEF wTopSpeciesByteDC EQU $CEDC ; byte passed as wArg2 with the picked species (E-0137)
 DEF wGM2Byte EQU $CEE7 ; byte of the $CE9B block (E-0135)
 DEF wTopSpeciesGrowth EQU $CF0A ; species growth bytes copied by LoadWCED9SpeciesStatsToWCF0A ($CF0A-$CF0C) (E-0135)
 DEF wTopStat0 EQU $CF29 ; stat copied from wCF2B (E-0135)
@@ -739,226 +721,162 @@ DEF wAreaGraphicsIndex EQU $D7FC ; area graphics entry (LoadAreaGraphicsForWD7FC
 DEF wScriptInDataBank EQU $D7FD ; non-zero when the script bytes are read from the bank in wDataBank (reading + execution (E-0038))
 DEF wDataBank EQU $D7FE ; ROM bank used by Func_000_0B6C when reading a word through HL (E-0014)
 DEF wRecordCapacity EQU $D7FF ; number of SRAM records the farm holds (LoadWD7FFFromWC7C7Table); also reused as a count by script command $F7 (E-0136)
-DEF wD800 EQU $D800
-DEF wD801 EQU $D801
-DEF wD802 EQU $D802
-DEF wD803 EQU $D803
-DEF wD804 EQU $D804
-DEF wD805 EQU $D805
-DEF wD806 EQU $D806
-DEF wD807 EQU $D807
-DEF wD808 EQU $D808
-DEF wD80A EQU $D80A
-DEF wD80B EQU $D80B
+DEF wEffectAnimState EQU $D800 ; state of the battle effect animation (RunBattleEffectAnimation) (E-0137)
+DEF wEffectTileOffset EQU $D801 ; tile offset of the effect sprite (DrawEffectSpriteAtWD804_*) (E-0137)
+DEF wEffectId EQU $D802 ; battle effect to show; $FF = none (ResetEffectStateForAction) (E-0137)
+DEF wEffectRoutine EQU $D803 ; effect routine run every fifth frame (RunWD803EffectEvery5Frames, table of 14) (E-0137)
+DEF wEffectSpriteX EQU $D804 ; X origin of the effect sprite (SetEffectSpriteXForTargets) (E-0137)
+DEF wEffectStep EQU $D805 ; effect step (RunWD805Step); also the per-target X list and the row width of CopyVRAMRectToBuffer (E-0137)
+DEF wEffectByte06 EQU $D806 ; effect animation work byte (E-0137)
+DEF wEffectCounter EQU $D807 ; effect animation counter (E-0137)
+DEF wSlotsOccupiedFlag EQU $D808 ; result of AllThreeSlotsFromCOccupied (E-0137)
+DEF wSideFlags0 EQU $D80A ; flags of side 0 (bit 3 checked by SkillPassesSideFlagBit3Check) (E-0137)
+DEF wSideFlags1 EQU $D80B ; flags of side 1 (E-0137)
 DEF wBattleStatus EQU $D80C ; 9-byte status record per slot (AddAx9ToHL), cleared when the battler is defeated (reading (E-0043))
-DEF wD80D EQU $D80D
-DEF wD80E EQU $D80E
-DEF wD80F EQU $D80F
-DEF wD810 EQU $D810
-DEF wD811 EQU $D811
-DEF wD812 EQU $D812
-DEF wD813 EQU $D813
-DEF wD814 EQU $D814
-DEF wD815 EQU $D815
-DEF wD854 EQU $D854
-DEF wD864 EQU $D864
-DEF wD866 EQU $D866
-DEF wD867 EQU $D867
-DEF wD868 EQU $D868
-DEF wD869 EQU $D869
-DEF wD86A EQU $D86A
-DEF wD86B EQU $D86B
-DEF wD86C EQU $D86C
-DEF wD86D EQU $D86D
-DEF wD86E EQU $D86E
-DEF wD86F EQU $D86F
-DEF wD871 EQU $D871
+DEF wBattleStatus1 EQU $D80D ; status byte 1 of slot 0; byte 1 of every slot is at wBattleStatus1 + 9 * slot (E-0137)
+DEF wBattleStatus2 EQU $D80E ; status byte 2 (array base, stride 9) (E-0137)
+DEF wBattleStatus3 EQU $D80F ; status byte 3 (array base, stride 9) (E-0137)
+DEF wBattleStatus4 EQU $D810 ; status byte 4 (array base, stride 9) (E-0137)
+DEF wBattleStatus5 EQU $D811 ; status byte 5 (array base, stride 9) (E-0137)
+DEF wBattleStatus6 EQU $D812 ; status byte 6 (array base, stride 9) (E-0137)
+DEF wBattleStatus7 EQU $D813 ; status byte 7 (array base, stride 9) (E-0137)
+DEF wBattleStatus8 EQU $D814 ; status byte 8 (array base, stride 9; RollChanceVsTargetWDA72Byte5Bits23) (E-0137)
+DEF wSlotFlags854 EQU $D854 ; per-slot flag bytes (ResolveStepFlagBit7Effect, BattleFight_Step0_Sub01) (E-0137)
+DEF wSlotPairBytes EQU $D864 ; bytes indexed by the actor (ActionEffect_SuckAll, RunBattleActions_Case09_Case00) (E-0137)
+DEF wAllMPSpentLo EQU $D866 ; MP taken by a skill whose cost is $FF, low byte (PayActorMPCost; read by MegaMagic) (E-0137)
+DEF wAllMPSpentHi EQU $D867 ; that MP, high byte (E-0137)
+DEF wBattleArg0 EQU $D868 ; argument byte: start offset for LoadSkillRecordPart, record index for the level-up routines, a flag elsewhere (E-0137)
+DEF wBattleArg1 EQU $D869 ; argument byte: byte count for LoadSkillRecordPart, record index for ApplyLevelUpToRecordWD869 (E-0137)
+DEF wBattleArg2 EQU $D86A ; argument byte: destination pointer low byte (LoadSkillRecordPart), word accumulator (E-0137)
+DEF wBattleArg3 EQU $D86B ; argument byte: destination pointer high byte (E-0137)
+DEF wNameSlot EQU $D86C ; slot whose name is copied to wC130 (CopyTargetNameToWC130) (E-0137)
+DEF wSlotChoices EQU $D86D ; up to three slot numbers picked from at random (PickRandomEntryOfWD86D) (E-0137)
+DEF wLoadSlot EQU $D871 ; slot being loaded from a battler record or weighted by the AI (StoreBCAtWordEntryWD871) (E-0137)
 DEF wBattleDamageLo EQU $D872 ; low byte of the damage ApplyDamageToTarget subtracts (wD873 is the high byte) (reading (E-0043))
-DEF wD873 EQU $D873
-DEF wD874 EQU $D874
-DEF wD875 EQU $D875
-DEF wD876 EQU $D876
-DEF wD877 EQU $D877
-DEF wD878 EQU $D878
-DEF wD879 EQU $D879
-DEF wD87A EQU $D87A
-DEF wD87B EQU $D87B
-DEF wD87C EQU $D87C
-DEF wD87D EQU $D87D
-DEF wD87E EQU $D87E
-DEF wD87F EQU $D87F
-DEF wD880 EQU $D880
-DEF wD88B EQU $D88B
-DEF wD88C EQU $D88C
-DEF wD88D EQU $D88D
-DEF wD88F EQU $D88F
-DEF wD890 EQU $D890
-DEF wD891 EQU $D891
-DEF wD892 EQU $D892
-DEF wD893 EQU $D893
-DEF wD894 EQU $D894
-DEF wD895 EQU $D895
-DEF wD89E EQU $D89E
-DEF wD89F EQU $D89F
-DEF wD8A0 EQU $D8A0
-DEF wD8A1 EQU $D8A1
-DEF wD8A2 EQU $D8A2
-DEF wD8A3 EQU $D8A3
+DEF wBattleDamageHi EQU $D873 ; high byte of the damage word (wBattleDamageLo is the low byte) (E-0137)
+DEF wTargetEstimates EQU $D874 ; four words: HP + DEF estimates of target slots (StoreSlotHPPlusDEFToWD874, PickWeakestEstimatedTarget) (E-0137)
+DEF wEffectTemp0 EQU $D876 ; effect work byte (ResolveStep0EEffect, Meditate) (E-0137)
+DEF wEffectTemp1 EQU $D877 ; effect work byte (ResolveStep0EEffect, Meditate) (E-0137)
+DEF wEffectTemp2 EQU $D878 ; effect work byte (Meditate) (E-0137)
+DEF wEffectTemp3 EQU $D879 ; effect work byte (Meditate) (E-0137)
+DEF wBattleTemp7A EQU $D87A ; battle work byte (RunBattleCommandEntry, CopyBattlerNameToHL) (E-0137)
+DEF wBattleTemp7B EQU $D87B ; battle work byte (RunBattleCommandEntry, CopyBattlerNameToHL) (E-0137)
+DEF wBattleTemp7C EQU $D87C ; battle work byte (CopyBattlerNameToHL) (E-0137)
+DEF wBattleTemp7D EQU $D87D ; battle work byte (BattleEnd_Step3, ChooseTarget_Heal_5593) (E-0137)
+DEF wBattleTemp7E EQU $D87E ; battle work byte (BattleEnd_Step3) (E-0137)
+DEF wBattleTemp7F EQU $D87F ; battle work byte (BattleEnd_Step3, BiAttack, EstimateAndPickWeakestTarget) (E-0137)
+DEF wBattleTemp80 EQU $D880 ; battle work byte (BattleEnd_Step3, BiAttack) (E-0137)
+DEF wSpeciesGroups EQU $D88B ; targets grouped by shared species (GroupTargetsBySpeciesToWD88B; bit 7 marks a group) (E-0137)
+DEF wBattlePartyCount EQU $D88F ; number of party monsters in the battle (RemovePartyMemberMarkedFF; CopyRectRecordForWD88F) (E-0137)
+DEF wBattleFoeCount EQU $D890 ; number of foe monsters, 1-3 (LayoutTileBlocksForWD890Count, SetEffectSpriteXForTargets) (E-0137)
+DEF wBattleTurn EQU $D891 ; battle turn counter (BattlePhase0_Step3; LinkRuleCheckWD04BTurnLimit) (E-0137)
+DEF wBattleFlag92 EQU $D892 ; battle flag (BattleFight_Step0_Sub01, AllThreeSlotsFromCOccupied) (E-0137)
+DEF wBattleFlag93 EQU $D893 ; battle flag (BattleFight_Step0_Sub01, SetResolveStep0A) (E-0137)
+DEF wBattleEndFlag EQU $D894 ; set with message $98 (SetWD894AndMessage98); read at the battle end (E-0137)
+DEF wActionQueue EQU $D895 ; 8-byte queue of slots waiting to act ($FF = empty; RemoveCFromWD895Queue) (E-0137)
+DEF wActionQueuePos EQU $D89E ; position in wActionQueue (E-0137)
+DEF wBattleMeter EQU $D89F ; 16-bit battle meter: each action adds an amount, capped at 1800 (AddHLToWD89FCappedAt1800, SubtractHLFromWD89FFloored) (E-0137)
+DEF wBattleInitA1 EQU $D8A1 ; set by GameMode4_Init_Sub01, read at the battle end (E-0137)
+DEF wBattleInitA2 EQU $D8A2 ; set by GameMode4_Init_Sub01 (E-0137)
+DEF wBattleInitA3 EQU $D8A3 ; set by GameMode4_Init_Sub01 (E-0137)
 DEF wBattleActor EQU $D8A4 ; slot number of the battler whose turn it is: indexes MP arrays and status records in the battle code (reading (E-0043))
 DEF wBattleTarget EQU $D8A5 ; slot number of the battler an action is applied to (ApplyDamageToTarget, DefeatTarget) (reading (E-0043))
 DEF wBattleActionId EQU $D8A6 ; id of the action being resolved; the resolve steps compare it with fixed values ($13-$15, $79, $91, $D6, $D7, $DC), some above the SkillTable range of 175, so it is an action number rather than a skill index (reading (E-0045))
-DEF wD8A7 EQU $D8A7
-DEF wD8AF EQU $D8AF
-DEF wD8B7 EQU $D8B7
-DEF wD8BB EQU $D8BB
+DEF wSlotDamageFlags EQU $D8A7 ; per-slot flags: bit 0 multiplies some damage (MultiplyDamageBy50IfWD8A7Bit0, AttackDamageTimes1_5IfWD8A7Bit0) (E-0137)
+DEF wSlotNameSuffix EQU $D8AF ; per-slot byte: bit 0 picks the letter appended to a repeated monster name (CopyBattleMonsterNameWithLetterSuffix) (E-0137)
+DEF wBattleLevel EQU $D8B7 ; level of each battle slot (DrawSlotLevel_BankA0, DrainTargetMPAmount) (E-0137)
 DEF wBattleHP EQU $D8BF ; current HP of the 8 battle slots as 16-bit words (party in slots 0-2, a foe in slot 4); the first value of the party panels; a defeated foe's word fell from 20 to 0 on the emulator (execution (E-0042))
 DEF wBattleMaxHP EQU $D8CF ; maximum HP of the 8 battle slots (the foe's word stayed 25 when its current HP fell to 0) (execution (E-0042))
 DEF wBattleMP EQU $D8DF ; current MP of the 8 battle slots (the values the party panels show as M) (execution (E-0042))
 DEF wBattleMaxMP EQU $D8EF ; maximum MP of the 8 battle slots, by symmetry with wBattleMaxHP (execution (E-0042))
-DEF wD8F0 EQU $D8F0
 DEF wBattleATK EQU $D8FF ; attack of the 8 battle slots: ComputeBasicDamage reads the actor's word from it and the defence array for the target; 8 words, party in slots 0-2 (reading (E-0043))
 DEF wBattleDEF EQU $D90F ; defence of the 8 battle slots; RecomputeBattler (Func_032_5BE8) fills it from GetBaseDEF (reading (E-0043))
 DEF wBattleAGL EQU $D91F ; agility of the 8 battle slots; Func_032_5BE8 fills it from GetBaseAGL (reading (E-0043))
 DEF wBattleINT EQU $D92F ; intelligence of the 8 battle slots, the array after wBattleAGL (assumed) (reading (E-0043))
-DEF wD93F EQU $D93F
-DEF wD94F EQU $D94F
+DEF wBattleWordArray3F EQU $D93F ; word per slot after wBattleINT (ActorWD93FBand, AddActorWD93FDiv16ToWD86A) (E-0137)
+DEF wBattleBytes4F EQU $D94F ; bytes indexed by 3 * slot (ActionEffect_ActionB0, ActionEffect_ActionC8) (E-0137)
 DEF wBattleMonsterId EQU $D958 ; word per battle slot: the monster id (the species-record and monster-name number; CopyMonsterNameOfWDAABSlotToDE, GetSlotSpeciesFamily) (E-0069) (reading + data (E-0069))
-DEF wD960 EQU $D960
-DEF wD961 EQU $D961
-DEF wD962 EQU $D962
-DEF wD963 EQU $D963
-DEF wD964 EQU $D964
-DEF wD965 EQU $D965
+DEF wBattlePictureIds EQU $D960 ; three monster ids whose pictures the battle intro shows (LoadBattleMonsterPictureAttributes, BattlePhase0_Step2) (E-0137)
 DEF wSlotPersonalityHi EQU $D968 ; first of three byte arrays (8 slots each) graded into the personality index with weight 9 by PersonalityIndexOfSlot (reading)
 DEF wSlotPersonalityMid EQU $D970 ; second array, weight 3 (reading)
 DEF wSlotPersonalityLo EQU $D978 ; third array, weight 1 (reading)
-DEF wD980 EQU $D980
-DEF wD981 EQU $D981
-DEF wD982 EQU $D982
-DEF wD988 EQU $D988
-DEF wD989 EQU $D989
-DEF wD999 EQU $D999
-DEF wD9A9 EQU $D9A9
-DEF wD9C9 EQU $D9C9
-DEF wD9D9 EQU $D9D9
-DEF wD9E9 EQU $D9E9
-DEF wDA08 EQU $DA08
+DEF wSlotTrait EQU $D980 ; per-slot AI trait byte (RollWD980LowFlag80) (E-0137)
+DEF wBattleSkillsPrefix EQU $D988 ; byte before wBattleSkills, indexed by 16 * slot (E-0137)
+DEF wBattleSkills EQU $D989 ; skills of the 8 battle slots, 16 bytes each (8 skill numbers at even offsets; SlotHasSkillWithFlagD) (E-0137)
 DEF wBattleActionChoice EQU $DA1C ; word per slot: byte 0 is the chosen action id, which ChooseActionTarget copies to wBattleActionId; byte 1 is wBattleTargetChoice (E-0061) (reading (E-0061))
 DEF wBattleTargetChoice EQU $DA1D ; byte 1 of each slot word in wBattleActionChoice: the target slot the per-action target routines write (E-0061) (reading (E-0061))
-DEF wDA1E EQU $DA1E
-DEF wDA1F EQU $DA1F
-DEF wDA24 EQU $DA24
-DEF wDA2C EQU $DA2C
-DEF wDA2D EQU $DA2D
-DEF wDA3C EQU $DA3C
-DEF wDA3D EQU $DA3D
-DEF wDA3E EQU $DA3E
-DEF wDA3F EQU $DA3F
-DEF wDA40 EQU $DA40
-DEF wDA41 EQU $DA41
-DEF wDA42 EQU $DA42
-DEF wDA43 EQU $DA43
-DEF wDA44 EQU $DA44
-DEF wDA47 EQU $DA47
-DEF wDA4B EQU $DA4B
-DEF wDA4C EQU $DA4C
-DEF wDA4F EQU $DA4F
-DEF wDA53 EQU $DA53
-DEF wDA5B EQU $DA5B
-DEF wDA5F EQU $DA5F
+DEF wSavedActionChoices EQU $DA2C ; copy of wBattleActionChoice (SaveActionChoicesAndPickFormations; TargetSavedSlotOrRandomFoe) (E-0137)
+DEF wAIChoiceWeights EQU $DA3C ; three AI choice weights sorted by SortThreeAIWeightsRandomTies (E-0137)
+DEF wAIChoiceOrder EQU $DA3F ; choice indexes that follow the weights when sorted (E-0137)
+DEF wAIChoiceIndex EQU $DA42 ; next AI choice to try (AIRunNextChoice) (E-0137)
+DEF wSlotTactic EQU $DA43 ; per-slot battle tactic, low 2 bits; 3 = manual command (GetActorWDA43Low2, SetWDA43AndWDA4BForWCFD4) (E-0137)
+DEF wSlotLastTactic EQU $DA4B ; last tactic other than 3 for each slot (E-0137)
+DEF wSlotAIMode EQU $DA53 ; per-slot AI mode (SetSlotAIModeFromINT; values below 3 skip some checks) (E-0137)
+DEF wSlotMarks EQU $DA5B ; per-slot mark set for present slots (SetWDA5BForPresentSlots, SetTargetWDA5BTo3) (E-0137)
 DEF wBattleSlotOut EQU $DA63 ; one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it) (reading (E-0043))
-DEF wDA64 EQU $DA64
-DEF wDA65 EQU $DA65
-DEF wDA67 EQU $DA67
-DEF wDA68 EQU $DA68
-DEF wDA69 EQU $DA69
-DEF wDA6B EQU $DA6B
-DEF wDA6C EQU $DA6C
-DEF wDA6D EQU $DA6D
-DEF wDA6E EQU $DA6E
-DEF wDA6F EQU $DA6F
-DEF wDA70 EQU $DA70
-DEF wDA71 EQU $DA71
-DEF wDA72 EQU $DA72
-DEF wDA73 EQU $DA73
-DEF wDA74 EQU $DA74
-DEF wDA75 EQU $DA75
-DEF wDA76 EQU $DA76
-DEF wDA77 EQU $DA77
-DEF wDA78 EQU $DA78
-DEF wDA79 EQU $DA79
-DEF wDA80 EQU $DA80
-DEF wDA8E EQU $DA8E
-DEF wDA95 EQU $DA95
-DEF wDA9C EQU $DA9C
-DEF wDAAA EQU $DAAA
-DEF wDAAB EQU $DAAB
+DEF wBattleExpAward EQU $DA6B ; 24-bit EXP award at the battle end (DivideWDA6BByModeFactor, AddExpToRecordCCapped); the AI scoring loop keeps its routine table pointer in the first two bytes (E-0137)
+DEF wAISkillScore EQU $DA6E ; AI score word of the skill being scored (ResetWDA6E, AddBCToWDA6E) (E-0137)
+DEF wAISkillScore2 EQU $DA70 ; second AI score word ($FFFF after reset; AddBCToWDA70) (E-0137)
+DEF wSlotResistances EQU $DA72 ; 8 seven-byte resistance records, one per slot (GetTargetWDA72Byte0-6; 2-bit levels) (E-0137)
+DEF wEffectActive EQU $DAAA ; non-zero while the battle effect animation runs (E-0137)
+DEF wDisplaySlot EQU $DAAB ; slot whose name or picture is shown (CopyMonsterNameOfWDAABSlotToDE, LoadBattleMonsterPictureAndTitle) (E-0137)
 DEF wQueuedActionId EQU $DAAC ; queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049) (reading (E-0049))
-DEF wDAAD EQU $DAAD
-DEF wDAAE EQU $DAAE
-DEF wDAB2 EQU $DAB2
-DEF wDAB3 EQU $DAB3
-DEF wDAB5 EQU $DAB5
-DEF wDAB7 EQU $DAB7
-DEF wDAB9 EQU $DAB9
-DEF wDABA EQU $DABA
-DEF wDABD EQU $DABD
-DEF wDABE EQU $DABE
-DEF wDABF EQU $DABF
-DEF wDAC0 EQU $DAC0
-DEF wDAC1 EQU $DAC1
-DEF wDAC2 EQU $DAC2
-DEF wDAC3 EQU $DAC3
+DEF wBattleByteAD EQU $DAAD ; set by the battle set-up (E-0137)
+DEF wSpecialSlotMonsters EQU $DAAE ; monster id words used for slots 3 and 7 (GetBaseHP, TatsuCall, Transform) (E-0137)
+DEF wResolveFlagB2 EQU $DAB2 ; resolve flag (bit 0 skips the action text in Func_032_5820_Case02) (E-0137)
+DEF wEffectByteB3 EQU $DAB3 ; effect selection byte (SelectEffectByWDAD2Flags) (E-0137)
+DEF wEffectByteB5 EQU $DAB5 ; effect selection byte (E-0137)
+DEF wEffectSpriteAttrXor EQU $DAB7 ; attribute XOR of the effect sprite (DrawEffectSpriteAtWD804_*) (E-0137)
+DEF wEffectTargetMode EQU $DAB9 ; effect target mode (3 moves the sprite; SetEffectSpriteXForTargets) (E-0137)
+DEF wDefeatFlagsBA EQU $DABA ; defeat bookkeeping byte (DefeatTarget_Sub01, CheckLinkRuleViolation) (E-0137)
+DEF wFollowUpAction EQU $DABD ; non-zero while a follow-up action runs (ResolveStepBegin, ResolveStepCallEffect82) (E-0137)
+DEF wDefeatStep EQU $DABE ; defeat sequence step + 1 (RunWDABEMinus1Step; set by DefeatTarget) (E-0137)
+DEF wDefeatByteBF EQU $DABF ; defeat bookkeeping byte (DefeatTarget_Sub01) (E-0137)
+DEF wResolveMsgFlags EQU $DAC0 ; message flags of the resolving action: bit 4 picks the actor or target side (ResolveStepDamageMessage) (E-0137)
+DEF wResolveMsgArg EQU $DAC1 ; message argument (ApplyDamageToTarget, ResolveStepDamageMessage) (E-0137)
+DEF wResolveMsgActor EQU $DAC2 ; message id for the actor side (E-0137)
+DEF wResolveMsgTarget EQU $DAC3 ; message id for the target side (E-0137)
 DEF wBattleStatResultLo EQU $DAC4 ; low byte of the 16-bit result of the GetBase* routines (wDAC5 is the high byte) (reading (E-0043))
 DEF wBattleStatResultHi EQU $DAC5 ; high byte of the 16-bit result of the GetBase* routines (reading (E-0043))
-DEF wDAC9 EQU $DAC9
-DEF wDAD1 EQU $DAD1
-DEF wDAD2 EQU $DAD2
-DEF wDAD3 EQU $DAD3
-DEF wDAD4 EQU $DAD4
-DEF wDAD7 EQU $DAD7
-DEF wDAD8 EQU $DAD8
-DEF wDAD9 EQU $DAD9
-DEF wDADC EQU $DADC
-DEF wDAE0 EQU $DAE0
-DEF wDAE8 EQU $DAE8
-DEF wDAE9 EQU $DAE9
-DEF wDAEA EQU $DAEA
-DEF wDAF1 EQU $DAF1
-DEF wDAF2 EQU $DAF2
-DEF wDAFA EQU $DAFA
+DEF wSavedActorTarget EQU $DAC9 ; actor and target saved by Func_032_5820_Case00 (E-0137)
+DEF wDefeatByteD1 EQU $DAD1 ; $FF after reset (ResetEffectStateForAction; DefeatTarget_Sub01) (E-0137)
+DEF wEffectFlags EQU $DAD2 ; effect flags read by SelectEffectByWDAD2Flags (E-0137)
+DEF wEffectFlags2 EQU $DAD3 ; effect flags read by SelectEffectByWDAD3Flags (E-0137)
+DEF wSlotNameBytes EQU $DAD4 ; three bytes set at battle start, checked by CopySlotNameToHL (E-0137)
+DEF wBattleSetupD7 EQU $DAD7 ; set by the battle set-up (E-0137)
+DEF wSideControl EQU $DAD8 ; per-slot control byte: bit 7 set = AI controlled (ChooseTargetForActor, AIChooseActionResolveStep) (E-0137)
+DEF wResolveBytesE0 EQU $DAE0 ; bytes cleared by RunBattleResolveStep_43C4_Case01 (E-0137)
+DEF wCommandByteE8 EQU $DAE8 ; set by RunBattleCommandEntry_Case00 (E-0137)
+DEF wCommandBytesE9 EQU $DAE9 ; bytes indexed per slot (ChooseTargetForActor, AddCommandWeightToWDA3C) (E-0137)
+DEF wCommandByteEA EQU $DAEA ; set by the battle set-up (E-0137)
+DEF wEffectFrameCounter EQU $DAF1 ; frame counter for the every-fifth-frame effect step (E-0137)
+DEF wBattleSetupF2 EQU $DAF2 ; three bytes written by RunBattleSetup_Case00_Case00 (E-0137)
+DEF wHealFlags EQU $DAFA ; bytes indexed per slot by HealTargetHP and LoveRain (E-0137)
 DEF wSoundChannelSlots EQU $DC00 ; channel-state slots; the record's first byte is added to this address (E-0018)
-DEF wDC01 EQU $DC01
-DEF wDC06 EQU $DC06
-DEF wDC20 EQU $DC20
-DEF wDC21 EQU $DC21
-DEF wDC40 EQU $DC40
-DEF wDC41 EQU $DC41
-DEF wDC60 EQU $DC60
-DEF wDC61 EQU $DC61
-DEF wDC80 EQU $DC80
-DEF wDC81 EQU $DC81
-DEF wDCA0 EQU $DCA0
-DEF wDCA1 EQU $DCA1
+DEF wSoundChannel1 EQU $DC20 ; sound channel slot 1 (6 slots of $20 bytes from wSoundChannelSlots) (E-0137)
+DEF wSoundChannel2 EQU $DC40 ; sound channel slot 2 (E-0137)
+DEF wSoundChannel3 EQU $DC60 ; sound channel slot 3 (E-0137)
+DEF wSoundChannel4 EQU $DC80 ; sound channel slot 4 (E-0137)
+DEF wSoundChannel5 EQU $DCA0 ; sound channel slot 5 (E-0137)
 DEF wSoundLabelSlots EQU $DCC0 ; per-channel label slots: 3 bytes each, 16 per channel (E-0019)
-DEF wDD08 EQU $DD08
-DEF wDD09 EQU $DD09
+DEF wSoundSkipMaskA EQU $DD08 ; ANDed with wSoundSkipMaskB; non-zero makes ReturnTwiceIfWDD08AndWDD0B skip the caller (E-0137)
+DEF wSoundEngineMode EQU $DD09 ; sound engine mode (SetWDD15To0AndWDD09FromWDD16, SetWDD15To4AndClearWDD09) (E-0137)
 DEF wSoundHwChannel EQU $DD0A ; hardware channel of the current slot: 2 selects the wave channel, 3 noise (E-0019)
-DEF wDD0B EQU $DD0B
-DEF wDD0C EQU $DD0C
-DEF wDD0D EQU $DD0D
-DEF wDD0E EQU $DD0E
+DEF wSoundSkipMaskB EQU $DD0B ; second mask of ReturnTwiceIfWDD08AndWDD0B (E-0137)
+DEF wSoundTickByte0C EQU $DD0C ; set by SoundTick, read by SoundNextEvent (E-0137)
+DEF wSoundRegBase EQU $DD0D ; register base ($FF00 offset) of the channel being processed (WriteChannelRegisterC) (E-0137)
+DEF wSoundTickBuf0E EQU $DD0E ; SoundTick work bytes (E-0137)
 DEF wSoundChannelIndex EQU $DD0F ; slot number of the channel the sound engine is processing (E-0019)
 DEF wSoundId EQU $DD10 ; sound id passed to the start-sound routine (E-0018)
-DEF wDD12 EQU $DD12
-DEF wDD13 EQU $DD13
-DEF wDD14 EQU $DD14
-DEF wDD15 EQU $DD15
-DEF wDD16 EQU $DD16
-DEF wDD17 EQU $DD17
-DEF wDD18 EQU $DD18
-DEF wDD19 EQU $DD19
-DEF wDFFF EQU $DFFF
+DEF wSoundTimer12 EQU $DD12 ; sound timer (InitSoundHardware_Sub01, SoundTick_Sub02) (E-0137)
+DEF wSoundTimer13 EQU $DD13 ; sound timer reload (E-0137)
+DEF wSoundTimer14 EQU $DD14 ; sound timer (SoundTick_Sub01) (E-0137)
+DEF wSoundEngineState EQU $DD15 ; sound engine state, 0 or 4 (E-0137)
+DEF wSoundSavedMode EQU $DD16 ; mode restored into wSoundEngineMode (E-0137)
+DEF wSoundEventByte17 EQU $DD17 ; SoundNextEvent work byte (E-0137)
+DEF wSoundEventByte18 EQU $DD18 ; SoundNextEvent work byte (E-0137)
+DEF wSoundInitByte19 EQU $DD19 ; set by InitSoundHardware, read by SoundTick (E-0137)
+DEF wStackTop EQU $DFFF ; initial stack pointer (BootAndMainLoop: ld sp, $DFFF) (E-0137)
 
 ; HRAM ($FF80-$FFFE)
 DEF hFF80 EQU $FF80

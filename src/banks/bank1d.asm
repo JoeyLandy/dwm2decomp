@@ -4007,14 +4007,14 @@ Func_01D_5DF9:: ; address name
 ; 13 call sites from 13 routines (e.g. ScriptCommandEB_Run_Case01_Case03, ScriptCommandEB_Run_Case05_Case2C, ScriptCommandEB_Run_Case05_Case0F, ScriptCommandEB_Run_Case04_Case2F, ...)
 ; reads: wRecordsInUse
 ; writes: wRecordsInUse, rRAMG2, rRAMB
-; points at: sA000
+; points at: sRecords
 CountRecordsInUse::
 Func_01D_5E3F:: ; address name
     call LoadWD7FFFromWC7C7Table
     ld d, c
     xor a, a
     ld [wRecordsInUse], a
-    ld hl, sA000
+    ld hl, sRecords
     ld b, $00
     ld c, $A5
 
@@ -4050,7 +4050,7 @@ Jump_01D_5E69::
 ; 19 call sites from 19 routines (e.g. ScriptCommandE8_Run_Case03_Sub01, ScriptCommandEB_Run_Case01_Case02, ScriptCommandEB_Run_Case05_Case40, ScriptCommandEB_Run_Case05_Case0E, ...)
 ; reads: wListCount, wPartyCount
 ; writes: wListCount, rRAMG2, rRAMB
-; points at: wListEntries, wPartyList, sA000
+; points at: wListEntries, wPartyList, sRecords
 ListPartyRecordsWithState2ToWD789::
 Func_01D_5E79:: ; address name
     call LoadWD7FFFromWC7C7Table
@@ -4078,7 +4078,7 @@ Jump_01D_5E97::
     push bc
     push de
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld a, [hl]
     cp a, $02
@@ -4113,7 +4113,7 @@ Jump_01D_5EC2::
 ; 12 call sites from 11 routines (e.g. ScriptCommandEB_Run_Case03, StartRecordListOrNoneMessage, ScriptCommandEB_Run_Case05_Case32, ScriptCommandEB_Run_Case05_Case3C, ...)
 ; reads: wRecordCapacity, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
-; points at: wListEntries, sA000
+; points at: wListEntries, sRecords
 ListRecordsState1WithByte6EClear::
 Func_01D_5ECE:: ; address name
     call LoadWD7FFFromWC7C7Table
@@ -4132,7 +4132,7 @@ Jump_01D_5ED6::
     xor a, a
     ld [rRAMB], a
     ld [wRecordsFlagged], a
-    ld de, sA000
+    ld de, sRecords
     ld hl, wListEntries
     ld b, $00
     ld c, $00
@@ -4187,7 +4187,7 @@ Jump_01D_5F1B::
 ; 13 call sites from 13 routines (e.g. ScriptCommandEB_Run_Case03, ScriptCommandED_Run_Case04_Case02, ScriptCommandED_Run_Case11_Case02, Func_016_5D13_Case10, ...)
 ; reads: wRecordCapacity, wListCount, wPartyCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
-; points at: wListEntries, wListEntries2, sA000, wPartyList
+; points at: wListEntries, wListEntries2, sRecords, wPartyList
 ListRecordsInUseWithByte6EClear::
 Func_01D_5F2D:: ; address name
     call LoadWD7FFFromWC7C7Table
@@ -4214,7 +4214,7 @@ Jump_01D_5F3F::
     xor a, a
     ld [rRAMB], a
     ld [wRecordsFlagged], a
-    ld de, sA000
+    ld de, sRecords
     ld hl, wListEntries
     ld b, $00
     ld c, $00
@@ -4378,7 +4378,7 @@ Jump_01D_6025::
 ; 10 call sites from 10 routines (e.g. ScriptCommandEF_Run_Case03, ScriptCommandED_Run_Case03, ScriptCommandED_Run_Case04_Case41, ScriptCommandED_Run_Case05_Case01, ...)
 ; reads: wRecordCapacity
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
-; points at: wListEntries, sA000
+; points at: wListEntries, sRecords
 ListRecordsInUseWithByte6ESet::
 Func_01D_6026:: ; address name
     call LoadWD7FFFromWC7C7Table
@@ -4397,7 +4397,7 @@ Jump_01D_602E::
     xor a, a
     ld [rRAMB], a
     ld [wRecordsFlagged], a
-    ld de, sA000
+    ld de, sRecords
     ld hl, wListEntries
     ld b, $00
     ld c, $00
@@ -6570,7 +6570,7 @@ Data_01D_6DE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; wD7F5 = the number of SRAM records (29 in bank 0 from sB356 plus one in bank 1) with bit 7 of byte 0 set (E-0125)
 ; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case05_Case00, ScriptCommandEB_Run_Case03, StartRecordListOrNoneMessage)
 ; writes: rRAMG2, rRAMB, wArg5
-; points at: sB356, sA000
+; points at: sCompactRecords, sRecords
 CountFlaggedSRAMRecords::
 Func_01D_6DF8:: ; address name
     ld a, $0A
@@ -6579,7 +6579,7 @@ Func_01D_6DF8:: ; address name
     ld [rRAMB], a
     xor a, a
     ld [wArg5], a
-    ld hl, sB356
+    ld hl, sCompactRecords
     ld c, $00
     ld b, $00
 
@@ -6598,7 +6598,7 @@ Jump_01D_6E12::
     jr c, Jump_01D_6E0C
     ld a, $01
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld a, [hl]
     bit 7, a
     jr z, Jump_01D_6E2D
@@ -8761,7 +8761,7 @@ Func_01D_7B05:: ; address name
 ; HL = the word at wD7F3/wD7F4; DE = sA000 + $A5 * wD7F1, the start of SRAM record wD7F1 (records are $A5 bytes, as in SRAMRecordAddress); clobbers A, BC (E-0063)
 ; 27 call sites from 10 routines (e.g. UnpackRecordFromBank1Slot, CopyTenBytesThenSelectSRAMBank0, LoadRecordNameEntry5, LoadRecordNameEntry4, ...)
 ; reads: wArg3, wArg4, wArg1
-; points at: sA000
+; points at: sRecords
 SRAMRecordAddressOfWD7F1::
 Func_01D_7B0F:: ; address name
     ld a, [wArg3]
@@ -8772,7 +8772,7 @@ Func_01D_7B0F:: ; address name
     ld a, [wArg1]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld e, l
     ld d, h

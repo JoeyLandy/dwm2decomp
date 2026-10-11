@@ -3,34 +3,34 @@ SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
 
 ; only called from DrawEffectSpriteForWD801Range (E-0047)
 ; 1 call site from 1 routine (e.g. DrawEffectSpriteForWD801Range)
-; reads: wD801, wDAD2, wD88F, wBattleTarget, wD804, wDAB7
-; writes: wD871, wD868
-; points at: wD871, wD868, hSpriteOriginX
+; reads: wEffectTileOffset, wEffectFlags, wBattlePartyCount, wBattleTarget, wEffectSpriteX, wEffectSpriteAttrXor
+; writes: wLoadSlot, wBattleArg0
+; points at: wLoadSlot, wBattleArg0, hSpriteOriginX
 DrawEffectSpriteForWD801Range_Sub02::
 Func_03F_4001:: ; address name
-    ld a, [wD801]
+    ld a, [wEffectTileOffset]
     cp a, $15
     jr nz, DrawEffectSpriteAtWD804_Bank3F
-    ld a, [wDAD2]
+    ld a, [wEffectFlags]
     bit 3, a
     jr z, DrawEffectSpriteAtWD804_Bank3F
-    ld a, [wD88F]
-    ld [wD871], a
+    ld a, [wBattlePartyCount]
+    ld [wLoadSlot], a
     ld a, [wBattleTarget]
     and a, $04
-    ld [wD868], a
+    ld [wBattleArg0], a
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03F_402B
     farcall SetEffectSpriteXForTargets
     call DrawEffectSpriteAtWD804_Bank3F
 
 Jump_03F_402B::
-    ld hl, wD871
+    ld hl, wLoadSlot
     dec [hl]
     ld a, [hl]
     or a, a
     ret z
-    ld hl, wD868
+    ld hl, wBattleArg0
     inc [hl]
     ld a, [hl]
     call CarryUnlessWDA63SlotEmpty
@@ -39,12 +39,12 @@ Jump_03F_402B::
     call DrawEffectSpriteAtWD804_Bank3F
 
 Jump_03F_4045::
-    ld hl, wD871
+    ld hl, wLoadSlot
     dec [hl]
     ld a, [hl]
     or a, a
     ret z
-    ld hl, wD868
+    ld hl, wBattleArg0
     inc [hl]
     ld a, [hl]
     call CarryUnlessWDA63SlotEmpty
@@ -53,12 +53,12 @@ Jump_03F_4045::
 
 ; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
 ; 2 call sites from 1 routine (e.g. DrawEffectSpriteForWD801Range_Sub02)
-; reads: wD804, wD801, wDAB7
+; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
 ; points at: hSpriteOriginX
 DrawEffectSpriteAtWD804_Bank3F::
 Func_03F_405B:: ; address name
     ld hl, hSpriteOriginX
-    ld a, [wD804]
+    ld a, [wEffectSpriteX]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -66,9 +66,9 @@ Func_03F_405B:: ; address name
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ld a, [wD801]
+    ld a, [wEffectTileOffset]
     ld [hl+], a
-    ld a, [wDAB7]
+    ld a, [wEffectSpriteAttrXor]
     ld [hl+], a
     ld a, $00
     ld [hl+], a

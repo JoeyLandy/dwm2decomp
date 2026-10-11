@@ -23,7 +23,8 @@
   "DC00": {
     "name": "wSoundChannelSlots",
     "note": "channel-state slots; the record's first byte is added to this address",
-    "evidence": "E-0018"
+    "evidence": "E-0018",
+    "size": "20"
   },
   "DCC0": {
     "name": "wSoundLabelSlots",
@@ -356,17 +357,20 @@
   "D968": {
     "name": "wSlotPersonalityHi",
     "note": "first of three byte arrays (8 slots each) graded into the personality index with weight 9 by PersonalityIndexOfSlot",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "8"
   },
   "D970": {
     "name": "wSlotPersonalityMid",
     "note": "second array, weight 3",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "8"
   },
   "D978": {
     "name": "wSlotPersonalityLo",
     "note": "third array, weight 1",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "8"
   },
   "D2C7": {
     "name": "wPersonalityIndex",
@@ -545,22 +549,26 @@
   "D8BF": {
     "name": "wBattleHP",
     "note": "current HP of the 8 battle slots as 16-bit words (party in slots 0-2, a foe in slot 4); the first value of the party panels; a defeated foe's word fell from 20 to 0 on the emulator",
-    "evidence": "execution (E-0042)"
+    "evidence": "execution (E-0042)",
+    "size": "10"
   },
   "D8CF": {
     "name": "wBattleMaxHP",
     "note": "maximum HP of the 8 battle slots (the foe's word stayed 25 when its current HP fell to 0)",
-    "evidence": "execution (E-0042)"
+    "evidence": "execution (E-0042)",
+    "size": "10"
   },
   "D8DF": {
     "name": "wBattleMP",
     "note": "current MP of the 8 battle slots (the values the party panels show as M)",
-    "evidence": "execution (E-0042)"
+    "evidence": "execution (E-0042)",
+    "size": "10"
   },
   "D8EF": {
     "name": "wBattleMaxMP",
     "note": "maximum MP of the 8 battle slots, by symmetry with wBattleMaxHP",
-    "evidence": "execution (E-0042)"
+    "evidence": "execution (E-0042)",
+    "size": "10"
   },
   "CFC8": {
     "name": "wBattlePhase",
@@ -585,12 +593,14 @@
   "DA63": {
     "name": "wBattleSlotOut",
     "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it)",
-    "evidence": "reading (E-0043)"
+    "evidence": "reading (E-0043)",
+    "size": "8"
   },
   "DA1C": {
     "name": "wBattleActionChoice",
     "note": "word per slot: byte 0 is the chosen action id, which ChooseActionTarget copies to wBattleActionId; byte 1 is wBattleTargetChoice (E-0061)",
-    "evidence": "reading (E-0061)"
+    "evidence": "reading (E-0061)",
+    "size": "10"
   },
   "DA1D": {
     "name": "wBattleTargetChoice",
@@ -632,7 +642,8 @@
   "D958": {
     "name": "wBattleMonsterId",
     "note": "word per battle slot: the monster id (the species-record and monster-name number; CopyMonsterNameOfWDAABSlotToDE, GetSlotSpeciesFamily) (E-0069)",
-    "evidence": "reading + data (E-0069)"
+    "evidence": "reading + data (E-0069)",
+    "size": "10"
   },
   "C924": {
     "name": "wMessageIndex",
@@ -662,7 +673,8 @@
   "D80C": {
     "name": "wBattleStatus",
     "note": "9-byte status record per slot (AddAx9ToHL), cleared when the battler is defeated",
-    "evidence": "reading (E-0043)"
+    "evidence": "reading (E-0043)",
+    "size": "48"
   },
   "DAC4": {
     "name": "wBattleStatResultLo",
@@ -702,22 +714,26 @@
   "D8FF": {
     "name": "wBattleATK",
     "note": "attack of the 8 battle slots: ComputeBasicDamage reads the actor's word from it and the defence array for the target; 8 words, party in slots 0-2",
-    "evidence": "reading (E-0043)"
+    "evidence": "reading (E-0043)",
+    "size": "10"
   },
   "D90F": {
     "name": "wBattleDEF",
     "note": "defence of the 8 battle slots; RecomputeBattler (Func_032_5BE8) fills it from GetBaseDEF",
-    "evidence": "reading (E-0043)"
+    "evidence": "reading (E-0043)",
+    "size": "10"
   },
   "D91F": {
     "name": "wBattleAGL",
     "note": "agility of the 8 battle slots; Func_032_5BE8 fills it from GetBaseAGL",
-    "evidence": "reading (E-0043)"
+    "evidence": "reading (E-0043)",
+    "size": "10"
   },
   "D92F": {
     "name": "wBattleINT",
     "note": "intelligence of the 8 battle slots, the array after wBattleAGL (assumed)",
-    "evidence": "reading (E-0043)"
+    "evidence": "reading (E-0043)",
+    "size": "10"
   },
   "D8A6": {
     "name": "wBattleActionId",
@@ -1469,7 +1485,8 @@
   "C56F": {
     "name": "wFadeDMGPalettes",
     "note": "three DMG palette bytes the fade lightens (LightenSelectedDMGPalettes)",
-    "evidence": "E-0133"
+    "evidence": "E-0133",
+    "size": "3"
   },
   "C576": {
     "name": "wFadeStepSize",
@@ -4242,5 +4259,818 @@
     "name": "wRecordCapacity",
     "note": "number of SRAM records the farm holds (LoadWD7FFFromWC7C7Table); also reused as a count by script command $F7",
     "evidence": "E-0136"
+  },
+  "D800": {
+    "name": "wEffectAnimState",
+    "note": "state of the battle effect animation (RunBattleEffectAnimation)",
+    "evidence": "E-0137"
+  },
+  "D801": {
+    "name": "wEffectTileOffset",
+    "note": "tile offset of the effect sprite (DrawEffectSpriteAtWD804_*)",
+    "evidence": "E-0137"
+  },
+  "D802": {
+    "name": "wEffectId",
+    "note": "battle effect to show; $FF = none (ResetEffectStateForAction)",
+    "evidence": "E-0137"
+  },
+  "D803": {
+    "name": "wEffectRoutine",
+    "note": "effect routine run every fifth frame (RunWD803EffectEvery5Frames, table of 14)",
+    "evidence": "E-0137"
+  },
+  "D804": {
+    "name": "wEffectSpriteX",
+    "note": "X origin of the effect sprite (SetEffectSpriteXForTargets)",
+    "evidence": "E-0137"
+  },
+  "D805": {
+    "name": "wEffectStep",
+    "note": "effect step (RunWD805Step); also the per-target X list and the row width of CopyVRAMRectToBuffer",
+    "evidence": "E-0137"
+  },
+  "D806": {
+    "name": "wEffectByte06",
+    "note": "effect animation work byte",
+    "evidence": "E-0137"
+  },
+  "D807": {
+    "name": "wEffectCounter",
+    "note": "effect animation counter",
+    "evidence": "E-0137"
+  },
+  "D808": {
+    "name": "wSlotsOccupiedFlag",
+    "note": "result of AllThreeSlotsFromCOccupied",
+    "evidence": "E-0137"
+  },
+  "D80A": {
+    "name": "wSideFlags0",
+    "note": "flags of side 0 (bit 3 checked by SkillPassesSideFlagBit3Check)",
+    "evidence": "E-0137"
+  },
+  "D80B": {
+    "name": "wSideFlags1",
+    "note": "flags of side 1",
+    "evidence": "E-0137"
+  },
+  "D80D": {
+    "name": "wBattleStatus1",
+    "note": "status byte 1 of slot 0; byte 1 of every slot is at wBattleStatus1 + 9 * slot",
+    "evidence": "E-0137"
+  },
+  "D80E": {
+    "name": "wBattleStatus2",
+    "note": "status byte 2 (array base, stride 9)",
+    "evidence": "E-0137"
+  },
+  "D80F": {
+    "name": "wBattleStatus3",
+    "note": "status byte 3 (array base, stride 9)",
+    "evidence": "E-0137"
+  },
+  "D810": {
+    "name": "wBattleStatus4",
+    "note": "status byte 4 (array base, stride 9)",
+    "evidence": "E-0137"
+  },
+  "D811": {
+    "name": "wBattleStatus5",
+    "note": "status byte 5 (array base, stride 9)",
+    "evidence": "E-0137"
+  },
+  "D812": {
+    "name": "wBattleStatus6",
+    "note": "status byte 6 (array base, stride 9)",
+    "evidence": "E-0137"
+  },
+  "D813": {
+    "name": "wBattleStatus7",
+    "note": "status byte 7 (array base, stride 9)",
+    "evidence": "E-0137"
+  },
+  "D814": {
+    "name": "wBattleStatus8",
+    "note": "status byte 8 (array base, stride 9; RollChanceVsTargetWDA72Byte5Bits23)",
+    "evidence": "E-0137"
+  },
+  "D854": {
+    "name": "wSlotFlags854",
+    "note": "per-slot flag bytes (ResolveStepFlagBit7Effect, BattleFight_Step0_Sub01)",
+    "evidence": "E-0137"
+  },
+  "D864": {
+    "name": "wSlotPairBytes",
+    "note": "bytes indexed by the actor (ActionEffect_SuckAll, RunBattleActions_Case09_Case00)",
+    "evidence": "E-0137"
+  },
+  "D866": {
+    "name": "wAllMPSpentLo",
+    "note": "MP taken by a skill whose cost is $FF, low byte (PayActorMPCost; read by MegaMagic)",
+    "evidence": "E-0137"
+  },
+  "D867": {
+    "name": "wAllMPSpentHi",
+    "note": "that MP, high byte",
+    "evidence": "E-0137"
+  },
+  "D868": {
+    "name": "wBattleArg0",
+    "note": "argument byte: start offset for LoadSkillRecordPart, record index for the level-up routines, a flag elsewhere",
+    "evidence": "E-0137"
+  },
+  "D869": {
+    "name": "wBattleArg1",
+    "note": "argument byte: byte count for LoadSkillRecordPart, record index for ApplyLevelUpToRecordWD869",
+    "evidence": "E-0137"
+  },
+  "D86A": {
+    "name": "wBattleArg2",
+    "note": "argument byte: destination pointer low byte (LoadSkillRecordPart), word accumulator",
+    "evidence": "E-0137"
+  },
+  "D86B": {
+    "name": "wBattleArg3",
+    "note": "argument byte: destination pointer high byte",
+    "evidence": "E-0137"
+  },
+  "D86C": {
+    "name": "wNameSlot",
+    "note": "slot whose name is copied to wC130 (CopyTargetNameToWC130)",
+    "evidence": "E-0137"
+  },
+  "D86D": {
+    "name": "wSlotChoices",
+    "note": "up to three slot numbers picked from at random (PickRandomEntryOfWD86D)",
+    "evidence": "E-0137",
+    "size": "3"
+  },
+  "D871": {
+    "name": "wLoadSlot",
+    "note": "slot being loaded from a battler record or weighted by the AI (StoreBCAtWordEntryWD871)",
+    "evidence": "E-0137"
+  },
+  "D873": {
+    "name": "wBattleDamageHi",
+    "note": "high byte of the damage word (wBattleDamageLo is the low byte)",
+    "evidence": "E-0137"
+  },
+  "D874": {
+    "name": "wTargetEstimates",
+    "note": "four words: HP + DEF estimates of target slots (StoreSlotHPPlusDEFToWD874, PickWeakestEstimatedTarget)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "D876": {
+    "name": "wEffectTemp0",
+    "note": "effect work byte (ResolveStep0EEffect, Meditate)",
+    "evidence": "E-0137"
+  },
+  "D877": {
+    "name": "wEffectTemp1",
+    "note": "effect work byte (ResolveStep0EEffect, Meditate)",
+    "evidence": "E-0137"
+  },
+  "D878": {
+    "name": "wEffectTemp2",
+    "note": "effect work byte (Meditate)",
+    "evidence": "E-0137"
+  },
+  "D879": {
+    "name": "wEffectTemp3",
+    "note": "effect work byte (Meditate)",
+    "evidence": "E-0137"
+  },
+  "D87A": {
+    "name": "wBattleTemp7A",
+    "note": "battle work byte (RunBattleCommandEntry, CopyBattlerNameToHL)",
+    "evidence": "E-0137"
+  },
+  "D87B": {
+    "name": "wBattleTemp7B",
+    "note": "battle work byte (RunBattleCommandEntry, CopyBattlerNameToHL)",
+    "evidence": "E-0137"
+  },
+  "D87C": {
+    "name": "wBattleTemp7C",
+    "note": "battle work byte (CopyBattlerNameToHL)",
+    "evidence": "E-0137"
+  },
+  "D87D": {
+    "name": "wBattleTemp7D",
+    "note": "battle work byte (BattleEnd_Step3, ChooseTarget_Heal_5593)",
+    "evidence": "E-0137"
+  },
+  "D87E": {
+    "name": "wBattleTemp7E",
+    "note": "battle work byte (BattleEnd_Step3)",
+    "evidence": "E-0137"
+  },
+  "D87F": {
+    "name": "wBattleTemp7F",
+    "note": "battle work byte (BattleEnd_Step3, BiAttack, EstimateAndPickWeakestTarget)",
+    "evidence": "E-0137"
+  },
+  "D880": {
+    "name": "wBattleTemp80",
+    "note": "battle work byte (BattleEnd_Step3, BiAttack)",
+    "evidence": "E-0137"
+  },
+  "D88B": {
+    "name": "wSpeciesGroups",
+    "note": "targets grouped by shared species (GroupTargetsBySpeciesToWD88B; bit 7 marks a group)",
+    "evidence": "E-0137",
+    "size": "3"
+  },
+  "D88F": {
+    "name": "wBattlePartyCount",
+    "note": "number of party monsters in the battle (RemovePartyMemberMarkedFF; CopyRectRecordForWD88F)",
+    "evidence": "E-0137"
+  },
+  "D890": {
+    "name": "wBattleFoeCount",
+    "note": "number of foe monsters, 1-3 (LayoutTileBlocksForWD890Count, SetEffectSpriteXForTargets)",
+    "evidence": "E-0137"
+  },
+  "D891": {
+    "name": "wBattleTurn",
+    "note": "battle turn counter (BattlePhase0_Step3; LinkRuleCheckWD04BTurnLimit)",
+    "evidence": "E-0137"
+  },
+  "D892": {
+    "name": "wBattleFlag92",
+    "note": "battle flag (BattleFight_Step0_Sub01, AllThreeSlotsFromCOccupied)",
+    "evidence": "E-0137"
+  },
+  "D893": {
+    "name": "wBattleFlag93",
+    "note": "battle flag (BattleFight_Step0_Sub01, SetResolveStep0A)",
+    "evidence": "E-0137"
+  },
+  "D894": {
+    "name": "wBattleEndFlag",
+    "note": "set with message $98 (SetWD894AndMessage98); read at the battle end",
+    "evidence": "E-0137"
+  },
+  "D895": {
+    "name": "wActionQueue",
+    "note": "8-byte queue of slots waiting to act ($FF = empty; RemoveCFromWD895Queue)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "D89E": {
+    "name": "wActionQueuePos",
+    "note": "position in wActionQueue",
+    "evidence": "E-0137"
+  },
+  "D89F": {
+    "name": "wBattleMeter",
+    "note": "16-bit battle meter: each action adds an amount, capped at 1800 (AddHLToWD89FCappedAt1800, SubtractHLFromWD89FFloored)",
+    "evidence": "E-0137",
+    "size": "2"
+  },
+  "D8A1": {
+    "name": "wBattleInitA1",
+    "note": "set by GameMode4_Init_Sub01, read at the battle end",
+    "evidence": "E-0137"
+  },
+  "D8A2": {
+    "name": "wBattleInitA2",
+    "note": "set by GameMode4_Init_Sub01",
+    "evidence": "E-0137"
+  },
+  "D8A3": {
+    "name": "wBattleInitA3",
+    "note": "set by GameMode4_Init_Sub01",
+    "evidence": "E-0137"
+  },
+  "D8A7": {
+    "name": "wSlotDamageFlags",
+    "note": "per-slot flags: bit 0 multiplies some damage (MultiplyDamageBy50IfWD8A7Bit0, AttackDamageTimes1_5IfWD8A7Bit0)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "D8AF": {
+    "name": "wSlotNameSuffix",
+    "note": "per-slot byte: bit 0 picks the letter appended to a repeated monster name (CopyBattleMonsterNameWithLetterSuffix)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "D8B7": {
+    "name": "wBattleLevel",
+    "note": "level of each battle slot (DrawSlotLevel_BankA0, DrainTargetMPAmount)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "D93F": {
+    "name": "wBattleWordArray3F",
+    "note": "word per slot after wBattleINT (ActorWD93FBand, AddActorWD93FDiv16ToWD86A)",
+    "evidence": "E-0137",
+    "size": "10"
+  },
+  "D94F": {
+    "name": "wBattleBytes4F",
+    "note": "bytes indexed by 3 * slot (ActionEffect_ActionB0, ActionEffect_ActionC8)",
+    "evidence": "E-0137"
+  },
+  "D960": {
+    "name": "wBattlePictureIds",
+    "note": "three monster ids whose pictures the battle intro shows (LoadBattleMonsterPictureAttributes, BattlePhase0_Step2)",
+    "evidence": "E-0137",
+    "size": "6"
+  },
+  "D980": {
+    "name": "wSlotTrait",
+    "note": "per-slot AI trait byte (RollWD980LowFlag80)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "D988": {
+    "name": "wBattleSkillsPrefix",
+    "note": "byte before wBattleSkills, indexed by 16 * slot",
+    "evidence": "E-0137"
+  },
+  "D989": {
+    "name": "wBattleSkills",
+    "note": "skills of the 8 battle slots, 16 bytes each (8 skill numbers at even offsets; SlotHasSkillWithFlagD)",
+    "evidence": "E-0137",
+    "size": "80"
+  },
+  "DA2C": {
+    "name": "wSavedActionChoices",
+    "note": "copy of wBattleActionChoice (SaveActionChoicesAndPickFormations; TargetSavedSlotOrRandomFoe)",
+    "evidence": "E-0137",
+    "size": "10"
+  },
+  "DA3C": {
+    "name": "wAIChoiceWeights",
+    "note": "three AI choice weights sorted by SortThreeAIWeightsRandomTies",
+    "evidence": "E-0137",
+    "size": "3"
+  },
+  "DA3F": {
+    "name": "wAIChoiceOrder",
+    "note": "choice indexes that follow the weights when sorted",
+    "evidence": "E-0137",
+    "size": "3"
+  },
+  "DA42": {
+    "name": "wAIChoiceIndex",
+    "note": "next AI choice to try (AIRunNextChoice)",
+    "evidence": "E-0137"
+  },
+  "DA43": {
+    "name": "wSlotTactic",
+    "note": "per-slot battle tactic, low 2 bits; 3 = manual command (GetActorWDA43Low2, SetWDA43AndWDA4BForWCFD4)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "DA4B": {
+    "name": "wSlotLastTactic",
+    "note": "last tactic other than 3 for each slot",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "DA53": {
+    "name": "wSlotAIMode",
+    "note": "per-slot AI mode (SetSlotAIModeFromINT; values below 3 skip some checks)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "DA5B": {
+    "name": "wSlotMarks",
+    "note": "per-slot mark set for present slots (SetWDA5BForPresentSlots, SetTargetWDA5BTo3)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "DA6B": {
+    "name": "wBattleExpAward",
+    "note": "24-bit EXP award at the battle end (DivideWDA6BByModeFactor, AddExpToRecordCCapped); the AI scoring loop keeps its routine table pointer in the first two bytes",
+    "evidence": "E-0137",
+    "size": "3"
+  },
+  "DA6E": {
+    "name": "wAISkillScore",
+    "note": "AI score word of the skill being scored (ResetWDA6E, AddBCToWDA6E)",
+    "evidence": "E-0137",
+    "size": "2"
+  },
+  "DA70": {
+    "name": "wAISkillScore2",
+    "note": "second AI score word ($FFFF after reset; AddBCToWDA70)",
+    "evidence": "E-0137",
+    "size": "2"
+  },
+  "DA72": {
+    "name": "wSlotResistances",
+    "note": "8 seven-byte resistance records, one per slot (GetTargetWDA72Byte0-6; 2-bit levels)",
+    "evidence": "E-0137",
+    "size": "38"
+  },
+  "DAAA": {
+    "name": "wEffectActive",
+    "note": "non-zero while the battle effect animation runs",
+    "evidence": "E-0137"
+  },
+  "DAAB": {
+    "name": "wDisplaySlot",
+    "note": "slot whose name or picture is shown (CopyMonsterNameOfWDAABSlotToDE, LoadBattleMonsterPictureAndTitle)",
+    "evidence": "E-0137"
+  },
+  "DAAD": {
+    "name": "wBattleByteAD",
+    "note": "set by the battle set-up",
+    "evidence": "E-0137"
+  },
+  "DAAE": {
+    "name": "wSpecialSlotMonsters",
+    "note": "monster id words used for slots 3 and 7 (GetBaseHP, TatsuCall, Transform)",
+    "evidence": "E-0137"
+  },
+  "DAB2": {
+    "name": "wResolveFlagB2",
+    "note": "resolve flag (bit 0 skips the action text in Func_032_5820_Case02)",
+    "evidence": "E-0137"
+  },
+  "DAB3": {
+    "name": "wEffectByteB3",
+    "note": "effect selection byte (SelectEffectByWDAD2Flags)",
+    "evidence": "E-0137"
+  },
+  "DAB5": {
+    "name": "wEffectByteB5",
+    "note": "effect selection byte",
+    "evidence": "E-0137"
+  },
+  "DAB7": {
+    "name": "wEffectSpriteAttrXor",
+    "note": "attribute XOR of the effect sprite (DrawEffectSpriteAtWD804_*)",
+    "evidence": "E-0137"
+  },
+  "DAB9": {
+    "name": "wEffectTargetMode",
+    "note": "effect target mode (3 moves the sprite; SetEffectSpriteXForTargets)",
+    "evidence": "E-0137"
+  },
+  "DABA": {
+    "name": "wDefeatFlagsBA",
+    "note": "defeat bookkeeping byte (DefeatTarget_Sub01, CheckLinkRuleViolation)",
+    "evidence": "E-0137"
+  },
+  "DABD": {
+    "name": "wFollowUpAction",
+    "note": "non-zero while a follow-up action runs (ResolveStepBegin, ResolveStepCallEffect82)",
+    "evidence": "E-0137"
+  },
+  "DABE": {
+    "name": "wDefeatStep",
+    "note": "defeat sequence step + 1 (RunWDABEMinus1Step; set by DefeatTarget)",
+    "evidence": "E-0137"
+  },
+  "DABF": {
+    "name": "wDefeatByteBF",
+    "note": "defeat bookkeeping byte (DefeatTarget_Sub01)",
+    "evidence": "E-0137"
+  },
+  "DAC0": {
+    "name": "wResolveMsgFlags",
+    "note": "message flags of the resolving action: bit 4 picks the actor or target side (ResolveStepDamageMessage)",
+    "evidence": "E-0137"
+  },
+  "DAC1": {
+    "name": "wResolveMsgArg",
+    "note": "message argument (ApplyDamageToTarget, ResolveStepDamageMessage)",
+    "evidence": "E-0137"
+  },
+  "DAC2": {
+    "name": "wResolveMsgActor",
+    "note": "message id for the actor side",
+    "evidence": "E-0137"
+  },
+  "DAC3": {
+    "name": "wResolveMsgTarget",
+    "note": "message id for the target side",
+    "evidence": "E-0137"
+  },
+  "DAC9": {
+    "name": "wSavedActorTarget",
+    "note": "actor and target saved by Func_032_5820_Case00",
+    "evidence": "E-0137"
+  },
+  "DAD1": {
+    "name": "wDefeatByteD1",
+    "note": "$FF after reset (ResetEffectStateForAction; DefeatTarget_Sub01)",
+    "evidence": "E-0137"
+  },
+  "DAD2": {
+    "name": "wEffectFlags",
+    "note": "effect flags read by SelectEffectByWDAD2Flags",
+    "evidence": "E-0137"
+  },
+  "DAD3": {
+    "name": "wEffectFlags2",
+    "note": "effect flags read by SelectEffectByWDAD3Flags",
+    "evidence": "E-0137"
+  },
+  "DAD4": {
+    "name": "wSlotNameBytes",
+    "note": "three bytes set at battle start, checked by CopySlotNameToHL",
+    "evidence": "E-0137"
+  },
+  "DAD7": {
+    "name": "wBattleSetupD7",
+    "note": "set by the battle set-up",
+    "evidence": "E-0137"
+  },
+  "DAD8": {
+    "name": "wSideControl",
+    "note": "per-slot control byte: bit 7 set = AI controlled (ChooseTargetForActor, AIChooseActionResolveStep)",
+    "evidence": "E-0137",
+    "size": "8"
+  },
+  "DAE0": {
+    "name": "wResolveBytesE0",
+    "note": "bytes cleared by RunBattleResolveStep_43C4_Case01",
+    "evidence": "E-0137"
+  },
+  "DAE8": {
+    "name": "wCommandByteE8",
+    "note": "set by RunBattleCommandEntry_Case00",
+    "evidence": "E-0137"
+  },
+  "DAE9": {
+    "name": "wCommandBytesE9",
+    "note": "bytes indexed per slot (ChooseTargetForActor, AddCommandWeightToWDA3C)",
+    "evidence": "E-0137"
+  },
+  "DAEA": {
+    "name": "wCommandByteEA",
+    "note": "set by the battle set-up",
+    "evidence": "E-0137"
+  },
+  "DAF1": {
+    "name": "wEffectFrameCounter",
+    "note": "frame counter for the every-fifth-frame effect step",
+    "evidence": "E-0137"
+  },
+  "DAF2": {
+    "name": "wBattleSetupF2",
+    "note": "three bytes written by RunBattleSetup_Case00_Case00",
+    "evidence": "E-0137"
+  },
+  "DAFA": {
+    "name": "wHealFlags",
+    "note": "bytes indexed per slot by HealTargetHP and LoveRain",
+    "evidence": "E-0137"
+  },
+  "DC20": {
+    "name": "wSoundChannel1",
+    "note": "sound channel slot 1 (6 slots of $20 bytes from wSoundChannelSlots)",
+    "evidence": "E-0137",
+    "size": "20"
+  },
+  "DC40": {
+    "name": "wSoundChannel2",
+    "note": "sound channel slot 2",
+    "evidence": "E-0137",
+    "size": "20"
+  },
+  "DC60": {
+    "name": "wSoundChannel3",
+    "note": "sound channel slot 3",
+    "evidence": "E-0137",
+    "size": "20"
+  },
+  "DC80": {
+    "name": "wSoundChannel4",
+    "note": "sound channel slot 4",
+    "evidence": "E-0137",
+    "size": "20"
+  },
+  "DCA0": {
+    "name": "wSoundChannel5",
+    "note": "sound channel slot 5",
+    "evidence": "E-0137",
+    "size": "20"
+  },
+  "DD08": {
+    "name": "wSoundSkipMaskA",
+    "note": "ANDed with wSoundSkipMaskB; non-zero makes ReturnTwiceIfWDD08AndWDD0B skip the caller",
+    "evidence": "E-0137"
+  },
+  "DD09": {
+    "name": "wSoundEngineMode",
+    "note": "sound engine mode (SetWDD15To0AndWDD09FromWDD16, SetWDD15To4AndClearWDD09)",
+    "evidence": "E-0137"
+  },
+  "DD0B": {
+    "name": "wSoundSkipMaskB",
+    "note": "second mask of ReturnTwiceIfWDD08AndWDD0B",
+    "evidence": "E-0137"
+  },
+  "DD0C": {
+    "name": "wSoundTickByte0C",
+    "note": "set by SoundTick, read by SoundNextEvent",
+    "evidence": "E-0137"
+  },
+  "DD0D": {
+    "name": "wSoundRegBase",
+    "note": "register base ($FF00 offset) of the channel being processed (WriteChannelRegisterC)",
+    "evidence": "E-0137"
+  },
+  "DD0E": {
+    "name": "wSoundTickBuf0E",
+    "note": "SoundTick work bytes",
+    "evidence": "E-0137"
+  },
+  "DD12": {
+    "name": "wSoundTimer12",
+    "note": "sound timer (InitSoundHardware_Sub01, SoundTick_Sub02)",
+    "evidence": "E-0137"
+  },
+  "DD13": {
+    "name": "wSoundTimer13",
+    "note": "sound timer reload",
+    "evidence": "E-0137"
+  },
+  "DD14": {
+    "name": "wSoundTimer14",
+    "note": "sound timer (SoundTick_Sub01)",
+    "evidence": "E-0137"
+  },
+  "DD15": {
+    "name": "wSoundEngineState",
+    "note": "sound engine state, 0 or 4",
+    "evidence": "E-0137"
+  },
+  "DD16": {
+    "name": "wSoundSavedMode",
+    "note": "mode restored into wSoundEngineMode",
+    "evidence": "E-0137"
+  },
+  "DD17": {
+    "name": "wSoundEventByte17",
+    "note": "SoundNextEvent work byte",
+    "evidence": "E-0137"
+  },
+  "DD18": {
+    "name": "wSoundEventByte18",
+    "note": "SoundNextEvent work byte",
+    "evidence": "E-0137"
+  },
+  "DD19": {
+    "name": "wSoundInitByte19",
+    "note": "set by InitSoundHardware, read by SoundTick",
+    "evidence": "E-0137"
+  },
+  "DFFF": {
+    "name": "wStackTop",
+    "note": "initial stack pointer (BootAndMainLoop: ld sp, $DFFF)",
+    "evidence": "E-0137"
+  },
+  "A000": {
+    "name": "sRecords",
+    "note": "SRAM bank 0: the monster records, $A5 bytes each from here (SRAMRecordAddress, LoadSRAMRecordByte); in SRAM bank 1 the extra record $1D sits here (RecordAddressWithBank1Slot1D)",
+    "evidence": "E-0137",
+    "size": "A5"
+  },
+  "A0A5": {
+    "name": "sRecord1",
+    "note": "second $A5-byte record (DeleteSRAMRecordAndCompact moves the records from here down)",
+    "evidence": "E-0137",
+    "size": "A5"
+  },
+  "A06F": {
+    "name": "sBank1Records",
+    "note": "SRAM bank 1: compact $6F-byte records (SRAMBank1RecordAddress); the bank-1 checksum covers $29A * 10 bytes from here",
+    "evidence": "E-0137"
+  },
+  "AD71": {
+    "name": "sRecordBackup",
+    "note": "SRAM bank 1: backup of the compact records and the bank-1 record (BackupRecordsToSRAMBank1, RestoreRecordsFromSRAMBank1Backup)",
+    "evidence": "E-0137"
+  },
+  "B356": {
+    "name": "sCompactRecords",
+    "note": "SRAM bank 0: 29 compact $6F-byte records after the 30 full records (RecordAddressWithBank1Slot1D, CountFlaggedSRAMRecords)",
+    "evidence": "E-0137",
+    "size": "C93"
+  },
+  "BA73": {
+    "name": "sBank1Checksum",
+    "note": "SRAM bank 1: complement of the record sum plus $4321 (ComputeSRAMBank1RecordChecksum, VerifySaveBank1Checksum)",
+    "evidence": "E-0137"
+  },
+  "BB00": {
+    "name": "sSaveSignature",
+    "note": "SRAM bank 1: $55 when a save exists (CheckSaveData)",
+    "evidence": "E-0137"
+  },
+  "BB01": {
+    "name": "sSaveData",
+    "note": "SRAM bank 1: the saved blocks in order: hFF8A ($0E bytes), wPlayerName block ($291), wStoryFlags ($6B), wKeyWorldSlot block ($B5) (SaveGameToSRAMWithChecksum)",
+    "evidence": "E-0137",
+    "size": "3BF"
+  },
+  "BB07": {
+    "name": "sSavedMapId",
+    "note": "saved hMapId (sSaveData + $6)",
+    "evidence": "E-0137"
+  },
+  "BB0F": {
+    "name": "sSavedPlayerName",
+    "note": "saved wPlayerName (start of the $291-byte block)",
+    "evidence": "E-0137"
+  },
+  "BC00": {
+    "name": "sSavedPartyCount",
+    "note": "saved wPartyCount",
+    "evidence": "E-0137"
+  },
+  "BC01": {
+    "name": "sSavedPartyList",
+    "note": "saved wPartyList (party record indexes)",
+    "evidence": "E-0137"
+  },
+  "BC0A": {
+    "name": "sSavedKeyList",
+    "note": "saved wKeyList (4-byte key entries)",
+    "evidence": "E-0137"
+  },
+  "BD30": {
+    "name": "sSavedPlayTime",
+    "note": "saved play time from wPlayFrames (5 bytes)",
+    "evidence": "E-0137"
+  },
+  "BD36": {
+    "name": "sSavedKeyIndex",
+    "note": "saved wCurrentKeyIndex",
+    "evidence": "E-0137"
+  },
+  "BD3A": {
+    "name": "sSavedArenaByte37",
+    "note": "saved wArenaByte37",
+    "evidence": "E-0137"
+  },
+  "BD97": {
+    "name": "sSavedLinkByte94",
+    "note": "saved wLinkByte94",
+    "evidence": "E-0137"
+  },
+  "BE0D": {
+    "name": "sSavedMapType",
+    "note": "saved wMapType (the title screen shows a key name for special maps)",
+    "evidence": "E-0137"
+  },
+  "BEC0": {
+    "name": "sSavedCE9BBlock",
+    "note": "SRAM bank 1: copy of the $D8-byte block at wGM2TimerFrames (SaveWCE9BBlockToSRAMBank1)",
+    "evidence": "E-0137"
+  },
+  "BEF3": {
+    "name": "sSavedGM2Mode",
+    "note": "saved wGM2Mode (sSavedCE9BBlock + $33)",
+    "evidence": "E-0137"
+  },
+  "BF98": {
+    "name": "sSaveChecksumLo",
+    "note": "SRAM bank 1: low byte of the saved blocks sum + $9753",
+    "evidence": "E-0137"
+  },
+  "BF99": {
+    "name": "sSaveChecksumHi",
+    "note": "high byte of that checksum",
+    "evidence": "E-0137"
+  },
+  "C53F": {
+    "name": "wPlayerNameText",
+    "note": "the player name copied with a $F0 terminator for text output (Func_000_2950_Case16)",
+    "evidence": "E-0137"
+  },
+  "C570": {
+    "of": "C56F",
+    "note": "second DMG palette byte of the fade",
+    "evidence": "E-0137"
+  },
+  "C571": {
+    "of": "C56F",
+    "note": "third DMG palette byte of the fade",
+    "evidence": "E-0137"
+  },
+  "CCCD": {
+    "name": "wNameBufUnknown",
+    "note": "name buffer picked when a name starts with the $98 placeholder (PickNameBufferForFirstByte)",
+    "evidence": "E-0137"
+  },
+  "CECF": {
+    "name": "wTopSpeciesName",
+    "note": "name of the picked species, copied from wNameGlyphBuf (GameMode5_Update_Case07_Sub01_Sub04)",
+    "evidence": "E-0137"
+  },
+  "CEDC": {
+    "name": "wTopSpeciesByteDC",
+    "note": "byte passed as wArg2 with the picked species",
+    "evidence": "E-0137"
   }
 }

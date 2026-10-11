@@ -873,7 +873,7 @@ Jump_014_45B8::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wSelectedRecord, wArg5, wArg6, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wSelectedRecord, wScreenSubStep, ...
-; points at: wRecordBufA, sB356, sA000
+; points at: wRecordBufA, sCompactRecords, sRecords
 ScriptCommandEB_Run_Case05_Case3F::
 Jump_014_45DE:: ; address name
     ld a, [wScreenSubStep]
@@ -920,13 +920,13 @@ Jump_014_4630::
     jr z, Jump_014_464F
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     jr Jump_014_4654
 
 Jump_014_464F::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
 
 Jump_014_4654::
@@ -966,7 +966,7 @@ Jump_014_4654::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord
 ; writes: rRAMG2, rRAMB, wItemGridX, wItemGridY, wSelectedRecord, wListCursor, wChoiceCursor, wListPageIndex, ...
-; points at: sB356, wRecordBufA, sA000
+; points at: sCompactRecords, wRecordBufA, sRecords
 ScriptCommandEB_Run_Case05_Case40::
 Jump_014_46A1:: ; address name
     ld a, $0A
@@ -976,13 +976,13 @@ Jump_014_46A1:: ; address name
     jr z, Jump_014_46B9
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     jr Jump_014_46BE
 
 Jump_014_46B9::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
 
 Jump_014_46BE::
@@ -2218,7 +2218,7 @@ Jump_014_4FCC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg2, wArg3, wArg4, wArg1, wListEntries2, wScreenByteBF, ...
-; points at: sB356, sA000
+; points at: sCompactRecords, sRecords
 ScriptCommandEB_Run_Case05_Case12::
 Jump_014_5002:: ; address name
     ld a, $0A
@@ -2235,13 +2235,13 @@ Jump_014_5002:: ; address name
     jr nc, Jump_014_502A
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     jr Jump_014_502F
 
 Jump_014_502A::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
 
 Jump_014_502F::
@@ -2250,7 +2250,7 @@ Jump_014_502F::
     ld [wArg3], a
     ld a, h
     ld [wArg4], a
-    ld hl, sA000
+    ld hl, sRecords
     ld c, $00
 
 Jump_014_503F::
@@ -2702,7 +2702,7 @@ Jump_014_5371:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wArg5, wArg6, wSelectedRecord, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wScreenSubStep, wSelectedRecord, ...
-; points at: wRecordBufA, sB356, sA000
+; points at: wRecordBufA, sCompactRecords, sRecords
 ScriptCommandEB_Run_Case04_Case42::
 Jump_014_538C:: ; address name
     ld a, [wScreenSubStep]
@@ -2754,13 +2754,13 @@ Jump_014_53EC::
     jr z, Jump_014_53FF
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     jr Jump_014_5404
 
 Jump_014_53FF::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
 
 Jump_014_5404::
@@ -2793,7 +2793,7 @@ Jump_014_5404::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord
 ; writes: rRAMG2, rRAMB, wItemGridX, wItemGridY, wSelectedRecord, wListCursor, wChoiceCursor, wListPageIndex, ...
-; points at: sB356, wRecordBufA, sA000
+; points at: sCompactRecords, wRecordBufA, sRecords
 ScriptCommandEB_Run_Case04_Case43::
 Jump_014_543F:: ; address name
     ld a, $0A
@@ -2803,13 +2803,13 @@ Jump_014_543F:: ; address name
     jr z, Jump_014_5457
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     jr Jump_014_545C
 
 Jump_014_5457::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
 
 Jump_014_545C::
@@ -3092,7 +3092,7 @@ Jump_014_5623::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wScreenStep
-; points at: sB356, sA000
+; points at: sCompactRecords, sRecords
 ScriptCommandEB_Run_Case07_Case12::
 Jump_014_5649:: ; address name
     ld a, $0A
@@ -3107,13 +3107,13 @@ Jump_014_5649:: ; address name
     jr z, Jump_014_566D
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     jr Jump_014_5672
 
 Jump_014_566D::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
 
 Jump_014_5672::
@@ -3204,7 +3204,7 @@ Jump_014_56E7::
 ; 2 call sites from 2 routines (e.g. ScriptCommandEB_Run_Case05_Case3E, ScriptCommandEB_Run_Case05_Case11)
 ; reads: wArg5, wArg6, wTextBuf1
 ; writes: wArg2, wArg3, wArg4, wArg1, wNameGlyphBuf, wTextBuf1
-; points at: sB356, wNameGlyphBuf, wTextBuf1, sA000
+; points at: sCompactRecords, wNameGlyphBuf, wTextBuf1, sRecords
 ScriptCommandEB_Run_Shared03::
 Func_014_56EB:: ; address name
     farcall SetWD7F5ToWD789Cell5
@@ -3217,13 +3217,13 @@ Func_014_56EB:: ; address name
     jr z, Jump_014_570A
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     jr Jump_014_570F
 
 Jump_014_570A::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
 
 Jump_014_570F::
@@ -3311,7 +3311,7 @@ Jump_014_578A::
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case2F)
 ; reads: wSelectedRecord, wTextBuf0
 ; writes: wArg2, wArg3, wArg4, wArg1, wNameGlyphBuf, wTextBuf0
-; points at: sB356, wNameGlyphBuf, wTextBuf0, sA000
+; points at: sCompactRecords, wNameGlyphBuf, wTextBuf0, sRecords
 ScriptCommandEB_Run_Case05_Case2F_Sub03::
 Func_014_578E:: ; address name
     ld a, [wSelectedRecord]
@@ -3319,13 +3319,13 @@ Func_014_578E:: ; address name
     jr z, Jump_014_57A1
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     jr Jump_014_57A6
 
 Jump_014_57A1::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
 
 Jump_014_57A6::
@@ -3776,10 +3776,10 @@ Func_014_59C2:: ; address name
 ; only called from ScriptCommandEB_Run_Case04_Case15 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case04_Case15)
 ; writes: rRAMB, wArg6, wArg7, wArg5
-; points at: sB356, sA000
+; points at: sCompactRecords, sRecords
 ScriptCommandEB_Run_Case04_Case15_Sub01::
 Func_014_59D0:: ; address name
-    ld hl, sB356
+    ld hl, sCompactRecords
     ld c, $00
 
 Jump_014_59D5::
@@ -3794,7 +3794,7 @@ Jump_014_59D5::
     jr c, Jump_014_59D5
     ld a, $01
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld a, [hl]
     bit 7, a
     jr z, Jump_014_59F7
@@ -3808,7 +3808,7 @@ Jump_014_59F7::
     jr z, Jump_014_5A15
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     ld a, l
     ld [wArg6], a
@@ -3822,7 +3822,7 @@ Jump_014_59F7::
 
 Jump_014_5A15::
     pop bc
-    ld hl, sA000
+    ld hl, sRecords
     ld a, l
     ld [wArg6], a
     ld a, h
@@ -6057,10 +6057,10 @@ Jump_014_6A3B::
 ; 1 call site from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case03_Case00)
 ; reads: wArg1, wGridCursorX
 ; writes: rRAMG2, rRAMB
-; points at: sA000, wNameEntryText, wPartyList
+; points at: sRecords, wNameEntryText, wPartyList
 RunWCFA8StateWhenNotFading_Case03_Case00_Sub01::
 Func_014_6A45:: ; address name
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -7958,7 +7958,7 @@ Data_014_7D79:: ; heuristic: target of a monotone pointer table; C0
 ; 4 call sites from 4 routines (e.g. ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case05_Case13, ScriptCommandEB_Run_Case04_Case42, ScriptCommandEB_Run_Case07_Case12)
 ; reads: wArg1
 ; writes: rRAMG2, rRAMB, wArg5, wArg6, wArg7
-; points at: sB356, sB3C5, sA000, wRecordBufB
+; points at: sCompactRecords, sRecords, wRecordBufB
 ScriptCommandEB_Run_Shared05::
 Func_014_7D7F:: ; address name
     ld a, [wArg1]
@@ -7972,12 +7972,12 @@ Func_014_7D7F:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     jr Jump_014_7DAB
 
 Jump_014_7D9E::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $0A
     ld [rRAMG2], a
     ld a, $01
@@ -7993,8 +7993,8 @@ Jump_014_7DAD::
     jr nz, Jump_014_7DAD
 
 Jump_014_7DB2::
-    ld hl, sB356
-    ld de, sB3C5
+    ld hl, sCompactRecords
+    ld de, sCompactRecords + $6F
     xor a, a
     ld [rRAMB], a
     ld bc, $0000
@@ -8051,7 +8051,7 @@ Jump_014_7DF0::
     jr Jump_014_7DDF
 
 Jump_014_7DF8::
-    ld hl, sB356
+    ld hl, sCompactRecords
     xor a, a
     ld [rRAMB], a
     ld c, $00
@@ -8075,7 +8075,7 @@ Jump_014_7E01::
 Jump_014_7E16::
     push hl
     ld de, wRecordBufB
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
     ld [rRAMB], a
     ld b, $6F
@@ -8086,7 +8086,7 @@ Jump_014_7E24::
     inc de
     dec b
     jr nz, Jump_014_7E24
-    ld hl, sA000
+    ld hl, sRecords
     ld b, $6F
 
 Jump_014_7E2F::
@@ -8110,7 +8110,7 @@ Jump_014_7E3E::
 Jump_014_7E44::
     xor a, a
     ld [rRAMB], a
-    ld hl, sB356
+    ld hl, sCompactRecords
     ld c, $00
 
 Jump_014_7E4D::
@@ -8146,7 +8146,7 @@ Jump_014_7E6D::
     jr c, Jump_014_7E4D
     ld a, $01
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld a, [hl]
     bit 7, a
     jr nz, Jump_014_7E89
@@ -8164,7 +8164,7 @@ Jump_014_7E89::
 ; 19 call sites from 18 routines (e.g. RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case17, ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case04_Case16, ...)
 ; reads: wArg1, wArg2, wPartyCount
 ; writes: rRAMG2, rRAMB, wArg3, wArg5, wArg6, wArg7, wPartyCount
-; points at: sA000, sA0A5, wPartyList
+; points at: sRecords, sRecord1, wPartyList
 DeleteSRAMRecordAndCompact::
 Func_014_7E96:: ; address name
     ld a, $0A
@@ -8176,7 +8176,7 @@ Func_014_7E96:: ; address name
     jr nc, Jump_014_7EB6
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld b, $A5
 
@@ -8187,8 +8187,8 @@ Jump_014_7EB1::
     jr nz, Jump_014_7EB1
 
 Jump_014_7EB6::
-    ld hl, sA000
-    ld de, sA0A5
+    ld hl, sRecords
+    ld de, sRecord1
     ld bc, $0000
 
 Jump_014_7EBF::
@@ -8316,7 +8316,7 @@ Jump_014_7F58::
     jr c, Jump_014_7F4D
 
 Jump_014_7F5F::
-    ld hl, sA000
+    ld hl, sRecords
     ld c, $00
 
 Jump_014_7F64::

@@ -442,22 +442,22 @@ Jump_01B_4357::
 
 ; zeroes the first two bytes of each of six $20-byte sound channel slots from wSoundChannelSlots (E-0118)
 ; 1 call site from 1 routine (e.g. Func_01B_4001_Case00)
-; writes: wSoundChannelSlots, wDC01, wDC20, wDC21, wDC40, wDC41, wDC60, wDC61, ...
+; writes: wSoundChannelSlots, wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5
 ClearSoundChannelSlots::
 Func_01B_4362:: ; address name
     xor a, a
     ld [wSoundChannelSlots], a
-    ld [wDC01], a
-    ld [wDC20], a
-    ld [wDC21], a
-    ld [wDC40], a
-    ld [wDC41], a
-    ld [wDC60], a
-    ld [wDC61], a
-    ld [wDC80], a
-    ld [wDC81], a
-    ld [wDCA0], a
-    ld [wDCA1], a
+    ld [wSoundChannelSlots + $1], a
+    ld [wSoundChannel1], a
+    ld [wSoundChannel1 + $1], a
+    ld [wSoundChannel2], a
+    ld [wSoundChannel2 + $1], a
+    ld [wSoundChannel3], a
+    ld [wSoundChannel3 + $1], a
+    ld [wSoundChannel4], a
+    ld [wSoundChannel4 + $1], a
+    ld [wSoundChannel5], a
+    ld [wSoundChannel5 + $1], a
     ret
 
 ; busy-waits $80 iterations (E-0122)
@@ -5914,7 +5914,7 @@ Jump_01B_6CB8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPackWork, wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenStep
-; points at: wRecordBufA, sA00F, sA000
+; points at: wRecordBufA, sRecords
 ScriptCommandEF_Run_Bank1B_Case05_Case01::
 Jump_01B_6CC8:: ; address name
     ld a, [wPackWork]
@@ -5928,7 +5928,7 @@ Jump_01B_6CC8:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld hl, sA00F
+    ld hl, sRecords + $F
     ld de, wRecordBufA + $F
     ld b, $0A
     jr Jump_01B_6D03
@@ -5936,7 +5936,7 @@ Jump_01B_6CC8:: ; address name
 Jump_01B_6CEC::
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld a, $0A
     ld [rRAMG2], a
@@ -7015,7 +7015,7 @@ Jump_01B_7398::
 ; 3 call sites from 3 routines (e.g. DrawRecordListPageIndicators_1B, ScriptCommandEF_Run_Bank1B_Case0E_Case01, Func_01B_6A5E_Case00)
 ; reads: wPickCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
-; points at: wListEntries, wListEntries2, sA000, wPickedRecords
+; points at: wListEntries, wListEntries2, sRecords, wPickedRecords
 ListAvailableRecordsForSelection::
 Func_01B_7399:: ; address name
     ld hl, wListEntries
@@ -7041,7 +7041,7 @@ Jump_01B_73A8::
     xor a, a
     ld [rRAMB], a
     ld [wRecordsFlagged], a
-    ld de, sA000
+    ld de, sRecords
     ld hl, wListEntries
     ld b, $00
     ld c, $00

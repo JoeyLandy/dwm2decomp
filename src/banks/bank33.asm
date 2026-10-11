@@ -2640,7 +2640,7 @@ Func_033_5F83:: ; address name
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case0F_Case01)
 ; reads: wPickCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
-; points at: wListEntries, wListEntries2, sA000, wPickedRecords
+; points at: wListEntries, wListEntries2, sRecords, wPickedRecords
 ListAvailableRecordsForSelection_Bank33::
 Func_033_5F99:: ; address name
     ld hl, wListEntries
@@ -2666,7 +2666,7 @@ Jump_033_5FA8::
     xor a, a
     ld [rRAMB], a
     ld [wRecordsFlagged], a
-    ld de, sA000
+    ld de, sRecords
     ld hl, wListEntries
     ld b, $00
     ld c, $00

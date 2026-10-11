@@ -7235,7 +7235,7 @@ Data_002_7006:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; with SRAM bank 1 selected: hFFC6 = 1 when sBB00 is not the signature $55 (no save); otherwise 2 when VerifySaveBank1Checksum or VerifySaveBank3Checksum returns non-zero (damaged save), else 0 (valid); then disables SRAM (E-0109)
 ; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, ShowSaveFileInfoWindow, LoadSaveFileSummary)
-; reads: sBB00
+; reads: sSaveSignature
 ; writes: rRAMG, rRAMB, hTemp0
 CheckSaveData::
 Func_002_706E:: ; address name
@@ -7243,7 +7243,7 @@ Func_002_706E:: ; address name
     ld [rRAMG], a
     ld a, $01
     ld [rRAMB], a
-    ld a, [sBB00]
+    ld a, [sSaveSignature]
     cp a, $55
     jr z, Jump_002_7083
     ld a, $01
@@ -7276,12 +7276,12 @@ Jump_002_7098::
 ; sums the SRAM bank-1 bytes from sA06F into the word DE (the loop adds several bytes per pass; the comparison at the end is not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
 ; 1 call site from 1 routine (e.g. CheckSaveData)
 ; writes: rRAMB
-; points at: sA06F, sBA73
+; points at: sBank1Records, sBank1Checksum
 VerifySaveBank1Checksum::
 Func_002_70A2:: ; address name
     ld a, $01
     ld [rRAMB], a
-    ld hl, sA06F
+    ld hl, sBank1Records
     ld bc, $029A
     ld de, $0000
 
@@ -7372,7 +7372,7 @@ Jump_002_70EC::
     ld a, d
     adc a, $43
     ld d, a
-    ld hl, sBA73
+    ld hl, sBank1Checksum
     ld a, [hl+]
     cp a, e
     jr nz, Jump_002_710E
@@ -7389,12 +7389,12 @@ Jump_002_710E::
 ; sums the SRAM bank-3 bytes from sA000 into the word DE (comparison not read) and returns A non-zero on a mismatch, as CheckSaveData uses it (E-0109)
 ; 1 call site from 1 routine (e.g. CheckSaveData)
 ; writes: rRAMB
-; points at: sA000
+; points at: sRecords
 VerifySaveBank3Checksum::
 Func_002_7111:: ; address name
     ld a, $03
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $0333
     ld de, $0000
 
@@ -7573,11 +7573,11 @@ Func_002_71B2:: ; address name
 ; copies the record backup at sAD71 (SRAM bank 1) back to sB356 in bank 0 and to sA000 in bank 1; counterpart of BackupRecordsToSRAMBank1 (E-0128)
 ; 2 call sites from 2 routines (e.g. RunSaveSteps, RunBank1RecordScanSteps)
 ; writes: rRAMB
-; points at: sAD71, sB356, sA000
+; points at: sRecordBackup, sCompactRecords, sRecords
 RestoreRecordsFromSRAMBank1Backup::
 Func_002_71ED:: ; address name
-    ld hl, sAD71
-    ld de, sB356
+    ld hl, sRecordBackup
+    ld de, sCompactRecords
     ld bc, $0309
 
 Jump_002_71F6::
@@ -7631,7 +7631,7 @@ Jump_002_7225::
     jr nz, Jump_002_7225
     ld a, $01
     ld [rRAMB], a
-    ld de, sA000
+    ld de, sRecords
     ld b, $6F
 
 Jump_002_7240::
@@ -7645,10 +7645,10 @@ Jump_002_7240::
 ; only called from RunSaveSteps (E-0047)
 ; 1 call site from 1 routine (e.g. RunSaveSteps)
 ; writes: rRAMB
-; points at: sA000
+; points at: sRecords
 RunSaveSteps_Sub01::
 Func_002_7247:: ; address name
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $0333
 
 Jump_002_724D::
@@ -7724,13 +7724,13 @@ Jump_002_724D::
 ; 1 call site from 1 routine (e.g. RunSaveSteps)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMB, hTemp0, hTemp1, wSaveStateFlag
-; points at: sBB01
+; points at: sSaveData
 CopySaveBlocksToSRAM::
 Func_002_72B0:: ; address name
     ld a, $01
     ld [rRAMB], a
     ld hl, Data_002_75F7
-    ld de, sBB01
+    ld de, sSaveData
 
 Jump_002_72BB::
     push hl
@@ -7769,17 +7769,17 @@ Jump_002_72D7::
 
 ; only called from RunSaveSteps (E-0047)
 ; 1 call site from 1 routine (e.g. RunSaveSteps)
-; reads: sBEF3
+; reads: sSavedGM2Mode
 ; writes: rSVBK, rRAMB
-; points at: sBEC0, wGM2TimerFrames
+; points at: sSavedCE9BBlock, wGM2TimerFrames
 RunSaveSteps_Sub02::
 Func_002_72E9:: ; address name
     xor a, a
     ldh [rSVBK], a
     ld a, $01
     ld [rRAMB], a
-    ld hl, sBEC0
-    ld a, [sBEF3]
+    ld hl, sSavedCE9BBlock
+    ld a, [sSavedGM2Mode]
     cp a, $01
     jr z, Jump_002_72FF
     and a, a
@@ -7804,12 +7804,12 @@ Jump_002_7305::
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347)
 ; reads: wGM2Mode
 ; writes: rRAMB, rSVBK
-; points at: wGM2TimerFrames, sBEC0
+; points at: wGM2TimerFrames, sSavedCE9BBlock
 SaveWCE9BBlockToSRAMBank1::
 Func_002_730E:: ; address name
     ld hl, wGM2TimerFrames
     ld bc, $00D8
-    ld de, sBEC0
+    ld de, sSavedCE9BBlock
     ld a, $01
     ld [rRAMB], a
     xor a, a
@@ -7889,12 +7889,12 @@ Jump_002_7377::
 ; sums $29A * 10 bytes from sA06F in SRAM bank 1 and stores the complement plus $4321 at sBA73 (E-0129)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_Sub01)
 ; writes: rRAMB
-; points at: sA06F, sBA73
+; points at: sBank1Records, sBank1Checksum
 ComputeSRAMBank1RecordChecksum::
 Func_002_737F:: ; address name
     ld a, $01
     ld [rRAMB], a
-    ld hl, sA06F
+    ld hl, sBank1Records
     ld bc, $029A
     ld de, $0000
 
@@ -7985,7 +7985,7 @@ Jump_002_73C9::
     ld a, d
     adc a, $43
     ld d, a
-    ld hl, sBA73
+    ld hl, sBank1Checksum
     ld a, e
     ld [hl+], a
     ld a, d
@@ -8028,11 +8028,11 @@ Func_002_73E6:: ; address name
 ; copies the SRAM bank-0 records from sB356 (and the bank-1 record at sA000) to the backup area at sAD71 in SRAM bank 1 (E-0127)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_Sub01)
 ; writes: rRAMB
-; points at: sB356, sAD71, sA000
+; points at: sCompactRecords, sRecordBackup, sRecords
 BackupRecordsToSRAMBank1::
 Func_002_741B:: ; address name
-    ld hl, sB356
-    ld de, sAD71
+    ld hl, sCompactRecords
+    ld de, sRecordBackup
     ld bc, $0309
 
 Jump_002_7424::
@@ -8084,7 +8084,7 @@ Jump_002_7453::
     inc de
     dec b
     jr nz, Jump_002_7453
-    ld hl, sA000
+    ld hl, sRecords
     ld b, $6F
 
 Jump_002_7469::
@@ -8098,18 +8098,18 @@ Jump_002_7469::
 ; fills the $2000 bytes of SRAM banks 2 and 3 with $FF (E-0117)
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347_Sub01)
 ; writes: rRAMB
-; points at: sA000
+; points at: sRecords
 ClearSRAMBanks2And3::
 Func_002_7470:: ; address name
     ld a, $02
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     ld a, $FF
     call FillBytes
     ld a, $03
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     ld a, $FF
     call FillBytes
@@ -8119,7 +8119,7 @@ Func_002_7470:: ; address name
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347)
 ; reads: wSaveByte4E, wMapType
 ; writes: rRAMG, rRAMB
-; points at: sA000
+; points at: sRecords
 RunSaveGameSteps_7347_Sub01::
 Func_002_7491:: ; address name
     ld a, [wSaveByte4E]
@@ -8136,7 +8136,7 @@ Jump_002_749A::
     ld [rRAMG], a
 
 Jump_002_74AC::
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $0333
     ld de, $0000
 
@@ -8289,7 +8289,7 @@ Jump_002_7542::
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347)
 ; reads: wScreenSavedFlag, wSnapshotSlot1, wSnapshotSlot2, wSnapshotSlot3, wSnapshotSlot4, wSnapshotSlot5, hTemp0, hTemp1, ...
 ; writes: wSpriteSnapshotCount, wSnapshotSlot1, wSnapshotSlot2, wSnapshotSlot3, wSnapshotSlot4, wSnapshotSlot5, rRAMB, hTemp2, ...
-; points at: wSpriteSlots, wSpriteSnapshot, sBB01
+; points at: wSpriteSlots, wSpriteSnapshot, sSaveData
 SnapshotSpritesForSave::
 Func_002_755E:: ; address name
     ld a, [wScreenSavedFlag]
@@ -8317,14 +8317,14 @@ Func_002_755E:: ; address name
 ; the same walk of Data_002_75F7 into SRAM from sBB01, also clearing the running sum in hFFC8/hFFC9 (accumulation not read to its end) (E-0109)
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps)
 ; reads: hTemp0, hTemp1, hTemp2, hTemp3
-; writes: rRAMB, hTemp2, hTemp3, hTemp0, hTemp1, sBB00, sBF98, sBF99
-; points at: sBB01
+; writes: rRAMB, hTemp2, hTemp3, hTemp0, hTemp1, sSaveSignature, sSaveChecksumLo, sSaveChecksumHi
+; points at: sSaveData
 CopySaveBlocksToSRAMWithSum::
 Func_002_7598:: ; address name
     ld a, $01
     ld [rRAMB], a
     ld hl, Data_002_75F7
-    ld de, sBB01
+    ld de, sSaveData
     xor a, a
     ldh [hTemp2], a
     ldh [hTemp3], a
@@ -8348,7 +8348,7 @@ Jump_002_75A8::
     jr nz, Jump_002_75DA
     pop hl
     ld a, $55
-    ld [sBB00], a
+    ld [sSaveSignature], a
     ldh a, [hTemp2]
     ld l, a
     ldh a, [hTemp3]
@@ -8360,9 +8360,9 @@ Jump_002_75A8::
     adc a, $97
     ld h, a
     ld a, l
-    ld [sBF98], a
+    ld [sSaveChecksumLo], a
     ld a, h
-    ld [sBF99], a
+    ld [sSaveChecksumHi], a
     ret
 
 Jump_002_75DA::
@@ -8390,9 +8390,9 @@ Data_002_75F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; SRAM bank 1: C = $FF when sBB00 is not $55 or the checksum of the four saved blocks plus $9753 differs from sBF98; otherwise loads them and returns with C unchanged (E-0127)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case05_Case0C)
-; reads: sBB00, hTemp2, hTemp3, sBF98, sBF99
+; reads: sSaveSignature, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3
-; points at: sBB01, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
+; points at: sSaveData, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
 VerifySaveChecksum::
 Func_002_760B:: ; address name
     ld a, $0A
@@ -8402,10 +8402,10 @@ Func_002_760B:: ; address name
     xor a, a
     ldh [hTemp2], a
     ldh [hTemp3], a
-    ld a, [sBB00]
+    ld a, [sSaveSignature]
     cp a, $55
     jr nz, Jump_002_766D
-    ld hl, sBB01
+    ld hl, sSaveData
     ld de, hPlayerSpriteVariant
     ld bc, $000E
     call CopyBytesWithChecksum_Bank02_7674
@@ -8428,9 +8428,9 @@ Func_002_760B:: ; address name
     ld a, h
     adc a, $97
     ld h, a
-    ld a, [sBF98]
+    ld a, [sSaveChecksumLo]
     ld c, a
-    ld a, [sBF99]
+    ld a, [sSaveChecksumHi]
     ld b, a
     ld a, c
     sub a, l
@@ -8475,8 +8475,8 @@ Func_002_7674:: ; address name
 ; SRAM bank 1: copies hFF8A ($0E bytes), wC60C ($291), wCBD7 ($6B) and wCC42 ($B5) to sBB01 onward while summing them; stores sum + $9753 at sBF98 and $55 at sBB00 (E-0121)
 ; 2 call sites from 2 routines (e.g. Func_033_5215_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_Case03_Case01)
 ; reads: hTemp2, hTemp3
-; writes: rRAMG, rRAMB, hTemp2, hTemp3, sBF98, sBF99, sBB00
-; points at: sBB01, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
+; writes: rRAMG, rRAMB, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi, sSaveSignature
+; points at: sSaveData, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
 SaveGameToSRAMWithChecksum::
 Func_002_7688:: ; address name
     ld a, $0A
@@ -8486,7 +8486,7 @@ Func_002_7688:: ; address name
     xor a, a
     ldh [hTemp2], a
     ldh [hTemp3], a
-    ld de, sBB01
+    ld de, sSaveData
     ld hl, hPlayerSpriteVariant
     ld bc, $000E
     call CopyBytesWithChecksum_Bank02
@@ -8510,11 +8510,11 @@ Func_002_7688:: ; address name
     adc a, $97
     ld h, a
     ld a, l
-    ld [sBF98], a
+    ld [sSaveChecksumLo], a
     ld a, h
-    ld [sBF99], a
+    ld [sSaveChecksumHi], a
     ld a, $55
-    ld [sBB00], a
+    ld [sSaveSignature], a
     xor a, a
     ld [rRAMG], a
     ret

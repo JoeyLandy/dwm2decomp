@@ -579,9 +579,9 @@ Jump_007_48F3::
 
 ; entry 1 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSGBActive, sBD97, wIsCGB, hTemp0, wLinkScreenState
+; reads: wSGBActive, sSavedLinkByte94, wIsCGB, hTemp0, wLinkScreenState
 ; writes: rRAMG, rRAMB, wLinkByte94, wMenuSaveByte34, wBattleKindFlags, wStringCategory, wStringIndex, rVBK, ...
-; points at: wWorkBuf, wLinkRole, wSGBPaletteSet, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot, sA000
+; points at: wWorkBuf, wLinkRole, wSGBPaletteSet, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot, sRecords
 GameMode5_Init_Case01::
 Jump_007_4952:: ; address name
     call InitSoundHardware
@@ -620,7 +620,7 @@ Jump_007_4985::
     ld [rRAMG], a
     ld a, $01
     ld [rRAMB], a
-    ld a, [sBD97]
+    ld a, [sSavedLinkByte94]
     or a, a
     jr z, Jump_007_49B3
     cp a, $01
@@ -645,7 +645,7 @@ Jump_007_49B3::
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     xor a, a
     call FillBytes
@@ -653,13 +653,13 @@ Jump_007_49B3::
     ld [rRAMG], a
     ld a, $01
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $006F
     xor a, a
     call FillBytes
     ld a, $02
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     xor a, a
     call FillBytes
@@ -2887,20 +2887,20 @@ Jump_007_5F89:: ; address name
 
 ; entry 2 of the `rst $00` table in GameMode5_Update_Case00_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wDC40, wWorkBuf
+; reads: wJoypadPressed, wSoundChannel2, wWorkBuf
 ; writes: wWorkBuf, wLinkScreenSubState, wLinkScreenState, wModeState, wGameMode2State, wGameMode2Arg
-; points at: wDC60, wDC80, wDCA0, wModeChangeRequest
+; points at: wSoundChannel3, wSoundChannel4, wSoundChannel5, wModeChangeRequest
 GameMode5_Update_Case00_Case04_Case02::
 Jump_007_5F9D:: ; address name
     ld a, [wJoypadPressed]
     and a, $0B
     jr nz, Jump_007_5FCF
-    ld a, [wDC40]
-    ld hl, wDC60
+    ld a, [wSoundChannel2]
+    ld hl, wSoundChannel3
     and a, [hl]
-    ld hl, wDC80
+    ld hl, wSoundChannel4
     and a, [hl]
-    ld hl, wDCA0
+    ld hl, wSoundChannel5
     and a, [hl]
     cp a, $FF
     ret nz
@@ -3892,11 +3892,11 @@ Jump_007_6606:: ; address name
 ; entry 1 of the `rst $00` table in GameMode5_Update_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots
-; points at: wDC20, wLinkScreenSubState
+; points at: wSoundChannel1, wLinkScreenSubState
 GameMode5_Update_Case01_Case02_Case01::
 Jump_007_6624:: ; address name
     ld a, [wSoundChannelSlots]
-    ld hl, wDC20
+    ld hl, wSoundChannel1
     and a, [hl]
     cp a, $FF
     ret nz
@@ -3908,7 +3908,7 @@ Jump_007_6624:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: rRAMG, rRAMB, wLinkScreenSubState
-; points at: sA000, wScreenTileBuffer, wLinkScreenState
+; points at: sRecords, wScreenTileBuffer, wLinkScreenState
 GameMode5_Update_Case01_Case02_Case02::
 Jump_007_6633:: ; address name
     ld a, [wTextFlags]
@@ -3918,25 +3918,25 @@ Jump_007_6633:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     xor a, a
     call FillBytes
     ld a, $01
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     xor a, a
     call FillBytes
     ld a, $02
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     xor a, a
     call FillBytes
     ld a, $03
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     xor a, a
     call FillBytes
@@ -4388,7 +4388,7 @@ Func_007_695A:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case01_Case06_Case06)
 ; reads: wRecordBuffer, wRecordBufferData, wScreenAttrBuffer, wSpeciesRecord
 ; writes: rRAMG, rRAMB, wMonsterId, wSpeciesIdLo, wSpeciesIdHi
-; points at: sA000, wPlayerName, sA00D, sA08E, sA099, sA01E, sA029
+; points at: sRecords, wPlayerName
 GameMode5_Update_Case01_Case06_Case06_Sub01::
 Func_007_6975:: ; address name
     ld a, $0A
@@ -4401,7 +4401,7 @@ Func_007_6975:: ; address name
     ld a, h
     ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $02
     ld [hl+], a
     ld a, $1C
@@ -4525,7 +4525,7 @@ Func_007_6975:: ; address name
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld hl, sA00D
+    ld hl, sRecords + $D
     ld a, [wSpeciesRecord]
     ld [hl], a
     ld a, l
@@ -4571,13 +4571,13 @@ Func_007_6975:: ; address name
     adc a, $00
     ld h, a
     ld [hl], $00
-    ld hl, sA08E
+    ld hl, sRecords + $8E
     call GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01
-    ld hl, sA099
+    ld hl, sRecords + $99
     call GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01
-    ld hl, sA01E
+    ld hl, sRecords + $1E
     call GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01
-    ld hl, sA029
+    ld hl, sRecords + $29
     call GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01
     farcall SetSpeciesFlag
     ret

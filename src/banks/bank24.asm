@@ -403,7 +403,7 @@ Jump_024_42A4::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wScreenStep
 ; writes: rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wSaveStep, wSaveRecordIndex, wScreenStep
-; points at: sA000, wRecordBufB
+; points at: sRecords, wRecordBufB
 GameMode6_Update_Case02_Case01::
 Jump_024_42B3:: ; address name
     farcall LoadWD7FFFromWC7C7Table
@@ -411,7 +411,7 @@ Jump_024_42B3:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
 
 Jump_024_42C5::
     ld a, [hl]
@@ -1144,7 +1144,7 @@ Jump_024_4724:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wRecordBufB, wScreenStep
 ; writes: wArg1, wArg2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wSaveStep, wSaveRecordIndex, ...
-; points at: sA000, wRecordBufB
+; points at: sRecords, wRecordBufB
 GameMode6_Update_Case04_Case0C::
 Jump_024_475C:: ; address name
     farcall SetWD7F5ToWD789Cell5
@@ -1160,7 +1160,7 @@ Jump_024_475C:: ; address name
     ld a, [wArg5]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld a, $0A
     ld [rRAMG], a
@@ -1518,7 +1518,7 @@ Jump_024_49AF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wRecordBufB, wScreenStep
 ; writes: wArg1, wArg2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wSaveStep, wSaveRecordIndex, ...
-; points at: sA000, wRecordBufB
+; points at: sRecords, wRecordBufB
 GameMode6_Update_Case05_Case0A::
 Jump_024_49E8:: ; address name
     farcall SetWD7F5ToWD789Cell4
@@ -1538,7 +1538,7 @@ Jump_024_49E8:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld b, $A5
     ld de, wRecordBufB
@@ -2397,7 +2397,7 @@ Jump_024_4F3F::
 ; only called from GameMode6_Update_Case05_Case08 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode6_Update_Case05_Case08)
 ; writes: rRAMG, rRAMB
-; points at: sA000
+; points at: sRecords
 GameMode6_Update_Case05_Case08_Sub01::
 Func_024_4F41:: ; address name
     ld a, $0A
@@ -2407,7 +2407,7 @@ Func_024_4F41:: ; address name
     ld a, [hl]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld a, $0B
     add_a_to_hl

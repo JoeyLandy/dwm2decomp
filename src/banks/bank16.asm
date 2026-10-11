@@ -4318,13 +4318,13 @@ Jump_016_5B61::
 
 ; only called from BattleEnd_Step5_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case00)
-; reads: wLinkMode, wBattleKind, wDAAB, wRandomLo, wRandomHi, wSpeciesRecord, wD894, wD89F, ...
-; writes: wD890, wSpeciesIdLo, wSpeciesIdHi, wDAAB
-; points at: wD8A1, wBattleMonsterId
+; reads: wLinkMode, wBattleKind, wDisplaySlot, wRandomLo, wRandomHi, wSpeciesRecord, wBattleEndFlag, wBattleMeter
+; writes: wBattleFoeCount, wSpeciesIdLo, wSpeciesIdHi, wDisplaySlot
+; points at: wBattleInitA1, wBattleMonsterId
 BattleEnd_Step5_Case00_Sub01::
 Func_016_5B7E:: ; address name
     ld a, $01
-    ld [wD890], a
+    ld [wBattleFoeCount], a
     ld a, [wLinkMode]
     or a, a
     jp nz, Jump_016_5CF5
@@ -4337,7 +4337,7 @@ Func_016_5B7E:: ; address name
     jp z, Jump_016_5CF5
     cp a, $08
     jp nc, Jump_016_5CF5
-    ld a, [wDAAB]
+    ld a, [wDisplaySlot]
     cp a, $FF
     jp z, Jump_016_5CF5
     cp a, $04
@@ -4345,12 +4345,12 @@ Func_016_5B7E:: ; address name
     cp a, $07
     jp nc, Jump_016_5CF5
     and a, $03
-    ld hl, wD8A1
+    ld hl, wBattleInitA1
     add_a_to_hl
     ld a, [hl]
     cp a, $07
     jp z, Jump_016_5CF5
-    ld a, [wDAAB]
+    ld a, [wDisplaySlot]
     ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
@@ -4378,19 +4378,19 @@ Func_016_5B7E:: ; address name
     ld a, [hl]
     cp a, b
     jp nc, Jump_016_5CFA
-    ld a, [wD894]
+    ld a, [wBattleEndFlag]
     or a, a
     jp nz, Jump_016_5CFA
     ld de, Data_016_5D03
 
 Jump_016_5C15::
-    ld a, [wD89F]
+    ld a, [wBattleMeter]
     ld c, a
-    ld a, [wD8A0]
+    ld a, [wBattleMeter + $1]
     ld b, a
-    ld a, [wDAAB]
+    ld a, [wDisplaySlot]
     and a, $03
-    ld hl, wD8A1
+    ld hl, wBattleInitA1
     add_a_to_hl
     ld a, [hl]
     add a, e
@@ -4406,7 +4406,7 @@ Jump_016_5C30::
     jp z, Jump_016_5CFA
     cp a, $07
     jp z, Jump_016_5CF5
-    ld a, [wD894]
+    ld a, [wBattleEndFlag]
     or a, a
     jp nz, Jump_016_5CFA
     ld a, [de]
@@ -4527,7 +4527,7 @@ Jump_016_5CBF::
 
 Jump_016_5CF5::
     ld a, $FF
-    ld [wDAAB], a
+    ld [wDisplaySlot], a
 
 Jump_016_5CFA::
     ret
@@ -5074,9 +5074,9 @@ Jump_016_6058:: ; address name
 
 ; entry 18 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSubMenuCursor2, wMenuState, wPartyCount, wPartyList, wBattleSlotOut, wDA64, wDA65
+; reads: wSubMenuCursor2, wMenuState, wPartyCount, wPartyList, wBattleSlotOut
 ; writes: wStringIndex, wBattleSubStep, rRAMG
-; points at: wListEntries, wBattleSubStep, wBattleSlotOut, wDA64, wDA65
+; points at: wListEntries, wBattleSubStep, wBattleSlotOut
 Func_016_5D13_Case12::
 Jump_016_60B5:: ; address name
     ld a, $BC
@@ -5114,14 +5114,14 @@ Jump_016_60ED::
     jr nz, Jump_016_6118
     ld a, [wBattleSlotOut]
     ld c, a
-    ld a, [wDA64]
+    ld a, [wBattleSlotOut + $1]
     or a, c
     jr z, Jump_016_6143
     ld hl, wBattleSlotOut
     ld a, [wPartyList]
     cp a, b
     jr z, Jump_016_6112
-    ld hl, wDA64
+    ld hl, wBattleSlotOut + $1
     ld a, [wPartyList + $1]
     cp a, b
     jr z, Jump_016_6112
@@ -5136,9 +5136,9 @@ Jump_016_6112::
 Jump_016_6118::
     ld a, [wBattleSlotOut]
     ld c, a
-    ld a, [wDA64]
+    ld a, [wBattleSlotOut + $1]
     add a, c
-    ld a, [wDA65]
+    ld a, [wBattleSlotOut + $2]
     add a, c
     cp a, $02
     jr c, Jump_016_6143
@@ -5146,11 +5146,11 @@ Jump_016_6118::
     ld a, [wPartyList]
     cp a, b
     jr z, Jump_016_6112
-    ld hl, wDA64
+    ld hl, wBattleSlotOut + $1
     ld a, [wPartyList + $1]
     cp a, b
     jr z, Jump_016_6112
-    ld hl, wDA65
+    ld hl, wBattleSlotOut + $2
     ld a, [wPartyList + $2]
     cp a, b
     jr z, Jump_016_6112
@@ -5187,7 +5187,7 @@ Jump_016_6151:: ; address name
 ; entry 21 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSubMenuCursor2, wMenuState, wPartyCount, wPartyList
-; writes: rRAMG, rRAMB, wArg1, wArg2, wD88F, wPartyList, wTemp0, wTemp1, ...
+; writes: rRAMG, rRAMB, wArg1, wArg2, wBattlePartyCount, wPartyList, wTemp0, wTemp1, ...
 ; points at: wListEntries, wBattleSubPhase
 Func_016_5D13_Case15::
 Jump_016_615E:: ; address name
@@ -5216,7 +5216,7 @@ Jump_016_615E:: ; address name
     farcall DeleteSRAMRecordAndCompact
     pop hl
     ld a, [wPartyCount]
-    ld [wD88F], a
+    ld [wBattlePartyCount], a
     cp a, $03
     jr z, Jump_016_61A8
     cp a, $02
@@ -5615,7 +5615,7 @@ Func_016_6480:: ; address name
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case16, Func_016_5D13_Case0B, Func_016_5D13_Case00)
 ; reads: wFarmLevel
 ; writes: rRAMG, rRAMB, wTemp0, wTemp1
-; points at: sA000
+; points at: sRecords
 CountRecordsByField6E::
 Func_016_6493:: ; address name
     ld a, $0A
@@ -5626,7 +5626,7 @@ Func_016_6493:: ; address name
     ld hl, Data_016_75EB
     add_a_to_hl
     ld b, [hl]
-    ld hl, sA000
+    ld hl, sRecords
     ld de, $0000
 
 Jump_016_64AE::
@@ -5671,7 +5671,7 @@ Jump_016_64C4::
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0C)
 ; reads: wPartyCount, wTemp0, wFarmLevel, wSubMenuCursor2, wListPageCount
 ; writes: rRAMG, rRAMB, wTemp0, wListLastPageSize, wListPageCount, wListPageSize, wScreenTileBuffer
-; points at: wListEntries, wPartyList, sA000
+; points at: wListEntries, wPartyList, sRecords
 ListPartyAndStoredRecordsForPage::
 Func_016_64DC:: ; address name
     ld a, $0A
@@ -5698,7 +5698,7 @@ Jump_016_64F3::
     ld hl, Data_016_75EB
     add_a_to_hl
     ld b, [hl]
-    ld hl, sA000
+    ld hl, sRecords
     ld c, $00
 
 Jump_016_6511::
@@ -5800,7 +5800,7 @@ Jump_016_65B0::
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case16)
 ; reads: wFarmLevel
 ; writes: rRAMG, rRAMB
-; points at: wListEntries, sA000
+; points at: wListEntries, sRecords
 ListRecordsWithField6EToWD789::
 Func_016_65B1:: ; address name
     ld hl, wListEntries
@@ -5815,7 +5815,7 @@ Func_016_65B1:: ; address name
     ld hl, Data_016_75EB
     add_a_to_hl
     ld b, [hl]
-    ld hl, sA000
+    ld hl, sRecords
     ld de, wListEntries
     ld c, $00
 
@@ -6116,7 +6116,7 @@ Jump_016_67A4::
 ; 1 call site from 1 routine (e.g. CopyRect7923AndDrawWD868Values)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
-; points at: wD868
+; points at: wBattleArg0
 DrawWD868ValuesAtTiles23B0::
 Func_016_67A5:: ; address name
     ld a, [wTextWindowTileLo]
@@ -6134,7 +6134,7 @@ Func_016_67A5:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld hl, wD868
+    ld hl, wBattleArg0
     ld b, $04
     ld de, vTiles2 + $3B0
     call ShowRecordNamesListFromHL
@@ -6211,7 +6211,7 @@ Jump_016_6810::
 ; for the four entries of WD789 page wCFD1 runs Func_016_6891 with wD868 = 0-3, draws the page digit, then restores the default window (E-0121)
 ; 4 call sites from 4 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case18, Func_016_5D13_Case17, Func_016_5D13_Case16)
 ; reads: wListPage
-; writes: wTextWindowRows, wTextWindowWidth, rRAMG, rRAMB, wD868, wTextWindowTileLo, wTextWindowTileHi
+; writes: wTextWindowRows, wTextWindowWidth, rRAMG, rRAMB, wBattleArg0, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wListEntries
 DrawFourListEntriesForPageWCFD1::
 Func_016_682F:: ; address name
@@ -6230,19 +6230,19 @@ Func_016_682F:: ; address name
     ld hl, wListEntries
     add_a_to_hl
     ld a, $00
-    ld [wD868], a
+    ld [wBattleArg0], a
     call DrawFourListEntriesForPageWCFD1_Sub01
     inc hl
     ld a, $01
-    ld [wD868], a
+    ld [wBattleArg0], a
     call DrawFourListEntriesForPageWCFD1_Sub01
     inc hl
     ld a, $02
-    ld [wD868], a
+    ld [wBattleArg0], a
     call DrawFourListEntriesForPageWCFD1_Sub01
     inc hl
     ld a, $03
-    ld [wD868], a
+    ld [wBattleArg0], a
     call DrawFourListEntriesForPageWCFD1_Sub01
     xor a, a
     ld [rRAMG], a
@@ -6261,7 +6261,7 @@ Func_016_682F:: ; address name
 
 ; only called from DrawFourListEntriesForPageWCFD1 (E-0047)
 ; 4 call sites from 1 routine (e.g. DrawFourListEntriesForPageWCFD1)
-; reads: wD868
+; reads: wBattleArg0
 DrawFourListEntriesForPageWCFD1_Sub01::
 Func_016_6891:: ; address name
     ld a, [hl]
@@ -6293,7 +6293,7 @@ Jump_016_68B6::
 
 Jump_016_68B8::
     ld c, a
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld hl, Data_016_690F
     add a, a
     add_a_to_hl
@@ -6306,7 +6306,7 @@ Jump_016_68CB::
     push hl
     ld bc, $0200
     call ShowStringBCAtTileRowWD868
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld hl, Data_016_690F
     add a, a
     add_a_to_hl
@@ -6317,7 +6317,7 @@ Jump_016_68CB::
 
 ; only called from DrawFourListEntriesForPageWCFD1_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageWCFD1_Sub01)
-; reads: wD868
+; reads: wBattleArg0
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi
 DrawFourListEntriesForPageWCFD1_Sub01_Sub01::
 Func_016_68E5:: ; address name
@@ -6331,7 +6331,7 @@ Func_016_68E5:: ; address name
 
 ; wStringCategory = B, wStringIndex = C, string window destination = $9400 + 256 * wD868, then ShowString_Bank08 (E-0118)
 ; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageWCFD1_Sub01)
-; reads: wD868
+; reads: wBattleArg0
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi
 ShowStringBCAtTileRowWD868::
 Func_016_68F0:: ; address name
@@ -6339,7 +6339,7 @@ Func_016_68F0:: ; address name
     ld [wStringIndex], a
     ld a, b
     ld [wStringCategory], a
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     add a, $94
     ld h, a
     ld l, $00
@@ -6370,7 +6370,7 @@ Func_016_6917:: ; address name
 ; removes the $FF entry from the party list wC6FE, wC6FD -= 1, wD88F = new count, and terminates the list with $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount
-; writes: wPartyCount, wD88F
+; writes: wPartyCount, wBattlePartyCount
 ; points at: wPartyList, wTemp0
 RemovePartyMemberMarkedFF:: ; heuristic: follows a terminator; C0
 Func_016_6926:: ; address name
@@ -6392,7 +6392,7 @@ Jump_016_6937::
     ld a, [wPartyCount]
     dec a
     ld [wPartyCount], a
-    ld [wD88F], a
+    ld [wBattlePartyCount], a
     ld b, a
     ld hl, wTemp0
     ld de, wPartyList
@@ -6506,7 +6506,7 @@ Func_016_69AB:: ; address name
 ; 2 call sites from 2 routines (e.g. Func_016_6C16_Case0F, Func_016_6C16_Case0B)
 ; reads: wMenuSubState
 ; writes: rRAMG, rRAMB, wStringIndex
-; points at: wD868, wTextBuf0
+; points at: wBattleArg0, wTextBuf0
 ShowRecordNameString1D::
 Func_016_69E2:: ; address name
     ld a, $0A
@@ -6514,7 +6514,7 @@ Func_016_69E2:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wMenuSubState]
-    ld hl, wD868
+    ld hl, wBattleArg0
     add_a_to_hl
     ld a, [hl]
     ld c, $01
@@ -6535,20 +6535,20 @@ Jump_016_6A01::
 
 ; copies the name of battle slot wDAAB to DE and appends tile $A7 + (wD8AF[slot] & 1) before the terminator (E-0124)
 ; 3 call sites from 3 routines (e.g. RunBattleSubStep_6A4E_Case00, Func_016_5D13_Case04, Func_016_5D13_Case00)
-; reads: wDAAB
-; points at: wD8AF
+; reads: wDisplaySlot
+; points at: wSlotNameSuffix
 CopyBattleMonsterNameWithLetterSuffix::
 Func_016_6A10:: ; address name
     push de
     call CopyMonsterNameOfWDAABSlotToDE
-    ld a, [wDAAB]
-    ld hl, wD8AF
+    ld a, [wDisplaySlot]
+    ld hl, wSlotNameSuffix
     add_a_to_hl
     ld a, [hl]
     and a, $01
     add a, $A7
     ld d, a
-    ld a, [wDAAB]
+    ld a, [wDisplaySlot]
     pop hl
 
 Jump_016_6A29::
@@ -6566,11 +6566,11 @@ Jump_016_6A31::
 
 ; copies the name of the monster in slot wDAAB to DE: string category 2 + the id's high byte (StringTable_MonsterNames, then StringTable_MonsterNames2 from id 256), index = the low byte (CopyStringHLToDE) (E-0069)
 ; 1 call site from 1 routine (e.g. CopyBattleMonsterNameWithLetterSuffix)
-; reads: wDAAB
+; reads: wDisplaySlot
 ; points at: wBattleMonsterId
 CopyMonsterNameOfWDAABSlotToDE::
 Func_016_6A36:: ; address name
-    ld a, [wDAAB]
+    ld a, [wDisplaySlot]
     ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
@@ -6614,9 +6614,9 @@ Jump_016_6A5C:: ; address name
 
 ; entry 1 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wDAAB
+; reads: wTextFlags, wDisplaySlot
 ; writes: wArg1, wArg2, wArg3, wArg4, wSpeciesIdLo, wArg5, wSpeciesIdHi, wTextWindowTileLo, ...
-; points at: wNameEntryState, wD8AF, wRecordBufA, wScreenTileBuffer, wBattleSubStep
+; points at: wNameEntryState, wSlotNameSuffix, wRecordBufA, wScreenTileBuffer, wBattleSubStep
 RunBattleSubStep_6A4E_Case01::
 Jump_016_6A6F:: ; address name
     ld a, [wTextFlags]
@@ -6628,12 +6628,12 @@ Jump_016_6A6F:: ; address name
     call FillBytes
     ld a, $01
     ld [wArg1], a
-    ld a, [wDAAB]
-    ld hl, wD8AF
+    ld a, [wDisplaySlot]
+    ld hl, wSlotNameSuffix
     add_a_to_hl
     ld a, [hl]
     ld [wArg2], a
-    ld a, [wDAAB]
+    ld a, [wDisplaySlot]
     ld hl, wRecordBufA
     ld a, l
     add a, $0D
@@ -6676,19 +6676,19 @@ Jump_016_6A6F:: ; address name
 
 ; entry 2 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAAB, wArg5
+; reads: wDisplaySlot, wArg5
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5
-; points at: wD8AF, wRecordBufA, wBattleScreenFlags, wNameGlyphBuf, wBattleSubStep
+; points at: wSlotNameSuffix, wRecordBufA, wBattleScreenFlags, wNameGlyphBuf, wBattleSubStep
 RunBattleSubStep_6A4E_Case02::
 Jump_016_6AE3:: ; address name
     ld a, $01
     ld [wArg1], a
-    ld a, [wDAAB]
-    ld hl, wD8AF
+    ld a, [wDisplaySlot]
+    ld hl, wSlotNameSuffix
     add_a_to_hl
     ld a, [hl]
     ld [wArg2], a
-    ld a, [wDAAB]
+    ld a, [wDisplaySlot]
     ld hl, wRecordBufA
     ld a, l
     add a, $0D
@@ -6749,7 +6749,7 @@ Jump_016_6B52:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFarmLevel, wPartyCount
 ; writes: rRAMG, rRAMB, wBattleSubStep, wWorkBuf
-; points at: sA000, wBattleSubPhase
+; points at: sRecords, wBattleSubPhase
 RunBattleSubStep_6A4E_Case04::
 Jump_016_6B57:: ; address name
     ld a, $0A
@@ -6760,7 +6760,7 @@ Jump_016_6B57:: ; address name
     ld hl, Data_016_75EB
     add_a_to_hl
     ld b, [hl]
-    ld hl, sA000
+    ld hl, sRecords
     ld c, $00
 
 Jump_016_6B71::
@@ -6904,9 +6904,9 @@ Func_016_6C16:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wWorkBuf, wD88F
+; reads: wWorkBuf, wBattlePartyCount
 ; writes: rRAMG, rRAMB, wStringIndex, wMenuState
-; points at: wScreenTileBuffer, wD868, wPartyList, wTextBuf0, wBattleSubStep
+; points at: wScreenTileBuffer, wBattleArg0, wPartyList, wTextBuf0, wBattleSubStep
 Func_016_6C16_Case00::
 Jump_016_6C42:: ; address name
     call BuildBattleMenuScreen_733F
@@ -6916,9 +6916,9 @@ Jump_016_6C42:: ; address name
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wWorkBuf]
     push af
-    ld a, [wD88F]
+    ld a, [wBattlePartyCount]
     ld b, a
-    ld hl, wD868
+    ld hl, wBattleArg0
     ld de, wPartyList
 
 Jump_016_6C5F::
@@ -7086,21 +7086,21 @@ Jump_016_6D3E::
 ; entry 6 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wPartyCount
-; writes: wD88F
-; points at: wD868, wPartyCount, wPartyList, wBattleSubStep
+; writes: wBattlePartyCount
+; points at: wBattleArg0, wPartyCount, wPartyList, wBattleSubStep
 Func_016_6C16_Case06::
 Jump_016_6D47:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, [wPartyCount]
-    ld hl, wD868
+    ld hl, wBattleArg0
     add_a_to_hl
     ld b, [hl]
     ld hl, wPartyCount
     inc [hl]
     ld a, [hl]
-    ld [wD88F], a
+    ld [wBattlePartyCount], a
     dec a
     ld hl, wPartyList
     add_a_to_hl
@@ -7180,9 +7180,9 @@ Jump_016_6DA6:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wD88F
+; reads: wJoypadPressed, wBattlePartyCount
 ; writes: rRAMG, rRAMB, wBattleSubStep
-; points at: wMenuSubState, wD868, wTextBuf0, wBattleSubStep
+; points at: wMenuSubState, wBattleArg0, wTextBuf0, wBattleSubStep
 Func_016_6C16_Case0A::
 Jump_016_6DE4:: ; address name
     ld hl, Data_016_66F7
@@ -7191,8 +7191,8 @@ Jump_016_6DE4:: ; address name
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_016_6E22
-    ld a, [wD88F]
-    ld hl, wD868
+    ld a, [wBattlePartyCount]
+    ld hl, wBattleArg0
     add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
@@ -7267,7 +7267,7 @@ Jump_016_6E38:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuSelectedMember, wMenuSubState
 ; writes: rRAMG, rRAMB, wStringIndex, wBattleSubStep
-; points at: wMenuSelectedMember, wBattleSubStep, wD868, wTextBuf0
+; points at: wMenuSelectedMember, wBattleSubStep, wBattleArg0, wTextBuf0
 Func_016_6C16_Case0C::
 Jump_016_6E80:: ; address name
     ld hl, Data_016_66EB
@@ -7291,7 +7291,7 @@ Jump_016_6EA1::
     xor a, a
     ld [rRAMB], a
     ld a, [wMenuSubState]
-    ld hl, wD868
+    ld hl, wBattleArg0
     add_a_to_hl
     ld a, [hl]
     ld c, $01
@@ -7324,20 +7324,20 @@ Jump_016_6ED4::
 
 ; entry 13 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD88F, wMenuSubState
+; reads: wBattlePartyCount, wMenuSubState
 ; writes: wListCount, wListCursor, wListPageIndex, wScreenState, wScreenStep, wScreenSubStep
-; points at: wListEntries, wD868, wBattleSubStep
+; points at: wListEntries, wBattleArg0, wBattleSubStep
 Func_016_6C16_Case0D::
 Jump_016_6EE9:: ; address name
     ld hl, wListEntries
     ld bc, $001E
     xor a, a
     call FillBytes
-    ld a, [wD88F]
+    ld a, [wBattlePartyCount]
     inc a
     ld [wListCount], a
     ld b, a
-    ld de, wD868
+    ld de, wBattleArg0
     ld hl, wListEntries
 
 Jump_016_6F01::
@@ -7473,20 +7473,20 @@ Jump_016_6FEE:: ; address name
 
 ; entry 18 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wMenuSubState, wD88F
+; reads: wMenuSubState, wBattlePartyCount
 ; writes: wBattleSubStep
-; points at: wD868, wPartyList, wScreenTileBuffer
+; points at: wBattleArg0, wPartyList, wScreenTileBuffer
 Func_016_6C16_Case12::
 Jump_016_7008:: ; address name
     ld a, [wMenuSubState]
-    ld hl, wD868
+    ld hl, wBattleArg0
     add_a_to_hl
     ld a, [hl]
     call RestoreRecordAFully
     ld [hl], $FF
-    ld hl, wD868
+    ld hl, wBattleArg0
     ld de, wPartyList
-    ld a, [wD88F]
+    ld a, [wBattlePartyCount]
     ld b, a
 
 Jump_016_7023::
@@ -7655,7 +7655,7 @@ Jump_016_710A::
 
 ; only called from RunFunc710FForPartyMembers (E-0047)
 ; 3 call sites from 1 routine (e.g. RunFunc710FForPartyMembers)
-; points at: wD8B7, wBattleHP, wBattleMP, wBattleSlotOut, wBattleStatus
+; points at: wBattleLevel, wBattleHP, wBattleMP, wBattleSlotOut, wBattleStatus
 RunFunc710FForPartyMembers_Sub01::
 Func_016_710F:: ; address name
     push bc
@@ -7663,7 +7663,7 @@ Func_016_710F:: ; address name
     call SRAMRecordAddress
     pop bc
     ld a, c
-    ld de, wD8B7
+    ld de, wBattleLevel
     add a, e
     ld e, a
     jr nc, Jump_016_711F
@@ -7771,11 +7771,11 @@ Func_016_7183:: ; address name
 
 ; A = 1 when Data $71AC[battle monster id of wDAAB] is at least 6, else 0 (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_016_6C16_Case05, Func_016_6C16_Case03)
-; reads: wDAAB
+; reads: wDisplaySlot
 ; points at: wBattleMonsterId
 BattleMonsterTable71ACAtLeast6::
 Func_016_7188:: ; address name
-    ld a, [wDAAB]
+    ld a, [wDisplaySlot]
     ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
@@ -8054,8 +8054,8 @@ Jump_016_74C9::
 
 ; only called from BattleEnd_Step3_Sub01 (E-0047)
 ; 6 call sites from 1 routine (e.g. BattleEnd_Step3_Sub01)
-; reads: wRandomLo, wRandomHi, wD87F, wD87D, wD87E
-; writes: wD87D, wD87E, wD87F, wD880
+; reads: wRandomLo, wRandomHi, wBattleTemp7F, wBattleTemp7D, wBattleTemp7E
+; writes: wBattleTemp7D, wBattleTemp7E, wBattleTemp7F, wBattleTemp80
 BattleEnd_Step3_Sub01_Sub02::
 Func_016_74D2:: ; address name
     ld hl, $03E7
@@ -8071,38 +8071,38 @@ Func_016_74D2:: ; address name
 
 Jump_016_74E2::
     ld a, c
-    ld [wD87D], a
+    ld [wBattleTemp7D], a
     ld a, b
-    ld [wD87E], a
+    ld [wBattleTemp7E], a
     ld a, $14
     call Multiply8By16
     ld a, $64
     call Divide24ByA
     ld a, l
-    ld [wD87F], a
+    ld [wBattleTemp7F], a
     ld a, h
-    ld [wD880], a
+    ld [wBattleTemp80], a
     call NextTableByte
     ld a, [wRandomLo]
     ld l, a
     ld a, [wRandomHi]
     ld h, a
-    ld a, [wD87F]
+    ld a, [wBattleTemp7F]
     or a, a
     call nz, DivideHLByA
     ld c, a
-    ld a, [wD87D]
+    ld a, [wBattleTemp7D]
     sub a, c
     ld l, a
-    ld a, [wD87E]
+    ld a, [wBattleTemp7E]
     sbc a, $00
     ld h, a
     ret
 
 ; only called from BattleEnd_Step3_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub01)
-; reads: wRandomLo, wRandomHi, wD87F, wD87D, wD87E
-; writes: wD87D, wD87E, wD87F, wD880
+; reads: wRandomLo, wRandomHi, wBattleTemp7F, wBattleTemp7D, wBattleTemp7E
+; writes: wBattleTemp7D, wBattleTemp7E, wBattleTemp7F, wBattleTemp80
 BattleEnd_Step3_Sub01_Sub03::
 Func_016_751B:: ; address name
     ld hl, $03E7
@@ -8118,30 +8118,30 @@ Func_016_751B:: ; address name
 
 Jump_016_752B::
     ld a, c
-    ld [wD87D], a
+    ld [wBattleTemp7D], a
     ld a, b
-    ld [wD87E], a
+    ld [wBattleTemp7E], a
     ld a, $14
     call Multiply8By16
     ld a, $64
     call Divide24ByA
     ld a, l
-    ld [wD87F], a
+    ld [wBattleTemp7F], a
     ld a, h
-    ld [wD880], a
+    ld [wBattleTemp80], a
     call NextTableByte
     ld a, [wRandomLo]
     ld l, a
     ld a, [wRandomHi]
     ld h, a
-    ld a, [wD87F]
+    ld a, [wBattleTemp7F]
     or a, a
     call nz, DivideHLByA
     ld c, a
-    ld a, [wD87D]
+    ld a, [wBattleTemp7D]
     sub a, c
     ld l, a
-    ld a, [wD87E]
+    ld a, [wBattleTemp7E]
     sbc a, $00
     ld h, a
     ld a, h
@@ -8215,9 +8215,9 @@ Data_016_75EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; checks the save; when valid, loads the player name, play time, party summaries and other title-screen details from SRAM bank 1 into wD0D5 onward (E-0129)
 ; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
-; reads: hTemp0, sBC00, sBC01, sBC02, sBC03, sBD3A, sBE0D, sBB07, ...
+; reads: hTemp0, sSavedPartyCount, sSavedPartyList, sSaveData, sSavedArenaByte37, sSavedMapType, sSavedMapId, sSavedKeyIndex
 ; writes: wBattlerRecords, rRAMG, rRAMB, wTitlePartyCount, wWorkBuf, wTitleByte0A, wTitleKeyFlag, wTitleStringIndex, ...
-; points at: wBattlerRecords, sBB0F, wTitlePlayerName, sBD30, wTitlePartySummary, sBC0A
+; points at: wBattlerRecords, sSavedPlayerName, wTitlePlayerName, sSavedPlayTime, wTitlePartySummary, sSavedKeyList
 LoadSaveFileSummary::
 Func_016_75EE:: ; address name
     ld hl, wBattlerRecords
@@ -8239,18 +8239,18 @@ Jump_016_760B::
     ld [rRAMG], a
     ld a, $01
     ld [rRAMB], a
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld de, wTitlePlayerName
     ld b, $0A
     call CopyBytesDEFromHL_Bank16
-    ld hl, sBD30
+    ld hl, sSavedPlayTime
     ld de, wBattlerRecords + $B
     ld b, $05
     call CopyBytesDEFromHL_Bank16
-    ld a, [sBC00]
+    ld a, [sSavedPartyCount]
     ld [wTitlePartyCount], a
     push af
-    ld a, [sBC01]
+    ld a, [sSavedPartyList]
     ld [wWorkBuf], a
     ld de, wTitlePartySummary
     ld a, e
@@ -8262,7 +8262,7 @@ Jump_016_760B::
     cp a, $01
     jr z, Jump_016_767E
     push af
-    ld a, [sBC02]
+    ld a, [sSaveData + $101]
     ld [wWorkBuf], a
     ld de, wBattlerRecords + $1D
     ld a, e
@@ -8273,7 +8273,7 @@ Jump_016_760B::
     pop af
     cp a, $02
     jr z, Jump_016_767E
-    ld a, [sBC03]
+    ld a, [sSaveData + $102]
     ld [wWorkBuf], a
     ld de, wBattlerRecords + $29
     ld a, e
@@ -8283,14 +8283,14 @@ Jump_016_760B::
     call BuildRecordSummaryForWD09D
 
 Jump_016_767E::
-    ld a, [sBD3A]
+    ld a, [sSavedArenaByte37]
     ld [wTitleByte0A], a
-    ld a, [sBE0D]
+    ld a, [sSavedMapType]
     ld [wTitleKeyFlag], a
-    ld a, [sBB07]
+    ld a, [sSavedMapId]
     ld [wTitleStringIndex], a
-    ld a, [sBD36]
-    ld hl, sBC0A
+    ld a, [sSavedKeyIndex]
+    ld hl, sSavedKeyList
     add a, a
     add a, a
     add_a_to_hl

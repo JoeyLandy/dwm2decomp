@@ -142,7 +142,7 @@ Jump_000_0157::
 
 Jump_000_015A::
     di
-    ld sp, wDFFF
+    ld sp, wStackTop
     call DisableVBlankTimerSerialJoypadInterrupts
     call ClearWRAMHRAMAndSRAMBanks0And2
     call InstallOamDmaRoutine
@@ -1423,7 +1423,7 @@ Func_000_08C7:: ; address name
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK, rHDMA1, rHDMA2, rHDMA3, rHDMA4, rHDMA5, rBGPI, ...
-; points at: wShadowOAM, hPlayerSpriteVariant, sA000
+; points at: wShadowOAM, hPlayerSpriteVariant, sRecords
 ClearWRAMHRAMAndSRAMBanks0And2::
 Func_000_08D0:: ; address name
     ld a, [wIsCGB]
@@ -1458,13 +1458,13 @@ Jump_000_08EC::
     ld a, $02
     ld [rRAMB], a
     xor a, a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     call FillBytes
     ld a, $00
     ld [rRAMB], a
     xor a, a
-    ld hl, sA000
+    ld hl, sRecords
     ld bc, $2000
     call FillBytes
     ld a, $00
@@ -2912,7 +2912,7 @@ Jump_000_1109::
 
 ; for each of bits 0, 1, 2 of wC56D that is set, lightens wC56F, wC570 or wC571 by wFadeLevel into wC5E9, wC5EA or wC5EB (LightenDMGPaletteByFadeLevel) (E-0117)
 ; 2 call sites from 1 routine (e.g. AdjustColorChannelForFade)
-; reads: wFadeMode, wFadeDMGPalettes, wC570, wC571, wFadeLevel
+; reads: wFadeMode, wFadeDMGPalettes, wFadeLevel
 ; points at: wDMGPaletteBGP
 LightenSelectedDMGPalettes::
 Func_000_111F:: ; address name
@@ -2923,12 +2923,12 @@ Func_000_111F:: ; address name
     call nz, LightenDMGPaletteByFadeLevel
     ld a, [wFadeMode]
     bit 1, a
-    ld a, [wC570]
+    ld a, [wFadeDMGPalettes + $1]
     inc hl
     call nz, LightenDMGPaletteByFadeLevel
     ld a, [wFadeMode]
     bit 2, a
-    ld a, [wC571]
+    ld a, [wFadeDMGPalettes + $2]
     inc hl
     jr nz, LightenDMGPaletteByFadeLevel
     ret
@@ -3017,7 +3017,7 @@ Jump_000_119F::
 
 ; only called from LightenDMGShade (E-0047)
 ; 2 call sites from 1 routine (e.g. LightenDMGShade)
-; reads: wFadeMode, wFadeDMGPalettes, wC570, wC571, wFadeLevel
+; reads: wFadeMode, wFadeDMGPalettes, wFadeLevel
 ; points at: wDMGPaletteBGP
 LightenDMGShade_Sub01::
 Func_000_11B4:: ; address name
@@ -3028,12 +3028,12 @@ Func_000_11B4:: ; address name
     call nz, DarkenDMGPaletteByFadeLevel
     ld a, [wFadeMode]
     bit 1, a
-    ld a, [wC570]
+    ld a, [wFadeDMGPalettes + $1]
     inc hl
     call nz, DarkenDMGPaletteByFadeLevel
     ld a, [wFadeMode]
     bit 2, a
-    ld a, [wC571]
+    ld a, [wFadeDMGPalettes + $2]
     inc hl
     jr nz, DarkenDMGPaletteByFadeLevel
     ret
@@ -5507,14 +5507,14 @@ Jump_000_1F40::
 
 ; A is first passed through MapIndexViaWC6FE; then HL = sA000 + A * $A5 + C as in SRAMRecordAddress
 ; 138 call sites from 100 routines (e.g. StoreHFFC6ToSRAMRecordBytes, LoadSRAMRecordBytesToHFFC6, DebugBattleSetup_Update_Sub01_Sub01, ShowRecordSkillPageNames_Bank03, ...)
-; points at: sA000
+; points at: sRecords
 SRAMRecordAddressMapped::
 Func_000_1F49:: ; address name
     push bc
     call MapIndexViaWC6FE
     ld c, $A5
     call Multiply8
-    ld bc, sA000
+    ld bc, sRecords
     add hl, bc
     pop bc
     ld a, c
@@ -5647,13 +5647,13 @@ Jump_000_1FBD::
 
 ; A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)
 ; 90 call sites from 59 routines (e.g. CopyRecordNameToWC8CF, LoadSRAMRecordWord, LoadRecordThreeBytesToHFFC6, LoadSRAMRecordByte, ...)
-; points at: sA000
+; points at: sRecords
 SRAMRecordAddress::
 Func_000_1FD1:: ; address name
     push bc
     ld c, $A5
     call Multiply8
-    ld bc, sA000
+    ld bc, sRecords
     add hl, bc
     pop bc
     ld a, c
@@ -6921,7 +6921,7 @@ Jump_000_2616::
 ; 3 call sites from 3 routines (e.g. VBlankHandler, RunStringDisplayToEnd, RunFrameTickFadeAndCounter_Bank1B)
 ; reads: wTextControl, wStringBank, wTextFlags, wFrameCounterLo, wTextLastChar, wJoypadPressedRepeat, wLinkJoypadPressedRepeat, wTextYesNoResult, ...
 ; writes: rROMB0, wTextYesNoResult, wTextRepeatCount, wTextDelayCounter, wTextLineCount, wTextPosLo, wTextPosHi
-; points at: wTextFlags, wTextLineCount, wTextControl, wDC01, wDC20, wDC40, wDC60, wDC80, ...
+; points at: wTextFlags, wTextLineCount, wTextControl, wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5
 StepStringDisplayUntilDone::
 Func_000_2620:: ; address name
     ld a, [wTextControl]
@@ -6941,7 +6941,7 @@ Jump_000_2627::
 ; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone)
 ; reads: wStringBank, wTextControl, wTextFlags, wFrameCounterLo, wTextLastChar, wJoypadPressedRepeat, wLinkJoypadPressedRepeat, wTextYesNoResult, ...
 ; writes: rROMB0, wTextYesNoResult, wTextRepeatCount, wTextDelayCounter, wTextLineCount, wTextPosLo, wTextPosHi
-; points at: wTextFlags, wTextLineCount, wTextControl, wDC01, wDC20, wDC40, wDC60, wDC80, ...
+; points at: wTextFlags, wTextLineCount, wTextControl, wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5
 StepStringDisplayUntilDone_Sub01::
 Func_000_2637:: ; address name
     ld a, [BANK_NUMBER_BYTE]
@@ -7221,25 +7221,25 @@ Jump_000_282C::
 
 Jump_000_2847::
     ld a, [wSoundChannelSlots]
-    ld hl, wDC01
+    ld hl, wSoundChannelSlots + $1
     and a, [hl]
-    ld hl, wDC20
-    and a, [hl]
-    inc hl
-    and a, [hl]
-    ld hl, wDC40
+    ld hl, wSoundChannel1
     and a, [hl]
     inc hl
     and a, [hl]
-    ld hl, wDC60
+    ld hl, wSoundChannel2
     and a, [hl]
     inc hl
     and a, [hl]
-    ld hl, wDC80
+    ld hl, wSoundChannel3
     and a, [hl]
     inc hl
     and a, [hl]
-    ld hl, wDCA0
+    ld hl, wSoundChannel4
+    and a, [hl]
+    inc hl
+    and a, [hl]
+    ld hl, wSoundChannel5
     and a, [hl]
     inc hl
     and a, [hl]
@@ -7994,11 +7994,11 @@ Jump_000_2C75:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextPosLo, wTextPosHi
 ; writes: wTextStartPosLo, wTextStartPosHi, wTextPosLo, wTextPosHi
-; points at: wPlayerName, wC53F, wTextFlags
+; points at: wPlayerName, wPlayerNameText, wTextFlags
 Func_000_2950_Case16::
 Jump_000_2C7B:: ; address name
     ld hl, wPlayerName
-    ld de, wC53F
+    ld de, wPlayerNameText
     ld b, $0A
 
 Jump_000_2C83::
@@ -8019,7 +8019,7 @@ Jump_000_2C83::
     ld [wTextStartPosLo], a
     ld a, h
     ld [wTextStartPosHi], a
-    ld hl, wC53F
+    ld hl, wPlayerNameText
     ld a, l
     ld [wTextPosLo], a
     ld a, h
@@ -8824,7 +8824,7 @@ Jump_000_30BE::
 
 ; rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0
 ; 9 call sites from 7 routines (e.g. BootAndMainLoop, StartMusic, DebugSoundTest_Update, GameMode1_Init, ...)
-; writes: rNR52, rNR51, wDD09, rNR50, wDD15, wDD19
+; writes: rNR52, rNR51, wSoundEngineMode, rNR50, wSoundEngineState, wSoundInitByte19
 ; points at: wSoundChannelSlots, wSoundLabelSlots
 InitSoundHardware::
 Func_000_3290:: ; address name
@@ -8834,7 +8834,7 @@ Func_000_3290:: ; address name
     ldh [rNR52], a
     xor a, a
     ldh [rNR51], a
-    ld [wDD09], a
+    ld [wSoundEngineMode], a
     ld a, $77
     ldh [rNR50], a
     ld hl, wSoundChannelSlots
@@ -8857,50 +8857,50 @@ Jump_000_32BA::
     dec b
     jr nz, Jump_000_32BA
     xor a, a
-    ld [wDD15], a
-    ld [wDD19], a
+    ld [wSoundEngineState], a
+    ld [wSoundInitByte19], a
     ret
 
 ; wDD15 = 0, wDD09 = wDD16 (sound engine state) (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDD16
-; writes: wDD15, wDD09
+; reads: wSoundSavedMode
+; writes: wSoundEngineState, wSoundEngineMode
 SetWDD15To0AndWDD09FromWDD16:: ; heuristic: follows a terminator; C0
 Func_000_32C6:: ; address name
     xor a, a
-    ld [wDD15], a
-    ld a, [wDD16]
-    ld [wDD09], a
+    ld [wSoundEngineState], a
+    ld a, [wSoundSavedMode]
+    ld [wSoundEngineMode], a
     ret
 
 ; wDD15 = 4, wDD09 = 0 (sound engine state) (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wDD15, wDD09
+; writes: wSoundEngineState, wSoundEngineMode
 SetWDD15To4AndClearWDD09:: ; heuristic: follows a terminator; C0
 Func_000_32D1:: ; address name
     ld a, $04
-    ld [wDD15], a
+    ld [wSoundEngineState], a
     xor a, a
-    ld [wDD09], a
+    ld [wSoundEngineMode], a
     ret
 
 ; only called from InitSoundHardware (E-0047)
 ; 1 call site from 1 routine (e.g. InitSoundHardware)
-; writes: wDD12, wDD13, wDD14
+; writes: wSoundTimer12, wSoundTimer13, wSoundTimer14
 InitSoundHardware_Sub01::
 Func_000_32DB:: ; address name
     ld a, b
-    ld [wDD12], a
+    ld [wSoundTimer12], a
     ld a, c
-    ld [wDD13], a
+    ld [wSoundTimer13], a
     xor a, a
-    ld [wDD14], a
+    ld [wSoundTimer14], a
     ret
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: wSoundChannelIndex, wDD14
-; writes: wDD14
+; reads: wSoundChannelIndex, wSoundTimer14
+; writes: wSoundTimer14
 SoundTick_Sub01::
 Func_000_32E8:: ; address name
     ld a, [wSoundChannelIndex]
@@ -8916,32 +8916,32 @@ Jump_000_32EF::
 
 Jump_000_32F5::
     ld b, a
-    ld a, [wDD14]
+    ld a, [wSoundTimer14]
     or a, b
-    ld [wDD14], a
+    ld [wSoundTimer14], a
     ret
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: wDD14, wDD13, wDD12
-; writes: wDD14, wDD12
-; points at: wDD12, wDC06
+; reads: wSoundTimer14, wSoundTimer13, wSoundTimer12
+; writes: wSoundTimer14, wSoundTimer12
+; points at: wSoundTimer12
 SoundTick_Sub02::
 Func_000_32FE:: ; address name
-    ld a, [wDD14]
-    ld hl, wDD12
+    ld a, [wSoundTimer14]
+    ld hl, wSoundTimer12
     and a, [hl]
     cp a, [hl]
     jr nz, Jump_000_3332
-    ld hl, wDC06
-    ld a, [wDD13]
+    ld hl, wSoundChannelSlots + $6
+    ld a, [wSoundTimer13]
     and a, $0F
     ld b, a
-    ld a, [wDD12]
+    ld a, [wSoundTimer12]
 
 Jump_000_3314::
     srl a
-    ld [wDD14], a
+    ld [wSoundTimer14], a
     jr nc, Jump_000_3320
     ld a, [hl]
     and a, $F0
@@ -8955,21 +8955,21 @@ Jump_000_3320::
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wDD14]
+    ld a, [wSoundTimer14]
     and a, a
     jr nz, Jump_000_3314
     xor a, a
-    ld [wDD12], a
+    ld [wSoundTimer12], a
 
 Jump_000_3332::
     xor a, a
-    ld [wDD14], a
+    ld [wSoundTimer14], a
     ret
 
 ; runs RunSoundTable3E24ForA three times and falls into it once more (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSoundId, wDD09
-; writes: wSoundId, rROMB0, wDD09
+; reads: wSoundId, wSoundEngineMode
+; writes: wSoundId, rROMB0, wSoundEngineMode
 ; points at: wSoundChannelSlots
 RunSoundTable3E24FourTimes:: ; heuristic: follows a terminator; C0
 Func_000_3337:: ; address name
@@ -8979,8 +8979,8 @@ Func_000_3337:: ; address name
 
 ; wSoundId = A, then runs the sound entry from table $3E24 (registers saved) (E-0122)
 ; 3 call sites from 1 routine (e.g. RunSoundTable3E24FourTimes)
-; reads: wSoundId, wDD09
-; writes: wSoundId, rROMB0, wDD09
+; reads: wSoundId, wSoundEngineMode
+; writes: wSoundId, rROMB0, wSoundEngineMode
 ; points at: wSoundChannelSlots
 RunSoundTable3E24ForA::
 Func_000_3340:: ; address name
@@ -8993,8 +8993,8 @@ Func_000_3340:: ; address name
 
 ; only called from StartMusic (E-0047)
 ; 1 call site from 1 routine (e.g. StartMusic)
-; reads: wSoundId, wDD09
-; writes: wSoundId, rROMB0, wDD09
+; reads: wSoundId, wSoundEngineMode
+; writes: wSoundId, rROMB0, wSoundEngineMode
 ; points at: wSoundChannelSlots
 StartMusic_Sub01::
 Func_000_334B:: ; address name
@@ -9002,8 +9002,8 @@ Func_000_334B:: ; address name
 
 ; calls StartSound (which returns A + 1) and falls into StartTwoSoundTracks, so sound ids A, A + 1 and A + 2 start (E-0126)
 ; 2 call sites from 2 routines (e.g. StartSoundEffect, StartMusic)
-; reads: wSoundId, wDD09
-; writes: wSoundId, rROMB0, wDD09
+; reads: wSoundId, wSoundEngineMode
+; writes: wSoundId, rROMB0, wSoundEngineMode
 ; points at: wSoundChannelSlots
 StartThreeSoundTracks::
 Func_000_334E:: ; address name
@@ -9011,8 +9011,8 @@ Func_000_334E:: ; address name
 
 ; calls StartSound and falls into it once more, so sound ids A and A + 1 start (E-0126)
 ; 2 call sites from 2 routines (e.g. StartSoundEffect, StartMusic)
-; reads: wSoundId, wDD09
-; writes: wSoundId, rROMB0, wDD09
+; reads: wSoundId, wSoundEngineMode
+; writes: wSoundId, rROMB0, wSoundEngineMode
 ; points at: wSoundChannelSlots
 StartTwoSoundTracks::
 Func_000_3351:: ; address name
@@ -9020,8 +9020,8 @@ Func_000_3351:: ; address name
 
 ; C2 static reading, and 495 emulated sound starts agree (E-0018): starts sound id A (kept in $DD10). Finds A's range in SoundBankTable, switches to that bank, takes the 4-byte record at (array + 4*(A - first id)), and copies it into the channel-state slot at $DC00 + record byte 0 (record byte 1 to slot +2, the track pointer to +3/+4, this bank to +5). Returns A + 1.
 ; 4 call sites from 4 routines (e.g. StartSoundEffect, StartThreeSoundTracks, StartTwoSoundTracks, StartMusic_Sub01)
-; reads: wSoundId, wDD09
-; writes: wSoundId, rROMB0, wDD09
+; reads: wSoundId, wSoundEngineMode
+; writes: wSoundId, rROMB0, wSoundEngineMode
 ; points at: wSoundChannelSlots
 StartSound::
 Func_000_3354:: ; address name
@@ -9082,9 +9082,9 @@ Jump_000_3366::
     ld b, $77
 
 Jump_000_33A3::
-    ld a, [wDD09]
+    ld a, [wSoundEngineMode]
     and a, b
-    ld [wDD09], a
+    ld [wSoundEngineMode], a
 
 Jump_000_33AA::
     xor a, a
@@ -9144,18 +9144,18 @@ Jump_000_33AA::
 ; C1 (E-0018): appears to be the sound engine's update routine. It switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes the sound registers (including $FF1A). Identified from those writes and from the banks it reads at runtime ($40-$43 via the tables above); not decoded further.
 ; for each of the 6 channel slots at wSoundChannelSlots: copies the slot into HRAM $FFD8-$FFF7, reads events from the track in bank hSoundBank and writes the channel's sound registers (the per-frame sound engine; called from VBlankHandler)
 ; 3 call sites from 1 routine (e.g. VBlankHandler)
-; reads: wDD15, hSoundBank, hSndChanFlags, hTrackPosLo, hTrackPosHi, hSndVibratoDelay, hSndVibratoCounter, hSndDutyAndTempo, ...
-; writes: wSoundChannelIndex, wDD08, rROMB0, wSoundHwChannel, wDD0D, wDD0B, wDD0C, hSndVibratoCounter, ...
-; points at: wDD0E, wSoundChannelSlots, hSndTickAccum, hSndEnvTimer
+; reads: wSoundEngineState, hSoundBank, hSndChanFlags, hTrackPosLo, hTrackPosHi, hSndVibratoDelay, hSndVibratoCounter, hSndDutyAndTempo, ...
+; writes: wSoundChannelIndex, wSoundSkipMaskA, rROMB0, wSoundHwChannel, wSoundRegBase, wSoundSkipMaskB, wSoundTickByte0C, hSndVibratoCounter, ...
+; points at: wSoundTickBuf0E, wSoundChannelSlots, hSndTickAccum, hSndEnvTimer
 SoundTick::
 Func_000_33E8:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
-    ld a, [wDD15]
+    ld a, [wSoundEngineState]
     ld [wSoundChannelIndex], a
     xor a, a
-    ld [wDD08], a
-    ld hl, wDD0E
+    ld [wSoundSkipMaskA], a
+    ld hl, wSoundTickBuf0E
     inc [hl]
     ld hl, wSoundChannelSlots
 
@@ -9206,7 +9206,7 @@ Jump_000_340B::
     add a, a
     add a, a
     add a, b
-    ld [wDD0D], a
+    ld [wSoundRegBase], a
     inc b
     ld a, $88
 
@@ -9214,8 +9214,8 @@ Jump_000_343C::
     rlca
     dec b
     jr nz, Jump_000_343C
-    ld [wDD0B], a
-    ld [wDD0C], a
+    ld [wSoundSkipMaskB], a
+    ld [wSoundTickByte0C], a
     ldh a, [hTrackPosLo]
     ld b, a
     ldh a, [hTrackPosHi]
@@ -9301,7 +9301,7 @@ Jump_000_34BA::
     jr Jump_000_349C
 
 Jump_000_34C7::
-    ld a, [wDD19]
+    ld a, [wSoundInitByte19]
     and a, a
     jr z, Jump_000_3502
     ld a, [wSoundHwChannel]
@@ -9310,21 +9310,21 @@ Jump_000_34C7::
     ld a, [wSoundChannelIndex]
     cp a, $02
     jr c, Jump_000_3502
-    ld a, [wDD0B]
+    ld a, [wSoundSkipMaskB]
     ld b, a
-    ld a, [wDD08]
+    ld a, [wSoundSkipMaskA]
     and a, b
     jr nz, Jump_000_3502
-    ld a, [wDD17]
+    ld a, [wSoundEventByte17]
     ld b, a
     ldh a, [hSndSweepOrWave]
     cp a, b
     jr z, Jump_000_3502
     ld e, a
-    ld [wDD17], a
+    ld [wSoundEventByte17], a
     swap e
     xor a, a
-    ld [wDD19], a
+    ld [wSoundInitByte19], a
     ldh [rNR30], a
     ld d, a
     call SoundTick_Sub06
@@ -9332,11 +9332,11 @@ Jump_000_34C7::
     ldh [rNR30], a
 
 Jump_000_3502::
-    ld a, [wDD0B]
+    ld a, [wSoundSkipMaskB]
     ld b, a
-    ld a, [wDD08]
+    ld a, [wSoundSkipMaskA]
     or a, b
-    ld [wDD08], a
+    ld [wSoundSkipMaskA], a
     pop hl
     push hl
     ld c, $D8
@@ -9379,11 +9379,11 @@ Jump_000_352F::
     ld [wSoundChannelIndex], a
     cp a, $06
     jp c, Jump_000_33FD
-    ld a, [wDD08]
+    ld a, [wSoundSkipMaskA]
     ld b, a
-    ld a, [wDD09]
+    ld a, [wSoundEngineMode]
     and a, b
-    ld [wDD09], a
+    ld [wSoundEngineMode], a
     ldh [rNR51], a
     pop af
     ld [rROMB0], a
@@ -9452,7 +9452,7 @@ Jump_000_3599::
     ldh [hSndSweepOrWave], a
 
 Jump_000_35A8::
-    ld [wDD17], a
+    ld [wSoundEventByte17], a
     swap e
     ld hl, $30CC
     push de
@@ -9543,7 +9543,7 @@ Jump_000_3613::
     cp a, $02
     jr nc, Jump_000_362A
     ld a, $FF
-    ld [wDD19], a
+    ld [wSoundInitByte19], a
 
 Jump_000_362A::
     call SoundNextEvent_Sub03
@@ -9646,9 +9646,9 @@ Jump_000_36A9::
     ld a, [hl+]
     swap a
     ldh [hSndEnvelope], a
-    ld a, [wDD0B]
+    ld a, [wSoundSkipMaskB]
     ld b, a
-    ld a, [wDD08]
+    ld a, [wSoundSkipMaskA]
     and a, b
     jp nz, Jump_000_35DB
     call WriteChannelEnvelopeIfChanged
@@ -9668,9 +9668,9 @@ Jump_000_36D4::
     ld a, [hl+]
     ld e, a
     ldh [hSndSweepOrWave], a
-    ld a, [wDD0B]
+    ld a, [wSoundSkipMaskB]
     ld b, a
-    ld a, [wDD08]
+    ld a, [wSoundSkipMaskA]
     and a, b
     jr z, Jump_000_36E5
     jp Jump_000_35DB
@@ -9681,7 +9681,7 @@ Jump_000_36E5::
     ld d, a
     push hl
     ld a, e
-    ld [wDD17], a
+    ld [wSoundEventByte17], a
     swap e
     ld hl, $30CC
     push de
@@ -9818,7 +9818,7 @@ Jump_000_3794::
     jr Jump_000_37B9
 
 Jump_000_37B6::
-    ld a, [wDD18]
+    ld a, [wSoundEventByte18]
 
 Jump_000_37B9::
     sla a
@@ -9841,7 +9841,7 @@ Jump_000_37CA::
 
 Jump_000_37D3::
     sub a, $80
-    ld [wDD18], a
+    ld [wSoundEventByte18], a
     jp Jump_000_35DB
 
 Jump_000_37DB::
@@ -9857,15 +9857,15 @@ Jump_000_37E3::
     jp Jump_000_35DB
 
 Jump_000_37EB::
-    ld a, [wDD18]
+    ld a, [wSoundEventByte18]
     inc a
-    ld [wDD18], a
+    ld [wSoundEventByte18], a
     jp Jump_000_35DB
 
 Jump_000_37F5::
-    ld a, [wDD18]
+    ld a, [wSoundEventByte18]
     dec a
-    ld [wDD18], a
+    ld [wSoundEventByte18], a
     jp Jump_000_35DB
 
 Jump_000_37FF::
@@ -10132,17 +10132,17 @@ Jump_000_398E::
     call ClearChannelLengthBits
 
 Jump_000_3998::
-    ld a, [wDD0C]
+    ld a, [wSoundTickByte0C]
     ld b, a
     cpl
     ld c, a
     ldh a, [hSndPanning]
     and a, b
     ld b, a
-    ld a, [wDD09]
+    ld a, [wSoundEngineMode]
     and a, c
     or a, b
-    ld [wDD09], a
+    ld [wSoundEngineMode], a
     ret
 
 Jump_000_39AB::
@@ -10157,7 +10157,7 @@ Jump_000_39AB::
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: wSoundHwChannel, hSndPitchSlide, hSndEnvelope, hSndPitchSlideTime, wDD0D, hSndFreqHi
+; reads: wSoundHwChannel, hSndPitchSlide, hSndEnvelope, hSndPitchSlideTime, wSoundRegBase, hSndFreqHi
 ; writes: hSndPitchSlideCounter, hSndEnvelope
 ; points at: hSndPitchSlideCounter, hSndPitchSlide
 SoundTick_Sub03::
@@ -10204,7 +10204,7 @@ Jump_000_39EC::
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: wSoundHwChannel, hSndNoteTimer, hSndChanFlags, wDD0E, hSndFreqLo, wDD0D
+; reads: wSoundHwChannel, hSndNoteTimer, hSndChanFlags, wSoundTickBuf0E, hSndFreqLo, wSoundRegBase
 SoundTick_Sub04::
 Func_000_39F8:: ; address name
     call ReturnTwiceIfWDD08AndWDD0B
@@ -10219,7 +10219,7 @@ Func_000_39F8:: ; address name
     ret z
     sub a, $10
     ld b, a
-    ld a, [wDD0E]
+    ld a, [wSoundTickBuf0E]
     and a, $0F
     or a, b
     ld e, a
@@ -10233,7 +10233,7 @@ Func_000_39F8:: ; address name
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
-; reads: wSoundHwChannel, hSndVibratoDepth, hSndEnvelope, wDD0D, hSndFreqHi, hSndVibratoDelay, hSndVibratoCounter, hSndA8Param
+; reads: wSoundHwChannel, hSndVibratoDepth, hSndEnvelope, wSoundRegBase, hSndFreqHi, hSndVibratoDelay, hSndVibratoCounter, hSndA8Param
 ; writes: rNR32
 ; points at: hSndEnvelope
 SoundNextEvent_Sub01::
@@ -10248,7 +10248,7 @@ Func_000_3A21:: ; address name
 
 ; B = A (bit 3 set when the low three bits are 0); writes it to the channel envelope register (wDD0D + $12) only if it differs, then restarts the channel (E-0124)
 ; 2 call sites from 2 routines (e.g. SoundNextEvent, SoundTick)
-; reads: wDD0D, hSndFreqHi
+; reads: wSoundRegBase, hSndFreqHi
 WriteChannelEnvelopeIfChanged::
 Func_000_3A2F:: ; address name
     ld b, a
@@ -10259,7 +10259,7 @@ Func_000_3A2F:: ; address name
     ld b, a
 
 Jump_000_3A38::
-    ld a, [wDD0D]
+    ld a, [wSoundRegBase]
     add a, $12
     ld c, a
     ldh a, [c]
@@ -10275,11 +10275,11 @@ Jump_000_3A38::
 
 ; A = value, C = register offset: writes A to $FF00 + wDD0D + C (wDD0D holds the current sound channel's register base); B = A (E-0077)
 ; 5 call sites from 2 routines (e.g. SoundNextEvent, WriteChannelEnvelopeIfChanged)
-; reads: wDD0D
+; reads: wSoundRegBase
 WriteChannelRegisterC::
 Func_000_3A4E:: ; address name
     ld b, a
-    ld a, [wDD0D]
+    ld a, [wSoundRegBase]
     add a, c
     ld c, a
     ld a, b
@@ -10293,11 +10293,11 @@ Jump_000_3A57::
 
 ; [$FF00 + wDD0D + $11] &= $C0: keeps the duty bits of the current channel's length/duty register and clears its length (E-0114)
 ; 2 call sites from 2 routines (e.g. SoundNextEvent, WriteChannelEnvelopeIfChanged)
-; reads: wDD0D
+; reads: wSoundRegBase
 ClearChannelLengthBits::
 Func_000_3A5D:: ; address name
     ld c, $11
-    ld a, [wDD0D]
+    ld a, [wSoundRegBase]
     add a, c
     ld c, a
     ldh a, [c]
@@ -10445,7 +10445,7 @@ Jump_000_3B0E::
 
 Jump_000_3B20::
     ld c, $12
-    ld a, [wDD0D]
+    ld a, [wSoundRegBase]
     add a, c
     ld c, a
     ldh a, [c]
@@ -10463,7 +10463,7 @@ Jump_000_3B20::
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
-; reads: wDD0D, hSndFreqHi
+; reads: wSoundRegBase, hSndFreqHi
 SoundNextEvent_Sub02::
 Func_000_3B39:: ; address name
     call ReturnTwiceIfWDD08AndWDD0B
@@ -10472,27 +10472,27 @@ Func_000_3B39:: ; address name
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
-; reads: wDD0B, wDD09
-; writes: wDD09
+; reads: wSoundSkipMaskB, wSoundEngineMode
+; writes: wSoundEngineMode
 SoundNextEvent_Sub03::
 Func_000_3B41:: ; address name
     call ReturnTwiceIfWDD08AndWDD0B
-    ld a, [wDD0B]
+    ld a, [wSoundSkipMaskB]
     cpl
     ld b, a
-    ld a, [wDD09]
+    ld a, [wSoundEngineMode]
     and a, b
-    ld [wDD09], a
+    ld [wSoundEngineMode], a
     ret
 
 ; when wDD08 & wDD0B is non-zero, drops the caller's return address (pop af) so it returns to the caller's caller; otherwise returns normally with Z set (E-0119)
 ; 6 call sites from 5 routines (e.g. SoundNextEvent, SoundNextEvent_Sub02, SoundNextEvent_Sub03, SoundTick_Sub05, ...)
-; reads: wDD0B, wDD08
+; reads: wSoundSkipMaskB, wSoundSkipMaskA
 ReturnTwiceIfWDD08AndWDD0B::
 Func_000_3B51:: ; address name
-    ld a, [wDD0B]
+    ld a, [wSoundSkipMaskB]
     ld b, a
-    ld a, [wDD08]
+    ld a, [wSoundSkipMaskA]
     and a, b
     ret z
     pop af
@@ -10510,16 +10510,16 @@ Func_000_3B51:: ; address name
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
-; reads: wDD17, hSndSweepOrWave, hSndA8Param
-; writes: wDD17, rNR30
+; reads: wSoundEventByte17, hSndSweepOrWave, hSndA8Param
+; writes: wSoundEventByte17, rNR30
 SoundNextEvent_Sub04::
 Func_000_3D7C:: ; address name
-    ld a, [wDD17]
+    ld a, [wSoundEventByte17]
     ld b, a
     ldh a, [hSndSweepOrWave]
     cp a, b
     ret z
-    ld [wDD17], a
+    ld [wSoundEventByte17], a
     ld e, a
     swap e
     xor a, a

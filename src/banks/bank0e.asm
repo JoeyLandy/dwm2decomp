@@ -1922,14 +1922,14 @@ Func_00E_5C2B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5
 ; writes: rRAMG2, rRAMB, wArg2, wSpeciesIdLo, wArg3, wSpeciesIdHi, wArg4, rRAMG
-; points at: sA000
+; points at: sRecords
 RefreshRecordResistancesFromSpecies:: ; heuristic: follows a terminator; C0
 Func_00E_5C50:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld c, $1E
 
 Jump_00E_5C5E::

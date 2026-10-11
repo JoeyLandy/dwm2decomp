@@ -2581,29 +2581,29 @@ Jump_00A_5245::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg
-; points at: wDC01, wDC20, wDC40, wDC60, wDC80, wDCA0, wModeChangeRequest, wBGFillFlag
+; points at: wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5, wModeChangeRequest, wBGFillFlag
 RunWC904Step_Case02::
 Jump_00A_525C:: ; address name
     ld a, [wSoundChannelSlots]
-    ld hl, wDC01
+    ld hl, wSoundChannelSlots + $1
     and a, [hl]
-    ld hl, wDC20
-    and a, [hl]
-    inc hl
-    and a, [hl]
-    ld hl, wDC40
+    ld hl, wSoundChannel1
     and a, [hl]
     inc hl
     and a, [hl]
-    ld hl, wDC60
+    ld hl, wSoundChannel2
     and a, [hl]
     inc hl
     and a, [hl]
-    ld hl, wDC80
+    ld hl, wSoundChannel3
     and a, [hl]
     inc hl
     and a, [hl]
-    ld hl, wDCA0
+    ld hl, wSoundChannel4
+    and a, [hl]
+    inc hl
+    and a, [hl]
+    ld hl, wSoundChannel5
     and a, [hl]
     inc hl
     and a, [hl]
@@ -3187,7 +3187,7 @@ Data_00A_560C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wScriptRunning, wEncounterRate, wStepCounterLo, wStepCounterHi, hTemp0
 ; writes: hTemp0, wStepCounterLo, wStepCounterHi, rRAMG
-; points at: sA000
+; points at: sRecords
 AdvanceStepCounterAndUpdateStoredRecords::
 Func_00A_561E:: ; address name
     ld a, [wScriptRunning]
@@ -3234,10 +3234,10 @@ Jump_00A_5656::
     ret z
     ld a, $0A
     ld [rRAMG], a
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $6B
     add_a_to_hl
-    ld de, sA000
+    ld de, sRecords
     ld b, $1E
 
 Jump_00A_5676::

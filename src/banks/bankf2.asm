@@ -1525,7 +1525,7 @@ Jump_0F2_4E25::
 
 ; BC = wCCCD when the byte at DE is $98 (the ??? placeholder), else wCDCC (E-0122)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub02)
-; points at: wNameBufAlt, wCCCD
+; points at: wNameBufAlt, wNameBufUnknown
 PickNameBufferForFirstByte_BankF2::
 Func_0F2_4E26:: ; address name
     ld a, [de]
@@ -1535,7 +1535,7 @@ Func_0F2_4E26:: ; address name
     jr Jump_0F2_4E33
 
 Jump_0F2_4E30::
-    ld bc, wCCCD
+    ld bc, wNameBufUnknown
 
 Jump_0F2_4E33::
     ret

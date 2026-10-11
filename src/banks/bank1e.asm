@@ -1167,7 +1167,7 @@ Jump_01E_4782::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenStep
 ; writes: rRAMG2, rRAMB, wTwoChoiceCursor, wScreenState, wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest
-; points at: sA000
+; points at: sRecords
 ScriptCommandE8_Run_Case04_Case10::
 Jump_01E_47B2:: ; address name
     farcall LoadWD7FFFromWC7C7Table
@@ -1176,7 +1176,7 @@ Jump_01E_47B2:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld c, $00
 
 Jump_01E_47C7::
@@ -7075,7 +7075,7 @@ Jump_01E_70C3::
 
 ; BC = wCCCD when the byte at DE is $98 (the '???' placeholder), else wCDCC (E-0122)
 ; 2 call sites from 1 routine (e.g. DrawRecordFamilyEntries_6FEB)
-; points at: wNameBufAlt, wCCCD
+; points at: wNameBufAlt, wNameBufUnknown
 PickNameBufferForFirstByte::
 Func_01E_70C9:: ; address name
     ld a, [de]
@@ -7085,7 +7085,7 @@ Func_01E_70C9:: ; address name
     jr Jump_01E_70D6
 
 Jump_01E_70D3::
-    ld bc, wCCCD
+    ld bc, wNameBufUnknown
 
 Jump_01E_70D6::
     ret

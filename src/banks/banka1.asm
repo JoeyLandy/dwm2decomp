@@ -90,7 +90,7 @@ Func_0A1_413F:: ; address name
 ; entry 0 of the `rst $00` table in RunBattleCommandEntry_BankA1
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte, wBattleActor
-; points at: wDA5F, wBattleSubPhase
+; points at: wBattleSubPhase
 RunBattleCommandEntry_BankA1_Case00::
 Jump_0A1_4156:: ; address name
     xor a, a
@@ -98,7 +98,7 @@ Jump_0A1_4156:: ; address name
     xor a, a
     ld [wBattleActor], a
     ld bc, $0304
-    ld hl, wDA5F
+    ld hl, wSlotMarks + $4
 
 Jump_0A1_4164::
     ld a, [hl]
@@ -130,7 +130,7 @@ Jump_0A1_417F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wBattleActor, wBattleResolveStep
-; points at: wDA5B, wBattleSubPhase
+; points at: wSlotMarks, wBattleSubPhase
 RunBattleCommandEntry_BankA1_Case01::
 Jump_0A1_418A:: ; address name
     call NextTableByteSecondStream
@@ -138,7 +138,7 @@ Jump_0A1_418A:: ; address name
     cp a, $08
     jr z, Jump_0A1_41BC
     ld e, a
-    ld hl, wDA5B
+    ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
     cp a, $01
@@ -181,7 +181,7 @@ Jump_0A1_41C3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wBattleSubPhase
-; points at: wBattleTargetChoice, wDA5B, wBattleActor
+; points at: wBattleTargetChoice, wSlotMarks, wBattleActor
 RunBattleCommandEntry_BankA1_Case03::
 Jump_0A1_41CA:: ; address name
     farcall ChooseActionTarget
@@ -191,7 +191,7 @@ Jump_0A1_41CA:: ; address name
     add_a_to_hl
     ld d, [hl]
     ld a, [wBattleActor]
-    ld hl, wDA5B
+    ld hl, wSlotMarks
     add_a_to_hl
     ld [hl], $02
     ld a, $01
@@ -202,31 +202,31 @@ Jump_0A1_41CA:: ; address name
 
 ; entry 4 of the `rst $00` table in RunBattleCommandEntry_BankA1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD871
-; writes: wD89E, wD871, wD87A, wD87B
-; points at: wD895, wD868, wD87D, wDA5B, wD87A, wD871, wBattleSubPhase
+; reads: wLoadSlot
+; writes: wActionQueuePos, wLoadSlot, wBattleTemp7A, wBattleTemp7B
+; points at: wActionQueue, wBattleArg0, wBattleTemp7D, wSlotMarks, wBattleTemp7A, wLoadSlot, wBattleSubPhase
 RunBattleCommandEntry_BankA1_Case04::
 Jump_0A1_41F4:: ; address name
-    ld hl, wD895
+    ld hl, wActionQueue
     ld bc, $0009
     ld a, $FF
     call FillBytes
-    ld hl, wD868
+    ld hl, wBattleArg0
     ld bc, $0009
     ld a, $FF
     call FillBytes
-    ld hl, wD87D
+    ld hl, wBattleTemp7D
     ld bc, $0012
     ld a, $00
     call FillBytes
     xor a, a
-    ld [wD89E], a
-    ld [wD871], a
-    ld hl, wD87D
+    ld [wActionQueuePos], a
+    ld [wLoadSlot], a
+    ld hl, wBattleTemp7D
     ld a, l
-    ld [wD87A], a
+    ld [wBattleTemp7A], a
     ld a, h
-    ld [wD87B], a
+    ld [wBattleTemp7B], a
     ld de, $0800
 
 Jump_0A1_422A::
@@ -234,7 +234,7 @@ Jump_0A1_422A::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0A1_4266
     ld a, e
-    ld hl, wDA5B
+    ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
     cp a, $02
@@ -242,20 +242,20 @@ Jump_0A1_422A::
     ld a, e
     call RunBattleCommandEntry_BankA1_Case04_Sub01
     call RunBattleCommandEntry_BankA1_Case04_Sub02
-    ld hl, wD87A
+    ld hl, wBattleTemp7A
     deref_hl
     ld a, c
     ld [hl+], a
     ld [hl], b
-    ld a, [wD871]
-    ld hl, wD868
+    ld a, [wLoadSlot]
+    ld hl, wBattleArg0
     add_a_to_hl
     ld [hl], e
-    ld hl, wD871
+    ld hl, wLoadSlot
     inc [hl]
-    ld hl, wD87A
+    ld hl, wBattleTemp7A
     inc [hl]
-    ld hl, wD87A
+    ld hl, wBattleTemp7A
     inc [hl]
 
 Jump_0A1_4266::
@@ -268,23 +268,23 @@ Jump_0A1_4266::
 
 ; entry 5 of the `rst $00` table in RunBattleCommandEntry_BankA1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD87A, wD87B, wBattleDamageLo, wD873, wD874, wD875, wD89E
-; writes: wD87A, wD87B, wBattleDamageLo, wD873, wD874, wD875, wD89E
-; points at: wD87D, wD87F, wD868, wD87A, wD895, wBattleSubPhase
+; reads: wBattleTemp7A, wBattleTemp7B, wBattleDamageLo, wBattleDamageHi, wTargetEstimates, wActionQueuePos
+; writes: wBattleTemp7A, wBattleTemp7B, wBattleDamageLo, wBattleDamageHi, wTargetEstimates, wActionQueuePos
+; points at: wBattleTemp7D, wBattleTemp7F, wBattleArg0, wBattleTemp7A, wActionQueue, wBattleSubPhase
 RunBattleCommandEntry_BankA1_Case05::
 Jump_0A1_4270:: ; address name
     ld d, $08
 
 Jump_0A1_4272::
-    ld hl, wD87D
+    ld hl, wBattleTemp7D
     ld a, l
-    ld [wD87A], a
+    ld [wBattleTemp7A], a
     ld a, h
-    ld [wD87B], a
+    ld [wBattleTemp7B], a
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ld hl, wD87F
+    ld hl, wBattleTemp7F
     deref_hl
     ld e, $00
 
@@ -294,25 +294,25 @@ Jump_0A1_4288::
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
-    ld [wD873], a
+    ld [wBattleDamageHi], a
     ld a, c
-    ld [wD874], a
+    ld [wTargetEstimates], a
     ld a, b
-    ld [wD875], a
-    ld a, [wD87A]
+    ld [wTargetEstimates + $1], a
+    ld a, [wBattleTemp7A]
     ld l, a
-    ld a, [wD87B]
+    ld a, [wBattleTemp7B]
     ld h, a
     ld a, [wBattleDamageLo]
     ld [hl+], a
-    ld a, [wD873]
+    ld a, [wBattleDamageHi]
     ld [hl+], a
-    ld a, [wD874]
+    ld a, [wTargetEstimates]
     ld [hl+], a
-    ld a, [wD875]
+    ld a, [wTargetEstimates + $1]
     ld [hl], a
     ld a, e
-    ld hl, wD868
+    ld hl, wBattleArg0
     add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
@@ -324,9 +324,9 @@ Jump_0A1_42C2::
     ld a, e
     cp a, d
     jr z, Jump_0A1_42DB
-    ld hl, wD87A
+    ld hl, wBattleTemp7A
     inc [hl]
-    ld hl, wD87A
+    ld hl, wBattleTemp7A
     inc [hl]
     deref_hl
     ld a, [hl+]
@@ -339,16 +339,16 @@ Jump_0A1_42C2::
 Jump_0A1_42DB::
     dec d
     jr nz, Jump_0A1_4272
-    ld a, [wD89E]
-    ld de, wD895
+    ld a, [wActionQueuePos]
+    ld de, wActionQueue
     add a, e
     ld e, a
     jr nc, Jump_0A1_42E9
     inc d
 
 Jump_0A1_42E9::
-    ld a, [wD89E]
-    ld hl, wD868
+    ld a, [wActionQueuePos]
+    ld hl, wBattleArg0
     ld b, $09
 
 Jump_0A1_42F1::
@@ -362,7 +362,7 @@ Jump_0A1_42F1::
 
 Jump_0A1_42FB::
     ld a, $00
-    ld [wD89E], a
+    ld [wActionQueuePos], a
     ld hl, wBattleSubPhase
     inc [hl]
     ret
@@ -417,7 +417,7 @@ Func_0A1_434F:: ; address name
 
 ; only called from RunBattleCommandEntry_BankA1_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_BankA1_Case06)
-; points at: wBattleActionChoice, wD812
+; points at: wBattleActionChoice, wBattleStatus6
 RunBattleCommandEntry_BankA1_Case06_Sub01::
 Func_0A1_4356:: ; address name
     ld c, $00
@@ -435,7 +435,7 @@ Jump_0A1_435A::
     cp a, $6E
     jr nz, Jump_0A1_4378
     ld a, c
-    ld hl, wD812
+    ld hl, wBattleStatus6
     call AddAx9ToHL
     set 2, [hl]
 
@@ -473,8 +473,8 @@ Func_0A1_437D:: ; address name
 
 ; only called from RunBattleCommandEntry_BankA1_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_BankA1_Case04)
-; reads: wD868, wD869, wD86A, wD86B, wRecordBufferData, wRandomLo
-; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
+; reads: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, wRecordBufferData, wRandomLo
+; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleActionChoice
 RunBattleCommandEntry_BankA1_Case04_Sub02::
 Func_0A1_43A1:: ; address name
@@ -497,36 +497,36 @@ Func_0A1_43A1:: ; address name
     ld [wRecordBuffer], a
     xor a, a
     ld [wRecordBuffer + $1], a
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld l, a
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     ld h, a
     push hl
-    ld a, [wD86A]
+    ld a, [wBattleArg2]
     ld l, a
-    ld a, [wD86B]
+    ld a, [wBattleArg3]
     ld h, a
     push hl
     ld a, $05
-    ld [wD868], a
+    ld [wBattleArg0], a
     ld a, $01
-    ld [wD869], a
+    ld [wBattleArg1], a
     ld hl, wRecordBufferData + $5
     ld a, l
-    ld [wD86A], a
+    ld [wBattleArg2], a
     ld a, h
-    ld [wD86B], a
+    ld [wBattleArg3], a
     farcall LoadSkillRecordPart
     pop hl
     ld a, l
-    ld [wD86A], a
+    ld [wBattleArg2], a
     ld a, h
-    ld [wD86B], a
+    ld [wBattleArg3], a
     pop hl
     ld a, l
-    ld [wD868], a
+    ld [wBattleArg0], a
     ld a, h
-    ld [wD869], a
+    ld [wBattleArg1], a
     pop hl
     pop de
     pop bc

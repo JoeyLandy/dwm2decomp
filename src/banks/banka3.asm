@@ -72,12 +72,12 @@ Jump_0A3_406F::
 ; runs Func_0A3_414F, then wDA5B[hFFC6] = 3 (E-0122)
 ; 22 call sites from 21 routines (e.g. ApplyActionResultAndMarkFormation, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
 ; reads: hTemp0
-; points at: wDA5B
+; points at: wSlotMarks
 RunA3414FAndMarkWDA5B3::
 Func_0A3_413F:: ; address name
     call ActorFormationSlotToHFFC6
     ldh a, [hTemp0]
-    ld hl, wDA5B
+    ld hl, wSlotMarks
     add_a_to_hl
     ld [hl], $03
     ret
@@ -126,12 +126,12 @@ Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case06, RunBattleCommandEntry_BankA1_Case06)
 ; reads: wLinkMode
 ; writes: wFormationSlot0, wFormationSlot1
-; points at: wBattleActionChoice, wDA2C, wDA24
+; points at: wBattleActionChoice, wSavedActionChoices
 SaveActionChoicesAndPickFormations::
 Func_0A3_4187:: ; address name
     ld b, $10
     ld hl, wBattleActionChoice
-    ld de, wDA2C
+    ld de, wSavedActionChoices
 
 Jump_0A3_418F::
     ld a, [hl+]
@@ -159,11 +159,11 @@ Jump_0A3_41B5::
     ret z
     cp a, $02
     ret z
-    ld de, wDA24
+    ld de, wBattleActionChoice + $8
     call SaveActionChoicesAndPickFormations_Sub01
     or a, a
     ret z
-    ld de, wDA24
+    ld de, wBattleActionChoice + $8
     call SaveActionChoicesAndPickFormations_Sub02
     ld [wFormationSlot1], a
     ret
@@ -298,11 +298,11 @@ Jump_0A3_4274::
 
 ; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; 3 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01)
-; points at: wD80F
+; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankA3::
 Func_0A3_4278:: ; address name
     push hl
-    ld hl, wD80F
+    ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
@@ -319,7 +319,7 @@ Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from SaveActionChoicesAndPickFormations_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01)
-; reads: wD981, wD982, hTemp0, wRandomLo, wD980
+; reads: wSlotTrait, hTemp0, wRandomLo
 ; writes: hTemp0
 SaveActionChoicesAndPickFormations_Sub01_Sub01::
 Func_0A3_44C4:: ; address name
@@ -353,10 +353,10 @@ Func_0A3_44C4:: ; address name
     ld a, [hl]
     inc a
     ldh [hTemp0], a
-    ld a, [wD981]
+    ld a, [wSlotTrait + $1]
     ld c, a
     ld b, $00
-    ld a, [wD982]
+    ld a, [wSlotTrait + $2]
     add a, c
     ld c, a
     jr nc, Jump_0A3_4503
@@ -389,10 +389,10 @@ Jump_0A3_4505::
     ld a, [hl]
     inc a
     ldh [hTemp0], a
-    ld a, [wD980]
+    ld a, [wSlotTrait]
     ld c, a
     ld b, $00
-    ld a, [wD981]
+    ld a, [wSlotTrait + $1]
     add a, c
     ld c, a
     jr nc, Jump_0A3_4538
@@ -425,10 +425,10 @@ Jump_0A3_453A::
     ld a, [hl]
     inc a
     ldh [hTemp0], a
-    ld a, [wD980]
+    ld a, [wSlotTrait]
     ld c, a
     ld b, $00
-    ld a, [wD982]
+    ld a, [wSlotTrait + $2]
     add a, c
     ld c, a
     jr nc, Jump_0A3_456D
@@ -662,7 +662,7 @@ Jump_0A3_49EE::
 ; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with target $FF; others set wDA5B[target] = 3 (E-0124)
 ; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
 ; reads: wBattleTarget
-; points at: wBattleActionChoice, wDA5B
+; points at: wBattleActionChoice, wSlotMarks
 CancelTargetActionUnlessSpecial::
 Func_0A3_4A02:: ; address name
     ld a, [wBattleTarget]
@@ -691,18 +691,18 @@ Func_0A3_4A02:: ; address name
 
 Jump_0A3_4A2B::
     ld a, [wBattleTarget]
-    ld hl, wDA5B
+    ld hl, wSlotMarks
     add_a_to_hl
     ld [hl], $03
     ret
 
 ; removes the first byte equal to C from the 8-byte queue at wD895, shifting later bytes down and filling with $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wD895
+; points at: wActionQueue
 RemoveCFromWD895Queue_A3:: ; heuristic: follows a terminator; C0
 Func_0A3_4A39:: ; address name
     push de
-    ld hl, wD895
+    ld hl, wActionQueue
     ld b, $08
     ld d, $00
 
@@ -737,12 +737,12 @@ Jump_0A3_4A59::
 ; only called from ResolveStepBegin (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepBegin)
 ; reads: wBattleTarget
-; points at: wD86D
+; points at: wSlotChoices
 ResolveStepBegin_Sub01::
 Func_0A3_4A5F:: ; address name
     call AdvanceRandom
     ld a, $FF
-    ld hl, wD86D
+    ld hl, wSlotChoices
     ld bc, $0003
     call FillBytes
     ld a, [wBattleTarget]
@@ -760,7 +760,7 @@ Jump_0A3_4A7A::
     cp a, d
     jr z, Jump_0A3_4A7A
     ld a, e
-    ld hl, wD86D
+    ld hl, wSlotChoices
     add_a_to_hl
     ld [hl], c
     inc e
@@ -782,7 +782,7 @@ Jump_0A3_4A99::
     ld c, e
     call RandomInRange
     ld a, e
-    ld hl, wD86D
+    ld hl, wSlotChoices
     add_a_to_hl
     ld a, [hl]
     ld c, a

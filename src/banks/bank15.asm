@@ -3160,7 +3160,7 @@ Jump_015_5555::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, wArg3, wArg2, wArg1, wScreenStep, wScreenState, wScriptCommandType, ...
-; points at: sA000, wListEntries2
+; points at: sRecords, wListEntries2
 ScriptCommandED_Run_Case05_Case10::
 Jump_015_556A:: ; address name
     ld a, $0A
@@ -3176,7 +3176,7 @@ Jump_015_556A:: ; address name
     ld a, [hl]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld a, $6E
     add_a_to_hl
@@ -3220,7 +3220,7 @@ Jump_015_55B7::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, hTemp0, hTemp1, wSelectedRecord, wArg7, wScreenState
 ; writes: rRAMG2, rRAMB, wArg2, wArg3, wArg4, wArg5, wSelectedRecord, wArg1, ...
-; points at: wNameGlyphBuf, sA000, wRecordBufA
+; points at: wNameGlyphBuf, sRecords, wRecordBufA
 ScriptCommandED_Run_Case06::
 Jump_015_55D2:: ; address name
     farcall SetWD7F5ToWD789Cell4
@@ -3295,7 +3295,7 @@ Jump_015_5657::
     ld a, [wSelectedRecord]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld de, wRecordBufA
     ld b, $A5
@@ -5290,7 +5290,7 @@ Func_015_63B8:: ; address name
 ; 9 call sites from 5 routines (e.g. ScriptCommandED_Run_Case04_Case36, ScriptCommandED_Run_Case04_Case2F, ScriptCommandED_Run_Case04_Case2C, ScriptCommandED_Run_Case04_Case3E, ...)
 ; reads: wLinkMode, wScreenState, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
-; points at: sBB0F
+; points at: sSavedPlayerName
 ScriptCommandED_Run_Shared02::
 Func_015_63D3:: ; address name
     ld a, [wLinkMode]
@@ -5300,7 +5300,7 @@ Func_015_63D3:: ; address name
     ld [rRAMG2], a
     ld a, $01
     ld [rRAMB], a
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld de, $022B
     add hl, de
     ld a, [hl]
@@ -6331,7 +6331,7 @@ Data_015_6937:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. ScriptCommandED_Run_Case04_Case16, ScriptCommandED_Run_Case12_Case01)
 ; reads: wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
-; points at: wListEntries, wListEntries2, sA000, wArg1
+; points at: wListEntries, wListEntries2, sRecords, wArg1
 ScriptCommandED_Run_Shared05::
 Func_015_693F:: ; address name
     ld hl, wListEntries
@@ -6357,7 +6357,7 @@ Jump_015_694E::
     xor a, a
     ld [rRAMB], a
     ld [wRecordsFlagged], a
-    ld de, sA000
+    ld de, sRecords
     ld hl, wListEntries
     ld b, $00
     ld c, $00
@@ -6546,7 +6546,7 @@ Func_015_6A36:: ; address name
 ; 2 call sites from 2 routines (e.g. ScriptCommandED_Run_Case04_Case1B, ScriptCommandED_Run_Case12_Case07)
 ; reads: wSelectedRecord, wArg5, wArg6
 ; writes: rRAMG2, rRAMB
-; points at: sA000, wRecordBufA, wRecordBufB
+; points at: sRecords, wRecordBufA, wRecordBufB
 ScriptCommandED_Run_Shared06::
 Func_015_6A82:: ; address name
     ld a, $0A
@@ -6556,7 +6556,7 @@ Func_015_6A82:: ; address name
     ld a, [wSelectedRecord]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld de, wRecordBufA
     ld b, $A5
@@ -6575,7 +6575,7 @@ Jump_015_6A9C::
     ld a, [hl]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld de, wRecordBufB
     ld b, $A5
@@ -6630,7 +6630,7 @@ Func_015_6ACA:: ; address name
 ; 3 call sites from 3 routines (e.g. ScriptCommandED_Run_Case04_Case2B, ScriptCommandF2_Run_Case03_Case0A, Func_0F0_4CA0_Table4_Case02)
 ; reads: hTemp0, wDigits
 ; writes: wStringCategory, wStringIndex, wScreenSubStep, rRAMG2, rRAMB, wNameGlyphBuf, wArg3, wArg4, ...
-; points at: wTextWindowTileLo, sBB0F, wNameGlyphBuf, wDigits, sBB01, sBE0D, sBD36, sBC0A, ...
+; points at: wTextWindowTileLo, sSavedPlayerName, wNameGlyphBuf, wDigits, sSaveData, sSavedMapType, sSavedKeyIndex, sSavedKeyList, ...
 ShowSaveFileInfoWindow::
 Func_015_6B00:: ; address name
     ld hl, vTiles1 + $240
@@ -6691,7 +6691,7 @@ Jump_015_6B6B::
     ld hl, wWindowTileBuffer + $64
     ld bc, $140B
     call CopyRectTo20ByteRows_Bank15
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld de, $022B
     add hl, de
     ld a, [hl]
@@ -6709,7 +6709,7 @@ Jump_015_6B6B::
     ld [hl], a
 
 Jump_015_6BA1::
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld de, wNameGlyphBuf
     ld c, $0A
 
@@ -6748,11 +6748,11 @@ Jump_015_6BB4::
     ld [wNameGlyphBuf + $2], a
     ld de, vTiles2 + $780
     call CopyGlyphTilesToVRAM
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld a, $F1
     add_a_to_hl
     ld b, [hl]
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld a, $F2
     add_a_to_hl
     ld c, $00
@@ -6895,7 +6895,7 @@ Jump_015_6CC8::
     ld a, c
     cp a, b
     jr c, Jump_015_6CC8
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld de, $0221
     add hl, de
     push hl
@@ -6930,7 +6930,7 @@ Jump_015_6CC8::
     ld de, wDigits + $1
     ld b, $02
     call WriteDigitTilesFromDEToVRAM
-    ld hl, sBB01
+    ld hl, sSaveData
     ld a, $06
     add_a_to_hl
     ld a, $0A
@@ -6941,17 +6941,17 @@ Jump_015_6CC8::
     add a, $0A
     cp a, $0D
     jr nz, Jump_015_6D9A
-    ld hl, sBE0D
+    ld hl, sSavedMapType
     ld a, [hl]
     bit 7, a
     jr z, Jump_015_6D98
-    ld hl, sBD36
+    ld hl, sSavedKeyIndex
     ld a, [hl]
     ld l, a
     ld h, $00
     add hl, hl
     add hl, hl
-    ld de, sBC0A
+    ld de, sSavedKeyList
     add hl, de
     inc hl
     ld de, wTextBuf0
@@ -7039,7 +7039,7 @@ Func_015_6DD6:: ; address name
 ; with SRAM bank 1 selected, HL = sA06F + $6F * [HL + C] (a $6F-byte record in bank 1); then selects bank 0 and disables SRAM (E-0117)
 ; 3 call sites from 1 routine (e.g. ShowSaveFileInfoWindow)
 ; writes: rRAMG2, rRAMB
-; points at: sA06F
+; points at: sBank1Records
 SRAMBank1RecordAddress::
 Func_015_6DE6:: ; address name
     ld a, $0A
@@ -7051,7 +7051,7 @@ Func_015_6DE6:: ; address name
     ld a, [hl]
     ld c, $6F
     call Multiply8
-    ld de, sA06F
+    ld de, sBank1Records
     add hl, de
     xor a, a
     ld [rRAMB], a
@@ -7482,7 +7482,7 @@ Data_015_763B:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from routines of ScriptCommandEB_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandEB_Run_Case05_Case02, ScriptCommandEB_Run_Case04_Case3C)
 ; writes: wListCount, rRAMG2, rRAMB
-; points at: wListEntries, sB356, sA000
+; points at: wListEntries, sCompactRecords, sRecords
 ScriptCommandEB_Run_Shared06::
 Func_015_77AC:: ; address name
     ld hl, wListEntries
@@ -7499,7 +7499,7 @@ Jump_015_77B1::
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld de, sB356
+    ld de, sCompactRecords
     ld hl, wListEntries
     ld b, $00
     ld c, $00
@@ -7524,7 +7524,7 @@ Jump_015_77DC::
     ld a, b
     cp a, $1D
     jr c, Jump_015_77CD
-    ld de, sA000
+    ld de, sRecords
     ld a, $01
     ld [rRAMB], a
     ld a, [de]
@@ -7545,7 +7545,7 @@ Jump_015_77F2::
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case03)
 ; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wNameGlyphBuf, wScreenStep
-; points at: wListEntries, sB356, sA000
+; points at: wListEntries, sCompactRecords, sRecords
 ScriptCommandEB_Run_Case05_Case03_Sub01::
 Func_015_77FB:: ; address name
     ld a, $0A
@@ -7599,7 +7599,7 @@ Jump_015_7832::
     jr z, Jump_015_7864
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     ld [wArg2], a
@@ -7614,7 +7614,7 @@ Jump_015_785A::
 Jump_015_7864::
     ld a, $01
     ld [wArg2], a
-    ld hl, sA000
+    ld hl, sRecords
     ld a, l
     ld [wArg3], a
     ld a, h
@@ -7900,7 +7900,7 @@ Data_015_7A3B:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; HL = sB356 + $6F * B in SRAM bank 0, except record $1D, which is at sA000 in SRAM bank 1 (E-0122)
 ; 3 call sites from 3 routines (e.g. ScriptCommandEB_Run_Case05_Case04_Sub01, LoadFamilyIconTileForWD7F1Record, ScriptCommandEB_Run_Case05_Case06_Sub01)
 ; writes: rRAMB
-; points at: sB356, sA000
+; points at: sCompactRecords, sRecords
 RecordAddressWithBank1Slot1D::
 Func_015_7A43:: ; address name
     ld a, b
@@ -7908,14 +7908,14 @@ Func_015_7A43:: ; address name
     jr z, Jump_015_7A56
     ld c, $6F
     call Multiply8
-    ld de, sB356
+    ld de, sCompactRecords
     add hl, de
     xor a, a
     ld [rRAMB], a
     ret
 
 Jump_015_7A56::
-    ld hl, sA000
+    ld hl, sRecords
     ld a, $01
     ld [rRAMB], a
     ret

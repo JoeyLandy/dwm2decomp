@@ -4583,7 +4583,7 @@ Data_060_6B05:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 3 call sites from 3 routines (e.g. RunWC46BMenuState_Case05_Sub01, DebugAutomap_Update_Sub01, RunWD780StateWhenNotFading_1B_Case01_Case21)
 ; reads: hTemp0
 ; writes: rRAMB, rRAMG, hTemp0
-; points at: sA000
+; points at: sRecords
 FindSRAMSlotMarkerIndex::
 Func_060_6C61:: ; address name
     ld a, $02
@@ -4592,7 +4592,7 @@ Func_060_6C61:: ; address name
     ld [rRAMG], a
     xor a, a
     ldh [hTemp0], a
-    ld hl, sA000
+    ld hl, sRecords
     ld b, $14
     ld c, $50
 

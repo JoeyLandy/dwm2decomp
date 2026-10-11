@@ -1722,7 +1722,7 @@ Jump_001_50EC::
 ; update for debug-mode state 9: the screen shows the skill viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugCursor, wRecordBufferData, wRecordBuffer
-; writes: wGameMode, wModeState, wDebugCursor, wRecordBuffer, wD868, wD869, wD86A, wD86B, ...
+; writes: wGameMode, wModeState, wDebugCursor, wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, ...
 ; points at: wModeChangeRequest, wDebugCursor, wRecordBufferData
 DebugSkillViewer_Update::
 Jump_001_50ED:: ; address name
@@ -1774,14 +1774,14 @@ Jump_001_512D::
     xor a, a
     ld [wRecordBuffer + $1], a
     xor a, a
-    ld [wD868], a
+    ld [wBattleArg0], a
     ld a, $11
-    ld [wD869], a
+    ld [wBattleArg1], a
     ld hl, wRecordBufferData
     ld a, l
-    ld [wD86A], a
+    ld [wBattleArg2], a
     ld a, h
-    ld [wD86B], a
+    ld [wBattleArg3], a
     farcall LoadSkillRecordPart
     ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $90
@@ -5703,13 +5703,13 @@ Func_001_6ABE:: ; address name
 
 ; only called from DebugBattleSetup_Update_Shared01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01)
-; writes: wD868, rRAMG, rRAMB
-; points at: wD868, sA000
+; writes: wBattleArg0, rRAMG, rRAMB
+; points at: wBattleArg0, sRecords
 DebugBattleSetup_Update_Shared01_Sub01::
 Func_001_6BDC:: ; address name
     ld b, $1E
     xor a, a
-    ld [wD868], a
+    ld [wBattleArg0], a
 
 Jump_001_6BE2::
     ld a, $0A
@@ -5721,7 +5721,7 @@ Jump_001_6BE2::
     pop bc
     xor a, a
     ld [rRAMG], a
-    ld hl, wD868
+    ld hl, wBattleArg0
     inc [hl]
     dec b
     jr nz, Jump_001_6BE2
@@ -5729,7 +5729,7 @@ Jump_001_6BE2::
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld de, $00A5
     ld [hl], $02
     add hl, de
@@ -5776,7 +5776,7 @@ Func_001_6C1F:: ; address name
 
 ; only called from CreateMonsterRecordOfKindHFFC7_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01)
-; reads: hTemp3, wD868, wRecordBuffer, wD869, wRandomHi, wRecordBufferData, wScreenAttrBuffer, wD86A, ...
+; reads: hTemp3, wBattleArg0, wRecordBuffer, wBattleArg1, wRandomHi, wRecordBufferData, wScreenAttrBuffer, wBattleArg2, ...
 ; writes: wMonsterId, wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wWorkBuf
 ; points at: wPlayerName
 CreateMonsterRecordOfKindHFFC7_Sub01_Sub01::
@@ -5788,7 +5788,7 @@ Func_001_6C48:: ; address name
     ld a, d
     ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld c, $00
     call SRAMRecordAddress
     pop af
@@ -5804,7 +5804,7 @@ Func_001_6C48:: ; address name
     ld a, [wRecordBuffer + $1]
     ld [hl+], a
     inc hl
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     cp a, $FF
     jr nz, Jump_001_6C82
     ld a, [wRandomHi]
@@ -5902,7 +5902,7 @@ Jump_001_6CE1::
     ld [hl+], a
     ld a, [wRecordBufferData + $13]
     ld [hl+], a
-    ld a, [wD86A]
+    ld a, [wBattleArg2]
     or a, a
     jr z, Jump_001_6D30
     push hl
@@ -5941,7 +5941,7 @@ Jump_001_6D33::
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld c, $0D
     call SRAMRecordAddress
     ld a, [wSpeciesRecord]
@@ -5983,7 +5983,7 @@ Jump_001_6D33::
     call WriteUnknownNamePlaceholder_Bank01
     call WriteUnknownNamePlaceholder_Bank01
     ld [hl], $00
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     cp a, $FF
     jr nz, Jump_001_6DD9
     call NextTableByte
@@ -5992,7 +5992,7 @@ Jump_001_6D33::
     ld a, $0E
     call DivideBByA
     ld [wWorkBuf + $1], a
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld c, $01
     call SRAMRecordAddress
     ld a, l
@@ -6030,7 +6030,7 @@ Jump_001_6DF4::
     ld a, h
     ld [wRecordBufA + $C], a
     farcall LoadTable4E60EntryForWC991ToWC9DE
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld c, $58
     call SRAMRecordAddress
     ld a, [wRecordBufA + $58]
@@ -6085,8 +6085,8 @@ Jump_001_6E3E::
 
 ; with SRAM enabled creates a record from the template Data_001_7098[hFFC7] (wD869 = hFFC7, level hFFC8); kinds 1 and 2 also set field $6E = 1 (E-0124)
 ; 10 call sites from 10 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, AddRecordWD7F5AsFollower, ScriptCommand2A_Run_Case10, ...)
-; reads: hTemp1, hTemp2, wD868
-; writes: rRAMG, rRAMB, wD869, wD86A
+; reads: hTemp1, hTemp2, wBattleArg0
+; writes: rRAMG, rRAMB, wBattleArg1, wBattleArg2
 CreateMonsterRecordOfKindHFFC7::
 Func_001_6E46:: ; address name
     ld a, $0A
@@ -6094,7 +6094,7 @@ Func_001_6E46:: ; address name
     xor a, a
     ld [rRAMB], a
     ldh a, [hTemp1]
-    ld [wD869], a
+    ld [wBattleArg1], a
     ld hl, Data_001_7098
     add a, a
     add_a_to_hl
@@ -6102,7 +6102,7 @@ Func_001_6E46:: ; address name
     inc hl
     ld d, [hl]
     xor a, a
-    ld [wD86A], a
+    ld [wBattleArg2], a
     ldh a, [hTemp2]
     call CreateMonsterRecordOfKindHFFC7_Sub01
     ldh a, [hTemp1]
@@ -6112,7 +6112,7 @@ Func_001_6E46:: ; address name
     jr nz, Jump_001_6E7D
 
 Jump_001_6E73::
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld c, $6E
     call SRAMRecordAddress
     ld [hl], $01
@@ -6124,23 +6124,23 @@ Jump_001_6E7D::
 
 ; only called from PickRandomMonsterSkipping7ETo82 (E-0047)
 ; 1 call site from 1 routine (e.g. PickRandomMonsterSkipping7ETo82)
-; reads: wD868
-; writes: wD869, wD86A, hTemp3, wD868
+; reads: wBattleArg0
+; writes: wBattleArg1, wBattleArg2, hTemp3, wBattleArg0
 PickRandomMonsterSkipping7ETo82_Sub01::
 Func_001_6E82:: ; address name
     ld a, $FF
-    ld [wD869], a
-    ld [wD86A], a
+    ld [wBattleArg1], a
+    ld [wBattleArg2], a
     ld a, $01
     ldh [hTemp3], a
-    ld a, [wD868]
+    ld a, [wBattleArg0]
 
 ; only called from CreateMonsterRecordOfKindHFFC7 (E-0047)
 ; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7)
-; writes: wD868
+; writes: wBattleArg0
 CreateMonsterRecordOfKindHFFC7_Sub01::
 Func_001_6E91:: ; address name
-    ld [wD868], a
+    ld [wBattleArg0], a
     call CreateMonsterRecordOfKindHFFC7_Sub01_Sub01
     ret
 

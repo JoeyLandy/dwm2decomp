@@ -4284,14 +4284,14 @@ Jump_00D_615A::
 ; 5 call sites from 4 routines (e.g. ScriptCommandF2_Run_Case03_Case0E, ScriptCommandF2_Run_Case03_Case0D, ScriptCommandF2_Run_Case03_Case0B, ScriptCommandF2_Run_Case03_Case06)
 ; reads: wScreenStep
 ; writes: rRAMG2, rRAMB
-; points at: sBB0F
+; points at: sSavedPlayerName
 ScriptCommandF2_Run_Shared02::
 Func_00D_615E:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     ld a, $01
     ld [rRAMB], a
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld de, $022B
     add hl, de
     ld a, [hl]
@@ -5883,14 +5883,14 @@ Jump_00D_6CC5::
 ; 3 call sites from 2 routines (e.g. ScriptCommandF3_Run_Case05_Case0E, ScriptCommandF3_Run_Case05_Case0C)
 ; reads: wFarmLevel
 ; writes: rRAMG2, rRAMB
-; points at: sA000
+; points at: sRecords
 ScriptCommandF3_Run_Shared02::
 Func_00D_6CCC:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld hl, sA000
+    ld hl, sRecords
     ld c, $00
     ld a, [wFarmLevel]
     ld de, Data_00D_6D06
@@ -7332,7 +7332,7 @@ Func_00D_7812:: ; address name
 ; 2 call sites from 2 routines (e.g. ScriptCommandF4_Run_Case04_Case13, ScriptCommandF4_Run_Case04_Case12)
 ; reads: wSelectedRecord
 ; writes: rRAMG2, rRAMB
-; points at: sA000, wRecordBufA
+; points at: sRecords, wRecordBufA
 ScriptCommandF4_Run_Shared01::
 Func_00D_7839:: ; address name
     ld a, $0A
@@ -7342,7 +7342,7 @@ Func_00D_7839:: ; address name
     ld a, [wSelectedRecord]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld de, wRecordBufA
     ld b, $A5

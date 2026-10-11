@@ -247,8 +247,8 @@ Jump_0E0_4164::
 
 ; entry 4 of the `rst $00` table in RunWC5FEState_E0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wJoypadPressedRepeat, wD894
-; writes: wDebugSubState, wD894
+; reads: wJoypadPressed, wJoypadPressedRepeat, wBattleEndFlag
+; writes: wDebugSubState, wBattleEndFlag
 RunWC5FEState_E0_Case04::
 Jump_0E0_4175:: ; address name
     ld a, [wJoypadPressed]
@@ -276,10 +276,10 @@ Jump_0E0_4190::
 Jump_0E0_419B::
     and a, $30
     ret z
-    ld a, [wD894]
+    ld a, [wBattleEndFlag]
     and a, $01
     xor a, $01
-    ld [wD894], a
+    ld [wBattleEndFlag], a
     call RunWC5FEState_E0_Shared03
     ret
 
@@ -402,10 +402,10 @@ Jump_0E0_424E::
 
 ; only called from routines of RunWC5FEState_E0 (E-0098)
 ; 2 call sites from 2 routines (e.g. RunWC5FEState_E0_Case04, RunWC5FEState_E0_Case00)
-; reads: wD894
+; reads: wBattleEndFlag
 RunWC5FEState_E0_Shared03::
 Func_0E0_425A:: ; address name
-    ld a, [wD894]
+    ld a, [wBattleEndFlag]
     and a, $01
     xor a, $01
     ld de, $41E6
@@ -556,7 +556,7 @@ Jump_0E0_445B:: ; address name
 ; entry 1 of the `rst $00` table in RunWC5FDState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDebugSubState
-; points at: wD89F, wDebugState
+; points at: wBattleMeter, wDebugState
 RunWC5FDState_E0_Case01::
 Jump_0E0_448E:: ; address name
     ld a, [wDebugSubState]
@@ -575,7 +575,7 @@ Jump_0E0_449A::
     inc c
     call DrawSlotHPMPStats_BankE0
     ld hl, vBGMap0 + $20B
-    ld de, wD89F
+    ld de, wBattleMeter
     call RunWC5FDState_E0_Case01_Sub01
     ld hl, wDebugState
     inc [hl]
@@ -584,7 +584,7 @@ Jump_0E0_449A::
 ; C = slot: unless its wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words (Func_0E0_4593 for each) at the position from the table at $4652 (C & 3); the rest is not read (E-0112)
 ; 3 call sites from 1 routine (e.g. RunWC5FDState_E0_Case01)
 ; writes: hTemp0, hTemp1
-; points at: wBattleSlotOut, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wD8B7, wBattleATK, wBattleDEF, ...
+; points at: wBattleSlotOut, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wBattleLevel, wBattleATK, wBattleDEF, ...
 DrawSlotHPMPStats_BankE0::
 Func_0E0_44B3:: ; address name
     ld a, c
@@ -613,7 +613,7 @@ Jump_0E0_44CB::
     ld de, wBattleMaxMP
     call DrawSlotHPMPStats_BankE0_Sub04
     inc hl
-    ld de, wD8B7
+    ld de, wBattleLevel
     call DrawSlotHPMPStats_BankE0_Sub02
     ld de, wBattleATK
     call DrawSlotHPMPStats_BankE0_Sub01
@@ -629,10 +629,10 @@ Jump_0E0_44CB::
     call DrawSlotHPMPStats_BankE0_Sub02
     ld de, wSlotPersonalityLo
     call DrawSlotHPMPStats_BankE0_Sub02
-    ld de, wD980
+    ld de, wSlotTrait
     call DrawSlotHPMPStats_BankE0_Sub02
     dec hl
-    ld de, wD93F
+    ld de, wBattleWordArray3F
     call DrawSlotHPMPStats_BankE0_Sub04
     call DrawSlotHPMPStats_BankE0_Sub06
     call DrawSlotHPMPStats_BankE0_Sub07
@@ -824,11 +824,11 @@ Func_0E0_45EE:: ; address name
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
-; points at: wDA53
+; points at: wSlotAIMode
 DrawSlotHPMPStats_BankE0_Sub06::
 Func_0E0_4603:: ; address name
     ld a, c
-    ld hl, wDA53
+    ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
     ld hl, $465E
@@ -847,11 +847,11 @@ Func_0E0_4603:: ; address name
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
-; points at: wD8AF
+; points at: wSlotNameSuffix
 DrawSlotHPMPStats_BankE0_Sub07::
 Func_0E0_462B:: ; address name
     ld a, c
-    ld de, wD8AF
+    ld de, wSlotNameSuffix
     add a, e
     ld e, a
     jr nc, Jump_0E0_4634
@@ -874,8 +874,8 @@ Jump_0E0_4634::
 
 ; entry 2 of the `rst $00` table in RunWC5FDState_E0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wD88F, wD890, wBattleActor, wBattleTarget, wBattleActionId, wDebugSubState
-; writes: wD88F, wD890, wDebugState, wDebugSubState, wD802
+; reads: wJoypadPressed, wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugSubState
+; writes: wBattlePartyCount, wBattleFoeCount, wDebugState, wDebugSubState, wEffectId
 ; points at: wWorkBuf, wDebugState
 RunWC5FDState_E0_Case02::
 Jump_0E0_4663:: ; address name
@@ -883,9 +883,9 @@ Jump_0E0_4663:: ; address name
     and a, $04
     jr z, Jump_0E0_46A3
     ld hl, wWorkBuf
-    ld a, [wD88F]
+    ld a, [wBattlePartyCount]
     ld [hl+], a
-    ld a, [wD890]
+    ld a, [wBattleFoeCount]
     ld [hl+], a
     ld a, [wBattleActor]
     ld [hl+], a
@@ -894,9 +894,9 @@ Jump_0E0_4663:: ; address name
     ld a, [wBattleActionId]
     ld [hl], a
     ld a, $01
-    ld [wD88F], a
+    ld [wBattlePartyCount], a
     ld a, $01
-    ld [wD890], a
+    ld [wBattleFoeCount], a
     ld a, $0A
     ld [wDebugState], a
     call DrawFullScreenFromBankE0_5283
@@ -905,7 +905,7 @@ Jump_0E0_4663:: ; address name
     ld [wDebugSubState], a
     call DrawHexByteAtBGMap8A
     ld a, $FF
-    ld [wD802], a
+    ld [wEffectId], a
     ret
 
 Jump_0E0_46A3::
@@ -946,7 +946,7 @@ Jump_0E0_46D1::
 
 ; entry 3 of the `rst $00` table in RunWC5FDState_E0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD88F, wLinkRole
+; reads: wBattlePartyCount, wLinkRole
 ; writes: wDebugValue3
 ; points at: wScreenTileBuffer, wLevelUpGains
 RunWC5FDState_E0_Case03::
@@ -979,7 +979,7 @@ Jump_0E0_46E8::
 Jump_0E0_46FE::
     dec c
     jr nz, Jump_0E0_46E6
-    ld a, [wD88F]
+    ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
     ld a, [wLinkRole]
@@ -1008,26 +1008,26 @@ Jump_0E0_4724:: ; address name
 
 ; entry 5 of the `rst $00` table in RunWC5FDState_E0
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wDA72, wDA79, wDA80, wDA8E, wDA95, wDA9C, wDebugState
+; points at: wSlotResistances, wDebugState
 RunWC5FDState_E0_Case05::
 Jump_0E0_4728:: ; address name
     ld hl, vBGMap0 + $61
-    ld de, wDA72
+    ld de, wSlotResistances
     call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $67
-    ld de, wDA79
+    ld de, wSlotResistances + $7
     call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $6D
-    ld de, wDA80
+    ld de, wSlotResistances + $E
     call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $141
-    ld de, wDA8E
+    ld de, wSlotResistances + $1C
     call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $147
-    ld de, wDA95
+    ld de, wSlotResistances + $23
     call DrawPacked2BitFieldsInRows
     ld hl, vBGMap0 + $14D
-    ld de, wDA9C
+    ld de, wSlotResistances + $2A
     call DrawPacked2BitFieldsInRows
     ld hl, wDebugState
     inc [hl]
@@ -1183,25 +1183,25 @@ Jump_0E0_480F::
 
 ; entry 8 of the `rst $00` table in RunWC5FDState_E0
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wD989, wD999, wD9A9, wD9C9, wD9D9, wD9E9, wDebugState
+; points at: wBattleSkills, wDebugState
 RunWC5FDState_E0_Case08::
 Jump_0E0_4825:: ; address name
-    ld de, wD989
+    ld de, wBattleSkills
     ld hl, vBGMap0 + $62
     call DrawEightBytesAsHexColumns
-    ld de, wD999
+    ld de, wBattleSkills + $10
     ld hl, vBGMap0 + $68
     call DrawEightBytesAsHexColumns
-    ld de, wD9A9
+    ld de, wBattleSkills + $20
     ld hl, vBGMap0 + $6E
     call DrawEightBytesAsHexColumns
-    ld de, wD9C9
+    ld de, wBattleSkills + $40
     ld hl, vBGMap0 + $142
     call DrawEightBytesAsHexColumns
-    ld de, wD9D9
+    ld de, wBattleSkills + $50
     ld hl, vBGMap0 + $148
     call DrawEightBytesAsHexColumns
-    ld de, wD9E9
+    ld de, wBattleSkills + $60
     ld hl, vBGMap0 + $14E
     call DrawEightBytesAsHexColumns
     call Run48B7ForThreeBattlerRecords
@@ -1420,12 +1420,12 @@ Jump_0E0_493B:: ; address name
 
 ; entry 10 of the `rst $00` table in RunWC5FDState_E0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD802, wJoypadPressed
-; writes: wD88F, wD890, wBattleActor, wBattleTarget, wBattleActionId, wDebugState, wDebugSubState, wDebugCounter, ...
+; reads: wEffectId, wJoypadPressed
+; writes: wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugState, wDebugSubState, wDebugCounter, ...
 ; points at: wDebugSubState, wWorkBuf
 RunWC5FDState_E0_Case0A::
 Jump_0E0_4A86:: ; address name
-    ld a, [wD802]
+    ld a, [wEffectId]
     cp a, $FF
     jr z, Jump_0E0_4A94
     farcall RunWC5FDState_E0_Case0A_Sub01
@@ -1504,9 +1504,9 @@ Jump_0E0_4AF8::
     jr z, Jump_0E0_4B2D
     ld hl, wWorkBuf
     ld a, [hl+]
-    ld [wD88F], a
+    ld [wBattlePartyCount], a
     ld a, [hl+]
-    ld [wD890], a
+    ld [wBattleFoeCount], a
     ld a, [hl+]
     ld [wBattleActor], a
     ld a, [hl+]
@@ -1530,9 +1530,9 @@ Jump_0E0_4B2D::
     ret z
     ld hl, wWorkBuf
     ld a, [hl+]
-    ld [wD88F], a
+    ld [wBattlePartyCount], a
     ld a, [hl+]
-    ld [wD890], a
+    ld [wBattleFoeCount], a
     ld a, [hl+]
     ld [wBattleActor], a
     ld a, [hl+]
@@ -1542,13 +1542,13 @@ Jump_0E0_4B2D::
     xor a, a
     ld [wDebugState], a
     ld a, $FF
-    ld [wD802], a
+    ld [wEffectId], a
     ret
 
 ; entry 11 of the `rst $00` table in RunWC5FDState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuRowCount, wTemp0, wTemp1, wDebugSubState, wDebugCounter
-; writes: wDebugCounter, wMenuRowCount, wD88F, wD890, wBattleActor, wBattleTarget, wBattleActionId, wDebugState, ...
+; writes: wDebugCounter, wMenuRowCount, wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugState, ...
 ; points at: wDebugSubState, wDebugCounter, wBattleStatus, wWorkBuf
 RunWC5FDState_E0_Case0B::
 Jump_0E0_4B54:: ; address name
@@ -1983,8 +1983,8 @@ Func_0E0_4EFD:: ; address name
 
 ; debug: draws the four-tile strip for wC5FE, then the 9 status bytes of slot wC5FE as rows of 0/1 digit tiles from vBGMap0 + $89 (E-0127)
 ; 2 call sites from 2 routines (e.g. RunWC5FDState_E0_Case0B, DrawHexByteAtBGMap8A)
-; reads: wDebugSubState, wD868, wD869
-; writes: wD868, wD869
+; reads: wDebugSubState, wBattleArg0, wBattleArg1
+; writes: wBattleArg0, wBattleArg1
 ; points at: wBattleStatus
 DrawSlotStatusBitsDebug::
 Func_0E0_4F28:: ; address name
@@ -1992,9 +1992,9 @@ Func_0E0_4F28:: ; address name
     call DrawFourTileStripForA
     ld hl, vBGMap0 + $89
     ld a, l
-    ld [wD868], a
+    ld [wBattleArg0], a
     ld a, h
-    ld [wD869], a
+    ld [wBattleArg1], a
     ld c, $00
     ld a, [wDebugSubState]
     ld hl, wBattleStatus
@@ -2006,9 +2006,9 @@ Jump_0E0_4F44::
 
 Jump_0E0_4F47::
     push hl
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld l, a
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     ld h, a
     ld a, l
     add a, b
@@ -2027,16 +2027,16 @@ Jump_0E0_4F47::
     cp a, $08
     jr nz, Jump_0E0_4F47
     push hl
-    ld a, [wD868]
+    ld a, [wBattleArg0]
     ld l, a
-    ld a, [wD869]
+    ld a, [wBattleArg1]
     ld h, a
     ld de, $0020
     add hl, de
     ld a, l
-    ld [wD868], a
+    ld [wBattleArg0], a
     ld a, h
-    ld [wD869], a
+    ld [wBattleArg1], a
     pop hl
     inc hl
     inc c
@@ -2105,23 +2105,23 @@ Func_0E0_4FCE:: ; address name
 ; loads skill wC5F9's first record byte (LoadSkillRecordPart) and writes it as three digit tiles at vBGMap0 + $204 (E-0121)
 ; 1 call site from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9)
 ; reads: wDebugValue0, wRecordBufferData, wDigits
-; writes: wD868, wRecordBuffer, wD869, wD86A, wD86B
+; writes: wBattleArg0, wRecordBuffer, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wRecordBufferData
 DrawSkillRecordByte0DigitsForWC5F9::
 Func_0E0_4FDB:: ; address name
     ld a, $00
-    ld [wD868], a
+    ld [wBattleArg0], a
     ld a, [wDebugValue0]
     ld [wRecordBuffer], a
     xor a, a
     ld [wRecordBuffer + $1], a
     ld a, $01
-    ld [wD869], a
+    ld [wBattleArg1], a
     ld hl, wRecordBufferData
     ld a, l
-    ld [wD86A], a
+    ld [wBattleArg2], a
     ld a, h
-    ld [wD86B], a
+    ld [wBattleArg3], a
     farcall LoadSkillRecordPart
     ld a, [wRecordBufferData]
     ld l, a
@@ -2354,7 +2354,7 @@ Func_0E0_558E:: ; address name
 
 ; loads wBattleActor, wBattleTarget, wBattleActionId and wDAD3 from the 4-byte entry A of the table at $55FB, then far-calls SelectEffectByWDAD3Flags (a test or debug entry list) (E-0118)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wBattleActor, wBattleTarget, wBattleActionId, wDAD3
+; writes: wBattleActor, wBattleTarget, wBattleActionId, wEffectFlags2
 RunEffectTestEntryA:: ; heuristic: follows a terminator; C0
 Func_0E0_559E:: ; address name
     add a, a
@@ -2368,7 +2368,7 @@ Func_0E0_559E:: ; address name
     ld a, [hl+]
     ld [wBattleActionId], a
     ld a, [hl]
-    ld [wDAD3], a
+    ld [wEffectFlags2], a
     farcall SelectEffectByWDAD3Flags
     ret
     INCBIN "dwm2-cobi-us.gbc", $3815BF, $108
@@ -2441,7 +2441,7 @@ Jump_0E0_572C::
 ; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02)
 ; reads: wBattleActor, wLinkMode, hTemp3, hTemp2
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wDigits, hTemp1, ...
-; points at: wDA43, wDA53, wD988, wAIWeights, wBattleActionChoice, wDA3F
+; points at: wSlotTactic, wSlotAIMode, wBattleSkillsPrefix, wAIWeights, wBattleActionChoice, wAIChoiceOrder
 RunWC5FDState_E0_Case0D_Case02_Sub01::
 Func_0E0_572D:: ; address name
     call DisplayedSlotOfActor
@@ -2476,7 +2476,7 @@ Jump_0E0_573D::
     cp a, $03
     jr z, Jump_0E0_578A
     ld a, [wBattleActor]
-    ld hl, wDA43
+    ld hl, wSlotTactic
     add_a_to_hl
     ld a, [hl]
     and a, $03
@@ -2490,7 +2490,7 @@ Jump_0E0_573D::
 
 Jump_0E0_578A::
     ld a, [wBattleActor]
-    ld de, wDA53
+    ld de, wSlotAIMode
     add a, e
     ld e, a
     jr nc, Jump_0E0_5795
@@ -2573,7 +2573,7 @@ Jump_0E0_57F9::
 Jump_0E0_581A::
     ld a, [wBattleActor]
     swap a
-    ld hl, wD988
+    ld hl, wBattleSkillsPrefix
     add_a_to_hl
     ld d, h
     ld e, l
@@ -2754,7 +2754,7 @@ Jump_0E0_592C::
     jr nz, Jump_0E0_592C
     ld b, $03
     ld c, $01
-    ld hl, wDA3F
+    ld hl, wAIChoiceOrder
 
 Jump_0E0_593D::
     push bc
@@ -2799,7 +2799,7 @@ Jump_0E0_5970::
     dec b
     jr nz, Jump_0E0_593D
     ld hl, vBGMap0 + $131
-    ld de, wDA3F
+    ld de, wAIChoiceOrder
     ld b, $03
 
 Jump_0E0_597E::
@@ -4663,12 +4663,11 @@ Jump_0E0_65BD:: ; address name
 
 ; entry 25 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; points at: sA070
 Func_0E0_5AD3_Case02_Case19::
 Jump_0E0_65F8:: ; address name
     call DrawSpriteSlots
     ld a, $00
-    ld de, sA070
+    ld de, $A070
     call StepSpriteSlotToward
     ld a, $01
     ld de, $4070
@@ -4893,15 +4892,14 @@ Jump_0E0_675A:: ; address name
 ; entry 26 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wWorkBuf
-; points at: sA070
 Func_0E0_5AD3_Case02_Case1A::
 Jump_0E0_677D:: ; address name
     call DrawSpriteSlots
     ld a, $01
-    ld de, sA070
+    ld de, $A070
     call StepSpriteSlotToward
     ld a, $00
-    ld de, sA070
+    ld de, $A070
     call StepSpriteSlotToward
     ret nz
     ld a, $02
@@ -5723,10 +5721,10 @@ Jump_0E0_6D43:: ; address name
     or a, a
     ret nz
     ld a, $00
-    ld de, vTiles0 + $40
+    ld de, $8040
     call StepSpriteSlotToward
     ld a, $01
-    ld de, vTiles2 + $40
+    ld de, $9040
     call StepSpriteSlotToward
     ret nz
     call StepWD0A2Mod30
@@ -5757,7 +5755,7 @@ Jump_0E0_6D73:: ; address name
     ld de, $7040
     call StepSpriteSlotToward
     ld a, $01
-    ld de, vTiles0 + $40
+    ld de, $8040
     call StepSpriteSlotToward
     ret nz
     ld a, [wWorkBuf + $7]
@@ -5960,12 +5958,11 @@ Jump_0E0_6EEF:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; points at: sA040
 Func_0E0_5AD3_Case04_Case0D::
 Jump_0E0_6EFB:: ; address name
     call DrawSpriteSlots
     ld a, $00
-    ld de, sA040
+    ld de, $A040
     call StepSpriteSlotToward
     ld a, $01
     ld de, $4040
@@ -5981,15 +5978,14 @@ Jump_0E0_6EFB:: ; address name
 ; entry 14 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wWorkBuf
-; points at: sA040
 Func_0E0_5AD3_Case04_Case0E::
 Jump_0E0_6F1B:: ; address name
     call DrawSpriteSlots
     ld a, $00
-    ld de, sA040
+    ld de, $A040
     call StepSpriteSlotToward
     ld a, $01
-    ld de, sA040
+    ld de, $A040
     call StepSpriteSlotToward
     ret nz
     call StepWD0A2Mod15
@@ -6532,9 +6528,9 @@ Jump_0E0_72AF::
 
 ; entry 1 of the `rst $00` table in Func_0E0_5AD3
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wWorkBuf, wDC40, wPartyCount
+; reads: wWorkBuf, wSoundChannel2, wPartyCount
 ; writes: wWorkBuf, hMapId, hMapScreenX, hMapScreenY, hPlayerX, wFollowerRecords, hPlayerY, hPlayerFacing, ...
-; points at: wDC41, wDC60, wDC80, wModeChangeRequest
+; points at: wSoundChannel3, wSoundChannel4, wModeChangeRequest
 Func_0E0_5AD3_Table2_Case01::
 Jump_0E0_72C0:: ; address name
     ld hl, wWorkBuf + $5
@@ -6551,14 +6547,14 @@ Jump_0E0_72C0:: ; address name
     jr Jump_0E0_732E
 
 Jump_0E0_72DB::
-    ld a, [wDC40]
-    ld hl, wDC41
+    ld a, [wSoundChannel2]
+    ld hl, wSoundChannel2 + $1
     and a, [hl]
-    ld hl, wDC60
+    ld hl, wSoundChannel3
     and a, [hl]
     inc hl
     and a, [hl]
-    ld hl, wDC80
+    ld hl, wSoundChannel4
     and a, [hl]
     inc hl
     and a, [hl]
@@ -7438,7 +7434,7 @@ Jump_0E0_7AD2::
 
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wD80F
+; points at: wBattleStatus3
 CheckSlotStatusBlockWide_BankE0:: ; heuristic: follows a terminator; C0
 Func_0E0_7AD7:: ; address name
     call CheckSlotStatusBlock
@@ -7446,7 +7442,7 @@ Func_0E0_7AD7:: ; address name
     push hl
     push bc
     ld c, a
-    ld hl, wD80F
+    ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
@@ -7468,11 +7464,11 @@ Jump_0E0_7AF2::
 
 ; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wD80F
+; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankE0:: ; heuristic: follows a terminator; C0
 Func_0E0_7AF6:: ; address name
     push hl
-    ld hl, wD80F
+    ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0

@@ -3,31 +3,31 @@ SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
 
 ; only called from DrawEffectSpriteForWD801Range (E-0047)
 ; 1 call site from 1 routine (e.g. DrawEffectSpriteForWD801Range)
-; reads: wD801, wD890, wBattleTarget, wD804, wDAB7
-; writes: wD871, wD868
-; points at: wD871, wD868, hSpriteOriginX
+; reads: wEffectTileOffset, wBattleFoeCount, wBattleTarget, wEffectSpriteX, wEffectSpriteAttrXor
+; writes: wLoadSlot, wBattleArg0
+; points at: wLoadSlot, wBattleArg0, hSpriteOriginX
 DrawEffectSpriteForWD801Range_Sub01::
 Func_03D_4001:: ; address name
-    ld a, [wD801]
+    ld a, [wEffectTileOffset]
     cp a, $2C
     jr nz, DrawEffectSpriteAtWD804_Bank3D
-    ld a, [wD890]
-    ld [wD871], a
+    ld a, [wBattleFoeCount]
+    ld [wLoadSlot], a
     ld a, [wBattleTarget]
     and a, $04
-    ld [wD868], a
+    ld [wBattleArg0], a
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_03D_4024
     farcall SetEffectSpriteXForTargets
     call DrawEffectSpriteAtWD804_Bank3D
 
 Jump_03D_4024::
-    ld hl, wD871
+    ld hl, wLoadSlot
     dec [hl]
     ld a, [hl]
     or a, a
     ret z
-    ld hl, wD868
+    ld hl, wBattleArg0
     inc [hl]
     ld a, [hl]
     call CarryUnlessWDA63SlotEmpty
@@ -36,12 +36,12 @@ Jump_03D_4024::
     call DrawEffectSpriteAtWD804_Bank3D
 
 Jump_03D_403E::
-    ld hl, wD871
+    ld hl, wLoadSlot
     dec [hl]
     ld a, [hl]
     or a, a
     ret z
-    ld hl, wD868
+    ld hl, wBattleArg0
     inc [hl]
     ld a, [hl]
     call CarryUnlessWDA63SlotEmpty
@@ -50,12 +50,12 @@ Jump_03D_403E::
 
 ; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
 ; 2 call sites from 1 routine (e.g. DrawEffectSpriteForWD801Range_Sub01)
-; reads: wD804, wD801, wDAB7
+; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
 ; points at: hSpriteOriginX
 DrawEffectSpriteAtWD804_Bank3D::
 Func_03D_4054:: ; address name
     ld hl, hSpriteOriginX
-    ld a, [wD804]
+    ld a, [wEffectSpriteX]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -63,9 +63,9 @@ Func_03D_4054:: ; address name
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ld a, [wD801]
+    ld a, [wEffectTileOffset]
     ld [hl+], a
-    ld a, [wDAB7]
+    ld a, [wEffectSpriteAttrXor]
     ld [hl+], a
     ld a, $00
     ld [hl+], a

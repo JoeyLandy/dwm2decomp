@@ -859,7 +859,7 @@ Jump_037_4E4B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSelectedRecord
 ; writes: rRAMG2, rRAMB
-; points at: sA000, wRecordBufA
+; points at: sRecords, wRecordBufA
 Func_037_4AFD_Case04_Case12::
 Jump_037_4E75:: ; address name
     ld a, [wTextFlags]
@@ -872,7 +872,7 @@ Jump_037_4E75:: ; address name
     ld a, [wSelectedRecord]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld de, wRecordBufA
     ld b, $A5

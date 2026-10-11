@@ -913,7 +913,7 @@ class Rom:
                         seen.add(pc)
                         n, text, kind, tgt = ins[pc]
                         nx = ins.get(pc + n)
-                        s = self.symbolize(text, (nx[1],) if nx and nx[0] != "dw" else ())
+                        s = self.symbolize(text, (nx[1],) if nx and nx[0] != "dw" else (), (b, pc))
                         m = self._SYM_MEM.search(s)
                         if m:
                             if s.startswith(("ld [", "ldh [")):
@@ -1613,12 +1613,75 @@ class Rom:
             return self._ram_symbol(addr, "h")
         return None
 
-    def symbolize(self, text: str, following: tuple[str, ...] = ()) -> str:
+    @property
+    def _numeric_args(self) -> set[tuple[int, int]]:
+        """`ld hl, n` (or `ld l, n`) / `ld bc, n` pairs that pass battle message bytes, not addresses (E-0137).
+
+        The battle text routines store L, H, C and B into wDAC2, wDAC3, wDAC0 and wDAC1
+        (`ld a, l` / `ld [$DAC2], a`, possibly after clearing the damage word). A pair of
+        immediate loads that falls into or jumps to such a routine (directly or through one
+        `jp`/`jr`) keeps both values numeric."""
+        if hasattr(self, "_numeric_cache"):
+            return self._numeric_cache
+        prolog = ("xor a, a", "ld [$D872], a", "ld [$D873], a")
+        found: set[tuple[int, int]] = set()
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            entries = set()
+            for pc, v in ins.items():
+                q, steps = pc, 0
+                while q in ins and ins[q][0] != "dw" and steps < 5:
+                    t = ins[q][1]
+                    nx = ins.get(q + ins[q][0])
+                    if t == "ld a, l" and nx and nx[0] != "dw" and nx[1] == "ld [$DAC2], a":
+                        entries.add(pc)
+                        break
+                    if t not in prolog:
+                        break
+                    q, steps = q + ins[q][0], steps + 1
+            if not entries:
+                continue
+            entries |= {pc for pc, v in ins.items() if v[0] != "dw" and v[2] in ("jp", "jr") and v[3] in entries}
+            loads = ("ld hl, $", "ld bc, $", "ld l, $")
+            for pc, v in ins.items():
+                if v[0] == "dw" or not v[1].startswith(loads):
+                    continue
+                q = pc + v[0]
+                w = ins.get(q)
+                if not w or w[0] == "dw" or not w[1].startswith(loads) or (w[1][3] == "b") == (v[1][3] == "b"):
+                    continue
+                q += w[0]
+                x = ins.get(q)
+                into = q in entries or (x and x[0] != "dw" and x[2] in ("jp", "jr", "call") and x[3] in entries)
+                if into:
+                    found |= {(b, pc), (b, pc + v[0])}
+        # DE = a (y, x) screen position for the sprite step routines, e.g. $A070 (E-0137)
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for pc, v in ins.items():
+                if v[0] == "dw" or not v[1].startswith("ld de, $"):
+                    continue
+                q = pc + v[0]
+                for _ in range(2):
+                    x = ins.get(q)
+                    if not x or x[0] == "dw":
+                        break
+                    r = self.resolve(b, x[3]) if x[2] == "call" and x[3] is not None else None
+                    if r and self.labels[r[0]].get(r[1], "").startswith("StepSpriteSlotToward"):
+                        found.add((b, pc))
+                        break
+                    q += x[0]
+        self._numeric_cache = found
+        return found
+
+    def symbolize(self, text: str, following: tuple[str, ...] = (), key: tuple[int, int] | None = None) -> str:
         """Replace absolute addresses in memory operands and pointer immediates by symbols.
 
         `following` holds the next instructions' text: a 16-bit immediate that is then added
         to HL (`add hl, bc`) is arithmetic (for example $FF9C is -100), not a pointer, so it
-        stays numeric."""
+        stays numeric. `key` (bank, address) marks message-argument loads (_numeric_args)."""
+        if key is not None and key in self._numeric_args:
+            return text
         m = self._MEM.search(text)
         if m:
             nm = self.sym_name(int(m.group(1), 16), False)
@@ -1749,7 +1812,7 @@ class Rom:
                     break
                 look.append(nx[1])
                 q += nx[0]
-            text = self.symbolize(text, tuple(look))
+            text = self.symbolize(text, tuple(look), (bank, pc))
             if text == "stop":
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:

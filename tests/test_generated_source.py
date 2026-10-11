@@ -88,10 +88,42 @@ class SymbolicOperands(unittest.TestCase):
                 return True
             return 0x8000 <= addr < 0xE000 or gbs.HRAM_START <= addr <= gbs.HRAM_END
 
+        def message_entries(lines: list[str]) -> set[str]:
+            """Labels of the routines that store L as the battle message (E-0137), plus one jump."""
+            found, last = set(), []
+            for i, line in enumerate(lines):
+                if line.endswith("::"):
+                    last.append(line[:-2])
+                    continue
+                code = line.split(";")[0].strip()
+                if code == "ld a, l" and i + 1 < len(lines) and lines[i + 1].strip() == "ld [wResolveMsgActor], a":
+                    found.update(last)
+                if code and code not in ("xor a, a", "ld [wBattleDamageLo], a", "ld [wBattleDamageHi], a"):
+                    last = []
+            jumps = re.compile(r"^(\w+)::\n(?:\w+:: ; address name\n)?    j[pr] (\w+)$", re.M)
+            text = "\n".join(lines)
+            return found | {a for a, t in jumps.findall(text) if t in found}
+
+        def message_argument(lines: list[str], n: int, entries: set[str]) -> bool:
+            """Line n (1-based) loads HL/BC in a pair that goes into a message routine."""
+            pair = re.compile(r"ld (hl|bc|l), \$")
+            code = lambda k: lines[k].split(";")[0].strip() if 0 <= k < len(lines) else ""
+            for first in (n - 1, n - 2):
+                if pair.match(code(first)) and pair.match(code(first + 1)):
+                    k = first + 2
+                    while k < len(lines) and not lines[k].strip():
+                        k += 1  # a label the pair falls into follows a blank line
+                    after = lines[k] if k < len(lines) else ""
+                    m = re.match(r"\s+(?:jp|jr|call) (\w+)$", after) or re.match(r"(\w+)::$", after)
+                    if m and m.group(1) in entries:
+                        return True
+            return False
+
         bad, checked, symbolic = [], 0, 0
         sym = re.compile(r"\[[whrsv][A-Za-z0-9_]+( \+ \$[0-9A-F]+)?\]|BANK_NUMBER_BYTE|, [whrsv][A-Z][A-Za-z0-9_]*( \+ \$[0-9A-F]+)?$")
         for f in sorted(BANKS.glob("bank*.asm")):
             lines = f.read_text(encoding="utf-8").splitlines()
+            entries = message_entries(lines)
             for n, line in enumerate(lines, 1):
                 if not line.startswith("    ") or line.lstrip().startswith(("db", "dw", "ds", "INCBIN")):
                     continue
@@ -117,6 +149,10 @@ class SymbolicOperands(unittest.TestCase):
                     if (int(m.group(1), 16) >= 0xFF00 and len(nxt) == 2 and nxt[0] == f"ld a, {low}"
                             and re.search(r"\[(hPlayerStepD[XY]Lo|hFF9[BD])\]", nxt[1])):
                         continue  # a step delta stored in the player movement bytes (E-0132)
+                    if message_argument(lines, n, entries):
+                        continue  # battle message bytes in HL/BC (E-0137)
+                    if reg == "de" and any(re.match(r"call StepSpriteSlotToward", x) for x in nxt):
+                        continue  # a (y, x) sprite position (E-0137)
                     if forbidden(int(m.group(1), 16), True):
                         bad.append(f"{f.name}:{n} {code}")
         self.assertGreater(symbolic, 10000, "expected the source to use many symbolic operands")
@@ -322,6 +358,21 @@ class InlineTableTrim(unittest.TestCase):
         body = text[start:start + 200]
         self.assertRegex(body, r"\n    ld a, \[w\w+\]\n    bit 7, a")  # decoded as code, whatever the RAM name
         self.assertNotIn("dw $44FA", text)
+
+
+class NumericArguments(unittest.TestCase):
+    """Battle message bytes and sprite positions stay numbers, not RAM or VRAM names (E-0137)."""
+
+    def test_message_argument_pairs_are_numeric(self):
+        text = (BANKS / "bank36.asm").read_text(encoding="utf-8")
+        self.assertIn("    ld hl, $B58E\n    ld bc, $80A8\n    jp Jump_036_7C8B", text)
+        self.assertNotIn("sB58E", text)
+        self.assertNotRegex(text, r"ld bc, vTiles[01] \+ \$A8")
+
+    def test_sprite_step_positions_are_numeric(self):
+        text = (BANKS / "banke0.asm").read_text(encoding="utf-8")
+        self.assertIn("ld de, $A070", text)
+        self.assertNotIn("sA070", text)
 
 
 class BufferOffsetAliases(unittest.TestCase):

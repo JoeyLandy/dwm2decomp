@@ -2065,7 +2065,7 @@ Jump_0F1_4DD0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSelectedRecord
 ; writes: rRAMG2, rRAMB
-; points at: sA000, wRecordBufA
+; points at: sRecords, wRecordBufA
 RunWD780StateWhenNotFading_F1_Case04_Case12::
 Jump_0F1_4DFA:: ; address name
     ld a, [wTextFlags]
@@ -2078,7 +2078,7 @@ Jump_0F1_4DFA:: ; address name
     ld a, [wSelectedRecord]
     ld c, $A5
     call Multiply8
-    ld de, sA000
+    ld de, sRecords
     add hl, de
     ld de, wRecordBufA
     ld b, $A5
@@ -4165,7 +4165,7 @@ Jump_0F1_5AF7::
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
 ; reads: wPickCount
 ; writes: rRAMG2, rRAMB
-; points at: sBB0F
+; points at: sSavedPlayerName
 GameMode5_Update_Case07_Sub01_Sub01::
 Func_0F1_5B0F:: ; address name
     ld a, [wPickCount]
@@ -4175,7 +4175,7 @@ Func_0F1_5B0F:: ; address name
     ld [rRAMG2], a
     ld a, $01
     ld [rRAMB], a
-    ld hl, sBB0F
+    ld hl, sSavedPlayerName
     ld de, $022B
     add hl, de
     ld a, [hl]
@@ -4259,14 +4259,14 @@ Func_0F1_5B8E:: ; address name
 
 ; only called from GameMode5_Update_Case07_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
-; reads: wCEDC, wTopSpeciesByte, wTopSpeciesLo, wTopSpeciesHi, wArg5
+; reads: wTopSpeciesByteDC, wTopSpeciesByte, wTopSpeciesLo, wTopSpeciesHi, wArg5
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wRecordBufB, wScreenByteEE
-; points at: wNameGlyphBuf, wCECF, wGM2Mode, wRecordBufB, wGM2TimerFrames
+; points at: wNameGlyphBuf, wTopSpeciesName, wGM2Mode, wRecordBufB, wGM2TimerFrames
 GameMode5_Update_Case07_Sub01_Sub04::
 Func_0F1_5BA5:: ; address name
     ld a, $01
     ld [wArg1], a
-    ld a, [wCEDC]
+    ld a, [wTopSpeciesByteDC]
     ld [wArg2], a
     ld a, [wTopSpeciesByte]
     ld [wArg3], a
@@ -4279,7 +4279,7 @@ Func_0F1_5BA5:: ; address name
     cp a, $FF
     ret nz
     ld hl, wNameGlyphBuf
-    ld de, wCECF
+    ld de, wTopSpeciesName
     ld b, $0A
 
 Jump_0F1_5BD6::

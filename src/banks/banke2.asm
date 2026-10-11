@@ -5225,7 +5225,7 @@ Jump_0E2_64BE::
 
 ; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wDA6E; a positive word is added to wDA6E; a negative word's magnitude is added to wDA70
 ; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub02, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
-; points at: wDA6E, wDA70
+; points at: wAISkillScore, wAISkillScore2
 AccumulateBank6WordToDA6E::
 Func_0E2_64CE:: ; address name
     call ReadBank6TableWord
@@ -5246,12 +5246,12 @@ Jump_0E2_64E0::
     cpl
     ld b, a
     inc bc
-    ld hl, wDA70
+    ld hl, wAISkillScore2
     call AddBCToWordAtHL
     jr Jump_0E2_64F4
 
 Jump_0E2_64EE::
-    ld hl, wDA6E
+    ld hl, wAISkillScore
     call AddBCToWordAtHL
 
 Jump_0E2_64F4::
@@ -5259,7 +5259,7 @@ Jump_0E2_64F4::
 
 ; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E
 ; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub02, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
-; points at: wDA70, wDA6E
+; points at: wAISkillScore2, wAISkillScore
 AccumulateBank6WordToDA70::
 Func_0E2_64F5:: ; address name
     call ReadBank6TableWord
@@ -5280,12 +5280,12 @@ Jump_0E2_6507::
     cpl
     ld b, a
     inc bc
-    ld hl, wDA6E
+    ld hl, wAISkillScore
     call AddBCToWordAtHL
     jr Jump_0E2_651B
 
 Jump_0E2_6515::
-    ld hl, wDA70
+    ld hl, wAISkillScore2
     call AddBCToWordAtHL
 
 Jump_0E2_651B::
@@ -5749,7 +5749,7 @@ Jump_0E2_67A4::
 ; C = (wD2CC & 1) ^ 1 and returns when non-zero; when bit 0 is set: wDA6E = 0, wDA70/wDA71 = $FFFF, C = 0 (E-0118)
 ; 4 call sites from 4 routines (e.g. AIScoreGuardSkill_67CF, AIScore_SquallHit, AIScore_Berserker, AIScore_Guard)
 ; reads: wAIFlag
-; writes: wDA6E, wDA6F, wDA70, wDA71
+; writes: wAISkillScore, wAISkillScore2
 MaxNegativeScoreWhenWD2CCBit0:: ; heuristic: follows a terminator; C0
 Func_0E2_67A5:: ; address name
     ld a, [wAIFlag]
@@ -5758,21 +5758,21 @@ Func_0E2_67A5:: ; address name
     ld c, a
     ret nz
     xor a, a
-    ld [wDA6E], a
-    ld [wDA6F], a
+    ld [wAISkillScore], a
+    ld [wAISkillScore + $1], a
     ld a, $FF
-    ld [wDA70], a
-    ld [wDA71], a
+    ld [wAISkillScore2], a
+    ld [wAISkillScore2 + $1], a
     xor a, a
     ld c, a
     ret
 
 ; only called from AIScore_TailWind (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TailWind)
-; reads: wD891
+; reads: wBattleTurn
 AIScore_TailWind_Sub02:: ; heuristic: follows a terminator; C0
 Func_0E2_67C0:: ; address name
-    ld a, [wD891]
+    ld a, [wBattleTurn]
     ld c, a
     or a, a
     ret nz
@@ -5783,7 +5783,7 @@ Func_0E2_67C0:: ; address name
 
 ; returns when MaxNegativeScoreWhenWD2CCBit0 applies; otherwise continues with AIScore_TailWind_Sub02 (E-0122)
 ; 8 call sites from 8 routines (e.g. AIScore_Ironize, AIScore_StrongD, AIScore_Dodge, AIScore_BladeD, ...)
-; reads: wD891
+; reads: wBattleTurn
 AIScoreGuardSkill_67CF::
 Func_0E2_67CF:: ; address name
     call MaxNegativeScoreWhenWD2CCBit0

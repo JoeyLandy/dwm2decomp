@@ -1584,6 +1584,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Result: 236 address-named RAM addresses remain (2,793 uses).
 - Binary verification: build/run136 PASS, 0 differing bytes; tests OK.
 
+### E-0137 — WRAM $D800-$DFFF, SRAM, and immediates that are not addresses
+
+- Kind: OBSERVATION (reading; C1). The SRAM save layout is C2: it follows from the copy routine's block list and its sizes.
+- **Battle RAM.**
+  - The effect animation state ($D800-$D807).
+  - The 9-byte status records: wBattleStatus, with status bytes 1-8 as array bases (stride 9).
+  - The damage word (wBattleDamageHi), the action queue, the turn counter, and the 16-bit battle meter (capped at 1800).
+  - The per-slot arrays: level, tactic (3 = manual command), AI mode, control bits, skills, and the 7-byte resistance records.
+  - The AI choice weights, the EXP award, and the message bytes wResolveMsg*.
+  - The existing per-slot stat arrays are now sized, so byte offsets read as `wBattleHP + $2`.
+- **Sound engine.** The five channel slots after wSoundChannelSlots ($20 bytes each), the current channel's register base, and the engine mode and state bytes. Most sound-engine bytes are still named by their readers only.
+- **SRAM.**
+  - The $A5-byte records at sRecords, the compact $6F-byte records, the backup, and the checksums.
+  - The save block at sSaveData ($BB01) is hFF8A ($0E bytes), wPlayerName ($291), wStoryFlags ($6B), and wKeyWorldSlot ($B5), copied in that order, $3BF bytes in all, ending at $BEC0 where the $D8-byte block goes.
+  - Each SRAM byte the code reads is named after the WRAM variable it saves; for example, sBD36 is the saved wCurrentKeyIndex.
+- **Immediates that are not addresses** (generator rule plus SymbolicOperands and NumericArguments tests). These now stay numeric:
+  - `ld hl, n` (or `ld l, n`) / `ld bc, n` pairs that go into the routines that store L/H/C/B into wResolveMsgActor/Target/Flags/Arg. These pairs carry message bytes and had been shown as fake SRAM or VRAM names, such as `ld hl, sB58E` / `ld bc, vTiles0 + $A8`.
+  - `ld de, n` before a call to StepSpriteSlotToward*: DE is a (y, x) screen position, such as `$A070`.
+- Result: no RAM operand is left with only an address name (tools/rank_unnamed.py --ram reports 0).
+- **Limits.** Many names here are role names (wBattleTemp7A, wEffectByte06, wScreenByteB2): they say which routines use the byte, not what it means in the game.
+- Binary verification: build/run137 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

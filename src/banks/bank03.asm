@@ -9099,7 +9099,7 @@ Func_003_7AE8:: ; address name
 ; only called from PauseMenu_State3_Case05_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_Case05_Case00)
 ; writes: rRAMG, rRAMB, wWorkBuf
-; points at: sA000, wWorkBuf
+; points at: sRecords, wWorkBuf
 PauseMenu_State3_Case05_Case00_Sub01::
 Func_003_7B25:: ; address name
     ld a, $0A
@@ -9109,7 +9109,7 @@ Func_003_7B25:: ; address name
     xor a, a
     ld [wWorkBuf], a
     ld [wWorkBuf + $1], a
-    ld de, sA000
+    ld de, sRecords
     ld b, $1E
 
 Jump_003_7B3B::

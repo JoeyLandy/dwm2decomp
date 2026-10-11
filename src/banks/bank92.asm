@@ -3,12 +3,12 @@ SECTION "Bank 92", ROMX[$4000], BANK[$92]
 
 ; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
 ; 1 call site from 1 routine (e.g. DrawEffectSpriteForWD801Range)
-; reads: wD804, wD801, wDAB7
+; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
 ; points at: hSpriteOriginX
 DrawEffectSpriteAtWD804_Bank92::
 Func_092_4001:: ; address name
     ld hl, hSpriteOriginX
-    ld a, [wD804]
+    ld a, [wEffectSpriteX]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -16,9 +16,9 @@ Func_092_4001:: ; address name
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ld a, [wD801]
+    ld a, [wEffectTileOffset]
     ld [hl+], a
-    ld a, [wDAB7]
+    ld a, [wEffectSpriteAttrXor]
     ld [hl+], a
     ld a, $00
     ld [hl+], a
