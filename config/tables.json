@@ -13677,6 +13677,255 @@
         }
       ],
       "note": "E-0219 (C1: table 9 of ActionTargetModeTable (mode 4, far side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "00",
+      "addr": "0973",
+      "label": "RandomByteTable",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "16 bytes"
+        }
+      ],
+      "record": "16 table bytes",
+      "note": "E-0220 (C1: NextTableByte steps wRandomHi through 0-$7F and loads wRandomLo from $0973 + wRandomHi; 128 bytes end at NextRandomSeed ($09F3))."
+    },
+    {
+      "bank": "07",
+      "addr": "5149",
+      "label": "SaveCheckScreenRects",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "rectangle record for this CheckSaveData result ($0000 = none)",
+          "reason": "rectangle record"
+        }
+      ],
+      "note": "E-0220 (C1: after CheckSaveData, Jump_007_4A68 reads the word at $5149 + 2 * hTemp0 (hTemp0 >= 1) and passes it to CopyRecordRectToScreenBuffer_Bank07; three words, so index 3 would read the offset word ($0000) of TileRect_07_514F, which follows; entry 0 is not read on that path)."
+    },
+    {
+      "bank": "07",
+      "addr": "514F",
+      "label": "TileRect_07_514F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 14"
+        }
+      ],
+      "record": "offset $0000; 12 x 15 tiles",
+      "note": "E-0220 (C1: a rectangle record of SaveCheckScreenRects, in the CopyRecordRectToScreenBuffer format: offset, width, rows, tiles)."
+    },
+    {
+      "bank": "07",
+      "addr": "52D7",
+      "label": "TileRect_07_52D7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        }
+      ],
+      "record": "offset $0000; 12 x 3 tiles",
+      "note": "E-0220 (C1: a rectangle record of SaveCheckScreenRects, in the CopyRecordRectToScreenBuffer format: offset, width, rows, tiles)."
+    },
+    {
+      "bank": "07",
+      "addr": "52FF",
+      "label": "TileRect_07_52FF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $01A0; 20 x 5 tiles",
+      "note": "E-0220 (C1: a rectangle record of SaveCheckScreenRects, in the CopyRecordRectToScreenBuffer format: offset, width, rows, tiles)."
+    },
+    {
+      "bank": "07",
+      "addr": "5086",
+      "label": "CursorPositionWords_07_5086",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 120,
+          "per_line": 8,
+          "ram": true,
+          "name": "BG map addresses of cursor positions"
+        }
+      ],
+      "record": "60 BG map addresses, used in runs of up to 8 by the menus of bank $07",
+      "note": "E-0220 (C1: menu code in bank $07 passes $5086, $5096, $509E, $50AA ... $50FA to WriteBCTileAtWordTableEntry_Bank07, EraseCursorAtEntryHL_Bank07 and MoveVerticalCursorInListHL; each run indexed by a menu position; 60 words in all)."
     }
   ]
 }

@@ -735,7 +735,7 @@ Jump_007_4A68::
     ld [wLinkScreenState], a
     or a, a
     jr z, Jump_007_4A9B
-    ld hl, $5149
+    ld hl, SaveCheckScreenRects
     add a, a
     add_a_to_hl
     deref_hl
@@ -1671,7 +1671,19 @@ Jump_007_507C::
     ld [hl], a
     pop hl
     ret
-    INCBIN "dwm2-cobi-us.gbc", $01D086, $78
+
+; E-0220 (C1: menu code in bank $07 passes $5086, $5096, $509E, $50AA ... $50FA to WriteBCTileAtWordTableEntry_Bank07, EraseCursorAtEntryHL_Bank07 and MoveVerticalCursorInListHL; each run indexed by a menu position; 60 words in all).
+; record: 60 BG map addresses, used in runs of up to 8 by the menus of bank $07
+CursorPositionWords_07_5086::
+Data_007_5086:: ; address name
+    dw vBGMap0 + $21, vBGMap0 + $61, vBGMap0 + $A1, vBGMap0 + $E1, vBGMap0 + $121, vBGMap0 + $161, vBGMap0 + $1A1, vBGMap0 + $1E1 ; entry 0
+    dw vBGMap0 + $A3, vBGMap0 + $E3, vBGMap0 + $123, vBGMap0 + $163, vBGMap0 + $61, vBGMap0 + $C1, vBGMap0 + $101, vBGMap0 + $141
+    dw vBGMap0 + $181, vBGMap0 + $1C1, vBGMap0 + $68, vBGMap0 + $6E, vBGMap0 + $CE, vBGMap0 + $D1, vBGMap0 + $10E, vBGMap0 + $111
+    dw vBGMap0 + $14E, vBGMap0 + $151, vBGMap0 + $18E, vBGMap0 + $191, vBGMap0 + $1CE, vBGMap0 + $1D1, vBGMap0 + $81, vBGMap0 + $C1
+    dw vBGMap0 + $101, vBGMap0 + $141, vBGMap0 + $181, vBGMap0 + $1C1, vBGMap0 + $201, vBGMap0 + $8C, vBGMap0 + $8E, vBGMap0 + $90
+    dw vBGMap0 + $CC, vBGMap0 + $CE, vBGMap0 + $D0, vBGMap0 + $10C, vBGMap0 + $10E, vBGMap0 + $110, vBGMap0 + $14C, vBGMap0 + $14E
+    dw vBGMap0 + $150, vBGMap0 + $18C, vBGMap0 + $18E, vBGMap0 + $190, vBGMap0 + $1CC, vBGMap0 + $1CE, vBGMap0 + $1D0, vBGMap0 + $20C
+    dw vBGMap0 + $20E, vBGMap0 + $210, vBGMap0 + $101, vBGMap0 + $141
 
 ; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte) (E-0067) (the same 15 bytes appear in 3 banks)
 ; 10 call sites from 10 routines (e.g. RunLinkScreenSubStateSubState_60E9_Case01, RunLinkScreenState_6C12_Case03_Case14, RunLinkScreenState_6C12_Case03_Case13, RunLinkScreenState_6C12_Case03_Case12, ...)
@@ -1731,7 +1743,36 @@ Func_007_513A:: ; address name
     ld [wStringIndex], a
     farcall ShowString_Bank07
     ret
-    INCBIN "dwm2-cobi-us.gbc", $01D149, $BE
+
+; E-0220 (C1: after CheckSaveData, Jump_007_4A68 reads the word at $5149 + 2 * hTemp0 (hTemp0 >= 1) and passes it to CopyRecordRectToScreenBuffer_Bank07; three words, so index 3 would read the offset word ($0000) of TileRect_07_514F, which follows; entry 0 is not read on that path).
+; record: rectangle record for this CheckSaveData result ($0000 = none)
+SaveCheckScreenRects::
+Data_007_5149:: ; address name
+    dw TileRect_07_514F ; id 0
+    dw TileRect_07_52D7 ; id 1
+    dw TileRect_07_52FF ; id 2
+
+; E-0220 (C1: a rectangle record of SaveCheckScreenRects, in the CopyRecordRectToScreenBuffer format: offset, width, rows, tiles).
+; record: offset $0000; 12 x 15 tiles
+TileRect_07_514F::
+Data_007_514F:: ; address name
+    dw $0000 ; entry 0
+    db $0C, $0F
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $00, $01, $02, $03, $04, $05, $06, $07, $08, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $12, $13, $14, $15, $16, $17, $18, $19, $1A, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $1B, $1C, $1D, $1E, $1F, $20, $21, $22, $23, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $70, $71, $72, $73, $74, $75, $76, $77, $78, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $2D, $2E, $2F, $30, $31, $32, $33, $34, $35, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0000 (row 0, column 0); 12 x 17 tiles
@@ -1757,8 +1798,8 @@ Data_007_5207:: ; address name
     db $B6, $C3, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
-; record: offset $0000 (row 0, column 0); 12 x 3 tiles
+; E-0220 (C1: a rectangle record of SaveCheckScreenRects, in the CopyRecordRectToScreenBuffer format: offset, width, rows, tiles).
+; record: offset $0000; 12 x 3 tiles
 TileRect_07_52D7::
 Data_007_52D7:: ; address name
     dw $0000 ; entry 0
@@ -1767,8 +1808,8 @@ Data_007_52D7:: ; address name
     db $B6, $C3, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
-; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
+; E-0220 (C1: a rectangle record of SaveCheckScreenRects, in the CopyRecordRectToScreenBuffer format: offset, width, rows, tiles).
+; record: offset $01A0; 20 x 5 tiles
 TileRect_07_52FF::
 Data_007_52FF:: ; address name
     dw $01A0 ; entry 0
@@ -3223,7 +3264,7 @@ Jump_007_60F3:: ; address name
     ld bc, $0240
     ld a, $C3
     call FillBytes
-    ld hl, $514F
+    ld hl, TileRect_07_514F
     ld a, [wLinkByte94]
     or a, a
     jr z, Jump_007_611B
@@ -3313,7 +3354,7 @@ Jump_007_6187::
     ld a, $07
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
-    ld hl, $52FF
+    ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wWindowTileBuffer + $38
@@ -3336,7 +3377,7 @@ Jump_007_61CE::
 Jump_007_61DC::
     jr c, Jump_007_61EE
     ld a, [wMenuState]
-    ld hl, $5086
+    ld hl, CursorPositionWords_07_5086
     and a, $07
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $69
@@ -3350,7 +3391,7 @@ Jump_007_61EE::
     jr Jump_007_6212
 
 Jump_007_61F8::
-    ld de, $5086
+    ld de, CursorPositionWords_07_5086
     ld hl, wMenuState
     ld a, [wMenuOption]
     cp a, [hl]
@@ -3940,7 +3981,7 @@ Jump_007_65C5:: ; address name
     ld [wSubMenuCursor], a
     ld hl, wWorkBuf
     ld [hl], $00
-    ld de, $5086
+    ld de, CursorPositionWords_07_5086
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $01
@@ -4051,7 +4092,7 @@ Jump_007_6633:: ; address name
     ld bc, $0240
     ld a, $C3
     call FillBytes
-    ld hl, $52D7
+    ld hl, TileRect_07_52D7
     call CopyRecordRectToScreenBuffer_Bank07
     call DrawScreenBufferToBGMap0_Bank07
     xor a, a
@@ -4146,7 +4187,7 @@ Jump_007_66E0:: ; address name
     ld a, $07
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
-    ld hl, $52FF
+    ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wWindowTileBuffer + $38
@@ -4204,7 +4245,7 @@ Jump_007_6759:: ; address name
     ld a, $08
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
-    ld hl, $52FF
+    ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wWindowTileBuffer + $38
@@ -4235,7 +4276,7 @@ Jump_007_67DB:: ; address name
     ld a, $05
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank07
-    ld hl, $52FF
+    ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wWindowTileBuffer + $38
@@ -5360,7 +5401,7 @@ Jump_007_6EA4:: ; address name
     ret nz
     xor a, a
     ld [wLinkSendByte], a
-    ld hl, $52FF
+    ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wWindowTileBuffer + $38
@@ -5780,7 +5821,7 @@ Jump_007_712D:: ; address name
 ; points at: wLinkScreenSubState
 RunLinkScreenState_6C12_Case03_Case07::
 Jump_007_713C:: ; address name
-    ld hl, $52FF
+    ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wWindowTileBuffer + $38
@@ -7035,7 +7076,7 @@ Jump_007_78B7::
     ret
 
 Jump_007_78C2::
-    ld hl, $52FF
+    ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
     ld de, wWindowTileBuffer + $38

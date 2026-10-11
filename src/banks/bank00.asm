@@ -1530,13 +1530,25 @@ Func_000_095B:: ; address name
     inc a
     and a, $7F
     ld [wRandomHi], a
-    ld hl, $0973
+    ld hl, RandomByteTable
     add_a_to_hl
     ld a, [hl]
     ld [wRandomLo], a
     pop hl
     ret
-    INCBIN "dwm2-cobi-us.gbc", $000973, $80
+
+; E-0220 (C1: NextTableByte steps wRandomHi through 0-$7F and loads wRandomLo from $0973 + wRandomHi; 128 bytes end at NextRandomSeed ($09F3)).
+; record: 16 table bytes
+RandomByteTable::
+Data_000_0973:: ; address name
+    db $7B, $FE, $22, $DC, $18, $C4, $6D, $FB, $CD, $27, $A0, $09, $6E, $38, $8A, $04 ; id 0
+    db $7C, $56, $97, $5A, $A8, $4D, $78, $B5, $6C, $AA, $03, $1A, $4A, $0D, $26, $82 ; id 1
+    db $AD, $02, $A1, $B9, $A3, $6B, $D8, $0C, $4C, $AE, $19, $45, $5B, $9C, $16, $07 ; id 2
+    db $89, $51, $90, $29, $F5, $62, $F7, $CB, $F1, $53, $FF, $14, $65, $D0, $87, $35 ; id 3
+    db $3E, $4E, $4F, $83, $0E, $C9, $7F, $5D, $FC, $E6, $BA, $01, $F8, $00, $F4, $0A ; id 4
+    db $E5, $A9, $8D, $D1, $E8, $DB, $DE, $81, $95, $72, $08, $9A, $C7, $49, $C8, $23 ; id 5
+    db $39, $37, $E0, $91, $C3, $33, $9B, $5F, $BE, $41, $EE, $74, $E2, $0B, $47, $7E ; id 6
+    db $BF, $60, $BB, $20, $61, $05, $B2, $94, $B6, $E4, $3A, $21, $1E, $B4, $8C, $CE ; id 7
 
 ; 16-bit seed in wCD03/wCD04 becomes seed * 5 + 11
 ; 81 call sites from 51 routines (e.g. VBlankHandler, PickRandomEncounterCountdownFromTable478F, TickRandomEncounterCounter, RunBattleIntroKindCase_Case06, ...)

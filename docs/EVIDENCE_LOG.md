@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0220 — Random byte table (bank 0); save-check rectangles and cursor positions (bank $07)
+
+- Kind: OBSERVATION (reading; C1).
+- **RandomByteTable (00:$0973, 128 bytes).** NextTableByte steps wRandomHi through 0-$7F and loads wRandomLo from $0973 + wRandomHi. The table ends at NextRandomSeed.
+- **SaveCheckScreenRects (07:$5149, 3 words) and TileRect_07_514F / _52D7 / _52FF.** Jump_007_4A68 reads the word at $5149 + 2 * hTemp0 (CheckSaveData's result, at least 1) and copies that rectangle record.
+  - The table has three words. Index 3 would read the first record's offset word ($0000) as a pointer.
+- **CursorPositionWords_07_5086.** 60 BG map addresses. Bank-$07 menus read runs of them from $5086, $5096, $509E ... $50FA with the cursor helpers.
+- **Result.** Bank $07 has no INCBIN left.
+- Binary verification: build/run265 PASS, 0 differing bytes; tests OK.
+
 ### E-0219 — Action target routine tables (bank $39)
 
 - Kind: OBSERVATION (reading; C1).
