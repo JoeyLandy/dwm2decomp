@@ -57,9 +57,9 @@ Func_000_0038:: ; address name
 
 ; di; jp VBlankHandler (the interrupt vector at $0040)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: rSVBK, rVBK, wIsCGB, wFadeState, wC526, wC527, wC58A, wC52B, ...
-; writes: rSVBK, wC526, wC527, wFrameCounterLo, wFrameCounterHi, rVBK, wC5D7, wGameMode, ...
-; points at: wC5ED, wC526, wGameMode, wC604
+; reads: rSVBK, rVBK, wIsCGB, wFadeState, wBGPaletteUploadRequest, wOBJPaletteUploadRequest, wLinkMode, wTextFlags, ...
+; writes: rSVBK, wBGPaletteUploadRequest, wOBJPaletteUploadRequest, wFrameCounterLo, wFrameCounterHi, rVBK, wVBlankLY, wGameMode, ...
+; points at: wVBlankFlags, wBGPaletteUploadRequest, wGameMode, wScreenShakeTimer
 VBlankVector::
 Func_000_0040:: ; address name
     di
@@ -68,7 +68,7 @@ Func_000_0040:: ; address name
 
 ; the LCD STAT interrupt vector ($0048): jumps to the handler at Jump_000_256A (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: rSVBK, wC5E1
+; reads: rSVBK, wSTATSplitEnable
 ; writes: rSVBK
 StatInterruptVector::
 Func_000_0048:: ; address name
@@ -116,9 +116,9 @@ Jump_000_0094::
 
 ; the cartridge entry point ($0100): nop, then jp Func_000_0150 (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wC58A, wModeChangeRequest, wFadeState
+; reads: wIsCGB, wLinkMode, wModeChangeRequest, wFadeState
 ; writes: wIsCGB, rVBK, wGameMode, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
-; points at: wGameMode, wC604
+; points at: wGameMode, wScreenShakeTimer
 ROMEntryPoint::
 Func_000_0100:: ; address name
     nop
@@ -127,9 +127,9 @@ Func_000_0100:: ; address name
 
 ; entry after the header jump: wIsCGB = 1 when A was $11 at power-on; disables interrupts, sets the stack, clears RAM, installs the OAM DMA routine, clears VRAM, sets game mode 5 and the MBC banks, then runs the main loop (E-0131)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wC58A, wModeChangeRequest, wFadeState
+; reads: wIsCGB, wLinkMode, wModeChangeRequest, wFadeState
 ; writes: wIsCGB, rVBK, wGameMode, rRAMB, rRAMG, rROMB0, rROMB1, wSGBActive, ...
-; points at: wGameMode, wC604
+; points at: wGameMode, wScreenShakeTimer
 BootAndMainLoop::
 Func_000_0150:: ; address name
     cp a, $11
@@ -186,7 +186,7 @@ Jump_000_0189::
     ld [wSoundEffectRequest], a
     call InitSoundHardware
     xor a, a
-    ld [wC58C], a
+    ld [wLinkReady], a
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_000_01D3
@@ -277,10 +277,10 @@ Jump_000_01DF::
     ld a, $01
     ld [wSGBActive], a
     ld a, $FF
-    ld [wC523], a
+    ld [wSGBBorderSet], a
     xor a, a
-    ld [wC51F], a
-    ld [wC520], a
+    ld [wSGBPaletteSet], a
+    ld [wSGBAttrFile], a
     farcall SendSGBPaletteSetPacket
 
 Jump_000_02D1::
@@ -293,36 +293,36 @@ Jump_000_02D2::
     call ClearScrollPositions
     call ResetFadeFromWC5E9
     xor a, a
-    ld [wC586], a
-    ld [wC52B], a
-    ld [wC52F], a
-    ld [wC530], a
+    ld [wSerialReceived], a
+    ld [wTextFlags], a
+    ld [wTextWindowRows], a
+    ld [wTextWindowWidth], a
     call RunGameModeInit
     xor a, a
     ld [wModeChangeRequest], a
-    ld [wC5E0], a
-    ld [wC5EE], a
-    ld [wC0C0], a
-    ld [wC0C1], a
-    ld [wC0D8], a
-    ld [wC0D9], a
-    ld [wC5ED], a
+    ld [wFieldInitStage], a
+    ld [wBootFlagEE], a
+    ld [wBGWriteDestLo], a
+    ld [wBGWriteDestHi], a
+    ld [wAttrWriteDestLo], a
+    ld [wAttrWriteDestHi], a
+    ld [wVBlankFlags], a
     ld [wFrameCounterLo], a
     ld [wFrameCounterHi], a
     ldh [hSpriteWindowClipMode], a
     ld a, $80
     ldh [hSpriteHideTile], a
     xor a, a
-    ld [wC58D], a
-    ld [wC58E], a
-    ld hl, wC604
+    ld [wLinkFrameCounterLo], a
+    ld [wLinkFrameCounterHi], a
+    ld hl, wScreenShakeTimer
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
 
 Jump_000_0324::
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     call z, NextTableByte
     halt
@@ -427,9 +427,9 @@ Jump_000_039D:: ; address name
 
 ; runs once per frame: saves registers and the VRAM and WRAM banks; skips everything but the sound tick when wC5ED bit 0 shows it was entered again; otherwise runs the OAM DMA routine at $FF80, uploads queued palettes on CGB, flushes the queued BG map write, restores the DMG palettes, scroll and LCDC, applies the screen shake, polls the joypad, runs SoundTick, advances the random seed, processes the sound queue, runs GameFrameUpdate, steps the string display when wC52B is set, steps the fade, and increments the 16-bit frame counter wC5F0/wC5F1; resets the game when all four buttons are held
 ; no direct call (reached through a table, a jump or a vector)
-; reads: rSVBK, rVBK, wIsCGB, wFadeState, wC526, wC527, wC58A, wC52B, ...
-; writes: rSVBK, wC526, wC527, wFrameCounterLo, wFrameCounterHi, rVBK, wC5D7, wGameMode, ...
-; points at: wC5ED, wC526, wGameMode, wC604
+; reads: rSVBK, rVBK, wIsCGB, wFadeState, wBGPaletteUploadRequest, wOBJPaletteUploadRequest, wLinkMode, wTextFlags, ...
+; writes: rSVBK, wBGPaletteUploadRequest, wOBJPaletteUploadRequest, wFrameCounterLo, wFrameCounterHi, rVBK, wVBlankLY, wGameMode, ...
+; points at: wVBlankFlags, wBGPaletteUploadRequest, wGameMode, wScreenShakeTimer
 VBlankHandler::
 Jump_000_03A4:: ; address name
     push af
@@ -443,7 +443,7 @@ Jump_000_03A4:: ; address name
     push bc
     ldh a, [rVBK]
     push af
-    ld hl, wC5ED
+    ld hl, wVBlankFlags
     bit 0, [hl]
     jp nz, Jump_000_046B
     set 0, [hl]
@@ -454,21 +454,21 @@ Jump_000_03A4:: ; address name
     ld a, [wFadeState]
     or a, a
     jr nz, Jump_000_03EA
-    ld hl, wC526
+    ld hl, wBGPaletteUploadRequest
     ld a, [hl]
     inc hl
     or a, [hl]
     jr z, Jump_000_03EA
-    ld a, [wC526]
+    ld a, [wBGPaletteUploadRequest]
     or a, a
     call nz, UploadBGPalettes
     xor a, a
-    ld [wC526], a
-    ld a, [wC527]
+    ld [wBGPaletteUploadRequest], a
+    ld a, [wOBJPaletteUploadRequest]
     or a, a
     call nz, VBlankHandler_Sub01
     xor a, a
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
 
 Jump_000_03EA::
     call FlushQueuedBGMapWrite
@@ -476,7 +476,7 @@ Jump_000_03EA::
     call CopyScrollToHardware
     call ApplyScreenShake
     call WriteLCDCShadow
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     and a, a
     jr nz, Jump_000_042E
     ei
@@ -486,7 +486,7 @@ Jump_000_03EA::
     call NextRandomSeed
     call ProcessSoundQueue
     call GameFrameUpdate
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     call nz, StepStringDisplayUntilDone
     call StepFade
@@ -513,24 +513,24 @@ Jump_000_043A::
     and a, $0F
     cp a, $0F
     jr nz, Jump_000_0450
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jp z, Jump_000_015A
 
 Jump_000_0450::
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, Jump_000_0456
 
 Jump_000_0456::
-    ld hl, wC5ED
+    ld hl, wVBlankFlags
     res 0, [hl]
 
 Jump_000_045B::
     pop af
     ldh [rVBK], a
     ldh a, [rLY]
-    ld [wC5D7], a
+    ld [wVBlankLY], a
     pop af
     ldh [rSVBK], a
     pop hl
@@ -567,13 +567,13 @@ Jump_000_0486::
 
 ; unless wC5DF is non-zero or a fade is running: jumps through a 9-entry table indexed by wGameMode to the mode's per-frame routine (modes 0-8 in banks $01, $02, $03, none, $31, $07, $24, $A0, $F2)
 ; 1 call site from 1 routine (e.g. GameFrameUpdate)
-; reads: wModeChangeRequest, wC58A, wFadeState, wGameMode
+; reads: wModeChangeRequest, wLinkMode, wFadeState, wGameMode
 RunGameModeUpdate::
 Func_000_048A:: ; address name
     ld a, [wModeChangeRequest]
     or a, a
     ret nz
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, Jump_000_049E
     ld a, [wFadeState]
@@ -659,24 +659,24 @@ Jump_000_04E6:: ; address name
 
 ; while wC604 or wC605 is non-zero, counts it down and adds an oscillating offset (from the counter's low bits) to rSCY or rSCX
 ; 1 call site from 1 routine (e.g. VBlankHandler)
-; reads: wC604, rSCY, wC605, rSCX
-; writes: wC604, rSCY, wC605, rSCX
-; points at: wC604
+; reads: wScreenShakeTimer, rSCY, wScreenShakeOffset, rSCX
+; writes: wScreenShakeTimer, rSCY, wScreenShakeOffset, rSCX
+; points at: wScreenShakeTimer
 ApplyScreenShake::
 Func_000_04ED:: ; address name
-    ld hl, wC604
+    ld hl, wScreenShakeTimer
     ld b, [hl]
     inc hl
     or a, [hl]
     ret z
-    ld a, [wC604]
+    ld a, [wScreenShakeTimer]
     or a, a
     jr z, Jump_000_0511
     dec a
-    ld [wC604], a
+    ld [wScreenShakeTimer], a
     ldh a, [rSCY]
     ld b, a
-    ld a, [wC604]
+    ld a, [wScreenShakeTimer]
     add a, a
     ld c, a
     and a, $07
@@ -689,14 +689,14 @@ Jump_000_050E::
     ldh [rSCY], a
 
 Jump_000_0511::
-    ld a, [wC605]
+    ld a, [wScreenShakeOffset]
     or a, a
     jr z, Jump_000_0530
     dec a
-    ld [wC605], a
+    ld [wScreenShakeOffset], a
     ldh a, [rSCX]
     ld b, a
-    ld a, [wC605]
+    ld a, [wScreenShakeOffset]
     add a, a
     ld c, a
     and a, $07
@@ -715,35 +715,35 @@ Jump_000_0530::
 
 ; in link mode: counts frames (resetting the game after an overflow), saves the joypad state and starts the next serial transfer of the queued byte or the joypad (E-0128)
 ; 8 call sites from 8 routines (e.g. GameMode5_Update_Case04, GameMode5_Update_Case03, GameMode5_Update_Case02, RunWD06AState_6C12_Case08_Case04, ...)
-; reads: wC58A, wC58D, wC58E, wC57F, wC581, wC5ED, wJoypadHeld, wJoypadHeldPrev, ...
-; writes: wC58D, wC58E, wC56A, wC56B, wC582, wC595, wC596, rVBK, ...
-; points at: wC592, wGameMode, wC604
+; reads: wLinkMode, wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkRole, wLinkSession, wVBlankFlags, wJoypadHeld, wJoypadHeldPrev, ...
+; writes: wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkSavedJoypadHeld, wLinkSavedJoypadHeldPrev, wLinkExchangeState, wLinkTimeoutLo, wLinkTimeoutHi, rVBK, ...
+; points at: wLinkBufferCountLo, wGameMode, wScreenShakeTimer
 LinkExchangeJoypadPerFrame::
 Func_000_0535:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     ret z
-    ld a, [wC58D]
+    ld a, [wLinkFrameCounterLo]
     add a, $01
-    ld [wC58D], a
-    ld a, [wC58E]
+    ld [wLinkFrameCounterLo], a
+    ld a, [wLinkFrameCounterHi]
     adc a, $00
-    ld [wC58E], a
+    ld [wLinkFrameCounterHi], a
     or a, a
     jp nz, Jump_000_015A
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     ret nz
-    ld a, [wC581]
+    ld a, [wLinkSession]
     cp a, $05
     jr nz, Jump_000_0563
-    ld a, [wC5ED]
+    ld a, [wVBlankFlags]
     bit 1, a
     ret nz
     jr Jump_000_057C
 
 Jump_000_0563::
-    ld a, [wC5ED]
+    ld a, [wVBlankFlags]
     bit 1, a
     jr nz, Jump_000_0574
     bit 2, a
@@ -754,49 +754,49 @@ Jump_000_0563::
 
 Jump_000_0574::
     xor a, a
-    ld [wC56A], a
-    ld [wC56B], a
+    ld [wLinkSavedJoypadHeld], a
+    ld [wLinkSavedJoypadHeldPrev], a
     ret
 
 Jump_000_057C::
     ld a, [wJoypadHeld]
-    ld [wC56A], a
+    ld [wLinkSavedJoypadHeld], a
     ld a, [wJoypadHeldPrev]
-    ld [wC56B], a
+    ld [wLinkSavedJoypadHeldPrev], a
     call PollJoypad
-    ld a, [wC594]
+    ld a, [wLinkSendByte]
     cp a, $FF
     jr z, Jump_000_059D
     ld a, $00
-    ld [wC582], a
-    ld a, [wC594]
+    ld [wLinkExchangeState], a
+    ld a, [wLinkSendByte]
     jp StartSerialTransferInternalClock
 
 Jump_000_059D::
-    ld hl, wC592
+    ld hl, wLinkBufferCountLo
     ld a, [hl+]
     or a, [hl]
     jr z, Jump_000_05C7
-    ld a, [wC595]
+    ld a, [wLinkTimeoutLo]
     ld l, a
-    ld a, [wC596]
+    ld a, [wLinkTimeoutHi]
     ld h, a
     push hl
-    ld a, [wC595]
+    ld a, [wLinkTimeoutLo]
     add a, $01
-    ld [wC595], a
-    ld a, [wC596]
+    ld [wLinkTimeoutLo], a
+    ld a, [wLinkTimeoutHi]
     adc a, $00
-    ld [wC596], a
+    ld [wLinkTimeoutHi], a
     pop hl
     ld a, $00
-    ld [wC582], a
+    ld [wLinkExchangeState], a
     ld a, [hl]
     jp StartSerialTransferInternalClock
 
 Jump_000_05C7::
     ld a, $00
-    ld [wC582], a
+    ld [wLinkExchangeState], a
     ld a, $F0
     jp StartSerialTransferInternalClock
 
@@ -876,7 +876,7 @@ Jump_000_0636::
 ; 1 call site from 1 routine (e.g. PollJoypad)
 ; reads: rP1
 ; writes: rP1
-; points at: wC474
+; points at: wSGBJoypad1
 PollJoypad_Sub01::
 Func_000_0646:: ; address name
     ldh a, [rP1]
@@ -895,7 +895,7 @@ Jump_000_0651::
     sla a
     ld d, $00
     ld e, a
-    ld hl, wC474
+    ld hl, wSGBJoypad1
     add hl, de
     ld a, $20
     ldh [rP1], a
@@ -960,7 +960,7 @@ Jump_000_069A::
 ; A = packet set index (stored in wSGBPacketIndex); returns at once when wSGBActive is 0; otherwise turns the LCD off, clears vTiles1, decompresses the stream at HL into vTiles1, fills the 20 x 13 corner of vBGMap0 with tiles $80, $81, ... in order, turns the LCD on, sends the packet set with SendSGBPacketSet and turns it off again; the tile data is thereby shown for the Super Game Boy to read
 ; 16 call sites from 2 routines (e.g. BootAndMainLoop, LoadSGBBorderForSetA)
 ; reads: wSGBActive
-; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rLCDC, wC5EC
+; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rLCDC, wLCDCShadow
 SGBTransferCompressed::
 Func_000_06A8:: ; address name
     ld [wSGBPacketIndex], a
@@ -1002,7 +1002,7 @@ Jump_000_06DF::
     jr nz, Jump_000_06DD
     ld a, $81
     ldh [rLCDC], a
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld bc, $0005
     call DelayBCWhenSGB
     farcall SendSGBPacketSet
@@ -1014,7 +1014,7 @@ Jump_000_06DF::
 ; A = packet set index; H = ROM bank, DE = source, BC = byte count: the same as SGBTransferCompressed, but copies the bytes to vTiles1 instead of decompressing
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wSGBActive
-; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rROMB0, rLCDC, wC5EC
+; writes: wSGBPacketIndex, rSCX, rSCY, rBGP, rROMB0, rLCDC, wLCDCShadow
 SGBTransferRaw::
 Func_000_0705:: ; address name
     ld [wSGBPacketIndex], a
@@ -1066,7 +1066,7 @@ Jump_000_0741::
     jr nz, Jump_000_073F
     ld a, $81
     ldh [rLCDC], a
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld bc, $0005
     call DelayBCWhenSGB
     farcall SendSGBPacketSet
@@ -1098,7 +1098,7 @@ Jump_000_0773::
 
 Jump_000_077A::
     push af
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_000_0784
     call ClearSGBPacketBuffer_Sub02
@@ -1114,7 +1114,7 @@ Jump_000_0784::
 ; 2 call sites from 1 routine (e.g. BootAndMainLoop)
 ; reads: rIE, rLY
 ; writes: rIF, rIE
-; points at: wC5EC
+; points at: wLCDCShadow
 DisableVBlankTimerSerialJoypadInterrupts::
 Func_000_078D:: ; address name
     xor a, a
@@ -1126,7 +1126,7 @@ Func_000_078D:: ; address name
 ; if rLCDC bit 7 is set, waits for rLY = $91, then clears rLCDC bit 7 and bit 7 of wC5EC
 ; 4 call sites from 2 routines (e.g. SGBTransferCompressed, SGBTransferRaw)
 ; reads: rLY
-; points at: wC5EC
+; points at: wLCDCShadow
 TurnOffLCD::
 Func_000_0796:: ; address name
     ld hl, rLCDC
@@ -1138,7 +1138,7 @@ Jump_000_079C::
     cp a, $91
     jr nz, Jump_000_079C
     res 7, [hl]
-    ld hl, wC5EC
+    ld hl, wLCDCShadow
     res 7, [hl]
     ret
 
@@ -1146,10 +1146,10 @@ Jump_000_079C::
 ; 1 call site from 1 routine (e.g. ClearSGBPacketBuffer)
 ; reads: wSGBActive
 ; writes: rLCDC, wSGBPacketIndex
-; points at: wC5EC
+; points at: wLCDCShadow
 ClearSGBPacketBuffer_Sub01::
 Func_000_07AA:: ; address name
-    ld hl, wC5EC
+    ld hl, wLCDCShadow
     set 7, [hl]
     ld a, [hl]
     ldh [rLCDC], a
@@ -1203,24 +1203,24 @@ Func_000_07E0:: ; address name
 
 ; waits until rSTAT mode bits are 0, then rLCDC = wC5EC
 ; 2 call sites from 1 routine (e.g. VBlankHandler)
-; reads: rSTAT, wC5EC
+; reads: rSTAT, wLCDCShadow
 ; writes: rLCDC
 WriteLCDCShadow::
 Func_000_07F1:: ; address name
     ldh a, [rSTAT]
     and a, $03
     jr nz, WriteLCDCShadow
-    ld a, [wC5EC]
+    ld a, [wLCDCShadow]
     ldh [rLCDC], a
     ret
 
 ; rBGP, rOBP0, rOBP1 = wC5E9, wC5EA, wC5EB
 ; 1 call site from 1 routine (e.g. VBlankHandler)
 ; writes: rBGP, rOBP0, rOBP1
-; points at: wC5E9
+; points at: wDMGPaletteBGP
 CopyDMGPalettesToHardware::
 Func_000_07FD:: ; address name
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, [hl+]
     ldh [rBGP], a
     ld a, [hl+]
@@ -1259,12 +1259,12 @@ Jump_000_0819::
 
 ; when bit 7 of wC526 is set, writes 8 bytes (one palette) from a buffer address derived by Func_000_0897 to rBGPD starting at index wC526; otherwise writes all 64 bytes from wC49F to rBGPD from index 0; each byte is written after waiting for VRAM access
 ; 18 call sites from 15 routines (e.g. VBlankHandler, PauseMenu_State4, DrawRecordMonsterPictureForWC46D, ExitPauseMenuToField, ...)
-; reads: wC526
+; reads: wBGPaletteUploadRequest
 ; writes: rBGPI
 ; points at: wBGPaletteBuffer
 UploadBGPalettes::
 Func_000_0829:: ; address name
-    ld a, [wC526]
+    ld a, [wBGPaletteUploadRequest]
     bit 7, a
     jr z, Jump_000_0841
     ldh [rBGPI], a
@@ -1302,12 +1302,12 @@ Jump_000_0851::
 
 ; only called from VBlankHandler (E-0047)
 ; 1 call site from 1 routine (e.g. VBlankHandler)
-; reads: wC527, rSTAT
+; reads: wOBJPaletteUploadRequest, rSTAT
 ; writes: rOBPI
 ; points at: wOBJPaletteBuffer
 VBlankHandler_Sub01::
 Func_000_085C:: ; address name
-    ld a, [wC527]
+    ld a, [wOBJPaletteUploadRequest]
     bit 7, a
     jr z, Jump_000_0876
     ldh [rOBPI], a
@@ -1521,19 +1521,19 @@ Func_000_0952:: ; address name
 
 ; wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8
 ; 47 call sites from 41 routines (e.g. BootAndMainLoop, AdvanceRandom, NextTableByteSecondStream, CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, ...)
-; reads: wC5E8
-; writes: wC5E8, wC5E7
+; reads: wRandomHi
+; writes: wRandomHi, wRandomLo
 NextTableByte::
 Func_000_095B:: ; address name
     push hl
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     inc a
     and a, $7F
-    ld [wC5E8], a
+    ld [wRandomHi], a
     ld hl, $0973
     add_a_to_hl
     ld a, [hl]
-    ld [wC5E7], a
+    ld [wRandomLo], a
     pop hl
     ret
     INCBIN "dwm2-cobi-us.gbc", $000973, $80
@@ -1569,8 +1569,8 @@ Func_000_09F3:: ; address name
 
 ; shifts wJoypadHeld to wJoypadHeldPrev and reads the new state into wJoypadHeld (directly, or through the SGB path when wSGBActive)
 ; 6 call sites from 4 routines (e.g. VBlankHandler, LinkExchangeJoypadPerFrame, LinkSendStepWithBuffer, LinkExchangeJoypadByte)
-; reads: wSGBActive, wJoypadHeld, wC474, wC560, wC476
-; writes: wJoypadHeldPrev, wJoypadHeld, wC561, wC560, wC55D, rP1
+; reads: wSGBActive, wJoypadHeld, wSGBJoypad1, wLinkJoypadHeld, wSGBJoypad2
+; writes: wJoypadHeldPrev, wJoypadHeld, wLinkJoypadHeldPrev, wLinkJoypadHeld, wJoypadReadFlag, rP1
 PollJoypad::
 Func_000_0A17:: ; address name
     ld a, [wSGBActive]
@@ -1579,17 +1579,17 @@ Func_000_0A17:: ; address name
     call PollJoypad_Sub01
     ld a, [wJoypadHeld]
     ld [wJoypadHeldPrev], a
-    ld a, [wC474]
+    ld a, [wSGBJoypad1]
     ld [wJoypadHeld], a
-    ld a, [wC560]
-    ld [wC561], a
-    ld a, [wC476]
-    ld [wC560], a
+    ld a, [wLinkJoypadHeld]
+    ld [wLinkJoypadHeldPrev], a
+    ld a, [wSGBJoypad2]
+    ld [wLinkJoypadHeld], a
     ret
 
 Jump_000_0A39::
     xor a, a
-    ld [wC55D], a
+    ld [wJoypadReadFlag], a
     call ReadJoypadDirect
     ld a, [wJoypadHeld]
     ld [wJoypadHeldPrev], a
@@ -1601,15 +1601,15 @@ Jump_000_0A39::
 
 ; ReadJoypadDirect, then wC561 = the old wC560 and wC560 = B (the new reading); finally rP1 = $30 (deselects both key groups) (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC560
-; writes: wC561, wC560, rP1
+; reads: wLinkJoypadHeld
+; writes: wLinkJoypadHeldPrev, wLinkJoypadHeld, rP1
 ReadJoypadIntoWC560:: ; heuristic: follows a terminator; C0
 Func_000_0A4F:: ; address name
     call ReadJoypadDirect
-    ld a, [wC560]
-    ld [wC561], a
+    ld a, [wLinkJoypadHeld]
+    ld [wLinkJoypadHeldPrev], a
     ld a, b
-    ld [wC560], a
+    ld [wLinkJoypadHeld], a
     ld a, $30
     ldh [rP1], a
     ret
@@ -1648,20 +1648,20 @@ Func_000_0A61:: ; address name
 
 ; wJoypadPressed = buttons newly held since the last poll; wJoypadPressedRepeat = the same, plus an auto-repeat that fires after $14 frames and then every 6 (timer in wJoypadRepeatTimer)
 ; 9 call sites from 5 routines (e.g. VBlankHandler, LinkReceiveStepWithBuffer, LinkSendStepWithBuffer, LinkReceiveJoypadByte, ...)
-; reads: wC58A, wC55D, wJoypadPressed, wC566, wC560, wJoypadHeld
-; writes: wC560, wC561, wJoypadPressedRepeat, wJoypadPressed, wJoypadRepeatTimer, wC567, wC566, wC568
-; points at: wJoypadHeld, wC560, wC568, wJoypadRepeatTimer
+; reads: wLinkMode, wJoypadReadFlag, wJoypadPressed, wLinkJoypadPressed, wLinkJoypadHeld, wJoypadHeld
+; writes: wLinkJoypadHeld, wLinkJoypadHeldPrev, wJoypadPressedRepeat, wJoypadPressed, wJoypadRepeatTimer, wLinkJoypadPressedRepeat, wLinkJoypadPressed, wLinkJoypadRepeatTimer
+; points at: wJoypadHeld, wLinkJoypadHeld, wLinkJoypadRepeatTimer, wJoypadRepeatTimer
 UpdateJoypadPresses::
 Func_000_0A8D:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, Jump_000_0AA0
-    ld a, [wC55D]
+    ld a, [wJoypadReadFlag]
     or a, a
     jr nz, Jump_000_0AA0
     xor a, a
-    ld [wC560], a
-    ld [wC561], a
+    ld [wLinkJoypadHeld], a
+    ld [wLinkJoypadHeldPrev], a
 
 Jump_000_0AA0::
     xor a, a
@@ -1701,15 +1701,15 @@ Jump_000_0AD5::
 
 Jump_000_0AD6::
     xor a, a
-    ld [wC567], a
-    ld hl, wC560
+    ld [wLinkJoypadPressedRepeat], a
+    ld hl, wLinkJoypadHeld
     ld a, [hl]
     inc hl
     xor a, [hl]
     dec hl
     and a, [hl]
-    ld [wC566], a
-    ld hl, wC560
+    ld [wLinkJoypadPressed], a
+    ld hl, wLinkJoypadHeld
     ld a, [hl+]
     or a, a
     jr z, Jump_000_0AEF
@@ -1717,20 +1717,20 @@ Jump_000_0AD6::
     jr z, Jump_000_0AFC
 
 Jump_000_0AEF::
-    ld a, [wC566]
-    ld [wC567], a
+    ld a, [wLinkJoypadPressed]
+    ld [wLinkJoypadPressedRepeat], a
     ld a, $14
-    ld [wC568], a
+    ld [wLinkJoypadRepeatTimer], a
     jr Jump_000_0B0C
 
 Jump_000_0AFC::
-    ld hl, wC568
+    ld hl, wLinkJoypadRepeatTimer
     ld a, [hl]
     or a, a
     jr nz, Jump_000_0B0B
     ld [hl], $06
-    ld a, [wC560]
-    ld [wC567], a
+    ld a, [wLinkJoypadHeld]
+    ld [wLinkJoypadPressedRepeat], a
 
 Jump_000_0B0B::
     dec [hl]
@@ -1857,11 +1857,11 @@ Func_000_0B6C:: ; address name
 
 ; wC5E9, wC5EA, wC5EB = $D2, $D2, $E2 (the DMG palette bytes the fade routines start from), copied to wD040-wD042 as well (E-0117)
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
-; reads: wC5E9, wC5EA, wC5EB
-; points at: wC5E9, wD040
+; reads: wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1
+; points at: wDMGPaletteBGP, wD040
 SetDefaultDMGPaletteBytes::
 Func_000_0B7F:: ; address name
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
     ld a, $D2
@@ -1869,11 +1869,11 @@ Func_000_0B7F:: ; address name
     ld a, $E2
     ld [hl], a
     ld hl, wD040
-    ld a, [wC5E9]
+    ld a, [wDMGPaletteBGP]
     ld [hl+], a
-    ld a, [wC5EA]
+    ld a, [wDMGPaletteOBP0]
     ld [hl+], a
-    ld a, [wC5EB]
+    ld a, [wDMGPaletteOBP1]
     ld [hl], a
     ret
 
@@ -1940,14 +1940,14 @@ Jump_000_0BC4::
 
 ; if wC0C0/wC0C1 (a VRAM address) is non-zero, writes wC0C3 bytes from wC0C4 there: along the row when wC0C2 is 0, down the column otherwise
 ; 1 call site from 1 routine (e.g. VBlankHandler)
-; reads: wC0C0, wC0C1, wC0C3, wC0C2, wIsCGB, wC0D8, wC0D9, wC0DB, ...
-; writes: wC0C0, wC0C1, rVBK, wC0D8, wC0D9
-; points at: wC0C4, wC0DC
+; reads: wBGWriteDestLo, wBGWriteDestHi, wBGWriteCount, wBGWriteVertical, wIsCGB, wAttrWriteDestLo, wAttrWriteDestHi, wAttrWriteCount, ...
+; writes: wBGWriteDestLo, wBGWriteDestHi, rVBK, wAttrWriteDestLo, wAttrWriteDestHi
+; points at: wBGWriteData, wAttrWriteData
 FlushQueuedBGMapWrite::
 Func_000_0BCC:: ; address name
-    ld a, [wC0C0]
+    ld a, [wBGWriteDestLo]
     ld e, a
-    ld a, [wC0C1]
+    ld a, [wBGWriteDestHi]
     ld d, a
     ld a, d
     or a, e
@@ -1955,10 +1955,10 @@ Func_000_0BCC:: ; address name
     ret
 
 Jump_000_0BD9::
-    ld a, [wC0C3]
+    ld a, [wBGWriteCount]
     ld b, a
-    ld hl, wC0C4
-    ld a, [wC0C2]
+    ld hl, wBGWriteData
+    ld a, [wBGWriteVertical]
     or a, a
     jr nz, Jump_000_0BF7
     ld a, e
@@ -1993,16 +1993,16 @@ Jump_000_0C00::
 
 Jump_000_0C05::
     xor a, a
-    ld [wC0C0], a
-    ld [wC0C1], a
+    ld [wBGWriteDestLo], a
+    ld [wBGWriteDestHi], a
     ld a, [wIsCGB]
     or a, a
     ret z
     ld a, $01
     ldh [rVBK], a
-    ld a, [wC0D8]
+    ld a, [wAttrWriteDestLo]
     ld e, a
-    ld a, [wC0D9]
+    ld a, [wAttrWriteDestHi]
     ld d, a
     ld a, d
     or a, e
@@ -2010,10 +2010,10 @@ Jump_000_0C05::
     ret
 
 Jump_000_0C22::
-    ld a, [wC0DB]
+    ld a, [wAttrWriteCount]
     ld b, a
-    ld hl, wC0DC
-    ld a, [wC0DA]
+    ld hl, wAttrWriteData
+    ld a, [wAttrWriteVertical]
     or a, a
     jr nz, Jump_000_0C40
     ld a, e
@@ -2050,8 +2050,8 @@ Jump_000_0C4E::
     ld a, $00
     ldh [rVBK], a
     xor a, a
-    ld [wC0D8], a
-    ld [wC0D9], a
+    ld [wAttrWriteDestLo], a
+    ld [wAttrWriteDestHi], a
     ret
 
 ; C2 static reading (E-0016): takes the lock byte $FFD6 (spins while it is non-zero), calls Func_000_0C69, then clears the lock.
@@ -2380,17 +2380,17 @@ Func_000_0DA8:: ; address name
 
 ; wC56F-wC571 = wC5E9-wC5EB; then clears wFadeLevel and the four bytes after it and wFadeState, and sets wC56D = 7 and wC56E = $1F (E-0090)
 ; 4 call sites from 4 routines (e.g. BootAndMainLoop, SendSGBFieldPaletteSet, ResetLinkScreenPalettes, ResetScreenPalettes_E0)
-; reads: wC5E9, wC5EA, wC5EB
-; writes: wFadeState, wC56D, wC56E
-; points at: wC56F, wFadeLevel
+; reads: wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1
+; writes: wFadeState, wFadeMode, wFadeMask
+; points at: wFadeDMGPalettes, wFadeLevel
 ResetFadeFromWC5E9::
 Func_000_0DCA:: ; address name
-    ld hl, wC56F
-    ld a, [wC5E9]
+    ld hl, wFadeDMGPalettes
+    ld a, [wDMGPaletteBGP]
     ld [hl+], a
-    ld a, [wC5EA]
+    ld a, [wDMGPaletteOBP0]
     ld [hl+], a
-    ld a, [wC5EB]
+    ld a, [wDMGPaletteOBP1]
     ld [hl], a
     jr Jump_000_0DDB
 
@@ -2404,16 +2404,16 @@ Jump_000_0DDB::
     ld [hl], a
     ld [wFadeState], a
     ld a, $07
-    ld [wC56D], a
+    ld [wFadeMode], a
     ld a, $1F
-    ld [wC56E], a
+    ld [wFadeMask], a
     ret
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
 ; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, SendSGBFieldPaletteSet, RunWC8C7Phase_Case00, ...)
-; reads: wIsCGB, wSGBActive, wFadeState, wC56D, wC56E, wC5E9, wC5EA, wC5EB
+; reads: wIsCGB, wSGBActive, wFadeState, wFadeMode, wFadeMask, wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1
 ; writes: wFadeState, wFadeLevel, wFadeDelay, wFadeDelayCounter
-; points at: wC4FF, wOBJPaletteBuffer, wSGBPacketBuffer, wC4EF, wC56F, wC5E9
+; points at: wOBJPaletteBuffer, wSGBPacketBuffer, wFadeDMGPalettes, wDMGPaletteBGP
 StartPaletteFade::
 Func_000_0DF2:: ; address name
     ld b, a
@@ -2427,7 +2427,7 @@ Func_000_0DF2:: ; address name
     jr nz, Jump_000_0E2C
     ld a, b
     ld [wFadeState], a
-    ld hl, wC4FF
+    ld hl, wOBJPaletteBuffer + $20
     ld de, wOBJPaletteBuffer
     ld c, $20
 
@@ -2457,7 +2457,7 @@ Jump_000_0E2C::
     srl a
     ld [wFadeDelay], a
     ld [wFadeDelayCounter], a
-    ld hl, wC4FF
+    ld hl, wOBJPaletteBuffer + $20
     ld de, wOBJPaletteBuffer
     ld c, $20
 
@@ -2468,7 +2468,7 @@ Jump_000_0E4B::
     dec c
     jr nz, Jump_000_0E4B
     ld de, $7FFF
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 7, a
     jr z, Jump_000_0E5E
     ld de, $0000
@@ -2492,11 +2492,11 @@ Jump_000_0E63::
     inc de
     call CopySGBPacketFieldsAndSend
     call SpinDelay
-    ld a, [wC56E]
+    ld a, [wFadeMask]
     bit 4, a
     jp z, Jump_000_0F3D
     call ClearSGBPacketBuffer
-    ld hl, wC4EF
+    ld hl, wOBJPaletteBuffer + $10
     ld de, wSGBPacketBuffer
     ld a, $09
     ld [de], a
@@ -2512,19 +2512,19 @@ Jump_000_0E9B::
     jp Jump_000_0F3D
 
 Jump_000_0EA8::
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 7, a
     jr nz, Jump_000_0EF7
     bit 7, b
     jr nz, Jump_000_0ED8
     ld a, b
     ld [wFadeState], a
-    ld hl, wC56F
-    ld a, [wC5E9]
+    ld hl, wFadeDMGPalettes
+    ld a, [wDMGPaletteBGP]
     ld [hl+], a
-    ld a, [wC5EA]
+    ld a, [wDMGPaletteOBP0]
     ld [hl+], a
-    ld a, [wC5EB]
+    ld a, [wDMGPaletteOBP1]
     ld [hl], a
     ld a, $00
     ld [wFadeLevel], a
@@ -2545,7 +2545,7 @@ Jump_000_0ED8::
     ld [wFadeDelay], a
     ld [wFadeDelayCounter], a
     ld a, $00
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
@@ -2556,12 +2556,12 @@ Jump_000_0EF7::
     jr nz, Jump_000_0F20
     ld a, b
     ld [wFadeState], a
-    ld hl, wC56F
-    ld a, [wC5E9]
+    ld hl, wFadeDMGPalettes
+    ld a, [wDMGPaletteBGP]
     ld [hl+], a
-    ld a, [wC5EA]
+    ld a, [wDMGPaletteOBP0]
     ld [hl+], a
-    ld a, [wC5EB]
+    ld a, [wDMGPaletteOBP1]
     ld [hl], a
     ld a, $00
     ld [wFadeLevel], a
@@ -2582,7 +2582,7 @@ Jump_000_0F20::
     ld [wFadeDelay], a
     ld [wFadeDelayCounter], a
     ld a, $FF
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
@@ -2611,7 +2611,7 @@ Jump_000_0F47::
 
 ; does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)
 ; 2 call sites from 2 routines (e.g. VBlankHandler, RunFrameTickFadeAndCounter_Bank1B)
-; reads: wFadeState, wIsCGB, wSGBActive, wFadeDelayCounter, wFadeLevel, wFadeDelay, wC56D
+; reads: wFadeState, wIsCGB, wSGBActive, wFadeDelayCounter, wFadeLevel, wFadeDelay, wFadeMode
 ; writes: wFadeDelayCounter, wFadeLevel, wFadeState
 StepFade::
 Func_000_0F4E:: ; address name
@@ -2680,33 +2680,33 @@ Jump_000_0FAD::
 
 ; only called from StepFade (E-0047)
 ; 2 call sites from 1 routine (e.g. StepFade)
-; reads: wC56E
-; writes: wC576, wSGBPacketIndex
-; points at: wOBJPaletteBuffer, wSGBPacketBuffer, wC4EF
+; reads: wFadeMask
+; writes: wFadeStepSize, wSGBPacketIndex
+; points at: wOBJPaletteBuffer, wSGBPacketBuffer
 StepFade_Sub01::
 Func_000_0FC1:: ; address name
-    ld a, [wC56E]
+    ld a, [wFadeMask]
     bit 0, a
     ld a, $00
-    ld [wC576], a
+    ld [wFadeStepSize], a
     call nz, StepFade_Sub01_Sub01
-    ld a, [wC56E]
+    ld a, [wFadeMask]
     bit 1, a
     ld a, $08
-    ld [wC576], a
+    ld [wFadeStepSize], a
     call nz, StepFade_Sub01_Sub01
-    ld a, [wC56E]
+    ld a, [wFadeMask]
     bit 4, a
     jr z, Jump_000_0FFC
-    ld a, [wC56E]
+    ld a, [wFadeMask]
     bit 2, a
     ld a, $10
-    ld [wC576], a
+    ld [wFadeStepSize], a
     call nz, StepFade_Sub01_Sub01
-    ld a, [wC56E]
+    ld a, [wFadeMask]
     bit 3, a
     ld a, $18
-    ld [wC576], a
+    ld [wFadeStepSize], a
     call nz, StepFade_Sub01_Sub01
 
 Jump_000_0FFC::
@@ -2717,12 +2717,12 @@ Jump_000_0FFC::
     ld [de], a
     inc de
     call CopySGBPacketFieldsAndSend
-    ld a, [wC56E]
+    ld a, [wFadeMask]
     bit 4, a
     ret z
     call SpinDelay
     call ClearSGBPacketBuffer
-    ld hl, wC4EF
+    ld hl, wOBJPaletteBuffer + $10
     ld de, wSGBPacketBuffer
     ld a, $09
     ld [de], a
@@ -2758,9 +2758,9 @@ Jump_000_102E::
 
 ; only called from StepFade_Sub01 (E-0047)
 ; 4 call sites from 1 routine (e.g. StepFade_Sub01)
-; reads: wC576, wFadeLevel
-; writes: wC576
-; points at: wC4FF, wOBJPaletteBuffer
+; reads: wFadeStepSize, wFadeLevel
+; writes: wFadeStepSize
+; points at: wOBJPaletteBuffer
 StepFade_Sub01_Sub01::
 Func_000_1040:: ; address name
     call StepFade_Sub01_Sub01_Sub02
@@ -2769,23 +2769,23 @@ Func_000_1040:: ; address name
 
 ; only called from StepFade_Sub01_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. StepFade_Sub01_Sub01)
-; reads: wC576, wFadeLevel
-; writes: wC576
-; points at: wC4FF, wOBJPaletteBuffer
+; reads: wFadeStepSize, wFadeLevel
+; writes: wFadeStepSize
+; points at: wOBJPaletteBuffer
 StepFade_Sub01_Sub01_Sub01::
 Func_000_1049:: ; address name
-    ld a, [wC576]
+    ld a, [wFadeStepSize]
     add a, $02
-    ld [wC576], a
+    ld [wFadeStepSize], a
 
 ; only called from StepFade_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. StepFade_Sub01_Sub01)
-; reads: wC576, wFadeLevel
-; points at: wC4FF, wOBJPaletteBuffer
+; reads: wFadeStepSize, wFadeLevel
+; points at: wOBJPaletteBuffer
 StepFade_Sub01_Sub01_Sub02::
 Func_000_1051:: ; address name
-    ld hl, wC4FF
-    ld a, [wC576]
+    ld hl, wOBJPaletteBuffer + $20
+    ld a, [wFadeStepSize]
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2827,7 +2827,7 @@ Func_000_1051:: ; address name
     pop de
     ld hl, wOBJPaletteBuffer
     ld b, $00
-    ld a, [wC576]
+    ld a, [wFadeStepSize]
     ld c, a
     add hl, bc
     ld [hl], e
@@ -2837,11 +2837,11 @@ Func_000_1051:: ; address name
 
 ; A = the 5-bit colour channel A moved by B toward white or black (bit 7 of wC56D), clamped; the following entries step the CGB and DMG fades (E-0128)
 ; 3 call sites from 1 routine (e.g. StepFade_Sub01_Sub01_Sub02)
-; reads: wC56D
+; reads: wFadeMode
 AdjustColorChannelForFade::
 Func_000_10AB:: ; address name
     push af
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     ld c, a
     pop af
     bit 7, c
@@ -2867,7 +2867,7 @@ Jump_000_10C7::
     ret
 
 Jump_000_10CE::
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 7, a
     jp nz, Jump_000_116D
     ld a, [wFadeState]
@@ -2912,21 +2912,21 @@ Jump_000_1109::
 
 ; for each of bits 0, 1, 2 of wC56D that is set, lightens wC56F, wC570 or wC571 by wFadeLevel into wC5E9, wC5EA or wC5EB (LightenDMGPaletteByFadeLevel) (E-0117)
 ; 2 call sites from 1 routine (e.g. AdjustColorChannelForFade)
-; reads: wC56D, wC56F, wC570, wC571, wFadeLevel
-; points at: wC5E9
+; reads: wFadeMode, wFadeDMGPalettes, wC570, wC571, wFadeLevel
+; points at: wDMGPaletteBGP
 LightenSelectedDMGPalettes::
 Func_000_111F:: ; address name
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 0, a
-    ld a, [wC56F]
-    ld hl, wC5E9
+    ld a, [wFadeDMGPalettes]
+    ld hl, wDMGPaletteBGP
     call nz, LightenDMGPaletteByFadeLevel
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 1, a
     ld a, [wC570]
     inc hl
     call nz, LightenDMGPaletteByFadeLevel
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 2, a
     ld a, [wC571]
     inc hl
@@ -3017,21 +3017,21 @@ Jump_000_119F::
 
 ; only called from LightenDMGShade (E-0047)
 ; 2 call sites from 1 routine (e.g. LightenDMGShade)
-; reads: wC56D, wC56F, wC570, wC571, wFadeLevel
-; points at: wC5E9
+; reads: wFadeMode, wFadeDMGPalettes, wC570, wC571, wFadeLevel
+; points at: wDMGPaletteBGP
 LightenDMGShade_Sub01::
 Func_000_11B4:: ; address name
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 0, a
-    ld a, [wC56F]
-    ld hl, wC5E9
+    ld a, [wFadeDMGPalettes]
+    ld hl, wDMGPaletteBGP
     call nz, DarkenDMGPaletteByFadeLevel
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 1, a
     ld a, [wC570]
     inc hl
     call nz, DarkenDMGPaletteByFadeLevel
-    ld a, [wC56D]
+    ld a, [wFadeMode]
     bit 2, a
     ld a, [wC571]
     inc hl
@@ -3141,14 +3141,14 @@ Func_000_122D:: ; address name
 
 ; A = sound id (0 = none): stores it in wC608, calls InitSoundHardware (silencing every channel), stores A in wSoundId and starts the track with Func_000_334E unless the id is one of a list that is handled separately
 ; 1 call site from 1 routine (e.g. ProcessSoundQueue)
-; reads: wC608
-; writes: wC608, wSoundId
+; reads: wCurrentMusic
+; writes: wCurrentMusic, wSoundId
 StartMusic::
 Func_000_1231:: ; address name
-    ld [wC608], a
+    ld [wCurrentMusic], a
     di
     call InitSoundHardware
-    ld a, [wC608]
+    ld a, [wCurrentMusic]
     or a, a
     jr z, Jump_000_1276
     ld [wSoundId], a
@@ -3322,23 +3322,23 @@ Jump_000_1338::
 
 ; only called from StepFade (E-0047)
 ; 1 call site from 1 routine (e.g. StepFade)
-; reads: wC5E0, wC5E2, wC5E3, rNR50, wC5E5, wC5E4
-; writes: wC5E3, rNR50, wC5E5, wC5E4, wC5E2
+; reads: wFieldInitStage, wSoundFadeLevel, wSoundFadeTarget, rNR50, wSoundFadeNR50, wSoundFadeTimer
+; writes: wSoundFadeTarget, rNR50, wSoundFadeNR50, wSoundFadeTimer, wSoundFadeLevel
 StepFade_Sub02::
 Func_000_137D:: ; address name
-    ld a, [wC5E0]
+    ld a, [wFieldInitStage]
     or a, a
     jr nz, Jump_000_13E0
-    ld a, [wC5E2]
+    ld a, [wSoundFadeLevel]
     bit 7, a
     jr nz, Jump_000_13E0
     or a, a
     ret z
-    ld a, [wC5E3]
+    ld a, [wSoundFadeTarget]
     or a, a
     jr z, Jump_000_1397
     dec a
-    ld [wC5E3], a
+    ld [wSoundFadeTarget], a
     ret
 
 Jump_000_1397::
@@ -3346,7 +3346,7 @@ Jump_000_1397::
     and a, $88
     cp a, $88
     jr z, Jump_000_13E0
-    ld a, [wC5E5]
+    ld a, [wSoundFadeNR50]
     or a, a
     jr z, Jump_000_13E0
     ld b, a
@@ -3376,16 +3376,16 @@ Jump_000_13C1::
     swap a
     or a, d
     ldh [rNR50], a
-    ld [wC5E5], a
+    ld [wSoundFadeNR50], a
     or a, a
     jr z, Jump_000_13DE
-    ld a, [wC5E4]
+    ld a, [wSoundFadeTimer]
     or a, a
     jr z, Jump_000_13E0
     dec a
-    ld [wC5E4], a
-    ld a, [wC5E2]
-    ld [wC5E3], a
+    ld [wSoundFadeTimer], a
+    ld a, [wSoundFadeLevel]
+    ld [wSoundFadeTarget], a
     ret
 
 Jump_000_13DE::
@@ -3394,15 +3394,15 @@ Jump_000_13DE::
 
 Jump_000_13E0::
     xor a, a
-    ld [wC5E2], a
+    ld [wSoundFadeLevel], a
     ret
 
 ; when A differs from wC523: sends the Super Game Boy border tiles, map and palettes of set A through three compressed transfers (SGBTransferCompressed) (E-0130)
 ; 2 call sites from 2 routines (e.g. GameMode1_Init, GameMode5_Init_Case01)
-; points at: wC523
+; points at: wSGBBorderSet
 LoadSGBBorderForSetA::
 Func_000_13E5:: ; address name
-    ld hl, wC523
+    ld hl, wSGBBorderSet
     cp a, [hl]
     ret z
     ld [hl], a
@@ -3521,21 +3521,21 @@ Jump_000_14CF::
 
 ; only called from ClearSGBPacketBuffer (E-0047)
 ; 1 call site from 1 routine (e.g. ClearSGBPacketBuffer)
-; reads: wC58A, wC580, wC57F, wC581, rSB, wIsCGB
-; writes: wC580, wC582, wC57F
+; reads: wLinkMode, wLinkStatus, wLinkRole, wLinkSession, rSB, wIsCGB
+; writes: wLinkStatus, wLinkExchangeState, wLinkRole
 ; points at: wJoypadHeld
 ClearSGBPacketBuffer_Sub02::
 Func_000_14D1:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jp z, Jump_000_1575
     ld a, $08
     call ClearSGBPacketBuffer_Shared01
-    ld a, [wC580]
+    ld a, [wLinkStatus]
     set 7, a
     res 6, a
-    ld [wC580], a
-    ld a, [wC57F]
+    ld [wLinkStatus], a
+    ld a, [wLinkRole]
     bit 1, a
     jr nz, Jump_000_14F6
     ld hl, $6000
@@ -3548,7 +3548,7 @@ Jump_000_14F1::
 
 Jump_000_14F6::
     ei
-    ld a, [wC581]
+    ld a, [wLinkSession]
     cp a, $05
     jr nz, Jump_000_150D
     call ClearSGBPacketBuffer_Sub02_Sub02
@@ -3574,10 +3574,10 @@ Jump_000_1517::
 
 Jump_000_1524::
     ld b, a
-    ld a, [wC581]
+    ld a, [wLinkSession]
     cp a, $05
     jr z, Jump_000_1558
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr nz, Jump_000_1545
     ld a, [wIsCGB]
@@ -3586,7 +3586,7 @@ Jump_000_1524::
     ld a, b
     bit 0, a
     jr z, Jump_000_1558
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     set 1, a
     jr Jump_000_1555
 
@@ -3597,29 +3597,29 @@ Jump_000_1545::
     ld a, b
     bit 0, a
     jr nz, Jump_000_1558
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     res 1, a
 
 Jump_000_1555::
-    ld [wC57F], a
+    ld [wLinkRole], a
 
 Jump_000_1558::
     di
-    ld a, [wC580]
+    ld a, [wLinkStatus]
     res 7, a
-    ld [wC580], a
-    ld a, [wC580]
+    ld [wLinkStatus], a
+    ld a, [wLinkStatus]
     res 0, a
     res 1, a
-    ld [wC580], a
-    ld a, [wC57F]
+    ld [wLinkStatus], a
+    ld a, [wLinkRole]
     bit 1, a
     ld a, $F8
     call nz, SerialSendByte
 
 Jump_000_1575::
     xor a, a
-    ld [wC582], a
+    ld [wLinkExchangeState], a
     ld hl, wJoypadHeld
     ld b, $0E
 
@@ -3631,11 +3631,11 @@ Jump_000_157E::
 
 ; only called from ClearSGBPacketBuffer_Sub02 (E-0047)
 ; 2 call sites from 1 routine (e.g. ClearSGBPacketBuffer_Sub02)
-; reads: wC57F, wIsCGB, wC588, wC589, wC580
-; writes: wC588, wC589, wC58E
+; reads: wLinkRole, wIsCGB, wLinkTimerLo, wLinkTimerHi, wLinkStatus
+; writes: wLinkTimerLo, wLinkTimerHi, wLinkFrameCounterHi
 ClearSGBPacketBuffer_Sub02_Sub01::
 Func_000_1583:: ; address name
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr nz, Jump_000_1594
     ld a, [wIsCGB]
@@ -3649,16 +3649,16 @@ Jump_000_1594::
     call SerialSendByte
 
 Jump_000_159C::
-    ld a, [wC588]
+    ld a, [wLinkTimerLo]
     add a, $01
-    ld [wC588], a
-    ld a, [wC589]
+    ld [wLinkTimerLo], a
+    ld a, [wLinkTimerHi]
     adc a, $00
-    ld [wC589], a
-    ld a, [wC589]
+    ld [wLinkTimerHi], a
+    ld a, [wLinkTimerHi]
     cp a, $FF
     jr nc, Jump_000_15BC
-    ld a, [wC580]
+    ld a, [wLinkStatus]
     bit 6, a
     jr z, Jump_000_159C
     xor a, a
@@ -3666,25 +3666,25 @@ Jump_000_159C::
 
 Jump_000_15BC::
     ld a, $02
-    ld [wC58E], a
+    ld [wLinkFrameCounterHi], a
     ret
 
 ; only called from ClearSGBPacketBuffer_Sub02 (E-0047)
 ; 2 call sites from 1 routine (e.g. ClearSGBPacketBuffer_Sub02)
-; reads: wC57F, wC580
+; reads: wLinkRole, wLinkStatus
 ClearSGBPacketBuffer_Sub02_Sub02::
 Func_000_15C2:: ; address name
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     ld a, $F5
     call nz, SerialSendByte
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     ld a, $F5
     call z, StartSerialTransferInternalClock
 
 Jump_000_15D6::
-    ld a, [wC580]
+    ld a, [wLinkStatus]
     bit 6, a
     jr z, Jump_000_15D6
     ret
@@ -3985,19 +3985,19 @@ Jump_000_16F1::
 
 ; HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones
 ; 116 call sites from 78 routines (e.g. DebugResultsDisplay_Update_Sub02, PackTwoDigitsOfCAsBCD, BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, ...)
-; reads: wC8C0, wC8C1
-; writes: wC8C0, wC8C1, wC8C2
+; reads: wDigits
+; writes: wDigits
 HLToDecimalDigits::
 Func_000_16F5:: ; address name
     xor a, a
-    ld [wC8C0], a
-    ld [wC8C1], a
-    ld [wC8C2], a
+    ld [wDigits], a
+    ld [wDigits + $1], a
+    ld [wDigits + $2], a
 
 Jump_000_16FF::
-    ld a, [wC8C0]
+    ld a, [wDigits]
     inc a
-    ld [wC8C0], a
+    ld [wDigits], a
     ld bc, $FF9C
     add hl, bc
     ld a, h
@@ -4005,14 +4005,14 @@ Jump_000_16FF::
     jr nc, Jump_000_16FF
     ld bc, $0064
     add hl, bc
-    ld a, [wC8C0]
+    ld a, [wDigits]
     dec a
-    ld [wC8C0], a
+    ld [wDigits], a
 
 Jump_000_171A::
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     inc a
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     ld bc, $FFF6
     add hl, bc
     ld a, h
@@ -4020,18 +4020,18 @@ Jump_000_171A::
     jr nc, Jump_000_171A
     ld bc, $000A
     add hl, bc
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     dec a
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     ld a, l
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     ret
 
 ; the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed
 ; 45 call sites from 38 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, DrawGoldDigitsAtHLWrapped, WithSRAMDraw4ACEAnd4BE8_Sub01, ...)
-; reads: hTemp2, hTemp1, wC8C0
-; writes: hTemp3, hTemp2, hTemp1, hTemp0, wC8C0
-; points at: wC8C0
+; reads: hTemp2, hTemp1, wDigits
+; writes: hTemp3, hTemp2, hTemp1, hTemp0, wDigits
+; points at: wDigits
 Number24ToPackedBCD::
 Func_000_173A:: ; address name
     xor a, a
@@ -4039,7 +4039,7 @@ Func_000_173A:: ; address name
     ldh [hTemp2], a
     ldh [hTemp1], a
     ldh [hTemp0], a
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, [hl+]
     ld c, a
     ld a, [hl+]
@@ -4059,7 +4059,7 @@ Jump_000_174E::
     sbc a, $0F
     ld d, a
     jr c, Jump_000_1768
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, c
     ld [hl+], a
     ld a, b
@@ -4072,7 +4072,7 @@ Jump_000_174E::
 Jump_000_1768::
     ld a, e
     ldh [hTemp3], a
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, [hl+]
     ld c, a
     ld a, [hl+]
@@ -4092,7 +4092,7 @@ Jump_000_1776::
     sbc a, $01
     ld d, a
     jr c, Jump_000_1790
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, c
     ld [hl+], a
     ld a, b
@@ -4106,7 +4106,7 @@ Jump_000_1790::
     ld a, e
     swap a
     ldh [hTemp2], a
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, [hl+]
     ld c, a
     ld a, [hl+]
@@ -4126,7 +4126,7 @@ Jump_000_17A0::
     sbc a, $00
     ld d, a
     jr c, Jump_000_17BA
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, c
     ld [hl+], a
     ld a, b
@@ -4140,7 +4140,7 @@ Jump_000_17BA::
     ldh a, [hTemp2]
     add a, e
     ldh [hTemp2], a
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, [hl+]
     ld c, a
     ld a, [hl+]
@@ -4155,7 +4155,7 @@ Jump_000_17C8::
     sbc a, $03
     ld b, a
     jr c, Jump_000_17DC
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, c
     ld [hl+], a
     ld a, b
@@ -4167,7 +4167,7 @@ Jump_000_17DC::
     ld a, e
     swap a
     ldh [hTemp1], a
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, [hl+]
     ld c, a
     ld a, [hl+]
@@ -4182,7 +4182,7 @@ Jump_000_17EA::
     sbc a, $00
     ld b, a
     jr c, Jump_000_17FE
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, c
     ld [hl+], a
     ld a, b
@@ -4194,19 +4194,19 @@ Jump_000_17FE::
     ldh a, [hTemp1]
     add a, e
     ldh [hTemp1], a
-    ld a, [wC8C0]
+    ld a, [wDigits]
     ld e, $00
 
 Jump_000_1808::
     sub a, $0A
     jr c, Jump_000_1812
-    ld [wC8C0], a
+    ld [wDigits], a
     inc e
     jr Jump_000_1808
 
 Jump_000_1812::
     swap e
-    ld a, [wC8C0]
+    ld a, [wDigits]
     add a, e
     ldh [hTemp0], a
     ret
@@ -4307,12 +4307,12 @@ Func_000_1872:: ; address name
 
 ; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
 ; 103 call sites from 44 routines (e.g. ScriptCommandEF_Run_Case0F_Case02, ScriptCommandEC_Run_Case02, ScriptCommandEB_Run_Case05_Case3C, ScriptCommandEB_Run_Case05_Case05, ...)
-; reads: rSTAT, wC52D
-; writes: wC52D
+; reads: rSTAT, wTextWindowTileLo
+; writes: wTextWindowTileLo
 FillTilesBxC::
 Func_000_1881:: ; address name
     ld a, b
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
 
 Jump_000_1885::
     push bc
@@ -4335,7 +4335,7 @@ Jump_000_188C::
     pop bc
     dec b
     jr nz, Jump_000_1885
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld b, a
     dec c
     jr nz, Jump_000_1885
@@ -4672,9 +4672,9 @@ Jump_000_1A62::
 
 ; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
-; reads: wCC44, hMapId, wC88E, wC891
+; reads: wCC44, hMapId, wKeyWorldActive, wKeyWorldKey
 ; writes: hTemp0
-; points at: wC88F
+; points at: wKeyWorldGoal
 LoadMapScreen_Sub01::
 Func_000_1A73:: ; address name
     ld a, [wCC44]
@@ -4701,14 +4701,14 @@ Jump_000_1A89::
     jr Jump_000_1A83
 
 Jump_000_1A92::
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_000_1AA9
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     dec a
     cp a, b
     jr nz, Jump_000_1AA9
-    ld de, wC88F
+    ld de, wKeyWorldGoal
     ld a, b
     ldh [hTemp0], a
     call LoadMapScreen_Sub01_Sub01
@@ -4871,7 +4871,7 @@ Jump_000_1B95::
 ; hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196
 ; 4 call sites from 4 routines (e.g. RunWCC44Type_420D_Case07, RunWCC44Type_420D_Case06, RunWCC44Type_420D_Case03, RunWCC44Type_420D_Case02)
 ; reads: hTemp0
-; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, wC901, wC194, ...
+; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wC90D, wC901, wMapMoveType, ...
 LoadSpecialMapHeader::
 Func_000_1BAD:: ; address name
     ld a, [BANK_NUMBER_BYTE]
@@ -4921,14 +4921,14 @@ Func_000_1BAD:: ; address name
     ld a, [hl+]
     ld [wMaxBlockingTile], a
     ld a, [hl+]
-    ld [wC193], a
+    ld [wMapHeaderByte7], a
     ld a, [hl+]
     ld [wC90D], a
     xor a, a
     ld [wC901], a
-    ld [wC194], a
-    ld [wC195], a
-    ld [wC196], a
+    ld [wMapMoveType], a
+    ld [wMapSpriteKind], a
+    ld [wMapTallTileMin], a
     pop af
     ld [rROMB0], a
     ret
@@ -4936,7 +4936,7 @@ Func_000_1BAD:: ; address name
 ; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile and other header bytes from the bank-$11 map record (special maps use RunWCC44Type_420D) (E-0128)
 ; 3 call sites from 3 routines (e.g. InitFieldScreen, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, hMapId
-; writes: rROMB0, wC46B, wC46C, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, ...
+; writes: rROMB0, wMenuState, wMenuSubState, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wC90D, ...
 LoadMapHeader::
 Func_000_1C0C:: ; address name
     ld a, [wCC44]
@@ -4970,8 +4970,8 @@ Jump_000_1C1A::
     call DecompressToVRAM
     pop hl
     xor a, a
-    ld [wC46B], a
-    ld [wC46C], a
+    ld [wMenuState], a
+    ld [wMenuSubState], a
     jr Jump_000_1C55
 
 Jump_000_1C51::
@@ -4995,27 +4995,27 @@ Jump_000_1C55::
     ld a, [hl+]
     ld [wMaxBlockingTile], a
     ld a, [hl+]
-    ld [wC193], a
+    ld [wMapHeaderByte7], a
     ld a, [hl+]
     ld [wC90D], a
     ld a, [hl+]
     or a, $80
     ld [wC901], a
     ld a, [hl+]
-    ld [wC194], a
+    ld [wMapMoveType], a
     ld a, [hl+]
-    ld [wC195], a
+    ld [wMapSpriteKind], a
     or a, a
     jr z, Jump_000_1C93
     and a, $0F
     jr z, Jump_000_1C8F
     ld a, [hl+]
-    ld [wC196], a
+    ld [wMapTallTileMin], a
     jr Jump_000_1C93
 
 Jump_000_1C8F::
     ld a, [hl+]
-    ld [wC197], a
+    ld [wMapHeaderByte11], a
 
 Jump_000_1C93::
     call SetWC195AndWC197ForSpecialMaps
@@ -5103,7 +5103,7 @@ Func_000_1CF9:: ; address name
 ; sets wC195/wC197 to $11/$2C on maps $30 and $B8, $22/$30 on maps $63-$66, $12/$2C on map $70 (E-0125)
 ; 1 call site from 1 routine (e.g. LoadMapHeader)
 ; reads: hMapId
-; writes: wC195, wC197
+; writes: wMapSpriteKind, wMapHeaderByte11
 SetWC195AndWC197ForSpecialMaps::
 Func_000_1D47:: ; address name
     ldh a, [hMapId]
@@ -5114,9 +5114,9 @@ Func_000_1D47:: ; address name
 
 Jump_000_1D51::
     ld a, $11
-    ld [wC195], a
+    ld [wMapSpriteKind], a
     ld a, $2C
-    ld [wC197], a
+    ld [wMapHeaderByte11], a
     ret
 
 Jump_000_1D5C::
@@ -5125,18 +5125,18 @@ Jump_000_1D5C::
     cp a, $67
     jr nc, Jump_000_1D6F
     ld a, $22
-    ld [wC195], a
+    ld [wMapSpriteKind], a
     ld a, $30
-    ld [wC197], a
+    ld [wMapHeaderByte11], a
     ret
 
 Jump_000_1D6F::
     cp a, $70
     jr nz, Jump_000_1D7E
     ld a, $12
-    ld [wC195], a
+    ld [wMapSpriteKind], a
     ld a, $2C
-    ld [wC197], a
+    ld [wMapHeaderByte11], a
     ret
 
 Jump_000_1D7E::
@@ -5163,7 +5163,7 @@ Func_000_1D7F:: ; address name
 
 ; only called from DebugMapEditor_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugMapEditor_Update)
-; reads: hTemp0, wC5FA, wC5FC
+; reads: hTemp0, wDebugValue1, wDebugValue3
 ; writes: rROMB0, hTemp0
 DebugMapEditor_Update_Sub01::
 Func_000_1D90:: ; address name
@@ -5189,7 +5189,7 @@ Func_000_1D90:: ; address name
     ld h, d
     ld a, $06
     add_a_to_hl
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld c, a
     ld a, [hl+]
     ldh [hTemp0], a
@@ -5204,7 +5204,7 @@ Jump_000_1DC0::
     ret
 
 Jump_000_1DC7::
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld c, a
     ld a, [hl+]
     cp a, c
@@ -5249,9 +5249,9 @@ Jump_000_1DF4::
     sla a
     add a, c
     ld c, a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     call Multiply8
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld c, a
     sla a
     add a, c
@@ -5871,11 +5871,10 @@ Jump_000_20DF::
 
 ; DE = destination: writes wC8C1 as tile $E0 + digit, or blank tile $C3 when it is 0, then wC8C2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
 ; 7 call sites from 7 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_Shared02, WriteByteAAsTwoDigitTiles, ...)
-; points at: wC8C1
 WriteTwoDigitTilesFromWC8C1::
 Func_000_210D:: ; address name
     push hl
-    ld hl, wC8C1
+    ld hl, wDigits + $1
     ld a, [hl+]
     or a, a
     jr z, Jump_000_2119
@@ -5896,12 +5895,12 @@ Jump_000_211B::
 
 ; DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third
 ; 36 call sites from 19 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_Shared02, PauseMenu_State3_Case05_Case00, ...)
-; points at: wC8C0
+; points at: wDigits
 WriteDecimalDigitTiles::
 Func_000_2123:: ; address name
     push hl
     ld c, $00
-    ld hl, wC8C0
+    ld hl, wDigits
     ld a, [hl+]
     or a, a
     jr z, Jump_000_2133
@@ -6135,9 +6134,9 @@ Jump_000_2221::
 
 ; fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToWC8CF, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)
 ; 22 call sites from 22 routines (e.g. InitFieldScreen, RunWC8C7Phase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
-; reads: wC6FD
+; reads: wPartyCount
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, rRAMG, wC8D9
-; points at: wC6FE
+; points at: wPartyList
 LoadRecordListNameTiles::
 Func_000_222B:: ; address name
     ld a, $90
@@ -6156,11 +6155,11 @@ Func_000_222B:: ; address name
     call CopyGlyphTilesToVRAM
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     ret z
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
     ld de, vTiles1 + $500
 
 Jump_000_2264::
@@ -6194,16 +6193,16 @@ Jump_000_227F::
 
 ; only called from LoadPlayerAndFollowerSpriteGraphics (E-0047)
 ; 2 call sites from 1 routine (e.g. LoadPlayerAndFollowerSpriteGraphics)
-; reads: wC6FD, hTemp0, hTemp4, hTemp5, hTemp2, hTemp3, wIsCGB, hTemp1
+; reads: wPartyCount, hTemp0, hTemp4, hTemp5, hTemp2, hTemp3, wIsCGB, hTemp1
 ; writes: hTemp4, hTemp5, hTemp2, hTemp3, rRAMG, rROMB0
-; points at: wC701, wC6FE, wOBJPaletteBuffer
+; points at: wPartyList, wOBJPaletteBuffer
 LoadPlayerAndFollowerSpriteGraphics_Sub01::
 Func_000_228A:: ; address name
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     ret z
     ld b, a
-    ld hl, wC701
+    ld hl, wPartyList + $3
     ld a, l
     ldh [hTemp4], a
     ld a, h
@@ -6213,7 +6212,7 @@ Func_000_228A:: ; address name
     ldh [hTemp2], a
     ld a, h
     ldh [hTemp3], a
-    ld de, wC6FE
+    ld de, wPartyList
 
 Jump_000_22A5::
     push bc
@@ -6633,13 +6632,13 @@ Jump_000_24B9::
 
 ; returns A unchanged when wC58A is non-zero and wC5DB is 4; otherwise A = the byte at wC6FE + (A & $7F); HL is clobbered in that case
 ; 4 call sites from 4 routines (e.g. SRAMRecordAddressMapped, DrawItemTargetStatPreview, MapIndexViaWC6FEKeepHL, BuildItemScreenForWItemId_BankF1_Sub01)
-; reads: wC58A, wGameMode
-; points at: wC6FE
+; reads: wLinkMode, wGameMode
+; points at: wPartyList
 MapIndexViaWC6FE::
 Func_000_24C5:: ; address name
     push bc
     ld b, a
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_000_24D7
     ld a, [wGameMode]
@@ -6652,7 +6651,7 @@ Func_000_24C5:: ; address name
 Jump_000_24D7::
     ld a, b
     pop bc
-    ld hl, wC6FE
+    ld hl, wPartyList
     and a, $7F
     add_a_to_hl
     ld a, [hl]
@@ -6661,7 +6660,7 @@ Jump_000_24D7::
 ; on CGB copies $40 bytes from DE in bank B (CopyFromBank) into wBGPaletteBuffer and sets wC526 = $7F (upload request) (E-0117)
 ; 2 call sites from 2 routines (e.g. LoadMapHeader, LoadSpecialMapHeader)
 ; reads: wIsCGB
-; writes: wC526
+; writes: wBGPaletteUploadRequest
 ; points at: wBGPaletteBuffer
 LoadBGPaletteBufferFromBank::
 Func_000_24E5:: ; address name
@@ -6672,7 +6671,7 @@ Func_000_24E5:: ; address name
     ld c, $40
     call CopyFromBank
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
     ret
 
 ; HL = BG map address. With col = (hScrollX / 8) & $1F: when col >= 12 and (L & $1F) < col - 12 (a column of the 20-column view that wrapped past entry 31), HL -= $20 and A = $FF; otherwise HL is unchanged and A = 0. BC and DE kept (E-0059)
@@ -6779,7 +6778,7 @@ Jump_000_256A::
     xor a, a
     ldh [rSVBK], a
     push de
-    ld a, [wC5E1]
+    ld a, [wSTATSplitEnable]
     and a, $03
     rst $00
     dw ComputeSpriteScrollOffsets_Case00
@@ -6856,31 +6855,31 @@ Jump_000_25C5::
 
 ; DE = string table (see LookupString); clears the request area with FillTilesFromRequest, copies the position wC52D/wC52E to wC531/wC532 and wC535/wC536, points wC533/wC534 and wC537/wC538 at the string, sets wC52B = 1 and clears wC52C and wC54F; the string is drawn later by the routine at $2620
 ; 51 call sites from 51 routines (e.g. BeginStringDisplay_Bank07, BeginStringDisplay_Bank08, BeginStringDisplay_Bank09, BeginStringDisplay_Bank0B, ...)
-; reads: wC52D, wC52E
-; writes: wC531, wC535, wC532, wC536, wC533, wC537, wC534, wC538, ...
+; reads: wTextWindowTileLo, wTextWindowTileHi
+; writes: wTextGlyphDestLo, wTextLineStartLo, wTextGlyphDestHi, wTextLineStartHi, wTextPosLo, wTextStartPosLo, wTextPosHi, wTextStartPosHi, ...
 BeginStringDisplay::
 Func_000_25C9:: ; address name
     push de
     call FillTilesFromRequest
-    ld a, [wC52D]
-    ld [wC531], a
-    ld [wC535], a
-    ld a, [wC52E]
-    ld [wC532], a
-    ld [wC536], a
+    ld a, [wTextWindowTileLo]
+    ld [wTextGlyphDestLo], a
+    ld [wTextLineStartLo], a
+    ld a, [wTextWindowTileHi]
+    ld [wTextGlyphDestHi], a
+    ld [wTextLineStartHi], a
     pop de
     call LookupString
     ld a, e
-    ld [wC533], a
-    ld [wC537], a
+    ld [wTextPosLo], a
+    ld [wTextStartPosLo], a
     ld a, d
-    ld [wC534], a
-    ld [wC538], a
+    ld [wTextPosHi], a
+    ld [wTextStartPosHi], a
     ld a, $01
-    ld [wC52B], a
+    ld [wTextFlags], a
     xor a, a
-    ld [wC52C], a
-    ld [wC54F], a
+    ld [wTextControl], a
+    ld [wTextLineCount], a
     ret
 
 ; DE = string table (see LookupString); copies the string, including its $F0 terminator, to the address in wC53D/wC53E
@@ -6904,55 +6903,55 @@ Jump_000_2609::
 
 ; sets bit 1 of wC52B, then runs the display step at $2620 until wC52B is zero
 ; 17 call sites from 17 routines (e.g. ShowString_Bank07, ShowString_Bank08, ShowString_Bank09, ShowString_Bank0B, ...)
-; reads: wC52B
-; points at: wC52B
+; reads: wTextFlags
+; points at: wTextFlags
 RunStringDisplayToEnd::
 Func_000_2611:: ; address name
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 1, [hl]
 
 Jump_000_2616::
     call StepStringDisplayUntilDone
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     jr nz, Jump_000_2616
     ret
 
 ; runs the string display step (Func_000_2637) repeatedly while bit 7 of wC52C stays set, setting bit 1 of wC52B each time (E-0122)
 ; 3 call sites from 3 routines (e.g. VBlankHandler, RunStringDisplayToEnd, RunFrameTickFadeAndCounter_Bank1B)
-; reads: wC52C, wStringBank, wC52B, wFrameCounterLo, wC550, wJoypadPressedRepeat, wC567, wC552, ...
-; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
-; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...
+; reads: wTextControl, wStringBank, wTextFlags, wFrameCounterLo, wTextLastChar, wJoypadPressedRepeat, wLinkJoypadPressedRepeat, wTextYesNoResult, ...
+; writes: rROMB0, wTextYesNoResult, wTextRepeatCount, wTextDelayCounter, wTextLineCount, wTextPosLo, wTextPosHi
+; points at: wTextFlags, wTextLineCount, wTextControl, wDC01, wDC20, wDC40, wDC60, wDC80, ...
 StepStringDisplayUntilDone::
 Func_000_2620:: ; address name
-    ld a, [wC52C]
+    ld a, [wTextControl]
     bit 7, a
     jr z, StepStringDisplayUntilDone_Sub01
 
 Jump_000_2627::
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 1, [hl]
     call StepStringDisplayUntilDone_Sub01
-    ld a, [wC52C]
+    ld a, [wTextControl]
     bit 7, a
     jr nz, Jump_000_2627
     ret
 
 ; only called from StepStringDisplayUntilDone (E-0047)
 ; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone)
-; reads: wStringBank, wC52C, wC52B, wFrameCounterLo, wC550, wJoypadPressedRepeat, wC567, wC552, ...
-; writes: rROMB0, wC552, wC53B, wC53C, wC54F, wC533, wC534
-; points at: wC52B, wC54F, wC52C, wDC01, wDC20, wDC40, wDC60, wDC80, ...
+; reads: wStringBank, wTextControl, wTextFlags, wFrameCounterLo, wTextLastChar, wJoypadPressedRepeat, wLinkJoypadPressedRepeat, wTextYesNoResult, ...
+; writes: rROMB0, wTextYesNoResult, wTextRepeatCount, wTextDelayCounter, wTextLineCount, wTextPosLo, wTextPosHi
+; points at: wTextFlags, wTextLineCount, wTextControl, wDC01, wDC20, wDC40, wDC60, wDC80, ...
 StepStringDisplayUntilDone_Sub01::
 Func_000_2637:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, [wStringBank]
     ld [rROMB0], a
-    ld a, [wC52C]
+    ld a, [wTextControl]
     bit 2, a
     jp nz, Jump_000_2847
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     jp z, Jump_000_2875
     bit 5, a
@@ -6972,27 +6971,27 @@ Jump_000_265F::
     call WriteVRAMByte
 
 Jump_000_266E::
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 2, a
     jp z, Jump_000_2764
-    ld a, [wC550]
+    ld a, [wTextLastChar]
     cp a, $E6
     jr z, Jump_000_2685
-    ld a, [wC550]
+    ld a, [wTextLastChar]
     cp a, $FF
     jp nz, Jump_000_274A
 
 Jump_000_2685::
     ld a, [wJoypadPressedRepeat]
     ld b, a
-    ld a, [wC567]
+    ld a, [wLinkJoypadPressedRepeat]
     or a, b
     bit 6, a
     jr z, Jump_000_26A2
-    ld a, [wC552]
+    ld a, [wTextYesNoResult]
     and a, $01
     xor a, $01
-    ld [wC552], a
+    ld [wTextYesNoResult], a
     ld a, $69
     call QueueSoundEffect
     jr Jump_000_26B5
@@ -7000,17 +6999,17 @@ Jump_000_2685::
 Jump_000_26A2::
     bit 7, a
     jr z, Jump_000_26B5
-    ld a, [wC552]
+    ld a, [wTextYesNoResult]
     and a, $01
     xor a, $01
-    ld [wC552], a
+    ld [wTextYesNoResult], a
     ld a, $69
     call QueueSoundEffect
 
 Jump_000_26B5::
     ld c, $BB
     ld b, $C3
-    ld a, [wC552]
+    ld a, [wTextYesNoResult]
     or a, a
     jr z, Jump_000_26C3
     ld c, $C3
@@ -7042,14 +7041,14 @@ Jump_000_26CE::
     call WriteVRAMByte
     ld a, [wJoypadPressed]
     ld b, a
-    ld a, [wC566]
+    ld a, [wLinkJoypadPressed]
     or a, b
     bit 0, a
     jr z, Jump_000_2711
-    ld a, [wC552]
+    ld a, [wTextYesNoResult]
     or a, a
     jr nz, Jump_000_2716
-    ld a, [wC550]
+    ld a, [wTextLastChar]
     cp a, $E6
     jp z, Jump_000_271B
     ld a, $69
@@ -7062,10 +7061,10 @@ Jump_000_2711::
 
 Jump_000_2716::
     ld a, $01
-    ld [wC552], a
+    ld [wTextYesNoResult], a
 
 Jump_000_271B::
-    ld hl, wC52B
+    ld hl, wTextFlags
     res 2, [hl]
     res 1, [hl]
     push de
@@ -7091,11 +7090,11 @@ Jump_000_271B::
 Jump_000_274A::
     ld a, [wJoypadPressed]
     ld b, a
-    ld a, [wC566]
+    ld a, [wLinkJoypadPressed]
     or a, b
     and a, $F7
     jp z, Jump_000_2875
-    ld hl, wC52B
+    ld hl, wTextFlags
     res 2, [hl]
     res 1, [hl]
     call ShowTextContinueMark
@@ -7104,20 +7103,20 @@ Jump_000_274A::
 Jump_000_2764::
     bit 6, a
     jr z, Jump_000_278B
-    ld a, [wC53B]
+    ld a, [wTextRepeatCount]
     dec a
-    ld [wC53B], a
+    ld [wTextRepeatCount], a
     or a, a
     jp z, Jump_000_2780
     ld a, [wJoypadPressed]
     ld b, a
-    ld a, [wC566]
+    ld a, [wLinkJoypadPressed]
     or a, b
     and a, $F7
     jp z, Jump_000_2875
 
 Jump_000_2780::
-    ld hl, wC52B
+    ld hl, wTextFlags
     res 6, [hl]
     call ShowTextContinueMark
     jp Jump_000_2875
@@ -7125,19 +7124,19 @@ Jump_000_2780::
 Jump_000_278B::
     bit 7, a
     jr z, Jump_000_27A2
-    ld a, [wC53C]
+    ld a, [wTextDelayCounter]
     dec a
-    ld [wC53C], a
+    ld [wTextDelayCounter], a
     or a, a
     jp nz, Jump_000_2875
-    ld hl, wC52B
+    ld hl, wTextFlags
     res 7, [hl]
     jp Jump_000_2875
 
 Jump_000_27A2::
-    ld a, [wC533]
+    ld a, [wTextPosLo]
     ld l, a
-    ld a, [wC534]
+    ld a, [wTextPosHi]
     ld h, a
     ld a, [hl]
     cp a, $8D
@@ -7146,43 +7145,43 @@ Jump_000_27A2::
     jr z, Jump_000_2816
     cp a, $E0
     jr nc, Jump_000_282C
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 1, a
     jr nz, Jump_000_27E5
     ld a, [wJoypadPressed]
     ld b, a
-    ld a, [wC566]
+    ld a, [wLinkJoypadPressed]
     or a, b
     and a, $F7
     jr z, Jump_000_27CF
-    ld hl, wC52C
+    ld hl, wTextControl
     set 7, [hl]
 
 Jump_000_27CF::
     ld a, [wC964]
     ld b, a
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 3, a
     jr z, Jump_000_27DE
-    ld a, [wC539]
+    ld a, [wTextControlArg]
     ld b, a
 
 Jump_000_27DE::
-    ld a, [wC54F]
+    ld a, [wTextLineCount]
     cp a, b
     jp c, Jump_000_2875
 
 Jump_000_27E5::
     xor a, a
-    ld [wC54F], a
-    ld hl, wC52C
+    ld [wTextLineCount], a
+    ld hl, wTextControl
     res 1, [hl]
     call IncrementWC533Word
     ld a, [hl]
     cp a, $E0
     jr nc, Jump_000_282C
     call StepStringDisplayUntilDone_Sub01_Sub01
-    ld a, [wC52C]
+    ld a, [wTextControl]
     bit 0, a
     jr z, Jump_000_2875
     ld a, b
@@ -7190,33 +7189,33 @@ Jump_000_27E5::
     jr z, Jump_000_2875
     cp a, $9A
     jr z, Jump_000_2875
-    ld a, [wC556]
+    ld a, [wTextBeepSound]
     call QueueSoundEffect
-    ld hl, wC52C
+    ld hl, wTextControl
     set 1, [hl]
     jr Jump_000_2875
 
 Jump_000_2816::
-    ld a, [wC533]
+    ld a, [wTextPosLo]
     add a, $01
-    ld [wC533], a
-    ld a, [wC534]
+    ld [wTextPosLo], a
+    ld a, [wTextPosHi]
     adc a, $00
-    ld [wC534], a
+    ld [wTextPosHi], a
     ld a, [hl]
     call CallFunc28BDInBank1F
     jr Jump_000_2875
 
 Jump_000_282C::
-    ld a, [wC533]
+    ld a, [wTextPosLo]
     add a, $01
-    ld [wC533], a
-    ld a, [wC534]
+    ld [wTextPosLo], a
+    ld a, [wTextPosHi]
     adc a, $00
-    ld [wC534], a
+    ld [wTextPosHi], a
     ld a, [hl]
     call StepStringDisplayUntilDone_Sub01_Sub02
-    ld hl, wC52C
+    ld hl, wTextControl
     res 1, [hl]
     jr Jump_000_2875
 
@@ -7246,11 +7245,11 @@ Jump_000_2847::
     and a, [hl]
     cp a, $FF
     jr nz, Jump_000_2875
-    ld hl, wC52C
+    ld hl, wTextControl
     res 2, [hl]
 
 Jump_000_2875::
-    ld hl, wC54F
+    ld hl, wTextLineCount
     inc [hl]
     pop af
     ld [rROMB0], a
@@ -7259,7 +7258,7 @@ Jump_000_2875::
 ; only called from StepStringDisplayUntilDone_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone_Sub01)
 ; reads: rSTAT
-; writes: rROMB0, wC531, wC532
+; writes: rROMB0, wTextGlyphDestLo, wTextGlyphDestHi
 StepStringDisplayUntilDone_Sub01_Sub01::
 Func_000_287E:: ; address name
     ld l, a
@@ -7287,9 +7286,9 @@ Jump_000_288E::
     dec c
     jr nz, Jump_000_288D
     ld a, l
-    ld [wC531], a
+    ld [wTextGlyphDestLo], a
     ld a, h
-    ld [wC532], a
+    ld [wTextGlyphDestHi], a
     pop af
     ld [rROMB0], a
     ret
@@ -7312,7 +7311,7 @@ Func_000_28AB:: ; address name
 ; only called from CallFunc28BDInBank1F (E-0047)
 ; 1 call site from 1 routine (e.g. CallFunc28BDInBank1F)
 ; reads: rSTAT
-; writes: wC531, wC532
+; writes: wTextGlyphDestLo, wTextGlyphDestHi
 CallFunc28BDInBank1F_Sub01::
 Func_000_28BD:: ; address name
     call GlyphTileSourceForL
@@ -7354,14 +7353,14 @@ Jump_000_28E6::
     dec b
     jr nz, Jump_000_28CA
     ld a, l
-    ld [wC531], a
+    ld [wTextGlyphDestLo], a
     ld a, h
-    ld [wC532], a
+    ld [wTextGlyphDestHi], a
     ret
 
 ; DE = $4010 + 16 * L (the 16-byte tile of glyph L in the font bank); HL = the word at wC531/wC532 (E-0120)
 ; 2 call sites from 2 routines (e.g. StepStringDisplayUntilDone_Sub01_Sub01, CallFunc28BDInBank1F_Sub01)
-; reads: wC531, wC532
+; reads: wTextGlyphDestLo, wTextGlyphDestHi
 GlyphTileSourceForL::
 Func_000_28F4:: ; address name
     ld de, $4010
@@ -7376,31 +7375,31 @@ Func_000_28F4:: ; address name
     add hl, de
     ld e, l
     ld d, h
-    ld a, [wC531]
+    ld a, [wTextGlyphDestLo]
     ld l, a
-    ld a, [wC532]
+    ld a, [wTextGlyphDestHi]
     ld h, a
     ret
 
 ; fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero
 ; 110 call sites from 74 routines (e.g. Func_000_2950_Case12, BeginStringDisplay, FillTilesRequest, DebugResultsDisplay_Update_Sub02_Sub01, ...)
-; reads: wC52D, wC52E, wC530, wC52F, rSTAT
-; points at: wC52F
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowWidth, wTextWindowRows, rSTAT
+; points at: wTextWindowRows
 FillTilesFromRequest::
 Func_000_290E:: ; address name
-    ld hl, wC52F
+    ld hl, wTextWindowRows
     ld a, [hl+]
     or a, [hl]
     ret z
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld l, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld h, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld c, a
 
 Jump_000_2920::
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld b, a
 
 Jump_000_2924::
@@ -7431,10 +7430,10 @@ Jump_000_292B::
 
 ; only called from StepStringDisplayUntilDone_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone_Sub01)
-; writes: wC550
+; writes: wTextLastChar
 StepStringDisplayUntilDone_Sub01_Sub02::
 Func_000_2950:: ; address name
-    ld [wC550], a
+    ld [wTextLastChar], a
     sub a, $E0
     rst $00
     dw Func_000_2950_Case00
@@ -7472,56 +7471,56 @@ Func_000_2950:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52C
+; points at: wTextControl
 Func_000_2950_Case00::
 Jump_000_2996:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     res 7, [hl]
     call IncrementWC533Word
     ld a, [hl]
     call QueueSoundEffect
-    ld hl, wC52C
+    ld hl, wTextControl
     set 2, [hl]
     ret
 
 ; entry 5 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52C
+; points at: wTextControl
 Func_000_2950_Case05::
 Jump_000_29A8:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     res 7, [hl]
     call IncrementWC533Word
     ld a, [hl]
     call QueueMusic
-    ld hl, wC52C
+    ld hl, wTextControl
     set 2, [hl]
     ret
 
 ; entry 6 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC552
-; points at: wC52C, wC52B
+; writes: wTextYesNoResult
+; points at: wTextControl, wTextFlags
 Func_000_2950_Case06::
 Jump_000_29BA:: ; address name
     jp AcknowledgeTextPrompt
 
 ; entry 7 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC552, wC550
+; writes: wTextYesNoResult, wTextLastChar
 Func_000_2950_Case07::
 Jump_000_29BD:: ; address name
     call AcknowledgeTextPrompt
     ld a, $01
-    ld [wC552], a
+    ld [wTextYesNoResult], a
     ld a, $FF
-    ld [wC550], a
+    ld [wTextLastChar], a
     ret
 
 ; entry 8 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC530, wC52D, wC52E
-; writes: wC531, wC532, wC535, wC536
+; reads: wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
+; writes: wTextGlyphDestLo, wTextGlyphDestHi, wTextLineStartLo, wTextLineStartHi
 Func_000_2950_Case08::
 Jump_000_29CB:: ; address name
     call IncrementWC533Word
@@ -7529,26 +7528,26 @@ Jump_000_29CB:: ; address name
     ld e, [hl]
     call IncrementWC533Word
     ld c, [hl]
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     call Multiply8
     add hl, de
     add hl, hl
     add hl, hl
     add hl, hl
     add hl, hl
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld e, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld d, a
     add hl, de
     ld a, l
-    ld [wC531], a
+    ld [wTextGlyphDestLo], a
     ld a, h
-    ld [wC532], a
+    ld [wTextGlyphDestHi], a
     ld a, l
-    ld [wC535], a
+    ld [wTextLineStartLo], a
     ld a, h
-    ld [wC536], a
+    ld [wTextLineStartHi], a
     ret
 
 ; entry 9 of the `rst $00` table in Func_000_2950
@@ -7581,36 +7580,36 @@ Jump_000_2A1A::
 
 ; entry 10 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC556
-; points at: wC52C
+; writes: wTextBeepSound
+; points at: wTextControl
 Func_000_2950_Case0A::
 Jump_000_2A25:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     set 0, [hl]
     ld a, $6B
-    ld [wC556], a
+    ld [wTextBeepSound], a
     ret
 
 ; entry 11 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC556
-; points at: wC52C
+; writes: wTextBeepSound
+; points at: wTextControl
 Func_000_2950_Case0B::
 Jump_000_2A30:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     set 0, [hl]
     ld a, $6A
-    ld [wC556], a
+    ld [wTextBeepSound], a
     ret
 
 ; entry 12 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC964
-; writes: wC53C
-; points at: wC52C, wC52B
+; writes: wTextDelayCounter
+; points at: wTextControl, wTextFlags
 Func_000_2950_Case0C::
 Jump_000_2A3B:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     res 7, [hl]
     ld a, [wC964]
     cp a, $07
@@ -7618,15 +7617,15 @@ Jump_000_2A3B:: ; address name
     ld hl, $2A66
     add_a_to_hl
     ld a, [hl]
-    ld [wC53C], a
-    ld hl, wC52B
+    ld [wTextDelayCounter], a
+    ld hl, wTextFlags
     set 7, [hl]
     ret
 
 Jump_000_2A59::
-    ld hl, wC52C
+    ld hl, wTextControl
     res 7, [hl]
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 2, [hl]
     set 5, [hl]
     ret
@@ -7634,23 +7633,23 @@ Jump_000_2A59::
 
 ; entry 13 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52C
+; points at: wTextControl
 Func_000_2950_Case0D::
 Jump_000_2A6D:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     set 7, [hl]
     ret
 
 ; entry 14 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52D, wC52E, wC52F, wC530, wC554, wC555, wC535, wC536
-; writes: wC531, wC532
-; points at: wC52B
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wTextCursorLo, wTextCursorHi, wTextLineStartLo, wTextLineStartHi
+; writes: wTextGlyphDestLo, wTextGlyphDestHi
+; points at: wTextFlags
 Func_000_2950_Case0E::
 Jump_000_2A73:: ; address name
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld e, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld d, a
     srl d
     rr e
@@ -7660,13 +7659,13 @@ Jump_000_2A73:: ; address name
     rr e
     srl d
     rr e
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
-    ld a, [wC554]
+    ld a, [wTextCursorLo]
     ld l, a
-    ld a, [wC555]
+    ld a, [wTextCursorHi]
     ld h, a
     push bc
 
@@ -7679,12 +7678,12 @@ Jump_000_2A9C::
     jr nz, Jump_000_2A9C
     ld hl, $0020
     call AddHLToTextCursorWC554
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     call BlankBGMapEntriesRight
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     swap a
     ld h, a
     and a, $F0
@@ -7695,9 +7694,9 @@ Jump_000_2A9C::
     ld c, l
     ld b, h
     push de
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld e, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld d, a
     add hl, de
     pop de
@@ -7723,26 +7722,26 @@ Jump_000_2AE8::
     inc e
     dec b
     jr nz, Jump_000_2AE8
-    ld a, [wC535]
+    ld a, [wTextLineStartLo]
     ld l, a
-    ld a, [wC536]
+    ld a, [wTextLineStartHi]
     ld h, a
     ld a, l
-    ld [wC531], a
+    ld [wTextGlyphDestLo], a
     ld a, h
-    ld [wC532], a
-    ld hl, wC52B
+    ld [wTextGlyphDestHi], a
+    ld hl, wTextFlags
     res 1, [hl]
     ret
 
 ; entry 15 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC530, wC52D, wC52E, wC535, wC536, wC554, wC555, wC52F
-; writes: wC531, wC532, wC535, wC536, wC53C
-; points at: wC52B
+; reads: wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi, wTextLineStartLo, wTextLineStartHi, wTextCursorLo, wTextCursorHi, wTextWindowRows
+; writes: wTextGlyphDestLo, wTextGlyphDestHi, wTextLineStartLo, wTextLineStartHi, wTextDelayCounter
+; points at: wTextFlags
 Func_000_2950_Case0F::
 Jump_000_2B09:: ; address name
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     swap a
     ld h, a
     and a, $F0
@@ -7750,14 +7749,14 @@ Jump_000_2B09:: ; address name
     ld a, h
     and a, $0F
     ld h, a
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld e, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld d, a
     add hl, de
-    ld a, [wC535]
+    ld a, [wTextLineStartLo]
     ld e, a
-    ld a, [wC536]
+    ld a, [wTextLineStartHi]
     ld d, a
     ld a, e
     sub a, l
@@ -7769,29 +7768,29 @@ Jump_000_2B09:: ; address name
     or a, e
     jr z, Jump_000_2B45
     ld a, l
-    ld [wC531], a
+    ld [wTextGlyphDestLo], a
     ld a, h
-    ld [wC532], a
+    ld [wTextGlyphDestHi], a
     ld a, l
-    ld [wC535], a
+    ld [wTextLineStartLo], a
     ld a, h
-    ld [wC536], a
+    ld [wTextLineStartHi], a
     call IncrementWC533Word
     ret
 
 Jump_000_2B45::
-    ld a, [wC554]
+    ld a, [wTextCursorLo]
     ld l, a
-    ld a, [wC555]
+    ld a, [wTextCursorHi]
     ld h, a
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     call BlankBGMapEntriesRight
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld e, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld d, a
     srl d
     rr e
@@ -7801,9 +7800,9 @@ Jump_000_2B45::
     rr e
     srl d
     rr e
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     ld hl, $0020
     call AddHLToTextCursorWC554
@@ -7820,12 +7819,12 @@ Jump_000_2B81::
     jr nz, Jump_000_2B81
     ld hl, $0040
     call AddHLToTextCursorWC554
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     call BlankBGMapEntriesRight
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     swap a
     ld h, a
     and a, $F0
@@ -7833,9 +7832,9 @@ Jump_000_2B81::
     ld a, h
     and a, $0F
     ld h, a
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld e, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld d, a
     ld c, l
     ld b, h
@@ -7852,53 +7851,53 @@ Jump_000_2BB5::
     ld a, b
     or a, c
     jr nz, Jump_000_2BB5
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 7, [hl]
     ld a, $04
-    ld [wC53C], a
+    ld [wTextDelayCounter], a
     ret
 
 ; entry 16 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC537, wC538
-; writes: wC52B, wC533, wC534, wC52C
+; reads: wTextFlags, wTextStartPosLo, wTextStartPosHi
+; writes: wTextFlags, wTextPosLo, wTextPosHi, wTextControl
 Func_000_2950_Case10::
 Jump_000_2BCD:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 4, a
     jp z, Jump_000_2BF1
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     res 4, a
-    ld [wC52B], a
+    ld [wTextFlags], a
     call ShowTextContinueMark
-    ld a, [wC537]
+    ld a, [wTextStartPosLo]
     ld l, a
-    ld a, [wC538]
+    ld a, [wTextStartPosHi]
     ld h, a
     ld a, l
-    ld [wC533], a
+    ld [wTextPosLo], a
     ld a, h
-    ld [wC534], a
+    ld [wTextPosHi], a
     ret
 
 Jump_000_2BF1::
     xor a, a
-    ld [wC52B], a
+    ld [wTextFlags], a
     xor a, a
-    ld [wC52C], a
+    ld [wTextControl], a
     ret
 
 ; when wC52B bit 5 is set: clears it, moves to the text cursor + $60 and 9 columns right, and writes tile $B4 there (probably the continue mark); plays sound $69 unless wGameMode is 4 (E-0120)
 ; 4 call sites from 3 routines (e.g. StepStringDisplayUntilDone_Sub01, Func_000_2950_Case12, Func_000_2950_Case10)
-; reads: wC52B, wGameMode
-; writes: wC52B
+; reads: wTextFlags, wGameMode
+; writes: wTextFlags
 ShowTextContinueMark::
 Func_000_2BFA:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 5, a
     ret z
     res 5, a
-    ld [wC52B], a
+    ld [wTextFlags], a
     ld hl, $0060
     call AddHLToTextCursorWC554
     ld b, $09
@@ -7914,11 +7913,11 @@ Func_000_2BFA:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC530, wC535, wC536
-; writes: wC531, wC532, wC535, wC536
+; reads: wTextWindowWidth, wTextLineStartLo, wTextLineStartHi
+; writes: wTextGlyphDestLo, wTextGlyphDestHi, wTextLineStartLo, wTextLineStartHi
 Func_000_2950_Case11::
 Jump_000_2C21:: ; address name
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     swap a
     ld h, a
     and a, $F0
@@ -7926,25 +7925,25 @@ Jump_000_2C21:: ; address name
     ld a, h
     and a, $0F
     ld h, a
-    ld a, [wC535]
+    ld a, [wTextLineStartLo]
     ld e, a
-    ld a, [wC536]
+    ld a, [wTextLineStartHi]
     ld d, a
     add hl, de
     ld a, l
-    ld [wC531], a
+    ld [wTextGlyphDestLo], a
     ld a, h
-    ld [wC532], a
+    ld [wTextGlyphDestHi], a
     ld a, l
-    ld [wC535], a
+    ld [wTextLineStartLo], a
     ld a, h
-    ld [wC536], a
+    ld [wTextLineStartHi], a
     ret
 
 ; entry 18 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52D, wC52E
-; writes: wC531, wC532, wC535, wC536
+; reads: wTextWindowTileLo, wTextWindowTileHi
+; writes: wTextGlyphDestLo, wTextGlyphDestHi, wTextLineStartLo, wTextLineStartHi
 Func_000_2950_Case12::
 Jump_000_2C48:: ; address name
     call ShowTextContinueMark
@@ -7953,52 +7952,52 @@ Jump_000_2C48:: ; address name
 
 ; entry 19 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52D, wC52E
-; writes: wC531, wC532, wC535, wC536
+; reads: wTextWindowTileLo, wTextWindowTileHi
+; writes: wTextGlyphDestLo, wTextGlyphDestHi, wTextLineStartLo, wTextLineStartHi
 Func_000_2950_Case13::
 Jump_000_2C51:: ; address name
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld l, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld h, a
     ld a, l
-    ld [wC531], a
+    ld [wTextGlyphDestLo], a
     ld a, h
-    ld [wC532], a
+    ld [wTextGlyphDestHi], a
     ld a, l
-    ld [wC535], a
+    ld [wTextLineStartLo], a
     ld a, h
-    ld [wC536], a
+    ld [wTextLineStartHi], a
     ret
 
 ; clears bit 7 of wC52C and bit 1 of wC52B (E-0114)
 ; 1 call site from 1 routine (e.g. Func_000_2950_Case12)
-; points at: wC52C, wC52B
+; points at: wTextControl, wTextFlags
 ClearStringDisplayFlags::
 Func_000_2C6A:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     res 7, [hl]
-    ld hl, wC52B
+    ld hl, wTextFlags
     res 1, [hl]
     ret
 
 ; entry 21 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52B
+; points at: wTextFlags
 Func_000_2950_Case15::
 Jump_000_2C75:: ; address name
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 1, [hl]
     ret
 
 ; entry 22 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC533, wC534
-; writes: wC537, wC538, wC533, wC534
-; points at: wC60C, wC53F, wC52B
+; reads: wTextPosLo, wTextPosHi
+; writes: wTextStartPosLo, wTextStartPosHi, wTextPosLo, wTextPosHi
+; points at: wPlayerName, wC53F, wTextFlags
 Func_000_2950_Case16::
 Jump_000_2C7B:: ; address name
-    ld hl, wC60C
+    ld hl, wPlayerName
     ld de, wC53F
     ld b, $0A
 
@@ -8010,70 +8009,70 @@ Jump_000_2C83::
     jr nz, Jump_000_2C83
     ld a, $F0
     ld [de], a
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 4, [hl]
-    ld a, [wC533]
+    ld a, [wTextPosLo]
     ld l, a
-    ld a, [wC534]
+    ld a, [wTextPosHi]
     ld h, a
     ld a, l
-    ld [wC537], a
+    ld [wTextStartPosLo], a
     ld a, h
-    ld [wC538], a
+    ld [wTextStartPosHi], a
     ld hl, wC53F
     ld a, l
-    ld [wC533], a
+    ld [wTextPosLo], a
     ld a, h
-    ld [wC534], a
+    ld [wTextPosHi], a
     ret
 
 ; entry 23 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52B, wC52C
+; points at: wTextFlags, wTextControl
 Func_000_2950_Case17::
 Jump_000_2CAD:: ; address name
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 2, [hl]
-    ld hl, wC52C
+    ld hl, wTextControl
     res 7, [hl]
     ret
 
 ; entry 24 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC539
-; points at: wC52B
+; writes: wTextControlArg
+; points at: wTextFlags
 Func_000_2950_Case18::
 Jump_000_2CB8:: ; address name
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 3, [hl]
     call IncrementWC533Word
     ld a, [hl]
-    ld [wC539], a
+    ld [wTextControlArg], a
     ret
 
 ; entry 25 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC533, wC534, wC537, wC538
-; writes: wC537, wC538, wC533, wC534
-; points at: wC52B, wTextBuf0
+; reads: wTextPosLo, wTextPosHi, wTextStartPosLo, wTextStartPosHi
+; writes: wTextStartPosLo, wTextStartPosHi, wTextPosLo, wTextPosHi
+; points at: wTextFlags, wTextBuf0
 Func_000_2950_Case19::
 Jump_000_2CC5:: ; address name
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 4, [hl]
-    ld a, [wC533]
+    ld a, [wTextPosLo]
     ld l, a
-    ld a, [wC534]
+    ld a, [wTextPosHi]
     ld h, a
     ld a, l
-    ld [wC537], a
+    ld [wTextStartPosLo], a
     ld a, h
-    ld [wC538], a
-    ld a, [wC537]
+    ld [wTextStartPosHi], a
+    ld a, [wTextStartPosLo]
     add a, $01
-    ld [wC537], a
-    ld a, [wC538]
+    ld [wTextStartPosLo], a
+    ld a, [wTextStartPosHi]
     adc a, $00
-    ld [wC538], a
+    ld [wTextStartPosHi], a
     ld de, wTextBuf0
     ld a, [hl]
     add a, e
@@ -8082,83 +8081,83 @@ Jump_000_2CC5:: ; address name
     adc a, d
     ld h, a
     ld a, l
-    ld [wC533], a
+    ld [wTextPosLo], a
     ld a, h
-    ld [wC534], a
+    ld [wTextPosHi], a
     ret
 
 ; entry 26 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52B
+; points at: wTextFlags
 Func_000_2950_Case1A::
 Jump_000_2CFD:: ; address name
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 5, [hl]
     ret
 
 ; entry 27 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC53B
-; points at: wC52B, wC52C
+; writes: wTextRepeatCount
+; points at: wTextFlags, wTextControl
 Func_000_2950_Case1B::
 Jump_000_2D03:: ; address name
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 6, [hl]
     call IncrementWC533Word
     ld a, [hl]
-    ld [wC53B], a
-    ld hl, wC52C
+    ld [wTextRepeatCount], a
+    ld hl, wTextControl
     res 7, [hl]
     ret
 
 ; entry 28 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC53C
-; points at: wC52B, wC52C
+; writes: wTextDelayCounter
+; points at: wTextFlags, wTextControl
 Func_000_2950_Case1C::
 Jump_000_2D15:: ; address name
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 7, [hl]
     call IncrementWC533Word
     ld a, [hl]
-    ld [wC53C], a
-    ld hl, wC52C
+    ld [wTextDelayCounter], a
+    ld hl, wTextControl
     res 7, [hl]
     ret
 
 ; entry 29 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52C
+; points at: wTextControl
 Func_000_2950_Case1D::
 Jump_000_2D27:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     set 0, [hl]
     ret
 
 ; entry 30 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52C
+; points at: wTextControl
 Func_000_2950_Case1E::
 Jump_000_2D2D:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     res 0, [hl]
     ret
 
 ; clears bit 7 of wC52C, plays sound $6C, runs Func_000_2D4A, sets bit 2 of wC52B and clears wC552 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_000_2950_Case07)
-; writes: wC552
-; points at: wC52C, wC52B
+; writes: wTextYesNoResult
+; points at: wTextControl, wTextFlags
 AcknowledgeTextPrompt::
 Func_000_2D33:: ; address name
-    ld hl, wC52C
+    ld hl, wTextControl
     res 7, [hl]
     ld a, $6C
     call QueueSoundEffect
     call AcknowledgeTextPrompt_Sub01
-    ld hl, wC52B
+    ld hl, wTextFlags
     set 2, [hl]
     xor a, a
-    ld [wC552], a
+    ld [wTextYesNoResult], a
     ret
 
 ; only called from AcknowledgeTextPrompt (E-0047)
@@ -8263,15 +8262,15 @@ Jump_000_2DCE::
 
 ; copies the 16-byte tiles at wC89E and wC8AE to vTiles1 + $6E0 and + $6F0 (CopyCBytesToVRAMWaitSTAT) (E-0117)
 ; 1 call site from 1 routine (e.g. AcknowledgeTextPrompt_Sub01)
-; points at: wC89E, wC8AE
+; points at: wScriptTileBuf0, wScriptTileBuf1
 UploadTwoTilesFromWC89E::
 Func_000_2DD6:: ; address name
     ld hl, vTiles1 + $6E0
-    ld de, wC89E
+    ld de, wScriptTileBuf0
     ld c, $10
     call CopyCBytesToVRAMWaitSTAT
     ld hl, vTiles1 + $6F0
-    ld de, wC8AE
+    ld de, wScriptTileBuf1
     ld c, $10
     call CopyCBytesToVRAMWaitSTAT
     ret
@@ -8320,20 +8319,20 @@ Func_000_2E40:: ; address name
 
 ; HL = the word at wC533/wC534, then that word += 1 (E-0090)
 ; 10 call sites from 9 routines (e.g. StepStringDisplayUntilDone_Sub01, Func_000_2950_Case1C, Func_000_2950_Case1B, Func_000_2950_Case18, ...)
-; reads: wC533, wC534
-; writes: wC533, wC534
+; reads: wTextPosLo, wTextPosHi
+; writes: wTextPosLo, wTextPosHi
 IncrementWC533Word::
 Func_000_2E5D:: ; address name
-    ld a, [wC533]
+    ld a, [wTextPosLo]
     ld l, a
-    ld a, [wC534]
+    ld a, [wTextPosHi]
     ld h, a
     ld a, l
     add a, $01
-    ld [wC533], a
+    ld [wTextPosLo], a
     ld a, h
     adc a, $00
-    ld [wC534], a
+    ld [wTextPosHi], a
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank08 (E-0114)
@@ -8366,17 +8365,17 @@ Func_000_2E81:: ; address name
 
 ; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
 ; 46 call sites from 29 routines (e.g. GameMode0_Init, DebugSkillViewer_Update, PauseMenu_State4, GameMode5_Init_Case06, ...)
-; writes: wC52D, wC52E, wC52F, wC530
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 FillTilesRequest::
 Func_000_2E98:: ; address name
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ret
 
@@ -8483,21 +8482,21 @@ Jump_000_2F1F::
 
 ; Divide24ByHFFCCDE with hFFC6-hFFC8 restored afterwards (A = the quotient); uses wC0A0, wC0A1 and wMenuRowCount as scratch, so wMenuRowCount is overwritten (E-0090)
 ; 3 call sites from 1 routine (e.g. WriteNumber24AsDecimalString)
-; reads: hTemp0, hTemp1, hTemp2, wC0A0, wC0A1, wMenuRowCount
-; writes: wC0A0, wC0A1, wMenuRowCount, hTemp0, hTemp1, hTemp2
+; reads: hTemp0, hTemp1, hTemp2, wTemp0, wTemp1, wMenuRowCount
+; writes: wTemp0, wTemp1, wMenuRowCount, hTemp0, hTemp1, hTemp2
 Quotient24ByHFFCCDE::
 Func_000_2F36:: ; address name
     ldh a, [hTemp0]
-    ld [wC0A0], a
+    ld [wTemp0], a
     ldh a, [hTemp1]
-    ld [wC0A1], a
+    ld [wTemp1], a
     ldh a, [hTemp2]
     ld [wMenuRowCount], a
     call Divide24ByHFFCCDE
     push af
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ldh [hTemp0], a
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     ldh [hTemp1], a
     ld a, [wMenuRowCount]
     ldh [hTemp2], a
@@ -8650,17 +8649,17 @@ Jump_000_2FFD::
 
 ; text cursor wC554 = HL; writes consecutive tile numbers starting at wC52D / 16 over the wC52F x wC530 window, rows two map rows apart (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52D, wC52E, wC52F, wC530, wC554, wC555
-; writes: wC554, wC555
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wTextCursorLo, wTextCursorHi
+; writes: wTextCursorLo, wTextCursorHi
 WriteWindowTileNumbersAtHL:: ; heuristic: follows a terminator; C0
 Func_000_3001:: ; address name
     ld a, l
-    ld [wC554], a
+    ld [wTextCursorLo], a
     ld a, h
-    ld [wC555], a
-    ld a, [wC52D]
+    ld [wTextCursorHi], a
+    ld a, [wTextWindowTileLo]
     ld e, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld d, a
     srl d
     rr e
@@ -8670,13 +8669,13 @@ Func_000_3001:: ; address name
     rr e
     srl d
     rr e
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
-    ld a, [wC554]
+    ld a, [wTextCursorLo]
     ld l, a
-    ld a, [wC555]
+    ld a, [wTextCursorHi]
     ld h, a
 
 Jump_000_3031::
@@ -8725,17 +8724,17 @@ Func_000_304F:: ; address name
 
 ; HL = wC554/wC555 + HL, with the high byte's low 2 bits wrapped and its upper 6 bits kept from wC555 (stays inside one 1 KB BG map) (E-0090)
 ; 7 call sites from 5 routines (e.g. StepStringDisplayUntilDone_Sub01, ShowTextContinueMark, Func_000_2950_Case0F, Func_000_2950_Case0E, ...)
-; reads: wC554, wC555
+; reads: wTextCursorLo, wTextCursorHi
 AddHLToTextCursorWC554::
 Func_000_305E:: ; address name
-    ld a, [wC554]
+    ld a, [wTextCursorLo]
     add a, l
     ld l, a
-    ld a, [wC555]
+    ld a, [wTextCursorHi]
     adc a, h
     and a, $03
     ld h, a
-    ld a, [wC555]
+    ld a, [wTextCursorHi]
     and a, $FC
     or a, h
     ld h, a
@@ -10777,7 +10776,7 @@ Jump_000_3E8F::
 
 ; HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)
 ; 19 call sites from 16 routines (e.g. RunBattleCommandEntry_Case04_Sub01, AddRandomWeightByValueBand, RollDamageBaseToBasePlusWD86A, ComputeBasicDamage, ...)
-; reads: wC5E7, wC5E8
+; reads: wRandomLo, wRandomHi
 RandomInRange::
 Func_000_3E98:: ; address name
     call CompareHLToBC
@@ -10809,9 +10808,9 @@ Jump_000_3EB1::
     ld b, a
     push hl
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld l, a
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     ld h, a
     call DivideHLByBC
     pop hl
@@ -10832,11 +10831,11 @@ Jump_000_3ED3::
 
 ; when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB
 ; 73 call sites from 57 routines (e.g. RandomInRange, RunBattleCommandEntry_Case04_Sub02, RunBattleCommandEntry_Case04_Sub01, AddRandomPersonalityWeights, ...)
-; reads: wC58A, wC5BA, wC5BB, wC5E7, wC5E8
-; writes: wC5E7, wC5E8, wC5BA, wC5BB
+; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
+; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 AdvanceRandom::
 Func_000_3ED4:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, NextTableByteSecondStream
     call NextTableByte
@@ -10844,28 +10843,28 @@ Func_000_3ED4:: ; address name
 
 ; advances a second random stream: loads the state in wC5BA/wC5BB into wC5E7/wC5E8, runs NextTableByte and stores the result back in wC5BA/wC5BB (wC5E7/wC5E8 keep the new value); HL kept (E-0090)
 ; 4 call sites from 4 routines (e.g. RunBattleCommandEntry_Case01, RunBattleCommandEntry_BankA1_Case04_Sub02, RunBattleCommandEntry_BankA1_Case04_Sub01, RunBattleCommandEntry_BankA1_Case01)
-; reads: wC5BA, wC5BB, wC5E7, wC5E8
-; writes: wC5E7, wC5E8, wC5BA, wC5BB
+; reads: wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
+; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 NextTableByteSecondStream::
 Func_000_3EDE:: ; address name
     push hl
-    ld a, [wC5BA]
+    ld a, [wRandomSeed2Lo]
     ld l, a
-    ld a, [wC5BB]
+    ld a, [wRandomSeed2Hi]
     ld h, a
     ld a, l
-    ld [wC5E7], a
+    ld [wRandomLo], a
     ld a, h
-    ld [wC5E8], a
+    ld [wRandomHi], a
     call NextTableByte
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld l, a
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     ld h, a
     ld a, l
-    ld [wC5BA], a
+    ld [wRandomSeed2Lo], a
     ld a, h
-    ld [wC5BB], a
+    ld [wRandomSeed2Hi], a
     pop hl
     ret
 

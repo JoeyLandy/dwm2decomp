@@ -3,7 +3,7 @@ SECTION "Bank 01", ROMX[$4000], BANK[$01]
 
 ; start-up for wGameMode = 0; forcing this mode on the emulator shows: debug menu (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit_Case00)
-; writes: wC5F8, wC5F9, wC5FA, wC5FB, wC5FC, wC5FD, wC5FE, wC5FF, ...
+; writes: wDebugCursor, wDebugValue0, wDebugValue1, wDebugValue2, wDebugValue3, wDebugState, wDebugSubState, wDebugCounter, ...
 GameMode0_Init::
 Func_001_4001:: ; address name
     ld hl, vTiles1
@@ -13,22 +13,22 @@ Func_001_4001:: ; address name
     ld de, $1007
     call FillTilesRequest
     xor a, a
-    ld [wC5F8], a
-    ld [wC5F9], a
-    ld [wC5FA], a
-    ld [wC5FB], a
-    ld [wC5FC], a
-    ld [wC5FD], a
-    ld [wC5FE], a
-    ld [wC5FF], a
+    ld [wDebugCursor], a
+    ld [wDebugValue0], a
+    ld [wDebugValue1], a
+    ld [wDebugValue2], a
+    ld [wDebugValue3], a
+    ld [wDebugState], a
+    ld [wDebugSubState], a
+    ld [wDebugCounter], a
     xor a, a
-    ld [wC5F6], a
-    ld [wC5F7], a
+    ld [wDebugByteF6], a
+    ld [wDebugByteF7], a
     call GameMode0_Init_Sub01
     ld a, $FC
     call StartPaletteFade
     ld a, $03
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld a, $01
     jp Jump_000_077A
 
@@ -54,20 +54,20 @@ Func_001_4045:: ; address name
 
 ; init for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC554, wC555, ...
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextCursorLo, wTextCursorHi, ...
 DebugMessageTest_Init::
 Jump_001_4061:: ; address name
     call LoadPalette0FromData4ACC
     ld hl, vTiles2 + $100
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1001
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $00
@@ -75,19 +75,19 @@ Jump_001_4061:: ; address name
     farcall ShowString_Bank08
     ld hl, vTiles2 + $300
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1207
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld hl, vBGMap0 + $1C1
     ld a, l
-    ld [wC554], a
+    ld [wTextCursorLo], a
     ld a, h
-    ld [wC555], a
+    ld [wTextCursorHi], a
     ld hl, vTiles2 + $200
     ld de, Data_01F_4160
     ld b, $1F
@@ -119,24 +119,24 @@ Jump_001_4061:: ; address name
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a, a
-    ld [wC5F8], a
-    ld [wC5F9], a
-    ld [wC5FA], a
-    ld [wC5FB], a
-    ld [wC5FC], a
-    ld [wC5FD], a
-    ld [wC5FE], a
-    ld [wC5FF], a
+    ld [wDebugCursor], a
+    ld [wDebugValue0], a
+    ld [wDebugValue1], a
+    ld [wDebugValue2], a
+    ld [wDebugValue3], a
+    ld [wDebugState], a
+    ld [wDebugSubState], a
+    ld [wDebugCounter], a
     ld a, $01
     ld de, Data_001_412F
     ld hl, vBGMap0
     ld bc, $1412
     call CopyRectFromBankToVRAM
     xor a, a
-    ld [wC46B], a
+    ld [wMenuState], a
     xor a, a
-    ld [wC0A0], a
-    ld [wC0A1], a
+    ld [wTemp0], a
+    ld [wTemp1], a
     xor a, a
     ld [wMenuRowCount], a
     ret
@@ -197,7 +197,7 @@ Data_001_42BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wStringCategory, wStringIndex, rVBK
-; points at: wC5F8
+; points at: wDebugCursor
 DebugSkillViewer_Init::
 Jump_001_4424:: ; address name
     ld a, $0F
@@ -224,7 +224,7 @@ Jump_001_4424:: ; address name
 
 Jump_001_445A::
     xor a, a
-    ld hl, wC5F8
+    ld hl, wDebugCursor
     ld [hl+], a
     dec a
     ld [hl], a
@@ -245,21 +245,21 @@ Jump_001_4462:: ; address name
 
 ; init for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wD7F1, wC5F8, ...
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wD7F1, wDebugCursor, ...
 ; points at: wD780
 DebugResultsDisplay_Init::
 Jump_001_4472:: ; address name
     call LoadPalette0FromData4ACC
     ld hl, vTiles2 + $100
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1001
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $00
@@ -267,14 +267,14 @@ Jump_001_4472:: ; address name
     farcall ShowString_Bank08
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1005
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $27
@@ -335,32 +335,32 @@ Jump_001_4472:: ; address name
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $200
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0901
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ld hl, vTiles2 + $300
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     call FillTilesFromRequest
     ld hl, vTiles2 + $400
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     call FillTilesFromRequest
     ld hl, vTiles2 + $500
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     call FillTilesFromRequest
     ld hl, vBGMap0 + $8A
     ld bc, $0901
@@ -383,14 +383,14 @@ Jump_001_4472:: ; address name
     add a, $10
     ld [vBGMap0 + $81], a
     xor a, a
-    ld [wC5F8], a
-    ld [wC5F9], a
-    ld [wC5FA], a
-    ld [wC5FB], a
-    ld [wC5FC], a
-    ld [wC5FD], a
-    ld [wC5FE], a
-    ld [wC5FF], a
+    ld [wDebugCursor], a
+    ld [wDebugValue0], a
+    ld [wDebugValue1], a
+    ld [wDebugValue2], a
+    ld [wDebugValue3], a
+    ld [wDebugState], a
+    ld [wDebugSubState], a
+    ld [wDebugCounter], a
     ld hl, wD780
     ld b, $60
 
@@ -403,20 +403,20 @@ Jump_001_45E2::
 
 ; init for debug-mode state 0: the screen shows the debug menu (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 DebugMainMenu_Init::
 Jump_001_45EA:: ; address name
     call LoadPalette0FromData4ACC
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1008
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $01
@@ -431,19 +431,19 @@ Jump_001_45EA:: ; address name
 ; init for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC5F8, wC5F9, ...
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wDebugCursor, wDebugValue0, ...
 DebugMapEditor_Init::
 Jump_001_461E:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1001
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $00
@@ -451,14 +451,14 @@ Jump_001_461E:: ; address name
     farcall ShowString_Bank08
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1008
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $02
@@ -474,19 +474,19 @@ Jump_001_461E:: ; address name
     ld bc, $1001
     call CopyRectFromBankToVRAM
     xor a, a
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     ldh a, [hMapId]
-    ld [wC5F9], a
+    ld [wDebugValue0], a
     ldh a, [hMapScreenX]
-    ld [wC5FA], a
+    ld [wDebugValue1], a
     ldh a, [hPlayerX]
-    ld [wC5FB], a
+    ld [wDebugValue2], a
     ldh a, [hMapScreenY]
-    ld [wC5FC], a
+    ld [wDebugValue3], a
     ldh a, [hPlayerY]
-    ld [wC5FD], a
+    ld [wDebugState], a
     ld a, $01
-    ld [wC5FE], a
+    ld [wDebugSubState], a
     ret
 
 Data_001_46A4:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -494,20 +494,20 @@ Data_001_46A4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; init for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC833, hMapScreenX, hMapScreenY
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC5F8, wC5F9, ...
+; reads: wCurrentKeyIndex, hMapScreenX, hMapScreenY
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wDebugCursor, wDebugValue0, ...
 DebugAutomap_Init::
 Jump_001_46B4:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1001
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $00
@@ -515,14 +515,14 @@ Jump_001_46B4:: ; address name
     farcall ShowString_Bank08
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1008
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $04
@@ -538,17 +538,17 @@ Jump_001_46B4:: ; address name
     ld bc, $1001
     call CopyRectFromBankToVRAM
     xor a, a
-    ld [wC5F8], a
-    ld a, [wC833]
+    ld [wDebugCursor], a
+    ld a, [wCurrentKeyIndex]
     push af
     call LoadKeyEntryFieldsToWC5FD
     pop af
     or a, $80
-    ld [wC5F9], a
+    ld [wDebugValue0], a
     ldh a, [hMapScreenX]
-    ld [wC5FB], a
+    ld [wDebugValue2], a
     ldh a, [hMapScreenY]
-    ld [wC5FC], a
+    ld [wDebugValue3], a
     ret
 
 Data_001_4733:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -557,19 +557,19 @@ Data_001_4733:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC5F9, wC5FA, ...
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wDebugValue0, wDebugValue1, ...
 DebugMonsterPictureViewer_Init::
 Jump_001_4743:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1001
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $00
@@ -577,14 +577,14 @@ Jump_001_4743:: ; address name
     farcall ShowString_Bank08
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1008
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $03
@@ -616,15 +616,15 @@ Jump_001_4743:: ; address name
 
 Jump_001_47C4::
     ld a, $00
-    ld [wC5F9], a
+    ld [wDebugValue0], a
     ld a, $80
-    ld [wC5FA], a
+    ld [wDebugValue1], a
     ld a, $00
-    ld [wC5FB], a
+    ld [wDebugValue2], a
     ld a, $80
-    ld [wC5FC], a
+    ld [wDebugValue3], a
     ld a, $00
-    ld [wC5FD], a
+    ld [wDebugState], a
     ret
 
 Data_001_47DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -637,19 +637,19 @@ Data_001_4802:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; init for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC46B, wC0A0, ...
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wMenuState, wTemp0, ...
 DebugSoundTest_Init::
 Jump_001_4826:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1001
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $00
@@ -657,14 +657,14 @@ Jump_001_4826:: ; address name
     farcall ShowString_Bank08
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1008
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $06
@@ -676,10 +676,10 @@ Jump_001_4826:: ; address name
     ld bc, $0B04
     call CopyRectFromBankToVRAM
     xor a, a
-    ld [wC46B], a
+    ld [wMenuState], a
     xor a, a
-    ld [wC0A0], a
-    ld [wC0A1], a
+    ld [wTemp0], a
+    ld [wTemp1], a
     ret
 
 Data_001_488A:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -689,20 +689,20 @@ Data_001_488A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; init for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC46B
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wMenuState
 ; points at: wD09D
 DebugBattleSetup_Init::
 Jump_001_48B6:: ; address name
     ld hl, vTiles2 + $100
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1001
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $00
@@ -710,14 +710,14 @@ Jump_001_48B6:: ; address name
     farcall ShowString_Bank08
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0B09
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     xor a, a
     ld [wStringCategory], a
     ld a, $09
@@ -733,31 +733,31 @@ Jump_001_48B6:: ; address name
     ld bc, $0018
     call FillBytes
     ld a, $01
-    ld [wC46B], a
+    ld [wMenuState], a
     call DebugBattleSetupShowFieldString
     ld a, $02
-    ld [wC46B], a
+    ld [wMenuState], a
     call DebugBattleSetupShowFieldString
     ld a, $03
-    ld [wC46B], a
+    ld [wMenuState], a
     call DebugBattleSetupShowFieldString
     ld a, $04
-    ld [wC46B], a
+    ld [wMenuState], a
     call DebugBattleSetupShowFieldString
     ld a, $05
-    ld [wC46B], a
+    ld [wMenuState], a
     call DebugBattleSetupShowFieldString
     ld a, $06
-    ld [wC46B], a
+    ld [wMenuState], a
     call DebugBattleSetupShowFieldString
     ld a, $08
-    ld [wC46B], a
+    ld [wMenuState], a
     call DebugBattleSetupShowFieldString
     ld a, $0A
-    ld [wC46B], a
+    ld [wMenuState], a
     call DebugBattleSetupShowFieldString
     xor a, a
-    ld [wC46B], a
+    ld [wMenuState], a
     ret
 
 Data_001_495D:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -804,7 +804,7 @@ Jump_001_4A77::
 ; on CGB copies the 8-byte palette Data_001_4ACC into wBGPaletteBuffer twice and sets wC526 and wC527 = $7F (E-0117)
 ; 7 call sites from 7 routines (e.g. DebugMessageTest_Init, DebugResultsDisplay_Init, DebugMainMenu_Init, GameMode5_Init_Case02, ...)
 ; reads: wIsCGB
-; writes: wC526, wC527
+; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
 ; points at: wBGPaletteBuffer
 LoadPalette0FromData4ACC::
 Func_001_4AA4:: ; address name
@@ -816,13 +816,13 @@ Func_001_4AA4:: ; address name
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
     ld de, Data_001_4ACC
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     ret
 
 Data_001_4ACC:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -850,12 +850,12 @@ Func_001_4AD4:: ; address name
 
 ; update for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wJoypadPressed, wMenuRowCount, wC0A1, wC0A0, wJoypadPressedRepeat, wC46B, wFrameCounterLo
-; writes: wStringIndex, wStringCategory, wC52F, wC530, wC52D, wC52E, wC46B, wModeState
-; points at: wC0A0, wModeChangeRequest
+; reads: wTextFlags, wJoypadPressed, wMenuRowCount, wTemp1, wTemp0, wJoypadPressedRepeat, wMenuState, wFrameCounterLo
+; writes: wStringIndex, wStringCategory, wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi, wMenuState, wModeState
+; points at: wTemp0, wModeChangeRequest
 DebugMessageTest_Update::
 Jump_001_4AF0:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld a, [wJoypadPressed]
@@ -863,19 +863,19 @@ Jump_001_4AF0:: ; address name
     jp z, Jump_001_4C56
     ld a, [wMenuRowCount]
     ld [wStringIndex], a
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     ld [wStringCategory], a
     ld de, $1204
     ld hl, vTiles2 + $300
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
-    ld a, [wC0A0]
+    ld [wTextWindowTileHi], a
+    ld a, [wTemp0]
     rst $00
     dw DebugMessageTest_Update_Case00
     dw DebugMessageTest_Update_Case01
@@ -1154,22 +1154,22 @@ Jump_001_4C56::
     ld a, [wJoypadPressedRepeat]
     and a, $40
     jr z, Jump_001_4C86
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $00
     call z, DebugMessageTest_Update_Case21_Sub01
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $01
     call z, DebugMessageTest_Update_Case21_Sub02
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $02
     call z, DebugMessageTest_Update_Case21_Sub03
-    ld a, [wC46B]
+    ld a, [wMenuState]
     sub a, $01
     jr nc, Jump_001_4C7E
     ld a, $02
 
 Jump_001_4C7E::
-    ld [wC46B], a
+    ld [wMenuState], a
     ld a, $69
     call QueueSoundEffect
 
@@ -1177,31 +1177,31 @@ Jump_001_4C86::
     ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_001_4CB8
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $00
     call z, DebugMessageTest_Update_Case21_Sub01
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $01
     call z, DebugMessageTest_Update_Case21_Sub02
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $02
     call z, DebugMessageTest_Update_Case21_Sub03
-    ld a, [wC46B]
+    ld a, [wMenuState]
     add a, $01
     cp a, $03
     jr nz, Jump_001_4CB0
     ld a, $00
 
 Jump_001_4CB0::
-    ld [wC46B], a
+    ld [wMenuState], a
     ld a, $69
     call QueueSoundEffect
 
 Jump_001_4CB8::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld c, a
     ld b, $00
-    ld hl, wC0A0
+    ld hl, wTemp0
     add hl, bc
     ld a, [wJoypadPressedRepeat]
     and a, $10
@@ -1228,11 +1228,11 @@ Jump_001_4CDC::
 Jump_001_4CE5::
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld b, $21
     cp a, $00
     call z, DebugMessageTest_Update_Case21_Sub04
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     add a, a
     ld hl, Data_001_4E54
     add_a_to_hl
@@ -1249,10 +1249,10 @@ Jump_001_4CE5::
 
 Jump_001_4D0C::
     ld b, a
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $01
     call z, DebugMessageTest_Update_Case21_Sub04
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     add a, a
     ld hl, Data_001_4E54
     add_a_to_hl
@@ -1271,14 +1271,14 @@ Jump_001_4D2C::
     ld b, [hl]
     ld h, b
     ld l, c
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     inc a
     add_a_to_hl
     ld a, [hl]
 
 Jump_001_4D3B::
     ld b, a
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $02
     call z, DebugMessageTest_Update_Case21_Sub04
 
@@ -1293,7 +1293,7 @@ Jump_001_4D44::
     ret
 
 Jump_001_4D54::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $00
     jr nz, Jump_001_4D79
     ld a, [wFrameCounterLo]
@@ -1307,16 +1307,16 @@ Jump_001_4D54::
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
-; reads: wC0A0, wC46B, wC0A1, wMenuRowCount
+; reads: wTemp0, wMenuState, wTemp1, wMenuRowCount
 DebugMessageTest_Update_Case21_Sub01::
 Func_001_4D6E:: ; address name
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld de, vBGMap0 + $6D
     call WriteHexByteTilesAtDE
     jr Jump_001_4DBC
 
 Jump_001_4D79::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $01
     jr nz, Jump_001_4D9E
     ld a, [wFrameCounterLo]
@@ -1330,10 +1330,10 @@ Jump_001_4D79::
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
-; reads: wC0A1, wC46B, wC0A0, wMenuRowCount
+; reads: wTemp1, wMenuState, wTemp0, wMenuRowCount
 DebugMessageTest_Update_Case21_Sub02::
 Func_001_4D93:: ; address name
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     ld de, vBGMap0 + $AD
     call WriteHexByteTilesAtDE
     jr Jump_001_4DBC
@@ -1350,7 +1350,7 @@ Jump_001_4D9E::
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
-; reads: wMenuRowCount, wC46B, wC0A0, wC0A1
+; reads: wMenuRowCount, wMenuState, wTemp0, wTemp1
 DebugMessageTest_Update_Case21_Sub03::
 Func_001_4DB1:: ; address name
     ld a, [wMenuRowCount]
@@ -1359,23 +1359,23 @@ Func_001_4DB1:: ; address name
     jr Jump_001_4DBC
 
 Jump_001_4DBC::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $00
     jr z, Jump_001_4DCC
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld de, vBGMap0 + $6D
     call WriteHexByteTilesAtDE
 
 Jump_001_4DCC::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $01
     jr z, Jump_001_4DDC
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     ld de, vBGMap0 + $AD
     call WriteHexByteTilesAtDE
 
 Jump_001_4DDC::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $02
     jr z, Jump_001_4DEC
     ld a, [wMenuRowCount]
@@ -1387,13 +1387,13 @@ Jump_001_4DEC::
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
 ; 3 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
-; reads: wC46B, wC0A0, wC0A1, wMenuRowCount
-; points at: wC0A0
+; reads: wMenuState, wTemp0, wTemp1, wMenuRowCount
+; points at: wTemp0
 DebugMessageTest_Update_Case21_Sub04::
 Func_001_4DED:: ; address name
     push af
-    ld a, [wC46B]
-    ld hl, wC0A0
+    ld a, [wMenuState]
+    ld hl, wTemp0
     add_a_to_hl
     ld a, b
     cp a, $FF
@@ -1412,19 +1412,19 @@ Jump_001_4E05::
     ld [hl], b
 
 Jump_001_4E0C::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $00
     jr nz, Jump_001_4E1B
     ld de, vBGMap0 + $6D
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     jr Jump_001_4E30
 
 Jump_001_4E1B::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $01
     jr nz, Jump_001_4E2A
     ld de, vBGMap0 + $AD
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     jr Jump_001_4E30
 
 Jump_001_4E2A::
@@ -1440,15 +1440,15 @@ Jump_001_4E30::
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
-; reads: wC46B
-; writes: wC0A1, wMenuRowCount
+; reads: wMenuState
+; writes: wTemp1, wMenuRowCount
 DebugMessageTest_Update_Case21_Sub05::
 Func_001_4E3B:: ; address name
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $00
     jr nz, Jump_001_4E4B
     xor a, a
-    ld [wC0A1], a
+    ld [wTemp1], a
     xor a, a
     ld [wMenuRowCount], a
     ret
@@ -1467,8 +1467,8 @@ Data_001_4E54:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; update for debug-mode state 10: the screen shows the monster record viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wJoypadPressedRepeat, wJoypadHeld, wC5F8, wC5F9, wMonsterId, wCFE7, wC52D, ...
-; writes: wGameMode, wModeState, wC5F8, wC5F9, wMonsterId, wCFE7, wStringCategory, wStringIndex, ...
+; reads: wJoypadPressed, wJoypadPressedRepeat, wJoypadHeld, wDebugCursor, wDebugValue0, wMonsterId, wCFE7, wTextWindowTileLo, ...
+; writes: wGameMode, wModeState, wDebugCursor, wDebugValue0, wMonsterId, wCFE7, wStringCategory, wStringIndex, ...
 ; points at: wModeChangeRequest
 DebugMonsterRecordViewer_Update::
 Jump_001_4ED4:: ; address name
@@ -1489,18 +1489,18 @@ Jump_001_4EE7::
     ld a, [wJoypadHeld]
     bit 2, a
     jr nz, Jump_001_4F07
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     sub a, $01
-    ld [wC5F8], a
-    ld a, [wC5F9]
+    ld [wDebugCursor], a
+    ld a, [wDebugValue0]
     sbc a, $00
-    ld [wC5F9], a
+    ld [wDebugValue0], a
     jr Jump_001_4F1F
 
 Jump_001_4F07::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     ld l, a
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld h, a
     ld a, l
     sub a, $10
@@ -1509,14 +1509,14 @@ Jump_001_4F07::
     sbc a, $00
     ld h, a
     ld a, l
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     ld a, h
-    ld [wC5F9], a
+    ld [wDebugValue0], a
 
 Jump_001_4F1F::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     ld l, a
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld h, a
     ld bc, $02AB
     call CompareHLToBC
@@ -1531,18 +1531,18 @@ Jump_001_4F34::
     ld a, [wJoypadHeld]
     bit 2, a
     jr nz, Jump_001_4F55
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     add a, $01
-    ld [wC5F8], a
-    ld a, [wC5F9]
+    ld [wDebugCursor], a
+    ld a, [wDebugValue0]
     adc a, $00
-    ld [wC5F9], a
+    ld [wDebugValue0], a
     jr Jump_001_4F6D
 
 Jump_001_4F55::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     ld l, a
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld h, a
     ld a, l
     add a, $10
@@ -1551,14 +1551,14 @@ Jump_001_4F55::
     adc a, $00
     ld h, a
     ld a, l
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     ld a, h
-    ld [wC5F9], a
+    ld [wDebugValue0], a
 
 Jump_001_4F6D::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     ld l, a
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld h, a
     ld bc, $02AB
     call CompareHLToBC
@@ -1567,14 +1567,14 @@ Jump_001_4F6D::
 
 ; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wC5F8/wC5F9 and wMonsterId/wCFE7, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen
 ; 1 call site from 1 routine (e.g. DebugMonsterRecordViewer_Init)
-; reads: wMonsterId, wCFE7, wC52D, wC52E, wC52F, wC530, wRecordBuffer, wCFED, ...
-; writes: wC5F8, wC5F9, wMonsterId, wCFE7, wStringCategory, wStringIndex, wC52D, wC52E, ...
+; reads: wMonsterId, wCFE7, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wRecordBuffer, wCFED, ...
+; writes: wDebugCursor, wDebugValue0, wMonsterId, wCFE7, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, ...
 DebugShowMonsterRecord::
 Func_001_4F80:: ; address name
     ld a, l
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     ld a, h
-    ld [wC5F9], a
+    ld [wDebugValue0], a
     ld a, l
     ld [wMonsterId], a
     ld a, h
@@ -1593,35 +1593,35 @@ Func_001_4F80:: ; address name
     ld [wStringIndex], a
     ld hl, vTiles2 + $400
     ld de, $0901
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld c, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld b, a
     push bc
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     push bc
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank88
     pop de
     pop hl
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld a, [wRecordBuffer]
     ld hl, vBGMap0 + $4F
     ld bc, $0100
@@ -1721,9 +1721,9 @@ Jump_001_50EC::
 
 ; update for debug-mode state 9: the screen shows the skill viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wJoypadPressedRepeat, wC5F8, wRecordBufferData, wRecordBuffer, wCFEF, wCFF0, wCFF1, ...
-; writes: wGameMode, wModeState, wC5F8, wRecordBuffer, wCFED, wD868, wD869, wD86A, ...
-; points at: wModeChangeRequest, wC5F8, wRecordBufferData
+; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugCursor, wRecordBufferData, wRecordBuffer, wCFEF, wCFF0, wCFF1, ...
+; writes: wGameMode, wModeState, wDebugCursor, wRecordBuffer, wCFED, wD868, wD869, wD86A, ...
+; points at: wModeChangeRequest, wDebugCursor, wRecordBufferData
 DebugSkillViewer_Update::
 Jump_001_50ED:: ; address name
     ld a, [wJoypadPressed]
@@ -1740,28 +1740,28 @@ Jump_001_5100::
     ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, Jump_001_5117
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     dec a
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     cp a, $AF
     jr c, Jump_001_5117
     ld a, $AE
-    ld [wC5F8], a
+    ld [wDebugCursor], a
 
 Jump_001_5117::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr z, Jump_001_512D
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     inc a
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     cp a, $AF
     jr c, Jump_001_512D
     xor a, a
-    ld [wC5F8], a
+    ld [wDebugCursor], a
 
 Jump_001_512D::
-    ld hl, wC5F8
+    ld hl, wDebugCursor
     ld a, [hl+]
     cp a, [hl]
     ld [hl], a
@@ -1769,7 +1769,7 @@ Jump_001_512D::
     ld hl, vBGMap0 + $46
     ld bc, $0100
     call WriteHexByteTilesAtHL
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     ld [wRecordBuffer], a
     xor a, a
     ld [wCFED], a
@@ -1908,16 +1908,16 @@ Jump_001_517F::
 
 ; only called from DebugSkillViewer_Update (E-0047)
 ; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
-; writes: wC8C0, wC8C1, wC8C2, hTemp1, hTemp0
+; writes: wDigits, hTemp1, hTemp0
 ; points at: hTemp3
 DebugSkillViewer_Update_Sub01::
 Func_001_52AF:: ; address name
     ld a, l
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, h
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     xor a, a
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     ld hl, hTemp3
     ld a, [hl-]
@@ -2061,17 +2061,17 @@ Data_001_5364:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from DebugShowMonsterRecord (E-0047)
 ; 7 call sites from 1 routine (e.g. DebugShowMonsterRecord)
 ; reads: hTemp2, hTemp1, hTemp0
-; writes: wC8C0, wC8C1, wC8C2
+; writes: wDigits
 DebugShowMonsterRecord_Sub01::
 Func_001_536C:: ; address name
     push bc
     push hl
     ld a, e
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, d
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     xor a, a
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     pop hl
     pop bc
@@ -2254,9 +2254,9 @@ Jump_001_5433:: ; address name
 
 ; update for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD780, wJoypadPressedRepeat, wC5F8, wD7BD, wD783, wD784, wC5F9, wC5FA, ...
-; writes: wD780, wD7BD, wC5F8, wC5F9, wC5FA, wC5FB, wC5FC, wC5FD, ...
-; points at: wD787, wD7A2, wModeChangeRequest, wC5FB, wC5FE, wC986, wC991, wCA36, ...
+; reads: wD780, wJoypadPressedRepeat, wDebugCursor, wD7BD, wD783, wD784, wDebugValue0, wDebugValue1, ...
+; writes: wD780, wD7BD, wDebugCursor, wDebugValue0, wDebugValue1, wDebugValue2, wDebugValue3, wDebugState, ...
+; points at: wD787, wD7A2, wModeChangeRequest, wDebugValue2, wDebugSubState, wC986, wC991, wCA36, ...
 DebugResultsDisplay_Update::
 Jump_001_543A:: ; address name
     ld a, [wD780]
@@ -2290,7 +2290,7 @@ Jump_001_546F::
     ret
 
 Jump_001_547A::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $04
     jr nz, Jump_001_5486
     ld hl, wD787
@@ -2314,7 +2314,7 @@ Jump_001_5497::
     ret
 
 Jump_001_549D::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $04
     jr nz, Jump_001_54A9
     ld hl, wD787
@@ -2365,28 +2365,28 @@ Jump_001_54E0::
 
 ; only called from DebugResultsDisplay_Update (E-0047)
 ; 5 call sites from 1 routine (e.g. DebugResultsDisplay_Update)
-; reads: wC5FF, wC5F8, wD7BD, wC8C2
-; writes: wC5FF
+; reads: wDebugCounter, wDebugCursor, wD7BD, wDigits
+; writes: wDebugCounter
 ; points at: wD787, wD7A2
 DebugResultsDisplay_Update_Sub01::
 Func_001_54E8:: ; address name
-    ld a, [wC5FF]
+    ld a, [wDebugCounter]
     inc a
-    ld [wC5FF], a
+    ld [wDebugCounter], a
     cp a, $10
     jr c, DebugResultsDisplay_Update_Sub02
     cp a, $18
     jr c, Jump_001_552A
     xor a, a
-    ld [wC5FF], a
+    ld [wDebugCounter], a
 
 ; only called from DebugResultsDisplay_Update (E-0047)
 ; 3 call sites from 1 routine (e.g. DebugResultsDisplay_Update)
-; reads: wC5F8, wD7BD, wC8C2
+; reads: wDebugCursor, wD7BD, wDigits
 ; points at: wD787, wD7A2
 DebugResultsDisplay_Update_Sub02::
 Func_001_54FB:: ; address name
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $04
     jr nz, Jump_001_5507
     ld hl, wD787
@@ -2403,7 +2403,7 @@ Jump_001_550A::
     ld h, $00
     call HLToDecimalDigits
     call DebugResultsDisplay_Update_Sub02_Sub01
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $10
     ld c, a
     di
@@ -2424,10 +2424,10 @@ Jump_001_552A::
 
 ; only called from DebugResultsDisplay_Update_Sub02 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02)
-; reads: wC5F8, wD7BD
+; reads: wDebugCursor, wD7BD
 DebugResultsDisplay_Update_Sub02_Sub01::
 Func_001_5535:: ; address name
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $04
     jr nz, Jump_001_5541
     ld de, Data_001_555C
@@ -2501,14 +2501,14 @@ Jump_001_5590::
     call DebugResultsDisplay_Update_Sub02_Sub01_Sub02
     ld hl, vTiles2 + $500
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0901
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ld de, vTiles2 + $500
     call CopyGlyphTilesToVRAM
@@ -2518,20 +2518,20 @@ Jump_001_55D8::
     call DebugResultsDisplay_Update_Sub02_Sub01_Sub02
     ld hl, vTiles2 + $500
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0901
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ld hl, vTiles2 + $200
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     call FillTilesFromRequest
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
@@ -2548,22 +2548,22 @@ Jump_001_55D8::
 Jump_001_561F::
     ld hl, vTiles2 + $500
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0901
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
 
 Jump_001_5638::
     ld hl, vTiles2 + $200
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     call FillTilesFromRequest
     ld de, wD7F6
     ld hl, vTiles2 + $200
@@ -2689,9 +2689,9 @@ Jump_001_56F1::
     ret
 
 Jump_001_5720::
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld [wD7F2], a
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld [wD7F3], a
     ld a, [wD7F2]
     ld [wSpeciesIdLo], a
@@ -2701,9 +2701,9 @@ Jump_001_5720::
     ld c, $00
     ld de, wD787
     call CopyWD01ABytesFromIndexCToDE
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld [wD7F2], a
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     ld [wD7F3], a
     ld a, [wD7F2]
     ld [wSpeciesIdLo], a
@@ -2826,7 +2826,7 @@ Jump_001_57F2::
     ret
 
 Jump_001_5800::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $04
     jr z, Jump_001_5812
     cp a, $07
@@ -2847,26 +2847,26 @@ Jump_001_5812::
 
 Jump_001_5822::
     call DrawDebugFieldValueWC5F8
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     and a, a
     ret z
     dec a
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     call StepDebugCursorWC5FF
     ret
 
 Jump_001_5832::
     call DrawDebugFieldValueWC5F8
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $09
     ret z
     inc a
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     call StepDebugCursorWC5FF
     ret
 
 Jump_001_5843::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     and a, a
     jr z, Jump_001_5876
     cp a, $01
@@ -2878,11 +2878,11 @@ Jump_001_5843::
     jp Jump_001_5923
 
 Jump_001_5858::
-    ld hl, wC5FB
+    ld hl, wDebugValue2
     jr Jump_001_5860
 
 Jump_001_585D::
-    ld hl, wC5FE
+    ld hl, wDebugSubState
 
 Jump_001_5860::
     push hl
@@ -2902,11 +2902,11 @@ Jump_001_5868::
     ret
 
 Jump_001_5871::
-    ld hl, wC5FC
+    ld hl, wDebugValue3
     jr Jump_001_5879
 
 Jump_001_5876::
-    ld hl, wC5F9
+    ld hl, wDebugValue0
 
 Jump_001_5879::
     push hl
@@ -2929,29 +2929,29 @@ Jump_001_588A::
     ld a, b
     ld [hl], a
     call StepDebugCursorWC5FF
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $02
     jr z, Jump_001_58A2
-    ld de, wC5F9
+    ld de, wDebugValue0
     ld hl, vTiles2 + $300
     jr Jump_001_58A8
 
 Jump_001_58A2::
-    ld de, wC5FC
+    ld de, wDebugValue3
     ld hl, vTiles2 + $400
 
 Jump_001_58A8::
     push de
     push hl
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0901
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
     pop hl
     pop de
@@ -2959,7 +2959,7 @@ Jump_001_58A8::
     ret
 
 Jump_001_58C6::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     and a, a
     jr z, Jump_001_58F2
     cp a, $01
@@ -2971,11 +2971,11 @@ Jump_001_58C6::
     jp Jump_001_596F
 
 Jump_001_58DB::
-    ld hl, wC5FB
+    ld hl, wDebugValue2
     jr Jump_001_58E3
 
 Jump_001_58E0::
-    ld hl, wC5FE
+    ld hl, wDebugSubState
 
 Jump_001_58E3::
     push hl
@@ -2992,11 +2992,11 @@ Jump_001_58EB::
     ret
 
 Jump_001_58F2::
-    ld hl, wC5F9
+    ld hl, wDebugValue0
     jr Jump_001_58FA
 
 Jump_001_58F7::
-    ld hl, wC5FC
+    ld hl, wDebugValue3
 
 Jump_001_58FA::
     push hl
@@ -3019,10 +3019,10 @@ Jump_001_5909::
     ld a, b
     ld [hl], a
     call StepDebugCursorWC5FF
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $02
     jp z, Jump_001_58A2
-    ld de, wC5F9
+    ld de, wDebugValue0
     ld hl, vTiles2 + $300
     jp Jump_001_58A8
 
@@ -3140,14 +3140,14 @@ Jump_001_59B3::
 
 Jump_001_59BA::
     xor a, a
-    ld [wC5F8], a
-    ld [wC5F9], a
-    ld [wC5FA], a
-    ld [wC5FB], a
-    ld [wC5FC], a
-    ld [wC5FD], a
-    ld [wC5FE], a
-    ld [wC5FF], a
+    ld [wDebugCursor], a
+    ld [wDebugValue0], a
+    ld [wDebugValue1], a
+    ld [wDebugValue2], a
+    ld [wDebugValue3], a
+    ld [wDebugState], a
+    ld [wDebugSubState], a
+    ld [wDebugCounter], a
     xor a, a
     ld [wModeState], a
     ld hl, wModeChangeRequest
@@ -3161,8 +3161,8 @@ Jump_001_59DC::
     ld a, [wD784]
     cp a, $0A
     ret c
-    ld hl, wC5FB
-    ld de, wC5FE
+    ld hl, wDebugValue2
+    ld de, wDebugSubState
     ld a, [hl]
     ld b, a
     ld a, [de]
@@ -3182,32 +3182,32 @@ Jump_001_59FB::
     or a, c
     jr nz, Jump_001_59FB
     ld hl, wC991
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld [hl+], a
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld [hl+], a
     ld hl, wCA36
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld [hl+], a
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     ld [hl+], a
     ld hl, wC994
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     ld [hl], a
     ld hl, wCA39
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     ld [hl], a
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld [wD7F6], a
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld [wD7F7], a
     farcall FamilyForSpeciesIdWD7F6
     ld a, [wD7F5]
     ld hl, wC993
     ld [hl], a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld [wD7F6], a
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     ld [wD7F7], a
     farcall FamilyForSpeciesIdWD7F6
     ld a, [wD7F5]
@@ -3262,26 +3262,26 @@ Jump_001_5A99::
 
 ; debug: wC5FF += 1; below $10 continues at Func_001_5AC0, below $18 at Jump_001_5B45, then wraps to 0 (E-0126)
 ; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, DebugToggleWD7F1Marker)
-; reads: wC5FF, wC5F8
-; writes: wC5FF
+; reads: wDebugCounter, wDebugCursor
+; writes: wDebugCounter
 StepDebugCursorWC5FF::
 Func_001_5AAC:: ; address name
-    ld a, [wC5FF]
+    ld a, [wDebugCounter]
     inc a
-    ld [wC5FF], a
+    ld [wDebugCounter], a
     cp a, $10
     jr c, DrawDebugFieldValueWC5F8
     cp a, $18
     jp c, Jump_001_5B45
     xor a, a
-    ld [wC5FF], a
+    ld [wDebugCounter], a
 
 ; debug: draws the value of field wC5F8 (Data_001_5B70) at Data_001_5B84[wC5F8] as hex, a tile or BCD (E-0128)
 ; 3 call sites from 1 routine (e.g. DebugToggleWD7F1Marker)
-; reads: wC5F8
+; reads: wDebugCursor
 DrawDebugFieldValueWC5F8::
 Func_001_5AC0:: ; address name
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     sla a
     ld de, Data_001_5B70
     add a, e
@@ -3300,12 +3300,12 @@ Jump_001_5ACD::
     inc hl
     ld a, [hl]
     ld b, a
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, $04
     jr nc, Jump_001_5B14
     bit 0, a
     jr nz, Jump_001_5AF8
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     sla a
     ld hl, Data_001_5B84
     add_a_to_hl
@@ -3318,7 +3318,7 @@ Jump_001_5ACD::
     ret
 
 Jump_001_5AF8::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     sla a
     ld hl, Data_001_5B84
     add_a_to_hl
@@ -3336,7 +3336,7 @@ Jump_001_5AF8::
     ret
 
 Jump_001_5B14::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     sla a
     ld hl, Data_001_5B84
     add_a_to_hl
@@ -3351,18 +3351,18 @@ Jump_001_5B14::
 
 ; C = the last two decimal digits of C packed as BCD (E-0125)
 ; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueWC5F8)
-; reads: wC8C1, wC8C2
+; reads: wDigits
 PackTwoDigitsOfCAsBCD::
 Func_001_5B2D:: ; address name
     push de
     ld l, c
     ld h, $00
     call HLToDecimalDigits
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     and a, $0F
     swap a
     ld c, a
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     and a, $0F
     or a, c
     ld c, a
@@ -3370,7 +3370,7 @@ Func_001_5B2D:: ; address name
     ret
 
 Jump_001_5B45::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     sla a
     ld hl, Data_001_5B84
     add_a_to_hl
@@ -3489,18 +3489,18 @@ Jump_001_5BED::
 
 ; update for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC5FD, wC5FE, wC5F9, wC5FB, wC5FC, wCD0D, wCD0E, ...
-; writes: wC833, hMapScreenX, hMapScreenY, hMapId, wCC44, wScriptRunning, wGameMode, wModeState, ...
+; reads: wJoypadPressed, wDebugState, wDebugSubState, wDebugValue0, wDebugValue2, wDebugValue3, wCD0D, wCD0E, ...
+; writes: wCurrentKeyIndex, hMapScreenX, hMapScreenY, hMapId, wCC44, wScriptRunning, wGameMode, wModeState, ...
 ; points at: wModeChangeRequest
 DebugAutomap_Update::
 Jump_001_5BFA:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
     jp z, Jump_001_5C14
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     cp a, $FF
     jr z, Jump_001_5C10
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     bit 7, a
     jr nz, Jump_001_5C18
 
@@ -3513,19 +3513,19 @@ Jump_001_5C14::
     jr z, Jump_001_5C8D
 
 Jump_001_5C18::
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     cp a, $FF
     ret z
-    ld a, [wC5F9]
-    ld [wC833], a
-    ld a, [wC5FB]
+    ld a, [wDebugValue0]
+    ld [wCurrentKeyIndex], a
+    ld a, [wDebugValue2]
     ldh [hMapScreenX], a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ldh [hMapScreenY], a
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     bit 7, a
     jr z, Jump_001_5C5B
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     and a, $1F
     ld hl, Data_001_5DAD
     add_a_to_hl
@@ -3544,7 +3544,7 @@ Jump_001_5C18::
     ret
 
 Jump_001_5C5B::
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     and a, $7F
     ld [wCC42], a
     farcall LoadWCD07RecordFromSRAMSlotWCC42
@@ -3579,27 +3579,27 @@ Jump_001_5CA0::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_001_5CB6
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     dec a
     cp a, $FF
     jr nz, Jump_001_5CB1
     ld a, $03
 
 Jump_001_5CB1::
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     jr Jump_001_5CC6
 
 Jump_001_5CB6::
     bit 7, a
     jr z, Jump_001_5CC6
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     inc a
     cp a, $04
     jr nz, Jump_001_5CC3
     xor a, a
 
 Jump_001_5CC3::
-    ld [wC5F8], a
+    ld [wDebugCursor], a
 
 Jump_001_5CC6::
     ld c, $00
@@ -3617,10 +3617,10 @@ Jump_001_5CD3::
 Jump_001_5CD9::
     bit 0, c
     jr z, Jump_001_5D3C
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     or a, a
     jr nz, Jump_001_5D00
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     add a, c
     cp a, $20
     jr nz, Jump_001_5CEE
@@ -3634,7 +3634,7 @@ Jump_001_5CEE::
 
 Jump_001_5CF4::
     or a, $80
-    ld [wC5F9], a
+    ld [wDebugValue0], a
     and a, $7F
     call LoadKeyEntryFieldsToWC5FD
     jr Jump_001_5D3C
@@ -3642,10 +3642,10 @@ Jump_001_5CF4::
 Jump_001_5D00::
     dec a
     jr nz, Jump_001_5D22
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     bit 7, a
     jr nz, Jump_001_5D22
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     add a, c
     cp a, $64
     jr nz, Jump_001_5D15
@@ -3659,34 +3659,34 @@ Jump_001_5D15::
 
 Jump_001_5D1B::
     or a, $80
-    ld [wC5FA], a
+    ld [wDebugValue1], a
     jr Jump_001_5D3C
 
 Jump_001_5D22::
     dec a
     jr nz, Jump_001_5D30
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     add a, c
     and a, $0F
-    ld [wC5FB], a
+    ld [wDebugValue2], a
     jr Jump_001_5D3C
 
 Jump_001_5D30::
     dec a
     jr nz, Jump_001_5D3C
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     add a, c
     and a, $0F
-    ld [wC5FC], a
+    ld [wDebugValue3], a
 
 Jump_001_5D3C::
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     bit 7, a
     jr z, Jump_001_5D46
     call DebugAutomap_Update_Sub03
 
 Jump_001_5D46::
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     bit 7, a
     jr z, Jump_001_5D55
     and a, $7F
@@ -3694,34 +3694,34 @@ Jump_001_5D46::
     call WriteHexByteTilesAtDE
 
 Jump_001_5D55::
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     bit 7, a
     jr nz, Jump_001_5D63
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     bit 7, a
     jr z, Jump_001_5D76
 
 Jump_001_5D63::
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     and a, $7F
-    ld [wC5F9], a
-    ld a, [wC5FA]
+    ld [wDebugValue0], a
+    ld a, [wDebugValue1]
     and a, $7F
-    ld [wC5FA], a
+    ld [wDebugValue1], a
     call DebugAutomap_Update_Sub02
 
 Jump_001_5D76::
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     ld de, vBGMap0 + $14A
     call WriteHexByteTilesAtDE
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld de, vBGMap0 + $16A
     call WriteHexByteTilesAtDE
     ld hl, vBGMap0 + $109
     ld b, $00
 
 Jump_001_5D8D::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, b
     jr z, Jump_001_5D9A
     ld a, $80
@@ -3746,16 +3746,16 @@ Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugAutomap_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update)
-; reads: wC5FA, wC5F9, wC5FD, hTemp0, hTemp1, hTemp2, hTemp3, wCD0D, ...
-; writes: hTemp0, wC833, wCC42, wCD05, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
+; reads: wDebugValue1, wDebugValue0, wDebugState, hTemp0, hTemp1, hTemp2, hTemp3, wCD0D, ...
+; writes: hTemp0, wCurrentKeyIndex, wCC42, wCD05, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
 ; points at: wModeChangeRequest
 DebugAutomap_Update_Sub01::
 Func_001_5DBA:: ; address name
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ldh [hTemp0], a
     farcall RollKeyContentsForLevelHFFC6
-    ld a, [wC5F9]
-    ld [wC833], a
+    ld a, [wDebugValue0]
+    ld [wCurrentKeyIndex], a
     ld l, a
     ld h, $00
     add hl, hl
@@ -3766,7 +3766,7 @@ Func_001_5DBA:: ; address name
     ld a, h
     adc a, $C7
     ld h, a
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     cp a, $FF
     jr nz, Jump_001_5DEF
     push hl
@@ -3835,7 +3835,7 @@ Jump_001_5DF3::
 
 ; A = key slot: wC5FD = byte 0 and wC5FE = byte 3 of its wKeyList entry, wC5FA = byte 3 | $80 (E-0120)
 ; 2 call sites from 2 routines (e.g. DebugAutomap_Update, DebugAutomap_Init)
-; writes: wC5FD, wC5FE, wC5FA
+; writes: wDebugState, wDebugSubState, wDebugValue1
 LoadKeyEntryFieldsToWC5FD::
 Func_001_5E6C:: ; address name
     ld l, a
@@ -3849,29 +3849,29 @@ Func_001_5E6C:: ; address name
     adc a, $C7
     ld h, a
     ld a, [hl]
-    ld [wC5FD], a
+    ld [wDebugState], a
     inc hl
     inc hl
     inc hl
     ld a, [hl]
-    ld [wC5FE], a
+    ld [wDebugSubState], a
     or a, $80
-    ld [wC5FA], a
+    ld [wDebugValue1], a
     ret
 
 ; only called from DebugAutomap_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update)
-; reads: wC5FD, wC5FE, wC5FA
-; writes: wC5FA
+; reads: wDebugState, wDebugSubState, wDebugValue1
+; writes: wDebugValue1
 DebugAutomap_Update_Sub02::
 Func_001_5E8A:: ; address name
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     cp a, $FF
     jr z, Jump_001_5EA4
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     bit 7, a
     jr nz, Jump_001_5EA4
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     and a, $7F
     ld de, vBGMap0 + $12A
     call WriteHexByteTilesAtDE
@@ -3879,14 +3879,14 @@ Func_001_5E8A:: ; address name
 
 Jump_001_5EA4::
     xor a, a
-    ld [wC5FA], a
+    ld [wDebugValue1], a
     ld de, vBGMap0 + $12A
     call WriteHexByteTilesAtDE
     ret
 
 ; only called from DebugAutomap_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update)
-; reads: wC5FE, wC5FD, wC5F9
+; reads: wDebugSubState, wDebugState, wDebugValue0
 ; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, wC8D5, wC8D6, ...
 ; points at: wC8CF
 DebugAutomap_Update_Sub03::
@@ -3911,10 +3911,10 @@ Func_001_5EAF:: ; address name
     ld [wC8DE], a
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     bit 7, a
     jr z, Jump_001_5F1C
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     cp a, $FF
     jr nz, Jump_001_5F1C
     ld a, $29
@@ -3934,10 +3934,10 @@ Func_001_5EAF:: ; address name
     ret
 
 Jump_001_5F1C::
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     bit 7, a
     jr z, Jump_001_5F44
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     dec a
     swap a
     and a, $F0
@@ -3956,7 +3956,7 @@ Jump_001_5F36::
     ret
 
 Jump_001_5F44::
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     and a, $1F
     ld de, wC8CF
     call WriteKeyNameToDE
@@ -3969,15 +3969,15 @@ Data_001_5F56:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; update for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wC5F9, wC5FA, wC5FB, wC5FC, wC5FD, wC5F8, wFrameCounterLo, ...
-; writes: hTemp0, hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY, wC8C7, wGameMode, ...
-; points at: wModeChangeRequest, wC5FE
+; reads: wJoypadPressedRepeat, wDebugValue0, wDebugValue1, wDebugValue2, wDebugValue3, wDebugState, wDebugCursor, wFrameCounterLo, ...
+; writes: hTemp0, hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY, wFieldReturnPhase, wGameMode, ...
+; points at: wModeChangeRequest, wDebugSubState
 DebugMapEditor_Update::
 Jump_001_5FFE:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jr z, Jump_001_604B
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ldh [hTemp0], a
     call DebugMapEditor_Update_Sub01
     or a, a
@@ -3994,18 +3994,18 @@ Jump_001_6017::
     ret
 
 Jump_001_601F::
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ldh [hMapId], a
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ldh [hMapScreenX], a
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     ldh [hPlayerX], a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ldh [hMapScreenY], a
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     ldh [hPlayerY], a
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     ld a, $00
     ld [wGameMode], a
     ld a, $00
@@ -4018,27 +4018,27 @@ Jump_001_604B::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_001_6061
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     dec a
     cp a, $FF
     jr nz, Jump_001_605C
     ld a, $04
 
 Jump_001_605C::
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     jr Jump_001_6071
 
 Jump_001_6061::
     bit 7, a
     jr z, Jump_001_6071
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     inc a
     cp a, $05
     jr nz, Jump_001_606E
     xor a, a
 
 Jump_001_606E::
-    ld [wC5F8], a
+    ld [wDebugCursor], a
 
 Jump_001_6071::
     ld c, $00
@@ -4059,37 +4059,37 @@ Jump_001_6085::
 Jump_001_608B::
     bit 0, c
     jr z, Jump_001_60E7
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     or a, a
     jr nz, Jump_001_60A8
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     add a, c
     cp a, $FF
     jr nz, Jump_001_609F
     ld a, $E1
 
 Jump_001_609F::
-    ld [wC5F9], a
-    ld hl, wC5FE
+    ld [wDebugValue0], a
+    ld hl, wDebugSubState
     inc [hl]
     jr Jump_001_60E7
 
 Jump_001_60A8::
     dec a
     jr nz, Jump_001_60B6
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     add a, c
     and a, $0F
-    ld [wC5FA], a
+    ld [wDebugValue1], a
     jr Jump_001_60E7
 
 Jump_001_60B6::
     dec a
     jr nz, Jump_001_60C4
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     add a, c
     and a, $0F
-    ld [wC5FC], a
+    ld [wDebugValue3], a
     jr Jump_001_60E7
 
 Jump_001_60C4::
@@ -4099,9 +4099,9 @@ Jump_001_60C4::
     sla c
     sla c
     sla c
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     add a, c
-    ld [wC5FB], a
+    ld [wDebugValue2], a
     jr Jump_001_60E7
 
 Jump_001_60D8::
@@ -4109,46 +4109,46 @@ Jump_001_60D8::
     sla c
     sla c
     sla c
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     add a, c
-    ld [wC5FD], a
+    ld [wDebugState], a
 
 Jump_001_60E7::
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     or a, a
     jr z, Jump_001_6119
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     add a, $0A
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
     ld hl, vTiles2 + $200
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1001
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     xor a, a
-    ld [wC5FE], a
+    ld [wDebugSubState], a
 
 Jump_001_6119::
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld de, vBGMap0 + $10A
     call WriteHexByteTilesAtDE
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld de, vBGMap0 + $12A
     call WriteHexByteTilesAtDE
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     swap a
     and a, $0F
     ld de, vBGMap0 + $14A
     call WriteHexByteTilesAtDE
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     swap a
     and a, $0F
     ld de, vBGMap0 + $16A
@@ -4157,7 +4157,7 @@ Jump_001_6119::
     ld b, $00
 
 Jump_001_614A::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     cp a, b
     jr z, Jump_001_6157
     ld a, $80
@@ -4179,15 +4179,15 @@ Jump_001_615C::
 
 ; update for debug-mode state 0: the screen shows the debug menu (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wC5F8, wJoypadPressed, wC600, wC601, wC602, wC603
-; writes: wC5F8, wGameMode, wCC44, wC893, wModeState, wC8C5
+; reads: wJoypadPressedRepeat, wDebugCursor, wJoypadPressed, wDebugMenuFlag0, wDebugMenuFlag1, wDebugMenuFlag2, wDebugMenuFlag3
+; writes: wDebugCursor, wGameMode, wCC44, wKeyWorldRefresh, wModeState, wFieldTransitionStep
 ; points at: wModeChangeRequest, wGameMode
 DebugMainMenu_Update::
 Jump_001_616A:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $90
     jr z, Jump_001_617D
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     inc a
     cp a, $0C
     jr nz, Jump_001_618E
@@ -4198,17 +4198,17 @@ Jump_001_617D::
     ld a, [wJoypadPressedRepeat]
     and a, $60
     jr z, Jump_001_6191
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     dec a
     cp a, $FF
     jr nz, Jump_001_618E
     ld a, $0B
 
 Jump_001_618E::
-    ld [wC5F8], a
+    ld [wDebugCursor], a
 
 Jump_001_6191::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     swap a
     add a, $A0
     ld hl, vBGMap0 + $122
@@ -4222,7 +4222,7 @@ Jump_001_619D::
     ld a, [wJoypadPressed]
     and a, $01
     ret z
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     or a, a
     jr nz, Jump_001_61C3
     ld a, $01
@@ -4232,7 +4232,7 @@ Jump_001_619D::
     xor a, a
     ld [wCC44], a
     ld a, $80
-    ld [wC893], a
+    ld [wKeyWorldRefresh], a
     ret
 
 Jump_001_61C3::
@@ -4265,7 +4265,7 @@ Jump_001_61E7::
     ld a, $04
     ld [wModeState], a
     ld a, $80
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -4349,13 +4349,13 @@ Jump_001_626A::
 
 Jump_001_627C::
     ld hl, wGameMode
-    ld a, [wC600]
+    ld a, [wDebugMenuFlag0]
     ld [hl+], a
-    ld a, [wC601]
+    ld a, [wDebugMenuFlag1]
     ld [hl+], a
-    ld a, [wC602]
+    ld a, [wDebugMenuFlag2]
     ld [hl+], a
-    ld a, [wC603]
+    ld a, [wDebugMenuFlag3]
     ld [hl], a
     ld hl, wModeChangeRequest
     inc [hl]
@@ -4363,18 +4363,18 @@ Jump_001_627C::
 
 ; update for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC5FD, wC5F8, wJoypadPressedRepeat, wC5FA, wC5F9, wIsCGB, wC5FC, ...
-; writes: wC5FD, wC5F8, wC5F9, wC5FA, hTemp0, wC526, wC5FC, wC527, ...
-; points at: wC5F9, wOBJPaletteBuffer, wC5FE, wModeChangeRequest
+; reads: wJoypadPressed, wDebugState, wDebugCursor, wJoypadPressedRepeat, wDebugValue1, wDebugValue0, wIsCGB, wDebugValue3, ...
+; writes: wDebugState, wDebugCursor, wDebugValue0, wDebugValue1, hTemp0, wBGPaletteUploadRequest, wDebugValue3, wOBJPaletteUploadRequest, ...
+; points at: wDebugValue0, wOBJPaletteBuffer, wDebugSubState, wModeChangeRequest
 DebugMonsterPictureViewer_Update::
 Jump_001_6294:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_001_62A6
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     inc a
     and a, $03
-    ld [wC5FD], a
+    ld [wDebugState], a
     jr Jump_001_62B9
 
 Jump_001_62A6::
@@ -4392,16 +4392,16 @@ Jump_001_62B9::
     ld a, [wJoypadPressed]
     and a, $C0
     jr z, Jump_001_62CA
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     inc a
     and a, $01
-    ld [wC5F8], a
+    ld [wDebugCursor], a
     ret
 
 Jump_001_62CA::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     sla a
-    ld de, wC5F9
+    ld de, wDebugValue0
     add a, e
     ld e, a
     jr nc, Jump_001_62D7
@@ -4426,7 +4426,7 @@ Jump_001_62D7::
     ld a, h
     cp a, $FF
     jr nz, Jump_001_634E
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     or a, a
     jr nz, Jump_001_6307
     ld hl, $017E
@@ -4434,9 +4434,9 @@ Jump_001_62D7::
     or a, $80
     ld h, a
     ld a, l
-    ld [wC5F9], a
+    ld [wDebugValue0], a
     ld a, h
-    ld [wC5FA], a
+    ld [wDebugValue1], a
     jr Jump_001_634E
 
 Jump_001_6307::
@@ -4445,15 +4445,15 @@ Jump_001_6307::
     or a, $80
     ld h, a
     ld a, l
-    ld [wC5FB], a
+    ld [wDebugValue2], a
     ld a, h
-    ld [wC5FC], a
+    ld [wDebugValue3], a
     jr Jump_001_634E
 
 Jump_001_6318::
     bit 4, a
     jr z, Jump_001_634E
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     or a, a
     jr nz, Jump_001_6334
     ld a, $7E
@@ -4493,14 +4493,14 @@ Jump_001_6346::
     ld [de], a
 
 Jump_001_634E::
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     bit 7, a
     jr z, Jump_001_6387
     and a, $7F
-    ld [wC5FA], a
-    ld a, [wC5F9]
+    ld [wDebugValue1], a
+    ld a, [wDebugValue0]
     ld e, a
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld d, a
     ld hl, vTiles2 + $200
     ld c, $01
@@ -4511,27 +4511,27 @@ Jump_001_634E::
     ld hl, vBGMap0 + $124
     ld a, $01
     ldh [hTemp0], a
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld e, a
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld d, a
     call LoadMonsterPictureAttributes
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
 
 Jump_001_6387::
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     bit 7, a
     jr z, Jump_001_63F5
     and a, $7F
-    ld [wC5FC], a
-    ld a, [wC5FB]
+    ld [wDebugValue3], a
+    ld a, [wDebugValue2]
     ld e, a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld d, a
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     ld l, a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld h, a
     add hl, hl
     add hl, de
@@ -4555,9 +4555,9 @@ Jump_001_6387::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_001_63F5
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     ld l, a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld h, a
     add hl, hl
     add hl, hl
@@ -4584,15 +4584,15 @@ Jump_001_63E5::
     dec c
     jr nz, Jump_001_63E5
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
 
 Jump_001_63F5::
-    ld hl, wC5FE
+    ld hl, wDebugSubState
     inc [hl]
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     or a, a
     jr nz, Jump_001_6415
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     bit 3, a
     jr z, Jump_001_6415
     xor a, a
@@ -4603,18 +4603,18 @@ Jump_001_63F5::
     jr Jump_001_6423
 
 Jump_001_6415::
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld c, a
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld b, a
     ld de, vBGMap0 + $AB
     call WriteThreeHexDigitsAtDE
 
 Jump_001_6423::
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     or a, a
     jr z, Jump_001_643F
-    ld a, [wC5FE]
+    ld a, [wDebugSubState]
     bit 3, a
     jr z, Jump_001_643F
     xor a, a
@@ -4625,9 +4625,9 @@ Jump_001_6423::
     jr Jump_001_644D
 
 Jump_001_643F::
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     ld c, a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     ld b, a
     ld de, vBGMap0 + $CB
     call WriteThreeHexDigitsAtDE
@@ -4635,7 +4635,7 @@ Jump_001_643F::
 Jump_001_644D::
     ld a, $00
     ldh [hSpriteAttrXor], a
-    ld a, [wC5FD]
+    ld a, [wDebugState]
     cp a, $03
     jr nz, Jump_001_645E
     ld a, $20
@@ -4680,13 +4680,13 @@ Jump_001_645E::
     ldh [hSpriteOriginY], a
     ld a, b
     ldh [hSpriteOriginYHi], a
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     and a, $7F
     ldh [hSpriteSetIndex], a
-    ld a, [wC5FC]
+    ld a, [wDebugValue3]
     or a, a
     jr nz, Jump_001_64B9
-    ld a, [wC5FB]
+    ld a, [wDebugValue2]
     bit 7, a
     jr nz, Jump_001_64B2
     farcall DrawMetaSpriteSet_Bank25
@@ -4702,19 +4702,19 @@ Jump_001_64B9::
 
 ; update for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46B, wC0A0, wC0A1, wJoypadPressedRepeat, wFrameCounterLo
-; writes: wC46B, wModeState
-; points at: wC0A0, wModeChangeRequest
+; reads: wJoypadPressed, wMenuState, wTemp0, wTemp1, wJoypadPressedRepeat, wFrameCounterLo
+; writes: wMenuState, wModeState
+; points at: wTemp0, wModeChangeRequest
 DebugSoundTest_Update::
 Jump_001_64C0:: ; address name
     ld a, [wJoypadPressed]
     and a, $08
     jr z, Jump_001_64F0
-    ld a, [wC46B]
+    ld a, [wMenuState]
     or a, a
     jr nz, Jump_001_64E0
     call InitSoundHardware
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld hl, Data_001_65DE
     add_a_to_hl
     ld a, [hl]
@@ -4722,7 +4722,7 @@ Jump_001_64C0:: ; address name
     ret
 
 Jump_001_64E0::
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     ld hl, Data_001_65FE
     add_a_to_hl
     ld a, [hl]
@@ -4733,7 +4733,7 @@ Jump_001_64F0::
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, Jump_001_6512
-    ld a, [wC46B]
+    ld a, [wMenuState]
     or a, a
     jr nz, Jump_001_6502
     call DebugSoundTest_Update_Sub01
@@ -4743,17 +4743,17 @@ Jump_001_6502::
     call DebugSoundTest_Update_Sub02
 
 Jump_001_6505::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     xor a, $01
-    ld [wC46B], a
+    ld [wMenuState], a
     ld a, $69
     call QueueSoundEffect
 
 Jump_001_6512::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld c, a
     ld b, $00
-    ld hl, wC0A0
+    ld hl, wTemp0
     add hl, bc
     ld a, [wJoypadPressedRepeat]
     and a, $10
@@ -4778,7 +4778,7 @@ Jump_001_6530::
 Jump_001_6539::
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld b, $20
     cp a, $00
     call z, DebugSoundTest_Update_Sub03
@@ -4797,7 +4797,7 @@ Jump_001_654F::
     ret
 
 Jump_001_655F::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     or a, a
     jr nz, Jump_001_6583
     ld a, [wFrameCounterLo]
@@ -4811,10 +4811,10 @@ Jump_001_655F::
 
 ; only called from DebugSoundTest_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
-; reads: wC0A0
+; reads: wTemp0
 DebugSoundTest_Update_Sub01::
 Func_001_6578:: ; address name
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld de, vBGMap0 + $E9
     call WriteHexByteTilesAtDE
     jr Jump_001_659F
@@ -4831,10 +4831,10 @@ Jump_001_6583::
 
 ; only called from DebugSoundTest_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
-; reads: wC0A1
+; reads: wTemp1
 DebugSoundTest_Update_Sub02::
 Func_001_6596:: ; address name
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     ld de, vBGMap0 + $109
     call WriteHexByteTilesAtDE
 
@@ -4843,13 +4843,13 @@ Jump_001_659F::
 
 ; only called from DebugSoundTest_Update (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugSoundTest_Update)
-; reads: wC46B, wC0A0, wC0A1
-; points at: wC0A0
+; reads: wMenuState, wTemp0, wTemp1
+; points at: wTemp0
 DebugSoundTest_Update_Sub03::
 Func_001_65A0:: ; address name
     push af
-    ld a, [wC46B]
-    ld hl, wC0A0
+    ld a, [wMenuState]
+    ld hl, wTemp0
     add_a_to_hl
     ld a, [hl]
     cp a, b
@@ -4864,18 +4864,18 @@ Jump_001_65B2::
     ld [hl], b
 
 Jump_001_65B9::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     or a, a
     jr nz, Jump_001_65CA
     ld hl, Data_001_65DE
     ld de, vBGMap0 + $EC
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     jr Jump_001_65D3
 
 Jump_001_65CA::
     ld hl, Data_001_65FE
     ld de, vBGMap0 + $10C
-    ld a, [wC0A1]
+    ld a, [wTemp1]
 
 Jump_001_65D3::
     add_a_to_hl
@@ -4893,8 +4893,8 @@ Data_001_65FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; update for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wD09D, wD0A5, wC46B, wJoypadPressedRepeat, wJoypadHeld, wFrameCounterLo
-; writes: wCFDC, wCFC5, wC46B, wC5F8, wC5F9, wC5FA, wGameMode, wModeState, ...
+; reads: wJoypadPressed, wD09D, wD0A5, wMenuState, wJoypadPressedRepeat, wJoypadHeld, wFrameCounterLo
+; writes: wCFDC, wCFC5, wMenuState, wDebugCursor, wDebugValue0, wDebugValue1, wGameMode, wModeState, ...
 ; points at: wCFDD, wD09F, wModeChangeRequest, wD066, wD0A9, wD09D
 DebugBattleSetup_Update::
 Jump_001_6652:: ; address name
@@ -4916,11 +4916,11 @@ Jump_001_6652:: ; address name
 
 Jump_001_667A::
     xor a, a
-    ld [wC46B], a
+    ld [wMenuState], a
     xor a, a
-    ld [wC5F8], a
-    ld [wC5F9], a
-    ld [wC5FA], a
+    ld [wDebugCursor], a
+    ld [wDebugValue0], a
+    ld [wDebugValue1], a
     ld a, [wD0A5]
     or a, a
     jr nz, Jump_001_6693
@@ -4991,7 +4991,7 @@ Jump_001_66E8::
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_001_6701
-    ld a, [wC46B]
+    ld a, [wMenuState]
     add a, a
     ld hl, wD09D
     add_a_to_hl
@@ -5012,11 +5012,11 @@ Jump_001_6701::
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
     xor a, a
-    ld [wC5F8], a
-    ld [wC5F9], a
-    ld [wC5FA], a
+    ld [wDebugCursor], a
+    ld [wDebugValue0], a
+    ld [wDebugValue1], a
     xor a, a
-    ld [wC46B], a
+    ld [wMenuState], a
     xor a, a
     ld [wModeState], a
     ld hl, wModeChangeRequest
@@ -5028,34 +5028,34 @@ Jump_001_6734::
     bit 6, a
     jr z, Jump_001_674E
     call DrawDebugValueHexForWC46B
-    ld a, [wC46B]
+    ld a, [wMenuState]
     dec a
     cp a, $FF
     jr nz, Jump_001_6748
     ld a, $0B
 
 Jump_001_6748::
-    ld [wC46B], a
+    ld [wMenuState], a
     jp Jump_001_6801
 
 Jump_001_674E::
     bit 7, a
     jr z, Jump_001_6764
     call DrawDebugValueHexForWC46B
-    ld a, [wC46B]
+    ld a, [wMenuState]
     inc a
     cp a, $0C
     jr nz, Jump_001_675E
     xor a, a
 
 Jump_001_675E::
-    ld [wC46B], a
+    ld [wMenuState], a
     jp Jump_001_6801
 
 Jump_001_6764::
     and a, $30
     jr z, Jump_001_67C9
-    ld a, [wC46B]
+    ld a, [wMenuState]
     add a, a
     ld hl, wD09D
     add_a_to_hl
@@ -5128,7 +5128,7 @@ Jump_001_67C4::
     jr Jump_001_6801
 
 Jump_001_67C9::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld hl, Data_001_68D3
     add a, a
     add_a_to_hl
@@ -5144,7 +5144,7 @@ Jump_001_67C9::
 
 Jump_001_67EB::
     push hl
-    ld a, [wC46B]
+    ld a, [wMenuState]
     add a, a
     ld hl, wD09D
     add_a_to_hl
@@ -5165,18 +5165,18 @@ Jump_001_6808::
 
 ; writes the word wD09D[wC46B] as three hex digits at the address Data_001_68D3[wC46B] (E-0122)
 ; 4 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
-; reads: wC46B
+; reads: wMenuState
 ; points at: wD09D
 DrawDebugValueHexForWC46B::
 Func_001_6809:: ; address name
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld hl, Data_001_68D3
     add a, a
     add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
     ld e, a
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld hl, wD09D
     add a, a
     add_a_to_hl
@@ -5188,11 +5188,11 @@ Func_001_6809:: ; address name
 
 ; stores Data_001_68EB[wC46B] - DE at HL (floored at 0; DE = $FFFF stores the limit) (E-0125)
 ; 2 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
-; reads: wC46B
+; reads: wMenuState
 SubtractDEFromDebugLimit::
 Func_001_682B:: ; address name
     push hl
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld hl, Data_001_68EB
     add a, a
     add_a_to_hl
@@ -5229,11 +5229,11 @@ Jump_001_6852::
 
 ; clamps the word DE to 0 .. Data_001_68EB[wC46B] (negative becomes the limit) and stores it at HL (E-0124)
 ; 2 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
-; reads: wC46B
+; reads: wMenuState
 ClampDebugValueToTableLimit::
 Func_001_6857:: ; address name
     push hl
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld hl, Data_001_68EB
     add a, a
     add_a_to_hl
@@ -5266,18 +5266,18 @@ Jump_001_687B::
 
 ; only called from DebugBattleSetup_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update)
-; reads: wC6FD, wC7C7, hTemp0
-; points at: wC6FE
+; reads: wPartyCount, wFarmLevel, hTemp0
+; points at: wPartyList
 DebugBattleSetup_Update_Sub01::
 Func_001_6880:: ; address name
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     jr z, Jump_001_68B4
     cp a, $04
     jr nc, Jump_001_68B4
     ld b, a
-    ld hl, wC6FE
-    ld a, [wC7C7]
+    ld hl, wPartyList
+    ld a, [wFarmLevel]
     cp a, $03
     jr nc, Jump_001_68B4
     ld c, $0A
@@ -5334,12 +5334,12 @@ Data_001_68EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; debug battle setup: shows the string for field wC46B (wD09D entries, ShowString_Bank88) at the window from Data_001_6A6C, with special cases for fields 4-6 (E-0131)
 ; 9 call sites from 2 routines (e.g. DebugBattleSetupLoadWords, DebugBattleSetup_Init)
-; reads: wC46B, wC52D, wC52E, wC52F, wC530, wD0A5
-; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
+; reads: wMenuState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD0A5
+; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wD09D
 DebugBattleSetupShowFieldString::
 Func_001_6903:: ; address name
-    ld a, [wC46B]
+    ld a, [wMenuState]
     or a, a
     ret z
     cp a, $04
@@ -5357,41 +5357,41 @@ Func_001_6903:: ; address name
     ld a, h
     ld [wStringCategory], a
     ld hl, Data_001_6A6C
-    ld a, [wC46B]
+    ld a, [wMenuState]
     dec a
     add a, a
     add_a_to_hl
     deref_hl
     ld de, $0901
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld c, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld b, a
     push bc
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     push bc
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank88
     pop de
     pop hl
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ret
 
 Jump_001_6976::
@@ -5401,35 +5401,35 @@ Jump_001_6976::
     ld [wStringCategory], a
     ld hl, vTiles2 + $3C0
     ld de, $0901
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld c, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld b, a
     push bc
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     push bc
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank2F
     pop de
     pop hl
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ret
 
 Jump_001_69C2::
@@ -5441,43 +5441,43 @@ Jump_001_69C2::
     ld de, $0901
 
 Jump_001_69D1::
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld c, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld b, a
     push bc
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     push bc
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     pop de
     pop hl
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ret
 
 Jump_001_6A0C::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld hl, wD09D
     add a, a
     add_a_to_hl
-    ld a, [wC46B]
+    ld a, [wMenuState]
     cp a, $07
     jr z, Jump_001_6A46
     cp a, $09
@@ -5489,7 +5489,7 @@ Jump_001_6A0C::
     ld a, [hl]
     add a, $02
     ld [wStringCategory], a
-    ld a, [wC46B]
+    ld a, [wMenuState]
     sub a, $06
     ld hl, Data_001_6A72
     add_a_to_hl
@@ -5503,7 +5503,7 @@ Jump_001_6A46::
     call DivideBByA
     ld c, a
     push bc
-    ld a, [wC46B]
+    ld a, [wMenuState]
     sub a, $07
     ld hl, Data_001_6A78
     add_a_to_hl
@@ -5612,25 +5612,25 @@ Func_001_6ABE:: ; address name
     ld a, $40
     ld [wC8FB], a
     ld a, $24
-    ld [wC60C], a
+    ld [wPlayerName], a
     ld a, $35
-    ld [wC60D], a
+    ld [wPlayerName + $1], a
     ld a, $8D
-    ld [wC60E], a
+    ld [wPlayerName + $2], a
     ld a, $2F
-    ld [wC60F], a
+    ld [wPlayerName + $3], a
     ld a, $2B
-    ld [wC610], a
+    ld [wPlayerName + $4], a
     ld a, $55
-    ld [wC611], a
+    ld [wPlayerName + $5], a
     ld a, $F0
-    ld [wC612], a
+    ld [wPlayerName + $6], a
     ld a, $F0
-    ld [wC613], a
+    ld [wPlayerName + $7], a
     ld a, $F0
-    ld [wC614], a
+    ld [wPlayerName + $8], a
     ld a, $F0
-    ld [wC615], a
+    ld [wPlayerName + $9], a
     ld a, $9F
     ld [wGoldLo], a
     ld a, $86
@@ -5638,65 +5638,65 @@ Func_001_6ABE:: ; address name
     ld a, $01
     ld [wGoldHi], a
     ld a, $03
-    ld [wC6FD], a
+    ld [wPartyCount], a
     ld a, $00
-    ld [wC6FE], a
+    ld [wPartyList], a
     ld a, $01
-    ld [wC6FF], a
+    ld [wPartyList + $1], a
     ld a, $02
-    ld [wC700], a
+    ld [wPartyList + $2], a
     ld a, $01
     ld [wInventory], a
     ld a, $02
-    ld [wC61E], a
+    ld [wInventory + $1], a
     ld a, $03
-    ld [wC61F], a
+    ld [wInventory + $2], a
     ld a, $04
-    ld [wC620], a
+    ld [wInventory + $3], a
     ld a, $05
-    ld [wC621], a
+    ld [wInventory + $4], a
     ld a, $06
-    ld [wC622], a
+    ld [wInventory + $5], a
     ld a, $01
-    ld [wC623], a
+    ld [wInventory + $6], a
     ld a, $1F
-    ld [wC624], a
+    ld [wInventory + $7], a
     ld a, $09
-    ld [wC625], a
+    ld [wInventory + $8], a
     ld a, $33
-    ld [wC626], a
+    ld [wInventory + $9], a
     ld a, $0B
-    ld [wC627], a
+    ld [wEventItemSlot], a
     ld a, $20
-    ld [wC628], a
+    ld [wInventory + $B], a
     ld a, $28
-    ld [wC629], a
+    ld [wInventory + $C], a
     ld a, $0E
-    ld [wC62A], a
+    ld [wInventory + $D], a
     ld a, $0F
-    ld [wC62B], a
+    ld [wInventory + $E], a
     ld a, $10
-    ld [wC62C], a
+    ld [wInventory + $F], a
     ld a, $11
-    ld [wC62D], a
+    ld [wInventory + $10], a
     ld a, $12
-    ld [wC62E], a
+    ld [wInventory + $11], a
     ld a, $1C
-    ld [wC62F], a
+    ld [wInventory + $12], a
     ld a, $1C
-    ld [wC630], a
+    ld [wInventory + $13], a
     ld a, $1C
-    ld [wC631], a
+    ld [wInventory + $14], a
     ld a, $0C
-    ld [wC632], a
+    ld [wSaveByte32], a
     ld a, $0C
-    ld [wC633], a
+    ld [wInventory + $16], a
     ld a, $0C
-    ld [wC634], a
+    ld [wInventory + $17], a
     ld a, $50
-    ld [wC838], a
+    ld [wArenaWinsLo], a
     xor a, a
-    ld [wC839], a
+    ld [wArenaWinsHi], a
     call DebugBattleSetup_Update_Shared01_Sub02
     call DebugBattleSetup_Update_Shared01_Sub01
     ret
@@ -5749,13 +5749,13 @@ Jump_001_6C14::
 
 ; draws random ids until one is non-zero and not $7E-$82, then creates that record (Func_001_6E82) (E-0124)
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01_Sub01)
-; reads: wC5E7, wC5E8
+; reads: wRandomLo, wRandomHi
 PickRandomMonsterSkipping7ETo82::
 Func_001_6C1F:: ; address name
     call NextTableByte
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld e, a
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     or a, e
     ld e, a
     or a, a
@@ -5776,9 +5776,9 @@ Func_001_6C1F:: ; address name
 
 ; only called from CreateMonsterRecordOfKindHFFC7_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01)
-; reads: hTemp3, wD868, wRecordBuffer, wCFED, wD869, wC5E8, wRecordBufferData, wCFEF, ...
+; reads: hTemp3, wD868, wRecordBuffer, wCFED, wD869, wRandomHi, wRecordBufferData, wCFEF, ...
 ; writes: wMonsterId, wCFE7, wC9DC, wSpeciesIdLo, wSpeciesIdHi, wD09D, wD09E, wD09F, ...
-; points at: wC60C, wD01A
+; points at: wPlayerName, wD01A
 CreateMonsterRecordOfKindHFFC7_Sub01_Sub01::
 Func_001_6C48:: ; address name
     ldh a, [hTemp3]
@@ -5807,7 +5807,7 @@ Func_001_6C48:: ; address name
     ld a, [wD869]
     cp a, $FF
     jr nz, Jump_001_6C82
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     and a, $01
     jr Jump_001_6C8D
 
@@ -5820,7 +5820,7 @@ Jump_001_6C82::
 
 Jump_001_6C8D::
     ld [hl+], a
-    ld de, wC60C
+    ld de, wPlayerName
     ld b, $0B
     call CopyBBytesDEToHL_Bank01
     ld a, $FF
@@ -5908,9 +5908,9 @@ Jump_001_6CE1::
     push hl
     call NextTableByte
     pop hl
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld [hl+], a
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     and a, $01
     ld [hl+], a
     jr Jump_001_6D33
@@ -5987,7 +5987,7 @@ Jump_001_6D33::
     cp a, $FF
     jr nz, Jump_001_6DD9
     call NextTableByte
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld b, a
     ld a, $0E
     call DivideBByA

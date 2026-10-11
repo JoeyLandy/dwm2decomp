@@ -43,25 +43,25 @@ DEF sBF99 EQU $BF99
 
 ; WRAM ($C000-$DFFF)
 DEF wShadowOAM EQU $C000 ; shadow OAM: 40 four-byte sprite entries that the OAM DMA routine copies from $C000 (OamDmaRoutineTemplate starts DMA with source $C0); ClearShadowOAM clears its $A0 bytes (E-0132)
-DEF wC0A0 EQU $C0A0
-DEF wC0A1 EQU $C0A1
+DEF wTemp0 EQU $C0A0 ; general scratch byte used by many menus and helpers (for example Quotient24ByHFFCCDE, menu cursor work, list counts) (E-0133)
+DEF wTemp1 EQU $C0A1 ; general scratch byte next to wTemp0 (often the high byte of a word kept in wTemp0) (E-0133)
 DEF wMenuRowCount EQU $C0A2 ; number of cursor rows UpdateMenuCursor wraps over (E-0060) (reading (E-0060))
 DEF wMenuPageCount EQU $C0A3 ; number of pages UpdateMenuCursor steps through with Left/Right; 0 or 1 disables paging (E-0060) (reading (E-0060))
-DEF wC0A4 EQU $C0A4
+DEF wPauseMenuScreen EQU $C0A4 ; screen index of the pause menu (RunWC0A4Screen dispatches on it; PauseMenu_Main cases set it) (E-0133)
 DEF wMenuLastPageRows EQU $C0A5 ; rows on the last page; UpdateMenuCursor clamps the row to this minus 1 there (E-0060) (reading (E-0060))
 DEF wMenuPage EQU $C0A6 ; current page index set by UpdateMenuCursor (E-0060) (reading (E-0060))
-DEF wC0A7 EQU $C0A7
-DEF wC0A8 EQU $C0A8
-DEF wC0C0 EQU $C0C0
-DEF wC0C1 EQU $C0C1
-DEF wC0C2 EQU $C0C2
-DEF wC0C3 EQU $C0C3
-DEF wC0C4 EQU $C0C4
-DEF wC0D8 EQU $C0D8
-DEF wC0D9 EQU $C0D9
-DEF wC0DA EQU $C0DA
-DEF wC0DB EQU $C0DB
-DEF wC0DC EQU $C0DC
+DEF wMenuItemCount EQU $C0A7 ; number of entries of the current item or skill list (SetupInventoryMenuPages, BuildInventoryScreenBase) (E-0133)
+DEF wPauseMenuStep EQU $C0A8 ; step counter of the pause menu sub-screens (PauseMenu_State3 cases) (E-0133)
+DEF wBGWriteDestLo EQU $C0C0 ; queued BG map write for VBlank: destination low byte; FlushQueuedBGMapWrite writes when the destination is non-zero and then clears it (E-0133)
+DEF wBGWriteDestHi EQU $C0C1 ; queued BG map write: destination high byte (E-0133)
+DEF wBGWriteVertical EQU $C0C2 ; queued BG map write: 0 writes along a row (wrapping in 32), non-zero down a column (E-0133)
+DEF wBGWriteCount EQU $C0C3 ; queued BG map write: number of tiles (E-0133)
+DEF wBGWriteData EQU $C0C4 ; tiles of the queued BG map write (up to 20) (E-0133)
+DEF wAttrWriteDestLo EQU $C0D8 ; queued CGB attribute write (VRAM bank 1) for VBlank: destination low byte (E-0133)
+DEF wAttrWriteDestHi EQU $C0D9 ; queued attribute write: destination high byte (E-0133)
+DEF wAttrWriteVertical EQU $C0DA ; queued attribute write: 0 along a row, non-zero down a column (E-0133)
+DEF wAttrWriteCount EQU $C0DB ; queued attribute write: number of bytes (E-0133)
+DEF wAttrWriteData EQU $C0DC ; bytes of the queued attribute write (up to 20) (E-0133)
 DEF wBGPaletteCopy EQU $C0F0 ; a 64-byte copy of the eight CGB background palettes; ScriptStepFlashScreenNegative copies it back to wBGPaletteBuffer (or its inverse) (E-0132)
 DEF wTextBuf0 EQU $C130 ; 16-byte text slot filled before a message: the actor or player name (CopyActorNameToWC130, WritePlayerNameWithFlag0SuffixToWC130); $F0-terminated (E-0132)
 DEF wTextBuf1 EQU $C140 ; 16-byte text slot: the skill or second name of a message (CopyActionSkillNameToWC140, CopyMappedSlotNameToWC140) (E-0132)
@@ -71,342 +71,256 @@ DEF wTextNumber EQU $C17E ; digit string of a number shown in a message (DeductG
 DEF wMapWidthScreens EQU $C190 ; map width in screens, from the map record (2 for the ship deck, 4 for map 56) (reading + execution (E-0037))
 DEF wMapHeightScreens EQU $C191 ; map height in screens, from the map record (reading + execution (E-0037))
 DEF wMaxBlockingTile EQU $C192 ; highest tile id that blocks the player (TileBlockedAtPixel compares tile ids with it); from the map record (55 for the ship deck) (reading + execution (E-0037))
-DEF wC193 EQU $C193
-DEF wC194 EQU $C194
-DEF wC195 EQU $C195
-DEF wC196 EQU $C196
-DEF wC197 EQU $C197
+DEF wMapHeaderByte7 EQU $C193 ; map header byte after wMaxBlockingTile (LoadMapHeader); CheckInteractionInFront reads it (E-0133)
+DEF wMapMoveType EQU $C194 ; map header byte selecting the player movement routine (RunPlayerMoveTypeWC194) (E-0133)
+DEF wMapSpriteKind EQU $C195 ; map header byte: high nibble picks the script sprite set ($23 + n - 1), low nibble 1 selects the follower-style sprite; set for special maps by SetWC195AndWC197ForSpecialMaps (E-0133)
+DEF wMapTallTileMin EQU $C196 ; map header byte: tiles at or above it count as tall tiles for field events and blocking (RollFieldEventOnTallTiles, TileBlockedAtPixel) (E-0133)
+DEF wMapHeaderByte11 EQU $C197 ; map header byte ($2C or $30 on the special maps; read by FieldModeStateDispatch_Shared01_Sub02) (E-0133)
 DEF wScreenTileBuffer EQU $C198 ; screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (Func_002_59CD) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030) (reading)
-DEF wC3DC EQU $C3DC
-DEF wC3E5 EQU $C3E5
-DEF wC3E7 EQU $C3E7
-DEF wC3F0 EQU $C3F0
-DEF wC3F1 EQU $C3F1
-DEF wC3F7 EQU $C3F7
-DEF wC408 EQU $C408
-DEF wC40B EQU $C40B
-DEF wC40C EQU $C40C
-DEF wC40D EQU $C40D
-DEF wC40E EQU $C40E
-DEF wC410 EQU $C410
-DEF wC411 EQU $C411
-DEF wC412 EQU $C412
-DEF wC413 EQU $C413
-DEF wC418 EQU $C418
-DEF wC419 EQU $C419
-DEF wC41F EQU $C41F
-DEF wC420 EQU $C420
-DEF wC425 EQU $C425
-DEF wC426 EQU $C426
-DEF wC429 EQU $C429
-DEF wC42E EQU $C42E
-DEF wC42F EQU $C42F
-DEF wC430 EQU $C430
-DEF wC434 EQU $C434
-DEF wC435 EQU $C435
-DEF wC440 EQU $C440
-DEF wC441 EQU $C441
-DEF wC443 EQU $C443
-DEF wC445 EQU $C445
-DEF wC451 EQU $C451
-DEF wC456 EQU $C456
-DEF wC45D EQU $C45D
-DEF wC45E EQU $C45E
-DEF wC462 EQU $C462
-DEF wC463 EQU $C463
-DEF wC465 EQU $C465
-DEF wC468 EQU $C468
-DEF wC469 EQU $C469
-DEF wC46A EQU $C46A
-DEF wC46B EQU $C46B
-DEF wC46C EQU $C46C
-DEF wC46D EQU $C46D
-DEF wC46E EQU $C46E
-DEF wC46F EQU $C46F
-DEF wC470 EQU $C470
-DEF wC471 EQU $C471
-DEF wC472 EQU $C472
-DEF wC474 EQU $C474
-DEF wC476 EQU $C476
+DEF wWindowTileBuffer EQU $C300 ; 20 x 18 tile buffer for windows and menus in field mode: OpenFieldMenuOnA saves screen rows here, CopyRectTo20ByteRows draws boxes into it (the two-choice box at row 13, column 14 = +$112), and it ends right before wFieldActionRequest ($C468); its CGB attributes are at $D168 in WRAM bank 2 (E-0133)
+DEF wFieldActionRequest EQU $C468 ; bit 7 set requests a field action; RunWC468ActionIfBit7 runs the routine for bits 0-1 (UpdatePlayerMovement sets $80 for a screen scroll) (E-0133)
+DEF wFieldActionStep EQU $C469 ; step of the requested field action (E-0133)
+DEF wScreenScrollDir EQU $C46A ; direction of the requested screen scroll (1 left, 2 right, ...) set by UpdatePlayerMovement (E-0133)
+DEF wMenuState EQU $C46B ; state of the current menu or debug screen (RunWC46BMenuState dispatches on it); cleared by LoadMapHeader (E-0133)
+DEF wMenuSubState EQU $C46C ; sub-state or flag of the current menu; cleared by LoadMapHeader (E-0133)
+DEF wMenuSelectedMember EQU $C46D ; selected party member or list entry of the menus (record wC46D & $0F or & 3) (E-0133)
+DEF wMenuCursor EQU $C46E ; main cursor position of the menus (cursor marks drawn for wC46E & 7) (E-0133)
+DEF wSubMenuCursor EQU $C46F ; cursor of a sub-menu or second list (E-0133)
+DEF wSubMenuCursor2 EQU $C470 ; cursor of a further sub-menu (record list rows, item targets) (E-0133)
+DEF wMenuOption EQU $C471 ; selected option of a menu (also the link menu choice sent by SendLinkByteForWC471) (E-0133)
+DEF wMenuOption2 EQU $C472 ; second option byte cleared with the menu cursors (E-0133)
+DEF wSGBJoypad1 EQU $C474 ; joypad byte read from the Super Game Boy for player 1 (PollJoypad) (E-0133)
+DEF wSGBJoypad2 EQU $C476 ; joypad byte read from the Super Game Boy for player 2 (copied to wLinkJoypadHeld) (E-0133)
 DEF wSGBPacketIndex EQU $C47C ; packet set number for SendSGBPacketSet; $FF selects wSGBPacketBuffer (reading)
 DEF wSGBPacketBuffer EQU $C47F ; packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF (reading)
-DEF wC480 EQU $C480
-DEF wC48A EQU $C48A
 DEF wBGPaletteBuffer EQU $C49F ; 8 CGB background palettes (4 RGB555 colours each, 64 bytes) that the fade routines read and write to rBGPD (WriteAllFadedPalettesFloor/Add) (E-0076) (reading (E-0076))
-DEF wC4A7 EQU $C4A7
-DEF wC4AF EQU $C4AF
-DEF wC4B7 EQU $C4B7
-DEF wC4BF EQU $C4BF
 DEF wOBJPaletteBuffer EQU $C4DF ; 8 CGB object palettes (64 bytes) that the fade routines write to rOBPD (E-0076) (reading (E-0076))
-DEF wC4E7 EQU $C4E7
-DEF wC4EF EQU $C4EF
-DEF wC4F7 EQU $C4F7
-DEF wC4FF EQU $C4FF
-DEF wC507 EQU $C507
-DEF wC50F EQU $C50F
-DEF wC51F EQU $C51F
-DEF wC520 EQU $C520
-DEF wC523 EQU $C523
+DEF wSGBPaletteSet EQU $C51F ; Super Game Boy palette set number; PAL_SET packets use 4 * it + 0-3 (E-0133)
+DEF wSGBAttrFile EQU $C520 ; Super Game Boy attribute file number sent with PAL_SET (E-0133)
+DEF wSGBBorderSet EQU $C523 ; border set last sent to the Super Game Boy (LoadSGBBorderForSetA skips a repeat) (E-0133)
 DEF wSGBActive EQU $C524 ; set to 1 at boot, cleared on CGB and when DetectSGB finds no Super Game Boy; SendSGBPacketSet, DelayBCWhenSGB and SpinDelay return at once when it is 0 (reading)
 DEF wIsCGB EQU $C525 ; 1 when the boot code found A = $11 (CGB), else 0; set at $0150 (E-0020)
-DEF wC526 EQU $C526
-DEF wC527 EQU $C527
+DEF wBGPaletteUploadRequest EQU $C526 ; non-zero asks the VBlank handler to upload wBGPaletteBuffer (UploadBGPalettes); cleared after (E-0133)
+DEF wOBJPaletteUploadRequest EQU $C527 ; non-zero asks the VBlank handler to upload wOBJPaletteBuffer; cleared after (E-0133)
 DEF wStringCategory EQU $C528 ; category index LookupString uses in the table of tables (reading)
 DEF wStringIndex EQU $C529 ; index within the category table that LookupString uses (reading)
 DEF wStringBank EQU $C52A ; ROM bank number LookupString stores; the string printer maps it into the ROM bank window (reading)
-DEF wC52B EQU $C52B
-DEF wC52C EQU $C52C
-DEF wC52D EQU $C52D
-DEF wC52E EQU $C52E
-DEF wC52F EQU $C52F
-DEF wC530 EQU $C530
-DEF wC531 EQU $C531
-DEF wC532 EQU $C532
-DEF wC533 EQU $C533
-DEF wC534 EQU $C534
-DEF wC535 EQU $C535
-DEF wC536 EQU $C536
-DEF wC537 EQU $C537
-DEF wC538 EQU $C538
-DEF wC539 EQU $C539
-DEF wC53B EQU $C53B
-DEF wC53C EQU $C53C
+DEF wTextFlags EQU $C52B ; string display flags: non-zero makes the VBlank handler step the text (StepStringDisplayUntilDone); bit 1 and bit 2 mark stages (E-0133)
+DEF wTextControl EQU $C52C ; string display control bits (bit 7 continues the display, bit 0 set at a prompt) (E-0133)
+DEF wTextWindowTileLo EQU $C52D ; text window: low byte of the VRAM tile address the glyphs are drawn at (default vTiles1 = $8800) (E-0133)
+DEF wTextWindowTileHi EQU $C52E ; text window: high byte of that address (E-0133)
+DEF wTextWindowRows EQU $C52F ; text window: number of rows (default 2) (E-0133)
+DEF wTextWindowWidth EQU $C530 ; text window: width in tiles (default $12 = 18) (E-0133)
+DEF wTextGlyphDestLo EQU $C531 ; current glyph destination, low byte (copied from wTextWindowTile at BeginStringDisplay) (E-0133)
+DEF wTextGlyphDestHi EQU $C532 ; current glyph destination, high byte (E-0133)
+DEF wTextPosLo EQU $C533 ; pointer to the next string byte, low byte (IncrementWC533Word) (E-0133)
+DEF wTextPosHi EQU $C534 ; pointer to the next string byte, high byte (E-0133)
+DEF wTextLineStartLo EQU $C535 ; glyph destination at the start of the line, low byte (E-0133)
+DEF wTextLineStartHi EQU $C536 ; glyph destination at the start of the line, high byte (E-0133)
+DEF wTextStartPosLo EQU $C537 ; string position at BeginStringDisplay, low byte (used when a prompt is acknowledged) (E-0133)
+DEF wTextStartPosHi EQU $C538 ; string position at BeginStringDisplay, high byte (E-0133)
+DEF wTextControlArg EQU $C539 ; argument byte read after a text control code (E-0133)
+DEF wTextRepeatCount EQU $C53B ; countdown of a repeated text control (E-0133)
+DEF wTextDelayCounter EQU $C53C ; countdown before the next glyph is drawn (E-0133)
 DEF wStringDestLo EQU $C53D ; low byte of the destination CopyStringToBuffer writes the string to (E-0059) (reading (E-0059))
 DEF wStringDestHi EQU $C53E ; high byte of the destination CopyStringToBuffer writes the string to (E-0059) (reading (E-0059))
 DEF wC53F EQU $C53F
-DEF wC54F EQU $C54F
-DEF wC550 EQU $C550
-DEF wC552 EQU $C552
-DEF wC554 EQU $C554
-DEF wC555 EQU $C555
-DEF wC556 EQU $C556
-DEF wC55D EQU $C55D
+DEF wTextLineCount EQU $C54F ; lines drawn since the window was cleared (E-0133)
+DEF wTextLastChar EQU $C550 ; last string byte handled ($E6 and $FF are special) (E-0133)
+DEF wTextYesNoResult EQU $C552 ; result of a text yes/no prompt (0 = first choice); AcknowledgeTextPrompt clears it, StartChoiceMessageByWC552 branches on it (E-0133)
+DEF wTextCursorLo EQU $C554 ; BG map address where the next text row starts, low byte (AddHLToTextCursorWC554) (E-0133)
+DEF wTextCursorHi EQU $C555 ; BG map address where the next text row starts, high byte (E-0133)
+DEF wTextBeepSound EQU $C556 ; sound effect played for text output ($6B) (E-0133)
+DEF wJoypadReadFlag EQU $C55D ; cleared before a direct joypad read (PollJoypad); tested by UpdateJoypadPresses (E-0133)
 DEF wJoypadHeld EQU $C55E ; buttons held at the latest PollJoypad (layout of ReadJoypadDirect) (reading)
 DEF wJoypadHeldPrev EQU $C55F ; wJoypadHeld from the previous poll (reading)
-DEF wC560 EQU $C560
-DEF wC561 EQU $C561
+DEF wLinkJoypadHeld EQU $C560 ; the other player's buttons: received over the link or from the second Super Game Boy pad (E-0133)
+DEF wLinkJoypadHeldPrev EQU $C561 ; the previous value of wLinkJoypadHeld (E-0133)
 DEF wJoypadPressed EQU $C562 ; buttons newly held since the previous poll (reading)
 DEF wJoypadPressedRepeat EQU $C563 ; newly held buttons plus auto-repeat (UpdateJoypadPresses) (reading)
 DEF wJoypadRepeatTimer EQU $C564 ; auto-repeat countdown: $14 after a new press, then 6 (reading)
-DEF wC565 EQU $C565
-DEF wC566 EQU $C566
-DEF wC567 EQU $C567
-DEF wC568 EQU $C568
-DEF wC56A EQU $C56A
-DEF wC56B EQU $C56B
+DEF wFieldFrameFlag EQU $C565 ; cleared with the joypad state before the field mode states run (E-0133)
+DEF wLinkJoypadPressed EQU $C566 ; newly pressed buttons of the other player (UpdateJoypadPresses) (E-0133)
+DEF wLinkJoypadPressedRepeat EQU $C567 ; newly pressed buttons plus auto-repeat for the other player (E-0133)
+DEF wLinkJoypadRepeatTimer EQU $C568 ; auto-repeat countdown for the other player ($14, then shorter) (E-0133)
+DEF wLinkSavedJoypadHeld EQU $C56A ; wJoypadHeld saved by LinkExchangeJoypadPerFrame (E-0133)
+DEF wLinkSavedJoypadHeldPrev EQU $C56B ; wJoypadHeldPrev saved by LinkExchangeJoypadPerFrame (E-0133)
 DEF wFadeState EQU $C56C ; palette fade state set by StartPaletteFade; GameFrameUpdate and the VBlank handler skip normal work while it is non-zero (bit 7 clear) (reading)
-DEF wC56D EQU $C56D
-DEF wC56E EQU $C56E
-DEF wC56F EQU $C56F
+DEF wFadeMode EQU $C56D ; fade mode bits: bit 7 = toward black, bits 0-2 select which palettes fade (7 = all) (E-0133)
+DEF wFadeMask EQU $C56E ; fade selection bits ($1F = all); bit 1 also picks the step size (E-0133)
+DEF wFadeDMGPalettes EQU $C56F ; three DMG palette bytes the fade lightens (LightenSelectedDMGPalettes) (E-0133)
 DEF wC570 EQU $C570
 DEF wC571 EQU $C571
 DEF wFadeLevel EQU $C572 ; the 5-bit level the fade routines apply to each colour component (E-0076) (reading (E-0076))
 DEF wFadeDelay EQU $C573 ; frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_Sub01 and reloaded by StepCGBFade (E-0077) (reading (E-0077))
 DEF wFadeDelayCounter EQU $C574 ; counts down to the next CGB fade step (StepCGBFade) (E-0077) (reading (E-0077))
-DEF wC576 EQU $C576
-DEF wC577 EQU $C577
-DEF wC578 EQU $C578
-DEF wC579 EQU $C579
-DEF wC57A EQU $C57A
-DEF wC57B EQU $C57B
-DEF wC57C EQU $C57C
-DEF wC57D EQU $C57D
-DEF wC57E EQU $C57E
-DEF wC57F EQU $C57F
-DEF wC580 EQU $C580
-DEF wC581 EQU $C581
-DEF wC582 EQU $C582
-DEF wC583 EQU $C583
-DEF wC586 EQU $C586
-DEF wC588 EQU $C588
-DEF wC589 EQU $C589
-DEF wC58A EQU $C58A
-DEF wC58B EQU $C58B
-DEF wC58C EQU $C58C
-DEF wC58D EQU $C58D
-DEF wC58E EQU $C58E
-DEF wC58F EQU $C58F
-DEF wC590 EQU $C590
-DEF wC591 EQU $C591
-DEF wC592 EQU $C592
-DEF wC593 EQU $C593
-DEF wC594 EQU $C594
-DEF wC595 EQU $C595
-DEF wC596 EQU $C596
-DEF wC597 EQU $C597
-DEF wC598 EQU $C598
-DEF wC599 EQU $C599
-DEF wC59A EQU $C59A
-DEF wC59B EQU $C59B
-DEF wC5A3 EQU $C5A3
-DEF wC5A7 EQU $C5A7
-DEF wC5A8 EQU $C5A8
-DEF wC5A9 EQU $C5A9
-DEF wC5AA EQU $C5AA
-DEF wC5AB EQU $C5AB
-DEF wC5B7 EQU $C5B7
-DEF wC5B8 EQU $C5B8
-DEF wC5B9 EQU $C5B9
-DEF wC5BA EQU $C5BA
-DEF wC5BB EQU $C5BB
-DEF wC5BC EQU $C5BC
-DEF wC5BD EQU $C5BD
-DEF wC5C6 EQU $C5C6
-DEF wC5C7 EQU $C5C7
-DEF wC5C8 EQU $C5C8
-DEF wC5C9 EQU $C5C9
-DEF wC5CB EQU $C5CB
-DEF wC5D7 EQU $C5D7
+DEF wFadeStepSize EQU $C576 ; CGB fade step chosen for this frame (0 or 8) (E-0133)
+DEF wSGBPaletteNum0Lo EQU $C577 ; Super Game Boy palette number 0 for PAL_SET (4 * wSGBPaletteSet), low byte (E-0133)
+DEF wSGBPaletteNum0Hi EQU $C578 ; palette number 0, high byte (E-0133)
+DEF wSGBPaletteNum1Lo EQU $C579 ; palette number 1, low byte (E-0133)
+DEF wSGBPaletteNum1Hi EQU $C57A ; palette number 1, high byte (E-0133)
+DEF wSGBPaletteNum2Lo EQU $C57B ; palette number 2, low byte (E-0133)
+DEF wSGBPaletteNum2Hi EQU $C57C ; palette number 2, high byte (E-0133)
+DEF wSGBPaletteNum3Lo EQU $C57D ; palette number 3, low byte (E-0133)
+DEF wSGBPaletteNum3Hi EQU $C57E ; palette number 3, high byte (E-0133)
+DEF wLinkRole EQU $C57F ; link flags: bit 1 = this Game Boy drives the clock (the side that sends first) (E-0133)
+DEF wLinkStatus EQU $C580 ; link status bits (bit 7 set, bit 6 cleared when the connection is set up) (E-0133)
+DEF wLinkSession EQU $C581 ; kind of link session (5 = a battle session in LinkExchangeJoypadPerFrame) (E-0133)
+DEF wLinkExchangeState EQU $C582 ; state of the per-frame link exchange (RunWC582State dispatches on it) (E-0133)
+DEF wLinkStateByte EQU $C583 ; cleared at the start of the link mode loop (E-0133)
+DEF wSerialReceived EQU $C586 ; byte last received over the serial port (E-0133)
+DEF wLinkTimerLo EQU $C588 ; link wait counter, low byte (E-0133)
+DEF wLinkTimerHi EQU $C589 ; link wait counter, high byte (E-0133)
+DEF wLinkMode EQU $C58A ; 0 outside link play, 1 in a link battle, 2 in another link mode; many routines branch on it (E-0133)
+DEF wLinkScreenStep EQU $C58B ; step of the link screens (GameMode5) (E-0133)
+DEF wLinkReady EQU $C58C ; set when both sides are ready; LinkReceive routines branch on it (E-0133)
+DEF wLinkFrameCounterLo EQU $C58D ; link frame counter, low byte; an overflow resets the game (E-0133)
+DEF wLinkFrameCounterHi EQU $C58E ; link frame counter, high byte (E-0133)
+DEF wLinkMessage EQU $C58F ; last link command byte received or sent (E-0133)
+DEF wLinkBufferPtrLo EQU $C590 ; link transfer buffer pointer, low byte (E-0133)
+DEF wLinkBufferPtrHi EQU $C591 ; link transfer buffer pointer, high byte (E-0133)
+DEF wLinkBufferCountLo EQU $C592 ; link transfer bytes left, low byte (E-0133)
+DEF wLinkBufferCountHi EQU $C593 ; link transfer bytes left, high byte (E-0133)
+DEF wLinkSendByte EQU $C594 ; byte queued to send over the link ($FF = none) (E-0133)
+DEF wLinkTimeoutLo EQU $C595 ; link timeout counter, low byte (E-0133)
+DEF wLinkTimeoutHi EQU $C596 ; link timeout counter, high byte (E-0133)
+DEF wLinkRecvBuffer EQU $C597 ; start of the link receive area (RunWD06AState_6C12 points the transfer buffer here) (E-0133)
+DEF wBattleSetupByte98 EQU $C598 ; set by the battle setup (RunBattlePhaseWhenTextIdle_A0) and the bank-$F0 screens (E-0133)
+DEF wBankF0Byte99 EQU $C599 ; byte set and read by the bank-$F0 screen routines (Func_0F0_4CA0 tables) (E-0133)
+DEF wBattleSetupFlagsLo EQU $C59A ; battle setup word read by RunBattleSetup (set by the bank-$33 screens), low byte (E-0133)
+DEF wBattleSetupFlagsHi EQU $C59B ; battle setup word, high byte (E-0133)
+DEF wBankF0ByteA3 EQU $C5A3 ; byte set by the bank-$F0 screens (E-0133)
+DEF wBankF0BlockA7 EQU $C5A7 ; work bytes of the bank-$F0 screens ($C5A7-$C5AB) (E-0133)
+DEF wBankF0ByteA8 EQU $C5A8 ; work byte of the bank-$F0 screens (read by Run67EEWithWD7F1ForWD7EC) (E-0133)
+DEF wBankF0ByteA9 EQU $C5A9 ; work byte of the bank-$F0 screens (read by Run67EEWithWD7F1ForWD7EC) (E-0133)
+DEF wBankF0ByteAA EQU $C5AA ; work byte of the bank-$F0 screens (E-0133)
+DEF wBankF0BlockAB EQU $C5AB ; work bytes of the bank-$F0 screens (E-0133)
+DEF wLinkPartnerName EQU $C5B7 ; the link partner's data block (name and record bytes) received during link setup (E-0133)
+DEF wLinkPartnerByte1 EQU $C5B8 ; byte of the link partner block (E-0133)
+DEF wLinkPartnerByte2 EQU $C5B9 ; byte of the link partner block (E-0133)
+DEF wRandomSeed2Lo EQU $C5BA ; second random/table stream position, low byte (NextTableByteSecondStream, AdvanceRandom); shared in link battles (E-0133)
+DEF wRandomSeed2Hi EQU $C5BB ; second random stream position, high byte (E-0133)
+DEF wBattleSetupByteBC EQU $C5BC ; set by RunBattleSetup_Case08 and read by the link screens (E-0133)
+DEF wBattleSetupByteBD EQU $C5BD ; set by RunBattleSetup_Case08 (E-0133)
+DEF wLinkTradeByte EQU $C5C6 ; link trade byte (RunWD06AState_6C12_Shared04) (E-0133)
+DEF wBankF0BlockC7 EQU $C5C7 ; work bytes of the bank-$F0 screens and game mode 8 (E-0133)
+DEF wBankF0ByteC8 EQU $C5C8 ; work byte of the bank-$F0 screens (E-0133)
+DEF wBankF0ByteC9 EQU $C5C9 ; work byte of the bank-$F0 screens (E-0133)
+DEF wBankF0BlockCB EQU $C5CB ; work block of the bank-$F0 screens (E-0133)
+DEF wVBlankLY EQU $C5D7 ; rLY value saved at the end of the VBlank handler (E-0133)
 DEF wGameMode EQU $C5DB ; index into the 9-entry tables RunGameModeInit and RunGameModeUpdate use; 5 at boot (reading)
 DEF wModeState EQU $C5DC ; per-mode sub-state; low nibble indexes the jump table in GameMode1_Update (E-0030) (reading)
-DEF wC5DD EQU $C5DD
-DEF wC5DE EQU $C5DE
+DEF wGameMode2State EQU $C5DD ; state of game mode 2 (RunWC5DDState); CheckInteractionInFront sets it (E-0133)
+DEF wGameMode2Arg EQU $C5DE ; argument for game mode 2 set before entering it (E-0133)
 DEF wModeChangeRequest EQU $C5DF ; non-zero makes the main loop leave its wait and run RunGameModeInit again (reading)
-DEF wC5E0 EQU $C5E0
-DEF wC5E1 EQU $C5E1
-DEF wC5E2 EQU $C5E2
-DEF wC5E3 EQU $C5E3
-DEF wC5E4 EQU $C5E4
-DEF wC5E5 EQU $C5E5
-DEF wC5E7 EQU $C5E7
-DEF wC5E8 EQU $C5E8
-DEF wC5E9 EQU $C5E9
-DEF wC5EA EQU $C5EA
-DEF wC5EB EQU $C5EB
-DEF wC5EC EQU $C5EC
-DEF wC5ED EQU $C5ED
-DEF wC5EE EQU $C5EE
+DEF wFieldInitStage EQU $C5E0 ; field set-up stage (GameMode1_Init / InitFieldScreen; 1 becomes 2 after the Super Game Boy palettes) (E-0133)
+DEF wSTATSplitEnable EQU $C5E1 ; enables the LCD STAT split effect (read by the STAT handler and ComputeSpriteScrollOffsets) (E-0133)
+DEF wSoundFadeLevel EQU $C5E2 ; sound volume fade level (StepFade_Sub02 shifts it and writes rNR50) (E-0133)
+DEF wSoundFadeTarget EQU $C5E3 ; sound fade target level (E-0133)
+DEF wSoundFadeTimer EQU $C5E4 ; sound fade step timer (E-0133)
+DEF wSoundFadeNR50 EQU $C5E5 ; saved rNR50 for the sound fade (E-0133)
+DEF wRandomLo EQU $C5E7 ; current random value, low byte (NextTableByte, AdvanceRandom, RandomInRange) (E-0133)
+DEF wRandomHi EQU $C5E8 ; current random value, high byte (E-0133)
+DEF wDMGPaletteBGP EQU $C5E9 ; DMG background palette byte copied to rBGP each VBlank (E-0133)
+DEF wDMGPaletteOBP0 EQU $C5EA ; DMG object palette 0 byte copied to rOBP0 (E-0133)
+DEF wDMGPaletteOBP1 EQU $C5EB ; DMG object palette 1 byte copied to rOBP1 (E-0133)
+DEF wLCDCShadow EQU $C5EC ; value WriteLCDCShadow writes to rLCDC each VBlank (E-0133)
+DEF wVBlankFlags EQU $C5ED ; bit 0 = VBlank handler running; bits 1, 2, 7 are link exchange flags (E-0133)
+DEF wBootFlagEE EQU $C5EE ; cleared at boot (E-0133)
 DEF wFrameCounterLo EQU $C5F0 ; low byte of the 16-bit frame counter the VBlank handler increments (reading)
 DEF wFrameCounterHi EQU $C5F1 ; high byte of the 16-bit frame counter (reading)
-DEF wC5F6 EQU $C5F6
-DEF wC5F7 EQU $C5F7
-DEF wC5F8 EQU $C5F8
-DEF wC5F9 EQU $C5F9
-DEF wC5FA EQU $C5FA
-DEF wC5FB EQU $C5FB
-DEF wC5FC EQU $C5FC
-DEF wC5FD EQU $C5FD
-DEF wC5FE EQU $C5FE
-DEF wC5FF EQU $C5FF
-DEF wC600 EQU $C600
-DEF wC601 EQU $C601
-DEF wC602 EQU $C602
-DEF wC603 EQU $C603
-DEF wC604 EQU $C604
-DEF wC605 EQU $C605
-DEF wC608 EQU $C608
+DEF wDebugByteF6 EQU $C5F6 ; cleared by GameMode0_Init (debug menu) (E-0133)
+DEF wDebugByteF7 EQU $C5F7 ; cleared by GameMode0_Init (debug menu) (E-0133)
+DEF wDebugCursor EQU $C5F8 ; debug screens: selected field or cursor (E-0133)
+DEF wDebugValue0 EQU $C5F9 ; debug screens: first edited value (E-0133)
+DEF wDebugValue1 EQU $C5FA ; debug screens: second edited value (E-0133)
+DEF wDebugValue2 EQU $C5FB ; debug screens: third edited value (E-0133)
+DEF wDebugValue3 EQU $C5FC ; debug screens: fourth edited value (E-0133)
+DEF wDebugState EQU $C5FD ; debug screens: state (RunWC5FDState_E0); also loaded with key entry fields (E-0133)
+DEF wDebugSubState EQU $C5FE ; debug screens: sub-state (RunWC5FEState_E0) (E-0133)
+DEF wDebugCounter EQU $C5FF ; debug screens: cursor blink and position counter (StepDebugCursorWC5FF) (E-0133)
+DEF wDebugMenuFlag0 EQU $C600 ; read by DebugMainMenu_Update (E-0133)
+DEF wDebugMenuFlag1 EQU $C601 ; read by DebugMainMenu_Update (E-0133)
+DEF wDebugMenuFlag2 EQU $C602 ; read by DebugMainMenu_Update (E-0133)
+DEF wDebugMenuFlag3 EQU $C603 ; read by DebugMainMenu_Update (E-0133)
+DEF wScreenShakeTimer EQU $C604 ; screen shake countdown (ApplyScreenShake) (E-0133)
+DEF wScreenShakeOffset EQU $C605 ; current screen shake offset (E-0133)
+DEF wCurrentMusic EQU $C608 ; music now playing; PlayMapMusic skips a request for the same id; $FF forces a restart (E-0133)
 DEF wMusicRequest EQU $C60A ; music id waiting for ProcessSoundQueue; $FF = none (reading)
 DEF wSoundEffectRequest EQU $C60B ; sound effect id waiting for ProcessSoundQueue; $FF = none (reading)
-DEF wC60C EQU $C60C
-DEF wC60D EQU $C60D
-DEF wC60E EQU $C60E
-DEF wC60F EQU $C60F
-DEF wC610 EQU $C610
-DEF wC611 EQU $C611
-DEF wC612 EQU $C612
-DEF wC613 EQU $C613
-DEF wC614 EQU $C614
-DEF wC615 EQU $C615
-DEF wC616 EQU $C616
+DEF wPlayerName EQU $C60C ; the player name (10 bytes): copied to wTextBuf0, wCADF, the name tiles; first part of the $291-byte save block that starts here (SaveGameToSRAMWithChecksum) (E-0133)
+DEF wSaveByte16 EQU $C616 ; save-data byte before the gold; set in link mode, read by ComputeBreedingChild (E-0133)
 DEF wGoldLo EQU $C617 ; low byte of the 24-bit gold amount: the new-game setup sets 100 (InitGoldAndClearInventory), AddGoldCapped caps it at 99,999 and DrawGoldPanel_Bank24 shows it in decimal (E-0074) (reading (E-0074))
 DEF wGoldMid EQU $C618 ; middle byte of the gold amount (E-0074) (reading (E-0074))
 DEF wGoldHi EQU $C619 ; high byte of the gold amount (E-0074) (reading (E-0074))
-DEF wC61A EQU $C61A
-DEF wC61B EQU $C61B
-DEF wC61C EQU $C61C
+DEF wBankedGoldLo EQU $C61A ; second 24-bit amount kept with the gold (shop/bank script command $E5), low byte (E-0133)
+DEF wBankedGoldMid EQU $C61B ; second amount, middle byte (E-0133)
+DEF wBankedGoldHi EQU $C61C ; second amount, high byte (E-0133)
 DEF wInventory EQU $C61D ; 24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game) (reading)
-DEF wC61E EQU $C61E
-DEF wC61F EQU $C61F
-DEF wC620 EQU $C620
-DEF wC621 EQU $C621
-DEF wC622 EQU $C622
-DEF wC623 EQU $C623
-DEF wC624 EQU $C624
-DEF wC625 EQU $C625
-DEF wC626 EQU $C626
-DEF wC627 EQU $C627
-DEF wC628 EQU $C628
-DEF wC629 EQU $C629
-DEF wC62A EQU $C62A
-DEF wC62B EQU $C62B
-DEF wC62C EQU $C62C
-DEF wC62D EQU $C62D
-DEF wC62E EQU $C62E
-DEF wC62F EQU $C62F
-DEF wC630 EQU $C630
-DEF wC631 EQU $C631
-DEF wC632 EQU $C632
-DEF wC633 EQU $C633
-DEF wC634 EQU $C634
-DEF wC635 EQU $C635
-DEF wC6FD EQU $C6FD
-DEF wC6FE EQU $C6FE
-DEF wC6FF EQU $C6FF
-DEF wC700 EQU $C700
-DEF wC701 EQU $C701
+DEF wEventItemSlot EQU $C627 ; save byte tested before the gold events ($FF or 0 allows them) (E-0133)
+DEF wSaveByte32 EQU $C632 ; save-data byte read by talk event 1/$19 (E-0133)
+DEF wItemStorage EQU $C635 ; 100 two-byte entries (WC635HasNonZeroEntry); ends right before wPartyCount; item storage of the save data (E-0133)
+DEF wPartyCount EQU $C6FD ; number of party monsters (0-3) (E-0133)
+DEF wPartyList EQU $C6FE ; record indexes of the party members (up to 3, then $FF); MoveIncapacitatedPartyMembersBack reorders it (E-0133)
 DEF wKeyList EQU $C707 ; up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090) (reading + data (E-0090))
-DEF wC70A EQU $C70A
-DEF wC783 EQU $C783
-DEF wC787 EQU $C787
-DEF wC7C7 EQU $C7C7
-DEF wC7C9 EQU $C7C9
-DEF wC7CA EQU $C7CA
+DEF wKeySeeds EQU $C787 ; two bytes per key entry: the random seed saved when a key is generated (GenerateNewKeyEntry, DeleteKeyEntryHFFC6) (E-0133)
+DEF wFarmLevel EQU $C7C7 ; storage level: Data_016_75EB[it] is how many SRAM records the farm holds (E-0133)
+DEF wStepCounterLo EQU $C7C9 ; field step counter for stored-record updates (wraps at 1000), low byte (E-0133)
+DEF wStepCounterHi EQU $C7CA ; field step counter, high byte (E-0133)
 DEF wSpeciesFlags EQU $C7CC ; one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070) (reading (E-0070))
-DEF wC7FB EQU $C7FB
-DEF wC7FC EQU $C7FC
-DEF wC82C EQU $C82C
+DEF wSpeciesFlagCount EQU $C7FB ; count kept by SetSpeciesFlag (monsters recorded) (E-0133)
+DEF wMonsterLibraryBuf EQU $C7FC ; buffer at $C7FC used by the record screens and script command $F6 (E-0133)
+DEF wArenaRank EQU $C82C ; arena class or rank index (script command $F7 indexes message tables with it) (E-0133)
 DEF wPlayFrames EQU $C82D ; frame count 0-59 of the play-time counter (reading)
 DEF wPlaySeconds EQU $C82E ; seconds 0-59 of the play-time counter (reading)
 DEF wPlayMinutes EQU $C82F ; minutes 0-59 of the play-time counter (reading)
 DEF wPlayHoursLo EQU $C830 ; low byte of the 16-bit play-time hours (reading)
 DEF wPlayHoursHi EQU $C831 ; high byte of the 16-bit play-time hours (reading)
-DEF wC832 EQU $C832
-DEF wC833 EQU $C833
-DEF wC834 EQU $C834
-DEF wC835 EQU $C835
-DEF wC836 EQU $C836
-DEF wC837 EQU $C837
-DEF wC838 EQU $C838
-DEF wC839 EQU $C839
-DEF wC83A EQU $C83A
-DEF wC83B EQU $C83B
-DEF wC83C EQU $C83C
-DEF wC83D EQU $C83D
-DEF wC83E EQU $C83E
-DEF wC848 EQU $C848
-DEF wC858 EQU $C858
-DEF wC868 EQU $C868
-DEF wC878 EQU $C878
-DEF wC888 EQU $C888
-DEF wC88B EQU $C88B
-DEF wC88C EQU $C88C
-DEF wC88D EQU $C88D
-DEF wC88E EQU $C88E
-DEF wC88F EQU $C88F
-DEF wC890 EQU $C890
-DEF wC891 EQU $C891
-DEF wC892 EQU $C892
-DEF wC893 EQU $C893
-DEF wC894 EQU $C894
-DEF wC895 EQU $C895
-DEF wC897 EQU $C897
-DEF wC898 EQU $C898
-DEF wC899 EQU $C899
-DEF wC89A EQU $C89A
-DEF wC89B EQU $C89B
-DEF wC89C EQU $C89C
-DEF wC89D EQU $C89D
-DEF wC89E EQU $C89E
-DEF wC8AE EQU $C8AE
-DEF wC8BF EQU $C8BF
-DEF wC8C0 EQU $C8C0
-DEF wC8C1 EQU $C8C1
-DEF wC8C2 EQU $C8C2
-DEF wC8C3 EQU $C8C3
-DEF wC8C4 EQU $C8C4
-DEF wC8C5 EQU $C8C5
-DEF wC8C6 EQU $C8C6
-DEF wC8C7 EQU $C8C7
+DEF wTownEventTimer EQU $C832 ; counts 0-99 for RunPeriodicFieldEventChecks; set to 99 to force a check (E-0133)
+DEF wCurrentKeyIndex EQU $C833 ; index of the key entry in use (key world) (E-0133)
+DEF wMenuSaveByte34 EQU $C834 ; pause-menu byte kept in the save data (E-0133)
+DEF wBattleResultByte EQU $C835 ; set at the end of a battle, read by the next battle set-up (E-0133)
+DEF wGameFlags836 EQU $C836 ; flag byte: bit 7 set by key events, low bit toggles the inventory sort order (E-0133)
+DEF wArenaByte37 EQU $C837 ; read by script command $F3 (E-0133)
+DEF wArenaWinsLo EQU $C838 ; 16-bit count shown by DrawWC838CountBoxAndStep (script command $F3), low byte (E-0133)
+DEF wArenaWinsHi EQU $C839 ; that count, high byte (E-0133)
+DEF wSpriteSnapshotCount EQU $C83A ; sprite slot count saved by SnapshotSpritesForSave (E-0133)
+DEF wSpriteSnapshot EQU $C83B ; sprite slot snapshot area saved with the game ($C83B onward) (E-0133)
+DEF wSnapshotByte3C EQU $C83C ; byte of the snapshot area (set by the Log Twig item) (E-0133)
+DEF wSnapshotByte3D EQU $C83D ; byte of the snapshot area (set by the Log Twig item) (E-0133)
+DEF wSnapshotByte3E EQU $C83E ; byte of the snapshot area (set by the Log Twig item) (E-0133)
+DEF wSnapshotSlot1 EQU $C848 ; snapshot slot 1 flags (E-0133)
+DEF wSnapshotSlot2 EQU $C858 ; snapshot slot 2 flags (E-0133)
+DEF wSnapshotSlot3 EQU $C868 ; snapshot slot 3 flags (E-0133)
+DEF wSnapshotSlot4 EQU $C878 ; snapshot slot 4 flags (E-0133)
+DEF wSnapshotSlot5 EQU $C888 ; snapshot slot 5 flags (E-0133)
+DEF wLastWarpIndex EQU $C88B ; index of the last warp taken (CheckWarpAtPlayer) (E-0133)
+DEF wStatusStepFlags EQU $C88C ; bit 7 and bit 0 used by the field status-effect state (EnterStatusEffectFieldState, ToggleWC88CLowBitOnce) (E-0133)
+DEF wSaveStateFlag EQU $C88D ; set when the save blocks are copied; read by GameMode1_Init (E-0133)
+DEF wKeyWorldActive EQU $C88E ; non-zero while a key world is active (E-0133)
+DEF wKeyWorldGoal EQU $C88F ; key-world goal position/warp bytes ($C88F-$C890) (E-0133)
+DEF wKeyWorldGoalCell EQU $C890 ; key-world goal cell (screen x/y nibbles) (E-0133)
+DEF wKeyWorldKey EQU $C891 ; key in use: bit 7 set, low bits = key index + 1 (E-0133)
+DEF wTalkEventByte92 EQU $C892 ; set by script command $F7 and read by talk event 1/$65 (E-0133)
+DEF wKeyWorldRefresh EQU $C893 ; bit 7 asks for the key/town objects to be rebuilt on entry (E-0133)
+DEF wLinkByte94 EQU $C894 ; link setting byte (GameMode5_Init, script command $7C) (E-0133)
+DEF wKeyNameBuf EQU $C895 ; buffer for key display rows (bank-$33 screens) (E-0133)
+DEF wBattleRewardByte97 EQU $C897 ; read by the battle results (E-0133)
+DEF wBattleRewardByte98 EQU $C898 ; read by the battle results (E-0133)
+DEF wBattleResultStep EQU $C899 ; step of the battle results screen (E-0133)
+DEF wBattleResultCounter EQU $C89A ; counter of the battle results screen (E-0133)
+DEF wBattleResultByte9B EQU $C89B ; set by the battle results screen (E-0133)
+DEF wBattleResultByte9C EQU $C89C ; set by the battle results screen (E-0133)
+DEF wThreeOptionResult EQU $C89D ; choice of HandleThreeOptionMenuInput_15 (E-0133)
+DEF wScriptTileBuf0 EQU $C89E ; 16-byte tile uploaded by UploadTwoTilesFromWC89E (filled by script fetch 6) (E-0133)
+DEF wScriptTileBuf1 EQU $C8AE ; second 16-byte tile uploaded by UploadTwoTilesFromWC89E (E-0133)
+DEF wFieldStepFlags EQU $C8BF ; field flags: bit 7 set by SetWC8BFBit7; $C0 blocks step triggers (E-0133)
+DEF wDigits EQU $C8C0 ; three decimal digits (hundreds, tens, ones) from HLToDecimalDigits; also a 24-bit input of Number24ToPackedBCD (E-0133)
+DEF wSaveStep EQU $C8C3 ; save-routine stage (RunSaveGameSteps); bit 7 marks the end (E-0133)
+DEF wSaveRecordIndex EQU $C8C4 ; record index of the save-record steps (E-0133)
+DEF wFieldTransitionStep EQU $C8C5 ; step of the field transition (mode state 4) (E-0133)
+DEF wFieldTransitionKind EQU $C8C6 ; kind of field transition (warp, fade, special) (E-0133)
+DEF wFieldReturnPhase EQU $C8C7 ; phase used when returning to the field (RunWC8C7Phase); non-zero keeps the screen (E-0133)
 DEF wC8C8 EQU $C8C8
 DEF wC8C9 EQU $C8C9
 DEF wC8CA EQU $C8CA

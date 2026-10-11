@@ -28,13 +28,13 @@ Func_0A1_4038:: ; address name
 
 ; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleActor
+; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
 Func_0A1_403F:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_0A1_4054
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_0A1_4054
     ld a, [wBattleActor]
@@ -49,13 +49,13 @@ Jump_0A1_4054::
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleTarget
+; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
 Func_0A1_405A:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_0A1_406F
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_0A1_406F
     ld a, [wBattleTarget]
@@ -71,10 +71,10 @@ Jump_0A1_406F::
 
 ; the same instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case01_Case02)
-; reads: wC52B, wBattleSubPhase
+; reads: wTextFlags, wBattleSubPhase
 RunBattleCommandEntry_BankA1::
 Func_0A1_413F:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, [wBattleSubPhase]
@@ -89,12 +89,12 @@ Func_0A1_413F:: ; address name
 
 ; entry 0 of the `rst $00` table in RunBattleCommandEntry_BankA1
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC594, wBattleActor
+; writes: wLinkSendByte, wBattleActor
 ; points at: wDA5F, wBattleSubPhase
 RunBattleCommandEntry_BankA1_Case00::
 Jump_0A1_4156:: ; address name
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     xor a, a
     ld [wBattleActor], a
     ld bc, $0304
@@ -473,7 +473,7 @@ Func_0A1_437D:: ; address name
 
 ; only called from RunBattleCommandEntry_BankA1_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_BankA1_Case04)
-; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
+; reads: wD868, wD869, wD86A, wD86B, wCFF3, wRandomLo
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wBattleActionChoice, wCFF3
 RunBattleCommandEntry_BankA1_Case04_Sub02::
@@ -547,7 +547,7 @@ Jump_0A1_4418::
 
 Jump_0A1_441D::
     call NextTableByteSecondStream
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld b, a
     ld a, $09
     call DivideBByA
@@ -737,10 +737,10 @@ Jump_0A1_4503::
 
 ; runs the routine for wC5DD & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case08)
-; reads: wC5DD
+; reads: wGameMode2State
 RunWC5DDState::
 Func_0A1_4519:: ; address name
-    ld a, [wC5DD]
+    ld a, [wGameMode2State]
     and a, $07
     rst $00
     dw RunWC5DDState_Case00
@@ -754,8 +754,8 @@ Func_0A1_4519:: ; address name
 ; entry 4 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, wIsCGB
-; writes: hScrollX, hScrollY, wC527, wC526
-; points at: wC5E9, wOBJPaletteBuffer, wC4E7, wBGPaletteBuffer, wC5DD
+; writes: hScrollX, hScrollY, wOBJPaletteUploadRequest, wBGPaletteUploadRequest
+; points at: wDMGPaletteBGP, wOBJPaletteBuffer, wBGPaletteBuffer, wGameMode2State
 RunWC5DDState_Case04::
 Jump_0A1_452D:: ; address name
     xor a, a
@@ -790,7 +790,7 @@ Jump_0A1_4573::
     call RunWC5DDState_Case04_Sub01
 
 Jump_0A1_4576::
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
     ld a, $D2
@@ -814,21 +814,21 @@ Jump_0A1_4592::
     call CopyFromBank
     ld de, Data_07E_5AF6
     ld b, $7E
-    ld hl, wC4E7
+    ld hl, wOBJPaletteBuffer + $8
     ld c, $10
     call CopyFromBank
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     ld de, Data_05D_4565
     ld b, $5D
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
 
 Jump_0A1_45C0::
-    ld hl, wC5DD
+    ld hl, wGameMode2State
     inc [hl]
     ret
 
@@ -1159,14 +1159,14 @@ Jump_0A1_4775:: ; address name
 
 ; entry 7 of the `rst $00` table in RunWCC44Type_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC88E, wC891, wCC42, wC890, wC88F, wCD08, wCD09, wCD0A
+; reads: wKeyWorldActive, wKeyWorldKey, wCC42, wKeyWorldGoalCell, wKeyWorldGoal, wCD08, wCD09, wCD0A
 ; writes: hPlayerX, hPlayerY
 RunWCC44Type_A1_4744_Case07::
 Jump_0A1_4787:: ; address name
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_0A1_47B4
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr z, Jump_0A1_47B4
     and a, $7F
@@ -1174,12 +1174,12 @@ Jump_0A1_4787:: ; address name
     ld a, [wCC42]
     cp a, c
     jr nz, Jump_0A1_47B4
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     call SetMapScreenFromAAndCenterPlayer
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     and a, $F0
     ldh [hPlayerX], a
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     and a, $0F
     swap a
     ldh [hPlayerY], a
@@ -1526,7 +1526,7 @@ Jump_0A1_4954::
 
 ; only called from RunWC5DDState_Case04_Sub02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub02_Sub01)
-; reads: hMapId, wC88B, wC944, wC88E, wC891, wC890, wC88F
+; reads: hMapId, wLastWarpIndex, wC944, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldGoal
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 RunWC5DDState_Case04_Sub02_Sub01_Sub01::
 Func_0A1_49A8:: ; address name
@@ -1601,7 +1601,7 @@ Jump_0A1_4A18::
     jr Jump_0A1_4A18
 
 Jump_0A1_4A23::
-    ld a, [wC88B]
+    ld a, [wLastWarpIndex]
     dec a
     dec a
     jr nz, Jump_0A1_4A2C
@@ -1617,25 +1617,25 @@ Jump_0A1_4A31::
     ld a, [wC944]
     inc a
     ld c, a
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_0A1_4A67
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr nz, Jump_0A1_4A67
     cp a, c
     jr nz, Jump_0A1_4A67
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     swap a
     and a, $0F
     ldh [hMapScreenX], a
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     and a, $0F
     ldh [hMapScreenY], a
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     and a, $F0
     ldh [hPlayerX], a
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     and a, $0F
     swap a
     ldh [hPlayerY], a
@@ -1692,8 +1692,8 @@ Func_0A1_4A91:: ; address name
 ; entry 5 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wIsCGB
-; writes: wC526, wC527
-; points at: wC5E9, wBGPaletteBuffer, wC5DD
+; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
+; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
 RunWC5DDState_Case05::
 Jump_0A1_4AA6:: ; address name
     ld a, [wJoypadPressed]
@@ -1705,11 +1705,11 @@ Jump_0A1_4AA6:: ; address name
 ; only called from RunWC5DDState_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
 ; reads: wIsCGB
-; writes: wC526, wC527
-; points at: wC5E9, wBGPaletteBuffer, wC5DD
+; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
+; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
 RunWC5DDState_Case02_Sub01::
 Func_0A1_4AB1:: ; address name
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $00
     ld [hl+], a
     ld [hl+], a
@@ -1722,13 +1722,13 @@ Func_0A1_4AB1:: ; address name
     ld a, $FF
     call FillBytes
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     call UploadBGPalettes
 
 Jump_0A1_4AD7::
-    ld hl, wC5DD
+    ld hl, wGameMode2State
     inc [hl]
     ret
 
@@ -1742,7 +1742,7 @@ Jump_0A1_4ADC::
 
 ; only called from RunWC5DDState_Case02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
-; reads: wCC44, hMapId, wC88E, wC891, wC890, wC88F, wCC42, wCD08, ...
+; reads: wCC44, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldGoal, wCC42, wCD08, ...
 ; writes: hTemp1, hTemp2
 RunWC5DDState_Case02_Sub01_Sub01::
 Func_0A1_4AEC:: ; address name
@@ -1783,15 +1783,15 @@ Func_0A1_4AEC:: ; address name
     ld c, $0B
 
 Jump_0A1_4B34::
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_0A1_4B4E
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     cp a, c
     jr nz, Jump_0A1_4B4E
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     ldh [hTemp2], a
     call RunWC5DDState_Case02_Sub01_Sub01_Sub01
     ret
@@ -1811,10 +1811,10 @@ Jump_0A1_4B4E::
     ret
 
 Jump_0A1_4B64::
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_0A1_4B88
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr z, Jump_0A1_4B88
     and a, $7F
@@ -1822,9 +1822,9 @@ Jump_0A1_4B64::
     ld a, [wCC42]
     cp a, c
     jr nz, Jump_0A1_4B88
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     ldh [hTemp2], a
     call RunWC5DDState_Case02_Sub01_Sub01_Sub01
     ret
@@ -2530,13 +2530,13 @@ Func_0A1_4F8B:: ; address name
 ; entry 0 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; writes: wSpriteSlotCount, wC526
-; points at: wC5E9, wBGPaletteBuffer, wC5DD
+; writes: wSpriteSlotCount, wBGPaletteUploadRequest
+; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
 RunWC5DDState_Case00::
 Jump_0A1_4FB8:: ; address name
     xor a, a
     ld [wSpriteSlotCount], a
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $00
     ld [hl+], a
     ld [hl+], a
@@ -2549,19 +2549,19 @@ Jump_0A1_4FB8:: ; address name
     ld a, $FF
     call FillBytes
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
     call UploadBGPalettes
 
 Jump_0A1_4FDD::
-    ld hl, wC5DD
+    ld hl, wGameMode2State
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC44, wIsCGB
-; writes: hScrollX, hScrollY, wC527, wC526
-; points at: wC5E9, wOBJPaletteBuffer, wC4E7, wBGPaletteBuffer, wC4A7, wC5DD
+; writes: hScrollX, hScrollY, wOBJPaletteUploadRequest, wBGPaletteUploadRequest
+; points at: wDMGPaletteBGP, wOBJPaletteBuffer, wBGPaletteBuffer, wGameMode2State
 RunWC5DDState_Case01::
 Jump_0A1_4FE2:: ; address name
     xor a, a
@@ -2601,7 +2601,7 @@ Jump_0A1_5036::
     call RunWC5DDState_Case01_Sub01
 
 Jump_0A1_5039::
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
     ld a, $D2
@@ -2625,11 +2625,11 @@ Jump_0A1_5055::
     call CopyFromBank
     ld de, Data_07E_5AF6
     ld b, $7E
-    ld hl, wC4E7
+    ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBank
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     ld de, Data_05D_4139
     ld b, $5D
     ld hl, wBGPaletteBuffer
@@ -2637,22 +2637,22 @@ Jump_0A1_5055::
     call CopyFromBank
     ld de, Data_05E_422F
     ld b, $5E
-    ld hl, wC4A7
+    ld hl, wBGPaletteBuffer + $8
     ld c, $08
     call CopyFromBank
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
 
 Jump_0A1_5090::
-    ld hl, wC5DD
+    ld hl, wGameMode2State
     inc [hl]
     ret
 
 ; entry 2 of the `rst $00` table in RunWC5DDState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
-; writes: wC5DD
-; points at: wC5DD
+; writes: wGameMode2State
+; points at: wGameMode2State
 RunWC5DDState_Case02::
 Jump_0A1_5095:: ; address name
     ld a, [wJoypadPressed]
@@ -2660,13 +2660,13 @@ Jump_0A1_5095:: ; address name
     jr z, Jump_0A1_50A5
     call RunWC5DDState_Case02_Sub01
     ld a, $06
-    ld [wC5DD], a
+    ld [wGameMode2State], a
     ret
 
 Jump_0A1_50A5::
     bit 2, a
     jr z, Jump_0A1_50AE
-    ld hl, wC5DD
+    ld hl, wGameMode2State
     inc [hl]
     ret
 
@@ -2921,7 +2921,7 @@ Jump_0A1_5214::
     dec b
     jr nz, Jump_0A1_5214
     ld de, wC8CF
-    ld a, [wC833]
+    ld a, [wCurrentKeyIndex]
     call WriteKeyNameToDE
     call RunWC5DDState_Shared01
     ld de, vTiles1
@@ -3122,7 +3122,7 @@ Jump_0A1_5333::
 
 ; only called from RunWC5DDState_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
-; reads: wCC44, hMapId, wC88E, wC891, wC890, wCC42, wCD08
+; reads: wCC44, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wCC42, wCD08
 ; writes: hTemp1
 RunWC5DDState_Case02_Sub02::
 Func_0A1_5394:: ; address name
@@ -3163,13 +3163,13 @@ Func_0A1_5394:: ; address name
     ld c, $0B
 
 Jump_0A1_53DC::
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_0A1_53F1
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     cp a, c
     jr nz, Jump_0A1_53F1
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
     call DrawCursorSpriteAtHFFC7Cell
     ret
@@ -3187,10 +3187,10 @@ Jump_0A1_53F1::
     ret
 
 Jump_0A1_5406::
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_0A1_5425
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr z, Jump_0A1_5425
     and a, $7F
@@ -3198,7 +3198,7 @@ Jump_0A1_5406::
     ld a, [wCC42]
     cp a, c
     jr nz, Jump_0A1_5425
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
     call DrawCursorSpriteAtHFFC7Cell
     ret
@@ -3256,7 +3256,7 @@ Func_0A1_542E:: ; address name
 
 ; only called from RunWC5DDState_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
-; reads: wFrameCounterLo, wCC44, hMapId, wC88B, hMapScreenX, hMapScreenY, wC88E, wC891, ...
+; reads: wFrameCounterLo, wCC44, hMapId, wLastWarpIndex, hMapScreenX, hMapScreenY, wKeyWorldActive, wKeyWorldKey, ...
 RunWC5DDState_Case02_Sub03::
 Func_0A1_5479:: ; address name
     ld a, [wFrameCounterLo]
@@ -3336,7 +3336,7 @@ Jump_0A1_5502::
     jr Jump_0A1_5502
 
 Jump_0A1_550D::
-    ld a, [wC88B]
+    ld a, [wLastWarpIndex]
     dec a
     dec a
     jr nz, Jump_0A1_5516
@@ -3371,20 +3371,20 @@ Jump_0A1_5523:: ; address name
     ret
 
 Jump_0A1_553D::
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_0A1_5565
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     cp a, c
     jr nz, Jump_0A1_5565
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     and a, $F0
     swap a
     add a, a
     add a, a
     add a, a
     call SetSpriteXFromWC945
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     and a, $0F
     add a, a
     add a, a
@@ -3495,13 +3495,13 @@ Jump_0A1_55D5:: ; address name
 
 ; entry 7 of the `rst $00` table in SetSpriteYFromWC946
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC88E, wC891, wCC42, wC890, wCD08
+; reads: wKeyWorldActive, wKeyWorldKey, wCC42, wKeyWorldGoalCell, wCD08
 SetSpriteYFromWC946_Case07::
 Jump_0A1_55E9:: ; address name
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_0A1_5606
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr z, Jump_0A1_5606
     and a, $7F
@@ -3509,7 +3509,7 @@ Jump_0A1_55E9:: ; address name
     ld a, [wCC42]
     cp a, c
     jr nz, Jump_0A1_5606
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     call SetSpriteXYFromCellA
     ret
 
@@ -3920,16 +3920,16 @@ Func_0A1_57F9:: ; address name
 
 ; wC5E0 = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case06)
-; writes: wC5E0, wDataBankSave, wGameMode
-; points at: wC5E9
+; writes: wFieldInitStage, wDataBankSave, wGameMode
+; points at: wDMGPaletteBGP
 EnterGameMode1WithDefaultPalettes::
 Func_0A1_5898:: ; address name
     ld a, $03
-    ld [wC5E0], a
+    ld [wFieldInitStage], a
     ld a, $40
     ld [wDataBankSave], a
     farcall InitFieldScreen
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
     ld a, $D2
@@ -4000,8 +4000,8 @@ Jump_0A1_58FE::
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
-; reads: wFadeState, wC8CB, wC468, hPlayerStateFlags, wCC44, hMapId
-; writes: hTemp0, wC944, wC8C7, wModeState, wC5DD
+; reads: wFadeState, wC8CB, wFieldActionRequest, hPlayerStateFlags, wCC44, hMapId
+; writes: hTemp0, wC944, wFieldReturnPhase, wModeState, wGameMode2State
 FieldModeStateDispatch_Shared04::
 Func_0A1_5903:: ; address name
     xor a, a
@@ -4012,7 +4012,7 @@ Func_0A1_5903:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
-    ld a, [wC468]
+    ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
     ldh a, [hPlayerStateFlags]
@@ -4062,7 +4062,7 @@ Jump_0A1_595D::
     ld a, $01
     ldh [hTemp0], a
     ld a, $01
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
     ld a, $08
     ld [wModeState], a
@@ -4090,19 +4090,19 @@ Jump_0A1_595D::
     cp a, $DA
     jr z, Jump_0A1_59A9
     ld a, $03
-    ld [wC5DD], a
+    ld [wGameMode2State], a
     ret
 
 Jump_0A1_59A9::
     xor a, a
-    ld [wC5DD], a
+    ld [wGameMode2State], a
     ret
 
 Jump_0A1_59AE::
     ld a, $01
     ldh [hTemp0], a
     ld a, $01
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
     ld a, $08
     ld [wModeState], a
@@ -4110,12 +4110,12 @@ Jump_0A1_59AE::
     and a, $7F
     jr nz, Jump_0A1_59CE
     xor a, a
-    ld [wC5DD], a
+    ld [wGameMode2State], a
     ret
 
 Jump_0A1_59CE::
     ld a, $03
-    ld [wC5DD], a
+    ld [wGameMode2State], a
     ret
     db $01, $01, $00, $44, $39, $31, $76, $44, $59, $21, $B4, $44, $59, $21, $B4, $44
     db $09, $01, $10, $44, $01, $01, $00, $44, $01, $09, $01, $44, $21, $21, $44, $44

@@ -204,7 +204,8 @@
   "C47F": {
     "name": "wSGBPacketBuffer",
     "note": "packet data used by SendSGBPacketSet when wSGBPacketIndex is $FF",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "10"
   },
   "C5DB": {
     "name": "wGameMode",
@@ -399,7 +400,8 @@
   "C61D": {
     "name": "wInventory",
     "note": "24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game)",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "18"
   },
   "FF90": {
     "name": "hMapId",
@@ -474,12 +476,14 @@
   "C49F": {
     "name": "wBGPaletteBuffer",
     "note": "8 CGB background palettes (4 RGB555 colours each, 64 bytes) that the fade routines read and write to rBGPD (WriteAllFadedPalettesFloor/Add) (E-0076)",
-    "evidence": "reading (E-0076)"
+    "evidence": "reading (E-0076)",
+    "size": "40"
   },
   "C4DF": {
     "name": "wOBJPaletteBuffer",
     "note": "8 CGB object palettes (64 bytes) that the fade routines write to rOBPD (E-0076)",
-    "evidence": "reading (E-0076)"
+    "evidence": "reading (E-0076)",
+    "size": "40"
   },
   "C572": {
     "name": "wFadeLevel",
@@ -499,7 +503,8 @@
   "C707": {
     "name": "wKeyList",
     "note": "up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090)",
-    "evidence": "reading + data (E-0090)"
+    "evidence": "reading + data (E-0090)",
+    "size": "80"
   },
   "C8EF": {
     "name": "wFollowerRecords",
@@ -1102,5 +1107,1128 @@
     "size": "8",
     "note": "digit string of a number shown in a message (DeductGoldPenaltyAndFormatLoss writes the gold lost here as packed BCD through Func_000_23CA)",
     "evidence": "E-0132"
+  },
+  "C0A0": {
+    "name": "wTemp0",
+    "note": "general scratch byte used by many menus and helpers (for example Quotient24ByHFFCCDE, menu cursor work, list counts)",
+    "evidence": "E-0133"
+  },
+  "C0A1": {
+    "name": "wTemp1",
+    "note": "general scratch byte next to wTemp0 (often the high byte of a word kept in wTemp0)",
+    "evidence": "E-0133"
+  },
+  "C0A4": {
+    "name": "wPauseMenuScreen",
+    "note": "screen index of the pause menu (RunWC0A4Screen dispatches on it; PauseMenu_Main cases set it)",
+    "evidence": "E-0133"
+  },
+  "C0A7": {
+    "name": "wMenuItemCount",
+    "note": "number of entries of the current item or skill list (SetupInventoryMenuPages, BuildInventoryScreenBase)",
+    "evidence": "E-0133"
+  },
+  "C0A8": {
+    "name": "wPauseMenuStep",
+    "note": "step counter of the pause menu sub-screens (PauseMenu_State3 cases)",
+    "evidence": "E-0133"
+  },
+  "C0C0": {
+    "name": "wBGWriteDestLo",
+    "note": "queued BG map write for VBlank: destination low byte; FlushQueuedBGMapWrite writes when the destination is non-zero and then clears it",
+    "evidence": "E-0133"
+  },
+  "C0C1": {
+    "name": "wBGWriteDestHi",
+    "note": "queued BG map write: destination high byte",
+    "evidence": "E-0133"
+  },
+  "C0C2": {
+    "name": "wBGWriteVertical",
+    "note": "queued BG map write: 0 writes along a row (wrapping in 32), non-zero down a column",
+    "evidence": "E-0133"
+  },
+  "C0C3": {
+    "name": "wBGWriteCount",
+    "note": "queued BG map write: number of tiles",
+    "evidence": "E-0133"
+  },
+  "C0D8": {
+    "name": "wAttrWriteDestLo",
+    "note": "queued CGB attribute write (VRAM bank 1) for VBlank: destination low byte",
+    "evidence": "E-0133"
+  },
+  "C0D9": {
+    "name": "wAttrWriteDestHi",
+    "note": "queued attribute write: destination high byte",
+    "evidence": "E-0133"
+  },
+  "C0DA": {
+    "name": "wAttrWriteVertical",
+    "note": "queued attribute write: 0 along a row, non-zero down a column",
+    "evidence": "E-0133"
+  },
+  "C0DB": {
+    "name": "wAttrWriteCount",
+    "note": "queued attribute write: number of bytes",
+    "evidence": "E-0133"
+  },
+  "C193": {
+    "name": "wMapHeaderByte7",
+    "note": "map header byte after wMaxBlockingTile (LoadMapHeader); CheckInteractionInFront reads it",
+    "evidence": "E-0133"
+  },
+  "C194": {
+    "name": "wMapMoveType",
+    "note": "map header byte selecting the player movement routine (RunPlayerMoveTypeWC194)",
+    "evidence": "E-0133"
+  },
+  "C195": {
+    "name": "wMapSpriteKind",
+    "note": "map header byte: high nibble picks the script sprite set ($23 + n - 1), low nibble 1 selects the follower-style sprite; set for special maps by SetWC195AndWC197ForSpecialMaps",
+    "evidence": "E-0133"
+  },
+  "C196": {
+    "name": "wMapTallTileMin",
+    "note": "map header byte: tiles at or above it count as tall tiles for field events and blocking (RollFieldEventOnTallTiles, TileBlockedAtPixel)",
+    "evidence": "E-0133"
+  },
+  "C197": {
+    "name": "wMapHeaderByte11",
+    "note": "map header byte ($2C or $30 on the special maps; read by FieldModeStateDispatch_Shared01_Sub02)",
+    "evidence": "E-0133"
+  },
+  "C468": {
+    "name": "wFieldActionRequest",
+    "note": "bit 7 set requests a field action; RunWC468ActionIfBit7 runs the routine for bits 0-1 (UpdatePlayerMovement sets $80 for a screen scroll)",
+    "evidence": "E-0133"
+  },
+  "C469": {
+    "name": "wFieldActionStep",
+    "note": "step of the requested field action",
+    "evidence": "E-0133"
+  },
+  "C46A": {
+    "name": "wScreenScrollDir",
+    "note": "direction of the requested screen scroll (1 left, 2 right, ...) set by UpdatePlayerMovement",
+    "evidence": "E-0133"
+  },
+  "C46B": {
+    "name": "wMenuState",
+    "note": "state of the current menu or debug screen (RunWC46BMenuState dispatches on it); cleared by LoadMapHeader",
+    "evidence": "E-0133"
+  },
+  "C46C": {
+    "name": "wMenuSubState",
+    "note": "sub-state or flag of the current menu; cleared by LoadMapHeader",
+    "evidence": "E-0133"
+  },
+  "C46D": {
+    "name": "wMenuSelectedMember",
+    "note": "selected party member or list entry of the menus (record wC46D & $0F or & 3)",
+    "evidence": "E-0133"
+  },
+  "C46E": {
+    "name": "wMenuCursor",
+    "note": "main cursor position of the menus (cursor marks drawn for wC46E & 7)",
+    "evidence": "E-0133"
+  },
+  "C46F": {
+    "name": "wSubMenuCursor",
+    "note": "cursor of a sub-menu or second list",
+    "evidence": "E-0133"
+  },
+  "C470": {
+    "name": "wSubMenuCursor2",
+    "note": "cursor of a further sub-menu (record list rows, item targets)",
+    "evidence": "E-0133"
+  },
+  "C471": {
+    "name": "wMenuOption",
+    "note": "selected option of a menu (also the link menu choice sent by SendLinkByteForWC471)",
+    "evidence": "E-0133"
+  },
+  "C472": {
+    "name": "wMenuOption2",
+    "note": "second option byte cleared with the menu cursors",
+    "evidence": "E-0133"
+  },
+  "C474": {
+    "name": "wSGBJoypad1",
+    "note": "joypad byte read from the Super Game Boy for player 1 (PollJoypad)",
+    "evidence": "E-0133"
+  },
+  "C476": {
+    "name": "wSGBJoypad2",
+    "note": "joypad byte read from the Super Game Boy for player 2 (copied to wLinkJoypadHeld)",
+    "evidence": "E-0133"
+  },
+  "C51F": {
+    "name": "wSGBPaletteSet",
+    "note": "Super Game Boy palette set number; PAL_SET packets use 4 * it + 0-3",
+    "evidence": "E-0133"
+  },
+  "C520": {
+    "name": "wSGBAttrFile",
+    "note": "Super Game Boy attribute file number sent with PAL_SET",
+    "evidence": "E-0133"
+  },
+  "C523": {
+    "name": "wSGBBorderSet",
+    "note": "border set last sent to the Super Game Boy (LoadSGBBorderForSetA skips a repeat)",
+    "evidence": "E-0133"
+  },
+  "C526": {
+    "name": "wBGPaletteUploadRequest",
+    "note": "non-zero asks the VBlank handler to upload wBGPaletteBuffer (UploadBGPalettes); cleared after",
+    "evidence": "E-0133"
+  },
+  "C527": {
+    "name": "wOBJPaletteUploadRequest",
+    "note": "non-zero asks the VBlank handler to upload wOBJPaletteBuffer; cleared after",
+    "evidence": "E-0133"
+  },
+  "C52B": {
+    "name": "wTextFlags",
+    "note": "string display flags: non-zero makes the VBlank handler step the text (StepStringDisplayUntilDone); bit 1 and bit 2 mark stages",
+    "evidence": "E-0133"
+  },
+  "C52C": {
+    "name": "wTextControl",
+    "note": "string display control bits (bit 7 continues the display, bit 0 set at a prompt)",
+    "evidence": "E-0133"
+  },
+  "C52D": {
+    "name": "wTextWindowTileLo",
+    "note": "text window: low byte of the VRAM tile address the glyphs are drawn at (default vTiles1 = $8800)",
+    "evidence": "E-0133"
+  },
+  "C52E": {
+    "name": "wTextWindowTileHi",
+    "note": "text window: high byte of that address",
+    "evidence": "E-0133"
+  },
+  "C52F": {
+    "name": "wTextWindowRows",
+    "note": "text window: number of rows (default 2)",
+    "evidence": "E-0133"
+  },
+  "C530": {
+    "name": "wTextWindowWidth",
+    "note": "text window: width in tiles (default $12 = 18)",
+    "evidence": "E-0133"
+  },
+  "C531": {
+    "name": "wTextGlyphDestLo",
+    "note": "current glyph destination, low byte (copied from wTextWindowTile at BeginStringDisplay)",
+    "evidence": "E-0133"
+  },
+  "C532": {
+    "name": "wTextGlyphDestHi",
+    "note": "current glyph destination, high byte",
+    "evidence": "E-0133"
+  },
+  "C533": {
+    "name": "wTextPosLo",
+    "note": "pointer to the next string byte, low byte (IncrementWC533Word)",
+    "evidence": "E-0133"
+  },
+  "C534": {
+    "name": "wTextPosHi",
+    "note": "pointer to the next string byte, high byte",
+    "evidence": "E-0133"
+  },
+  "C535": {
+    "name": "wTextLineStartLo",
+    "note": "glyph destination at the start of the line, low byte",
+    "evidence": "E-0133"
+  },
+  "C536": {
+    "name": "wTextLineStartHi",
+    "note": "glyph destination at the start of the line, high byte",
+    "evidence": "E-0133"
+  },
+  "C537": {
+    "name": "wTextStartPosLo",
+    "note": "string position at BeginStringDisplay, low byte (used when a prompt is acknowledged)",
+    "evidence": "E-0133"
+  },
+  "C538": {
+    "name": "wTextStartPosHi",
+    "note": "string position at BeginStringDisplay, high byte",
+    "evidence": "E-0133"
+  },
+  "C539": {
+    "name": "wTextControlArg",
+    "note": "argument byte read after a text control code",
+    "evidence": "E-0133"
+  },
+  "C53B": {
+    "name": "wTextRepeatCount",
+    "note": "countdown of a repeated text control",
+    "evidence": "E-0133"
+  },
+  "C53C": {
+    "name": "wTextDelayCounter",
+    "note": "countdown before the next glyph is drawn",
+    "evidence": "E-0133"
+  },
+  "C54F": {
+    "name": "wTextLineCount",
+    "note": "lines drawn since the window was cleared",
+    "evidence": "E-0133"
+  },
+  "C550": {
+    "name": "wTextLastChar",
+    "note": "last string byte handled ($E6 and $FF are special)",
+    "evidence": "E-0133"
+  },
+  "C552": {
+    "name": "wTextYesNoResult",
+    "note": "result of a text yes/no prompt (0 = first choice); AcknowledgeTextPrompt clears it, StartChoiceMessageByWC552 branches on it",
+    "evidence": "E-0133"
+  },
+  "C554": {
+    "name": "wTextCursorLo",
+    "note": "BG map address where the next text row starts, low byte (AddHLToTextCursorWC554)",
+    "evidence": "E-0133"
+  },
+  "C555": {
+    "name": "wTextCursorHi",
+    "note": "BG map address where the next text row starts, high byte",
+    "evidence": "E-0133"
+  },
+  "C556": {
+    "name": "wTextBeepSound",
+    "note": "sound effect played for text output ($6B)",
+    "evidence": "E-0133"
+  },
+  "C55D": {
+    "name": "wJoypadReadFlag",
+    "note": "cleared before a direct joypad read (PollJoypad); tested by UpdateJoypadPresses",
+    "evidence": "E-0133"
+  },
+  "C560": {
+    "name": "wLinkJoypadHeld",
+    "note": "the other player's buttons: received over the link or from the second Super Game Boy pad",
+    "evidence": "E-0133"
+  },
+  "C561": {
+    "name": "wLinkJoypadHeldPrev",
+    "note": "the previous value of wLinkJoypadHeld",
+    "evidence": "E-0133"
+  },
+  "C565": {
+    "name": "wFieldFrameFlag",
+    "note": "cleared with the joypad state before the field mode states run",
+    "evidence": "E-0133"
+  },
+  "C566": {
+    "name": "wLinkJoypadPressed",
+    "note": "newly pressed buttons of the other player (UpdateJoypadPresses)",
+    "evidence": "E-0133"
+  },
+  "C567": {
+    "name": "wLinkJoypadPressedRepeat",
+    "note": "newly pressed buttons plus auto-repeat for the other player",
+    "evidence": "E-0133"
+  },
+  "C568": {
+    "name": "wLinkJoypadRepeatTimer",
+    "note": "auto-repeat countdown for the other player ($14, then shorter)",
+    "evidence": "E-0133"
+  },
+  "C56A": {
+    "name": "wLinkSavedJoypadHeld",
+    "note": "wJoypadHeld saved by LinkExchangeJoypadPerFrame",
+    "evidence": "E-0133"
+  },
+  "C56B": {
+    "name": "wLinkSavedJoypadHeldPrev",
+    "note": "wJoypadHeldPrev saved by LinkExchangeJoypadPerFrame",
+    "evidence": "E-0133"
+  },
+  "C56D": {
+    "name": "wFadeMode",
+    "note": "fade mode bits: bit 7 = toward black, bits 0-2 select which palettes fade (7 = all)",
+    "evidence": "E-0133"
+  },
+  "C56E": {
+    "name": "wFadeMask",
+    "note": "fade selection bits ($1F = all); bit 1 also picks the step size",
+    "evidence": "E-0133"
+  },
+  "C56F": {
+    "name": "wFadeDMGPalettes",
+    "note": "three DMG palette bytes the fade lightens (LightenSelectedDMGPalettes)",
+    "evidence": "E-0133"
+  },
+  "C576": {
+    "name": "wFadeStepSize",
+    "note": "CGB fade step chosen for this frame (0 or 8)",
+    "evidence": "E-0133"
+  },
+  "C577": {
+    "name": "wSGBPaletteNum0Lo",
+    "note": "Super Game Boy palette number 0 for PAL_SET (4 * wSGBPaletteSet), low byte",
+    "evidence": "E-0133"
+  },
+  "C578": {
+    "name": "wSGBPaletteNum0Hi",
+    "note": "palette number 0, high byte",
+    "evidence": "E-0133"
+  },
+  "C579": {
+    "name": "wSGBPaletteNum1Lo",
+    "note": "palette number 1, low byte",
+    "evidence": "E-0133"
+  },
+  "C57A": {
+    "name": "wSGBPaletteNum1Hi",
+    "note": "palette number 1, high byte",
+    "evidence": "E-0133"
+  },
+  "C57B": {
+    "name": "wSGBPaletteNum2Lo",
+    "note": "palette number 2, low byte",
+    "evidence": "E-0133"
+  },
+  "C57C": {
+    "name": "wSGBPaletteNum2Hi",
+    "note": "palette number 2, high byte",
+    "evidence": "E-0133"
+  },
+  "C57D": {
+    "name": "wSGBPaletteNum3Lo",
+    "note": "palette number 3, low byte",
+    "evidence": "E-0133"
+  },
+  "C57E": {
+    "name": "wSGBPaletteNum3Hi",
+    "note": "palette number 3, high byte",
+    "evidence": "E-0133"
+  },
+  "C57F": {
+    "name": "wLinkRole",
+    "note": "link flags: bit 1 = this Game Boy drives the clock (the side that sends first)",
+    "evidence": "E-0133"
+  },
+  "C580": {
+    "name": "wLinkStatus",
+    "note": "link status bits (bit 7 set, bit 6 cleared when the connection is set up)",
+    "evidence": "E-0133"
+  },
+  "C581": {
+    "name": "wLinkSession",
+    "note": "kind of link session (5 = a battle session in LinkExchangeJoypadPerFrame)",
+    "evidence": "E-0133"
+  },
+  "C582": {
+    "name": "wLinkExchangeState",
+    "note": "state of the per-frame link exchange (RunWC582State dispatches on it)",
+    "evidence": "E-0133"
+  },
+  "C583": {
+    "name": "wLinkStateByte",
+    "note": "cleared at the start of the link mode loop",
+    "evidence": "E-0133"
+  },
+  "C586": {
+    "name": "wSerialReceived",
+    "note": "byte last received over the serial port",
+    "evidence": "E-0133"
+  },
+  "C588": {
+    "name": "wLinkTimerLo",
+    "note": "link wait counter, low byte",
+    "evidence": "E-0133"
+  },
+  "C589": {
+    "name": "wLinkTimerHi",
+    "note": "link wait counter, high byte",
+    "evidence": "E-0133"
+  },
+  "C58A": {
+    "name": "wLinkMode",
+    "note": "0 outside link play, 1 in a link battle, 2 in another link mode; many routines branch on it",
+    "evidence": "E-0133"
+  },
+  "C58B": {
+    "name": "wLinkScreenStep",
+    "note": "step of the link screens (GameMode5)",
+    "evidence": "E-0133"
+  },
+  "C58C": {
+    "name": "wLinkReady",
+    "note": "set when both sides are ready; LinkReceive routines branch on it",
+    "evidence": "E-0133"
+  },
+  "C58D": {
+    "name": "wLinkFrameCounterLo",
+    "note": "link frame counter, low byte; an overflow resets the game",
+    "evidence": "E-0133"
+  },
+  "C58E": {
+    "name": "wLinkFrameCounterHi",
+    "note": "link frame counter, high byte",
+    "evidence": "E-0133"
+  },
+  "C58F": {
+    "name": "wLinkMessage",
+    "note": "last link command byte received or sent",
+    "evidence": "E-0133"
+  },
+  "C590": {
+    "name": "wLinkBufferPtrLo",
+    "note": "link transfer buffer pointer, low byte",
+    "evidence": "E-0133"
+  },
+  "C591": {
+    "name": "wLinkBufferPtrHi",
+    "note": "link transfer buffer pointer, high byte",
+    "evidence": "E-0133"
+  },
+  "C592": {
+    "name": "wLinkBufferCountLo",
+    "note": "link transfer bytes left, low byte",
+    "evidence": "E-0133"
+  },
+  "C593": {
+    "name": "wLinkBufferCountHi",
+    "note": "link transfer bytes left, high byte",
+    "evidence": "E-0133"
+  },
+  "C594": {
+    "name": "wLinkSendByte",
+    "note": "byte queued to send over the link ($FF = none)",
+    "evidence": "E-0133"
+  },
+  "C595": {
+    "name": "wLinkTimeoutLo",
+    "note": "link timeout counter, low byte",
+    "evidence": "E-0133"
+  },
+  "C596": {
+    "name": "wLinkTimeoutHi",
+    "note": "link timeout counter, high byte",
+    "evidence": "E-0133"
+  },
+  "C300": {
+    "name": "wWindowTileBuffer",
+    "size": "168",
+    "note": "20 x 18 tile buffer for windows and menus in field mode: OpenFieldMenuOnA saves screen rows here, CopyRectTo20ByteRows draws boxes into it (the two-choice box at row 13, column 14 = +$112), and it ends right before wFieldActionRequest ($C468); its CGB attributes are at $D168 in WRAM bank 2",
+    "evidence": "E-0133"
+  },
+  "C0C4": {
+    "name": "wBGWriteData",
+    "size": "14",
+    "note": "tiles of the queued BG map write (up to 20)",
+    "evidence": "E-0133"
+  },
+  "C0DC": {
+    "name": "wAttrWriteData",
+    "size": "14",
+    "note": "bytes of the queued attribute write (up to 20)",
+    "evidence": "E-0133"
+  },
+  "C597": {
+    "name": "wLinkRecvBuffer",
+    "note": "start of the link receive area (RunWD06AState_6C12 points the transfer buffer here)",
+    "evidence": "E-0133"
+  },
+  "C598": {
+    "name": "wBattleSetupByte98",
+    "note": "set by the battle setup (RunBattlePhaseWhenTextIdle_A0) and the bank-$F0 screens",
+    "evidence": "E-0133"
+  },
+  "C599": {
+    "name": "wBankF0Byte99",
+    "note": "byte set and read by the bank-$F0 screen routines (Func_0F0_4CA0 tables)",
+    "evidence": "E-0133"
+  },
+  "C59A": {
+    "name": "wBattleSetupFlagsLo",
+    "note": "battle setup word read by RunBattleSetup (set by the bank-$33 screens), low byte",
+    "evidence": "E-0133"
+  },
+  "C59B": {
+    "name": "wBattleSetupFlagsHi",
+    "note": "battle setup word, high byte",
+    "evidence": "E-0133"
+  },
+  "C5A3": {
+    "name": "wBankF0ByteA3",
+    "note": "byte set by the bank-$F0 screens",
+    "evidence": "E-0133"
+  },
+  "C5A7": {
+    "name": "wBankF0BlockA7",
+    "note": "work bytes of the bank-$F0 screens ($C5A7-$C5AB)",
+    "evidence": "E-0133"
+  },
+  "C5A8": {
+    "name": "wBankF0ByteA8",
+    "note": "work byte of the bank-$F0 screens (read by Run67EEWithWD7F1ForWD7EC)",
+    "evidence": "E-0133"
+  },
+  "C5A9": {
+    "name": "wBankF0ByteA9",
+    "note": "work byte of the bank-$F0 screens (read by Run67EEWithWD7F1ForWD7EC)",
+    "evidence": "E-0133"
+  },
+  "C5AA": {
+    "name": "wBankF0ByteAA",
+    "note": "work byte of the bank-$F0 screens",
+    "evidence": "E-0133"
+  },
+  "C5AB": {
+    "name": "wBankF0BlockAB",
+    "note": "work bytes of the bank-$F0 screens",
+    "evidence": "E-0133"
+  },
+  "C5B7": {
+    "name": "wLinkPartnerName",
+    "note": "the link partner's data block (name and record bytes) received during link setup",
+    "evidence": "E-0133"
+  },
+  "C5B8": {
+    "name": "wLinkPartnerByte1",
+    "note": "byte of the link partner block",
+    "evidence": "E-0133"
+  },
+  "C5B9": {
+    "name": "wLinkPartnerByte2",
+    "note": "byte of the link partner block",
+    "evidence": "E-0133"
+  },
+  "C5BA": {
+    "name": "wRandomSeed2Lo",
+    "note": "second random/table stream position, low byte (NextTableByteSecondStream, AdvanceRandom); shared in link battles",
+    "evidence": "E-0133"
+  },
+  "C5BB": {
+    "name": "wRandomSeed2Hi",
+    "note": "second random stream position, high byte",
+    "evidence": "E-0133"
+  },
+  "C5BC": {
+    "name": "wBattleSetupByteBC",
+    "note": "set by RunBattleSetup_Case08 and read by the link screens",
+    "evidence": "E-0133"
+  },
+  "C5BD": {
+    "name": "wBattleSetupByteBD",
+    "note": "set by RunBattleSetup_Case08",
+    "evidence": "E-0133"
+  },
+  "C5C6": {
+    "name": "wLinkTradeByte",
+    "note": "link trade byte (RunWD06AState_6C12_Shared04)",
+    "evidence": "E-0133"
+  },
+  "C5C7": {
+    "name": "wBankF0BlockC7",
+    "note": "work bytes of the bank-$F0 screens and game mode 8",
+    "evidence": "E-0133"
+  },
+  "C5C8": {
+    "name": "wBankF0ByteC8",
+    "note": "work byte of the bank-$F0 screens",
+    "evidence": "E-0133"
+  },
+  "C5C9": {
+    "name": "wBankF0ByteC9",
+    "note": "work byte of the bank-$F0 screens",
+    "evidence": "E-0133"
+  },
+  "C5CB": {
+    "name": "wBankF0BlockCB",
+    "note": "work block of the bank-$F0 screens",
+    "evidence": "E-0133"
+  },
+  "C5D7": {
+    "name": "wVBlankLY",
+    "note": "rLY value saved at the end of the VBlank handler",
+    "evidence": "E-0133"
+  },
+  "C5DD": {
+    "name": "wGameMode2State",
+    "note": "state of game mode 2 (RunWC5DDState); CheckInteractionInFront sets it",
+    "evidence": "E-0133"
+  },
+  "C5DE": {
+    "name": "wGameMode2Arg",
+    "note": "argument for game mode 2 set before entering it",
+    "evidence": "E-0133"
+  },
+  "C5E0": {
+    "name": "wFieldInitStage",
+    "note": "field set-up stage (GameMode1_Init / InitFieldScreen; 1 becomes 2 after the Super Game Boy palettes)",
+    "evidence": "E-0133"
+  },
+  "C5E1": {
+    "name": "wSTATSplitEnable",
+    "note": "enables the LCD STAT split effect (read by the STAT handler and ComputeSpriteScrollOffsets)",
+    "evidence": "E-0133"
+  },
+  "C5E2": {
+    "name": "wSoundFadeLevel",
+    "note": "sound volume fade level (StepFade_Sub02 shifts it and writes rNR50)",
+    "evidence": "E-0133"
+  },
+  "C5E3": {
+    "name": "wSoundFadeTarget",
+    "note": "sound fade target level",
+    "evidence": "E-0133"
+  },
+  "C5E4": {
+    "name": "wSoundFadeTimer",
+    "note": "sound fade step timer",
+    "evidence": "E-0133"
+  },
+  "C5E5": {
+    "name": "wSoundFadeNR50",
+    "note": "saved rNR50 for the sound fade",
+    "evidence": "E-0133"
+  },
+  "C5E7": {
+    "name": "wRandomLo",
+    "note": "current random value, low byte (NextTableByte, AdvanceRandom, RandomInRange)",
+    "evidence": "E-0133"
+  },
+  "C5E8": {
+    "name": "wRandomHi",
+    "note": "current random value, high byte",
+    "evidence": "E-0133"
+  },
+  "C5E9": {
+    "name": "wDMGPaletteBGP",
+    "note": "DMG background palette byte copied to rBGP each VBlank",
+    "evidence": "E-0133"
+  },
+  "C5EA": {
+    "name": "wDMGPaletteOBP0",
+    "note": "DMG object palette 0 byte copied to rOBP0",
+    "evidence": "E-0133"
+  },
+  "C5EB": {
+    "name": "wDMGPaletteOBP1",
+    "note": "DMG object palette 1 byte copied to rOBP1",
+    "evidence": "E-0133"
+  },
+  "C5EC": {
+    "name": "wLCDCShadow",
+    "note": "value WriteLCDCShadow writes to rLCDC each VBlank",
+    "evidence": "E-0133"
+  },
+  "C5ED": {
+    "name": "wVBlankFlags",
+    "note": "bit 0 = VBlank handler running; bits 1, 2, 7 are link exchange flags",
+    "evidence": "E-0133"
+  },
+  "C5EE": {
+    "name": "wBootFlagEE",
+    "note": "cleared at boot",
+    "evidence": "E-0133"
+  },
+  "C5F6": {
+    "name": "wDebugByteF6",
+    "note": "cleared by GameMode0_Init (debug menu)",
+    "evidence": "E-0133"
+  },
+  "C5F7": {
+    "name": "wDebugByteF7",
+    "note": "cleared by GameMode0_Init (debug menu)",
+    "evidence": "E-0133"
+  },
+  "C5F8": {
+    "name": "wDebugCursor",
+    "note": "debug screens: selected field or cursor",
+    "evidence": "E-0133"
+  },
+  "C5F9": {
+    "name": "wDebugValue0",
+    "note": "debug screens: first edited value",
+    "evidence": "E-0133"
+  },
+  "C5FA": {
+    "name": "wDebugValue1",
+    "note": "debug screens: second edited value",
+    "evidence": "E-0133"
+  },
+  "C5FB": {
+    "name": "wDebugValue2",
+    "note": "debug screens: third edited value",
+    "evidence": "E-0133"
+  },
+  "C5FC": {
+    "name": "wDebugValue3",
+    "note": "debug screens: fourth edited value",
+    "evidence": "E-0133"
+  },
+  "C5FD": {
+    "name": "wDebugState",
+    "note": "debug screens: state (RunWC5FDState_E0); also loaded with key entry fields",
+    "evidence": "E-0133"
+  },
+  "C5FE": {
+    "name": "wDebugSubState",
+    "note": "debug screens: sub-state (RunWC5FEState_E0)",
+    "evidence": "E-0133"
+  },
+  "C5FF": {
+    "name": "wDebugCounter",
+    "note": "debug screens: cursor blink and position counter (StepDebugCursorWC5FF)",
+    "evidence": "E-0133"
+  },
+  "C600": {
+    "name": "wDebugMenuFlag0",
+    "note": "read by DebugMainMenu_Update",
+    "evidence": "E-0133"
+  },
+  "C601": {
+    "name": "wDebugMenuFlag1",
+    "note": "read by DebugMainMenu_Update",
+    "evidence": "E-0133"
+  },
+  "C602": {
+    "name": "wDebugMenuFlag2",
+    "note": "read by DebugMainMenu_Update",
+    "evidence": "E-0133"
+  },
+  "C603": {
+    "name": "wDebugMenuFlag3",
+    "note": "read by DebugMainMenu_Update",
+    "evidence": "E-0133"
+  },
+  "C604": {
+    "name": "wScreenShakeTimer",
+    "note": "screen shake countdown (ApplyScreenShake)",
+    "evidence": "E-0133"
+  },
+  "C605": {
+    "name": "wScreenShakeOffset",
+    "note": "current screen shake offset",
+    "evidence": "E-0133"
+  },
+  "C608": {
+    "name": "wCurrentMusic",
+    "note": "music now playing; PlayMapMusic skips a request for the same id; $FF forces a restart",
+    "evidence": "E-0133"
+  },
+  "C616": {
+    "name": "wSaveByte16",
+    "note": "save-data byte before the gold; set in link mode, read by ComputeBreedingChild",
+    "evidence": "E-0133"
+  },
+  "C61A": {
+    "name": "wBankedGoldLo",
+    "note": "second 24-bit amount kept with the gold (shop/bank script command $E5), low byte",
+    "evidence": "E-0133"
+  },
+  "C61B": {
+    "name": "wBankedGoldMid",
+    "note": "second amount, middle byte",
+    "evidence": "E-0133"
+  },
+  "C61C": {
+    "name": "wBankedGoldHi",
+    "note": "second amount, high byte",
+    "evidence": "E-0133"
+  },
+  "C627": {
+    "name": "wEventItemSlot",
+    "note": "save byte tested before the gold events ($FF or 0 allows them)",
+    "evidence": "E-0133"
+  },
+  "C632": {
+    "name": "wSaveByte32",
+    "note": "save-data byte read by talk event 1/$19",
+    "evidence": "E-0133"
+  },
+  "C6FD": {
+    "name": "wPartyCount",
+    "note": "number of party monsters (0-3)",
+    "evidence": "E-0133"
+  },
+  "C7C7": {
+    "name": "wFarmLevel",
+    "note": "storage level: Data_016_75EB[it] is how many SRAM records the farm holds",
+    "evidence": "E-0133"
+  },
+  "C7C9": {
+    "name": "wStepCounterLo",
+    "note": "field step counter for stored-record updates (wraps at 1000), low byte",
+    "evidence": "E-0133"
+  },
+  "C7CA": {
+    "name": "wStepCounterHi",
+    "note": "field step counter, high byte",
+    "evidence": "E-0133"
+  },
+  "C7FB": {
+    "name": "wSpeciesFlagCount",
+    "note": "count kept by SetSpeciesFlag (monsters recorded)",
+    "evidence": "E-0133"
+  },
+  "C7FC": {
+    "name": "wMonsterLibraryBuf",
+    "note": "buffer at $C7FC used by the record screens and script command $F6",
+    "evidence": "E-0133"
+  },
+  "C82C": {
+    "name": "wArenaRank",
+    "note": "arena class or rank index (script command $F7 indexes message tables with it)",
+    "evidence": "E-0133"
+  },
+  "C832": {
+    "name": "wTownEventTimer",
+    "note": "counts 0-99 for RunPeriodicFieldEventChecks; set to 99 to force a check",
+    "evidence": "E-0133"
+  },
+  "C833": {
+    "name": "wCurrentKeyIndex",
+    "note": "index of the key entry in use (key world)",
+    "evidence": "E-0133"
+  },
+  "C834": {
+    "name": "wMenuSaveByte34",
+    "note": "pause-menu byte kept in the save data",
+    "evidence": "E-0133"
+  },
+  "C835": {
+    "name": "wBattleResultByte",
+    "note": "set at the end of a battle, read by the next battle set-up",
+    "evidence": "E-0133"
+  },
+  "C836": {
+    "name": "wGameFlags836",
+    "note": "flag byte: bit 7 set by key events, low bit toggles the inventory sort order",
+    "evidence": "E-0133"
+  },
+  "C837": {
+    "name": "wArenaByte37",
+    "note": "read by script command $F3",
+    "evidence": "E-0133"
+  },
+  "C838": {
+    "name": "wArenaWinsLo",
+    "note": "16-bit count shown by DrawWC838CountBoxAndStep (script command $F3), low byte",
+    "evidence": "E-0133"
+  },
+  "C839": {
+    "name": "wArenaWinsHi",
+    "note": "that count, high byte",
+    "evidence": "E-0133"
+  },
+  "C83A": {
+    "name": "wSpriteSnapshotCount",
+    "note": "sprite slot count saved by SnapshotSpritesForSave",
+    "evidence": "E-0133"
+  },
+  "C83B": {
+    "name": "wSpriteSnapshot",
+    "note": "sprite slot snapshot area saved with the game ($C83B onward)",
+    "evidence": "E-0133"
+  },
+  "C83C": {
+    "name": "wSnapshotByte3C",
+    "note": "byte of the snapshot area (set by the Log Twig item)",
+    "evidence": "E-0133"
+  },
+  "C83D": {
+    "name": "wSnapshotByte3D",
+    "note": "byte of the snapshot area (set by the Log Twig item)",
+    "evidence": "E-0133"
+  },
+  "C83E": {
+    "name": "wSnapshotByte3E",
+    "note": "byte of the snapshot area (set by the Log Twig item)",
+    "evidence": "E-0133"
+  },
+  "C848": {
+    "name": "wSnapshotSlot1",
+    "note": "snapshot slot 1 flags",
+    "evidence": "E-0133"
+  },
+  "C858": {
+    "name": "wSnapshotSlot2",
+    "note": "snapshot slot 2 flags",
+    "evidence": "E-0133"
+  },
+  "C868": {
+    "name": "wSnapshotSlot3",
+    "note": "snapshot slot 3 flags",
+    "evidence": "E-0133"
+  },
+  "C878": {
+    "name": "wSnapshotSlot4",
+    "note": "snapshot slot 4 flags",
+    "evidence": "E-0133"
+  },
+  "C888": {
+    "name": "wSnapshotSlot5",
+    "note": "snapshot slot 5 flags",
+    "evidence": "E-0133"
+  },
+  "C88B": {
+    "name": "wLastWarpIndex",
+    "note": "index of the last warp taken (CheckWarpAtPlayer)",
+    "evidence": "E-0133"
+  },
+  "C88C": {
+    "name": "wStatusStepFlags",
+    "note": "bit 7 and bit 0 used by the field status-effect state (EnterStatusEffectFieldState, ToggleWC88CLowBitOnce)",
+    "evidence": "E-0133"
+  },
+  "C88D": {
+    "name": "wSaveStateFlag",
+    "note": "set when the save blocks are copied; read by GameMode1_Init",
+    "evidence": "E-0133"
+  },
+  "C88E": {
+    "name": "wKeyWorldActive",
+    "note": "non-zero while a key world is active",
+    "evidence": "E-0133"
+  },
+  "C88F": {
+    "name": "wKeyWorldGoal",
+    "note": "key-world goal position/warp bytes ($C88F-$C890)",
+    "evidence": "E-0133"
+  },
+  "C890": {
+    "name": "wKeyWorldGoalCell",
+    "note": "key-world goal cell (screen x/y nibbles)",
+    "evidence": "E-0133"
+  },
+  "C891": {
+    "name": "wKeyWorldKey",
+    "note": "key in use: bit 7 set, low bits = key index + 1",
+    "evidence": "E-0133"
+  },
+  "C892": {
+    "name": "wTalkEventByte92",
+    "note": "set by script command $F7 and read by talk event 1/$65",
+    "evidence": "E-0133"
+  },
+  "C893": {
+    "name": "wKeyWorldRefresh",
+    "note": "bit 7 asks for the key/town objects to be rebuilt on entry",
+    "evidence": "E-0133"
+  },
+  "C894": {
+    "name": "wLinkByte94",
+    "note": "link setting byte (GameMode5_Init, script command $7C)",
+    "evidence": "E-0133"
+  },
+  "C895": {
+    "name": "wKeyNameBuf",
+    "note": "buffer for key display rows (bank-$33 screens)",
+    "evidence": "E-0133"
+  },
+  "C897": {
+    "name": "wBattleRewardByte97",
+    "note": "read by the battle results",
+    "evidence": "E-0133"
+  },
+  "C898": {
+    "name": "wBattleRewardByte98",
+    "note": "read by the battle results",
+    "evidence": "E-0133"
+  },
+  "C899": {
+    "name": "wBattleResultStep",
+    "note": "step of the battle results screen",
+    "evidence": "E-0133"
+  },
+  "C89A": {
+    "name": "wBattleResultCounter",
+    "note": "counter of the battle results screen",
+    "evidence": "E-0133"
+  },
+  "C89B": {
+    "name": "wBattleResultByte9B",
+    "note": "set by the battle results screen",
+    "evidence": "E-0133"
+  },
+  "C89C": {
+    "name": "wBattleResultByte9C",
+    "note": "set by the battle results screen",
+    "evidence": "E-0133"
+  },
+  "C89D": {
+    "name": "wThreeOptionResult",
+    "note": "choice of HandleThreeOptionMenuInput_15",
+    "evidence": "E-0133"
+  },
+  "C89E": {
+    "name": "wScriptTileBuf0",
+    "note": "16-byte tile uploaded by UploadTwoTilesFromWC89E (filled by script fetch 6)",
+    "evidence": "E-0133"
+  },
+  "C8AE": {
+    "name": "wScriptTileBuf1",
+    "note": "second 16-byte tile uploaded by UploadTwoTilesFromWC89E",
+    "evidence": "E-0133"
+  },
+  "C8BF": {
+    "name": "wFieldStepFlags",
+    "note": "field flags: bit 7 set by SetWC8BFBit7; $C0 blocks step triggers",
+    "evidence": "E-0133"
+  },
+  "C8C0": {
+    "name": "wDigits",
+    "note": "three decimal digits (hundreds, tens, ones) from HLToDecimalDigits; also a 24-bit input of Number24ToPackedBCD",
+    "evidence": "E-0133",
+    "size": "3"
+  },
+  "C8C3": {
+    "name": "wSaveStep",
+    "note": "save-routine stage (RunSaveGameSteps); bit 7 marks the end",
+    "evidence": "E-0133"
+  },
+  "C8C4": {
+    "name": "wSaveRecordIndex",
+    "note": "record index of the save-record steps",
+    "evidence": "E-0133"
+  },
+  "C8C5": {
+    "name": "wFieldTransitionStep",
+    "note": "step of the field transition (mode state 4)",
+    "evidence": "E-0133"
+  },
+  "C8C6": {
+    "name": "wFieldTransitionKind",
+    "note": "kind of field transition (warp, fade, special)",
+    "evidence": "E-0133"
+  },
+  "C8C7": {
+    "name": "wFieldReturnPhase",
+    "note": "phase used when returning to the field (RunWC8C7Phase); non-zero keeps the screen",
+    "evidence": "E-0133"
+  },
+  "C60C": {
+    "name": "wPlayerName",
+    "size": "A",
+    "note": "the player name (10 bytes): copied to wTextBuf0, wCADF, the name tiles; first part of the $291-byte save block that starts here (SaveGameToSRAMWithChecksum)",
+    "evidence": "E-0133"
+  },
+  "C635": {
+    "name": "wItemStorage",
+    "size": "C8",
+    "note": "100 two-byte entries (WC635HasNonZeroEntry); ends right before wPartyCount; item storage of the save data",
+    "evidence": "E-0133"
+  },
+  "C6FE": {
+    "name": "wPartyList",
+    "size": "4",
+    "note": "record indexes of the party members (up to 3, then $FF); MoveIncapacitatedPartyMembersBack reorders it",
+    "evidence": "E-0133"
+  },
+  "C787": {
+    "name": "wKeySeeds",
+    "size": "40",
+    "note": "two bytes per key entry: the random seed saved when a key is generated (GenerateNewKeyEntry, DeleteKeyEntryHFFC6)",
+    "evidence": "E-0133"
   }
 }

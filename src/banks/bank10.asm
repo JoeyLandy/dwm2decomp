@@ -352,7 +352,7 @@ Func_010_4252:: ; address name
 
 ; fetch handler for script opcode 83 (entry 131 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC195, hPlayerStateFlags
+; reads: wMapSpriteKind, hPlayerStateFlags
 ; writes: wScriptCommandType, wScriptParam1
 ScriptFetch83:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_426E:: ; address name
@@ -360,7 +360,7 @@ Func_010_426E:: ; address name
     ld a, $83
     ld [wScriptCommandType], a
     call StartEventScript
-    ld a, [wC195]
+    ld a, [wMapSpriteKind]
     and a, $03
     dec a
     jr nz, Jump_010_4291
@@ -547,18 +547,18 @@ Func_010_435A:: ; address name
 
 ; fetch handler for script opcode 06 (entry 6 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptInDataBank, wC552, wScriptPointerLo, wScriptPointerHi, wCC44
+; reads: wScriptInDataBank, wTextYesNoResult, wScriptPointerLo, wScriptPointerHi, wCC44
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
-; points at: wC89E, wC8AE
+; points at: wScriptTileBuf0, wScriptTileBuf1
 ScriptFetch06:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4367:: ; address name
     push bc
     push de
-    ld hl, wC89E
+    ld hl, wScriptTileBuf0
     ld de, vTiles1 + $6E0
     ld c, $10
     call CopyCBytesToVRAMWaitSTAT_Bank10
-    ld hl, wC8AE
+    ld hl, wScriptTileBuf1
     ld de, vTiles1 + $6F0
     ld c, $10
     call CopyCBytesToVRAMWaitSTAT_Bank10
@@ -568,7 +568,7 @@ Func_010_4367:: ; address name
     ld a, [wScriptInDataBank]
     and a, a
     jr z, Jump_010_43A6
-    ld a, [wC552]
+    ld a, [wTextYesNoResult]
     or a, a
     jr nz, Jump_010_43A3
     call ReadWordFromDataBank
@@ -591,7 +591,7 @@ Jump_010_43A3::
     jr Jump_010_4398
 
 Jump_010_43A6::
-    ld a, [wC552]
+    ld a, [wTextYesNoResult]
     or a, a
     jr nz, Jump_010_43BD
     ld a, [hl+]
@@ -1922,12 +1922,12 @@ Jump_010_4A74::
 
 ; entry 2 of the `rst $00` table in ScriptCommand09
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wScriptParam1, hPlayerY
+; reads: wTextFlags, wScriptParam1, hPlayerY
 ; writes: hSpriteWindowClipMode, wC8CB, wC8CC
 ; points at: wScriptStep
 ScriptCommand09_Case02::
 Jump_010_4A84:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld a, [wScriptParam1]

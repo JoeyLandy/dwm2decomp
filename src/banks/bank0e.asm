@@ -967,7 +967,7 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
 
 ; clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
 ; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case14, ScriptCommandED_Run_Case04_Case1C, ...)
-; reads: wD7F6, wD7F7, wD7F5, wC616, wD7F1, wD00E, wCFA8
+; reads: wD7F6, wD7F7, wD7F5, wSaveByte16, wD7F1, wD00E, wCFA8
 ; writes: wD7F6, wD7F7, wSpeciesIdLo, wSpeciesIdHi, wCFA8, wD7F5
 ; points at: wCAD0, wC991, wCA36, wCADB, wC994, wCADD, wCB25, wCB74, ...
 ComputeBreedingChild::
@@ -1329,7 +1329,7 @@ Jump_00E_5862::
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ld a, [wC616]
+    ld a, [wSaveByte16]
     ld hl, wCAE9
     ld [hl], a
     ld a, $01
@@ -2325,10 +2325,10 @@ Data_00E_5E79:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; copies the 10-byte player name wC60C to wCADF (E-0122)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
-; points at: wC60C, wCADF
+; points at: wPlayerName, wCADF
 CopyPlayerNameToWCADF::
 Func_00E_5E85:: ; address name
-    ld hl, wC60C
+    ld hl, wPlayerName
     ld de, wCADF
     ld c, $0A
 
@@ -2674,13 +2674,13 @@ Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0117)
 ; 3 call sites from 3 routines (e.g. RollWCB3DChanceOrIncWD7F5, RollWCB3DForCaseB_5D77, RollWCADEFromSpeciesFlag)
-; reads: wC5E7
+; reads: wRandomLo
 RandomModulo29::
 Func_00E_611B:: ; address name
     push bc
     call NextTableByte
     pop bc
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld l, a
     rl a
     and a, b

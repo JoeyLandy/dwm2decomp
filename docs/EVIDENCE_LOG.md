@@ -1513,6 +1513,26 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Result: 1,313 address-named RAM addresses remain (26,306 uses).
 - Binary verification: build/run94 PASS, 0 differing bytes; tests OK.
 
+### E-0133 — WRAM $C000-$C8C7
+
+- Kind: OBSERVATION (reading; C1).
+- **What is named.** About 220 names and buffers. These include:
+  - the VBlank BG/attribute write queues (FlushQueuedBGMapWrite);
+  - the map header bytes after wMaxBlockingTile;
+  - menu state and cursors;
+  - the text engine (window address, rows and width; string position; text cursor; yes/no result);
+  - palette upload requests, the fade state and the DMG palette bytes;
+  - Super Game Boy palette set and attribute file;
+  - the link state (role, mode, transfer pointer and count, send byte, timeouts);
+  - the random value (wRandomLo/Hi) and the second stream;
+  - the debug-screen variables;
+  - the save block (wPlayerName, wInventory with $18 slots, wItemStorage of 100 entries, wPartyCount, wPartyList, wKeyList, wKeySeeds);
+  - save and field transition steps.
+- **wWindowTileBuffer.** $C300-$C467 is a 20 x 18 window buffer: menus and boxes are drawn into it with 20-byte rows (the two-choice box at +$112), and it ends right before wFieldActionRequest.
+- **Limits.** Names marked as bank-$F0 or link "Byte" entries are mechanical: what they mean is not yet read.
+- Result: 1,004 address-named RAM addresses remain (19,217 uses).
+- Binary verification: build/run95 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

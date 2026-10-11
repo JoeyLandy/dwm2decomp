@@ -454,30 +454,30 @@ Data_007_482A:: ; heuristic: target of a monotone pointer table; C0
 ; start-up for wGameMode = 5; forcing this mode on the emulator shows: title screen; also sparkles and a victory screen when forced (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit_Case05)
 ; reads: wModeState
-; writes: wC554, wC555, wC58C
-; points at: wC46B, wC52D, wD06A
+; writes: wTextCursorLo, wTextCursorHi, wLinkReady
+; points at: wMenuState, wTextWindowTileLo, wD06A
 GameMode5_Init::
 Func_007_486E:: ; address name
     xor a, a
-    ld hl, wC46B
+    ld hl, wMenuState
     ld bc, $0008
     call FillBytes
     xor a, a
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     ld bc, $0012
     call FillBytes
     ld hl, vBGMap0 + $1C1
     ld a, l
-    ld [wC554], a
+    ld [wTextCursorLo], a
     ld a, h
-    ld [wC555], a
+    ld [wTextCursorHi], a
     xor a, a
     ld hl, wD06A
     ld bc, $0008
     call FillBytes
     call ClearSTATInterruptSources
     xor a, a
-    ld [wC58C], a
+    ld [wLinkReady], a
     ld a, [wModeState]
     rst $00
     dw GameMode5_Init_Case00
@@ -493,13 +493,13 @@ Func_007_486E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSGBActive, wIsCGB
 ; writes: rBGP, rOBP0, rOBP1, hWindowX, hWindowY, hScrollX, hScrollY, wFrameCounterLo, ...
-; points at: wC51F, wC5E9, wBGPaletteBuffer
+; points at: wSGBPaletteSet, wDMGPaletteBGP, wBGPaletteBuffer
 GameMode5_Init_Case00::
 Jump_007_48B2:: ; address name
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_48C8
-    ld hl, wC51F
+    ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
@@ -521,7 +521,7 @@ Jump_007_48D3::
     dec b
     jr nz, Jump_007_48D3
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
     ld a, $01
     ldh [rVBK], a
     ld hl, vBGMap0
@@ -537,7 +537,7 @@ Jump_007_48F3::
     ld hl, vTiles1
     call DecompressToRAMLocked
     xor a, a
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
@@ -561,27 +561,27 @@ Jump_007_48F3::
     ld [wFrameCounterLo], a
     ld [wFrameCounterHi], a
     xor a, a
-    ld [wC5E1], a
+    ld [wSTATSplitEnable], a
     xor a, a
-    ld [wC581], a
-    ld [wC582], a
+    ld [wLinkSession], a
+    ld [wLinkExchangeState], a
     xor a, a
-    ld [wC58A], a
+    ld [wLinkMode], a
     xor a, a
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     xor a, a
-    ld [wC57F], a
-    ld [wC580], a
+    ld [wLinkRole], a
+    ld [wLinkStatus], a
     ld a, $03
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld a, $01
     jp Jump_000_077A
 
 ; entry 1 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSGBActive, sBD97, wIsCGB, hTemp0, wD06A
-; writes: rRAMG, rRAMB, wC894, wC834, wC964, wStringCategory, wStringIndex, rVBK, ...
-; points at: wD09D, wC57F, wC51F, hPlayerSpriteVariant, wC60C, wCBD7, wCC42, sA000
+; writes: rRAMG, rRAMB, wLinkByte94, wMenuSaveByte34, wC964, wStringCategory, wStringIndex, rVBK, ...
+; points at: wD09D, wLinkRole, wSGBPaletteSet, hPlayerSpriteVariant, wPlayerName, wCBD7, wCC42, sA000
 GameMode5_Init_Case01::
 Jump_007_4952:: ; address name
     call InitSoundHardware
@@ -590,7 +590,7 @@ Jump_007_4952:: ; address name
     ld bc, $0210
     call FillBytes
     xor a, a
-    ld hl, wC57F
+    ld hl, wLinkRole
     ld bc, $0058
     call FillBytes
     ld a, [wSGBActive]
@@ -599,7 +599,7 @@ Jump_007_4952:: ; address name
     ld a, $02
     call LoadSGBBorderForSetA
     call SpinDelay
-    ld hl, wC51F
+    ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
@@ -612,7 +612,7 @@ Jump_007_4985::
     ld bc, $000E
     xor a, a
     call FillBytes
-    ld hl, wC60C
+    ld hl, wPlayerName
     ld bc, $0291
     xor a, a
     call FillBytes
@@ -628,7 +628,7 @@ Jump_007_4985::
     xor a, a
 
 Jump_007_49B3::
-    ld [wC894], a
+    ld [wLinkByte94], a
     xor a, a
     ld [rRAMB], a
     xor a, a
@@ -666,7 +666,7 @@ Jump_007_49B3::
     xor a, a
     ld [rRAMG], a
     ld a, $04
-    ld [wC834], a
+    ld [wMenuSaveByte34], a
     ld a, $01
     ld [wC964], a
     ld b, $46
@@ -741,19 +741,19 @@ Jump_007_4A9D::
     ld [wFrameCounterLo], a
     ld [wFrameCounterHi], a
     xor a, a
-    ld [wC5E1], a
+    ld [wSTATSplitEnable], a
     xor a, a
-    ld [wC581], a
-    ld [wC582], a
+    ld [wLinkSession], a
+    ld [wLinkExchangeState], a
     xor a, a
-    ld [wC58A], a
+    ld [wLinkMode], a
     xor a, a
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     xor a, a
-    ld [wC57F], a
-    ld [wC580], a
+    ld [wLinkRole], a
+    ld [wLinkStatus], a
     ld a, $03
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld a, $09
     jp Jump_000_077A
 
@@ -858,9 +858,9 @@ Jump_007_4B2A::
 
 ; entry 2 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSGBActive, wC8C3, wCC44, wC8CB, wIsCGB
-; writes: wC8C3, wC8C4, wC8CB, wC8CC, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
-; points at: wD780, wC51F, wC46B, wD06A
+; reads: wSGBActive, wSaveStep, wCC44, wC8CB, wIsCGB
+; writes: wSaveStep, wSaveRecordIndex, wC8CB, wC8CC, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
+; points at: wD780, wSGBPaletteSet, wMenuState, wD06A
 GameMode5_Init_Case02::
 Jump_007_4B45:: ; address name
     ld hl, wD780
@@ -874,12 +874,12 @@ Jump_007_4B4B::
     or a, c
     jr nz, Jump_007_4B4B
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4B6F
-    ld hl, wC51F
+    ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
@@ -894,7 +894,7 @@ Jump_007_4B6F::
 
 Jump_007_4B7B::
     farcall RunSaveSteps
-    ld a, [wC8C3]
+    ld a, [wSaveStep]
     bit 7, a
     jr z, Jump_007_4B7B
     ld a, [wCC44]
@@ -929,7 +929,7 @@ Jump_007_4BC4::
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
-    ld hl, wC46B
+    ld hl, wMenuState
     ld bc, $0008
     xor a, a
     call FillBytes
@@ -953,21 +953,21 @@ Jump_007_4BC4::
     ld [wFrameCounterLo], a
     ld [wFrameCounterHi], a
     xor a, a
-    ld [wC5E1], a
+    ld [wSTATSplitEnable], a
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     xor a, a
-    ld [wC58F], a
+    ld [wLinkMessage], a
     ld a, $03
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld a, $09
     jp Jump_000_077A
 
 ; entry 3 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSGBActive, wC8C3, wCC44, wC8CB, wIsCGB
-; writes: wC8C3, wC8C4, wC8CB, wC8CC, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
-; points at: wD780, wC51F, wC46B, wD06A
+; reads: wSGBActive, wSaveStep, wCC44, wC8CB, wIsCGB
+; writes: wSaveStep, wSaveRecordIndex, wC8CB, wC8CC, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
+; points at: wD780, wSGBPaletteSet, wMenuState, wD06A
 GameMode5_Init_Case03::
 Jump_007_4C24:: ; address name
     ld hl, wD780
@@ -981,12 +981,12 @@ Jump_007_4C2A::
     or a, c
     jr nz, Jump_007_4C2A
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4C4E
-    ld hl, wC51F
+    ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
@@ -1001,7 +1001,7 @@ Jump_007_4C4E::
 
 Jump_007_4C5A::
     farcall RunSaveSteps
-    ld a, [wC8C3]
+    ld a, [wSaveStep]
     bit 7, a
     jr z, Jump_007_4C5A
     ld a, [wCC44]
@@ -1036,7 +1036,7 @@ Jump_007_4CA3::
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
-    ld hl, wC46B
+    ld hl, wMenuState
     ld bc, $0008
     xor a, a
     call FillBytes
@@ -1058,31 +1058,31 @@ Jump_007_4CA3::
     ld [wFrameCounterLo], a
     ld [wFrameCounterHi], a
     xor a, a
-    ld [wC5E1], a
+    ld [wSTATSplitEnable], a
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     xor a, a
-    ld [wC58F], a
+    ld [wLinkMessage], a
     ld a, $03
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld a, $09
     jp Jump_000_077A
 
 ; entry 4 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSGBActive, wC8C3, wCC44, wIsCGB
-; writes: wC8C3, wC8C4, wD09E, hWindowX, hWindowY, hScrollY, hScrollX, wFrameCounterLo, ...
-; points at: wC51F, wScreenTileBuffer, wC46B, wD06A
+; reads: wSGBActive, wSaveStep, wCC44, wIsCGB
+; writes: wSaveStep, wSaveRecordIndex, wD09E, hWindowX, hWindowY, hScrollY, hScrollX, wFrameCounterLo, ...
+; points at: wSGBPaletteSet, wScreenTileBuffer, wMenuState, wD06A
 GameMode5_Init_Case04::
 Jump_007_4CFF:: ; address name
     call GameMode5_Init_Case04_Sub01
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4D1F
-    ld hl, wC51F
+    ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
@@ -1097,7 +1097,7 @@ Jump_007_4D1F::
 
 Jump_007_4D2B::
     farcall RunSaveSteps
-    ld a, [wC8C3]
+    ld a, [wSaveStep]
     bit 7, a
     jr z, Jump_007_4D2B
     ld a, [wCC44]
@@ -1139,7 +1139,7 @@ Jump_007_4D45::
     ld hl, $5447
     call CopyRecordRectToScreenBuffer_Bank07
     call DrawScreenBufferToBGMap0_Bank07
-    ld hl, wC46B
+    ld hl, wMenuState
     ld bc, $0008
     xor a, a
     call FillBytes
@@ -1161,13 +1161,13 @@ Jump_007_4D45::
     ld [wFrameCounterLo], a
     ld [wFrameCounterHi], a
     xor a, a
-    ld [wC5E1], a
+    ld [wSTATSplitEnable], a
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     xor a, a
-    ld [wC58F], a
+    ld [wLinkMessage], a
     ld a, $03
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld a, $09
     jp Jump_000_077A
 
@@ -1218,9 +1218,9 @@ Jump_007_4E19::
 
 ; entry 5 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
-; reads: rSTAT, wSGBActive, wC8C3, wCC44, wC8CB, wIsCGB
-; writes: wC8C3, wC8C4, wC8CB, wC8CC, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
-; points at: wD780, wC51F, wC46B, wD06A
+; reads: rSTAT, wSGBActive, wSaveStep, wCC44, wC8CB, wIsCGB
+; writes: wSaveStep, wSaveRecordIndex, wC8CB, wC8CC, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
+; points at: wD780, wSGBPaletteSet, wMenuState, wD06A
 GameMode5_Init_Case05::
 Jump_007_4E20:: ; address name
     ld hl, vTiles0
@@ -1245,9 +1245,9 @@ Jump_007_4E28::
 
 ; entry 6 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSGBActive, wC8C3, wCC44, wC8CB, wIsCGB
-; writes: wC8C3, wC8C4, wC8CB, wC8CC, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
-; points at: wD780, wC51F, wC46B, wD06A
+; reads: wSGBActive, wSaveStep, wCC44, wC8CB, wIsCGB
+; writes: wSaveStep, wSaveRecordIndex, wC8CB, wC8CC, hSpriteWindowClipMode, hWindowX, hWindowY, hScrollY, ...
+; points at: wD780, wSGBPaletteSet, wMenuState, wD06A
 GameMode5_Init_Case06::
 Jump_007_4E37:: ; address name
     ld hl, wD780
@@ -1259,12 +1259,12 @@ Jump_007_4E3D::
     dec b
     jr nz, Jump_007_4E3D
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_4E5F
-    ld hl, wC51F
+    ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
@@ -1279,7 +1279,7 @@ Jump_007_4E5F::
 
 Jump_007_4E6B::
     farcall RunSaveSteps
-    ld a, [wC8C3]
+    ld a, [wSaveStep]
     bit 7, a
     jr z, Jump_007_4E6B
     ld a, [wCC44]
@@ -1331,7 +1331,7 @@ Jump_007_4ED6::
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_007_4ED6
-    ld hl, wC46B
+    ld hl, wMenuState
     ld bc, $0008
     xor a, a
     call FillBytes
@@ -1353,28 +1353,28 @@ Jump_007_4ED6::
     ld [wFrameCounterLo], a
     ld [wFrameCounterHi], a
     xor a, a
-    ld [wC5E1], a
+    ld [wSTATSplitEnable], a
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     xor a, a
-    ld [wC58F], a
+    ld [wLinkMessage], a
     ld a, $03
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld a, $09
     jp Jump_000_077A
 
 ; only called from GameMode5_Init_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Init_Case06)
-; reads: wC6FD, hTemp0, hTemp1
+; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG
-; points at: wC6FE, wC972
+; points at: wPartyList, wC972
 GameMode5_Init_Case06_Sub01::
 Func_007_4F29:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
     ld de, wC972
 
 Jump_007_4F38::
@@ -1409,7 +1409,7 @@ Jump_007_4F38::
     jr nz, Jump_007_4F38
     xor a, a
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     cp a, $03
     ret z
     ld a, $FF
@@ -1457,7 +1457,7 @@ Jump_007_4F96:: ; address name
 
 ; blinks the cursor of the list entry [HL] every 8 frames; up/down moves it (wrapping over wC46F entries) with sound $69 (E-0127)
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_Case01_Case01, RunWD06AState_6C12_Case01, RunWD06BSubState_60E9_Case01, RunWD06AState_6C12_Case03_Case17, ...)
-; reads: wFrameCounterLo, wC46F, wJoypadPressedRepeat
+; reads: wFrameCounterLo, wSubMenuCursor, wJoypadPressedRepeat
 ; writes: wFrameCounterLo
 MoveVerticalCursorInListHL::
 Func_007_4F9D:: ; address name
@@ -1474,7 +1474,7 @@ Jump_007_4FB0::
     call WriteBBTileAtWordTableEntryC_Bank07
 
 Jump_007_4FB3::
-    ld a, [wC46F]
+    ld a, [wSubMenuCursor]
     cp a, $01
     jr z, Jump_007_4FE4
     ld c, [hl]
@@ -1486,7 +1486,7 @@ Jump_007_4FB3::
     ld [hl], a
     cp a, $FF
     jr nz, Jump_007_4FE5
-    ld a, [wC46F]
+    ld a, [wSubMenuCursor]
     dec a
     ld [hl], a
     jr Jump_007_4FE5
@@ -1495,7 +1495,7 @@ Jump_007_4FD0::
     ld a, [wJoypadPressedRepeat]
     and a, $80
     jr z, Jump_007_4FE4
-    ld a, [wC46F]
+    ld a, [wSubMenuCursor]
     dec a
     inc [hl]
     cp a, [hl]
@@ -1519,7 +1519,7 @@ Jump_007_4FE5::
 
 ; only called from routines of RunWD06AState_6C12 (E-0098)
 ; 15 call sites from 15 routines (e.g. RunWD06AState_6C12_Case03_Case1E, RunWD06AState_6C12_Case03_Case1B, RunWD06AState_6C12_Case03_Case18, RunWD06AState_6C12_Case03_Case15, ...)
-; reads: wFrameCounterLo, wJoypadPressedRepeat, wC470
+; reads: wFrameCounterLo, wJoypadPressedRepeat, wSubMenuCursor2
 ; writes: wFrameCounterLo
 RunWD06AState_6C12_Shared01::
 Func_007_4FF5:: ; address name
@@ -1545,7 +1545,7 @@ Jump_007_500B::
     ld [hl], a
     cp a, $FF
     jr nz, Jump_007_5036
-    ld a, [wC470]
+    ld a, [wSubMenuCursor2]
     dec a
     ld [hl], a
     jr Jump_007_5036
@@ -1554,7 +1554,7 @@ Jump_007_5021::
     ld a, [wJoypadPressedRepeat]
     and a, $10
     jr z, Jump_007_5035
-    ld a, [wC470]
+    ld a, [wSubMenuCursor2]
     dec a
     inc [hl]
     cp a, [hl]
@@ -2172,7 +2172,7 @@ Func_007_5B14:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB
 ; writes: rVBK, wD09D, wD09E, wD0E7
-; points at: wBGPaletteBuffer, wOBJPaletteBuffer, wC4E7, wD09D, wD09F, wD06B
+; points at: wBGPaletteBuffer, wOBJPaletteBuffer, wD09D, wD09F, wD06B
 RunWD06BSubState_5B14_Case00::
 Jump_007_5B2A:: ; address name
     ld a, [wFadeState]
@@ -2238,7 +2238,7 @@ Jump_007_5B76::
     call CopyFromBankWaitVRAM
     ld b, $7E
     ld de, Data_07E_4CAD
-    ld hl, wC4E7
+    ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBankWaitVRAM
 
@@ -2888,7 +2888,7 @@ Jump_007_5F89:: ; address name
 ; entry 2 of the `rst $00` table in GameMode5_Update_Case00_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wDC40, wD09D
-; writes: wD09D, wD06B, wD06A, wModeState, wC5DD, wC5DE
+; writes: wD09D, wD06B, wD06A, wModeState, wGameMode2State, wGameMode2Arg
 ; points at: wDC60, wDC80, wDCA0, wModeChangeRequest
 GameMode5_Update_Case00_Case04_Case02::
 Jump_007_5F9D:: ; address name
@@ -2925,9 +2925,9 @@ Jump_007_5FCF::
     ld a, $01
     ld [wModeState], a
     ld a, $00
-    ld [wC5DD], a
+    ld [wGameMode2State], a
     ld a, $00
-    ld [wC5DE], a
+    ld [wGameMode2Arg], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
@@ -2960,12 +2960,12 @@ Func_007_5FE8:: ; address name
 
 ; sets the DMG palettes $D2/$D2/$E2 (also in wD040) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wC51F and copies 8 bytes from $58FA to wC4FF (E-0128)
 ; 7 call sites from 7 routines (e.g. GameMode5_Update_Case00_Case00_Case00, GameMode5_Update_Case00_Case01_Case00, GameMode5_Update_Case00_Case02_Case00, RunWD06BSubState_5B14_Case06, ...)
-; reads: wC5E9, wC5EA, wC5EB, wSGBActive, wC51F, wC520
-; writes: rBGP, rOBP0, rOBP1, wC577, wC578, wC579, wC57A, wC57B, ...
-; points at: wC5E9, wD040, wC4FF
+; reads: wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1, wSGBActive, wSGBPaletteSet, wSGBAttrFile
+; writes: rBGP, rOBP0, rOBP1, wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, ...
+; points at: wDMGPaletteBGP, wD040
 ResetLinkScreenPalettes::
 Func_007_600E:: ; address name
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
     ld a, $D2
@@ -2973,11 +2973,11 @@ Func_007_600E:: ; address name
     ld a, $E2
     ld [hl], a
     ld hl, wD040
-    ld a, [wC5E9]
+    ld a, [wDMGPaletteBGP]
     ld [hl+], a
-    ld a, [wC5EA]
+    ld a, [wDMGPaletteOBP0]
     ld [hl+], a
-    ld a, [wC5EB]
+    ld a, [wDMGPaletteOBP1]
     ld [hl], a
     call ResetFadeFromWC5E9
     ld a, [wSGBActive]
@@ -2987,41 +2987,41 @@ Func_007_600E:: ; address name
     ldh [rBGP], a
     ldh [rOBP0], a
     ldh [rOBP1], a
-    ld a, [wC51F]
+    ld a, [wSGBPaletteSet]
     ld l, a
     ld h, $00
     add hl, hl
     add hl, hl
     ld a, l
-    ld [wC577], a
+    ld [wSGBPaletteNum0Lo], a
     ld a, h
-    ld [wC578], a
+    ld [wSGBPaletteNum0Hi], a
     inc hl
     ld a, l
-    ld [wC579], a
+    ld [wSGBPaletteNum1Lo], a
     ld a, h
-    ld [wC57A], a
+    ld [wSGBPaletteNum1Hi], a
     inc hl
     ld a, l
-    ld [wC57B], a
+    ld [wSGBPaletteNum2Lo], a
     ld a, h
-    ld [wC57C], a
+    ld [wSGBPaletteNum2Hi], a
     inc hl
     ld a, l
-    ld [wC57D], a
+    ld [wSGBPaletteNum3Lo], a
     ld a, h
-    ld [wC57E], a
+    ld [wSGBPaletteNum3Hi], a
     ld a, $B1
     ld [wSGBPacketBuffer], a
-    ld a, [wC520]
-    ld [wC480], a
+    ld a, [wSGBAttrFile]
+    ld [wSGBPacketBuffer + $1], a
     ld a, $FF
     ld [wSGBPacketIndex], a
     farcall_b SendSGBPacketSet
     call SpinDelay
     farcall LoadSGBObjectPalettesFromPointers
     ld hl, $58FA
-    ld de, wC4FF
+    ld de, wOBJPaletteBuffer + $20
     ld bc, $0008
     call CopyBytes
 
@@ -3053,31 +3053,31 @@ Jump_007_6090:: ; address name
 
 ; entry 0 of the `rst $00` table in GameMode5_Update_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58B, wModeChangeRequest, wC580
-; writes: wC58B, wD786, wC588
+; reads: wLinkScreenStep, wModeChangeRequest, wLinkStatus
+; writes: wLinkScreenStep, wD786, wLinkTimerLo
 GameMode5_Update_Case01_Case00::
 Jump_007_60B0:: ; address name
     call RunWD06BSubState_60E9
-    ld a, [wC58B]
+    ld a, [wLinkScreenStep]
     or a, a
     jr z, Jump_007_60E8
-    ld a, [wC58B]
+    ld a, [wLinkScreenStep]
     ld b, a
     xor a, a
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ld a, [wModeChangeRequest]
     or a, a
     jr nz, Jump_007_60E8
     ld a, $0F
     ld [wD786], a
     ld a, b
-    ld [wC588], a
+    ld [wLinkTimerLo], a
     call StartSerialTransferInternalClock
     ld a, $01
     ld [wD786], a
 
 Jump_007_60D8::
-    ld a, [wC580]
+    ld a, [wLinkStatus]
     and a, $03
     cp a, $03
     jr nz, Jump_007_60D8
@@ -3104,8 +3104,8 @@ Func_007_60E9:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWD06BSubState_60E9
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC894, wC46B
-; writes: wD781, wD782, wC46F, wC470, wC471, wC58B, wC588
+; reads: wLinkByte94, wMenuState
+; writes: wD781, wD782, wSubMenuCursor, wSubMenuCursor2, wMenuOption, wLinkScreenStep, wLinkTimerLo
 ; points at: wScreenTileBuffer, wD06B
 RunWD06BSubState_60E9_Case00::
 Jump_007_60F3:: ; address name
@@ -3121,7 +3121,7 @@ Jump_007_60F3:: ; address name
     ld a, $C3
     call FillBytes
     ld hl, $514F
-    ld a, [wC894]
+    ld a, [wLinkByte94]
     or a, a
     jr z, Jump_007_611B
     ld hl, $5207
@@ -3129,30 +3129,30 @@ Jump_007_60F3:: ; address name
 Jump_007_611B::
     call CopyRecordRectToScreenBuffer_Bank07
     call DrawScreenBufferToBGMap0_Bank07
-    ld a, [wC894]
+    ld a, [wLinkByte94]
     and a, $01
     ld a, $07
     jr z, Jump_007_612C
     ld a, $08
 
 Jump_007_612C::
-    ld [wC46F], a
+    ld [wSubMenuCursor], a
     xor a, a
-    ld [wC470], a
-    ld a, [wC46B]
-    ld [wC471], a
+    ld [wSubMenuCursor2], a
+    ld a, [wMenuState]
+    ld [wMenuOption], a
     xor a, a
-    ld [wC58B], a
-    ld [wC588], a
+    ld [wLinkScreenStep], a
+    ld [wLinkTimerLo], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in RunWD06BSubState_60E9
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wC52B, wJoypadPressed, wSGBActive, wC46B, wC471
-; writes: wD781, wD782, wStringCategory, wStringIndex, wD06A, wD06C, wC471
-; points at: wD06B, wC46B
+; reads: wFadeState, wTextFlags, wJoypadPressed, wSGBActive, wMenuState, wMenuOption
+; writes: wD781, wD782, wStringCategory, wStringIndex, wD06A, wD06C, wMenuOption
+; points at: wD06B, wMenuState
 RunWD06BSubState_60E9_Case01::
 Jump_007_6145:: ; address name
     ld a, [wFadeState]
@@ -3168,7 +3168,7 @@ Jump_007_6145:: ; address name
     ret
 
 Jump_007_615D::
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 0, a
     jr z, Jump_007_6176
     xor a, a
@@ -3198,7 +3198,7 @@ Jump_007_6187::
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_007_61CE
-    ld a, [wC46B]
+    ld a, [wMenuState]
     and a, $0F
     cp a, $02
     jr c, Jump_007_61CE
@@ -3213,7 +3213,7 @@ Jump_007_6187::
     ld hl, $52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
-    ld de, wScreenTileBuffer + $1A0
+    ld de, wWindowTileBuffer + $38
     ld bc, $1405
     call CopyRect32StrideToVRAM_Bank07
     ld a, $05
@@ -3221,7 +3221,7 @@ Jump_007_6187::
     ret
 
 Jump_007_61CE::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     and a, $0F
     ld b, $02
     ld c, $08
@@ -3232,7 +3232,7 @@ Jump_007_61CE::
 
 Jump_007_61DC::
     jr c, Jump_007_61EE
-    ld a, [wC46B]
+    ld a, [wMenuState]
     ld hl, $5086
     and a, $07
     call WriteBCTileAtWordTableEntry_Bank07
@@ -3248,26 +3248,26 @@ Jump_007_61EE::
 
 Jump_007_61F8::
     ld de, $5086
-    ld hl, wC46B
-    ld a, [wC471]
+    ld hl, wMenuState
+    ld a, [wMenuOption]
     cp a, [hl]
     call nz, EraseCursorAtEntryHL_Bank07
-    ld a, [wC471]
+    ld a, [wMenuOption]
     ld [hl], a
     call MoveVerticalCursorInListHL
-    ld a, [wC46B]
-    ld [wC471], a
+    ld a, [wMenuState]
+    ld [wMenuOption], a
 
 Jump_007_6212::
     ret
 
 ; wD781 = 0, sends the byte at $65BD + (wC471 & $0F) through SerialSendByte (stored in wD782), then wD781 = 1 (E-0122)
 ; 1 call site from 1 routine (e.g. RunWD06BSubState_60E9_Case01)
-; reads: wC471
+; reads: wMenuOption
 ; writes: wD781, wD782
 SendLinkByteForWC471::
 Func_007_6213:: ; address name
-    ld a, [wC471]
+    ld a, [wMenuOption]
     ld de, $65BD
     and a, $0F
     add a, e
@@ -3287,10 +3287,10 @@ Jump_007_6220::
 
 ; entry 2 of the `rst $00` table in RunWD06BSubState_60E9
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC46B
+; reads: wMenuState
 RunWD06BSubState_60E9_Case02::
 Jump_007_6231:: ; address name
-    ld a, [wC46B]
+    ld a, [wMenuState]
     and a, $0F
     rst $00
     dw RunWD06BSubState_60E9_Case02_Case00
@@ -3323,20 +3323,20 @@ Jump_007_6247:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWD06BSubState_60E9_Case02_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wScreenTileBuffer
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenTileBuffer
 ; points at: wD06C
 RunWD06BSubState_60E9_Case02_Case00_Case00::
 Jump_007_6262:: ; address name
     ld hl, vTiles2 + $680
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0401
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld a, $00
     ld [wStringCategory], a
     ld a, $04
@@ -3344,14 +3344,14 @@ Jump_007_6262:: ; address name
     farcall ShowString_Bank07
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1202
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld hl, $5367
     call CopyRecordRectToScreenBuffer_Bank07
     farcall DecompressA4GraphicsAndContinue
@@ -3366,7 +3366,7 @@ Jump_007_6262:: ; address name
 ; entry 1 of the `rst $00` table in RunWD06BSubState_60E9_Case02_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
-; writes: wC8C3, wC8C4, wD06C, wD06B
+; writes: wSaveStep, wSaveRecordIndex, wD06C, wD06B
 ; points at: wD06C, wScreenTileBuffer
 RunWD06BSubState_60E9_Case02_Case00_Case01::
 Jump_007_62BA:: ; address name
@@ -3376,8 +3376,8 @@ Jump_007_62BA:: ; address name
     ld hl, wD06C
     inc [hl]
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
     jr Jump_007_62E9
 
 Jump_007_62CE::
@@ -3400,13 +3400,13 @@ Jump_007_62E9::
 
 ; entry 2 of the `rst $00` table in RunWD06BSubState_60E9_Case02_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8C3, wCC44, wCD0D, wCD0E, hPlayerFacing, hPlayerX, hPlayerY
-; writes: wMapWidthScreens, wMapHeightScreens, wC8C7, wD069, wD091, wFollowerRecords, wC8F4, wC8F9, ...
+; reads: wSaveStep, wCC44, wCD0D, wCD0E, hPlayerFacing, hPlayerX, hPlayerY
+; writes: wMapWidthScreens, wMapHeightScreens, wFieldReturnPhase, wD069, wD091, wFollowerRecords, wC8F4, wC8F9, ...
 RunWD06BSubState_60E9_Case02_Case00_Case02::
 Jump_007_62ED:: ; address name
     call RunWD06BSubState_60E9_Shared01
     farcall RunSaveSteps
-    ld a, [wC8C3]
+    ld a, [wSaveStep]
     bit 7, a
     ret z
     farcall LoadWCD07RecordFromSRAMSlotWCC42
@@ -3422,7 +3422,7 @@ Jump_007_62ED:: ; address name
 
 Jump_007_6319::
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     xor a, a
     ld [wD069], a
     ld [wD091], a
@@ -3516,19 +3516,19 @@ Jump_007_63B1::
 
 ; entry 2 of the `rst $00` table in RunWD06BSubState_60E9_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC470
-; writes: wC55D, wC58B, wD786, wD781, wD782
+; reads: wSubMenuCursor2
+; writes: wJoypadReadFlag, wLinkScreenStep, wD786, wD781, wD782
 RunWD06BSubState_60E9_Case02_Case02::
 Jump_007_63B7:: ; address name
-    ld a, [wC470]
+    ld a, [wSubMenuCursor2]
     cp a, $FF
     jr z, Jump_007_63CD
     cp a, $FE
     jr z, Jump_007_63E7
     ld a, $00
-    ld [wC55D], a
+    ld [wJoypadReadFlag], a
     ld a, $F5
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ret
 
 Jump_007_63CD::
@@ -3561,35 +3561,35 @@ Jump_007_63E7::
 
 ; writes A to VRAM at HL, plays sound $69, clears wC58B and wC470 and sets wD06A = 7 (E-0122)
 ; 6 call sites from 6 routines (e.g. RunWD06BSubState_60E9_Case02_Case07, RunWD06BSubState_60E9_Case02_Case06, RunWD06BSubState_60E9_Case02_Case05, RunWD06BSubState_60E9_Case02_Case04, ...)
-; writes: wC58B, wD06A, wC470
+; writes: wLinkScreenStep, wD06A, wSubMenuCursor2
 WriteTileSound69ThenWD06A7::
 Func_007_6406:: ; address name
     call WriteVRAMByte
     ld a, $69
     call QueueSoundEffect
     xor a, a
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ld a, $07
     ld [wD06A], a
     xor a, a
-    ld [wC470], a
+    ld [wSubMenuCursor2], a
     ret
 
 ; entry 3 of the `rst $00` table in RunWD06BSubState_60E9_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC470
-; writes: wC55D, wC58B, wD786, wD781, wD782
+; reads: wSubMenuCursor2
+; writes: wJoypadReadFlag, wLinkScreenStep, wD786, wD781, wD782
 RunWD06BSubState_60E9_Case02_Case03::
 Jump_007_641C:: ; address name
-    ld a, [wC470]
+    ld a, [wSubMenuCursor2]
     cp a, $FF
     jr z, Jump_007_6432
     cp a, $FE
     jr z, Jump_007_644C
     ld a, $00
-    ld [wC55D], a
+    ld [wJoypadReadFlag], a
     ld a, $F6
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ret
 
 Jump_007_6432::
@@ -3622,19 +3622,19 @@ Jump_007_644C::
 
 ; entry 4 of the `rst $00` table in RunWD06BSubState_60E9_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC470
-; writes: wC55D, wC58B, wD786, wD781, wD782
+; reads: wSubMenuCursor2
+; writes: wJoypadReadFlag, wLinkScreenStep, wD786, wD781, wD782
 RunWD06BSubState_60E9_Case02_Case04::
 Jump_007_646B:: ; address name
-    ld a, [wC470]
+    ld a, [wSubMenuCursor2]
     cp a, $FF
     jr z, Jump_007_6481
     cp a, $FE
     jr z, Jump_007_649B
     ld a, $00
-    ld [wC55D], a
+    ld [wJoypadReadFlag], a
     ld a, $B7
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ret
 
 Jump_007_6481::
@@ -3667,19 +3667,19 @@ Jump_007_649B::
 
 ; entry 6 of the `rst $00` table in RunWD06BSubState_60E9_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC470
-; writes: wC55D, wC58B, wD786, wD781, wD782
+; reads: wSubMenuCursor2
+; writes: wJoypadReadFlag, wLinkScreenStep, wD786, wD781, wD782
 RunWD06BSubState_60E9_Case02_Case06::
 Jump_007_64BA:: ; address name
-    ld a, [wC470]
+    ld a, [wSubMenuCursor2]
     cp a, $FF
     jr z, Jump_007_64D0
     cp a, $FE
     jr z, Jump_007_64EA
     ld a, $00
-    ld [wC55D], a
+    ld [wJoypadReadFlag], a
     ld a, $E0
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ret
 
 Jump_007_64D0::
@@ -3712,19 +3712,19 @@ Jump_007_64EA::
 
 ; entry 7 of the `rst $00` table in RunWD06BSubState_60E9_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC470
-; writes: wC55D, wC58B, wD786, wD781, wD782
+; reads: wSubMenuCursor2
+; writes: wJoypadReadFlag, wLinkScreenStep, wD786, wD781, wD782
 RunWD06BSubState_60E9_Case02_Case07::
 Jump_007_6509:: ; address name
-    ld a, [wC470]
+    ld a, [wSubMenuCursor2]
     cp a, $FF
     jr z, Jump_007_651F
     cp a, $FE
     jr z, Jump_007_6539
     ld a, $00
-    ld [wC55D], a
+    ld [wJoypadReadFlag], a
     ld a, $F1
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ret
 
 Jump_007_651F::
@@ -3757,19 +3757,19 @@ Jump_007_6539::
 
 ; entry 5 of the `rst $00` table in RunWD06BSubState_60E9_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC470
-; writes: wC55D, wC58B, wD786, wD781, wD782
+; reads: wSubMenuCursor2
+; writes: wJoypadReadFlag, wLinkScreenStep, wD786, wD781, wD782
 RunWD06BSubState_60E9_Case02_Case05::
 Jump_007_6558:: ; address name
-    ld a, [wC470]
+    ld a, [wSubMenuCursor2]
     cp a, $FF
     jr z, Jump_007_656E
     cp a, $FE
     jr z, Jump_007_6588
     ld a, $00
-    ld [wC55D], a
+    ld [wJoypadReadFlag], a
     ld a, $DC
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ret
 
 Jump_007_656E::
@@ -3802,25 +3802,25 @@ Jump_007_6588::
 
 ; writes A to VRAM at HL, plays sound $69, clears wC58B and wC470 and sets wD06A = 4 (E-0122)
 ; 6 call sites from 6 routines (e.g. RunWD06BSubState_60E9_Case02_Case07, RunWD06BSubState_60E9_Case02_Case06, RunWD06BSubState_60E9_Case02_Case05, RunWD06BSubState_60E9_Case02_Case04, ...)
-; writes: wC58B, wD06A, wC470
+; writes: wLinkScreenStep, wD06A, wSubMenuCursor2
 WriteTileSound69ThenWD06A4::
 Func_007_65A7:: ; address name
     call WriteVRAMByte
     ld a, $69
     call QueueSoundEffect
     xor a, a
-    ld [wC58B], a
+    ld [wLinkScreenStep], a
     ld a, $04
     ld [wD06A], a
     xor a, a
-    ld [wC470], a
+    ld [wSubMenuCursor2], a
     ret
     db $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3
 
 ; entry 1 of the `rst $00` table in GameMode5_Update_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
-; writes: wD781, wD782, wC46B, wC46F
+; writes: wD781, wD782, wMenuState, wSubMenuCursor
 ; points at: wD09D, wD06A
 GameMode5_Update_Case01_Case01::
 Jump_007_65C5:: ; address name
@@ -3832,9 +3832,9 @@ Jump_007_65C5:: ; address name
     ld a, $01
     ld [wD781], a
     ld a, $01
-    ld [wC46B], a
+    ld [wMenuState], a
     ld a, $01
-    ld [wC46F], a
+    ld [wSubMenuCursor], a
     ld hl, wD09D
     ld [hl], $00
     ld de, $5086
@@ -3906,12 +3906,12 @@ Jump_007_6624:: ; address name
 
 ; entry 2 of the `rst $00` table in GameMode5_Update_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
+; reads: wTextFlags
 ; writes: rRAMG, rRAMB, wD06B
 ; points at: sA000, wScreenTileBuffer, wD06A
 GameMode5_Update_Case01_Case02_Case02::
 Jump_007_6633:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, $0A
@@ -4000,7 +4000,7 @@ Jump_007_66D2::
 
 ; entry 7 of the `rst $00` table in GameMode5_Update_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC588, wD787, wD780
+; reads: wLinkTimerLo, wD787, wD780
 ; writes: wD781, wD782, wTextBuf0, wStringCategory, wStringIndex, wD06A
 GameMode5_Update_Case01_Case07::
 Jump_007_66E0:: ; address name
@@ -4014,7 +4014,7 @@ Jump_007_66E0:: ; address name
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
-    ld a, [wC588]
+    ld a, [wLinkTimerLo]
     ld b, a
     and a, $F0
     swap a
@@ -4046,7 +4046,7 @@ Jump_007_66E0:: ; address name
     ld hl, $52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
-    ld de, wScreenTileBuffer + $1A0
+    ld de, wWindowTileBuffer + $38
     ld bc, $1405
     call CopyRect32StrideToVRAM_Bank07
     ld a, $05
@@ -4055,8 +4055,8 @@ Jump_007_66E0:: ; address name
 
 ; entry 8 of the `rst $00` table in GameMode5_Update_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC471, wD783, wD784, wD785
-; writes: wD781, wD782, wC46B, wTextBuf0, wStringCategory, wStringIndex, wD06A
+; reads: wMenuOption, wD783, wD784, wD785
+; writes: wD781, wD782, wMenuState, wTextBuf0, wStringCategory, wStringIndex, wD06A
 GameMode5_Update_Case01_Case08::
 Jump_007_6759:: ; address name
     xor a, a
@@ -4067,8 +4067,8 @@ Jump_007_6759:: ; address name
     ld a, $01
     ld [wD781], a
     call EraseCursorAtEntryHL_Bank07
-    ld a, [wC471]
-    ld [wC46B], a
+    ld a, [wMenuOption]
+    ld [wMenuState], a
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -4104,7 +4104,7 @@ Jump_007_6759:: ; address name
     ld hl, $52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
-    ld de, wScreenTileBuffer + $1A0
+    ld de, wWindowTileBuffer + $38
     ld bc, $1405
     call CopyRect32StrideToVRAM_Bank07
     ld a, $05
@@ -4135,7 +4135,7 @@ Jump_007_67DB:: ; address name
     ld hl, $52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
-    ld de, wScreenTileBuffer + $1A0
+    ld de, wWindowTileBuffer + $38
     ld bc, $1405
     call CopyRect32StrideToVRAM_Bank07
     ld hl, wD06A
@@ -4144,7 +4144,7 @@ Jump_007_67DB:: ; address name
 
 ; entry 5 of the `rst $00` table in GameMode5_Update_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
+; reads: wTextFlags
 ; writes: wD781, wD782, wD06A, wD06B
 GameMode5_Update_Case01_Case05::
 Jump_007_681C:: ; address name
@@ -4155,7 +4155,7 @@ Jump_007_681C:: ; address name
     call SerialSendByte
     ld a, $01
     ld [wD781], a
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     xor a, a
@@ -4192,8 +4192,8 @@ Jump_007_684C:: ; address name
 ; entry 1 of the `rst $00` table in GameMode5_Update_Case01_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB, wSGBActive
-; writes: rSVBK, wC52D, wC52E, wC52F, wC530
-; points at: wScreenTileBuffer, wD000, wOBJPaletteBuffer, wC4FF, wD06B
+; writes: rSVBK, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; points at: wScreenTileBuffer, wD000, wOBJPaletteBuffer, wD06B
 GameMode5_Update_Case01_Case06_Case01::
 Jump_007_6856:: ; address name
     ld a, [wFadeState]
@@ -4222,7 +4222,7 @@ Jump_007_687D::
     or a, a
     jr z, Jump_007_6897
     ld hl, wOBJPaletteBuffer
-    ld de, wC4FF
+    ld de, wOBJPaletteBuffer + $20
     ld b, $20
 
 Jump_007_6891::
@@ -4235,14 +4235,14 @@ Jump_007_6891::
 Jump_007_6897::
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1202
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld a, $FC
     call StartPaletteFade
     ld hl, wD06B
@@ -4295,9 +4295,9 @@ Jump_007_68DE:: ; address name
 
 ; entry 5 of the `rst $00` table in GameMode5_Update_Case01_Case06
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD09D, wC5E7, wD7F5
-; writes: wC616
-; points at: wD7F1, wC8CF, wC60C, wD06B
+; reads: wD09D, wRandomLo, wD7F5
+; writes: wSaveByte16
+; points at: wD7F1, wC8CF, wPlayerName, wD06B
 GameMode5_Update_Case01_Case06_Case05::
 Jump_007_68E3:: ; address name
     ld hl, wD7F1
@@ -4311,13 +4311,13 @@ Jump_007_68E3:: ; address name
     ld [hl], a
     farcall RunWCFA8StateWhenNotFading
     call NextTableByte
-    ld a, [wC5E7]
-    ld [wC616], a
+    ld a, [wRandomLo]
+    ld [wSaveByte16], a
     ld a, [wD7F5]
     cp a, $FF
     ret nz
     ld de, wC8CF
-    ld hl, wC60C
+    ld hl, wPlayerName
     ld b, $0A
 
 Jump_007_690E::
@@ -4351,9 +4351,9 @@ Jump_007_6919:: ; address name
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
     ld a, $00
-    ld [wC6FD], a
+    ld [wPartyCount], a
     ld a, $00
-    ld [wC6FE], a
+    ld [wPartyList], a
     call InitGoldAndClearInventory
     call GameMode5_Update_Case01_Case06_Case06_Sub01
     ld hl, wKeyList
@@ -4361,7 +4361,7 @@ Jump_007_6919:: ; address name
     ld a, $FF
     call FillBytes
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     ld a, $03
     ld [wD06A], a
     ret
@@ -4388,7 +4388,7 @@ Func_007_695A:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case01_Case06_Case06)
 ; reads: wRecordBuffer, wCFED, wRecordBufferData, wCFEF, wCFF0, wCFF1, wCFF5, wCFF6, ...
 ; writes: rRAMG, rRAMB, wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi
-; points at: sA000, wC60C, sA00D, wD01A, sA08E, sA099, sA01E, sA029
+; points at: sA000, wPlayerName, sA00D, wD01A, sA08E, sA099, sA01E, sA029
 GameMode5_Update_Case01_Case06_Case06_Sub01::
 Func_007_6975:: ; address name
     ld a, $0A
@@ -4428,7 +4428,7 @@ Func_007_6975:: ; address name
     inc hl
     xor a, a
     ld [hl+], a
-    ld de, wC60C
+    ld de, wPlayerName
     ld b, $0B
     call CopyBBytesDEToHL_Bank07
     ld a, $FF
@@ -4623,11 +4623,11 @@ Jump_007_6AE9::
 
 ; entry 2 of the `rst $00` table in GameMode5_Update
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC581, wD06A, wD780, wD7EE, wC8C3, wC94B, wC88D, wD781, ...
+; reads: wLinkSession, wD06A, wD780, wD7EE, wSaveStep, wC94B, wSaveStateFlag, wD781, ...
 ; writes: wD7EE, wGameMode, wModeChangeRequest, wCC44, wC917, wC916, hPlayerX, hPlayerY, ...
 GameMode5_Update_Case02::
 Jump_007_6AEE:: ; address name
-    ld a, [wC581]
+    ld a, [wLinkSession]
     cp a, $05
     jp z, Jump_007_7D38
     call LinkExchangeJoypadPerFrame
@@ -4646,7 +4646,7 @@ Jump_007_6B01::
     and a, a
     jr z, Jump_007_6B23
     farcall RunSaveGameSteps
-    ld a, [wC8C3]
+    ld a, [wSaveStep]
     bit 7, a
     ret z
     xor a, a
@@ -4678,15 +4678,15 @@ Jump_007_6B23::
     ldh [hMapId], a
     xor a, a
     ldh [hPlayerStateFlags], a
-    ld [wC6FD], a
+    ld [wPartyCount], a
     xor a, a
-    ld [wC8C7], a
-    ld a, [wC88D]
+    ld [wFieldReturnPhase], a
+    ld a, [wSaveStateFlag]
     ld [wC965], a
     xor a, a
-    ld [wC88D], a
+    ld [wSaveStateFlag], a
     xor a, a
-    ld [wC58A], a
+    ld [wLinkMode], a
     ld [wC94B], a
     ld [wScriptInDataBank], a
     ld [wD7F0], a
@@ -4827,7 +4827,7 @@ Jump_007_6C28:: ; address name
 ; entry 0 of the `rst $00` table in RunWD06AState_6C12_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wD06B
-; writes: wC46F, wC594, wD06B
+; writes: wSubMenuCursor, wLinkSendByte, wD06B
 RunWD06AState_6C12_Case00_Case00::
 Jump_007_6C32:: ; address name
     ld a, [wFadeState]
@@ -4839,9 +4839,9 @@ Jump_007_6C32:: ; address name
     call RunWD06AState_6C12_Case00_Case00_Sub01
     farcall FullyHealParty
     ld a, $04
-    ld [wC46F], a
+    ld [wSubMenuCursor], a
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, [wD06B]
     inc a
     ld [wD06B], a
@@ -4849,16 +4849,16 @@ Jump_007_6C32:: ; address name
 
 ; only called from RunWD06AState_6C12_Case00_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWD06AState_6C12_Case00_Case00)
-; reads: wC6FD, hTemp0, hTemp1
+; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG
-; points at: wC6FE, wC972
+; points at: wPartyList, wC972
 RunWD06AState_6C12_Case00_Case00_Sub01::
 Func_007_6C59:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
     ld de, wC972
 
 Jump_007_6C68::
@@ -4893,7 +4893,7 @@ Jump_007_6C68::
     jr nz, Jump_007_6C68
     xor a, a
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     cp a, $03
     ret z
     ld a, $FF
@@ -4912,27 +4912,27 @@ Jump_007_6C68::
 ; entry 1 of the `rst $00` table in RunWD06AState_6C12_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD06B
-; writes: wD06B, wC594
+; writes: wD06B, wLinkSendByte
 RunWD06AState_6C12_Case00_Case01::
 Jump_007_6CAB:: ; address name
     ld a, [wD06B]
     inc a
     ld [wD06B], a
     ld a, $D3
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 ; entry 2 of the `rst $00` table in RunWD06AState_6C12_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD06A
-; writes: wC594, wD06B, wD06A
+; reads: wLinkMessage, wD06A
+; writes: wLinkSendByte, wD06B, wD06A
 RunWD06AState_6C12_Case00_Case02::
 Jump_007_6CB8:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $D3
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld [wD06B], a
     ld a, [wD06A]
     inc a
@@ -4941,12 +4941,12 @@ Jump_007_6CB8:: ; address name
 
 ; entry 1 of the `rst $00` table in RunWD06AState_6C12
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wJoypadPressed, wC46B
-; writes: wD06B, wD06C, wC594, wCFC5, wD059, wD06A
-; points at: wD06A, wC46B
+; reads: wLinkMessage, wJoypadPressed, wMenuState
+; writes: wD06B, wD06C, wLinkSendByte, wCFC5, wD059, wD06A
+; points at: wD06A, wMenuState
 RunWD06AState_6C12_Case01::
 Jump_007_6CCD:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr nz, Jump_007_6CEA
     ld a, $01
@@ -4954,7 +4954,7 @@ Jump_007_6CCD:: ; address name
     ld a, $01
     ld [wD06C], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06A
     inc [hl]
     jp Jump_007_6DA8
@@ -4971,7 +4971,7 @@ Jump_007_6CEA::
     ld hl, wD06A
     inc [hl]
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     jp Jump_007_6DA8
 
 Jump_007_6D06::
@@ -5000,14 +5000,14 @@ Jump_007_6D2A::
 
 Jump_007_6D32::
     ld de, $5096
-    ld hl, wC46B
+    ld hl, wMenuState
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_007_6D90
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46B]
+    ld a, [wMenuState]
     and a, $03
     cp a, $03
     jr z, Jump_007_6D97
@@ -5042,7 +5042,7 @@ Jump_007_6D86::
     ld a, e
     ld [wD06A], a
     ld a, d
-    ld [wC594], a
+    ld [wLinkSendByte], a
     jr Jump_007_6DA8
 
 Jump_007_6D90::
@@ -5052,7 +5052,7 @@ Jump_007_6D90::
 
 Jump_007_6D97::
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     xor a, a
     ld [wD06C], a
     xor a, a
@@ -5168,12 +5168,12 @@ Jump_007_6E16:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWD06AState_6C12_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wC57F
-; writes: wCFC5, wD06A, wC594, wD059
+; reads: wLinkMessage, wLinkRole
+; writes: wCFC5, wD06A, wLinkSendByte, wD059
 ; points at: wD06B
 RunWD06AState_6C12_Case02_Case00::
 Jump_007_6E2A:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     jr z, Jump_007_6E8C
     cp a, $FE
@@ -5187,7 +5187,7 @@ Jump_007_6E2A:: ; address name
     ret
 
 Jump_007_6E42::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_6E8C
     call InitWD043PresetA
@@ -5200,7 +5200,7 @@ Jump_007_6E42::
     ret
 
 Jump_007_6E5C::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_6E8C
     call InitWD043PresetB
@@ -5213,7 +5213,7 @@ Jump_007_6E5C::
     ret
 
 Jump_007_6E76::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_6E8C
     ld a, $08
@@ -5221,46 +5221,46 @@ Jump_007_6E76::
     ld a, $04
     ld [wD06A], a
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_007_6E8C::
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in RunWD06AState_6C12_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC594
+; writes: wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case02_Case01::
 Jump_007_6E9A:: ; address name
     ld hl, wD06B
     inc [hl]
     ld a, $02
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 ; entry 2 of the `rst $00` table in RunWD06AState_6C12_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wC594
+; reads: wLinkMessage
+; writes: wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case02_Case02::
 Jump_007_6EA4:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $02
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, $52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
-    ld de, wScreenTileBuffer + $1A0
+    ld de, wWindowTileBuffer + $38
     ld bc, $1405
     call CopyRect32StrideToVRAM_Bank07
     ld hl, wD06B
@@ -5269,11 +5269,11 @@ Jump_007_6EA4:: ; address name
 
 ; entry 3 of the `rst $00` table in RunWD06AState_6C12_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
+; reads: wLinkMessage
 ; points at: wD06B
 RunWD06AState_6C12_Case02_Case03::
 Jump_007_6EC5:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     or a, a
     ret nz
     ld hl, wD06B
@@ -5300,27 +5300,27 @@ Jump_007_6ED9::
 
 ; entry 5 of the `rst $00` table in RunWD06AState_6C12_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
-; writes: wC594
+; reads: wTextFlags
+; writes: wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case02_Case05::
 Jump_007_6EE1:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 6 of the `rst $00` table in RunWD06AState_6C12_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
+; reads: wLinkMessage
 ; points at: wD06B
 RunWD06AState_6C12_Case02_Case06::
 Jump_007_6EF0:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     ret nz
     ld hl, wD06B
@@ -5329,19 +5329,19 @@ Jump_007_6EF0:: ; address name
 
 ; entry 7 of the `rst $00` table in RunWD06AState_6C12_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC581, wC582, wC57F, wC580, wC58A, wC58F, wC594, wC58B
+; writes: wLinkSession, wLinkExchangeState, wLinkRole, wLinkStatus, wLinkMode, wLinkMessage, wLinkSendByte, wLinkScreenStep
 ; points at: wD09D, wModeChangeRequest, wGameMode
 RunWD06AState_6C12_Case02_Case07::
 Jump_007_6EFB:: ; address name
     xor a, a
-    ld [wC581], a
-    ld [wC582], a
-    ld [wC57F], a
-    ld [wC580], a
-    ld [wC58A], a
-    ld [wC58F], a
-    ld [wC594], a
-    ld [wC58B], a
+    ld [wLinkSession], a
+    ld [wLinkExchangeState], a
+    ld [wLinkRole], a
+    ld [wLinkStatus], a
+    ld [wLinkMode], a
+    ld [wLinkMessage], a
+    ld [wLinkSendByte], a
+    ld [wLinkScreenStep], a
     ld hl, wD09D
     ld bc, $001E
     xor a, a
@@ -5401,12 +5401,12 @@ Jump_007_6F34:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wC57F
-; writes: wC46F, wC594, wCFC5, wD059, wD06A, wD06B, wD06C
+; reads: wLinkMessage, wLinkRole
+; writes: wSubMenuCursor, wLinkSendByte, wCFC5, wD059, wD06A, wD06B, wD06C
 ; points at: wD06B
 RunWD06AState_6C12_Case03_Case00::
 Jump_007_6F76:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr z, Jump_007_6F8B
     cp a, $FD
@@ -5418,7 +5418,7 @@ Jump_007_6F76:: ; address name
     jr Jump_007_6FF1
 
 Jump_007_6F8B::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_6FF1
     ld a, $01
@@ -5426,13 +5426,13 @@ Jump_007_6F8B::
     ld a, $01
     ld [wD06C], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $02
     ld [wD06A], a
     ret
 
 Jump_007_6FA7::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_6FF1
     ld a, $08
@@ -5440,11 +5440,11 @@ Jump_007_6FA7::
     ld a, $04
     ld [wD06A], a
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_007_6FBD::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_6FF1
     call InitWD043PresetA
@@ -5457,7 +5457,7 @@ Jump_007_6FBD::
     ret
 
 Jump_007_6FD7::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_6FF1
     call InitWD043PresetB
@@ -5477,21 +5477,21 @@ Jump_007_6FF1::
     call DrawWD09DSelectionTilesAndPanels
     call DrawScreenBufferToBGMap0_Bank07
     ld a, $06
-    ld [wC46F], a
+    ld [wSubMenuCursor], a
     ld hl, wD06B
     inc [hl]
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 ; entry 1 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46C
-; writes: wC470, wC46D, wD06B, wD06C
-; points at: wC46C, wD09D
+; reads: wJoypadPressed, wMenuSubState
+; writes: wSubMenuCursor2, wMenuSelectedMember, wD06B, wD06C
+; points at: wMenuSubState, wD09D
 RunWD06AState_6C12_Case03_Case01::
 Jump_007_7010:: ; address name
-    ld hl, wC46C
+    ld hl, wMenuSubState
     ld de, $509E
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
@@ -5505,19 +5505,19 @@ Jump_007_7021::
     ret z
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46C]
+    ld a, [wMenuSubState]
     ld hl, $509E
     and a, $07
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $02
-    ld [wC470], a
-    ld a, [wC46C]
+    ld [wSubMenuCursor2], a
+    ld a, [wMenuSubState]
     and a, $07
     ld hl, wD09D
     add_a_to_hl
     ld a, [hl]
-    ld [wC46D], a
-    ld a, [wC46C]
+    ld [wMenuSelectedMember], a
+    ld a, [wMenuSubState]
     and a, $07
     ld hl, $7063
     add_a_to_hl
@@ -5530,11 +5530,11 @@ Jump_007_7021::
 
 ; entry 2 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC594, wD06A, wD06B, wD06C
+; writes: wLinkSendByte, wD06A, wD06B, wD06C
 RunWD06AState_6C12_Case03_Case02::
 Jump_007_7069:: ; address name
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $02
     ld [wD06A], a
     xor a, a
@@ -5545,18 +5545,18 @@ Jump_007_7069:: ; address name
 
 ; entry 3 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46D, wD09E, wD09F, wD0A0, wD0A1, wD0A2
-; writes: wD09D, wD06B, wD059, wC594
-; points at: wC46D, wD043, wD06B
+; reads: wJoypadPressed, wMenuSelectedMember, wD09E, wD09F, wD0A0, wD0A1, wD0A2
+; writes: wD09D, wD06B, wD059, wLinkSendByte
+; points at: wMenuSelectedMember, wD043, wD06B
 RunWD06AState_6C12_Case03_Case03::
 Jump_007_707C:: ; address name
-    ld hl, wC46D
+    ld hl, wMenuSelectedMember
     ld de, $50AA
     call RunWD06AState_6C12_Shared01
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_7097
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD09D], a
     xor a, a
     ld [wD06B], a
@@ -5568,7 +5568,7 @@ Jump_007_7097::
     ret z
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     and a, $01
     jr z, Jump_007_70AF
     ld a, $02
@@ -5597,7 +5597,7 @@ Jump_007_70AF::
     ld [wD059], a
     call CopyWD043ToWD04D
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
@@ -5616,58 +5616,58 @@ Func_007_70E9:: ; address name
 
 ; entry 4 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wC594
+; reads: wLinkMessage
+; writes: wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case03_Case04::
 Jump_007_70F3:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $02
     ret nz
     ld a, $02
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 5 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC592, wC595, wC596, wC590, wC591, wC58C, wC594
-; points at: wD043, wC5B7, wD06B
+; writes: wLinkBufferCountLo, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkReady, wLinkSendByte
+; points at: wD043, wLinkPartnerName, wD06B
 RunWD06AState_6C12_Case03_Case05::
 Jump_007_7103:: ; address name
     ld a, $0A
-    ld [wC592], a
+    ld [wLinkBufferCountLo], a
     ld hl, wD043
     ld a, l
-    ld [wC595], a
+    ld [wLinkTimeoutLo], a
     ld a, h
-    ld [wC596], a
-    ld hl, wC5B7
+    ld [wLinkTimeoutHi], a
+    ld hl, wLinkPartnerName
     ld a, l
-    ld [wC590], a
+    ld [wLinkBufferPtrLo], a
     ld a, h
-    ld [wC591], a
+    ld [wLinkBufferPtrHi], a
     ld a, $01
-    ld [wC58C], a
+    ld [wLinkReady], a
     ld a, $FF
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 6 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wC594
+; reads: wLinkMessage
+; writes: wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case03_Case06::
 Jump_007_712D:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $F0
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
@@ -5680,7 +5680,7 @@ Jump_007_713C:: ; address name
     ld hl, $52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
-    ld de, wScreenTileBuffer + $1A0
+    ld de, wWindowTileBuffer + $38
     ld bc, $1405
     call CopyRect32StrideToVRAM_Bank07
     ld hl, wD06B
@@ -5700,11 +5700,11 @@ Jump_007_7153:: ; address name
 
 ; entry 9 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
+; reads: wTextFlags
 ; points at: wD06B
 RunWD06AState_6C12_Case03_Case09::
 Jump_007_715E:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     ld hl, wD06B
@@ -5713,11 +5713,11 @@ Jump_007_715E:: ; address name
 
 ; entry 10 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wD06A, wD06B, wD06C, wC594
+; reads: wLinkMessage
+; writes: wD06A, wD06B, wD06C, wLinkSendByte
 RunWD06AState_6C12_Case03_Case0A::
 Jump_007_7168:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr nz, Jump_007_7183
     ld a, $02
@@ -5727,14 +5727,14 @@ Jump_007_7168:: ; address name
     ld a, $01
     ld [wD06C], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_007_7183::
     cp a, $01
     ret nz
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $05
     ld [wD06A], a
     ld a, $01
@@ -5745,18 +5745,18 @@ Jump_007_7183::
 
 ; entry 11 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46D
+; reads: wJoypadPressed, wMenuSelectedMember
 ; writes: wD09E, wD06B, wD06C
-; points at: wC46D, wD06B
+; points at: wMenuSelectedMember, wD06B
 RunWD06AState_6C12_Case03_Case0B::
 Jump_007_719B:: ; address name
-    ld hl, wC46D
+    ld hl, wMenuSelectedMember
     ld de, $50AE
     call RunWD06AState_6C12_Shared01
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_71B6
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD09E], a
     xor a, a
     ld [wD06B], a
@@ -5768,7 +5768,7 @@ Jump_007_71B6::
     ret z
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD09E], a
     or a, a
     jr z, Jump_007_71CF
@@ -5786,7 +5786,7 @@ Jump_007_71CF::
 ; entry 12 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD044, wD045
-; writes: wC46E, wC46F, wC470
+; writes: wMenuCursor, wSubMenuCursor, wSubMenuCursor2
 ; points at: wD0A3, wD06B
 RunWD06AState_6C12_Case03_Case0C::
 Jump_007_71D8:: ; address name
@@ -5880,11 +5880,11 @@ Jump_007_7259::
     ld [de], a
     call RunWD06AState_6C12_Case03_Case0C_Sub01
     xor a, a
-    ld [wC46E], a
+    ld [wMenuCursor], a
     ld a, $07
-    ld [wC46F], a
+    ld [wSubMenuCursor], a
     ld a, $03
-    ld [wC470], a
+    ld [wSubMenuCursor2], a
     ld hl, wD06B
     inc [hl]
     ret
@@ -5907,12 +5907,12 @@ Func_007_7270:: ; address name
 
 ; entry 13 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46E, wD0A3, wD0A4, wD0A5, wD0A6, wD0A7, wD0A8, ...
+; reads: wJoypadPressed, wMenuCursor, wD0A3, wD0A4, wD0A5, wD0A6, wD0A7, wD0A8, ...
 ; writes: wD044, wD045, wD06B
-; points at: wC46E, wD06B
+; points at: wMenuCursor, wD06B
 RunWD06AState_6C12_Case03_Case0D::
 Jump_007_7284:: ; address name
-    ld hl, wC46E
+    ld hl, wMenuCursor
     ld de, $50C2
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
@@ -5920,10 +5920,10 @@ Jump_007_7284:: ; address name
     jr z, Jump_007_72AE
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     ld hl, $50C2
     call WriteBCTileAtWordTableEntry_Bank07
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     and a, $07
     inc a
     ld hl, wD06B
@@ -6180,18 +6180,18 @@ Jump_007_740A:: ; address name
 
 ; entry 21 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46D
+; reads: wJoypadPressed, wMenuSelectedMember
 ; writes: wD09F, wD06B, wD06C
-; points at: wC46D, wD06B
+; points at: wMenuSelectedMember, wD06B
 RunWD06AState_6C12_Case03_Case15::
 Jump_007_742F:: ; address name
-    ld hl, wC46D
+    ld hl, wMenuSelectedMember
     ld de, $50B2
     call RunWD06AState_6C12_Shared01
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_744A
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD09F], a
     xor a, a
     ld [wD06B], a
@@ -6203,7 +6203,7 @@ Jump_007_744A::
     ret z
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD09F], a
     or a, a
     jr z, Jump_007_7463
@@ -6221,7 +6221,7 @@ Jump_007_7463::
 ; entry 22 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD047
-; writes: wC46E, wC46F
+; writes: wMenuCursor, wSubMenuCursor
 ; points at: wD06B
 RunWD06AState_6C12_Case03_Case16::
 Jump_007_746C:: ; address name
@@ -6237,27 +6237,27 @@ Jump_007_746C:: ; address name
     rlca
     rlca
     and a, $01
-    ld [wC46E], a
+    ld [wMenuCursor], a
     ld a, $02
-    ld [wC46F], a
+    ld [wSubMenuCursor], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 23 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wC46E, wD047, wD048, wJoypadPressed, wD046
+; reads: wJoypadPressedRepeat, wMenuCursor, wD047, wD048, wJoypadPressed, wD046
 ; writes: wD048, wD047, wD06B, wD046
-; points at: wC46E
+; points at: wMenuCursor
 RunWD06AState_6C12_Case03_Case17::
 Jump_007_7498:: ; address name
-    ld hl, wC46E
+    ld hl, wMenuCursor
     ld de, $50FA
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressedRepeat]
     and a, $30
     jr z, Jump_007_7514
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     and a, $01
     jr nz, Jump_007_74EF
     ld a, [wD047]
@@ -6330,7 +6330,7 @@ Jump_007_7514::
     ret z
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     rrca
     rrca
     and a, $40
@@ -6345,7 +6345,7 @@ Jump_007_7514::
 
 ; only called from routines of RunWD06AState_6C12 (E-0098)
 ; 2 call sites from 2 routines (e.g. RunWD06AState_6C12_Case03_Case17, RunWD06AState_6C12_Case03_Case16)
-; reads: wD047, wD048, wC8C0, wC8C1, wC8C2
+; reads: wD047, wD048, wDigits
 RunWD06AState_6C12_Shared02::
 Func_007_7535:: ; address name
     ld a, [wD047]
@@ -6369,7 +6369,7 @@ Jump_007_7550::
     ld a, b
     call WriteVRAMByteInc
     ld c, $01
-    ld a, [wC8C0]
+    ld a, [wDigits]
     add a, $E0
     cp a, $E0
     jr nz, Jump_007_7566
@@ -6378,7 +6378,7 @@ Jump_007_7550::
 
 Jump_007_7566::
     call WriteVRAMByteInc
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     cp a, $E0
     jr nz, Jump_007_7578
@@ -6388,7 +6388,7 @@ Jump_007_7566::
 
 Jump_007_7578::
     call WriteVRAMByteInc
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     call WriteVRAMByteInc
     ld b, $C6
@@ -6406,7 +6406,7 @@ Jump_007_758F::
 
 ; only called from routines of RunWD06AState_6C12 (E-0098)
 ; 2 call sites from 2 routines (e.g. RunWD06AState_6C12_Case03_Case17, RunWD06AState_6C12_Case03_Case16)
-; reads: wD046, wC8C1, wC8C2
+; reads: wD046, wDigits
 RunWD06AState_6C12_Shared03::
 Func_007_7594:: ; address name
     ld a, [wD046]
@@ -6427,7 +6427,7 @@ Jump_007_75A8::
     call WriteVRAMByteInc
     ld a, $C3
     call WriteVRAMByteInc
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     cp a, $E0
     jr nz, Jump_007_75BF
@@ -6435,7 +6435,7 @@ Jump_007_75A8::
 
 Jump_007_75BF::
     call WriteVRAMByteInc
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     call WriteVRAMByteInc
     ld b, $C6
@@ -6451,18 +6451,18 @@ Jump_007_75D3::
 
 ; entry 24 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46D
+; reads: wJoypadPressed, wMenuSelectedMember
 ; writes: wD0A0, wD06B, wD06C
-; points at: wC46D, wD06B
+; points at: wMenuSelectedMember, wD06B
 RunWD06AState_6C12_Case03_Case18::
 Jump_007_75D8:: ; address name
-    ld hl, wC46D
+    ld hl, wMenuSelectedMember
     ld de, $50B6
     call RunWD06AState_6C12_Shared01
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_75F3
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD0A0], a
     xor a, a
     ld [wD06B], a
@@ -6474,7 +6474,7 @@ Jump_007_75F3::
     ret z
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD0A0], a
     or a, a
     jr z, Jump_007_760C
@@ -6507,7 +6507,7 @@ Jump_007_7615:: ; address name
 
 ; entry 26 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wD049, wD04A, wC46E
+; reads: wJoypadPressed, wD049, wD04A, wMenuCursor
 ; writes: wD06B
 RunWD06AState_6C12_Case03_Case1A::
 Jump_007_762F:: ; address name
@@ -6539,17 +6539,17 @@ Jump_007_7656::
     ld a, $69
     call QueueSoundEffect
     call RunWD06AState_6C12_Case03_Case1A_Sub01
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     call RunWD06AState_6C12_Shared05
     ret
 
 ; only called from RunWD06AState_6C12_Case03_Case1A (E-0047)
 ; 1 call site from 1 routine (e.g. RunWD06AState_6C12_Case03_Case1A)
-; reads: wC46E
+; reads: wMenuCursor
 ; points at: wD049
 RunWD06AState_6C12_Case03_Case1A_Sub01::
 Func_007_766B:: ; address name
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     ld hl, $774D
     add a, a
     add_a_to_hl
@@ -6579,10 +6579,10 @@ Jump_007_768E::
 ; 1 call site from 1 routine (e.g. RunWD06AState_6C12_Case03_Case1A)
 ; reads: wFrameCounterLo, wJoypadPressedRepeat
 ; writes: wFrameCounterLo
-; points at: wC46E
+; points at: wMenuCursor
 RunWD06AState_6C12_Case03_Case1A_Sub02::
 Func_007_7690:: ; address name
-    ld hl, wC46E
+    ld hl, wMenuCursor
     ld de, $7700
     ld a, [wFrameCounterLo]
     and a, $07
@@ -6708,18 +6708,18 @@ Jump_007_7749::
 
 ; entry 27 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46D
+; reads: wJoypadPressed, wMenuSelectedMember
 ; writes: wD0A1, wD06B, wD06C
-; points at: wC46D, wD06B
+; points at: wMenuSelectedMember, wD06B
 RunWD06AState_6C12_Case03_Case1B::
 Jump_007_7763:: ; address name
-    ld hl, wC46D
+    ld hl, wMenuSelectedMember
     ld de, $50BA
     call RunWD06AState_6C12_Shared01
     ld a, [wJoypadPressed]
     and a, $02
     jr z, Jump_007_777E
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD0A1], a
     xor a, a
     ld [wD06B], a
@@ -6731,7 +6731,7 @@ Jump_007_777E::
     ret z
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD0A1], a
     or a, a
     jr z, Jump_007_7797
@@ -6816,8 +6816,8 @@ Jump_007_7806::
 
 ; only called from routines of RunWD06AState_6C12 (E-0098)
 ; 2 call sites from 2 routines (e.g. RunWD06AState_6C12_Case03_Case1D, RunWD06AState_6C12_Case03_Case1C)
-; reads: wD04B, wC8C1, wC8C2
-; points at: wC5C6
+; reads: wD04B, wDigits
+; points at: wLinkTradeByte
 RunWD06AState_6C12_Shared04::
 Func_007_7807:: ; address name
     ld a, [wD04B]
@@ -6826,7 +6826,7 @@ Func_007_7807:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    ld bc, wC5C6
+    ld bc, wLinkTradeByte
     pop af
     cp a, $0B
     jr nc, Jump_007_781D
@@ -6841,7 +6841,7 @@ Jump_007_7823::
     ld hl, vBGMap0 + $12E
     ld a, b
     call WriteVRAMByteInc
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     cp a, $E0
     jr nz, Jump_007_7835
@@ -6849,7 +6849,7 @@ Jump_007_7823::
 
 Jump_007_7835::
     call WriteVRAMByteInc
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     call WriteVRAMByteInc
     ld a, c
@@ -6858,12 +6858,12 @@ Jump_007_7835::
 
 ; entry 30 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46D
+; reads: wJoypadPressed, wMenuSelectedMember
 ; writes: wD0A2, wD06B
-; points at: wC46D
+; points at: wMenuSelectedMember
 RunWD06AState_6C12_Case03_Case1E::
 Jump_007_7845:: ; address name
-    ld hl, wC46D
+    ld hl, wMenuSelectedMember
     ld de, $50BE
     call RunWD06AState_6C12_Shared01
     ld a, [wJoypadPressed]
@@ -6871,7 +6871,7 @@ Jump_007_7845:: ; address name
     ret z
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld [wD0A2], a
     xor a, a
     ld [wD06B], a
@@ -6899,12 +6899,12 @@ Jump_007_7864:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
+; reads: wLinkMessage
 ; writes: wCFC5, wD06A, wD059
 ; points at: wD06B
 RunWD06AState_6C12_Case04_Case00::
 Jump_007_7880:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FB
     jr z, Jump_007_7891
     cp a, $FC
@@ -6944,7 +6944,7 @@ Jump_007_78C2::
     ld hl, $52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
-    ld de, wScreenTileBuffer + $1A0
+    ld de, wWindowTileBuffer + $38
     ld bc, $1405
     call CopyRect32StrideToVRAM_Bank07
     ld hl, wD06B
@@ -6953,25 +6953,25 @@ Jump_007_78C2::
 
 ; entry 1 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC594
+; writes: wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case04_Case01::
 Jump_007_78D9:: ; address name
     ld hl, $0304
     call ShowStringHL_Bank07
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 2 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
+; reads: wTextFlags
 ; points at: wD06B
 RunWD06AState_6C12_Case04_Case02::
 Jump_007_78E8:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     ld hl, wD06B
@@ -6980,12 +6980,12 @@ Jump_007_78E8:: ; address name
 
 ; entry 3 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wD06A, wD06B, wD06C, wC594
+; reads: wLinkMessage
+; writes: wD06A, wD06B, wD06C, wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case04_Case03::
 Jump_007_78F2:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr nz, Jump_007_790E
     ld a, $02
@@ -6995,7 +6995,7 @@ Jump_007_78F2:: ; address name
     ld a, $01
     ld [wD06C], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_007_790E::
@@ -7009,69 +7009,69 @@ Jump_007_790E::
 
 ; entry 4 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
-; writes: wC594
+; reads: wTextFlags
+; writes: wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case04_Case04::
 Jump_007_791C:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, $02
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 5 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wC592, wC595, wC596, wC590, wC591, wC58C, wC594
-; points at: wC597, wD043, wD06B
+; reads: wLinkMessage
+; writes: wLinkBufferCountLo, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkReady, wLinkSendByte
+; points at: wLinkRecvBuffer, wD043, wD06B
 RunWD06AState_6C12_Case04_Case05::
 Jump_007_792B:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $02
     ret nz
     ld a, $0A
-    ld [wC592], a
-    ld hl, wC597
+    ld [wLinkBufferCountLo], a
+    ld hl, wLinkRecvBuffer
     ld a, l
-    ld [wC595], a
+    ld [wLinkTimeoutLo], a
     ld a, h
-    ld [wC596], a
+    ld [wLinkTimeoutHi], a
     ld hl, wD043
     ld a, l
-    ld [wC590], a
+    ld [wLinkBufferPtrLo], a
     ld a, h
-    ld [wC591], a
+    ld [wLinkBufferPtrHi], a
     ld a, $01
-    ld [wC58C], a
+    ld [wLinkReady], a
     ld a, $FF
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 6 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wC594
+; reads: wLinkMessage
+; writes: wLinkSendByte
 ; points at: wD06B
 RunWD06AState_6C12_Case04_Case06::
 Jump_007_795B:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $F0
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 7 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC470, wC46D
+; writes: wSubMenuCursor2, wMenuSelectedMember
 ; points at: wD06B
 RunWD06AState_6C12_Case04_Case07::
 Jump_007_796A:: ; address name
@@ -7083,9 +7083,9 @@ Jump_007_796A:: ; address name
     call DrawWD09DSelectionTilesAndPanels
     call DrawScreenBufferToBGMap0_Bank07
     ld a, $02
-    ld [wC470], a
+    ld [wSubMenuCursor2], a
     ld a, $00
-    ld [wC46D], a
+    ld [wMenuSelectedMember], a
     ld hl, wD06B
     inc [hl]
     call CopyWD043ToWD04D
@@ -7093,12 +7093,12 @@ Jump_007_796A:: ; address name
 
 ; entry 8 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46D
-; writes: wD059, wC594
-; points at: wC46D, wD06B
+; reads: wJoypadPressed, wMenuSelectedMember
+; writes: wD059, wLinkSendByte
+; points at: wMenuSelectedMember, wD06B
 RunWD06AState_6C12_Case04_Case08::
 Jump_007_7990:: ; address name
-    ld hl, wC46D
+    ld hl, wMenuSelectedMember
     ld de, $50AA
     call RunWD06AState_6C12_Shared01
     ld a, [wJoypadPressed]
@@ -7106,13 +7106,13 @@ Jump_007_7990:: ; address name
     jr z, Jump_007_79BB
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     and a, $01
     jr nz, Jump_007_79C1
     ld a, $02
     ld [wD059], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
@@ -7124,7 +7124,7 @@ Jump_007_79BB::
 
 Jump_007_79C1::
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ld hl, wD06B
@@ -7133,11 +7133,11 @@ Jump_007_79C1::
 
 ; entry 9 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
+; reads: wLinkMessage
 ; writes: wD06A, wD06B, wD06C
 RunWD06AState_6C12_Case04_Case09::
 Jump_007_79CF:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     ret nz
     ld a, $05
@@ -7159,11 +7159,11 @@ Jump_007_79E4:: ; address name
 
 ; entry 11 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC594, wD06A, wD06C, wD06B
+; writes: wLinkSendByte, wD06A, wD06C, wD06B
 RunWD06AState_6C12_Case04_Case0B::
 Jump_007_79E9:: ; address name
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $02
     ld [wD06A], a
     xor a, a
@@ -7174,8 +7174,8 @@ Jump_007_79E9:: ; address name
 
 ; entry 5 of the `rst $00` table in RunWD06AState_6C12
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD06B, wC58F, wC46B, wC57F
-; writes: wC594, wC58C, wD06A, wD06B, wCFC5, wD059, wD06C
+; reads: wD06B, wLinkMessage, wMenuState, wLinkRole
+; writes: wLinkSendByte, wLinkReady, wD06A, wD06B, wCFC5, wD059, wD06C
 ; points at: wScreenTileBuffer, wD06A
 RunWD06AState_6C12_Case05::
 Jump_007_79FC:: ; address name
@@ -7185,7 +7185,7 @@ Jump_007_79FC:: ; address name
     jp Jump_007_7AA7
 
 Jump_007_7A05::
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr z, Jump_007_7A12
     cp a, $FD
@@ -7193,7 +7193,7 @@ Jump_007_7A05::
     jr Jump_007_7A45
 
 Jump_007_7A12::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jp z, Jump_007_7A9C
     ld a, $01
@@ -7201,13 +7201,13 @@ Jump_007_7A12::
     ld a, $01
     ld [wD06C], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $02
     ld [wD06A], a
     ret
 
 Jump_007_7A2F::
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_7A9C
     ld a, $08
@@ -7215,11 +7215,11 @@ Jump_007_7A2F::
     ld a, $04
     ld [wD06A], a
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_007_7A45::
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FC
     jr z, Jump_007_7A52
     cp a, $FB
@@ -7227,13 +7227,13 @@ Jump_007_7A45::
     jr Jump_007_7A9C
 
 Jump_007_7A52::
-    ld a, [wC46B]
+    ld a, [wMenuState]
     and a, a
     jr z, Jump_007_7A7A
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FC
     jr z, Jump_007_7A9C
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_7A9C
     call InitWD043PresetA
@@ -7246,10 +7246,10 @@ Jump_007_7A52::
     jr Jump_007_7A9C
 
 Jump_007_7A7A::
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FB
     jr z, Jump_007_7A9C
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_007_7A9C
     call InitWD043PresetB
@@ -7275,9 +7275,9 @@ Jump_007_7AA7::
     call FillBytes
     call DrawScreenBufferToBGMap0_Bank07
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     xor a, a
-    ld [wC58C], a
+    ld [wLinkReady], a
     ld hl, wD06A
     inc [hl]
     ret
@@ -7321,11 +7321,11 @@ Func_007_7AD4:: ; address name
     ld bc, $0003
     call WriteBCTileAtHLOrHLPlusBC
     ld a, [wD0A1]
-    ld hl, wScreenTileBuffer + $18E
+    ld hl, wWindowTileBuffer + $26
     ld bc, $0003
     call WriteBCTileAtHLOrHLPlusBC
     ld a, [wD0A2]
-    ld hl, wScreenTileBuffer + $1CE
+    ld hl, wWindowTileBuffer + $66
     ld bc, $0003
     call WriteBCTileAtHLOrHLPlusBC
     call DrawWD09DSelectionTilesAndPanels_Sub01
@@ -7433,7 +7433,7 @@ Jump_007_7B9B::
 
 ; only called from DrawWD09DSelectionTilesAndPanels (E-0047)
 ; 1 call site from 1 routine (e.g. DrawWD09DSelectionTilesAndPanels)
-; reads: wD048, wD046, wC8C0, wC8C1, wC8C2, wD047
+; reads: wD048, wD046, wDigits, wD047
 DrawWD09DSelectionTilesAndPanels_Sub02::
 Func_007_7B9D:: ; address name
     ld de, $7BFD
@@ -7475,7 +7475,7 @@ Jump_007_7BBC::
     call HLToDecimalDigits
     ld c, $01
     ld hl, wScreenTileBuffer + $12C
-    ld a, [wC8C0]
+    ld a, [wDigits]
     add a, $E0
     cp a, $E0
     jr nz, Jump_007_7BE5
@@ -7484,7 +7484,7 @@ Jump_007_7BBC::
 
 Jump_007_7BE5::
     ld [hl+], a
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     cp a, $E0
     jr nz, Jump_007_7BF5
@@ -7494,7 +7494,7 @@ Jump_007_7BE5::
 
 Jump_007_7BF5::
     ld [hl+], a
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [hl], a
     ret
@@ -7590,7 +7590,7 @@ Jump_007_7C5E::
 
 ; only called from DrawWD09DSelectionTilesAndPanels (E-0047)
 ; 1 call site from 1 routine (e.g. DrawWD09DSelectionTilesAndPanels)
-; reads: wD04B, wC8C1, wC8C2
+; reads: wD04B, wDigits
 DrawWD09DSelectionTilesAndPanels_Sub04::
 Func_007_7C5F:: ; address name
     ld a, [wD04B]
@@ -7598,8 +7598,8 @@ Func_007_7C5F:: ; address name
     res 7, l
     ld h, $00
     call HLToDecimalDigits
-    ld hl, wScreenTileBuffer + $1AE
-    ld a, [wC8C1]
+    ld hl, wWindowTileBuffer + $46
+    ld a, [wDigits + $1]
     or a, a
     jr z, Jump_007_7C76
     add a, $E0
@@ -7607,7 +7607,7 @@ Func_007_7C5F:: ; address name
 
 Jump_007_7C76::
     inc hl
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [hl], a
     ret
@@ -7627,12 +7627,12 @@ Jump_007_7C7E:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWD06AState_6C12_Case08
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wC470, wC46D, wC594, wD06A, wD06B, wD06C
+; reads: wLinkMessage
+; writes: wSubMenuCursor2, wMenuSelectedMember, wLinkSendByte, wD06A, wD06B, wD06C
 ; points at: wD06B
 RunWD06AState_6C12_Case08_Case00::
 Jump_007_7C8C:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jp z, RunWD06AState_6C12_Case08_Case04
     ld d, $C3
@@ -7643,24 +7643,24 @@ Jump_007_7C8C:: ; address name
     call DrawWD09DSelectionTilesAndPanels
     call DrawScreenBufferToBGMap0_Bank07
     ld a, $02
-    ld [wC470], a
+    ld [wSubMenuCursor2], a
     ld a, $00
-    ld [wC46D], a
+    ld [wMenuSelectedMember], a
     ld hl, wD06B
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in RunWD06AState_6C12_Case08
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wJoypadPressed, wC46D
-; writes: wC594, wD06A, wD06B, wD06C
-; points at: wC46D, wD06B
+; reads: wLinkMessage, wJoypadPressed, wMenuSelectedMember
+; writes: wLinkSendByte, wD06A, wD06B, wD06C
+; points at: wMenuSelectedMember, wD06B
 RunWD06AState_6C12_Case08_Case01::
 Jump_007_7CB7:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr z, RunWD06AState_6C12_Case08_Case04
-    ld hl, wC46D
+    ld hl, wMenuSelectedMember
     ld de, $50AA
     call RunWD06AState_6C12_Shared01
     ld a, [wJoypadPressed]
@@ -7668,11 +7668,11 @@ Jump_007_7CB7:: ; address name
     jr z, Jump_007_7CE4
     ld a, $69
     call QueueSoundEffect
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     and a, $01
     jr nz, Jump_007_7CEA
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ret
@@ -7684,7 +7684,7 @@ Jump_007_7CE4::
 
 Jump_007_7CEA::
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06B
     inc [hl]
     ld hl, wD06B
@@ -7693,11 +7693,11 @@ Jump_007_7CEA::
 
 ; entry 2 of the `rst $00` table in RunWD06AState_6C12_Case08
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wD06A, wD06B, wD06C, wC594
+; reads: wLinkMessage
+; writes: wD06A, wD06B, wD06C, wLinkSendByte
 RunWD06AState_6C12_Case08_Case02::
 Jump_007_7CF8:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr z, RunWD06AState_6C12_Case08_Case04
     cp a, $01
@@ -7712,11 +7712,11 @@ Jump_007_7CF8:: ; address name
 
 ; entry 3 of the `rst $00` table in RunWD06AState_6C12_Case08
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC594, wD06A, wD06B, wD06C
+; writes: wLinkSendByte, wD06A, wD06B, wD06C
 RunWD06AState_6C12_Case08_Case03::
 Jump_007_7D11:: ; address name
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $02
     ld [wD06A], a
     xor a, a
@@ -7727,11 +7727,11 @@ Jump_007_7D11:: ; address name
 
 ; entry 4 of the `rst $00` table in RunWD06AState_6C12_Case08
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC594, wD06A, wD06B, wD06C
+; writes: wLinkSendByte, wD06A, wD06B, wD06C
 RunWD06AState_6C12_Case08_Case04::
 Jump_007_7D24:: ; address name
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $02
     ld [wD06A], a
     xor a, a
@@ -7779,15 +7779,15 @@ Jump_007_7D43::
     ldh [hMapId], a
     xor a, a
     ldh [hPlayerStateFlags], a
-    ld [wC6FD], a
+    ld [wPartyCount], a
     xor a, a
-    ld [wC8C7], a
-    ld a, [wC88D]
+    ld [wFieldReturnPhase], a
+    ld a, [wSaveStateFlag]
     ld [wC965], a
     xor a, a
-    ld [wC88D], a
+    ld [wSaveStateFlag], a
     xor a, a
-    ld [wC58A], a
+    ld [wLinkMode], a
     ld [wC94B], a
     ld [wScriptInDataBank], a
     ld [wD7F0], a
@@ -7831,12 +7831,12 @@ Jump_007_7DDD::
 
 ; only called from RunWD06AState_6C12_Case08_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWD06AState_6C12_Case08_Case04)
-; reads: wC57F, wD7B5, wD7B6, wD7F5, wD7F6, wD7F7, wC8C3
-; writes: wD7F1, wD7AB, wD7AF, wD7F2, rRAMG2, rRAMB, wC8C3, wC8C4, ...
-; points at: wCAD0, wCADB, wC7FC, wD7E0, wD780
+; reads: wLinkRole, wD7B5, wD7B6, wD7F5, wD7F6, wD7F7, wSaveStep
+; writes: wD7F1, wD7AB, wD7AF, wD7F2, rRAMG2, rRAMB, wSaveStep, wSaveRecordIndex, ...
+; points at: wCAD0, wCADB, wMonsterLibraryBuf, wD7E0, wD780
 RunWD06AState_6C12_Case08_Case04_Sub01::
 Func_007_7DE5:: ; address name
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jp z, Jump_007_7E6E
     ld a, $02
@@ -7876,14 +7876,14 @@ Jump_007_7E37::
     xor a, a
     ld [rRAMG2], a
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
     ld hl, wCADB
     ld a, [hl+]
     ld [wD7F1], a
     ld a, [hl]
     ld [wD7F2], a
-    ld de, wC7FC
+    ld de, wMonsterLibraryBuf
     ld a, e
     ld [wD7F3], a
     ld a, d
@@ -7902,12 +7902,12 @@ Jump_007_7E6E::
     xor a, a
     ld [wD7EB], a
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
 
 Jump_007_7E79::
     farcall RunSaveGameSteps
-    ld a, [wC8C3]
+    ld a, [wSaveStep]
     bit 7, a
     jr z, Jump_007_7E79
     ld hl, wD780

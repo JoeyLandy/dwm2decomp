@@ -11,19 +11,19 @@ Func_004_4001:: ; address name
 
 ; when wC88D bit 7 is set: clears wC88D, wSpriteSlotCount = wC83A and the $50 bytes at wC83B go back to wSpriteSlots (undoes SnapshotSpritesForSave) (E-0117)
 ; 2 call sites from 1 routine (e.g. LoadMapObjectsForScreen)
-; reads: wC88D, wC83A
-; writes: wC88D, wSpriteSlotCount
-; points at: wC83B, wSpriteSlots
+; reads: wSaveStateFlag, wSpriteSnapshotCount
+; writes: wSaveStateFlag, wSpriteSlotCount
+; points at: wSpriteSnapshot, wSpriteSlots
 RestoreSpriteSnapshot::
 Func_004_4008:: ; address name
-    ld a, [wC88D]
+    ld a, [wSaveStateFlag]
     bit 7, a
     ret z
     xor a, a
-    ld [wC88D], a
-    ld a, [wC83A]
+    ld [wSaveStateFlag], a
+    ld a, [wSpriteSnapshotCount]
     ld [wSpriteSlotCount], a
-    ld hl, wC83B
+    ld hl, wSpriteSnapshot
     ld de, wSpriteSlots
     ld bc, $0050
     call CopyBytes
@@ -399,7 +399,7 @@ Jump_004_420B::
     dec b
     jp nz, Jump_004_416D
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     ret
     INCBIN "dwm2-cobi-us.gbc", $01023D, $90
 
@@ -629,12 +629,12 @@ Func_004_449F:: ; address name
 
 ; unless bit 7 of wC468 is set: updates the sprite slots, then draws each slot's metasprite at its position relative to the scroll (E-0129)
 ; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunWCFA8StateWhenNotFading_Shared01, GameMode6_Update_Shared06, GameMode5_Update_Case07_Sub01_Sub03, ...)
-; reads: wC468, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hTemp0
+; reads: wFieldActionRequest, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hTemp0
 ; writes: hTemp0, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
 ; points at: wSpriteSlots
 UpdateAndDrawSpriteSlots::
 Func_004_44CE:: ; address name
-    ld a, [wC468]
+    ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
     ld a, [wSpriteSlotCount]
@@ -854,7 +854,7 @@ Jump_004_45EC::
 
 ; entry 2 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptRunning, wC5E7
+; reads: wScriptRunning, wRandomLo
 UpdateSpriteSlots_Case02::
 Jump_004_4606:: ; address name
     pop hl
@@ -938,7 +938,7 @@ Jump_004_465C::
     xor a, a
     ld [hl+], a
     call NextTableByte
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $03
     cp a, $03
     jr z, Jump_004_46B9
@@ -1045,7 +1045,7 @@ Jump_004_4704:: ; address name
 
 ; entry 3 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptRunning, wC5E7
+; reads: wScriptRunning, wRandomLo
 UpdateSpriteSlots_Case03::
 Jump_004_4705:: ; address name
     pop hl
@@ -1162,7 +1162,7 @@ Jump_004_4784::
     xor a, a
     ld [hl+], a
     call NextTableByte
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $03
     jr z, Jump_004_481C
     dec a
@@ -1487,7 +1487,7 @@ Jump_004_4955::
 
 ; only called from RunWC935Type0AOrOther (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC935Type0AOrOther)
-; reads: wC196
+; reads: wMapTallTileMin
 ; points at: wScreenTileBuffer, wC910
 RunWC935Type0AOrOther_Sub01::
 Func_004_495A:: ; address name
@@ -1534,7 +1534,7 @@ Jump_004_4999::
     ld a, [de]
     inc de
     ld c, a
-    ld a, [wC196]
+    ld a, [wMapTallTileMin]
     cp a, c
     jr c, Jump_004_49A4
     jr Jump_004_49AC
@@ -1555,7 +1555,7 @@ Jump_004_49AC::
 
 ; only called from routines of UpdateSpriteSlots (E-0098)
 ; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_Case03, UpdateSpriteSlots_Case02)
-; reads: hPlayerX, hTemp1, hPlayerY, hTemp0, wC6FD
+; reads: hPlayerX, hTemp1, hPlayerY, hTemp0, wPartyCount
 ; writes: hTemp0, hTemp1
 ; points at: wC8F0
 UpdateSpriteSlots_Shared01::
@@ -1608,7 +1608,7 @@ Jump_004_49F3::
     ret
 
 Jump_004_49F7::
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     jr z, Jump_004_4A43
     ld b, a
@@ -1816,7 +1816,7 @@ Jump_004_4B5E::
 ; when hFF8C bit 3 is set: decompresses Data_07E_58FF (bank $7E) to vTiles0 + $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer (wC527 = $7F) (E-0120)
 ; 1 call site from 1 routine (e.g. LoadPlayerAndFollowerSpriteGraphics)
 ; reads: hPlayerStateFlags
-; writes: wC527
+; writes: wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
 LoadAltObjectGraphicsIfHFF8CBit3::
 Func_004_4B7E:: ; address name
@@ -1841,7 +1841,7 @@ Func_004_4B7E:: ; address name
     ld c, $08
     call CopyFromBank
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     ret
 
 ; unless bit 1 of hFF8C is set, hFF99 += 1 (+3 more with bit 2); then runs the routine for hFF8B (jump table of three) (E-0124)
@@ -2117,19 +2117,19 @@ Jump_004_4D3C::
 
 ; only called from AdvanceHFF99AndRunHFF8BMode_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. AdvanceHFF99AndRunHFF8BMode_Case00)
-; reads: wC6FD, hTemp9, hFieldDrawFlags, hPlayerAnimCounter, hTemp0, hScrollX, hScrollXHi, hScrollY, ...
+; reads: wPartyCount, hTemp9, hFieldDrawFlags, hPlayerAnimCounter, hTemp0, hScrollX, hScrollXHi, hScrollY, ...
 ; writes: hTemp9, hTemp0, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, ...
-; points at: wFollowerRecords, wC701
+; points at: wFollowerRecords
 AdvanceHFF99AndRunHFF8BMode_Case00_Sub01::
 Func_004_4D43:: ; address name
     ld a, $02
     ldh [hTemp9], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     ret z
     ld b, a
     ld hl, wFollowerRecords
-    ld de, wC701
+    ld de, wPartyList + $3
     ld a, $10
     ldh [hTemp0], a
 
@@ -3398,8 +3398,8 @@ Data_004_5815:: ; heuristic: target of a monotone pointer table; C0
 
 ; with story flag $1A set: counts keys twice (Func_012_6955 with hFFC7 = 1 and 2), sets bit 7 of wC836 and starts script $5039 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: hTemp1, wC836
+; reads: wGameFlags836
+; writes: hTemp1, wGameFlags836
 MapEventCountKeysAndStartScript5039:: ; heuristic: target of a pointer table; C0
 Func_004_581C:: ; address name
     ld de, $001A
@@ -3413,9 +3413,9 @@ Func_004_581C:: ; address name
     ld a, $02
     ldh [hTemp1], a
     farcall WriteKeyEntryHFFC6
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 7, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $5039
     call StartScriptAtHL_B04
     ret
@@ -3847,7 +3847,7 @@ Jump_004_5A9E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1, wStepArrived, hTemp2
 ; writes: rRAMG
-; points at: wC6FE, wC8CF
+; points at: wPartyList, wC8CF
 Func_004_58C2_Case13::
 Jump_004_5AA5:: ; address name
     ld de, $006F
@@ -3874,7 +3874,7 @@ Jump_004_5AD3::
     ld a, $0A
     ld [rRAMG], a
     ldh a, [hTemp1]
-    ld hl, wC6FE
+    ld hl, wPartyList
     add_a_to_hl
     ld a, [hl]
     ld c, $01
@@ -4313,16 +4313,16 @@ Jump_004_5D0D::
 
 ; carry when a party record has a species word with a non-zero high byte and low byte $3C-$5B (E-0124)
 ; 2 call sites from 1 routine (e.g. Func_004_58C2_Case33)
-; reads: wC6FD, hTemp1, hTemp0
+; reads: wPartyCount, hTemp1, hTemp0
 ; writes: rRAMG
-; points at: wC6FE
+; points at: wPartyList
 PartyHasSpeciesLo3CTo5BWithHiSet::
 Func_004_5D14:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
 
 Jump_004_5D20::
     ld a, [hl+]
@@ -4582,8 +4582,8 @@ Jump_004_5E6C::
 
 ; entry 69 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: wC836
+; reads: wGameFlags836
+; writes: wGameFlags836
 Func_004_58C2_Case45::
 Jump_004_5E73:: ; address name
     ld de, $005E
@@ -4613,9 +4613,9 @@ Jump_004_5E99::
 
 Jump_004_5EA5::
     ld [hl], $5F
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $5C7E
     call StartScriptAtHL_B04
     ret
@@ -4677,8 +4677,8 @@ Jump_004_5EEE::
 
 ; entry 75 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: wC836
+; reads: wGameFlags836
+; writes: wGameFlags836
 Func_004_58C2_Case4B::
 Jump_004_5EF5:: ; address name
     call InventoryHasFreeSlotCheck
@@ -4689,9 +4689,9 @@ Jump_004_5EF5:: ; address name
 
 Jump_004_5F01::
     ld [hl], $31
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $5CC2
     call StartScriptAtHL_B04
     ret
@@ -5598,13 +5598,13 @@ Jump_004_63E6::
 
 ; entry 24 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD, wStepArrived
+; reads: wPartyCount, wStepArrived
 Func_004_612B_Case18::
 Jump_004_63ED:: ; address name
     ld de, $0042
     call TestFlagBit
     jr c, Jump_004_641D
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     cp a, $03
     jr nz, Jump_004_640F
     farcall SetWStepArrivedIfPartyHasField55Bit7
@@ -5626,7 +5626,7 @@ Jump_004_6416::
     ret
 
 Jump_004_641D::
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     cp a, $03
     jr nz, Jump_004_6437
     farcall SetWStepArrivedIfPartyHasField55Bit7
@@ -6604,14 +6604,14 @@ Jump_004_6953:: ; address name
 
 ; entry 35 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC94D, wC6FD, hPlayerFacing
+; reads: wC94D, wPartyCount, hPlayerFacing
 ; writes: wC8F4, wScriptParam1
 Func_004_6892_Case23::
 Jump_004_696C:: ; address name
     ld a, [wC94D]
     or a, a
     ret z
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     dec a
     ret z
     ldh a, [hPlayerFacing]
@@ -6627,14 +6627,14 @@ Jump_004_696C:: ; address name
 
 ; entry 36 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC94D, wC6FD, hPlayerFacing
+; reads: wC94D, wPartyCount, hPlayerFacing
 ; writes: wC8F9, wScriptParam1
 Func_004_6892_Case24::
 Jump_004_698B:: ; address name
     ld a, [wC94D]
     or a, a
     ret z
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     dec a
     ret z
     dec a
@@ -7591,8 +7591,8 @@ Jump_004_6F93:: ; address name
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 7 constant message(s) depending on story flags and state; the first one in the code is $075F, whose string begins 'Kiral Fetch me my treasure from'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, wC836
-; writes: hTemp0, wC836
+; reads: hTemp0, wGameFlags836
+; writes: hTemp0, wGameFlags836
 Talk075F_KiralFetchMeMy:: ; heuristic: follows a terminator; C0
 Func_004_6F9A:: ; address name
     ld de, $0167
@@ -7650,9 +7650,9 @@ Jump_004_6FF7::
     farcall RemoveInventorySlotShiftDown
     call InventoryHasFreeSlotCheck
     ld [hl], $17
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $641B
     call StartScriptAtHL_B04
     ld a, $08
@@ -7833,8 +7833,8 @@ Jump_004_715D::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $077B, whose string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: wC836
+; reads: wGameFlags836
+; writes: wGameFlags836
 Talk077B_HeroPeeredIntoThe:: ; heuristic: target of a pointer table; C0
 Func_004_7164:: ; address name
     ld de, $0164
@@ -7856,9 +7856,9 @@ Jump_004_717B::
 
 Jump_004_7187::
     ld [hl], $3C
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $077A
     call StartMessageCommand09HL_B04
     ld de, $0164
@@ -8044,8 +8044,8 @@ Jump_004_72B5::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $07A6, whose string begins 'Our daughter's only memento was taken'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: wC836
+; reads: wGameFlags836
+; writes: wGameFlags836
 Talk07A6_OurDaughtersOnlyMemento:: ; heuristic: target of a pointer table; C0
 Func_004_72BC:: ; address name
     ld de, $01C3
@@ -8078,9 +8078,9 @@ Jump_004_72EA::
 
 Jump_004_72F6::
     ld [hl], $0B
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $64E3
     call StartScriptAtHL_B04
     ret
@@ -8576,8 +8576,8 @@ Jump_004_7633::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $07BF, whose string begins '0 found the Pretty Ring. But'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: wC836
+; reads: wGameFlags836
+; writes: wGameFlags836
 Talk07BF_HeroFoundThePretty:: ; heuristic: target of a pointer table; C0
 Func_004_763A:: ; address name
     call InventoryHasFreeSlotCheck
@@ -8588,9 +8588,9 @@ Func_004_763A:: ; address name
 
 Jump_004_7646::
     ld [hl], $3D
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $64B3
     call StartScriptAtHL_B04
     ret
@@ -9608,11 +9608,11 @@ Jump_004_7C2B:: ; address name
 
 ; A = 0 unless wC634 is $FF or 0; then scans wInventory for an empty slot ($FF or 0) and returns carry (E-0124)
 ; 6 call sites from 6 routines (e.g. Func_004_58C2_Case4B, Func_004_58C2_Case45, Talk075F_KiralFetchMeMy, Talk07BF_HeroFoundThePretty, ...)
-; reads: wC634
+; reads: wInventory
 ; points at: wInventory
 InventoryHasFreeSlotCheck::
 Func_004_7C37:: ; address name
-    ld a, [wC634]
+    ld a, [wInventory + $17]
     cp a, $FF
     jr z, Jump_004_7C43
     or a, a

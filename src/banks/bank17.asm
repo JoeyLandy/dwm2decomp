@@ -157,9 +157,9 @@ Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
 
 ; when the Super Game Boy is active, builds a PAL_SET ($51) packet from Data_017_426C[wC51F] (also kept in wC577), attribute file wC520 | $80, loads the object palettes and sends it (E-0125)
 ; 9 call sites from 9 routines (e.g. BootAndMainLoop, GameMode1_Init, GameMode5_Init_Case01, GameMode5_Init_Case02, ...)
-; reads: wSGBActive, wC51F, wC0A0, wC520
-; writes: wSGBPacketBuffer, wC0A0, wSGBPacketIndex
-; points at: wC480, wC577
+; reads: wSGBActive, wSGBPaletteSet, wTemp0, wSGBAttrFile
+; writes: wSGBPacketBuffer, wTemp0, wSGBPacketIndex
+; points at: wSGBPaletteNum0Lo
 SendSGBPaletteSetPacket::
 Func_017_41CF:: ; address name
     ld a, [wSGBActive]
@@ -168,7 +168,7 @@ Func_017_41CF:: ; address name
     call ClearSGBPacketBuffer
     ld a, $51
     ld [wSGBPacketBuffer], a
-    ld a, [wC51F]
+    ld a, [wSGBPaletteSet]
     ld l, a
     ld h, $00
     add hl, hl
@@ -176,10 +176,10 @@ Func_017_41CF:: ; address name
     add hl, hl
     ld de, Data_017_426C
     add hl, de
-    ld de, wC480
-    ld bc, wC577
+    ld de, wSGBPacketBuffer + $1
+    ld bc, wSGBPaletteNum0Lo
     ld a, $08
-    ld [wC0A0], a
+    ld [wTemp0], a
 
 Jump_017_41F4::
     ld a, [hl+]
@@ -187,11 +187,11 @@ Jump_017_41F4::
     ld [bc], a
     inc de
     inc bc
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     dec a
-    ld [wC0A0], a
+    ld [wTemp0], a
     jr nz, Jump_017_41F4
-    ld a, [wC520]
+    ld a, [wSGBAttrFile]
     or a, $80
     ld [de], a
     call LoadSGBObjectPalettesFromPointers
@@ -203,35 +203,35 @@ Jump_017_41F4::
 
 ; when the Super Game Boy is active, converts the four palettes pointed to by wC577-wC57E into wOBJPaletteBuffer, wC4E7, wC4EF and wC4F7 (Func_017_4258) (E-0121)
 ; 7 call sites from 7 routines (e.g. SendSGBPaletteSetPacket, SendSGBFieldPaletteSet, GameMode5_Init_Case00, ResetLinkScreenPalettes, ...)
-; reads: wSGBActive, wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, ...
-; points at: wOBJPaletteBuffer, wC4E7, wC4EF, wC4F7
+; reads: wSGBActive, wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, wSGBPaletteNum2Hi, wSGBPaletteNum3Lo, ...
+; points at: wOBJPaletteBuffer
 LoadSGBObjectPalettesFromPointers::
 Func_017_421A:: ; address name
     ld a, [wSGBActive]
     or a, a
     ret z
-    ld a, [wC577]
+    ld a, [wSGBPaletteNum0Lo]
     ld l, a
-    ld a, [wC578]
+    ld a, [wSGBPaletteNum0Hi]
     ld h, a
     ld de, wOBJPaletteBuffer
     call LoadSGBObjectPalettesFromPointers_Sub01
-    ld de, wC4E7
-    ld a, [wC579]
+    ld de, wOBJPaletteBuffer + $8
+    ld a, [wSGBPaletteNum1Lo]
     ld l, a
-    ld a, [wC57A]
+    ld a, [wSGBPaletteNum1Hi]
     ld h, a
     call LoadSGBObjectPalettesFromPointers_Sub01
-    ld de, wC4EF
-    ld a, [wC57B]
+    ld de, wOBJPaletteBuffer + $10
+    ld a, [wSGBPaletteNum2Lo]
     ld l, a
-    ld a, [wC57C]
+    ld a, [wSGBPaletteNum2Hi]
     ld h, a
     call LoadSGBObjectPalettesFromPointers_Sub01
-    ld de, wC4F7
-    ld a, [wC57D]
+    ld de, wOBJPaletteBuffer + $18
+    ld a, [wSGBPaletteNum3Lo]
     ld l, a
-    ld a, [wC57E]
+    ld a, [wSGBPaletteNum3Hi]
     ld h, a
     call LoadSGBObjectPalettesFromPointers_Sub01
     ret

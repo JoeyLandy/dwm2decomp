@@ -4,12 +4,12 @@ SECTION "Bank 1C", ROMX[$4000], BANK[$1C]
 ; implements script command type E1; reached through ScriptCommandE1 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandE1)
 ; reads: wIsCGB
-; writes: wD7F0, wD780, wC46B, wC56D, wScriptCommandType, wScriptStartRequest
-; points at: wScreenTileBuffer, wD000, wD208, wD168, wD780
+; writes: wD7F0, wD780, wMenuState, wFadeMode, wScriptCommandType, wScriptStartRequest
+; points at: wScreenTileBuffer, wD000, wD208, wWindowTileBuffer, wD168, wD780
 ScriptCommandE1_Run::
 Func_01C_4001:: ; address name
     ld hl, wScreenTileBuffer
-    ld de, wScreenTileBuffer + $208
+    ld de, wWindowTileBuffer + $A0
     ld bc, $00A0
     call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
@@ -21,8 +21,8 @@ Func_01C_4001:: ; address name
     call CopyLow3BitsToWRAMBank2_Bank1C
 
 Jump_01C_401F::
-    ld hl, wScreenTileBuffer + $168
-    ld de, wScreenTileBuffer + $208
+    ld hl, wWindowTileBuffer
+    ld de, wWindowTileBuffer + $A0
     ld bc, $00A0
     call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
@@ -52,9 +52,9 @@ Jump_01C_404F::
     xor a, a
     ld [wD7F0], a
     ld [wD780], a
-    ld [wC46B], a
+    ld [wMenuState], a
     ld a, $07
-    ld [wC56D], a
+    ld [wFadeMode], a
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -82,7 +82,7 @@ Func_01C_4075:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wD7F0, wScriptCommandType, wScriptStartRequest
-; points at: wD780, wScreenTileBuffer, wD168, wD000, wD208
+; points at: wD780, wWindowTileBuffer, wScreenTileBuffer, wD168, wD000, wD208
 ScriptCommandE0_Run_Case00::
 Jump_01C_408B:: ; address name
     ld bc, $001A
@@ -95,7 +95,7 @@ Jump_01C_4091::
     ld a, b
     or a, c
     jr nz, Jump_01C_4091
-    ld hl, wScreenTileBuffer + $168
+    ld hl, wWindowTileBuffer
     ld de, wScreenTileBuffer
     ld bc, $00A0
     call CopyBytesDEToHL_Bank1C
@@ -108,7 +108,7 @@ Jump_01C_4091::
     call CopyLow3BitsToWRAMBank2_Bank1C
 
 Jump_01C_40B6::
-    ld hl, wScreenTileBuffer + $208
+    ld hl, wWindowTileBuffer + $A0
     ld de, wScreenTileBuffer
     ld bc, $00A0
     call CopyBytesDEToHL_Bank1C
@@ -135,7 +135,7 @@ Jump_01C_40D4::
 ; entry 1 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8CB
-; writes: wC46B, wScriptCommandType, wScriptStartRequest
+; writes: wMenuState, wScriptCommandType, wScriptStartRequest
 ; points at: wD782, wD78C, wD780
 ScriptCommandE0_Run_Case01::
 Jump_01C_40EA:: ; address name
@@ -157,7 +157,7 @@ Jump_01C_40F2::
     bit 7, a
     jr nz, Jump_01C_4122
     ld de, wD782
-    ld hl, wScreenTileBuffer + $174
+    ld hl, wWindowTileBuffer + $C
     ld bc, $0803
     call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wD782
@@ -168,7 +168,7 @@ Jump_01C_40F2::
 
 Jump_01C_4122::
     ld de, wD782
-    ld hl, wScreenTileBuffer + $1D8
+    ld hl, wWindowTileBuffer + $70
     ld bc, $0803
     call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wD782
@@ -182,7 +182,7 @@ Jump_01C_413A::
     ld de, $0168
     call DrawScreenBufferRectToBGMap_1C
     xor a, a
-    ld [wC46B], a
+    ld [wMenuState], a
     ld hl, wD780
     inc [hl]
     xor a, a
@@ -198,7 +198,7 @@ Data_01C_4158:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 2 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F7, wD7F8, wMenuInputResult, wD7F1
-; writes: wD7F3, wD7F2, wD7F1, wC552, wC46B, wScriptCommandType, wScriptStartRequest
+; writes: wD7F3, wD7F2, wD7F1, wTextYesNoResult, wMenuState, wScriptCommandType, wScriptStartRequest
 ; points at: wD780
 ScriptCommandE0_Run_Case02::
 Jump_01C_4170:: ; address name
@@ -223,8 +223,8 @@ Jump_01C_4170:: ; address name
     pop hl
     pop de
     xor a, a
-    ld [wC552], a
-    ld [wC46B], a
+    ld [wTextYesNoResult], a
+    ld [wMenuState], a
     call ScriptCommandE0_Run_Case02_Sub01
     call ScriptCommandE0_Run_Case02_Sub02
     call ScriptCommandE0_Run_Case02_Sub03
@@ -240,9 +240,9 @@ Jump_01C_41B4::
     pop hl
     pop de
     ld a, $01
-    ld [wC552], a
+    ld [wTextYesNoResult], a
     xor a, a
-    ld [wC46B], a
+    ld [wMenuState], a
     ld hl, wD780
     inc [hl]
     xor a, a
@@ -253,12 +253,12 @@ Jump_01C_41B4::
 
 ; entry 3 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC56D
+; writes: wFadeMode
 ; points at: wD780
 ScriptCommandE0_Run_Case03::
 Jump_01C_41CD:: ; address name
     ld a, $87
-    ld [wC56D], a
+    ld [wFadeMode], a
     ld a, $04
     call StartPaletteFade
     ld hl, wD780
@@ -289,16 +289,16 @@ Jump_01C_41E6:: ; address name
 
 ; entry 6 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD, hTemp0, wD7F5, wD7F6, wD7F7, wD7F8
+; reads: wPartyCount, hTemp0, wD7F5, wD7F6, wD7F7, wD7F8
 ; writes: rRAMG2, rRAMB, wD7F5, wD7F6, wD7F7, wD7F8
-; points at: wC6FE, wD780
+; points at: wPartyList, wD780
 ScriptCommandE0_Run_Case06::
 Jump_01C_41EB:: ; address name
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     and a, a
     jp z, Jump_01C_424E
     ld c, a
-    ld hl, wC6FE
+    ld hl, wPartyList
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -365,7 +365,7 @@ Jump_01C_424E::
 ; entry 7 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781, wCC44
-; writes: wD781, wC56D, wC950, wC893
+; writes: wD781, wFadeMode, wC950, wKeyWorldRefresh
 ; points at: wD781, wD780
 ScriptCommandE0_Run_Case07::
 Jump_01C_4258:: ; address name
@@ -378,7 +378,7 @@ Jump_01C_4258:: ; address name
     ld [wD781], a
     call SendSGBPaletteSetForWC51F
     ld a, $87
-    ld [wC56D], a
+    ld [wFadeMode], a
     ld a, $F8
     call StartPaletteFade
     ld hl, wD780
@@ -386,7 +386,7 @@ Jump_01C_4258:: ; address name
     xor a, a
     ld [wC950], a
     ld a, $80
-    ld [wC893], a
+    ld [wKeyWorldRefresh], a
     ld a, [wCC44]
     bit 7, a
     jr nz, Jump_01C_428E
@@ -400,7 +400,7 @@ Jump_01C_428E::
 ; entry 8 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
-; writes: wC56D, wScriptCommandType, wScriptStartRequest
+; writes: wFadeMode, wScriptCommandType, wScriptStartRequest
 ; points at: wD780
 ScriptCommandE0_Run_Case08::
 Jump_01C_4295:: ; address name
@@ -409,7 +409,7 @@ Jump_01C_4295:: ; address name
     ret nz
     farcall RestartMapMusic
     ld a, $07
-    ld [wC56D], a
+    ld [wFadeMode], a
     ld hl, wD780
     inc [hl]
     xor a, a
@@ -420,41 +420,41 @@ Jump_01C_4295:: ; address name
 
 ; when the Super Game Boy is active, sets the four palette numbers 4 * wC51F + 0-3, sends a PAL_SET ($B1) packet with attribute file wC520, waits, and loads the object palettes (E-0121)
 ; 3 call sites from 3 routines (e.g. ScriptCommandE0_Run_Case07, ScriptCommandED_Run_Case0B_Case05, GameMode5_Update_Case07_Sub01)
-; reads: wSGBActive, wC51F, wC520
-; writes: wC577, wC578, wC579, wC57A, wC57B, wC57C, wC57D, wC57E, ...
+; reads: wSGBActive, wSGBPaletteSet, wSGBAttrFile
+; writes: wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, wSGBPaletteNum2Hi, wSGBPaletteNum3Lo, wSGBPaletteNum3Hi, ...
 SendSGBPaletteSetForWC51F::
 Func_01C_42B3:: ; address name
     ld a, [wSGBActive]
     and a, a
     ret z
-    ld a, [wC51F]
+    ld a, [wSGBPaletteSet]
     ld l, a
     ld h, $00
     add hl, hl
     add hl, hl
     ld a, l
-    ld [wC577], a
+    ld [wSGBPaletteNum0Lo], a
     ld a, h
-    ld [wC578], a
+    ld [wSGBPaletteNum0Hi], a
     inc hl
     ld a, l
-    ld [wC579], a
+    ld [wSGBPaletteNum1Lo], a
     ld a, h
-    ld [wC57A], a
+    ld [wSGBPaletteNum1Hi], a
     inc hl
     ld a, l
-    ld [wC57B], a
+    ld [wSGBPaletteNum2Lo], a
     ld a, h
-    ld [wC57C], a
+    ld [wSGBPaletteNum2Hi], a
     inc hl
     ld a, l
-    ld [wC57D], a
+    ld [wSGBPaletteNum3Lo], a
     ld a, h
-    ld [wC57E], a
+    ld [wSGBPaletteNum3Hi], a
     ld a, $B1
     ld [wSGBPacketBuffer], a
-    ld a, [wC520]
-    ld [wC480], a
+    ld a, [wSGBAttrFile]
+    ld [wSGBPacketBuffer + $1], a
     ld a, $FF
     ld [wSGBPacketIndex], a
     farcall_b SendSGBPacketSet
@@ -564,7 +564,7 @@ Jump_01C_434C::
 
 ; with story flag 2, no text, wC468 bit 7 clear, a non-empty party and hFF8C bit 0 clear: hFFB9 = 3, sets bit 1 of the player and object flags and returns A = $FF; otherwise 0 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8CB, wC468, wC6FD, hPlayerStateFlags
+; reads: wC8CB, wFieldActionRequest, wPartyCount, hPlayerStateFlags
 ; writes: hSpriteWindowClipMode
 TryStartFieldMenu:: ; heuristic: follows a terminator; C0
 Func_01C_4364:: ; address name
@@ -574,10 +574,10 @@ Func_01C_4364:: ; address name
     ld a, [wC8CB]
     and a, $03
     jr nz, Jump_01C_4393
-    ld a, [wC468]
+    ld a, [wFieldActionRequest]
     bit 7, a
     jr nz, Jump_01C_4393
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     jr z, Jump_01C_4393
     ldh a, [hPlayerStateFlags]
@@ -596,7 +596,7 @@ Jump_01C_4393::
 ; writes the gold as up to five decimal digit tiles without leading zeros at HL in VRAM, wrapping at the row end (E-0128)
 ; 7 call sites from 7 routines (e.g. ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, InitItemListWD788AndCount, ScriptCommandE2_Run_Case03_Case0E, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi
-; writes: wC8C0, wC8C1, wC8C2
+; writes: wDigits
 ; points at: hTemp2
 DrawGoldDigitsAtHLWrapped_1C::
 Func_01C_4395:: ; address name
@@ -606,11 +606,11 @@ Func_01C_4395:: ; address name
     ld a, [wGoldMid]
     ld h, a
     ld a, l
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, h
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     ld a, [wGoldHi]
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     pop hl
     ld c, $00
@@ -748,10 +748,10 @@ Func_01C_4442:: ; address name
 ; only called from ScriptCommandE0_Run_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE0_Run_Case00)
 ; writes: wD7F7, wD7F8, wMenuInputResult
-; points at: wC8C0, wTextBuf0
+; points at: wDigits, wTextBuf0
 ScriptCommandE0_Run_Case00_Sub01::
 Func_01C_4463:: ; address name
-    ld hl, wC8C0
+    ld hl, wDigits
     xor a, a
     ld [hl+], a
     ld a, $01
@@ -766,7 +766,7 @@ Func_01C_4463:: ; address name
     ld [wD7F8], a
     ld a, l
     ld [wMenuInputResult], a
-    ld hl, wC8C0
+    ld hl, wDigits
     ld de, wTextBuf0
     ld c, $03
     ld a, [hl]
@@ -798,7 +798,7 @@ Jump_01C_449B::
 ; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
 ; 5 call sites from 5 routines (e.g. ScriptCommandE1_Run, ScriptCommandE3_Run_Case00_Sub01, ScriptCommandE0_Run_Case02_Sub03, ScriptCommandE0_Run_Case01, ...)
 ; reads: wIsCGB
-; writes: wC554, wC555, rSVBK
+; writes: wTextCursorLo, wTextCursorHi, rSVBK
 ; points at: wScreenTileBuffer, wD000
 DrawScreenBufferRectToBGMap_1C::
 Func_01C_449F:: ; address name
@@ -823,9 +823,9 @@ Func_01C_449F:: ; address name
     adc a, $01
     ld h, a
     ld a, l
-    ld [wC554], a
+    ld [wTextCursorLo], a
     ld a, h
-    ld [wC555], a
+    ld [wTextCursorHi], a
     pop hl
     pop bc
     pop de
@@ -893,11 +893,11 @@ Func_01C_44F3:: ; address name
 ; only called from ScriptCommandE0_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE0_Run_Case02)
 ; reads: wIsCGB
-; points at: wD168, wD208
+; points at: wWindowTileBuffer, wD168, wD208
 ScriptCommandE0_Run_Case02_Sub02::
 Func_01C_451D:: ; address name
-    ld hl, wScreenTileBuffer + $168
-    ld de, wScreenTileBuffer + $208
+    ld hl, wWindowTileBuffer
+    ld de, wWindowTileBuffer + $A0
     ld bc, $00A0
     call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
@@ -933,7 +933,7 @@ Jump_01C_4543::
     bit 7, a
     jr nz, Jump_01C_4573
     ld de, wD782
-    ld hl, wScreenTileBuffer + $174
+    ld hl, wWindowTileBuffer + $C
     ld bc, $0803
     call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wD782
@@ -944,7 +944,7 @@ Jump_01C_4543::
 
 Jump_01C_4573::
     ld de, wD782
-    ld hl, wScreenTileBuffer + $1D8
+    ld hl, wWindowTileBuffer + $70
     ld bc, $0803
     call CopyRectTo20ByteRowsJp_Bank1C
     ld de, wD782
@@ -1048,7 +1048,7 @@ Jump_01C_4615:: ; address name
 ; entry 2 of the `rst $00` table in ScriptCommandE3_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD787
-; writes: wC52D, wC52E, wC52F, wC530, wD787
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD787
 ScriptCommandE3_Run_Case02::
 Jump_01C_4619:: ; address name
     ld b, $46
@@ -1057,25 +1057,25 @@ Jump_01C_4619:: ; address name
     call DecompressToVRAM
     ld hl, vTiles1 + $500
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0F01
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1202
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld a, [wD787]
     inc a
     ld [wD787], a
@@ -1147,7 +1147,7 @@ Jump_01C_46AA::
     ld a, b
     or a, c
     jr nz, Jump_01C_46AA
-    ld hl, wScreenTileBuffer + $1CC
+    ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
     ld bc, $0104
     call CopyBytesDEToHL_Bank1C
@@ -1221,7 +1221,7 @@ Jump_01C_4710:: ; address name
 ScriptCommandE2_Run_Case01_Case03::
 Jump_01C_4714:: ; address name
     ld de, Data_01C_4738
-    ld hl, wScreenTileBuffer + $1CC
+    ld hl, wWindowTileBuffer + $64
     ld bc, $0807
     call CopyRectTo20ByteRowsJp_Bank1C
     call DrawWD788BoxAtWC370AndStep
@@ -1542,7 +1542,7 @@ Jump_01C_48F5:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommandE2_Run_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7B6, wD7BA, wC8C2, wD781, wD7B5
+; reads: wD7B6, wD7BA, wDigits, wD781, wD7B5
 ; writes: wD7BC, wD7BA, wD7B6, wD7B7, wD781, wD783, wD784, wD7B5
 ScriptCommandE2_Run_Case03_Case02::
 Jump_01C_490D:: ; address name
@@ -1624,7 +1624,7 @@ Jump_01C_496D::
     call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [hl], a
     ei
@@ -1638,7 +1638,7 @@ Jump_01C_496D::
     call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E1
     ld [hl], a
     ei
@@ -1878,11 +1878,11 @@ Jump_01C_4AFA::
     ld b, $F2
     call ReadFarPointerAtDEInBankB
     ld a, l
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, h
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     ld a, b
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     farcall UnpackBCDToDigitsWD7F1_Bank1E
     ld a, $DF
@@ -2771,7 +2771,7 @@ Jump_01C_5032::
 ; entry 10 of the `rst $00` table in ScriptCommandE2_Run_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B6, wD7B5, hTemp3, hTemp2, hTemp1, hTemp0, wD788, wD789, ...
-; writes: wD7B8, wC8C0, wC8C1, wC8C2, wD788, wD789, wD78A, wD78B, ...
+; writes: wD7B8, wDigits, wD788, wD789, wD78A, wD78B, wD78C, wD78D, ...
 ; points at: wTextBuf0, wD7CE, wD788
 ScriptCommandE2_Run_Case03_Case0A::
 Jump_01C_507C:: ; address name
@@ -2792,11 +2792,11 @@ Jump_01C_507C:: ; address name
     push de
     ld hl, wD7CE
     ld a, [hl+]
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, [hl+]
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     ld a, [hl]
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     ldh a, [hTemp3]
     and a, $0F
@@ -3371,15 +3371,15 @@ Jump_01C_5433::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     and a, a
     jr z, Jump_01C_5451
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     ld [wD7A5], a
 
 Jump_01C_5451::
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [wD7A6], a
     call BGMapAddressAtScroll_Bank1C_67AF
@@ -3418,8 +3418,8 @@ Jump_01C_5476:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommandE2_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7B6, wD7BB, wC8C1, wC8C2, wD781, wD7B5
-; writes: wD7B0, wD7BB, wD7B6, wD7B7, wC8C1, wD781, wD783, wD784, ...
+; reads: wD7B6, wD7BB, wDigits, wD781, wD7B5
+; writes: wD7B0, wD7BB, wD7B6, wD7B7, wDigits, wD781, wD783, wD784, ...
 ; points at: wInventory, wD7D5
 ScriptCommandE2_Run_Case04_Case02::
 Jump_01C_5496:: ; address name
@@ -3519,11 +3519,11 @@ Jump_01C_5516::
     jr c, Jump_01C_5561
     call DrawC5BEC6AtScroll18E_Bank1C
     call HLToDecimalDigits
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     and a, a
     jr nz, Jump_01C_552E
     ld a, $E3
-    ld [wC8C1], a
+    ld [wDigits + $1], a
 
 Jump_01C_552E::
     call BGMapAddressAtScroll_Bank1C_67AF
@@ -3532,7 +3532,7 @@ Jump_01C_552E::
     call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [hl], a
     ei
@@ -3546,7 +3546,7 @@ Jump_01C_552E::
     call StepBGMapAddressBackOnScrollWrap
     di
     call WaitForVRAMAccess
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E1
     ld [hl], a
     ei
@@ -3725,7 +3725,7 @@ Jump_01C_5669::
 ; entry 4 of the `rst $00` table in ScriptCommandE2_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B6, wD783, hTemp1, hTemp0, wD7BD, wD7BE, wD7BF, wD7C0, ...
-; writes: wC8C0, wC8C1, wC8C2, wD7BD, wD7BE, wD7BF, wD7C0, wD7C1, ...
+; writes: wDigits, wD7BD, wD7BE, wD7BF, wD7C0, wD7C1, wD7EE, wD783, ...
 ; points at: wD7D5, wD7BD
 ScriptCommandE2_Run_Case04_Case04::
 Jump_01C_566A:: ; address name
@@ -3750,11 +3750,11 @@ Jump_01C_567C::
     rl d
     call ScriptCommandE2_Run_Shared03
     ld a, l
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, h
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     xor a, a
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     ldh a, [hTemp1]
     and a, $F0
@@ -4657,7 +4657,7 @@ Jump_01C_5C0C::
 ; entry 9 of the `rst $00` table in ScriptCommandE2_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B6, wD7B5, hTemp2, hTemp1, hTemp0, wD788, wD789, wD78A, ...
-; writes: wD7B8, wC8C0, wC8C1, wC8C2, wD788, wD789, wD78A, wD78B, ...
+; writes: wD7B8, wDigits, wD788, wD789, wD78A, wD78B, wD78C, wD78D, ...
 ; points at: wD7D5, wTextBuf0, wD7CE, wD788
 ScriptCommandE2_Run_Case04_Case09::
 Jump_01C_5C46:: ; address name
@@ -4678,11 +4678,11 @@ Jump_01C_5C46:: ; address name
     push de
     ld hl, wD7CE
     ld a, [hl+]
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, [hl+]
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     ld a, [hl]
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     ldh a, [hTemp2]
     and a, $F0
@@ -4940,7 +4940,7 @@ Jump_01C_5DEC:: ; address name
 
 ; entry 13 of the `rst $00` table in ScriptCommandE2_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7D0, wD7CF, wD7CE, wD781, wC8C1, wC8C2
+; reads: wD7D0, wD7CF, wD7CE, wD781, wDigits
 ; writes: wD7F3, wD7F2, wD7F1, wD7B0, wD780, wD781, wTwoChoiceCursor, wD7B5, ...
 ; points at: wInventory, wD788, wD792
 ScriptCommandE2_Run_Case04_Case0D::
@@ -5031,15 +5031,15 @@ Jump_01C_5EA2::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     and a, a
     jr z, Jump_01C_5EC0
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     ld [wD7A5], a
 
 Jump_01C_5EC0::
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [wD7A6], a
     call BGMapAddressAtScroll_Bank1C_67AF
@@ -5712,7 +5712,7 @@ Func_01C_67AF:: ; address name
 ; clears a rectangle (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1; on CGB also clears the attribute map in VRAM bank 1 (E-0121)
 ; 11 call sites from 9 routines (e.g. DrawTwoBoxesAndRequestScript80, ScriptCommandE2_Run_Case03_Case09, ScriptCommandE2_Run_Case04_Case0C, ScriptCommandE2_Run_Case04_Case08, ...)
 ; reads: wIsCGB
-; writes: wC554, wC555, rVBK, rSVBK
+; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ClearRectBothBanksSetWC554Plus1C1::
 Func_01C_67D0:: ; address name
     push de
@@ -5729,9 +5729,9 @@ Func_01C_67D0:: ; address name
     adc a, $01
     ld h, a
     ld a, l
-    ld [wC554], a
+    ld [wTextCursorLo], a
     ld a, h
-    ld [wC555], a
+    ld [wTextCursorHi], a
     pop hl
     pop bc
     pop de
@@ -5752,7 +5752,7 @@ Func_01C_67D0:: ; address name
 
 ; clears a rectangle (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1 (E-0124)
 ; 13 call sites from 13 routines (e.g. ScriptCommandE2_Run_Case03_Case0E, DrawTwoBoxesAndRequestScript80, ScriptCommandE2_Run_Case03_Case0C, ScriptCommandE2_Run_Case03_Case08, ...)
-; writes: wC554, wC555
+; writes: wTextCursorLo, wTextCursorHi
 ClearRectSetWC554Plus1C1_Bank1C::
 Func_01C_6806:: ; address name
     push de
@@ -5769,9 +5769,9 @@ Func_01C_6806:: ; address name
     adc a, $01
     ld h, a
     ld a, l
-    ld [wC554], a
+    ld [wTextCursorLo], a
     ld a, h
-    ld [wC555], a
+    ld [wTextCursorHi], a
     pop hl
     pop bc
     pop de
@@ -6188,7 +6188,7 @@ Jump_01C_6A14::
 
 ; copies $28 bytes from Data_01C_5F5E to wD788, runs Func_01C_4395, counts the inventory items into wD7B0 and its digits into wD7A5/6, wD781 += 1 (E-0125)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE2_Run_Case01_Case02, ScriptCommandE5_Run_Case01_Case04)
-; reads: wC8C1, wC8C2
+; reads: wDigits
 ; writes: wD7B0, wD7A5, wD7A6
 ; points at: wD788, wD792, wInventory, wD781
 InitItemListWD788AndCount::
@@ -6227,15 +6227,15 @@ Jump_01C_6A49::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     and a, a
     jr z, Jump_01C_6A64
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     ld [wD7A5], a
 
 Jump_01C_6A64::
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [wD7A6], a
     ld hl, wD781
@@ -6248,7 +6248,7 @@ Jump_01C_6A64::
 DrawWD788BoxAtWC370AndStep::
 Func_01C_6A71:: ; address name
     ld de, wD788
-    ld hl, wScreenTileBuffer + $1D8
+    ld hl, wWindowTileBuffer + $70
     ld bc, $0805
     call CopyRectTo20ByteRowsJp_Bank1C
     call BGMapAddressAtScroll_Bank1C_67AF
@@ -6261,7 +6261,7 @@ Func_01C_6A71:: ; address name
 
 ; only called from ScriptCommandE3_Run_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE3_Run_Case01)
-; writes: wD784, wD783, wD780, wD781, wC46B, wScriptCommandType, wScriptStartRequest
+; writes: wD784, wD783, wD780, wD781, wMenuState, wScriptCommandType, wScriptStartRequest
 ; points at: wD787
 ScriptCommandE3_Run_Case01_Sub01::
 Func_01C_6A8E:: ; address name
@@ -6270,7 +6270,7 @@ Func_01C_6A8E:: ; address name
     ld [wD783], a
     ld [wD780], a
     ld [wD781], a
-    ld [wC46B], a
+    ld [wMenuState], a
     ld hl, wD787
     inc [hl]
     xor a, a
@@ -6285,7 +6285,7 @@ Func_01C_6A8E:: ; address name
 ; points at: wScreenTileBuffer, wD1CC, wD000, wD787
 ScriptCommandE3_Run_Case00_Sub01::
 Func_01C_6AAC:: ; address name
-    ld hl, wScreenTileBuffer + $1CC
+    ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
     ld bc, $0104
     call CopyBytesDEToHL_Bank1C
@@ -6589,7 +6589,7 @@ Jump_01C_6D03::
     ld a, b
     or a, c
     jr nz, Jump_01C_6D03
-    ld hl, wScreenTileBuffer + $1CC
+    ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
     ld bc, $0104
     call CopyBytesDEToHL_Bank1C
@@ -6714,7 +6714,7 @@ Jump_01C_6DC7:: ; address name
 ScriptCommandE5_Run_Case01_Case05::
 Jump_01C_6DCB:: ; address name
     ld de, Data_01C_6DEF
-    ld hl, wScreenTileBuffer + $1CC
+    ld hl, wWindowTileBuffer + $64
     ld bc, $0B07
     call CopyRectTo20ByteRowsJp_Bank1C
     call DrawWD788BoxAtWC370AndStep
@@ -7022,14 +7022,14 @@ Jump_01C_6FBC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD780, wD7B6, wD783, wD7B8, wD784, wD781
 ; writes: wD7B8, wD784, wD783, wD781
-; points at: wC635, wD7D5
+; points at: wItemStorage, wD7D5
 ScriptCommandE5_Run_Case03_Case09::
 Jump_01C_6FD5:: ; address name
     call ScriptCommandE5_Run_Shared01
     ld a, [wD780]
     cp a, $03
     jr z, Jump_01C_6FFC
-    ld hl, wC635
+    ld hl, wItemStorage
     ld a, [wD7B6]
     ld e, a
     ld d, $00
@@ -7439,7 +7439,7 @@ Jump_01C_724B:: ; address name
 
 ; copies $20 bytes from Data_01C_5F5E to wD788, counts the inventory items into wD7B0 and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)
 ; 2 call sites from 2 routines (e.g. ClearRect147AndAskTwoChoice, ScriptCommandE5_Run_Case03_Case0F)
-; reads: wC8C1, wC8C2
+; reads: wDigits
 ; writes: wD7B0, wD7A5, wD7A6
 ; points at: wD788, wD792, wInventory
 InitItemListWD788AndDraw::
@@ -7480,15 +7480,15 @@ Jump_01C_7279::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     and a, a
     jr z, Jump_01C_7297
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     ld [wD7A5], a
 
 Jump_01C_7297::
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [wD7A6], a
     call BGMapAddressAtScroll_Bank1C_67AF

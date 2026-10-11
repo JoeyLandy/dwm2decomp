@@ -3,12 +3,12 @@ SECTION "Bank 60", ROMX[$4000], BANK[$60]
 
 ; only called from RunWC46BMenuState_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case05)
-; reads: wC833, hTemp0
+; reads: wCurrentKeyIndex, hTemp0
 ; writes: wCC42, wCD03, wCD04
-; points at: wC787
+; points at: wKeySeeds
 RunWC46BMenuState_Case05_Sub01::
 Func_060_4001:: ; address name
-    ld a, [wC833]
+    ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -28,9 +28,9 @@ Func_060_4001:: ; address name
     ld [wCC42], a
     or a, $80
     ld [hl], a
-    ld a, [wC833]
+    ld a, [wCurrentKeyIndex]
     add a, a
-    ld hl, wC787
+    ld hl, wKeySeeds
     add_a_to_hl
     ld a, [hl+]
     ld [wCD03], a
@@ -39,7 +39,7 @@ Func_060_4001:: ; address name
 
 ; only called from DebugAutomap_Update_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01)
-; reads: wC833
+; reads: wCurrentKeyIndex
 DebugAutomap_Update_Sub01_Sub01::
 Func_060_4035:: ; address name
     call DebugAutomap_Update_Sub01_Sub01_Sub02
@@ -56,7 +56,7 @@ Func_060_4035:: ; address name
     call DebugAutomap_Update_Sub01_Sub01_Sub0A
     call DebugAutomap_Update_Sub01_Sub01_Sub01
     call DebugAutomap_Update_Sub01_Sub01_Sub0B
-    ld a, [wC833]
+    ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -471,12 +471,12 @@ Jump_060_435E::
 
 ; from the wC708 entry wC833: wCD02 = Data_060_43C7[byte 0] plus a row adjustment, and copies the $FF-terminated list of Data_060_43D7 row byte 1 to wCCF7 (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wC833, wCD02
+; reads: wCurrentKeyIndex, wCD02
 ; writes: wCD02
 ; points at: wCCF7
 LoadKeyWorldParamsForWC833::
 Func_060_436B:: ; address name
-    ld a, [wC833]
+    ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -1165,14 +1165,14 @@ Data_060_4C58:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; when wC88E is set and wC891 has bit 7 with low bits equal to wCC42, clears wC88E (E-0122)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub02)
-; reads: wC88E, wC891, wCC42
-; writes: wC88E
+; reads: wKeyWorldActive, wKeyWorldKey, wCC42
+; writes: wKeyWorldActive
 ClearWC88EWhenWC891MatchesWCC42::
 Func_060_4C6C:: ; address name
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     ret z
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     ret z
     and a, $7F
@@ -1181,12 +1181,12 @@ Func_060_4C6C:: ; address name
     cp a, c
     ret nz
     ld a, $00
-    ld [wC88E], a
+    ld [wKeyWorldActive], a
     ret
 
 ; repeatedly picks entry (wCD03 & 3) of the 4-byte row of Data_060_4CC1 selected by the second byte of the wC708 entry wC833 until it is non-zero; wCD0B = entry - 1 (E-0121)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub02)
-; reads: wCD03, wC833
+; reads: wCD03, wCurrentKeyIndex
 ; writes: wCD0B
 PickRandomNonzeroFromTable4CC1::
 Func_060_4C85:: ; address name
@@ -1194,7 +1194,7 @@ Func_060_4C85:: ; address name
     ld a, [wCD03]
     and a, $07
     push af
-    ld a, [wC833]
+    ld a, [wCurrentKeyIndex]
     ld e, a
     ld d, $00
     sla e
@@ -3625,20 +3625,20 @@ Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; on key-world maps with bit 7 of wC893 set: sets the object count wCC47 from the band of the key level and drops objects for which Func_060_53E5 fails; marks the wC890 object (E-0129)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
-; reads: wCC44, wC893, wC833, wCD0F, wCC47, wC88E, wC891, wCC42, ...
-; writes: wC893, wCC47, hTemp0
+; reads: wCC44, wKeyWorldRefresh, wCurrentKeyIndex, wCD0F, wCC47, wKeyWorldActive, wKeyWorldKey, wCC42, ...
+; writes: wKeyWorldRefresh, wCC47, hTemp0
 ; points at: wCC48, wCC4C
 RefreshKeyWorldObjectsOnEntry::
 Func_060_62F9:: ; address name
     ld a, [wCC44]
     cp a, $80
     ret nz
-    ld a, [wC893]
+    ld a, [wKeyWorldRefresh]
     bit 7, a
     ret z
     and a, $7F
-    ld [wC893], a
-    ld a, [wC833]
+    ld [wKeyWorldRefresh], a
+    ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
     add hl, hl
@@ -3689,10 +3689,10 @@ Jump_060_634E::
     sub a, b
     ld [wCC47], a
     jr z, RefreshKeyWorldObjectsOnEntry
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     ret z
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     ret z
     and a, $7F
@@ -3700,7 +3700,7 @@ Jump_060_634E::
     ld a, [wCC42]
     cp a, c
     ret nz
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     ld c, a
     ld hl, wCC4C
     ld a, [wCC47]
@@ -3729,14 +3729,14 @@ Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; on town maps with bit 7 of wC893 set: sets the object count and band for the map, drops listed objects and marks the wC890 one (E-0130)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
-; reads: wCC44, wC893, hMapId
+; reads: wCC44, wKeyWorldRefresh, hMapId
 ; writes: wCC47, wCD0F, hTemp0
 SetupTownObjectsForMap::
 Func_060_639D:: ; address name
     ld a, [wCC44]
     bit 7, a
     ret nz
-    ld a, [wC893]
+    ld a, [wKeyWorldRefresh]
     bit 7, a
     ret z
     ldh a, [hMapId]
@@ -3855,8 +3855,8 @@ Jump_060_6470::
 
 ; clears bit 7 of wC893; walks the wCC47 8-byte entries at wCC48 and drops the count at the first entry for which Func_060_64F3 returns 0 (E-0125)
 ; 7 call sites from 1 routine (e.g. SetupTownObjectsForMap)
-; reads: wC893, wCC47
-; writes: hTemp6, hTemp7, wC893, hTemp0, wCC47
+; reads: wKeyWorldRefresh, wCC47
+; writes: hTemp6, hTemp7, wKeyWorldRefresh, hTemp0, wCC47
 ; points at: wCC48
 RemoveWCC48EntryMatching::
 Func_060_6488:: ; address name
@@ -3864,9 +3864,9 @@ Func_060_6488:: ; address name
     ldh [hTemp6], a
     ld a, h
     ldh [hTemp7], a
-    ld a, [wC893]
+    ld a, [wKeyWorldRefresh]
     and a, $7F
-    ld [wC893], a
+    ld [wKeyWorldRefresh], a
     ld a, [wCC47]
     ld b, a
     ld de, wCC48
@@ -3903,21 +3903,21 @@ Jump_060_64B8::
 
 ; when wC88E is set and wC891 equals hFFC6, sets bit 7 of the entry whose byte 4 equals wC890 (E-0125)
 ; 7 call sites from 1 routine (e.g. SetupTownObjectsForMap)
-; reads: wC88E, wC891, hTemp0, wC890, wCC47
+; reads: wKeyWorldActive, wKeyWorldKey, hTemp0, wKeyWorldGoalCell, wCC47
 ; points at: wCC4C
 MarkWCC48EntryForWC890::
 Func_060_64C2:: ; address name
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     ret z
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     ret nz
     ld c, a
     ldh a, [hTemp0]
     cp a, c
     ret nz
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     ld c, a
     ld hl, wCC4C
     ld a, [wCC47]
@@ -4397,7 +4397,7 @@ Data_060_6866:: ; heuristic: target of a monotone pointer table; C0
 
 ; only called from FieldModeStateDispatch_Case04_Sub02 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02)
-; reads: wCC44, wCC43, wCC45, wCCEA, wC833, wCCED, wCCF1, wCCEE, ...
+; reads: wCC44, wCC43, wCC45, wCCEA, wCurrentKeyIndex, wCCED, wCCF1, wCCEE, ...
 ; writes: wCCE9, wCCEA
 ; points at: wCDB0, wCCEB
 FieldModeStateDispatch_Case04_Sub02_Sub01::
@@ -4436,7 +4436,7 @@ Jump_060_687A::
     jr z, Jump_060_6875
     xor a, a
     ld [wCCEA], a
-    ld a, [wC833]
+    ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
     add hl, hl

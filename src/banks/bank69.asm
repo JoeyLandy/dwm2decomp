@@ -4,7 +4,7 @@ SECTION "Bank 69", ROMX[$4000], BANK[$69]
 ; clears the sprite slots; key-world maps set up their objects, other maps load the object list for hMapId (with a story-flag case on map $2F) (E-0131)
 ; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC38, hTempA, wMapWidthScreens
-; writes: wSpriteSlotCount, wC527, hTempA, hTemp4, hTemp5, hTemp2, hTemp0, hTemp1, ...
+; writes: wSpriteSlotCount, wOBJPaletteUploadRequest, hTempA, hTemp4, hTemp5, hTemp2, hTemp0, hTemp1, ...
 ; points at: wSpriteSlots
 LoadMapObjectsForScreen::
 Func_069_4001:: ; address name
@@ -16,7 +16,7 @@ Func_069_4001:: ; address name
     farcall SetupKeyWorldObjectsForMapType
     farcall RestoreSpriteSnapshot
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     ret
 
 Jump_069_401E::
@@ -275,7 +275,7 @@ Jump_069_413A::
 Jump_069_4168::
     farcall RestoreSpriteSnapshot
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     ret
     dw Data_069_63B2
     db $22, $67

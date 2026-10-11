@@ -112,12 +112,12 @@ Jump_05F_699A::
 
 ; entry 2 of the `rst $00` table in RunMessageBox
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wMessageGroup, hPlayerY
+; reads: wTextFlags, wMessageGroup, hPlayerY
 ; writes: wC8CB, wC8CC, hSpriteWindowClipMode
 ; points at: wMessageState
 RunMessageBox_Case02::
 Jump_05F_69A2:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld a, [wMessageGroup]
@@ -643,7 +643,7 @@ Jump_05F_6C43::
 
 ; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
 ; 52 call sites from 49 routines (e.g. ScriptCommand5E_Run_Shared01, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ScriptCommand4B_Run_Case11, ...)
-; writes: wModeState, wC8C5, wScriptParam0
+; writes: wModeState, wFieldTransitionStep, wScriptParam0
 ; points at: wScriptStep
 ScriptStartFadeAndAdvanceStep::
 Func_05F_6C5A:: ; address name
@@ -652,7 +652,7 @@ Func_05F_6C5A:: ; address name
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -661,7 +661,7 @@ Func_05F_6C5A:: ; address name
 
 ; wModeState = 3, wC904 = 0, wC8C7 = 2, far-calls SaveScreenBufferToBGMap1, then Func_00A_476E (E-0078)
 ; 5 call sites from 5 routines (e.g. ScriptCommand9A_Run, ScriptCommand96_Run_Case04, ScriptCommand85_Run_Case01, ScriptCommand9E_Run_Case01, ...)
-; writes: wModeState, wC904, wC8C7
+; writes: wModeState, wC904, wFieldReturnPhase
 SetModeState3AndSaveScreen::
 Func_05F_6C71:: ; address name
     ld a, $03
@@ -669,15 +669,15 @@ Func_05F_6C71:: ; address name
     xor a, a
     ld [wC904], a
     ld a, $02
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
     farcall PickRandomWC902FromTable478F
     ret
 
 ; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
 ; 17 call sites from 16 routines (e.g. ScriptCommand32_Run_Case00, ScriptCommand84_Run_Case08, ScriptCommand86_Run_Case02, ScriptCommand81_Run_Case02, ...)
-; reads: wC928, wC836
-; writes: wC836
+; reads: wC928, wGameFlags836
+; writes: wGameFlags836
 ; points at: wInventory
 AppendItemWC928ToInventory::
 Func_05F_6C8C:: ; address name
@@ -697,25 +697,25 @@ Jump_05F_6C9B::
     ld a, [wC928]
     ld [hl], a
     pop hl
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
 ; 5 call sites from 4 routines (e.g. Func_004_58C2_Case13, Func_004_612B_Case18, DispatchTalkEvent_Case04_Case6F, ScriptCommand82_Run_Shared05)
-; reads: wC6FD, hTemp0
+; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
-; points at: wC6FE
+; points at: wPartyList
 SetWStepArrivedIfPartyHasField55Bit7::
 Func_05F_6CA9:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     jr z, Jump_05F_6CC8
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
 
 Jump_05F_6CB8::
     ld a, [hl]
@@ -744,18 +744,18 @@ Jump_05F_6CD1::
 
 ; only called from ScriptCommand82_Run_Shared05 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand82_Run_Shared05)
-; reads: wC6FD, hTemp0
+; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
-; points at: wC6FE
+; points at: wPartyList
 ScriptCommand82_Run_Shared05_Sub01::
 Func_05F_6CDB:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     jr z, Jump_05F_6CFA
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
 
 Jump_05F_6CEA::
     ld a, [hl]
@@ -784,18 +784,18 @@ Jump_05F_6D03::
 
 ; only called from ScriptCommand82_Run_Shared05 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand82_Run_Shared05)
-; reads: wC6FD, hTemp0
+; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
-; points at: wC6FE
+; points at: wPartyList
 ScriptCommand82_Run_Shared05_Sub02::
 Func_05F_6D0D:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     jr z, Jump_05F_6D2C
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
 
 Jump_05F_6D1C::
     ld a, [hl]
@@ -825,8 +825,8 @@ Jump_05F_6D35::
 ; with hFF8D bits 1-3 set: wD7F1 = wC6FE[hFFC6] (bank 0 record), far-calls Func_014_7E96, LoadRecordListNameTiles and Func_004_4AA8, wC527 = $7F, then clears hFF8D bits 1-3 (E-0121)
 ; 3 call sites from 3 routines (e.g. ScriptCommand3D_Run_Case03, ScriptCommand3C_Run_Case0D, ScriptCommand3A_Run_Case0A)
 ; reads: hFieldDrawFlags, hTemp0
-; writes: hFieldDrawFlags, wD7F1, wD7F2, wC527
-; points at: wC6FE
+; writes: hFieldDrawFlags, wD7F1, wD7F2, wOBJPaletteUploadRequest
+; points at: wPartyList
 LoadListedRecordNameTilesForHFFC6::
 Func_05F_6D3F:: ; address name
     farcall FindPartyIndexOfSpeciesHFFC6
@@ -834,7 +834,7 @@ Func_05F_6D3F:: ; address name
     or a, $0E
     ldh [hFieldDrawFlags], a
     ldh a, [hTemp0]
-    ld hl, wC6FE
+    ld hl, wPartyList
     add_a_to_hl
     ld a, [hl]
     ld [wD7F1], a
@@ -844,7 +844,7 @@ Func_05F_6D3F:: ; address name
     call LoadRecordListNameTiles
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     ldh a, [hFieldDrawFlags]
     and a, $F1
     ldh [hFieldDrawFlags], a
@@ -852,7 +852,7 @@ Func_05F_6D3F:: ; address name
 
 ; for record $FF in bank 1 (Func_014_7E96): if wD7F5 is not $FF and is >= Data_05F_6DA8[wC7C7 & 3], sets wD7F5 = $FF (E-0121)
 ; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, Talk08D1_TheEvaluatorSaidI, ScriptCommand2A_Run_Case02, ...)
-; reads: wD7F5, wC7C7
+; reads: wD7F5, wFarmLevel
 ; writes: wD7F1, wD7F2, wD7F5
 ClearWD7F5IfAtOrAboveLimitForWC7C7::
 Func_05F_6D78:: ; address name
@@ -864,7 +864,7 @@ Func_05F_6D78:: ; address name
     ld a, [wD7F5]
     cp a, $FF
     ret z
-    ld a, [wC7C7]
+    ld a, [wFarmLevel]
     and a, $03
     ld hl, Data_05F_6DA8
     add_a_to_hl
@@ -1864,11 +1864,11 @@ Jump_05F_738B:: ; address name
 
 ; starts message 6 and advances wC92D when wC552 is 0, otherwise message 7 and steps wC92D back (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC552
+; reads: wTextYesNoResult
 ; points at: wC92D
 StartChoiceMessageByWC552:: ; heuristic: follows a terminator; C0
 Func_05F_7390:: ; address name
-    ld a, [wC552]
+    ld a, [wTextYesNoResult]
     or a, a
     jr nz, Jump_05F_739E
     ld a, $06
@@ -1899,7 +1899,7 @@ Func_05F_73A8:: ; address name
 ; entry 15 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wCB86, wC933
-; writes: wC928, wC929, wCB86, wScriptParam0, hTemp0, wCB81, wC6FD
+; writes: wC928, wC929, wCB86, wScriptParam0, hTemp0, wCB81, wPartyCount
 ; points at: wCB8B, wCB8A, wC92D
 RunWC92DStep_7363_Case0F::
 Jump_05F_73B2:: ; address name
@@ -1957,7 +1957,7 @@ Jump_05F_7402::
     ld a, $04
     call StartMessageFromTable7787
     ld a, [wC933]
-    ld [wC6FD], a
+    ld [wPartyCount], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wC92D
@@ -2098,13 +2098,13 @@ Jump_05F_74F6::
 
 ; entry 10 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wScriptParam0
+; reads: wRandomLo, wScriptParam0
 ; writes: wCBD3, wScriptParam0
 ; points at: wC92D
 RunWC92DStep_7363_Case0A::
 Jump_05F_750C:: ; address name
     call NextTableByte
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $03
     jr z, RunWC92DStep_7363_Case0A
     dec a
@@ -2267,8 +2267,8 @@ Jump_05F_75EC:: ; address name
 
 ; entry 4 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD
-; writes: wCBCF, wC933, wC6FD
+; reads: wPartyCount
+; writes: wCBCF, wC933, wPartyCount
 ; points at: wC92D
 RunWC92DStep_7363_Case04::
 Jump_05F_7617:: ; address name
@@ -2277,10 +2277,10 @@ Jump_05F_7617:: ; address name
     ret nc
     ld a, $80
     ld [wCBCF], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     ld [wC933], a
     ld a, $01
-    ld [wC6FD], a
+    ld [wPartyCount], a
     ld hl, wC92D
     inc [hl]
     ret
@@ -2288,7 +2288,7 @@ Jump_05F_7617:: ; address name
 ; entry 3 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
-; writes: wScriptParam0, hFieldDrawFlags, wC527
+; writes: wScriptParam0, hFieldDrawFlags, wOBJPaletteUploadRequest
 ; points at: wC92D
 RunWC92DStep_7363_Case03::
 Jump_05F_7631:: ; address name
@@ -2308,7 +2308,7 @@ Jump_05F_7646::
     call LoadRecordListNameTiles
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
     xor a, a
     ldh [hFieldDrawFlags], a
     xor a, a
@@ -2320,8 +2320,8 @@ Jump_05F_7646::
 ; entry 2 of the `rst $00` table in RunWC92DStep_7363
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wIsCGB
-; writes: wC526, wScriptParam0
-; points at: wC5E9, wBGPaletteCopy, wBGPaletteBuffer, wC92D
+; writes: wBGPaletteUploadRequest, wScriptParam0
+; points at: wDMGPaletteBGP, wBGPaletteCopy, wBGPaletteBuffer, wC92D
 RunWC92DStep_7363_Case02::
 Jump_05F_766C:: ; address name
     ld a, [wScriptParam0]
@@ -2329,7 +2329,7 @@ Jump_05F_766C:: ; address name
     srl a
     and a, $01
     jr z, Jump_05F_7697
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
     ld a, $D2
@@ -2346,7 +2346,7 @@ Jump_05F_766C:: ; address name
     jr Jump_05F_76B9
 
 Jump_05F_7697::
-    ld hl, wC5E9
+    ld hl, wDMGPaletteBGP
     ld a, $2D
     ld [hl+], a
     ld a, $2D
@@ -2370,7 +2370,7 @@ Jump_05F_76B1::
 
 Jump_05F_76B9::
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
 
 Jump_05F_76BE::
     ld a, [wScriptParam0]
@@ -2649,14 +2649,14 @@ Func_05F_785C:: ; address name
 
 ; implements script command type 05; reached through ScriptCommand05 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand05)
-; reads: wC468, hPlayerStateFlags, wScriptParam1, wScriptParam0, wJoypadHeld
+; reads: wFieldActionRequest, hPlayerStateFlags, wScriptParam1, wScriptParam0, wJoypadHeld
 ; writes: wJoypadHeld, wJoypadPressed, wScriptStartRequest, wScriptParam1
 ScriptCommand05_Run::
 Func_05F_787C:: ; address name
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC468]
+    ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
     ldh a, [hPlayerStateFlags]
@@ -2823,8 +2823,8 @@ Func_05F_7969:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand0A_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wScriptParam1, wMessageIndex, wMessageGroup, wC634, wC836, hTemp0
-; writes: wScriptParam0, wScriptParam1, wC836
+; reads: wScriptParam0, wScriptParam1, wMessageIndex, wMessageGroup, wInventory, wGameFlags836, hTemp0
+; writes: wScriptParam0, wScriptParam1, wGameFlags836
 ; points at: wScriptStep, wScriptParam0, wInventory
 ScriptCommand0A_Run_Case00::
 Jump_05F_7977:: ; address name
@@ -2862,7 +2862,7 @@ Jump_05F_79AE::
     pop af
     cp a, $03
     jr z, Jump_05F_79F5
-    ld a, [wC634]
+    ld a, [wInventory + $17]
     cp a, $FF
     jr z, Jump_05F_79BE
     cp a, $00
@@ -2883,9 +2883,9 @@ Jump_05F_79C1::
 Jump_05F_79CC::
     ld a, [wScriptParam1]
     ld [hl], a
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
 
 Jump_05F_79D8::
     ld a, [wMessageIndex]
@@ -2973,12 +2973,12 @@ Jump_05F_7A4F::
 
 ; entry 3 of the `rst $00` table in ScriptCommand0A_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wScriptParam1, hPlayerY
+; reads: wTextFlags, wScriptParam1, hPlayerY
 ; writes: hSpriteWindowClipMode, wC8CB, wC8CC
 ; points at: wScriptStep
 ScriptCommand0A_Run_Case03::
 Jump_05F_7A5D:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld a, [wScriptParam1]

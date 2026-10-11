@@ -3,8 +3,8 @@ SECTION "Bank F2", ROMX[$4000], BANK[$F2]
 
 ; start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when forced (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit_Case08)
-; reads: wC8C3, wC8CB
-; writes: wC8C3, wC8C4, hScrollY, hScrollX, wC52D, wC52E, wC52F, wC530, ...
+; reads: wSaveStep, wC8CB
+; writes: wSaveStep, wSaveRecordIndex, hScrollY, hScrollX, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
 ; points at: wD780
 GameMode8_Init::
 Func_0F2_4001:: ; address name
@@ -17,12 +17,12 @@ Jump_0F2_4007::
     dec b
     jr nz, Jump_0F2_4007
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
 
 Jump_0F2_4013::
     farcall RunSaveSteps
-    ld a, [wC8C3]
+    ld a, [wSaveStep]
     bit 7, a
     jr z, Jump_0F2_4013
     ld b, $46
@@ -41,14 +41,14 @@ Jump_0F2_4013::
     farcall SendSGBFieldPaletteSet
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1202
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
     ld a, $01
     ld [wC8CB], a
@@ -72,13 +72,13 @@ Jump_0F2_4075::
     ld a, $02
     ldh [hSpriteWindowClipMode], a
     ld a, $03
-    ld [wC5EC], a
+    ld [wLCDCShadow], a
     ld a, $01
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 8
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case08)
-; reads: wFadeState, wD782, wC52B
+; reads: wFadeState, wD782, wTextFlags
 GameMode8_Update::
 Func_0F2_40A2:: ; address name
     ld a, [wFadeState]
@@ -90,7 +90,7 @@ Func_0F2_40A2:: ; address name
     call GameMode8_Update_Sub01
 
 Jump_0F2_40B0::
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, [wD782]
@@ -245,10 +245,10 @@ Jump_0F2_415F:: ; address name
 ; entry 12 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wStringCategory
-; points at: wC60C, wTextBuf0, wCADB, wC8CF, wTextBuf1, wD782
+; points at: wPlayerName, wTextBuf0, wCADB, wC8CF, wTextBuf1, wD782
 GameMode8_Update_Case0C::
 Jump_0F2_4185:: ; address name
-    ld hl, wC60C
+    ld hl, wPlayerName
     ld de, wTextBuf0
     ld c, $0A
     call GameMode8_Update_Case0C_Sub01
@@ -383,8 +383,8 @@ Jump_0F2_422D::
 
 ; only called from GameMode8_Update_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode8_Update_Case00)
-; reads: wC5C7, wIsCGB
-; writes: hTemp0, wCBCF, wCBD3, wCBD4, wSpriteSlotCount, wC527
+; reads: wBankF0BlockC7, wIsCGB
+; writes: hTemp0, wCBCF, wCBD3, wCBD4, wSpriteSlotCount, wOBJPaletteUploadRequest
 ; points at: wSpriteSlots, wCB8F, hTemp0
 GameMode8_Update_Case00_Sub01::
 Func_0F2_4248:: ; address name
@@ -401,7 +401,7 @@ Jump_0F2_4258::
     ld de, wSpriteSlots
     ld b, $10
     call CopyBytesDEFromHL_BankF2
-    ld a, [wC5C7]
+    ld a, [wBankF0BlockC7]
     and a, a
     jr nz, Jump_0F2_426B
     ld hl, Data_0F2_431E
@@ -428,7 +428,7 @@ Jump_0F2_4286::
     ld b, $06
     call CopyBytesDEFromHL_BankF2
     farcall DecompressGraphicsHFFC6ToHFFCA
-    ld a, [wC5C7]
+    ld a, [wBankF0BlockC7]
     and a, a
     jr nz, Jump_0F2_429F
     ld hl, Data_0F2_42EC
@@ -457,7 +457,7 @@ Jump_0F2_42A2::
     and a, a
     jr z, Jump_0F2_42D8
     ld a, $7F
-    ld [wC527], a
+    ld [wOBJPaletteUploadRequest], a
 
 Jump_0F2_42D8::
     ret
@@ -523,7 +523,7 @@ Func_0F2_434E:: ; address name
 ; the same 84 bytes as DrawScreenBufferRectToBGMap_1B (1B:6277)
 ; 1 call site from 1 routine (e.g. GameMode8_Init)
 ; reads: wIsCGB
-; writes: wC554, wC555, rSVBK
+; writes: wTextCursorLo, wTextCursorHi, rSVBK
 ; points at: wScreenTileBuffer, wD000
 DrawScreenBufferRectToBGMap_1B_BankF2::
 Func_0F2_436F:: ; address name
@@ -548,9 +548,9 @@ Func_0F2_436F:: ; address name
     adc a, $01
     ld h, a
     ld a, l
-    ld [wC554], a
+    ld [wTextCursorLo], a
     ld a, h
-    ld [wC555], a
+    ld [wTextCursorHi], a
     pop hl
     pop bc
     pop de
@@ -893,7 +893,7 @@ Data_0F2_48D1:: ; heuristic: target of a monotone pointer table; C0
 
 ; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores the default window (E-0121)
 ; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case0D_Case01, Func_037_4AFD_Case0D_Case1C, RunWD780StateWhenNotFading_F1_Case0D_Case01, RunWD780StateWhenNotFading_F1_Case0D_Case1C)
-; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
+; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowString10Bank0EAtTiles2020ThenDefault::
 Func_0F2_49CF:: ; address name
     ld a, $10
@@ -902,30 +902,30 @@ Func_0F2_49CF:: ; address name
     ld [wStringCategory], a
     ld hl, vTiles2 + $20
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1E01
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank0E
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1202
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ret
 
 ; shows string $0E of category 0 (ShowString_Bank0E) at vTiles2 + $700 with size $0107, restores the default window and copies two tiles from bank $1F to vTiles1 + $6E0 and + $6F0 (E-0121)
 ; 2 call sites from 2 routines (e.g. ShowString0EAndStep_Bank37, ShowString0EAndStep_BankF1)
-; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
+; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowString0EBank0EAtTiles2700AndLoadTiles::
 Func_0F2_4A0B:: ; address name
     ld a, $0E
@@ -934,25 +934,25 @@ Func_0F2_4A0B:: ; address name
     ld [wStringCategory], a
     ld hl, vTiles2 + $700
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0701
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank0E
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1202
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld de, Data_01F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F
@@ -992,7 +992,7 @@ Func_0F2_4A61:: ; address name
 
 ; shows personality name CombinedPersonalityLevelIndex (category 7) at vTiles2 + $200 with size $0109, then restores the default window (E-0121)
 ; 1 call site from 1 routine (e.g. ShowPersonalityNameAndWCA3AName)
-; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
+; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowCombinedPersonalityName::
 Func_0F2_4A94:: ; address name
     call CombinedPersonalityLevelIndex
@@ -1002,25 +1002,25 @@ Func_0F2_4A94:: ; address name
     ld [wStringCategory], a
     ld hl, vTiles2 + $200
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0901
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1202
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ret
 
 ; returns 9 * PersonalityLevelOfA(wCA9A) + 3 * PersonalityLevelOfA(wCA9D) + PersonalityLevelOfA(wCA9B) (E-0121)
@@ -1070,16 +1070,16 @@ Func_0F2_4AFE:: ; address name
 ; writes the EXP wCA83-wCA85 as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
 ; reads: wCA83, wCA84, wCA85, wCA81, wCA82, hTemp0, wCA36, wCA37, ...
-; writes: wC8C0, wC8C1, wC8C2, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, ...
+; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wD7F1, wD7F2, ...
 ; points at: hTemp2
 DrawWCA83ExpAndToNextLevel::
 Func_0F2_4B05:: ; address name
     ld a, [wCA83]
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, [wCA84]
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     ld a, [wCA85]
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     farcall UnpackBCDToDigitsWD7F1_Bank1E
     call BGMapAddressAtScroll_BankF2_514D
@@ -1144,11 +1144,11 @@ Func_0F2_4B05:: ; address name
     sbc a, l
     ld e, a
     ld a, c
-    ld [wC8C0], a
+    ld [wDigits], a
     ld a, b
-    ld [wC8C1], a
+    ld [wDigits + $1], a
     ld a, e
-    ld [wC8C2], a
+    ld [wDigits + $2], a
     call Number24ToPackedBCD
     farcall UnpackBCDToDigitsWD7F1_Bank1E
 
@@ -1175,7 +1175,7 @@ Jump_0F2_4BB6::
 ; shows string wCACF of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case14, RunWD780StateWhenNotFading_F1_Case0D_Case14)
 ; reads: wCACF
-; writes: wStringIndex, wStringCategory, rRAMG2, wC52D, wC52E, wC52F, wC530
+; writes: wStringIndex, wStringCategory, rRAMG2, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowWCACFCategory11StringAtTiles2320::
 Func_0F2_4BD0:: ; address name
     ld a, [wCACF]
@@ -1186,21 +1186,21 @@ Func_0F2_4BD0:: ; address name
     ld [rRAMG2], a
     ld hl, vTiles2 + $320
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0602
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     ret
 
 ; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1A, RunWD780StateWhenNotFading_F1_Case0D_Case1A)
 ; reads: wCA36, wCA37, wD013
-; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
+; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowSpeciesCategory13StringAtTiles2680::
 Func_0F2_4BFC:: ; address name
     ld a, [wCA36]
@@ -1214,14 +1214,14 @@ Func_0F2_4BFC:: ; address name
     ld [wStringCategory], a
     ld hl, vTiles2 + $680
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0602
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     ret
 
@@ -1373,7 +1373,7 @@ Jump_0F2_4D18::
 ; shows string wCA2B[wD7F3] of category wCA2C[wD7F3] + 2 at the address in wD7F1/2 with size $0109 (E-0121)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub01)
 ; reads: wD7F3, wD7F1, wD7F2
-; writes: wStringIndex, wStringCategory, wC52D, wC52E, wC52F, wC530
+; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wCA2B
 ShowWCA2BEntryStringAtWD7F1::
 Func_0F2_4D2B:: ; address name
@@ -1390,14 +1390,14 @@ Func_0F2_4D2B:: ; address name
     ld a, [wD7F2]
     ld l, a
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0901
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     ret
 
@@ -1770,7 +1770,7 @@ Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; writes the level wCA81 (marked $6F at the cap wCA82), its digits and the status marks from wCA80 into the BG map (E-0129)
 ; 5 call sites from 5 routines (e.g. DrawWCA2BStatsScreen, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case16, ...)
-; reads: hTemp1, hTemp0, wC8C1, wC8C2, wCA80, wCA39
+; reads: hTemp1, hTemp0, wDigits, wCA80, wCA39
 ; writes: hTemp0, hTemp1
 ; points at: wCA81
 DrawLevelAndStatusRowForWCA81::
@@ -1819,7 +1819,7 @@ Jump_0F2_4F74::
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigitsWC8C0
     pop hl
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     ld e, a
     di
@@ -1827,7 +1827,7 @@ Jump_0F2_4F74::
     ld [hl], e
     ei
     inc hl
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld e, a
     di
@@ -2020,24 +2020,24 @@ Data_0F2_509F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; writes wC8C0, wC8C1, wC8C2 as digit tiles ($E0 + n) at HL (E-0121)
 ; 2 call sites from 2 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn)
-; reads: wC8C0, wC8C1, wC8C2
+; reads: wDigits
 WriteThreeDigitsWC8C0AtHL::
 Func_0F2_50A4:: ; address name
     di
     call WaitForVRAMAccess
-    ld a, [wC8C0]
+    ld a, [wDigits]
     add a, $E0
     ld [hl+], a
     ei
     di
     call WaitForVRAMAccess
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     ld [hl+], a
     ei
     di
     call WaitForVRAMAccess
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [hl+], a
     ei
@@ -2045,7 +2045,7 @@ Func_0F2_50A4:: ; address name
 
 ; hFFC6/7 = the word wCA2B[wD7F5], far-calls DrawSpeciesAndFamilyIconForHFFC6 and continues at Jump_0F2_50F8 (E-0126)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub02)
-; reads: wD7F5, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2
+; reads: wD7F5, wD7F1, wD7F2, wD7F3, wDigits
 ; writes: hTemp0, hTemp1
 ; points at: wCA2B
 DrawSpeciesIconForWCA2BEntry::
@@ -2064,7 +2064,7 @@ Func_0F2_50C6:: ; address name
 
 ; loads the family icon of wCA38 & $0F into tile wD7F4; the next entry draws tile $1E and the count wCA2B[wD7F1] at the scroll offset wD7F2/3 (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
-; reads: wCA38, wD7F4, wD7F1, wD7F2, wD7F3, wC8C1, wC8C2
+; reads: wCA38, wD7F4, wD7F1, wD7F2, wD7F3, wDigits
 ; writes: wD09D, wD09E
 ; points at: wCA2B
 DrawFamilyIconAndCountForWCA38::
@@ -2108,12 +2108,12 @@ Jump_0F2_5108::
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigitsWC8C0
     pop hl
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     cp a, $E3
     jr z, Jump_0F2_5141
     di
     call WaitForVRAMAccess
-    ld a, [wC8C1]
+    ld a, [wDigits + $1]
     add a, $E0
     ld [hl+], a
     ei
@@ -2121,7 +2121,7 @@ Jump_0F2_5108::
 Jump_0F2_5141::
     di
     call WaitForVRAMAccess
-    ld a, [wC8C2]
+    ld a, [wDigits + $2]
     add a, $E0
     ld [hl+], a
     ei
@@ -2496,7 +2496,7 @@ Jump_0F2_637F::
 ; 2 call sites from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01)
 ; reads: wD15E
 ; writes: wD15E
-; points at: wC787, wD11E
+; points at: wKeySeeds, wD11E
 ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01::
 Func_0F2_6393:: ; address name
     ld b, $00
@@ -2539,7 +2539,7 @@ Jump_0F2_63B0::
     push de
     ld a, b
     add a, a
-    ld hl, wC787
+    ld hl, wKeySeeds
     add_a_to_hl
     ld a, [wD15E]
     add a, a
@@ -2575,7 +2575,7 @@ Jump_0F2_63E3::
 ; 2 call sites from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01)
 ; reads: wD15E
 ; writes: wD15E
-; points at: wC787, wD11E
+; points at: wKeySeeds, wD11E
 ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02::
 Func_0F2_63EF:: ; address name
     ld b, $00
@@ -2615,7 +2615,7 @@ Jump_0F2_63F3::
     push de
     ld a, b
     add a, a
-    ld hl, wC787
+    ld hl, wKeySeeds
     add_a_to_hl
     ld a, [wD15E]
     add a, a
@@ -2768,7 +2768,7 @@ Jump_0F2_64C0::
 ; 1 call site from 1 routine (e.g. Run64C7UnlessWD780Is3)
 ; reads: wCF8B
 ; writes: wCF8B
-; points at: wD09D, wC635
+; points at: wD09D, wItemStorage
 Run64C7UnlessWD780Is3_Sub01::
 Func_0F2_64C7:: ; address name
     ld hl, wD09D
@@ -2800,7 +2800,7 @@ Jump_0F2_64E7::
     jr z, Jump_0F2_6517
     ld c, a
     push de
-    ld hl, wC635
+    ld hl, wItemStorage
     ld d, $64
 
 Jump_0F2_64F3::
@@ -2838,7 +2838,7 @@ Jump_0F2_6500::
 
 Jump_0F2_6517::
     ld hl, wD09D
-    ld de, wC635
+    ld de, wItemStorage
     ld b, $C8
 
 Jump_0F2_651F::
@@ -2857,16 +2857,16 @@ Data_0F2_6586:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; for each party record sets HP (field $5B) and MP (field $5F) down to their maxima when they exceed them (E-0129)
 ; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub01, BattleEnd_Step7_Case02_Sub01)
-; reads: wC6FD, wCF8B, wCF8C
+; reads: wPartyCount, wCF8B, wCF8C
 ; writes: wCF8B, wCF8C
-; points at: wC6FE
+; points at: wPartyList
 ClampPartyHPAndMPToMax::
 Func_0F2_65E6:: ; address name
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     and a, a
     ret z
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
 
 Jump_0F2_65EF::
     push bc

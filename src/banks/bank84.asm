@@ -740,8 +740,8 @@ Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from ItemUsable_LogTwig (E-0047)
 ; 1 call site from 1 routine (e.g. ItemUsable_LogTwig)
-; reads: hPlayerStateFlags, wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC88E, ...
-; writes: hTempA, wC83B, wC83C, wC83D, wC83E, wC88E, wC88F, wC890, ...
+; reads: hPlayerStateFlags, wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wKeyWorldActive, ...
+; writes: hTempA, wSpriteSnapshot, wSnapshotByte3C, wSnapshotByte3D, wSnapshotByte3E, wKeyWorldActive, wKeyWorldGoal, wKeyWorldGoalCell, ...
 ; points at: wCD7B, wCD8B
 ItemUsable_LogTwig_Sub01::
 Func_084_47C2:: ; address name
@@ -833,25 +833,25 @@ Jump_084_4826::
     jr Jump_084_4826
 
 Jump_084_4834::
-    ld a, [wC88E]
-    ld [wC83B], a
+    ld a, [wKeyWorldActive]
+    ld [wSpriteSnapshot], a
     or a, a
     jr z, Jump_084_4866
-    ld a, [wC88F]
-    ld [wC83C], a
-    ld a, [wC890]
-    ld [wC83D], a
-    ld a, [wC891]
-    ld [wC83E], a
-    ld a, [wC891]
+    ld a, [wKeyWorldGoal]
+    ld [wSnapshotByte3C], a
+    ld a, [wKeyWorldGoalCell]
+    ld [wSnapshotByte3D], a
+    ld a, [wKeyWorldKey]
+    ld [wSnapshotByte3E], a
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr nz, Jump_084_4866
     cp a, e
     jr nz, Jump_084_4866
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     cp a, b
     jr nz, Jump_084_4870
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     cp a, c
     jr nz, Jump_084_4870
     ret
@@ -868,14 +868,14 @@ Jump_084_4866::
 
 Jump_084_4870::
     ld a, $01
-    ld [wC88E], a
+    ld [wKeyWorldActive], a
     ld a, b
-    ld [wC88F], a
+    ld [wKeyWorldGoal], a
     ld a, c
-    ld [wC890], a
+    ld [wKeyWorldGoalCell], a
     ld a, e
     inc a
-    ld [wC891], a
+    ld [wKeyWorldKey], a
     ld a, $01
     ldh [hTempA], a
     ret
@@ -971,17 +971,17 @@ Jump_084_4919::
     pop hl
 
 Jump_084_491A::
-    ld a, [wC88E]
-    ld [wC83B], a
+    ld a, [wKeyWorldActive]
+    ld [wSpriteSnapshot], a
     or a, a
     jr z, Jump_084_495F
-    ld a, [wC88F]
-    ld [wC83C], a
-    ld a, [wC890]
-    ld [wC83D], a
-    ld a, [wC891]
-    ld [wC83E], a
-    ld a, [wC891]
+    ld a, [wKeyWorldGoal]
+    ld [wSnapshotByte3C], a
+    ld a, [wKeyWorldGoalCell]
+    ld [wSnapshotByte3D], a
+    ld a, [wKeyWorldKey]
+    ld [wSnapshotByte3E], a
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr z, Jump_084_495F
     and a, $7F
@@ -997,10 +997,10 @@ Jump_084_491A::
     swap a
     or a, b
     ld b, a
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     cp a, b
     jr nz, Jump_084_4978
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     cp a, c
     jr nz, Jump_084_4978
     ret
@@ -1031,14 +1031,14 @@ Jump_084_4978::
     or a, b
     ld b, a
     ld a, $01
-    ld [wC88E], a
+    ld [wKeyWorldActive], a
     ld a, b
-    ld [wC88F], a
+    ld [wKeyWorldGoal], a
     ld a, c
-    ld [wC890], a
+    ld [wKeyWorldGoalCell], a
     ld a, [wCC42]
     or a, $80
-    ld [wC891], a
+    ld [wKeyWorldKey], a
     ld a, $01
     ldh [hTempA], a
     ret
@@ -1078,7 +1078,7 @@ Jump_084_4A87::
 
 ; only called from RunWC8C7Phase_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC8C7Phase_Case01)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wC83B, wC83E, wC83D, wC83C, ...
+; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wSpriteSnapshot, wSnapshotByte3E, wSnapshotByte3D, wSnapshotByte3C, ...
 ; writes: hSpriteWindowClipMode, hTemp0, rSVBK
 RunWC8C7Phase_Case01_Sub02::
 Func_084_4A89:: ; address name
@@ -1111,17 +1111,17 @@ Jump_084_4AA5::
     ldh a, [hMapScreenY]
     or a, c
     ld c, a
-    ld a, [wC83B]
+    ld a, [wSpriteSnapshot]
     or a, a
     jr z, Jump_084_4ACE
-    ld a, [wC83E]
+    ld a, [wSnapshotByte3E]
     dec a
     cp a, b
     jr nz, Jump_084_4ACE
-    ld a, [wC83D]
+    ld a, [wSnapshotByte3D]
     cp a, c
     jp nz, Jump_084_4B46
-    ld a, [wC83C]
+    ld a, [wSnapshotByte3C]
     ld c, a
     call RunWC8C7Phase_Case01_Sub02_Sub01
     jr Jump_084_4B46
@@ -1150,10 +1150,10 @@ Jump_084_4AFE::
     ldh a, [hMapScreenY]
     or a, c
     ld c, a
-    ld a, [wC83B]
+    ld a, [wSpriteSnapshot]
     or a, a
     jr z, Jump_084_4B2C
-    ld a, [wC83E]
+    ld a, [wSnapshotByte3E]
     bit 7, a
     jr z, Jump_084_4B2C
     and a, $7F
@@ -1161,10 +1161,10 @@ Jump_084_4AFE::
     ld a, [wCC42]
     cp a, b
     jr nz, Jump_084_4B2C
-    ld a, [wC83D]
+    ld a, [wSnapshotByte3D]
     cp a, c
     jr nz, Jump_084_4B46
-    ld a, [wC83C]
+    ld a, [wSnapshotByte3C]
     ld c, a
     call RunWC8C7Phase_Case01_Sub02_Sub01
     jr Jump_084_4B46
@@ -1185,7 +1185,7 @@ Jump_084_4B2C::
     jr Jump_084_4B46
 
 Jump_084_4B46::
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     and a, $0F
     ld l, a
     ld e, a
@@ -1202,7 +1202,7 @@ Jump_084_4B46::
     rl h
     sla l
     rl h
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     and a, $F0
     swap a
     add a, a
@@ -1386,11 +1386,11 @@ Data_084_4C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; when wC88E is set and key entry hFFC6 matches wC891, clears wC88E (E-0127)
 ; 1 call site from 1 routine (e.g. DeleteKeyEntryHFFC6)
-; reads: wC88E, hTemp0, wC891
-; writes: wC88E
+; reads: wKeyWorldActive, hTemp0, wKeyWorldKey
+; writes: wKeyWorldActive
 ClearWC88EForMatchingKeyEntry::
 Func_084_4C84:: ; address name
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     ret z
     ldh a, [hTemp0]
@@ -1412,14 +1412,14 @@ Func_084_4C84:: ; address name
     jr z, Jump_084_4CB1
     ld a, [hl]
     ld c, a
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     ret nz
     dec a
     cp a, c
     ret nz
     ld a, $00
-    ld [wC88E], a
+    ld [wKeyWorldActive], a
     ret
 
 Jump_084_4CB1::
@@ -1430,14 +1430,14 @@ Jump_084_4CB1::
     ret z
     and a, $3F
     ld c, a
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     ret z
     and a, $7F
     cp a, c
     ret nz
     ld a, $00
-    ld [wC88E], a
+    ld [wKeyWorldActive], a
     ret
 
 Data_084_4CCB:: ; heuristic: pointer load in the same bank (bank assumed); C0

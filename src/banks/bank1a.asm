@@ -87,7 +87,7 @@ Jump_01A_4063::
 
 ; only called from ComputeDamageEstimateForAction (E-0047)
 ; 1 call site from 1 routine (e.g. ComputeDamageEstimateForAction)
-; reads: wBattleActionId, wC58A, wBattleActor
+; reads: wBattleActionId, wLinkMode, wBattleActor
 ; writes: wBattleDamageLo, wD873
 ; points at: wDA53
 ComputeDamageEstimateForAction_Sub01::
@@ -104,7 +104,7 @@ Func_01A_408F:: ; address name
     adc a, $40
     ld h, a
     ld bc, $0009
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr z, Jump_01A_40B6
     ld a, [wBattleActor]

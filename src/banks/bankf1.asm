@@ -3,10 +3,10 @@ SECTION "Bank F1", ROMX[$4000], BANK[$F1]
 
 ; only called from PauseMenu_State4 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State4)
-; reads: wC0A0
+; reads: wTemp0
 PauseMenu_State4_Sub02::
 Func_0F1_4001:: ; address name
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     rst $00
     dw Func_0F1_4001_Case00
     dw Func_0F1_4001_Case01
@@ -14,10 +14,10 @@ Func_0F1_4001:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_0F1_4001
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC0A1
+; reads: wTemp1
 Func_0F1_4001_Case00::
 Jump_0F1_400B:: ; address name
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     rst $00
     dw Func_0F1_4001_Case00_Case00
     dw Func_0F1_4001_Case00_Case01
@@ -25,8 +25,8 @@ Jump_0F1_400B:: ; address name
 ; entry 0 of the `rst $00` table in Func_0F1_4001_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD095
-; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory, wCF8B
-; points at: wC0A1
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wCF8B
+; points at: wTemp1
 Func_0F1_4001_Case00_Case00::
 Jump_0F1_4013:: ; address name
     ld a, [wD095]
@@ -39,20 +39,20 @@ Jump_0F1_4013:: ; address name
     call CopyTileBufferToBGMap_BankF1
     ld hl, vTiles1 + $720
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $0107
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld a, $1B
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
     farcall ShowString_BankF0
-    ld hl, wC0A1
+    ld hl, wTemp1
     inc [hl]
     xor a, a
     ld [wCF8B], a
@@ -60,9 +60,9 @@ Jump_0F1_4013:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_0F1_4001_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wC46E
-; writes: wDataBankSave, wD082, wItemId, wC0A1, wC46F
-; points at: wC46E, wInventory, wTextBuf2, wC60C, wTextBuf0, wC0A0
+; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wMenuCursor
+; writes: wDataBankSave, wD082, wItemId, wTemp1, wSubMenuCursor
+; points at: wMenuCursor, wInventory, wTextBuf2, wPlayerName, wTextBuf0, wTemp0
 Func_0F1_4001_Case00_Case01::
 Jump_0F1_4057:: ; address name
     ld a, [wInventory]
@@ -73,7 +73,7 @@ Jump_0F1_4057:: ; address name
 
 Jump_0F1_4062::
     ld de, Data_0F1_4A6A
-    ld hl, wC46E
+    ld hl, wMenuCursor
     call UpdateMenuCursor_BankF1
     ld a, [wJoypadPressedRepeat]
     and a, $C0
@@ -85,7 +85,7 @@ Jump_0F1_4062::
     ret
 
 Jump_0F1_407C::
-    ld hl, wC46E
+    ld hl, wMenuCursor
     bit 7, [hl]
     jr z, Jump_0F1_4092
     res 7, [hl]
@@ -105,7 +105,7 @@ Jump_0F1_4092::
     add a, a
     add a, a
     ld c, a
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     add a, c
     ld [wD082], a
     ld hl, wInventory
@@ -116,16 +116,16 @@ Jump_0F1_4092::
     ld h, $05
     ld de, wTextBuf2
     call CopyStringHLToDE
-    ld de, wC60C
+    ld de, wPlayerName
     ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
     farcall LoadItemRecord
-    ld hl, wC0A0
+    ld hl, wTemp0
     inc [hl]
     xor a, a
-    ld [wC0A1], a
+    ld [wTemp1], a
     xor a, a
-    ld [wC46F], a
+    ld [wSubMenuCursor], a
     ret
 
 Jump_0F1_40DC::
@@ -146,10 +146,10 @@ Jump_0F1_40EC::
 
 ; entry 1 of the `rst $00` table in Func_0F1_4001
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC0A1
+; reads: wTemp1
 Func_0F1_4001_Case01::
 Jump_0F1_40FC:: ; address name
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     rst $00
     dw Func_0F1_4001_Case01_Case00
     dw Func_0F1_4001_Case01_Case01
@@ -157,7 +157,7 @@ Jump_0F1_40FC:: ; address name
 ; entry 0 of the `rst $00` table in Func_0F1_4001_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuRowCount, wMenuPageCount
-; points at: wC0A1
+; points at: wTemp1
 Func_0F1_4001_Case01_Case00::
 Jump_0F1_4104:: ; address name
     call BuildScreenBlock32WithCursor_BankF1
@@ -166,36 +166,36 @@ Jump_0F1_4104:: ; address name
     ld [wMenuRowCount], a
     ld a, $01
     ld [wMenuPageCount], a
-    ld hl, wC0A1
+    ld hl, wTemp1
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in Func_0F1_4001_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wC46F
-; writes: wC0A1, wC0A0
-; points at: wC46F, wC0A0
+; reads: wJoypadPressed, wSubMenuCursor
+; writes: wTemp1, wTemp0
+; points at: wSubMenuCursor, wTemp0
 Func_0F1_4001_Case01_Case01::
 Jump_0F1_4119:: ; address name
     ld de, Data_0F1_4A72
-    ld hl, wC46F
+    ld hl, wSubMenuCursor
     call UpdateMenuCursor_BankF1
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_0F1_4142
-    ld a, [wC46F]
+    ld a, [wSubMenuCursor]
     and a, $01
     and a, a
     jr z, Jump_0F1_4133
     jr Jump_0F1_4145
 
 Jump_0F1_4133::
-    ld a, [wC46F]
+    ld a, [wSubMenuCursor]
     and a, $01
     add a, $02
-    ld [wC0A0], a
+    ld [wTemp0], a
     xor a, a
-    ld [wC0A1], a
+    ld [wTemp1], a
     ret
 
 Jump_0F1_4142::
@@ -203,18 +203,18 @@ Jump_0F1_4142::
     ret z
 
 Jump_0F1_4145::
-    ld hl, wC0A0
+    ld hl, wTemp0
     dec [hl]
     xor a, a
-    ld [wC0A1], a
+    ld [wTemp1], a
     ret
 
 ; entry 2 of the `rst $00` table in Func_0F1_4001
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC0A1
+; reads: wTemp1
 Func_0F1_4001_Case02::
 Jump_0F1_414E:: ; address name
-    ld a, [wC0A1]
+    ld a, [wTemp1]
     rst $00
     dw Func_0F1_4001_Case02_Case00
     dw Func_0F1_4001_Case02_Case01
@@ -225,7 +225,7 @@ Jump_0F1_414E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemId, wD082
 ; writes: wD7F1, wCF8B, wDataBankSave, wStringIndex
-; points at: wInventory, wC0A1
+; points at: wInventory, wTemp1
 Func_0F1_4001_Case02_Case00::
 Jump_0F1_415A:: ; address name
     ld a, [wItemId]
@@ -279,7 +279,7 @@ Jump_0F1_4187::
 
 Jump_0F1_41B9::
     ld [wStringIndex], a
-    ld hl, wC0A1
+    ld hl, wTemp1
     inc [hl]
     ld a, $69
     call QueueSoundEffect
@@ -287,46 +287,46 @@ Jump_0F1_41B9::
 
 ; entry 1 of the `rst $00` table in Func_0F1_4001_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC0A1
+; points at: wTemp1
 Func_0F1_4001_Case02_Case01::
 Jump_0F1_41C6:: ; address name
     call ClearWindowAndBuildBlock32WithCursor_BankF1
     call CopyTileBufferToBGMap_BankF1
-    ld hl, wC0A1
+    ld hl, wTemp1
     inc [hl]
     ret
 
 ; entry 2 of the `rst $00` table in Func_0F1_4001_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory
-; points at: wC0A1
+; points at: wTemp1
 Func_0F1_4001_Case02_Case02::
 Jump_0F1_41D1:: ; address name
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_BankF0_48A0
-    ld hl, wC0A1
+    ld hl, wTemp1
     inc [hl]
     ret
 
 ; entry 3 of the `rst $00` table in Func_0F1_4001_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
-; writes: wC0A0, wC0A1
+; reads: wTextFlags
+; writes: wTemp0, wTemp1
 Func_0F1_4001_Case02_Case03::
 Jump_0F1_41E0:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     xor a, a
-    ld [wC0A0], a
+    ld [wTemp0], a
     xor a, a
-    ld [wC0A1], a
+    ld [wTemp1], a
     ret
 
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001_Case00_Case00, BuildScreenBlock32WithCursor_BankF1)
-; reads: wInventory, wC0A7, wMenuPage
+; reads: wInventory, wMenuItemCount, wMenuPage
 BuildInventoryScreenBase_BankF1::
 Func_0F1_41EE:: ; address name
     call ClearScreenTileBuffer_BankF1
@@ -339,7 +339,7 @@ Func_0F1_41EE:: ; address name
     ret z
     ld e, $0D
     farcall CopyBlockToTileBuffer
-    ld a, [wC0A7]
+    ld a, [wMenuItemCount]
     cp a, $02
     jr c, Jump_0F1_422C
     ld hl, wScreenTileBuffer + $10E
@@ -350,7 +350,7 @@ Func_0F1_41EE:: ; address name
     ld [hl+], a
     ld a, $BE
     ld [hl+], a
-    ld a, [wC0A7]
+    ld a, [wMenuItemCount]
     add a, $E0
     ld [hl+], a
     ld [hl], $C6
@@ -360,13 +360,13 @@ Jump_0F1_422C::
 
 ; runs Func_0F1_41EE, copies block $32 and draws the cursor for wC46E & 7 (E-0122)
 ; 4 call sites from 4 routines (e.g. Func_0F1_4001_Case01_Case00, ClearWindowAndBuildBlock32WithCursor_BankF1, BuildItemScreenForWItemId_BankF1, BuildScreenBlocks32And0F_BankF1)
-; reads: wC46E
+; reads: wMenuCursor
 BuildScreenBlock32WithCursor_BankF1::
 Func_0F1_422D:: ; address name
     call BuildInventoryScreenBase_BankF1
     ld e, $32
     farcall CopyBlockToTileBuffer
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     and a, $07
     ld hl, Data_0F1_4A6A
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
@@ -396,14 +396,14 @@ Func_0F1_4244:: ; address name
 
 ; fills tiles, builds the item screen, copies block $10 and draws the cursor for wC46D & 3 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC46D
+; reads: wMenuSelectedMember
 BuildItemScreenWithRecordCursor_BankF1:: ; heuristic: follows a terminator; C0
 Func_0F1_4276:: ; address name
     call FillTilesFromRequest
     call BuildItemScreenForWItemId_BankF1
     ld e, $10
     farcall CopyBlockToTileBuffer
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     and a, $03
     ld hl, Data_0F1_4A5E
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
@@ -420,14 +420,14 @@ Func_0F1_4290:: ; address name
 
 ; fills tiles, builds blocks $32 and $0F, copies block $10 and draws the cursor for wC46F & 3 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC46F
+; reads: wSubMenuCursor
 BuildScreenBlocks32And0FWithCursor_BankF1:: ; heuristic: follows a terminator; C0
 Func_0F1_429C:: ; address name
     call FillTilesFromRequest
     call BuildScreenBlocks32And0F_BankF1
     ld e, $10
     farcall CopyBlockToTileBuffer
-    ld a, [wC46F]
+    ld a, [wSubMenuCursor]
     and a, $03
     ld hl, Data_0F1_4A72
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
@@ -435,7 +435,7 @@ Func_0F1_429C:: ; address name
 
 ; clears the default window, fills tiles, builds block $32, copies block $10 and draws the cursor for wC46F & 3 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Case02_Case01)
-; reads: wC46F
+; reads: wSubMenuCursor
 ClearWindowAndBuildBlock32WithCursor_BankF1::
 Func_0F1_42B6:: ; address name
     ld hl, vTiles1
@@ -445,7 +445,7 @@ Func_0F1_42B6:: ; address name
     call BuildScreenBlock32WithCursor_BankF1
     ld e, $10
     farcall CopyBlockToTileBuffer
-    ld a, [wC46F]
+    ld a, [wSubMenuCursor]
     and a, $03
     ld hl, Data_0F1_4A72
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
@@ -453,7 +453,7 @@ Func_0F1_42B6:: ; address name
 
 ; the same instruction sequence as ShowSelectedItemDescription (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 4 call sites from 2 routines (e.g. Func_0F1_4001_Case00_Case01, Func_0F1_4001_Case00_Case00)
-; reads: wMenuPage, wC46E
+; reads: wMenuPage, wMenuCursor
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory
 ShowSelectedItemDescription_BankF1::
@@ -463,7 +463,7 @@ Func_0F1_42D9:: ; address name
     add a, a
     add a, a
     ld c, a
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     and a, $0F
     add a, c
     ld c, a
@@ -486,26 +486,26 @@ Jump_0F1_42F5::
 
 ; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wC61E entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ; 2 call sites from 1 routine (e.g. Func_0F1_4001_Case00_Case01)
-; reads: wC52D, wC52E, wC52F, wC530, wInventory, wMenuPage
-; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
-; points at: wC61E, wInventory
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wInventory, wMenuPage
+; writes: wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi
+; points at: wInventory
 ShowInventoryPageItemNames_BankF1::
 Func_0F1_4307:: ; address name
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld l, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld h, a
     push hl
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld l, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld h, a
     push hl
     ld hl, $0901
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     ld a, [wInventory]
     or a, a
     jr nz, Jump_0F1_434F
@@ -515,11 +515,11 @@ Func_0F1_4307:: ; address name
     ld [wStringIndex], a
     ld hl, vTiles2 + $5C0
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     farcall ShowString_Bank08
-    ld de, wC61E
+    ld de, wInventory + $1
     ld hl, vTiles2 + $650
     ld b, $03
     jr Jump_0F1_4363
@@ -556,9 +556,9 @@ Jump_0F1_436E::
     push de
     push hl
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     farcall ShowString_Bank08
     pop hl
     ld de, $0090
@@ -569,14 +569,14 @@ Jump_0F1_436E::
     jr nz, Jump_0F1_4368
     pop hl
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     pop hl
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ret
 
 ; when wMenuPageCount is non-zero, writes tile $E1 + (wMenuPage & $0F) at vBGMap0 + $10F (E-0067) (the same 20 bytes appear in 2 banks)
@@ -598,12 +598,12 @@ Jump_0F1_43B3::
 
 ; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001_Case00_Case01, Func_0F1_4001_Case00_Case00)
-; reads: wC0A7, wMenuPage, wMenuLastPageRows, wC46E
-; writes: wMenuRowCount, wC46E
+; reads: wMenuItemCount, wMenuPage, wMenuLastPageRows, wMenuCursor
+; writes: wMenuRowCount, wMenuCursor
 ; points at: wMenuPage
 SetMenuRowsForPage_BankF1::
 Func_0F1_43B4:: ; address name
-    ld a, [wC0A7]
+    ld a, [wMenuItemCount]
     dec a
     ld c, a
     ld a, [wMenuPage]
@@ -613,12 +613,12 @@ Func_0F1_43B4:: ; address name
     ld a, [wMenuLastPageRows]
     ld [wMenuRowCount], a
     ld c, a
-    ld a, [wC46E]
+    ld a, [wMenuCursor]
     cp a, c
     jr c, Jump_0F1_43DA
     dec c
     ld a, c
-    ld [wC46E], a
+    ld [wMenuCursor], a
     jr Jump_0F1_43DA
 
 Jump_0F1_43D5::
@@ -633,7 +633,7 @@ Jump_0F1_43DA::
 ; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Case00_Case00)
 ; reads: wMenuPage, wMenuLastPageRows
-; writes: wMenuPageCount, wC0A7, wMenuLastPageRows, wMenuRowCount
+; writes: wMenuPageCount, wMenuItemCount, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
 SetupInventoryMenuPages_BankF1::
 Func_0F1_43E0:: ; address name
@@ -678,7 +678,7 @@ Jump_0F1_4406::
 
 Jump_0F1_440D::
     ld [wMenuPageCount], a
-    ld [wC0A7], a
+    ld [wMenuItemCount], a
     ld a, c
     and a, $03
     or a, a
@@ -702,11 +702,11 @@ Jump_0F1_442B::
 
 ; only called from BuildItemScreenForWItemId_BankF1 (E-0047)
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1)
-; reads: wC46D, wItemId, hTemp0, hTemp1
-; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hTemp0, hTemp1, wScreenTileBuffer, wC52D, ...
+; reads: wMenuSelectedMember, wItemId, hTemp0, hTemp1
+; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hTemp0, hTemp1, wScreenTileBuffer, wTextWindowTileLo, ...
 BuildItemScreenForWItemId_BankF1_Sub01:: ; heuristic: follows a terminator; C0
 Func_0F1_442F:: ; address name
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld c, a
     ld a, [wItemId]
     ld hl, Data_0F1_4613
@@ -752,7 +752,7 @@ Jump_0F1_4475::
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wScreenTileBuffer + $181
+    ld de, wWindowTileBuffer + $19
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -788,7 +788,7 @@ Jump_0F1_44A0::
 Jump_0F1_44A3::
     deref_hl
     call HLToDecimalDigits
-    ld de, wScreenTileBuffer + $185
+    ld de, wWindowTileBuffer + $1D
     call WriteDecimalDigitTiles
     ld a, $C3
     ld [wScreenTileBuffer + $146], a
@@ -812,7 +812,7 @@ Jump_0F1_44BA::
     ld de, $0901
     call ShowStringBank08AtTilesHL_BankF1
     pop af
-    ld hl, wScreenTileBuffer + $181
+    ld hl, wWindowTileBuffer + $19
     ld c, a
     ld b, c
     ld a, $1A
@@ -837,14 +837,14 @@ Jump_0F1_44F1::
 Jump_0F1_44F5::
     ld hl, vTiles1
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1202
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     jr Jump_0F1_4582
 
 Jump_0F1_450D::
@@ -901,7 +901,7 @@ Jump_0F1_4556::
     jr nz, Jump_0F1_4556
 
 Jump_0F1_455A::
-    ld hl, wScreenTileBuffer + $181
+    ld hl, wWindowTileBuffer + $19
     ld b, $07
     ld a, c
     or a, a
@@ -938,7 +938,7 @@ Jump_0F1_457C::
     jr Jump_0F1_4599
 
 Jump_0F1_4582::
-    ld a, [wC46D]
+    ld a, [wMenuSelectedMember]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
@@ -1409,8 +1409,8 @@ Jump_0F1_49FD::
 
 ; the same 81 bytes as DerefWordTableEntryA_Bank03 (03:43C3)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52D, wC52E, wC52F, wC530
-; writes: wStringCategory, wStringIndex, wC52D, wC52E, wC52F, wC530
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 DerefWordTableEntryA_BankF1:: ; heuristic: follows a terminator; C0
 Func_0F1_4A0D:: ; address name
     add a, a
@@ -1424,39 +1424,39 @@ Func_0F1_4A0D:: ; address name
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
 ; 3 call sites from 2 routines (e.g. ShowSelectedItemDescription_BankF1, BuildItemScreenForWItemId_BankF1_Sub01)
-; reads: wC52D, wC52E, wC52F, wC530
-; writes: wC52D, wC52E, wC52F, wC530
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHL_BankF1::
 Func_0F1_4A23:: ; address name
-    ld a, [wC52D]
+    ld a, [wTextWindowTileLo]
     ld c, a
-    ld a, [wC52E]
+    ld a, [wTextWindowTileHi]
     ld b, a
     push bc
-    ld a, [wC52F]
+    ld a, [wTextWindowRows]
     ld c, a
-    ld a, [wC530]
+    ld a, [wTextWindowWidth]
     ld b, a
     push bc
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld a, e
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, d
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     farcall ShowString_Bank08
     pop bc
     ld a, c
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, b
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     pop bc
     ld a, c
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, b
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ret
 
 Data_0F1_4A5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1550,12 +1550,12 @@ Jump_0F1_4AFD:: ; address name
 
 ; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
+; reads: wTextFlags
 ; writes: wGameMode, wModeState, wModeChangeRequest
 ; points at: wD780
 RunWD780StateWhenNotFading_F1_Case01::
 Jump_0F1_4B0B:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     bit 0, a
     ret nz
     ld hl, wD780
@@ -1579,7 +1579,7 @@ Jump_0F1_4B17::
 ; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD780
-; writes: wD780, wStringCategory, wC594
+; writes: wD780, wStringCategory, wLinkSendByte
 ; points at: wD06A
 RunWD780StateWhenNotFading_F1_Case02::
 Jump_0F1_4B2E:: ; address name
@@ -1591,7 +1591,7 @@ Jump_0F1_4B2E:: ; address name
     ld a, $01
     call BeginString_Bank0E_Cat0
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD06A
     inc [hl]
     ret
@@ -1610,11 +1610,11 @@ Jump_0F1_4B47:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD781
+; reads: wTextFlags, wD781
 ; writes: wD781
 RunWD780StateWhenNotFading_F1_Case03_Case00::
 Jump_0F1_4B53:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, $07
@@ -1626,15 +1626,15 @@ Jump_0F1_4B53:: ; address name
 
 ; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD781
-; writes: wC594, wD781
+; reads: wTextFlags, wD781
+; writes: wLinkSendByte, wD781
 RunWD780StateWhenNotFading_F1_Case03_Case01::
 Jump_0F1_4B65:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -1642,15 +1642,15 @@ Jump_0F1_4B65:: ; address name
 
 ; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD781
-; writes: wC594, wD781
+; reads: wLinkMessage, wD781
+; writes: wLinkSendByte, wD781
 RunWD780StateWhenNotFading_F1_Case03_Case02::
 Jump_0F1_4B77:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $09
     call BeginString_Bank0E_Cat0
     ld a, [wD781]
@@ -1660,11 +1660,11 @@ Jump_0F1_4B77:: ; address name
 
 ; entry 3 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD780
+; reads: wTextFlags, wD780
 ; writes: wD781, wD780
 RunWD780StateWhenNotFading_F1_Case03_Case03::
 Jump_0F1_4B8E:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     xor a, a
@@ -1717,14 +1717,14 @@ Jump_0F1_4B9F:: ; address name
 
 ; entry 14 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC58F
-; writes: wD781, wC594
+; reads: wTextFlags, wLinkMessage
+; writes: wD781, wLinkSendByte
 RunWD780StateWhenNotFading_F1_Case04_Case0E::
 Jump_0F1_4BE5:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr nz, Jump_0F1_4C01
     ld a, $09
@@ -1732,7 +1732,7 @@ Jump_0F1_4BE5:: ; address name
     ld a, $03
     call BeginString_Bank0E_Cat0
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_0F1_4C01::
@@ -1741,14 +1741,14 @@ Jump_0F1_4C01::
 
 ; entry 8 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC58F, wMenuInputResult
-; writes: wD781, wC594
+; reads: wTextFlags, wLinkMessage, wMenuInputResult
+; writes: wD781, wLinkSendByte
 RunWD780StateWhenNotFading_F1_Case04_Case08::
 Jump_0F1_4C08:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr nz, Jump_0F1_4C24
     ld a, $09
@@ -1756,7 +1756,7 @@ Jump_0F1_4C08:: ; address name
     ld a, $03
     call BeginString_Bank0E_Cat0
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_0F1_4C24::
@@ -1769,15 +1769,15 @@ Jump_0F1_4C24::
     ld a, $02
     call BeginString_Bank0E_Cat0
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 ; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
+; reads: wTextFlags
 RunWD780StateWhenNotFading_F1_Case04_Case00::
 Jump_0F1_4C40:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     farcall ScriptCommandED_Run
@@ -1785,13 +1785,13 @@ Jump_0F1_4C40:: ; address name
 
 ; entry 16 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7B4, wC52B, wD782
+; reads: wD7B4, wTextFlags, wD782
 RunWD780StateWhenNotFading_F1_Case04_Case10::
 Jump_0F1_4C4C:: ; address name
     ld a, [wD7B4]
     cp a, $FF
     jr z, Jump_0F1_4C64
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     farcall ScriptCommandED_Run
@@ -1813,15 +1813,15 @@ Jump_0F1_4C64::
 
 ; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD782
-; writes: wC594, wD782
+; reads: wTextFlags, wD782
+; writes: wLinkSendByte, wD782
 RunWD780StateWhenNotFading_F1_Table2_Case00::
 Jump_0F1_4C78:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -1831,31 +1831,31 @@ Jump_0F1_4C78:: ; address name
 
 ; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD782
-; writes: wD782, wC594
+; reads: wTextFlags, wD782
+; writes: wD782, wLinkSendByte
 RunWD780StateWhenNotFading_F1_Table2_Case01::
 Jump_0F1_4C8E:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, [wD782]
     inc a
     ld [wD782], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 ; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD782
-; writes: wC594, wD782
+; reads: wLinkMessage, wD782
+; writes: wLinkSendByte, wD782
 RunWD780StateWhenNotFading_F1_Table2_Case02::
 Jump_0F1_4CA0:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $09
     call BeginString_Bank0E_Cat0
     ld a, [wD782]
@@ -1865,11 +1865,11 @@ Jump_0F1_4CA0:: ; address name
 
 ; entry 3 of the `rst $00` table in RunWD780StateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
+; reads: wTextFlags
 ; writes: wD7B4, wD782
 RunWD780StateWhenNotFading_F1_Table2_Case03::
 Jump_0F1_4CB7:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     farcall ScriptCommandED_Run
@@ -1880,11 +1880,11 @@ Jump_0F1_4CB7:: ; address name
 
 ; entry 12 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD782
+; reads: wTextFlags, wD782
 ; writes: wD782
 RunWD780StateWhenNotFading_F1_Case04_Case0C::
 Jump_0F1_4CCA:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, [wD782]
@@ -1931,12 +1931,12 @@ Jump_0F1_4D07:: ; address name
     ld [wD7F1], a
     call LoadFamilyIconTileForRecordB_BankF1
     ld de, Data_0F1_5A36
-    ld hl, wScreenTileBuffer + $1D4
+    ld hl, wWindowTileBuffer + $6C
     ld bc, $0C05
     call CopyRectTo20ByteRows_BankF1
     pop af
     ld [wD7F1], a
-    ld hl, wScreenTileBuffer + $1EE
+    ld hl, wWindowTileBuffer + $86
     ld a, l
     ld [wD7F2], a
     ld a, h
@@ -1949,11 +1949,11 @@ Jump_0F1_4D07:: ; address name
 
 ; entry 15 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD781
+; reads: wTextFlags, wD781
 ; writes: wD7F1, wD7F2, wD781, wD7B4
 RunWD780StateWhenNotFading_F1_Case04_Case0F::
 Jump_0F1_4D49:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
 
@@ -1980,12 +1980,12 @@ Func_0F1_4D4E:: ; address name
 
 ; entry 17 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD7F5, wD7F6, hTemp0, wD781, wC6FD, wD7AB, wD7AF
+; reads: wTextFlags, wD7F5, wD7F6, hTemp0, wD781, wPartyCount, wD7AB, wD7AF
 ; writes: rRAMG2, rRAMB, wD781, wD7B4, wD7B5, wD7B6
-; points at: wC6FE
+; points at: wPartyList
 RunWD780StateWhenNotFading_F1_Case04_Case11::
 Jump_0F1_4D6F:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, $0A
@@ -2018,9 +2018,9 @@ Jump_0F1_4D6F:: ; address name
 Jump_0F1_4DAB::
     pop hl
     ld c, [hl]
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     ld b, a
-    ld de, wC6FE
+    ld de, wPartyList
 
 Jump_0F1_4DB4::
     ld a, [de]
@@ -2063,12 +2063,12 @@ Jump_0F1_4DD0::
 
 ; entry 18 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD7B4
+; reads: wTextFlags, wD7B4
 ; writes: rRAMG2, rRAMB
 ; points at: sA000, wC986
 RunWD780StateWhenNotFading_F1_Case04_Case12::
 Jump_0F1_4DFA:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, $0A
@@ -2102,28 +2102,28 @@ Jump_0F1_4E19::
 
 ; entry 19 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD781
-; writes: wD781, wC594
+; reads: wTextFlags, wD781
+; writes: wD781, wLinkSendByte
 RunWD780StateWhenNotFading_F1_Case04_Case13::
 Jump_0F1_4E38:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, [wD781]
     inc a
     ld [wD781], a
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 ; entry 20 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD781
-; writes: wD781, wC594, wC592, wC593, wC595, wC596, wC590, wC591, ...
+; reads: wLinkMessage, wD781
+; writes: wD781, wLinkSendByte, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, ...
 ; points at: wC986, wCA2B
 RunWD780StateWhenNotFading_F1_Case04_Case14::
 Jump_0F1_4E4A:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     jr z, Jump_0F1_4E64
     cp a, $FE
@@ -2133,7 +2133,7 @@ Jump_0F1_4E4A:: ; address name
     ld a, $03
     call BeginString_Bank0E_Cat0
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_0F1_4E64::
@@ -2141,36 +2141,36 @@ Jump_0F1_4E64::
     inc a
     ld [wD781], a
     ld a, $A5
-    ld [wC592], a
+    ld [wLinkBufferCountLo], a
     xor a, a
-    ld [wC593], a
+    ld [wLinkBufferCountHi], a
     ld hl, wC986
     ld a, l
-    ld [wC595], a
+    ld [wLinkTimeoutLo], a
     ld a, h
-    ld [wC596], a
+    ld [wLinkTimeoutHi], a
     ld hl, wCA2B
     ld a, l
-    ld [wC590], a
+    ld [wLinkBufferPtrLo], a
     ld a, h
-    ld [wC591], a
+    ld [wLinkBufferPtrHi], a
     ld a, $FF
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $01
-    ld [wC58C], a
+    ld [wLinkReady], a
     ret
 
 ; entry 21 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD781
-; writes: wC58C, wD781
+; reads: wLinkMessage, wD781
+; writes: wLinkReady, wD781
 RunWD780StateWhenNotFading_F1_Case04_Case15::
 Jump_0F1_4E95:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $F0
     ret nz
     xor a, a
-    ld [wC58C], a
+    ld [wLinkReady], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2178,12 +2178,12 @@ Jump_0F1_4E95:: ; address name
 
 ; entry 22 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC994, wCA39, wD7F5, wC9DC, wC9F3, wCA81, wCA98, ...
-; writes: wD781, wD782, wD7B4, wC594, wStringIndex, wStringCategory
-; points at: wC994, wC52D
+; reads: wTextFlags, wC994, wCA39, wD7F5, wC9DC, wC9F3, wCA81, wCA98, ...
+; writes: wD781, wD782, wD7B4, wLinkSendByte, wStringIndex, wStringCategory
+; points at: wC994, wTextWindowTileLo
 RunWD780StateWhenNotFading_F1_Case04_Case16::
 Jump_0F1_4EA7:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld hl, wC994
@@ -2239,12 +2239,12 @@ Jump_0F1_4EF2::
 
 Jump_0F1_4F12::
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, $0F
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
     ld a, $96
@@ -2253,7 +2253,7 @@ Jump_0F1_4F12::
     ld [hl+], a
     ld [hl], $0D
     farcall ShowString_Bank0E
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -2270,11 +2270,11 @@ Jump_0F1_4F12::
 
 ; entry 29 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD7F5, wD781
+; reads: wTextFlags, wD7F5, wD781
 ; writes: wD7F1, wD781
 RunWD780StateWhenNotFading_F1_Case04_Case1D::
 Jump_0F1_4F4C:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, $02
@@ -2292,15 +2292,15 @@ Jump_0F1_4F4C:: ; address name
 
 ; entry 23 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD781
+; reads: wTextFlags, wD781
 ; writes: wTwoChoiceCursor, wD781
-; points at: wC52D, wC3E7
+; points at: wTextWindowTileLo
 RunWD780StateWhenNotFading_F1_Case04_Case17::
 Jump_0F1_4F6F:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -2313,7 +2313,7 @@ Jump_0F1_4F6F:: ; address name
     ld a, $6C
     call QueueSoundEffect
     ld de, Data_0F1_5A90
-    ld hl, wC3E7
+    ld hl, wWindowTileBuffer + $E7
     ld bc, $0907
     call CopyRectTo20ByteRows_BankF1
     call BGMapAddressAtScroll_BankF1
@@ -2327,14 +2327,14 @@ Jump_0F1_4F6F:: ; address name
 
 ; entry 24 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC58F, wTwoChoiceCursor, wD781, wD780, wD7AB, wD7AF
-; writes: wD781, wC594, wD782, wD7B2, wD7B3, wD7B5, wD7B6, wD7AB, ...
+; reads: wTextFlags, wLinkMessage, wTwoChoiceCursor, wD781, wD780, wD7AB, wD7AF
+; writes: wD781, wLinkSendByte, wD782, wD7B2, wD7B3, wD7B5, wD7B6, wD7AB, ...
 RunWD780StateWhenNotFading_F1_Case04_Case18::
 Jump_0F1_4FAA:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     jr nz, Jump_0F1_4FC9
     call RunFunc58FAAt024FAndDrawBox_BankF1
@@ -2343,7 +2343,7 @@ Jump_0F1_4FAA:: ; address name
     ld a, $03
     call BeginString_Bank0E_Cat0
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_0F1_4FC9::
@@ -2363,7 +2363,7 @@ Jump_0F1_4FD7::
     ld a, $02
     call BeginString_Bank0E_Cat0
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_0F1_4FEA::
@@ -2403,12 +2403,11 @@ Jump_0F1_500C::
 
 ; entry 25 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD782, wD781, wTwoChoiceCursor
+; reads: wTextFlags, wD782, wD781, wTwoChoiceCursor
 ; writes: wD782, wTwoChoiceCursor, wD781
-; points at: wC412
 RunWD780StateWhenNotFading_F1_Case04_Case19::
 Jump_0F1_5037:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, [wD782]
@@ -2463,7 +2462,7 @@ Jump_0F1_5067::
     xor a, a
     ld [wTwoChoiceCursor], a
     ld de, Data_0F1_5A72
-    ld hl, wC412
+    ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows_BankF1
     call BGMapAddressAtScroll_BankF1
@@ -2477,11 +2476,11 @@ Jump_0F1_5067::
 
 ; entry 26 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wMenuInputResult, wTwoChoiceCursor, wD781
+; reads: wTextFlags, wMenuInputResult, wTwoChoiceCursor, wD781
 ; writes: wD781, wD782
 RunWD780StateWhenNotFading_F1_Case04_Case1A::
 Jump_0F1_50C3:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     farcall UpdateTwoChoiceCursor_Bank1D
@@ -2516,12 +2515,12 @@ Jump_0F1_50E7::
 
 ; entry 30 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD782, wD7EE, wD781, wD7B5, wD7B6, wD7F5, wD7F6, ...
+; reads: wTextFlags, wD782, wD7EE, wD781, wD7B5, wD7B6, wD7F5, wD7F6, ...
 ; writes: wD782, wD781, wD7AB, wD7AF, wD7F1, wD7F2, rRAMG2, rRAMB, ...
-; points at: wCAD0, wCADB, wC7FC, wD7E0
+; points at: wCAD0, wCADB, wMonsterLibraryBuf, wD7E0
 RunWD780StateWhenNotFading_F1_Case04_Case1E::
 Jump_0F1_50FF:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, [wD782]
@@ -2572,14 +2571,14 @@ Jump_0F1_515A::
     xor a, a
     ld [rRAMG2], a
     xor a, a
-    ld [wC8C3], a
-    ld [wC8C4], a
+    ld [wSaveStep], a
+    ld [wSaveRecordIndex], a
     ld hl, wCADB
     ld a, [hl+]
     ld [wD7F1], a
     ld a, [hl]
     ld [wD7F2], a
-    ld de, wC7FC
+    ld de, wMonsterLibraryBuf
     ld a, e
     ld [wD7F3], a
     ld a, d
@@ -2603,11 +2602,11 @@ Jump_0F1_518C::
 
 ; entry 28 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD781
-; writes: wD781, wC594
+; reads: wLinkMessage, wD781
+; writes: wD781, wLinkSendByte
 RunWD780StateWhenNotFading_F1_Case04_Case1C::
 Jump_0F1_51A4:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     jr z, Jump_0F1_51BE
     cp a, $FE
@@ -2617,12 +2616,12 @@ Jump_0F1_51A4:: ; address name
     ld a, $03
     call BeginString_Bank0E_Cat0
     ld a, $FE
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ret
 
 Jump_0F1_51BE::
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2630,15 +2629,15 @@ Jump_0F1_51BE::
 
 ; entry 9 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F, wD781
-; writes: wC594, wD781
+; reads: wLinkMessage, wD781
+; writes: wLinkSendByte, wD781
 RunWD780StateWhenNotFading_F1_Case04_Case09::
 Jump_0F1_51CA:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $FE
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2646,11 +2645,11 @@ Jump_0F1_51CA:: ; address name
 
 ; entry 10 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD781
+; reads: wTextFlags, wD781
 ; writes: wD781, wD782
 RunWD780StateWhenNotFading_F1_Case04_Case0A::
 Jump_0F1_51DC:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, $07
@@ -2674,15 +2673,15 @@ Jump_0F1_51F2:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04_Case0B
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD782
-; writes: wC594, wD782
+; reads: wTextFlags, wD782
+; writes: wLinkSendByte, wD782
 RunWD780StateWhenNotFading_F1_Case04_Case0B_Case00::
 Jump_0F1_51FA:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
     ld a, $01
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -2690,15 +2689,15 @@ Jump_0F1_51FA:: ; address name
 
 ; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04_Case0B
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58F
-; writes: wC594, wD781, wD780
+; reads: wLinkMessage
+; writes: wLinkSendByte, wD781, wD780
 RunWD780StateWhenNotFading_F1_Case04_Case0B_Case01::
 Jump_0F1_520C:: ; address name
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     xor a, a
     ld [wD781], a
     ld a, $01
@@ -2707,19 +2706,19 @@ Jump_0F1_520C:: ; address name
 
 ; entry 32 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wC58F
-; writes: wC594, wC94B
+; reads: wTextFlags, wLinkMessage
+; writes: wLinkSendByte, wC94B
 ; points at: wD780
 RunWD780StateWhenNotFading_F1_Case04_Case20::
 Jump_0F1_5220:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wC58F]
+    ld a, [wLinkMessage]
     cp a, $01
     ret nz
     xor a, a
-    ld [wC594], a
+    ld [wLinkSendByte], a
     ld hl, wD780
     ld bc, $006F
 
@@ -2802,7 +2801,7 @@ Func_0F1_5285:: ; address name
 
 ; entry 6 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case11
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC52D, wD781
+; points at: wTextWindowTileLo, wD781
 RunWD780StateWhenNotFading_F1_Case11_Case06::
 Jump_0F1_5293:: ; address name
     ld hl, vTiles1 + $270
@@ -2811,7 +2810,7 @@ Jump_0F1_5293:: ; address name
     ld hl, vTiles1 + $780
     ld bc, $0501
     call FillTilesBxC
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -3320,7 +3319,7 @@ Jump_0F1_559C::
 ; entry 28 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782
-; writes: wC52D, wC52E, wC52F, wC530, wD782
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD782
 RunWD780StateWhenNotFading_F1_Case0D_Case1C::
 Jump_0F1_55AE:: ; address name
     ld a, [wD782]
@@ -3328,14 +3327,14 @@ Jump_0F1_55AE:: ; address name
     jr nz, Jump_0F1_55DB
     ld hl, vTiles2 + $200
     ld a, l
-    ld [wC52D], a
+    ld [wTextWindowTileLo], a
     ld a, h
-    ld [wC52E], a
+    ld [wTextWindowTileHi], a
     ld hl, $1504
     ld a, l
-    ld [wC52F], a
+    ld [wTextWindowRows], a
     ld a, h
-    ld [wC530], a
+    ld [wTextWindowWidth], a
     call FillTilesFromRequest
     farcall DrawRects5E13And66DF
     ld a, [wD782]
@@ -3353,7 +3352,7 @@ Jump_0F1_55DB::
 ; entry 29 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD781
-; points at: wC52D
+; points at: wTextWindowTileLo
 RunWD780StateWhenNotFading_F1_Case0D_Case1D::
 Jump_0F1_55E9:: ; address name
     farcall DrawLevelAndStatusRowForWCA81
@@ -3366,7 +3365,7 @@ Jump_0F1_55E9:: ; address name
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -3519,18 +3518,18 @@ Jump_0F1_56C8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wStringIndex, wStringCategory, wD781
-; points at: wC3E7, wC52D
+; points at: wTextWindowTileLo
 RunWD780StateWhenNotFading_F1_Case0E_Case08::
 Jump_0F1_56DC:: ; address name
     ld de, Data_0F1_5A90
-    ld hl, wC3E7
+    ld hl, wWindowTileBuffer + $E7
     ld bc, $0907
     call CopyRectTo20ByteRows_BankF1
     ld a, $0F
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
     ld a, $96
@@ -3539,7 +3538,7 @@ Jump_0F1_56DC:: ; address name
     ld [hl+], a
     ld [hl], $0D
     farcall ShowString_Bank0E
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
     ld a, $88
@@ -3639,7 +3638,7 @@ Jump_0F1_57C9::
 ; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at $8A70 with size $0109 (E-0121)
 ; 2 call sites from 2 routines (e.g. RunWD780StateWhenNotFading_F1_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case10)
 ; writes: wStringIndex, wStringCategory
-; points at: wCA2C, wCA36, wC52D
+; points at: wCA2C, wCA36, wTextWindowTileLo
 DrawWCA2CNameAndWCA36String::
 Func_0F1_57CD:: ; address name
     ld hl, wCA2C
@@ -3652,7 +3651,7 @@ Func_0F1_57CD:: ; address name
     ld a, [hl]
     add a, $02
     ld [wStringCategory], a
-    ld hl, wC52D
+    ld hl, wTextWindowTileLo
     ld a, $70
     ld [hl+], a
     ld a, $8A
@@ -4027,7 +4026,7 @@ Jump_0F1_59B8::
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (E-0062)
 ; 4 call sites from 4 routines (e.g. RunWD780StateWhenNotFading_F1_Case04_Case19, RunFunc58FAAt024FAndDrawBox_BankF1, RunWD780StateWhenNotFading_F1_Case04_Case17, RunWD780StateWhenNotFading_F1_Case04_Case12)
 ; reads: wIsCGB
-; writes: wC554, wC555, rVBK, rSVBK
+; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wD000
 DrawScreenBufferRect_BankF1::
 Func_0F1_59CA:: ; address name
@@ -4045,10 +4044,10 @@ Func_0F1_59CA:: ; address name
     push hl
     ld a, l
     add a, $C1
-    ld [wC554], a
+    ld [wTextCursorLo], a
     ld a, h
     adc a, $01
-    ld [wC555], a
+    ld [wTextCursorHi], a
     pop hl
     pop bc
     pop de

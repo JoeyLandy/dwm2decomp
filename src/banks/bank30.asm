@@ -3,10 +3,10 @@ SECTION "Bank 30", ROMX[$4000], BANK[$30]
 
 ; battle fight step 2: returns while a message is being drawn (wC52B); otherwise one of 7 sub-steps by wBattleSubPhase; case 0 loads the slots' personality bytes (wSlotPersonality*), the command menu loop follows
 ; 1 call site from 1 routine (e.g. BattleFight_Step2)
-; reads: wC52B, wBattleSubPhase
+; reads: wTextFlags, wBattleSubPhase
 RunBattleCommandEntry::
 Func_030_4001:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, [wBattleSubPhase]
@@ -21,14 +21,14 @@ Func_030_4001:: ; address name
 
 ; entry 0 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wD88F
+; reads: wLinkMode, wD88F
 ; writes: wDAE8
 ; points at: wBattleSubPhase, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wD980
 RunBattleCommandEntry_Case00::
 Jump_030_4018:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     ret nz
     xor a, a
@@ -119,12 +119,12 @@ Jump_030_409A::
 
 ; entry 1 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wBattleActor
+; reads: wLinkMode, wBattleActor
 ; writes: wBattleActor, wBattleResolveStep
 ; points at: wDA5B, wBattleSubPhase
 RunBattleCommandEntry_Case01::
 Jump_030_40A0:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     call nz, NextTableByteSecondStream
     ld a, [wBattleActor]
@@ -193,16 +193,16 @@ Jump_030_40E7:: ; address name
 
 ; uses the preset target when the side is player-controlled, bit 7 of its wDAD8 byte is clear and wBattleTargetChoice is set; otherwise ChooseActionTarget; stores the result (E-0125)
 ; 5 call sites from 4 routines (e.g. RunBattleCommandEntry_Case03, ActionEffect_Chance, RunBattleActions_Case06, RunMultiHitCounter)
-; reads: wC58A, wC46B, wBattleActor
+; reads: wLinkMode, wMenuState, wBattleActor
 ; points at: wDAD8, wBattleTargetChoice, wDAE9
 ChooseTargetForActor::
 Func_030_4102:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr z, Jump_030_4112
     cp a, $02
     jr z, Jump_030_4149
-    ld a, [wC46B]
+    ld a, [wMenuState]
     jr Jump_030_4122
 
 Jump_030_4112::
@@ -341,7 +341,7 @@ Func_030_41DF:: ; address name
 
 ; only called from RunBattleCommandEntry_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
-; reads: wD868, wD869, wD86A, wD86B, wCFF3, wC5E7
+; reads: wD868, wD869, wD86A, wD86B, wCFF3, wRandomLo
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
 ; points at: wBattleActionChoice, wCFF3
 RunBattleCommandEntry_Case04_Sub02::
@@ -415,7 +415,7 @@ Jump_030_427A::
 
 Jump_030_427F::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld b, a
     ld a, $09
     call DivideBByA
@@ -647,7 +647,7 @@ Func_030_43C4:: ; address name
 
 ; entry 0 of the `rst $00` table in RunBattleResolveStep_43C4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wC58A, wC46B, wDAE9
+; reads: wBattleActor, wLinkMode, wMenuState, wDAE9
 ; writes: wPersonalityIndex
 ; points at: wDAE9, wBattleResolveStep
 RunBattleResolveStep_43C4_Case00::
@@ -657,7 +657,7 @@ Jump_030_43D0:: ; address name
     ld [wPersonalityIndex], a
     call ForcedActionForActorStatus
     jr nz, Jump_030_4414
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_440B
     cp a, $02
@@ -675,7 +675,7 @@ Jump_030_43FA::
     ld a, [wBattleActor]
     cp a, $01
     jr z, Jump_030_4406
-    ld a, [wC46B]
+    ld a, [wMenuState]
     jr Jump_030_440E
 
 Jump_030_4406::
@@ -683,7 +683,7 @@ Jump_030_4406::
     jr Jump_030_440E
 
 Jump_030_440B::
-    ld a, [wC46B]
+    ld a, [wMenuState]
 
 Jump_030_440E::
     and a, $03
@@ -701,7 +701,7 @@ Jump_030_4418::
 
 ; entry 1 of the `rst $00` table in RunBattleResolveStep_43C4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wBattleActor, wD868, wD869, wD86A, wD86B
+; reads: wLinkMode, wBattleActor, wD868, wD869, wD86A, wD86B
 ; writes: wBattleStatResultLo, wBattleResolveStep
 ; points at: wBattleResolveStep, wD868, wBattleStatus, wDAE0, wBattleActionChoice, wDAD8
 RunBattleResolveStep_43C4_Case01::
@@ -710,7 +710,7 @@ Jump_030_441D:: ; address name
     inc [hl]
     xor a, a
     ld [wBattleStatResultLo], a
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_4431
     cp a, $02
@@ -909,12 +909,12 @@ Func_030_4558:: ; address name
 
 ; adds a random value 0-63 (wC5E7 & $3F) to the word wD86A (E-0122)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01)
-; reads: wC5E7, wD86A, wD86B
+; reads: wRandomLo, wD86A, wD86B
 ; writes: wD86A, wD86B
 AddRandom0To63ToWD86A::
 Func_030_4579:: ; address name
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $3F
     ld l, a
     ld h, $00
@@ -1004,11 +1004,11 @@ Func_030_45DA:: ; address name
 
 ; for player-side actors: with battle command 1 adds $2D to wDA3C[actor's wDA43 mode] (unless 3), otherwise $14 to wDA3C[wDA4B & 3] (E-0127)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
-; reads: wC58A, wBattleActor, wC46B, wDAE9
+; reads: wLinkMode, wBattleActor, wMenuState, wDAE9
 ; points at: wDA3C, wDA4B, wDAE9
 AddCommandWeightToWDA3C::
 Func_030_4617:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_4646
     cp a, $02
@@ -1017,7 +1017,7 @@ Func_030_4617:: ; address name
     cp a, $04
     jr nc, Jump_030_4687
     cp a, $00
-    ld a, [wC46B]
+    ld a, [wMenuState]
     jr z, Jump_030_4650
     ld a, [wDAE9]
     jr Jump_030_4650
@@ -1036,7 +1036,7 @@ Jump_030_4646::
     ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_030_4687
-    ld a, [wC46B]
+    ld a, [wMenuState]
 
 Jump_030_4650::
     and a, $03
@@ -1101,7 +1101,7 @@ Func_030_469D:: ; address name
 
 ; adds AI weights for the actor's status (wD80D bits) and command mode, and for allies below a sixth of max HP in AI modes 3 and 4 (E-0130)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
-; reads: wBattleActor, wC58A, wC46B, wDAE9, wD891
+; reads: wBattleActor, wLinkMode, wMenuState, wDAE9, wD891
 ; points at: wD80D, wDA3C, wDA53, wDA3E, wD989, wDAE9
 AddStatusAndHPWeightsToAI::
 Func_030_46BA:: ; address name
@@ -1118,14 +1118,14 @@ Func_030_46BA:: ; address name
     jr z, Jump_030_470B
 
 Jump_030_46CF::
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_46FA
     cp a, $02
     jr nz, Jump_030_46E8
     ld a, [wBattleActor]
     cp a, $00
-    ld a, [wC46B]
+    ld a, [wMenuState]
     jr z, Jump_030_46FD
     ld a, [wDAE9]
     jr Jump_030_46FD
@@ -1141,7 +1141,7 @@ Jump_030_46E8::
     jr Jump_030_46FD
 
 Jump_030_46FA::
-    ld a, [wC46B]
+    ld a, [wMenuState]
 
 Jump_030_46FD::
     and a, $03
@@ -1210,10 +1210,10 @@ Jump_030_4768::
     ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_030_478A
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, Jump_030_478A
-    ld a, [wC46B]
+    ld a, [wMenuState]
     and a, $01
     jr nz, Jump_030_478A
     ld hl, wDA3E
@@ -1264,11 +1264,11 @@ Jump_030_47B4::
 
 ; for player-controlled slots adds random 0-15 to wDA3C-wDA3E; for AI slots adds weights by personality band (AddRandomWeightByValueBand) (E-0125)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
-; reads: wC58A, wBattleActor, wC5E7
+; reads: wLinkMode, wBattleActor, wRandomLo
 ; points at: wDA3C, wSlotPersonalityHi, wSlotPersonalityMid, wDA3D, wSlotPersonalityLo, wDA3E
 AddRandomPersonalityWeights::
 Func_030_47B9:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_47E6
     cp a, $02
@@ -1286,7 +1286,7 @@ Jump_030_47CA::
 
 Jump_030_47D5::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $0F
     ld e, a
     call AddSignedEToByteAtHLClamped
@@ -1341,14 +1341,14 @@ Jump_030_4834::
 
 ; sorts wDA3C-wDA3E in descending order (ties broken by the random bits in wC5E7/8), swapping the matching wDA3F-wDA41 entries (E-0128)
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
-; reads: wC5E7, wC5E8, wDA3F, wDA40, wDA41, wDA3C, wBattleActor
+; reads: wRandomLo, wRandomHi, wDA3F, wDA40, wDA41, wDA3C, wBattleActor
 ; writes: wDA3F, wDA40, wDA41
 ; points at: wDA3C, wD988, wD2AD, wD2BD
 SortThreeAIWeightsRandomTies::
 Func_030_483F:: ; address name
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld c, a
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     ld b, a
     ld hl, wDA3C
     ld a, [hl+]
@@ -1474,20 +1474,20 @@ Jump_030_48F2::
 
 ; only called from AddWeightsForSkillD (E-0047)
 ; 2 call sites from 1 routine (e.g. AddWeightsForSkillD)
-; reads: wC58A, wBattleActor, wC46B, wDAE9
+; reads: wLinkMode, wBattleActor, wMenuState, wDAE9
 ; points at: wDAE9
 AddWeightsForSkillD_Sub01::
 Func_030_48F3:: ; address name
     push de
     push hl
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_4920
     cp a, $01
     jr z, Jump_030_490E
     ld a, [wBattleActor]
     cp a, $00
-    ld a, [wC46B]
+    ld a, [wMenuState]
     jr z, Jump_030_4923
     ld a, [wDAE9]
     jr Jump_030_4923
@@ -1503,7 +1503,7 @@ Jump_030_490E::
     jr Jump_030_4923
 
 Jump_030_4920::
-    ld a, [wC46B]
+    ld a, [wMenuState]
 
 Jump_030_4923::
     and a, $03
@@ -1536,7 +1536,7 @@ Jump_030_493C::
 
 ; for player-controlled actors in manual mode chooses action 0; otherwise runs the AI routine for the next wDA3C entry (Data_030_4998) and advances wDA42 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wC58A, wDA42, wD871
+; reads: wBattleActor, wLinkMode, wDA42, wD871
 ; points at: wDA3C, wDA42
 AIRunNextChoice:: ; heuristic: follows a terminator; C0
 Func_030_4946:: ; address name
@@ -1544,7 +1544,7 @@ Func_030_4946:: ; address name
     and a, $03
     cp a, $03
     jr z, Jump_030_496E
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_4959
     cp a, $02
@@ -1591,7 +1591,7 @@ Data_030_4998:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; wDA6B/wDA6C = AIScoreRoutineTableB, then continues with the scoring loop (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wC58A, wDA3F
+; reads: wBattleActor, wLinkMode, wDA3F
 ; writes: wDA6B, wDA6C
 ; points at: wD988, wD2AD
 UseAIScoreTableB:: ; heuristic: target of a pointer table; C0
@@ -1605,7 +1605,7 @@ Func_030_4AC6:: ; address name
 
 ; sets wDA6B/C to AIScoreRoutineTableA; for AI-controlled actors estimates damage, scores the eight skills, attack (0) and $AC into wD2AD, and doubles the weight of the preferred kind (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wC58A, wDA3F
+; reads: wBattleActor, wLinkMode, wDA3F
 ; writes: wDA6B, wDA6C
 ; points at: wD988, wD2AD
 ScoreActionsWithAIScoreTableA:: ; heuristic: target of a pointer table; C0
@@ -1621,7 +1621,7 @@ Jump_030_4ADE::
     and a, $03
     cp a, $03
     jr z, Jump_030_4B06
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_4AF1
     cp a, $02
@@ -1685,7 +1685,7 @@ Jump_030_4B1B::
     and a, $03
     cp a, $03
     jr z, Jump_030_4B6F
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_4B5E
     cp a, $02
@@ -1838,7 +1838,7 @@ Jump_030_4BFF::
 
 ; picks the largest of the ten wD2AD weights (ties at random); index 8 chooses action 0, 9 chooses $AC, others the actor's skill in that slot (E-0127)
 ; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
-; reads: wC5E7, wBattleActor, hTemp0
+; reads: wRandomLo, wBattleActor, hTemp0
 ; writes: hTemp0
 ; points at: wD2AD, wD989
 ChooseHighestWeightedAction::
@@ -1866,7 +1866,7 @@ Jump_030_4C09::
     jr c, Jump_030_4C2F
     jr nz, Jump_030_4C34
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     bit 0, a
     jr z, Jump_030_4C34
 
@@ -2005,13 +2005,13 @@ Jump_030_4CC9::
 
 ; only called from AddSkillBaseWeightAndLoadSkill (E-0047)
 ; 1 call site from 1 routine (e.g. AddSkillBaseWeightAndLoadSkill)
-; reads: wC5E7
+; reads: wRandomLo
 AddSkillBaseWeightAndLoadSkill_Sub01::
 Func_030_4CDB:: ; address name
     push af
     dec de
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $3F
     ld b, a
     ld a, [de]
@@ -2039,10 +2039,10 @@ Jump_030_4CF0:: ; address name
 
 ; for AI-controlled slots (foes, or both sides outside normal battles, never slot 3/7) runs the handlers for the set bits of the actor's action data word (E-0124)
 ; 2 call sites from 2 routines (e.g. RunBattleResolveStep_43C4_Case03, AIChooseActionForActor)
-; reads: wC58A, wBattleActor
+; reads: wLinkMode, wBattleActor
 RunActorActionHandlersForAISlots::
 Func_030_4CFC:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_030_4D06
     cp a, $02
@@ -2170,7 +2170,7 @@ Data_030_4F46:: ; address name
 
 ; AI trait roll with mask DE = $01: when the actor's value is at least $80 rolls a chance that grows with its distance from $80 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
+; reads: wRandomLo, wBattleActor
 ; points at: wSlotPersonalityHi, wD854
 RollPersonalityHiHighFlag01:: ; heuristic: target of a pointer table; C0
 Func_030_4F86:: ; address name
@@ -2180,7 +2180,7 @@ Func_030_4F86:: ; address name
 
 ; AI trait roll with mask DE = $02: when the actor's value is below $80 rolls a chance that grows with its distance from $80 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
+; reads: wRandomLo, wBattleActor
 ; points at: wSlotPersonalityHi, wD854
 RollPersonalityHiLowFlag02:: ; heuristic: target of a pointer table; C0
 Func_030_4F8E:: ; address name
@@ -2190,7 +2190,7 @@ Func_030_4F8E:: ; address name
 
 ; AI trait roll with mask DE = $04: when the actor's value is at least $80 rolls a chance that grows with its distance from $80 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
+; reads: wRandomLo, wBattleActor
 ; points at: wSlotPersonalityMid, wD854
 RollPersonalityMidHighFlag04:: ; heuristic: target of a pointer table; C0
 Func_030_4F96:: ; address name
@@ -2200,7 +2200,7 @@ Func_030_4F96:: ; address name
 
 ; AI trait roll with mask DE = $08: when the actor's value is below $80 rolls a chance that grows with its distance from $80 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
+; reads: wRandomLo, wBattleActor
 ; points at: wSlotPersonalityMid, wD854
 RollPersonalityMidLowFlag08:: ; heuristic: target of a pointer table; C0
 Func_030_4F9E:: ; address name
@@ -2210,7 +2210,7 @@ Func_030_4F9E:: ; address name
 
 ; AI trait roll with mask DE = $10: when the actor's value is at least $80 rolls a chance that grows with its distance from $80 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
+; reads: wRandomLo, wBattleActor
 ; points at: wSlotPersonalityLo, wD854
 RollPersonalityLoHighFlag10:: ; heuristic: target of a pointer table; C0
 Func_030_4FA6:: ; address name
@@ -2220,7 +2220,7 @@ Func_030_4FA6:: ; address name
 
 ; AI trait roll with mask DE = $20: when the actor's value is below $80 rolls a chance that grows with its distance from $80 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
+; reads: wRandomLo, wBattleActor
 ; points at: wSlotPersonalityLo, wD854
 RollPersonalityLoLowFlag20:: ; heuristic: target of a pointer table; C0
 Func_030_4FAE:: ; address name
@@ -2230,7 +2230,7 @@ Func_030_4FAE:: ; address name
 
 ; AI trait roll with mask DE = $40: when the actor's value is at least $80 rolls a chance that grows with its distance from $80 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
+; reads: wRandomLo, wBattleActor
 ; points at: wD980, wD854
 RollWD980HighFlag40:: ; heuristic: target of a pointer table; C0
 Func_030_4FB6:: ; address name
@@ -2240,7 +2240,7 @@ Func_030_4FB6:: ; address name
 
 ; AI trait roll with mask DE = $80: when the actor's wD980 value is below $80 rolls a chance that grows with its distance from $80 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7, wBattleActor
+; reads: wRandomLo, wBattleActor
 ; points at: wD980, wD854
 RollWD980LowFlag80:: ; heuristic: target of a pointer table; C0
 Func_030_4FBE:: ; address name
@@ -2251,7 +2251,7 @@ Func_030_4FBE:: ; address name
 
 Jump_030_4FC8::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld b, a
     ld a, [wBattleActor]
     add_a_to_hl
@@ -2268,7 +2268,7 @@ Jump_030_4FC8::
 
 Jump_030_4FE9::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld b, a
     ld a, [wBattleActor]
     add_a_to_hl
@@ -2316,8 +2316,8 @@ Jump_030_5016::
 
 ; only called from RunBattleResolveStep_43C4_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01)
-; reads: wBattleActor, wC0A0, wC0A8
-; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wC0A0
+; reads: wBattleActor, wTemp0, wPauseMenuStep
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wTemp0
 RunBattleResolveStep_43C4_Case01_Sub03::
 Func_030_502D:: ; address name
     ld b, $00
@@ -2338,7 +2338,7 @@ Func_030_502D:: ; address name
     ld a, b
     cp a, $02
     jr nz, Jump_030_50A0
-    ld hl, wC0A0
+    ld hl, wTemp0
     ld bc, $0008
     ld a, $FF
     call FillBytes
@@ -2349,17 +2349,17 @@ Func_030_502D:: ; address name
     ld a, [hl]
     cp a, $40
     jr c, Jump_030_507E
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     cp a, $FF
     jr z, Jump_030_50A6
 
 Jump_030_507E::
     call FilterSkillListByMP
-    ld a, [wC0A8]
+    ld a, [wPauseMenuStep]
     cp a, $FF
     jr z, Jump_030_50A6
     call RunBattleResolveStep_43C4_Case01_Sub03_Sub02
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     cp a, $FF
     jr z, Jump_030_50A6
     call RunBattleResolveStep_43C4_Case01_Sub03_Sub03
@@ -2421,7 +2421,7 @@ Jump_030_50CD::
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub03)
 ; reads: wBattleActor, wCFF1
 ; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wD989, wCFF1, wC0A0
+; points at: wD989, wCFF1, wTemp0
 RunBattleResolveStep_43C4_Case01_Sub03_Sub01::
 Func_030_50D2:: ; address name
     ld a, [wBattleActor]
@@ -2457,7 +2457,7 @@ Jump_030_50E3::
     pop hl
     jr z, Jump_030_5123
     ld a, c
-    ld de, wC0A0
+    ld de, wTemp0
     add a, e
     ld e, a
     jr nc, Jump_030_5120
@@ -2479,7 +2479,7 @@ Jump_030_5123::
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub03)
 ; reads: wBattleActor, wRecordBufferData
 ; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wBattleMP, wC0A0, wRecordBufferData, wC0A8
+; points at: wBattleMP, wTemp0, wRecordBufferData, wPauseMenuStep
 FilterSkillListByMP::
 Func_030_5129:: ; address name
     ld a, [wBattleActor]
@@ -2489,7 +2489,7 @@ Func_030_5129:: ; address name
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ld hl, wC0A0
+    ld hl, wTemp0
     ld e, $08
     ld d, $00
 
@@ -2521,7 +2521,7 @@ Jump_030_513F::
     call CompareHLToBC
     jr c, Jump_030_5181
     ld a, d
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld [hl], $FF
 
@@ -2533,20 +2533,20 @@ Jump_030_5181::
     jr nz, Jump_030_513F
 
 Jump_030_5187::
-    ld hl, wC0A8
+    ld hl, wPauseMenuStep
     ld bc, $0008
     ld a, $FF
     call FillBytes
-    ld hl, wC0A0
-    ld de, wC0A8
+    ld hl, wTemp0
+    ld de, wPauseMenuStep
     jr Jump_030_51CD
 
 ; only called from RunBattleResolveStep_43C4_Case01_Sub03 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub03)
-; points at: wC0A8, wC0A0
+; points at: wPauseMenuStep, wTemp0
 RunBattleResolveStep_43C4_Case01_Sub03_Sub02::
 Func_030_519A:: ; address name
-    ld hl, wC0A8
+    ld hl, wPauseMenuStep
     ld b, $08
     ld c, $00
 
@@ -2557,7 +2557,7 @@ Jump_030_51A1::
     call RunBattleResolveStep_43C4_Case01_Sub03_Sub02_Sub01
     jr c, Jump_030_51B7
     ld a, c
-    ld de, wC0A8
+    ld de, wPauseMenuStep
     add a, e
     ld e, a
     jr nc, Jump_030_51B4
@@ -2574,12 +2574,12 @@ Jump_030_51B7::
     jr nz, Jump_030_51A1
 
 Jump_030_51BC::
-    ld hl, wC0A0
+    ld hl, wTemp0
     ld bc, $0008
     ld a, $FF
     call FillBytes
-    ld hl, wC0A8
-    ld de, wC0A0
+    ld hl, wPauseMenuStep
+    ld de, wTemp0
 
 Jump_030_51CD::
     ld b, $08
@@ -2634,12 +2634,12 @@ Jump_030_5207::
 
 ; only called from RunBattleResolveStep_43C4_Case01_Sub03 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub03)
-; reads: wC0A0, wRecordBufferData
+; reads: wTemp0, wRecordBufferData
 ; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wRecordBufferData, wC0A1, wC0A0
+; points at: wRecordBufferData, wTemp1, wTemp0
 RunBattleResolveStep_43C4_Case01_Sub03_Sub03::
 Func_030_5209:: ; address name
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld [wRecordBuffer], a
     ld a, $00
     ld [wD868], a
@@ -2656,7 +2656,7 @@ Func_030_5209:: ; address name
     ld a, [wRecordBufferData]
     ld c, a
     ld b, $00
-    ld hl, wC0A1
+    ld hl, wTemp1
     ld de, $0700
 
 Jump_030_523A::
@@ -2700,7 +2700,7 @@ Jump_030_5277::
 
 Jump_030_527C::
     ld a, e
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld c, [hl]
     ret
@@ -2747,12 +2747,12 @@ Jump_030_52B4::
 
 ; only called from RunBattleResolveStep_43C4_Case01 (E-0047)
 ; 2 call sites from 1 routine (e.g. RunBattleResolveStep_43C4_Case01)
-; reads: wC58A, wBattleActor
+; reads: wLinkMode, wBattleActor
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD8B7, wD980
 RunBattleResolveStep_43C4_Case01_Sub04::
 Func_030_52B5:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     ret nz
     ld a, [wBattleActor]
@@ -3140,20 +3140,20 @@ Jump_030_556B::
 
 ; advances the random seed; when wC5F8 is set and the random value is below wC5FA, stores wC5F9 as the actor's action choice (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5F8, wC5FA, wC5E7, wC5F9
+; reads: wDebugCursor, wDebugValue1, wRandomLo, wDebugValue0
 MaybeOverrideActorActionWithWC5F9:: ; heuristic: follows a terminator; C0
 Func_030_556C:: ; address name
     call AdvanceRandom
     call ActorActionChoiceAddress
-    ld a, [wC5F8]
+    ld a, [wDebugCursor]
     or a, a
     jr z, Jump_030_5586
-    ld a, [wC5FA]
+    ld a, [wDebugValue1]
     ld b, a
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, b
     jr nc, Jump_030_5586
-    ld a, [wC5F9]
+    ld a, [wDebugValue0]
     ld [hl], a
 
 Jump_030_5586::
@@ -3466,13 +3466,13 @@ Func_030_5C72:: ; address name
 
 ; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleActor
+; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank30:: ; heuristic: follows a terminator; C0
 Func_030_5C79:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_030_5C8E
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_030_5C8E
     ld a, [wBattleActor]
@@ -3487,13 +3487,13 @@ Jump_030_5C8E::
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleTarget
+; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank30:: ; heuristic: follows a terminator; C0
 Func_030_5C94:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_030_5CA9
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_030_5CA9
     ld a, [wBattleTarget]

@@ -28,13 +28,13 @@ Func_0A3_4038:: ; address name
 
 ; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleActor
+; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_BankA3:: ; heuristic: follows a terminator; C0
 Func_0A3_403F:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_0A3_4054
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_0A3_4054
     ld a, [wBattleActor]
@@ -49,13 +49,13 @@ Jump_0A3_4054::
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleTarget
+; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_BankA3:: ; heuristic: follows a terminator; C0
 Func_0A3_405A:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_0A3_406F
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_0A3_406F
     ld a, [wBattleTarget]
@@ -124,7 +124,7 @@ Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; copies 16 bytes of wBattleActionChoice to wDA2C, clears wC953/4, and outside link battles sets the formation for each side from Func_0A3_41CF and Func_0A3_4917 (E-0125)
 ; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case06, RunBattleCommandEntry_BankA1_Case06)
-; reads: wC58A
+; reads: wLinkMode
 ; writes: wC953, wC954
 ; points at: wBattleActionChoice, wDA2C, wDA24
 SaveActionChoicesAndPickFormations::
@@ -142,7 +142,7 @@ Jump_0A3_418F::
     ld a, $FF
     ld [wC953], a
     ld [wC954], a
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     ret z
     ld de, wBattleActionChoice
@@ -154,7 +154,7 @@ Jump_0A3_418F::
     ld [wC953], a
 
 Jump_0A3_41B5::
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     ret z
     cp a, $02
@@ -170,7 +170,7 @@ Jump_0A3_41B5::
 
 ; only called from SaveActionChoicesAndPickFormations (E-0047)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
-; reads: wBattleActor, hTemp0, wC58A
+; reads: wBattleActor, hTemp0, wLinkMode
 ; writes: hTemp0
 SaveActionChoicesAndPickFormations_Sub01::
 Func_0A3_41CF:: ; address name
@@ -251,7 +251,7 @@ Jump_0A3_421A::
 
 Jump_0A3_4239::
     pop de
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $02
     jr z, Jump_0A3_4264
     inc hl
@@ -319,7 +319,7 @@ Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from SaveActionChoicesAndPickFormations_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01)
-; reads: wD981, wD982, hTemp0, wC5E7, wD980
+; reads: wD981, wD982, hTemp0, wRandomLo, wD980
 ; writes: hTemp0
 SaveActionChoicesAndPickFormations_Sub01_Sub01::
 Func_0A3_44C4:: ; address name
@@ -455,7 +455,7 @@ Jump_0A3_456D::
 
 Jump_0A3_458F::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $7F
     cp a, $64
     jr nc, Jump_0A3_458F
@@ -627,12 +627,12 @@ Jump_0A3_49D0::
 
 ; only called from RollWC5E7BelowChance (E-0047)
 ; 1 call site from 1 routine (e.g. RollWC5E7BelowChance)
-; reads: wC58A, wBattleActor
+; reads: wLinkMode, wBattleActor
 ; writes: hTemp0
 ; points at: wBattleMonsterId
 RollWC5E7BelowChance_Sub01::
 Func_0A3_49D5:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_0A3_49DF
     cp a, $02
@@ -790,11 +790,11 @@ Jump_0A3_4A99::
 
 ; only called from ActionEffect_Chance (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Chance)
-; reads: wC5E7, wC58A, wCFC5, wBattleActor
+; reads: wRandomLo, wLinkMode, wCFC5, wBattleActor
 ActionEffect_Chance_Sub01::
 Func_0A3_4AAF:: ; address name
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld b, a
     ld a, $0E
     call DivideBByA
@@ -802,7 +802,7 @@ Func_0A3_4AAF:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld c, a
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, Jump_0A3_4AF3
     ld a, [wCFC5]
@@ -841,16 +841,16 @@ Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from BattleEnd_Step7_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step7_Case02)
-; reads: wC6FD
+; reads: wPartyCount
 ; writes: rRAMG
-; points at: wC6FE, wC972
+; points at: wPartyList, wC972
 BattleEnd_Step7_Case02_Sub01::
 Func_0A3_4B0B:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     ld b, a
-    ld hl, wC6FE
+    ld hl, wPartyList
     ld de, wC972
 
 Jump_0A3_4B1A::

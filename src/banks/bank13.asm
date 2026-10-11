@@ -560,8 +560,8 @@ Jump_013_4335:: ; address name
 
 ; entry 21 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: wC836
+; reads: wGameFlags836
+; writes: wGameFlags836
 DispatchTalkEvent_Case05_Case15::
 Jump_013_433C:: ; address name
     ld de, $00A6
@@ -573,9 +573,9 @@ Jump_013_433C:: ; address name
     call InventoryHasFreeSlotCheck_Bank13
     jr nc, Jump_013_4367
     ld [hl], $35
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $041A
     call StartMessageCommand09HL_B13
     ld de, $00A7
@@ -1875,10 +1875,10 @@ Jump_013_4A02::
     ld a, $06
     ld [wModeState], a
     xor a, a
-    ld [wC46B], a
-    ld [wC46C], a
+    ld [wMenuState], a
+    ld [wMenuSubState], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     ret
 
 ; entry 4 of the `rst $00` table in DispatchTalkEvent
@@ -3676,7 +3676,7 @@ Jump_013_53E1::
 
 ; entry 111 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB8A, wC6FD, wStepArrived
+; reads: wCB8A, wPartyCount, wStepArrived
 DispatchTalkEvent_Case04_Case6F::
 Jump_013_53E8:: ; address name
     ld de, $009D
@@ -3696,7 +3696,7 @@ Jump_013_53E8:: ; address name
     ret
 
 Jump_013_540E::
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     cp a, $03
     jr nz, Jump_013_542F
     farcall SetWStepArrivedIfPartyHasField55Bit7
@@ -4962,7 +4962,7 @@ Jump_013_5D76:: ; address name
 
 ; entry 7 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD, hTemp1, hTemp0
+; reads: wPartyCount, hTemp1, hTemp0
 DispatchTalkEvent_Case01_Case07::
 Jump_013_5D7D:: ; address name
     ld de, $0025
@@ -5054,7 +5054,7 @@ Jump_013_5E28::
     ret
 
 Jump_013_5E37::
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     cp a, $02
     jr nc, Jump_013_5E45
     ld hl, $0107
@@ -5171,7 +5171,7 @@ Jump_013_5EE7::
 
 ; only called from DispatchTalkEvent_Case01_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_Case07)
-; reads: hTemp0, wC6FD, wC634
+; reads: hTemp0, wPartyCount, wInventory
 ; writes: hTemp0, hTemp1
 DispatchTalkEvent_Case01_Case07_Sub01::
 Func_013_5EF4:: ; address name
@@ -5200,13 +5200,13 @@ Jump_013_5F0C::
     ret
 
 Jump_013_5F28::
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     dec a
     jr z, Jump_013_5F55
     ld de, $0134
     call TestFlagBit
     jr c, Jump_013_5F4E
-    ld a, [wC634]
+    ld a, [wInventory + $17]
     cp a, $FF
     jr z, Jump_013_5F47
     or a, a
@@ -5483,8 +5483,8 @@ Jump_013_6109::
 
 ; entry 13 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: wC836
+; reads: wGameFlags836
+; writes: wGameFlags836
 DispatchTalkEvent_Case01_Case0D::
 Jump_013_6110:: ; address name
     call InventoryHasFreeSlotCheck_Bank13
@@ -5493,9 +5493,9 @@ Jump_013_6110:: ; address name
 
 Jump_013_6116::
     ld [hl], $2C
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $00FD
     call StartMessageCommand09HL_B13
     ret
@@ -5990,7 +5990,7 @@ Jump_013_6474::
 
 ; entry 25 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC632, hTemp1, hTemp0
+; reads: wSaveByte32, hTemp1, hTemp0
 ; writes: hTemp0
 DispatchTalkEvent_Case01_Case19::
 Jump_013_647B:: ; address name
@@ -6115,7 +6115,7 @@ Jump_013_6577::
     ld de, $013B
     call TestFlagBit
     jr c, Jump_013_6597
-    ld a, [wC632]
+    ld a, [wSaveByte32]
     or a, a
     jr z, Jump_013_6590
     cp a, $FF
@@ -6626,7 +6626,7 @@ Jump_013_68DB:: ; address name
 
 ; entry 39 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD, hTemp0
+; reads: wPartyCount, hTemp0
 ; writes: hTemp0, hTemp1
 DispatchTalkEvent_Case01_Case27::
 Jump_013_68E2:: ; address name
@@ -6639,7 +6639,7 @@ Jump_013_68E2:: ; address name
     ld de, $012D
     call TestFlagBit
     jr c, Jump_013_6923
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     dec a
     jr z, Jump_013_6915
     ld hl, $0002
@@ -7130,7 +7130,7 @@ Jump_013_6B84:: ; address name
 
 ; entry 75 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC634
+; reads: wInventory
 ; writes: wC928
 DispatchTalkEvent_Case01_Case4B::
 Jump_013_6B8B:: ; address name
@@ -7140,7 +7140,7 @@ Jump_013_6B8B:: ; address name
     ld de, $01A4
     call TestFlagBit
     jr c, Jump_013_6BBE
-    ld a, [wC634]
+    ld a, [wInventory + $17]
     cp a, $FF
     jr z, Jump_013_6BAC
     or a, a
@@ -7379,10 +7379,10 @@ Jump_013_6CAC:: ; address name
 
 ; entry 97 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC82C
+; reads: wArenaRank
 DispatchTalkEvent_Case01_Case61::
 Jump_013_6CB3:: ; address name
-    ld a, [wC82C]
+    ld a, [wArenaRank]
     or a, a
     jr nz, Jump_013_6CCF
     ld de, $0000
@@ -7501,8 +7501,8 @@ Jump_013_6D61::
 
 ; entry 101 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC82C, wC892, hTemp0
-; writes: wDataBank, wD7FB, wC892
+; reads: wArenaRank, wTalkEventByte92, hTemp0
+; writes: wDataBank, wD7FB, wTalkEventByte92
 DispatchTalkEvent_Case01_Case65::
 Jump_013_6D68:: ; address name
     ld a, $0C
@@ -7510,19 +7510,19 @@ Jump_013_6D68:: ; address name
     xor a, a
     ld [wD7FB], a
     farcall DispatchTalkEvent_Case01_Case65_Sub01
-    ld a, [wC82C]
+    ld a, [wArenaRank]
     or a, a
     jr z, Jump_013_6DAD
     cp a, $01
     jr z, Jump_013_6DB4
     cp a, $05
     jr z, Jump_013_6DCA
-    ld a, [wC892]
+    ld a, [wTalkEventByte92]
     or a, a
     jr nz, Jump_013_6DA7
     farcall GenerateNewKeyEntry
     ldh a, [hTemp0]
-    ld [wC892], a
+    ld [wTalkEventByte92], a
     or a, a
     jr nz, Jump_013_6DA0
     ld hl, $5578
@@ -7535,7 +7535,7 @@ Jump_013_6DA0::
     ret
 
 Jump_013_6DA7::
-    ld a, [wC82C]
+    ld a, [wArenaRank]
     or a, a
     jr nz, Jump_013_6DB4
 
@@ -7839,8 +7839,8 @@ Jump_013_6F56:: ; address name
 
 ; entry 119 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC836
-; writes: wC836
+; reads: wGameFlags836
+; writes: wGameFlags836
 DispatchTalkEvent_Case01_Case77::
 Jump_013_6F5D:: ; address name
     ld de, $0025
@@ -7868,9 +7868,9 @@ Jump_013_6F84::
 
 Jump_013_6F90::
     ld [hl], $11
-    ld a, [wC836]
+    ld a, [wGameFlags836]
     set 6, a
-    ld [wC836], a
+    ld [wGameFlags836], a
     ld hl, $55F6
     call StartScriptAtHL_B13
     ret
@@ -7985,7 +7985,7 @@ Jump_013_7029::
 
 ; entry 127 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, wC6FD, wC634, wCB9A
+; reads: hTemp0, wPartyCount, wInventory, wCB9A
 ; writes: hTemp0, hTemp1, wD7FB, wDataBank
 DispatchTalkEvent_Case01_Case7F::
 Jump_013_7030:: ; address name
@@ -8013,13 +8013,13 @@ Jump_013_704D::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_7046
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     dec a
     jr z, Jump_013_708F
     ld de, $0191
     call TestFlagBit
     jr c, Jump_013_7088
-    ld a, [wC634]
+    ld a, [wInventory + $17]
     cp a, $FF
     jr z, Jump_013_7081
     or a, a
@@ -8879,10 +8879,10 @@ Jump_013_7701::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0276, whose string begins 'If you want to enter, please'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC82C
+; reads: wArenaRank
 Talk0276_IfYouWantTo:: ; heuristic: target of a pointer table; C0
 Func_013_7708:: ; address name
-    ld a, [wC82C]
+    ld a, [wArenaRank]
     cp a, $05
     jr z, Jump_013_7720
     or a, a
@@ -9121,7 +9121,7 @@ Jump_013_7909::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4 constant message(s) depending on story flags and state; the first one in the code is $04D2, whose string begins 'Up ahead is the Starry Shrine'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC82C
+; reads: wArenaRank
 Talk04D2_UpAheadIsThe:: ; heuristic: target of a pointer table; C0
 Func_013_7910:: ; address name
     ld de, $0025
@@ -9130,7 +9130,7 @@ Func_013_7910:: ; address name
     ld de, $0022
     call TestFlagBit
     jr c, Jump_013_7934
-    ld a, [wC82C]
+    ld a, [wArenaRank]
     or a, a
     jr nz, Jump_013_792D
     ld hl, $04D2
@@ -9802,11 +9802,11 @@ Func_013_7F86:: ; address name
 
 ; the same 28 bytes as InventoryHasFreeSlotCheck (04:7C37)
 ; 5 call sites from 5 routines (e.g. DispatchTalkEvent_Case01_Case77, DispatchTalkEvent_Case01_Case0D, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case02, ...)
-; reads: wC634
+; reads: wInventory
 ; points at: wInventory
 InventoryHasFreeSlotCheck_Bank13::
 Func_013_7F94:: ; address name
-    ld a, [wC634]
+    ld a, [wInventory + $17]
     cp a, $FF
     jr z, Jump_013_7FA0
     or a, a

@@ -3,7 +3,7 @@ SECTION "Bank 19", ROMX[$4000], BANK[$19]
 
 ; only called from GameMode4_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init)
-; reads: wCFC5, wDataBank, wC58A, wD20C, wD25A, wD2A8
+; reads: wCFC5, wDataBank, wLinkMode, wD20C, wD25A, wD2A8
 ; writes: wDataBankSave, wCFC5, rRAMG, rRAMB, wD8A1, wD8A2, wD8A3
 ; points at: wD800, wBattlePhase, wCFD0, wD09D
 GameMode4_Init_Sub01::
@@ -27,7 +27,7 @@ Func_019_4001:: ; address name
     pop af
     ld [wCFC5], a
     call GameMode4_Init_Sub01_Sub01
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, Jump_019_4069
     ld hl, wD09D
@@ -60,9 +60,9 @@ Jump_019_4069::
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
-; reads: wCFC5, wC58A, wC6FD, wCFDC, wC835, wC834, wC57F
-; writes: wDAD7, wD802, wQueuedActionId, wDAAD, wD892, wC5FC, wC5FD, wC5FE, ...
-; points at: wC46B, wDA5B, wDAD8, wBattleSlotOut, wBattleMonsterId, wDA08, wDAD4, wD895, ...
+; reads: wCFC5, wLinkMode, wPartyCount, wCFDC, wBattleResultByte, wMenuSaveByte34, wLinkRole
+; writes: wDAD7, wD802, wQueuedActionId, wDAAD, wD892, wDebugValue3, wDebugState, wDebugSubState, ...
+; points at: wMenuState, wDA5B, wDAD8, wBattleSlotOut, wBattleMonsterId, wDA08, wDAD4, wD895, ...
 GameMode4_Init_Sub01_Sub01::
 Func_019_4079:: ; address name
     ld a, [wCFC5]
@@ -85,14 +85,14 @@ Jump_019_408D::
     ld [wQueuedActionId], a
     ld [wDAAD], a
     ld [wD892], a
-    ld hl, wC46B
+    ld hl, wMenuState
     ld bc, $0008
     xor a, a
     call FillBytes
     xor a, a
-    ld [wC5FC], a
-    ld [wC5FD], a
-    ld [wC5FE], a
+    ld [wDebugValue3], a
+    ld [wDebugState], a
+    ld [wDebugSubState], a
     ld hl, wDA5B
     ld bc, $0008
     ld a, $FF
@@ -134,26 +134,26 @@ Jump_019_408D::
     ld [wCFD8], a
     ld [wCFD9], a
     ld [wCFDA], a
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, Jump_019_4140
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     ld [wD88F], a
     ld [wC984], a
     ld a, [wCFDC]
     inc a
     ld [wD890], a
     ld [wC985], a
-    ld a, [wC835]
+    ld a, [wBattleResultByte]
     ld [wCFDB], a
-    ld a, [wC834]
+    ld a, [wMenuSaveByte34]
     ld [wC964], a
     jr Jump_019_417E
 
 Jump_019_4140::
     ld a, $03
     ld [wC964], a
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr nz, Jump_019_4166
     ld hl, wD0EC
@@ -205,7 +205,7 @@ Jump_019_4199::
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
-; writes: wC526
+; writes: wBGPaletteUploadRequest
 GameMode4_Init_Sub01_Sub02::
 Func_019_419B:: ; address name
     farcall GameMode4_Init_Sub01_Sub02_Sub01
@@ -217,17 +217,17 @@ Func_019_419B:: ; address name
     ld hl, vBGMap0
     call CopyScreenTileBufferToVRAM_A0_Bank19
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
-; reads: wC57F, wD890
+; reads: wLinkRole, wD890
 ; points at: wD1C9, wD0DF, wD217, wD12D, wD265, wD17B
 GameMode4_Init_Sub01_Sub03::
 Func_019_41CB:: ; address name
     ld de, wD1C9
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_019_41D8
     ld de, wD0DF
@@ -240,7 +240,7 @@ Jump_019_41D8::
     cp a, $01
     jr z, Jump_019_4218
     ld de, wD217
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_019_41F4
     ld de, wD12D
@@ -253,7 +253,7 @@ Jump_019_41F4::
     cp a, $02
     jr z, Jump_019_4218
     ld de, wD265
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_019_4210
     ld de, wD17B
@@ -282,7 +282,7 @@ Func_019_4219:: ; address name
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
-; reads: wD88F, wC57F, wD890, wD00B, wD00A
+; reads: wD88F, wLinkRole, wD890, wD00B, wD00A
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wD8A7, wBattleSlotOut, wBattleMonsterId
 GameMode4_Init_Sub01_Sub04::
@@ -290,7 +290,7 @@ Func_019_4224:: ; address name
     ld a, [wD88F]
     ld b, a
     ld c, $00
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_019_4235
     ld a, [wD890]
@@ -304,7 +304,7 @@ Jump_019_4235::
     ld a, [wD890]
     ld b, a
     ld c, $04
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_019_424D
     ld a, [wD88F]
@@ -437,7 +437,7 @@ Func_019_42EE:: ; address name
 
 ; outside link and special battles stores a random value between 80 and 100 percent of the word at HL into BC's target (E-0127)
 ; 1 call site from 1 routine (e.g. LoadBattleSlotFromBattlerRecord_4CF8)
-; reads: wCFC5, wC58A, wC5E7, wC5E8
+; reads: wCFC5, wLinkMode, wRandomLo, wRandomHi
 RandomizeWordBetween80And100Percent::
 Func_019_42FD:: ; address name
     ld a, [wCFC5]
@@ -447,7 +447,7 @@ Func_019_42FD:: ; address name
     ret z
     cp a, $05
     ret z
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     ret nz
     push bc
@@ -474,9 +474,9 @@ Func_019_42FD:: ; address name
     pop de
     pop bc
     pop af
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld l, a
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     ld h, a
 
 Jump_019_4332::
@@ -632,7 +632,7 @@ Jump_019_43E4::
 
 ; replaces skill $8F by $AA for slots without wD8AF set; outside link battles marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
 ; 2 call sites from 2 routines (e.g. LoadSlotSkillsFromBattlerRecord, GameMode4_Init_Sub01_Sub04)
-; reads: wC58A
+; reads: wLinkMode
 ; points at: wD8AF, wD9C9, wD989
 AdjustSkillsForBattleStart::
 Func_019_43ED:: ; address name
@@ -652,7 +652,7 @@ Jump_019_43FE::
     inc hl
     dec b
     jr nz, Jump_019_43F3
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     ret nz
     ld bc, $0304
@@ -1461,7 +1461,7 @@ Jump_019_4771::
 
 ; advances the random table (NextTableByte) and stores the new wC5E7 at HL; HL += 1; AF, BC, DE kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
 ; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
-; reads: wC5E7
+; reads: wRandomLo
 StoreRandomByteAtHL_Bank19::
 Func_019_488D:: ; address name
     push af
@@ -1473,13 +1473,13 @@ Func_019_488D:: ; address name
     pop de
     pop bc
     pop af
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     ld [hl+], a
     ret
 
 ; NextTableByte, then stores (wC5E7 & $7F) + $80 at HL; HL += 1 (E-0118)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
-; reads: wC5E7
+; reads: wRandomLo
 StoreRandomByte80ToFFAtHL::
 Func_019_489D:: ; address name
     push af
@@ -1491,7 +1491,7 @@ Func_019_489D:: ; address name
     pop de
     pop bc
     pop af
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $7F
     add a, $80
     ld [hl+], a
@@ -1648,7 +1648,7 @@ Jump_019_4968::
 
 ; field $0D of record wD86A: values 1, 2 and others roll with thresholds 2, $80 and $E6 and become 1 or 0; with wD068 set bit 4 is cleared (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
-; reads: wD86A, wD86B, wC5E7, wD068
+; reads: wD86A, wD86B, wRandomLo, wD068
 RollRecordField0DState::
 Func_019_496F:: ; address name
     ld a, [wD86A]
@@ -1684,7 +1684,7 @@ Jump_019_4991::
     pop de
     pop bc
     pop af
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, b
     jr c, Jump_019_49A5
     xor a, a
@@ -2007,7 +2007,7 @@ Jump_019_4B31::
 
 ; only called from LoadMonsterAndSpeciesForListEntryC (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMonsterAndSpeciesForListEntryC)
-; reads: wSpeciesRecord, wD009, wC5E7, wD068
+; reads: wSpeciesRecord, wD009, wRandomLo, wD068
 ; points at: wD01A
 LoadMonsterAndSpeciesForListEntryC_Sub02::
 Func_019_4B37:: ; address name
@@ -2048,7 +2048,7 @@ Jump_019_4B5B::
     pop de
     pop bc
     pop af
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, b
     jr c, Jump_019_4B6F
     xor a, a
@@ -2089,11 +2089,11 @@ Jump_019_4B87::
 
 ; only called from GameMode4_Init_Sub01_Sub04 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub04)
-; reads: wC58A, wD868, wD871
+; reads: wLinkMode, wD868, wD871
 ; points at: wBattleMonsterId, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
 GameMode4_Init_Sub01_Sub04_Sub01::
 Func_019_4B91:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, LoadBattleSlotFromBattlerRecord_4BA8
     ld a, c
@@ -2111,7 +2111,7 @@ Jump_019_4BA4::
 
 ; slot C: copies species, family, AI settings (wDA43/wDA4B outside link battles) and stats from its battler record into the battle arrays (E-0131)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
-; reads: wC58A, wD868, wD871
+; reads: wLinkMode, wD868, wD871
 ; points at: wBattleMonsterId, wD8AF, wDA43, wDA4B, wCFD8, wD8B7, wBattleMaxHP, wBattleMaxMP, ...
 LoadBattleSlotFromBattlerRecord_4BA8::
 Func_019_4BA8:: ; address name
@@ -2151,7 +2151,7 @@ Jump_019_4BCF::
     ld a, [hl]
     and a, $0F
     ld [de], a
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_019_4BF5
     ld a, c
@@ -2544,11 +2544,11 @@ Jump_019_4E0E::
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
-; reads: wC58A
+; reads: wLinkMode
 ; points at: wDA5F, wDA5B
 GameMode4_Init_Sub01_Sub08::
 Func_019_4E1C:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr nz, Jump_019_4E3E
     ld hl, wDA5F

@@ -528,7 +528,7 @@ Func_03B_42F4:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD892, wD893, wC57F
+; reads: wD892, wD893, wLinkRole
 ; writes: wDABA, wD808, wBattleTarget, wBattleActionId, wBattleResolveStep
 ; points at: wBattleResolveStep
 Func_03B_42F4_Case00::
@@ -555,7 +555,7 @@ Jump_03B_4314:: ; address name
 
 Jump_03B_433E::
     ld c, $00
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_03B_4356
     ld c, $04
@@ -563,7 +563,7 @@ Jump_03B_433E::
 
 Jump_03B_434B::
     ld c, $04
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_03B_4356
     ld c, $00
@@ -849,8 +849,8 @@ Jump_03B_450E::
 
 ; entry 6 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAC0, wDAC2, wC0A0, wDAC3
-; writes: wC0A0
+; reads: wDAC0, wDAC2, wTemp0, wDAC3
+; writes: wTemp0
 ; points at: wBattleResolveStep
 Func_03B_42F4_Case06::
 Jump_03B_4512:: ; address name
@@ -862,15 +862,15 @@ Jump_03B_4512:: ; address name
     bit 4, a
     jr z, Jump_03B_4529
     ld a, [wDAC2]
-    ld [wC0A0], a
+    ld [wTemp0], a
     jr Jump_03B_452F
 
 Jump_03B_4529::
     ld a, [wDAC3]
-    ld [wC0A0], a
+    ld [wTemp0], a
 
 Jump_03B_452F::
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
     call SetResolveStep0AUnlessWDAC0Bit4
@@ -1135,7 +1135,7 @@ Jump_03B_469B::
 
 ; entry 11 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAC1, wD808, wD893, wCFD5, wC471, wItemId, wD087
+; reads: wDAC1, wD808, wD893, wCFD5, wMenuOption, wItemId, wD087
 ; writes: wItemId, wD082
 ; points at: wBattleResolveStep
 Func_03B_42F4_Case0B::
@@ -1157,7 +1157,7 @@ Jump_03B_46AE::
     add a, a
     add a, a
     ld b, a
-    ld a, [wC471]
+    ld a, [wMenuOption]
     and a, $03
     add a, b
     ld [wD082], a
@@ -1216,7 +1216,7 @@ Func_03B_470B:: ; address name
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case0A)
 ; reads: wBattleTarget
 ; writes: wD88B, wDABA, wD88C, wD88D
-; points at: wD88B, wC0A0
+; points at: wD88B, wTemp0
 GroupTargetsBySpeciesToWD88B::
 Func_03B_4711:: ; address name
     ld a, $FF
@@ -1238,7 +1238,7 @@ Jump_03B_4735::
     ld c, a
     ld a, c
     add a, a
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
@@ -1246,7 +1246,7 @@ Jump_03B_4735::
     inc c
     ld a, c
     add a, a
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld a, [hl+]
     cp a, e
@@ -1257,7 +1257,7 @@ Jump_03B_4735::
     inc c
     ld a, c
     add a, a
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld a, [hl+]
     cp a, e
@@ -1283,7 +1283,7 @@ Jump_03B_4785::
     inc c
     ld a, c
     add a, a
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld a, [hl+]
     cp a, e
@@ -1307,7 +1307,7 @@ Jump_03B_47A8::
     dec c
     ld a, c
     add a, a
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld a, [hl+]
     cp a, e
@@ -1355,14 +1355,14 @@ Jump_03B_47E9::
 Jump_03B_47EE::
     ld a, e
     add a, a
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
     ld a, d
     add a, a
-    ld hl, wC0A0
+    ld hl, wTemp0
     add_a_to_hl
     ld a, [hl+]
     cp a, c
@@ -1859,7 +1859,7 @@ Jump_03B_4A9B::
 
 ; level A: 0 returns carry; 1 and 2 take two chance rolls; 3 returns no carry (E-0122)
 ; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
-; reads: wC5E7
+; reads: wRandomLo
 RollChanceForLevelA_Bank3B::
 Func_03B_4A9C:: ; address name
     and a, a
@@ -1884,7 +1884,7 @@ Jump_03B_4AAF::
 
 ; the same instruction sequence as RollChanceByLevel_100_100_75_0 (bank $36) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
-; reads: wC5E7
+; reads: wRandomLo
 RollChanceByLevel_100_100_75_0_Bank3B::
 Func_03B_4AB2:: ; address name
     cp a, $02
@@ -1902,7 +1902,7 @@ Jump_03B_4ABC::
 
 ; only called from RollChanceByHLBits6And7_Bank3B (E-0047)
 ; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_Bank3B)
-; reads: wC5E7
+; reads: wRandomLo
 RollChanceByHLBits6And7_Bank3B_Sub01::
 Func_03B_4ABF:: ; address name
     and a, a
@@ -1927,35 +1927,35 @@ Jump_03B_4AD2::
 
 Jump_03B_4AD5::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, $D8
     ret
 
 Jump_03B_4ADE::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, $BF
     ret
 
 Jump_03B_4AE7::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, $7F
     ret
 
 Jump_03B_4AF0::
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, $66
     ret
 
 ; AdvanceRandom, then compares wC5E7 with $3F: carry (success) about one time in four (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC5E7
+; reads: wRandomLo
 RollChance3FOf256:: ; heuristic: follows a terminator; C0
 Func_03B_4AF9:: ; address name
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, $3F
     ret
 
@@ -2531,13 +2531,13 @@ Func_03B_4F52:: ; address name
 
 ; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wC57F, wBattleActor
+; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank3B:: ; heuristic: follows a terminator; C0
 Func_03B_4F59:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_03B_4F6E
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_03B_4F6E
     ld a, [wBattleActor]
@@ -2552,13 +2552,13 @@ Jump_03B_4F6E::
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
 ; 3 call sites from 3 routines (e.g. Func_03B_42F4_Case02, InflictStatus0Bit0WithWD93FReduction, ApplyTargetWD93FReduction)
-; reads: wC58A, wC57F, wBattleTarget
+; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank3B::
 Func_03B_4F74:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_03B_4F89
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_03B_4F89
     ld a, [wBattleTarget]

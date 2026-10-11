@@ -3,12 +3,12 @@ SECTION "Bank 61", ROMX[$4000], BANK[$61]
 
 ; wCD05 = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
 ; 2 call sites from 2 routines (e.g. RunWC903Case_Case05, ScriptCommand84_Run_Case04_Sub01)
-; reads: wC6FD, hTemp0, hTemp1, hTemp4, hTemp5
+; reads: wPartyCount, hTemp0, hTemp1, hTemp4, hTemp5
 ; writes: wCD05, hTemp4, hTemp5, rRAMG
-; points at: wC6FE
+; points at: wPartyList
 ComputePartyStrengthLevelWCD05::
 Func_061_4001:: ; address name
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     jr nz, Jump_061_400C
     xor a, a
@@ -22,7 +22,7 @@ Jump_061_400C::
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    ld hl, wC6FE
+    ld hl, wPartyList
     ld a, $0A
     ld [rRAMG], a
 
@@ -107,7 +107,7 @@ Jump_061_401E::
     ld l, a
     ldh a, [hTemp5]
     ld h, a
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     call DivideHLByA
     ld a, h
     or a, a
@@ -127,12 +127,12 @@ Jump_061_40B0::
 
 ; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hFFCA-hFFCD and wCD05 for key generation (E-0131)
 ; 2 call sites from 2 routines (e.g. RunWC903Case_Case06, WriteKeyEntryHFFC6)
-; reads: wC6FD, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
+; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
 ; writes: wCD05, hTemp4, hTemp5, hTemp6, hTemp7, rRAMG, hTemp2, hTemp3
-; points at: wC6FE
+; points at: wPartyList
 ComputePartyStrengthForKey::
 Func_061_40B4:: ; address name
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     or a, a
     jr nz, Jump_061_40BF
     xor a, a
@@ -150,7 +150,7 @@ Jump_061_40BF::
     ldh [hTemp6], a
     ld a, h
     ldh [hTemp7], a
-    ld hl, wC6FE
+    ld hl, wPartyList
     ld a, $0A
     ld [rRAMG], a
 
@@ -352,7 +352,7 @@ Jump_061_41C9::
     ret
 
 Jump_061_41F8::
-    ld a, [wC6FD]
+    ld a, [wPartyCount]
     call DivideHLByA
     ld a, l
     cp a, $63
@@ -430,7 +430,7 @@ Jump_061_422B:: ; address name
 ; entry 5 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45, wIsCGB
-; writes: wC526, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC90D, wC195, wC197, wC196, ...
+; writes: wBGPaletteUploadRequest, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC90D, wMapSpriteKind, wMapHeaderByte11, wMapTallTileMin, ...
 ; points at: wCDAE, wBGPaletteBuffer
 RunWCC44Type_420D_Case05::
 Jump_061_4261:: ; address name
@@ -469,7 +469,7 @@ Jump_061_4261:: ; address name
     ld c, $40
     call CopyFromBank
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
 
 Jump_061_42A5::
     ld a, $04
@@ -480,11 +480,11 @@ Jump_061_42A5::
     xor a, a
     ld [wC90D], a
     ld a, $10
-    ld [wC195], a
+    ld [wMapSpriteKind], a
     ld a, $2A
-    ld [wC197], a
+    ld [wMapHeaderByte11], a
     xor a, a
-    ld [wC196], a
+    ld [wMapTallTileMin], a
     ld a, $A3
     ld [wC901], a
     pop af
@@ -493,12 +493,12 @@ Jump_061_42A5::
     cp a, $09
     jr z, Jump_061_42D7
     xor a, a
-    ld [wC194], a
+    ld [wMapMoveType], a
     ret
 
 Jump_061_42D7::
     ld a, $05
-    ld [wC194], a
+    ld [wMapMoveType], a
     ret
 
 Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -554,7 +554,7 @@ Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 1 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wCC45
-; writes: wC526, wMaxBlockingTile, wC90D, wC195, wC196, wMapWidthScreens, wMapHeightScreens, wC901, ...
+; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wC90D, wMapSpriteKind, wMapTallTileMin, wMapWidthScreens, wMapHeightScreens, wC901, ...
 ; points at: wBGPaletteBuffer, wCD7B
 RunWCC44Type_420D_Case01::
 Jump_061_4325:: ; address name
@@ -571,15 +571,15 @@ Jump_061_4325:: ; address name
     ld c, $40
     call CopyFromBank
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
 
 Jump_061_4348::
     ld a, $3F
     ld [wMaxBlockingTile], a
     xor a, a
     ld [wC90D], a
-    ld [wC195], a
-    ld [wC196], a
+    ld [wMapSpriteKind], a
+    ld [wMapTallTileMin], a
     ld hl, wCD7B
     ld a, [wCC45]
     sla a
@@ -622,7 +622,7 @@ Jump_061_4380::
     ld a, $A3
     ld [wC901], a
     xor a, a
-    ld [wC194], a
+    ld [wMapMoveType], a
     ret
 
 ; entry 2 of the `rst $00` table in RunWCC44Type_420D
@@ -666,8 +666,8 @@ Jump_061_43B9:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD0B, wIsCGB, wC195
-; writes: wC526, wMaxBlockingTile, wC90D, wC901, wC194, wC196, wC197, wC195
+; reads: wCD0B, wIsCGB, wMapSpriteKind
+; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wC90D, wC901, wMapMoveType, wMapTallTileMin, wMapHeaderByte11, wMapSpriteKind
 ; points at: wBGPaletteBuffer
 RunWCC44Type_420D_Case00::
 Jump_061_43CF:: ; address name
@@ -707,7 +707,7 @@ Jump_061_43CF:: ; address name
     ld c, $40
     call CopyFromBank
     ld a, $7F
-    ld [wC526], a
+    ld [wBGPaletteUploadRequest], a
 
 Jump_061_440A::
     ld a, $3D
@@ -732,33 +732,33 @@ Jump_061_4421::
     cp a, $07
     jr z, Jump_061_4437
     xor a, a
-    ld [wC194], a
+    ld [wMapMoveType], a
     jr Jump_061_443C
 
 Jump_061_4437::
     ld a, $04
-    ld [wC194], a
+    ld [wMapMoveType], a
 
 Jump_061_443C::
     xor a, a
-    ld [wC196], a
-    ld [wC197], a
+    ld [wMapTallTileMin], a
+    ld [wMapHeaderByte11], a
     ld a, [wCD0B]
     ld hl, Data_061_4468
     add_a_to_hl
     ld a, [hl]
-    ld [wC195], a
+    ld [wMapSpriteKind], a
     and a, $0F
     jr z, Jump_061_445B
     ld a, $29
-    ld [wC196], a
+    ld [wMapTallTileMin], a
 
 Jump_061_445B::
-    ld a, [wC195]
+    ld a, [wMapSpriteKind]
     and a, $F0
     jr z, Jump_061_4467
     ld a, $2C
-    ld [wC197], a
+    ld [wMapHeaderByte11], a
 
 Jump_061_4467::
     ret
@@ -1654,17 +1654,17 @@ Jump_061_54E2::
 
 ; on key-world maps draws the goal object for the current screen (from wC88F when the wC891 key matches, else from wCD0A) (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
-; reads: wCC44, wC88E, wC891, wCC42, hMapScreenX, hMapScreenY, wC890, wC88F, ...
+; reads: wCC44, wKeyWorldActive, wKeyWorldKey, wCC42, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, wKeyWorldGoal, ...
 ; writes: rSVBK
 DrawKeyWorldGoalAtScreen::
 Func_061_54EC:: ; address name
     ld a, [wCC44]
     cp a, $80
     ret nz
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_061_5548
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr z, Jump_061_5548
     and a, $7F
@@ -1678,10 +1678,10 @@ Func_061_54EC:: ; address name
     ldh a, [hMapScreenY]
     or a, c
     ld c, a
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     cp a, c
     ret nz
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     and a, $0F
     ld c, a
     ld e, a
@@ -1703,7 +1703,7 @@ Jump_061_552D::
     rl d
     sla e
     rl d
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     swap a
     and a, $0F
     add a, a
@@ -2202,7 +2202,7 @@ Jump_061_579D::
 ; when wCC43 is 0, the wCD89 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case05)
 ; reads: wCC43, wCC45, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hPlayerStateFlags, ...
+; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wCD89
 WarpByWCD89EntryAtScreen14::
 Func_061_57A4:: ; address name
@@ -2249,19 +2249,19 @@ Jump_061_57AD::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
 ; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wCDAD entry, plays sound $60, wCC44 = $83 and starts the transition; C = 1 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case04)
 ; reads: hMapScreenY, wCC45, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wModeState, wC8C5, ...
+; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wModeState, wFieldTransitionStep, ...
 ; points at: wCDAD
 WarpToScreen01Event83::
 Func_061_5807:: ; address name
@@ -2297,19 +2297,19 @@ Jump_061_5810::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $40
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
 ; on screen row 1: warps to the screen in the wCD78 entry of wCC45 and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case02)
 ; reads: hMapScreenY, wCC45, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hPlayerStateFlags, ...
+; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wCD78
 WarpByWCD78EntryAtScreenRow1::
 Func_061_585A:: ; address name
@@ -2351,7 +2351,7 @@ Jump_061_587C::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
@@ -2359,14 +2359,14 @@ Jump_061_587C::
     and a, $FE
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
 ; checks the warp list Data_061_6566[wCDAC entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case03)
 ; reads: wCC45, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wC8CA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wModeState, wC8C5, hPlayerStateFlags, ...
+; writes: wC8CA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wCDAC, wCD88
 CheckKeyWorldWarpTable::
 Func_061_58BC:: ; address name
@@ -2473,12 +2473,12 @@ Jump_061_594D::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     pop de
     ld a, $60
     call QueueSoundEffect
@@ -2628,12 +2628,12 @@ Jump_061_59DD::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
@@ -2758,12 +2758,12 @@ Jump_061_5AB5::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
@@ -2806,14 +2806,14 @@ Jump_061_5B18::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     ld c, $01
     ret
 
@@ -2847,14 +2847,14 @@ Jump_061_5B6B::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     ld c, $01
     ret
 
@@ -2864,7 +2864,7 @@ Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from RunWCC44Type_596F_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case02)
 ; reads: hPlayerX, hPlayerY, wC955, wCC45, hPlayerStateFlags
-; writes: wC955, wCC45, wC8C8, wC8C9, wC8CA, wC914, wModeState, wC46B, ...
+; writes: wC955, wCC45, wC8C8, wC8C9, wC8CA, wC914, wModeState, wMenuState, ...
 RunWCC44Type_596F_Case02_Sub01::
 Func_061_5BBB:: ; address name
     ldh a, [hPlayerX]
@@ -2898,13 +2898,13 @@ Jump_061_5BC4::
     ld a, $06
     ld [wModeState], a
     xor a, a
-    ld [wC46B], a
-    ld [wC46C], a
+    ld [wMenuState], a
+    ld [wMenuSubState], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     ret
 
 ; only called from RunWCC44Type_596F_Case03 (E-0047)
@@ -3029,12 +3029,12 @@ Jump_061_5C7E::
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $03
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     pop de
     ld c, $01
     ret
@@ -3199,18 +3199,18 @@ Jump_061_5D92::
     ld a, $60
     call QueueSoundEffect
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     ld a, $04
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
     ld a, $03
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     farcall ClearWC935IfBit7AndNot6
     pop hl
     ld a, $01
@@ -3230,7 +3230,7 @@ Jump_061_5DE1::
     xor a, a
     ld [wC8CA], a
     ld a, $03
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     jr Jump_061_5E44
 
 Jump_061_5E02::
@@ -3261,7 +3261,7 @@ Jump_061_5E02::
     xor a, a
     ld [wC8CA], a
     ld a, $01
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
 
 Jump_061_5E44::
     ldh a, [hTemp1]
@@ -3273,13 +3273,13 @@ Jump_061_5E44::
     ld a, $60
     call QueueSoundEffect
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     ld a, $04
     call StartPaletteFade
     ld a, $04
     ld [wModeState], a
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
@@ -3304,14 +3304,14 @@ Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunWCC44Type_596F_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
-; reads: wC88E, wC891, wCC42, hMapScreenX, hMapScreenY, wC890, hPlayerX, hPlayerY, ...
-; writes: wC8C7, wC8C5, wModeState, hPlayerStateFlags, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
+; reads: wKeyWorldActive, wKeyWorldKey, wCC42, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, hPlayerX, hPlayerY, ...
+; writes: wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
 RunWCC44Type_596F_Case00_Sub02::
 Func_061_5E8D:: ; address name
-    ld a, [wC88E]
+    ld a, [wKeyWorldActive]
     or a, a
     jr z, Jump_061_5ECF
-    ld a, [wC891]
+    ld a, [wKeyWorldKey]
     bit 7, a
     jr z, Jump_061_5ECF
     and a, $7F
@@ -3325,7 +3325,7 @@ Func_061_5E8D:: ; address name
     ldh a, [hMapScreenY]
     or a, c
     ld c, a
-    ld a, [wC890]
+    ld a, [wKeyWorldGoalCell]
     cp a, c
     jr nz, Jump_061_5EC7
     ldh a, [hPlayerX]
@@ -3336,7 +3336,7 @@ Func_061_5E8D:: ; address name
     swap a
     or a, c
     ld c, a
-    ld a, [wC88F]
+    ld a, [wKeyWorldGoal]
     cp a, c
     jr nz, Jump_061_5EC7
     jr Jump_061_5EF0
@@ -3378,11 +3378,11 @@ Jump_061_5EF0::
     ld a, $60
     call QueueSoundEffect
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     ld a, $04
     call StartPaletteFade
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ld a, $04
     ld [wModeState], a
     ldh a, [hPlayerStateFlags]
@@ -3400,7 +3400,7 @@ Jump_061_5EF0::
     xor a, a
     ld [wC8CA], a
     ld a, $03
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     farcall ClearWC935IfBit7AndNot6
     ld a, $01
     ret
@@ -3408,7 +3408,7 @@ Jump_061_5EF0::
 ; only called from RunWCC44Type_596F_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
 ; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wC8C8, wC8C9, wC8CA, wC8C7, wC8C5, wModeState, hPlayerStateFlags, wCC45, ...
+; writes: wC8C8, wC8C9, wC8CA, wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wCC45, ...
 ; points at: wCD7B
 RunWCC44Type_596F_Case00_Sub03::
 Func_061_5F39:: ; address name
@@ -3466,13 +3466,13 @@ Jump_061_5F56::
     ld a, $60
     call QueueSoundEffect
     xor a, a
-    ld [wC8C7], a
+    ld [wFieldReturnPhase], a
     push hl
     ld a, $04
     call StartPaletteFade
     pop hl
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ld a, $04
     ld [wModeState], a
     ldh a, [hPlayerStateFlags]
@@ -3506,7 +3506,7 @@ Jump_061_5F56::
     ld a, $80
     ld [wC8C9], a
     ld a, $03
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     farcall ClearWC935IfBit7AndNot6
     pop hl
     ld a, $01
@@ -3545,7 +3545,7 @@ Jump_061_5FE0::
     call StartPaletteFade
     pop hl
     xor a, a
-    ld [wC8C5], a
+    ld [wFieldTransitionStep], a
     ld a, $04
     ld [wModeState], a
     ldh a, [hPlayerStateFlags]
@@ -3579,7 +3579,7 @@ Jump_061_5FE0::
     ld a, $80
     ld [wC8C9], a
     ld a, $03
-    ld [wC8C6], a
+    ld [wFieldTransitionKind], a
     farcall ClearWC935IfBit7AndNot6
     pop hl
     ld a, $01

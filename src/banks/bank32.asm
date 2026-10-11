@@ -840,16 +840,16 @@ Jump_032_4C9B::
 
 ; a random roll: 3/4 of the time nothing; otherwise clears status 3 (text $0F), loses a sixth of max HP (text $10) or of max MP, or does something else (E-0128)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case00_Case02)
-; reads: wC5E7, wC5E8, wBattleActor, wBattleDamageLo, wD873
+; reads: wRandomLo, wRandomHi, wBattleActor, wBattleDamageLo, wD873
 ; writes: wBattleSubStep
 ; points at: wBattleStatus, wD89E
 RollStatusTickEffect::
 Func_032_4C9C:: ; address name
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, $40
     jr nc, Jump_032_4CB7
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     cp a, $40
     jr c, Jump_032_4CB9
     cp a, $80
@@ -1022,7 +1022,7 @@ Func_032_4D8D:: ; address name
 
 ; for an actor with status bits $C0 or $0C forces action $C9; otherwise picks action $C0, $C1 or a table action (Data_032_4E1C or 4E20) at random and stores it (E-0128)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case00_Case03)
-; reads: wBattleActor, wC5E7, wC58A, wC5E8, wCFC5
+; reads: wBattleActor, wRandomLo, wLinkMode, wRandomHi, wCFC5
 ; writes: wBattleActionId, wBattleTarget
 ; points at: wD80F, wBattleActionChoice, wBattleTargetChoice
 PickRandomActionWhenUncontrolled::
@@ -1043,12 +1043,12 @@ Jump_032_4DAF::
     jr Jump_032_4DF7
 
 Jump_032_4DB3::
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, $80
     jr c, Jump_032_4DF1
     cp a, $C0
     jr c, Jump_032_4DF5
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr z, Jump_032_4DD1
     ld a, [wBattleActor]
@@ -1061,7 +1061,7 @@ Jump_032_4DD1::
     ld hl, Data_032_4E1C
 
 Jump_032_4DD4::
-    ld a, [wC5E8]
+    ld a, [wRandomHi]
     ld b, a
     ld a, [hl+]
     call DivideBByA
@@ -1136,7 +1136,7 @@ Func_032_4E29:: ; address name
 
 ; only called from ShowActorStatusRecoveryMessage (E-0047)
 ; 1 call site from 1 routine (e.g. ShowActorStatusRecoveryMessage)
-; reads: wC5E7, wBattleActor, wBattleTarget, wD871
+; reads: wRandomLo, wBattleActor, wBattleTarget, wD871
 ; writes: wD871, wBattleTarget
 ; points at: wD80F, wBattleActionChoice
 ShowActorStatusRecoveryMessage_Sub01::
@@ -1163,7 +1163,7 @@ Jump_032_4E6A::
     ld b, $FF
 
 Jump_032_4E6C::
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     cp a, b
     jr z, Jump_032_4E8F
     jr c, Jump_032_4E8F
@@ -1400,11 +1400,11 @@ Jump_032_4FFB::
 
 ; entry 1 of the `rst $00` table in Func_032_4ADC_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wBattleActor, wD89E, wBattleActionId
+; reads: wLinkMode, wBattleActor, wD89E, wBattleActionId
 ; points at: wD895, wDA5B, wBattleActionChoice, wBattleSubStep
 Func_032_4ADC_Case01_Case01::
 Jump_032_5000:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr z, Jump_032_5073
     ld a, [wBattleActor]
@@ -2131,7 +2131,7 @@ Jump_032_546D::
 
 ; entry 3 of the `rst $00` table in Func_032_4ADC
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wCFC5, wBattleActor, wBattleActionId
+; reads: wLinkMode, wCFC5, wBattleActor, wBattleActionId
 ; writes: wDAD3, wD093
 ; points at: wBattleResolveStep
 Func_032_4ADC_Case03::
@@ -2142,7 +2142,7 @@ Jump_032_5474:: ; address name
     ld a, $80
     ld [wDAD3], a
     farcall SelectEffectByWDAD3Flags
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     ret nz
     ld a, [wCFC5]
@@ -2396,14 +2396,14 @@ Jump_032_55E7:: ; address name
 
 ; in link battles with rules on: an action forbidden by the wD044/wD045 rules (Data_032_5688) ends the battle with music 2 and a message for the side that broke it (E-0128)
 ; 1 call site from 1 routine (e.g. Func_032_5820_Case06)
-; reads: wC58A, wD043, wDABA, wD044, wBattleActionId, wD045, wBattleActor, wC57F, ...
+; reads: wLinkMode, wD043, wDABA, wD044, wBattleActionId, wD045, wBattleActor, wLinkRole, ...
 ; writes: wD092, wStringIndex, wStringCategory, wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wDataBank, ...
 ; points at: wBattleResolveStep, wD057, wD058
 CheckLinkRuleViolation::
 Func_032_55EE:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     ret z
     cp a, $02
@@ -2450,7 +2450,7 @@ Jump_032_5633::
 Jump_032_563B::
     ld a, $02
     call QueueMusic
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     rlca
     and a, $04
     ld b, a
@@ -2531,12 +2531,12 @@ Jump_032_578B:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_032_4ADC_Case09
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wBattleActor
+; reads: wTextFlags, wBattleActor
 ; writes: wBattleTarget
 ; points at: wBattleSubStep
 Func_032_4ADC_Case09_Case00::
 Jump_032_5793:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, [wBattleActor]
@@ -2557,12 +2557,12 @@ Jump_032_57AF::
 
 ; entry 1 of the `rst $00` table in Func_032_4ADC_Case09
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B
+; reads: wTextFlags
 ; writes: wBattleStep, wBattleSubStep, wBattleResolveStep
 ; points at: wBattlePhase
 Func_032_4ADC_Case09_Case01::
 Jump_032_57BA:: ; address name
-    ld a, [wC52B]
+    ld a, [wTextFlags]
     or a, a
     ret nz
     call LoadBattleActor
@@ -2601,10 +2601,10 @@ Func_032_57E4:: ; address name
 
 ; in link battles or for slots 0-3 checks slot C's status block; otherwise carry unless the wDA63 slot is empty (E-0122)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case09_Case01)
-; reads: wC58A
+; reads: wLinkMode
 SlotCStatusCheckOrWDA63::
 Func_032_57E8:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr z, Jump_032_57F8
     ld a, c
@@ -3133,15 +3133,15 @@ Jump_032_5AA9::
 
 ; for the target's picture slot fills $24 tiles at vTiles2 + $140, $380 or $5C0 with the pattern $FF, $00 (E-0127)
 ; 11 call sites from 11 routines (e.g. RunBattleSubStep2_6764_Case01, Func_032_4ADC_Case09_Case00, RunDefeatSequence_Case01, RunBattleSubStep2_66F1_Case01, ...)
-; reads: wC58A, wC57F, wBattleTarget, rSTAT
+; reads: wLinkMode, wLinkRole, wBattleTarget, rSTAT
 BlankTargetMonsterPicture::
 Func_032_5AB3:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_032_5AD4
     cp a, $02
     jr z, Jump_032_5AD4
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_032_5AD4
     ld a, [wBattleTarget]
@@ -3204,7 +3204,7 @@ Jump_032_5AFE::
 
 ; target slot wBattleTarget: re-derives its stats (Func_032_5C3F, Func_032_5B94, Func_032_5BE8 clear 'buff' bits), sets wBattleSlotOut[target] = 1, wBattleHP[target] = 0 and clears the target's 9-byte status record (wD80C + 9 * slot)
 ; 9 call sites from 9 routines (e.g. RunBattleSubStep2_6764_Case00, Func_032_4ADC_Case09_Case00, RunDefeatSequence_Case00, RunBattleSubStep2_66F1_Case00, ...)
-; reads: wBattleTarget, wC58A
+; reads: wBattleTarget, wLinkMode
 ; writes: wDAAB, wDABE
 ; points at: wD812, wBattleSlotOut, wBattleHP, wBattleStatus, wD80A
 DefeatTarget::
@@ -3247,7 +3247,7 @@ Jump_032_5B2A::
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_032_5B66
     cp a, $02
@@ -3600,7 +3600,7 @@ Jump_032_5E0B::
 
 ; only called from RecomputeTargetMaxHPAndMP (E-0047)
 ; 1 call site from 1 routine (e.g. RecomputeTargetMaxHPAndMP)
-; reads: wBattleTarget, wC58A
+; reads: wBattleTarget, wLinkMode
 ; points at: wDAD4
 RecomputeTargetMaxHPAndMP_Sub01::
 Func_032_5E1A:: ; address name
@@ -3609,11 +3609,11 @@ Func_032_5E1A:: ; address name
 
 ; only called from ActionEffect_BeDragon (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_BeDragon)
-; reads: wC58A
+; reads: wLinkMode
 ; points at: wDAD4
 ActionEffect_BeDragon_Sub01::
 Func_032_5E1E:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     or a, a
     jr z, Jump_032_5E27
     cp a, $02
@@ -3914,7 +3914,7 @@ Jump_032_6044::
 
 ; only called from ResolveStep0EEffect_Case00 (E-0047)
 ; 2 call sites from 1 routine (e.g. ResolveStep0EEffect_Case00)
-; reads: wBattleActor, wC5E7
+; reads: wBattleActor, wRandomLo
 ; points at: wBattleActionChoice
 ResolveStep0EEffect_Case00_Sub01::
 Func_032_604A:: ; address name
@@ -3923,7 +3923,7 @@ Func_032_604A:: ; address name
     ld hl, wBattleActionChoice
     call AddDoubleAToHL_Bank32
     push hl
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $03
     ld hl, Data_032_6094
     add_a_to_hl
@@ -3939,7 +3939,7 @@ Func_032_604A:: ; address name
     ld a, c
     cp a, $00
     jr nz, Jump_032_6090
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $03
     add a, b
 
@@ -4028,9 +4028,9 @@ Jump_032_60C0:: ; address name
 
 ; entry 1 of the `rst $00` table in ResolveStep0EEffect_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wD873, wD876, wD877, wC0A0, wD871
-; writes: wD876, wD877, wCFCE, wC0A0, wD871, wBattleTarget, wBattleDamageLo, wD873
-; points at: wBattleSubStep2, wBattleHP, wC0A0
+; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wD873, wD876, wD877, wTemp0, wD871
+; writes: wD876, wD877, wCFCE, wTemp0, wD871, wBattleTarget, wBattleDamageLo, wD873
+; points at: wBattleSubStep2, wBattleHP, wTemp0
 ResolveStep0EEffect_Case03_Case01::
 Jump_032_60DF:: ; address name
     ld hl, wBattleSubStep2
@@ -4078,10 +4078,10 @@ Jump_032_6112::
 
 Jump_032_6121::
     ld a, $35
-    ld [wC0A0], a
+    ld [wTemp0], a
     call ActorOnLocalSide_Bank32
     jr nc, Jump_032_612F
-    ld hl, wC0A0
+    ld hl, wTemp0
     inc [hl]
 
 Jump_032_612F::
@@ -4102,7 +4102,7 @@ Jump_032_612F::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
     pop hl
@@ -4169,22 +4169,22 @@ Jump_032_61A9:: ; address name
 
 ; entry 2 of the `rst $00` table in RunWCFCEStep_618A
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wC0A0
-; writes: wC0A0, wCFCE
+; reads: wBattleTarget, wTemp0
+; writes: wTemp0, wCFCE
 ; points at: wBattleSubStep2
 RunWCFCEStep_618A_Case02::
 Jump_032_61B1:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank32
     ld a, $90
-    ld [wC0A0], a
+    ld [wTemp0], a
     call ActorOnLocalSide_Bank32
     jr c, Jump_032_61C6
     ld a, $8D
-    ld [wC0A0], a
+    ld [wTemp0], a
 
 Jump_032_61C6::
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
     ld hl, wBattleSubStep2
@@ -4343,22 +4343,22 @@ Jump_032_629B:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_032_627C
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wC0A0
-; writes: wC0A0, wCFCE
+; reads: wBattleTarget, wTemp0
+; writes: wTemp0, wCFCE
 ; points at: wBattleSubStep2
 Func_032_627C_Case02::
 Jump_032_62A3:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank32
     ld a, $90
-    ld [wC0A0], a
+    ld [wTemp0], a
     call ActorOnLocalSide_Bank32
     jr c, Jump_032_62B8
     ld a, $8D
-    ld [wC0A0], a
+    ld [wTemp0], a
 
 Jump_032_62B8::
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
     ld hl, wBattleSubStep2
@@ -4418,7 +4418,7 @@ Jump_032_62FD:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_032_627C
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wC5E7, wBattleDamageLo, wD873, wBattleTarget, wD871
+; reads: wBattleActor, wRandomLo, wBattleDamageLo, wD873, wBattleTarget, wD871
 ; writes: wBattleDamageLo, wD873, wCFCE, wD871, wBattleTarget
 ; points at: wBattleSubStep2, wBattleHP
 Func_032_627C_Table2_Case01::
@@ -4430,7 +4430,7 @@ Jump_032_630B:: ; address name
     ld a, [wBattleActor]
     call SetBit0OfWD095Indexed_Bank32
     call AdvanceRandom
-    ld a, [wC5E7]
+    ld a, [wRandomLo]
     and a, $01
     jr z, Jump_032_6366
     ld a, [wBattleActor]
@@ -4665,9 +4665,9 @@ Jump_032_6449:: ; address name
 
 ; entry 1 of the `rst $00` table in ResolveStep0EEffect_Case09
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wBattleDamageLo, wD873, wBattleTarget, wD876, wD877, wC0A0, wD871
-; writes: wD876, wD877, wCFCE, wC0A0, wD871, wBattleTarget, wBattleDamageLo, wD873
-; points at: wBattleSubStep2, wBattleHP, wC0A0
+; reads: wBattleActor, wBattleDamageLo, wD873, wBattleTarget, wD876, wD877, wTemp0, wD871
+; writes: wD876, wD877, wCFCE, wTemp0, wD871, wBattleTarget, wBattleDamageLo, wD873
+; points at: wBattleSubStep2, wBattleHP, wTemp0
 ResolveStep0EEffect_Case09_Case01::
 Jump_032_6468:: ; address name
     ld hl, wBattleSubStep2
@@ -4731,10 +4731,10 @@ Jump_032_64B6::
 
 Jump_032_64C5::
     ld a, $35
-    ld [wC0A0], a
+    ld [wTemp0], a
     call ActorOnLocalSide_Bank32
     jr nc, Jump_032_64D3
-    ld hl, wC0A0
+    ld hl, wTemp0
     inc [hl]
 
 Jump_032_64D3::
@@ -4755,7 +4755,7 @@ Jump_032_64D3::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
     pop hl
@@ -4822,22 +4822,22 @@ Jump_032_654D:: ; address name
 
 ; entry 2 of the `rst $00` table in RunWCFCEStep_652E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wC0A0
-; writes: wC0A0, wCFCE
+; reads: wBattleTarget, wTemp0
+; writes: wTemp0, wCFCE
 ; points at: wBattleSubStep2
 RunWCFCEStep_652E_Case02::
 Jump_032_6555:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank32
     ld a, $90
-    ld [wC0A0], a
+    ld [wTemp0], a
     call ActorOnLocalSide_Bank32
     jr c, Jump_032_656A
     ld a, $8D
-    ld [wC0A0], a
+    ld [wTemp0], a
 
 Jump_032_656A::
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
     ld hl, wBattleSubStep2
@@ -5137,22 +5137,22 @@ Jump_032_6710:: ; address name
 
 ; entry 2 of the `rst $00` table in RunBattleSubStep2_66F1
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wC0A0
-; writes: wC0A0, wBattleSubStep2, wBattleSubStep, wDABA
+; reads: wBattleTarget, wTemp0
+; writes: wTemp0, wBattleSubStep2, wBattleSubStep, wDABA
 ; points at: wBattleResolveStep
 RunBattleSubStep2_66F1_Case02::
 Jump_032_6718:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfWD095Indexed_Bank32
     ld a, $8A
-    ld [wC0A0], a
+    ld [wTemp0], a
     call ActorOnLocalSide_Bank32
     jr c, Jump_032_672D
     ld a, $8B
-    ld [wC0A0], a
+    ld [wTemp0], a
 
 Jump_032_672D::
-    ld a, [wC0A0]
+    ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
     xor a, a
@@ -5356,13 +5356,13 @@ Func_032_6826:: ; address name
 
 ; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
 ; 9 call sites from 9 routines (e.g. RunBattleSubStep_6662_Case01, RunDefeatSequence_Case02, RunBattleSubStep2_66F1_Case02, ResolveStep0EEffect_Case03_Case01, ...)
-; reads: wC58A, wC57F, wBattleActor
+; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank32::
 Func_032_682D:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_032_6842
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_032_6842
     ld a, [wBattleActor]
@@ -5377,13 +5377,13 @@ Jump_032_6842::
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
 ; 3 call sites from 3 routines (e.g. RunBattleSubStep2_6764_Case02, ResolveStep0EEffect_Case00, RunDefeatSequence_Case02)
-; reads: wC58A, wC57F, wBattleTarget
+; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank32::
 Func_032_6848:: ; address name
-    ld a, [wC58A]
+    ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_032_685D
-    ld a, [wC57F]
+    ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_032_685D
     ld a, [wBattleTarget]

@@ -3,14 +3,14 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
 
 ; only called from FieldModeStateDispatch_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case00)
-; reads: wC8CB, wC468, hPlayerStateFlags, wC918, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
+; reads: wC8CB, wFieldActionRequest, hPlayerStateFlags, wC918, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
 ; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Case00_Sub02::
 Func_087_4001:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
-    ld a, [wC468]
+    ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
     ldh a, [hPlayerStateFlags]
@@ -146,14 +146,14 @@ Jump_087_4096::
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
-; reads: wC8CB, wC468, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
+; reads: wC8CB, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Shared03::
 Func_087_42A0:: ; address name
     ld a, [wC8CB]
     and a, $03
     ret nz
-    ld a, [wC468]
+    ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
     ldh a, [hPlayerStateFlags]
