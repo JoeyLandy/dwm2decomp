@@ -34,7 +34,7 @@ Func_005_4010:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
-; 25 call sites from 21 routines (e.g. FailIfFoeHPBelowFourTimesWD2C1, CheckLoneFoeHPNotBelowWD2C1, AIScore_Meditate_Sub01_Sub01, HPBandOfSlotHFFC6, ...)
+; 25 call sites from 21 routines (e.g. FoeHPCheckReadsWrongSlot, CheckLoneFoeHPNotBelowWD2C1, AIScore_Meditate_Sub01_Sub01, HPBandOfSlotHFFC6, ...)
 ; points at: wBattleHP
 GetBattleHP_Bank05::
 Func_005_4015:: ; address name
@@ -6789,11 +6789,11 @@ Jump_005_6491::
     ld c, $FF
     ret
 
-; C = $00 when an occupied foe's HP is below 4 * its wD2C1 word, else $FF; the loop never advances C, so it checks the first foe slot three times (E-0125)
+; meant to give C = $00 when a foe's HP is below 4 * its wAIDamageEstimates word; it never advances C (first foe only, three times) and deref_hl leaves the estimate's low byte in A, so GetBattleHP_Bank05 reads the HP of that slot number: C = $00 when HP[estimate & $FF] < 4 * estimate, else $FF (a likely game bug; executed, test FoeHPCheckReadsWrongSlot) (E-0125, E-0154)
 ; 4 call sites from 4 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
-FailIfFoeHPBelowFourTimesWD2C1::
+FoeHPCheckReadsWrongSlot::
 Func_005_6494:: ; address name
     ld a, [wBattleActor]
     and a, $04

@@ -4212,7 +4212,7 @@ Jump_000_1812::
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
-; 864 call sites from 412 routines (e.g. LoadMapScreen_Sub02, SetWC90DTo0BOnMap19IfFlagD1, WritePlayerNameWithFlag0SuffixToWC130, PlayMapMusic_Case05, ...)
+; 864 call sites from 412 routines (e.g. LoadMapScreen_Sub02, SetFieldEventKindOnMap19IfFlagD1, WritePlayerNameWithFlag0SuffixToWC130, PlayMapMusic_Case05, ...)
 TestFlagBit::
 Func_000_181B:: ; address name
     ld b, e
@@ -5020,16 +5020,16 @@ Jump_000_1C8F::
 Jump_000_1C93::
     call SetWC195AndWC197ForSpecialMaps
     call ShiftAnimatedTilesOnMap1Or2
-    call SetWC90DTo0BOnMap19IfFlagD1
+    call SetFieldEventKindOnMap19IfFlagD1
     pop af
     ld [rROMB0], a
     ret
 
-; on map $19, if story flag $D1 is set, wC90D = $0B (the wCC37 check never returns, since the flags still hold the map comparison) (E-0122)
+; on map $19, if story flag $D1 is set, wFieldEventKind = $0B; its `ld a, [wStoryFlags + $60] / ret nz` tests the flags of the map compare, so that byte never stops it (executed with the byte $00 and $FF, test Map19StoryByteCheckNeverReturns) (E-0122, E-0154)
 ; 1 call site from 1 routine (e.g. LoadMapHeader)
 ; reads: hMapId, wStoryFlags
 ; writes: wFieldEventKind
-SetWC90DTo0BOnMap19IfFlagD1::
+SetFieldEventKindOnMap19IfFlagD1::
 Func_000_1CA1:: ; address name
     ldh a, [hMapId]
     cp a, $19
@@ -10696,7 +10696,7 @@ Jump_000_3E50::
     ret
 
 ; A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved
-; 288 call sites from 242 routines (e.g. CheckSlotStatusBlock, FailIfFoeHPBelowFourTimesWD2C1, CheckFoeStatus7Bit2, CheckLoneFoeHPNotBelowWD2C1, ...)
+; 288 call sites from 242 routines (e.g. CheckSlotStatusBlock, FoeHPCheckReadsWrongSlot, CheckFoeStatus7Bit2, CheckLoneFoeHPNotBelowWD2C1, ...)
 ; points at: wBattleSlotOut
 CarryUnlessWDA63SlotEmpty::
 Func_000_3E54:: ; address name
@@ -10731,7 +10731,7 @@ Jump_000_3E76::
     ret
 
 ; Z set when HL == BC; A is clobbered
-; 179 call sites from 117 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, FailIfFoeHPBelowFourTimesWD2C1, ...)
+; 179 call sites from 117 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, FoeHPCheckReadsWrongSlot, ...)
 CompareHLToBC::
 Func_000_3E7A:: ; address name
     ld a, h

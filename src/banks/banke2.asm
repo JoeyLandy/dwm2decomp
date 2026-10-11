@@ -67,7 +67,7 @@ Jump_0E2_406E::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_407E::
-    farcall FailIfFoeHPBelowFourTimesWD2C1
+    farcall FoeHPCheckReadsWrongSlot
     ld a, c
     and a, a
     jr nz, Jump_0E2_408E
@@ -2201,7 +2201,7 @@ Jump_0E2_4F9D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4FB0::
-    farcall FailIfFoeHPBelowFourTimesWD2C1
+    farcall FoeHPCheckReadsWrongSlot
     ld a, c
     and a, a
     jr nz, Jump_0E2_4FC0
@@ -2274,7 +2274,7 @@ Jump_0E2_5024::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_5037::
-    farcall FailIfFoeHPBelowFourTimesWD2C1
+    farcall FoeHPCheckReadsWrongSlot
     ld a, c
     and a, a
     jr nz, Jump_0E2_5067
@@ -2447,7 +2447,7 @@ Jump_0E2_513B::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_514E::
-    farcall FailIfFoeHPBelowFourTimesWD2C1
+    farcall FoeHPCheckReadsWrongSlot
     ld a, c
     and a, a
     jr nz, Jump_0E2_515E

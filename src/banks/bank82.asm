@@ -17,7 +17,7 @@ Jump_082_400F::
     call BeginStringDisplay
     ret
 
-; message bank $82: when wStringIndex < $90, CopyStringToBuffer with this bank's table Data_082_4032; otherwise far-calls Func_096_4026. The target is the BeginStringDisplay overflow entry (Func_096_4026), not the copy entry Func_096_4035, so indices >= $90 start a display instead of copying (a likely bug) (E-0080)
+; message bank $82: when wStringIndex < $90, CopyStringToBuffer with this bank's table MessageStrings_Bank82; otherwise far-calls the BeginStringDisplay overflow entry (96:4026), not the copy entry 96:4035, so strings $90 and up are not copied: the destination is left unchanged (executed, test Bank82OverflowCopyDoesNotCopy; a likely game bug) (E-0080, E-0154)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStringIndex
 CopyStringToBuffer_Bank82:: ; heuristic: follows a terminator; C0

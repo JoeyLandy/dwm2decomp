@@ -446,5 +446,65 @@ class FoeMPCheckOffset(unittest.TestCase):
         self.assertEqual(call(0x05, 0x4259, mem={0xD8A4: 0, 0xD8DF + 0x40: 50}).c, 0xFF)
 
 
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class FoeHPCheckReadsWrongSlot(unittest.TestCase):
+    """05:6494 compares 4 * the first foe's wAIDamageEstimates word with the HP of the slot named by
+    that word's low byte (deref_hl leaves it in A for GetBattleHP_Bank05), and never moves to the next
+    foe (E-0154; C2 on our emulator)."""
+
+    @staticmethod
+    def run_check(hp: dict, estimate: int) -> int:
+        mem = {0xD8A4: 0}  # actor 0: the foes are slots 4-6, all present (wBattleSlotOut 0)
+        for slot, value in hp.items():
+            mem[0xD8BF + 2 * slot], mem[0xD8C0 + 2 * slot] = value & 0xFF, value >> 8
+        for i in range(3):
+            mem[0xD2C1 + 2 * i], mem[0xD2C2 + 2 * i] = estimate, 0
+        return call(0x05, 0x6494, mem=mem).c
+
+    def test_reads_the_hp_of_slot_estimate_not_the_foe(self):
+        # estimate 1: slot 1's HP decides, although every foe's HP is below 4 * 1
+        self.assertEqual(self.run_check({1: 100, 4: 1, 5: 1, 6: 1}, 1), 0xFF)
+        self.assertEqual(self.run_check({1: 2, 4: 100, 5: 100, 6: 100}, 1), 0x00)
+
+
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class SixthOfMaxHPWithoutFloor(unittest.TestCase):
+    """32:4D2C subtracts max HP / 6 from HP with no floor, so HP below the damage wraps (E-0154)."""
+
+    def test_hp_wraps_below_zero(self):
+        gb = call(0x32, 0x4D2C, mem={0xD8A4: 0, 0xD8BF: 10, 0xD8C0: 0, 0xD8CF: 120, 0xD8D0: 0})
+        self.assertEqual(gb.rb(0xD872) | gb.rb(0xD873) << 8, 20)
+        self.assertEqual(gb.rb(0xD8BF) | gb.rb(0xD8C0) << 8, 0xFFF6)
+
+
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class Map19StoryByteCheckNeverReturns(unittest.TestCase):
+    """00:1CA1 loads wStoryFlags + $60 and then `ret nz` on the flags of the earlier map compare,
+    so the byte never stops it (E-0154)."""
+
+    def test_event_kind_is_set_whatever_the_byte(self):
+        for byte in (0x00, 0xFF):
+            mem = {0xFF90: 0x19, 0xCBD7 + 0x60: byte, 0xCBD7 + 0xD1 // 8: 0xFF, 0xC90D: 0}
+            self.assertEqual(call(0x00, 0x1CA1, mem=mem).rb(0xC90D), 0x0B, hex(byte))
+
+
+@unittest.skipUnless(ROM.is_file(), "reference ROM not present")
+class Bank82OverflowCopyDoesNotCopy(unittest.TestCase):
+    """CopyStringToBuffer_Bank82 far-calls the overflow BeginStringDisplay entry for strings $90 and
+    up, so nothing is copied, unlike bank $28's overflow copy (E-0080, E-0154)."""
+
+    @staticmethod
+    def copy(bank: int, index: int) -> bytes:
+        mem = {0xC529: index, 0xC53D: 0x00, 0xC53E: 0xCA}
+        mem.update({0xCA00 + i: 0xEE for i in range(16)})
+        gb = call(bank, 0x4016, mem=mem)
+        return bytes(gb.rb(0xCA00 + i) for i in range(16))
+
+    def test_overflow_index_leaves_the_buffer(self):
+        self.assertEqual(self.copy(0x82, 0x90), b"\xEE" * 16)
+        self.assertNotEqual(self.copy(0x82, 0x8F), b"\xEE" * 16)
+        self.assertNotEqual(self.copy(0x28, 0xDA), b"\xEE" * 16)
+
+
 if __name__ == "__main__":
     unittest.main()

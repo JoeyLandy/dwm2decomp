@@ -1345,7 +1345,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - battle helpers: a sixth of max HP lost (32:4D2C), damage times 50 when a flag is set (39:6E61), and AGL/DEF reset to base (32:5BE8);
   - 24-bit by 8-bit multiplies (19:4A74, 1C:6CAB);
   - per-bank copies of earlier names (the bracket and page indicator, skill-page names, effect-sprite setup in five banks).
-- 32:4D2C subtracts the damage from HP without a floor check; callers may guarantee HP > max HP / 6. Not tested.
+- 32:4D2C subtracts the damage from HP without a floor check; callers may guarantee HP > max HP / 6. Executed in E-0154.
 - Binary verification: pending; see the commit.
 
 ### E-0122 — Short routines that fall through or branch, and jump-table dispatchers
@@ -1357,7 +1357,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - LoadFamilyPaletteForWD09D (16:7A48, 19 callers) and its per-bank wrappers;
   - status cures (3B:4BE8-4C5A) and AI trait rolls (30:4F86-4FB6);
   - blinking-cursor helpers in many banks (cursor tile $BB, blank $C3).
-- 00:1CA1 has a check that never fires: `ld a, [wCC37]; ret nz` tests flags left by the earlier comparison. Not tested.
+- 00:1CA1 has a check that never fires: `ld a, [wCC37]; ret nz` tests flags left by the earlier comparison. Executed in E-0154.
 - Data mis-decoded as code, left unnamed: 12:55F8, 36:6A59, 36:746B, 3D:4E3D, 7A:4001, 92:5805, 92:580E, E0:55BF.
 - Binary verification: pending; see the commit.
 
@@ -1396,7 +1396,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - key generation (12:6955, 60:6916);
   - the 1bpp glyph expansion (00:30A1);
   - the boot-time RAM clear (00:08D0). It also clears SRAM banks 0 and 2; when it runs relative to the save check is not yet traced.
-- **Likely slip.** 05:6494 (FailIfFoeHPBelowFourTimesWD2C1) loops three times with `dec b` but never `inc c`, so it tests the first foe slot three times. Not tested.
+- **Likely slip.** 05:6494 (now FoeHPCheckReadsWrongSlot) loops three times with `dec b` but never `inc c`, so it tests the first foe slot three times. Executed and extended in E-0154.
 - **Data.** 3D:4E56, 3E:7615 and 92:5827 are pointer tables decoded as code; left unnamed.
 - Binary verification: build/run83 PASS, 0 differing bytes.
 
@@ -1861,6 +1861,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **What changed.** 724 `script_message` lines (and the $EA/$F5 message variants) end with a comment quoting the first six words of the message, for example `script_message $0031 ; 'Heh, so these are the newcomers?'`.
 - **Limits.** Bits 6 and 7 of the high byte (window open/close flags, E-0079) are not shown. The other ShowMessageHL path (wCC44 bit 7 set) is not used for the quotes.
 - Binary verification: build/run153 PASS, 0 differing bytes; tests OK.
+
+### E-0154 — The likely game bugs, executed
+
+- Kind: OBSERVATION (execution on tools/sm83.py against the reference ROM; C2 on our emulator, not checked on hardware). Pinned in tests/test_routine_behaviour.py.
+- **05:6494 FoeHPCheckReadsWrongSlot** (was FailIfFoeHPBelowFourTimesWD2C1).
+  - Besides never advancing C (E-0125), `deref_hl` leaves the estimate's low byte in A, so GetBattleHP_Bank05 reads the HP of the slot numbered by that byte.
+  - With estimates of 1: slot 1's HP of 100 gives C = $FF although every foe's HP is 1; slot 1's HP of 2 gives C = $00 although every foe's HP is 100.
+  - Test FoeHPCheckReadsWrongSlot.
+- **32:4D2C ActorLosesSixthOfMaxHP.** HP 10 with max HP 120 takes damage 20, and HP becomes $FFF6 (no floor). Test SixthOfMaxHPWithoutFloor.
+- **00:1CA1 SetFieldEventKindOnMap19IfFlagD1** (was SetWC90DTo0BOnMap19IfFlagD1). With wStoryFlags + $60 = $00 or $FF, wFieldEventKind still becomes $0B, so the `ret nz` never fires. Test Map19StoryByteCheckNeverReturns.
+- **82:4016 CopyStringToBuffer_Bank82 (E-0080).**
+  - For string $90 the 16-byte destination is unchanged; string $8F, and bank $28's overflow string $DA, are copied.
+  - Test Bank82OverflowCopyDoesNotCopy.
+- **Already pinned:** 05:6972 (Status4CheckReadsAddress) and 05:4259 (FoeMPCheckOffset).
+- **Limits.** Whether these change play depends on callers and on reachable game states, which are not traced. ROM bytes are unchanged; these are observations, not fixes.
+- Binary verification: build/run154 PASS, 0 differing bytes; tests OK (now 47 behaviour tests).
 
 ## Reusable investigation record
 

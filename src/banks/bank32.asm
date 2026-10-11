@@ -932,7 +932,7 @@ Jump_032_4D2A::
     scf
     ret
 
-; damage = the actor's max HP / 6 (stored in wBattleDamageLo/wD873) and is subtracted from the actor's HP without a floor check (E-0121)
+; damage = the actor's max HP / 6 (wBattleDamageLo/Hi) is subtracted from the actor's HP without a floor: HP 10 with max HP 120 becomes $FFF6 (executed, test SixthOfMaxHPWithoutFloor); whether callers keep HP above the damage is not read (E-0121, E-0154)
 ; 1 call site from 1 routine (e.g. RollStatusTickEffect)
 ; reads: wBattleActor
 ; writes: wBattleDamageLo, wBattleDamageHi
