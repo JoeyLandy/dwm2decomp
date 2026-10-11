@@ -1473,17 +1473,17 @@ Jump_000_08EC::
 
 ; fills vBGMap0 with $800 zero bytes; if wD066 is set, clears it and fills only $400 bytes with $C3 (E-0122)
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
-; reads: wD066
-; writes: wD066
+; reads: wBGFillFlag
+; writes: wBGFillFlag
 ClearBGMapOrFillWithC3::
 Func_000_0930:: ; address name
     ld hl, vBGMap0
     ld bc, $0800
-    ld a, [wD066]
+    ld a, [wBGFillFlag]
     or a, a
     jr z, Jump_000_0945
     xor a, a
-    ld [wD066], a
+    ld [wBGFillFlag], a
     ld bc, $0400
     ld a, $C3
 
@@ -1858,7 +1858,7 @@ Func_000_0B6C:: ; address name
 ; wC5E9, wC5EA, wC5EB = $D2, $D2, $E2 (the DMG palette bytes the fade routines start from), copied to wD040-wD042 as well (E-0117)
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1
-; points at: wDMGPaletteBGP, wD040
+; points at: wDMGPaletteBGP, wDMGPaletteBytes
 SetDefaultDMGPaletteBytes::
 Func_000_0B7F:: ; address name
     ld hl, wDMGPaletteBGP
@@ -1868,7 +1868,7 @@ Func_000_0B7F:: ; address name
     ld [hl+], a
     ld a, $E2
     ld [hl], a
-    ld hl, wD040
+    ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     ld [hl+], a
     ld a, [wDMGPaletteOBP0]
@@ -4418,7 +4418,7 @@ Func_000_18D6:: ; address name
 ; 4 call sites from 4 routines (e.g. Func_061_4472_Case07, Func_061_4472_Case06, Func_061_4472_Case03, Func_061_4472_Case02)
 ; reads: hTemp0, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp1, hTemp2, hTemp3
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
-; points at: wScreenTileBuffer
+; points at: wScreenTileBuffer, wScreenAttrBuffer
 LoadMapScreenFromChunk::
 Func_000_1906:: ; address name
     ld a, [BANK_NUMBER_BYTE]
@@ -4522,7 +4522,7 @@ Jump_000_1978::
     ld b, a
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
@@ -4536,7 +4536,7 @@ Jump_000_19A4::
 ; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case00, ScriptCommand77_Run_Case01, ScriptCommandED_Run_Case07_Case02)
 ; reads: wMapType, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp0, hTemp1, hTemp2, ...
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
-; points at: wScreenTileBuffer
+; points at: wScreenTileBuffer, wScreenAttrBuffer
 LoadMapScreen::
 Func_000_19A9:: ; address name
     ld a, [wMapType]
@@ -4657,7 +4657,7 @@ Jump_000_1A36::
     ld b, a
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
@@ -5277,7 +5277,7 @@ Jump_000_1E23::
 ; 16 call sites from 16 routines (e.g. InitFieldScreen, RedrawScreenBufferIfWC8CDBit7, FieldModeStateDispatch_Case02_Sub01_Sub02, GameMode5_Update_Case01_Case06_Case01, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wScreenTileBuffer
+; points at: wScreenTileBuffer, wScreenAttrBuffer
 DrawFullScreenBufferToBGMap::
 Func_000_1E29:: ; address name
     push hl
@@ -5327,7 +5327,7 @@ Jump_000_1E5B::
     ldh [rVBK], a
     ld a, $02
     ldh [rSVBK], a
-    ld de, wRecordBufferData + $12
+    ld de, wScreenAttrBuffer
     ld bc, $1412
 
 Jump_000_1E6F::

@@ -3725,11 +3725,11 @@ Jump_004_5A1D::
 
 ; entry 7 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 Func_004_58C2_Case07::
 Jump_004_5A24:: ; address name
     ld a, $04
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5B8C
@@ -4024,11 +4024,11 @@ Jump_004_5B92:: ; address name
 
 ; entry 32 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 Func_004_58C2_Case20::
 Jump_004_5B99:: ; address name
     ld a, $06
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5BAF
@@ -5489,11 +5489,11 @@ Jump_004_6347::
 
 ; entry 18 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 Func_004_612B_Case12::
 Jump_004_634E:: ; address name
     ld a, $03
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld de, $0040
@@ -7275,11 +7275,11 @@ Jump_004_6DC2::
 
 ; entry 10 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 Func_004_6A35_Case0A::
 Jump_004_6DC9:: ; address name
     ld a, $10
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_637B
@@ -8208,11 +8208,11 @@ Jump_004_73C0::
 
 ; wD7FB = $11, wDataBank = $10, then StartScriptAtHL_B04 with HL = Data_010_643E (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 StartScript643EInBank10:: ; heuristic: target of a pointer table; C0
 Func_004_73C7:: ; address name
     ld a, $11
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_643E
@@ -9419,7 +9419,7 @@ Jump_004_7B3F:: ; address name
 ; entry 1 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
-; writes: wDataBank, wD7FB
+; writes: wDataBank, wScreenTableIndex
 ; points at: wKeyWorldFloorState
 Func_004_7B29_Case01::
 Jump_004_7B46:: ; address name
@@ -9436,7 +9436,7 @@ Jump_004_7B46:: ; address name
     jr nz, Jump_004_7B6B
     pop af
     ld a, $0F
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $65A3
     call StartScriptAtHL_B04
     ret
@@ -9451,7 +9451,7 @@ Jump_004_7B6B::
     ld a, $13
 
 Jump_004_7B78::
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $65A3
     call StartScriptAtHL_B04
     ret

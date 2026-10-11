@@ -722,27 +722,27 @@ Func_012_43DA:: ; address name
 
 ; entry 21 of the `rst $00` table in ScriptCommand96_Run
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wScriptStep, wD7FF
+; points at: wScriptStep, wRecordCapacity
 ScriptCommand96_Run_Case15::
 Jump_012_4412:: ; address name
     ld a, $07
     call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
-    ld hl, wD7FF
+    ld hl, wRecordCapacity
     dec [hl]
     ret
 
 ; entry 13 of the `rst $00` table in ScriptCommand96_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FF
+; reads: wRecordCapacity
 ; writes: wScriptStep
-; points at: wD7FF, wScriptStep
+; points at: wRecordCapacity, wScriptStep
 ScriptCommand96_Run_Case0D::
 Jump_012_4420:: ; address name
-    ld hl, wD7FF
+    ld hl, wRecordCapacity
     dec [hl]
-    ld a, [wD7FF]
+    ld a, [wRecordCapacity]
     cp a, $02
     jr nz, Jump_012_4437
     ld a, $07
@@ -764,14 +764,14 @@ Jump_012_4440::
 
 ; entry 5 of the `rst $00` table in ScriptCommand96_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FF
+; reads: wRecordCapacity
 ; writes: wScriptStep
-; points at: wD7FF, wScriptStep
+; points at: wRecordCapacity, wScriptStep
 ScriptCommand96_Run_Case05::
 Jump_012_444D:: ; address name
-    ld hl, wD7FF
+    ld hl, wRecordCapacity
     dec [hl]
-    ld a, [wD7FF]
+    ld a, [wRecordCapacity]
     cp a, $02
     jr nz, Jump_012_4464
     ld a, $07
@@ -824,7 +824,7 @@ Jump_012_447A:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand96_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FC
+; reads: wAreaGraphicsIndex
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wArenaFlags
 ScriptCommand96_Run_Case00::
 Jump_012_44AF:: ; address name
@@ -840,7 +840,7 @@ Jump_012_44AF:: ; address name
     ld a, $00
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld a, [wD7FC]
+    ld a, [wAreaGraphicsIndex]
     add a, $05
     call StartMessageA
     ld a, $80
@@ -955,14 +955,14 @@ Jump_012_457B::
 
 ; entry 22 of the `rst $00` table in ScriptCommand95_Run
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wScriptStep, wD7FF
+; points at: wScriptStep, wRecordCapacity
 ScriptCommand95_Run_Case16::
 Jump_012_4587:: ; address name
     ld a, $07
     call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
-    ld hl, wD7FF
+    ld hl, wRecordCapacity
     dec [hl]
     ret
 
@@ -980,14 +980,14 @@ Jump_012_4595:: ; address name
 ; entry 14 of the `rst $00` table in ScriptCommand95_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank
-; points at: wScriptStep, wD7FF
+; points at: wScriptStep, wRecordCapacity
 ScriptCommand95_Run_Case0E::
 Jump_012_459F:: ; address name
     ld a, $05
     call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
-    ld hl, wD7FF
+    ld hl, wRecordCapacity
     dec [hl]
     ld a, [wArenaRank]
     or a, a
@@ -1184,14 +1184,14 @@ Jump_012_469E:: ; address name
 ; entry 6 of the `rst $00` table in ScriptCommand95_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank
-; points at: wScriptStep, wD7FF
+; points at: wScriptStep, wRecordCapacity
 ScriptCommand95_Run_Case06::
 Jump_012_46D8:: ; address name
     ld a, $03
     call StartMessageFromTable48B9ByWC82C
     ld hl, wScriptStep
     inc [hl]
-    ld hl, wD7FF
+    ld hl, wRecordCapacity
     dec [hl]
     ld a, [wArenaRank]
     or a, a
@@ -1208,7 +1208,7 @@ Jump_012_46F8::
 ; entry 4 of the `rst $00` table in ScriptCommand96_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleIntroKind, wBattleTransitionSubStep
-; points at: wScriptStep, wD7FF
+; points at: wScriptStep, wRecordCapacity
 ScriptCommand96_Run_Case04::
 Jump_012_4705:: ; address name
     ld hl, wFollowerRecords + $1
@@ -1228,7 +1228,7 @@ Jump_012_4705:: ; address name
     ret nc
     ld hl, wScriptStep
     inc [hl]
-    ld hl, wD7FF
+    ld hl, wRecordCapacity
     inc [hl]
     ld a, $04
     ld [wBattleIntroKind], a
@@ -1603,11 +1603,11 @@ Jump_012_499B:: ; address name
 
 ; entry 23 of the `rst $00` table in ScriptCommand8F_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7FB
+; reads: wScreenTableIndex
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, hFieldDrawFlags, wFieldTransitionKind, wSavedPositionValid
 ScriptCommand8F_Run_Case17::
 Jump_012_49C8:: ; address name
-    ld a, [wD7FB]
+    ld a, [wScreenTableIndex]
     ld hl, Data_012_4A14
     add_a_to_hl
     ld a, [hl]
@@ -1615,7 +1615,7 @@ Jump_012_49C8:: ; address name
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    ld a, [wD7FB]
+    ld a, [wScreenTableIndex]
     cp a, $01
     jr z, Jump_012_49F6
     cp a, $03
@@ -8428,7 +8428,7 @@ Jump_012_73A0::
 ; when the player stands on a trigger (Func_012_7536) and nothing blocks it, sets wC916 = $0F and far-calls DispatchTalkEvent, clearing the joypad state (E-0125)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01)
 ; reads: wTriggerEnable, wFieldStepFlags, wTriggerKind, hPlayerX, hPlayerY, wScriptRunning, wTalkEventIndex, wTalkEventGroup
-; writes: wD091, wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
+; writes: wEncounterDelay, wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 CheckStepTriggerAndDispatchTalk::
 Func_012_73A1:: ; address name
     ld a, [wTriggerEnable]
@@ -8461,7 +8461,7 @@ Func_012_73A1:: ; address name
     cp a, $1D
     jr nz, Jump_012_73DC
     ld a, $01
-    ld [wD091], a
+    ld [wEncounterDelay], a
 
 Jump_012_73DC::
     ld a, $0F

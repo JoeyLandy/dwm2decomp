@@ -5,10 +5,10 @@ SECTION "Bank F2", ROMX[$4000], BANK[$F2]
 ; 1 call site from 1 routine (e.g. RunGameModeInit_Case08)
 ; reads: wSaveStep, wTextWindowState
 ; writes: wSaveStep, wSaveRecordIndex, hScrollY, hScrollX, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
-; points at: wD780
+; points at: wScreenState
 GameMode8_Init::
 Func_0F2_4001:: ; address name
-    ld hl, wD780
+    ld hl, wScreenState
     ld bc, $006F
 
 Jump_0F2_4007::
@@ -78,13 +78,13 @@ Jump_0F2_4075::
 
 ; per-frame routine for wGameMode = 8
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case08)
-; reads: wFadeState, wD782, wTextFlags
+; reads: wFadeState, wScreenSubStep, wTextFlags
 GameMode8_Update::
 Func_0F2_40A2:: ; address name
     ld a, [wFadeState]
     and a, a
     ret nz
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     and a, a
     jr z, Jump_0F2_40B0
     call GameMode8_Update_Sub01
@@ -93,7 +93,7 @@ Jump_0F2_40B0::
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     rst $00
     dw GameMode8_Update_Case00
     dw GameMode8_Update_Case01
@@ -112,38 +112,38 @@ Jump_0F2_40B0::
 
 ; entry 0 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD782
-; writes: wD782
+; reads: wScreenSubStep
+; writes: wScreenSubStep
 GameMode8_Update_Case00::
 Jump_0F2_40D5:: ; address name
     call GameMode8_Update_Case00_Sub01
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 1 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD783, wD782
-; writes: wD783, wD782
+; reads: wScreenCounter, wScreenSubStep
+; writes: wScreenCounter, wScreenSubStep
 GameMode8_Update_Case01::
 Jump_0F2_40E0:: ; address name
-    ld a, [wD783]
+    ld a, [wScreenCounter]
     inc a
-    ld [wD783], a
+    ld [wScreenCounter], a
     cp a, $10
     ret c
     xor a, a
-    ld [wD783], a
-    ld a, [wD782]
+    ld [wScreenCounter], a
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 2 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wObject1, wD782
-; writes: wObject1, wD782
+; reads: wObject1, wScreenSubStep
+; writes: wObject1, wScreenSubStep
 GameMode8_Update_Case02::
 Jump_0F2_40F6:: ; address name
     ld a, [wObject1 + $9]
@@ -160,30 +160,30 @@ Jump_0F2_40F6:: ; address name
     ld a, [wObject1 + $D]
     set 1, a
     ld [wObject1 + $D], a
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 4 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD782
-; writes: wObject5, wD7F1, wD782
+; reads: wScreenSubStep
+; writes: wObject5, wArg1, wScreenSubStep
 GameMode8_Update_Case04::
 Jump_0F2_411C:: ; address name
     ld a, $80
     ld [wObject5], a
     ld a, $01
-    ld [wD7F1], a
-    ld a, [wD782]
+    ld [wArg1], a
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 5 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSpriteSlots, wD782
-; writes: wSpriteSlots, wD782
+; reads: wSpriteSlots, wScreenSubStep
+; writes: wSpriteSlots, wScreenSubStep
 GameMode8_Update_Case05::
 Jump_0F2_412E:: ; address name
     ld a, [wSpriteSlots + $9]
@@ -198,29 +198,29 @@ Jump_0F2_412E:: ; address name
     ld a, [wSpriteSlots + $D]
     set 1, a
     ld [wSpriteSlots + $D], a
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 8 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD782
-; writes: wObject5, wD7F1, wD782
+; reads: wScreenSubStep
+; writes: wObject5, wArg1, wScreenSubStep
 GameMode8_Update_Case08::
 Jump_0F2_414F:: ; address name
     ld a, $00
     ld [wObject5], a
-    ld [wD7F1], a
-    ld a, [wD782]
+    ld [wArg1], a
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 11 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSpriteSlots, wD782
-; writes: wSpriteSlots, wD782
+; reads: wSpriteSlots, wScreenSubStep
+; writes: wSpriteSlots, wScreenSubStep
 GameMode8_Update_Case0B::
 Jump_0F2_415F:: ; address name
     ld a, [wSpriteSlots + $D]
@@ -237,15 +237,15 @@ Jump_0F2_415F:: ; address name
     ld [wSpriteSlots + $B], a
     cp a, $E0
     ret nz
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 12 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wStringCategory
-; points at: wPlayerName, wTextBuf0, wNameGlyphBuf, wTextBuf1, wD782
+; points at: wPlayerName, wTextBuf0, wNameGlyphBuf, wTextBuf1, wScreenSubStep
 GameMode8_Update_Case0C::
 Jump_0F2_4185:: ; address name
     ld hl, wPlayerName
@@ -268,7 +268,7 @@ Jump_0F2_4185:: ; address name
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_BankF0_48A0
-    ld hl, wD782
+    ld hl, wScreenSubStep
     inc [hl]
     ret
 
@@ -358,10 +358,10 @@ Jump_0F2_4219::
 ; only called from GameMode8_Update_Case0D (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode8_Update_Case0D)
 ; writes: wLinkSceneByte4B, wGameMode, wModeState, wModeChangeRequest
-; points at: wD780
+; points at: wScreenState
 GameMode8_Update_Case0D_Sub01::
 Func_0F2_4227:: ; address name
-    ld hl, wD780
+    ld hl, wScreenState
     ld bc, $006F
 
 Jump_0F2_422D::
@@ -524,7 +524,7 @@ Func_0F2_434E:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
-; points at: wScreenTileBuffer
+; points at: wScreenTileBuffer, wScreenAttrBuffer
 DrawScreenBufferRectToBGMap_1B_BankF2::
 Func_0F2_436F:: ; address name
     push de
@@ -568,7 +568,7 @@ Func_0F2_436F:: ; address name
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     add hl, de
     ld a, l
     ld e, a
@@ -1068,8 +1068,8 @@ Func_0F2_4AFE:: ; address name
 
 ; writes the EXP wCA83-wCA85 as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
-; reads: wRecordBufB, hTemp0, wD00F, hTemp1, hTemp2
-; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wD7F1, wD7F2, ...
+; reads: wRecordBufB, hTemp0, wSpeciesRecord, hTemp1, hTemp2
+; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wArg1, wArg2, ...
 ; points at: hTemp2
 DrawWCA83ExpAndToNextLevel::
 Func_0F2_4B05:: ; address name
@@ -1102,7 +1102,7 @@ Func_0F2_4B05:: ; address name
     ld a, [wRecordBufB + $C]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD00F]
+    ld a, [wSpeciesRecord + $7]
     ldh [hTemp0], a
     pop bc
     ld a, b
@@ -1161,14 +1161,14 @@ Jump_0F2_4BA8::
 
 Jump_0F2_4BB6::
     ld a, $E3
-    ld [wD7F1], a
-    ld [wD7F2], a
-    ld [wD7F3], a
-    ld [wD7F4], a
-    ld [wD7F5], a
-    ld [wD7F6], a
+    ld [wArg1], a
+    ld [wArg2], a
+    ld [wArg3], a
+    ld [wArg4], a
+    ld [wArg5], a
+    ld [wArg6], a
     xor a, a
-    ld [wD7F7], a
+    ld [wArg7], a
     jr Jump_0F2_4BA8
 
 ; shows string wCACF of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
@@ -1198,7 +1198,7 @@ Func_0F2_4BD0:: ; address name
 
 ; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1A, RunWD780StateWhenNotFading_F1_Case0D_Case1A)
-; reads: wRecordBufB, wD013
+; reads: wRecordBufB, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowSpeciesCategory13StringAtTiles2680::
 Func_0F2_4BFC:: ; address name
@@ -1207,7 +1207,7 @@ Func_0F2_4BFC:: ; address name
     ld a, [wRecordBufB + $C]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD013]
+    ld a, [wSpeciesRecord + $B]
     ld [wStringIndex], a
     ld a, $0D
     ld [wStringCategory], a
@@ -1235,7 +1235,7 @@ Func_0F2_4C36:: ; address name
 ; only called from RunF24C3DAnd4D72 (E-0047)
 ; 1 call site from 1 routine (e.g. RunF24C3DAnd4D72)
 ; reads: wRecordBufB, hTemp1
-; writes: wNameGlyphBuf, wD7F1, wD7F2, wD7F3
+; writes: wNameGlyphBuf, wArg1, wArg2, wArg3
 ; points at: wRecordBufB
 RunF24C3DAnd4D72_Sub01::
 Func_0F2_4C3D:: ; address name
@@ -1290,13 +1290,13 @@ Jump_0F2_4C7E::
     call CopyGlyphTilesToVRAM
     pop de
     ld a, $92
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, $50
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, [de]
     inc de
     push de
-    ld [wD7F3], a
+    ld [wArg3], a
     call ShowWCA2BEntryStringAtWD7F1
     pop de
 
@@ -1350,13 +1350,13 @@ Jump_0F2_4CEE::
     call CopyGlyphTilesToVRAM
     pop de
     ld a, $93
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, $90
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, [de]
     inc de
     push de
-    ld [wD7F3], a
+    ld [wArg3], a
     call ShowWCA2BEntryStringAtWD7F1
     pop de
 
@@ -1371,12 +1371,12 @@ Jump_0F2_4D18::
 
 ; shows string wCA2B[wD7F3] of category wCA2C[wD7F3] + 2 at the address in wD7F1/2 with size $0109 (E-0121)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub01)
-; reads: wD7F3, wD7F1, wD7F2
+; reads: wArg3, wArg1, wArg2
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wRecordBufB
 ShowWCA2BEntryStringAtWD7F1::
 Func_0F2_4D2B:: ; address name
-    ld a, [wD7F3]
+    ld a, [wArg3]
     ld hl, wRecordBufB
     add_a_to_hl
     ld a, [hl+]
@@ -1384,9 +1384,9 @@ Func_0F2_4D2B:: ; address name
     ld a, [hl]
     add a, $02
     ld [wStringCategory], a
-    ld a, [wD7F1]
+    ld a, [wArg1]
     ld h, a
-    ld a, [wD7F2]
+    ld a, [wArg2]
     ld l, a
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1409,7 +1409,7 @@ Data_0F2_4D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from RunF24C3DAnd4D72 (E-0047)
 ; 1 call site from 1 routine (e.g. RunF24C3DAnd4D72)
 ; reads: wRecordBufB, hTemp1
-; writes: wD7F1, wD7F5, wD7F2, wD7F3, wD7F4
+; writes: wArg1, wArg5, wArg2, wArg3, wArg4
 RunF24C3DAnd4D72_Sub02::
 Func_0F2_4D72:: ; address name
     ld a, [wRecordBufB + $D]
@@ -1443,18 +1443,18 @@ Jump_0F2_4D82::
 Jump_0F2_4D9E::
     inc de
     ld a, [de]
-    ld [wD7F1], a
+    ld [wArg1], a
     inc de
     ld a, [de]
     dec de
     push de
-    ld [wD7F5], a
+    ld [wArg5], a
     xor a, a
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, $6A
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $6C
-    ld [wD7F4], a
+    ld [wArg4], a
     call DrawSpeciesIconForWCA2BEntry
     pop de
     call PickNameBufferForFirstByte_BankF2
@@ -1493,18 +1493,18 @@ Jump_0F2_4DD4::
 Jump_0F2_4DF0::
     inc de
     ld a, [de]
-    ld [wD7F1], a
+    ld [wArg1], a
     inc de
     ld a, [de]
     dec de
     push de
-    ld [wD7F5], a
+    ld [wArg5], a
     ld a, $01
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, $8A
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $6D
-    ld [wD7F4], a
+    ld [wArg4], a
     call DrawSpeciesIconForWCA2BEntry
     pop de
     call PickNameBufferForFirstByte_BankF2
@@ -1590,10 +1590,10 @@ Jump_0F2_4E5F::
 
 ; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. DrawWCA83ExpAndToNextLevel)
-; points at: wD7F1
+; points at: wArg1
 DrawSevenDigitsFromWD7F1_BankF2::
 Func_0F2_4E63:: ; address name
-    ld de, wD7F1
+    ld de, wArg1
     ld c, $07
 
 Jump_0F2_4E68::
@@ -1611,8 +1611,8 @@ Jump_0F2_4E68::
 ; for the three species words of wCA2B (offsets Data_0F2_4F41 or 4F44 by bit 4 of wCA38) decompresses their graphics to the targets in Data_0F2_4ED4 (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1E, RunWD780StateWhenNotFading_F1_Case0D_Case1E)
 ; reads: wRecordBufB, hTemp0, hTemp1
-; writes: hTemp0, hTemp1, wD7F1, wD7F2
-; points at: wRecordBufB, wD7F3
+; writes: hTemp0, hTemp1, wArg1, wArg2
+; points at: wRecordBufB, wArg3
 DecompressWCA2BSpeciesGraphics::
 Func_0F2_4E76:: ; address name
     ld c, $00
@@ -1650,9 +1650,9 @@ Jump_0F2_4E90::
     pop bc
     push bc
     ldh a, [hTemp0]
-    ld [wD7F1], a
+    ld [wArg1], a
     ldh a, [hTemp1]
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, c
     ld b, a
     add a, a
@@ -1664,7 +1664,7 @@ Jump_0F2_4E90::
     inc d
 
 Jump_0F2_4EBB::
-    ld hl, wD7F3
+    ld hl, wArg3
     ld c, $03
 
 Jump_0F2_4EC0::
@@ -1689,8 +1689,8 @@ Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; for the three species words of wCA2B draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
 ; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wRecordBufB, hTemp1, hTemp0
-; writes: hTemp0, wD7F1, wD7F2
-; points at: wD7F3
+; writes: hTemp0, wArg1, wArg2
+; points at: wArg3
 DrawWCA2BSpeciesSprites::
 Func_0F2_4EDD:: ; address name
     ld c, $00
@@ -1725,9 +1725,9 @@ Jump_0F2_4EF9::
     pop bc
     push bc
     ldh a, [hTemp0]
-    ld [wD7F1], a
+    ld [wArg1], a
     ldh a, [hTemp1]
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, c
     add a, a
     add a, a
@@ -1738,7 +1738,7 @@ Jump_0F2_4EF9::
     inc d
 
 Jump_0F2_4F1A::
-    ld hl, wD7F3
+    ld hl, wArg3
     ld c, $04
 
 Jump_0F2_4F1F::
@@ -2043,14 +2043,14 @@ Func_0F2_50A4:: ; address name
 
 ; hFFC6/7 = the word wCA2B[wD7F5], far-calls DrawSpeciesAndFamilyIconForHFFC6 and continues at Jump_0F2_50F8 (E-0126)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub02)
-; reads: wD7F5, wD7F1, wD7F2, wD7F3, wDigits
+; reads: wArg5, wArg1, wArg2, wArg3, wDigits
 ; writes: hTemp0, hTemp1
 ; points at: wRecordBufB
 DrawSpeciesIconForWCA2BEntry::
 Func_0F2_50C6:: ; address name
     push bc
     ld hl, wRecordBufB
-    ld a, [wD7F5]
+    ld a, [wArg5]
     add_a_to_hl
     ld a, [hl+]
     ldh [hTemp0], a
@@ -2062,22 +2062,22 @@ Func_0F2_50C6:: ; address name
 
 ; loads the family icon of wCA38 & $0F into tile wD7F4; the next entry draws tile $1E and the count wCA2B[wD7F1] at the scroll offset wD7F2/3 (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
-; reads: wRecordBufB, wD7F4, wD7F1, wD7F2, wD7F3, wDigits
-; writes: wD09D, wD09E
+; reads: wRecordBufB, wArg4, wArg1, wArg2, wArg3, wDigits
+; writes: wWorkBuf
 ; points at: wRecordBufB
 DrawFamilyIconAndCountForWCA38::
 Func_0F2_50E2:: ; address name
     push bc
     ld a, [wRecordBufB + $D]
     and a, $0F
-    ld [wD09D], a
-    ld a, [wD7F4]
-    ld [wD09E], a
+    ld [wWorkBuf], a
+    ld a, [wArg4]
+    ld [wWorkBuf + $1], a
     farcall LoadFamilyIconTileForWD09D
     pop bc
 
 Jump_0F2_50F8::
-    ld a, [wD7F1]
+    ld a, [wArg1]
     ld hl, wRecordBufB
     add_a_to_hl
     ld a, [hl]
@@ -2088,9 +2088,9 @@ Jump_0F2_50F8::
 Jump_0F2_5108::
     push af
     call BGMapAddressAtScroll_BankF2_514D
-    ld a, [wD7F2]
+    ld a, [wArg2]
     ld d, a
-    ld a, [wD7F3]
+    ld a, [wArg3]
     ld e, a
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -2173,14 +2173,14 @@ Jump_0F2_5172::
 
 ; only called from ScriptCommandF6_Run_Case10_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case04)
-; reads: wD7F1, wD7F2, wD7F3
-; writes: wD7F5, wD7F6, wD7F7
-; points at: wD7F1, wD7F5
+; reads: wArg1, wArg2, wArg3
+; writes: wArg5, wArg6, wArg7
+; points at: wArg1, wArg5
 ScriptCommandF6_Run_Case10_Case04_Sub01::
 Func_0F2_5181:: ; address name
-    ld a, [wD7F1]
+    ld a, [wArg1]
     ld c, a
-    ld a, [wD7F2]
+    ld a, [wArg2]
     ld b, a
     ld a, $03
     call Multiply8By16
@@ -2191,7 +2191,7 @@ Func_0F2_5181:: ; address name
 
 Jump_0F2_5196::
     ld a, [hl+]
-    ld de, wD7F1
+    ld de, wArg1
     add a, e
     ld e, a
     jr nc, Jump_0F2_519F
@@ -2200,7 +2200,7 @@ Jump_0F2_5196::
 Jump_0F2_519F::
     push hl
     ld a, b
-    ld hl, wD7F5
+    ld hl, wArg5
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -2208,12 +2208,12 @@ Jump_0F2_519F::
     inc b
     dec c
     jr nz, Jump_0F2_5196
-    ld a, [wD7F1]
-    ld [wD7F5], a
-    ld a, [wD7F2]
-    ld [wD7F6], a
-    ld a, [wD7F3]
-    ld [wD7F7], a
+    ld a, [wArg1]
+    ld [wArg5], a
+    ld a, [wArg2]
+    ld [wArg6], a
+    ld a, [wArg3]
+    ld [wArg7], a
     ret
 
 Data_0F2_51C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -2425,21 +2425,21 @@ Func_0F2_6333:: ; address name
 
 ; only called from ScriptCommandF2_Run_Case03_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05)
-; writes: wD781
+; writes: wScreenStep
 ScriptCommandF2_Run_Case03_Case05_Sub01::
 Func_0F2_633B:: ; address name
     call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01
     call CopyWD09EToKeyList
     xor a, a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; copies $C0 bytes from wD09E to wKeyList (E-0122)
 ; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01)
-; points at: wD09E, wKeyList
+; points at: wKeyList
 CopyWD09EToKeyList::
 Func_0F2_6346:: ; address name
-    ld hl, wD09E
+    ld hl, wWorkBuf + $1
     ld de, wKeyList
     ld c, $C0
 
@@ -2453,12 +2453,12 @@ Jump_0F2_634E::
 
 ; only called from ScriptCommandF2_Run_Case03_Case05_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01)
-; reads: wD09D
-; writes: wD15E, wD09D
-; points at: wD09E, wKeyList
+; reads: wWorkBuf
+; writes: wKeyGenCount, wWorkBuf
+; points at: wKeyList
 ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01::
 Func_0F2_6355:: ; address name
-    ld hl, wD09E
+    ld hl, wWorkBuf + $1
     ld c, $C0
 
 Jump_0F2_635A::
@@ -2467,14 +2467,14 @@ Jump_0F2_635A::
     dec c
     jr nz, Jump_0F2_635A
     xor a, a
-    ld [wD15E], a
-    ld a, [wD09D]
+    ld [wKeyGenCount], a
+    ld a, [wWorkBuf]
     and a, a
     jr nz, Jump_0F2_637F
     ld a, $01
-    ld [wD09D], a
+    ld [wWorkBuf], a
     ld hl, wKeyList
-    ld de, wD09E
+    ld de, wWorkBuf + $1
     call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02
     ld hl, wKeyList
     call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01
@@ -2482,9 +2482,9 @@ Jump_0F2_635A::
 
 Jump_0F2_637F::
     xor a, a
-    ld [wD09D], a
+    ld [wWorkBuf], a
     ld hl, wKeyList
-    ld de, wD09E
+    ld de, wWorkBuf + $1
     call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01
     ld hl, wKeyList
     call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02
@@ -2492,9 +2492,9 @@ Jump_0F2_637F::
 
 ; only called from ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01)
-; reads: wD15E
-; writes: wD15E
-; points at: wKeySeeds, wD11E
+; reads: wKeyGenCount
+; writes: wKeyGenCount
+; points at: wKeySeeds, wKeyGenList
 ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01::
 Func_0F2_6393:: ; address name
     ld b, $00
@@ -2539,9 +2539,9 @@ Jump_0F2_63B0::
     add a, a
     ld hl, wKeySeeds
     add_a_to_hl
-    ld a, [wD15E]
+    ld a, [wKeyGenCount]
     add a, a
-    ld de, wD11E
+    ld de, wKeyGenList
     add a, e
     ld e, a
     jr nc, Jump_0F2_63D5
@@ -2553,9 +2553,9 @@ Jump_0F2_63D5::
     inc de
     ld a, [hl]
     ld [de], a
-    ld a, [wD15E]
+    ld a, [wKeyGenCount]
     inc a
-    ld [wD15E], a
+    ld [wKeyGenCount], a
     pop de
 
 Jump_0F2_63E2::
@@ -2571,9 +2571,9 @@ Jump_0F2_63E3::
 
 ; only called from ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01)
-; reads: wD15E
-; writes: wD15E
-; points at: wKeySeeds, wD11E
+; reads: wKeyGenCount
+; writes: wKeyGenCount
+; points at: wKeySeeds, wKeyGenList
 ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02::
 Func_0F2_63EF:: ; address name
     ld b, $00
@@ -2615,9 +2615,9 @@ Jump_0F2_63F3::
     add a, a
     ld hl, wKeySeeds
     add_a_to_hl
-    ld a, [wD15E]
+    ld a, [wKeyGenCount]
     add a, a
-    ld de, wD11E
+    ld de, wKeyGenList
     add a, e
     ld e, a
     jr nc, Jump_0F2_642F
@@ -2629,9 +2629,9 @@ Jump_0F2_642F::
     inc de
     ld a, [hl]
     ld [de], a
-    ld a, [wD15E]
+    ld a, [wKeyGenCount]
     inc a
-    ld [wD15E], a
+    ld [wKeyGenCount], a
     pop de
 
 Jump_0F2_643C::
@@ -2645,12 +2645,12 @@ Jump_0F2_643C::
 
 ; in state 3 continues at Jump_0F2_6470; otherwise runs Func_0F2_64C7 (E-0126)
 ; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, ScriptCommandE5_Run_Case03_Case0B_Sub01, ScriptCommandE5_Run_Case03_Case0E_Sub02)
-; reads: wD780, wCounterPtr0Lo
+; reads: wScreenState, wCounterPtr0Lo
 ; writes: wCounterPtr0Lo
-; points at: wD09D, wInventory, wD7D5
+; points at: wWorkBuf, wInventory, wItemGrid
 Run64C7UnlessWD780Is3::
 Func_0F2_6449:: ; address name
-    ld a, [wD780]
+    ld a, [wScreenState]
     cp a, $03
     jr z, Jump_0F2_6470
     call Run64C7UnlessWD780Is3_Sub01
@@ -2659,10 +2659,10 @@ Func_0F2_6449:: ; address name
 ; only called from ScriptCommandE5_Run_Case03_Case0E (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E)
 ; reads: wCounterPtr0Lo
-; points at: wD09D
+; points at: wWorkBuf
 ScriptCommandE5_Run_Case03_Case0E_Sub03::
 Func_0F2_6454:: ; address name
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld b, $18
 
 Jump_0F2_6459::
@@ -2684,7 +2684,7 @@ Jump_0F2_646C::
     ret
 
 Jump_0F2_6470::
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld b, $18
 
 Jump_0F2_6475::
@@ -2708,7 +2708,7 @@ Jump_0F2_648B::
 
 ; only called from ScriptCommandE5_Run_Case03_Case0E_Sub03 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E_Sub03)
-; points at: wInventory, wD09D, wD7D5
+; points at: wInventory, wWorkBuf, wItemGrid
 ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01::
 Func_0F2_648E:: ; address name
     ld b, $00
@@ -2739,7 +2739,7 @@ Jump_0F2_64A8::
     ld e, b
     ld d, $00
     push hl
-    ld hl, wD09D
+    ld hl, wWorkBuf
     add hl, de
     ld e, l
     ld d, h
@@ -2750,8 +2750,8 @@ Jump_0F2_64A8::
     jr Jump_0F2_64A4
 
 Jump_0F2_64B8::
-    ld hl, wD09D
-    ld de, wD7D5
+    ld hl, wWorkBuf
+    ld de, wItemGrid
     ld b, $18
 
 Jump_0F2_64C0::
@@ -2766,10 +2766,10 @@ Jump_0F2_64C0::
 ; 1 call site from 1 routine (e.g. Run64C7UnlessWD780Is3)
 ; reads: wCounterPtr0Lo
 ; writes: wCounterPtr0Lo
-; points at: wD09D, wItemStorage
+; points at: wWorkBuf, wItemStorage
 Run64C7UnlessWD780Is3_Sub01::
 Func_0F2_64C7:: ; address name
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld b, $C8
 
 Jump_0F2_64CC::
@@ -2821,7 +2821,7 @@ Jump_0F2_6500::
     sla e
     rl d
     push hl
-    ld hl, wD09D
+    ld hl, wWorkBuf
     add hl, de
     ld e, l
     ld d, h
@@ -2835,7 +2835,7 @@ Jump_0F2_6500::
     jr Jump_0F2_64FC
 
 Jump_0F2_6517::
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld de, wItemStorage
     ld b, $C8
 
@@ -2983,10 +2983,10 @@ Jump_0F2_668F::
 
 ; only called from DispatchTalkEvent_Case01_Case65 (E-0047)
 ; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_Case65)
-; points at: wD580
+; points at: wArenaEntry
 DispatchTalkEvent_Case01_Case65_Sub01::
 Func_0F2_6692:: ; address name
-    ld hl, wD580
+    ld hl, wArenaEntry
     ld bc, $020F
 
 Jump_0F2_6698::

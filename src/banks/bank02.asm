@@ -565,37 +565,37 @@ Data_002_4322:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from RunWC46BMenuState_Case04 (E-0047)
 ; 2 call sites from 1 routine (e.g. RunWC46BMenuState_Case04)
 ; reads: wIsCGB, wDMGPaletteBGP, wDMGPaletteOBP0
-; writes: wD040, wD041
-; points at: wD040, wD041
+; writes: wDMGPaletteBytes
+; points at: wDMGPaletteBytes
 RunWC46BMenuState_Case04_Sub01::
 Func_002_432A:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
     call RunWD780StepEveryOtherFrame
-    ld hl, wD040
+    ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp a, [hl]
     jp z, Jump_002_4519
     ld a, [wDMGPaletteBGP]
-    ld [wD040], a
+    ld [wDMGPaletteBytes], a
     jp Jump_002_4519
 
 ; wD781 += 1; on odd values, unless wD780 is $FF, runs the step for wD780 (jump table) (E-0122)
 ; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case04_Sub01)
-; reads: wD781, wD780
-; writes: wD781
+; reads: wScreenStep, wScreenState
+; writes: wScreenStep
 RunWD780StepEveryOtherFrame::
 Func_002_4345:: ; address name
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     bit 0, a
     jr nz, Jump_002_4351
     ret
 
 Jump_002_4351::
-    ld a, [wD780]
+    ld a, [wScreenState]
     cp a, $FF
     ret z
     rst $00
@@ -606,13 +606,13 @@ Jump_002_4351::
 
 ; entry 0 of the `rst $00` table in RunWD780StepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD783, rSTAT, wD780
-; writes: wD780
-; points at: wD09D
+; reads: wScreenCounter, rSTAT, wScreenState
+; writes: wScreenState
+; points at: wWorkBuf
 RunWD780StepEveryOtherFrame_Case00::
 Jump_002_4360:: ; address name
-    ld hl, wD09D
-    ld a, [wD783]
+    ld hl, wWorkBuf
+    ld a, [wScreenCounter]
     swap a
     ld d, a
     and a, $F0
@@ -632,8 +632,8 @@ Jump_002_4360:: ; address name
 
 ; only called from RunWD780StepEveryOtherFrame_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWD780StepEveryOtherFrame_Case03)
-; reads: rSTAT, wD780
-; writes: wD780
+; reads: rSTAT, wScreenState
+; writes: wScreenState
 RunWD780StepEveryOtherFrame_Case03_Sub01::
 Func_002_4380:: ; address name
     di
@@ -710,20 +710,19 @@ Jump_002_43C7::
     ld a, [hl+]
     ld [de], a
     ei
-    ld a, [wD780]
+    ld a, [wScreenState]
     inc a
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; entry 1 of the `rst $00` table in RunWD780StepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD783, rSTAT, wD780
-; writes: wD780
-; points at: wD0AD
+; reads: wScreenCounter, rSTAT, wScreenState
+; writes: wScreenState
 RunWD780StepEveryOtherFrame_Case01::
 Jump_002_43DA:: ; address name
-    ld hl, wD0AD
-    ld a, [wD783]
+    ld hl, wWorkBuf + $10
+    ld a, [wScreenCounter]
     swap a
     ld d, a
     and a, $F0
@@ -744,13 +743,12 @@ Jump_002_43DA:: ; address name
 
 ; entry 2 of the `rst $00` table in RunWD780StepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD783, rSTAT, wD780
-; writes: wD780
-; points at: wD0BD
+; reads: wScreenCounter, rSTAT, wScreenState
+; writes: wScreenState
 RunWD780StepEveryOtherFrame_Case02::
 Jump_002_43FD:: ; address name
-    ld hl, wD0BD
-    ld a, [wD783]
+    ld hl, wWorkBuf + $20
+    ld a, [wScreenCounter]
     swap a
     ld d, a
     and a, $F0
@@ -771,13 +769,12 @@ Jump_002_43FD:: ; address name
 
 ; entry 3 of the `rst $00` table in RunWD780StepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD783
-; writes: wD783, wD782, wD780
-; points at: wD0CD
+; reads: wScreenCounter
+; writes: wScreenCounter, wScreenSubStep, wScreenState
 RunWD780StepEveryOtherFrame_Case03::
 Jump_002_4420:: ; address name
-    ld hl, wD0CD
-    ld a, [wD783]
+    ld hl, wWorkBuf + $30
+    ld a, [wScreenCounter]
     swap a
     ld d, a
     and a, $F0
@@ -795,33 +792,33 @@ Jump_002_4420:: ; address name
     ld [de], a
     inc de
     call RunWD780StepEveryOtherFrame_Case03_Sub01
-    ld a, [wD783]
+    ld a, [wScreenCounter]
     inc a
-    ld [wD783], a
+    ld [wScreenCounter], a
     cp a, $08
     jr c, Jump_002_445B
     xor a, a
-    ld [wD782], a
-    ld [wD783], a
+    ld [wScreenSubStep], a
+    ld [wScreenCounter], a
     ld a, $FF
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 Jump_002_445B::
     xor a, a
-    ld [wD782], a
-    ld [wD780], a
+    ld [wScreenSubStep], a
+    ld [wScreenState], a
     ret
 
 ; only called from RunWC46BMenuState_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case01)
-; reads: wD783
-; writes: wD783
-; points at: wBGPaletteBuffer, wD09D
+; reads: wScreenCounter
+; writes: wScreenCounter
+; points at: wBGPaletteBuffer, wWorkBuf
 RunWC46BMenuState_Case01_Sub01::
 Func_002_4463:: ; address name
     ld hl, wBGPaletteBuffer
-    ld de, wD09D
+    ld de, wWorkBuf
     ld c, $04
 
 Jump_002_446B::
@@ -845,20 +842,20 @@ Jump_002_447B::
     jr nz, Jump_002_446B
     ld c, $04
     ld hl, wBGPaletteBuffer
-    ld a, [wD783]
+    ld a, [wScreenCounter]
     inc a
-    ld [wD783], a
+    ld [wScreenCounter], a
     cp a, $08
     jr c, Jump_002_446B
     xor a, a
-    ld [wD783], a
+    ld [wScreenCounter], a
     ret
 
 ; only called from RunWC46BMenuState_Case01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case01_Sub01)
-; reads: wD783, wD7C4, wD7C5, wD7C6, wD782
-; writes: wD7C4, wD7C5, wD7C6, wD782
-; points at: wD7C4
+; reads: wScreenCounter, wTextCounter2, wTextCounter3, wTextCounter4, wScreenSubStep
+; writes: wTextCounter2, wTextCounter3, wTextCounter4, wScreenSubStep
+; points at: wTextCounter2
 RunWC46BMenuState_Case01_Sub01_Sub01::
 Func_002_449A:: ; address name
     ld c, [hl]
@@ -868,7 +865,7 @@ Func_002_449A:: ; address name
     ld a, b
     srl a
     srl a
-    ld [wD7C4], a
+    ld [wTextCounter2], a
     push bc
     sla c
     rl b
@@ -878,17 +875,17 @@ Func_002_449A:: ; address name
     rl b
     ld a, b
     and a, $1F
-    ld [wD7C5], a
+    ld [wTextCounter3], a
     pop bc
     ld a, c
     and a, $1F
-    ld [wD7C6], a
+    ld [wTextCounter4], a
     push hl
     ld hl, Data_002_4510
-    ld a, [wD783]
+    ld a, [wScreenCounter]
     add_a_to_hl
     ld b, [hl]
-    ld hl, wD7C4
+    ld hl, wTextCounter2
     ld c, $03
 
 Jump_002_44D2::
@@ -903,9 +900,9 @@ Jump_002_44DA::
     dec c
     jr nz, Jump_002_44D2
     pop hl
-    ld a, [wD7C4]
+    ld a, [wTextCounter2]
     ld b, a
-    ld a, [wD7C5]
+    ld a, [wTextCounter3]
     sla a
     sla a
     sla a
@@ -914,7 +911,7 @@ Jump_002_44DA::
     rl b
     sla c
     rl b
-    ld a, [wD7C6]
+    ld a, [wTextCounter4]
     or a, c
     ld c, a
     ld a, c
@@ -923,25 +920,25 @@ Jump_002_44DA::
     ld a, b
     ld [de], a
     inc de
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     cp a, $08
     jr c, RunWC46BMenuState_Case01_Sub01_Sub01
     xor a, a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 Data_002_4510:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $08, $0C, $10, $14, $18, $1C, $20, $24
 
 Jump_002_4519::
-    ld hl, wD041
+    ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
     cp a, [hl]
     jp z, Jump_002_45C1
     ld a, [wDMGPaletteOBP0]
-    ld [wD041], a
+    ld [wDMGPaletteBytes + $1], a
     jp Jump_002_45C1
 
 ; writes four colours of the palette at HL to rOBPD, each chosen by a 2-bit shade of wC5EA through Data_002_45C2; HL += 8 (E-0129)
@@ -1299,14 +1296,14 @@ Jump_002_4792::
 
 ; entry 2 of the `rst $00` table in RunWC8C7Phase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleKind, wD092, wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wMapType, hPlayerStateFlags, ...
+; reads: wBattleKind, wBattleScene, wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wMapType, hPlayerStateFlags, ...
 ; writes: wFieldReturnPhase, wMenuState, wMenuSubState, wModeState, hMapId, hMapScreenX, hMapScreenY, hPlayerFacing, ...
 RunWC8C7Phase_Case02::
 Jump_002_4798:: ; address name
     ld a, [wBattleKind]
     cp a, $05
     jp z, Jump_002_48AE
-    ld a, [wD092]
+    ld a, [wBattleScene]
     or a, a
     jr z, RunWC8C7Phase_Case00
     cp a, $03
@@ -1755,7 +1752,7 @@ Data_002_4AD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case01)
 ; reads: wFieldInitStage, wModeState, wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1, wSGBActive
 ; writes: wJoypadHeld, wJoypadHeldPrev, wJoypadPressed, wJoypadPressedRepeat, wJoypadRepeatTimer, wFieldFrameFlag, wFieldInitStage
-; points at: wDMGPaletteBGP, wD040, wOBJPaletteBuffer
+; points at: wDMGPaletteBGP, wDMGPaletteBytes, wOBJPaletteBuffer
 GameMode1_Update::
 Func_002_4AD8:: ; address name
     ld a, [wFieldInitStage]
@@ -3081,9 +3078,9 @@ Jump_002_5321::
 
 ; only called from RunFieldEventWC90D_Case08_Sub01 (E-0047)
 ; 3 call sites from 1 routine (e.g. RunFieldEventWC90D_Case08_Sub01)
-; reads: hTemp0, wMenuSubState, wD7C4, wD7C5, wD7C6
-; writes: wD7C4, wD7C5, wD7C6
-; points at: wD7C4
+; reads: hTemp0, wMenuSubState, wTextCounter2, wTextCounter3, wTextCounter4
+; writes: wTextCounter2, wTextCounter3, wTextCounter4
+; points at: wTextCounter2
 RunFieldEventWC90D_Case08_Sub01_Sub01::
 Func_002_534A:: ; address name
     ld a, [hl]
@@ -3096,7 +3093,7 @@ Func_002_534A:: ; address name
     ld a, b
     srl a
     srl a
-    ld [wD7C4], a
+    ld [wTextCounter2], a
     pop bc
     push bc
     sla c
@@ -3107,11 +3104,11 @@ Func_002_534A:: ; address name
     rl b
     ld a, b
     and a, $1F
-    ld [wD7C5], a
+    ld [wTextCounter3], a
     pop bc
     ld a, c
     and a, $1F
-    ld [wD7C6], a
+    ld [wTextCounter4], a
     push hl
     ld hl, Data_002_53C5
     ldh a, [hTemp0]
@@ -3128,7 +3125,7 @@ Func_002_534A:: ; address name
 Jump_002_538D::
     ld a, [hl]
     ld b, a
-    ld hl, wD7C4
+    ld hl, wTextCounter2
     ld c, $00
 
 Jump_002_5394::
@@ -3145,9 +3142,9 @@ Jump_002_539B::
     cp a, $03
     jr c, Jump_002_5394
     pop hl
-    ld a, [wD7C4]
+    ld a, [wTextCounter2]
     ld b, a
-    ld a, [wD7C5]
+    ld a, [wTextCounter3]
     sla a
     sla a
     sla a
@@ -3156,7 +3153,7 @@ Jump_002_539B::
     rl b
     sla c
     rl b
-    ld a, [wD7C6]
+    ld a, [wTextCounter4]
     or a, c
     ld c, a
     ld a, c
@@ -4913,7 +4910,7 @@ Jump_002_5EE9::
 ; 22 call sites from 20 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wScreenSavedFlag
-; points at: wScreenTileBuffer, wD2D0
+; points at: wScreenTileBuffer, wScreenAttrBuffer, wSavedScreenAttrs
 SaveScreenBufferToBGMap1::
 Func_002_5EEE:: ; address name
     ld de, wScreenTileBuffer
@@ -4933,8 +4930,8 @@ Jump_002_5EF7::
     jr z, Jump_002_5F1B
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wRecordBufferData + $12
-    ld de, wD2D0
+    ld hl, wScreenAttrBuffer
+    ld de, wSavedScreenAttrs
     ld bc, $0168
     call CopyBytes
     ld a, $00
@@ -4949,7 +4946,7 @@ Jump_002_5F1B::
 ; 7 call sites from 7 routines (e.g. InitFieldScreen, ScriptCommand82_Run_Case0A_Case08, ScriptCommand2A_Run_Case0F, ScriptCommand2A_Run_Case0D, ...)
 ; reads: wIsCGB, wScreenSavedFlag
 ; writes: rSVBK, wSpriteSlotCount
-; points at: wScreenTileBuffer, wD2D0
+; points at: wScreenTileBuffer, wSavedScreenAttrs, wScreenAttrBuffer
 RestoreScreenBufferFromBGMap1::
 Func_002_5F22:: ; address name
     ld hl, vBGMap1
@@ -4972,8 +4969,8 @@ Jump_002_5F2B::
     jr z, Jump_002_5F52
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wD2D0
-    ld de, wRecordBufferData + $12
+    ld hl, wSavedScreenAttrs
+    ld de, wScreenAttrBuffer
     ld bc, $0168
     call CopyBytes
     ld a, $00
@@ -5112,7 +5109,7 @@ Jump_002_5FF7::
     ld [hl+], a
     ld a, $E2
     ld [hl], a
-    ld hl, wD040
+    ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     ld [hl+], a
     ld a, [wDMGPaletteOBP0]
@@ -5653,7 +5650,7 @@ Jump_002_64D7::
 ; 3 call sites from 3 routines (e.g. RunWC8C7Phase_Case01, FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
 ; reads: wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wIsCGB, hScrollY, hScrollX, ...
 ; writes: hSpriteWindowClipMode, wFieldReturnPhase, rSVBK, wPartyWindowTimer, wModeState, wMenuState
-; points at: wWindowTileBuffer, wScreenTileBuffer, wD168
+; points at: wWindowTileBuffer, wScreenTileBuffer, wWindowAttrBuffer, wScreenAttrBuffer
 OpenFieldMenuOnA::
 Func_002_64E5:: ; address name
     ld a, [wFadeState]
@@ -5693,8 +5690,8 @@ Jump_002_6525::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_002_6549
-    ld hl, wD168
-    ld de, wRecordBufferData + $12
+    ld hl, wWindowAttrBuffer
+    ld de, wScreenAttrBuffer
     ld a, $02
     ldh [rSVBK], a
     ld b, $64
@@ -5946,7 +5943,7 @@ Jump_002_66C8::
 ; 1 call site from 1 routine (e.g. OpenFieldMenuOnA)
 ; reads: wTextWindowState, wFieldActionRequest, wPartyCount, hPlayerStateFlags, wPartyWindowFlags, wPartyWindowTimer, wIsCGB
 ; writes: wPartyWindowTimer, wPartyWindowFlags, hSpriteWindowClipMode, rSVBK
-; points at: wScreenTileBuffer, wD1CC
+; points at: wScreenTileBuffer
 ShowIdlePartyStatusWindow::
 Func_002_66CC:: ; address name
     ld de, $0002
@@ -6001,7 +5998,7 @@ Jump_002_671B::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_002_6745
-    ld hl, wD1CC
+    ld hl, wWindowAttrBuffer + $64
     ld a, e
     add a, $68
     ld e, a
@@ -6188,7 +6185,6 @@ Data_002_6835:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. ShowIdlePartyStatusWindow)
 ; reads: hScrollY, hScrollX, wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wD1CC
 DrawBottomWindowWC364AtScroll::
 Func_002_6841:: ; address name
     ldh a, [hScrollY]
@@ -6242,7 +6238,7 @@ Jump_002_6869::
     ldh [rVBK], a
     ld a, $02
     ldh [rSVBK], a
-    ld de, wD1CC
+    ld de, wWindowAttrBuffer + $64
     ld bc, $1406
     xor a, a
     call CopyRectFromBankToBGMapWrapped
@@ -6563,7 +6559,7 @@ Jump_002_6B04::
 ; 7 call sites from 4 routines (e.g. OpenFieldMenuOnA, StepTextWindowOpenClose_Case02, StepTextWindowOpenClose_Case01, StepTextWindowOpenClose_Case00)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
-; points at: wWindowTileBuffer, wD168
+; points at: wWindowTileBuffer, wWindowAttrBuffer
 CopyScreenRectToBGMapSetWC554::
 Func_002_6B19:: ; address name
     push bc
@@ -6597,7 +6593,7 @@ Func_002_6B19:: ; address name
     ldh [rVBK], a
     ld a, $02
     ldh [rSVBK], a
-    ld de, wD168
+    ld de, wWindowAttrBuffer
     xor a, a
     call CopyRectFromBankToBGMapWrapped
     ld a, $00
@@ -6740,7 +6736,7 @@ Jump_002_6C7F::
 ; entry 1 of the `rst $00` table in RunWC46BMenuState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuCursor, hScrollX
-; writes: wMenuCursor, wMenuSubState, wMenuSelectedMember, wSubMenuCursor, wSubMenuCursor2, wMenuOption, wMenuOption2, wD780, ...
+; writes: wMenuCursor, wMenuSubState, wMenuSelectedMember, wSubMenuCursor, wSubMenuCursor2, wMenuOption, wMenuOption2, wScreenState, ...
 ; points at: wBGPaletteCopy, wMenuState
 RunWC46BMenuState_Case01::
 Jump_002_6C89:: ; address name
@@ -6773,11 +6769,11 @@ Jump_002_6CB6::
     ld a, $1E
     ld [wMenuSelectedMember], a
     xor a, a
-    ld [wD780], a
-    ld [wD782], a
+    ld [wScreenState], a
+    ld [wScreenSubStep], a
     call RunWC46BMenuState_Case01_Sub01
     xor a, a
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; only called from RunWC46BMenuState_Case01 (E-0047)
@@ -7002,16 +6998,16 @@ Data_002_6E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 5 of the `rst $00` table in RunWC46BMenuState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapToggleFlag, wWarpDestFacing, wKeyWorldWidth, wKeyWorldHeight, wWarpDestX, wWarpDestY, hPlayerFacing, hPlayerX, ...
-; writes: wD780, wD783, wD781, wMapType, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hPlayerX, ...
+; writes: wScreenState, wScreenCounter, wScreenStep, wMapType, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hPlayerX, ...
 ; points at: wModeChangeRequest
 RunWC46BMenuState_Case05::
 Jump_002_6E25:: ; address name
     call InitSoundHardware
     farcall RestartMapMusic
     xor a, a
-    ld [wD780], a
-    ld [wD783], a
-    ld [wD781], a
+    ld [wScreenState], a
+    ld [wScreenCounter], a
+    ld [wScreenStep], a
     ld a, [wMapToggleFlag]
     bit 7, a
     jr nz, Jump_002_6EBA
@@ -7540,13 +7536,13 @@ Jump_002_71AA::
 
 ; runs Func_01D_7492 for SRAM bank 1 record wC8C4 ($A06F + $6F * index); when wD7F5 is $FF advances wC8C4 and, after record 30, increments wC8C3 (E-0121)
 ; 2 call sites from 2 routines (e.g. RunSaveSteps, RunBank1RecordScanSteps)
-; reads: wSaveRecordIndex, wD7F5
-; writes: wD7F1, wD7F3, wD7F4, wD7F2, wSaveRecordIndex
+; reads: wSaveRecordIndex, wArg5
+; writes: wArg1, wArg3, wArg4, wArg2, wSaveRecordIndex
 ; points at: wSaveStep
 ScanBank1RecordStepWC8C4::
 Func_002_71B2:: ; address name
     ld a, [wSaveRecordIndex]
-    ld [wD7F1], a
+    ld [wArg1], a
     ld c, $6F
     call Multiply8
     ld a, l
@@ -7556,13 +7552,13 @@ Func_002_71B2:: ; address name
     adc a, $A0
     ld h, a
     ld a, l
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, h
-    ld [wD7F4], a
+    ld [wArg4], a
     ld a, $01
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall UnpackRecordFromBank1Slot
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $FF
     ret nz
     ld a, [wSaveRecordIndex]
@@ -7999,12 +7995,12 @@ Jump_002_73C9::
 ; copies SRAM bank-1 record wC8C4 ($6F bytes at sA06F + $6F * n) through Func_01D_6E39, then wC8C4 += 1; after 30 records wC8C3 += 1 (the next save step) (E-0120)
 ; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_Sub01)
 ; reads: wSaveRecordIndex
-; writes: wD7F1, wD7F3, wD7F4, wD7F2, wSaveRecordIndex
+; writes: wArg1, wArg3, wArg4, wArg2, wSaveRecordIndex
 ; points at: wSaveStep
 SaveStepCopyBank1RecordWC8C4::
 Func_002_73E6:: ; address name
     ld a, [wSaveRecordIndex]
-    ld [wD7F1], a
+    ld [wArg1], a
     ld c, $6F
     call Multiply8
     ld a, l
@@ -8014,11 +8010,11 @@ Func_002_73E6:: ; address name
     adc a, $A0
     ld h, a
     ld a, l
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, h
-    ld [wD7F4], a
+    ld [wArg4], a
     ld a, $01
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall PackRecordFieldsToBank1Slot
     ld a, [wSaveRecordIndex]
     inc a

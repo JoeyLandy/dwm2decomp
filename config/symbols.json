@@ -399,7 +399,8 @@
   "D084": {
     "name": "wItemRecord",
     "note": "13-byte copy of an ItemTable record",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "D"
   },
   "C61D": {
     "name": "wInventory",
@@ -598,8 +599,9 @@
   },
   "D0D5": {
     "name": "wBattlerRecords",
-    "note": "six 78-byte ($4E) battler records for slots 0-2 and 4-6 (BattlerRecordFieldAddress); GetBaseHP reads the HP word at offset $1D (E-0062)",
-    "evidence": "reading (E-0062)"
+    "note": "six 78-byte ($4E) battler records for slots 0-2 and 4-6 (BattlerRecordFieldAddress); GetBaseHP reads the HP word at offset $1D (E-0062); the size covers the slot-0 record, the others are wBattlerRecordSlot1-6 (E-0136)",
+    "evidence": "reading (E-0062)",
+    "size": "4E"
   },
   "D7F9": {
     "name": "wMenuInputResult",
@@ -624,7 +626,8 @@
   "D008": {
     "name": "wSpeciesRecord",
     "note": "47-byte copy of a species record (LoadSpeciesRecord); byte 0 is the family (E-0069)",
-    "evidence": "reading + data (E-0069)"
+    "evidence": "reading + data (E-0069)",
+    "size": "2F"
   },
   "D958": {
     "name": "wBattleMonsterId",
@@ -3349,5 +3352,895 @@
     "name": "wWildByteE5",
     "note": "encounter work byte",
     "evidence": "E-0135"
+  },
+  "D000": {
+    "name": "wScreenAttrBuffer",
+    "note": "WRAM bank 2: CGB attribute bytes for wScreenTileBuffer, same 20 x 18 layout ($168 bytes; the map loader and the screen copies switch rSVBK to 2 first)",
+    "evidence": "E-0136"
+  },
+  "D080": {
+    "of": "D000",
+    "note": "attribute rectangle copied by Func_003_4FBB_Case02 (row 6, column 8)",
+    "evidence": "E-0136"
+  },
+  "D100": {
+    "of": "D000",
+    "note": "attribute rectangle copied by Func_003_4FBB_Case02 (row 12, column 16)",
+    "evidence": "E-0136"
+  },
+  "D104": {
+    "of": "D000",
+    "note": "attribute row 13 (RedrawFullScreenBoxes_0C and script windows)",
+    "evidence": "E-0136"
+  },
+  "D168": {
+    "name": "wWindowAttrBuffer",
+    "note": "WRAM bank 2: CGB attributes for wWindowTileBuffer ($C300), same 20 x 18 layout and the same offset ($E68) from the tile buffer as wScreenAttrBuffer",
+    "evidence": "E-0136"
+  },
+  "D1CC": {
+    "of": "D168",
+    "note": "attributes of the bottom window (wWindowTileBuffer + $64; DrawBottomWindowWC364AtScroll)",
+    "evidence": "E-0136"
+  },
+  "D1E3": {
+    "of": "D168",
+    "note": "attribute bytes written by GameMode6_Update_Case00_Case00_Sub01 on CGB",
+    "evidence": "E-0136"
+  },
+  "D208": {
+    "of": "D168",
+    "note": "attribute bytes of window row 8 (script commands E0 and E1)",
+    "evidence": "E-0136"
+  },
+  "D25F": {
+    "of": "D168",
+    "note": "6 x 6 attribute block copied by CopyAttributeBlock51D3ToWD25F (20-byte rows)",
+    "evidence": "E-0136"
+  },
+  "D27A": {
+    "of": "D168",
+    "note": "attributes of the two-choice box (row 13, column 14, like wWindowTileBuffer + $112)",
+    "evidence": "E-0136"
+  },
+  "D298": {
+    "of": "D168",
+    "note": "attribute bytes written by ScriptCommandF6_Run_Case10_Case01 with rSVBK = 2",
+    "evidence": "E-0136"
+  },
+  "D2D0": {
+    "name": "wSavedScreenAttrs",
+    "note": "WRAM bank 2: copy of the $168 attribute bytes of wScreenAttrBuffer (SaveScreenBufferToBGMap1 / RestoreScreenBufferFromBGMap1)",
+    "evidence": "E-0136"
+  },
+  "D040": {
+    "name": "wDMGPaletteBytes",
+    "note": "three DMG palette bytes kept for the fades (SetDefaultDMGPaletteBytes, UploadBGPalettesWithFade)",
+    "evidence": "E-0136",
+    "size": "3"
+  },
+  "D043": {
+    "name": "wLinkRules",
+    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckWD044Bit6, UnpackLinkRecordToWD09D)",
+    "evidence": "E-0136",
+    "size": "A"
+  },
+  "D04B": {
+    "name": "wLinkRuleTurnLimit",
+    "note": "rule byte with the turn limit (LinkRuleCheckWD04BTurnLimit)",
+    "evidence": "E-0136"
+  },
+  "D04D": {
+    "name": "wLinkRulesCopy",
+    "note": "second copy of the 10 rule bytes (GameMode5_Init_Case04_Sub01)",
+    "evidence": "E-0136",
+    "size": "A"
+  },
+  "D057": {
+    "name": "wLinkRuleWork57",
+    "note": "rule work bytes tested by LinkRuleCheckWD044Bit6",
+    "evidence": "E-0136"
+  },
+  "D058": {
+    "name": "wBattleInitByte58",
+    "note": "set by the battle set-up (GameMode4_Init_Sub01_Sub01)",
+    "evidence": "E-0136"
+  },
+  "D059": {
+    "name": "wLinkSetupMode",
+    "note": "link set-up mode written by the link screen states; GameMode5_Init_Case04_Sub01 compares it with 2",
+    "evidence": "E-0136"
+  },
+  "D05A": {
+    "name": "wLinkSeedCopy",
+    "note": "11 bytes copied from wRandomSeed2Hi onward at the start of a link exchange (Func_033_5215_Table2_Case05_Case0D)",
+    "evidence": "E-0136",
+    "size": "B"
+  },
+  "D064": {
+    "name": "wBattleResultDelay",
+    "note": "copied to wBattleResultCounter when the results screen starts",
+    "evidence": "E-0136"
+  },
+  "D065": {
+    "name": "wLinkReceivedByte",
+    "note": "byte read through the pointer wArg5/wArg6 during the link exchange",
+    "evidence": "E-0136"
+  },
+  "D066": {
+    "name": "wBGFillFlag",
+    "note": "selects clearing the BG map or filling it with tile $C3 (ClearBGMapOrFillWithC3)",
+    "evidence": "E-0136"
+  },
+  "D068": {
+    "name": "wNewRecordByte0D",
+    "note": "value for byte $0D of a new or changed record (RollRecordField0DState, BattleEnd_Step6_Case02)",
+    "evidence": "E-0136"
+  },
+  "D069": {
+    "name": "wTalkCountdown",
+    "note": "frames before a talk event is dispatched (CountDownWD069ThenDispatchTalkEvent)",
+    "evidence": "E-0136"
+  },
+  "D06A": {
+    "name": "wLinkScreenState",
+    "note": "state of the link and title screens of game mode 5 (StartFadeToWD06AState1/2)",
+    "evidence": "E-0136"
+  },
+  "D06B": {
+    "name": "wLinkScreenSubState",
+    "note": "sub-state of those screens (RunWD06BSubState_* tables)",
+    "evidence": "E-0136"
+  },
+  "D06C": {
+    "name": "wLinkScreenFlag",
+    "note": "flag set and tested by the link screen sub-states",
+    "evidence": "E-0136"
+  },
+  "D082": {
+    "name": "wInventorySlot",
+    "note": "inventory slot chosen in the pause menu (LookupWD082ForRecordBuffer)",
+    "evidence": "E-0136"
+  },
+  "D083": {
+    "name": "wTargetRecord",
+    "note": "party member an item or skill is used on (pause menu, ItemUsable_* checks)",
+    "evidence": "E-0136"
+  },
+  "D08D": {
+    "name": "wItemMessage",
+    "note": "item record byte 9: message selector; SetWD08D12IfItemRefused / SetWD08D14IfItemRefused store $12 or $14 when the target refuses",
+    "evidence": "E-0136"
+  },
+  "D08E": {
+    "name": "wItemRecordByte0A",
+    "note": "item record byte $0A (written by ItemUsable_WorldDew and ListPartyMembersWithField55Bit0)",
+    "evidence": "E-0136"
+  },
+  "D08F": {
+    "name": "wItemEffectAmount",
+    "note": "item record byte $0B: amount the item effect applies (ItemApply_Herb, ItemApply_Potion, ShowRaiseAmountOrRefuse); field skills store theirs here",
+    "evidence": "E-0136"
+  },
+  "D090": {
+    "name": "wItemEffectRange",
+    "note": "item record byte $0C: random range added by HealRecordHPByRandomAmount",
+    "evidence": "E-0136"
+  },
+  "D091": {
+    "name": "wEncounterDelay",
+    "note": "delay before random encounters count again (TickRandomEncounterCounter)",
+    "evidence": "E-0136"
+  },
+  "D092": {
+    "name": "wBattleScene",
+    "note": "battle kind or scene: picks the battle background and arena variants (8 copies an attribute block)",
+    "evidence": "E-0136"
+  },
+  "D093": {
+    "name": "wBattleByte93",
+    "note": "battle byte tested by Func_031_67AA_Case09_Case00",
+    "evidence": "E-0136"
+  },
+  "D095": {
+    "name": "wLevelUpGains",
+    "note": "stat gains of a level up (ComputeLevelUpStatGainsForWD869, ClampLevelUpGainsTo999, ItemApply_WorldLeaf)",
+    "evidence": "E-0136",
+    "size": "6"
+  },
+  "D09B": {
+    "name": "wGrowthTemp0",
+    "note": "growth calculation work byte (ComputeLevelUpStatGainsForWD869_Sub01, AddWD09CIfWD09BMatchesB)",
+    "evidence": "E-0136"
+  },
+  "D09C": {
+    "name": "wGrowthTemp1",
+    "note": "growth calculation work byte added when wGrowthTemp0 matches",
+    "evidence": "E-0136"
+  },
+  "D09D": {
+    "name": "wWorkBuf",
+    "note": "shared work area: arguments and pointers of many routines (record index and destination of BuildRecordSummaryForWD09D, menu lists, palette rows of the screen fades)",
+    "evidence": "E-0136",
+    "size": "38"
+  },
+  "D0C7": {
+    "name": "wPauseListCount",
+    "note": "number of entries in the pause-menu list (PauseMenu_State3; BuildScreenBlocks21To23_Sub01)",
+    "evidence": "E-0136"
+  },
+  "D0D6": {
+    "name": "wTitlePlayerName",
+    "note": "title screen: player name copied from SRAM ($0A bytes; LoadSaveFileSummary reuses battler record 0)",
+    "evidence": "E-0136"
+  },
+  "D0E2": {
+    "name": "wTitlePlayMinutes",
+    "note": "title screen: minutes of the play time",
+    "evidence": "E-0136"
+  },
+  "D0E3": {
+    "name": "wTitlePlayHoursLo",
+    "note": "title screen: hours of the play time, low byte",
+    "evidence": "E-0136"
+  },
+  "D0E4": {
+    "name": "wTitlePlayHoursHi",
+    "note": "title screen: hours of the play time, high byte",
+    "evidence": "E-0136"
+  },
+  "D0E5": {
+    "name": "wTitlePartyCount",
+    "note": "title screen: number of party monsters",
+    "evidence": "E-0136"
+  },
+  "D0E6": {
+    "name": "wTitlePartySummary",
+    "note": "title screen: party summaries, 12 bytes each (BuildRecordSummaryForWD09D); the second and third sit at battler-record offsets $1D and $29",
+    "evidence": "E-0136"
+  },
+  "D0E7": {
+    "name": "wLinkMenuCounter",
+    "note": "counter of the RunWD06BSubState_5B14 screen",
+    "evidence": "E-0136"
+  },
+  "D0E8": {
+    "name": "wLinkMenuEntry",
+    "note": "entry number for table $555D (LoadTable555DEntryForWD0A6ToWD0EA)",
+    "evidence": "E-0136"
+  },
+  "D0EA": {
+    "name": "wLinkMenuEntryBytes",
+    "note": "three bytes copied from the table $555D entry",
+    "evidence": "E-0136"
+  },
+  "D10A": {
+    "name": "wTitleByte0A",
+    "note": "title summary byte copied from sBD3A (also read by the pause menu and link screens)",
+    "evidence": "E-0136"
+  },
+  "D10B": {
+    "name": "wTitleKeyFlag",
+    "note": "title summary byte from sBE0D: picks a key name or a string (ShowKeyNameOrStringForWD10B)",
+    "evidence": "E-0136"
+  },
+  "D10C": {
+    "name": "wTitleStringIndex",
+    "note": "title summary byte from sBB07: string shown when there is no key",
+    "evidence": "E-0136"
+  },
+  "D10D": {
+    "name": "wTitleKeyEntry",
+    "note": "4-byte key entry of the current key (sBC0A + 4 * sBD36)",
+    "evidence": "E-0136"
+  },
+  "D10E": {
+    "name": "wTitleKeyWord1",
+    "note": "key entry byte 1: first word of the key name",
+    "evidence": "E-0136"
+  },
+  "D10F": {
+    "name": "wTitleKeyWord2",
+    "note": "key entry byte 2: second word of the key name",
+    "evidence": "E-0136"
+  },
+  "D110": {
+    "name": "wTitleKeyByte3",
+    "note": "key entry byte 3",
+    "evidence": "E-0136"
+  },
+  "D11E": {
+    "name": "wKeyGenList",
+    "note": "word list indexed by 2 * wKeyGenCount while script command $F2 builds a key",
+    "evidence": "E-0136"
+  },
+  "D15E": {
+    "name": "wKeyGenCount",
+    "note": "count of entries in wKeyGenList",
+    "evidence": "E-0136"
+  },
+  "D123": {
+    "name": "wBattlerRecordSlot1",
+    "note": "battler record of slot 1",
+    "evidence": "E-0136",
+    "size": "4E"
+  },
+  "D171": {
+    "name": "wBattlerRecordSlot2",
+    "note": "battler record of slot 2",
+    "evidence": "E-0136",
+    "size": "4E"
+  },
+  "D1BF": {
+    "name": "wBattlerRecordSlot4",
+    "note": "battler record of slot 4 (BackupBattlerRecords0And1 copies record 0 here)",
+    "evidence": "E-0136",
+    "size": "4E"
+  },
+  "D20D": {
+    "name": "wBattlerRecordSlot5",
+    "note": "battler record of slot 5 (BackupBattlerRecords0And1 copies record 1 here)",
+    "evidence": "E-0136",
+    "size": "4E"
+  },
+  "D25B": {
+    "name": "wBattlerRecordSlot6",
+    "note": "battler record of slot 6",
+    "evidence": "E-0136",
+    "size": "4E"
+  },
+  "D200": {
+    "name": "wLinkExchangeBuffer",
+    "note": "link transfer buffer for the record exchange (wLinkBufferPtr is pointed here)",
+    "evidence": "E-0136"
+  },
+  "D201": {
+    "of": "D200",
+    "note": "flag byte cleared by ClearWD201Bit7AndFourSlots",
+    "evidence": "E-0136"
+  },
+  "D2AD": {
+    "name": "wAIWeights",
+    "note": "ten AI weight words of the acting monster (InitAIWeightsForActor, AddWeightsForSkillD)",
+    "evidence": "E-0136",
+    "size": "14"
+  },
+  "D2C1": {
+    "name": "wAIDamageEstimates",
+    "note": "AI damage estimates (CheckLoneFoeHPNotBelowWD2C1)",
+    "evidence": "E-0136",
+    "size": "6"
+  },
+  "D2C8": {
+    "name": "wBattleCommandArgs",
+    "note": "four bytes stored by RunBattleCommandEntry_Case06",
+    "evidence": "E-0136",
+    "size": "4"
+  },
+  "D2CC": {
+    "name": "wAIFlag",
+    "note": "AI flag set while choosing an action (AIChooseActionForActor) and read by the scoring routines",
+    "evidence": "E-0136"
+  },
+  "D2CD": {
+    "name": "wTransitionByteCD",
+    "note": "set by the battle transition (RunWC904Step_Case00)",
+    "evidence": "E-0136"
+  },
+  "D2CE": {
+    "name": "wBattleEndTimer",
+    "note": "battle end wait timer (CountDownWD2CEWhenSoundIdle)",
+    "evidence": "E-0136"
+  },
+  "D580": {
+    "name": "wArenaEntry",
+    "note": "arena work bytes (script command $F7)",
+    "evidence": "E-0136",
+    "size": "6"
+  },
+  "D586": {
+    "name": "wArenaByte86",
+    "note": "arena byte set by ScriptCommandF7_Run_Case15",
+    "evidence": "E-0136"
+  },
+  "D587": {
+    "name": "wArenaByte87",
+    "note": "arena byte set by ScriptCommandF7_Run_Case15",
+    "evidence": "E-0136"
+  },
+  "D588": {
+    "name": "wArenaRound",
+    "note": "arena counter (IncWD588AndCopyWD7FCToWD78C)",
+    "evidence": "E-0136"
+  },
+  "D589": {
+    "name": "wArenaList",
+    "note": "arena list (ScriptCommand96_Run_Shared01_Sub01)",
+    "evidence": "E-0136"
+  },
+  "D5B1": {
+    "name": "wArenaList2",
+    "note": "second arena list (ScriptCommand96_Run_Shared01_Sub01)",
+    "evidence": "E-0136"
+  },
+  "D780": {
+    "name": "wScreenState",
+    "note": "state of the current menu or script screen (RunWD780StepEveryOtherFrame, RunWD780StateWhenNotFading_*); $FF = idle",
+    "evidence": "E-0136"
+  },
+  "D781": {
+    "name": "wScreenStep",
+    "note": "step within wScreenState; most screen jump tables index it",
+    "evidence": "E-0136"
+  },
+  "D782": {
+    "name": "wScreenSubStep",
+    "note": "sub-step of the current screen",
+    "evidence": "E-0136"
+  },
+  "D783": {
+    "name": "wScreenCounter",
+    "note": "counter of the current screen (palette row in the fades, link checks)",
+    "evidence": "E-0136"
+  },
+  "D784": {
+    "name": "wGlyphListPos",
+    "note": "position in the glyph tile list (DrawWC8CFGlyphsOverlaying8DAnd8E, CopyGlyphTileListFromBank1F)",
+    "evidence": "E-0136"
+  },
+  "D785": {
+    "name": "wGlyphListStart",
+    "note": "first entry copied by CopyGlyphTileListFromBank1F",
+    "evidence": "E-0136"
+  },
+  "D786": {
+    "name": "wGridCursorX",
+    "note": "column in a 6-column grid (GridIndexFromWD786WD787)",
+    "evidence": "E-0136"
+  },
+  "D787": {
+    "name": "wGridCursorY",
+    "note": "row in that grid (also a blink counter in BlinkCursorWD787_Bank15)",
+    "evidence": "E-0136"
+  },
+  "D788": {
+    "name": "wScreenList",
+    "note": "first byte of a screen work list (InitItemListWD788AndCount copies $28 bytes here; script commands $EC and $F1 keep a state here)",
+    "evidence": "E-0136"
+  },
+  "D789": {
+    "name": "wListEntries",
+    "note": "entries of the current list (record or key indexes; BuildKeyListIndexWD789, ListRecordsInUseWithByte6EClear)",
+    "evidence": "E-0136",
+    "size": "20"
+  },
+  "D78A": {
+    "name": "wGrid2CursorX",
+    "note": "column of a second 6-column grid (GridIndexFromWD78AWD78B; script command $F6)",
+    "evidence": "E-0136"
+  },
+  "D78B": {
+    "name": "wGrid2CursorY",
+    "note": "row of that grid",
+    "evidence": "E-0136"
+  },
+  "D78C": {
+    "name": "wScreenArea",
+    "note": "copy of wAreaGraphicsIndex (IncWD588AndCopyWD7FCToWD78C)",
+    "evidence": "E-0136"
+  },
+  "D78D": {
+    "name": "wScreenByte8D",
+    "note": "set by script command $E2",
+    "evidence": "E-0136"
+  },
+  "D78E": {
+    "name": "wScreenCountPlusOne",
+    "note": "wRecordCapacity + 1 (SetupWD78EFromWD7FF)",
+    "evidence": "E-0136"
+  },
+  "D790": {
+    "name": "wScreenByte90",
+    "note": "set by script command $E2",
+    "evidence": "E-0136"
+  },
+  "D791": {
+    "name": "wScreenByte91",
+    "note": "set by script command $E2",
+    "evidence": "E-0136"
+  },
+  "D792": {
+    "name": "wScreenBlock92",
+    "note": "bytes pointed at by script command $E2",
+    "evidence": "E-0136"
+  },
+  "D793": {
+    "name": "wScreenByte93",
+    "note": "set by script commands $E2 and $E5",
+    "evidence": "E-0136"
+  },
+  "D794": {
+    "name": "wScreenByte94",
+    "note": "set by script commands $E2 and $E5",
+    "evidence": "E-0136"
+  },
+  "D799": {
+    "name": "wScreenByte99",
+    "note": "set by script command $F6 case 1, read by case 7",
+    "evidence": "E-0136"
+  },
+  "D79A": {
+    "name": "wScreenByte9A",
+    "note": "set by script command $F6 case 1, read by case 7",
+    "evidence": "E-0136"
+  },
+  "D79C": {
+    "name": "wScreenBlock9C",
+    "note": "bytes written by ScriptCommandF6_Run_Case10_Case01",
+    "evidence": "E-0136"
+  },
+  "D7A2": {
+    "name": "wDebugResultsBuf",
+    "note": "bytes used by DebugResultsDisplay_Update",
+    "evidence": "E-0136"
+  },
+  "D7A5": {
+    "name": "wItemCountTens",
+    "note": "tens digit of the item count (InitItemListWD788AndCount)",
+    "evidence": "E-0136"
+  },
+  "D7A6": {
+    "name": "wItemCountOnes",
+    "note": "ones digit of the item count",
+    "evidence": "E-0136"
+  },
+  "D7A9": {
+    "name": "wListCount",
+    "note": "number of entries in wListEntries",
+    "evidence": "E-0136"
+  },
+  "D7AA": {
+    "name": "wRecordsInUse",
+    "note": "number of SRAM records in use (CountRecordsInUse)",
+    "evidence": "E-0136"
+  },
+  "D7AB": {
+    "name": "wListCursor",
+    "note": "cursor row in the current list or page (UpdateListCursorWD7AB, UpdatePagedListCursor)",
+    "evidence": "E-0136"
+  },
+  "D7AC": {
+    "name": "wListCursorAux",
+    "note": "byte kept with wListCursor by UpdateListCursorWD7AB",
+    "evidence": "E-0136"
+  },
+  "D7AD": {
+    "name": "wChoiceCursor",
+    "note": "cursor of the two-entry choice (HandleTwoChoiceCursorInput_0D, DrawArrowTileBCAtWD7ADEntry)",
+    "evidence": "E-0136"
+  },
+  "D7AE": {
+    "name": "wCursorBlinkAE",
+    "note": "cursor blink counter (0-$17; BlinkCursorWD7AE_*)",
+    "evidence": "E-0136"
+  },
+  "D7AF": {
+    "name": "wListPageIndex",
+    "note": "page of the paged list (UpdatePagedListCursor)",
+    "evidence": "E-0136"
+  },
+  "D7B0": {
+    "name": "wListPages",
+    "note": "number of pages (or items) of the paged list",
+    "evidence": "E-0136"
+  },
+  "D7B1": {
+    "name": "wListLastRow",
+    "note": "last row of the current page",
+    "evidence": "E-0136"
+  },
+  "D7B2": {
+    "name": "wScreenByteB2",
+    "note": "screen work byte (script commands $EB, $ED, $EF)",
+    "evidence": "E-0136"
+  },
+  "D7B3": {
+    "name": "wScreenByteB3",
+    "note": "screen work byte (script commands $EB, $ED, $EF)",
+    "evidence": "E-0136"
+  },
+  "D7B4": {
+    "name": "wSelectedRecord",
+    "note": "SRAM record index chosen on a screen (LoadRecordWD7B4Byte0EBit0); also a blink counter in BlinkCursorWD7B4_Bank1C",
+    "evidence": "E-0136"
+  },
+  "D7B5": {
+    "name": "wItemGridX",
+    "note": "column 0-3 of the item grid (DrawWD7B5Cursor)",
+    "evidence": "E-0136"
+  },
+  "D7B6": {
+    "name": "wItemGridY",
+    "note": "row of the item grid (entry 4 * row + column)",
+    "evidence": "E-0136"
+  },
+  "D7B7": {
+    "name": "wChoiceCursorF0",
+    "note": "cursor of the bank-$F0 two-entry choice (HandleTwoChoiceCursorInput_F0)",
+    "evidence": "E-0136"
+  },
+  "D7B8": {
+    "name": "wCursorBlinkB8",
+    "note": "cursor blink counter (BlinkCursorWD7B8_*)",
+    "evidence": "E-0136"
+  },
+  "D7B9": {
+    "name": "wRecordsFlagged",
+    "note": "in-use records whose byte $6E is set (ListRecordsInUseWithByte6EClear)",
+    "evidence": "E-0136"
+  },
+  "D7BA": {
+    "name": "wSavedFieldDrawFlags",
+    "note": "hFieldDrawFlags saved by SaveAndHideSpriteState",
+    "evidence": "E-0136"
+  },
+  "D7BB": {
+    "name": "wSavedSpriteSlotCount",
+    "note": "wSpriteSlotCount saved by SaveAndHideSpriteState",
+    "evidence": "E-0136"
+  },
+  "D7BC": {
+    "name": "wSavedSpriteClipMode",
+    "note": "hSpriteWindowClipMode saved by SaveAndHideSpriteState",
+    "evidence": "E-0136"
+  },
+  "D7BD": {
+    "name": "wScreenByteBD",
+    "note": "screen work byte (debug results, script commands $EF and $F3)",
+    "evidence": "E-0136"
+  },
+  "D7BE": {
+    "name": "wListEntries2",
+    "note": "second 30-byte list cleared by ListRecordsInUseWithByte6EClear; script commands $E2, $E5 and $EB use its first bytes",
+    "evidence": "E-0136"
+  },
+  "D7BF": {
+    "name": "wScreenByteBF",
+    "note": "screen work byte (script commands $E2, $E5, $EB)",
+    "evidence": "E-0136"
+  },
+  "D7C0": {
+    "name": "wScreenByteC0",
+    "note": "screen work byte (script commands $E2, $E5, $EB)",
+    "evidence": "E-0136"
+  },
+  "D7C1": {
+    "name": "wScreenByteC1",
+    "note": "screen work byte (script commands $E2, $E5, $EB)",
+    "evidence": "E-0136"
+  },
+  "D7C2": {
+    "name": "wTextCounter0",
+    "note": "text counter cleared by ResetWD7C2Counters",
+    "evidence": "E-0136"
+  },
+  "D7C3": {
+    "name": "wTextCounter1",
+    "note": "text counter (StepItemDescriptionText)",
+    "evidence": "E-0136"
+  },
+  "D7C4": {
+    "name": "wTextCounter2",
+    "note": "text counter (StepItemDescriptionText, field event 8)",
+    "evidence": "E-0136"
+  },
+  "D7C5": {
+    "name": "wTextCounter3",
+    "note": "text counter",
+    "evidence": "E-0136"
+  },
+  "D7C6": {
+    "name": "wTextCounter4",
+    "note": "text counter (StepItemDescriptionText)",
+    "evidence": "E-0136"
+  },
+  "D7C7": {
+    "name": "wTextTimer",
+    "note": "text timer set to 60 by ResetWD7C2Counters",
+    "evidence": "E-0136"
+  },
+  "D7C8": {
+    "name": "wTextCounter5",
+    "note": "text counter cleared by ResetWD7C2Counters",
+    "evidence": "E-0136"
+  },
+  "D7C9": {
+    "name": "wTextCounter6",
+    "note": "text counter (StepItemDescriptionText)",
+    "evidence": "E-0136"
+  },
+  "D7CA": {
+    "name": "wNumberTens",
+    "note": "tens digit of a two-digit number being edited (TenTimesWD7CAPlusWD7CB)",
+    "evidence": "E-0136"
+  },
+  "D7CB": {
+    "name": "wNumberOnes",
+    "note": "ones digit of that number",
+    "evidence": "E-0136"
+  },
+  "D7CC": {
+    "name": "wNumberEditPos",
+    "note": "position of the number editor (DrawRect0147AndResetWD7CC sets 2)",
+    "evidence": "E-0136"
+  },
+  "D7CD": {
+    "name": "wCursorBlinkCD",
+    "note": "cursor blink counter (BlinkCursorWD7CD_*)",
+    "evidence": "E-0136"
+  },
+  "D7CE": {
+    "name": "wThreeDigits",
+    "note": "three digits drawn by DrawThreeDigitsAtScrollOffset6E",
+    "evidence": "E-0136",
+    "size": "3"
+  },
+  "D7D1": {
+    "name": "wScreenByteD1",
+    "note": "screen work byte (script command $E2)",
+    "evidence": "E-0136"
+  },
+  "D7D2": {
+    "name": "wCursorBlinkD2",
+    "note": "cursor blink counter (BlinkCursorWD7D2_*)",
+    "evidence": "E-0136"
+  },
+  "D7D3": {
+    "name": "wCountTens",
+    "note": "tens digit of a count (CountItemInInventoryToDigits, SplitWC635EntryIntoDigits)",
+    "evidence": "E-0136"
+  },
+  "D7D4": {
+    "name": "wCountOnes",
+    "note": "ones digit of that count",
+    "evidence": "E-0136"
+  },
+  "D7D5": {
+    "name": "wItemGrid",
+    "note": "24 item ids in rows of 4 (CountNonZeroWD7D5Bytes, StepItemDescriptionText)",
+    "evidence": "E-0136",
+    "size": "18"
+  },
+  "D7DC": {
+    "name": "wPickCount",
+    "note": "number of records picked into wPickedRecords (4 marks the end; FinishWD7DDEntryAndAdvance)",
+    "evidence": "E-0136"
+  },
+  "D7DD": {
+    "name": "wPickedRecords",
+    "note": "up to three picked record indexes ($FF padded by PadWD7DDWithFFToThree)",
+    "evidence": "E-0136",
+    "size": "3"
+  },
+  "D7E0": {
+    "name": "wPackWork",
+    "note": "workspace of PackRecordFieldsToBank1Slot ($FF marks a finished pick)",
+    "evidence": "E-0136"
+  },
+  "D7E1": {
+    "name": "wPackByteE1",
+    "note": "PackRecordFieldsToBank1Slot work byte",
+    "evidence": "E-0136"
+  },
+  "D7E2": {
+    "name": "wPackFields",
+    "note": "four 2-bit fields packed into one byte by Pack2BitFieldsFromWD7E2",
+    "evidence": "E-0136",
+    "size": "4"
+  },
+  "D7E6": {
+    "name": "wPackByteE6",
+    "note": "PackRecordFieldsToBank1Slot input byte",
+    "evidence": "E-0136"
+  },
+  "D7E8": {
+    "name": "wLinkByteE8",
+    "note": "read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens",
+    "evidence": "E-0136"
+  },
+  "D7E9": {
+    "name": "wLinkByteE9",
+    "note": "read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens",
+    "evidence": "E-0136"
+  },
+  "D7EA": {
+    "name": "wLinkByteEA",
+    "note": "read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens",
+    "evidence": "E-0136"
+  },
+  "D7EB": {
+    "name": "wLinkByteEB",
+    "note": "set by the link screen, read by game mode 6",
+    "evidence": "E-0136"
+  },
+  "D7EC": {
+    "name": "wF0ScreenKind",
+    "note": "bank-$F0 screen kind (Run67EEWithWD7F1ForWD7EC checks 3 or 4)",
+    "evidence": "E-0136"
+  },
+  "D7ED": {
+    "name": "wScreenByteED",
+    "note": "set and read by script command $E5",
+    "evidence": "E-0136"
+  },
+  "D7EE": {
+    "name": "wScreenByteEE",
+    "note": "screen work byte (game mode 5, script command $E2)",
+    "evidence": "E-0136"
+  },
+  "D7EF": {
+    "name": "wCursorBlinkEF",
+    "note": "cursor blink counter (BlinkCursorWD7EF_Bank1D_4801)",
+    "evidence": "E-0136"
+  },
+  "D7F0": {
+    "name": "wMessageMode",
+    "note": "0 shows a message through the normal group dispatch (StartMessageCommand09HL_*)",
+    "evidence": "E-0136"
+  },
+  "D7F1": {
+    "name": "wArg1",
+    "note": "first argument/result byte of many helpers: SRAM record index, low byte of a 24-bit amount, source high byte of a tile rectangle, $FF/0 results",
+    "evidence": "E-0136"
+  },
+  "D7F2": {
+    "name": "wArg2",
+    "note": "second argument byte: middle byte of an amount, SRAM bank, index low byte",
+    "evidence": "E-0136"
+  },
+  "D7F3": {
+    "name": "wArg3",
+    "note": "third argument byte: high byte of an amount, pointer low byte, rectangle width",
+    "evidence": "E-0136"
+  },
+  "D7F4": {
+    "name": "wArg4",
+    "note": "fourth argument byte: pointer high byte, rectangle rows",
+    "evidence": "E-0136"
+  },
+  "D7F5": {
+    "name": "wArg5",
+    "note": "fifth argument/result byte: pointer high byte (SetWD7F5ToWD789Cell4), BG destination, first 2-bit field, $FF results",
+    "evidence": "E-0136"
+  },
+  "D7F6": {
+    "name": "wArg6",
+    "note": "sixth argument byte: pointer low byte, second 2-bit field",
+    "evidence": "E-0136"
+  },
+  "D7F7": {
+    "name": "wArg7",
+    "note": "seventh argument byte: third 2-bit field",
+    "evidence": "E-0136"
+  },
+  "D7F8": {
+    "name": "wArg8",
+    "note": "eighth argument byte: fourth 2-bit field",
+    "evidence": "E-0136"
+  },
+  "D7FB": {
+    "name": "wScreenTableIndex",
+    "note": "index into per-screen pointer tables (Data_0F2_5643, Data_01C_6158)",
+    "evidence": "E-0136"
+  },
+  "D7FC": {
+    "name": "wAreaGraphicsIndex",
+    "note": "area graphics entry (LoadAreaGraphicsForWD7FC)",
+    "evidence": "E-0136"
+  },
+  "D7FF": {
+    "name": "wRecordCapacity",
+    "note": "number of SRAM records the farm holds (LoadWD7FFFromWC7C7Table); also reused as a count by script command $F7",
+    "evidence": "E-0136"
   }
 }

@@ -3,8 +3,8 @@ SECTION "Bank 81", ROMX[$4000], BANK[$81]
 
 ; only called from CallFunc4001InBank81KeepRegs (E-0047)
 ; 1 call site from 1 routine (e.g. CallFunc4001InBank81KeepRegs)
-; reads: wRecordBufB, wSpeciesRecord, wD2AD, wD2AE, wD2AF, wD2B0, wD2B1, wD2B2, ...
-; writes: wD2AD, wD2AE, wD2B3, wD2AF, wD2B0, wSpeciesIdLo, wSpeciesIdHi, wD2B4, ...
+; reads: wRecordBufB, wSpeciesRecord, wAIWeights
+; writes: wAIWeights, wSpeciesIdLo, wSpeciesIdHi, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
 CallFunc4001InBank81KeepRegs_Sub01::
 Func_081_4001:: ; address name
     ld a, [wRecordBufB + $B]
@@ -13,44 +13,44 @@ Func_081_4001:: ; address name
     ld h, a
     push hl
     ld a, l
-    ld [wD2AD], a
+    ld [wAIWeights], a
     ld a, h
-    ld [wD2AE], a
+    ld [wAIWeights + $1], a
     ld a, [wRecordBufB + $D]
-    ld [wD2B3], a
+    ld [wAIWeights + $6], a
     ld a, [wRecordBufB + $1A]
     ld l, a
     ld a, [wRecordBufB + $1B]
     ld h, a
     ld a, l
-    ld [wD2AF], a
+    ld [wAIWeights + $2], a
     ld a, h
-    ld [wD2B0], a
+    ld [wAIWeights + $3], a
     ld a, l
     ld [wSpeciesIdLo], a
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesFamily
     ld a, [wSpeciesRecord]
-    ld [wD2B4], a
+    ld [wAIWeights + $7], a
     ld a, [wRecordBufB + $1C]
     ld l, a
     ld a, [wRecordBufB + $1D]
     ld h, a
     ld a, l
-    ld [wD2B1], a
+    ld [wAIWeights + $4], a
     ld a, h
-    ld [wD2B2], a
+    ld [wAIWeights + $5], a
     ld a, l
     ld [wSpeciesIdLo], a
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesFamily
     ld a, [wSpeciesRecord]
-    ld [wD2B5], a
-    ld a, [wD2AD]
+    ld [wAIWeights + $8], a
+    ld a, [wAIWeights]
     ld l, a
-    ld a, [wD2AE]
+    ld a, [wAIWeights + $1]
     ld h, a
     add hl, hl
     ld a, l
@@ -61,50 +61,50 @@ Func_081_4001:: ; address name
     ld h, a
     deref_hl
     push hl
-    ld a, [wD2AF]
+    ld a, [wAIWeights + $2]
     ld e, a
-    ld a, [wD2B0]
+    ld a, [wAIWeights + $3]
     ld d, a
     ld a, e
     ldh [hTemp0], a
     ld a, d
     ldh [hTemp1], a
-    ld a, [wD2B1]
+    ld a, [wAIWeights + $4]
     ld e, a
-    ld a, [wD2B2]
+    ld a, [wAIWeights + $5]
     ld d, a
     ld a, e
     ldh [hTemp2], a
     ld a, d
     ldh [hTemp3], a
-    ld a, [wD2B4]
+    ld a, [wAIWeights + $7]
     ldh [hTemp4], a
-    ld a, [wD2B5]
+    ld a, [wAIWeights + $8]
     ldh [hTemp5], a
     call CallFunc4001InBank81KeepRegs_Sub01_Sub01
     pop hl
     ld a, c
     or a, a
     jr z, Jump_081_40D8
-    ld a, [wD2B1]
+    ld a, [wAIWeights + $4]
     ld e, a
-    ld a, [wD2B2]
+    ld a, [wAIWeights + $5]
     ld d, a
     ld a, e
     ldh [hTemp0], a
     ld a, d
     ldh [hTemp1], a
-    ld a, [wD2AF]
+    ld a, [wAIWeights + $2]
     ld e, a
-    ld a, [wD2B0]
+    ld a, [wAIWeights + $3]
     ld d, a
     ld a, e
     ldh [hTemp2], a
     ld a, d
     ldh [hTemp3], a
-    ld a, [wD2B5]
+    ld a, [wAIWeights + $8]
     ldh [hTemp4], a
-    ld a, [wD2B4]
+    ld a, [wAIWeights + $7]
     ldh [hTemp5], a
     call CallFunc4001InBank81KeepRegs_Sub01_Sub01
     ld a, c
@@ -124,7 +124,7 @@ Jump_081_40D8::
 
 ; only called from CallFunc4001InBank81KeepRegs_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. CallFunc4001InBank81KeepRegs_Sub01)
-; reads: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, wD2B3, wD2AD, wD2AE
+; reads: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, wAIWeights
 ; points at: hTemp5
 CallFunc4001InBank81KeepRegs_Sub01_Sub01::
 Func_081_40E2:: ; address name
@@ -144,13 +144,13 @@ Jump_081_40F4::
     ld l, a
     ldh a, [hTemp1]
     ld h, a
-    ld a, [wD2AD]
+    ld a, [wAIWeights]
     ld c, a
-    ld a, [wD2AE]
+    ld a, [wAIWeights + $1]
     ld b, a
     call CompareHLToBC
     jr nz, Jump_081_4113
-    ld a, [wD2B3]
+    ld a, [wAIWeights + $6]
     ld hl, hTemp5
     cp a, [hl]
     jr nz, Jump_081_4113
@@ -167,7 +167,7 @@ Jump_081_4116::
     ld c, [hl]
     inc hl
     inc hl
-    ld a, [wD2B3]
+    ld a, [wAIWeights + $6]
     cp a, c
     jr z, Jump_081_4126
 
@@ -1581,11 +1581,11 @@ Data_081_5451:: ; heuristic: target of a monotone pointer table; C0
 
 ; copies three bytes of table $555D entry ($5486[wD0A6] * $129 + 3 * (wD0E8 - 1)) to wD0EA (E-0121)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
-; reads: wD0A6, wD0E8
-; points at: wD0EA
+; reads: wWorkBuf, wLinkMenuEntry
+; points at: wLinkMenuEntryBytes
 LoadTable555DEntryForWD0A6ToWD0EA::
 Func_081_5453:: ; address name
-    ld a, [wD0A6]
+    ld a, [wWorkBuf + $9]
     ld l, a
     ld h, $00
     ld a, l
@@ -1597,7 +1597,7 @@ Func_081_5453:: ; address name
     ld a, [hl]
     ld bc, $0129
     call Multiply8By16
-    ld a, [wD0E8]
+    ld a, [wLinkMenuEntry]
     dec a
     ld c, a
     ld b, $00
@@ -1610,7 +1610,7 @@ Func_081_5453:: ; address name
     ld a, h
     adc a, $55
     ld h, a
-    ld de, wD0EA
+    ld de, wLinkMenuEntryBytes
     ld a, [hl+]
     ld [de], a
     inc de

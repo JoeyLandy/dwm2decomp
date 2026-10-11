@@ -4718,8 +4718,8 @@ Jump_039_67A9::
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp5, hTemp6, hTemp1, hTemp2, hTemp0, hTemp3, hTemp4
-; writes: wD09D, wD09E, wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, ...
-; points at: wD09D, hTemp1, wBattleTargetChoice
+; writes: wWorkBuf, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6
+; points at: wWorkBuf, hTemp1, wBattleTargetChoice
 ChooseTarget_Heal_67AD:: ; heuristic: target of a pointer table; C0
 Func_039_67AD:: ; address name
     ld a, [wBattleActor]
@@ -4728,18 +4728,18 @@ Func_039_67AD:: ; address name
     ld d, $03
     push de
     xor a, a
-    ld [wD09D], a
-    ld [wD09E], a
-    ld [wD09F], a
-    ld [wD0A0], a
-    ld [wD0A1], a
-    ld [wD0A2], a
-    ld [wD0A3], a
-    ld [wD0A4], a
-    ld [wD0A5], a
-    ld [wD0A6], a
-    ld [wD0A7], a
-    ld [wD0A8], a
+    ld [wWorkBuf], a
+    ld [wWorkBuf + $1], a
+    ld [wWorkBuf + $2], a
+    ld [wWorkBuf + $3], a
+    ld [wWorkBuf + $4], a
+    ld [wWorkBuf + $5], a
+    ld [wWorkBuf + $6], a
+    ld [wWorkBuf + $7], a
+    ld [wWorkBuf + $8], a
+    ld [wWorkBuf + $9], a
+    ld [wWorkBuf + $A], a
+    ld [wWorkBuf + $B], a
 
 Jump_039_67DB::
     ld a, e
@@ -4758,7 +4758,7 @@ Jump_039_67DB::
     push de
     ld a, e
     and a, $03
-    ld de, wD09D
+    ld de, wWorkBuf
     add a, a
     add a, a
     add a, e
@@ -4807,7 +4807,7 @@ Jump_039_6820::
     jr z, Jump_039_687A
     ld a, e
     and a, $03
-    ld hl, wD09D
+    ld hl, wWorkBuf
     add a, a
     add a, a
     add_a_to_hl
@@ -4859,7 +4859,7 @@ Jump_039_687A::
     ld a, e
     ldh [hTemp0], a
     and a, $03
-    ld hl, wD09D
+    ld hl, wWorkBuf
     add a, a
     add a, a
     add_a_to_hl
@@ -4893,7 +4893,7 @@ Jump_039_68AE::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp4, hTemp5, hTemp0, wD876, wD877, wD874, wD875, ...
 ; writes: hTemp0, hTemp4, hTemp5, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873, ...
-; points at: hTemp0, wBattleDamageLo, hTemp1, wBattleTargetChoice, wD09D
+; points at: hTemp0, wBattleDamageLo, hTemp1, wBattleTargetChoice, wWorkBuf
 ChooseTarget_Heal_68B0:: ; heuristic: target of a pointer table; C0
 Func_039_68B0:: ; address name
     ld a, [wBattleActor]

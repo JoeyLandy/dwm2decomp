@@ -2469,7 +2469,7 @@ Jump_005_4C5A::
 ; counts the present slots among the actor's three opposite slots (D = the last one found); when fewer than two are present and that foe's HP (GetBattleHP_Bank05) is below the word wD2C1[2 * (slot & 3)], C = 0; otherwise C = $FF. With no foe present D is not set by this routine (E-0091)
 ; 32 call sites from 32 routines (e.g. AIScore_ChargeUp_Sub01, AIIronizeUsable, AIScore_Dodge_Sub01_Sub01, AIScore_Skill00, ...)
 ; reads: wBattleActor
-; points at: wD2C1
+; points at: wAIDamageEstimates
 CheckLoneFoeHPNotBelowWD2C1::
 Func_005_4C5D:: ; address name
     ld a, [wBattleActor]
@@ -2496,7 +2496,7 @@ Jump_005_4C71::
     ld a, d
     call GetBattleHP_Bank05
     push hl
-    ld hl, wD2C1
+    ld hl, wAIDamageEstimates
     ld a, d
     and a, $03
     sla a
@@ -2865,7 +2865,7 @@ Jump_005_4E45::
 ; C = $00 when an occupied foe's wD2C1 word is at least Func_005_4E7C for it, else $FF (E-0125)
 ; 12 call sites from 12 routines (e.g. InvertedResultOfFunc4E48, AIScore_Blaze, AIScore_Firebal, AIScore_BigBang, ...)
 ; reads: wBattleActor
-; points at: wD2C1
+; points at: wAIDamageEstimates
 FailIfFoeWD2C1AtLeastEstimate::
 Func_005_4E48:: ; address name
     ld a, [wBattleActor]
@@ -2873,7 +2873,7 @@ Func_005_4E48:: ; address name
     xor a, $04
     ld c, a
     ld b, $03
-    ld hl, wD2C1
+    ld hl, wAIDamageEstimates
 
 Jump_005_4E55::
     ld a, c
@@ -4241,7 +4241,7 @@ Jump_005_55BB::
 ; link battles only: C = $00 when rule bits 7 and 6 of wD044 are set and the side's wD057 flag (or wD045 bit 6) allows it; otherwise $FF (E-0124)
 ; 2 call sites from 2 routines (e.g. AIAddScoresFor55BEAnd5731, AIScore_Sacrifice_Sub03)
 ; reads: wLinkMode, wBattleActor
-; points at: wD044, wD057
+; points at: wLinkRuleWork57
 LinkRuleCheckWD044Bit6::
 Func_005_55BE:: ; address name
     ld a, [wLinkMode]
@@ -4249,7 +4249,7 @@ Func_005_55BE:: ; address name
     jr z, Jump_005_55F0
     cp a, $02
     jr z, Jump_005_55F0
-    ld hl, wD044
+    ld hl, wLinkRules + $1
     bit 7, [hl]
     jr z, Jump_005_55F0
     bit 6, [hl]
@@ -4258,7 +4258,7 @@ Func_005_55BE:: ; address name
     bit 6, [hl]
     jr z, Jump_005_55ED
     ld a, [wBattleActor]
-    ld hl, wD057
+    ld hl, wLinkRuleWork57
     and a, $04
     srl a
     srl a
@@ -4277,7 +4277,7 @@ Jump_005_55F0::
 ; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 5 are set, and either wD045 bit 5 is clear or bit 5 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
 ; 2 call sites from 2 routines (e.g. AIScore_MagicBack_Sub01, WeighWD044RuleBit5)
 ; reads: wLinkMode, wBattleActor
-; points at: wD044, wD057
+; points at: wLinkRuleWork57
 CheckWD044RuleBit5:: ; heuristic: follows a terminator; C0
 Func_005_55F3:: ; address name
     ld a, [wLinkMode]
@@ -4285,7 +4285,7 @@ Func_005_55F3:: ; address name
     jr z, Jump_005_5625
     cp a, $02
     jr z, Jump_005_5625
-    ld hl, wD044
+    ld hl, wLinkRules + $1
     bit 7, [hl]
     jr z, Jump_005_5625
     bit 5, [hl]
@@ -4294,7 +4294,7 @@ Func_005_55F3:: ; address name
     bit 5, [hl]
     jr z, Jump_005_5622
     ld a, [wBattleActor]
-    ld hl, wD057
+    ld hl, wLinkRuleWork57
     and a, $04
     srl a
     srl a
@@ -4313,7 +4313,7 @@ Jump_005_5625::
 ; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 4 are set, and either wD045 bit 4 is clear or bit 4 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
 ; 1 call site from 1 routine (e.g. WeighWD044RuleBit4)
 ; reads: wLinkMode, wBattleActor
-; points at: wD044, wD057
+; points at: wLinkRuleWork57
 CheckWD044RuleBit4:: ; heuristic: follows a terminator; C0
 Func_005_5628:: ; address name
     ld a, [wLinkMode]
@@ -4321,7 +4321,7 @@ Func_005_5628:: ; address name
     jr z, Jump_005_565A
     cp a, $02
     jr z, Jump_005_565A
-    ld hl, wD044
+    ld hl, wLinkRules + $1
     bit 7, [hl]
     jr z, Jump_005_565A
     bit 4, [hl]
@@ -4330,7 +4330,7 @@ Func_005_5628:: ; address name
     bit 4, [hl]
     jr z, Jump_005_5657
     ld a, [wBattleActor]
-    ld hl, wD057
+    ld hl, wLinkRuleWork57
     and a, $04
     srl a
     srl a
@@ -4349,7 +4349,7 @@ Jump_005_565A::
 ; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 3 are set, and either wD045 bit 3 is clear or bit 3 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
 ; 1 call site from 1 routine (e.g. WeighWD044RuleBit3)
 ; reads: wLinkMode, wBattleActor
-; points at: wD044, wD057
+; points at: wLinkRuleWork57
 CheckWD044RuleBit3:: ; heuristic: follows a terminator; C0
 Func_005_565D:: ; address name
     ld a, [wLinkMode]
@@ -4357,7 +4357,7 @@ Func_005_565D:: ; address name
     jr z, Jump_005_568F
     cp a, $02
     jr z, Jump_005_568F
-    ld hl, wD044
+    ld hl, wLinkRules + $1
     bit 7, [hl]
     jr z, Jump_005_568F
     bit 3, [hl]
@@ -4366,7 +4366,7 @@ Func_005_565D:: ; address name
     bit 3, [hl]
     jr z, Jump_005_568C
     ld a, [wBattleActor]
-    ld hl, wD057
+    ld hl, wLinkRuleWork57
     and a, $04
     srl a
     srl a
@@ -4385,7 +4385,7 @@ Jump_005_568F::
 ; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 2 are set, and either wD045 bit 2 is clear or bit 2 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
 ; 1 call site from 1 routine (e.g. WeighWD044RuleBit2)
 ; reads: wLinkMode, wBattleActor
-; points at: wD044, wD057
+; points at: wLinkRuleWork57
 CheckWD044RuleBit2:: ; heuristic: follows a terminator; C0
 Func_005_5692:: ; address name
     ld a, [wLinkMode]
@@ -4393,7 +4393,7 @@ Func_005_5692:: ; address name
     jr z, Jump_005_56C4
     cp a, $02
     jr z, Jump_005_56C4
-    ld hl, wD044
+    ld hl, wLinkRules + $1
     bit 7, [hl]
     jr z, Jump_005_56C4
     bit 2, [hl]
@@ -4402,7 +4402,7 @@ Func_005_5692:: ; address name
     bit 2, [hl]
     jr z, Jump_005_56C1
     ld a, [wBattleActor]
-    ld hl, wD057
+    ld hl, wLinkRuleWork57
     and a, $04
     srl a
     srl a
@@ -4421,7 +4421,7 @@ Jump_005_56C4::
 ; C = 0 (fail) when wC58A is neither 0 nor 2, wD044 bits 7 and 1 are set, and either wD045 bit 1 is clear or bit 1 is set in the actor side's byte wD057[actor / 4]; otherwise C = $FF (E-0091)
 ; 1 call site from 1 routine (e.g. WeighWD044RuleBit1)
 ; reads: wLinkMode, wBattleActor
-; points at: wD044, wD057
+; points at: wLinkRuleWork57
 CheckWD044RuleBit1:: ; heuristic: follows a terminator; C0
 Func_005_56C7:: ; address name
     ld a, [wLinkMode]
@@ -4429,7 +4429,7 @@ Func_005_56C7:: ; address name
     jr z, Jump_005_56F9
     cp a, $02
     jr z, Jump_005_56F9
-    ld hl, wD044
+    ld hl, wLinkRules + $1
     bit 7, [hl]
     jr z, Jump_005_56F9
     bit 1, [hl]
@@ -4438,7 +4438,7 @@ Func_005_56C7:: ; address name
     bit 1, [hl]
     jr z, Jump_005_56F6
     ld a, [wBattleActor]
-    ld hl, wD057
+    ld hl, wLinkRuleWork57
     and a, $04
     srl a
     srl a
@@ -4457,7 +4457,7 @@ Jump_005_56F9::
 ; only called from AIScore_MegaMagic (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
 ; reads: wLinkMode, wBattleActor
-; points at: wD044, wD057
+; points at: wLinkRuleWork57
 AIScore_MegaMagic_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_56FC:: ; address name
     ld a, [wLinkMode]
@@ -4465,7 +4465,7 @@ Func_005_56FC:: ; address name
     jr z, Jump_005_572E
     cp a, $02
     jr z, Jump_005_572E
-    ld hl, wD044
+    ld hl, wLinkRules + $1
     bit 7, [hl]
     jr z, Jump_005_572E
     bit 0, [hl]
@@ -4474,7 +4474,7 @@ Func_005_56FC:: ; address name
     bit 0, [hl]
     jr z, Jump_005_572B
     ld a, [wBattleActor]
-    ld hl, wD057
+    ld hl, wLinkRuleWork57
     and a, $04
     srl a
     srl a
@@ -4493,7 +4493,7 @@ Jump_005_572E::
 ; link battles only: C = $00 when the wD04B rule is on and wD891 is less than 4 past its limit; otherwise $FF (E-0124)
 ; 3 call sites from 3 routines (e.g. AIScore_MegaMagic, AIScore_BigBang, AIAddScoresFor55BEAnd5731)
 ; reads: wLinkMode, wD891
-; points at: wD04B
+; points at: wLinkRuleTurnLimit
 LinkRuleCheckWD04BTurnLimit::
 Func_005_5731:: ; address name
     ld a, [wLinkMode]
@@ -4501,7 +4501,7 @@ Func_005_5731:: ; address name
     jr z, Jump_005_5755
     cp a, $02
     jr z, Jump_005_5755
-    ld hl, wD04B
+    ld hl, wLinkRuleTurnLimit
     bit 7, [hl]
     jr z, Jump_005_5755
     ld a, [hl]
@@ -5225,7 +5225,7 @@ Jump_005_5C89::
 ; C = $00 when an occupied foe's HP is at most four fifths of its wD2C1 word, else $FF (E-0125)
 ; 2 call sites from 2 routines (e.g. AIScore_SquallHit, AIScore_BiAttack)
 ; reads: wBattleActor
-; points at: wD2C1
+; points at: wAIDamageEstimates
 FailIfFoeHPAtMostFourFifthsWD2C1:: ; heuristic: follows a terminator; C0
 Func_005_5C8C:: ; address name
     ld a, [wBattleActor]
@@ -5239,7 +5239,7 @@ Jump_005_5C96::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5CC1
     and a, $03
-    ld hl, wD2C1
+    ld hl, wAIDamageEstimates
     sla a
     add_a_to_hl
     push bc
@@ -5710,7 +5710,7 @@ Jump_005_5ECB::
 
 ; only called from AIAddScoresFor5ECEAnd5FC7 (E-0047)
 ; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7)
-; reads: wBattleActor, wD2CC
+; reads: wBattleActor, wAIFlag
 ; points at: wDA5B
 AIAddScoresFor5ECEAnd5FC7_Sub01::
 Func_005_5ECE:: ; address name
@@ -5718,7 +5718,7 @@ Func_005_5ECE:: ; address name
     call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_5F10
-    ld a, [wD2CC]
+    ld a, [wAIFlag]
     or a, a
     jr z, Jump_005_5F0A
     ld a, [wBattleActor]
@@ -5802,7 +5802,7 @@ Func_005_5F2A:: ; address name
 
 ; C = 1 when the AI mode is below 4; with wD2CC set, $00 when another ally that can act knows skill $63 or $64 with enough MP; otherwise $FF (E-0127)
 ; 2 call sites from 2 routines (e.g. AIScoreB_TwinHits, AIScore_TwinHits)
-; reads: wBattleActor, wD2CC
+; reads: wBattleActor, wAIFlag
 ; points at: wD80D, wDA5B
 FailIfAllyCanUseSkill63Or64:: ; heuristic: follows a terminator; C0
 Func_005_5F3D:: ; address name
@@ -5810,7 +5810,7 @@ Func_005_5F3D:: ; address name
     call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_5F8A
-    ld a, [wD2CC]
+    ld a, [wAIFlag]
     or a, a
     jr z, Jump_005_5F84
     ld a, [wBattleActor]
@@ -5911,7 +5911,7 @@ Jump_005_5FB3::
 
 ; only called from AIAddScoresFor5ECEAnd5FC7 (E-0047)
 ; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7)
-; reads: wBattleActor, wD2CC
+; reads: wBattleActor, wAIFlag
 ; points at: wDA5B
 AIAddScoresFor5ECEAnd5FC7_Sub02::
 Func_005_5FC7:: ; address name
@@ -5919,7 +5919,7 @@ Func_005_5FC7:: ; address name
     call ReadWDA53Indexed_Bank05
     cp a, $04
     jr c, Jump_005_600B
-    ld a, [wD2CC]
+    ld a, [wAIFlag]
     or a, a
     jr z, Jump_005_6005
     ld a, [wBattleActor]
@@ -6263,14 +6263,14 @@ Jump_005_6195::
 
 ; C = 1 when wDA53[actor] (the AI mode) is below 3; otherwise C = 0 when wD2CC is non-zero, $FF when it is zero (E-0092)
 ; 7 call sites from 7 routines (e.g. AIScore_SquallHit_Sub01, AIIronizeUsable, AIScore_Dodge_Sub01_Sub01, AIGuardSkillUsable_7C45, ...)
-; reads: wBattleActor, wD2CC
+; reads: wBattleActor, wAIFlag
 CheckWD2CCSetModeGated:: ; heuristic: follows a terminator; C0
 Func_005_6198:: ; address name
     ld a, [wBattleActor]
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_61AE
-    ld a, [wD2CC]
+    ld a, [wAIFlag]
     or a, a
     jr nz, Jump_005_61AB
     ld c, $FF
@@ -6800,7 +6800,7 @@ Jump_005_6491::
 ; C = $00 when an occupied foe's HP is below 4 * its wD2C1 word, else $FF; the loop never advances C, so it checks the first foe slot three times (E-0125)
 ; 4 call sites from 4 routines (e.g. AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, AIScore_PoisonHit)
 ; reads: wBattleActor
-; points at: wD2C1
+; points at: wAIDamageEstimates
 FailIfFoeHPBelowFourTimesWD2C1::
 Func_005_6494:: ; address name
     ld a, [wBattleActor]
@@ -6816,7 +6816,7 @@ Jump_005_649E::
     push bc
     ld a, c
     and a, $03
-    ld hl, wD2C1
+    ld hl, wAIDamageEstimates
     add a, a
     add_a_to_hl
     deref_hl
@@ -7338,7 +7338,7 @@ Func_005_6741:: ; address name
 ; only called from AIScore_BiAttack (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BiAttack)
 ; reads: wBattleActor
-; points at: wD2C1
+; points at: wAIDamageEstimates
 AIScore_BiAttack_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_676E:: ; address name
     ld a, [wBattleActor]
@@ -7355,7 +7355,7 @@ Jump_005_6778::
     ld a, c
     and a, $03
     add a, a
-    ld hl, wD2C1
+    ld hl, wAIDamageEstimates
     add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
@@ -7391,7 +7391,7 @@ Jump_005_67AF::
 ; only called from AIScore_Berserker (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Berserker)
 ; reads: wBattleActor
-; points at: wD2C1
+; points at: wAIDamageEstimates
 AIScore_Berserker_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_67B2:: ; address name
     ld a, [wBattleActor]
@@ -7439,7 +7439,7 @@ Jump_005_67D2::
     ld a, e
     and a, $03
     add a, a
-    ld hl, wD2C1
+    ld hl, wAIDamageEstimates
     add_a_to_hl
     deref_hl
     add hl, hl
@@ -7547,7 +7547,7 @@ Jump_005_6899::
 
 ; only called from AIScore_Kamikaze (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Kamikaze)
-; reads: wBattleActor, wLinkMode, wBattleKind, wD2CC, wRecordBufferData
+; reads: wBattleActor, wLinkMode, wBattleKind, wAIFlag, wRecordBufferData
 ; points at: wDA5B, wDA72
 AIScore_Kamikaze_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_689C:: ; address name
@@ -7561,7 +7561,7 @@ Func_005_689C:: ; address name
     ld a, [wBattleKind]
     cp a, $02
     jp nc, Jump_005_696C
-    ld a, [wD2CC]
+    ld a, [wAIFlag]
     or a, a
     jp z, Jump_005_696C
     ld a, [wBattleActor]

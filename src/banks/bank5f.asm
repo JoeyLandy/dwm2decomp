@@ -823,7 +823,7 @@ Jump_05F_6D35::
 ; with hFF8D bits 1-3 set: wD7F1 = wC6FE[hFFC6] (bank 0 record), far-calls Func_014_7E96, LoadRecordListNameTiles and Func_004_4AA8, wC527 = $7F, then clears hFF8D bits 1-3 (E-0121)
 ; 3 call sites from 3 routines (e.g. ScriptCommand3D_Run_Case03, ScriptCommand3C_Run_Case0D, ScriptCommand3A_Run_Case0A)
 ; reads: hFieldDrawFlags, hTemp0
-; writes: hFieldDrawFlags, wD7F1, wD7F2, wOBJPaletteUploadRequest
+; writes: hFieldDrawFlags, wArg1, wArg2, wOBJPaletteUploadRequest
 ; points at: wPartyList
 LoadListedRecordNameTilesForHFFC6::
 Func_05F_6D3F:: ; address name
@@ -835,9 +835,9 @@ Func_05F_6D3F:: ; address name
     ld hl, wPartyList
     add_a_to_hl
     ld a, [hl]
-    ld [wD7F1], a
+    ld [wArg1], a
     xor a, a
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall DeleteSRAMRecordAndCompact
     call LoadRecordListNameTiles
     farcall LoadPlayerAndFollowerSpriteGraphics
@@ -850,16 +850,16 @@ Func_05F_6D3F:: ; address name
 
 ; for record $FF in bank 1 (Func_014_7E96): if wD7F5 is not $FF and is >= Data_05F_6DA8[wC7C7 & 3], sets wD7F5 = $FF (E-0121)
 ; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, Talk08D1_TheEvaluatorSaidI, ScriptCommand2A_Run_Case02, ...)
-; reads: wD7F5, wFarmLevel
-; writes: wD7F1, wD7F2, wD7F5
+; reads: wArg5, wFarmLevel
+; writes: wArg1, wArg2, wArg5
 ClearWD7F5IfAtOrAboveLimitForWC7C7::
 Func_05F_6D78:: ; address name
     ld a, $FF
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, $01
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall DeleteSRAMRecordAndCompact
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $FF
     ret z
     ld a, [wFarmLevel]
@@ -868,11 +868,11 @@ Func_05F_6D78:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld c, a
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, c
     ret c
     ld a, $FF
-    ld [wD7F5], a
+    ld [wArg5], a
     ret
 
 Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0

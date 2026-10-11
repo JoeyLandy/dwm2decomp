@@ -557,7 +557,7 @@ Jump_030_4342::
 
 ; entry 6 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD2C8, wD2C9, wD2CA, wD2CB, wBattleSubPhase
+; writes: wBattleCommandArgs, wBattleSubPhase
 ; points at: wBattleHP, wBattleMaxHP, wBattleStep, wBattleResolveStep
 RunBattleCommandEntry_Case06::
 Jump_030_434C:: ; address name
@@ -567,18 +567,18 @@ Jump_030_434C:: ; address name
     call AddWordAtHLToBC_Bank30
     call AddWordAtHLToBC_Bank30
     ld a, c
-    ld [wD2C8], a
+    ld [wBattleCommandArgs], a
     ld a, b
-    ld [wD2C9], a
+    ld [wBattleCommandArgs + $1], a
     ld hl, wBattleMaxHP
     ld bc, $0000
     call AddWordAtHLToBC_Bank30
     call AddWordAtHLToBC_Bank30
     call AddWordAtHLToBC_Bank30
     ld a, c
-    ld [wD2CA], a
+    ld [wBattleCommandArgs + $2], a
     ld a, b
-    ld [wD2CB], a
+    ld [wBattleCommandArgs + $3], a
     ld hl, wBattleStep
     inc [hl]
     xor a, a
@@ -932,7 +932,7 @@ Jump_030_4586::
 ; when the actor has no forced action and bit 7 of its wDAD8 byte is set, initialises the AI weights and runs the routine for its AI mode; a forced action is stored directly; then wBattleResolveStep += 1 (E-0124)
 ; 2 call sites from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case01_Sub01)
 ; reads: wBattleActor
-; writes: wD2CC
+; writes: wAIFlag
 ; points at: wDAD8, wDA53, wBattleResolveStep
 AIChooseActionResolveStep::
 Func_030_4595:: ; address name
@@ -945,7 +945,7 @@ Func_030_4595:: ; address name
     jr z, Jump_030_45CB
     call InitAIWeightsForActor
     xor a, a
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ld a, [wBattleActor]
     ld hl, wDA53
     add_a_to_hl
@@ -974,10 +974,10 @@ Data_030_45D0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; clears wD2AD ($14 bytes), sets wDA3C-wDA42 = 0, 0, 0, 1, 2, 3, 3, then adds personality, HP and other weights (Func_030_4617, 46BA, 47B9, 483F); wD871 = 0 (E-0124)
 ; 1 call site from 1 routine (e.g. AIChooseActionResolveStep)
 ; writes: wDA3C, wDA3D, wDA3E, wDA3F, wDA40, wDA41, wDA42, wD871
-; points at: wD2AD
+; points at: wAIWeights
 InitAIWeightsForActor::
 Func_030_45DA:: ; address name
-    ld hl, wD2AD
+    ld hl, wAIWeights
     ld bc, $0014
     xor a, a
     call FillBytes
@@ -1343,7 +1343,7 @@ Jump_030_4834::
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wRandomLo, wRandomHi, wDA3F, wDA40, wDA41, wDA3C, wBattleActor
 ; writes: wDA3F, wDA40, wDA41
-; points at: wDA3C, wD988, wD2AD, wD2BD
+; points at: wDA3C, wD988, wAIWeights
 SortThreeAIWeightsRandomTies::
 Func_030_483F:: ; address name
     ld a, [wRandomLo]
@@ -1429,7 +1429,7 @@ Jump_030_48A7::
 ; for each of the actor's skills equal to D adds weight through Func_030_48F3 to wD2AD[index]; for D other than 2 also to wD2BD[D - 1] (E-0125)
 ; 1 call site from 1 routine (e.g. SortThreeAIWeightsRandomTies)
 ; reads: wBattleActor
-; points at: wD988, wD2AD, wD2BD
+; points at: wD988, wAIWeights
 AddWeightsForSkillD::
 Func_030_48B6:: ; address name
     ld bc, $0800
@@ -1448,7 +1448,7 @@ Jump_030_48C6::
     jr nz, Jump_030_48DA
     push hl
     ld a, c
-    ld hl, wD2AD
+    ld hl, wAIWeights
     add a, a
     add_a_to_hl
     call AddWeightsForSkillD_Sub01
@@ -1465,7 +1465,7 @@ Jump_030_48DA::
     cp a, $02
     jr z, Jump_030_48F2
     dec a
-    ld hl, wD2BD
+    ld hl, wAIWeights + $10
     add_a_to_hl
     call AddWeightsForSkillD_Sub01
 
@@ -1593,7 +1593,7 @@ Data_030_4998:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wLinkMode, wDA3F
 ; writes: wDA6B, wDA6C
-; points at: wD988, wD2AD
+; points at: wD988, wAIWeights
 UseAIScoreTableB:: ; heuristic: target of a pointer table; C0
 Func_030_4AC6:: ; address name
     ld hl, AIScoreRoutineTableB
@@ -1607,7 +1607,7 @@ Func_030_4AC6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wLinkMode, wDA3F
 ; writes: wDA6B, wDA6C
-; points at: wD988, wD2AD
+; points at: wD988, wAIWeights
 ScoreActionsWithAIScoreTableA:: ; heuristic: target of a pointer table; C0
 Func_030_4AD3:: ; address name
     ld hl, AIScoreRoutineTableA
@@ -1647,7 +1647,7 @@ Jump_030_4B06::
     ld hl, wD988
     swap a
     add_a_to_hl
-    ld de, wD2AD
+    ld de, wAIWeights
     ld b, $08
 
 Jump_030_4B1B::
@@ -1840,7 +1840,7 @@ Jump_030_4BFF::
 ; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wRandomLo, wBattleActor, hTemp0
 ; writes: hTemp0
-; points at: wD2AD, wD989
+; points at: wAIWeights, wD989
 ChooseHighestWeightedAction::
 Func_030_4C00:: ; address name
     xor a, a
@@ -1851,7 +1851,7 @@ Func_030_4C00:: ; address name
 Jump_030_4C09::
     ld a, e
     push hl
-    ld hl, wD2AD
+    ld hl, wAIWeights
     add a, a
     add_a_to_hl
     ld c, [hl]
@@ -1909,7 +1909,7 @@ Jump_030_4C5E::
 ; for each foe stores (actor ATK - foe DEF / 2) / 2, floored at 0, in wD2C1[foe & 3] (0 for empty slots) (E-0125)
 ; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wBattleActor
-; points at: wD2C1
+; points at: wAIDamageEstimates
 EstimateDamageVsEachFoeToWD2C1::
 Func_030_4C63:: ; address name
     ld a, [wBattleActor]
@@ -1950,7 +1950,7 @@ Jump_030_4C92::
 Jump_030_4C96::
     ld a, c
     and a, $03
-    ld hl, wD2C1
+    ld hl, wAIDamageEstimates
     add a, a
     add_a_to_hl
     ld [hl], e
@@ -2950,7 +2950,7 @@ Jump_030_543E::
 ; wPersonalityIndex = PersonalityIndexOfSlot_Bank30(actor); resets the AI workspace (Func_030_5472); with wD2CC = 1 runs the routine for the actor's AI mode (Data_030_45D0 indexed by wDA53[actor], JumpToHL) and stores its result B as the actor's chosen action; runs Func_030_4CFC; wD2CC = 0 (E-0120)
 ; 3 call sites from 2 routines (e.g. Func_032_4ADC_Case01_Case00, RunWC5FDState_E0_Case0D_Case05_Sub01)
 ; reads: wBattleActor
-; writes: wPersonalityIndex, wD2CC
+; writes: wPersonalityIndex, wAIFlag
 ; points at: wDA53
 AIChooseActionForActor::
 Func_030_5440:: ; address name
@@ -2959,7 +2959,7 @@ Func_030_5440:: ; address name
     ld [wPersonalityIndex], a
     call AIChooseActionForActor_Sub01
     ld a, $01
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ld a, [wBattleActor]
     ld hl, wDA53
     add_a_to_hl
@@ -2971,16 +2971,16 @@ Func_030_5440:: ; address name
     ld [hl], b
     call RunActorActionHandlersForAISlots
     xor a, a
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ret
 
 ; only called from AIChooseActionForActor (E-0047)
 ; 1 call site from 1 routine (e.g. AIChooseActionForActor)
 ; writes: wDA3C, wDA3D, wDA3E, wDA3F, wDA40, wDA41, wDA42, wD871
-; points at: wD2AD
+; points at: wAIWeights
 AIChooseActionForActor_Sub01::
 Func_030_5472:: ; address name
-    ld hl, wD2AD
+    ld hl, wAIWeights
     ld bc, $0014
     xor a, a
     call FillBytes
@@ -3046,21 +3046,21 @@ Jump_030_54D9::
 ; 1 call site from 1 routine (e.g. AIChooseActionForActor_Sub01)
 ; reads: wBattleActor, wDA3E, wDA3C
 ; writes: wDA3E, wDA3C
-; points at: wD2C8, wBattleHP
+; points at: wBattleCommandArgs, wBattleHP
 AIChooseActionForActor_Sub01_Sub02::
 Func_030_54DA:: ; address name
     ld a, [wBattleActor]
     rrca
     and a, $02
     xor a, $02
-    ld hl, wD2C8
+    ld hl, wBattleCommandArgs
     add_a_to_hl
     deref_hl
     push hl
     ld a, [wBattleActor]
     rrca
     and a, $02
-    ld hl, wD2C8
+    ld hl, wBattleCommandArgs
     add_a_to_hl
     deref_hl
     push hl

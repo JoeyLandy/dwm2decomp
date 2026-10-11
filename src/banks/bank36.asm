@@ -4599,7 +4599,7 @@ Jump_036_5BC2::
 
 ; only called from ActionEffect_TatsuCall (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_TatsuCall)
-; reads: wD871, wRecordBuffer, wRecordBufferData
+; reads: wD871, wRecordBuffer, wRecordBufferData, wScreenAttrBuffer
 ; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi, wD868, wD869, wD86A, wD86B
 ; points at: wBattleStatus, wBattleSlotOut, wDAAE, wBattleMonsterId, wD8B7, wBattleHP, wBattleMaxHP, wBattleMP, ...
 ActionEffect_TatsuCall_Sub01::
@@ -4686,7 +4686,7 @@ Func_036_5BC4:: ; address name
     ld b, a
     ld hl, wBattleAGL
     call StoreBCAtWordEntryWD871
-    ld a, [wRecordBufferData + $12]
+    ld a, [wScreenAttrBuffer]
     ld c, a
     ld a, [wRecordBufferData + $13]
     ld b, a
@@ -4729,7 +4729,7 @@ Func_036_5BC4:: ; address name
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld hl, wD01A
+    ld hl, wSpeciesRecord + $12
     ld a, l
     ld [wD868], a
     ld a, h
@@ -5117,7 +5117,7 @@ Jump_036_5F17::
 
 ; only called from ActionEffect_BeDragon (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_BeDragon)
-; reads: wBattleActionId, wRecordBufferData, wBattleActor, wRecordBuffer
+; reads: wBattleActionId, wRecordBufferData, wBattleActor, wScreenAttrBuffer, wRecordBuffer
 ; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi, wD868, wD869, wD86A, wD86B
 ; points at: wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, wBattleDEF, wBattleAGL, wBattleINT, ...
 ActionEffect_BeDragon_Sub02::
@@ -5170,7 +5170,7 @@ Jump_036_5F32::
     ld b, a
     ld hl, wBattleAGL
     call StoreBCAtActorWordEntry
-    ld a, [wRecordBufferData + $12]
+    ld a, [wScreenAttrBuffer]
     ld c, a
     ld a, [wRecordBufferData + $13]
     ld b, a
@@ -5188,7 +5188,7 @@ Jump_036_5F32::
     ld a, [wBattleActor]
     ld c, a
     farcall SetSlotAIModeFromINT
-    ld hl, wD01A
+    ld hl, wSpeciesRecord + $12
     ld a, l
     ld [wD868], a
     ld a, h
@@ -6657,7 +6657,7 @@ Func_036_6646:: ; address name
 ; 1 call site from 1 routine (e.g. ActionEffect_Transform_Sub01)
 ; reads: wRecordBuffer
 ; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi
-; points at: wDAAE, wD01A
+; points at: wDAAE
 ActionEffect_Transform_Sub01_Sub03::
 Func_036_6658:: ; address name
     ld b, a
@@ -6688,7 +6688,7 @@ Jump_036_6667::
     ld a, [wRecordBuffer + $1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld hl, wD01A
+    ld hl, wSpeciesRecord + $12
 
 Jump_036_669D::
     ret
@@ -7069,7 +7069,6 @@ Func_036_6912:: ; address name
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D2; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionD2:: ; code pointer of the table ActionEffectTable; C0
 Func_036_691E:: ; address name
     call ActionEffect_ActionD2_Sub01
@@ -7079,7 +7078,6 @@ Func_036_691E:: ; address name
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D3; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionD3:: ; code pointer of the table ActionEffectTable; C0
 Func_036_692A:: ; address name
     call ActionEffect_ActionD3_Sub01
@@ -7089,7 +7087,6 @@ Func_036_692A:: ; address name
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D4; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionD4:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6936:: ; address name
     call ActionEffect_ActionD4_Sub01
@@ -7099,7 +7096,6 @@ Func_036_6936:: ; address name
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D5; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionD5:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6942:: ; address name
     call SkillDamageScaledByWDA72Byte6Bits32
@@ -7119,7 +7115,6 @@ Func_036_694E:: ; address name
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D7; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionD7:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6957:: ; address name
     farcall RunA3414FAndMarkWDA5B3
@@ -7129,7 +7124,6 @@ Func_036_6957:: ; address name
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D8; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionD8:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6963:: ; address name
     farcall RunA3414FAndMarkWDA5B3
@@ -7139,7 +7133,6 @@ Func_036_6963:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 217; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionD9:: ; code pointer of the table ActionEffectTable; C0
 Func_036_696F:: ; address name
     call ActionEffect_ActionD9_Sub01
@@ -7464,7 +7457,6 @@ Func_036_6B74:: ; address name
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 0 (no name); ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; 2 call sites from 2 routines (e.g. ActionEffect_ActionC2, ActionEffect_PoisonHit)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_Action00:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B75:: ; address name
     call ComputeAttackDamage
@@ -8633,7 +8625,7 @@ Func_036_71D9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; writes: wBattleSubPhase, wBattleResolveStep, wDAC3, wDAC0, wDAC1, wDAC2
-; points at: wD812, wD035
+; points at: wD812
 ActionEffect_CallHelp:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71DF:: ; address name
     ld a, [wBattleActor]
@@ -8668,7 +8660,6 @@ Jump_036_7214::
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 80 FireSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_FireSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_721A:: ; address name
     call AttackDamageScaledByWDA72Byte0Bits54
@@ -8677,7 +8668,6 @@ Func_036_721A:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 81 VacuSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_VacuSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7220:: ; address name
     call AttackDamageScaledByWDA72Byte1Bits76
@@ -8686,7 +8676,6 @@ Func_036_7220:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 82 BoltSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_BoltSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7226:: ; address name
     call AttackDamageScaledByWDA72Byte1Bits54
@@ -8695,7 +8684,6 @@ Func_036_7226:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 83 IceSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_IceSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_722C:: ; address name
     call AttackDamageScaledByWDA72Byte1Bits32
@@ -8704,7 +8692,6 @@ Func_036_722C:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 84 SlimeBlow; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_SlimeBlow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7232:: ; address name
     call AttackDamageHalvedDEFVsSlime
@@ -8713,7 +8700,6 @@ Func_036_7232:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 85 DrakSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_DrakSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7238:: ; address name
     call AttackDamageHalvedDEFVsDragon
@@ -8722,7 +8708,6 @@ Func_036_7238:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 86 BeastCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_BeastCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_723E:: ; address name
     call AttackDamageHalvedDEFVsBeast
@@ -8731,7 +8716,6 @@ Func_036_723E:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 87 BirdBlow; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_BirdBlow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7244:: ; address name
     call AttackDamageHalvedDEFVsBird
@@ -8740,7 +8724,6 @@ Func_036_7244:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 88 BugBlow; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_BugBlow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_724A:: ; address name
     call AttackDamageHalvedDEFVsBug
@@ -8749,7 +8732,6 @@ Func_036_724A:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 89 Shears; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_Shears:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7250:: ; address name
     call AttackDamageHalvedDEFVsPlant
@@ -8758,7 +8740,6 @@ Func_036_7250:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 90 DevilCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_DevilCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7256:: ; address name
     call AttackDamageHalvedDEFVsDemon
@@ -8767,7 +8748,6 @@ Func_036_7256:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 91 ZombieCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ZombieCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_725C:: ; address name
     call AttackDamageHalvedDEFVsZombie
@@ -8776,7 +8756,6 @@ Func_036_725C:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 92 CleanCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_CleanCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7262:: ; address name
     call AttackDamageHalvedDEFVsMaterial
@@ -8785,7 +8764,6 @@ Func_036_7262:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 93 AquaCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_AquaCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7268:: ; address name
     call AttackDamageHalvedDEFVsWater
@@ -8794,7 +8772,6 @@ Func_036_7268:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 94 MetalCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_MetalCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_726E:: ; address name
     call AttackDamageTimes1_5IfWD8A7Bit0
@@ -8811,7 +8788,6 @@ Func_036_7274:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_SquallHit:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7278:: ; address name
     call ComputeAttackDamage
@@ -8829,7 +8805,6 @@ Func_036_7278:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 99 BiAttack, 100 QuadHits; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_BiAttack:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7291:: ; address name
     call ActionEffect_BiAttack_Sub01
@@ -8839,7 +8814,6 @@ Func_036_7291:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleDamageLo, wD873, wBattleTarget
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_RainSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7297:: ; address name
     call ComputeAttackDamage
@@ -8872,7 +8846,6 @@ Jump_036_72B9::
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 102 MultiCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_MultiCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_72C4:: ; address name
     call ActionEffect_MultiCut_Sub01
@@ -8881,7 +8854,6 @@ Func_036_72C4:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 103 GigaSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_GigaSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_72CA:: ; address name
     call SkillDamageScaledByWDA72Byte6Bits32
@@ -8906,7 +8878,6 @@ Func_036_72D0:: ; address name
 ; 1 call site from 1 routine (e.g. ActionEffect_TwinSlash)
 ; reads: wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_PsycheUp:: ; code pointer of the table ActionEffectTable; C0
 Func_036_72E0:: ; address name
     call ComputeAttackDamage
@@ -8925,7 +8896,7 @@ Func_036_72E0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wDAD1, wDABD, wBattleDamageLo, wD873
 ; writes: wBattleTarget, wDAD1, wBattleSubPhase, wBattleResolveStep, wDAC0, wDAC1, wBattleDamageLo, wD873, ...
-; points at: wD810, wBattleTargetChoice, wD035
+; points at: wD810, wBattleTargetChoice
 ActionEffect_HighJump:: ; code pointer of the table ActionEffectTable; C0
 Func_036_72F9:: ; address name
     ld a, [wBattleActor]
@@ -8949,7 +8920,7 @@ Jump_036_730E::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wRandomLo, wBattleActor
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD80E, wD235
+; points at: wD80E
 ActionEffect_EvilSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7314:: ; address name
     ld a, [wBattleTarget]
@@ -8972,7 +8943,7 @@ Jump_036_7326::
     ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
-    ld hl, wD235
+    ld hl, wBattlerRecordSlot5 + $28
     ld bc, vTiles0 + $A8
     jp Jump_036_7C8B
 
@@ -9020,7 +8991,7 @@ Func_036_7378:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD812, wD80E, wD035
+; points at: wD812, wD80E
 ActionEffect_Berserker:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7387:: ; address name
     ld a, [wBattleActor]
@@ -9047,7 +9018,6 @@ Func_036_7387:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 111 Ramming; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_Ramming:: ; code pointer of the table ActionEffectTable; C0
 Func_036_73B7:: ; address name
     call DamageEightyPercentOfTargetHPScaled
@@ -9641,7 +9611,7 @@ Jump_036_7718::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wRandomLo
 ; writes: wBattleSubPhase, wBattleResolveStep, wDAC3, wDAC0, wDAC1, wBattleTarget, wBattleDamageLo, wD873, ...
-; points at: wD80F, wD854, wBattleStatus, wD0AD
+; points at: wD80F, wD854, wBattleStatus
 ActionEffect_Geyser:: ; code pointer of the table ActionEffectTable; C0
 Func_036_771B:: ; address name
     ld a, [wBattleActor]
@@ -9712,7 +9682,7 @@ Jump_036_779C::
     ld [wBattleDamageLo], a
     ld a, d
     ld [wD873], a
-    ld hl, wD0AD
+    ld hl, wWorkBuf + $10
     ld bc, vTiles1 + $A8
     jp Jump_036_7C8B
 
@@ -10278,7 +10248,6 @@ Func_036_7AD5:: ; address name
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 185; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionB9:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7AEE:: ; address name
     call AttackDamageWithATK200
@@ -10373,7 +10342,6 @@ Jump_036_7B68::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD136
 ActionEffect_ActionC0:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7B6B:: ; address name
     call AdvanceRandom
@@ -10381,7 +10349,7 @@ Func_036_7B6B:: ; address name
     cp a, $40
     jr c, Jump_036_7B81
     call ComputeAttackDamage
-    ld hl, wD136
+    ld hl, wBattlerRecordSlot1 + $13
     ld bc, vTiles0 + $A8
     jp Jump_036_7C8B
 
@@ -10394,7 +10362,6 @@ Jump_036_7B81::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ActionEffect_ActionC1:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7B89:: ; address name
     call AdvanceRandom
@@ -10551,7 +10518,7 @@ Func_036_7C2C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD810, wD035
+; points at: wD810
 ActionEffect_ActionCC:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7C5F:: ; address name
     ld a, [wBattleActor]
@@ -10563,7 +10530,7 @@ Func_036_7C5F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; writes: wBattleTarget, wBattleDamageLo, wD873, wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD80F, wBattleStatus, wD0AD
+; points at: wD80F, wBattleStatus
 ActionEffect_ActionCD:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7C6B:: ; address name
     ld a, [wBattleActor]
@@ -10596,10 +10563,9 @@ Jump_036_7C7D::
 ; only called from ResolveStepComputeDamage (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepComputeDamage)
 ; writes: wDAC2, wDAC3, wDAC0, wDAC1
-; points at: wD035
 ResolveStepComputeDamage_Sub02::
 Func_036_7C85:: ; address name
-    ld hl, wD035
+    ld hl, wSpeciesRecord + $2D
     ld bc, vTiles1 + $A8
 
 Jump_036_7C8B::
@@ -11036,11 +11002,11 @@ Jump_036_7E9C::
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 3 call sites from 3 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, Func_036_4A38_Case01)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit0OfWD095Indexed_Bank36::
 Func_036_7EBE:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 0, [hl]
     pop hl
@@ -11048,11 +11014,11 @@ Func_036_7EBE:: ; address name
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 5 call sites from 4 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage, Func_036_4A38_Case01)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit1OfWD095Indexed_Bank36::
 Func_036_7ECB:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 1, [hl]
     pop hl
@@ -11060,11 +11026,11 @@ Func_036_7ECB:: ; address name
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit2OfWD095Indexed_Bank36:: ; heuristic: follows a terminator; C0
 Func_036_7ED8:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 2, [hl]
     pop hl

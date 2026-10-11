@@ -275,7 +275,7 @@ Jump_00F_4171:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wSGBActive, wSGBPaletteSet
 ; writes: wSpriteSlotCount, wObject5, hPlayerX, wFollowerRecords, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
-; points at: wScreenTileBuffer, wScriptStep
+; points at: wScreenTileBuffer, wScreenAttrBuffer, wScriptStep
 ScriptCommand5F_Run_Case29::
 Jump_00F_418E:: ; address name
     xor a, a
@@ -318,7 +318,7 @@ Jump_00F_41D4::
     jr z, Jump_00F_41F1
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     xor a, a
     ld bc, $0168
     call FillBytes

@@ -147,13 +147,13 @@ Jump_016_40F5:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 1 Herb, 2 LoveWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case00)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Herb::
 Func_016_40F6:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5B
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -177,7 +177,7 @@ Func_016_40F6:: ; address name
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 3 WorldDew, 11 SageRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case03)
 ; reads: wPartyCount
-; writes: wItemId, wD08E
+; writes: wItemId, wItemRecordByte0A
 ItemUsable_WorldDew::
 Func_016_4118:: ; address name
     ld a, [wPartyCount]
@@ -275,17 +275,17 @@ Jump_016_419B::
     call ItemUsable_WorldDew_Sub01
     ld a, $27
     add a, d
-    ld [wD08E], a
+    ld [wItemRecordByte0A], a
     ret
 
 ; only called from ItemUsable_WorldDew (E-0047)
 ; 3 call sites from 1 routine (e.g. ItemUsable_WorldDew)
-; reads: wD083
-; writes: wD083
+; reads: wTargetRecord
+; writes: wTargetRecord
 ; points at: wPartyCount, wTextBuf3
 ItemUsable_WorldDew_Sub01::
 Func_016_41B3:: ; address name
-    ld [wD083], a
+    ld [wTargetRecord], a
     ld hl, wPartyCount
     cp a, [hl]
     ret nc
@@ -296,7 +296,7 @@ Func_016_41B3:: ; address name
     pop de
     ret nz
     push de
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5B
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -320,7 +320,7 @@ Func_016_41B3:: ; address name
     ld hl, wTextBuf3
     add_a_to_hl
     push hl
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $01
     call SRAMRecordAddressMapped
     ld e, l
@@ -333,13 +333,13 @@ Func_016_41B3:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 4 Potion, 5 ElfWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case05)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Potion::
 Func_016_41FD:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5F
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -362,13 +362,13 @@ Func_016_41FD:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 6 Antidote; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0A)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Antidote::
 Func_016_421F:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 2, [hl]
@@ -379,13 +379,13 @@ Func_016_421F:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 7 MoonHerb; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_MoonHerb::
 Jump_016_4234:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 3, [hl]
@@ -396,13 +396,13 @@ Jump_016_4234:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 8 Laurel; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Laurel::
 Jump_016_4249:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 0, [hl]
@@ -414,7 +414,7 @@ Jump_016_4249:: ; address name
 ; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to wC160 and wD08E = $32 + their count; otherwise wItemId = $FF (E-0127)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0B)
 ; reads: wPartyCount
-; writes: wItemId, wD08E
+; writes: wItemId, wItemRecordByte0A
 ListPartyMembersWithField55Bit0::
 Func_016_425E:: ; address name
     ld a, [wPartyCount]
@@ -470,17 +470,17 @@ Jump_016_42AC::
     call CopyEligibleRecordNameToWC160Row
     ld a, $32
     add a, d
-    ld [wD08E], a
+    ld [wItemRecordByte0A], a
     ret
 
 ; if record A (< wC6FD) has field $55 bit 7 clear and bit 0 set, copies its name and marks (field 1) to wC160 + 16 * D and increments D (E-0121)
 ; 3 call sites from 1 routine (e.g. ListPartyMembersWithField55Bit0)
-; reads: wD083
-; writes: wD083
+; reads: wTargetRecord
+; writes: wTargetRecord
 ; points at: wPartyCount, wTextBuf3
 CopyEligibleRecordNameToWC160Row::
 Func_016_42C4:: ; address name
-    ld [wD083], a
+    ld [wTargetRecord], a
     ld hl, wPartyCount
     cp a, [hl]
     ret nc
@@ -491,7 +491,7 @@ Func_016_42C4:: ; address name
     pop de
     ret nz
     push de
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 0, [hl]
@@ -503,7 +503,7 @@ Func_016_42C4:: ; address name
     ld hl, wTextBuf3
     add_a_to_hl
     push hl
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $01
     call SRAMRecordAddressMapped
     ld e, l
@@ -516,13 +516,13 @@ Func_016_42C4:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 9 AwakeSand; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_AwakeSand::
 Jump_016_4301:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 1, [hl]
@@ -533,13 +533,13 @@ Jump_016_4301:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 10 SkyBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_SkyBell::
 Jump_016_4316:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 4, [hl]
@@ -550,11 +550,11 @@ Jump_016_4316:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case08)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_WorldLeaf::
 Func_016_432B:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
@@ -565,12 +565,12 @@ Func_016_432B:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 13 ATKseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemUsable_ATKseed::
 Jump_016_433C:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $63
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -582,12 +582,12 @@ Jump_016_433C:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 14 DEFseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemUsable_DEFseed::
 Jump_016_4352:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $65
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -599,12 +599,12 @@ Jump_016_4352:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 15 AGLseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemUsable_AGLseed::
 Jump_016_4368:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $67
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -616,12 +616,12 @@ Jump_016_4368:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 16 INTseed; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemUsable_INTseed::
 Jump_016_437E:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $69
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -633,12 +633,12 @@ Jump_016_437E:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 17 LifeAcorn; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemUsable_LifeAcorn::
 Jump_016_4394:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5D
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -650,12 +650,12 @@ Jump_016_4394:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 18 MysticNut; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemUsable_MysticNut::
 Jump_016_43AA:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $61
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -667,13 +667,13 @@ Jump_016_43AA:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 19 Quest?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Quest::
 Jump_016_43C0:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $6F
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -685,13 +685,13 @@ Jump_016_43C0:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 20 Horror?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Horror::
 Jump_016_43D6:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $6F
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -703,13 +703,13 @@ Jump_016_43D6:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 21 BeNice?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_BeNice::
 Jump_016_43EB:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $70
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -721,13 +721,13 @@ Jump_016_43EB:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 22 Cheater?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Cheater::
 Jump_016_4401:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $70
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -739,13 +739,13 @@ Jump_016_4401:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 23 Smart?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Smart::
 Jump_016_4416:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $72
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -757,13 +757,13 @@ Jump_016_4416:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 24 Comedy?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Comedy::
 Jump_016_442C:: ; address name
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $72
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -1171,11 +1171,11 @@ Jump_016_462F:: ; address name
 
 ; A = wD083, then CheckRecordFlag55Bit7 (E-0066)
 ; 22 call sites from 22 routines (e.g. ItemApply_WorldDew_Sub01, ItemUsable_VITbelt, ItemUsable_BeefJerky, ItemUsable_Comedy, ...)
-; reads: wD083
+; reads: wTargetRecord
 ; writes: wItemId
 CheckWD083RecordFlag55Bit7::
 Func_016_4633:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
 
 ; A = record (SRAMRecordAddressMapped, offset $55; SRAM must be enabled): returns Z set when bit 7 of that byte is clear; when it is set, wItemId = $FF, A = $FF and Z is clear. What the bit means is not known (E-0066)
 ; 3 call sites from 1 routine (e.g. ListPartyMembersWithField55Bit0)
@@ -1223,7 +1223,7 @@ Jump_016_4669::
 
 ; HL = cap, BC = current value: when they are equal sets wItemId = $FF (refuse); otherwise writes min(HL - BC, wD08F) (wD08F when the difference is 256 or more) as a decimal string at wC160 (WriteDecimalByteString) (E-0103)
 ; 6 call sites from 6 routines (e.g. ItemUsable_MysticNut, ItemUsable_LifeAcorn, ItemUsable_INTseed, ItemUsable_AGLseed, ...)
-; reads: wD08F
+; reads: wItemEffectAmount
 ; writes: wItemId
 ; points at: wTextBuf3
 ShowRaiseAmountOrRefuse::
@@ -1239,7 +1239,7 @@ Func_016_466A:: ; address name
     jr z, Jump_016_4688
     ld a, h
     or a, a
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     jr nz, Jump_016_4681
     cp a, l
     jr z, Jump_016_4681
@@ -1374,7 +1374,7 @@ Jump_016_475E:: ; address name
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wRandomLo, wD08F, wD083
+; reads: wRandomLo, wItemEffectAmount, wTargetRecord
 ItemApply_Herb::
 Jump_016_475F:: ; address name
     call NextTableByte
@@ -1383,11 +1383,11 @@ Jump_016_475F:: ; address name
     ld a, $0B
     call DivideBByA
     ld b, a
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     add a, b
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call AddHLToRecordHPCapped
     call ConsumeSelectedItemByChance
     ret
@@ -1407,29 +1407,29 @@ Jump_016_477D:: ; address name
 
 ; only called from ItemApply_WorldDew (E-0047)
 ; 3 call sites from 1 routine (e.g. ItemApply_WorldDew)
-; reads: wD083
-; writes: wD083
+; reads: wTargetRecord
+; writes: wTargetRecord
 ; points at: wPartyCount
 ItemApply_WorldDew_Sub01::
 Func_016_4790:: ; address name
     ld hl, wPartyCount
     cp a, [hl]
     ret nc
-    ld [wD083], a
+    ld [wTargetRecord], a
     call CheckWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5D
     call SRAMRecordAddressMapped
     deref_hl
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5B
     call StoreHLToRecordField
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wRandomLo, wD08F, wD083
+; reads: wRandomLo, wItemEffectAmount, wTargetRecord
 ItemApply_Potion::
 Jump_016_47B0:: ; address name
     call NextTableByte
@@ -1438,25 +1438,25 @@ Jump_016_47B0:: ; address name
     ld a, $0B
     call DivideBByA
     ld b, a
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     add a, b
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call AddHLToRecordMPCapped
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 5 ElfWater; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemApply_ElfWater::
 Jump_016_47CE:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $61
     call SRAMRecordAddressMapped
     deref_hl
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5F
     call StoreHLToRecordField
     call ConsumeSelectedItemByChance
@@ -1464,10 +1464,10 @@ Jump_016_47CE:: ; address name
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 6 Antidote; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemApply_Antidote::
 Jump_016_47E5:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     res 2, [hl]
@@ -1476,10 +1476,10 @@ Jump_016_47E5:: ; address name
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 7 MoonHerb; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemApply_MoonHerb::
 Jump_016_47F3:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     res 3, [hl]
@@ -1488,10 +1488,10 @@ Jump_016_47F3:: ; address name
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 8 Laurel; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemApply_Laurel::
 Jump_016_4801:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     res 0, [hl]
@@ -1500,10 +1500,10 @@ Jump_016_4801:: ; address name
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 9 AwakeSand; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemApply_AwakeSand::
 Jump_016_480F:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     res 1, [hl]
@@ -1512,10 +1512,10 @@ Jump_016_480F:: ; address name
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 10 SkyBell; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
+; reads: wTargetRecord
 ItemApply_SkyBell::
 Jump_016_481D:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     res 4, [hl]
@@ -1530,206 +1530,206 @@ Jump_016_482B:: ; address name
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 12 WorldLeaf; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
-; writes: wD095
+; reads: wTargetRecord
+; writes: wLevelUpGains
 ItemApply_WorldLeaf::
 Jump_016_482C:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     ld [hl], $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5D
     call SRAMRecordAddressMapped
     deref_hl
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5B
     call StoreHLToRecordField
     ld a, $01
-    ld [wD095], a
+    ld [wLevelUpGains], a
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 13 ATKseed; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_ATKseed::
 Jump_016_4852:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_ATKseed_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 14 DEFseed; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_DEFseed::
 Jump_016_4862:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_DEFseed_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 15 AGLseed; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_AGLseed::
 Jump_016_4872:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_AGLseed_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 16 INTseed; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_INTseed::
 Jump_016_4882:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_INTseed_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_LifeAcorn::
 Jump_016_4892:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_LifeAcorn_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 18 MysticNut; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_MysticNut::
 Jump_016_48A2:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_MysticNut_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 19 Quest?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_Quest::
 Jump_016_48B2:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_Quest_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 20 Horror?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_Horror::
 Jump_016_48C2:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_Horror_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 21 BeNice?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_BeNice::
 Jump_016_48D2:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_BeNice_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 22 Cheater?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_Cheater::
 Jump_016_48E2:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_Cheater_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 23 Smart?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_Smart::
 Jump_016_48F2:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_Smart_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 24 Comedy?; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_Comedy::
 Jump_016_4902:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ItemApply_Comedy_Sub01
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 25 BeefJerky, 26 PorkChop, 27 Rib, 28 Sirloin; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_BeefJerky::
 Jump_016_4912:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ApplyMeatToRecordField6B
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 29 BadMeat; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 ItemApply_BadMeat::
 Jump_016_4922:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call ApplyMeatToRecordField6B
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     set 2, [hl]
@@ -1750,11 +1750,11 @@ Jump_016_493D:: ; address name
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 32 Repellent; the body is not interpreted beyond the Herb case (E-0089)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD091
+; writes: wEncounterDelay
 ItemApply_Repellent::
 Jump_016_493E:: ; address name
     ld a, $C8
-    ld [wD091], a
+    ld [wEncounterDelay], a
     call ConsumeSelectedItemByChance
     ret
 
@@ -2074,12 +2074,12 @@ Jump_016_4A47:: ; address name
 
 ; stores item wItemId - $3F in field $A4 of record wD083: an empty field consumes the item (hFFC6 = 0); otherwise the old item goes back to the inventory and its name to wC160 (hFFC6 = 1) (E-0125)
 ; 15 call sites from 15 routines (e.g. ItemApply_Life, ItemApply_DScale, ItemApply_MagicCape, ItemApply_Wise, ...)
-; reads: wD083, wItemId, wD082
+; reads: wTargetRecord, wItemId, wInventorySlot
 ; writes: hTemp0, wItemId
 ; points at: wInventory, wTextBuf3
 EquipItemOnRecordWD083::
 Func_016_4A48:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $A4
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -2100,7 +2100,7 @@ Jump_016_4A61::
     ld [hl], a
     ld a, $FF
     ld [wItemId], a
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     ld hl, wInventory
     add_a_to_hl
     pop af
@@ -2312,12 +2312,12 @@ Jump_016_4B4C:: ; address name
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: the word there += A, capped at 999 (CapDETo999) (E-0103)
 ; 9 call sites from 9 routines (e.g. ItemApply_DScale, ItemApply_Wise, ItemApply_Smart_4A1D, ItemApply_Starry, ...)
-; reads: wD083, hTemp0
+; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 AddAToRecordWordCapped::
 Func_016_4B4D:: ; address name
     ldh [hTemp0], a
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld e, a
@@ -2339,12 +2339,12 @@ Jump_016_4B60::
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: adds A to the word at field C and to the word two bytes before it, each capped at 999 (E-0103)
 ; 4 call sites from 4 routines (e.g. ItemApply_OddBelt, ItemApply_MagicBelt, ItemApply_DracoBelt, ItemApply_VITbelt)
-; reads: wD083, hTemp0
+; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 AddAToRecordWordPairCapped::
 Func_016_4B68:: ; address name
     ldh [hTemp0], a
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld e, a
@@ -2384,12 +2384,12 @@ Jump_016_4B8F::
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: leaves the word unchanged when it is 999; otherwise word -= A, but never below 1 (E-0103)
 ; 9 call sites from 9 routines (e.g. Func_016_4A98_Case13, Func_016_4A98_Case0B, Func_016_4A98_Case0A, Func_016_4A98_Case09, ...)
-; reads: wD083, hTemp0
+; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 SubtractAFromRecordWordFloor1::
 Func_016_4B97:: ; address name
     ldh [hTemp0], a
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld e, a
@@ -2426,12 +2426,12 @@ Jump_016_4BBF::
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: as SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before it (the second half is not read to its end) (E-0103)
 ; 4 call sites from 4 routines (e.g. Func_016_4A98_Case03, Func_016_4A98_Case02, Func_016_4A98_Case01, Func_016_4A98_Case00)
-; reads: wD083, hTemp0
+; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 SubtractAFromRecordWordPairFloor1::
 Func_016_4BC4:: ; address name
     ldh [hTemp0], a
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld e, a
@@ -2510,9 +2510,9 @@ Jump_016_4C18::
 
 ; advances the random table (NextTableByte), takes A = (wC5E8:wC5E7) mod 100 and, when A < wD087, sets wItemId = $FF, clears wInventory[wD082] to $FF and runs CompactInventory; otherwise returns with carry clear and nothing changed (E-0063)
 ; 33 call sites from 33 routines (e.g. EquipItemOnRecordWD083, ItemApply_LogTwig, ItemApply_Bookmark, ItemApply_ExitBell, ...)
-; reads: wRandomLo, wRandomHi, wD082
+; reads: wRandomLo, wRandomHi, wInventorySlot
 ; writes: wItemId
-; points at: wD087, wInventory
+; points at: wInventory
 ConsumeSelectedItemByChance::
 Func_016_4C1D:: ; address name
     call NextTableByte
@@ -2522,12 +2522,12 @@ Func_016_4C1D:: ; address name
     ld h, a
     ld a, $64
     call DivideHLByA
-    ld hl, wD087
+    ld hl, wItemRecord + $3
     cp a, [hl]
     ret nc
     ld a, $FF
     ld [wItemId], a
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     ld hl, wInventory
     add_a_to_hl
     ld [hl], $FF
@@ -2536,10 +2536,10 @@ Func_016_4C1D:: ; address name
 
 ; copies the 24 wInventory bytes to wD09D, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
 ; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, EquipItemOnRecordWD083, RemoveWItemIdFromInventory, PauseMenu_Items_Case03_Case04, ...)
-; points at: wD09D, wInventory
+; points at: wWorkBuf, wInventory
 CompactInventory::
 Func_016_4C48:: ; address name
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld de, wInventory
     ld b, $18
 
@@ -2553,7 +2553,7 @@ Jump_016_4C50::
     ld bc, $0018
     ld a, $FF
     call FillBytes
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld de, wInventory
     ld b, $18
 
@@ -2746,11 +2746,11 @@ Data_016_51C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from PauseMenu_Skills_Case03_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02)
-; reads: wD082
+; reads: wInventorySlot
 ; writes: wItemId
 PauseMenu_Skills_Case03_Case02_Sub01::
 Func_016_52C9:: ; address name
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     cp a, $14
     jr c, Jump_016_52D6
     ld a, $FF
@@ -2798,13 +2798,13 @@ Jump_016_5306:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wMenuSelectedMember, wD083
+; reads: wMenuSelectedMember, wTargetRecord
 ; writes: wItemId
 Func_016_52C9_Case05::
 Jump_016_530D:: ; address name
     ld a, [wMenuSelectedMember]
     ld c, a
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     cp a, c
     jr nz, Jump_016_531E
     ld a, $FF
@@ -2844,12 +2844,12 @@ Jump_016_5333:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD082, wItemId
-; writes: wD08D
+; reads: wInventorySlot, wItemId
+; writes: wItemMessage
 Func_016_52C9_Case0C::
 Jump_016_533A:: ; address name
     call ItemUsable_Repellent
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     cp a, $10
     jr z, Jump_016_5348
     call SetWD08D14IfItemRefused
@@ -2860,7 +2860,7 @@ Jump_016_5348::
     cp a, $FF
     jr nz, Jump_016_5355
     ld a, $15
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 Jump_016_5355::
@@ -2878,7 +2878,7 @@ Jump_016_5359:: ; address name
 ; entry 17 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGoldHi, wGoldMid, wGoldLo, wInventory
-; writes: wItemId, wD08D
+; writes: wItemId, wItemMessage
 Func_016_52C9_Case11::
 Jump_016_5360:: ; address name
     call ItemUsable_Repellent
@@ -2896,7 +2896,7 @@ Jump_016_5360:: ; address name
     ld a, $FF
     ld [wItemId], a
     ld a, $17
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 Jump_016_5385::
@@ -2908,13 +2908,13 @@ Jump_016_5385::
     ld a, $FF
     ld [wItemId], a
     ld a, $16
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 18 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapObjectCount
-; writes: wItemId, wD08D
+; writes: wItemId, wItemMessage
 ; points at: wMapObjects
 Func_016_52C9_Case12::
 Jump_016_5398:: ; address name
@@ -2944,7 +2944,7 @@ Jump_016_53BB::
     ld a, $FF
     ld [wItemId], a
     ld a, $18
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 Jump_016_53C6::
@@ -2961,38 +2961,38 @@ Jump_016_53C7:: ; address name
 ; when wItemId is $FF (refused): wD08D = $12 (E-0119)
 ; 6 call sites from 6 routines (e.g. Func_016_52C9_Case0B, Func_016_52C9_Case0A, Func_016_52C9_Case08, Func_016_52C9_Case05, ...)
 ; reads: wItemId
-; writes: wD08D
+; writes: wItemMessage
 SetWD08D12IfItemRefused::
 Func_016_53CE:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret nz
     ld a, $12
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; when wItemId is $FF (refused): wD08D = $14 (E-0119)
 ; 5 call sites from 5 routines (e.g. Func_016_52C9_Case13, Func_016_52C9_Case12, Func_016_52C9_Case11, Func_016_52C9_Case0F, ...)
 ; reads: wItemId
-; writes: wD08D
+; writes: wItemMessage
 SetWD08D14IfItemRefused::
 Func_016_53DA:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret nz
     ld a, $14
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; only called from PauseMenu_Skills_Case03_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07)
-; reads: wItemId, wD082
+; reads: wItemId, wInventorySlot
 PauseMenu_Skills_Case03_Case07_Sub01::
 Func_016_53E6:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret z
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     rst $00
     dw Func_016_53E6_Case00
     dw Func_016_53E6_Case01
@@ -3017,62 +3017,62 @@ Func_016_53E6:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD08F, wD090, wD08D
+; writes: wItemEffectAmount, wItemEffectRange, wItemMessage
 Func_016_53E6_Case00::
 Jump_016_5418:: ; address name
     ld a, $0A
-    ld [wD08F], a
+    ld [wItemEffectAmount], a
     ld a, $1E
-    ld [wD090], a
+    ld [wItemEffectRange], a
     call HealRecordHPByRandomAmount
     ld a, $06
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 1 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD08F, wD090, wD08D
+; writes: wItemEffectAmount, wItemEffectRange, wItemMessage
 Func_016_53E6_Case01::
 Jump_016_542B:: ; address name
     ld a, $0F
-    ld [wD08F], a
+    ld [wItemEffectAmount], a
     ld a, $4B
-    ld [wD090], a
+    ld [wItemEffectRange], a
     call HealRecordHPByRandomAmount
     ld a, $06
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; record wD083: copies its word at field $5D (max HP) into field $5B (HP) (StoreHLToRecordField), then wD08D = 6 (E-0117)
 ; 1 call site from 1 routine (e.g. Func_016_53E6_Case09)
-; reads: wD083
-; writes: wD08D
+; reads: wTargetRecord
+; writes: wItemMessage
 FullHealRecordWD083::
 Func_016_543E:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5D
     call SRAMRecordAddressMapped
     deref_hl
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5B
     call StoreHLToRecordField
     ld a, $06
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 3 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08E, wD083
-; writes: wD08F, wD090, wD08D, wD083
+; reads: wItemRecordByte0A, wTargetRecord
+; writes: wItemEffectAmount, wItemEffectRange, wItemMessage, wTargetRecord
 ; points at: wPartyCount
 Func_016_53E6_Case03::
 Jump_016_5457:: ; address name
     ld a, $1E
-    ld [wD08F], a
+    ld [wItemEffectAmount], a
     ld a, $5A
-    ld [wD090], a
-    ld a, [wD08E]
-    ld [wD08D], a
+    ld [wItemEffectRange], a
+    ld a, [wItemRecordByte0A]
+    ld [wItemMessage], a
     ld a, $00
     call HealPartyRecordAIfHurt
     ld a, $01
@@ -3081,18 +3081,18 @@ Jump_016_5457:: ; address name
 
 ; A = party index: returns when it is not below wC6FD, when record byte $55 bit 7 is set, or when HP ($5B) already equals max HP ($5D); otherwise Func_016_56AF (a random heal) (E-0120)
 ; 2 call sites from 1 routine (e.g. Func_016_53E6_Case03)
-; reads: wD083
-; writes: wD083
+; reads: wTargetRecord
+; writes: wTargetRecord
 ; points at: wPartyCount
 HealPartyRecordAIfHurt::
 Func_016_5473:: ; address name
     ld hl, wPartyCount
     cp a, [hl]
     ret nc
-    ld [wD083], a
+    ld [wTargetRecord], a
     call TestWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5B
     call SRAMRecordAddressMapped
     ld a, [hl+]
@@ -3114,13 +3114,13 @@ Func_016_5473:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08E, wD083
-; writes: wD08D, wD083
+; reads: wItemRecordByte0A, wTargetRecord
+; writes: wItemMessage, wTargetRecord
 ; points at: wPartyCount
 Func_016_53E6_Case04::
 Jump_016_549B:: ; address name
-    ld a, [wD08E]
-    ld [wD08D], a
+    ld a, [wItemRecordByte0A]
+    ld [wItemMessage], a
     ld a, $00
     call FullHealPartyRecordA
     ld a, $01
@@ -3129,73 +3129,73 @@ Jump_016_549B:: ; address name
 
 ; A = party index: returns when it is not below wC6FD or the record's byte $55 bit 7 is set; otherwise wD083 = A and the record's HP word ($5B) = its max HP word ($5D) (E-0117)
 ; 2 call sites from 1 routine (e.g. Func_016_53E6_Case04)
-; reads: wD083
-; writes: wD083
+; reads: wTargetRecord
+; writes: wTargetRecord
 ; points at: wPartyCount
 FullHealPartyRecordA::
 Func_016_54AD:: ; address name
     ld hl, wPartyCount
     cp a, [hl]
     ret nc
-    ld [wD083], a
+    ld [wTargetRecord], a
     call TestWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5D
     call SRAMRecordAddressMapped
     deref_hl
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5B
     call StoreHLToRecordField
     ret
 
 ; entry 5 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD08F, wD08D
+; writes: wItemEffectAmount, wItemMessage
 Func_016_53E6_Case05::
 Jump_016_54CD:: ; address name
     ld a, $0F
-    ld [wD08F], a
+    ld [wItemEffectAmount], a
     call HealRecordMPByWD08F
     ld a, $07
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 6 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD08F, wD08D
+; writes: wItemEffectAmount, wItemMessage
 Func_016_53E6_Case06::
 Jump_016_54DB:: ; address name
     ld a, $1E
-    ld [wD08F], a
+    ld [wItemEffectAmount], a
     call HealRecordMPByWD08F
     ld a, $07
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 7 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD08F, wD08D
+; writes: wItemEffectAmount, wItemMessage
 Func_016_53E6_Case07::
 Jump_016_54E9:: ; address name
     ld a, $50
-    ld [wD08F], a
+    ld [wItemEffectAmount], a
     call HealRecordMPByWD08F
     ld a, $07
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 8 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
-; writes: wD08D, wD095
+; reads: wTargetRecord
+; writes: wItemMessage, wLevelUpGains
 Func_016_53E6_Case08::
 Jump_016_54F7:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     ld [hl], $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $5B
     call SRAMRecordAddressMapped
     push hl
@@ -3211,51 +3211,51 @@ Jump_016_54F7:: ; address name
     inc hl
     ld [hl], b
     ld a, $08
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $01
-    ld [wD095], a
+    ld [wLevelUpGains], a
     ret
 
 ; entry 9 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
-; writes: wD08D, wD095
+; reads: wTargetRecord
+; writes: wItemMessage, wLevelUpGains
 Func_016_53E6_Case09::
 Jump_016_5522:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     ld [hl], $00
     call FullHealRecordWD083
     ld a, $08
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $01
-    ld [wD095], a
+    ld [wLevelUpGains], a
     ret
 
 ; entry 10 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD083
-; writes: wD08D
+; reads: wTargetRecord
+; writes: wItemMessage
 Func_016_53E6_Case0A::
 Jump_016_553A:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     res 2, [hl]
     ld a, $09
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 11 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08E, wD083
-; writes: wD08D, wD083
+; reads: wItemRecordByte0A, wTargetRecord
+; writes: wItemMessage, wTargetRecord
 ; points at: wPartyCount
 Func_016_53E6_Case0B::
 Jump_016_554A:: ; address name
-    ld a, [wD08E]
-    ld [wD08D], a
+    ld a, [wItemRecordByte0A]
+    ld [wItemMessage], a
     ld a, $00
     call ClearPartyRecordFlag55Bit0
     ld a, $01
@@ -3264,18 +3264,18 @@ Jump_016_554A:: ; address name
 
 ; A = party index: returns when it is not below wC6FD or byte $55 bit 7 is set; otherwise clears bit 0 of the record's byte $55 (E-0117)
 ; 2 call sites from 1 routine (e.g. Func_016_53E6_Case0B)
-; reads: wD083
-; writes: wD083
+; reads: wTargetRecord
+; writes: wTargetRecord
 ; points at: wPartyCount
 ClearPartyRecordFlag55Bit0::
 Func_016_555C:: ; address name
     ld hl, wPartyCount
     cp a, [hl]
     ret nc
-    ld [wD083], a
+    ld [wTargetRecord], a
     call TestWD083RecordFlag55Bit7
     ret nz
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     res 0, [hl]
@@ -3283,13 +3283,13 @@ Func_016_555C:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBankSave, wD08D, wItemId
+; writes: wDataBankSave, wItemMessage, wItemId
 Func_016_53E6_Case0C::
 Jump_016_5573:: ; address name
     ld a, $01
     ld [wDataBankSave], a
     ld a, $FF
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $FF
     ld [wItemId], a
     ret
@@ -3297,7 +3297,7 @@ Jump_016_5573:: ; address name
 ; entry 13 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember
-; writes: wDataBankSave, wD068, wD08D, wItemId
+; writes: wDataBankSave, wNewRecordByte0D, wItemMessage, wItemId
 Func_016_53E6_Case0D::
 Jump_016_5583:: ; address name
     ld a, $01
@@ -3309,52 +3309,52 @@ Jump_016_5583:: ; address name
     and a, $01
     xor a, $01
     or a, $10
-    ld [wD068], a
+    ld [wNewRecordByte0D], a
     ld a, $FF
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $FF
     ld [wItemId], a
     ret
 
 ; entry 14 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD069, wD08D, wItemId
+; writes: wTalkCountdown, wItemMessage, wItemId
 Func_016_53E6_Case0E::
 Jump_016_55A5:: ; address name
     ld a, $C8
-    ld [wD069], a
+    ld [wTalkCountdown], a
     ld a, $FF
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $FF
     ld [wItemId], a
     ret
 
 ; entry 15 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wDataBankSave, wD08D, wItemId
+; writes: wDataBankSave, wItemMessage, wItemId
 Func_016_53E6_Case0F::
 Jump_016_55B5:: ; address name
     ld a, $04
     ld [wDataBankSave], a
     ld a, $FF
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $FF
     ld [wItemId], a
     ret
 
 ; entry 16 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD08D
+; writes: wItemMessage
 Func_016_53E6_Case10::
 Jump_016_55C5:: ; address name
     ld a, $0B
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 17 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, wPendingFieldEvent, wRandomLo, wRandomHi
-; writes: wSpriteSlotCount, wScreenSavedFlag, wPendingFieldEvent, wItemId, wD08D, wInventory
+; writes: wSpriteSlotCount, wScreenSavedFlag, wPendingFieldEvent, wItemId, wItemMessage, wInventory
 ; points at: wGoldLo, wTextBuf3
 Func_016_53E6_Case11::
 Jump_016_55CB:: ; address name
@@ -3456,72 +3456,72 @@ Jump_016_5675::
 
 Jump_016_5688::
     ld a, $0E
-    ld [wD08D], a
+    ld [wItemMessage], a
     ret
 
 ; entry 18 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wGameMode2Byte50, wD08D, wItemId
+; writes: wGameMode2Byte50, wItemMessage, wItemId
 Func_016_53E6_Case12::
 Jump_016_568E:: ; address name
     ld a, $01
     ld [wGameMode2Byte50], a
     ld a, $11
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $FF
     ld [wItemId], a
     ret
 
 ; entry 19 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD08D, wItemId
+; writes: wItemMessage, wItemId
 Func_016_53E6_Case13::
 Jump_016_569E:: ; address name
     farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1C
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $FF
     ld [wItemId], a
     ret
 
 ; reads the next table byte, then heals record wD083's HP by wC5E7 / (wD08F + 1) + wD090 (capped at max HP) (E-0122)
 ; 3 call sites from 3 routines (e.g. HealPartyRecordAIfHurt, Func_016_53E6_Case01, Func_016_53E6_Case00)
-; reads: wRandomLo, wD08F, wD090, wD083
+; reads: wRandomLo, wItemEffectAmount, wItemEffectRange, wTargetRecord
 HealRecordHPByRandomAmount::
 Func_016_56AF:: ; address name
     call NextTableByte
     ld a, [wRandomLo]
     ld b, a
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     inc a
     call DivideBByA
     ld b, a
-    ld a, [wD090]
+    ld a, [wItemEffectRange]
     add a, b
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call AddHLToRecordHPCapped
     ret
 
 ; heals record wD083's MP by wD08F (capped at max MP) (E-0122)
 ; 3 call sites from 3 routines (e.g. Func_016_53E6_Case07, Func_016_53E6_Case06, Func_016_53E6_Case05)
-; reads: wD08F, wD083
+; reads: wItemEffectAmount, wTargetRecord
 HealRecordMPByWD08F::
 Func_016_56CC:: ; address name
-    ld a, [wD08F]
+    ld a, [wItemEffectAmount]
     ld l, a
     ld h, $00
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     call AddHLToRecordMPCapped
     ret
 
 ; Z clear when bit 7 of byte $55 of record wD083 is set (SRAMRecordAddressMapped); HL points at it (E-0114)
 ; 3 call sites from 3 routines (e.g. ClearPartyRecordFlag55Bit0, FullHealPartyRecordA, HealPartyRecordAIfHurt)
-; reads: wD083
+; reads: wTargetRecord
 TestWD083RecordFlag55Bit7::
 Func_016_56D9:: ; address name
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
@@ -3529,9 +3529,8 @@ Func_016_56D9:: ; address name
 
 ; for special maps copies the eight monster entries of the current screen (AddressOfWCD10EntryForCurrentScreen) to wD09F, removes duplicates and stores the count in wD09D; normal maps use Func_00A_4D5E (E-0129)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0C)
-; reads: wMapType, wD09F, wD0A0, wD09E
-; writes: wD09E, wD09D
-; points at: wD09F, wD0A1
+; reads: wMapType, wWorkBuf
+; writes: wWorkBuf
 CollectUniqueEncounterIdsToWD09F::
 Func_016_56E4:: ; address name
     ld a, [wMapType]
@@ -3542,7 +3541,7 @@ Func_016_56E4:: ; address name
 
 Jump_016_56F2::
     call AddressOfWCD10EntryForCurrentScreen
-    ld de, wD09F
+    ld de, wWorkBuf + $2
     ld b, $08
 
 Jump_016_56FA::
@@ -3555,10 +3554,10 @@ Jump_016_56FA::
     inc de
     dec b
     jr nz, Jump_016_56FA
-    ld hl, wD0A1
-    ld a, [wD09F]
+    ld hl, wWorkBuf + $4
+    ld a, [wWorkBuf + $2]
     ld e, a
-    ld a, [wD0A0]
+    ld a, [wWorkBuf + $3]
     ld d, a
     ld bc, $0707
 
@@ -3573,9 +3572,9 @@ Jump_016_5715::
     ld a, [hl]
     cp a, d
     jr nz, Jump_016_5728
-    ld a, [wD09E]
+    ld a, [wWorkBuf + $1]
     inc a
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     ld a, $FF
     ld [hl-], a
     ld [hl+], a
@@ -3606,8 +3605,8 @@ Jump_016_573E::
     jr nz, Jump_016_5713
 
 Jump_016_5741::
-    ld de, wD09F
-    ld hl, wD09F
+    ld de, wWorkBuf + $2
+    ld hl, wWorkBuf + $2
     ld bc, $0800
 
 Jump_016_574A::
@@ -3630,9 +3629,9 @@ Jump_016_5759::
     dec b
     jr nz, Jump_016_574A
     ld a, c
-    ld [wD09D], a
+    ld [wWorkBuf], a
     xor a, a
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     ret
 
 ; HL = wCD10 + 2 * an index from the current map screen and the wCD70 table (index $20 when bit 3 of hFF8C is set) (E-0127)
@@ -4030,16 +4029,16 @@ Func_016_5906:: ; address name
 
 ; toggles the sort order in wC836 and sorts the 24 inventory slots by the key table Data_016_599E or Data_016_5A0E (empty slots last) (E-0128)
 ; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case00_Case01, RunBattleSetup_Case02_Case02, Func_0F1_4001_Case00_Case01)
-; reads: wGameFlags836, wD09D, wD09E
-; writes: wD09D, wD09E, wGameFlags836
-; points at: wD09F, wInventory, wD0A0
+; reads: wGameFlags836, wWorkBuf
+; writes: wWorkBuf, wGameFlags836
+; points at: wInventory
 SortInventory::
 Func_016_590C:: ; address name
-    ld hl, wD09F
+    ld hl, wWorkBuf + $2
     ld a, l
-    ld [wD09D], a
+    ld [wWorkBuf], a
     ld a, h
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     ld bc, $0018
     ld a, $FF
     call FillBytes
@@ -4072,28 +4071,28 @@ Jump_016_5944::
     ld l, a
     ld h, $00
     add hl, de
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     ld c, a
-    ld a, [wD09E]
+    ld a, [wWorkBuf + $1]
     ld b, a
     ld a, [hl]
     ld [bc], a
     inc bc
     ld a, c
-    ld [wD09D], a
+    ld [wWorkBuf], a
     ld a, b
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     pop hl
     pop bc
     inc hl
     dec b
     jr nz, Jump_016_593C
     ld a, $18
-    ld [wD09D], a
+    ld [wWorkBuf], a
 
 Jump_016_5966::
-    ld hl, wD09F
-    ld de, wD0A0
+    ld hl, wWorkBuf + $2
+    ld de, wWorkBuf + $3
     ld b, $17
     ld c, $00
 
@@ -4114,9 +4113,9 @@ Jump_016_597C::
     inc c
     dec b
     jr nz, Jump_016_5970
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     dec a
-    ld [wD09D], a
+    ld [wWorkBuf], a
     jr nz, Jump_016_5966
     ret
 
@@ -4195,13 +4194,13 @@ Func_016_5AAF:: ; address name
 
 ; zeroes the 11 per-family counters at wD09D, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wD09D[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wC7FC (wD7F5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_Case00, TotalSpeciesFlaggedOrListed)
-; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wD7F5
-; writes: wSpeciesIdLo, wSpeciesIdHi, wD7F1, wD7F2, wD7F3, wD7F4
-; points at: wD09D, wMonsterLibraryBuf
+; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wArg5
+; writes: wSpeciesIdLo, wSpeciesIdHi, wArg1, wArg2, wArg3, wArg4
+; points at: wWorkBuf, wMonsterLibraryBuf
 CountSpeciesPerFamilyFlaggedOrListed::
 Func_016_5AC0:: ; address name
     xor a, a
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld bc, $000B
     call FillBytes
     xor a, a
@@ -4213,7 +4212,7 @@ Jump_016_5AD1::
     ld a, [wSpeciesRecord]
     cp a, $FF
     jr z, Jump_016_5B16
-    ld de, wD09D
+    ld de, wWorkBuf
     add a, e
     ld e, a
     jr nc, Jump_016_5AE6
@@ -4224,17 +4223,17 @@ Jump_016_5AE6::
     jr nz, Jump_016_5B13
     push de
     ld a, [wSpeciesIdLo]
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, [wSpeciesIdHi]
-    ld [wD7F2], a
+    ld [wArg2], a
     ld hl, wMonsterLibraryBuf
     ld a, l
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, h
-    ld [wD7F4], a
+    ld [wArg4], a
     farcall TestBitInFieldAtWD7F3
     pop de
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $FF
     jr z, Jump_016_5B13
     jr Jump_016_5B16
@@ -4268,11 +4267,11 @@ Jump_016_5B16::
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub01)
 ; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wD09D
+; points at: wWorkBuf
 BattleEnd_Step3_Sub01_Sub01::
 Func_016_5B33:: ; address name
     xor a, a
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld bc, $000B
     call FillBytes
     xor a, a
@@ -4284,7 +4283,7 @@ Jump_016_5B44::
     ld a, [wSpeciesRecord]
     cp a, $FF
     jr z, Jump_016_5B61
-    ld de, wD09D
+    ld de, wWorkBuf
     add a, e
     ld e, a
     jr nc, Jump_016_5B59
@@ -4319,7 +4318,7 @@ Jump_016_5B61::
 
 ; only called from BattleEnd_Step5_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case00)
-; reads: wLinkMode, wBattleKind, wDAAB, wRandomLo, wRandomHi, wD00C, wD894, wD89F, ...
+; reads: wLinkMode, wBattleKind, wDAAB, wRandomLo, wRandomHi, wSpeciesRecord, wD894, wD89F, ...
 ; writes: wD890, wSpeciesIdLo, wSpeciesIdHi, wDAAB
 ; points at: wD8A1, wBattleMonsterId
 BattleEnd_Step5_Case00_Sub01::
@@ -4371,7 +4370,7 @@ Func_016_5B7E:: ; address name
     ld a, $C8
     call DivideHLByA
     ld b, a
-    ld a, [wD00C]
+    ld a, [wSpeciesRecord + $4]
     cp a, $07
     jp z, Jump_016_5CF5
     ld hl, Data_016_5CFB
@@ -4852,10 +4851,10 @@ Jump_016_5ED7::
 ; entry 12 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
-; points at: wD789, wScreenTileBuffer, wBattleSubStep
+; points at: wListEntries, wScreenTileBuffer, wBattleSubStep
 Func_016_5D13_Case0C::
 Jump_016_5EEC:: ; address name
-    ld hl, wD789
+    ld hl, wListEntries
     ld bc, $001E
     ld a, $FF
     call FillBytes
@@ -5006,24 +5005,24 @@ Jump_016_5FC7::
 ; entry 16 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp0, wMenuState, wSubMenuCursor2
-; writes: wD7A9, wD7AB, wD7AF, wD780, wD781, wD782
+; writes: wListCount, wListCursor, wListPageIndex, wScreenState, wScreenStep, wScreenSubStep
 ; points at: wScreenTileBuffer, wBattleSubPhase
 Func_016_5D13_Case10::
 Jump_016_6017:: ; address name
     ld a, [wTemp0]
-    ld [wD7A9], a
+    ld [wListCount], a
     ld a, [wMenuState]
-    ld [wD7AB], a
+    ld [wListCursor], a
     ld a, [wSubMenuCursor2]
-    ld [wD7AF], a
+    ld [wListPageIndex], a
     farcall ClampRecordListPageCursor5
     farcall SaveAndHideSpriteState_Bank1E
     ld a, $0C
-    ld [wD780], a
+    ld [wScreenState], a
     xor a, a
-    ld [wD781], a
+    ld [wScreenStep], a
     xor a, a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     farcall ListRecordsInUseWithByte6EClear
     ld hl, wScreenTileBuffer
     ld bc, $02D0
@@ -5035,20 +5034,20 @@ Jump_016_6017:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7AB, wD7AF
+; reads: wListCursor, wListPageIndex
 ; writes: wMenuState, wSubMenuCursor2, wListPage, wScreenTileBuffer, wListPageSize, wListPageCount, wListLastPageSize, wBattleSubStep
 ; points at: wScreenTileBuffer
 Func_016_5D13_Case11::
 Jump_016_6058:: ; address name
     farcall CopyRectRecord796FToScreenBufferAndPlaySound6C
-    ld a, [wD7AB]
+    ld a, [wListCursor]
     ld [wMenuState], a
     ld hl, Data_016_66DD
     add a, a
     add_a_to_hl
     deref_hl
     ld [hl], $BC
-    ld a, [wD7AF]
+    ld a, [wListPageIndex]
     ld [wSubMenuCursor2], a
     ld [wListPage], a
     farcall CopyRectRecord787EAndPlaySound6C
@@ -5077,7 +5076,7 @@ Jump_016_6058:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSubMenuCursor2, wMenuState, wPartyCount, wPartyList, wBattleSlotOut, wDA64, wDA65
 ; writes: wStringIndex, wBattleSubStep, rRAMG
-; points at: wD789, wBattleSubStep, wBattleSlotOut, wDA64, wDA65
+; points at: wListEntries, wBattleSubStep, wBattleSlotOut, wDA64, wDA65
 Func_016_5D13_Case12::
 Jump_016_60B5:: ; address name
     ld a, $BC
@@ -5091,7 +5090,7 @@ Jump_016_60B5:: ; address name
     ld b, a
     ld a, [wMenuState]
     add a, b
-    ld hl, wD789
+    ld hl, wListEntries
     add_a_to_hl
     ld b, [hl]
     ld a, [wPartyCount]
@@ -5188,8 +5187,8 @@ Jump_016_6151:: ; address name
 ; entry 21 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSubMenuCursor2, wMenuState, wPartyCount, wPartyList
-; writes: rRAMG, rRAMB, wD7F1, wD7F2, wD88F, wPartyList, wTemp0, wTemp1, ...
-; points at: wD789, wBattleSubPhase
+; writes: rRAMG, rRAMB, wArg1, wArg2, wD88F, wPartyList, wTemp0, wTemp1, ...
+; points at: wListEntries, wBattleSubPhase
 Func_016_5D13_Case15::
 Jump_016_615E:: ; address name
     ld a, [wTextFlags]
@@ -5203,7 +5202,7 @@ Jump_016_615E:: ; address name
     ld b, a
     ld a, [wMenuState]
     add a, b
-    ld hl, wD789
+    ld hl, wListEntries
     add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
@@ -5211,9 +5210,9 @@ Jump_016_615E:: ; address name
     ld [rRAMB], a
     push hl
     ld a, [hl]
-    ld [wD7F1], a
+    ld [wArg1], a
     xor a, a
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall DeleteSRAMRecordAndCompact
     pop hl
     ld a, [wPartyCount]
@@ -5252,7 +5251,7 @@ Jump_016_61A8::
 ; entry 22 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1, wMenuOption, wCommandCursorMax
-; writes: wWindowTileBuffer, wStringIndex, wD7A9, wListLastPageSize, wCommandPageCount, wListPageCount, wListPageSize, wListPage, ...
+; writes: wWindowTileBuffer, wStringIndex, wListCount, wListLastPageSize, wCommandPageCount, wListPageCount, wListPageSize, wListPage, ...
 ; points at: wScreenTileBuffer, wBattleSubStep
 Func_016_5D13_Case16::
 Jump_016_61D2:: ; address name
@@ -5269,7 +5268,7 @@ Jump_016_61D2:: ; address name
     call CountRecordsByField6E
     call ListRecordsWithField6EToWD789
     ld a, [wTemp1]
-    ld [wD7A9], a
+    ld [wListCount], a
     dec a
     ld b, a
     and a, $03
@@ -5415,7 +5414,7 @@ Jump_016_62D3::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wStringIndex, wBattleSubStep
-; points at: wMenuSelectedMember, wBattleSubStep, wD789, wTextBuf1
+; points at: wMenuSelectedMember, wBattleSubStep, wListEntries, wTextBuf1
 Func_016_5D13_Case19::
 Jump_016_631B:: ; address name
     ld hl, Data_016_66EB
@@ -5439,7 +5438,7 @@ Jump_016_631B:: ; address name
     ld b, a
     ld a, [wCommandCursorMax]
     add a, b
-    ld hl, wD789
+    ld hl, wListEntries
     add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
@@ -5471,22 +5470,22 @@ Jump_016_6375::
 ; entry 26 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuState, wMenuOption
-; writes: wD7AB, wD7AF, wD780, wD781, wD782
+; writes: wListCursor, wListPageIndex, wScreenState, wScreenStep, wScreenSubStep
 ; points at: wScreenTileBuffer, wBattleSubPhase
 Func_016_5D13_Case1A::
 Jump_016_637E:: ; address name
     ld a, [wMenuState]
-    ld [wD7AB], a
+    ld [wListCursor], a
     ld a, [wMenuOption]
-    ld [wD7AF], a
+    ld [wListPageIndex], a
     farcall ClampRecordListPageCursor4
     farcall SaveAndHideSpriteState_Bank1E
     ld a, $0D
-    ld [wD780], a
+    ld [wScreenState], a
     xor a, a
-    ld [wD781], a
+    ld [wScreenStep], a
     xor a, a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     farcall ListRecordsInUseWithByte6ESet
     ld hl, wScreenTileBuffer
     ld bc, $02D0
@@ -5498,13 +5497,13 @@ Jump_016_637E:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7AB, wD7AF, wCommandPageCount
+; reads: wListCursor, wListPageIndex, wCommandPageCount
 ; writes: wMenuState, wCommandCursorMax, wMenuOption, wListPage, wScreenTileBuffer, wWindowTileBuffer, wListPageSize, wListPageCount, ...
 ; points at: wScreenTileBuffer
 Func_016_5D13_Case1B::
 Jump_016_63B9:: ; address name
     farcall CopyRectRecord78AAToScreenBuffer
-    ld a, [wD7AB]
+    ld a, [wListCursor]
     ld [wMenuState], a
     ld [wCommandCursorMax], a
     ld hl, Data_016_66EF
@@ -5518,7 +5517,7 @@ Jump_016_63B9:: ; address name
     adc a, $29
     ld h, a
     ld [hl], $BC
-    ld a, [wD7AF]
+    ld a, [wListPageIndex]
     ld [wMenuOption], a
     ld [wListPage], a
     farcall CopyRectRecord787EAndPlaySound6C
@@ -5560,8 +5559,8 @@ Jump_016_640E::
 ; entry 28 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wMenuOption, wCommandCursorMax
-; writes: rRAMG, rRAMB, wD7F1, wD7F2, wBattleResolveStep, wBattleSubStep
-; points at: wD789, wBattleSubPhase
+; writes: rRAMG, rRAMB, wArg1, wArg2, wBattleResolveStep, wBattleSubStep
+; points at: wListEntries, wBattleSubPhase
 Func_016_5D13_Case1C::
 Jump_016_643D:: ; address name
     ld a, [wTextFlags]
@@ -5573,16 +5572,16 @@ Jump_016_643D:: ; address name
     ld b, a
     ld a, [wCommandCursorMax]
     add a, b
-    ld hl, wD789
+    ld hl, wListEntries
     add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld [wD7F1], a
+    ld [wArg1], a
     xor a, a
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall DeleteSRAMRecordAndCompact
     xor a, a
     ld [rRAMG], a
@@ -5672,7 +5671,7 @@ Jump_016_64C4::
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0C)
 ; reads: wPartyCount, wTemp0, wFarmLevel, wSubMenuCursor2, wListPageCount
 ; writes: rRAMG, rRAMB, wTemp0, wListLastPageSize, wListPageCount, wListPageSize, wScreenTileBuffer
-; points at: wD789, wPartyList, sA000
+; points at: wListEntries, wPartyList, sA000
 ListPartyAndStoredRecordsForPage::
 Func_016_64DC:: ; address name
     ld a, $0A
@@ -5681,7 +5680,7 @@ Func_016_64DC:: ; address name
     ld [rRAMB], a
     xor a, a
     ld [wTemp0], a
-    ld de, wD789
+    ld de, wListEntries
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -5801,10 +5800,10 @@ Jump_016_65B0::
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case16)
 ; reads: wFarmLevel
 ; writes: rRAMG, rRAMB
-; points at: wD789, sA000
+; points at: wListEntries, sA000
 ListRecordsWithField6EToWD789::
 Func_016_65B1:: ; address name
-    ld hl, wD789
+    ld hl, wListEntries
     ld bc, $001E
     ld a, $FF
     call FillBytes
@@ -5817,7 +5816,7 @@ Func_016_65B1:: ; address name
     add_a_to_hl
     ld b, [hl]
     ld hl, sA000
-    ld de, wD789
+    ld de, wListEntries
     ld c, $00
 
 Jump_016_65D9::
@@ -6027,7 +6026,7 @@ Data_016_6701:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0D, Func_016_5D13_Case0C)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wListPage, wPartyCount, wListPageCount
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
-; points at: wD789
+; points at: wListEntries
 DrawRecordListPageWithNumbers::
 Func_016_6705:: ; address name
     ld a, [wTextWindowTileLo]
@@ -6051,7 +6050,7 @@ Func_016_6705:: ; address name
     add a, a
     add a, b
     ld b, a
-    ld hl, wD789
+    ld hl, wListEntries
     add_a_to_hl
     ld b, $05
     ld de, vTiles2 + $3B0
@@ -6213,7 +6212,7 @@ Jump_016_6810::
 ; 4 call sites from 4 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case18, Func_016_5D13_Case17, Func_016_5D13_Case16)
 ; reads: wListPage
 ; writes: wTextWindowRows, wTextWindowWidth, rRAMG, rRAMB, wD868, wTextWindowTileLo, wTextWindowTileHi
-; points at: wD789
+; points at: wListEntries
 DrawFourListEntriesForPageWCFD1::
 Func_016_682F:: ; address name
     ld hl, $0901
@@ -6228,7 +6227,7 @@ Func_016_682F:: ; address name
     ld a, [wListPage]
     add a, a
     add a, a
-    ld hl, wD789
+    ld hl, wListEntries
     add_a_to_hl
     ld a, $00
     ld [wD868], a
@@ -6356,11 +6355,11 @@ Data_016_690F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; when wD7A9 is 5 or more: wC320 = $E1 + wCFD1 (the page number tile) (E-0119)
 ; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageWCFD1)
-; reads: wD7A9, wListPage
+; reads: wListCount, wListPage
 ; writes: wWindowTileBuffer
 DrawListPageDigitIfLong::
 Func_016_6917:: ; address name
-    ld a, [wD7A9]
+    ld a, [wListCount]
     cp a, $05
     ret c
     ld a, [wListPage]
@@ -6432,7 +6431,7 @@ Func_016_6961:: ; address name
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0D)
 ; reads: wSubMenuCursor2, wMenuState
 ; writes: rRAMG, rRAMB, wStringIndex
-; points at: wD789, wTextBuf1
+; points at: wListEntries, wTextBuf1
 ShowRecordNameString12::
 Func_016_696D:: ; address name
     ld a, [wSubMenuCursor2]
@@ -6443,7 +6442,7 @@ Func_016_696D:: ; address name
     ld b, a
     ld a, [wMenuState]
     add a, b
-    ld hl, wD789
+    ld hl, wListEntries
     add_a_to_hl
     ld a, [hl]
     ld c, $01
@@ -6474,7 +6473,7 @@ Jump_016_6995::
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case18)
 ; reads: wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wStringIndex
-; points at: wD789, wTextBuf1
+; points at: wListEntries, wTextBuf1
 ShowListedRecordNameMessage::
 Func_016_69AB:: ; address name
     ld a, [wMenuOption]
@@ -6483,7 +6482,7 @@ Func_016_69AB:: ; address name
     ld b, a
     ld a, [wCommandCursorMax]
     add a, b
-    ld hl, wD789
+    ld hl, wListEntries
     add_a_to_hl
     ld a, $0A
     ld [rRAMG], a
@@ -6616,7 +6615,7 @@ Jump_016_6A5C:: ; address name
 ; entry 1 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wDAAB
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wSpeciesIdLo, wD7F5, wSpeciesIdHi, wTextWindowTileLo, ...
+; writes: wArg1, wArg2, wArg3, wArg4, wSpeciesIdLo, wArg5, wSpeciesIdHi, wTextWindowTileLo, ...
 ; points at: wNameEntryState, wD8AF, wRecordBufA, wScreenTileBuffer, wBattleSubStep
 RunBattleSubStep_6A4E_Case01::
 Jump_016_6A6F:: ; address name
@@ -6628,12 +6627,12 @@ Jump_016_6A6F:: ; address name
     xor a, a
     call FillBytes
     ld a, $01
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, [wDAAB]
     ld hl, wD8AF
     add_a_to_hl
     ld a, [hl]
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, [wDAAB]
     ld hl, wRecordBufA
     ld a, l
@@ -6643,7 +6642,7 @@ Jump_016_6A6F:: ; address name
     adc a, $00
     ld h, a
     ld a, [hl]
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, l
     add a, $FE
     ld l, a
@@ -6651,10 +6650,10 @@ Jump_016_6A6F:: ; address name
     adc a, $FF
     ld h, a
     ld a, [hl+]
-    ld [wD7F4], a
+    ld [wArg4], a
     ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD7F5], a
+    ld [wArg5], a
     ld [wSpeciesIdHi], a
     call SetSpeciesFlag
     ld a, $C3
@@ -6677,18 +6676,18 @@ Jump_016_6A6F:: ; address name
 
 ; entry 2 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAAB, wD7F5
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5
-; points at: wD8AF, wRecordBufA, wBattleScreenFlags, wD09E, wNameGlyphBuf, wBattleSubStep
+; reads: wDAAB, wArg5
+; writes: wArg1, wArg2, wArg3, wArg4, wArg5
+; points at: wD8AF, wRecordBufA, wBattleScreenFlags, wNameGlyphBuf, wBattleSubStep
 RunBattleSubStep_6A4E_Case02::
 Jump_016_6AE3:: ; address name
     ld a, $01
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, [wDAAB]
     ld hl, wD8AF
     add_a_to_hl
     ld a, [hl]
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, [wDAAB]
     ld hl, wRecordBufA
     ld a, l
@@ -6698,7 +6697,7 @@ Jump_016_6AE3:: ; address name
     adc a, $00
     ld h, a
     ld a, [hl]
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, l
     add a, $FE
     ld l, a
@@ -6706,11 +6705,11 @@ Jump_016_6AE3:: ; address name
     adc a, $FF
     ld h, a
     ld a, [hl+]
-    ld [wD7F4], a
+    ld [wArg4], a
     ld a, [hl]
-    ld [wD7F5], a
+    ld [wArg5], a
     farcall RunWCFA8StateWhenNotFading
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $FF
     ret nz
     ld b, $31
@@ -6723,7 +6722,7 @@ Jump_016_6AE3:: ; address name
     call DecompressToVRAM
     ld hl, wBattleScreenFlags
     inc [hl]
-    ld hl, wD09E
+    ld hl, wWorkBuf + $1
     ld de, wNameGlyphBuf
     ld b, $0A
 
@@ -6749,8 +6748,8 @@ Jump_016_6B52:: ; address name
 ; entry 4 of the `rst $00` table in RunBattleSubStep_6A4E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFarmLevel, wPartyCount
-; writes: rRAMG, rRAMB, wBattleSubStep, wD09D
-; points at: sA000, wBattleSubPhase, wD09E
+; writes: rRAMG, rRAMB, wBattleSubStep, wWorkBuf
+; points at: sA000, wBattleSubPhase
 RunBattleSubStep_6A4E_Case04::
 Jump_016_6B57:: ; address name
     ld a, $0A
@@ -6781,11 +6780,11 @@ Jump_016_6B71::
 
 Jump_016_6B83::
     ld a, c
-    ld [wD09D], a
+    ld [wWorkBuf], a
     ld [hl], $01
     inc hl
     ld b, $0A
-    ld de, wD09E
+    ld de, wWorkBuf + $1
     call CopyBBytesDEToHL_Bank16
     ld de, wRecordBufA + $B
     ld b, $9A
@@ -6905,7 +6904,7 @@ Func_016_6C16:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD09D, wD88F
+; reads: wWorkBuf, wD88F
 ; writes: rRAMG, rRAMB, wStringIndex, wMenuState
 ; points at: wScreenTileBuffer, wD868, wPartyList, wTextBuf0, wBattleSubStep
 Func_016_6C16_Case00::
@@ -6915,7 +6914,7 @@ Jump_016_6C42:: ; address name
     ld de, wScreenTileBuffer
     ld bc, $140D
     call CopyRect32StrideToVRAM_Bank16
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     push af
     ld a, [wD88F]
     ld b, a
@@ -7326,20 +7325,20 @@ Jump_016_6ED4::
 ; entry 13 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD88F, wMenuSubState
-; writes: wD7A9, wD7AB, wD7AF, wD780, wD781, wD782
-; points at: wD789, wD868, wBattleSubStep
+; writes: wListCount, wListCursor, wListPageIndex, wScreenState, wScreenStep, wScreenSubStep
+; points at: wListEntries, wD868, wBattleSubStep
 Func_016_6C16_Case0D::
 Jump_016_6EE9:: ; address name
-    ld hl, wD789
+    ld hl, wListEntries
     ld bc, $001E
     xor a, a
     call FillBytes
     ld a, [wD88F]
     inc a
-    ld [wD7A9], a
+    ld [wListCount], a
     ld b, a
     ld de, wD868
-    ld hl, wD789
+    ld hl, wListEntries
 
 Jump_016_6F01::
     ld a, [de]
@@ -7348,39 +7347,39 @@ Jump_016_6F01::
     dec b
     jr nz, Jump_016_6F01
     ld a, [wMenuSubState]
-    ld [wD7AB], a
+    ld [wListCursor], a
     ld a, $00
-    ld [wD7AF], a
+    ld [wListPageIndex], a
     farcall ClampRecordListPageCursor5
     farcall SaveAndHideSpriteState_Bank1E
     ld a, $0E
-    ld [wD780], a
+    ld [wScreenState], a
     xor a, a
-    ld [wD781], a
+    ld [wScreenStep], a
     xor a, a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
 ; entry 14 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wD7BC, wD7BA, wD7BB
+; reads: wScreenStep, wSavedSpriteClipMode, wSavedFieldDrawFlags, wSavedSpriteSlotCount
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wSpriteSlotCount
 ; points at: wBattleScreenFlags, wBattleSubStep
 Func_016_6C16_Case0E::
 Jump_016_6F30:: ; address name
     farcall ScriptCommandE8_Run
-    ld a, [wD781]
+    ld a, [wScreenStep]
     cp a, $0A
     ret nz
-    ld a, [wD7BC]
+    ld a, [wSavedSpriteClipMode]
     ldh [hSpriteWindowClipMode], a
     ld a, $80
     ldh [hSpriteHideTile], a
-    ld a, [wD7BA]
+    ld a, [wSavedFieldDrawFlags]
     ldh [hFieldDrawFlags], a
-    ld a, [wD7BB]
+    ld a, [wSavedSpriteSlotCount]
     ld [wSpriteSlotCount], a
     ld b, $31
     ld de, Data_031_7C1E
@@ -7398,14 +7397,14 @@ Jump_016_6F30:: ; address name
 
 ; entry 15 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7AB
+; reads: wListCursor
 ; writes: wMenuSubState, wBattleSubStep
 ; points at: wScreenTileBuffer
 Func_016_6C16_Case0F::
 Jump_016_6F6F:: ; address name
     call BuildBattleMenuScreen_733F
     call CopyRect7923AndDrawWD868Values
-    ld a, [wD7AB]
+    ld a, [wListCursor]
     ld [wMenuSubState], a
     ld hl, Data_016_66DD
     add a, a
@@ -7846,9 +7845,9 @@ Func_016_733F:: ; address name
 
 ; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
-; reads: wBattleKind, wRecordBufA, wD00E, wRecordBufAByte71, wRandomLo, wRandomHi
+; reads: wBattleKind, wRecordBufA, wSpeciesRecord, wRecordBufAByte71, wRandomLo, wRandomHi
 ; writes: wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wRecordBufAByte71
-; points at: wD09D
+; points at: wWorkBuf
 BattleEnd_Step3_Sub01::
 Func_016_7364:: ; address name
     ld a, [wBattleKind]
@@ -7894,7 +7893,7 @@ Jump_016_7397::
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD00E]
+    ld a, [wSpeciesRecord + $6]
     ld c, a
     ld a, [wRecordBufA + $56]
     cp a, c
@@ -7978,7 +7977,7 @@ Jump_016_73BB::
 
 Jump_016_7456::
     call BattleEnd_Step3_Sub01_Sub01
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld b, $0B
     ld de, $0000
 
@@ -8217,8 +8216,8 @@ Data_016_75EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; checks the save; when valid, loads the player name, play time, party summaries and other title-screen details from SRAM bank 1 into wD0D5 onward (E-0129)
 ; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: hTemp0, sBC00, sBC01, sBC02, sBC03, sBD3A, sBE0D, sBB07, ...
-; writes: wBattlerRecords, rRAMG, rRAMB, wD0E5, wD09D, wD09E, wD09F, wD10A, ...
-; points at: wBattlerRecords, sBB0F, wD0D6, sBD30, wD0E0, wD0E6, wD0F2, wD0FE, ...
+; writes: wBattlerRecords, rRAMG, rRAMB, wTitlePartyCount, wWorkBuf, wTitleByte0A, wTitleKeyFlag, wTitleStringIndex, ...
+; points at: wBattlerRecords, sBB0F, wTitlePlayerName, sBD30, wTitlePartySummary, sBC0A
 LoadSaveFileSummary::
 Func_016_75EE:: ; address name
     ld hl, wBattlerRecords
@@ -8241,68 +8240,68 @@ Jump_016_760B::
     ld a, $01
     ld [rRAMB], a
     ld hl, sBB0F
-    ld de, wD0D6
+    ld de, wTitlePlayerName
     ld b, $0A
     call CopyBytesDEFromHL_Bank16
     ld hl, sBD30
-    ld de, wD0E0
+    ld de, wBattlerRecords + $B
     ld b, $05
     call CopyBytesDEFromHL_Bank16
     ld a, [sBC00]
-    ld [wD0E5], a
+    ld [wTitlePartyCount], a
     push af
     ld a, [sBC01]
-    ld [wD09D], a
-    ld de, wD0E6
+    ld [wWorkBuf], a
+    ld de, wTitlePartySummary
     ld a, e
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     ld a, d
-    ld [wD09F], a
+    ld [wWorkBuf + $2], a
     call BuildRecordSummaryForWD09D
     pop af
     cp a, $01
     jr z, Jump_016_767E
     push af
     ld a, [sBC02]
-    ld [wD09D], a
-    ld de, wD0F2
+    ld [wWorkBuf], a
+    ld de, wBattlerRecords + $1D
     ld a, e
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     ld a, d
-    ld [wD09F], a
+    ld [wWorkBuf + $2], a
     call BuildRecordSummaryForWD09D
     pop af
     cp a, $02
     jr z, Jump_016_767E
     ld a, [sBC03]
-    ld [wD09D], a
-    ld de, wD0FE
+    ld [wWorkBuf], a
+    ld de, wBattlerRecords + $29
     ld a, e
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     ld a, d
-    ld [wD09F], a
+    ld [wWorkBuf + $2], a
     call BuildRecordSummaryForWD09D
 
 Jump_016_767E::
     ld a, [sBD3A]
-    ld [wD10A], a
+    ld [wTitleByte0A], a
     ld a, [sBE0D]
-    ld [wD10B], a
+    ld [wTitleKeyFlag], a
     ld a, [sBB07]
-    ld [wD10C], a
+    ld [wTitleStringIndex], a
     ld a, [sBD36]
     ld hl, sBC0A
     add a, a
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD10D], a
+    ld [wTitleKeyEntry], a
     ld a, [hl+]
-    ld [wD10E], a
+    ld [wTitleKeyWord1], a
     ld a, [hl+]
-    ld [wD10F], a
+    ld [wTitleKeyWord2], a
     ld a, [hl]
-    ld [wD110], a
+    ld [wTitleKeyByte3], a
     xor a, a
     ld [rRAMB], a
     xor a, a
@@ -8324,11 +8323,11 @@ Func_016_76B6:: ; address name
 
 ; for SRAM bank-1 record wD09D writes its family nibble, a packed field from bytes $21/$27 (Func_016_7720) and field $62 & $7F to the buffer at wD09E (E-0127)
 ; 3 call sites from 1 routine (e.g. LoadSaveFileSummary)
-; reads: wD09D, wD09E, wD09F, wD0A0, wD0A1
-; writes: wD0A0, wD0A1
+; reads: wWorkBuf
+; writes: wWorkBuf
 BuildRecordSummaryForWD09D::
 Func_016_76BD:: ; address name
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     ld c, $6F
     call Multiply8
     ld a, l
@@ -8338,12 +8337,12 @@ Func_016_76BD:: ; address name
     adc a, $A0
     ld h, a
     ld a, l
-    ld [wD0A0], a
+    ld [wWorkBuf + $3], a
     ld a, h
-    ld [wD0A1], a
-    ld a, [wD09E]
+    ld [wWorkBuf + $4], a
+    ld a, [wWorkBuf + $1]
     ld e, a
-    ld a, [wD09F]
+    ld a, [wWorkBuf + $2]
     ld d, a
     ld a, [hl]
     and a, $0F
@@ -8363,23 +8362,23 @@ Func_016_76BD:: ; address name
     adc a, $00
     ld h, a
     ld c, [hl]
-    ld a, [wD0A0]
+    ld a, [wWorkBuf + $3]
     add a, $03
     ld l, a
-    ld a, [wD0A1]
+    ld a, [wWorkBuf + $4]
     adc a, $00
     ld h, a
     call BuildRecordSummaryForWD09D_Sub01
-    ld a, [wD0A0]
+    ld a, [wWorkBuf + $3]
     add a, $62
     ld l, a
-    ld a, [wD0A1]
+    ld a, [wWorkBuf + $4]
     adc a, $00
     ld h, a
-    ld a, [wD09E]
+    ld a, [wWorkBuf + $1]
     add a, $0B
     ld e, a
-    ld a, [wD09F]
+    ld a, [wWorkBuf + $2]
     adc a, $00
     ld d, a
     ld a, [hl]
@@ -8478,9 +8477,9 @@ Jump_016_777A::
 
 ; far-calls DecompressGraphicsA4ToTiles0 and continues at Jump_016_77A6 (E-0127)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_Sub01, RunWD06BSubState_60E9_Case02_Case00_Case00)
-; reads: wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
+; reads: wBattlerRecords, wGameMode, wTitlePlayHoursLo, wTitlePlayHoursHi, wTitlePlayMinutes, wTitlePartyCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
-; points at: wD0D6, wD0E6, wD0F2, wD0FE
+; points at: wTitlePlayerName, wTitlePartySummary
 DecompressA4GraphicsAndContinue::
 Func_016_777B:: ; address name
     farcall DecompressGraphicsA4ToTiles0
@@ -8488,9 +8487,9 @@ Func_016_777B:: ; address name
 
 ; loads the summary graphics and palette, the save file summary, and draws the player name, party icons, names, levels and key name on the title screen (E-0131)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wBattlerRecords, wGameMode, wD0E3, wD0E4, wD0E2, wD0E5
+; reads: wIsCGB, wBattlerRecords, wGameMode, wTitlePlayHoursLo, wTitlePlayHoursHi, wTitlePlayMinutes, wTitlePartyCount
 ; writes: wOBJPaletteUploadRequest, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
-; points at: wOBJPaletteBuffer, wD0D6, wD0E6, wD0F2, wD0FE
+; points at: wOBJPaletteBuffer, wTitlePlayerName, wTitlePartySummary
 DrawTitleSaveSummaryScreen:: ; heuristic: follows a terminator; C0
 Func_016_7783:: ; address name
     ld b, $7E
@@ -8597,7 +8596,7 @@ Jump_016_7832::
     ld [wStringCategory], a
     ld a, $05
     ld [wStringIndex], a
-    ld hl, wD0D6
+    ld hl, wTitlePlayerName
     ld de, vTiles2 + $200
     ld a, [wGameMode]
     cp a, $05
@@ -8606,9 +8605,9 @@ Jump_016_7832::
 
 Jump_016_7857::
     call ShowTenByteNameAtDE
-    ld a, [wD0E3]
+    ld a, [wTitlePlayHoursLo]
     ld l, a
-    ld a, [wD0E4]
+    ld a, [wTitlePlayHoursHi]
     ld h, a
     call HLToDecimalDigits
     ld de, wScreenTileBuffer + $4D
@@ -8619,7 +8618,7 @@ Jump_016_7857::
 
 Jump_016_7872::
     call WriteThreeDigitTilesWC8C0_Bank16
-    ld a, [wD0E2]
+    ld a, [wTitlePlayMinutes]
     ld l, a
     ld h, $00
     call HLToDecimalDigits
@@ -8631,16 +8630,16 @@ Jump_016_7872::
 
 Jump_016_788B::
     call WriteTwoDigitTilesWC8C1NoBlank_Bank16
-    ld a, [wD0E5]
+    ld a, [wTitlePartyCount]
     ld b, a
     ld c, $00
-    ld hl, wD0E6
+    ld hl, wTitlePartySummary
     call DrawSaveSummaryPartyEntryC
     ld c, $01
-    ld hl, wD0F2
+    ld hl, wBattlerRecords + $1D
     call DrawSaveSummaryPartyEntryC
     ld c, $02
-    ld hl, wD0FE
+    ld hl, wBattlerRecords + $29
     call DrawSaveSummaryPartyEntryC
     call BlankTwoTileCellByGameMode
     call ShowKeyNameOrStringForWD10B
@@ -8708,7 +8707,7 @@ Jump_016_78E9::
 ; for summary entry C (below B) loads its family icon, shows its 10-byte name and writes its level; otherwise blanks the entry (E-0129)
 ; 3 call sites from 1 routine (e.g. DrawTitleSaveSummaryScreen)
 ; reads: wGameMode
-; writes: wD09D, wD09E
+; writes: wWorkBuf
 DrawSaveSummaryPartyEntryC::
 Func_016_78F9:: ; address name
     ld a, c
@@ -8716,7 +8715,7 @@ Func_016_78F9:: ; address name
     jr nc, Jump_016_7969
     push bc
     ld a, [hl+]
-    ld [wD09D], a
+    ld [wWorkBuf], a
     push hl
     ld a, c
     ld hl, Data_016_7A36
@@ -8730,7 +8729,7 @@ Jump_016_7912::
     pop af
     add_a_to_hl
     ld a, [hl]
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     push hl
     call LoadFamilyIconTileForWD09D
     pop hl
@@ -8833,7 +8832,7 @@ Jump_016_79A6::
 
 ; window at vTiles2 + $3B0 (or + $5B0 in game mode 5): shows string wD10C + $0A, or builds a two-word key name from wD10E/wD10F (E-0127)
 ; 1 call site from 1 routine (e.g. DrawTitleSaveSummaryScreen)
-; reads: wGameMode, wD10B, wD10C, wD110, wD10E, wD10F, wD10D
+; reads: wGameMode, wTitleKeyFlag, wTitleStringIndex, wTitleKeyByte3, wTitleKeyWord1, wTitleKeyWord2, wTitleKeyEntry
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
 ; points at: wTextBuf0
 ShowKeyNameOrStringForWD10B::
@@ -8854,10 +8853,10 @@ Jump_016_79C2::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld a, [wD10B]
+    ld a, [wTitleKeyFlag]
     bit 7, a
     jr nz, Jump_016_79EF
-    ld a, [wD10C]
+    ld a, [wTitleStringIndex]
     add a, $0A
     ld [wStringIndex], a
     xor a, a
@@ -8866,15 +8865,15 @@ Jump_016_79C2::
     ret
 
 Jump_016_79EF::
-    ld a, [wD110]
+    ld a, [wTitleKeyByte3]
     bit 7, a
     jr nz, Jump_016_7A22
     ld de, wTextBuf0
-    ld a, [wD10E]
+    ld a, [wTitleKeyWord1]
     inc a
     call CopyKeyNameWordToDE_Bank16
     dec de
-    ld a, [wD10F]
+    ld a, [wTitleKeyWord2]
     add a, $11
     call CopyKeyNameWordToDE_Bank16
     dec de
@@ -8895,7 +8894,7 @@ Func_016_7A1E:: ; address name
     ret
 
 Jump_016_7A22::
-    ld a, [wD10D]
+    ld a, [wTitleKeyEntry]
     and a, $3F
     ld [wStringIndex], a
     ld a, $06
@@ -8917,10 +8916,10 @@ Data_016_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; writes the 16-byte icon tile of family wD09D (Data_016_7ACD + 16 * family) to VRAM tile wD09E through Func_016_7AAF; corrected in E-0124, first named as a palette load (E-0122)
 ; 19 call sites from 19 routines (e.g. DrawSaveSummaryPartyEntryC, ShowSpeciesNameAndIconForSlotB, ScriptCommandF6_Run_Case10_Case04, ScriptCommandF6_Run_Case10_Case06_Sub02, ...)
-; reads: wD09D
+; reads: wWorkBuf
 LoadFamilyIconTileForWD09D::
 Func_016_7A48:: ; address name
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     swap a
     ld de, Data_016_7ACD
     add a, e
@@ -8996,10 +8995,10 @@ Jump_016_7AAA::
 
 ; writes B bytes from DE to VRAM tile wD09E ($8000 + 16 * index; indices below $80 use the $9000 area) (E-0124)
 ; 2 call sites from 2 routines (e.g. LoadFamilyIconTileForWD09D, LoadAllFamilyIconTiles)
-; reads: wD09E
+; reads: wWorkBuf
 WriteBytesToVRAMTileWD09E::
 Func_016_7AAF:: ; address name
-    ld a, [wD09E]
+    ld a, [wWorkBuf + $1]
 
 Jump_016_7AB2::
     swap a

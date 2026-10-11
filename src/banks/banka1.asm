@@ -369,7 +369,7 @@ Jump_0A1_42FB::
 
 ; entry 6 of the `rst $00` table in RunBattleCommandEntry_BankA1
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD2C8, wD2C9, wD2CA, wD2CB, wBattleSubPhase
+; writes: wBattleCommandArgs, wBattleSubPhase
 ; points at: wBattleHP, wBattleMaxHP, wBattleStep, wBattleResolveStep
 RunBattleCommandEntry_BankA1_Case06::
 Jump_0A1_4305:: ; address name
@@ -379,18 +379,18 @@ Jump_0A1_4305:: ; address name
     call AddWordAtHLToBC_BankA1
     call AddWordAtHLToBC_BankA1
     ld a, c
-    ld [wD2C8], a
+    ld [wBattleCommandArgs], a
     ld a, b
-    ld [wD2C9], a
+    ld [wBattleCommandArgs + $1], a
     ld hl, wBattleMaxHP
     ld bc, $0000
     call AddWordAtHLToBC_BankA1
     call AddWordAtHLToBC_BankA1
     call AddWordAtHLToBC_BankA1
     ld a, c
-    ld [wD2CA], a
+    ld [wBattleCommandArgs + $2], a
     ld a, b
-    ld [wD2CB], a
+    ld [wBattleCommandArgs + $3], a
     ld hl, wBattleStep
     inc [hl]
     xor a, a

@@ -563,297 +563,182 @@ DEF wWildByteE5 EQU $CFE5 ; encounter work byte (E-0135)
 DEF wMonsterId EQU $CFE6 ; 16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads (reading)
 DEF wRecordBuffer EQU $CFEC ; scratch buffer shared by the record loaders: LoadSkillRecord reads its first word as the skill number and writes 17 bytes after it; LoadMonsterRecord stores a 26-byte monster record here (reading)
 DEF wRecordBufferData EQU $CFEE ; where LoadSkillRecord puts the 17 bytes of a skill record (byte 2 of the buffer) (reading)
+DEF wScreenAttrBuffer EQU $D000 ; WRAM bank 2: CGB attribute bytes for wScreenTileBuffer, same 20 x 18 layout ($168 bytes; the map loader and the screen copies switch rSVBK to 2 first) (E-0136)
 DEF wSpeciesIdLo EQU $D006 ; low byte of the monster id whose species record LoadSpeciesRecord loads (E-0069) (reading + data (E-0069))
 DEF wSpeciesIdHi EQU $D007 ; high byte of that monster id (E-0069) (reading + data (E-0069))
 DEF wSpeciesRecord EQU $D008 ; 47-byte copy of a species record (LoadSpeciesRecord); byte 0 is the family (E-0069) (reading + data (E-0069))
-DEF wD009 EQU $D009
-DEF wD00A EQU $D00A
-DEF wD00B EQU $D00B
-DEF wD00C EQU $D00C
-DEF wD00E EQU $D00E
-DEF wD00F EQU $D00F
-DEF wD010 EQU $D010
-DEF wD011 EQU $D011
-DEF wD012 EQU $D012
-DEF wD013 EQU $D013
-DEF wD014 EQU $D014
-DEF wD015 EQU $D015
-DEF wD016 EQU $D016
-DEF wD017 EQU $D017
-DEF wD018 EQU $D018
-DEF wD019 EQU $D019
-DEF wD01A EQU $D01A
-DEF wD034 EQU $D034
-DEF wD035 EQU $D035
-DEF wD036 EQU $D036
-DEF wD040 EQU $D040
-DEF wD041 EQU $D041
-DEF wD043 EQU $D043
-DEF wD044 EQU $D044
-DEF wD045 EQU $D045
-DEF wD046 EQU $D046
-DEF wD047 EQU $D047
-DEF wD048 EQU $D048
-DEF wD049 EQU $D049
-DEF wD04A EQU $D04A
-DEF wD04B EQU $D04B
-DEF wD04C EQU $D04C
-DEF wD04D EQU $D04D
-DEF wD057 EQU $D057
-DEF wD058 EQU $D058
-DEF wD059 EQU $D059
-DEF wD05A EQU $D05A
-DEF wD064 EQU $D064
-DEF wD065 EQU $D065
-DEF wD066 EQU $D066
+DEF wDMGPaletteBytes EQU $D040 ; three DMG palette bytes kept for the fades (SetDefaultDMGPaletteBytes, UploadBGPalettesWithFade) (E-0136)
+DEF wLinkRules EQU $D043 ; link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckWD044Bit6, UnpackLinkRecordToWD09D) (E-0136)
+DEF wLinkRuleTurnLimit EQU $D04B ; rule byte with the turn limit (LinkRuleCheckWD04BTurnLimit) (E-0136)
+DEF wLinkRulesCopy EQU $D04D ; second copy of the 10 rule bytes (GameMode5_Init_Case04_Sub01) (E-0136)
+DEF wLinkRuleWork57 EQU $D057 ; rule work bytes tested by LinkRuleCheckWD044Bit6 (E-0136)
+DEF wBattleInitByte58 EQU $D058 ; set by the battle set-up (GameMode4_Init_Sub01_Sub01) (E-0136)
+DEF wLinkSetupMode EQU $D059 ; link set-up mode written by the link screen states; GameMode5_Init_Case04_Sub01 compares it with 2 (E-0136)
+DEF wLinkSeedCopy EQU $D05A ; 11 bytes copied from wRandomSeed2Hi onward at the start of a link exchange (Func_033_5215_Table2_Case05_Case0D) (E-0136)
+DEF wBattleResultDelay EQU $D064 ; copied to wBattleResultCounter when the results screen starts (E-0136)
+DEF wLinkReceivedByte EQU $D065 ; byte read through the pointer wArg5/wArg6 during the link exchange (E-0136)
+DEF wBGFillFlag EQU $D066 ; selects clearing the BG map or filling it with tile $C3 (ClearBGMapOrFillWithC3) (E-0136)
 DEF wDataBankSave EQU $D067 ; spare slot some code copies wDataBank to and restores it from (E-0014)
-DEF wD068 EQU $D068
-DEF wD069 EQU $D069
-DEF wD06A EQU $D06A
-DEF wD06B EQU $D06B
-DEF wD06C EQU $D06C
-DEF wD080 EQU $D080
+DEF wNewRecordByte0D EQU $D068 ; value for byte $0D of a new or changed record (RollRecordField0DState, BattleEnd_Step6_Case02) (E-0136)
+DEF wTalkCountdown EQU $D069 ; frames before a talk event is dispatched (CountDownWD069ThenDispatchTalkEvent) (E-0136)
+DEF wLinkScreenState EQU $D06A ; state of the link and title screens of game mode 5 (StartFadeToWD06AState1/2) (E-0136)
+DEF wLinkScreenSubState EQU $D06B ; sub-state of those screens (RunWD06BSubState_* tables) (E-0136)
+DEF wLinkScreenFlag EQU $D06C ; flag set and tested by the link screen sub-states (E-0136)
 DEF wItemId EQU $D081 ; item id used by LoadItemRecord and RunItemEffect; $FF = none (reading)
-DEF wD082 EQU $D082
-DEF wD083 EQU $D083
+DEF wInventorySlot EQU $D082 ; inventory slot chosen in the pause menu (LookupWD082ForRecordBuffer) (E-0136)
+DEF wTargetRecord EQU $D083 ; party member an item or skill is used on (pause menu, ItemUsable_* checks) (E-0136)
 DEF wItemRecord EQU $D084 ; 13-byte copy of an ItemTable record (reading)
-DEF wD087 EQU $D087
-DEF wD088 EQU $D088
-DEF wD08A EQU $D08A
-DEF wD08C EQU $D08C
-DEF wD08D EQU $D08D
-DEF wD08E EQU $D08E
-DEF wD08F EQU $D08F
-DEF wD090 EQU $D090
-DEF wD091 EQU $D091
-DEF wD092 EQU $D092
-DEF wD093 EQU $D093
-DEF wD095 EQU $D095
-DEF wD096 EQU $D096
-DEF wD097 EQU $D097
-DEF wD098 EQU $D098
-DEF wD099 EQU $D099
-DEF wD09A EQU $D09A
-DEF wD09B EQU $D09B
-DEF wD09C EQU $D09C
-DEF wD09D EQU $D09D
-DEF wD09E EQU $D09E
-DEF wD09F EQU $D09F
-DEF wD0A0 EQU $D0A0
-DEF wD0A1 EQU $D0A1
-DEF wD0A2 EQU $D0A2
-DEF wD0A3 EQU $D0A3
-DEF wD0A4 EQU $D0A4
-DEF wD0A5 EQU $D0A5
-DEF wD0A6 EQU $D0A6
-DEF wD0A7 EQU $D0A7
-DEF wD0A8 EQU $D0A8
-DEF wD0A9 EQU $D0A9
-DEF wD0AA EQU $D0AA
-DEF wD0AB EQU $D0AB
-DEF wD0AC EQU $D0AC
-DEF wD0AD EQU $D0AD
-DEF wD0AE EQU $D0AE
-DEF wD0BD EQU $D0BD
-DEF wD0C7 EQU $D0C7
-DEF wD0CD EQU $D0CD
-DEF wBattlerRecords EQU $D0D5 ; six 78-byte ($4E) battler records for slots 0-2 and 4-6 (BattlerRecordFieldAddress); GetBaseHP reads the HP word at offset $1D (E-0062) (reading (E-0062))
-DEF wD0D6 EQU $D0D6
-DEF wD0D9 EQU $D0D9
-DEF wD0DF EQU $D0DF
-DEF wD0E0 EQU $D0E0
-DEF wD0E2 EQU $D0E2
-DEF wD0E3 EQU $D0E3
-DEF wD0E4 EQU $D0E4
-DEF wD0E5 EQU $D0E5
-DEF wD0E6 EQU $D0E6
-DEF wD0E7 EQU $D0E7
-DEF wD0E8 EQU $D0E8
-DEF wD0EA EQU $D0EA
-DEF wD0EC EQU $D0EC
-DEF wD0ED EQU $D0ED
-DEF wD0F2 EQU $D0F2
-DEF wD0F6 EQU $D0F6
-DEF wD0F8 EQU $D0F8
-DEF wD0FA EQU $D0FA
-DEF wD0FC EQU $D0FC
-DEF wD0FE EQU $D0FE
-DEF wD100 EQU $D100
-DEF wD104 EQU $D104
-DEF wD10A EQU $D10A
-DEF wD10B EQU $D10B
-DEF wD10C EQU $D10C
-DEF wD10D EQU $D10D
-DEF wD10E EQU $D10E
-DEF wD10F EQU $D10F
-DEF wD110 EQU $D110
-DEF wD11E EQU $D11E
-DEF wD123 EQU $D123
-DEF wD12D EQU $D12D
-DEF wD132 EQU $D132
-DEF wD136 EQU $D136
-DEF wD13A EQU $D13A
-DEF wD140 EQU $D140
-DEF wD144 EQU $D144
-DEF wD146 EQU $D146
-DEF wD148 EQU $D148
-DEF wD14A EQU $D14A
-DEF wD14C EQU $D14C
-DEF wD15E EQU $D15E
-DEF wD168 EQU $D168
-DEF wD17B EQU $D17B
-DEF wD1BF EQU $D1BF
-DEF wD1C9 EQU $D1C9
-DEF wD1CC EQU $D1CC
-DEF wD1D6 EQU $D1D6
-DEF wD1E3 EQU $D1E3
-DEF wD200 EQU $D200
-DEF wD201 EQU $D201
-DEF wD208 EQU $D208
-DEF wD20C EQU $D20C
-DEF wD20D EQU $D20D
-DEF wD217 EQU $D217
-DEF wD21D EQU $D21D
-DEF wD225 EQU $D225
-DEF wD235 EQU $D235
-DEF wD25A EQU $D25A
-DEF wD25F EQU $D25F
-DEF wD265 EQU $D265
-DEF wD27A EQU $D27A
-DEF wD298 EQU $D298
-DEF wD2A8 EQU $D2A8
-DEF wD2AD EQU $D2AD
-DEF wD2AE EQU $D2AE
-DEF wD2AF EQU $D2AF
-DEF wD2B0 EQU $D2B0
-DEF wD2B1 EQU $D2B1
-DEF wD2B2 EQU $D2B2
-DEF wD2B3 EQU $D2B3
-DEF wD2B4 EQU $D2B4
-DEF wD2B5 EQU $D2B5
-DEF wD2BD EQU $D2BD
-DEF wD2C1 EQU $D2C1
+DEF wItemMessage EQU $D08D ; item record byte 9: message selector; SetWD08D12IfItemRefused / SetWD08D14IfItemRefused store $12 or $14 when the target refuses (E-0136)
+DEF wItemRecordByte0A EQU $D08E ; item record byte $0A (written by ItemUsable_WorldDew and ListPartyMembersWithField55Bit0) (E-0136)
+DEF wItemEffectAmount EQU $D08F ; item record byte $0B: amount the item effect applies (ItemApply_Herb, ItemApply_Potion, ShowRaiseAmountOrRefuse); field skills store theirs here (E-0136)
+DEF wItemEffectRange EQU $D090 ; item record byte $0C: random range added by HealRecordHPByRandomAmount (E-0136)
+DEF wEncounterDelay EQU $D091 ; delay before random encounters count again (TickRandomEncounterCounter) (E-0136)
+DEF wBattleScene EQU $D092 ; battle kind or scene: picks the battle background and arena variants (8 copies an attribute block) (E-0136)
+DEF wBattleByte93 EQU $D093 ; battle byte tested by Func_031_67AA_Case09_Case00 (E-0136)
+DEF wLevelUpGains EQU $D095 ; stat gains of a level up (ComputeLevelUpStatGainsForWD869, ClampLevelUpGainsTo999, ItemApply_WorldLeaf) (E-0136)
+DEF wGrowthTemp0 EQU $D09B ; growth calculation work byte (ComputeLevelUpStatGainsForWD869_Sub01, AddWD09CIfWD09BMatchesB) (E-0136)
+DEF wGrowthTemp1 EQU $D09C ; growth calculation work byte added when wGrowthTemp0 matches (E-0136)
+DEF wWorkBuf EQU $D09D ; shared work area: arguments and pointers of many routines (record index and destination of BuildRecordSummaryForWD09D, menu lists, palette rows of the screen fades) (E-0136)
+DEF wPauseListCount EQU $D0C7 ; number of entries in the pause-menu list (PauseMenu_State3; BuildScreenBlocks21To23_Sub01) (E-0136)
+DEF wBattlerRecords EQU $D0D5 ; six 78-byte ($4E) battler records for slots 0-2 and 4-6 (BattlerRecordFieldAddress); GetBaseHP reads the HP word at offset $1D (E-0062); the size covers the slot-0 record, the others are wBattlerRecordSlot1-6 (E-0136) (reading (E-0062))
+DEF wTitlePlayerName EQU $D0D6 ; title screen: player name copied from SRAM ($0A bytes; LoadSaveFileSummary reuses battler record 0) (E-0136)
+DEF wTitlePlayMinutes EQU $D0E2 ; title screen: minutes of the play time (E-0136)
+DEF wTitlePlayHoursLo EQU $D0E3 ; title screen: hours of the play time, low byte (E-0136)
+DEF wTitlePlayHoursHi EQU $D0E4 ; title screen: hours of the play time, high byte (E-0136)
+DEF wTitlePartyCount EQU $D0E5 ; title screen: number of party monsters (E-0136)
+DEF wTitlePartySummary EQU $D0E6 ; title screen: party summaries, 12 bytes each (BuildRecordSummaryForWD09D); the second and third sit at battler-record offsets $1D and $29 (E-0136)
+DEF wLinkMenuCounter EQU $D0E7 ; counter of the RunWD06BSubState_5B14 screen (E-0136)
+DEF wLinkMenuEntry EQU $D0E8 ; entry number for table $555D (LoadTable555DEntryForWD0A6ToWD0EA) (E-0136)
+DEF wLinkMenuEntryBytes EQU $D0EA ; three bytes copied from the table $555D entry (E-0136)
+DEF wTitleByte0A EQU $D10A ; title summary byte copied from sBD3A (also read by the pause menu and link screens) (E-0136)
+DEF wTitleKeyFlag EQU $D10B ; title summary byte from sBE0D: picks a key name or a string (ShowKeyNameOrStringForWD10B) (E-0136)
+DEF wTitleStringIndex EQU $D10C ; title summary byte from sBB07: string shown when there is no key (E-0136)
+DEF wTitleKeyEntry EQU $D10D ; 4-byte key entry of the current key (sBC0A + 4 * sBD36) (E-0136)
+DEF wTitleKeyWord1 EQU $D10E ; key entry byte 1: first word of the key name (E-0136)
+DEF wTitleKeyWord2 EQU $D10F ; key entry byte 2: second word of the key name (E-0136)
+DEF wTitleKeyByte3 EQU $D110 ; key entry byte 3 (E-0136)
+DEF wKeyGenList EQU $D11E ; word list indexed by 2 * wKeyGenCount while script command $F2 builds a key (E-0136)
+DEF wBattlerRecordSlot1 EQU $D123 ; battler record of slot 1 (E-0136)
+DEF wKeyGenCount EQU $D15E ; count of entries in wKeyGenList (E-0136)
+DEF wWindowAttrBuffer EQU $D168 ; WRAM bank 2: CGB attributes for wWindowTileBuffer ($C300), same 20 x 18 layout and the same offset ($E68) from the tile buffer as wScreenAttrBuffer (E-0136)
+DEF wBattlerRecordSlot2 EQU $D171 ; battler record of slot 2 (E-0136)
+DEF wBattlerRecordSlot4 EQU $D1BF ; battler record of slot 4 (BackupBattlerRecords0And1 copies record 0 here) (E-0136)
+DEF wLinkExchangeBuffer EQU $D200 ; link transfer buffer for the record exchange (wLinkBufferPtr is pointed here) (E-0136)
+DEF wBattlerRecordSlot5 EQU $D20D ; battler record of slot 5 (BackupBattlerRecords0And1 copies record 1 here) (E-0136)
+DEF wBattlerRecordSlot6 EQU $D25B ; battler record of slot 6 (E-0136)
+DEF wAIWeights EQU $D2AD ; ten AI weight words of the acting monster (InitAIWeightsForActor, AddWeightsForSkillD) (E-0136)
+DEF wAIDamageEstimates EQU $D2C1 ; AI damage estimates (CheckLoneFoeHPNotBelowWD2C1) (E-0136)
 DEF wPersonalityIndex EQU $D2C7 ; column index (0-26) into the bank-6 table; set from PersonalityIndexOfSlot in banks $30 and $E0 before ReadBank6TableWord (reading)
-DEF wD2C8 EQU $D2C8
-DEF wD2C9 EQU $D2C9
-DEF wD2CA EQU $D2CA
-DEF wD2CB EQU $D2CB
-DEF wD2CC EQU $D2CC
-DEF wD2CD EQU $D2CD
-DEF wD2CE EQU $D2CE
-DEF wD2D0 EQU $D2D0
-DEF wD580 EQU $D580
-DEF wD581 EQU $D581
-DEF wD582 EQU $D582
-DEF wD586 EQU $D586
-DEF wD587 EQU $D587
-DEF wD588 EQU $D588
-DEF wD589 EQU $D589
-DEF wD5B1 EQU $D5B1
-DEF wD780 EQU $D780
-DEF wD781 EQU $D781
-DEF wD782 EQU $D782
-DEF wD783 EQU $D783
-DEF wD784 EQU $D784
-DEF wD785 EQU $D785
-DEF wD786 EQU $D786
-DEF wD787 EQU $D787
-DEF wD788 EQU $D788
-DEF wD789 EQU $D789
-DEF wD78A EQU $D78A
-DEF wD78B EQU $D78B
-DEF wD78C EQU $D78C
-DEF wD78D EQU $D78D
-DEF wD78E EQU $D78E
-DEF wD790 EQU $D790
-DEF wD791 EQU $D791
-DEF wD792 EQU $D792
-DEF wD793 EQU $D793
-DEF wD794 EQU $D794
-DEF wD799 EQU $D799
-DEF wD79A EQU $D79A
-DEF wD79C EQU $D79C
-DEF wD7A2 EQU $D7A2
-DEF wD7A5 EQU $D7A5
-DEF wD7A6 EQU $D7A6
-DEF wD7A9 EQU $D7A9
-DEF wD7AA EQU $D7AA
-DEF wD7AB EQU $D7AB
-DEF wD7AC EQU $D7AC
-DEF wD7AD EQU $D7AD
-DEF wD7AE EQU $D7AE
-DEF wD7AF EQU $D7AF
-DEF wD7B0 EQU $D7B0
-DEF wD7B1 EQU $D7B1
-DEF wD7B2 EQU $D7B2
-DEF wD7B3 EQU $D7B3
-DEF wD7B4 EQU $D7B4
-DEF wD7B5 EQU $D7B5
-DEF wD7B6 EQU $D7B6
-DEF wD7B7 EQU $D7B7
-DEF wD7B8 EQU $D7B8
-DEF wD7B9 EQU $D7B9
-DEF wD7BA EQU $D7BA
-DEF wD7BB EQU $D7BB
-DEF wD7BC EQU $D7BC
-DEF wD7BD EQU $D7BD
-DEF wD7BE EQU $D7BE
-DEF wD7BF EQU $D7BF
-DEF wD7C0 EQU $D7C0
-DEF wD7C1 EQU $D7C1
-DEF wD7C2 EQU $D7C2
-DEF wD7C3 EQU $D7C3
-DEF wD7C4 EQU $D7C4
-DEF wD7C5 EQU $D7C5
-DEF wD7C6 EQU $D7C6
-DEF wD7C7 EQU $D7C7
-DEF wD7C8 EQU $D7C8
-DEF wD7C9 EQU $D7C9
-DEF wD7CA EQU $D7CA
-DEF wD7CB EQU $D7CB
-DEF wD7CC EQU $D7CC
-DEF wD7CD EQU $D7CD
-DEF wD7CE EQU $D7CE
-DEF wD7CF EQU $D7CF
-DEF wD7D0 EQU $D7D0
-DEF wD7D1 EQU $D7D1
-DEF wD7D2 EQU $D7D2
-DEF wD7D3 EQU $D7D3
-DEF wD7D4 EQU $D7D4
-DEF wD7D5 EQU $D7D5
-DEF wD7DC EQU $D7DC
-DEF wD7DD EQU $D7DD
-DEF wD7E0 EQU $D7E0
-DEF wD7E1 EQU $D7E1
-DEF wD7E2 EQU $D7E2
-DEF wD7E3 EQU $D7E3
-DEF wD7E4 EQU $D7E4
-DEF wD7E5 EQU $D7E5
-DEF wD7E6 EQU $D7E6
-DEF wD7E8 EQU $D7E8
-DEF wD7E9 EQU $D7E9
-DEF wD7EA EQU $D7EA
-DEF wD7EB EQU $D7EB
-DEF wD7EC EQU $D7EC
-DEF wD7ED EQU $D7ED
-DEF wD7EE EQU $D7EE
-DEF wD7EF EQU $D7EF
-DEF wD7F0 EQU $D7F0
-DEF wD7F1 EQU $D7F1
-DEF wD7F2 EQU $D7F2
-DEF wD7F3 EQU $D7F3
-DEF wD7F4 EQU $D7F4
-DEF wD7F5 EQU $D7F5
-DEF wD7F6 EQU $D7F6
-DEF wD7F7 EQU $D7F7
-DEF wD7F8 EQU $D7F8
+DEF wBattleCommandArgs EQU $D2C8 ; four bytes stored by RunBattleCommandEntry_Case06 (E-0136)
+DEF wAIFlag EQU $D2CC ; AI flag set while choosing an action (AIChooseActionForActor) and read by the scoring routines (E-0136)
+DEF wTransitionByteCD EQU $D2CD ; set by the battle transition (RunWC904Step_Case00) (E-0136)
+DEF wBattleEndTimer EQU $D2CE ; battle end wait timer (CountDownWD2CEWhenSoundIdle) (E-0136)
+DEF wSavedScreenAttrs EQU $D2D0 ; WRAM bank 2: copy of the $168 attribute bytes of wScreenAttrBuffer (SaveScreenBufferToBGMap1 / RestoreScreenBufferFromBGMap1) (E-0136)
+DEF wArenaEntry EQU $D580 ; arena work bytes (script command $F7) (E-0136)
+DEF wArenaByte86 EQU $D586 ; arena byte set by ScriptCommandF7_Run_Case15 (E-0136)
+DEF wArenaByte87 EQU $D587 ; arena byte set by ScriptCommandF7_Run_Case15 (E-0136)
+DEF wArenaRound EQU $D588 ; arena counter (IncWD588AndCopyWD7FCToWD78C) (E-0136)
+DEF wArenaList EQU $D589 ; arena list (ScriptCommand96_Run_Shared01_Sub01) (E-0136)
+DEF wArenaList2 EQU $D5B1 ; second arena list (ScriptCommand96_Run_Shared01_Sub01) (E-0136)
+DEF wScreenState EQU $D780 ; state of the current menu or script screen (RunWD780StepEveryOtherFrame, RunWD780StateWhenNotFading_*); $FF = idle (E-0136)
+DEF wScreenStep EQU $D781 ; step within wScreenState; most screen jump tables index it (E-0136)
+DEF wScreenSubStep EQU $D782 ; sub-step of the current screen (E-0136)
+DEF wScreenCounter EQU $D783 ; counter of the current screen (palette row in the fades, link checks) (E-0136)
+DEF wGlyphListPos EQU $D784 ; position in the glyph tile list (DrawWC8CFGlyphsOverlaying8DAnd8E, CopyGlyphTileListFromBank1F) (E-0136)
+DEF wGlyphListStart EQU $D785 ; first entry copied by CopyGlyphTileListFromBank1F (E-0136)
+DEF wGridCursorX EQU $D786 ; column in a 6-column grid (GridIndexFromWD786WD787) (E-0136)
+DEF wGridCursorY EQU $D787 ; row in that grid (also a blink counter in BlinkCursorWD787_Bank15) (E-0136)
+DEF wScreenList EQU $D788 ; first byte of a screen work list (InitItemListWD788AndCount copies $28 bytes here; script commands $EC and $F1 keep a state here) (E-0136)
+DEF wListEntries EQU $D789 ; entries of the current list (record or key indexes; BuildKeyListIndexWD789, ListRecordsInUseWithByte6EClear) (E-0136)
+DEF wGrid2CursorX EQU $D78A ; column of a second 6-column grid (GridIndexFromWD78AWD78B; script command $F6) (E-0136)
+DEF wGrid2CursorY EQU $D78B ; row of that grid (E-0136)
+DEF wScreenArea EQU $D78C ; copy of wAreaGraphicsIndex (IncWD588AndCopyWD7FCToWD78C) (E-0136)
+DEF wScreenByte8D EQU $D78D ; set by script command $E2 (E-0136)
+DEF wScreenCountPlusOne EQU $D78E ; wRecordCapacity + 1 (SetupWD78EFromWD7FF) (E-0136)
+DEF wScreenByte90 EQU $D790 ; set by script command $E2 (E-0136)
+DEF wScreenByte91 EQU $D791 ; set by script command $E2 (E-0136)
+DEF wScreenBlock92 EQU $D792 ; bytes pointed at by script command $E2 (E-0136)
+DEF wScreenByte93 EQU $D793 ; set by script commands $E2 and $E5 (E-0136)
+DEF wScreenByte94 EQU $D794 ; set by script commands $E2 and $E5 (E-0136)
+DEF wScreenByte99 EQU $D799 ; set by script command $F6 case 1, read by case 7 (E-0136)
+DEF wScreenByte9A EQU $D79A ; set by script command $F6 case 1, read by case 7 (E-0136)
+DEF wScreenBlock9C EQU $D79C ; bytes written by ScriptCommandF6_Run_Case10_Case01 (E-0136)
+DEF wDebugResultsBuf EQU $D7A2 ; bytes used by DebugResultsDisplay_Update (E-0136)
+DEF wItemCountTens EQU $D7A5 ; tens digit of the item count (InitItemListWD788AndCount) (E-0136)
+DEF wItemCountOnes EQU $D7A6 ; ones digit of the item count (E-0136)
+DEF wListCount EQU $D7A9 ; number of entries in wListEntries (E-0136)
+DEF wRecordsInUse EQU $D7AA ; number of SRAM records in use (CountRecordsInUse) (E-0136)
+DEF wListCursor EQU $D7AB ; cursor row in the current list or page (UpdateListCursorWD7AB, UpdatePagedListCursor) (E-0136)
+DEF wListCursorAux EQU $D7AC ; byte kept with wListCursor by UpdateListCursorWD7AB (E-0136)
+DEF wChoiceCursor EQU $D7AD ; cursor of the two-entry choice (HandleTwoChoiceCursorInput_0D, DrawArrowTileBCAtWD7ADEntry) (E-0136)
+DEF wCursorBlinkAE EQU $D7AE ; cursor blink counter (0-$17; BlinkCursorWD7AE_*) (E-0136)
+DEF wListPageIndex EQU $D7AF ; page of the paged list (UpdatePagedListCursor) (E-0136)
+DEF wListPages EQU $D7B0 ; number of pages (or items) of the paged list (E-0136)
+DEF wListLastRow EQU $D7B1 ; last row of the current page (E-0136)
+DEF wScreenByteB2 EQU $D7B2 ; screen work byte (script commands $EB, $ED, $EF) (E-0136)
+DEF wScreenByteB3 EQU $D7B3 ; screen work byte (script commands $EB, $ED, $EF) (E-0136)
+DEF wSelectedRecord EQU $D7B4 ; SRAM record index chosen on a screen (LoadRecordWD7B4Byte0EBit0); also a blink counter in BlinkCursorWD7B4_Bank1C (E-0136)
+DEF wItemGridX EQU $D7B5 ; column 0-3 of the item grid (DrawWD7B5Cursor) (E-0136)
+DEF wItemGridY EQU $D7B6 ; row of the item grid (entry 4 * row + column) (E-0136)
+DEF wChoiceCursorF0 EQU $D7B7 ; cursor of the bank-$F0 two-entry choice (HandleTwoChoiceCursorInput_F0) (E-0136)
+DEF wCursorBlinkB8 EQU $D7B8 ; cursor blink counter (BlinkCursorWD7B8_*) (E-0136)
+DEF wRecordsFlagged EQU $D7B9 ; in-use records whose byte $6E is set (ListRecordsInUseWithByte6EClear) (E-0136)
+DEF wSavedFieldDrawFlags EQU $D7BA ; hFieldDrawFlags saved by SaveAndHideSpriteState (E-0136)
+DEF wSavedSpriteSlotCount EQU $D7BB ; wSpriteSlotCount saved by SaveAndHideSpriteState (E-0136)
+DEF wSavedSpriteClipMode EQU $D7BC ; hSpriteWindowClipMode saved by SaveAndHideSpriteState (E-0136)
+DEF wScreenByteBD EQU $D7BD ; screen work byte (debug results, script commands $EF and $F3) (E-0136)
+DEF wListEntries2 EQU $D7BE ; second 30-byte list cleared by ListRecordsInUseWithByte6EClear; script commands $E2, $E5 and $EB use its first bytes (E-0136)
+DEF wScreenByteBF EQU $D7BF ; screen work byte (script commands $E2, $E5, $EB) (E-0136)
+DEF wScreenByteC0 EQU $D7C0 ; screen work byte (script commands $E2, $E5, $EB) (E-0136)
+DEF wScreenByteC1 EQU $D7C1 ; screen work byte (script commands $E2, $E5, $EB) (E-0136)
+DEF wTextCounter0 EQU $D7C2 ; text counter cleared by ResetWD7C2Counters (E-0136)
+DEF wTextCounter1 EQU $D7C3 ; text counter (StepItemDescriptionText) (E-0136)
+DEF wTextCounter2 EQU $D7C4 ; text counter (StepItemDescriptionText, field event 8) (E-0136)
+DEF wTextCounter3 EQU $D7C5 ; text counter (E-0136)
+DEF wTextCounter4 EQU $D7C6 ; text counter (StepItemDescriptionText) (E-0136)
+DEF wTextTimer EQU $D7C7 ; text timer set to 60 by ResetWD7C2Counters (E-0136)
+DEF wTextCounter5 EQU $D7C8 ; text counter cleared by ResetWD7C2Counters (E-0136)
+DEF wTextCounter6 EQU $D7C9 ; text counter (StepItemDescriptionText) (E-0136)
+DEF wNumberTens EQU $D7CA ; tens digit of a two-digit number being edited (TenTimesWD7CAPlusWD7CB) (E-0136)
+DEF wNumberOnes EQU $D7CB ; ones digit of that number (E-0136)
+DEF wNumberEditPos EQU $D7CC ; position of the number editor (DrawRect0147AndResetWD7CC sets 2) (E-0136)
+DEF wCursorBlinkCD EQU $D7CD ; cursor blink counter (BlinkCursorWD7CD_*) (E-0136)
+DEF wThreeDigits EQU $D7CE ; three digits drawn by DrawThreeDigitsAtScrollOffset6E (E-0136)
+DEF wScreenByteD1 EQU $D7D1 ; screen work byte (script command $E2) (E-0136)
+DEF wCursorBlinkD2 EQU $D7D2 ; cursor blink counter (BlinkCursorWD7D2_*) (E-0136)
+DEF wCountTens EQU $D7D3 ; tens digit of a count (CountItemInInventoryToDigits, SplitWC635EntryIntoDigits) (E-0136)
+DEF wCountOnes EQU $D7D4 ; ones digit of that count (E-0136)
+DEF wItemGrid EQU $D7D5 ; 24 item ids in rows of 4 (CountNonZeroWD7D5Bytes, StepItemDescriptionText) (E-0136)
+DEF wPickCount EQU $D7DC ; number of records picked into wPickedRecords (4 marks the end; FinishWD7DDEntryAndAdvance) (E-0136)
+DEF wPickedRecords EQU $D7DD ; up to three picked record indexes ($FF padded by PadWD7DDWithFFToThree) (E-0136)
+DEF wPackWork EQU $D7E0 ; workspace of PackRecordFieldsToBank1Slot ($FF marks a finished pick) (E-0136)
+DEF wPackByteE1 EQU $D7E1 ; PackRecordFieldsToBank1Slot work byte (E-0136)
+DEF wPackFields EQU $D7E2 ; four 2-bit fields packed into one byte by Pack2BitFieldsFromWD7E2 (E-0136)
+DEF wPackByteE6 EQU $D7E6 ; PackRecordFieldsToBank1Slot input byte (E-0136)
+DEF wLinkByteE8 EQU $D7E8 ; read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens (E-0136)
+DEF wLinkByteE9 EQU $D7E9 ; read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens (E-0136)
+DEF wLinkByteEA EQU $D7EA ; read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens (E-0136)
+DEF wLinkByteEB EQU $D7EB ; set by the link screen, read by game mode 6 (E-0136)
+DEF wF0ScreenKind EQU $D7EC ; bank-$F0 screen kind (Run67EEWithWD7F1ForWD7EC checks 3 or 4) (E-0136)
+DEF wScreenByteED EQU $D7ED ; set and read by script command $E5 (E-0136)
+DEF wScreenByteEE EQU $D7EE ; screen work byte (game mode 5, script command $E2) (E-0136)
+DEF wCursorBlinkEF EQU $D7EF ; cursor blink counter (BlinkCursorWD7EF_Bank1D_4801) (E-0136)
+DEF wMessageMode EQU $D7F0 ; 0 shows a message through the normal group dispatch (StartMessageCommand09HL_*) (E-0136)
+DEF wArg1 EQU $D7F1 ; first argument/result byte of many helpers: SRAM record index, low byte of a 24-bit amount, source high byte of a tile rectangle, $FF/0 results (E-0136)
+DEF wArg2 EQU $D7F2 ; second argument byte: middle byte of an amount, SRAM bank, index low byte (E-0136)
+DEF wArg3 EQU $D7F3 ; third argument byte: high byte of an amount, pointer low byte, rectangle width (E-0136)
+DEF wArg4 EQU $D7F4 ; fourth argument byte: pointer high byte, rectangle rows (E-0136)
+DEF wArg5 EQU $D7F5 ; fifth argument/result byte: pointer high byte (SetWD7F5ToWD789Cell4), BG destination, first 2-bit field, $FF results (E-0136)
+DEF wArg6 EQU $D7F6 ; sixth argument byte: pointer low byte, second 2-bit field (E-0136)
+DEF wArg7 EQU $D7F7 ; seventh argument byte: third 2-bit field (E-0136)
+DEF wArg8 EQU $D7F8 ; eighth argument byte: fourth 2-bit field (E-0136)
 DEF wMenuInputResult EQU $D7F9 ; result of the bank-$1B/$1D menu cursor routines: $FF confirmed (A), $FE cancelled (B), $FD row moved, $FB page moved, 0 nothing (E-0068) (reading (E-0068))
 DEF wTwoChoiceCursor EQU $D7FA ; 0 or 1, the selected entry of UpdateTwoChoiceCursor (E-0068) (reading (E-0068))
-DEF wD7FB EQU $D7FB
-DEF wD7FC EQU $D7FC
+DEF wScreenTableIndex EQU $D7FB ; index into per-screen pointer tables (Data_0F2_5643, Data_01C_6158) (E-0136)
+DEF wAreaGraphicsIndex EQU $D7FC ; area graphics entry (LoadAreaGraphicsForWD7FC) (E-0136)
 DEF wScriptInDataBank EQU $D7FD ; non-zero when the script bytes are read from the bank in wDataBank (reading + execution (E-0038))
 DEF wDataBank EQU $D7FE ; ROM bank used by Func_000_0B6C when reading a word through HL (E-0014)
-DEF wD7FF EQU $D7FF
+DEF wRecordCapacity EQU $D7FF ; number of SRAM records the farm holds (LoadWD7FFFromWC7C7Table); also reused as a count by script command $F7 (E-0136)
 DEF wD800 EQU $D800
 DEF wD801 EQU $D801
 DEF wD802 EQU $D802

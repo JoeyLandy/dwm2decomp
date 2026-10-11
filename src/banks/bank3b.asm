@@ -218,7 +218,7 @@ Jump_03B_414C::
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's INT word (wD000) is returned; otherwise the word at offset $29 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01)
-; reads: wRecordBufferData
+; reads: wScreenAttrBuffer, wRecordBufferData
 ; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wDAAE
 GetBaseINT::
@@ -247,7 +247,7 @@ Jump_03B_4167::
     ld a, h
     ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wRecordBufferData + $12]
+    ld a, [wScreenAttrBuffer]
     ld c, a
     ld a, [wRecordBufferData + $13]
     ld b, a
@@ -456,7 +456,7 @@ Jump_03B_42B6::
 
 ; slot C (not 3/7): C = (species byte wD00A << 4) | wD00B for its species (field $0A); 0 for slot 3/7 (E-0124)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ActionEffect_Transform_Sub01_Sub05)
-; reads: wD00A, wD00B
+; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 SlotSpeciesNibblesD00AD00B::
 Func_03B_42BB:: ; address name
@@ -472,10 +472,10 @@ Func_03B_42BB:: ; address name
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD00A]
+    ld a, [wSpeciesRecord + $2]
     swap a
     ld c, a
-    ld a, [wD00B]
+    ld a, [wSpeciesRecord + $3]
     or a, c
     ld c, a
     jr Jump_03B_42E5
@@ -1135,8 +1135,8 @@ Jump_03B_469B::
 
 ; entry 11 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAC1, wD808, wD893, wCommandCursor, wMenuOption, wItemId, wD087
-; writes: wItemId, wD082
+; reads: wDAC1, wD808, wD893, wCommandCursor, wMenuOption, wItemId, wItemRecord
+; writes: wItemId, wInventorySlot
 ; points at: wBattleResolveStep
 Func_03B_42F4_Case0B::
 Jump_03B_469E:: ; address name
@@ -1160,13 +1160,13 @@ Jump_03B_46AE::
     ld a, [wMenuOption]
     and a, $03
     add a, b
-    ld [wD082], a
+    ld [wInventorySlot], a
     farcall LoadItemRecord
     farcall ConsumeSelectedItemByChance
     ld a, [wItemId]
     cp a, $FF
     ret nz
-    ld a, [wD087]
+    ld a, [wItemRecord + $3]
     cp a, $64
     jr nz, Jump_03B_46E6
     ld a, [wD893]
@@ -2575,11 +2575,11 @@ Jump_03B_4F89::
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case08)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit0OfWD095Indexed_Bank3B::
 Func_03B_4FAB:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 0, [hl]
     pop hl
@@ -2587,11 +2587,11 @@ Func_03B_4FAB:: ; address name
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case08)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit1OfWD095Indexed_Bank3B::
 Func_03B_4FB8:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 1, [hl]
     pop hl
@@ -2599,11 +2599,11 @@ Func_03B_4FB8:: ; address name
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case08, InflictStatus0Bit0WithWD93FReduction)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit2OfWD095Indexed_Bank3B::
 Func_03B_4FC5:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 2, [hl]
     pop hl

@@ -406,7 +406,7 @@ Jump_00A_4228:: ; address name
 
 ; entry 6 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
 ; writes: hTemp1, wStatusFieldStep, wFieldStepFlags, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case06::
 Jump_00A_4229:: ; address name
@@ -420,7 +420,7 @@ Jump_00A_4229:: ; address name
 
 ; entry 7 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
 ; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case07::
 Jump_00A_4239:: ; address name
@@ -432,7 +432,7 @@ Jump_00A_4239:: ; address name
 
 ; entry 1 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
 ; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case01::
 Jump_00A_4243:: ; address name
@@ -444,7 +444,7 @@ Jump_00A_4243:: ; address name
 
 ; entry 2 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
 ; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case02::
 Jump_00A_424D:: ; address name
@@ -456,7 +456,7 @@ Jump_00A_424D:: ; address name
 
 ; entry 3 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
 ; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case03::
 Jump_00A_4257:: ; address name
@@ -468,7 +468,7 @@ Jump_00A_4257:: ; address name
 
 ; entry 4 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
 ; writes: hTemp1, wStatusFieldStep, wFieldStepFlags, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case04::
 Jump_00A_4261:: ; address name
@@ -482,7 +482,7 @@ Jump_00A_4261:: ; address name
 
 ; entry 5 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; reads: wFadeState, wScriptRunning, wTalkCountdown, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
 ; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case05::
 Jump_00A_4271:: ; address name
@@ -499,7 +499,7 @@ Jump_00A_427B::
     ld a, [wScriptRunning]
     or a, a
     ret nz
-    ld a, [wD069]
+    ld a, [wTalkCountdown]
     or a, a
     ret nz
     ldh a, [hPlayerX]
@@ -679,8 +679,8 @@ Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; when nothing else runs and wC901 & $7F is set, counts wD069 down; at zero sets wC916 = 30 and far-calls DispatchTalkEvent (or retries next frame if a script runs) (E-0124)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
-; reads: wFadeState, wScriptRunning, wEncounterRate, wD069
-; writes: wD069, wTalkEventGroup, wTalkEventIndex
+; reads: wFadeState, wScriptRunning, wEncounterRate, wTalkCountdown
+; writes: wTalkCountdown, wTalkEventGroup, wTalkEventIndex
 CountDownWD069ThenDispatchTalkEvent::
 Func_00A_43B5:: ; address name
     ld a, [wFadeState]
@@ -692,18 +692,18 @@ Func_00A_43B5:: ; address name
     ld a, [wEncounterRate]
     and a, $7F
     ret z
-    ld a, [wD069]
+    ld a, [wTalkCountdown]
     or a, a
     ret z
     dec a
-    ld [wD069], a
+    ld [wTalkCountdown], a
     or a, a
     ret nz
     ld a, [wScriptRunning]
     or a, a
     jr z, Jump_00A_43DC
     ld a, $01
-    ld [wD069], a
+    ld [wTalkCountdown], a
     ret
 
 Jump_00A_43DC::
@@ -716,8 +716,8 @@ Jump_00A_43DC::
 
 ; in the field when nothing blocks it: counts down the encounter or talk timers (wC901, wD091) and starts a battle or talk event when they expire (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
-; reads: wFadeState, wScriptRunning, hPlayerStateFlags, wModeState, wEncounterRate, wD091, wEncounterCountdown, wMapType, ...
-; writes: wEncounterRate, wD091, wTalkEventGroup, wTalkEventIndex, wEncounterCountdown, wBattleIntroKind, wModeState, wBattleTransitionStep, ...
+; reads: wFadeState, wScriptRunning, hPlayerStateFlags, wModeState, wEncounterRate, wEncounterDelay, wEncounterCountdown, wMapType, ...
+; writes: wEncounterRate, wEncounterDelay, wTalkEventGroup, wTalkEventIndex, wEncounterCountdown, wBattleIntroKind, wModeState, wBattleTransitionStep, ...
 TickRandomEncounterCounter::
 Func_00A_43EC:: ; address name
     ld a, [wFadeState]
@@ -747,18 +747,18 @@ Jump_00A_4414::
     ld a, [wEncounterRate]
     or a, a
     ret z
-    ld a, [wD091]
+    ld a, [wEncounterDelay]
     or a, a
     jr z, Jump_00A_4442
     dec a
-    ld [wD091], a
+    ld [wEncounterDelay], a
     or a, a
     ret nz
     ld a, [wModeState]
     cp a, $01
     jr nz, Jump_00A_4432
     ld a, $01
-    ld [wD091], a
+    ld [wEncounterDelay], a
     ret
 
 Jump_00A_4432::
@@ -2194,9 +2194,9 @@ Jump_00A_504E::
 
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
 ; 48 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_Sub01)
-; reads: hMapScreenY, hMapScreenX, wD09D, hTemp0, hTemp1
-; writes: wD09D, wD09E, wMonsterId, hTemp0
-; points at: wD09F, hTemp0
+; reads: hMapScreenY, hMapScreenX, wWorkBuf, hTemp0, hTemp1
+; writes: wWorkBuf, wMonsterId, hTemp0
+; points at: hTemp0
 ReadMapCellWordForScreenXY_5057::
 Func_00A_5057:: ; address name
     sla a
@@ -2216,9 +2216,9 @@ Func_00A_5057:: ; address name
 
 ; DE += 2; wD09D = the number of non-zero entries (up to 5); copies their monster ids to wD09F and replaces each with two bytes of its monster table entry (E-0127)
 ; 4 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_Sub01)
-; reads: wD09D, hTemp0, hTemp1
-; writes: wD09D, wD09E, wMonsterId, hTemp0
-; points at: wD09F, hTemp0
+; reads: wWorkBuf, hTemp0, hTemp1
+; writes: wWorkBuf, wMonsterId, hTemp0
+; points at: hTemp0
 LoadEncounterMonsterIdsToWD09D::
 Func_00A_5071:: ; address name
     inc de
@@ -2247,10 +2247,10 @@ Jump_00A_5083::
 
 Jump_00A_508B::
     ld a, b
-    ld [wD09D], a
+    ld [wWorkBuf], a
     xor a, a
-    ld [wD09E], a
-    ld hl, wD09F
+    ld [wWorkBuf + $1], a
+    ld hl, wWorkBuf + $2
 
 Jump_00A_5096::
     ld a, [de]
@@ -2261,9 +2261,9 @@ Jump_00A_5096::
     ld [hl+], a
     dec b
     jr nz, Jump_00A_5096
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     ld b, a
-    ld hl, wD09F
+    ld hl, wWorkBuf + $2
 
 Jump_00A_50A6::
     push bc
@@ -2525,12 +2525,12 @@ Func_00A_51FD:: ; address name
 ; entry 0 of the `rst $00` table in RunWC904Step
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic, wBattleTransitionSubStep, hScrollY, hScrollX
-; writes: wD2CD, hSpriteWindowClipMode, wTransitionBGPtrLo, wTransitionBGPtrHi, wTransitionCounter, wTransitionStage, wTransitionByte08
+; writes: wTransitionByteCD, hSpriteWindowClipMode, wTransitionBGPtrLo, wTransitionBGPtrHi, wTransitionCounter, wTransitionStage, wTransitionByte08
 ; points at: wBattleTransitionStep
 RunWC904Step_Case00::
 Jump_00A_5207:: ; address name
     ld a, [wCurrentMusic]
-    ld [wD2CD], a
+    ld [wTransitionByteCD], a
     ld a, [wBattleTransitionSubStep]
     and a, $01
     sla a
@@ -2581,7 +2581,7 @@ Jump_00A_5245::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg
-; points at: wDC01, wDC20, wDC40, wDC60, wDC80, wDCA0, wModeChangeRequest, wD066
+; points at: wDC01, wDC20, wDC40, wDC60, wDC80, wDCA0, wModeChangeRequest, wBGFillFlag
 RunWC904Step_Case02::
 Jump_00A_525C:: ; address name
     ld a, [wSoundChannelSlots]
@@ -2620,7 +2620,7 @@ Jump_00A_525C:: ; address name
     ld [wGameMode2Arg], a
     ld hl, wModeChangeRequest
     inc [hl]
-    ld hl, wD066
+    ld hl, wBGFillFlag
     inc [hl]
     ret
 

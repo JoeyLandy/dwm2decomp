@@ -20,7 +20,7 @@ Func_003_4001:: ; address name
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case02)
 ; reads: wGameMode2State, wModeState, wIsCGB, hScrollY, hScrollX, wScriptTemp4, wStoryFlags, wSpriteSlotCount
 ; writes: wSpriteSlotCount, wBGPaletteUploadRequest, rVBK, hScrollX, hScrollY, wMenuSelectedMember, wMenuCursor, wSubMenuCursor, ...
-; points at: wBGPaletteBuffer, wScreenTileBuffer, wGameMode2State, wTemp0, wD09D
+; points at: wBGPaletteBuffer, wScreenTileBuffer, wGameMode2State, wTemp0, wWorkBuf
 GameMode2_Update::
 Func_003_4015:: ; address name
     ld a, [wGameMode2State]
@@ -131,7 +131,7 @@ Jump_003_40BE::
     ld bc, $0020
     xor a, a
     call FillBytes
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld bc, $0028
     xor a, a
     call FillBytes
@@ -150,7 +150,7 @@ Jump_003_40BE::
     xor a, a
     ld [rRAMG], a
     xor a, a
-    ld [wD095], a
+    ld [wLevelUpGains], a
     call CopyTileBufferToBGMap
     ld hl, vTiles1
     ld de, $1202
@@ -1499,8 +1499,8 @@ Jump_003_486A::
 
 ; entry 2 of the `rst $00` table in PauseMenu_Main_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wJoypadPressed, wD09D, wD09E
-; writes: wTemp1, hOamNextEntry, wD7F1, wD7F2, wPauseMenuScreen, wDataBankSave
+; reads: wJoypadPressedRepeat, wJoypadPressed, wWorkBuf
+; writes: wTemp1, hOamNextEntry, wArg1, wArg2, wPauseMenuScreen, wDataBankSave
 ; points at: wMenuSelectedMember, wShadowOAM, wTemp0
 PauseMenu_Main_Case03_Case02::
 Jump_003_4881:: ; address name
@@ -1530,14 +1530,14 @@ Jump_003_4896::
     ret
 
 Jump_003_48B3::
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     ld l, a
-    ld a, [wD09E]
+    ld a, [wWorkBuf + $1]
     ld h, a
     ld a, l
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, h
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall DrawPartySpeciesSprites
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1728,6 +1728,7 @@ Func_003_4A27:: ; address name
 ; 2 call sites from 2 routines (e.g. DecompressMenuTilesTo16E0, PauseMenu_Main_Case00_Case01)
 ; reads: wMenuSelectedMember, wIsCGB
 ; writes: wBGPaletteUploadRequest, hTemp0, rVBK, rSVBK
+; points at: wScreenAttrBuffer
 DrawRecordMonsterPictureForWC46D::
 Func_003_4A36:: ; address name
     ld c, $0B
@@ -1752,14 +1753,14 @@ Func_003_4A36:: ; address name
     pop de
     ld a, $01
     ldh [hTemp0], a
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     call LoadMonsterPictureAttributeBlock
     ld a, $01
     ldh [rVBK], a
     ld a, $02
     ldh [rSVBK], a
     ld hl, vBGMap0 + $161
-    ld de, wRecordBufferData + $12
+    ld de, wScreenAttrBuffer
     ld bc, $0606
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, $00
@@ -2019,7 +2020,7 @@ Func_003_4B52:: ; address name
 
 ; only called from WithSRAMDraw4ACEAnd4BE8 (E-0047)
 ; 1 call site from 1 routine (e.g. WithSRAMDraw4ACEAnd4BE8)
-; reads: wMenuSelectedMember, wDigits, wD00F, hTemp2, hTemp3, hTemp4
+; reads: wMenuSelectedMember, wDigits, wSpeciesRecord, hTemp2, hTemp3, hTemp4
 ; writes: wStringIndex, wStringCategory, wScreenTileBuffer, wDigits, wSpeciesIdLo, wSpeciesIdHi, hTemp0, hTemp1
 WithSRAMDraw4ACEAnd4BE8_Sub01::
 Func_003_4BE8:: ; address name
@@ -2175,7 +2176,7 @@ Jump_003_4CB8::
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD00F]
+    ld a, [wSpeciesRecord + $7]
     ldh [hTemp0], a
     ld c, $56
     ld a, [wMenuSelectedMember]
@@ -2218,7 +2219,7 @@ Jump_003_4D4D::
 
 ; for SRAM record wC46D & $0F: shows the species category $0D string at vTiles2 + $2C0 and the eight skills of field $34 in slots 0-7 (E-0121)
 ; 1 call site from 1 routine (e.g. WithSRAMShowRecordSpeciesAndSkillNames)
-; reads: wMenuSelectedMember, wD013
+; reads: wMenuSelectedMember, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory
 ShowRecordSpeciesAndSkillNames::
 Func_003_4D57:: ; address name
@@ -2231,7 +2232,7 @@ Func_003_4D57:: ; address name
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD013]
+    ld a, [wSpeciesRecord + $B]
     ld [wStringIndex], a
     ld a, $0D
     ld [wStringCategory], a
@@ -2418,7 +2419,7 @@ Jump_003_4E6F::
 ; reads a species id at [HL] (HL += 2), shows its name (category id-high + 2) at the window from Data_003_4F5D[B], loads the species record, sets wD09D = family, wD09E = Data_003_4F61[B] and far-calls Func_016_7A48 (E-0121)
 ; 2 call sites from 1 routine (e.g. WithSRAMRun4E02_Sub01)
 ; reads: wSpeciesRecord
-; writes: wSpeciesIdLo, wStringIndex, wSpeciesIdHi, wStringCategory, wD09D, wD09E
+; writes: wSpeciesIdLo, wStringIndex, wSpeciesIdHi, wStringCategory, wWorkBuf
 ShowSpeciesNameAndIconForSlotB::
 Func_003_4EB6:: ; address name
     ld a, [hl+]
@@ -2439,13 +2440,13 @@ Func_003_4EB6:: ; address name
     call ShowStringBank08AtTilesHL_Bank03
     farcall LoadSpeciesRecord
     ld a, [wSpeciesRecord]
-    ld [wD09D], a
+    ld [wWorkBuf], a
     pop bc
     ld a, b
     ld hl, Data_003_4F61
     add_a_to_hl
     ld a, [hl]
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     farcall LoadFamilyIconTileForWD09D
     pop hl
     ret
@@ -2538,7 +2539,7 @@ Data_003_4F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads field $0B of SRAM record wC46D & $0F and decompresses its graphics to vTiles0 (DecompressGraphicsWD7F1ToWD7F4); then sets wD7F3-wD7F6 = $00, $90, $40, $00 and hFFB9 = 0 (E-0121)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Case01_Case01)
 ; reads: wMenuSelectedMember
-; writes: rRAMG, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6, ...
+; writes: rRAMG, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, ...
 DecompressRecordSpeciesGraphicsToTiles0::
 Func_003_4F6F:: ; address name
     ld a, $0A
@@ -2550,27 +2551,27 @@ Func_003_4F6F:: ; address name
     and a, $0F
     call SRAMRecordAddressMapped
     ld a, [hl+]
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, [hl]
-    ld [wD7F2], a
+    ld [wArg2], a
     xor a, a
-    ld [wD7F3], a
+    ld [wArg3], a
     ld hl, vTiles0
     ld a, l
-    ld [wD7F4], a
+    ld [wArg4], a
     ld a, h
-    ld [wD7F5], a
+    ld [wArg5], a
     farcall DecompressGraphicsWD7F1ToWD7F4
     xor a, a
     ld [rRAMG], a
     ld a, $00
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $90
-    ld [wD7F4], a
+    ld [wArg4], a
     ld a, $40
-    ld [wD7F5], a
+    ld [wArg5], a
     ld a, $00
-    ld [wD7F6], a
+    ld [wArg6], a
     xor a, a
     ldh [hSpriteWindowClipMode], a
     ret
@@ -2578,7 +2579,7 @@ Func_003_4F6F:: ; address name
 ; only called from PauseMenu_Main_Case03_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01)
 ; reads: wMenuSelectedMember
-; writes: rRAMG, rRAMB, wD7F1, wD7F2, wD09D, wD09E, hSpriteWindowClipMode
+; writes: rRAMG, rRAMB, wArg1, wArg2, wWorkBuf, hSpriteWindowClipMode
 ; points at: wPartyList
 PauseMenu_Main_Case03_Case01_Sub01::
 Func_003_4FBB:: ; address name
@@ -2590,13 +2591,13 @@ Func_003_4FBB:: ; address name
     ld hl, wPartyList
     add_a_to_hl
     ld a, l
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, h
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, l
-    ld [wD09D], a
+    ld [wWorkBuf], a
     ld a, h
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     farcall LoadPartySpeciesSpriteGraphics
     xor a, a
     ld [rRAMG], a
@@ -2897,7 +2898,7 @@ Data_003_51AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wPartyCount
 ; writes: rVBK, rSVBK
-; points at: wD080, wD100, wTemp1
+; points at: wScreenAttrBuffer, wTemp1
 Func_003_4FBB_Case02::
 Jump_003_51B0:: ; address name
     call CopyTileBufferToBGMap
@@ -2910,20 +2911,20 @@ Jump_003_51B0:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld hl, vBGMap0 + $E1
-    ld de, wRecordBufferData + $12
+    ld de, wScreenAttrBuffer
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, [wPartyCount]
     cp a, $01
     jr z, Jump_003_51F3
     ld hl, vBGMap0 + $E7
-    ld de, wD080
+    ld de, wScreenAttrBuffer + $80
     ld bc, $0606
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, [wPartyCount]
     cp a, $02
     jr z, Jump_003_51F3
     ld hl, vBGMap0 + $ED
-    ld de, wD100
+    ld de, wScreenAttrBuffer + $100
     ld bc, $0606
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
 
@@ -3045,11 +3046,11 @@ Jump_003_5280:: ; address name
 
 ; entry 0 of the `rst $00` table in PauseMenu_Items_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD095
+; reads: wLevelUpGains
 ; points at: wTemp1
 PauseMenu_Items_Case00_Case00::
 Jump_003_5288:: ; address name
-    ld a, [wD095]
+    ld a, [wLevelUpGains]
     or a, a
     call nz, RefreshRecordListAndNameTiles
     call SetupInventoryMenuPages_Bank03
@@ -3064,7 +3065,7 @@ Jump_003_5288:: ; address name
 ; entry 1 of the `rst $00` table in PauseMenu_Items_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wMenuCursor
-; writes: wD082, wItemId, wTemp1, wSubMenuCursor
+; writes: wInventorySlot, wItemId, wTemp1, wSubMenuCursor
 ; points at: wMenuCursor, wInventory, wTextBuf2, wPlayerName, wTextBuf0, wTemp0
 PauseMenu_Items_Case00_Case01::
 Jump_003_52A3:: ; address name
@@ -3110,7 +3111,7 @@ Jump_003_52DE::
     ld c, a
     ld a, [wMenuCursor]
     add a, c
-    ld [wD082], a
+    ld [wInventorySlot], a
     ld hl, wInventory
     add_a_to_hl
     ld a, [hl]
@@ -3247,15 +3248,15 @@ Jump_003_538D:: ; address name
 
 ; entry 0 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD088, wD08A
+; reads: wItemRecord
 ; writes: wTemp1
 ; points at: wTemp1
 PauseMenu_Items_Case02_Case00::
 Jump_003_53D5:: ; address name
-    ld a, [wD088]
+    ld a, [wItemRecord + $4]
     bit 1, a
     jr nz, Jump_003_53FC
-    ld a, [wD08A]
+    ld a, [wItemRecord + $6]
     or a, a
     jr z, Jump_003_53F0
     cp a, $04
@@ -3344,7 +3345,7 @@ Jump_003_542F:: ; address name
 ; entry 5 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wMenuSelectedMember
-; writes: rRAMG, rRAMB, wD083, wTemp0, wTemp1
+; writes: rRAMG, rRAMB, wTargetRecord, wTemp0, wTemp1
 ; points at: wMenuSelectedMember, wTextBuf1, wTemp1
 PauseMenu_Items_Case02_Case05::
 Jump_003_5449:: ; address name
@@ -3373,7 +3374,7 @@ Jump_003_5469::
     ld [rRAMB], a
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld [wD083], a
+    ld [wTargetRecord], a
     ld c, $01
     call SRAMRecordAddressMapped
     ld e, l
@@ -3408,14 +3409,14 @@ Jump_003_54A9:: ; address name
 
 ; entry 7 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08D
+; reads: wItemMessage
 ; writes: wStringCategory, wStringIndex, wTemp1
 ; points at: wTemp1
 PauseMenu_Items_Case02_Case07::
 Jump_003_54B4:: ; address name
     ld a, $00
     ld [wStringCategory], a
-    ld a, [wD08D]
+    ld a, [wItemMessage]
     ld [wStringIndex], a
     cp a, $25
     jr z, Jump_003_54CE
@@ -3431,7 +3432,7 @@ Jump_003_54CE::
 
 ; entry 8 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wItemId, wD08A
+; reads: wTextFlags, wItemId, wItemRecord
 ; writes: rRAMG, rRAMB, wTemp1
 ; points at: wTemp1
 PauseMenu_Items_Case02_Case08::
@@ -3451,7 +3452,7 @@ Jump_003_54D4:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret z
-    ld a, [wD08A]
+    ld a, [wItemRecord + $6]
     cp a, $00
     jr z, Jump_003_550C
     cp a, $02
@@ -3469,12 +3470,12 @@ Jump_003_550C::
 
 ; entry 9 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD082
+; reads: wInventorySlot
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory, wTemp1
 PauseMenu_Items_Case02_Case09::
 Jump_003_5512:: ; address name
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     ld hl, wInventory
     add_a_to_hl
     ld a, [hl]
@@ -3513,7 +3514,7 @@ Jump_003_5547:: ; address name
 
 ; entry 11 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08E, hTemp0
+; reads: wItemRecordByte0A, hTemp0
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, wMenuPage, wMenuCursor
 ; points at: wTemp1
 PauseMenu_Items_Case02_Case0B::
@@ -3525,7 +3526,7 @@ Jump_003_5550:: ; address name
     farcall ApplyItemEffect
     xor a, a
     ld [rRAMG], a
-    ld a, [wD08E]
+    ld a, [wItemRecordByte0A]
     ld [wStringIndex], a
     cp a, $27
     jr z, Jump_003_5585
@@ -3551,7 +3552,7 @@ Jump_003_5585::
 
 ; entry 22 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wItemId, wD08E
+; reads: wTextFlags, wItemId, wItemRecordByte0A
 ; writes: rRAMG, rRAMB
 ; points at: wTemp1
 PauseMenu_Items_Case02_Case16::
@@ -3577,7 +3578,7 @@ Jump_003_5591:: ; address name
     inc [hl]
     ld hl, wTemp1
     inc [hl]
-    ld a, [wD08E]
+    ld a, [wItemRecordByte0A]
     or a, a
     ret nz
     ld hl, wTemp1
@@ -3615,7 +3616,7 @@ Jump_003_55DE:: ; address name
 
 ; entry 25 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08E
+; reads: wItemRecordByte0A
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory
 ; points at: wTemp1
 PauseMenu_Items_Case02_Case19::
@@ -3627,7 +3628,7 @@ Jump_003_55EB:: ; address name
     farcall ApplyItemEffect
     xor a, a
     ld [rRAMG], a
-    ld a, [wD08E]
+    ld a, [wItemRecordByte0A]
     ld [wStringIndex], a
     cp a, $FF
     jr z, Jump_003_5614
@@ -3933,12 +3934,12 @@ Jump_003_57B9::
 
 ; entry 4 of the `rst $00` table in PauseMenu_Items_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08C, wD082
+; reads: wItemRecord, wInventorySlot
 ; writes: wStringCategory, wStringIndex
 ; points at: wTemp1, wInventory
 PauseMenu_Items_Case03_Case04::
 Jump_003_57C6:: ; address name
-    ld a, [wD08C]
+    ld a, [wItemRecord + $8]
     bit 1, a
     jr z, Jump_003_57E2
     ld a, $08
@@ -3951,7 +3952,7 @@ Jump_003_57C6:: ; address name
     ret
 
 Jump_003_57E2::
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     ld hl, wInventory
     add_a_to_hl
     ld [hl], $00
@@ -4812,12 +4813,12 @@ Jump_003_5E95:: ; address name
 
 ; entry 0 of the `rst $00` table in PauseMenu_Skills_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD095, wMenuPageCount, wPartyCount
+; reads: wLevelUpGains, wMenuPageCount, wPartyCount
 ; writes: rRAMG, rRAMB, wMenuRowCount, wMenuPageCount
 ; points at: wTemp1
 PauseMenu_Skills_Case00_Case00::
 Jump_003_5EA3:: ; address name
-    ld a, [wD095]
+    ld a, [wLevelUpGains]
     or a, a
     call nz, RefreshRecordListAndNameTiles
     ld a, [wMenuPageCount]
@@ -5228,8 +5229,8 @@ Jump_003_6120:: ; address name
 
 ; entry 2 of the `rst $00` table in PauseMenu_Skills_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wJoypadPressed, wSubMenuCursor, wD083
-; writes: rRAMG, rRAMB, wD083, wTemp1, wTemp0, wMenuPage
+; reads: wJoypadPressedRepeat, wJoypadPressed, wSubMenuCursor, wTargetRecord
+; writes: rRAMG, rRAMB, wTargetRecord, wTemp1, wTemp0, wMenuPage
 ; points at: wSubMenuCursor, wTextBuf1, wTemp0
 PauseMenu_Skills_Case02_Case02::
 Jump_003_6149:: ; address name
@@ -5264,11 +5265,11 @@ Jump_003_6178::
     ld [rRAMB], a
     ld a, [wSubMenuCursor]
     and a, $03
-    ld [wD083], a
+    ld [wTargetRecord], a
     call BuildSkillScreenTileBuffer
     call PauseMenu_Skills_Shared03
     call CopyTileBufferToBGMap
-    ld a, [wD083]
+    ld a, [wTargetRecord]
     ld c, $01
     call SRAMRecordAddressMapped
     ld e, l
@@ -5348,18 +5349,18 @@ Jump_003_61EA:: ; address name
 
 ; entry 1 of the `rst $00` table in PauseMenu_Skills_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD082
+; reads: wInventorySlot
 ; writes: wStringIndex, wStringCategory
 ; points at: wTemp1
 PauseMenu_Skills_Case03_Case01::
 Jump_003_6223:: ; address name
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     ld hl, Data_003_6987
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
     call nz, QueueSoundEffect
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     ld hl, Data_003_69AF
     add_a_to_hl
     ld a, [hl]
@@ -5374,7 +5375,7 @@ Jump_003_6223:: ; address name
 ; entry 2 of the `rst $00` table in PauseMenu_Skills_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSubMenuCursor, wItemId
-; writes: wD083, rRAMG, rRAMB
+; writes: wTargetRecord, rRAMG, rRAMB
 ; points at: wTemp1
 PauseMenu_Skills_Case03_Case02::
 Jump_003_6253:: ; address name
@@ -5382,7 +5383,7 @@ Jump_003_6253:: ; address name
     or a, a
     ret nz
     ld a, [wSubMenuCursor]
-    ld [wD083], a
+    ld [wTargetRecord], a
     ld a, $0A
     ld [rRAMG], a
     ld a, $00
@@ -5403,7 +5404,7 @@ Jump_003_6253:: ; address name
 
 ; entry 3 of the `rst $00` table in PauseMenu_Skills_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD08D
+; reads: wTextFlags, wItemMessage
 ; writes: wStringIndex, wStringCategory
 ; points at: wTemp1
 PauseMenu_Skills_Case03_Case03::
@@ -5411,7 +5412,7 @@ Jump_003_6286:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    ld a, [wD08D]
+    ld a, [wItemMessage]
     ld [wStringIndex], a
     ld a, $01
     ld [wStringCategory], a
@@ -5439,7 +5440,7 @@ Jump_003_62A1:: ; address name
 ; entry 5 of the `rst $00` table in PauseMenu_Skills_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufferData, wMenuSelectedMember, wItemId, wRandomLo
-; writes: rRAMG, rRAMB, wD08F, wD090, wD08D, wTemp1
+; writes: rRAMG, rRAMB, wItemEffectAmount, wItemEffectRange, wItemMessage, wTemp1
 ; points at: wTemp1
 PauseMenu_Skills_Case03_Case05::
 Jump_003_62B2:: ; address name
@@ -5455,9 +5456,9 @@ Jump_003_62B2:: ; address name
     call SRAMRecordAddressMapped
     deref_hl
     ld a, l
-    ld [wD08F], a
+    ld [wItemEffectAmount], a
     ld a, h
-    ld [wD090], a
+    ld [wItemEffectRange], a
     jr Jump_003_62DB
 
 Jump_003_62D8::
@@ -5488,18 +5489,18 @@ Jump_003_62DB::
     bit 7, a
     ret z
     ld a, $13
-    ld [wD08D], a
+    ld [wItemMessage], a
     ld a, $03
     ld [wTemp1], a
     ret
 
 ; entry 6 of the `rst $00` table in PauseMenu_Skills_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD082
+; reads: wInventorySlot
 ; points at: wTemp1
 PauseMenu_Skills_Case03_Case06::
 Jump_003_630E:: ; address name
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     ld hl, Data_003_699B
     add_a_to_hl
     ld a, [hl]
@@ -5511,7 +5512,7 @@ Jump_003_630E:: ; address name
 
 ; entry 7 of the `rst $00` table in PauseMenu_Skills_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wItemId, wD08D
+; reads: wItemId, wItemMessage
 ; writes: rRAMG, rRAMB, wStringCategory, wStringIndex
 ; points at: wTemp1
 PauseMenu_Skills_Case03_Case07::
@@ -5539,7 +5540,7 @@ Jump_003_634F::
     ld [wStringCategory], a
 
 Jump_003_6354::
-    ld a, [wD08D]
+    ld a, [wItemMessage]
     ld [wStringIndex], a
     cp a, $FF
     jr z, Jump_003_6364
@@ -5552,7 +5553,7 @@ Jump_003_6364::
 
 ; entry 8 of the `rst $00` table in PauseMenu_Skills_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD082
+; reads: wTextFlags, wInventorySlot
 ; points at: wTemp1
 PauseMenu_Skills_Case03_Case08::
 Jump_003_6369:: ; address name
@@ -5561,12 +5562,12 @@ Jump_003_6369:: ; address name
     ret nz
     ld hl, wTemp1
     inc [hl]
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     cp a, $10
     ret z
     ld hl, wTemp1
     inc [hl]
-    ld a, [wD082]
+    ld a, [wInventorySlot]
     cp a, $11
     ret z
     ld hl, wTemp1
@@ -5575,9 +5576,9 @@ Jump_003_6369:: ; address name
 
 ; entry 9 of the `rst $00` table in PauseMenu_Skills_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wItemId, wD09E
+; reads: wTextFlags, wItemId, wWorkBuf
 ; writes: wStringCategory, wStringIndex, wItemId, wTemp1
-; points at: wD09F, wTextBuf3, wD09E
+; points at: wTextBuf3
 PauseMenu_Skills_Case03_Case09::
 Jump_003_6387:: ; address name
     ld a, [wTextFlags]
@@ -5586,8 +5587,8 @@ Jump_003_6387:: ; address name
     ld a, [wItemId]
     cp a, $FF
     jr z, Jump_003_63CA
-    ld a, [wD09E]
-    ld hl, wD09F
+    ld a, [wWorkBuf + $1]
+    ld hl, wWorkBuf + $2
     add a, a
     add_a_to_hl
     deref_hl
@@ -5601,7 +5602,7 @@ Jump_003_6387:: ; address name
     ld a, $0C
     ld [wStringIndex], a
     farcall BeginStringDisplay_Bank37
-    ld hl, wD09E
+    ld hl, wWorkBuf + $1
     ld a, [hl]
     inc a
     ld [hl-], a
@@ -6093,14 +6094,14 @@ Jump_003_66E5::
 ; wD082 = Data_003_6700[wRecordBuffer]; Z set when it is $FF (E-0119)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case01_Case01)
 ; reads: wRecordBuffer
-; writes: wD082
+; writes: wInventorySlot
 LookupWD082ForRecordBuffer::
 Func_003_66EE:: ; address name
     ld a, [wRecordBuffer]
     ld hl, Data_003_6700
     add_a_to_hl
     ld a, [hl]
-    ld [wD082], a
+    ld [wInventorySlot], a
     cp a, $FF
     ret
 
@@ -6600,12 +6601,12 @@ Jump_003_6B8D:: ; address name
 
 ; entry 1 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD0C7, wJoypadPressed, wGameFlags836, wJoypadPressedRepeat, wMenuPageCount, wWindowTileBuffer, wMenuCursor, wModeState
+; reads: wPauseListCount, wJoypadPressed, wGameFlags836, wJoypadPressedRepeat, wMenuPageCount, wWindowTileBuffer, wMenuCursor, wModeState
 ; writes: wGameFlags836, wTemp1, wTemp0, wDataBankSave
 ; points at: wMenuCursor, wTemp1
 PauseMenu_State3_Case01_Case01::
 Jump_003_6BD7:: ; address name
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     or a, a
     jr z, Jump_003_6C52
     ld hl, wMenuCursor
@@ -7095,7 +7096,6 @@ Jump_003_6EAF::
 ; index = wMenuPage * 4 + (wC46E & 7): A = wD0A7[index], Z clear when its bit 7 is set (E-0117)
 ; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case01_Case10, PauseMenu_State3_Case01_Case05, PauseMenu_State3_Case01_Case03)
 ; reads: wMenuPage, wMenuCursor
-; points at: wD0A7
 TestListEntryBit7::
 Func_003_6EBF:: ; address name
     ld a, [wMenuPage]
@@ -7106,7 +7106,7 @@ Func_003_6EBF:: ; address name
     ld a, [wMenuCursor]
     and a, $07
     add a, b
-    ld hl, wD0A7
+    ld hl, wWorkBuf + $A
     add_a_to_hl
     ld a, [hl]
     bit 7, a
@@ -7406,16 +7406,16 @@ Jump_003_706B:: ; address name
 ; entry 0 of the `rst $00` table in PauseMenu_State3_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount
-; writes: wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, wD0A5, wMenuPageCount, ...
+; writes: wWorkBuf, wMenuPageCount, wMenuPage, wPauseMenuStep
 ; points at: wTemp1
 PauseMenu_State3_Case04_Case00::
 Jump_003_707B:: ; address name
     ld a, [wPartyCount]
     dec a
-    ld [wD09F], a
+    ld [wWorkBuf + $2], a
     ld c, $00
     ld a, c
-    ld [wD0A0], a
+    ld [wWorkBuf + $3], a
     ld a, [wPartyCount]
     cp a, $01
     jr z, Jump_003_7092
@@ -7427,7 +7427,7 @@ Jump_003_7092::
 
 Jump_003_7094::
     ld a, c
-    ld [wD0A1], a
+    ld [wWorkBuf + $4], a
     ld a, [wPartyCount]
     cp a, $03
     jr nz, Jump_003_70A2
@@ -7439,11 +7439,11 @@ Jump_003_70A2::
 
 Jump_003_70A4::
     ld a, c
-    ld [wD0A2], a
+    ld [wWorkBuf + $5], a
     ld a, $FF
-    ld [wD0A3], a
-    ld [wD0A4], a
-    ld [wD0A5], a
+    ld [wWorkBuf + $6], a
+    ld [wWorkBuf + $7], a
+    ld [wWorkBuf + $8], a
     ld a, $01
     ld [wMenuPageCount], a
     xor a, a
@@ -7471,9 +7471,9 @@ Jump_003_70CA:: ; address name
 
 ; entry 2 of the `rst $00` table in PauseMenu_State3_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wJoypadPressed, wMenuCursor, wPauseMenuStep, wPartyCount, wD09F
+; reads: wJoypadPressedRepeat, wJoypadPressed, wMenuCursor, wPauseMenuStep, wPartyCount, wWorkBuf
 ; writes: wPauseMenuStep, wTemp0, wTemp1
-; points at: wMenuCursor, wD0A0, wD0A3, wD09F, wTemp1
+; points at: wMenuCursor, wTemp1
 PauseMenu_State3_Case04_Case02::
 Jump_003_70D9:: ; address name
     ld hl, wMenuCursor
@@ -7493,16 +7493,16 @@ Jump_003_70ED::
     call QueueSoundEffect
     ld a, [wMenuCursor]
     and a, $03
-    ld hl, wD0A0
+    ld hl, wWorkBuf + $3
     add_a_to_hl
     ld c, [hl]
     ld [hl], $FF
     ld a, [wPauseMenuStep]
-    ld hl, wD0A3
+    ld hl, wWorkBuf + $6
     add_a_to_hl
     ld [hl], c
     call PauseMenu_State3_Shared08
-    ld hl, wD09F
+    ld hl, wWorkBuf + $2
     dec [hl]
     ld a, [wPartyCount]
     ld b, a
@@ -7533,22 +7533,22 @@ Jump_003_7134::
 
 ; only called from PauseMenu_State3_Case04_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_Case04_Case05)
-; reads: wPauseMenuStep, wD09F
+; reads: wPauseMenuStep, wWorkBuf
 ; writes: wPauseMenuStep
-; points at: wD09F, wD0A3, wD0A0, wTemp1
+; points at: wTemp1
 PauseMenu_State3_Case04_Case05_Sub01::
 Func_003_7145:: ; address name
-    ld hl, wD09F
+    ld hl, wWorkBuf + $2
     inc [hl]
     ld a, [wPauseMenuStep]
     dec a
     ld [wPauseMenuStep], a
-    ld hl, wD0A3
+    ld hl, wWorkBuf + $6
     add_a_to_hl
     ld c, [hl]
     ld [hl], $FF
-    ld a, [wD09F]
-    ld hl, wD0A0
+    ld a, [wWorkBuf + $2]
+    ld hl, wWorkBuf + $3
     add_a_to_hl
     ld [hl], c
     call PauseMenu_State3_Shared08
@@ -7621,22 +7621,22 @@ Jump_003_71AE:: ; address name
 
 ; only called from PauseMenu_State3_Case04_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_Case04_Case04)
-; reads: wD0A3, wD0A4, wD0A5
+; reads: wWorkBuf
 ; writes: wPartyList
 ; points at: wPartyList
 PauseMenu_State3_Case04_Case04_Sub01::
 Func_003_71CA:: ; address name
-    ld a, [wD0A3]
+    ld a, [wWorkBuf + $6]
     ld hl, wPartyList
     add_a_to_hl
     ld c, [hl]
-    ld a, [wD0A4]
+    ld a, [wWorkBuf + $7]
     cp a, $FF
     jr z, Jump_003_71FD
     ld hl, wPartyList
     add_a_to_hl
     ld b, [hl]
-    ld a, [wD0A5]
+    ld a, [wWorkBuf + $8]
     cp a, $FF
     jr z, Jump_003_71F9
     ld hl, wPartyList
@@ -7655,33 +7655,33 @@ Jump_003_71FD::
 
 ; only called from routines of PauseMenu_State3 (E-0098)
 ; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case04_Case05, PauseMenu_State3_Case04_Case03, PauseMenu_State3_Case04_Case01)
-; reads: wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, wD0A5
+; reads: wWorkBuf
 ; writes: wMenuRowCount
 PauseMenu_State3_Shared01::
 Func_003_7202:: ; address name
     call LoadScreenBlock28
-    ld a, [wD09F]
+    ld a, [wWorkBuf + $2]
     inc a
     ld [wMenuRowCount], a
     ld de, wScreenTileBuffer + $63
-    ld a, [wD0A0]
+    ld a, [wWorkBuf + $3]
     call PauseMenu_State3_Shared01_Sub01
     ld de, wScreenTileBuffer + $A3
-    ld a, [wD0A1]
+    ld a, [wWorkBuf + $4]
     call PauseMenu_State3_Shared01_Sub01
     ld de, wScreenTileBuffer + $E3
-    ld a, [wD0A2]
+    ld a, [wWorkBuf + $5]
     call PauseMenu_State3_Shared01_Sub01
     ld de, wScreenTileBuffer + $6C
-    ld a, [wD0A3]
+    ld a, [wWorkBuf + $6]
     ld b, $E1
     call PauseMenu_State3_Shared01_Sub02
     ld de, wScreenTileBuffer + $AC
-    ld a, [wD0A4]
+    ld a, [wWorkBuf + $7]
     ld b, $E2
     call PauseMenu_State3_Shared01_Sub02
     ld de, wScreenTileBuffer + $EC
-    ld a, [wD0A5]
+    ld a, [wWorkBuf + $8]
     ld b, $E3
     call PauseMenu_State3_Shared01_Sub02
     ld de, wScreenTileBuffer + $63
@@ -7744,7 +7744,6 @@ Func_003_7278:: ; address name
 ; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case04_Case05, PauseMenu_State3_Case04_Case02, PauseMenu_State3_Case04_Case01)
 ; reads: wMenuCursor
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, wScreenTileBuffer, wWindowTileBuffer
-; points at: wD0A0
 PauseMenu_State3_Shared02::
 Func_003_7281:: ; address name
     ld a, $0A
@@ -7753,7 +7752,7 @@ Func_003_7281:: ; address name
     ld [rRAMB], a
     ld a, [wMenuCursor]
     and a, $03
-    ld hl, wD0A0
+    ld hl, wWorkBuf + $3
     add_a_to_hl
     ld a, [hl]
     push af
@@ -7842,67 +7841,67 @@ Func_003_7281:: ; address name
 
 ; only called from routines of PauseMenu_State3 (E-0098)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case04_Case05_Sub01, PauseMenu_State3_Case04_Case02)
-; reads: wD0A0, wD0A1, wD0A2
-; writes: wD0A2, wD0A1, wD0A0
+; reads: wWorkBuf
+; writes: wWorkBuf
 PauseMenu_State3_Shared08::
 Func_003_7335:: ; address name
-    ld a, [wD0A0]
+    ld a, [wWorkBuf + $3]
     ld c, a
-    ld a, [wD0A1]
+    ld a, [wWorkBuf + $4]
     ld b, a
-    ld a, [wD0A2]
+    ld a, [wWorkBuf + $5]
     ld e, a
     cp a, b
     jr c, Jump_003_7360
     cp a, c
     jr c, Jump_003_7389
-    ld [wD0A2], a
+    ld [wWorkBuf + $5], a
     ld a, b
     cp a, c
     jr c, Jump_003_7357
-    ld [wD0A1], a
+    ld [wWorkBuf + $4], a
     ld a, c
-    ld [wD0A0], a
+    ld [wWorkBuf + $3], a
     jr Jump_003_7394
 
 Jump_003_7357::
-    ld [wD0A0], a
+    ld [wWorkBuf + $3], a
     ld a, c
-    ld [wD0A1], a
+    ld [wWorkBuf + $4], a
     jr Jump_003_7394
 
 Jump_003_7360::
     cp a, c
     jr c, Jump_003_7370
-    ld [wD0A1], a
+    ld [wWorkBuf + $4], a
     ld a, c
-    ld [wD0A0], a
+    ld [wWorkBuf + $3], a
     ld a, b
-    ld [wD0A2], a
+    ld [wWorkBuf + $5], a
     jr Jump_003_7394
 
 Jump_003_7370::
-    ld [wD0A0], a
+    ld [wWorkBuf + $3], a
     ld a, b
     cp a, c
     jr c, Jump_003_7380
-    ld [wD0A2], a
+    ld [wWorkBuf + $5], a
     ld a, c
-    ld [wD0A1], a
+    ld [wWorkBuf + $4], a
     jr Jump_003_7394
 
 Jump_003_7380::
-    ld [wD0A1], a
+    ld [wWorkBuf + $4], a
     ld a, c
-    ld [wD0A2], a
+    ld [wWorkBuf + $5], a
     jr Jump_003_7394
 
 Jump_003_7389::
-    ld [wD0A1], a
+    ld [wWorkBuf + $4], a
     ld a, b
-    ld [wD0A0], a
+    ld [wWorkBuf + $3], a
     ld a, c
-    ld [wD0A2], a
+    ld [wWorkBuf + $5], a
 
 Jump_003_7394::
     ret
@@ -7922,14 +7921,14 @@ Jump_003_7398:: ; address name
 
 ; entry 0 of the `rst $00` table in PauseMenu_State3_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wPlayHoursLo, wPlayHoursHi, wPlayMinutes, wD09D, wD09E, wD7F5, wD09F, wD0A0, ...
-; writes: wD09E
-; points at: wPlayerName, wD09D, wTemp1
+; reads: wPlayHoursLo, wPlayHoursHi, wPlayMinutes, wWorkBuf, wArg5
+; writes: wWorkBuf
+; points at: wPlayerName, wWorkBuf, wTemp1
 PauseMenu_State3_Case05_Case00::
 Jump_003_73A0:: ; address name
     call LoadScreenBlock2D
     ld a, $20
-    ld [wD09E], a
+    ld [wWorkBuf + $1], a
     farcall LoadAllFamilyIconTiles
     ld hl, wPlayerName
     call CopyTenBytesToWC130
@@ -7947,52 +7946,52 @@ Jump_003_73A0:: ; address name
     ld de, wScreenTileBuffer + $6C
     call WriteTwoDigitTilesWC8C1NoBlank_Bank03
     call PauseMenu_State3_Case05_Case00_Sub01
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     ld de, wScreenTileBuffer + $AB
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD09E]
+    ld a, [wWorkBuf + $1]
     ld de, wScreenTileBuffer + $B1
     call WriteByteAAsTwoDigitTiles
     farcall CountFlaggedSRAMRecords
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ld de, wScreenTileBuffer + $EB
     call WriteByteAAsTwoDigitTiles
     farcall CountSpeciesPerFamilyFlaggedOrListed
-    ld a, [wD09D]
+    ld a, [wWorkBuf]
     ld de, wWindowTileBuffer + $1B
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD09E]
+    ld a, [wWorkBuf + $1]
     ld de, wWindowTileBuffer + $1F
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD09F]
+    ld a, [wWorkBuf + $2]
     ld de, wWindowTileBuffer + $23
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD0A0]
+    ld a, [wWorkBuf + $3]
     ld de, wWindowTileBuffer + $27
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD0A1]
+    ld a, [wWorkBuf + $4]
     ld de, wWindowTileBuffer + $5B
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD0A2]
+    ld a, [wWorkBuf + $5]
     ld de, wWindowTileBuffer + $5F
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD0A3]
+    ld a, [wWorkBuf + $6]
     ld de, wWindowTileBuffer + $63
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD0A4]
+    ld a, [wWorkBuf + $7]
     ld de, wWindowTileBuffer + $67
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD0A5]
+    ld a, [wWorkBuf + $8]
     ld de, wWindowTileBuffer + $9B
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD0A6]
+    ld a, [wWorkBuf + $9]
     ld de, wWindowTileBuffer + $9F
     call WriteByteAAsTwoDigitTiles
-    ld a, [wD0A7]
+    ld a, [wWorkBuf + $A]
     ld de, wWindowTileBuffer + $A3
     call WriteByteAAsTwoDigitTiles
     ld hl, $0000
-    ld de, wD09D
+    ld de, wWorkBuf
     ld b, $0B
 
 Jump_003_746C::
@@ -8309,7 +8308,7 @@ Jump_003_7633::
 
 ; only called from routines of PauseMenu_State3 (E-0098)
 ; 7 call sites from 6 routines (e.g. PauseMenu_State3_Case06_Case05, PauseMenu_State3_Case06_Case04, PauseMenu_State3_Case06_Case03, PauseMenu_State3_Case06_Case02, ...)
-; reads: wBattlerRecords, wD10A
+; reads: wBattlerRecords, wTitleByte0A
 ; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
 PauseMenu_State3_Shared03::
 Func_003_7647:: ; address name
@@ -8320,7 +8319,7 @@ Func_003_7647:: ; address name
     ld a, [wBattlerRecords]
     or a, a
     jr z, Jump_003_7689
-    ld a, [wD10A]
+    ld a, [wTitleByte0A]
     or a, a
     jr z, Jump_003_7689
     ld a, $29
@@ -8512,9 +8511,9 @@ Func_003_7791:: ; address name
 
 ; only called from routines of PauseMenu_State3 (E-0098)
 ; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_Case0E, PauseMenu_State3_Case01_Case01, PauseMenu_State3_Case01_Case00)
-; reads: wMenuPage, wD0C7
+; reads: wMenuPage, wPauseListCount
 ; writes: wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi
-; points at: wD0A7, wD0A8, wTextBuf0
+; points at: wTextBuf0
 PauseMenu_State3_Shared06::
 Func_003_779A:: ; address name
     ld hl, $0C01
@@ -8526,7 +8525,7 @@ Func_003_779A:: ; address name
     ld b, a
     add a, a
     add a, a
-    ld de, wD0A7
+    ld de, wWorkBuf + $A
     add a, e
     ld e, a
     jr nc, Jump_003_77B3
@@ -8534,7 +8533,7 @@ Func_003_779A:: ; address name
 
 Jump_003_77B3::
     ld bc, $0400
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     or a, a
     jr nz, Jump_003_77E0
     ld a, $08
@@ -8549,7 +8548,7 @@ Jump_003_77B3::
     ld [wTextWindowTileHi], a
     farcall ShowString_Bank08
     ld bc, $0301
-    ld de, wD0A8
+    ld de, wWorkBuf + $B
 
 Jump_003_77E0::
     push bc
@@ -8694,12 +8693,12 @@ Data_003_78C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from routines of PauseMenu_State3 (E-0098)
 ; 3 call sites from 2 routines (e.g. PauseMenu_State3_Case01_Case01, PauseMenu_State3_Case01_Case00)
-; reads: wD0C7, wMenuPage, wMenuCursor
+; reads: wPauseListCount, wMenuPage, wMenuCursor
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
-; points at: wD0A7, wTextBuf0
+; points at: wTextBuf0
 PauseMenu_State3_Shared07::
 Func_003_78CB:: ; address name
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     or a, a
     ret z
     ld hl, vTiles2 + $200
@@ -8717,7 +8716,7 @@ Func_003_78CB:: ; address name
     add a, a
     add a, a
     ld b, a
-    ld hl, wD0A7
+    ld hl, wWorkBuf + $A
     add_a_to_hl
     ld a, [wMenuCursor]
     and a, $07
@@ -8736,7 +8735,7 @@ Func_003_78CB:: ; address name
     ld h, a
     bit 7, [hl]
     jr nz, Jump_003_794D
-    ld de, wD0A7
+    ld de, wWorkBuf + $A
     ld a, [wMenuPage]
     ld b, a
     add a, a
@@ -8805,20 +8804,20 @@ Jump_003_7953::
 
 ; only called from BuildScreenBlocks21To23 (E-0047)
 ; 1 call site from 1 routine (e.g. BuildScreenBlocks21To23)
-; reads: wGameFlags836, wD0C7
-; writes: wD0C7
-; points at: wD0A7, wKeyList
+; reads: wGameFlags836, wPauseListCount
+; writes: wPauseListCount
+; points at: wKeyList
 BuildScreenBlocks21To23_Sub01::
 Func_003_7978:: ; address name
-    ld hl, wD0A7
+    ld hl, wWorkBuf + $A
     ld bc, $0020
     ld a, $FF
     call FillBytes
-    ld hl, wD0A7
+    ld hl, wWorkBuf + $A
     ld de, wKeyList
     ld bc, $2000
     xor a, a
-    ld [wD0C7], a
+    ld [wPauseListCount], a
     ld a, [wGameFlags836]
     bit 1, a
     jr nz, Jump_003_79F6
@@ -8840,9 +8839,9 @@ Jump_003_7997::
     jr nz, Jump_003_79B4
     ld [hl], c
     inc hl
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     inc a
-    ld [wD0C7], a
+    ld [wPauseListCount], a
 
 Jump_003_79B4::
     inc c
@@ -8877,9 +8876,9 @@ Jump_003_79C6::
     ld [hl], c
     set 7, [hl]
     inc hl
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     inc a
-    ld [wD0C7], a
+    ld [wPauseListCount], a
 
 Jump_003_79E8::
     inc c
@@ -8913,9 +8912,9 @@ Jump_003_79F6::
     ld [hl], c
     set 7, [hl]
     inc hl
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     inc a
-    ld [wD0C7], a
+    ld [wPauseListCount], a
 
 Jump_003_7A18::
     inc c
@@ -8947,9 +8946,9 @@ Jump_003_7A2A::
     jr nz, Jump_003_7A47
     ld [hl], c
     inc hl
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     inc a
-    ld [wD0C7], a
+    ld [wPauseListCount], a
 
 Jump_003_7A47::
     inc c
@@ -8963,17 +8962,17 @@ Jump_003_7A47::
     jr nz, Jump_003_7A2A
 
 Jump_003_7A53::
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     or a, a
     ret
 
 ; from wD0C7 items computes wMenuPageCount (4 rows per page, up to 8 pages), wMenuLastPageRows and wMenuRowCount for wMenuPage, and draws the page indicator (E-0128)
 ; 2 call sites from 2 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_Case01_Case01)
-; reads: wD0C7, wMenuPage, wMenuLastPageRows, wMenuPageCount
+; reads: wPauseListCount, wMenuPage, wMenuLastPageRows, wMenuPageCount
 ; writes: wMenuLastPageRows, wMenuPageCount, wMenuRowCount, wWindowTileBuffer
 ComputeMenuPagesForWD0C7Items::
 Func_003_7A58:: ; address name
-    ld a, [wD0C7]
+    ld a, [wPauseListCount]
     or a, a
     jr z, Jump_003_7A80
     cp a, $05
@@ -9099,8 +9098,8 @@ Func_003_7AE8:: ; address name
 
 ; only called from PauseMenu_State3_Case05_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_Case05_Case00)
-; writes: rRAMG, rRAMB, wD09D, wD09E
-; points at: sA000, wD09E, wD09D
+; writes: rRAMG, rRAMB, wWorkBuf
+; points at: sA000, wWorkBuf
 PauseMenu_State3_Case05_Case00_Sub01::
 Func_003_7B25:: ; address name
     ld a, $0A
@@ -9108,8 +9107,8 @@ Func_003_7B25:: ; address name
     ld a, $00
     ld [rRAMB], a
     xor a, a
-    ld [wD09D], a
-    ld [wD09E], a
+    ld [wWorkBuf], a
+    ld [wWorkBuf + $1], a
     ld de, sA000
     ld b, $1E
 
@@ -9122,11 +9121,11 @@ Jump_003_7B3B::
     ld a, [hl]
     or a, a
     jr z, Jump_003_7B4D
-    ld hl, wD09E
+    ld hl, wWorkBuf + $1
     jr Jump_003_7B50
 
 Jump_003_7B4D::
-    ld hl, wD09D
+    ld hl, wWorkBuf
 
 Jump_003_7B50::
     inc [hl]

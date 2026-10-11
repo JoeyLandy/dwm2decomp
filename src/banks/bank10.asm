@@ -1072,7 +1072,7 @@ Func_010_45C9:: ; address name
 
 ; fetch handler for script opcode F5 (entry 245 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptInDataBank, wD7FB, wScriptParam0
+; reads: wScriptInDataBank, wScreenTableIndex, wScriptParam0
 ; writes: wScriptCommandType, wScriptParam0, wScriptParam1, wScriptStep, wScriptPointerLo, wScriptPointerHi
 ScriptFetchF5:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_45D3:: ; address name
@@ -1101,7 +1101,7 @@ Jump_010_45EE::
 
 Jump_010_45FB::
     push hl
-    ld a, [wD7FB]
+    ld a, [wScreenTableIndex]
     add a, a
     add a, a
     add a, a
@@ -1974,7 +1974,7 @@ Jump_010_4AC6::
 
 ; only called from ScriptCommand09_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand09_Case01)
-; reads: wD7F0, wMapType
+; reads: wMessageMode, wMapType
 ; writes: wStringIndex, wStringCategory
 ScriptCommand09_Case01_Sub01::
 Func_010_4AD0:: ; address name
@@ -1982,7 +1982,7 @@ Func_010_4AD0:: ; address name
     and a, $3F
     ld h, a
     push hl
-    ld a, [wD7F0]
+    ld a, [wMessageMode]
     and a, a
     jr z, Jump_010_4B20
     dec a

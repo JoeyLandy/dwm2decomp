@@ -239,13 +239,13 @@ Data_037_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunWC582State_44D6_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC582State_44D6_Case01)
-; reads: wFadeState, wD780
+; reads: wFadeState, wScreenState
 RunWC582State_44D6_Case01_Sub01::
 Func_037_4AFD:: ; address name
     ld a, [wFadeState]
     and a, a
     ret nz
-    ld a, [wD780]
+    ld a, [wScreenState]
     rst $00
     dw Func_037_4AFD_Case00
     dw Func_037_4AFD_Case01
@@ -268,27 +268,27 @@ Func_037_4AFD:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD780
-; writes: wD780
+; reads: wScreenState
+; writes: wScreenState
 Func_037_4AFD_Case00::
 Jump_037_4B2A:: ; address name
     farcall ScriptCommandE8_Run
-    ld a, [wD780]
+    ld a, [wScreenState]
     inc a
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; entry 1 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wGameMode, wModeState, wModeChangeRequest
-; points at: wD780
+; points at: wScreenState
 Func_037_4AFD_Case01::
 Jump_037_4B38:: ; address name
     ld a, [wTextFlags]
     bit 0, a
     ret nz
-    ld hl, wD780
+    ld hl, wScreenState
     ld bc, $006F
 
 Jump_037_4B44::
@@ -310,7 +310,7 @@ Jump_037_4B44::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wLinkSendByte
-; points at: wD780
+; points at: wScreenState
 Func_037_4AFD_Case05::
 Jump_037_4B5B:: ; address name
     ld a, [wTextFlags]
@@ -318,14 +318,14 @@ Jump_037_4B5B:: ; address name
     ret nz
     ld a, $03
     ld [wLinkSendByte], a
-    ld hl, wD780
+    ld hl, wScreenState
     inc [hl]
     ret
 
 ; entry 6 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkSendByte, wD780
+; writes: wLinkSendByte, wScreenState
 Func_037_4AFD_Case06::
 Jump_037_4B6A:: ; address name
     ld a, [wLinkMessage]
@@ -334,31 +334,31 @@ Jump_037_4B6A:: ; address name
     xor a, a
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; entry 2 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD780
-; writes: wD780, wLinkSendByte
-; points at: wD06A
+; reads: wScreenState
+; writes: wScreenState, wLinkSendByte
+; points at: wLinkScreenState
 Func_037_4AFD_Case02::
 Jump_037_4B7A:: ; address name
-    ld a, [wD780]
+    ld a, [wScreenState]
     inc a
-    ld [wD780], a
+    ld [wScreenState], a
     ld a, $02
     ld [wLinkSendByte], a
-    ld hl, wD06A
+    ld hl, wLinkScreenState
     inc [hl]
     ret
 
 ; entry 3 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
+; reads: wScreenStep
 Func_037_4AFD_Case03::
 Jump_037_4B8B:: ; address name
-    ld a, [wD781]
+    ld a, [wScreenStep]
     rst $00
     dw Func_037_4AFD_Case03_Case00
     dw Func_037_4AFD_Case03_Case01
@@ -367,22 +367,22 @@ Jump_037_4B8B:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD781
-; writes: wD781
+; reads: wTextFlags, wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case03_Case00::
 Jump_037_4B97:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 1 of the `rst $00` table in Func_037_4AFD_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wLinkMessage, wD781
-; writes: wD780, wD781
+; reads: wTextFlags, wLinkMessage, wScreenStep
+; writes: wScreenState, wScreenStep
 Func_037_4AFD_Case03_Case01::
 Jump_037_4BA4:: ; address name
     ld a, [wTextFlags]
@@ -394,56 +394,56 @@ Jump_037_4BA4:: ; address name
     cp a, $02
     ret nz
     ld a, $05
-    ld [wD780], a
+    ld [wScreenState], a
     xor a, a
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $15
     call ShowStringIndexA_Bank37
     ret
 
 Jump_037_4BC1::
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 2 of the `rst $00` table in Func_037_4AFD_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wLinkSendByte, wD781
+; reads: wScreenStep
+; writes: wLinkSendByte, wScreenStep
 Func_037_4AFD_Case03_Case02::
 Jump_037_4BC9:: ; address name
     xor a, a
     ld [wLinkSendByte], a
     ld a, $09
     call ShowStringIndexA_Bank37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 3 of the `rst $00` table in Func_037_4AFD_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD780
-; writes: wD781, wD780
+; reads: wTextFlags, wScreenState
+; writes: wScreenStep, wScreenState
 Func_037_4AFD_Case03_Case03::
 Jump_037_4BDA:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
     xor a, a
-    ld [wD781], a
-    ld a, [wD780]
+    ld [wScreenStep], a
+    ld a, [wScreenState]
     inc a
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; entry 4 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
+; reads: wScreenStep
 Func_037_4AFD_Case04::
 Jump_037_4BEB:: ; address name
-    ld a, [wD781]
+    ld a, [wScreenStep]
     rst $00
     dw Func_037_4AFD_Case04_Case00
     dw Func_037_4AFD_Case04_Case00
@@ -483,7 +483,7 @@ Jump_037_4BEB:: ; address name
 ; entry 14 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage
-; writes: wD781, wLinkSendByte, wD2CC
+; writes: wScreenStep, wLinkSendByte, wAIFlag
 Func_037_4AFD_Case04_Case0E::
 Jump_037_4C33:: ; address name
     ld a, [wTextFlags]
@@ -493,13 +493,13 @@ Jump_037_4C33:: ; address name
     cp a, $FD
     jr nz, Jump_037_4C54
     ld a, $09
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $14
     call ShowStringIndexA_Bank37
     ld a, $FD
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ret
 
 Jump_037_4C54::
@@ -509,7 +509,7 @@ Jump_037_4C54::
 ; entry 8 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage, wMenuInputResult
-; writes: wD781, wLinkSendByte, wD2CC
+; writes: wScreenStep, wLinkSendByte, wAIFlag
 Func_037_4AFD_Case04_Case08::
 Jump_037_4C5B:: ; address name
     ld a, [wTextFlags]
@@ -519,13 +519,13 @@ Jump_037_4C5B:: ; address name
     cp a, $FD
     jr nz, Jump_037_4C7C
     ld a, $09
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $14
     call ShowStringIndexA_Bank37
     ld a, $FD
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ret
 
 Jump_037_4C7C::
@@ -534,13 +534,13 @@ Jump_037_4C7C::
     cp a, $FE
     ret nz
     ld a, $09
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $13
     call ShowStringIndexA_Bank37
     ld a, $FD
     ld [wLinkSendByte], a
     ld a, $00
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ret
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case04
@@ -556,10 +556,10 @@ Jump_037_4C9D:: ; address name
 
 ; entry 16 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7B4, wTextFlags, wD782
+; reads: wSelectedRecord, wTextFlags, wScreenSubStep
 Func_037_4AFD_Case04_Case10::
 Jump_037_4CA9:: ; address name
-    ld a, [wD7B4]
+    ld a, [wSelectedRecord]
     cp a, $FF
     jr z, Jump_037_4CC1
     ld a, [wTextFlags]
@@ -571,7 +571,7 @@ Jump_037_4CA9:: ; address name
     ret
 
 Jump_037_4CC1::
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     rst $00
     dw Func_037_4AFD_Table2_Case00
     dw Func_037_4AFD_Table2_Case01
@@ -587,8 +587,8 @@ Jump_037_4CC1::
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD782
-; writes: wLinkSendByte, wD782
+; reads: wTextFlags, wScreenSubStep
+; writes: wLinkSendByte, wScreenSubStep
 Func_037_4AFD_Table2_Case00::
 Jump_037_4CDB:: ; address name
     ld a, [wTextFlags]
@@ -596,33 +596,33 @@ Jump_037_4CDB:: ; address name
     ret nz
     xor a, a
     ld [wLinkSendByte], a
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ld a, $07
     call ShowStringIndexA_Bank37
     ret
 
 ; entry 1 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD782
-; writes: wD782, wLinkSendByte
+; reads: wTextFlags, wScreenSubStep
+; writes: wScreenSubStep, wLinkSendByte
 Func_037_4AFD_Table2_Case01::
 Jump_037_4CF1:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ld a, $01
     ld [wLinkSendByte], a
     ret
 
 ; entry 2 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wD782
-; writes: wLinkSendByte, wD782
+; reads: wLinkMessage, wScreenSubStep
+; writes: wLinkSendByte, wScreenSubStep
 Func_037_4AFD_Table2_Case02::
 Jump_037_4D03:: ; address name
     ld a, [wLinkMessage]
@@ -632,15 +632,15 @@ Jump_037_4D03:: ; address name
     ld [wLinkSendByte], a
     ld a, $09
     call ShowStringIndexA_Bank37
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 3 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
-; writes: wD7B4, wD782
+; writes: wSelectedRecord, wScreenSubStep
 Func_037_4AFD_Table2_Case03::
 Jump_037_4D1A:: ; address name
     ld a, [wTextFlags]
@@ -648,14 +648,14 @@ Jump_037_4D1A:: ; address name
     ret nz
     farcall ScriptCommandED_Run
     xor a, a
-    ld [wD7B4], a
-    ld [wD782], a
+    ld [wSelectedRecord], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 9 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD782
-; writes: wLinkSendByte, wD782
+; reads: wTextFlags, wScreenSubStep
+; writes: wLinkSendByte, wScreenSubStep
 Func_037_4AFD_Table2_Case09::
 Jump_037_4D2D:: ; address name
     ld a, [wTextFlags]
@@ -665,28 +665,28 @@ Jump_037_4D2D:: ; address name
     ld [wLinkSendByte], a
     ld a, $09
     call ShowStringIndexA_Bank37
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 12 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD782
-; writes: wD782
+; reads: wTextFlags, wScreenSubStep
+; writes: wScreenSubStep
 Func_037_4AFD_Case04_Case0C::
 Jump_037_4D43:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     and a, a
     jr nz, Jump_037_4D5B
     ld a, $04
     call ShowStringIndexA_Bank37
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 Jump_037_4D5B::
@@ -702,47 +702,47 @@ Jump_037_4D5B::
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a, a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 4 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5, wD7F6, wD781
-; writes: wD7F1, wD7F2, wD7F3, wD781
+; reads: wArg5, wArg6, wScreenStep
+; writes: wArg1, wArg2, wArg3, wScreenStep
 Func_037_4AFD_Case04_Case04::
 Jump_037_4D80:: ; address name
     farcall SetWD7F5ToWD789Cell5
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ld h, a
-    ld a, [wD7F6]
+    ld a, [wArg6]
     ld l, a
     ld a, [hl]
     ld b, a
     push af
     ld a, $C7
-    ld [wD7F1], a
+    ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank37
     ld de, Data_037_647D
     ld hl, wWindowTileBuffer + $6C
     ld bc, $0C05
     call CopyRectToScreenBufferAndClearAttributes_37
     pop af
-    ld [wD7F1], a
+    ld [wArg1], a
     ld hl, wWindowTileBuffer + $86
     ld a, l
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, h
-    ld [wD7F3], a
+    ld [wArg3], a
     farcall DrawRecordField0EMarkAndField56Digits
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 15 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD781
-; writes: wD7F1, wD7F2, wD781, wD7B4
+; reads: wTextFlags, wScreenStep
+; writes: wArg1, wArg2, wScreenStep, wSelectedRecord
 Func_037_4AFD_Case04_Case0F::
 Jump_037_4DC2:: ; address name
     ld a, [wTextFlags]
@@ -751,8 +751,8 @@ Jump_037_4DC2:: ; address name
 
 ; runs Func_037_5A5D (C = 5, HL = $0278, DE = $00AC, wD7F1/2 = 0/8), wD781 += 1 and clears wD7B4 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case12)
-; reads: wD781
-; writes: wD7F1, wD7F2, wD781, wD7B4
+; reads: wScreenStep
+; writes: wArg1, wArg2, wScreenStep, wSelectedRecord
 RunFunc5A5DAt0278AndStep::
 Func_037_4DC7:: ; address name
     ld b, $00
@@ -760,21 +760,21 @@ Func_037_4DC7:: ; address name
     ld hl, $0278
     ld de, $00AC
     xor a, a
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, $08
-    ld [wD7F2], a
+    ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     xor a, a
-    ld [wD7B4], a
+    ld [wSelectedRecord], a
     ret
 
 ; entry 17 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD7F5, wD7F6, hTemp0, wD781, wPartyCount, wD7AB, wD7AF
-; writes: rRAMG2, rRAMB, wD781, wD7B4, wD7B5, wD7B6
+; reads: wTextFlags, wArg5, wArg6, hTemp0, wScreenStep, wPartyCount, wListCursor, wListPageIndex
+; writes: rRAMG2, rRAMB, wScreenStep, wSelectedRecord, wItemGridX, wItemGridY
 ; points at: wPartyList
 Func_037_4AFD_Case04_Case11::
 Jump_037_4DE9:: ; address name
@@ -786,9 +786,9 @@ Jump_037_4DE9:: ; address name
     xor a, a
     ld [rRAMB], a
     farcall SetWD7F5ToWD789Cell5
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ld h, a
-    ld a, [wD7F6]
+    ld a, [wArg6]
     ld l, a
     push hl
     ld a, [hl]
@@ -800,10 +800,10 @@ Jump_037_4DE9:: ; address name
     pop hl
     xor a, a
     ld [rRAMG2], a
-    ld a, [wD781]
+    ld a, [wScreenStep]
     dec a
     dec a
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $05
     call ShowStringIndexA_Bank37
     ret
@@ -828,36 +828,36 @@ Jump_037_4E2F::
 Jump_037_4E39::
     xor a, a
     ld [rRAMG2], a
-    ld a, [wD781]
+    ld a, [wScreenStep]
     dec a
     dec a
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $06
     call ShowStringIndexA_Bank37
     ret
 
 Jump_037_4E4B::
     farcall SetWD7F5ToWD789Cell5
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ld h, a
-    ld a, [wD7F6]
+    ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld [wD7B4], a
-    ld a, [wD7AB]
-    ld [wD7B5], a
-    ld a, [wD7AF]
-    ld [wD7B6], a
+    ld [wSelectedRecord], a
+    ld a, [wListCursor]
+    ld [wItemGridX], a
+    ld a, [wListPageIndex]
+    ld [wItemGridY], a
     xor a, a
     ld [rRAMG2], a
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 18 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD7B4
+; reads: wTextFlags, wSelectedRecord
 ; writes: rRAMG2, rRAMB
 ; points at: sA000, wRecordBufA
 Func_037_4AFD_Case04_Case12::
@@ -869,7 +869,7 @@ Jump_037_4E75:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld a, [wD7B4]
+    ld a, [wSelectedRecord]
     ld c, $A5
     call Multiply8
     ld de, sA000
@@ -897,37 +897,37 @@ Jump_037_4E94::
 
 ; entry 19 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD781
-; writes: wD781, wLinkSendByte
+; reads: wTextFlags, wScreenStep
+; writes: wScreenStep, wLinkSendByte
 Func_037_4AFD_Case04_Case13::
 Jump_037_4EB6:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $01
     ld [wLinkSendByte], a
     ret
 
 ; entry 31 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
+; reads: wScreenStep
 ; writes: wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, wLinkReady, ...
-; points at: wD09D
+; points at: wWorkBuf
 Func_037_4AFD_Case04_Case1F::
 Jump_037_4EC8:: ; address name
     ld a, $64
     ld [wLinkBufferCountLo], a
     xor a, a
     ld [wLinkBufferCountHi], a
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld a, l
     ld [wLinkTimeoutLo], a
     ld a, h
     ld [wLinkTimeoutHi], a
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld a, l
     ld [wLinkBufferPtrLo], a
     ld a, h
@@ -936,16 +936,16 @@ Jump_037_4EC8:: ; address name
     ld [wLinkSendByte], a
     ld a, $01
     ld [wLinkReady], a
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 20 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wD781
-; writes: wD781, wLinkSendByte, wD2CC, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, ...
-; points at: wD09D, wD132
+; reads: wLinkMessage, wScreenStep
+; writes: wScreenStep, wLinkSendByte, wAIFlag, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, ...
+; points at: wWorkBuf
 Func_037_4AFD_Case04_Case14::
 Jump_037_4EF9:: ; address name
     ld a, [wLinkMessage]
@@ -954,29 +954,29 @@ Jump_037_4EF9:: ; address name
     cp a, $FD
     ret nz
     ld a, $09
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $14
     call ShowStringIndexA_Bank37
     ld a, $FD
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ret
 
 Jump_037_4F18::
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $95
     ld [wLinkBufferCountLo], a
     xor a, a
     ld [wLinkBufferCountHi], a
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld a, l
     ld [wLinkTimeoutLo], a
     ld a, h
     ld [wLinkTimeoutHi], a
-    ld hl, wD132
+    ld hl, wBattlerRecordSlot1 + $F
     ld a, l
     ld [wLinkBufferPtrLo], a
     ld a, h
@@ -989,8 +989,8 @@ Jump_037_4F18::
 
 ; entry 21 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wD781
-; writes: wLinkReady, wD781
+; reads: wLinkMessage, wScreenStep
+; writes: wLinkReady, wScreenStep
 Func_037_4AFD_Case04_Case15::
 Jump_037_4F49:: ; address name
     ld a, [wLinkMessage]
@@ -999,15 +999,15 @@ Jump_037_4F49:: ; address name
     xor a, a
     ld [wLinkReady], a
     call UnpackLinkRecordToWCA2B
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 22 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wRecordBufA, wRecordBufB, wD781
-; writes: wD781, wD782, wD7B4, wLinkSendByte, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, ...
+; reads: wTextFlags, wRecordBufA, wRecordBufB, wScreenStep
+; writes: wScreenStep, wScreenSubStep, wSelectedRecord, wLinkSendByte, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, ...
 Func_037_4AFD_Case04_Case16::
 Jump_037_4F5E:: ; address name
     ld a, [wTextFlags]
@@ -1024,11 +1024,11 @@ Jump_037_4F5E:: ; address name
     ld a, $08
     call ShowStringIndexA_Bank37
     ld a, $10
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $08
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ld a, $FF
-    ld [wD7B4], a
+    ld [wSelectedRecord], a
     ret
 
 Jump_037_4F89::
@@ -1061,44 +1061,44 @@ Jump_037_4F89::
     ld [wTextWindowWidth], a
     ld a, $0B
     call ShowStringIndexA_Bank37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 29 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkRole, wD781
-; writes: wD7F1, wD781, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, ...
-; points at: wD09D
+; reads: wLinkRole, wScreenStep
+; writes: wArg1, wScreenStep, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, ...
+; points at: wWorkBuf
 Func_037_4AFD_Case04_Case1D::
 Jump_037_4FD5:: ; address name
     ld a, [wLinkRole]
     bit 1, a
     jr nz, Jump_037_4FE7
     ld a, $02
-    ld [wD7F1], a
+    ld [wArg1], a
     farcall ComputeBreedingChild
 
 Jump_037_4FE7::
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ld b, a
 
 Jump_037_4FEF::
     push bc
     call StoreReceivedRecordIntoSRAM
     pop bc
-    ld a, [wD781]
+    ld a, [wScreenStep]
     cp a, b
     jr z, Jump_037_4FEF
     jp Func_037_4AFD_Case04_Case1F
 
 ; entry 23 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD781
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wTwoChoiceCursor, wD781
+; reads: wTextFlags, wScreenStep
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wTwoChoiceCursor, wScreenStep
 Func_037_4AFD_Case04_Case17::
 Jump_037_4FFD:: ; address name
     ld a, [wTextFlags]
@@ -1126,15 +1126,15 @@ Jump_037_4FFD:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRectToBGMap_37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 24 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wLinkMessage, wTwoChoiceCursor, wD781, wD780, wD7AB, wD7AF
-; writes: wD781, wLinkSendByte, wD2CC, wD7B2, wD7B3, wD7B5, wD7B6, wD782, ...
+; reads: wTextFlags, wLinkMessage, wTwoChoiceCursor, wScreenStep, wScreenState, wListCursor, wListPageIndex
+; writes: wScreenStep, wLinkSendByte, wAIFlag, wScreenByteB2, wScreenByteB3, wItemGridX, wItemGridY, wScreenSubStep, ...
 Func_037_4AFD_Case04_Case18::
 Jump_037_5041:: ; address name
     ld a, [wTextFlags]
@@ -1145,13 +1145,13 @@ Jump_037_5041:: ; address name
     jr nz, Jump_037_5065
     call RunFunc5A5DAt024FAndDrawBox
     ld a, $21
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $14
     call ShowStringIndexA_Bank37
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ret
 
 Jump_037_5065::
@@ -1167,13 +1167,13 @@ Jump_037_5065::
 Jump_037_5073::
     call RunFunc5A5DAt024FAndDrawBox
     ld a, $21
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $13
     call ShowStringIndexA_Bank37
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $00
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ret
 
 Jump_037_508B::
@@ -1186,35 +1186,35 @@ Jump_037_508B::
     ld b, $BC
     ld hl, Data_037_6516
     call StoreBAtWordTableEntry_Bank37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $0C
     call ShowStringIndexA_Bank37
     ret
 
 Jump_037_50AE::
-    ld a, [wD780]
-    ld [wD7B2], a
-    ld a, [wD781]
-    ld [wD7B3], a
-    ld a, [wD7AB]
-    ld [wD7B5], a
-    ld a, [wD7AF]
-    ld [wD7B6], a
+    ld a, [wScreenState]
+    ld [wScreenByteB2], a
+    ld a, [wScreenStep]
+    ld [wScreenByteB3], a
+    ld a, [wListCursor]
+    ld [wItemGridX], a
+    ld a, [wListPageIndex]
+    ld [wItemGridY], a
     xor a, a
-    ld [wD781], a
-    ld [wD782], a
-    ld [wD7AB], a
-    ld [wD7AF], a
+    ld [wScreenStep], a
+    ld [wScreenSubStep], a
+    ld [wListCursor], a
+    ld [wListPageIndex], a
     ld a, $0D
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; entry 25 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD781
-; writes: wTwoChoiceCursor, wD781
+; reads: wTextFlags, wScreenStep
+; writes: wTwoChoiceCursor, wScreenStep
 Func_037_4AFD_Case04_Case19::
 Jump_037_50D9:: ; address name
     ld a, [wTextFlags]
@@ -1250,15 +1250,15 @@ Jump_037_50D9:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRectToBGMap_37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 26 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wMenuInputResult, wTwoChoiceCursor, wD781
-; writes: wD781, wD782
+; reads: wTextFlags, wMenuInputResult, wTwoChoiceCursor, wScreenStep
+; writes: wScreenStep, wScreenSubStep
 Func_037_4AFD_Case04_Case1A::
 Jump_037_5136:: ; address name
     ld a, [wTextFlags]
@@ -1278,73 +1278,73 @@ Jump_037_514F::
     ld a, $0B
     call ShowStringIndexA_Bank37
     ld a, $17
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 Jump_037_515A::
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, Jump_037_514F
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     xor a, a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ld a, $07
     call ShowStringIndexA_Bank37
     ret
 
 ; when text is idle and not linking: copies the $A5-byte received record at wCAD0 into the record slot at WD789 cell 5 and resets the save counters (E-0128)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case1D)
-; reads: wTextFlags, wD782, wD781, wLinkRole, wD7B5, wD7B6, wD7F5, wD7F6, ...
-; writes: wD782, wD781, wD7AB, wD7AF, wD7F1, wD7F2, rRAMG2, rRAMB, ...
-; points at: wChildRecord, wMonsterLibraryBuf, wD7E0
+; reads: wTextFlags, wScreenSubStep, wScreenStep, wLinkRole, wItemGridX, wItemGridY, wArg5, wArg6, ...
+; writes: wScreenSubStep, wScreenStep, wListCursor, wListPageIndex, wArg1, wArg2, rRAMG2, rRAMB, ...
+; points at: wChildRecord, wMonsterLibraryBuf, wPackWork
 StoreReceivedRecordIntoSRAM::
 Func_037_5172:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     and a, a
     jr z, Jump_037_5189
     xor a, a
-    ld [wD782], a
-    ld a, [wD781]
+    ld [wScreenSubStep], a
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 Jump_037_5189::
     ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_037_5198
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 Jump_037_5198::
-    ld a, [wD7B5]
-    ld [wD7AB], a
-    ld a, [wD7B6]
-    ld [wD7AF], a
+    ld a, [wItemGridX]
+    ld [wListCursor], a
+    ld a, [wItemGridY]
+    ld [wListPageIndex], a
     farcall SetWD7F5ToWD789Cell5
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ld h, a
-    ld a, [wD7F6]
+    ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, $01
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall DeleteSRAMRecordAndCompact
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld a, [wD7F6]
+    ld a, [wArg6]
     ld l, a
-    ld a, [wD7F7]
+    ld a, [wArg7]
     ld h, a
     ld de, wChildRecord
     ld b, $A5
@@ -1362,16 +1362,16 @@ Jump_037_51D7::
     ld [wSaveRecordIndex], a
     ld hl, wChildRecord + $B
     ld a, [hl+]
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, [hl]
-    ld [wD7F2], a
+    ld [wArg2], a
     ld de, wMonsterLibraryBuf
     ld a, e
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, d
-    ld [wD7F4], a
+    ld [wArg4], a
     farcall SetBitInFieldAtWD7F3
-    ld hl, wD7E0
+    ld hl, wPackWork
     ld b, $07
 
 Jump_037_5209::
@@ -1379,16 +1379,16 @@ Jump_037_5209::
     ld [hl+], a
     dec b
     jr nz, Jump_037_5209
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 28 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wD781, wLinkRole
-; writes: wD781, wLinkSendByte, wD2CC, wD7F1, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, ...
-; points at: wD09D
+; reads: wLinkMessage, wScreenStep, wLinkRole
+; writes: wScreenStep, wLinkSendByte, wAIFlag, wArg1, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, ...
+; points at: wWorkBuf
 Func_037_4AFD_Case04_Case1C::
 Jump_037_5216:: ; address name
     ld a, [wLinkMessage]
@@ -1397,39 +1397,39 @@ Jump_037_5216:: ; address name
     cp a, $FE
     ret nz
     ld a, $21
-    ld [wD781], a
+    ld [wScreenStep], a
     ld a, $14
     call ShowStringIndexA_Bank37
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wD2CC], a
+    ld [wAIFlag], a
     ret
 
 Jump_037_5235::
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     jp Func_037_4AFD_Case04_Case1D
 
 ; entry 9 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wD781, wTextFlags, wD782
-; writes: wD781, wD782
+; reads: wLinkMessage, wScreenStep, wTextFlags, wScreenSubStep
+; writes: wScreenStep, wScreenSubStep
 Func_037_4AFD_Case04_Case09::
 Jump_037_523F:: ; address name
     ld a, [wLinkMessage]
     cp a, $FD
     ret nz
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     jr Func_037_4AFD_Case04_Case0A
 
 ; entry 33 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wTextFlags, wD781, wD782
-; writes: wLinkSendByte, wD781, wD782
+; reads: wLinkMessage, wTextFlags, wScreenStep, wScreenSubStep
+; writes: wLinkSendByte, wScreenStep, wScreenSubStep
 Func_037_4AFD_Case04_Case21::
 Jump_037_524E:: ; address name
     ld a, [wLinkMessage]
@@ -1438,53 +1438,53 @@ Jump_037_524E:: ; address name
     xor a, a
     ld [wLinkSendByte], a
     ld a, $0A
-    ld [wD781], a
+    ld [wScreenStep], a
     jr Func_037_4AFD_Case04_Case0A
 
 ; entry 10 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD781, wD782
-; writes: wD781, wD782
+; reads: wTextFlags, wScreenStep, wScreenSubStep
+; writes: wScreenStep, wScreenSubStep
 Func_037_4AFD_Case04_Case0A::
 Jump_037_525F:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     xor a, a
-    ld [wD782], a
+    ld [wScreenSubStep], a
 
 ; entry 11 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD782
+; reads: wScreenSubStep
 Func_037_4AFD_Case04_Case0B::
 Jump_037_526F:: ; address name
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     rst $00
     dw Func_037_4AFD_Case04_Case0B_Case00
     dw Func_037_4AFD_Case04_Case0B_Case01
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case04_Case0B
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wD782, wLinkRole, wD2CC
-; writes: wD782, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
-; points at: wD09D
+; reads: wTextFlags, wScreenSubStep, wLinkRole, wAIFlag
+; writes: wScreenSubStep, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
+; points at: wWorkBuf
 Func_037_4AFD_Case04_Case0B_Case00::
 Jump_037_5277:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ld b, $64
     ld a, [wLinkRole]
     bit 1, a
     jr z, Jump_037_5296
     ld b, $48
-    ld a, [wD2CC]
+    ld a, [wAIFlag]
     or a, a
     jr z, Jump_037_5296
     ld b, $45
@@ -1494,12 +1494,12 @@ Jump_037_5296::
     ld [wLinkBufferCountLo], a
     xor a, a
     ld [wLinkBufferCountHi], a
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld a, l
     ld [wLinkTimeoutLo], a
     ld a, h
     ld [wLinkTimeoutHi], a
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld a, l
     ld [wLinkBufferPtrLo], a
     ld a, h
@@ -1514,7 +1514,7 @@ Jump_037_5296::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkReady, wGameMode, wModeState, wModeChangeRequest, wLinkSendByte
-; points at: wD780
+; points at: wScreenState
 Func_037_4AFD_Case04_Case0B_Case01::
 Jump_037_52BF:: ; address name
     ld a, [wLinkMessage]
@@ -1522,7 +1522,7 @@ Jump_037_52BF:: ; address name
     ret nz
     xor a, a
     ld [wLinkReady], a
-    ld hl, wD780
+    ld hl, wScreenState
     ld bc, $006F
 
 Jump_037_52CF::
@@ -1545,7 +1545,7 @@ Jump_037_52CF::
 ; entry 32 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkSendByte, wLinkSceneByte4B, wD7EB
+; writes: wLinkSendByte, wLinkSceneByte4B, wLinkByteEB
 Func_037_4AFD_Case04_Case20::
 Jump_037_52EA:: ; address name
     ld a, [wLinkMessage]
@@ -1559,33 +1559,33 @@ Jump_037_52F2::
     ld a, $01
     ld [wLinkSceneByte4B], a
     ld a, $01
-    ld [wD7EB], a
+    ld [wLinkByteEB], a
     ret
 
 ; entry 12 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wD780
-; writes: wD781, wD782, wD780
+; reads: wScreenStep, wScreenState
+; writes: wScreenStep, wScreenSubStep, wScreenState
 Func_037_4AFD_Case0C::
 Jump_037_5301:: ; address name
     farcall ScriptCommandE8_Run
-    ld a, [wD781]
+    ld a, [wScreenStep]
     cp a, $0A
     ret nz
     xor a, a
-    ld [wD781], a
-    ld [wD782], a
-    ld a, [wD780]
+    ld [wScreenStep], a
+    ld [wScreenSubStep], a
+    ld a, [wScreenState]
     add a, $05
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; entry 17 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
+; reads: wScreenStep
 Func_037_4AFD_Case11::
 Jump_037_531D:: ; address name
-    ld a, [wD781]
+    ld a, [wScreenStep]
     rst $00
     dw Func_037_4AFD_Case11_Case00
     dw ShowString0EAndStep_Bank37
@@ -1607,31 +1607,31 @@ Jump_037_5335:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case11
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case11_Case00::
 Jump_037_533C:: ; address name
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wD781 += 1 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case0D_Case1C)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 ShowString0EAndStep_Bank37::
 Func_037_5344:: ; address name
     farcall ShowString0EBank0EAtTiles2700AndLoadTiles
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 6 of the `rst $00` table in Func_037_4AFD_Case11
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-; points at: wD781
+; points at: wScreenStep
 Func_037_4AFD_Case11_Case06::
 Jump_037_5352:: ; address name
     ld hl, vTiles1 + $270
@@ -1666,36 +1666,36 @@ Jump_037_5352:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld hl, wD781
+    ld hl, wScreenStep
     inc [hl]
     ret
 
 ; entry 7 of the `rst $00` table in Func_037_4AFD_Case11
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5, wD7F6, wD781
-; writes: wD7F1, wD781
+; reads: wArg5, wArg6, wScreenStep
+; writes: wArg1, wScreenStep
 Func_037_4AFD_Case11_Case07::
 Jump_037_539F:: ; address name
     farcall SetWD7F5ToWD789Cell5
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ld h, a
-    ld a, [wD7F6]
+    ld a, [wArg6]
     ld l, a
     ld a, [hl]
     ld b, a
-    ld [wD7F1], a
+    ld [wArg1], a
     farcall DrawRecordNameAndSpeciesNameTiles
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 13 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
+; reads: wScreenStep
 Func_037_4AFD_Case0D::
 Jump_037_53C0:: ; address name
-    ld a, [wD781]
+    ld a, [wScreenStep]
     rst $00
     dw Func_037_4AFD_Case0D_Case00
     dw Func_037_4AFD_Case0D_Case01
@@ -1739,20 +1739,20 @@ Jump_037_5406:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case00::
 Jump_037_5407:: ; address name
     farcall DrawTileMap5E12AndLoadFrameTiles
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 1 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case01::
 Jump_037_5415:: ; address name
     farcall ShowString10Bank0EAtTiles2020ThenDefault
@@ -1761,13 +1761,13 @@ Jump_037_5415:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case02::
 Jump_037_5424:: ; address name
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; clears 5 tiles at vTiles1 + $500 and draws the name at wCA2C there (E-0122)
@@ -1794,34 +1794,34 @@ Func_037_542C:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD7F3, wD7F4, wD7F7, wD781
+; reads: wScreenStep
+; writes: wArg3, wArg4, wArg7, wScreenStep
 Func_037_4AFD_Case0D_Case03::
 Jump_037_5452:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld de, Data_037_687F
     ld a, $14
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $12
-    ld [wD7F4], a
+    ld [wArg4], a
     xor a, a
-    ld [wD7F7], a
+    ld [wArg7], a
     call DrawTileRectAtHLFromDE_Bank37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 4 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case04::
 Jump_037_5471:: ; address name
     farcall DrawWCA2BStatsScreen
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 5 of the `rst $00` table in Func_037_4AFD_Case0D
@@ -1833,8 +1833,8 @@ Jump_037_547F:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wMenuInputResult, wD781
-; writes: wJoypadPressedRepeat, wMenuInputResult, wD7F3, wD7F4, wD7F7, wD781
+; reads: wJoypadPressedRepeat, wMenuInputResult, wScreenStep
+; writes: wJoypadPressedRepeat, wMenuInputResult, wArg3, wArg4, wArg7, wScreenStep
 Func_037_4AFD_Case0D_Case06::
 Jump_037_5486:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -1854,9 +1854,9 @@ Jump_037_5486:: ; address name
     ret
 
 Jump_037_54A8::
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 Jump_037_54B0::
@@ -1865,51 +1865,51 @@ Jump_037_54B0::
     add hl, de
     ld de, Data_037_651B
     ld a, $06
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $06
-    ld [wD7F4], a
+    ld [wArg4], a
     xor a, a
-    ld [wD7F7], a
+    ld [wArg7], a
     call DrawTileRectAtHLFromDE_Bank37
     ld a, $0E
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 7 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD780
-; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wD781, ...
+; reads: wScreenState
+; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenStep, ...
 Func_037_4AFD_Case0D_Case07::
 Jump_037_54D1:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld a, h
-    ld [wD7F5], a
+    ld [wArg5], a
     ld a, l
-    ld [wD7F6], a
+    ld [wArg6], a
     ld de, $5E12
     ld a, d
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, e
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, $20
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $20
-    ld [wD7F4], a
+    ld [wArg4], a
     xor a, a
-    ld [wD7F7], a
+    ld [wArg7], a
     farcall DrawTileRectAndClearAttrs_5D9A
     xor a, a
-    ld [wD781], a
-    ld [wD782], a
-    ld a, [wD780]
+    ld [wScreenStep], a
+    ld [wScreenSubStep], a
+    ld a, [wScreenState]
     inc a
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; entry 14 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD781
+; reads: wScreenStep
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 Func_037_4AFD_Case0D_Case0E::
 Jump_037_550A:: ; address name
     ld hl, vTiles2 + $200
@@ -1923,15 +1923,15 @@ Jump_037_550A:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 15 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD781
+; reads: wScreenStep
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 Func_037_4AFD_Case0D_Case0F::
 Jump_037_552B:: ; address name
     ld hl, vTiles1 + $270
@@ -1956,27 +1956,27 @@ Jump_037_552B:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 16 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case10::
 Jump_037_5565:: ; address name
     call DrawWCA2CNameAndWCA36String_Bank37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 17 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD7F3, wD7F4, wD7F7, wD781
+; reads: wScreenStep
+; writes: wArg3, wArg4, wArg7, wScreenStep
 Func_037_4AFD_Case0D_Case11::
 Jump_037_5570:: ; address name
     call BGMapAddressAtScroll_Bank37
@@ -1984,63 +1984,63 @@ Jump_037_5570:: ; address name
     add hl, de
     ld de, Data_037_6577
     ld a, $0C
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $0F
-    ld [wD7F4], a
+    ld [wArg4], a
     xor a, a
-    ld [wD7F7], a
+    ld [wArg7], a
     call DrawTileRectAtHLFromDE_Bank37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 18 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wRecordBufB
-; writes: wD781, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7
+; reads: wScreenStep, wRecordBufB
+; writes: wScreenStep, wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, wArg7
 Func_037_4AFD_Case0D_Case12::
 Jump_037_5593:: ; address name
     farcall ShowPersonalityNameAndWCA3AName
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
 
 ; entry 19 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wRecordBufB
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781, wD7F5, hSpriteHideTile, wD7F7
+; reads: wScreenStep, wRecordBufB
+; writes: wArg1, wArg2, wArg3, wArg4, wScreenStep, wArg5, hSpriteHideTile, wArg7
 Func_037_4AFD_Case0D_Case13::
 Jump_037_55A0:: ; address name
     ld a, $6D
-    ld [wD7F1], a
+    ld [wArg1], a
     xor a, a
-    ld [wD7F2], a
+    ld [wArg2], a
     ld a, $EA
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $C7
-    ld [wD7F4], a
+    ld [wArg4], a
     farcall DrawFamilyIconAndCountForWCA38
     farcall DrawWCA83ExpAndToNextLevel
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
 
 ; entry 20 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wRecordBufB, wD781
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7, wD781
+; reads: wRecordBufB, wScreenStep
+; writes: wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, wArg7, wScreenStep
 Func_037_4AFD_Case0D_Case14::
 Jump_037_55C6:: ; address name
     ld a, [wRecordBufB + $B]
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, [wRecordBufB + $C]
-    ld [wD7F2], a
+    ld [wArg2], a
     xor a, a
-    ld [wD7F3], a
-    ld [wD7F4], a
+    ld [wArg3], a
+    ld [wArg4], a
     ld a, $80
-    ld [wD7F5], a
+    ld [wArg5], a
     farcall DecompressGraphicsWD7F1ToWD7F4
     ld a, $F0
     ldh [hSpriteHideTile], a
@@ -2050,21 +2050,21 @@ Jump_037_55C6:: ; address name
     add hl, de
     ld de, Data_037_66DF
     ld a, $08
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $07
-    ld [wD7F4], a
+    ld [wArg4], a
     xor a, a
-    ld [wD7F7], a
+    ld [wArg7], a
     call DrawTileRectAtHLFromDE_Bank37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 21 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wMenuInputResult, wD781
-; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wD781
+; reads: wJoypadPressedRepeat, wMenuInputResult, wScreenStep
+; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wScreenStep
 Func_037_4AFD_Case0D_Case15::
 Jump_037_5611:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -2086,10 +2086,10 @@ Jump_037_5611:: ; address name
 Jump_037_5633::
     xor a, a
     ldh [hSpriteHideTile], a
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 Jump_037_563F::
@@ -2097,70 +2097,70 @@ Jump_037_563F::
     ldh [hSpriteHideTile], a
     farcall DrawRects662BAnd653F
     ld a, $04
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 22 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD781
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case16::
 Jump_037_564E:: ; address name
     farcall DrawLevelAndStatusRowForWCA81
     ld a, $0F
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 23 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case17::
 Jump_037_565A:: ; address name
     farcall DrawRects6B4FAnd6C27
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 24 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case18::
 Jump_037_5668:: ; address name
     farcall ClearTilesAndDrawRects6C5FAnd6D37
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 25 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case19::
 Jump_037_5676:: ; address name
     farcall ShowWCA2BSkillNamesOrNone
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
 
 ; entry 26 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD781
+; reads: wScreenStep
+; writes: wScreenStep
 Func_037_4AFD_Case0D_Case1A::
 Jump_037_5683:: ; address name
     farcall ShowSpeciesCategory13StringAtTiles2680
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 27 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wMenuInputResult, wD781
-; writes: wJoypadPressedRepeat, wMenuInputResult, wD781, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; reads: wJoypadPressedRepeat, wMenuInputResult, wScreenStep
+; writes: wJoypadPressedRepeat, wMenuInputResult, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 Func_037_4AFD_Case0D_Case1B::
 Jump_037_5691:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -2191,9 +2191,9 @@ Jump_037_56B3::
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 Jump_037_56D4::
@@ -2204,36 +2204,36 @@ Jump_037_56D4::
     call CopyFromBankWaitVRAM
     call UploadTilesFromData58AE
     farcall DrawSummaryFrames6E47And6D6F
-    ld a, [wD781]
+    ld a, [wScreenStep]
     add a, $03
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 28 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD782
-; writes: wD782
+; reads: wScreenSubStep
+; writes: wScreenSubStep
 Func_037_4AFD_Case0D_Case1C::
 Jump_037_56F3:: ; address name
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     and a, a
     jr nz, Jump_037_5707
     farcall DrawRects5E13And66DF
-    ld a, [wD782]
+    ld a, [wScreenSubStep]
     inc a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 Jump_037_5707::
     farcall ShowString10Bank0EAtTiles2020ThenDefault
     call ShowString0EAndStep_Bank37
     xor a, a
-    ld [wD782], a
+    ld [wScreenSubStep], a
     ret
 
 ; entry 29 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD781
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 Func_037_4AFD_Case0D_Case1D::
 Jump_037_5715:: ; address name
     farcall DrawLevelAndStatusRowForWCA81
@@ -2265,13 +2265,13 @@ Jump_037_5715:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     ld a, $11
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 30 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wD7F3, wD7F4, wD7F7, wD781
+; reads: wScreenStep
+; writes: wArg3, wArg4, wArg7, wScreenStep
 Func_037_4AFD_Case0D_Case1E::
 Jump_037_5760:: ; address name
     call BGMapAddressAtScroll_Bank37
@@ -2279,36 +2279,36 @@ Jump_037_5760:: ; address name
     add hl, de
     ld de, Data_037_63D7
     ld a, $0C
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $12
-    ld [wD7F4], a
+    ld [wArg4], a
     xor a, a
-    ld [wD7F7], a
+    ld [wArg7], a
     call DrawTileRectAtHLFromDE_Bank37
     farcall DecompressWCA2BSpeciesGraphics
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 31 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: hSpriteHideTile, wD781
+; reads: wScreenStep
+; writes: hSpriteHideTile, wScreenStep
 Func_037_4AFD_Case0D_Case1F::
 Jump_037_5789:: ; address name
     farcall RunF24C3DAnd4D72
     ld a, $F0
     ldh [hSpriteHideTile], a
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 32 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult
-; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wD781
+; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wScreenStep
 Func_037_4AFD_Case0D_Case20::
 Jump_037_579B:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -2333,22 +2333,22 @@ Jump_037_57BE::
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, $17
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 Jump_037_57C7::
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, $07
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 14 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
+; reads: wScreenStep
 Func_037_4AFD_Case0E::
 Jump_037_57D0:: ; address name
-    ld a, [wD781]
+    ld a, [wScreenStep]
     rst $00
     dw Func_037_4AFD_Case0E_Case00
     dw ShowString0EAndStep_Bank37
@@ -2363,52 +2363,52 @@ Jump_037_57D0:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7B5, wD7B6, wD781
-; writes: wD7AB, wD7AF, wD781
+; reads: wItemGridX, wItemGridY, wScreenStep
+; writes: wListCursor, wListPageIndex, wScreenStep
 Func_037_4AFD_Case0E_Case00::
 Jump_037_57E8:: ; address name
-    ld a, [wD7B5]
-    ld [wD7AB], a
-    ld a, [wD7B6]
-    ld [wD7AF], a
-    ld a, [wD781]
+    ld a, [wItemGridX]
+    ld [wListCursor], a
+    ld a, [wItemGridY]
+    ld [wListPageIndex], a
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; entry 9 of the `rst $00` table in Func_037_4AFD_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD780
-; writes: wD780
+; reads: wScreenState
+; writes: wScreenState
 Func_037_4AFD_Case0E_Case09::
 Jump_037_57FC:: ; address name
-    ld a, [wD780]
+    ld a, [wScreenState]
     push af
     ld a, $11
-    ld [wD780], a
+    ld [wScreenState], a
     farcall ScriptCommandED_Run
     pop af
     ret
 
 ; entry 2 of the `rst $00` table in Func_037_4AFD_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD780
-; writes: wD780
+; reads: wScreenState
+; writes: wScreenState
 Func_037_4AFD_Case0E_Case02::
 Jump_037_580D:: ; address name
-    ld a, [wD780]
+    ld a, [wScreenState]
     push af
     ld a, $11
-    ld [wD780], a
+    ld [wScreenState], a
     farcall ScriptCommandED_Run
     pop af
-    ld [wD780], a
+    ld [wScreenState], a
     ret
 
 ; entry 8 of the `rst $00` table in Func_037_4AFD_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781
-; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD781
+; reads: wScreenStep
+; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 Func_037_4AFD_Case0E_Case08::
 Jump_037_5821:: ; address name
     ld de, Data_037_64D7
@@ -2440,29 +2440,29 @@ Jump_037_5821:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld a, [wD781]
+    ld a, [wScreenStep]
     inc a
-    ld [wD781], a
+    ld [wScreenStep], a
     ret
 
 ; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6
+; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawWCA36SpritePart:: ; heuristic: follows a terminator; C0
 Func_037_5870:: ; address name
     ld a, [wRecordBufB + $B]
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, [wRecordBufB + $C]
-    ld [wD7F2], a
+    ld [wArg2], a
     xor a, a
-    ld [wD7F3], a
+    ld [wArg3], a
     ld a, $90
-    ld [wD7F4], a
+    ld [wArg4], a
     ld a, $40
-    ld [wD7F5], a
+    ld [wArg5], a
     xor a, a
-    ld [wD7F6], a
+    ld [wArg6], a
     farcall DrawMetaSpritePartC0
     ret
 
@@ -2563,23 +2563,23 @@ Func_037_5929:: ; address name
 
 ; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromWD7F1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
 ; 5 call sites from 5 routines (e.g. Func_037_4AFD_Case0D_Case1E, Func_037_4AFD_Case0D_Case14, Func_037_4AFD_Case0D_Case11, Func_037_4AFD_Case0D_Case06, ...)
-; writes: wD7F5, wD7F6, wD7F1, wD7F2
+; writes: wArg5, wArg6, wArg1, wArg2
 DrawTileRectAtHLFromDE_Bank37::
 Func_037_595F:: ; address name
     ld a, h
-    ld [wD7F5], a
+    ld [wArg5], a
     ld a, l
-    ld [wD7F6], a
+    ld [wArg6], a
     ld a, d
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, e
-    ld [wD7F2], a
+    ld [wArg2], a
     farcall DrawTileRectFromWD7F1Params
     ret
 
 ; runs Func_037_5A5D (C = 7, HL = $024F, DE = $0083, wD7F1/2 = 0/9), then draws the box at scroll + $1CC (E-0122)
 ; 2 call sites from 1 routine (e.g. Func_037_4AFD_Case04_Case18)
-; writes: wD7F1, wD7F2
+; writes: wArg1, wArg2
 RunFunc5A5DAt024FAndDrawBox::
 Func_037_5976:: ; address name
     ld b, $00
@@ -2587,9 +2587,9 @@ Func_037_5976:: ; address name
     ld hl, $024F
     ld de, $0083
     xor a, a
-    ld [wD7F1], a
+    ld [wArg1], a
     ld a, $09
-    ld [wD7F2], a
+    ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_37
     call BGMapAddressAtScroll_Bank37
     ld bc, $140D
@@ -2609,7 +2609,7 @@ Func_037_5999:: ; address name
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case18)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
-; writes: wMenuInputResult, wTwoChoiceCursor, wD783
+; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
 HandleThreeChoiceCursorInput_37::
 Func_037_59A3:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -2656,7 +2656,7 @@ Jump_037_59E7::
 
 Jump_037_59EB::
     xor a, a
-    ld [wD783], a
+    ld [wScreenCounter], a
     call DrawCursorTileBB_Bank37
     ld a, $69
     call QueueSoundEffect
@@ -2679,22 +2679,22 @@ Jump_037_5A0B::
 
 ; once the joypad repeat timer reaches $14, cycles wD783 through 0-$17 and draws the cursor tile ($BB) or a blank ($C3) (E-0122)
 ; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_37)
-; reads: wJoypadRepeatTimer, wD783, wTwoChoiceCursor
-; writes: wD783
+; reads: wJoypadRepeatTimer, wScreenCounter, wTwoChoiceCursor
+; writes: wScreenCounter
 BlinkCursorWD783_Bank37::
 Func_037_5A11:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, DrawCursorTileBB_Bank37
-    ld a, [wD783]
+    ld a, [wScreenCounter]
     inc a
-    ld [wD783], a
+    ld [wScreenCounter], a
     cp a, $10
     jr c, DrawCursorTileBB_Bank37
     cp a, $18
     jr c, DrawBlankTileC3_Bank37
     xor a, a
-    ld [wD783], a
+    ld [wScreenCounter], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
 ; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_37)
@@ -2745,8 +2745,8 @@ Data_037_5A57:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
 ; 2 call sites from 2 routines (e.g. RunFunc5A5DAt024FAndDrawBox, RunFunc5A5DAt0278AndStep)
-; reads: wD7F1, wD7F2, wIsCGB
-; points at: wScreenTileBuffer
+; reads: wArg1, wArg2, wIsCGB
+; points at: wScreenTileBuffer, wScreenAttrBuffer
 CopyScreenBufferRectWithAttrs_37::
 Func_037_5A5D:: ; address name
     push bc
@@ -2764,9 +2764,9 @@ Func_037_5A5D:: ; address name
     ld a, h
     ld d, a
     pop hl
-    ld a, [wD7F1]
+    ld a, [wArg1]
     ld b, a
-    ld a, [wD7F2]
+    ld a, [wArg2]
     ld c, a
     call CopyBytesDEToHL_Bank37
     pop de
@@ -2776,21 +2776,21 @@ Func_037_5A5D:: ; address name
     jr z, Jump_037_5AA2
     push hl
     push de
-    ld de, wRecordBufferData + $12
+    ld de, wScreenAttrBuffer
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     add hl, de
     ld a, l
     ld e, a
     ld a, h
     ld d, a
     pop hl
-    ld a, [wD7F1]
+    ld a, [wArg1]
     ld b, a
-    ld a, [wD7F2]
+    ld a, [wArg2]
     ld c, a
     call CopyLow3BitsToWRAMBank2_Bank37
     pop de
@@ -2849,8 +2849,8 @@ Jump_037_5AC4::
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWD09D (E-0122)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case04)
-; reads: hTemp0, wD7F1
-; writes: rRAMG2, rRAMB, wD09D, wD09E
+; reads: hTemp0, wArg1
+; writes: rRAMG2, rRAMB, wWorkBuf
 LoadFamilyIconTileForRecordB_Bank37::
 Func_037_5AD3:: ; address name
     ld a, $0A
@@ -2862,9 +2862,9 @@ Func_037_5AD3:: ; address name
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F
-    ld [wD09D], a
-    ld a, [wD7F1]
-    ld [wD09E], a
+    ld [wWorkBuf], a
+    ld a, [wArg1]
+    ld [wWorkBuf + $1], a
     farcall LoadFamilyIconTileForWD09D
     xor a, a
     ld [rRAMG2], a
@@ -2940,7 +2940,7 @@ Jump_037_5B27::
 ; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case04_Case19, RunFunc5A5DAt024FAndDrawBox, Func_037_4AFD_Case04_Case17, Func_037_4AFD_Case04_Case12)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
-; points at: wScreenTileBuffer
+; points at: wScreenTileBuffer, wScreenAttrBuffer
 DrawScreenBufferRectToBGMap_37::
 Func_037_5B3F:: ; address name
     push de
@@ -2985,7 +2985,7 @@ Func_037_5B3F:: ; address name
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     add hl, de
     ld a, l
     ld e, a
@@ -3042,12 +3042,12 @@ Func_037_5BB6:: ; address name
 
 ; unpacks the received partner record at wC986 into wD09D: names, species, family, parents, skills and scaled stats (E-0129)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case12)
-; reads: wD043
-; writes: wD043
-; points at: wD09D, wRecordBufA
+; reads: wLinkRules
+; writes: wLinkRules
+; points at: wWorkBuf, wRecordBufA
 UnpackLinkRecordToWD09D::
 Func_037_5BC6:: ; address name
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld de, wRecordBufA
     ld a, [de]
     ld [hl+], a
@@ -3069,7 +3069,7 @@ Func_037_5BC6:: ; address name
     ld a, [de]
     dec de
     and a, c
-    ld [wD043], a
+    ld [wLinkRules], a
     cp a, $FF
     jr nz, Jump_037_5BF5
     call WriteFFPairAndUnknownName
@@ -3115,7 +3115,7 @@ Jump_037_5C07::
     ld a, $00
     ld [hl+], a
     inc de
-    ld a, [wD043]
+    ld a, [wLinkRules]
     cp a, $FF
     jr nz, Jump_037_5C3C
     call WriteUnknownNameEntry_5CC8
@@ -3136,12 +3136,12 @@ Jump_037_5C47::
 
 ; unpacks the received record at wD132 into wCA2B: names, species ids from Data_037_5FC7, family, parents, skills and scaled stats (E-0127)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case15)
-; writes: wSpeciesIdLo, wSpeciesIdHi, wD043
-; points at: wRecordBufB, wD132
+; writes: wSpeciesIdLo, wSpeciesIdHi, wLinkRules
+; points at: wRecordBufB
 UnpackLinkRecordToWCA2B::
 Func_037_5C4E:: ; address name
     ld hl, wRecordBufB
-    ld de, wD132
+    ld de, wBattlerRecordSlot1 + $F
     ld a, [de]
     ld [hl+], a
     inc de
@@ -3161,7 +3161,7 @@ Func_037_5C4E:: ; address name
     ld [hl+], a
     inc de
     ld a, [de]
-    ld [wD043], a
+    ld [wLinkRules], a
     cp a, $FF
     jr nz, Jump_037_5C80
     call WriteFFQuadAndBlankName
@@ -3482,7 +3482,6 @@ Jump_037_5DE9::
 
 ; maps $21 bytes through Data_037_63D3 and compacts the 8- and $19-entry lists, dropping $FE/$FF entries (E-0127)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
-; points at: wD21D, wD225
 MapAndCompactSkillList63D3::
 Func_037_5DEB:: ; address name
     ld b, $21
@@ -3506,7 +3505,7 @@ Jump_037_5DFF::
     pop hl
     push de
     push hl
-    ld de, wD21D
+    ld de, wBattlerRecordSlot5 + $10
     ld b, $21
     ld a, $FF
 
@@ -3516,7 +3515,7 @@ Jump_037_5E0D::
     dec b
     jr nz, Jump_037_5E0D
     ld b, $08
-    ld de, wD21D
+    ld de, wBattlerRecordSlot5 + $10
 
 Jump_037_5E17::
     ld a, [hl+]
@@ -3529,7 +3528,7 @@ Jump_037_5E1E::
     dec b
     jr nz, Jump_037_5E17
     ld b, $19
-    ld de, wD225
+    ld de, wBattlerRecordSlot5 + $18
 
 Jump_037_5E26::
     ld a, [hl+]
@@ -3543,7 +3542,7 @@ Jump_037_5E2D::
     jr nz, Jump_037_5E26
     pop hl
     ld b, $21
-    ld de, wD21D
+    ld de, wBattlerRecordSlot5 + $10
 
 Jump_037_5E36::
     ld a, [de]
@@ -3722,7 +3721,6 @@ Func_037_5EE7:: ; address name
 
 ; maps $21 bytes through Data_037_62F5 and compacts the 8- and $19-entry lists, dropping $FF entries (E-0127)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
-; points at: wD21D, wD225
 MapAndCompactSkillList62F5::
 Func_037_5EF7:: ; address name
     ld b, $21
@@ -3746,7 +3744,7 @@ Jump_037_5F0B::
     pop hl
     push de
     push hl
-    ld de, wD21D
+    ld de, wBattlerRecordSlot5 + $10
     ld b, $21
     ld a, $FF
 
@@ -3756,7 +3754,7 @@ Jump_037_5F19::
     dec b
     jr nz, Jump_037_5F19
     ld b, $08
-    ld de, wD21D
+    ld de, wBattlerRecordSlot5 + $10
 
 Jump_037_5F23::
     ld a, [hl+]
@@ -3769,7 +3767,7 @@ Jump_037_5F2A::
     dec b
     jr nz, Jump_037_5F23
     ld b, $19
-    ld de, wD225
+    ld de, wBattlerRecordSlot5 + $18
 
 Jump_037_5F32::
     ld a, [hl+]
@@ -3783,7 +3781,7 @@ Jump_037_5F39::
     jr nz, Jump_037_5F32
     pop hl
     ld b, $21
-    ld de, wD21D
+    ld de, wBattlerRecordSlot5 + $10
 
 Jump_037_5F42::
     ld a, [de]
@@ -3885,12 +3883,12 @@ Jump_037_5FA7::
 
 ; copies $1A bytes (CopyBBytesHLToDE_Bank37), then appends wD034 as the 27th byte (E-0115)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
-; reads: wD034
+; reads: wSpeciesRecord
 Copy26BytesThenWD034::
 Func_037_5FAD:: ; address name
     ld b, $1A
     call CopyBBytesHLToDE_Bank37
-    ld a, [wD034]
+    ld a, [wSpeciesRecord + $2C]
     ld [hl+], a
     inc de
     ret

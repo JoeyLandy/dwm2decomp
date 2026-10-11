@@ -1566,6 +1566,12 @@ class Rom:
 
     def _ram_symbol(self, addr: int, prefix: str) -> str:
         info = self.symbols.get(addr)
+        if info and "of" in info:
+            # an "of" entry places the address inside a buffer the size rule would not pick, e.g. the
+            # WRAM-bank-2 attribute buffers that share addresses with bank-1 records (E-0136)
+            base = info["of"]
+            self.ram_used[base] = self.symbols[base]["name"]
+            return f"{self.symbols[base]['name']} + ${addr - base:X}"
         if not info:
             # inside a named buffer (a symbol with a "size"): BufferName + $offset (E-0132)
             for base, binfo in self._sized:
@@ -1783,6 +1789,8 @@ def main() -> int:
             if not key.startswith("_"):
                 if isinstance(info.get("size"), str):
                     info = dict(info, size=int(info["size"], 16))
+                if "of" in info:
+                    info = dict(info, of=int(info["of"], 16))
                 rom.symbols[int(key, 16)] = info
         log(f"loaded {len(rom.symbols)} evidence-named RAM symbols")
     regions_path = ROOT / "config/data_regions.json"

@@ -2224,14 +2224,14 @@ Jump_03A_552A::
 ; on CGB, when wC5E9 changed, writes the eight background palettes through Func_03A_55BB (rBGPI $80-$B8) (E-0128)
 ; 1 call site from 1 routine (e.g. RunBattleEffectAnimation)
 ; reads: wIsCGB, wDMGPaletteBGP, rSTAT, wDMGPaletteOBP0
-; writes: rBGPI, wD040, rOBPI, wD041
-; points at: wD040, wBGPaletteBuffer, wD041, wOBJPaletteBuffer
+; writes: rBGPI, wDMGPaletteBytes, rOBPI
+; points at: wDMGPaletteBytes, wBGPaletteBuffer, wOBJPaletteBuffer
 UploadBGPalettesWithFade::
 Func_03A_5536:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
-    ld hl, wD040
+    ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp a, [hl]
     jp z, Jump_03A_564C
@@ -2302,7 +2302,7 @@ Jump_03A_55A5::
     ldh [rBGPI], a
     call UploadBGPalettesWithFade_Sub01
     ld a, [wDMGPaletteBGP]
-    ld [wD040], a
+    ld [wDMGPaletteBytes], a
     jp Jump_03A_564C
 
 ; only called from UploadBGPalettesWithFade (E-0047)
@@ -2425,7 +2425,7 @@ Jump_03A_5638::
     ret
 
 Jump_03A_564C::
-    ld hl, wD041
+    ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
     cp a, [hl]
     jp z, Jump_03A_575D
@@ -2496,7 +2496,7 @@ Jump_03A_56B6::
     ldh [rOBPI], a
     call UploadBGPalettesWithFade_Sub01_Sub01
     ld a, [wDMGPaletteOBP0]
-    ld [wD041], a
+    ld [wDMGPaletteBytes + $1], a
     jp Jump_03A_575D
 
 ; only called from UploadBGPalettesWithFade_Sub01 (E-0047)
@@ -3563,7 +3563,7 @@ Jump_03A_6584:: ; address name
 
 ; entry 4 of the `rst $00` table in RunBattleActions_Case09
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMode, wD043, wD04B
+; reads: wLinkMode, wLinkRules, wLinkRuleTurnLimit
 ; writes: wBattleResolveStep, wStringIndex, wStringCategory, wBattleStep, wBattleSubPhase
 ; points at: wBattleActor, wDA5B, wD891, wBattleResolveStep, wTextBuf0
 RunBattleActions_Case09_Case04::
@@ -3616,10 +3616,10 @@ Jump_03A_65F5::
     jr z, Jump_03A_6631
     cp a, $02
     jr z, Jump_03A_6631
-    ld a, [wD043]
+    ld a, [wLinkRules]
     or a, a
     jr z, Jump_03A_6631
-    ld a, [wD04B]
+    ld a, [wLinkRuleTurnLimit]
     bit 7, a
     jr z, Jump_03A_6631
     res 7, a
@@ -3703,7 +3703,7 @@ Jump_03A_6665:: ; address name
 ; entry 6 of the `rst $00` table in RunBattleActions_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
-; writes: wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wD092
+; writes: wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wBattleScene
 RunBattleActions_Case09_Case06::
 Jump_03A_6677:: ; address name
     ld a, [wTextFlags]
@@ -3717,7 +3717,7 @@ Jump_03A_6677:: ; address name
     ld [wBattleSubPhase], a
     ld [wBattleResolveStep], a
     ld a, $80
-    ld [wD092], a
+    ld [wBattleScene], a
     ld a, $42
     call QueueMusic
     ret
@@ -3741,7 +3741,7 @@ Jump_03A_6698:: ; address name
 ; for each shown slot redraws the HP, MP and status parts flagged in bits 0-2 of wD095[slot] and clears the flags (E-0127)
 ; 2 call sites from 2 routines (e.g. RunBattleActions, RunBattleStep4)
 ; reads: wLinkMode, wLinkRole, wD88F
-; points at: wD095
+; points at: wLevelUpGains
 RedrawChangedSlotPanels::
 Func_03A_66A9:: ; address name
     ld a, [wLinkMode]
@@ -3765,7 +3765,7 @@ Jump_03A_66BF::
 Jump_03A_66C5::
     push bc
     ld a, c
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     bit 0, [hl]
     jr z, Jump_03A_66E3
@@ -6385,11 +6385,11 @@ Jump_03A_7CCA::
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. RunBattleActions_Case09_Case02_Sub02)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit0OfWD095Indexed_Bank3A::
 Func_03A_7CEC:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 0, [hl]
     pop hl
@@ -6397,11 +6397,11 @@ Func_03A_7CEC:: ; address name
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case00)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit1OfWD095Indexed_Bank3A::
 Func_03A_7CF9:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 1, [hl]
     pop hl
@@ -6409,11 +6409,11 @@ Func_03A_7CF9:: ; address name
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 3 call sites from 3 routines (e.g. RunBattleActions_Case09_Case02_Sub02, RunBattleResolveStep_69AA_Case02, RunBattleResolveStep_69AA_Case01)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit2OfWD095Indexed_Bank3A::
 Func_03A_7D06:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 2, [hl]
     pop hl

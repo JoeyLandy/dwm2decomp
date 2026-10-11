@@ -819,10 +819,10 @@ Data_01A_5F9C:: ; heuristic: target of a monotone pointer table; C0
 ; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: wD86A, wD86B
 ; writes: wD86C
-; points at: wD09D
+; points at: wWorkBuf
 CheckSkillsLearnableAtLevel::
 Func_01A_5FA7:: ; address name
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld bc, $0038
     ld a, $FF
     call FillBytes
@@ -832,7 +832,7 @@ Func_01A_5FA7:: ; address name
     ld a, [wD86B]
     adc a, $00
     ld d, a
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld b, $08
 
 Jump_01A_5FC3::
@@ -954,7 +954,7 @@ Jump_01A_5FE2::
     pop bc
     push bc
     push de
-    ld de, wD09D
+    ld de, wWorkBuf
     ld b, $08
 
 Jump_01A_6066::
@@ -1349,10 +1349,10 @@ Jump_01A_6234::
 
 ; searches the $38 bytes at wD09D for C: Z when found, else B = 1 and NZ (E-0122)
 ; 1 call site from 1 routine (e.g. FindNewlyLearnableSkills)
-; points at: wD09D
+; points at: wWorkBuf
 FindCInWD09D38::
 Func_01A_623D:: ; address name
-    ld de, wD09D
+    ld de, wWorkBuf
     ld b, $38
 
 Jump_01A_6242::
@@ -1369,10 +1369,10 @@ Jump_01A_6242::
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wRecordBufA
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wD09D, wD010
+; points at: wWorkBuf
 BattleEnd_Step3_Sub02::
 Func_01A_624B:: ; address name
-    ld hl, wD09D
+    ld hl, wWorkBuf
     ld bc, $0019
     ld a, $FF
     call FillBytes
@@ -1385,8 +1385,8 @@ Func_01A_624B:: ; address name
     ld a, h
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld hl, wD09D
-    ld de, wD010
+    ld hl, wWorkBuf
+    ld de, wSpeciesRecord + $8
     ld b, $03
 
 Jump_01A_6274::
@@ -1408,7 +1408,7 @@ Jump_01A_6289::
     ld [hl+], a
     dec b
     jr nz, Jump_01A_6289
-    ld de, wD09D
+    ld de, wWorkBuf
     ld hl, wRecordBufA + $3C
     ld b, $19
 
@@ -1593,13 +1593,13 @@ Jump_01A_6347::
 
 ; A = 0 and NC if A equals C or one of the 8 bytes at wD09D; otherwise carry (E-0122)
 ; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
-; points at: wD09D
+; points at: wWorkBuf
 AIsCOrInWD09D8::
 Func_01A_6348:: ; address name
     cp a, c
     jr z, Jump_01A_6359
     ld b, $08
-    ld hl, wD09D
+    ld hl, wWorkBuf
 
 Jump_01A_6350::
     cp a, [hl]
@@ -1616,12 +1616,12 @@ Jump_01A_6359::
 
 ; A = 0 and NC if C is one of the 8 bytes at wD09D; otherwise carry (E-0122)
 ; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
-; points at: wD09D
+; points at: wWorkBuf
 FindCInWD09D8::
 Func_01A_635B:: ; address name
     ld a, c
     ld b, $08
-    ld hl, wD09D
+    ld hl, wWorkBuf
 
 Jump_01A_6361::
     cp a, [hl]
@@ -1639,7 +1639,7 @@ Jump_01A_636A::
 ; stores C in the first empty slot of the eight at wD09D, skipping slots whose skill is not in the exclusion list Data_01A_5D8B[C]; hFFC6 = 0 when none (E-0126)
 ; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
 ; writes: hTemp1, hTemp0
-; points at: wD09D
+; points at: wWorkBuf
 AddSkillCToFreeSlotUnlessExcluded::
 Func_01A_636C:: ; address name
     ld b, $00
@@ -1650,7 +1650,7 @@ Func_01A_636C:: ; address name
     ld d, [hl]
     ld e, a
     ld b, $08
-    ld hl, wD09D
+    ld hl, wWorkBuf
     xor a, a
     ldh [hTemp1], a
 
@@ -1750,12 +1750,12 @@ Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; for record wD869 below its level cap: computes the stat gains from its species growth rows (table $6616) into wD095-wD09A (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_031_67AA_Case02_Case01, Func_031_67AA_Case07)
-; reads: wD869, wD014, wD015, wD016, wD017, wD018, wD019
-; writes: wSpeciesIdLo, wSpeciesIdHi, wD095, wD096, wD097, wD098, wD099, wD09A
-; points at: wD095
+; reads: wD869, wSpeciesRecord
+; writes: wSpeciesIdLo, wSpeciesIdHi, wLevelUpGains
+; points at: wLevelUpGains
 ComputeLevelUpStatGainsForWD869::
 Func_01A_6418:: ; address name
-    ld hl, wD095
+    ld hl, wLevelUpGains
     ld bc, $0008
     xor a, a
     call FillBytes
@@ -1780,36 +1780,36 @@ Func_01A_6418:: ; address name
     jr nc, Jump_01A_64A1
     ld d, a
     call ComputeLevelUpStatGainsForWD869_Sub01
-    ld a, [wD014]
+    ld a, [wSpeciesRecord + $C]
     call ReadByteTable6616Row
     ld b, $00
     call AddWD09CIfWD09BMatchesB
-    ld [wD095], a
-    ld a, [wD015]
+    ld [wLevelUpGains], a
+    ld a, [wSpeciesRecord + $D]
     call ReadByteTable6616Row
     ld b, $01
     call AddWD09CIfWD09BMatchesB
-    ld [wD096], a
-    ld a, [wD016]
+    ld [wLevelUpGains + $1], a
+    ld a, [wSpeciesRecord + $E]
     call ReadByteTable6616Row
     ld b, $02
     call AddWD09CIfWD09BMatchesB
-    ld [wD097], a
-    ld a, [wD017]
+    ld [wLevelUpGains + $2], a
+    ld a, [wSpeciesRecord + $F]
     call ReadByteTable6616Row
     ld b, $03
     call AddWD09CIfWD09BMatchesB
-    ld [wD098], a
-    ld a, [wD018]
+    ld [wLevelUpGains + $3], a
+    ld a, [wSpeciesRecord + $10]
     call ReadByteTable6616Row
     ld b, $04
     call AddWD09CIfWD09BMatchesB
-    ld [wD099], a
-    ld a, [wD019]
+    ld [wLevelUpGains + $4], a
+    ld a, [wSpeciesRecord + $11]
     call ReadByteTable6616Row
     ld b, $05
     call AddWD09CIfWD09BMatchesB
-    ld [wD09A], a
+    ld [wLevelUpGains + $5], a
     call ClampLevelUpGainsTo999
 
 Jump_01A_64A1::
@@ -1817,9 +1817,9 @@ Jump_01A_64A1::
 
 ; only called from ComputeLevelUpStatGainsForWD869 (E-0047)
 ; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
-; reads: wD869, wD09B
-; writes: wD09B, wD09C
-; points at: wD095
+; reads: wD869, wGrowthTemp0
+; writes: wGrowthTemp0, wGrowthTemp1
+; points at: wLevelUpGains
 ComputeLevelUpStatGainsForWD869_Sub01::
 Func_01A_64A2:: ; address name
     push de
@@ -1835,13 +1835,13 @@ Func_01A_64A2:: ; address name
 
 Jump_01A_64B7::
     ld a, $FF
-    ld [wD09B], a
+    ld [wGrowthTemp0], a
     xor a, a
     jp Jump_01A_654C
 
 Jump_01A_64C0::
     sub a, $1D
-    ld [wD09B], a
+    ld [wGrowthTemp0], a
     ld a, l
     add a, $C9
     ld l, a
@@ -1932,15 +1932,15 @@ Jump_01A_6539::
     srl a
     ld b, a
     push hl
-    ld a, [wD09B]
-    ld hl, wD095
+    ld a, [wGrowthTemp0]
+    ld hl, wLevelUpGains
     add_a_to_hl
     ld a, [hl]
     pop hl
     add a, b
 
 Jump_01A_654C::
-    ld [wD09C], a
+    ld [wGrowthTemp1], a
     pop de
     ret
 
@@ -1984,17 +1984,17 @@ Func_01A_6562:: ; address name
 
 ; A = C + (wD09C when wD09B = B, else 0) (E-0078)
 ; 6 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
-; reads: wD09B, wD09C
+; reads: wGrowthTemp0, wGrowthTemp1
 AddWD09CIfWD09BMatchesB::
 Func_01A_6579:: ; address name
-    ld a, [wD09B]
+    ld a, [wGrowthTemp0]
     cp a, b
     jr z, Jump_01A_6582
     xor a, a
     jr Jump_01A_6585
 
 Jump_01A_6582::
-    ld a, [wD09C]
+    ld a, [wGrowthTemp1]
 
 Jump_01A_6585::
     add a, c
@@ -2002,67 +2002,67 @@ Jump_01A_6585::
 
 ; limits each gain in wD095-wD09A so the record's stat words from field $5D stay at or below 999 (E-0127)
 ; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
-; reads: wD869, wD095, wD096, wD097, wD098, wD099, wD09A
-; writes: wD095, wD096, wD097, wD098, wD099, wD09A
+; reads: wD869, wLevelUpGains
+; writes: wLevelUpGains
 ClampLevelUpGainsTo999::
 Func_01A_6587:: ; address name
     ld a, [wD869]
     ld c, $5D
     call SRAMRecordAddress
-    ld a, [wD095]
+    ld a, [wLevelUpGains]
     ld c, a
     call ClampDeltaTo999
-    ld [wD095], a
+    ld [wLevelUpGains], a
     ld a, l
     add a, $04
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wD096]
+    ld a, [wLevelUpGains + $1]
     ld c, a
     call ClampDeltaTo999
-    ld [wD096], a
+    ld [wLevelUpGains + $1], a
     ld a, l
     add a, $02
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wD097]
+    ld a, [wLevelUpGains + $2]
     ld c, a
     call ClampDeltaTo999
-    ld [wD097], a
+    ld [wLevelUpGains + $2], a
     ld a, l
     add a, $02
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wD098]
+    ld a, [wLevelUpGains + $3]
     ld c, a
     call ClampDeltaTo999
-    ld [wD098], a
+    ld [wLevelUpGains + $3], a
     ld a, l
     add a, $02
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wD099]
+    ld a, [wLevelUpGains + $4]
     ld c, a
     call ClampDeltaTo999
-    ld [wD099], a
+    ld [wLevelUpGains + $4], a
     ld a, l
     add a, $02
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wD09A]
+    ld a, [wLevelUpGains + $5]
     ld c, a
     call ClampDeltaTo999
-    ld [wD09A], a
+    ld [wLevelUpGains + $5], a
     ret
 
 ; C = the amount that still fits under 999 for the word at HL plus C (0 when the word is already 999) (E-0126)

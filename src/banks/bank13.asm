@@ -784,11 +784,11 @@ Jump_013_4451:: ; address name
 
 ; entry 36 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case05_Case24::
 Jump_013_445D:: ; address name
     ld a, $0D
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_6041
@@ -1137,11 +1137,11 @@ Jump_013_464C:: ; address name
 
 ; entry 58 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case05_Case3A::
 Jump_013_4653:: ; address name
     ld a, $0E
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_607C
@@ -2242,11 +2242,11 @@ Jump_013_4C60::
 
 ; entry 13 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case04_Case0D::
 Jump_013_4C67:: ; address name
     ld a, $07
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5D68
@@ -2650,11 +2650,11 @@ Jump_013_4E7B:: ; address name
 
 ; entry 41 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case04_Case29::
 Jump_013_4E82:: ; address name
     ld a, $0A
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5DB0
@@ -2663,11 +2663,11 @@ Jump_013_4E82:: ; address name
 
 ; entry 42 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case04_Case2A::
 Jump_013_4E93:: ; address name
     ld a, $08
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5DB7
@@ -2676,11 +2676,11 @@ Jump_013_4E93:: ; address name
 
 ; entry 43 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case04_Case2B::
 Jump_013_4EA4:: ; address name
     ld a, $09
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5DBE
@@ -3453,11 +3453,11 @@ Jump_013_52BF:: ; address name
 
 ; entry 95 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case04_Case5F::
 Jump_013_52CB:: ; address name
     ld a, $0B
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5E8E
@@ -3972,11 +3972,11 @@ Jump_013_5596::
 
 ; entry 125 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case04_Case7D::
 Jump_013_559D:: ; address name
     ld a, $0C
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5F0B
@@ -5566,7 +5566,7 @@ Jump_013_6188::
 ; entry 16 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
-; writes: wStoryFlags, wD7FB, wDataBank
+; writes: wStoryFlags, wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case01_Case10::
 Jump_013_618F:: ; address name
     ld de, $0025
@@ -5625,7 +5625,7 @@ Jump_013_61F6::
 
 Jump_013_61FD::
     ld a, $02
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld de, $012C
@@ -5642,7 +5642,7 @@ Jump_013_6216::
 
 ; entry 17 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case01_Case11::
 Jump_013_621D:: ; address name
     ld de, $0025
@@ -5679,7 +5679,7 @@ Jump_013_6252::
     call TestFlagBit
     jr nc, Jump_013_624B
     ld a, $00
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_533E
@@ -5690,7 +5690,7 @@ Jump_013_6252::
 
 Jump_013_6279::
     ld a, $00
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_5345
@@ -5702,7 +5702,7 @@ Jump_013_628A::
     call TestFlagBit
     jr c, Jump_013_6279
     ld a, $00
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
     ld hl, Data_010_534C
@@ -6813,12 +6813,12 @@ Jump_013_69D3::
 
 ; entry 51 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5, wTalkEventGroup
+; reads: wArg5, wTalkEventGroup
 ; writes: hTemp1, hTemp2, hTemp3
 DispatchTalkEvent_Case01_Case33::
 Jump_013_69DA:: ; address name
     farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_013_69EE
     ld hl, $0D62
@@ -6836,7 +6836,7 @@ Jump_013_69EE::
     sub a, $33
     add a, $06
     ldh [hTemp1], a
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
@@ -6997,7 +6997,7 @@ Jump_013_6ACA:: ; address name
 
 ; entry 66 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5
+; reads: wArg5
 ; writes: hTemp1, hTemp2, hTemp3
 DispatchTalkEvent_Case01_Case42::
 Jump_013_6AD1:: ; address name
@@ -7021,7 +7021,7 @@ Jump_013_6AEF::
     call TestFlagBit
     jr c, Jump_013_6B2B
     farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_013_6B0B
     ld hl, $0B44
@@ -7031,7 +7031,7 @@ Jump_013_6AEF::
 Jump_013_6B0B::
     ld a, $02
     ldh [hTemp1], a
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
@@ -7501,13 +7501,13 @@ Jump_013_6D61::
 ; entry 101 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank, wTalkEventByte92, hTemp0
-; writes: wDataBank, wD7FB, wTalkEventByte92
+; writes: wDataBank, wScreenTableIndex, wTalkEventByte92
 DispatchTalkEvent_Case01_Case65::
 Jump_013_6D68:: ; address name
     ld a, $0C
     ld [wDataBank], a
     xor a, a
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     farcall DispatchTalkEvent_Case01_Case65_Sub01
     ld a, [wArenaRank]
     or a, a
@@ -7563,7 +7563,7 @@ Jump_013_6DCA::
 
 ; entry 102 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case01_Case66::
 Jump_013_6DD1:: ; address name
     farcall SaveScreenBufferToBGMap1
@@ -7572,7 +7572,7 @@ Jump_013_6DD1:: ; address name
     call TestFlagBit
     jr c, Jump_013_6E02
     ld a, $00
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $0E
     ld [wDataBank], a
     ld de, $010D
@@ -7985,7 +7985,7 @@ Jump_013_7029::
 ; entry 127 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, wPartyCount, wInventory, wObject1
-; writes: hTemp0, hTemp1, wD7FB, wDataBank
+; writes: hTemp0, hTemp1, wScreenTableIndex, wDataBank
 DispatchTalkEvent_Case01_Case7F::
 Jump_013_7030:: ; address name
     ld de, $0134
@@ -8044,7 +8044,7 @@ Jump_013_708F::
 
 Jump_013_7096::
     ld a, $01
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld de, $0023
     call TestFlagBit
     jr c, Jump_013_70AA
@@ -8402,7 +8402,7 @@ Jump_013_7332::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0A49, whose string begins 'Breeding could result in monsters with'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 Talk0A49_BreedingCouldResultIn:: ; heuristic: target of a pointer table; C0
 Func_013_7364:: ; address name
     farcall SaveScreenBufferToBGMap1
@@ -8414,7 +8414,7 @@ Func_013_7364:: ; address name
     call TestFlagBit
     jr c, Jump_013_738F
     ld a, $01
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $5660
     call StartScriptAtHL_B13
     ld a, $0E
@@ -8433,7 +8433,7 @@ Jump_013_7396::
     call TestFlagBit
     jr c, Jump_013_73B8
     ld a, $03
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $5670
     call StartScriptAtHL_B13
     ld a, $0E
@@ -8532,7 +8532,7 @@ Jump_013_743A::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $04BA, whose string begins 'If you get an EvilArmor, I'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 Talk04BA_IfYouGetAn:: ; heuristic: target of a pointer table; C0
 Func_013_7441:: ; address name
     farcall SaveScreenBufferToBGMap1
@@ -8543,7 +8543,7 @@ Func_013_7441:: ; address name
     ld hl, $5680
     call StartScriptAtHL_B13
     ld a, $02
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $0E
     ld [wDataBank], a
     ret
@@ -8855,7 +8855,7 @@ Func_013_76CE:: ; address name
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $04C0, whose string begins 'All righty! We'll do this again'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 Talk04C0_AllRightyWellDo:: ; heuristic: target of a pointer table; C0
 Func_013_76DF:: ; address name
     farcall SaveScreenBufferToBGMap1
@@ -8866,7 +8866,7 @@ Func_013_76DF:: ; address name
     ld hl, $56C8
     call StartScriptAtHL_B13
     ld a, $04
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld a, $0E
     ld [wDataBank], a
     ret
@@ -9020,11 +9020,11 @@ Func_013_780F:: ; address name
 
 ; wD7FB = 1, StartScriptAtHL_B13 with HL = $5660, then wDataBank = $0E (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wD7FB, wDataBank
+; writes: wScreenTableIndex, wDataBank
 StartScript5660WithBank0E:: ; heuristic: target of a pointer table; C0
 Func_013_781C:: ; address name
     ld a, $01
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $5660
     call StartScriptAtHL_B13
     ld a, $0E
@@ -9089,7 +9089,7 @@ Data_013_78D7:: ; heuristic: target of a monotone pointer table; C0
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $08D1, whose string begins 'The Evaluator said I had an'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5
+; reads: wArg5
 Talk08D1_TheEvaluatorSaidI:: ; heuristic: target of a pointer table; C0
 Func_013_78DE:: ; address name
     ld de, $0025
@@ -9106,7 +9106,7 @@ Jump_013_78ED::
     call TestFlagBit
     jr c, Jump_013_78E6
     farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_013_7909
     ld hl, $57FE
@@ -9567,7 +9567,7 @@ Func_013_7DEC:: ; address name
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story flags and state; the first one in the code is $0B56, whose string begins 'When you breed monsters with another'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, hTemp1, hTemp0
-; writes: wDataBank, wD7FB
+; writes: wDataBank, wScreenTableIndex
 Talk0B56_WhenYouBreedMonsters:: ; heuristic: target of a pointer table; C0
 Func_013_7E05:: ; address name
     farcall SaveScreenBufferToBGMap1
@@ -9583,7 +9583,7 @@ Func_013_7E05:: ; address name
     call TestFlagBit
     jr c, Jump_013_7E32
     ld a, $05
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $581C
     call StartScriptAtHL_B13
     ret
@@ -9610,7 +9610,7 @@ Jump_013_7E39::
 
 Jump_013_7E59::
     ld a, $06
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $582C
     call StartScriptAtHL_B13
     ret
@@ -9637,7 +9637,7 @@ Jump_013_7E6C::
 
 Jump_013_7E8C::
     ld a, $07
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $583C
     call StartScriptAtHL_B13
     ret
@@ -9650,7 +9650,7 @@ Jump_013_7E98::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $0B6D, whose string begins 'Breeding fire and ice together makes'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, hTemp1, hTemp0
-; writes: wDataBank, wD7FB
+; writes: wDataBank, wScreenTableIndex
 Talk0B6D_BreedingFireAndIce:: ; heuristic: target of a pointer table; C0
 Func_013_7E9F:: ; address name
     farcall SaveScreenBufferToBGMap1
@@ -9664,7 +9664,7 @@ Func_013_7E9F:: ; address name
     call TestFlagBit
     jr c, Jump_013_7EC8
     ld a, $08
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $584C
     call StartScriptAtHL_B13
     ret
@@ -9691,7 +9691,7 @@ Jump_013_7ECF::
 
 Jump_013_7EEF::
     ld a, $09
-    ld [wD7FB], a
+    ld [wScreenTableIndex], a
     ld hl, $585C
     call StartScriptAtHL_B13
     ret

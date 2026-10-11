@@ -1562,6 +1562,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Result: 515 address-named RAM addresses remain (12,425 uses); all of $C000-$CFFF and HRAM is named.
 - Binary verification: build/run97 PASS, 0 differing bytes; tests OK.
 
+### E-0136 — WRAM $D000-$D7FF
+
+- Kind: OBSERVATION (reading; C1).
+- **Bank 2 and bank 1 share these addresses.**
+  - On CGB the code switches rSVBK to 2 before it touches the attribute buffers.
+  - Those buffers mirror the tile buffers at a fixed offset of $E68: wScreenAttrBuffer at $D000 (for wScreenTileBuffer $C198), wWindowAttrBuffer at $D168 (for $C300), and wSavedScreenAttrs at $D2D0.
+  - In WRAM bank 1 the same addresses hold the species and item records, the shared work area wWorkBuf, and the six $4E-byte battler records.
+- **Generator change.** A symbol may carry `"of": "<base>"` instead of a name.
+  - The address then renders as `<base name> + $offset`, whatever sized buffer it also falls in.
+  - The attribute positions use this (for example $D1CC becomes wWindowAttrBuffer + $64, matching wWindowTileBuffer + $64).
+  - Test: BufferOffsetAliases.
+- **What is named.**
+  - **Bank-1 records and title data:** each battler record as a sized symbol (wBattlerRecords and wBattlerRecordSlot1-6), so record fields read as `slot + $offset`. The title-screen save summary that LoadSaveFileSummary writes over battler record 0.
+  - **Link and battle state:** the link rule bytes, the link screen state (wLinkScreenState/SubState), and the item-effect fields of the item record. The level-up gains, the AI weights, and the battle-end timer.
+  - **The $D780 screen work area:** state, step, sub-step and counter, the list, page and grid cursors, the cursor blink counters, the digit editors, and the argument bytes wArg1-wArg8 that many helpers pass values in.
+- **Limits.**
+  - Names in the $D780 area describe the role each byte plays in the routines read. Many script-command screens reuse these bytes, so several names stay generic (wScreenByteXX).
+  - The arena bytes ($D580-$D5B1) are named by their writers only.
+  - Each address keeps one name for every bank and context. Where bank-1 and bank-2 uses collide, the name follows the bank-1 use unless an `of` entry or an exact name says otherwise.
+- Result: 236 address-named RAM addresses remain (2,793 uses).
+- Binary verification: build/run136 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

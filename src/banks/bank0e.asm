@@ -967,8 +967,8 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
 
 ; clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
 ; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case14, ScriptCommandED_Run_Case04_Case1C, ...)
-; reads: wD7F6, wD7F7, wD7F5, wSaveByte16, wD7F1, wD00E, wNameEntryState
-; writes: wD7F6, wD7F7, wSpeciesIdLo, wSpeciesIdHi, wNameEntryState, wD7F5
+; reads: wArg6, wArg7, wArg5, wSaveByte16, wArg1, wSpeciesRecord, wNameEntryState
+; writes: wArg6, wArg7, wSpeciesIdLo, wSpeciesIdHi, wNameEntryState, wArg5
 ; points at: wChildRecord, wRecordBufA, wRecordBufB
 ComputeBreedingChild::
 Func_00E_5688:: ; address name
@@ -1024,7 +1024,7 @@ Jump_00E_56AE::
     jp Jump_00E_5710
 
 Jump_00E_56D1::
-    ld a, [wD7F1]
+    ld a, [wArg1]
     cp a, $02
     jr nz, Jump_00E_570D
     jr Jump_00E_5705
@@ -1095,9 +1095,9 @@ Jump_00E_5710::
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD7F6], a
+    ld [wArg6], a
     ld a, [hl]
-    ld [wD7F7], a
+    ld [wArg7], a
     jp Jump_00E_5862
 
 Jump_00E_5737::
@@ -1130,7 +1130,7 @@ Jump_00E_5754::
     jr Jump_00E_576A
 
 Jump_00E_575F::
-    ld a, [wD7F1]
+    ld a, [wArg1]
     cp a, $02
     jr nz, Jump_00E_5777
     inc hl
@@ -1173,9 +1173,9 @@ Jump_00E_577A::
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD7F6], a
+    ld [wArg6], a
     ld a, [hl]
-    ld [wD7F7], a
+    ld [wArg7], a
     jp Jump_00E_5862
 
 Jump_00E_57A1::
@@ -1246,9 +1246,9 @@ Jump_00E_57E0::
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ld [wD7F6], a
+    ld [wArg6], a
     ld a, [hl]
-    ld [wD7F7], a
+    ld [wArg7], a
     jp Jump_00E_5862
 
 Jump_00E_5808::
@@ -1277,35 +1277,35 @@ Jump_00E_5808::
     jr z, Jump_00E_583F
     dec hl
     ld a, [hl+]
-    ld [wD7F6], a
+    ld [wArg6], a
     ld a, [hl]
-    ld [wD7F7], a
+    ld [wArg7], a
     jp Jump_00E_5862
 
 Jump_00E_583F::
     ld a, $FF
-    ld [wD7F6], a
+    ld [wArg6], a
     ld a, $FF
-    ld [wD7F7], a
+    ld [wArg7], a
     ld a, $06
     ld [wNameEntryState], a
     ld a, $FF
-    ld [wD7F5], a
+    ld [wArg5], a
     ret
 
 Jump_00E_5854::
     ld hl, wRecordBufA + $B
     ld a, [hl+]
-    ld [wD7F6], a
+    ld [wArg6], a
     ld a, [hl]
-    ld [wD7F7], a
+    ld [wArg7], a
     jp Jump_00E_5862
 
 Jump_00E_5862::
     ld hl, wChildRecord + $B
-    ld a, [wD7F6]
+    ld a, [wArg6]
     ld [hl+], a
-    ld a, [wD7F7]
+    ld a, [wArg7]
     ld [hl], a
     ld hl, wRecordBufA + $E
     ld a, [hl]
@@ -1314,7 +1314,7 @@ Jump_00E_5862::
     ld b, a
     push bc
     call FamilyForSpeciesIdWD7F6
-    ld a, [wD7F5]
+    ld a, [wArg5]
     pop bc
     or a, b
     ld b, a
@@ -1452,7 +1452,7 @@ Jump_00E_5922::
     jr nz, Jump_00E_5922
     ld hl, wRecordBufA + $6D
     ld de, wRecordBufB + $6D
-    ld a, [wD7F1]
+    ld a, [wArg1]
     and a, a
     jr z, Jump_00E_594F
     ld a, [hl]
@@ -1516,7 +1516,7 @@ Jump_00E_598B::
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD00E]
+    ld a, [wSpeciesRecord + $6]
     ld b, a
     push bc
     ld hl, wChildRecord + $6D
@@ -1549,7 +1549,7 @@ Jump_00E_59C4::
     inc a
     ld [wNameEntryState], a
     ld a, $FF
-    ld [wD7F5], a
+    ld [wArg5], a
     ret
 
 ; when wCA2A or wCACF is set and listed for stat C (Data_00E_5A6B), subtracts Data_00E_5A8E[value] from DE (unless it is at 999) (E-0130)
@@ -1883,7 +1883,7 @@ Func_00E_5C09:: ; address name
 
 ; monster id = the word at HL: LoadSpeciesRecord, then B = species byte 8, C = byte 9, A = byte 10 (wD010-wD012) (E-0117)
 ; 3 call sites from 1 routine (e.g. BuildWCB0CCandidateList)
-; reads: wD010, wD011, wD012
+; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 LoadSpeciesBytes8To10FromHL::
 Func_00E_5C11:: ; address name
@@ -1892,36 +1892,36 @@ Func_00E_5C11:: ; address name
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD010]
+    ld a, [wSpeciesRecord + $8]
     ld b, a
-    ld a, [wD011]
+    ld a, [wSpeciesRecord + $9]
     ld c, a
-    ld a, [wD012]
+    ld a, [wSpeciesRecord + $A]
     ret
 
 ; monster id = wD7F1/wD7F2: LoadSpeciesRecord, then copies species bytes 8-10 to wD7F5-wD7F7 (E-0117)
 ; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case04)
-; reads: wD7F1, wD7F2, wD010, wD011, wD012
-; writes: wSpeciesIdLo, wSpeciesIdHi, wD7F5, wD7F6, wD7F7
+; reads: wArg1, wArg2, wSpeciesRecord
+; writes: wSpeciesIdLo, wSpeciesIdHi, wArg5, wArg6, wArg7
 LoadSpeciesBytes8To10ToWD7F5::
 Func_00E_5C2B:: ; address name
-    ld a, [wD7F1]
+    ld a, [wArg1]
     ld [wSpeciesIdLo], a
-    ld a, [wD7F2]
+    ld a, [wArg2]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wD010]
-    ld [wD7F5], a
-    ld a, [wD011]
-    ld [wD7F6], a
-    ld a, [wD012]
-    ld [wD7F7], a
+    ld a, [wSpeciesRecord + $8]
+    ld [wArg5], a
+    ld a, [wSpeciesRecord + $9]
+    ld [wArg6], a
+    ld a, [wSpeciesRecord + $A]
+    ld [wArg7], a
     ret
 
 ; for each of the 30 SRAM records stores the 27 two-bit resistance levels of its species at record + $73 (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5
-; writes: rRAMG2, rRAMB, wD7F2, wSpeciesIdLo, wD7F3, wSpeciesIdHi, wD7F4, rRAMG
+; reads: wArg5
+; writes: rRAMG2, rRAMB, wArg2, wSpeciesIdLo, wArg3, wSpeciesIdHi, wArg4, rRAMG
 ; points at: sA000
 RefreshRecordResistancesFromSpecies:: ; heuristic: follows a terminator; C0
 Func_00E_5C50:: ; address name
@@ -1942,10 +1942,10 @@ Jump_00E_5C5E::
     ld a, $0B
     add_a_to_hl
     ld a, [hl+]
-    ld [wD7F2], a
+    ld [wArg2], a
     ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD7F3], a
+    ld [wArg3], a
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     pop hl
@@ -1958,9 +1958,9 @@ Jump_00E_5C8C::
     push hl
     push bc
     ld a, c
-    ld [wD7F4], a
+    ld [wArg4], a
     call LoadWD01AByteWD7F4
-    ld a, [wD7F5]
+    ld a, [wArg5]
     pop bc
     pop hl
     and a, $03
@@ -1982,16 +1982,16 @@ Jump_00E_5CA1::
 
 ; for each of the 27 resistances of species wCADB: levels below 3 may rise by the parent rolls (RollWCB3DForCaseB_5D16 or 5D77); stores the result at wCB43 (E-0127)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
-; reads: wD7F5
-; writes: wD7F2, wSpeciesIdLo, wD7F3, wSpeciesIdHi, wD7F4
+; reads: wArg5
+; writes: wArg2, wSpeciesIdLo, wArg3, wSpeciesIdHi, wArg4
 RollChildResistancesToWCB43::
 Func_00E_5CB2:: ; address name
     ld hl, wChildRecord + $B
     ld a, [hl+]
-    ld [wD7F2], a
+    ld [wArg2], a
     ld [wSpeciesIdLo], a
     ld a, [hl]
-    ld [wD7F3], a
+    ld [wArg3], a
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld b, $1B
@@ -2000,14 +2000,14 @@ Func_00E_5CB2:: ; address name
 Jump_00E_5CCD::
     push bc
     ld a, c
-    ld [wD7F4], a
+    ld [wArg4], a
     call LoadWD01AByteWD7F4
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $03
     jr nc, Jump_00E_5D01
     pop bc
     push bc
-    ld a, [wD7F5]
+    ld a, [wArg5]
     cp a, $02
     jr z, Jump_00E_5CF4
     ld b, $03
@@ -2036,7 +2036,7 @@ Jump_00E_5D01::
     inc d
 
 Jump_00E_5D0B::
-    ld a, [wD7F5]
+    ld a, [wArg5]
     and a, $03
     ld [de], a
     inc c
@@ -2046,8 +2046,8 @@ Jump_00E_5D0B::
 
 ; when wCB3D is set rolls RollWCB3DChanceOrIncWD7F5 with factor 1, 3 or 10 (then 3) for B = 3, 4, 5, or 5 after counting otherwise (E-0125)
 ; 1 call site from 1 routine (e.g. RollChildResistancesToWCB43)
-; reads: wD7F5
-; writes: wD7F5
+; reads: wArg5
+; writes: wArg5
 RollWCB3DForCaseB_5D16::
 Func_00E_5D16:: ; address name
     push bc
@@ -2066,9 +2066,9 @@ Jump_00E_5D20::
     jr z, Jump_00E_5D3F
     cp a, $05
     jr z, Jump_00E_5D43
-    ld a, [wD7F5]
+    ld a, [wArg5]
     inc a
-    ld [wD7F5], a
+    ld [wArg5], a
     ld a, $05
 
 Jump_00E_5D36::
@@ -2095,8 +2095,8 @@ Jump_00E_5D43::
 
 ; chance = A * wCB3D; if below 100 and a random value is below it, A = $FF; otherwise wD7F5 += 1 and A = 0 (E-0124)
 ; 3 call sites from 2 routines (e.g. RollWCB3DForCaseB_5D16, RollWCB3DForCaseB_5D77)
-; reads: wD7F5
-; writes: wD7F5
+; reads: wArg5
+; writes: wArg5
 RollWCB3DChanceOrIncWD7F5::
 Func_00E_5D4E:: ; address name
     ld c, a
@@ -2121,16 +2121,16 @@ Func_00E_5D4E:: ; address name
     ret
 
 Jump_00E_5D6E::
-    ld a, [wD7F5]
+    ld a, [wArg5]
     inc a
-    ld [wD7F5], a
+    ld [wArg5], a
     xor a, a
     ret
 
 ; when wCB3D is set: B = 5 rolls a random value against wCB3D (A = $FF on success), other values roll factor 2 (E-0125)
 ; 1 call site from 1 routine (e.g. RollChildResistancesToWCB43)
-; reads: wD7F5
-; writes: wD7F5
+; reads: wArg5
+; writes: wArg5
 RollWCB3DForCaseB_5D77::
 Func_00E_5D77:: ; address name
     push bc
@@ -2170,9 +2170,9 @@ Jump_00E_5D8D::
     ret
 
 Jump_00E_5DA5::
-    ld a, [wD7F5]
+    ld a, [wArg5]
     inc a
-    ld [wD7F5], a
+    ld [wArg5], a
     xor a, a
     pop bc
     ret
@@ -2247,16 +2247,15 @@ Data_00E_5E02:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; wD7F5 = the byte at wD01A + wD7F4 (E-0114)
 ; 3 call sites from 3 routines (e.g. RollChildResistancesToWCB43, RefreshRecordResistancesFromSpecies, CopyWD01ABytesFromIndexCToDE)
-; reads: wD7F4
-; writes: wD7F5
-; points at: wD01A
+; reads: wArg4
+; writes: wArg5
 LoadWD01AByteWD7F4::
 Func_00E_5E1D:: ; address name
-    ld hl, wD01A
-    ld a, [wD7F4]
+    ld hl, wSpeciesRecord + $12
+    ld a, [wArg4]
     add_a_to_hl
     ld a, [hl]
-    ld [wD7F5], a
+    ld [wArg5], a
     ret
 
 ; copies six bytes from the addresses in Data_00E_5E61 (or 5E6D when bit 4 of wCADD is set) to the addresses in Data_00E_5E79 (E-0125)
@@ -2394,13 +2393,13 @@ Data_00E_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; computes a bonus from personality compatibility, matching parent fields and wD7F1, and adds it to the child stats at wCAD0 (offsets Data_00E_5F89) (E-0130)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
-; reads: wD7F5, wD7F1
+; reads: wArg5, wArg1
 ; points at: wChildRecord
 ApplyBreedingBonusToChildStats::
 Func_00E_5EE8:: ; address name
     call PersonalityPairValueToWD7F5
     ld c, $00
-    ld a, [wD7F5]
+    ld a, [wArg5]
     and a, a
     jr nz, Jump_00E_5EF7
     ld a, c
@@ -2442,7 +2441,7 @@ Jump_00E_5F0D::
     ld c, a
 
 Jump_00E_5F27::
-    ld a, [wD7F1]
+    ld a, [wArg1]
     and a, a
     jr z, Jump_00E_5F31
     ld a, c
@@ -2528,7 +2527,7 @@ Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; wD7F5 = the 2-bit entry of the matrix Data_00E_603F for the combined personality indexes of wC986 and wCA2B (E-0128)
 ; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunWD780StateWhenNotFading_F1_Case04_Case16)
-; writes: wD7F5
+; writes: wArg5
 ; points at: wRecordBufA, wRecordBufB
 PersonalityPairValueToWD7F5::
 Func_00E_5F91:: ; address name
@@ -2600,7 +2599,7 @@ Jump_00E_5FEF::
     srl a
 
 Jump_00E_5FF4::
-    ld [wD7F5], a
+    ld [wArg5], a
     pop af
     ret
 
@@ -2680,45 +2679,45 @@ Func_00E_611B:: ; address name
 
 ; loads word field wD7F5 of record A (LoadSRAMRecordWord) and falls into DrawSpeciesAndFamilyIconForHFFC6 (E-0126)
 ; 1 call site from 1 routine (e.g. LoadRecordWordFieldAndContinue710A)
-; reads: wD7F5, hTemp0, hTemp1, wD7F4
-; writes: wD7F6, wD7F7, wD09D, wD09E
+; reads: wArg5, hTemp0, hTemp1, wArg4
+; writes: wArg6, wArg7, wWorkBuf
 LoadRecordWordFieldWD7F5AndShowIcon::
 Func_00E_612E:: ; address name
     ld a, c
     push af
-    ld a, [wD7F5]
+    ld a, [wArg5]
     ld c, a
     pop af
     call LoadSRAMRecordWord
 
 ; wD7F6/7 = hFFC6/7, runs Func_00E_615A, then loads the family icon tile for wD7F5 & $0F into tile wD7F4 (E-0126)
 ; 1 call site from 1 routine (e.g. DrawSpeciesIconForWCA2BEntry)
-; reads: hTemp0, hTemp1, wD7F5, wD7F4
-; writes: wD7F6, wD7F7, wD09D, wD09E
+; reads: hTemp0, hTemp1, wArg5, wArg4
+; writes: wArg6, wArg7, wWorkBuf
 DrawSpeciesAndFamilyIconForHFFC6::
 Func_00E_6138:: ; address name
     ldh a, [hTemp0]
-    ld [wD7F6], a
+    ld [wArg6], a
     ldh a, [hTemp1]
-    ld [wD7F7], a
+    ld [wArg7], a
     call FamilyForSpeciesIdWD7F6
-    ld a, [wD7F5]
+    ld a, [wArg5]
     and a, $0F
-    ld [wD09D], a
-    ld a, [wD7F4]
-    ld [wD09E], a
+    ld [wWorkBuf], a
+    ld a, [wArg4]
+    ld [wWorkBuf + $1], a
     farcall LoadFamilyIconTileForWD09D
     ret
 
 ; wD7F5 = the family (0-10) of species id wD7F6/7 by id ranges (< $1B, $43, $67, $85, $A8, $CA, $F1, $111, $139, $15C, or more) (E-0128)
 ; 5 call sites from 4 routines (e.g. ComputeBreedingChild, DrawSpeciesAndFamilyIconForHFFC6, DebugToggleWD7F1Marker, ScriptCommandF6_Run_Case10_Case06_Sub02)
-; reads: wD7F6, wD7F7
-; writes: wD7F5
+; reads: wArg6, wArg7
+; writes: wArg5
 FamilyForSpeciesIdWD7F6::
 Func_00E_615A:: ; address name
-    ld a, [wD7F6]
+    ld a, [wArg6]
     ld l, a
-    ld a, [wD7F7]
+    ld a, [wArg7]
     ld h, a
     cp a, $01
     jr nz, Jump_00E_6175
@@ -2793,12 +2792,12 @@ Jump_00E_61BB::
     ld a, $0A
 
 Jump_00E_61BD::
-    ld [wD7F5], a
+    ld [wArg5], a
     ret
 
 ; loads species wCADB; when its byte wD009 is non-zero, rolls against Data_00E_61FC[byte & 3] and stores 1 in wCADE on success, else 0 (E-0124)
 ; 2 call sites from 2 routines (e.g. ComputeBreedingChild, ScriptCommandF3_Run_Case05_Case0E_Sub01)
-; reads: wChildRecord, wD009
+; reads: wChildRecord, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 RollWCADEFromSpeciesFlag::
 Func_00E_61C1:: ; address name
@@ -2807,7 +2806,7 @@ Func_00E_61C1:: ; address name
     ld a, [wChildRecord + $C]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecordWord0
-    ld a, [wD009]
+    ld a, [wSpeciesRecord + $1]
     and a, a
     jr z, Jump_00E_61F4
     and a, $03

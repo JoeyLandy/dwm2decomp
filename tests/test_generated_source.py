@@ -322,3 +322,18 @@ class InlineTableTrim(unittest.TestCase):
         body = text[start:start + 200]
         self.assertRegex(body, r"\n    ld a, \[w\w+\]\n    bit 7, a")  # decoded as code, whatever the RAM name
         self.assertNotIn("dw $44FA", text)
+
+
+class BufferOffsetAliases(unittest.TestCase):
+    """An "of" symbol renders as an offset into the buffer it names (E-0136)."""
+
+    def test_bank2_attribute_addresses_use_the_attribute_buffer(self):
+        symbols = json.loads((BANKS.parents[1] / "config/symbols.json").read_text(encoding="utf-8"))
+        aliases = {k: v for k, v in symbols.items() if isinstance(v, dict) and "of" in v}
+        self.assertIn("D1CC", aliases)
+        text = "\n".join(line.split(";")[0] for p in BANKS.glob("bank*.asm")
+                         for line in p.read_text(encoding="utf-8").splitlines())  # code only
+        for key, info in aliases.items():
+            base = symbols[info["of"]]["name"]
+            self.assertNotRegex(text, rf"\bw{key}\b")
+            self.assertIn(f"{base} + ${int(key, 16) - int(info['of'], 16):X}", text)

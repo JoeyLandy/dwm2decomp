@@ -910,7 +910,7 @@ Jump_061_44F1::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenY, hMapScreenX, wIsCGB
 ; writes: hTemp0, rSVBK
-; points at: wScreenTileBuffer
+; points at: wScreenTileBuffer, wScreenAttrBuffer
 Func_061_4472_Case05::
 Jump_061_4533:: ; address name
     ld a, [wKeyWorldFloor]
@@ -1016,7 +1016,7 @@ Jump_061_454E::
     ld d, a
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
@@ -1299,7 +1299,6 @@ Func_061_4706:: ; address name
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case05)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp0, wIsCGB
 ; writes: hTemp0, rSVBK
-; points at: wD0A8
 DrawKeyWorldExitTile::
 Func_061_474C:: ; address name
     ld a, [wKeyWorldFloor]
@@ -1404,7 +1403,7 @@ Jump_061_47C5::
     ret z
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wD0A8
+    ld hl, wWorkBuf + $B
     ld a, [hl]
     and a, $F8
     or a, $04
@@ -1536,7 +1535,7 @@ Jump_061_542D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenY, hMapScreenX, wIsCGB
 ; writes: rSVBK
-; points at: wScreenTileBuffer
+; points at: wScreenTileBuffer, wScreenAttrBuffer
 Func_061_4472_Case00::
 Jump_061_5443:: ; address name
     ldh a, [hMapScreenY]
@@ -1635,7 +1634,7 @@ Jump_061_5443:: ; address name
     ld d, a
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wRecordBufferData + $12
+    ld hl, wScreenAttrBuffer
     call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
@@ -1781,7 +1780,7 @@ Jump_061_5585::
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
-; points at: wKeyWorldObjects, wD0A8
+; points at: wKeyWorldObjects
 DrawWCD7BEntryTilesForScreen::
 Func_061_55AF:: ; address name
     ld hl, wKeyWorldObjects
@@ -1844,7 +1843,7 @@ Jump_061_55F6::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_061_562E
-    ld de, wD0A8
+    ld de, wWorkBuf + $B
     ld a, $02
     ldh [rSVBK], a
     ld a, $05
@@ -1886,7 +1885,6 @@ Jump_061_562E::
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
-; points at: wD0A8
 DrawWCD8BObjectTilesForScreen::
 Func_061_562F:: ; address name
     ld hl, wKeyWorldFloorInfo + $3
@@ -1978,7 +1976,7 @@ Jump_061_56A6::
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_061_56E2
-    ld de, wD0A8
+    ld de, wWorkBuf + $B
     ld a, $02
     ldh [rSVBK], a
     bit 0, c

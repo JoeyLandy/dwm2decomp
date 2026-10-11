@@ -2132,7 +2132,7 @@ Jump_032_546D::
 ; entry 3 of the `rst $00` table in Func_032_4ADC
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wBattleKind, wBattleActor, wBattleActionId
-; writes: wDAD3, wD093
+; writes: wDAD3, wBattleByte93
 ; points at: wBattleResolveStep
 Func_032_4ADC_Case03::
 Jump_032_5474:: ; address name
@@ -2162,7 +2162,7 @@ Jump_032_5474:: ; address name
     ret z
     cp a, $B0
     ret nc
-    ld [wD093], a
+    ld [wBattleByte93], a
     ret
 
 ; entry 4 of the `rst $00` table in Func_032_4ADC
@@ -2396,9 +2396,9 @@ Jump_032_55E7:: ; address name
 
 ; in link battles with rules on: an action forbidden by the wD044/wD045 rules (Data_032_5688) ends the battle with music 2 and a message for the side that broke it (E-0128)
 ; 1 call site from 1 routine (e.g. Func_032_5820_Case06)
-; reads: wLinkMode, wD043, wDABA, wD044, wBattleActionId, wD045, wBattleActor, wLinkRole, ...
-; writes: wD092, wStringIndex, wStringCategory, wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wDataBank, ...
-; points at: wBattleResolveStep, wD057, wD058
+; reads: wLinkMode, wLinkRules, wDABA, wBattleActionId, wBattleActor, wLinkRole, wDataBankSave
+; writes: wBattleScene, wStringIndex, wStringCategory, wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wDataBank, ...
+; points at: wBattleResolveStep, wLinkRuleWork57, wBattleInitByte58
 CheckLinkRuleViolation::
 Func_032_55EE:: ; address name
     ld hl, wBattleResolveStep
@@ -2408,7 +2408,7 @@ Func_032_55EE:: ; address name
     ret z
     cp a, $02
     ret z
-    ld a, [wD043]
+    ld a, [wLinkRules]
     or a, a
     ret z
     ld a, [wDABA]
@@ -2416,7 +2416,7 @@ Func_032_55EE:: ; address name
     ret nz
     call ActionIsSpecialBFOrC9ToCF
     ret nc
-    ld a, [wD044]
+    ld a, [wLinkRules + $1]
     bit 7, a
     ret z
     ld b, a
@@ -2429,14 +2429,14 @@ Func_032_55EE:: ; address name
     and a, b
     ret z
     ld c, a
-    ld a, [wD045]
+    ld a, [wLinkRules + $2]
     and a, c
     jr z, Jump_032_563B
-    ld hl, wD057
+    ld hl, wLinkRuleWork57
     ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_032_5633
-    ld hl, wD058
+    ld hl, wBattleInitByte58
 
 Jump_032_5633::
     ld a, c
@@ -2459,13 +2459,13 @@ Jump_032_563B::
     cp a, b
     jr nz, Jump_032_5658
     ld a, $05
-    ld [wD092], a
+    ld [wBattleScene], a
     ld a, $63
     jr Jump_032_565F
 
 Jump_032_5658::
     ld a, $04
-    ld [wD092], a
+    ld [wBattleScene], a
     ld a, $64
 
 Jump_032_565F::
@@ -5400,11 +5400,11 @@ Jump_032_685D::
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 7 call sites from 7 routines (e.g. RunBattleSubStep_6662_Case01, RollStatusTickEffect, ApplyDamageToTarget, ResolveStep0EEffect_Case03_Case01, ...)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit0OfWD095Indexed_Bank32::
 Func_032_687F:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 0, [hl]
     pop hl
@@ -5412,11 +5412,11 @@ Func_032_687F:: ; address name
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 3 call sites from 3 routines (e.g. PayActorMPCost, RollStatusTickEffect, ApplyDamageToTarget)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit1OfWD095Indexed_Bank32::
 Func_032_688C:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 1, [hl]
     pop hl
@@ -5424,11 +5424,11 @@ Func_032_688C:: ; address name
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 16 call sites from 14 routines (e.g. ActionEffect_Surge_Sub01, ActionEffect_DeMagic_Sub01, DefeatTarget, RunBattleSubStep2_6764_Case02, ...)
-; points at: wD095
+; points at: wLevelUpGains
 SetBit2OfWD095Indexed_Bank32::
 Func_032_6899:: ; address name
     push hl
-    ld hl, wD095
+    ld hl, wLevelUpGains
     add_a_to_hl
     set 2, [hl]
     pop hl

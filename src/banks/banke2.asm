@@ -5748,11 +5748,11 @@ Jump_0E2_67A4::
 
 ; C = (wD2CC & 1) ^ 1 and returns when non-zero; when bit 0 is set: wDA6E = 0, wDA70/wDA71 = $FFFF, C = 0 (E-0118)
 ; 4 call sites from 4 routines (e.g. AIScoreGuardSkill_67CF, AIScore_SquallHit, AIScore_Berserker, AIScore_Guard)
-; reads: wD2CC
+; reads: wAIFlag
 ; writes: wDA6E, wDA6F, wDA70, wDA71
 MaxNegativeScoreWhenWD2CCBit0:: ; heuristic: follows a terminator; C0
 Func_0E2_67A5:: ; address name
-    ld a, [wD2CC]
+    ld a, [wAIFlag]
     and a, $01
     xor a, $01
     ld c, a
