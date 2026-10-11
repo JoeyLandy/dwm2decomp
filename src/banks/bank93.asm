@@ -521,9 +521,45 @@ Data_093_7705:: ; address name
     dw $001B, $2BFF, $023F, $0000 ; entry 5
     dw $218C, $4F18, $3A52, $0000 ; entry 6
     dw $218C, $4F18, $3A52, $0000 ; entry 7
-    INCBIN "dwm2-cobi-us.gbc", $24F745, $1AD
-    ds $22, $00
-    INCBIN "dwm2-cobi-us.gbc", $24F914, $EE
+
+; compressed tileset of map $X6248 (the first map record using it)
+; LZSS-compressed asset: 399 bytes expand to 608 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+MapX6248Tileset:: ; heuristic: map tileset stream; C0
+Data_093_7745:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $24F745, $18F
+
+; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
+; record: one CGB palette: 4 BGR555 colours
+MapX6248Palettes::
+Data_093_78D4:: ; address name
+    dw $7DA0, $7FFF, $7FE0, $0000 ; entry 0
+    dw $012F, $035F, $01DA, $0000 ; entry 1
+    dw $48EC, $6BFF, $4A6F, $0000 ; entry 2
+    dw $396B, $7FFF, $5A94, $0000 ; entry 3
+    dw $0000, $0000, $0000, $0000 ; entry 4
+    dw $0000, $0000, $0000, $0000 ; entry 5
+    dw $0000, $0000, $0000, $0000 ; entry 6
+    dw $0000, $0000, $0000, $0000 ; entry 7
+
+; E-0142 (derived: 1 screen far pointers, row by row)
+; record: compressed 20 x 18 screen; its ROM bank
+MapX6248Screens0::
+Data_093_7914:: ; address name
+    dfar Data_093_791A ; entry 0
+
+; E-0142 (derived: 1 screen far pointers, row by row)
+; record: compressed 20 x 18 screen; its ROM bank
+MapX6248Attrs0::
+Data_093_7917:: ; address name
+    dfar Data_093_79B6 ; entry 0
+
+; LZSS-compressed asset: 156 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_791A:: ; heuristic: map screen stream; C0
+    INCBIN "dwm2-cobi-us.gbc", $24F91A, $9C
+
+; LZSS-compressed asset: 76 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_093_79B6:: ; heuristic: map screen stream; C0
+    INCBIN "dwm2-cobi-us.gbc", $24F9B6, $4C
 
 ; compressed tileset of map $8F (the first map record using it)
 ; LZSS-compressed asset: 1318 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)

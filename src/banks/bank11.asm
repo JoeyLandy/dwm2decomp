@@ -746,7 +746,7 @@ Data_011_4480:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_011_44AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2
 
-; E-0036 (C1: the pointer for map 56 is the record whose tileset stream (57:6E96) the game decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the tile map for $C198 and the attribute map for $D000.
+; E-0036 (C1: the pointer for map 56 is the record whose tileset stream (57:6E96) the game decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the tile map for $C198 and the attribute map for $D000. E-0201: the complete map record at $6248 (tileset 93:$7745, one 1 x 1 screen variant repeated) has no entry here and is listed as an extra record.
 ; record: map record in this bank, indexed by the map number hMapId
 MapTable::
 Data_011_44B8:: ; address name
@@ -3772,7 +3772,25 @@ Data_011_6218:: ; address name
     dfar Map9BAttrs0
     dfar Map9BScreens4
     dfar Map9BAttrs4
-    db $45, $77, $93, $D4, $78, $93, $01, $01, $1F, $1C, $00, $00, $00, $02, $06, $00, $3B, $CC, $14, $79, $93, $17, $79, $93, $14, $79, $93, $17, $79, $93, $14, $79, $93, $17, $79, $93, $14, $79, $93, $17, $79, $93, $14, $79, $93, $17, $79, $93
+
+; E-0142, E-0201 (derived: map record that no MapTable entry points to, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
+MapRecordX6248::
+Data_011_6248:: ; address name
+    dfar MapX6248Tileset ; entry 0
+    dfar MapX6248Palettes
+    db $01, $01, $1F, $1C, $00, $00, $00, $02, $06, $00
+    dw wStoryFlags + $64
+    dfar MapX6248Screens0
+    dfar MapX6248Attrs0
+    dfar MapX6248Screens0
+    dfar MapX6248Attrs0
+    dfar MapX6248Screens0
+    dfar MapX6248Attrs0
+    dfar MapX6248Screens0
+    dfar MapX6248Attrs0
+    dfar MapX6248Screens0
+    dfar MapX6248Attrs0
 
 ; E-0142 (derived: map record of map $A0, 4 x 3 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array

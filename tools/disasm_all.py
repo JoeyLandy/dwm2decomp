@@ -1451,7 +1451,7 @@ class Rom:
             return
         b11, end_all = mt["bank"], wt["addr"]
         ptrs = [self._u16(b11, mt["addr"] + 2 * i) for i in range(mt["count"])]
-        recs = sorted({p for p in ptrs if mt["addr"] + 2 * mt["count"] <= p < end_all})
+        recs = sorted({p for p in ptrs if mt["addr"] + 2 * mt["count"] <= p < end_all} | {int(x, 16) for x in mt.get("extra_records", [])})  # E-0201: records no map uses
         nb = len(self.data) // BANK
 
         def fp(bank: int, addr: int) -> tuple[int, int]:
@@ -1481,7 +1481,8 @@ class Rom:
         named: set[tuple[int, int]] = set()
         added = 0
         for r, nxt in zip(recs, recs[1:] + [end_all]):
-            first = min(i for i, p in enumerate(ptrs) if p == r)
+            first = min((i for i, p in enumerate(ptrs) if p == r), default=None)
+            tag = f"{first:02X}" if first is not None else f"X{r:04X}"  # X: no MapTable entry
             o = b11 * BANK + r - self.base(b11)
             wd, ht = self.data[o + 6], self.data[o + 7]
             fields = dfar("tileset", "map tileset stream", True) + dfar("palettes", "map BG palettes", False) + [
@@ -1491,16 +1492,16 @@ class Rom:
             tiles, pal = fp(b11, r), fp(b11, r + 3)
             if tiles not in self.names and tiles not in named:
                 named.add(tiles)
-                self.names[tiles] = {"name": f"Map{first:02X}Tileset", "data": True, "evidence": "E-0142",
-                                     "note": f"compressed tileset of map ${first:02X} (the first map record using it)"}
-            palettes.setdefault(pal, f"Map{first:02X}Palettes")
+                self.names[tiles] = {"name": f"Map{tag}Tileset", "data": True, "evidence": "E-0142",
+                                     "note": f"compressed tileset of map ${tag} (the first map record using it)"}
+            palettes.setdefault(pal, f"Map{tag}Palettes")
             k, q = 0, r + 0x12
             while q + 6 <= nxt and k < 9:
                 (tb, ta), (ab, aa) = fp(b11, q), fp(b11, q + 3)
                 if not (screens_ok(tb, ta, wd * ht) and screens_ok(ab, aa, wd * ht)):
                     break
                 for (bb, aa_, kind) in ((tb, ta, "Screens"), (ab, aa, "Attrs")):
-                    arrays.setdefault((bb, aa_), (wd * ht, f"Map{first:02X}{kind}{k}"))
+                    arrays.setdefault((bb, aa_), (wd * ht, f"Map{tag}{kind}{k}"))
                 fields += dfar(f"variant {k} screens", "map screen array", False) + \
                     dfar(f"variant {k} attributes", "map screen array", False)
                 k, q = k + 1, q + 6
@@ -1509,11 +1510,11 @@ class Rom:
             for i, f in enumerate(fields):
                 if f.get("bank_from", 0) is None:
                     f["bank_from"] = i + 1
-            self.schemas.append({"bank": b11, "addr": r, "label": f"MapRecord{first:02X}", "count": 1,
+            self.schemas.append({"bank": b11, "addr": r, "label": f"MapRecord{tag}", "count": 1,
                                  "fields": fields, "record": "tileset; palettes; width, height, wMaxBlockingTile, "
                                  "wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; "
-                                 "variant flag byte; then per variant: screen array, attribute array", "note": f"E-0142 (derived: map record of map ${first:02X}, "
-                                 f"{wd} x {ht} screens, {k} decoded variant(s))"})
+                                 "variant flag byte; then per variant: screen array, attribute array", "note": (f"E-0142 (derived: map record of map ${first:02X}, " if first is not None else "E-0142, E-0201 (derived: map record that no MapTable entry points to, ")
+                                 + f"{wd} x {ht} screens, {k} decoded variant(s))"})
             added += 1
         sm = next((t for t in self.schemas if t["label"] == "SpecialMapRecords"), None)
         if sm:  # 26-byte special map records (E-0144): arrays at +$14 / +$17, size from +6 / +7

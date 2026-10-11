@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0201 — A map record that no map uses (11:$6248)
+
+- Kind: OBSERVATION (byte search and layout; C1).
+- **The record.** After MapRecord9B (11:$6218) comes a complete second 48-byte map record at $6248, up to MapRecordA0 at $6278. It has tileset 93:$7745, palettes 93:$78D4, a 1 x 1 screen size, flag wStoryFlags + $64, and five variants that all name the same screen arrays (93:$7914 / $7917).
+  - No MapTable word points to $6248; a ROM search found the word only inside the record itself.
+  - E-0142 had folded it into MapRecord9B as trailing bytes.
+- **Its data.** The tileset stream (608 bytes) and the two screens (360 bytes each, tile and attribute maps) decompress cleanly. They had been the INCBIN slices 93:$7745 and 93:$7914.
+- **Tool.** MapTable gains `extra_records` for records reached by no entry; such records are labelled MapRecordX<address>.
+- Binary verification: build/run223 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
