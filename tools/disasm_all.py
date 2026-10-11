@@ -1739,6 +1739,38 @@ class Rom:
                     del self.dlabels[wrong[0]][wrong[1]]
         log(f"event scripts: {len(sites)} start sites, {len(code)} commands in {used} regions")
 
+    MESSAGE_GROUP_BANKS = [0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2E, 0x7C, 0x80, 0x80, 0x82, 0x86, 0x89]
+
+    def message_preview(self, word: int) -> str | None:
+        """First words of message `word` on ShowMessageHL's normal path (E-0080/E-0081): group =
+        high byte & $3F picks the bank (MESSAGE_GROUP_BANKS, from ShowMessageHL's 14 cases); the
+        low byte indexes MessageStrings_BankBB ($4032; bank $86: $4016), or the bank's overflow
+        table (minus the threshold at $4005) at and above that threshold. None when unknown."""
+        g, i = (word >> 8) & 0x3F, word & 0xFF
+        if g >= len(self.MESSAGE_GROUP_BANKS):
+            return None
+        bank = self.MESSAGE_GROUP_BANKS[g]
+        if not hasattr(self, "_name_addr"):
+            self._name_addr = {v["name"]: k for k, v in self.names.items()}
+        table = 0x4016 if bank == 0x86 else 0x4032
+        o = bank * BANK
+        if bank != 0x86 and self.data[o + 4] == 0xFE and i >= self.data[o + 5]:
+            ov = self._name_addr.get(f"MessageStrings_Bank{bank:02X}_Overflow")
+            if not ov:
+                return None
+            i -= self.data[o + 5]
+            bank, table = ov
+        p = self._u16(bank, table + 2 * i)
+        if not 0x4000 <= p < 0x8000:
+            return None
+        chars = []
+        q = bank * BANK + p - BANK
+        while len(chars) < 80 and self.data[q] != 0xF0:
+            chars.append(gb_text.BYTE_TO_TEXT.get(self.data[q], " "))
+            q += 1
+        words = "".join(chars).split()
+        return " ".join(words[:6]) if words else None
+
     def emit_script(self, bank: int, p: int, sc: dict, out: list[str]) -> None:
         dl = self.dlabels[bank]
         out.append("")
@@ -1752,8 +1784,10 @@ class Rom:
             lab = lambda t: dl.get(t, f"${t:04X}")
             if op == 0xFF:
                 out.append("    script_end")
-            elif op == 0x00:
-                out.append(f"    script_message ${w:04X}")
+            elif op in (0x00, 0xEA, 0xF5):
+                text = self.message_preview(w)
+                macro = f"    script_message ${w:04X}" if op == 0x00 else f"    script_op ${op:02X}, ${arg[0]:02X}, ${arg[1]:02X}"
+                out.append(macro + (f" ; '{text}'" if text else ""))
             elif op == 0x06:
                 out.append(f"    script_skip_if_no {lab(a + 2 + arg[0])}")
             elif op == 0x07:

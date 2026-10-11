@@ -1850,6 +1850,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - Message words are left as numbers, and the command types are not named beyond their handler labels (ScriptCommandXX).
 - Binary verification: build/run152 PASS, 0 differing bytes; tests OK.
 
+### E-0153 — Script messages quoted from their text
+
+- Kind: OBSERVATION (reading of ShowMessageHL's 14-way group dispatch plus the E-0080 string tables; C1).
+- **Lookup.** message_preview in tools/disasm_all.py resolves a message word on ShowMessageHL's normal path:
+  - group = high byte & $3F picks the bank: groups 0-6 → banks $28-$2E, 7 → $2E, 8 → $7C, 9-10 → $80, 11 → $82, 12 → $86, 13 → $89 (from the farcall in each ShowMessageHL_CaseNN);
+  - the low byte indexes MessageStrings_BankBB at $4032 (bank $86: its table at $4016);
+  - at or above the bank's threshold (the `cp` operand at $4005), the index minus the threshold selects the bank's overflow table;
+  - the text is read up to $F0 with the game charmap.
+- **What changed.** 724 `script_message` lines (and the $EA/$F5 message variants) end with a comment quoting the first six words of the message, for example `script_message $0031 ; 'Heh, so these are the newcomers?'`.
+- **Limits.** Bits 6 and 7 of the high byte (window open/close flags, E-0079) are not shown. The other ShowMessageHL path (wCC44 bit 7 set) is not used for the quotes.
+- Binary verification: build/run153 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
