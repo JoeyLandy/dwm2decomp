@@ -2690,6 +2690,24 @@
         }
       ],
       "note": "E-0179 (C1: the packets SGBPacketSetTable points at; each set is one packet here; 21 packets end at $520E)."
+    },
+    {
+      "bank": "3A",
+      "addr": "71B4",
+      "label": "BattleTextPrepTable",
+      "count": 256,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name_targets": "BattleTextPrep",
+          "name_note": "prepares the arguments of battle text",
+          "name": "routine run before battle text D ($0000 = none)",
+          "reason": "battle text preparation routine"
+        }
+      ],
+      "note": "E-0180 (C1: ShowBattleText reads the word $71B4 + 2 * D and, when it is non-zero, calls it (JumpToWordAtHL) before showing string D of category 1 from bank $2F; 256 words up to the first routine at $73B4; 211 are non-zero)."
     }
   ]
 }

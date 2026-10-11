@@ -8353,7 +8353,7 @@ Func_000_2E72:: ; address name
     ret
 
 ; H = string category, L = string index, DE = destination: stores them in wStringDestLo/Hi, wStringCategory and wStringIndex and far-calls CopyStringToBuffer_Bank08, which copies the string with its $F0 terminator to DE (categories 9 and above go to Func_095_465F) (E-0059)
-; 23 call sites from 22 routines (e.g. PauseMenu_Skills_Case03_Case09, PauseMenu_Skills_Case03_Case00, PauseMenu_Items_Case00_Case01, Func_016_53E6_Case11, ...)
+; 24 call sites from 23 routines (e.g. PauseMenu_Skills_Case03_Case09, PauseMenu_Skills_Case03_Case00, PauseMenu_Items_Case00_Case01, Func_016_53E6_Case11, ...)
 ; writes: wStringDestLo, wStringDestHi, wStringCategory, wStringIndex
 CopyStringHLToDE::
 Func_000_2E81:: ; address name
@@ -8454,7 +8454,7 @@ Func_000_2ECF:: ; address name
     ld c, a
     ldh a, [hTemp1]
     ld b, a
-    jp RunBattleActions_Case09_Case04_Sub01
+    jp WriteBCAsDecimalString
 
 Jump_000_2F03::
     ld a, $0F
@@ -8544,9 +8544,9 @@ Jump_000_2F60::
     pop hl
     ret
 
-; only called from RunBattleActions_Case09_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case09_Case04)
-RunBattleActions_Case09_Case04_Sub01::
+; writes BC (below 10,000) as decimal digit bytes at HL without leading zeros, each followed by a $F0 terminator that the next digit overwrites (DivideBCByDE by 1000, 100, 10, then the remainder) (E-0180)
+; 2 call sites from 2 routines (e.g. BattleTextPrep35_Sub01, RunBattleActions_Case09_Case04)
+WriteBCAsDecimalString::
 Func_000_2F84:: ; address name
     ld de, $03E8
     push bc
@@ -8589,7 +8589,7 @@ Jump_000_2FC2::
     ret
 
 ; A = BC / DE by repeated subtraction (the quotient must fit in 8 bits), BC = the remainder; HL kept (E-0078)
-; 6 call sites from 1 routine (e.g. RunBattleActions_Case09_Case04_Sub01)
+; 6 call sites from 1 routine (e.g. WriteBCAsDecimalString)
 DivideBCByDE::
 Func_000_2FC7:: ; address name
     push hl
@@ -8615,7 +8615,7 @@ Jump_000_2FCA::
     ret
 
 ; [HL] = A, HL += 1, [HL] = $F0 (string terminator) (E-0077)
-; 7 call sites from 2 routines (e.g. RunBattleActions_Case09_Case04_Sub01, WriteNumber24AsDecimalString)
+; 7 call sites from 2 routines (e.g. WriteBCAsDecimalString, WriteNumber24AsDecimalString)
 StoreAThenTerminator::
 Func_000_2FDC:: ; address name
     ld [hl+], a
@@ -10701,7 +10701,7 @@ Jump_000_3E50::
     ret
 
 ; A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved
-; 288 call sites from 242 routines (e.g. CheckSlotStatusBlock, FoeHPCheckReadsWrongSlot, CheckFoeStatus7Bit2, CheckLoneFoeHPNotBelowAIDamageEstimates, ...)
+; 289 call sites from 243 routines (e.g. CheckSlotStatusBlock, FoeHPCheckReadsWrongSlot, CheckFoeStatus7Bit2, CheckLoneFoeHPNotBelowAIDamageEstimates, ...)
 ; points at: wBattleSlotOut
 CarryUnlessBattleSlotOutSlotEmpty::
 Func_000_3E54:: ; address name

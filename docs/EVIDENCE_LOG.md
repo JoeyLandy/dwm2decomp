@@ -2155,6 +2155,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The packets' payloads (data sent to SGB RAM) are not interpreted.
 - Binary verification: build/run182 PASS, 0 differing bytes; tests OK.
 
+### E-0180 — Battle text preparation routines
+
+- Kind: OBSERVATION (reading of ShowBattleText, 3A:7193; C1).
+- **Source.** ShowBattleText takes the word at 3A:$71B4 + 2 * D. When it is non-zero it calls it (JumpToWordAtHL), then shows string D of category 1 from bank $2F.
+- **Declared.** BattleTextPrepTable: 256 words up to the first routine at $73B4; 211 are non-zero. It is marked as a code table, so the routines are traced. Each is named BattleTextPrepNN after the first entry that uses it. They copy names (actor, target, item) and numbers into the text buffers before the string is shown.
+- **Also named.** WriteBCAsDecimalString (00:2F84), now reached through those routines. tools/rank_unnamed.py reports 0 again.
+- Binary verification: build/run183 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

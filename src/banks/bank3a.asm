@@ -3715,7 +3715,7 @@ Jump_03A_6619::
     ld c, a
     ld b, $00
     ld hl, wTextBuf0
-    call RunBattleActions_Case09_Case04_Sub01
+    call WriteBCAsDecimalString
     ld hl, wTextBuf0
     ld a, [hl]
     cp a, $01
@@ -5146,50 +5146,578 @@ Jump_03A_71A4::
     farcall BeginStringDisplay_Bank2F
     ret
 
-; address loaded by ShowBattleText
+; E-0180 (C1: ShowBattleText reads the word $71B4 + 2 * D and, when it is non-zero, calls it (JumpToWordAtHL) before showing string D of category 1 from bank $2F; 256 words up to the first routine at $73B4; 211 are non-zero).
+; record: routine run before battle text D ($0000 = none)
+BattleTextPrepTable::
 Data_03A_71B4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0EB1B4, $1C2
-    dw Data_03A_73B4
-    db $B4, $73
-    dw Data_03A_73CB
-    db $CB, $73
-    dw Data_03A_73CB
-    db $B8, $73
-    dw Data_03A_73E0
-    db $E0, $73
-    dw Data_03A_73E0
-    db $E0, $73
-    dw Data_03A_74F7
-    db $F7, $74
-    dw Data_03A_74F7
-    db $F7, $74
-    dw Data_03A_74F7
-    db $F7, $74
-    dw Data_03A_74F7
-    db $FE, $74
-    dw Data_03A_74F7
-    db $F7, $74
-    dw Data_03A_74F7
-    db $F7, $74
-    dw Data_03A_74F7
-    db $F7, $74
-    dw Data_03A_74F7
-    db $F7, $74, $00, $00, $00, $00, $BB, $74, $BB, $74, $00, $00
+    dw BattleTextPrep00 ; id 0
+    dw BattleTextPrep01 ; id 1
+    dw BattleTextPrep01 ; id 2
+    dw BattleTextPrep01 ; id 3
+    dw BattleTextPrep01 ; id 4
+    dw BattleTextPrep01 ; id 5
+    dw BattleTextPrep06 ; id 6
+    dw BattleTextPrep06 ; id 7
+    dw BattleTextPrep00 ; id 8
+    dw BattleTextPrep06 ; id 9
+    dw BattleTextPrep06 ; id 10
+    dw BattleTextPrep06 ; id 11
+    dw BattleTextPrep00 ; id 12
+    dw BattleTextPrep00 ; id 13
+    dw BattleTextPrep00 ; id 14
+    dw BattleTextPrep0F ; id 15
+    dw BattleTextPrep00 ; id 16
+    dw BattleTextPrep00 ; id 17
+    dw BattleTextPrep00 ; id 18
+    dw BattleTextPrep00 ; id 19
+    dw BattleTextPrep00 ; id 20
+    dw BattleTextPrep00 ; id 21
+    dw BattleTextPrep00 ; id 22
+    dw BattleTextPrep00 ; id 23
+    dw BattleTextPrep00 ; id 24
+    dw BattleTextPrep00 ; id 25
+    dw BattleTextPrep00 ; id 26
+    dw BattleTextPrep00 ; id 27
+    dw BattleTextPrep00 ; id 28
+    dw BattleTextPrep00 ; id 29
+    dw BattleTextPrep06 ; id 30
+    dw BattleTextPrep06 ; id 31
+    dw BattleTextPrep06 ; id 32
+    dw BattleTextPrep21 ; id 33
+    dw BattleTextPrep00 ; id 34
+    dw BattleTextPrep00 ; id 35
+    dw BattleTextPrep01 ; id 36
+    dw BattleTextPrep06 ; id 37
+    dw BattleTextPrep00 ; id 38
+    dw BattleTextPrep00 ; id 39
+    dw BattleTextPrep00 ; id 40
+    dw BattleTextPrep00 ; id 41
+    dw BattleTextPrep00 ; id 42
+    dw BattleTextPrep06 ; id 43
+    dw BattleTextPrep00 ; id 44
+    dw BattleTextPrep00 ; id 45
+    dw BattleTextPrep00 ; id 46
+    dw BattleTextPrep00 ; id 47
+    dw BattleTextPrep00 ; id 48
+    dw BattleTextPrep00 ; id 49
+    dw BattleTextPrep00 ; id 50
+    dw BattleTextPrep00 ; id 51
+    dw BattleTextPrep00 ; id 52
+    dw BattleTextPrep35 ; id 53
+    dw BattleTextPrep35 ; id 54
+    dw BattleTextPrep37 ; id 55
+    dw BattleTextPrep37 ; id 56
+    dw BattleTextPrep35 ; id 57
+    dw BattleTextPrep35 ; id 58
+    dw BattleTextPrep37 ; id 59
+    dw BattleTextPrep37 ; id 60
+    dw BattleTextPrep35 ; id 61
+    dw BattleTextPrep35 ; id 62
+    dw BattleTextPrep00 ; id 63
+    dw BattleTextPrep35 ; id 64
+    dw BattleTextPrep37 ; id 65
+    dw BattleTextPrep37 ; id 66
+    dw BattleTextPrep37 ; id 67
+    dw BattleTextPrep37 ; id 68
+    dw BattleTextPrep35 ; id 69
+    dw BattleTextPrep37 ; id 70
+    dw BattleTextPrep37 ; id 71
+    dw BattleTextPrep35 ; id 72
+    dw BattleTextPrep35 ; id 73
+    dw BattleTextPrep37 ; id 74
+    dw BattleTextPrep00 ; id 75
+    dw BattleTextPrep00 ; id 76
+    dw BattleTextPrep4D ; id 77
+    dw BattleTextPrep37 ; id 78
+    dw BattleTextPrep37 ; id 79
+    dw BattleTextPrep37 ; id 80
+    dw BattleTextPrep37 ; id 81
+    dw BattleTextPrep06 ; id 82
+    dw $0000 ; id 83
+    dw BattleTextPrep37 ; id 84
+    dw BattleTextPrep37 ; id 85
+    dw BattleTextPrep37 ; id 86
+    dw BattleTextPrep35 ; id 87
+    dw BattleTextPrep37 ; id 88
+    dw BattleTextPrep37 ; id 89
+    dw BattleTextPrep37 ; id 90
+    dw BattleTextPrep37 ; id 91
+    dw BattleTextPrep37 ; id 92
+    dw BattleTextPrep37 ; id 93
+    dw BattleTextPrep37 ; id 94
+    dw BattleTextPrep37 ; id 95
+    dw BattleTextPrep37 ; id 96
+    dw BattleTextPrep61 ; id 97
+    dw BattleTextPrep37 ; id 98
+    dw BattleTextPrep37 ; id 99
+    dw BattleTextPrep37 ; id 100
+    dw BattleTextPrep37 ; id 101
+    dw BattleTextPrep37 ; id 102
+    dw BattleTextPrep37 ; id 103
+    dw BattleTextPrep37 ; id 104
+    dw $0000 ; id 105
+    dw BattleTextPrep37 ; id 106
+    dw BattleTextPrep37 ; id 107
+    dw BattleTextPrep37 ; id 108
+    dw BattleTextPrep37 ; id 109
+    dw BattleTextPrep37 ; id 110
+    dw BattleTextPrep37 ; id 111
+    dw BattleTextPrep37 ; id 112
+    dw BattleTextPrep37 ; id 113
+    dw $0000 ; id 114
+    dw BattleTextPrep37 ; id 115
+    dw BattleTextPrep37 ; id 116
+    dw BattleTextPrep37 ; id 117
+    dw BattleTextPrep37 ; id 118
+    dw BattleTextPrep37 ; id 119
+    dw BattleTextPrep37 ; id 120
+    dw BattleTextPrep37 ; id 121
+    dw BattleTextPrep37 ; id 122
+    dw BattleTextPrep37 ; id 123
+    dw BattleTextPrep00 ; id 124
+    dw BattleTextPrep00 ; id 125
+    dw BattleTextPrep7E ; id 126
+    dw BattleTextPrep61 ; id 127
+    dw BattleTextPrep37 ; id 128
+    dw $0000 ; id 129
+    dw BattleTextPrep37 ; id 130
+    dw BattleTextPrep37 ; id 131
+    dw BattleTextPrep00 ; id 132
+    dw BattleTextPrep37 ; id 133
+    dw $0000 ; id 134
+    dw BattleTextPrep87 ; id 135
+    dw BattleTextPrep35 ; id 136
+    dw BattleTextPrep35 ; id 137
+    dw BattleTextPrep37 ; id 138
+    dw BattleTextPrep37 ; id 139
+    dw BattleTextPrep00 ; id 140
+    dw BattleTextPrep37 ; id 141
+    dw BattleTextPrep37 ; id 142
+    dw BattleTextPrep37 ; id 143
+    dw BattleTextPrep37 ; id 144
+    dw BattleTextPrep00 ; id 145
+    dw BattleTextPrep92 ; id 146
+    dw BattleTextPrep37 ; id 147
+    dw BattleTextPrep94 ; id 148
+    dw BattleTextPrep95 ; id 149
+    dw BattleTextPrep95 ; id 150
+    dw BattleTextPrep97 ; id 151
+    dw BattleTextPrep00 ; id 152
+    dw BattleTextPrep99 ; id 153
+    dw BattleTextPrep00 ; id 154
+    dw BattleTextPrep97 ; id 155
+    dw BattleTextPrep00 ; id 156
+    dw BattleTextPrep06 ; id 157
+    dw BattleTextPrep37 ; id 158
+    dw BattleTextPrep97 ; id 159
+    dw BattleTextPrepA0 ; id 160
+    dw BattleTextPrep99 ; id 161
+    dw BattleTextPrep99 ; id 162
+    dw BattleTextPrep97 ; id 163
+    dw BattleTextPrep97 ; id 164
+    dw BattleTextPrep97 ; id 165
+    dw BattleTextPrep97 ; id 166
+    dw BattleTextPrep97 ; id 167
+    dw BattleTextPrep00 ; id 168
+    dw BattleTextPrep00 ; id 169
+    dw BattleTextPrepAA ; id 170
+    dw BattleTextPrepAA ; id 171
+    dw $0000 ; id 172
+    dw BattleTextPrep35 ; id 173
+    dw BattleTextPrep35 ; id 174
+    dw BattleTextPrep00 ; id 175
+    dw BattleTextPrepB0 ; id 176
+    dw BattleTextPrep06 ; id 177
+    dw BattleTextPrepAA ; id 178
+    dw BattleTextPrep35 ; id 179
+    dw BattleTextPrepAA ; id 180
+    dw BattleTextPrep37 ; id 181
+    dw BattleTextPrep00 ; id 182
+    dw BattleTextPrep00 ; id 183
+    dw BattleTextPrepB8 ; id 184
+    dw BattleTextPrep00 ; id 185
+    dw BattleTextPrep00 ; id 186
+    dw BattleTextPrep00 ; id 187
+    dw $0000 ; id 188
+    dw BattleTextPrep00 ; id 189
+    dw BattleTextPrepBE ; id 190
+    dw BattleTextPrep00 ; id 191
+    dw $0000 ; id 192
+    dw $0000 ; id 193
+    dw BattleTextPrep37 ; id 194
+    dw BattleTextPrep37 ; id 195
+    dw $0000 ; id 196
+    dw $0000 ; id 197
+    dw $0000 ; id 198
+    dw BattleTextPrep37 ; id 199
+    dw BattleTextPrep37 ; id 200
+    dw BattleTextPrep37 ; id 201
+    dw BattleTextPrepCA ; id 202
+    dw BattleTextPrep37 ; id 203
+    dw $0000 ; id 204
+    dw BattleTextPrep35 ; id 205
+    dw BattleTextPrep37 ; id 206
+    dw BattleTextPrep37 ; id 207
+    dw BattleTextPrep37 ; id 208
+    dw BattleTextPrep37 ; id 209
+    dw BattleTextPrep37 ; id 210
+    dw BattleTextPrep00 ; id 211
+    dw BattleTextPrep37 ; id 212
+    dw BattleTextPrep37 ; id 213
+    dw $0000 ; id 214
+    dw BattleTextPrep37 ; id 215
+    dw BattleTextPrep37 ; id 216
+    dw BattleTextPrep37 ; id 217
+    dw BattleTextPrep00 ; id 218
+    dw BattleTextPrep37 ; id 219
+    dw BattleTextPrep06 ; id 220
+    dw BattleTextPrep37 ; id 221
+    dw BattleTextPrep37 ; id 222
+    dw BattleTextPrep37 ; id 223
+    dw BattleTextPrep00 ; id 224
+    dw BattleTextPrep00 ; id 225
+    dw BattleTextPrep00 ; id 226
+    dw BattleTextPrep01 ; id 227
+    dw BattleTextPrep01 ; id 228
+    dw BattleTextPrep01 ; id 229
+    dw BattleTextPrepE6 ; id 230
+    dw BattleTextPrep37 ; id 231
+    dw BattleTextPrep37 ; id 232
+    dw BattleTextPrep37 ; id 233
+    dw BattleTextPrep37 ; id 234
+    dw BattleTextPrepAA ; id 235
+    dw BattleTextPrepAA ; id 236
+    dw BattleTextPrepAA ; id 237
+    dw BattleTextPrepAA ; id 238
+    dw BattleTextPrepAA ; id 239
+    dw BattleTextPrepAA ; id 240
+    dw BattleTextPrepAA ; id 241
+    dw BattleTextPrepF2 ; id 242
+    dw BattleTextPrepAA ; id 243
+    dw BattleTextPrepAA ; id 244
+    dw BattleTextPrepAA ; id 245
+    dw BattleTextPrepAA ; id 246
+    dw BattleTextPrepAA ; id 247
+    dw BattleTextPrepAA ; id 248
+    dw BattleTextPrepAA ; id 249
+    dw BattleTextPrepAA ; id 250
+    dw $0000 ; id 251
+    dw $0000 ; id 252
+    dw BattleTextPrep95 ; id 253
+    dw BattleTextPrep95 ; id 254
+    dw $0000 ; id 255
 
-Data_03A_73B4:: ; heuristic: target of a monotone pointer table; C0
-    db $CD, $EE, $78, $C9, $FA, $A5, $D8, $FE, $03, $38, $0B, $CD, $E3, $7A, $78, $FE
-    db $01, $20, $03, $CD, $27, $79, $C9
+; prepares the arguments of battle text 00 (entry 0 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep00:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_73B4:: ; address name
+    call CopyActorNameToTextBuf0
+    ret
 
-Data_03A_73CB:: ; heuristic: target of a monotone pointer table; C0
-    db $CD, $EE, $78, $CD, $1A, $79, $C9, $CD, $EE, $78, $CD, $34, $79, $C9, $CD, $27
-    db $79, $CD, $4E, $79, $C9
+; prepares the arguments of battle text E6 (entry 230 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget
+BattleTextPrepE6:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_73B8:: ; address name
+    ld a, [wBattleTarget]
+    cp a, $03
+    jr c, Jump_03A_73CA
+    call ListSideMonsterIdsToWC0A0
+    ld a, b
+    cp a, $01
+    jr nz, Jump_03A_73CA
+    call CopyTargetNameToTextBuf0
 
-Data_03A_73E0:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0EB3E0, $117
+Jump_03A_73CA::
+    ret
 
-Data_03A_74F7:: ; heuristic: target of a monotone pointer table; C0
-    db $CD, $EE, $78, $CD, $08, $79, $C9, $CD, $41, $79, $CD, $EE, $78, $CD, $08, $79
-    db $C9
+; prepares the arguments of battle text 01 (entry 1 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep01:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_73CB:: ; address name
+    call CopyActorNameToTextBuf0
+    call CopyActionSkillNameToTextBuf1
+    ret
+
+; prepares the arguments of battle text 06 (entry 6 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep06:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_73D2:: ; address name
+    call CopyActorNameToTextBuf0
+    call CopyTargetNameToTextBuf1
+    ret
+
+; prepares the arguments of battle text 35 (entry 53 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep35:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_73D9:: ; address name
+    call CopyTargetNameToTextBuf0
+    call BattleTextPrep35_Sub01
+    ret
+
+; prepares the arguments of battle text 37 (entry 55 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep37:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_73E0:: ; address name
+    call CopyTargetNameToTextBuf0
+    ret
+
+; prepares the arguments of battle text B8 (entry 184 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor
+; writes: wBattleTarget
+BattleTextPrepB8:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_73E4:: ; address name
+    call CopyActorNameToTextBuf0
+    ld a, [wBattleActor]
+    and a, $04
+    xor a, $04
+    ld c, a
+    ld b, $03
+
+Jump_03A_73F1::
+    ld a, c
+    call CarryUnlessBattleSlotOutSlotEmpty
+    jr nc, Jump_03A_73FB
+    inc c
+    dec b
+    jr nz, Jump_03A_73F1
+
+Jump_03A_73FB::
+    ld a, c
+    ld [wBattleTarget], a
+    call CopyTargetNameToTextBuf1
+    ld a, [wBattleActor]
+    ld [wBattleTarget], a
+    ret
+
+; prepares the arguments of battle text 21 (entry 33 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wLinkMode, wBattleTarget, wBattleStatResultLo
+; writes: wBattleStatResultLo
+; points at: wTemp0, wPauseMenuStep, wTextBuf0
+BattleTextPrep21:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_7409:: ; address name
+    call CopyActorNameToTextBuf1
+    call ListSideMonsterIdsToWC0A0
+    call ActorOnLocalSide_Bank3A
+    jr c, Jump_03A_7417
+    jp CopyTargetOrSideNameToTextBuf0_77C3
+
+Jump_03A_7417::
+    ld a, [wLinkMode]
+    or a, a
+    jp z, Jump_03A_774F
+    cp a, $02
+    jp z, Jump_03A_774F
+    ret
+
+; prepares the arguments of battle text 0F (entry 15 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wLinkMode, wBattleTarget, wBattleStatResultLo
+; writes: wBattleStatResultLo
+; points at: wTemp0, wPauseMenuStep, wTextBuf0
+BattleTextPrep0F:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_7424:: ; address name
+    call CopyActorNameToTextBuf1
+    ld a, [wLinkMode]
+    cp a, $01
+    jp z, Jump_03A_77C8
+    call ListSideMonsterIdsToWC0A0
+    call TargetOnLocalSide_Bank3A
+    jp c, CopyTargetOrSideNameToTextBuf0_77C3
+    jp Jump_03A_774F
+
+; prepares the arguments of battle text BE (entry 190 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wTextBuf0
+BattleTextPrepBE:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_743B:: ; address name
+    call CopyActorNameToTextBuf0
+    call ListSideMonsterIdsToWC0A0
+    call ActorOnLocalSide_Bank3A
+    ld a, e
+    jr c, Jump_03A_7448
+    ld a, b
+
+Jump_03A_7448::
+    cp a, $01
+    jr nz, Jump_03A_7465
+    ld hl, wTextBuf0
+
+Jump_03A_744F::
+    ld a, [hl+]
+    cp a, $F0
+    jr nz, Jump_03A_744F
+    dec hl
+    ld a, $90
+    ld [hl+], a
+    ld a, $3A
+    ld [hl+], a
+    ld a, $24
+    ld [hl+], a
+    ld a, $36
+    ld [hl+], a
+    ld a, $F0
+    ld [hl], a
+    ret
+
+Jump_03A_7465::
+    call BattleTextPrepBE_Sub01
+    ld a, $90
+    ld [hl+], a
+    ld a, $3A
+    ld [hl+], a
+    ld a, $28
+    ld [hl+], a
+    ld a, $35
+    ld [hl+], a
+    ld a, $28
+    ld [hl+], a
+    ld a, $F0
+    ld [hl], a
+    ret
+
+; prepares the arguments of battle text 4D (entry 77 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wLinkMode, wBattleTarget, wBattleStatResultLo
+; writes: wBattleStatResultLo
+; points at: wTemp0, wPauseMenuStep, wTextBuf0
+BattleTextPrep4D:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_747B:: ; address name
+    call ListSideMonsterIdsToWC0A0
+    call TargetOnLocalSide_Bank3A
+    jp c, CopyTargetOrSideNameToTextBuf0_77C3
+    ld a, [wLinkMode]
+    cp a, $01
+    jp z, Jump_03A_77C8
+    jp Jump_03A_774F
+
+; prepares the arguments of battle text 61 (entry 97 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep61:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_748F:: ; address name
+    call CopyTargetNameToTextBuf0
+    ret
+
+; prepares the arguments of battle text 7E (entry 126 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep7E:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_7493:: ; address name
+    call CopyTargetNameToTextBuf0
+    call CopyActionSkillNameToTextBuf1
+    ret
+
+; prepares the arguments of battle text 87 (entry 135 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep87:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_749A:: ; address name
+    call CopyActionItemNameToTextBuf2
+    ret
+
+; prepares the arguments of battle text A0 (entry 160 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrepA0:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_749E:: ; address name
+    call CopyPlayerNameToTextBuf0
+    call CopyTargetNameToTextBuf1
+    call CopyActionItemNameToTextBuf2
+    ret
+
+; prepares the arguments of battle text 94 (entry 148 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget, wBattleStatResultLo
+; writes: wBattleStatResultLo
+; points at: wTemp0, wPauseMenuStep, wTextBuf0
+BattleTextPrep94:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74A8:: ; address name
+    call CopyPlayerNameToTextBuf1
+    call CopyActionItemNameToTextBuf2
+    call ListSideMonsterIdsToWC0A0
+    call TargetOnLocalSide_Bank3A
+    jp nc, Jump_03A_774F
+    call CopyTargetNameToTextBuf0
+    ret
+
+; prepares the arguments of battle text 95 (entry 149 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget, wBattleStatResultLo
+; writes: wBattleStatResultLo
+; points at: wTemp0, wPauseMenuStep, wTextBuf0
+BattleTextPrep95:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74BB:: ; address name
+    call CopyPlayerNameToTextBuf1
+    call ListSideMonsterIdsToWC0A0
+    call TargetOnLocalSide_Bank3A
+    jp nc, Jump_03A_774F
+    call CopyTargetNameToTextBuf0
+    ret
+
+; prepares the arguments of battle text 97 (entry 151 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep97:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74CB:: ; address name
+    call CopyPlayerNameToTextBuf0
+    call CopyActionItemNameToTextBuf2
+    ret
+
+; prepares the arguments of battle text 99 (entry 153 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrep99:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74D2:: ; address name
+    call CopyPlayerNameToTextBuf0
+    ret
+
+; prepares the arguments of battle text 92 (entry 146 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleByteAD
+; points at: wTextBuf1
+BattleTextPrep92:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74D6:: ; address name
+    ld a, [wBattleByteAD]
+    ld l, a
+    ld h, $04
+    ld de, wTextBuf1
+    call CopyStringHLToDE
+    ret
+
+; prepares the arguments of battle text B0 (entry 176 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrepB0:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74E3:: ; address name
+    call CopyActionSkillNameToTextBuf1
+    ret
+
+; prepares the arguments of battle text CA (entry 202 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDefeatByteD1
+; writes: wNameSlot
+; points at: wTextBuf1
+BattleTextPrepCA:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74E7:: ; address name
+    call CopyTargetNameToTextBuf0
+    ld a, [wDefeatByteD1]
+    ld hl, wTextBuf1
+    ld [wNameSlot], a
+    call CopySlotNameToHL
+    ret
+
+; prepares the arguments of battle text AA (entry 170 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrepAA:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74F7:: ; address name
+    call CopyActorNameToTextBuf0
+    call CopyMappedSlotNameToTextBuf1
+    ret
+
+; prepares the arguments of battle text F2 (entry 242 of BattleTextPrepTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleTextPrepF2:: ; code pointer of the table BattleTextPrepTable; C0
+Func_03A_74FE:: ; address name
+    call CopyTargetNameToTextBuf2
+    call CopyActorNameToTextBuf0
+    call CopyMappedSlotNameToTextBuf1
+    ret
 
 ; copies the actor, skill and target names to wC130/wC140/wC150 and picks the action message from Data_03A_7603 (or special messages $49-$4C) (E-0129)
 ; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, Func_032_4ADC_Case01_Case00, Func_032_4ADC_Case01_Case03, Func_032_5820_Case01)
@@ -5376,6 +5904,8 @@ Call774CWithBattleFoeCount_Sub01::
 Func_03A_774C:: ; address name
     ldh a, [hTemp0]
     ld b, a
+
+Jump_03A_774F::
     ld a, b
     cp a, $01
     jr z, Jump_03A_77CF
@@ -5458,18 +5988,23 @@ Jump_03A_7784::
 
 Jump_03A_77BE::
     call CopyTargetNameToTextBuf0
-    jr Jump_03A_77CB
+    jr BattleTextPrepBE_Sub01
 
 ; E = 1: copies the target's name to wC130; otherwise the target side's name followed by the word 'monsters' (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-CopyTargetOrSideNameToTextBuf0_77C3:: ; heuristic: follows a terminator; C0
-Func_03A_77C3:: ; address name
+CopyTargetOrSideNameToTextBuf0_77C3::
+Jump_03A_77C3:: ; address name
     ld a, e
     cp a, $01
     jr z, Jump_03A_77CF
+
+Jump_03A_77C8::
     call CopyTargetSideNameToTextBuf0
 
-Jump_03A_77CB::
+; only called from BattleTextPrepBE (E-0047)
+; 1 call site from 1 routine (e.g. BattleTextPrepBE)
+BattleTextPrepBE_Sub01::
+Func_03A_77CB:: ; address name
     call WriteMonstersWordToTextBuf0
     ret
 
@@ -5706,7 +6241,7 @@ Jump_03A_78EA::
     ret
 
 ; wD86C = wBattleActor, then CopySlotNameToHL with HL = wC130 (E-0113)
-; 3 call sites from 2 routines (e.g. BuildActionMessageNames, ShowSpecialActionMessage)
+; 10 call sites from 9 routines (e.g. BattleTextPrepF2, BattleTextPrepBE, BattleTextPrepB8, BattleTextPrepAA, ...)
 ; reads: wBattleActor
 ; writes: wNameSlot
 ; points at: wTextBuf0
@@ -5719,11 +6254,11 @@ Func_03A_78EE:: ; address name
     ret
 
 ; wD86C = wBattleActor, then CopySlotNameToHL with HL = wC140 (E-0116)
-; no direct call (reached through a table, a jump or a vector)
+; 2 call sites from 2 routines (e.g. BattleTextPrep21, BattleTextPrep0F)
 ; reads: wBattleActor
 ; writes: wNameSlot
 ; points at: wTextBuf1
-CopyActorNameToTextBuf1:: ; heuristic: follows a terminator; C0
+CopyActorNameToTextBuf1::
 Func_03A_78FB:: ; address name
     ld a, [wBattleActor]
     ld hl, wTextBuf1
@@ -5732,7 +6267,7 @@ Func_03A_78FB:: ; address name
     ret
 
 ; far-calls Func_0A3_414F (which maps the actor to a slot in hFFC6), then copies that slot's name to wC140 (CopySlotNameToHL) (E-0113)
-; 2 call sites from 2 routines (e.g. BuildActionMessageNames, ShowSpecialActionMessage)
+; 4 call sites from 4 routines (e.g. BattleTextPrepF2, BattleTextPrepAA, BuildActionMessageNames, ShowSpecialActionMessage)
 ; reads: hTemp0
 ; writes: wNameSlot
 ; points at: wTextBuf1
@@ -5746,7 +6281,7 @@ Func_03A_7908:: ; address name
     ret
 
 ; copies string wBattleActionId of category 4 (skill names) to wC140 (CopyStringHLToDE) (E-0116)
-; 1 call site from 1 routine (e.g. BuildActionMessageNames)
+; 4 call sites from 4 routines (e.g. BattleTextPrepB0, BattleTextPrep7E, BattleTextPrep01, BuildActionMessageNames)
 ; reads: wBattleActionId
 ; points at: wTextBuf1
 CopyActionSkillNameToTextBuf1::
@@ -5759,7 +6294,7 @@ Func_03A_791A:: ; address name
     ret
 
 ; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC130 (E-0077)
-; 6 call sites from 6 routines (e.g. Call774CWithBattleFoeCount_Sub01, CopyTargetOrSideNameToTextBuf0_77C3, CheckAllTargetsSame, CopyTargetOrSideNameToTextBuf0_784A, ...)
+; 14 call sites from 14 routines (e.g. BattleTextPrepE6, BattleTextPrepCA, BattleTextPrep95, Call774CWithBattleFoeCount_Sub01, ...)
 ; reads: wBattleTarget
 ; writes: wNameSlot
 ; points at: wTextBuf0
@@ -5772,11 +6307,11 @@ Func_03A_7927:: ; address name
     ret
 
 ; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC140 (E-0116)
-; no direct call (reached through a table, a jump or a vector)
+; 3 call sites from 3 routines (e.g. BattleTextPrepB8, BattleTextPrepA0, BattleTextPrep06)
 ; reads: wBattleTarget
 ; writes: wNameSlot
 ; points at: wTextBuf1
-CopyTargetNameToTextBuf1:: ; heuristic: follows a terminator; C0
+CopyTargetNameToTextBuf1::
 Func_03A_7934:: ; address name
     ld a, [wBattleTarget]
     ld hl, wTextBuf1
@@ -5785,18 +6320,31 @@ Func_03A_7934:: ; address name
     ret
 
 ; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC150 (E-0116)
-; no direct call (reached through a table, a jump or a vector)
+; 1 call site from 1 routine (e.g. BattleTextPrepF2)
 ; reads: wBattleTarget
 ; writes: wNameSlot
 ; points at: wTextBuf2
-CopyTargetNameToTextBuf2:: ; heuristic: follows a terminator; C0
+CopyTargetNameToTextBuf2::
 Func_03A_7941:: ; address name
     ld a, [wBattleTarget]
     ld hl, wTextBuf2
     ld [wNameSlot], a
     call CopySlotNameToHL
     ret
-    db $21, $40, $C1, $FA, $72, $D8, $4F, $FA, $73, $D8, $47, $CD, $84, $2F, $C9
+
+; only called from BattleTextPrep35 (E-0047)
+; 1 call site from 1 routine (e.g. BattleTextPrep35)
+; reads: wBattleDamageLo, wBattleDamageHi
+; points at: wTextBuf1
+BattleTextPrep35_Sub01::
+Func_03A_794E:: ; address name
+    ld hl, wTextBuf1
+    ld a, [wBattleDamageLo]
+    ld c, a
+    ld a, [wBattleDamageHi]
+    ld b, a
+    call WriteBCAsDecimalString
+    ret
 
 ; wD86C = wBattleTarget & 4 (the first slot of the target's side), then CopySlotNameToHL with HL = wC130 (E-0113)
 ; 3 call sites from 3 routines (e.g. CopyTargetOrSideNameToTextBuf0_77C3, CopyTargetOrSideNameToTextBuf0_784A, CopyTargetOrSideNameToTextBuf0_78DE)
@@ -5813,9 +6361,9 @@ Func_03A_795D:: ; address name
     ret
 
 ; copies the name at wC60C (5 glyphs, CopyFiveGlyphsPlusMarks) to wC130 (E-0116)
-; no direct call (reached through a table, a jump or a vector)
+; 3 call sites from 3 routines (e.g. BattleTextPrepA0, BattleTextPrep99, BattleTextPrep97)
 ; points at: wPlayerName, wTextBuf0
-CopyPlayerNameToTextBuf0:: ; heuristic: follows a terminator; C0
+CopyPlayerNameToTextBuf0::
 Func_03A_796C:: ; address name
     ld de, wPlayerName
     ld hl, wTextBuf0
@@ -5823,9 +6371,9 @@ Func_03A_796C:: ; address name
     ret
 
 ; copies the name at wC60C (5 glyphs) to wC140 (E-0116)
-; no direct call (reached through a table, a jump or a vector)
+; 2 call sites from 2 routines (e.g. BattleTextPrep95, BattleTextPrep94)
 ; points at: wPlayerName, wTextBuf1
-CopyPlayerNameToTextBuf1:: ; heuristic: follows a terminator; C0
+CopyPlayerNameToTextBuf1::
 Func_03A_7976:: ; address name
     ld de, wPlayerName
     ld hl, wTextBuf1
@@ -5833,10 +6381,10 @@ Func_03A_7976:: ; address name
     ret
 
 ; copies string wBattleActionId of category 5 (item names) to wC150 (CopyStringHLToDE) (E-0116)
-; no direct call (reached through a table, a jump or a vector)
+; 4 call sites from 4 routines (e.g. BattleTextPrepA0, BattleTextPrep97, BattleTextPrep94, BattleTextPrep87)
 ; reads: wBattleActionId
 ; points at: wTextBuf2
-CopyActionItemNameToTextBuf2:: ; heuristic: follows a terminator; C0
+CopyActionItemNameToTextBuf2::
 Func_03A_7980:: ; address name
     ld a, [wBattleActionId]
     ld l, a
@@ -5860,7 +6408,7 @@ Func_03A_798D:: ; address name
     ret
 
 ; A = battle slot: slots 0-2 go to CopyBattlerNameToHL; other slots take paths that check slot 3/7, wC58A and wDAD4 (not fully read) (E-0077)
-; 10 call sites from 10 routines (e.g. RunBattleSetup_Shared06_Sub01, BuildActionMessageNames, CopyActorNameToTextBuf0, CopyMappedSlotNameToTextBuf1, ...)
+; 11 call sites from 11 routines (e.g. CopyMappedSlotNameToTextBuf1, CopyActorNameToTextBuf0, CopyTargetNameToTextBuf2, CopyTargetNameToTextBuf0, ...)
 ; reads: wLinkMode, wNameSlot
 ; writes: wBattleArg1
 ; points at: wSlotNameBytes
@@ -6127,7 +6675,7 @@ Jump_03A_7ADD::
     ret
 
 ; clears wC0A0 ($10 bytes) and lists the species ids of the occupied slots of the shown side at wC0A0 and of the other side at wC0A8 (E-0129)
-; 6 call sites from 5 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, GroupTargetsBySpeciesToSpeciesGroups, ApplyTargetBattleWordArray3FReduction, ...)
+; 13 call sites from 12 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, BattleTextPrepE6, BattleTextPrepBE, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wTemp0, wBattleMonsterId, wPauseMenuStep
 ListSideMonsterIdsToWC0A0::
@@ -6249,7 +6797,7 @@ Jump_03A_7B77::
     ret
 
 ; writes the glyphs of 'Monsters' (decoded with the charmap) and $F0 to wC130 (E-0113)
-; 3 call sites from 3 routines (e.g. CopyTargetOrSideNameToTextBuf0_77C3, CopyTargetOrSideNameToTextBuf0_784A, CopyTargetOrSideNameToTextBuf0_78DE)
+; 3 call sites from 3 routines (e.g. BattleTextPrepBE_Sub01, CopyTargetOrSideNameToTextBuf0_784A, CopyTargetOrSideNameToTextBuf0_78DE)
 ; points at: wTextBuf0
 WriteMonstersWordToTextBuf0::
 Func_03A_7B82:: ; address name
@@ -6431,7 +6979,7 @@ Func_03A_7C93:: ; address name
     ret
 
 ; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
-; 2 call sites from 2 routines (e.g. SelectEffectByEffectFlags2Flags, SelectEffectByEffectFlags)
+; 4 call sites from 4 routines (e.g. SelectEffectByEffectFlags2Flags, SelectEffectByEffectFlags, BattleTextPrepBE, BattleTextPrep21)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank3A::
 Func_03A_7C9A:: ; address name
@@ -6452,7 +7000,7 @@ Jump_03A_7CAF::
     ret
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
-; 4 call sites from 3 routines (e.g. SelectEffectByEffectFlags, RunDefeatStepMinus1Step_Case01, RunDefeatStepMinus1Step_Case00)
+; 8 call sites from 7 routines (e.g. SelectEffectByEffectFlags, BattleTextPrep95, BattleTextPrep94, BattleTextPrep4D, ...)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank3A::
 Func_03A_7CB5:: ; address name
