@@ -1337,6 +1337,86 @@
         }
       ],
       "note": "E-0141 (C1: Func_061_4472_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes)."
+    },
+    {
+      "bank": "04",
+      "addr": "43AC",
+      "label": "FieldSpriteGraphicsTable",
+      "count": 80,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "target_bank": "7D",
+          "stream": true,
+          "name": "compressed sprite graphics in bank $7D",
+          "reason": "field sprite graphics stream"
+        }
+      ],
+      "note": "E-0143 (C1: DecompressGraphicsHFFC6ToHFFCA with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode)."
+    },
+    {
+      "bank": "04",
+      "addr": "444C",
+      "label": "FieldSpriteGraphicsTable50",
+      "count": 18,
+      "id_base": 80,
+      "fields": [
+        {
+          "type": "ptr",
+          "target_bank": "7E",
+          "stream": true,
+          "name": "compressed sprite graphics in bank $7E",
+          "reason": "field sprite graphics stream"
+        }
+      ],
+      "note": "E-0143 (C1: DecompressGraphicsHFFC6ToHFFCA with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61."
+    },
+    {
+      "bank": "04",
+      "addr": "4A46",
+      "label": "FieldSpritePaletteIndex",
+      "count": 98,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "palette number in FieldSpritePalettes"
+        }
+      ],
+      "note": "E-0143 (C1: on CGB, with hFFC8 non-zero, DecompressGraphicsHFFC6ToHFFCA reads the byte $4A46 + hFFC6 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hFFC9; values 0-20)."
+    },
+    {
+      "bank": "7E",
+      "addr": "4B15",
+      "label": "FieldSpritePalettes",
+      "count": 21,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB OBJ palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0143 (C1: the palettes FieldSpritePaletteIndex selects; DecompressGraphicsHFFC6ToHFFCA copies one to wOBJPaletteBuffer + 8 * hFFC9)."
+    },
+    {
+      "bank": "27",
+      "addr": "7328",
+      "label": "MonsterSpritePalettes",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB OBJ palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0143 (C1: on CGB, with hFFC8 = 0, DecompressGraphicsHFFC6ToHFFCA copies the 8 bytes at 27:$7328 + 8 * monster id to wOBJPaletteBuffer + 8 * hFFC9; the count matches MonsterSpriteTable)."
     }
   ]
 }

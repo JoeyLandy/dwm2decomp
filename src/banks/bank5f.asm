@@ -2213,7 +2213,7 @@ Jump_05F_73E6::
 Jump_05F_7402::
     ld a, $72
     call QueueSoundEffect
-    ld de, Data_07D_7AD4
+    ld de, FieldSpriteGfx49
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
@@ -2493,7 +2493,7 @@ Jump_05F_75D2:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
-    ld de, Data_07D_41E1
+    ld de, FieldSpriteGfx02
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM

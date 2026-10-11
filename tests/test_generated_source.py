@@ -275,7 +275,9 @@ class DecompressCallSites(unittest.TestCase):
             for i, l in enumerate(ls[1:], 1):
                 if ls[i - 1].startswith("; LZSS-compressed asset"):
                     stream_labels.add(l.split("::")[0])
-        ld_de = re.compile(r"\s+ld de, (Data_[0-9A-F]{3}_[0-9A-F]{4})$")
+                    if i + 1 < len(ls) and ls[i + 1].endswith(":: ; address name"):
+                        stream_labels.add(ls[i + 1].split("::")[0])  # named streams keep the address name (E-0138)
+        ld_de = re.compile(r"\s+ld de, ([A-Za-z_]\w*)$")
         sites = bad = 0
         for f in sorted(BANKS.glob("bank*.asm")):
             lines = f.read_text(encoding="utf-8").splitlines()

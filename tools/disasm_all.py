@@ -778,7 +778,7 @@ class Rom:
                     q += sz
                 for fi, f in enumerate(fields):
                     if f.get("stream"):
-                        tb = vals[f["bank_from"]] if "bank_from" in f else t["bank"]
+                        tb = vals[f["bank_from"]] if "bank_from" in f else int(f.get("target_bank", "%X" % t["bank"]), 16)
                         from_tables += register(tb, vals[fi], f.get("reason", "stream named by a table field"))
         log(f"compressed assets from table fields: {from_tables} new streams")
 
@@ -1378,7 +1378,7 @@ class Rom:
                 for fi, f in enumerate(fields):
                     if f["type"] != "ptr":
                         continue
-                    tb = vals[f["bank_from"]] if "bank_from" in f else bank
+                    tb = vals[f["bank_from"]] if "bank_from" in f else int(f.get("target_bank", "%X" % bank), 16)
                     tgt = vals[fi]
                     if f.get("name_targets") and tgt and (tb, tgt) not in self.names and tgt in self.insn[tb] and not (
                             f.get("name_unique_only") and sum(
@@ -1511,7 +1511,7 @@ class Rom:
                     pass  # emitted by the `dfar` of the pointer before it
                 elif f["type"] == "ptr":
                     flush()
-                    tb = vals[f["bank_from"]] if "bank_from" in f else bank
+                    tb = vals[f["bank_from"]] if "bank_from" in f else int(f.get("target_bank", "%X" % bank), 16)
                     tgt = vals[fi]
                     nm = self.table_at[(tb, tgt)]["label"] if (tb, tgt) in self.table_at else None
                     nm = nm or self.dlabels.get(tb, {}).get(tgt)

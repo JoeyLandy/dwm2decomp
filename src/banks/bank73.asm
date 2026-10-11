@@ -8179,7 +8179,7 @@ Jump_073_711D::
 Jump_073_7138::
     ld a, $72
     call QueueSoundEffect
-    ld de, Data_07D_7AD4
+    ld de, FieldSpriteGfx49
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM

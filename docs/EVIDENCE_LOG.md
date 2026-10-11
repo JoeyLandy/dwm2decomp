@@ -1696,6 +1696,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The two conditional header bytes and wMapHeaderByte7 are named by their stores only.
 - Binary verification: build/run142 PASS, 0 differing bytes; tests OK.
 
+### E-0143 — Field sprite graphics and the sprite palettes
+
+- Kind: OBSERVATION (reading of DecompressGraphicsHFFC6ToHFFCA 04:431F, plus decoding; C1).
+- **Graphics.** With hFFC8 non-zero, the routine reads the word $43AC + 2 * graphics number in bank $04 and decompresses it from bank $7D, or from bank $7E for numbers $50 and up.
+  - The 98 words decode as streams; the word after them does not.
+  - The generator had shown these bytes as an INCBIN slice and stray `dw`s, one of them a message label.
+- **Palettes (on CGB).**
+  - Monster sprites (hFFC8 = 0): the 8 bytes at 27:$7328 + 8 * monster id.
+  - Field sprites: the 8 bytes at 7E:$4B15 + 8 * (the byte at 04:$4A46 + number). The index bytes take values 0-20.
+  - Either way the palette goes to wOBJPaletteBuffer + 8 * hFFC9.
+- **What changed.**
+  - FieldSpriteGraphicsTable ($00-$4F) and FieldSpriteGraphicsTable50 ($50-$61) are declared. A new pointer option `target_bank` gives a fixed target bank.
+  - Also declared: FieldSpritePaletteIndex, FieldSpritePalettes (21) and MonsterSpritePalettes (384, with monster names).
+  - The streams are named FieldSpriteGfxNN.
+  - The DecompressCallSites test now accepts named stream labels.
+- **Limits.** Which character each field sprite number shows is not read.
+- Binary verification: build/run143 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

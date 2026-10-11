@@ -565,15 +565,114 @@ Jump_004_4396::
     ld c, $08
     call CopyFromBank
     ret
-    INCBIN "dwm2-cobi-us.gbc", $0103AC, $86
-    dw $7594
-    dw $764F
-    dw Msg01CE_ThisIsAGreat
-    dw $77BF
-    db $FC, $77, $75, $79, $D4, $7A, $8D, $7B, $D0, $7B, $84, $7C, $75, $7D, $2D, $7E
-    db $07, $7F, $01, $40, $D7, $40, $B1, $41, $7C, $42, $53, $43, $C6, $44, $89, $45
-    db $E3, $45, $99, $46, $D8, $46, $FF, $46, $34, $47, $73, $47, $32, $48, $5F, $48
-    db $D6, $48, $BD, $49, $D7, $4A
+
+; E-0143 (C1: DecompressGraphicsHFFC6ToHFFCA with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode).
+; record: compressed sprite graphics in bank $7D
+FieldSpriteGraphicsTable::
+Data_004_43AC:: ; heuristic: start of a structured table; C0
+    dw FieldSpriteGfx00 ; id 0
+    dw FieldSpriteGfx01 ; id 1
+    dw FieldSpriteGfx02 ; id 2
+    dw FieldSpriteGfx03 ; id 3
+    dw FieldSpriteGfx04 ; id 4
+    dw FieldSpriteGfx05 ; id 5
+    dw FieldSpriteGfx06 ; id 6
+    dw FieldSpriteGfx07 ; id 7
+    dw FieldSpriteGfx08 ; id 8
+    dw FieldSpriteGfx09 ; id 9
+    dw FieldSpriteGfx0A ; id 10
+    dw FieldSpriteGfx0B ; id 11
+    dw FieldSpriteGfx0C ; id 12
+    dw FieldSpriteGfx0D ; id 13
+    dw FieldSpriteGfx0E ; id 14
+    dw FieldSpriteGfx0F ; id 15
+    dw FieldSpriteGfx10 ; id 16
+    dw FieldSpriteGfx11 ; id 17
+    dw FieldSpriteGfx12 ; id 18
+    dw FieldSpriteGfx13 ; id 19
+    dw FieldSpriteGfx14 ; id 20
+    dw FieldSpriteGfx15 ; id 21
+    dw FieldSpriteGfx16 ; id 22
+    dw FieldSpriteGfx17 ; id 23
+    dw FieldSpriteGfx18 ; id 24
+    dw FieldSpriteGfx19 ; id 25
+    dw FieldSpriteGfx1A ; id 26
+    dw FieldSpriteGfx1B ; id 27
+    dw FieldSpriteGfx1C ; id 28
+    dw FieldSpriteGfx1D ; id 29
+    dw FieldSpriteGfx1E ; id 30
+    dw FieldSpriteGfx1F ; id 31
+    dw FieldSpriteGfx20 ; id 32
+    dw FieldSpriteGfx21 ; id 33
+    dw FieldSpriteGfx22 ; id 34
+    dw FieldSpriteGfx23 ; id 35
+    dw FieldSpriteGfx24 ; id 36
+    dw FieldSpriteGfx25 ; id 37
+    dw FieldSpriteGfx26 ; id 38
+    dw FieldSpriteGfx27 ; id 39
+    dw FieldSpriteGfx28 ; id 40
+    dw FieldSpriteGfx29 ; id 41
+    dw FieldSpriteGfx2A ; id 42
+    dw FieldSpriteGfx2B ; id 43
+    dw FieldSpriteGfx2C ; id 44
+    dw FieldSpriteGfx2D ; id 45
+    dw FieldSpriteGfx2E ; id 46
+    dw FieldSpriteGfx2F ; id 47
+    dw FieldSpriteGfx30 ; id 48
+    dw FieldSpriteGfx31 ; id 49
+    dw FieldSpriteGfx32 ; id 50
+    dw FieldSpriteGfx33 ; id 51
+    dw FieldSpriteGfx34 ; id 52
+    dw FieldSpriteGfx35 ; id 53
+    dw FieldSpriteGfx36 ; id 54
+    dw FieldSpriteGfx37 ; id 55
+    dw FieldSpriteGfx38 ; id 56
+    dw FieldSpriteGfx39 ; id 57
+    dw FieldSpriteGfx3A ; id 58
+    dw FieldSpriteGfx3B ; id 59
+    dw FieldSpriteGfx3C ; id 60
+    dw FieldSpriteGfx3D ; id 61
+    dw FieldSpriteGfx3E ; id 62
+    dw FieldSpriteGfx3F ; id 63
+    dw FieldSpriteGfx40 ; id 64
+    dw FieldSpriteGfx41 ; id 65
+    dw FieldSpriteGfx42 ; id 66
+    dw FieldSpriteGfx43 ; id 67
+    dw FieldSpriteGfx44 ; id 68
+    dw FieldSpriteGfx45 ; id 69
+    dw FieldSpriteGfx46 ; id 70
+    dw FieldSpriteGfx47 ; id 71
+    dw FieldSpriteGfx48 ; id 72
+    dw FieldSpriteGfx49 ; id 73
+    dw FieldSpriteGfx4A ; id 74
+    dw FieldSpriteGfx4B ; id 75
+    dw FieldSpriteGfx4C ; id 76
+    dw FieldSpriteGfx4D ; id 77
+    dw FieldSpriteGfx4E ; id 78
+    dw FieldSpriteGfx4F ; id 79
+
+; E-0143 (C1: DecompressGraphicsHFFC6ToHFFCA with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61.
+; record: compressed sprite graphics in bank $7E
+FieldSpriteGraphicsTable50::
+Data_004_444C:: ; heuristic: start of a structured table; C0
+    dw FieldSpriteGfx50 ; id 80
+    dw FieldSpriteGfx51 ; id 81
+    dw FieldSpriteGfx52 ; id 82
+    dw FieldSpriteGfx53 ; id 83
+    dw FieldSpriteGfx54 ; id 84
+    dw FieldSpriteGfx55 ; id 85
+    dw FieldSpriteGfx56 ; id 86
+    dw FieldSpriteGfx57 ; id 87
+    dw FieldSpriteGfx58 ; id 88
+    dw FieldSpriteGfx59 ; id 89
+    dw FieldSpriteGfx5A ; id 90
+    dw FieldSpriteGfx5B ; id 91
+    dw FieldSpriteGfx5C ; id 92
+    dw FieldSpriteGfx5D ; id 93
+    dw FieldSpriteGfx5E ; id 94
+    dw FieldSpriteGfx5F ; id 95
+    dw FieldSpriteGfx60 ; id 96
+    dw FieldSpriteGfx61 ; id 97
 
 ; sets bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (the counterpart of ClearBit1OfPlayerAndObjectFlags; RunMessageBox calls them around a message) (E-0120)
 ; 11 call sites from 11 routines (e.g. OpenFieldMenuOnA, ScriptCommand09_Case00, RunMessageBox_Bank12_Case00, RunMessageBoxStateIfActive_Bank12_Case00, ...)
@@ -1666,7 +1765,109 @@ Jump_004_4A43::
     xor a, a
     pop bc
     ret
-    INCBIN "dwm2-cobi-us.gbc", $010A46, $62
+
+; E-0143 (C1: on CGB, with hFFC8 non-zero, DecompressGraphicsHFFC6ToHFFCA reads the byte $4A46 + hFFC6 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hFFC9; values 0-20).
+; record: palette number in FieldSpritePalettes
+FieldSpritePaletteIndex::
+Data_004_4A46:: ; heuristic: start of a structured table; C0
+    db $12 ; id 0
+    db $13 ; id 1
+    db $06 ; id 2
+    db $07 ; id 3
+    db $02 ; id 4
+    db $01 ; id 5
+    db $04 ; id 6
+    db $07 ; id 7
+    db $03 ; id 8
+    db $06 ; id 9
+    db $03 ; id 10
+    db $01 ; id 11
+    db $05 ; id 12
+    db $07 ; id 13
+    db $01 ; id 14
+    db $00 ; id 15
+    db $01 ; id 16
+    db $07 ; id 17
+    db $03 ; id 18
+    db $04 ; id 19
+    db $06 ; id 20
+    db $04 ; id 21
+    db $01 ; id 22
+    db $03 ; id 23
+    db $03 ; id 24
+    db $07 ; id 25
+    db $04 ; id 26
+    db $07 ; id 27
+    db $02 ; id 28
+    db $07 ; id 29
+    db $07 ; id 30
+    db $06 ; id 31
+    db $03 ; id 32
+    db $06 ; id 33
+    db $02 ; id 34
+    db $02 ; id 35
+    db $02 ; id 36
+    db $02 ; id 37
+    db $02 ; id 38
+    db $02 ; id 39
+    db $01 ; id 40
+    db $03 ; id 41
+    db $06 ; id 42
+    db $03 ; id 43
+    db $01 ; id 44
+    db $08 ; id 45
+    db $08 ; id 46
+    db $08 ; id 47
+    db $08 ; id 48
+    db $04 ; id 49
+    db $00 ; id 50
+    db $03 ; id 51
+    db $07 ; id 52
+    db $04 ; id 53
+    db $01 ; id 54
+    db $02 ; id 55
+    db $07 ; id 56
+    db $06 ; id 57
+    db $07 ; id 58
+    db $07 ; id 59
+    db $03 ; id 60
+    db $02 ; id 61
+    db $01 ; id 62
+    db $07 ; id 63
+    db $00 ; id 64
+    db $06 ; id 65
+    db $02 ; id 66
+    db $07 ; id 67
+    db $05 ; id 68
+    db $07 ; id 69
+    db $11 ; id 70
+    db $0A ; id 71
+    db $0B ; id 72
+    db $06 ; id 73
+    db $05 ; id 74
+    db $01 ; id 75
+    db $04 ; id 76
+    db $02 ; id 77
+    db $01 ; id 78
+    db $06 ; id 79
+    db $06 ; id 80
+    db $02 ; id 81
+    db $03 ; id 82
+    db $06 ; id 83
+    db $0C ; id 84
+    db $0D ; id 85
+    db $0E ; id 86
+    db $02 ; id 87
+    db $09 ; id 88
+    db $04 ; id 89
+    db $0F ; id 90
+    db $10 ; id 91
+    db $02 ; id 92
+    db $00 ; id 93
+    db $02 ; id 94
+    db $03 ; id 95
+    db $00 ; id 96
+    db $14 ; id 97
 
 ; hFF8B = sprite mode from story flags $19F, $25 and 2 and bit 3 of hFF8C, then loads the matching player and follower sprite graphics (E-0128)
 ; 32 call sites from 32 routines (e.g. InitFieldScreen, RunWC8C7Phase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)

@@ -4128,7 +4128,7 @@ Jump_00F_5B2C:: ; address name
 ; points at: wScriptStep
 ScriptCommand66_Run_Case0A::
 Jump_00F_5B3B:: ; address name
-    ld de, Data_07D_4C21
+    ld de, FieldSpriteGfx0F
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
@@ -6480,7 +6480,7 @@ Jump_00F_69A6:: ; address name
     ld b, $38
     call StepWC921Counter_Bank0F
     ret nc
-    ld de, Data_07D_42BD
+    ld de, FieldSpriteGfx03
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
@@ -6951,7 +6951,7 @@ Jump_00F_6C77::
     ld [wObject1 + $7], a
     ld hl, wObject1 + $D
     call ClearBit2AtHL_Bank0F
-    ld de, Data_07D_7705
+    ld de, FieldSpriteGfx45
     ld b, $7D
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -8294,7 +8294,7 @@ Jump_00F_749D:: ; address name
     ret z
     ld a, $01
     ld [wSpriteSlotCount], a
-    ld de, Data_07D_5B5F
+    ld de, FieldSpriteGfx22
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
@@ -8320,13 +8320,13 @@ Jump_00F_74F7:: ; address name
     ld [wSpriteSlots + $C], a
     ld a, $C0
     ld [wObject1 + $C], a
-    ld de, Data_07D_5F6E
+    ld de, FieldSpriteGfx27
     ld b, $7D
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld a, $27
     ld [wSpriteSlots + $2], a
-    ld de, Data_07D_5F6E
+    ld de, FieldSpriteGfx27
     ld b, $7D
     ld hl, vTiles0 + $600
     call DecompressToVRAM

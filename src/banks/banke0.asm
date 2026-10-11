@@ -3072,15 +3072,15 @@ Jump_0E0_5AF2:: ; address name
 Func_0E0_5AD3_Case00_Case00::
 Jump_0E0_5B16:: ; address name
     ld b, $7D
-    ld de, Data_07D_4001
+    ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_40FA
+    ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_41E1
+    ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $7E
@@ -3579,15 +3579,15 @@ Jump_0E0_5E4B:: ; address name
 Func_0E0_5AD3_Case01_Case00::
 Jump_0E0_5E83:: ; address name
     ld b, $7D
-    ld de, Data_07D_4001
+    ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_40FA
+    ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_41E1
+    ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $46
@@ -4197,15 +4197,15 @@ Jump_0E0_6266:: ; address name
 Func_0E0_5AD3_Case02_Case00::
 Jump_0E0_62A0:: ; address name
     ld b, $7D
-    ld de, Data_07D_4001
+    ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_40FA
+    ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7E
-    ld de, Data_07E_48D6
+    ld de, FieldSpriteGfx5F
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $21
@@ -4213,11 +4213,11 @@ Jump_0E0_62A0:: ; address name
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_42BD
+    ld de, FieldSpriteGfx03
     ld hl, vTiles0 + $400
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_41E1
+    ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld b, $48
@@ -5039,27 +5039,27 @@ Jump_0E0_6841:: ; address name
 Func_0E0_5AD3_Case03_Case00::
 Jump_0E0_685B:: ; address name
     ld b, $7D
-    ld de, Data_07D_4001
+    ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_40FA
+    ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_42BD
+    ld de, FieldSpriteGfx03
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_41E1
+    ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_4EB6
+    ld de, FieldSpriteGfx12
     ld hl, vTiles0 + $400
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_4B4A
+    ld de, FieldSpriteGfx0E
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld b, $7E
@@ -5574,19 +5574,19 @@ Jump_0E0_6C0A:: ; address name
 Func_0E0_5AD3_Case04_Case00::
 Jump_0E0_6C2C:: ; address name
     ld b, $7D
-    ld de, Data_07D_4001
+    ld de, FieldSpriteGfx00
     ld hl, vTiles0
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_40FA
+    ld de, FieldSpriteGfx01
     ld hl, vTiles0 + $100
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_42BD
+    ld de, FieldSpriteGfx03
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $7D
-    ld de, Data_07D_41E1
+    ld de, FieldSpriteGfx02
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $49
