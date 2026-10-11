@@ -1492,8 +1492,8 @@ class Rom:
                            {"type": "db", "size": 1, "name": "its ROM bank"}]
             self.schemas.append({"bank": bank, "addr": addr, "label": f"KeyWorldChunkGroup{g:02X}", "count": n,
                                  "fields": fields, "id_base": 0,
-                                 "record": "16 far pointers to screen tile maps (each behind an 8-byte header), "
-                                           "then 16 to their attribute maps",
+                                 "record": "16 far pointers to screen tile maps (each behind an 8-byte header whose "
+                                           "bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps",
                                  "note": f"E-0146 (derived: {n} sub-chunk(s) of a 4 x 4 grid of screens; "
                                  "Func_061_4472_Case00 skips the 8-byte header before each tile map)"})
             self.schemas.append({"bank": bank, "addr": addr + 0x60 * n, "label": f"KeyWorldChunkGroup{g:02X}Order",

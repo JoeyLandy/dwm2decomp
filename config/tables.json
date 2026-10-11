@@ -2131,6 +2131,47 @@
         }
       ],
       "note": "E-0163 (C1: LoadMapObjectsForScreen reads the word $4174 + 2 * hMapId (`add $74` / `adc $41`); 228 words up to the first array at $433C)."
+    },
+    {
+      "bank": "5E",
+      "addr": "43A0",
+      "label": "AutomapBlocks",
+      "count": 281,
+      "id_base": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 5,
+          "line": true,
+          "name": "tile row 0"
+        },
+        {
+          "type": "db",
+          "size": 5,
+          "line": true,
+          "name": "tile row 1"
+        },
+        {
+          "type": "db",
+          "size": 5,
+          "line": true,
+          "name": "tile row 2"
+        },
+        {
+          "type": "db",
+          "size": 5,
+          "line": true,
+          "name": "tile row 3"
+        },
+        {
+          "type": "db",
+          "size": 5,
+          "line": true,
+          "name": "tile row 4"
+        }
+      ],
+      "record": "5 x 5 tiles, one row per line (block number = id)",
+      "note": "E-0166 (C1: RunGameMode2State_Case04_Sub01_Sub01 (A1:4640, the game mode 2 map view) reads the word at bytes 6-7 of a key-world screen's 8-byte header (E-0146), and writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map; block numbers 1-281 fit before Map49Tileset at $5F2A)."
     }
   ]
 }

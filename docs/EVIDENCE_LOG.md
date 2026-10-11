@@ -2016,6 +2016,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** 336 words go back to bytes and 30 bogus labels are removed. The remaining equal-byte `dw` operands outside such runs fell from 324 to 29.
 - Binary verification: build/run166 PASS, 0 differing bytes; tests OK.
 
+### E-0166 — Automap blocks and the key-world screen header
+
+- Kind: OBSERVATION (reading of RunGameMode2State_Case04_Sub01_Sub01, A1:4640; C1).
+- **Source.** The game mode 2 map view reads a key-world screen's tile-map far pointer, as Func_061_4472_Case00 does. It then reads the word at bytes 6-7 of the 8-byte header in front of the stream (E-0146), and writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map. So each screen is drawn as a 5 x 5 block, and header bytes 6-7 are its block number.
+- **Bounds.** The block numbers in the decoded chunk groups run 1-281, which fits before Map49Tileset ($5F2A). The blocks start right after the 20 x 18 screen TileRect_5E_4238.
+  - Some header slots begin with $68 $01, a 360-byte stream's size word. Their words are not block numbers, and those slots were left out of the bound.
+- **What changed.** AutomapBlocks (281 blocks, 5 lines of 5 tiles each). The chunk-group record description names the header bytes. About 7 KB of tile bytes are laid out.
+- Binary verification: build/run167 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

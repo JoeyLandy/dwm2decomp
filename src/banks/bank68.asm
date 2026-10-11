@@ -2,7 +2,7 @@ SECTION "Bank 68", ROMX[$4000], BANK[$68]
     db $68
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup44::
 Data_068_4001:: ; heuristic: key-world chunk group; C0
     dfar Data_066_54FD ; id 0
@@ -205,7 +205,7 @@ Data_068_4241:: ; heuristic: start of a structured table; C0
     db $04, $05, $03, $02, $00, $01 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup45::
 Data_068_4247:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5560 ; id 0
@@ -408,7 +408,7 @@ Data_068_4487:: ; heuristic: start of a structured table; C0
     db $00, $02, $01, $03, $04, $05 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup46::
 Data_068_448D:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -611,7 +611,7 @@ Data_068_46CD:: ; heuristic: start of a structured table; C0
     db $05, $04, $03, $02, $01, $00 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup47::
 Data_068_46D3:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -814,7 +814,7 @@ Data_068_4913:: ; heuristic: start of a structured table; C0
     db $01, $00, $02, $03, $05, $04 ; entry 0
 
 ; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup48::
 Data_068_4919:: ; heuristic: key-world chunk group; C0
     dfar Data_066_55DC ; id 0
@@ -921,7 +921,7 @@ Data_068_4A39:: ; heuristic: start of a structured table; C0
     db $00, $01, $02 ; entry 0
 
 ; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup49::
 Data_068_4A3C:: ; heuristic: key-world chunk group; C0
     dfar Data_066_54FD ; id 0
@@ -1028,7 +1028,7 @@ Data_068_4B5C:: ; heuristic: start of a structured table; C0
     db $02, $01, $00 ; entry 0
 
 ; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4A::
 Data_068_4B5F:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -1135,7 +1135,7 @@ Data_068_4C7F:: ; heuristic: start of a structured table; C0
     db $01, $00, $02 ; entry 0
 
 ; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4B::
 Data_068_4C82:: ; heuristic: key-world chunk group; C0
     dfar Data_066_54FD ; id 0
@@ -1242,7 +1242,7 @@ Data_068_4DA2:: ; heuristic: start of a structured table; C0
     db $02, $00, $01 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4C::
 Data_068_4DA5:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -1445,7 +1445,7 @@ Data_068_4FE5:: ; heuristic: start of a structured table; C0
     db $00, $02, $05, $01, $03, $04 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4D::
 Data_068_4FEB:: ; heuristic: key-world chunk group; C0
     dfar Data_066_55DC ; id 0
@@ -1648,7 +1648,7 @@ Data_068_522B:: ; heuristic: start of a structured table; C0
     db $05, $02, $01, $04, $03, $00 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4E::
 Data_068_5231:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5658 ; id 0
@@ -1851,7 +1851,7 @@ Data_068_5471:: ; heuristic: start of a structured table; C0
     db $01, $02, $05, $00, $03, $04 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4F::
 Data_068_5477:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -2054,7 +2054,7 @@ Data_068_56B7:: ; heuristic: start of a structured table; C0
     db $04, $03, $00, $05, $02, $01 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup50::
 Data_068_56BD:: ; heuristic: key-world chunk group; C0
     dfar Data_066_54FD ; id 0
@@ -2257,7 +2257,7 @@ Data_068_58FD:: ; heuristic: start of a structured table; C0
     db $01, $02, $05, $00, $03, $04 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup51::
 Data_068_5903:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -2460,7 +2460,7 @@ Data_068_5B43:: ; heuristic: start of a structured table; C0
     db $00, $03, $04, $01, $02, $05 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup52::
 Data_068_5B49:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -2663,7 +2663,7 @@ Data_068_5D89:: ; heuristic: start of a structured table; C0
     db $05, $02, $01, $04, $03, $00 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup53::
 Data_068_5D8F:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -2866,7 +2866,7 @@ Data_068_5FCF:: ; heuristic: start of a structured table; C0
     db $04, $03, $00, $05, $02, $01 ; entry 0
 
 ; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup54::
 Data_068_5FD5:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -3166,7 +3166,7 @@ Data_068_6335:: ; heuristic: start of a structured table; C0
     db $00, $02, $03, $01, $04, $07, $05, $06, $08 ; entry 0
 
 ; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup55::
 Data_068_633E:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -3490,7 +3490,7 @@ Data_068_669E:: ; heuristic: start of a structured table; C0
     db $08, $07, $03, $06, $04, $02, $04, $01, $00 ; entry 0
 
 ; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup56::
 Data_068_66A7:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
@@ -3789,7 +3789,7 @@ Data_068_6A07:: ; heuristic: start of a structured table; C0
     db $03, $02, $00, $07, $04, $01, $08, $06, $05 ; entry 0
 
 ; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
-; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup57::
 Data_068_6A10:: ; heuristic: key-world chunk group; C0
     dfar Data_066_5CC8 ; id 0
