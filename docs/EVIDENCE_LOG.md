@@ -2025,6 +2025,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **What changed.** AutomapBlocks (281 blocks, 5 lines of 5 tiles each). The chunk-group record description names the header bytes. About 7 KB of tile bytes are laid out.
 - Binary verification: build/run167 PASS, 0 differing bytes; tests OK.
 
+### E-0167 — World map view rectangles (banks $A1/$5D)
+
+- Kind: OBSERVATION (reading of RunGameMode2State_Case01_Sub02, A1:52D4; C1).
+- **Source.** For non-special maps, game mode 2 takes the 8-byte entry at A1:$533C + 8 * wGameMode2Byte44: a source address, rows, width, then four bytes. It centres a rectangle of that size with CenteredBGMapOriginForSizeBC and copies it from bank $5D with CopyRectFromBankToVRAM.
+- **Declared.**
+  - WorldMapViewTable: 11 valid entries. The entry after them is not a record.
+  - WorldMapView0-10: rectangles from 8 x 8 to 1 x 2, contiguous from 5D:$41B9 to $43AE, one row per line.
+- **Limits.** Byte 4 of each entry ($20, $30, $48, $70, $A0, ...) matches the map-number bands used elsewhere for talk events but is not read here. Which world area each view shows is not read.
+- Binary verification: build/run168 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -2172,6 +2172,219 @@
       ],
       "record": "5 x 5 tiles, one row per line (block number = id)",
       "note": "E-0166 (C1: RunGameMode2State_Case04_Sub01_Sub01 (A1:4640, the game mode 2 map view) reads the word at bytes 6-7 of a key-world screen's 8-byte header (E-0146), and writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map; block numbers 1-281 fit before Map49Tileset at $5F2A)."
+    },
+    {
+      "bank": "A1",
+      "addr": "533C",
+      "label": "WorldMapViewTable",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "target_bank": "5D",
+          "name": "tile rectangle in bank $5D",
+          "reason": "world map view rectangle"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "rows, width"
+        },
+        {
+          "type": "db",
+          "size": 4,
+          "name": "a map number ($20, $30, $48 ...) and three zero bytes; not read here"
+        }
+      ],
+      "note": "E-0167 (C1: RunGameMode2State_Case01_Sub02 takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE)."
+    },
+    {
+      "bank": "5D",
+      "addr": "41B9",
+      "label": "WorldMapView0",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "8 x 8 tiles, one row per line",
+      "note": "E-0167 (C1: entry 0 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "41F9",
+      "label": "WorldMapView1",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "8 x 8 tiles, one row per line",
+      "note": "E-0167 (C1: entry 1 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "4239",
+      "label": "WorldMapView2",
+      "count": 12,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "12 x 12 tiles, one row per line",
+      "note": "E-0167 (C1: entry 2 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "42C9",
+      "label": "WorldMapView3",
+      "count": 12,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "12 x 12 tiles, one row per line",
+      "note": "E-0167 (C1: entry 3 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "4359",
+      "label": "WorldMapView4",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "4 x 3 tiles, one row per line",
+      "note": "E-0167 (C1: entry 4 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "4365",
+      "label": "WorldMapView5",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "6 x 6 tiles, one row per line",
+      "note": "E-0167 (C1: entry 5 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "4389",
+      "label": "WorldMapView6",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 3,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "3 x 2 tiles, one row per line",
+      "note": "E-0167 (C1: entry 6 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "438F",
+      "label": "WorldMapView7",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 5,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "5 x 5 tiles, one row per line",
+      "note": "E-0167 (C1: entry 7 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "43A8",
+      "label": "WorldMapView8",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "1 x 2 tiles, one row per line",
+      "note": "E-0167 (C1: entry 8 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "43AA",
+      "label": "WorldMapView9",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "1 x 2 tiles, one row per line",
+      "note": "E-0167 (C1: entry 9 of WorldMapViewTable)."
+    },
+    {
+      "bank": "5D",
+      "addr": "43AC",
+      "label": "WorldMapView10",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "2 x 1 tiles, one row per line",
+      "note": "E-0167 (C1: entry 10 of WorldMapViewTable)."
     }
   ]
 }

@@ -3117,7 +3117,33 @@ Jump_0A1_5333::
     dec b
     jr nz, Jump_0A1_5333
     ret
-    INCBIN "dwm2-cobi-us.gbc", $28533C, $58
+
+; E-0167 (C1: RunGameMode2State_Case01_Sub02 takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE).
+; record: tile rectangle in bank $5D; rows, width; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+WorldMapViewTable::
+Data_0A1_533C:: ; heuristic: start of a structured table; C0
+    dw WorldMapView0 ; id 0
+    db $08, $08, $20, $00, $00, $00
+    dw WorldMapView1 ; id 1
+    db $08, $08, $30, $00, $00, $00
+    dw WorldMapView2 ; id 2
+    db $0C, $0C, $48, $00, $00, $00
+    dw WorldMapView3 ; id 3
+    db $0C, $0C, $70, $00, $00, $00
+    dw WorldMapView4 ; id 4
+    db $03, $04, $A0, $00, $00, $00
+    dw WorldMapView5 ; id 5
+    db $06, $06, $A8, $00, $00, $00
+    dw WorldMapView6 ; id 6
+    db $02, $03, $B0, $00, $00, $00
+    dw WorldMapView7 ; id 7
+    db $05, $05, $B8, $00, $00, $00
+    dw WorldMapView8 ; id 8
+    db $02, $01, $C8, $00, $00, $00
+    dw WorldMapView9 ; id 9
+    db $02, $01, $D1, $00, $00, $00
+    dw WorldMapView10 ; id 10
+    db $01, $02, $DA, $00, $00, $00
 
 ; only called from RunGameMode2State_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)

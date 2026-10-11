@@ -11,7 +11,123 @@ Data_05D_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Palettes_5D_4139::
 Data_05D_4139:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $318C, $7FFF, $5294, $0000 ; id 0
-    INCBIN "dwm2-cobi-us.gbc", $174141, $26D
+    INCBIN "dwm2-cobi-us.gbc", $174141, $78
+
+; E-0167 (C1: entry 0 of WorldMapViewTable).
+; record: 8 x 8 tiles, one row per line
+WorldMapView0::
+Data_05D_41B9:: ; heuristic: world map view rectangle; C0
+    db $3E, $15, $26, $37, $26, $0E, $19, $0F ; id 0
+    db $13, $33, $33, $33, $01, $31, $33, $11 ; id 1
+    db $25, $22, $33, $33, $33, $33, $1F, $0C ; id 2
+    db $00, $2F, $33, $33, $33, $33, $03, $24 ; id 3
+    db $3A, $05, $33, $33, $33, $33, $33, $11 ; id 4
+    db $27, $00, $33, $33, $33, $33, $16, $32 ; id 5
+    db $25, $09, $02, $33, $33, $33, $33, $26 ; id 6
+    db $32, $32, $3C, $2A, $3A, $14, $2A, $3B ; id 7
+
+; E-0167 (C1: entry 1 of WorldMapViewTable).
+; record: 8 x 8 tiles, one row per line
+WorldMapView1::
+Data_05D_41F9:: ; heuristic: world map view rectangle; C0
+    db $32, $02, $0F, $0D, $0C, $0E, $0F, $3D ; id 0
+    db $32, $3D, $17, $00, $01, $2F, $03, $32 ; id 1
+    db $32, $24, $10, $03, $24, $0B, $07, $32 ; id 2
+    db $1B, $2B, $37, $06, $11, $27, $26, $32 ; id 3
+    db $27, $06, $02, $16, $32, $3C, $24, $32 ; id 4
+    db $36, $24, $17, $30, $2D, $32, $32, $27 ; id 5
+    db $0E, $11, $31, $33, $30, $37, $19, $06 ; id 6
+    db $32, $32, $10, $3A, $18, $09, $24, $32 ; id 7
+
+; E-0167 (C1: entry 2 of WorldMapViewTable).
+; record: 12 x 12 tiles, one row per line
+WorldMapView2::
+Data_05D_4239:: ; heuristic: world map view rectangle; C0
+    db $32, $32, $32, $32, $0D, $01, $32, $32, $32, $32, $32, $32 ; id 0
+    db $32, $32, $32, $32, $05, $33, $2B, $0F, $32, $32, $32, $32 ; id 1
+    db $32, $32, $32, $32, $25, $02, $33, $33, $19, $04, $01, $32 ; id 2
+    db $32, $32, $32, $32, $32, $3C, $33, $33, $33, $33, $33, $0F ; id 3
+    db $32, $32, $32, $32, $32, $0E, $33, $33, $33, $33, $33, $16 ; id 4
+    db $32, $32, $32, $32, $3E, $33, $33, $33, $33, $33, $33, $14 ; id 5
+    db $32, $27, $2B, $19, $33, $33, $33, $33, $33, $33, $33, $1A ; id 6
+    db $32, $10, $33, $33, $33, $33, $33, $33, $33, $33, $11, $32 ; id 7
+    db $32, $32, $05, $33, $33, $33, $33, $33, $33, $33, $26, $32 ; id 8
+    db $32, $27, $00, $33, $33, $33, $03, $02, $33, $33, $01, $26 ; id 9
+    db $27, $00, $03, $18, $33, $33, $11, $25, $3A, $02, $33, $16 ; id 10
+    db $2A, $3A, $24, $32, $32, $32, $32, $32, $32, $36, $2A, $11 ; id 11
+
+; E-0167 (C1: entry 3 of WorldMapViewTable).
+; record: 12 x 12 tiles, one row per line
+WorldMapView3::
+Data_05D_42C9:: ; heuristic: world map view rectangle; C0
+    db $32, $27, $3D, $3E, $04, $26, $32, $32, $32, $32, $32, $32 ; id 0
+    db $32, $3C, $24, $32, $02, $01, $26, $32, $32, $32, $00, $01 ; id 1
+    db $32, $3D, $32, $32, $10, $02, $18, $24, $32, $32, $17, $33 ; id 2
+    db $32, $32, $27, $3D, $32, $25, $17, $11, $0E, $0F, $05, $03 ; id 3
+    db $3E, $37, $31, $01, $26, $32, $3C, $32, $17, $08, $3C, $07 ; id 4
+    db $0B, $2F, $33, $33, $39, $32, $05, $19, $31, $39, $32, $32 ; id 5
+    db $32, $22, $33, $33, $01, $37, $00, $33, $03, $24, $32, $32 ; id 6
+    db $32, $0B, $2A, $02, $33, $33, $33, $33, $30, $0F, $32, $32 ; id 7
+    db $27, $3D, $32, $3C, $02, $33, $33, $33, $03, $11, $32, $32 ; id 8
+    db $17, $39, $32, $32, $23, $2F, $03, $18, $11, $3E, $3D, $23 ; id 9
+    db $05, $30, $26, $3A, $0E, $00, $08, $32, $32, $10, $01, $01 ; id 10
+    db $25, $18, $07, $11, $2A, $3A, $11, $32, $32, $32, $3C, $11 ; id 11
+
+; E-0167 (C1: entry 4 of WorldMapViewTable).
+; record: 4 x 3 tiles, one row per line
+WorldMapView4::
+Data_05D_4359:: ; heuristic: world map view rectangle; C0
+    db $0D, $3D, $32, $32 ; id 0
+    db $38, $01, $26, $32 ; id 1
+    db $0B, $3A, $0A, $32 ; id 2
+
+; E-0167 (C1: entry 5 of WorldMapViewTable).
+; record: 6 x 6 tiles, one row per line
+WorldMapView5::
+Data_05D_4365:: ; heuristic: world map view rectangle; C0
+    db $19, $33, $19, $26, $32, $32 ; id 0
+    db $17, $33, $33, $30, $01, $3D ; id 1
+    db $33, $33, $33, $33, $33, $30 ; id 2
+    db $17, $33, $33, $33, $33, $03 ; id 3
+    db $02, $33, $18, $09, $02, $01 ; id 4
+    db $32, $32, $32, $32, $38, $03 ; id 5
+
+; E-0167 (C1: entry 6 of WorldMapViewTable).
+; record: 3 x 2 tiles, one row per line
+WorldMapView6::
+Data_05D_4389:: ; heuristic: world map view rectangle; C0
+    db $3E, $19, $0F ; id 0
+    db $10, $2A, $3A ; id 1
+
+; E-0167 (C1: entry 7 of WorldMapViewTable).
+; record: 5 x 5 tiles, one row per line
+WorldMapView7::
+Data_05D_438F:: ; heuristic: world map view rectangle; C0
+    db $3E, $2B, $19, $26, $26 ; id 0
+    db $17, $33, $33, $30, $08 ; id 1
+    db $38, $33, $08, $23, $22 ; id 2
+    db $10, $33, $01, $30, $06 ; id 3
+    db $10, $2A, $18, $2A, $3B ; id 4
+
+; E-0167 (C1: entry 8 of WorldMapViewTable).
+; record: 1 x 2 tiles, one row per line
+WorldMapView8::
+Data_05D_43A8:: ; heuristic: world map view rectangle; C0
+    db $37 ; id 0
+    db $3A ; id 1
+
+; E-0167 (C1: entry 9 of WorldMapViewTable).
+; record: 1 x 2 tiles, one row per line
+WorldMapView9::
+Data_05D_43AA:: ; heuristic: world map view rectangle; C0
+    db $06 ; id 0
+    db $3B ; id 1
+
+; E-0167 (C1: entry 10 of WorldMapViewTable).
+; record: 2 x 1 tiles, one row per line
+WorldMapView10::
+Data_05D_43AC:: ; heuristic: world map view rectangle; C0
+    db $38, $39 ; id 0
 
 ; address loaded by RunGameMode2State_Case04
 ; LZSS-compressed asset: 439 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
