@@ -4,7 +4,7 @@ SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
 ; reads the effect flags in wDAD2. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88, it returns unless wDAD2 bit 0 or bit 6 is set. Then it tests bits 7, 6, 5, 4, 3, 2 in that order and selects one of six tables (Data_03A_40CC, Data_03A_4294, Data_03A_445C, Data_03A_47EC, Data_03A_486C; bit 4 has its own branch) indexed by wBattleActionId. An entry of $FF returns; other entries go on to Jump_03A_48EC or the effect code, which is not read (E-0057)
 ; 15 call sites from 13 routines (e.g. Func_032_4ADC_Case05, Func_032_5820_Case03, ResolveStep0EEffect_Case00, ResolveStep0EEffect_Case03_Case00, ...)
 ; reads: wBattleTarget, wBattleActionId, wDAD2, wDABF, wCFF2, wBattleActor, wD868, wD801
-; writes: wBattleActor, wD803, wD802, wDAF1, wC952, wD868, wD801, wDAB5, ...
+; writes: wBattleActor, wD803, wD802, wDAF1, wEffectFlags52, wD868, wD801, wDAB5, ...
 ; points at: wD804, wD805, wDAB3, wDAD2
 SelectEffectByWDAD2Flags::
 Func_03A_4001:: ; address name
@@ -182,7 +182,7 @@ Data_03A_486C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Jump_03A_48EC::
     push af
     xor a, a
-    ld [wC952], a
+    ld [wEffectFlags52], a
     ld a, [wBattleActionId]
     cp a, $D7
     jr z, Jump_03A_48FA
@@ -190,7 +190,7 @@ Jump_03A_48EC::
 
 Jump_03A_48FA::
     ld a, $01
-    ld [wC952], a
+    ld [wEffectFlags52], a
 
 Jump_03A_48FF::
     pop af
@@ -277,9 +277,9 @@ Jump_03A_4970::
     ld [wDAB3], a
     ld hl, wDAB3
     ld a, l
-    ld [wCB75], a
+    ld [wSequencePtrLo], a
     ld a, h
-    ld [wCB76], a
+    ld [wSequencePtrHi], a
     farcall TickWCB75Sequence
     call SetEffectSpriteXForTargets
     ld a, [wD801]
@@ -548,7 +548,7 @@ Jump_03A_4B53::
     ret
 
 Jump_03A_4B74::
-    ld a, [wC952]
+    ld a, [wEffectFlags52]
     or a, a
     jr nz, Jump_03A_4BB5
     xor a, a
@@ -582,7 +582,7 @@ Jump_03A_4B87::
 
 Jump_03A_4BB5::
     xor a, a
-    ld [wC952], a
+    ld [wEffectFlags52], a
     ld a, [wBattleActionId]
     sub a, $D7
     sla a
@@ -609,9 +609,9 @@ Jump_03A_4BB5::
     ld [wDAB3], a
     ld hl, wDAB3
     ld a, l
-    ld [wCB75], a
+    ld [wSequencePtrLo], a
     ld a, h
-    ld [wCB76], a
+    ld [wSequencePtrHi], a
     farcall TickWCB75Sequence
     call SetEffectSpriteXForTargets
     ld a, [wD801]
@@ -2145,9 +2145,9 @@ Func_03A_548F:: ; address name
     ld [wDAB3], a
     ld hl, wDAB3
     ld a, l
-    ld [wCB75], a
+    ld [wSequencePtrLo], a
     ld a, h
-    ld [wCB76], a
+    ld [wSequencePtrHi], a
     farcall TickWCB75Sequence
     call SetEffectSpriteXForTargets
     ld a, [wD801]
@@ -2931,7 +2931,7 @@ Jump_03A_61F4::
 ; after an action: actions $4E/$4F with wDABA clear the actor's wD812 bit 0 (text $81); $B9 clears it (text $86); $D6 stores the actor in wC982; $15 and $D6 jump to resolve step $0E; otherwise wBattleSubPhase += 1 (E-0127)
 ; 1 call site from 1 routine (e.g. RunBattleStep4_Case04)
 ; reads: wBattleActionId, wBattleActor, wDABA
-; writes: wC982, wC983, wBattleSubPhase, wBattleResolveStep, wBattleSubStep
+; writes: wSavedActorSlot, wSavedActorByte, wBattleSubPhase, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleSubPhase, wCFCF, wD812
 RunActionSpecificPostStep::
 Func_03A_61F8:: ; address name
@@ -2973,9 +2973,9 @@ Jump_03A_6230::
 
 Jump_03A_6245::
     ld a, [wBattleActor]
-    ld [wC982], a
+    ld [wSavedActorSlot], a
     xor a, a
-    ld [wC983], a
+    ld [wSavedActorByte], a
 
 Jump_03A_624F::
     ld a, $01
@@ -2996,7 +2996,7 @@ Jump_03A_6264::
 ; entry 5 of the `rst $00` table in RunBattleActions
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAB2, wBattleTarget, wBattleActor, wCFF5, wD89E
-; writes: wDAB2, wC970, wBattleSubPhase, wBattleResolveStep, wDABD, wDABE, wCFCF, wBattleStep, ...
+; writes: wDAB2, wActionRepeatFlag, wBattleSubPhase, wBattleResolveStep, wDABD, wDABE, wCFCF, wBattleStep, ...
 ; points at: wD812, wBattleStep, wBattleSubPhase, wD810, wBattlePhase, wD895, wDA5B, wBattleActionChoice
 RunBattleActions_Case05::
 Jump_03A_6269:: ; address name
@@ -3006,7 +3006,7 @@ Jump_03A_6269:: ; address name
     xor a, a
     ld [wDAB2], a
     ld a, $01
-    ld [wC970], a
+    ld [wActionRepeatFlag], a
     ld a, [wBattleTarget]
     call CheckSlotStatusBlockWide_Bank3A
     jr c, Jump_03A_629F
@@ -3825,7 +3825,7 @@ Func_03A_6711:: ; address name
 ; only called from RunBattleStep4_Case03_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleStep4_Case03_Sub01)
 ; reads: wDABA, wBattleActionId, wBattleActor
-; writes: wDABA, wC982, wC983, wBattleSubPhase, wBattleResolveStep, wBattleSubStep
+; writes: wDABA, wSavedActorSlot, wSavedActorByte, wBattleSubPhase, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleSubPhase, wCFCF
 RunBattleStep4_Case03_Sub01_Sub01::
 Func_03A_6731:: ; address name
@@ -3857,9 +3857,9 @@ Jump_03A_6743::
 
 Jump_03A_6765::
     ld a, [wBattleActor]
-    ld [wC982], a
+    ld [wSavedActorSlot], a
     xor a, a
-    ld [wC983], a
+    ld [wSavedActorByte], a
 
 Jump_03A_676F::
     ld a, $01
@@ -4196,8 +4196,8 @@ Jump_03A_6944:: ; address name
 
 ; entry 5 of the `rst $00` table in RunBattleStep4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wBattleTarget, wC970
-; writes: wBattleActor, wBattleTarget, wDABA, wDABD, wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wC970
+; reads: wBattleActor, wBattleTarget, wActionRepeatFlag
+; writes: wBattleActor, wBattleTarget, wDABA, wDABD, wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wActionRepeatFlag
 ; points at: wDAC9, wBattleActionChoice, wDA5B, wBattleStep
 RunBattleStep4_Case05::
 Jump_03A_6948:: ; address name
@@ -4256,11 +4256,11 @@ Jump_03A_6984::
     ld [wBattleResolveStep], a
     xor a, a
     ld [wBattleSubStep], a
-    ld a, [wC970]
+    ld a, [wActionRepeatFlag]
     or a, a
     ret z
     xor a, a
-    ld [wC970], a
+    ld [wActionRepeatFlag], a
     ld a, $06
     ld [wBattleSubPhase], a
     ret
@@ -4806,8 +4806,8 @@ Jump_03A_6CC9::
 
 ; only called from RunBattleResolveStep_69AA_Case09 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case09)
-; reads: wBattleStep, wDABD, wBattleTarget, wCFF5, wBattleActionId, wBattleActor, wC981, wDAC0
-; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wC981, wDABD
+; reads: wBattleStep, wDABD, wBattleTarget, wCFF5, wBattleActionId, wBattleActor, wResolveByte81, wDAC0
+; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wResolveByte81, wDABD
 ; points at: wD812, wBattleStep, wBattleSubPhase
 RunBattleResolveStep_69AA_Case09_Sub01::
 Func_03A_6CD4:: ; address name
@@ -4840,7 +4840,7 @@ Func_03A_6CD4:: ; address name
     jr z, Jump_03A_6D45
 
 Jump_03A_6D11::
-    ld a, [wC981]
+    ld a, [wResolveByte81]
     cp a, $01
     jr z, Jump_03A_6D45
     ld a, [wDAC0]
@@ -4869,7 +4869,7 @@ Jump_03A_6D3D::
 
 Jump_03A_6D45::
     xor a, a
-    ld [wC981], a
+    ld [wResolveByte81], a
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
@@ -4933,7 +4933,7 @@ Func_03A_6D76:: ; address name
 ; only called from ShowActionBattleTextFrom6DAA (E-0047)
 ; 1 call site from 1 routine (e.g. ShowActionBattleTextFrom6DAA)
 ; reads: wRandomLo
-; writes: wC96F
+; writes: wEffectByte6F
 ShowActionBattleTextFrom6DAA_Sub01::
 Func_03A_6D91:: ; address name
     call AdvanceRandom
@@ -4941,13 +4941,13 @@ Func_03A_6D91:: ; address name
     cp a, $80
     jr c, Jump_03A_6DA2
     xor a, a
-    ld [wC96F], a
+    ld [wEffectByte6F], a
     ld d, $91
     ret
 
 Jump_03A_6DA2::
     ld a, $01
-    ld [wC96F], a
+    ld [wEffectByte6F], a
     ld d, $D6
     ret
 
@@ -5109,8 +5109,8 @@ Data_03A_74F7:: ; heuristic: target of a monotone pointer table; C0
 
 ; copies the actor, skill and target names to wC130/wC140/wC150 and picks the action message from Data_03A_7603 (or special messages $49-$4C) (E-0129)
 ; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, Func_032_4ADC_Case01_Case00, Func_032_4ADC_Case01_Case03, Func_032_5820_Case01)
-; reads: wBattleActionId, wBattleActor, wC982
-; writes: wC982, wD86C, wStringIndex, wStringCategory
+; reads: wBattleActionId, wBattleActor, wSavedActorSlot
+; writes: wSavedActorSlot, wD86C, wStringIndex, wStringCategory
 ; points at: wBattleTargetChoice, wTextBuf2
 BuildActionMessageNames::
 Func_03A_7508:: ; address name
@@ -5119,7 +5119,7 @@ Func_03A_7508:: ; address name
     cp a, $D0
     jr nc, Jump_03A_7532
     xor a, a
-    ld [wC982], a
+    ld [wSavedActorSlot], a
     call CopyActorNameToWC130
     call CopyActionSkillNameToWC140
     ld a, [wBattleActor]
@@ -5134,7 +5134,7 @@ Func_03A_7508:: ; address name
 
 Jump_03A_7532::
     ld a, $01
-    ld [wC982], a
+    ld [wSavedActorSlot], a
     call CopyActorNameToWC130
     call CopyMappedSlotNameToWC140
 
@@ -5164,7 +5164,7 @@ Jump_03A_7568::
     jr Jump_03A_75A4
 
 Jump_03A_7570::
-    ld a, [wC982]
+    ld a, [wSavedActorSlot]
     bit 0, a
     jr nz, Jump_03A_757B
     ld a, $49
@@ -5179,7 +5179,7 @@ Jump_03A_7580::
     jr Jump_03A_75A4
 
 Jump_03A_7584::
-    ld a, [wC982]
+    ld a, [wSavedActorSlot]
     bit 0, a
     jr nz, Jump_03A_758F
     ld a, $4B
@@ -5190,7 +5190,7 @@ Jump_03A_758F::
     jr Jump_03A_75B7
 
 Jump_03A_7594::
-    ld a, [wC982]
+    ld a, [wSavedActorSlot]
     bit 0, a
     jr nz, Jump_03A_759F
     ld a, $4C

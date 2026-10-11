@@ -134,7 +134,7 @@ Jump_01C_40D4::
 
 ; entry 1 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8CB
+; reads: wTextWindowState
 ; writes: wMenuState, wScriptCommandType, wScriptStartRequest
 ; points at: wD782, wD78C, wD780
 ScriptCommandE0_Run_Case01::
@@ -153,7 +153,7 @@ Jump_01C_40F2::
     jr c, Jump_01C_40F2
     ld hl, wD78C
     call DrawGoldDigitsAtHLWrapped_1C
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     bit 7, a
     jr nz, Jump_01C_4122
     ld de, wD782
@@ -364,8 +364,8 @@ Jump_01C_424E::
 
 ; entry 7 of the `rst $00` table in ScriptCommandE0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wCC44
-; writes: wD781, wFadeMode, wC950, wKeyWorldRefresh
+; reads: wD781, wMapType
+; writes: wD781, wFadeMode, wGameMode2Byte50, wKeyWorldRefresh
 ; points at: wD781, wD780
 ScriptCommandE0_Run_Case07::
 Jump_01C_4258:: ; address name
@@ -384,10 +384,10 @@ Jump_01C_4258:: ; address name
     ld hl, wD780
     inc [hl]
     xor a, a
-    ld [wC950], a
+    ld [wGameMode2Byte50], a
     ld a, $80
     ld [wKeyWorldRefresh], a
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_01C_428E
     farcall SetupTownObjectsForMap
@@ -564,14 +564,14 @@ Jump_01C_434C::
 
 ; with story flag 2, no text, wC468 bit 7 clear, a non-empty party and hFF8C bit 0 clear: hFFB9 = 3, sets bit 1 of the player and object flags and returns A = $FF; otherwise 0 (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8CB, wFieldActionRequest, wPartyCount, hPlayerStateFlags
+; reads: wTextWindowState, wFieldActionRequest, wPartyCount, hPlayerStateFlags
 ; writes: hSpriteWindowClipMode
 TryStartFieldMenu:: ; heuristic: follows a terminator; C0
 Func_01C_4364:: ; address name
     ld de, $0002
     call TestFlagBit
     jr nc, Jump_01C_4393
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     jr nz, Jump_01C_4393
     ld a, [wFieldActionRequest]
@@ -911,7 +911,7 @@ Func_01C_451D:: ; address name
 
 ; only called from ScriptCommandE0_Run_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE0_Run_Case02)
-; reads: wC8CB
+; reads: wTextWindowState
 ; points at: wD782, wD78C
 ScriptCommandE0_Run_Case02_Sub03::
 Func_01C_453B:: ; address name
@@ -929,7 +929,7 @@ Jump_01C_4543::
     jr c, Jump_01C_4543
     ld hl, wD78C
     call DrawGoldDigitsAtHLWrapped_1C
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     bit 7, a
     jr nz, Jump_01C_4573
     ld de, wD782

@@ -4,12 +4,12 @@ SECTION "Bank 84", ROMX[$4000], BANK[$84]
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: wCD0C, hTemp8, hTemp9
-; writes: wCC46, hTemp8, hTemp9, hTemp0
+; writes: wKeyWorldByte46, hTemp8, hTemp9, hTemp0
 ; points at: wCD8B, wCDAC
 DebugAutomap_Update_Sub01_Sub01_Sub0C::
 Func_084_4001:: ; address name
     xor a, a
-    ld [wCC46], a
+    ld [wKeyWorldByte46], a
     ld a, [wCD0C]
     add a, a
     ld hl, Data_084_4CCB
@@ -195,7 +195,7 @@ Jump_084_40EC::
 
 ; entry 4 of the `rst $00` table in RunDebugAutomapCaseHFFC6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp8, hTemp9, wCC46, wCD0B, wCD04
+; reads: hTemp8, hTemp9, wKeyWorldByte46, wCD0B, wCD04
 ; writes: hTemp0
 RunDebugAutomapCaseHFFC6_Case04::
 Jump_084_40F3:: ; address name
@@ -209,7 +209,7 @@ Jump_084_40F3:: ; address name
     ldh [hTemp0], a
     push hl
     inc de
-    ld a, [wCC46]
+    ld a, [wKeyWorldByte46]
     ld [de], a
     inc de
     ld a, [wCD0B]
@@ -264,7 +264,7 @@ Jump_084_4150::
 
 ; entry 5 of the `rst $00` table in RunDebugAutomapCaseHFFC6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp8, hTemp9, wCC46, wCD04
+; reads: hTemp8, hTemp9, wKeyWorldByte46, wCD04
 ; writes: hTemp0
 RunDebugAutomapCaseHFFC6_Case05::
 Jump_084_4156:: ; address name
@@ -278,7 +278,7 @@ Jump_084_4156:: ; address name
     ldh [hTemp0], a
     push hl
     inc de
-    ld a, [wCC46]
+    ld a, [wKeyWorldByte46]
     ld [de], a
     inc de
     call NextRandomSeed
@@ -343,13 +343,13 @@ Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from routines of RunDebugAutomapCaseHFFC6 (E-0098)
 ; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseHFFC6_Case05, RunDebugAutomapCaseHFFC6_Case04)
-; reads: wCC46, hTemp2, hTemp4, hTemp0, hTemp3
-; writes: hTemp2, hTemp3, wCC46
+; reads: wKeyWorldByte46, hTemp2, hTemp4, hTemp0, hTemp3
+; writes: hTemp2, hTemp3, wKeyWorldByte46
 ; points at: wCE2C
 RunDebugAutomapCaseHFFC6_Shared01::
 Func_084_41F2:: ; address name
     push af
-    ld a, [wCC46]
+    ld a, [wKeyWorldByte46]
     add a, a
     ld hl, wCE2C
     add_a_to_hl
@@ -386,9 +386,9 @@ Func_084_41F2:: ; address name
     ld [hl+], a
     ld a, $0F
     ldh [hTemp3], a
-    ld a, [wCC46]
+    ld a, [wKeyWorldByte46]
     inc a
-    ld [wCC46], a
+    ld [wKeyWorldByte46], a
     jr Jump_084_427D
 
 Jump_084_4241::
@@ -422,9 +422,9 @@ Jump_084_4241::
     ldh a, [hTemp3]
     or a, c
     ld [hl+], a
-    ld a, [wCC46]
+    ld a, [wKeyWorldByte46]
     inc a
-    ld [wCC46], a
+    ld [wKeyWorldByte46], a
 
 Jump_084_427D::
     ldh a, [hTemp0]
@@ -471,9 +471,9 @@ Jump_084_429B::
     swap a
     or a, c
     ld [hl+], a
-    ld a, [wCC46]
+    ld a, [wKeyWorldByte46]
     inc a
-    ld [wCC46], a
+    ld [wKeyWorldByte46], a
     pop bc
     dec b
     jr nz, Jump_084_4282
@@ -740,7 +740,7 @@ Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from ItemUsable_LogTwig (E-0047)
 ; 1 call site from 1 routine (e.g. ItemUsable_LogTwig)
-; reads: hPlayerStateFlags, wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wKeyWorldActive, ...
+; reads: hPlayerStateFlags, wMapType, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wKeyWorldActive, ...
 ; writes: hTempA, wSpriteSnapshot, wSnapshotByte3C, wSnapshotByte3D, wSnapshotByte3E, wKeyWorldActive, wKeyWorldGoal, wKeyWorldGoalCell, ...
 ; points at: wCD7B, wCD8B
 ItemUsable_LogTwig_Sub01::
@@ -750,7 +750,7 @@ Func_084_47C2:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
     ret nz
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jp nz, Jump_084_48A9
     ldh a, [hMapId]
@@ -986,7 +986,7 @@ Jump_084_491A::
     jr z, Jump_084_495F
     and a, $7F
     ld b, a
-    ld a, [wCC42]
+    ld a, [wKeyWorldSlot]
     cp a, b
     jr nz, Jump_084_495F
     ldh a, [hPlayerX]
@@ -1036,7 +1036,7 @@ Jump_084_4978::
     ld [wKeyWorldGoal], a
     ld a, c
     ld [wKeyWorldGoalCell], a
-    ld a, [wCC42]
+    ld a, [wKeyWorldSlot]
     or a, $80
     ld [wKeyWorldKey], a
     ld a, $01
@@ -1052,10 +1052,10 @@ Data_084_49A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from ItemUsable_LogTwig_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. ItemUsable_LogTwig_Sub01)
-; reads: wC8FE, hPlayerX, hPlayerY, wC8FF
+; reads: wTriggerKind, hPlayerX, hPlayerY, wTriggerCell
 ItemUsable_LogTwig_Sub01_Sub01::
 Func_084_4A6A:: ; address name
-    ld a, [wC8FE]
+    ld a, [wTriggerKind]
     cp a, $FF
     jr z, Jump_084_4A87
     ldh a, [hPlayerX]
@@ -1066,7 +1066,7 @@ Func_084_4A6A:: ; address name
     and a, $0F
     or a, c
     ld c, a
-    ld a, [wC8FF]
+    ld a, [wTriggerCell]
     cp a, c
     jr nz, Jump_084_4A87
     ld a, $01
@@ -1078,13 +1078,13 @@ Jump_084_4A87::
 
 ; only called from RunWC8C7Phase_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC8C7Phase_Case01)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wSpriteSnapshot, wSnapshotByte3E, wSnapshotByte3D, wSnapshotByte3C, ...
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wSpriteSnapshot, wSnapshotByte3E, wSnapshotByte3D, wSnapshotByte3C, ...
 ; writes: hSpriteWindowClipMode, hTemp0, rSVBK
 RunWC8C7Phase_Case01_Sub02::
 Func_084_4A89:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_084_4AFE
     ldh a, [hMapId]
@@ -1158,7 +1158,7 @@ Jump_084_4AFE::
     jr z, Jump_084_4B2C
     and a, $7F
     ld b, a
-    ld a, [wCC42]
+    ld a, [wKeyWorldSlot]
     cp a, b
     jr nz, Jump_084_4B2C
     ld a, [wSnapshotByte3D]
@@ -1227,7 +1227,7 @@ Jump_084_4B46::
     or a, a
     jr z, Jump_084_4BD6
     ld c, $05
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_084_4BB9
     ld c, $03
@@ -1300,7 +1300,7 @@ Jump_084_4BFE::
 
 ; only called from RunWC8C7Phase_Case01_Sub02 (E-0047)
 ; 4 call sites from 1 routine (e.g. RunWC8C7Phase_Case01_Sub02)
-; reads: wIsCGB, wCC44
+; reads: wIsCGB, wMapType
 ; writes: rSVBK
 RunWC8C7Phase_Case01_Sub02_Sub01::
 Func_084_4C04:: ; address name
@@ -1346,7 +1346,7 @@ Func_084_4C04:: ; address name
     or a, a
     ret z
     ld c, $01
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_084_4C61
     ld a, b

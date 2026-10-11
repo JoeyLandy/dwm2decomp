@@ -3,24 +3,24 @@ SECTION "Bank 81", ROMX[$4000], BANK[$81]
 
 ; only called from CallFunc4001InBank81KeepRegs (E-0047)
 ; 1 call site from 1 routine (e.g. CallFunc4001InBank81KeepRegs)
-; reads: wCA36, wCA37, wCA38, wCA45, wCA46, wSpeciesRecord, wCA47, wCA48, ...
+; reads: wRecordBufB, wSpeciesRecord, wD2AD, wD2AE, wD2AF, wD2B0, wD2B1, wD2B2, ...
 ; writes: wD2AD, wD2AE, wD2B3, wD2AF, wD2B0, wSpeciesIdLo, wSpeciesIdHi, wD2B4, ...
 CallFunc4001InBank81KeepRegs_Sub01::
 Func_081_4001:: ; address name
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld l, a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld h, a
     push hl
     ld a, l
     ld [wD2AD], a
     ld a, h
     ld [wD2AE], a
-    ld a, [wCA38]
+    ld a, [wRecordBufB + $D]
     ld [wD2B3], a
-    ld a, [wCA45]
+    ld a, [wRecordBufB + $1A]
     ld l, a
-    ld a, [wCA46]
+    ld a, [wRecordBufB + $1B]
     ld h, a
     ld a, l
     ld [wD2AF], a
@@ -33,9 +33,9 @@ Func_081_4001:: ; address name
     farcall LoadSpeciesFamily
     ld a, [wSpeciesRecord]
     ld [wD2B4], a
-    ld a, [wCA47]
+    ld a, [wRecordBufB + $1C]
     ld l, a
-    ld a, [wCA48]
+    ld a, [wRecordBufB + $1D]
     ld h, a
     ld a, l
     ld [wD2B1], a
@@ -110,9 +110,9 @@ Func_081_4001:: ; address name
     ld a, c
     or a, a
     jr nz, Jump_081_40D8
-    ld a, [wCA38]
+    ld a, [wRecordBufB + $D]
     set 4, a
-    ld [wCA38], a
+    ld [wRecordBufB + $D], a
 
 Jump_081_40D8::
     pop hl

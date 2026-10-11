@@ -4534,12 +4534,12 @@ Jump_000_19A4::
 
 ; loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the highest set bit of the flag byte whose RAM address is stored in the record, decompresses that variant's tile-map stream (an array of far pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute stream into wD000 (WRAM bank 2); then runs the map's tile-replacement table (Func_084_43B8) and two map-specific fix-ups (Func_000_1B6F, Func_000_1A73); hands over to Func_061_4472 when wCC44 bit 7 is set
 ; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case00, ScriptCommand77_Run_Case01, ScriptCommandED_Run_Case07_Case02)
-; reads: wCC44, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp0, hTemp1, hTemp2, ...
+; reads: wMapType, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp0, hTemp1, hTemp2, ...
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
 ; points at: wScreenTileBuffer, wD000
 LoadMapScreen::
 Func_000_19A9:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_000_19B7
     farcall LoadMapScreen_Sub03
@@ -4672,12 +4672,12 @@ Jump_000_1A62::
 
 ; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
-; reads: wCC44, hMapId, wKeyWorldActive, wKeyWorldKey
+; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey
 ; writes: hTemp0
 ; points at: wKeyWorldGoal
 LoadMapScreen_Sub01::
 Func_000_1A73:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jp nz, Jump_000_1AB3
     ldh a, [hMapId]
@@ -4871,7 +4871,7 @@ Jump_000_1B95::
 ; hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196
 ; 4 call sites from 4 routines (e.g. RunWCC44Type_420D_Case07, RunWCC44Type_420D_Case06, RunWCC44Type_420D_Case03, RunWCC44Type_420D_Case02)
 ; reads: hTemp0
-; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wC90D, wC901, wMapMoveType, ...
+; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, wEncounterRate, wMapMoveType, ...
 LoadSpecialMapHeader::
 Func_000_1BAD:: ; address name
     ld a, [BANK_NUMBER_BYTE]
@@ -4923,9 +4923,9 @@ Func_000_1BAD:: ; address name
     ld a, [hl+]
     ld [wMapHeaderByte7], a
     ld a, [hl+]
-    ld [wC90D], a
+    ld [wFieldEventKind], a
     xor a, a
-    ld [wC901], a
+    ld [wEncounterRate], a
     ld [wMapMoveType], a
     ld [wMapSpriteKind], a
     ld [wMapTallTileMin], a
@@ -4935,11 +4935,11 @@ Func_000_1BAD:: ; address name
 
 ; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile and other header bytes from the bank-$11 map record (special maps use RunWCC44Type_420D) (E-0128)
 ; 3 call sites from 3 routines (e.g. InitFieldScreen, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
-; reads: wCC44, hMapId
-; writes: rROMB0, wMenuState, wMenuSubState, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wC90D, ...
+; reads: wMapType, hMapId
+; writes: rROMB0, wMenuState, wMenuSubState, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, ...
 LoadMapHeader::
 Func_000_1C0C:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_000_1C1A
     farcall RunWCC44Type_420D
@@ -4997,10 +4997,10 @@ Jump_000_1C55::
     ld a, [hl+]
     ld [wMapHeaderByte7], a
     ld a, [hl+]
-    ld [wC90D], a
+    ld [wFieldEventKind], a
     ld a, [hl+]
     or a, $80
-    ld [wC901], a
+    ld [wEncounterRate], a
     ld a, [hl+]
     ld [wMapMoveType], a
     ld a, [hl+]
@@ -5027,28 +5027,28 @@ Jump_000_1C93::
 
 ; on map $19, if story flag $D1 is set, wC90D = $0B (the wCC37 check never returns, since the flags still hold the map comparison) (E-0122)
 ; 1 call site from 1 routine (e.g. LoadMapHeader)
-; reads: hMapId, wCC37
-; writes: wC90D
+; reads: hMapId, wStoryFlags
+; writes: wFieldEventKind
 SetWC90DTo0BOnMap19IfFlagD1::
 Func_000_1CA1:: ; address name
     ldh a, [hMapId]
     cp a, $19
     ret nz
-    ld a, [wCC37]
+    ld a, [wStoryFlags + $60]
     ret nz
     ld de, $00D1
     call TestFlagBit
     ret nc
     ld a, $0B
-    ld [wC90D], a
+    ld [wFieldEventKind], a
     ret
 
 ; when bit 1 of wCC37 is set (and bit 5 clear) on map 1 or 2, shifts a tile row in vTiles2 and copies $40 bytes from $1D07 (tile animation) (E-0125)
 ; 1 call site from 1 routine (e.g. LoadMapHeader)
-; reads: wCC37, hMapId
+; reads: wStoryFlags, hMapId
 ShiftAnimatedTilesOnMap1Or2::
 Func_000_1CB7:: ; address name
-    ld a, [wCC37]
+    ld a, [wStoryFlags + $60]
     bit 5, a
     ret nz
     bit 1, a
@@ -5374,13 +5374,13 @@ Jump_000_1E9C::
 
 ; copies the 20 x 13 screen-buffer area (offset by bit 7 of wC8CB) to the BG map at HL, wrapping, and on CGB its attributes from WRAM bank 2 (E-0130)
 ; 2 call sites from 2 routines (e.g. StepStringDisplayUntilDone_Sub01, DrawScreenBufferAtScrollOrigin)
-; reads: wC8CB, rSTAT, wIsCGB
+; reads: wTextWindowState, rSTAT, wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer
 DrawScreenBufferToBGMapWithAttrs::
 Func_000_1EA5:: ; address name
     ld de, wScreenTileBuffer
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     bit 7, a
     jr z, Jump_000_1EC1
     ld a, $64
@@ -5605,13 +5605,13 @@ Func_000_1F95:: ; address name
 
 ; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
 ; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, Func_004_58C2_Case13, ScriptCommand87_Run_Case01, ScriptCommandEB_Run_Case05_Case32_Sub01, ...)
-; points at: wC8CF
+; points at: wNameGlyphBuf
 CopyRecordNameToWC8CF::
 Func_000_1FA4:: ; address name
     push hl
     push de
     call SRAMRecordAddress
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld b, $0A
     ld a, [hl]
     cp a, $FF
@@ -6015,14 +6015,14 @@ Jump_000_219A::
 ; 68 call sites from 31 routines (e.g. LoadRecordListNameTiles, DebugResultsDisplay_Update_Sub02_Sub01, DrawMonsterNameForWordAtDE_Bank01, DebugAutomap_Update_Sub03, ...)
 ; reads: rSTAT
 ; writes: rROMB0
-; points at: wC8CF
+; points at: wNameGlyphBuf
 CopyGlyphTilesToVRAM::
 Func_000_21A1:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $1F
     ld [rROMB0], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld c, $0B
 
 Jump_000_21AF::
@@ -6135,18 +6135,18 @@ Jump_000_2221::
 ; fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToWC8CF, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)
 ; 22 call sites from 22 routines (e.g. InitFieldScreen, RunWC8C7Phase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
 ; reads: wPartyCount
-; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4, rRAMG, wC8D9
+; writes: wNameGlyphBuf, rRAMG
 ; points at: wPartyList
 LoadRecordListNameTiles::
 Func_000_222B:: ; address name
     ld a, $90
-    ld [wC8CF], a
-    ld [wC8D0], a
-    ld [wC8D1], a
-    ld [wC8D2], a
-    ld [wC8D3], a
+    ld [wNameGlyphBuf], a
+    ld [wNameGlyphBuf + $1], a
+    ld [wNameGlyphBuf + $2], a
+    ld [wNameGlyphBuf + $3], a
+    ld [wNameGlyphBuf + $4], a
     ld a, $F0
-    ld [wC8D4], a
+    ld [wNameGlyphBuf + $5], a
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $550
@@ -6170,7 +6170,7 @@ Jump_000_2264::
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     pop de
     push de
     call CopyGlyphTilesToVRAM
@@ -7158,7 +7158,7 @@ Jump_000_27A2::
     set 7, [hl]
 
 Jump_000_27CF::
-    ld a, [wC964]
+    ld a, [wBattleKindFlags]
     ld b, a
     ld a, [wTextFlags]
     bit 3, a
@@ -7604,14 +7604,14 @@ Jump_000_2A30:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC964
+; reads: wBattleKindFlags
 ; writes: wTextDelayCounter
 ; points at: wTextControl, wTextFlags
 Func_000_2950_Case0C::
 Jump_000_2A3B:: ; address name
     ld hl, wTextControl
     res 7, [hl]
-    ld a, [wC964]
+    ld a, [wBattleKindFlags]
     cp a, $07
     jr z, Jump_000_2A59
     ld hl, $2A66

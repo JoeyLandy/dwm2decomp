@@ -11,7 +11,7 @@ Func_010_4001:: ; address name
 
 ; does nothing during a fade or unless wScriptStartRequest bit 7 is set (then it clears that bit and sets wScriptRunning); reads the opcode at wScriptPointer (through ReadWordFromDataBank when wScriptInDataBank is set) and jumps through a 13-entry opcode table; $FF ends the script (wScriptRunning, wScriptCommandType and wScriptInDataBank cleared, wModeState = 0, or 5 when wCC44 bit 7 is set); the opcode handlers set wScriptCommandType and its parameters and advance wScriptPointer
 ; 5 call sites from 5 routines (e.g. RunEventScriptFrame, RunWC8C7Phase_Case02, RunWC46BMenuState_Case05, GameMode5_Update_Case02, ...)
-; reads: wFadeState, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
+; reads: wFadeState, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wMapType
 ; writes: wScriptStartRequest, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 FetchScriptCommand::
 Func_010_4008:: ; address name
@@ -49,7 +49,7 @@ Jump_010_4033::
     ld [wScriptRunning], a
     ld [wScriptCommandType], a
     ld [wScriptInDataBank], a
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_010_404E
     ld a, $00
@@ -547,7 +547,7 @@ Func_010_435A:: ; address name
 
 ; fetch handler for script opcode 06 (entry 6 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptInDataBank, wTextYesNoResult, wScriptPointerLo, wScriptPointerHi, wCC44
+; reads: wScriptInDataBank, wTextYesNoResult, wScriptPointerLo, wScriptPointerHi, wMapType
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 ; points at: wScriptTileBuf0, wScriptTileBuf1
 ScriptFetch06:: ; code pointer of the table ScriptOpcodeHandlers; C0
@@ -612,7 +612,7 @@ Jump_010_43BD::
 
 ; fetch handler for script opcode 07 (entry 7 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wCC44
+; reads: wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wMapType
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 ScriptFetch07:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_43C9:: ; address name
@@ -637,7 +637,7 @@ Jump_010_43DF::
 
 ; fetch handler for script opcode 0A (entry 10 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
+; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wMapType
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 ScriptFetch0A:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_43EA:: ; address name
@@ -673,15 +673,14 @@ Func_010_43FD:: ; address name
 
 ; fetch handler for script opcode 0C (entry 12 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
+; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wMapType
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
-; points at: wCB8B
 ScriptFetch0C:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4414:: ; address name
     pop hl
     ld a, [hl+]
     swap a
-    ld de, wCB8B
+    ld de, wSpriteSlots + $C
     add a, e
     ld e, a
     jr nc, Jump_010_4420
@@ -716,7 +715,7 @@ Func_010_442E:: ; address name
 
 ; fetch handler for script opcode 0E (entry 14 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
+; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wMapType
 ; writes: hTemp0, hTemp1, wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 ScriptFetch0E:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4445:: ; address name
@@ -734,7 +733,7 @@ Func_010_4445:: ; address name
 
 ; fetch handler for script opcode 0F (entry 15 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
+; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wMapType
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 ScriptFetch0F:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_445D:: ; address name
@@ -843,14 +842,14 @@ Jump_010_44EB::
 
 ; fetch handler for script opcode 23 (entry 35 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC38
-; writes: wCC38, wScriptCommandType
+; reads: wStoryFlags
+; writes: wStoryFlags, wScriptCommandType
 ScriptFetch23:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_44FB:: ; address name
     pop hl
-    ld a, [wCC38]
+    ld a, [wStoryFlags + $61]
     set 2, a
-    ld [wCC38], a
+    ld [wStoryFlags + $61], a
     ld a, $23
     ld [wScriptCommandType], a
     call StartEventScript
@@ -1203,7 +1202,7 @@ Jump_010_4670::
 
 ; fetch handler for script opcode E7 (entry 231 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wCC44
+; reads: wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wMapType
 ; writes: wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wModeState
 ScriptFetchE7:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_467E:: ; address name
@@ -1223,7 +1222,7 @@ Func_010_467E:: ; address name
 
 ; fetch handler for script opcode E4 (entry 228 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTwoChoiceCursor, wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wCC44
+; reads: wTwoChoiceCursor, wScriptInDataBank, wScriptPointerLo, wScriptPointerHi, wMapType
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 ScriptFetchE4:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_4694:: ; address name
@@ -1833,11 +1832,11 @@ Func_010_49F5:: ; address name
 
 ; entry 3 of the `rst $00` table in ScriptCommand09
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8CB
+; reads: wTextWindowState
 ; writes: wScriptCommandType, wScriptRunning, wModeState
 ScriptCommand09_Case03::
 Jump_010_4A01:: ; address name
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     farcall ClearBit1OfPlayerAndObjectFlags
@@ -1864,7 +1863,7 @@ Func_010_4A1B:: ; address name
 ; entry 0 of the `rst $00` table in ScriptCommand09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, hPlayerY
-; writes: wC8CB, wC8CC, hSpriteWindowClipMode
+; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wScriptStep
 ScriptCommand09_Case00::
 Jump_010_4A27:: ; address name
@@ -1879,16 +1878,16 @@ Jump_010_4A27:: ; address name
     ld a, $69
     call QueueSoundEffect
     ld a, $01
-    ld [wC8CB], a
+    ld [wTextWindowState], a
     ld a, $00
-    ld [wC8CC], a
+    ld [wTextWindowStep], a
     ld a, $02
     ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_010_4A62
     ld a, $81
-    ld [wC8CB], a
+    ld [wTextWindowState], a
     ld a, $01
     ldh [hSpriteWindowClipMode], a
 
@@ -1899,14 +1898,14 @@ Jump_010_4A62::
 
 ; entry 1 of the `rst $00` table in ScriptCommand09
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam1, wC8CB, wScriptParam0
+; reads: wScriptParam1, wTextWindowState, wScriptParam0
 ; points at: wScriptStep
 ScriptCommand09_Case01::
 Jump_010_4A67:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, Jump_010_4A74
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
 
@@ -1923,7 +1922,7 @@ Jump_010_4A74::
 ; entry 2 of the `rst $00` table in ScriptCommand09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScriptParam1, hPlayerY
-; writes: hSpriteWindowClipMode, wC8CB, wC8CC
+; writes: hSpriteWindowClipMode, wTextWindowState, wTextWindowStep
 ; points at: wScriptStep
 ScriptCommand09_Case02::
 Jump_010_4A84:: ; address name
@@ -1938,14 +1937,14 @@ Jump_010_4A84:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
     ld a, $02
-    ld [wC8CB], a
+    ld [wTextWindowState], a
     ld a, $00
-    ld [wC8CC], a
+    ld [wTextWindowStep], a
     ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_010_4AAE
     ld a, $82
-    ld [wC8CB], a
+    ld [wTextWindowState], a
 
 Jump_010_4AAE::
     ld hl, wScriptStep
@@ -1954,14 +1953,14 @@ Jump_010_4AAE::
 
 ; entry 3 of the `rst $00` table in ScriptCommand01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam1, wC8CB
+; reads: wScriptParam1, wTextWindowState
 ; writes: wScriptCommandType, wScriptStartRequest
 ScriptCommand01_Case03::
 Jump_010_4AB3:: ; address name
     ld a, [wScriptParam1]
     bit 6, a
     jr nz, Jump_010_4AC6
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     farcall ClearBit1OfPlayerAndObjectFlags
@@ -1975,7 +1974,7 @@ Jump_010_4AC6::
 
 ; only called from ScriptCommand09_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand09_Case01)
-; reads: wD7F0, wCC44
+; reads: wD7F0, wMapType
 ; writes: wStringIndex, wStringCategory
 ScriptCommand09_Case01_Sub01::
 Func_010_4AD0:: ; address name
@@ -2023,7 +2022,7 @@ Data_010_4AFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 Jump_010_4B20::
     pop hl
-    ld a, [wCC44]
+    ld a, [wMapType]
     cp a, $80
     jr z, Jump_010_4B2D
     bit 7, a

@@ -2065,7 +2065,7 @@ Jump_0F1_4DD0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wD7B4
 ; writes: rRAMG2, rRAMB
-; points at: sA000, wC986
+; points at: sA000, wRecordBufA
 RunWD780StateWhenNotFading_F1_Case04_Case12::
 Jump_0F1_4DFA:: ; address name
     ld a, [wTextFlags]
@@ -2080,7 +2080,7 @@ Jump_0F1_4DFA:: ; address name
     call Multiply8
     ld de, sA000
     add hl, de
-    ld de, wC986
+    ld de, wRecordBufA
     ld b, $A5
 
 Jump_0F1_4E19::
@@ -2120,7 +2120,7 @@ Jump_0F1_4E38:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wD781
 ; writes: wD781, wLinkSendByte, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, ...
-; points at: wC986, wCA2B
+; points at: wRecordBufA, wRecordBufB
 RunWD780StateWhenNotFading_F1_Case04_Case14::
 Jump_0F1_4E4A:: ; address name
     ld a, [wLinkMessage]
@@ -2144,12 +2144,12 @@ Jump_0F1_4E64::
     ld [wLinkBufferCountLo], a
     xor a, a
     ld [wLinkBufferCountHi], a
-    ld hl, wC986
+    ld hl, wRecordBufA
     ld a, l
     ld [wLinkTimeoutLo], a
     ld a, h
     ld [wLinkTimeoutHi], a
-    ld hl, wCA2B
+    ld hl, wRecordBufB
     ld a, l
     ld [wLinkBufferPtrLo], a
     ld a, h
@@ -2178,19 +2178,19 @@ Jump_0F1_4E95:: ; address name
 
 ; entry 22 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wC994, wCA39, wD7F5, wC9DC, wC9F3, wCA81, wCA98, ...
+; reads: wTextFlags, wRecordBufA, wRecordBufB, wD7F5, wD781
 ; writes: wD781, wD782, wD7B4, wLinkSendByte, wStringIndex, wStringCategory
-; points at: wC994, wTextWindowTileLo
+; points at: wTextWindowTileLo
 RunWD780StateWhenNotFading_F1_Case04_Case16::
 Jump_0F1_4EA7:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld hl, wC994
-    ld a, [wC994]
+    ld hl, wRecordBufA + $E
+    ld a, [wRecordBufA + $E]
     and a, $01
     ld b, a
-    ld a, [wCA39]
+    ld a, [wRecordBufB + $E]
     and a, $01
     cp a, b
     jr nz, Jump_0F1_4ED1
@@ -2224,16 +2224,16 @@ Jump_0F1_4EDE::
 Jump_0F1_4EF2::
     cp a, $02
     jr nz, Jump_0F1_4F12
-    ld a, [wC9DC]
+    ld a, [wRecordBufA + $56]
     cp a, $28
     jr c, Jump_0F1_4EDE
-    ld a, [wC9F3]
+    ld a, [wRecordBufA + $6D]
     cp a, $05
     jr c, Jump_0F1_4EDE
-    ld a, [wCA81]
+    ld a, [wRecordBufB + $56]
     cp a, $28
     jr c, Jump_0F1_4EDE
-    ld a, [wCA98]
+    ld a, [wRecordBufB + $6D]
     cp a, $05
     jr c, Jump_0F1_4EDE
 
@@ -2517,7 +2517,7 @@ Jump_0F1_50E7::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wD782, wD7EE, wD781, wD7B5, wD7B6, wD7F5, wD7F6, ...
 ; writes: wD782, wD781, wD7AB, wD7AF, wD7F1, wD7F2, rRAMG2, rRAMB, ...
-; points at: wCAD0, wCADB, wMonsterLibraryBuf, wD7E0
+; points at: wChildRecord, wMonsterLibraryBuf, wD7E0
 RunWD780StateWhenNotFading_F1_Case04_Case1E::
 Jump_0F1_50FF:: ; address name
     ld a, [wTextFlags]
@@ -2559,7 +2559,7 @@ Jump_0F1_511B::
     ld l, a
     ld a, [wD7F7]
     ld h, a
-    ld de, wCAD0
+    ld de, wChildRecord
     ld b, $A5
 
 Jump_0F1_515A::
@@ -2573,7 +2573,7 @@ Jump_0F1_515A::
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
-    ld hl, wCADB
+    ld hl, wChildRecord + $B
     ld a, [hl+]
     ld [wD7F1], a
     ld a, [hl]
@@ -2707,7 +2707,7 @@ Jump_0F1_520C:: ; address name
 ; entry 32 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage
-; writes: wLinkSendByte, wC94B
+; writes: wLinkSendByte, wLinkSceneByte4B
 ; points at: wD780
 RunWD780StateWhenNotFading_F1_Case04_Case20::
 Jump_0F1_5220:: ; address name
@@ -2730,7 +2730,7 @@ Jump_0F1_5235::
     or a, c
     jr nz, Jump_0F1_5235
     ld a, $01
-    ld [wC94B], a
+    ld [wLinkSceneByte4B], a
     ret
 
 ; entry 12 of the `rst $00` table in RunWD780StateWhenNotFading_F1
@@ -2924,13 +2924,12 @@ Jump_0F1_533C:: ; address name
 
 ; clears a 5 x 1 tile area at vTiles1 + $500 (FillTilesBxC), copies the short string at wCA2C to wC8CF (CopyShortStringToWC8CF_BankF1) and draws its glyphs at vTiles1 + $500 (E-0116)
 ; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case0D_Case01)
-; points at: wCA2C
 DrawShortStringWCA2CAtTiles1500::
 Func_0F1_5344:: ; address name
     ld hl, vTiles1 + $500
     ld bc, $0501
     call FillTilesBxC
-    ld hl, wCA2C
+    ld hl, wRecordBufB + $1
     call CopyShortStringToWC8CF_BankF1
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
@@ -3117,7 +3116,7 @@ Jump_0F1_5448:: ; address name
 
 ; entry 18 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wCA36, wCA37
+; reads: wD781, wRecordBufB
 ; writes: wD781, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7
 RunWD780StateWhenNotFading_F1_Case0D_Case12::
 Jump_0F1_546B:: ; address name
@@ -3128,7 +3127,7 @@ Jump_0F1_546B:: ; address name
 
 ; entry 19 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wCA36, wCA37
+; reads: wD781, wRecordBufB
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781, wD7F5, hSpriteHideTile, wD7F7
 RunWD780StateWhenNotFading_F1_Case0D_Case13::
 Jump_0F1_5478:: ; address name
@@ -3148,13 +3147,13 @@ Jump_0F1_5478:: ; address name
 
 ; entry 20 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCA36, wCA37, wD781
+; reads: wRecordBufB, wD781
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7, wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case14::
 Jump_0F1_549E:: ; address name
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld [wD7F1], a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
@@ -3553,13 +3552,13 @@ Jump_0F1_56DC:: ; address name
 
 ; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
 ; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
-; reads: wCA36, wCA37
+; reads: wRecordBufB
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6
 DrawWCA36SpritePart_BankF1::
 Func_0F1_5719:: ; address name
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld [wD7F1], a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
@@ -3615,10 +3614,10 @@ Jump_0F1_57AB::
 
 ; Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. DrawWCA2CNameAndWCA36String, DrawShortStringWCA2CAtTiles1500)
-; points at: wC8CF
+; points at: wNameGlyphBuf
 CopyShortStringToWC8CF_BankF1::
 Func_0F1_57BA:: ; address name
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld c, $0A
 
 Jump_0F1_57BF::
@@ -3638,14 +3637,14 @@ Jump_0F1_57C9::
 ; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at $8A70 with size $0109 (E-0121)
 ; 2 call sites from 2 routines (e.g. RunWD780StateWhenNotFading_F1_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case10)
 ; writes: wStringIndex, wStringCategory
-; points at: wCA2C, wCA36, wTextWindowTileLo
+; points at: wTextWindowTileLo
 DrawWCA2CNameAndWCA36String::
 Func_0F1_57CD:: ; address name
-    ld hl, wCA2C
+    ld hl, wRecordBufB + $1
     call CopyShortStringToWC8CF_BankF1
     ld de, vTiles1 + $780
     call CopyGlyphTilesToVRAM
-    ld hl, wCA36
+    ld hl, wRecordBufB + $B
     ld a, [hl+]
     ld [wStringIndex], a
     ld a, [hl]
@@ -4261,8 +4260,8 @@ Func_0F1_5B8E:: ; address name
 ; only called from GameMode5_Update_Case07_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
 ; reads: wCEDC, wCEDB, wCED9, wCEDA, wD7F5
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wCA99, wD7EE
-; points at: wC8CF, wCECF, wCECE, wCA2B, wCE9B
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wRecordBufB, wD7EE
+; points at: wNameGlyphBuf, wCECF, wCECE, wRecordBufB, wCE9B
 GameMode5_Update_Case07_Sub01_Sub04::
 Func_0F1_5BA5:: ; address name
     ld a, $01
@@ -4279,7 +4278,7 @@ Func_0F1_5BA5:: ; address name
     ld a, [wD7F5]
     cp a, $FF
     ret nz
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld de, wCECF
     ld b, $0A
 
@@ -4299,7 +4298,7 @@ Jump_0F1_5BE2::
 
 Jump_0F1_5BE5::
     ld hl, wCECE
-    ld de, wCA2B
+    ld de, wRecordBufB
     ld b, $A5
 
 Jump_0F1_5BED::
@@ -4317,7 +4316,7 @@ Jump_0F1_5BF8::
     dec b
     jr nz, Jump_0F1_5BF8
     xor a, a
-    ld [wCA99], a
+    ld [wRecordBufB + $6E], a
     ld [wD7EE], a
     ret
 

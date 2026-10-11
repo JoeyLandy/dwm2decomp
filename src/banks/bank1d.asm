@@ -3729,8 +3729,8 @@ Jump_01D_5C8D::
 
 ; with SRAM bank 0 enabled reads the record at WD789 cell 5 and continues at Jump_01D_5CAF (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: rRAMG2, rRAMB, wC8D9
-; points at: wC8CF, wTextBuf0
+; writes: rRAMG2, rRAMB, wNameGlyphBuf
+; points at: wNameGlyphBuf, wTextBuf0
 LoadWD789Cell5RecordAndContinue5CAF:: ; heuristic: follows a terminator; C0
 Func_01D_5C94:: ; address name
     call SetWD7F5ToWD789Cell5
@@ -3744,8 +3744,8 @@ Func_01D_5C94:: ; address name
 ; only called from ScriptCommandEB_Run_Case05_Case3E (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case3E)
 ; reads: wD7B4
-; writes: rRAMG2, rRAMB, wC8D9
-; points at: wC8CF, wTextBuf0
+; writes: rRAMG2, rRAMB, wNameGlyphBuf
+; points at: wNameGlyphBuf, wTextBuf0
 ScriptCommandEB_Run_Case05_Case3E_Sub01::
 Func_01D_5CA3:: ; address name
     ld a, $0A
@@ -3758,10 +3758,10 @@ Jump_01D_5CAF::
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     xor a, a
     ld [rRAMG2], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $00
 
@@ -3785,8 +3785,8 @@ Jump_01D_5CD3::
 ; record wD7F1: draws its name at vTiles1 + $780 and the name of its species (field $0B) at vTiles1 + $270 (E-0127)
 ; 11 call sites from 11 routines (e.g. ScriptCommandF4_Run_Case11_Case07, ScriptCommandEB_Run_Case05_Case23, ScriptCommandED_Run_Case04_Case06, ScriptCommandED_Run_Case07_Case11, ...)
 ; reads: wD7F1, hTemp0, hTemp1, wDataBank
-; writes: rRAMG2, rRAMB, wC8D9, wDataBank
-; points at: wC8CF
+; writes: rRAMG2, rRAMB, wNameGlyphBuf, wDataBank
+; points at: wNameGlyphBuf
 DrawRecordNameAndSpeciesNameTiles::
 Func_01D_5CD7:: ; address name
     ld a, [wD7F1]
@@ -3800,7 +3800,7 @@ Func_01D_5CD7:: ; address name
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     ld de, vTiles1 + $780
     call CopyGlyphTilesToVRAM
     pop bc
@@ -3836,7 +3836,7 @@ Func_01D_5CD7:: ; address name
     ld d, c
     pop af
     ld [wDataBank], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld b, $08
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -4455,8 +4455,8 @@ Jump_01D_6075::
 ; for the visible entries of page wD7AF draws the species name (field $0B, category 2 of the bank-08 database) of each listed record (E-0129)
 ; 8 call sites from 8 routines (e.g. ScriptCommandEF_Run_Case0F_Case04, ScriptCommandED_Run_Case05_Case04, ScriptCommandED_Run_Case0F_Case04, ScriptCommandE8_Run_Case06_Case19, ...)
 ; reads: wD7AF, wD7B1, wD7A9, hTemp0, hTemp1, wDataBank, wD7B0
-; writes: rRAMG2, rRAMB, wDataBank, wC8DE
-; points at: wD789, wC8CF
+; writes: rRAMG2, rRAMB, wDataBank, wNameGlyphBuf
+; points at: wD789, wNameGlyphBuf
 DrawRecordListPageSpeciesNames::
 Func_01D_6088:: ; address name
     ld a, $0A
@@ -4528,12 +4528,12 @@ Jump_01D_60BB::
     ld d, c
     pop af
     ld [wDataBank], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld b, $08
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $F0
-    ld [wC8DE], a
+    ld [wNameGlyphBuf + $F], a
     pop bc
     push bc
     call DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D
@@ -4557,13 +4557,13 @@ Jump_01D_6124::
 ; 4 call sites from 3 routines (e.g. DrawRecordListPageSpeciesNames, ScriptCommandED_Run_Case04_Case1C, DrawRecordNameAndSpeciesName)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
-; points at: wC8CF
+; points at: wNameGlyphBuf
 DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1D::
 Func_01D_6129:: ; address name
     xor a, a
     ld [wD784], a
     ld [wD785], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
 
 Jump_01D_6133::
     ld a, [wD784]
@@ -4701,7 +4701,7 @@ Data_01D_6299:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; with SRAM enabled, for each of the wC6FD record numbers in wC6FE copies the record's name (CopyRecordNameToWC8CF, C = 1) and draws it as glyph tiles at the VRAM address from Data_01D_62F9 (CopyGlyphTilesToVRAM); then disables SRAM (E-0106)
 ; 6 call sites from 6 routines (e.g. ScriptCommandF6_Run_Case08, ScriptCommandEC_Run_Case03, ScriptCommandEB_Run_Case05_Case0E, ScriptCommandEE_Run_Case03, ...)
 ; reads: wPartyCount
-; writes: rRAMG2, rRAMB, wC8D9
+; writes: rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wPartyList, wTextWindowTileLo
 DrawRecordListNameTiles_Bank1D::
 Func_01D_62AD:: ; address name
@@ -4720,7 +4720,7 @@ Jump_01D_62B8::
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     ld hl, Data_01D_62F9
     pop bc
     push bc
@@ -7654,7 +7654,7 @@ Jump_01D_7470::
 ; 4 call sites from 4 routines (e.g. ScanBank1RecordStepWC8C4, ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case05_Case13, ScriptCommandEB_Run_Case04_Case42)
 ; reads: wD7F2, wD7F5, wD7F6, wD7F7, wD7F8
 ; writes: rRAMB, rRAMG2, wD7E0, wD7F5
-; points at: wC8CF
+; points at: wNameGlyphBuf
 UnpackRecordFromBank1Slot::
 Func_01D_7492:: ; address name
     call SRAMRecordAddressOfWD7F1
@@ -7787,7 +7787,7 @@ Jump_01D_7514::
     inc d
 
 Jump_01D_7552::
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
@@ -7801,7 +7801,7 @@ Jump_01D_7552::
     inc d
 
 Jump_01D_7566::
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
@@ -7815,7 +7815,7 @@ Jump_01D_7566::
     inc d
 
 Jump_01D_757A::
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
@@ -7829,7 +7829,7 @@ Jump_01D_757A::
     inc d
 
 Jump_01D_758E::
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
@@ -7843,7 +7843,7 @@ Jump_01D_758E::
     inc d
 
 Jump_01D_75A2::
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     call CopyTenBytesThenSelectSRAMBank0
     pop de
     push de
@@ -7857,7 +7857,7 @@ Jump_01D_75A2::
     inc d
 
 Jump_01D_75B6::
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     call CopyTenBytesThenSelectSRAMBank0
     pop de
     xor a, a
@@ -8657,10 +8657,10 @@ Func_01D_7A61:: ; address name
 
 ; fills wC8CF with $F0 and copies up to five glyphs from HL, adding mark $8D or $8E after each glyph whose wD7F5 field is 1 or 2 (E-0127)
 ; 6 call sites from 6 routines (e.g. LoadRecordNameEntry5, LoadRecordNameEntry4, LoadRecordNameEntry3, LoadRecordNameEntry2, ...)
-; points at: wC8CF, wD7F5
+; points at: wNameGlyphBuf, wD7F5
 BuildFiveGlyphNameWithMarksToWC8CF::
 Func_01D_7A90:: ; address name
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld c, $00
 
 Jump_01D_7A95::
@@ -8672,7 +8672,7 @@ Jump_01D_7A95::
     cp a, $0B
     jr c, Jump_01D_7A95
     ld bc, $0000
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
 
 Jump_01D_7AA5::
     ld a, [hl]

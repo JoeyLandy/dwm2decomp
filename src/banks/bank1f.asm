@@ -633,7 +633,7 @@ Data_01F_5BA8:: ; heuristic: bank from RAM variable $D7FE; C0
 ; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
 ; 8 call sites from 8 routines (e.g. ScriptCommandEB_Run_Case05_Case20, ScriptCommandED_Run_Case04_Case03, ScriptCommandED_Run_Case07_Case0E, ScriptCommandED_Run_Case12_Case06, ...)
 ; reads: wD7AF, wD7B1, wD7A9, wD781, wD7B0
-; writes: rRAMG2, rRAMB, wC8D9, wD781
+; writes: rRAMG2, rRAMB, wNameGlyphBuf, wD781
 ; points at: wD789
 DrawRecordListPageNames::
 Func_01F_5C15:: ; address name
@@ -685,7 +685,7 @@ Jump_01F_5C4A::
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     pop bc
     push bc
     ld a, c
@@ -731,13 +731,13 @@ Data_01F_5C9C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. DrawRecordListPageNames)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
-; points at: wC8CF
+; points at: wNameGlyphBuf
 DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1F::
 Func_01F_5CA6:: ; address name
     xor a, a
     ld [wD784], a
     ld [wD785], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
 
 Jump_01F_5CB0::
     ld a, [wD784]
@@ -1169,7 +1169,7 @@ Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wCA36 at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case05, RunWD780StateWhenNotFading_F1_Case0D_Case05)
-; reads: wD782, wCA36, wCA37, wIsCGB, wD781
+; reads: wD782, wRecordBufB, wIsCGB, wD781
 ; writes: wD7F5, wD7F6, wD7F1, wD7F2, wD7F3, wD7F4, wD7F7, wD782, ...
 DrawWCA36MonsterPictureInTwoSteps::
 Func_01F_73EC:: ; address name
@@ -1195,9 +1195,9 @@ Func_01F_73EC:: ; address name
     xor a, a
     ld [wD7F7], a
     call DrawTileRectFromWD7F1Params
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld e, a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld d, a
     ld hl, vTiles2 + $200
     ld c, $01
@@ -1211,9 +1211,9 @@ Jump_01F_7436::
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_01F_745C
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld e, a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld d, a
     push de
     ld a, $7F
@@ -1441,12 +1441,12 @@ Func_01F_7591:: ; address name
 
 ; shows the eight skill names of the record at wCA2B (field $34) in rows from vTiles2 + $200, or string $0E of category 8 when it has none (E-0129)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case19, RunWD780StateWhenNotFading_F1_Case0D_Case19)
-; reads: wCA5F
+; reads: wRecordBufB
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
-; points at: wCA2B
+; points at: wRecordBufB
 ShowWCA2BSkillNamesOrNone::
 Func_01F_7601:: ; address name
-    ld a, [wCA5F]
+    ld a, [wRecordBufB + $34]
     cp a, $FF
     jr z, Jump_01F_760D
     and a, a
@@ -1499,7 +1499,7 @@ Jump_01F_7655::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld hl, wCA2B
+    ld hl, wRecordBufB
     ld a, c
     add_a_to_hl
     ld a, [hl]

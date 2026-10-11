@@ -3,11 +3,11 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
 
 ; only called from FieldModeStateDispatch_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case00)
-; reads: wC8CB, wFieldActionRequest, hPlayerStateFlags, wC918, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
-; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
+; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wStepTriggerFlag, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
+; writes: wStepTriggerFlag, wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Case00_Sub02::
 Func_087_4001:: ; address name
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     ld a, [wFieldActionRequest]
@@ -16,11 +16,11 @@ Func_087_4001:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 0, a
     ret nz
-    ld a, [wC918]
+    ld a, [wStepTriggerFlag]
     or a, a
     ret nz
     inc a
-    ld [wC918], a
+    ld [wStepTriggerFlag], a
     ldh a, [hMapId]
     ld l, a
     ld h, $00
@@ -99,9 +99,9 @@ Jump_087_4071::
 
 Jump_087_4078::
     ld a, [hl+]
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     ld a, [hl]
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ld a, [wModeState]
     cp a, $01
@@ -146,11 +146,11 @@ Jump_087_4096::
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
-; reads: wC8CB, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
-; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
+; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
+; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Shared03::
 Func_087_42A0:: ; address name
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     ld a, [wFieldActionRequest]
@@ -261,92 +261,92 @@ Jump_087_432B::
     cp a, $FF
     jr nz, Jump_087_4351
     ld a, $08
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     jp Jump_087_43DC
 
 Jump_087_4351::
     cp a, $FE
     jr nz, Jump_087_4360
     ld a, $09
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     xor a, a
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     jr Jump_087_43DC
 
 Jump_087_4360::
     cp a, $FC
     jr nz, Jump_087_4370
     ld a, $09
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $02
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     jr Jump_087_43DC
 
 Jump_087_4370::
     cp a, $FB
     jr nz, Jump_087_4380
     ld a, $09
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $03
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     jr Jump_087_43DC
 
 Jump_087_4380::
     cp a, $FA
     jr nz, Jump_087_4390
     ld a, $09
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $08
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     jr Jump_087_43DC
 
 Jump_087_4390::
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     ldh a, [hMapId]
     cp a, $20
     jr nc, Jump_087_43A0
     ld a, $01
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     jr Jump_087_43DC
 
 Jump_087_43A0::
     cp a, $30
     jr nc, Jump_087_43AB
     ld a, $02
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     jr Jump_087_43DC
 
 Jump_087_43AB::
     cp a, $48
     jr nc, Jump_087_43B6
     ld a, $03
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     jr Jump_087_43DC
 
 Jump_087_43B6::
     cp a, $70
     jr nc, Jump_087_43C1
     ld a, $04
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     jr Jump_087_43DC
 
 Jump_087_43C1::
     cp a, $A0
     jr nc, Jump_087_43CC
     ld a, $05
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     jr Jump_087_43DC
 
 Jump_087_43CC::
     cp a, $A8
     jr nc, Jump_087_43D7
     ld a, $06
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     jr Jump_087_43DC
 
 Jump_087_43D7::
     ld a, $07
-    ld [wC917], a
+    ld [wTalkEventIndex], a
 
 Jump_087_43DC::
     farcall DispatchTalkEvent
@@ -356,14 +356,14 @@ Jump_087_43DC::
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC8CD]
+    ld a, [wPartyWindowFlags]
     bit 7, a
     ret z
     farcall RedrawScreenBufferIfWC8CDBit7
     ret
 
 Jump_087_43FC::
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_087_440A
     call FieldModeStateDispatch_Shared03_Sub01
@@ -401,7 +401,7 @@ Jump_087_4420::
     cp a, $05
     jr nz, Jump_087_4489
     inc hl
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_087_443D
     ld a, [hl]
@@ -475,7 +475,7 @@ Jump_087_4489::
     cp a, c
     jr nz, Jump_087_44FC
     inc hl
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_087_449F
     ld a, [hl]
@@ -526,9 +526,9 @@ Jump_087_44CA::
 
 Jump_087_44D1::
     ld a, [hl+]
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     ld a, [hl]
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ld a, [wModeState]
     cp a, $01
@@ -536,7 +536,7 @@ Jump_087_44D1::
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC8CD]
+    ld a, [wPartyWindowFlags]
     bit 7, a
     jr z, Jump_087_44FA
     farcall RedrawScreenBufferIfWC8CDBit7
@@ -553,7 +553,7 @@ Jump_087_44FC::
 
 ; only called from FieldModeStateDispatch_Shared03 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared03)
-; reads: wCC45
+; reads: wKeyWorldFloor
 ; points at: wCD89
 FieldModeStateDispatch_Shared03_Sub01::
 Func_087_4507:: ; address name
@@ -566,7 +566,7 @@ Func_087_4507:: ; address name
 Jump_087_4511::
     cp a, $83
     jr nz, Jump_087_4537
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld hl, wCD89
@@ -636,7 +636,6 @@ Jump_087_4537::
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared03)
 ; reads: wSpriteSlotCount, hTemp1, hTemp0
 ; writes: hTemp0, hTemp1
-; points at: wCB8A
 FieldModeStateDispatch_Shared03_Sub02::
 Func_087_4709:: ; address name
     ld a, [wSpriteSlotCount]
@@ -653,7 +652,7 @@ Func_087_4709:: ; address name
     ld a, [wSpriteSlotCount]
     ld b, a
     ld c, $01
-    ld hl, wCB8A
+    ld hl, wSpriteSlots + $B
 
 Jump_087_4725::
     push hl

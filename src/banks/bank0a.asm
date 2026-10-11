@@ -3,8 +3,8 @@ SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
 
 ; only called from FieldModeStateDispatch_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07)
-; reads: wMenuState, wMenuSubState, wC915, wCC44
-; writes: wMenuState, rRAMG, wC916, wC917, wModeState
+; reads: wMenuState, wMenuSubState, wStatusFieldStep, wMapType
+; writes: wMenuState, rRAMG, wTalkEventGroup, wTalkEventIndex, wModeState
 FieldModeStateDispatch_Case07_Sub01::
 Func_00A_4001:: ; address name
     call FieldModeStateDispatch_Case07_Sub01_Sub04
@@ -29,18 +29,18 @@ Jump_00A_4021::
 Jump_00A_4027::
     xor a, a
     ld [rRAMG], a
-    ld a, [wC915]
+    ld a, [wStatusFieldStep]
     and a, $07
     jr z, Jump_00A_4042
     ld a, $04
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
 Jump_00A_4042::
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_00A_404F
     ld a, $00
@@ -120,8 +120,8 @@ Func_00A_409B:: ; address name
 
 ; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
-; reads: wPartyCount, hTemp0, hTemp1, wC915
-; writes: wC915
+; reads: wPartyCount, hTemp0, hTemp1, wStatusFieldStep
+; writes: wStatusFieldStep
 ; points at: wPartyList
 FieldModeStateDispatch_Case07_Sub01_Sub02::
 Func_00A_40A4:: ; address name
@@ -170,9 +170,9 @@ Jump_00A_40E1::
     jr nz, Jump_00A_40E1
 
 Jump_00A_40E6::
-    ld a, [wC915]
+    ld a, [wStatusFieldStep]
     or a, c
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     push hl
     ld a, [hl]
     ld c, $55
@@ -204,8 +204,8 @@ Jump_00A_410A::
 
 ; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
-; reads: wPartyCount, hTemp0, hTemp1, wC915, wCC44, hMapId
-; writes: wFieldStepFlags, wC915
+; reads: wPartyCount, hTemp0, hTemp1, wStatusFieldStep, wMapType, hMapId
+; writes: wFieldStepFlags, wStatusFieldStep
 ; points at: wPartyList
 FieldModeStateDispatch_Case07_Sub01_Sub03::
 Func_00A_4110:: ; address name
@@ -227,7 +227,7 @@ Jump_00A_4117::
     ld e, a
     ldh a, [hTemp1]
     ld d, a
-    ld a, [wC915]
+    ld a, [wStatusFieldStep]
     bit 7, a
     jr nz, Jump_00A_413E
     ld c, $0A
@@ -237,7 +237,7 @@ Jump_00A_4117::
 
 Jump_00A_413E::
     ld c, $02
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_00A_414F
     ldh a, [hMapId]
@@ -271,9 +271,9 @@ Jump_00A_4169::
     jr nz, Jump_00A_4169
 
 Jump_00A_416E::
-    ld a, [wC915]
+    ld a, [wStatusFieldStep]
     or a, c
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     push hl
     ld a, [hl]
     ld c, $55
@@ -406,90 +406,90 @@ Jump_00A_4228:: ; address name
 
 ; entry 6 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wC910, wC911, ...
-; writes: hTemp1, wC915, wFieldStepFlags, wModeState, wMenuState, wMenuSubState
+; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; writes: hTemp1, wStatusFieldStep, wFieldStepFlags, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case06::
 Jump_00A_4229:: ; address name
     ld a, $50
     ldh [hTemp1], a
     ld a, $80
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
     jr Jump_00A_427B
 
 ; entry 7 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wC910, wC911, ...
-; writes: hTemp1, wC915, wModeState, wMenuState, wMenuSubState
+; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case07::
 Jump_00A_4239:: ; address name
     ld a, $52
     ldh [hTemp1], a
     xor a, a
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     jr Jump_00A_427B
 
 ; entry 1 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wC910, wC911, ...
-; writes: hTemp1, wC915, wModeState, wMenuState, wMenuSubState
+; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case01::
 Jump_00A_4243:: ; address name
     ld a, $44
     ldh [hTemp1], a
     xor a, a
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     jr Jump_00A_427B
 
 ; entry 2 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wC910, wC911, ...
-; writes: hTemp1, wC915, wModeState, wMenuState, wMenuSubState
+; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case02::
 Jump_00A_424D:: ; address name
     ld a, $56
     ldh [hTemp1], a
     xor a, a
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     jr Jump_00A_427B
 
 ; entry 3 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wC910, wC911, ...
-; writes: hTemp1, wC915, wModeState, wMenuState, wMenuSubState
+; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case03::
 Jump_00A_4257:: ; address name
     ld a, $44
     ldh [hTemp1], a
     xor a, a
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     jr Jump_00A_427B
 
 ; entry 4 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wC910, wC911, ...
-; writes: hTemp1, wC915, wFieldStepFlags, wModeState, wMenuState, wMenuSubState
+; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; writes: hTemp1, wStatusFieldStep, wFieldStepFlags, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case04::
 Jump_00A_4261:: ; address name
     ld a, $44
     ldh [hTemp1], a
     ld a, $80
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
     jr Jump_00A_427B
 
 ; entry 5 of the `rst $00` table in RunPlayerMoveTypeWC194
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wC910, wC911, ...
-; writes: hTemp1, wC915, wModeState, wMenuState, wMenuSubState
+; reads: wFadeState, wScriptRunning, wD069, hPlayerX, hPlayerY, hTemp1, wTilesUnderPoint
+; writes: hTemp1, wStatusFieldStep, wModeState, wMenuState, wMenuSubState
 RunPlayerMoveTypeWC194_Case05::
 Jump_00A_4271:: ; address name
     ld a, $44
     ldh [hTemp1], a
     xor a, a
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     jr Jump_00A_427B
 
 Jump_00A_427B::
@@ -509,16 +509,16 @@ Jump_00A_427B::
     call ReadTileBuffer2x2AtPixel_Bank0A
     ldh a, [hTemp1]
     ld c, a
-    ld a, [wC910]
+    ld a, [wTilesUnderPoint]
     cp a, c
     jr z, Jump_00A_42AF
-    ld a, [wC911]
+    ld a, [wTilesUnderPoint + $1]
     cp a, c
     jr z, Jump_00A_42AF
-    ld a, [wC912]
+    ld a, [wTilesUnderPoint + $2]
     cp a, c
     jr z, Jump_00A_42AF
-    ld a, [wC913]
+    ld a, [wTilesUnderPoint + $3]
     cp a, c
     jr z, Jump_00A_42AF
     ret
@@ -533,8 +533,8 @@ Jump_00A_42AF::
 
 ; in the field (story flag 2, not in mode states 1 or 7, outside listed maps): when a party member has status bit 2 or 0 of field $55, switches to mode state 7 and toggles wC88C (E-0129)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
-; reads: hPlayerStateFlags, wModeState, wCC44, hMapId, wPartyCount, wStatusStepFlags
-; writes: rRAMG, wStatusStepFlags, wC902, wModeState, wMenuState, wMenuSubState, wC915
+; reads: hPlayerStateFlags, wModeState, wMapType, hMapId, wPartyCount, wStatusStepFlags
+; writes: rRAMG, wStatusStepFlags, wEncounterCountdown, wModeState, wMenuState, wMenuSubState, wStatusFieldStep
 ; points at: wPartyList
 EnterStatusEffectFieldState::
 Func_00A_42BC:: ; address name
@@ -553,7 +553,7 @@ Func_00A_42BC:: ; address name
     ld a, [wModeState]
     cp a, $07
     ret z
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_00A_42F1
     ldh a, [hMapId]
@@ -609,7 +609,7 @@ Jump_00A_4321::
     cp a, $03
     jr nz, Jump_00A_432D
     xor a, a
-    ld [wC902], a
+    ld [wEncounterCountdown], a
 
 Jump_00A_432D::
     ld a, $07
@@ -619,7 +619,7 @@ Jump_00A_432D::
     ld a, $01
     ld [wMenuSubState], a
     xor a, a
-    ld [wC915], a
+    ld [wStatusFieldStep], a
     ld a, [wStatusStepFlags]
     and a, $7F
     ld [wStatusStepFlags], a
@@ -679,8 +679,8 @@ Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; when nothing else runs and wC901 & $7F is set, counts wD069 down; at zero sets wC916 = 30 and far-calls DispatchTalkEvent (or retries next frame if a script runs) (E-0124)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
-; reads: wFadeState, wScriptRunning, wC901, wD069
-; writes: wD069, wC916, wC917
+; reads: wFadeState, wScriptRunning, wEncounterRate, wD069
+; writes: wD069, wTalkEventGroup, wTalkEventIndex
 CountDownWD069ThenDispatchTalkEvent::
 Func_00A_43B5:: ; address name
     ld a, [wFadeState]
@@ -689,7 +689,7 @@ Func_00A_43B5:: ; address name
     ld a, [wScriptRunning]
     or a, a
     ret nz
-    ld a, [wC901]
+    ld a, [wEncounterRate]
     and a, $7F
     ret z
     ld a, [wD069]
@@ -708,16 +708,16 @@ Func_00A_43B5:: ; address name
 
 Jump_00A_43DC::
     ld a, $1E
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
 ; in the field when nothing blocks it: counts down the encounter or talk timers (wC901, wD091) and starts a battle or talk event when they expire (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
-; reads: wFadeState, wScriptRunning, hPlayerStateFlags, wModeState, wC901, wD091, wC902, wCC44, ...
-; writes: wC901, wD091, wC916, wC917, wC902, wC903, wModeState, wC904, ...
+; reads: wFadeState, wScriptRunning, hPlayerStateFlags, wModeState, wEncounterRate, wD091, wEncounterCountdown, wMapType, ...
+; writes: wEncounterRate, wD091, wTalkEventGroup, wTalkEventIndex, wEncounterCountdown, wBattleIntroKind, wModeState, wBattleTransitionStep, ...
 TickRandomEncounterCounter::
 Func_00A_43EC:: ; address name
     ld a, [wFadeState]
@@ -736,15 +736,15 @@ Func_00A_43EC:: ; address name
     ret z
     cp a, $01
     ret z
-    ld a, [wC901]
+    ld a, [wEncounterRate]
     bit 7, a
     jr z, Jump_00A_4414
     and a, $7F
-    ld [wC901], a
+    ld [wEncounterRate], a
     ret
 
 Jump_00A_4414::
-    ld a, [wC901]
+    ld a, [wEncounterRate]
     or a, a
     ret z
     ld a, [wD091]
@@ -763,14 +763,14 @@ Jump_00A_4414::
 
 Jump_00A_4432::
     ld a, $1D
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
 Jump_00A_4442::
-    ld a, [wC901]
+    ld a, [wEncounterRate]
     push af
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -812,16 +812,16 @@ Jump_00A_447A::
     cp a, $FF
     jr z, Jump_00A_4498
     ld c, a
-    ld a, [wC910]
+    ld a, [wTilesUnderPoint]
     cp a, c
     jr z, Jump_00A_44A0
-    ld a, [wC911]
+    ld a, [wTilesUnderPoint + $1]
     cp a, c
     jr z, Jump_00A_44A0
-    ld a, [wC912]
+    ld a, [wTilesUnderPoint + $2]
     cp a, c
     jr z, Jump_00A_44A0
-    ld a, [wC913]
+    ld a, [wTilesUnderPoint + $3]
     cp a, c
     jr z, Jump_00A_44A0
 
@@ -836,21 +836,21 @@ Jump_00A_44A0::
     ld a, b
     srl a
     ld b, a
-    ld a, [wC902]
+    ld a, [wEncounterCountdown]
     sub a, b
-    ld [wC902], a
+    ld [wEncounterCountdown], a
     jr Jump_00A_44B6
 
 Jump_00A_44AD::
     ld a, [hl]
     ld c, a
-    ld a, [wC902]
+    ld a, [wEncounterCountdown]
     sub a, c
-    ld [wC902], a
+    ld [wEncounterCountdown], a
 
 Jump_00A_44B6::
     jr c, Jump_00A_44C3
-    ld a, [wC902]
+    ld a, [wEncounterCountdown]
     or a, a
     jr z, Jump_00A_44C3
     cp a, $E0
@@ -859,24 +859,24 @@ Jump_00A_44B6::
 
 Jump_00A_44C3::
     xor a, a
-    ld [wC903], a
-    ld a, [wCC44]
+    ld [wBattleIntroKind], a
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_00A_44D3
     ld a, $01
-    ld [wC903], a
+    ld [wBattleIntroKind], a
 
 Jump_00A_44D3::
     farcall RedrawScreenBufferIfWC8CDBit7
     ld a, $03
     ld [wModeState], a
     xor a, a
-    ld [wC904], a
+    ld [wBattleTransitionStep], a
     call NextRandomSeed
     ld a, [wCD03]
     and a, $01
     sla a
-    ld [wC905], a
+    ld [wBattleTransitionSubStep], a
     ld a, $02
     ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
@@ -886,7 +886,7 @@ Jump_00A_44D3::
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
 ; 2 call sites from 2 routines (e.g. TickRandomEncounterCounter, RunPlayerMoveTypeWC194_Case05)
-; writes: wC910, wC911, wC912, wC913
+; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank0A::
 Func_00A_461E:: ; address name
     ld a, c
@@ -912,26 +912,26 @@ Func_00A_461E:: ; address name
     adc a, $C1
     ld h, a
     ld a, [hl+]
-    ld [wC910], a
+    ld [wTilesUnderPoint], a
     ld a, [hl-]
-    ld [wC911], a
+    ld [wTilesUnderPoint + $1], a
     ld a, $14
     add_a_to_hl
     ld a, [hl+]
-    ld [wC912], a
+    ld [wTilesUnderPoint + $2], a
     ld a, [hl]
-    ld [wC913], a
+    ld [wTilesUnderPoint + $3], a
     ret
 
 ; clears wC96C and runs the routine for wC903 & 7 (jump table of eight) (E-0122)
 ; 1 call site from 1 routine (e.g. RunWC904Step_Case02)
-; reads: wC903
-; writes: wC96C
+; reads: wBattleIntroKind
+; writes: wBattleIntroFlag
 RunWC903Case::
 Func_00A_465D:: ; address name
     xor a, a
-    ld [wC96C], a
-    ld a, [wC903]
+    ld [wBattleIntroFlag], a
+    ld a, [wBattleIntroKind]
     and a, $07
     rst $00
     dw RunWC903Case_Case00
@@ -945,12 +945,12 @@ Func_00A_465D:: ; address name
 
 ; entry 6 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC935, wCD05, wCD04, hTemp0, hTemp1
+; reads: wPendingFieldEvent, wCD05, wCD04, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1, wCFDC, wCFC5
 ; points at: wCFDD
 RunWC903Case_Case06::
 Jump_00A_4677:: ; address name
-    ld a, [wC935]
+    ld a, [wPendingFieldEvent]
     and a, $0F
     cp a, $0C
     jr nc, Jump_00A_46D0
@@ -1089,7 +1089,7 @@ Jump_00A_475C::
 ; draws random values until wCD04 & $3F is below 100, then wC902 = 2 * Data_00A_478F[value / 5] (E-0122)
 ; 5 call sites from 5 routines (e.g. TickRandomEncounterCounter, RunWD06BSubState_60E9_Case02_Case00_Case02, StartScriptedEncounterHFFC6, SetModeState3AndSaveScreen, ...)
 ; reads: wCD04
-; writes: wC902
+; writes: wEncounterCountdown
 PickRandomWC902FromTable478F::
 Func_00A_476E:: ; address name
     call NextRandomSeed
@@ -1105,7 +1105,7 @@ Func_00A_476E:: ; address name
     add_a_to_hl
     ld a, [hl]
     add a, a
-    ld [wC902], a
+    ld [wEncounterCountdown], a
     ret
 
 Data_00A_478F:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1115,7 +1115,7 @@ Data_00A_478F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; loads encounter entry $481C + 8 * hFFC6 into wCFDC-wCFE2, sets the battle intro (wC903 = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the battle transition (E-0128)
 ; 14 call sites from 14 routines (e.g. ScriptCommand4A_Run_Case05, ScriptCommand66_Run_Case05, ScriptCommand48_Run_Case06, ScriptCommand41_Run_Case03, ...)
 ; reads: hTemp0
-; writes: wCFDC, wCFDD, wCFDE, wCFDF, wCFE0, wCFE1, wCFE2, wC903, ...
+; writes: wCFDC, wCFDD, wCFDE, wCFDF, wCFE0, wCFE1, wCFE2, wBattleIntroKind, ...
 StartScriptedEncounterHFFC6::
 Func_00A_47A4:: ; address name
     push hl
@@ -1150,7 +1150,7 @@ Func_00A_47A4:: ; address name
     ld a, [hl]
     ld [wCFE2], a
     ld a, $02
-    ld [wC903], a
+    ld [wBattleIntroKind], a
     ldh a, [hTemp0]
     cp a, $14
     jr z, Jump_00A_47F6
@@ -1165,15 +1165,15 @@ Func_00A_47A4:: ; address name
 
 Jump_00A_47F6::
     ld a, $07
-    ld [wC903], a
+    ld [wBattleIntroKind], a
 
 Jump_00A_47FB::
     ld a, $03
     ld [wModeState], a
     xor a, a
-    ld [wC904], a
+    ld [wBattleTransitionStep], a
     ld a, $01
-    ld [wC905], a
+    ld [wBattleTransitionSubStep], a
     ld a, $02
     ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
@@ -2298,7 +2298,7 @@ Jump_00A_50CB:: ; address name
 
 ; entry 1 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wRandomLo, wCC44, hMapScreenY, hMapScreenX, wCC45
+; reads: wRandomLo, wMapType, hMapScreenY, hMapScreenX, wKeyWorldFloor
 ; writes: wCFDC, wCFC5
 ; points at: wCD70, wCD88
 RunWC903Case_Case01::
@@ -2310,7 +2310,7 @@ Jump_00A_50D1:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld [wCFDC], a
-    ld a, [wCC44]
+    ld a, [wMapType]
     and a, $07
     cp a, $01
     jr z, Jump_00A_50F1
@@ -2340,7 +2340,7 @@ Jump_00A_50F1::
     ret
 
 Jump_00A_5116::
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld hl, wCD88
@@ -2478,15 +2478,15 @@ Jump_00A_51A4::
 
 ; entry 3 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC44
-; writes: wC96C, wCFC5
+; reads: wMapType
+; writes: wBattleIntroFlag, wCFC5
 RunWC903Case_Case03::
 Jump_00A_51DF:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     cp a, $82
     jr nz, Jump_00A_51EB
     ld a, $01
-    ld [wC96C], a
+    ld [wBattleIntroFlag], a
 
 Jump_00A_51EB::
     ld a, $03
@@ -2513,10 +2513,10 @@ Jump_00A_51F7:: ; address name
 
 ; runs the routine for wC904 (jump table of three); field mode state 3 (E-0122)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case03)
-; reads: wC904
+; reads: wBattleTransitionStep
 RunWC904Step::
 Func_00A_51FD:: ; address name
-    ld a, [wC904]
+    ld a, [wBattleTransitionStep]
     rst $00
     dw RunWC904Step_Case00
     dw RunWC904Step_Case01
@@ -2524,14 +2524,14 @@ Func_00A_51FD:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWC904Step
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCurrentMusic, wC905, hScrollY, hScrollX
-; writes: wD2CD, hSpriteWindowClipMode, wC909, wC90A, wC906, wC907, wC908
-; points at: wC904
+; reads: wCurrentMusic, wBattleTransitionSubStep, hScrollY, hScrollX
+; writes: wD2CD, hSpriteWindowClipMode, wTransitionBGPtrLo, wTransitionBGPtrHi, wTransitionCounter, wTransitionStage, wTransitionByte08
+; points at: wBattleTransitionStep
 RunWC904Step_Case00::
 Jump_00A_5207:: ; address name
     ld a, [wCurrentMusic]
     ld [wD2CD], a
-    ld a, [wC905]
+    ld a, [wBattleTransitionSubStep]
     and a, $01
     sla a
     add a, $44
@@ -2566,14 +2566,14 @@ Jump_00A_5207:: ; address name
 
 Jump_00A_5245::
     ld a, e
-    ld [wC909], a
+    ld [wTransitionBGPtrLo], a
     ld a, d
-    ld [wC90A], a
+    ld [wTransitionBGPtrHi], a
     xor a, a
-    ld [wC906], a
-    ld [wC907], a
-    ld [wC908], a
-    ld hl, wC904
+    ld [wTransitionCounter], a
+    ld [wTransitionStage], a
+    ld [wTransitionByte08], a
+    ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
@@ -2626,10 +2626,10 @@ Jump_00A_525C:: ; address name
 
 ; entry 1 of the `rst $00` table in RunWC904Step
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC905
+; reads: wBattleTransitionSubStep
 RunWC904Step_Case01::
 Jump_00A_52A4:: ; address name
-    ld a, [wC905]
+    ld a, [wBattleTransitionSubStep]
     rst $00
     dw RunWC904Step_Case01_Case00
     dw RunWC904Step_Case01_Case01
@@ -2637,29 +2637,29 @@ Jump_00A_52A4:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWC904Step_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC906
+; reads: wTransitionCounter
 RunWC904Step_Case01_Case00::
 Jump_00A_52AE:: ; address name
-    ld a, [wC906]
+    ld a, [wTransitionCounter]
     rst $00
     dw RunWC904Step_Case01_Case00_Case00
     dw RunWC904Step_Case01_Case00_Case01
 
 ; entry 0 of the `rst $00` table in RunWC904Step_Case01_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC907
-; points at: wC906, wC907
+; reads: wTransitionStage
+; points at: wTransitionCounter, wTransitionStage
 RunWC904Step_Case01_Case00_Case00::
 Jump_00A_52B6:: ; address name
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     cp a, $14
     jr nz, Jump_00A_52C2
-    ld hl, wC906
+    ld hl, wTransitionCounter
     inc [hl]
     ret
 
 Jump_00A_52C2::
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     ld hl, $0000
     add_a_to_hl
     ld b, $09
@@ -2678,7 +2678,7 @@ Jump_00A_52CF::
     ld h, a
     dec b
     jr nz, Jump_00A_52CF
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     ld b, a
     ld a, $13
     sub a, b
@@ -2700,16 +2700,16 @@ Jump_00A_52F2::
     ld h, a
     dec b
     jr nz, Jump_00A_52F2
-    ld hl, wC907
+    ld hl, wTransitionStage
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in RunWC904Step_Case01_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC904
+; points at: wBattleTransitionStep
 RunWC904Step_Case01_Case00_Case01::
 Jump_00A_5309:: ; address name
-    ld hl, wC904
+    ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
@@ -2777,17 +2777,17 @@ Func_00A_533F:: ; address name
 
 ; HL = wC909/wC90A + HL, the high byte's low 2 bits wrapped and its upper 6 bits kept from wC90A (stays inside one 1 KB BG map) (E-0117)
 ; 1 call site from 1 routine (e.g. WriteTileC4AtWC909AndClearAttr_Sub01)
-; reads: wC909, wC90A
+; reads: wTransitionBGPtrLo, wTransitionBGPtrHi
 AddHLToWC909InBGMap::
 Func_00A_534E:: ; address name
-    ld a, [wC909]
+    ld a, [wTransitionBGPtrLo]
     add a, l
     ld l, a
-    ld a, [wC90A]
+    ld a, [wTransitionBGPtrHi]
     adc a, h
     and a, $03
     ld h, a
-    ld a, [wC90A]
+    ld a, [wTransitionBGPtrHi]
     and a, $FC
     or a, h
     ld h, a
@@ -2795,13 +2795,13 @@ Func_00A_534E:: ; address name
 
 ; entry 1 of the `rst $00` table in RunWC904Step_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC906
+; reads: wTransitionCounter
 RunWC904Step_Case01_Case01::
 Jump_00A_5362:: ; address name
     ld b, $06
 
 Jump_00A_5364::
-    ld a, [wC906]
+    ld a, [wTransitionCounter]
     rst $00
     dw AddHLToWC909InBGMap_Case00
     dw AddHLToWC909InBGMap_Case01
@@ -2809,13 +2809,13 @@ Jump_00A_5364::
 
 ; entry 0 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC907, wC90B, wC90C, wC906
-; writes: wC90B, wC90C, wC907
-; points at: wC907, wC906
+; reads: wTransitionStage, wTransitionCountA, wTransitionCountB, wTransitionCounter
+; writes: wTransitionCountA, wTransitionCountB, wTransitionStage
+; points at: wTransitionStage, wTransitionCounter
 AddHLToWC909InBGMap_Case00::
 Jump_00A_536E:: ; address name
     push bc
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     cp a, $11
     jp c, Jump_00A_5413
     cp a, $23
@@ -2854,13 +2854,13 @@ Jump_00A_536E:: ; address name
 
 ; entry 1 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC907, wC90B, wC90C, wC906
-; writes: wC90B, wC90C, wC907
-; points at: wC907, wC906
+; reads: wTransitionStage, wTransitionCountA, wTransitionCountB, wTransitionCounter
+; writes: wTransitionCountA, wTransitionCountB, wTransitionStage
+; points at: wTransitionStage, wTransitionCounter
 AddHLToWC909InBGMap_Case01::
 Jump_00A_53C6:: ; address name
     push bc
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     cp a, $02
     jr c, Jump_00A_5438
     cp a, $04
@@ -2902,14 +2902,14 @@ Jump_00A_5413::
     jr nz, Jump_00A_5421
     ld hl, $0233
     ld a, l
-    ld [wC90B], a
+    ld [wTransitionCountA], a
     ld a, h
-    ld [wC90C], a
+    ld [wTransitionCountB], a
 
 Jump_00A_5421::
-    ld a, [wC90B]
+    ld a, [wTransitionCountA]
     ld l, a
-    ld a, [wC90C]
+    ld a, [wTransitionCountB]
     ld h, a
     push hl
     call WriteTileC4AtWC909AndClearAttr
@@ -2927,14 +2927,14 @@ Jump_00A_5438::
     jr nz, Jump_00A_5446
     ld hl, $012A
     ld a, l
-    ld [wC90B], a
+    ld [wTransitionCountA], a
     ld a, h
-    ld [wC90C], a
+    ld [wTransitionCountB], a
 
 Jump_00A_5446::
-    ld a, [wC90B]
+    ld a, [wTransitionCountA]
     ld l, a
-    ld a, [wC90C]
+    ld a, [wTransitionCountB]
     ld h, a
     push hl
     call WriteTileC4AtWC909AndClearAttr
@@ -2948,9 +2948,9 @@ Jump_00A_5446::
     jr Jump_00A_5489
 
 Jump_00A_545D::
-    ld a, [wC90B]
+    ld a, [wTransitionCountA]
     ld l, a
-    ld a, [wC90C]
+    ld a, [wTransitionCountB]
     ld h, a
     push hl
     call WriteTileC4AtWC909AndClearAttr
@@ -2964,9 +2964,9 @@ Jump_00A_545D::
     jr Jump_00A_5489
 
 Jump_00A_5474::
-    ld a, [wC90B]
+    ld a, [wTransitionCountA]
     ld l, a
-    ld a, [wC90C]
+    ld a, [wTransitionCountB]
     ld h, a
     push hl
     call WriteTileC4AtWC909AndClearAttr
@@ -2980,18 +2980,18 @@ Jump_00A_5474::
 
 Jump_00A_5489::
     ld a, l
-    ld [wC90B], a
+    ld [wTransitionCountA], a
     ld a, h
-    ld [wC90C], a
-    ld hl, wC907
+    ld [wTransitionCountB], a
+    ld hl, wTransitionStage
     inc [hl]
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     cp a, $B4
     jr nz, Jump_00A_54A4
-    ld hl, wC906
+    ld hl, wTransitionCounter
     inc [hl]
     xor a, a
-    ld [wC907], a
+    ld [wTransitionStage], a
 
 Jump_00A_54A4::
     pop bc
@@ -3001,19 +3001,19 @@ Jump_00A_54A4::
 
 ; entry 2 of the `rst $00` table in AddHLToWC909InBGMap
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC904
+; points at: wBattleTransitionStep
 AddHLToWC909InBGMap_Case02::
 Jump_00A_54AA:: ; address name
-    ld hl, wC904
+    ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
 ; entry 2 of the `rst $00` table in RunWC904Step_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC906
+; reads: wTransitionCounter
 RunWC904Step_Case01_Case02::
 Jump_00A_54AF:: ; address name
-    ld a, [wC906]
+    ld a, [wTransitionCounter]
     rst $00
     dw RunWC904Step_Case01_Case02_Case00
     dw RunWC904Step_Case01_Case02_Case01
@@ -3021,32 +3021,32 @@ Jump_00A_54AF:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWC904Step_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC907, wC90B, wC90C
-; writes: wC90B, wC90C
-; points at: wC907, wC906
+; reads: wTransitionStage, wTransitionCountA, wTransitionCountB
+; writes: wTransitionCountA, wTransitionCountB
+; points at: wTransitionStage, wTransitionCounter
 RunWC904Step_Case01_Case02_Case00::
 Jump_00A_54B9:: ; address name
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     or a, a
     jr nz, Jump_00A_54CA
     ld hl, $0000
     ld a, l
-    ld [wC90B], a
+    ld [wTransitionCountA], a
     ld a, h
-    ld [wC90C], a
+    ld [wTransitionCountB], a
 
 Jump_00A_54CA::
     ld hl, Data_00A_55FA
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
     ld hl, Data_00A_560C
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     add a, a
     add_a_to_hl
-    ld a, [wC90B]
+    ld a, [wTransitionCountA]
     ld e, a
-    ld a, [wC90C]
+    ld a, [wTransitionCountB]
     ld d, a
     call JumpToWordAtHL_Bank0A
 
@@ -3060,12 +3060,12 @@ Jump_00A_54ED::
     dec b
     jr nz, Jump_00A_54ED
     ld hl, Data_00A_55FA
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
-    ld a, [wC90B]
+    ld a, [wTransitionCountA]
     ld l, a
-    ld a, [wC90C]
+    ld a, [wTransitionCountB]
     ld h, a
 
 Jump_00A_550C::
@@ -3079,7 +3079,7 @@ Jump_00A_550C::
     jr nz, Jump_00A_550C
     push hl
     ld hl, Data_00A_5603
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
     pop hl
@@ -3100,12 +3100,12 @@ Jump_00A_5526::
     dec b
     jr nz, Jump_00A_5526
     ld hl, Data_00A_5603
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
-    ld a, [wC90B]
+    ld a, [wTransitionCountA]
     ld l, a
-    ld a, [wC90C]
+    ld a, [wTransitionCountB]
     ld h, a
 
 Jump_00A_554C::
@@ -3122,9 +3122,9 @@ Jump_00A_554C::
     ld h, a
     dec b
     jr nz, Jump_00A_554C
-    ld a, [wC90B]
+    ld a, [wTransitionCountA]
     ld l, a
-    ld a, [wC90C]
+    ld a, [wTransitionCountB]
     ld h, a
     ld a, l
     add a, $21
@@ -3133,35 +3133,35 @@ Jump_00A_554C::
     adc a, $00
     ld h, a
     ld a, l
-    ld [wC90B], a
+    ld [wTransitionCountA], a
     ld a, h
-    ld [wC90C], a
-    ld hl, wC907
+    ld [wTransitionCountB], a
+    ld hl, wTransitionStage
     inc [hl]
-    ld hl, wC906
+    ld hl, wTransitionCounter
     inc [hl]
-    ld a, [wC907]
+    ld a, [wTransitionStage]
     cp a, $09
     ret nz
-    ld hl, wC906
+    ld hl, wTransitionCounter
     inc [hl]
     ret
 
 ; entry 1 of the `rst $00` table in RunWC904Step_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC906
+; points at: wTransitionCounter
 RunWC904Step_Case01_Case02_Case01::
 Jump_00A_5589:: ; address name
-    ld hl, wC906
+    ld hl, wTransitionCounter
     dec [hl]
     ret
 
 ; entry 2 of the `rst $00` table in RunWC904Step_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC904
+; points at: wBattleTransitionStep
 RunWC904Step_Case01_Case02_Case02::
 Jump_00A_558E:: ; address name
-    ld hl, wC904
+    ld hl, wBattleTransitionStep
     inc [hl]
     ret
 
@@ -3185,7 +3185,7 @@ Data_00A_560C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; counts steps in wC7C9 (wrapping at 1000); every 100 steps and at 1000 updates the stored SRAM records by their state byte and field $6E (E-0130)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
-; reads: wScriptRunning, wC901, wStepCounterLo, wStepCounterHi, hTemp0
+; reads: wScriptRunning, wEncounterRate, wStepCounterLo, wStepCounterHi, hTemp0
 ; writes: hTemp0, wStepCounterLo, wStepCounterHi, rRAMG
 ; points at: sA000
 AdvanceStepCounterAndUpdateStoredRecords::
@@ -3193,7 +3193,7 @@ Func_00A_561E:: ; address name
     ld a, [wScriptRunning]
     or a, a
     ret nz
-    ld a, [wC901]
+    ld a, [wEncounterRate]
     and a, $7F
     ret z
     xor a, a
@@ -3324,12 +3324,12 @@ Jump_00A_56B8::
 
 ; only called from UpdatePlayerMovement_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. UpdatePlayerMovement_Sub01)
-; reads: wC901, wScriptRunning, wPartyCount, hTemp0, hTemp1
+; reads: wEncounterRate, wScriptRunning, wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG
 ; points at: wPartyList
 UpdatePlayerMovement_Sub01_Sub02::
 Func_00A_56D0:: ; address name
-    ld a, [wC901]
+    ld a, [wEncounterRate]
     and a, $7F
     ret z
     ld a, [wScriptRunning]
@@ -3415,7 +3415,7 @@ Jump_00A_573E::
 ; only called from UpdatePlayerMovement_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. UpdatePlayerMovement_Sub01)
 ; reads: hPlayerSpriteOverride, wScriptRunning, hPlayerSpriteTimerLo, hPlayerSpriteTimerHi
-; writes: hPlayerSpriteTimerLo, hPlayerSpriteTimerHi, wC916, wC917
+; writes: hPlayerSpriteTimerLo, hPlayerSpriteTimerHi, wTalkEventGroup, wTalkEventIndex
 UpdatePlayerMovement_Sub01_Sub03::
 Func_00A_5748:: ; address name
     ldh a, [hPlayerSpriteOverride]
@@ -3437,9 +3437,9 @@ Func_00A_5748:: ; address name
     bit 7, a
     ret z
     ld a, $0A
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 

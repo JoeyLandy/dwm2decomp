@@ -2793,14 +2793,14 @@ Jump_005_4DF2::
 ; C = 0 when the actor's side byte (wC984 for slots 0-3, wC985 for 4-7) is 1, else C = $FF (E-0099)
 ; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Farewell_Sub01, AIScore_LifeDance_Sub01, AIScore_LifeSong_Sub01)
 ; reads: wBattleActor
-; points at: wC984
+; points at: wSide0Flag
 CheckSideWC984Not1::
 Func_005_4DF5:: ; address name
     ld a, [wBattleActor]
     rrca
     rrca
     and a, $01
-    ld hl, wC984
+    ld hl, wSide0Flag
     add_a_to_hl
     ld a, [hl]
     cp a, $01
@@ -5315,17 +5315,17 @@ Jump_005_5CEE::
 
 ; C = $FF when the side's wC984/wC985 flag is 1 or another ally slot is empty, else $00 (E-0124)
 ; 2 call sites from 2 routines (e.g. AIScore_LifeDance, AIAddPenaltyFor5758And5CF1)
-; reads: wBattleActor, wC984, wC985
+; reads: wBattleActor, wSide0Flag, wSide1Flag
 PassIfWC984OrAllySlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_5CF1:: ; address name
     ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_5CFD
-    ld a, [wC984]
+    ld a, [wSide0Flag]
     jr Jump_005_5D00
 
 Jump_005_5CFD::
-    ld a, [wC985]
+    ld a, [wSide1Flag]
 
 Jump_005_5D00::
     cp a, $01
@@ -6738,17 +6738,17 @@ Jump_005_644F::
 
 ; C = $00 when the side's wC984/wC985 flag is 1 or no other ally slot is occupied, else $FF (E-0125)
 ; 10 call sites from 10 routines (e.g. AIIronizeUsable, AIScore_LureDance_Sub01, AIScore_StrongD_Sub01, AIScore_Cover_Sub01, ...)
-; reads: wBattleActor, wC984, wC985
+; reads: wBattleActor, wSide0Flag, wSide1Flag
 AllyCheckWC984AndOtherSlots:: ; heuristic: follows a terminator; C0
 Func_005_6452:: ; address name
     ld a, [wBattleActor]
     cp a, $04
     jr nc, Jump_005_645E
-    ld a, [wC984]
+    ld a, [wSide0Flag]
     jr Jump_005_6461
 
 Jump_005_645E::
-    ld a, [wC985]
+    ld a, [wSide1Flag]
 
 Jump_005_6461::
     cp a, $01

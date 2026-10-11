@@ -789,11 +789,11 @@ Jump_016_4446:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 32 Repellent, 33 ShinyHarp; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 2 call sites from 2 routines (e.g. Func_016_52C9_Case11, Func_016_52C9_Case0C)
-; reads: wC901
+; reads: wEncounterRate
 ; writes: wItemId
 ItemUsable_Repellent::
 Func_016_4447:: ; address name
-    ld a, [wC901]
+    ld a, [wEncounterRate]
     and a, $7F
     ret nz
     ld a, $FF
@@ -815,11 +815,11 @@ Func_016_4454:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC44, hTempA, hMapId
+; reads: wMapType, hTempA, hMapId
 ; writes: wItemId
 ItemUsable_LogTwig::
 Jump_016_4458:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_016_4469
     cp a, $80
@@ -867,11 +867,11 @@ Jump_016_449D::
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 41 WarpWing, 54 TidalBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 2 call sites from 2 routines (e.g. Func_016_52C9_Case13, ItemUsable_Warp)
-; reads: wCC44, hMapId
+; reads: wMapType, hMapId
 ; writes: wItemId
 ItemUsable_WarpWing::
 Func_016_44AD:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_016_44BD
     cp a, $80
@@ -892,11 +892,11 @@ Jump_016_44BD::
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 42 ExitBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0F)
-; reads: wCC44, hMapId
+; reads: wMapType, hMapId
 ; writes: wItemId
 ItemUsable_ExitBell::
 Func_016_44D0:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_016_44E6
     cp a, $81
@@ -933,11 +933,11 @@ Jump_016_44FA:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 48 WaterCall; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wItemId
 ItemUsable_WaterCall::
 Jump_016_44FB:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_016_4542
     ldh a, [hMapId]
@@ -985,11 +985,11 @@ Jump_016_4547::
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerY, hPlayerFacing, hPlayerX
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, hPlayerY, hPlayerFacing, hPlayerX
 ; writes: wItemId
 ItemUsable_MoonRock::
 Jump_016_4548:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_016_457D
     ldh a, [hMapId]
@@ -1025,11 +1025,11 @@ Jump_016_4582::
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 50 Crest; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wItemId
 ItemUsable_Crest::
 Jump_016_4583:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_016_45BC
     ldh a, [hMapId]
@@ -1072,11 +1072,11 @@ Jump_016_45C2:: ; address name
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 52 SleepHerb; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wItemId
 ItemUsable_SleepHerb::
 Jump_016_45C3:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_016_45F4
     ldh a, [hMapId]
@@ -1110,11 +1110,11 @@ Jump_016_45F9::
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 53 Change?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC44, hMapId, hMapScreenY, wCB7E
+; reads: wMapType, hMapId, hMapScreenY, wScreenSavedFlag
 ; writes: wItemId
 ItemUsable_Change::
 Jump_016_45FA:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_016_4626
     ldh a, [hMapId]
@@ -1135,7 +1135,7 @@ Jump_016_45FA:: ; address name
     jr z, Jump_016_4626
 
 Jump_016_4621::
-    ld a, [wCB7E]
+    ld a, [wScreenSavedFlag]
     or a, a
     ret nz
 
@@ -1193,13 +1193,13 @@ Func_016_4636:: ; address name
 
 ; only called from Bank16Func4645ResultTest (E-0047)
 ; 1 call site from 1 routine (e.g. Bank16Func4645ResultTest)
-; reads: wCC44, wC901, hMapId
+; reads: wMapType, wEncounterRate, hMapId
 Bank16Func4645ResultTest_Sub01::
 Func_016_4645:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_016_4655
-    ld a, [wC901]
+    ld a, [wEncounterRate]
     and a, $7F
     jr nz, Jump_016_4667
     jr Jump_016_4663
@@ -2913,19 +2913,19 @@ Jump_016_5385::
 
 ; entry 18 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC47
+; reads: wMapObjectCount
 ; writes: wItemId, wD08D
-; points at: wCC48
+; points at: wMapObjects
 Func_016_52C9_Case12::
 Jump_016_5398:: ; address name
     call ItemUsable_Warp
     call SetWD08D14IfItemRefused
     ret z
-    ld a, [wCC47]
+    ld a, [wMapObjectCount]
     or a, a
     jr z, Jump_016_53BB
-    ld hl, wCC48
-    ld a, [wCC47]
+    ld hl, wMapObjects
+    ld a, [wMapObjectCount]
     ld b, a
 
 Jump_016_53AC::
@@ -3353,21 +3353,21 @@ Jump_016_55C5:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC44, wC935, wRandomLo, wRandomHi
-; writes: wSpriteSlotCount, wCB7E, wC935, wItemId, wD08D, wInventory
+; reads: wMapType, wPendingFieldEvent, wRandomLo, wRandomHi
+; writes: wSpriteSlotCount, wScreenSavedFlag, wPendingFieldEvent, wItemId, wD08D, wInventory
 ; points at: wGoldLo, wTextBuf3
 Func_016_53E6_Case11::
 Jump_016_55CB:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     cp a, $80
     jr nz, Jump_016_55E3
-    ld a, [wC935]
+    ld a, [wPendingFieldEvent]
     bit 7, a
     jr z, Jump_016_55E3
     xor a, a
     ld [wSpriteSlotCount], a
-    ld [wCB7E], a
-    ld [wC935], a
+    ld [wScreenSavedFlag], a
+    ld [wPendingFieldEvent], a
 
 Jump_016_55E3::
     ld hl, wGoldLo
@@ -3461,11 +3461,11 @@ Jump_016_5688::
 
 ; entry 18 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC950, wD08D, wItemId
+; writes: wGameMode2Byte50, wD08D, wItemId
 Func_016_53E6_Case12::
 Jump_016_568E:: ; address name
     ld a, $01
-    ld [wC950], a
+    ld [wGameMode2Byte50], a
     ld a, $11
     ld [wD08D], a
     ld a, $FF
@@ -3529,12 +3529,12 @@ Func_016_56D9:: ; address name
 
 ; for special maps copies the eight monster entries of the current screen (AddressOfWCD10EntryForCurrentScreen) to wD09F, removes duplicates and stores the count in wD09D; normal maps use Func_00A_4D5E (E-0129)
 ; 1 call site from 1 routine (e.g. Func_016_52C9_Case0C)
-; reads: wCC44, wD09F, wD0A0, wD09E
+; reads: wMapType, wD09F, wD0A0, wD09E
 ; writes: wD09E, wD09D
 ; points at: wD09F, wD0A1
 CollectUniqueEncounterIdsToWD09F::
 Func_016_56E4:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_016_56F2
     farcall CollectUniqueEncounterIdsToWD09F_Sub01
@@ -3637,14 +3637,14 @@ Jump_016_5759::
 
 ; HL = wCD10 + 2 * an index from the current map screen and the wCD70 table (index $20 when bit 3 of hFF8C is set) (E-0127)
 ; 1 call site from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F)
-; reads: hPlayerStateFlags, wCC44, hMapScreenY, hMapScreenX, wCC45
+; reads: hPlayerStateFlags, wMapType, hMapScreenY, hMapScreenX, wKeyWorldFloor
 ; points at: wCD70, wCD10, wCD88
 AddressOfWCD10EntryForCurrentScreen::
 Func_016_5766:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, Jump_016_57C4
-    ld a, [wCC44]
+    ld a, [wMapType]
     and a, $07
     cp a, $01
     jr z, Jump_016_5778
@@ -3670,7 +3670,7 @@ Jump_016_5778::
     jr Jump_016_57C6
 
 Jump_016_5795::
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld hl, wCD88
@@ -6617,7 +6617,7 @@ Jump_016_6A5C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wDAAB
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wSpeciesIdLo, wD7F5, wSpeciesIdHi, wTextWindowTileLo, ...
-; points at: wCFA8, wD8AF, wC986, wScreenTileBuffer, wBattleSubStep
+; points at: wCFA8, wD8AF, wRecordBufA, wScreenTileBuffer, wBattleSubStep
 RunBattleSubStep_6A4E_Case01::
 Jump_016_6A6F:: ; address name
     ld a, [wTextFlags]
@@ -6635,7 +6635,7 @@ Jump_016_6A6F:: ; address name
     ld a, [hl]
     ld [wD7F2], a
     ld a, [wDAAB]
-    ld hl, wC986
+    ld hl, wRecordBufA
     ld a, l
     add a, $0D
     ld l, a
@@ -6679,7 +6679,7 @@ Jump_016_6A6F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAAB, wD7F5
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5
-; points at: wD8AF, wC986, wCFCF, wD09E, wC8CF, wBattleSubStep
+; points at: wD8AF, wRecordBufA, wCFCF, wD09E, wNameGlyphBuf, wBattleSubStep
 RunBattleSubStep_6A4E_Case02::
 Jump_016_6AE3:: ; address name
     ld a, $01
@@ -6690,7 +6690,7 @@ Jump_016_6AE3:: ; address name
     ld a, [hl]
     ld [wD7F2], a
     ld a, [wDAAB]
-    ld hl, wC986
+    ld hl, wRecordBufA
     ld a, l
     add a, $0D
     ld l, a
@@ -6724,7 +6724,7 @@ Jump_016_6AE3:: ; address name
     ld hl, wCFCF
     inc [hl]
     ld hl, wD09E
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld b, $0A
 
 Jump_016_6B47::
@@ -6750,7 +6750,7 @@ Jump_016_6B52:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFarmLevel, wPartyCount
 ; writes: rRAMG, rRAMB, wBattleSubStep, wD09D
-; points at: sA000, wBattleSubPhase, wD09E, wC991
+; points at: sA000, wBattleSubPhase, wD09E
 RunBattleSubStep_6A4E_Case04::
 Jump_016_6B57:: ; address name
     ld a, $0A
@@ -6787,7 +6787,7 @@ Jump_016_6B83::
     ld b, $0A
     ld de, wD09E
     call CopyBBytesDEToHL_Bank16
-    ld de, wC991
+    ld de, wRecordBufA + $B
     ld b, $9A
     call CopyBBytesDEToHL_Bank16
     ld a, $00
@@ -7846,8 +7846,8 @@ Func_016_733F:: ; address name
 
 ; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
-; reads: wCFC5, wC9DC, wC991, wC992, wD00E, wC9E3, wC9E4, wC9E7, ...
-; writes: wC9DC, wSpeciesIdLo, wSpeciesIdHi, wC9DD, wC9E3, wC9E4, wC9E1, wC9E2, ...
+; reads: wCFC5, wRecordBufA, wD00E, wRecordBufAByte71, wRandomLo, wRandomHi
+; writes: wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wRecordBufAByte71
 ; points at: wD09D
 BattleEnd_Step3_Sub01::
 Func_016_7364:: ; address name
@@ -7869,7 +7869,7 @@ Jump_016_736F::
     ld c, a
 
 Jump_016_7382::
-    ld a, [wC9DC]
+    ld a, [wRecordBufA + $56]
     add a, c
     bit 7, a
     jr nz, Jump_016_7395
@@ -7884,10 +7884,10 @@ Jump_016_7395::
     ld a, $01
 
 Jump_016_7397::
-    ld [wC9DC], a
-    ld a, [wC991]
+    ld [wRecordBufA + $56], a
+    ld a, [wRecordBufA + $B]
     ld l, a
-    ld a, [wC992]
+    ld a, [wRecordBufA + $C]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -7896,85 +7896,85 @@ Jump_016_7397::
     farcall LoadSpeciesRecord
     ld a, [wD00E]
     ld c, a
-    ld a, [wC9DC]
+    ld a, [wRecordBufA + $56]
     cp a, c
     jr c, Jump_016_73BB
     ld c, a
 
 Jump_016_73BB::
     ld a, c
-    ld [wC9DD], a
+    ld [wRecordBufA + $57], a
     ld a, [wCFC5]
     cp a, $02
     jp z, Jump_016_7456
-    ld a, [wC9E3]
+    ld a, [wRecordBufA + $5D]
     ld c, a
-    ld a, [wC9E4]
+    ld a, [wRecordBufA + $5E]
     ld b, a
     call BattleEnd_Step3_Sub01_Sub03
     ld a, l
-    ld [wC9E3], a
+    ld [wRecordBufA + $5D], a
     ld a, h
-    ld [wC9E4], a
+    ld [wRecordBufA + $5E], a
     ld a, l
-    ld [wC9E1], a
+    ld [wRecordBufA + $5B], a
     ld a, h
-    ld [wC9E2], a
-    ld a, [wC9E7]
+    ld [wRecordBufA + $5C], a
+    ld a, [wRecordBufA + $61]
     ld c, a
-    ld a, [wC9E8]
+    ld a, [wRecordBufA + $62]
     ld b, a
     call BattleEnd_Step3_Sub01_Sub02
     ld a, l
-    ld [wC9E7], a
+    ld [wRecordBufA + $61], a
     ld a, h
-    ld [wC9E8], a
+    ld [wRecordBufA + $62], a
     ld a, l
-    ld [wC9E5], a
+    ld [wRecordBufA + $5F], a
     ld a, h
-    ld [wC9E6], a
-    ld a, [wC9E9]
+    ld [wRecordBufA + $60], a
+    ld a, [wRecordBufA + $63]
     ld c, a
-    ld a, [wC9EA]
+    ld a, [wRecordBufA + $64]
     ld b, a
     call BattleEnd_Step3_Sub01_Sub02
     ld a, l
-    ld [wC9E9], a
+    ld [wRecordBufA + $63], a
     ld a, h
-    ld [wC9EA], a
-    ld a, [wC9EB]
+    ld [wRecordBufA + $64], a
+    ld a, [wRecordBufA + $65]
     ld c, a
-    ld a, [wC9EC]
+    ld a, [wRecordBufA + $66]
     ld b, a
     call BattleEnd_Step3_Sub01_Sub02
     ld a, l
-    ld [wC9EB], a
+    ld [wRecordBufA + $65], a
     ld a, h
-    ld [wC9EC], a
-    ld a, [wC9ED]
+    ld [wRecordBufA + $66], a
+    ld a, [wRecordBufA + $67]
     ld c, a
-    ld a, [wC9EE]
+    ld a, [wRecordBufA + $68]
     ld b, a
     call BattleEnd_Step3_Sub01_Sub02
     ld a, l
-    ld [wC9ED], a
+    ld [wRecordBufA + $67], a
     ld a, h
-    ld [wC9EE], a
-    ld a, [wC9EF]
+    ld [wRecordBufA + $68], a
+    ld a, [wRecordBufA + $69]
     ld c, a
-    ld a, [wC9F0]
+    ld a, [wRecordBufA + $6A]
     ld b, a
     call BattleEnd_Step3_Sub01_Sub02
     ld a, l
-    ld [wC9EF], a
+    ld [wRecordBufA + $69], a
     ld a, h
-    ld [wC9F0], a
-    ld a, [wC9F7]
+    ld [wRecordBufA + $6A], a
+    ld a, [wRecordBufAByte71]
     ld c, a
     ld b, $00
     call BattleEnd_Step3_Sub01_Sub02
     ld a, l
-    ld [wC9F7], a
+    ld [wRecordBufAByte71], a
 
 Jump_016_7456::
     call BattleEnd_Step3_Sub01_Sub01
@@ -8023,7 +8023,7 @@ Jump_016_74A2::
 
 Jump_016_74A5::
     push hl
-    ld a, [wC9DC]
+    ld a, [wRecordBufA + $56]
     ld c, $19
     call Multiply8
     pop de
@@ -8048,9 +8048,9 @@ Jump_016_74BE::
 
 Jump_016_74C9::
     ld a, l
-    ld [wC9F1], a
+    ld [wRecordBufA + $6B], a
     ld a, h
-    ld [wC9F2], a
+    ld [wRecordBufA + $6C], a
     ret
 
 ; only called from BattleEnd_Step3_Sub01 (E-0047)

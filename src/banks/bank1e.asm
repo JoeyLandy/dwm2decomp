@@ -442,7 +442,7 @@ Jump_01E_4234:: ; address name
 ; entry 0 of the `rst $00` table in ScriptCommandE8_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wD781, wPartyCount
-; writes: wD782, wD781, rRAMG2, rRAMB, wC8D9
+; writes: wD782, wD781, rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wPartyList
 ScriptCommandE8_Run_Case04_Case00::
 Jump_01E_429A:: ; address name
@@ -469,7 +469,7 @@ Jump_01E_42A9::
 ; only called from ScriptCommandE8_Run_Case0E_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case0E_Case07)
 ; reads: wPartyCount, wD782
-; writes: rRAMG2, rRAMB, wC8D9, wD782
+; writes: rRAMG2, rRAMB, wNameGlyphBuf, wD782
 ; points at: wPartyList
 ScriptCommandE8_Run_Case0E_Case07_Sub01::
 Func_01E_42C6:: ; address name
@@ -489,7 +489,7 @@ Jump_01E_42D1::
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     pop bc
     push bc
     ld a, b
@@ -1671,8 +1671,8 @@ Jump_01E_4B42:: ; address name
 ; entry 40 of the `rst $00` table in ScriptCommandE8_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyList, wD781
-; writes: rRAMG2, rRAMB, wC8D9, wD781, wScriptCommandType, wScriptStartRequest
-; points at: wC8CF, wTextBuf0, wTextWindowTileLo
+; writes: rRAMG2, rRAMB, wNameGlyphBuf, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wNameGlyphBuf, wTextBuf0, wTextWindowTileLo
 ScriptCommandE8_Run_Case04_Case28::
 Jump_01E_4B5D:: ; address name
     ld a, $0A
@@ -1683,8 +1683,8 @@ Jump_01E_4B5D:: ; address name
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
-    ld hl, wC8CF
+    ld [wNameGlyphBuf + $A], a
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $00
 
@@ -1726,8 +1726,8 @@ Jump_01E_4B89::
     call CopyRecordNameToWC8CF
     pop de
     ld a, $F0
-    ld [wC8D9], a
-    ld hl, wC8CF
+    ld [wNameGlyphBuf + $A], a
+    ld hl, wNameGlyphBuf
 
 Jump_01E_4BB4::
     ld a, [hl]
@@ -2305,7 +2305,7 @@ Jump_01E_4F9D:: ; address name
 ; entry 61 of the `rst $00` table in ScriptCommandE8_Run_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wD781, wPartyCount
-; writes: wD782, wD781, rRAMG2, rRAMB, wC8D9
+; writes: wD782, wD781, rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wPartyList
 ScriptCommandE8_Run_Case05_Case3D::
 Jump_01E_4FAC:: ; address name
@@ -2336,8 +2336,8 @@ Jump_01E_4FBB:: ; address name
 ; entry 71 of the `rst $00` table in ScriptCommandE8_Run_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B4, wD781
-; writes: rRAMG2, rRAMB, wC8D9, wD781, wScriptCommandType, wScriptStartRequest
-; points at: wC8CF, wTextBuf0, wTextWindowTileLo
+; writes: rRAMG2, rRAMB, wNameGlyphBuf, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wNameGlyphBuf, wTextBuf0, wTextWindowTileLo
 ScriptCommandE8_Run_Case05_Case47::
 Jump_01E_4FD6:: ; address name
     ld a, $0A
@@ -2348,8 +2348,8 @@ Jump_01E_4FD6:: ; address name
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
-    ld hl, wC8CF
+    ld [wNameGlyphBuf + $A], a
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $00
     jp Jump_01E_4B7B
@@ -3365,8 +3365,8 @@ Jump_01E_57EB:: ; address name
 ; entry 25 of the `rst $00` table in ScriptCommandE8_Run_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
-; writes: rRAMG2, rRAMB, wC8D9, wD781, wScriptCommandType, wScriptStartRequest
-; points at: wC8CF, wTextBuf0, wTextWindowTileLo
+; writes: rRAMG2, rRAMB, wNameGlyphBuf, wD781, wScriptCommandType, wScriptStartRequest
+; points at: wNameGlyphBuf, wTextBuf0, wTextWindowTileLo
 ScriptCommandE8_Run_Case07_Case19::
 Jump_01E_581C:: ; address name
     ld a, $0A
@@ -3378,8 +3378,8 @@ Jump_01E_581C:: ; address name
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
-    ld hl, wC8CF
+    ld [wNameGlyphBuf + $A], a
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $00
 
@@ -6543,7 +6543,7 @@ Func_01E_6D42:: ; address name
 ; for record B draws the names of its parents (fields from $6ED2 or $6EDA by bit 4 of field $0D), or '???' when unknown (E-0131)
 ; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunWD781Step_F0_5DE8_Case05_Sub01)
 ; reads: hTemp0, hTemp1
-; writes: rRAMG2, rRAMB, wC8CF, wC8D0, wC8D1, wC8D2, wC8D9, wD7F1, ...
+; writes: rRAMG2, rRAMB, wNameGlyphBuf, wD7F1, wD7F2, wD7F3
 DrawRecordParentNames::
 Func_01E_6D70:: ; address name
     ld a, $0A
@@ -6577,13 +6577,13 @@ Jump_01E_6D8F::
     cp a, $FF
     jr nz, Jump_01E_6DC5
     ld a, $98
-    ld [wC8CF], a
+    ld [wNameGlyphBuf], a
     ld a, $98
-    ld [wC8D0], a
+    ld [wNameGlyphBuf + $1], a
     ld a, $98
-    ld [wC8D1], a
+    ld [wNameGlyphBuf + $2], a
     ld a, $F0
-    ld [wC8D2], a
+    ld [wNameGlyphBuf + $3], a
     push de
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
@@ -6609,7 +6609,7 @@ Jump_01E_6DC5::
     ld a, b
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
     pop de
@@ -6637,7 +6637,7 @@ Jump_01E_6DF3::
     call CopyRecordNameToWC8CF
     ld de, vTiles2 + $2F0
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     call CopyGlyphTilesToVRAM
     pop de
     pop bc
@@ -6652,13 +6652,13 @@ Jump_01E_6DF3::
     cp a, $FF
     jr nz, Jump_01E_6E3E
     ld a, $98
-    ld [wC8CF], a
+    ld [wNameGlyphBuf], a
     ld a, $98
-    ld [wC8D0], a
+    ld [wNameGlyphBuf + $1], a
     ld a, $98
-    ld [wC8D1], a
+    ld [wNameGlyphBuf + $2], a
     ld a, $F0
-    ld [wC8D2], a
+    ld [wNameGlyphBuf + $3], a
     push de
     ld de, vTiles2 + $340
     call CopyGlyphTilesToVRAM
@@ -6684,7 +6684,7 @@ Jump_01E_6E3E::
     ld a, b
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     ld de, vTiles2 + $340
     call CopyGlyphTilesToVRAM
     pop de
@@ -6710,7 +6710,7 @@ Jump_01E_6E6C::
     call CopyRecordNameToWC8CF
     ld de, vTiles2 + $430
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     call CopyGlyphTilesToVRAM
     pop bc
     xor a, a
@@ -6721,7 +6721,7 @@ Jump_01E_6E6C::
 ; 2 call sites from 1 routine (e.g. DrawRecordParentNames)
 ; reads: wD7F3, hTemp0, hTemp1, wDataBank, wD7F1, wD7F2
 ; writes: wDataBank
-; points at: wC8CF
+; points at: wNameGlyphBuf
 DrawMonsterNameOfRecordField::
 Func_01E_6E84:: ; address name
     push bc
@@ -6756,7 +6756,7 @@ Func_01E_6E84:: ; address name
     ld d, c
     pop af
     ld [wDataBank], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld b, $08
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -6771,7 +6771,7 @@ Func_01E_6E84:: ; address name
 
 ; clears five tiles at vTiles2 + $290 (copying the tile at $2940), then copies the name at record [HL] field $0F (CopyRecordNameToWC8CF) and draws it there (E-0120)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case09_Case12)
-; writes: wC8D9
+; writes: wNameGlyphBuf
 DrawRecordName0FAtTiles2290::
 Func_01E_6EE2:: ; address name
     push hl
@@ -6792,7 +6792,7 @@ Func_01E_6EE2:: ; address name
     call CopyRecordNameToWC8CF
     ld de, vTiles2 + $290
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     call CopyGlyphTilesToVRAM
     ret
 

@@ -3,12 +3,12 @@ SECTION "Bank 11", ROMX[$4000], BANK[$11]
 
 ; unless a special mode is set (wCC44 bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wCCEA = 1, sound effect $60 is queued, and the entry's new hMapId, hFF8F, hFF92 and position (wC8C8/wC8C9) are stored
 ; 6 call sites from 1 routine (e.g. UpdatePlayerMovement)
-; reads: wCC44, hMapId, hPlayerFacing, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8CA, ...
-; writes: wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hPlayerStateFlags, ...
+; reads: wMapType, hMapId, hPlayerFacing, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestFacing, ...
+; writes: wWarpDestFacing, wCCEA, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, hPlayerStateFlags, ...
 ; points at: wFieldInitStage
 CheckWarpAtPlayer::
 Func_011_4002:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_011_4010
     farcall CheckWarpAtPlayer_Sub01
@@ -49,7 +49,7 @@ Jump_011_4029::
     jr nz, Jump_011_407D
     ld a, [de]
     inc de
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     push af
     swap a
     and a, $0F
@@ -78,7 +78,7 @@ Jump_011_4029::
     jr Jump_011_4088
 
 Jump_011_4066::
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     inc de
     ld a, [de]
     inc de
@@ -123,18 +123,18 @@ Jump_011_4088::
     and a, $0F
     inc de
     ldh [hMapScreenY], a
-    ld a, [wC8CA]
+    ld a, [wWarpDestFacing]
     cp a, $FF
     jr z, Jump_011_40D2
     ld a, [de]
     inc de
     swap a
     and a, $F0
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, [de]
     swap a
     and a, $F0
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     dec de
     dec de
     dec de
@@ -144,9 +144,9 @@ Jump_011_4088::
     ldh a, [hPlayerStateFlags]
     or a, $40
     ldh [hPlayerStateFlags], a
-    ld a, [wC8C9]
+    ld a, [wWarpDestY]
     add a, $08
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     jr Jump_011_40F9
 
 Jump_011_40D2::
@@ -155,12 +155,12 @@ Jump_011_40D2::
     ld c, a
     ldh a, [hPlayerX]
     add a, c
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, [de]
     ld c, a
     ldh a, [hPlayerY]
     add a, c
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     dec de
     dec de
     dec de
@@ -170,9 +170,9 @@ Jump_011_40D2::
     ldh a, [hPlayerStateFlags]
     or a, $40
     ldh [hPlayerStateFlags], a
-    ld a, [wC8C9]
+    ld a, [wWarpDestY]
     add a, $08
-    ld [wC8C9], a
+    ld [wWarpDestY], a
 
 Jump_011_40F9::
     ld a, [de]
@@ -206,12 +206,12 @@ Jump_011_4105::
 
 ; special maps use RunWCC44Type_596F; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
-; reads: wCC44, hMapId, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8C9
-; writes: hPlayerStateFlags, wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
+; reads: wMapType, hMapId, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestY
+; writes: hPlayerStateFlags, wWarpDestFacing, wCCEA, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
 ; points at: wFieldInitStage
 CheckWarpsAtPlayerPosition::
 Func_011_4130:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_011_413E
     farcall RunWCC44Type_596F
@@ -282,7 +282,7 @@ Jump_011_4199::
 Jump_011_419F::
     ld a, [de]
     inc de
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     push af
     swap a
     and a, $0F
@@ -356,11 +356,11 @@ Jump_011_41E6::
     inc de
     swap a
     and a, $F0
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, [de]
     swap a
     and a, $F0
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     dec de
     dec de
     dec de
@@ -370,9 +370,9 @@ Jump_011_41E6::
     ldh a, [hPlayerStateFlags]
     or a, $40
     ldh [hPlayerStateFlags], a
-    ld a, [wC8C9]
+    ld a, [wWarpDestY]
     add a, $08
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     jr Jump_011_4229
 
 Jump_011_4229::
@@ -411,12 +411,12 @@ Jump_011_4235::
 
 ; unless bit 7 of wCC44 is set, looks hMapId up in Data_011_42AC; when listed, sets the linked map from Data_011_42B8 and warps (using wC88F when wC891 selects it), C = 1; otherwise C = 0 (E-0125)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, CallF4268OnScreenY1)
-; reads: wCC44, hMapId, wKeyWorldActive, wKeyWorldKey, wCC42, wKeyWorldGoal, wKeyWorldGoalCell, wCD09, ...
-; writes: hMapId, wC8C8, wC8C9, hMapScreenX, hMapScreenY
+; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoal, wKeyWorldGoalCell, wCD09, ...
+; writes: hMapId, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY
 ; points at: wKeyWorldGoal
 WarpToLinkedMapForCurrentMap::
 Func_011_4268:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jp nz, Jump_011_42D9
     ldh a, [hMapId]
@@ -488,16 +488,16 @@ Jump_011_42E0::
     jr z, Jump_011_431E
     and a, $7F
     ld c, a
-    ld a, [wCC42]
+    ld a, [wKeyWorldSlot]
     cp a, c
     jr nz, Jump_011_431E
     ld a, [wKeyWorldGoal]
     and a, $F0
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, [wKeyWorldGoal]
     and a, $0F
     swap a
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     ld a, [wKeyWorldGoalCell]
     and a, $F0
     swap a
@@ -511,9 +511,9 @@ Jump_011_42E0::
 
 Jump_011_431E::
     ld a, [wCD09]
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, [wCD0A]
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     ld a, [wCD08]
     and a, $F0
     swap a
@@ -528,7 +528,7 @@ Jump_011_431E::
 ; script command: plays sound $60 and reads a warp destination at DE (wC8C8/9 from the nibbles of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wC5E0 += 1, wModeState = 4, updates hFF8C and returns C = 1 (E-0121)
 ; 1 call site from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
 ; reads: hPlayerStateFlags
-; writes: wCCEA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wFieldTransitionKind, wModeState, wFieldTransitionStep, ...
+; writes: wCCEA, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wFieldTransitionKind, wModeState, wFieldTransitionStep, ...
 ; points at: wFieldInitStage
 ScriptWarpToMapFromBytesAtDE::
 Func_011_4340:: ; address name
@@ -538,11 +538,11 @@ Func_011_4340:: ; address name
     call QueueSoundEffect
     ld a, [de]
     and a, $F0
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, [de]
     swap a
     and a, $F0
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     inc de
     ld a, [de]
     swap a
@@ -574,11 +574,11 @@ Func_011_4340:: ; address name
 ; wC8CA = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wC8C5, updates hFF8C and sets wC8C6 = 1 (E-0124)
 ; 2 call sites from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
 ; reads: hPlayerStateFlags
-; writes: wC8CA, wModeState, wFieldTransitionStep, hPlayerStateFlags, wFieldTransitionKind
+; writes: wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, wFieldTransitionKind
 StartWarpTransition::
 Func_011_438F:: ; address name
     ld a, $F0
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     ld a, $04
@@ -656,7 +656,7 @@ Jump_011_43F3::
 ; only called from CheckMapExitTable4480 (E-0047)
 ; 2 call sites from 1 routine (e.g. CheckMapExitTable4480)
 ; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wLastWarpIndex, wFieldTransitionKind, ...
+; writes: wCCEA, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wLastWarpIndex, wFieldTransitionKind, ...
 ; points at: wFieldInitStage
 CheckMapExitTable4480_Sub01::
 Func_011_43FA:: ; address name
@@ -710,9 +710,9 @@ Jump_011_442B::
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $80
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     xor a, a
     ld [wLastWarpIndex], a
     ld a, $03

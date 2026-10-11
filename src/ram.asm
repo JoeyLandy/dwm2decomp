@@ -321,77 +321,45 @@ DEF wSaveRecordIndex EQU $C8C4 ; record index of the save-record steps (E-0133)
 DEF wFieldTransitionStep EQU $C8C5 ; step of the field transition (mode state 4) (E-0133)
 DEF wFieldTransitionKind EQU $C8C6 ; kind of field transition (warp, fade, special) (E-0133)
 DEF wFieldReturnPhase EQU $C8C7 ; phase used when returning to the field (RunWC8C7Phase); non-zero keeps the screen (E-0133)
-DEF wC8C8 EQU $C8C8
-DEF wC8C9 EQU $C8C9
-DEF wC8CA EQU $C8CA
-DEF wC8CB EQU $C8CB
-DEF wC8CC EQU $C8CC
-DEF wC8CD EQU $C8CD
-DEF wC8CE EQU $C8CE
-DEF wC8CF EQU $C8CF
-DEF wC8D0 EQU $C8D0
-DEF wC8D1 EQU $C8D1
-DEF wC8D2 EQU $C8D2
-DEF wC8D3 EQU $C8D3
-DEF wC8D4 EQU $C8D4
-DEF wC8D5 EQU $C8D5
-DEF wC8D6 EQU $C8D6
-DEF wC8D7 EQU $C8D7
-DEF wC8D8 EQU $C8D8
-DEF wC8D9 EQU $C8D9
-DEF wC8DA EQU $C8DA
-DEF wC8DB EQU $C8DB
-DEF wC8DC EQU $C8DC
-DEF wC8DD EQU $C8DD
-DEF wC8DE EQU $C8DE
+DEF wWarpDestX EQU $C8C8 ; player X to place after a warp or when returning to the field (ExitPauseMenuToField, warp commands) (E-0134)
+DEF wWarpDestY EQU $C8C9 ; player Y to place after a warp or when returning to the field (E-0134)
+DEF wWarpDestFacing EQU $C8CA ; player facing after a warp ($FF/$F0 keep or mark special cases) (E-0134)
+DEF wTextWindowState EQU $C8CB ; text window open/close state: low 2 bits active (StepTextWindowOpenClose runs until they clear), bit 7 picks the upper window (E-0134)
+DEF wTextWindowStep EQU $C8CC ; step of the text window open/close (E-0134)
+DEF wPartyWindowFlags EQU $C8CD ; idle party window flags: bit 7 = shown (redraw on close), low bits = rows (E-0134)
+DEF wPartyWindowTimer EQU $C8CE ; idle frames counted before the party window appears ($B4) (E-0134)
+DEF wNameGlyphBuf EQU $C8CF ; name text copied before drawing its glyphs (CopyRecordNameToWC8CF, CopyGlyphTilesToVRAM); $F0-terminated (E-0134)
 DEF wFollowerRecords EQU $C8EF ; three 5-byte records for the monsters following the player: direction, X, Y, target X, target Y (SetFollowerTargetsFromLeader, StepFollowersTowardTargets; ScriptSetDirection and ScriptSlideObjectY address the same records) (E-0093) (reading (E-0093))
-DEF wC8F0 EQU $C8F0
-DEF wC8F1 EQU $C8F1
-DEF wC8F2 EQU $C8F2
-DEF wC8F3 EQU $C8F3
-DEF wC8F4 EQU $C8F4
-DEF wC8F5 EQU $C8F5
-DEF wC8F6 EQU $C8F6
-DEF wC8F7 EQU $C8F7
-DEF wC8F8 EQU $C8F8
-DEF wC8F9 EQU $C8F9
-DEF wC8FA EQU $C8FA
-DEF wC8FB EQU $C8FB
-DEF wC8FC EQU $C8FC
-DEF wC8FD EQU $C8FD
-DEF wC8FE EQU $C8FE
-DEF wC8FF EQU $C8FF
-DEF wC900 EQU $C900
-DEF wC901 EQU $C901
-DEF wC902 EQU $C902
-DEF wC903 EQU $C903
-DEF wC904 EQU $C904
-DEF wC905 EQU $C905
-DEF wC906 EQU $C906
-DEF wC907 EQU $C907
-DEF wC908 EQU $C908
-DEF wC909 EQU $C909
-DEF wC90A EQU $C90A
-DEF wC90B EQU $C90B
-DEF wC90C EQU $C90C
-DEF wC90D EQU $C90D
-DEF wC90E EQU $C90E
-DEF wC90F EQU $C90F
-DEF wC910 EQU $C910
-DEF wC911 EQU $C911
-DEF wC912 EQU $C912
-DEF wC913 EQU $C913
-DEF wC914 EQU $C914
-DEF wC915 EQU $C915
-DEF wC916 EQU $C916
-DEF wC917 EQU $C917
-DEF wC918 EQU $C918
+DEF wTriggerKind EQU $C8FE ; kind of the active trigger on this screen ($FF = none); its marker sprite is drawn when set (E-0134)
+DEF wTriggerCell EQU $C8FF ; cell of the active trigger (x and y nibbles) (E-0134)
+DEF wTriggerIndex EQU $C900 ; index of the active trigger entry (E-0134)
+DEF wEncounterRate EQU $C901 ; random encounter setting from the map header (bit 7 suppresses one count; low bits non-zero enable encounters) (E-0134)
+DEF wEncounterCountdown EQU $C902 ; steps left before a random encounter (PickRandomWC902FromTable478F) (E-0134)
+DEF wBattleIntroKind EQU $C903 ; battle intro kind (RunWC903Case dispatches on it; 2 normal, 7 special) (E-0134)
+DEF wBattleTransitionStep EQU $C904 ; step of the battle transition effect (RunWC904Step) (E-0134)
+DEF wBattleTransitionSubStep EQU $C905 ; sub-step of the battle transition (E-0134)
+DEF wTransitionCounter EQU $C906 ; counter of the battle transition effect (E-0134)
+DEF wTransitionStage EQU $C907 ; stage of the battle transition effect (E-0134)
+DEF wTransitionByte08 EQU $C908 ; battle transition work byte (E-0134)
+DEF wTransitionBGPtrLo EQU $C909 ; BG map pointer of the battle transition effect, low byte (AddHLToWC909InBGMap) (E-0134)
+DEF wTransitionBGPtrHi EQU $C90A ; BG map pointer of the battle transition effect, high byte (E-0134)
+DEF wTransitionCountA EQU $C90B ; battle transition loop counter (E-0134)
+DEF wTransitionCountB EQU $C90C ; battle transition loop counter (E-0134)
+DEF wFieldEventKind EQU $C90D ; field event kind of the map (map header; RunFieldEventWC90D dispatches on its low nibble) (E-0134)
+DEF wFieldEventTimer EQU $C90E ; timer of the field event (E-0134)
+DEF wFieldEventArg EQU $C90F ; argument of the field event (set by script command $5E) (E-0134)
+DEF wTilesUnderPoint EQU $C910 ; the four tile ids of the 2 x 2 block under a point (TileBlockedAtPixel, ReadTileBuffer2x2AtPixel) (E-0134)
+DEF wMapToggleFlag EQU $C914 ; flag set when the map toggles or returns ($7F/$92 maps) (E-0134)
+DEF wStatusFieldStep EQU $C915 ; step of the field status-effect state (mode state 7) (E-0134)
+DEF wTalkEventGroup EQU $C916 ; group of the talk event to dispatch (DispatchTalkEvent) (E-0134)
+DEF wTalkEventIndex EQU $C917 ; index within the talk event group (E-0134)
+DEF wStepTriggerFlag EQU $C918 ; set when a step ends on a trigger (UpdatePlayerMovement_Sub01) (E-0134)
 DEF wScriptStartRequest EQU $C919 ; bit 7 set asks FetchScriptCommand to begin running the script at wScriptPointer (reading + execution (E-0038))
 DEF wScriptPointerLo EQU $C91A ; low byte of the address of the next script byte (wC91B is the high byte; the bytes are in the current bank, or in wDataBank when wScriptInDataBank is set) (reading + execution (E-0038))
 DEF wScriptPointerHi EQU $C91B ; high byte of the script pointer (reading + execution (E-0038))
-DEF wC91C EQU $C91C
-DEF wC91D EQU $C91D
-DEF wC91E EQU $C91E
+DEF wScriptReturnBank EQU $C91C ; saved script position for a return: bank or first byte (E-0134)
+DEF wScriptReturnLo EQU $C91D ; saved script position, low byte (E-0134)
+DEF wScriptReturnHi EQU $C91E ; saved script position, high byte (E-0134)
 DEF wScriptRunning EQU $C91F ; non-zero while a script runs (reading + execution (E-0038))
 DEF wScriptCommandType EQU $C920 ; the script command being run, 0 = none; indexes ScriptCommandHandlers (minus 1) (reading + execution (E-0038))
 DEF wScriptParam0 EQU $C921 ; first parameter of the current script command (reading + execution (E-0038))
@@ -400,255 +368,87 @@ DEF wScriptStep EQU $C923 ; step counter of the current script command (reading 
 DEF wMessageIndex EQU $C924 ; string index of the message RunMessageBox shows (low byte of the message word) (E-0079) (reading (E-0079))
 DEF wMessageGroup EQU $C925 ; message word high byte: bits 0-5 select the message group (ShowMessageHL), bit 7 skips opening the window, bit 6 skips closing it (E-0079) (reading (E-0079))
 DEF wMessageState EQU $C926 ; RunMessageBox state: 0-3 while a message runs, $FF when idle; StartMessageA sets 0 (E-0079) (reading (E-0079))
-DEF wC927 EQU $C927
-DEF wC928 EQU $C928
-DEF wC929 EQU $C929
-DEF wC92A EQU $C92A
+DEF wFieldInitFlag EQU $C927 ; flag read and cleared by InitFieldScreen (set by script command $9F) (E-0134)
+DEF wStepPtrLo EQU $C928 ; low byte of the address of the coordinate an object step changes (StepObjectTowardCoord, AddStepDeltaToPointedByte); other routines borrow it as scratch (E-0134)
+DEF wStepPtrHi EQU $C929 ; high byte of that address (E-0134)
+DEF wStepTarget EQU $C92A ; target value of the stepped coordinate (E-0134)
 DEF wStepArrived EQU $C92C ; 1 when the last StepObjectTowardCoord or StepPlayer*TowardWC928 step reached the target coordinate in wC928, else 0 (E-0071) (reading (E-0071))
-DEF wC92D EQU $C92D
-DEF wC92E EQU $C92E
-DEF wC92F EQU $C92F
-DEF wC930 EQU $C930
-DEF wC931 EQU $C931
-DEF wC932 EQU $C932
-DEF wC933 EQU $C933
-DEF wC934 EQU $C934
-DEF wC935 EQU $C935
-DEF wC936 EQU $C936
-DEF wC937 EQU $C937
-DEF wC938 EQU $C938
-DEF wC939 EQU $C939
-DEF wC93A EQU $C93A
-DEF wC93B EQU $C93B
-DEF wC93C EQU $C93C
-DEF wC93D EQU $C93D
-DEF wC93E EQU $C93E
-DEF wC93F EQU $C93F
-DEF wC940 EQU $C940
-DEF wC941 EQU $C941
-DEF wC942 EQU $C942
-DEF wC943 EQU $C943
-DEF wC944 EQU $C944
-DEF wC945 EQU $C945
-DEF wC946 EQU $C946
-DEF wC947 EQU $C947
-DEF wC948 EQU $C948
-DEF wC949 EQU $C949
-DEF wC94A EQU $C94A
-DEF wC94B EQU $C94B
-DEF wC94C EQU $C94C
-DEF wC94D EQU $C94D
-DEF wC94E EQU $C94E
-DEF wC94F EQU $C94F
-DEF wC950 EQU $C950
-DEF wC951 EQU $C951
-DEF wC952 EQU $C952
-DEF wC953 EQU $C953
-DEF wC954 EQU $C954
-DEF wC955 EQU $C955
-DEF wC956 EQU $C956
-DEF wC957 EQU $C957
-DEF wC958 EQU $C958
-DEF wC962 EQU $C962
-DEF wC963 EQU $C963
-DEF wC964 EQU $C964
-DEF wC965 EQU $C965
-DEF wC966 EQU $C966
-DEF wC967 EQU $C967
-DEF wC968 EQU $C968
-DEF wC969 EQU $C969
-DEF wC96A EQU $C96A
-DEF wC96B EQU $C96B
-DEF wC96C EQU $C96C
-DEF wC96D EQU $C96D
-DEF wC96E EQU $C96E
-DEF wC96F EQU $C96F
-DEF wC970 EQU $C970
-DEF wC971 EQU $C971
-DEF wC972 EQU $C972
-DEF wC981 EQU $C981
-DEF wC982 EQU $C982
-DEF wC983 EQU $C983
-DEF wC984 EQU $C984
-DEF wC985 EQU $C985
-DEF wC986 EQU $C986
-DEF wC987 EQU $C987
-DEF wC991 EQU $C991
-DEF wC992 EQU $C992
-DEF wC993 EQU $C993
-DEF wC994 EQU $C994
-DEF wC995 EQU $C995
-DEF wC9BA EQU $C9BA
-DEF wC9C2 EQU $C9C2
-DEF wC9DC EQU $C9DC
-DEF wC9DD EQU $C9DD
-DEF wC9DE EQU $C9DE
-DEF wC9DF EQU $C9DF
-DEF wC9E0 EQU $C9E0
-DEF wC9E1 EQU $C9E1
-DEF wC9E2 EQU $C9E2
-DEF wC9E3 EQU $C9E3
-DEF wC9E4 EQU $C9E4
-DEF wC9E5 EQU $C9E5
-DEF wC9E6 EQU $C9E6
-DEF wC9E7 EQU $C9E7
-DEF wC9E8 EQU $C9E8
-DEF wC9E9 EQU $C9E9
-DEF wC9EA EQU $C9EA
-DEF wC9EB EQU $C9EB
-DEF wC9EC EQU $C9EC
-DEF wC9ED EQU $C9ED
-DEF wC9EE EQU $C9EE
-DEF wC9EF EQU $C9EF
-DEF wC9F0 EQU $C9F0
-DEF wC9F1 EQU $C9F1
-DEF wC9F2 EQU $C9F2
-DEF wC9F3 EQU $C9F3
-DEF wC9F7 EQU $C9F7
-DEF wC9F9 EQU $C9F9
-DEF wCA2A EQU $CA2A
-DEF wCA2B EQU $CA2B
-DEF wCA2C EQU $CA2C
-DEF wCA36 EQU $CA36
-DEF wCA37 EQU $CA37
-DEF wCA38 EQU $CA38
-DEF wCA39 EQU $CA39
-DEF wCA3A EQU $CA3A
-DEF wCA45 EQU $CA45
-DEF wCA46 EQU $CA46
-DEF wCA47 EQU $CA47
-DEF wCA48 EQU $CA48
-DEF wCA49 EQU $CA49
-DEF wCA53 EQU $CA53
-DEF wCA54 EQU $CA54
-DEF wCA55 EQU $CA55
-DEF wCA56 EQU $CA56
-DEF wCA5E EQU $CA5E
-DEF wCA5F EQU $CA5F
-DEF wCA67 EQU $CA67
-DEF wCA80 EQU $CA80
-DEF wCA81 EQU $CA81
-DEF wCA82 EQU $CA82
-DEF wCA83 EQU $CA83
-DEF wCA84 EQU $CA84
-DEF wCA85 EQU $CA85
-DEF wCA86 EQU $CA86
-DEF wCA87 EQU $CA87
-DEF wCA88 EQU $CA88
-DEF wCA89 EQU $CA89
-DEF wCA8A EQU $CA8A
-DEF wCA8B EQU $CA8B
-DEF wCA8C EQU $CA8C
-DEF wCA8D EQU $CA8D
-DEF wCA8E EQU $CA8E
-DEF wCA8F EQU $CA8F
-DEF wCA90 EQU $CA90
-DEF wCA91 EQU $CA91
-DEF wCA92 EQU $CA92
-DEF wCA93 EQU $CA93
-DEF wCA94 EQU $CA94
-DEF wCA95 EQU $CA95
-DEF wCA96 EQU $CA96
-DEF wCA97 EQU $CA97
-DEF wCA98 EQU $CA98
-DEF wCA99 EQU $CA99
-DEF wCA9A EQU $CA9A
-DEF wCA9B EQU $CA9B
-DEF wCA9D EQU $CA9D
-DEF wCA9E EQU $CA9E
-DEF wCAB9 EQU $CAB9
-DEF wCAC3 EQU $CAC3
-DEF wCAC4 EQU $CAC4
-DEF wCACE EQU $CACE
-DEF wCACF EQU $CACF
-DEF wCAD0 EQU $CAD0
-DEF wCADB EQU $CADB
-DEF wCADC EQU $CADC
-DEF wCADD EQU $CADD
-DEF wCADE EQU $CADE
-DEF wCADF EQU $CADF
-DEF wCAE9 EQU $CAE9
-DEF wCB04 EQU $CB04
-DEF wCB0C EQU $CB0C
-DEF wCB25 EQU $CB25
-DEF wCB26 EQU $CB26
-DEF wCB27 EQU $CB27
-DEF wCB28 EQU $CB28
-DEF wCB2B EQU $CB2B
-DEF wCB3D EQU $CB3D
-DEF wCB3E EQU $CB3E
-DEF wCB3F EQU $CB3F
-DEF wCB43 EQU $CB43
-DEF wCB74 EQU $CB74
-DEF wCB75 EQU $CB75
-DEF wCB76 EQU $CB76
+DEF wScriptSubStep EQU $C92D ; sub-step of script commands that run several stages (RunWC92DStep) (E-0134)
+DEF wScriptMsgSelect EQU $C92E ; selector for script messages (StartMessageFromTable7787) (E-0134)
+DEF wScriptTemp0 EQU $C92F ; script work byte (E-0134)
+DEF wScriptTemp1 EQU $C930 ; script work byte (E-0134)
+DEF wScriptTemp2 EQU $C931 ; script work byte (E-0134)
+DEF wScriptTemp3 EQU $C932 ; script work byte (E-0134)
+DEF wScriptTemp4 EQU $C933 ; script work byte (also read by game mode 2) (E-0134)
+DEF wFieldStateByte34 EQU $C934 ; set by FieldModeStateDispatch_Shared01 (E-0134)
+DEF wPendingFieldEvent EQU $C935 ; pending field event: bit 7 = pending, bit 6 = stage, low nibble = kind (the gold and party events set $C0-$CF) (E-0134)
+DEF wSavedPositionValid EQU $C936 ; set when a player position is saved in wSavedPlayerState; cleared on restore (E-0134)
+DEF wSavedPlayerState EQU $C937 ; saved player state: wObject0 byte 7, position, facing, follower bytes ($C937-$C943; SavePlayerPositionState) (E-0134)
+DEF wGameMode2Byte44 EQU $C944 ; set by the field states, read by game mode 2 (E-0134)
+DEF wCursorCellX EQU $C945 ; cursor cell column (game mode 2 screens; CenteredBGMapOriginForSizeBC) (E-0134)
+DEF wCursorCellY EQU $C946 ; cursor cell row (E-0134)
+DEF wCursorCellW EQU $C947 ; cursor cell width (E-0134)
+DEF wCursorCellH EQU $C948 ; cursor cell height (E-0134)
+DEF wSpriteFloatY EQU $C949 ; vertical offset of an animated sprite (CycleWC949Down) (E-0134)
+DEF wArenaFlags EQU $C94A ; arena flags (bit 7 selects alternate messages and monsters) (E-0134)
+DEF wLinkSceneByte4B EQU $C94B ; link/scene byte (game modes 5 and 6) (E-0134)
+DEF wLinkSceneByte4C EQU $C94C ; link/scene byte read by GameMode6_Init (E-0134)
+DEF wFollowerDelay EQU $C94D ; follower step delay (E-0134)
+DEF wSaveByte4E EQU $C94E ; read by the save steps (E-0134)
+DEF wKeyWorldPlaceFlag EQU $C94F ; set when a key-world object is placed (E-0134)
+DEF wGameMode2Byte50 EQU $C950 ; read by the game-mode-2 screens, set by script command $E0 (E-0134)
+DEF wTriggerEnable EQU $C951 ; 1 disables step triggers (CheckStepTriggerAndDispatchTalk) (E-0134)
+DEF wEffectFlags52 EQU $C952 ; set by SelectEffectByWDAD2Flags (E-0134)
+DEF wFormationSlot0 EQU $C953 ; formation chosen for side 0 ($FF = none; SaveActionChoicesAndPickFormations) (E-0134)
+DEF wFormationSlot1 EQU $C954 ; formation chosen for side 1 (E-0134)
+DEF wMapToggleRequest EQU $C955 ; non-zero requests the $7F/$92 map toggle (E-0134)
+DEF wTriggerMarkerFlags EQU $C956 ; trigger marker flags (bit 7 hides the marker) (E-0134)
+DEF wReturnWarpFlag EQU $C957 ; set by StartReturnWarpByFlag25 (E-0134)
+DEF wBattleByte58 EQU $C958 ; battle work byte (E-0134)
+DEF wBattleByte62 EQU $C962 ; battle work byte (E-0134)
+DEF wBattleByte63 EQU $C963 ; battle work byte (E-0134)
+DEF wBattleKindFlags EQU $C964 ; battle kind flags set at battle set-up and end (E-0134)
+DEF wScriptByte65 EQU $C965 ; read by script command $9F (E-0134)
+DEF wKeyRetryCount EQU $C966 ; retries counted by GenerateNewKeyEntry (E-0134)
+DEF wKeyWorldObjFlag EQU $C967 ; flag set by SetupKeyWorldObjectsForMapType (E-0134)
+DEF wScriptByte68 EQU $C968 ; set by script command $F2 (E-0134)
+DEF wKeyWorldLevelBase EQU $C969 ; key-world level base (LoadWC969TripleForWCD05) (E-0134)
+DEF wKeyWorldLevelArea EQU $C96A ; key-world area level (E-0134)
+DEF wKeyWorldLevelMonster EQU $C96B ; key-world monster level (E-0134)
+DEF wBattleIntroFlag EQU $C96C ; set by RunWC903Case; read by ScaleStatAndCapByBattleKind (E-0134)
+DEF wItemMenuByte6D EQU $C96D ; item menu work byte (E-0134)
+DEF wItemMenuByte6E EQU $C96E ; item menu work byte (E-0134)
+DEF wEffectByte6F EQU $C96F ; set by battle text, read by the LoveRain effect (E-0134)
+DEF wActionRepeatFlag EQU $C970 ; action repeat flag (reset with the effect state) (E-0134)
+DEF wResolveByte71 EQU $C971 ; set at the start of an action (E-0134)
+DEF wBattleBuffer72 EQU $C972 ; battle work bytes from $C972 (E-0134)
+DEF wResolveByte81 EQU $C981 ; set while resolving targets (E-0134)
+DEF wSavedActorSlot EQU $C982 ; actor slot saved for some effects (action $D6, MP drain) (E-0134)
+DEF wSavedActorByte EQU $C983 ; byte saved with wSavedActorSlot (E-0134)
+DEF wSide0Flag EQU $C984 ; per-side flag (side 0) checked by the AI (E-0134)
+DEF wSide1Flag EQU $C985 ; per-side flag (side 1) checked by the AI (E-0134)
+DEF wRecordBufA EQU $C986 ; a $A5-byte monster record in SRAM record format (first parent in breeding, own record in link screens); offsets: +$0B species, +$34 skills, +$56 level, +$5B HP ... +$69 INT, +$6F personality (E-0134)
+DEF wRecordBufAByte71 EQU $C9F7 ; record buffer A byte $71 (E-0134)
+DEF wRecordBufB EQU $CA2B ; a second $A5-byte record (second parent in breeding, partner record in link screens) (E-0134)
+DEF wChildRecord EQU $CAD0 ; the $A5-byte record built by ComputeBreedingChild; stored into SRAM by StoreReceivedRecordIntoSRAM (E-0134)
+DEF wSequencePtrLo EQU $CB75 ; pointer to the running animation sequence, low byte (TickWCB75Sequence) (E-0134)
+DEF wSequencePtrHi EQU $CB76 ; pointer to the running animation sequence, high byte (E-0134)
 DEF wSpriteSlotCount EQU $CB7D ; number of 8-byte slots DrawSpriteSlots draws (reading)
-DEF wCB7E EQU $CB7E
+DEF wScreenSavedFlag EQU $CB7E ; set when the screen buffer was saved to vBGMap1 (E-0134)
 DEF wSpriteSlots EQU $CB7F ; start of an array of objects: 8-byte slots in the bank $E0 intro (DrawSpriteSlots), 16-byte entries in field mode (the script commands, ScriptStepObject) (reading)
-DEF wCB80 EQU $CB80
-DEF wCB81 EQU $CB81
-DEF wCB82 EQU $CB82
-DEF wCB83 EQU $CB83
-DEF wCB84 EQU $CB84
-DEF wCB85 EQU $CB85
-DEF wCB86 EQU $CB86
-DEF wCB87 EQU $CB87
-DEF wCB88 EQU $CB88
-DEF wCB89 EQU $CB89
-DEF wCB8A EQU $CB8A
-DEF wCB8B EQU $CB8B
-DEF wCB8C EQU $CB8C
-DEF wCB8D EQU $CB8D
-DEF wCB8E EQU $CB8E
-DEF wCB8F EQU $CB8F
-DEF wCB90 EQU $CB90
-DEF wCB91 EQU $CB91
-DEF wCB92 EQU $CB92
-DEF wCB93 EQU $CB93
-DEF wCB96 EQU $CB96
-DEF wCB98 EQU $CB98
-DEF wCB9A EQU $CB9A
-DEF wCB9B EQU $CB9B
-DEF wCB9C EQU $CB9C
-DEF wCB9F EQU $CB9F
-DEF wCBA1 EQU $CBA1
-DEF wCBA2 EQU $CBA2
-DEF wCBA3 EQU $CBA3
-DEF wCBA4 EQU $CBA4
-DEF wCBA6 EQU $CBA6
-DEF wCBA8 EQU $CBA8
-DEF wCBAA EQU $CBAA
-DEF wCBAB EQU $CBAB
-DEF wCBAC EQU $CBAC
-DEF wCBB6 EQU $CBB6
-DEF wCBBA EQU $CBBA
-DEF wCBBB EQU $CBBB
-DEF wCBBC EQU $CBBC
-DEF wCBC6 EQU $CBC6
-DEF wCBCA EQU $CBCA
-DEF wCBCC EQU $CBCC
-DEF wCBCF EQU $CBCF
-DEF wCBD0 EQU $CBD0
-DEF wCBD3 EQU $CBD3
-DEF wCBD4 EQU $CBD4
-DEF wCBD5 EQU $CBD5
-DEF wCBD6 EQU $CBD6
-DEF wCBD7 EQU $CBD7
-DEF wCC37 EQU $CC37
-DEF wCC38 EQU $CC38
-DEF wCC39 EQU $CC39
-DEF wCC3A EQU $CC3A
-DEF wCC3B EQU $CC3B
-DEF wCC3C EQU $CC3C
-DEF wCC3F EQU $CC3F
-DEF wCC42 EQU $CC42
-DEF wCC43 EQU $CC43
-DEF wCC44 EQU $CC44
-DEF wCC45 EQU $CC45
-DEF wCC46 EQU $CC46
-DEF wCC47 EQU $CC47
-DEF wCC48 EQU $CC48
-DEF wCC4C EQU $CC4C
+DEF wObject1 EQU $CB8F ; field object 1: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags) (E-0134)
+DEF wObject2 EQU $CB9F ; field object 2: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags) (E-0134)
+DEF wObject3 EQU $CBAF ; field object 3: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags) (E-0134)
+DEF wObject4 EQU $CBBF ; field object 4: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags) (E-0134)
+DEF wObject5 EQU $CBCF ; field object 5 (its entry stops at the story flags at $CBD7) (E-0134)
+DEF wStoryFlags EQU $CBD7 ; story flags: flag n is bit n & 7 of byte n / 8 (TestFlagBit, SetFlagBit); the $6B bytes are the second save block (E-0134)
+DEF wKeyWorldSlot EQU $CC42 ; SRAM slot of the active key world (0-19) (E-0134)
+DEF wKeyWorldArea EQU $CC43 ; area index within the key world (E-0134)
+DEF wMapType EQU $CC44 ; map type: bit 7 = special map ($80 key world, $82-$87 other kinds); low bits pick the routine sets (E-0134)
+DEF wKeyWorldFloor EQU $CC45 ; floor or room index within the special map (E-0134)
+DEF wKeyWorldByte46 EQU $CC46 ; key-world byte (E-0134)
+DEF wMapObjectCount EQU $CC47 ; number of 8-byte map objects at wMapObjects (E-0134)
+DEF wMapObjects EQU $CC48 ; map objects (8 bytes each) of town and key-world maps (E-0134)
 DEF wCCCD EQU $CCCD
 DEF wCCE9 EQU $CCE9
 DEF wCCEA EQU $CCEA

@@ -1533,6 +1533,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Result: 1,004 address-named RAM addresses remain (19,217 uses).
 - Binary verification: build/run95 PASS, 0 differing bytes; tests OK.
 
+### E-0134 — WRAM $C8C8-$CC4F
+
+- Kind: OBSERVATION (reading; C1).
+- **What is named.**
+  - Warp destination; text window and party-window state; trigger entry.
+  - Encounter rate and countdown; battle intro and transition; field event kind.
+  - Talk event group and index; script return position; the object-step pointer and target (wStepPtr/wStepTarget).
+  - Pending field event (wPendingFieldEvent) and the saved player state.
+  - Formation choices; key-world slot, area, level and objects; map type (wMapType).
+- **Buffers.**
+  - Three $A5-byte monster records in the SRAM record format: wRecordBufA, wRecordBufB (the breeding parents and link records) and wChildRecord.
+  - The field objects wObject1-5 (16-byte entries after wSpriteSlots).
+  - wStoryFlags ($CBD7, $6B bytes): TestFlagBit adds flag / 8 to $CBD7, and this is the second save block.
+- Result: 691 address-named RAM addresses remain (14,424 uses).
+- Binary verification: build/run96 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -62,18 +62,18 @@ Func_013_4049:: ; address name
 
 ; unless wCC44 says otherwise (several special values), starts an event: when wC916 is not $FD it runs script command $09 with a parameter from wCDAE; otherwise (and for the other paths) it jumps through an 11-entry table by wC917 (the handler group: cases far-call bank-$04 dispatchers or, for group 4, dispatch on wC916 through a 257-entry table of talk handlers such as TalkMsg0DD7_OurHeartsAreLike). Group/entry meaning beyond talk handlers is not read (E-0097)
 ; 39 call sites from 26 routines (e.g. RunWC8C7Phase_Case02, RunWC8C7Phase_Case01, FieldModeStateDispatch_Shared01_Sub02, FieldModeStateDispatch_Shared01_Sub03, ...)
-; reads: wCC44, wC917, wCC45, wC916
-; writes: wScriptStartRequest, wModeState, wC917, wC916, wScriptParam0, wScriptParam1, wScriptCommandType, wScriptRunning, ...
+; reads: wMapType, wTalkEventIndex, wKeyWorldFloor, wTalkEventGroup
+; writes: wScriptStartRequest, wModeState, wTalkEventIndex, wTalkEventGroup, wScriptParam0, wScriptParam1, wScriptCommandType, wScriptRunning, ...
 ; points at: wCD89, wCDAE
 DispatchTalkEvent::
 Func_013_405C:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jp z, Jump_013_40E9
-    ld a, [wC917]
+    ld a, [wTalkEventIndex]
     cp a, $09
     jp z, Jump_013_40E9
-    ld a, [wCC44]
+    ld a, [wMapType]
     cp a, $80
     jp z, Jump_013_40E9
     cp a, $82
@@ -86,7 +86,7 @@ Func_013_405C:: ; address name
     jp z, Jump_013_40E9
     cp a, $83
     jr nz, Jump_013_409E
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld hl, wCD89
@@ -100,17 +100,17 @@ Jump_013_409E::
     ld [wScriptStartRequest], a
     ld a, $01
     ld [wModeState], a
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAE
     add_a_to_hl
-    ld a, [wC916]
+    ld a, [wTalkEventGroup]
     cp a, $FD
     jr nz, Jump_013_40C8
     ld a, $09
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $01
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     jr Jump_013_40E9
 
 Jump_013_40C8::
@@ -131,7 +131,7 @@ Jump_013_40C8::
     ret
 
 Jump_013_40E9::
-    ld a, [wC917]
+    ld a, [wTalkEventIndex]
     rst $00
     dw DispatchTalkEvent_Case00
     dw DispatchTalkEvent_Case01
@@ -196,10 +196,10 @@ Jump_013_412D:: ; address name
 
 ; entry 5 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC916
+; reads: wTalkEventGroup
 DispatchTalkEvent_Case05::
 Jump_013_4134:: ; address name
-    ld a, [wC916]
+    ld a, [wTalkEventGroup]
     rst $00
     dw DispatchTalkEvent_Case05_Case00
     dw DispatchTalkEvent_Case05_Case01
@@ -594,7 +594,7 @@ Jump_013_436E::
 
 ; entry 22 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerSpriteOverride, wCB8A
+; reads: hPlayerSpriteOverride, wSpriteSlots
 DispatchTalkEvent_Case05_Case16::
 Jump_013_4375:: ; address name
     ld de, $0209
@@ -612,7 +612,7 @@ Jump_013_4387::
     ret
 
 Jump_013_438E::
-    ld a, [wCB8A]
+    ld a, [wSpriteSlots + $B]
     cp a, $50
     jr z, Jump_013_43A2
     ld hl, $6015
@@ -1754,11 +1754,11 @@ Jump_013_4970:: ; address name
 ; entry 106 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
-; writes: wCB96
+; writes: wObject1
 DispatchTalkEvent_Case05_Case6A::
 Jump_013_4977:: ; address name
     xor a, a
-    ld [wCB96], a
+    ld [wObject1 + $7], a
     ldh a, [hPlayerY]
     cp a, $70
     ret z
@@ -1836,42 +1836,42 @@ Jump_013_49CE:: ; address name
 
 ; when wC955 is set: clears it and warps between map $7F and $92 (position $40, $40 or $40, $10) through mode state 6 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC955, hMapId
-; writes: wC955, hMapId, wC8C8, wC8C9, wJoypadHeld, wJoypadPressed, wC8CA, wC914, ...
+; reads: wMapToggleRequest, hMapId
+; writes: wMapToggleRequest, hMapId, wWarpDestX, wWarpDestY, wJoypadHeld, wJoypadPressed, wWarpDestFacing, wMapToggleFlag, ...
 ToggleMapBetween7FAnd92:: ; heuristic: follows a terminator; C0
 Func_013_49D5:: ; address name
-    ld a, [wC955]
+    ld a, [wMapToggleRequest]
     or a, a
     ret z
     xor a, a
-    ld [wC955], a
+    ld [wMapToggleRequest], a
     ldh a, [hMapId]
     cp a, $7F
     jr nz, Jump_013_49F4
     ld a, $92
     ldh [hMapId], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $40
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     jr Jump_013_4A02
 
 Jump_013_49F4::
     ld a, $7F
     ldh [hMapId], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $10
-    ld [wC8C9], a
+    ld [wWarpDestY], a
 
 Jump_013_4A02::
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     xor a, a
-    ld [wC914], a
+    ld [wMapToggleFlag], a
     ld a, $06
     ld [wModeState], a
     xor a, a
@@ -1883,10 +1883,10 @@ Jump_013_4A02::
 
 ; entry 4 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC916
+; reads: wTalkEventGroup
 DispatchTalkEvent_Case04::
 Jump_013_4A23:: ; address name
-    ld a, [wC916]
+    ld a, [wTalkEventGroup]
     rst $00
     dw DispatchTalkEvent_Case04_Case00
     dw DispatchTalkEvent_Case04_Case01
@@ -3676,7 +3676,7 @@ Jump_013_53E1::
 
 ; entry 111 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB8A, wPartyCount, wStepArrived
+; reads: wSpriteSlots, wPartyCount, wStepArrived
 DispatchTalkEvent_Case04_Case6F::
 Jump_013_53E8:: ; address name
     ld de, $009D
@@ -3688,7 +3688,7 @@ Jump_013_53E8:: ; address name
     ld de, $0096
     call TestFlagBit
     jr c, Jump_013_5436
-    ld a, [wCB8A]
+    ld a, [wSpriteSlots + $B]
     cp a, $50
     jr nz, Jump_013_540E
     ld hl, $039D
@@ -4179,7 +4179,7 @@ Jump_013_572B::
 
 ; tests story flags in turn (flag $01E5 set: jr to Jump_013_5770; flag $01E2 set: jr to Jump_013_5769; flag $01E1 set: jr to Jump_013_575E; flag $01F1 set: jr to Jump_013_5759); when none of them branches, starts message $0DDB through StartMessageCommand09HL_B13 (script command $09); that string begins 'What is it? Leave at once!' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCB86
+; writes: wSpriteSlots
 TalkMsg0DDB_WhatIsItLeave:: ; heuristic: target of a pointer table; C0
 Func_013_5732:: ; address name
     ld de, $01E5
@@ -4200,12 +4200,12 @@ Func_013_5732:: ; address name
 
 Jump_013_5759::
     xor a, a
-    ld [wCB86], a
+    ld [wSpriteSlots + $7], a
     ret
 
 Jump_013_575E::
     xor a, a
-    ld [wCB86], a
+    ld [wSpriteSlots + $7], a
     ld hl, $5FCB
     call StartScriptAtHL_B13
     ret
@@ -4391,10 +4391,10 @@ Jump_013_593A:: ; address name
 
 ; entry 1 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC916
+; reads: wTalkEventGroup
 DispatchTalkEvent_Case01::
 Jump_013_5941:: ; address name
-    ld a, [wC916]
+    ld a, [wTalkEventGroup]
     rst $00
     dw DispatchTalkEvent_Case01_Case00
     dw DispatchTalkEvent_Case01_Case01
@@ -5566,8 +5566,8 @@ Jump_013_6188::
 
 ; entry 16 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC37
-; writes: wCC37, wD7FB, wDataBank
+; reads: wStoryFlags
+; writes: wStoryFlags, wD7FB, wDataBank
 DispatchTalkEvent_Case01_Case10::
 Jump_013_618F:: ; address name
     ld de, $0025
@@ -5590,9 +5590,9 @@ Jump_013_61B6::
     ld de, $0011
     call TestFlagBit
     jr c, Jump_013_61D3
-    ld a, [wCC37]
+    ld a, [wStoryFlags + $60]
     set 0, a
-    ld [wCC37], a
+    ld [wStoryFlags + $60], a
     ld hl, $0077
     call StartMessageCommand09HL_B13
     ld de, $0011
@@ -5923,7 +5923,7 @@ Jump_013_6400::
 ; entry 23 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX
-; writes: hTemp0, wCBD3, wCBD4
+; writes: hTemp0, wObject5
 DispatchTalkEvent_Case01_Case17::
 Jump_013_6407:: ; address name
     ld de, $0009
@@ -5963,9 +5963,9 @@ Jump_013_6438::
     ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     ld a, $20
-    ld [wCBD3], a
+    ld [wObject5 + $4], a
     ld a, $50
-    ld [wCBD4], a
+    ld [wObject5 + $5], a
     ld de, $000A
     call SetFlagBit
     ret
@@ -6814,7 +6814,7 @@ Jump_013_69D3::
 
 ; entry 51 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5, wC916
+; reads: wD7F5, wTalkEventGroup
 ; writes: hTemp1, hTemp2, hTemp3
 DispatchTalkEvent_Case01_Case33::
 Jump_013_69DA:: ; address name
@@ -6827,13 +6827,13 @@ Jump_013_69DA:: ; address name
     ret
 
 Jump_013_69EE::
-    ld a, [wC916]
+    ld a, [wTalkEventGroup]
     sub a, $33
     add a, $63
     ld l, a
     ld h, $0D
     call StartMessageCommand09HL_B13
-    ld a, [wC916]
+    ld a, [wTalkEventGroup]
     sub a, $33
     add a, $06
     ldh [hTemp1], a
@@ -7131,7 +7131,7 @@ Jump_013_6B84:: ; address name
 ; entry 75 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventory
-; writes: wC928
+; writes: wStepPtrLo
 DispatchTalkEvent_Case01_Case4B::
 Jump_013_6B8B:: ; address name
     ld de, $01A3
@@ -7153,7 +7153,7 @@ Jump_013_6BAC::
     ld hl, $599F
     call StartScriptAtHL_B13
     ld a, $2C
-    ld [wC928], a
+    ld [wStepPtrLo], a
     farcall AppendItemWC928ToInventory
     ret
 
@@ -7985,7 +7985,7 @@ Jump_013_7029::
 
 ; entry 127 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, wPartyCount, wInventory, wCB9A
+; reads: hTemp0, wPartyCount, wInventory, wObject1
 ; writes: hTemp0, hTemp1, wD7FB, wDataBank
 DispatchTalkEvent_Case01_Case7F::
 Jump_013_7030:: ; address name
@@ -8056,7 +8056,7 @@ Jump_013_70A3::
     ret
 
 Jump_013_70AA::
-    ld a, [wCB9A]
+    ld a, [wObject1 + $B]
     cp a, $10
     jr nz, Jump_013_70A3
     ld a, $10
@@ -9567,7 +9567,7 @@ Func_013_7DEC:: ; address name
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story flags and state; the first one in the code is $0B56, whose string begins 'When you breed monsters with another'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB81, hTemp1, hTemp0
+; reads: wSpriteSlots, hTemp1, hTemp0
 ; writes: wDataBank, wD7FB
 Talk0B56_WhenYouBreedMonsters:: ; heuristic: target of a pointer table; C0
 Func_013_7E05:: ; address name
@@ -9575,7 +9575,7 @@ Func_013_7E05:: ; address name
     call SavePlayerPositionState
     ld a, $0E
     ld [wDataBank], a
-    ld a, [wCB81]
+    ld a, [wSpriteSlots + $2]
     cp a, $17
     jr z, Jump_013_7E6C
     cp a, $13
@@ -9650,7 +9650,7 @@ Jump_013_7E98::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $0B6D, whose string begins 'Breeding fire and ice together makes'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB81, hTemp1, hTemp0
+; reads: wSpriteSlots, hTemp1, hTemp0
 ; writes: wDataBank, wD7FB
 Talk0B6D_BreedingFireAndIce:: ; heuristic: target of a pointer table; C0
 Func_013_7E9F:: ; address name
@@ -9658,7 +9658,7 @@ Func_013_7E9F:: ; address name
     call SavePlayerPositionState
     ld a, $0E
     ld [wDataBank], a
-    ld a, [wCB81]
+    ld a, [wSpriteSlots + $2]
     cp a, $14
     jr z, Jump_013_7ECF
     ld de, $0035
@@ -9734,7 +9734,7 @@ Jump_013_7F2A::
 ; map event: with story flag $25 set, sets wCB8A = $30 when the count from Func_085_5B04 is at least 50 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1, hTemp0
-; writes: wCB8A
+; writes: wSpriteSlots
 SetWCB8A30IfFlag25AndCountAtLeast50:: ; heuristic: target of a pointer table; C0
 Func_013_7F31:: ; address name
     ld de, $0025
@@ -9750,7 +9750,7 @@ Func_013_7F31:: ; address name
 
 Jump_013_7F48::
     ld a, $30
-    ld [wCB8A], a
+    ld [wSpriteSlots + $B], a
     ret
 
 ; sets story flag $C9 if flag $32 is set and flag $CA if flag $33 is set (E-0122)
@@ -9832,35 +9832,35 @@ Jump_013_7FAE::
 
 ; copies wCB86, the player position and facing, wFollowerRecords and wC8F0-wC8FB fields into wC937-wC943 (E-0121)
 ; 8 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case6A, DispatchTalkEvent_Case01_Case66, Talk0B6D_BreedingFireAndIce, Talk0B56_WhenYouBreedMonsters, ...)
-; reads: wCB86, hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wC8F0, wC8F1, wC8F4, ...
-; writes: wC937, wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, ...
+; reads: wSpriteSlots, hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords
+; writes: wSavedPlayerState
 SavePlayerPositionState::
 Func_013_7FB0:: ; address name
-    ld a, [wCB86]
-    ld [wC937], a
+    ld a, [wSpriteSlots + $7]
+    ld [wSavedPlayerState], a
     ldh a, [hPlayerX]
-    ld [wC938], a
+    ld [wSavedPlayerState + $1], a
     ldh a, [hPlayerY]
-    ld [wC939], a
+    ld [wSavedPlayerState + $2], a
     ldh a, [hPlayerFacing]
-    ld [wC93A], a
+    ld [wSavedPlayerState + $3], a
     ld a, [wFollowerRecords]
-    ld [wC93B], a
-    ld a, [wC8F0]
-    ld [wC93C], a
-    ld a, [wC8F1]
-    ld [wC93D], a
-    ld a, [wC8F4]
-    ld [wC93E], a
-    ld a, [wC8F5]
-    ld [wC93F], a
-    ld a, [wC8F6]
-    ld [wC940], a
-    ld a, [wC8F9]
-    ld [wC941], a
-    ld a, [wC8FA]
-    ld [wC942], a
-    ld a, [wC8FB]
-    ld [wC943], a
+    ld [wSavedPlayerState + $4], a
+    ld a, [wFollowerRecords + $1]
+    ld [wSavedPlayerState + $5], a
+    ld a, [wFollowerRecords + $2]
+    ld [wSavedPlayerState + $6], a
+    ld a, [wFollowerRecords + $5]
+    ld [wSavedPlayerState + $7], a
+    ld a, [wFollowerRecords + $6]
+    ld [wSavedPlayerState + $8], a
+    ld a, [wFollowerRecords + $7]
+    ld [wSavedPlayerState + $9], a
+    ld a, [wFollowerRecords + $A]
+    ld [wSavedPlayerState + $A], a
+    ld a, [wFollowerRecords + $B]
+    ld [wSavedPlayerState + $B], a
+    ld a, [wFollowerRecords + $C]
+    ld [wSavedPlayerState + $C], a
     ret
     db $00, $00, $00, $00

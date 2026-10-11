@@ -1367,18 +1367,18 @@ Jump_01A_6242::
 
 ; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
-; reads: wC991, wC992
+; reads: wRecordBufA
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wD09D, wD010, wC9C2
+; points at: wD09D, wD010
 BattleEnd_Step3_Sub02::
 Func_01A_624B:: ; address name
     ld hl, wD09D
     ld bc, $0019
     ld a, $FF
     call FillBytes
-    ld a, [wC991]
+    ld a, [wRecordBufA + $B]
     ld l, a
-    ld a, [wC992]
+    ld a, [wRecordBufA + $C]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -1400,7 +1400,7 @@ Jump_01A_627E::
     ld [hl+], a
     dec b
     jr nz, Jump_01A_6274
-    ld hl, wC9C2
+    ld hl, wRecordBufA + $3C
     ld b, $19
     ld a, $FF
 
@@ -1409,7 +1409,7 @@ Jump_01A_6289::
     dec b
     jr nz, Jump_01A_6289
     ld de, wD09D
-    ld hl, wC9C2
+    ld hl, wRecordBufA + $3C
     ld b, $19
 
 Jump_01A_6295::
@@ -1520,11 +1520,10 @@ Jump_01A_62FB::
 
 ; only called from routines of BattleEnd_Step3 (E-0098)
 ; 3 call sites from 2 routines (e.g. BattleEnd_Step3_Sub02_Sub02, BattleEnd_Step3_Sub02_Sub01)
-; points at: wC9BA
 BattleEnd_Step3_Shared01::
 Func_01A_6306:: ; address name
     push bc
-    ld hl, wC9BA
+    ld hl, wRecordBufA + $34
     ld b, $08
 
 Jump_01A_630C::

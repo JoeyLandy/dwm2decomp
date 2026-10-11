@@ -2310,7 +2310,7 @@ Jump_00D_5342:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD786, wD781
 ; writes: rRAMG2, rRAMB, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD781
-; points at: wPartyList, wC8CF
+; points at: wPartyList, wNameGlyphBuf
 ScriptCommandF0_Run_Case06_Case02::
 Jump_00D_534E:: ; address name
     ld a, [wD786]
@@ -2323,7 +2323,7 @@ Jump_00D_534E:: ; address name
     ld a, [hl]
     ld c, $01
     call SRAMRecordAddress
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld c, $00
 
 Jump_00D_536D::
@@ -3414,7 +3414,7 @@ Jump_00D_5B27::
 ; entry 14 of the `rst $00` table in ScriptCommandF2_Run_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wSaveStep, wD781, wD7F5, wD7F6
-; writes: wTwoChoiceCursor, wD782, wD781, wScriptCommandType, wC968, wScriptStartRequest, wSaveStep, wSaveRecordIndex, ...
+; writes: wTwoChoiceCursor, wD782, wD781, wScriptCommandType, wScriptByte68, wScriptStartRequest, wSaveStep, wSaveRecordIndex, ...
 ScriptCommandF2_Run_Case03_Case0E::
 Jump_00D_5B4A:: ; address name
     call ScriptCommandF2_Run_Shared02
@@ -3434,7 +3434,7 @@ Jump_00D_5B4A:: ; address name
     xor a, a
     ld [wScriptCommandType], a
     ld a, $01
-    ld [wC968], a
+    ld [wScriptByte68], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -3865,8 +3865,8 @@ Data_00D_5DE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; for the keys on the current page writes their names to wC8CF and draws them; generated keys (kind $FE) are shown as "Magic Key" (E-0130)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF2_Run_Case03_Case03, RunWD780StateWhenNotFading_1B_Case01_Case03)
 ; reads: wD7AF, wD7B1, wD7A9, wDataBank, wD7B0
-; writes: wDataBank, wC8DC
-; points at: wD789, wKeyList, wC8CF
+; writes: wDataBank, wNameGlyphBuf
+; points at: wD789, wKeyList, wNameGlyphBuf
 DrawKeyListPageNames::
 Func_00D_5DED:: ; address name
     ld hl, wD789
@@ -3916,7 +3916,7 @@ Jump_00D_5E35::
     ld a, [de]
     cp a, $FE
     jr nz, Jump_00D_5E60
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld a, $16
     ld [hl+], a
     ld a, $24
@@ -3983,17 +3983,17 @@ Jump_00D_5E60::
     ld d, a
     pop af
     ld [wDataBank], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld b, $09
     ld c, $10
     call CopyFromBankWaitVRAM
     ld a, $F0
-    ld [wC8DC], a
+    ld [wNameGlyphBuf + $D], a
     jr Jump_00D_5EC0
 
 Jump_00D_5EB2::
     ld a, [hl]
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     call WriteKeyNameToDE
     ld a, $5B
     ld [de], a
@@ -4023,13 +4023,13 @@ Jump_00D_5ED5::
 ; 2 call sites from 2 routines (e.g. DrawKeyListPageNames, ScriptCommandF3_Run_Case05_Case03_Sub01)
 ; reads: wD784, wD785
 ; writes: wD784, wD785
-; points at: wC8CF
+; points at: wNameGlyphBuf
 DrawWC8CFGlyphsOverlaying8DAnd8E::
 Func_00D_5ED6:: ; address name
     xor a, a
     ld [wD784], a
     ld [wD785], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
 
 Jump_00D_5EE0::
     ld a, [wD784]
@@ -5641,13 +5641,13 @@ Func_00D_6B45:: ; address name
 
 ; only called from ScriptCommandF3_Run_Case05_Case0E (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF3_Run_Case05_Case0E)
-; reads: wD7F5, wD7F6, wRecordBuffer, wCFED, wSpeciesRecord, wCADE, wD010, wD011, ...
-; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi, wCADB, wCADC, rRAMG2, rRAMB
-; points at: wC986, wPlayerName, wD01A
+; reads: wD7F5, wD7F6, wRecordBuffer, wCFED, wSpeciesRecord, wChildRecord, wD010, wD011, ...
+; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi, wChildRecord, rRAMG2, rRAMB
+; points at: wRecordBufA, wPlayerName, wD01A
 ScriptCommandF3_Run_Case05_Case0E_Sub01::
 Func_00D_6B55:: ; address name
     push hl
-    ld hl, wC986
+    ld hl, wRecordBufA
     ld b, $A5
 
 Jump_00D_6B5B::
@@ -5676,22 +5676,22 @@ Jump_00D_6B5B::
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     farcall SetSpeciesFlag
-    ld hl, wC986
+    ld hl, wRecordBufA
     ld a, $01
     ld [hl+], a
     call WriteBlankName10_Bank0D
     ld a, [wRecordBuffer]
     ld [hl+], a
-    ld [wCADB], a
+    ld [wChildRecord + $B], a
     ld a, [wCFED]
     ld [hl+], a
-    ld [wCADC], a
+    ld [wChildRecord + $C], a
     ld a, [wSpeciesRecord]
     ld [hl+], a
     push hl
     farcall RollWCADEFromSpeciesFlag
     pop hl
-    ld a, [wCADE]
+    ld a, [wChildRecord + $E]
     ld [hl+], a
     ld de, wPlayerName
     ld c, $00
@@ -5842,7 +5842,7 @@ Jump_00D_6C8E::
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    ld de, wC986
+    ld de, wRecordBufA
     ld b, $A5
 
 Jump_00D_6CAF::
@@ -6158,7 +6158,7 @@ Jump_00D_6E03::
 ; only called from ScriptCommandF3_Run_Case05_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF3_Run_Case05_Case03)
 ; reads: wD7AF, wD7B1, wD7A9, wD7B0
-; points at: wD789, wC8CF
+; points at: wD789, wNameGlyphBuf
 ScriptCommandF3_Run_Case05_Case03_Sub01::
 Func_00D_6E0E:: ; address name
     ld hl, wD789
@@ -6213,7 +6213,7 @@ Jump_00D_6E3A::
     ld e, a
     ld a, [hl]
     ld d, a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld c, $00
 
 Jump_00D_6E66::
@@ -6614,7 +6614,7 @@ Jump_00D_72E0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7FB, wD781
 ; writes: wD781
-; points at: wCA2B, wC994, wCA39
+; points at: wRecordBufB
 ScriptCommandF4_Run_Case04_Case13::
 Jump_00D_72F4:: ; address name
     call ScriptCommandF4_Run_Shared01
@@ -6632,7 +6632,7 @@ Jump_00D_7304::
     inc de
     ld a, [de]
     ld h, a
-    ld de, wCA2B
+    ld de, wRecordBufB
     ld b, $A5
 
 Jump_00D_730E::
@@ -6641,12 +6641,12 @@ Jump_00D_730E::
     inc de
     dec b
     jr nz, Jump_00D_730E
-    ld hl, wC994
+    ld hl, wRecordBufA + $E
     ld a, [hl]
     and a, $01
     inc a
     and a, $01
-    ld hl, wCA39
+    ld hl, wRecordBufB + $E
     ld [hl], a
     ld a, [wD781]
     inc a
@@ -6765,7 +6765,7 @@ Jump_00D_73D2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wD781, wD7B4, wD7F6, wD7F7, wD7FB
 ; writes: wTwoChoiceCursor, wD782, wD781, wScriptCommandType, wScriptStartRequest, wD7F1, wD7F2, rRAMG2, ...
-; points at: wCAD0, wCADB, wMonsterLibraryBuf, wD7E0
+; points at: wChildRecord, wMonsterLibraryBuf, wD7E0
 ScriptCommandF4_Run_Case04_Case17::
 Jump_00D_73F1:: ; address name
     ld a, [wD782]
@@ -6797,7 +6797,7 @@ Jump_00D_740F::
     ld l, a
     ld a, [wD7F7]
     ld h, a
-    ld de, wCAD0
+    ld de, wChildRecord
     ld b, $A5
 
 Jump_00D_7435::
@@ -6814,7 +6814,7 @@ Jump_00D_7435::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
-    ld hl, wCADB
+    ld hl, wChildRecord + $B
     ld a, [hl+]
     ld [wD7F1], a
     ld a, [hl]
@@ -6867,19 +6867,19 @@ Jump_00D_74AD:: ; address name
 ; entry 25 of the `rst $00` table in ScriptCommandF4_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD781
-; writes: wC91C, wC91D, wC91E, wC917, wC916, wScriptInDataBank, hSpriteWindowClipMode, wD781
+; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wD781
 ScriptCommandF4_Run_Case04_Case19::
 Jump_00D_74BB:: ; address name
     ld a, [wScriptStartRequest]
-    ld [wC91C], a
+    ld [wScriptReturnBank], a
     ld a, [wScriptPointerLo]
-    ld [wC91D], a
+    ld [wScriptReturnLo], a
     ld a, [wScriptPointerHi]
-    ld [wC91E], a
+    ld [wScriptReturnHi], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $20
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
@@ -7131,9 +7131,9 @@ Jump_00D_76AF:: ; address name
 
 ; only called from ScriptCommandF4_Run_Case04_Case14 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Case04_Case14)
-; reads: wD7F6, wD7F7, wD7F5, wCB3D
+; reads: wD7F6, wD7F7, wD7F5, wChildRecord
 ; writes: wD7F1, wSpeciesIdLo, wD7F2, wSpeciesIdHi, wD7F3, wD7F4, wTwoChoiceCursor
-; points at: wMonsterLibraryBuf, wC8CF, wTextBuf0, wDigits
+; points at: wMonsterLibraryBuf, wNameGlyphBuf, wTextBuf0, wDigits
 ScriptCommandF4_Run_Case04_Case14_Sub01::
 Func_00D_76D0:: ; address name
     ld a, [wD7F6]
@@ -7183,7 +7183,7 @@ Jump_00D_7737::
     ld a, [wD7F7]
     ld h, a
     call CopyMonsterNameToBuffer_B0D
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld b, $10
 
@@ -7204,7 +7204,7 @@ Jump_00D_7758::
     ld [de], a
     inc de
     push de
-    ld a, [wCB3D]
+    ld a, [wChildRecord + $6D]
     ld l, a
     ld h, $00
     call HLToDecimalDigits
@@ -7237,7 +7237,7 @@ Jump_00D_7782::
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Case04_Case14_Sub01)
 ; reads: wDataBank
 ; writes: wDataBank
-; points at: wC8CF
+; points at: wNameGlyphBuf
 CopyMonsterNameToBuffer_B0D::
 Func_00D_778C:: ; address name
     push hl
@@ -7263,7 +7263,7 @@ Func_00D_778C:: ; address name
     ld d, c
     pop af
     ld [wDataBank], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld b, $08
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -7271,38 +7271,38 @@ Func_00D_778C:: ; address name
 
 ; the same 80 bytes as RestorePlayerPositionState (15:6E14)
 ; 1 call site from 1 routine (e.g. ScriptCommandF4_Run_Case04_Case1A)
-; reads: wC938, wC939, wC93A, wC93B, wC93C, wC93D, wC93E, wC93F, ...
-; writes: hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wC8F0, wC8F1, wC8F4, wC8F5, ...
+; reads: wSavedPlayerState
+; writes: hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wSpriteSlots, wSavedPositionValid
 RestorePlayerPositionState_Bank0D::
 Func_00D_77C2:: ; address name
-    ld a, [wC938]
+    ld a, [wSavedPlayerState + $1]
     ldh [hPlayerX], a
-    ld a, [wC939]
+    ld a, [wSavedPlayerState + $2]
     ldh [hPlayerY], a
-    ld a, [wC93A]
+    ld a, [wSavedPlayerState + $3]
     ldh [hPlayerFacing], a
-    ld a, [wC93B]
+    ld a, [wSavedPlayerState + $4]
     ld [wFollowerRecords], a
-    ld a, [wC93C]
-    ld [wC8F0], a
-    ld a, [wC93D]
-    ld [wC8F1], a
-    ld a, [wC93E]
-    ld [wC8F4], a
-    ld a, [wC93F]
-    ld [wC8F5], a
-    ld a, [wC940]
-    ld [wC8F6], a
-    ld a, [wC941]
-    ld [wC8F9], a
-    ld a, [wC942]
-    ld [wC8FA], a
-    ld a, [wC943]
-    ld [wC8FB], a
-    ld a, [wC937]
-    ld [wCB86], a
+    ld a, [wSavedPlayerState + $5]
+    ld [wFollowerRecords + $1], a
+    ld a, [wSavedPlayerState + $6]
+    ld [wFollowerRecords + $2], a
+    ld a, [wSavedPlayerState + $7]
+    ld [wFollowerRecords + $5], a
+    ld a, [wSavedPlayerState + $8]
+    ld [wFollowerRecords + $6], a
+    ld a, [wSavedPlayerState + $9]
+    ld [wFollowerRecords + $7], a
+    ld a, [wSavedPlayerState + $A]
+    ld [wFollowerRecords + $A], a
+    ld a, [wSavedPlayerState + $B]
+    ld [wFollowerRecords + $B], a
+    ld a, [wSavedPlayerState + $C]
+    ld [wFollowerRecords + $C], a
+    ld a, [wSavedPlayerState]
+    ld [wSpriteSlots + $7], a
     xor a, a
-    ld [wC936], a
+    ld [wSavedPositionValid], a
     ret
 
 ; the same 39 bytes as LoadFamilyIconTileForRecordB_Bank15 (15:6866)
@@ -7332,7 +7332,7 @@ Func_00D_7812:: ; address name
 ; 2 call sites from 2 routines (e.g. ScriptCommandF4_Run_Case04_Case13, ScriptCommandF4_Run_Case04_Case12)
 ; reads: wD7B4
 ; writes: rRAMG2, rRAMB
-; points at: sA000, wC986
+; points at: sA000, wRecordBufA
 ScriptCommandF4_Run_Shared01::
 Func_00D_7839:: ; address name
     ld a, $0A
@@ -7344,7 +7344,7 @@ Func_00D_7839:: ; address name
     call Multiply8
     ld de, sA000
     add hl, de
-    ld de, wC986
+    ld de, wRecordBufA
     ld b, $A5
 
 Jump_00D_7853::

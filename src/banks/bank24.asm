@@ -3,7 +3,7 @@ SECTION "Bank 24", ROMX[$4000], BANK[$24]
 
 ; start-up for wGameMode = 6; forcing this mode on the emulator shows: victory screen when forced (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit_Case06)
-; reads: wD04C, wD092, wC991, wC992, wC8CB, wC986, wC94C, wSaveStep
+; reads: wD04C, wD092, wRecordBufA, wTextWindowState, wLinkSceneByte4C, wSaveStep
 ; writes: hScrollY, hScrollX, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wD0DF, wD0E0, ...
 ; points at: wD780
 GameMode6_Init::
@@ -31,10 +31,10 @@ Jump_024_4014::
     jr Jump_024_4057
 
 Jump_024_4022::
-    ld a, [wC986]
+    ld a, [wRecordBufA]
     and a, a
     jr z, Jump_024_4057
-    ld a, [wC94C]
+    ld a, [wLinkSceneByte4C]
     ld [wD7F1], a
     xor a, a
     ld [wD7F2], a
@@ -86,9 +86,9 @@ Jump_024_4057::
     ld a, [wD092]
     cp a, $08
     jr nz, Jump_024_40B1
-    ld a, [wC991]
+    ld a, [wRecordBufA + $B]
     ld [wD0DF], a
-    ld a, [wC992]
+    ld a, [wRecordBufA + $C]
     ld [wD0E0], a
 
 Jump_024_40B1::
@@ -117,15 +117,15 @@ Jump_024_40D3::
     call DecompressToRAMLocked
     call GameMode6_Init_Sub01
     ld a, $01
-    ld [wC8CB], a
+    ld [wTextWindowState], a
     ld a, $00
-    ld [wC8CC], a
+    ld [wTextWindowStep], a
     ld a, $00
     ldh [hSpriteWindowClipMode], a
 
 Jump_024_40EA::
     farcall StepTextWindowOpenClose
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     jr nz, Jump_024_40EA
     ld a, $FC
@@ -211,7 +211,7 @@ Jump_024_4170:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD092, wD781
 ; writes: wD781, wTextBuf0, wStringCategory, wStringIndex
-; points at: wC987, wTextBuf0
+; points at: wTextBuf0
 GameMode6_Update_Case00_Case00::
 Jump_024_4178:: ; address name
     ld a, [wD092]
@@ -261,7 +261,7 @@ Jump_024_41C0::
     ld a, [wD781]
     inc a
     ld [wD781], a
-    ld hl, wC987
+    ld hl, wRecordBufA + $1
     ld de, wTextBuf0
     ld bc, $000A
     call CopyBytes
@@ -276,7 +276,7 @@ Jump_024_41C0::
 
 ; entry 1 of the `rst $00` table in GameMode6_Update_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD04C, wD092, wC986, wD780, wCA2B
+; reads: wD04C, wD092, wRecordBufA, wD780, wRecordBufB
 ; writes: wD781, wD780
 GameMode6_Update_Case00_Case01::
 Jump_024_41F5:: ; address name
@@ -295,13 +295,13 @@ Jump_024_41FF::
     and a, $01
     and a, a
     jr z, Jump_024_4213
-    ld a, [wC986]
+    ld a, [wRecordBufA]
     and a, a
     jr z, Jump_024_41FB
     jr Jump_024_4219
 
 Jump_024_4213::
-    ld a, [wCA2B]
+    ld a, [wRecordBufB]
     and a, a
     jr z, Jump_024_41FB
 
@@ -401,9 +401,9 @@ Jump_024_42A4::
 
 ; entry 1 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCA36, wCA37, wD781
+; reads: wRecordBufB, wD781
 ; writes: rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wSaveStep, wSaveRecordIndex, wD781
-; points at: sA000, wCA2B
+; points at: sA000, wRecordBufB
 GameMode6_Update_Case02_Case01::
 Jump_024_42B3:: ; address name
     farcall LoadWD7FFFromWC7C7Table
@@ -424,7 +424,7 @@ Jump_024_42C5::
     jr Jump_024_42C5
 
 Jump_024_42D6::
-    ld de, wCA2B
+    ld de, wRecordBufB
     ld b, $A5
 
 Jump_024_42DB::
@@ -433,9 +433,9 @@ Jump_024_42DB::
     inc de
     dec b
     jr nz, Jump_024_42DB
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld [wSpeciesIdLo], a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld [wSpeciesIdHi], a
     farcall SetSpeciesFlag
     xor a, a
@@ -1142,9 +1142,9 @@ Jump_024_4724:: ; address name
 
 ; entry 12 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5, wD7F6, wCA36, wCA37, wD781
+; reads: wD7F5, wD7F6, wRecordBufB, wD781
 ; writes: wD7F1, wD7F2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wSaveStep, wSaveRecordIndex, ...
-; points at: sA000, wCA2B
+; points at: sA000, wRecordBufB
 GameMode6_Update_Case04_Case0C::
 Jump_024_475C:: ; address name
     farcall SetWD7F5ToWD789Cell5
@@ -1167,7 +1167,7 @@ Jump_024_475C:: ; address name
     xor a, a
     ld [rRAMB], a
     ld b, $A5
-    ld de, wCA2B
+    ld de, wRecordBufB
 
 Jump_024_4792::
     ld a, [de]
@@ -1175,9 +1175,9 @@ Jump_024_4792::
     inc de
     dec b
     jr nz, Jump_024_4792
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld [wSpeciesIdLo], a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld [wSpeciesIdHi], a
     farcall SetSpeciesFlag
     xor a, a
@@ -1516,9 +1516,9 @@ Jump_024_49AF:: ; address name
 
 ; entry 10 of the `rst $00` table in GameMode6_Update_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7F5, wD7F6, wCA36, wCA37, wD781
+; reads: wD7F5, wD7F6, wRecordBufB, wD781
 ; writes: wD7F1, wD7F2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wSaveStep, wSaveRecordIndex, ...
-; points at: sA000, wCA2B
+; points at: sA000, wRecordBufB
 GameMode6_Update_Case05_Case0A::
 Jump_024_49E8:: ; address name
     farcall SetWD7F5ToWD789Cell4
@@ -1541,7 +1541,7 @@ Jump_024_49E8:: ; address name
     ld de, sA000
     add hl, de
     ld b, $A5
-    ld de, wCA2B
+    ld de, wRecordBufB
 
 Jump_024_4A1E::
     ld a, [de]
@@ -1549,9 +1549,9 @@ Jump_024_4A1E::
     inc de
     dec b
     jr nz, Jump_024_4A1E
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld [wSpeciesIdLo], a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld [wSpeciesIdHi], a
     farcall SetSpeciesFlag
     xor a, a
@@ -2106,7 +2106,7 @@ Func_024_4DA8:: ; address name
 ; only called from routines of GameMode6_Update (E-0098)
 ; 6 call sites from 6 routines (e.g. GameMode6_Update_Case00_Case01, GameMode6_Update_Case02_Case06, GameMode6_Update_Case02_Case02, GameMode6_Update_Case03_Case03, ...)
 ; reads: wD092
-; writes: wC94B, wGameMode, wModeState, wModeChangeRequest
+; writes: wLinkSceneByte4B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wD780
 GameMode6_Update_Shared04::
 Func_024_4DEB:: ; address name
@@ -2121,7 +2121,7 @@ Jump_024_4DF1::
     or a, c
     jr nz, Jump_024_4DF1
     xor a, a
-    ld [wC94B], a
+    ld [wLinkSceneByte4B], a
     ld a, $05
     ld [wGameMode], a
     ld a, $01
@@ -2342,18 +2342,18 @@ Func_024_4EE8:: ; address name
 
 ; HL = wCA2C, then copies up to 10 name bytes to wC130 with a $F0 terminator (E-0124)
 ; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case05, Func_024_5553_Case08)
-; points at: wCA2C, wTextBuf0
+; points at: wTextBuf0
 CopyWCA2CNameToWC130::
 Func_024_4F0C:: ; address name
-    ld hl, wCA2C
+    ld hl, wRecordBufB + $1
     jp Jump_024_4F15
 
 ; copies up to 10 name bytes from wC987 (stopping at $F0) to wC130 with a $F0 terminator (E-0124)
 ; 1 call site from 1 routine (e.g. Func_024_5434_Case08)
-; points at: wC987, wTextBuf0
+; points at: wTextBuf0
 CopyWC987NameToWC130::
 Func_024_4F12:: ; address name
-    ld hl, wC987
+    ld hl, wRecordBufA + $1
 
 Jump_024_4F15::
     ld de, wTextBuf0
@@ -2466,8 +2466,8 @@ Func_024_4F68:: ; address name
 ; only called from GameMode6_Update_Case04_Case0A (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode6_Update_Case04_Case0A)
 ; reads: wD7F5, wD7F6
-; writes: rRAMG, rRAMB, wC8D9
-; points at: wC8CF, wTextBuf0
+; writes: rRAMG, rRAMB, wNameGlyphBuf
+; points at: wNameGlyphBuf, wTextBuf0
 GameMode6_Update_Case04_Case0A_Sub01::
 Func_024_4FA3:: ; address name
     ld a, $0A
@@ -2483,8 +2483,8 @@ Func_024_4FA3:: ; address name
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
-    ld hl, wC8CF
+    ld [wNameGlyphBuf + $A], a
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
 
 Jump_024_4FCB::
@@ -2815,10 +2815,10 @@ Data_024_51D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from routines of GameMode6_Init (E-0098)
 ; 7 call sites from 2 routines (e.g. GameMode6_Init_Sub01, GameMode6_Init_Sub02)
-; reads: wC94B
+; reads: wLinkSceneByte4B
 GameMode6_Init_Shared01::
 Func_024_51F7:: ; address name
-    ld a, [wC94B]
+    ld a, [wLinkSceneByte4B]
     and a, a
     jr nz, Jump_024_51FE
     ret
@@ -2987,11 +2987,11 @@ Func_024_52CE:: ; address name
 
 ; copies the $A5 bytes at Data_024_52ED to wCA2B (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wCA2B
+; points at: wRecordBufB
 CopyDefaultRecordToWCA2B:: ; heuristic: follows a terminator; C0
 Func_024_52DE:: ; address name
     ld hl, Data_024_52ED
-    ld de, wCA2B
+    ld de, wRecordBufB
     ld b, $A5
 
 Jump_024_52E6::
@@ -3122,20 +3122,20 @@ Func_024_5434:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_024_5434
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB88, wCBAA, wCB8A, wD782
-; writes: wCBAA, wCB8A, wD782
+; reads: wSpriteSlots, wObject2, wD782
+; writes: wObject2, wSpriteSlots, wD782
 Func_024_5434_Case01::
 Jump_024_5454:: ; address name
-    ld a, [wCB88]
+    ld a, [wSpriteSlots + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCBAA]
+    ld a, [wObject2 + $B]
     dec a
-    ld [wCBAA], a
-    ld a, [wCB8A]
+    ld [wObject2 + $B], a
+    ld a, [wSpriteSlots + $B]
     dec a
-    ld [wCB8A], a
+    ld [wSpriteSlots + $B], a
     cp a, $58
     ret nz
     ld a, [wD782]
@@ -3163,17 +3163,17 @@ Jump_024_5474:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_024_5434
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB98, wCB9A, wD782
-; writes: wCB9A, wD782
+; reads: wObject1, wD782
+; writes: wObject1, wD782
 Func_024_5434_Case03::
 Jump_024_548A:: ; address name
-    ld a, [wCB98]
+    ld a, [wObject1 + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCB9A]
+    ld a, [wObject1 + $B]
     inc a
-    ld [wCB9A], a
+    ld [wObject1 + $B], a
     cp a, $38
     ret nz
     ld a, [wD782]
@@ -3183,15 +3183,15 @@ Jump_024_548A:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_024_5434
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCA99, wD782
-; writes: wCBCF, wD782
+; reads: wRecordBufB, wD782
+; writes: wObject5, wD782
 Func_024_5434_Case05::
 Jump_024_54A3:: ; address name
-    ld a, [wCA99]
+    ld a, [wRecordBufB + $6E]
     and a, a
     jr z, Jump_024_54AE
     ld a, $80
-    ld [wCBCF], a
+    ld [wObject5], a
 
 Jump_024_54AE::
     ld a, [wD782]
@@ -3201,24 +3201,24 @@ Jump_024_54AE::
 
 ; entry 7 of the `rst $00` table in Func_024_5434
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCA99, wCBA8, wCBAA, wD782
-; writes: wCBAA, wCBA6, wD782
+; reads: wRecordBufB, wObject2, wD782
+; writes: wObject2, wD782
 Func_024_5434_Case07::
 Jump_024_54B6:: ; address name
-    ld a, [wCA99]
+    ld a, [wRecordBufB + $6E]
     and a, a
     jr nz, Jump_024_54D2
-    ld a, [wCBA8]
+    ld a, [wObject2 + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCBAA]
+    ld a, [wObject2 + $B]
     dec a
-    ld [wCBAA], a
+    ld [wObject2 + $B], a
     cp a, $28
     ret nz
     ld a, $01
-    ld [wCBA6], a
+    ld [wObject2 + $7], a
 
 Jump_024_54D2::
     ld a, [wD782]
@@ -3242,21 +3242,21 @@ Jump_024_54DA:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_024_5434
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB98, wCB9A, wD782
-; writes: wCBCF, wCB96, wCB9A, wD782
+; reads: wObject1, wD782
+; writes: wObject5, wObject1, wD782
 Func_024_5434_Case0B::
 Jump_024_54EA:: ; address name
     xor a, a
-    ld [wCBCF], a
+    ld [wObject5], a
     ld a, $03
-    ld [wCB96], a
-    ld a, [wCB98]
+    ld [wObject1 + $7], a
+    ld a, [wObject1 + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCB9A]
+    ld a, [wObject1 + $B]
     dec a
-    ld [wCB9A], a
+    ld [wObject1 + $B], a
     cp a, $18
     ret nz
     ld a, [wD782]
@@ -3266,22 +3266,22 @@ Jump_024_54EA:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_024_5434
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB98, wCBAA, wCB9A, wD782
-; writes: wCBA6, wCBAA, wCB9A, wD782
+; reads: wObject1, wObject2, wD782
+; writes: wObject2, wObject1, wD782
 Func_024_5434_Case0C::
 Jump_024_550C:: ; address name
     ld a, $03
-    ld [wCBA6], a
-    ld a, [wCB98]
+    ld [wObject2 + $7], a
+    ld a, [wObject1 + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCBAA]
+    ld a, [wObject2 + $B]
     dec a
-    ld [wCBAA], a
-    ld a, [wCB9A]
+    ld [wObject2 + $B], a
+    ld a, [wObject1 + $B]
     dec a
-    ld [wCB9A], a
+    ld [wObject1 + $B], a
     cp a, $D8
     ret nz
     ld a, [wD782]
@@ -3291,19 +3291,19 @@ Jump_024_550C:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_024_5434
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB88, wCB8A, wD781
-; writes: wCB86, wCB8A, wD782, wD781
+; reads: wSpriteSlots, wD781
+; writes: wSpriteSlots, wD782, wD781
 Func_024_5434_Case0D::
 Jump_024_5531:: ; address name
     ld a, $01
-    ld [wCB86], a
-    ld a, [wCB88]
+    ld [wSpriteSlots + $7], a
+    ld a, [wSpriteSlots + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCB8A]
+    ld a, [wSpriteSlots + $B]
     inc a
-    ld [wCB8A], a
+    ld [wSpriteSlots + $B], a
     cp a, $B0
     ret nz
     xor a, a
@@ -3337,21 +3337,21 @@ Func_024_5553:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB88, wCB8A, wD782
-; writes: wCB8A, wD782
+; reads: wSpriteSlots, wD782
+; writes: wSpriteSlots, wD782
 Func_024_5553_Case01::
 Jump_024_5573:: ; address name
-    ld a, [wCB88]
+    ld a, [wSpriteSlots + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCB8A]
+    ld a, [wSpriteSlots + $B]
     dec a
-    ld [wCB8A], a
+    ld [wSpriteSlots + $B], a
     cp a, $59
     ret nc
     ld a, $58
-    ld [wCB8A], a
+    ld [wSpriteSlots + $B], a
     ld a, [wD782]
     inc a
     ld [wD782], a
@@ -3359,20 +3359,20 @@ Jump_024_5573:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB98, wCBAA, wCB9A, wD782
-; writes: wCBAA, wCB9A, wD782
+; reads: wObject1, wObject2, wD782
+; writes: wObject2, wObject1, wD782
 Func_024_5553_Case03::
 Jump_024_5591:: ; address name
-    ld a, [wCB98]
+    ld a, [wObject1 + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCBAA]
+    ld a, [wObject2 + $B]
     inc a
-    ld [wCBAA], a
-    ld a, [wCB9A]
+    ld [wObject2 + $B], a
+    ld a, [wObject1 + $B]
     inc a
-    ld [wCB9A], a
+    ld [wObject1 + $B], a
     cp a, $38
     ret nz
     ld a, [wD782]
@@ -3400,15 +3400,15 @@ Jump_024_55B1:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCA99, wD782
-; writes: wCBCF, wD782
+; reads: wRecordBufB, wD782
+; writes: wObject5, wD782
 Func_024_5553_Case05::
 Jump_024_55C7:: ; address name
-    ld a, [wCA99]
+    ld a, [wRecordBufB + $6E]
     and a, a
     jr z, Jump_024_55D2
     ld a, $80
-    ld [wCBCF], a
+    ld [wObject5], a
 
 Jump_024_55D2::
     ld a, [wD782]
@@ -3418,26 +3418,26 @@ Jump_024_55D2::
 
 ; entry 7 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCA99, wCBA8, wCBAA, wD782
-; writes: wCBAA, wCBA6, wD782
+; reads: wRecordBufB, wObject2, wD782
+; writes: wObject2, wD782
 Func_024_5553_Case07::
 Jump_024_55DA:: ; address name
-    ld a, [wCA99]
+    ld a, [wRecordBufB + $6E]
     and a, a
     jr nz, Jump_024_55FB
-    ld a, [wCBA8]
+    ld a, [wObject2 + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCBAA]
+    ld a, [wObject2 + $B]
     inc a
-    ld [wCBAA], a
+    ld [wObject2 + $B], a
     cp a, $68
     ret c
     ld a, $68
-    ld [wCBAA], a
+    ld [wObject2 + $B], a
     ld a, $03
-    ld [wCBA6], a
+    ld [wObject2 + $7], a
 
 Jump_024_55FB::
     ld a, [wD782]
@@ -3461,19 +3461,19 @@ Jump_024_5603:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB98, wCB9A, wD782
-; writes: wCB96, wCB9A, wD782
+; reads: wObject1, wD782
+; writes: wObject1, wD782
 Func_024_5553_Case0B::
 Jump_024_5613:: ; address name
     ld a, $03
-    ld [wCB96], a
-    ld a, [wCB98]
+    ld [wObject1 + $7], a
+    ld a, [wObject1 + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCB9A]
+    ld a, [wObject1 + $B]
     dec a
-    ld [wCB9A], a
+    ld [wObject1 + $B], a
     cp a, $E0
     ret nz
     ld a, [wD782]
@@ -3483,21 +3483,21 @@ Jump_024_5613:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB88, wCB8A, wD782
-; writes: wCBCF, wCB86, wCB8A, wD782
+; reads: wSpriteSlots, wD782
+; writes: wObject5, wSpriteSlots, wD782
 Func_024_5553_Case0C::
 Jump_024_5631:: ; address name
     xor a, a
-    ld [wCBCF], a
+    ld [wObject5], a
     ld a, $01
-    ld [wCB86], a
-    ld a, [wCB88]
+    ld [wSpriteSlots + $7], a
+    ld a, [wSpriteSlots + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCB8A]
+    ld a, [wSpriteSlots + $B]
     inc a
-    ld [wCB8A], a
+    ld [wSpriteSlots + $B], a
     cp a, $78
     ret c
     ld a, [wD782]
@@ -3507,22 +3507,22 @@ Jump_024_5631:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB88, wCBAA, wCB8A, wD781
-; writes: wCBA6, wCBAA, wCB8A, wD782, wD781
+; reads: wSpriteSlots, wObject2, wD781
+; writes: wObject2, wSpriteSlots, wD782, wD781
 Func_024_5553_Case0D::
 Jump_024_5653:: ; address name
     ld a, $01
-    ld [wCBA6], a
-    ld a, [wCB88]
+    ld [wObject2 + $7], a
+    ld a, [wSpriteSlots + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wCBAA]
+    ld a, [wObject2 + $B]
     inc a
-    ld [wCBAA], a
-    ld a, [wCB8A]
+    ld [wObject2 + $B], a
+    ld a, [wSpriteSlots + $B]
     inc a
-    ld [wCB8A], a
+    ld [wSpriteSlots + $B], a
     cp a, $C0
     ret c
     xor a, a
@@ -3534,11 +3534,11 @@ Jump_024_5653:: ; address name
 
 ; only called from routines of GameMode6_Update (E-0098)
 ; 4 call sites from 3 routines (e.g. GameMode6_Update, GameMode6_Update_Case02_Case0E, GameMode6_Update_Case03_Case01)
-; reads: wCA99
+; reads: wRecordBufB
 GameMode6_Update_Shared06::
 Func_024_567C:: ; address name
     farcall UpdateAndDrawSpriteSlots
-    ld a, [wCA99]
+    ld a, [wRecordBufB + $6E]
     and a, a
     ret z
     farcall DrawFieldSprites
@@ -3546,9 +3546,9 @@ Func_024_567C:: ; address name
 
 ; only called from routines of GameMode6_Update (E-0098)
 ; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case0D, GameMode6_Update_Case03_Case00)
-; reads: wCA99, wD092, wCA36, wCA37, wIsCGB, wC991, wC992
-; writes: hTemp0, hTemp1, wCBA1, wCBA2, wSpriteSlotCount, wOBJPaletteUploadRequest, wCBCF, wCBD3, ...
-; points at: wSpriteSlots, wCB8F, hTemp0, wCB9F
+; reads: wRecordBufB, wD092, wIsCGB, wRecordBufA
+; writes: hTemp0, hTemp1, wObject2, wSpriteSlotCount, wOBJPaletteUploadRequest, wObject5
+; points at: wSpriteSlots, wObject1, hTemp0, wObject2
 GameMode6_Update_Shared07::
 Func_024_568E:: ; address name
     ld de, $0000
@@ -3565,7 +3565,7 @@ Jump_024_569E::
     ld b, $10
     call CopyBytesDEFromHL_Bank24
     ld hl, Data_024_5C09
-    ld de, wCB8F
+    ld de, wObject1
     ld b, $10
     call CopyBytesDEFromHL_Bank24
     ld de, $0000
@@ -3587,7 +3587,7 @@ Jump_024_56C1::
     ld b, $06
     call CopyBytesDEFromHL_Bank24
     farcall DecompressGraphicsHFFC6ToHFFCA
-    ld a, [wCA99]
+    ld a, [wRecordBufB + $6E]
     and a, a
     jr nz, Jump_024_5762
     ld hl, Data_024_5BE3
@@ -3600,16 +3600,16 @@ Jump_024_56C1::
     and a, $01
     and a, a
     jr nz, Jump_024_5709
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ldh [hTemp0], a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ldh [hTemp1], a
     jr Jump_024_5713
 
 Jump_024_5709::
-    ld a, [wC991]
+    ld a, [wRecordBufA + $B]
     ldh [hTemp0], a
-    ld a, [wC992]
+    ld a, [wRecordBufA + $C]
     ldh [hTemp1], a
 
 Jump_024_5713::
@@ -3627,7 +3627,7 @@ Jump_024_572A::
     ld hl, Data_024_5C29
 
 Jump_024_572D::
-    ld de, wCB9F
+    ld de, wObject2
     ld b, $10
     call CopyBytesDEFromHL_Bank24
     ld a, [wD092]
@@ -3636,17 +3636,17 @@ Jump_024_572D::
     and a, $01
     and a, a
     jr nz, Jump_024_574F
-    ld a, [wCA36]
-    ld [wCBA1], a
-    ld a, [wCA37]
-    ld [wCBA2], a
+    ld a, [wRecordBufB + $B]
+    ld [wObject2 + $2], a
+    ld a, [wRecordBufB + $C]
+    ld [wObject2 + $3], a
     jr Jump_024_575B
 
 Jump_024_574F::
-    ld a, [wC991]
-    ld [wCBA1], a
-    ld a, [wC992]
-    ld [wCBA2], a
+    ld a, [wRecordBufA + $B]
+    ld [wObject2 + $2], a
+    ld a, [wRecordBufA + $C]
+    ld [wObject2 + $3], a
 
 Jump_024_575B::
     ld a, $03
@@ -3658,11 +3658,11 @@ Jump_024_5762::
     ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     xor a, a
-    ld [wCBCF], a
+    ld [wObject5], a
     ld a, $48
-    ld [wCBD3], a
+    ld [wObject5 + $4], a
     ld a, $40
-    ld [wCBD4], a
+    ld [wObject5 + $5], a
     ld a, $02
     ld [wSpriteSlotCount], a
 
@@ -5830,8 +5830,8 @@ Jump_024_6B33::
 ; only called from routines of ScriptCommandF8_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case10, ScriptCommandF8_Run_Case02_Case0A)
 ; reads: wD7AD
-; writes: rRAMG, rRAMB, wC8D9
-; points at: wPartyList, wC8CF, wTextBuf0
+; writes: rRAMG, rRAMB, wNameGlyphBuf
+; points at: wPartyList, wNameGlyphBuf, wTextBuf0
 ScriptCommandF8_Run_Shared03::
 Func_024_6B3A:: ; address name
     ld a, $0A
@@ -5845,11 +5845,11 @@ Func_024_6B3A:: ; address name
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     xor a, a
     ld [rRAMG], a
     ld [rRAMB], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $00
 

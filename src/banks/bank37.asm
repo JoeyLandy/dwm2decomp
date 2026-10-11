@@ -859,7 +859,7 @@ Jump_037_4E4B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wD7B4
 ; writes: rRAMG2, rRAMB
-; points at: sA000, wC986
+; points at: sA000, wRecordBufA
 Func_037_4AFD_Case04_Case12::
 Jump_037_4E75:: ; address name
     ld a, [wTextFlags]
@@ -874,7 +874,7 @@ Jump_037_4E75:: ; address name
     call Multiply8
     ld de, sA000
     add hl, de
-    ld de, wC986
+    ld de, wRecordBufA
     ld b, $A5
 
 Jump_037_4E94::
@@ -1006,19 +1006,18 @@ Jump_037_4F49:: ; address name
 
 ; entry 22 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wC994, wCA39, wD781
+; reads: wTextFlags, wRecordBufA, wRecordBufB, wD781
 ; writes: wD781, wD782, wD7B4, wLinkSendByte, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, ...
-; points at: wC994
 Func_037_4AFD_Case04_Case16::
 Jump_037_4F5E:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld hl, wC994
-    ld a, [wC994]
+    ld hl, wRecordBufA + $E
+    ld a, [wRecordBufA + $E]
     and a, $01
     ld b, a
-    ld a, [wCA39]
+    ld a, [wRecordBufB + $E]
     and a, $01
     cp a, b
     jr nz, Jump_037_4F89
@@ -1299,7 +1298,7 @@ Jump_037_515A::
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case1D)
 ; reads: wTextFlags, wD782, wD781, wLinkRole, wD7B5, wD7B6, wD7F5, wD7F6, ...
 ; writes: wD782, wD781, wD7AB, wD7AF, wD7F1, wD7F2, rRAMG2, rRAMB, ...
-; points at: wCAD0, wCADB, wMonsterLibraryBuf, wD7E0
+; points at: wChildRecord, wMonsterLibraryBuf, wD7E0
 StoreReceivedRecordIntoSRAM::
 Func_037_5172:: ; address name
     ld a, [wTextFlags]
@@ -1347,7 +1346,7 @@ Jump_037_5198::
     ld l, a
     ld a, [wD7F7]
     ld h, a
-    ld de, wCAD0
+    ld de, wChildRecord
     ld b, $A5
 
 Jump_037_51D7::
@@ -1361,7 +1360,7 @@ Jump_037_51D7::
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
-    ld hl, wCADB
+    ld hl, wChildRecord + $B
     ld a, [hl+]
     ld [wD7F1], a
     ld a, [hl]
@@ -1546,7 +1545,7 @@ Jump_037_52CF::
 ; entry 32 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wLinkSendByte, wC94B, wD7EB
+; writes: wLinkSendByte, wLinkSceneByte4B, wD7EB
 Func_037_4AFD_Case04_Case20::
 Jump_037_52EA:: ; address name
     ld a, [wLinkMessage]
@@ -1558,7 +1557,7 @@ Jump_037_52F2::
     xor a, a
     ld [wLinkSendByte], a
     ld a, $01
-    ld [wC94B], a
+    ld [wLinkSceneByte4B], a
     ld a, $01
     ld [wD7EB], a
     ret
@@ -1774,7 +1773,6 @@ Jump_037_5424:: ; address name
 ; clears 5 tiles at vTiles1 + $500 and draws the name at wCA2C there (E-0122)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case0D_Case01)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-; points at: wCA2C
 DrawWCA2CNameAtTiles1500::
 Func_037_542C:: ; address name
     ld hl, vTiles1 + $500
@@ -1788,7 +1786,7 @@ Func_037_542C:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld hl, wCA2C
+    ld hl, wRecordBufB + $1
     call CopyF0NameToWC8CF
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
@@ -1999,7 +1997,7 @@ Jump_037_5570:: ; address name
 
 ; entry 18 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wCA36, wCA37
+; reads: wD781, wRecordBufB
 ; writes: wD781, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7
 Func_037_4AFD_Case0D_Case12::
 Jump_037_5593:: ; address name
@@ -2010,7 +2008,7 @@ Jump_037_5593:: ; address name
 
 ; entry 19 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD781, wCA36, wCA37
+; reads: wD781, wRecordBufB
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781, wD7F5, hSpriteHideTile, wD7F7
 Func_037_4AFD_Case0D_Case13::
 Jump_037_55A0:: ; address name
@@ -2030,13 +2028,13 @@ Jump_037_55A0:: ; address name
 
 ; entry 20 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCA36, wCA37, wD781
+; reads: wRecordBufB, wD781
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7, wD781
 Func_037_4AFD_Case0D_Case14::
 Jump_037_55C6:: ; address name
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld [wD7F1], a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
@@ -2449,13 +2447,13 @@ Jump_037_5821:: ; address name
 
 ; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCA36, wCA37
+; reads: wRecordBufB
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wD7F6
 DrawWCA36SpritePart:: ; heuristic: follows a terminator; C0
 Func_037_5870:: ; address name
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld [wD7F1], a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld [wD7F2], a
     xor a, a
     ld [wD7F3], a
@@ -2512,10 +2510,10 @@ Jump_037_5901::
 
 ; copies up to 10 bytes from HL to wC8CF, stopping at $F0, and appends $F0 (E-0124)
 ; 2 call sites from 2 routines (e.g. DrawWCA2CNameAndWCA36String_Bank37, DrawWCA2CNameAtTiles1500)
-; points at: wC8CF
+; points at: wNameGlyphBuf
 CopyF0NameToWC8CF::
 Func_037_5912:: ; address name
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld c, $00
 
 Jump_037_5917::
@@ -2538,14 +2536,13 @@ Jump_037_5925::
 ; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at vTiles1 + $270 with size $0109 (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1D, Func_037_4AFD_Case0D_Case10)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-; points at: wCA2C, wCA36
 DrawWCA2CNameAndWCA36String_Bank37::
 Func_037_5929:: ; address name
-    ld hl, wCA2C
+    ld hl, wRecordBufB + $1
     call CopyF0NameToWC8CF
     ld de, vTiles1 + $780
     call CopyGlyphTilesToVRAM
-    ld hl, wCA36
+    ld hl, wRecordBufB + $B
     ld a, [hl+]
     ld [wStringIndex], a
     ld a, [hl]
@@ -3047,11 +3044,11 @@ Func_037_5BB6:: ; address name
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case12)
 ; reads: wD043
 ; writes: wD043
-; points at: wD09D, wC986
+; points at: wD09D, wRecordBufA
 UnpackLinkRecordToWD09D::
 Func_037_5BC6:: ; address name
     ld hl, wD09D
-    ld de, wC986
+    ld de, wRecordBufA
     ld a, [de]
     ld [hl+], a
     inc de
@@ -3140,10 +3137,10 @@ Jump_037_5C47::
 ; unpacks the received record at wD132 into wCA2B: names, species ids from Data_037_5FC7, family, parents, skills and scaled stats (E-0127)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case15)
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wD043
-; points at: wCA2B, wD132
+; points at: wRecordBufB, wD132
 UnpackLinkRecordToWCA2B::
 Func_037_5C4E:: ; address name
-    ld hl, wCA2B
+    ld hl, wRecordBufB
     ld de, wD132
     ld a, [de]
     ld [hl+], a

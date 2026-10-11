@@ -201,7 +201,7 @@ Func_0A0_40B0:: ; address name
     ld a, [wBattleResultByte]
     ld [wCFDB], a
     ld a, $03
-    ld [wC964], a
+    ld [wBattleKindFlags], a
     ret
 
 ; only called from GameMode7_Init_Sub01 (E-0047)
@@ -560,22 +560,22 @@ Jump_0A0_42DF::
 ; only called from GameMode7_Init_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01)
 ; reads: wLinkRole
-; points at: wBattlerRecords, wC986, wCA2B
+; points at: wBattlerRecords, wRecordBufA, wRecordBufB
 GameMode7_Init_Sub01_Sub05::
 Func_0A0_42E3:: ; address name
     ld de, wBattlerRecords
     ld a, [wLinkRole]
     bit 1, a
     jr nz, Jump_0A0_42F8
-    ld hl, wC986
+    ld hl, wRecordBufA
     call GameMode7_Init_Sub01_Sub05_Sub01
-    ld hl, wCA2B
+    ld hl, wRecordBufB
     jr GameMode7_Init_Sub01_Sub05_Sub01
 
 Jump_0A0_42F8::
-    ld hl, wCA2B
+    ld hl, wRecordBufB
     call GameMode7_Init_Sub01_Sub05_Sub01
-    ld hl, wC986
+    ld hl, wRecordBufA
 
 ; only called from GameMode7_Init_Sub01_Sub05 (E-0047)
 ; 2 call sites from 1 routine (e.g. GameMode7_Init_Sub01_Sub05)
@@ -1903,18 +1903,18 @@ Data_0A0_4B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from GameMode7_Init_Sub01_Sub02 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01_Sub02)
 ; reads: wLinkRole
-; writes: wC8CF, wC8D0, wC8D1, wC8D2, wC8D3, wC8D4
-; points at: wBattlerRecords, wC8CF, wD123, wPlayerName, wD05A
+; writes: wNameGlyphBuf
+; points at: wBattlerRecords, wNameGlyphBuf, wD123, wPlayerName, wD05A
 GameMode7_Init_Sub01_Sub02_Sub01::
 Func_0A0_4B10:: ; address name
     ld a, $90
-    ld [wC8CF], a
-    ld [wC8D0], a
-    ld [wC8D1], a
-    ld [wC8D2], a
-    ld [wC8D3], a
+    ld [wNameGlyphBuf], a
+    ld [wNameGlyphBuf + $1], a
+    ld [wNameGlyphBuf + $2], a
+    ld [wNameGlyphBuf + $3], a
+    ld [wNameGlyphBuf + $4], a
     ld a, $F0
-    ld [wC8D4], a
+    ld [wNameGlyphBuf + $5], a
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
     ld de, vTiles1 + $550
@@ -1922,13 +1922,13 @@ Func_0A0_4B10:: ; address name
     ld de, vTiles1 + $5A0
     call CopyGlyphTilesToVRAM
     ld hl, wBattlerRecords
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld bc, $000A
     call CopyBytes
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
     ld hl, wD123
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld bc, $000A
     call CopyBytes
     ld de, vTiles1 + $550
@@ -1937,7 +1937,7 @@ Func_0A0_4B10:: ; address name
     bit 1, a
     jr nz, Jump_0A0_4B7A
     ld hl, wPlayerName
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld bc, $000A
     call CopyBytes
     ld de, vTiles1 + $5A0
@@ -1947,7 +1947,7 @@ Func_0A0_4B10:: ; address name
 
 Jump_0A0_4B7A::
     ld hl, wD05A
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld bc, $000A
     call CopyBytes
     ld de, vTiles1 + $5A0
@@ -1955,7 +1955,7 @@ Jump_0A0_4B7A::
     ld hl, wPlayerName
 
 Jump_0A0_4B8F::
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld bc, $0400
 
 Jump_0A0_4B95::
@@ -1985,11 +1985,11 @@ Jump_0A0_4BB1::
     ld de, vTiles1 + $240
     call CopyGlyphTilesToVRAM
     ld a, $90
-    ld [wC8CF], a
-    ld [wC8D0], a
-    ld [wC8D1], a
+    ld [wNameGlyphBuf], a
+    ld [wNameGlyphBuf + $1], a
+    ld [wNameGlyphBuf + $2], a
     ld a, $F0
-    ld [wC8D2], a
+    ld [wNameGlyphBuf + $3], a
     ld de, vTiles1 + $4B0
     call CopyGlyphTilesToVRAM
     ret
@@ -2002,11 +2002,11 @@ Jump_0A0_4BCF::
     ld de, vTiles1 + $240
     call CopyGlyphTilesToVRAM
     ld a, $90
-    ld [wC8CF], a
-    ld [wC8D0], a
-    ld [wC8D1], a
+    ld [wNameGlyphBuf], a
+    ld [wNameGlyphBuf + $1], a
+    ld [wNameGlyphBuf + $2], a
     ld a, $F0
-    ld [wC8D2], a
+    ld [wNameGlyphBuf + $3], a
     ld de, vTiles1 + $4B0
     call CopyGlyphTilesToVRAM
     pop bc
@@ -2014,7 +2014,7 @@ Jump_0A0_4BCF::
     add a, $06
     ld b, a
     pop hl
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
 
 Jump_0A0_4BF9::
     ld a, [hl]
@@ -2572,7 +2572,7 @@ Jump_0A0_505D::
 ; entry 6 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD78E
-; writes: wCFDC, wD890, wC985
+; writes: wCFDC, wD890, wSide1Flag
 ; points at: wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case00_Case06::
 Jump_0A0_5076:: ; address name
@@ -2595,7 +2595,7 @@ Jump_0A0_5093::
     ld a, $02
     ld [wD890], a
     ld a, $02
-    ld [wC985], a
+    ld [wSide1Flag], a
     call BackupBattlerRecords0And1
     call RunBattlePhaseWhenTextIdle_A0_Case00_Case06_Sub02
     ld hl, wBattleStep
@@ -3293,7 +3293,7 @@ Jump_0A0_547E:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00)
 ; reads: wPartyCount
 ; writes: rRAMG
-; points at: wPartyList, wC972
+; points at: wPartyList, wBattleBuffer72
 RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub01::
 Func_0A0_5491:: ; address name
     ld a, $0A
@@ -3301,7 +3301,7 @@ Func_0A0_5491:: ; address name
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
-    ld de, wC972
+    ld de, wBattleBuffer72
 
 Jump_0A0_54A0::
     inc de
@@ -3371,12 +3371,12 @@ Jump_0A0_54DD:: ; address name
 ; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResultStep, wBattleResultCounter, wLinkRole, wD064
-; writes: wC964, wBattleResultByte9B, wBattleResultByte9C, wBattleResultStep, wBattleResultCounter, wSaveStep, wSaveRecordIndex
+; writes: wBattleKindFlags, wBattleResultByte9B, wBattleResultByte9C, wBattleResultStep, wBattleResultCounter, wSaveStep, wSaveRecordIndex
 ; points at: wBattleSlotOut, wBattleStatus, wD815, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case03_Case00::
 Jump_0A0_54F7:: ; address name
     ld a, $01
-    ld [wC964], a
+    ld [wBattleKindFlags], a
     ld a, [wBattleResultStep]
     ld l, a
     ld a, [wBattleResultCounter]
@@ -3679,7 +3679,7 @@ Data_0A0_56CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 5 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextBuf0
-; points at: wC987, wTextBuf0, wBattleStep
+; points at: wTextBuf0, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case03_Case05::
 Jump_0A0_56D2:: ; address name
     ld hl, vBGMap0
@@ -3687,7 +3687,7 @@ Jump_0A0_56D2:: ; address name
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
-    ld hl, wC987
+    ld hl, wRecordBufA + $1
     ld de, wTextBuf0
     ld bc, $000A
     call CopyBytes
@@ -3833,9 +3833,9 @@ Jump_0A0_57B9:: ; address name
 
 ; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03_Case09
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wLinkMessage, wCA88, wCA89, wCA8C, wCA8D, wCA8E, wCA8F, wCA90, ...
-; writes: wD092, wD04C, wCA2B, wCA45, wCA46, wCA47, wCA48, wCA53, ...
-; points at: wC986, wCA2B, wCA49, wCA54, wCAB9, wCAC4, wModeChangeRequest, wD066
+; reads: wLinkMessage, wRecordBufB
+; writes: wD092, wD04C, wRecordBufB, wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wD780, ...
+; points at: wRecordBufA, wRecordBufB, wModeChangeRequest, wD066
 RunBattlePhaseWhenTextIdle_A0_Case03_Case09_Case01::
 Jump_0A0_57C8:: ; address name
     ld a, [wLinkMessage]
@@ -3845,113 +3845,113 @@ Jump_0A0_57C8:: ; address name
     ld [wD092], a
     ld a, $01
     ld [wD04C], a
-    ld hl, wC986
-    ld de, wCA2B
+    ld hl, wRecordBufA
+    ld de, wRecordBufB
     ld bc, $00A5
     call CopyBytes
     ld a, $01
-    ld [wCA2B], a
+    ld [wRecordBufB], a
     ld a, $FF
-    ld [wCA45], a
-    ld [wCA46], a
-    ld [wCA47], a
-    ld [wCA48], a
-    ld hl, wCA49
+    ld [wRecordBufB + $1A], a
+    ld [wRecordBufB + $1B], a
+    ld [wRecordBufB + $1C], a
+    ld [wRecordBufB + $1D], a
+    ld hl, wRecordBufB + $1E
     call WriteUnknownNamePlaceholder
     ld a, $FF
-    ld [wCA53], a
-    ld hl, wCA54
+    ld [wRecordBufB + $28], a
+    ld hl, wRecordBufB + $29
     call WriteUnknownNamePlaceholder
     ld a, $FF
-    ld [wCA5E], a
+    ld [wRecordBufB + $33], a
     call AppendMappedSkillsToWCA67
     xor a, a
-    ld [wCA80], a
+    ld [wRecordBufB + $55], a
     ld a, $01
-    ld [wCA81], a
+    ld [wRecordBufB + $56], a
     xor a, a
-    ld [wCA83], a
-    ld [wCA84], a
-    ld [wCA85], a
-    ld a, [wCA88]
+    ld [wRecordBufB + $58], a
+    ld [wRecordBufB + $59], a
+    ld [wRecordBufB + $5A], a
+    ld a, [wRecordBufB + $5D]
     ld l, a
-    ld a, [wCA89]
+    ld a, [wRecordBufB + $5E]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wCA88], a
+    ld [wRecordBufB + $5D], a
     ld a, h
-    ld [wCA89], a
+    ld [wRecordBufB + $5E], a
     ld a, l
-    ld [wCA86], a
+    ld [wRecordBufB + $5B], a
     ld a, h
-    ld [wCA87], a
-    ld a, [wCA8C]
+    ld [wRecordBufB + $5C], a
+    ld a, [wRecordBufB + $61]
     ld l, a
-    ld a, [wCA8D]
+    ld a, [wRecordBufB + $62]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wCA8C], a
+    ld [wRecordBufB + $61], a
     ld a, h
-    ld [wCA8D], a
+    ld [wRecordBufB + $62], a
     ld a, l
-    ld [wCA8A], a
+    ld [wRecordBufB + $5F], a
     ld a, h
-    ld [wCA8B], a
-    ld a, [wCA8E]
+    ld [wRecordBufB + $60], a
+    ld a, [wRecordBufB + $63]
     ld l, a
-    ld a, [wCA8F]
+    ld a, [wRecordBufB + $64]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wCA8E], a
+    ld [wRecordBufB + $63], a
     ld a, h
-    ld [wCA8F], a
-    ld a, [wCA90]
+    ld [wRecordBufB + $64], a
+    ld a, [wRecordBufB + $65]
     ld l, a
-    ld a, [wCA91]
+    ld a, [wRecordBufB + $66]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wCA90], a
+    ld [wRecordBufB + $65], a
     ld a, h
-    ld [wCA91], a
-    ld a, [wCA92]
+    ld [wRecordBufB + $66], a
+    ld a, [wRecordBufB + $67]
     ld l, a
-    ld a, [wCA93]
+    ld a, [wRecordBufB + $68]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wCA92], a
+    ld [wRecordBufB + $67], a
     ld a, h
-    ld [wCA93], a
-    ld a, [wCA94]
+    ld [wRecordBufB + $68], a
+    ld a, [wRecordBufB + $69]
     ld l, a
-    ld a, [wCA95]
+    ld a, [wRecordBufB + $6A]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wCA94], a
+    ld [wRecordBufB + $69], a
     ld a, h
-    ld [wCA95], a
+    ld [wRecordBufB + $6A], a
     xor a, a
-    ld [wCA96], a
-    ld [wCA97], a
+    ld [wRecordBufB + $6B], a
+    ld [wRecordBufB + $6C], a
     xor a, a
-    ld [wCA98], a
+    ld [wRecordBufB + $6D], a
     ld a, $01
-    ld [wCA99], a
-    ld hl, wCAB9
+    ld [wRecordBufB + $6E], a
+    ld hl, wRecordBufB + $8E
     call WriteUnknownNamePlaceholder
     xor a, a
-    ld [wCAC3], a
-    ld hl, wCAC4
+    ld [wRecordBufB + $98], a
+    ld hl, wRecordBufB + $99
     call WriteUnknownNamePlaceholder
     xor a, a
-    ld [wCACE], a
+    ld [wRecordBufB + $A3], a
     xor a, a
-    ld [wCACF], a
+    ld [wRecordBufB + $A4], a
     ld a, $04
     call StartPaletteFade
     ld a, $06
@@ -4023,10 +4023,9 @@ Func_0A0_591A:: ; address name
 
 ; appends the eight skills at wCA5F (mapped through the pair list Data_0A0_597A) to the first free slot of wCA67, then clears wCA5F (E-0127)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case09_Case01)
-; points at: wCA67, wCA5F
 AppendMappedSkillsToWCA67::
 Func_0A0_5939:: ; address name
-    ld de, wCA67
+    ld de, wRecordBufB + $3C
     ld b, $19
 
 Jump_0A0_593E::
@@ -4040,7 +4039,7 @@ Jump_0A0_593E::
 
 Jump_0A0_5948::
     ld b, $08
-    ld hl, wCA5F
+    ld hl, wRecordBufB + $34
 
 Jump_0A0_594D::
     ld a, [hl]
@@ -4075,7 +4074,7 @@ Jump_0A0_5966::
     jr nz, Jump_0A0_594D
 
 Jump_0A0_596E::
-    ld hl, wCA5F
+    ld hl, wRecordBufB + $34
     ld b, $08
 
 Jump_0A0_5973::

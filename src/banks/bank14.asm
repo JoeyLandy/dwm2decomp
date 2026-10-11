@@ -873,7 +873,7 @@ Jump_014_45B8::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wD7B4, wD7F5, wD7F6, wD781
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD7B4, wD782, ...
-; points at: wC986, sB356, sA000
+; points at: wRecordBufA, sB356, sA000
 ScriptCommandEB_Run_Case05_Case3F::
 Jump_014_45DE:: ; address name
     ld a, [wD782]
@@ -888,7 +888,7 @@ Jump_014_45DE:: ; address name
     xor a, a
     ld [rRAMG2], a
     ld [wD7F2], a
-    ld hl, wC986
+    ld hl, wRecordBufA
     ld a, l
     ld [wD7F3], a
     ld a, h
@@ -966,7 +966,7 @@ Jump_014_4654::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B4
 ; writes: rRAMG2, rRAMB, wD7B5, wD7B6, wD7B4, wD7AB, wD7AD, wD7AF, ...
-; points at: sB356, wC986, sA000
+; points at: sB356, wRecordBufA, sA000
 ScriptCommandEB_Run_Case05_Case40::
 Jump_014_46A1:: ; address name
     ld a, $0A
@@ -987,7 +987,7 @@ Jump_014_46B9::
 
 Jump_014_46BE::
     ld [rRAMB], a
-    ld de, wC986
+    ld de, wRecordBufA
     ld b, $6F
 
 Jump_014_46C6::
@@ -2704,7 +2704,7 @@ Jump_014_5371:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wD7F5, wD7F6, wD7B4, wD781
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2, wD7F3, wD7F4, wD782, wD7B4, ...
-; points at: wC986, sB356, sA000
+; points at: wRecordBufA, sB356, sA000
 ScriptCommandEB_Run_Case04_Case42::
 Jump_014_538C:: ; address name
     ld a, [wD782]
@@ -2725,7 +2725,7 @@ Jump_014_538C:: ; address name
     xor a, a
     ld [rRAMG2], a
     ld [wD7F2], a
-    ld hl, wC986
+    ld hl, wRecordBufA
     ld a, l
     ld [wD7F3], a
     ld a, h
@@ -2795,7 +2795,7 @@ Jump_014_5404::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7B4
 ; writes: rRAMG2, rRAMB, wD7B5, wD7B6, wD7B4, wD7AB, wD7AD, wD7AF, ...
-; points at: sB356, wC986, sA000
+; points at: sB356, wRecordBufA, sA000
 ScriptCommandEB_Run_Case04_Case43::
 Jump_014_543F:: ; address name
     ld a, $0A
@@ -2816,7 +2816,7 @@ Jump_014_5457::
 
 Jump_014_545C::
     ld [rRAMB], a
-    ld de, wC986
+    ld de, wRecordBufA
     ld b, $6F
 
 Jump_014_5464::
@@ -3156,8 +3156,8 @@ Jump_014_56A4:: ; address name
 
 ; only called from ScriptCommandEB_Run_Case05_Case32 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case32)
-; writes: rRAMG2, rRAMB, wC8D9
-; points at: wC8CF, wTextBuf0
+; writes: rRAMG2, rRAMB, wNameGlyphBuf
+; points at: wNameGlyphBuf, wTextBuf0
 ScriptCommandEB_Run_Case05_Case32_Sub01::
 Func_014_56B0:: ; address name
     push bc
@@ -3170,10 +3170,10 @@ Func_014_56B0:: ; address name
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     xor a, a
     ld [rRAMG2], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     pop bc
     ld a, c
@@ -3205,8 +3205,8 @@ Jump_014_56E7::
 ; only called from routines of ScriptCommandEB_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandEB_Run_Case05_Case3E, ScriptCommandEB_Run_Case05_Case11)
 ; reads: wD7F5, wD7F6, wTextBuf1
-; writes: wD7F2, wD7F3, wD7F4, wD7F1, wC8D9, wTextBuf1
-; points at: sB356, wC8CF, wTextBuf1, sA000
+; writes: wD7F2, wD7F3, wD7F4, wD7F1, wNameGlyphBuf, wTextBuf1
+; points at: sB356, wNameGlyphBuf, wTextBuf1, sA000
 ScriptCommandEB_Run_Shared03::
 Func_014_56EB:: ; address name
     farcall SetWD7F5ToWD789Cell5
@@ -3238,8 +3238,8 @@ Jump_014_570F::
     ld [wD7F1], a
     farcall LoadRecordNameEntry0
     ld a, $F0
-    ld [wC8D9], a
-    ld hl, wC8CF
+    ld [wNameGlyphBuf + $A], a
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf1
     ld c, $00
 
@@ -3268,8 +3268,8 @@ Jump_014_573F::
 ; only called from ScriptCommandEB_Run_Case05_Case2F (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case2F)
 ; reads: wD7F5, wD7F6
-; writes: rRAMG2, rRAMB, wC8D9
-; points at: wC8CF, wTextBuf1
+; writes: rRAMG2, rRAMB, wNameGlyphBuf
+; points at: wNameGlyphBuf, wTextBuf1
 ScriptCommandEB_Run_Case05_Case2F_Sub02::
 Func_014_574E:: ; address name
     farcall SetWD7F5ToWD789Cell5
@@ -3285,10 +3285,10 @@ Func_014_574E:: ; address name
     ld c, $01
     call CopyRecordNameToWC8CF
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     xor a, a
     ld [rRAMG2], a
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf1
     ld c, $00
 
@@ -3312,8 +3312,8 @@ Jump_014_578A::
 ; only called from ScriptCommandEB_Run_Case05_Case2F (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case2F)
 ; reads: wD7B4, wTextBuf0
-; writes: wD7F2, wD7F3, wD7F4, wD7F1, wC8D9, wTextBuf0
-; points at: sB356, wC8CF, wTextBuf0, sA000
+; writes: wD7F2, wD7F3, wD7F4, wD7F1, wNameGlyphBuf, wTextBuf0
+; points at: sB356, wNameGlyphBuf, wTextBuf0, sA000
 ScriptCommandEB_Run_Case05_Case2F_Sub03::
 Func_014_578E:: ; address name
     ld a, [wD7B4]
@@ -3340,8 +3340,8 @@ Jump_014_57A6::
     ld [wD7F1], a
     farcall LoadRecordNameEntry0
     ld a, $F0
-    ld [wC8D9], a
-    ld hl, wC8CF
+    ld [wNameGlyphBuf + $A], a
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $00
 
@@ -5569,11 +5569,11 @@ Jump_014_6734:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7BC
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, hSpriteHideTile, wD7F5
-; points at: wCFAD, wC8CF, wCFA8
+; points at: wCFAD, wNameGlyphBuf, wCFA8
 RunWCFA8StateWhenNotFading_Case06_Case01::
 Jump_014_676A:: ; address name
     ld hl, wCFAD
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
 
 Jump_014_6770::
     ld a, [hl]
@@ -7960,7 +7960,7 @@ Data_014_7D79:: ; heuristic: target of a monotone pointer table; C0
 ; 4 call sites from 4 routines (e.g. ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case05_Case13, ScriptCommandEB_Run_Case04_Case42, ScriptCommandEB_Run_Case07_Case12)
 ; reads: wD7F1
 ; writes: rRAMG2, rRAMB, wD7F5, wD7F6, wD7F7
-; points at: sB356, sB3C5, sA000, wCA2B
+; points at: sB356, sB3C5, sA000, wRecordBufB
 ScriptCommandEB_Run_Shared05::
 Func_014_7D7F:: ; address name
     ld a, [wD7F1]
@@ -8076,7 +8076,7 @@ Jump_014_7E01::
 
 Jump_014_7E16::
     push hl
-    ld de, wCA2B
+    ld de, wRecordBufB
     ld hl, sA000
     ld a, $01
     ld [rRAMB], a
@@ -8099,7 +8099,7 @@ Jump_014_7E2F::
     pop hl
     xor a, a
     ld [rRAMB], a
-    ld de, wCA2B
+    ld de, wRecordBufB
     ld b, $6F
 
 Jump_014_7E3E::

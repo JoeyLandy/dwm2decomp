@@ -367,10 +367,10 @@ Jump_061_4209::
 
 ; runs the routine for wCC44 & 7 (jump table; 4 reuses 3) (E-0122)
 ; 1 call site from 1 routine (e.g. LoadMapHeader)
-; reads: wCC44
+; reads: wMapType
 RunWCC44Type_420D::
 Func_061_420D:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     and a, $07
     rst $00
     dw RunWCC44Type_420D_Case00
@@ -394,12 +394,12 @@ Jump_061_4223:: ; address name
 
 ; entry 6 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, hTemp0
+; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0
 ; points at: wCD89, wCDAF
 RunWCC44Type_420D_Case06::
 Jump_061_422B:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     sla a
     sla a
     push af
@@ -414,7 +414,7 @@ Jump_061_422B:: ; address name
     ldh [hTemp0], a
     pop af
     ld hl, wCDAF
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     add_a_to_hl
     ld a, [hl]
@@ -429,12 +429,12 @@ Jump_061_422B:: ; address name
 
 ; entry 5 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, wIsCGB
-; writes: wBGPaletteUploadRequest, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC90D, wMapSpriteKind, wMapHeaderByte11, wMapTallTileMin, ...
+; reads: wKeyWorldFloor, wIsCGB
+; writes: wBGPaletteUploadRequest, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wFieldEventKind, wMapSpriteKind, wMapHeaderByte11, wMapTallTileMin, ...
 ; points at: wCDAE, wBGPaletteBuffer
 RunWCC44Type_420D_Case05::
 Jump_061_4261:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAE
     add_a_to_hl
@@ -478,7 +478,7 @@ Jump_061_42A5::
     ld a, $3F
     ld [wMaxBlockingTile], a
     xor a, a
-    ld [wC90D], a
+    ld [wFieldEventKind], a
     ld a, $10
     ld [wMapSpriteKind], a
     ld a, $2A
@@ -486,7 +486,7 @@ Jump_061_42A5::
     xor a, a
     ld [wMapTallTileMin], a
     ld a, $A3
-    ld [wC901], a
+    ld [wEncounterRate], a
     pop af
     cp a, $07
     jr z, Jump_061_42D7
@@ -553,8 +553,8 @@ Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; entry 1 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wIsCGB, wCC45
-; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wC90D, wMapSpriteKind, wMapTallTileMin, wMapWidthScreens, wMapHeightScreens, wC901, ...
+; reads: wIsCGB, wKeyWorldFloor
+; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wFieldEventKind, wMapSpriteKind, wMapTallTileMin, wMapWidthScreens, wMapHeightScreens, wEncounterRate, ...
 ; points at: wBGPaletteBuffer, wCD7B
 RunWCC44Type_420D_Case01::
 Jump_061_4325:: ; address name
@@ -577,11 +577,11 @@ Jump_061_4348::
     ld a, $3F
     ld [wMaxBlockingTile], a
     xor a, a
-    ld [wC90D], a
+    ld [wFieldEventKind], a
     ld [wMapSpriteKind], a
     ld [wMapTallTileMin], a
     ld hl, wCD7B
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     sla a
     sla a
     add_a_to_hl
@@ -620,21 +620,21 @@ Jump_061_4380::
     ld a, [hl]
     ld [wMapHeightScreens], a
     ld a, $A3
-    ld [wC901], a
+    ld [wEncounterRate], a
     xor a, a
     ld [wMapMoveType], a
     ret
 
 ; entry 2 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, hTemp0
+; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0, wCD06
 ; points at: hTemp0
 RunWCC44Type_420D_Case02::
 Jump_061_439F:: ; address name
     ld a, $61
     ldh [hTemp0], a
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     bit 7, a
     jr z, Jump_061_43AE
     ld hl, hTemp0
@@ -649,13 +649,13 @@ Jump_061_43AE::
 
 ; entry 3 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45
+; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: wCDAC
 RunWCC44Type_420D_Case03::
 Jump_061_43B9:: ; address name
     ld hl, wCDAC
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     add_a_to_hl
     ld a, [hl]
@@ -667,7 +667,7 @@ Jump_061_43B9:: ; address name
 ; entry 0 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCD0B, wIsCGB, wMapSpriteKind
-; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wC90D, wC901, wMapMoveType, wMapTallTileMin, wMapHeaderByte11, wMapSpriteKind
+; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wFieldEventKind, wEncounterRate, wMapMoveType, wMapTallTileMin, wMapHeaderByte11, wMapSpriteKind
 ; points at: wBGPaletteBuffer
 RunWCC44Type_420D_Case00::
 Jump_061_43CF:: ; address name
@@ -716,16 +716,16 @@ Jump_061_440A::
     cp a, $04
     jr z, Jump_061_441D
     ld a, $02
-    ld [wC90D], a
+    ld [wFieldEventKind], a
     jr Jump_061_4421
 
 Jump_061_441D::
     xor a, a
-    ld [wC90D], a
+    ld [wFieldEventKind], a
 
 Jump_061_4421::
     ld a, $A2
-    ld [wC901], a
+    ld [wEncounterRate], a
     ld a, [wCD0B]
     cp a, $01
     jr z, Jump_061_4437
@@ -768,10 +768,10 @@ Data_061_4468:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
-; reads: wCC44
+; reads: wMapType
 LoadMapScreen_Sub03::
 Func_061_4472:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     and a, $07
     rst $00
     dw Func_061_4472_Case00
@@ -795,12 +795,12 @@ Jump_061_4488:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, hTemp0
+; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0
 ; points at: wCD89, wCDAF
 Func_061_4472_Case06::
 Jump_061_4490:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     sla a
     sla a
     push af
@@ -815,7 +815,7 @@ Jump_061_4490:: ; address name
     ldh [hTemp0], a
     pop af
     ld hl, wCDAF
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     add_a_to_hl
     ld a, [hl]
@@ -846,12 +846,12 @@ Jump_061_44D7::
 
 ; writes a 2 x 2 tile block ($1A or $1C by the wCDAF entry, then $1E) at wC244, with CGB attribute 5 (E-0127)
 ; 3 call sites from 3 routines (e.g. Func_061_4472_Case06, ScriptCommand86_Run_Case04, ScriptCommand86_Run_Case02)
-; reads: wCC45, wIsCGB
+; reads: wKeyWorldFloor, wIsCGB
 ; writes: rSVBK
 ; points at: wCDAF
 DrawDoorTilesForWCC45::
 Func_061_44DB:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld de, wCDAF
     add a, e
@@ -911,12 +911,12 @@ Jump_061_44F1::
 
 ; entry 5 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, wCC43, hMapScreenY, hMapScreenX, wIsCGB
+; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenY, hMapScreenX, wIsCGB
 ; writes: hTemp0, rSVBK
 ; points at: wCDAD, wScreenTileBuffer, wD000
 Func_061_4472_Case05::
 Jump_061_4533:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAD
     add_a_to_hl
@@ -924,7 +924,7 @@ Jump_061_4533:: ; address name
     add a, a
     ld e, a
     ld d, $00
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     add a, a
     add a, e
     ld e, a
@@ -1031,19 +1031,19 @@ Jump_061_45E1::
 
 ; for the two wCDB0 entries of wCC45 matching wCC43 runs Func_061_462F with C = $80 or the stored value (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_061_4472_Case05, ScriptCommand81_Run_Case02)
-; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, wIsCGB
+; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wCDB0, wCDAD
 CheckTwoWCDB0EntriesForWCC43::
 Func_061_45E8:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDB0
     add_a_to_hl
     push hl
     ld a, [hl]
     ld b, a
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     cp a, b
     jr nz, Jump_061_4613
     inc hl
@@ -1075,7 +1075,7 @@ Jump_061_4613::
     inc hl
     ld a, [hl]
     ld b, a
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     cp a, b
     ret nz
     inc hl
@@ -1096,7 +1096,7 @@ Jump_061_462B::
 
 ; only called from CheckTwoWCDB0EntriesForWCC43 (E-0047)
 ; 1 call site from 1 routine (e.g. CheckTwoWCDB0EntriesForWCC43)
-; reads: hMapScreenX, hMapScreenY, wCC45, wCC43, wIsCGB
+; reads: hMapScreenX, hMapScreenY, wKeyWorldFloor, wKeyWorldArea, wIsCGB
 ; writes: rSVBK
 ; points at: wCDAD
 CheckTwoWCDB0EntriesForWCC43_Sub01::
@@ -1123,7 +1123,7 @@ Jump_061_464C::
 
 Jump_061_464E::
     push af
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld de, wCDAD
     add a, e
@@ -1136,7 +1136,7 @@ Jump_061_465C::
     add a, a
     ld e, a
     ld d, $00
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     add a, a
     add a, e
     ld e, a
@@ -1253,13 +1253,13 @@ Jump_061_468E::
 
 ; hFFC6 = the two nibbles at $4818 + 16 * [$CE2C + 2 * wCDAD[16 * wCC45] + 2 * wCC43] + 2 * hFFC6, packed into one byte (E-0121)
 ; 1 call site from 1 routine (e.g. WriteRandomEntryFromTable690E)
-; reads: wCC45, wCC43, hTemp0
+; reads: wKeyWorldFloor, wKeyWorldArea, hTemp0
 ; writes: hTemp0
 ; points at: wCDAD
 LookupTable4818NibblePairForHFFC6::
 Func_061_4706:: ; address name
     push hl
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAD
     add_a_to_hl
@@ -1267,7 +1267,7 @@ Func_061_4706:: ; address name
     add a, a
     ld l, a
     ld h, $00
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     add a, a
     add_a_to_hl
     ld a, l
@@ -1303,12 +1303,12 @@ Func_061_4706:: ; address name
 
 ; draws the exit or stairs tile block for the current screen when it matches the area entry in wCE2D (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case05)
-; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, hTemp0, wIsCGB
+; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp0, wIsCGB
 ; writes: hTemp0, rSVBK
 ; points at: wCD89, wCDAD, wCE2D, wD0A8
 DrawKeyWorldExitTile::
 Func_061_474C:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     push af
@@ -1325,7 +1325,7 @@ Func_061_474C:: ; address name
     add a, a
     ld hl, wCE2D
     add_a_to_hl
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     add a, a
     add_a_to_hl
     ldh a, [hMapScreenX]
@@ -1504,14 +1504,14 @@ Jump_061_5418:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45
+; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: hTemp0
 Func_061_4472_Case02::
 Jump_061_541A:: ; address name
     ld a, $61
     ldh [hTemp0], a
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     bit 7, a
     jr z, Jump_061_5429
     ld hl, hTemp0
@@ -1523,13 +1523,13 @@ Jump_061_5429::
 
 ; entry 3 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45
+; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: wCDAC
 Func_061_4472_Case03::
 Jump_061_542D:: ; address name
     ld hl, wCDAC
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     add_a_to_hl
     ld a, [hl]
@@ -1654,11 +1654,11 @@ Jump_061_54E2::
 
 ; on key-world maps draws the goal object for the current screen (from wC88F when the wC891 key matches, else from wCD0A) (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
-; reads: wCC44, wKeyWorldActive, wKeyWorldKey, wCC42, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, wKeyWorldGoal, ...
+; reads: wMapType, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, wKeyWorldGoal, ...
 ; writes: rSVBK
 DrawKeyWorldGoalAtScreen::
 Func_061_54EC:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     cp a, $80
     ret nz
     ld a, [wKeyWorldActive]
@@ -1669,7 +1669,7 @@ Func_061_54EC:: ; address name
     jr z, Jump_061_5548
     and a, $7F
     ld c, a
-    ld a, [wCC42]
+    ld a, [wKeyWorldSlot]
     cp a, c
     jr nz, Jump_061_5548
     ldh a, [hMapScreenX]
@@ -2120,10 +2120,10 @@ Jump_061_5723::
 
 ; only called from CheckWarpAtPlayer (E-0047)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer)
-; reads: wCC44
+; reads: wMapType
 CheckWarpAtPlayer_Sub01::
 Func_061_5764:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     and a, $07
     rst $00
     dw Func_061_5764_Case00
@@ -2201,12 +2201,12 @@ Jump_061_579D::
 
 ; when wCC43 is 0, the wCD89 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case05)
-; reads: wCC43, wCC45, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
+; reads: wKeyWorldArea, wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
+; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wCD89
 WarpByWCD89EntryAtScreen14::
 Func_061_57A4:: ; address name
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     or a, a
     jr z, Jump_061_57AD
 
@@ -2215,7 +2215,7 @@ Jump_061_57AA::
     ret
 
 Jump_061_57AD::
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     sla a
     sla a
     ld hl, wCD89
@@ -2238,10 +2238,10 @@ Jump_061_57AD::
     and a, $0F
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     ld a, $F0
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     ld a, $04
@@ -2260,8 +2260,8 @@ Jump_061_57AD::
 
 ; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wCDAD entry, plays sound $60, wCC44 = $83 and starts the transition; C = 1 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case04)
-; reads: hMapScreenY, wCC45, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wModeState, wFieldTransitionStep, ...
+; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
+; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wModeState, wFieldTransitionStep, ...
 ; points at: wCDAD
 WarpToScreen01Event83::
 Func_061_5807:: ; address name
@@ -2277,12 +2277,12 @@ Jump_061_5810::
     inc a
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $38
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     ld a, $FF
-    ld [wC8CA], a
-    ld a, [wCC45]
+    ld [wWarpDestFacing], a
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAD
     add_a_to_hl
@@ -2291,7 +2291,7 @@ Jump_061_5810::
     ld a, $60
     call QueueSoundEffect
     ld a, $83
-    ld [wCC44], a
+    ld [wMapType], a
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -2308,8 +2308,8 @@ Jump_061_5810::
 
 ; on screen row 1: warps to the screen in the wCD78 entry of wCC45 and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case02)
-; reads: hMapScreenY, wCC45, hPlayerStateFlags
-; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
+; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
+; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wCD78
 WarpByWCD78EntryAtScreenRow1::
 Func_061_585A:: ; address name
@@ -2320,13 +2320,13 @@ Func_061_585A:: ; address name
     ret
 
 Jump_061_5863::
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     and a, $7F
     sla a
     sla a
     ld hl, wCD78
     add_a_to_hl
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     bit 7, a
     jr z, Jump_061_587C
     inc hl
@@ -2340,10 +2340,10 @@ Jump_061_587C::
     and a, $0F
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     ld a, $F0
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     ld a, $04
@@ -2365,12 +2365,12 @@ Jump_061_587C::
 
 ; checks the warp list Data_061_6566[wCDAC entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case03)
-; reads: wCC45, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wC8CA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
+; reads: wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
+; writes: wWarpDestFacing, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wCDAC, wCD88
 CheckKeyWorldWarpTable::
 Func_061_58BC:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAC
     add_a_to_hl
@@ -2407,7 +2407,7 @@ Jump_061_58E6::
     jr Jump_061_590B
 
 Jump_061_58F4::
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     inc de
     ld a, [de]
     inc de
@@ -2442,11 +2442,11 @@ Jump_061_5916::
     inc de
     inc de
     ld a, [de]
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     inc de
     ld a, [de]
-    ld [wC8C9], a
-    ld a, [wCC45]
+    ld [wWarpDestY], a
+    ld a, [wKeyWorldFloor]
     sla a
     sla a
     ld hl, wCD88
@@ -2459,7 +2459,7 @@ Jump_061_5916::
     and a, $0F
     ldh [hMapScreenY], a
     ld a, $F0
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     jr Jump_061_594D
 
 Jump_061_5949::
@@ -2487,10 +2487,10 @@ Jump_061_594D::
 
 ; runs the routine for wCC44 & 7 (jump table; 7 reuses 4) (E-0122)
 ; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
-; reads: wCC44
+; reads: wMapType
 RunWCC44Type_596F::
 Func_061_596F:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     and a, $07
     rst $00
     dw RunWCC44Type_596F_Case00
@@ -2560,8 +2560,8 @@ Jump_061_59A6:: ; address name
 
 ; only called from RunWCC44Type_596F_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case06)
-; reads: hPlayerX, hPlayerY, wCC45, wCC43, hPlayerStateFlags
-; writes: wCC43, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wCCEA, ...
+; reads: hPlayerX, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hPlayerStateFlags
+; writes: wKeyWorldArea, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wCCEA, ...
 ; points at: wCDAD, wCE2D
 RunWCC44Type_596F_Case06_Sub01::
 Func_061_59AA:: ; address name
@@ -2577,7 +2577,7 @@ Jump_061_59B3::
     ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_061_59B0
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAD
     add_a_to_hl
@@ -2590,9 +2590,9 @@ Jump_061_59B3::
     inc d
 
 Jump_061_59D0::
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     dec a
-    ld [wCC43], a
+    ld [wKeyWorldArea], a
     add a, a
     add a, e
     ld e, a
@@ -2613,12 +2613,12 @@ Jump_061_59DD::
     and a, $0F
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $85
-    ld [wCC44], a
+    ld [wMapType], a
     ld a, $01
     ld [wCCEA], a
     ld a, $60
@@ -2642,8 +2642,8 @@ Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunWCC44Type_596F_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case05)
-; reads: hPlayerX, hPlayerStateFlags, hPlayerY, wCC45, wCC43, hMapScreenX, hMapScreenY, hTemp1, ...
-; writes: hPlayerStateFlags, hTemp0, hTemp1, wCC43, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
+; reads: hPlayerX, hPlayerStateFlags, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp1, ...
+; writes: hPlayerStateFlags, hTemp0, hTemp1, wKeyWorldArea, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
 ; points at: wCD89, wCDAC, wCE2D, wCD88
 RunWCC44Type_596F_Case05_Sub01::
 Func_061_5A33:: ; address name
@@ -2662,7 +2662,7 @@ Jump_061_5A42::
     ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_061_5A39
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     push af
@@ -2686,7 +2686,7 @@ Jump_061_5A42::
     inc d
 
 Jump_061_5A71::
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     add a, a
     add a, e
     ld e, a
@@ -2728,13 +2728,13 @@ Jump_061_5A9B::
     ret
 
 Jump_061_5AB5::
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     or a, a
     jr nz, Jump_061_5B08
     ldh a, [hTemp0]
     cp a, $04
     jr nz, Jump_061_5B08
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld hl, wCD88
@@ -2747,10 +2747,10 @@ Jump_061_5AB5::
     and a, $0F
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     ld a, $F0
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     ld a, $04
@@ -2768,9 +2768,9 @@ Jump_061_5AB5::
     ret
 
 Jump_061_5B08::
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     dec a
-    ld [wCC43], a
+    ld [wKeyWorldArea], a
     dec de
     dec de
     ld a, [de]
@@ -2779,24 +2779,24 @@ Jump_061_5B08::
     jr Jump_061_5B6B
 
 Jump_061_5B18::
-    ld a, [wCC43]
+    ld a, [wKeyWorldArea]
     inc a
-    ld [wCC43], a
+    ld [wKeyWorldArea], a
     inc a
     ld c, a
     ldh a, [hTemp1]
     cp a, c
     jr nz, Jump_061_5B66
     ld a, $86
-    ld [wCC44], a
+    ld [wMapType], a
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     ld a, $01
@@ -2834,10 +2834,10 @@ Jump_061_5B6B::
     and a, $0F
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     ld a, $01
@@ -2863,8 +2863,8 @@ Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunWCC44Type_596F_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case02)
-; reads: hPlayerX, hPlayerY, wC955, wCC45, hPlayerStateFlags
-; writes: wC955, wCC45, wC8C8, wC8C9, wC8CA, wC914, wModeState, wMenuState, ...
+; reads: hPlayerX, hPlayerY, wMapToggleRequest, wKeyWorldFloor, hPlayerStateFlags
+; writes: wMapToggleRequest, wKeyWorldFloor, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapToggleFlag, wModeState, wMenuState, ...
 RunWCC44Type_596F_Case02_Sub01::
 Func_061_5BBB:: ; address name
     ldh a, [hPlayerX]
@@ -2879,22 +2879,22 @@ Jump_061_5BC4::
     ldh a, [hPlayerY]
     cp a, $30
     jr nz, Jump_061_5BC1
-    ld a, [wC955]
+    ld a, [wMapToggleRequest]
     or a, a
     jr z, Jump_061_5BC1
     xor a, a
-    ld [wC955], a
-    ld a, [wCC45]
+    ld [wMapToggleRequest], a
+    ld a, [wKeyWorldFloor]
     add a, $80
-    ld [wCC45], a
+    ld [wKeyWorldFloor], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $30
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     ld a, $FF
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     xor a, a
-    ld [wC914], a
+    ld [wMapToggleFlag], a
     ld a, $06
     ld [wModeState], a
     xor a, a
@@ -2909,12 +2909,12 @@ Jump_061_5BC4::
 
 ; only called from RunWCC44Type_596F_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case03)
-; reads: wCC45, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-; writes: hPlayerStateFlags, wC8CA, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wCC44, wModeState, ...
+; reads: wKeyWorldFloor, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+; writes: hPlayerStateFlags, wWarpDestFacing, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wMapType, wModeState, ...
 ; points at: wCDAC
 RunWCC44Type_596F_Case03_Sub01::
 Func_061_5C07:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAC
     add_a_to_hl
@@ -2952,7 +2952,7 @@ Jump_061_5C37::
 Jump_061_5C3D::
     ld a, [de]
     inc de
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     push af
     swap a
     and a, $0F
@@ -3009,10 +3009,10 @@ Jump_061_5C7E::
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $80
-    ld [wC8C9], a
-    ld a, [wCC45]
+    ld [wWarpDestY], a
+    ld a, [wKeyWorldFloor]
     swap a
     ld hl, wCDAC
     add_a_to_hl
@@ -3021,7 +3021,7 @@ Jump_061_5C7E::
     ld a, $63
     ld [hl], a
     ld a, $84
-    ld [wCC44], a
+    ld [wMapType], a
     ld a, $60
     call QueueSoundEffect
     ld a, $04
@@ -3053,7 +3053,7 @@ Func_061_5CCF:: ; address name
 ; only called from RunWCC44Type_596F_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
 ; reads: hPlayerStateFlags, hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hTemp2, hTemp1
-; writes: hTemp1, hPlayerStateFlags, hTemp2, wCC45, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
+; writes: hTemp1, hPlayerStateFlags, hTemp2, wKeyWorldFloor, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
 ; points at: wCD8B, wCDAC, wCDAD, wCE2D
 RunWCC44Type_596F_Case00_Sub01::
 Func_061_5CD0:: ; address name
@@ -3141,9 +3141,9 @@ Jump_061_5D25::
     cp a, $05
     jp z, Jump_061_5DE1
     ldh a, [hTemp1]
-    ld [wCC45], a
+    ld [wKeyWorldFloor], a
     ld a, $83
-    ld [wCC44], a
+    ld [wMapType], a
     ldh a, [hTemp1]
     swap a
     ld hl, wCDAC
@@ -3189,13 +3189,13 @@ Jump_061_5D92::
     inc de
     call ReadByteInBank
     ld a, c
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     inc de
     call ReadByteInBank
     ld a, c
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     xor a, a
@@ -3218,24 +3218,24 @@ Jump_061_5D92::
 
 Jump_061_5DE1::
     xor a, a
-    ld [wCC43], a
+    ld [wKeyWorldArea], a
     ld a, $01
     ldh [hMapScreenX], a
     ld a, $03
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $80
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $03
     ld [wFieldTransitionKind], a
     jr Jump_061_5E44
 
 Jump_061_5E02::
     xor a, a
-    ld [wCC43], a
+    ld [wKeyWorldArea], a
     ldh a, [hTemp1]
     swap a
     ld hl, wCDAD
@@ -3256,18 +3256,18 @@ Jump_061_5E02::
     and a, $0F
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $01
     ld [wFieldTransitionKind], a
 
 Jump_061_5E44::
     ldh a, [hTemp1]
-    ld [wCC45], a
+    ld [wKeyWorldFloor], a
     ld a, $85
-    ld [wCC44], a
+    ld [wMapType], a
     ld a, $01
     ld [wCCEA], a
     ld a, $60
@@ -3304,8 +3304,8 @@ Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunWCC44Type_596F_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
-; reads: wKeyWorldActive, wKeyWorldKey, wCC42, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, hPlayerX, hPlayerY, ...
-; writes: wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
+; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, hPlayerX, hPlayerY, ...
+; writes: wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
 RunWCC44Type_596F_Case00_Sub02::
 Func_061_5E8D:: ; address name
     ld a, [wKeyWorldActive]
@@ -3316,7 +3316,7 @@ Func_061_5E8D:: ; address name
     jr z, Jump_061_5ECF
     and a, $7F
     ld c, a
-    ld a, [wCC42]
+    ld a, [wKeyWorldSlot]
     cp a, c
     jr nz, Jump_061_5ECF
     ldh a, [hMapScreenX]
@@ -3389,16 +3389,16 @@ Jump_061_5EF0::
     or a, $20
     ldh [hPlayerStateFlags], a
     ld a, $87
-    ld [wCC44], a
+    ld [wMapType], a
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $80
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $03
     ld [wFieldTransitionKind], a
     farcall ClearWC935IfBit7AndNot6
@@ -3408,7 +3408,7 @@ Jump_061_5EF0::
 ; only called from RunWCC44Type_596F_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
 ; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wC8C8, wC8C9, wC8CA, wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wCC45, ...
+; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wKeyWorldFloor, ...
 ; points at: wCD7B
 RunWCC44Type_596F_Case00_Sub03::
 Func_061_5F39:: ; address name
@@ -3459,10 +3459,10 @@ Jump_061_5F56::
     bit 7, a
     jr nz, Jump_061_5F53
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     xor a, a
@@ -3495,16 +3495,16 @@ Jump_061_5F56::
     sra h
     rr l
     ld a, l
-    ld [wCC45], a
+    ld [wKeyWorldFloor], a
     ld a, $82
-    ld [wCC44], a
+    ld [wMapType], a
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $80
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     ld a, $03
     ld [wFieldTransitionKind], a
     farcall ClearWC935IfBit7AndNot6
@@ -3534,10 +3534,10 @@ Jump_061_5FE0::
     bit 7, a
     jp nz, Jump_061_5F53
     ld a, $40
-    ld [wC8C8], a
-    ld [wC8C9], a
+    ld [wWarpDestX], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     ld a, $60
     call QueueSoundEffect
     push hl
@@ -3568,16 +3568,16 @@ Jump_061_5FE0::
     rr l
     ld a, l
     or a, $80
-    ld [wCC45], a
+    ld [wKeyWorldFloor], a
     ld a, $82
-    ld [wCC44], a
+    ld [wMapType], a
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
     ld a, $40
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ld a, $80
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     ld a, $03
     ld [wFieldTransitionKind], a
     farcall ClearWC935IfBit7AndNot6
@@ -3598,7 +3598,7 @@ Jump_061_6065::
 
 ; hFFC6 = 1 when bit 7 of wCD07 is set; otherwise on map types $80/$85 the wCE7E entry of the current area (wCD74), else 0 (E-0129)
 ; 1 call site from 1 routine (e.g. Func_016_5D13_Case00)
-; reads: wCD07, wCC44, wCC45, hMapScreenY, hMapScreenX
+; reads: wCD07, wMapType, wKeyWorldFloor, hMapScreenY, hMapScreenX
 ; writes: hTemp0
 ; points at: wCD88, wCD74, wCE7E
 KeyWorldAreaEncounterIndex::
@@ -3613,7 +3613,7 @@ Func_061_606D:: ; address name
 Jump_061_6079::
     push hl
     push de
-    ld a, [wCC44]
+    ld a, [wMapType]
     cp a, $80
     jr z, Jump_061_60AC
     cp a, $85
@@ -3623,7 +3623,7 @@ Jump_061_6079::
     ret
 
 Jump_061_608A::
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld de, wCD88

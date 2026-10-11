@@ -183,7 +183,8 @@
   "CB7F": {
     "name": "wSpriteSlots",
     "note": "start of an array of objects: 8-byte slots in the bank $E0 intro (DrawSpriteSlots), 16-byte entries in field mode (the script commands, ScriptStepObject)",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "10"
   },
   "C198": {
     "name": "wScreenTileBuffer",
@@ -509,7 +510,8 @@
   "C8EF": {
     "name": "wFollowerRecords",
     "note": "three 5-byte records for the monsters following the player: direction, X, Y, target X, target Y (SetFollowerTargetsFromLeader, StepFollowersTowardTargets; ScriptSetDirection and ScriptSlideObjectY address the same records) (E-0093)",
-    "evidence": "reading (E-0093)"
+    "evidence": "reading (E-0093)",
+    "size": "F"
   },
   "C920": {
     "name": "wScriptCommandType",
@@ -2230,5 +2232,584 @@
     "size": "40",
     "note": "two bytes per key entry: the random seed saved when a key is generated (GenerateNewKeyEntry, DeleteKeyEntryHFFC6)",
     "evidence": "E-0133"
+  },
+  "C8C8": {
+    "name": "wWarpDestX",
+    "note": "player X to place after a warp or when returning to the field (ExitPauseMenuToField, warp commands)",
+    "evidence": "E-0134"
+  },
+  "C8C9": {
+    "name": "wWarpDestY",
+    "note": "player Y to place after a warp or when returning to the field",
+    "evidence": "E-0134"
+  },
+  "C8CA": {
+    "name": "wWarpDestFacing",
+    "note": "player facing after a warp ($FF/$F0 keep or mark special cases)",
+    "evidence": "E-0134"
+  },
+  "C8CB": {
+    "name": "wTextWindowState",
+    "note": "text window open/close state: low 2 bits active (StepTextWindowOpenClose runs until they clear), bit 7 picks the upper window",
+    "evidence": "E-0134"
+  },
+  "C8CC": {
+    "name": "wTextWindowStep",
+    "note": "step of the text window open/close",
+    "evidence": "E-0134"
+  },
+  "C8CD": {
+    "name": "wPartyWindowFlags",
+    "note": "idle party window flags: bit 7 = shown (redraw on close), low bits = rows",
+    "evidence": "E-0134"
+  },
+  "C8CE": {
+    "name": "wPartyWindowTimer",
+    "note": "idle frames counted before the party window appears ($B4)",
+    "evidence": "E-0134"
+  },
+  "C8FE": {
+    "name": "wTriggerKind",
+    "note": "kind of the active trigger on this screen ($FF = none); its marker sprite is drawn when set",
+    "evidence": "E-0134"
+  },
+  "C8FF": {
+    "name": "wTriggerCell",
+    "note": "cell of the active trigger (x and y nibbles)",
+    "evidence": "E-0134"
+  },
+  "C900": {
+    "name": "wTriggerIndex",
+    "note": "index of the active trigger entry",
+    "evidence": "E-0134"
+  },
+  "C901": {
+    "name": "wEncounterRate",
+    "note": "random encounter setting from the map header (bit 7 suppresses one count; low bits non-zero enable encounters)",
+    "evidence": "E-0134"
+  },
+  "C902": {
+    "name": "wEncounterCountdown",
+    "note": "steps left before a random encounter (PickRandomWC902FromTable478F)",
+    "evidence": "E-0134"
+  },
+  "C903": {
+    "name": "wBattleIntroKind",
+    "note": "battle intro kind (RunWC903Case dispatches on it; 2 normal, 7 special)",
+    "evidence": "E-0134"
+  },
+  "C904": {
+    "name": "wBattleTransitionStep",
+    "note": "step of the battle transition effect (RunWC904Step)",
+    "evidence": "E-0134"
+  },
+  "C905": {
+    "name": "wBattleTransitionSubStep",
+    "note": "sub-step of the battle transition",
+    "evidence": "E-0134"
+  },
+  "C906": {
+    "name": "wTransitionCounter",
+    "note": "counter of the battle transition effect",
+    "evidence": "E-0134"
+  },
+  "C907": {
+    "name": "wTransitionStage",
+    "note": "stage of the battle transition effect",
+    "evidence": "E-0134"
+  },
+  "C908": {
+    "name": "wTransitionByte08",
+    "note": "battle transition work byte",
+    "evidence": "E-0134"
+  },
+  "C909": {
+    "name": "wTransitionBGPtrLo",
+    "note": "BG map pointer of the battle transition effect, low byte (AddHLToWC909InBGMap)",
+    "evidence": "E-0134"
+  },
+  "C90A": {
+    "name": "wTransitionBGPtrHi",
+    "note": "BG map pointer of the battle transition effect, high byte",
+    "evidence": "E-0134"
+  },
+  "C90B": {
+    "name": "wTransitionCountA",
+    "note": "battle transition loop counter",
+    "evidence": "E-0134"
+  },
+  "C90C": {
+    "name": "wTransitionCountB",
+    "note": "battle transition loop counter",
+    "evidence": "E-0134"
+  },
+  "C90D": {
+    "name": "wFieldEventKind",
+    "note": "field event kind of the map (map header; RunFieldEventWC90D dispatches on its low nibble)",
+    "evidence": "E-0134"
+  },
+  "C90E": {
+    "name": "wFieldEventTimer",
+    "note": "timer of the field event",
+    "evidence": "E-0134"
+  },
+  "C90F": {
+    "name": "wFieldEventArg",
+    "note": "argument of the field event (set by script command $5E)",
+    "evidence": "E-0134"
+  },
+  "C910": {
+    "name": "wTilesUnderPoint",
+    "note": "the four tile ids of the 2 x 2 block under a point (TileBlockedAtPixel, ReadTileBuffer2x2AtPixel)",
+    "evidence": "E-0134",
+    "size": "4"
+  },
+  "C914": {
+    "name": "wMapToggleFlag",
+    "note": "flag set when the map toggles or returns ($7F/$92 maps)",
+    "evidence": "E-0134"
+  },
+  "C915": {
+    "name": "wStatusFieldStep",
+    "note": "step of the field status-effect state (mode state 7)",
+    "evidence": "E-0134"
+  },
+  "C916": {
+    "name": "wTalkEventGroup",
+    "note": "group of the talk event to dispatch (DispatchTalkEvent)",
+    "evidence": "E-0134"
+  },
+  "C917": {
+    "name": "wTalkEventIndex",
+    "note": "index within the talk event group",
+    "evidence": "E-0134"
+  },
+  "C918": {
+    "name": "wStepTriggerFlag",
+    "note": "set when a step ends on a trigger (UpdatePlayerMovement_Sub01)",
+    "evidence": "E-0134"
+  },
+  "C91C": {
+    "name": "wScriptReturnBank",
+    "note": "saved script position for a return: bank or first byte",
+    "evidence": "E-0134"
+  },
+  "C91D": {
+    "name": "wScriptReturnLo",
+    "note": "saved script position, low byte",
+    "evidence": "E-0134"
+  },
+  "C91E": {
+    "name": "wScriptReturnHi",
+    "note": "saved script position, high byte",
+    "evidence": "E-0134"
+  },
+  "C927": {
+    "name": "wFieldInitFlag",
+    "note": "flag read and cleared by InitFieldScreen (set by script command $9F)",
+    "evidence": "E-0134"
+  },
+  "C928": {
+    "name": "wStepPtrLo",
+    "note": "low byte of the address of the coordinate an object step changes (StepObjectTowardCoord, AddStepDeltaToPointedByte); other routines borrow it as scratch",
+    "evidence": "E-0134"
+  },
+  "C929": {
+    "name": "wStepPtrHi",
+    "note": "high byte of that address",
+    "evidence": "E-0134"
+  },
+  "C92A": {
+    "name": "wStepTarget",
+    "note": "target value of the stepped coordinate",
+    "evidence": "E-0134"
+  },
+  "C92D": {
+    "name": "wScriptSubStep",
+    "note": "sub-step of script commands that run several stages (RunWC92DStep)",
+    "evidence": "E-0134"
+  },
+  "C92E": {
+    "name": "wScriptMsgSelect",
+    "note": "selector for script messages (StartMessageFromTable7787)",
+    "evidence": "E-0134"
+  },
+  "C92F": {
+    "name": "wScriptTemp0",
+    "note": "script work byte",
+    "evidence": "E-0134"
+  },
+  "C930": {
+    "name": "wScriptTemp1",
+    "note": "script work byte",
+    "evidence": "E-0134"
+  },
+  "C931": {
+    "name": "wScriptTemp2",
+    "note": "script work byte",
+    "evidence": "E-0134"
+  },
+  "C932": {
+    "name": "wScriptTemp3",
+    "note": "script work byte",
+    "evidence": "E-0134"
+  },
+  "C933": {
+    "name": "wScriptTemp4",
+    "note": "script work byte (also read by game mode 2)",
+    "evidence": "E-0134"
+  },
+  "C934": {
+    "name": "wFieldStateByte34",
+    "note": "set by FieldModeStateDispatch_Shared01",
+    "evidence": "E-0134"
+  },
+  "C935": {
+    "name": "wPendingFieldEvent",
+    "note": "pending field event: bit 7 = pending, bit 6 = stage, low nibble = kind (the gold and party events set $C0-$CF)",
+    "evidence": "E-0134"
+  },
+  "C936": {
+    "name": "wSavedPositionValid",
+    "note": "set when a player position is saved in wSavedPlayerState; cleared on restore",
+    "evidence": "E-0134"
+  },
+  "C937": {
+    "name": "wSavedPlayerState",
+    "note": "saved player state: wObject0 byte 7, position, facing, follower bytes ($C937-$C943; SavePlayerPositionState)",
+    "evidence": "E-0134",
+    "size": "D"
+  },
+  "C944": {
+    "name": "wGameMode2Byte44",
+    "note": "set by the field states, read by game mode 2",
+    "evidence": "E-0134"
+  },
+  "C945": {
+    "name": "wCursorCellX",
+    "note": "cursor cell column (game mode 2 screens; CenteredBGMapOriginForSizeBC)",
+    "evidence": "E-0134"
+  },
+  "C946": {
+    "name": "wCursorCellY",
+    "note": "cursor cell row",
+    "evidence": "E-0134"
+  },
+  "C947": {
+    "name": "wCursorCellW",
+    "note": "cursor cell width",
+    "evidence": "E-0134"
+  },
+  "C948": {
+    "name": "wCursorCellH",
+    "note": "cursor cell height",
+    "evidence": "E-0134"
+  },
+  "C949": {
+    "name": "wSpriteFloatY",
+    "note": "vertical offset of an animated sprite (CycleWC949Down)",
+    "evidence": "E-0134"
+  },
+  "C94A": {
+    "name": "wArenaFlags",
+    "note": "arena flags (bit 7 selects alternate messages and monsters)",
+    "evidence": "E-0134"
+  },
+  "C94B": {
+    "name": "wLinkSceneByte4B",
+    "note": "link/scene byte (game modes 5 and 6)",
+    "evidence": "E-0134"
+  },
+  "C94C": {
+    "name": "wLinkSceneByte4C",
+    "note": "link/scene byte read by GameMode6_Init",
+    "evidence": "E-0134"
+  },
+  "C94D": {
+    "name": "wFollowerDelay",
+    "note": "follower step delay",
+    "evidence": "E-0134"
+  },
+  "C94E": {
+    "name": "wSaveByte4E",
+    "note": "read by the save steps",
+    "evidence": "E-0134"
+  },
+  "C94F": {
+    "name": "wKeyWorldPlaceFlag",
+    "note": "set when a key-world object is placed",
+    "evidence": "E-0134"
+  },
+  "C950": {
+    "name": "wGameMode2Byte50",
+    "note": "read by the game-mode-2 screens, set by script command $E0",
+    "evidence": "E-0134"
+  },
+  "C951": {
+    "name": "wTriggerEnable",
+    "note": "1 disables step triggers (CheckStepTriggerAndDispatchTalk)",
+    "evidence": "E-0134"
+  },
+  "C952": {
+    "name": "wEffectFlags52",
+    "note": "set by SelectEffectByWDAD2Flags",
+    "evidence": "E-0134"
+  },
+  "C953": {
+    "name": "wFormationSlot0",
+    "note": "formation chosen for side 0 ($FF = none; SaveActionChoicesAndPickFormations)",
+    "evidence": "E-0134"
+  },
+  "C954": {
+    "name": "wFormationSlot1",
+    "note": "formation chosen for side 1",
+    "evidence": "E-0134"
+  },
+  "C955": {
+    "name": "wMapToggleRequest",
+    "note": "non-zero requests the $7F/$92 map toggle",
+    "evidence": "E-0134"
+  },
+  "C956": {
+    "name": "wTriggerMarkerFlags",
+    "note": "trigger marker flags (bit 7 hides the marker)",
+    "evidence": "E-0134"
+  },
+  "C957": {
+    "name": "wReturnWarpFlag",
+    "note": "set by StartReturnWarpByFlag25",
+    "evidence": "E-0134"
+  },
+  "C958": {
+    "name": "wBattleByte58",
+    "note": "battle work byte",
+    "evidence": "E-0134"
+  },
+  "C962": {
+    "name": "wBattleByte62",
+    "note": "battle work byte",
+    "evidence": "E-0134"
+  },
+  "C963": {
+    "name": "wBattleByte63",
+    "note": "battle work byte",
+    "evidence": "E-0134"
+  },
+  "C964": {
+    "name": "wBattleKindFlags",
+    "note": "battle kind flags set at battle set-up and end",
+    "evidence": "E-0134"
+  },
+  "C965": {
+    "name": "wScriptByte65",
+    "note": "read by script command $9F",
+    "evidence": "E-0134"
+  },
+  "C966": {
+    "name": "wKeyRetryCount",
+    "note": "retries counted by GenerateNewKeyEntry",
+    "evidence": "E-0134"
+  },
+  "C967": {
+    "name": "wKeyWorldObjFlag",
+    "note": "flag set by SetupKeyWorldObjectsForMapType",
+    "evidence": "E-0134"
+  },
+  "C968": {
+    "name": "wScriptByte68",
+    "note": "set by script command $F2",
+    "evidence": "E-0134"
+  },
+  "C969": {
+    "name": "wKeyWorldLevelBase",
+    "note": "key-world level base (LoadWC969TripleForWCD05)",
+    "evidence": "E-0134"
+  },
+  "C96A": {
+    "name": "wKeyWorldLevelArea",
+    "note": "key-world area level",
+    "evidence": "E-0134"
+  },
+  "C96B": {
+    "name": "wKeyWorldLevelMonster",
+    "note": "key-world monster level",
+    "evidence": "E-0134"
+  },
+  "C96C": {
+    "name": "wBattleIntroFlag",
+    "note": "set by RunWC903Case; read by ScaleStatAndCapByBattleKind",
+    "evidence": "E-0134"
+  },
+  "C96D": {
+    "name": "wItemMenuByte6D",
+    "note": "item menu work byte",
+    "evidence": "E-0134"
+  },
+  "C96E": {
+    "name": "wItemMenuByte6E",
+    "note": "item menu work byte",
+    "evidence": "E-0134"
+  },
+  "C96F": {
+    "name": "wEffectByte6F",
+    "note": "set by battle text, read by the LoveRain effect",
+    "evidence": "E-0134"
+  },
+  "C970": {
+    "name": "wActionRepeatFlag",
+    "note": "action repeat flag (reset with the effect state)",
+    "evidence": "E-0134"
+  },
+  "C971": {
+    "name": "wResolveByte71",
+    "note": "set at the start of an action",
+    "evidence": "E-0134"
+  },
+  "C972": {
+    "name": "wBattleBuffer72",
+    "note": "battle work bytes from $C972",
+    "evidence": "E-0134",
+    "size": "F"
+  },
+  "C981": {
+    "name": "wResolveByte81",
+    "note": "set while resolving targets",
+    "evidence": "E-0134"
+  },
+  "C982": {
+    "name": "wSavedActorSlot",
+    "note": "actor slot saved for some effects (action $D6, MP drain)",
+    "evidence": "E-0134"
+  },
+  "C983": {
+    "name": "wSavedActorByte",
+    "note": "byte saved with wSavedActorSlot",
+    "evidence": "E-0134"
+  },
+  "C984": {
+    "name": "wSide0Flag",
+    "note": "per-side flag (side 0) checked by the AI",
+    "evidence": "E-0134"
+  },
+  "C985": {
+    "name": "wSide1Flag",
+    "note": "per-side flag (side 1) checked by the AI",
+    "evidence": "E-0134"
+  },
+  "C9F7": {
+    "name": "wRecordBufAByte71",
+    "note": "record buffer A byte $71",
+    "evidence": "E-0134"
+  },
+  "CB75": {
+    "name": "wSequencePtrLo",
+    "note": "pointer to the running animation sequence, low byte (TickWCB75Sequence)",
+    "evidence": "E-0134"
+  },
+  "CB76": {
+    "name": "wSequencePtrHi",
+    "note": "pointer to the running animation sequence, high byte",
+    "evidence": "E-0134"
+  },
+  "CB7E": {
+    "name": "wScreenSavedFlag",
+    "note": "set when the screen buffer was saved to vBGMap1",
+    "evidence": "E-0134"
+  },
+  "CC42": {
+    "name": "wKeyWorldSlot",
+    "note": "SRAM slot of the active key world (0-19)",
+    "evidence": "E-0134"
+  },
+  "CC43": {
+    "name": "wKeyWorldArea",
+    "note": "area index within the key world",
+    "evidence": "E-0134"
+  },
+  "CC44": {
+    "name": "wMapType",
+    "note": "map type: bit 7 = special map ($80 key world, $82-$87 other kinds); low bits pick the routine sets",
+    "evidence": "E-0134"
+  },
+  "CC45": {
+    "name": "wKeyWorldFloor",
+    "note": "floor or room index within the special map",
+    "evidence": "E-0134"
+  },
+  "CC46": {
+    "name": "wKeyWorldByte46",
+    "note": "key-world byte",
+    "evidence": "E-0134"
+  },
+  "CC47": {
+    "name": "wMapObjectCount",
+    "note": "number of 8-byte map objects at wMapObjects",
+    "evidence": "E-0134"
+  },
+  "CC48": {
+    "name": "wMapObjects",
+    "note": "map objects (8 bytes each) of town and key-world maps",
+    "evidence": "E-0134",
+    "size": "70"
+  },
+  "C8CF": {
+    "name": "wNameGlyphBuf",
+    "size": "10",
+    "note": "name text copied before drawing its glyphs (CopyRecordNameToWC8CF, CopyGlyphTilesToVRAM); $F0-terminated",
+    "evidence": "E-0134"
+  },
+  "C986": {
+    "name": "wRecordBufA",
+    "size": "A5",
+    "note": "a $A5-byte monster record in SRAM record format (first parent in breeding, own record in link screens); offsets: +$0B species, +$34 skills, +$56 level, +$5B HP ... +$69 INT, +$6F personality",
+    "evidence": "E-0134"
+  },
+  "CA2B": {
+    "name": "wRecordBufB",
+    "size": "A5",
+    "note": "a second $A5-byte record (second parent in breeding, partner record in link screens)",
+    "evidence": "E-0134"
+  },
+  "CAD0": {
+    "name": "wChildRecord",
+    "size": "A5",
+    "note": "the $A5-byte record built by ComputeBreedingChild; stored into SRAM by StoreReceivedRecordIntoSRAM",
+    "evidence": "E-0134"
+  },
+  "CBD7": {
+    "name": "wStoryFlags",
+    "size": "6B",
+    "note": "story flags: flag n is bit n & 7 of byte n / 8 (TestFlagBit, SetFlagBit); the $6B bytes are the second save block",
+    "evidence": "E-0134"
+  },
+  "CB8F": {
+    "name": "wObject1",
+    "size": "10",
+    "note": "field object 1: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags)",
+    "evidence": "E-0134"
+  },
+  "CB9F": {
+    "name": "wObject2",
+    "size": "10",
+    "note": "field object 2: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags)",
+    "evidence": "E-0134"
+  },
+  "CBAF": {
+    "name": "wObject3",
+    "size": "10",
+    "note": "field object 3: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags)",
+    "evidence": "E-0134"
+  },
+  "CBBF": {
+    "name": "wObject4",
+    "size": "10",
+    "note": "field object 4: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags)",
+    "evidence": "E-0134"
+  },
+  "CBCF": {
+    "name": "wObject5",
+    "size": "8",
+    "note": "field object 5 (its entry stops at the story flags at $CBD7)",
+    "evidence": "E-0134"
   }
 }

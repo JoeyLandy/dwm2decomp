@@ -18,7 +18,7 @@ Func_003_4001:: ; address name
 
 ; per-frame routine for wGameMode = 2
 ; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case02)
-; reads: wGameMode2State, wModeState, wIsCGB, hScrollY, hScrollX, wC933, wCC37, wSpriteSlotCount
+; reads: wGameMode2State, wModeState, wIsCGB, hScrollY, hScrollX, wScriptTemp4, wStoryFlags, wSpriteSlotCount
 ; writes: wSpriteSlotCount, wBGPaletteUploadRequest, rVBK, hScrollX, hScrollY, wMenuSelectedMember, wMenuCursor, wSubMenuCursor, ...
 ; points at: wBGPaletteBuffer, wScreenTileBuffer, wGameMode2State, wTemp0, wD09D
 GameMode2_Update::
@@ -204,65 +204,65 @@ Jump_003_414C::
     ld de, $019F
     call TestFlagBit
     ret nc
-    ld a, [wC933]
+    ld a, [wScriptTemp4]
     ld [wPartyCount], a
     ld de, $0025
     call SetFlagBit
-    ld a, [wCC37]
+    ld a, [wStoryFlags + $60]
     set 6, a
-    ld [wCC37], a
+    ld [wStoryFlags + $60], a
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
-    ld [wC8F4], a
-    ld [wC8F9], a
+    ld [wFollowerRecords + $5], a
+    ld [wFollowerRecords + $A], a
     ld a, $60
     ldh [hPlayerX], a
-    ld [wC8F0], a
-    ld [wC8F5], a
-    ld [wC8FA], a
+    ld [wFollowerRecords + $1], a
+    ld [wFollowerRecords + $6], a
+    ld [wFollowerRecords + $B], a
     ld a, $50
     ldh [hPlayerY], a
-    ld [wC8F1], a
-    ld [wC8F6], a
-    ld [wC8FB], a
+    ld [wFollowerRecords + $2], a
+    ld [wFollowerRecords + $7], a
+    ld [wFollowerRecords + $C], a
     ld a, [wSpriteSlotCount]
     ld [wSpriteSnapshotCount], a
     ld a, $00
     ld [wSpriteSlots], a
     ld a, $01
-    ld [wCB80], a
+    ld [wSpriteSlots + $1], a
     ld a, $05
-    ld [wCB81], a
+    ld [wSpriteSlots + $2], a
     ld a, $00
-    ld [wCB82], a
+    ld [wSpriteSlots + $3], a
     ld a, $40
-    ld [wCB83], a
-    ld [wCB8A], a
+    ld [wSpriteSlots + $4], a
+    ld [wSpriteSlots + $B], a
     ld a, $30
-    ld [wCB84], a
-    ld [wCB8B], a
+    ld [wSpriteSlots + $5], a
+    ld [wSpriteSlots + $C], a
     ld a, $05
-    ld [wCB85], a
+    ld [wSpriteSlots + $6], a
     ld a, $00
-    ld [wCB86], a
+    ld [wSpriteSlots + $7], a
     ld a, $50
-    ld [wCB87], a
+    ld [wSpriteSlots + $8], a
     ld a, $62
-    ld [wCB88], a
+    ld [wSpriteSlots + $9], a
     xor a, a
-    ld [wCB89], a
+    ld [wSpriteSlots + $A], a
     xor a, a
-    ld [wCB8C], a
+    ld [wSpriteSlots + $D], a
     ld a, $01
-    ld [wCB8D], a
+    ld [wSpriteSlots + $E], a
     ld a, $02
-    ld [wCB8E], a
+    ld [wSpriteSlots + $F], a
     ld a, $E0
-    ld [wCB93], a
-    ld [wCB9A], a
-    ld [wCBA3], a
-    ld [wCBAA], a
+    ld [wObject1 + $4], a
+    ld [wObject1 + $B], a
+    ld [wObject2 + $4], a
+    ld [wObject2 + $B], a
     ret
 
 ; only called from PauseMenu_State4 (E-0047)
@@ -534,17 +534,17 @@ Func_003_432F:: ; address name
 ; clears the object flag bits, saves the player position to wC8C8/9, whitens the CGB palettes, blanks the screen and returns to game mode 1 through Func_002_4628 (E-0125)
 ; 12 call sites from 12 routines (e.g. PauseMenu_Main_Case04, PauseMenu_State3_Case00_Case01, PauseMenu_State3_Case01_Case06, PauseMenu_State3_Case01_Case01, ...)
 ; reads: hPlayerX, hPlayerY, wIsCGB
-; writes: wC8C8, wC8C9, wC8CA, rRAMG, wBGPaletteUploadRequest, wFieldInitStage, wGameMode
+; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, rRAMG, wBGPaletteUploadRequest, wFieldInitStage, wGameMode
 ; points at: wBGPaletteBuffer, wScreenTileBuffer, wFieldInitStage
 ExitPauseMenuToField::
 Func_003_4339:: ; address name
     call ClearBit1OfPlayerAndObjectFlags_Bank03
     ldh a, [hPlayerX]
-    ld [wC8C8], a
+    ld [wWarpDestX], a
     ldh a, [hPlayerY]
-    ld [wC8C9], a
+    ld [wWarpDestY], a
     xor a, a
-    ld [wC8CA], a
+    ld [wWarpDestFacing], a
     xor a, a
     ld [rRAMG], a
     ld a, [wIsCGB]
@@ -577,13 +577,12 @@ Jump_003_4367::
 ; 1 call site from 1 routine (e.g. ExitPauseMenuToField)
 ; reads: hPlayerStateFlags
 ; writes: hPlayerStateFlags
-; points at: wCB8C
 ClearBit1OfPlayerAndObjectFlags_Bank03::
 Func_003_4389:: ; address name
     ldh a, [hPlayerStateFlags]
     and a, $FD
     ldh [hPlayerStateFlags], a
-    ld hl, wCB8C
+    ld hl, wSpriteSlots + $D
     ld a, [hl]
     and a, $FD
     ld [hl], a
@@ -3705,8 +3704,8 @@ Jump_003_564A:: ; address name
 
 ; entry 29 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wSubMenuCursor, wCC44, wC935, wSpriteSlotCount, wCB7E
-; writes: wC96D, wC96E, wSpriteSlotCount, wCB7E, rRAMG, rRAMB, wPauseMenuScreen, wTemp0, ...
+; reads: wJoypadPressed, wSubMenuCursor, wMapType, wPendingFieldEvent, wSpriteSlotCount, wScreenSavedFlag
+; writes: wItemMenuByte6D, wItemMenuByte6E, wSpriteSlotCount, wScreenSavedFlag, rRAMG, rRAMB, wPauseMenuScreen, wTemp0, ...
 ; points at: wSubMenuCursor, wTemp1
 PauseMenu_Items_Case02_Case1D::
 Jump_003_566D:: ; address name
@@ -3721,19 +3720,19 @@ Jump_003_566D:: ; address name
     ld a, [wSubMenuCursor]
     and a, $01
     jr nz, Jump_003_56CA
-    ld a, [wCC44]
+    ld a, [wMapType]
     cp a, $80
     jr nz, Jump_003_56AA
-    ld a, [wC935]
+    ld a, [wPendingFieldEvent]
     bit 7, a
     jr z, Jump_003_56AA
     ld a, [wSpriteSlotCount]
-    ld [wC96D], a
-    ld a, [wCB7E]
-    ld [wC96E], a
+    ld [wItemMenuByte6D], a
+    ld a, [wScreenSavedFlag]
+    ld [wItemMenuByte6E], a
     xor a, a
     ld [wSpriteSlotCount], a
-    ld [wCB7E], a
+    ld [wScreenSavedFlag], a
 
 Jump_003_56AA::
     ld a, $0A
@@ -3803,23 +3802,23 @@ Jump_003_56EB:: ; address name
 
 ; entry 33 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wCC44, wC935, wC96D, wC96E
-; writes: wSpriteSlotCount, wCB7E, wTemp0, wTemp1, wPauseMenuScreen
+; reads: wTextFlags, wMapType, wPendingFieldEvent, wItemMenuByte6D, wItemMenuByte6E
+; writes: wSpriteSlotCount, wScreenSavedFlag, wTemp0, wTemp1, wPauseMenuScreen
 PauseMenu_Items_Case02_Case21::
 Jump_003_5700:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    ld a, [wCC44]
+    ld a, [wMapType]
     cp a, $80
     jr nz, Jump_003_571F
-    ld a, [wC935]
+    ld a, [wPendingFieldEvent]
     bit 7, a
     jr z, Jump_003_571F
-    ld a, [wC96D]
+    ld a, [wItemMenuByte6D]
     ld [wSpriteSlotCount], a
-    ld a, [wC96E]
-    ld [wCB7E], a
+    ld a, [wItemMenuByte6E]
+    ld [wScreenSavedFlag], a
 
 Jump_003_571F::
     call ResetInventoryMenuToFirstPage
@@ -6707,7 +6706,7 @@ Jump_003_6C6E:: ; address name
 
 ; entry 3 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wSubMenuCursor, wCurrentKeyIndex, wCC44
+; reads: wJoypadPressed, wSubMenuCursor, wCurrentKeyIndex, wMapType
 ; writes: wTemp1, wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
 ; points at: wSubMenuCursor, wTemp1, wTextBuf2
 PauseMenu_State3_Case01_Case03::
@@ -6735,7 +6734,7 @@ Jump_003_6CB2::
     ld a, [wCurrentKeyIndex]
     cp a, c
     jr nz, Jump_003_6CC9
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_003_6CC9
     pop af

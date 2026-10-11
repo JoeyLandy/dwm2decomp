@@ -5543,20 +5543,20 @@ Func_00C_73C6:: ; address name
 ; only called from ScriptCommandF7_Run_Case1A (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case1A)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD588
-; writes: wC91C, wC91D, wC91E, wC917, wC916, wScriptInDataBank, hSpriteWindowClipMode, wC903, ...
+; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wD5B1, wCFDD
 ScriptCommandF7_Run_Case1A_Sub01::
 Func_00C_73C7:: ; address name
     ld a, [wScriptStartRequest]
-    ld [wC91C], a
+    ld [wScriptReturnBank], a
     ld a, [wScriptPointerLo]
-    ld [wC91D], a
+    ld [wScriptReturnLo], a
     ld a, [wScriptPointerHi]
-    ld [wC91E], a
+    ld [wScriptReturnHi], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $1F
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
@@ -5567,12 +5567,12 @@ Func_00C_73C7:: ; address name
 ; only called from routines of ScriptCommand96_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
 ; reads: wD588
-; writes: wC903, wCFDC
+; writes: wBattleIntroKind, wCFDC
 ; points at: wD5B1, wCFDD
 ScriptCommand96_Run_Shared01::
 Func_00C_73F5:: ; address name
     ld a, $04
-    ld [wC903], a
+    ld [wBattleIntroKind], a
     ld a, $02
     ld [wCFDC], a
     call ScriptCommand96_Run_Shared01_Sub01
@@ -5604,20 +5604,20 @@ Jump_00C_7418::
 ; only called from routines of ScriptCommandF7_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case21, ScriptCommandF7_Run_Case1E)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD78E
-; writes: wC91C, wC91D, wC91E, wC917, wC916, wScriptInDataBank, hSpriteWindowClipMode, wC903, ...
+; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wCFDD
 ScriptCommandF7_Run_Shared03::
 Func_00C_741F:: ; address name
     ld a, [wScriptStartRequest]
-    ld [wC91C], a
+    ld [wScriptReturnBank], a
     ld a, [wScriptPointerLo]
-    ld [wC91D], a
+    ld [wScriptReturnLo], a
     ld a, [wScriptPointerHi]
-    ld [wC91E], a
+    ld [wScriptReturnHi], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $18
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
@@ -5628,12 +5628,12 @@ Func_00C_741F:: ; address name
 ; only called from routines of ScriptCommand95_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wD78E
-; writes: wC903, wCFDC
+; writes: wBattleIntroKind, wCFDC
 ; points at: wCFDD
 ScriptCommand95_Run_Shared01::
 Func_00C_744D:: ; address name
     ld a, $04
-    ld [wC903], a
+    ld [wBattleIntroKind], a
     ld a, $02
     ld [wCFDC], a
     ld hl, Data_00C_787D
@@ -5667,20 +5667,20 @@ Jump_00C_7471::
 ; only called from routines of ScriptCommandF7_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case0A, ScriptCommandF7_Run_Case07)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD786, wD78E
-; writes: wC91C, wC91D, wC91E, wC917, wC916, wScriptInDataBank, hSpriteWindowClipMode, wC903, ...
+; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wCFDD
 ScriptCommandF7_Run_Shared04::
 Func_00C_7478:: ; address name
     ld a, [wScriptStartRequest]
-    ld [wC91C], a
+    ld [wScriptReturnBank], a
     ld a, [wScriptPointerLo]
-    ld [wC91D], a
+    ld [wScriptReturnLo], a
     ld a, [wScriptPointerHi]
-    ld [wC91E], a
+    ld [wScriptReturnHi], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $18
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     farcall DispatchTalkEvent
     xor a, a
     ld [wScriptInDataBank], a
@@ -5691,12 +5691,12 @@ Func_00C_7478:: ; address name
 ; only called from routines of ScriptCommand95_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wD786, wD78E
-; writes: wC903, wCFDC
+; writes: wBattleIntroKind, wCFDC
 ; points at: wCFDD
 ScriptCommand95_Run_Shared02::
 Func_00C_74A6:: ; address name
     ld a, $04
-    ld [wC903], a
+    ld [wBattleIntroKind], a
     ld a, $02
     ld [wCFDC], a
     ld a, [wD786]

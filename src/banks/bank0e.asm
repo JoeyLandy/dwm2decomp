@@ -969,10 +969,10 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
 ; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case14, ScriptCommandED_Run_Case04_Case1C, ...)
 ; reads: wD7F6, wD7F7, wD7F5, wSaveByte16, wD7F1, wD00E, wCFA8
 ; writes: wD7F6, wD7F7, wSpeciesIdLo, wSpeciesIdHi, wCFA8, wD7F5
-; points at: wCAD0, wC991, wCA36, wCADB, wC994, wCADD, wCB25, wCB74, ...
+; points at: wChildRecord, wRecordBufA, wRecordBufB
 ComputeBreedingChild::
 Func_00E_5688:: ; address name
-    ld hl, wCAD0
+    ld hl, wChildRecord
     ld b, $A5
 
 Jump_00E_568D::
@@ -980,7 +980,7 @@ Jump_00E_568D::
     ld [hl+], a
     dec b
     jr nz, Jump_00E_568D
-    ld hl, wC991
+    ld hl, wRecordBufA + $B
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -993,7 +993,7 @@ Jump_00E_568D::
     ld h, [hl]
     ld l, e
     push hl
-    ld hl, wCA36
+    ld hl, wRecordBufB + $B
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1033,14 +1033,14 @@ Jump_00E_56DA::
     dec hl
     push hl
     ld b, [hl]
-    ld hl, wC9F3
+    ld hl, wRecordBufA + $6D
     jr Jump_00E_56E8
 
 Jump_00E_56E2::
     dec hl
     push hl
     ld b, [hl]
-    ld hl, wCA98
+    ld hl, wRecordBufB + $6D
 
 Jump_00E_56E8::
     ld a, [hl]
@@ -1049,14 +1049,14 @@ Jump_00E_56E8::
     jr Jump_00E_5708
 
 Jump_00E_56EF::
-    ld a, [wC991]
+    ld a, [wRecordBufA + $B]
     ld l, a
-    ld a, [wC992]
+    ld a, [wRecordBufA + $C]
     ld h, a
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     cp a, l
     jr nz, Jump_00E_5708
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     cp a, h
     jr nz, Jump_00E_5708
     jr Jump_00E_5710
@@ -1078,7 +1078,7 @@ Jump_00E_570D::
 Jump_00E_5710::
     pop hl
     push bc
-    ld hl, wC991
+    ld hl, wRecordBufA + $B
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1101,7 +1101,7 @@ Jump_00E_5710::
     jp Jump_00E_5862
 
 Jump_00E_5737::
-    ld hl, wC991
+    ld hl, wRecordBufA + $B
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1114,7 +1114,7 @@ Jump_00E_5737::
     ld h, [hl]
     ld l, e
     push hl
-    ld hl, wCA38
+    ld hl, wRecordBufB + $D
     ld a, [hl]
     and a, $0F
     ld e, a
@@ -1156,7 +1156,7 @@ Jump_00E_5777::
 Jump_00E_577A::
     pop hl
     push bc
-    ld hl, wC991
+    ld hl, wRecordBufA + $B
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1179,7 +1179,7 @@ Jump_00E_577A::
     jp Jump_00E_5862
 
 Jump_00E_57A1::
-    ld hl, wC993
+    ld hl, wRecordBufA + $D
     ld a, [hl]
     and a, $0F
     add a, a
@@ -1190,7 +1190,7 @@ Jump_00E_57A1::
     ld h, [hl]
     ld l, e
     push hl
-    ld hl, wCA36
+    ld hl, wRecordBufB + $B
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1231,7 +1231,7 @@ Jump_00E_57DD::
 Jump_00E_57E0::
     pop hl
     push bc
-    ld hl, wC993
+    ld hl, wRecordBufA + $D
     ld a, [hl]
     and a, $0F
     add a, a
@@ -1252,7 +1252,7 @@ Jump_00E_57E0::
     jp Jump_00E_5862
 
 Jump_00E_5808::
-    ld hl, wC993
+    ld hl, wRecordBufA + $D
     ld a, [hl]
     and a, $0F
     add a, a
@@ -1263,7 +1263,7 @@ Jump_00E_5808::
     ld h, [hl]
     ld l, e
     push hl
-    ld hl, wCA38
+    ld hl, wRecordBufB + $D
     ld a, [hl]
     and a, $0F
     pop hl
@@ -1294,7 +1294,7 @@ Jump_00E_583F::
     ret
 
 Jump_00E_5854::
-    ld hl, wC991
+    ld hl, wRecordBufA + $B
     ld a, [hl+]
     ld [wD7F6], a
     ld a, [hl]
@@ -1302,12 +1302,12 @@ Jump_00E_5854::
     jp Jump_00E_5862
 
 Jump_00E_5862::
-    ld hl, wCADB
+    ld hl, wChildRecord + $B
     ld a, [wD7F6]
     ld [hl+], a
     ld a, [wD7F7]
     ld [hl], a
-    ld hl, wC994
+    ld hl, wRecordBufA + $E
     ld a, [hl]
     and a, $01
     swap a
@@ -1318,32 +1318,32 @@ Jump_00E_5862::
     pop bc
     or a, b
     ld b, a
-    ld hl, wCADD
+    ld hl, wChildRecord + $D
     ld [hl], b
     xor a, a
-    ld hl, wCB25
+    ld hl, wChildRecord + $55
     ld [hl], a
-    ld hl, wCB74
+    ld hl, wChildRecord + $A4
     ld [hl], a
-    ld hl, wCB28
+    ld hl, wChildRecord + $58
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
     ld a, [wSaveByte16]
-    ld hl, wCAE9
+    ld hl, wChildRecord + $19
     ld [hl], a
     ld a, $01
-    ld hl, wCB26
+    ld hl, wChildRecord + $56
     ld [hl], a
-    ld hl, wCAD0
+    ld hl, wChildRecord
     ld [hl], a
-    ld hl, wCB3E
+    ld hl, wChildRecord + $6E
     ld [hl], a
     call CopyFourNamesByWCADDBit4Table
     call CopyPlayerNameToWCADF
     call CopySixBytesByWCADDBit4Table
-    ld hl, wC986
-    ld de, wCA2B
+    ld hl, wRecordBufA
+    ld de, wRecordBufB
     ld c, $00
     ld b, $08
 
@@ -1395,7 +1395,7 @@ Jump_00E_58DF::
     rr l
     pop bc
     push bc
-    ld de, wCB2B
+    ld de, wChildRecord + $5B
     ld a, c
     add a, a
     add a, e
@@ -1438,7 +1438,7 @@ Jump_00E_5922::
     ld e, a
     pop bc
     push bc
-    ld hl, wCB3F
+    ld hl, wChildRecord + $6F
     ld a, c
     add_a_to_hl
     ld [hl], e
@@ -1450,8 +1450,8 @@ Jump_00E_5922::
     inc c
     dec b
     jr nz, Jump_00E_5922
-    ld hl, wC9F3
-    ld de, wCA98
+    ld hl, wRecordBufA + $6D
+    ld de, wRecordBufB + $6D
     ld a, [wD7F1]
     and a, a
     jr z, Jump_00E_594F
@@ -1468,8 +1468,8 @@ Jump_00E_594F::
 Jump_00E_5955::
     ld b, a
     push bc
-    ld hl, wC9DC
-    ld de, wCA81
+    ld hl, wRecordBufA + $56
+    ld de, wRecordBufB + $56
     ld b, [hl]
     ld a, [de]
     add a, b
@@ -1508,9 +1508,9 @@ Jump_00E_5982::
     ld a, $63
 
 Jump_00E_598B::
-    ld hl, wCB3D
+    ld hl, wChildRecord + $6D
     ld [hl], a
-    ld hl, wCADB
+    ld hl, wChildRecord + $B
     ld a, [hl+]
     ld [wSpeciesIdLo], a
     ld a, [hl]
@@ -1519,7 +1519,7 @@ Jump_00E_598B::
     ld a, [wD00E]
     ld b, a
     push bc
-    ld hl, wCB3D
+    ld hl, wChildRecord + $6D
     ld a, [hl]
     ld c, $03
     call Multiply8
@@ -1539,7 +1539,7 @@ Jump_00E_59BD::
     ld a, $63
 
 Jump_00E_59C4::
-    ld hl, wCB27
+    ld hl, wChildRecord + $57
     ld [hl], a
     call RollWCADEFromSpeciesFlag
     call ApplyBreedingBonusToChildStats
@@ -1554,10 +1554,10 @@ Jump_00E_59C4::
 
 ; when wCA2A or wCACF is set and listed for stat C (Data_00E_5A6B), subtracts Data_00E_5A8E[value] from DE (unless it is at 999) (E-0130)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
-; reads: wCA2A, wCACF
+; reads: wRecordBufA, wRecordBufB
 AdjustStatForWCA2AAndWCACF::
 Func_00E_59E1:: ; address name
-    ld a, [wCA2A]
+    ld a, [wRecordBufA + $A4]
     and a, a
     jr z, Jump_00E_5A25
     ld b, a
@@ -1611,7 +1611,7 @@ Jump_00E_5A24::
     pop hl
 
 Jump_00E_5A25::
-    ld a, [wCACF]
+    ld a, [wRecordBufB + $A4]
     and a, a
     ret z
     ld b, a
@@ -1711,10 +1711,9 @@ Data_00E_5A8E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; fills wCB04 with $FF, appends species bytes 8-10 of wCADB, wC991 and wCA36 and eight bytes each from wC9BA and wCA5F to wCB0C, maps them through Data_00E_5B03 and compacts the list (E-0124)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
-; points at: wCB04, wCADB, wCB0C, wC991, wCA36, wC9BA, wCA5F
 BuildWCB0CCandidateList::
 Func_00E_5AA4:: ; address name
-    ld hl, wCB04
+    ld hl, wChildRecord + $34
     ld c, $08
 
 Jump_00E_5AA9::
@@ -1722,23 +1721,23 @@ Jump_00E_5AA9::
     ld [hl+], a
     dec c
     jr nz, Jump_00E_5AA9
-    ld hl, wCADB
+    ld hl, wChildRecord + $B
     call LoadSpeciesBytes8To10FromHL
-    ld hl, wCB0C
+    ld hl, wChildRecord + $3C
     call StoreBCAAtHL
     push hl
-    ld hl, wC991
+    ld hl, wRecordBufA + $B
     call LoadSpeciesBytes8To10FromHL
     pop hl
     call StoreBCAAtHL
     push hl
-    ld hl, wCA36
+    ld hl, wRecordBufB + $B
     call LoadSpeciesBytes8To10FromHL
     pop hl
     call StoreBCAAtHL
-    ld de, wC9BA
+    ld de, wRecordBufA + $34
     call CopyEightBytesDEToHL
-    ld de, wCA5F
+    ld de, wRecordBufB + $34
     call CopyEightBytesDEToHL
     call MapWCB0CEntriesThroughTable5B03
     call BuildWCB0CCandidateList_Sub01
@@ -1748,10 +1747,9 @@ Jump_00E_5AA9::
 
 ; replaces each of the $19 bytes at wCB0C (other than $FF) by Data_00E_5B03[byte] (E-0124)
 ; 1 call site from 1 routine (e.g. BuildWCB0CCandidateList)
-; points at: wCB0C
 MapWCB0CEntriesThroughTable5B03::
 Func_00E_5AEA:: ; address name
-    ld hl, wCB0C
+    ld hl, wChildRecord + $3C
     ld c, $19
 
 Jump_00E_5AEF::
@@ -1779,11 +1777,10 @@ Data_00E_5B03:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; moves the non-$FF bytes of the $19-byte list at wCB0C to its front (E-0124)
 ; 1 call site from 1 routine (e.g. BuildWCB0CCandidateList)
-; points at: wCB0C
 CompactWCB0CRemovingFF::
 Func_00E_5BB3:: ; address name
-    ld hl, wCB0C
-    ld de, wCB0C
+    ld hl, wChildRecord + $3C
+    ld de, wChildRecord + $3C
     ld c, $19
 
 Jump_00E_5BBB::
@@ -1805,10 +1802,9 @@ Jump_00E_5BC5::
 
 ; only called from BuildWCB0CCandidateList (E-0047)
 ; 2 call sites from 1 routine (e.g. BuildWCB0CCandidateList)
-; points at: wCB0C
 BuildWCB0CCandidateList_Sub01::
 Func_00E_5BCC:: ; address name
-    ld hl, wCB0C
+    ld hl, wChildRecord + $3C
     ld c, $00
 
 Jump_00E_5BD1::
@@ -1988,10 +1984,9 @@ Jump_00E_5CA1::
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; reads: wD7F5
 ; writes: wD7F2, wSpeciesIdLo, wD7F3, wSpeciesIdHi, wD7F4
-; points at: wCADB, wCB43
 RollChildResistancesToWCB43::
 Func_00E_5CB2:: ; address name
-    ld hl, wCADB
+    ld hl, wChildRecord + $B
     ld a, [hl+]
     ld [wD7F2], a
     ld [wSpeciesIdLo], a
@@ -2033,7 +2028,7 @@ Jump_00E_5CF4::
 
 Jump_00E_5D01::
     pop bc
-    ld de, wCB43
+    ld de, wChildRecord + $73
     ld a, c
     add a, e
     ld e, a
@@ -2053,11 +2048,10 @@ Jump_00E_5D0B::
 ; 1 call site from 1 routine (e.g. RollChildResistancesToWCB43)
 ; reads: wD7F5
 ; writes: wD7F5
-; points at: wCB3D
 RollWCB3DForCaseB_5D16::
 Func_00E_5D16:: ; address name
     push bc
-    ld hl, wCB3D
+    ld hl, wChildRecord + $6D
     ld a, [hl]
     and a, a
     jr nz, Jump_00E_5D20
@@ -2103,11 +2097,10 @@ Jump_00E_5D43::
 ; 3 call sites from 2 routines (e.g. RollWCB3DForCaseB_5D16, RollWCB3DForCaseB_5D77)
 ; reads: wD7F5
 ; writes: wD7F5
-; points at: wCB3D
 RollWCB3DChanceOrIncWD7F5::
 Func_00E_5D4E:: ; address name
     ld c, a
-    ld hl, wCB3D
+    ld hl, wChildRecord + $6D
     ld a, [hl]
     call Multiply8
     ld a, h
@@ -2138,11 +2131,10 @@ Jump_00E_5D6E::
 ; 1 call site from 1 routine (e.g. RollChildResistancesToWCB43)
 ; reads: wD7F5
 ; writes: wD7F5
-; points at: wCB3D
 RollWCB3DForCaseB_5D77::
 Func_00E_5D77:: ; address name
     push bc
-    ld hl, wCB3D
+    ld hl, wChildRecord + $6D
     ld a, [hl]
     and a, a
     jr nz, Jump_00E_5D81
@@ -2161,7 +2153,7 @@ Jump_00E_5D81::
     ret
 
 Jump_00E_5D8D::
-    ld hl, wCB3D
+    ld hl, wChildRecord + $6D
     cp a, $01
     jr z, Jump_00E_5D7F
     ld a, [hl]
@@ -2187,15 +2179,14 @@ Jump_00E_5DA5::
 
 ; B = Func_00E_5DCD(wC9F9) + Func_00E_5DCD(wCA9E) when both are valid and the sum is at least B; otherwise B = $FF (E-0124)
 ; 2 call sites from 1 routine (e.g. RollChildResistancesToWCB43)
-; points at: wC9F9, wCA9E
 SumFunc5DCDOfWC9F9AndWCA9E::
 Func_00E_5DAF:: ; address name
-    ld hl, wC9F9
+    ld hl, wRecordBufA + $73
     call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
     cp a, $FF
     jr z, Jump_00E_5DCA
     ld e, a
-    ld hl, wCA9E
+    ld hl, wRecordBufB + $73
     call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
     cp a, $FF
     jr z, Jump_00E_5DCA
@@ -2270,10 +2261,9 @@ Func_00E_5E1D:: ; address name
 
 ; copies six bytes from the addresses in Data_00E_5E61 (or 5E6D when bit 4 of wCADD is set) to the addresses in Data_00E_5E79 (E-0125)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
-; points at: wCADD
 CopySixBytesByWCADDBit4Table::
 Func_00E_5E2D:: ; address name
-    ld hl, wCADD
+    ld hl, wChildRecord + $D
     ld a, [hl]
     and a, $10
     and a, a
@@ -2325,11 +2315,11 @@ Data_00E_5E79:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; copies the 10-byte player name wC60C to wCADF (E-0122)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
-; points at: wPlayerName, wCADF
+; points at: wPlayerName
 CopyPlayerNameToWCADF::
 Func_00E_5E85:: ; address name
     ld hl, wPlayerName
-    ld de, wCADF
+    ld de, wChildRecord + $F
     ld c, $0A
 
 Jump_00E_5E8D::
@@ -2342,10 +2332,9 @@ Jump_00E_5E8D::
 
 ; copies four 10-byte names from the addresses in Data_00E_5ED0 (or 5ED8 with bit 4 of wCADD) to the addresses in Data_00E_5EE0 (E-0125)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
-; points at: wCADD
 CopyFourNamesByWCADDBit4Table::
 Func_00E_5E94:: ; address name
-    ld hl, wCADD
+    ld hl, wChildRecord + $D
     ld a, [hl]
     and a, $10
     and a, a
@@ -2406,7 +2395,7 @@ Data_00E_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; computes a bonus from personality compatibility, matching parent fields and wD7F1, and adds it to the child stats at wCAD0 (offsets Data_00E_5F89) (E-0130)
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 ; reads: wD7F5, wD7F1
-; points at: wC9DD, wCA82, wC9F3, wCA98, wCAD0
+; points at: wChildRecord
 ApplyBreedingBonusToChildStats::
 Func_00E_5EE8:: ; address name
     call PersonalityPairValueToWD7F5
@@ -2419,13 +2408,13 @@ Func_00E_5EE8:: ; address name
     ld c, a
 
 Jump_00E_5EF7::
-    ld hl, wC9DD
+    ld hl, wRecordBufA + $57
     ld a, [hl-]
     ld b, a
     ld a, [hl]
     cp a, b
     jr nz, Jump_00E_5F0D
-    ld hl, wCA82
+    ld hl, wRecordBufB + $57
     ld a, [hl-]
     ld b, a
     ld a, [hl]
@@ -2436,12 +2425,12 @@ Jump_00E_5EF7::
     ld c, a
 
 Jump_00E_5F0D::
-    ld hl, wC9F3
+    ld hl, wRecordBufA + $6D
     ld a, [hl]
     cp a, $05
     jr c, Jump_00E_5F27
     ld b, a
-    ld hl, wCA98
+    ld hl, wRecordBufB + $6D
     ld a, [hl]
     cp a, $05
     jr c, Jump_00E_5F27
@@ -2470,7 +2459,7 @@ Jump_00E_5F31::
 Jump_00E_5F39::
     push de
     push bc
-    ld hl, wCAD0
+    ld hl, wChildRecord
     ld a, [de]
     add_a_to_hl
     ld e, [hl]
@@ -2493,7 +2482,7 @@ Jump_00E_5F58::
     pop de
     push de
     push bc
-    ld bc, wCAD0
+    ld bc, wChildRecord
     ld a, [de]
     add a, c
     ld c, a
@@ -2540,13 +2529,13 @@ Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; wD7F5 = the 2-bit entry of the matrix Data_00E_603F for the combined personality indexes of wC986 and wCA2B (E-0128)
 ; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunWD780StateWhenNotFading_F1_Case04_Case16)
 ; writes: wD7F5
-; points at: wC986, wCA2B
+; points at: wRecordBufA, wRecordBufB
 PersonalityPairValueToWD7F5::
 Func_00E_5F91:: ; address name
-    ld hl, wC986
+    ld hl, wRecordBufA
     call CombinedPersonalityLevelIndexOfRecord
     push af
-    ld hl, wCA2B
+    ld hl, wRecordBufB
     call CombinedPersonalityLevelIndexOfRecord
     ld b, a
     ld l, a
@@ -2809,14 +2798,13 @@ Jump_00E_61BD::
 
 ; loads species wCADB; when its byte wD009 is non-zero, rolls against Data_00E_61FC[byte & 3] and stores 1 in wCADE on success, else 0 (E-0124)
 ; 2 call sites from 2 routines (e.g. ComputeBreedingChild, ScriptCommandF3_Run_Case05_Case0E_Sub01)
-; reads: wCADB, wCADC, wD009
+; reads: wChildRecord, wD009
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wCADE
 RollWCADEFromSpeciesFlag::
 Func_00E_61C1:: ; address name
-    ld a, [wCADB]
+    ld a, [wChildRecord + $B]
     ld [wSpeciesIdLo], a
-    ld a, [wCADC]
+    ld a, [wChildRecord + $C]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecordWord0
     ld a, [wD009]
@@ -2842,7 +2830,7 @@ Jump_00E_61F4::
 
 Jump_00E_61F6::
     ld a, b
-    ld hl, wCADE
+    ld hl, wChildRecord + $E
     ld [hl], a
     ret
 

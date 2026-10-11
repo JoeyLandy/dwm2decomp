@@ -1482,8 +1482,8 @@ Jump_033_57DC:: ; address name
 ; entry 13 of the `rst $00` table in Func_033_5215_Table2_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7DD
-; writes: rRAMG, rRAMB, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wC94B, wLinkSendByte
-; points at: wC986, wCA2B, wD781
+; writes: rRAMG, rRAMB, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSceneByte4B, wLinkSendByte
+; points at: wRecordBufA, wRecordBufB, wD781
 Func_033_5215_Table2_Case04_Case0D::
 Jump_033_57F8:: ; address name
     ld a, $0A
@@ -1493,7 +1493,7 @@ Jump_033_57F8:: ; address name
     ld a, [wD7DD]
     ld c, $00
     call SRAMRecordAddress
-    ld de, wC986
+    ld de, wRecordBufA
     ld a, e
     ld [wLinkTimeoutLo], a
     ld a, d
@@ -1506,7 +1506,7 @@ Jump_033_5816::
     inc de
     dec b
     jr nz, Jump_033_5816
-    ld de, wCA2B
+    ld de, wRecordBufB
     ld a, e
     ld [wLinkBufferPtrLo], a
     ld a, d
@@ -1514,7 +1514,7 @@ Jump_033_5816::
     xor a, a
     ld [rRAMG], a
     xor a, a
-    ld [wC94B], a
+    ld [wLinkSceneByte4B], a
     ld a, $01
     ld [wLinkSendByte], a
     ld hl, wD781
@@ -1689,8 +1689,8 @@ Jump_033_5902:: ; address name
 ; entry 4 of the `rst $00` table in Func_033_5215_Table2_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkTradeByte
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wC8D9, wC963, wStringCategory, wStringIndex
-; points at: wC8CF, wRandomSeed2Hi, wLinkPartnerName, wD781
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameGlyphBuf, wBattleByte63, wStringCategory, wStringIndex
+; points at: wNameGlyphBuf, wRandomSeed2Hi, wLinkPartnerName, wD781
 Func_033_5215_Table2_Case05_Case04::
 Jump_033_5911:: ; address name
     ld de, Data_033_6331
@@ -1708,16 +1708,16 @@ Jump_033_5911:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld hl, wRandomSeed2Hi
     ld bc, $000A
     call CopyBytes
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     ld de, vTiles2 + $50
     call CopyGlyphTilesToVRAM
     ld a, [wLinkTradeByte]
-    ld [wC963], a
+    ld [wBattleByte63], a
     ld de, wLinkPartnerName
     ld hl, wWindowTileBuffer + $A7
     call RunFunc6204FourTimes
@@ -2338,8 +2338,8 @@ Jump_033_5D79:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_033_5215_Table2_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wC8D9
-; points at: wKeyNameBuf, wLinkPartnerName, wC8CF, wRandomSeed2Hi, wD781
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameGlyphBuf
+; points at: wKeyNameBuf, wLinkPartnerName, wNameGlyphBuf, wRandomSeed2Hi, wD781
 Func_033_5215_Table2_Case0E_Case05::
 Jump_033_5D80:: ; address name
     ld de, Data_033_62C3
@@ -2367,12 +2367,12 @@ Jump_033_5D80:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld hl, wRandomSeed2Hi
     ld bc, $000A
     call CopyBytes
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     ld de, vTiles2 + $50
     call CopyGlyphTilesToVRAM
     ld hl, wD781
@@ -2808,7 +2808,7 @@ Func_033_6060:: ; address name
 ; 3 call sites from 3 routines (e.g. Func_033_5215_Table2_Case04_Case08, Func_033_5215_Table2_Case0E_Case06, Func_033_5215_Table2_Case0F_Case06)
 ; reads: wD7F5, wD7F6
 ; writes: rRAMG2, rRAMB, rRAMG
-; points at: wC8CF, wTextBuf0
+; points at: wNameGlyphBuf, wTextBuf0
 CopyWD789Cell5NameToWC130_Bank33::
 Func_033_6074:: ; address name
     ld a, $0A
@@ -2823,7 +2823,7 @@ Func_033_6074:: ; address name
     ld a, [hl]
     ld c, $01
     call CopyRecordNameToWC8CF
-    ld hl, wC8CF
+    ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld b, $0B
 
@@ -3187,8 +3187,8 @@ Jump_033_622B::
 
 ; clears vTiles2 (size $0105), draws the 10-byte player name wC60C there, then shows string 0 of category 1 (ShowString_Bank07) at vTiles2 + $100 with size $0110 (E-0121)
 ; 3 call sites from 3 routines (e.g. Func_033_5215_Case00, Func_033_5215_Table2_Case0E_Case00, Func_033_5215_Table2_Case0F_Case00)
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wC8D9, wStringCategory, wStringIndex
-; points at: wC8CF, wPlayerName
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameGlyphBuf, wStringCategory, wStringIndex
+; points at: wNameGlyphBuf, wPlayerName
 DrawPlayerNameAndString0Category1::
 Func_033_6247:: ; address name
     ld hl, vTiles2
@@ -3202,12 +3202,12 @@ Func_033_6247:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld de, wC8CF
+    ld de, wNameGlyphBuf
     ld hl, wPlayerName
     ld bc, $000A
     call CopyBytes
     ld a, $F0
-    ld [wC8D9], a
+    ld [wNameGlyphBuf + $A], a
     ld de, vTiles2
     call CopyGlyphTilesToVRAM
     ld hl, vTiles2 + $100

@@ -139,42 +139,42 @@ Jump_019_408D::
     jr nz, Jump_019_4140
     ld a, [wPartyCount]
     ld [wD88F], a
-    ld [wC984], a
+    ld [wSide0Flag], a
     ld a, [wCFDC]
     inc a
     ld [wD890], a
-    ld [wC985], a
+    ld [wSide1Flag], a
     ld a, [wBattleResultByte]
     ld [wCFDB], a
     ld a, [wMenuSaveByte34]
-    ld [wC964], a
+    ld [wBattleKindFlags], a
     jr Jump_019_417E
 
 Jump_019_4140::
     ld a, $03
-    ld [wC964], a
+    ld [wBattleKindFlags], a
     ld a, [wLinkRole]
     bit 1, a
     jr nz, Jump_019_4166
     ld hl, wD0EC
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wD88F], a
-    ld [wC984], a
+    ld [wSide0Flag], a
     ld hl, wD1D6
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wD890], a
-    ld [wC985], a
+    ld [wSide1Flag], a
     jr Jump_019_417E
 
 Jump_019_4166::
     ld hl, wD0EC
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wD890], a
-    ld [wC984], a
+    ld [wSide0Flag], a
     ld hl, wD1D6
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wD88F], a
-    ld [wC985], a
+    ld [wSide1Flag], a
 
 Jump_019_417E::
     xor a, a
@@ -1499,7 +1499,7 @@ Func_019_489D:: ; address name
 
 ; scales the word hFFC8 by 101 percent and caps it at 999, 600 or 700 depending on wD868 and the battle kind wCFC5, then stores it (E-0128)
 ; 6 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
-; reads: hTemp2, hTemp3, wCFC5, wD868, wC96C, wD869, wD00B
+; reads: hTemp2, hTemp3, wCFC5, wD868, wBattleIntroFlag, wD869, wD00B
 ; writes: hTemp2, hTemp3
 ScaleStatAndCapByBattleKind::
 Func_019_48B1:: ; address name
@@ -1522,7 +1522,7 @@ Func_019_48B1:: ; address name
     ld a, [wD868]
     cp a, $01
     jr nz, Jump_019_48EB
-    ld a, [wC96C]
+    ld a, [wBattleIntroFlag]
     cp a, $01
     ld a, $05
     jr z, Jump_019_493C
@@ -2634,14 +2634,13 @@ Func_019_7380:: ; address name
 
 ; loads species record [wC991] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wC9DC] - 1)) to wC9DE (E-0121)
 ; 2 call sites from 2 routines (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, BattleEnd_Step3)
-; reads: wC991, wC992, wD00F, wC9DC
+; reads: wRecordBufA, wD00F
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wC9DE
 LoadTable4E60EntryForWC991ToWC9DE::
 Func_019_73A2:: ; address name
-    ld a, [wC991]
+    ld a, [wRecordBufA + $B]
     ld l, a
-    ld a, [wC992]
+    ld a, [wRecordBufA + $C]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -2651,7 +2650,7 @@ Func_019_73A2:: ; address name
     ld a, [wD00F]
     ld bc, $0129
     call Multiply8By16
-    ld a, [wC9DC]
+    ld a, [wRecordBufA + $56]
     dec a
     ld c, a
     ld b, $00
@@ -2664,7 +2663,7 @@ Func_019_73A2:: ; address name
     ld a, h
     adc a, $4E
     ld h, a
-    ld de, wC9DE
+    ld de, wRecordBufA + $58
     ld a, [hl+]
     ld [de], a
     inc de
@@ -2677,14 +2676,13 @@ Func_019_73A2:: ; address name
 
 ; loads species record [wCA36] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wCA81] - 1)) to wCA83 (E-0121)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
-; reads: wCA36, wCA37, wD00F, wCA81
+; reads: wRecordBufB, wD00F
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-; points at: wCA83
 LoadTable4E60EntryForWCA36ToWCA83::
 Func_019_73DF:: ; address name
-    ld a, [wCA36]
+    ld a, [wRecordBufB + $B]
     ld l, a
-    ld a, [wCA37]
+    ld a, [wRecordBufB + $C]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -2694,7 +2692,7 @@ Func_019_73DF:: ; address name
     ld a, [wD00F]
     ld bc, $0129
     call Multiply8By16
-    ld a, [wCA81]
+    ld a, [wRecordBufB + $56]
     dec a
     ld c, a
     ld b, $00
@@ -2707,7 +2705,7 @@ Func_019_73DF:: ; address name
     ld a, h
     adc a, $4E
     ld h, a
-    ld de, wCA83
+    ld de, wRecordBufB + $58
     ld a, [hl+]
     ld [de], a
     inc de

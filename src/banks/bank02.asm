@@ -1104,7 +1104,7 @@ Jump_002_461A::
 
 ; enters the field: loads the map header, resets scroll and timers, reorders the party, loads names and sprites, finds triggers, draws the map screen and places objects (E-0129)
 ; 4 call sites from 4 routines (e.g. GameMode1_Init, FieldModeStateDispatch_Case04, ExitPauseMenuToField, EnterGameMode1WithDefaultPalettes)
-; reads: wCC44, hMapId, wFieldReturnPhase, wC927, wFieldInitStage, wIsCGB
+; reads: wMapType, hMapId, wFieldReturnPhase, wFieldInitFlag, wFieldInitStage, wIsCGB
 ; writes: hFieldDrawFlags, hScrollY, hScrollX, hWindowY, hWindowX, rLYC, wFrameCounterLo, wFrameCounterHi, ...
 InitFieldScreen::
 Func_002_4628:: ; address name
@@ -1138,7 +1138,7 @@ Func_002_4628:: ; address name
     farcall SetupTownObjectsForMap
     farcall RefreshKeyWorldObjectsOnEntry
     call WritePlayerNameWithFlag0SuffixToWC130
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_002_467D
     ldh a, [hMapId]
@@ -1171,21 +1171,21 @@ Jump_002_46BC::
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     xor a, a
-    ld [wCBCF], a
+    ld [wObject5], a
     farcall PlaceSpecialMapObjectsOnEntry
     xor a, a
-    ld [wC8CB], a
-    ld [wC8CC], a
-    ld [wC8CD], a
-    ld [wC8CE], a
-    ld a, [wC927]
+    ld [wTextWindowState], a
+    ld [wTextWindowStep], a
+    ld [wPartyWindowFlags], a
+    ld [wPartyWindowTimer], a
+    ld a, [wFieldInitFlag]
     bit 7, a
     jr z, Jump_002_46EE
     and a, $7F
     ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     xor a, a
-    ld [wC927], a
+    ld [wFieldInitFlag], a
 
 Jump_002_46EE::
     ld a, [wFieldInitStage]
@@ -1252,7 +1252,7 @@ Func_002_4745:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWC8C7Phase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wCC44
+; reads: wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wMapType
 ; writes: wFieldReturnPhase, wMenuState, wMenuSubState, wModeState
 RunWC8C7Phase_Case00::
 Jump_002_4753:: ; address name
@@ -1278,7 +1278,7 @@ Jump_002_4768::
     jr Jump_002_4786
 
 Jump_002_4779::
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jp z, Jump_002_4786
     ld a, $05
@@ -1299,7 +1299,7 @@ Jump_002_4792::
 
 ; entry 2 of the `rst $00` table in RunWC8C7Phase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFC5, wD092, wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wCC44, hPlayerStateFlags, ...
+; reads: wCFC5, wD092, wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wMapType, hPlayerStateFlags, ...
 ; writes: wFieldReturnPhase, wMenuState, wMenuSubState, wModeState, hMapId, hMapScreenX, hMapScreenY, hPlayerFacing, ...
 RunWC8C7Phase_Case02::
 Jump_002_4798:: ; address name
@@ -1351,36 +1351,36 @@ Jump_002_47E8::
     ld a, c
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
-    ld [wC8F4], a
-    ld [wC8F9], a
+    ld [wFollowerRecords + $5], a
+    ld [wFollowerRecords + $A], a
     ld a, $50
     ldh [hPlayerX], a
-    ld [wC8F0], a
-    ld [wC8F5], a
-    ld [wC8FA], a
+    ld [wFollowerRecords + $1], a
+    ld [wFollowerRecords + $6], a
+    ld [wFollowerRecords + $B], a
     ld a, $30
     ldh [hPlayerY], a
-    ld [wC8F1], a
-    ld [wC8F6], a
-    ld [wC8FB], a
+    ld [wFollowerRecords + $2], a
+    ld [wFollowerRecords + $7], a
+    ld [wFollowerRecords + $C], a
     ldh a, [hPlayerStateFlags]
     and a, $F7
     ldh [hPlayerStateFlags], a
     xor a, a
     ldh [hPlayerSpriteOverride], a
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_002_4824
     farcall SaveWCD07RecordToSRAMSlotWCC42
 
 Jump_002_4824::
     xor a, a
-    ld [wCC44], a
+    ld [wMapType], a
     farcall PlayMapMusic
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $05
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     farcall DispatchTalkEvent
     farcall FetchScriptCommand
     jp InitFieldScreen
@@ -1398,27 +1398,27 @@ Jump_002_4846::
     ld a, $02
     ldh [hPlayerFacing], a
     ldh [hPlayerFacing], a
-    ld [wC8F4], a
-    ld [wC8F9], a
+    ld [wFollowerRecords + $5], a
+    ld [wFollowerRecords + $A], a
     ld a, $40
     ldh [hPlayerX], a
-    ld [wC8F0], a
-    ld [wC8F5], a
-    ld [wC8FA], a
+    ld [wFollowerRecords + $1], a
+    ld [wFollowerRecords + $6], a
+    ld [wFollowerRecords + $B], a
     ld a, $30
     ldh [hPlayerY], a
-    ld [wC8F1], a
-    ld [wC8F6], a
-    ld [wC8FB], a
+    ld [wFollowerRecords + $2], a
+    ld [wFollowerRecords + $7], a
+    ld [wFollowerRecords + $C], a
     ld a, $01
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     ld a, $65
-    ld [wC916], a
-    ld a, [wC91C]
+    ld [wTalkEventGroup], a
+    ld a, [wScriptReturnBank]
     ld [wScriptStartRequest], a
-    ld a, [wC91D]
+    ld a, [wScriptReturnLo]
     ld [wScriptPointerLo], a
-    ld a, [wC91E]
+    ld a, [wScriptReturnHi]
     ld [wScriptPointerHi], a
     ld a, $02
     ldh [hSpriteWindowClipMode], a
@@ -1437,8 +1437,8 @@ Jump_002_48AE::
 
 ; entry 1 of the `rst $00` table in RunWC8C7Phase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDataBankSave, wCC44, wCurrentKeyIndex, wJoypadPressed
-; writes: wFieldReturnPhase, wFieldInitStage, wModeState, wCurrentKeyIndex, wC914, wDataBankSave, wMenuState, wMenuSubState, ...
+; reads: wDataBankSave, wMapType, wCurrentKeyIndex, wJoypadPressed
+; writes: wFieldReturnPhase, wFieldInitStage, wModeState, wCurrentKeyIndex, wMapToggleFlag, wDataBankSave, wMenuState, wMenuSubState, ...
 RunWC8C7Phase_Case01::
 Jump_002_48C3:: ; address name
     xor a, a
@@ -1469,7 +1469,7 @@ Jump_002_48EF::
     push af
     xor a, a
     ld [wModeState], a
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_002_4902
     ld a, $05
@@ -1482,7 +1482,7 @@ Jump_002_4902::
     and a, $7F
     ld [wCurrentKeyIndex], a
     ld a, $80
-    ld [wC914], a
+    ld [wMapToggleFlag], a
     xor a, a
     ld [wDataBankSave], a
     ld a, [wCurrentKeyIndex]
@@ -1524,9 +1524,9 @@ Jump_002_4945::
     xor a, a
     ld [wDataBankSave], a
     ld a, $19
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
@@ -1539,9 +1539,9 @@ Jump_002_495E::
     ld a, $67
     call QueueSoundEffect
     ld a, $08
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
@@ -1554,9 +1554,9 @@ Jump_002_497E::
     ld a, $67
     call QueueSoundEffect
     ld a, $06
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
@@ -1569,9 +1569,9 @@ Jump_002_499E::
     ld a, $67
     call QueueSoundEffect
     ld a, $07
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
@@ -1579,9 +1579,9 @@ Jump_002_49BE::
     dec a
     jr nz, Jump_002_49D2
     ld a, $39
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     ld a, $02
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
@@ -1589,9 +1589,9 @@ Jump_002_49D2::
     dec a
     jr nz, Jump_002_49E6
     ld a, $6A
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     ld a, $03
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
@@ -1599,9 +1599,9 @@ Jump_002_49E6::
     dec a
     jr nz, Jump_002_49FA
     ld a, $A1
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     ld a, $04
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
@@ -1609,9 +1609,9 @@ Jump_002_49FA::
     dec a
     jr nz, Jump_002_4A0E
     ld a, $AA
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     ld a, $04
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
@@ -1625,31 +1625,31 @@ Jump_002_4A0E::
 
 Jump_002_4A1C::
     ld a, $09
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     ret
 
 ; hPlayerFacing and the three follower directions = 0, every follower position = hPlayerX/hPlayerY, wDataBankSave = 0 (E-0117)
 ; 3 call sites from 1 routine (e.g. RunWC8C7Phase_Case01)
 ; reads: hPlayerX, hPlayerY
-; writes: hPlayerFacing, wFollowerRecords, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, ...
+; writes: hPlayerFacing, wFollowerRecords, wDataBankSave
 ResetFollowersToPlayer::
 Func_002_4A2C:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
-    ld [wC8F4], a
-    ld [wC8F9], a
+    ld [wFollowerRecords + $5], a
+    ld [wFollowerRecords + $A], a
     ldh a, [hPlayerX]
-    ld [wC8F0], a
-    ld [wC8F5], a
-    ld [wC8FA], a
+    ld [wFollowerRecords + $1], a
+    ld [wFollowerRecords + $6], a
+    ld [wFollowerRecords + $B], a
     ldh a, [hPlayerY]
-    ld [wC8F1], a
-    ld [wC8F6], a
-    ld [wC8FB], a
+    ld [wFollowerRecords + $2], a
+    ld [wFollowerRecords + $7], a
+    ld [wFollowerRecords + $C], a
     xor a, a
     ld [wDataBankSave], a
     ret
@@ -1679,11 +1679,11 @@ Func_002_4A53:: ; address name
 
 ; only called from RunWC8C7Phase_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC8C7Phase_Case01)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCECE, wCF8B
-; writes: wCBCF, wCF8B, hTemp0
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wCECE, wCF8B
+; writes: wObject5, wCF8B, hTemp0
 RunWC8C7Phase_Case01_Sub01::
 Func_002_4A7A:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     ret nz
     ldh a, [hMapId]
@@ -1702,7 +1702,7 @@ Func_002_4A7A:: ; address name
     cp a, $FF
     jr z, Jump_002_4AA1
     ld a, $80
-    ld [wCBCF], a
+    ld [wObject5], a
     ret
 
 Jump_002_4AA1::
@@ -1712,15 +1712,15 @@ Jump_002_4AA1::
     ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     ld a, $80
-    ld [wCBCF], a
+    ld [wObject5], a
     ret
 
 ; only called from GameMode1_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode1_Init)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY
 GameMode1_Init_Sub01::
 Func_002_4AB5:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_002_4AC5
     ldh a, [hMapId]
@@ -1873,8 +1873,8 @@ Jump_002_4BB1:: ; address name
 
 ; entry 4 of the `rst $00` table in FieldModeStateDispatch
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wFadeState, wFieldTransitionStep, wC8CA, wCD0D, wCD0E, wCC44
-; writes: wC8FE, wCC44, wMapWidthScreens, wMapHeightScreens, wGameMode, wFieldInitStage, wModeState, wFieldReturnPhase
+; reads: wFadeState, wFieldTransitionStep, wWarpDestFacing, wCD0D, wCD0E, wMapType
+; writes: wTriggerKind, wMapType, wMapWidthScreens, wMapHeightScreens, wGameMode, wFieldInitStage, wModeState, wFieldReturnPhase
 ; points at: wModeChangeRequest, wFieldInitStage
 FieldModeStateDispatch_Case04::
 Jump_002_4BCD:: ; address name
@@ -1889,14 +1889,14 @@ Jump_002_4BCD:: ; address name
     and a, $7F
     jp nz, Jump_002_4C18
     ld a, $FF
-    ld [wC8FE], a
+    ld [wTriggerKind], a
     farcall FieldModeStateDispatch_Case04_Sub02
-    ld a, [wC8CA]
+    ld a, [wWarpDestFacing]
     cp a, $F0
     jr nz, Jump_002_4C14
     push af
     ld a, $80
-    ld [wCC44], a
+    ld [wMapType], a
     ld a, [wCD0D]
     ld [wMapWidthScreens], a
     ld a, [wCD0E]
@@ -1917,7 +1917,7 @@ Jump_002_4C18::
     inc [hl]
     xor a, a
     ld [wFieldInitStage], a
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_002_4C39
     ld a, $00
@@ -1940,8 +1940,8 @@ Jump_002_4C3F::
 
 ; only called from FieldModeStateDispatch_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04)
-; reads: wFieldTransitionKind, wC957, hPlayerStateFlags, wC936, wC8C8, wC8C9, hPlayerFacing, hPlayerX, ...
-; writes: hPlayerFacing, wC957, wCC44, hPlayerStateFlags, hMapId, hMapScreenX, hMapScreenY, hPlayerX, ...
+; reads: wFieldTransitionKind, wReturnWarpFlag, hPlayerStateFlags, wSavedPositionValid, wWarpDestX, wWarpDestY, hPlayerFacing, hPlayerX, ...
+; writes: hPlayerFacing, wReturnWarpFlag, wMapType, hPlayerStateFlags, hMapId, hMapScreenX, hMapScreenY, hPlayerX, ...
 ; points at: wFieldTransitionStep
 FieldModeStateDispatch_Case04_Sub01::
 Func_002_4C4E:: ; address name
@@ -1952,11 +1952,11 @@ Func_002_4C4E:: ; address name
     ldh [hPlayerFacing], a
 
 Jump_002_4C57::
-    ld a, [wC957]
+    ld a, [wReturnWarpFlag]
     or a, a
     jr z, Jump_002_4C82
     xor a, a
-    ld [wC957], a
+    ld [wReturnWarpFlag], a
     ld de, $0025
     call TestFlagBit
     jr nc, Jump_002_4C6D
@@ -1965,7 +1965,7 @@ Jump_002_4C57::
 
 Jump_002_4C6D::
     xor a, a
-    ld [wCC44], a
+    ld [wMapType], a
     ldh a, [hPlayerStateFlags]
     and a, $B7
     ldh [hPlayerStateFlags], a
@@ -1977,31 +1977,31 @@ Jump_002_4C6D::
     ldh [hMapScreenY], a
 
 Jump_002_4C82::
-    ld a, [wC936]
+    ld a, [wSavedPositionValid]
     or a, a
     jr nz, Jump_002_4CDA
-    ld a, [wC8C8]
+    ld a, [wWarpDestX]
     ldh [hPlayerX], a
-    ld a, [wC8C9]
+    ld a, [wWarpDestY]
     ldh [hPlayerY], a
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
-    ld [wC8F4], a
-    ld [wC8F9], a
+    ld [wFollowerRecords + $5], a
+    ld [wFollowerRecords + $A], a
     ldh a, [hPlayerX]
-    ld [wC8F0], a
-    ld [wC8F5], a
-    ld [wC8FA], a
+    ld [wFollowerRecords + $1], a
+    ld [wFollowerRecords + $6], a
+    ld [wFollowerRecords + $B], a
     ldh a, [hPlayerY]
-    ld [wC8F1], a
-    ld [wC8F6], a
-    ld [wC8FB], a
+    ld [wFollowerRecords + $2], a
+    ld [wFollowerRecords + $7], a
+    ld [wFollowerRecords + $C], a
     ldh a, [hPlayerStateFlags]
     and a, $F9
     ldh [hPlayerStateFlags], a
     ld hl, wFieldTransitionStep
     inc [hl]
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     ret nz
     ldh a, [hMapId]
@@ -2011,40 +2011,40 @@ Jump_002_4C82::
     and a, $F7
     ldh [hPlayerStateFlags], a
     xor a, a
-    ld [wCC44], a
+    ld [wMapType], a
     xor a, a
     ldh [hPlayerSpriteOverride], a
     xor a, a
-    ld [wC950], a
+    ld [wGameMode2Byte50], a
     ret
 
 Jump_002_4CDA::
-    ld a, [wC938]
+    ld a, [wSavedPlayerState + $1]
     ldh [hPlayerX], a
-    ld a, [wC939]
+    ld a, [wSavedPlayerState + $2]
     ldh [hPlayerY], a
-    ld a, [wC93A]
+    ld a, [wSavedPlayerState + $3]
     ldh [hPlayerFacing], a
-    ld a, [wC93B]
+    ld a, [wSavedPlayerState + $4]
     ld [wFollowerRecords], a
-    ld a, [wC93C]
-    ld [wC8F0], a
-    ld a, [wC93D]
-    ld [wC8F1], a
-    ld a, [wC93E]
-    ld [wC8F4], a
-    ld a, [wC93F]
-    ld [wC8F5], a
-    ld a, [wC940]
-    ld [wC8F6], a
-    ld a, [wC941]
-    ld [wC8F9], a
-    ld a, [wC942]
-    ld [wC8FA], a
-    ld a, [wC943]
-    ld [wC8FB], a
+    ld a, [wSavedPlayerState + $5]
+    ld [wFollowerRecords + $1], a
+    ld a, [wSavedPlayerState + $6]
+    ld [wFollowerRecords + $2], a
+    ld a, [wSavedPlayerState + $7]
+    ld [wFollowerRecords + $5], a
+    ld a, [wSavedPlayerState + $8]
+    ld [wFollowerRecords + $6], a
+    ld a, [wSavedPlayerState + $9]
+    ld [wFollowerRecords + $7], a
+    ld a, [wSavedPlayerState + $A]
+    ld [wFollowerRecords + $A], a
+    ld a, [wSavedPlayerState + $B]
+    ld [wFollowerRecords + $B], a
+    ld a, [wSavedPlayerState + $C]
+    ld [wFollowerRecords + $C], a
     xor a, a
-    ld [wC936], a
+    ld [wSavedPositionValid], a
     ld hl, wFieldTransitionStep
     inc [hl]
     ret
@@ -2151,8 +2151,8 @@ Func_002_4DD6:: ; address name
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case00)
-; reads: wMapSpriteKind, wFadeState, wC8CB, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, hPlayerX, hPlayerY, ...
-; writes: wC934
+; reads: wMapSpriteKind, wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, hPlayerX, hPlayerY, ...
+; writes: wFieldStateByte34
 FieldModeStateDispatch_Shared01::
 Func_002_4DED:: ; address name
     ld a, [wMapSpriteKind]
@@ -2161,7 +2161,7 @@ Func_002_4DED:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     ld a, [wFieldActionRequest]
@@ -2223,7 +2223,7 @@ Jump_002_4E3F::
     call TestFlag1FAsBool
     or a, a
     jr z, Jump_002_4E59
-    ld [wC934], a
+    ld [wFieldStateByte34], a
     call FieldModeStateDispatch_Shared01_Sub02
     or a, a
     ret nz
@@ -2238,7 +2238,7 @@ Jump_002_4E59::
     call FieldModeStateDispatch_Shared01_Sub01
     or a, a
     ret z
-    ld [wC934], a
+    ld [wFieldStateByte34], a
 
 Jump_002_4E6D::
     call FieldModeStateDispatch_Shared01_Sub03
@@ -2287,8 +2287,8 @@ Jump_002_4E9B::
 
 ; only called from FieldModeStateDispatch_Shared01 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared01)
-; reads: hPlayerStateFlags, wMapHeaderByte11, wC910, wC8CD
-; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
+; reads: hPlayerStateFlags, wMapHeaderByte11, wTilesUnderPoint, wPartyWindowFlags
+; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Shared01_Sub02::
 Func_002_4E9E:: ; address name
     ldh a, [hPlayerStateFlags]
@@ -2302,18 +2302,18 @@ Jump_002_4EA4::
 Jump_002_4EA6::
     ld a, [wMapHeaderByte11]
     ld c, a
-    ld a, [wC910]
+    ld a, [wTilesUnderPoint]
     cp a, c
     jr nz, Jump_002_4EA4
     ld a, $02
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC8CD]
+    ld a, [wPartyWindowFlags]
     bit 7, a
     jr z, Jump_002_4ED3
     farcall RedrawScreenBufferIfWC8CDBit7
@@ -2324,15 +2324,15 @@ Jump_002_4ED3::
 
 ; only called from FieldModeStateDispatch_Shared01 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared01)
-; reads: hPlayerStateFlags, wMapTallTileMin, wC8CD, wMaxBlockingTile
-; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
-; points at: wC910
+; reads: hPlayerStateFlags, wMapTallTileMin, wPartyWindowFlags, wMaxBlockingTile
+; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
+; points at: wTilesUnderPoint
 FieldModeStateDispatch_Shared01_Sub03::
 Func_002_4ED6:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, Jump_002_4F13
-    ld de, wC910
+    ld de, wTilesUnderPoint
     ld b, $04
 
 Jump_002_4EE1::
@@ -2351,21 +2351,21 @@ Jump_002_4EEC::
 
 Jump_002_4EF0::
     ld a, $01
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC8CD]
+    ld a, [wPartyWindowFlags]
     bit 7, a
     ret z
     farcall RedrawScreenBufferIfWC8CDBit7
     ret
 
 Jump_002_4F13::
-    ld de, wC910
+    ld de, wTilesUnderPoint
     ld b, $04
 
 Jump_002_4F18::
@@ -2387,14 +2387,14 @@ Jump_002_4F28::
 
 Jump_002_4F29::
     ld a, $01
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
-    ld a, [wC8CD]
+    ld a, [wPartyWindowFlags]
     bit 7, a
     ret z
     farcall RedrawScreenBufferIfWC8CDBit7
@@ -2402,13 +2402,13 @@ Jump_002_4F29::
 
 ; only called from FieldModeStateDispatch_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case05)
-; reads: wFadeState, wC8CB, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wCC44
+; reads: wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wMapType
 FieldModeStateDispatch_Case05_Sub01::
 Func_002_4F4C:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     ld a, [wFieldActionRequest]
@@ -2420,7 +2420,7 @@ Func_002_4F4C:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
     ret z
-    ld a, [wCC44]
+    ld a, [wMapType]
     and a, $07
     rst $00
     dw Func_002_4F4C_Case00
@@ -2440,12 +2440,12 @@ Jump_002_4F7E:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_002_4F4C
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, hPlayerFacing, hMapScreenY, hPlayerX, hPlayerY
+; reads: wKeyWorldFloor, hPlayerFacing, hMapScreenY, hPlayerX, hPlayerY
 ; writes: wFieldReturnPhase, wGameMode, wModeState, wGameMode2State, wJoypadHeld, wJoypadPressed
 ; points at: wCD89
 Func_002_4F4C_Case03::
 Jump_002_4F7F:: ; address name
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld hl, wCD89
@@ -2510,9 +2510,9 @@ Jump_002_4FBC::
 
 ; when A is newly pressed and no fade, load or move is in progress: finds the position one step ahead of the player (hPlayerX or hPlayerY +/- 16 chosen by hPlayerFacing), looks it up with Func_002_59CD, and compares the result with the four ids at wC910 to pick an interaction
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case00)
-; reads: wMapHeaderByte7, wFadeState, wC8CB, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, hPlayerX, hPlayerY, ...
+; reads: wMapHeaderByte7, wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, hPlayerX, hPlayerY, ...
 ; writes: wFieldReturnPhase, wGameMode, wModeState, wGameMode2State, wJoypadHeld, wJoypadPressed
-; points at: wC910
+; points at: wTilesUnderPoint
 CheckInteractionInFront::
 Func_002_4FE8:: ; address name
     ld a, [wMapHeaderByte7]
@@ -2524,7 +2524,7 @@ Func_002_4FE8:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     ld a, [wFieldActionRequest]
@@ -2571,7 +2571,7 @@ Jump_002_5033::
 
 Jump_002_5037::
     call TileBlockedAtPixel
-    ld de, wC910
+    ld de, wTilesUnderPoint
     ld b, $04
 
 Jump_002_503F::
@@ -2608,7 +2608,7 @@ Jump_002_504E::
 
 ; unless a fade runs or bit 7 of wC468 is set, runs the field event for wC90D & $0F (jump table of sixteen) (E-0124)
 ; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case04, FieldModeStateDispatch_Case03, FieldModeStateDispatch_Case02, ...)
-; reads: wFadeState, wFieldActionRequest, wC90D
+; reads: wFadeState, wFieldActionRequest, wFieldEventKind
 RunFieldEventWC90D::
 Func_002_5074:: ; address name
     ld a, [wFadeState]
@@ -2617,7 +2617,7 @@ Func_002_5074:: ; address name
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
-    ld a, [wC90D]
+    ld a, [wFieldEventKind]
     and a, $0F
     rst $00
     dw RunFieldEventWC90D_Case00
@@ -3021,7 +3021,7 @@ Jump_002_52BA::
 
 ; only called from RunFieldEventWC90D_Case08 (E-0047)
 ; 1 call site from 1 routine (e.g. RunFieldEventWC90D_Case08)
-; reads: wScriptCommandType, wC936, wMenuSubState, wMenuState
+; reads: wScriptCommandType, wSavedPositionValid, wMenuSubState, wMenuState
 ; writes: wMenuSubState, wMenuState, hTemp0, wBGPaletteUploadRequest
 ; points at: wBGPaletteBuffer, wBGPaletteCopy
 RunFieldEventWC90D_Case08_Sub01::
@@ -3029,7 +3029,7 @@ Func_002_52D8:: ; address name
     ld a, [wScriptCommandType]
     cp a, $ED
     ret z
-    ld a, [wC936]
+    ld a, [wSavedPositionValid]
     and a, a
     ret nz
     ld a, [wMenuSubState]
@@ -3173,11 +3173,11 @@ Data_002_53C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunFieldEventWC90D_Case0C (E-0047)
 ; 1 call site from 1 routine (e.g. RunFieldEventWC90D_Case0C)
-; reads: wC90E, wCD03, wC90F, wFrameCounterLo, hScrollX, wCD04
-; writes: wC90E, hScrollX
+; reads: wFieldEventTimer, wCD03, wFieldEventArg, wFrameCounterLo, hScrollX, wCD04
+; writes: wFieldEventTimer, hScrollX
 RunFieldEventWC90D_Case0C_Sub01::
 Func_002_53D5:: ; address name
-    ld a, [wC90E]
+    ld a, [wFieldEventTimer]
     bit 7, a
     jr nz, Jump_002_53F0
     and a, $7F
@@ -3187,7 +3187,7 @@ Func_002_53D5:: ; address name
     cp a, c
     jr nz, Jump_002_53EC
     ld a, $80
-    ld [wC90E], a
+    ld [wFieldEventTimer], a
 
 Jump_002_53EC::
     xor a, a
@@ -3195,7 +3195,7 @@ Jump_002_53EC::
     ret
 
 Jump_002_53F0::
-    ld a, [wC90F]
+    ld a, [wFieldEventArg]
     or a, a
     jr nz, Jump_002_53EC
     ld a, [wFrameCounterLo]
@@ -3210,14 +3210,14 @@ Jump_002_53F0::
     ldh [hScrollX], a
 
 Jump_002_5408::
-    ld a, [wC90E]
+    ld a, [wFieldEventTimer]
     inc a
-    ld [wC90E], a
+    ld [wFieldEventTimer], a
     cp a, $BC
     ret nz
     ld a, [wCD04]
     and a, $7F
-    ld [wC90E], a
+    ld [wFieldEventTimer], a
     ret
 
 ; does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hFF9A, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)
@@ -3625,8 +3625,8 @@ Jump_002_56C5::
 
 ; only called from UpdatePlayerMovement (E-0047)
 ; 8 call sites from 1 routine (e.g. UpdatePlayerMovement)
-; reads: hPlayerStepDXLo, hPlayerStepDXHi, hPlayerStepDYLo, hPlayerStepDYHi, hPlayerStateFlags, wFieldActionRequest, hPlayerY, wC8F1, ...
-; writes: hPlayerStateFlags, wC918, hPlayerStepDYLo, hPlayerStepDYHi, wC955, hPlayerY, wC8F1, wC8F6, ...
+; reads: hPlayerStepDXLo, hPlayerStepDXHi, hPlayerStepDYLo, hPlayerStepDYHi, hPlayerStateFlags, wFieldActionRequest, hPlayerY, wFollowerRecords, ...
+; writes: hPlayerStateFlags, wStepTriggerFlag, hPlayerStepDYLo, hPlayerStepDYHi, wMapToggleRequest, hPlayerY, wFollowerRecords, hPlayerStepDXLo, ...
 ; points at: hPlayerY, hPlayerX
 UpdatePlayerMovement_Sub01::
 Func_002_56DC:: ; address name
@@ -3649,7 +3649,7 @@ Func_002_56DC:: ; address name
     and a, $FE
     ldh [hPlayerStateFlags], a
     xor a, a
-    ld [wC918], a
+    ld [wStepTriggerFlag], a
     jp Jump_002_58BF
 
 Jump_002_5700::
@@ -3675,7 +3675,7 @@ Jump_002_5700::
     and a, $FA
     ldh [hPlayerStateFlags], a
     xor a, a
-    ld [wC918], a
+    ld [wStepTriggerFlag], a
     ret
 
 Jump_002_5729::
@@ -3711,15 +3711,15 @@ Jump_002_5747::
     ldh a, [hPlayerX]
     sub a, $08
     ldh [hPlayerX], a
-    ld a, [wC8F0]
+    ld a, [wFollowerRecords + $1]
     sub a, $08
-    ld [wC8F0], a
-    ld a, [wC8F5]
+    ld [wFollowerRecords + $1], a
+    ld a, [wFollowerRecords + $6]
     sub a, $08
-    ld [wC8F5], a
-    ld a, [wC8FA]
+    ld [wFollowerRecords + $6], a
+    ld a, [wFollowerRecords + $B]
     sub a, $08
-    ld [wC8FA], a
+    ld [wFollowerRecords + $B], a
     call SetFollowerTargetsFromLeader
     call StepFollowersTowardTargets
     jp Jump_002_5892
@@ -3761,15 +3761,15 @@ Jump_002_57A2::
     ldh a, [hPlayerX]
     add a, $08
     ldh [hPlayerX], a
-    ld a, [wC8F0]
+    ld a, [wFollowerRecords + $1]
     add a, $08
-    ld [wC8F0], a
-    ld a, [wC8F5]
+    ld [wFollowerRecords + $1], a
+    ld a, [wFollowerRecords + $6]
     add a, $08
-    ld [wC8F5], a
-    ld a, [wC8FA]
+    ld [wFollowerRecords + $6], a
+    ld a, [wFollowerRecords + $B]
     add a, $08
-    ld [wC8FA], a
+    ld [wFollowerRecords + $B], a
     call SetFollowerTargetsFromLeader
     call StepFollowersTowardTargets
     jp Jump_002_5892
@@ -3807,15 +3807,15 @@ Jump_002_57FE::
     ldh a, [hPlayerY]
     sub a, $08
     ldh [hPlayerY], a
-    ld a, [wC8F1]
+    ld a, [wFollowerRecords + $2]
     sub a, $08
-    ld [wC8F1], a
-    ld a, [wC8F6]
+    ld [wFollowerRecords + $2], a
+    ld a, [wFollowerRecords + $7]
     sub a, $08
-    ld [wC8F6], a
-    ld a, [wC8FB]
+    ld [wFollowerRecords + $7], a
+    ld a, [wFollowerRecords + $C]
     sub a, $08
-    ld [wC8FB], a
+    ld [wFollowerRecords + $C], a
     call SetFollowerTargetsFromLeader
     call StepFollowersTowardTargets
     jr Jump_002_5892
@@ -3857,15 +3857,15 @@ Jump_002_5857::
     ldh a, [hPlayerY]
     add a, $08
     ldh [hPlayerY], a
-    ld a, [wC8F1]
+    ld a, [wFollowerRecords + $2]
     add a, $08
-    ld [wC8F1], a
-    ld a, [wC8F6]
+    ld [wFollowerRecords + $2], a
+    ld a, [wFollowerRecords + $7]
     add a, $08
-    ld [wC8F6], a
-    ld a, [wC8FB]
+    ld [wFollowerRecords + $7], a
+    ld a, [wFollowerRecords + $C]
     add a, $08
-    ld [wC8FB], a
+    ld [wFollowerRecords + $C], a
     call SetFollowerTargetsFromLeader
     call StepFollowersTowardTargets
 
@@ -3885,7 +3885,7 @@ Jump_002_5892::
     or a, l
     ret nz
     ld a, $01
-    ld [wC955], a
+    ld [wMapToggleRequest], a
     ldh a, [hPlayerStateFlags]
     bit 6, a
     jr z, Jump_002_58B1
@@ -3898,7 +3898,7 @@ Jump_002_58B1::
     bit 7, a
     ret nz
     xor a, a
-    ld [wC918], a
+    ld [wStepTriggerFlag], a
 
 Jump_002_58BF::
     farcall UpdatePlayerMovement_Sub01_Sub02
@@ -3915,59 +3915,59 @@ Jump_002_58BF::
 
 ; only called from UpdatePlayerMovement_Sub01 (E-0047)
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement_Sub01)
-; reads: wC94D, hPlayerFacing, hPlayerX, hPlayerY
-; writes: wFollowerRecords, wC8F4, wC8F9, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
+; reads: wFollowerDelay, hPlayerFacing, hPlayerX, hPlayerY
+; writes: wFollowerRecords
 UpdatePlayerMovement_Sub01_Sub01::
 Func_002_58FC:: ; address name
-    ld a, [wC94D]
+    ld a, [wFollowerDelay]
     or a, a
     ret z
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
-    ld [wC8F4], a
-    ld [wC8F9], a
+    ld [wFollowerRecords + $5], a
+    ld [wFollowerRecords + $A], a
     ldh a, [hPlayerX]
-    ld [wC8F0], a
-    ld [wC8F5], a
-    ld [wC8FA], a
+    ld [wFollowerRecords + $1], a
+    ld [wFollowerRecords + $6], a
+    ld [wFollowerRecords + $B], a
     ldh a, [hPlayerY]
-    ld [wC8F1], a
-    ld [wC8F6], a
-    ld [wC8FB], a
+    ld [wFollowerRecords + $2], a
+    ld [wFollowerRecords + $7], a
+    ld [wFollowerRecords + $C], a
     ret
 
 ; the three 5-byte follower records at wFollowerRecords hold direction, X, Y, target X, target Y: record 0's target = hPlayerX/hPlayerY, record 1's target = record 0's position, record 2's target = record 1's position (E-0093)
 ; 12 call sites from 6 routines (e.g. UpdatePlayerMovement, UpdatePlayerMovement_Sub01, UpdateFollowersOnStep_Bank0F, ScriptStepMoveFollowersToLeader, ...)
-; reads: hPlayerX, hPlayerY, wC8F0, wC8F1, wC8F5, wC8F6
-; writes: wC8F2, wC8F3, wC8F7, wC8F8, wC8FC, wC8FD
+; reads: hPlayerX, hPlayerY, wFollowerRecords
+; writes: wFollowerRecords
 SetFollowerTargetsFromLeader::
 Func_002_5923:: ; address name
     ldh a, [hPlayerX]
-    ld [wC8F2], a
+    ld [wFollowerRecords + $3], a
     ldh a, [hPlayerY]
-    ld [wC8F3], a
-    ld a, [wC8F0]
-    ld [wC8F7], a
-    ld a, [wC8F1]
-    ld [wC8F8], a
-    ld a, [wC8F5]
-    ld [wC8FC], a
-    ld a, [wC8F6]
-    ld [wC8FD], a
+    ld [wFollowerRecords + $4], a
+    ld a, [wFollowerRecords + $1]
+    ld [wFollowerRecords + $8], a
+    ld a, [wFollowerRecords + $2]
+    ld [wFollowerRecords + $9], a
+    ld a, [wFollowerRecords + $6]
+    ld [wFollowerRecords + $D], a
+    ld a, [wFollowerRecords + $7]
+    ld [wFollowerRecords + $E], a
     ret
 
 ; unless wC94D is non-zero, moves each of the three follower records one pixel toward its target (four pixels when wC468 bit 7 is set), X first and then Y, storing the direction moved in byte 0 (1 = X increasing, 3 = X decreasing; Y directions not read to the end) (E-0093)
 ; 12 call sites from 5 routines (e.g. UpdatePlayerMovement_Sub01, UpdateFollowersOnStep_Bank0F, ScriptStepMoveFollowersToLeader, UpdateFollowersOnStep_Bank12, ...)
-; reads: wC94D, wFieldActionRequest
-; points at: wFollowerRecords, wC8F2
+; reads: wFollowerDelay, wFieldActionRequest
+; points at: wFollowerRecords
 StepFollowersTowardTargets::
 Func_002_5946:: ; address name
-    ld a, [wC94D]
+    ld a, [wFollowerDelay]
     or a, a
     ret nz
     ld b, $03
     ld hl, wFollowerRecords
-    ld de, wC8F2
+    ld de, wFollowerRecords + $3
 
 Jump_002_5953::
     push hl
@@ -4075,8 +4075,8 @@ Jump_002_59C9::
 ; B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wC910-wC913; returns A = 1 when any of them is at most wC192, else A = 0 (a different pair of comparisons with wC196 runs when hFF8C bit 3 is set)
 ; 6 call sites from 3 routines (e.g. FieldModeStateDispatch_Shared01, CheckInteractionInFront, UpdatePlayerMovement)
 ; reads: hPlayerStateFlags, wMaxBlockingTile, wMapTallTileMin
-; writes: wC910, wC911, wC912, wC913
-; points at: wC910
+; writes: wTilesUnderPoint
+; points at: wTilesUnderPoint
 TileBlockedAtPixel::
 Func_002_59CD:: ; address name
     push bc
@@ -4109,19 +4109,19 @@ Jump_002_59D5::
     adc a, $C1
     ld h, a
     ld a, [hl+]
-    ld [wC910], a
+    ld [wTilesUnderPoint], a
     ld a, [hl-]
-    ld [wC911], a
+    ld [wTilesUnderPoint + $1], a
     ld a, $14
     add_a_to_hl
     ld a, [hl+]
-    ld [wC912], a
+    ld [wTilesUnderPoint + $2], a
     ld a, [hl]
-    ld [wC913], a
+    ld [wTilesUnderPoint + $3], a
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, Jump_002_5A35
-    ld de, wC910
+    ld de, wTilesUnderPoint
     ld b, $04
 
 Jump_002_5A1E::
@@ -4148,7 +4148,7 @@ Jump_002_5A30::
     ret
 
 Jump_002_5A35::
-    ld de, wC910
+    ld de, wTilesUnderPoint
     ld b, $02
 
 Jump_002_5A3A::
@@ -4178,7 +4178,6 @@ Jump_002_5A4C::
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: wSpriteSlotCount, hTemp1, hTemp0
 ; writes: hTemp0, hTemp1
-; points at: wCB8A
 FindSpriteSlotAtTile::
 Func_002_5A51:: ; address name
     ld a, [wSpriteSlotCount]
@@ -4196,7 +4195,7 @@ Func_002_5A51:: ; address name
     ld a, [wSpriteSlotCount]
     ld b, a
     ld c, $01
-    ld hl, wCB8A
+    ld hl, wSpriteSlots + $B
 
 Jump_002_5A6E::
     push hl
@@ -4256,11 +4255,11 @@ Jump_002_5AB1::
 
 ; only called from UpdatePlayerMovement (E-0047)
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement)
-; reads: wC8FE, wCC44, wC8FF
+; reads: wTriggerKind, wMapType, wTriggerCell
 UpdatePlayerMovement_Sub02::
 Func_002_5AB6:: ; address name
     push bc
-    ld a, [wC8FE]
+    ld a, [wTriggerKind]
     cp a, $02
     jr z, Jump_002_5AC5
     cp a, $03
@@ -4280,17 +4279,17 @@ Jump_002_5AC5::
     swap a
     and a, $0F
     ld c, a
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_002_5AEE
 
 Jump_002_5AD8::
-    ld a, [wC8FF]
+    ld a, [wTriggerCell]
     swap a
     and a, $0F
     cp a, b
     jr nz, Jump_002_5AC2
-    ld a, [wC8FF]
+    ld a, [wTriggerCell]
     and a, $0F
     cp a, c
     jr nz, Jump_002_5AC2
@@ -4301,7 +4300,7 @@ Jump_002_5AD8::
 Jump_002_5AEE::
     cp a, $85
     jr z, Jump_002_5AD8
-    ld a, [wC8FF]
+    ld a, [wTriggerCell]
     add a, a
     ld hl, Data_002_5B0A
     add_a_to_hl
@@ -4322,7 +4321,7 @@ Data_002_5B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from FieldModeStateDispatch_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case00)
 ; reads: wFadeState, hPlayerStateFlags, wJoypadHeld, hMapScreenX, hMapScreenY, hMapId, hPlayerX, hPlayerY
-; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
+; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Case00_Sub01::
 Func_002_5B2A:: ; address name
     ld a, [wFadeState]
@@ -4371,9 +4370,9 @@ Jump_002_5B53::
     jr nz, Jump_002_5B81
     ld a, b
     add a, $10
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     xor a, a
     ld [wJoypadHeld], a
@@ -4396,13 +4395,13 @@ Data_002_5B89:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; clears wC8CE; if bit 7 of wC8CD is set, draws the full screen buffer to the BG map at the scroll position and clears wC8CD and wC8CE (E-0121)
 ; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, UpdatePlayerMovement_Sub01, Func_002_4F4C_Case07, ...)
-; reads: wC8CD, hScrollY, hScrollX
-; writes: wC8CE, wC8CD
+; reads: wPartyWindowFlags, hScrollY, hScrollX
+; writes: wPartyWindowTimer, wPartyWindowFlags
 RedrawScreenBufferIfWC8CDBit7::
 Func_002_5B9E:: ; address name
     xor a, a
-    ld [wC8CE], a
-    ld a, [wC8CD]
+    ld [wPartyWindowTimer], a
+    ld a, [wPartyWindowFlags]
     bit 7, a
     ret z
     ld hl, vBGMap0
@@ -4425,8 +4424,8 @@ Func_002_5B9E:: ; address name
     add_a_to_hl
     call DrawFullScreenBufferToBGMap
     xor a, a
-    ld [wC8CD], a
-    ld [wC8CE], a
+    ld [wPartyWindowFlags], a
+    ld [wPartyWindowTimer], a
     ret
 
 ; if bit 7 of wC468 is set, runs the routine for wC468 & 3 (jump table) (E-0122)
@@ -4459,11 +4458,11 @@ Jump_002_5BE8:: ; address name
 
 ; entry 3 of the `rst $00` table in RunWC468ActionIfBit7
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC918, wFieldActionRequest
+; writes: wStepTriggerFlag, wFieldActionRequest
 RunWC468ActionIfBit7_Case03::
 Jump_002_5BF4:: ; address name
     xor a, a
-    ld [wC918], a
+    ld [wStepTriggerFlag], a
     farcall AdvanceStepCounterAndUpdateStoredRecords
     farcall RunPeriodicFieldEventChecks
     farcall TickRandomEncounterCounter
@@ -4477,8 +4476,8 @@ Jump_002_5BF4:: ; address name
 
 ; entry 2 of the `rst $00` table in RunWC468ActionIfBit7
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC935
-; writes: wC935, wCBCF
+; reads: wPendingFieldEvent
+; writes: wPendingFieldEvent, wObject5
 ; points at: wFieldActionRequest
 RunWC468ActionIfBit7_Case02::
 Jump_002_5C27:: ; address name
@@ -4487,13 +4486,13 @@ Jump_002_5C27:: ; address name
     farcall FindTriggerEntryForCurrentScreen
     farcall FindTriggerEntryForCurrentScreen_WCCEB
     farcall LoadMapObjectsForScreen
-    ld a, [wC935]
+    ld a, [wPendingFieldEvent]
     bit 7, a
     jr z, Jump_002_5C4E
     bit 6, a
     jr nz, Jump_002_5C4E
     xor a, a
-    ld [wC935], a
+    ld [wPendingFieldEvent], a
     jr Jump_002_5C54
 
 Jump_002_5C4E::
@@ -4501,7 +4500,7 @@ Jump_002_5C4E::
 
 Jump_002_5C54::
     xor a, a
-    ld [wCBCF], a
+    ld [wObject5], a
     farcall PlaceSpecialMapObjectsOnEntry
     ret
 
@@ -4914,7 +4913,7 @@ Jump_002_5EE9::
 ; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wD000 to wD2D0 (rSVBK = 2); saves wSpriteSlotCount in wCB7E. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
 ; 22 call sites from 20 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
 ; reads: wIsCGB, wSpriteSlotCount
-; writes: rSVBK, wCB7E
+; writes: rSVBK, wScreenSavedFlag
 ; points at: wScreenTileBuffer, wD000, wD2D0
 SaveScreenBufferToBGMap1::
 Func_002_5EEE:: ; address name
@@ -4944,12 +4943,12 @@ Jump_002_5EF7::
 
 Jump_002_5F1B::
     ld a, [wSpriteSlotCount]
-    ld [wCB7E], a
+    ld [wScreenSavedFlag], a
     ret
 
 ; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wD2D0 back to wD000 (rSVBK = 2); restores wSpriteSlotCount from wCB7E (E-0066)
 ; 7 call sites from 7 routines (e.g. InitFieldScreen, ScriptCommand82_Run_Case0A_Case08, ScriptCommand2A_Run_Case0F, ScriptCommand2A_Run_Case0D, ...)
-; reads: wIsCGB, wCB7E
+; reads: wIsCGB, wScreenSavedFlag
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wD2D0, wD000
 RestoreScreenBufferFromBGMap1::
@@ -4982,7 +4981,7 @@ Jump_002_5F2B::
     ldh [rSVBK], a
 
 Jump_002_5F52::
-    ld a, [wCB7E]
+    ld a, [wScreenSavedFlag]
     ld [wSpriteSlotCount], a
     ret
 
@@ -5143,7 +5142,7 @@ Jump_002_6045::
 
 ; wC608 = $FF (no current music), then falls into PlayMapMusic so the map's music always restarts (E-0122)
 ; 10 call sites from 10 routines (e.g. GameMode1_Init, InitFieldScreen, Func_000_2950_Case09, RunWC46BMenuState_Case05, ...)
-; reads: wCC44, wCC45, hPlayerStateFlags, wCurrentMusic, hMapId
+; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 ; writes: wCurrentMusic
 ; points at: wCD89
 RestartMapMusic::
@@ -5153,11 +5152,11 @@ Func_002_604B:: ; address name
 
 ; chooses the music for the current map (by wCC44 and hMapId, with story-flag cases) and queues it unless it is already wC608 (E-0122)
 ; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case04, RunWC8C7Phase_Case02, ScriptCommand58_Run_Case28, ScriptCommand46_Run_Case0A, ...)
-; reads: wCC44, wCC45, hPlayerStateFlags, wCurrentMusic, hMapId
+; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 ; points at: wCD89
 PlayMapMusic::
 Func_002_6050:: ; address name
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_002_609D
     ld c, $22
@@ -5171,7 +5170,7 @@ Func_002_6050:: ; address name
     jr z, Jump_002_6089
     cp a, $83
     jr nz, Jump_002_607F
-    ld a, [wCC45]
+    ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld hl, wCD89
@@ -5427,7 +5426,7 @@ Func_002_6327:: ; address name
 
 ; only called from FieldModeStateDispatch_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case02)
-; reads: wJoypadPressed, wCC44, wMenuState
+; reads: wJoypadPressed, wMapType, wMenuState
 ; writes: wFieldReturnPhase, hSpriteWindowClipMode, wModeState, wGameMode, wGameMode2State, wMenuState
 FieldModeStateDispatch_Case02_Sub01::
 Func_002_6391:: ; address name
@@ -5441,7 +5440,7 @@ Func_002_6391:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
     call FieldModeStateDispatch_Case02_Sub01_Sub02
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_002_63B7
     xor a, a
@@ -5617,7 +5616,7 @@ Data_002_64AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from FieldModeStateDispatch_Case02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case02_Sub01)
 ; reads: hScrollY, hScrollX
-; writes: wC8CD, wC8CE
+; writes: wPartyWindowFlags, wPartyWindowTimer
 FieldModeStateDispatch_Case02_Sub01_Sub02::
 Func_002_64B3:: ; address name
     ldh a, [hScrollY]
@@ -5648,15 +5647,15 @@ Jump_002_64D7::
     ld h, d
     call DrawFullScreenBufferToBGMap
     xor a, a
-    ld [wC8CD], a
+    ld [wPartyWindowFlags], a
     xor a, a
-    ld [wC8CE], a
+    ld [wPartyWindowTimer], a
     ret
 
 ; in the field, when A is pressed and nothing blocks it: saves the screen, sets the object flags and draws the field menu windows (Data_002_6606, 6642) (E-0130)
 ; 3 call sites from 3 routines (e.g. RunWC8C7Phase_Case01, FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
-; reads: wFadeState, wC8CB, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wIsCGB, hScrollY, hScrollX, ...
-; writes: hSpriteWindowClipMode, wFieldReturnPhase, rSVBK, wC8CE, wModeState, wMenuState
+; reads: wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wIsCGB, hScrollY, hScrollX, ...
+; writes: hSpriteWindowClipMode, wFieldReturnPhase, rSVBK, wPartyWindowTimer, wModeState, wMenuState
 ; points at: wWindowTileBuffer, wScreenTileBuffer, wD168, wD000
 OpenFieldMenuOnA::
 Func_002_64E5:: ; address name
@@ -5666,7 +5665,7 @@ Func_002_64E5:: ; address name
     ld de, $0002
     call TestFlagBit
     ret nc
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     ld a, [wFieldActionRequest]
@@ -5752,7 +5751,7 @@ Jump_002_6585::
     ld bc, $1405
     call CopyScreenRectToBGMapSetWC554
     ld a, $B3
-    ld [wC8CE], a
+    ld [wPartyWindowTimer], a
     call ShowIdlePartyStatusWindow
     pop hl
     ld a, $2E
@@ -5948,15 +5947,15 @@ Jump_002_66C8::
 
 ; in the field, after $B4 idle frames: saves the bottom of the screen and shows the party status window (level, HP, MP) (E-0130)
 ; 1 call site from 1 routine (e.g. OpenFieldMenuOnA)
-; reads: wC8CB, wFieldActionRequest, wPartyCount, hPlayerStateFlags, wC8CD, wC8CE, wIsCGB
-; writes: wC8CE, wC8CD, hSpriteWindowClipMode, rSVBK
+; reads: wTextWindowState, wFieldActionRequest, wPartyCount, hPlayerStateFlags, wPartyWindowFlags, wPartyWindowTimer, wIsCGB
+; writes: wPartyWindowTimer, wPartyWindowFlags, hSpriteWindowClipMode, rSVBK
 ; points at: wScreenTileBuffer, wD1CC
 ShowIdlePartyStatusWindow::
 Func_002_66CC:: ; address name
     ld de, $0002
     call TestFlagBit
     ret nc
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret nz
     ld a, [wFieldActionRequest]
@@ -5968,20 +5967,20 @@ Func_002_66CC:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 0, a
     ret nz
-    ld a, [wC8CD]
+    ld a, [wPartyWindowFlags]
     bit 7, a
     ret nz
-    ld a, [wC8CE]
+    ld a, [wPartyWindowTimer]
     inc a
-    ld [wC8CE], a
+    ld [wPartyWindowTimer], a
     cp a, $B4
     ret nz
     xor a, a
-    ld [wC8CE], a
+    ld [wPartyWindowTimer], a
     ld a, [wPartyCount]
     dec a
     or a, $80
-    ld [wC8CD], a
+    ld [wPartyWindowFlags], a
     ld a, $03
     ldh [hSpriteWindowClipMode], a
     ld hl, wWindowTileBuffer + $64
@@ -6027,7 +6026,7 @@ Jump_002_6739::
     ldh [rSVBK], a
 
 Jump_002_6745::
-    ld a, [wC8CD]
+    ld a, [wPartyWindowFlags]
     and a, $03
     jr z, Jump_002_6753
     dec a
@@ -6064,14 +6063,14 @@ Jump_002_677B::
 
 ; for each party member writes level (field $56), HP (field $5B) and MP (field $5F) into the status window at wC364 (offsets Data_002_6835) (E-0130)
 ; 1 call site from 1 routine (e.g. ShowIdlePartyStatusWindow)
-; reads: wC8CD, hTemp0, hTemp5, hTemp1
+; reads: wPartyWindowFlags, hTemp0, hTemp5, hTemp1
 ; writes: rRAMG, hTemp5
 ; points at: wPartyList
 BuildPartyStatusWindowRows::
 Func_002_6788:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ld a, [wC8CD]
+    ld a, [wPartyWindowFlags]
     and a, $03
     inc a
     ld b, a
@@ -6339,17 +6338,17 @@ Data_002_695E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; while wC8CB & 3 is set: copies the text window rows to or from wC300 (with CGB attributes) and redraws them at the scroll position (E-0130)
 ; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case01, GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, ...)
-; reads: wC8CB, wIsCGB, hScrollY, hScrollX, wC8CC
+; reads: wTextWindowState, wIsCGB, hScrollY, hScrollX, wTextWindowStep
 ; writes: rSVBK
-; points at: wWindowTileBuffer, wScreenTileBuffer, wC8CC
+; points at: wWindowTileBuffer, wScreenTileBuffer, wTextWindowStep
 StepTextWindowOpenClose::
 Func_002_69D0:: ; address name
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $03
     ret z
     ld hl, wWindowTileBuffer
     ld de, wScreenTileBuffer
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     bit 7, a
     jr nz, Jump_002_69EB
     ld a, e
@@ -6429,7 +6428,7 @@ Jump_002_6A1F::
     inc d
 
 Jump_002_6A47::
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     bit 7, a
     jr nz, Jump_002_6A5A
     ld a, e
@@ -6443,13 +6442,13 @@ Jump_002_6A47::
     ld d, a
 
 Jump_002_6A5A::
-    ld hl, wC8CC
+    ld hl, wTextWindowStep
     inc [hl]
-    ld a, [wC8CC]
+    ld a, [wTextWindowStep]
     and a, $01
     dec a
     ret nz
-    ld a, [wC8CC]
+    ld a, [wTextWindowStep]
     srl a
     and a, $03
     rst $00
@@ -6460,10 +6459,10 @@ Jump_002_6A5A::
 
 ; entry 0 of the `rst $00` table in StepTextWindowOpenClose
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8CB
+; reads: wTextWindowState
 StepTextWindowOpenClose_Case00::
 Jump_002_6A75:: ; address name
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     bit 0, a
     jr z, Jump_002_6A92
     push de
@@ -6493,10 +6492,10 @@ Jump_002_6A92::
 
 ; entry 1 of the `rst $00` table in StepTextWindowOpenClose
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8CB
+; reads: wTextWindowState
 StepTextWindowOpenClose_Case01::
 Jump_002_6AA8:: ; address name
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     bit 0, a
     jr z, Jump_002_6AC5
     push de
@@ -6526,12 +6525,12 @@ Jump_002_6AC5::
 
 ; entry 2 of the `rst $00` table in StepTextWindowOpenClose
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC8CB
-; writes: wC8CB, wC8CC
+; reads: wTextWindowState
+; writes: wTextWindowState, wTextWindowStep
 ; points at: wWindowTileBuffer
 StepTextWindowOpenClose_Case02::
 Jump_002_6ADB:: ; address name
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     bit 0, a
     jr z, Jump_002_6B04
     push de
@@ -6544,11 +6543,11 @@ Jump_002_6ADB:: ; address name
     ld h, d
     ld bc, $1405
     call CopyScreenRectToBGMapSetWC554
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $80
-    ld [wC8CB], a
+    ld [wTextWindowState], a
     xor a, a
-    ld [wC8CC], a
+    ld [wTextWindowStep], a
     ret
 
 Jump_002_6B04::
@@ -6556,11 +6555,11 @@ Jump_002_6B04::
     ld h, d
     ld bc, $1405
     call CopyScreenRectToBGMapSetWC554
-    ld a, [wC8CB]
+    ld a, [wTextWindowState]
     and a, $80
-    ld [wC8CB], a
+    ld [wTextWindowState], a
     xor a, a
-    ld [wC8CC], a
+    ld [wTextWindowStep], a
     ret
 
 ; copies a rectangle of the screen buffer wC300 to the BG map (CopyRectFromBankToBGMapWrapped) and sets wC554 = HL + $21 (wrapped in the map); on CGB also copies the attributes from wD168 in VRAM bank 1 (E-0121)
@@ -6714,7 +6713,7 @@ Jump_002_6C5E:: ; address name
 
 ; entry 0 of the `rst $00` table in RunWC46BMenuState
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC914
+; reads: wMapToggleFlag
 ; writes: wMenuSubState, wMenuCursor
 ; points at: wMenuState
 RunWC46BMenuState_Case00::
@@ -6724,7 +6723,7 @@ Jump_002_6C5F:: ; address name
     call InitSoundHardware
     ld hl, wMenuState
     inc [hl]
-    ld a, [wC914]
+    ld a, [wMapToggleFlag]
     bit 7, a
     jr z, Jump_002_6C7F
     xor a, a
@@ -7005,8 +7004,8 @@ Data_002_6E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; entry 5 of the `rst $00` table in RunWC46BMenuState
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC914, wC8CA, wCD0D, wCD0E, wC8C8, wC8C9, hPlayerFacing, hPlayerX, ...
-; writes: wD780, wD783, wD781, wCC44, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hPlayerX, ...
+; reads: wMapToggleFlag, wWarpDestFacing, wCD0D, wCD0E, wWarpDestX, wWarpDestY, hPlayerFacing, hPlayerX, ...
+; writes: wD780, wD783, wD781, wMapType, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hPlayerX, ...
 ; points at: wModeChangeRequest
 RunWC46BMenuState_Case05::
 Jump_002_6E25:: ; address name
@@ -7016,15 +7015,15 @@ Jump_002_6E25:: ; address name
     ld [wD780], a
     ld [wD783], a
     ld [wD781], a
-    ld a, [wC914]
+    ld a, [wMapToggleFlag]
     bit 7, a
     jr nz, Jump_002_6EBA
-    ld a, [wC8CA]
+    ld a, [wWarpDestFacing]
     cp a, $F0
     jr nz, Jump_002_6E59
     push af
     ld a, $80
-    ld [wCC44], a
+    ld [wMapType], a
     ld a, [wCD0D]
     ld [wMapWidthScreens], a
     ld a, [wCD0E]
@@ -7040,23 +7039,23 @@ Jump_002_6E59::
 Jump_002_6E61::
     xor a, a
     ldh [hPlayerFacing], a
-    ld a, [wC8C8]
+    ld a, [wWarpDestX]
     ldh [hPlayerX], a
-    ld a, [wC8C9]
+    ld a, [wWarpDestY]
     ldh [hPlayerY], a
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
-    ld [wC8F4], a
-    ld [wC8F9], a
+    ld [wFollowerRecords + $5], a
+    ld [wFollowerRecords + $A], a
     ldh a, [hPlayerX]
-    ld [wC8F0], a
-    ld [wC8F5], a
-    ld [wC8FA], a
+    ld [wFollowerRecords + $1], a
+    ld [wFollowerRecords + $6], a
+    ld [wFollowerRecords + $B], a
     ldh a, [hPlayerY]
-    ld [wC8F1], a
-    ld [wC8F6], a
-    ld [wC8FB], a
-    ld a, [wCC44]
+    ld [wFollowerRecords + $2], a
+    ld [wFollowerRecords + $7], a
+    ld [wFollowerRecords + $C], a
+    ld a, [wMapType]
     bit 7, a
     jr nz, Jump_002_6EA5
     ld a, $01
@@ -7078,7 +7077,7 @@ Jump_002_6EA5::
     ret
 
 Jump_002_6EBA::
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_002_6EC7
     farcall SaveWCD07RecordToSRAMSlotWCC42
@@ -7128,9 +7127,9 @@ Jump_002_6EC7::
     ld a, [hl]
     ldh [hPlayerY], a
     xor a, a
-    ld [wC950], a
+    ld [wGameMode2Byte50], a
     xor a, a
-    ld [wCC44], a
+    ld [wMapType], a
     ld a, $80
     ld [wKeyWorldRefresh], a
     xor a, a
@@ -7153,9 +7152,9 @@ Jump_002_6F3B::
     cp a, $01
     jp nz, Jump_002_6FDE
     ld a, $1A
-    ld [wC916], a
+    ld [wTalkEventGroup], a
     xor a, a
-    ld [wC917], a
+    ld [wTalkEventIndex], a
     farcall DispatchTalkEvent
     farcall FetchScriptCommand
     jp Jump_002_6FDE
@@ -7175,7 +7174,7 @@ Jump_002_6F59::
 
 Jump_002_6F73::
     and a, $3F
-    ld [wCC42], a
+    ld [wKeyWorldSlot], a
     farcall LoadWCD07RecordFromSRAMSlotWCC42
 
 Jump_002_6F7E::
@@ -7203,12 +7202,12 @@ Jump_002_6F7E::
     ld a, [wCD0A]
     ldh [hPlayerY], a
     xor a, a
-    ld [wC950], a
+    ld [wGameMode2Byte50], a
     ld a, $80
-    ld [wCC44], a
+    ld [wMapType], a
     farcall MarkVisitedMapScreenInWCE93
     ld a, $87
-    ld [wCC44], a
+    ld [wMapType], a
     ld a, $01
     ld [wMapWidthScreens], a
     ld [wMapHeightScreens], a
@@ -7224,16 +7223,16 @@ Jump_002_6FDE::
     ldh [hPlayerFacing], a
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
-    ld [wC8F4], a
-    ld [wC8F9], a
+    ld [wFollowerRecords + $5], a
+    ld [wFollowerRecords + $A], a
     ldh a, [hPlayerX]
-    ld [wC8F0], a
-    ld [wC8F5], a
-    ld [wC8FA], a
+    ld [wFollowerRecords + $1], a
+    ld [wFollowerRecords + $6], a
+    ld [wFollowerRecords + $B], a
     ldh a, [hPlayerY]
-    ld [wC8F1], a
-    ld [wC8F6], a
-    ld [wC8FB], a
+    ld [wFollowerRecords + $2], a
+    ld [wFollowerRecords + $7], a
+    ld [wFollowerRecords + $C], a
     xor a, a
     ldh [hPlayerSpriteOverride], a
     ret
@@ -8125,18 +8124,18 @@ Func_002_7470:: ; address name
 
 ; only called from RunSaveGameSteps_7347 (E-0047)
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347)
-; reads: wC94E, wCC44
+; reads: wSaveByte4E, wMapType
 ; writes: rRAMG, rRAMB
 ; points at: sA000
 RunSaveGameSteps_7347_Sub01::
 Func_002_7491:: ; address name
-    ld a, [wC94E]
+    ld a, [wSaveByte4E]
     or a, a
     jr z, Jump_002_749A
     call ClearSRAMBanks2And3
 
 Jump_002_749A::
-    ld a, [wCC44]
+    ld a, [wMapType]
     bit 7, a
     jr z, Jump_002_74AC
     farcall SaveWCD07RecordToSRAMSlotWCC42
@@ -8295,12 +8294,12 @@ Jump_002_7542::
 
 ; wC83A = wCB7E and the $50 bytes of wSpriteSlots go to wC83B; then clears bit 1 of five object flag bytes at wC848, wC858, wC868, wC878 and wC888 (E-0109)
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347)
-; reads: wCB7E, wSnapshotSlot1, wSnapshotSlot2, wSnapshotSlot3, wSnapshotSlot4, wSnapshotSlot5, hTemp0, hTemp1, ...
+; reads: wScreenSavedFlag, wSnapshotSlot1, wSnapshotSlot2, wSnapshotSlot3, wSnapshotSlot4, wSnapshotSlot5, hTemp0, hTemp1, ...
 ; writes: wSpriteSnapshotCount, wSnapshotSlot1, wSnapshotSlot2, wSnapshotSlot3, wSnapshotSlot4, wSnapshotSlot5, rRAMB, hTemp2, ...
 ; points at: wSpriteSlots, wSpriteSnapshot, sBB01
 SnapshotSpritesForSave::
 Func_002_755E:: ; address name
-    ld a, [wCB7E]
+    ld a, [wScreenSavedFlag]
     ld [wSpriteSnapshotCount], a
     ld hl, wSpriteSlots
     ld de, wSpriteSnapshot
@@ -8400,7 +8399,7 @@ Data_002_75F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case05_Case0C)
 ; reads: sBB00, hTemp2, hTemp3, sBF98, sBF99
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3
-; points at: sBB01, hPlayerSpriteVariant, wPlayerName, wCBD7, wCC42
+; points at: sBB01, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
 VerifySaveChecksum::
 Func_002_760B:: ; address name
     ld a, $0A
@@ -8420,10 +8419,10 @@ Func_002_760B:: ; address name
     ld de, wPlayerName
     ld bc, $0291
     call CopyBytesWithChecksum_Bank02_7674
-    ld de, wCBD7
+    ld de, wStoryFlags
     ld bc, $006B
     call CopyBytesWithChecksum_Bank02_7674
-    ld de, wCC42
+    ld de, wKeyWorldSlot
     ld bc, $00B5
     call CopyBytesWithChecksum_Bank02_7674
     ldh a, [hTemp2]
@@ -8484,7 +8483,7 @@ Func_002_7674:: ; address name
 ; 2 call sites from 2 routines (e.g. Func_033_5215_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_Case03_Case01)
 ; reads: hTemp2, hTemp3
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3, sBF98, sBF99, sBB00
-; points at: sBB01, hPlayerSpriteVariant, wPlayerName, wCBD7, wCC42
+; points at: sBB01, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
 SaveGameToSRAMWithChecksum::
 Func_002_7688:: ; address name
     ld a, $0A
@@ -8501,10 +8500,10 @@ Func_002_7688:: ; address name
     ld hl, wPlayerName
     ld bc, $0291
     call CopyBytesWithChecksum_Bank02
-    ld hl, wCBD7
+    ld hl, wStoryFlags
     ld bc, $006B
     call CopyBytesWithChecksum_Bank02
-    ld hl, wCC42
+    ld hl, wKeyWorldSlot
     ld bc, $00B5
     call CopyBytesWithChecksum_Bank02
     ldh a, [hTemp2]

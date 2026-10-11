@@ -86,7 +86,7 @@ Func_0A3_413F:: ; address name
 ; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, CheckFormationPartnersCanAct, PayActorMPCost, ...)
 ; reads: wBattleActor
 ; writes: hTemp0
-; points at: wC953
+; points at: wFormationSlot0
 ActorFormationSlotToHFFC6::
 Func_0A3_414F:: ; address name
     push bc
@@ -98,7 +98,7 @@ Func_0A3_414F:: ; address name
     ld b, a
     sra a
     sra a
-    ld hl, wC953
+    ld hl, wFormationSlot0
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
@@ -125,7 +125,7 @@ Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; copies 16 bytes of wBattleActionChoice to wDA2C, clears wC953/4, and outside link battles sets the formation for each side from Func_0A3_41CF and Func_0A3_4917 (E-0125)
 ; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case06, RunBattleCommandEntry_BankA1_Case06)
 ; reads: wLinkMode
-; writes: wC953, wC954
+; writes: wFormationSlot0, wFormationSlot1
 ; points at: wBattleActionChoice, wDA2C, wDA24
 SaveActionChoicesAndPickFormations::
 Func_0A3_4187:: ; address name
@@ -140,8 +140,8 @@ Jump_0A3_418F::
     dec b
     jr nz, Jump_0A3_418F
     ld a, $FF
-    ld [wC953], a
-    ld [wC954], a
+    ld [wFormationSlot0], a
+    ld [wFormationSlot1], a
     ld a, [wLinkMode]
     cp a, $01
     ret z
@@ -151,7 +151,7 @@ Jump_0A3_418F::
     jr z, Jump_0A3_41B5
     ld de, wBattleActionChoice
     call SaveActionChoicesAndPickFormations_Sub02
-    ld [wC953], a
+    ld [wFormationSlot0], a
 
 Jump_0A3_41B5::
     ld a, [wLinkMode]
@@ -165,7 +165,7 @@ Jump_0A3_41B5::
     ret z
     ld de, wDA24
     call SaveActionChoicesAndPickFormations_Sub02
-    ld [wC954], a
+    ld [wFormationSlot1], a
     ret
 
 ; only called from SaveActionChoicesAndPickFormations (E-0047)
@@ -843,7 +843,7 @@ Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. BattleEnd_Step7_Case02)
 ; reads: wPartyCount
 ; writes: rRAMG
-; points at: wPartyList, wC972
+; points at: wPartyList, wBattleBuffer72
 BattleEnd_Step7_Case02_Sub01::
 Func_0A3_4B0B:: ; address name
     ld a, $0A
@@ -851,7 +851,7 @@ Func_0A3_4B0B:: ; address name
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
-    ld de, wC972
+    ld de, wBattleBuffer72
 
 Jump_0A3_4B1A::
     inc de
