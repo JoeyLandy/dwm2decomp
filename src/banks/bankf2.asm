@@ -2204,7 +2204,7 @@ Func_0F2_5181:: ; address name
     ld b, a
     ld a, $03
     call Multiply8By16
-    ld de, Data_0F2_51C3
+    ld de, MonsterArgOrderTable
     add hl, de
     ld c, $03
     ld b, $00
@@ -2239,7 +2239,7 @@ Jump_0F2_519F::
 ; E-0171 (C1: PermuteArg5To7ByMonster reads the 3 bytes at $51C3 + 3 * (wArg2:wArg1), stores wArg5 + k at wArg1 + byte k, then copies wArg1-3 back to wArg5-7; all 384 entries are permutations; the caller, script command $F6 case $10/4, indexes it with the id it shows as a monster name).
 ; record: destination offsets of wArg5-7 among wArg1-3 (always a permutation of 0, 1, 2)
 MonsterArgOrderTable::
-Data_0F2_51C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F2_51C3:: ; address name
     db $00, $01, $02 ; id 0
     db $02, $00, $01 ; id 1 DrakSlime
     db $01, $00, $02 ; id 2 SpotSlime

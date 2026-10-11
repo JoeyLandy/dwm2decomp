@@ -4,7 +4,7 @@ SECTION "Bank 43", ROMX[$4000], BANK[$43]
 ; E-0018. Sound ids 168-222: the array ends at $40DD and track streams follow; the bank table nominally covers ids up to 254, but no records exist for 223-254.
 ; record: channel-state slot offset (added to $DC00); copied to slot byte +2 (meaning unverified); track stream (stored at slot +3/+4, with this bank at +5)
 SoundRecords_Bank43::
-Data_043_4001:: ; heuristic: sound record array named by the bank table; C0
+Data_043_4001:: ; address name
     db $00, $03 ; id 168
     dw Data_043_40DD
     db $00, $03 ; id 169

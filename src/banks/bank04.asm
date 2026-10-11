@@ -569,7 +569,7 @@ Jump_004_4396::
 ; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode).
 ; record: compressed sprite graphics in bank $7D
 FieldSpriteGraphicsTable::
-Data_004_43AC:: ; heuristic: start of a structured table; C0
+Data_004_43AC:: ; address name
     dw FieldSpriteGfx00 ; id 0
     dw FieldSpriteGfx01 ; id 1
     dw FieldSpriteGfx02 ; id 2
@@ -654,7 +654,7 @@ Data_004_43AC:: ; heuristic: start of a structured table; C0
 ; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61.
 ; record: compressed sprite graphics in bank $7E
 FieldSpriteGraphicsTable50::
-Data_004_444C:: ; heuristic: start of a structured table; C0
+Data_004_444C:: ; address name
     dw FieldSpriteGfx50 ; id 80
     dw FieldSpriteGfx51 ; id 81
     dw FieldSpriteGfx52 ; id 82
@@ -1769,7 +1769,7 @@ Jump_004_4A43::
 ; E-0143 (C1: on CGB, with hFFC8 non-zero, DecompressGraphicsTemp0ToTemp4 reads the byte $4A46 + hFFC6 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hFFC9; values 0-20).
 ; record: palette number in FieldSpritePalettes
 FieldSpritePaletteIndex::
-Data_004_4A46:: ; heuristic: start of a structured table; C0
+Data_004_4A46:: ; address name
     db $12 ; id 0
     db $13 ; id 1
     db $06 ; id 2
@@ -2539,7 +2539,7 @@ Jump_004_4E69::
 ; E-0041 (C1: the debug monster viewer's second pane decompresses the stream for its id to vTiles0 + $200; all 384 entries parse). Far pointers: address, bank.
 ; record: compressed small-sprite stream (32 or 256 bytes); ROM bank of that data
 MonsterSpriteTable::
-Data_004_4EAA:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_004_4EAA:: ; address name
     dfar MonsterSprite_DrakSlime ; id 0
     dfar MonsterSprite_DrakSlime ; id 1 DrakSlime
     dfar MonsterSprite_SpotSlime ; id 2 SpotSlime

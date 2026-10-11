@@ -129,7 +129,7 @@ Data_07E_4AD7:: ; address name
 ; E-0143 (C1: the palettes FieldSpritePaletteIndex selects; DecompressGraphicsTemp0ToTemp4 copies one to wOBJPaletteBuffer + 8 * hFFC9).
 ; record: one CGB OBJ palette: 4 BGR555 colours
 FieldSpritePalettes::
-Data_07E_4B15:: ; heuristic: start of a structured table; C0
+Data_07E_4B15:: ; address name
     dw $0000, $6BFF, $663F, $0800 ; id 0
 Data_07E_4B1D:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $0000, $6BFF, $001F, $0800 ; id 1
@@ -380,7 +380,7 @@ Data_07E_5A9A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 ; E-0164 (derived: 16 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_7E_5AF6::
-Data_07E_5AF6:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_5AF6:: ; address name
     dw $0000, $6BFF, $0279, $0000 ; id 0
     dw $7C00, $7C00, $7C00, $7C00 ; id 1
     db $00, $7C, $00, $7C, $00, $7C, $00, $7C
@@ -411,6 +411,6 @@ Data_07E_5B63:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 ; E-0164 (derived: 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_7E_5BB8::
-Data_07E_5BB8:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_07E_5BB8:: ; address name
     dw $0000, $3D7D, $2011, $0000 ; id 0
     ds $2440, $00

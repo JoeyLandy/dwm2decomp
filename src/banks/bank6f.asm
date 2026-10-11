@@ -132,7 +132,7 @@ Data_06F_501E:: ; address name
 ; E-0140 (C1: entry 6 of MapType5TilesetTable; copied to wBGPaletteBuffer).
 ; record: one CGB palette: 4 BGR555 colours
 MapType5Palettes6::
-Data_06F_52FE:: ; heuristic: map type 5 BG palettes; C0
+Data_06F_52FE:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $150B, $5F17, $15AE, $0044 ; entry 1
     dw $1528, $5F17, $15AE, $0000 ; entry 2
@@ -275,7 +275,7 @@ Data_06F_6475:: ; heuristic: stream in a run of back-to-back compressed streams;
 ; E-0140 (C1: entry 7 of MapType5TilesetTable; copied to wBGPaletteBuffer).
 ; record: one CGB palette: 4 BGR555 colours
 MapType5Palettes7::
-Data_06F_6650:: ; heuristic: map type 5 BG palettes; C0
+Data_06F_6650:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $150B, $5F17, $15AE, $0044 ; entry 1
     dw $1528, $5F17, $15AE, $0000 ; entry 2

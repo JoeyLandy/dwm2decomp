@@ -19,7 +19,7 @@ Jump_011_4010::
     ld l, a
     ld h, $00
     add hl, hl
-    ld de, Data_011_67A6
+    ld de, MapWarpTable
     add hl, de
     ld a, [hl+]
     ld e, a
@@ -225,7 +225,7 @@ Jump_011_413E::
     ld l, a
     ld h, $00
     add hl, hl
-    ld de, Data_011_67A6
+    ld de, MapWarpTable
     add hl, de
     ld a, [hl+]
     ld e, a
@@ -749,7 +749,7 @@ Data_011_44AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0036 (C1: the pointer for map 56 is the record whose tileset stream (57:6E96) the game decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the tile map for $C198 and the attribute map for $D000.
 ; record: map record in this bank, indexed by the map number hMapId
 MapTable::
-Data_011_44B8:: ; heuristic: start of a structured table; C0
+Data_011_44B8:: ; address name
     dw MapRecord00 ; entry 0
     dw MapRecord01 ; entry 1
     dw MapRecord02 ; entry 2
@@ -1010,7 +1010,7 @@ Data_011_44B8:: ; heuristic: start of a structured table; C0
 ; E-0142 (derived: map record of map $00, 3 x 4 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord00::
-Data_011_46B8:: ; heuristic: map record of the map table; C0
+Data_011_46B8:: ; address name
     dfar AreaTileset0 ; entry 0
     dfar AreaPalettes0
     db $03, $04, $4E, $00, $01, $00, $00, $01, $10, $00
@@ -1035,7 +1035,7 @@ Data_011_46B8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $01, 4 x 3 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord01::
-Data_011_46FA:: ; heuristic: map record of the map table; C0
+Data_011_46FA:: ; address name
     dfar Map01Tileset ; entry 0
     dfar Map01Palettes
     db $04, $03, $4F, $00, $01, $00, $00, $01, $0D, $00
@@ -1060,7 +1060,7 @@ Data_011_46FA:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $02, 3 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord02::
-Data_011_473C:: ; heuristic: map record of the map table; C0
+Data_011_473C:: ; address name
     dfar Map02Tileset ; entry 0
     dfar Map02Palettes
     db $03, $01, $31, $00, $01, $00, $00, $01, $0D, $00
@@ -1085,7 +1085,7 @@ Data_011_473C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $03, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord03::
-Data_011_477E:: ; heuristic: map record of the map table; C0
+Data_011_477E:: ; address name
     dfar Map03Tileset ; entry 0
     dfar Map03Palettes
     db $01, $01, $2F, $2C, $00, $00, $00, $00, $00, $00
@@ -1110,7 +1110,7 @@ Data_011_477E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $04, 3 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord04::
-Data_011_47C0:: ; heuristic: map record of the map table; C0
+Data_011_47C0:: ; address name
     dfar Map04Tileset ; entry 0
     dfar Map04Palettes
     db $03, $01, $2E, $00, $00, $00, $00, $00, $00, $00
@@ -1135,7 +1135,7 @@ Data_011_47C0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $05, 3 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord05::
-Data_011_4802:: ; heuristic: map record of the map table; C0
+Data_011_4802:: ; address name
     dfar Map05Tileset ; entry 0
     dfar Map05Palettes
     db $03, $01, $67, $00, $00, $00, $00, $00, $00, $00
@@ -1160,7 +1160,7 @@ Data_011_4802:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $06, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord06::
-Data_011_4844:: ; heuristic: map record of the map table; C0
+Data_011_4844:: ; address name
     dfar Map06Tileset ; entry 0
     dfar Map06Palettes
     db $01, $01, $33, $00, $00, $00, $00, $00, $00, $00
@@ -1185,7 +1185,7 @@ Data_011_4844:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $07, 1 x 2 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord07::
-Data_011_4886:: ; heuristic: map record of the map table; C0
+Data_011_4886:: ; address name
     dfar AreaTileset1 ; entry 0
     dfar AreaPalettes1
     db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
@@ -1210,7 +1210,7 @@ Data_011_4886:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $09, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord09::
-Data_011_48C8:: ; heuristic: map record of the map table; C0
+Data_011_48C8:: ; address name
     dfar Map09Tileset ; entry 0
     dfar Map09Palettes
     db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
@@ -1235,7 +1235,7 @@ Data_011_48C8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $08, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord08::
-Data_011_490A:: ; heuristic: map record of the map table; C0
+Data_011_490A:: ; address name
     dfar Map08Tileset ; entry 0
     dfar Map08Palettes
     db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
@@ -1260,7 +1260,7 @@ Data_011_490A:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $0A, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord0A::
-Data_011_494C:: ; heuristic: map record of the map table; C0
+Data_011_494C:: ; address name
     dfar Map0ATileset ; entry 0
     dfar Map0APalettes
     db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00
@@ -1285,7 +1285,7 @@ Data_011_494C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $0B, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord0B::
-Data_011_498E:: ; heuristic: map record of the map table; C0
+Data_011_498E:: ; address name
     dfar Map0BTileset ; entry 0
     dfar Map0BPalettes
     db $01, $01, $00, $00, $07, $00, $00, $00, $00, $00
@@ -1310,7 +1310,7 @@ Data_011_498E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $0C, 2 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord0C::
-Data_011_49D0:: ; heuristic: map record of the map table; C0
+Data_011_49D0:: ; address name
     dfar Map0CTileset ; entry 0
     dfar Map0CPalettes
     db $02, $01, $2F, $00, $00, $00, $00, $00, $00, $00
@@ -1335,7 +1335,7 @@ Data_011_49D0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $0D, 4 x 2 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord0D::
-Data_011_4A12:: ; heuristic: map record of the map table; C0
+Data_011_4A12:: ; address name
     dfar Map0DTileset ; entry 0
     dfar Map0DPalettes
     db $04, $02, $3F, $00, $0F, $00, $00, $00, $00, $00
@@ -1360,7 +1360,7 @@ Data_011_4A12:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $0E, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord0E::
-Data_011_4A54:: ; heuristic: map record of the map table; C0
+Data_011_4A54:: ; address name
     dfar Map0ETileset ; entry 0
     dfar Map0EPalettes
     db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
@@ -1385,7 +1385,7 @@ Data_011_4A54:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $0F, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord0F::
-Data_011_4A96:: ; heuristic: map record of the map table; C0
+Data_011_4A96:: ; address name
     dfar Map0FTileset ; entry 0
     dfar Map0FPalettes
     db $01, $01, $50, $00, $00, $00, $00, $00, $00, $00
@@ -1410,7 +1410,7 @@ Data_011_4A96:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $10, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord10::
-Data_011_4AD8:: ; heuristic: map record of the map table; C0
+Data_011_4AD8:: ; address name
     dfar Map10Tileset ; entry 0
     dfar Map10Palettes
     db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
@@ -1435,7 +1435,7 @@ Data_011_4AD8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $11, 1 x 2 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord11::
-Data_011_4B1A:: ; heuristic: map record of the map table; C0
+Data_011_4B1A:: ; address name
     dfar Map11Tileset ; entry 0
     dfar Map11Palettes
     db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00
@@ -1460,7 +1460,7 @@ Data_011_4B1A:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $12, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord12::
-Data_011_4B5C:: ; heuristic: map record of the map table; C0
+Data_011_4B5C:: ; address name
     dfar Map12Tileset ; entry 0
     dfar Map12Palettes
     db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
@@ -1485,7 +1485,7 @@ Data_011_4B5C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $13, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord13::
-Data_011_4B9E:: ; heuristic: map record of the map table; C0
+Data_011_4B9E:: ; address name
     dfar Map13Tileset ; entry 0
     dfar Map13Palettes
     db $01, $01, $27, $00, $00, $00, $00, $00, $00, $00
@@ -1510,7 +1510,7 @@ Data_011_4B9E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $14, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord14::
-Data_011_4BE0:: ; heuristic: map record of the map table; C0
+Data_011_4BE0:: ; address name
     dfar Map14Tileset ; entry 0
     dfar Map14Palettes
     db $01, $01, $00, $00, $08, $00, $00, $00, $00, $00
@@ -1535,7 +1535,7 @@ Data_011_4BE0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $15, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord15::
-Data_011_4C22:: ; heuristic: map record of the map table; C0
+Data_011_4C22:: ; address name
     dfar Map15Tileset ; entry 0
     dfar Map15Palettes
     db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
@@ -1560,7 +1560,7 @@ Data_011_4C22:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $16, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord16::
-Data_011_4C64:: ; heuristic: map record of the map table; C0
+Data_011_4C64:: ; address name
     dfar Map16Tileset ; entry 0
     dfar Map16Palettes
     db $01, $01, $2B, $00, $00, $00, $00, $00, $00, $00
@@ -1585,7 +1585,7 @@ Data_011_4C64:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $17, 1 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord17::
-Data_011_4CA6:: ; heuristic: map record of the map table; C0
+Data_011_4CA6:: ; address name
     dfar Map17Tileset ; entry 0
     dfar Map17Palettes
     db $01, $01, $3A, $00, $00, $00, $00, $00, $00, $00
@@ -1610,7 +1610,7 @@ Data_011_4CA6:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $18, 3 x 2 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord18::
-Data_011_4CE8:: ; heuristic: map record of the map table; C0
+Data_011_4CE8:: ; address name
     dfar Map18Tileset ; entry 0
     dfar Map18Palettes
     db $03, $02, $39, $00, $00, $00, $00, $00, $00, $00
@@ -1635,7 +1635,7 @@ Data_011_4CE8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $19, 2 x 3 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord19::
-Data_011_4D2A:: ; heuristic: map record of the map table; C0
+Data_011_4D2A:: ; address name
     dfar Map19Tileset ; entry 0
     dfar Map19Palettes
     db $02, $03, $57, $00, $00, $00, $00, $00, $00, $00
@@ -1660,7 +1660,7 @@ Data_011_4D2A:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $1A, 3 x 1 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord1A::
-Data_011_4D6C:: ; heuristic: map record of the map table; C0
+Data_011_4D6C:: ; address name
     dfar Map1ATileset ; entry 0
     dfar Map1APalettes
     db $03, $01, $4B, $00, $00, $00, $00, $00, $00, $00
@@ -1685,7 +1685,7 @@ Data_011_4D6C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $1B, 1 x 3 screens, 8 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord1B::
-Data_011_4DAE:: ; heuristic: map record of the map table; C0
+Data_011_4DAE:: ; address name
     dfar Map1BTileset ; entry 0
     dfar Map1BPalettes
     db $01, $03, $1F, $00, $00, $00, $00, $02, $00, $00
@@ -1710,7 +1710,7 @@ Data_011_4DAE:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $1C, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord1C::
-Data_011_4DF0:: ; heuristic: map record of the map table; C0
+Data_011_4DF0:: ; address name
     dfar Map1CTileset ; entry 0
     dfar Map1CPalettes
     db $01, $02, $00, $00, $01, $00, $00, $00, $00, $00
@@ -1723,7 +1723,7 @@ Data_011_4DF0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $1D, 2 x 1 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord1D::
-Data_011_4E0E:: ; heuristic: map record of the map table; C0
+Data_011_4E0E:: ; address name
     dfar Map1DTileset ; entry 0
     dfar Map1DPalettes
     db $02, $01, $37, $00, $0E, $00, $00, $00, $00, $00
@@ -1736,7 +1736,7 @@ Data_011_4E0E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $20, 8 x 8 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord20::
-Data_011_4E2C:: ; heuristic: map record of the map table; C0
+Data_011_4E2C:: ; address name
     dfar Map20Tileset ; entry 0
     dfar Map20Palettes
     db $08, $08, $2B, $00, $00, $01, $00, $00, $00, $00
@@ -1759,7 +1759,7 @@ Data_011_4E2C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $21, 2 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord21::
-Data_011_4E68:: ; heuristic: map record of the map table; C0
+Data_011_4E68:: ; address name
     dfar Map21Tileset ; entry 0
     dfar Map21Palettes
     db $02, $01, $4E, $00, $01, $00, $00, $00, $00, $00
@@ -1782,7 +1782,7 @@ Data_011_4E68:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $22, 1 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord22::
-Data_011_4EA4:: ; heuristic: map record of the map table; C0
+Data_011_4EA4:: ; address name
     dfar Map22Tileset ; entry 0
     dfar Map22Palettes
     db $01, $01, $30, $00, $00, $00, $00, $00, $00, $00
@@ -1805,7 +1805,7 @@ Data_011_4EA4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $23, 1 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord23::
-Data_011_4EE0:: ; heuristic: map record of the map table; C0
+Data_011_4EE0:: ; address name
     dfar Map23Tileset ; entry 0
     dfar Map23Palettes
     db $01, $01, $31, $00, $00, $00, $00, $00, $00, $00
@@ -1828,7 +1828,7 @@ Data_011_4EE0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $24, 2 x 2 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord24::
-Data_011_4F1C:: ; heuristic: map record of the map table; C0
+Data_011_4F1C:: ; address name
     dfar Map24Tileset ; entry 0
     dfar Map24Palettes
     db $02, $02, $48, $00, $00, $00, $00, $00, $00, $00
@@ -1851,7 +1851,7 @@ Data_011_4F1C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $25, 2 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord25::
-Data_011_4F58:: ; heuristic: map record of the map table; C0
+Data_011_4F58:: ; address name
     dfar Map25Tileset ; entry 0
     dfar Map25Palettes
     db $02, $01, $37, $00, $00, $00, $00, $00, $00, $00
@@ -1874,7 +1874,7 @@ Data_011_4F58:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $26, 1 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord26::
-Data_011_4F94:: ; heuristic: map record of the map table; C0
+Data_011_4F94:: ; address name
     dfar Map26Tileset ; entry 0
     dfar Map26Palettes
     db $01, $01, $58, $00, $06, $00, $00, $00, $00, $00
@@ -1897,7 +1897,7 @@ Data_011_4F94:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $28, 1 x 2 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord28::
-Data_011_4FD0:: ; heuristic: map record of the map table; C0
+Data_011_4FD0:: ; address name
     dfar Map28Tileset ; entry 0
     dfar Map28Palettes
     db $01, $02, $2F, $00, $01, $00, $00, $00, $00, $00
@@ -1920,7 +1920,7 @@ Data_011_4FD0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $29, 1 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord29::
-Data_011_500C:: ; heuristic: map record of the map table; C0
+Data_011_500C:: ; address name
     dfar Map29Tileset ; entry 0
     dfar Map29Palettes
     db $01, $01, $32, $2C, $00, $00, $00, $00, $00, $00
@@ -1943,7 +1943,7 @@ Data_011_500C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $2A, 1 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord2A::
-Data_011_5048:: ; heuristic: map record of the map table; C0
+Data_011_5048:: ; address name
     dfar Map2ATileset ; entry 0
     dfar Map2APalettes
     db $01, $01, $27, $00, $01, $00, $00, $01, $0F, $00
@@ -1966,7 +1966,7 @@ Data_011_5048:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $2B, 4 x 4 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord2B::
-Data_011_5084:: ; heuristic: map record of the map table; C0
+Data_011_5084:: ; address name
     dfar Map2BTileset ; entry 0
     dfar Map2BPalettes
     db $04, $04, $4F, $00, $01, $02, $00, $01, $0D, $00
@@ -1989,7 +1989,7 @@ Data_011_5084:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $2D, 1 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord2D::
-Data_011_50C0:: ; heuristic: map record of the map table; C0
+Data_011_50C0:: ; address name
     dfar Map2DTileset ; entry 0
     dfar Map2DPalettes
     db $01, $01, $21, $00, $00, $00, $00, $00, $00, $00
@@ -2012,7 +2012,7 @@ Data_011_50C0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $2E, 1 x 1 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord2E::
-Data_011_50FC:: ; heuristic: map record of the map table; C0
+Data_011_50FC:: ; address name
     dfar Map25Tileset ; entry 0
     dfar Map25Palettes
     db $01, $01, $37, $00, $00, $00, $00, $00, $00, $00
@@ -2035,7 +2035,7 @@ Data_011_50FC:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $2F, 2 x 2 screens, 7 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord2F::
-Data_011_5138:: ; heuristic: map record of the map table; C0
+Data_011_5138:: ; address name
     dfar Map2FTileset ; entry 0
     dfar Map2FPalettes
     db $02, $02, $37, $00, $01, $00, $00, $01, $09, $00
@@ -2058,7 +2058,7 @@ Data_011_5138:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $30, 8 x 8 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord30::
-Data_011_5174:: ; heuristic: map record of the map table; C0
+Data_011_5174:: ; address name
     dfar Map30Tileset ; entry 0
     dfar Map30Palettes
     db $08, $08, $3D, $00, $01, $03, $00, $01, $27, $00
@@ -2077,7 +2077,7 @@ Data_011_5174:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $31, 1 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord31::
-Data_011_51A4:: ; heuristic: map record of the map table; C0
+Data_011_51A4:: ; address name
     dfar Map31Tileset ; entry 0
     dfar Map31Palettes
     db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
@@ -2096,7 +2096,7 @@ Data_011_51A4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $32, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord32::
-Data_011_51D4:: ; heuristic: map record of the map table; C0
+Data_011_51D4:: ; address name
     dfar Map32Tileset ; entry 0
     dfar Map32Palettes
     db $02, $02, $4B, $00, $01, $00, $00, $00, $00, $00
@@ -2115,7 +2115,7 @@ Data_011_51D4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $33, 1 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord33::
-Data_011_5204:: ; heuristic: map record of the map table; C0
+Data_011_5204:: ; address name
     dfar Map33Tileset ; entry 0
     dfar Map33Palettes
     db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -2134,7 +2134,7 @@ Data_011_5204:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $34, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord34::
-Data_011_5234:: ; heuristic: map record of the map table; C0
+Data_011_5234:: ; address name
     dfar Map34Tileset ; entry 0
     dfar Map34Palettes
     db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00
@@ -2153,7 +2153,7 @@ Data_011_5234:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $35, 4 x 4 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord35::
-Data_011_5264:: ; heuristic: map record of the map table; C0
+Data_011_5264:: ; address name
     dfar Map35Tileset ; entry 0
     dfar Map35Palettes
     db $04, $04, $29, $00, $01, $04, $00, $01, $0F, $00
@@ -2172,7 +2172,7 @@ Data_011_5264:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $36, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord36::
-Data_011_5294:: ; heuristic: map record of the map table; C0
+Data_011_5294:: ; address name
     dfar Map36Tileset ; entry 0
     dfar Map36Palettes
     db $01, $01, $23, $00, $01, $00, $00, $01, $09, $00
@@ -2191,7 +2191,7 @@ Data_011_5294:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $37, 3 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord37::
-Data_011_52C4:: ; heuristic: map record of the map table; C0
+Data_011_52C4:: ; address name
     dfar Map37Tileset ; entry 0
     dfar Map37Palettes
     db $03, $01, $4F, $00, $01, $07, $00, $01, $0D, $00
@@ -2210,7 +2210,7 @@ Data_011_52C4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $38, 4 x 4 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord38::
-Data_011_52F4:: ; heuristic: map record of the map table; C0
+Data_011_52F4:: ; address name
     dfar Map38Tileset ; entry 0
     dfar Map38Palettes
     db $04, $04, $3F, $00, $00, $05, $00, $00, $01, $00
@@ -2229,7 +2229,7 @@ Data_011_52F4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $39, 4 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord39::
-Data_011_5324:: ; heuristic: map record of the map table; C0
+Data_011_5324:: ; address name
     dfar Map38Tileset ; entry 0
     dfar Map38Palettes
     db $04, $03, $3F, $00, $00, $05, $00, $02, $01, $00
@@ -2248,7 +2248,7 @@ Data_011_5324:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $3A, 3 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord3A::
-Data_011_5354:: ; heuristic: map record of the map table; C0
+Data_011_5354:: ; address name
     dfar Map38Tileset ; entry 0
     dfar Map38Palettes
     db $03, $03, $3F, $00, $00, $05, $06, $02, $01, $00
@@ -2267,7 +2267,7 @@ Data_011_5354:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $3B, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord3B::
-Data_011_5384:: ; heuristic: map record of the map table; C0
+Data_011_5384:: ; address name
     dfar Map3BTileset ; entry 0
     dfar Map3BPalettes
     db $01, $01, $37, $2C, $00, $00, $00, $02, $01, $00
@@ -2286,7 +2286,7 @@ Data_011_5384:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $3C, 3 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord3C::
-Data_011_53B4:: ; heuristic: map record of the map table; C0
+Data_011_53B4:: ; address name
     dfar Map3CTileset ; entry 0
     dfar Map3CPalettes
     db $03, $01, $3F, $00, $01, $00, $00, $00, $00, $00
@@ -2305,7 +2305,7 @@ Data_011_53B4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $3D, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord3D::
-Data_011_53E4:: ; heuristic: map record of the map table; C0
+Data_011_53E4:: ; address name
     dfar Map3DTileset ; entry 0
     dfar Map3DPalettes
     db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00
@@ -2324,7 +2324,7 @@ Data_011_53E4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $3E, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord3E::
-Data_011_5414:: ; heuristic: map record of the map table; C0
+Data_011_5414:: ; address name
     dfar Map3ETileset ; entry 0
     dfar Map3EPalettes
     db $02, $02, $2F, $00, $01, $06, $00, $01, $0E, $00
@@ -2343,7 +2343,7 @@ Data_011_5414:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $3F, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord3F::
-Data_011_5444:: ; heuristic: map record of the map table; C0
+Data_011_5444:: ; address name
     dfar Map3ETileset ; entry 0
     dfar Map3EPalettes
     db $02, $02, $2F, $00, $01, $06, $00, $01, $0E, $00
@@ -2362,7 +2362,7 @@ Data_011_5444:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $40, 1 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord40::
-Data_011_5474:: ; heuristic: map record of the map table; C0
+Data_011_5474:: ; address name
     dfar Map40Tileset ; entry 0
     dfar Map40Palettes
     db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
@@ -2381,7 +2381,7 @@ Data_011_5474:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $41, 1 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord41::
-Data_011_54A4:: ; heuristic: map record of the map table; C0
+Data_011_54A4:: ; address name
     dfar Map41Tileset ; entry 0
     dfar Map41Palettes
     db $01, $02, $3B, $00, $01, $00, $00, $00, $00, $00
@@ -2400,7 +2400,7 @@ Data_011_54A4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $42, 3 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord42::
-Data_011_54D4:: ; heuristic: map record of the map table; C0
+Data_011_54D4:: ; address name
     dfar Map37Tileset ; entry 0
     dfar Map37Palettes
     db $03, $01, $4F, $00, $01, $08, $00, $02, $10, $00
@@ -2419,7 +2419,7 @@ Data_011_54D4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $43, 3 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord43::
-Data_011_5504:: ; heuristic: map record of the map table; C0
+Data_011_5504:: ; address name
     dfar Map43Tileset ; entry 0
     dfar Map43Palettes
     db $03, $01, $4F, $00, $0D, $08, $00, $02, $02, $00
@@ -2438,7 +2438,7 @@ Data_011_5504:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $44, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord44::
-Data_011_5534:: ; heuristic: map record of the map table; C0
+Data_011_5534:: ; address name
     dfar Map44Tileset ; entry 0
     dfar Map44Palettes
     db $01, $01, $4F, $00, $00, $00, $00, $00, $00, $00
@@ -2457,7 +2457,7 @@ Data_011_5534:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $48, 12 x 12 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord48::
-Data_011_5564:: ; heuristic: map record of the map table; C0
+Data_011_5564:: ; address name
     dfar Map48Tileset ; entry 0
     dfar Map48Palettes
     db $0C, $0C, $2B, $00, $01, $09, $00, $01, $27, $00
@@ -2472,7 +2472,7 @@ Data_011_5564:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $49, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord49::
-Data_011_5588:: ; heuristic: map record of the map table; C0
+Data_011_5588:: ; address name
     dfar Map49Tileset ; entry 0
     dfar Map49Palettes
     db $01, $01, $2B, $00, $01, $00, $00, $01, $0A, $00
@@ -2487,7 +2487,7 @@ Data_011_5588:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $4A, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord4A::
-Data_011_55AC:: ; heuristic: map record of the map table; C0
+Data_011_55AC:: ; address name
     dfar Map4ATileset ; entry 0
     dfar Map4APalettes
     db $02, $02, $4C, $00, $00, $00, $00, $00, $00, $00
@@ -2502,7 +2502,7 @@ Data_011_55AC:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $4B, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord4B::
-Data_011_55D0:: ; heuristic: map record of the map table; C0
+Data_011_55D0:: ; address name
     dfar Map4BTileset ; entry 0
     dfar Map4BPalettes
     db $01, $01, $2B, $00, $00, $00, $00, $00, $00, $00
@@ -2517,7 +2517,7 @@ Data_011_55D0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $4C, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord4C::
-Data_011_55F4:: ; heuristic: map record of the map table; C0
+Data_011_55F4:: ; address name
     dfar Map4CTileset ; entry 0
     dfar Map4CPalettes
     db $02, $02, $46, $00, $00, $00, $00, $00, $00, $00
@@ -2532,7 +2532,7 @@ Data_011_55F4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $4D, 1 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord4D::
-Data_011_5618:: ; heuristic: map record of the map table; C0
+Data_011_5618:: ; address name
     dfar Map4DTileset ; entry 0
     dfar Map4DPalettes
     db $01, $02, $17, $00, $00, $00, $00, $00, $00, $00
@@ -2547,7 +2547,7 @@ Data_011_5618:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $4E, 1 x 3 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord4E::
-Data_011_563C:: ; heuristic: map record of the map table; C0
+Data_011_563C:: ; address name
     dfar Map4ETileset ; entry 0
     dfar Map4EPalettes
     db $01, $03, $2F, $00, $09, $00, $00, $00, $00, $00
@@ -2562,7 +2562,7 @@ Data_011_563C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $4F, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord4F::
-Data_011_5660:: ; heuristic: map record of the map table; C0
+Data_011_5660:: ; address name
     dfar Map4FTileset ; entry 0
     dfar Map4FPalettes
     db $02, $02, $57, $00, $01, $00, $00, $00, $00, $00
@@ -2577,7 +2577,7 @@ Data_011_5660:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $50, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord50::
-Data_011_5684:: ; heuristic: map record of the map table; C0
+Data_011_5684:: ; address name
     dfar Map50Tileset ; entry 0
     dfar Map50Palettes
     db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -2592,7 +2592,7 @@ Data_011_5684:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $51, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord51::
-Data_011_56A8:: ; heuristic: map record of the map table; C0
+Data_011_56A8:: ; address name
     dfar Map50Tileset ; entry 0
     dfar Map50Palettes
     db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -2607,7 +2607,7 @@ Data_011_56A8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $52, 3 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord52::
-Data_011_56CC:: ; heuristic: map record of the map table; C0
+Data_011_56CC:: ; address name
     dfar Map52Tileset ; entry 0
     dfar Map52Palettes
     db $03, $02, $2F, $00, $00, $00, $00, $00, $00, $00
@@ -2622,7 +2622,7 @@ Data_011_56CC:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $53, 4 x 4 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord53::
-Data_011_56F0:: ; heuristic: map record of the map table; C0
+Data_011_56F0:: ; address name
     dfar Map53Tileset ; entry 0
     dfar Map53Palettes
     db $04, $04, $33, $00, $00, $0A, $00, $10, $30, $00
@@ -2637,7 +2637,7 @@ Data_011_56F0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $54, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord54::
-Data_011_5714:: ; heuristic: map record of the map table; C0
+Data_011_5714:: ; address name
     dfar Map53Tileset ; entry 0
     dfar Map53Palettes
     db $01, $01, $33, $00, $00, $0B, $00, $10, $30, $00
@@ -2652,7 +2652,7 @@ Data_011_5714:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $55, 2 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord55::
-Data_011_5738:: ; heuristic: map record of the map table; C0
+Data_011_5738:: ; address name
     dfar Map53Tileset ; entry 0
     dfar Map53Palettes
     db $02, $01, $33, $00, $00, $0B, $00, $10, $30, $00
@@ -2667,7 +2667,7 @@ Data_011_5738:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $56, 1 x 3 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord56::
-Data_011_575C:: ; heuristic: map record of the map table; C0
+Data_011_575C:: ; address name
     dfar Map53Tileset ; entry 0
     dfar Map53Palettes
     db $01, $03, $33, $00, $00, $0B, $00, $10, $30, $00
@@ -2682,7 +2682,7 @@ Data_011_575C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $57, 3 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord57::
-Data_011_5780:: ; heuristic: map record of the map table; C0
+Data_011_5780:: ; address name
     dfar Map57Tileset ; entry 0
     dfar Map57Palettes
     db $03, $01, $3F, $00, $00, $00, $00, $10, $2C, $00
@@ -2697,7 +2697,7 @@ Data_011_5780:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $58, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord58::
-Data_011_57A4:: ; heuristic: map record of the map table; C0
+Data_011_57A4:: ; address name
     dfar Map58Tileset ; entry 0
     dfar Map58Palettes
     db $02, $02, $57, $00, $01, $00, $00, $00, $00, $00
@@ -2712,7 +2712,7 @@ Data_011_57A4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $59, 2 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord59::
-Data_011_57C8:: ; heuristic: map record of the map table; C0
+Data_011_57C8:: ; address name
     dfar Map59Tileset ; entry 0
     dfar Map59Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -2727,7 +2727,7 @@ Data_011_57C8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $5A, 2 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord5A::
-Data_011_57EC:: ; heuristic: map record of the map table; C0
+Data_011_57EC:: ; address name
     dfar Map5ATileset ; entry 0
     dfar Map5APalettes
     db $02, $01, $21, $00, $00, $00, $00, $00, $00, $00
@@ -2742,7 +2742,7 @@ Data_011_57EC:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $5B, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord5B::
-Data_011_5810:: ; heuristic: map record of the map table; C0
+Data_011_5810:: ; address name
     dfar Map5BTileset ; entry 0
     dfar Map5BPalettes
     db $02, $02, $43, $00, $00, $00, $00, $00, $00, $00
@@ -2757,7 +2757,7 @@ Data_011_5810:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $5C, 1 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord5C::
-Data_011_5834:: ; heuristic: map record of the map table; C0
+Data_011_5834:: ; address name
     dfar Map5CTileset ; entry 0
     dfar Map5CPalettes
     db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00
@@ -2772,7 +2772,7 @@ Data_011_5834:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $5D, 4 x 4 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord5D::
-Data_011_5858:: ; heuristic: map record of the map table; C0
+Data_011_5858:: ; address name
     dfar Map5DTileset ; entry 0
     dfar Map5DPalettes
     db $04, $04, $11, $00, $00, $0C, $00, $00, $00, $00
@@ -2787,7 +2787,7 @@ Data_011_5858:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $5E, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord5E::
-Data_011_587C:: ; heuristic: map record of the map table; C0
+Data_011_587C:: ; address name
     dfar Map5ETileset ; entry 0
     dfar Map5EPalettes
     db $02, $02, $4B, $00, $01, $00, $00, $00, $00, $00
@@ -2802,7 +2802,7 @@ Data_011_587C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $5F, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord5F::
-Data_011_58A0:: ; heuristic: map record of the map table; C0
+Data_011_58A0:: ; address name
     dfar Map5FTileset ; entry 0
     dfar Map5FPalettes
     db $01, $01, $1F, $00, $00, $00, $00, $00, $00, $00
@@ -2817,7 +2817,7 @@ Data_011_58A0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $60, 1 x 3 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord60::
-Data_011_58C4:: ; heuristic: map record of the map table; C0
+Data_011_58C4:: ; address name
     dfar Map60Tileset ; entry 0
     dfar Map60Palettes
     db $01, $03, $31, $00, $00, $00, $00, $00, $00, $00
@@ -2832,7 +2832,7 @@ Data_011_58C4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $61, 1 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord61::
-Data_011_58E8:: ; heuristic: map record of the map table; C0
+Data_011_58E8:: ; address name
     dfar Map61Tileset ; entry 0
     dfar Map61Palettes
     db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00
@@ -2847,7 +2847,7 @@ Data_011_58E8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $62, 2 x 4 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord62::
-Data_011_590C:: ; heuristic: map record of the map table; C0
+Data_011_590C:: ; address name
     dfar Map62Tileset ; entry 0
     dfar Map62Palettes
     db $02, $04, $32, $00, $00, $0D, $00, $00, $00, $00
@@ -2862,7 +2862,7 @@ Data_011_590C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $63, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord63::
-Data_011_5930:: ; heuristic: map record of the map table; C0
+Data_011_5930:: ; address name
     dfar Map63Tileset ; entry 0
     dfar Map63Palettes
     db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
@@ -2877,7 +2877,7 @@ Data_011_5930:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $64, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord64::
-Data_011_5954:: ; heuristic: map record of the map table; C0
+Data_011_5954:: ; address name
     dfar Map63Tileset ; entry 0
     dfar Map63Palettes
     db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
@@ -2892,7 +2892,7 @@ Data_011_5954:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $65, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord65::
-Data_011_5978:: ; heuristic: map record of the map table; C0
+Data_011_5978:: ; address name
     dfar Map63Tileset ; entry 0
     dfar Map63Palettes
     db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
@@ -2907,7 +2907,7 @@ Data_011_5978:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $66, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord66::
-Data_011_599C:: ; heuristic: map record of the map table; C0
+Data_011_599C:: ; address name
     dfar Map63Tileset ; entry 0
     dfar Map63Palettes
     db $02, $02, $33, $00, $00, $0F, $07, $02, $01, $00
@@ -2922,7 +2922,7 @@ Data_011_599C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $67, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord67::
-Data_011_59C0:: ; heuristic: map record of the map table; C0
+Data_011_59C0:: ; address name
     dfar Map63Tileset ; entry 0
     dfar Map63Palettes
     db $01, $01, $33, $00, $00, $0F, $00, $02, $01, $00
@@ -2938,7 +2938,7 @@ Data_011_59C0:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $70, 12 x 12 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord70::
-Data_011_5A08:: ; heuristic: map record of the map table; C0
+Data_011_5A08:: ; address name
     dfar Map70Tileset ; entry 0
     dfar Map70Palettes
     db $0C, $0C, $2D, $00, $00, $10, $00, $02, $29, $00
@@ -2957,7 +2957,7 @@ Data_011_5A08:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $71, 3 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord71::
-Data_011_5A38:: ; heuristic: map record of the map table; C0
+Data_011_5A38:: ; address name
     dfar Map71Tileset ; entry 0
     dfar Map71Palettes
     db $03, $01, $31, $00, $00, $00, $00, $00, $00, $00
@@ -2976,7 +2976,7 @@ Data_011_5A38:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $72, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord72::
-Data_011_5A68:: ; heuristic: map record of the map table; C0
+Data_011_5A68:: ; address name
     dfar Map72Tileset ; entry 0
     dfar Map72Palettes
     db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00
@@ -2995,7 +2995,7 @@ Data_011_5A68:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $73, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord73::
-Data_011_5A98:: ; heuristic: map record of the map table; C0
+Data_011_5A98:: ; address name
     dfar Map73Tileset ; entry 0
     dfar Map73Palettes
     db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
@@ -3014,7 +3014,7 @@ Data_011_5A98:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $74, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord74::
-Data_011_5AC8:: ; heuristic: map record of the map table; C0
+Data_011_5AC8:: ; address name
     dfar Map73Tileset ; entry 0
     dfar Map73Palettes
     db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
@@ -3033,7 +3033,7 @@ Data_011_5AC8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $75, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord75::
-Data_011_5AF8:: ; heuristic: map record of the map table; C0
+Data_011_5AF8:: ; address name
     dfar Map73Tileset ; entry 0
     dfar Map73Palettes
     db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
@@ -3052,7 +3052,7 @@ Data_011_5AF8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $76, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord76::
-Data_011_5B28:: ; heuristic: map record of the map table; C0
+Data_011_5B28:: ; address name
     dfar Map73Tileset ; entry 0
     dfar Map73Palettes
     db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
@@ -3071,7 +3071,7 @@ Data_011_5B28:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $77, 3 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord77::
-Data_011_5B58:: ; heuristic: map record of the map table; C0
+Data_011_5B58:: ; address name
     dfar Map77Tileset ; entry 0
     dfar Map77Palettes
     db $03, $01, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -3090,7 +3090,7 @@ Data_011_5B58:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $78, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord78::
-Data_011_5B88:: ; heuristic: map record of the map table; C0
+Data_011_5B88:: ; address name
     dfar Map78Tileset ; entry 0
     dfar Map78Palettes
     db $02, $02, $3D, $00, $00, $00, $00, $00, $00, $00
@@ -3109,7 +3109,7 @@ Data_011_5B88:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $79, 1 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord79::
-Data_011_5BB8:: ; heuristic: map record of the map table; C0
+Data_011_5BB8:: ; address name
     dfar Map79Tileset ; entry 0
     dfar Map79Palettes
     db $01, $02, $45, $00, $00, $00, $00, $00, $00, $00
@@ -3128,7 +3128,7 @@ Data_011_5BB8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $7A, 1 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord7A::
-Data_011_5BE8:: ; heuristic: map record of the map table; C0
+Data_011_5BE8:: ; address name
     dfar Map7ATileset ; entry 0
     dfar Map7APalettes
     db $01, $02, $4B, $00, $00, $00, $00, $00, $00, $00
@@ -3147,7 +3147,7 @@ Data_011_5BE8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $7B, 1 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord7B::
-Data_011_5C18:: ; heuristic: map record of the map table; C0
+Data_011_5C18:: ; address name
     dfar Map7BTileset ; entry 0
     dfar Map7BPalettes
     db $01, $03, $1F, $00, $00, $00, $00, $00, $00, $00
@@ -3166,7 +3166,7 @@ Data_011_5C18:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $7C, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord7C::
-Data_011_5C48:: ; heuristic: map record of the map table; C0
+Data_011_5C48:: ; address name
     dfar Map7CTileset ; entry 0
     dfar Map7CPalettes
     db $02, $02, $45, $00, $00, $00, $00, $00, $00, $00
@@ -3185,7 +3185,7 @@ Data_011_5C48:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $7D, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord7D::
-Data_011_5C78:: ; heuristic: map record of the map table; C0
+Data_011_5C78:: ; address name
     dfar Map7DTileset ; entry 0
     dfar Map7DPalettes
     db $01, $01, $3B, $00, $00, $00, $00, $00, $00, $00
@@ -3205,7 +3205,7 @@ Data_011_5C9C:: ; heuristic: label inside a table; C0
 ; E-0142 (derived: map record of map $7E, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord7E::
-Data_011_5CA8:: ; heuristic: map record of the map table; C0
+Data_011_5CA8:: ; address name
     dfar Map7DTileset ; entry 0
     dfar Map7DPalettes
     db $01, $01, $3B, $00, $00, $00, $00, $00, $00, $00
@@ -3224,7 +3224,7 @@ Data_011_5CA8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $7F, 1 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord7F::
-Data_011_5CD8:: ; heuristic: map record of the map table; C0
+Data_011_5CD8:: ; address name
     dfar Map7FTileset ; entry 0
     dfar Map7FPalettes
     db $01, $02, $2F, $00, $00, $00, $00, $00, $00, $00
@@ -3243,7 +3243,7 @@ Data_011_5CD8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $80, 3 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord80::
-Data_011_5D08:: ; heuristic: map record of the map table; C0
+Data_011_5D08:: ; address name
     dfar Map80Tileset ; entry 0
     dfar Map80Palettes
     db $03, $01, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -3263,7 +3263,7 @@ Data_011_5D2C:: ; heuristic: label inside a table; C0
 ; E-0142 (derived: map record of map $81, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord81::
-Data_011_5D38:: ; heuristic: map record of the map table; C0
+Data_011_5D38:: ; address name
     dfar Map81Tileset ; entry 0
     dfar Map81Palettes
     db $01, $01, $2F, $00, $00, $12, $00, $00, $00, $00
@@ -3282,7 +3282,7 @@ Data_011_5D38:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $82, 3 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord82::
-Data_011_5D68:: ; heuristic: map record of the map table; C0
+Data_011_5D68:: ; address name
     dfar Map81Tileset ; entry 0
     dfar Map81Palettes
     db $03, $03, $2F, $00, $00, $13, $00, $00, $00, $00
@@ -3301,7 +3301,7 @@ Data_011_5D68:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $83, 3 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord83::
-Data_011_5D98:: ; heuristic: map record of the map table; C0
+Data_011_5D98:: ; address name
     dfar Map81Tileset ; entry 0
     dfar Map81Palettes
     db $03, $03, $2F, $00, $00, $13, $00, $00, $00, $00
@@ -3320,7 +3320,7 @@ Data_011_5D98:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $84, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord84::
-Data_011_5DC8:: ; heuristic: map record of the map table; C0
+Data_011_5DC8:: ; address name
     dfar Map81Tileset ; entry 0
     dfar Map81Palettes
     db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
@@ -3339,7 +3339,7 @@ Data_011_5DC8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $85, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord85::
-Data_011_5DF8:: ; heuristic: map record of the map table; C0
+Data_011_5DF8:: ; address name
     dfar Map85Tileset ; entry 0
     dfar Map85Palettes
     db $02, $02, $3F, $00, $00, $14, $00, $02, $01, $00
@@ -3358,7 +3358,7 @@ Data_011_5DF8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $86, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord86::
-Data_011_5E28:: ; heuristic: map record of the map table; C0
+Data_011_5E28:: ; address name
     dfar Map85Tileset ; entry 0
     dfar Map85Palettes
     db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
@@ -3377,7 +3377,7 @@ Data_011_5E28:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $87, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord87::
-Data_011_5E58:: ; heuristic: map record of the map table; C0
+Data_011_5E58:: ; address name
     dfar Map85Tileset ; entry 0
     dfar Map85Palettes
     db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
@@ -3396,7 +3396,7 @@ Data_011_5E58:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $88, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord88::
-Data_011_5E88:: ; heuristic: map record of the map table; C0
+Data_011_5E88:: ; address name
     dfar Map85Tileset ; entry 0
     dfar Map85Palettes
     db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
@@ -3415,7 +3415,7 @@ Data_011_5E88:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $89, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord89::
-Data_011_5EB8:: ; heuristic: map record of the map table; C0
+Data_011_5EB8:: ; address name
     dfar Map89Tileset ; entry 0
     dfar Map89Palettes
     db $02, $02, $48, $00, $00, $00, $00, $00, $00, $00
@@ -3434,7 +3434,7 @@ Data_011_5EB8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $8A, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord8A::
-Data_011_5EE8:: ; heuristic: map record of the map table; C0
+Data_011_5EE8:: ; address name
     dfar Map8ATileset ; entry 0
     dfar Map8APalettes
     db $01, $01, $33, $00, $00, $00, $00, $00, $00, $00
@@ -3453,7 +3453,7 @@ Data_011_5EE8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $8B, 3 x 4 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord8B::
-Data_011_5F18:: ; heuristic: map record of the map table; C0
+Data_011_5F18:: ; address name
     dfar Map8BTileset ; entry 0
     dfar Map8BPalettes
     db $03, $04, $2D, $00, $00, $15, $00, $00, $00, $00
@@ -3472,7 +3472,7 @@ Data_011_5F18:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $8C, 3 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord8C::
-Data_011_5F48:: ; heuristic: map record of the map table; C0
+Data_011_5F48:: ; address name
     dfar Map8CTileset ; entry 0
     dfar Map8CPalettes
     db $03, $03, $4F, $00, $00, $15, $00, $00, $00, $00
@@ -3491,7 +3491,7 @@ Data_011_5F48:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $8D, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord8D::
-Data_011_5F78:: ; heuristic: map record of the map table; C0
+Data_011_5F78:: ; address name
     dfar Map8DTileset ; entry 0
     dfar Map8DPalettes
     db $01, $01, $2C, $00, $00, $00, $00, $00, $00, $00
@@ -3510,7 +3510,7 @@ Data_011_5F78:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $8E, 3 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord8E::
-Data_011_5FA8:: ; heuristic: map record of the map table; C0
+Data_011_5FA8:: ; address name
     dfar Map8ETileset ; entry 0
     dfar Map8EPalettes
     db $03, $03, $53, $00, $00, $15, $00, $00, $00, $00
@@ -3529,7 +3529,7 @@ Data_011_5FA8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $8F, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord8F::
-Data_011_5FD8:: ; heuristic: map record of the map table; C0
+Data_011_5FD8:: ; address name
     dfar Map8FTileset ; entry 0
     dfar Map8FPalettes
     db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
@@ -3548,7 +3548,7 @@ Data_011_5FD8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $90, 3 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord90::
-Data_011_6008:: ; heuristic: map record of the map table; C0
+Data_011_6008:: ; address name
     dfar Map8CTileset ; entry 0
     dfar Map8CPalettes
     db $03, $02, $4F, $00, $00, $15, $00, $00, $00, $00
@@ -3567,7 +3567,7 @@ Data_011_6008:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $91, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord91::
-Data_011_6038:: ; heuristic: map record of the map table; C0
+Data_011_6038:: ; address name
     dfar Map91Tileset ; entry 0
     dfar Map91Palettes
     db $01, $01, $3B, $00, $03, $00, $00, $00, $00, $00
@@ -3586,7 +3586,7 @@ Data_011_6038:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $92, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord92::
-Data_011_6068:: ; heuristic: map record of the map table; C0
+Data_011_6068:: ; address name
     dfar Map92Tileset ; entry 0
     dfar Map92Palettes
     db $01, $01, $17, $00, $00, $00, $00, $00, $00, $00
@@ -3605,7 +3605,7 @@ Data_011_6068:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $93, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord93::
-Data_011_6098:: ; heuristic: map record of the map table; C0
+Data_011_6098:: ; address name
     dfar Map93Tileset ; entry 0
     dfar Map93Palettes
     db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
@@ -3624,7 +3624,7 @@ Data_011_6098:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $94, 3 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord94::
-Data_011_60C8:: ; heuristic: map record of the map table; C0
+Data_011_60C8:: ; address name
     dfar Map94Tileset ; entry 0
     dfar Map94Palettes
     db $03, $03, $3F, $00, $04, $00, $00, $00, $00, $00
@@ -3643,7 +3643,7 @@ Data_011_60C8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $95, 2 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord95::
-Data_011_60F8:: ; heuristic: map record of the map table; C0
+Data_011_60F8:: ; address name
     dfar Map94Tileset ; entry 0
     dfar Map94Palettes
     db $02, $03, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -3662,7 +3662,7 @@ Data_011_60F8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $96, 2 x 2 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord96::
-Data_011_6128:: ; heuristic: map record of the map table; C0
+Data_011_6128:: ; address name
     dfar Map94Tileset ; entry 0
     dfar Map94Palettes
     db $02, $02, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -3681,7 +3681,7 @@ Data_011_6128:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $97, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord97::
-Data_011_6158:: ; heuristic: map record of the map table; C0
+Data_011_6158:: ; address name
     dfar Map97Tileset ; entry 0
     dfar Map97Palettes
     db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
@@ -3700,7 +3700,7 @@ Data_011_6158:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $98, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord98::
-Data_011_6188:: ; heuristic: map record of the map table; C0
+Data_011_6188:: ; address name
     dfar Map97Tileset ; entry 0
     dfar Map97Palettes
     db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
@@ -3719,7 +3719,7 @@ Data_011_6188:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $99, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord99::
-Data_011_61B8:: ; heuristic: map record of the map table; C0
+Data_011_61B8:: ; address name
     dfar Map97Tileset ; entry 0
     dfar Map97Palettes
     db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
@@ -3738,7 +3738,7 @@ Data_011_61B8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $9A, 1 x 1 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord9A::
-Data_011_61E8:: ; heuristic: map record of the map table; C0
+Data_011_61E8:: ; address name
     dfar Map97Tileset ; entry 0
     dfar Map97Palettes
     db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
@@ -3757,7 +3757,7 @@ Data_011_61E8:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $9B, 1 x 3 screens, 5 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecord9B::
-Data_011_6218:: ; heuristic: map record of the map table; C0
+Data_011_6218:: ; address name
     dfar Map9BTileset ; entry 0
     dfar Map9BPalettes
     db $01, $03, $4F, $00, $00, $00, $00, $02, $0F, $00
@@ -3777,7 +3777,7 @@ Data_011_6218:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $A0, 4 x 3 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordA0::
-Data_011_6278:: ; heuristic: map record of the map table; C0
+Data_011_6278:: ; address name
     dfar MapA0Tileset ; entry 0
     dfar MapA0Palettes
     db $04, $03, $3F, $00, $01, $16, $00, $02, $29, $00
@@ -3790,7 +3790,7 @@ Data_011_6278:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $A1, 1 x 3 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordA1::
-Data_011_6296:: ; heuristic: map record of the map table; C0
+Data_011_6296:: ; address name
     dfar MapA1Tileset ; entry 0
     dfar MapA1Palettes
     db $01, $03, $5F, $00, $05, $00, $00, $00, $00, $00
@@ -3803,7 +3803,7 @@ Data_011_6296:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $A2, 3 x 4 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordA2::
-Data_011_62B4:: ; heuristic: map record of the map table; C0
+Data_011_62B4:: ; address name
     dfar MapA2Tileset ; entry 0
     dfar MapA2Palettes
     db $03, $04, $55, $00, $01, $17, $00, $02, $07, $00
@@ -3816,7 +3816,7 @@ Data_011_62B4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $A3, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordA3::
-Data_011_62D2:: ; heuristic: map record of the map table; C0
+Data_011_62D2:: ; address name
     dfar MapA3Tileset ; entry 0
     dfar MapA3Palettes
     db $01, $02, $68, $00, $0A, $00, $00, $00, $00, $00
@@ -3830,7 +3830,7 @@ Data_011_62D2:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $A8, 6 x 6 screens, 1 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordA8::
-Data_011_630E:: ; heuristic: map record of the map table; C0
+Data_011_630E:: ; address name
     dfar MapA8Tileset ; entry 0
     dfar MapA8Palettes
     db $06, $06, $3B, $00, $00, $18, $00, $00, $00, $00
@@ -3841,7 +3841,7 @@ Data_011_630E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $A9, 2 x 2 screens, 1 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordA9::
-Data_011_6326:: ; heuristic: map record of the map table; C0
+Data_011_6326:: ; address name
     dfar MapA9Tileset ; entry 0
     dfar MapA9Palettes
     db $02, $02, $2D, $00, $00, $00, $00, $00, $00, $00
@@ -3852,7 +3852,7 @@ Data_011_6326:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $AA, 1 x 2 screens, 1 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordAA::
-Data_011_633E:: ; heuristic: map record of the map table; C0
+Data_011_633E:: ; address name
     dfar MapA9Tileset ; entry 0
     dfar MapA9Palettes
     db $01, $02, $2D, $00, $00, $00, $00, $00, $00, $00
@@ -3863,7 +3863,7 @@ Data_011_633E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $AB, 1 x 1 screens, 1 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordAB::
-Data_011_6356:: ; heuristic: map record of the map table; C0
+Data_011_6356:: ; address name
     dfar MapA9Tileset ; entry 0
     dfar MapA9Palettes
     db $01, $01, $2D, $00, $00, $00, $00, $00, $00, $00
@@ -3874,7 +3874,7 @@ Data_011_6356:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $AC, 1 x 1 screens, 1 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordAC::
-Data_011_636E:: ; heuristic: map record of the map table; C0
+Data_011_636E:: ; address name
     dfar MapACTileset ; entry 0
     dfar MapACPalettes
     db $01, $01, $31, $00, $00, $00, $00, $00, $00, $00
@@ -3885,7 +3885,7 @@ Data_011_636E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $AD, 3 x 4 screens, 1 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordAD::
-Data_011_6386:: ; heuristic: map record of the map table; C0
+Data_011_6386:: ; address name
     dfar MapADTileset ; entry 0
     dfar MapADPalettes
     db $03, $04, $3F, $00, $00, $19, $01, $00, $00, $00
@@ -3896,7 +3896,7 @@ Data_011_6386:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $AE, 3 x 4 screens, 1 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordAE::
-Data_011_639E:: ; heuristic: map record of the map table; C0
+Data_011_639E:: ; address name
     dfar MapADTileset ; entry 0
     dfar MapADPalettes
     db $03, $04, $3F, $00, $00, $19, $01, $00, $00, $00
@@ -3907,7 +3907,7 @@ Data_011_639E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $B0, 3 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordB0::
-Data_011_63B6:: ; heuristic: map record of the map table; C0
+Data_011_63B6:: ; address name
     dfar MapB0Tileset ; entry 0
     dfar MapB0Palettes
     db $03, $02, $3F, $00, $00, $1A, $00, $00, $00, $00
@@ -3920,7 +3920,7 @@ Data_011_63B6:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $B1, 1 x 1 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordB1::
-Data_011_63D4:: ; heuristic: map record of the map table; C0
+Data_011_63D4:: ; address name
     dfar MapB1Tileset ; entry 0
     dfar MapB1Palettes
     db $01, $01, $37, $00, $00, $00, $00, $00, $00, $00
@@ -3933,7 +3933,7 @@ Data_011_63D4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $B3, 2 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordB3::
-Data_011_63F2:: ; heuristic: map record of the map table; C0
+Data_011_63F2:: ; address name
     dfar MapB3Tileset ; entry 0
     dfar MapB3Palettes
     db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
@@ -3946,7 +3946,7 @@ Data_011_63F2:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $B4, 2 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordB4::
-Data_011_6410:: ; heuristic: map record of the map table; C0
+Data_011_6410:: ; address name
     dfar MapB3Tileset ; entry 0
     dfar MapB3Palettes
     db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
@@ -3959,7 +3959,7 @@ Data_011_6410:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $B5, 2 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordB5::
-Data_011_642E:: ; heuristic: map record of the map table; C0
+Data_011_642E:: ; address name
     dfar MapB3Tileset ; entry 0
     dfar MapB3Palettes
     db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
@@ -3972,7 +3972,7 @@ Data_011_642E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $B6, 1 x 1 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordB6::
-Data_011_644C:: ; heuristic: map record of the map table; C0
+Data_011_644C:: ; address name
     dfar MapB3Tileset ; entry 0
     dfar MapB3Palettes
     db $01, $01, $1F, $00, $00, $00, $00, $00, $00, $00
@@ -3985,7 +3985,7 @@ Data_011_644C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $B8, 5 x 5 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordB8::
-Data_011_646A:: ; heuristic: map record of the map table; C0
+Data_011_646A:: ; address name
     dfar MapB8Tileset ; entry 0
     dfar MapB8Palettes
     db $05, $05, $3F, $00, $01, $1C, $00, $01, $29, $00
@@ -4000,7 +4000,7 @@ Data_011_646A:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $B9, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordB9::
-Data_011_648E:: ; heuristic: map record of the map table; C0
+Data_011_648E:: ; address name
     dfar MapB9Tileset ; entry 0
     dfar MapB9Palettes
     db $02, $02, $3D, $00, $00, $00, $00, $00, $00, $00
@@ -4015,7 +4015,7 @@ Data_011_648E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $BA, 1 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordBA::
-Data_011_64B2:: ; heuristic: map record of the map table; C0
+Data_011_64B2:: ; address name
     dfar MapBATileset ; entry 0
     dfar MapBAPalettes
     db $01, $02, $39, $00, $00, $00, $00, $00, $00, $00
@@ -4030,7 +4030,7 @@ Data_011_64B2:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $BB, 1 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordBB::
-Data_011_64D6:: ; heuristic: map record of the map table; C0
+Data_011_64D6:: ; address name
     dfar MapBBTileset ; entry 0
     dfar MapBBPalettes
     db $01, $02, $0F, $00, $00, $00, $00, $00, $00, $00
@@ -4045,7 +4045,7 @@ Data_011_64D6:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $BC, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordBC::
-Data_011_64FA:: ; heuristic: map record of the map table; C0
+Data_011_64FA:: ; address name
     dfar MapBCTileset ; entry 0
     dfar MapBCPalettes
     db $01, $01, $2C, $00, $00, $00, $00, $00, $00, $00
@@ -4060,7 +4060,7 @@ Data_011_64FA:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $BD, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordBD::
-Data_011_651E:: ; heuristic: map record of the map table; C0
+Data_011_651E:: ; address name
     dfar MapBDTileset ; entry 0
     dfar MapBDPalettes
     db $01, $01, $3F, $00, $00, $00, $03, $00, $00, $00
@@ -4075,7 +4075,7 @@ Data_011_651E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $BE, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordBE::
-Data_011_6542:: ; heuristic: map record of the map table; C0
+Data_011_6542:: ; address name
     dfar MapBDTileset ; entry 0
     dfar MapBDPalettes
     db $01, $01, $3F, $00, $00, $1D, $03, $00, $00, $00
@@ -4090,7 +4090,7 @@ Data_011_6542:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $BF, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordBF::
-Data_011_6566:: ; heuristic: map record of the map table; C0
+Data_011_6566:: ; address name
     dfar MapBDTileset ; entry 0
     dfar MapBDPalettes
     db $02, $02, $3F, $00, $00, $1E, $03, $00, $00, $00
@@ -4105,7 +4105,7 @@ Data_011_6566:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $C0, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordC0::
-Data_011_658A:: ; heuristic: map record of the map table; C0
+Data_011_658A:: ; address name
     dfar MapBDTileset ; entry 0
     dfar MapBDPalettes
     db $02, $02, $3F, $00, $00, $1F, $03, $00, $00, $00
@@ -4120,7 +4120,7 @@ Data_011_658A:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $C1, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordC1::
-Data_011_65AE:: ; heuristic: map record of the map table; C0
+Data_011_65AE:: ; address name
     dfar MapBDTileset ; entry 0
     dfar MapBDPalettes
     db $02, $02, $3F, $00, $00, $1F, $03, $00, $00, $00
@@ -4135,7 +4135,7 @@ Data_011_65AE:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $C2, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordC2::
-Data_011_65D2:: ; heuristic: map record of the map table; C0
+Data_011_65D2:: ; address name
     dfar MapBDTileset ; entry 0
     dfar MapBDPalettes
     db $02, $02, $3F, $00, $00, $20, $03, $00, $00, $00
@@ -4150,7 +4150,7 @@ Data_011_65D2:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $C3, 2 x 2 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordC3::
-Data_011_65F6:: ; heuristic: map record of the map table; C0
+Data_011_65F6:: ; address name
     dfar MapBDTileset ; entry 0
     dfar MapBDPalettes
     db $02, $02, $3F, $00, $00, $20, $03, $00, $00, $00
@@ -4165,7 +4165,7 @@ Data_011_65F6:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $C4, 1 x 1 screens, 3 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordC4::
-Data_011_661A:: ; heuristic: map record of the map table; C0
+Data_011_661A:: ; address name
     dfar MapBDTileset ; entry 0
     dfar MapBDPalettes
     db $01, $01, $3F, $00, $00, $00, $03, $00, $00, $00
@@ -4180,7 +4180,7 @@ Data_011_661A:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $C8, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordC8::
-Data_011_663E:: ; heuristic: map record of the map table; C0
+Data_011_663E:: ; address name
     dfar MapC8Tileset ; entry 0
     dfar MapC8Palettes
     db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -4193,7 +4193,7 @@ Data_011_663E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $C9, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordC9::
-Data_011_665C:: ; heuristic: map record of the map table; C0
+Data_011_665C:: ; address name
     dfar MapC9Tileset ; entry 0
     dfar MapC9Palettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4206,7 +4206,7 @@ Data_011_665C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $CA, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordCA::
-Data_011_667A:: ; heuristic: map record of the map table; C0
+Data_011_667A:: ; address name
     dfar MapC9Tileset ; entry 0
     dfar MapC9Palettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4219,7 +4219,7 @@ Data_011_667A:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $CE, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordCE::
-Data_011_6698:: ; heuristic: map record of the map table; C0
+Data_011_6698:: ; address name
     dfar MapC9Tileset ; entry 0
     dfar MapC9Palettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4232,7 +4232,7 @@ Data_011_6698:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $D1, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordD1::
-Data_011_66B6:: ; heuristic: map record of the map table; C0
+Data_011_66B6:: ; address name
     dfar MapD1Tileset ; entry 0
     dfar MapD1Palettes
     db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -4245,7 +4245,7 @@ Data_011_66B6:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $D2, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordD2::
-Data_011_66D4:: ; heuristic: map record of the map table; C0
+Data_011_66D4:: ; address name
     dfar MapD2Tileset ; entry 0
     dfar MapD2Palettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4258,7 +4258,7 @@ Data_011_66D4:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $D3, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordD3::
-Data_011_66F2:: ; heuristic: map record of the map table; C0
+Data_011_66F2:: ; address name
     dfar MapD2Tileset ; entry 0
     dfar MapD2Palettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4271,7 +4271,7 @@ Data_011_66F2:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $D7, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordD7::
-Data_011_6710:: ; heuristic: map record of the map table; C0
+Data_011_6710:: ; address name
     dfar MapD2Tileset ; entry 0
     dfar MapD2Palettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4284,7 +4284,7 @@ Data_011_6710:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $DA, 2 x 1 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordDA::
-Data_011_672E:: ; heuristic: map record of the map table; C0
+Data_011_672E:: ; address name
     dfar MapDATileset ; entry 0
     dfar MapDAPalettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $00, $00
@@ -4297,7 +4297,7 @@ Data_011_672E:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $DB, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordDB::
-Data_011_674C:: ; heuristic: map record of the map table; C0
+Data_011_674C:: ; address name
     dfar MapDBTileset ; entry 0
     dfar MapDBPalettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4310,7 +4310,7 @@ Data_011_674C:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $DC, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordDC::
-Data_011_676A:: ; heuristic: map record of the map table; C0
+Data_011_676A:: ; address name
     dfar MapDBTileset ; entry 0
     dfar MapDBPalettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4323,7 +4323,7 @@ Data_011_676A:: ; heuristic: map record of the map table; C0
 ; E-0142 (derived: map record of map $E0, 1 x 2 screens, 2 decoded variant(s))
 ; record: tileset; palettes; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; then per variant: screen array, attribute array
 MapRecordE0::
-Data_011_6788:: ; heuristic: map record of the map table; C0
+Data_011_6788:: ; address name
     dfar MapDBTileset ; entry 0
     dfar MapDBPalettes
     db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
@@ -4336,7 +4336,7 @@ Data_011_6788:: ; heuristic: map record of the map table; C0
 ; E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table).
 ; record: list of warps for this map number (hMapId); a list ends with $80; maps without warps share one empty list
 MapWarpTable::
-Data_011_67A6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_011_67A6:: ; address name
     dw Data_011_69A7 ; entry 0
     dw Data_011_69D5 ; entry 1
     dw Data_011_6A5D ; entry 2

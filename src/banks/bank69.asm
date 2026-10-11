@@ -281,7 +281,7 @@ Jump_069_4168::
 ; E-0163 (C1: LoadMapObjectsForScreen reads the word $4174 + 2 * hMapId (`add $74` / `adc $41`); 228 words up to the first array at $433C).
 ; record: per-screen selector array of this map ($0000 = none)
 MapObjectTable::
-Data_069_4174:: ; heuristic: start of a structured table; C0
+Data_069_4174:: ; address name
     dw MapObjectScreens_63B2 ; id 0
     dw MapObjectScreens_6722 ; id 1
     dw MapObjectScreens_6945 ; id 2
@@ -514,7 +514,7 @@ Data_069_4174:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_433C::
-Data_069_433C:: ; heuristic: map object screen array; C0
+Data_069_433C:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_4340 ; id 1
 
@@ -527,21 +527,21 @@ Data_069_4340:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4348::
-Data_069_4348:: ; heuristic: start of a structured table; C0
+Data_069_4348:: ; address name
     db $01 ; entry 0
     db $85, $01, $41, $00, $00, $40, $20, $05, $00, $50, $A7
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4354::
-Data_069_4354:: ; heuristic: start of a structured table; C0
+Data_069_4354:: ; address name
     db $01 ; entry 0
     db $85, $01, $41, $00, $00, $30, $20, $05, $00, $50, $A7
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4360::
-Data_069_4360:: ; heuristic: map object screen array; C0
+Data_069_4360:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_4364 ; id 1
 
@@ -554,14 +554,14 @@ Data_069_4364:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_436A::
-Data_069_436A:: ; heuristic: start of a structured table; C0
+Data_069_436A:: ; address name
     db $01 ; entry 0
     db $85, $00, $0D, $00, $00, $40, $30, $05, $00, $50, $A6
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4376::
-Data_069_4376:: ; heuristic: map object screen array; C0
+Data_069_4376:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_437A ; id 1
 
@@ -574,14 +574,14 @@ Data_069_437A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4380::
-Data_069_4380:: ; heuristic: start of a structured table; C0
+Data_069_4380:: ; address name
     db $01 ; entry 0
     db $85, $00, $5C, $00, $00, $40, $30, $05, $00, $50, $A5
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_438C::
-Data_069_438C:: ; heuristic: map object screen array; C0
+Data_069_438C:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_4390 ; id 1
 
@@ -594,14 +594,14 @@ Data_069_4390:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4396::
-Data_069_4396:: ; heuristic: start of a structured table; C0
+Data_069_4396:: ; address name
     db $01 ; entry 0
     db $85, $00, $55, $00, $00, $40, $30, $05, $00, $50, $A4
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_43A2::
-Data_069_43A2:: ; heuristic: map object screen array; C0
+Data_069_43A2:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_43A6 ; id 1
 
@@ -614,14 +614,14 @@ Data_069_43A6:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_43AC::
-Data_069_43AC:: ; heuristic: start of a structured table; C0
+Data_069_43AC:: ; address name
     db $01 ; entry 0
     db $85, $00, $10, $00, $00, $40, $30, $05, $00, $50, $A3
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_43B8::
-Data_069_43B8:: ; heuristic: map object screen array; C0
+Data_069_43B8:: ; address name
     dw ObjSelector_43BC ; id 0
     dw ObjSelector_43D7 ; id 1
 
@@ -633,7 +633,7 @@ Data_069_43BC:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_43C0::
-Data_069_43C0:: ; heuristic: start of a structured table; C0
+Data_069_43C0:: ; address name
     db $02 ; entry 0
     db $85, $00, $63, $00, $00, $20, $40, $05, $00, $50, $A0
     db $86, $01, $52, $00, $00, $60, $30, $06, $02, $60, $A1
@@ -646,14 +646,14 @@ Data_069_43D7:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_43DB::
-Data_069_43DB:: ; heuristic: start of a structured table; C0
+Data_069_43DB:: ; address name
     db $01 ; entry 0
     db $85, $00, $59, $00, $00, $40, $30, $05, $00, $50, $A2
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_43E7::
-Data_069_43E7:: ; heuristic: map object screen array; C0
+Data_069_43E7:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_43EB ; id 1
 
@@ -666,21 +666,21 @@ Data_069_43EB:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_43F3::
-Data_069_43F3:: ; heuristic: start of a structured table; C0
+Data_069_43F3:: ; address name
     db $01 ; entry 0
     db $85, $00, $9A, $00, $00, $40, $20, $05, $00, $50, $87
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_43FF::
-Data_069_43FF:: ; heuristic: start of a structured table; C0
+Data_069_43FF:: ; address name
     db $01 ; entry 0
     db $85, $00, $9A, $00, $00, $30, $20, $05, $00, $50, $87
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_440B::
-Data_069_440B:: ; heuristic: map object screen array; C0
+Data_069_440B:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_440F ; id 1
 
@@ -693,14 +693,14 @@ Data_069_440F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4415::
-Data_069_4415:: ; heuristic: start of a structured table; C0
+Data_069_4415:: ; address name
     db $01 ; entry 0
     db $85, $00, $8D, $00, $00, $40, $30, $05, $00, $50, $86
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4421::
-Data_069_4421:: ; heuristic: map object screen array; C0
+Data_069_4421:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_4425 ; id 1
 
@@ -713,14 +713,14 @@ Data_069_4425:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_442B::
-Data_069_442B:: ; heuristic: start of a structured table; C0
+Data_069_442B:: ; address name
     db $01 ; entry 0
     db $85, $00, $80, $00, $00, $40, $30, $05, $00, $50, $85
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4437::
-Data_069_4437:: ; heuristic: map object screen array; C0
+Data_069_4437:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_443B ; id 1
 
@@ -733,14 +733,14 @@ Data_069_443B:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4441::
-Data_069_4441:: ; heuristic: start of a structured table; C0
+Data_069_4441:: ; address name
     db $01 ; entry 0
     db $85, $00, $92, $00, $00, $40, $30, $05, $00, $50, $84
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_444D::
-Data_069_444D:: ; heuristic: map object screen array; C0
+Data_069_444D:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_4451 ; id 1
 
@@ -753,14 +753,14 @@ Data_069_4451:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4457::
-Data_069_4457:: ; heuristic: start of a structured table; C0
+Data_069_4457:: ; address name
     db $01 ; entry 0
     db $85, $00, $39, $00, $00, $40, $30, $05, $00, $50, $83
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4463::
-Data_069_4463:: ; heuristic: map object screen array; C0
+Data_069_4463:: ; address name
     dw ObjSelector_4467 ; id 0
     dw ObjSelector_4482 ; id 1
 
@@ -772,7 +772,7 @@ Data_069_4467:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_446B::
-Data_069_446B:: ; heuristic: start of a structured table; C0
+Data_069_446B:: ; address name
     db $02 ; entry 0
     db $85, $00, $15, $00, $00, $70, $40, $05, $00, $50, $80
     db $86, $01, $11, $00, $00, $10, $70, $06, $03, $60, $81
@@ -785,14 +785,14 @@ Data_069_4482:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4486::
-Data_069_4486:: ; heuristic: start of a structured table; C0
+Data_069_4486:: ; address name
     db $01 ; entry 0
     db $85, $00, $51, $00, $00, $40, $30, $05, $00, $50, $82
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4492::
-Data_069_4492:: ; heuristic: map object screen array; C0
+Data_069_4492:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_4496 ; id 1
 
@@ -805,21 +805,21 @@ Data_069_4496:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_449E::
-Data_069_449E:: ; heuristic: start of a structured table; C0
+Data_069_449E:: ; address name
     db $01 ; entry 0
     db $85, $00, $ED, $00, $00, $40, $20, $05, $00, $50, $67
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_44AA::
-Data_069_44AA:: ; heuristic: start of a structured table; C0
+Data_069_44AA:: ; address name
     db $01 ; entry 0
     db $85, $00, $ED, $00, $00, $30, $20, $05, $00, $50, $67
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_44B6::
-Data_069_44B6:: ; heuristic: map object screen array; C0
+Data_069_44B6:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_44BA ; id 1
 
@@ -832,14 +832,14 @@ Data_069_44BA:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_44C0::
-Data_069_44C0:: ; heuristic: start of a structured table; C0
+Data_069_44C0:: ; address name
     db $01 ; entry 0
     db $85, $00, $25, $01, $00, $40, $30, $05, $00, $50, $66
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_44CC::
-Data_069_44CC:: ; heuristic: map object screen array; C0
+Data_069_44CC:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_44D0 ; id 1
 
@@ -852,14 +852,14 @@ Data_069_44D0:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_44D6::
-Data_069_44D6:: ; heuristic: start of a structured table; C0
+Data_069_44D6:: ; address name
     db $01 ; entry 0
     db $85, $00, $2E, $01, $00, $40, $30, $05, $00, $50, $65
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_44E2::
-Data_069_44E2:: ; heuristic: map object screen array; C0
+Data_069_44E2:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_44E6 ; id 1
 
@@ -872,14 +872,14 @@ Data_069_44E6:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_44EC::
-Data_069_44EC:: ; heuristic: start of a structured table; C0
+Data_069_44EC:: ; address name
     db $01 ; entry 0
     db $85, $00, $55, $01, $00, $40, $30, $05, $00, $50, $64
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_44F8::
-Data_069_44F8:: ; heuristic: map object screen array; C0
+Data_069_44F8:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_44FC ; id 1
 
@@ -892,14 +892,14 @@ Data_069_44FC:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4502::
-Data_069_4502:: ; heuristic: start of a structured table; C0
+Data_069_4502:: ; address name
     db $01 ; entry 0
     db $85, $00, $4E, $00, $00, $40, $30, $05, $00, $50, $63
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_450E::
-Data_069_450E:: ; heuristic: map object screen array; C0
+Data_069_450E:: ; address name
     dw ObjSelector_4512 ; id 0
     dw ObjSelector_452D ; id 1
 
@@ -911,7 +911,7 @@ Data_069_4512:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4516::
-Data_069_4516:: ; heuristic: start of a structured table; C0
+Data_069_4516:: ; address name
     db $02 ; entry 0
     db $85, $00, $47, $00, $00, $30, $30, $05, $00, $50, $60
     db $86, $01, $3E, $00, $00, $70, $50, $06, $03, $60, $61
@@ -924,14 +924,14 @@ Data_069_452D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4531::
-Data_069_4531:: ; heuristic: start of a structured table; C0
+Data_069_4531:: ; address name
     db $01 ; entry 0
     db $85, $00, $06, $00, $00, $40, $30, $05, $00, $50, $62
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_453D::
-Data_069_453D:: ; heuristic: map object screen array; C0
+Data_069_453D:: ; address name
     dw ObjSelector_4545 ; id 0
     dw ObjSelector_456B ; id 1
     dw ObjSelector_459C ; id 2
@@ -945,7 +945,7 @@ Data_069_4545:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4549::
-Data_069_4549:: ; heuristic: start of a structured table; C0
+Data_069_4549:: ; address name
     db $03 ; entry 0
     db $85, $01, $0C, $00, $02, $40, $50, $05, $01, $50, $36
     db $86, $01, $0D, $00, $00, $20, $30, $06, $00, $60, $37
@@ -959,7 +959,7 @@ Data_069_456B:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_456F::
-Data_069_456F:: ; heuristic: start of a structured table; C0
+Data_069_456F:: ; address name
     db $04 ; entry 0
     db $85, $01, $09, $00, $00, $60, $50, $05, $03, $50, $39
     db $86, $01, $0A, $00, $00, $20, $60, $06, $00, $60, $3A
@@ -974,7 +974,7 @@ Data_069_459C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_45A0::
-Data_069_45A0:: ; heuristic: start of a structured table; C0
+Data_069_45A0:: ; address name
     db $03 ; entry 0
     db $85, $01, $08, $00, $00, $30, $60, $05, $00, $50, $30
     db $86, $01, $09, $00, $00, $30, $40, $06, $01, $60, $31
@@ -988,7 +988,7 @@ Data_069_45C2:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_45C6::
-Data_069_45C6:: ; heuristic: start of a structured table; C0
+Data_069_45C6:: ; address name
     db $03 ; entry 0
     db $85, $01, $07, $00, $02, $20, $60, $05, $01, $50, $33
     db $86, $01, $0A, $00, $00, $60, $40, $06, $00, $60, $34
@@ -997,7 +997,7 @@ Data_069_45C6:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_45E8::
-Data_069_45E8:: ; heuristic: map object screen array; C0
+Data_069_45E8:: ; address name
     dw ObjSelector_45EC ; id 0
     dw ObjSelector_4617 ; id 1
 
@@ -1010,7 +1010,7 @@ Data_069_45EC:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_45F4::
-Data_069_45F4:: ; heuristic: start of a structured table; C0
+Data_069_45F4:: ; address name
     db $02 ; entry 0
     db $85, $01, $2A, $00, $00, $70, $60, $05, $03, $50, $43
     db $86, $01, $51, $00, $00, $30, $40, $06, $00, $60, $44
@@ -1018,7 +1018,7 @@ Data_069_45F4:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_460B::
-Data_069_460B:: ; heuristic: start of a structured table; C0
+Data_069_460B:: ; address name
     db $01 ; entry 0
     db $85, $01, $2A, $00, $00, $70, $60, $05, $03, $50, $43
 
@@ -1030,7 +1030,7 @@ Data_069_4617:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_461B::
-Data_069_461B:: ; heuristic: start of a structured table; C0
+Data_069_461B:: ; address name
     db $03 ; entry 0
     db $85, $01, $16, $00, $00, $50, $60, $05, $00, $50, $40
     db $86, $01, $22, $00, $02, $50, $20, $06, $01, $60, $41
@@ -1039,7 +1039,7 @@ Data_069_461B:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_463D::
-Data_069_463D:: ; heuristic: map object screen array; C0
+Data_069_463D:: ; address name
     dw ObjSelector_4641 ; id 0
     dw ObjSelector_466B ; id 1
 
@@ -1065,7 +1065,7 @@ Data_069_466B:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_46AB::
-Data_069_46AB:: ; heuristic: map object screen array; C0
+Data_069_46AB:: ; address name
     dw ObjSelector_46AD ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1081,7 +1081,7 @@ Data_069_46AD:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_46C5::
-Data_069_46C5:: ; heuristic: start of a structured table; C0
+Data_069_46C5:: ; address name
     db $03 ; entry 0
     db $85, $01, $15, $00, $00, $30, $20, $05, $00, $50, $3D
     db $86, $01, $43, $00, $00, $70, $40, $06, $00, $60, $3F
@@ -1090,7 +1090,7 @@ Data_069_46C5:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_46E7::
-Data_069_46E7:: ; heuristic: start of a structured table; C0
+Data_069_46E7:: ; address name
     db $02 ; entry 0
     db $85, $01, $15, $00, $00, $30, $20, $05, $00, $50, $3D
     db $86, $01, $13, $00, $00, $70, $70, $06, $00, $60, $3E
@@ -1098,7 +1098,7 @@ Data_069_46E7:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_46FE::
-Data_069_46FE:: ; heuristic: map object screen array; C0
+Data_069_46FE:: ; address name
     dw ObjSelector_4700 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1110,7 +1110,7 @@ Data_069_4700:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4706::
-Data_069_4706:: ; heuristic: start of a structured table; C0
+Data_069_4706:: ; address name
     db $02 ; entry 0
     db $85, $01, $51, $00, $00, $50, $20, $05, $00, $50, $48
     db $86, $01, $43, $00, $00, $E0, $E0, $06, $00, $60, $3F
@@ -1118,7 +1118,7 @@ Data_069_4706:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_471D::
-Data_069_471D:: ; heuristic: map object screen array; C0
+Data_069_471D:: ; address name
     dw ObjSelector_471F ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1131,7 +1131,7 @@ Data_069_471F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_472B::
-Data_069_472B:: ; heuristic: start of a structured table; C0
+Data_069_472B:: ; address name
     db $02 ; entry 0
     db $85, $01, $20, $00, $00, $30, $40, $05, $02, $50, $20
     db $86, $00, $2A, $01, $00, $40, $30, $06, $00, $60, $21
@@ -1139,7 +1139,7 @@ Data_069_472B:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4742::
-Data_069_4742:: ; heuristic: start of a structured table; C0
+Data_069_4742:: ; address name
     db $02 ; entry 0
     db $85, $01, $20, $00, $00, $10, $40, $05, $02, $50, $20
     db $86, $00, $2A, $01, $00, $40, $30, $06, $00, $60, $21
@@ -1147,7 +1147,7 @@ Data_069_4742:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4759::
-Data_069_4759:: ; heuristic: start of a structured table; C0
+Data_069_4759:: ; address name
     db $03 ; entry 0
     db $85, $01, $20, $00, $00, $60, $50, $05, $02, $50, $20
     db $86, $00, $2A, $01, $00, $40, $30, $06, $00, $60, $21
@@ -1156,7 +1156,7 @@ Data_069_4759:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_477B::
-Data_069_477B:: ; heuristic: map object screen array; C0
+Data_069_477B:: ; address name
     dw ObjSelector_477D ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1169,7 +1169,7 @@ Data_069_477D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4787::
-Data_069_4787:: ; heuristic: start of a structured table; C0
+Data_069_4787:: ; address name
     db $02 ; entry 0
     db $85, $00, $29, $01, $00, $40, $20, $05, $00, $50, $2D
     db $86, $01, $61, $00, $00, $40, $E0, $06, $00, $60, $2D
@@ -1177,14 +1177,14 @@ Data_069_4787:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_479E::
-Data_069_479E:: ; heuristic: start of a structured table; C0
+Data_069_479E:: ; address name
     db $01 ; entry 0
     db $85, $01, $61, $00, $00, $40, $20, $05, $00, $50, $2D
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_47AA::
-Data_069_47AA:: ; heuristic: map object screen array; C0
+Data_069_47AA:: ; address name
     dw ObjSelector_47B2 ; id 0
     dw ObjSelector_47CD ; id 1
     dw ObjSelector_486A ; id 2
@@ -1198,7 +1198,7 @@ Data_069_47B2:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_47B6::
-Data_069_47B6:: ; heuristic: start of a structured table; C0
+Data_069_47B6:: ; address name
     db $02 ; entry 0
     db $85, $01, $42, $00, $00, $50, $20, $05, $02, $50, $06
     db $86, $01, $32, $00, $00, $50, $40, $06, $00, $60, $07
@@ -1215,7 +1215,7 @@ Data_069_47CD:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_47E1::
-Data_069_47E1:: ; heuristic: start of a structured table; C0
+Data_069_47E1:: ; address name
     db $03 ; entry 0
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0B
     db $86, $01, $31, $00, $00, $40, $A0, $06, $02, $60, $01
@@ -1224,7 +1224,7 @@ Data_069_47E1:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4803::
-Data_069_4803:: ; heuristic: start of a structured table; C0
+Data_069_4803:: ; address name
     db $03 ; entry 0
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0B
     db $86, $01, $31, $00, $00, $60, $40, $06, $02, $60, $01
@@ -1233,7 +1233,7 @@ Data_069_4803:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4825::
-Data_069_4825:: ; heuristic: start of a structured table; C0
+Data_069_4825:: ; address name
     db $02 ; entry 0
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0B
     db $86, $01, $31, $00, $00, $60, $40, $06, $02, $60, $01
@@ -1241,14 +1241,14 @@ Data_069_4825:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_483C::
-Data_069_483C:: ; heuristic: start of a structured table; C0
+Data_069_483C:: ; address name
     db $01 ; entry 0
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0B
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4848::
-Data_069_4848:: ; heuristic: start of a structured table; C0
+Data_069_4848:: ; address name
     db $03 ; entry 0
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0B
     db $86, $01, $31, $00, $00, $30, $50, $06, $02, $60, $01
@@ -1262,7 +1262,7 @@ Data_069_486A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_486E::
-Data_069_486E:: ; heuristic: start of a structured table; C0
+Data_069_486E:: ; address name
     db $03 ; entry 0
     db $85, $01, $33, $00, $00, $60, $60, $05, $01, $50, $08
     db $86, $01, $34, $00, $02, $20, $50, $06, $01, $60, $09
@@ -1276,7 +1276,7 @@ Data_069_4890:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4894::
-Data_069_4894:: ; heuristic: start of a structured table; C0
+Data_069_4894:: ; address name
     db $03 ; entry 0
     db $85, $01, $37, $00, $00, $80, $40, $05, $00, $50, $03
     db $86, $01, $34, $00, $00, $20, $30, $06, $01, $60, $04
@@ -1285,7 +1285,7 @@ Data_069_4894:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_48B6::
-Data_069_48B6:: ; heuristic: map object screen array; C0
+Data_069_48B6:: ; address name
     dw ObjSelector_48BA ; id 0
     dw ObjSelector_4916 ; id 1
 
@@ -1307,7 +1307,7 @@ Data_069_4916:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_493A::
-Data_069_493A:: ; heuristic: map object screen array; C0
+Data_069_493A:: ; address name
     dw ObjSelector_493C ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1318,7 +1318,7 @@ Data_069_493C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4940::
-Data_069_4940:: ; heuristic: start of a structured table; C0
+Data_069_4940:: ; address name
     db $02 ; entry 0
     db $85, $01, $37, $00, $00, $50, $40, $05, $00, $50, $0F
     db $86, $01, $38, $00, $00, $30, $20, $06, $03, $60, $10
@@ -1326,7 +1326,7 @@ Data_069_4940:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4957::
-Data_069_4957:: ; heuristic: map object screen array; C0
+Data_069_4957:: ; address name
     dw ObjSelector_4959 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1339,7 +1339,7 @@ Data_069_4959:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_49AF::
-Data_069_49AF:: ; heuristic: map object screen array; C0
+Data_069_49AF:: ; address name
     dw ObjSelector_49B5 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -1353,7 +1353,7 @@ Data_069_49B5:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_49BB::
-Data_069_49BB:: ; heuristic: start of a structured table; C0
+Data_069_49BB:: ; address name
     db $02 ; entry 0
     db $85, $01, $5C, $00, $00, $40, $30, $05, $00, $50, $00
     db $86, $00, $DF, $00, $00, $40, $E0, $06, $00, $60, $00
@@ -1361,7 +1361,7 @@ Data_069_49BB:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_49D2::
-Data_069_49D2:: ; heuristic: map object screen array; C0
+Data_069_49D2:: ; address name
     dw ObjSelector_49D6 ; id 0
     dw $0000 ; id 1
 
@@ -1374,7 +1374,7 @@ Data_069_49D6:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_49DC::
-Data_069_49DC:: ; heuristic: start of a structured table; C0
+Data_069_49DC:: ; address name
     db $02 ; entry 0
     db $85, $01, $4A, $00, $00, $40, $E0, $05, $00, $50, $00
     db $86, $01, $48, $00, $05, $48, $30, $06, $00, $60, $01
@@ -1382,7 +1382,7 @@ Data_069_49DC:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_49F3::
-Data_069_49F3:: ; heuristic: map object screen array; C0
+Data_069_49F3:: ; address name
     dw ObjSelector_49F9 ; id 0
     dw ObjSelector_4A51 ; id 1
     dw ObjSelector_4A82 ; id 2
@@ -1399,7 +1399,7 @@ Data_069_49F9:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4A24::
-Data_069_4A24:: ; heuristic: start of a structured table; C0
+Data_069_4A24:: ; address name
     db $04 ; entry 0
     db $85, $00, $6D, $00, $00, $70, $20, $05, $00, $50, $0B
     db $86, $00, $55, $01, $00, $20, $E0, $06, $00, $60, $00
@@ -1414,7 +1414,7 @@ Data_069_4A51:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4A55::
-Data_069_4A55:: ; heuristic: start of a structured table; C0
+Data_069_4A55:: ; address name
     db $04 ; entry 0
     db $85, $00, $47, $00, $00, $50, $70, $05, $00, $50, $00
     db $86, $00, $63, $00, $00, $10, $60, $06, $01, $60, $01
@@ -1429,7 +1429,7 @@ Data_069_4A82:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4A86::
-Data_069_4A86:: ; heuristic: start of a structured table; C0
+Data_069_4A86:: ; address name
     db $03 ; entry 0
     db $85, $00, $6A, $00, $02, $30, $40, $05, $01, $50, $05
     db $86, $00, $51, $00, $00, $20, $60, $06, $02, $60, $04
@@ -1438,7 +1438,7 @@ Data_069_4A86:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4AA8::
-Data_069_4AA8:: ; heuristic: map object screen array; C0
+Data_069_4AA8:: ; address name
     dw ObjSelector_4AAA ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1449,14 +1449,14 @@ Data_069_4AAA:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4AAE::
-Data_069_4AAE:: ; heuristic: start of a structured table; C0
+Data_069_4AAE:: ; address name
     db $01 ; entry 0
     db $85, $00, $77, $00, $00, $30, $10, $05, $00, $50, $00
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4ABA::
-Data_069_4ABA:: ; heuristic: map object screen array; C0
+Data_069_4ABA:: ; address name
     dw ObjSelector_4AC2 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -1471,7 +1471,7 @@ Data_069_4AC2:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4AC8::
-Data_069_4AC8:: ; heuristic: start of a structured table; C0
+Data_069_4AC8:: ; address name
     db $02 ; entry 0
     db $85, $00, $79, $00, $00, $6E, $EC, $05, $00, $50, $00
     db $86, $01, $5A, $00, $00, $40, $50, $06, $00, $60, $00
@@ -1479,7 +1479,7 @@ Data_069_4AC8:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4ADF::
-Data_069_4ADF:: ; heuristic: map object screen array; C0
+Data_069_4ADF:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw ObjSelector_4AE5 ; id 2
@@ -1493,21 +1493,21 @@ Data_069_4AE5:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4AED::
-Data_069_4AED:: ; heuristic: start of a structured table; C0
+Data_069_4AED:: ; address name
     db $01 ; entry 0
     db $85, $00, $61, $00, $00, $40, $20, $05, $00, $50, $16
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4AF9::
-Data_069_4AF9:: ; heuristic: start of a structured table; C0
+Data_069_4AF9:: ; address name
     db $01 ; entry 0
     db $85, $00, $61, $00, $00, $50, $20, $05, $03, $50, $16
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4B05::
-Data_069_4B05:: ; heuristic: map object screen array; C0
+Data_069_4B05:: ; address name
     dw ObjSelector_4B0D ; id 0
     dw ObjSelector_4B33 ; id 1
     dw ObjSelector_4B59 ; id 2
@@ -1521,7 +1521,7 @@ Data_069_4B0D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4B11::
-Data_069_4B11:: ; heuristic: start of a structured table; C0
+Data_069_4B11:: ; address name
     db $03 ; entry 0
     db $85, $00, $53, $00, $00, $10, $70, $05, $01, $50, $1C
     db $86, $00, $19, $01, $00, $10, $30, $06, $00, $60, $1B
@@ -1535,7 +1535,7 @@ Data_069_4B33:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4B37::
-Data_069_4B37:: ; heuristic: start of a structured table; C0
+Data_069_4B37:: ; address name
     db $03 ; entry 0
     db $85, $00, $5C, $00, $00, $50, $60, $05, $03, $50, $1E
     db $86, $00, $2B, $00, $00, $30, $40, $06, $00, $60, $1F
@@ -1549,7 +1549,7 @@ Data_069_4B59:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4B5D::
-Data_069_4B5D:: ; heuristic: start of a structured table; C0
+Data_069_4B5D:: ; address name
     db $04 ; entry 0
     db $85, $00, $48, $00, $00, $50, $40, $05, $00, $50, $17
     db $85, $00, $48, $00, $00, $80, $70, $05, $03, $50, $1A
@@ -1564,7 +1564,7 @@ Data_069_4B8A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4B8E::
-Data_069_4B8E:: ; heuristic: start of a structured table; C0
+Data_069_4B8E:: ; address name
     db $04 ; entry 0
     db $85, $00, $5F, $00, $00, $10, $20, $05, $00, $50, $21
     db $86, $00, $80, $00, $02, $10, $60, $06, $03, $60, $22
@@ -1574,7 +1574,7 @@ Data_069_4B8E:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4BBB::
-Data_069_4BBB:: ; heuristic: map object screen array; C0
+Data_069_4BBB:: ; address name
     dw ObjSelector_4BBF ; id 0
     dw ObjSelector_4BCF ; id 1
 
@@ -1586,7 +1586,7 @@ Data_069_4BBF:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4BC3::
-Data_069_4BC3:: ; heuristic: start of a structured table; C0
+Data_069_4BC3:: ; address name
     db $01 ; entry 0
     db $85, $00, $0C, $00, $00, $50, $60, $05, $00, $50, $6B
 
@@ -1598,7 +1598,7 @@ Data_069_4BCF:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4BD3::
-Data_069_4BD3:: ; heuristic: start of a structured table; C0
+Data_069_4BD3:: ; address name
     db $03 ; entry 0
     db $85, $00, $53, $00, $00, $70, $10, $05, $00, $50, $00
     db $86, $00, $5D, $00, $00, $30, $20, $06, $03, $60, $6C
@@ -1607,7 +1607,7 @@ Data_069_4BD3:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4BF5::
-Data_069_4BF5:: ; heuristic: map object screen array; C0
+Data_069_4BF5:: ; address name
     dw ObjSelector_4BF9 ; id 0
     dw ObjSelector_4C50 ; id 1
 
@@ -1621,7 +1621,7 @@ Data_069_4BF9:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4C44::
-Data_069_4C44:: ; heuristic: start of a structured table; C0
+Data_069_4C44:: ; address name
     db $01 ; entry 0
     db $85, $00, $1F, $01, $00, $50, $40, $05, $00, $50, $2A
 
@@ -1633,14 +1633,14 @@ Data_069_4C50:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4C54::
-Data_069_4C54:: ; heuristic: start of a structured table; C0
+Data_069_4C54:: ; address name
     db $01 ; entry 0
     db $85, $00, $79, $00, $00, $00, $E0, $05, $00, $50, $00
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4C60::
-Data_069_4C60:: ; heuristic: map object screen array; C0
+Data_069_4C60:: ; address name
     dw ObjSelector_4C68 ; id 0
     dw ObjSelector_4CCA ; id 1
     dw ObjSelector_4CFB ; id 2
@@ -1656,7 +1656,7 @@ Data_069_4C68:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4CB3::
-Data_069_4CB3:: ; heuristic: start of a structured table; C0
+Data_069_4CB3:: ; address name
     db $02 ; entry 0
     db $85, $00, $59, $00, $00, $60, $60, $05, $00, $50, $35
     db $86, $00, $58, $00, $00, $20, $70, $06, $01, $60, $36
@@ -1669,7 +1669,7 @@ Data_069_4CCA:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4CCE::
-Data_069_4CCE:: ; heuristic: start of a structured table; C0
+Data_069_4CCE:: ; address name
     db $04 ; entry 0
     db $85, $00, $54, $00, $00, $10, $30, $05, $00, $50, $38
     db $86, $00, $03, $00, $02, $40, $60, $06, $01, $60, $39
@@ -1684,7 +1684,7 @@ Data_069_4CFB:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4CFF::
-Data_069_4CFF:: ; heuristic: start of a structured table; C0
+Data_069_4CFF:: ; address name
     db $04 ; entry 0
     db $85, $00, $63, $00, $02, $50, $60, $05, $01, $50, $30
     db $86, $00, $55, $00, $00, $20, $40, $06, $01, $60, $31
@@ -1700,7 +1700,7 @@ Data_069_4D2C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4D34::
-Data_069_4D34:: ; heuristic: start of a structured table; C0
+Data_069_4D34:: ; address name
     db $03 ; entry 0
     db $85, $00, $4E, $00, $00, $30, $70, $05, $00, $50, $2D
     db $86, $00, $4D, $00, $02, $70, $10, $06, $03, $60, $2E
@@ -1709,7 +1709,7 @@ Data_069_4D34:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4D56::
-Data_069_4D56:: ; heuristic: start of a structured table; C0
+Data_069_4D56:: ; address name
     db $04 ; entry 0
     db $85, $00, $4E, $00, $00, $30, $70, $05, $00, $50, $2D
     db $86, $00, $4D, $00, $02, $70, $10, $06, $03, $60, $2E
@@ -1719,7 +1719,7 @@ Data_069_4D56:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4D83::
-Data_069_4D83:: ; heuristic: map object screen array; C0
+Data_069_4D83:: ; address name
     dw ObjSelector_4D85 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1731,21 +1731,21 @@ Data_069_4D85:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4D8D::
-Data_069_4D8D:: ; heuristic: start of a structured table; C0
+Data_069_4D8D:: ; address name
     db $01 ; entry 0
     db $85, $00, $56, $00, $00, $10, $10, $05, $01, $50, $3D
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4D99::
-Data_069_4D99:: ; heuristic: start of a structured table; C0
+Data_069_4D99:: ; address name
     db $01 ; entry 0
     db $85, $00, $56, $00, $00, $10, $10, $05, $01, $50, $3F
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4DA5::
-Data_069_4DA5:: ; heuristic: map object screen array; C0
+Data_069_4DA5:: ; address name
     dw ObjSelector_4DA7 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1757,14 +1757,14 @@ Data_069_4DA7:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4DAF::
-Data_069_4DAF:: ; heuristic: start of a structured table; C0
+Data_069_4DAF:: ; address name
     db $01 ; entry 0
     db $85, $00, $80, $00, $00, $30, $10, $05, $00, $50, $43
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4DBB::
-Data_069_4DBB:: ; heuristic: start of a structured table; C0
+Data_069_4DBB:: ; address name
     db $04 ; entry 0
     db $85, $00, $80, $00, $00, $30, $10, $05, $00, $50, $43
     db $86, $00, $5A, $00, $00, $40, $40, $06, $02, $60, $44
@@ -1774,7 +1774,7 @@ Data_069_4DBB:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4DE8::
-Data_069_4DE8:: ; heuristic: map object screen array; C0
+Data_069_4DE8:: ; address name
     dw ObjSelector_4DEC ; id 0
     dw ObjSelector_4E0C ; id 1
 
@@ -1787,14 +1787,14 @@ Data_069_4DEC:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4DF4::
-Data_069_4DF4:: ; heuristic: start of a structured table; C0
+Data_069_4DF4:: ; address name
     db $01 ; entry 0
     db $85, $00, $61, $00, $00, $50, $40, $05, $00, $50, $5A
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4E00::
-Data_069_4E00:: ; heuristic: start of a structured table; C0
+Data_069_4E00:: ; address name
     db $01 ; entry 0
     db $85, $00, $61, $00, $00, $40, $40, $05, $00, $50, $5A
 
@@ -1807,7 +1807,7 @@ Data_069_4E0C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4E14::
-Data_069_4E14:: ; heuristic: start of a structured table; C0
+Data_069_4E14:: ; address name
     db $03 ; entry 0
     db $85, $00, $5A, $00, $00, $30, $30, $05, $01, $50, $57
     db $86, $00, $59, $00, $00, $70, $50, $06, $00, $60, $58
@@ -1816,14 +1816,14 @@ Data_069_4E14:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4E36::
-Data_069_4E36:: ; heuristic: start of a structured table; C0
+Data_069_4E36:: ; address name
     db $01 ; entry 0
     db $85, $00, $5A, $00, $00, $30, $30, $05, $01, $50, $57
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4E42::
-Data_069_4E42:: ; heuristic: map object screen array; C0
+Data_069_4E42:: ; address name
     dw ObjSelector_4E44 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -1835,14 +1835,14 @@ Data_069_4E44:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4E4A::
-Data_069_4E4A:: ; heuristic: start of a structured table; C0
+Data_069_4E4A:: ; address name
     db $01 ; entry 0
     db $85, $00, $12, $00, $00, $40, $30, $05, $00, $50, $4A
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4E56::
-Data_069_4E56:: ; heuristic: map object screen array; C0
+Data_069_4E56:: ; address name
     dw ObjSelector_4E5E ; id 0
     dw $0000 ; id 1
     dw ObjSelector_4E6E ; id 2
@@ -1856,7 +1856,7 @@ Data_069_4E5E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4E62::
-Data_069_4E62:: ; heuristic: start of a structured table; C0
+Data_069_4E62:: ; address name
     db $01 ; entry 0
     db $85, $00, $5E, $00, $00, $80, $60, $05, $02, $50, $0A
 
@@ -1868,7 +1868,7 @@ Data_069_4E6E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4E72::
-Data_069_4E72:: ; heuristic: start of a structured table; C0
+Data_069_4E72:: ; address name
     db $02 ; entry 0
     db $85, $00, $5D, $00, $00, $60, $60, $05, $00, $50, $09
     db $86, $00, $55, $00, $00, $10, $50, $06, $00, $60, $07
@@ -1881,14 +1881,14 @@ Data_069_4E89:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4E8D::
-Data_069_4E8D:: ; heuristic: start of a structured table; C0
+Data_069_4E8D:: ; address name
     db $01 ; entry 0
     db $85, $00, $50, $00, $00, $40, $60, $05, $02, $50, $08
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4E99::
-Data_069_4E99:: ; heuristic: map object screen array; C0
+Data_069_4E99:: ; address name
     dw ObjSelector_4EAB ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -1908,14 +1908,14 @@ Data_069_4EAB:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4EB1::
-Data_069_4EB1:: ; heuristic: start of a structured table; C0
+Data_069_4EB1:: ; address name
     db $01 ; entry 0
     db $85, $00, $0A, $01, $00, $20, $20, $05, $00, $50, $4C
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4EBD::
-Data_069_4EBD:: ; heuristic: map object screen array; C0
+Data_069_4EBD:: ; address name
     dw ObjSelector_4ECF ; id 0
     dw ObjSelector_4EF7 ; id 1
     dw ObjSelector_4F07 ; id 2
@@ -1935,7 +1935,7 @@ Data_069_4ECF:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4ED5::
-Data_069_4ED5:: ; heuristic: start of a structured table; C0
+Data_069_4ED5:: ; address name
     db $03 ; entry 0
     db $85, $01, $44, $00, $00, $30, $30, $05, $00, $50, $69
     db $86, $01, $44, $00, $00, $60, $40, $06, $00, $60, $69
@@ -1949,7 +1949,7 @@ Data_069_4EF7:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4EFB::
-Data_069_4EFB:: ; heuristic: start of a structured table; C0
+Data_069_4EFB:: ; address name
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $30, $50, $05, $00, $50, $69
 
@@ -1961,7 +1961,7 @@ Data_069_4F07:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4F0B::
-Data_069_4F0B:: ; heuristic: start of a structured table; C0
+Data_069_4F0B:: ; address name
     db $03 ; entry 0
     db $85, $01, $44, $00, $00, $10, $30, $05, $03, $50, $69
     db $86, $01, $44, $00, $00, $20, $50, $06, $01, $60, $69
@@ -1975,7 +1975,7 @@ Data_069_4F2D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4F31::
-Data_069_4F31:: ; heuristic: start of a structured table; C0
+Data_069_4F31:: ; address name
     db $03 ; entry 0
     db $85, $01, $44, $00, $00, $30, $70, $05, $01, $50, $69
     db $86, $01, $44, $00, $00, $50, $30, $06, $03, $60, $69
@@ -1989,7 +1989,7 @@ Data_069_4F53:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4F57::
-Data_069_4F57:: ; heuristic: start of a structured table; C0
+Data_069_4F57:: ; address name
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $30, $30, $05, $01, $50, $69
 
@@ -2001,7 +2001,7 @@ Data_069_4F63:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4F67::
-Data_069_4F67:: ; heuristic: start of a structured table; C0
+Data_069_4F67:: ; address name
     db $03 ; entry 0
     db $85, $01, $44, $00, $00, $10, $30, $05, $02, $50, $69
     db $86, $01, $44, $00, $00, $20, $70, $06, $02, $60, $69
@@ -2010,7 +2010,7 @@ Data_069_4F67:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4F89::
-Data_069_4F89:: ; heuristic: map object screen array; C0
+Data_069_4F89:: ; address name
     dw ObjSelector_4F8B ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -2022,14 +2022,14 @@ Data_069_4F8B:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4F91::
-Data_069_4F91:: ; heuristic: start of a structured table; C0
+Data_069_4F91:: ; address name
     db $01 ; entry 0
     db $85, $00, $F6, $00, $00, $40, $40, $05, $00, $50, $4F
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4F9D::
-Data_069_4F9D:: ; heuristic: map object screen array; C0
+Data_069_4F9D:: ; address name
     dw ObjSelector_4FA9 ; id 0
     dw ObjSelector_4FBB ; id 1
     dw $0000 ; id 2
@@ -2046,7 +2046,7 @@ Data_069_4FA9:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4FAF::
-Data_069_4FAF:: ; heuristic: start of a structured table; C0
+Data_069_4FAF:: ; address name
     db $01 ; entry 0
     db $85, $00, $0A, $01, $00, $50, $20, $05, $00, $50, $6E
 
@@ -2059,14 +2059,14 @@ Data_069_4FBB:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4FC1::
-Data_069_4FC1:: ; heuristic: start of a structured table; C0
+Data_069_4FC1:: ; address name
     db $01 ; entry 0
     db $85, $00, $0A, $01, $00, $80, $50, $05, $03, $50, $6F
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4FCD::
-Data_069_4FCD:: ; heuristic: map object screen array; C0
+Data_069_4FCD:: ; address name
     dw ObjSelector_4FCF ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -2078,14 +2078,14 @@ Data_069_4FCF:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_4FD5::
-Data_069_4FD5:: ; heuristic: start of a structured table; C0
+Data_069_4FD5:: ; address name
     db $01 ; entry 0
     db $85, $00, $10, $01, $00, $40, $30, $05, $00, $50, $55
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_4FE1::
-Data_069_4FE1:: ; heuristic: map object screen array; C0
+Data_069_4FE1:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -2129,7 +2129,7 @@ Data_069_5041:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5047::
-Data_069_5047:: ; heuristic: start of a structured table; C0
+Data_069_5047:: ; address name
     db $01 ; entry 0
     db $85, $00, $D6, $00, $00, $40, $20, $05, $00, $50, $5F
 
@@ -2142,14 +2142,14 @@ Data_069_5053:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5059::
-Data_069_5059:: ; heuristic: start of a structured table; C0
+Data_069_5059:: ; address name
     db $01 ; entry 0
     db $85, $00, $D6, $00, $00, $30, $40, $05, $03, $50, $60
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5065::
-Data_069_5065:: ; heuristic: map object screen array; C0
+Data_069_5065:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -2166,14 +2166,14 @@ Data_069_5071:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5077::
-Data_069_5077:: ; heuristic: start of a structured table; C0
+Data_069_5077:: ; address name
     db $01 ; entry 0
     db $85, $00, $D6, $00, $00, $80, $40, $05, $00, $50, $61
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5083::
-Data_069_5083:: ; heuristic: map object screen array; C0
+Data_069_5083:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_508B ; id 1
     dw $0000 ; id 2
@@ -2190,7 +2190,7 @@ Data_069_508B:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_50A5::
-Data_069_50A5:: ; heuristic: map object screen array; C0
+Data_069_50A5:: ; address name
     dw ObjSelector_50AB ; id 0
     dw ObjSelector_50DE ; id 1
     dw $0000 ; id 2
@@ -2213,14 +2213,14 @@ Data_069_50DE:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_50E4::
-Data_069_50E4:: ; heuristic: start of a structured table; C0
+Data_069_50E4:: ; address name
     db $01 ; entry 0
     db $85, $01, $54, $00, $04, $48, $20, $05, $00, $50, $67
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_50F0::
-Data_069_50F0:: ; heuristic: map object screen array; C0
+Data_069_50F0:: ; address name
     dw ObjSelector_50F2 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -2234,7 +2234,7 @@ Data_069_50F2:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_519C::
-Data_069_519C:: ; heuristic: start of a structured table; C0
+Data_069_519C:: ; address name
     db $05 ; entry 0
     db $85, $01, $53, $00, $00, $40, $E0, $05, $00, $50, $00
     db $86, $01, $3A, $00, $00, $40, $50, $06, $02, $60, $72
@@ -2245,7 +2245,7 @@ Data_069_519C:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_51D4::
-Data_069_51D4:: ; heuristic: map object screen array; C0
+Data_069_51D4:: ; address name
     dw ObjSelector_51DC ; id 0
     dw ObjSelector_523E ; id 1
     dw ObjSelector_5264 ; id 2
@@ -2260,7 +2260,7 @@ Data_069_51DC:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_51E4::
-Data_069_51E4:: ; heuristic: start of a structured table; C0
+Data_069_51E4:: ; address name
     db $04 ; entry 0
     db $85, $01, $10, $00, $00, $40, $10, $05, $00, $50, $0B
     db $85, $01, $10, $00, $00, $50, $10, $05, $00, $50, $0C
@@ -2270,7 +2270,7 @@ Data_069_51E4:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5211::
-Data_069_5211:: ; heuristic: start of a structured table; C0
+Data_069_5211:: ; address name
     db $04 ; entry 0
     db $85, $01, $10, $00, $00, $30, $20, $05, $00, $50, $0B
     db $85, $01, $10, $00, $02, $60, $30, $05, $00, $50, $0C
@@ -2285,7 +2285,7 @@ Data_069_523E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5242::
-Data_069_5242:: ; heuristic: start of a structured table; C0
+Data_069_5242:: ; address name
     db $03 ; entry 0
     db $85, $01, $2E, $00, $00, $60, $70, $05, $03, $50, $05
     db $86, $01, $2D, $00, $02, $40, $50, $06, $01, $60, $06
@@ -2299,7 +2299,7 @@ Data_069_5264:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5268::
-Data_069_5268:: ; heuristic: start of a structured table; C0
+Data_069_5268:: ; address name
     db $04 ; entry 0
     db $85, $01, $10, $00, $00, $60, $60, $05, $00, $50, $00
     db $86, $01, $2E, $00, $00, $80, $50, $06, $02, $60, $01
@@ -2314,7 +2314,7 @@ Data_069_5295:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5299::
-Data_069_5299:: ; heuristic: start of a structured table; C0
+Data_069_5299:: ; address name
     db $04 ; entry 0
     db $85, $01, $2F, $00, $02, $50, $50, $05, $01, $50, $04
     db $85, $01, $2F, $00, $00, $30, $40, $05, $03, $50, $07
@@ -2324,7 +2324,7 @@ Data_069_5299:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_52C6::
-Data_069_52C6:: ; heuristic: map object screen array; C0
+Data_069_52C6:: ; address name
     dw ObjSelector_52C8 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -2336,7 +2336,7 @@ Data_069_52C8:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_52D0::
-Data_069_52D0:: ; heuristic: start of a structured table; C0
+Data_069_52D0:: ; address name
     db $02 ; entry 0
     db $85, $01, $2E, $00, $00, $60, $20, $05, $01, $50, $12
     db $86, $01, $15, $00, $00, $20, $50, $06, $01, $60, $13
@@ -2344,14 +2344,14 @@ Data_069_52D0:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_52E7::
-Data_069_52E7:: ; heuristic: start of a structured table; C0
+Data_069_52E7:: ; address name
     db $01 ; entry 0
     db $85, $01, $2E, $00, $00, $60, $20, $05, $01, $50, $12
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_52F3::
-Data_069_52F3:: ; heuristic: map object screen array; C0
+Data_069_52F3:: ; address name
     dw ObjSelector_52FB ; id 0
     dw ObjSelector_537E ; id 1
     dw ObjSelector_538E ; id 2
@@ -2367,7 +2367,7 @@ Data_069_52FB:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5367::
-Data_069_5367:: ; heuristic: start of a structured table; C0
+Data_069_5367:: ; address name
     db $02 ; entry 0
     db $85, $01, $0E, $00, $00, $40, $30, $05, $00, $50, $48
     db $86, $01, $0E, $00, $00, $E0, $E0, $06, $00, $60, $00
@@ -2380,7 +2380,7 @@ Data_069_537E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5382::
-Data_069_5382:: ; heuristic: start of a structured table; C0
+Data_069_5382:: ; address name
     db $01 ; entry 0
     db $85, $01, $12, $00, $00, $20, $20, $05, $02, $50, $17
 
@@ -2397,7 +2397,7 @@ Data_069_538E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_53D8::
-Data_069_53D8:: ; heuristic: start of a structured table; C0
+Data_069_53D8:: ; address name
     db $02 ; entry 0
     db $85, $01, $10, $00, $00, $60, $20, $05, $00, $50, $15
     db $86, $01, $10, $00, $00, $30, $30, $06, $00, $60, $18
@@ -2410,14 +2410,14 @@ Data_069_53EF:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_53F3::
-Data_069_53F3:: ; heuristic: start of a structured table; C0
+Data_069_53F3:: ; address name
     db $01 ; entry 0
     db $85, $01, $10, $00, $00, $80, $30, $05, $00, $50, $16
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_53FF::
-Data_069_53FF:: ; heuristic: map object screen array; C0
+Data_069_53FF:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_5403 ; id 1
 
@@ -2430,7 +2430,7 @@ Data_069_5403:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5409::
-Data_069_5409:: ; heuristic: start of a structured table; C0
+Data_069_5409:: ; address name
     db $02 ; entry 0
     db $85, $01, $0E, $00, $00, $70, $30, $05, $00, $50, $48
     db $86, $01, $03, $00, $00, $30, $50, $06, $03, $60, $49
@@ -2438,7 +2438,7 @@ Data_069_5409:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5420::
-Data_069_5420:: ; heuristic: map object screen array; C0
+Data_069_5420:: ; address name
     dw ObjSelector_5426 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -2451,14 +2451,14 @@ Data_069_5426:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_542A::
-Data_069_542A:: ; heuristic: start of a structured table; C0
+Data_069_542A:: ; address name
     db $01 ; entry 0
     db $85, $01, $2E, $00, $00, $50, $30, $05, $00, $50, $1C
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5436::
-Data_069_5436:: ; heuristic: map object screen array; C0
+Data_069_5436:: ; address name
     dw ObjSelector_543E ; id 0
     dw ObjSelector_546F ; id 1
     dw ObjSelector_54C6 ; id 2
@@ -2472,7 +2472,7 @@ Data_069_543E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5442::
-Data_069_5442:: ; heuristic: start of a structured table; C0
+Data_069_5442:: ; address name
     db $04 ; entry 0
     db $85, $01, $30, $00, $00, $30, $50, $05, $00, $50, $1D
     db $85, $01, $30, $00, $00, $50, $40, $05, $00, $50, $1F
@@ -2488,7 +2488,7 @@ Data_069_546F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5477::
-Data_069_5477:: ; heuristic: start of a structured table; C0
+Data_069_5477:: ; address name
     db $04 ; entry 0
     db $85, $01, $16, $00, $00, $10, $30, $05, $01, $50, $29
     db $86, $01, $15, $00, $00, $70, $20, $06, $00, $60, $2A
@@ -2498,7 +2498,7 @@ Data_069_5477:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_54A4::
-Data_069_54A4:: ; heuristic: start of a structured table; C0
+Data_069_54A4:: ; address name
     db $03 ; entry 0
     db $85, $01, $16, $00, $00, $10, $30, $05, $01, $50, $29
     db $86, $01, $15, $00, $00, $70, $20, $06, $00, $60, $2A
@@ -2512,7 +2512,7 @@ Data_069_54C6:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_54CA::
-Data_069_54CA:: ; heuristic: start of a structured table; C0
+Data_069_54CA:: ; address name
     db $04 ; entry 0
     db $85, $01, $2E, $00, $00, $10, $20, $05, $00, $50, $21
     db $86, $01, $2D, $00, $02, $40, $50, $06, $01, $60, $22
@@ -2527,7 +2527,7 @@ Data_069_54F7:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_54FB::
-Data_069_54FB:: ; heuristic: start of a structured table; C0
+Data_069_54FB:: ; address name
     db $04 ; entry 0
     db $85, $01, $2E, $00, $00, $40, $50, $05, $00, $50, $1E
     db $86, $01, $30, $00, $00, $80, $20, $06, $03, $60, $25
@@ -2537,7 +2537,7 @@ Data_069_54FB:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5528::
-Data_069_5528:: ; heuristic: map object screen array; C0
+Data_069_5528:: ; address name
     dw ObjSelector_552A ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -2549,7 +2549,7 @@ Data_069_552A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5532::
-Data_069_5532:: ; heuristic: start of a structured table; C0
+Data_069_5532:: ; address name
     db $04 ; entry 0
     db $85, $01, $16, $00, $00, $20, $20, $05, $01, $50, $31
     db $85, $01, $16, $00, $00, $40, $30, $05, $02, $50, $32
@@ -2559,7 +2559,7 @@ Data_069_5532:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_555F::
-Data_069_555F:: ; heuristic: start of a structured table; C0
+Data_069_555F:: ; address name
     db $02 ; entry 0
     db $85, $01, $16, $00, $00, $20, $20, $05, $01, $50, $31
     db $86, $01, $17, $00, $00, $40, $50, $06, $00, $60, $33
@@ -2567,7 +2567,7 @@ Data_069_555F:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5576::
-Data_069_5576:: ; heuristic: map object screen array; C0
+Data_069_5576:: ; address name
     dw ObjSelector_5578 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -2578,7 +2578,7 @@ Data_069_5578:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_557C::
-Data_069_557C:: ; heuristic: start of a structured table; C0
+Data_069_557C:: ; address name
     db $02 ; entry 0
     db $85, $01, $2E, $00, $00, $10, $10, $05, $01, $50, $36
     db $86, $01, $29, $00, $00, $20, $70, $06, $02, $60, $37
@@ -2594,7 +2594,7 @@ Data_069_5599:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_559D::
-Data_069_559D:: ; heuristic: start of a structured table; C0
+Data_069_559D:: ; address name
     db $02 ; entry 0
     db $85, $01, $52, $00, $00, $40, $30, $05, $00, $50, $3C
     db $86, $01, $52, $00, $00, $70, $40, $06, $03, $60, $3D
@@ -2608,7 +2608,7 @@ Data_069_55B4:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_55BC::
-Data_069_55BC:: ; heuristic: start of a structured table; C0
+Data_069_55BC:: ; address name
     db $04 ; entry 0
     db $85, $01, $10, $00, $00, $30, $30, $05, $00, $50, $38
     db $85, $01, $10, $00, $00, $00, $40, $05, $01, $50, $39
@@ -2618,7 +2618,7 @@ Data_069_55BC:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_55E9::
-Data_069_55E9:: ; heuristic: start of a structured table; C0
+Data_069_55E9:: ; address name
     db $04 ; entry 0
     db $85, $01, $10, $00, $00, $30, $30, $05, $00, $50, $38
     db $85, $01, $10, $00, $00, $60, $40, $05, $00, $50, $39
@@ -2628,7 +2628,7 @@ Data_069_55E9:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5616::
-Data_069_5616:: ; heuristic: map object screen array; C0
+Data_069_5616:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw ObjSelector_5636 ; id 2
@@ -2654,7 +2654,7 @@ Data_069_5636:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_563A::
-Data_069_563A:: ; heuristic: start of a structured table; C0
+Data_069_563A:: ; address name
     db $01 ; entry 0
     db $85, $01, $16, $00, $00, $70, $30, $05, $00, $50, $3F
 
@@ -2667,7 +2667,7 @@ Data_069_5646:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_564E::
-Data_069_564E:: ; heuristic: start of a structured table; C0
+Data_069_564E:: ; address name
     db $03 ; entry 0
     db $85, $01, $52, $00, $00, $40, $60, $05, $02, $50, $3C
     db $86, $01, $52, $00, $00, $50, $60, $06, $02, $60, $3D
@@ -2676,14 +2676,14 @@ Data_069_564E:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5670::
-Data_069_5670:: ; heuristic: start of a structured table; C0
+Data_069_5670:: ; address name
     db $01 ; entry 0
     db $85, $01, $16, $00, $02, $50, $20, $05, $01, $50, $3E
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_567C::
-Data_069_567C:: ; heuristic: map object screen array; C0
+Data_069_567C:: ; address name
     dw ObjSelector_567E ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -2694,14 +2694,14 @@ Data_069_567E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5682::
-Data_069_5682:: ; heuristic: start of a structured table; C0
+Data_069_5682:: ; address name
     db $01 ; entry 0
     db $85, $01, $52, $00, $00, $60, $30, $05, $00, $50, $40
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_568E::
-Data_069_568E:: ; heuristic: map object screen array; C0
+Data_069_568E:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_5692 ; id 1
 
@@ -2713,14 +2713,14 @@ Data_069_5692:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5696::
-Data_069_5696:: ; heuristic: start of a structured table; C0
+Data_069_5696:: ; address name
     db $01 ; entry 0
     db $85, $01, $16, $00, $00, $50, $50, $05, $03, $50, $41
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_56A2::
-Data_069_56A2:: ; heuristic: map object screen array; C0
+Data_069_56A2:: ; address name
     dw ObjSelector_56A8 ; id 0
     dw ObjSelector_56BA ; id 1
     dw ObjSelector_570E ; id 2
@@ -2734,7 +2734,7 @@ Data_069_56A8:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_56AE::
-Data_069_56AE:: ; heuristic: start of a structured table; C0
+Data_069_56AE:: ; address name
     db $01 ; entry 0
     db $85, $01, $16, $00, $02, $60, $10, $05, $01, $50, $44
 
@@ -2754,7 +2754,7 @@ Data_069_570E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5714::
-Data_069_5714:: ; heuristic: start of a structured table; C0
+Data_069_5714:: ; address name
     db $02 ; entry 0
     db $85, $01, $16, $00, $02, $30, $10, $05, $01, $50, $42
     db $86, $01, $10, $00, $00, $70, $30, $06, $02, $60, $43
@@ -2762,7 +2762,7 @@ Data_069_5714:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_572B::
-Data_069_572B:: ; heuristic: map object screen array; C0
+Data_069_572B:: ; address name
     dw ObjSelector_5733 ; id 0
     dw ObjSelector_5764 ; id 1
     dw ObjSelector_5795 ; id 2
@@ -2776,7 +2776,7 @@ Data_069_5733:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5737::
-Data_069_5737:: ; heuristic: start of a structured table; C0
+Data_069_5737:: ; address name
     db $04 ; entry 0
     db $85, $01, $52, $00, $00, $60, $40, $05, $00, $50, $56
     db $86, $01, $2E, $00, $00, $30, $70, $06, $03, $60, $57
@@ -2791,7 +2791,7 @@ Data_069_5764:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5768::
-Data_069_5768:: ; heuristic: start of a structured table; C0
+Data_069_5768:: ; address name
     db $04 ; entry 0
     db $85, $01, $30, $00, $00, $10, $20, $05, $00, $50, $52
     db $86, $01, $2D, $00, $00, $80, $30, $06, $01, $60, $53
@@ -2806,7 +2806,7 @@ Data_069_5795:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5799::
-Data_069_5799:: ; heuristic: start of a structured table; C0
+Data_069_5799:: ; address name
     db $04 ; entry 0
     db $85, $01, $2F, $00, $00, $40, $40, $05, $00, $50, $4E
     db $86, $01, $2E, $00, $00, $10, $60, $06, $01, $60, $4F
@@ -2821,7 +2821,7 @@ Data_069_57C6:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_57CA::
-Data_069_57CA:: ; heuristic: start of a structured table; C0
+Data_069_57CA:: ; address name
     db $02 ; entry 0
     db $85, $01, $2D, $00, $00, $30, $50, $05, $00, $50, $59
     db $86, $01, $30, $00, $02, $60, $40, $06, $01, $60, $5A
@@ -2829,7 +2829,7 @@ Data_069_57CA:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_57E1::
-Data_069_57E1:: ; heuristic: map object screen array; C0
+Data_069_57E1:: ; address name
     dw ObjSelector_57E5 ; id 0
     dw ObjSelector_5800 ; id 1
 
@@ -2841,7 +2841,7 @@ Data_069_57E5:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_57E9::
-Data_069_57E9:: ; heuristic: start of a structured table; C0
+Data_069_57E9:: ; address name
     db $02 ; entry 0
     db $85, $01, $2E, $00, $00, $80, $10, $05, $00, $50, $5E
     db $86, $01, $15, $00, $00, $60, $10, $06, $00, $60, $5F
@@ -2854,14 +2854,14 @@ Data_069_5800:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5804::
-Data_069_5804:: ; heuristic: start of a structured table; C0
+Data_069_5804:: ; address name
     db $01 ; entry 0
     db $85, $01, $29, $00, $00, $20, $20, $05, $00, $50, $60
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5810::
-Data_069_5810:: ; heuristic: map object screen array; C0
+Data_069_5810:: ; address name
     dw ObjSelector_5814 ; id 0
     dw ObjSelector_585D ; id 1
 
@@ -2878,7 +2878,7 @@ Data_069_5814:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5851::
-Data_069_5851:: ; heuristic: start of a structured table; C0
+Data_069_5851:: ; address name
     db $01 ; entry 0
     db $87, $01, $42, $00, $00, $30, $50, $07, $00, $70, $2E
 
@@ -2892,7 +2892,7 @@ Data_069_585D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_58A8::
-Data_069_58A8:: ; heuristic: start of a structured table; C0
+Data_069_58A8:: ; address name
     db $03 ; entry 0
     db $85, $01, $52, $00, $00, $20, $50, $05, $00, $50, $66
     db $86, $01, $52, $00, $00, $70, $60, $06, $03, $60, $61
@@ -2901,7 +2901,7 @@ Data_069_58A8:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_58CA::
-Data_069_58CA:: ; heuristic: map object screen array; C0
+Data_069_58CA:: ; address name
     dw ObjSelector_58D2 ; id 0
     dw ObjSelector_58ED ; id 1
     dw ObjSelector_5944 ; id 2
@@ -2915,7 +2915,7 @@ Data_069_58D2:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_58D6::
-Data_069_58D6:: ; heuristic: start of a structured table; C0
+Data_069_58D6:: ; address name
     db $02 ; entry 0
     db $85, $01, $52, $00, $00, $70, $40, $05, $00, $50, $6E
     db $86, $01, $14, $00, $00, $20, $10, $06, $02, $60, $6B
@@ -2930,7 +2930,7 @@ Data_069_58ED:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5938::
-Data_069_5938:: ; heuristic: start of a structured table; C0
+Data_069_5938:: ; address name
     db $01 ; entry 0
     db $85, $01, $0E, $00, $00, $40, $20, $05, $00, $50, $71
 
@@ -2942,7 +2942,7 @@ Data_069_5944:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5948::
-Data_069_5948:: ; heuristic: start of a structured table; C0
+Data_069_5948:: ; address name
     db $02 ; entry 0
     db $86, $01, $12, $00, $00, $30, $60, $06, $03, $60, $6C
     db $87, $01, $52, $00, $00, $10, $20, $07, $02, $70, $6A
@@ -2956,7 +2956,7 @@ Data_069_595F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5967::
-Data_069_5967:: ; heuristic: start of a structured table; C0
+Data_069_5967:: ; address name
     db $03 ; entry 0
     db $85, $01, $12, $00, $00, $40, $10, $05, $00, $50, $6F
     db $86, $01, $52, $00, $00, $50, $10, $06, $00, $60, $69
@@ -2965,7 +2965,7 @@ Data_069_5967:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5989::
-Data_069_5989:: ; heuristic: start of a structured table; C0
+Data_069_5989:: ; address name
     db $03 ; entry 0
     db $85, $01, $12, $00, $00, $30, $30, $05, $00, $50, $6F
     db $86, $01, $52, $00, $00, $60, $20, $06, $00, $60, $69
@@ -2974,7 +2974,7 @@ Data_069_5989:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_59AB::
-Data_069_59AB:: ; heuristic: map object screen array; C0
+Data_069_59AB:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_59AF ; id 1
 
@@ -2988,14 +2988,14 @@ Data_069_59AF:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_59FA::
-Data_069_59FA:: ; heuristic: start of a structured table; C0
+Data_069_59FA:: ; address name
     db $01 ; entry 0
     db $85, $01, $3A, $00, $00, $60, $30, $05, $03, $50, $72
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5A06::
-Data_069_5A06:: ; heuristic: map object screen array; C0
+Data_069_5A06:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw ObjSelector_5A26 ; id 2
@@ -3022,7 +3022,7 @@ Data_069_5A26:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5A2E::
-Data_069_5A2E:: ; heuristic: start of a structured table; C0
+Data_069_5A2E:: ; address name
     db $03 ; entry 0
     db $85, $01, $2E, $00, $00, $30, $50, $05, $01, $50, $92
     db $86, $01, $2F, $00, $02, $60, $30, $06, $01, $60, $93
@@ -3031,7 +3031,7 @@ Data_069_5A2E:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5A50::
-Data_069_5A50:: ; heuristic: start of a structured table; C0
+Data_069_5A50:: ; address name
     db $02 ; entry 0
     db $85, $01, $2E, $00, $00, $30, $50, $05, $01, $50, $92
     db $86, $01, $2F, $00, $02, $60, $30, $06, $01, $60, $93
@@ -3057,14 +3057,14 @@ Data_069_5A73:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5A79::
-Data_069_5A79:: ; heuristic: start of a structured table; C0
+Data_069_5A79:: ; address name
     db $01 ; entry 0
     db $85, $01, $3A, $00, $00, $50, $40, $05, $02, $50, $99
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5A85::
-Data_069_5A85:: ; heuristic: map object screen array; C0
+Data_069_5A85:: ; address name
     dw ObjSelector_5A8D ; id 0
     dw ObjSelector_5AE4 ; id 1
     dw ObjSelector_5B46 ; id 2
@@ -3079,7 +3079,7 @@ Data_069_5A8D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5A95::
-Data_069_5A95:: ; heuristic: start of a structured table; C0
+Data_069_5A95:: ; address name
     db $03 ; entry 0
     db $85, $01, $2F, $00, $00, $60, $50, $05, $00, $50, $78
     db $86, $01, $2F, $00, $00, $40, $20, $06, $00, $60, $7E
@@ -3088,7 +3088,7 @@ Data_069_5A95:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5AB7::
-Data_069_5AB7:: ; heuristic: start of a structured table; C0
+Data_069_5AB7:: ; address name
     db $04 ; entry 0
     db $85, $01, $2F, $00, $00, $60, $50, $05, $00, $50, $78
     db $85, $01, $2F, $00, $00, $40, $10, $05, $02, $50, $7E
@@ -3104,7 +3104,7 @@ Data_069_5AE4:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5AEC::
-Data_069_5AEC:: ; heuristic: start of a structured table; C0
+Data_069_5AEC:: ; address name
     db $04 ; entry 0
     db $85, $01, $10, $00, $00, $40, $10, $05, $00, $50, $7C
     db $85, $01, $10, $00, $00, $50, $10, $05, $00, $50, $7C
@@ -3114,7 +3114,7 @@ Data_069_5AEC:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5B19::
-Data_069_5B19:: ; heuristic: start of a structured table; C0
+Data_069_5B19:: ; address name
     db $04 ; entry 0
     db $85, $01, $10, $00, $00, $30, $30, $05, $00, $50, $7C
     db $85, $01, $10, $00, $00, $60, $20, $05, $00, $50, $7C
@@ -3129,7 +3129,7 @@ Data_069_5B46:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5B4A::
-Data_069_5B4A:: ; heuristic: start of a structured table; C0
+Data_069_5B4A:: ; address name
     db $04 ; entry 0
     db $85, $01, $2E, $00, $00, $70, $40, $05, $01, $50, $74
     db $86, $01, $2F, $00, $00, $60, $70, $06, $01, $60, $75
@@ -3144,7 +3144,7 @@ Data_069_5B77:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5B7B::
-Data_069_5B7B:: ; heuristic: start of a structured table; C0
+Data_069_5B7B:: ; address name
     db $04 ; entry 0
     db $85, $01, $30, $00, $00, $60, $60, $05, $00, $50, $73
     db $86, $01, $2F, $00, $00, $20, $50, $06, $03, $60, $7A
@@ -3154,7 +3154,7 @@ Data_069_5B7B:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5BA8::
-Data_069_5BA8:: ; heuristic: map object screen array; C0
+Data_069_5BA8:: ; address name
     dw ObjSelector_5BAA ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -3166,7 +3166,7 @@ Data_069_5BAA:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5BB2::
-Data_069_5BB2:: ; heuristic: start of a structured table; C0
+Data_069_5BB2:: ; address name
     db $04 ; entry 0
     db $85, $01, $2E, $00, $00, $40, $60, $05, $02, $50, $86
     db $86, $01, $15, $00, $00, $20, $20, $06, $00, $60, $87
@@ -3176,7 +3176,7 @@ Data_069_5BB2:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5BDF::
-Data_069_5BDF:: ; heuristic: start of a structured table; C0
+Data_069_5BDF:: ; address name
     db $03 ; entry 0
     db $85, $01, $2E, $00, $00, $40, $60, $05, $02, $50, $86
     db $86, $01, $2E, $00, $00, $50, $40, $06, $03, $60, $88
@@ -3185,7 +3185,7 @@ Data_069_5BDF:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5C01::
-Data_069_5C01:: ; heuristic: map object screen array; C0
+Data_069_5C01:: ; address name
     dw ObjSelector_5C07 ; id 0
     dw ObjSelector_5C71 ; id 1
     dw ObjSelector_5CB2 ; id 2
@@ -3203,7 +3203,7 @@ Data_069_5C07:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5C39::
-Data_069_5C39:: ; heuristic: start of a structured table; C0
+Data_069_5C39:: ; address name
     db $05 ; entry 0
     db $85, $01, $0F, $00, $00, $40, $10, $05, $00, $50, $90
     db $86, $01, $10, $00, $00, $30, $60, $06, $00, $60, $8E
@@ -3220,7 +3220,7 @@ Data_069_5C71:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5C79::
-Data_069_5C79:: ; heuristic: start of a structured table; C0
+Data_069_5C79:: ; address name
     db $03 ; entry 0
     db $85, $01, $10, $00, $00, $30, $10, $05, $01, $50, $8E
     db $86, $01, $12, $00, $00, $20, $50, $06, $02, $60, $8F
@@ -3229,7 +3229,7 @@ Data_069_5C79:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5C9B::
-Data_069_5C9B:: ; heuristic: start of a structured table; C0
+Data_069_5C9B:: ; address name
     db $02 ; entry 0
     db $85, $01, $10, $00, $00, $30, $10, $05, $01, $50, $8E
     db $86, $01, $12, $00, $00, $20, $50, $06, $02, $60, $8F
@@ -3242,7 +3242,7 @@ Data_069_5CB2:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5CB6::
-Data_069_5CB6:: ; heuristic: start of a structured table; C0
+Data_069_5CB6:: ; address name
     db $03 ; entry 0
     db $85, $01, $10, $00, $00, $30, $10, $05, $00, $50, $8A
     db $86, $01, $10, $00, $02, $50, $40, $06, $01, $60, $8B
@@ -3251,7 +3251,7 @@ Data_069_5CB6:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5CD8::
-Data_069_5CD8:: ; heuristic: map object screen array; C0
+Data_069_5CD8:: ; address name
     dw ObjSelector_5CDC ; id 0
     dw ObjSelector_5D8B ; id 1
 
@@ -3265,7 +3265,7 @@ Data_069_5CDC:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5D7F::
-Data_069_5D7F:: ; heuristic: start of a structured table; C0
+Data_069_5D7F:: ; address name
     db $01 ; entry 0
     db $85, $01, $2A, $00, $02, $30, $50, $05, $01, $50, $8D
 
@@ -3278,14 +3278,14 @@ Data_069_5D8B:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5D91::
-Data_069_5D91:: ; heuristic: start of a structured table; C0
+Data_069_5D91:: ; address name
     db $01 ; entry 0
     db $85, $01, $2A, $00, $00, $70, $60, $05, $03, $50, $8D
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5D9D::
-Data_069_5D9D:: ; heuristic: map object screen array; C0
+Data_069_5D9D:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3370,7 +3370,7 @@ Data_069_5E37:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5E57::
-Data_069_5E57:: ; heuristic: map object screen array; C0
+Data_069_5E57:: ; address name
     dw ObjSelector_5E5B ; id 0
     dw ObjSelector_5E8C ; id 1
 
@@ -3382,7 +3382,7 @@ Data_069_5E5B:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5E5F::
-Data_069_5E5F:: ; heuristic: start of a structured table; C0
+Data_069_5E5F:: ; address name
     db $04 ; entry 0
     db $85, $01, $0C, $00, $00, $20, $30, $05, $01, $50, $04
     db $86, $01, $0B, $00, $00, $50, $40, $06, $00, $60, $05
@@ -3397,7 +3397,7 @@ Data_069_5E8C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5E90::
-Data_069_5E90:: ; heuristic: start of a structured table; C0
+Data_069_5E90:: ; address name
     db $04 ; entry 0
     db $85, $01, $08, $00, $00, $60, $60, $05, $00, $50, $00
     db $86, $01, $09, $00, $00, $80, $40, $06, $03, $60, $01
@@ -3407,7 +3407,7 @@ Data_069_5E90:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5EBD::
-Data_069_5EBD:: ; heuristic: map object screen array; C0
+Data_069_5EBD:: ; address name
     dw ObjSelector_5EC5 ; id 0
     dw ObjSelector_5EF6 ; id 1
     dw ObjSelector_5F1C ; id 2
@@ -3421,7 +3421,7 @@ Data_069_5EC5:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5EC9::
-Data_069_5EC9:: ; heuristic: start of a structured table; C0
+Data_069_5EC9:: ; address name
     db $04 ; entry 0
     db $85, $01, $0B, $00, $00, $20, $20, $05, $01, $50, $1A
     db $86, $01, $08, $00, $02, $60, $40, $06, $01, $60, $1B
@@ -3436,7 +3436,7 @@ Data_069_5EF6:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5EFA::
-Data_069_5EFA:: ; heuristic: start of a structured table; C0
+Data_069_5EFA:: ; address name
     db $03 ; entry 0
     db $85, $01, $08, $00, $00, $50, $60, $05, $03, $50, $1E
     db $86, $01, $09, $00, $02, $30, $40, $06, $01, $60, $1F
@@ -3450,7 +3450,7 @@ Data_069_5F1C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5F20::
-Data_069_5F20:: ; heuristic: start of a structured table; C0
+Data_069_5F20:: ; address name
     db $04 ; entry 0
     db $85, $01, $0A, $00, $00, $80, $40, $05, $03, $50, $21
     db $86, $01, $15, $00, $00, $40, $50, $06, $03, $60, $22
@@ -3465,7 +3465,7 @@ Data_069_5F4D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5F51::
-Data_069_5F51:: ; heuristic: start of a structured table; C0
+Data_069_5F51:: ; address name
     db $03 ; entry 0
     db $85, $01, $0C, $00, $00, $70, $60, $05, $00, $50, $25
     db $86, $01, $09, $00, $00, $60, $30, $06, $00, $60, $26
@@ -3474,7 +3474,7 @@ Data_069_5F51:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_5F73::
-Data_069_5F73:: ; heuristic: map object screen array; C0
+Data_069_5F73:: ; address name
     dw ObjSelector_5F77 ; id 0
     dw ObjSelector_5FE5 ; id 1
 
@@ -3492,7 +3492,7 @@ Data_069_5F77:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5FB8::
-Data_069_5FB8:: ; heuristic: start of a structured table; C0
+Data_069_5FB8:: ; address name
     db $04 ; entry 0
     db $85, $01, $16, $00, $00, $50, $30, $05, $00, $50, $30
     db $86, $01, $06, $00, $00, $40, $B0, $06, $02, $60, $23
@@ -3508,7 +3508,7 @@ Data_069_5FE5:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_5FED::
-Data_069_5FED:: ; heuristic: start of a structured table; C0
+Data_069_5FED:: ; address name
     db $03 ; entry 0
     db $85, $01, $03, $00, $00, $40, $E0, $05, $00, $50, $00
     db $86, $01, $28, $00, $00, $30, $D0, $06, $00, $60, $00
@@ -3517,7 +3517,7 @@ Data_069_5FED:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_600F::
-Data_069_600F:: ; heuristic: start of a structured table; C0
+Data_069_600F:: ; address name
     db $02 ; entry 0
     db $85, $01, $0A, $00, $00, $60, $10, $05, $00, $50, $3B
     db $86, $01, $29, $00, $00, $60, $30, $06, $02, $60, $3C
@@ -3525,7 +3525,7 @@ Data_069_600F:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6026::
-Data_069_6026:: ; heuristic: map object screen array; C0
+Data_069_6026:: ; address name
     dw ObjSelector_6028 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -3536,7 +3536,7 @@ Data_069_6028:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_602C::
-Data_069_602C:: ; heuristic: start of a structured table; C0
+Data_069_602C:: ; address name
     db $03 ; entry 0
     db $85, $01, $0A, $00, $00, $30, $10, $05, $00, $50, $2C
     db $86, $01, $16, $00, $00, $20, $50, $06, $00, $60, $2D
@@ -3545,7 +3545,7 @@ Data_069_602C:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_604E::
-Data_069_604E:: ; heuristic: map object screen array; C0
+Data_069_604E:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3572,14 +3572,14 @@ Data_069_606E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6074::
-Data_069_6074:: ; heuristic: start of a structured table; C0
+Data_069_6074:: ; address name
     db $01 ; entry 0
     db $85, $00, $4F, $01, $00, $40, $30, $05, $03, $50, $34
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6080::
-Data_069_6080:: ; heuristic: map object screen array; C0
+Data_069_6080:: ; address name
     dw ObjSelector_6086 ; id 0
     dw $0000 ; id 1
     dw ObjSelector_6098 ; id 2
@@ -3593,7 +3593,7 @@ Data_069_6086:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_608C::
-Data_069_608C:: ; heuristic: start of a structured table; C0
+Data_069_608C:: ; address name
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $70, $10, $05, $00, $50, $47
 
@@ -3605,14 +3605,14 @@ Data_069_6098:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_609C::
-Data_069_609C:: ; heuristic: start of a structured table; C0
+Data_069_609C:: ; address name
     db $01 ; entry 0
     db $85, $01, $56, $00, $00, $70, $60, $05, $00, $50, $4D
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_60A8::
-Data_069_60A8:: ; heuristic: map object screen array; C0
+Data_069_60A8:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3639,7 +3639,7 @@ Data_069_60C8:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_60CE::
-Data_069_60CE:: ; heuristic: start of a structured table; C0
+Data_069_60CE:: ; address name
     db $03 ; entry 0
     db $85, $01, $03, $00, $00, $50, $A0, $05, $02, $50, $00
     db $86, $01, $28, $00, $00, $50, $B0, $06, $02, $60, $00
@@ -3648,7 +3648,7 @@ Data_069_60CE:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_60F0::
-Data_069_60F0:: ; heuristic: map object screen array; C0
+Data_069_60F0:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3672,7 +3672,7 @@ Data_069_6108:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_615C::
-Data_069_615C:: ; heuristic: map object screen array; C0
+Data_069_615C:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_616E ; id 1
     dw $0000 ; id 2
@@ -3692,7 +3692,7 @@ Data_069_616E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6174::
-Data_069_6174:: ; heuristic: start of a structured table; C0
+Data_069_6174:: ; address name
     db $03 ; entry 0
     db $85, $01, $03, $00, $00, $60, $A0, $05, $02, $50, $00
     db $86, $01, $28, $00, $00, $60, $B0, $06, $02, $60, $00
@@ -3701,7 +3701,7 @@ Data_069_6174:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6196::
-Data_069_6196:: ; heuristic: map object screen array; C0
+Data_069_6196:: ; address name
     dw ObjSelector_6198 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -3714,7 +3714,7 @@ Data_069_6198:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_61EC::
-Data_069_61EC:: ; heuristic: map object screen array; C0
+Data_069_61EC:: ; address name
     dw ObjSelector_61F2 ; id 0
     dw ObjSelector_6228 ; id 1
     dw ObjSelector_6259 ; id 2
@@ -3728,7 +3728,7 @@ Data_069_61F2:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_61FA::
-Data_069_61FA:: ; heuristic: start of a structured table; C0
+Data_069_61FA:: ; address name
     db $02 ; entry 0
     db $85, $01, $13, $00, $00, $60, $20, $05, $00, $50, $13
     db $86, $01, $4E, $00, $00, $E0, $40, $06, $00, $60, $3D
@@ -3736,7 +3736,7 @@ Data_069_61FA:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6211::
-Data_069_6211:: ; heuristic: start of a structured table; C0
+Data_069_6211:: ; address name
     db $02 ; entry 0
     db $85, $01, $13, $00, $00, $60, $20, $05, $00, $50, $13
     db $86, $01, $4E, $00, $00, $30, $40, $06, $01, $60, $3D
@@ -3749,7 +3749,7 @@ Data_069_6228:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_622C::
-Data_069_622C:: ; heuristic: start of a structured table; C0
+Data_069_622C:: ; address name
     db $04 ; entry 0
     db $85, $01, $09, $00, $00, $60, $60, $05, $00, $50, $0F
     db $86, $01, $0D, $00, $00, $20, $20, $06, $00, $60, $16
@@ -3764,7 +3764,7 @@ Data_069_6259:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_625D::
-Data_069_625D:: ; heuristic: start of a structured table; C0
+Data_069_625D:: ; address name
     db $03 ; entry 0
     db $85, $01, $13, $00, $00, $70, $20, $05, $00, $50, $15
     db $86, $01, $07, $00, $00, $20, $10, $06, $00, $60, $12
@@ -3773,7 +3773,7 @@ Data_069_625D:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_627F::
-Data_069_627F:: ; heuristic: map object screen array; C0
+Data_069_627F:: ; address name
     dw ObjSelector_6281 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -3784,7 +3784,7 @@ Data_069_6281:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6285::
-Data_069_6285:: ; heuristic: start of a structured table; C0
+Data_069_6285:: ; address name
     db $02 ; entry 0
     db $85, $01, $0A, $00, $00, $70, $10, $05, $00, $50, $14
     db $86, $01, $12, $00, $00, $40, $10, $06, $00, $60, $6D
@@ -3792,7 +3792,7 @@ Data_069_6285:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_629C::
-Data_069_629C:: ; heuristic: map object screen array; C0
+Data_069_629C:: ; address name
     dw ObjSelector_62A0 ; id 0
     dw $0000 ; id 1
 
@@ -3805,21 +3805,21 @@ Data_069_62A0:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_62A8::
-Data_069_62A8:: ; heuristic: start of a structured table; C0
+Data_069_62A8:: ; address name
     db $01 ; entry 0
     db $85, $01, $58, $00, $00, $E0, $18, $05, $00, $50, $00
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_62B4::
-Data_069_62B4:: ; heuristic: start of a structured table; C0
+Data_069_62B4:: ; address name
     db $01 ; entry 0
     db $85, $01, $58, $00, $00, $48, $18, $05, $00, $50, $00
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_62C0::
-Data_069_62C0:: ; heuristic: map object screen array; C0
+Data_069_62C0:: ; address name
     dw ObjSelector_62C4 ; id 0
     dw ObjSelector_633D ; id 1
 
@@ -3837,7 +3837,7 @@ Data_069_62C4:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6305::
-Data_069_6305:: ; heuristic: start of a structured table; C0
+Data_069_6305:: ; address name
     db $05 ; entry 0
     db $85, $01, $4F, $00, $00, $40, $20, $05, $00, $50, $45
     db $86, $01, $2C, $00, $00, $40, $50, $06, $02, $60, $43
@@ -3853,7 +3853,7 @@ Data_069_633D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6341::
-Data_069_6341:: ; heuristic: start of a structured table; C0
+Data_069_6341:: ; address name
     db $04 ; entry 0
     db $85, $01, $2C, $00, $00, $60, $30, $05, $01, $50, $3E
     db $86, $01, $2C, $00, $00, $40, $70, $06, $01, $60, $3F
@@ -3863,7 +3863,7 @@ Data_069_6341:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_636E::
-Data_069_636E:: ; heuristic: map object screen array; C0
+Data_069_636E:: ; address name
     dw ObjSelector_6374 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3877,14 +3877,14 @@ Data_069_6374:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_637A::
-Data_069_637A:: ; heuristic: start of a structured table; C0
+Data_069_637A:: ; address name
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $80, $60, $05, $00, $50, $48
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6386::
-Data_069_6386:: ; heuristic: map object screen array; C0
+Data_069_6386:: ; address name
     dw ObjSelector_638C ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3898,14 +3898,14 @@ Data_069_638C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6392::
-Data_069_6392:: ; heuristic: start of a structured table; C0
+Data_069_6392:: ; address name
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $60, $30, $05, $00, $50, $49
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_639E::
-Data_069_639E:: ; heuristic: map object screen array; C0
+Data_069_639E:: ; address name
     dw ObjSelector_63A0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -3917,14 +3917,14 @@ Data_069_63A0:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_63A6::
-Data_069_63A6:: ; heuristic: start of a structured table; C0
+Data_069_63A6:: ; address name
     db $01 ; entry 0
     db $85, $00, $06, $01, $00, $60, $20, $05, $00, $50, $4A
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_63B2::
-Data_069_63B2:: ; heuristic: map object screen array; C0
+Data_069_63B2:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3948,7 +3948,7 @@ Data_069_63CA:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_63D6::
-Data_069_63D6:: ; heuristic: start of a structured table; C0
+Data_069_63D6:: ; address name
     db $03 ; entry 0
     db $85, $01, $1A, $00, $00, $40, $00, $05, $00, $50, $0A
     db $86, $01, $03, $00, $00, $40, $60, $06, $00, $60, $18
@@ -3957,14 +3957,14 @@ Data_069_63D6:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_63F8::
-Data_069_63F8:: ; heuristic: start of a structured table; C0
+Data_069_63F8:: ; address name
     db $01 ; entry 0
     db $85, $01, $1A, $00, $00, $40, $00, $05, $00, $50, $0A
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6404::
-Data_069_6404:: ; heuristic: start of a structured table; C0
+Data_069_6404:: ; address name
     db $02 ; entry 0
     db $85, $01, $1A, $00, $00, $20, $10, $05, $00, $50, $0A
     db $86, $01, $10, $00, $00, $40, $E0, $06, $00, $60, $00
@@ -3982,7 +3982,7 @@ Data_069_641B:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_645B::
-Data_069_645B:: ; heuristic: start of a structured table; C0
+Data_069_645B:: ; address name
     db $03 ; entry 0
     db $85, $01, $04, $00, $00, $50, $30, $05, $01, $50, $07
     db $86, $00, $5A, $00, $00, $60, $20, $06, $00, $60, $4B
@@ -3999,7 +3999,7 @@ Data_069_647D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_649F::
-Data_069_649F:: ; heuristic: start of a structured table; C0
+Data_069_649F:: ; address name
     db $01 ; entry 0
     db $85, $00, $F0, $00, $00, $80, $30, $05, $00, $50, $98
 
@@ -4014,7 +4014,7 @@ Data_069_64AB:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_653D::
-Data_069_653D:: ; heuristic: start of a structured table; C0
+Data_069_653D:: ; address name
     db $03 ; entry 0
     db $85, $01, $00, $00, $00, $60, $30, $05, $00, $50, $1B
     db $86, $00, $01, $00, $02, $50, $50, $06, $01, $60, $1A
@@ -4023,7 +4023,7 @@ Data_069_653D:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_655F::
-Data_069_655F:: ; heuristic: start of a structured table; C0
+Data_069_655F:: ; address name
     db $03 ; entry 0
     db $85, $01, $01, $00, $00, $60, $30, $05, $00, $50, $1C
     db $86, $00, $01, $00, $02, $50, $50, $06, $03, $60, $1A
@@ -4042,7 +4042,7 @@ Data_069_65AF:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_660D::
-Data_069_660D:: ; heuristic: start of a structured table; C0
+Data_069_660D:: ; address name
     db $03 ; entry 0
     db $85, $00, $4F, $00, $00, $30, $20, $05, $00, $50, $B3
     db $86, $00, $D8, $00, $00, $50, $10, $06, $00, $60, $4A
@@ -4056,7 +4056,7 @@ Data_069_662F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6633::
-Data_069_6633:: ; heuristic: start of a structured table; C0
+Data_069_6633:: ; address name
     db $01 ; entry 0
     db $86, $00, $91, $00, $00, $30, $30, $06, $01, $60, $04
 
@@ -4070,7 +4070,7 @@ Data_069_663F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_669B::
-Data_069_669B:: ; heuristic: start of a structured table; C0
+Data_069_669B:: ; address name
     db $03 ; entry 0
     db $85, $00, $B9, $00, $02, $40, $20, $05, $01, $50, $09
     db $86, $00, $F6, $00, $00, $60, $40, $06, $00, $60, $B4
@@ -4089,7 +4089,7 @@ Data_069_66BD:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6700::
-Data_069_6700:: ; heuristic: start of a structured table; C0
+Data_069_6700:: ; address name
     db $03 ; entry 0
     db $85, $00, $3D, $00, $00, $40, $10, $05, $01, $50, $7D
     db $86, $00, $2E, $00, $00, $20, $30, $06, $00, $60, $7E
@@ -4098,7 +4098,7 @@ Data_069_6700:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6722::
-Data_069_6722:: ; heuristic: map object screen array; C0
+Data_069_6722:: ; address name
     dw ObjSelector_673A ; id 0
     dw ObjSelector_674A ; id 1
     dw $0000 ; id 2
@@ -4120,7 +4120,7 @@ Data_069_673A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_673E::
-Data_069_673E:: ; heuristic: start of a structured table; C0
+Data_069_673E:: ; address name
     db $01 ; entry 0
     db $85, $01, $11, $00, $00, $20, $60, $05, $01, $50, $80
 
@@ -4132,7 +4132,7 @@ Data_069_674A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_674E::
-Data_069_674E:: ; heuristic: start of a structured table; C0
+Data_069_674E:: ; address name
     db $01 ; entry 0
     db $85, $01, $1A, $00, $00, $80, $40, $05, $01, $50, $DA
 
@@ -4144,7 +4144,7 @@ Data_069_675A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_675E::
-Data_069_675E:: ; heuristic: start of a structured table; C0
+Data_069_675E:: ; address name
     db $01 ; entry 0
     db $85, $01, $19, $00, $00, $20, $60, $05, $01, $50, $22
 
@@ -4166,7 +4166,7 @@ Data_069_679D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_67A3::
-Data_069_67A3:: ; heuristic: start of a structured table; C0
+Data_069_67A3:: ; address name
     db $02 ; entry 0
     db $85, $01, $15, $00, $00, $50, $60, $05, $02, $50, $B7
     db $86, $01, $12, $00, $00, $50, $70, $06, $02, $60, $B8
@@ -4188,7 +4188,7 @@ Data_069_67D2:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_67DE::
-Data_069_67DE:: ; heuristic: start of a structured table; C0
+Data_069_67DE:: ; address name
     db $02 ; entry 0
     db $85, $01, $1B, $00, $00, $60, $70, $05, $03, $50, $12
     db $86, $01, $10, $00, $00, $20, $50, $06, $00, $60, $0B
@@ -4196,7 +4196,7 @@ Data_069_67DE:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_67F5::
-Data_069_67F5:: ; heuristic: start of a structured table; C0
+Data_069_67F5:: ; address name
     db $04 ; entry 0
     db $85, $01, $1B, $00, $00, $60, $70, $05, $03, $50, $12
     db $86, $01, $10, $00, $00, $20, $50, $06, $00, $60, $0B
@@ -4215,7 +4215,7 @@ Data_069_6822:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_685B::
-Data_069_685B:: ; heuristic: start of a structured table; C0
+Data_069_685B:: ; address name
     db $01 ; entry 0
     db $85, $01, $18, $00, $00, $70, $60, $05, $00, $50, $21
 
@@ -4232,7 +4232,7 @@ Data_069_6867:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_687F::
-Data_069_687F:: ; heuristic: start of a structured table; C0
+Data_069_687F:: ; address name
     db $02 ; entry 0
     db $85, $01, $1C, $00, $00, $50, $00, $05, $00, $50, $0C
     db $86, $01, $1D, $00, $00, $50, $60, $06, $00, $60, $16
@@ -4240,7 +4240,7 @@ Data_069_687F:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6896::
-Data_069_6896:: ; heuristic: start of a structured table; C0
+Data_069_6896:: ; address name
     db $04 ; entry 0
     db $85, $01, $1C, $00, $00, $50, $00, $05, $00, $50, $0C
     db $86, $01, $03, $00, $00, $30, $60, $06, $03, $60, $18
@@ -4250,7 +4250,7 @@ Data_069_6896:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_68C3::
-Data_069_68C3:: ; heuristic: start of a structured table; C0
+Data_069_68C3:: ; address name
     db $03 ; entry 0
     db $85, $01, $1C, $00, $00, $40, $30, $05, $00, $50, $0C
     db $86, $01, $08, $00, $02, $E0, $E0, $06, $01, $60, $B9
@@ -4259,14 +4259,14 @@ Data_069_68C3:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_68E5::
-Data_069_68E5:: ; heuristic: start of a structured table; C0
+Data_069_68E5:: ; address name
     db $01 ; entry 0
     db $85, $01, $1C, $00, $00, $50, $60, $05, $00, $50, $0C
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_68F1::
-Data_069_68F1:: ; heuristic: start of a structured table; C0
+Data_069_68F1:: ; address name
     db $02 ; entry 0
     db $85, $01, $1C, $00, $00, $40, $30, $05, $00, $50, $0C
     db $86, $01, $08, $00, $02, $30, $40, $06, $01, $60, $B9
@@ -4282,7 +4282,7 @@ Data_069_6908:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_692E::
-Data_069_692E:: ; heuristic: start of a structured table; C0
+Data_069_692E:: ; address name
     db $02 ; entry 0
     db $85, $01, $1A, $00, $00, $30, $60, $05, $00, $50, $1E
     db $86, $01, $10, $00, $00, $20, $40, $06, $01, $60, $EB
@@ -4290,7 +4290,7 @@ Data_069_692E:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6945::
-Data_069_6945:: ; heuristic: map object screen array; C0
+Data_069_6945:: ; address name
     dw ObjSelector_694B ; id 0
     dw ObjSelector_6A33 ; id 1
     dw ObjSelector_6A74 ; id 2
@@ -4306,7 +4306,7 @@ Data_069_694B:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_69D9::
-Data_069_69D9:: ; heuristic: start of a structured table; C0
+Data_069_69D9:: ; address name
     db $04 ; entry 0
     db $85, $01, $15, $00, $00, $60, $50, $05, $02, $50, $10
     db $85, $01, $15, $00, $00, $20, $50, $05, $03, $50, $7F
@@ -4316,7 +4316,7 @@ Data_069_69D9:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6A06::
-Data_069_6A06:: ; heuristic: start of a structured table; C0
+Data_069_6A06:: ; address name
     db $04 ; entry 0
     db $85, $01, $15, $00, $00, $60, $50, $05, $02, $50, $10
     db $85, $01, $15, $00, $00, $10, $40, $05, $01, $50, $7F
@@ -4332,7 +4332,7 @@ Data_069_6A33:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6A3B::
-Data_069_6A3B:: ; heuristic: start of a structured table; C0
+Data_069_6A3B:: ; address name
     db $02 ; entry 0
     db $85, $01, $15, $00, $00, $40, $10, $05, $00, $50, $11
     db $86, $01, $1C, $00, $00, $10, $50, $06, $00, $60, $AA
@@ -4340,7 +4340,7 @@ Data_069_6A3B:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6A52::
-Data_069_6A52:: ; heuristic: start of a structured table; C0
+Data_069_6A52:: ; address name
     db $03 ; entry 0
     db $85, $01, $15, $00, $00, $40, $10, $05, $00, $50, $11
     db $86, $01, $1D, $00, $02, $50, $30, $06, $03, $60, $0F
@@ -4356,7 +4356,7 @@ Data_069_6A74:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6AC2::
-Data_069_6AC2:: ; heuristic: start of a structured table; C0
+Data_069_6AC2:: ; address name
     db $03 ; entry 0
     db $85, $01, $1D, $00, $00, $40, $40, $05, $00, $50, $0E
     db $86, $01, $1D, $00, $00, $20, $50, $06, $00, $60, $15
@@ -4367,7 +4367,7 @@ Data_069_6AC2:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6AFB::
-Data_069_6AFB:: ; heuristic: map object screen array; C0
+Data_069_6AFB:: ; address name
     dw ObjSelector_6B01 ; id 0
     dw ObjSelector_6B27 ; id 1
     dw ObjSelector_6B42 ; id 2
@@ -4380,7 +4380,7 @@ Data_069_6B01:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6B05::
-Data_069_6B05:: ; heuristic: start of a structured table; C0
+Data_069_6B05:: ; address name
     db $03 ; entry 0
     db $85, $01, $16, $00, $00, $40, $10, $05, $01, $50, $64
     db $86, $01, $11, $00, $00, $50, $20, $06, $02, $60, $C3
@@ -4394,7 +4394,7 @@ Data_069_6B27:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6B2B::
-Data_069_6B2B:: ; heuristic: start of a structured table; C0
+Data_069_6B2B:: ; address name
     db $02 ; entry 0
     db $85, $01, $17, $00, $00, $40, $10, $05, $00, $50, $00
     db $86, $01, $17, $00, $00, $50, $10, $06, $00, $60, $00
@@ -4411,7 +4411,7 @@ Data_069_6B42:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6BCC::
-Data_069_6BCC:: ; heuristic: start of a structured table; C0
+Data_069_6BCC:: ; address name
     db $03 ; entry 0
     db $85, $01, $2E, $00, $00, $50, $20, $05, $00, $50, $F1
     db $86, $00, $7B, $00, $00, $60, $40, $06, $00, $60, $67
@@ -4420,7 +4420,7 @@ Data_069_6BCC:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6BEE::
-Data_069_6BEE:: ; heuristic: start of a structured table; C0
+Data_069_6BEE:: ; address name
     db $03 ; entry 0
     db $85, $01, $14, $00, $00, $50, $20, $05, $00, $50, $F1
     db $86, $00, $32, $01, $00, $60, $40, $06, $00, $60, $36
@@ -4429,7 +4429,7 @@ Data_069_6BEE:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6C10::
-Data_069_6C10:: ; heuristic: start of a structured table; C0
+Data_069_6C10:: ; address name
     db $03 ; entry 0
     db $85, $01, $5F, $00, $00, $50, $20, $05, $00, $50, $F2
     db $86, $00, $A5, $00, $00, $60, $40, $06, $00, $60, $28
@@ -4438,7 +4438,7 @@ Data_069_6C10:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6C32::
-Data_069_6C32:: ; heuristic: map object screen array; C0
+Data_069_6C32:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_6C38 ; id 1
     dw $0000 ; id 2
@@ -4453,7 +4453,7 @@ Data_069_6C38:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6D0B::
-Data_069_6D0B:: ; heuristic: start of a structured table; C0
+Data_069_6D0B:: ; address name
     db $03 ; entry 0
     db $85, $01, $4A, $00, $00, $E0, $E0, $05, $00, $50, $A9
     db $86, $01, $02, $00, $00, $50, $20, $06, $00, $60, $19
@@ -4462,7 +4462,7 @@ Data_069_6D0B:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6D2D::
-Data_069_6D2D:: ; heuristic: map object screen array; C0
+Data_069_6D2D:: ; address name
     dw ObjSelector_6D2F ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4477,7 +4477,7 @@ Data_069_6D2F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6D61::
-Data_069_6D61:: ; heuristic: start of a structured table; C0
+Data_069_6D61:: ; address name
     db $01 ; entry 0
     db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02
     INCBIN "dwm2-cobi-us.gbc", $1A6D6D, $CE
@@ -4485,7 +4485,7 @@ Data_069_6D61:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6E3B::
-Data_069_6E3B:: ; heuristic: map object screen array; C0
+Data_069_6E3B:: ; address name
     dw ObjSelector_6E3F ; id 0
     dw ObjSelector_6E65 ; id 1
 
@@ -4497,7 +4497,7 @@ Data_069_6E3F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6E43::
-Data_069_6E43:: ; heuristic: start of a structured table; C0
+Data_069_6E43:: ; address name
     db $03 ; entry 0
     db $85, $00, $93, $00, $00, $40, $30, $05, $01, $50, $4C
     db $86, $00, $5E, $00, $00, $30, $70, $06, $00, $60, $4D
@@ -4511,7 +4511,7 @@ Data_069_6E65:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6E69::
-Data_069_6E69:: ; heuristic: start of a structured table; C0
+Data_069_6E69:: ; address name
     db $03 ; entry 0
     db $85, $00, $4E, $01, $00, $50, $40, $05, $03, $50, $4E
     db $86, $00, $8E, $00, $00, $20, $50, $06, $01, $60, $4F
@@ -4520,7 +4520,7 @@ Data_069_6E69:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6E8B::
-Data_069_6E8B:: ; heuristic: map object screen array; C0
+Data_069_6E8B:: ; address name
     dw ObjSelector_6E8D ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4532,14 +4532,14 @@ Data_069_6E8D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6E95::
-Data_069_6E95:: ; heuristic: start of a structured table; C0
+Data_069_6E95:: ; address name
     db $01 ; entry 0
     db $85, $01, $15, $00, $00, $40, $20, $05, $00, $50, $14
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6EA1::
-Data_069_6EA1:: ; heuristic: start of a structured table; C0
+Data_069_6EA1:: ; address name
     db $02 ; entry 0
     db $85, $01, $15, $00, $00, $40, $20, $05, $00, $50, $14
     db $86, $01, $10, $00, $00, $60, $60, $06, $00, $60, $1D
@@ -4547,7 +4547,7 @@ Data_069_6EA1:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6EB8::
-Data_069_6EB8:: ; heuristic: map object screen array; C0
+Data_069_6EB8:: ; address name
     dw ObjSelector_6EBA ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4558,7 +4558,7 @@ Data_069_6EBA:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6EBE::
-Data_069_6EBE:: ; heuristic: start of a structured table; C0
+Data_069_6EBE:: ; address name
     db $04 ; entry 0
     db $85, $01, $1C, $00, $00, $30, $20, $05, $00, $50, $92
     db $86, $01, $1A, $00, $00, $20, $60, $06, $03, $60, $93
@@ -4568,7 +4568,7 @@ Data_069_6EBE:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6EEB::
-Data_069_6EEB:: ; heuristic: map object screen array; C0
+Data_069_6EEB:: ; address name
     dw ObjSelector_6EED ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4579,7 +4579,7 @@ Data_069_6EED:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6EF1::
-Data_069_6EF1:: ; heuristic: start of a structured table; C0
+Data_069_6EF1:: ; address name
     db $03 ; entry 0
     db $85, $01, $2A, $00, $00, $50, $30, $05, $00, $50, $69
     db $86, $01, $15, $00, $00, $10, $60, $06, $01, $60, $B7
@@ -4588,7 +4588,7 @@ Data_069_6EF1:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6F13::
-Data_069_6F13:: ; heuristic: map object screen array; C0
+Data_069_6F13:: ; address name
     dw ObjSelector_6F15 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4599,7 +4599,7 @@ Data_069_6F15:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6F19::
-Data_069_6F19:: ; heuristic: start of a structured table; C0
+Data_069_6F19:: ; address name
     db $04 ; entry 0
     db $84, $01, $00, $00, $00, $70, $30, $04, $03, $40, $00
     db $85, $00, $01, $00, $00, $60, $40, $05, $03, $50, $00
@@ -4609,7 +4609,7 @@ Data_069_6F19:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6F46::
-Data_069_6F46:: ; heuristic: map object screen array; C0
+Data_069_6F46:: ; address name
     dw ObjSelector_6F4A ; id 0
     dw ObjSelector_6F71 ; id 1
 
@@ -4623,7 +4623,7 @@ Data_069_6F4A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6F5A::
-Data_069_6F5A:: ; heuristic: start of a structured table; C0
+Data_069_6F5A:: ; address name
     db $02 ; entry 0
     db $85, $01, $1E, $00, $00, $40, $70, $05, $02, $50, $25
     db $86, $01, $1F, $00, $00, $40, $60, $06, $00, $60, $26
@@ -4638,7 +4638,7 @@ Data_069_6F71:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6F83::
-Data_069_6F83:: ; heuristic: start of a structured table; C0
+Data_069_6F83:: ; address name
     db $02 ; entry 0
     db $85, $01, $10, $00, $00, $50, $30, $05, $00, $50, $23
     db $86, $01, $10, $00, $00, $60, $70, $06, $03, $60, $24
@@ -4648,7 +4648,7 @@ Data_069_6F83:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_6FB1::
-Data_069_6FB1:: ; heuristic: map object screen array; C0
+Data_069_6FB1:: ; address name
     dw $0000 ; id 0
     dw ObjSelector_6FC1 ; id 1
     dw $0000 ; id 2
@@ -4666,7 +4666,7 @@ Data_069_6FC1:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6FC5::
-Data_069_6FC5:: ; heuristic: start of a structured table; C0
+Data_069_6FC5:: ; address name
     db $02 ; entry 0
     db $85, $01, $0C, $00, $00, $40, $30, $05, $00, $50, $6A
     db $86, $01, $18, $00, $00, $60, $60, $06, $03, $60, $6B
@@ -4679,7 +4679,7 @@ Data_069_6FDC:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_6FE0::
-Data_069_6FE0:: ; heuristic: start of a structured table; C0
+Data_069_6FE0:: ; address name
     db $04 ; entry 0
     db $85, $01, $12, $00, $00, $30, $40, $05, $03, $50, $70
     db $86, $01, $10, $00, $00, $20, $30, $06, $00, $60, $6F
@@ -4695,14 +4695,14 @@ Data_069_700D:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7013::
-Data_069_7013:: ; heuristic: start of a structured table; C0
+Data_069_7013:: ; address name
     db $01 ; entry 0
     db $85, $01, $16, $00, $00, $40, $60, $05, $01, $50, $A8
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_701F::
-Data_069_701F:: ; heuristic: map object screen array; C0
+Data_069_701F:: ; address name
     dw ObjSelector_7021 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4713,7 +4713,7 @@ Data_069_7021:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7025::
-Data_069_7025:: ; heuristic: start of a structured table; C0
+Data_069_7025:: ; address name
     db $04 ; entry 0
     db $85, $01, $1C, $00, $00, $70, $40, $05, $03, $50, $38
     db $86, $01, $1D, $00, $00, $60, $50, $06, $02, $60, $39
@@ -4723,7 +4723,7 @@ Data_069_7025:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7052::
-Data_069_7052:: ; heuristic: map object screen array; C0
+Data_069_7052:: ; address name
     dw ObjSelector_7054 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4737,7 +4737,7 @@ Data_069_7054:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7070::
-Data_069_7070:: ; heuristic: start of a structured table; C0
+Data_069_7070:: ; address name
     db $02 ; entry 0
     db $85, $01, $1B, $00, $00, $20, $40, $05, $02, $50, $42
     db $86, $01, $1A, $00, $00, $30, $30, $06, $03, $60, $3E
@@ -4745,7 +4745,7 @@ Data_069_7070:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7087::
-Data_069_7087:: ; heuristic: map object screen array; C0
+Data_069_7087:: ; address name
     dw ObjSelector_7089 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4757,14 +4757,14 @@ Data_069_7089:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7091::
-Data_069_7091:: ; heuristic: start of a structured table; C0
+Data_069_7091:: ; address name
     db $01 ; entry 0
     db $85, $01, $1B, $00, $00, $60, $50, $05, $01, $50, $42
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_709D::
-Data_069_709D:: ; heuristic: start of a structured table; C0
+Data_069_709D:: ; address name
     db $02 ; entry 0
     db $85, $01, $1B, $00, $00, $60, $40, $05, $00, $50, $42
     db $86, $01, $1A, $00, $00, $60, $50, $06, $02, $60, $3E
@@ -4772,7 +4772,7 @@ Data_069_709D:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_70B4::
-Data_069_70B4:: ; heuristic: map object screen array; C0
+Data_069_70B4:: ; address name
     dw ObjSelector_70B8 ; id 0
     dw ObjSelector_70D3 ; id 1
 
@@ -4784,7 +4784,7 @@ Data_069_70B8:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_70BC::
-Data_069_70BC:: ; heuristic: start of a structured table; C0
+Data_069_70BC:: ; address name
     db $02 ; entry 0
     db $85, $01, $1B, $00, $00, $50, $30, $05, $00, $50, $2B
     db $86, $01, $18, $00, $00, $10, $40, $06, $01, $60, $AF
@@ -4797,7 +4797,7 @@ Data_069_70D3:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_70D7::
-Data_069_70D7:: ; heuristic: start of a structured table; C0
+Data_069_70D7:: ; address name
     db $04 ; entry 0
     db $85, $01, $1B, $00, $00, $40, $20, $05, $00, $50, $29
     db $86, $01, $1A, $00, $00, $30, $40, $06, $03, $60, $2C
@@ -4807,7 +4807,7 @@ Data_069_70D7:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7104::
-Data_069_7104:: ; heuristic: map object screen array; C0
+Data_069_7104:: ; address name
     dw ObjSelector_7106 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4822,7 +4822,7 @@ Data_069_7106:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_713A::
-Data_069_713A:: ; heuristic: start of a structured table; C0
+Data_069_713A:: ; address name
     db $03 ; entry 0
     db $85, $01, $1E, $00, $00, $60, $60, $05, $00, $50, $77
     db $86, $01, $19, $00, $00, $40, $40, $06, $02, $60, $27
@@ -4831,7 +4831,7 @@ Data_069_713A:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_715C::
-Data_069_715C:: ; heuristic: map object screen array; C0
+Data_069_715C:: ; address name
     dw ObjSelector_715E ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4842,14 +4842,14 @@ Data_069_715E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7162::
-Data_069_7162:: ; heuristic: start of a structured table; C0
+Data_069_7162:: ; address name
     db $01 ; entry 0
     db $85, $01, $21, $00, $00, $40, $30, $05, $00, $50, $46
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_716E::
-Data_069_716E:: ; heuristic: map object screen array; C0
+Data_069_716E:: ; address name
     dw ObjSelector_7170 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4860,7 +4860,7 @@ Data_069_7170:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7174::
-Data_069_7174:: ; heuristic: start of a structured table; C0
+Data_069_7174:: ; address name
     db $03 ; entry 0
     db $85, $01, $0C, $00, $00, $50, $90, $05, $02, $50, $00
     db $86, $00, $01, $00, $00, $50, $A0, $06, $00, $60, $00
@@ -4869,7 +4869,7 @@ Data_069_7174:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7196::
-Data_069_7196:: ; heuristic: map object screen array; C0
+Data_069_7196:: ; address name
     dw ObjSelector_7198 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4885,7 +4885,7 @@ Data_069_7198:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_71B0::
-Data_069_71B0:: ; heuristic: start of a structured table; C0
+Data_069_71B0:: ; address name
     db $02 ; entry 0
     db $85, $01, $1E, $00, $00, $50, $30, $05, $00, $50, $8F
     db $86, $01, $5D, $00, $00, $60, $08, $06, $00, $60, $DB
@@ -4893,7 +4893,7 @@ Data_069_71B0:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_71C7::
-Data_069_71C7:: ; heuristic: start of a structured table; C0
+Data_069_71C7:: ; address name
     db $02 ; entry 0
     db $85, $01, $1E, $00, $00, $40, $30, $05, $00, $50, $8F
     db $86, $01, $5D, $00, $00, $60, $08, $06, $00, $60, $DB
@@ -4901,14 +4901,14 @@ Data_069_71C7:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_71DE::
-Data_069_71DE:: ; heuristic: start of a structured table; C0
+Data_069_71DE:: ; address name
     db $01 ; entry 0
     db $85, $01, $1E, $00, $00, $50, $30, $05, $00, $50, $8F
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_71EA::
-Data_069_71EA:: ; heuristic: map object screen array; C0
+Data_069_71EA:: ; address name
     dw ObjSelector_71EC ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4919,7 +4919,7 @@ Data_069_71EC:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_71F0::
-Data_069_71F0:: ; heuristic: start of a structured table; C0
+Data_069_71F0:: ; address name
     db $03 ; entry 0
     db $85, $01, $1E, $00, $00, $60, $30, $05, $00, $50, $72
     db $86, $01, $1F, $00, $00, $30, $60, $06, $00, $60, $73
@@ -4928,7 +4928,7 @@ Data_069_71F0:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7212::
-Data_069_7212:: ; heuristic: map object screen array; C0
+Data_069_7212:: ; address name
     dw ObjSelector_7214 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4943,7 +4943,7 @@ Data_069_7214:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7288::
-Data_069_7288:: ; heuristic: start of a structured table; C0
+Data_069_7288:: ; address name
     db $04 ; entry 0
     db $87, $01, $2A, $00, $00, $40, $30, $07, $03, $70, $F0
     db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86
@@ -4953,7 +4953,7 @@ Data_069_7288:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_72B5::
-Data_069_72B5:: ; heuristic: start of a structured table; C0
+Data_069_72B5:: ; address name
     db $04 ; entry 0
     db $87, $01, $13, $00, $00, $40, $30, $07, $03, $70, $F0
     db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86
@@ -4963,7 +4963,7 @@ Data_069_72B5:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_72E2::
-Data_069_72E2:: ; heuristic: start of a structured table; C0
+Data_069_72E2:: ; address name
     db $04 ; entry 0
     db $87, $01, $17, $00, $00, $40, $30, $07, $03, $70, $F0
     db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86
@@ -4973,7 +4973,7 @@ Data_069_72E2:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_730F::
-Data_069_730F:: ; heuristic: map object screen array; C0
+Data_069_730F:: ; address name
     dw ObjSelector_731B ; id 0
     dw ObjSelector_734C ; id 1
     dw ObjSelector_7372 ; id 2
@@ -4989,7 +4989,7 @@ Data_069_731B:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_731F::
-Data_069_731F:: ; heuristic: start of a structured table; C0
+Data_069_731F:: ; address name
     db $04 ; entry 0
     db $85, $01, $19, $00, $00, $40, $40, $05, $00, $50, $56
     db $86, $00, $55, $00, $00, $40, $50, $06, $02, $60, $57
@@ -5004,7 +5004,7 @@ Data_069_734C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7350::
-Data_069_7350:: ; heuristic: start of a structured table; C0
+Data_069_7350:: ; address name
     db $03 ; entry 0
     db $85, $01, $1B, $00, $00, $70, $60, $05, $00, $50, $61
     db $86, $01, $1E, $00, $00, $50, $50, $06, $02, $60, $BD
@@ -5018,7 +5018,7 @@ Data_069_7372:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7376::
-Data_069_7376:: ; heuristic: start of a structured table; C0
+Data_069_7376:: ; address name
     db $04 ; entry 0
     db $85, $01, $1E, $00, $00, $10, $40, $05, $00, $50, $5B
     db $86, $01, $1F, $00, $00, $20, $50, $06, $03, $60, $BF
@@ -5033,7 +5033,7 @@ Data_069_73A3:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_73A7::
-Data_069_73A7:: ; heuristic: start of a structured table; C0
+Data_069_73A7:: ; address name
     db $03 ; entry 0
     db $85, $01, $12, $00, $00, $60, $20, $05, $00, $50, $58
     db $86, $00, $91, $00, $00, $50, $30, $06, $01, $60, $59
@@ -5047,7 +5047,7 @@ Data_069_73C9:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_73CD::
-Data_069_73CD:: ; heuristic: start of a structured table; C0
+Data_069_73CD:: ; address name
     db $03 ; entry 0
     db $85, $01, $15, $00, $00, $50, $20, $05, $00, $50, $5D
     db $86, $00, $5F, $00, $00, $60, $40, $06, $03, $60, $5F
@@ -5061,7 +5061,7 @@ Data_069_73EF:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_73F3::
-Data_069_73F3:: ; heuristic: start of a structured table; C0
+Data_069_73F3:: ; address name
     db $04 ; entry 0
     db $85, $01, $1C, $00, $00, $50, $50, $05, $03, $50, $55
     db $86, $01, $1D, $00, $00, $20, $30, $06, $00, $60, $5E
@@ -5071,7 +5071,7 @@ Data_069_73F3:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7420::
-Data_069_7420:: ; heuristic: map object screen array; C0
+Data_069_7420:: ; address name
     dw ObjSelector_742C ; id 0
     dw $0000 ; id 1
     dw ObjSelector_74A3 ; id 2
@@ -5091,7 +5091,7 @@ Data_069_742C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_745F::
-Data_069_745F:: ; heuristic: start of a structured table; C0
+Data_069_745F:: ; address name
     db $03 ; entry 0
     db $85, $01, $3B, $00, $00, $40, $20, $05, $00, $50, $81
     db $86, $01, $12, $00, $00, $60, $30, $06, $03, $60, $82
@@ -5111,7 +5111,7 @@ Data_069_74A3:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_74CB::
-Data_069_74CB:: ; heuristic: start of a structured table; C0
+Data_069_74CB:: ; address name
     db $01 ; entry 0
     db $85, $01, $10, $00, $00, $30, $60, $05, $02, $50, $83
     db $03, $85, $01, $10, $00, $00, $40, $70, $05, $02, $50, $83, $86, $01, $1B, $00
@@ -5128,7 +5128,7 @@ Data_069_74F9:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7511::
-Data_069_7511:: ; heuristic: start of a structured table; C0
+Data_069_7511:: ; address name
     db $02 ; entry 0
     db $85, $01, $10, $00, $00, $20, $30, $05, $01, $50, $84
     db $86, $01, $10, $00, $00, $20, $60, $06, $01, $60, $85
@@ -5145,21 +5145,21 @@ Data_069_754A:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7552::
-Data_069_7552:: ; heuristic: start of a structured table; C0
+Data_069_7552:: ; address name
     db $01 ; entry 0
     db $85, $01, $03, $00, $00, $30, $30, $05, $00, $50, $99
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_755E::
-Data_069_755E:: ; heuristic: start of a structured table; C0
+Data_069_755E:: ; address name
     db $01 ; entry 0
     db $85, $01, $03, $00, $00, $D0, $30, $05, $00, $50, $99
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_756A::
-Data_069_756A:: ; heuristic: map object screen array; C0
+Data_069_756A:: ; address name
     dw ObjSelector_7570 ; id 0
     dw ObjSelector_75C6 ; id 1
     dw ObjSelector_7679 ; id 2
@@ -5174,7 +5174,7 @@ Data_069_7570:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7582::
-Data_069_7582:: ; heuristic: start of a structured table; C0
+Data_069_7582:: ; address name
     db $02 ; entry 0
     db $85, $01, $1E, $00, $00, $40, $60, $05, $00, $50, $8A
     db $86, $01, $1F, $00, $00, $50, $20, $06, $02, $60, $D9
@@ -5193,7 +5193,7 @@ Data_069_75C6:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_75E6::
-Data_069_75E6:: ; heuristic: start of a structured table; C0
+Data_069_75E6:: ; address name
     db $01 ; entry 0
     db $85, $01, $12, $00, $00, $30, $50, $05, $00, $50, $8D
     INCBIN "dwm2-cobi-us.gbc", $1A75F2, $87
@@ -5209,7 +5209,7 @@ Data_069_7679:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7689::
-Data_069_7689:: ; heuristic: start of a structured table; C0
+Data_069_7689:: ; address name
     db $03 ; entry 0
     db $85, $01, $10, $00, $00, $20, $20, $05, $00, $50, $8C
     db $86, $00, $7A, $00, $00, $40, $40, $06, $02, $60, $D7
@@ -5218,7 +5218,7 @@ Data_069_7689:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_76AB::
-Data_069_76AB:: ; heuristic: start of a structured table; C0
+Data_069_76AB:: ; address name
     db $02 ; entry 0
     db $85, $01, $10, $00, $00, $30, $20, $05, $00, $50, $8C
     db $86, $01, $12, $00, $00, $60, $30, $06, $01, $60, $8D
@@ -5226,7 +5226,7 @@ Data_069_76AB:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_76C2::
-Data_069_76C2:: ; heuristic: start of a structured table; C0
+Data_069_76C2:: ; address name
     db $03 ; entry 0
     db $85, $01, $10, $00, $00, $20, $20, $05, $00, $50, $8C
     db $86, $00, $7A, $00, $00, $50, $40, $06, $02, $60, $D7
@@ -5235,7 +5235,7 @@ Data_069_76C2:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_76E4::
-Data_069_76E4:: ; heuristic: map object screen array; C0
+Data_069_76E4:: ; address name
     dw ObjSelector_76E8 ; id 0
     dw Data_069_76F8 ; id 1
 
@@ -5247,7 +5247,7 @@ Data_069_76E8:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_76EC::
-Data_069_76EC:: ; heuristic: start of a structured table; C0
+Data_069_76EC:: ; address name
     db $02 ; entry 0
     db $85, $01, $57, $00, $00, $45, $80, $05, $02, $50, $00
 Data_069_76F8:: ; heuristic: map object selector; C0
@@ -5257,7 +5257,7 @@ Data_069_76F8:: ; heuristic: map object selector; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7708::
-Data_069_7708:: ; heuristic: map object screen array; C0
+Data_069_7708:: ; address name
     dw ObjSelector_770C ; id 0
     dw ObjSelector_776E ; id 1
 
@@ -5270,7 +5270,7 @@ Data_069_770C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7714::
-Data_069_7714:: ; heuristic: start of a structured table; C0
+Data_069_7714:: ; address name
     db $04 ; entry 0
     db $85, $01, $04, $00, $00, $50, $10, $05, $00, $50, $32
     db $86, $01, $05, $00, $00, $40, $10, $06, $00, $60, $31
@@ -5280,7 +5280,7 @@ Data_069_7714:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7741::
-Data_069_7741:: ; heuristic: start of a structured table; C0
+Data_069_7741:: ; address name
     db $04 ; entry 0
     db $85, $01, $04, $00, $00, $50, $10, $05, $00, $50, $32
     db $86, $01, $05, $00, $00, $40, $10, $06, $00, $60, $31
@@ -5298,7 +5298,7 @@ Data_069_776E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7784::
-Data_069_7784:: ; heuristic: start of a structured table; C0
+Data_069_7784:: ; address name
     db $04 ; entry 0
     db $85, $01, $29, $00, $02, $50, $30, $05, $01, $50, $2D
     db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2E
@@ -5308,7 +5308,7 @@ Data_069_7784:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_77B1::
-Data_069_77B1:: ; heuristic: start of a structured table; C0
+Data_069_77B1:: ; address name
     db $04 ; entry 0
     db $85, $01, $29, $00, $02, $50, $30, $05, $01, $50, $2D
     db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2E
@@ -5319,7 +5319,7 @@ Data_069_77B1:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7822::
-Data_069_7822:: ; heuristic: map object screen array; C0
+Data_069_7822:: ; address name
     dw ObjSelector_7826 ; id 0
     dw ObjSelector_7857 ; id 1
 
@@ -5331,7 +5331,7 @@ Data_069_7826:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_782A::
-Data_069_782A:: ; heuristic: start of a structured table; C0
+Data_069_782A:: ; address name
     db $04 ; entry 0
     db $85, $01, $23, $00, $00, $40, $70, $05, $01, $50, $00
     db $86, $01, $24, $00, $00, $10, $60, $06, $02, $60, $01
@@ -5346,7 +5346,7 @@ Data_069_7857:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_785B::
-Data_069_785B:: ; heuristic: start of a structured table; C0
+Data_069_785B:: ; address name
     db $03 ; entry 0
     db $85, $01, $26, $00, $00, $60, $50, $05, $00, $50, $04
     db $86, $01, $25, $00, $02, $30, $60, $06, $01, $60, $05
@@ -5355,7 +5355,7 @@ Data_069_785B:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_787D::
-Data_069_787D:: ; heuristic: map object screen array; C0
+Data_069_787D:: ; address name
     dw ObjSelector_787F ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -5366,7 +5366,7 @@ Data_069_787F:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7883::
-Data_069_7883:: ; heuristic: start of a structured table; C0
+Data_069_7883:: ; address name
     db $03 ; entry 0
     db $85, $01, $24, $00, $00, $30, $40, $05, $01, $50, $0A
     db $86, $01, $25, $00, $00, $80, $70, $06, $03, $60, $0B
@@ -5375,7 +5375,7 @@ Data_069_7883:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_78A5::
-Data_069_78A5:: ; heuristic: map object screen array; C0
+Data_069_78A5:: ; address name
     dw ObjSelector_78A7 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -5386,7 +5386,7 @@ Data_069_78A7:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_78AB::
-Data_069_78AB:: ; heuristic: start of a structured table; C0
+Data_069_78AB:: ; address name
     db $02 ; entry 0
     db $85, $01, $24, $00, $00, $10, $60, $05, $02, $50, $1F
     db $86, $01, $24, $00, $00, $50, $10, $06, $00, $60, $20
@@ -5394,7 +5394,7 @@ Data_069_78AB:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_78C2::
-Data_069_78C2:: ; heuristic: map object screen array; C0
+Data_069_78C2:: ; address name
     dw ObjSelector_78CA ; id 0
     dw ObjSelector_792C ; id 1
     dw ObjSelector_7947 ; id 2
@@ -5409,7 +5409,7 @@ Data_069_78CA:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_78D2::
-Data_069_78D2:: ; heuristic: start of a structured table; C0
+Data_069_78D2:: ; address name
     db $04 ; entry 0
     db $85, $01, $4D, $00, $00, $40, $10, $05, $00, $50, $13
     db $85, $01, $4D, $00, $00, $50, $10, $05, $00, $50, $14
@@ -5419,7 +5419,7 @@ Data_069_78D2:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_78FF::
-Data_069_78FF:: ; heuristic: start of a structured table; C0
+Data_069_78FF:: ; address name
     db $04 ; entry 0
     db $85, $01, $4D, $00, $00, $30, $20, $05, $00, $50, $13
     db $85, $01, $4D, $00, $02, $60, $30, $05, $00, $50, $14
@@ -5434,7 +5434,7 @@ Data_069_792C:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7930::
-Data_069_7930:: ; heuristic: start of a structured table; C0
+Data_069_7930:: ; address name
     db $02 ; entry 0
     db $85, $01, $12, $00, $00, $60, $30, $05, $00, $50, $17
     db $86, $01, $4D, $00, $00, $20, $60, $06, $01, $60, $0E
@@ -5447,7 +5447,7 @@ Data_069_7947:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_794B::
-Data_069_794B:: ; heuristic: start of a structured table; C0
+Data_069_794B:: ; address name
     db $04 ; entry 0
     db $85, $01, $26, $00, $00, $70, $70, $05, $03, $50, $0C
     db $86, $01, $24, $00, $00, $20, $40, $06, $00, $60, $10
@@ -5463,7 +5463,7 @@ Data_069_7978:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7980::
-Data_069_7980:: ; heuristic: start of a structured table; C0
+Data_069_7980:: ; address name
     db $03 ; entry 0
     db $85, $01, $25, $00, $00, $20, $60, $05, $03, $50, $0F
     db $86, $01, $24, $00, $00, $50, $50, $06, $00, $60, $16
@@ -5472,7 +5472,7 @@ Data_069_7980:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_79A2::
-Data_069_79A2:: ; heuristic: start of a structured table; C0
+Data_069_79A2:: ; address name
     db $02 ; entry 0
     db $85, $01, $25, $00, $00, $20, $60, $05, $03, $50, $0F
     db $86, $01, $24, $00, $00, $50, $50, $06, $00, $60, $16
@@ -5480,7 +5480,7 @@ Data_069_79A2:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_79B9::
-Data_069_79B9:: ; heuristic: map object screen array; C0
+Data_069_79B9:: ; address name
     dw ObjSelector_79BD ; id 0
     dw ObjSelector_7A32 ; id 1
 
@@ -5496,7 +5496,7 @@ Data_069_79BD:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_79ED::
-Data_069_79ED:: ; heuristic: start of a structured table; C0
+Data_069_79ED:: ; address name
     db $02 ; entry 0
     db $85, $01, $4D, $00, $00, $30, $50, $05, $00, $50, $27
     db $86, $01, $24, $00, $02, $60, $40, $06, $00, $60, $28
@@ -5517,7 +5517,7 @@ Data_069_7A32:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7A6F::
-Data_069_7A6F:: ; heuristic: start of a structured table; C0
+Data_069_7A6F:: ; address name
     db $03 ; entry 0
     db $85, $01, $4C, $00, $00, $20, $10, $05, $03, $50, $22
     db $85, $01, $4C, $00, $00, $20, $20, $05, $03, $50, $23
@@ -5526,7 +5526,7 @@ Data_069_7A6F:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7A91::
-Data_069_7A91:: ; heuristic: map object screen array; C0
+Data_069_7A91:: ; address name
     dw ObjSelector_7A93 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -5540,7 +5540,7 @@ Data_069_7A93:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7B26::
-Data_069_7B26:: ; heuristic: start of a structured table; C0
+Data_069_7B26:: ; address name
     db $05 ; entry 0
     db $85, $01, $22, $00, $00, $40, $10, $05, $00, $50, $2B
     db $86, $01, $24, $00, $00, $60, $20, $06, $00, $60, $28
@@ -5551,7 +5551,7 @@ Data_069_7B26:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7B5E::
-Data_069_7B5E:: ; heuristic: map object screen array; C0
+Data_069_7B5E:: ; address name
     dw ObjSelector_7B62 ; id 0
     dw ObjSelector_7B72 ; id 1
 
@@ -5563,7 +5563,7 @@ Data_069_7B62:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7B66::
-Data_069_7B66:: ; heuristic: start of a structured table; C0
+Data_069_7B66:: ; address name
     db $01 ; entry 0
     db $85, $00, $4F, $00, $00, $50, $20, $05, $00, $50, $3B
 
@@ -5580,7 +5580,7 @@ Data_069_7B72:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7BAB::
-Data_069_7BAB:: ; heuristic: map object screen array; C0
+Data_069_7BAB:: ; address name
     dw ObjSelector_7BAD ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -5594,14 +5594,14 @@ Data_069_7BAD:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7BBF::
-Data_069_7BBF:: ; heuristic: start of a structured table; C0
+Data_069_7BBF:: ; address name
     db $01 ; entry 0
     db $85, $01, $26, $00, $00, $20, $40, $05, $00, $50, $09
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7BCB::
-Data_069_7BCB:: ; heuristic: start of a structured table; C0
+Data_069_7BCB:: ; address name
     db $02 ; entry 0
     db $85, $01, $22, $00, $00, $20, $50, $05, $02, $50, $2B
     db $86, $01, $26, $00, $00, $20, $40, $06, $00, $60, $09
@@ -5611,7 +5611,7 @@ Data_069_7BCB:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7BF9::
-Data_069_7BF9:: ; heuristic: map object screen array; C0
+Data_069_7BF9:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -5641,7 +5641,7 @@ Data_069_7C19:: ; address name
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7C4C::
-Data_069_7C4C:: ; heuristic: map object screen array; C0
+Data_069_7C4C:: ; address name
     dw ObjSelector_7C4E ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -5654,7 +5654,7 @@ Data_069_7C4E:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7CAF::
-Data_069_7CAF:: ; heuristic: start of a structured table; C0
+Data_069_7CAF:: ; address name
     db $04 ; entry 0
     db $85, $01, $4D, $00, $00, $50, $30, $05, $00, $50, $2C
     db $86, $01, $27, $00, $00, $30, $70, $06, $00, $60, $00
@@ -5664,7 +5664,7 @@ Data_069_7CAF:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7CDC::
-Data_069_7CDC:: ; heuristic: map object screen array; C0
+Data_069_7CDC:: ; address name
     dw ObjSelector_7CDE ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -5677,7 +5677,7 @@ Data_069_7CDE:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7CF8::
-Data_069_7CF8:: ; heuristic: start of a structured table; C0
+Data_069_7CF8:: ; address name
     db $02 ; entry 0
     db $85, $01, $4D, $00, $00, $40, $40, $05, $00, $50, $25
     db $85, $01, $4D, $00, $00, $50, $40, $05, $00, $50, $26
@@ -5688,7 +5688,7 @@ Data_069_7CF8:: ; heuristic: start of a structured table; C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7D31::
-Data_069_7D31:: ; heuristic: map object screen array; C0
+Data_069_7D31:: ; address name
     dw ObjSelector_7D39 ; id 0
     dw ObjSelector_7D51 ; id 1
     dw ObjSelector_7DDD ; id 2
@@ -5712,7 +5712,7 @@ Data_069_7D51:: ; address name
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
 MapObjects_7DBB::
-Data_069_7DBB:: ; heuristic: start of a structured table; C0
+Data_069_7DBB:: ; address name
     db $03 ; entry 0
     db $85, $00, $4F, $00, $00, $40, $E0, $05, $00, $50, $37
     db $85, $00, $4F, $00, $00, $50, $E0, $05, $00, $50, $37
@@ -5737,7 +5737,7 @@ Data_069_7E1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
 MapObjectScreens_7E4B::
-Data_069_7E4B:: ; heuristic: map object screen array; C0
+Data_069_7E4B:: ; address name
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2

@@ -1916,7 +1916,7 @@ DecompressGraphicsAToTiles0::
 Func_03A_52A4:: ; address name
     ld c, a
     ld b, $00
-    ld hl, Data_03A_52B9
+    ld hl, BattleEffectGraphicsTable
     add hl, bc
     add hl, bc
     add hl, bc
@@ -1932,7 +1932,7 @@ Func_03A_52A4:: ; address name
 ; E-0145 (C1: DecompressGraphicsAToTiles0 decompresses the far pointer at $52B9 + 3 * A to vTiles0; RunBattleEffectAnimation and the debug effect viewer call it; all 60 entries decode).
 ; record: compressed effect graphics (vTiles0); its ROM bank
 BattleEffectGraphicsTable::
-Data_03A_52B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_52B9:: ; address name
     dfar BattleEffectGfx00 ; id 0
     dfar BattleEffectGfx01 ; id 1
     dfar BattleEffectGfx02 ; id 2
@@ -2278,7 +2278,7 @@ Func_03A_5516:: ; address name
     add hl, hl
     add hl, hl
     add hl, hl
-    ld bc, Data_03A_7D9A
+    ld bc, EffectOBJPalettes
     add hl, bc
     ld b, $08
     ld de, wOBJPaletteBuffer
@@ -5127,7 +5127,7 @@ Data_03A_710C:: ; heuristic: target of a monotone pointer table; C0
 ShowBattleText::
 Func_03A_7193:: ; address name
     push de
-    ld hl, Data_03A_71B4
+    ld hl, BattleTextPrepTable
     ld c, d
     ld b, $00
     add hl, bc
@@ -5149,7 +5149,7 @@ Jump_03A_71A4::
 ; E-0180 (C1: ShowBattleText reads the word $71B4 + 2 * D and, when it is non-zero, calls it (JumpToWordAtHL) before showing string D of category 1 from bank $2F; 256 words up to the first routine at $73B4; 211 are non-zero).
 ; record: routine run before battle text D ($0000 = none)
 BattleTextPrepTable::
-Data_03A_71B4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_71B4:: ; address name
     dw BattleTextPrep00 ; id 0
     dw BattleTextPrep01 ; id 1
     dw BattleTextPrep01 ; id 2
@@ -7168,7 +7168,7 @@ Jump_03A_7D98::
 ; E-0173 (C1: LoadEffectOBJPaletteC copies the 8 bytes at $7D9A + 8 * C to wOBJPaletteBuffer on CGB; 59 whole palettes lie before the label at $7F79).
 ; record: one CGB OBJ palette: 4 BGR555 colours
 EffectOBJPalettes::
-Data_03A_7D9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_7D9A:: ; address name
     dw $0000, $02FF, $0017, $01DF ; id 0
     dw $0000, $02FF, $0017, $01DF ; id 1
     dw $0000, $02FF, $0017, $01DF ; id 2

@@ -558,7 +558,7 @@ FieldModeStateDispatch_Shared03_Sub01::
 Func_087_4507:: ; address name
     cp a, $84
     jr nz, Jump_087_4511
-    ld hl, Data_087_5D28
+    ld hl, SpecialMapInteractions_5D28
     ld a, $01
     ret
 
@@ -573,14 +573,14 @@ Jump_087_4511::
     ld a, [hl]
     cp a, $02
     jr nz, Jump_087_452D
-    ld hl, Data_087_5CA4
+    ld hl, SpecialMapInteractions_5CA4
     ld a, $01
     ret
 
 Jump_087_452D::
     cp a, $03
     jr nz, Jump_087_4537
-    ld hl, Data_087_5CFF
+    ld hl, SpecialMapInteractions_5CFF
     ld a, $01
     ret
 
@@ -591,7 +591,7 @@ Jump_087_4537::
 ; E-0157 (C1: FieldModeStateDispatch_Shared03 reads the word $4539 + 2 * hMapId when A is pressed (232 words, up to FieldModeStateDispatch_Shared03_Sub02 at $4709); its list of 10-byte entries ends with $FF; an entry matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front), map, screen and player position; unless its story flag is set it runs DispatchTalkEvent with the group and index).
 ; record: list of interaction spots for this map ($0000 = none)
 MapInteractionTable::
-Data_087_4539:: ; heuristic: start of a structured table; C0
+Data_087_4539:: ; address name
     dw MapInteractions00 ; id 0
     dw MapInteractions01 ; id 1
     dw MapInteractions02 ; id 2
@@ -886,7 +886,7 @@ Jump_087_474D::
 ; E-0157 (derived: list for entry $00 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions00::
-Data_087_4751:: ; heuristic: map interaction list; C0
+Data_087_4751:: ; address name
     db $05, $00, $01, $02, $70, $70 ; id 0
     dw $FFFF
     db $A3, $01
@@ -904,7 +904,7 @@ Data_087_4751:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $01 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions01::
-Data_087_477A:: ; heuristic: map interaction list; C0
+Data_087_477A:: ; address name
     db $03, $01, $02, $02, $60, $70 ; id 0
     dw $FFFF
     db $17, $0A
@@ -913,7 +913,7 @@ Data_087_477A:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $02 of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions02::
-Data_087_4785:: ; heuristic: map interaction list; C0
+Data_087_4785:: ; address name
     db $03, $02, $01, $00, $30, $20 ; id 0
     dw $FFFF
     db $13, $01
@@ -938,7 +938,7 @@ Data_087_4785:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $04 of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions04::
-Data_087_47CD:: ; heuristic: map interaction list; C0
+Data_087_47CD:: ; address name
     db $03, $04, $01, $00, $40, $30 ; id 0
     dw $FFFF
     db $65, $01
@@ -959,7 +959,7 @@ Data_087_47CD:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $05 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions05::
-Data_087_4800:: ; heuristic: map interaction list; C0
+Data_087_4800:: ; address name
     db $05, $05, $01, $00, $40, $30 ; id 0
     dw $FFFF
     db $A9, $01
@@ -968,7 +968,7 @@ Data_087_4800:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $06 of MapInteractionTable; 10 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions06::
-Data_087_480B:: ; heuristic: map interaction list; C0
+Data_087_480B:: ; address name
     db $03, $06, $00, $00, $40, $10 ; id 0
     dw $FFFF
     db $03, $01
@@ -1004,7 +1004,7 @@ Data_087_480B:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $07 of MapInteractionTable; 7 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions07::
-Data_087_4870:: ; heuristic: map interaction list; C0
+Data_087_4870:: ; address name
     db $03, $07, $00, $00, $60, $60 ; id 0
     dw $FFFF
     db $50, $01
@@ -1031,7 +1031,7 @@ Data_087_4870:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $08 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions08::
-Data_087_48B7:: ; heuristic: map interaction list; C0
+Data_087_48B7:: ; address name
     db $03, $08, $00, $00, $40, $40 ; id 0
     dw $FFFF
     db $07, $0A
@@ -1043,7 +1043,7 @@ Data_087_48B7:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $09 of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions09::
-Data_087_48CC:: ; heuristic: map interaction list; C0
+Data_087_48CC:: ; address name
     db $03, $09, $00, $00, $20, $30 ; id 0
     dw $FFFF
     db $C5, $01
@@ -1058,7 +1058,7 @@ Data_087_48CC:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $0C of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions0C::
-Data_087_48EB:: ; heuristic: map interaction list; C0
+Data_087_48EB:: ; address name
     db $04, $0C, $00, $00, $20, $50 ; id 0
     dw $FFFF
     db $C9, $01
@@ -1073,7 +1073,7 @@ Data_087_48EB:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $0D of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions0D::
-Data_087_490A:: ; heuristic: map interaction list; C0
+Data_087_490A:: ; address name
     db $03, $0D, $01, $01, $10, $10 ; id 0
     dw $FFFF
     db $6C, $01
@@ -1091,7 +1091,7 @@ Data_087_490A:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $0E of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions0E::
-Data_087_4933:: ; heuristic: map interaction list; C0
+Data_087_4933:: ; address name
     db $03, $0E, $00, $00, $10, $10 ; id 0
     dw $FFFF
     db $3B, $01
@@ -1112,7 +1112,7 @@ Data_087_4933:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $0F of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions0F::
-Data_087_4966:: ; heuristic: map interaction list; C0
+Data_087_4966:: ; address name
     db $03, $0F, $00, $00, $10, $10 ; id 0
     dw $FFFF
     db $40, $01
@@ -1136,7 +1136,7 @@ Data_087_4966:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $10 of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions10::
-Data_087_49A3:: ; heuristic: map interaction list; C0
+Data_087_49A3:: ; address name
     db $03, $10, $00, $00, $60, $10 ; id 0
     dw $FFFF
     db $43, $01
@@ -1151,7 +1151,7 @@ Data_087_49A3:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $11 of MapInteractionTable; 16 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions11::
-Data_087_49C2:: ; heuristic: map interaction list; C0
+Data_087_49C2:: ; address name
     db $05, $11, $00, $01, $70, $50 ; id 0
     dw $FFFF
     db $09, $0A
@@ -1205,7 +1205,7 @@ Data_087_49C2:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $12 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions12::
-Data_087_4A63:: ; heuristic: map interaction list; C0
+Data_087_4A63:: ; address name
     db $03, $12, $00, $00, $80, $20 ; id 0
     dw $FFFF
     db $C8, $01
@@ -1223,7 +1223,7 @@ Data_087_4A63:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $13 of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions13::
-Data_087_4A8C:: ; heuristic: map interaction list; C0
+Data_087_4A8C:: ; address name
     db $03, $13, $00, $00, $10, $30 ; id 0
     dw $FFFF
     db $47, $01
@@ -1238,7 +1238,7 @@ Data_087_4A8C:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $15 of MapInteractionTable; 10 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions15::
-Data_087_4AAB:: ; heuristic: map interaction list; C0
+Data_087_4AAB:: ; address name
     db $03, $15, $00, $00, $10, $10 ; id 0
     dw $FFFF
     db $90, $01
@@ -1274,7 +1274,7 @@ Data_087_4AAB:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $16 of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions16::
-Data_087_4B10:: ; heuristic: map interaction list; C0
+Data_087_4B10:: ; address name
     db $03, $16, $00, $00, $20, $20 ; id 0
     dw $FFFF
     db $74, $01
@@ -1295,7 +1295,7 @@ Data_087_4B10:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $17 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions17::
-Data_087_4B43:: ; heuristic: map interaction list; C0
+Data_087_4B43:: ; address name
     db $02, $17, $00, $00, $50, $40 ; id 0
     dw $FFFF
     db $86, $01
@@ -1304,7 +1304,7 @@ Data_087_4B43:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $18 of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions18::
-Data_087_4B4E:: ; heuristic: map interaction list; C0
+Data_087_4B4E:: ; address name
     db $04, $18, $00, $01, $30, $30 ; id 0
     dw $FFFF
     db $62, $01
@@ -1328,7 +1328,7 @@ Data_087_4B4E:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $19 of MapInteractionTable; 14 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions19::
-Data_087_4B8B:: ; heuristic: map interaction list; C0
+Data_087_4B8B:: ; address name
     db $04, $19, $00, $01, $40, $20 ; id 0
     dw $FFFF
     db $D8, $01
@@ -1376,7 +1376,7 @@ Data_087_4B8B:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $1A of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions1A::
-Data_087_4C18:: ; heuristic: map interaction list; C0
+Data_087_4C18:: ; address name
     db $05, $1A, $00, $00, $30, $40 ; id 0
     dw $FFFF
     db $8B, $01
@@ -1388,7 +1388,7 @@ Data_087_4C18:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $1B of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions1B::
-Data_087_4C2D:: ; heuristic: map interaction list; C0
+Data_087_4C2D:: ; address name
     db $05, $1B, $00, $02, $30, $40 ; id 0
     dw $FFFF
     db $EC, $01
@@ -1400,7 +1400,7 @@ Data_087_4C2D:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $1D of MapInteractionTable; 8 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions1D::
-Data_087_4C42:: ; heuristic: map interaction list; C0
+Data_087_4C42:: ; address name
     db $04, $1D, $00, $00, $90, $30 ; id 0
     dw $FFFF
     db $18, $0A
@@ -1430,7 +1430,7 @@ Data_087_4C42:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $21 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions21::
-Data_087_4C93:: ; heuristic: map interaction list; C0
+Data_087_4C93:: ; address name
     db $05, $21, $00, $00, $10, $40 ; id 0
     dw $FFFF
     db $07, $02
@@ -1442,7 +1442,7 @@ Data_087_4C93:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $22 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions22::
-Data_087_4CA8:: ; heuristic: map interaction list; C0
+Data_087_4CA8:: ; address name
     db $04, $22, $00, $00, $50, $40 ; id 0
     dw $FFFF
     db $0A, $02
@@ -1454,7 +1454,7 @@ Data_087_4CA8:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $23 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions23::
-Data_087_4CBD:: ; heuristic: map interaction list; C0
+Data_087_4CBD:: ; address name
     db $01, $23, $00, $00, $10, $40 ; id 0
     dw $FFFF
     db $1F, $02
@@ -1463,7 +1463,7 @@ Data_087_4CBD:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $24 of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions24::
-Data_087_4CC8:: ; heuristic: map interaction list; C0
+Data_087_4CC8:: ; address name
     db $05, $24, $00, $00, $20, $70 ; id 0
     dw $FFFF
     db $19, $02
@@ -1484,7 +1484,7 @@ Data_087_4CC8:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $25 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions25::
-Data_087_4CFB:: ; heuristic: map interaction list; C0
+Data_087_4CFB:: ; address name
     db $03, $25, $01, $00, $50, $10 ; id 0
     dw $FFFF
     db $2A, $02
@@ -1493,7 +1493,7 @@ Data_087_4CFB:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $28 of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions28::
-Data_087_4D06:: ; heuristic: map interaction list; C0
+Data_087_4D06:: ; address name
     db $05, $28, $00, $00, $30, $10 ; id 0
     dw $FFFF
     db $40, $02
@@ -1508,7 +1508,7 @@ Data_087_4D06:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $2A of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions2A::
-Data_087_4D25:: ; heuristic: map interaction list; C0
+Data_087_4D25:: ; address name
     db $02, $2A, $00, $00, $70, $60 ; id 0
     dw $FFFF
     db $42, $02
@@ -1520,7 +1520,7 @@ Data_087_4D25:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $2B of MapInteractionTable; 8 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions2B::
-Data_087_4D3A:: ; heuristic: map interaction list; C0
+Data_087_4D3A:: ; address name
     db $05, $2B, $00, $01, $10, $60 ; id 0
     dw $FFFF
     db $2F, $02
@@ -1550,7 +1550,7 @@ Data_087_4D3A:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $2D of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions2D::
-Data_087_4D8B:: ; heuristic: map interaction list; C0
+Data_087_4D8B:: ; address name
     db $03, $2D, $00, $00, $20, $40 ; id 0
     dw $005A
     db $38, $02
@@ -1565,7 +1565,7 @@ Data_087_4D8B:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $2E of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions2E::
-Data_087_4DAA:: ; heuristic: map interaction list; C0
+Data_087_4DAA:: ; address name
     db $04, $2E, $00, $00, $40, $20 ; id 0
     dw $FFFF
     db $3E, $02
@@ -1583,7 +1583,7 @@ Data_087_4DAA:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $31 of MapInteractionTable; 8 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions31::
-Data_087_4DD3:: ; heuristic: map interaction list; C0
+Data_087_4DD3:: ; address name
     db $03, $31, $00, $00, $20, $70 ; id 0
     dw $FFFF
     db $08, $03
@@ -1613,7 +1613,7 @@ Data_087_4DD3:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $32 of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions32::
-Data_087_4E24:: ; heuristic: map interaction list; C0
+Data_087_4E24:: ; address name
     db $05, $32, $01, $00, $10, $20 ; id 0
     dw $FFFF
     db $2A, $03
@@ -1637,7 +1637,7 @@ Data_087_4E24:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $33 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions33::
-Data_087_4E61:: ; heuristic: map interaction list; C0
+Data_087_4E61:: ; address name
     db $03, $33, $00, $00, $50, $50 ; id 0
     dw $FFFF
     db $30, $03
@@ -1646,7 +1646,7 @@ Data_087_4E61:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $34 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions34::
-Data_087_4E6C:: ; heuristic: map interaction list; C0
+Data_087_4E6C:: ; address name
     db $03, $34, $00, $00, $30, $30 ; id 0
     dw $FFFF
     db $2C, $03
@@ -1655,7 +1655,7 @@ Data_087_4E6C:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $35 of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions35::
-Data_087_4E77:: ; heuristic: map interaction list; C0
+Data_087_4E77:: ; address name
     db $05, $35, $00, $00, $50, $50 ; id 0
     dw $FFFF
     db $35, $03
@@ -1679,7 +1679,7 @@ Data_087_4E77:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $37 of MapInteractionTable; 8 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions37::
-Data_087_4EB4:: ; heuristic: map interaction list; C0
+Data_087_4EB4:: ; address name
     db $03, $37, $00, $00, $60, $50 ; id 0
     dw $FFFF
     db $5C, $03
@@ -1709,7 +1709,7 @@ Data_087_4EB4:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $39 of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions39::
-Data_087_4F05:: ; heuristic: map interaction list; C0
+Data_087_4F05:: ; address name
     db $05, $39, $03, $00, $20, $40 ; id 0
     dw $FFFF
     db $54, $03
@@ -1730,7 +1730,7 @@ Data_087_4F05:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $3A of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions3A::
-Data_087_4F38:: ; heuristic: map interaction list; C0
+Data_087_4F38:: ; address name
     db $05, $3A, $00, $00, $40, $50 ; id 0
     dw $FFFF
     db $5A, $03
@@ -1742,7 +1742,7 @@ Data_087_4F38:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $3B of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions3B::
-Data_087_4F4D:: ; heuristic: map interaction list; C0
+Data_087_4F4D:: ; address name
     db $05, $3B, $00, $00, $70, $70 ; id 0
     dw $FFFF
     db $6B, $03
@@ -1751,7 +1751,7 @@ Data_087_4F4D:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $3C of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions3C::
-Data_087_4F58:: ; heuristic: map interaction list; C0
+Data_087_4F58:: ; address name
     db $04, $3C, $00, $00, $50, $40 ; id 0
     dw $FFFF
     db $3D, $03
@@ -1766,7 +1766,7 @@ Data_087_4F58:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $3D of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions3D::
-Data_087_4F77:: ; heuristic: map interaction list; C0
+Data_087_4F77:: ; address name
     db $03, $3D, $00, $00, $70, $30 ; id 0
     dw $FFFF
     db $14, $03
@@ -1784,7 +1784,7 @@ Data_087_4F77:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $3E of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions3E::
-Data_087_4FA0:: ; heuristic: map interaction list; C0
+Data_087_4FA0:: ; address name
     db $05, $3E, $01, $01, $60, $30 ; id 0
     dw $FFFF
     db $4E, $03
@@ -1793,7 +1793,7 @@ Data_087_4FA0:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $40 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions40::
-Data_087_4FAB:: ; heuristic: map interaction list; C0
+Data_087_4FAB:: ; address name
     db $03, $40, $00, $00, $40, $40 ; id 0
     dw $FFFF
     db $4F, $03
@@ -1805,7 +1805,7 @@ Data_087_4FAB:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $42 of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions42::
-Data_087_4FC0:: ; heuristic: map interaction list; C0
+Data_087_4FC0:: ; address name
     db $03, $42, $00, $00, $40, $20 ; id 0
     dw $FFFF
     db $62, $03
@@ -1826,7 +1826,7 @@ Data_087_4FC0:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $43 of MapInteractionTable; 10 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions43::
-Data_087_4FF3:: ; heuristic: map interaction list; C0
+Data_087_4FF3:: ; address name
     db $05, $43, $00, $00, $50, $40 ; id 0
     dw $0077
     db $4C, $03
@@ -1862,7 +1862,7 @@ Data_087_4FF3:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $44 of MapInteractionTable; 8 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions44::
-Data_087_5058:: ; heuristic: map interaction list; C0
+Data_087_5058:: ; address name
     db $03, $44, $00, $00, $60, $20 ; id 0
     dw $0076
     db $4B, $03
@@ -1892,7 +1892,7 @@ Data_087_5058:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $4A of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions4A::
-Data_087_50A9:: ; heuristic: map interaction list; C0
+Data_087_50A9:: ; address name
     db $04, $4A, $00, $00, $40, $80 ; id 0
     dw $FFFF
     db $0E, $04
@@ -1916,7 +1916,7 @@ Data_087_50A9:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $4B of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions4B::
-Data_087_50E6:: ; heuristic: map interaction list; C0
+Data_087_50E6:: ; address name
     db $04, $4B, $00, $00, $80, $20 ; id 0
     dw $FFFF
     db $12, $04
@@ -1925,7 +1925,7 @@ Data_087_50E6:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $4C of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions4C::
-Data_087_50F1:: ; heuristic: map interaction list; C0
+Data_087_50F1:: ; address name
     db $03, $4C, $01, $00, $20, $10 ; id 0
     dw $FFFF
     db $19, $04
@@ -1943,7 +1943,7 @@ Data_087_50F1:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $4D of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions4D::
-Data_087_511A:: ; heuristic: map interaction list; C0
+Data_087_511A:: ; address name
     db $03, $4D, $00, $01, $60, $10 ; id 0
     dw $008A
     db $4A, $04
@@ -1961,7 +1961,7 @@ Data_087_511A:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $4F of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions4F::
-Data_087_5143:: ; heuristic: map interaction list; C0
+Data_087_5143:: ; address name
     db $05, $4F, $00, $00, $10, $50 ; id 0
     dw $FFFF
     db $2D, $04
@@ -1982,7 +1982,7 @@ Data_087_5143:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $50 of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions50::
-Data_087_5176:: ; heuristic: map interaction list; C0
+Data_087_5176:: ; address name
     db $04, $50, $00, $00, $40, $20 ; id 0
     dw $FFFF
     db $31, $04
@@ -1997,7 +1997,7 @@ Data_087_5176:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $51 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions51::
-Data_087_5195:: ; heuristic: map interaction list; C0
+Data_087_5195:: ; address name
     db $04, $51, $00, $00, $30, $10 ; id 0
     dw $FFFF
     db $36, $04
@@ -2006,7 +2006,7 @@ Data_087_5195:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $55 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions55::
-Data_087_51A0:: ; heuristic: map interaction list; C0
+Data_087_51A0:: ; address name
     db $05, $55, $00, $00, $30, $40 ; id 0
     dw $FFFF
     db $47, $04
@@ -2015,7 +2015,7 @@ Data_087_51A0:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $57 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions57::
-Data_087_51AB:: ; heuristic: map interaction list; C0
+Data_087_51AB:: ; address name
     db $03, $57, $01, $00, $40, $20 ; id 0
     dw $0085
     db $45, $04
@@ -2024,7 +2024,7 @@ Data_087_51AB:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $58 of MapInteractionTable; 7 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions58::
-Data_087_51B6:: ; heuristic: map interaction list; C0
+Data_087_51B6:: ; address name
     db $01, $58, $01, $00, $10, $60 ; id 0
     dw $FFFF
     db $5B, $04
@@ -2051,7 +2051,7 @@ Data_087_51B6:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $59 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions59::
-Data_087_51FD:: ; heuristic: map interaction list; C0
+Data_087_51FD:: ; address name
     db $03, $59, $00, $00, $80, $30 ; id 0
     dw $FFFF
     db $5E, $04
@@ -2063,7 +2063,7 @@ Data_087_51FD:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $5A of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions5A::
-Data_087_5212:: ; heuristic: map interaction list; C0
+Data_087_5212:: ; address name
     db $03, $5A, $01, $00, $60, $60 ; id 0
     dw $FFFF
     db $68, $04
@@ -2072,7 +2072,7 @@ Data_087_5212:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $5B of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions5B::
-Data_087_521D:: ; heuristic: map interaction list; C0
+Data_087_521D:: ; address name
     db $03, $5B, $00, $00, $20, $10 ; id 0
     dw $FFFF
     db $94, $04
@@ -2093,7 +2093,7 @@ Data_087_521D:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $5E of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions5E::
-Data_087_5250:: ; heuristic: map interaction list; C0
+Data_087_5250:: ; address name
     db $02, $5E, $00, $01, $80, $00 ; id 0
     dw $FFFF
     db $85, $04
@@ -2105,7 +2105,7 @@ Data_087_5250:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $5F of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions5F::
-Data_087_5265:: ; heuristic: map interaction list; C0
+Data_087_5265:: ; address name
     db $01, $5F, $00, $00, $40, $40 ; id 0
     dw $FFFF
     db $86, $04
@@ -2114,7 +2114,7 @@ Data_087_5265:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $60 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions60::
-Data_087_5270:: ; heuristic: map interaction list; C0
+Data_087_5270:: ; address name
     db $03, $60, $00, $01, $20, $50 ; id 0
     dw $FFFF
     db $91, $04
@@ -2123,7 +2123,7 @@ Data_087_5270:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $62 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions62::
-Data_087_527B:: ; heuristic: map interaction list; C0
+Data_087_527B:: ; address name
     db $02, $62, $01, $00, $10, $20 ; id 0
     dw $FFFF
     db $9C, $04
@@ -2141,7 +2141,7 @@ Data_087_527B:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $63 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions63::
-Data_087_52A4:: ; heuristic: map interaction list; C0
+Data_087_52A4:: ; address name
     db $05, $63, $01, $00, $10, $70 ; id 0
     dw $FFFF
     db $A2, $04
@@ -2153,7 +2153,7 @@ Data_087_52A4:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $64 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions64::
-Data_087_52B9:: ; heuristic: map interaction list; C0
+Data_087_52B9:: ; address name
     db $05, $64, $00, $00, $10, $40 ; id 0
     dw $FFFF
     db $A4, $04
@@ -2165,7 +2165,7 @@ Data_087_52B9:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $66 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions66::
-Data_087_52CE:: ; heuristic: map interaction list; C0
+Data_087_52CE:: ; address name
     db $05, $66, $00, $00, $10, $40 ; id 0
     dw $FFFF
     db $A6, $04
@@ -2177,7 +2177,7 @@ Data_087_52CE:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $67 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions67::
-Data_087_52E3:: ; heuristic: map interaction list; C0
+Data_087_52E3:: ; address name
     db $05, $67, $00, $00, $30, $70 ; id 0
     dw $FFFF
     db $A8, $04
@@ -2189,7 +2189,7 @@ Data_087_52E3:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $71 of MapInteractionTable; 8 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions71::
-Data_087_52F8:: ; heuristic: map interaction list; C0
+Data_087_52F8:: ; address name
     db $03, $71, $00, $00, $10, $30 ; id 0
     dw $FFFF
     db $0C, $05
@@ -2219,7 +2219,7 @@ Data_087_52F8:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $72 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions72::
-Data_087_5349:: ; heuristic: map interaction list; C0
+Data_087_5349:: ; address name
     db $03, $72, $00, $00, $30, $30 ; id 0
     dw $FFFF
     db $0E, $05
@@ -2228,7 +2228,7 @@ Data_087_5349:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $89 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions89::
-Data_087_5354:: ; heuristic: map interaction list; C0
+Data_087_5354:: ; address name
     db $03, $89, $00, $01, $50, $60 ; id 0
     dw $FFFF
     db $0F, $05
@@ -2237,7 +2237,7 @@ Data_087_5354:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $73 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions73::
-Data_087_535F:: ; heuristic: map interaction list; C0
+Data_087_535F:: ; address name
     db $02, $73, $00, $01, $70, $20 ; id 0
     dw $FFFF
     db $10, $05
@@ -2246,7 +2246,7 @@ Data_087_535F:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $76 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions76::
-Data_087_536A:: ; heuristic: map interaction list; C0
+Data_087_536A:: ; address name
     db $03, $76, $00, $00, $40, $40 ; id 0
     dw $FFFF
     db $11, $05
@@ -2264,7 +2264,7 @@ Data_087_536A:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $78 of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions78::
-Data_087_5393:: ; heuristic: map interaction list; C0
+Data_087_5393:: ; address name
     db $04, $78, $00, $00, $20, $60 ; id 0
     dw $FFFF
     db $25, $05
@@ -2288,7 +2288,7 @@ Data_087_5393:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $79 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions79::
-Data_087_53D0:: ; heuristic: map interaction list; C0
+Data_087_53D0:: ; address name
     db $03, $79, $00, $01, $70, $30 ; id 0
     dw $FFFF
     db $28, $05
@@ -2297,7 +2297,7 @@ Data_087_53D0:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $7A of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions7A::
-Data_087_53DB:: ; heuristic: map interaction list; C0
+Data_087_53DB:: ; address name
     db $04, $7A, $00, $00, $30, $30 ; id 0
     dw $FFFF
     db $2B, $05
@@ -2312,7 +2312,7 @@ Data_087_53DB:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $7C of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions7C::
-Data_087_53FA:: ; heuristic: map interaction list; C0
+Data_087_53FA:: ; address name
     db $03, $7C, $00, $00, $30, $70 ; id 0
     dw $FFFF
     db $3C, $05
@@ -2336,7 +2336,7 @@ Data_087_53FA:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $7D of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions7D::
-Data_087_5437:: ; heuristic: map interaction list; C0
+Data_087_5437:: ; address name
     db $04, $7D, $00, $00, $30, $10 ; id 0
     dw $FFFF
     db $3F, $05
@@ -2345,7 +2345,7 @@ Data_087_5437:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $7E of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions7E::
-Data_087_5442:: ; heuristic: map interaction list; C0
+Data_087_5442:: ; address name
     db $03, $7E, $00, $00, $30, $30 ; id 0
     dw $FFFF
     db $43, $05
@@ -2354,7 +2354,7 @@ Data_087_5442:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $7F of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions7F::
-Data_087_544D:: ; heuristic: map interaction list; C0
+Data_087_544D:: ; address name
     db $05, $7F, $00, $01, $70, $30 ; id 0
     dw $FFFF
     db $5B, $05
@@ -2363,7 +2363,7 @@ Data_087_544D:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $81 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions81::
-Data_087_5458:: ; heuristic: map interaction list; C0
+Data_087_5458:: ; address name
     db $03, $81, $00, $00, $40, $30 ; id 0
     dw $FFFF
     db $47, $05
@@ -2372,7 +2372,7 @@ Data_087_5458:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $82 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions82::
-Data_087_5463:: ; heuristic: map interaction list; C0
+Data_087_5463:: ; address name
     db $05, $82, $02, $02, $50, $40 ; id 0
     dw $FFFF
     db $48, $05
@@ -2381,7 +2381,7 @@ Data_087_5463:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $84 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions84::
-Data_087_546E:: ; heuristic: map interaction list; C0
+Data_087_546E:: ; address name
     db $02, $84, $00, $00, $50, $10 ; id 0
     dw $FFFF
     db $49, $05
@@ -2390,7 +2390,7 @@ Data_087_546E:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $85 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions85::
-Data_087_5479:: ; heuristic: map interaction list; C0
+Data_087_5479:: ; address name
     db $05, $85, $01, $00, $50, $20 ; id 0
     dw $FFFF
     db $4B, $05
@@ -2399,7 +2399,7 @@ Data_087_5479:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $8D of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions8D::
-Data_087_5484:: ; heuristic: map interaction list; C0
+Data_087_5484:: ; address name
     db $03, $8D, $00, $00, $40, $20 ; id 0
     dw $00B0
     db $4D, $05
@@ -2411,7 +2411,7 @@ Data_087_5484:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $8E of MapInteractionTable; 75 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions8E::
-Data_087_5499:: ; heuristic: map interaction list; C0
+Data_087_5499:: ; address name
     db $03, $8E, $01, $00, $40, $20 ; id 0
     dw $00B2
     db $52, $05
@@ -2642,7 +2642,7 @@ Data_087_5499:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $8F of MapInteractionTable; 6 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions8F::
-Data_087_5788:: ; heuristic: map interaction list; C0
+Data_087_5788:: ; address name
     db $03, $8F, $00, $00, $10, $10 ; id 0
     dw $00B1
     db $50, $05
@@ -2666,7 +2666,7 @@ Data_087_5788:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $91 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions91::
-Data_087_57C5:: ; heuristic: map interaction list; C0
+Data_087_57C5:: ; address name
     db $03, $91, $00, $00, $40, $30 ; id 0
     dw $FFFF
     db $56, $05
@@ -2675,7 +2675,7 @@ Data_087_57C5:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $94 of MapInteractionTable; 3 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions94::
-Data_087_57D0:: ; heuristic: map interaction list; C0
+Data_087_57D0:: ; address name
     db $05, $94, $02, $00, $40, $40 ; id 0
     dw $FFFF
     db $62, $05
@@ -2690,7 +2690,7 @@ Data_087_57D0:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $96 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions96::
-Data_087_57EF:: ; heuristic: map interaction list; C0
+Data_087_57EF:: ; address name
     db $05, $96, $00, $00, $40, $40 ; id 0
     dw $FFFF
     db $64, $05
@@ -2699,7 +2699,7 @@ Data_087_57EF:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $98 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions98::
-Data_087_57FA:: ; heuristic: map interaction list; C0
+Data_087_57FA:: ; address name
     db $05, $98, $00, $00, $10, $60 ; id 0
     dw $FFFF
     db $65, $05
@@ -2708,7 +2708,7 @@ Data_087_57FA:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $9A of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions9A::
-Data_087_5805:: ; heuristic: map interaction list; C0
+Data_087_5805:: ; address name
     db $05, $9A, $00, $00, $80, $70 ; id 0
     dw $FFFF
     db $66, $05
@@ -2717,7 +2717,7 @@ Data_087_5805:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $9B of MapInteractionTable; 8 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractions9B::
-Data_087_5810:: ; heuristic: map interaction list; C0
+Data_087_5810:: ; address name
     db $03, $9B, $00, $01, $40, $30 ; id 0
     dw $00C1
     db $67, $05
@@ -2747,7 +2747,7 @@ Data_087_5810:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $A3 of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsA3::
-Data_087_5861:: ; heuristic: map interaction list; C0
+Data_087_5861:: ; address name
     db $03, $A3, $00, $00, $40, $40 ; id 0
     dw $00D1
     db $01, $06
@@ -2759,7 +2759,7 @@ Data_087_5861:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $A9 of MapInteractionTable; 7 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsA9::
-Data_087_5876:: ; heuristic: map interaction list; C0
+Data_087_5876:: ; address name
     db $03, $A9, $00, $00, $20, $70 ; id 0
     dw $FFFF
     db $13, $07
@@ -2786,7 +2786,7 @@ Data_087_5876:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $AB of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsAB::
-Data_087_58BD:: ; heuristic: map interaction list; C0
+Data_087_58BD:: ; address name
     db $05, $AB, $00, $00, $70, $20 ; id 0
     dw $FFFF
     db $17, $07
@@ -2795,7 +2795,7 @@ Data_087_58BD:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $AD of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsAD::
-Data_087_58C8:: ; heuristic: map interaction list; C0
+Data_087_58C8:: ; address name
     db $05, $AD, $00, $00, $60, $40 ; id 0
     dw $FFFF
     db $18, $07
@@ -2804,7 +2804,7 @@ Data_087_58C8:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $AE of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsAE::
-Data_087_58D3:: ; heuristic: map interaction list; C0
+Data_087_58D3:: ; address name
     db $05, $AE, $00, $02, $60, $40 ; id 0
     dw $FFFF
     db $19, $07
@@ -2816,7 +2816,7 @@ Data_087_58D3:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $B1 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsB1::
-Data_087_58E8:: ; heuristic: map interaction list; C0
+Data_087_58E8:: ; address name
     db $03, $B1, $00, $00, $60, $10 ; id 0
     dw $FFFF
     db $22, $07
@@ -2834,7 +2834,7 @@ Data_087_58E8:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $B6 of MapInteractionTable; 8 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsB6::
-Data_087_5911:: ; heuristic: map interaction list; C0
+Data_087_5911:: ; address name
     db $05, $B6, $00, $00, $50, $20 ; id 0
     dw $FFFF
     db $2E, $07
@@ -2864,7 +2864,7 @@ Data_087_5911:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $B9 of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsB9::
-Data_087_5962:: ; heuristic: map interaction list; C0
+Data_087_5962:: ; address name
     db $04, $B9, $00, $00, $40, $10 ; id 0
     dw $FFFF
     db $49, $07
@@ -2885,7 +2885,7 @@ Data_087_5962:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $BA of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsBA::
-Data_087_5995:: ; heuristic: map interaction list; C0
+Data_087_5995:: ; address name
     db $03, $BA, $00, $00, $70, $50 ; id 0
     dw $FFFF
     db $4D, $07
@@ -2903,7 +2903,7 @@ Data_087_5995:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $BB of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsBB::
-Data_087_59BE:: ; heuristic: map interaction list; C0
+Data_087_59BE:: ; address name
     db $03, $BB, $00, $00, $40, $10 ; id 0
     dw $01C0
     db $2F, $07
@@ -2912,7 +2912,7 @@ Data_087_59BE:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $BC of MapInteractionTable; 2 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsBC::
-Data_087_59C9:: ; heuristic: map interaction list; C0
+Data_087_59C9:: ; address name
     db $03, $BC, $00, $00, $30, $40 ; id 0
     dw $FFFF
     db $3D, $07
@@ -2924,7 +2924,7 @@ Data_087_59C9:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $BE of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsBE::
-Data_087_59DE:: ; heuristic: map interaction list; C0
+Data_087_59DE:: ; address name
     db $05, $BE, $00, $00, $50, $30 ; id 0
     dw $FFFF
     db $50, $07
@@ -2933,7 +2933,7 @@ Data_087_59DE:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $BF of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsBF::
-Data_087_59E9:: ; heuristic: map interaction list; C0
+Data_087_59E9:: ; address name
     db $05, $BF, $01, $00, $70, $20 ; id 0
     dw $FFFF
     db $51, $07
@@ -2942,7 +2942,7 @@ Data_087_59E9:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $C0 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsC0::
-Data_087_59F4:: ; heuristic: map interaction list; C0
+Data_087_59F4:: ; address name
     db $05, $C0, $00, $01, $10, $70 ; id 0
     dw $FFFF
     db $52, $07
@@ -2951,7 +2951,7 @@ Data_087_59F4:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $C2 of MapInteractionTable; 1 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsC2::
-Data_087_59FF:: ; heuristic: map interaction list; C0
+Data_087_59FF:: ; address name
     db $05, $C2, $01, $01, $40, $30 ; id 0
     dw $FFFF
     db $53, $07
@@ -2960,7 +2960,7 @@ Data_087_59FF:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $C4 of MapInteractionTable; 5 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsC4::
-Data_087_5A0A:: ; heuristic: map interaction list; C0
+Data_087_5A0A:: ; address name
     db $05, $C4, $00, $00, $30, $60 ; id 0
     dw $FFFF
     db $54, $07
@@ -2981,7 +2981,7 @@ Data_087_5A0A:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $CA of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsCA::
-Data_087_5A3D:: ; heuristic: map interaction list; C0
+Data_087_5A3D:: ; address name
     db $05, $CA, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $68, $07
@@ -2999,7 +2999,7 @@ Data_087_5A3D:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $CB of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsCB::
-Data_087_5A66:: ; heuristic: map interaction list; C0
+Data_087_5A66:: ; address name
     db $05, $CB, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $6B, $07
@@ -3017,7 +3017,7 @@ Data_087_5A66:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $CC of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsCC::
-Data_087_5A8F:: ; heuristic: map interaction list; C0
+Data_087_5A8F:: ; address name
     db $05, $CC, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $78, $07
@@ -3035,7 +3035,7 @@ Data_087_5A8F:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $CD of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsCD::
-Data_087_5AB8:: ; heuristic: map interaction list; C0
+Data_087_5AB8:: ; address name
     db $05, $CD, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $71, $07
@@ -3053,7 +3053,7 @@ Data_087_5AB8:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $CE of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsCE::
-Data_087_5AE1:: ; heuristic: map interaction list; C0
+Data_087_5AE1:: ; address name
     db $05, $CE, $00, $00, $20, $40 ; id 0
     dw $FFFF
     db $74, $07
@@ -3071,7 +3071,7 @@ Data_087_5AE1:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $D3 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsD3::
-Data_087_5B0A:: ; heuristic: map interaction list; C0
+Data_087_5B0A:: ; address name
     db $05, $D3, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $88, $07
@@ -3089,7 +3089,7 @@ Data_087_5B0A:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $D4 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsD4::
-Data_087_5B33:: ; heuristic: map interaction list; C0
+Data_087_5B33:: ; address name
     db $05, $D4, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $78, $07
@@ -3107,7 +3107,7 @@ Data_087_5B33:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $D5 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsD5::
-Data_087_5B5C:: ; heuristic: map interaction list; C0
+Data_087_5B5C:: ; address name
     db $05, $D5, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $78, $07
@@ -3125,7 +3125,7 @@ Data_087_5B5C:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $D6 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsD6::
-Data_087_5B85:: ; heuristic: map interaction list; C0
+Data_087_5B85:: ; address name
     db $05, $D6, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $78, $07
@@ -3143,7 +3143,7 @@ Data_087_5B85:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $D7 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsD7::
-Data_087_5BAE:: ; heuristic: map interaction list; C0
+Data_087_5BAE:: ; address name
     db $05, $D7, $00, $00, $20, $40 ; id 0
     dw $FFFF
     db $94, $07
@@ -3161,7 +3161,7 @@ Data_087_5BAE:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $DC of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsDC::
-Data_087_5BD7:: ; heuristic: map interaction list; C0
+Data_087_5BD7:: ; address name
     db $05, $DC, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $78, $07
@@ -3179,7 +3179,7 @@ Data_087_5BD7:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $DD of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsDD::
-Data_087_5C00:: ; heuristic: map interaction list; C0
+Data_087_5C00:: ; address name
     db $05, $DD, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $AB, $07
@@ -3197,7 +3197,7 @@ Data_087_5C00:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $DE of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsDE::
-Data_087_5C29:: ; heuristic: map interaction list; C0
+Data_087_5C29:: ; address name
     db $05, $DE, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $78, $07
@@ -3215,7 +3215,7 @@ Data_087_5C29:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $DF of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsDF::
-Data_087_5C52:: ; heuristic: map interaction list; C0
+Data_087_5C52:: ; address name
     db $05, $DF, $00, $00, $10, $20 ; id 0
     dw $FFFF
     db $78, $07
@@ -3233,7 +3233,7 @@ Data_087_5C52:: ; heuristic: map interaction list; C0
 ; E-0157 (derived: list for entry $E0 of MapInteractionTable; 4 record(s), then $FF)
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 MapInteractionsE0::
-Data_087_5C7B:: ; heuristic: map interaction list; C0
+Data_087_5C7B:: ; address name
     db $05, $E0, $00, $00, $20, $40 ; id 0
     dw $FFFF
     db $B4, $07
@@ -3251,7 +3251,7 @@ Data_087_5C7B:: ; heuristic: map interaction list; C0
 ; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when the floor info byte is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 SpecialMapInteractions_5CA4::
-Data_087_5CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_087_5CA4:: ; address name
     db $05, $00, $00, $00, $50, $40 ; id 0
     dw $FFFF
     db $06, $09
@@ -3284,7 +3284,7 @@ Data_087_5CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 SpecialMapInteractions_5CFF::
-Data_087_5CFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_087_5CFF:: ; address name
     db $05, $00, $00, $00, $40, $30 ; id 0
     dw $FFFF
     db $04, $09
@@ -3302,7 +3302,7 @@ Data_087_5CFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $84; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
 ; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
 SpecialMapInteractions_5D28::
-Data_087_5D28:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_087_5D28:: ; address name
     db $03, $00, $00, $00, $30, $40 ; id 0
     dw $FFFF
     db $07, $09

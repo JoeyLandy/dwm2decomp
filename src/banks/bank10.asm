@@ -68,7 +68,7 @@ Jump_010_4054::
 ; E-0039 (C1: the inline table after FetchScriptCommand's `rst $00`, indexed by the script byte; 249 words, 49 distinct handlers: opcodes 0-12 each have their own, and most others share ScriptFetchGeneric, which makes the opcode byte the command type and starts the command (the command then reads its own arguments from the script pointer); a zero word is an unused opcode).
 ; record: fetch handler for this script byte (opcode)
 ScriptOpcodeHandlers::
-Data_010_4056:: ; heuristic: start of a structured table; C0
+Data_010_4056:: ; address name
     dw ScriptFetch00 ; entry 0
     dw ScriptFetch01 ; entry 1
     dw ScriptFetch02 ; entry 2
@@ -1296,7 +1296,7 @@ Func_010_46E9:: ; address name
 ; E-0038 (C1: ExecuteScriptCommand indexes it with wScriptCommandType - 1; command types are set by the fetch handlers of FetchScriptCommand; a zero word is an unused type; all 248 words are code pointers inside the bank and the table ends where the next bytes stop being pointers).
 ; record: handler that runs one frame of script command type (index + 1)
 ScriptCommandHandlers::
-Data_010_46F5:: ; heuristic: start of a structured table; C0
+Data_010_46F5:: ; address name
     dw ScriptCommand01 ; entry 0
     dw ScriptCommand02 ; entry 1
     dw ScriptCommand03 ; entry 2

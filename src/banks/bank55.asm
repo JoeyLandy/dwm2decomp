@@ -10,7 +10,7 @@ Data_055_4001:: ; address name
 ; E-0142 (derived: 9 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map8CScreens0::
-Data_055_42DC:: ; heuristic: map screen array; C0
+Data_055_42DC:: ; address name
     dfar Data_055_4312 ; entry 0
     dfar Data_055_43D4 ; entry 1
     dfar Data_055_4454 ; entry 2
@@ -24,7 +24,7 @@ Data_055_42DC:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 9 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map8CAttrs0::
-Data_055_42F7:: ; heuristic: map screen array; C0
+Data_055_42F7:: ; address name
     dfar Data_055_4906 ; entry 0
     dfar Data_055_4930 ; entry 1
     dfar Data_055_4968 ; entry 2
@@ -136,7 +136,7 @@ Data_055_4ACD:: ; heuristic: map screen stream; C0
 ; E-0142 (derived: 6 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map90Screens0::
-Data_055_4AFF:: ; heuristic: map screen array; C0
+Data_055_4AFF:: ; address name
     dfar Data_055_4B23 ; entry 0
     dfar Data_055_4BEC ; entry 1
     dfar Data_055_4C90 ; entry 2
@@ -147,7 +147,7 @@ Data_055_4AFF:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 6 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map90Attrs0::
-Data_055_4B11:: ; heuristic: map screen array; C0
+Data_055_4B11:: ; address name
     dfar Data_055_4F50 ; entry 0
     dfar Data_055_4FA6 ; entry 1
     dfar Data_055_4FEC ; entry 2
@@ -212,7 +212,7 @@ Data_055_5124:: ; address name
 ; E-0142 (derived: 9 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map8EScreens0::
-Data_055_5742:: ; heuristic: map screen array; C0
+Data_055_5742:: ; address name
     dfar Data_055_57AE ; entry 0
     dfar Data_055_58B7 ; entry 1
     dfar Data_055_5A7D ; entry 2
@@ -226,7 +226,7 @@ Data_055_5742:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 9 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map8EAttrs0::
-Data_055_575D:: ; heuristic: map screen array; C0
+Data_055_575D:: ; address name
     dfar Data_055_60F2 ; entry 0
     dfar Data_055_6163 ; entry 1
     dfar Data_055_6239 ; entry 2
@@ -240,7 +240,7 @@ Data_055_575D:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 9 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map8EScreens3::
-Data_055_5778:: ; heuristic: map screen array; C0
+Data_055_5778:: ; address name
     dfar Data_055_57AE ; entry 0
     dfar Data_055_599A ; entry 1
     dfar Data_055_5A7D ; entry 2
@@ -254,7 +254,7 @@ Data_055_5778:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 9 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map8EAttrs3::
-Data_055_5793:: ; heuristic: map screen array; C0
+Data_055_5793:: ; address name
     dfar Data_055_60F2 ; entry 0
     dfar Data_055_61CE ; entry 1
     dfar Data_055_6239 ; entry 2
@@ -354,7 +354,7 @@ Data_055_6534:: ; address name
 ; E-0142 (derived: 9 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map94Screens0::
-Data_055_6970:: ; heuristic: map screen array; C0
+Data_055_6970:: ; address name
     dfar Data_055_69A6 ; entry 0
     dfar Data_055_6A67 ; entry 1
     dfar Data_055_6B39 ; entry 2
@@ -368,7 +368,7 @@ Data_055_6970:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 9 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map94Attrs0::
-Data_055_698B:: ; heuristic: map screen array; C0
+Data_055_698B:: ; address name
     dfar Data_055_7103 ; entry 0
     dfar Data_055_7133 ; entry 1
     dfar Data_055_716A ; entry 2
@@ -462,7 +462,7 @@ Data_055_7317:: ; heuristic: map screen stream; C0
 ; E-0142 (derived: 6 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map95Screens0::
-Data_055_735E:: ; heuristic: map screen array; C0
+Data_055_735E:: ; address name
     dfar Data_055_7382 ; entry 0
     dfar Data_055_7446 ; entry 1
     dfar Data_055_74F4 ; entry 2
@@ -473,7 +473,7 @@ Data_055_735E:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 6 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map95Attrs0::
-Data_055_7370:: ; heuristic: map screen array; C0
+Data_055_7370:: ; address name
     dfar Data_055_77C4 ; entry 0
     dfar Data_055_7815 ; entry 1
     dfar Data_055_7863 ; entry 2
@@ -532,7 +532,7 @@ Data_055_793F:: ; heuristic: map screen stream; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map96Screens0::
-Data_055_7989:: ; heuristic: map screen array; C0
+Data_055_7989:: ; address name
     dfar Data_055_79A1 ; entry 0
     dfar Data_055_7A57 ; entry 1
     dfar Data_055_7B15 ; entry 2
@@ -541,7 +541,7 @@ Data_055_7989:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map96Attrs0::
-Data_055_7995:: ; heuristic: map screen array; C0
+Data_055_7995:: ; address name
     dfar Data_055_7C77 ; entry 0
     dfar Data_055_7CC0 ; entry 1
     dfar Data_055_7D13 ; entry 2

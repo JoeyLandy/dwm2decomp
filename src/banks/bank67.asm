@@ -4,7 +4,7 @@ SECTION "Bank 67", ROMX[$4000], BANK[$67]
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup00::
-Data_067_4001:: ; heuristic: key-world chunk group; C0
+Data_067_4001:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_6546
     dfar Data_065_6736
@@ -41,13 +41,13 @@ Data_067_4001:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup00Order::
-Data_067_4061:: ; heuristic: start of a structured table; C0
+Data_067_4061:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup01::
-Data_067_4062:: ; heuristic: key-world chunk group; C0
+Data_067_4062:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_55DC
     dfar Data_065_64CA
@@ -84,13 +84,13 @@ Data_067_4062:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup01Order::
-Data_067_40C2:: ; heuristic: start of a structured table; C0
+Data_067_40C2:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup02::
-Data_067_40C3:: ; heuristic: key-world chunk group; C0
+Data_067_40C3:: ; address name
     dfar Data_066_5477 ; id 0
     dfar Data_065_64CA
     dfar Data_065_6546
@@ -127,13 +127,13 @@ Data_067_40C3:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup02Order::
-Data_067_4123:: ; heuristic: start of a structured table; C0
+Data_067_4123:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup03::
-Data_067_4124:: ; heuristic: key-world chunk group; C0
+Data_067_4124:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5560
     dfar Data_065_74B6
@@ -170,13 +170,13 @@ Data_067_4124:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup03Order::
-Data_067_4184:: ; heuristic: start of a structured table; C0
+Data_067_4184:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup04::
-Data_067_4185:: ; heuristic: key-world chunk group; C0
+Data_067_4185:: ; address name
     dfar Data_066_5705 ; id 0
     dfar Data_065_6693
     dfar Data_065_65EA
@@ -213,13 +213,13 @@ Data_067_4185:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup04Order::
-Data_067_41E5:: ; heuristic: start of a structured table; C0
+Data_067_41E5:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup05::
-Data_067_41E6:: ; heuristic: key-world chunk group; C0
+Data_067_41E6:: ; address name
     dfar Data_066_5705 ; id 0
     dfar Data_065_743F
     dfar Data_066_5477
@@ -256,13 +256,13 @@ Data_067_41E6:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup05Order::
-Data_067_4246:: ; heuristic: start of a structured table; C0
+Data_067_4246:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup06::
-Data_067_4247:: ; heuristic: key-world chunk group; C0
+Data_067_4247:: ; address name
     dfar Data_066_55DC ; id 0
     dfar Data_065_6808
     dfar Data_065_68B7
@@ -299,13 +299,13 @@ Data_067_4247:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup06Order::
-Data_067_42A7:: ; heuristic: start of a structured table; C0
+Data_067_42A7:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup07::
-Data_067_42A8:: ; heuristic: key-world chunk group; C0
+Data_067_42A8:: ; address name
     dfar Data_066_596B ; id 0
     dfar Data_065_643F
     dfar Data_065_64CA
@@ -342,13 +342,13 @@ Data_067_42A8:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup07Order::
-Data_067_4308:: ; heuristic: start of a structured table; C0
+Data_067_4308:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup08::
-Data_067_4309:: ; heuristic: key-world chunk group; C0
+Data_067_4309:: ; address name
     dfar Data_066_5560 ; id 0
     dfar Data_065_643F
     dfar Data_065_7641
@@ -385,13 +385,13 @@ Data_067_4309:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup08Order::
-Data_067_4369:: ; heuristic: start of a structured table; C0
+Data_067_4369:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup09::
-Data_067_436A:: ; heuristic: key-world chunk group; C0
+Data_067_436A:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5CC8
@@ -428,13 +428,13 @@ Data_067_436A:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup09Order::
-Data_067_43CA:: ; heuristic: start of a structured table; C0
+Data_067_43CA:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0A::
-Data_067_43CB:: ; heuristic: key-world chunk group; C0
+Data_067_43CB:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_6736
     dfar Data_065_64CA
@@ -471,13 +471,13 @@ Data_067_43CB:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup0AOrder::
-Data_067_442B:: ; heuristic: start of a structured table; C0
+Data_067_442B:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0B::
-Data_067_442C:: ; heuristic: key-world chunk group; C0
+Data_067_442C:: ; address name
     dfar Data_066_5658 ; id 0
     dfar Data_065_64CA
     dfar Data_065_74B6
@@ -514,13 +514,13 @@ Data_067_442C:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup0BOrder::
-Data_067_448C:: ; heuristic: start of a structured table; C0
+Data_067_448C:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0C::
-Data_067_448D:: ; heuristic: key-world chunk group; C0
+Data_067_448D:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_54FD
     dfar Data_065_74B6
@@ -558,13 +558,13 @@ Data_067_44A5:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup0COrder::
-Data_067_44ED:: ; heuristic: start of a structured table; C0
+Data_067_44ED:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0D::
-Data_067_44EE:: ; heuristic: key-world chunk group; C0
+Data_067_44EE:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5705
@@ -601,13 +601,13 @@ Data_067_44EE:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup0DOrder::
-Data_067_454E:: ; heuristic: start of a structured table; C0
+Data_067_454E:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0E::
-Data_067_454F:: ; heuristic: key-world chunk group; C0
+Data_067_454F:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_596B
     dfar Data_065_65EA
@@ -644,13 +644,13 @@ Data_067_454F:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup0EOrder::
-Data_067_45AF:: ; heuristic: start of a structured table; C0
+Data_067_45AF:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup0F::
-Data_067_45B0:: ; heuristic: key-world chunk group; C0
+Data_067_45B0:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_6736
     dfar Data_065_65EA
@@ -687,13 +687,13 @@ Data_067_45B0:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup0FOrder::
-Data_067_4610:: ; heuristic: start of a structured table; C0
+Data_067_4610:: ; address name
     db $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup10::
-Data_067_4611:: ; heuristic: key-world chunk group; C0
+Data_067_4611:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_6546
     dfar Data_065_6808
@@ -763,13 +763,13 @@ Data_067_4635:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup10Order::
-Data_067_46D1:: ; heuristic: start of a structured table; C0
+Data_067_46D1:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup11::
-Data_067_46D3:: ; heuristic: key-world chunk group; C0
+Data_067_46D3:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5477
@@ -838,13 +838,13 @@ Data_067_46D3:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup11Order::
-Data_067_4793:: ; heuristic: start of a structured table; C0
+Data_067_4793:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup12::
-Data_067_4795:: ; heuristic: key-world chunk group; C0
+Data_067_4795:: ; address name
     dfar Data_066_55DC ; id 0
     dfar Data_065_6736
     dfar Data_065_6546
@@ -913,13 +913,13 @@ Data_067_4795:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup12Order::
-Data_067_4855:: ; heuristic: start of a structured table; C0
+Data_067_4855:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup13::
-Data_067_4857:: ; heuristic: key-world chunk group; C0
+Data_067_4857:: ; address name
     dw Data_066_5CC8 ; id 0
 Data_067_4859:: ; heuristic: label inside a table; C0
     db $66
@@ -990,13 +990,13 @@ Data_067_4859:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup13Order::
-Data_067_4917:: ; heuristic: start of a structured table; C0
+Data_067_4917:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup14::
-Data_067_4919:: ; heuristic: key-world chunk group; C0
+Data_067_4919:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5477
     dfar Data_065_74B6
@@ -1065,13 +1065,13 @@ Data_067_4919:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup14Order::
-Data_067_49D9:: ; heuristic: start of a structured table; C0
+Data_067_49D9:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup15::
-Data_067_49DB:: ; heuristic: key-world chunk group; C0
+Data_067_49DB:: ; address name
     dfar Data_066_5705 ; id 0
     dfar Data_065_6736
     dfar Data_065_6693
@@ -1140,13 +1140,13 @@ Data_067_49DB:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup15Order::
-Data_067_4A9B:: ; heuristic: start of a structured table; C0
+Data_067_4A9B:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup16::
-Data_067_4A9D:: ; heuristic: key-world chunk group; C0
+Data_067_4A9D:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5705
     dfar Data_065_7641
@@ -1215,13 +1215,13 @@ Data_067_4A9D:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup16Order::
-Data_067_4B5D:: ; heuristic: start of a structured table; C0
+Data_067_4B5D:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup17::
-Data_067_4B5F:: ; heuristic: key-world chunk group; C0
+Data_067_4B5F:: ; address name
     dfar Data_066_55DC ; id 0
     dfar Data_065_65EA
     dfar Data_065_6546
@@ -1290,13 +1290,13 @@ Data_067_4B5F:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup17Order::
-Data_067_4C1F:: ; heuristic: start of a structured table; C0
+Data_067_4C1F:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup18::
-Data_067_4C21:: ; heuristic: key-world chunk group; C0
+Data_067_4C21:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5CC8
@@ -1365,13 +1365,13 @@ Data_067_4C21:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup18Order::
-Data_067_4CE1:: ; heuristic: start of a structured table; C0
+Data_067_4CE1:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup19::
-Data_067_4CE3:: ; heuristic: key-world chunk group; C0
+Data_067_4CE3:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5477
     dfar Data_065_74B6
@@ -1440,13 +1440,13 @@ Data_067_4CE3:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup19Order::
-Data_067_4DA3:: ; heuristic: start of a structured table; C0
+Data_067_4DA3:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1A::
-Data_067_4DA5:: ; heuristic: key-world chunk group; C0
+Data_067_4DA5:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5705
     dfar Data_065_65EA
@@ -1515,13 +1515,13 @@ Data_067_4DA5:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup1AOrder::
-Data_067_4E65:: ; heuristic: start of a structured table; C0
+Data_067_4E65:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1B::
-Data_067_4E67:: ; heuristic: key-world chunk group; C0
+Data_067_4E67:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_596B
@@ -1590,13 +1590,13 @@ Data_067_4E67:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup1BOrder::
-Data_067_4F27:: ; heuristic: start of a structured table; C0
+Data_067_4F27:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1C::
-Data_067_4F29:: ; heuristic: key-world chunk group; C0
+Data_067_4F29:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_54FD
@@ -1666,13 +1666,13 @@ Data_067_4F98:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup1COrder::
-Data_067_4FE9:: ; heuristic: start of a structured table; C0
+Data_067_4FE9:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1D::
-Data_067_4FEB:: ; heuristic: key-world chunk group; C0
+Data_067_4FEB:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5CC8
@@ -1741,13 +1741,13 @@ Data_067_4FEB:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup1DOrder::
-Data_067_50AB:: ; heuristic: start of a structured table; C0
+Data_067_50AB:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1E::
-Data_067_50AD:: ; heuristic: key-world chunk group; C0
+Data_067_50AD:: ; address name
     dfar Data_066_55DC ; id 0
     dfar Data_065_65EA
     dfar Data_065_6693
@@ -1816,13 +1816,13 @@ Data_067_50AD:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup1EOrder::
-Data_067_516D:: ; heuristic: start of a structured table; C0
+Data_067_516D:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup1F::
-Data_067_516F:: ; heuristic: key-world chunk group; C0
+Data_067_516F:: ; address name
     dfar Data_066_57D9 ; id 0
     dfar Data_065_751D
     dfar Data_066_596B
@@ -1891,13 +1891,13 @@ Data_067_516F:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup1FOrder::
-Data_067_522F:: ; heuristic: start of a structured table; C0
+Data_067_522F:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup20::
-Data_067_5231:: ; heuristic: key-world chunk group; C0
+Data_067_5231:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_64CA
     dfar Data_065_6693
@@ -1966,13 +1966,13 @@ Data_067_5231:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup20Order::
-Data_067_52F1:: ; heuristic: start of a structured table; C0
+Data_067_52F1:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup21::
-Data_067_52F3:: ; heuristic: key-world chunk group; C0
+Data_067_52F3:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5560
     dfar Data_065_65EA
@@ -2041,13 +2041,13 @@ Data_067_52F3:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup21Order::
-Data_067_53B3:: ; heuristic: start of a structured table; C0
+Data_067_53B3:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup22::
-Data_067_53B5:: ; heuristic: key-world chunk group; C0
+Data_067_53B5:: ; address name
     dfar Data_066_5477 ; id 0
     dfar Data_065_76ED
     dfar Data_066_5658
@@ -2116,13 +2116,13 @@ Data_067_53B5:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup22Order::
-Data_067_5475:: ; heuristic: start of a structured table; C0
+Data_067_5475:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup23::
-Data_067_5477:: ; heuristic: key-world chunk group; C0
+Data_067_5477:: ; address name
     dfar Data_066_589C ; id 0
     dfar Data_065_6546
     dfar Data_065_6808
@@ -2191,13 +2191,13 @@ Data_067_5477:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup23Order::
-Data_067_5537:: ; heuristic: start of a structured table; C0
+Data_067_5537:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup24::
-Data_067_5539:: ; heuristic: key-world chunk group; C0
+Data_067_5539:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5658
@@ -2266,13 +2266,13 @@ Data_067_5539:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup24Order::
-Data_067_55F9:: ; heuristic: start of a structured table; C0
+Data_067_55F9:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup25::
-Data_067_55FB:: ; heuristic: key-world chunk group; C0
+Data_067_55FB:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5CC8
@@ -2341,13 +2341,13 @@ Data_067_55FB:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup25Order::
-Data_067_56BB:: ; heuristic: start of a structured table; C0
+Data_067_56BB:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup26::
-Data_067_56BD:: ; heuristic: key-world chunk group; C0
+Data_067_56BD:: ; address name
     dfar Data_066_5658 ; id 0
     dfar Data_065_643F
     dfar Data_065_64CA
@@ -2416,13 +2416,13 @@ Data_067_56BD:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup26Order::
-Data_067_577D:: ; heuristic: start of a structured table; C0
+Data_067_577D:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup27::
-Data_067_577F:: ; heuristic: key-world chunk group; C0
+Data_067_577F:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_57D9
     dfar Data_065_6991
@@ -2491,13 +2491,13 @@ Data_067_577F:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup27Order::
-Data_067_583F:: ; heuristic: start of a structured table; C0
+Data_067_583F:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup28::
-Data_067_5841:: ; heuristic: key-world chunk group; C0
+Data_067_5841:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5CC8
@@ -2566,13 +2566,13 @@ Data_067_5841:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup28Order::
-Data_067_5901:: ; heuristic: start of a structured table; C0
+Data_067_5901:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup29::
-Data_067_5903:: ; heuristic: key-world chunk group; C0
+Data_067_5903:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_54FD
@@ -2641,13 +2641,13 @@ Data_067_5903:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup29Order::
-Data_067_59C3:: ; heuristic: start of a structured table; C0
+Data_067_59C3:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2A::
-Data_067_59C5:: ; heuristic: key-world chunk group; C0
+Data_067_59C5:: ; address name
     dfar Data_066_5705 ; id 0
     dfar Data_065_65EA
     dfar Data_065_74B6
@@ -2716,13 +2716,13 @@ Data_067_59C5:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup2AOrder::
-Data_067_5A85:: ; heuristic: start of a structured table; C0
+Data_067_5A85:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2B::
-Data_067_5A87:: ; heuristic: key-world chunk group; C0
+Data_067_5A87:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_54FD
     dfar Data_065_75A3
@@ -2793,13 +2793,13 @@ Data_067_5AB9:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup2BOrder::
-Data_067_5B47:: ; heuristic: start of a structured table; C0
+Data_067_5B47:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2C::
-Data_067_5B49:: ; heuristic: key-world chunk group; C0
+Data_067_5B49:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_743F
     dfar Data_066_5658
@@ -2869,13 +2869,13 @@ Data_067_5BD9:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup2COrder::
-Data_067_5C09:: ; heuristic: start of a structured table; C0
+Data_067_5C09:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2D::
-Data_067_5C0B:: ; heuristic: key-world chunk group; C0
+Data_067_5C0B:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5477
@@ -2944,13 +2944,13 @@ Data_067_5C0B:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup2DOrder::
-Data_067_5CCB:: ; heuristic: start of a structured table; C0
+Data_067_5CCB:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2E::
-Data_067_5CCD:: ; heuristic: key-world chunk group; C0
+Data_067_5CCD:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_596B
     dfar Data_065_643F
@@ -3019,13 +3019,13 @@ Data_067_5CCD:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup2EOrder::
-Data_067_5D8D:: ; heuristic: start of a structured table; C0
+Data_067_5D8D:: ; address name
     db $00, $01 ; entry 0
 
 ; E-0146 (derived: 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup2F::
-Data_067_5D8F:: ; heuristic: key-world chunk group; C0
+Data_067_5D8F:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5CC8
@@ -3094,13 +3094,13 @@ Data_067_5D8F:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup2FOrder::
-Data_067_5E4F:: ; heuristic: start of a structured table; C0
+Data_067_5E4F:: ; address name
     db $01, $00 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup30::
-Data_067_5E51:: ; heuristic: key-world chunk group; C0
+Data_067_5E51:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5560
@@ -3233,13 +3233,13 @@ Data_067_5E51:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup30Order::
-Data_067_5FD1:: ; heuristic: start of a structured table; C0
+Data_067_5FD1:: ; address name
     db $00, $01, $02, $03 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup31::
-Data_067_5FD5:: ; heuristic: key-world chunk group; C0
+Data_067_5FD5:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5658
     dfar Data_065_65EA
@@ -3372,13 +3372,13 @@ Data_067_5FD5:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup31Order::
-Data_067_6155:: ; heuristic: start of a structured table; C0
+Data_067_6155:: ; address name
     db $03, $01, $02, $00 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup32::
-Data_067_6159:: ; heuristic: key-world chunk group; C0
+Data_067_6159:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_57D9
     dfar Data_065_68B7
@@ -3520,13 +3520,13 @@ Data_067_6293:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup32Order::
-Data_067_62D9:: ; heuristic: start of a structured table; C0
+Data_067_62D9:: ; address name
     db $01, $02, $00, $03 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup33::
-Data_067_62DD:: ; heuristic: key-world chunk group; C0
+Data_067_62DD:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_6693
     dfar Data_065_65EA
@@ -3661,13 +3661,13 @@ Data_067_637B:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup33Order::
-Data_067_645D:: ; heuristic: start of a structured table; C0
+Data_067_645D:: ; address name
     db $03, $00, $02, $01 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup34::
-Data_067_6461:: ; heuristic: key-world chunk group; C0
+Data_067_6461:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dw Data_066_5CC8
@@ -3815,13 +3815,13 @@ Data_067_657A:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup34Order::
-Data_067_65E1:: ; heuristic: start of a structured table; C0
+Data_067_65E1:: ; address name
     db $00, $01, $03, $02 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup35::
-Data_067_65E5:: ; heuristic: key-world chunk group; C0
+Data_067_65E5:: ; address name
     dfar Data_066_5705 ; id 0
     dfar Data_065_6808
     dfar Data_065_6736
@@ -3968,13 +3968,13 @@ Data_067_665C:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup35Order::
-Data_067_6765:: ; heuristic: start of a structured table; C0
+Data_067_6765:: ; address name
     db $02, $03, $01, $00 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup36::
-Data_067_6769:: ; heuristic: key-world chunk group; C0
+Data_067_6769:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_64CA
     dfar Data_065_6808
@@ -4107,13 +4107,13 @@ Data_067_6769:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup36Order::
-Data_067_68E9:: ; heuristic: start of a structured table; C0
+Data_067_68E9:: ; address name
     db $02, $03, $00, $01 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup37::
-Data_067_68ED:: ; heuristic: key-world chunk group; C0
+Data_067_68ED:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_64CA
     dfar Data_065_7878
@@ -4246,13 +4246,13 @@ Data_067_68ED:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup37Order::
-Data_067_6A6D:: ; heuristic: start of a structured table; C0
+Data_067_6A6D:: ; address name
     db $01, $00, $02, $03 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup38::
-Data_067_6A71:: ; heuristic: key-world chunk group; C0
+Data_067_6A71:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_54FD
@@ -4387,13 +4387,13 @@ Data_067_6B9F:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup38Order::
-Data_067_6BF1:: ; heuristic: start of a structured table; C0
+Data_067_6BF1:: ; address name
     db $00, $02, $01, $03 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup39::
-Data_067_6BF5:: ; heuristic: key-world chunk group; C0
+Data_067_6BF5:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5CC8
@@ -4526,13 +4526,13 @@ Data_067_6BF5:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup39Order::
-Data_067_6D75:: ; heuristic: start of a structured table; C0
+Data_067_6D75:: ; address name
     db $03, $01, $02, $00 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3A::
-Data_067_6D79:: ; heuristic: key-world chunk group; C0
+Data_067_6D79:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_6736
     dfar Data_065_6693
@@ -4665,13 +4665,13 @@ Data_067_6D79:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup3AOrder::
-Data_067_6EF9:: ; heuristic: start of a structured table; C0
+Data_067_6EF9:: ; address name
     db $02, $00, $03, $01 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3B::
-Data_067_6EFD:: ; heuristic: key-world chunk group; C0
+Data_067_6EFD:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_57D9
     dfar Data_065_7878
@@ -4804,13 +4804,13 @@ Data_067_6EFD:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup3BOrder::
-Data_067_707D:: ; heuristic: start of a structured table; C0
+Data_067_707D:: ; address name
     db $02, $03, $00, $01 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3C::
-Data_067_7081:: ; heuristic: key-world chunk group; C0
+Data_067_7081:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5658
@@ -4943,13 +4943,13 @@ Data_067_7081:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup3COrder::
-Data_067_7201:: ; heuristic: start of a structured table; C0
+Data_067_7201:: ; address name
     db $00, $03, $01, $02 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3D::
-Data_067_7205:: ; heuristic: key-world chunk group; C0
+Data_067_7205:: ; address name
     dfar Data_066_5560 ; id 0
     dfar Data_065_751D
     dfar Data_066_5658
@@ -5082,13 +5082,13 @@ Data_067_7205:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup3DOrder::
-Data_067_7385:: ; heuristic: start of a structured table; C0
+Data_067_7385:: ; address name
     db $02, $01, $03, $00 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3E::
-Data_067_7389:: ; heuristic: key-world chunk group; C0
+Data_067_7389:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_54FD
     dfar Data_065_643F
@@ -5221,13 +5221,13 @@ Data_067_7389:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup3EOrder::
-Data_067_7509:: ; heuristic: start of a structured table; C0
+Data_067_7509:: ; address name
     db $03, $02, $00, $01 ; entry 0
 
 ; E-0146 (derived: 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup3F::
-Data_067_750D:: ; heuristic: key-world chunk group; C0
+Data_067_750D:: ; address name
     dfar Data_066_54FD ; id 0
     dfar Data_065_751D
     dfar Data_066_589C
@@ -5360,13 +5360,13 @@ Data_067_750D:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup3FOrder::
-Data_067_768D:: ; heuristic: start of a structured table; C0
+Data_067_768D:: ; address name
     db $01, $00, $02, $03 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup40::
-Data_067_7691:: ; heuristic: key-world chunk group; C0
+Data_067_7691:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_5CC8
@@ -5563,13 +5563,13 @@ Data_067_7691:: ; heuristic: key-world chunk group; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup40Order::
-Data_067_78D1:: ; heuristic: start of a structured table; C0
+Data_067_78D1:: ; address name
     db $00, $01, $02, $03, $04, $05 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup41::
-Data_067_78D7:: ; heuristic: key-world chunk group; C0
+Data_067_78D7:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_54FD
@@ -5768,13 +5768,13 @@ Data_067_7AE1:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup41Order::
-Data_067_7B17:: ; heuristic: start of a structured table; C0
+Data_067_7B17:: ; address name
     db $04, $05, $03, $02, $01, $00 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup42::
-Data_067_7B1D:: ; heuristic: key-world chunk group; C0
+Data_067_7B1D:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_5CC8
     dfar Data_066_54FD
@@ -5972,13 +5972,13 @@ Data_067_7BC5:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup42Order::
-Data_067_7D5D:: ; heuristic: start of a structured table; C0
+Data_067_7D5D:: ; address name
     db $04, $05, $03, $02, $00, $01 ; entry 0
 
 ; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup43::
-Data_067_7D63:: ; heuristic: key-world chunk group; C0
+Data_067_7D63:: ; address name
     dfar Data_066_5CC8 ; id 0
     dfar Data_066_55DC
     dfar Data_065_6693
@@ -6177,6 +6177,6 @@ Data_067_7F84:: ; heuristic: label inside a table; C0
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
 KeyWorldChunkGroup43Order::
-Data_067_7FA3:: ; heuristic: start of a structured table; C0
+Data_067_7FA3:: ; address name
     db $01, $00, $02, $03, $05, $04 ; entry 0
     ds $57, $00

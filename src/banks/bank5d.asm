@@ -9,7 +9,7 @@ Data_05D_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 ; E-0185 (C1: RunGameMode2State_Case01 copies only palette 0 (8 bytes) to wBGPaletteBuffer with CopyFromBank; the block is 128 bytes, palette 8 repeats palette 0 with two colours swapped, and every other palette is $7C00 fill, read by nothing found).
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_5D_4139::
-Data_05D_4139:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_05D_4139:: ; address name
     dw $318C, $7FFF, $5294, $0000 ; id 0
     dw $7C00, $7C00, $7C00, $7C00 ; id 1
     dw $7C00, $7C00, $7C00, $7C00 ; id 2
@@ -30,7 +30,7 @@ Data_05D_4139:: ; heuristic: argument of a bank-switching copy helper; C0
 ; E-0167 (C1: entry 0 of WorldMapViewTable).
 ; record: 8 x 8 tiles, one row per line
 WorldMapView0::
-Data_05D_41B9:: ; heuristic: world map view rectangle; C0
+Data_05D_41B9:: ; address name
     db $3E, $15, $26, $37, $26, $0E, $19, $0F ; id 0
     db $13, $33, $33, $33, $01, $31, $33, $11 ; id 1
     db $25, $22, $33, $33, $33, $33, $1F, $0C ; id 2
@@ -43,7 +43,7 @@ Data_05D_41B9:: ; heuristic: world map view rectangle; C0
 ; E-0167 (C1: entry 1 of WorldMapViewTable).
 ; record: 8 x 8 tiles, one row per line
 WorldMapView1::
-Data_05D_41F9:: ; heuristic: world map view rectangle; C0
+Data_05D_41F9:: ; address name
     db $32, $02, $0F, $0D, $0C, $0E, $0F, $3D ; id 0
     db $32, $3D, $17, $00, $01, $2F, $03, $32 ; id 1
     db $32, $24, $10, $03, $24, $0B, $07, $32 ; id 2
@@ -56,7 +56,7 @@ Data_05D_41F9:: ; heuristic: world map view rectangle; C0
 ; E-0167 (C1: entry 2 of WorldMapViewTable).
 ; record: 12 x 12 tiles, one row per line
 WorldMapView2::
-Data_05D_4239:: ; heuristic: world map view rectangle; C0
+Data_05D_4239:: ; address name
     db $32, $32, $32, $32, $0D, $01, $32, $32, $32, $32, $32, $32 ; id 0
     db $32, $32, $32, $32, $05, $33, $2B, $0F, $32, $32, $32, $32 ; id 1
     db $32, $32, $32, $32, $25, $02, $33, $33, $19, $04, $01, $32 ; id 2
@@ -73,7 +73,7 @@ Data_05D_4239:: ; heuristic: world map view rectangle; C0
 ; E-0167 (C1: entry 3 of WorldMapViewTable).
 ; record: 12 x 12 tiles, one row per line
 WorldMapView3::
-Data_05D_42C9:: ; heuristic: world map view rectangle; C0
+Data_05D_42C9:: ; address name
     db $32, $27, $3D, $3E, $04, $26, $32, $32, $32, $32, $32, $32 ; id 0
     db $32, $3C, $24, $32, $02, $01, $26, $32, $32, $32, $00, $01 ; id 1
     db $32, $3D, $32, $32, $10, $02, $18, $24, $32, $32, $17, $33 ; id 2
@@ -90,7 +90,7 @@ Data_05D_42C9:: ; heuristic: world map view rectangle; C0
 ; E-0167 (C1: entry 4 of WorldMapViewTable).
 ; record: 4 x 3 tiles, one row per line
 WorldMapView4::
-Data_05D_4359:: ; heuristic: world map view rectangle; C0
+Data_05D_4359:: ; address name
     db $0D, $3D, $32, $32 ; id 0
     db $38, $01, $26, $32 ; id 1
     db $0B, $3A, $0A, $32 ; id 2
@@ -98,7 +98,7 @@ Data_05D_4359:: ; heuristic: world map view rectangle; C0
 ; E-0167 (C1: entry 5 of WorldMapViewTable).
 ; record: 6 x 6 tiles, one row per line
 WorldMapView5::
-Data_05D_4365:: ; heuristic: world map view rectangle; C0
+Data_05D_4365:: ; address name
     db $19, $33, $19, $26, $32, $32 ; id 0
     db $17, $33, $33, $30, $01, $3D ; id 1
     db $33, $33, $33, $33, $33, $30 ; id 2
@@ -109,14 +109,14 @@ Data_05D_4365:: ; heuristic: world map view rectangle; C0
 ; E-0167 (C1: entry 6 of WorldMapViewTable).
 ; record: 3 x 2 tiles, one row per line
 WorldMapView6::
-Data_05D_4389:: ; heuristic: world map view rectangle; C0
+Data_05D_4389:: ; address name
     db $3E, $19, $0F ; id 0
     db $10, $2A, $3A ; id 1
 
 ; E-0167 (C1: entry 7 of WorldMapViewTable).
 ; record: 5 x 5 tiles, one row per line
 WorldMapView7::
-Data_05D_438F:: ; heuristic: world map view rectangle; C0
+Data_05D_438F:: ; address name
     db $3E, $2B, $19, $26, $26 ; id 0
     db $17, $33, $33, $30, $08 ; id 1
     db $38, $33, $08, $23, $22 ; id 2
@@ -126,21 +126,21 @@ Data_05D_438F:: ; heuristic: world map view rectangle; C0
 ; E-0167 (C1: entry 8 of WorldMapViewTable).
 ; record: 1 x 2 tiles, one row per line
 WorldMapView8::
-Data_05D_43A8:: ; heuristic: world map view rectangle; C0
+Data_05D_43A8:: ; address name
     db $37 ; id 0
     db $3A ; id 1
 
 ; E-0167 (C1: entry 9 of WorldMapViewTable).
 ; record: 1 x 2 tiles, one row per line
 WorldMapView9::
-Data_05D_43AA:: ; heuristic: world map view rectangle; C0
+Data_05D_43AA:: ; address name
     db $06 ; id 0
     db $3B ; id 1
 
 ; E-0167 (C1: entry 10 of WorldMapViewTable).
 ; record: 2 x 1 tiles, one row per line
 WorldMapView10::
-Data_05D_43AC:: ; heuristic: world map view rectangle; C0
+Data_05D_43AC:: ; address name
     db $38, $39 ; id 0
 
 ; address loaded by RunGameMode2State_Case04
@@ -151,7 +151,7 @@ Data_05D_43AE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 ; E-0164 (derived: 64 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_5D_4565::
-Data_05D_4565:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_05D_4565:: ; address name
     dw $014D, $6BFF, $2A55, $0000 ; id 0
     dw $294A, $7FFF, $4A52, $0000 ; id 1
     dw $294A, $7FFF, $4A52, $0000 ; id 2
@@ -164,7 +164,7 @@ Data_05D_4565:: ; heuristic: argument of a bank-switching copy helper; C0
 ; E-0185 (C1: entry 0 of WorldMapScreenCellTable, 8 x 8 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 8 per row, 8 rows
 WorldMapScreenCells0::
-Data_05D_45A5:: ; heuristic: world map screen cells; C0
+Data_05D_45A5:: ; address name
     db $57, $0A, $06, $57, $57, $57, $56, $56, $56, $56, $57, $02, $56, $56, $56, $57, $04, $56, $56, $56, $57, $57, $56, $56, $56 ; id 0
     db $57, $57, $57, $57, $57, $06, $0B, $57, $57, $06, $56, $56, $06, $04, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56 ; id 1
     db $57, $57, $57, $57, $57, $06, $0B, $57, $57, $57, $56, $56, $06, $57, $57, $56, $56, $56, $05, $57, $56, $56, $56, $05, $57 ; id 2
@@ -233,7 +233,7 @@ Data_05D_45A5:: ; heuristic: world map screen cells; C0
 ; E-0185 (C1: entry 1 of WorldMapScreenCellTable, 8 x 8 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 8 per row, 8 rows
 WorldMapScreenCells1::
-Data_05D_4BE5:: ; heuristic: world map screen cells; C0
+Data_05D_4BE5:: ; address name
     db $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58 ; id 0
     db $58, $16, $16, $16, $58, $14, $56, $07, $02, $56, $58, $12, $01, $06, $00, $58, $58, $17, $12, $13, $58, $58, $58, $58, $58 ; id 1
     db $58, $58, $58, $58, $58, $56, $16, $1B, $58, $58, $56, $56, $56, $11, $58, $17, $56, $56, $56, $58, $58, $58, $56, $15, $58 ; id 2
@@ -302,7 +302,7 @@ Data_05D_4BE5:: ; heuristic: world map screen cells; C0
 ; E-0185 (C1: entry 2 of WorldMapScreenCellTable, 12 x 12 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 12 per row, 12 rows
 WorldMapScreenCells2::
-Data_05D_5225:: ; heuristic: world map screen cells; C0
+Data_05D_5225:: ; address name
     db $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57 ; id 0
     db $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57 ; id 1
     db $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57, $57 ; id 2
@@ -452,7 +452,7 @@ Data_05D_5658:: ; heuristic: label inside a table; C0
 ; E-0185 (C1: entry 3 of WorldMapScreenCellTable, 12 x 12 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 12 per row, 12 rows
 WorldMapScreenCells3::
-Data_05D_6035:: ; heuristic: world map screen cells; C0
+Data_05D_6035:: ; address name
     db $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58 ; id 0
     db $58, $58, $58, $58, $58, $58, $58, $1A, $16, $58, $58, $10, $56, $56, $56, $58, $12, $56, $56, $56, $58, $14, $56, $56, $56 ; id 1
     db $58, $58, $58, $58, $58, $1A, $56, $16, $58, $58, $56, $56, $56, $15, $58, $56, $56, $1D, $58, $58, $56, $56, $58, $58, $58 ; id 2
@@ -601,7 +601,7 @@ Data_05D_6035:: ; heuristic: world map screen cells; C0
 ; E-0185 (C1: entry 4 of WorldMapScreenCellTable, 4 x 3 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 4 per row, 3 rows
 WorldMapScreenCells4::
-Data_05D_6E45:: ; heuristic: world map screen cells; C0
+Data_05D_6E45:: ; address name
     db $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $1A, $58, $58, $58, $10, $56, $58, $58, $58, $56, $56 ; id 0
     db $58, $58, $23, $58, $58, $58, $1A, $56, $52, $58, $10, $56, $03, $2A, $58, $56, $56, $0D, $58, $58, $56, $56, $57, $58, $58 ; id 1
     db $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58, $58 ; id 2
@@ -618,7 +618,7 @@ Data_05D_6E45:: ; heuristic: world map screen cells; C0
 ; E-0185 (C1: entry 5 of WorldMapScreenCellTable, 6 x 6 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 6 per row, 6 rows
 WorldMapScreenCells5::
-Data_05D_6F71:: ; heuristic: world map screen cells; C0
+Data_05D_6F71:: ; address name
     db $57, $57, $57, $0A, $06, $0A, $06, $56, $56, $56, $04, $56, $56, $56, $56, $04, $56, $56, $56, $56, $04, $56, $56, $56, $56 ; id 0
     db $06, $57, $57, $0A, $06, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56 ; id 1
     db $0B, $57, $0B, $57, $57, $56, $00, $56, $00, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56 ; id 2
@@ -659,7 +659,7 @@ Data_05D_6F71:: ; heuristic: world map screen cells; C0
 ; E-0185 (C1: entry 6 of WorldMapScreenCellTable, 3 x 2 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 3 per row, 2 rows
 WorldMapScreenCells6::
-Data_05D_72F5:: ; heuristic: world map screen cells; C0
+Data_05D_72F5:: ; address name
     db $57, $0A, $0B, $57, $57, $0A, $56, $56, $56, $56, $0C, $56, $56, $56, $56, $57, $56, $56, $56, $56, $57, $56, $56, $56, $56 ; id 0
     db $57, $0A, $06, $0B, $57, $06, $56, $56, $56, $0B, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56 ; id 1
     db $57, $57, $57, $57, $57, $0A, $56, $06, $57, $57, $56, $56, $56, $01, $57, $56, $56, $56, $56, $05, $56, $56, $56, $56, $05 ; id 2
@@ -670,7 +670,7 @@ Data_05D_72F5:: ; heuristic: world map screen cells; C0
 ; E-0185 (C1: entry 7 of WorldMapScreenCellTable, 5 x 5 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 5 per row, 5 rows
 WorldMapScreenCells7::
-Data_05D_738B:: ; heuristic: world map screen cells; C0
+Data_05D_738B:: ; address name
     db $57, $57, $57, $57, $57, $57, $57, $56, $56, $06, $57, $56, $56, $56, $56, $57, $56, $56, $56, $56, $57, $04, $56, $56, $56 ; id 0
     db $57, $57, $57, $57, $57, $06, $56, $57, $56, $56, $56, $56, $06, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56 ; id 1
     db $57, $57, $57, $57, $57, $56, $56, $01, $06, $06, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56, $56 ; id 2
@@ -700,21 +700,21 @@ Data_05D_738B:: ; heuristic: world map screen cells; C0
 ; E-0185 (C1: entry 8 of WorldMapScreenCellTable, 1 x 2 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 1 per row, 2 rows
 WorldMapScreenCells8::
-Data_05D_75FC:: ; heuristic: world map screen cells; C0
+Data_05D_75FC:: ; address name
     db $58, $58, $58, $58, $58, $58, $58, $10, $1B, $58, $58, $14, $56, $11, $58, $58, $10, $56, $56, $1B, $58, $56, $56, $56, $58 ; id 0
     db $58, $56, $56, $56, $58, $14, $56, $56, $15, $58, $58, $56, $56, $1D, $58, $58, $14, $13, $58, $58, $58, $58, $58, $58, $58 ; id 1
 
 ; E-0185 (C1: entry 9 of WorldMapScreenCellTable, 1 x 2 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 1 per row, 2 rows
 WorldMapScreenCells9::
-Data_05D_762E:: ; heuristic: world map screen cells; C0
+Data_05D_762E:: ; address name
     db $58, $58, $58, $58, $58, $58, $1A, $10, $11, $58, $58, $56, $56, $1D, $58, $14, $56, $1D, $58, $58, $14, $56, $58, $58, $58 ; id 0
     db $14, $56, $1B, $58, $58, $14, $56, $56, $1B, $58, $58, $56, $56, $1D, $58, $58, $1C, $1D, $58, $58, $58, $58, $58, $58, $58 ; id 1
 
 ; E-0185 (C1: entry 10 of WorldMapScreenCellTable, 2 x 1 screens).
 ; record: one screen: 5 rows of 5 cells; screens run left to right, 2 per row, 1 rows
 WorldMapScreenCells10::
-Data_05D_7660:: ; heuristic: world map screen cells; C0
+Data_05D_7660:: ; address name
     db $58, $58, $58, $58, $58, $58, $1A, $56, $56, $16, $58, $12, $13, $56, $56, $58, $58, $58, $58, $17, $58, $58, $58, $58, $58 ; id 0
     db $58, $16, $58, $58, $58, $10, $56, $56, $1B, $58, $56, $56, $56, $56, $1D, $17, $13, $13, $58, $58, $58, $58, $58, $58, $58 ; id 1
     ds $96E, $00

@@ -128,7 +128,7 @@ Jump_001_4061:: ; address name
     ld [wDebugSubState], a
     ld [wDebugCounter], a
     ld a, $01
-    ld de, Data_001_412F
+    ld de, TileRect_01_412F
     ld hl, vBGMap0
     ld bc, $1412
     call CopyRectFromBankToVRAM
@@ -144,7 +144,7 @@ Jump_001_4061:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_01_412F::
-Data_001_412F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_412F:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
@@ -175,7 +175,7 @@ Jump_001_4297:: ; address name
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
-    ld de, Data_001_42BC
+    ld de, TileRect_01_42BC
     ld hl, vBGMap0
     ld bc, $1412
     call CopyRectFromBankToVRAM
@@ -186,7 +186,7 @@ Jump_001_4297:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_01_42BC::
-Data_001_42BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_42BC:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $11, $40, $41, $42, $43, $44, $45, $46, $47, $48, $00, $00, $00 ; id 1
     db $00, $12, $13, $14, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
@@ -219,7 +219,7 @@ Jump_001_4424:: ; address name
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
-    ld de, Data_001_6F30
+    ld de, TileRect_01_6F30
     ld hl, vBGMap0
     ld bc, $1412
     call CopyRectFromBankToVRAM
@@ -482,7 +482,7 @@ Jump_001_461E:: ; address name
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
-    ld de, Data_001_46A4
+    ld de, TileRect_01_46A4
     ld hl, vBGMap0 + $EA
     ld bc, $1001
     call CopyRectFromBankToVRAM
@@ -505,7 +505,7 @@ Jump_001_461E:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 16 x 1 tiles, one row per line
 TileRect_01_46A4::
-Data_001_46A4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_46A4:: ; address name
     db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F ; id 0
 
 ; init for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
@@ -549,7 +549,7 @@ Jump_001_46B4:: ; address name
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
-    ld de, Data_001_4733
+    ld de, TileRect_01_4733
     ld hl, vBGMap0 + $EA
     ld bc, $1001
     call CopyRectFromBankToVRAM
@@ -570,7 +570,7 @@ Jump_001_46B4:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 16 x 1 tiles, one row per line
 TileRect_01_4733::
-Data_001_4733:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_4733:: ; address name
     db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F ; id 0
 
 ; init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
@@ -614,7 +614,7 @@ Jump_001_4743:: ; address name
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
-    ld de, Data_001_47DE
+    ld de, TileRect_01_47DE
     ld hl, vBGMap0 + $124
     ld bc, $0606
     call CopyRectFromBankToVRAM
@@ -625,7 +625,7 @@ Jump_001_4743:: ; address name
     ld a, $01
     ldh [c], a
     ld a, $01
-    ld de, Data_001_4802
+    ld de, TileRect_01_4802
     ld hl, vBGMap0 + $124
     ld bc, $0606
     call CopyRectFromBankToVRAM
@@ -649,7 +649,7 @@ Jump_001_47C4::
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 6 tiles, one row per line
 TileRect_01_47DE::
-Data_001_47DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_47DE:: ; address name
     db $20, $21, $22, $23, $24, $25 ; id 0
     db $26, $27, $28, $29, $2A, $2B ; id 1
     db $2C, $2D, $2E, $2F, $30, $31 ; id 2
@@ -660,7 +660,7 @@ Data_001_47DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 6 tiles, one row per line
 TileRect_01_4802::
-Data_001_4802:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_4802:: ; address name
     db $01, $01, $01, $01, $01, $01 ; id 0
     db $01, $01, $01, $01, $01, $01 ; id 1
     db $01, $01, $01, $01, $01, $01 ; id 2
@@ -704,7 +704,7 @@ Jump_001_4826:: ; address name
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
-    ld de, Data_001_488A
+    ld de, TileRect_01_488A
     ld hl, vBGMap0 + $A3
     ld bc, $0B04
     call CopyRectFromBankToVRAM
@@ -718,7 +718,7 @@ Jump_001_4826:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 11 x 4 tiles, one row per line
 TileRect_01_488A::
-Data_001_488A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_488A:: ; address name
     db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A ; id 0
     db $90, $91, $92, $93, $94, $95, $96, $97, $98, $99, $9A ; id 1
     db $A0, $A1, $A2, $A3, $A4, $A5, $10, $10, $A8, $10, $12 ; id 2
@@ -761,7 +761,7 @@ Jump_001_48B6:: ; address name
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
-    ld de, Data_001_495D
+    ld de, TileRect_01_495D
     ld hl, vBGMap0 + $40
     ld bc, $140E
     call CopyRectFromBankToVRAM
@@ -800,7 +800,7 @@ Jump_001_48B6:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 14 tiles, one row per line
 TileRect_01_495D::
-Data_001_495D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_495D:: ; address name
     db $00, $00, $00, $00, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
     db $8B, $8C, $8D, $8E, $8F, $90, $91, $10, $10, $10, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
@@ -4595,7 +4595,7 @@ Jump_001_6387::
     ld h, a
     add hl, hl
     add hl, de
-    ld de, Data_004_4EAA
+    ld de, MonsterSpriteTable
     add hl, de
     ld e, l
     ld d, h
@@ -6244,7 +6244,7 @@ Data_001_6EB0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_01_6F30::
-Data_001_6F30:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_6F30:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
     db $00, $11, $12, $13, $35, $0E, $00, $00, $00, $00, $A0, $A1, $A2, $A3, $A4, $A5, $A6, $A7, $A8, $00 ; id 2

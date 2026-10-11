@@ -4,7 +4,7 @@ SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
 ; E-0169 (C1: GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable73BC copy the 16 bytes at $4010 + 16 * glyph from bank $1F to VRAM, and CopyGlyphTilesToVRAM takes one glyph per text byte, so the glyph number is the character code; 259 glyphs up to SendSGBPacketSet at $5040).
 ; record: glyph tile (2bpp, 16 bytes)
 GlyphFont::
-Data_01F_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_4010:: ; address name
     db $FF, $7C, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 0 '0'
     db $FF, $10, $FF, $30, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00 ; id 1 '1'
     db $FF, $7C, $FF, $82, $FF, $02, $FF, $0C, $FF, $30, $FF, $40, $FF, $FE, $FF, $00 ; id 2 '2'
@@ -325,7 +325,7 @@ Jump_01F_5051::
     ld l, a
     ld h, $00
     add hl, hl
-    ld de, Data_01F_5094
+    ld de, SGBPacketSetTable
     add hl, de
     ld e, [hl]
     inc hl
@@ -381,7 +381,7 @@ Jump_01F_507A::
 ; E-0179 (C1: SendSGBPacketSet reads the word $5094 + 2 * wSGBPacketIndex ($FF selects wSGBPacketBuffer instead) and sends byte-0 & 7 packets of 16 bytes from there through the joypad register).
 ; record: first 16-byte SGB packet of this set
 SGBPacketSetTable::
-Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_5094:: ; address name
     dw Data_01F_513E ; id 0
     dw Data_01F_514E ; id 1
     dw SGBPackets ; id 2
@@ -407,7 +407,7 @@ Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0179 (C1: the packets SGBPacketSetTable points at; each set is one packet here; 21 packets end at $520E).
 ; record: SGB packet (byte 0 = command * 8 + packet count)
 SGBPackets::
-Data_01F_50BE:: ; heuristic: SGB packet; C0
+Data_01F_50BE:: ; address name
     db $79, $5D, $08, $00, $0B, $8C, $D0, $F4, $60, $00, $00, $00, $00, $00, $00, $00 ; id 0
 Data_01F_50CE:: ; heuristic: SGB packet; C0
     db $79, $52, $08, $00, $0B, $A9, $E7, $9F, $01, $C0, $7E, $E8, $E8, $E8, $E8, $E0 ; id 1
@@ -1289,7 +1289,7 @@ Func_01F_5CF8:: ; address name
     ld a, d
     and a, $0F
     ld d, a
-    ld hl, Data_01F_4010
+    ld hl, GlyphFont
     add hl, de
     ld e, l
     ld d, h
@@ -1519,7 +1519,7 @@ Data_01F_5E12:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 3 tiles, one row per line
 TileRect_1F_5E13::
-Data_01F_5E13:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_5E13:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
@@ -1527,7 +1527,7 @@ Data_01F_5E13:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_5E37::
-Data_01F_5E37:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_5E37:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
@@ -1550,7 +1550,7 @@ Data_01F_5E37:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
 ; record: 20 x 18 tiles, one row per line
 TileScreen_1F_5F9F::
-Data_01F_5F9F:: ; heuristic: start of a structured table; C0
+Data_01F_5F9F:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
@@ -1573,7 +1573,7 @@ Data_01F_5F9F:: ; heuristic: start of a structured table; C0
 ; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
 ; record: 20 x 18 tiles, one row per line
 TileScreen_1F_6107::
-Data_01F_6107:: ; heuristic: start of a structured table; C0
+Data_01F_6107:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
@@ -1596,7 +1596,7 @@ Data_01F_6107:: ; heuristic: start of a structured table; C0
 ; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
 ; record: 20 x 18 tiles, one row per line
 TileScreen_1F_626F::
-Data_01F_626F:: ; heuristic: start of a structured table; C0
+Data_01F_626F:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $13, $14, $15, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
@@ -1619,7 +1619,7 @@ Data_01F_626F:: ; heuristic: start of a structured table; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_63D7::
-Data_01F_63D7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_63D7:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $13, $14, $15, $0E, $ED, $20, $21, $22, $23, $24, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -1642,7 +1642,7 @@ Data_01F_63D7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_64AF::
-Data_01F_64AF:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_64AF:: ; address name
     db $20, $21, $22, $23, $24, $25 ; id 0
     db $26, $27, $28, $29, $2A, $2B ; id 1
     db $2C, $2D, $2E, $2F, $30, $31 ; id 2
@@ -1653,7 +1653,7 @@ Data_01F_64AF:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_64D3::
-Data_01F_64D3:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_64D3:: ; address name
     db $02, $03, $04, $05, $06, $07 ; id 0
     db $08, $09, $0A, $0B, $0C, $0D ; id 1
     db $0E, $0F, $10, $11, $12, $13 ; id 2
@@ -1664,7 +1664,7 @@ Data_01F_64D3:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFro
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_64F7::
-Data_01F_64F7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_64F7:: ; address name
     db $48, $49, $4A, $4B, $4C, $4D ; id 0
     db $4E, $4F, $50, $51, $52, $53 ; id 1
     db $54, $55, $56, $57, $58, $59 ; id 2
@@ -1675,7 +1675,7 @@ Data_01F_64F7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_651B::
-Data_01F_651B:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_651B:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1686,7 +1686,7 @@ Data_01F_651B:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFro
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_653F::
-Data_01F_653F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_653F:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1698,7 +1698,7 @@ Data_01F_653F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 15 tiles, one row per line
 TileRect_1F_6577::
-Data_01F_6577:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6577:: ; address name
     db $B6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $C3, $B7 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $C3, $B7 ; id 2
@@ -1718,7 +1718,7 @@ Data_01F_6577:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 15 tiles, one row per line
 TileRect_1F_662B::
-Data_01F_662B:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_662B:: ; address name
     db $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 2
@@ -1738,7 +1738,7 @@ Data_01F_662B:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_66DF::
-Data_01F_66DF:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_66DF:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 1
     db $B6, $32, $33, $34, $35, $36, $37, $B7 ; id 2
@@ -1750,7 +1750,7 @@ Data_01F_66DF:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_6717::
-Data_01F_6717:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6717:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
@@ -1773,7 +1773,7 @@ Data_01F_6717:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_687F::
-Data_01F_687F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_687F:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
@@ -1796,7 +1796,7 @@ Data_01F_687F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_69E7::
-Data_01F_69E7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_69E7:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
@@ -1819,7 +1819,7 @@ Data_01F_69E7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_6B4F::
-Data_01F_6B4F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6B4F:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -1842,7 +1842,7 @@ Data_01F_6B4F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_6C27::
-Data_01F_6C27:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6C27:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1854,7 +1854,7 @@ Data_01F_6C27:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_6C5F::
-Data_01F_6C5F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6C5F:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -1877,7 +1877,7 @@ Data_01F_6C5F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_6D37::
-Data_01F_6D37:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6D37:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1889,7 +1889,7 @@ Data_01F_6D37:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_6D6F::
-Data_01F_6D6F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6D6F:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $13, $14, $15, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -1912,7 +1912,7 @@ Data_01F_6D6F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_6E47::
-Data_01F_6E47:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6E47:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $7C, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $6E, $7E, $C3, $C3, $C3 ; id 2
@@ -1924,7 +1924,7 @@ Data_01F_6E47:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_6E7F::
-Data_01F_6E7F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+Data_01F_6E7F:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $13, $14, $15, $0E, $ED, $20, $21, $22, $23, $24, $B7 ; id 1
     db $C3, $48, $49, $4A, $4B, $4C, $4D, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -1947,7 +1947,7 @@ Data_01F_6E7F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_6FE7::
-Data_01F_6FE7:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_6FE7:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $00, $00, $C3, $C3, $B6, $C3, $50, $51, $52, $53, $54, $C3, $B7, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $00, $00, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1971,7 +1971,7 @@ Data_01F_7087:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFro
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 5 tiles, one row per line
 TileRect_1F_714F::
-Data_01F_714F:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_714F:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; id 1
 Data_01F_7177:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
@@ -1982,7 +1982,7 @@ Data_01F_7177:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFro
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 3 tiles, one row per line
 TileRect_1F_71B3::
-Data_01F_71B3:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_71B3:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; id 1
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
@@ -1990,7 +1990,7 @@ Data_01F_71B3:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFro
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_1F_71EF::
-Data_01F_71EF:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_71EF:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $CE, $CF, $DF, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -2000,7 +2000,7 @@ Data_01F_71EF:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFro
 ; E-0187 (C1: Jump_024_513A sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375).
 ; record: one 20 x 6 tile panel (wScreenByteBD selects it)
 TileRect_1F_720D::
-Data_01F_720D:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_720D:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $00, $01, $02, $03, $04, $05, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $06, $07, $08, $09, $0A, $0B, $C3, $C3, $C3, $C3, $C3, $C3, $C3
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $0C, $0D, $0E, $0F, $10, $11, $C3, $C3, $C3, $C3, $C3, $C3, $C3
@@ -2047,7 +2047,7 @@ Jump_01F_7381::
     rl d
     sla e
     rl d
-    ld hl, Data_01F_4010
+    ld hl, GlyphFont
     add hl, de
     ld e, l
     ld d, h
@@ -2102,7 +2102,7 @@ Func_01F_73EC:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_651B
+    ld de, TileRect_1F_651B
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2154,7 +2154,7 @@ Jump_01F_745C::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_64AF
+    ld de, TileRect_1F_64AF
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2224,7 +2224,7 @@ Func_01F_74E3:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_662B
+    ld de, TileRect_1F_662B
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2243,7 +2243,7 @@ Func_01F_74E3:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_653F
+    ld de, TileRect_1F_653F
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2269,7 +2269,7 @@ Func_01F_753A:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_6B4F
+    ld de, TileRect_1F_6B4F
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2288,7 +2288,7 @@ Func_01F_753A:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_6C27
+    ld de, TileRect_1F_6C27
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2325,7 +2325,7 @@ Func_01F_7591:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_6C5F
+    ld de, TileRect_1F_6C5F
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2344,7 +2344,7 @@ Func_01F_7591:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_6D37
+    ld de, TileRect_1F_6D37
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2476,7 +2476,7 @@ Func_01F_76B5:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_6E47
+    ld de, TileRect_1F_6E47
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2506,7 +2506,7 @@ Func_01F_76B5:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_6D6F
+    ld de, TileRect_1F_6D6F
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2553,7 +2553,7 @@ Func_01F_7754:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_5E13
+    ld de, TileRect_1F_5E13
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2572,7 +2572,7 @@ Func_01F_7754:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_66DF
+    ld de, TileRect_1F_66DF
     ld a, d
     ld [wArg1], a
     ld a, e

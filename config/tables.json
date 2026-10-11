@@ -3479,6 +3479,68 @@
       ],
       "record": "20 x 18 tiles, one row per line",
       "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
+    },
+    {
+      "bank": "00",
+      "addr": "30CC",
+      "label": "SoundWaveSetTable",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "wave set",
+          "reason": "sound wave set"
+        }
+      ],
+      "note": "E-0189 (C1: Jump_000_35A8 indexes it by (hSndA8Param >> 4) * 2; only entry 0 exists, and the wave set follows it directly)."
+    },
+    {
+      "bank": "00",
+      "addr": "30CE",
+      "label": "SoundWaveSet0",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "16 bytes of 4-bit samples"
+        }
+      ],
+      "record": "one wave RAM image: 32 4-bit samples, two per byte",
+      "note": "E-0189 (C1: Jump_000_35A8 clears rNR30, then copies the 16 bytes at the set + wave number * 16 (wave number from hSndSweepOrWave or the track, swapped into the high nibble) to $FF30-$FF3F; wave 0 is a sine, 1 a triangle, 2 a square, 3 a sawtooth)."
+    },
+    {
+      "bank": "00",
+      "addr": "31CE",
+      "label": "SoundModulationTable",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "modulation rows",
+          "reason": "sound modulation rows"
+        }
+      ],
+      "note": "E-0189 (C1: Jump_000_3A94 indexes it by (hSndA8Param & $0F) * 2; only entry 0 exists, and its rows follow it directly)."
+    },
+    {
+      "bank": "00",
+      "addr": "31D0",
+      "label": "SoundModulationRows0",
+      "count": 12,
+      "id_base": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "16 steps"
+        }
+      ],
+      "record": "16 steps for one depth value: high nibble is combined with hSndEnvelope, bit 2 selects a branch",
+      "note": "E-0189 (C1: Jump_000_3A94 reads the byte at the rows - $10 + (hSndVibratoDepth | phase), where the phase is 4 bits computed from hSndVibratoCounter and hSndVibratoDelay, so row 1 is the first; 12 rows end at the routine at $3290; what each step does to the pitch or volume is not read)."
     }
   ]
 }

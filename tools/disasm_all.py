@@ -967,6 +967,7 @@ class Rom:
             for nxt in (a + 3, a + 5):  # ld hl / ld b / rst $10 in either order
                 if ins.get(nxt, ("", "", ""))[2] == "rst":
                     far_targets[(bank, nxt)] = t
+        bank0_tables = {t["addr"] for t in self.schemas if t["bank"] == 0 and 0x150 <= t["addr"] < 0x4000}
         arg_src: dict[tuple[int, int], tuple[int, str]] = {}
         for bank in range(self.nbanks):
             ins = self.insn[bank]
@@ -1030,6 +1031,12 @@ class Rom:
                 if not m:
                     continue
                 imm = int(m.group(2), 16)
+                if imm in bank0_tables:  # E-0189: a bank-0 address is in bank 0 from any bank
+                    self.dlabels[0].setdefault(imm, f"Data_000_{imm:04X}")
+                    self.dreason.setdefault((0, imm), "load of a declared bank-0 table")
+                    self.dref[(bank, a)] = (0, imm)
+                    strong += 1
+                    continue
                 if not 0x4000 <= imm < 0x8000:
                     continue
                 if a in paired:
@@ -1395,6 +1402,11 @@ class Rom:
                 raise AssertionError(f"{name}: no traced code label at {bank:02X}:{addr:04X}")
             self.alias[(bank, addr)] = old
             self.labels[bank][addr] = name
+        for (bank, addr), t in self.table_at.items():  # operands name the table, not its address
+            cur = self.dlabels[bank].get(addr)
+            if cur and cur.startswith("Data_") and t.get("label") and t["label"] not in seen:
+                self.dalias.setdefault((bank, addr), cur)
+                self.dlabels[bank][addr] = t["label"]
         log(f"routines renamed from config/names.json: {len(self.names)}")
 
     def _u16(self, bank: int, addr: int) -> int:

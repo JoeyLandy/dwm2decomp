@@ -10,7 +10,7 @@ Data_095_4001:: ; address name
 ; E-0142 (derived: 3 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map4EScreens0::
-Data_095_4202:: ; heuristic: map screen array; C0
+Data_095_4202:: ; address name
     dfar Data_095_4214 ; entry 0
     dfar Data_095_428C ; entry 1
     dfar Data_095_42B4 ; entry 2
@@ -18,7 +18,7 @@ Data_095_4202:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 3 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map4EAttrs0::
-Data_095_420B:: ; heuristic: map screen array; C0
+Data_095_420B:: ; address name
     dfar Data_095_432C ; entry 0
     dfar Data_095_4376 ; entry 1
     dfar Data_095_4394 ; entry 2
@@ -59,13 +59,13 @@ Data_095_43E6:: ; address name
 ; E-0142 (derived: 1 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map92Screens0::
-Data_095_4581:: ; heuristic: map screen array; C0
+Data_095_4581:: ; address name
     dfar Data_095_4587 ; entry 0
 
 ; E-0142 (derived: 1 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map92Attrs0::
-Data_095_4584:: ; heuristic: map screen array; C0
+Data_095_4584:: ; address name
     dfar Data_095_461E ; entry 0
 
 ; LZSS-compressed asset: 151 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)

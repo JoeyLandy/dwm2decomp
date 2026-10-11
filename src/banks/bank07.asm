@@ -1710,7 +1710,7 @@ Func_007_513A:: ; address name
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0000 (row 0, column 0); 12 x 17 tiles
 TileRect_07_5207::
-Data_007_5207:: ; heuristic: start of a structured table; C0
+Data_007_5207:: ; address name
     dw $0000 ; entry 0
     db $0C, $11
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1734,7 +1734,7 @@ Data_007_5207:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0000 (row 0, column 0); 12 x 3 tiles
 TileRect_07_52D7::
-Data_007_52D7:: ; heuristic: start of a structured table; C0
+Data_007_52D7:: ; address name
     dw $0000 ; entry 0
     db $0C, $03
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1744,7 +1744,7 @@ Data_007_52D7:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
 TileRect_07_52FF::
-Data_007_52FF:: ; heuristic: start of a structured table; C0
+Data_007_52FF:: ; address name
     dw $01A0 ; entry 0
     db $14, $05
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1756,7 +1756,7 @@ Data_007_52FF:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0060 (row 3, column 0); 20 x 11 tiles
 TileRect_07_5367::
-Data_007_5367:: ; heuristic: start of a structured table; C0
+Data_007_5367:: ; address name
     dw $0060 ; entry 0
     db $14, $0B
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1774,7 +1774,7 @@ Data_007_5367:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0082 (row 4, column 2); 16 x 9 tiles
 TileRect_07_5447::
-Data_007_5447:: ; heuristic: start of a structured table; C0
+Data_007_5447:: ; address name
     dw $0082 ; entry 0
     db $10, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1790,7 +1790,7 @@ Data_007_5447:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0020 (row 1, column 0); 20 x 16 tiles
 TileRect_07_54DB::
-Data_007_54DB:: ; heuristic: start of a structured table; C0
+Data_007_54DB:: ; address name
     dw $0020 ; entry 0
     db $14, $10
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1813,7 +1813,7 @@ Data_007_54DB:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0000 (row 0, column 0); 20 x 18 tiles
 TileRect_07_561F::
-Data_007_561F:: ; heuristic: start of a structured table; C0
+Data_007_561F:: ; address name
     dw $0000 ; entry 0
     db $14, $12
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1838,7 +1838,7 @@ Data_007_561F:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $00E0 (row 7, column 0); 20 x 5 tiles
 TileRect_07_578B::
-Data_007_578B:: ; heuristic: start of a structured table; C0
+Data_007_578B:: ; address name
     dw $00E0 ; entry 0
     db $14, $05
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1850,7 +1850,7 @@ Data_007_578B:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0062 (row 3, column 2); 15 x 11 tiles
 TileRect_07_57F3::
-Data_007_57F3:: ; heuristic: start of a structured table; C0
+Data_007_57F3:: ; address name
     dw $0062 ; entry 0
     db $0F, $0B
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -1868,7 +1868,7 @@ Data_007_57F3:: ; heuristic: start of a structured table; C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $00E1 (row 7, column 1); 18 x 5 tiles
 TileRect_07_589C::
-Data_007_589C:: ; heuristic: start of a structured table; C0
+Data_007_589C:: ; address name
     dw $00E1 ; entry 0
     db $12, $05
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2

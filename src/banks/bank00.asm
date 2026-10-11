@@ -5099,7 +5099,7 @@ Func_000_1CF9:: ; address name
 ; E-0168 (derived: 64 bytes copied into vTiles uncompressed)
 ; record: one 16-byte tile (2bpp) per line
 Tiles_00_1D07::
-Data_000_1D07:: ; heuristic: start of a structured table; C0
+Data_000_1D07:: ; address name
     db $FF, $1E, $E1, $21, $DF, $5F, $E2, $62, $9C, $9C, $A4, $A4, $C4, $C4, $CE, $4E ; id 0
     db $FF, $78, $87, $84, $FB, $FA, $67, $66, $39, $39, $25, $25, $23, $23, $33, $32 ; id 1
     db $DF, $53, $FF, $62, $F6, $0A, $FF, $04, $FC, $04, $BF, $48, $FF, $10, $FF, $0F ; id 2
@@ -8825,7 +8825,56 @@ Jump_000_30BE::
     pop af
     ld [rROMB0], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $0030CC, $1C4
+
+; E-0189 (C1: Jump_000_35A8 indexes it by (hSndA8Param >> 4) * 2; only entry 0 exists, and the wave set follows it directly).
+; record: wave set
+SoundWaveSetTable::
+Data_000_30CC:: ; address name
+    dw SoundWaveSet0 ; id 0
+
+; E-0189 (C1: Jump_000_35A8 clears rNR30, then copies the 16 bytes at the set + wave number * 16 (wave number from hSndSweepOrWave or the track, swapped into the high nibble) to $FF30-$FF3F; wave 0 is a sine, 1 a triangle, 2 a square, 3 a sawtooth).
+; record: one wave RAM image: 32 4-bit samples, two per byte
+SoundWaveSet0::
+Data_000_30CE:: ; address name
+    db $00, $01, $12, $35, $8A, $CD, $EE, $FF, $FF, $FE, $ED, $CA, $85, $32, $11, $00 ; id 0
+    db $01, $23, $45, $67, $89, $AB, $CD, $EF, $FE, $DC, $BA, $98, $76, $54, $32, $10 ; id 1
+    db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
+    db $FF, $EE, $DD, $CC, $BB, $AA, $99, $88, $77, $66, $55, $44, $33, $22, $11, $00 ; id 3
+    db $FF, $FF, $DE, $BD, $24, $12, $00, $00, $00, $00, $21, $42, $DB, $ED, $FF, $FF ; id 4
+    db $FF, $FF, $EE, $CA, $53, $11, $00, $00, $00, $00, $11, $35, $AC, $EE, $FF, $FF ; id 5
+    db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $FF, $00 ; id 6
+    db $00, $00, $66, $AA, $BB, $DD, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF ; id 7
+    db $FF, $FF, $EE, $ED, $DD, $CC, $CB, $BA, $A9, $98, $87, $65, $54, $43, $31, $10 ; id 8
+    db $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $AA, $BB, $CC, $DD, $EE, $FF, $FF ; id 9
+    db $00, $00, $00, $00, $AA, $AA, $BB, $CC, $DD, $DD, $FF, $FF, $FF, $FF, $00, $FF ; id 10
+    db $00, $00, $00, $00, $AA, $AA, $BB, $CC, $DD, $DD, $FF, $FF, $FF, $FF, $AA, $FF ; id 11
+    db $01, $12, $22, $33, $35, $55, $77, $99, $55, $99, $AA, $BB, $CC, $DD, $EE, $FF ; id 12
+    db $FC, $DC, $BA, $90, $70, $50, $30, $15, $15, $15, $15, $22, $55, $77, $AA, $CC ; id 13
+    db $EE, $EE, $CD, $AC, $35, $23, $11, $11, $11, $11, $32, $53, $CA, $DC, $EE, $EE ; id 14
+    db $DD, $DD, $DD, $DD, $DD, $DD, $DD, $DD, $22, $22, $22, $22, $22, $22, $22, $22 ; id 15
+
+; E-0189 (C1: Jump_000_3A94 indexes it by (hSndA8Param & $0F) * 2; only entry 0 exists, and its rows follow it directly).
+; record: modulation rows
+SoundModulationTable::
+Data_000_31CE:: ; address name
+    dw SoundModulationRows0 ; id 0
+
+; E-0189 (C1: Jump_000_3A94 reads the byte at the rows - $10 + (hSndVibratoDepth | phase), where the phase is 4 bits computed from hSndVibratoCounter and hSndVibratoDelay, so row 1 is the first; 12 rows end at the routine at $3290; what each step does to the pitch or volume is not read).
+; record: 16 steps for one depth value: high nibble is combined with hSndEnvelope, bit 2 selects a branch
+SoundModulationRows0::
+Data_000_31D0:: ; address name
+    db $F1, $D0, $B0, $90, $70, $50, $30, $15, $15, $15, $15, $15, $15, $15, $15, $15 ; id 1
+    db $F3, $D0, $B0, $90, $70, $50, $30, $10, $51, $40, $30, $20, $15, $15, $15, $15 ; id 2
+    db $89, $98, $A8, $B8, $C8, $D8, $E8, $F5, $F5, $F5, $F5, $F5, $F5, $F5, $F5, $F5 ; id 3
+    db $B9, $C8, $D8, $E8, $F1, $D0, $B0, $90, $70, $50, $30, $15, $15, $15, $15, $15 ; id 4
+    db $99, $A8, $B8, $C8, $D8, $E8, $F4, $F4, $F0, $E0, $D0, $B0, $90, $70, $50, $35 ; id 5
+    db $DB, $F3, $D0, $B0, $90, $81, $70, $60, $50, $40, $30, $20, $15, $15, $15, $15 ; id 6
+    db $F1, $E0, $D0, $C0, $B0, $A0, $90, $80, $70, $60, $50, $40, $30, $20, $10, $05 ; id 7
+    db $F1, $70, $50, $30, $20, $15, $15, $15, $15, $05, $05, $05, $05, $05, $05, $05 ; id 8
+    db $F1, $B0, $70, $50, $30, $20, $20, $15, $15, $15, $15, $15, $15, $15, $15, $05 ; id 9
+    db $F1, $B0, $70, $50, $30, $10, $51, $40, $30, $20, $15, $15, $15, $15, $15, $05 ; id 10
+    db $F3, $D0, $B0, $90, $70, $50, $30, $10, $51, $40, $30, $20, $15, $15, $15, $05 ; id 11
+    db $09, $18, $28, $38, $48, $58, $68, $78, $88, $98, $A8, $B8, $C8, $D8, $E8, $F5 ; id 12
 
 ; rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0
 ; 9 call sites from 7 routines (e.g. BootAndMainLoop, StartMusic, DebugSoundTest_Update, GameMode1_Init, ...)
@@ -9034,7 +9083,7 @@ Func_000_3354:: ; address name
     push de
     push hl
     ld [wSoundId], a
-    ld hl, $3E13
+    ld hl, SoundBankTable
 
 Jump_000_335D::
     cp a, [hl]
@@ -9459,7 +9508,7 @@ Jump_000_3599::
 Jump_000_35A8::
     ld [wSoundEventByte17], a
     swap e
-    ld hl, $30CC
+    ld hl, SoundWaveSetTable
     push de
     ldh a, [hSndA8Param]
     swap a
@@ -9688,7 +9737,7 @@ Jump_000_36E5::
     ld a, e
     ld [wSoundEventByte17], a
     swap e
-    ld hl, $30CC
+    ld hl, SoundWaveSetTable
     push de
     ldh a, [hSndA8Param]
     swap a
@@ -10375,7 +10424,7 @@ Jump_000_3AA4::
     push de
     ldh a, [hSndA8Param]
     and a, $0F
-    ld de, $31CE
+    ld de, SoundModulationTable
     sla a
     add a, e
     ld e, a
@@ -10536,7 +10585,7 @@ Func_000_3D7C:: ; address name
 SoundTick_Sub06::
 Func_000_3D8D:: ; address name
     ld d, a
-    ld hl, $30CC
+    ld hl, SoundWaveSetTable
     push de
     ldh a, [hSndA8Param]
     swap a
@@ -10648,7 +10697,7 @@ Jump_000_3DFB::
 ; E-0018 (C2: static reading of Func_000_3354, and 495 emulated sound starts read exactly the banks this table names). Func_000_3354 takes the first entry whose first byte is greater than the sound id; the PREVIOUS entry gives the base id, record array and bank. A first byte of $FF ends the table.
 ; record: first sound id of this range; record array in that bank; ROM bank holding the records and tracks
 SoundBankTable::
-Data_000_3E13:: ; heuristic: start of a structured table; C0
+Data_000_3E13:: ; address name
     db $00 ; entry 0
     dfar SoundRecords_Bank40
     db $1C ; entry 1

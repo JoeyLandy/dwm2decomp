@@ -252,7 +252,7 @@ Func_015_4171:: ; address name
 ; points at: wGoldLo, wDigits, wArg3
 DrawGoldBoxAndStep_Bank15::
 Func_015_4182:: ; address name
-    ld de, Data_015_7291
+    ld de, TileRect_15_7291
     ld hl, wWindowTileBuffer + $70
     ld bc, $0803
     call CopyRectTo20ByteRows_Bank15
@@ -292,7 +292,7 @@ Jump_015_41AA::
 ; writes: wScreenStep, wScreenState
 ScriptCommandED_Run_Case01_Case02::
 Jump_015_41BD:: ; address name
-    ld de, Data_015_6F6B
+    ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
@@ -447,7 +447,7 @@ Jump_015_42B3:: ; address name
     ld a, $08
     ld [wArg2], a
     call ScriptCommandED_Run_Shared03
-    ld de, Data_015_42F4
+    ld de, TileRect_15_42F4
     ld hl, wWindowTileBuffer + $64
     ld bc, $080B
     call CopyRectTo20ByteRows_Bank15
@@ -468,7 +468,7 @@ Jump_015_42B3:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 11 tiles, one row per line
 TileRect_15_42F4::
-Data_015_42F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_42F4:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -488,7 +488,7 @@ Data_015_42F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ScriptCommandED_Run_Case04_Case01::
 Jump_015_434C:: ; address name
     call ClearTileAreas1240_1700_14E0
-    ld de, Data_015_747D
+    ld de, TileRect_15_747D
     ld hl, wWindowTileBuffer + $64
     ld bc, $080B
     call CopyRectTo20ByteRows_Bank15
@@ -557,7 +557,7 @@ Jump_015_43BD:: ; address name
     ld a, $C7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank15
-    ld de, Data_015_74D5
+    ld de, TileRect_15_74D5
     ld hl, wWindowTileBuffer + $BC
     ld bc, $0C09
     call CopyRectTo20ByteRows_Bank15
@@ -737,7 +737,7 @@ Jump_015_44D3:: ; address name
     ld a, $0C
     ld [wArg2], a
     call ScriptCommandED_Run_Shared03
-    ld de, Data_015_6FA3
+    ld de, TileRect_15_6FA3
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
@@ -757,7 +757,7 @@ Jump_015_44D3:: ; address name
 ScriptCommandED_Run_Case04_Case0A::
 Jump_015_451B:: ; address name
     call DrawPair72A9And72C5AndStep
-    ld de, Data_015_6F6B
+    ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
@@ -783,7 +783,7 @@ Jump_015_451B:: ; address name
 ; writes: wScreenStep
 ScriptCommandED_Run_Case04_Case0C::
 Jump_015_4550:: ; address name
-    ld de, Data_015_7379
+    ld de, TileRect_15_7379
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows_Bank15
@@ -807,7 +807,7 @@ Jump_015_4570:: ; address name
     ld hl, Data_015_72E1
     ld de, Data_015_72F1
     call CopyGlyphTileListFromBank1F_Bank15
-    ld de, Data_015_7351
+    ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows_Bank15
@@ -1005,7 +1005,7 @@ Jump_015_46D3:: ; address name
     ld [wWindowTileBuffer + $78], a
     ld [wWindowTileBuffer + $A0], a
     ld [wWindowTileBuffer + $C8], a
-    ld de, Data_015_7541
+    ld de, TileRect_15_7541
     ld hl, wWindowTileBuffer + $94
     ld bc, $0C03
     call CopyRectTo20ByteRows_Bank15
@@ -1039,11 +1039,11 @@ Jump_015_4712:: ; address name
 ScriptCommandED_Run_Case04_Case14::
 Jump_015_4716:: ; address name
     call ClearThreeTileRows
-    ld de, Data_015_7565
+    ld de, TileRect_15_7565
     ld hl, wWindowTileBuffer + $94
     ld bc, $0C03
     call CopyRectTo20ByteRows_Bank15
-    ld de, Data_015_7589
+    ld de, TileRect_15_7589
     ld hl, wWindowTileBuffer + $10C
     ld bc, $0C05
     call CopyRectTo20ByteRows_Bank15
@@ -1067,7 +1067,7 @@ Jump_015_4739:: ; address name
     ld hl, vTiles1 + $4E0
     ld bc, $1101
     call FillTilesBxC
-    ld de, Data_015_747D
+    ld de, TileRect_15_747D
     ld hl, wWindowTileBuffer + $64
     ld bc, $080B
     call CopyRectTo20ByteRows_Bank15
@@ -1348,7 +1348,7 @@ Jump_015_491A:: ; address name
     ld [wWindowTileBuffer + $93], a
     ld [wWindowTileBuffer + $A7], a
     call DrawGoldBoxAndStep_Bank15
-    ld de, Data_015_74D5
+    ld de, TileRect_15_74D5
     ld hl, wWindowTileBuffer + $BC
     ld bc, $0C01
     call CopyRectTo20ByteRows_Bank15
@@ -1356,7 +1356,7 @@ Jump_015_491A:: ; address name
     ld hl, wWindowTileBuffer + $120
     ld bc, $0C04
     call CopyRectTo20ByteRows_Bank15
-    ld de, Data_015_4985
+    ld de, TileRect_15_4985
     ld hl, wWindowTileBuffer + $93
     ld bc, $0102
     call CopyRectTo20ByteRows_Bank15
@@ -1383,7 +1383,7 @@ Jump_015_491A:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 1 x 2 tiles, one row per line
 TileRect_15_4985::
-Data_015_4985:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_4985:: ; address name
     db $B7 ; id 0
     db $B7 ; id 1
 
@@ -1427,7 +1427,7 @@ Jump_015_4987:: ; address name
 ; points at: wTextWindowTileLo
 ScriptCommandED_Run_Case04_Case24::
 Jump_015_49C9:: ; address name
-    ld de, Data_015_75F5
+    ld de, TileRect_15_75F5
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows_Bank15
@@ -1437,7 +1437,7 @@ Jump_015_49C9:: ; address name
     call DrawScreenBufferRect_Bank15
     call ClearTileAreas2700_1750_17D0
     call DrawListEntriesCell5RecordNamesAndStep
-    ld de, Data_015_7589
+    ld de, TileRect_15_7589
     ld hl, wWindowTileBuffer + $10C
     ld bc, $0C05
     call CopyRectTo20ByteRows_Bank15
@@ -1852,7 +1852,7 @@ Jump_015_4C8A::
     ld a, [wLinkMode]
     and a, a
     jr z, Jump_015_4CD9
-    ld de, Data_015_75F5
+    ld de, TileRect_15_75F5
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows_Bank15
@@ -1862,7 +1862,7 @@ Jump_015_4C8A::
     call DrawScreenBufferRect_Bank15
     call ClearTileAreas2700_1750_17D0
     call DrawListEntriesCell5RecordNamesAndStep
-    ld de, Data_015_7589
+    ld de, TileRect_15_7589
     ld hl, wWindowTileBuffer + $10C
     ld bc, $0C05
     call CopyRectTo20ByteRows_Bank15
@@ -1932,7 +1932,7 @@ Jump_015_4D1E::
 ; writes: wOBJPaletteUploadRequest
 ScriptCommandED_Run_Case04_Case30::
 Jump_015_4D2B:: ; address name
-    ld de, Data_015_761D
+    ld de, TileRect_15_761D
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows_Bank15
@@ -1997,7 +1997,7 @@ ScriptCommandED_Run_Case04_Case33::
 Jump_015_4D96:: ; address name
     call DrawPair72A9And72C5AndStep
     call DrawGoldBoxAndStep_Bank15
-    ld de, Data_015_6F6B
+    ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
@@ -2539,7 +2539,7 @@ Jump_015_50F7:: ; address name
 ; writes: wScreenStep
 ScriptCommandED_Run_Case05_Case01::
 Jump_015_50FB:: ; address name
-    ld de, Data_015_6FDB
+    ld de, TileRect_15_6FDB
     ld hl, wWindowTileBuffer + $BB
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank15
@@ -2595,7 +2595,7 @@ Func_015_512C:: ; address name
 ; writes: wArg1, wArg2, wScreenStep
 ScriptCommandED_Run_Case05_Case03::
 Jump_015_5165:: ; address name
-    ld de, Data_015_7050
+    ld de, TileRect_15_7050
     ld hl, wWindowTileBuffer + $BB
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank15
@@ -2783,7 +2783,7 @@ Jump_015_52BD:: ; address name
     ld a, [wThreeOptionResult]
     or a, a
     jr z, Jump_015_52EB
-    ld de, Data_015_7345
+    ld de, TileRect_15_7345
     ld hl, wWindowTileBuffer + $BB
     ld bc, $0403
     call CopyRectTo20ByteRows_Bank15
@@ -2793,7 +2793,7 @@ Jump_015_52BD:: ; address name
     ret
 
 Jump_015_52EB::
-    ld de, Data_015_733F
+    ld de, TileRect_15_733F
     ld hl, wWindowTileBuffer + $BA
     ld bc, $0203
     call CopyRectTo20ByteRows_Bank15
@@ -2890,7 +2890,7 @@ ScriptCommandED_Run_Case05_Case0B::
 Jump_015_5387:: ; address name
     ld a, $6C
     call QueueSoundEffect
-    ld de, Data_015_7351
+    ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows_Bank15
@@ -3547,7 +3547,7 @@ Jump_015_57CB:: ; address name
     call ScriptCommandED_Run_Shared02
     ld a, $6C
     call QueueSoundEffect
-    ld de, Data_015_73AB
+    ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows_Bank15
@@ -3712,7 +3712,7 @@ Jump_015_58D2:: ; address name
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_015_6F6B
+    ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
@@ -3818,7 +3818,7 @@ Jump_015_5998::
 ; writes: wListPageIndex, wListCursor, wCursorBlinkAE, wScreenStep
 ScriptCommandED_Run_Case07_Case0B::
 Jump_015_59B8:: ; address name
-    ld de, Data_015_59E5
+    ld de, TileRect_15_59E5
     ld hl, wWindowTileBuffer + $64
     ld bc, $0809
     call CopyRectTo20ByteRows_Bank15
@@ -3839,7 +3839,7 @@ Jump_015_59B8:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 9 tiles, one row per line
 TileRect_15_59E5::
-Data_015_59E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_59E5:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -3932,7 +3932,7 @@ Jump_015_5A97:: ; address name
     ld a, $02
     ld [hl+], a
     ld [hl], $12
-    ld de, Data_015_73C9
+    ld de, TileRect_15_73C9
     ld hl, wWindowTileBuffer + $64
     ld bc, $0809
     call CopyRectTo20ByteRows_Bank15
@@ -3987,7 +3987,7 @@ Jump_015_5AFC:: ; address name
     ld a, $C7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank15
-    ld de, Data_015_7411
+    ld de, TileRect_15_7411
     ld hl, wWindowTileBuffer + $6C
     ld bc, $0C09
     call CopyRectTo20ByteRows_Bank15
@@ -4160,7 +4160,7 @@ Jump_015_5C19:: ; address name
     ld a, $14
     ld [wArg2], a
     call ScriptCommandED_Run_Shared03
-    ld de, Data_015_73AB
+    ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
     ld bc, $0601
     call CopyRectTo20ByteRows_Bank15
@@ -4213,7 +4213,7 @@ Jump_015_5C7D:: ; address name
     ld a, $08
     ld [wArg2], a
     call ScriptCommandED_Run_Shared03
-    ld de, Data_015_73AB
+    ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows_Bank15
@@ -4413,7 +4413,7 @@ Jump_015_5DCE:: ; address name
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_015_6F6B
+    ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
@@ -4765,7 +4765,7 @@ Jump_015_603E:: ; address name
     ld b, $47
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, Data_047_67E2
+    ld de, Map0DPalettes
     ld b, $47
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -4799,7 +4799,7 @@ Jump_015_6070:: ; address name
 ; writes: wArg1, wArg2, wScreenStep
 ScriptCommandED_Run_Case05_Case0D::
 Jump_015_6074:: ; address name
-    ld de, Data_015_7050
+    ld de, TileRect_15_7050
     ld hl, wWindowTileBuffer + $BB
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank15
@@ -4866,7 +4866,7 @@ Jump_015_60E2:: ; address name
     ld b, $BC
     ld hl, Data_015_7333
     call StoreBAtWordTableEntry_Bank15
-    ld de, Data_015_7351
+    ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows_Bank15
@@ -5059,7 +5059,7 @@ Jump_015_6235:: ; address name
     ld b, $BC
     ld hl, Data_015_73A1
     call StoreBAtWordTableEntry_Bank15
-    ld de, Data_015_7351
+    ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows_Bank15
@@ -5238,7 +5238,7 @@ Jump_015_6359:: ; address name
 ; writes: wScreenStep
 CopyRect7351ToWC410AndIncScreenStep::
 Func_015_6360:: ; address name
-    ld de, Data_015_7351
+    ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
     ld bc, $0805
     call CopyRectTo20ByteRows_Bank15
@@ -5395,7 +5395,7 @@ Jump_015_6439::
     jr Jump_015_644D
 
 Jump_015_6441::
-    ld de, Data_015_727D
+    ld de, TileRect_15_727D
     ld hl, wWindowTileBuffer + $C8
     ld bc, $1401
     call CopyRectTo20ByteRows_Bank15
@@ -5413,7 +5413,7 @@ Jump_015_644D::
 ; 3 call sites from 3 routines (e.g. DrawRect70C5IfLinkModeAndStep, ScriptCommandF2_Run_Case03_Case09, Func_0F0_4CA0_Table4_Case01)
 CopyRect70C5ToWC364AndDraw::
 Func_015_645F:: ; address name
-    ld de, Data_015_70C5
+    ld de, TileRect_15_70C5
     ld hl, wWindowTileBuffer + $64
     ld bc, $140B
     call CopyRectTo20ByteRows_Bank15
@@ -6720,7 +6720,7 @@ Jump_015_6B6B::
     ld [rRAMG2], a
     ld a, $01
     ld [rRAMB], a
-    ld de, Data_015_71A1
+    ld de, TileRect_15_71A1
     ld hl, wWindowTileBuffer + $64
     ld bc, $140B
     call CopyRectTo20ByteRows_Bank15
@@ -7335,7 +7335,7 @@ Jump_015_6F5C::
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_15_6F6B::
-Data_015_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_6F6B:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $A4, $A5, $EE, $EE, $A6, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7347,7 +7347,7 @@ Data_015_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_15_6FA3::
-Data_015_6FA3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_6FA3:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7359,7 +7359,7 @@ Data_015_6FA3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 9 tiles, one row per line
 TileRect_15_6FDB::
-Data_015_6FDB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_6FDB:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7373,7 +7373,7 @@ Data_015_6FDB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 9 tiles, one row per line
 TileRect_15_7050::
-Data_015_7050:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7050:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $D5, $D6, $D7, $D8, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7387,7 +7387,7 @@ Data_015_7050:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 11 tiles, one row per line
 TileRect_15_70C5::
-Data_015_70C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_70C5:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7403,7 +7403,7 @@ Data_015_70C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 11 tiles, one row per line
 TileRect_15_71A1::
-Data_015_71A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_71A1:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $A4, $A5, $A6, $A7, $78, $79, $ED, $A8, $A9, $AA, $AB, $AC, $C3, $C3, $C3, $ED, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7419,13 +7419,13 @@ Data_015_71A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 1 tiles, one row per line
 TileRect_15_727D::
-Data_015_727D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_727D:: ; address name
     db $B6, $C3, $C3, $C3, $D0, $D1, $D2, $D3, $D4, $D5, $D6, $D7, $D8, $D9, $DA, $DB, $DC, $DD, $DE, $B7 ; id 0
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 3 tiles, one row per line
 TileRect_15_7291::
-Data_015_7291:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7291:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
@@ -7473,7 +7473,7 @@ Data_015_733B:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 2 x 3 tiles, one row per line
 TileRect_15_733F::
-Data_015_733F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_733F:: ; address name
     db $C3, $B7 ; id 0
     db $C3, $B7 ; id 1
     db $B4, $B5 ; id 2
@@ -7481,7 +7481,7 @@ Data_015_733F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 4 x 3 tiles, one row per line
 TileRect_15_7345::
-Data_015_7345:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7345:: ; address name
     db $C3, $C3, $C3, $B7 ; id 0
     db $C3, $C3, $C3, $B7 ; id 1
     db $B4, $B4, $B4, $B5 ; id 2
@@ -7489,7 +7489,7 @@ Data_015_7345:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_15_7351::
-Data_015_7351:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7351:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $70, $71, $72, $73, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7499,7 +7499,7 @@ Data_015_7351:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_15_7379::
-Data_015_7379:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7379:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7513,7 +7513,7 @@ Data_015_73A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_15_73AB::
-Data_015_73AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_73AB:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $CE, $CF, $DF, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7523,7 +7523,7 @@ Data_015_73AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 9 tiles, one row per line
 TileRect_15_73C9::
-Data_015_73C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_73C9:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7537,7 +7537,7 @@ Data_015_73C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 9 tiles, one row per line
 TileRect_15_7411::
-Data_015_7411:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7411:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $F8, $F9, $FA, $FB, $FC, $C3, $EA, $ED, $C3, $C3, $B7 ; id 1
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
@@ -7552,7 +7552,7 @@ Data_015_7471:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 11 tiles, one row per line
 TileRect_15_747D::
-Data_015_747D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_747D:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7568,7 +7568,7 @@ Data_015_747D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 9 tiles, one row per line
 TileRect_15_74D5::
-Data_015_74D5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_74D5:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $F8, $F9, $FA, $FB, $FC, $C3, $EA, $ED, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7584,7 +7584,7 @@ Data_015_7511:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 3 tiles, one row per line
 TileRect_15_7541::
-Data_015_7541:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7541:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
@@ -7592,7 +7592,7 @@ Data_015_7541:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 3 tiles, one row per line
 TileRect_15_7565::
-Data_015_7565:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7565:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C9, $7C, $7D, $7E, $7F, $C0, $C1, $C2, $CA, $CB, $B7 ; id 1
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
@@ -7600,7 +7600,7 @@ Data_015_7565:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 5 tiles, one row per line
 TileRect_15_7589::
-Data_015_7589:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7589:: ; address name
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 0
     db $B6, $F5, $F6, $F7, $FD, $FE, $C3, $EA, $ED, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7616,7 +7616,7 @@ Data_015_75C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_15_75F5::
-Data_015_75F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_75F5:: ; address name
     db $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -7626,7 +7626,7 @@ Data_015_75F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_15_761D::
-Data_015_761D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_761D:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $B7 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B4, $B4, $B4, $B4, $B4, $B5 ; id 2

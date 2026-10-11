@@ -175,7 +175,7 @@ Func_017_41CF:: ; address name
     add hl, hl
     add hl, hl
     add hl, hl
-    ld de, Data_017_426C
+    ld de, SGBPaletteSets
     add hl, de
     ld de, wSGBPacketBuffer + $1
     ld bc, wSGBPaletteNum0Lo
@@ -263,7 +263,7 @@ Jump_017_4265::
 ; E-0178 (C1: SendSGBPaletteSetPacket copies the 8 bytes at $426C + 8 * wSGBPaletteSet into a PAL_SET ($51) packet after the command byte and into wSGBPaletteNum0Lo onward, then adds the attribute file wSGBAttrFile | $80; entries 0-63 hold four words below 512 (the SGB's system palette count), the words after them do not).
 ; record: four SGB system palette numbers for PAL_SET
 SGBPaletteSets::
-Data_017_426C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_017_426C:: ; address name
     dw 0, 1, 2, 3 ; id 0
     dw 4, 5, 6, 7 ; id 1
     dw 8, 9, 10, 11 ; id 2

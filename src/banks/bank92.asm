@@ -23,14 +23,14 @@ Func_092_4001:: ; address name
     ld a, $00
     ld [hl+], a
     ld [hl+], a
-    ld de, Data_092_4024
+    ld de, MetaSprites92_4024Table
     call BuildOamFromSpriteTable_Bank92
     ret
 
 ; E-0147 (C1: the caller of BuildOamFromSpriteTable_Bank92 passes DE = $92:4024; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 60 words, up to the next code or data).
 ; record: meta-sprite set
 MetaSprites92_4024Table::
-Data_092_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_092_4024:: ; address name
     dw MetaSprites92_4024Set00 ; id 0
     dw MetaSprites92_4024Set00 ; id 1
     dw MetaSprites92_4024Set00 ; id 2
@@ -164,7 +164,7 @@ Jump_092_40EC::
 ; E-0147 (derived: meta-sprite set 0 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set00::
-Data_092_40ED:: ; heuristic: meta-sprite set; C0
+Data_092_40ED:: ; address name
     dw MetaSprites92_4024Set00Frame0 ; entry 0
     dw MetaSprites92_4024Set00Frame1 ; entry 1
     dw MetaSprites92_4024Set00Frame2 ; entry 2
@@ -201,7 +201,7 @@ Data_092_40ED:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame0::
-Data_092_412D:: ; heuristic: meta-sprite frame; C0
+Data_092_412D:: ; address name
     db $D0, $BC, $00, $10 ; entry 0
     db $D0, $3C, $00, $10 ; entry 1
     db $80 ; end
@@ -209,7 +209,7 @@ Data_092_412D:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame1::
-Data_092_4136:: ; heuristic: meta-sprite frame; C0
+Data_092_4136:: ; address name
     db $D0, $B8, $01, $10 ; entry 0
     db $D0, $C0, $01, $30 ; entry 1
     db $D0, $38, $01, $10 ; entry 2
@@ -219,7 +219,7 @@ Data_092_4136:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame2::
-Data_092_4147:: ; heuristic: meta-sprite frame; C0
+Data_092_4147:: ; address name
     db $E8, $B8, $05, $10 ; entry 0
     db $E8, $C0, $06, $10 ; entry 1
     db $F0, $B8, $07, $10 ; entry 2
@@ -247,7 +247,7 @@ Data_092_4147:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame3::
-Data_092_41A0:: ; heuristic: meta-sprite frame; C0
+Data_092_41A0:: ; address name
     db $D0, $BC, $0B, $10 ; entry 0
     db $F0, $BC, $0F, $10 ; entry 1
     db $E8, $BC, $0E, $10 ; entry 2
@@ -271,7 +271,7 @@ Data_092_41A0:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame4::
-Data_092_41E9:: ; heuristic: meta-sprite frame; C0
+Data_092_41E9:: ; address name
     db $E8, $BC, $0C, $10 ; entry 0
     db $F0, $BC, $0D, $10 ; entry 1
     db $D0, $DC, $00, $10 ; entry 2
@@ -315,7 +315,7 @@ Data_092_41E9:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame5::
-Data_092_4282:: ; heuristic: meta-sprite frame; C0
+Data_092_4282:: ; address name
     db $D0, $CC, $0B, $30 ; entry 0
     db $F0, $CC, $0F, $30 ; entry 1
     db $E8, $CC, $0E, $30 ; entry 2
@@ -351,7 +351,7 @@ Data_092_4282:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame6::
-Data_092_42FB:: ; heuristic: meta-sprite frame; C0
+Data_092_42FB:: ; address name
     db $E8, $CC, $0C, $30 ; entry 0
     db $F0, $CC, $0D, $30 ; entry 1
     db $E8, $D8, $05, $10 ; entry 2
@@ -395,7 +395,7 @@ Data_092_42FB:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame7::
-Data_092_4394:: ; heuristic: meta-sprite frame; C0
+Data_092_4394:: ; address name
     db $D0, $DC, $0B, $10 ; entry 0
     db $F0, $DC, $0F, $10 ; entry 1
     db $E8, $DC, $0E, $10 ; entry 2
@@ -431,7 +431,7 @@ Data_092_4394:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame8::
-Data_092_440D:: ; heuristic: meta-sprite frame; C0
+Data_092_440D:: ; address name
     db $E8, $DC, $0C, $10 ; entry 0
     db $F0, $DC, $0D, $10 ; entry 1
     db $D0, $FC, $00, $10 ; entry 2
@@ -474,7 +474,7 @@ Data_092_440D:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame9::
-Data_092_44A2:: ; heuristic: meta-sprite frame; C0
+Data_092_44A2:: ; address name
     db $D0, $EC, $0B, $30 ; entry 0
     db $F0, $EC, $0F, $30 ; entry 1
     db $E8, $EC, $0E, $30 ; entry 2
@@ -508,7 +508,7 @@ Data_092_44A2:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame10::
-Data_092_4513:: ; heuristic: meta-sprite frame; C0
+Data_092_4513:: ; address name
     db $E8, $EB, $0C, $30 ; entry 0
     db $F0, $EB, $0D, $30 ; entry 1
     db $F0, $0D, $0C, $10 ; entry 2
@@ -534,7 +534,7 @@ Data_092_4513:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame11::
-Data_092_4564:: ; heuristic: meta-sprite frame; C0
+Data_092_4564:: ; address name
     db $F0, $ED, $0B, $10 ; entry 0
     db $E8, $EC, $0C, $50 ; entry 1
     db $F0, $0B, $0C, $70 ; entry 2
@@ -557,7 +557,7 @@ Data_092_4564:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 12 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame12::
-Data_092_45A9:: ; heuristic: meta-sprite frame; C0
+Data_092_45A9:: ; address name
     db $F0, $00, $05, $70 ; entry 0
     db $F0, $F8, $06, $70 ; entry 1
     db $E8, $00, $07, $70 ; entry 2
@@ -573,7 +573,7 @@ Data_092_45A9:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 13 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame13::
-Data_092_45D2:: ; heuristic: meta-sprite frame; C0
+Data_092_45D2:: ; address name
     db $F8, $FC, $05, $30 ; entry 0
     db $F8, $F4, $06, $30 ; entry 1
     db $F0, $F6, $04, $30 ; entry 2
@@ -589,7 +589,7 @@ Data_092_45D2:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 14 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame14::
-Data_092_45FB:: ; heuristic: meta-sprite frame; C0
+Data_092_45FB:: ; address name
     db $D8, $00, $1C, $50 ; entry 0
     db $D8, $08, $1D, $50 ; entry 1
     db $E0, $00, $1A, $50 ; entry 2
@@ -609,7 +609,7 @@ Data_092_45FB:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 15 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame15::
-Data_092_4634:: ; heuristic: meta-sprite frame; C0
+Data_092_4634:: ; address name
     db $F0, $00, $1C, $10 ; entry 0
     db $E8, $00, $1A, $10 ; entry 1
     db $E0, $00, $18, $10 ; entry 2
@@ -635,7 +635,7 @@ Data_092_4634:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 16 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame16::
-Data_092_4685:: ; heuristic: meta-sprite frame; C0
+Data_092_4685:: ; address name
     db $D8, $FC, $1C, $50 ; entry 0
     db $E0, $FC, $1A, $50 ; entry 1
     db $E8, $FC, $18, $50 ; entry 2
@@ -664,7 +664,7 @@ Data_092_4685:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 17 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame17::
-Data_092_46E2:: ; heuristic: meta-sprite frame; C0
+Data_092_46E2:: ; address name
     db $F0, $E4, $1D, $30 ; entry 0
     db $E0, $E4, $19, $30 ; entry 1
     db $F8, $EC, $1E, $10 ; entry 2
@@ -699,7 +699,7 @@ Data_092_46E2:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 18 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame18::
-Data_092_4757:: ; heuristic: meta-sprite frame; C0
+Data_092_4757:: ; address name
     db $D8, $0C, $1D, $50 ; entry 0
     db $F0, $F4, $1C, $10 ; entry 1
     db $D8, $E4, $14, $10 ; entry 2
@@ -741,7 +741,7 @@ Data_092_4757:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 19 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame19::
-Data_092_47E8:: ; heuristic: meta-sprite frame; C0
+Data_092_47E8:: ; address name
     db $D0, $D0, $03, $10 ; entry 0
     db $D8, $D0, $07, $10 ; entry 1
     db $E0, $D4, $23, $10 ; entry 2
@@ -774,7 +774,7 @@ Data_092_47E8:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 20 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame20::
-Data_092_4855:: ; heuristic: meta-sprite frame; C0
+Data_092_4855:: ; address name
     db $D0, $28, $03, $30 ; entry 0
     db $D8, $28, $07, $30 ; entry 1
     db $E0, $24, $23, $30 ; entry 2
@@ -807,7 +807,7 @@ Data_092_4855:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 21 of MetaSprites92_4024Set00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set00Frame21::
-Data_092_48C2:: ; heuristic: meta-sprite frame; C0
+Data_092_48C2:: ; address name
     db $F8, $48, $03, $70 ; entry 0
     db $F0, $48, $07, $70 ; entry 1
     db $E8, $42, $24, $10 ; entry 2
@@ -848,7 +848,7 @@ MetaSprites92_4024Set00Frame22::
 ; E-0147 (derived: meta-sprite set 52 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set34::
-Data_092_493C:: ; heuristic: meta-sprite set; C0
+Data_092_493C:: ; address name
     dw MetaSprites92_4024Set34Frame0 ; entry 0
     dw MetaSprites92_4024Set34Frame1 ; entry 1
     dw MetaSprites92_4024Set34Frame2 ; entry 2
@@ -885,7 +885,7 @@ Data_092_493C:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame0::
-Data_092_497C:: ; heuristic: meta-sprite frame; C0
+Data_092_497C:: ; address name
     db $F7, $F5, $05, $00 ; entry 0
     db $F8, $05, $0B, $00 ; entry 1
     db $80 ; end
@@ -893,7 +893,7 @@ Data_092_497C:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame1::
-Data_092_4985:: ; heuristic: meta-sprite frame; C0
+Data_092_4985:: ; address name
     db $F0, $05, $0A, $00 ; entry 0
     db $E8, $05, $0C, $00 ; entry 1
     db $EF, $F2, $04, $00 ; entry 2
@@ -905,7 +905,7 @@ Data_092_4985:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame2::
-Data_092_499E:: ; heuristic: meta-sprite frame; C0
+Data_092_499E:: ; address name
     db $E0, $05, $0C, $00 ; entry 0
     db $DF, $F1, $23, $20 ; entry 1
     db $E7, $F5, $05, $00 ; entry 2
@@ -917,7 +917,7 @@ Data_092_499E:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame3::
-Data_092_49B7:: ; heuristic: meta-sprite frame; C0
+Data_092_49B7:: ; address name
     db $F8, $F0, $00, $00 ; entry 0
     db $F8, $F8, $01, $00 ; entry 1
     db $F8, $00, $06, $00 ; entry 2
@@ -931,7 +931,7 @@ Data_092_49B7:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame4::
-Data_092_49D8:: ; heuristic: meta-sprite frame; C0
+Data_092_49D8:: ; address name
     db $F8, $E8, $00, $40 ; entry 0
     db $F8, $F0, $01, $40 ; entry 1
     db $F0, $E8, $02, $40 ; entry 2
@@ -947,7 +947,7 @@ Data_092_49D8:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame5::
-Data_092_4A01:: ; heuristic: meta-sprite frame; C0
+Data_092_4A01:: ; address name
     db $F0, $F0, $00, $60 ; entry 0
     db $F0, $E8, $01, $60 ; entry 1
     db $E8, $F0, $02, $60 ; entry 2
@@ -963,7 +963,7 @@ Data_092_4A01:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame6::
-Data_092_4A2A:: ; heuristic: meta-sprite frame; C0
+Data_092_4A2A:: ; address name
     db $E8, $F8, $00, $60 ; entry 0
     db $E8, $F0, $01, $60 ; entry 1
     db $E0, $F8, $02, $60 ; entry 2
@@ -981,7 +981,7 @@ Data_092_4A2A:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame7::
-Data_092_4A5B:: ; heuristic: meta-sprite frame; C0
+Data_092_4A5B:: ; address name
     db $E0, $F8, $06, $00 ; entry 0
     db $E0, $00, $07, $00 ; entry 1
     db $E8, $F8, $08, $00 ; entry 2
@@ -1001,7 +1001,7 @@ Data_092_4A5B:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame8::
-Data_092_4A94:: ; heuristic: meta-sprite frame; C0
+Data_092_4A94:: ; address name
     db $E0, $F0, $06, $00 ; entry 0
     db $E0, $F8, $07, $00 ; entry 1
     db $E8, $F0, $08, $00 ; entry 2
@@ -1017,7 +1017,7 @@ Data_092_4A94:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame9::
-Data_092_4ABD:: ; heuristic: meta-sprite frame; C0
+Data_092_4ABD:: ; address name
     db $E8, $F0, $06, $20 ; entry 0
     db $E8, $E8, $07, $20 ; entry 1
     db $F0, $F0, $08, $20 ; entry 2
@@ -1035,7 +1035,7 @@ Data_092_4ABD:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame10::
-Data_092_4AEE:: ; heuristic: meta-sprite frame; C0
+Data_092_4AEE:: ; address name
     db $F0, $E8, $06, $00 ; entry 0
     db $F0, $F0, $07, $00 ; entry 1
     db $F8, $E8, $08, $00 ; entry 2
@@ -1053,7 +1053,7 @@ Data_092_4AEE:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame11::
-Data_092_4B1F:: ; heuristic: meta-sprite frame; C0
+Data_092_4B1F:: ; address name
     db $F8, $08, $02, $60 ; entry 0
     db $F8, $00, $03, $60 ; entry 1
     db $F8, $F8, $06, $20 ; entry 2
@@ -1069,7 +1069,7 @@ Data_092_4B1F:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 12 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame12::
-Data_092_4B48:: ; heuristic: meta-sprite frame; C0
+Data_092_4B48:: ; address name
     db $E8, $F0, $28, $00 ; entry 0
     db $E8, $F8, $29, $00 ; entry 1
     db $E8, $08, $28, $20 ; entry 2
@@ -1091,7 +1091,7 @@ Data_092_4B48:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 13 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame13::
-Data_092_4B89:: ; heuristic: meta-sprite frame; C0
+Data_092_4B89:: ; address name
     db $F0, $F4, $25, $00 ; entry 0
     db $F0, $04, $25, $20 ; entry 1
     db $F0, $FC, $26, $00 ; entry 2
@@ -1103,7 +1103,7 @@ Data_092_4B89:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 14 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame14::
-Data_092_4BA2:: ; heuristic: meta-sprite frame; C0
+Data_092_4BA2:: ; address name
     db $F0, $F4, $0D, $00 ; entry 0
     db $F0, $FC, $0E, $00 ; entry 1
     db $F8, $F4, $0F, $00 ; entry 2
@@ -1114,7 +1114,7 @@ Data_092_4BA2:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 15 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame15::
-Data_092_4BB7:: ; heuristic: meta-sprite frame; C0
+Data_092_4BB7:: ; address name
     db $F8, $F3, $15, $00 ; entry 0
     db $F8, $FB, $16, $00 ; entry 1
     db $F8, $03, $17, $00 ; entry 2
@@ -1127,7 +1127,7 @@ Data_092_4BB7:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 16 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame16::
-Data_092_4BD4:: ; heuristic: meta-sprite frame; C0
+Data_092_4BD4:: ; address name
     db $F8, $F3, $20, $00 ; entry 0
     db $F8, $FB, $21, $00 ; entry 1
     db $F8, $03, $22, $00 ; entry 2
@@ -1144,7 +1144,7 @@ Data_092_4BD4:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 17 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame17::
-Data_092_4C01:: ; heuristic: meta-sprite frame; C0
+Data_092_4C01:: ; address name
     db $E0, $F8, $24, $00 ; entry 0
     db $E0, $00, $24, $20 ; entry 1
     db $E8, $F8, $24, $40 ; entry 2
@@ -1154,7 +1154,7 @@ Data_092_4C01:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 18 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame18::
-Data_092_4C12:: ; heuristic: meta-sprite frame; C0
+Data_092_4C12:: ; address name
     db $DC, $F4, $25, $00 ; entry 0
     db $DC, $FC, $26, $00 ; entry 1
     db $E4, $F4, $27, $00 ; entry 2
@@ -1169,7 +1169,7 @@ Data_092_4C12:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 19 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame19::
-Data_092_4C37:: ; heuristic: meta-sprite frame; C0
+Data_092_4C37:: ; address name
     db $D0, $F0, $28, $00 ; entry 0
     db $D0, $F8, $29, $00 ; entry 1
     db $D0, $08, $28, $20 ; entry 2
@@ -1207,7 +1207,7 @@ Data_092_4C37:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 20 of MetaSprites92_4024Set34; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set34Frame20::
-Data_092_4CB8:: ; heuristic: meta-sprite frame; C0
+Data_092_4CB8:: ; address name
     db $D8, $F0, $2C, $00 ; entry 0
     db $D8, $F8, $2D, $00 ; entry 1
     db $D8, $08, $2C, $20 ; entry 2
@@ -1234,7 +1234,7 @@ MetaSprites92_4024Set34Frame21::
 ; E-0147 (derived: meta-sprite set 53 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set35::
-Data_092_4CFA:: ; heuristic: meta-sprite set; C0
+Data_092_4CFA:: ; address name
     dw MetaSprites92_4024Set35Frame0 ; entry 0
     dw MetaSprites92_4024Set35Frame1 ; entry 1
     dw MetaSprites92_4024Set35Frame2 ; entry 2
@@ -1271,7 +1271,7 @@ Data_092_4CFA:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame0::
-Data_092_4D3A:: ; heuristic: meta-sprite frame; C0
+Data_092_4D3A:: ; address name
     db $F8, $B8, $21, $00 ; entry 0
     db $F8, $C0, $22, $00 ; entry 1
     db $F8, $C8, $23, $00 ; entry 2
@@ -1287,7 +1287,7 @@ Data_092_4D3A:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame1::
-Data_092_4D63:: ; heuristic: meta-sprite frame; C0
+Data_092_4D63:: ; address name
     db $F8, $BC, $14, $00 ; entry 0
     db $F8, $C4, $15, $00 ; entry 1
     db $F8, $D4, $14, $20 ; entry 2
@@ -1309,7 +1309,7 @@ Data_092_4D63:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame2::
-Data_092_4DA4:: ; heuristic: meta-sprite frame; C0
+Data_092_4DA4:: ; address name
     db $F0, $BC, $14, $00 ; entry 0
     db $F0, $C4, $15, $00 ; entry 1
     db $F0, $D4, $14, $20 ; entry 2
@@ -1339,7 +1339,7 @@ Data_092_4DA4:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame3::
-Data_092_4E05:: ; heuristic: meta-sprite frame; C0
+Data_092_4E05:: ; address name
     db $F8, $C8, $19, $00 ; entry 0
     db $F8, $C0, $1C, $00 ; entry 1
     db $F8, $D0, $1C, $20 ; entry 2
@@ -1369,7 +1369,7 @@ Data_092_4E05:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame4::
-Data_092_4E66:: ; heuristic: meta-sprite frame; C0
+Data_092_4E66:: ; address name
     db $F8, $B8, $24, $00 ; entry 0
     db $F8, $C0, $25, $00 ; entry 1
     db $F8, $C8, $27, $00 ; entry 2
@@ -1393,7 +1393,7 @@ Data_092_4E66:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame5::
-Data_092_4EAF:: ; heuristic: meta-sprite frame; C0
+Data_092_4EAF:: ; address name
     db $F8, $D0, $21, $00 ; entry 0
     db $F8, $D8, $22, $00 ; entry 1
     db $F8, $E0, $23, $00 ; entry 2
@@ -1409,7 +1409,7 @@ Data_092_4EAF:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame6::
-Data_092_4ED8:: ; heuristic: meta-sprite frame; C0
+Data_092_4ED8:: ; address name
     db $F8, $D4, $14, $00 ; entry 0
     db $F8, $DC, $15, $00 ; entry 1
     db $F8, $EC, $14, $20 ; entry 2
@@ -1431,7 +1431,7 @@ Data_092_4ED8:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame7::
-Data_092_4F19:: ; heuristic: meta-sprite frame; C0
+Data_092_4F19:: ; address name
     db $E8, $D4, $14, $00 ; entry 0
     db $E8, $DC, $15, $00 ; entry 1
     db $E8, $EC, $14, $20 ; entry 2
@@ -1465,7 +1465,7 @@ Data_092_4F19:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame8::
-Data_092_4F8A:: ; heuristic: meta-sprite frame; C0
+Data_092_4F8A:: ; address name
     db $F8, $D0, $1A, $00 ; entry 0
     db $F8, $F0, $1A, $20 ; entry 1
     db $F0, $E0, $19, $00 ; entry 2
@@ -1505,7 +1505,7 @@ Data_092_4F8A:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame9::
-Data_092_5013:: ; heuristic: meta-sprite frame; C0
+Data_092_5013:: ; address name
     db $F8, $E0, $19, $00 ; entry 0
     db $F8, $D8, $1C, $00 ; entry 1
     db $F8, $E8, $1C, $20 ; entry 2
@@ -1539,7 +1539,7 @@ Data_092_5013:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame10::
-Data_092_5084:: ; heuristic: meta-sprite frame; C0
+Data_092_5084:: ; address name
     db $F0, $E0, $10, $00 ; entry 0
     db $F0, $E8, $11, $00 ; entry 1
     db $F0, $F0, $12, $00 ; entry 2
@@ -1561,7 +1561,7 @@ Data_092_5084:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame11::
-Data_092_50C5:: ; heuristic: meta-sprite frame; C0
+Data_092_50C5:: ; address name
     db $F0, $E8, $18, $00 ; entry 0
     db $F0, $F8, $18, $00 ; entry 1
     db $F8, $E0, $1A, $00 ; entry 2
@@ -1597,7 +1597,7 @@ Data_092_50C5:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 12 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame12::
-Data_092_513E:: ; heuristic: meta-sprite frame; C0
+Data_092_513E:: ; address name
     db $E8, $E8, $18, $00 ; entry 0
     db $E8, $F8, $18, $00 ; entry 1
     db $F0, $E0, $1A, $00 ; entry 2
@@ -1643,7 +1643,7 @@ Data_092_513E:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 13 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame13::
-Data_092_51DF:: ; heuristic: meta-sprite frame; C0
+Data_092_51DF:: ; address name
     db $D8, $E8, $21, $00 ; entry 0
     db $D8, $F0, $22, $00 ; entry 1
     db $D8, $F8, $23, $00 ; entry 2
@@ -1683,7 +1683,7 @@ Data_092_51DF:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 14 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame14::
-Data_092_5268:: ; heuristic: meta-sprite frame; C0
+Data_092_5268:: ; address name
     db $D8, $FC, $00, $00 ; entry 0
     db $D0, $FC, $01, $00 ; entry 1
     db $E0, $F0, $26, $00 ; entry 2
@@ -1727,7 +1727,7 @@ Data_092_5268:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 15 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame15::
-Data_092_5301:: ; heuristic: meta-sprite frame; C0
+Data_092_5301:: ; address name
     db $E8, $FC, $00, $00 ; entry 0
     db $E0, $FC, $01, $00 ; entry 1
     db $D0, $FC, $03, $00 ; entry 2
@@ -1773,7 +1773,7 @@ Data_092_5301:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 16 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame16::
-Data_092_53A2:: ; heuristic: meta-sprite frame; C0
+Data_092_53A2:: ; address name
     db $F0, $FC, $01, $00 ; entry 0
     db $E0, $FC, $03, $00 ; entry 1
     db $D8, $FC, $04, $00 ; entry 2
@@ -1816,7 +1816,7 @@ Data_092_53A2:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 17 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame17::
-Data_092_5437:: ; heuristic: meta-sprite frame; C0
+Data_092_5437:: ; address name
     db $D0, $FC, $05, $00 ; entry 0
     db $D8, $FC, $05, $00 ; entry 1
     db $F0, $20, $10, $20 ; entry 2
@@ -1846,7 +1846,7 @@ Data_092_5437:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 18 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame18::
-Data_092_5498:: ; heuristic: meta-sprite frame; C0
+Data_092_5498:: ; address name
     db $F8, $FB, $0C, $20 ; entry 0
     db $F0, $FB, $0C, $20 ; entry 1
     db $E8, $FB, $0C, $20 ; entry 2
@@ -1876,7 +1876,7 @@ Data_092_5498:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 19 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame19::
-Data_092_54F9:: ; heuristic: meta-sprite frame; C0
+Data_092_54F9:: ; address name
     db $F8, $FC, $0C, $00 ; entry 0
     db $F0, $FC, $0C, $00 ; entry 1
     db $E8, $FC, $0C, $00 ; entry 2
@@ -1916,7 +1916,7 @@ Data_092_54F9:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 20 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame20::
-Data_092_5582:: ; heuristic: meta-sprite frame; C0
+Data_092_5582:: ; address name
     db $F8, $FC, $0C, $00 ; entry 0
     db $F0, $FC, $0C, $00 ; entry 1
     db $E8, $FC, $0C, $00 ; entry 2
@@ -1950,7 +1950,7 @@ Data_092_5582:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 21 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame21::
-Data_092_55F3:: ; heuristic: meta-sprite frame; C0
+Data_092_55F3:: ; address name
     db $F8, $FB, $0C, $20 ; entry 0
     db $F0, $FB, $0C, $20 ; entry 1
     db $E8, $FB, $0C, $20 ; entry 2
@@ -1978,7 +1978,7 @@ Data_092_55F3:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 22 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame22::
-Data_092_564C:: ; heuristic: meta-sprite frame; C0
+Data_092_564C:: ; address name
     db $F0, $FC, $0D, $00 ; entry 0
     db $E8, $FC, $0D, $00 ; entry 1
     db $E0, $FC, $0D, $00 ; entry 2
@@ -2002,7 +2002,7 @@ Data_092_564C:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 23 of MetaSprites92_4024Set35; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set35Frame23::
-Data_092_5695:: ; heuristic: meta-sprite frame; C0
+Data_092_5695:: ; address name
     db $F0, $FB, $0D, $20 ; entry 0
     db $E8, $FB, $0D, $20 ; entry 1
     db $E0, $FB, $0D, $20 ; entry 2
@@ -2023,7 +2023,7 @@ MetaSprites92_4024Set35Frame24::
 ; E-0147 (derived: meta-sprite set 54 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set36::
-Data_092_56BF:: ; heuristic: meta-sprite set; C0
+Data_092_56BF:: ; address name
     dw MetaSprites92_4024Set36Frame0 ; entry 0
     dw MetaSprites92_4024Set36Frame1 ; entry 1
     dw MetaSprites92_4024Set36Frame2 ; entry 2
@@ -2060,7 +2060,7 @@ Data_092_56BF:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame0::
-Data_092_56FF:: ; heuristic: meta-sprite frame; C0
+Data_092_56FF:: ; address name
     db $F8, $10, $00, $00 ; entry 0
     db $F8, $18, $01, $00 ; entry 1
     db $80 ; end
@@ -2068,7 +2068,7 @@ Data_092_56FF:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame1::
-Data_092_5708:: ; heuristic: meta-sprite frame; C0
+Data_092_5708:: ; address name
     db $F8, $08, $02, $00 ; entry 0
     db $F8, $10, $03, $00 ; entry 1
     db $F0, $08, $00, $00 ; entry 2
@@ -2078,7 +2078,7 @@ Data_092_5708:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame2::
-Data_092_5719:: ; heuristic: meta-sprite frame; C0
+Data_092_5719:: ; address name
     db $F0, $00, $02, $00 ; entry 0
     db $F0, $08, $03, $00 ; entry 1
     db $E8, $00, $00, $00 ; entry 2
@@ -2099,7 +2099,7 @@ Data_092_5719:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame3::
-Data_092_5756:: ; heuristic: meta-sprite frame; C0
+Data_092_5756:: ; address name
     db $F0, $08, $18, $00 ; entry 0
     db $F0, $10, $19, $00 ; entry 1
     db $F0, $00, $19, $60 ; entry 2
@@ -2126,7 +2126,7 @@ Data_092_5756:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame4::
-Data_092_57AB:: ; heuristic: meta-sprite frame; C0
+Data_092_57AB:: ; address name
     db $E8, $F8, $19, $60 ; entry 0
     db $D0, $E0, $08, $00 ; entry 1
     db $D0, $E8, $09, $00 ; entry 2
@@ -2146,7 +2146,7 @@ Data_092_57AB:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame5::
-Data_092_57E4:: ; heuristic: meta-sprite frame; C0
+Data_092_57E4:: ; address name
     db $D0, $D8, $0B, $00 ; entry 0
     db $D0, $E0, $0C, $00 ; entry 1
     db $D8, $D8, $0E, $00 ; entry 2
@@ -2160,7 +2160,7 @@ Data_092_57E4:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame6::
-Data_092_5805:: ; heuristic: meta-sprite frame; C0
+Data_092_5805:: ; address name
     db $D0, $E8, $1A, $00 ; entry 0
     db $D8, $F0, $1A, $00 ; entry 1
     db $80 ; end
@@ -2168,7 +2168,7 @@ Data_092_5805:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame7::
-Data_092_580E:: ; heuristic: meta-sprite frame; C0
+Data_092_580E:: ; address name
     db $E0, $F9, $1E, $00 ; entry 0
     db $E7, $F9, $1E, $40 ; entry 1
     db $E0, $00, $1E, $20 ; entry 2
@@ -2180,7 +2180,7 @@ Data_092_580E:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame8::
-Data_092_5827:: ; heuristic: meta-sprite frame; C0
+Data_092_5827:: ; address name
     db $E0, $F0, $11, $00 ; entry 0
     db $E0, $F8, $12, $00 ; entry 1
     db $D8, $F8, $0F, $00 ; entry 2
@@ -2200,7 +2200,7 @@ Data_092_5827:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame9::
-Data_092_5860:: ; heuristic: meta-sprite frame; C0
+Data_092_5860:: ; address name
     db $E0, $F9, $1E, $00 ; entry 0
     db $E7, $F9, $1E, $40 ; entry 1
     db $E0, $00, $1E, $20 ; entry 2
@@ -2224,7 +2224,7 @@ Data_092_5860:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame10::
-Data_092_58A9:: ; heuristic: meta-sprite frame; C0
+Data_092_58A9:: ; address name
     db $F0, $08, $1A, $00 ; entry 0
     db $F8, $10, $1A, $00 ; entry 1
     db $E8, $00, $1A, $00 ; entry 2
@@ -2236,7 +2236,7 @@ Data_092_58A9:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame11::
-Data_092_58C2:: ; heuristic: meta-sprite frame; C0
+Data_092_58C2:: ; address name
     db $D0, $E8, $21, $00 ; entry 0
     db $F0, $08, $21, $00 ; entry 1
     db $F8, $10, $21, $00 ; entry 2
@@ -2258,7 +2258,7 @@ Data_092_58C2:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 12 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame12::
-Data_092_5903:: ; heuristic: meta-sprite frame; C0
+Data_092_5903:: ; address name
     db $D0, $E8, $1F, $00 ; entry 0
     db $D8, $F0, $1F, $00 ; entry 1
     db $D0, $F0, $20, $00 ; entry 2
@@ -2280,7 +2280,7 @@ Data_092_5903:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 13 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame13::
-Data_092_5944:: ; heuristic: meta-sprite frame; C0
+Data_092_5944:: ; address name
     db $F8, $0C, $1B, $60 ; entry 0
     db $F8, $14, $1B, $00 ; entry 1
     db $D0, $E4, $1B, $60 ; entry 2
@@ -2298,7 +2298,7 @@ Data_092_5944:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 14 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame14::
-Data_092_5975:: ; heuristic: meta-sprite frame; C0
+Data_092_5975:: ; address name
     db $D0, $EC, $1C, $00 ; entry 0
     db $D0, $E4, $1C, $60 ; entry 1
     db $D8, $F4, $1C, $00 ; entry 2
@@ -2316,7 +2316,7 @@ Data_092_5975:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 15 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame15::
-Data_092_59A6:: ; heuristic: meta-sprite frame; C0
+Data_092_59A6:: ; address name
     db $F8, $08, $1B, $60 ; entry 0
     db $D0, $E0, $1B, $60 ; entry 1
     db $D8, $E8, $1B, $60 ; entry 2
@@ -2340,7 +2340,7 @@ Data_092_59A6:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 16 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame16::
-Data_092_59EF:: ; heuristic: meta-sprite frame; C0
+Data_092_59EF:: ; address name
     db $F0, $0C, $1D, $00 ; entry 0
     db $D0, $F4, $1C, $00 ; entry 1
     db $D8, $FC, $1C, $00 ; entry 2
@@ -2370,7 +2370,7 @@ Data_092_59EF:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 17 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame17::
-Data_092_5A50:: ; heuristic: meta-sprite frame; C0
+Data_092_5A50:: ; address name
     db $D0, $F0, $1D, $00 ; entry 0
     db $D0, $F8, $1B, $00 ; entry 1
     db $D0, $E0, $1D, $00 ; entry 2
@@ -2406,7 +2406,7 @@ Data_092_5A50:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 18 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame18::
-Data_092_5AC9:: ; heuristic: meta-sprite frame; C0
+Data_092_5AC9:: ; address name
     db $D0, $F4, $1D, $00 ; entry 0
     db $D0, $E4, $1D, $00 ; entry 1
     db $D0, $EC, $1D, $00 ; entry 2
@@ -2448,7 +2448,7 @@ Data_092_5AC9:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 19 of MetaSprites92_4024Set36; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set36Frame19::
-Data_092_5B5A:: ; heuristic: meta-sprite frame; C0
+Data_092_5B5A:: ; address name
     db $D0, $F4, $1D, $00 ; entry 0
     db $D0, $E4, $1D, $00 ; entry 1
     db $D0, $EC, $1D, $00 ; entry 2
@@ -2495,7 +2495,7 @@ MetaSprites92_4024Set36Frame20::
 ; E-0147 (derived: meta-sprite set 55 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set37::
-Data_092_5BEC:: ; heuristic: meta-sprite set; C0
+Data_092_5BEC:: ; address name
     dw MetaSprites92_4024Set37Frame0 ; entry 0
     dw MetaSprites92_4024Set37Frame1 ; entry 1
     dw MetaSprites92_4024Set37Frame2 ; entry 2
@@ -2532,7 +2532,7 @@ Data_092_5BEC:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame0::
-Data_092_5C2C:: ; heuristic: meta-sprite frame; C0
+Data_092_5C2C:: ; address name
     db $D8, $FC, $00, $10 ; entry 0
     db $D0, $FC, $01, $10 ; entry 1
     db $80 ; end
@@ -2540,7 +2540,7 @@ Data_092_5C2C:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame1::
-Data_092_5C35:: ; heuristic: meta-sprite frame; C0
+Data_092_5C35:: ; address name
     db $E8, $FC, $00, $10 ; entry 0
     db $E0, $FC, $01, $10 ; entry 1
     db $D0, $FC, $03, $10 ; entry 2
@@ -2550,7 +2550,7 @@ Data_092_5C35:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame2::
-Data_092_5C46:: ; heuristic: meta-sprite frame; C0
+Data_092_5C46:: ; address name
     db $F8, $FC, $00, $10 ; entry 0
     db $F0, $FC, $01, $10 ; entry 1
     db $E0, $FC, $03, $10 ; entry 2
@@ -2564,7 +2564,7 @@ Data_092_5C46:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame3::
-Data_092_5C67:: ; heuristic: meta-sprite frame; C0
+Data_092_5C67:: ; address name
     db $D0, $FC, $05, $10 ; entry 0
     db $F8, $FC, $03, $10 ; entry 1
     db $F0, $FC, $04, $10 ; entry 2
@@ -2580,7 +2580,7 @@ Data_092_5C67:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame4::
-Data_092_5C90:: ; heuristic: meta-sprite frame; C0
+Data_092_5C90:: ; address name
     db $F8, $FC, $0C, $10 ; entry 0
     db $F0, $FC, $0C, $10 ; entry 1
     db $E8, $FC, $0C, $10 ; entry 2
@@ -2604,7 +2604,7 @@ Data_092_5C90:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame5::
-Data_092_5CD9:: ; heuristic: meta-sprite frame; C0
+Data_092_5CD9:: ; address name
     db $F0, $03, $08, $10 ; entry 0
     db $F0, $0B, $09, $10 ; entry 1
     db $F0, $F4, $08, $30 ; entry 2
@@ -2628,7 +2628,7 @@ Data_092_5CD9:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame6::
-Data_092_5D22:: ; heuristic: meta-sprite frame; C0
+Data_092_5D22:: ; address name
     db $F8, $FB, $0C, $30 ; entry 0
     db $F0, $FB, $0C, $30 ; entry 1
     db $E8, $FB, $0C, $30 ; entry 2
@@ -2652,7 +2652,7 @@ Data_092_5D22:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame7::
-Data_092_5D6B:: ; heuristic: meta-sprite frame; C0
+Data_092_5D6B:: ; address name
     db $F8, $20, $18, $30 ; entry 0
     db $E8, $1A, $17, $30 ; entry 1
     db $EC, $10, $19, $10 ; entry 2
@@ -2676,7 +2676,7 @@ Data_092_5D6B:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame8::
-Data_092_5DB4:: ; heuristic: meta-sprite frame; C0
+Data_092_5DB4:: ; address name
     db $F0, $FB, $0D, $30 ; entry 0
     db $E8, $FB, $0D, $30 ; entry 1
     db $E0, $FB, $0D, $30 ; entry 2
@@ -2708,7 +2708,7 @@ Data_092_5DB4:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame9::
-Data_092_5E1D:: ; heuristic: meta-sprite frame; C0
+Data_092_5E1D:: ; address name
     db $E8, $E1, $10, $10 ; entry 0
     db $E8, $E9, $11, $10 ; entry 1
     db $E8, $F1, $12, $10 ; entry 2
@@ -2742,7 +2742,7 @@ Data_092_5E1D:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame10::
-Data_092_5E8E:: ; heuristic: meta-sprite frame; C0
+Data_092_5E8E:: ; address name
     db $E8, $DE, $10, $10 ; entry 0
     db $E8, $E6, $11, $10 ; entry 1
     db $E8, $EE, $12, $10 ; entry 2
@@ -2774,7 +2774,7 @@ Data_092_5E8E:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame11::
-Data_092_5EF7:: ; heuristic: meta-sprite frame; C0
+Data_092_5EF7:: ; address name
     db $F0, $D6, $10, $10 ; entry 0
     db $F0, $DE, $11, $10 ; entry 1
     db $F0, $E6, $12, $10 ; entry 2
@@ -2802,7 +2802,7 @@ Data_092_5EF7:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 12 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame12::
-Data_092_5F50:: ; heuristic: meta-sprite frame; C0
+Data_092_5F50:: ; address name
     db $F8, $26, $0E, $30 ; entry 0
     db $F8, $1E, $0F, $30 ; entry 1
     db $F8, $D2, $0E, $10 ; entry 2
@@ -2826,7 +2826,7 @@ Data_092_5F50:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 13 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame13::
-Data_092_5F99:: ; heuristic: meta-sprite frame; C0
+Data_092_5F99:: ; address name
     db $F0, $40, $22, $30 ; entry 0
     db $F0, $38, $23, $30 ; entry 1
     db $F0, $30, $24, $30 ; entry 2
@@ -2850,7 +2850,7 @@ Data_092_5F99:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 14 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame14::
-Data_092_5FE2:: ; heuristic: meta-sprite frame; C0
+Data_092_5FE2:: ; address name
     db $F8, $48, $22, $30 ; entry 0
     db $F8, $40, $23, $30 ; entry 1
     db $F8, $38, $24, $30 ; entry 2
@@ -2872,7 +2872,7 @@ Data_092_5FE2:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 15 of MetaSprites92_4024Set37; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set37Frame15::
-Data_092_6023:: ; heuristic: meta-sprite frame; C0
+Data_092_6023:: ; address name
     db $F8, $48, $21, $30 ; entry 0
     db $F8, $B0, $21, $10 ; entry 1
     db $F8, $20, $1F, $70 ; entry 2
@@ -2887,7 +2887,7 @@ MetaSprites92_4024Set37Frame16::
 ; E-0147 (derived: meta-sprite set 56 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set38::
-Data_092_6035:: ; heuristic: meta-sprite set; C0
+Data_092_6035:: ; address name
     dw MetaSprites92_4024Set38Frame0 ; entry 0
     dw MetaSprites92_4024Set38Frame1 ; entry 1
     dw MetaSprites92_4024Set38Frame2 ; entry 2
@@ -2924,7 +2924,7 @@ Data_092_6035:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame0::
-Data_092_6075:: ; heuristic: meta-sprite frame; C0
+Data_092_6075:: ; address name
     db $F0, $10, $00, $10 ; entry 0
     db $F0, $18, $01, $10 ; entry 1
     db $F0, $20, $02, $10 ; entry 2
@@ -2938,7 +2938,7 @@ Data_092_6075:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame1::
-Data_092_6096:: ; heuristic: meta-sprite frame; C0
+Data_092_6096:: ; address name
     db $E8, $00, $00, $10 ; entry 0
     db $E8, $08, $01, $10 ; entry 1
     db $E8, $10, $02, $10 ; entry 2
@@ -2956,7 +2956,7 @@ Data_092_6096:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame2::
-Data_092_60C7:: ; heuristic: meta-sprite frame; C0
+Data_092_60C7:: ; address name
     db $E0, $08, $03, $10 ; entry 0
     db $E8, $08, $06, $10 ; entry 1
     db $E8, $10, $07, $10 ; entry 2
@@ -2992,7 +2992,7 @@ Data_092_60C7:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame3::
-Data_092_6140:: ; heuristic: meta-sprite frame; C0
+Data_092_6140:: ; address name
     db $E0, $F0, $03, $30 ; entry 0
     db $E8, $F0, $06, $30 ; entry 1
     db $F0, $F8, $08, $30 ; entry 2
@@ -3032,7 +3032,7 @@ Data_092_6140:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame4::
-Data_092_61C9:: ; heuristic: meta-sprite frame; C0
+Data_092_61C9:: ; address name
     db $D0, $D0, $00, $10 ; entry 0
     db $D0, $D8, $01, $10 ; entry 1
     db $D0, $E0, $02, $10 ; entry 2
@@ -3075,7 +3075,7 @@ Data_092_61C9:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame5::
-Data_092_625E:: ; heuristic: meta-sprite frame; C0
+Data_092_625E:: ; address name
     db $D0, $C0, $08, $10 ; entry 0
     db $D0, $C8, $09, $10 ; entry 1
     db $D0, $28, $00, $30 ; entry 2
@@ -3121,7 +3121,7 @@ Data_092_625E:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame6::
-Data_092_62FF:: ; heuristic: meta-sprite frame; C0
+Data_092_62FF:: ; address name
     db $F0, $F0, $1B, $50 ; entry 0
     db $F0, $F8, $1C, $50 ; entry 1
     db $E8, $F0, $1E, $50 ; entry 2
@@ -3143,7 +3143,7 @@ Data_092_62FF:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame7::
-Data_092_6340:: ; heuristic: meta-sprite frame; C0
+Data_092_6340:: ; address name
     db $D0, $E8, $1B, $10 ; entry 0
     db $D0, $F0, $1C, $10 ; entry 1
     db $D0, $F8, $1D, $10 ; entry 2
@@ -3185,7 +3185,7 @@ Data_092_6340:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame8::
-Data_092_63D1:: ; heuristic: meta-sprite frame; C0
+Data_092_63D1:: ; address name
     db $D0, $28, $1B, $30 ; entry 0
     db $D0, $20, $1C, $30 ; entry 1
     db $D8, $28, $1E, $30 ; entry 2
@@ -3227,7 +3227,7 @@ Data_092_63D1:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame9::
-Data_092_6462:: ; heuristic: meta-sprite frame; C0
+Data_092_6462:: ; address name
     db $D0, $40, $1B, $30 ; entry 0
     db $D0, $38, $1C, $30 ; entry 1
     db $D8, $40, $1E, $30 ; entry 2
@@ -3273,7 +3273,7 @@ Data_092_6462:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame10::
-Data_092_6503:: ; heuristic: meta-sprite frame; C0
+Data_092_6503:: ; address name
     db $D0, $D8, $20, $10 ; entry 0
     db $D0, $E0, $21, $10 ; entry 1
     db $D0, $E8, $22, $10 ; entry 2
@@ -3294,7 +3294,7 @@ Data_092_6503:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame11::
-Data_092_6540:: ; heuristic: meta-sprite frame; C0
+Data_092_6540:: ; address name
     db $D0, $20, $20, $30 ; entry 0
     db $D0, $18, $21, $30 ; entry 1
     db $D0, $10, $22, $30 ; entry 2
@@ -3315,7 +3315,7 @@ Data_092_6540:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 12 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame12::
-Data_092_657D:: ; heuristic: meta-sprite frame; C0
+Data_092_657D:: ; address name
     db $D0, $C4, $25, $10 ; entry 0
     db $D0, $CC, $26, $10 ; entry 1
     db $D0, $D4, $27, $10 ; entry 2
@@ -3348,7 +3348,7 @@ Data_092_657D:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 13 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame13::
-Data_092_65EA:: ; heuristic: meta-sprite frame; C0
+Data_092_65EA:: ; address name
     db $D0, $34, $25, $30 ; entry 0
     db $D0, $2C, $26, $30 ; entry 1
     db $D0, $24, $27, $30 ; entry 2
@@ -3381,7 +3381,7 @@ Data_092_65EA:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 14 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame14::
-Data_092_6657:: ; heuristic: meta-sprite frame; C0
+Data_092_6657:: ; address name
     db $D0, $D8, $23, $10 ; entry 0
     db $D0, $E0, $24, $10 ; entry 1
     db $D8, $E0, $20, $10 ; entry 2
@@ -3402,7 +3402,7 @@ Data_092_6657:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 15 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame15::
-Data_092_6694:: ; heuristic: meta-sprite frame; C0
+Data_092_6694:: ; address name
     db $D0, $20, $23, $30 ; entry 0
     db $D0, $18, $24, $30 ; entry 1
     db $D8, $18, $20, $30 ; entry 2
@@ -3423,7 +3423,7 @@ Data_092_6694:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 16 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame16::
-Data_092_66D1:: ; heuristic: meta-sprite frame; C0
+Data_092_66D1:: ; address name
     db $D0, $C0, $2B, $10 ; entry 0
     db $D0, $C8, $2C, $10 ; entry 1
     db $D0, $F0, $2F, $10 ; entry 2
@@ -3467,7 +3467,7 @@ Data_092_66D1:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 17 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame17::
-Data_092_676A:: ; heuristic: meta-sprite frame; C0
+Data_092_676A:: ; address name
     db $D0, $38, $2B, $30 ; entry 0
     db $D0, $30, $2C, $30 ; entry 1
     db $D0, $08, $2F, $30 ; entry 2
@@ -3511,7 +3511,7 @@ Data_092_676A:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 18 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame18::
-Data_092_6803:: ; heuristic: meta-sprite frame; C0
+Data_092_6803:: ; address name
     db $F0, $0C, $0F, $10 ; entry 0
     db $F0, $14, $10, $10 ; entry 1
     db $F0, $1C, $11, $10 ; entry 2
@@ -3535,7 +3535,7 @@ Data_092_6803:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 19 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame19::
-Data_092_684C:: ; heuristic: meta-sprite frame; C0
+Data_092_684C:: ; address name
     db $F0, $EC, $0F, $30 ; entry 0
     db $F0, $E4, $10, $30 ; entry 1
     db $F0, $DC, $11, $30 ; entry 2
@@ -3559,7 +3559,7 @@ Data_092_684C:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 20 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame20::
-Data_092_6895:: ; heuristic: meta-sprite frame; C0
+Data_092_6895:: ; address name
     db $E8, $FC, $0F, $10 ; entry 0
     db $E8, $04, $10, $10 ; entry 1
     db $E8, $0C, $11, $10 ; entry 2
@@ -3583,7 +3583,7 @@ Data_092_6895:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 21 of MetaSprites92_4024Set38; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set38Frame21::
-Data_092_68DE:: ; heuristic: meta-sprite frame; C0
+Data_092_68DE:: ; address name
     db $E8, $FC, $0F, $30 ; entry 0
     db $E8, $F4, $10, $30 ; entry 1
     db $E8, $EC, $11, $30 ; entry 2
@@ -3612,7 +3612,7 @@ MetaSprites92_4024Set38Frame22::
 ; E-0147 (derived: meta-sprite set 57 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set39::
-Data_092_6928:: ; heuristic: meta-sprite set; C0
+Data_092_6928:: ; address name
     dw MetaSprites92_4024Set39Frame0 ; entry 0
     dw MetaSprites92_4024Set39Frame1 ; entry 1
     dw MetaSprites92_4024Set39Frame2 ; entry 2
@@ -3649,7 +3649,7 @@ Data_092_6928:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame0::
-Data_092_6968:: ; heuristic: meta-sprite frame; C0
+Data_092_6968:: ; address name
     db $F8, $C0, $00, $10 ; entry 0
     db $F0, $C0, $00, $10 ; entry 1
     db $E8, $C0, $00, $10 ; entry 2
@@ -3678,7 +3678,7 @@ Data_092_6968:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame1::
-Data_092_69C5:: ; heuristic: meta-sprite frame; C0
+Data_092_69C5:: ; address name
     db $E8, $C0, $01, $10 ; entry 0
     db $E0, $C0, $01, $10 ; entry 1
     db $D0, $C0, $01, $10 ; entry 2
@@ -3720,7 +3720,7 @@ Data_092_69C5:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame2::
-Data_092_6A56:: ; heuristic: meta-sprite frame; C0
+Data_092_6A56:: ; address name
     db $F0, $C8, $02, $10 ; entry 0
     db $E8, $C8, $02, $10 ; entry 1
     db $E0, $C8, $02, $10 ; entry 2
@@ -3762,7 +3762,7 @@ Data_092_6A56:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame3::
-Data_092_6AE7:: ; heuristic: meta-sprite frame; C0
+Data_092_6AE7:: ; address name
     db $F8, $BC, $02, $10 ; entry 0
     db $F0, $BC, $02, $10 ; entry 1
     db $E8, $BC, $02, $10 ; entry 2
@@ -3804,7 +3804,7 @@ Data_092_6AE7:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame4::
-Data_092_6B78:: ; heuristic: meta-sprite frame; C0
+Data_092_6B78:: ; address name
     db $F8, $26, $03, $10 ; entry 0
     db $F0, $26, $03, $10 ; entry 1
     db $E8, $26, $03, $10 ; entry 2
@@ -3846,7 +3846,7 @@ Data_092_6B78:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame5::
-Data_092_6C09:: ; heuristic: meta-sprite frame; C0
+Data_092_6C09:: ; address name
     db $F8, $D0, $03, $10 ; entry 0
     db $F0, $D0, $03, $10 ; entry 1
     db $E8, $D0, $03, $10 ; entry 2
@@ -3888,7 +3888,7 @@ Data_092_6C09:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame6::
-Data_092_6C9A:: ; heuristic: meta-sprite frame; C0
+Data_092_6C9A:: ; address name
     db $F8, $3C, $03, $30 ; entry 0
     db $F0, $3C, $03, $30 ; entry 1
     db $E8, $3C, $03, $30 ; entry 2
@@ -3930,7 +3930,7 @@ Data_092_6C9A:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame7::
-Data_092_6D2B:: ; heuristic: meta-sprite frame; C0
+Data_092_6D2B:: ; address name
     db $F8, $20, $03, $30 ; entry 0
     db $F0, $20, $03, $30 ; entry 1
     db $E8, $20, $03, $30 ; entry 2
@@ -3972,7 +3972,7 @@ Data_092_6D2B:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame8::
-Data_092_6DBC:: ; heuristic: meta-sprite frame; C0
+Data_092_6DBC:: ; address name
     db $F8, $E8, $03, $10 ; entry 0
     db $F0, $E8, $03, $10 ; entry 1
     db $E8, $E8, $03, $10 ; entry 2
@@ -4014,7 +4014,7 @@ Data_092_6DBC:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame9::
-Data_092_6E4D:: ; heuristic: meta-sprite frame; C0
+Data_092_6E4D:: ; address name
     db $E6, $04, $05, $10 ; entry 0
     db $E2, $F4, $05, $10 ; entry 1
     db $80 ; end
@@ -4022,7 +4022,7 @@ Data_092_6E4D:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame10::
-Data_092_6E56:: ; heuristic: meta-sprite frame; C0
+Data_092_6E56:: ; address name
     db $E2, $01, $08, $10 ; entry 0
     db $EA, $01, $09, $10 ; entry 1
     db $E2, $08, $08, $30 ; entry 2
@@ -4038,7 +4038,7 @@ Data_092_6E56:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame11::
-Data_092_6E7F:: ; heuristic: meta-sprite frame; C0
+Data_092_6E7F:: ; address name
     db $EA, $24, $05, $10 ; entry 0
     db $DE, $D4, $05, $10 ; entry 1
     db $DC, $11, $0A, $10 ; entry 2
@@ -4054,7 +4054,7 @@ Data_092_6E7F:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 12 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame12::
-Data_092_6EA8:: ; heuristic: meta-sprite frame; C0
+Data_092_6EA8:: ; address name
     db $EE, $21, $08, $50 ; entry 0
     db $E6, $21, $09, $50 ; entry 1
     db $EE, $28, $08, $70 ; entry 2
@@ -4070,7 +4070,7 @@ Data_092_6EA8:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 13 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame13::
-Data_092_6ED1:: ; heuristic: meta-sprite frame; C0
+Data_092_6ED1:: ; address name
     db $EE, $44, $05, $10 ; entry 0
     db $DA, $B4, $05, $10 ; entry 1
     db $D8, $31, $0A, $10 ; entry 2
@@ -4086,7 +4086,7 @@ Data_092_6ED1:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 14 of MetaSprites92_4024Set39; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set39Frame14::
-Data_092_6EFA:: ; heuristic: meta-sprite frame; C0
+Data_092_6EFA:: ; address name
     db $F2, $41, $08, $50 ; entry 0
     db $EA, $41, $09, $50 ; entry 1
     db $F2, $48, $08, $70 ; entry 2
@@ -4105,7 +4105,7 @@ MetaSprites92_4024Set39Frame15::
 ; E-0147 (derived: meta-sprite set 58 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set3A::
-Data_092_6F1C:: ; heuristic: meta-sprite set; C0
+Data_092_6F1C:: ; address name
     dw MetaSprites92_4024Set3AFrame0 ; entry 0
     dw MetaSprites92_4024Set3AFrame1 ; entry 1
     dw MetaSprites92_4024Set3AFrame2 ; entry 2
@@ -4142,14 +4142,14 @@ Data_092_6F1C:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame0::
-Data_092_6F5C:: ; heuristic: meta-sprite frame; C0
+Data_092_6F5C:: ; address name
     db $E4, $FC, $05, $10 ; entry 0
     db $80 ; end
 
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame1::
-Data_092_6F61:: ; heuristic: meta-sprite frame; C0
+Data_092_6F61:: ; address name
     db $E0, $F8, $06, $10 ; entry 0
     db $E0, $00, $06, $30 ; entry 1
     db $E8, $F8, $06, $50 ; entry 2
@@ -4160,7 +4160,7 @@ Data_092_6F61:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame2::
-Data_092_6F76:: ; heuristic: meta-sprite frame; C0
+Data_092_6F76:: ; address name
     db $E0, $F8, $07, $10 ; entry 0
     db $E0, $00, $07, $30 ; entry 1
     db $E8, $F8, $07, $50 ; entry 2
@@ -4176,7 +4176,7 @@ Data_092_6F76:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame3::
-Data_092_6F9F:: ; heuristic: meta-sprite frame; C0
+Data_092_6F9F:: ; address name
     db $E4, $F4, $0E, $10 ; entry 0
     db $E4, $FC, $0F, $10 ; entry 1
     db $DC, $F4, $0C, $10 ; entry 2
@@ -4204,7 +4204,7 @@ Data_092_6F9F:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame4::
-Data_092_6FF8:: ; heuristic: meta-sprite frame; C0
+Data_092_6FF8:: ; address name
     db $E0, $F0, $11, $10 ; entry 0
     db $E0, $F8, $12, $10 ; entry 1
     db $E0, $00, $13, $10 ; entry 2
@@ -4242,7 +4242,7 @@ Data_092_6FF8:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame5::
-Data_092_7079:: ; heuristic: meta-sprite frame; C0
+Data_092_7079:: ; address name
     db $E8, $E0, $11, $10 ; entry 0
     db $E8, $E8, $12, $10 ; entry 1
     db $E8, $F0, $13, $10 ; entry 2
@@ -4277,7 +4277,7 @@ Data_092_7079:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame6::
-Data_092_70EE:: ; heuristic: meta-sprite frame; C0
+Data_092_70EE:: ; address name
     db $E0, $00, $11, $50 ; entry 0
     db $E0, $08, $12, $50 ; entry 1
     db $E0, $10, $13, $50 ; entry 2
@@ -4307,7 +4307,7 @@ Data_092_70EE:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame7::
-Data_092_714F:: ; heuristic: meta-sprite frame; C0
+Data_092_714F:: ; address name
     db $D4, $D8, $0E, $10 ; entry 0
     db $D4, $E0, $0F, $10 ; entry 1
     db $D4, $E8, $0E, $30 ; entry 2
@@ -4339,7 +4339,7 @@ Data_092_714F:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame8::
-Data_092_71B8:: ; heuristic: meta-sprite frame; C0
+Data_092_71B8:: ; address name
     db $D0, $EC, $11, $30 ; entry 0
     db $D0, $E4, $12, $30 ; entry 1
     db $D0, $DC, $13, $30 ; entry 2
@@ -4377,7 +4377,7 @@ Data_092_71B8:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame9::
-Data_092_7239:: ; heuristic: meta-sprite frame; C0
+Data_092_7239:: ; address name
     db $EC, $CC, $0E, $10 ; entry 0
     db $EC, $D4, $0F, $10 ; entry 1
     db $E4, $CC, $0C, $10 ; entry 2
@@ -4415,7 +4415,7 @@ Data_092_7239:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame10::
-Data_092_72BA:: ; heuristic: meta-sprite frame; C0
+Data_092_72BA:: ; address name
     db $E8, $C8, $11, $10 ; entry 0
     db $E8, $D0, $12, $10 ; entry 1
     db $E8, $D8, $13, $10 ; entry 2
@@ -4457,7 +4457,7 @@ Data_092_72BA:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame11::
-Data_092_734B:: ; heuristic: meta-sprite frame; C0
+Data_092_734B:: ; address name
     db $DC, $B8, $0E, $10 ; entry 0
     db $DC, $C0, $0F, $10 ; entry 1
     db $D4, $B8, $0C, $10 ; entry 2
@@ -4494,7 +4494,7 @@ Data_092_734B:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 12 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame12::
-Data_092_73C8:: ; heuristic: meta-sprite frame; C0
+Data_092_73C8:: ; address name
     db $D8, $CC, $11, $30 ; entry 0
     db $D8, $C4, $12, $30 ; entry 1
     db $D8, $BC, $13, $30 ; entry 2
@@ -4528,7 +4528,7 @@ Data_092_73C8:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 13 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame13::
-Data_092_7439:: ; heuristic: meta-sprite frame; C0
+Data_092_7439:: ; address name
     db $F0, $AC, $0F, $10 ; entry 0
     db $E8, $AC, $0D, $10 ; entry 1
     db $F0, $B4, $0E, $30 ; entry 2
@@ -4560,7 +4560,7 @@ Data_092_7439:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 14 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame14::
-Data_092_74A2:: ; heuristic: meta-sprite frame; C0
+Data_092_74A2:: ; address name
     db $EC, $B0, $13, $10 ; entry 0
     db $EC, $B8, $14, $10 ; entry 1
     db $F4, $B8, $11, $70 ; entry 2
@@ -4581,7 +4581,7 @@ Data_092_74A2:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 15 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame15::
-Data_092_74DF:: ; heuristic: meta-sprite frame; C0
+Data_092_74DF:: ; address name
     db $DC, $48, $13, $70 ; entry 0
     db $DC, $40, $14, $70 ; entry 1
     db $D4, $40, $11, $10 ; entry 2
@@ -4592,14 +4592,14 @@ Data_092_74DF:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 16 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame16::
-Data_092_74F4:: ; heuristic: meta-sprite frame; C0
+Data_092_74F4:: ; address name
     db $DC, $0C, $05, $10 ; entry 0
     db $80 ; end
 
 ; E-0147 (derived: frame 17 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame17::
-Data_092_74F9:: ; heuristic: meta-sprite frame; C0
+Data_092_74F9:: ; address name
     db $E0, $10, $07, $70 ; entry 0
     db $E0, $08, $07, $50 ; entry 1
     db $D8, $08, $07, $10 ; entry 2
@@ -4610,7 +4610,7 @@ Data_092_74F9:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 18 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame18::
-Data_092_750E:: ; heuristic: meta-sprite frame; C0
+Data_092_750E:: ; address name
     db $E8, $00, $17, $50 ; entry 0
     db $E8, $08, $18, $50 ; entry 1
     db $E8, $18, $17, $70 ; entry 2
@@ -4634,7 +4634,7 @@ Data_092_750E:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 19 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame19::
-Data_092_7557:: ; heuristic: meta-sprite frame; C0
+Data_092_7557:: ; address name
     db $F0, $00, $1B, $50 ; entry 0
     db $F0, $08, $1C, $50 ; entry 1
     db $E8, $F8, $1D, $50 ; entry 2
@@ -4677,7 +4677,7 @@ Data_092_7557:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 20 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame20::
-Data_092_75EC:: ; heuristic: meta-sprite frame; C0
+Data_092_75EC:: ; address name
     db $E8, $D8, $1B, $10 ; entry 0
     db $E8, $E0, $1C, $10 ; entry 1
     db $F0, $D0, $1D, $10 ; entry 2
@@ -4704,7 +4704,7 @@ Data_092_75EC:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 21 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame21::
-Data_092_7641:: ; heuristic: meta-sprite frame; C0
+Data_092_7641:: ; address name
     db $E8, $18, $17, $10 ; entry 0
     db $E8, $20, $18, $10 ; entry 1
     db $F0, $18, $19, $10 ; entry 2
@@ -4726,7 +4726,7 @@ Data_092_7641:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 22 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame22::
-Data_092_7682:: ; heuristic: meta-sprite frame; C0
+Data_092_7682:: ; address name
     db $E0, $18, $1B, $10 ; entry 0
     db $E0, $20, $1C, $10 ; entry 1
     db $E8, $10, $1D, $10 ; entry 2
@@ -4771,7 +4771,7 @@ Data_092_7682:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 23 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame23::
-Data_092_771F:: ; heuristic: meta-sprite frame; C0
+Data_092_771F:: ; address name
     db $F0, $C8, $1B, $50 ; entry 0
     db $F0, $D0, $1C, $50 ; entry 1
     db $E8, $C0, $1D, $50 ; entry 2
@@ -4810,7 +4810,7 @@ Data_092_771F:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 24 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame24::
-Data_092_77A4:: ; heuristic: meta-sprite frame; C0
+Data_092_77A4:: ; address name
     db $E0, $30, $17, $50 ; entry 0
     db $E0, $38, $18, $50 ; entry 1
     db $D8, $30, $19, $50 ; entry 2
@@ -4832,7 +4832,7 @@ Data_092_77A4:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 25 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame25::
-Data_092_77E5:: ; heuristic: meta-sprite frame; C0
+Data_092_77E5:: ; address name
     db $D8, $38, $1A, $10 ; entry 0
     db $D0, $38, $1A, $10 ; entry 1
     db $E8, $30, $1B, $50 ; entry 2
@@ -4873,7 +4873,7 @@ Data_092_77E5:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 26 of MetaSprites92_4024Set3A; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3AFrame26::
-Data_092_7872:: ; heuristic: meta-sprite frame; C0
+Data_092_7872:: ; address name
     db $E8, $C0, $1A, $70 ; entry 0
     db $D8, $C8, $1B, $30 ; entry 1
     db $D8, $C0, $1C, $30 ; entry 2
@@ -4908,7 +4908,7 @@ MetaSprites92_4024Set3AFrame27::
 ; E-0147 (derived: meta-sprite set 59 of MetaSprites92_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
 MetaSprites92_4024Set3B::
-Data_092_78D4:: ; heuristic: meta-sprite set; C0
+Data_092_78D4:: ; address name
     dw MetaSprites92_4024Set3BFrame0 ; entry 0
     dw MetaSprites92_4024Set3BFrame1 ; entry 1
     dw MetaSprites92_4024Set3BFrame2 ; entry 2
@@ -4945,7 +4945,7 @@ Data_092_78D4:: ; heuristic: meta-sprite set; C0
 ; E-0147 (derived: frame 0 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame0::
-Data_092_7914:: ; heuristic: meta-sprite frame; C0
+Data_092_7914:: ; address name
     db $E2, $B8, $00, $20 ; entry 0
     db $E0, $B0, $01, $20 ; entry 1
     db $E8, $B0, $02, $20 ; entry 2
@@ -4955,7 +4955,7 @@ Data_092_7914:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 1 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame1::
-Data_092_7925:: ; heuristic: meta-sprite frame; C0
+Data_092_7925:: ; address name
     db $E0, $B8, $02, $60 ; entry 0
     db $E0, $B0, $03, $60 ; entry 1
     db $E8, $D4, $08, $40 ; entry 2
@@ -4969,7 +4969,7 @@ Data_092_7925:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 2 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame2::
-Data_092_7946:: ; heuristic: meta-sprite frame; C0
+Data_092_7946:: ; address name
     db $E0, $B0, $14, $00 ; entry 0
     db $E0, $B8, $15, $00 ; entry 1
     db $E0, $C0, $16, $00 ; entry 2
@@ -4992,7 +4992,7 @@ Data_092_7946:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 3 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame3::
-Data_092_798B:: ; heuristic: meta-sprite frame; C0
+Data_092_798B:: ; address name
     db $E4, $F0, $04, $60 ; entry 0
     db $E2, $F8, $03, $60 ; entry 1
     db $E2, $00, $02, $60 ; entry 2
@@ -5010,7 +5010,7 @@ Data_092_798B:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 4 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame4::
-Data_092_79BC:: ; heuristic: meta-sprite frame; C0
+Data_092_79BC:: ; address name
     db $E2, $F2, $00, $00 ; entry 0
     db $E0, $FA, $01, $00 ; entry 1
     db $E8, $FA, $02, $00 ; entry 2
@@ -5028,7 +5028,7 @@ Data_092_79BC:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 5 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame5::
-Data_092_79ED:: ; heuristic: meta-sprite frame; C0
+Data_092_79ED:: ; address name
     db $E3, $28, $19, $20 ; entry 0
     db $E3, $18, $1B, $20 ; entry 1
     db $EB, $18, $1F, $20 ; entry 2
@@ -5045,7 +5045,7 @@ Data_092_79ED:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 6 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame6::
-Data_092_7A1A:: ; heuristic: meta-sprite frame; C0
+Data_092_7A1A:: ; address name
     db $DA, $31, $01, $00 ; entry 0
     db $E2, $31, $02, $00 ; entry 1
     db $DE, $29, $16, $20 ; entry 2
@@ -5063,7 +5063,7 @@ Data_092_7A1A:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 7 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame7::
-Data_092_7A4B:: ; heuristic: meta-sprite frame; C0
+Data_092_7A4B:: ; address name
     db $E2, $48, $0C, $00 ; entry 0
     db $E4, $40, $04, $40 ; entry 1
     db $E4, $38, $02, $00 ; entry 2
@@ -5084,7 +5084,7 @@ Data_092_7A4B:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 8 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame8::
-Data_092_7A88:: ; heuristic: meta-sprite frame; C0
+Data_092_7A88:: ; address name
     db $E4, $48, $05, $40 ; entry 0
     db $E7, $40, $0C, $60 ; entry 1
     db $E6, $38, $02, $40 ; entry 2
@@ -5108,7 +5108,7 @@ Data_092_7A88:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 9 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame9::
-Data_092_7AD1:: ; heuristic: meta-sprite frame; C0
+Data_092_7AD1:: ; address name
     db $E1, $48, $12, $00 ; entry 0
     db $E5, $40, $20, $60 ; entry 1
     db $D8, $F0, $28, $00 ; entry 2
@@ -5132,7 +5132,7 @@ Data_092_7AD1:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 10 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame10::
-Data_092_7B1A:: ; heuristic: meta-sprite frame; C0
+Data_092_7B1A:: ; address name
     db $E0, $F8, $21, $00 ; entry 0
     db $E7, $F8, $21, $40 ; entry 1
     db $E0, $FF, $21, $20 ; entry 2
@@ -5142,7 +5142,7 @@ Data_092_7B1A:: ; heuristic: meta-sprite frame; C0
 ; E-0147 (derived: frame 11 of MetaSprites92_4024Set3B; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
 MetaSprites92_4024Set3BFrame11::
-Data_092_7B2B:: ; heuristic: meta-sprite frame; C0
+Data_092_7B2B:: ; address name
     db $E4, $FC, $0F, $00 ; entry 0
     db $80 ; end
 

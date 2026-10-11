@@ -443,7 +443,7 @@ Jump_061_4261:: ; address name
     sla a
     add a, c
     sla a
-    ld hl, Data_061_42DD
+    ld hl, MapType5TilesetTable
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -503,7 +503,7 @@ Jump_061_42D7::
 ; E-0140 (C1: LoadMapType5TilesetAndHeader indexes it with 6 * byte 2 of the floor's wKeyWorldFloorState entry, decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; entries 0-11 decode to 2048-byte tile sets with 15-bit palettes, entry 12 onward is not a valid record).
 ; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
 MapType5TilesetTable::
-Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_061_42DD:: ; address name
     dfar MapType5Tiles0 ; id 0
     dfar MapType5Palettes0
     dfar MapType5Tiles1 ; id 1
@@ -543,7 +543,7 @@ Jump_061_4325:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_061_4348
-    ld de, Data_06E_77E0
+    ld de, MapType5Palettes5
     ld b, $6E
     ld hl, wBGPaletteBuffer
     ld c, $40
@@ -2077,7 +2077,7 @@ Jump_061_5723::
 ; E-0139 (C1: RunWCC44Type_420D_Case00 indexes it with 6 * wKeyWorldGoalKind, decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; all 10 tile streams decode to 2048 bytes and all 10 palettes are 15-bit colours).
 ; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
 KeyWorldTilesetTable::
-Data_061_5728:: ; heuristic: start of a structured table; C0
+Data_061_5728:: ; address name
     dfar KeyWorldTiles0 ; id 0
     dfar KeyWorldPalettes0
     dfar KeyWorldTiles1 ; id 1
@@ -3658,7 +3658,7 @@ Jump_061_60BB::
 ; E-0144 (C1: LoadSpecialMapHeader and LoadMapScreenFromChunk map bank $61 and read the word $60D8 + 2 * hFFC6; every non-zero word is $61D8 + 26 * n).
 ; record: special map record ($0000 = none)
 SpecialMapTable::
-Data_061_60D8:: ; heuristic: start of a structured table; C0
+Data_061_60D8:: ; address name
     dw SpecialMapRecords ; id 0
     dw Data_061_61F2 ; id 1
     dw Data_061_620C ; id 2
@@ -3791,7 +3791,7 @@ Data_061_60D8:: ; heuristic: start of a structured table; C0
 ; E-0144 (C1: LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with LoadBGPaletteBufferFromBank and stores the five header bytes; LoadMapScreenFromChunk takes the far pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one at +$17 as the attribute array; every array decodes to 360-byte screens).
 ; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind; 9 bytes not read by these routines; screen tile-map array; its ROM bank; screen attribute-map array; its ROM bank
 SpecialMapRecords::
-Data_061_61D8:: ; heuristic: special map record; C0
+Data_061_61D8:: ; address name
     dfar SpecialMap00Tileset ; id 0
     dfar SpecialMap00Palettes
     db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80

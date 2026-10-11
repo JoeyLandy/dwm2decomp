@@ -4,7 +4,7 @@ SECTION "Bank 65", ROMX[$4000], BANK[$65]
 ; E-0139 (C1: entry 3 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer).
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes3::
-Data_065_4001:: ; heuristic: key-world BG palettes; C0
+Data_065_4001:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $026E, $3F7F, $02F3, $0188 ; entry 1
     dw $0152, $3F7F, $0218, $00C8 ; entry 2
@@ -136,7 +136,7 @@ Data_065_47D8:: ; address name
 ; E-0139 (C1: entry 7 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer).
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes7::
-Data_065_4C79:: ; heuristic: key-world BG palettes; C0
+Data_065_4C79:: ; address name
     dw $1412, $7FFF, $259F, $0063 ; entry 0
     dw $318C, $5AD6, $4631, $0000 ; entry 1
     dw $1415, $7DFF, $7C18, $2C09 ; entry 2

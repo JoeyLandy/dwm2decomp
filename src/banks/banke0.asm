@@ -2262,7 +2262,7 @@ Func_0E0_510C:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_E0_511B::
-Data_0E0_511B:: ; heuristic: start of a structured table; C0
+Data_0E0_511B:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $F5, $F6, $F7, $C3, $C3, $C3, $F8, $F9, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -2285,7 +2285,7 @@ Data_0E0_511B:: ; heuristic: start of a structured table; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_E0_5283::
-Data_0E0_5283:: ; heuristic: start of a structured table; C0
+Data_0E0_5283:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $0E, $09, $0F, $C3, $0C, $0D, $0D, $0C, $0A, $FF, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -2308,7 +2308,7 @@ Data_0E0_5283:: ; heuristic: start of a structured table; C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_E0_53EB::
-Data_0E0_53EB:: ; heuristic: start of a structured table; C0
+Data_0E0_53EB:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $09, $F0, $FF, $C3, $E0, $E1, $E2, $E3, $E4, $E5, $E6, $E7, $C3, $C3, $B7 ; id 2
@@ -3132,7 +3132,7 @@ Jump_0E0_5B16:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, Data_048_4001
+    ld de, AreaPalettes0
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -3635,7 +3635,7 @@ Jump_0E0_5E83:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, Data_048_4081
+    ld de, Map02Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -4265,7 +4265,7 @@ Jump_0E0_62A0:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $48
-    ld de, Data_048_5138
+    ld de, Map18Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -5111,12 +5111,12 @@ Jump_0E0_685B:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $94
-    ld de, Data_094_4001
+    ld de, Map19Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
     ld b, $48
-    ld de, Data_048_5138
+    ld de, Map18Palettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -5634,7 +5634,7 @@ Jump_0E0_6C2C:: ; address name
     ld a, $00
     ldh [rSVBK], a
     ld b, $49
-    ld de, Data_049_52BB
+    ld de, Map1APalettes
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -6673,7 +6673,7 @@ Jump_0E0_735E:: ; address name
     or a, a
     jr z, Jump_0E0_73A2
     ld b, $48
-    ld de, Data_048_4001
+    ld de, AreaPalettes0
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM

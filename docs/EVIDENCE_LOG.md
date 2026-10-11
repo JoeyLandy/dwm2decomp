@@ -2272,6 +2272,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Which command sets the cursor range for each menu is not traced.
 - Binary verification: build/run196 PASS, 0 differing bytes; tests OK.
 
+### E-0189 — Sound wave set and modulation rows (bank 0); operands name their tables
+
+- Kind: OBSERVATION (reading; C1) plus TOOL.
+- **SoundWaveSetTable (00:$30CC).** Jump_000_35A8 (and two other paths) clears rNR30, then reads the word at $30CC + (hSndA8Param >> 4) * 2.
+  - It adds wave number * 16 and copies 16 bytes to $FF30-$FF3F (wave RAM).
+  - The table has one entry, SoundWaveSet0 ($30CE): 16 waves of 16 bytes. Wave 0 is a sine, 1 a triangle, 2 a square, 3 a sawtooth.
+- **SoundModulationTable (00:$31CE).** Jump_000_3A94 reads the word at $31CE + (hSndA8Param & $0F) * 2. It then reads the byte at that pointer - $10 + (hSndVibratoDepth | a 4-bit phase from hSndVibratoCounter and hSndVibratoDelay).
+  - The table has one entry, SoundModulationRows0 ($31D0): 12 rows of 16 bytes, ending at the routine at $3290.
+  - How each step changes pitch or volume is not read.
+- **Bank-0 tables.** A load of an address in $0150-$3FFF that starts a declared bank-0 table now names that table from any bank. Bank 0 is always mapped there, so no bank evidence is needed.
+- **Table names in operands.** A declared or derived table's label now replaces the address name (Data_BBB_AAAA) at its start, and the address name stays as an alias.
+  - 347 operands changed, for example `ld hl, MapExitDestinationTable` and `ld hl, ArenaEncounterLists`.
+  - `ld r16, Data_*` operands went from 1,724 to 1,382.
+- Binary verification: build/run200 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

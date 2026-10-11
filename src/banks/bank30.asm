@@ -871,7 +871,7 @@ Func_030_4536:: ; address name
     ld a, [wPersonalityIndex]
     add a, a
     add a, a
-    ld hl, Data_030_5587
+    ld hl, PersonalityTacticWeights
     add_a_to_hl
     push hl
     call GetActorSlotTacticLow2
@@ -951,7 +951,7 @@ Func_030_4595:: ; address name
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
-    ld hl, Data_030_45D0
+    ld hl, AIModeRoutineTable
     call ReadBattleWordFromArray_Bank30
     call JumpToHL
     jr Jump_030_45CB
@@ -968,7 +968,7 @@ Jump_030_45CB::
 ; E-0181 (C1: AIChooseActionResolveStep and AIChooseActionForActor read the word at $45D0 + 2 * AI mode and call it: mode 0 AIRunNextChoice, modes 1-3 ScoreActionsWithAIScoreTableA, mode 4 UseAIScoreTableB).
 ; record: routine run for this AI mode (wSlotAIMode)
 AIModeRoutineTable::
-Data_030_45D0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_030_45D0:: ; address name
     dw AIRunNextChoice ; id 0
     dw ScoreActionsWithAIScoreTableA ; id 1
     dw ScoreActionsWithAIScoreTableA ; id 2
@@ -1577,7 +1577,7 @@ Jump_030_496E::
     ld hl, wAIChoiceWeights
     add_a_to_hl
     ld a, [hl]
-    ld hl, Data_030_4998
+    ld hl, AIChoiceRoutineTable
     dec a
     call ReadBattleWordFromArray_Bank30
     call JumpToHL
@@ -1593,7 +1593,7 @@ Jump_030_496E::
 ; E-0181 (C1: AIRunNextChoice reads the word at $4998 + 2 * (wAIChoiceWeights[wAIChoiceIndex] - 1) and calls it (JumpToHL); three words, and the three routines follow directly).
 ; record: AI choice routine for this wAIChoiceWeights value
 AIChoiceRoutineTable::
-Data_030_4998:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_030_4998:: ; address name
     dw AIPickRandomActionOfKind1 ; id 1
     dw AIPickRandomSkillOfKind2 ; id 2
     dw AIPickRandomSkillOfKind3 ; id 3
@@ -3166,7 +3166,7 @@ Func_030_5440:: ; address name
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
-    ld hl, Data_030_45D0
+    ld hl, AIModeRoutineTable
     call ReadBattleWordFromArray_Bank30
     call JumpToHL
     call ActorActionChoiceAddress
@@ -3364,7 +3364,7 @@ Jump_030_5586::
 ; E-0173 (C1: AddPersonalityWeightToBattleArg0 adds the byte $5587 + 4 * wPersonalityIndex + (the actor's wSlotTactic & 3) to the word wBattleArg0; 27 personality rows).
 ; record: weight added for tactic 0, 1, 2, 3
 PersonalityTacticWeights::
-Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_030_5587:: ; address name
     db $14, $14, $14, $00 ; id 0
     db $14, $14, $0F, $00 ; id 1
     db $14, $14, $05, $00 ; id 2

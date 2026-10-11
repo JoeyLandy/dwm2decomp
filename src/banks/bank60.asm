@@ -3330,7 +3330,7 @@ Jump_060_609E:: ; address name
     ld c, a
     sla a
     add a, c
-    ld de, Data_060_610D
+    ld de, KeyWorldChunkLists
     add a, e
     ld e, a
     jr nc, Jump_060_60B2
@@ -3417,7 +3417,7 @@ Func_060_60F8:: ; address name
 ; E-0146 (C1: RunRandomPatternCase_Case00/01/02 pick entry (random & $1F) of the lists at $610D, $616D and $61E5 and store the far pointer in the key-world area data; the far pointers run to $62F8 and all point at chunk groups ($61 bytes per sub-chunk)).
 ; record: chunk group in bank $67/$68; its ROM bank
 KeyWorldChunkLists::
-Data_060_610D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_610D:: ; address name
     dfar KeyWorldChunkGroup00 ; id 0
     dfar KeyWorldChunkGroup01 ; id 1
     dfar KeyWorldChunkGroup02 ; id 2

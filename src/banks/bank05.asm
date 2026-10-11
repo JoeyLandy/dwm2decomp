@@ -5044,7 +5044,7 @@ Jump_005_59F7::
     jr Jump_005_5A2D
 
 Jump_005_5A12::
-    ld hl, Data_005_5A33
+    ld hl, HealSkillMPCosts
     sub a, $16
     add_a_to_hl
     ld a, [hl]
@@ -5071,7 +5071,7 @@ Jump_005_5A30::
 ; E-0174 (C1: FailIfAllyLacksMPForHealSkill reads the byte $5A33 + (skill - $16) for skills $16-$1A an ally knows and compares it with that ally's MP; the bytes after these five decode as an untraced routine (ld a, [wBattleActor] ...) and stay data).
 ; record: MP the AI assumes this skill costs
 HealSkillMPCosts::
-Data_005_5A33:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_005_5A33:: ; address name
     db $02 ; id 22
     db $05 ; id 23
     db $07 ; id 24

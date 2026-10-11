@@ -2312,7 +2312,7 @@ Jump_085_4E61::
 ; E-0145 (C1: ScriptCommand79_Run_Case01 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes after them do not).
 ; record: frame 0 tile map (bank $93); frame 0 attribute map; frame 1 tile map; frame 1 attribute map
 ScreenAnimationTable::
-Data_085_4E7A:: ; heuristic: start of a structured table; C0
+Data_085_4E7A:: ; address name
     dw Data_093_5A91 ; id 0
     dw Data_093_6124
     dw Data_093_5B36

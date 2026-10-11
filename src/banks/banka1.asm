@@ -812,14 +812,14 @@ Jump_0A1_4592::
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, Data_07E_5AF6
+    ld de, Palettes_7E_5AF6
     ld b, $7E
     ld hl, wOBJPaletteBuffer + $8
     ld c, $10
     call CopyFromBank
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
-    ld de, Data_05D_4565
+    ld de, Palettes_5D_4565
     ld b, $5D
     ld hl, wBGPaletteBuffer
     ld c, $40
@@ -1505,7 +1505,7 @@ Jump_0A1_4954::
 ; E-0185 (C1: RunGameMode2State_Case04_Sub02_Sub01 reads the record at $497C + 4 * wGameMode2Byte44: width and height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692).
 ; record: size nibbles (width, height in screens); pointer and bank of the 25-byte-per-screen cell grid
 WorldMapScreenCellTable::
-Data_0A1_497C:: ; heuristic: start of a structured table; C0
+Data_0A1_497C:: ; address name
     db $88 ; id 0
     dfar WorldMapScreenCells0
     db $88 ; id 1
@@ -2627,19 +2627,19 @@ Jump_0A1_5055::
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, Data_07E_5AF6
+    ld de, Palettes_7E_5AF6
     ld b, $7E
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBank
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
-    ld de, Data_05D_4139
+    ld de, Palettes_5D_4139
     ld b, $5D
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, Data_05E_422F
+    ld de, Palettes_5E_422F
     ld b, $5E
     ld hl, wBGPaletteBuffer + $8
     ld c, $08
@@ -3126,7 +3126,7 @@ Jump_0A1_5333::
 ; E-0167 (C1: RunGameMode2State_Case01_Sub02 takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE).
 ; record: tile rectangle in bank $5D; rows, width; a map number ($20, $30, $48 ...) and three zero bytes; not read here
 WorldMapViewTable::
-Data_0A1_533C:: ; heuristic: start of a structured table; C0
+Data_0A1_533C:: ; address name
     dw WorldMapView0 ; id 0
     db $08, $08, $20, $00, $00, $00
     dw WorldMapView1 ; id 1
@@ -3949,7 +3949,7 @@ Func_0A1_57F9:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 12 tiles, one row per line
 TileRect_A1_5808::
-Data_0A1_5808:: ; heuristic: start of a structured table; C0
+Data_0A1_5808:: ; address name
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 0
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 1
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 2

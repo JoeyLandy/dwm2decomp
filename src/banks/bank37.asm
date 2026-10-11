@@ -723,7 +723,7 @@ Jump_037_4D80:: ; address name
     ld a, $C7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank37
-    ld de, Data_037_647D
+    ld de, TileRect_37_647D
     ld hl, wWindowTileBuffer + $6C
     ld bc, $0C05
     call CopyRectToScreenBufferAndClearAttributes_37
@@ -1119,7 +1119,7 @@ Jump_037_4FFD:: ; address name
     ld [wTwoChoiceCursor], a
     ld a, $6C
     call QueueSoundEffect
-    ld de, Data_037_64D7
+    ld de, TileRect_37_64D7
     ld hl, wWindowTileBuffer + $E7
     ld bc, $0907
     call CopyRectToScreenBufferAndClearAttributes_37
@@ -1243,7 +1243,7 @@ Jump_037_50D9:: ; address name
     call CopyFromBankWaitVRAM
     xor a, a
     ld [wTwoChoiceCursor], a
-    ld de, Data_037_64B9
+    ld de, TileRect_37_64B9
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectToScreenBufferAndClearAttributes_37
@@ -1800,7 +1800,7 @@ Func_037_542C:: ; address name
 Func_037_4AFD_Case0D_Case03::
 Jump_037_5452:: ; address name
     call BGMapAddressAtScroll_Bank37
-    ld de, Data_01F_687F
+    ld de, TileRect_1F_687F
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -1864,7 +1864,7 @@ Jump_037_54B0::
     call BGMapAddressAtScroll_Bank37
     ld de, $0161
     add hl, de
-    ld de, Data_01F_651B
+    ld de, TileRect_1F_651B
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -1983,7 +1983,7 @@ Jump_037_5570:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld de, $0068
     add hl, de
-    ld de, Data_01F_6577
+    ld de, TileRect_1F_6577
     ld a, $0C
     ld [wArg3], a
     ld a, $0F
@@ -2049,7 +2049,7 @@ Jump_037_55C6:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld de, $0160
     add hl, de
-    ld de, Data_01F_66DF
+    ld de, TileRect_1F_66DF
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -2278,7 +2278,7 @@ Jump_037_5760:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld de, $0008
     add hl, de
-    ld de, Data_01F_63D7
+    ld de, TileRect_1F_63D7
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -2412,7 +2412,7 @@ Jump_037_580D:: ; address name
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 Func_037_4AFD_Case0E_Case08::
 Jump_037_5821:: ; address name
-    ld de, Data_037_64D7
+    ld de, TileRect_37_64D7
     ld hl, wWindowTileBuffer + $E7
     ld bc, $0907
     call CopyRectToScreenBufferAndClearAttributes_37
@@ -3991,7 +3991,7 @@ Data_037_63D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 5 tiles, one row per line
 TileRect_37_647D::
-Data_037_647D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_037_647D:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $F8, $F9, $FA, $FB, $FC, $C3, $EA, $ED, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -4001,7 +4001,7 @@ Data_037_647D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_37_64B9::
-Data_037_64B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_037_64B9:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $70, $71, $72, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -4011,7 +4011,7 @@ Data_037_64B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 7 tiles, one row per line
 TileRect_37_64D7::
-Data_037_64D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_037_64D7:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $60, $61, $62, $62, $63, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2

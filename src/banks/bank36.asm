@@ -6798,7 +6798,7 @@ Func_036_6717:: ; address name
 ; E-0126 (C1: DispatchActionEffectTable (36:6717) jumps through the word at $6726 + 2 * wBattleActionId; E-0053 and E-0084 counted 240 entries ending at $6906, where the first effect routine starts).
 ; record: effect routine
 ActionEffectTable::
-Data_036_6726:: ; heuristic: start of a structured table; C0
+Data_036_6726:: ; address name
     dw ActionEffect_Action00 ; entry 0
     dw ActionEffect_Blaze ; entry 1
     dw ActionEffect_Blaze ; entry 2
@@ -10823,7 +10823,7 @@ Jump_036_7DD1::
 ; E-0126 (C1: RunEffectHandlerForActionId (36:7DC9) indexes it with 2 * (action id - $47), or 0 for action 0, and jumps through JumpToWordAtHL; all 40 words point into the bank, and GetBattleATK follows at $7E2E).
 ; record: handler
 EffectHandlerTable::
-Data_036_7DDE:: ; heuristic: start of a structured table; C0
+Data_036_7DDE:: ; address name
     dw ComputeAttackDamage ; entry 0
     dw ActionEffect_WindBeast_Sub01 ; entry 1
     dw ActionEffect_Vacuum_Sub01 ; entry 2

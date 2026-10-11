@@ -135,7 +135,7 @@ Jump_01A_40CB::
 ; E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10).
 ; record: first number the debug skill viewer shows; rises across a spell family (2, 4, 10 for Blaze, Blazemore, Blazemost); skill family: string index in category $12 (1 = Blaze, 2 = Firebal, 3 = Bang, ...); skill type: string index in category $13 ('Type A' ... 'Type G'); low 2 bits: when usable, string index in category $14 (0 None, 1 Battle, 2 Field, 3 Anytime); high nibble: string index in category $10 ('Charge', 'Mixed', 'Cautious', ...); target: string index in category $11 after Func_001_5311 ('1 enemy', 'All enemies', ...); number shown by the debug skill viewer; number shown by the debug skill viewer; number shown by the debug skill viewer; number shown by the debug skill viewer; 16-bit number shown by the debug skill viewer; 16-bit value read by the viewer (wCFF9); 16-bit value; 16-bit value
 SkillTable::
-Data_01A_40D4:: ; heuristic: start of a structured table; C0
+Data_01A_40D4:: ; address name
     db $00, $00, $00, $01, $11, $81, $FF, $3E, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $02, $01, $04, $11, $11, $48, $83, $97, $80, $0C, $00, $03, $00, $07, $00, $05, $00 ; id 1
     db $04, $01, $04, $11, $11, $48, $83, $97, $80, $46, $00, $14, $00, $1E, $00, $0C, $00 ; id 2
@@ -323,7 +323,7 @@ Data_01A_40D4:: ; heuristic: start of a structured table; C0
 ; E-0156 (C1: CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the record's; BattleEnd_Step3_Sub02_Sub02 scans the five bytes at +13 of all 170 records ($5005, stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end exactly at the prerequisite pointer table $5BEC).
 ; record: required level; six required stat words (battler record +$1D, +$21, +$23, +$25, +$27, +$29); five skill numbers ($FF = none)
 SkillRequirementTable::
-Data_01A_4FF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_4FF8:: ; address name
     db $00 ; id 0
     dw 0, 0, 0, 0, 0, 0
 Data_01A_5005:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -839,7 +839,7 @@ Data_01A_5005:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0159 (C1: TryAddSkillIfPrerequisitesKnown reads the word $5BEC + 2 * skill and adds the skill only when every skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record; lists share tails, so they are laid out byte by byte in SkillPrerequisiteLists).
 ; record: $FF-terminated list of skills needed before this one
 SkillPrerequisitePointers::
-Data_01A_5BEC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_5BEC:: ; address name
     dw SkillPrerequisiteLists ; id 0
     dw Data_01A_5D41 ; id 1
     dw Data_01A_5D42 ; id 2
@@ -1014,7 +1014,7 @@ Data_01A_5BEC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0159 (C1: the lists SkillPrerequisitePointers points into; a list runs from its label to the next $FF, and several lists end in the same bytes).
 ; record: skill number, or $FF ending a list
 SkillPrerequisiteLists::
-Data_01A_5D40:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D40:: ; address name
     db $FF ; entry 0
 Data_01A_5D41:: ; heuristic: skill prerequisite list; C0
     db $02 ; entry 1
@@ -1525,7 +1525,7 @@ Jump_01A_5FC3::
     ld a, [wBattleArg3]
     adc a, $00
     ld d, a
-    ld hl, Data_01A_4FF8
+    ld hl, SkillRequirementTable
     ld c, $00
     ld a, $04
     ld [wNameSlot], a
@@ -1772,7 +1772,7 @@ Func_01A_60F1:: ; address name
     call SRAMRecordAddressMapped
     ld d, h
     ld e, l
-    ld hl, Data_01A_4FF8
+    ld hl, SkillRequirementTable
     ld c, $00
 
 Jump_01A_6100::
@@ -2113,7 +2113,7 @@ Func_01A_62A0:: ; address name
     jr nz, Jump_01A_62CD
     push bc
     ld b, $00
-    ld hl, Data_01A_5BEC
+    ld hl, SkillPrerequisitePointers
     add hl, bc
     add hl, bc
     pop bc
@@ -2237,7 +2237,7 @@ Func_01A_631F:: ; address name
     ldh a, [hTemp0]
     ld c, a
     ld b, $00
-    ld hl, Data_01A_5BEC
+    ld hl, SkillPrerequisitePointers
     add hl, bc
     add hl, bc
     deref_hl
@@ -2392,7 +2392,7 @@ Func_01A_63A7:: ; address name
     ldh a, [hTemp1]
     ld b, a
     ldh a, [hTemp0]
-    ld de, Data_01A_63F8
+    ld de, StatGrowthBase
     add a, e
     ld e, a
     jr nc, Jump_01A_63C3
@@ -2446,7 +2446,7 @@ Func_01A_63D8:: ; address name
 ; E-0158 (C1: StatFromGrowthRow starts its sum from the byte $63F8 + row).
 ; record: value before the first gain of this growth row
 StatGrowthBase::
-Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_63F8:: ; address name
     db $01 ; id 0
     db $02 ; id 1
     db $02 ; id 2
@@ -2834,7 +2834,7 @@ Jump_01A_6613::
 ; E-0158 (C1: StatFromGrowthRow adds the first hFFC7 bytes of row hFFC6 ($6616 + $63 * row) to StatGrowthBase[row]; ReadStatGrowthGain reads one byte of a row for ComputeLevelUpStatGainsForBattleArg1; 32 rows of 99 bytes fill the slice).
 ; record: 99 per-level stat gains (levels 1-99), 11 per line
 StatGrowthTable::
-Data_01A_6616:: ; heuristic: start of a structured table; C0
+Data_01A_6616:: ; address name
     db $00, $01, $01, $00, $01, $01, $01, $00, $00, $01, $00 ; id 0
     db $01, $00, $00, $01, $00, $01, $00, $00, $00, $01, $01
     db $00, $01, $00, $00, $01, $01, $00, $00, $01, $01, $01
@@ -3128,7 +3128,7 @@ Data_01A_6616:: ; heuristic: start of a structured table; C0
 ; 9 call sites from 9 routines (e.g. BuildBattleMenuScreen_733F, RunBattleSubStep_6E67_Case00, RunBattleSubStep_6E67_Case03, ClearWindowAndCopyRect7345Far, ...)
 CopyRectRecord7345ToScreenBuffer::
 Func_01A_7276:: ; address name
-    ld hl, Data_01A_7345
+    ld hl, TileRect_1A_7345
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3136,7 +3136,7 @@ Func_01A_7276:: ; address name
 ; 3 call sites from 3 routines (e.g. RunBattleSetup_Shared04, RunBattleSetup_BankA0_Case00_Case00, RunBattleSetup_BankA0_Case00_Case07)
 CopyRectRecord73ADToScreenBuffer::
 Func_01A_727D:: ; address name
-    ld hl, Data_01A_73AD
+    ld hl, TileRect_1A_73AD
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3144,7 +3144,7 @@ Func_01A_727D:: ; address name
 ; 1 call site from 1 routine (e.g. CopyRectRecord73F7ToScreenBufferFar)
 CopyRectRecord73F7ToScreenBuffer::
 Func_01A_7284:: ; address name
-    ld hl, Data_01A_73F7
+    ld hl, TileRect_1A_73F7
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3152,7 +3152,7 @@ Func_01A_7284:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Case01_Case00)
 CopyRectRecord747FToScreenBuffer::
 Func_01A_728B:: ; address name
-    ld hl, Data_01A_747F
+    ld hl, TileRect_1A_747F
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3160,7 +3160,7 @@ Func_01A_728B:: ; address name
 ; 1 call site from 1 routine (e.g. CopyRectRecord755FToScreenBufferFar)
 CopyRectRecord755FToScreenBuffer::
 Func_01A_7292:: ; address name
-    ld hl, Data_01A_755F
+    ld hl, TileRect_1A_755F
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3168,7 +3168,7 @@ Func_01A_7292:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Case01_Case04)
 CopyRectRecord75ABToScreenBuffer::
 Func_01A_7299:: ; address name
-    ld hl, Data_01A_75AB
+    ld hl, TileRect_1A_75AB
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3176,7 +3176,7 @@ Func_01A_7299:: ; address name
 ; 1 call site from 1 routine (e.g. CopyRectRecord7600ToScreenBufferFar)
 CopyRectRecord7600ToScreenBuffer::
 Func_01A_72A0:: ; address name
-    ld hl, Data_01A_7600
+    ld hl, TileRect_1A_7600
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3184,7 +3184,7 @@ Func_01A_72A0:: ; address name
 ; 1 call site from 1 routine (e.g. CopyRectRecord76ACToScreenBufferFar)
 CopyRectRecord76ACToScreenBuffer::
 Func_01A_72A7:: ; address name
-    ld hl, Data_01A_76AC
+    ld hl, TileRect_1A_76AC
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3192,7 +3192,7 @@ Func_01A_72A7:: ; address name
 ; 1 call site from 1 routine (e.g. CopyRectRecord76F8ToScreenBufferFar)
 CopyRectRecord76F8ToScreenBuffer::
 Func_01A_72AE:: ; address name
-    ld hl, Data_01A_76F8
+    ld hl, TileRect_1A_76F8
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3200,9 +3200,9 @@ Func_01A_72AE:: ; address name
 ; 2 call sites from 2 routines (e.g. CopyRectRecords7600And7734ToScreenBufferFar, RunBattleSetup_BankA0_Case01_Case0C)
 CopyRectRecords7600And7734ToScreenBuffer::
 Func_01A_72B5:: ; address name
-    ld hl, Data_01A_7600
+    ld hl, TileRect_1A_7600
     call CopyRecordRectToScreenBuffer_Bank1A
-    ld hl, Data_01A_7734
+    ld hl, TileRect_1A_7734
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3210,7 +3210,7 @@ Func_01A_72B5:: ; address name
 ; 1 call site from 1 routine (e.g. CopyRectRecord7750ToScreenBufferFar)
 CopyRectRecord7750ToScreenBuffer::
 Func_01A_72C2:: ; address name
-    ld hl, Data_01A_7750
+    ld hl, TileRect_1A_7750
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3218,9 +3218,9 @@ Func_01A_72C2:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattleSubStep_6E67_Case01)
 CopyRectRecords77B6And79CBAndPlaySound6C::
 Func_01A_72C9:: ; address name
-    ld hl, Data_01A_77B6
+    ld hl, TileRect_1A_77B6
     call CopyRecordRectToScreenBuffer_Bank1A
-    ld hl, Data_01A_79CB
+    ld hl, TileRect_1A_79CB
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6C
     call QueueSoundEffect
@@ -3235,7 +3235,7 @@ Func_01A_72DB:: ; address name
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld hl, Data_01A_7826
+    ld hl, TileRect_1A_7826
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6C
     call QueueSoundEffect
@@ -3245,7 +3245,7 @@ Func_01A_72DB:: ; address name
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case0A, Func_016_5D13_Case0F, Func_016_5D13_Case16)
 CopyRectRecord7848ToScreenBuffer::
 Func_01A_72F4:: ; address name
-    ld hl, Data_01A_7848
+    ld hl, TileRect_1A_7848
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3253,7 +3253,7 @@ Func_01A_72F4:: ; address name
 ; 6 call sites from 6 routines (e.g. Func_016_5D13_Case0E, Func_016_5D13_Case11, Func_016_5D13_Case18, Func_016_5D13_Case1B, ...)
 CopyRectRecord787EAndPlaySound6C::
 Func_01A_72FB:: ; address name
-    ld hl, Data_01A_787E
+    ld hl, TileRect_1A_787E
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6C
     call QueueSoundEffect
@@ -3263,7 +3263,7 @@ Func_01A_72FB:: ; address name
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case16, Func_016_5D13_Case18, Func_016_5D13_Case1B)
 CopyRectRecord78AAToScreenBuffer::
 Func_01A_7307:: ; address name
-    ld hl, Data_01A_78AA
+    ld hl, TileRect_1A_78AA
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3271,7 +3271,7 @@ Func_01A_7307:: ; address name
 ; 1 call site from 1 routine (e.g. CopyRect7923AndDrawBattleArg0Values)
 CopyRectRecord7923ToScreenBuffer::
 Func_01A_730E:: ; address name
-    ld hl, Data_01A_7923
+    ld hl, TileRect_1A_7923
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
@@ -3279,7 +3279,7 @@ Func_01A_730E:: ; address name
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case0C, Func_016_5D13_Case11)
 CopyRectRecord796FToScreenBufferAndPlaySound6C::
 Func_01A_7315:: ; address name
-    ld hl, Data_01A_796F
+    ld hl, TileRect_1A_796F
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6C
     call QueueSoundEffect
@@ -3327,7 +3327,7 @@ Jump_01A_7331::
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
 TileRect_1A_7345::
-Data_01A_7345:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_7345:: ; address name
     dw $01A0 ; entry 0
     db $14, $05
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3339,7 +3339,7 @@ Data_01A_7345:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $01A0 (row 13, column 0); 14 x 5 tiles
 TileRect_1A_73AD::
-Data_01A_73AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_73AD:: ; address name
     dw $01A0 ; entry 0
     db $0E, $05
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3351,7 +3351,7 @@ Data_01A_73AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $00E0 (row 7, column 0); 12 x 11 tiles
 TileRect_1A_73F7::
-Data_01A_73F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_73F7:: ; address name
     dw $00E0 ; entry 0
     db $0C, $0B
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3369,7 +3369,7 @@ Data_01A_73F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $00E0 (row 7, column 0); 20 x 11 tiles
 TileRect_1A_747F::
-Data_01A_747F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_747F:: ; address name
     dw $00E0 ; entry 0
     db $14, $0B
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3387,7 +3387,7 @@ Data_01A_747F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0120 (row 9, column 0); 8 x 9 tiles
 TileRect_1A_755F::
-Data_01A_755F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_755F:: ; address name
     dw $0120 ; entry 0
     db $08, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3403,7 +3403,7 @@ Data_01A_755F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0120 (row 9, column 0); 9 x 9 tiles
 TileRect_1A_75AB::
-Data_01A_75AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_75AB:: ; address name
     dw $0120 ; entry 0
     db $09, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3419,7 +3419,7 @@ Data_01A_75AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0120 (row 9, column 0); 12 x 9 tiles
 TileRect_1A_7600::
-Data_01A_7600:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_7600:: ; address name
     dw $0120 ; entry 0
     db $0C, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3439,7 +3439,7 @@ Data_01A_7600:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0120 (row 9, column 0); 8 x 9 tiles
 TileRect_1A_76AC::
-Data_01A_76AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_76AC:: ; address name
     dw $0120 ; entry 0
     db $08, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3455,7 +3455,7 @@ Data_01A_76AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0160 (row 11, column 0); 8 x 7 tiles
 TileRect_1A_76F8::
-Data_01A_76F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_76F8:: ; address name
     dw $0160 ; entry 0
     db $08, $07
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3469,7 +3469,7 @@ Data_01A_76F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $01CC (row 14, column 12); 8 x 3 tiles
 TileRect_1A_7734::
-Data_01A_7734:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_7734:: ; address name
     dw $01CC ; entry 0
     db $08, $03
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3479,7 +3479,7 @@ Data_01A_7734:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0160 (row 11, column 0); 14 x 7 tiles
 TileRect_1A_7750::
-Data_01A_7750:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_7750:: ; address name
     dw $0160 ; entry 0
     db $0E, $07
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3493,7 +3493,7 @@ Data_01A_7750:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0008 (row 0, column 8); 12 x 9 tiles
 TileRect_1A_77B6::
-Data_01A_77B6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_77B6:: ; address name
     dw $0008 ; entry 0
     db $0C, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3509,7 +3509,7 @@ Data_01A_77B6:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $010E (row 8, column 14); 6 x 5 tiles
 TileRect_1A_7826::
-Data_01A_7826:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_7826:: ; address name
     dw $010E ; entry 0
     db $06, $05
     db $B0, $B1, $B1, $B1, $B1, $B2
@@ -3521,7 +3521,7 @@ Data_01A_7826:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $010A (row 8, column 10); 10 x 5 tiles
 TileRect_1A_7848::
-Data_01A_7848:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_7848:: ; address name
     dw $010A ; entry 0
     db $0A, $05
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3533,7 +3533,7 @@ Data_01A_7848:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $010C (row 8, column 12); 8 x 5 tiles
 TileRect_1A_787E::
-Data_01A_787E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_787E:: ; address name
     dw $010C ; entry 0
     db $08, $05
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3545,7 +3545,7 @@ Data_01A_787E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0080 (row 4, column 0); 13 x 9 tiles
 TileRect_1A_78AA::
-Data_01A_78AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_78AA:: ; address name
     dw $0080 ; entry 0
     db $0D, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3561,7 +3561,7 @@ Data_01A_78AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_1A_7923::
-Data_01A_7923:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_7923:: ; address name
     dw $0000 ; entry 0
     db $08, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3577,7 +3577,7 @@ Data_01A_7923:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0000 (row 0, column 0); 8 x 11 tiles
 TileRect_1A_796F::
-Data_01A_796F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_796F:: ; address name
     dw $0000 ; entry 0
     db $08, $0B
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
@@ -3595,7 +3595,7 @@ Data_01A_796F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0120 (row 9, column 0); 20 x 9 tiles
 TileRect_1A_79CB::
-Data_01A_79CB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_79CB:: ; address name
     dw $0120 ; entry 0
     db $14, $09
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2

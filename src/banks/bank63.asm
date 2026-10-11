@@ -10,7 +10,7 @@ Data_063_4001:: ; address name
 ; E-0139 (C1: entry 1 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer).
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes1::
-Data_063_4468:: ; heuristic: key-world BG palettes; C0
+Data_063_4468:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $0160, $3FBF, $03E2, $0000 ; entry 1
     dw $1415, $7DFF, $7C18, $2C09 ; entry 2
@@ -127,7 +127,7 @@ Data_063_4C6B:: ; address name
 ; E-0139 (C1: entry 5 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer).
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes5::
-Data_063_5170:: ; heuristic: key-world BG palettes; C0
+Data_063_5170:: ; address name
     dw $012F, $7FFF, $2AB7, $0063 ; entry 0
     dw $0160, $3FBF, $03E2, $0000 ; entry 1
     dw $0142, $03FF, $034E, $0000 ; entry 2
@@ -234,7 +234,7 @@ Data_063_5907:: ; address name
 ; E-0139 (C1: entry 9 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer).
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes9::
-Data_063_5DAD:: ; heuristic: key-world BG palettes; C0
+Data_063_5DAD:: ; address name
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $0160, $3FBF, $03E2, $0000 ; entry 1
     dw $012F, $3FBF, $03E2, $0000 ; entry 2

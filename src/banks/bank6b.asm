@@ -10,7 +10,7 @@ Data_06B_4001:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 SpecialMap06Palettes::
-Data_06B_434B:: ; heuristic: special map BG palettes; C0
+Data_06B_434B:: ; address name
     dw $1C2E, $7FFF, $357B, $0000 ; entry 0
     dw $012F, $3F7F, $01DA, $0000 ; entry 1
     dw $49AE, $6B79, $4ACD, $0000 ; entry 2
@@ -23,7 +23,7 @@ Data_06B_434B:: ; heuristic: special map BG palettes; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap06Screens::
-Data_06B_438B:: ; heuristic: map screen array; C0
+Data_06B_438B:: ; address name
     dfar Data_06B_43A3 ; entry 0
     dfar Data_06B_448F ; entry 1
     dfar Data_06B_455A ; entry 2
@@ -32,7 +32,7 @@ Data_06B_438B:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap06Attrs::
-Data_06B_4397:: ; heuristic: map screen array; C0
+Data_06B_4397:: ; address name
     dfar Data_06B_470A ; entry 0
     dfar Data_06B_4773 ; entry 1
     dfar Data_06B_47C9 ; entry 2
@@ -79,7 +79,7 @@ Data_06B_4867:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 SpecialMap07Palettes::
-Data_06B_4D36:: ; heuristic: special map BG palettes; C0
+Data_06B_4D36:: ; address name
     dw $49AE, $7FFF, $4ACD, $0000 ; entry 0
     dw $012F, $67FF, $01DA, $0000 ; entry 1
     dw $0191, $3F7F, $029A, $0000 ; entry 2
@@ -92,7 +92,7 @@ Data_06B_4D36:: ; heuristic: special map BG palettes; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap07Screens::
-Data_06B_4D76:: ; heuristic: map screen array; C0
+Data_06B_4D76:: ; address name
     dfar Data_06B_4D8E ; entry 0
     dfar Data_06B_4E66 ; entry 1
     dfar Data_06B_4F4B ; entry 2
@@ -101,7 +101,7 @@ Data_06B_4D76:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap07Attrs::
-Data_06B_4D82:: ; heuristic: map screen array; C0
+Data_06B_4D82:: ; address name
     dfar Data_06B_5116 ; entry 0
     dfar Data_06B_516F ; entry 1
     dfar Data_06B_51D0 ; entry 2
@@ -148,7 +148,7 @@ Data_06B_5283:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 SpecialMap08Palettes::
-Data_06B_5740:: ; heuristic: special map BG palettes; C0
+Data_06B_5740:: ; address name
     dw $49AE, $7FFF, $4ACD, $0000 ; entry 0
     dw $012F, $67FF, $01DA, $0000 ; entry 1
     dw $0191, $3F7F, $029A, $0000 ; entry 2
@@ -161,7 +161,7 @@ Data_06B_5740:: ; heuristic: special map BG palettes; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap08Screens::
-Data_06B_5780:: ; heuristic: map screen array; C0
+Data_06B_5780:: ; address name
     dfar Data_06B_5798 ; entry 0
     dfar Data_06B_5875 ; entry 1
     dfar Data_06B_5950 ; entry 2
@@ -170,7 +170,7 @@ Data_06B_5780:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap08Attrs::
-Data_06B_578C:: ; heuristic: map screen array; C0
+Data_06B_578C:: ; address name
     dfar Data_06B_5B4A ; entry 0
     dfar Data_06B_5BA8 ; entry 1
     dfar Data_06B_5BEE ; entry 2
@@ -220,7 +220,7 @@ Data_06B_5C75:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 SpecialMap09Palettes::
-Data_06B_60CF:: ; heuristic: special map BG palettes; C0
+Data_06B_60CF:: ; address name
     dw $218C, $7FFF, $5AB1, $0000 ; entry 0
     dw $012F, $67FF, $01DA, $0000 ; entry 1
     dw $012F, $3F7F, $029A, $0000 ; entry 2
@@ -233,7 +233,7 @@ Data_06B_60CF:: ; heuristic: special map BG palettes; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap09Screens::
-Data_06B_610F:: ; heuristic: map screen array; C0
+Data_06B_610F:: ; address name
     dfar Data_06B_6127 ; entry 0
     dfar Data_06B_6251 ; entry 1
     dfar Data_06B_633B ; entry 2
@@ -242,7 +242,7 @@ Data_06B_610F:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap09Attrs::
-Data_06B_611B:: ; heuristic: map screen array; C0
+Data_06B_611B:: ; address name
     dfar Data_06B_653C ; entry 0
     dfar Data_06B_658E ; entry 1
     dfar Data_06B_65BF ; entry 2
@@ -297,7 +297,7 @@ Data_06B_6624:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 SpecialMap0APalettes::
-Data_06B_6A02:: ; heuristic: special map BG palettes; C0
+Data_06B_6A02:: ; address name
     dw $49AE, $7FFF, $4ACD, $0000 ; entry 0
     dw $012F, $67FF, $01DA, $0000 ; entry 1
     dw $012F, $3F7F, $029A, $0000 ; entry 2
@@ -310,7 +310,7 @@ Data_06B_6A02:: ; heuristic: special map BG palettes; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap0AScreens::
-Data_06B_6A42:: ; heuristic: map screen array; C0
+Data_06B_6A42:: ; address name
     dfar Data_06B_6A5A ; entry 0
     dfar Data_06B_6B37 ; entry 1
     dfar Data_06B_6C24 ; entry 2
@@ -319,7 +319,7 @@ Data_06B_6A42:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap0AAttrs::
-Data_06B_6A4E:: ; heuristic: map screen array; C0
+Data_06B_6A4E:: ; address name
     dfar Data_06B_6E0C ; entry 0
     dfar Data_06B_6E6F ; entry 1
     dfar Data_06B_6ECC ; entry 2
@@ -366,7 +366,7 @@ Data_06B_6F67:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 SpecialMap0BPalettes::
-Data_06B_73DE:: ; heuristic: special map BG palettes; C0
+Data_06B_73DE:: ; address name
     dw $49AE, $7FFF, $4ACD, $0000 ; entry 0
     dw $012F, $67FF, $01DA, $0000 ; entry 1
     dw $194A, $5F17, $3A33, $0000 ; entry 2
@@ -379,7 +379,7 @@ Data_06B_73DE:: ; heuristic: special map BG palettes; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap0BScreens::
-Data_06B_741E:: ; heuristic: map screen array; C0
+Data_06B_741E:: ; address name
     dfar Data_06B_7436 ; entry 0
     dfar Data_06B_7557 ; entry 1
     dfar Data_06B_7645 ; entry 2
@@ -388,7 +388,7 @@ Data_06B_741E:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap0BAttrs::
-Data_06B_742A:: ; heuristic: map screen array; C0
+Data_06B_742A:: ; address name
     dfar Data_06B_786E ; entry 0
     dfar Data_06B_78E7 ; entry 1
     dfar Data_06B_795F ; entry 2
@@ -429,7 +429,7 @@ Data_06B_79DB:: ; heuristic: map screen stream; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap0CScreens::
-Data_06B_7A44:: ; heuristic: map screen array; C0
+Data_06B_7A44:: ; address name
     dfar Data_06B_7A5C ; entry 0
     dfar Data_06B_7B6E ; entry 1
     dfar Data_06B_7C5B ; entry 2
@@ -438,7 +438,7 @@ Data_06B_7A44:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 SpecialMap0CAttrs::
-Data_06B_7A50:: ; heuristic: map screen array; C0
+Data_06B_7A50:: ; address name
     dfar Data_06B_7E1E ; entry 0
     dfar Data_06B_7E72 ; entry 1
     dfar Data_06B_7EA4 ; entry 2

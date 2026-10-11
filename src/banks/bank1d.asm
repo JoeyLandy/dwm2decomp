@@ -4093,7 +4093,7 @@ Func_01D_5D47:: ; address name
     add a, a
     add a, c
     push af
-    ld hl, Data_01D_5D78
+    ld hl, AreaTilesetTable
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -4103,7 +4103,7 @@ Func_01D_5D47:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     pop af
-    ld hl, Data_01D_5D7E
+    ld hl, AreaPaletteTable
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -4118,14 +4118,14 @@ Func_01D_5D47:: ; address name
 ; E-0145 (C1: LoadAreaGraphicsForAreaGraphicsIndex decompresses the far pointer at $5D78 + 3 * wAreaGraphicsIndex to vTiles2; two entries decode, the bytes after them are AreaPaletteTable).
 ; record: compressed BG tiles (vTiles2); its ROM bank
 AreaTilesetTable::
-Data_01D_5D78:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_5D78:: ; address name
     dfar AreaTileset0 ; id 0
     dfar AreaTileset1 ; id 1
 
 ; E-0145 (C1: LoadAreaGraphicsForAreaGraphicsIndex copies $40 bytes from the far pointer at $5D7E + 3 * wAreaGraphicsIndex to wBGPaletteBuffer).
 ; record: $40-byte BG palette set; its ROM bank
 AreaPaletteTable::
-Data_01D_5D7E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_5D7E:: ; address name
     dfar AreaPalettes0 ; id 0
     dfar AreaPalettes1 ; id 1
 
@@ -6104,7 +6104,7 @@ Func_01D_6915:: ; address name
     push hl
     add hl, hl
     add hl, de
-    ld de, Data_004_4EAA
+    ld de, MonsterSpriteTable
     add hl, de
     ld e, l
     ld d, h
@@ -6173,7 +6173,7 @@ Func_01D_6973:: ; address name
     ld d, a
     add hl, hl
     add hl, de
-    ld de, Data_004_4EAA
+    ld de, MonsterSpriteTable
     add hl, de
     ld e, l
     ld d, h

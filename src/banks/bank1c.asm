@@ -1222,7 +1222,7 @@ Jump_01C_4710:: ; address name
 ; points at: wScreenState
 ScriptCommandE2_Run_Case01_Case03::
 Jump_01C_4714:: ; address name
-    ld de, Data_01C_4738
+    ld de, TileRect_1C_4738
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
     call CopyRectTo20ByteRowsJp_Bank1C
@@ -1241,7 +1241,7 @@ Jump_01C_4714:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1C_4738::
-Data_01C_4738:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_4738:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $EA, $EB, $EC, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -6745,7 +6745,7 @@ Jump_01C_6DC7:: ; address name
 ; points at: wScreenState
 ScriptCommandE5_Run_Case01_Case05::
 Jump_01C_6DCB:: ; address name
-    ld de, Data_01C_6DEF
+    ld de, TileRect_1C_6DEF
     ld hl, wWindowTileBuffer + $64
     ld bc, $0B07
     call CopyRectTo20ByteRowsJp_Bank1C
@@ -6764,7 +6764,7 @@ Jump_01C_6DCB:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 11 x 7 tiles, one row per line
 TileRect_1C_6DEF::
-Data_01C_6DEF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_6DEF:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $A6, $CF, $A5, $A7, $DF, $EB, $AD, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2

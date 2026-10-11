@@ -607,7 +607,7 @@ Func_084_43AC:: ; address name
 ; writes: hTemp0
 ApplyMapScreenFlagEvents::
 Func_084_43B8:: ; address name
-    ld hl, Data_084_4461
+    ld hl, MapScreenFlagTiles
 
 Jump_084_43BB::
     push hl
@@ -743,7 +743,7 @@ Jump_084_4457::
 ; E-0151 (C1: ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match and the story flag is set, ApplyMapScreenFlagEvents_Sub01 writes the tile and tile + 1 at wScreenTileBuffer + offset (tile $FF takes another path); 108 entries).
 ; record: map number, screen X, screen Y, tile; story flag number (TestFlagBit); offset into wScreenTileBuffer
 MapScreenFlagTiles::
-Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_084_4461:: ; address name
     db $19, $00, $02, $3E ; id 0
     dw $011B
     dw $0088

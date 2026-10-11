@@ -2603,7 +2603,7 @@ Jump_019_4E5A::
 ; E-0148 (C1: LoadTable4E60EntryForWC991ToWC9DE copies the 3 bytes at $4E60 + $129 * (species record byte 7) + 3 * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and DrawWCA83ExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row starting at 0).
 ; record: EXP needed for levels 1-99 (24-bit)
 ExpTable::
-Data_019_4E60:: ; heuristic: start of a structured table; C0
+Data_019_4E60:: ; address name
     d24 0, 2, 7, 15, 27, 45, 72, 113, 175, 268, 408 ; id 0
     d24 618, 933, 1327, 1820, 2436, 3206, 4169, 5373, 6878, 8759, 10875
     d24 13256, 15935, 18949, 22340, 26155, 30447, 35276, 40709, 46482, 52616, 59133

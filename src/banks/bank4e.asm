@@ -10,7 +10,7 @@ Data_04E_4001:: ; address name
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map4FScreens0::
-Data_04E_45D3:: ; heuristic: map screen array; C0
+Data_04E_45D3:: ; address name
     dfar Data_04E_4603 ; entry 0
     dfar Data_04E_46E4 ; entry 1
     dfar Data_04E_47D5 ; entry 2
@@ -19,7 +19,7 @@ Data_04E_45D3:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map4FAttrs0::
-Data_04E_45DF:: ; heuristic: map screen array; C0
+Data_04E_45DF:: ; address name
     dfar Data_04E_4B40 ; entry 0
     dfar Data_04E_4B8F ; entry 1
     dfar Data_04E_4BE9 ; entry 2
@@ -28,7 +28,7 @@ Data_04E_45DF:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map4FScreens2::
-Data_04E_45EB:: ; heuristic: map screen array; C0
+Data_04E_45EB:: ; address name
     dfar Data_04E_4603 ; entry 0
     dfar Data_04E_46E4 ; entry 1
     dfar Data_04E_48B9 ; entry 2
@@ -37,7 +37,7 @@ Data_04E_45EB:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 4 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map4FAttrs2::
-Data_04E_45F7:: ; heuristic: map screen array; C0
+Data_04E_45F7:: ; address name
     dfar Data_04E_4B40 ; entry 0
     dfar Data_04E_4B8F ; entry 1
     dfar Data_04E_4C25 ; entry 2
@@ -112,25 +112,25 @@ Data_04E_4CDB:: ; address name
 ; E-0142 (derived: 1 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map50Screens0::
-Data_04E_5179:: ; heuristic: map screen array; C0
+Data_04E_5179:: ; address name
     dfar Data_04E_5185 ; entry 0
 
 ; E-0142 (derived: 1 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map50Attrs0::
-Data_04E_517C:: ; heuristic: map screen array; C0
+Data_04E_517C:: ; address name
     dfar Data_04E_5248 ; entry 0
 
 ; E-0142 (derived: 1 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map51Screens0::
-Data_04E_517F:: ; heuristic: map screen array; C0
+Data_04E_517F:: ; address name
     dfar Data_04E_5274 ; entry 0
 
 ; E-0142 (derived: 1 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map51Attrs0::
-Data_04E_5182:: ; heuristic: map screen array; C0
+Data_04E_5182:: ; address name
     dfar Data_04E_5332 ; entry 0
 
 ; LZSS-compressed asset: 195 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -160,7 +160,7 @@ Data_04E_5378:: ; address name
 ; E-0142 (derived: 6 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map52Screens0::
-Data_04E_56A3:: ; heuristic: map screen array; C0
+Data_04E_56A3:: ; address name
     dfar Data_04E_56C7 ; entry 0
     dfar Data_04E_57BF ; entry 1
     dfar Data_04E_58C0 ; entry 2
@@ -171,7 +171,7 @@ Data_04E_56A3:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 6 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map52Attrs0::
-Data_04E_56B5:: ; heuristic: map screen array; C0
+Data_04E_56B5:: ; address name
     dfar Data_04E_5A43 ; entry 0
     dfar Data_04E_5ABC ; entry 1
     dfar Data_04E_5B24 ; entry 2
@@ -220,7 +220,7 @@ Data_04E_5BE2:: ; address name
 ; E-0142 (derived: 16 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map53Screens0::
-Data_04E_6031:: ; heuristic: map screen array; C0
+Data_04E_6031:: ; address name
     dfar Data_04E_6091 ; entry 0
     dfar Data_04E_6173 ; entry 1
     dfar Data_04E_61CD ; entry 2
@@ -241,7 +241,7 @@ Data_04E_6031:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 16 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map53Attrs0::
-Data_04E_6061:: ; heuristic: map screen array; C0
+Data_04E_6061:: ; address name
     dfar Data_04E_6C80 ; entry 0
     dfar Data_04E_6CD6 ; entry 1
     dfar Data_04E_6CF8 ; entry 2
@@ -397,7 +397,7 @@ Data_04E_70D1:: ; heuristic: map screen stream; C0
 ; E-0142 (derived: 3 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map56Screens0::
-Data_04E_7120:: ; heuristic: map screen array; C0
+Data_04E_7120:: ; address name
     dfar Data_04E_7132 ; entry 0
     dfar Data_04E_71CC ; entry 1
     dfar Data_04E_72A7 ; entry 2
@@ -405,7 +405,7 @@ Data_04E_7120:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 3 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map56Attrs0::
-Data_04E_7129:: ; heuristic: map screen array; C0
+Data_04E_7129:: ; address name
     dfar Data_04E_739E ; entry 0
     dfar Data_04E_73DD ; entry 1
     dfar Data_04E_7432 ; entry 2
@@ -446,7 +446,7 @@ Data_04E_7487:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map57Palettes::
-Data_04E_79C8:: ; heuristic: map BG palettes; C0
+Data_04E_79C8:: ; address name
     dw $1415, $7FFF, $3C1F, $0000 ; entry 0
     dw $184C, $7FFF, $6980, $0000 ; entry 1
     dw $184C, $0217, $1116, $0000 ; entry 2
@@ -459,7 +459,7 @@ Data_04E_79C8:: ; heuristic: map BG palettes; C0
 ; E-0142 (derived: 3 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map57Screens0::
-Data_04E_7A08:: ; heuristic: map screen array; C0
+Data_04E_7A08:: ; address name
     dfar Data_04E_7A1A ; entry 0
     dfar Data_04E_7B3E ; entry 1
     dfar Data_04E_7C76 ; entry 2
@@ -467,7 +467,7 @@ Data_04E_7A08:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 3 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map57Attrs0::
-Data_04E_7A11:: ; heuristic: map screen array; C0
+Data_04E_7A11:: ; address name
     dfar Data_04E_7DA6 ; entry 0
     dfar Data_04E_7E12 ; entry 1
     dfar Data_04E_7E87 ; entry 2

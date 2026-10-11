@@ -2638,7 +2638,7 @@ Jump_016_4CBC::
 ; E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wD081) to wD084; RunItemEffect dispatches on the same id; wC61D is a 24-slot bag of such ids, empty at the start of a new game, matching the item menu's 'No items'; the herb handler compares the words at save-record offsets $5B and $5D to refuse use at full HP). 99 records: the next bytes are a different table. The meaning of the fields is not established beyond the first amount being 10, 50, 500, 200 and 2000 for ids 1-5.
 ; record: byte 0 (0, 1, 2 or 6); 16-bit amount (10, 50, 500, 200, 2000 for the first five items); byte 3 (usually $64); byte 4; byte 5; byte 6; byte 7; byte 8; byte 9; byte 10; byte 11; byte 12
 ItemTable::
-Data_016_4CC2:: ; heuristic: start of a structured table; C0
+Data_016_4CC2:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $0A, $00, $64, $00, $00, $04, $02, $00, $03, $04, $1E, $28 ; id 1
     db $00, $32, $00, $64, $00, $00, $04, $03, $00, $03, $04, $3C, $46 ; id 2
@@ -8514,7 +8514,7 @@ Func_016_7783:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_016_77A6
-    ld de, Data_07E_5BB8
+    ld de, Palettes_7E_5BB8
     ld b, $7E
     ld hl, wOBJPaletteBuffer
     ld c, $08

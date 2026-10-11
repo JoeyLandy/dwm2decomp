@@ -5728,7 +5728,7 @@ Func_003_6432:: ; address name
     jr nz, Jump_003_6450
 
 Jump_003_6443::
-    ld de, Data_003_6A98
+    ld de, TileRect_03_6A98
     ld bc, $0501
     ld hl, wScreenTileBuffer + $10E
     call CopyRectToBGMap
@@ -6409,7 +6409,7 @@ Func_003_6A60:: ; address name
     jr nz, Jump_003_6A7E
 
 Jump_003_6A71::
-    ld de, Data_003_6A98
+    ld de, TileRect_03_6A98
     ld bc, $0501
     ld hl, wScreenTileBuffer + $10E
     call CopyRectToBGMap
@@ -6432,7 +6432,7 @@ Jump_003_6A7E::
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 5 x 1 tiles, one row per line
 TileRect_03_6A98::
-Data_003_6A98:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_6A98:: ; address name
     db $B4, $B4, $B4, $B4, $B4 ; id 0
 
 ; GameMode2_Update, wModeState 3: an item list screen (state 3) (E-0046)

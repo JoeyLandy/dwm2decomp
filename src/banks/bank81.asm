@@ -1624,7 +1624,7 @@ Func_081_5453:: ; address name
 ; E-0151 (C1: LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes reads the byte $5486 + wWorkBuf+9 and uses it as the row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31).
 ; record: row of ExpTable81 (0-31)
 ExpCurveIndex81::
-Data_081_5486:: ; heuristic: start of a structured table; C0
+Data_081_5486:: ; address name
     db $0D ; id 0
     db $0A ; id 1
     db $0A ; id 2
@@ -1844,7 +1844,7 @@ Data_081_5486:: ; heuristic: start of a structured table; C0
 ; E-0151 (C1: LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes copies the 3 bytes at $555D + $129 * row + 3 * (wLinkMenuEntry - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different values; 31 of the 32 rows rise from 0).
 ; record: 24-bit values for levels 1-99
 ExpTable81::
-Data_081_555D:: ; heuristic: start of a structured table; C0
+Data_081_555D:: ; address name
     d24 0, 2, 7, 15, 30, 50, 90, 140, 215, 330, 500 ; id 0
     d24 760, 1080, 1480, 1980, 2600, 3380, 4360, 5580, 6950, 8500, 10500
     d24 12900, 15700, 18900, 22500, 26500, 30900, 35700, 40900, 46500, 52500, 58900

@@ -4,7 +4,7 @@ SECTION "Bank 50", ROMX[$4000], BANK[$50]
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map70Palettes::
-Data_050_4001:: ; heuristic: map BG palettes; C0
+Data_050_4001:: ; address name
     dw $7DA0, $7FFF, $01D3, $0063 ; entry 0
     dw $01D3, $7FFF, $0348, $0006 ; entry 1
     dw $01C4, $03FF, $0348, $0084 ; entry 2
@@ -17,7 +17,7 @@ Data_050_4001:: ; heuristic: map BG palettes; C0
 ; E-0142 (derived: 144 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map70Screens0::
-Data_050_4041:: ; heuristic: map screen array; C0
+Data_050_4041:: ; address name
     dfar Data_050_41F1 ; entry 0
     dfar Data_050_420E ; entry 1
     dfar Data_050_42AA ; entry 2

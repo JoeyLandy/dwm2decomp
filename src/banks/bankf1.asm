@@ -1937,7 +1937,7 @@ Jump_0F1_4D07:: ; address name
     ld a, $C7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_BankF1
-    ld de, Data_0F1_5A36
+    ld de, TileRect_F1_5A36
     ld hl, wWindowTileBuffer + $6C
     ld bc, $0C05
     call CopyRectTo20ByteRows_BankF1
@@ -2319,7 +2319,7 @@ Jump_0F1_4F6F:: ; address name
     ld [wTwoChoiceCursor], a
     ld a, $6C
     call QueueSoundEffect
-    ld de, Data_0F1_5A90
+    ld de, TileRect_F1_5A90
     ld hl, wWindowTileBuffer + $E7
     ld bc, $0907
     call CopyRectTo20ByteRows_BankF1
@@ -2468,7 +2468,7 @@ Jump_0F1_5067::
     call CopyFromBankWaitVRAM
     xor a, a
     ld [wTwoChoiceCursor], a
-    ld de, Data_0F1_5A72
+    ld de, TileRect_F1_5A72
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows_BankF1
@@ -2949,7 +2949,7 @@ Func_0F1_5344:: ; address name
 RunScreenStateWhenNotFading_F1_Case0D_Case03::
 Jump_0F1_535A:: ; address name
     call BGMapAddressAtScroll_BankF1
-    ld de, Data_01F_687F
+    ld de, TileRect_1F_687F
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -3013,7 +3013,7 @@ Jump_0F1_53B8::
     call BGMapAddressAtScroll_BankF1
     ld de, $0161
     add hl, de
-    ld de, Data_01F_651B
+    ld de, TileRect_1F_651B
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -3108,7 +3108,7 @@ Jump_0F1_5448:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, $0068
     add hl, de
-    ld de, Data_01F_6577
+    ld de, TileRect_1F_6577
     ld a, $0C
     ld [wArg3], a
     ld a, $0F
@@ -3174,7 +3174,7 @@ Jump_0F1_549E:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, $0160
     add hl, de
-    ld de, Data_01F_66DF
+    ld de, TileRect_1F_66DF
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -3392,7 +3392,7 @@ Jump_0F1_561B:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, $0008
     add hl, de
-    ld de, Data_01F_63D7
+    ld de, TileRect_1F_63D7
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -3527,7 +3527,7 @@ Jump_0F1_56C8:: ; address name
 ; points at: wTextWindowTileLo
 RunScreenStateWhenNotFading_F1_Case0E_Case08::
 Jump_0F1_56DC:: ; address name
-    ld de, Data_0F1_5A90
+    ld de, TileRect_F1_5A90
     ld hl, wWindowTileBuffer + $E7
     ld bc, $0907
     call CopyRectTo20ByteRows_BankF1
@@ -4118,7 +4118,7 @@ Func_0F1_5A28:: ; address name
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 5 tiles, one row per line
 TileRect_F1_5A36::
-Data_0F1_5A36:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_5A36:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $F8, $F9, $FA, $FB, $FC, $C3, $EA, $ED, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -4128,7 +4128,7 @@ Data_0F1_5A36:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_F1_5A72::
-Data_0F1_5A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_5A72:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $70, $71, $72, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -4138,7 +4138,7 @@ Data_0F1_5A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 7 tiles, one row per line
 TileRect_F1_5A90::
-Data_0F1_5A90:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_5A90:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $60, $61, $62, $62, $63, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2

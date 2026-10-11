@@ -10,7 +10,7 @@ Data_04A_4001:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map20Palettes::
-Data_04A_42A1:: ; heuristic: map BG palettes; C0
+Data_04A_42A1:: ; address name
     dw $7C01, $7FFF, $7FE1, $0000 ; entry 0
     dw $0152, $3F7F, $0218, $00C8 ; entry 1
     dw $026E, $3F7F, $02F3, $0188 ; entry 2
@@ -23,7 +23,7 @@ Data_04A_42A1:: ; heuristic: map BG palettes; C0
 ; E-0142 (derived: 64 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map20Screens0::
-Data_04A_42E1:: ; heuristic: map screen array; C0
+Data_04A_42E1:: ; address name
     dfar Data_04A_4461 ; entry 0
     dfar Data_04A_44D2 ; entry 1
     dfar Data_04A_4548 ; entry 2
@@ -92,7 +92,7 @@ Data_04A_42E1:: ; heuristic: map screen array; C0
 ; E-0142 (derived: 64 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map20Attrs0::
-Data_04A_43A1:: ; heuristic: map screen array; C0
+Data_04A_43A1:: ; address name
     dfar Data_04A_6289 ; entry 0
     dfar Data_04A_62CA ; entry 1
     dfar Data_04A_6309 ; entry 2
@@ -834,7 +834,7 @@ Data_04A_7200:: ; heuristic: target of a monotone pointer table; C0
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map21Palettes::
-Data_04A_74EB:: ; heuristic: map BG palettes; C0
+Data_04A_74EB:: ; address name
     dw $7C01, $7FFF, $6301, $0000 ; entry 0
     dw $0110, $3F7F, $0214, $0000 ; entry 1
     dw $02C4, $3F7F, $029A, $0000 ; entry 2
@@ -847,14 +847,14 @@ Data_04A_74EB:: ; heuristic: map BG palettes; C0
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map21Screens0::
-Data_04A_752B:: ; heuristic: map screen array; C0
+Data_04A_752B:: ; address name
     dfar Data_04A_7537 ; entry 0
     dfar Data_04A_7622 ; entry 1
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map21Attrs0::
-Data_04A_7531:: ; heuristic: map screen array; C0
+Data_04A_7531:: ; address name
     dfar Data_04A_7709 ; entry 0
     dfar Data_04A_775D ; entry 1
 
@@ -882,7 +882,7 @@ Data_04A_775D:: ; heuristic: map screen stream; C0
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map26Palettes::
-Data_04A_77CF:: ; heuristic: map BG palettes; C0
+Data_04A_77CF:: ; address name
     dw $5816, $7FFF, $699A, $0000 ; entry 0
     dw $218C, $4F18, $3A52, $0CA5 ; entry 1
     dw $0116, $03FF, $01FC, $0CA5 ; entry 2
@@ -895,7 +895,7 @@ Data_04A_77CF:: ; heuristic: map BG palettes; C0
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map28Palettes::
-Data_04A_780F:: ; heuristic: map BG palettes; C0
+Data_04A_780F:: ; address name
     dw $7C01, $7FFF, $6301, $0000 ; entry 0
     dw $01D3, $3F7F, $029A, $0042 ; entry 1
     dw $02C0, $3F7F, $03E2, $0000 ; entry 2
@@ -914,7 +914,7 @@ Data_04A_784F:: ; address name
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map2APalettes::
-Data_04A_7B19:: ; heuristic: map BG palettes; C0
+Data_04A_7B19:: ; address name
     dw $7C01, $7FFF, $6301, $0000 ; entry 0
     dw $01D3, $3F7F, $029A, $0042 ; entry 1
     dw $01CA, $7FFF, $029A, $0042 ; entry 2
@@ -927,13 +927,13 @@ Data_04A_7B19:: ; heuristic: map BG palettes; C0
 ; E-0142 (derived: 1 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map2AScreens0::
-Data_04A_7B59:: ; heuristic: map screen array; C0
+Data_04A_7B59:: ; address name
     dfar Data_04A_7B5F ; entry 0
 
 ; E-0142 (derived: 1 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 Map2AAttrs0::
-Data_04A_7B5C:: ; heuristic: map screen array; C0
+Data_04A_7B5C:: ; address name
     dfar Data_04A_7C1B ; entry 0
 
 ; LZSS-compressed asset: 188 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)

@@ -4,7 +4,7 @@ SECTION "Bank 40", ROMX[$4000], BANK[$40]
 ; E-0018 (C2 for the fields, C0 for the meaning of the second byte and of the streams). Sound ids 0-27.
 ; record: channel-state slot offset (added to $DC00); copied to slot byte +2 (meaning unverified); track stream (stored at slot +3/+4, with this bank at +5)
 SoundRecords_Bank40::
-Data_040_4001:: ; heuristic: sound record array named by the bank table; C0
+Data_040_4001:: ; address name
     db $00, $00 ; id 0
     dw Data_040_4071
     db $20, $01 ; id 1

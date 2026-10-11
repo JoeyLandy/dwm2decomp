@@ -179,7 +179,7 @@ Func_0A3_41CF:: ; address name
     and a, $04
     ldh [hTemp0], a
     ld b, $00
-    ld hl, Data_0A3_4289
+    ld hl, FormationTable
 
 Jump_0A3_41DB::
     push hl
@@ -318,7 +318,7 @@ Jump_0A3_4287::
 ; E-0172 (C1: SaveActionChoicesAndPickFormations_Sub01 walks these 5-byte records until a 0 byte; a record applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock, SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll when byte 3 is 1 or in link mode 2).
 ; record: action each of the three slots must have chosen ($FF = any); 1 = roll FormationCompatibilityRoll (always rolled in link mode 2); combined action id ($D0-$E3)
 FormationTable::
-Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A3_4289:: ; address name
     db $0F, $0F, $FF, $01, $D0 ; id 0
     db $0F, $FF, $0F, $01, $D0 ; id 1
     db $FF, $0F, $0F, $01, $D0 ; id 2
@@ -560,7 +560,7 @@ Jump_0A3_456D::
     pop hl
     ld a, [hl]
     sub a, $D0
-    ld hl, Data_0A3_45A3
+    ld hl, FormationChanceFactors
     add_a_to_hl
     ld a, [hl]
     call Multiply8By16
@@ -589,7 +589,7 @@ Jump_0A3_45A0::
 ; E-0172 (C1: the roll multiplies (matrix value + 1) * (the two slots' wSlotTrait sum) by FormationChanceFactors[action - $D0], divides by 10 and succeeds when a random 0-99 is below it).
 ; record: factor of this combined action in the roll
 FormationChanceFactors::
-Data_0A3_45A3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A3_45A3:: ; address name
     db $0A ; id 208
     db $14 ; id 209
     db $32 ; id 210
@@ -614,7 +614,7 @@ Data_0A3_45A3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; E-0172 (C1: the roll reads $45B7 + 32 * (second slot's PersonalityIndexOfSlot) + (first slot's index) for the two slots of the pair chosen by B / 3; 27 rows fill the slice up to $4917).
 ; record: value for the first slot's personality index 0-31 (27 used)
 PersonalityCompatibility::
-Data_0A3_45B7:: ; heuristic: start of a structured table; C0
+Data_0A3_45B7:: ; address name
     db $08, $09, $02, $07, $06, $05, $02, $06, $07, $08, $07, $04, $06, $07, $07, $06, $06, $04, $07, $06, $09, $07, $08, $02, $08, $03, $04, $00, $00, $00, $00, $00 ; id 0
     db $09, $08, $03, $07, $07, $03, $06, $07, $07, $08, $08, $05, $07, $09, $08, $07, $08, $05, $08, $03, $02, $08, $08, $03, $08, $05, $09, $00, $00, $00, $00, $00 ; id 1
     db $02, $03, $05, $07, $06, $02, $07, $06, $06, $06, $03, $02, $07, $08, $02, $09, $02, $01, $08, $07, $01, $08, $07, $02, $08, $08, $03, $00, $00, $00, $00, $00 ; id 2

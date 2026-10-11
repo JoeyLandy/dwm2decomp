@@ -3052,7 +3052,7 @@ Jump_012_51FC:: ; address name
 Jump_012_5258::
     ldh a, [hMapId]
     ld c, a
-    ld hl, Data_012_52AD
+    ld hl, MapExitDestinationTable
 
 Jump_012_525E::
     ld a, [hl]
@@ -3109,7 +3109,7 @@ Jump_012_52A6::
 ; E-0182 (C1: ScriptCommand8A_Run_Case01, for maps without bit 7 of wMapType, scans 7-byte records from $52AD for the one whose first byte equals hMapId (there is no terminator and no bounds check), skips three more bytes when wLastWarpIndex = 2, then loads hMapId, hMapScreenX/Y from the nibbles of the next byte and wWarpDestX/Y from the nibbles of the byte after (each nibble x16), clearing wWarpDestFacing; 87 records end at the routine at $550E, and every map id is unique).
 ; record: map id; exit A (map, screen XY nibbles, position XY nibbles); exit B (same, used when wLastWarpIndex = 2)
 MapExitDestinationTable::
-Data_012_52AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_52AD:: ; address name
     db $2B, $2A, $00, $12, $24, $11, $25 ; id 0
     db $35, $30, $03, $44, $00, $00, $00 ; id 1
     db $38, $30, $53, $44, $00, $00, $00 ; id 2
