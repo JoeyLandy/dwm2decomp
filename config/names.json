@@ -6474,5 +6474,17 @@
   "05:4075": {"name": "ClearBattleStatusBitsWithMaskD_Bank05", "note": "wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL); not reached from traced code (E-0205)", "evidence": "reading (E-0205)"},
   "A1:4075": {"name": "ClearBattleStatusBitsWithMaskD_BankA1", "note": "wBattleStatus + 9 * E &= ClearBitMaskTable_BankA1[D] (AddAx9ToHL); not reached from traced code (E-0205)", "evidence": "reading (E-0205)"},
   "A3:4075": {"name": "ClearBattleStatusBitsWithMaskD_BankA3", "note": "wBattleStatus + 9 * E &= ClearBitMaskTable_BankA3[D] (AddAx9ToHL); not reached from traced code (E-0205)", "evidence": "reading (E-0205)"},
-  "1B:5352": {"name": "UnreferencedScreenInitFromBank46", "note": "clears $6F bytes from wScreenState, decompresses bank $46 $4001 to $8800, far-calls F1:$4AA8 and LoadPalette0FromData53C6, waits on wC8CB and jumps to $077A; no caller found (E-0197)", "evidence": "reading (E-0197)"}
+  "1B:5352": {"name": "UnreferencedScreenInitFromBank46", "note": "clears $6F bytes from wScreenState, decompresses bank $46 $4001 to $8800, far-calls F1:$4AA8 and LoadPalette0FromData53C6, waits on wC8CB and jumps to $077A; no caller found (E-0197)", "evidence": "reading (E-0197)"},
+  "3A:7106": {"name": "BattleText0HookRet_7106", "note": "bare ret, the hook of messages 0 and 1 (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:7108": {"name": "BattleText0HookRet_7108", "note": "bare ret (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:710C": {"name": "BattleText0HookRet_710C", "note": "bare ret (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:710D": {"name": "BattleText0HookListSidesTwice", "note": "ListSideMonsterIdsToWC0A0, then falls into BattleText0Hook0D, which lists again and jumps into WriteTargetNameOrTheMonsters ($785D) (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:711C": {"name": "BattleText0HookActorName", "note": "CopyActorNameToTextBuf0 (44 messages) (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:7120": {"name": "BattleText0HookActorNameAndDamage", "note": "CopyActorNameToTextBuf0, then WriteBattleDamageToTextBuf1 (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:7138": {"name": "BattleText0HookTargetNameAndGroupWord", "note": "CopyTargetNameToTextBuf0; then, when wSpeciesGroups[(wDefeatFlagsBA & $7F) - 1] has bit 7 set and is not $FF, WriteMonstersWordToTextBuf0 (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:7154": {"name": "BattleText0HookActorAndSkill_7154", "note": "CopyActorNameToTextBuf0, CopyActionSkillNameToTextBuf1 (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:7162": {"name": "BattleText0HookActorAndSkill_7162", "note": "CopyActorNameToTextBuf0, CopyActionSkillNameToTextBuf1 (the same as $7154) (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:7169": {"name": "BattleText0HookActorAndMappedSlot", "note": "CopyActorNameToTextBuf0, CopyMappedSlotNameToTextBuf1 (21 messages) (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:7183": {"name": "BattleText0HookTargetAndDefeatSlot", "note": "CopyTargetNameToTextBuf0, then the name of slot wDefeatByteD1 into wTextBuf1 (E-0210)", "evidence": "reading (E-0210)"},
+  "3A:794E": {"name": "WriteBattleDamageToTextBuf1", "note": "wTextBuf1 = wBattleDamage as a decimal string (WriteBCAsDecimalString) (E-0210)", "evidence": "reading (E-0210)"}
 }

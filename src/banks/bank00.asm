@@ -8545,7 +8545,7 @@ Jump_000_2F60::
     ret
 
 ; writes BC (below 10,000) as decimal digit bytes at HL without leading zeros, each followed by a $F0 terminator that the next digit overwrites (DivideBCByDE by 1000, 100, 10, then the remainder) (E-0180)
-; 2 call sites from 2 routines (e.g. BattleTextPrep35_Sub01, RunBattleActions_Case09_Case04)
+; 2 call sites from 2 routines (e.g. WriteBattleDamageToTextBuf1, RunBattleActions_Case09_Case04)
 WriteBCAsDecimalString::
 Func_000_2F84:: ; address name
     ld de, $03E8

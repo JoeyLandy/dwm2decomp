@@ -12742,6 +12742,167 @@
       ],
       "record": "effect byte for a far-side actor, for a near-side actor ($FF = none)",
       "note": "E-0209 (C1: 228 entries of $FF $FF between ActionEffectTable_Flag5 and ActionEffectTable_Flag2, the size of one more table; no reader found)."
+    },
+    {
+      "bank": "3A",
+      "addr": "57F7",
+      "label": "ActionSoundTable_Flag7",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "sound effect when the actor is on the far side, on the near side ($FF = none)"
+        }
+      ],
+      "record": "sound effect for a far-side actor, for a near-side actor ($FF = none)",
+      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 7, indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table)."
+    },
+    {
+      "bank": "3A",
+      "addr": "59BF",
+      "label": "ActionSoundTable_Flag6",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "sound effect when the actor is on the far side, on the near side ($FF = none)"
+        }
+      ],
+      "record": "sound effect for a far-side actor, for a near-side actor ($FF = none)",
+      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 6, indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table)."
+    },
+    {
+      "bank": "3A",
+      "addr": "5B87",
+      "label": "ActionSoundTable_Flag5A",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "sound effect when the actor is on the far side, on the near side ($FF = none)"
+        }
+      ],
+      "record": "sound effect for a far-side actor, for a near-side actor ($FF = none)",
+      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 5 with bit 4 (after SelectEffectByEffectFlags2Flags_Sub01), indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table)."
+    },
+    {
+      "bank": "3A",
+      "addr": "5D4F",
+      "label": "ActionSoundTable_Flag5B",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "sound effect when the actor is on the far side, on the near side ($FF = none)"
+        }
+      ],
+      "record": "sound effect for a far-side actor, for a near-side actor ($FF = none)",
+      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 5 without bit 4, indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table)."
+    },
+    {
+      "bank": "3A",
+      "addr": "5F17",
+      "label": "ActionSoundTable_Flag3",
+      "count": 208,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "sound effect when the actor is on the far side, on the near side ($FF = none)"
+        }
+      ],
+      "record": "sound effect for a far-side actor, for a near-side actor ($FF = none)",
+      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 3, indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 208 entries, up to the next table)."
+    },
+    {
+      "bank": "3A",
+      "addr": "60B7",
+      "label": "ActionSoundTable_Flag0",
+      "count": 40,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "sound effect when the actor is on the far side, on the near side ($FF = none)"
+        }
+      ],
+      "record": "sound effect for a far-side actor, for a near-side actor ($FF = none)",
+      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 0 (the target acts), indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 40 entries, up to the next table)."
+    },
+    {
+      "bank": "3A",
+      "addr": "6107",
+      "label": "ActionSoundTable_Flag2",
+      "count": 40,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "sound effect when the actor is on the far side, on the near side ($FF = none)"
+        }
+      ],
+      "record": "sound effect for a far-side actor, for a near-side actor ($FF = none)",
+      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 2 (the target acts), indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 40 entries, up to the next table)."
+    },
+    {
+      "bank": "3A",
+      "addr": "6DAA",
+      "label": "ActionBattleTextTable",
+      "count": 232,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "battle text index ($FF = none)"
+        }
+      ],
+      "note": "E-0210 (C1: ShowActionBattleTextFrom6DAA reads the byte at $6DAA + wBattleActionId and, unless it is $FF, passes it in D to ShowBattleText (action $CF first runs ShowActionBattleTextFrom6DAA_Sub01); 232 bytes end at ShowActionBattleText ($6E92))."
+    },
+    {
+      "bank": "3A",
+      "addr": "6F06",
+      "label": "BattleTextCategory0HookTable",
+      "count": 256,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "routine run before message D ($0000 = none)",
+          "name_targets": "BattleText0Hook",
+          "name_base": 0,
+          "name_unique_only": true,
+          "reason": "battle text hook"
+        }
+      ],
+      "note": "E-0210 (C1: ShowBattleTextCategory0 calls the word at $6F06 + 2 * D through JumpToWordAtHL when it is non-zero, then shows string D of category 0 with BeginStringDisplay_Bank2F; 256 words end exactly at the first target, a bare ret at $7106; most entries are $0000 or point at bare rets)."
+    },
+    {
+      "bank": "3A",
+      "addr": "6EA5",
+      "label": "ActionBattleTextTable2",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "battle text index ($FF = none)"
+        }
+      ],
+      "note": "E-0210 (C1: ShowActionBattleText (from Func_03B_42F4) reads the byte at $6EA5 + wBattleActionId and, unless it is $FF, passes it to ShowBattleText; 64 bytes end at ShowBattleTextCategory0 ($6EE5))."
     }
   ]
 }

@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0210 — Action sound and battle text tables, battle text hooks (bank $3A)
+
+- Kind: OBSERVATION (reading; C1).
+- **ActionSoundTable_Flag7/6/5A/5B ($57F7, $59BF, $5B87, $5D4F; 228 entries), _Flag3 ($5F17; 208), _Flag0 ($60B7; 40) and _Flag2 ($6107; 40).** SelectEffectByEffectFlags2Flags picks one by wEffectFlags2 and indexes it by wBattleActionId. Byte 1 is used for a near-side actor; a value other than $FF goes to QueueSoundEffect. Each table runs to the next.
+- **ActionBattleTextTable ($6DAA, 232 bytes) and ActionBattleTextTable2 ($6EA5, 64 bytes).** One battle text index per action ($FF = none), read by ShowActionBattleTextFrom6DAA and ShowActionBattleText. Each ends at the routine after it.
+- **BattleTextCategory0HookTable ($6F06, 256 code words).** ShowBattleTextCategory0 calls word D through JumpToWordAtHL when it is non-zero, before showing string D of category 0.
+  - The 256 words end exactly at the first target ($7106).
+  - The targets (the old INCBIN at $710C) are now traced: bare rets and small hooks that copy the actor, target, skill or slot name, or the damage, into the text buffers.
+  - Two hooks jump into the middle of CheckAllTargetsSame ($77D6) and WriteTargetNameOrTheMonsters ($785D). Once those tails were traced from the hooks, the fall-through heuristic no longer found the routines' own starts, so 3A:$77D3 and 3A:$785A are kept as configured code entries.
+- The hooks are named, and `tools/rank_unnamed.py` reports 0 address-only routines.
+- Binary verification: build/run241 PASS, 0 differing bytes.
+
 ### E-0209 — Sound note tables (bank 0); action effect tables (bank $3A)
 
 - Kind: OBSERVATION (reading; C1, the period table C2 through E-0019).

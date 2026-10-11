@@ -3742,35 +3742,35 @@ Func_03A_5762:: ; address name
 Jump_03A_5780::
     ld a, [wBattleTarget]
     ld [wBattleActor], a
-    ld hl, Data_03A_60B7
+    ld hl, ActionSoundTable_Flag0
     jr Jump_03A_57B4
 
 Jump_03A_578B::
     ld a, [wBattleTarget]
     ld [wBattleActor], a
-    ld hl, Data_03A_6107
+    ld hl, ActionSoundTable_Flag2
     jr Jump_03A_57B4
 
 Jump_03A_5796::
-    ld hl, Data_03A_57F7
+    ld hl, ActionSoundTable_Flag7
     jr Jump_03A_57B4
 
 Jump_03A_579B::
-    ld hl, Data_03A_59BF
+    ld hl, ActionSoundTable_Flag6
     jr Jump_03A_57B4
 
 Jump_03A_57A0::
     ld b, a
     call SelectEffectByEffectFlags2Flags_Sub01
     ret nz
-    ld hl, Data_03A_5B87
+    ld hl, ActionSoundTable_Flag5A
     bit 4, b
     jr nz, Jump_03A_57B4
-    ld hl, Data_03A_5D4F
+    ld hl, ActionSoundTable_Flag5B
     jr Jump_03A_57B4
 
 Jump_03A_57B1::
-    ld hl, Data_03A_5F17
+    ld hl, ActionSoundTable_Flag3
 
 Jump_03A_57B4::
     ld a, [wBattleActionId]
@@ -3824,96 +3824,1240 @@ Jump_03A_57F1::
     bit 6, a
     ret
 
-; address loaded by SelectEffectByEffectFlags2Flags
-Data_03A_57F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $80, $7C
-    ds $78, $7A
-    INCBIN "dwm2-cobi-us.gbc", $0E9871, $BE
-    ds $1C, $FF
-    db $80, $7C, $FF, $FF, $FF, $FF, $7A, $FF, $7A
-    ds $15, $FF
-    INCBIN "dwm2-cobi-us.gbc", $0E9969, $56
+; E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 7, indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table).
+; record: sound effect for a far-side actor, for a near-side actor ($FF = none)
+ActionSoundTable_Flag7::
+Data_03A_57F7:: ; address name
+    db $80, $7C ; id 0
+    db $7A, $7A ; id 1
+    db $7A, $7A ; id 2
+    db $7A, $7A ; id 3
+    db $7A, $7A ; id 4
+    db $7A, $7A ; id 5
+    db $7A, $7A ; id 6
+    db $7A, $7A ; id 7
+    db $7A, $7A ; id 8
+    db $7A, $7A ; id 9
+    db $7A, $7A ; id 10
+    db $7A, $7A ; id 11
+    db $7A, $7A ; id 12
+    db $7A, $7A ; id 13
+    db $7A, $7A ; id 14
+    db $7A, $7A ; id 15
+    db $7A, $7A ; id 16
+    db $7A, $7A ; id 17
+    db $7A, $7A ; id 18
+    db $7A, $7A ; id 19
+    db $7A, $7A ; id 20
+    db $7A, $7A ; id 21
+    db $7A, $7A ; id 22
+    db $7A, $7A ; id 23
+    db $7A, $7A ; id 24
+    db $7A, $7A ; id 25
+    db $7A, $7A ; id 26
+    db $7A, $7A ; id 27
+    db $7A, $7A ; id 28
+    db $7A, $7A ; id 29
+    db $7A, $7A ; id 30
+    db $7A, $7A ; id 31
+    db $7A, $7A ; id 32
+    db $7A, $7A ; id 33
+    db $7A, $7A ; id 34
+    db $7A, $7A ; id 35
+    db $7A, $7A ; id 36
+    db $7A, $7A ; id 37
+    db $7A, $7A ; id 38
+    db $7A, $7A ; id 39
+    db $7A, $7A ; id 40
+    db $7A, $7A ; id 41
+    db $7A, $7A ; id 42
+    db $7A, $7A ; id 43
+    db $7A, $7A ; id 44
+    db $7A, $7A ; id 45
+    db $7A, $7A ; id 46
+    db $7A, $7A ; id 47
+    db $7A, $7A ; id 48
+    db $7A, $7A ; id 49
+    db $7A, $7A ; id 50
+    db $7A, $7A ; id 51
+    db $7A, $7A ; id 52
+    db $7A, $7A ; id 53
+    db $7A, $7A ; id 54
+    db $7A, $7A ; id 55
+    db $7A, $7A ; id 56
+    db $7A, $7A ; id 57
+    db $7A, $7A ; id 58
+    db $7A, $7A ; id 59
+    db $7A, $7A ; id 60
+    db $80, $7C ; id 61
+    db $80, $7C ; id 62
+    db $80, $7C ; id 63
+    db $80, $7C ; id 64
+    db $80, $7C ; id 65
+    db $80, $7C ; id 66
+    db $80, $7C ; id 67
+    db $80, $7C ; id 68
+    db $80, $7C ; id 69
+    db $80, $7C ; id 70
+    db $80, $7C ; id 71
+    db $80, $7C ; id 72
+    db $80, $7C ; id 73
+    db $80, $7C ; id 74
+    db $80, $7C ; id 75
+    db $80, $7C ; id 76
+    db $80, $7C ; id 77
+    db $80, $7C ; id 78
+    db $80, $7C ; id 79
+    db $80, $7C ; id 80
+    db $80, $7C ; id 81
+    db $80, $7C ; id 82
+    db $80, $7C ; id 83
+    db $80, $7C ; id 84
+    db $80, $7C ; id 85
+    db $80, $7C ; id 86
+    db $80, $7C ; id 87
+    db $80, $7C ; id 88
+    db $80, $7C ; id 89
+    db $80, $7C ; id 90
+    db $80, $7C ; id 91
+    db $80, $7C ; id 92
+    db $80, $7C ; id 93
+    db $80, $7C ; id 94
+    db $80, $7C ; id 95
+    db $80, $7C ; id 96
+    db $80, $7C ; id 97
+    db $80, $7C ; id 98
+    db $80, $7C ; id 99
+    db $80, $7C ; id 100
+    db $80, $7C ; id 101
+    db $80, $7C ; id 102
+    db $80, $7C ; id 103
+    db $FF, $FF ; id 104
+    db $80, $7C ; id 105
+    db $80, $7C ; id 106
+    db $80, $7C ; id 107
+    db $80, $7C ; id 108
+    db $80, $7C ; id 109
+    db $80, $7C ; id 110
+    db $80, $7C ; id 111
+    db $80, $7C ; id 112
+    db $80, $7C ; id 113
+    db $80, $7C ; id 114
+    db $80, $7C ; id 115
+    db $80, $7C ; id 116
+    db $80, $7C ; id 117
+    db $80, $7C ; id 118
+    db $80, $7C ; id 119
+    db $80, $7C ; id 120
+    db $80, $7C ; id 121
+    db $80, $7C ; id 122
+    db $80, $7C ; id 123
+    db $80, $7C ; id 124
+    db $80, $7C ; id 125
+    db $80, $7C ; id 126
+    db $FF, $FF ; id 127
+    db $FF, $FF ; id 128
+    db $FF, $FF ; id 129
+    db $FF, $FF ; id 130
+    db $FF, $FF ; id 131
+    db $FF, $FF ; id 132
+    db $7A, $7A ; id 133
+    db $7A, $7A ; id 134
+    db $7A, $7A ; id 135
+    db $7A, $7A ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $80, $7C ; id 139
+    db $80, $7C ; id 140
+    db $80, $7C ; id 141
+    db $80, $7C ; id 142
+    db $7C, $7C ; id 143
+    db $FF, $FF ; id 144
+    db $7A, $7A ; id 145
+    db $80, $7C ; id 146
+    db $80, $7C ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $7A, $7A ; id 155
+    db $FF, $FF ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $FF, $FF ; id 159
+    db $FF, $FF ; id 160
+    db $FF, $FF ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $80, $7C ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $7A, $FF ; id 173
+    db $7A, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $FF, $FF ; id 176
+    db $FF, $FF ; id 177
+    db $FF, $FF ; id 178
+    db $FF, $FF ; id 179
+    db $FF, $FF ; id 180
+    db $FF, $FF ; id 181
+    db $FF, $FF ; id 182
+    db $FF, $FF ; id 183
+    db $FF, $FF ; id 184
+    db $80, $7C ; id 185
+    db $FF, $FF ; id 186
+    db $FF, $FF ; id 187
+    db $FF, $FF ; id 188
+    db $FF, $FF ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $80, $7C ; id 192
+    db $80, $7C ; id 193
+    db $80, $7C ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $FF, $FF ; id 200
+    db $65, $65 ; id 201
+    db $65, $65 ; id 202
+    db $65, $65 ; id 203
+    db $65, $65 ; id 204
+    db $65, $65 ; id 205
+    db $FF, $FF ; id 206
+    db $FF, $FF ; id 207
+    db $7A, $7A ; id 208
+    db $7A, $7A ; id 209
+    db $80, $7C ; id 210
+    db $80, $7C ; id 211
+    db $80, $7C ; id 212
+    db $80, $7C ; id 213
+    db $7A, $7A ; id 214
+    db $80, $7C ; id 215
+    db $80, $7C ; id 216
+    db $7A, $7A ; id 217
+    db $FF, $FF ; id 218
+    db $FF, $FF ; id 219
+    db $7A, $7A ; id 220
+    db $FF, $FF ; id 221
+    db $FF, $FF ; id 222
+    db $7A, $7A ; id 223
+    db $FF, $FF ; id 224
+    db $FF, $FF ; id 225
+    db $FF, $FF ; id 226
+    db $FF, $FF ; id 227
 
-; address loaded by SelectEffectByEffectFlags2Flags
-Data_03A_59BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $FF, $FF, $89, $FF, $8B, $FF, $8B, $FF, $8D, $FF, $8D, $FF, $8F, $FF, $90
-    db $FF, $D9, $FF, $91, $FF, $93, $FF, $93, $FF, $94, $FF, $97, $FF, $97, $FF, $98
-    db $FF, $95, $FF, $95, $FF, $96
-    ds $55, $FF
-    INCBIN "dwm2-cobi-us.gbc", $0E9A3A, $61
-    ds $2A, $FF
-    db $B0, $B0
-    ds $1B, $FF
-    db $B6
-    ds $12, $FF
-    db $DC, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $BA
-    ds $5E, $FF
-    db $BC, $FF, $BD, $FF, $BF, $FF, $C1, $FF, $C3, $FF, $C5, $FF, $FF, $FF, $99, $FF
-    db $99, $FF, $C7
-    ds $12, $FF
-    db $CB, $FF
+; E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 6, indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table).
+; record: sound effect for a far-side actor, for a near-side actor ($FF = none)
+ActionSoundTable_Flag6::
+Data_03A_59BF:: ; address name
+    db $FF, $FF ; id 0
+    db $FF, $89 ; id 1
+    db $FF, $8B ; id 2
+    db $FF, $8B ; id 3
+    db $FF, $8D ; id 4
+    db $FF, $8D ; id 5
+    db $FF, $8F ; id 6
+    db $FF, $90 ; id 7
+    db $FF, $D9 ; id 8
+    db $FF, $91 ; id 9
+    db $FF, $93 ; id 10
+    db $FF, $93 ; id 11
+    db $FF, $94 ; id 12
+    db $FF, $97 ; id 13
+    db $FF, $97 ; id 14
+    db $FF, $98 ; id 15
+    db $FF, $95 ; id 16
+    db $FF, $95 ; id 17
+    db $FF, $96 ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $FF, $FF ; id 25
+    db $FF, $FF ; id 26
+    db $FF, $FF ; id 27
+    db $FF, $FF ; id 28
+    db $FF, $FF ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $FF, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $FF, $FF ; id 36
+    db $FF, $FF ; id 37
+    db $FF, $FF ; id 38
+    db $FF, $FF ; id 39
+    db $FF, $FF ; id 40
+    db $FF, $FF ; id 41
+    db $FF, $FF ; id 42
+    db $FF, $FF ; id 43
+    db $FF, $FF ; id 44
+    db $FF, $FF ; id 45
+    db $FF, $FF ; id 46
+    db $FF, $FF ; id 47
+    db $FF, $FF ; id 48
+    db $FF, $FF ; id 49
+    db $FF, $FF ; id 50
+    db $FF, $FF ; id 51
+    db $FF, $FF ; id 52
+    db $FF, $FF ; id 53
+    db $FF, $FF ; id 54
+    db $FF, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $FF, $FF ; id 58
+    db $FF, $FF ; id 59
+    db $FF, $FF ; id 60
+    db $FF, $AE ; id 61
+    db $FF, $AC ; id 62
+    db $FF, $AB ; id 63
+    db $FF, $8D ; id 64
+    db $FF, $8D ; id 65
+    db $FF, $8F ; id 66
+    db $FF, $9F ; id 67
+    db $FF, $95 ; id 68
+    db $FF, $95 ; id 69
+    db $FF, $96 ; id 70
+    db $FF, $9D ; id 71
+    db $FF, $93 ; id 72
+    db $FF, $94 ; id 73
+    db $FF, $97 ; id 74
+    db $FF, $9E ; id 75
+    db $FF, $B2 ; id 76
+    db $FF, $B4 ; id 77
+    db $FF, $FF ; id 78
+    db $FF, $FF ; id 79
+    db $FF, $A2 ; id 80
+    db $FF, $A4 ; id 81
+    db $FF, $A3 ; id 82
+    db $FF, $A5 ; id 83
+    db $FF, $A7 ; id 84
+    db $FF, $99 ; id 85
+    db $FF, $99 ; id 86
+    db $FF, $A8 ; id 87
+    db $FF, $A7 ; id 88
+    db $FF, $99 ; id 89
+    db $FF, $DA ; id 90
+    db $FF, $DA ; id 91
+    db $FF, $99 ; id 92
+    db $FF, $B8 ; id 93
+    db $FF, $99 ; id 94
+    db $FF, $FF ; id 95
+    db $FF, $FF ; id 96
+    db $FF, $FF ; id 97
+    db $FF, $99 ; id 98
+    db $FF, $FF ; id 99
+    db $FF, $FF ; id 100
+    db $FF, $99 ; id 101
+    db $FF, $AA ; id 102
+    db $FF, $A9 ; id 103
+    db $FF, $FF ; id 104
+    db $FF, $FF ; id 105
+    db $FF, $FF ; id 106
+    db $FF, $99 ; id 107
+    db $FF, $99 ; id 108
+    db $FF, $99 ; id 109
+    db $FF, $FF ; id 110
+    db $FF, $FF ; id 111
+    db $FF, $FF ; id 112
+    db $FF, $FF ; id 113
+    db $FF, $FF ; id 114
+    db $FF, $FF ; id 115
+    db $FF, $FF ; id 116
+    db $FF, $FF ; id 117
+    db $FF, $FF ; id 118
+    db $FF, $FF ; id 119
+    db $FF, $FF ; id 120
+    db $FF, $FF ; id 121
+    db $FF, $FF ; id 122
+    db $FF, $FF ; id 123
+    db $FF, $FF ; id 124
+    db $FF, $FF ; id 125
+    db $FF, $FF ; id 126
+    db $FF, $FF ; id 127
+    db $FF, $FF ; id 128
+    db $FF, $FF ; id 129
+    db $FF, $FF ; id 130
+    db $B0, $B0 ; id 131
+    db $FF, $FF ; id 132
+    db $FF, $FF ; id 133
+    db $FF, $FF ; id 134
+    db $FF, $FF ; id 135
+    db $FF, $FF ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $FF, $FF ; id 139
+    db $FF, $FF ; id 140
+    db $FF, $FF ; id 141
+    db $FF, $FF ; id 142
+    db $FF, $FF ; id 143
+    db $FF, $FF ; id 144
+    db $FF, $B6 ; id 145
+    db $FF, $FF ; id 146
+    db $FF, $FF ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $DC, $FF ; id 155
+    db $FF, $FF ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $FF, $FF ; id 159
+    db $FF, $FF ; id 160
+    db $BA, $FF ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $FF, $FF ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $FF, $FF ; id 173
+    db $FF, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $FF, $FF ; id 176
+    db $FF, $FF ; id 177
+    db $FF, $FF ; id 178
+    db $FF, $FF ; id 179
+    db $FF, $FF ; id 180
+    db $FF, $FF ; id 181
+    db $FF, $FF ; id 182
+    db $FF, $FF ; id 183
+    db $FF, $FF ; id 184
+    db $FF, $FF ; id 185
+    db $FF, $FF ; id 186
+    db $FF, $FF ; id 187
+    db $FF, $FF ; id 188
+    db $FF, $FF ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $FF, $FF ; id 192
+    db $FF, $FF ; id 193
+    db $FF, $FF ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $FF, $FF ; id 200
+    db $FF, $FF ; id 201
+    db $FF, $FF ; id 202
+    db $FF, $FF ; id 203
+    db $FF, $FF ; id 204
+    db $FF, $FF ; id 205
+    db $FF, $FF ; id 206
+    db $FF, $FF ; id 207
+    db $FF, $BC ; id 208
+    db $FF, $BD ; id 209
+    db $FF, $BF ; id 210
+    db $FF, $C1 ; id 211
+    db $FF, $C3 ; id 212
+    db $FF, $C5 ; id 213
+    db $FF, $FF ; id 214
+    db $FF, $99 ; id 215
+    db $FF, $99 ; id 216
+    db $FF, $C7 ; id 217
+    db $FF, $FF ; id 218
+    db $FF, $FF ; id 219
+    db $FF, $FF ; id 220
+    db $FF, $FF ; id 221
+    db $FF, $FF ; id 222
+    db $FF, $FF ; id 223
+    db $FF, $FF ; id 224
+    db $FF, $FF ; id 225
+    db $FF, $FF ; id 226
+    db $CB, $FF ; id 227
 
-; address loaded by SelectEffectByEffectFlags2Flags
-Data_03A_5B87:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $26, $81
-    db $B1, $B1, $B1, $B1, $B1, $B1
-    ds $10, $85
-    db $FF, $FF, $FF, $FF, $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $86, $86
-    db $86, $86, $87, $87, $87, $87, $86, $86, $86, $86, $87, $87, $87, $87, $86, $86
-    db $99, $99, $88, $88, $88, $88, $86, $FF, $86, $87, $87, $87, $FF, $88, $FF, $FF
-    db $9B, $9B, $9B, $9B, $FF, $FF, $FF, $FF, $9A, $9A, $9A, $9A, $FF, $FF
-    ds $56, $81
-    db $FF, $FF
-    ds $10, $81
-    db $88, $88, $88, $88, $88, $88, $88, $88, $88, $88, $87, $87, $86, $87, $88, $88
-    db $B1, $B1, $88, $88, $85, $85, $85, $85, $FF, $FF, $88, $99, $81, $81, $FF, $FF
-    db $85, $85, $87, $87
-    ds $10, $FF
-    db $88, $88, $88, $88, $81, $81, $81, $81, $88, $88, $81, $81, $7A, $7A, $87, $87
-    db $87, $87, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    db $9B, $9B, $85, $85, $FF, $FF, $FF, $FF, $85, $85
-    ds $14, $FF
-    INCBIN "dwm2-cobi-us.gbc", $0E9CDB, $4C
-    ds $14, $81
-    db $85, $85, $FF, $FF, $9A, $9A, $86, $86, $FF, $FF, $86, $87, $FF, $FF, $88, $88
-    db $FF, $FF, $FF, $FF
+; E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 5 with bit 4 (after SelectEffectByEffectFlags2Flags_Sub01), indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table).
+; record: sound effect for a far-side actor, for a near-side actor ($FF = none)
+ActionSoundTable_Flag5A::
+Data_03A_5B87:: ; address name
+    db $81, $81 ; id 0
+    db $81, $81 ; id 1
+    db $81, $81 ; id 2
+    db $81, $81 ; id 3
+    db $81, $81 ; id 4
+    db $81, $81 ; id 5
+    db $81, $81 ; id 6
+    db $81, $81 ; id 7
+    db $81, $81 ; id 8
+    db $81, $81 ; id 9
+    db $81, $81 ; id 10
+    db $81, $81 ; id 11
+    db $81, $81 ; id 12
+    db $81, $81 ; id 13
+    db $81, $81 ; id 14
+    db $81, $81 ; id 15
+    db $81, $81 ; id 16
+    db $81, $81 ; id 17
+    db $81, $81 ; id 18
+    db $B1, $B1 ; id 19
+    db $B1, $B1 ; id 20
+    db $B1, $B1 ; id 21
+    db $85, $85 ; id 22
+    db $85, $85 ; id 23
+    db $85, $85 ; id 24
+    db $85, $85 ; id 25
+    db $85, $85 ; id 26
+    db $85, $85 ; id 27
+    db $85, $85 ; id 28
+    db $85, $85 ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $85, $85 ; id 32
+    db $85, $85 ; id 33
+    db $85, $85 ; id 34
+    db $85, $85 ; id 35
+    db $85, $85 ; id 36
+    db $86, $86 ; id 37
+    db $86, $86 ; id 38
+    db $87, $87 ; id 39
+    db $87, $87 ; id 40
+    db $86, $86 ; id 41
+    db $86, $86 ; id 42
+    db $87, $87 ; id 43
+    db $87, $87 ; id 44
+    db $86, $86 ; id 45
+    db $99, $99 ; id 46
+    db $88, $88 ; id 47
+    db $88, $88 ; id 48
+    db $86, $FF ; id 49
+    db $86, $87 ; id 50
+    db $87, $87 ; id 51
+    db $FF, $88 ; id 52
+    db $FF, $FF ; id 53
+    db $9B, $9B ; id 54
+    db $9B, $9B ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $9A, $9A ; id 58
+    db $9A, $9A ; id 59
+    db $FF, $FF ; id 60
+    db $81, $81 ; id 61
+    db $81, $81 ; id 62
+    db $81, $81 ; id 63
+    db $81, $81 ; id 64
+    db $81, $81 ; id 65
+    db $81, $81 ; id 66
+    db $81, $81 ; id 67
+    db $81, $81 ; id 68
+    db $81, $81 ; id 69
+    db $81, $81 ; id 70
+    db $81, $81 ; id 71
+    db $81, $81 ; id 72
+    db $81, $81 ; id 73
+    db $81, $81 ; id 74
+    db $81, $81 ; id 75
+    db $81, $81 ; id 76
+    db $81, $81 ; id 77
+    db $81, $81 ; id 78
+    db $81, $81 ; id 79
+    db $81, $81 ; id 80
+    db $81, $81 ; id 81
+    db $81, $81 ; id 82
+    db $81, $81 ; id 83
+    db $81, $81 ; id 84
+    db $81, $81 ; id 85
+    db $81, $81 ; id 86
+    db $81, $81 ; id 87
+    db $81, $81 ; id 88
+    db $81, $81 ; id 89
+    db $81, $81 ; id 90
+    db $81, $81 ; id 91
+    db $81, $81 ; id 92
+    db $81, $81 ; id 93
+    db $81, $81 ; id 94
+    db $81, $81 ; id 95
+    db $81, $81 ; id 96
+    db $81, $81 ; id 97
+    db $81, $81 ; id 98
+    db $81, $81 ; id 99
+    db $81, $81 ; id 100
+    db $81, $81 ; id 101
+    db $81, $81 ; id 102
+    db $81, $81 ; id 103
+    db $FF, $FF ; id 104
+    db $81, $81 ; id 105
+    db $81, $81 ; id 106
+    db $81, $81 ; id 107
+    db $81, $81 ; id 108
+    db $81, $81 ; id 109
+    db $81, $81 ; id 110
+    db $81, $81 ; id 111
+    db $81, $81 ; id 112
+    db $88, $88 ; id 113
+    db $88, $88 ; id 114
+    db $88, $88 ; id 115
+    db $88, $88 ; id 116
+    db $88, $88 ; id 117
+    db $87, $87 ; id 118
+    db $86, $87 ; id 119
+    db $88, $88 ; id 120
+    db $B1, $B1 ; id 121
+    db $88, $88 ; id 122
+    db $85, $85 ; id 123
+    db $85, $85 ; id 124
+    db $FF, $FF ; id 125
+    db $88, $99 ; id 126
+    db $81, $81 ; id 127
+    db $FF, $FF ; id 128
+    db $85, $85 ; id 129
+    db $87, $87 ; id 130
+    db $FF, $FF ; id 131
+    db $FF, $FF ; id 132
+    db $FF, $FF ; id 133
+    db $FF, $FF ; id 134
+    db $FF, $FF ; id 135
+    db $FF, $FF ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $88, $88 ; id 139
+    db $88, $88 ; id 140
+    db $81, $81 ; id 141
+    db $81, $81 ; id 142
+    db $88, $88 ; id 143
+    db $81, $81 ; id 144
+    db $7A, $7A ; id 145
+    db $87, $87 ; id 146
+    db $87, $87 ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $9B, $9B ; id 155
+    db $85, $85 ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $85, $85 ; id 159
+    db $FF, $FF ; id 160
+    db $FF, $FF ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $81, $81 ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $87, $87 ; id 173
+    db $FF, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $82, $82 ; id 176
+    db $85, $85 ; id 177
+    db $7A, $7A ; id 178
+    db $FF, $FF ; id 179
+    db $86, $86 ; id 180
+    db $88, $88 ; id 181
+    db $87, $87 ; id 182
+    db $FF, $FF ; id 183
+    db $9A, $9A ; id 184
+    db $81, $81 ; id 185
+    db $FF, $FF ; id 186
+    db $FF, $FF ; id 187
+    db $85, $85 ; id 188
+    db $81, $81 ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $81, $81 ; id 192
+    db $81, $81 ; id 193
+    db $81, $81 ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $FF, $FF ; id 200
+    db $81, $81 ; id 201
+    db $81, $81 ; id 202
+    db $81, $81 ; id 203
+    db $81, $81 ; id 204
+    db $81, $81 ; id 205
+    db $FF, $FF ; id 206
+    db $FF, $FF ; id 207
+    db $81, $81 ; id 208
+    db $81, $81 ; id 209
+    db $81, $81 ; id 210
+    db $81, $81 ; id 211
+    db $81, $81 ; id 212
+    db $81, $81 ; id 213
+    db $81, $81 ; id 214
+    db $81, $81 ; id 215
+    db $81, $81 ; id 216
+    db $81, $81 ; id 217
+    db $85, $85 ; id 218
+    db $FF, $FF ; id 219
+    db $9A, $9A ; id 220
+    db $86, $86 ; id 221
+    db $FF, $FF ; id 222
+    db $86, $87 ; id 223
+    db $FF, $FF ; id 224
+    db $88, $88 ; id 225
+    db $FF, $FF ; id 226
+    db $FF, $FF ; id 227
 
-; address loaded by SelectEffectByEffectFlags2Flags
-Data_03A_5D4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $84, $84
-    ds $9E, $FF
-    ds $30, $84
-    db $FF, $FF
-    ds $10, $84
-    ds $72, $FF
-    db $84, $84
-    ds $1C, $FF
-    db $84, $84, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $84, $84
-    db $84, $84, $84, $84, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $82, $82
-    db $FF, $FF, $FF, $FF, $FF, $FF, $84, $84, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF
-    db $FF, $FF, $84, $84, $84, $84, $84, $84, $84, $84, $FF, $FF, $84, $84, $84, $84
-    ds $16, $FF
+; E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 5 without bit 4, indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table).
+; record: sound effect for a far-side actor, for a near-side actor ($FF = none)
+ActionSoundTable_Flag5B::
+Data_03A_5D4F:: ; address name
+    db $84, $84 ; id 0
+    db $FF, $FF ; id 1
+    db $FF, $FF ; id 2
+    db $FF, $FF ; id 3
+    db $FF, $FF ; id 4
+    db $FF, $FF ; id 5
+    db $FF, $FF ; id 6
+    db $FF, $FF ; id 7
+    db $FF, $FF ; id 8
+    db $FF, $FF ; id 9
+    db $FF, $FF ; id 10
+    db $FF, $FF ; id 11
+    db $FF, $FF ; id 12
+    db $FF, $FF ; id 13
+    db $FF, $FF ; id 14
+    db $FF, $FF ; id 15
+    db $FF, $FF ; id 16
+    db $FF, $FF ; id 17
+    db $FF, $FF ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $FF, $FF ; id 25
+    db $FF, $FF ; id 26
+    db $FF, $FF ; id 27
+    db $FF, $FF ; id 28
+    db $FF, $FF ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $FF, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $FF, $FF ; id 36
+    db $FF, $FF ; id 37
+    db $FF, $FF ; id 38
+    db $FF, $FF ; id 39
+    db $FF, $FF ; id 40
+    db $FF, $FF ; id 41
+    db $FF, $FF ; id 42
+    db $FF, $FF ; id 43
+    db $FF, $FF ; id 44
+    db $FF, $FF ; id 45
+    db $FF, $FF ; id 46
+    db $FF, $FF ; id 47
+    db $FF, $FF ; id 48
+    db $FF, $FF ; id 49
+    db $FF, $FF ; id 50
+    db $FF, $FF ; id 51
+    db $FF, $FF ; id 52
+    db $FF, $FF ; id 53
+    db $FF, $FF ; id 54
+    db $FF, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $FF, $FF ; id 58
+    db $FF, $FF ; id 59
+    db $FF, $FF ; id 60
+    db $FF, $FF ; id 61
+    db $FF, $FF ; id 62
+    db $FF, $FF ; id 63
+    db $FF, $FF ; id 64
+    db $FF, $FF ; id 65
+    db $FF, $FF ; id 66
+    db $FF, $FF ; id 67
+    db $FF, $FF ; id 68
+    db $FF, $FF ; id 69
+    db $FF, $FF ; id 70
+    db $FF, $FF ; id 71
+    db $FF, $FF ; id 72
+    db $FF, $FF ; id 73
+    db $FF, $FF ; id 74
+    db $FF, $FF ; id 75
+    db $FF, $FF ; id 76
+    db $FF, $FF ; id 77
+    db $FF, $FF ; id 78
+    db $FF, $FF ; id 79
+    db $84, $84 ; id 80
+    db $84, $84 ; id 81
+    db $84, $84 ; id 82
+    db $84, $84 ; id 83
+    db $84, $84 ; id 84
+    db $84, $84 ; id 85
+    db $84, $84 ; id 86
+    db $84, $84 ; id 87
+    db $84, $84 ; id 88
+    db $84, $84 ; id 89
+    db $84, $84 ; id 90
+    db $84, $84 ; id 91
+    db $84, $84 ; id 92
+    db $84, $84 ; id 93
+    db $84, $84 ; id 94
+    db $84, $84 ; id 95
+    db $84, $84 ; id 96
+    db $84, $84 ; id 97
+    db $84, $84 ; id 98
+    db $84, $84 ; id 99
+    db $84, $84 ; id 100
+    db $84, $84 ; id 101
+    db $84, $84 ; id 102
+    db $84, $84 ; id 103
+    db $FF, $FF ; id 104
+    db $84, $84 ; id 105
+    db $84, $84 ; id 106
+    db $84, $84 ; id 107
+    db $84, $84 ; id 108
+    db $84, $84 ; id 109
+    db $84, $84 ; id 110
+    db $84, $84 ; id 111
+    db $84, $84 ; id 112
+    db $FF, $FF ; id 113
+    db $FF, $FF ; id 114
+    db $FF, $FF ; id 115
+    db $FF, $FF ; id 116
+    db $FF, $FF ; id 117
+    db $FF, $FF ; id 118
+    db $FF, $FF ; id 119
+    db $FF, $FF ; id 120
+    db $FF, $FF ; id 121
+    db $FF, $FF ; id 122
+    db $FF, $FF ; id 123
+    db $FF, $FF ; id 124
+    db $FF, $FF ; id 125
+    db $FF, $FF ; id 126
+    db $FF, $FF ; id 127
+    db $FF, $FF ; id 128
+    db $FF, $FF ; id 129
+    db $FF, $FF ; id 130
+    db $FF, $FF ; id 131
+    db $FF, $FF ; id 132
+    db $FF, $FF ; id 133
+    db $FF, $FF ; id 134
+    db $FF, $FF ; id 135
+    db $FF, $FF ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $FF, $FF ; id 139
+    db $FF, $FF ; id 140
+    db $FF, $FF ; id 141
+    db $FF, $FF ; id 142
+    db $FF, $FF ; id 143
+    db $FF, $FF ; id 144
+    db $FF, $FF ; id 145
+    db $FF, $FF ; id 146
+    db $FF, $FF ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $FF, $FF ; id 155
+    db $FF, $FF ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $FF, $FF ; id 159
+    db $FF, $FF ; id 160
+    db $FF, $FF ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $84, $84 ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $FF, $FF ; id 173
+    db $FF, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $FF, $FF ; id 176
+    db $FF, $FF ; id 177
+    db $FF, $FF ; id 178
+    db $FF, $FF ; id 179
+    db $FF, $FF ; id 180
+    db $FF, $FF ; id 181
+    db $FF, $FF ; id 182
+    db $FF, $FF ; id 183
+    db $FF, $FF ; id 184
+    db $84, $84 ; id 185
+    db $FF, $FF ; id 186
+    db $FF, $FF ; id 187
+    db $FF, $FF ; id 188
+    db $FF, $FF ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $84, $84 ; id 192
+    db $84, $84 ; id 193
+    db $84, $84 ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $82, $82 ; id 200
+    db $FF, $FF ; id 201
+    db $FF, $FF ; id 202
+    db $FF, $FF ; id 203
+    db $84, $84 ; id 204
+    db $FF, $FF ; id 205
+    db $FF, $FF ; id 206
+    db $FF, $FF ; id 207
+    db $FF, $FF ; id 208
+    db $FF, $FF ; id 209
+    db $84, $84 ; id 210
+    db $84, $84 ; id 211
+    db $84, $84 ; id 212
+    db $84, $84 ; id 213
+    db $FF, $FF ; id 214
+    db $84, $84 ; id 215
+    db $84, $84 ; id 216
+    db $FF, $FF ; id 217
+    db $FF, $FF ; id 218
+    db $FF, $FF ; id 219
+    db $FF, $FF ; id 220
+    db $FF, $FF ; id 221
+    db $FF, $FF ; id 222
+    db $FF, $FF ; id 223
+    db $FF, $FF ; id 224
+    db $FF, $FF ; id 225
+    db $FF, $FF ; id 226
+    db $FF, $FF ; id 227
 
-; address loaded by SelectEffectByEffectFlags2Flags
-Data_03A_5F17:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $BE, $FF
-    db $88, $88, $88, $88, $88, $88
-    ds $16, $FF
-    db $81, $81, $FF, $FF, $81, $81, $81, $81
-    ds $BE, $FF
+; E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 3, indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 208 entries, up to the next table).
+; record: sound effect for a far-side actor, for a near-side actor ($FF = none)
+ActionSoundTable_Flag3::
+Data_03A_5F17:: ; address name
+    db $FF, $FF ; id 0
+    db $FF, $FF ; id 1
+    db $FF, $FF ; id 2
+    db $FF, $FF ; id 3
+    db $FF, $FF ; id 4
+    db $FF, $FF ; id 5
+    db $FF, $FF ; id 6
+    db $FF, $FF ; id 7
+    db $FF, $FF ; id 8
+    db $FF, $FF ; id 9
+    db $FF, $FF ; id 10
+    db $FF, $FF ; id 11
+    db $FF, $FF ; id 12
+    db $FF, $FF ; id 13
+    db $FF, $FF ; id 14
+    db $FF, $FF ; id 15
+    db $FF, $FF ; id 16
+    db $FF, $FF ; id 17
+    db $FF, $FF ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $FF, $FF ; id 25
+    db $FF, $FF ; id 26
+    db $FF, $FF ; id 27
+    db $FF, $FF ; id 28
+    db $FF, $FF ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $FF, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $FF, $FF ; id 36
+    db $FF, $FF ; id 37
+    db $FF, $FF ; id 38
+    db $FF, $FF ; id 39
+    db $FF, $FF ; id 40
+    db $FF, $FF ; id 41
+    db $FF, $FF ; id 42
+    db $FF, $FF ; id 43
+    db $FF, $FF ; id 44
+    db $FF, $FF ; id 45
+    db $FF, $FF ; id 46
+    db $FF, $FF ; id 47
+    db $FF, $FF ; id 48
+    db $FF, $FF ; id 49
+    db $FF, $FF ; id 50
+    db $FF, $FF ; id 51
+    db $FF, $FF ; id 52
+    db $FF, $FF ; id 53
+    db $FF, $FF ; id 54
+    db $FF, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $FF, $FF ; id 58
+    db $FF, $FF ; id 59
+    db $FF, $FF ; id 60
+    db $FF, $FF ; id 61
+    db $FF, $FF ; id 62
+    db $FF, $FF ; id 63
+    db $FF, $FF ; id 64
+    db $FF, $FF ; id 65
+    db $FF, $FF ; id 66
+    db $FF, $FF ; id 67
+    db $FF, $FF ; id 68
+    db $FF, $FF ; id 69
+    db $FF, $FF ; id 70
+    db $FF, $FF ; id 71
+    db $FF, $FF ; id 72
+    db $FF, $FF ; id 73
+    db $FF, $FF ; id 74
+    db $FF, $FF ; id 75
+    db $FF, $FF ; id 76
+    db $FF, $FF ; id 77
+    db $FF, $FF ; id 78
+    db $FF, $FF ; id 79
+    db $FF, $FF ; id 80
+    db $FF, $FF ; id 81
+    db $FF, $FF ; id 82
+    db $FF, $FF ; id 83
+    db $FF, $FF ; id 84
+    db $FF, $FF ; id 85
+    db $FF, $FF ; id 86
+    db $FF, $FF ; id 87
+    db $FF, $FF ; id 88
+    db $FF, $FF ; id 89
+    db $FF, $FF ; id 90
+    db $FF, $FF ; id 91
+    db $FF, $FF ; id 92
+    db $FF, $FF ; id 93
+    db $FF, $FF ; id 94
+    db $88, $88 ; id 95
+    db $88, $88 ; id 96
+    db $88, $88 ; id 97
+    db $FF, $FF ; id 98
+    db $FF, $FF ; id 99
+    db $FF, $FF ; id 100
+    db $FF, $FF ; id 101
+    db $FF, $FF ; id 102
+    db $FF, $FF ; id 103
+    db $FF, $FF ; id 104
+    db $FF, $FF ; id 105
+    db $FF, $FF ; id 106
+    db $FF, $FF ; id 107
+    db $FF, $FF ; id 108
+    db $81, $81 ; id 109
+    db $FF, $FF ; id 110
+    db $81, $81 ; id 111
+    db $81, $81 ; id 112
+    db $FF, $FF ; id 113
+    db $FF, $FF ; id 114
+    db $FF, $FF ; id 115
+    db $FF, $FF ; id 116
+    db $FF, $FF ; id 117
+    db $FF, $FF ; id 118
+    db $FF, $FF ; id 119
+    db $FF, $FF ; id 120
+    db $FF, $FF ; id 121
+    db $FF, $FF ; id 122
+    db $FF, $FF ; id 123
+    db $FF, $FF ; id 124
+    db $FF, $FF ; id 125
+    db $FF, $FF ; id 126
+    db $FF, $FF ; id 127
+    db $FF, $FF ; id 128
+    db $FF, $FF ; id 129
+    db $FF, $FF ; id 130
+    db $FF, $FF ; id 131
+    db $FF, $FF ; id 132
+    db $FF, $FF ; id 133
+    db $FF, $FF ; id 134
+    db $FF, $FF ; id 135
+    db $FF, $FF ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $FF, $FF ; id 139
+    db $FF, $FF ; id 140
+    db $FF, $FF ; id 141
+    db $FF, $FF ; id 142
+    db $FF, $FF ; id 143
+    db $FF, $FF ; id 144
+    db $FF, $FF ; id 145
+    db $FF, $FF ; id 146
+    db $FF, $FF ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $FF, $FF ; id 155
+    db $FF, $FF ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $FF, $FF ; id 159
+    db $FF, $FF ; id 160
+    db $FF, $FF ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $FF, $FF ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $FF, $FF ; id 173
+    db $FF, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $FF, $FF ; id 176
+    db $FF, $FF ; id 177
+    db $FF, $FF ; id 178
+    db $FF, $FF ; id 179
+    db $FF, $FF ; id 180
+    db $FF, $FF ; id 181
+    db $FF, $FF ; id 182
+    db $FF, $FF ; id 183
+    db $FF, $FF ; id 184
+    db $FF, $FF ; id 185
+    db $FF, $FF ; id 186
+    db $FF, $FF ; id 187
+    db $FF, $FF ; id 188
+    db $FF, $FF ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $FF, $FF ; id 192
+    db $FF, $FF ; id 193
+    db $FF, $FF ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $FF, $FF ; id 200
+    db $FF, $FF ; id 201
+    db $FF, $FF ; id 202
+    db $FF, $FF ; id 203
+    db $FF, $FF ; id 204
+    db $FF, $FF ; id 205
+    db $FF, $FF ; id 206
+    db $FF, $FF ; id 207
 
-; address loaded by SelectEffectByEffectFlags2Flags
-Data_03A_60B7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $FF
-    ds $18, $85
-    ds $2A, $FF
-    db $87, $FF, $86, $FF, $81, $FF, $81, $FF, $81, $FF, $81, $FF
+; E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 0 (the target acts), indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 40 entries, up to the next table).
+; record: sound effect for a far-side actor, for a near-side actor ($FF = none)
+ActionSoundTable_Flag0::
+Data_03A_60B7:: ; address name
+    db $FF, $FF ; id 0
+    db $85, $85 ; id 1
+    db $85, $85 ; id 2
+    db $85, $85 ; id 3
+    db $85, $85 ; id 4
+    db $85, $85 ; id 5
+    db $85, $85 ; id 6
+    db $85, $85 ; id 7
+    db $85, $85 ; id 8
+    db $85, $85 ; id 9
+    db $85, $85 ; id 10
+    db $85, $85 ; id 11
+    db $85, $85 ; id 12
+    db $FF, $FF ; id 13
+    db $FF, $FF ; id 14
+    db $FF, $FF ; id 15
+    db $FF, $FF ; id 16
+    db $FF, $FF ; id 17
+    db $FF, $FF ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $FF, $FF ; id 25
+    db $FF, $FF ; id 26
+    db $FF, $FF ; id 27
+    db $FF, $FF ; id 28
+    db $FF, $FF ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $87, $FF ; id 34
+    db $86, $FF ; id 35
+    db $81, $FF ; id 36
+    db $81, $FF ; id 37
+    db $81, $FF ; id 38
+    db $81, $FF ; id 39
 
-; address loaded by SelectEffectByEffectFlags2Flags
-Data_03A_6107:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $32, $FF
-    db $85, $FF, $85, $FF, $85, $FF, $85, $FF, $88, $88, $85, $FF, $FF, $FF, $FF, $FF
-    db $FF, $FF, $FF, $FF, $FF, $FF, $93, $FF, $97, $FF, $96, $FF, $96, $FF
+; E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 2 (the target acts), indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 40 entries, up to the next table).
+; record: sound effect for a far-side actor, for a near-side actor ($FF = none)
+ActionSoundTable_Flag2::
+Data_03A_6107:: ; address name
+    db $FF, $FF ; id 0
+    db $FF, $FF ; id 1
+    db $FF, $FF ; id 2
+    db $FF, $FF ; id 3
+    db $FF, $FF ; id 4
+    db $FF, $FF ; id 5
+    db $FF, $FF ; id 6
+    db $FF, $FF ; id 7
+    db $FF, $FF ; id 8
+    db $FF, $FF ; id 9
+    db $FF, $FF ; id 10
+    db $FF, $FF ; id 11
+    db $FF, $FF ; id 12
+    db $FF, $FF ; id 13
+    db $FF, $FF ; id 14
+    db $FF, $FF ; id 15
+    db $FF, $FF ; id 16
+    db $FF, $FF ; id 17
+    db $FF, $FF ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $85, $FF ; id 25
+    db $85, $FF ; id 26
+    db $85, $FF ; id 27
+    db $85, $FF ; id 28
+    db $88, $88 ; id 29
+    db $85, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $FF, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $93, $FF ; id 36
+    db $97, $FF ; id 37
+    db $96, $FF ; id 38
+    db $96, $FF ; id 39
 
 ; battle fight step 3: returns while a message is being drawn; in link mode calls Func_03A_4ADB; otherwise one of 6 sub-steps by wBattleSubPhase, which execute the chosen actions through RunBattleResolveStep
 ; 2 call sites from 2 routines (e.g. BattleFight_Step3, RunBattlePhaseWhenTextIdle_A0_Case01_Case03)
@@ -6018,7 +7162,7 @@ Jump_03A_6D71::
 ShowActionBattleTextFrom6DAA::
 Func_03A_6D76:: ; address name
     ld a, [wBattleActionId]
-    ld hl, Data_03A_6DAA
+    ld hl, ActionBattleTextTable
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
@@ -6050,11 +7194,242 @@ Jump_03A_6DA2::
     ld d, $D6
     ret
 
-; address loaded by ShowActionBattleTextFrom6DAA
-Data_03A_6DAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00
-    ds $3C, $01
-    INCBIN "dwm2-cobi-us.gbc", $0EADE7, $AB
+; E-0210 (C1: ShowActionBattleTextFrom6DAA reads the byte at $6DAA + wBattleActionId and, unless it is $FF, passes it in D to ShowBattleText (action $CF first runs ShowActionBattleTextFrom6DAA_Sub01); 232 bytes end at ShowActionBattleText ($6E92)).
+; record: battle text index ($FF = none)
+ActionBattleTextTable::
+Data_03A_6DAA:: ; address name
+    db $00 ; id 0
+    db $01 ; id 1
+    db $01 ; id 2
+    db $01 ; id 3
+    db $01 ; id 4
+    db $01 ; id 5
+    db $01 ; id 6
+    db $01 ; id 7
+    db $01 ; id 8
+    db $01 ; id 9
+    db $01 ; id 10
+    db $01 ; id 11
+    db $01 ; id 12
+    db $01 ; id 13
+    db $01 ; id 14
+    db $01 ; id 15
+    db $01 ; id 16
+    db $01 ; id 17
+    db $01 ; id 18
+    db $01 ; id 19
+    db $01 ; id 20
+    db $01 ; id 21
+    db $01 ; id 22
+    db $01 ; id 23
+    db $01 ; id 24
+    db $01 ; id 25
+    db $01 ; id 26
+    db $01 ; id 27
+    db $01 ; id 28
+    db $01 ; id 29
+    db $01 ; id 30
+    db $01 ; id 31
+    db $01 ; id 32
+    db $01 ; id 33
+    db $01 ; id 34
+    db $01 ; id 35
+    db $01 ; id 36
+    db $01 ; id 37
+    db $01 ; id 38
+    db $01 ; id 39
+    db $01 ; id 40
+    db $01 ; id 41
+    db $01 ; id 42
+    db $01 ; id 43
+    db $01 ; id 44
+    db $01 ; id 45
+    db $01 ; id 46
+    db $01 ; id 47
+    db $01 ; id 48
+    db $01 ; id 49
+    db $01 ; id 50
+    db $01 ; id 51
+    db $01 ; id 52
+    db $01 ; id 53
+    db $01 ; id 54
+    db $01 ; id 55
+    db $01 ; id 56
+    db $01 ; id 57
+    db $01 ; id 58
+    db $01 ; id 59
+    db $01 ; id 60
+    db $1A ; id 61
+    db $19 ; id 62
+    db $18 ; id 63
+    db $03 ; id 64
+    db $03 ; id 65
+    db $03 ; id 66
+    db $03 ; id 67
+    db $03 ; id 68
+    db $03 ; id 69
+    db $03 ; id 70
+    db $03 ; id 71
+    db $02 ; id 72
+    db $15 ; id 73
+    db $16 ; id 74
+    db $17 ; id 75
+    db $33 ; id 76
+    db $34 ; id 77
+    db $11 ; id 78
+    db $10 ; id 79
+    db $02 ; id 80
+    db $02 ; id 81
+    db $02 ; id 82
+    db $02 ; id 83
+    db $02 ; id 84
+    db $02 ; id 85
+    db $02 ; id 86
+    db $02 ; id 87
+    db $02 ; id 88
+    db $02 ; id 89
+    db $02 ; id 90
+    db $02 ; id 91
+    db $02 ; id 92
+    db $02 ; id 93
+    db $02 ; id 94
+    db $00 ; id 95
+    db $00 ; id 96
+    db $00 ; id 97
+    db $13 ; id 98
+    db $02 ; id 99
+    db $02 ; id 100
+    db $02 ; id 101
+    db $0F ; id 102
+    db $02 ; id 103
+    db $DA ; id 104
+    db $14 ; id 105
+    db $0C ; id 106
+    db $0B ; id 107
+    db $0A ; id 108
+    db $06 ; id 109
+    db $08 ; id 110
+    db $07 ; id 111
+    db $09 ; id 112
+    db $03 ; id 113
+    db $03 ; id 114
+    db $03 ; id 115
+    db $03 ; id 116
+    db $1B ; id 117
+    db $04 ; id 118
+    db $04 ; id 119
+    db $04 ; id 120
+    db $04 ; id 121
+    db $04 ; id 122
+    db $04 ; id 123
+    db $04 ; id 124
+    db $1D ; id 125
+    db $1C ; id 126
+    db $02 ; id 127
+    db $02 ; id 128
+    db $05 ; id 129
+    db $05 ; id 130
+    db $05 ; id 131
+    db $BD ; id 132
+    db $23 ; id 133
+    db $23 ; id 134
+    db $23 ; id 135
+    db $23 ; id 136
+    db $0E ; id 137
+    db $12 ; id 138
+    db $1F ; id 139
+    db $1F ; id 140
+    db $20 ; id 141
+    db $21 ; id 142
+    db $DC ; id 143
+    db $22 ; id 144
+    db $A8 ; id 145
+    db $04 ; id 146
+    db $25 ; id 147
+    db $2E ; id 148
+    db $2D ; id 149
+    db $2F ; id 150
+    db $2B ; id 151
+    db $2C ; id 152
+    db $24 ; id 153
+    db $24 ; id 154
+    db $29 ; id 155
+    db $32 ; id 156
+    db $30 ; id 157
+    db $2A ; id 158
+    db $26 ; id 159
+    db $27 ; id 160
+    db $31 ; id 161
+    db $00 ; id 162
+    db $00 ; id 163
+    db $00 ; id 164
+    db $00 ; id 165
+    db $00 ; id 166
+    db $00 ; id 167
+    db $00 ; id 168
+    db $00 ; id 169
+    db $DC ; id 170
+    db $00 ; id 171
+    db $E1 ; id 172
+    db $01 ; id 173
+    db $01 ; id 174
+    db $00 ; id 175
+    db $BC ; id 176
+    db $FF ; id 177
+    db $FF ; id 178
+    db $BD ; id 179
+    db $BE ; id 180
+    db $FF ; id 181
+    db $FF ; id 182
+    db $C0 ; id 183
+    db $FF ; id 184
+    db $C1 ; id 185
+    db $C2 ; id 186
+    db $FF ; id 187
+    db $FF ; id 188
+    db $C4 ; id 189
+    db $00 ; id 190
+    db $E5 ; id 191
+    db $00 ; id 192
+    db $00 ; id 193
+    db $B6 ; id 194
+    db $B7 ; id 195
+    db $BB ; id 196
+    db $B8 ; id 197
+    db $B9 ; id 198
+    db $BA ; id 199
+    db $D8 ; id 200
+    db $E2 ; id 201
+    db $E3 ; id 202
+    db $E4 ; id 203
+    db $0D ; id 204
+    db $A9 ; id 205
+    db $28 ; id 206
+    db $D6 ; id 207
+    db $EB ; id 208
+    db $EC ; id 209
+    db $ED ; id 210
+    db $EE ; id 211
+    db $EF ; id 212
+    db $F0 ; id 213
+    db $F1 ; id 214
+    db $F2 ; id 215
+    db $F3 ; id 216
+    db $F4 ; id 217
+    db $F5 ; id 218
+    db $F6 ; id 219
+    db $F7 ; id 220
+    db $F8 ; id 221
+    db $F9 ; id 222
+    db $FA ; id 223
+    db $AA ; id 224
+    db $AB ; id 225
+    db $B2 ; id 226
+    db $B4 ; id 227
+    db $FF ; id 228
+    db $FF ; id 229
+    db $FF ; id 230
+    db $FF ; id 231
 
 ; D = Data_03A_6EA5[wBattleActionId]; returns at once when it is $FF, otherwise ShowBattleText (E-0116)
 ; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case00, Func_03B_42F4_Case01)
@@ -6063,7 +7438,7 @@ Data_03A_6DAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ShowActionBattleText::
 Func_03A_6E92:: ; address name
     ld a, [wBattleActionId]
-    ld hl, Data_03A_6EA5
+    ld hl, ActionBattleTextTable2
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
@@ -6071,13 +7446,74 @@ Func_03A_6E92:: ; address name
     ld d, a
     jp ShowBattleText
 
-; address loaded by ShowActionBattleText
-Data_03A_6EA5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $9F, $9F, $A2, $9F, $9F, $9F, $9F, $9F, $9F, $9F, $A1, $9F, $FF, $FF, $FF
-    db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $94, $94, $94, $94, $94, $97, $99
-    db $FF, $FF, $A5, $9B, $A4, $A3, $A6, $A7
-    ds $10, $FF
-    db $97, $FF, $FF, $FF, $0D, $A9, $28, $D6
+; E-0210 (C1: ShowActionBattleText (from Func_03B_42F4) reads the byte at $6EA5 + wBattleActionId and, unless it is $FF, passes it to ShowBattleText; 64 bytes end at ShowBattleTextCategory0 ($6EE5)).
+; record: battle text index ($FF = none)
+ActionBattleTextTable2::
+Data_03A_6EA5:: ; address name
+    db $FF ; id 0
+    db $9F ; id 1
+    db $9F ; id 2
+    db $A2 ; id 3
+    db $9F ; id 4
+    db $9F ; id 5
+    db $9F ; id 6
+    db $9F ; id 7
+    db $9F ; id 8
+    db $9F ; id 9
+    db $9F ; id 10
+    db $A1 ; id 11
+    db $9F ; id 12
+    db $FF ; id 13
+    db $FF ; id 14
+    db $FF ; id 15
+    db $FF ; id 16
+    db $FF ; id 17
+    db $FF ; id 18
+    db $FF ; id 19
+    db $FF ; id 20
+    db $FF ; id 21
+    db $FF ; id 22
+    db $FF ; id 23
+    db $FF ; id 24
+    db $94 ; id 25
+    db $94 ; id 26
+    db $94 ; id 27
+    db $94 ; id 28
+    db $94 ; id 29
+    db $97 ; id 30
+    db $99 ; id 31
+    db $FF ; id 32
+    db $FF ; id 33
+    db $A5 ; id 34
+    db $9B ; id 35
+    db $A4 ; id 36
+    db $A3 ; id 37
+    db $A6 ; id 38
+    db $A7 ; id 39
+    db $FF ; id 40
+    db $FF ; id 41
+    db $FF ; id 42
+    db $FF ; id 43
+    db $FF ; id 44
+    db $FF ; id 45
+    db $FF ; id 46
+    db $FF ; id 47
+    db $FF ; id 48
+    db $FF ; id 49
+    db $FF ; id 50
+    db $FF ; id 51
+    db $FF ; id 52
+    db $FF ; id 53
+    db $FF ; id 54
+    db $FF ; id 55
+    db $97 ; id 56
+    db $FF ; id 57
+    db $FF ; id 58
+    db $FF ; id 59
+    db $0D ; id 60
+    db $A9 ; id 61
+    db $28 ; id 62
+    db $D6 ; id 63
 
 ; D = message index. The same as ShowBattleText, but it stores 0 in wStringCategory: the entry at Data_03A_6F06 + 2 * D is called first when non-zero, then BeginStringDisplay_Bank2F shows category 0 (E-0056)
 ; 22 call sites from 14 routines (e.g. RunBattleResolveStep_43C4_Case01, Func_032_4ADC_Case00_Case01, Func_032_4ADC_Case00_Case03, ShowActorStatusRecoveryMessage, ...)
@@ -6085,7 +7521,7 @@ Data_03A_6EA5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ShowBattleTextCategory0::
 Func_03A_6EE5:: ; address name
     push de
-    ld hl, Data_03A_6F06
+    ld hl, BattleTextCategory0HookTable
     ld c, d
     ld b, $00
     add hl, bc
@@ -6104,41 +7540,455 @@ Jump_03A_6EF6::
     farcall BeginStringDisplay_Bank2F
     ret
 
-; address loaded by ShowBattleTextCategory0
-Data_03A_6F06:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_03A_7106
-    dw Data_03A_7106
-    dw Data_03A_7107
-    dw Data_03A_7108
-    dw Data_03A_7108
-    dw Data_03A_7109
-    dw Data_03A_710A
-    dw Data_03A_710B
-    dw Data_03A_710C
-    dw Data_03A_710C
-    INCBIN "dwm2-cobi-us.gbc", $0EAF1A, $F0
-    ds $FC, $00
+; E-0210 (C1: ShowBattleTextCategory0 calls the word at $6F06 + 2 * D through JumpToWordAtHL when it is non-zero, then shows string D of category 0 with BeginStringDisplay_Bank2F; 256 words end exactly at the first target, a bare ret at $7106; most entries are $0000 or point at bare rets).
+; record: routine run before message D ($0000 = none)
+BattleTextCategory0HookTable::
+Data_03A_6F06:: ; address name
+    dw BattleText0HookRet_7106 ; id 0
+    dw BattleText0HookRet_7106 ; id 1
+    dw BattleText0Hook02 ; id 2
+    dw BattleText0HookRet_7108 ; id 3
+    dw BattleText0HookRet_7108 ; id 4
+    dw BattleText0Hook05 ; id 5
+    dw BattleText0Hook06 ; id 6
+    dw BattleText0Hook07 ; id 7
+    dw BattleText0HookRet_710C ; id 8
+    dw BattleText0HookRet_710C ; id 9
+    dw $0000 ; id 10
+    dw BattleText0HookListSidesTwice ; id 11
+    dw BattleText0HookListSidesTwice ; id 12
+    dw BattleText0Hook0D ; id 13
+    dw BattleText0Hook0E ; id 14
+    dw BattleText0HookActorName ; id 15
+    dw BattleText0HookActorNameAndDamage ; id 16
+    dw BattleText0HookActorNameAndDamage ; id 17
+    dw BattleText0HookActorName ; id 18
+    dw BattleText0HookActorName ; id 19
+    dw BattleText0HookActorName ; id 20
+    dw BattleText0HookActorName ; id 21
+    dw BattleText0HookActorName ; id 22
+    dw BattleText0HookActorName ; id 23
+    dw BattleText0HookActorName ; id 24
+    dw BattleText0HookActorName ; id 25
+    dw BattleText0HookActorName ; id 26
+    dw BattleText0HookActorName ; id 27
+    dw BattleText0HookActorName ; id 28
+    dw $0000 ; id 29
+    dw $0000 ; id 30
+    dw $0000 ; id 31
+    dw $0000 ; id 32
+    dw $0000 ; id 33
+    dw BattleText0Hook22 ; id 34
+    dw $0000 ; id 35
+    dw $0000 ; id 36
+    dw $0000 ; id 37
+    dw $0000 ; id 38
+    dw $0000 ; id 39
+    dw BattleText0HookActorName ; id 40
+    dw $0000 ; id 41
+    dw BattleText0HookTargetNameAndGroupWord ; id 42
+    dw BattleText0HookTargetNameAndGroupWord ; id 43
+    dw $0000 ; id 44
+    dw $0000 ; id 45
+    dw BattleText0HookActorName ; id 46
+    dw BattleText0HookActorName ; id 47
+    dw BattleText0HookActorName ; id 48
+    dw BattleText0HookActorName ; id 49
+    dw BattleText0HookActorName ; id 50
+    dw BattleText0Hook33 ; id 51
+    dw BattleText0HookActorName ; id 52
+    dw BattleText0HookActorName ; id 53
+    dw BattleText0HookActorAndSkill_7154 ; id 54
+    dw BattleText0HookActorAndSkill_7154 ; id 55
+    dw BattleText0HookActorAndSkill_7154 ; id 56
+    dw BattleText0HookActorName ; id 57
+    dw BattleText0HookActorName ; id 58
+    dw BattleText0HookActorName ; id 59
+    dw BattleText0HookActorName ; id 60
+    dw BattleText0HookActorName ; id 61
+    dw BattleText0HookActorName ; id 62
+    dw BattleText0Hook3F ; id 63
+    dw BattleText0HookActorName ; id 64
+    dw BattleText0HookActorName ; id 65
+    dw BattleText0HookActorName ; id 66
+    dw BattleText0HookActorName ; id 67
+    dw BattleText0HookActorName ; id 68
+    dw BattleText0HookActorAndSkill_7162 ; id 69
+    dw BattleText0HookActorAndSkill_7162 ; id 70
+    dw BattleText0HookActorAndSkill_7162 ; id 71
+    dw BattleText0HookActorName ; id 72
+    dw BattleText0HookActorAndSkill_7162 ; id 73
+    dw BattleText0HookActorAndSkill_7162 ; id 74
+    dw BattleText0HookActorAndSkill_7162 ; id 75
+    dw BattleText0HookActorAndSkill_7162 ; id 76
+    dw BattleText0HookActorAndSkill_7162 ; id 77
+    dw BattleText0HookActorAndSkill_7162 ; id 78
+    dw BattleText0HookActorAndSkill_7162 ; id 79
+    dw BattleText0HookActorAndSkill_7162 ; id 80
+    dw BattleText0HookActorName ; id 81
+    dw BattleText0HookActorName ; id 82
+    dw BattleText0HookActorName ; id 83
+    dw BattleText0HookActorName ; id 84
+    dw BattleText0HookActorName ; id 85
+    dw BattleText0HookActorAndSkill_7162 ; id 86
+    dw BattleText0HookActorName ; id 87
+    dw BattleText0HookActorName ; id 88
+    dw BattleText0HookActorName ; id 89
+    dw BattleText0HookActorName ; id 90
+    dw BattleText0HookActorName ; id 91
+    dw BattleText0HookActorName ; id 92
+    dw BattleText0HookActorName ; id 93
+    dw BattleText0HookActorAndSkill_7162 ; id 94
+    dw BattleText0HookActorAndSkill_7162 ; id 95
+    dw $0000 ; id 96
+    dw $0000 ; id 97
+    dw $0000 ; id 98
+    dw $0000 ; id 99
+    dw $0000 ; id 100
+    dw $0000 ; id 101
+    dw BattleText0HookActorAndMappedSlot ; id 102
+    dw BattleText0HookActorAndMappedSlot ; id 103
+    dw BattleText0HookActorAndMappedSlot ; id 104
+    dw BattleText0HookActorAndMappedSlot ; id 105
+    dw BattleText0HookActorAndMappedSlot ; id 106
+    dw BattleText0HookActorAndMappedSlot ; id 107
+    dw BattleText0HookActorAndMappedSlot ; id 108
+    dw BattleText0HookActorAndMappedSlot ; id 109
+    dw BattleText0HookActorAndMappedSlot ; id 110
+    dw BattleText0HookActorAndMappedSlot ; id 111
+    dw BattleText0HookActorAndMappedSlot ; id 112
+    dw BattleText0HookActorAndMappedSlot ; id 113
+    dw BattleText0HookActorAndMappedSlot ; id 114
+    dw BattleText0HookActorAndMappedSlot ; id 115
+    dw BattleText0HookActorAndMappedSlot ; id 116
+    dw BattleText0HookActorAndMappedSlot ; id 117
+    dw BattleText0HookActorAndMappedSlot ; id 118
+    dw BattleText0HookActorAndMappedSlot ; id 119
+    dw BattleText0HookActorAndMappedSlot ; id 120
+    dw BattleText0HookActorAndMappedSlot ; id 121
+    dw BattleText0HookActorAndMappedSlot ; id 122
+    dw $0000 ; id 123
+    dw $0000 ; id 124
+    dw $0000 ; id 125
+    dw BattleText0Hook7E ; id 126
+    dw $0000 ; id 127
+    dw BattleText0HookTargetAndDefeatSlot ; id 128
+    dw BattleText0HookTargetAndDefeatSlot ; id 129
+    dw $0000 ; id 130
+    dw $0000 ; id 131
+    dw $0000 ; id 132
+    dw $0000 ; id 133
+    dw $0000 ; id 134
+    dw $0000 ; id 135
+    dw $0000 ; id 136
+    dw $0000 ; id 137
+    dw $0000 ; id 138
+    dw $0000 ; id 139
+    dw $0000 ; id 140
+    dw $0000 ; id 141
+    dw $0000 ; id 142
+    dw $0000 ; id 143
+    dw $0000 ; id 144
+    dw $0000 ; id 145
+    dw $0000 ; id 146
+    dw $0000 ; id 147
+    dw $0000 ; id 148
+    dw $0000 ; id 149
+    dw $0000 ; id 150
+    dw $0000 ; id 151
+    dw $0000 ; id 152
+    dw $0000 ; id 153
+    dw $0000 ; id 154
+    dw $0000 ; id 155
+    dw $0000 ; id 156
+    dw $0000 ; id 157
+    dw $0000 ; id 158
+    dw $0000 ; id 159
+    dw $0000 ; id 160
+    dw $0000 ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw $0000 ; id 170
+    dw $0000 ; id 171
+    dw $0000 ; id 172
+    dw $0000 ; id 173
+    dw $0000 ; id 174
+    dw $0000 ; id 175
+    dw $0000 ; id 176
+    dw $0000 ; id 177
+    dw $0000 ; id 178
+    dw $0000 ; id 179
+    dw $0000 ; id 180
+    dw $0000 ; id 181
+    dw $0000 ; id 182
+    dw $0000 ; id 183
+    dw $0000 ; id 184
+    dw $0000 ; id 185
+    dw $0000 ; id 186
+    dw $0000 ; id 187
+    dw $0000 ; id 188
+    dw $0000 ; id 189
+    dw $0000 ; id 190
+    dw $0000 ; id 191
+    dw $0000 ; id 192
+    dw $0000 ; id 193
+    dw $0000 ; id 194
+    dw $0000 ; id 195
+    dw $0000 ; id 196
+    dw $0000 ; id 197
+    dw $0000 ; id 198
+    dw $0000 ; id 199
+    dw $0000 ; id 200
+    dw $0000 ; id 201
+    dw $0000 ; id 202
+    dw $0000 ; id 203
+    dw $0000 ; id 204
+    dw $0000 ; id 205
+    dw $0000 ; id 206
+    dw $0000 ; id 207
+    dw $0000 ; id 208
+    dw $0000 ; id 209
+    dw $0000 ; id 210
+    dw $0000 ; id 211
+    dw $0000 ; id 212
+    dw $0000 ; id 213
+    dw $0000 ; id 214
+    dw $0000 ; id 215
+    dw $0000 ; id 216
+    dw $0000 ; id 217
+    dw $0000 ; id 218
+    dw $0000 ; id 219
+    dw $0000 ; id 220
+    dw $0000 ; id 221
+    dw $0000 ; id 222
+    dw $0000 ; id 223
+    dw $0000 ; id 224
+    dw $0000 ; id 225
+    dw $0000 ; id 226
+    dw $0000 ; id 227
+    dw $0000 ; id 228
+    dw $0000 ; id 229
+    dw $0000 ; id 230
+    dw $0000 ; id 231
+    dw $0000 ; id 232
+    dw $0000 ; id 233
+    dw $0000 ; id 234
+    dw $0000 ; id 235
+    dw $0000 ; id 236
+    dw $0000 ; id 237
+    dw $0000 ; id 238
+    dw $0000 ; id 239
+    dw $0000 ; id 240
+    dw $0000 ; id 241
+    dw $0000 ; id 242
+    dw $0000 ; id 243
+    dw $0000 ; id 244
+    dw $0000 ; id 245
+    dw $0000 ; id 246
+    dw $0000 ; id 247
+    dw $0000 ; id 248
+    dw $0000 ; id 249
+    dw $0000 ; id 250
+    dw $0000 ; id 251
+    dw $0000 ; id 252
+    dw $0000 ; id 253
+    dw $0000 ; id 254
+    dw $0000 ; id 255
 
-Data_03A_7106:: ; heuristic: target of a monotone pointer table; C0
-    db $C9
+; bare ret, the hook of messages 0 and 1 (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0HookRet_7106:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7106:: ; address name
+    ret
 
-Data_03A_7107:: ; heuristic: target of a monotone pointer table; C0
-    db $C9
+; handler 02 (entry 2 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0Hook02:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7107:: ; address name
+    ret
 
-Data_03A_7108:: ; heuristic: target of a monotone pointer table; C0
-    db $C9
+; bare ret (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0HookRet_7108:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7108:: ; address name
+    ret
 
-Data_03A_7109:: ; heuristic: target of a monotone pointer table; C0
-    db $C9
+; handler 05 (entry 5 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0Hook05:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7109:: ; address name
+    ret
 
-Data_03A_710A:: ; heuristic: target of a monotone pointer table; C0
-    db $C9
+; handler 06 (entry 6 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0Hook06:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_710A:: ; address name
+    ret
 
-Data_03A_710B:: ; heuristic: target of a monotone pointer table; C0
-    db $C9
+; handler 07 (entry 7 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0Hook07:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_710B:: ; address name
+    ret
 
-Data_03A_710C:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0EB10C, $87
+; bare ret (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0HookRet_710C:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_710C:: ; address name
+    ret
+
+; ListSideMonsterIdsToWC0A0, then falls into BattleText0Hook0D, which lists again and jumps into WriteTargetNameOrTheMonsters ($785D) (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget, wBattleStatResultLo
+; writes: wBattleStatResultLo
+; points at: wTemp0, wPauseMenuStep, wTextBuf0
+BattleText0HookListSidesTwice:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_710D:: ; address name
+    call ListSideMonsterIdsToWC0A0
+
+; handler 0D (entry 13 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget, wBattleStatResultLo
+; writes: wBattleStatResultLo
+; points at: wTemp0, wPauseMenuStep, wTextBuf0
+BattleText0Hook0D:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7110:: ; address name
+    call ListSideMonsterIdsToWC0A0
+    jp Jump_03A_785D
+
+; handler 0E (entry 14 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget, wBattleStatResultLo
+; writes: wBattleStatResultLo
+; points at: wTemp0, wPauseMenuStep, wTextBuf0
+BattleText0Hook0E:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7116:: ; address name
+    call ListSideMonsterIdsToWC0A0
+    jp Jump_03A_77D6
+
+; CopyActorNameToTextBuf0 (44 messages) (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0HookActorName:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_711C:: ; address name
+    call CopyActorNameToTextBuf0
+    ret
+
+; CopyActorNameToTextBuf0, then WriteBattleDamageToTextBuf1 (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0HookActorNameAndDamage:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7120:: ; address name
+    call CopyActorNameToTextBuf0
+    call WriteBattleDamageToTextBuf1
+    ret
+
+; handler 22 (entry 34 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0Hook22:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7127:: ; address name
+    ret
+
+; handler 33 (entry 51 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wResolveByte71
+; writes: wNameSlot
+; points at: wTextBuf1
+BattleText0Hook33:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7128:: ; address name
+    call CopyTargetNameToTextBuf0
+    ld a, [wResolveByte71]
+    ld hl, wTextBuf1
+    ld [wNameSlot], a
+    call CopySlotNameToHL
+    ret
+
+; CopyTargetNameToTextBuf0; then, when wSpeciesGroups[(wDefeatFlagsBA & $7F) - 1] has bit 7 set and is not $FF, WriteMonstersWordToTextBuf0 (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDefeatFlagsBA
+; points at: wSpeciesGroups
+BattleText0HookTargetNameAndGroupWord:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7138:: ; address name
+    call CopyTargetNameToTextBuf0
+    ld a, [wDefeatFlagsBA]
+    and a, $7F
+    dec a
+    ld hl, wSpeciesGroups
+    add_a_to_hl
+    ld a, [hl]
+    cp a, $FF
+    ret z
+    bit 7, a
+    ret z
+    call WriteMonstersWordToTextBuf0
+    ret
+
+; CopyActorNameToTextBuf0, CopyActionSkillNameToTextBuf1 (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0HookActorAndSkill_7154:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7154:: ; address name
+    call CopyActorNameToTextBuf0
+    call CopyActionSkillNameToTextBuf1
+    ret
+
+; handler 3F (entry 63 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0Hook3F:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_715B:: ; address name
+    call CopyActorNameToTextBuf0
+    call CopyTargetNameToTextBuf2
+    ret
+
+; CopyActorNameToTextBuf0, CopyActionSkillNameToTextBuf1 (the same as $7154) (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0HookActorAndSkill_7162:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7162:: ; address name
+    call CopyActorNameToTextBuf0
+    call CopyActionSkillNameToTextBuf1
+    ret
+
+; CopyActorNameToTextBuf0, CopyMappedSlotNameToTextBuf1 (21 messages) (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+BattleText0HookActorAndMappedSlot:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7169:: ; address name
+    call CopyActorNameToTextBuf0
+    call CopyMappedSlotNameToTextBuf1
+    ret
+
+; handler 7E (entry 126 of BattleTextCategory0HookTable)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget
+BattleText0Hook7E:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7170:: ; address name
+    ld a, [wBattleTarget]
+    cp a, $03
+    jr c, Jump_03A_7182
+    call ListSideMonsterIdsToWC0A0
+    ld a, b
+    cp a, $01
+    jr nz, Jump_03A_7182
+    call CopyTargetNameToTextBuf0
+
+Jump_03A_7182::
+    ret
+
+; CopyTargetNameToTextBuf0, then the name of slot wDefeatByteD1 into wTextBuf1 (E-0210)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wDefeatByteD1
+; writes: wNameSlot
+; points at: wTextBuf1
+BattleText0HookTargetAndDefeatSlot:: ; code pointer of the table BattleTextCategory0HookTable; C0
+Func_03A_7183:: ; address name
+    call CopyTargetNameToTextBuf0
+    ld a, [wDefeatByteD1]
+    ld hl, wTextBuf1
+    ld [wNameSlot], a
+    call CopySlotNameToHL
+    ret
 
 ; D = message index. If the 16-bit entry at Data_03A_71B4 + 2 * D is non-zero it is called first through Func_000_000B (a per-message routine, not read). Then it stores D in wStringIndex, 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category 1 (E-0056)
 ; 66 call sites from 56 routines (e.g. Func_032_4ADC_Case01_Case09, Func_032_4ADC_Case06_Case01, Func_032_4ADC_Case06_Case02, Func_032_4ADC_Case09_Case00, ...)
@@ -6471,7 +8321,7 @@ Func_03A_73D2:: ; address name
 BattleTextPrep35:: ; code pointer of the table BattleTextPrepTable; C0
 Func_03A_73D9:: ; address name
     call CopyTargetNameToTextBuf0
-    call BattleTextPrep35_Sub01
+    call WriteBattleDamageToTextBuf1
     ret
 
 ; prepares the arguments of battle text 37 (entry 55 of BattleTextPrepTable)
@@ -7036,10 +8886,12 @@ Jump_03A_77CF::
 ; reads: hTemp0, wBattleTarget, wBattleStatResultLo
 ; writes: wBattleStatResultLo
 ; points at: wTemp0, wPauseMenuStep, wTextBuf0
-CheckAllTargetsSame:: ; heuristic: follows a terminator; C0
+CheckAllTargetsSame:: ; configured code entry (E-0210); C0
 Func_03A_77D3:: ; address name
     ldh a, [hTemp0]
     ld b, a
+
+Jump_03A_77D6::
     ld a, b
     cp a, $01
     jr z, Jump_03A_7856
@@ -7146,10 +8998,12 @@ Jump_03A_7856::
 ; reads: hTemp0, wBattleTarget, wBattleStatResultLo
 ; writes: wBattleStatResultLo
 ; points at: wTemp0, wPauseMenuStep, wTextBuf0
-WriteTargetNameOrTheMonsters:: ; heuristic: follows a terminator; C0
+WriteTargetNameOrTheMonsters:: ; configured code entry (E-0210); C0
 Func_03A_785A:: ; address name
     ldh a, [hTemp0]
     ld b, a
+
+Jump_03A_785D::
     ld a, b
     cp a, $01
     jp z, Jump_03A_78EA
@@ -7260,7 +9114,7 @@ Jump_03A_78EA::
     ret
 
 ; wD86C = wBattleActor, then CopySlotNameToHL with HL = wC130 (E-0113)
-; 10 call sites from 9 routines (e.g. BattleTextPrepF2, BattleTextPrepBE, BattleTextPrepB8, BattleTextPrepAA, ...)
+; 16 call sites from 15 routines (e.g. BattleText0HookActorAndMappedSlot, BattleText0HookActorAndSkill_7162, BattleText0Hook3F, BattleText0HookActorAndSkill_7154, ...)
 ; reads: wBattleActor
 ; writes: wNameSlot
 ; points at: wTextBuf0
@@ -7286,7 +9140,7 @@ Func_03A_78FB:: ; address name
     ret
 
 ; far-calls Func_0A3_414F (which maps the actor to a slot in hFFC6), then copies that slot's name to wC140 (CopySlotNameToHL) (E-0113)
-; 4 call sites from 4 routines (e.g. BattleTextPrepF2, BattleTextPrepAA, BuildActionMessageNames, ShowSpecialActionMessage)
+; 5 call sites from 5 routines (e.g. BattleText0HookActorAndMappedSlot, BattleTextPrepF2, BattleTextPrepAA, BuildActionMessageNames, ...)
 ; reads: hTemp0
 ; writes: wNameSlot
 ; points at: wTextBuf1
@@ -7300,7 +9154,7 @@ Func_03A_7908:: ; address name
     ret
 
 ; copies string wBattleActionId of category 4 (skill names) to wC140 (CopyStringHLToDE) (E-0116)
-; 4 call sites from 4 routines (e.g. BattleTextPrepB0, BattleTextPrep7E, BattleTextPrep01, BuildActionMessageNames)
+; 6 call sites from 6 routines (e.g. BattleText0HookActorAndSkill_7162, BattleText0HookActorAndSkill_7154, BattleTextPrepB0, BattleTextPrep7E, ...)
 ; reads: wBattleActionId
 ; points at: wTextBuf1
 CopyActionSkillNameToTextBuf1::
@@ -7313,7 +9167,7 @@ Func_03A_791A:: ; address name
     ret
 
 ; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC130 (E-0077)
-; 14 call sites from 14 routines (e.g. BattleTextPrepE6, BattleTextPrepCA, BattleTextPrep95, Call774CWithBattleFoeCount_Sub01, ...)
+; 18 call sites from 18 routines (e.g. BattleText0HookTargetAndDefeatSlot, BattleText0Hook7E, BattleText0Hook33, BattleText0HookTargetNameAndGroupWord, ...)
 ; reads: wBattleTarget
 ; writes: wNameSlot
 ; points at: wTextBuf0
@@ -7339,7 +9193,7 @@ Func_03A_7934:: ; address name
     ret
 
 ; wD86C = wBattleTarget, then CopySlotNameToHL with HL = wC150 (E-0116)
-; 1 call site from 1 routine (e.g. BattleTextPrepF2)
+; 2 call sites from 2 routines (e.g. BattleText0Hook3F, BattleTextPrepF2)
 ; reads: wBattleTarget
 ; writes: wNameSlot
 ; points at: wTextBuf2
@@ -7351,11 +9205,11 @@ Func_03A_7941:: ; address name
     call CopySlotNameToHL
     ret
 
-; only called from BattleTextPrep35 (E-0047)
-; 1 call site from 1 routine (e.g. BattleTextPrep35)
+; wTextBuf1 = wBattleDamage as a decimal string (WriteBCAsDecimalString) (E-0210)
+; 2 call sites from 2 routines (e.g. BattleText0HookActorNameAndDamage, BattleTextPrep35)
 ; reads: wBattleDamageLo, wBattleDamageHi
 ; points at: wTextBuf1
-BattleTextPrep35_Sub01::
+WriteBattleDamageToTextBuf1::
 Func_03A_794E:: ; address name
     ld hl, wTextBuf1
     ld a, [wBattleDamageLo]
@@ -7366,7 +9220,7 @@ Func_03A_794E:: ; address name
     ret
 
 ; wD86C = wBattleTarget & 4 (the first slot of the target's side), then CopySlotNameToHL with HL = wC130 (E-0113)
-; 3 call sites from 3 routines (e.g. CopyTargetOrSideNameToTextBuf0_77C3, CopyTargetOrSideNameToTextBuf0_784A, CopyTargetOrSideNameToTextBuf0_78DE)
+; 3 call sites from 3 routines (e.g. CopyTargetOrSideNameToTextBuf0_77C3, CopyTargetOrSideNameToTextBuf0_78DE, CopyTargetOrSideNameToTextBuf0_784A)
 ; reads: wBattleTarget
 ; writes: wNameSlot
 ; points at: wTextBuf0
@@ -7427,7 +9281,7 @@ Func_03A_798D:: ; address name
     ret
 
 ; A = battle slot: slots 0-2 go to CopyBattlerNameToHL; other slots take paths that check slot 3/7, wC58A and wDAD4 (not fully read) (E-0077)
-; 11 call sites from 11 routines (e.g. CopyMappedSlotNameToTextBuf1, CopyActorNameToTextBuf0, CopyTargetNameToTextBuf2, CopyTargetNameToTextBuf0, ...)
+; 13 call sites from 13 routines (e.g. BattleText0HookTargetAndDefeatSlot, CopyTargetNameToTextBuf0, CopyMappedSlotNameToTextBuf1, CopyActorNameToTextBuf0, ...)
 ; reads: wLinkMode, wNameSlot
 ; writes: wBattleArg1
 ; points at: wSlotNameBytes
@@ -7694,7 +9548,7 @@ Jump_03A_7ADD::
     ret
 
 ; clears wC0A0 ($10 bytes) and lists the species ids of the occupied slots of the shown side at wC0A0 and of the other side at wC0A8 (E-0129)
-; 13 call sites from 12 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, BattleTextPrepE6, BattleTextPrepBE, ...)
+; 17 call sites from 16 routines (e.g. ActionEffect_Ironize_Sub01, CopyBattlerNameToHL_Sub02, BattleText0Hook7E, BattleText0Hook0E, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wTemp0, wBattleMonsterId, wPauseMenuStep
 ListSideMonsterIdsToWC0A0::
@@ -7816,7 +9670,7 @@ Jump_03A_7B77::
     ret
 
 ; writes the glyphs of 'Monsters' (decoded with the charmap) and $F0 to wC130 (E-0113)
-; 3 call sites from 3 routines (e.g. BattleTextPrepBE_Sub01, CopyTargetOrSideNameToTextBuf0_784A, CopyTargetOrSideNameToTextBuf0_78DE)
+; 4 call sites from 4 routines (e.g. BattleText0HookTargetNameAndGroupWord, CopyTargetOrSideNameToTextBuf0_784A, CopyTargetOrSideNameToTextBuf0_78DE, BattleTextPrepBE_Sub01)
 ; points at: wTextBuf0
 WriteMonstersWordToTextBuf0::
 Func_03A_7B82:: ; address name
