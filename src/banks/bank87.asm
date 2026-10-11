@@ -119,30 +119,267 @@ Jump_087_4096::
     ld a, $0A
     add_a_to_hl
     jr Jump_087_4031
-    db $33, $5D, $48, $5D, $71, $5D, $00, $00, $86, $5D, $9B, $5D, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $BA, $5D
-    ds $18, $00
-    db $D9, $5D, $E4, $5D, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $EF, $5D
-    ds $12, $00
-    db $FA, $5D, $00, $00, $00, $00, $00, $00, $00, $00, $05, $5E, $00, $00, $00, $00
-    db $00, $00, $24, $5E, $00, $00, $00, $00, $00, $00, $00, $00, $2F, $5E, $44, $5E
-    db $4F, $5E, $5A, $5E
-    ds $20, $00
-    db $65, $5E
-    ds $1C, $00
-    db $70, $5E, $00, $00, $7B, $5E
-    ds $12, $00
-    db $90, $5E
-    ds $1C, $00
-    db $A5, $5E, $00, $00, $00, $00, $00, $00, $B0, $5E, $00, $00, $00, $00, $00, $00
-    db $00, $00, $BB, $5E
-    ds $1A, $00
-    db $C6, $5E, $00, $00, $00, $00, $00, $00, $00, $00, $EF, $5E
-    ds $10, $00
-    db $FA, $5E
-    ds $1C, $00
-    db $05, $5F, $00, $00, $1A, $5F
-    ds $A6, $00
+
+; E-0198 (C1: FieldModeStateDispatch_Case00_Sub02, once per step (wStepTriggerFlag), reads the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and position (unless player X is $FF) match and whose flag is $FFFF or clear sets wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0).
+; record: list of step triggers for this map ($0000 = none)
+MapStepTriggerTable::
+Data_087_40A0:: ; address name
+    dw MapStepTriggers00 ; id 0
+    dw MapStepTriggers01 ; id 1
+    dw MapStepTriggers02 ; id 2
+    dw $0000 ; id 3
+    dw MapStepTriggers04 ; id 4
+    dw MapStepTriggers05 ; id 5
+    dw $0000 ; id 6
+    dw $0000 ; id 7
+    dw $0000 ; id 8
+    dw $0000 ; id 9
+    dw $0000 ; id 10
+    dw $0000 ; id 11
+    dw MapStepTriggers0C ; id 12
+    dw $0000 ; id 13
+    dw $0000 ; id 14
+    dw $0000 ; id 15
+    dw $0000 ; id 16
+    dw $0000 ; id 17
+    dw $0000 ; id 18
+    dw $0000 ; id 19
+    dw $0000 ; id 20
+    dw $0000 ; id 21
+    dw $0000 ; id 22
+    dw $0000 ; id 23
+    dw $0000 ; id 24
+    dw MapStepTriggers19 ; id 25
+    dw MapStepTriggers1A ; id 26
+    dw $0000 ; id 27
+    dw $0000 ; id 28
+    dw $0000 ; id 29
+    dw $0000 ; id 30
+    dw $0000 ; id 31
+    dw MapStepTriggers20 ; id 32
+    dw $0000 ; id 33
+    dw $0000 ; id 34
+    dw $0000 ; id 35
+    dw $0000 ; id 36
+    dw $0000 ; id 37
+    dw $0000 ; id 38
+    dw $0000 ; id 39
+    dw $0000 ; id 40
+    dw $0000 ; id 41
+    dw MapStepTriggers2A ; id 42
+    dw $0000 ; id 43
+    dw $0000 ; id 44
+    dw $0000 ; id 45
+    dw $0000 ; id 46
+    dw MapStepTriggers2F ; id 47
+    dw $0000 ; id 48
+    dw $0000 ; id 49
+    dw $0000 ; id 50
+    dw MapStepTriggers33 ; id 51
+    dw $0000 ; id 52
+    dw $0000 ; id 53
+    dw $0000 ; id 54
+    dw $0000 ; id 55
+    dw MapStepTriggers38 ; id 56
+    dw MapStepTriggers39 ; id 57
+    dw MapStepTriggers3A ; id 58
+    dw MapStepTriggers3B ; id 59
+    dw $0000 ; id 60
+    dw $0000 ; id 61
+    dw $0000 ; id 62
+    dw $0000 ; id 63
+    dw $0000 ; id 64
+    dw $0000 ; id 65
+    dw $0000 ; id 66
+    dw $0000 ; id 67
+    dw $0000 ; id 68
+    dw $0000 ; id 69
+    dw $0000 ; id 70
+    dw $0000 ; id 71
+    dw $0000 ; id 72
+    dw $0000 ; id 73
+    dw $0000 ; id 74
+    dw $0000 ; id 75
+    dw MapStepTriggers4C ; id 76
+    dw $0000 ; id 77
+    dw $0000 ; id 78
+    dw $0000 ; id 79
+    dw $0000 ; id 80
+    dw $0000 ; id 81
+    dw $0000 ; id 82
+    dw $0000 ; id 83
+    dw $0000 ; id 84
+    dw $0000 ; id 85
+    dw $0000 ; id 86
+    dw $0000 ; id 87
+    dw $0000 ; id 88
+    dw $0000 ; id 89
+    dw $0000 ; id 90
+    dw MapStepTriggers5B ; id 91
+    dw $0000 ; id 92
+    dw MapStepTriggers5D ; id 93
+    dw $0000 ; id 94
+    dw $0000 ; id 95
+    dw $0000 ; id 96
+    dw $0000 ; id 97
+    dw $0000 ; id 98
+    dw $0000 ; id 99
+    dw $0000 ; id 100
+    dw $0000 ; id 101
+    dw $0000 ; id 102
+    dw MapStepTriggers67 ; id 103
+    dw $0000 ; id 104
+    dw $0000 ; id 105
+    dw $0000 ; id 106
+    dw $0000 ; id 107
+    dw $0000 ; id 108
+    dw $0000 ; id 109
+    dw $0000 ; id 110
+    dw $0000 ; id 111
+    dw $0000 ; id 112
+    dw $0000 ; id 113
+    dw $0000 ; id 114
+    dw $0000 ; id 115
+    dw $0000 ; id 116
+    dw $0000 ; id 117
+    dw MapStepTriggers76 ; id 118
+    dw $0000 ; id 119
+    dw $0000 ; id 120
+    dw $0000 ; id 121
+    dw MapStepTriggers7A ; id 122
+    dw $0000 ; id 123
+    dw $0000 ; id 124
+    dw $0000 ; id 125
+    dw $0000 ; id 126
+    dw MapStepTriggers7F ; id 127
+    dw $0000 ; id 128
+    dw $0000 ; id 129
+    dw $0000 ; id 130
+    dw $0000 ; id 131
+    dw $0000 ; id 132
+    dw $0000 ; id 133
+    dw $0000 ; id 134
+    dw $0000 ; id 135
+    dw $0000 ; id 136
+    dw $0000 ; id 137
+    dw $0000 ; id 138
+    dw $0000 ; id 139
+    dw $0000 ; id 140
+    dw MapStepTriggers8D ; id 141
+    dw $0000 ; id 142
+    dw $0000 ; id 143
+    dw $0000 ; id 144
+    dw $0000 ; id 145
+    dw MapStepTriggers92 ; id 146
+    dw $0000 ; id 147
+    dw $0000 ; id 148
+    dw $0000 ; id 149
+    dw $0000 ; id 150
+    dw $0000 ; id 151
+    dw $0000 ; id 152
+    dw $0000 ; id 153
+    dw $0000 ; id 154
+    dw MapStepTriggers9B ; id 155
+    dw $0000 ; id 156
+    dw $0000 ; id 157
+    dw $0000 ; id 158
+    dw $0000 ; id 159
+    dw $0000 ; id 160
+    dw $0000 ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw MapStepTriggersAA ; id 170
+    dw $0000 ; id 171
+    dw MapStepTriggersAC ; id 172
+    dw $0000 ; id 173
+    dw $0000 ; id 174
+    dw $0000 ; id 175
+    dw $0000 ; id 176
+    dw $0000 ; id 177
+    dw $0000 ; id 178
+    dw $0000 ; id 179
+    dw $0000 ; id 180
+    dw $0000 ; id 181
+    dw $0000 ; id 182
+    dw $0000 ; id 183
+    dw $0000 ; id 184
+    dw $0000 ; id 185
+    dw $0000 ; id 186
+    dw $0000 ; id 187
+    dw $0000 ; id 188
+    dw $0000 ; id 189
+    dw $0000 ; id 190
+    dw $0000 ; id 191
+    dw $0000 ; id 192
+    dw $0000 ; id 193
+    dw $0000 ; id 194
+    dw $0000 ; id 195
+    dw $0000 ; id 196
+    dw $0000 ; id 197
+    dw $0000 ; id 198
+    dw $0000 ; id 199
+    dw $0000 ; id 200
+    dw $0000 ; id 201
+    dw $0000 ; id 202
+    dw $0000 ; id 203
+    dw $0000 ; id 204
+    dw $0000 ; id 205
+    dw $0000 ; id 206
+    dw $0000 ; id 207
+    dw $0000 ; id 208
+    dw $0000 ; id 209
+    dw $0000 ; id 210
+    dw $0000 ; id 211
+    dw $0000 ; id 212
+    dw $0000 ; id 213
+    dw $0000 ; id 214
+    dw $0000 ; id 215
+    dw $0000 ; id 216
+    dw $0000 ; id 217
+    dw $0000 ; id 218
+    dw $0000 ; id 219
+    dw $0000 ; id 220
+    dw $0000 ; id 221
+    dw $0000 ; id 222
+    dw $0000 ; id 223
+    dw $0000 ; id 224
+    dw $0000 ; id 225
+    dw $0000 ; id 226
+    dw $0000 ; id 227
+    dw $0000 ; id 228
+    dw $0000 ; id 229
+    dw $0000 ; id 230
+    dw $0000 ; id 231
+    dw $0000 ; id 232
+    dw $0000 ; id 233
+    dw $0000 ; id 234
+    dw $0000 ; id 235
+    dw $0000 ; id 236
+    dw $0000 ; id 237
+    dw $0000 ; id 238
+    dw $0000 ; id 239
+    dw $0000 ; id 240
+    dw $0000 ; id 241
+    dw $0000 ; id 242
+    dw $0000 ; id 243
+    dw $0000 ; id 244
+    dw $0000 ; id 245
+    dw $0000 ; id 246
+    dw $0000 ; id 247
+    dw $0000 ; id 248
+    dw $0000 ; id 249
+    dw $0000 ; id 250
+    dw $0000 ; id 251
+    dw $0000 ; id 252
+    dw $0000 ; id 253
+    dw $0000 ; id 254
+    dw $0000 ; id 255
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
@@ -3307,5 +3544,313 @@ Data_087_5D28:: ; address name
     dw $FFFF
     db $07, $09
     db $FF ; end
-    INCBIN "dwm2-cobi-us.gbc", $21DD33, $1F2
+
+; E-0157 (derived: list for entry $00 of MapStepTriggerTable; 2 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers00::
+Data_087_5D33:: ; address name
+    db $00, $00, $01, $01, $FF, $FF ; id 0
+    dw $0015
+    db $01, $0A
+    db $00, $00, $00, $03, $FF, $FF ; id 1
+    dw $FFFF
+    db $E4, $01
+    db $FF ; end
+
+; E-0157 (derived: list for entry $01 of MapStepTriggerTable; 4 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers01::
+Data_087_5D48:: ; address name
+    db $00, $01, $01, $01, $30, $48 ; id 0
+    dw $FFFF
+    db $E7, $01
+    db $00, $01, $01, $01, $FF, $FF ; id 1
+    dw $0138
+    db $D1, $01
+    db $00, $01, $01, $00, $FF, $FF ; id 2
+    dw $FFFF
+    db $F4, $01
+    db $00, $01, $02, $02, $FF, $FF ; id 3
+    dw $0187
+    db $F6, $01
+    db $FF ; end
+
+; E-0157 (derived: list for entry $02 of MapStepTriggerTable; 2 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers02::
+Data_087_5D71:: ; address name
+    db $00, $02, $02, $00, $FF, $FF ; id 0
+    dw $0005
+    db $04, $0A
+    db $00, $02, $00, $00, $FF, $FF ; id 1
+    dw $0006
+    db $05, $0A
+    db $FF ; end
+
+; E-0157 (derived: list for entry $04 of MapStepTriggerTable; 2 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers04::
+Data_087_5D86:: ; address name
+    db $00, $04, $00, $00, $50, $50 ; id 0
+    dw $FFFF
+    db $25, $00
+    db $00, $04, $01, $00, $FF, $FF ; id 1
+    dw $FFFF
+    db $26, $00
+    db $FF ; end
+
+; E-0157 (derived: list for entry $05 of MapStepTriggerTable; 3 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers05::
+Data_087_5D9B:: ; address name
+    db $00, $05, $01, $00, $FF, $FF ; id 0
+    dw $000B
+    db $06, $0A
+    db $00, $05, $01, $00, $00, $40 ; id 1
+    dw $0002
+    db $1A, $0A
+    db $00, $05, $01, $00, $90, $40 ; id 2
+    dw $0002
+    db $1A, $0A
+    db $FF ; end
+
+; E-0157 (derived: list for entry $0C of MapStepTriggerTable; 3 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers0C::
+Data_087_5DBA:: ; address name
+    db $00, $0C, $00, $00, $20, $10 ; id 0
+    dw $FFFF
+    db $01, $01
+    db $00, $0C, $00, $00, $70, $10 ; id 1
+    dw $FFFF
+    db $01, $01
+    db $00, $0C, $01, $00, $FF, $FF ; id 2
+    dw $FFFF
+    db $F5, $01
+    db $FF ; end
+
+; E-0157 (derived: list for entry $19 of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers19::
+Data_087_5DD9:: ; address name
+    db $00, $19, $00, $02, $40, $00 ; id 0
+    dw $FFFF
+    db $F3, $01
+    db $FF ; end
+
+; E-0157 (derived: list for entry $1A of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers1A::
+Data_087_5DE4:: ; address name
+    db $00, $1A, $01, $00, $FF, $FF ; id 0
+    dw $0025
+    db $9E, $01
+    db $FF ; end
+
+; E-0157 (derived: list for entry $20 of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers20::
+Data_087_5DEF:: ; address name
+    db $00, $20, $05, $05, $FF, $FF ; id 0
+    dw $FFFF
+    db $44, $02
+    db $FF ; end
+
+; E-0157 (derived: list for entry $2A of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers2A::
+Data_087_5DFA:: ; address name
+    db $00, $2A, $00, $00, $FF, $FF ; id 0
+    dw $004A
+    db $2E, $02
+    db $FF ; end
+
+; E-0157 (derived: list for entry $2F of MapStepTriggerTable; 3 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers2F::
+Data_087_5E05:: ; address name
+    db $00, $2F, $00, $01, $FF, $FF ; id 0
+    dw $0058
+    db $29, $02
+    db $00, $2F, $01, $00, $40, $30 ; id 1
+    dw $FFFF
+    db $43, $02
+    db $00, $2F, $01, $00, $50, $30 ; id 2
+    dw $FFFF
+    db $43, $02
+    db $FF ; end
+
+; E-0157 (derived: list for entry $33 of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers33::
+Data_087_5E24:: ; address name
+    db $00, $33, $00, $01, $40, $70 ; id 0
+    dw $0064
+    db $2F, $03
+    db $FF ; end
+
+; E-0157 (derived: list for entry $38 of MapStepTriggerTable; 2 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers38::
+Data_087_5E2F:: ; address name
+    db $00, $38, $00, $00, $E0, $00 ; id 0
+    dw $FFFF
+    db $00, $0A
+    db $00, $38, $02, $03, $FF, $FF ; id 1
+    dw $007B
+    db $50, $03
+    db $FF ; end
+
+; E-0157 (derived: list for entry $39 of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers39::
+Data_087_5E44:: ; address name
+    db $00, $39, $01, $01, $FF, $FF ; id 0
+    dw $007C
+    db $51, $03
+    db $FF ; end
+
+; E-0157 (derived: list for entry $3A of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers3A::
+Data_087_5E4F:: ; address name
+    db $00, $3A, $01, $00, $60, $60 ; id 0
+    dw $007E
+    db $52, $03
+    db $FF ; end
+
+; E-0157 (derived: list for entry $3B of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers3B::
+Data_087_5E5A:: ; address name
+    db $00, $3B, $00, $00, $FF, $FF ; id 0
+    dw $005F
+    db $53, $03
+    db $FF ; end
+
+; E-0157 (derived: list for entry $4C of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers4C::
+Data_087_5E65:: ; address name
+    db $00, $4C, $00, $00, $FF, $FF ; id 0
+    dw $008B
+    db $4C, $04
+    db $FF ; end
+
+; E-0157 (derived: list for entry $5B of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers5B::
+Data_087_5E70:: ; address name
+    db $00, $5B, $01, $00, $FF, $FF ; id 0
+    dw $0096
+    db $70, $04
+    db $FF ; end
+
+; E-0157 (derived: list for entry $5D of MapStepTriggerTable; 2 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers5D::
+Data_087_5E7B:: ; address name
+    db $00, $5D, $02, $01, $FF, $FF ; id 0
+    dw $0098
+    db $98, $04
+    db $00, $5D, $02, $02, $FF, $FF ; id 1
+    dw $0099
+    db $98, $04
+    db $FF ; end
+
+; E-0157 (derived: list for entry $67 of MapStepTriggerTable; 2 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers67::
+Data_087_5E90:: ; address name
+    db $00, $67, $00, $00, $40, $20 ; id 0
+    dw $FFFF
+    db $81, $04
+    db $00, $67, $00, $00, $50, $20 ; id 1
+    dw $FFFF
+    db $81, $04
+    db $FF ; end
+
+; E-0157 (derived: list for entry $76 of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers76::
+Data_087_5EA5:: ; address name
+    db $00, $76, $00, $00, $FF, $FF ; id 0
+    dw $00A4
+    db $14, $05
+    db $FF ; end
+
+; E-0157 (derived: list for entry $7A of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers7A::
+Data_087_5EB0:: ; address name
+    db $00, $7A, $00, $01, $40, $80 ; id 0
+    dw $00A8
+    db $29, $05
+    db $FF ; end
+
+; E-0157 (derived: list for entry $7F of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers7F::
+Data_087_5EBB:: ; address name
+    db $00, $7F, $00, $00, $40, $10 ; id 0
+    dw $FFFF
+    db $72, $05
+    db $FF ; end
+
+; E-0157 (derived: list for entry $8D of MapStepTriggerTable; 4 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers8D::
+Data_087_5EC6:: ; address name
+    db $00, $8D, $00, $00, $30, $30 ; id 0
+    dw $00B0
+    db $4E, $05
+    db $00, $8D, $00, $00, $60, $30 ; id 1
+    dw $00B0
+    db $4E, $05
+    db $00, $8D, $00, $00, $30, $60 ; id 2
+    dw $00B0
+    db $4E, $05
+    db $00, $8D, $00, $00, $60, $60 ; id 3
+    dw $00B0
+    db $4E, $05
+    db $FF ; end
+
+; E-0157 (derived: list for entry $92 of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers92::
+Data_087_5EEF:: ; address name
+    db $00, $92, $00, $00, $40, $40 ; id 0
+    dw $FFFF
+    db $72, $05
+    db $FF ; end
+
+; E-0157 (derived: list for entry $9B of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggers9B::
+Data_087_5EFA:: ; address name
+    db $00, $9B, $00, $00, $FF, $FF ; id 0
+    dw $00C2
+    db $68, $05
+    db $FF ; end
+
+; E-0157 (derived: list for entry $AA of MapStepTriggerTable; 2 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggersAA::
+Data_087_5F05:: ; address name
+    db $00, $AA, $00, $00, $FF, $FF ; id 0
+    dw $0149
+    db $0C, $07
+    db $00, $AA, $00, $01, $FF, $FF ; id 1
+    dw $FFFF
+    db $00, $07
+    db $FF ; end
+
+; E-0157 (derived: list for entry $AC of MapStepTriggerTable; 1 record(s), then $FF)
+; record: 0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index
+MapStepTriggersAC::
+Data_087_5F1A:: ; address name
+    db $00, $AC, $00, $00, $FF, $FF ; id 0
+    dw $014F
+    db $12, $07
+    db $FF ; end
     ds $20DB, $00

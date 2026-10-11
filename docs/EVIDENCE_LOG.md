@@ -2380,6 +2380,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The one picture no back-to-back run had found is now a verified stream (520 bytes expanding to 576).
 - Binary verification: build/run215 PASS, 0 differing bytes.
 
+### E-0198 — Map step trigger lists (bank $87)
+
+- Kind: OBSERVATION (reading; C1).
+- **Reader.** FieldModeStateDispatch_Case00_Sub02 runs once per step (guarded by wStepTriggerFlag). It reads the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF.
+  - An entry fires when byte 0 is 0, the map and screen match, the player position matches (skipped when player X is $FF), and the story flag is $FFFF or clear.
+  - It then sets wTalkEventGroup/Index and far-calls DispatchTalkEvent.
+- **Layout.** MapStepTriggerTable has 256 words and ends at the code at $42A0; its bytes had been emitted as anonymous `db` lines after the routine.
+  - The lists (MapStepTriggersNN, derived with the E-0157 `lists` option) fill $5D33-$5F25, right after SpecialMapInteractions_5D28.
+  - Bank $87 has no INCBIN left.
+- Binary verification: build/run216 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

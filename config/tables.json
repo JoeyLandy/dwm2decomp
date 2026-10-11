@@ -8052,6 +8052,44 @@
       ],
       "record": "84 $F0-terminated words, the same as RejectedNameList (14:$70F0) without padding",
       "note": "E-0197 (C1: no reader found; the 84 words match RejectedNameList in bank $14 in order, each ending in $F0 with no padding; an unreferenced routine follows at $5352)."
+    },
+    {
+      "bank": "87",
+      "addr": "40A0",
+      "label": "MapStepTriggerTable",
+      "count": 256,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of step triggers for this map ($0000 = none)",
+          "reason": "map step trigger list"
+        }
+      ],
+      "lists": {
+        "size": 10,
+        "end": 255,
+        "label": "MapStepTriggers",
+        "record": "0 (other values: skipped), map number, screen X, screen Y, player X ($FF = anywhere on the screen), player Y; story flag ($FFFF = none; set = skip); talk event group, index",
+        "fields": [
+          {
+            "type": "db",
+            "size": 6,
+            "name": "0, map, screen X, screen Y, player X ($FF = any), player Y"
+          },
+          {
+            "type": "words",
+            "size": 2,
+            "name": "story flag that disables the entry ($FFFF = none)"
+          },
+          {
+            "type": "db",
+            "size": 2,
+            "name": "talk event group, index"
+          }
+        ]
+      },
+      "note": "E-0198 (C1: FieldModeStateDispatch_Case00_Sub02, once per step (wStepTriggerFlag), reads the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and position (unless player X is $FF) match and whose flag is $FFFF or clear sets wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0)."
     }
   ]
 }
