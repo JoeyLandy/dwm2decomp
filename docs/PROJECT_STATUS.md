@@ -55,21 +55,23 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code; the cartridge header (`$0104-$014F`) is an INCBIN slice, not annotated.
 
-## Readability state (2026-10-10, after E-0137)
+## Readability state (2026-10-11, after E-0155)
 
-Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run137). Measured from the generated `src/`:
+Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run155). Measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
 | Routines with only an address name (`tools/rank_unnamed.py`) | 0 |
-| `call`/`farcall` operands that reach a named routine | 100% of 22,058 |
-| Evidence-named routines in `config/names.json` | 3,227, plus families, `_CaseNN`/`_SubNN`/`_SharedNN` structural names |
+| `call`/`farcall` operands that reach a named routine | 100% |
+| Code labels | 9,100: 5,337 structural (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps), 148 still spelling a RAM address (E-0155), the rest descriptive |
 | RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 (from 1,611 before E-0132); buffers print as `Name + $offset`, and WRAM-bank-2 attribute positions use `of` aliases (E-0132 to E-0137) |
-| Data decoded from tables (E-0138 to E-0142) | monster pictures, sprites and palettes named by monster; key-world tilesets and rooms; all 183 map records and 35 special maps with their screen arrays and palettes; key-world chunk groups; 512 meta-sprite sets with 3,397 frames; far pointers print as `dfar Label` |
-| `INCBIN` bytes not inside a known compressed stream | 197,278 (from about 645,000 before E-0139) |
+| Data decoded field by field | monster pictures, sprites and palettes named by monster; all 183 map records and 35 special maps with screen arrays and palettes; key-world tilesets, rooms and chunk groups; 512 meta-sprite sets (3,397 frames); EXP tables; the AI personality weights; SGB borders; map-screen flag tiles (E-0138 to E-0151) |
+| Event scripts | 2,120 commands in bank $10 decoded into `script_*` macros, with message quotes (E-0152, E-0153) |
+| `INCBIN` bytes not inside a known compressed stream | 132,070 (from about 645,000 before E-0139) |
+| Likely game bugs | six executed and pinned by emulator tests (E-0075, E-0099, E-0154) |
 | Immediates kept numeric although they look like addresses | step deltas, battle message bytes, sprite positions (E-0132, E-0137) |
 
-Most routine and RAM names are C1 readings, and many describe mechanics or which routines use a byte rather than game meaning (for example wScreenByteB2, wBattleTemp7A). Proven data is kept out of code through `config/data_regions.json`, and code pointer tables through `config/tables.json`.
+Most routine and RAM names are C1 readings, and many describe mechanics or which routines use a byte rather than game meaning (for example wScreenByteB2, wBattleTemp7A). Data-bank scripts, message words and command-type meanings are not yet decoded. Proven data is kept out of code through `config/data_regions.json` and `config/tables.json`; map, key-world and meta-sprite layouts are derived in tools/disasm_all.py.
 
 ## Readability state (2026-10-09, after E-0027)
 
