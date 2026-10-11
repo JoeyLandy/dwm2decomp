@@ -118,7 +118,11 @@ MACRO script_sound
 ENDM
 
 MACRO script_choice_jump
-    db $E4, (\\1) - @ - 1, (\\2) - @ - 1
+    db $E4
+    REPT _NARG
+        db (\\1) - @ - 1
+        SHIFT
+    ENDR
 ENDM
 
 MACRO script_jump_data_bank
@@ -467,6 +471,18 @@ class Rom:
         words = [first_bytes[i] | (first_bytes[i + 1] << 8) for i in range(0, min(len(first_bytes), 16) - 1, 2)]
         tablelike = len(words) >= 6 and sum(0x4000 <= w < 0x8000 for w in words) >= 0.75 * len(words)
         return regreg <= 0.25 * n and nops <= 0.2 * n and struct >= 1 and not tablelike
+
+    def _rect_relays(self) -> set[tuple[int, int]]:
+        """Copies of the DrawTileRectAtHLFromDE family (E-0093): routines whose first 23 bytes
+        equal the canonical's (HL, DE to wArg5/6, wArg1/2, then a far call)."""
+        fam = next((f for f in self.families if f["name"] == "DrawTileRectAtHLFromDE"), None)
+        if not fam:
+            return set()
+        cb, ca = int(fam["canonical"][:2], 16), int(fam["canonical"][3:], 16)
+        sig = lambda b, a: bytes(self.data[b * BANK + a - self.base(b):b * BANK + a - self.base(b) + 23])
+        want = sig(cb, ca)
+        return {(b, a) for b in range(self.nbanks) for a in self.labels[b]
+                if a in self.insn[b] and a <= self.base(b) + BANK - 23 and sig(b, a) == want}
 
     def banked_call_args(self) -> dict[tuple[int, int], tuple[int, int]]:
         """`ld hl, ADDR` loads that feed a banked code call (`rst $10` / `call $0010`).
@@ -967,6 +983,24 @@ class Rom:
                         stored = True
                 if de is not None and stored:
                     arg_src[(bank, de)] = (t[0], f"wArg1/wArg2 source of a far call to {self.names[t]['name']}")
+        # E-0187: the DrawTileRectAtHLFromDE_Bank* relays store DE in wArg1/wArg2 themselves, then far-call
+        # DrawTileRectFromArg1Params: DE before a call to one points into that routine's bank.
+        rect_bank = next((b for (b, a) in arg_readers
+                          if self.names[(b, a)]["name"] == "DrawTileRectFromArg1Params"), None)
+        relays = self._rect_relays()
+        for bank in range(self.nbanks):
+            ins = self.insn[bank]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if rect_bank is None or v[2] != "call" or v[3] is None or self.resolve(bank, v[3]) not in relays:
+                    continue
+                for x in reversed(order[max(0, k - 12):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    if (m := ld16.match(ins[x][1])) and m.group(1) == "de":
+                        arg_src[(bank, x)] = (rect_bank, "DE source of a DrawTileRectAtHLFromDE relay")
+                        break
         for bank in range(self.nbanks):
             ins = self.insn[bank]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
@@ -1913,12 +1947,19 @@ class Rom:
         arg_sigs = {sig(b, a) for b, a in arg_canon}
         arg_copiers = {(b, a) for b in range(self.nbanks) for a in self.labels[b]
                        if a in self.insn[b] and a <= self.base(b) + BANK - 16 and sig(b, a) in arg_sigs}
+        far_rect = {}  # (bank, rst $10 address) -> bank of the far-called copier (E-0187)
+        for (bank, a), t in self.banked_call_args().items():
+            for nxt in (a + 3, a + 5):
+                if self.insn[bank].get(nxt, ("", "", ""))[2] == "rst" and t in arg_canon:
+                    far_rect[(bank, nxt)] = t[0]
         for cb in range(self.nbanks):
             ins = self.insn[cb]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
             for k, a in enumerate(order):
                 v = ins[a]
-                if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in arg_copiers:
+                db = far_rect.get((cb, a), cb)
+                if (cb, a) not in far_rect and (
+                        v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in arg_copiers):
                     continue
                 window = order[max(0, k - 16):k]
                 stores: dict[int, int] = {}
@@ -1939,7 +1980,31 @@ class Rom:
                 if all(i in stores for i in (1, 2, 3, 4)):
                     src = stores[1] << 8 | stores[2]
                     if 0x4000 <= src < 0x8000:
-                        uses.setdefault((cb, src), set()).add((stores[3], stores[4]))
+                        uses.setdefault((db, src), set()).add((stores[3], stores[4]))
+        # The DrawTileRectAtHLFromDE_Bank* relays (E-0187): DE = source in DrawTileRectFromArg1Params'
+        # bank, wArg3/wArg4 = width and rows stored by the caller.
+        rect_bank = next((b for b, a in arg_canon), None)
+        relays = self._rect_relays()
+        for cb in range(self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if rect_bank is None or v[2] != "call" or v[3] is None or self.resolve(cb, v[3]) not in relays:
+                    continue
+                de, stores = None, {}
+                window = order[max(0, k - 12):k]
+                for j in range(len(window) - 1, -1, -1):
+                    t = ins[window[j]][1]
+                    if ins[window[j]][2] in SETUP_BARRIER:
+                        break
+                    if de is None and (m := ld_de.match(t)):
+                        de = int(m.group(1), 16)
+                    m = re.match(r"ld \[\$D7F([34])\], a$", t)
+                    if m and j and int(m.group(1)) not in stores and (mm := ld_a.match(ins[window[j - 1]][1])):
+                        stores[int(m.group(1))] = int(mm.group(1), 16)
+                if de is not None and 0x4000 <= de < 0x8000 and 3 in stores and 4 in stores:
+                    uses.setdefault((rect_bank, de), set()).add((stores[3], stores[4]))
         raw = 0
         for (cb, src), dims in sorted(uses.items()):
             widths = {w for w, _ in dims}
@@ -1958,8 +2023,9 @@ class Rom:
                 "bank": cb, "addr": src, "label": f"TileRect_{cb:02X}_{src:04X}", "count": rows,
                 "fields": [{"type": "db", "size": w, "line": True, "name": "row"}], "id_base": 0,
                 "record": f"{w} x {rows} tiles, one row per line",
-                "note": "E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, "
-                        "to a rectangle copier)"})
+                "note": "E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, "
+                        "as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and "
+                        "wArg4 = rows)"})
             raw += 1
         log(f"raw tile rectangles: {raw}")
         # Palette sources (E-0164): CopyFromBank (DE, bank B, HL, C bytes) and CopyBytesDEToHL_Bank00
@@ -2097,11 +2163,12 @@ class Rom:
             for a in list(dl):
                 if addr < a < end and a not in bounds:
                     why = self.dreason.get((bank, a), "")
-                    if not why or any(k in why for k in ("pointer load", "stream", "monotone pointer table")):
+                    if not why or any(k in why for k in ("pointer load", "stream", "monotone pointer table",
+                                                          "bank from RAM variable")):
                         del dl[a]  # a guess (C0) inside a table the configuration proves
                         self.streams.pop((bank, a), None)
                         continue
-                    raise AssertionError(f"label {dl[a]} falls inside a field of table {t['label']}")
+                    raise AssertionError(f"label {dl[a]} ({why}) falls inside a field of table {t['label']}")
             for k in [k for k in dt if addr <= k < end]:
                 del dt[k]  # the schema emits these bytes
             for i in range(count):
@@ -2177,7 +2244,7 @@ class Rom:
         (bank $10) reads the opcode; ScriptOpcodeHandlers says which opcodes exist; SCRIPT_ARGS
         gives the inline bytes the dedicated fetch handlers read (every other opcode only names
         the command type). $06 skips forward by its byte when wTextYesNoResult is 0, $07 jumps,
-        $E4 jumps by one of two forward offsets (wTwoChoiceCursor), $E7 continues in the data
+        $E4 jumps by one of N forward offsets (wTwoChoiceCursor; N from the layout, E-0188), $E7 continues in the data
         bank, $FF ends the script. The data bank is the one the caller stores in wDataBank before
         StartScriptAtHL_* (`ld a, n` / `ld [wDataBank], a`); $E7 targets are traced there (E-0160)."""
         b = 0x10
@@ -2260,6 +2327,8 @@ class Rom:
                     if op != 0xFF and op not in valid:
                         break
                     n = 0 if op == 0xFF else self.SCRIPT_ARGS.get(op, 0)
+                    if op == 0xE4:
+                        n = self.e4_count(base, pc)
                     code[(sb, pc)] = (op, bytes(self.data[base + pc + 1:base + pc + 1 + n]))
                     arg = code[(sb, pc)][1]
                     nxt = []
@@ -2268,7 +2337,7 @@ class Rom:
                     if op == 0x07:
                         nxt = [arg[0] | arg[1] << 8]
                     if op == 0xE4:
-                        nxt = [pc + 2 + arg[0], pc + 3 + arg[1]]
+                        nxt = [pc + 2 + i + o for i, o in enumerate(arg)]
                     for t in nxt:
                         targets.add((sb, t))
                         todo.append(t)
@@ -2335,9 +2404,22 @@ class Rom:
                         not self.dlabels[wrong[0]][wrong[1]].startswith(("Script", "Map")):
                     del self.dlabels[wrong[0]][wrong[1]]
         log(f"event scripts: {len(sites)} start sites, {len(code)} commands in {used} regions, "
-            f"{len(self.data_script_entries)} data-bank entries")
+            f"{len(self.data_script_entries)} data-bank entries" + f", {getattr(self, 'e4_fallbacks', 0)} $E4 counts not fixed by layout")
 
     MESSAGE_GROUP_BANKS = [0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2E, 0x7C, 0x80, 0x80, 0x82, 0x86, 0x89]
+
+    def e4_count(self, base: int, pc: int) -> int:
+        """Offsets after a $E4 at pc (E-0188). ScriptFetchE4 skips wTwoChoiceCursor offset bytes and
+        jumps by the one it lands on (target = offset address + 1 + offset), so a menu of N options
+        has N offsets and the count is not encoded. $E4 always jumps, so the first target follows
+        the offsets directly: N is the smallest count (2 or more) whose nearest target is the byte
+        after its last offset. Falls back to 2."""
+        for k in range(2, 9):
+            offs = self.data[base + pc + 1:base + pc + 1 + k]
+            if min(pc + 2 + i + o for i, o in enumerate(offs)) == pc + 1 + k:
+                return k
+        self.e4_fallbacks = getattr(self, "e4_fallbacks", 0) + 1
+        return 2
 
     def message_preview(self, word: int) -> str | None:
         """First words of message `word` on ShowMessageHL's normal path (E-0080/E-0081): group =
@@ -2397,7 +2479,7 @@ class Rom:
             elif op == 0x0F:
                 out.append(f"    script_sound ${arg[0]:02X}")
             elif op == 0xE4:
-                out.append(f"    script_choice_jump {lab(a + 2 + arg[0])}, {lab(a + 3 + arg[1])}")
+                out.append("    script_choice_jump " + ", ".join(lab(a + 2 + i + o) for i, o in enumerate(arg)))
             elif op == 0xE7:
                 banks = getattr(self, "e7_banks", {}).get((bank, a), set())
                 tb = next(iter(banks)) if len(banks) == 1 and None not in banks else None

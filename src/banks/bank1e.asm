@@ -528,7 +528,7 @@ Jump_01E_430D::
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1E_4333::
 Data_01E_4333:: ; heuristic: start of a structured table; C0
@@ -783,7 +783,7 @@ Jump_01E_44C3:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_1E_44EF::
 Data_01E_44EF:: ; heuristic: start of a structured table; C0
@@ -1098,7 +1098,7 @@ Func_01E_46E5:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 1 tiles, one row per line
 TileRect_1E_4718::
 Data_01E_4718:: ; heuristic: start of a structured table; C0
@@ -1295,7 +1295,7 @@ Jump_01E_4831:: ; address name
     ld [wTwoChoiceCursor], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_1E_4872::
 Data_01E_4872:: ; heuristic: start of a structured table; C0
@@ -1431,7 +1431,7 @@ Jump_01E_4933:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 11 tiles, one row per line
 TileRect_1E_495A::
 Data_01E_495A:: ; heuristic: start of a structured table; C0
@@ -2842,7 +2842,7 @@ Jump_01E_5300:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 3 tiles, one row per line
 TileRect_1E_5343::
 Data_01E_5343:: ; heuristic: start of a structured table; C0
@@ -2968,7 +2968,7 @@ Jump_01E_5430:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 9 tiles, one row per line
 TileRect_1E_5461::
 Data_01E_5461:: ; heuristic: start of a structured table; C0
@@ -3396,13 +3396,13 @@ Jump_01E_5774:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 1 tiles, one row per line
 TileRect_1E_57DC::
 Data_01E_57DC:: ; heuristic: start of a structured table; C0
     db $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 1 x 2 tiles, one row per line
 TileRect_1E_57E9::
 Data_01E_57E9:: ; heuristic: start of a structured table; C0
@@ -3639,7 +3639,7 @@ Jump_01E_592B:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 1 tiles, one row per line
 TileRect_1E_5987::
 Data_01E_5987:: ; heuristic: start of a structured table; C0
@@ -3773,7 +3773,7 @@ Func_01E_5A4D:: ; address name
     ld [wScreenStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 1 tiles, one row per line
 TileRect_1E_5A80::
 Data_01E_5A80:: ; heuristic: start of a structured table; C0
@@ -3933,7 +3933,7 @@ Jump_01E_5B50:: ; address name
 ScriptCommandE8_Run_Case09_Case03::
 Jump_01E_5B96:: ; address name
     call BGMapAddressAtScroll_Bank1E
-    ld de, $6717
+    ld de, Data_01F_6717
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -4016,7 +4016,7 @@ Jump_01E_5C16::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, $651B
+    ld de, Data_01F_651B
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -4230,7 +4230,7 @@ Jump_01E_5D7E::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
-    ld de, $662B
+    ld de, Data_01F_662B
     ld a, $0C
     ld [wArg3], a
     ld a, $0F
@@ -4241,7 +4241,7 @@ Jump_01E_5D7E::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, $653F
+    ld de, Data_01F_653F
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4331,7 +4331,7 @@ Jump_01E_5E17::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, $6E47
+    ld de, Data_01F_6E47
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4345,7 +4345,7 @@ Jump_01E_5E17::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, $6D6F
+    ld de, Data_01F_6D6F
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -4392,7 +4392,7 @@ Jump_01E_5E98:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, $6B4F
+    ld de, Data_01F_6B4F
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -4403,7 +4403,7 @@ Jump_01E_5E98:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, $6C27
+    ld de, Data_01F_6C27
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4428,7 +4428,7 @@ Jump_01E_5ED6:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, $6C5F
+    ld de, Data_01F_6C5F
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -4439,7 +4439,7 @@ Jump_01E_5ED6:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, $6D37
+    ld de, Data_01F_6D37
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4600,7 +4600,7 @@ Jump_01E_5FAA:: ; address name
 ScriptCommandE8_Run_Case0E_Case03::
 Jump_01E_5FF0:: ; address name
     call BGMapAddressAtScroll_Bank1E
-    ld de, $69E7
+    ld de, Data_01F_69E7
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -5086,7 +5086,7 @@ ScriptCommandE8_Run_Case0D_Case04::
 Jump_01E_62EF:: ; address name
     farcall UploadTilesFromData6D20
     call BGMapAddressAtScroll_Bank1E
-    ld de, $6E7F
+    ld de, Data_01F_6E7F
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -5242,7 +5242,7 @@ Jump_01E_640A::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0041
     add hl, de
-    ld de, $64F7
+    ld de, Data_01F_64F7
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5434,7 +5434,7 @@ Jump_01E_6559::
     call CopyRectTo20ByteRows_Bank1E
     jr Jump_01E_654A
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 1 tiles, one row per line
 TileRect_1E_6567::
 Data_01E_6567:: ; heuristic: start of a structured table; C0
@@ -5582,7 +5582,7 @@ Jump_01E_6646:: ; address name
 ScriptCommandE8_Run_Case08_Case03::
 Jump_01E_664E:: ; address name
     call BGMapAddressAtScroll_Bank1E
-    ld de, $5E37
+    ld de, Data_01F_5E37
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -5634,7 +5634,7 @@ Jump_01E_669D:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, $651B
+    ld de, Data_01F_651B
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5704,7 +5704,7 @@ Jump_01E_6726::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, $64AF
+    ld de, Data_01F_64AF
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5754,7 +5754,7 @@ Jump_01E_677D::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, $651B
+    ld de, Data_01F_651B
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5964,7 +5964,7 @@ Jump_01E_68E4:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
-    ld de, $6577
+    ld de, Data_01F_6577
     ld a, $0C
     ld [wArg3], a
     ld a, $0F
@@ -6056,7 +6056,7 @@ Jump_01E_694D:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, $66DF
+    ld de, Data_01F_66DF
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6135,7 +6135,7 @@ Jump_01E_6A18::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
-    ld de, $662B
+    ld de, Data_01F_662B
     ld a, $0C
     ld [wArg3], a
     ld a, $0F
@@ -6146,7 +6146,7 @@ Jump_01E_6A18::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, $653F
+    ld de, Data_01F_653F
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6331,7 +6331,7 @@ Jump_01E_6B55::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, $6E47
+    ld de, Data_01F_6E47
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6345,7 +6345,7 @@ Jump_01E_6B55::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, $6D6F
+    ld de, Data_01F_6D6F
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -6381,7 +6381,7 @@ Jump_01E_6BC6:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, $5E13
+    ld de, Data_01F_5E13
     ld a, $0C
     ld [wArg3], a
     ld a, $03
@@ -6392,7 +6392,7 @@ Jump_01E_6BC6:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, $66DF
+    ld de, Data_01F_66DF
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6466,7 +6466,7 @@ Jump_01E_6C69:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, $63D7
+    ld de, Data_01F_63D7
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -8512,7 +8512,7 @@ Func_01E_7778:: ; address name
     ret
     INCBIN "dwm2-cobi-us.gbc", $07B78C, $1D0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 9 tiles, one row per line
 TileRect_1E_795C::
 Data_01E_795C:: ; heuristic: start of a structured table; C0
@@ -8526,7 +8526,7 @@ Data_01E_795C:: ; heuristic: start of a structured table; C0
     db $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 11 x 11 tiles, one row per line
 TileRect_1E_79C8::
 Data_01E_79C8:: ; heuristic: start of a structured table; C0
@@ -8542,7 +8542,7 @@ Data_01E_79C8:: ; heuristic: start of a structured table; C0
     db $B6, $C3, $F0, $F1, $A5, $F2, $C3, $C3, $C3, $C3, $B7 ; id 9
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 11 tiles, one row per line
 TileRect_1E_7A41::
 Data_01E_7A41:: ; heuristic: start of a structured table; C0
@@ -8558,7 +8558,7 @@ Data_01E_7A41:: ; heuristic: start of a structured table; C0
     db $B6, $C3, $A4, $A5, $A6, $CE, $CF, $B7 ; id 9
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 11 tiles, one row per line
 TileRect_1E_7A99::
 Data_01E_7A99:: ; heuristic: start of a structured table; C0
@@ -8574,7 +8574,7 @@ Data_01E_7A99:: ; heuristic: start of a structured table; C0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 11 tiles, one row per line
 TileRect_1E_7AF1::
 Data_01E_7AF1:: ; heuristic: start of a structured table; C0
@@ -8590,7 +8590,7 @@ Data_01E_7AF1:: ; heuristic: start of a structured table; C0
     db $B6, $C3, $F0, $F1, $A5, $F2, $C3, $C3 ; id 9
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4 ; id 10
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 9 tiles, one row per line
 TileRect_1E_7B49::
 Data_01E_7B49:: ; heuristic: start of a structured table; C0
@@ -8604,7 +8604,7 @@ Data_01E_7B49:: ; heuristic: start of a structured table; C0
     db $B6, $C3, $C7, $C8, $C9, $CA, $CB, $EA, $EB, $EC, $ED, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 5 tiles, one row per line
 TileRect_1E_7BBE::
 Data_01E_7BBE:: ; heuristic: start of a structured table; C0
@@ -8614,7 +8614,7 @@ Data_01E_7BBE:: ; heuristic: start of a structured table; C0
     db $B6, $C3, $77, $78, $78, $76, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 4 x 8 tiles, one row per line
 TileRect_1E_7BFF::
 Data_01E_7BFF:: ; heuristic: start of a structured table; C0
@@ -8627,7 +8627,7 @@ Data_01E_7BFF:: ; heuristic: start of a structured table; C0
     db $C3, $C3, $C3, $B7 ; id 6
     db $DF, $CF, $C3, $B7 ; id 7
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 4 x 3 tiles, one row per line
 TileRect_1E_7C1F::
 Data_01E_7C1F:: ; heuristic: start of a structured table; C0

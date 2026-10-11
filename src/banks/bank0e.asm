@@ -5533,21 +5533,23 @@ Script_0E_7F99:: ; heuristic: event script entry or jump target; C0
     script_op $F5, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
     script_command $F4
 Script_0E_7F9D:: ; heuristic: event script entry or jump target; C0
-    script_choice_jump Script_0E_7FA8, Script_0E_7FAC
-    db $00, $F5, $04, $C0, $F4, $07, $8F, $7F
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0E_7FA8, Script_0E_7FAC, Script_0E_7FA1
+Script_0E_7FA1:: ; heuristic: event script entry or jump target; C0
+    script_op $F5, $04, $C0 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_command $F4
+    script_jump Script_0E_7F8F
 Script_0E_7FA8:: ; heuristic: event script entry or jump target; C0
     script_command $F4
     script_jump Script_0E_7F9D
 Script_0E_7FAC:: ; heuristic: event script entry or jump target; C0
     script_command $F4
-    script_choice_jump Script_0E_7FC1, Script_0E_7FB7
-    db $00, $F5, $06, $C0, $07, $BA, $7F
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0E_7FC1, Script_0E_7FB7, Script_0E_7FB1
+Script_0E_7FB1:: ; heuristic: event script entry or jump target; C0
+    script_op $F5, $06, $C0 ; 'You folks run a monster farm?'
+    script_jump Script_0E_7FBA
 Script_0E_7FB7:: ; heuristic: event script entry or jump target; C0
     script_op $F5, $07, $C0 ; 'There's a spirit in GreatLog that's'
+Script_0E_7FBA:: ; heuristic: event script entry or jump target; C0
     script_op $F5, $03, $C0 ; 'Tara There you are, big brother!'
     script_command $F4
     script_jump Script_0E_7F8F

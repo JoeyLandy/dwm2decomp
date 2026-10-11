@@ -58,7 +58,11 @@ MACRO script_sound
 ENDM
 
 MACRO script_choice_jump
-    db $E4, (\1) - @ - 1, (\2) - @ - 1
+    db $E4
+    REPT _NARG
+        db (\1) - @ - 1
+        SHIFT
+    ENDR
 ENDM
 
 MACRO script_jump_data_bank

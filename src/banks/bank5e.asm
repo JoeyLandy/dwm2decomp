@@ -13,7 +13,7 @@ Data_05E_422F:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $014D, $6BFF, $2A55, $0000 ; id 0
     db $88
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_5E_4238::
 Data_05E_4238:: ; heuristic: start of a structured table; C0

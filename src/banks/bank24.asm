@@ -3689,7 +3689,7 @@ Func_024_578B:: ; address name
     jr nz, CopyBytesDEFromHL_Bank24
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 17 x 2 tiles, one row per line
 TileRect_24_5792::
 Data_024_5792:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3706,14 +3706,14 @@ Data_024_57B4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_57D6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $1C, $07
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 17 x 2 tiles, one row per line
 TileRect_24_57F2::
 Data_024_57F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $02, $03, $04, $05, $C3, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F ; id 0
     db $10, $11, $12, $13, $14, $15, $C3, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F ; id 1
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 14 x 13 tiles, one row per line
 TileRect_24_5814::
 Data_024_5814:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3735,7 +3735,7 @@ Data_024_5814:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_58CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $78, $C3
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 5 tiles, one row per line
 TileRect_24_5942::
 Data_024_5942:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3745,7 +3745,7 @@ Data_024_5942:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 5 tiles, one row per line
 TileRect_24_59A6::
 Data_024_59A6:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3755,7 +3755,7 @@ Data_024_59A6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_24_5A0A::
 Data_024_5A0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3765,7 +3765,7 @@ Data_024_5A0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $70, $71, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_24_5A28::
 Data_024_5A28:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3775,7 +3775,7 @@ Data_024_5A28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B7, $7F, $7F, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B5, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 10 x 5 tiles, one row per line
 TileRect_24_5A50::
 Data_024_5A50:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3785,7 +3785,7 @@ Data_024_5A50:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $7D, $7F, $7F, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_24_5A82::
 Data_024_5A82:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3803,7 +3803,7 @@ Data_024_5AAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_5AAE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 11 tiles, one row per line
 TileRect_24_5AB8::
 Data_024_5AB8:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3819,7 +3819,7 @@ Data_024_5AB8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $A4, $A5, $A6, $CE, $CF, $B7 ; id 9
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 13 x 9 tiles, one row per line
 TileRect_24_5B10::
 Data_024_5B10:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3833,7 +3833,7 @@ Data_024_5B10:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $C7, $C8, $C9, $CA, $CB, $EA, $EB, $EC, $ED, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 5 tiles, one row per line
 TileRect_24_5B85::
 Data_024_5B85:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4767,7 +4767,7 @@ Jump_024_6445:: ; address name
     ld [wTwoChoiceCursor], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_24_6479::
 Data_024_6479:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5498,7 +5498,7 @@ Jump_024_68DF::
     jr c, Jump_024_68DF
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 3 tiles, one row per line
 TileRect_24_68EB::
 Data_024_68EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5996,7 +5996,7 @@ Jump_024_6B7D::
     jr nz, Jump_024_6B7C
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 10 x 9 tiles, one row per line
 TileRect_24_6B8B::
 Data_024_6B8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6010,7 +6010,7 @@ Data_024_6B8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $A9, $F6, $F2, $FC, $C3, $C3, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 5 tiles, one row per line
 TileRect_24_6BE5::
 Data_024_6BE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6020,7 +6020,7 @@ Data_024_6BE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 11 x 7 tiles, one row per line
 TileRect_24_6C49::
 Data_024_6C49:: ; heuristic: pointer load in the same bank (bank assumed); C0

@@ -1238,7 +1238,7 @@ Jump_01C_4714:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1C_4738::
 Data_01C_4738:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6761,7 +6761,7 @@ Jump_01C_6DCB:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 11 x 7 tiles, one row per line
 TileRect_1C_6DEF::
 Data_01C_6DEF:: ; heuristic: pointer load in the same bank (bank assumed); C0

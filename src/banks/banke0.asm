@@ -2259,7 +2259,7 @@ Func_0E0_510C:: ; address name
     call CopyRectFromBankToVRAM
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_E0_511B::
 Data_0E0_511B:: ; heuristic: start of a structured table; C0
@@ -2282,7 +2282,7 @@ Data_0E0_511B:: ; heuristic: start of a structured table; C0
     db $B6, $C3, $C3, $C3, $C3, $FA, $FB, $FC, $FD, $FE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_E0_5283::
 Data_0E0_5283:: ; heuristic: start of a structured table; C0
@@ -2305,7 +2305,7 @@ Data_0E0_5283:: ; heuristic: start of a structured table; C0
     db $B6, $EC, $01, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $E3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 18 tiles, one row per line
 TileRect_E0_53EB::
 Data_0E0_53EB:: ; heuristic: start of a structured table; C0

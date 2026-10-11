@@ -436,6 +436,13 @@ class EventScripts(unittest.TestCase):
         text = (BANKS / "bank13.asm").read_text(encoding="utf-8")
         self.assertIn("    ld hl, Script_6083\n    call StartScriptAtHL_B13\n", text)
 
+    def test_choice_jump_takes_one_offset_per_option(self):
+        """E-0188: $E4 has as many offsets as menu options; the first target follows them."""
+        text = (BANKS / "bank10.asm").read_text(encoding="utf-8")
+        self.assertIn("    script_choice_jump Script_668F, Script_6688, Script_6685\nScript_6685::", text)
+        macros = (BANKS.parent / "macros.inc").read_text(encoding="utf-8")
+        self.assertIn("    REPT _NARG\n", macros[macros.index("MACRO script_choice_jump"):])
+
     def test_data_bank_jumps_name_their_target(self):
         """E-0184: wDataBank stores at the routine head or after the start call are found."""
         text = "".join(p.read_text(encoding="utf-8") for p in BANKS.glob("bank*.asm"))

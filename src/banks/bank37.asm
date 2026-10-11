@@ -1800,7 +1800,7 @@ Func_037_542C:: ; address name
 Func_037_4AFD_Case0D_Case03::
 Jump_037_5452:: ; address name
     call BGMapAddressAtScroll_Bank37
-    ld de, Data_037_687F
+    ld de, Data_01F_687F
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -1864,7 +1864,7 @@ Jump_037_54B0::
     call BGMapAddressAtScroll_Bank37
     ld de, $0161
     add hl, de
-    ld de, Data_037_651B
+    ld de, Data_01F_651B
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -1983,7 +1983,7 @@ Jump_037_5570:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld de, $0068
     add hl, de
-    ld de, Data_037_6577
+    ld de, Data_01F_6577
     ld a, $0C
     ld [wArg3], a
     ld a, $0F
@@ -2049,7 +2049,7 @@ Jump_037_55C6:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld de, $0160
     add hl, de
-    ld de, Data_037_66DF
+    ld de, Data_01F_66DF
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -2278,7 +2278,7 @@ Jump_037_5760:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld de, $0008
     add hl, de
-    ld de, Data_037_63D7
+    ld de, Data_01F_63D7
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -3986,13 +3986,9 @@ Data_037_6301:: ; heuristic: target of a monotone pointer table; C0
 
 ; address loaded by MapAndCompactSkillList63D3
 Data_037_63D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $3A, $00, $01, $02
+    INCBIN "dwm2-cobi-us.gbc", $0DE3D3, $AA
 
-; address loaded by Func_037_4AFD_Case0D_Case1E
-Data_037_63D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0DE3D7, $A6
-
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 5 tiles, one row per line
 TileRect_37_647D::
 Data_037_647D:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4002,7 +3998,7 @@ Data_037_647D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C7, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_37_64B9::
 Data_037_64B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4012,7 +4008,7 @@ Data_037_64B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $76, $73, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 7 tiles, one row per line
 TileRect_37_64D7::
 Data_037_64D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4026,30 +4022,14 @@ Data_037_64D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; address loaded by Func_037_4AFD_Case04_Case18
 Data_037_6516:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FC, $C3, $24, $C4, $4C
-
-; address loaded by Func_037_4AFD_Case0D_Case06
-Data_037_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $C4
-    ds $5B, $00
-
-; address loaded by Func_037_4AFD_Case0D_Case11
-Data_037_6577:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $8A, $00
+    db $FC, $C3, $24, $C4, $4C, $C4
+    ds $E5, $00
 
 Data_037_6601:: ; heuristic: target of a monotone pointer table; C0
-    ds $DE, $00
-
-; address loaded by Func_037_4AFD_Case0D_Case14
-Data_037_66DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $122, $00
+    ds $200, $00
 
 Data_037_6801:: ; heuristic: target of a monotone pointer table; C0
-    ds $7E, $00
-
-; address loaded by Func_037_4AFD_Case0D_Case03
-Data_037_687F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $181, $00
+    ds $1FF, $00
 
 Data_037_6A00:: ; heuristic: target of a monotone pointer table; C0
     db $00

@@ -6429,7 +6429,7 @@ Jump_003_6A7E::
     call WriteVRAMByte
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 5 x 1 tiles, one row per line
 TileRect_03_6A98::
 Data_003_6A98:: ; heuristic: pointer load in the same bank (bank assumed); C0

@@ -1270,49 +1270,49 @@ Jump_00C_4883::
     ld [wScreenSubStep], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 10 x 1 tiles, one row per line
 TileRect_0C_48AB::
 Data_00C_48AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E ; id 0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 10 x 1 tiles, one row per line
 TileRect_0C_48B5::
 Data_00C_48B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $42, $30, $31, $32, $33, $34, $35, $36, $37, $38 ; id 0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 10 x 1 tiles, one row per line
 TileRect_0C_48BF::
 Data_00C_48BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $43, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41 ; id 0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 1 tiles, one row per line
 TileRect_0C_48C9::
 Data_00C_48C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $44, $45, $46, $47, $48, $49, $4A, $4B, $4C ; id 0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 1 tiles, one row per line
 TileRect_0C_48D2::
 Data_00C_48D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4D, $4E, $4F, $50, $51, $52, $53, $54, $55 ; id 0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 1 tiles, one row per line
 TileRect_0C_48DB::
 Data_00C_48DB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E ; id 0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 18 x 1 tiles, one row per line
 TileRect_0C_48E4::
 Data_00C_48E4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $A3, $A4, $A5, $A6, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $B0, $B1, $B2, $B3 ; id 0
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 18 x 1 tiles, one row per line
 TileRect_0C_48F6::
 Data_00C_48F6:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3108,7 +3108,7 @@ Data_00C_5562:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_56D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $04
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 13 tiles, one row per line
 TileRect_0C_56D9::
 Data_00C_56D9:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3126,7 +3126,7 @@ Data_00C_56D9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $07, $C3, $C3, $ED, $C3, $C3, $B7 ; id 11
     db $B3, $C5, $C3, $BE, $E2, $C6, $B4, $B4, $B5 ; id 12
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 13 tiles, one row per line
 TileRect_0C_574E::
 Data_00C_574E:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3144,7 +3144,7 @@ Data_00C_574E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $B7 ; id 11
     db $B3, $B4, $B4, $B4, $B4, $B4, $C5, $C3, $BE, $C3, $C6, $B5 ; id 12
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 13 tiles, one row per line
 TileRect_0C_57EA::
 Data_00C_57EA:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3164,7 +3164,7 @@ Data_00C_57EA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $66, $B9, $B9, $B9, $B9, $B9, $B9, $B9
     db $B9, $B9, $B9, $BA
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 5 tiles, one row per line
 TileRect_0C_589A::
 Data_00C_589A:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6006,7 +6006,7 @@ Data_00C_7602:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $24, $0B, $1C, $44, $02, $18, $0F, $10, $13, $15, $45, $FE, $03, $0D, $11, $12
     db $17, $2C, $FD, $FE, $23, $2C, $0D, $0E, $17, $FD, $1E, $FE
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 17 x 9 tiles, one row per line
 TileRect_0C_762E::
 Data_00C_762E:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6020,7 +6020,7 @@ Data_00C_762E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $C3, $A7, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $E5, $E0, $E0, $E0, $BF, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 3 x 5 tiles, one row per line
 TileRect_0C_76C7::
 Data_00C_76C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6030,7 +6030,7 @@ Data_00C_76C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E0, $BF, $B7 ; id 3
     db $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 17 x 9 tiles, one row per line
 TileRect_0C_76D6::
 Data_00C_76D6:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6044,7 +6044,7 @@ Data_00C_76D6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $A7, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $E5, $E0, $E0, $E0, $BF, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 3 x 5 tiles, one row per line
 TileRect_0C_776F::
 Data_00C_776F:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6054,7 +6054,7 @@ Data_00C_776F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $BF, $C3, $B7 ; id 3
     db $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 3 tiles, one row per line
 TileRect_0C_777E::
 Data_00C_777E:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6063,7 +6063,7 @@ Data_00C_777E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
     INCBIN "dwm2-cobi-us.gbc", $033796, $9B
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_0C_7831::
 Data_00C_7831:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6160,34 +6160,48 @@ Data_00C_7A01:: ; heuristic: arena encounter list; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_0C_7A51:: ; heuristic: event script entry or jump target; C0
     script_command $F7
-    script_choice_jump Script_0C_7A5C, Script_0C_7A59
-    db $00, $07, $5F, $7A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7A5C, Script_0C_7A59, Script_0C_7A56
+Script_0C_7A56:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7A5F
 Script_0C_7A59:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7AFE
 Script_0C_7A5C:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A75
-    db $F7, $F7, $E4, $0B, $07, $00, $E9, $00, $25, $00, $E9, $FF, $07, $5F, $7A, $00
-    db $20, $40, $F7, $07, $DB, $7A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7A5F:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_command $F7
+    script_choice_jump Script_0C_7A6E, Script_0C_7A6B, Script_0C_7A65
+Script_0C_7A65:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $0025 ; '0 checked the dresser. Children's clothes'
+    script_command $E9
+    script_end
+Script_0C_7A6B:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7A5F
+Script_0C_7A6E:: ; heuristic: event script entry or jump target; C0
+    script_message $4020 ; 'Cobi Sure, Mama! We'll be fine.'
+    script_command $F7
+    script_jump Script_0C_7ADB
 Script_0C_7A75:: ; heuristic: event script entry or jump target; C0
     script_command $F7
-    script_choice_jump Script_0C_7A8D, Script_0C_7A87
-    db $07, $00, $E9, $00, $03, $80, $E9, $FF, $00, $16, $C0, $07, $75, $7A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7A8D, Script_0C_7A87, Script_0C_7A81, Script_0C_7A7B
+Script_0C_7A7B:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $8003 ; 'Tara There you are, big brother!'
+    script_command $E9
+    script_end
+Script_0C_7A81:: ; heuristic: event script entry or jump target; C0
+    script_message $C016 ; 'Listen you two! Quit your horsing'
+    script_jump Script_0C_7A75
 Script_0C_7A87:: ; heuristic: event script entry or jump target; C0
     script_message $C001 ; 'In the middle of the sea'
     script_jump Script_0C_7A75
 Script_0C_7A8D:: ; heuristic: event script entry or jump target; C0
     script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
     script_command $F7
-    script_choice_jump Script_0C_7A9E, Script_0C_7A98
-    db $00, $07, $75, $7A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7A9E, Script_0C_7A98, Script_0C_7A95
+Script_0C_7A95:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7A75
 Script_0C_7A98:: ; heuristic: event script entry or jump target; C0
     script_message $C006 ; 'You folks run a monster farm?'
     script_jump Script_0C_7A75
@@ -6196,20 +6210,24 @@ Script_0C_7A9E:: ; heuristic: event script entry or jump target; C0
 Script_0C_7AA1:: ; heuristic: event script entry or jump target; C0
     script_command $F7
     script_command $F7
-    script_choice_jump Script_0C_7AAD, Script_0C_7AAA
-    db $00, $07, $EB, $7A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7AAD, Script_0C_7AAA, Script_0C_7AA7
+Script_0C_7AA7:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7AEB
 Script_0C_7AAA:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7AA1
 Script_0C_7AAD:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7AB0
 Script_0C_7AB0:: ; heuristic: event script entry or jump target; C0
     script_command $F7
-    script_choice_jump Script_0C_7AC8, Script_0C_7AC2
-    db $07, $00, $E9, $00, $24, $00, $E9, $FF, $00, $23, $40, $07, $CB, $7A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7AC8, Script_0C_7AC2, Script_0C_7ABC, Script_0C_7AB6
+Script_0C_7AB6:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $0024 ; '0 checked the bookshelf. Behavior of'
+    script_command $E9
+    script_end
+Script_0C_7ABC:: ; heuristic: event script entry or jump target; C0
+    script_message $4023 ; 'Go to the Vault and pick'
+    script_jump Script_0C_7ACB
 Script_0C_7AC2:: ; heuristic: event script entry or jump target; C0
     script_message $4022 ; 'Tara We'll be OK! I'm going'
     script_jump Script_0C_7ACB
@@ -6228,8 +6246,32 @@ Script_0C_7AD5:: ; heuristic: event script entry or jump target; C0
     script_message $802B ; 'Monster masters are those people who'
     script_command $E9
     script_end
-    db $F7, $E4, $01, $06, $E9, $00, $2D, $80, $E9, $FF, $E9, $00, $2B, $80, $E9, $FF
-    db $F7, $E4, $07, $00, $E9, $00, $26, $00, $E9, $FF, $E9, $00, $25, $00, $E9, $FF
+Script_0C_7ADB:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7ADF, Script_0C_7AE5
+Script_0C_7ADF:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $802D ; 'I aspired to be one long'
+    script_command $E9
+    script_end
+Script_0C_7AE5:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $802B ; 'Monster masters are those people who'
+    script_command $E9
+    script_end
+Script_0C_7AEB:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7AF5, Script_0C_7AEF
+Script_0C_7AEF:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $0026 ; '0 checked the dresser. It smelled'
+    script_command $E9
+    script_end
+Script_0C_7AF5:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $0025 ; '0 checked the dresser. Children's clothes'
+    script_command $E9
+    script_end
     db $00, $0B, $C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -6245,11 +6287,19 @@ Script_0C_7B08:: ; heuristic: event script entry or jump target; C0
     script_command $F7
     script_command $F7
 Script_0C_7B0A:: ; heuristic: event script entry or jump target; C0
-    script_choice_jump Script_0C_7B2F, Script_0C_7B29
-    db $15, $0E, $07, $00, $00, $11, $C0, $07, $32, $7B, $00, $10, $C0, $07, $32, $7B
-    db $00, $0F, $C0, $07, $32, $7B, $00, $0E, $C0, $07, $32, $7B
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7B2F, Script_0C_7B29, Script_0C_7B23, Script_0C_7B1D, Script_0C_7B17, Script_0C_7B11
+Script_0C_7B11:: ; heuristic: event script entry or jump target; C0
+    script_message $C011 ; '0 peered into the vase. Freshly'
+    script_jump Script_0C_7B32
+Script_0C_7B17:: ; heuristic: event script entry or jump target; C0
+    script_message $C010 ; '0 peered into the barrel. It'
+    script_jump Script_0C_7B32
+Script_0C_7B1D:: ; heuristic: event script entry or jump target; C0
+    script_message $C00F ; 'Worried about your monsters? Don't be!'
+    script_jump Script_0C_7B32
+Script_0C_7B23:: ; heuristic: event script entry or jump target; C0
+    script_message $C00E ; 'When our farm gets established in'
+    script_jump Script_0C_7B32
 Script_0C_7B29:: ; heuristic: event script entry or jump target; C0
     script_message $C00D ; 'GreatLog's King asked us to settle'
     script_jump Script_0C_7B32
@@ -6267,10 +6317,10 @@ Script_0C_7B3C:: ; heuristic: event script entry or jump target; C0
     script_command $F7
     script_message $C012 ; 'Cobi 0! They said GreatLog will'
     script_command $F7
-    script_choice_jump Script_0C_7B50, Script_0C_7B49
-    db $00, $F7, $07, $0A, $7B
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7B50, Script_0C_7B49, Script_0C_7B45
+Script_0C_7B45:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_jump Script_0C_7B0A
 Script_0C_7B49:: ; heuristic: event script entry or jump target; C0
     script_message $C014 ; 'Tara Big brother! GreatLog will be'
     script_command $F7
@@ -6281,10 +6331,9 @@ Script_0C_7B50:: ; heuristic: event script entry or jump target; C0
 Script_0C_7B54:: ; heuristic: event script entry or jump target; C0
     script_command $F7
     script_command $F7
-    script_choice_jump Script_0C_7B60, Script_0C_7B5D
-    db $00, $07, $99, $7B
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7B60, Script_0C_7B5D, Script_0C_7B5A
+Script_0C_7B5A:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7B99
 Script_0C_7B5D:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7B54
 Script_0C_7B60:: ; heuristic: event script entry or jump target; C0
@@ -6305,10 +6354,7 @@ Script_0C_7B75:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7B6A
 Script_0C_7B7B:: ; heuristic: event script entry or jump target; C0
     script_command $F7
-    script_choice_jump Script_0C_7B81, Script_0C_7B87
-    db $0D, $12
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7B81, Script_0C_7B87, Script_0C_7B8D, Script_0C_7B93
 Script_0C_7B81:: ; heuristic: event script entry or jump target; C0
     script_command $E9
     script_message $8032 ; 'C'mon, Warubou!'
@@ -6319,10 +6365,29 @@ Script_0C_7B87:: ; heuristic: event script entry or jump target; C0
     script_message $8033 ; 'Hello, there! You must be the'
     script_command $E9
     script_end
-    db $E9, $00, $34, $80, $E9, $FF, $E9, $00, $35, $80, $E9, $FF, $F7, $E4, $07, $00
-    db $E9, $00, $29, $00, $E9, $FF, $E9, $00, $28, $00, $E9, $FF
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7B8D:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $8034 ; 'Oh It's all spinning around That'
+    script_command $E9
+    script_end
+Script_0C_7B93:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $8035 ; 'The horrid Prince and that elemental'
+    script_command $E9
+    script_end
+Script_0C_7B99:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7BA3, Script_0C_7B9D
+Script_0C_7B9D:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $0029 ; 'I e heard that there are'
+    script_command $E9
+    script_end
+Script_0C_7BA3:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $0028 ; '0 peered into the vase. It'
+    script_command $E9
+    script_end
 Script_0C_7BA9:: ; heuristic: event script entry or jump target; C0
     script_command $F3
     script_choice_jump Script_0C_7BB0, Script_0C_7BAD
@@ -6355,29 +6420,36 @@ Script_0C_7BD4:: ; heuristic: event script entry or jump target; C0
     script_command $F3
     script_command $F3
     script_command $F3
-    script_choice_jump Script_0C_7BE4, Script_0C_7BE1
-    db $00, $EE, $00, $14, $80, $EE, $FF
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7BE4, Script_0C_7BE1, Script_0C_7BDB
+Script_0C_7BDB:: ; heuristic: event script entry or jump target; C0
+    script_command $EE
+    script_message $8014 ; 'Tara Big brother! GreatLog will be'
+    script_command $EE
+    script_end
 Script_0C_7BE1:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7BD4
 Script_0C_7BE4:: ; heuristic: event script entry or jump target; C0
     script_message $C017 ; 'It seems to me that the'
     script_command $F3
-    script_choice_jump Script_0C_7BF7, Script_0C_7BF0
-    db $00, $00, $18, $C0, $F3
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7BF7, Script_0C_7BF0, Script_0C_7BEC
+Script_0C_7BEC:: ; heuristic: event script entry or jump target; C0
+    script_message $C018 ; 'Yo, did you enjoy the voyage?'
+    script_command $F3
 Script_0C_7BF0:: ; heuristic: event script entry or jump target; C0
     script_message $C016 ; 'Listen you two! Quit your horsing'
     script_command $F3
     script_jump Script_0C_7BD4
 Script_0C_7BF7:: ; heuristic: event script entry or jump target; C0
     script_command $F3
-    script_choice_jump Script_0C_7C12, Script_0C_7C0B
-    db $08, $00, $00, $1B, $C0, $F3, $07, $F0, $7B, $00, $1A, $C0, $F3, $07, $F0, $7B
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7C12, Script_0C_7C0B, Script_0C_7C04, Script_0C_7BFD
+Script_0C_7BFD:: ; heuristic: event script entry or jump target; C0
+    script_message $C01B ; 'I accidentally went outside. People gave'
+    script_command $F3
+    script_jump Script_0C_7BF0
+Script_0C_7C04:: ; heuristic: event script entry or jump target; C0
+    script_message $C01A ; 'There aren't many friends here. It's'
+    script_command $F3
+    script_jump Script_0C_7BF0
 Script_0C_7C0B:: ; heuristic: event script entry or jump target; C0
     script_message $C019 ; 'Slash If you're in need of'
     script_command $F3
@@ -6393,10 +6465,15 @@ Script_0C_7C1F:: ; heuristic: event script entry or jump target; C0
     script_message $C01C ; 'This hay is pretty good. Maybe'
 Script_0C_7C22:: ; heuristic: event script entry or jump target; C0
     script_command $F3
-    script_choice_jump Script_0C_7C3D, Script_0C_7C36
-    db $08, $00, $00, $20, $C0, $F3, $07, $F0, $7B, $00, $1F, $C0, $F3, $07, $F0, $7B
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_0C_7C3D, Script_0C_7C36, Script_0C_7C2F, Script_0C_7C28
+Script_0C_7C28:: ; heuristic: event script entry or jump target; C0
+    script_message $C020 ; 'Cobi Sure, Mama! We'll be fine.'
+    script_command $F3
+    script_jump Script_0C_7BF0
+Script_0C_7C2F:: ; heuristic: event script entry or jump target; C0
+    script_message $C01F ; 'You e come at the right'
+    script_command $F3
+    script_jump Script_0C_7BF0
 Script_0C_7C36:: ; heuristic: event script entry or jump target; C0
     script_message $C01E ; '0 peered into the barrel. It'
     script_command $F3

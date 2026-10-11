@@ -2949,7 +2949,7 @@ Func_0F1_5344:: ; address name
 RunScreenStateWhenNotFading_F1_Case0D_Case03::
 Jump_0F1_535A:: ; address name
     call BGMapAddressAtScroll_BankF1
-    ld de, Data_0F1_687F
+    ld de, Data_01F_687F
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -3013,7 +3013,7 @@ Jump_0F1_53B8::
     call BGMapAddressAtScroll_BankF1
     ld de, $0161
     add hl, de
-    ld de, Data_0F1_651B
+    ld de, Data_01F_651B
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -3108,7 +3108,7 @@ Jump_0F1_5448:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, $0068
     add hl, de
-    ld de, Data_0F1_6577
+    ld de, Data_01F_6577
     ld a, $0C
     ld [wArg3], a
     ld a, $0F
@@ -3174,7 +3174,7 @@ Jump_0F1_549E:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, $0160
     add hl, de
-    ld de, Data_0F1_66DF
+    ld de, Data_01F_66DF
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -3392,7 +3392,7 @@ Jump_0F1_561B:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, $0008
     add hl, de
-    ld de, Data_0F1_63D7
+    ld de, Data_01F_63D7
     ld a, $0C
     ld [wArg3], a
     ld a, $12
@@ -4115,7 +4115,7 @@ Func_0F1_5A28:: ; address name
     ld [de], a
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 5 tiles, one row per line
 TileRect_F1_5A36::
 Data_0F1_5A36:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4125,7 +4125,7 @@ Data_0F1_5A36:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C7, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
 TileRect_F1_5A72::
 Data_0F1_5A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4135,7 +4135,7 @@ Data_0F1_5A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $76, $73, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 9 x 7 tiles, one row per line
 TileRect_F1_5A90::
 Data_0F1_5A90:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4399,24 +4399,4 @@ Data_0F1_5E04:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $12, $36, $FF, $7F, $D8, $42, $BF, $30, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
     db $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
     db $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
-    ds $593, $00
-
-; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case1E
-Data_0F1_63D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $144, $00
-
-; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case06
-Data_0F1_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $5C, $00
-
-; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case11
-Data_0F1_6577:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $168, $00
-
-; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case14
-Data_0F1_66DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1A0, $00
-
-; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case03
-Data_0F1_687F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1781, $00
+    ds $21BC, $00

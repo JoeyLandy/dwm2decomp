@@ -2241,6 +2241,37 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The callers in banks $14, $15, $1E, $37 and $F0 had raw operands; all ten now read `ld de, BGFillTile`.
 - Binary verification: build/run192 PASS, 0 differing bytes.
 
+### E-0187 — Bank $1F tile rectangles reached through relays and far calls
+
+- Kind: TOOL plus OBSERVATION (C1).
+- **Relays.** DrawTileRectAtHLFromDE (E-0093) exists in four banks ($1E, $37, $F0, $F1). Each copy stores DE in wArg1/wArg2 and far-calls DrawTileRectFromArg1Params, so DE always points into bank $1F.
+  - The generator now finds the copies by their first 23 bytes.
+  - It gives the `ld de` before each call bank $1F, and derives the rectangle from the caller's wArg3/wArg4 stores.
+  - Banks $37, $F0 and $F1 had wrong-bank labels (for example Data_037_63D7 and Data_0F1_66DF); these now read Data_01F_*. Bank $1E's raw operands are labelled too.
+- **Far calls.** The E-0177 derivation now also accepts a far call (`rst $10`) to DrawTileRectFromArg1Params and uses the callee's bank. This gives, for example, the 20 x 18 rectangle at $6FE7 that bank $14 draws.
+  - Rectangles derived in bank $1F went from 12 to over 20.
+- **Declared.**
+  - TileRect_1F_720D: three 20 x 6 panels. Jump_024_513A draws the panel at $720D + (wScreenByteBD - 1) * $78.
+  - TileScreen_1F_5F9F, _6107 and _626F: 20 x 18 screens with the same box layout as TileRect_1F_5E37, contiguous with it. No reader was found.
+- **Heuristic order.** A "bank from RAM variable $D7FE" label now gives way to a proven table, like the other guesses. It had paired `ld hl, Script_65B8` with bank $1F.
+- Binary verification: build/run194 PASS, 0 differing bytes.
+
+### E-0188 — $E4 is an N-way branch on the menu cursor
+
+- Kind: OBSERVATION (reading ScriptFetchE4; C2 for the mechanism, C1 for the per-site count).
+- **Mechanism.** ScriptFetchE4 (10:4694) takes the script pointer just after the opcode and steps forward wTwoChoiceCursor bytes. It then adds the byte it lands on to the address after that byte. Equivalently, target i = opcode address + 2 + i + offset[i].
+  - So a menu of N options needs N offsets, and the script does not encode N.
+  - E-0152 had fixed it at two.
+- **Count rule.** $E4 always jumps, so nothing falls through to the byte after the offsets. In every site, that byte is the nearest target.
+  - The decoder takes N as the smallest count of 2 or more whose nearest target is the byte after the Nth offset.
+  - Example: 10:6681 `E4 0C 04 00` has three targets ($668F, $6688, $6685). A two-offset reading would leave the $00 at $6684 decoded as a message opcode.
+  - All 149 sites fit the rule (0 fallbacks): 76 two-way, 46 three-way, 18 four-way, 6 five-way, 1 six-way, 2 seven-way.
+- **Effect.** `script_choice_jump` takes any number of labels (REPT _NARG over `db (\1) - @ - 1`).
+  - The decoder now covers 3,359 script commands in 118 regions (it was 2,885 in 193); misread offsets had split regions.
+  - Unidentified INCBIN is 62,381 bytes.
+- **Limits.** Which command sets the cursor range for each menu is not traced.
+- Binary verification: build/run196 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

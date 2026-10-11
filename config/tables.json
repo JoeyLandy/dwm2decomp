@@ -3078,6 +3078,407 @@
       ],
       "record": "one CGB palette: 4 BGR555 colours",
       "note": "E-0185 (C1: RunGameMode2State_Case01 copies only palette 0 (8 bytes) to wBGPaletteBuffer with CopyFromBank; the block is 128 bytes, palette 8 repeats palette 0 with two colours swapped, and every other palette is $7C00 fill, read by nothing found)."
+    },
+    {
+      "bank": "1F",
+      "addr": "720D",
+      "label": "TileRect_1F_720D",
+      "count": 3,
+      "id_base": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        }
+      ],
+      "record": "one 20 x 6 tile panel (wScreenByteBD selects it)",
+      "note": "E-0187 (C1: Jump_024_513A sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375)."
+    },
+    {
+      "bank": "1F",
+      "addr": "5F9F",
+      "label": "TileScreen_1F_5F9F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 14"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 15"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 16"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 17"
+        }
+      ],
+      "record": "20 x 18 tiles, one row per line",
+      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
+    },
+    {
+      "bank": "1F",
+      "addr": "6107",
+      "label": "TileScreen_1F_6107",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 14"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 15"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 16"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 17"
+        }
+      ],
+      "record": "20 x 18 tiles, one row per line",
+      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
+    },
+    {
+      "bank": "1F",
+      "addr": "626F",
+      "label": "TileScreen_1F_626F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 14"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 15"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 16"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 17"
+        }
+      ],
+      "record": "20 x 18 tiles, one row per line",
+      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
     }
   ]
 }

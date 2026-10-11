@@ -840,10 +840,16 @@ Data_01F_5A3A:: ; address name
     script_command $E8
 Script_1F_5A3B:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_choice_jump Script_1F_5A51, Script_1F_5A4E
-    db $0B, $07, $00, $E9, $EA, $1D, $80, $E9, $FF, $07, $96, $5B, $07, $61, $5B
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_5A51, Script_1F_5A4E, Script_1F_5A4B, Script_1F_5A48, Script_1F_5A42
+Script_1F_5A42:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_op $EA, $1D, $80 ; '0 checked the pump. It's rusted'
+    script_command $E9
+    script_end
+Script_1F_5A48:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5B96
+Script_1F_5A4B:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5B61
 Script_1F_5A4E:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5AC5
 Script_1F_5A51:: ; heuristic: event script entry or jump target; C0
@@ -853,6 +859,7 @@ Script_1F_5A55:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5A80
 Script_1F_5A58:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $02, $C0 ; 'Cobi 0! Papa's calling. He's at'
+Script_1F_5A5B:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5A66, Script_1F_5A5F
 Script_1F_5A5F:: ; heuristic: event script entry or jump target; C0
@@ -863,10 +870,11 @@ Script_1F_5A66:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $03, $C0 ; 'Tara There you are, big brother!'
 Script_1F_5A69:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_choice_jump Script_1F_5A7C, Script_1F_5A75
-    db $00, $EA, $02, $C0, $E8, $07, $5B, $5A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_5A7C, Script_1F_5A75, Script_1F_5A6E
+Script_1F_5A6E:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $02, $C0 ; 'Cobi 0! Papa's calling. He's at'
+    script_command $E8
+    script_jump Script_1F_5A5B
 Script_1F_5A75:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $04, $C0 ; 'Cobi What's wrong, 0? Papa's calling'
     script_command $E8
@@ -891,6 +899,7 @@ Script_1F_5A94:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5A3B
 Script_1F_5A9A:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $08, $C0 ; 'Sailing is sure exhilarating. Right?'
+Script_1F_5A9D:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_choice_jump Script_1F_5AA7, Script_1F_5AA1
 Script_1F_5AA1:: ; heuristic: event script entry or jump target; C0
@@ -900,10 +909,11 @@ Script_1F_5AA7:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $09, $C0 ; 'Good. That's good to hear! You'
 Script_1F_5AAA:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_choice_jump Script_1F_5AC1, Script_1F_5AB6
-    db $00, $EA, $08, $C0, $E8, $07, $9D, $5A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_5AC1, Script_1F_5AB6, Script_1F_5AAF
+Script_1F_5AAF:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $08, $C0 ; 'Sailing is sure exhilarating. Right?'
+    script_command $E8
+    script_jump Script_1F_5A9D
 Script_1F_5AB6:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_op $EA, $0A, $C0 ; 'Is that so? Too bad! You'll'
@@ -915,21 +925,39 @@ Script_1F_5AC1:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5AAA
 Script_1F_5AC5:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_choice_jump Script_1F_5ACA, Script_1F_5AD3
-    db $0C
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_5ACA, Script_1F_5AD3, Script_1F_5AD6
 Script_1F_5ACA:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $10, $C0 ; '0 peered into the barrel. It'
     script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
     script_jump Script_1F_5A3B
 Script_1F_5AD3:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B01
-    db $EA, $0D, $C0, $E8, $E4, $07, $00, $EA, $05, $C0, $07, $3B, $5A, $EA, $0E, $C0
-    db $E8, $E4, $14, $08, $00, $EA, $0D, $C0, $E8, $07, $D9, $5A, $E8, $EA, $0F, $C0
-    db $E8, $EA, $05, $C0, $07, $3B, $5A, $E8, $07, $E6, $5A
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1F_5AD6:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $0D, $C0 ; 'GreatLog's King asked us to settle'
+Script_1F_5AD9:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_choice_jump Script_1F_5AE3, Script_1F_5ADD
+Script_1F_5ADD:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_jump Script_1F_5A3B
+Script_1F_5AE3:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $0E, $C0 ; 'When our farm gets established in'
+Script_1F_5AE6:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_choice_jump Script_1F_5AFD, Script_1F_5AF2, Script_1F_5AEB
+Script_1F_5AEB:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $0D, $C0 ; 'GreatLog's King asked us to settle'
+    script_command $E8
+    script_jump Script_1F_5AD9
+Script_1F_5AF2:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_op $EA, $0F, $C0 ; 'Worried about your monsters? Don't be!'
+    script_command $E8
+    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_jump Script_1F_5A3B
+Script_1F_5AFD:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_jump Script_1F_5AE6
 Script_1F_5B01:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $11, $C0 ; '0 peered into the vase. Freshly'
     script_op $EA, $07, $C0 ; 'There's a spirit in GreatLog that's'
@@ -952,10 +980,11 @@ Script_1F_5B1F:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $03, $C0 ; 'Tara There you are, big brother!'
 Script_1F_5B22:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_choice_jump Script_1F_5B35, Script_1F_5B2E
-    db $00, $EA, $0C, $C0, $E8, $07, $14, $5B
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_5B35, Script_1F_5B2E, Script_1F_5B27
+Script_1F_5B27:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $0C, $C0 ; 'GreatLog's King asked us to settle'
+    script_command $E8
+    script_jump Script_1F_5B14
 Script_1F_5B2E:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_op $EA, $08, $C0 ; 'Sailing is sure exhilarating. Right?'
@@ -973,10 +1002,11 @@ Script_1F_5B43:: ; heuristic: event script entry or jump target; C0
     script_op $EA, $0E, $C0 ; 'When our farm gets established in'
 Script_1F_5B46:: ; heuristic: event script entry or jump target; C0
     script_command $E8
-    script_choice_jump Script_1F_5B5D, Script_1F_5B52
-    db $00, $EA, $08, $C0, $E8, $07, $39, $5B
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_5B5D, Script_1F_5B52, Script_1F_5B4B
+Script_1F_5B4B:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $08, $C0 ; 'Sailing is sure exhilarating. Right?'
+    script_command $E8
+    script_jump Script_1F_5B39
 Script_1F_5B52:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_op $EA, $0A, $C0 ; 'Is that so? Too bad! You'll'
@@ -986,7 +1016,115 @@ Script_1F_5B52:: ; heuristic: event script entry or jump target; C0
 Script_1F_5B5D:: ; heuristic: event script entry or jump target; C0
     script_command $E8
     script_jump Script_1F_5B46
-    INCBIN "dwm2-cobi-us.gbc", $07DB61, $B4
+Script_1F_5B61:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+Script_1F_5B62:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $12, $C0 ; 'Cobi 0! They said GreatLog will'
+    script_command $E8
+    script_choice_jump Script_1F_5B6B, Script_1F_5B6E, Script_1F_5B71, Script_1F_5B7E
+Script_1F_5B6B:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5B81
+Script_1F_5B6E:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5B8F
+Script_1F_5B71:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $13, $C0 ; 'Land ho! There's GreatLog!'
+    script_jump Script_1F_5B62
+Script_1F_5B77:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_jump Script_1F_5A3B
+Script_1F_5B7E:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5B77
+Script_1F_5B81:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $15, $C0 ; 'This is a tale of children'
+Script_1F_5B84:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_choice_jump Script_1F_5B8B, Script_1F_5B88
+Script_1F_5B88:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5B62
+Script_1F_5B8B:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_jump Script_1F_5B84
+Script_1F_5B8F:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $16, $C0 ; 'Listen you two! Quit your horsing'
+    script_command $E8
+    script_jump Script_1F_5B62
+Script_1F_5B96:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+Script_1F_5B97:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $17, $C0 ; 'It seems to me that the'
+    script_command $E8
+    script_choice_jump Script_1F_5BA7, Script_1F_5BAA, Script_1F_5BAD, Script_1F_5BBA, Script_1F_5BA1
+Script_1F_5BA1:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $06, $C0 ; 'You folks run a monster farm?'
+    script_jump Script_1F_5B97
+Script_1F_5BA7:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5BBD
+Script_1F_5BAA:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5BE9
+Script_1F_5BAD:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $13, $C0 ; 'Land ho! There's GreatLog!'
+    script_jump Script_1F_5B97
+Script_1F_5BB3:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_jump Script_1F_5A3B
+Script_1F_5BBA:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5BB3
+Script_1F_5BBD:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $18, $C0 ; 'Yo, did you enjoy the voyage?'
+Script_1F_5BC0:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_choice_jump Script_1F_5BC7, Script_1F_5BC4
+Script_1F_5BC4:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5B97
+Script_1F_5BC7:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $1A, $C0 ; 'There aren't many friends here. It's'
+Script_1F_5BCA:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_choice_jump Script_1F_5BE5, Script_1F_5BDA, Script_1F_5BD3, Script_1F_5BD0
+Script_1F_5BD0:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $06, $C0 ; 'You folks run a monster farm?'
+Script_1F_5BD3:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $18, $C0 ; 'Yo, did you enjoy the voyage?'
+    script_command $E8
+    script_jump Script_1F_5BC0
+Script_1F_5BDA:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_op $EA, $1C, $C0 ; 'This hay is pretty good. Maybe'
+    script_command $E8
+    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_jump Script_1F_5A3B
+Script_1F_5BE5:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_jump Script_1F_5BCA
+Script_1F_5BE9:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $19, $C0 ; 'Slash If you're in need of'
+Script_1F_5BEC:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_choice_jump Script_1F_5BF3, Script_1F_5BF0
+Script_1F_5BF0:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_5B97
+Script_1F_5BF3:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $1A, $C0 ; 'There aren't many friends here. It's'
+Script_1F_5BF6:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_choice_jump Script_1F_5C11, Script_1F_5C06, Script_1F_5BFF, Script_1F_5BFC
+Script_1F_5BFC:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $06, $C0 ; 'You folks run a monster farm?'
+Script_1F_5BFF:: ; heuristic: event script entry or jump target; C0
+    script_op $EA, $19, $C0 ; 'Slash If you're in need of'
+    script_command $E8
+    script_jump Script_1F_5BEC
+Script_1F_5C06:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_op $EA, $1B, $C0 ; 'I accidentally went outside. People gave'
+    script_command $E8
+    script_op $EA, $05, $C0 ; 'Tara Hurry! Papa will be angry!'
+    script_jump Script_1F_5A3B
+Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
+    script_command $E8
+    script_jump Script_1F_5BF6
 
 ; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
 ; 8 call sites from 8 routines (e.g. ScriptCommandEB_Run_Case05_Case20, ScriptCommandED_Run_Case04_Case03, ScriptCommandED_Run_Case07_Case0E, ScriptCommandED_Run_Case12_Case06, ...)
@@ -1378,19 +1516,133 @@ BGFillTile:: ; heuristic: wArg1/wArg2 source of a far call to FillTileRectWithAr
 Data_01F_5E12:: ; address name
     db $C3
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 3 tiles, one row per line
 TileRect_1F_5E13::
-Data_01F_5E13:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_5E13:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
-    INCBIN "dwm2-cobi-us.gbc", $07DE37, $678
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 18 tiles, one row per line
+TileRect_1F_5E37::
+Data_01F_5E37:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 9
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 11
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 12
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 13
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 14
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+
+; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
+; record: 20 x 18 tiles, one row per line
+TileScreen_1F_5F9F::
+Data_01F_5F9F:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $15, $1F, $1B, $1C, $1D, $ED, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
+; record: 20 x 18 tiles, one row per line
+TileScreen_1F_6107::
+Data_01F_6107:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $B7
+    db $B6, $15, $1F, $1B, $1C, $1D, $ED, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $B7
+    db $B6, $68, $69, $6A, $6B, $6C, $6D, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $B7
+    db $B6, $6E, $6F, $70, $71, $72, $73, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
+; record: 20 x 18 tiles, one row per line
+TileScreen_1F_626F::
+Data_01F_626F:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $13, $14, $15, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $0D, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $14, $10, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $0D, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 12 x 18 tiles, one row per line
+TileRect_1F_63D7::
+Data_01F_63D7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $13, $14, $15, $0E, $ED, $20, $21, $22, $23, $24, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $6C, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $0D, $0D, $ED, $2F, $30, $31, $32, $33, $C3, $C3, $B7 ; id 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 9
+    db $B6, $0D, $14, $10, $0E, $ED, $34, $35, $36, $37, $38, $B7 ; id 10
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 11
+    db $B6, $6D, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
+    db $B6, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $B7 ; id 14
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $B6, $0D, $0D, $ED, $43, $44, $45, $46, $47, $C3, $C3, $B7 ; id 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_64AF::
-Data_01F_64AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_64AF:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $20, $21, $22, $23, $24, $25 ; id 0
     db $26, $27, $28, $29, $2A, $2B ; id 1
     db $2C, $2D, $2E, $2F, $30, $31 ; id 2
@@ -1398,11 +1650,29 @@ Data_01F_64AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $38, $39, $3A, $3B, $3C, $3D ; id 4
     db $3E, $3F, $40, $41, $42, $43 ; id 5
 
-; address loaded by ScriptCommandF6_Run_Case10_Case02
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 6 x 6 tiles, one row per line
+TileRect_1F_64D3::
 Data_01F_64D3:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-    INCBIN "dwm2-cobi-us.gbc", $07E4D3, $48
+    db $02, $03, $04, $05, $06, $07 ; id 0
+    db $08, $09, $0A, $0B, $0C, $0D ; id 1
+    db $0E, $0F, $10, $11, $12, $13 ; id 2
+    db $14, $15, $16, $17, $18, $19 ; id 3
+    db $1A, $1B, $1C, $1D, $1E, $1F ; id 4
+    db $20, $21, $22, $23, $24, $25 ; id 5
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 6 x 6 tiles, one row per line
+TileRect_1F_64F7::
+Data_01F_64F7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+    db $48, $49, $4A, $4B, $4C, $4D ; id 0
+    db $4E, $4F, $50, $51, $52, $53 ; id 1
+    db $54, $55, $56, $57, $58, $59 ; id 2
+    db $5A, $5B, $5C, $5D, $5E, $5F ; id 3
+    db $60, $61, $62, $63, $64, $65 ; id 4
+    db $66, $67, $68, $69, $6A, $6B ; id 5
+
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_651B::
 Data_01F_651B:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
@@ -1413,10 +1683,10 @@ Data_01F_651B:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFro
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_653F::
-Data_01F_653F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_653F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1424,12 +1694,31 @@ Data_01F_653F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
-    INCBIN "dwm2-cobi-us.gbc", $07E577, $B4
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 12 x 15 tiles, one row per line
+TileRect_1F_6577::
+Data_01F_6577:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+    db $B6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $C3, $B7 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $0D, $0D, $ED, $29, $2A, $2B, $2C, $2D, $C3, $C3, $B7 ; id 6
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 7
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 8
+    db $B6, $FF, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 10
+    db $B6, $0B, $0E, $0F, $10, $C3, $09, $0E, $11, $0E, $12, $B7 ; id 11
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
+    db $B6, $FF, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 14
+
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 15 tiles, one row per line
 TileRect_1F_662B::
-Data_01F_662B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_662B:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 2
@@ -1446,10 +1735,10 @@ Data_01F_662B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 13
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 14
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_66DF::
-Data_01F_66DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_66DF:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 1
     db $B6, $32, $33, $34, $35, $36, $37, $B7 ; id 2
@@ -1457,12 +1746,80 @@ Data_01F_66DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $38, $39, $3A, $3B, $3C, $3D, $B7 ; id 4
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 5
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
-    INCBIN "dwm2-cobi-us.gbc", $07E717, $438
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 18 tiles, one row per line
+TileRect_1F_6717::
+Data_01F_6717:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $F0, $F1, $F2, $F3, $F4, $B7, $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $A4, $A5, $A6, $CE, $CF, $B7, $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 9
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 11
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 12
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 13
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 14
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 18 tiles, one row per line
+TileRect_1F_687F::
+Data_01F_687F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 3
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 5
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 9
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 11
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 12
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 13
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 14
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 18 tiles, one row per line
+TileRect_1F_69E7::
+Data_01F_69E7:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7, $B6, $C3, $02, $03, $04, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $C3, $05, $06, $07, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $F0, $F1, $F2, $F3, $F4, $B7, $B6, $C3, $02, $BF, $09, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0A, $0B, $03, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 9
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $0C, $09, $05, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; id 11
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 12
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 13
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 14
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_6B4F::
-Data_01F_6B4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_6B4F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -1482,10 +1839,10 @@ Data_01F_6B4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 16
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_6C27::
-Data_01F_6C27:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_6C27:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1494,10 +1851,10 @@ Data_01F_6C27:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_6C5F::
-Data_01F_6C5F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_6C5F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -1517,10 +1874,10 @@ Data_01F_6C5F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 16
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_6D37::
-Data_01F_6D37:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_6D37:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1529,10 +1886,10 @@ Data_01F_6D37:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_6D6F::
-Data_01F_6D6F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_6D6F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $13, $14, $15, $0E, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
@@ -1552,10 +1909,10 @@ Data_01F_6D6F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $0D, $0D, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_6E47::
-Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_6E47:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $7C, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $6E, $7E, $C3, $C3, $C3 ; id 2
@@ -1563,71 +1920,105 @@ Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $7D, $C3, $C3, $C3 ; id 4
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
-    INCBIN "dwm2-cobi-us.gbc", $07EE7F, $168
 
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case02
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 18 tiles, one row per line
+TileRect_1F_6E7F::
+Data_01F_6E7F:: ; heuristic: DE source of a DrawTileRectAtHLFromDE relay; C0
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $13, $14, $15, $0E, $ED, $20, $21, $22, $23, $24, $B7 ; id 1
+    db $C3, $48, $49, $4A, $4B, $4C, $4D, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $C3, $4E, $4F, $50, $51, $52, $53, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $C3, $54, $55, $56, $57, $58, $59, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $C3, $5A, $5B, $5C, $5D, $5E, $5F, $C3, $B6, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $B7 ; id 5
+    db $C3, $60, $61, $62, $63, $64, $65, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $C3, $66, $67, $68, $69, $6A, $6B, $C3, $B6, $0D, $0D, $ED, $2F, $30, $31, $32, $33, $C3, $C3, $B7 ; id 7
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 9
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $14, $10, $0E, $ED, $34, $35, $36, $37, $38, $B7 ; id 10
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 11
+    db $C3, $C3, $C3, $C3, $7C, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
+    db $C3, $C3, $C3, $6E, $7E, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
+    db $C3, $C3, $C3, $6F, $7E, $C3, $C3, $C3, $B6, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $B7 ; id 14
+    db $C3, $C3, $C3, $C3, $7D, $C3, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $0D, $0D, $ED, $43, $44, $45, $46, $47, $C3, $C3, $B7 ; id 16
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 18 tiles, one row per line
+TileRect_1F_6FE7::
 Data_01F_6FE7:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-    INCBIN "dwm2-cobi-us.gbc", $07EFE7, $51
-    ds $12, $B1
-    db $B2, $B6, $C3, $C3, $C3, $C3, $06, $35, $3B, $28, $39, $C3, $13, $24, $30, $28
-    db $C3, $C3, $C3, $C3, $B7, $B8
-    ds $12, $B9
-    db $BA, $B6, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $C3
-    db $0F, $10, $11, $12, $B7
-
-; address loaded by RunNameEntryStateWhenNotFading_Case07
+    db $C3, $C3, $C3, $C3, $C3, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
+    db $C3, $00, $00, $C3, $C3, $B6, $C3, $50, $51, $52, $53, $54, $C3, $B7, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
+    db $C3, $00, $00, $C3, $C3, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
+    db $C3, $00, $00, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 4
+    db $B6, $C3, $C3, $C3, $C3, $06, $35, $3B, $28, $39, $C3, $13, $24, $30, $28, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 6
+    db $B6, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $C3, $0F, $10, $11, $12, $B7 ; id 7
 Data_01F_7087:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-    db $B6
-    ds $12, $C3
-    db $B7, $B6, $13, $14, $15, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $C3
-    db $20, $21, $22, $23, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $C3
-    db $31, $32, $33, $34, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $C3
-    db $42, $43, $44, $45, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $46, $47, $48, $49, $4A, $4B, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $06, $13, $05, $C3, $B7, $B6
-    ds $12, $C3
-    db $B7, $B3
-    ds $12, $B4
-    db $B5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $13, $14, $15, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $C3, $20, $21, $22, $23, $B7 ; id 9
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $B6, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $C3, $31, $32, $33, $34, $B7 ; id 11
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
+    db $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $C3, $42, $43, $44, $45, $B7 ; id 13
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 14
+    db $B6, $46, $47, $48, $49, $4A, $4B, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $06, $13, $05, $C3, $B7 ; id 15
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
-; address loaded by RunNameEntryStateWhenNotFading_Case02_Case03
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 5 tiles, one row per line
+TileRect_1F_714F::
 Data_01F_714F:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-    db $B0
-    ds $12, $B1
-    db $B2, $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69
-    db $6A, $6B, $6C, $6D, $B7
-
-; address loaded by RunNameEntryStateWhenNotFading_Case02_Case01
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; id 1
 Data_01F_7177:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-    db $B6
-    ds $12, $C3
-    db $B7, $B6, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $7B
-    db $7C, $7D, $7E, $7F, $B7, $B3
-    ds $12, $B4
-    db $B5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by RunNameEntryStateWhenNotFading_Case02_Case02
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 3 tiles, one row per line
+TileRect_1F_71B3::
 Data_01F_71B3:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-    db $B0
-    ds $12, $B1
-    db $B2, $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69
-    db $6A, $6B, $6C, $6D, $B7, $B3
-    ds $12, $B4
-    db $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; id 1
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
 
-; address loaded by RunNameEntryStateWhenNotFading_Case04
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 6 x 5 tiles, one row per line
+TileRect_1F_71EF::
 Data_01F_71EF:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-    db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
-    db $C3, $B7, $B6, $C3, $13, $36, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
+    db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $CE, $CF, $DF, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $13, $36, $C3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by GameMode6_Init_Sub01_Sub01
+; E-0187 (C1: Jump_024_513A sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375).
+; record: one 20 x 6 tile panel (wScreenByteBD selects it)
+TileRect_1F_720D::
 Data_01F_720D:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
-    INCBIN "dwm2-cobi-us.gbc", $07F20D, $168
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $00, $01, $02, $03, $04, $05, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $06, $07, $08, $09, $0A, $0B, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $0C, $0D, $0E, $0F, $10, $11, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $12, $13, $14, $15, $16, $17, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $18, $19, $1A, $1B, $1C, $1D, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $1E, $1F, $20, $21, $22, $23, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $00, $01, $02, $03, $04, $05, $24, $25, $26, $27, $28, $29, $C3, $C3, $C3, $C3 ; id 2
+    db $C3, $C3, $C3, $C3, $06, $07, $08, $09, $0A, $0B, $2A, $2B, $2C, $2D, $2E, $2F, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $0C, $0D, $0E, $0F, $10, $11, $30, $31, $32, $33, $34, $35, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $12, $13, $14, $15, $16, $17, $36, $37, $38, $39, $3A, $3B, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $18, $19, $1A, $1B, $1C, $1D, $3C, $3D, $3E, $3F, $40, $41, $C3, $C3, $C3, $C3
+    db $C3, $C3, $C3, $C3, $1E, $1F, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $C3, $C3, $C3, $C3
+    db $C3, $00, $01, $02, $03, $04, $05, $24, $25, $26, $27, $28, $29, $48, $49, $4A, $4B, $4C, $4D, $C3 ; id 3
+    db $C3, $06, $07, $08, $09, $0A, $0B, $2A, $2B, $2C, $2D, $2E, $2F, $4E, $4F, $50, $51, $52, $53, $C3
+    db $C3, $0C, $0D, $0E, $0F, $10, $11, $30, $31, $32, $33, $34, $35, $54, $55, $56, $57, $58, $59, $C3
+    db $C3, $12, $13, $14, $15, $16, $17, $36, $37, $38, $39, $3A, $3B, $5A, $5B, $5C, $5D, $5E, $5F, $C3
+    db $C3, $18, $19, $1A, $1B, $1C, $1D, $3C, $3D, $3E, $3F, $40, $41, $60, $61, $62, $63, $64, $65, $C3
+    db $C3, $1E, $1F, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $66, $67, $68, $69, $6A, $6B, $C3
 
 ; copies 16 glyph tiles (Data_01F_73BC) from bank $1F to the VRAM addresses in Data_01F_73CC (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_Case01)
@@ -2235,11 +2626,18 @@ Script_1F_77D4:: ; heuristic: event script entry or jump target; C0
     script_command $F8
 Script_1F_77D5:: ; heuristic: event script entry or jump target; C0
     script_command $F8
-    script_choice_jump Script_1F_77F4, Script_1F_77EE
-    db $0E, $07, $00, $EE, $00, $05, $80, $EE, $FF, $00, $03, $C0, $07, $F7, $77, $00
-    db $02, $C0, $07, $F7, $77
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_77F4, Script_1F_77EE, Script_1F_77E8, Script_1F_77E2, Script_1F_77DC
+Script_1F_77DC:: ; heuristic: event script entry or jump target; C0
+    script_command $EE
+    script_message $8005 ; 'Tara Hurry! Papa will be angry!'
+    script_command $EE
+    script_end
+Script_1F_77E2:: ; heuristic: event script entry or jump target; C0
+    script_message $C003 ; 'Tara There you are, big brother!'
+    script_jump Script_1F_77F7
+Script_1F_77E8:: ; heuristic: event script entry or jump target; C0
+    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_jump Script_1F_77F7
 Script_1F_77EE:: ; heuristic: event script entry or jump target; C0
     script_message $C001 ; 'In the middle of the sea'
     script_jump Script_1F_77F7
@@ -2250,10 +2648,10 @@ Script_1F_77F7:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_77D5
 Script_1F_77FD:: ; heuristic: event script entry or jump target; C0
     script_command $F8
-    script_choice_jump Script_1F_780E, Script_1F_7808
-    db $00, $00, $08, $C0, $07, $11, $78
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_780E, Script_1F_7808, Script_1F_7802
+Script_1F_7802:: ; heuristic: event script entry or jump target; C0
+    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_jump Script_1F_7811
 Script_1F_7808:: ; heuristic: event script entry or jump target; C0
     script_message $C007 ; 'There's a spirit in GreatLog that's'
     script_jump Script_1F_7811
@@ -2267,10 +2665,13 @@ Script_1F_7815:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_77F7
 Script_1F_7819:: ; heuristic: event script entry or jump target; C0
     script_command $F8
-    script_choice_jump Script_1F_7831, Script_1F_782B
-    db $07, $00, $00, $0B, $C0, $07, $FD, $77, $00, $0A, $C0, $07, $FD, $77
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_7831, Script_1F_782B, Script_1F_7825, Script_1F_781F
+Script_1F_781F:: ; heuristic: event script entry or jump target; C0
+    script_message $C00B ; 'We'll soon be reaching GreatLog. I'
+    script_jump Script_1F_77FD
+Script_1F_7825:: ; heuristic: event script entry or jump target; C0
+    script_message $C00A ; 'Is that so? Too bad! You'll'
+    script_jump Script_1F_77FD
 Script_1F_782B:: ; heuristic: event script entry or jump target; C0
     script_message $C009 ; 'Good. That's good to hear! You'
     script_jump Script_1F_77FD
@@ -2278,20 +2679,20 @@ Script_1F_7831:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_message $C00C ; 'GreatLog's King asked us to settle'
     script_command $F8
-    script_choice_jump Script_1F_7845, Script_1F_783E
-    db $00, $F8, $07, $FD, $77
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_7845, Script_1F_783E, Script_1F_783A
+Script_1F_783A:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_jump Script_1F_77FD
 Script_1F_783E:: ; heuristic: event script entry or jump target; C0
     script_message $C014 ; 'Tara Big brother! GreatLog will be'
     script_command $F8
     script_jump Script_1F_77F7
 Script_1F_7845:: ; heuristic: event script entry or jump target; C0
     script_command $F8
-    script_choice_jump Script_1F_7856, Script_1F_7850
-    db $00, $00, $0F, $C0, $07, $59, $78
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_7856, Script_1F_7850, Script_1F_784A
+Script_1F_784A:: ; heuristic: event script entry or jump target; C0
+    script_message $C00F ; 'Worried about your monsters? Don't be!'
+    script_jump Script_1F_7859
 Script_1F_7850:: ; heuristic: event script entry or jump target; C0
     script_message $C00E ; 'When our farm gets established in'
     script_jump Script_1F_7859
@@ -2299,10 +2700,10 @@ Script_1F_7856:: ; heuristic: event script entry or jump target; C0
     script_message $C00D ; 'GreatLog's King asked us to settle'
 Script_1F_7859:: ; heuristic: event script entry or jump target; C0
     script_command $F8
-    script_choice_jump Script_1F_786A, Script_1F_7864
-    db $00, $00, $12, $C0, $07, $6D, $78
-
-; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+    script_choice_jump Script_1F_786A, Script_1F_7864, Script_1F_785E
+Script_1F_785E:: ; heuristic: event script entry or jump target; C0
+    script_message $C012 ; 'Cobi 0! They said GreatLog will'
+    script_jump Script_1F_786D
 Script_1F_7864:: ; heuristic: event script entry or jump target; C0
     script_message $C011 ; '0 peered into the vase. Freshly'
     script_jump Script_1F_786D

@@ -3946,7 +3946,7 @@ Func_0A1_57F9:: ; address name
     call CopyRectFromBankToVRAM
     ret
 
-; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 12 tiles, one row per line
 TileRect_A1_5808::
 Data_0A1_5808:: ; heuristic: start of a structured table; C0
