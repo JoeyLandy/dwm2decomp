@@ -8564,6 +8564,3831 @@
         }
       ],
       "note": "E-0200 (C1: BlankTwoTableEntries788A stores tile $C3 at entries 0 and 1 through StoreBAtWordTableEntry_Bank1E; 7 words end at GlyphCopyDestList4)."
+    },
+    {
+      "bank": "0A",
+      "addr": "481C",
+      "label": "ScriptedEncounterTable",
+      "count": 51,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "wEncounterKind, then a byte not read"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "three encounter words copied to wEncounterMonsters"
+        }
+      ],
+      "record": "wEncounterKind; unread byte; three encounter words (wEncounterMonsters)",
+      "note": "E-0202 (C1: StartScriptedEncounterTemp0 (14 callers, script commands among them) reads the record at $481C + 8 * hTemp0: byte 0 to wEncounterKind, bytes 2-7 to wEncounterMonsters; records $14, $15 and $2F-$31 use battle intro 7, the rest intro 2; 51 records end at RunBattleIntroKindCase_Case00 ($49B4))."
+    },
+    {
+      "bank": "0A",
+      "addr": "5773",
+      "label": "EncounterGrid_5773",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (8 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "57F3",
+      "label": "EncounterGroup_57F3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "57FE",
+      "label": "EncounterGroup_57FE",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "580B",
+      "label": "EncounterGroup_580B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5818",
+      "label": "EncounterGroup_5818",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5827",
+      "label": "EncounterGroup_5827",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5836",
+      "label": "EncounterGroup_5836",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5845",
+      "label": "EncounterGroup_5845",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5856",
+      "label": "EncounterGrid_5856",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (4 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5876",
+      "label": "EncounterGroup_5876",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5881",
+      "label": "EncounterGroup_5881",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "588E",
+      "label": "EncounterGroup_588E",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "589B",
+      "label": "EncounterGrid_589B",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (8 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "591B",
+      "label": "EncounterGroup_591B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5928",
+      "label": "EncounterGroup_5928",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5939",
+      "label": "EncounterGroup_5939",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "594A",
+      "label": "EncounterGroup_594A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "595B",
+      "label": "EncounterGroup_595B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "596A",
+      "label": "EncounterGroup_596A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "597B",
+      "label": "EncounterGroup_597B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "598A",
+      "label": "EncounterGroup_598A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "599B",
+      "label": "EncounterGroup_599B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "59AC",
+      "label": "EncounterGroup_59AC",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "59BD",
+      "label": "EncounterGroup_59BD",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "59CA",
+      "label": "EncounterGroup_59CA",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "59D7",
+      "label": "EncounterGroup_59D7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "59E6",
+      "label": "EncounterGroup_59E6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "59F7",
+      "label": "EncounterGroup_59F7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5A08",
+      "label": "EncounterGroup_5A08",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5A19",
+      "label": "EncounterGroup_5A19",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5A2A",
+      "label": "EncounterGroup_5A2A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5A3B",
+      "label": "EncounterGroup_5A3B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5A4C",
+      "label": "EncounterGrid_5A4C",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (4 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5A6C",
+      "label": "EncounterGroup_5A6C",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5A7B",
+      "label": "EncounterGroup_5A7B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: no reference found; it follows the group before it; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5A8A",
+      "label": "EncounterGrid_5A8A",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (4 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5AAA",
+      "label": "EncounterGroup_5AAA",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5AB7",
+      "label": "EncounterGrid_5AB7",
+      "count": 12,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (4 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5ACF",
+      "label": "EncounterGroup_5ACF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5ADE",
+      "label": "EncounterGrid_5ADE",
+      "count": 9,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5AF0",
+      "label": "EncounterGroup_5AF0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5AFF",
+      "label": "EncounterGrid_5AFF",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B07",
+      "label": "EncounterGroup_5B07",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B14",
+      "label": "EncounterGrid_5B14",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B1C",
+      "label": "EncounterGroup_5B1C",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B29",
+      "label": "EncounterGrid_5B29",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B2F",
+      "label": "EncounterGroup_5B2F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B3A",
+      "label": "EncounterGroup_5B3A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
+      "note": "E-0202 (C1: no reference found; it follows the group before it; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B45",
+      "label": "EncounterGrid_5B45",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B4B",
+      "label": "EncounterGroup_5B4B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B58",
+      "label": "EncounterGrid_5B58",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B5E",
+      "label": "EncounterGroup_5B5E",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5B6B",
+      "label": "EncounterGrid_5B6B",
+      "count": 144,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (12 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5C8B",
+      "label": "EncounterGroup_5C8B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5C96",
+      "label": "EncounterGroup_5C96",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5CA3",
+      "label": "EncounterGroup_5CA3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5CB4",
+      "label": "EncounterGroup_5CB4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5CC3",
+      "label": "EncounterGroup_5CC3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5CD2",
+      "label": "EncounterGroup_5CD2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5CDF",
+      "label": "EncounterGroup_5CDF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5CEE",
+      "label": "EncounterGroup_5CEE",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5CFD",
+      "label": "EncounterGroup_5CFD",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D0E",
+      "label": "EncounterGroup_5D0E",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D1D",
+      "label": "EncounterGroup_5D1D",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D2E",
+      "label": "EncounterGroup_5D2E",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D3D",
+      "label": "EncounterGroup_5D3D",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D4E",
+      "label": "EncounterGroup_5D4E",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D5D",
+      "label": "EncounterGrid_5D5D",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (4 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D7D",
+      "label": "EncounterGroup_5D7D",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D8C",
+      "label": "EncounterGroup_5D8C",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5D9B",
+      "label": "EncounterGrid_5D9B",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (4 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5DBB",
+      "label": "EncounterGroup_5DBB",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5DCA",
+      "label": "EncounterGrid_5DCA",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 8 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5DDA",
+      "label": "EncounterGroup_5DDA",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5DE7",
+      "label": "EncounterGrid_5DE7",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5DEF",
+      "label": "EncounterGrid_5DEF",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5DF7",
+      "label": "EncounterGrid_5DF7",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5DFF",
+      "label": "EncounterGroup_5DFF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5E0C",
+      "label": "EncounterGrid_5E0C",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5E14",
+      "label": "EncounterGrid_5E14",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5E1C",
+      "label": "EncounterGroup_5E1C",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5E2B",
+      "label": "EncounterGrid_5E2B",
+      "count": 144,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (12 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5F4B",
+      "label": "EncounterGroup_5F4B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5F56",
+      "label": "EncounterGroup_5F56",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5F63",
+      "label": "EncounterGroup_5F63",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5F72",
+      "label": "EncounterGroup_5F72",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5F83",
+      "label": "EncounterGroup_5F83",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5F92",
+      "label": "EncounterGroup_5F92",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5FA1",
+      "label": "EncounterGroup_5FA1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5FB0",
+      "label": "EncounterGroup_5FB0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5FBF",
+      "label": "EncounterGroup_5FBF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5FCE",
+      "label": "EncounterGroup_5FCE",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5FDF",
+      "label": "EncounterGroup_5FDF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5FEE",
+      "label": "EncounterGroup_5FEE",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "5FFB",
+      "label": "EncounterGroup_5FFB",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "600A",
+      "label": "EncounterGroup_600A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6019",
+      "label": "EncounterGroup_6019",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6028",
+      "label": "EncounterGrid_6028",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6030",
+      "label": "EncounterGroup_6030",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "603D",
+      "label": "EncounterGrid_603D",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6045",
+      "label": "EncounterGroup_6045",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6052",
+      "label": "EncounterGrid_6052",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "605A",
+      "label": "EncounterGroup_605A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "606B",
+      "label": "EncounterGrid_606B",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6073",
+      "label": "EncounterGroup_6073",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6084",
+      "label": "EncounterGrid_6084",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (1 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6086",
+      "label": "EncounterGroup_6086",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6097",
+      "label": "EncounterGrid_6097",
+      "count": 9,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "60A9",
+      "label": "EncounterGroup_60A9",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "60BA",
+      "label": "EncounterGrid_60BA",
+      "count": 9,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "60CC",
+      "label": "EncounterGroup_60CC",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "60DD",
+      "label": "EncounterGrid_60DD",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "60E5",
+      "label": "EncounterGroup_60E5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "60F2",
+      "label": "EncounterGrid_60F2",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "60FA",
+      "label": "EncounterGroup_60FA",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6107",
+      "label": "EncounterGrid_6107",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "610F",
+      "label": "EncounterGroup_610F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6120",
+      "label": "EncounterGrid_6120",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6128",
+      "label": "EncounterGroup_6128",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6139",
+      "label": "EncounterGrid_6139",
+      "count": 12,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6151",
+      "label": "EncounterGroup_6151",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6160",
+      "label": "EncounterGrid_6160",
+      "count": 9,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6172",
+      "label": "EncounterGroup_6172",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6181",
+      "label": "EncounterGrid_6181",
+      "count": 9,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6193",
+      "label": "EncounterGroup_6193",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "61A2",
+      "label": "EncounterGrid_61A2",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "61AE",
+      "label": "EncounterGroup_61AE",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "61BD",
+      "label": "EncounterGrid_61BD",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (4 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "61DD",
+      "label": "EncounterGroup_61DD",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "61EC",
+      "label": "EncounterGroup_61EC",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "61FB",
+      "label": "EncounterGrid_61FB",
+      "count": 12,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6213",
+      "label": "EncounterGroup_6213",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6220",
+      "label": "EncounterGrid_6220",
+      "count": 36,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (6 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 6 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 36 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6268",
+      "label": "EncounterGroup_6268",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6275",
+      "label": "EncounterGroup_6275",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6284",
+      "label": "EncounterGroup_6284",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6293",
+      "label": "EncounterGroup_6293",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "62A0",
+      "label": "EncounterGroup_62A0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "62AB",
+      "label": "EncounterGrid_62AB",
+      "count": 12,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "62C3",
+      "label": "EncounterGroup_62C3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "62D2",
+      "label": "EncounterGrid_62D2",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (3 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "62DE",
+      "label": "EncounterGroup_62DE",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "62EB",
+      "label": "EncounterGrid_62EB",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "62F3",
+      "label": "EncounterGroup_62F3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6300",
+      "label": "EncounterGrid_6300",
+      "count": 25,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (5 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 5 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 25 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6332",
+      "label": "EncounterGroup_6332",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "633F",
+      "label": "EncounterGroup_633F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "634E",
+      "label": "EncounterGroup_634E",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "635D",
+      "label": "EncounterGroup_635D",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "636A",
+      "label": "EncounterGroup_636A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6375",
+      "label": "EncounterGroup_6375",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6382",
+      "label": "EncounterGrid_6382",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (1 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6384",
+      "label": "EncounterGroup_6384",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "6393",
+      "label": "EncounterGrid_6393",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "639B",
+      "label": "EncounterGroup_639B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "63AA",
+      "label": "EncounterGrid_63AA",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "63B2",
+      "label": "EncounterGroup_63B2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "63BF",
+      "label": "EncounterGrid_63BF",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter group for this screen",
+          "reason": "wild encounter group"
+        }
+      ],
+      "record": "one screen, row by row (2 per row): its encounter group",
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+    },
+    {
+      "bank": "0A",
+      "addr": "63C7",
+      "label": "EncounterGroup_63C7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "wEncounterKind + 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "limit for the random 0-127, then rising slot thresholds"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "name": "encounter words"
+        }
+      ],
+      "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
+      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+    },
+    {
+      "bank": "0A",
+      "addr": "44FE",
+      "label": "EncounterRateTable",
+      "count": 36,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "0 = by tile, otherwise the step decrement is byte 1"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "name": "tile numbers ($FF = none), or the decrement"
+        }
+      ],
+      "record": "mode (0 = by tile); then tile numbers, slot k taking (k + 2) / 2 off wEncounterCountdown when a tile under the player matches (otherwise 1), or with a non-zero mode the decrement itself",
+      "note": "E-0202 (C1: Jump_00A_4451 reads the record at $44FE + 8 * wEncounterRate; with byte 0 = 0 it compares bytes 1-7 (until $FF) with the four tiles of wTilesUnderPoint and subtracts (2 + slot) / 2 from wEncounterCountdown, else 1; with a non-zero byte 0 it subtracts byte 1; when bit 3 of hPlayerStateFlags is set the decrement is 1; 36 records end at the code at $461E)."
+    },
+    {
+      "bank": "0A",
+      "addr": "560C",
+      "label": "TransitionRowStepTable",
+      "count": 9,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "routine adding this stage's step to DE",
+          "name_targets": "TransitionRowStep",
+          "name_base": 0,
+          "reason": "transition row step"
+        }
+      ],
+      "note": "E-0202 (C1: RunBattleTransitionStep_Case01_Case02_Case00 calls JumpToWordAtHL_Bank0A with HL = $560C + 2 * wTransitionStage and DE = wTransitionCountA/B; each target adds a constant ($220, $1E0, $1A0, ...) to DE and returns it in HL; the nine targets were the INCBIN slice at $5597)."
     }
   ]
 }

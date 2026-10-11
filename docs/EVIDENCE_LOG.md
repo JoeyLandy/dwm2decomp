@@ -2430,6 +2430,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0202 — Wild and scripted encounters (bank $0A)
+
+- Kind: OBSERVATION (reading; C1).
+- **ScriptedEncounterTable ($481C).** 51 records of 8 bytes. StartScriptedEncounterTemp0 (14 callers) copies byte 0 to wEncounterKind and bytes 2-7 to wEncounterMonsters (three words). Records $14, $15 and $2F-$31 use battle intro 7, the rest intro 2.
+- **Encounter grids and groups ($5773-$63D4).**
+  - RunBattleIntroKindCase_Case00, and the parallel CollectUniqueEncounterIdsToWD09F_Sub01, pick by hMapId either:
+    - a grid, passed with its width in A to ReadMapCellWordForScreenXY (one word per screen, row by row); or
+    - a group, passed directly to RunBattleIntroKindCase_Case00_Sub01.
+  - A group record is: wEncounterKind + 1; a limit for a random 0-127; five rising slot thresholds; then one encounter word per non-zero threshold.
+    - The routine draws three times and stores, each time, the word of the first slot whose threshold is not below the draw.
+  - Walking the region with that length rule tiles it exactly: 48 grids and 111 groups.
+  - Two groups ($5A7B and $5B3A) have no reference found. Each repeats the group before it with a different kind.
+- **EncounterRateTable ($44FE).** 36 records of 8 bytes, indexed by wEncounterRate (Jump_00A_4451).
+  - Mode 0 compares up to seven tile numbers with wTilesUnderPoint to choose the wEncounterCountdown decrement.
+  - Any other mode subtracts byte 1.
+- **TransitionRowStepTable ($560C).** Nine code pointers for JumpToWordAtHL_Bank0A, indexed by wTransitionStage. Each target adds a constant row step to DE; the targets were the INCBIN slice at $5597 and are now traced code.
+- **Result.** Bank $0A has no INCBIN left.
+- Binary verification: build/run226 PASS, 0 differing bytes.
+
 ### E-0201 — Map records that no map uses (11:$59E4, $6248, $62F0)
 
 - Kind: OBSERVATION (byte search and layout; C1).
