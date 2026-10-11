@@ -55,9 +55,9 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code; the cartridge header (`$0104-$014F`) is an INCBIN slice, not annotated.
 
-## Readability state (2026-10-11, after E-0155)
+## Readability state (2026-10-11, after E-0173)
 
-Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run155). Measured from the generated `src/`:
+Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run175). Measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
@@ -65,9 +65,9 @@ Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/ru
 | `call`/`farcall` operands that reach a named routine | 100% |
 | Code labels | 9,100: 5,337 structural (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps), 148 still spelling a RAM address (E-0155), the rest descriptive |
 | RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 (from 1,611 before E-0132); buffers print as `Name + $offset`, and WRAM-bank-2 attribute positions use `of` aliases (E-0132 to E-0137) |
-| Data decoded field by field | monster pictures, sprites and palettes named by monster; all 183 map records and 35 special maps with screen arrays and palettes; key-world tilesets, rooms and chunk groups; 512 meta-sprite sets (3,397 frames); EXP tables; the AI personality weights; SGB borders; map-screen flag tiles (E-0138 to E-0151) |
-| Event scripts | 2,120 commands in bank $10 decoded into `script_*` macros, with message quotes (E-0152, E-0153) |
-| `INCBIN` bytes not inside a known compressed stream | 132,070 (from about 645,000 before E-0139) |
+| Data decoded field by field | monster pictures, sprites and palettes named by monster; all 183 map records and 35 special maps with screen arrays and palettes; key-world tilesets, rooms and chunk groups; 512 meta-sprite sets (3,397 frames); EXP, stat-growth and skill-requirement tables; AI personality weights; SGB borders; map-screen flag tiles; map interaction spots; map object selectors and lists; tile rectangles; automap blocks; the text font; formations (E-0138 to E-0173) |
+| Event scripts | 2,672 commands decoded into `script_*` macros with message quotes, including data-bank scripts reached by `$E7` (E-0152, E-0153, E-0160) |
+| `INCBIN` bytes not inside a known compressed stream | 79,259 (from about 645,000 before E-0139); every data label that code loads names its readers (E-0162) |
 | Likely game bugs | six executed and pinned by emulator tests (E-0075, E-0099, E-0154) |
 | Immediates kept numeric although they look like addresses | step deltas, battle message bytes, sprite positions (E-0132, E-0137) |
 
