@@ -1312,6 +1312,22 @@ class Rom:
                                  "fields": fields, "note": f"E-0142 (derived: map record of map ${first:02X}, "
                                  f"{wd} x {ht} screens, {k} decoded variant(s))"})
             added += 1
+        sm = next((t for t in self.schemas if t["label"] == "SpecialMapRecords"), None)
+        if sm:  # 26-byte special map records (E-0144): arrays at +$14 / +$17, size from +6 / +7
+            for i in range(sm["count"]):
+                r = sm["addr"] + 26 * i
+                o = sm["bank"] * BANK + r - self.base(sm["bank"])
+                wd, ht = self.data[o + 6], self.data[o + 7]
+                palettes.setdefault(fp(sm["bank"], r + 3), f"SpecialMap{i:02X}Palettes")
+                tiles = fp(sm["bank"], r)
+                if tiles not in self.names and tiles not in named:
+                    named.add(tiles)
+                    self.names[tiles] = {"name": f"SpecialMap{i:02X}Tileset", "data": True, "evidence": "E-0144",
+                                         "note": f"compressed tileset of special map record {i} (SpecialMapRecords)"}
+                for j, kind in ((0x14, "Screens"), (0x17, "Attrs")):
+                    tb, ta = fp(sm["bank"], r + j)
+                    if screens_ok(tb, ta, wd * ht):
+                        arrays.setdefault((tb, ta), (wd * ht, f"SpecialMap{i:02X}{kind}"))
         taken: list[tuple[int, int, int]] = []
         for (bank, addr), (n, label) in sorted(arrays.items()):
             if any(b == bank and lo < addr + 3 * n and addr < hi for b, lo, hi in taken):

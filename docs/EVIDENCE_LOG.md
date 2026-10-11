@@ -1714,6 +1714,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Which character each field sprite number shows is not read.
 - Binary verification: build/run143 PASS, 0 differing bytes; tests OK.
 
+### E-0144 — Special map records
+
+- Kind: OBSERVATION (reading of LoadSpecialMapHeader 00:1BAD and LoadMapScreenFromChunk 00:1906, plus decoding; C1).
+- **Layout.** Both routines map bank $61 and read the word $60D8 + 2 * hFFC6.
+  - SpecialMapTable has 128 words; 91 are zero and the rest point to 35 contiguous 26-byte records at $61D8-$6565.
+  - A record is: tileset far pointer (decompressed to vTiles2), palette far pointer (LoadBGPaletteBufferFromBank), five header bytes (width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind), nine bytes these routines do not read, then the far pointers to the screen array (+$14) and the attribute array (+$17). LoadMapScreenFromChunk indexes the arrays the same way as LoadMapScreen (E-0142).
+- **Checks.** All 70 arrays decode to 360-byte screens.
+- **What changed.** add_map_schemas now also derives the special map arrays and palette sets: 514 arrays and 165 palette sets in all, and 100 more screen streams. The labels are SpecialMapNNScreens/Attrs/Palettes/Tileset.
+- **Limits.** The nine unread header bytes (they look like further far pointers to bank $80) are left as `db`.
+- Binary verification: build/run144 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -3648,140 +3648,355 @@ Jump_061_60BB::
     pop de
     pop hl
     ret
-    db $D8, $61, $F2, $61, $0C, $62, $26, $62, $40, $62, $5A, $62
-    ds $34, $00
-    dw Data_061_6274
-    dw Data_061_628E
-    dw Data_061_62A8
-    dw Data_061_62C2
-    dw Data_061_62DC
-    dw Data_061_62F6
-    dw Data_061_6310
-    dw Data_061_632A
-    dw Data_061_6344
-    dw Data_061_635E
-    ds $2C, $00
-    dw Data_061_6378
-    dw Data_061_6392
-    dw Data_061_63AC
-    dw Data_061_63C6
-    dw Data_061_63E0
-    dw Data_061_63FA
-    dw Data_061_6414
-    dw Data_061_642E
-    dw Data_061_6448
-    dw Data_061_6462
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $7C, $64, $96, $64
-    db $B0, $64, $CA, $64, $E4, $64
-    ds $18, $00
-    db $FE, $64, $18, $65, $32, $65, $4C, $65, $4C, $65, $4C, $65
-    ds $32, $00
-    INCBIN "dwm2-cobi-us.gbc", $1861D8, $73
 
-Data_061_624B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $01, $40, $80
+; E-0144 (C1: LoadSpecialMapHeader and LoadMapScreenFromChunk map bank $61 and read the word $60D8 + 2 * hFFC6; every non-zero word is $61D8 + 26 * n).
+; record: special map record ($0000 = none)
+SpecialMapTable::
+Data_061_60D8:: ; heuristic: start of a structured table; C0
+    dw SpecialMapRecords ; id 0
+    dw Data_061_61F2 ; id 1
+    dw Data_061_620C ; id 2
+    dw Data_061_6226 ; id 3
+    dw Data_061_6240 ; id 4
+    dw Data_061_625A ; id 5
+    dw $0000 ; id 6
+    dw $0000 ; id 7
+    dw $0000 ; id 8
+    dw $0000 ; id 9
+    dw $0000 ; id 10
+    dw $0000 ; id 11
+    dw $0000 ; id 12
+    dw $0000 ; id 13
+    dw $0000 ; id 14
+    dw $0000 ; id 15
+    dw $0000 ; id 16
+    dw $0000 ; id 17
+    dw $0000 ; id 18
+    dw $0000 ; id 19
+    dw $0000 ; id 20
+    dw $0000 ; id 21
+    dw $0000 ; id 22
+    dw $0000 ; id 23
+    dw $0000 ; id 24
+    dw $0000 ; id 25
+    dw $0000 ; id 26
+    dw $0000 ; id 27
+    dw $0000 ; id 28
+    dw $0000 ; id 29
+    dw $0000 ; id 30
+    dw $0000 ; id 31
+    dw Data_061_6274 ; id 32
+    dw Data_061_628E ; id 33
+    dw Data_061_62A8 ; id 34
+    dw Data_061_62C2 ; id 35
+    dw Data_061_62DC ; id 36
+    dw Data_061_62F6 ; id 37
+    dw Data_061_6310 ; id 38
+    dw Data_061_632A ; id 39
+    dw Data_061_6344 ; id 40
+    dw Data_061_635E ; id 41
+    dw $0000 ; id 42
+    dw $0000 ; id 43
+    dw $0000 ; id 44
+    dw $0000 ; id 45
+    dw $0000 ; id 46
+    dw $0000 ; id 47
+    dw $0000 ; id 48
+    dw $0000 ; id 49
+    dw $0000 ; id 50
+    dw $0000 ; id 51
+    dw $0000 ; id 52
+    dw $0000 ; id 53
+    dw $0000 ; id 54
+    dw $0000 ; id 55
+    dw $0000 ; id 56
+    dw $0000 ; id 57
+    dw $0000 ; id 58
+    dw $0000 ; id 59
+    dw $0000 ; id 60
+    dw $0000 ; id 61
+    dw $0000 ; id 62
+    dw $0000 ; id 63
+    dw Data_061_6378 ; id 64
+    dw Data_061_6392 ; id 65
+    dw Data_061_63AC ; id 66
+    dw Data_061_63C6 ; id 67
+    dw Data_061_63E0 ; id 68
+    dw Data_061_63FA ; id 69
+    dw Data_061_6414 ; id 70
+    dw Data_061_642E ; id 71
+    dw Data_061_6448 ; id 72
+    dw Data_061_6462 ; id 73
+    dw $0000 ; id 74
+    dw $0000 ; id 75
+    dw $0000 ; id 76
+    dw $0000 ; id 77
+    dw $0000 ; id 78
+    dw $0000 ; id 79
+    dw Data_061_647C ; id 80
+    dw Data_061_6496 ; id 81
+    dw Data_061_64B0 ; id 82
+    dw Data_061_64CA ; id 83
+    dw Data_061_64E4 ; id 84
+    dw $0000 ; id 85
+    dw $0000 ; id 86
+    dw $0000 ; id 87
+    dw $0000 ; id 88
+    dw $0000 ; id 89
+    dw $0000 ; id 90
+    dw $0000 ; id 91
+    dw $0000 ; id 92
+    dw $0000 ; id 93
+    dw $0000 ; id 94
+    dw $0000 ; id 95
+    dw $0000 ; id 96
+    dw Data_061_64FE ; id 97
+    dw Data_061_6518 ; id 98
+    dw Data_061_6532 ; id 99
+    dw Data_061_654C ; id 100
+    dw Data_061_654C ; id 101
+    dw Data_061_654C ; id 102
+    dw $0000 ; id 103
+    dw $0000 ; id 104
+    dw $0000 ; id 105
+    dw $0000 ; id 106
+    dw $0000 ; id 107
+    dw $0000 ; id 108
+    dw $0000 ; id 109
+    dw $0000 ; id 110
+    dw $0000 ; id 111
+    dw $0000 ; id 112
+    dw $0000 ; id 113
+    dw $0000 ; id 114
+    dw $0000 ; id 115
+    dw $0000 ; id 116
+    dw $0000 ; id 117
+    dw $0000 ; id 118
+    dw $0000 ; id 119
+    dw $0000 ; id 120
+    dw $0000 ; id 121
+    dw $0000 ; id 122
+    dw $0000 ; id 123
+    dw $0000 ; id 124
+    dw $0000 ; id 125
+    dw $0000 ; id 126
+    dw $0000 ; id 127
 
-Data_061_6250:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $40, $80, $80, $63, $6A, $86, $63, $6A, $40, $66, $6A, $B2, $6A, $6A
-    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80, $F2, $6A
-    db $6A, $F8, $6A, $6A
-
-Data_061_6274:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $40, $6B, $4B, $43, $6B, $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $8B, $43, $6B, $97, $43, $6B
-
-Data_061_628E:: ; heuristic: target of a monotone pointer table; C0
-    db $67, $48, $6B, $36, $4D, $6B, $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $76, $4D, $6B, $82, $4D, $6B
-
-Data_061_62A8:: ; heuristic: target of a monotone pointer table; C0
-    db $83, $52, $6B, $40, $57, $6B, $02, $02, $4F, $00, $01, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $80, $57, $6B, $8C, $57, $6B
-
-Data_061_62C2:: ; heuristic: target of a monotone pointer table; C0
-    db $75, $5C, $6B, $CF, $60, $6B, $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $0F, $61, $6B, $1B, $61, $6B
-
-Data_061_62DC:: ; heuristic: target of a monotone pointer table; C0
-    db $24, $66, $6B, $02, $6A, $6B, $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $42, $6A, $6B, $4E, $6A, $6B
-
-Data_061_62F6:: ; heuristic: target of a monotone pointer table; C0
-    db $67, $6F, $6B, $DE, $73, $6B, $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $1E, $74, $6B, $2A, $74, $6B
-
-Data_061_6310:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $4A, $94, $F4, $4E, $94, $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $44, $7A, $6B, $50, $7A, $6B
-
-Data_061_632A:: ; heuristic: target of a monotone pointer table; C0
-    db $34, $4F, $94, $89, $54, $94, $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $C9, $54, $94, $D5, $54, $94
-
-Data_061_6344:: ; heuristic: target of a monotone pointer table; C0
-    db $90, $5A, $94, $2F, $5F, $94, $02, $02
-
-Data_061_634C:: ; heuristic: target of a monotone pointer table; C0
-    db $4F, $00, $00, $00, $00
-
-Data_061_6351:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $40, $80, $00, $01, $40, $80, $6F, $5F, $94, $7B, $5F, $94
-
-Data_061_635E:: ; heuristic: target of a monotone pointer table; C0
-    db $98, $64, $94, $74, $69, $94, $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80
-    db $00, $01, $40, $80, $B4, $69, $94, $C0, $69, $94
-
-Data_061_6378:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $40, $6C, $89, $42, $6C, $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80
-    db $00, $00, $40, $80, $C9, $42, $6C, $CF, $42, $6C
-
-Data_061_6392:: ; heuristic: target of a monotone pointer table; C0
-    db $3C, $45, $6C, $ED, $47, $6C, $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80
-    db $00, $00, $40, $80, $2D, $48, $6C, $33, $48, $6C
-
-Data_061_63AC:: ; heuristic: target of a monotone pointer table; C0
-    db $F6, $4A, $6C, $6C, $4E, $6C, $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80
-    db $00, $00, $40, $80, $AC, $4E, $6C, $B2, $4E, $6C
-
-Data_061_63C6:: ; heuristic: target of a monotone pointer table; C0
-    db $94, $51, $6C, $81, $54, $6C, $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80
-    db $00, $00, $40, $80, $C1, $54, $6C, $C7, $54, $6C
-
-Data_061_63E0:: ; heuristic: target of a monotone pointer table; C0
-    db $95, $57, $6C, $83, $5A, $6C, $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80
-    db $00, $00, $40, $80, $C3, $5A, $6C, $C9, $5A, $6C
-
-Data_061_63FA:: ; heuristic: target of a monotone pointer table; C0
-    db $73, $5D, $6C, $AF, $60, $6C, $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80
-    db $00, $00, $40, $80, $EF, $60, $6C, $F5, $60, $6C
-
-Data_061_6414:: ; heuristic: target of a monotone pointer table; C0
-    db $E4, $63, $6C, $59, $67, $6C, $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80
-    db $00, $00, $40, $80, $99, $67, $6C, $9F, $67, $6C
-
-Data_061_642E:: ; heuristic: target of a monotone pointer table; C0
-    db $E8, $6E, $94, $CF, $71, $94, $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80
-    db $00, $00, $40, $80, $22, $6A, $6C, $28, $6A, $6C
-
-Data_061_6448:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $72, $94, $7D
-
-Data_061_644C:: ; heuristic: target of a monotone pointer table; C0
-    db $74, $94, $02, $01
-
-Data_061_6450:: ; heuristic: target of a monotone pointer table; C0
-    db $3F, $00, $01, $00, $00, $00, $40, $80, $00, $00, $40, $80, $BD, $74, $94, $C3
-    db $74, $94
-
-Data_061_6462:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $186462, $E5
-
-Data_061_6547:: ; heuristic: target of a monotone pointer table; C0
-    db $78, $6A, $BE, $78, $6A
-
-Data_061_654C:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $4B, $90, $FE, $4E, $90, $01, $01, $32, $2C, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $3E, $4F, $90, $41, $4F, $90
+; E-0144 (C1: LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with LoadBGPaletteBufferFromBank and stores the five header bytes; LoadMapScreenFromChunk takes the far pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one at +$17 as the attribute array; every array decodes to 360-byte screens).
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind; 9 bytes not read by these routines; screen tile-map array; its ROM bank; screen attribute-map array; its ROM bank
+SpecialMapRecords::
+Data_061_61D8:: ; heuristic: special map record; C0
+    dfar SpecialMap00Tileset ; id 0
+    dfar SpecialMap00Palettes
+    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap00Screens
+    dfar SpecialMap00Attrs
+Data_061_61F2:: ; heuristic: special map record; C0
+    dfar SpecialMap01Tileset ; id 1
+    dfar SpecialMap01Palettes
+    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap01Screens
+    dfar SpecialMap01Attrs
+Data_061_620C:: ; heuristic: special map record; C0
+    dfar SpecialMap02Tileset ; id 2
+    dfar SpecialMap02Palettes
+    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap02Screens
+    dfar SpecialMap02Attrs
+Data_061_6226:: ; heuristic: special map record; C0
+    dfar SpecialMap03Tileset ; id 3
+    dfar SpecialMap03Palettes
+    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap03Screens
+    dfar SpecialMap03Attrs
+Data_061_6240:: ; heuristic: special map record; C0
+    dfar SpecialMap04Tileset ; id 4
+    dfar SpecialMap04Palettes
+    db $01, $02, $4F, $4C, $00
+Data_061_624B:: ; heuristic: label inside a table; C0
+    db $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap04Screens
+    dfar SpecialMap04Attrs
+Data_061_625A:: ; heuristic: special map record; C0
+    dfar SpecialMap05Tileset ; id 5
+    dfar SpecialMap05Palettes
+    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap05Screens
+    dfar SpecialMap05Attrs
+Data_061_6274:: ; heuristic: special map record; C0
+    dfar SpecialMap06Tileset ; id 6
+    dfar SpecialMap06Palettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap06Screens
+    dfar SpecialMap06Attrs
+Data_061_628E:: ; heuristic: special map record; C0
+    dfar SpecialMap07Tileset ; id 7
+    dfar SpecialMap07Palettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap07Screens
+    dfar SpecialMap07Attrs
+Data_061_62A8:: ; heuristic: special map record; C0
+    dfar SpecialMap08Tileset ; id 8
+    dfar SpecialMap08Palettes
+    db $02, $02, $4F, $00, $01, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap08Screens
+    dfar SpecialMap08Attrs
+Data_061_62C2:: ; heuristic: special map record; C0
+    dfar SpecialMap09Tileset ; id 9
+    dfar SpecialMap09Palettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap09Screens
+    dfar SpecialMap09Attrs
+Data_061_62DC:: ; heuristic: special map record; C0
+    dfar SpecialMap0ATileset ; id 10
+    dfar SpecialMap0APalettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap0AScreens
+    dfar SpecialMap0AAttrs
+Data_061_62F6:: ; heuristic: special map record; C0
+    dfar SpecialMap0BTileset ; id 11
+    dfar SpecialMap0BPalettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap0BScreens
+    dfar SpecialMap0BAttrs
+Data_061_6310:: ; heuristic: special map record; C0
+    dfar SpecialMap0CTileset ; id 12
+    dfar SpecialMap0CPalettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap0CScreens
+    dfar SpecialMap0CAttrs
+Data_061_632A:: ; heuristic: special map record; C0
+    dfar SpecialMap0DTileset ; id 13
+    dfar SpecialMap0DPalettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap0DScreens
+    dfar SpecialMap0DAttrs
+Data_061_6344:: ; heuristic: special map record; C0
+    dfar SpecialMap0ETileset ; id 14
+    dfar SpecialMap0EPalettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap0EScreens
+    dfar SpecialMap0EAttrs
+Data_061_635E:: ; heuristic: special map record; C0
+    dfar SpecialMap0FTileset ; id 15
+    dfar SpecialMap0FPalettes
+    db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
+    dfar SpecialMap0FScreens
+    dfar SpecialMap0FAttrs
+Data_061_6378:: ; heuristic: special map record; C0
+    dfar SpecialMap10Tileset ; id 16
+    dfar SpecialMap10Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap10Screens
+    dfar SpecialMap10Attrs
+Data_061_6392:: ; heuristic: special map record; C0
+    dfar SpecialMap11Tileset ; id 17
+    dfar SpecialMap11Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap11Screens
+    dfar SpecialMap11Attrs
+Data_061_63AC:: ; heuristic: special map record; C0
+    dfar SpecialMap12Tileset ; id 18
+    dfar SpecialMap12Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap12Screens
+    dfar SpecialMap12Attrs
+Data_061_63C6:: ; heuristic: special map record; C0
+    dfar SpecialMap13Tileset ; id 19
+    dfar SpecialMap13Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap13Screens
+    dfar SpecialMap13Attrs
+Data_061_63E0:: ; heuristic: special map record; C0
+    dfar SpecialMap14Tileset ; id 20
+    dfar SpecialMap14Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap14Screens
+    dfar SpecialMap14Attrs
+Data_061_63FA:: ; heuristic: special map record; C0
+    dfar SpecialMap15Tileset ; id 21
+    dfar SpecialMap15Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap15Screens
+    dfar SpecialMap15Attrs
+Data_061_6414:: ; heuristic: special map record; C0
+    dfar SpecialMap16Tileset ; id 22
+    dfar SpecialMap16Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap16Screens
+    dfar SpecialMap16Attrs
+Data_061_642E:: ; heuristic: special map record; C0
+    dfar SpecialMap17Tileset ; id 23
+    dfar SpecialMap17Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap17Screens
+    dfar SpecialMap17Attrs
+Data_061_6448:: ; heuristic: special map record; C0
+    dfar SpecialMap18Tileset ; id 24
+    dfar SpecialMap18Palettes
+    db $02, $01, $3F, $00, $01, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap18Screens
+    dfar SpecialMap18Attrs
+Data_061_6462:: ; heuristic: special map record; C0
+    dfar SpecialMap19Tileset ; id 25
+    dfar SpecialMap19Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
+    dfar SpecialMap19Screens
+    dfar SpecialMap19Attrs
+Data_061_647C:: ; heuristic: special map record; C0
+    dfar SpecialMap1ATileset ; id 26
+    dfar SpecialMap1APalettes
+    db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    dfar SpecialMap1AScreens
+    dfar SpecialMap1AAttrs
+Data_061_6496:: ; heuristic: special map record; C0
+    dfar SpecialMap1ATileset ; id 27
+    dfar SpecialMap1APalettes
+    db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    dfar SpecialMap1BScreens
+    dfar SpecialMap1BAttrs
+Data_061_64B0:: ; heuristic: special map record; C0
+    dfar SpecialMap1ATileset ; id 28
+    dfar SpecialMap1APalettes
+    db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    dfar SpecialMap1CScreens
+    dfar SpecialMap1CAttrs
+Data_061_64CA:: ; heuristic: special map record; C0
+    dfar SpecialMap1ATileset ; id 29
+    dfar SpecialMap1APalettes
+    db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    dfar SpecialMap1DScreens
+    dfar SpecialMap1DAttrs
+Data_061_64E4:: ; heuristic: special map record; C0
+    dfar SpecialMap1ATileset ; id 30
+    dfar SpecialMap1APalettes
+    db $01, $01, $3F, $3C, $00, $00, $00, $00, $40, $80, $00, $00, $50, $80
+    dfar SpecialMap1EScreens
+    dfar SpecialMap1EAttrs
+Data_061_64FE:: ; heuristic: special map record; C0
+    dfar SpecialMap1FTileset ; id 31
+    dfar SpecialMap1FPalettes
+    db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    dfar SpecialMap1FScreens
+    dfar SpecialMap1FAttrs
+Data_061_6518:: ; heuristic: special map record; C0
+    dfar SpecialMap20Tileset ; id 32
+    dfar SpecialMap20Palettes
+    db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    dfar SpecialMap20Screens
+    dfar SpecialMap20Attrs
+Data_061_6532:: ; heuristic: special map record; C0
+    dfar SpecialMap21Tileset ; id 33
+    dfar SpecialMap21Palettes
+    db $01, $01, $19, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    dfar SpecialMap21Screens
+    dfar SpecialMap21Attrs
+Data_061_654C:: ; heuristic: special map record; C0
+    dfar Map29Tileset ; id 34
+    dfar Map29Palettes
+    db $01, $01, $32, $2C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    dfar Map29Screens0
+    dfar Map29Attrs0
 
 Data_061_6566:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $67, $66, $67, $66, $67, $66, $67, $66, $67, $66, $67

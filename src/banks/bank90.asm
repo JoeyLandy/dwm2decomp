@@ -41,14 +41,14 @@ Data_090_450F:: ; address name
 
 ; compressed tileset of map $29 (the first map record using it)
 ; LZSS-compressed asset: 1014 bytes expand to 1264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Map29Tileset:: ; heuristic: map tileset stream; C0
+Map29Tileset:: ; heuristic: special map tileset stream; C0
 Data_090_4B08:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $240B08, $3F6
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
 Map29Palettes::
-Data_090_4EFE:: ; heuristic: map BG palettes; C0
+Data_090_4EFE:: ; heuristic: special map BG palettes; C0
     dw $3126, $7FFF, $7E0A, $0000 ; entry 0
     dw $3126, $035F, $7E0A, $0000 ; entry 1
     dw $010B, $6BFF, $1DB0, $0000 ; entry 2
