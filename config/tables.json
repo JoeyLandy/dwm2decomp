@@ -1870,6 +1870,22 @@
         }
       ],
       "note": "E-0148 (C1: LoadTable4E60EntryForWC991ToWC9DE copies the 3 bytes at $4E60 + $129 * (species record byte 7) + 3 * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and DrawWCA83ExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row starting at 0)."
+    },
+    {
+      "bank": "06",
+      "addr": "4001",
+      "label": "AIPersonalityWeightTable",
+      "count": 212,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 54,
+          "per_line": 9,
+          "name": "27 signed weights, one per personality index (wPersonalityIndex 0-26)"
+        }
+      ],
+      "note": "E-0149 (C1: ReadBank6TableWord reads the word at 06:$4001 + $36 * BC + 2 * wPersonalityIndex; AccumulateBank6WordToDA6E / DA70 add it to the AI score (a low byte of $FF counts as 5000, a negative word is subtracted); the 527 call sites pass rows $00-$D3, and the bank is zero after row $D3)."
     }
   ]
 }

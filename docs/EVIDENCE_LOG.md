@@ -1784,6 +1784,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Which EXP curve each species uses is data in the species records; the curves' game-facing names are not known.
 - Binary verification: build/run148 PASS, 0 differing bytes; tests OK.
 
+### E-0149 — The AI personality weight table (bank $06)
+
+- Kind: OBSERVATION (reading of ReadBank6TableWord E2:654B and AccumulateBank6WordToDA6E / DA70; C1).
+- **Source.** The word at 06:$4001 + $36 * BC + 2 * wPersonalityIndex is added to an AI score. A low byte of $FF counts as 5000, and a negative word is subtracted.
+  - The rows are 27 words, one per personality index.
+  - The 527 call sites pass rows $00-$D3.
+  - The bank holds only zeros after row $D3 ($6CB9), so the table has 212 rows.
+- **What changed.** AIPersonalityWeightTable is declared, with a new `per_line` option for word fields (9 words per line, 3 lines per row). This ~11 KB had been INCBIN slices.
+- **Limits.** What each row number means (the situation an AI routine scores) is known only through its callers' names (AIScore_*).
+- Binary verification: build/run149 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

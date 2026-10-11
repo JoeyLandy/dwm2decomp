@@ -1644,8 +1644,11 @@ class Rom:
                     flush()
                     r = raws[fi]
                     words = [r[j] | r[j + 1] << 8 for j in range(0, len(r), 2)]
-                    out.append("    dw " + ", ".join((f.get("ram") and self.sym_name(v, True)) or f"${v:04X}" for v in words)
-                               + ("" if tagged else tag))
+                    per = f.get("per_line", len(words))  # long rows wrap after "per_line" words
+                    for j in range(0, len(words), per):
+                        out.append("    dw " + ", ".join((f.get("ram") and self.sym_name(v, True)) or f"${v:04X}"
+                                                         for v in words[j:j + per]) + ("" if tagged else tag))
+                        tagged = True
                     tagged = True
                 elif skip_bank == fi:
                     pass  # emitted by the `dfar` of the pointer before it
