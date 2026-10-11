@@ -6319,6 +6319,75 @@
       ],
       "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
       "note": "E-0194 (C1: SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 25 screens)."
+    },
+    {
+      "bank": "61",
+      "addr": "4810",
+      "label": "KeyWorldEntryScreenXY",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "screen X (high nibble) / Y (low nibble)"
+        }
+      ],
+      "note": "E-0195 (C1: CheckTwoWCDB0EntriesForKeyWorldArea_Sub01 reads the byte at $4810 + B (B from the floor state entry) and continues only when it equals hMapScreenX/Y packed as nibbles)."
+    },
+    {
+      "bank": "61",
+      "addr": "4818",
+      "label": "KeyWorldScreenSpotRecords",
+      "count": 192,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "eight (X, Y) pairs"
+        }
+      ],
+      "record": "eight spots as (X, Y) byte pairs; all-zero records are unused",
+      "note": "E-0195 (C1: LookupTable4818NibblePairForTemp0 reads the pair at $4818 + 16 * [$CE2C + 2 * floor state byte 1 + 2 * wKeyWorldArea] + 2 * hTemp0 and packs it into one byte of nibbles; Func_061_462F reads byte $4819 + 16 * n + 2 * B the same way; 192 records end at the code at $5418)."
+    },
+    {
+      "bank": "61",
+      "addr": "6566",
+      "label": "KeyWorldWarpListTable",
+      "count": 128,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "warp list for this floor-state value",
+          "reason": "key-world warp list"
+        }
+      ],
+      "lists": {
+        "size": 9,
+        "end": 128,
+        "label": "KeyWorldWarps",
+        "record": "kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y",
+        "fields": [
+          {
+            "type": "db",
+            "size": 5,
+            "name": "kind, byte 1 (not read), screen X, screen Y, $FF"
+          },
+          {
+            "type": "db",
+            "size": 2,
+            "name": "not read here"
+          },
+          {
+            "type": "db",
+            "size": 2,
+            "name": "wWarpDestX, wWarpDestY"
+          }
+        ]
+      },
+      "note": "E-0195 (C1: CheckKeyWorldWarpTable and RunMapType_596F_Case03_Sub01 read the word at $6566 + 2 * (floor state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3 equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen; 128 words, then the lists up to TownObjectSpotGrid0 at $6705)."
     }
   ]
 }

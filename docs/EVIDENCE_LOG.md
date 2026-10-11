@@ -2343,6 +2343,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The streams count goes from 4,926 to 4,921.
 - Binary verification: build/run209 PASS, 0 differing bytes; tests OK. Unidentified INCBIN is 56,140 bytes.
 
+### E-0195 — Key-world screen spots and warp lists (bank $61)
+
+- Kind: OBSERVATION (reading; C1).
+- **KeyWorldEntryScreenXY ($4810, 8 bytes).** CheckTwoWCDB0EntriesForKeyWorldArea_Sub01 compares the byte at $4810 + B with hMapScreenX/Y packed as nibbles.
+- **KeyWorldScreenSpotRecords ($4818).** 192 records of 16 bytes (eight X, Y pairs), ending at the code at $5418.
+  - LookupTable4818NibblePairForTemp0 reads pair hTemp0 of record [$CE2C + 2 * floor state byte 1 + 2 * wKeyWorldArea]. Func_061_462F reads the same records.
+- **KeyWorldWarpListTable ($6566).** 128 words, indexed by floor state byte 0 & $7F. CheckKeyWorldWarpTable and RunMapType_596F_Case03_Sub01 walk 9-byte entries until $80.
+  - Kind $FE or $FF, a screen match and byte 4 = $FF warp to (byte 7, byte 8).
+  - The lists (KeyWorldWarpsNN, derived with the E-0157 `lists` option) fill $6666-$6705 exactly.
+- **Result.** Bank $61 has no INCBIN left.
+- Binary verification: build/run211 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
