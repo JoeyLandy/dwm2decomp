@@ -3046,7 +3046,7 @@ Func_0E0_5A79:: ; address name
 ; the same 45 bytes as ShowStringBank09AtHLSizeDEThenDefault (E0:42A6)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-ShowStringBank09AtHLSizeDEThenDefault_BankE0:: ; heuristic: same first 16 bytes as the routine at 00:2E98; C0
+ShowStringBank09AtHLSizeDEThenDefault_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 00:2E98; C0
 Func_0E0_5AA6:: ; address name
     ld a, l
     ld [wTextWindowTileLo], a
@@ -7421,7 +7421,7 @@ Data_0E0_79BA:: ; heuristic: target of a monotone pointer table; C0
     db "    "
     INCBIN "dwm2-cobi-us.gbc", $3839BE, $C2
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_Sub01, RunDebugState_E0_Case0D_Case01)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankE0::
@@ -7480,7 +7480,7 @@ Jump_0E0_7AD2::
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_BankE0:: ; heuristic: follows a terminator; C0
@@ -7510,7 +7510,7 @@ Jump_0E0_7AF2::
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankE0:: ; heuristic: follows a terminator; C0

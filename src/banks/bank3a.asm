@@ -9892,10 +9892,28 @@ Jump_03A_7CCA::
     ld a, [wBattleTarget]
     cp a, $04
     ret
-    db $7A, $21, $E5, $7C, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
-    db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus
+ClearBattleStatusBitsWithMaskD_Bank3A:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
+Func_03A_7CD0:: ; address name
+    ld a, d
+    ld hl, Data_03A_7CE5
+    add_a_to_hl
+    ld d, [hl]
+    ld a, e
+    ld hl, wBattleStatus
+    call AddAx9ToHL
+    ld a, d
+    and a, [hl]
+    ld [hl], a
+    ret
+
+; address loaded by ClearBattleStatusBitsWithMaskD_Bank3A
+Data_03A_7CE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $DF, $FE, $00, $FD, $73, $EF, $BF
+
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
 ; 1 call site from 1 routine (e.g. RunBattleActions_Case09_Case02_Sub02)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank3A::
@@ -9907,7 +9925,7 @@ Func_03A_7CEC:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case00)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank3A::
@@ -9919,7 +9937,7 @@ Func_03A_7CF9:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
 ; 3 call sites from 3 routines (e.g. RunBattleActions_Case09_Case02_Sub02, RunBattleResolveStep_69AA_Case02, RunBattleResolveStep_69AA_Case01)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank3A::
@@ -9931,7 +9949,7 @@ Func_03A_7D06:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank3A:: ; heuristic: follows a terminator; C0
@@ -9990,7 +10008,7 @@ Jump_03A_7D65::
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; 2 call sites from 2 routines (e.g. RunBattleActions_Case05, RunBattleResolveStep_69AA_Case09_Sub01)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank3A::
@@ -10020,7 +10038,7 @@ Jump_03A_7D85::
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank3A:: ; heuristic: follows a terminator; C0

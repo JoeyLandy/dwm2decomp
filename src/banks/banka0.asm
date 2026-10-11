@@ -1896,7 +1896,7 @@ Jump_0A0_4AE2::
 
 ; the same 38 bytes as Multiply24By8 (19:4A74)
 ; no direct call (reached through a table, a jump or a vector)
-Multiply24By8_BankA0:: ; heuristic: same first 16 bytes as the routine at 19:4A74; C0
+Multiply24By8_BankA0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 19:4A74; C0
 Func_0A0_4AE4:: ; address name
     push af
     push hl

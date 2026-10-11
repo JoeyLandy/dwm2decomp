@@ -3890,7 +3890,7 @@ Jump_000_16A5::
     ret
 
 ; E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E
-; 65 call sites from 54 routines (e.g. MultiplyHLByAPercent, FastestFoeAGLAbove31PercentOfActor, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
+; 64 call sites from 53 routines (e.g. MultiplyHLByAPercent, FastestFoeAGLAbove31PercentOfActor, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
 Multiply8By16::
 Func_000_16AA:: ; address name
     push af
@@ -10747,7 +10747,7 @@ Data_000_3E13:: ; address name
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessBattleSlotOutSlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
-; 34 call sites from 31 routines (e.g. CheckSlotStatusBlockWide_Bank05, FailIfAbleAllyKnowsSkillList6D1A, FailIfAllyLacksMPForSkillList5AF8, FailIfAllyLacksMPForHealSkill, ...)
+; 36 call sites from 33 routines (e.g. CheckSlotStatusBlockWide_Bank05, FailIfAbleAllyKnowsSkillList6D1A, FailIfAllyLacksMPForSkillList5AF8, FailIfAllyLacksMPForHealSkill, ...)
 ; points at: wBattleStatus
 CheckSlotStatusBlock::
 Func_000_3E25:: ; address name
@@ -10994,7 +10994,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 306 call sites from 251 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ClearBattleStatusBitsWithMaskD_Bank05, ...)
+; 317 call sites from 262 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ClearBattleStatusBitsWithMaskD_Bank05, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de

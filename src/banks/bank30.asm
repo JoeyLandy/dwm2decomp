@@ -4142,7 +4142,7 @@ Func_030_5C4F:: ; address name
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMP
-GetBattleMP_Bank30:: ; heuristic: same first 16 bytes as the routine at 05:401A; C0
+GetBattleMP_Bank30:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
 Func_030_5C54:: ; address name
     ld hl, wBattleMP
     jr ReadBattleWordFromArray_Bank30
@@ -4206,9 +4206,64 @@ Jump_030_5CA9::
     ld a, [wBattleTarget]
     cp a, $04
     ret
-    INCBIN "dwm2-cobi-us.gbc", $0C1CAF, $43
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus
+ClearBattleStatusBitsWithMaskD_Bank30:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
+Func_030_5CAF:: ; address name
+    ld a, d
+    ld hl, Data_030_5CC4
+    add_a_to_hl
+    ld d, [hl]
+    ld a, e
+    ld hl, wBattleStatus
+    call AddAx9ToHL
+    ld a, d
+    and a, [hl]
+    ld [hl], a
+    ret
+
+; address loaded by ClearBattleStatusBitsWithMaskD_Bank30
+Data_030_5CC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    db $DF, $FE, $00, $FD, $73, $EF, $BF
+
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit0OfLevelUpGainsIndexed_Bank30:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4091; C0
+Func_030_5CCB:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 0, [hl]
+    pop hl
+    ret
+
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit1OfLevelUpGainsIndexed_Bank30:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:409E; C0
+Func_030_5CD8:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 1, [hl]
+    pop hl
+    ret
+
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit2OfLevelUpGainsIndexed_Bank30:: ; heuristic: follows a terminator; C0
+Func_030_5CE5:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 2, [hl]
+    pop hl
+    ret
+
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; 2 call sites from 2 routines (e.g. RunBattleResolveStep_43C4_Case00, AIChooseActionForActor)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank30::
@@ -4267,7 +4322,7 @@ Jump_030_5D44::
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank30:: ; heuristic: follows a terminator; C0
@@ -4297,7 +4352,7 @@ Jump_030_5D64::
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank30:: ; heuristic: follows a terminator; C0

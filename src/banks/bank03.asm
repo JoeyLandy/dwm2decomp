@@ -930,7 +930,7 @@ Func_003_454C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-ShowStringBank08AtTilesHL_03_455B:: ; heuristic: same first 16 bytes as the routine at 03:43D9; C0
+ShowStringBank08AtTilesHL_03_455B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 03:43D9; C0
 Func_003_455B:: ; address name
     ld a, [wTextWindowTileLo]
     ld c, a

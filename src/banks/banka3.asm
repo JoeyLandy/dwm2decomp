@@ -11,35 +11,35 @@ Func_0A3_4001:: ; address name
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleDEF
-GetBattleDEF_BankA3:: ; heuristic: same first 16 bytes as the routine at 05:4006; C0
+GetBattleDEF_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4006; C0
 Func_0A3_4006:: ; address name
     ld hl, wBattleDEF
     jr Jump_0A3_402E
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxHP
-GetBattleMaxHP_BankA3:: ; heuristic: same first 16 bytes as the routine at 05:400B; C0
+GetBattleMaxHP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:400B; C0
 Func_0A3_400B:: ; address name
     ld hl, wBattleMaxHP
     jr Jump_0A3_402E
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxMP
-GetBattleMaxMP_BankA3:: ; heuristic: same first 16 bytes as the routine at 05:4010; C0
+GetBattleMaxMP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4010; C0
 Func_0A3_4010:: ; address name
     ld hl, wBattleMaxMP
     jr Jump_0A3_402E
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleHP
-GetBattleHP_BankA3:: ; heuristic: same first 16 bytes as the routine at 05:4015; C0
+GetBattleHP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
 Func_0A3_4015:: ; address name
     ld hl, wBattleHP
     jr Jump_0A3_402E
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMP
-GetBattleMP_BankA3:: ; heuristic: same first 16 bytes as the routine at 05:401A; C0
+GetBattleMP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
 Func_0A3_401A:: ; address name
     ld hl, wBattleMP
     jr Jump_0A3_402E
@@ -130,7 +130,7 @@ Data_0A3_408A:: ; address name
     db $EF ; id 5
     db $BF ; id 6
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
@@ -142,7 +142,7 @@ Func_0A3_4091:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
@@ -154,7 +154,7 @@ Func_0A3_409E:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
@@ -166,7 +166,7 @@ Func_0A3_40AB:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankA3:: ; configured code entry (E-0205); C0
@@ -225,7 +225,7 @@ Jump_0A3_410A::
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_BankA3:: ; configured code entry (E-0205); C0
@@ -255,7 +255,7 @@ Jump_0A3_412A::
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
@@ -501,7 +501,7 @@ Jump_0A3_4274::
     ld a, $01
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 13 banks)
 ; 3 call sites from 1 routine (e.g. FindFormationForSide)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankA3_4278::
@@ -942,7 +942,7 @@ Jump_0A3_497A::
     ldh [hTemp0], a
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; 6 call sites from 1 routine (e.g. FormationCompatibilityRoll)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankA3_497E::

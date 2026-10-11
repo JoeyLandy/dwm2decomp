@@ -633,7 +633,27 @@ class Rom:
         """E-0212: untraced bytes whose first 16 equal the first 16 of a traced routine (all of
         them decoded as code there) are a copy of that routine: queue them as code. Library
         routines are copied into many banks; a copy no traced code reaches stays data otherwise."""
-        sig: dict[bytes, str] = {}
+        def norm(b: int, a: int):
+            """Whole instructions covering 16 bytes from `a`; a 16-bit operand into the switchable
+            window is replaced by its offset from `a`, so a relocated copy of a block matches."""
+            base = self.base(b)
+            o0 = b * BANK - base
+            out, pc = [], a
+            while pc - a < 16:
+                if pc + 3 > base + BANK:
+                    return None
+                n, _t, kind, _tg = decode(self.data, o0 + pc, pc)
+                if kind == "bad":
+                    return None
+                raw = bytes(self.data[o0 + pc:o0 + pc + n])
+                if n == 3 and raw[0] != 0x01 and 0x4000 <= (raw[1] | raw[2] << 8) < 0x8000:  # not ld bc (a count)
+                    out.append((raw[0], "rel", (raw[1] | raw[2] << 8) - a))
+                else:
+                    out.append(raw)
+                pc += n
+            return tuple(out)
+
+        sig: dict[tuple, str] = {}
         for b in range(self.nbanks):
             base, ins, cov = self.base(b), self.insn[b], self.covered[b]
             for a, lab in self.labels[b].items():
@@ -644,8 +664,9 @@ class Rom:
                     continue
                 if not all(x in cov for x in range(a, a + 16)) or any(ins.get(x, ("",))[0] == "dw" for x in range(a, a + 16)):
                     continue
-                o = b * BANK + a - base
-                sig.setdefault(bytes(self.data[o:o + 16]), f"{b:02X}:{a:04X}")
+                k = norm(b, a)
+                if k:
+                    sig.setdefault(k, f"{b:02X}:{a:04X}")
         spans = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
             2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
         found = 0
@@ -660,11 +681,24 @@ class Rom:
                 if nxt is not None and nxt + 16 <= base + BANK and nxt not in cov:
                     cands.add(nxt)
             for p in sorted(cands):
-                src = sig.get(bytes(self.data[o0 + p:o0 + p + 16]))
+                k = norm(b, p)
+                src = sig.get(k) if k else None
                 if src and not any(x in cov for x in range(p, p + 16)) and not self.in_data_region(b, p) \
                         and not any(tb == b and lo <= p < hi for tb, lo, hi in spans) and f"{b:02X}:{p:04X}" != src:
-                    self.add_entry(b, p, "Func", f"heuristic: same first 16 bytes as the routine at {src}")
+                    self.add_entry(b, p, "Func", f"heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at {src}")
                     found += 1
+                    # the rest of a copied block: the source's later routines at the same distance
+                    sb, sa = int(src[:2], 16), int(src[3:], 16)
+                    for sa2 in sorted(x for x, lab in self.labels[sb].items() if sa < x < sa + 0x200 and x in self.insn[sb]
+                                      and (lab.startswith("Func_") or ((sb, x) in self.names and not self.names[(sb, x)].get("data")))):
+                        p2 = p + sa2 - sa
+                        k2 = norm(sb, sa2)
+                        if not k2 or p2 + 16 > base + BANK or any(x in cov for x in range(p2, p2 + 16)) \
+                                or self.in_data_region(b, p2) or any(tb == b and lo <= p2 < hi for tb, lo, hi in spans):
+                            continue
+                        if norm(b, p2) == k2:  # each key is relative to its own start
+                            self.add_entry(b, p2, "Func", f"heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at {sb:02X}:{sa2:04X}")
+                            found += 1
         log(f"  (c) copies of traced routines: {found} queued")
         return found > 0
 
@@ -1337,7 +1371,7 @@ class Rom:
         used = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
         named = 0
         for (b, a), why in sorted(self.reason.items()):
-            m = re.search(r"same first 16 bytes as the routine at ([0-9A-F]{2}):([0-9A-F]{4})", why or "")
+            m = re.search(r"same first 16 bytes (?:\(in-bank addresses taken relative\) )?as the routine at ([0-9A-F]{2}):([0-9A-F]{4})", why or "")
             if not m or not self.labels[b].get(a, "").startswith("Func_"):
                 continue
             sb, sa = int(m.group(1), 16), int(m.group(2), 16)

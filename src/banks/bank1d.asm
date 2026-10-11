@@ -4153,7 +4153,7 @@ Func_01D_5D84:: ; address name
     ret
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB
-; 29 call sites from 29 routines (e.g. ScriptCommandEF_Run_Case05_Case0F, ScriptCommandEF_Run_Case05_Case12_Case06, GetListEntriesCell4AddressWithSRAM, ScriptCommandEF_Run_Shared01, ...)
+; 28 call sites from 28 routines (e.g. ScriptCommandEF_Run_Case05_Case0F, ScriptCommandEF_Run_Case05_Case12_Case06, GetListEntriesCell4AddressWithSRAM, ScriptCommandEF_Run_Shared01, ...)
 ; reads: wListPageIndex, wListCursor
 ; writes: wArg5, wArg6
 ; points at: wListEntries

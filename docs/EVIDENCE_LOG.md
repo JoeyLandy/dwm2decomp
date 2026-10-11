@@ -2442,7 +2442,11 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - It queued 25 copies, for example the GetBattle* stubs at $4006-$401A in banks $A1 and $A3, GetBattleDEF_BankE2, Multiply24By8_BankA0, and a bank-$E0 copy of the bank-0 routine at $2E98.
   - A first version that tried every uncovered byte seeded inside a run of 6-byte target routines in bank $39 and broke ChooseTarget_BeastCut; limiting it to fall-through candidates fixed that.
 - **Generator: name_copies.** A copy takes its source routine's name with its own bank suffix; a second copy in the same bank adds its address.
-- Binary verification: build/run248 PASS, 0 differing bytes; `tools/rank_unnamed.py` reports 0 address-only routines.
+- **Relocated copies.** The match compares whole instructions over 16 bytes. A 16-bit operand into the switchable window (other than `ld bc`, usually a count) counts as its offset from the routine start, so a block copied to another address still matches.
+  - Example: bank $E2's copy of the E-0205 block loads its mask table at $6932 instead of $408A.
+- **Block extension.** After a match, the source's later routine entries (up to $200 bytes on) are tried at the same distance. This reaches routines that follow a small table rather than a terminator.
+- **Result.** 55 copies queued, and bank $E2 has no INCBIN left. Unidentified INCBIN is 34,739 bytes.
+- Binary verification: build/run248 PASS, then build/run250 PASS with relocation and block extension, 0 differing bytes; tests OK; `tools/rank_unnamed.py` reports 0 address-only routines.
 
 ### E-0211 — Monster pedigree tables (bank $0C)
 
