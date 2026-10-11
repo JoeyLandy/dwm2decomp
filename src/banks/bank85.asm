@@ -4372,7 +4372,7 @@ Jump_085_5A98::
 ; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG, hTemp0
 ; points at: wPartyList
-Talk04CB_ThatKeyIUsed_Sub01:: ; heuristic: follows a terminator; C0
+Talk04CB_ThatKeyIUsed_Sub01::
 Func_085_5A9D:: ; address name
     ld a, [wPartyCount]
     or a, a
@@ -4451,7 +4451,7 @@ Data_085_5B00:: ; heuristic: target of a monotone pointer table; C0
     db $74, $01, $00, $00
 
 ; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wD09D into hFFC6/hFFC7 (E-0122)
-; 13 call sites from 8 routines (e.g. DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case19, TalkMsg0A3C_KingIfYouSee, TalkMsg0512_KamehaYo0Thanks, ...)
+; 14 call sites from 9 routines (e.g. Func_004_5616_Case0A, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case19, TalkMsg0A3C_KingIfYouSee, ...)
 ; writes: hTemp0, hTemp1
 ; points at: wWorkBuf
 TotalSpeciesFlaggedOrListed::
@@ -4474,7 +4474,7 @@ Jump_085_5B12::
     ret
 
 ; hFFC6 = 1 when a used key entry has kind hFFC6, else 0 (E-0125)
-; 4 call sites from 3 routines (e.g. TalkMsg0512_KamehaYo0Thanks, ScriptCommand72_Run_Case01, ScriptCommand71_Run_Case01)
+; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, DispatchTalkEvent_Case01_CaseDB, ScriptCommand72_Run_Case01, ScriptCommand71_Run_Case01)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wKeyList
@@ -4874,9 +4874,9 @@ Jump_085_5DE7::
     ret
 
 ; copies the 48-byte preset $5E11, $5E41 or $5E71 (C = 0, 1, other) to wSpeciesFlags (E-0124)
-; no direct call (reached through a table, a jump or a vector)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_CaseE6)
 ; points at: wSpeciesFlags
-LoadSpeciesFlagsPresetC:: ; heuristic: follows a terminator; C0
+LoadSpeciesFlagsPresetC::
 Func_085_5DF5:: ; address name
     ld a, c
     ld de, $5E11

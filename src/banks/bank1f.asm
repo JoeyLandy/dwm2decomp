@@ -2720,7 +2720,33 @@ Script_1F_7871:: ; heuristic: event script entry or jump target; C0
 Script_1F_7877:: ; heuristic: event script entry or jump target; C0
     script_command $F8
     script_jump Script_1F_77F7
-    db $F6, $F6, $E4, $11, $07, $00, $F6, $00, $02, $80, $F6, $FF, $00, $05, $C0, $00
-    db $04, $C0, $07, $7C, $78, $00, $03, $C0, $F6, $E4, $09, $00, $F6, $00, $04, $C0
-    db $F6, $07, $7C, $78, $F6, $00, $03, $C0, $F6, $07, $93, $78
+Script_1F_787B:: ; heuristic: event script entry or jump target; C0
+    script_command $F6
+Script_1F_787C:: ; heuristic: event script entry or jump target; C0
+    script_command $F6
+    script_choice_jump Script_1F_7890, Script_1F_7887, Script_1F_7881
+Script_1F_7881:: ; heuristic: event script entry or jump target; C0
+    script_command $F6
+    script_message $8002 ; 'Cobi 0! Papa's calling. He's at'
+    script_command $F6
+    script_end
+Script_1F_7887:: ; heuristic: event script entry or jump target; C0
+    script_message $C005 ; 'Tara Hurry! Papa will be angry!'
+    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_jump Script_1F_787C
+Script_1F_7890:: ; heuristic: event script entry or jump target; C0
+    script_message $C003 ; 'Tara There you are, big brother!'
+Script_1F_7893:: ; heuristic: event script entry or jump target; C0
+    script_command $F6
+    script_choice_jump Script_1F_789F, Script_1F_7897
+Script_1F_7897:: ; heuristic: event script entry or jump target; C0
+    script_command $F6
+    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_command $F6
+    script_jump Script_1F_787C
+Script_1F_789F:: ; heuristic: event script entry or jump target; C0
+    script_command $F6
+    script_message $C003 ; 'Tara There you are, big brother!'
+    script_command $F6
+    script_jump Script_1F_7893
     ds $759, $00

@@ -2,7 +2,7 @@ SECTION "Bank 13", ROMX[$4000], BANK[$13]
     db $13
 
 ; starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
-; 697 call sites from 339 routines (e.g. DispatchTalkEvent_Case01_Case7F, DispatchTalkEvent_Case01_Case7E, DispatchTalkEvent_Case01_Case7D, DispatchTalkEvent_Case01_Case7C, ...)
+; 783 call sites from 406 routines (e.g. Talk0D90_HumphImTerry, Talk0B6D_BreedingFireAndIce, Talk0B56_WhenYouBreedMonsters, DispatchTalkEvent_Case01_CaseEE, ...)
 ; writes: wScriptParam0, wScriptParam1, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 StartMessageCommand09HL_B13::
 Func_013_4001:: ; address name
@@ -24,7 +24,7 @@ Func_013_4001:: ; address name
     ret
 
 ; starts a message through script command $0A: DE is stored in wMessageIndex (low) and wMessageGroup (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
-; 33 call sites from 33 routines (e.g. DispatchTalkEvent_Case01_Case79, DispatchTalkEvent_Case01_Case63, DispatchTalkEvent_Case04_Case5C, DispatchTalkEvent_Case04_Case47, ...)
+; 36 call sites from 36 routines (e.g. Msg013F_TheCircusMasterWas, Msg013E_OurKingHasBeen, Msg013D_StrongMonstersAreIn, Msg013C_ISawALake, ...)
 ; writes: wMessageIndex, wMessageGroup, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 StartMessageScriptDE_B13::
 Func_013_4025:: ; address name
@@ -46,7 +46,7 @@ Func_013_4025:: ; address name
     ret
 
 ; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)
-; 215 call sites from 113 routines (e.g. DispatchTalkEvent_Case08, DispatchTalkEvent_Case01_Case7F, DispatchTalkEvent_Case01_Case77, DispatchTalkEvent_Case01_Case72, ...)
+; 252 call sites from 135 routines (e.g. DispatchTalkEvent_Case08, IfFlag0021StartScript5988, Talk0D90_HumphImTerry, Talk0B6D_BreedingFireAndIce, ...)
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
 StartScriptAtHL_B13::
 Func_013_4049:: ; address name
@@ -313,7 +313,8 @@ Jump_013_4134:: ; address name
     dw DispatchTalkEvent_Case05_Case6E
     dw DispatchTalkEvent_Case05_Case6F
     dw DispatchTalkEvent_Case05_Case70
-    db $00, $00, $D5, $49
+    dw $0000 ; unused index (E-0207)
+    dw ToggleMapBetween7FAnd92
 
 ; entry 0 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
@@ -1837,8 +1838,8 @@ Jump_013_49CE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapToggleRequest, hMapId
 ; writes: wMapToggleRequest, hMapId, wWarpDestX, wWarpDestY, wJoypadHeld, wJoypadPressed, wWarpDestFacing, wMapToggleFlag, ...
-ToggleMapBetween7FAnd92:: ; heuristic: follows a terminator; C0
-Func_013_49D5:: ; address name
+ToggleMapBetween7FAnd92::
+Jump_013_49D5:: ; address name
     ld a, [wMapToggleRequest]
     or a, a
     ret z
@@ -2015,40 +2016,40 @@ Jump_013_4A23:: ; address name
     dw DispatchTalkEvent_Case04_Case7D
     dw DispatchTalkEvent_Case04_Case7E
     dw DispatchTalkEvent_Case04_Case7F
-    dw Data_013_55CB
-    dw Data_013_55D7
-    dw Data_013_55DE
-    dw Data_013_55EA
-    dw Data_013_55F6
-    dw Data_013_55FD
-    dw Data_013_5604
-    dw Data_013_5610
-    dw Data_013_5617
-    dw Data_013_561E
-    dw Data_013_5625
-    dw Data_013_564A
+    dw DispatchTalkEvent_Case04_Case80
+    dw DispatchTalkEvent_Case04_Case81
+    dw DispatchTalkEvent_Case04_Case82
+    dw DispatchTalkEvent_Case04_Case83
+    dw DispatchTalkEvent_Case04_Case84
+    dw DispatchTalkEvent_Case04_Case85
+    dw DispatchTalkEvent_Case04_Case86
+    dw DispatchTalkEvent_Case04_Case87
+    dw DispatchTalkEvent_Case04_Case88
+    dw DispatchTalkEvent_Case04_Case89
+    dw DispatchTalkEvent_Case04_Case8A
+    dw DispatchTalkEvent_Case04_Case8B
     dw TalkMsg0DD7_OurHeartsAreLike
     dw Talk0DD8_QueenHelenIsWracked
     dw Talk0DD9_TheReceptionHallIs
     dw TalkMsg0DDA_OurQueenHelensPremonition
     dw TalkMsg0DDB_WhatIsItLeave
-    dw Data_013_5777
-    dw Data_013_577E
-    dw Data_013_5794
-    dw Data_013_579B
-    dw Data_013_579B
-    dw Data_013_57A2
-    dw Data_013_57A9
-    dw Data_013_57B0
-    dw Data_013_57B7
-    dw Data_013_5803
-    dw Data_013_581F
-    dw Data_013_5826
-    dw Data_013_585A
-    dw Data_013_586B
-    dw Data_013_5870
-    dw Data_013_5877
-    dw Data_013_5894
+    dw DispatchTalkEvent_Case04_Case91
+    dw DispatchTalkEvent_Case04_Case92
+    dw DispatchTalkEvent_Case04_Case93
+    dw DispatchTalkEvent_Case04_Case94
+    dw DispatchTalkEvent_Case04_Case94
+    dw DispatchTalkEvent_Case04_Case96
+    dw DispatchTalkEvent_Case04_Case97
+    dw DispatchTalkEvent_Case04_Case98
+    dw DispatchTalkEvent_Case04_Case99
+    dw DispatchTalkEvent_Case04_Case9A
+    dw DispatchTalkEvent_Case04_Case9B
+    dw DispatchTalkEvent_Case04_Case9C
+    dw DispatchTalkEvent_Case04_Case9D
+    dw DispatchTalkEvent_Case04_Case9E
+    dw DispatchTalkEvent_Case04_Case9F
+    dw DispatchTalkEvent_Case04_CaseA0
+    dw DispatchTalkEvent_Case04_CaseA1
     dw Msg01E9
     dw Msg01EA
     dw Msg01EB
@@ -2057,7 +2058,7 @@ Jump_013_4A23:: ; address name
     dw Msg01EE
     dw Msg01EF
     dw Msg01F0
-    db $33, $59
+    dw DispatchTalkEvent_Case04_CaseAA
 
 ; entry 0 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -4007,49 +4008,142 @@ Jump_013_55C4:: ; address name
     call StartScriptAtHL_B13
     ret
 
-Data_013_55CB:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $1F, $EA, $FE, $D7, $21, $D6, $5F, $CD, $49, $40, $C9
+; entry 128 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+DispatchTalkEvent_Case04_Case80::
+Jump_013_55CB:: ; address name
+    ld a, $1F
+    ld [wDataBank], a
+    ld hl, Script_5FD6
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_55D7:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $E6, $5F, $CD, $49, $40, $C9
+; entry 129 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case81::
+Jump_013_55D7:: ; address name
+    ld hl, Script_5FE6
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_55DE:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $1F, $EA, $FE, $D7, $21, $D6, $5F, $CD, $49, $40, $C9
+; entry 130 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+DispatchTalkEvent_Case04_Case82::
+Jump_013_55DE:: ; address name
+    ld a, $1F
+    ld [wDataBank], a
+    ld hl, Script_5FD6
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_55EA:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $1F, $EA, $FE, $D7, $21, $D6, $5F, $CD, $49, $40, $C9
+; entry 131 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+DispatchTalkEvent_Case04_Case83::
+Jump_013_55EA:: ; address name
+    ld a, $1F
+    ld [wDataBank], a
+    ld hl, Script_5FD6
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_55F6:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $13, $03, $CD, $01, $40, $C9
+; entry 132 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case84::
+Jump_013_55F6:: ; address name
+    ld hl, $0313
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_55FD:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $12, $03, $CD, $01, $40, $C9
+; entry 133 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case85::
+Jump_013_55FD:: ; address name
+    ld hl, $0312
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_5604:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $1F, $5F, $CD, $49, $40, $3E, $10, $EA, $FE, $D7, $C9
+; entry 134 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; writes: wDataBank
+DispatchTalkEvent_Case04_Case86::
+Jump_013_5604:: ; address name
+    ld hl, Script_5F1F
+    call StartScriptAtHL_B13
+    ld a, $10
+    ld [wDataBank], a
+    ret
 
-Data_013_5610:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $B8, $03, $CD, $01, $40, $C9
+; entry 135 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case87::
+Jump_013_5610:: ; address name
+    ld hl, $03B8
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_5617:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $AC, $03, $CD, $01, $40, $C9
+; entry 136 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case88::
+Jump_013_5617:: ; address name
+    ld hl, $03AC
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_561E:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $96, $03, $CD, $01, $40, $C9
+; entry 137 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case89::
+Jump_013_561E:: ; address name
+    ld hl, $0396
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_5625:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $E2, $01, $CD, $1B, $18, $38, $16, $11, $9D, $00, $CD, $1B, $18, $38, $07
-    db $21, $B9, $03, $CD, $01, $40, $C9, $21, $E3, $0A, $CD, $01, $40, $C9, $21, $FB
-    db $0A, $CD, $01, $40, $C9
+; entry 138 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case8A::
+Jump_013_5625:: ; address name
+    ld de, $01E2
+    call TestFlagBit
+    jr c, Jump_013_5643
+    ld de, $009D
+    call TestFlagBit
+    jr c, Jump_013_563C
+    ld hl, $03B9
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_564A:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $E2, $01, $CD, $1B, $18, $38, $07, $21, $D6, $0D, $CD, $01, $40, $C9, $21
-    db $FC, $0A, $CD, $01, $40, $C9
+Jump_013_563C::
+    ld hl, $0AE3
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_5643::
+    ld hl, $0AFB
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 139 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case8B::
+Jump_013_564A:: ; address name
+    ld de, $01E2
+    call TestFlagBit
+    jr c, Jump_013_5659
+    ld hl, $0DD6
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_5659::
+    ld hl, $0AFC
+    call StartMessageCommand09HL_B13
+    ret
 
 ; tests story flags in turn (flag $01E2 set: jr to Jump_013_567E; flag $009D set: jr to Jump_013_5677); when none of them branches, starts message $0DD7 through StartMessageCommand09HL_B13 (script command $09); that string begins 'Our hearts are like the skies' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0DD7_OurHeartsAreLike:: ; heuristic: target of a pointer table; C0
-Func_013_5660:: ; address name
+TalkMsg0DD7_OurHeartsAreLike::
+Jump_013_5660:: ; address name
     ld de, $01E2
     call TestFlagBit
     jr c, Jump_013_567E
@@ -4074,8 +4168,8 @@ Jump_013_567E::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-Talk0DD8_QueenHelenIsWracked:: ; heuristic: target of a pointer table; C0
-Func_013_5685:: ; address name
+Talk0DD8_QueenHelenIsWracked::
+Jump_013_5685:: ; address name
     ld de, $01E2
     call TestFlagBit
     jr c, Jump_013_56E8
@@ -4133,8 +4227,8 @@ Jump_013_56E8::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0DD9, whose string begins 'The reception hall is beyond here.'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Talk0DD9_TheReceptionHallIs:: ; heuristic: target of a pointer table; C0
-Func_013_56EF:: ; address name
+Talk0DD9_TheReceptionHallIs::
+Jump_013_56EF:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_56FF
@@ -4154,8 +4248,8 @@ Jump_013_5706::
 
 ; tests story flags in turn (flag $01E2 set: jr to Jump_013_572B; flag $009D set: jr to Jump_013_5724); when none of them branches, starts message $0DDA through StartMessageCommand09HL_B13 (script command $09); that string begins 'Our Queen Helen's premonition made it' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0DDA_OurQueenHelensPremonition:: ; heuristic: target of a pointer table; C0
-Func_013_570D:: ; address name
+TalkMsg0DDA_OurQueenHelensPremonition::
+Jump_013_570D:: ; address name
     ld de, $01E2
     call TestFlagBit
     jr c, Jump_013_572B
@@ -4179,8 +4273,8 @@ Jump_013_572B::
 ; tests story flags in turn (flag $01E5 set: jr to Jump_013_5770; flag $01E2 set: jr to Jump_013_5769; flag $01E1 set: jr to Jump_013_575E; flag $01F1 set: jr to Jump_013_5759); when none of them branches, starts message $0DDB through StartMessageCommand09HL_B13 (script command $09); that string begins 'What is it? Leave at once!' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
-TalkMsg0DDB_WhatIsItLeave:: ; heuristic: target of a pointer table; C0
-Func_013_5732:: ; address name
+TalkMsg0DDB_WhatIsItLeave::
+Jump_013_5732:: ; address name
     ld de, $01E5
     call TestFlagBit
     jr c, Jump_013_5770
@@ -4219,67 +4313,247 @@ Jump_013_5770::
     call StartMessageCommand09HL_B13
     ret
 
-Data_013_5777:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $FF, $00, $CD, $01, $40, $C9
+; entry 145 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case91::
+Jump_013_5777:: ; address name
+    ld hl, $00FF
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_577E:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $E5, $01, $CD, $1B, $18, $38, $07, $21, $DC, $0D, $CD, $01, $40, $C9, $21
-    db $24, $0D, $CD, $01, $40, $C9
+; entry 146 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case92::
+Jump_013_577E:: ; address name
+    ld de, $01E5
+    call TestFlagBit
+    jr c, Jump_013_578D
+    ld hl, $0DDC
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_5794:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $DD, $0D, $CD, $01, $40, $C9
+Jump_013_578D::
+    ld hl, $0D24
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_579B:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $C0, $0A, $CD, $01, $40, $C9
+; entry 147 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case93::
+Jump_013_5794:: ; address name
+    ld hl, $0DDD
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_57A2:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $C1, $0A, $CD, $01, $40, $C9
+; entry 148 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case94::
+Jump_013_579B:: ; address name
+    ld hl, $0AC0
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_57A9:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $BC, $0A, $CD, $01, $40, $C9
+; entry 150 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case96::
+Jump_013_57A2:: ; address name
+    ld hl, $0AC1
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_57B0:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $4A, $5F, $CD, $49, $40, $C9
+; entry 151 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case97::
+Jump_013_57A9:: ; address name
+    ld hl, $0ABC
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_57B7:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $04D7B7, $4C
+; entry 152 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case98::
+Jump_013_57B0:: ; address name
+    ld hl, Script_5F4A
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_5803:: ; heuristic: target of a monotone pointer table; C0
-    db $FA, $9A, $CB, $FE, $80, $20, $0E, $FA, $9B, $CB, $FE, $10, $20, $07, $21, $CE
-    db $0A, $CD, $01, $40, $C9, $21, $AD, $5F, $CD, $49, $40, $C9
+; entry 153 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case99::
+Jump_013_57B7:: ; address name
+    ld de, $009A
+    call TestFlagBit
+    jr c, Jump_013_57E1
+    ld de, $0096
+    call TestFlagBit
+    jr c, Jump_013_57CE
+    ld hl, Script_5F4C
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_581F:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $16, $0A, $CD, $01, $40, $C9
+Jump_013_57CE::
+    call InventoryHasFreeSlotCheck_Bank13
+    jr nc, Jump_013_57DA
+    ld hl, Script_5F54
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_5826:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $9F, $00, $CD, $1B, $18, $38, $02, $18, $07, $21, $E8, $0A, $CD, $01, $40
-    db $C9, $CD, $94, $7F, $30, $17, $36, $34, $FA, $36, $C8, $CB, $F7, $EA, $36, $C8
-    db $21, $E7, $0A, $CD, $01, $40, $11, $9F, $00, $CD, $45, $18, $C9, $21, $E9, $0A
-    db $CD, $01, $40, $C9
+Jump_013_57DA::
+    ld hl, Script_5F6C
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_585A:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $03, $EA, $21, $C9, $3E, $00, $EA, $22, $C9, $11, $E0, $01, $CD, $25, $40
-    db $C9
+Jump_013_57E1::
+    ld de, $0096
+    call TestFlagBit
+    jr c, Jump_013_57F0
+    ld hl, Script_5F7D
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_586B:: ; heuristic: target of a monotone pointer table; C0
-    db $AF, $EA, $A6, $CB, $C9
+Jump_013_57F0::
+    call InventoryHasFreeSlotCheck_Bank13
+    jr nc, Jump_013_57FC
+    ld hl, Script_5F82
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_5870:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $D2, $5F, $CD, $49, $40, $C9
+Jump_013_57FC::
+    ld hl, Script_5F97
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_5877:: ; heuristic: target of a monotone pointer table; C0
-    db $CD, $94, $7F, $38, $07, $21, $27, $0D, $CD, $01, $40, $C9, $36, $32, $FA, $36
-    db $C8, $CB, $F7, $EA, $36, $C8, $21, $DD, $5F, $CD, $49, $40, $C9
+; entry 154 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; reads: wObject1
+DispatchTalkEvent_Case04_Case9A::
+Jump_013_5803:: ; address name
+    ld a, [wObject1 + $B]
+    cp a, $80
+    jr nz, Jump_013_5818
+    ld a, [wObject1 + $C]
+    cp a, $10
+    jr nz, Jump_013_5818
+    ld hl, $0ACE
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_5894:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $32, $E0, $C6, $21, $CE, $7D, $06, $12, $D7, $21, $F1, $7D, $06, $12, $D7
-    db $21, $D4, $5F, $CD, $49, $40, $C9
+Jump_013_5818::
+    ld hl, Script_5FAD
+    call StartScriptAtHL_B13
+    ret
+
+; entry 155 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case9B::
+Jump_013_581F:: ; address name
+    ld hl, $0A16
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 156 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; reads: wGameFlags836
+; writes: wGameFlags836
+DispatchTalkEvent_Case04_Case9C::
+Jump_013_5826:: ; address name
+    ld de, $009F
+    call TestFlagBit
+    jr c, Jump_013_5830
+    jr Jump_013_5837
+
+Jump_013_5830::
+    ld hl, $0AE8
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_5837::
+    call InventoryHasFreeSlotCheck_Bank13
+    jr nc, Jump_013_5853
+    ld [hl], $34
+    ld a, [wGameFlags836]
+    set 6, a
+    ld [wGameFlags836], a
+    ld hl, $0AE7
+    call StartMessageCommand09HL_B13
+    ld de, $009F
+    call SetFlagBit
+    ret
+
+Jump_013_5853::
+    ld hl, $0AE9
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 157 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+DispatchTalkEvent_Case04_Case9D::
+Jump_013_585A:: ; address name
+    ld a, $03
+    ld [wScriptParam0], a
+    ld a, $00
+    ld [wScriptParam1], a
+    ld de, $01E0
+    call StartMessageScriptDE_B13
+    ret
+
+; entry 158 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; writes: wObject2
+DispatchTalkEvent_Case04_Case9E::
+Jump_013_586B:: ; address name
+    xor a, a
+    ld [wObject2 + $7], a
+    ret
+
+; entry 159 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_Case9F::
+Jump_013_5870:: ; address name
+    ld hl, Script_5FD2
+    call StartScriptAtHL_B13
+    ret
+
+; entry 160 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; reads: wGameFlags836
+; writes: wGameFlags836
+DispatchTalkEvent_Case04_CaseA0::
+Jump_013_5877:: ; address name
+    call InventoryHasFreeSlotCheck_Bank13
+    jr c, Jump_013_5883
+    ld hl, $0D27
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_5883::
+    ld [hl], $32
+    ld a, [wGameFlags836]
+    set 6, a
+    ld [wGameFlags836], a
+    ld hl, Script_5FDD
+    call StartScriptAtHL_B13
+    ret
+
+; entry 161 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+; writes: hTemp0
+DispatchTalkEvent_Case04_CaseA1::
+Jump_013_5894:: ; address name
+    ld a, $32
+    ldh [hTemp0], a
+    farcall FindTemp0InInventoryList
+    farcall RemoveInventorySlotShiftDown
+    ld hl, Script_5FD4
+    call StartScriptAtHL_B13
+    ret
 
 ; wScriptParam0 = 00, wScriptParam1 = 25, then StartMessageScriptDE_B13 with DE = $01E9: starts message group 1, string $E9; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01E9:: ; heuristic: target of a pointer table; C0
-Func_013_58AB:: ; address name
+Msg01E9::
+Jump_013_58AB:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $25
@@ -4291,8 +4565,8 @@ Func_013_58AB:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 41, then StartMessageScriptDE_B13 with DE = $01EA: starts message group 1, string $EA; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01EA:: ; heuristic: target of a pointer table; C0
-Func_013_58BC:: ; address name
+Msg01EA::
+Jump_013_58BC:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $41
@@ -4304,8 +4578,8 @@ Func_013_58BC:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 52, then StartMessageScriptDE_B13 with DE = $01EB: starts message group 1, string $EB; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01EB:: ; heuristic: target of a pointer table; C0
-Func_013_58CD:: ; address name
+Msg01EB::
+Jump_013_58CD:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $52
@@ -4317,8 +4591,8 @@ Func_013_58CD:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 17, then StartMessageScriptDE_B13 with DE = $01EC: starts message group 1, string $EC; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01EC:: ; heuristic: target of a pointer table; C0
-Func_013_58DE:: ; address name
+Msg01EC::
+Jump_013_58DE:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $17
@@ -4330,8 +4604,8 @@ Func_013_58DE:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 23, then StartMessageScriptDE_B13 with DE = $01ED: starts message group 1, string $ED; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01ED:: ; heuristic: target of a pointer table; C0
-Func_013_58EF:: ; address name
+Msg01ED::
+Jump_013_58EF:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $23
@@ -4343,8 +4617,8 @@ Func_013_58EF:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 5D, then StartMessageScriptDE_B13 with DE = $01EE: starts message group 1, string $EE; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01EE:: ; heuristic: target of a pointer table; C0
-Func_013_5900:: ; address name
+Msg01EE::
+Jump_013_5900:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5D
@@ -4356,8 +4630,8 @@ Func_013_5900:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 5B, then StartMessageScriptDE_B13 with DE = $01EF: starts message group 1, string $EF; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01EF:: ; heuristic: target of a pointer table; C0
-Func_013_5911:: ; address name
+Msg01EF::
+Jump_013_5911:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5B
@@ -4369,8 +4643,8 @@ Func_013_5911:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 1E, then StartMessageScriptDE_B13 with DE = $01F0: starts message group 1, string $F0; on the normal ShowMessageHL path the string is empty (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01F0:: ; heuristic: target of a pointer table; C0
-Func_013_5922:: ; address name
+Msg01F0::
+Jump_013_5922:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $1E
@@ -4378,7 +4652,14 @@ Func_013_5922:: ; address name
     ld de, $01F0
     call StartMessageScriptDE_B13
     ret
-    db $21, $C9, $5F, $CD, $49, $40, $C9
+
+; entry 170 of the `rst $00` table in DispatchTalkEvent_Case04
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case04_CaseAA::
+Jump_013_5933:: ; address name
+    ld hl, Script_5FC9
+    call StartScriptAtHL_B13
+    ret
 
 ; entry 8 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
@@ -4523,12 +4804,15 @@ Jump_013_5941:: ; address name
     dw DispatchTalkEvent_Case01_Case7D
     dw DispatchTalkEvent_Case01_Case7E
     dw DispatchTalkEvent_Case01_Case7F
-    db $D2, $70
+    dw DispatchTalkEvent_Case01_Case80
     dw TalkMsg0A3C_KingIfYouSee
     dw TalkMsg0A3E_YoureFreeToGo
     dw TalkMsg0A3F_TheKingAndPrinces
     dw Talk0A41_ThisIsGreatLogCastle
-    db $39, $73, $40, $73, $56, $73, $5D, $73
+    dw DispatchTalkEvent_Case01_Case85
+    dw DispatchTalkEvent_Case01_Case86
+    dw DispatchTalkEvent_Case01_Case87
+    dw DispatchTalkEvent_Case01_Case88
     dw Talk0A49_BreedingCouldResultIn
     dw TalkMsg0A4A_FromUpHerePeople
     dw Msg0126_WarubouThereYourPartys
@@ -4537,7 +4821,13 @@ Jump_013_5941:: ; address name
     dw Talk04BA_IfYouGetAn
     dw Talk04CB_ThatKeyIUsed
     dw Talk04CE_HeroCheckedTheShelf
-    db $1F, $75, $26, $75, $72, $75, $79, $75, $80, $75, $80, $75, $80, $75
+    dw DispatchTalkEvent_Case01_Case91
+    dw DispatchTalkEvent_Case01_Case92
+    dw DispatchTalkEvent_Case01_Case93
+    dw DispatchTalkEvent_Case01_Case94
+    dw DispatchTalkEvent_Case01_Case95
+    dw DispatchTalkEvent_Case01_Case95
+    dw DispatchTalkEvent_Case01_Case95
     dw TalkMsg0504_IfTheIslandSink
     dw TalkMsg0512_KamehaYo0Thanks
     dw Msg011B_HmAreYouA
@@ -4545,86 +4835,87 @@ Jump_013_5941:: ; address name
     dw Talk04C0_AllRightyWellDo
     dw Talk0276_IfYouWantTo
     dw StartScript5709Or56F5IfFlagD1
-    dw Data_013_7727
-    dw Data_013_774B
-    dw Data_013_7752
-    dw Data_013_7759
-    dw Data_013_7760
-    dw Data_013_7767
-    dw Data_013_7788
-    dw Data_013_778F
-    dw Data_013_77A0
-    dw Data_013_77B6
+    dw DispatchTalkEvent_Case01_Case9F
+    dw DispatchTalkEvent_Case01_CaseA0
+    dw DispatchTalkEvent_Case01_CaseA1
+    dw DispatchTalkEvent_Case01_CaseA2
+    dw DispatchTalkEvent_Case01_CaseA3
+    dw DispatchTalkEvent_Case01_CaseA4
+    dw DispatchTalkEvent_Case01_CaseA5
+    dw DispatchTalkEvent_Case01_CaseA6
+    dw DispatchTalkEvent_Case01_CaseA7
+    dw DispatchTalkEvent_Case01_CaseA8
     dw Talk0043_HeroCheckedTheOdd
     dw Talk0036_ThereWereManyWild
     dw Talk0037_HeroTriedToOpen
     dw StartScript5660WithBank0E
     dw TalkMsg0268_YepShesTakingGood
-    dw Data_013_7852
-    dw Data_013_7859
-    dw Data_013_7860
-    dw Data_013_7876
-    dw Data_013_787D
-    dw Data_013_78A2
-    dw Data_013_78B9
-    dw Data_013_78D0
-    dw Data_013_78D7
+    dw DispatchTalkEvent_Case01_CaseAE
+    dw DispatchTalkEvent_Case01_CaseAF
+    dw DispatchTalkEvent_Case01_CaseB0
+    dw DispatchTalkEvent_Case01_CaseB1
+    dw DispatchTalkEvent_Case01_CaseB2
+    dw DispatchTalkEvent_Case01_CaseB3
+    dw DispatchTalkEvent_Case01_CaseB4
+    dw DispatchTalkEvent_Case01_CaseB5
+    dw DispatchTalkEvent_Case01_CaseB6
     dw Talk08D1_TheEvaluatorSaidI
     dw Talk04D2_UpAheadIsThe
     dw TalkMsg021F_DoYouKnowAbout
     dw TalkMsg0220_InOtherWorldsYoull
     dw TalkMsg027F_ItsNotEasyTo
     dw TalkMsg0280_MamaIsABig
-    dw Data_013_799A
-    dw Data_013_79A1
-    dw Data_013_79A8
-    dw Data_013_79AF
-    dw Data_013_79B6
-    dw Data_013_79BD
-    dw Data_013_79C4
-    dw Data_013_79DA
-    dw Data_013_79F0
-    dw Data_013_79F7
-    dw Data_013_79FE
-    dw Data_013_7A0F
-    dw Data_013_7A16
-    dw Data_013_7A1D
-    dw Data_013_7A2E
-    dw Data_013_7A35
-    dw Data_013_7A4A
-    dw Data_013_7A93
+    dw DispatchTalkEvent_Case01_CaseBD
+    dw DispatchTalkEvent_Case01_CaseBE
+    dw DispatchTalkEvent_Case01_CaseBF
+    dw DispatchTalkEvent_Case01_CaseC0
+    dw DispatchTalkEvent_Case01_CaseC1
+    dw DispatchTalkEvent_Case01_CaseC2
+    dw DispatchTalkEvent_Case01_CaseC3
+    dw DispatchTalkEvent_Case01_CaseC4
+    dw DispatchTalkEvent_Case01_CaseC5
+    dw DispatchTalkEvent_Case01_CaseC6
+    dw DispatchTalkEvent_Case01_CaseC7
+    dw DispatchTalkEvent_Case01_CaseC8
+    dw DispatchTalkEvent_Case01_CaseC9
+    dw DispatchTalkEvent_Case01_CaseCA
+    dw DispatchTalkEvent_Case01_CaseCB
+    dw DispatchTalkEvent_Case01_CaseCC
+    dw DispatchTalkEvent_Case01_CaseCD
+    dw DispatchTalkEvent_Case01_CaseCE
     dw Talk00FC_YouHaveToEat
     dw TalkMsg0A74_TheMedalMasterWas
     dw IfFlag0023StartScript57A2
     dw Msg013C_ISawALake
     dw Msg013D_StrongMonstersAreIn
     dw TalkMsg0A35_ImABugSo
-    db $04, $7B
+    dw DispatchTalkEvent_Case01_CaseD5
     dw TalkMsg0A68_MyEmyuIsVery
     dw TalkMsg0A6B_MonstersLookSoFrightening
     dw Talk0A40_PleaseEnterTheKing
     dw TalkMsg0A4B_OnTheHorizonYou
-    dw Data_013_7B8A
-    dw Data_013_7B91
-    dw Data_013_7CF7
-    dw Data_013_7CFE
-    dw Data_013_7D05
-    dw Data_013_7D0C
-    dw Data_013_7D13
-    dw Data_013_7D1A
-    dw Data_013_7D21
-    dw Data_013_7D28
-    dw Data_013_7D2F
-    dw Data_013_7D45
-    dw Data_013_7D65
-    dw Data_013_7D8C
-    db $00, $00
+    dw DispatchTalkEvent_Case01_CaseDA
+    dw DispatchTalkEvent_Case01_CaseDB
+    dw DispatchTalkEvent_Case01_CaseDC
+    dw DispatchTalkEvent_Case01_CaseDD
+    dw DispatchTalkEvent_Case01_CaseDE
+    dw DispatchTalkEvent_Case01_CaseDF
+    dw DispatchTalkEvent_Case01_CaseE0
+    dw DispatchTalkEvent_Case01_CaseE1
+    dw DispatchTalkEvent_Case01_CaseE2
+    dw DispatchTalkEvent_Case01_CaseE3
+    dw DispatchTalkEvent_Case01_CaseE4
+    dw DispatchTalkEvent_Case01_CaseE5
+    dw DispatchTalkEvent_Case01_CaseE6
+    dw DispatchTalkEvent_Case01_CaseE7
+    dw $0000 ; unused index (E-0207)
     dw TalkMsg029B_IFoundAKey
     dw Talk0DE3_TheSeaIsHuge
     dw TalkMsg0220_InOtherWorldsYoull_7DC5
     dw Msg013E_OurKingHasBeen
     dw Msg013F_TheCircusMasterWas
-    db $FD, $7D, $00, $00
+    dw DispatchTalkEvent_Case01_CaseEE
+    dw $0000 ; unused index (E-0207)
     dw Talk0B56_WhenYouBreedMonsters
     dw Talk0B6D_BreedingFireAndIce
     dw Talk0D90_HumphImTerry
@@ -8073,14 +8364,21 @@ Jump_013_70CB::
     ld hl, Script_5652
     call StartScriptAtHL_B13
     ret
-    db $21, $39, $0A, $CD, $01, $40, $C9
+
+; entry 128 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case80::
+Jump_013_70D2:: ; address name
+    ld hl, $0A39
+    call StartMessageCommand09HL_B13
+    ret
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7122; flag $00D1 set: jr to Jump_013_711B; flag $0024 set: jp to Jump_013_70F9); when none of them branches, starts message $0A3C through StartMessageCommand09HL_B13 (script command $09); that string begins 'King If you see Kameha again,' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1, hTemp0
 ; writes: hTemp0, hTemp1
-TalkMsg0A3C_KingIfYouSee:: ; heuristic: target of a pointer table; C0
-Func_013_70D9:: ; address name
+TalkMsg0A3C_KingIfYouSee::
+Jump_013_70D9:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7122
@@ -8291,8 +8589,8 @@ Jump_013_7273::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7299; flag $0024 set: jp to Jump_013_7292); when none of them branches, starts message $0A3E through StartMessageCommand09HL_B13 (script command $09); that string begins 'You're free to go anywhere in' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A3E_YoureFreeToGo:: ; heuristic: target of a pointer table; C0
-Func_013_727A:: ; address name
+TalkMsg0A3E_YoureFreeToGo::
+Jump_013_727A:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7299
@@ -8351,8 +8649,8 @@ Jump_013_72E7::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_730D; flag $00D1 set: jr to Jump_013_7314; flag $0122 set: jr to Jump_013_730D); when none of them branches, starts message $0A3F through StartMessageCommand09HL_B13 (script command $09); that string begins 'The King and Prince's chamber is' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A3F_TheKingAndPrinces:: ; heuristic: target of a pointer table; C0
-Func_013_72EE:: ; address name
+TalkMsg0A3F_TheKingAndPrinces::
+Jump_013_72EE:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_730D
@@ -8378,8 +8676,8 @@ Jump_013_7314::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0A41, whose string begins 'This is GreatLog Castle. The reception'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Talk0A41_ThisIsGreatLogCastle:: ; heuristic: target of a pointer table; C0
-Func_013_731B:: ; address name
+Talk0A41_ThisIsGreatLogCastle::
+Jump_013_731B:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_732B
@@ -8396,15 +8694,52 @@ Jump_013_7332::
     ld hl, $0545
     call StartMessageCommand09HL_B13
     ret
-    db $21, $42, $0A, $CD, $01, $40, $C9, $11, $25, $00, $CD, $1B, $18, $38, $07, $21
-    db $43, $0A, $CD, $01, $40, $C9, $21, $52, $0B, $CD, $01, $40, $C9, $21, $44, $0A
-    db $CD, $01, $40, $C9, $21, $45, $0A, $CD, $01, $40, $C9
+
+; entry 133 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case85::
+Jump_013_7339:: ; address name
+    ld hl, $0A42
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 134 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case86::
+Jump_013_7340:: ; address name
+    ld de, $0025
+    call TestFlagBit
+    jr c, Jump_013_734F
+    ld hl, $0A43
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_734F::
+    ld hl, $0B52
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 135 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case87::
+Jump_013_7356:: ; address name
+    ld hl, $0A44
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 136 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case88::
+Jump_013_735D:: ; address name
+    ld hl, $0A45
+    call StartMessageCommand09HL_B13
+    ret
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0A49, whose string begins 'Breeding could result in monsters with'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-Talk0A49_BreedingCouldResultIn:: ; heuristic: target of a pointer table; C0
-Func_013_7364:: ; address name
+Talk0A49_BreedingCouldResultIn::
+Jump_013_7364:: ; address name
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld de, $0024
@@ -8447,8 +8782,8 @@ Jump_013_73B8::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_73DE; flag $0024 set: jp to Jump_013_73D7); when none of them branches, starts message $0A4A through StartMessageCommand09HL_B13 (script command $09); that string begins 'From up here people look like' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A4A_FromUpHerePeople:: ; heuristic: target of a pointer table; C0
-Func_013_73BF:: ; address name
+TalkMsg0A4A_FromUpHerePeople::
+Jump_013_73BF:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_73DE
@@ -8472,8 +8807,8 @@ Jump_013_73DE::
 ; wScriptParam0 = 01, wScriptParam1 = 47, then StartMessageScriptDE_B13 with DE = $0126: starts message group 1, string $26; on the normal ShowMessageHL path the string begins 'Warubou There, your party's fine! So,' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0126_WarubouThereYourPartys:: ; heuristic: target of a pointer table; C0
-Func_013_73E5:: ; address name
+Msg0126_WarubouThereYourPartys::
+Jump_013_73E5:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $47
@@ -8484,8 +8819,8 @@ Func_013_73E5:: ; address name
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7415; flag $0024 set: jp to Jump_013_740E); when none of them branches, starts message $0A4C through StartMessageCommand09HL_B13 (script command $09); that string begins 'GreatLog Castle was made by hollowing' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A4C_GreatLogCastleWasMade:: ; heuristic: target of a pointer table; C0
-Func_013_73F6:: ; address name
+TalkMsg0A4C_GreatLogCastleWasMade::
+Jump_013_73F6:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7415
@@ -8508,8 +8843,8 @@ Jump_013_7415::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_743A; flag $0024 set: jr to Jump_013_7433); when none of them branches, starts message $0A4D through StartMessageCommand09HL_B13 (script command $09); that string begins 'The island used to be lush' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A4D_TheIslandUsedTo:: ; heuristic: target of a pointer table; C0
-Func_013_741C:: ; address name
+TalkMsg0A4D_TheIslandUsedTo::
+Jump_013_741C:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_743A
@@ -8533,8 +8868,8 @@ Jump_013_743A::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $04BA, whose string begins 'If you get an EvilArmor, I'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-Talk04BA_IfYouGetAn:: ; heuristic: target of a pointer table; C0
-Func_013_7441:: ; address name
+Talk04BA_IfYouGetAn::
+Jump_013_7441:: ; address name
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld de, $011A
@@ -8556,8 +8891,8 @@ Jump_013_7463::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story flags and state; the first one in the code is $04CB, whose string begins 'That key, I used on my'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
-Talk04CB_ThatKeyIUsed:: ; heuristic: target of a pointer table; C0
-Func_013_746A:: ; address name
+Talk04CB_ThatKeyIUsed::
+Jump_013_746A:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7488
@@ -8631,8 +8966,8 @@ Jump_013_74EA::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $04CE, whose string begins '0 checked the shelf. 0 found'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
-Talk04CE_HeroCheckedTheShelf:: ; heuristic: target of a pointer table; C0
-Func_013_74F1:: ; address name
+Talk04CE_HeroCheckedTheShelf::
+Jump_013_74F1:: ; address name
     ld de, $011E
     call TestFlagBit
     jr c, Jump_013_7518
@@ -8655,12 +8990,83 @@ Jump_013_7518::
     ld hl, $04CC
     call StartMessageCommand09HL_B13
     ret
-    INCBIN "dwm2-cobi-us.gbc", $04F51F, $62
+
+; entry 145 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case91::
+Jump_013_751F:: ; address name
+    ld hl, $04CF
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 146 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptByte68
+; writes: wDataBank
+DispatchTalkEvent_Case01_Case92::
+Jump_013_7526:: ; address name
+    ld a, [wScriptByte68]
+    cp a, $01
+    jr nz, Jump_013_7534
+    ld hl, $0DC2
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_7534::
+    farcall SaveScreenBufferToBGMap1
+    ld a, $0D
+    ld [wDataBank], a
+    ld de, $0025
+    call TestFlagBit
+    jr c, Jump_013_7563
+    ld de, $011F
+    call TestFlagBit
+    jr c, Jump_013_755C
+    ld hl, Script_56AD
+    call StartScriptAtHL_B13
+    ld de, $011F
+    call SetFlagBit
+    ret
+
+Jump_013_755C::
+    ld hl, Script_56B7
+    call StartScriptAtHL_B13
+    ret
+
+Jump_013_7563::
+    ld de, $0113
+    call TestFlagBit
+    jr c, Jump_013_755C
+    ld hl, Script_56BE
+    call StartScriptAtHL_B13
+    ret
+
+; entry 147 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case93::
+Jump_013_7572:: ; address name
+    ld hl, $0299
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 148 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case94::
+Jump_013_7579:: ; address name
+    ld hl, $029A
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 149 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case95::
+Jump_013_7580:: ; address name
+    ret
 
 ; tests story flags in turn (flag $0025 set: jp to Jump_013_7591); when none of them branches, starts message $0504 through StartMessageCommand09HL_B13 (script command $09); that string begins 'If the island sink, is no' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0504_IfTheIslandSink:: ; heuristic: target of a pointer table; C0
-Func_013_7581:: ; address name
+TalkMsg0504_IfTheIslandSink::
+Jump_013_7581:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_7591
@@ -8677,8 +9083,8 @@ Jump_013_7591::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1, hTemp0
 ; writes: hTemp0, hTemp1
-TalkMsg0512_KamehaYo0Thanks:: ; heuristic: target of a pointer table; C0
-Func_013_7598:: ; address name
+TalkMsg0512_KamehaYo0Thanks::
+Jump_013_7598:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_75B6
@@ -8830,8 +9236,8 @@ Jump_013_76B6::
 ; wScriptParam0 = 00, wScriptParam1 = 11, then StartMessageScriptDE_B13 with DE = $011B: starts message group 1, string $1B; on the normal ShowMessageHL path the string begins 'Hm? Are you a master hopeful?' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg011B_HmAreYouA:: ; heuristic: target of a pointer table; C0
-Func_013_76BD:: ; address name
+Msg011B_HmAreYouA::
+Jump_013_76BD:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $11
@@ -8843,8 +9249,8 @@ Func_013_76BD:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 13, then StartMessageScriptDE_B13 with DE = $011C: starts message group 1, string $1C; on the normal ShowMessageHL path the string begins 'Oh, hi! Good to see you' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg011C_OhHiGoodTo:: ; heuristic: target of a pointer table; C0
-Func_013_76CE:: ; address name
+Msg011C_OhHiGoodTo::
+Jump_013_76CE:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $13
@@ -8856,8 +9262,8 @@ Func_013_76CE:: ; address name
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $04C0, whose string begins 'All righty! We'll do this again'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-Talk04C0_AllRightyWellDo:: ; heuristic: target of a pointer table; C0
-Func_013_76DF:: ; address name
+Talk04C0_AllRightyWellDo::
+Jump_013_76DF:: ; address name
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld de, $0129
@@ -8879,8 +9285,8 @@ Jump_013_7701::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0276, whose string begins 'If you want to enter, please'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank
-Talk0276_IfYouWantTo:: ; heuristic: target of a pointer table; C0
-Func_013_7708:: ; address name
+Talk0276_IfYouWantTo::
+Jump_013_7708:: ; address name
     ld a, [wArenaRank]
     cp a, $05
     jr z, Jump_013_7720
@@ -8900,13 +9306,18 @@ Jump_013_7720::
     call StartScriptAtHL_B13
     ret
 
-Data_013_7727:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $F2, $56, $CD, $49, $40, $C9
+; entry 159 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_Case9F::
+Jump_013_7727:: ; address name
+    ld hl, Script_56F2
+    call StartScriptAtHL_B13
+    ret
 
 ; map event: with story flag $D1 set, starts script $56F5 if flag 0 is set, else $5709 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-StartScript5709Or56F5IfFlagD1:: ; heuristic: target of a pointer table; C0
-Func_013_772E:: ; address name
+StartScript5709Or56F5IfFlagD1::
+Jump_013_772E:: ; address name
     ld de, $00D1
     call TestFlagBit
     ret nc
@@ -8922,41 +9333,100 @@ Jump_013_7744::
     call StartScriptAtHL_B13
     ret
 
-Data_013_774B:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $24, $00, $CD, $01, $40, $C9
+; entry 160 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseA0::
+Jump_013_774B:: ; address name
+    ld hl, $0024
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7752:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $25, $00, $CD, $01, $40, $C9
+; entry 161 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseA1::
+Jump_013_7752:: ; address name
+    ld hl, $0025
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7759:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $1D, $00, $CD, $01, $40, $C9
+; entry 162 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseA2::
+Jump_013_7759:: ; address name
+    ld hl, $001D
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7760:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $1C, $00, $CD, $01, $40, $C9
+; entry 163 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseA3::
+Jump_013_7760:: ; address name
+    ld hl, $001C
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7767:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $F8, $64, $06, $12, $D7, $21, $85, $5E, $06, $02, $D7, $21, $85, $5E, $06
-    db $02, $D7, $CD, $2B, $22, $21, $A8, $4A, $06, $04, $D7, $3E, $7F, $EA, $27, $C5
-    db $C9
+; entry 164 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; writes: wOBJPaletteUploadRequest
+DispatchTalkEvent_Case01_CaseA4::
+Jump_013_7767:: ; address name
+    farcall FullyHealParty
+    farcall MoveIncapacitatedPartyMembersBack
+    farcall MoveIncapacitatedPartyMembersBack
+    call LoadRecordListNameTiles
+    farcall LoadPlayerAndFollowerSpriteGraphics
+    ld a, $7F
+    ld [wOBJPaletteUploadRequest], a
+    ret
 
-Data_013_7788:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $37, $00, $CD, $01, $40, $C9
+; entry 165 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseA5::
+Jump_013_7788:: ; address name
+    ld hl, $0037
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_778F:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $17, $EA, $FB, $D7, $3E, $10, $EA, $FE, $D7, $21, $B3, $59, $CD, $49, $40
-    db $C9
+; entry 166 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScreenTableIndex, wDataBank
+DispatchTalkEvent_Case01_CaseA6::
+Jump_013_778F:: ; address name
+    ld a, $17
+    ld [wScreenTableIndex], a
+    ld a, $10
+    ld [wDataBank], a
+    ld hl, Script_59B3
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_77A0:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $10, $27, $7D, $E0, $C6, $7C, $E0, $C7, $21, $C2, $7E, $06, $12, $D7, $21
-    db $FE, $00, $CD, $01, $40, $C9
+; entry 167 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; writes: hTemp0, hTemp1
+DispatchTalkEvent_Case01_CaseA7::
+Jump_013_77A0:: ; address name
+    ld hl, $2710
+    ld a, l
+    ldh [hTemp0], a
+    ld a, h
+    ldh [hTemp1], a
+    farcall AddGoldCapped
+    ld hl, $00FE
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_77B6:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $4E, $0D, $CD, $01, $40, $C9
+; entry 168 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseA8::
+Jump_013_77B6:: ; address name
+    ld hl, $0D4E
+    call StartMessageCommand09HL_B13
+    ret
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0043, whose string begins '0 checked the odd object. It'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Talk0043_HeroCheckedTheOdd:: ; heuristic: target of a pointer table; C0
-Func_013_77BD:: ; address name
+Talk0043_HeroCheckedTheOdd::
+Jump_013_77BD:: ; address name
     ld de, $000B
     call TestFlagBit
     jr nc, Jump_013_77CC
@@ -8971,8 +9441,8 @@ Jump_013_77CC::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4 constant message(s) depending on story flags and state; the first one in the code is $0036, whose string begins 'There were many wild monsters in'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Talk0036_ThereWereManyWild:: ; heuristic: target of a pointer table; C0
-Func_013_77D3:: ; address name
+Talk0036_ThereWereManyWild::
+Jump_013_77D3:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_77F3
@@ -9009,8 +9479,8 @@ Jump_013_7808::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0037, whose string begins '0 tried to open the chest.'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenTileBuffer
-Talk0037_HeroTriedToOpen:: ; heuristic: target of a pointer table; C0
-Func_013_780F:: ; address name
+Talk0037_HeroTriedToOpen::
+Jump_013_780F:: ; address name
     ld a, [wScreenTileBuffer + $D2]
     cp a, $1A
     ret nz
@@ -9021,8 +9491,8 @@ Func_013_780F:: ; address name
 ; wD7FB = 1, StartScriptAtHL_B13 with HL = $5660, then wDataBank = $0E (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-StartScript5660WithBank0E:: ; heuristic: target of a pointer table; C0
-Func_013_781C:: ; address name
+StartScript5660WithBank0E::
+Jump_013_781C:: ; address name
     ld a, $01
     ld [wScreenTableIndex], a
     ld hl, Script_5660
@@ -9033,8 +9503,8 @@ Func_013_781C:: ; address name
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_784B; flag $0024 set: jr to Jump_013_7844); when none of them branches, starts message $0268 through StartMessageCommand09HL_B13 (script command $09); that string begins 'Yep, she's taking good care of' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0268_YepShesTakingGood:: ; heuristic: target of a pointer table; C0
-Func_013_782D:: ; address name
+TalkMsg0268_YepShesTakingGood::
+Jump_013_782D:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_784B
@@ -9055,43 +9525,123 @@ Jump_013_784B::
     call StartMessageCommand09HL_B13
     ret
 
-Data_013_7852:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $2E, $02, $CD, $01, $40, $C9
+; entry 174 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseAE::
+Jump_013_7852:: ; address name
+    ld hl, $022E
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7859:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $2F, $02, $CD, $01, $40, $C9
+; entry 175 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseAF::
+Jump_013_7859:: ; address name
+    ld hl, $022F
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7860:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $25, $00, $CD, $1B, $18, $38, $07, $21, $42, $02, $CD, $01, $40, $C9, $21
-    db $33, $0B, $CD, $01, $40, $C9
+; entry 176 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseB0::
+Jump_013_7860:: ; address name
+    ld de, $0025
+    call TestFlagBit
+    jr c, Jump_013_786F
+    ld hl, $0242
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7876:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $B1, $02, $CD, $01, $40, $C9
+Jump_013_786F::
+    ld hl, $0B33
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_787D:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $22, $00, $CD, $1B, $18, $38, $16, $11, $21, $00, $CD, $1B, $18, $38, $07
-    db $21, $1D, $57, $CD, $49, $40, $C9, $21, $2A, $57, $CD, $49, $40, $C9, $21, $37
-    db $57, $CD, $49, $40, $C9
+; entry 177 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseB1::
+Jump_013_7876:: ; address name
+    ld hl, $02B1
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_78A2:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $25, $00, $CD, $1B, $18, $DA, $B2, $78, $21, $A6, $02, $CD, $01, $40, $C9
-    db $21, $07, $0B, $CD, $01, $40, $C9
+; entry 178 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseB2::
+Jump_013_787D:: ; address name
+    ld de, $0022
+    call TestFlagBit
+    jr c, Jump_013_789B
+    ld de, $0021
+    call TestFlagBit
+    jr c, Jump_013_7894
+    ld hl, Script_571D
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_78B9:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $25, $00, $CD, $1B, $18, $DA, $C9, $78, $21, $09, $02, $CD, $01, $40, $C9
-    db $21, $09, $0B, $CD, $01, $40, $C9
+Jump_013_7894::
+    ld hl, Script_572A
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_78D0:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $51, $0A, $CD, $01, $40, $C9
+Jump_013_789B::
+    ld hl, Script_5737
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_78D7:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $44, $57, $CD, $49, $40, $C9
+; entry 179 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseB3::
+Jump_013_78A2:: ; address name
+    ld de, $0025
+    call TestFlagBit
+    jp c, Jump_013_78B2
+    ld hl, $02A6
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_78B2::
+    ld hl, $0B07
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 180 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseB4::
+Jump_013_78B9:: ; address name
+    ld de, $0025
+    call TestFlagBit
+    jp c, Jump_013_78C9
+    ld hl, $0209
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_78C9::
+    ld hl, $0B09
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 181 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseB5::
+Jump_013_78D0:: ; address name
+    ld hl, $0A51
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 182 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseB6::
+Jump_013_78D7:: ; address name
+    ld hl, Script_5744
+    call StartScriptAtHL_B13
+    ret
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $08D1, whose string begins 'The Evaluator said I had an'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5
-Talk08D1_TheEvaluatorSaidI:: ; heuristic: target of a pointer table; C0
-Func_013_78DE:: ; address name
+Talk08D1_TheEvaluatorSaidI::
+Jump_013_78DE:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_78ED
@@ -9121,8 +9671,8 @@ Jump_013_7909::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4 constant message(s) depending on story flags and state; the first one in the code is $04D2, whose string begins 'Up ahead is the Starry Shrine'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank
-Talk04D2_UpAheadIsThe:: ; heuristic: target of a pointer table; C0
-Func_013_7910:: ; address name
+Talk04D2_UpAheadIsThe::
+Jump_013_7910:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_793B
@@ -9153,8 +9703,8 @@ Jump_013_793B::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7951); when none of them branches, starts message $021F through StartMessageCommand09HL_B13 (script command $09); that string begins 'Do you know about LogTwig? It's' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg021F_DoYouKnowAbout:: ; heuristic: target of a pointer table; C0
-Func_013_7942:: ; address name
+TalkMsg021F_DoYouKnowAbout::
+Jump_013_7942:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7951
@@ -9169,8 +9719,8 @@ Jump_013_7951::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7967); when none of them branches, starts message $0220 through StartMessageCommand09HL_B13 (script command $09); that string begins 'In other worlds, you'll meet other' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0220_InOtherWorldsYoull:: ; heuristic: target of a pointer table; C0
-Func_013_7958:: ; address name
+TalkMsg0220_InOtherWorldsYoull::
+Jump_013_7958:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7967
@@ -9185,8 +9735,8 @@ Jump_013_7967::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_797D); when none of them branches, starts message $027F through StartMessageCommand09HL_B13 (script command $09); that string begins 'It's not easy to win right' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg027F_ItsNotEasyTo:: ; heuristic: target of a pointer table; C0
-Func_013_796E:: ; address name
+TalkMsg027F_ItsNotEasyTo::
+Jump_013_796E:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_797D
@@ -9201,8 +9751,8 @@ Jump_013_797D::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7993); when none of them branches, starts message $0280 through StartMessageCommand09HL_B13 (script command $09); that string begins 'Mama is a big worrier But' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0280_MamaIsABig:: ; heuristic: target of a pointer table; C0
-Func_013_7984:: ; address name
+TalkMsg0280_MamaIsABig::
+Jump_013_7984:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7993
@@ -9215,69 +9765,221 @@ Jump_013_7993::
     call StartMessageCommand09HL_B13
     ret
 
-Data_013_799A:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $84, $02, $CD, $01, $40, $C9
+; entry 189 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseBD::
+Jump_013_799A:: ; address name
+    ld hl, $0284
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79A1:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $85, $02, $CD, $01, $40, $C9
+; entry 190 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseBE::
+Jump_013_79A1:: ; address name
+    ld hl, $0285
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79A8:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $88, $02, $CD, $01, $40, $C9
+; entry 191 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseBF::
+Jump_013_79A8:: ; address name
+    ld hl, $0288
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79AF:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $52, $57, $CD, $49, $40, $C9
+; entry 192 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC0::
+Jump_013_79AF:: ; address name
+    ld hl, Script_5752
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_79B6:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $93, $02, $CD, $01, $40, $C9
+; entry 193 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC1::
+Jump_013_79B6:: ; address name
+    ld hl, $0293
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79BD:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $95, $02, $CD, $01, $40, $C9
+; entry 194 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC2::
+Jump_013_79BD:: ; address name
+    ld hl, $0295
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79C4:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $25, $00, $CD, $1B, $18, $38, $07, $21, $7B, $02, $CD, $01, $40, $C9, $21
-    db $68, $0B, $CD, $01, $40, $C9
+; entry 195 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC3::
+Jump_013_79C4:: ; address name
+    ld de, $0025
+    call TestFlagBit
+    jr c, Jump_013_79D3
+    ld hl, $027B
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79DA:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $25, $00, $CD, $1B, $18, $38, $07, $21, $7C, $02, $CD, $01, $40, $C9, $21
-    db $69, $0B, $CD, $01, $40, $C9
+Jump_013_79D3::
+    ld hl, $0B68
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79F0:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $9C, $02, $CD, $01, $40, $C9
+; entry 196 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC4::
+Jump_013_79DA:: ; address name
+    ld de, $0025
+    call TestFlagBit
+    jr c, Jump_013_79E9
+    ld hl, $027C
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79F7:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $9D, $02, $CD, $01, $40, $C9
+Jump_013_79E9::
+    ld hl, $0B69
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_79FE:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $01, $EA, $21, $C9, $3E, $2C, $EA, $22, $C9, $11, $32, $01, $CD, $25, $40
-    db $C9
+; entry 197 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC5::
+Jump_013_79F0:: ; address name
+    ld hl, $029C
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7A0F:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $B1, $02, $CD, $01, $40, $C9
+; entry 198 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC6::
+Jump_013_79F7:: ; address name
+    ld hl, $029D
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7A16:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $25, $02, $CD, $01, $40, $C9
+; entry 199 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+DispatchTalkEvent_Case01_CaseC7::
+Jump_013_79FE:: ; address name
+    ld a, $01
+    ld [wScriptParam0], a
+    ld a, $2C
+    ld [wScriptParam1], a
+    ld de, $0132
+    call StartMessageScriptDE_B13
+    ret
 
-Data_013_7A1D:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $01, $EA, $21, $C9, $3E, $2C, $EA, $22, $C9, $11, $30, $01, $CD, $25, $40
-    db $C9
+; entry 200 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC8::
+Jump_013_7A0F:: ; address name
+    ld hl, $02B1
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7A2E:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $4A, $02, $CD, $01, $40, $C9
+; entry 201 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseC9::
+Jump_013_7A16:: ; address name
+    ld hl, $0225
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7A35:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $80, $7E, $06, $12, $D7, $F0, $C7, $CB, $7F, $C0, $EA, $34, $C9, $21, $5F
-    db $57, $CD, $49, $40, $C9
+; entry 202 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptParam0, wScriptParam1
+DispatchTalkEvent_Case01_CaseCA::
+Jump_013_7A1D:: ; address name
+    ld a, $01
+    ld [wScriptParam0], a
+    ld a, $2C
+    ld [wScriptParam1], a
+    ld de, $0130
+    call StartMessageScriptDE_B13
+    ret
 
-Data_013_7A4A:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $04FA4A, $49
+; entry 203 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseCB::
+Jump_013_7A2E:: ; address name
+    ld hl, $024A
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7A93:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $45, $02, $CD, $01, $40, $C9
+; entry 204 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; reads: hTemp1
+; writes: wFieldStateByte34
+DispatchTalkEvent_Case01_CaseCC::
+Jump_013_7A35:: ; address name
+    farcall DispatchTalkEvent_Case01_CaseCC_Sub01
+    ldh a, [hTemp1]
+    bit 7, a
+    ret nz
+    ld [wFieldStateByte34], a
+    ld hl, Script_575F
+    call StartScriptAtHL_B13
+    ret
+
+; entry 205 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; reads: wInventory
+; writes: wStepPtrLo
+DispatchTalkEvent_Case01_CaseCD::
+Jump_013_7A4A:: ; address name
+    ld de, $01A5
+    call TestFlagBit
+    jr nc, Jump_013_7A7D
+    ld de, $01A6
+    call TestFlagBit
+    jr c, Jump_013_7A7D
+    ld a, [wInventory + $17]
+    cp a, $FF
+    jr z, Jump_013_7A6B
+    or a, a
+    jr z, Jump_013_7A6B
+    ld hl, $0D45
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_7A6B::
+    ld a, $2C
+    ld [wStepPtrLo], a
+    farcall AppendItemWC928ToInventory
+    ld hl, Script_59A9
+    call StartScriptAtHL_B13
+    ret
+
+Jump_013_7A7D::
+    ld de, $0025
+    call TestFlagBit
+    jr c, Jump_013_7A8C
+    ld hl, $0D26
+    call StartMessageCommand09HL_B13
+    ret
+
+Jump_013_7A8C::
+    ld hl, $0B15
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 206 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseCE::
+Jump_013_7A93:: ; address name
+    ld hl, $0245
+    call StartMessageCommand09HL_B13
+    ret
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $00FC, whose string begins 'You have to eat your vegetables!'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Talk00FC_YouHaveToEat:: ; heuristic: target of a pointer table; C0
-Func_013_7A9A:: ; address name
+Talk00FC_YouHaveToEat::
+Jump_013_7A9A:: ; address name
     farcall AddHundredToPartyINTCapped999
     ld hl, $00FC
     call StartMessageCommand09HL_B13
@@ -9285,8 +9987,8 @@ Func_013_7A9A:: ; address name
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7AB6); when none of them branches, starts message $0A74 through StartMessageCommand09HL_B13 (script command $09); that string begins 'The Medal Master was famous as' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A74_TheMedalMasterWas:: ; heuristic: target of a pointer table; C0
-Func_013_7AA7:: ; address name
+TalkMsg0A74_TheMedalMasterWas::
+Jump_013_7AA7:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7AB6
@@ -9301,8 +10003,8 @@ Jump_013_7AB6::
 
 ; when story flag $23 is set, StartScriptAtHL_B13 with HL = $57A2 (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-IfFlag0023StartScript57A2:: ; heuristic: target of a pointer table; C0
-Func_013_7ABD:: ; address name
+IfFlag0023StartScript57A2::
+Jump_013_7ABD:: ; address name
     ld de, $0023
     call TestFlagBit
     ret nc
@@ -9313,8 +10015,8 @@ Func_013_7ABD:: ; address name
 ; wScriptParam0 = 02, wScriptParam1 = 2C, then StartMessageScriptDE_B13 with DE = $013C: starts message group 1, string $3C; on the normal ShowMessageHL path the string begins 'I saw a lake like a' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg013C_ISawALake:: ; heuristic: target of a pointer table; C0
-Func_013_7ACB:: ; address name
+Msg013C_ISawALake::
+Jump_013_7ACB:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $2C
@@ -9326,8 +10028,8 @@ Func_013_7ACB:: ; address name
 ; wScriptParam0 = 01, wScriptParam1 = 1C, then StartMessageScriptDE_B13 with DE = $013D: starts message group 1, string $3D; on the normal ShowMessageHL path the string begins 'Strong monsters are in the well.' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg013D_StrongMonstersAreIn:: ; heuristic: target of a pointer table; C0
-Func_013_7ADC:: ; address name
+Msg013D_StrongMonstersAreIn::
+Jump_013_7ADC:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $1C
@@ -9338,8 +10040,8 @@ Func_013_7ADC:: ; address name
 
 ; tests story flags in turn (flag $0025 set: jp to Jump_013_7AFD); when none of them branches, starts message $0A35 through StartMessageCommand09HL_B13 (script command $09); that string begins 'I'm a bug, so I'm not' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A35_ImABugSo:: ; heuristic: target of a pointer table; C0
-Func_013_7AED:: ; address name
+TalkMsg0A35_ImABugSo::
+Jump_013_7AED:: ; address name
     ld de, $0025
     call TestFlagBit
     jp c, Jump_013_7AFD
@@ -9351,12 +10053,19 @@ Jump_013_7AFD::
     ld hl, $0B0A
     call StartMessageCommand09HL_B13
     ret
-    db $21, $34, $0A, $CD, $01, $40, $C9
+
+; entry 213 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseD5::
+Jump_013_7B04:: ; address name
+    ld hl, $0A34
+    call StartMessageCommand09HL_B13
+    ret
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7B1A); when none of them branches, starts message $0A68 through StartMessageCommand09HL_B13 (script command $09); that string begins 'My Emyu is very timid. I' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A68_MyEmyuIsVery:: ; heuristic: target of a pointer table; C0
-Func_013_7B0B:: ; address name
+TalkMsg0A68_MyEmyuIsVery::
+Jump_013_7B0B:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7B1A
@@ -9371,8 +10080,8 @@ Jump_013_7B1A::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7B3F; flag $0136 set: jr to Jump_013_7B38); when none of them branches, starts message $0A6B through StartMessageCommand09HL_B13 (script command $09); that string begins 'Monsters look so frightening Yes, I' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A6B_MonstersLookSoFrightening:: ; heuristic: target of a pointer table; C0
-Func_013_7B21:: ; address name
+TalkMsg0A6B_MonstersLookSoFrightening::
+Jump_013_7B21:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7B3F
@@ -9395,8 +10104,8 @@ Jump_013_7B3F::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0A40, whose string begins 'Please enter. The King awaits you'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Talk0A40_PleaseEnterTheKing:: ; heuristic: target of a pointer table; C0
-Func_013_7B46:: ; address name
+Talk0A40_PleaseEnterTheKing::
+Jump_013_7B46:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7B56
@@ -9416,8 +10125,8 @@ Jump_013_7B5D::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7B83; flag $0024 set: jp to Jump_013_7B7C); when none of them branches, starts message $0A4B through StartMessageCommand09HL_B13 (script command $09); that string begins 'On the horizon, you can see' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0A4B_OnTheHorizonYou:: ; heuristic: target of a pointer table; C0
-Func_013_7B64:: ; address name
+TalkMsg0A4B_OnTheHorizonYou::
+Jump_013_7B64:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7B83
@@ -9438,56 +10147,331 @@ Jump_013_7B83::
     call StartMessageCommand09HL_B13
     ret
 
-Data_013_7B8A:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $D1, $04, $CD, $01, $40, $C9
+; entry 218 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseDA::
+Jump_013_7B8A:: ; address name
+    ld hl, $04D1
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7B91:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $04FB91, $166
+; entry 219 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; reads: hTemp0, wGameFlags836
+; writes: hTemp0, hTemp1, wGameFlags836
+DispatchTalkEvent_Case01_CaseDB::
+Jump_013_7B91:: ; address name
+    ld de, $00C8
+    call TestFlagBit
+    ret c
+    ld de, $003D
+    call TestFlagBit
+    jp c, Jump_013_7C82
+    ld a, $01
+    or a, a
+    jr z, Jump_013_7C14
+    ld a, $0A
+    ldh [hTemp0], a
+    farcall KeyListHasKindTemp0
+    ldh a, [hTemp0]
+    or a, a
+    jr nz, Jump_013_7BED
+    farcall CountKeysOrFull
+    ldh a, [hTemp0]
+    bit 7, a
+    jr z, Jump_013_7BC8
+    ld hl, $0B4F
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7CF7:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $19, $05, $CD, $01, $40, $C9
+Jump_013_7BC8::
+    ld a, $0A
+    ldh [hTemp1], a
+    ld de, $0206
+    call TestFlagBit
+    jr nc, Jump_013_7BD8
+    ld a, $4A
+    ldh [hTemp1], a
 
-Data_013_7CFE:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $1A, $05, $CD, $01, $40, $C9
+Jump_013_7BD8::
+    farcall WriteKeyEntryTemp0
+    ld a, [wGameFlags836]
+    set 7, a
+    ld [wGameFlags836], a
+    ld hl, Script_586C
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_7D05:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $1B, $05, $CD, $01, $40, $C9
+Jump_013_7BED::
+    farcall GenerateNewKeyEntry
+    ldh a, [hTemp0]
+    or a, a
+    jr z, Jump_013_7C0D
+    ld a, [wGameFlags836]
+    set 7, a
+    ld [wGameFlags836], a
+    ld hl, Script_588D
+    call StartScriptAtHL_B13
+    ld de, $003D
+    call SetFlagBit
+    ret
 
-Data_013_7D0C:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $1C, $05, $CD, $01, $40, $C9
+Jump_013_7C0D::
+    ld hl, $0B4F
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7D13:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $1D, $05, $CD, $01, $40, $C9
+Jump_013_7C14::
+    ld a, $0B
+    ldh [hTemp0], a
+    farcall KeyListHasKindTemp0
+    ldh a, [hTemp0]
+    or a, a
+    jr nz, Jump_013_7C5B
+    farcall CountKeysOrFull
+    ldh a, [hTemp0]
+    bit 7, a
+    jr z, Jump_013_7C36
+    ld hl, $0BB8
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7D1A:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $1E, $05, $CD, $01, $40, $C9
+Jump_013_7C36::
+    ld a, $0B
+    ldh [hTemp1], a
+    ld de, $0207
+    call TestFlagBit
+    jr nc, Jump_013_7C46
+    ld a, $4B
+    ldh [hTemp1], a
 
-Data_013_7D21:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $5E, $05, $CD, $01, $40, $C9
+Jump_013_7C46::
+    farcall WriteKeyEntryTemp0
+    ld a, [wGameFlags836]
+    set 7, a
+    ld [wGameFlags836], a
+    ld hl, Script_5877
+    call StartScriptAtHL_B13
+    ret
 
-Data_013_7D28:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $D5, $0D, $CD, $01, $40, $C9
+Jump_013_7C5B::
+    farcall GenerateNewKeyEntry
+    ldh a, [hTemp0]
+    or a, a
+    jr z, Jump_013_7C7B
+    ld a, [wGameFlags836]
+    set 7, a
+    ld [wGameFlags836], a
+    ld hl, Script_588D
+    call StartScriptAtHL_B13
+    ld de, $003D
+    call SetFlagBit
+    ret
 
-Data_013_7D2F:: ; heuristic: target of a monotone pointer table; C0
-    db $FA, $CE, $CE, $FE, $01, $C0, $FA, $CF, $CB, $B7, $C0, $3E, $14, $E0, $C6, $21
-    db $98, $6B, $06, $12, $D7, $C9
+Jump_013_7C7B::
+    ld hl, $0B4F
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7D45:: ; heuristic: target of a monotone pointer table; C0
-    db $FA, $CE, $CE, $FE, $01, $C0, $FA, $C1, $CE, $B7, $20, $07, $21, $E3, $57, $CD
-    db $49, $40, $C9, $11, $52, $C1, $CD, $31, $24, $21, $E8, $57, $CD, $49, $40, $C9
+Jump_013_7C82::
+    ld de, $003E
+    call TestFlagBit
+    ret nc
+    ld a, $0C
+    ldh [hTemp0], a
+    farcall KeyListHasKindTemp0
+    ldh a, [hTemp0]
+    or a, a
+    jr nz, Jump_013_7CD0
+    farcall CountKeysOrFull
+    ldh a, [hTemp0]
+    bit 7, a
+    jr z, Jump_013_7CAB
+    ld hl, $0BB8
+    call StartMessageCommand09HL_B13
+    ret
 
-Data_013_7D65:: ; heuristic: target of a monotone pointer table; C0
-    db $F0, $8E, $FE, $30, $20, $07, $21, $66, $0D, $0E, $00, $18, $10, $FE, $40, $20
-    db $07, $21, $67, $0D, $0E, $01, $18, $05, $21, $68, $0D, $0E, $02, $CD, $01, $40
-    db $21, $F5, $5D, $06, $85, $D7, $C9
+Jump_013_7CAB::
+    ld a, $0C
+    ldh [hTemp1], a
+    ld de, $0208
+    call TestFlagBit
+    jr nc, Jump_013_7CBB
+    ld a, $4C
+    ldh [hTemp1], a
 
-Data_013_7D8C:: ; heuristic: target of a monotone pointer table; C0
-    db $AF, $EA, $68, $C9, $C9
+Jump_013_7CBB::
+    farcall WriteKeyEntryTemp0
+    ld a, [wGameFlags836]
+    set 7, a
+    ld [wGameFlags836], a
+    ld hl, Script_5882
+    call StartScriptAtHL_B13
+    ret
+
+Jump_013_7CD0::
+    farcall GenerateNewKeyEntry
+    ldh a, [hTemp0]
+    or a, a
+    jr z, Jump_013_7CF0
+    ld a, [wGameFlags836]
+    set 7, a
+    ld [wGameFlags836], a
+    ld hl, Script_588D
+    call StartScriptAtHL_B13
+    ld de, $00C8
+    call SetFlagBit
+    ret
+
+Jump_013_7CF0::
+    ld hl, $0B4F
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 220 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseDC::
+Jump_013_7CF7:: ; address name
+    ld hl, $0519
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 221 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseDD::
+Jump_013_7CFE:: ; address name
+    ld hl, $051A
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 222 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseDE::
+Jump_013_7D05:: ; address name
+    ld hl, $051B
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 223 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseDF::
+Jump_013_7D0C:: ; address name
+    ld hl, $051C
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 224 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseE0::
+Jump_013_7D13:: ; address name
+    ld hl, $051D
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 225 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseE1::
+Jump_013_7D1A:: ; address name
+    ld hl, $051E
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 226 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseE2::
+Jump_013_7D21:: ; address name
+    ld hl, $055E
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 227 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseE3::
+Jump_013_7D28:: ; address name
+    ld hl, $0DD5
+    call StartMessageCommand09HL_B13
+    ret
+
+; entry 228 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; reads: wGM2Mode, wObject5
+; writes: hTemp0
+DispatchTalkEvent_Case01_CaseE4::
+Jump_013_7D2F:: ; address name
+    ld a, [wGM2Mode]
+    cp a, $01
+    ret nz
+    ld a, [wObject5]
+    or a, a
+    ret nz
+    ld a, $14
+    ldh [hTemp0], a
+    farcall RunFieldCommandTemp0
+    ret
+
+; entry 229 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; reads: wGM2Mode, wRollState
+DispatchTalkEvent_Case01_CaseE5::
+Jump_013_7D45:: ; address name
+    ld a, [wGM2Mode]
+    cp a, $01
+    ret nz
+    ld a, [wRollState]
+    or a, a
+    jr nz, Jump_013_7D58
+    ld hl, Script_57E3
+    call StartScriptAtHL_B13
+    ret
+
+Jump_013_7D58::
+    ld de, wTextBuf2 + $2
+    call CopyItemNameToDE
+    ld hl, Script_57E8
+    call StartScriptAtHL_B13
+    ret
+
+; entry 230 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; reads: hPlayerX
+DispatchTalkEvent_Case01_CaseE6::
+Jump_013_7D65:: ; address name
+    ldh a, [hPlayerX]
+    cp a, $30
+    jr nz, Jump_013_7D72
+    ld hl, $0D66
+    ld c, $00
+    jr Jump_013_7D82
+
+Jump_013_7D72::
+    cp a, $40
+    jr nz, Jump_013_7D7D
+    ld hl, $0D67
+    ld c, $01
+    jr Jump_013_7D82
+
+Jump_013_7D7D::
+    ld hl, $0D68
+    ld c, $02
+
+Jump_013_7D82::
+    call StartMessageCommand09HL_B13
+    farcall LoadSpeciesFlagsPresetC
+    ret
+
+; entry 231 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+; writes: wScriptByte68
+DispatchTalkEvent_Case01_CaseE7::
+Jump_013_7D8C:: ; address name
+    xor a, a
+    ld [wScriptByte68], a
+    ret
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7DA0); when none of them branches, starts message $029B through StartMessageCommand09HL_B13 (script command $09); that string begins 'I found a key in another' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg029B_IFoundAKey:: ; heuristic: target of a pointer table; C0
-Func_013_7D91:: ; address name
+TalkMsg029B_IFoundAKey::
+Jump_013_7D91:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7DA0
@@ -9502,8 +10486,8 @@ Jump_013_7DA0::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0DE3, whose string begins 'The sea is huge and mysterious.'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-Talk0DE3_TheSeaIsHuge:: ; heuristic: target of a pointer table; C0
-Func_013_7DA7:: ; address name
+Talk0DE3_TheSeaIsHuge::
+Jump_013_7DA7:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7DB7
@@ -9523,8 +10507,8 @@ Jump_013_7DBE::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7DD4); when none of them branches, starts message $0220 through StartMessageCommand09HL_B13 (script command $09); that string begins 'In other worlds, you'll meet other' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg0220_InOtherWorldsYoull_7DC5:: ; heuristic: target of a pointer table; C0
-Func_013_7DC5:: ; address name
+TalkMsg0220_InOtherWorldsYoull_7DC5::
+Jump_013_7DC5:: ; address name
     ld de, $0025
     call TestFlagBit
     jr c, Jump_013_7DD4
@@ -9540,8 +10524,8 @@ Jump_013_7DD4::
 ; wScriptParam0 = 00, wScriptParam1 = 26, then StartMessageScriptDE_B13 with DE = $013E: starts message group 1, string $3E; on the normal ShowMessageHL path the string begins 'Our King has been a fan' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg013E_OurKingHasBeen:: ; heuristic: target of a pointer table; C0
-Func_013_7DDB:: ; address name
+Msg013E_OurKingHasBeen::
+Jump_013_7DDB:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $26
@@ -9553,8 +10537,8 @@ Func_013_7DDB:: ; address name
 ; wScriptParam0 = 00, wScriptParam1 = 42, then StartMessageScriptDE_B13 with DE = $013F: starts message group 1, string $3F; on the normal ShowMessageHL path the string begins 'The circus master was trying to' (E-0081)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg013F_TheCircusMasterWas:: ; heuristic: target of a pointer table; C0
-Func_013_7DEC:: ; address name
+Msg013F_TheCircusMasterWas::
+Jump_013_7DEC:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $42
@@ -9562,14 +10546,22 @@ Func_013_7DEC:: ; address name
     ld de, $013F
     call StartMessageScriptDE_B13
     ret
-    db $21, $5F, $05, $CD, $01, $40, $C9, $C9
+
+; entry 238 of the `rst $00` table in DispatchTalkEvent_Case01
+; no direct call (reached through a table, a jump or a vector)
+DispatchTalkEvent_Case01_CaseEE::
+Jump_013_7DFD:: ; address name
+    ld hl, $055F
+    call StartMessageCommand09HL_B13
+    ret
+    db $C9
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story flags and state; the first one in the code is $0B56, whose string begins 'When you breed monsters with another'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, hTemp1, hTemp0
 ; writes: wDataBank, wScreenTableIndex
-Talk0B56_WhenYouBreedMonsters:: ; heuristic: target of a pointer table; C0
-Func_013_7E05:: ; address name
+Talk0B56_WhenYouBreedMonsters::
+Jump_013_7E05:: ; address name
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld a, $0E
@@ -9651,8 +10643,8 @@ Jump_013_7E98::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, hTemp1, hTemp0
 ; writes: wDataBank, wScreenTableIndex
-Talk0B6D_BreedingFireAndIce:: ; heuristic: target of a pointer table; C0
-Func_013_7E9F:: ; address name
+Talk0B6D_BreedingFireAndIce::
+Jump_013_7E9F:: ; address name
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld a, $0E
@@ -9704,8 +10696,8 @@ Jump_013_7EFB::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0D90, whose string begins 'Humph I'm Terry. Terry I'm a'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1, hTemp0
-Talk0D90_HumphImTerry:: ; heuristic: target of a pointer table; C0
-Func_013_7F02:: ; address name
+Talk0D90_HumphImTerry::
+Jump_013_7F02:: ; address name
     ld de, $0038
     call TestFlagBit
     jr c, Jump_013_7F2A
@@ -9734,8 +10726,8 @@ Jump_013_7F2A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1, hTemp0
 ; writes: wSpriteSlots
-SetWCB8A30IfFlag25AndCountAtLeast50:: ; heuristic: target of a pointer table; C0
-Func_013_7F31:: ; address name
+SetWCB8A30IfFlag25AndCountAtLeast50::
+Jump_013_7F31:: ; address name
     ld de, $0025
     call TestFlagBit
     ret nc
@@ -9754,8 +10746,8 @@ Jump_013_7F48::
 
 ; sets story flag $C9 if flag $32 is set and flag $CA if flag $33 is set (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-SetFlagsC9AndCAFrom32And33:: ; heuristic: target of a pointer table; C0
-Func_013_7F4E:: ; address name
+SetFlagsC9AndCAFrom32And33::
+Jump_013_7F4E:: ; address name
     ld de, $0032
     call TestFlagBit
     jr nc, Jump_013_7F5C
@@ -9772,8 +10764,8 @@ Jump_013_7F5C::
 
 ; sets story flag $CB if flag $35 is set and flag $CC if flag $36 is set (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-SetFlagsCBAndCCFrom35And36:: ; heuristic: target of a pointer table; C0
-Func_013_7F6A:: ; address name
+SetFlagsCBAndCCFrom35And36::
+Jump_013_7F6A:: ; address name
     ld de, $0035
     call TestFlagBit
     jr nc, Jump_013_7F78
@@ -9790,8 +10782,8 @@ Jump_013_7F78::
 
 ; when story flag $21 is set, StartScriptAtHL_B13 with HL = $5988 (E-0119)
 ; no direct call (reached through a table, a jump or a vector)
-IfFlag0021StartScript5988:: ; heuristic: target of a pointer table; C0
-Func_013_7F86:: ; address name
+IfFlag0021StartScript5988::
+Jump_013_7F86:: ; address name
     ld de, $0021
     call TestFlagBit
     ret nc
@@ -9800,7 +10792,7 @@ Func_013_7F86:: ; address name
     ret
 
 ; the same 28 bytes as InventoryHasFreeSlotCheck (04:7C37)
-; 5 call sites from 5 routines (e.g. DispatchTalkEvent_Case01_Case77, DispatchTalkEvent_Case01_Case0D, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case02, ...)
+; 9 call sites from 8 routines (e.g. DispatchTalkEvent_Case01_Case77, DispatchTalkEvent_Case01_Case0D, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case02, ...)
 ; reads: wInventory
 ; points at: wInventory
 InventoryHasFreeSlotCheck_Bank13::
@@ -9830,7 +10822,7 @@ Jump_013_7FAE::
     ret
 
 ; copies wCB86, the player position and facing, wFollowerRecords and wC8F0-wC8FB fields into wC937-wC943 (E-0121)
-; 8 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case6A, DispatchTalkEvent_Case01_Case66, Talk0B6D_BreedingFireAndIce, Talk0B56_WhenYouBreedMonsters, ...)
+; 8 call sites from 7 routines (e.g. Talk0B6D_BreedingFireAndIce, Talk0B56_WhenYouBreedMonsters, Talk04C0_AllRightyWellDo, Talk04BA_IfYouGetAn, ...)
 ; reads: wSpriteSlots, hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords
 ; writes: wSavedPlayerState
 SavePlayerPositionState::

@@ -1940,11 +1940,13 @@ Data_01B_51B6:: ; address name
     db "SUCK", $F0
 
 ; C1 static reading (E-0197): not reached from any traced code, pointer or far call found; the bytes after the word list at $51B6 decode as one routine: clear $6F bytes from wScreenState, decompress bank $46 $4001 to $8800, far-call F1:$4AA8, LoadPalette0FromData53C6, then wait on wC8CB and jp $077A
+; clears $6F bytes from wScreenState, decompresses bank $46 $4001 to $8800, far-calls F1:$4AA8 and LoadPalette0FromData53C6, waits on wC8CB and jumps to $077A; no caller found (E-0197)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: hScrollY, hScrollX, wTextWindowState, wTextWindowStep, hSpriteWindowClipMode, wLCDCShadow
 ; points at: wScreenState
-Func_01B_5352:: ; configured code entry (E-0197); C0
+UnreferencedScreenInitFromBank46:: ; configured code entry (E-0197); C0
+Func_01B_5352:: ; address name
     ld hl, wScreenState
     ld bc, $006F
 
@@ -1989,7 +1991,7 @@ Jump_01B_538B::
     jp Jump_000_077A
 
 ; on CGB copies the 8-byte palette Data_01B_53C6 into wBGPaletteBuffer and sets wC526 = $7F (E-0118)
-; 3 call sites from 3 routines (e.g. Func_01B_5352, GameMode6_Init, GameMode8_Init)
+; 3 call sites from 3 routines (e.g. UnreferencedScreenInitFromBank46, GameMode6_Init, GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wBGPaletteUploadRequest
 ; points at: wBGPaletteBuffer

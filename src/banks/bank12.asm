@@ -5967,7 +5967,7 @@ Jump_012_64EA::
     ret
 
 ; with SRAM enabled sets every party record's HP to max HP, MP to max MP and field $55 to 0 (E-0125)
-; 10 call sites from 9 routines (e.g. ScriptCommand96_Run_Case18, ScriptCommand9B_Run_Case04, RunFieldReturnPhase_Case02, GameMode5_Init_Case06, ...)
+; 11 call sites from 10 routines (e.g. ScriptCommand96_Run_Case18, ScriptCommand9B_Run_Case04, RunFieldReturnPhase_Case02, GameMode5_Init_Case06, ...)
 ; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG
 ; points at: wPartyList
@@ -6675,7 +6675,7 @@ Func_012_6893:: ; address name
     ret
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
-; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, DispatchTalkEvent_Case01_Case65, ...)
+; 14 call sites from 11 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, DispatchTalkEvent_Case01_Case65, ...)
 ; reads: hTemp0, hTemp2, hTemp1, hTempA, wKeyRetryCount, wKeyRandomLo, wKeyRandomHi, wGameFlags836
 ; writes: wKeyRetryCount, hTemp0, hTemp1, hTempA, wGameFlags836
 ; points at: wKeySeeds
@@ -6822,7 +6822,7 @@ Jump_012_6948::
     ret
 
 ; writes key entry hFFC6: byte 0 = hFFC7 and byte 3 = $80; for kind $FE generates the remaining bytes (Func_061_40B4, Func_060_6916) from hFFC7-hFFC9 (E-0125)
-; 12 call sites from 10 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
+; 15 call sites from 11 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
 ; reads: hTemp0, hTemp1, wPartyStrength, hTemp2, hTemp3
 ; writes: hTemp0
 WriteKeyEntryTemp0::
@@ -6866,7 +6866,7 @@ Jump_012_6973::
     ret
 
 ; counts the 4-byte wKeyList entries before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
-; 11 call sites from 9 routines (e.g. MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
+; 14 call sites from 10 routines (e.g. MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
 ; writes: hTemp0
 ; points at: wKeyList
 CountKeysOrFull::
@@ -7220,7 +7220,7 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
 ; runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)
-; 51 call sites from 49 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunFieldReturnPhase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
+; 53 call sites from 51 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunFieldReturnPhase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
 ; reads: hTemp0
 RunFieldCommandTemp0::
 Func_012_6B98:: ; address name
@@ -10262,7 +10262,7 @@ Jump_012_7DC3::
     ret
 
 ; hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches
-; 47 call sites from 23 routines (e.g. RollFieldEventOnTallTiles, Func_004_58C2_Case4F, Func_004_58C2_Case6A, Func_004_612B_Case38, ...)
+; 48 call sites from 24 routines (e.g. RollFieldEventOnTallTiles, Func_004_58C2_Case4F, Func_004_58C2_Case6A, Func_004_612B_Case38, ...)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wInventory
@@ -10298,7 +10298,7 @@ Jump_012_7DED::
     ret
 
 ; hFFC6 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last slot keeps its old value), then wC634 = $FF; nothing moves when the slot is $17 (E-0106)
-; 17 call sites from 10 routines (e.g. Func_004_58C2_Case6A, Func_004_612B_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
+; 18 call sites from 11 routines (e.g. Func_004_58C2_Case6A, Func_004_612B_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
 ; reads: hTemp0
 ; writes: wInventory
 ; points at: wInventory
@@ -10407,7 +10407,15 @@ Jump_012_7E77::
     xor a, a
     ld [rRAMG], a
     ret
-    db $AF, $E0, $C7, $C9
+
+; only called from DispatchTalkEvent_Case01_CaseCC (E-0047)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_CaseCC)
+; writes: hTemp1
+DispatchTalkEvent_Case01_CaseCC_Sub01::
+Func_012_7E80:: ; address name
+    xor a, a
+    ldh [hTemp1], a
+    ret
 
 ; wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)
 ; 5 call sites from 5 routines (e.g. ScriptCommand82_Run_Case0A_Case02, ScriptCommand82_Run_Case08_Case02, ScriptCommand82_Run_Case03_Case02, ScriptCommand82_Run_Case02_Case05, ...)
@@ -10453,7 +10461,7 @@ Jump_012_7EB7::
     ret
 
 ; adds the word hFFC6/hFFC7 to the 24-bit wGoldLo/Mid/Hi and caps the result at $01869F (99,999) (E-0074)
-; 12 call sites from 5 routines (e.g. ScriptCommand84_Run_Case08, ScriptFetch0E, ScriptCommand80_Run_Case02, TalkMsg0A3C_KingIfYouSee, ...)
+; 13 call sites from 6 routines (e.g. ScriptCommand84_Run_Case08, ScriptFetch0E, ScriptCommand80_Run_Case02, TalkMsg0A3C_KingIfYouSee, ...)
 ; reads: hTemp0, hTemp1, wGoldLo, wGoldMid, wGoldHi
 ; writes: wGoldLo, wGoldMid, wGoldHi
 AddGoldCapped::

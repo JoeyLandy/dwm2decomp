@@ -2410,7 +2410,7 @@ Jump_000_0DDB::
     ret
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
-; 92 call sites from 80 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, SendSGBFieldPaletteSet, RunFieldReturnPhase_Case00, ...)
+; 93 call sites from 81 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, SendSGBFieldPaletteSet, RunFieldReturnPhase_Case00, ...)
 ; reads: wIsCGB, wSGBActive, wFadeState, wFadeMode, wFadeMask, wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1
 ; writes: wFadeState, wFadeLevel, wFadeDelay, wFadeDelayCounter
 ; points at: wOBJPaletteBuffer, wSGBPacketBuffer, wFadeDMGPalettes, wDMGPaletteBGP
@@ -3189,7 +3189,7 @@ Jump_000_1276::
     ret
 
 ; wSoundEffectRequest = A; ProcessSoundQueue starts it on the next frame
-; 405 call sites from 292 routines (e.g. StepStringDisplayUntilDone_Sub01, ShowTextContinueMark, AcknowledgeTextPrompt, Func_000_2950_Case09, ...)
+; 406 call sites from 293 routines (e.g. StepStringDisplayUntilDone_Sub01, ShowTextContinueMark, AcknowledgeTextPrompt, Func_000_2950_Case09, ...)
 ; writes: wSoundEffectRequest
 QueueSoundEffect::
 Func_000_1278:: ; address name
@@ -3847,7 +3847,7 @@ Func_000_1679:: ; address name
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C
-; 116 call sites from 99 routines (e.g. Func_000_2950_Case08, BattlerRecordFieldAddress, Multiply8By16, SRAMRecordAddressMapped, ...)
+; 117 call sites from 100 routines (e.g. Func_000_2950_Case08, BattlerRecordFieldAddress, Multiply8By16, SRAMRecordAddressMapped, ...)
 Multiply8::
 Func_000_1682:: ; address name
     ld b, $00
@@ -4212,7 +4212,7 @@ Jump_000_1812::
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
-; 864 call sites from 412 routines (e.g. LoadMapScreen_Sub02, SetFieldEventKindOnMap19IfFlagD1, WritePlayerNameWithFlag0SuffixToTextBuf0, PlayMapMusic_Case05, ...)
+; 905 call sites from 435 routines (e.g. LoadMapScreen_Sub02, SetFieldEventKindOnMap19IfFlagD1, WritePlayerNameWithFlag0SuffixToTextBuf0, MapMusicByFlag25, ...)
 TestFlagBit::
 Func_000_181B:: ; address name
     ld b, e
@@ -4251,7 +4251,7 @@ Jump_000_1843::
     ret
 
 ; DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300
-; 158 call sites from 119 routines (e.g. RunFieldReturnPhase_Case01, RunMenuStateMenuState_Case05, PauseMenu_State4, Func_004_6A35_Case12, ...)
+; 166 call sites from 125 routines (e.g. RunFieldReturnPhase_Case01, RunMenuStateMenuState_Case05, PauseMenu_State4, Talk0046_ThanksForComingBy, ...)
 SetFlagBit::
 Func_000_1845:: ; address name
     ld a, d
@@ -6138,7 +6138,7 @@ Jump_000_2221::
     ret
 
 ; fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)
-; 22 call sites from 22 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
+; 23 call sites from 23 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
 ; reads: wPartyCount
 ; writes: wNameGlyphBuf, rRAMG
 ; points at: wPartyList
@@ -6510,7 +6510,7 @@ Func_000_241A:: ; address name
     jr Jump_000_2447
 
 ; A = item number: with ROM bank $08 mapped, copies that string of StringTable_ItemNames, including its $F0 terminator, to DE; restores the bank (E-0071)
-; 15 call sites from 11 routines (e.g. ScriptCommand86_Run_Case00, ScriptCommand84_Run_Case06, ScriptCommand81_Run_Case00, ScriptCommand80_Run_Case00, ...)
+; 17 call sites from 13 routines (e.g. ScriptCommand86_Run_Case00, ScriptCommand84_Run_Case06, ScriptCommand81_Run_Case00, ScriptCommand80_Run_Case00, ...)
 ; writes: rROMB0
 CopyItemNameToDE::
 Func_000_2431:: ; address name
@@ -8877,7 +8877,7 @@ Data_000_31D0:: ; address name
     db $09, $18, $28, $38, $48, $58, $68, $78, $88, $98, $A8, $B8, $C8, $D8, $E8, $F5 ; id 12
 
 ; rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0
-; 9 call sites from 7 routines (e.g. BootAndMainLoop, StartMusic, DebugSoundTest_Update, GameMode1_Init, ...)
+; 10 call sites from 8 routines (e.g. BootAndMainLoop, StartMusic, DebugSoundTest_Update, GameMode1_Init, ...)
 ; writes: rNR52, rNR51, wSoundEngineMode, rNR50, wSoundEngineState, wSoundInitByte19
 ; points at: wSoundChannelSlots, wSoundLabelSlots
 InitSoundHardware::
@@ -10956,7 +10956,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 305 call sites from 250 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, Func_005_4075, ...)
+; 305 call sites from 250 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ClearBattleStatusBitsWithMaskD_Bank05, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de

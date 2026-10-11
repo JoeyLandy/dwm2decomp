@@ -942,7 +942,60 @@ Jump_073_4647:: ; address name
     dw ScriptCommand82_Run_Case06_Case04
     dw ScriptCommand82_Run_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
-    INCBIN "dwm2-cobi-us.gbc", $1CC659, $5A
+    dw $0000 ; unused index (E-0207)
+    dw ScriptCommand82_Run_Case0C_Case01
+    dw ScriptCommand82_Run_Case06_Case09
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw ScriptCommand82_Run_Case0C_Case01
+    dw ScriptCommand82_Run_Case06_Case0D
+    dw ScriptCommand82_Run_Case0C_Case01
+    dw ScriptStepBlinkSpritesThenEnd
+    dw ScriptCommand82_Run_Case0C_Case01
+    dw ScriptStepBlinkSpritesThenEnd
+
+; entry 13 of the `rst $00` table in ScriptCommand82_Run_Case06
+; no direct call (reached through a table, a jump or a vector)
+; reads: wMenuSelectedMember
+; writes: wStepPtrLo
+; points at: wScriptStep
+ScriptCommand82_Run_Case06_Case0D::
+Jump_073_466F:: ; address name
+    ld hl, wScriptStep
+    inc [hl]
+    ld hl, $001B
+    call StartMessageHL_B73
+    ld a, [wMenuSelectedMember]
+    ld de, wTextBuf2 + $2
+    call CopyItemNameToDE
+    ld a, [wMenuSelectedMember]
+    ld [wStepPtrLo], a
+    farcall AppendItemWC928ToInventory
+    ret
+
+; entry 9 of the `rst $00` table in ScriptCommand82_Run_Case06
+; no direct call (reached through a table, a jump or a vector)
+; reads: wTextYesNoResult, wMenuSubState
+; writes: wMenuState, wScriptStep
+ScriptCommand82_Run_Case06_Case09::
+Jump_073_468F:: ; address name
+    ld a, [wTextYesNoResult]
+    or a, a
+    jr nz, Jump_073_46A7
+    ld a, [wMenuSubState]
+    ld [wMenuState], a
+    ld hl, wShadowOAM + $19
+    call StartMessageHL_B73
+    ld a, $03
+    ld [wScriptStep], a
+    ret
+
+Jump_073_46A7::
+    ld hl, vTiles0 + $1A
+    call StartMessageHL_B73
+    ld a, $0C
+    ld [wScriptStep], a
+    ret
 
 ; entry 4 of the `rst $00` table in ScriptCommand82_Run_Case06
 ; no direct call (reached through a table, a jump or a vector)
@@ -2275,7 +2328,7 @@ Jump_073_4EC4::
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 77 call sites from 42 routines (e.g. ScriptCommand82_Run_Case00_Case00, ScriptCommand82_Run_Case01_Case02, ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Case02_Case05, ...)
+; 80 call sites from 44 routines (e.g. ScriptCommand82_Run_Case00_Case00, ScriptCommand82_Run_Case01_Case02, ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Case02_Case05, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B73::
 Func_073_4ED8:: ; address name

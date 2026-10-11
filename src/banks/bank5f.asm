@@ -910,7 +910,7 @@ Jump_05F_6C43::
     ret
 
 ; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
-; 52 call sites from 49 routines (e.g. ScriptCommand5E_Run_Shared01, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ScriptCommand4B_Run_Case11, ...)
+; 53 call sites from 50 routines (e.g. ScriptCommand5E_Run_Case8F, ScriptCommand5E_Run_Shared01, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ...)
 ; writes: wModeState, wFieldTransitionStep, wScriptParam0
 ; points at: wScriptStep
 ScriptStartFadeAndAdvanceStep::
@@ -943,7 +943,7 @@ Func_05F_6C71:: ; address name
     ret
 
 ; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
-; 17 call sites from 16 routines (e.g. ScriptCommand32_Run_Case00, ScriptCommand84_Run_Case08, ScriptCommand86_Run_Case02, ScriptCommand81_Run_Case02, ...)
+; 19 call sites from 18 routines (e.g. ScriptCommand32_Run_Case00, ScriptCommand84_Run_Case08, ScriptCommand86_Run_Case02, ScriptCommand81_Run_Case02, ...)
 ; reads: wStepPtrLo, wGameFlags836
 ; writes: wGameFlags836
 ; points at: wInventory
@@ -1150,7 +1150,7 @@ Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E, $1E
 
 ; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hFFC6 (E-0125)
-; 10 call sites from 8 routines (e.g. Talk075F_KiralFetchMeMy, ScriptCommand58_Run_Case2B, ScriptCommand4B_Run_Case16, ScriptCommand39_Run_Case31, ...)
+; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, ScriptCommand5E_Run_Case93, ScriptCommand58_Run_Case2B, ScriptCommand4B_Run_Case16, ...)
 ; reads: hTemp0
 ; points at: wKeyList
 MarkKeyEntryKindTemp0Bit6::

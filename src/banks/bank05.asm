@@ -123,9 +123,11 @@ Jump_005_406F::
     cp a, $04
     ret
 
+; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL); not reached from traced code (E-0205)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus
-Func_005_4075:: ; configured code entry (E-0205); C0
+ClearBattleStatusBitsWithMaskD_Bank05:: ; configured code entry (E-0205); C0
+Func_005_4075:: ; address name
     ld a, d
     ld hl, ClearBitMaskTable_Bank05
     add_a_to_hl

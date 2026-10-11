@@ -4434,7 +4434,65 @@ Data_00D_6292:: ; address name
 
 ; address loaded by ScriptCommandF2_Run_Case03_Case02, ScriptCommandF2_Run_Case03_Case04, ScriptCommandF2_Run_Case03_Case05, ScriptCommandF2_Run_Case03_Case08
 Data_00D_62B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0362B0, $60
+    db $CE, $C3, $F6, $C3, $1E, $C4, $46, $C4
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0D_62B8:: ; heuristic: event script entry or jump target; C0
+    script_command $F2
+    script_command $F2
+    script_choice_jump Script_0D_62CA, Script_0D_62C4, Script_0D_62BE
+Script_0D_62BE:: ; heuristic: event script entry or jump target; C0
+    script_command $EE
+    script_message $8002 ; 'Cobi 0! Papa's calling. He's at'
+    script_command $EE
+    script_end
+Script_0D_62C4:: ; heuristic: event script entry or jump target; C0
+    script_command $EE
+    script_message $8003 ; 'Tara There you are, big brother!'
+    script_command $EE
+    script_end
+Script_0D_62CA:: ; heuristic: event script entry or jump target; C0
+    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+Script_0D_62CD:: ; heuristic: event script entry or jump target; C0
+    script_command $F2
+    script_choice_jump Script_0D_62DE, Script_0D_62D5, Script_0D_62D2
+Script_0D_62D2:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0D_62BE
+Script_0D_62D5:: ; heuristic: event script entry or jump target; C0
+    script_message $C009 ; 'Good. That's good to hear! You'
+    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_jump Script_0D_62CD
+Script_0D_62DE:: ; heuristic: event script entry or jump target; C0
+    script_message $C005 ; 'Tara Hurry! Papa will be angry!'
+    script_command $F2
+    script_choice_jump Script_0D_62F3, Script_0D_62ED, Script_0D_62E6
+Script_0D_62E6:: ; heuristic: event script entry or jump target; C0
+    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_command $F2
+    script_jump Script_0D_62CD
+Script_0D_62ED:: ; heuristic: event script entry or jump target; C0
+    script_command $EE
+    script_message $8007 ; 'There's a spirit in GreatLog that's'
+    script_command $EE
+    script_end
+Script_0D_62F3:: ; heuristic: event script entry or jump target; C0
+    script_command $F2
+    script_command $F2
+    script_choice_jump Script_0D_62FB, Script_0D_62F8
+Script_0D_62F8:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0D_62BE
+Script_0D_62FB:: ; heuristic: event script entry or jump target; C0
+    script_command $F2
+    script_command $F2
+    script_message $C00F ; 'Worried about your monsters? Don't be!'
+    script_command $F2
+    script_choice_jump Script_0D_630A, Script_0D_6304
+Script_0D_6304:: ; heuristic: event script entry or jump target; C0
+    script_message $C00A ; 'Is that so? Too bad! You'll'
+    script_jump Script_0D_62BE
+Script_0D_630A:: ; heuristic: event script entry or jump target; C0
+    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_jump Script_0D_62CD
 
 ; implements script command type F3; reached through ScriptCommandF3 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandF3)

@@ -346,10 +346,16 @@ class Rom:
             rom = self.data[bank * BANK:(bank + 1) * BANK]
             cov = self.covered[bank]
             pos, words, floor = start, [], None
-            while len(words) < MAX_TABLE and pos + 2 <= base + BANK:
+            # E-0207: an `rst $00` table runs to its lowest target and may hold $0000 for unused indexes
+            limit = 256 if (bank, start) in self.dispatch else MAX_TABLE
+            while len(words) < limit and pos + 2 <= base + BANK:
                 if pos in cov or pos + 1 in cov or (floor is not None and pos >= floor):
                     break
                 w = rom[pos - base] | (rom[pos - base + 1] << 8)
+                if w == 0 and floor is not None and (bank, start) in self.dispatch:
+                    words.append((pos, w, None))
+                    pos += 2
+                    continue
                 r = self.resolve(bank, w)
                 if not r or w < 0x0100:
                     break
@@ -363,13 +369,16 @@ class Rom:
             if not words:
                 continue
             did = True
+            while words and words[-1][2] is None:  # a table does not end with an unused index
+                words.pop()
             if (bank, start) in self.dispatch:
-                self.dispatch[(bank, start)] = [(tb, ta) for _p, _w, (tb, ta) in words]
+                self.dispatch[(bank, start)] = [r for _p, _w, r in words]  # None: unused index
             self.table_words[(bank, start)] = [p for p, _w, _r in words]
-            for p, w, (tb, ta) in words:
+            for p, w, r in words:
                 self.insn[bank][p] = ("dw", w)
                 cov.update((p, p + 1))
-                self.add_entry(tb, ta, "Jump")
+                if r:
+                    self.add_entry(r[0], r[1], "Jump")
         return did
 
     def trim_tables(self) -> bool:
@@ -1392,7 +1401,10 @@ class Rom:
                 parent = info["name"]
             tables_of[parent] = k = tables_of.get(parent, 0) + 1
             stem = f"{parent}_Case" if k == 1 else f"{parent}_Table{k}_Case"  # a routine can hold several tables
-            for n, (tb, ta) in enumerate(targets):
+            for n, tgt in enumerate(targets):
+                if tgt is None:
+                    continue
+                tb, ta = tgt
                 if tb != bank or (tb, ta) in self.names or not self.labels[tb].get(ta, "").startswith("Jump_"):
                     continue
                 if ta not in self.insn[tb]:
@@ -2345,7 +2357,7 @@ class Rom:
         sites: list[tuple[int, int, int]] = []
         site_bank: dict[int, set] = {}  # script address -> data banks its callers set (None = unknown)
         entry_like = {k for k, info in self.names.items() if not info.get("data")}
-        entry_like |= {t for ts in self.dispatch.values() for t in ts}
+        entry_like |= {t for ts in self.dispatch.values() for t in ts if t}
         for cb in range(self.nbanks):
             for v in self.insn[cb].values():
                 if v[0] != "dw" and v[2] in ("call", "callc") and v[3] is not None:
@@ -3161,9 +3173,9 @@ class Rom:
                 nm = None
                 if r and r[0] == bank and w in ins and ins[w][0] != "dw":
                     nm = labels.get(w)
-                elif r and r[0] == 0 and w in self.insn[0] and self.insn[0][w][0] != "dw":
+                elif r and r[0] == 0 and w and w in self.insn[0] and self.insn[0][w][0] != "dw":
                     nm = self.labels[0].get(w)
-                out.append(f"    dw {nm or f'${w:04X}'}")
+                out.append(f"    dw {nm or f'${w:04X}'}" + (" ; unused index (E-0207)" if w == 0 else ""))
                 pc += 2
                 continue
             n, text, kind, tgt = it

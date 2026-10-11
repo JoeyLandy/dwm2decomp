@@ -4858,7 +4858,7 @@ Func_002_5E82:: ; address name
     call MoveIncapacitatedPartyMembersBack
 
 ; reorders the party list so a member with bit 7 of field $55 set moves behind one without it (second/third and first/second pairs) (E-0127)
-; 19 call sites from 10 routines (e.g. InitFieldScreen, RunFunc5E85Twice, ScriptCommand58_Run_Case22, ScriptCommand9B_Run_Case05, ...)
+; 21 call sites from 11 routines (e.g. InitFieldScreen, RunFunc5E85Twice, ScriptCommand58_Run_Case22, ScriptCommand9B_Run_Case05, ...)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
 MoveIncapacitatedPartyMembersBack::
@@ -4918,7 +4918,7 @@ Jump_002_5EE9::
     ret
 
 ; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wD000 to wD2D0 (rSVBK = 2); saves wSpriteSlotCount in wCB7E. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
-; 22 call sites from 20 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
+; 23 call sites from 21 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wScreenSavedFlag
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wSavedScreenAttrs
@@ -5148,7 +5148,7 @@ Jump_002_6045::
     ret
 
 ; wC608 = $FF (no current music), then falls into PlayMapMusic so the map's music always restarts (E-0122)
-; 10 call sites from 10 routines (e.g. GameMode1_Init, InitFieldScreen, Func_000_2950_Case09, RunMenuStateMenuState_Case05, ...)
+; 11 call sites from 11 routines (e.g. GameMode1_Init, InitFieldScreen, Func_000_2950_Case09, RunMenuStateMenuState_Case05, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 ; writes: wCurrentMusic
 RestartMapMusic::
@@ -5240,7 +5240,48 @@ Jump_002_609D::
     dw PlayMapMusic_Case00
     dw PlayMapMusic_Case1C
     dw PlayMapMusic_Case1D
-    INCBIN "dwm2-cobi-us.gbc", $00A0DC, $54
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case2B
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case20
+    dw MapMusicByPlayerStateFlagsBit3
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case2B
+    dw MapMusicByPlayerStateFlagsBit3
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case38
+    dw PlayMapMusic_Case39
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case3B
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case20
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
     dw MapMusicByFlag23_631A
     dw MapMusicByFlag23_631A
     dw MapMusicByFlag23
@@ -5252,18 +5293,151 @@ Jump_002_609D::
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23_631A
-    db $39, $63, $39, $63, $39, $63, $39, $63, $39, $63
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    db $72, $63
+    dw PlayMapMusic_Case37
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    INCBIN "dwm2-cobi-us.gbc", $00A164, $104
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw MapMusicByFlag23_631A
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case9B
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw MapMusicByFlag25
+    dw PlayMapMusic_CaseA1
+    dw PlayMapMusic_CaseA1
+    dw PlayMapMusic_CaseA1
+    dw MapMusicByFlag25
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw PlayMapMusic_Case2B
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case21
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case20
+    dw $0000 ; unused index (E-0207)
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case20
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw PlayMapMusic_Case37
+    dw $0000 ; unused index (E-0207)
+    dw PlayMapMusic_Case20
+    db $00, $00
 
 ; entry 0 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
@@ -5358,26 +5532,30 @@ PlayMapMusic_Case1C::
 Jump_002_62DA:: ; address name
     ret
 
-Jump_002_62DB::
+; entry 33 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCurrentMusic
+PlayMapMusic_Case21::
+Jump_002_62DB:: ; address name
     ld c, $19
     jp Jump_002_6089
 
 ; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-MapMusicByFlag23:: ; heuristic: target of a pointer table; C0
-Func_002_62E0:: ; address name
+MapMusicByFlag23::
+Jump_002_62E0:: ; address name
     ld de, $0023
     call TestFlagBit
-    jr c, Jump_002_62DB
+    jr c, PlayMapMusic_Case21
     ld c, $2E
     jp Jump_002_6089
 
 ; map music case: on hMapScreenY 0, without flag $87, or with flag $8A uses the flag-$23 case; otherwise music $28 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenY, wCurrentMusic
-MapMusicByScreenAndFlags87And8A:: ; heuristic: target of a pointer table; C0
-Func_002_62ED:: ; address name
+MapMusicByScreenAndFlags87And8A::
+Jump_002_62ED:: ; address name
     ldh a, [hMapScreenY]
     or a, a
     jr z, MapMusicByFlag23
@@ -5390,15 +5568,19 @@ Func_002_62ED:: ; address name
     ld c, $28
     jp Jump_002_6089
 
-Jump_002_6307::
+; entry 32 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCurrentMusic
+PlayMapMusic_Case20::
+Jump_002_6307:: ; address name
     ld c, $1C
     jp Jump_002_6089
 
 ; map music case: music $2B when bit 3 of hFF8C is set, else $1C (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, wCurrentMusic
-MapMusicByPlayerStateFlagsBit3:: ; heuristic: follows a terminator; C0
-Func_002_630C:: ; address name
+MapMusicByPlayerStateFlagsBit3::
+Jump_002_630C:: ; address name
     ld c, $1C
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -5409,25 +5591,107 @@ Func_002_630C:: ; address name
 ; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-MapMusicByFlag23_631A:: ; heuristic: target of a pointer table; C0
-Func_002_631A:: ; address name
+MapMusicByFlag23_631A::
+Jump_002_631A:: ; address name
     ld de, $0023
     call TestFlagBit
-    jr c, Jump_002_6307
+    jr c, PlayMapMusic_Case20
     ld c, $2E
     jp Jump_002_6089
 
 ; map music case: if story flag $25 is set uses music $1C, else $1F (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-MapMusicByFlag25:: ; heuristic: follows a terminator; C0
-Func_002_6327:: ; address name
+MapMusicByFlag25::
+Jump_002_6327:: ; address name
     ld de, $0025
     call TestFlagBit
-    jr c, Jump_002_6307
+    jr c, PlayMapMusic_Case20
     ld c, $1F
     jp Jump_002_6089
-    INCBIN "dwm2-cobi-us.gbc", $00A334, $5D
+
+; entry 161 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCurrentMusic
+PlayMapMusic_CaseA1::
+Jump_002_6334:: ; address name
+    ld c, $CC
+    jp Jump_002_6089
+
+; entry 43 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCurrentMusic
+PlayMapMusic_Case2B::
+Jump_002_6339:: ; address name
+    ld c, $25
+    jp Jump_002_6089
+
+; entry 56 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: hMapScreenX, hMapScreenY, wCurrentMusic
+PlayMapMusic_Case38::
+Jump_002_633E:: ; address name
+    ldh a, [hMapScreenX]
+    or a, a
+    jr nz, PlayMapMusic_Case2B
+    ldh a, [hMapScreenY]
+    or a, a
+    jr nz, PlayMapMusic_Case2B
+    call InitSoundHardware
+    ret
+
+; entry 57 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: hMapScreenX, hMapScreenY, wCurrentMusic
+PlayMapMusic_Case39::
+Jump_002_634C:: ; address name
+    ldh a, [hMapScreenX]
+    cp a, $01
+    jr nz, PlayMapMusic_Case2B
+    ldh a, [hMapScreenY]
+    cp a, $01
+    jr nz, PlayMapMusic_Case2B
+    ld de, $007C
+    call TestFlagBit
+    jr c, PlayMapMusic_Case2B
+    ld c, $28
+    jp Jump_002_6089
+
+; entry 59 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCurrentMusic
+PlayMapMusic_Case3B::
+Jump_002_6365:: ; address name
+    ld de, $0022
+    call TestFlagBit
+    jr c, PlayMapMusic_Case2B
+    ld c, $28
+    jp Jump_002_6089
+
+; entry 55 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: wCurrentMusic
+PlayMapMusic_Case37::
+Jump_002_6372:: ; address name
+    ld c, $22
+    jp Jump_002_6089
+
+; entry 155 of the `rst $00` table in PlayMapMusic
+; no direct call (reached through a table, a jump or a vector)
+; reads: hMapScreenY, wCurrentMusic
+PlayMapMusic_Case9B::
+Jump_002_6377:: ; address name
+    ldh a, [hMapScreenY]
+    or a, a
+    jr nz, PlayMapMusic_Case37
+    ld de, $00C2
+    call TestFlagBit
+    jr nc, PlayMapMusic_Case37
+    ld de, $00C3
+    call TestFlagBit
+    jr c, PlayMapMusic_Case37
+    ld c, $28
+    jp Jump_002_6089
 
 ; only called from FieldModeStateDispatch_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case02)

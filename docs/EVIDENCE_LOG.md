@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0207 — `rst $00` tables longer than 128 words, with unused indexes
+
+- Kind: TOOL (C1 per table).
+- **Problem.** The inline table after `rst $00` was cut at 128 words (MAX_TABLE) and at the first $0000 word. DispatchTalkEvent_Case01's table (13:$5945) is longer: its lowest target, the `ret` at $5B33, marks where the table ends, which gives 247 words, two of them $0000.
+  - The talk handlers listed after the cut had been left as data labels (for example 13:$7B8A, `ld hl, $04D1 / call $4001 / ret`).
+- **Rule.** A dispatch table may now run up to 256 words, bounded as before by its lowest target. Once that bound is known, a $0000 word is kept as an unused index: no target, and the case numbering of later entries is preserved. A table never ends on an unused index.
+- **Result.** $0000 words now appear inside tables in banks $02 (PlayMapMusic), $04, $13 and $73, each between valid entries. The newly traced handlers take their `_CaseNN` names.
+- Configured routines from E-0197 and E-0205 are named, and `tools/rank_unnamed.py` reports 0 address-only routines.
+- Binary verification: build/run234 PASS, 0 differing bytes; tests OK.
+
 ### E-0206 — Object path table (bank $0F); per-monster class tables (banks $16, $0C)
 
 - Kind: OBSERVATION (reading; C1).
