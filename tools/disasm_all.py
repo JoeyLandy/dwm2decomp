@@ -1860,6 +1860,62 @@ class Rom:
                         "to a rectangle copier)"})
             raw += 1
         log(f"raw tile rectangles: {raw}")
+        # Palette sources (E-0164): CopyFromBank (DE, bank B, HL, C bytes) and CopyBytesDEToHL_Bank00
+        # (DE in this bank or bank 0, HL, BC bytes) into wBGPaletteBuffer / wOBJPaletteBuffer
+        # ($C49F-$C51E), and LoadBGPaletteBufferFromBank (DE, bank B, $40 bytes).
+        pal_fns = {(b, a): info["name"] for (b, a), info in self.names.items() if not info.get("data") and
+                   info["name"] in ("CopyFromBank", "CopyBytesDEToHL_Bank00", "LoadBGPaletteBufferFromBank")}
+        ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")
+        ld_b = re.compile(r"ld b, \$([0-9A-F]{2})$")
+        ld_c = re.compile(r"ld c, \$([0-9A-F]{2})$")
+        pals: dict[tuple[int, int], int] = {}
+        for cb in range(self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                fn = pal_fns.get(self.resolve(cb, v[3])) if v[2] in ("call", "jp") and v[3] is not None else None
+                if not fn:
+                    continue
+                regs: dict[str, int] = {}
+                for x in reversed(order[max(0, k - 6):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    for r, rx in (("de", ld_de), ("hl", ld_hl), ("b", ld_b), ("c", ld_c), ("bc", ld_bc)):
+                        if r not in regs and (m := rx.match(ins[x][1])):
+                            regs[r] = int("".join(m.groups()), 16)
+                de = regs.get("de")
+                if de is None or not 0x4000 <= de < 0x8000:
+                    continue
+                if fn == "LoadBGPaletteBufferFromBank":
+                    sb, n = regs.get("b"), 0x40
+                elif fn == "CopyFromBank":
+                    sb, n = regs.get("b"), regs.get("c")
+                    if not 0xC49F <= regs.get("hl", 0) < 0xC51F:
+                        continue
+                else:
+                    sb, n = cb, regs.get("bc")
+                    if not 0xC49F <= regs.get("hl", 0) < 0xC51F:
+                        continue
+                if sb is None or n is None or not 0 < sb < self.nbanks or n % 8 or not 0 < n <= 0x40:
+                    continue
+                pals[(sb, de)] = max(pals.get((sb, de), 0), n)
+        npal = 0
+        for (sb, src), n in sorted(pals.items()):
+            end = src + n
+            o = sb * BANK + src - self.base(sb)
+            if end > 0x8000 or any(self.data[o + j + 1] & 0x80 for j in range(0, n, 2)) or \
+                    any(p in self.covered[sb] for p in range(src, end)) or \
+                    any(b == sb and lo < end and src < hi for b, lo, hi in taken) or \
+                    any(b == sb and a2 < end and src < a2 + used for (b, a2), (_, used) in self.streams.items()):
+                continue
+            taken.append((sb, src, end))
+            self.schemas.append({"bank": sb, "addr": src, "label": f"Palettes_{sb:02X}_{src:04X}", "count": n // 8,
+                                 "id_base": 0, "fields": [{"type": "words", "size": 8, "name": "one CGB palette: 4 BGR555 colours"}],
+                                 "note": f"E-0164 (derived: {n} bytes copied into a palette buffer by CopyFromBank, "
+                                         "CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)"})
+            npal += 1
+        log(f"palette sources: {npal}")
 
     def prepare_tables(self) -> None:
         """Validate config/tables.json against the ROM and register data labels for their

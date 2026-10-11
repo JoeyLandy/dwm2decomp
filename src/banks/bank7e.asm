@@ -377,9 +377,12 @@ Data_07E_5A15:: ; heuristic: stream in a run of back-to-back compressed streams;
 Data_07E_5A9A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F9A9A, $5C
 
-; address loaded by RunGameMode2State_Case04, RunGameMode2State_Case01
+; E-0164 (derived: 16 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
+; record: one CGB palette: 4 BGR555 colours
+Palettes_7E_5AF6::
 Data_07E_5AF6:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $00, $00, $FF, $6B, $79, $02, $00, $00, $00, $7C, $00, $7C, $00, $7C, $00, $7C
+    dw $0000, $6BFF, $0279, $0000 ; id 0
+    dw $7C00, $7C00, $7C00, $7C00 ; id 1
     db $00, $7C, $00, $7C, $00, $7C, $00, $7C
 
 ; address loaded by RunGameMode2State_Case01
@@ -405,7 +408,9 @@ Data_07E_5B46:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07E_5B63:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F9B63, $55
 
-; address loaded by DrawTitleSaveSummaryScreen
+; E-0164 (derived: 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
+; record: one CGB palette: 4 BGR555 colours
+Palettes_7E_5BB8::
 Data_07E_5BB8:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $00, $00, $7D, $3D, $11, $20
-    ds $2442, $00
+    dw $0000, $3D7D, $2011, $0000 ; id 0
+    ds $2440, $00

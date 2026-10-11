@@ -1994,6 +1994,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The 11 object bytes are not named field by field. The second skip byte's role is not read.
 - Binary verification: build/run163 PASS, 0 differing bytes; tests OK.
 
+### E-0164 — Palette sources from palette-buffer copies
+
+- Kind: OBSERVATION (derived from call sites; C1).
+- **Rule.** These sources are laid out as BGR555 palette tables:
+  - CopyFromBank with a literal source (DE), bank (B), destination (HL) in wBGPaletteBuffer/wOBJPaletteBuffer ($C49F-$C51E) and length (C);
+  - LoadBGPaletteBufferFromBank (DE, B, $40 bytes);
+  - CopyBytesDEToHL_Bank00 into those buffers, which is not matched yet because its family name is assigned after this pass.
+  - A source is used only when every word has bit 15 clear and it touches no code or layout.
+- **Result.** 5 palette sets (for example 5D:4139 and 5E:422F, loaded for game mode 2), labelled Palettes_BB_AAAA. A sixth candidate, 6E:77E0, was already MapType5Palettes5.
+- Binary verification: build/run165 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -6,9 +6,12 @@ SECTION "Bank 5E", ROMX[$4000], BANK[$5E]
 Data_05E_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $178001, $22E
 
-; address loaded by RunGameMode2State_Case01
+; E-0164 (derived: 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
+; record: one CGB palette: 4 BGR555 colours
+Palettes_5E_422F::
 Data_05E_422F:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $4D, $01, $FF, $6B, $55, $2A, $00, $00, $88
+    dw $014D, $6BFF, $2A55, $0000 ; id 0
+    db $88
 
 ; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
 ; record: 20 x 18 tiles, one row per line

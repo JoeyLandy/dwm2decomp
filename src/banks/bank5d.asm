@@ -6,18 +6,31 @@ SECTION "Bank 5D", ROMX[$4000], BANK[$5D]
 Data_05D_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $174001, $138
 
-; address loaded by RunGameMode2State_Case01
+; E-0164 (derived: 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
+; record: one CGB palette: 4 BGR555 colours
+Palettes_5D_4139::
 Data_05D_4139:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $174139, $275
+    dw $318C, $7FFF, $5294, $0000 ; id 0
+    INCBIN "dwm2-cobi-us.gbc", $174141, $26D
 
 ; address loaded by RunGameMode2State_Case04
 ; LZSS-compressed asset: 439 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_05D_43AE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1743AE, $1B7
 
-; address loaded by RunGameMode2State_Case04
+; E-0164 (derived: 64 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)
+; record: one CGB palette: 4 BGR555 colours
+Palettes_5D_4565::
 Data_05D_4565:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $174565, $92
+    dw $014D, $6BFF, $2A55, $0000 ; id 0
+    dw $294A, $7FFF, $4A52, $0000 ; id 1
+    dw $294A, $7FFF, $4A52, $0000 ; id 2
+    dw $294A, $7FFF, $4A52, $0000 ; id 3
+    dw $294A, $7FFF, $4A52, $0000 ; id 4
+    dw $294A, $7FFF, $4A52, $0000 ; id 5
+    dw $294A, $7FFF, $4A52, $0000 ; id 6
+    dw $294A, $7FFF, $4A52, $0000 ; id 7
+    INCBIN "dwm2-cobi-us.gbc", $1745A5, $52
     dw Data_05D_5604
     db $0B, $57, $57, $56
     dw Data_05D_5656
