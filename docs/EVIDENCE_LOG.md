@@ -2436,9 +2436,11 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Problem.** A key-world screen map stream was printed as an INCBIN up to the next label. When no chunk group (E-0146) reached the screens after it, they stayed inside that INCBIN. For example, 66:$5CD0's 28-byte stream sat in an INCBIN of $468 bytes.
 - **Rule.** After a 360-byte stream labelled as a key-world screen map, the bytes up to the next label, stream, layout or code are tiled with streams that decompress cleanly to 360 bytes. Each stream may sit behind an 8-byte screen header. A gap is used only when it tiles exactly.
   - Example: 66:$5CEC-$6138 holds seven header-plus-tile-map pairs.
-- **Result.** 24 gaps tiled: 44 streams registered, with their headers as KeyWorldScreenHeader tables. The stream count is now 4,605, and unidentified INCBIN is 20,687 bytes.
+- **Result.** At first, 24 gaps tiled into 44 streams, with their headers as KeyWorldScreenHeader tables.
+  - Widening the starting point to any 360-byte stream labelled as a screen (key-world room screens and map screens too) raises this to 50 gaps and 132 streams.
+  - The stream count is now 4,693, and unidentified INCBIN is 14,638 bytes.
 - **Limits.** Which rooms, if any, use these screens is not traced.
-- Binary verification: build/run268 PASS, 0 differing bytes; tests OK.
+- Binary verification: build/run268 PASS, then build/run269 PASS with the wider rule, 0 differing bytes; tests OK.
 
 ### E-0221 — Key-world goal graphics (bank $04); party-count rectangles (bank $31)
 

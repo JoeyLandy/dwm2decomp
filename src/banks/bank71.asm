@@ -216,7 +216,25 @@ Data_071_5B90:: ; heuristic: key-world room screen attribute map; C0
 
 ; LZSS-compressed asset: 70 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_5BBA:: ; heuristic: key-world room screen attribute map; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C5BBA, $160
+    INCBIN "dwm2-cobi-us.gbc", $1C5BBA, $46
+
+; LZSS-compressed asset: 36 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_5C00:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    db $68, $01, $03, $02, $03, $00, $0F, $1C, $01, $01, $01, $01, $03, $20, $0F, $4D
+    db $03, $80, $0F, $4D, $03, $00, $00, $00, $02, $03, $FF, $FE, $03, $FC, $FF, $01
+    db $03, $94, $0F, $35
+
+; LZSS-compressed asset: 76 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_5C24:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C5C24, $4C
+
+; LZSS-compressed asset: 88 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_5C70:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C5C70, $58
+
+; LZSS-compressed asset: 82 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_5CC8:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C5CC8, $52
 
 ; LZSS-compressed asset: 72 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_5D1A:: ; heuristic: key-world room screen attribute map; C0
@@ -326,7 +344,26 @@ Data_071_6A07:: ; heuristic: key-world room screen attribute map; C0
 
 ; LZSS-compressed asset: 65 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_6A42:: ; heuristic: key-world room screen attribute map; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C6A42, $176
+    INCBIN "dwm2-cobi-us.gbc", $1C6A42, $41
+
+; LZSS-compressed asset: 52 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_6A83:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    db $68, $01, $03, $02, $03, $00, $0F, $4D, $03, $18, $0F, $04, $01, $03, $78, $03
+    db $00, $03, $77, $05, $03, $76, $07, $00, $03, $82, $0F, $00, $03, $81, $0F, $16
+    db $03, $D0, $00, $03, $86, $0C, $03, $FC, $F0, $03, $86, $02, $03, $EF, $0F, $4D
+    db $03, $08, $1F, $05
+
+; LZSS-compressed asset: 102 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_6AB7:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C6AB7, $66
+
+; LZSS-compressed asset: 81 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_6B1D:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C6B1D, $51
+
+; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_6B6E:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C6B6E, $4A
 
 ; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_6BB8:: ; heuristic: key-world room screen attribute map; C0
@@ -452,7 +489,28 @@ Data_071_79C4:: ; heuristic: key-world room screen attribute map; C0
 
 ; LZSS-compressed asset: 59 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_7A02:: ; heuristic: key-world room screen attribute map; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C7A02, $13F
+    db $68, $01, $00, $02, $00, $00, $0F, $16, $01, $00, $2A, $0B, $00, $26, $0F, $05
+    db $03, $03, $03, $03, $00, $42, $0F, $13, $00, $1E, $0C, $00, $78, $0F, $11, $00
+    db $28, $00, $00, $A0, $0F, $2F, $00, $34, $06, $00, $00, $02, $00, $F2, $0F, $03
+    db $00, $52, $04, $00, $10, $1F, $0B, $00, $00, $0F, $13
+
+; LZSS-compressed asset: 39 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7A3D:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    db $68, $01, $03, $02, $03, $00, $0F, $4D, $03, $1E, $0F, $0A, $01, $03, $7E, $01
+    db $00, $03, $7D, $03, $03, $78, $09, $00, $03, $86, $0F, $00, $03, $85, $0F, $36
+    db $03, $F5, $0F, $4D, $03, $08, $1E
+
+; LZSS-compressed asset: 67 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7A64:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7A64, $43
+
+; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7AA7:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7AA7, $4A
+
+; LZSS-compressed asset: 80 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7AF1:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7AF1, $50
 
 ; LZSS-compressed asset: 78 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_7B41:: ; heuristic: key-world room screen attribute map; C0
@@ -460,11 +518,36 @@ Data_071_7B41:: ; heuristic: key-world room screen attribute map; C0
 
 ; LZSS-compressed asset: 78 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_7B8F:: ; heuristic: key-world room screen attribute map; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C7B8F, $E8
+    INCBIN "dwm2-cobi-us.gbc", $1C7B8F, $4E
+
+; LZSS-compressed asset: 84 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7BDD:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7BDD, $54
+
+; LZSS-compressed asset: 70 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7C31:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7C31, $46
 
 ; LZSS-compressed asset: 31 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_7C77:: ; heuristic: key-world room screen tile map; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C7C77, $213
+    db $68, $01, $01, $20, $21, $01, $00, $0C, $00, $00, $30, $31, $01, $14, $0C, $01
+    db $FE, $FF, $4D, $01, $5E, $0F, $4D, $01, $BE, $0F, $47, $01, $3F, $1F, $15
+
+; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7C96:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7C96, $82
+
+; LZSS-compressed asset: 122 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7D18:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7D18, $7A
+
+; LZSS-compressed asset: 122 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7D92:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7D92, $7A
+
+; LZSS-compressed asset: 126 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_071_7E0C:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $1C7E0C, $7E
 
 ; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_071_7E8A:: ; heuristic: key-world room screen attribute map; C0

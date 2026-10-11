@@ -2115,7 +2115,7 @@ class Rom:
 
         added = gaps = 0
         for (b, a), (size, used) in sorted(self.streams.items()):
-            if size != 360 or "key-world screen" not in self.dreason.get((b, a), ""):
+            if size != 360 or "screen" not in self.dreason.get((b, a), ""):
                 continue
             lo = a + used
             marks = [x for x in self.dlabels[b] if x >= lo] + [x for (bb, x) in self.streams if bb == b and x >= lo] + \
