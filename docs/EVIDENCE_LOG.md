@@ -1929,6 +1929,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - Which species stat uses which row is data in the species records.
 - Binary verification: build/run158 PASS, 0 differing bytes; tests OK.
 
+### E-0159 — Skill prerequisite lists (bank $1A)
+
+- Kind: OBSERVATION (reading of TryAddSkillIfPrerequisitesKnown, 1A:631F; C1).
+- **Source.** The routine reads the word $5BEC + 2 * skill. It adds the skill only when every skill of that $FF-terminated list is already among the eight (or equals C).
+- **Bounds.** 170 words, one per SkillRequirementTable record, point into $5D40-$5D8A. The lists share tails, for example $5D41 = [2, 3] and $5D42 = [3].
+- **Declared.** SkillPrerequisitePointers, and SkillPrerequisiteLists (one byte per line, with each list's label on its first byte).
+- Binary verification: build/run159 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

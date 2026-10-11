@@ -836,139 +836,304 @@ Data_01A_5005:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw 0, 40, 0, 0, 0, 62
     db $FF, $FF, $FF, $FF, $FF
 
+; E-0159 (C1: TryAddSkillIfPrerequisitesKnown reads the word $5BEC + 2 * skill and adds the skill only when every skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record; lists share tails, so they are laid out byte by byte in SkillPrerequisiteLists).
+; record: $FF-terminated list of skills needed before this one
+SkillPrerequisitePointers::
 Data_01A_5BEC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $40, $5D
-    dw Data_01A_5D41
-    db $42, $5D, $40, $5D
-    dw Data_01A_5D44
-    db $45, $5D, $40, $5D
-    dw Data_01A_5D47
-    db $48, $5D, $40, $5D
-    dw Data_01A_5D4A
-    db $4B, $5D, $40, $5D
-    dw Data_01A_5D4D
-    db $4E, $5D, $40, $5D
-    dw Data_01A_5D50
-    db $51, $5D, $40, $5D
-    dw Data_01A_5D53
-    db $40, $5D, $40, $5D
-    dw Data_01A_5D55
-    db $56, $5D, $40, $5D
-    dw Data_01A_5D58
-    db $40, $5D, $5A, $5D
-    dw Data_01A_5D5B
-    dw Data_01A_5D40
-    db $5D, $5D
-    dw Data_01A_5D40
-    db $40, $5D
-    dw Data_01A_5D40
-    db $40, $5D
-    dw Data_01A_5D40
-    db $40, $5D
-    dw Data_01A_5D5F
-    db $40, $5D
-    dw Data_01A_5D61
-    db $40, $5D
-    dw Data_01A_5D63
-    db $40, $5D
-    dw Data_01A_5D65
-    db $40, $5D, $40, $5D, $40, $5D, $67, $5D, $40, $5D, $40, $5D, $40, $5D, $40, $5D
-    db $40, $5D, $40, $5D, $69, $5D
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D6B
-    dw Data_01A_5D6C
-    dw Data_01A_5D6D
-    INCBIN "dwm2-cobi-us.gbc", $069C72, $68
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D40
-    dw Data_01A_5D7F
-    dw Data_01A_5D80
-    dw Data_01A_5D81
-    INCBIN "dwm2-cobi-us.gbc", $069CFC, $44
+    dw SkillPrerequisiteLists ; id 0
+    dw Data_01A_5D41 ; id 1
+    dw Data_01A_5D42 ; id 2
+    dw SkillPrerequisiteLists ; id 3
+    dw Data_01A_5D44 ; id 4
+    dw Data_01A_5D45 ; id 5
+    dw SkillPrerequisiteLists ; id 6
+    dw Data_01A_5D47 ; id 7
+    dw Data_01A_5D48 ; id 8
+    dw SkillPrerequisiteLists ; id 9
+    dw Data_01A_5D4A ; id 10
+    dw Data_01A_5D4B ; id 11
+    dw SkillPrerequisiteLists ; id 12
+    dw Data_01A_5D4D ; id 13
+    dw Data_01A_5D4E ; id 14
+    dw SkillPrerequisiteLists ; id 15
+    dw Data_01A_5D50 ; id 16
+    dw Data_01A_5D51 ; id 17
+    dw SkillPrerequisiteLists ; id 18
+    dw Data_01A_5D53 ; id 19
+    dw SkillPrerequisiteLists ; id 20
+    dw SkillPrerequisiteLists ; id 21
+    dw Data_01A_5D55 ; id 22
+    dw Data_01A_5D56 ; id 23
+    dw SkillPrerequisiteLists ; id 24
+    dw Data_01A_5D58 ; id 25
+    dw SkillPrerequisiteLists ; id 26
+    dw Data_01A_5D5A ; id 27
+    dw Data_01A_5D5B ; id 28
+    dw SkillPrerequisiteLists ; id 29
+    dw Data_01A_5D5D ; id 30
+    dw SkillPrerequisiteLists ; id 31
+    dw SkillPrerequisiteLists ; id 32
+    dw SkillPrerequisiteLists ; id 33
+    dw SkillPrerequisiteLists ; id 34
+    dw SkillPrerequisiteLists ; id 35
+    dw SkillPrerequisiteLists ; id 36
+    dw Data_01A_5D5F ; id 37
+    dw SkillPrerequisiteLists ; id 38
+    dw Data_01A_5D61 ; id 39
+    dw SkillPrerequisiteLists ; id 40
+    dw Data_01A_5D63 ; id 41
+    dw SkillPrerequisiteLists ; id 42
+    dw Data_01A_5D65 ; id 43
+    dw SkillPrerequisiteLists ; id 44
+    dw SkillPrerequisiteLists ; id 45
+    dw SkillPrerequisiteLists ; id 46
+    dw Data_01A_5D67 ; id 47
+    dw SkillPrerequisiteLists ; id 48
+    dw SkillPrerequisiteLists ; id 49
+    dw SkillPrerequisiteLists ; id 50
+    dw SkillPrerequisiteLists ; id 51
+    dw SkillPrerequisiteLists ; id 52
+    dw SkillPrerequisiteLists ; id 53
+    dw Data_01A_5D69 ; id 54
+    dw SkillPrerequisiteLists ; id 55
+    dw SkillPrerequisiteLists ; id 56
+    dw SkillPrerequisiteLists ; id 57
+    dw SkillPrerequisiteLists ; id 58
+    dw SkillPrerequisiteLists ; id 59
+    dw SkillPrerequisiteLists ; id 60
+    dw SkillPrerequisiteLists ; id 61
+    dw SkillPrerequisiteLists ; id 62
+    dw SkillPrerequisiteLists ; id 63
+    dw Data_01A_5D6B ; id 64
+    dw Data_01A_5D6C ; id 65
+    dw Data_01A_5D6D ; id 66
+    dw SkillPrerequisiteLists ; id 67
+    dw Data_01A_5D6F ; id 68
+    dw Data_01A_5D70 ; id 69
+    dw Data_01A_5D71 ; id 70
+    dw SkillPrerequisiteLists ; id 71
+    dw Data_01A_5D73 ; id 72
+    dw SkillPrerequisiteLists ; id 73
+    dw SkillPrerequisiteLists ; id 74
+    dw SkillPrerequisiteLists ; id 75
+    dw Data_01A_5D75 ; id 76
+    dw SkillPrerequisiteLists ; id 77
+    dw Data_01A_5D77 ; id 78
+    dw SkillPrerequisiteLists ; id 79
+    dw SkillPrerequisiteLists ; id 80
+    dw SkillPrerequisiteLists ; id 81
+    dw SkillPrerequisiteLists ; id 82
+    dw SkillPrerequisiteLists ; id 83
+    dw SkillPrerequisiteLists ; id 84
+    dw SkillPrerequisiteLists ; id 85
+    dw SkillPrerequisiteLists ; id 86
+    dw SkillPrerequisiteLists ; id 87
+    dw SkillPrerequisiteLists ; id 88
+    dw SkillPrerequisiteLists ; id 89
+    dw SkillPrerequisiteLists ; id 90
+    dw SkillPrerequisiteLists ; id 91
+    dw SkillPrerequisiteLists ; id 92
+    dw SkillPrerequisiteLists ; id 93
+    dw SkillPrerequisiteLists ; id 94
+    dw SkillPrerequisiteLists ; id 95
+    dw SkillPrerequisiteLists ; id 96
+    dw SkillPrerequisiteLists ; id 97
+    dw SkillPrerequisiteLists ; id 98
+    dw Data_01A_5D79 ; id 99
+    dw SkillPrerequisiteLists ; id 100
+    dw SkillPrerequisiteLists ; id 101
+    dw SkillPrerequisiteLists ; id 102
+    dw SkillPrerequisiteLists ; id 103
+    dw SkillPrerequisiteLists ; id 104
+    dw SkillPrerequisiteLists ; id 105
+    dw SkillPrerequisiteLists ; id 106
+    dw SkillPrerequisiteLists ; id 107
+    dw SkillPrerequisiteLists ; id 108
+    dw SkillPrerequisiteLists ; id 109
+    dw SkillPrerequisiteLists ; id 110
+    dw SkillPrerequisiteLists ; id 111
+    dw SkillPrerequisiteLists ; id 112
+    dw SkillPrerequisiteLists ; id 113
+    dw SkillPrerequisiteLists ; id 114
+    dw Data_01A_5D7B ; id 115
+    dw SkillPrerequisiteLists ; id 116
+    dw SkillPrerequisiteLists ; id 117
+    dw Data_01A_5D7D ; id 118
+    dw SkillPrerequisiteLists ; id 119
+    dw SkillPrerequisiteLists ; id 120
+    dw SkillPrerequisiteLists ; id 121
+    dw SkillPrerequisiteLists ; id 122
+    dw SkillPrerequisiteLists ; id 123
+    dw SkillPrerequisiteLists ; id 124
+    dw SkillPrerequisiteLists ; id 125
+    dw SkillPrerequisiteLists ; id 126
+    dw SkillPrerequisiteLists ; id 127
+    dw SkillPrerequisiteLists ; id 128
+    dw SkillPrerequisiteLists ; id 129
+    dw SkillPrerequisiteLists ; id 130
+    dw SkillPrerequisiteLists ; id 131
+    dw SkillPrerequisiteLists ; id 132
+    dw Data_01A_5D7F ; id 133
+    dw Data_01A_5D80 ; id 134
+    dw Data_01A_5D81 ; id 135
+    dw SkillPrerequisiteLists ; id 136
+    dw SkillPrerequisiteLists ; id 137
+    dw SkillPrerequisiteLists ; id 138
+    dw Data_01A_5D83 ; id 139
+    dw SkillPrerequisiteLists ; id 140
+    dw Data_01A_5D85 ; id 141
+    dw SkillPrerequisiteLists ; id 142
+    dw SkillPrerequisiteLists ; id 143
+    dw SkillPrerequisiteLists ; id 144
+    dw SkillPrerequisiteLists ; id 145
+    dw SkillPrerequisiteLists ; id 146
+    dw SkillPrerequisiteLists ; id 147
+    dw SkillPrerequisiteLists ; id 148
+    dw SkillPrerequisiteLists ; id 149
+    dw SkillPrerequisiteLists ; id 150
+    dw Data_01A_5D87 ; id 151
+    dw SkillPrerequisiteLists ; id 152
+    dw Data_01A_5D89 ; id 153
+    dw SkillPrerequisiteLists ; id 154
+    dw SkillPrerequisiteLists ; id 155
+    dw SkillPrerequisiteLists ; id 156
+    dw SkillPrerequisiteLists ; id 157
+    dw SkillPrerequisiteLists ; id 158
+    dw SkillPrerequisiteLists ; id 159
+    dw SkillPrerequisiteLists ; id 160
+    dw SkillPrerequisiteLists ; id 161
+    dw SkillPrerequisiteLists ; id 162
+    dw SkillPrerequisiteLists ; id 163
+    dw SkillPrerequisiteLists ; id 164
+    dw SkillPrerequisiteLists ; id 165
+    dw SkillPrerequisiteLists ; id 166
+    dw SkillPrerequisiteLists ; id 167
+    dw SkillPrerequisiteLists ; id 168
+    dw SkillPrerequisiteLists ; id 169
 
-Data_01A_5D40:: ; heuristic: target of a monotone pointer table; C0
-    db $FF
-
-Data_01A_5D41:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $03, $FF
-
-Data_01A_5D44:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $06, $FF
-
-Data_01A_5D47:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $09, $FF
-
-Data_01A_5D4A:: ; heuristic: target of a monotone pointer table; C0
-    db $0B, $0C, $FF
-
-Data_01A_5D4D:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $0F, $FF
-
-Data_01A_5D50:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $12, $FF
-
-Data_01A_5D53:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $FF
-
-Data_01A_5D55:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $18, $FF
-
-Data_01A_5D58:: ; heuristic: target of a monotone pointer table; C0
-    db $1A, $FF, $1C
-
-Data_01A_5D5B:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $FF, $1F, $FF
-
-Data_01A_5D5F:: ; heuristic: target of a monotone pointer table; C0
-    db $26, $FF
-
-Data_01A_5D61:: ; heuristic: target of a monotone pointer table; C0
-    db $28, $FF
-
-Data_01A_5D63:: ; heuristic: target of a monotone pointer table; C0
-    db $2A, $FF
-
-Data_01A_5D65:: ; heuristic: target of a monotone pointer table; C0
-    db $2C, $FF, $30, $FF, $37, $FF
-
-Data_01A_5D6B:: ; heuristic: target of a monotone pointer table; C0
-    db $41
-
-Data_01A_5D6C:: ; heuristic: target of a monotone pointer table; C0
-    db $42
-
-Data_01A_5D6D:: ; heuristic: target of a monotone pointer table; C0
-    db $43, $FF, $45, $46, $47, $FF, $49, $FF, $4D, $FF, $4F, $FF, $64, $FF, $74, $FF
-    db $77, $FF
-
-Data_01A_5D7F:: ; heuristic: target of a monotone pointer table; C0
-    db $86
-
-Data_01A_5D80:: ; heuristic: target of a monotone pointer table; C0
-    db $87
-
-Data_01A_5D81:: ; heuristic: target of a monotone pointer table; C0
-    db $88, $FF, $8C, $FF, $8E, $FF, $98, $FF, $9A, $FF
+; E-0159 (C1: the lists SkillPrerequisitePointers points into; a list runs from its label to the next $FF, and several lists end in the same bytes).
+; record: skill number, or $FF ending a list
+SkillPrerequisiteLists::
+Data_01A_5D40:: ; heuristic: skill prerequisite list; C0
+    db $FF ; entry 0
+Data_01A_5D41:: ; heuristic: skill prerequisite list; C0
+    db $02 ; entry 1
+Data_01A_5D42:: ; heuristic: skill prerequisite list; C0
+    db $03 ; entry 2
+    db $FF ; entry 3
+Data_01A_5D44:: ; heuristic: skill prerequisite list; C0
+    db $05 ; entry 4
+Data_01A_5D45:: ; heuristic: skill prerequisite list; C0
+    db $06 ; entry 5
+    db $FF ; entry 6
+Data_01A_5D47:: ; heuristic: skill prerequisite list; C0
+    db $08 ; entry 7
+Data_01A_5D48:: ; heuristic: skill prerequisite list; C0
+    db $09 ; entry 8
+    db $FF ; entry 9
+Data_01A_5D4A:: ; heuristic: skill prerequisite list; C0
+    db $0B ; entry 10
+Data_01A_5D4B:: ; heuristic: skill prerequisite list; C0
+    db $0C ; entry 11
+    db $FF ; entry 12
+Data_01A_5D4D:: ; heuristic: skill prerequisite list; C0
+    db $0E ; entry 13
+Data_01A_5D4E:: ; heuristic: skill prerequisite list; C0
+    db $0F ; entry 14
+    db $FF ; entry 15
+Data_01A_5D50:: ; heuristic: skill prerequisite list; C0
+    db $11 ; entry 16
+Data_01A_5D51:: ; heuristic: skill prerequisite list; C0
+    db $12 ; entry 17
+    db $FF ; entry 18
+Data_01A_5D53:: ; heuristic: skill prerequisite list; C0
+    db $14 ; entry 19
+    db $FF ; entry 20
+Data_01A_5D55:: ; heuristic: skill prerequisite list; C0
+    db $17 ; entry 21
+Data_01A_5D56:: ; heuristic: skill prerequisite list; C0
+    db $18 ; entry 22
+    db $FF ; entry 23
+Data_01A_5D58:: ; heuristic: skill prerequisite list; C0
+    db $1A ; entry 24
+    db $FF ; entry 25
+Data_01A_5D5A:: ; heuristic: skill prerequisite list; C0
+    db $1C ; entry 26
+Data_01A_5D5B:: ; heuristic: skill prerequisite list; C0
+    db $1D ; entry 27
+    db $FF ; entry 28
+Data_01A_5D5D:: ; heuristic: skill prerequisite list; C0
+    db $1F ; entry 29
+    db $FF ; entry 30
+Data_01A_5D5F:: ; heuristic: skill prerequisite list; C0
+    db $26 ; entry 31
+    db $FF ; entry 32
+Data_01A_5D61:: ; heuristic: skill prerequisite list; C0
+    db $28 ; entry 33
+    db $FF ; entry 34
+Data_01A_5D63:: ; heuristic: skill prerequisite list; C0
+    db $2A ; entry 35
+    db $FF ; entry 36
+Data_01A_5D65:: ; heuristic: skill prerequisite list; C0
+    db $2C ; entry 37
+    db $FF ; entry 38
+Data_01A_5D67:: ; heuristic: skill prerequisite list; C0
+    db $30 ; entry 39
+    db $FF ; entry 40
+Data_01A_5D69:: ; heuristic: skill prerequisite list; C0
+    db $37 ; entry 41
+    db $FF ; entry 42
+Data_01A_5D6B:: ; heuristic: skill prerequisite list; C0
+    db $41 ; entry 43
+Data_01A_5D6C:: ; heuristic: skill prerequisite list; C0
+    db $42 ; entry 44
+Data_01A_5D6D:: ; heuristic: skill prerequisite list; C0
+    db $43 ; entry 45
+    db $FF ; entry 46
+Data_01A_5D6F:: ; heuristic: skill prerequisite list; C0
+    db $45 ; entry 47
+Data_01A_5D70:: ; heuristic: skill prerequisite list; C0
+    db $46 ; entry 48
+Data_01A_5D71:: ; heuristic: skill prerequisite list; C0
+    db $47 ; entry 49
+    db $FF ; entry 50
+Data_01A_5D73:: ; heuristic: skill prerequisite list; C0
+    db $49 ; entry 51
+    db $FF ; entry 52
+Data_01A_5D75:: ; heuristic: skill prerequisite list; C0
+    db $4D ; entry 53
+    db $FF ; entry 54
+Data_01A_5D77:: ; heuristic: skill prerequisite list; C0
+    db $4F ; entry 55
+    db $FF ; entry 56
+Data_01A_5D79:: ; heuristic: skill prerequisite list; C0
+    db $64 ; entry 57
+    db $FF ; entry 58
+Data_01A_5D7B:: ; heuristic: skill prerequisite list; C0
+    db $74 ; entry 59
+    db $FF ; entry 60
+Data_01A_5D7D:: ; heuristic: skill prerequisite list; C0
+    db $77 ; entry 61
+    db $FF ; entry 62
+Data_01A_5D7F:: ; heuristic: skill prerequisite list; C0
+    db $86 ; entry 63
+Data_01A_5D80:: ; heuristic: skill prerequisite list; C0
+    db $87 ; entry 64
+Data_01A_5D81:: ; heuristic: skill prerequisite list; C0
+    db $88 ; entry 65
+    db $FF ; entry 66
+Data_01A_5D83:: ; heuristic: skill prerequisite list; C0
+    db $8C ; entry 67
+    db $FF ; entry 68
+Data_01A_5D85:: ; heuristic: skill prerequisite list; C0
+    db $8E ; entry 69
+    db $FF ; entry 70
+Data_01A_5D87:: ; heuristic: skill prerequisite list; C0
+    db $98 ; entry 71
+    db $FF ; entry 72
+Data_01A_5D89:: ; heuristic: skill prerequisite list; C0
+    db $9A ; entry 73
+    db $FF ; entry 74
 
 Data_01A_5D8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $DF, $5E

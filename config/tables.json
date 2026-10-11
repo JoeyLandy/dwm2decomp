@@ -2087,6 +2087,35 @@
         }
       ],
       "note": "E-0158 (C1: StatFromGrowthRow starts its sum from the byte $63F8 + row)."
+    },
+    {
+      "bank": "1A",
+      "addr": "5BEC",
+      "label": "SkillPrerequisitePointers",
+      "count": 170,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "$FF-terminated list of skills needed before this one",
+          "reason": "skill prerequisite list"
+        }
+      ],
+      "note": "E-0159 (C1: TryAddSkillIfPrerequisitesKnown reads the word $5BEC + 2 * skill and adds the skill only when every skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record; lists share tails, so they are laid out byte by byte in SkillPrerequisiteLists)."
+    },
+    {
+      "bank": "1A",
+      "addr": "5D40",
+      "label": "SkillPrerequisiteLists",
+      "count": 75,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill number, or $FF ending a list"
+        }
+      ],
+      "note": "E-0159 (C1: the lists SkillPrerequisitePointers points into; a list runs from its label to the next $FF, and several lists end in the same bytes)."
     }
   ]
 }
