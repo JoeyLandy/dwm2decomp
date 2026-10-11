@@ -31,7 +31,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from trace_disasm import decode  # noqa: E402
 from lzss_gfx import decompress as lzss_decompress  # noqa: E402
-from sound_tracks import decode_header, decode_region  # noqa: E402
+from sound_tracks import decode_event, decode_header, decode_region  # noqa: E402
 import gb_symbols as gbs  # noqa: E402
 import gb_text  # noqa: E402
 
@@ -2242,6 +2242,31 @@ class Rom:
                     del dt[k]
                 self.track_at[(bank, p)] = {"events": evs, "end": nxt, "header": decode_header(bd, p - 0x4000)}
                 used += 1
+            # E-0190: the last track ends at an `end` event after which only one fill byte repeats
+            # up to the next label, decoded code or the end of the bank.
+            p = ptrs[-1] if ptrs else None
+            if p is None or not 0x4000 <= p < 0x8000 or (bank, p) in self.track_at:
+                continue
+            limit = min([a for a in dl if a > p] + [0x8000])
+            limit = next((a for a in range(p, limit) if a in self.covered[bank]), limit)
+            off, evs, end = p - 0x4000 + 4, [], None
+            while off < limit - 0x4000:
+                ev, n = decode_event(bd, off)
+                if off + n > limit - 0x4000:
+                    break
+                evs.append(ev)
+                off += n
+                rest = bd[off:limit - 0x4000]
+                if ev["kind"] == "end" and len(set(rest)) <= 1:
+                    end = off + 0x4000
+                    break
+            if end is None:
+                skipped += 1
+                continue
+            for k in [k for k in dt if p <= k < end]:
+                del dt[k]
+            self.track_at[(bank, p)] = {"events": evs, "end": end, "header": decode_header(bd, p - 0x4000)}
+            used += 1
         log(f"sound tracks emitted as events: {used} (skipped {skipped}; "
             f"{sum(len(v['events']) for v in self.track_at.values())} events)")
 

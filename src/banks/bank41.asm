@@ -8057,5 +8057,181 @@ Data_041_7C65:: ; heuristic: track stream of a sound record; C0
     db $B0, $F3 ; jump $F3
     db $FF, $FF ; end
 
+; sound track, 174 events after the header (E-0019: grammar C2, meaning C0)
 Data_041_7E97:: ; heuristic: track stream of a sound record; C0
-    INCBIN "dwm2-cobi-us.gbc", $107E97, $169
+    db $07, $FF, $02, $0F ; header: param=7 byte1=$FF volume=$02 byte3=$0F
+    db $A1, $0B ; duty $0B
+    db $A3, $09 ; mod $09
+    db $A0, $02 ; volume $02
+    db $24, $2A ; note E2 dur 42
+    db $A0, $04 ; volume $04
+    db $24, $06 ; note E2 dur 6
+    db $A0, $02 ; volume $02
+    db $1B, $2A ; note B1 dur 42
+    db $A0, $04 ; volume $04
+    db $1B, $06 ; note B1 dur 6
+    db $FD, $F3 ; label 3
+    db $A0, $02 ; volume $02
+    db $14, $2A ; note E1 dur 42
+    db $A0, $04 ; volume $04
+    db $14, $06 ; note E1 dur 6
+    db $A0, $02 ; volume $02
+    db $19, $2A ; note A1 dur 42
+    db $A0, $04 ; volume $04
+    db $19, $06 ; note A1 dur 6
+    db $A0, $02 ; volume $02
+    db $1B, $2A ; note B1 dur 42
+    db $A0, $04 ; volume $04
+    db $1B, $06 ; note B1 dur 6
+    db $A0, $02 ; volume $02
+    db $14, $2A ; note E1 dur 42
+    db $A0, $04 ; volume $04
+    db $14, $06 ; note E1 dur 6
+    db $A0, $02 ; volume $02
+    db $19, $2A ; note A1 dur 42
+    db $A0, $04 ; volume $04
+    db $19, $06 ; note A1 dur 6
+    db $A0, $02 ; volume $02
+    db $16, $2A ; note F#1 dur 42
+    db $A0, $04 ; volume $04
+    db $16, $06 ; note F#1 dur 6
+    db $A0, $02 ; volume $02
+    db $1B, $2A ; note B1 dur 42
+    db $A0, $04 ; volume $04
+    db $1B, $06 ; note B1 dur 6
+    db $A0, $02 ; volume $02
+    db $14, $20 ; note E1 dur 32
+    db $A0, $04 ; volume $04
+    db $14, $10 ; note E1 dur 16
+    db $A0, $02 ; volume $02
+    db $19, $2A ; note A1 dur 42
+    db $A0, $04 ; volume $04
+    db $19, $06 ; note A1 dur 6
+    db $A0, $02 ; volume $02
+    db $22, $2A ; note D2 dur 42
+    db $A0, $04 ; volume $04
+    db $22, $06 ; note D2 dur 6
+    db $A0, $02 ; volume $02
+    db $17, $2A ; note G1 dur 42
+    db $A0, $04 ; volume $04
+    db $17, $06 ; note G1 dur 6
+    db $A0, $02 ; volume $02
+    db $20, $2A ; note C2 dur 42
+    db $A0, $04 ; volume $04
+    db $20, $06 ; note C2 dur 6
+    db $A0, $02 ; volume $02
+    db $16, $2A ; note F#1 dur 42
+    db $A0, $04 ; volume $04
+    db $16, $06 ; note F#1 dur 6
+    db $A0, $02 ; volume $02
+    db $15, $2A ; note F1 dur 42
+    db $A0, $04 ; volume $04
+    db $15, $06 ; note F1 dur 6
+    db $A0, $02 ; volume $02
+    db $1B, $2A ; note B1 dur 42
+    db $A0, $04 ; volume $04
+    db $1B, $06 ; note B1 dur 6
+    db $A0, $02 ; volume $02
+    db $14, $20 ; note E1 dur 32
+    db $A0, $04 ; volume $04
+    db $14, $12 ; note E1 dur 18
+    db $A2, $7F ; duty2 $7F
+    db $A0, $02 ; volume $02
+    db $22, $10 ; note D2 dur 16
+    db $A0, $04 ; volume $04
+    db $22, $20 ; note D2 dur 32
+    db $A0, $02 ; volume $02
+    db $17, $10 ; note G1 dur 16
+    db $A0, $04 ; volume $04
+    db $17, $20 ; note G1 dur 32
+    db $A0, $02 ; volume $02
+    db $20, $10 ; note C2 dur 16
+    db $A0, $04 ; volume $04
+    db $20, $20 ; note C2 dur 32
+    db $A0, $02 ; volume $02
+    db $15, $10 ; note F1 dur 16
+    db $A0, $04 ; volume $04
+    db $15, $20 ; note F1 dur 32
+    db $A0, $02 ; volume $02
+    db $1B, $10 ; note B1 dur 16
+    db $A0, $04 ; volume $04
+    db $1B, $20 ; note B1 dur 32
+    db $A0, $02 ; volume $02
+    db $14, $10 ; note E1 dur 16
+    db $A0, $04 ; volume $04
+    db $14, $20 ; note E1 dur 32
+    db $A0, $02 ; volume $02
+    db $19, $10 ; note A1 dur 16
+    db $A0, $04 ; volume $04
+    db $19, $20 ; note A1 dur 32
+    db $A0, $02 ; volume $02
+    db $16, $10 ; note F#1 dur 16
+    db $A0, $04 ; volume $04
+    db $16, $20 ; note F#1 dur 32
+    db $A2, $FF ; duty2 $FF
+    db $A0, $02 ; volume $02
+    db $1B, $1C ; note B1 dur 28
+    db $A0, $04 ; volume $04
+    db $1B, $08 ; note B1 dur 8
+    db $A0, $02 ; volume $02
+    db $1B, $0C ; note B1 dur 12
+    db $A0, $02 ; volume $02
+    db $14, $2A ; note E1 dur 42
+    db $A0, $04 ; volume $04
+    db $14, $06 ; note E1 dur 6
+    db $A0, $02 ; volume $02
+    db $19, $1C ; note A1 dur 28
+    db $A0, $04 ; volume $04
+    db $19, $08 ; note A1 dur 8
+    db $A0, $02 ; volume $02
+    db $19, $0C ; note A1 dur 12
+    db $A0, $02 ; volume $02
+    db $22, $2A ; note D2 dur 42
+    db $A0, $04 ; volume $04
+    db $22, $06 ; note D2 dur 6
+    db $A0, $02 ; volume $02
+    db $18, $1C ; note G#1 dur 28
+    db $A0, $04 ; volume $04
+    db $18, $08 ; note G#1 dur 8
+    db $A0, $02 ; volume $02
+    db $18, $0C ; note G#1 dur 12
+    db $A0, $02 ; volume $02
+    db $21, $2A ; note C#2 dur 42
+    db $A0, $04 ; volume $04
+    db $21, $06 ; note C#2 dur 6
+    db $A0, $02 ; volume $02
+    db $1B, $1C ; note B1 dur 28
+    db $A0, $04 ; volume $04
+    db $1B, $08 ; note B1 dur 8
+    db $A0, $02 ; volume $02
+    db $1B, $0C ; note B1 dur 12
+    db $A0, $02 ; volume $02
+    db $20, $2A ; note C2 dur 42
+    db $A0, $04 ; volume $04
+    db $20, $06 ; note C2 dur 6
+    db $A0, $02 ; volume $02
+    db $1B, $1C ; note B1 dur 28
+    db $A0, $04 ; volume $04
+    db $1B, $08 ; note B1 dur 8
+    db $A0, $02 ; volume $02
+    db $26, $0C ; note F#2 dur 12
+    db $A0, $02 ; volume $02
+    db $2B, $1C ; note B2 dur 28
+    db $A0, $04 ; volume $04
+    db $2B, $08 ; note B2 dur 8
+    db $A0, $02 ; volume $02
+    db $26, $0C ; note F#2 dur 12
+    db $1B, $14 ; note B1 dur 20
+    db $A0, $04 ; volume $04
+    db $1B, $10 ; note B1 dur 16
+    db $A0, $02 ; volume $02
+    db $1B, $0A ; note B1 dur 10
+    db $A0, $04 ; volume $04
+    db $1B, $02 ; note B1 dur 2
+    db $A0, $02 ; volume $02
+    db $1B, $18 ; note B1 dur 24
+    db $A0, $06 ; volume $06
+    db $1B, $18 ; note B1 dur 24
+    db $B0, $F3 ; jump $F3
+    db $FF, $FF ; end
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00

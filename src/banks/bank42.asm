@@ -8400,7 +8400,16 @@ Data_042_7F98:: ; heuristic: track stream of a sound record; C0
     db $40, $05 ; note C4 dur 5
     db $FF, $FF ; end
 
+; sound track, 9 events after the header (E-0019: grammar C2, meaning C0)
 Data_042_7FAE:: ; heuristic: track stream of a sound record; C0
-    db $00, $00, $0F, $00, $20, $0B, $3E, $02, $60, $02, $98, $03, $43, $09, $C1, $20
-    db $A0, $09, $43, $20, $FF, $FF
+    db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
+    db $20, $0B ; note C2 dur 11
+    db $3E, $02 ; rest-note $3E dur 2
+    db $60, $02 ; note C6 dur 2
+    db $98, $03 ; note G#9 dur 3
+    db $43, $09 ; note D#4 dur 9
+    db $C1, $20 ; env $20
+    db $A0, $09 ; volume $09
+    db $43, $20 ; note D#4 dur 32
+    db $FF, $FF ; end
     ds $3C, $00

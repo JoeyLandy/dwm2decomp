@@ -2287,6 +2287,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - `ld r16, Data_*` operands went from 1,724 to 1,382.
 - Binary verification: build/run200 PASS, 0 differing bytes; tests OK.
 
+### E-0190 — The last sound track of each table
+
+- Kind: TOOL (C2 grammar from E-0019; region end C1).
+- **Problem.** prepare_tracks decoded a track only up to the next track pointer, so the last track of each table had no end and stayed INCBIN. An example is 40:$7B9B (850 bytes).
+- **Rule.** The last track now runs to the first `end` event after which the bytes up to the next label, decoded code or the end of the bank are a single repeated value. At 40:$7B9B it ends at $7EED (`B0 F3`, `FF FF`), and $113 zero bytes follow.
+- **Result.** 218 tracks are decoded (214 before), with none skipped. Unidentified INCBIN is 60,460 bytes.
+- Binary verification: build/run201 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

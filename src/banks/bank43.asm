@@ -4856,6 +4856,134 @@ Data_043_641D:: ; heuristic: track stream of a sound record; C0
     db $75, $05 ; note F7 dur 5
     db $FF, $FF ; end
 
+; sound track, 127 events after the header (E-0019: grammar C2, meaning C0)
 Data_043_650D:: ; heuristic: track stream of a sound record; C0
-    INCBIN "dwm2-cobi-us.gbc", $10E50D, $102
+    db $05, $01, $07, $00 ; header: param=5 byte1=$01 volume=$07 byte3=$00
+    db $A5, $F0 ; pan $F0
+    db $1F, $2C ; rest-note $1F dur 44
+    db $C1, $3F ; env $3F
+    db $FD, $F0 ; label 0
+    db $A0, $08 ; volume $08
+    db $65, $05 ; note F6 dur 5
+    db $76, $05 ; note F#7 dur 5
+    db $69, $05 ; note A6 dur 5
+    db $67, $05 ; note G6 dur 5
+    db $A0, $07 ; volume $07
+    db $68, $05 ; note G#6 dur 5
+    db $76, $05 ; note F#7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $69, $05 ; note A6 dur 5
+    db $67, $05 ; note G6 dur 5
+    db $A0, $09 ; volume $09
+    db $65, $05 ; note F6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $69, $05 ; note A6 dur 5
+    db $67, $05 ; note G6 dur 5
+    db $A0, $07 ; volume $07
+    db $68, $05 ; note G#6 dur 5
+    db $76, $05 ; note F#7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $78, $05 ; note G#7 dur 5
+    db $68, $05 ; note G#6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $A0, $0A ; volume $0A
+    db $68, $05 ; note G#6 dur 5
+    db $76, $05 ; note F#7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $78, $05 ; note G#7 dur 5
+    db $68, $05 ; note G#6 dur 5
+    db $B2, $F0 ; repeat $F0
+    db $A0, $07 ; volume $07
+    db $69, $05 ; note A6 dur 5
+    db $77, $05 ; note G7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $78, $05 ; note G#7 dur 5
+    db $68, $05 ; note G#6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $78, $05 ; note G#7 dur 5
+    db $A0, $04 ; volume $04
+    db $68, $05 ; note G#6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $69, $05 ; note A6 dur 5
+    db $77, $05 ; note G7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $78, $05 ; note G#7 dur 5
+    db $A0, $03 ; volume $03
+    db $68, $05 ; note G#6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $69, $05 ; note A6 dur 5
+    db $77, $05 ; note G7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $78, $05 ; note G#7 dur 5
+    db $A0, $02 ; volume $02
+    db $68, $05 ; note G#6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $69, $05 ; note A6 dur 5
+    db $77, $05 ; note G7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $78, $05 ; note G#7 dur 5
+    db $1F, $08 ; rest-note $1F dur 8
+    db $1F, $6F ; rest-note $1F dur 111
+    db $A0, $07 ; volume $07
+    db $AF, $03 ; param $03
+    db $A5, $FF ; pan $FF
+    db $62, $05 ; note D6 dur 5
+    db $73, $05 ; note D#7 dur 5
+    db $66, $05 ; note F#6 dur 5
+    db $64, $05 ; note E6 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $73, $05 ; note D#7 dur 5
+    db $A0, $0A ; volume $0A
+    db $62, $05 ; note D6 dur 5
+    db $72, $05 ; note D7 dur 5
+    db $66, $05 ; note F#6 dur 5
+    db $64, $05 ; note E6 dur 5
+    db $A0, $0E ; volume $0E
+    db $65, $05 ; note F6 dur 5
+    db $73, $05 ; note D#7 dur 5
+    db $62, $05 ; note D6 dur 5
+    db $72, $05 ; note D7 dur 5
+    db $66, $05 ; note F#6 dur 5
+    db $64, $05 ; note E6 dur 5
+    db $A0, $0A ; volume $0A
+    db $65, $05 ; note F6 dur 5
+    db $73, $05 ; note D#7 dur 5
+    db $62, $05 ; note D6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $65, $05 ; note F6 dur 5
+    db $72, $05 ; note D7 dur 5
+    db $A0, $08 ; volume $08
+    db $66, $05 ; note F#6 dur 5
+    db $74, $05 ; note E7 dur 5
+    db $62, $05 ; note D6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $A0, $06 ; volume $06
+    db $65, $05 ; note F6 dur 5
+    db $72, $05 ; note D7 dur 5
+    db $66, $05 ; note F#6 dur 5
+    db $74, $05 ; note E7 dur 5
+    db $62, $05 ; note D6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $A0, $03 ; volume $03
+    db $65, $05 ; note F6 dur 5
+    db $72, $05 ; note D7 dur 5
+    db $66, $05 ; note F#6 dur 5
+    db $74, $05 ; note E7 dur 5
+    db $62, $05 ; note D6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $A0, $02 ; volume $02
+    db $65, $05 ; note F6 dur 5
+    db $72, $05 ; note D7 dur 5
+    db $66, $05 ; note F#6 dur 5
+    db $74, $05 ; note E7 dur 5
+    db $62, $05 ; note D6 dur 5
+    db $75, $05 ; note F7 dur 5
+    db $A0, $01 ; volume $01
+    db $65, $05 ; note F6 dur 5
+    db $72, $05 ; note D7 dur 5
+    db $66, $05 ; note F#6 dur 5
+    db $74, $05 ; note E7 dur 5
+    db $FF, $FF ; end
     ds $19F1, $00
