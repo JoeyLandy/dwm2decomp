@@ -13285,6 +13285,138 @@
         }
       ],
       "note": "E-0214 (C1: ScriptCommandCB_Run_Case00 passes $530C to ScriptCommandCB_Run_Shared01, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at ScriptCommandCA_Run)."
+    },
+    {
+      "bank": "A1",
+      "addr": "59D6",
+      "label": "WorldMapStartPositions",
+      "count": 10,
+      "id_base": 0,
+      "tail": 2,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "screen X/Y nibbles, position X/Y nibbles (LoadMapPositionFromHL)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "not read on this path"
+        }
+      ],
+      "record": "screen X/Y and position X/Y nibbles; two bytes not read here",
+      "note": "E-0215 (C1: Jump_0A1_4A67 reads the record at $59D6 + 4 * wGameMode2Byte44 with LoadMapPositionFromHL (hMapScreenX/Y, hPlayerX/Y from nibbles); 11 indexes, so record 10's first two bytes are the tail and its other two would be WorldMapCursorSpriteLists' first word)."
+    },
+    {
+      "bank": "A1",
+      "addr": "5A00",
+      "label": "WorldMapCursorSpriteLists",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "world map sprite list"
+        }
+      ],
+      "lists": {
+        "until": "5A49",
+        "size": 1,
+        "one_line": true,
+        "label": "WorldMapCursorSprites",
+        "fields": [
+          {
+            "type": "db",
+            "size": 1,
+            "name": "count, then X / Y offsets per sprite"
+          }
+        ],
+        "record": "count, then an X offset and a Y offset (from the cursor cell) per sprite"
+      },
+      "note": "E-0215 (C1: Func_0A1_5654 reads word wGameMode2Byte44 and draws DrawMetaSpriteSet26 once per entry at wCursorCellX * 8 + X, wCursorCellY * 8 + Y; the lists run to $5A49)."
+    },
+    {
+      "bank": "A1",
+      "addr": "5A49",
+      "label": "WorldMapMarkerLists",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "world map marker list"
+        }
+      ],
+      "lists": {
+        "until": "5A92",
+        "size": 1,
+        "one_line": true,
+        "label": "WorldMapMarkers",
+        "fields": [
+          {
+            "type": "db",
+            "size": 1,
+            "name": "count, then two bytes per entry"
+          }
+        ],
+        "record": "count, then two bytes (screen / position nibbles) per entry"
+      },
+      "note": "E-0215 (C1: Func_0A1_4DA4 reads word wGameMode2Byte44 and walks count entries of two bytes; the lists run to $5A92)."
+    },
+    {
+      "bank": "A1",
+      "addr": "5A92",
+      "label": "WorldMapCursorCellTable",
+      "count": 150,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "map id"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "cursor cell X, Y"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "second cell X, Y (wLastWarpIndex = 2; 0 = unused)"
+        }
+      ],
+      "record": "map id; cursor cell X, Y; second X, Y used when wLastWarpIndex = 2",
+      "note": "E-0215 (C1: SetSpriteYFromCursorCellY's path scans 5-byte records from $5A92 for the current map id (no terminator) and takes bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records, map ids rising, end exactly at WorldMapScreenPositionTable)."
+    },
+    {
+      "bank": "A1",
+      "addr": "5D80",
+      "label": "WorldMapScreenPositionTable",
+      "count": 150,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "map id"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "screen X/Y and position X/Y nibbles"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "the same for wLastWarpIndex = 2 (0 = unused)"
+        }
+      ],
+      "record": "map id; screen / position nibbles; the same for wLastWarpIndex = 2",
+      "note": "E-0215 (C1: the routine before Jump_0A1_4A18 scans 5-byte records from $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero padding from $606E)."
     }
   ]
 }

@@ -2430,6 +2430,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0215 — World map viewer tables (bank $A1)
+
+- Kind: OBSERVATION (reading; C1).
+- **WorldMapStartPositions ($59D6).** Jump_0A1_4A67 reads the record at $59D6 + 4 * wGameMode2Byte44 with LoadMapPositionFromHL. Only the first two bytes are read. There are 11 indexes, so record 10 is a 2-byte tail.
+- **WorldMapCursorSpriteLists ($5A00) and WorldMapMarkerLists ($5A49).** 11 words each, by wGameMode2Byte44. Each list is a count, then two bytes per entry:
+  - sprite X/Y offsets from the cursor cell, drawn with DrawMetaSpriteSet26 (Func_0A1_5654);
+  - or entries walked by Func_0A1_4DA4.
+  - The lists tile $5A16-$5A92.
+- **WorldMapCursorCellTable ($5A92) and WorldMapScreenPositionTable ($5D80).** 150 five-byte records each, with the same rising map ids: a map id, then a pair of bytes, then a second pair used when wLastWarpIndex = 2.
+  - The pairs are cursor cell X/Y in the first table, and screen/position nibbles (LoadMapPositionFromHL) in the second.
+  - They are searched by map id with no terminator. The first ends exactly where the second begins, and the second ends at zero padding ($606E).
+- **Result.** Bank $A1 has no INCBIN left.
+- Binary verification: build/run256 PASS, 0 differing bytes.
+
 ### E-0214 — Bank $73: symbol tiles and tables, two unreferenced routines, a map message table
 
 - Kind: OBSERVATION (reading; C1).

@@ -1796,7 +1796,7 @@ Func_0A1_49A8:: ; address name
     cp a, $DA
     ret z
     ld c, a
-    ld hl, $5D80
+    ld hl, WorldMapScreenPositionTable
 
 Jump_0A1_4A18::
     ld a, [hl]
@@ -1855,7 +1855,7 @@ Jump_0A1_4A67::
     dec a
     add a, a
     add a, a
-    ld hl, $59D6
+    ld hl, WorldMapStartPositions
     add_a_to_hl
     call LoadMapPositionFromHL
     ret
@@ -2010,7 +2010,7 @@ Jump_0A1_4B4E::
     dec a
     add a, a
     add a, a
-    ld hl, $59D6
+    ld hl, WorldMapStartPositions
     add_a_to_hl
     ld a, [hl+]
     ldh [hTemp1], a
@@ -2375,7 +2375,7 @@ Func_0A1_4DA4:: ; address name
     jp nz, Jump_0A1_4E4D
     ld a, [wGameMode2Byte44]
     add a, a
-    ld hl, $5A49
+    ld hl, WorldMapMarkerLists
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -3413,7 +3413,7 @@ Jump_0A1_53F1::
     dec a
     sla a
     sla a
-    ld hl, $59D6
+    ld hl, WorldMapStartPositions
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp1], a
@@ -3556,7 +3556,7 @@ Func_0A1_5479:: ; address name
     cp a, $DA
     jr z, SetSpriteYFromCursorCellY_Case00
     ld c, a
-    ld hl, $5A92
+    ld hl, WorldMapCursorCellTable
 
 Jump_0A1_5502::
     ld a, [hl]
@@ -3813,7 +3813,7 @@ Func_0A1_5654:: ; address name
     jr nz, Jump_0A1_5694
     ld a, [wGameMode2Byte44]
     add a, a
-    ld hl, $5A00
+    ld hl, WorldMapCursorSpriteLists
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -4366,243 +4366,512 @@ Jump_0A1_59CE::
     ld a, $03
     ld [wGameMode2State], a
     ret
-    db $01, $01, $00, $44, $39, $31, $76, $44, $59, $21, $B4, $44, $59, $21, $B4, $44
-    db $09, $01, $10, $44, $01, $01, $00, $44, $01, $09, $01, $44, $21, $21, $44, $44
-    db $01, $09, $01, $44, $01, $01, $00, $44, $01, $01, $00, $44
-    dw Data_0A1_5A16
-    dw Data_0A1_5A1B
-    dw Data_0A1_5A22
-    dw Data_0A1_5A2D
-    dw Data_0A1_5A34
-    dw Data_0A1_5A35
-    dw Data_0A1_5A38
-    dw Data_0A1_5A3B
-    dw Data_0A1_5A40
-    dw Data_0A1_5A43
-    dw Data_0A1_5A46
+    db $01, $01
 
-Data_0A1_5A16:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $11, $09, $11, $29
+; E-0215 (C1: Jump_0A1_4A67 reads the record at $59D6 + 4 * wGameMode2Byte44 with LoadMapPositionFromHL (hMapScreenX/Y, hPlayerX/Y from nibbles); 11 indexes, so record 10's first two bytes are the tail and its other two would be WorldMapCursorSpriteLists' first word).
+; record: screen X/Y and position X/Y nibbles; two bytes not read here
+WorldMapStartPositions::
+Data_0A1_59D6:: ; address name
+    db $00, $44, $39, $31 ; id 0
+    db $76, $44, $59, $21 ; id 1
+    db $B4, $44, $59, $21 ; id 2
+    db $B4, $44, $09, $01 ; id 3
+    db $10, $44, $01, $01 ; id 4
+    db $00, $44, $01, $09 ; id 5
+    db $01, $44, $21, $21 ; id 6
+    db $44, $44, $01, $09 ; id 7
+    db $01, $44, $01, $01 ; id 8
+    db $00, $44, $01, $01 ; id 9
+    db $00, $44 ; end
 
-Data_0A1_5A1B:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $29, $31, $21, $11, $11, $21
+; E-0215 (C1: Func_0A1_5654 reads word wGameMode2Byte44 and draws DrawMetaSpriteSet26 once per entry at wCursorCellX * 8 + X, wCursorCellY * 8 + Y; the lists run to $5A49).
+; record: list
+WorldMapCursorSpriteLists::
+Data_0A1_5A00:: ; address name
+    dw WorldMapCursorSprites000 ; id 0
+    dw WorldMapCursorSprites001 ; id 1
+    dw WorldMapCursorSprites002 ; id 2
+    dw WorldMapCursorSprites003 ; id 3
+    dw WorldMapCursorSprites004 ; id 4
+    dw WorldMapCursorSprites005 ; id 5
+    dw WorldMapCursorSprites006 ; id 6
+    dw WorldMapCursorSprites007 ; id 7
+    dw WorldMapCursorSprites008 ; id 8
+    dw WorldMapCursorSprites009 ; id 9
+    dw WorldMapCursorSprites00A ; id 10
 
-Data_0A1_5A22:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $41, $11, $39, $29, $21, $41, $11, $49, $49, $49
+; E-0199 (derived: list for entry $00 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites000::
+Data_0A1_5A16:: ; address name
+    db $02, $11, $09, $11, $29 ; id 0
 
-Data_0A1_5A2D:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $59, $09, $29, $31, $29, $49
+; E-0199 (derived: list for entry $01 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites001::
+Data_0A1_5A1B:: ; address name
+    db $03, $29, $31, $21, $11, $11, $21 ; id 0
 
-Data_0A1_5A34:: ; heuristic: target of a monotone pointer table; C0
-    db $00
+; E-0199 (derived: list for entry $02 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites002::
+Data_0A1_5A22:: ; address name
+    db $05, $41, $11, $39, $29, $21, $41, $11, $49, $49, $49 ; id 0
 
-Data_0A1_5A35:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $11, $21
+; E-0199 (derived: list for entry $03 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites003::
+Data_0A1_5A2D:: ; address name
+    db $03, $59, $09, $29, $31, $29, $49 ; id 0
 
-Data_0A1_5A38:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $09, $01
+; E-0199 (derived: list for entry $04 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites004::
+Data_0A1_5A34:: ; address name
+    db $00 ; id 0
 
-Data_0A1_5A3B:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $21, $19, $09, $09
+; E-0199 (derived: list for entry $05 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites005::
+Data_0A1_5A35:: ; address name
+    db $01, $11, $21 ; id 0
 
-Data_0A1_5A40:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $01
+; E-0199 (derived: list for entry $06 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites006::
+Data_0A1_5A38:: ; address name
+    db $01, $09, $01 ; id 0
 
-Data_0A1_5A43:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $09
+; E-0199 (derived: list for entry $07 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites007::
+Data_0A1_5A3B:: ; address name
+    db $02, $21, $19, $09, $09 ; id 0
 
-Data_0A1_5A46:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $09, $01
-    dw Data_0A1_5A5F
-    dw Data_0A1_5A64
-    dw Data_0A1_5A6B
-    dw Data_0A1_5A76
-    dw Data_0A1_5A7D
-    dw Data_0A1_5A7E
-    dw Data_0A1_5A81
-    dw Data_0A1_5A84
-    dw Data_0A1_5A89
-    dw Data_0A1_5A8C
-    dw Data_0A1_5A8F
+; E-0199 (derived: list for entry $08 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites008::
+Data_0A1_5A40:: ; address name
+    db $01, $01, $01 ; id 0
 
-Data_0A1_5A5F:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $21, $44, $25, $44
+; E-0199 (derived: list for entry $09 of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites009::
+Data_0A1_5A43:: ; address name
+    db $01, $01, $09 ; id 0
 
-Data_0A1_5A64:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $56, $44, $42, $44, $24, $44
+; E-0199 (derived: list for entry $0A of WorldMapCursorSpriteLists; it runs to the next list)
+; record: count, then an X offset and a Y offset (from the cursor cell) per sprite
+WorldMapCursorSprites00A::
+Data_0A1_5A46:: ; address name
+    db $01, $09, $01 ; id 0
 
-Data_0A1_5A6B:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $82, $44, $75, $44, $48, $44, $29, $44, $99, $44
+; E-0215 (C1: Func_0A1_4DA4 reads word wGameMode2Byte44 and walks count entries of two bytes; the lists run to $5A92).
+; record: list
+WorldMapMarkerLists::
+Data_0A1_5A49:: ; address name
+    dw WorldMapMarkers000 ; id 0
+    dw WorldMapMarkers001 ; id 1
+    dw WorldMapMarkers002 ; id 2
+    dw WorldMapMarkers003 ; id 3
+    dw WorldMapMarkers004 ; id 4
+    dw WorldMapMarkers005 ; id 5
+    dw WorldMapMarkers006 ; id 6
+    dw WorldMapMarkers007 ; id 7
+    dw WorldMapMarkers008 ; id 8
+    dw WorldMapMarkers009 ; id 9
+    dw WorldMapMarkers00A ; id 10
 
-Data_0A1_5A76:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $B1, $44, $56, $64, $59, $44
+; E-0199 (derived: list for entry $00 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers000::
+Data_0A1_5A5F:: ; address name
+    db $02, $21, $44, $25, $44 ; id 0
 
-Data_0A1_5A7D:: ; heuristic: target of a monotone pointer table; C0
-    db $00
+; E-0199 (derived: list for entry $01 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers001::
+Data_0A1_5A64:: ; address name
+    db $03, $56, $44, $42, $44, $24, $44 ; id 0
 
-Data_0A1_5A7E:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $24, $44
+; E-0199 (derived: list for entry $02 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers002::
+Data_0A1_5A6B:: ; address name
+    db $05, $82, $44, $75, $44, $48, $44, $29, $44, $99, $44 ; id 0
 
-Data_0A1_5A81:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $10, $44
+; E-0199 (derived: list for entry $03 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers003::
+Data_0A1_5A76:: ; address name
+    db $03, $B1, $44, $56, $64, $59, $44 ; id 0
 
-Data_0A1_5A84:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $43, $44, $11, $35
+; E-0199 (derived: list for entry $04 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers004::
+Data_0A1_5A7D:: ; address name
+    db $00 ; id 0
 
-Data_0A1_5A89:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $44
+; E-0199 (derived: list for entry $05 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers005::
+Data_0A1_5A7E:: ; address name
+    db $01, $24, $44 ; id 0
 
-Data_0A1_5A8C:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $44
+; E-0199 (derived: list for entry $06 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers006::
+Data_0A1_5A81:: ; address name
+    db $01, $10, $44 ; id 0
 
-Data_0A1_5A8F:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $285A8F, $101
-    dw Data_0A1_5C00
-    db $11, $49, $00
-    dw Data_0A1_5D00
-    db $28, $51, $00
-    dw Data_0A1_5E00
-    db $49, $49, $00
-    dw Data_0A1_5F00
-    db $49, $49, $00
-    dw Data_0A1_6000
-    db $49, $49, $00
-    dw Data_0A1_6100
-    db $49, $49, $00
-    dw Data_0A1_6200
-    db $51, $29, $00
-    dw Data_0A1_6300
-    db $41, $39, $00
-    dw Data_0A1_6400
-    db $41, $39, $00
-    dw Data_0A1_6500
-    db $41, $39, $00
-    dw Data_0A1_6600
-    db $41, $39, $00
-    dw Data_0A1_6700
-    db $41, $39, $00
-    dw Data_0A1_7100
-    db $59, $09, $00
-    dw Data_0A1_7200
-    db $59, $09, $00
-    dw Data_0A1_7300
-    db $59, $09, $00
-    dw Data_0A1_7400
-    db $59, $09, $00
-    dw Data_0A1_7500
-    db $59, $09, $00
-    dw Data_0A1_7600
-    db $59, $09, $00
-    dw Data_0A1_7700
-    db $51, $21, $49
-    dw Data_0A1_7821
-    db $29, $31, $00
-    dw Data_0A1_7900
-    db $29, $31, $00
-    dw Data_0A1_7A00
-    db $01, $21, $00
-    dw Data_0A1_7B00
+; E-0199 (derived: list for entry $07 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers007::
+Data_0A1_5A84:: ; address name
+    db $02, $43, $44, $11, $35 ; id 0
 
-Data_0A1_5C00:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $31, $19
-    dw Data_0A1_7C39
-    db $29, $49, $00
-    dw Data_0A1_7D00
-    db $29, $49, $00
-    dw Data_0A1_7E00
-    db $29, $49, $00
-    dw Data_0A1_7F00
-    INCBIN "dwm2-cobi-us.gbc", $285C14, $EC
+; E-0199 (derived: list for entry $08 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers008::
+Data_0A1_5A89:: ; address name
+    db $01, $00, $44 ; id 0
 
-Data_0A1_5D00:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $285D00, $45
+; E-0199 (derived: list for entry $09 of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers009::
+Data_0A1_5A8C:: ; address name
+    db $01, $01, $44 ; id 0
 
-Data_0A1_5D45:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $09, $00, $00, $D3, $01
+; E-0199 (derived: list for entry $0A of WorldMapMarkerLists; it runs to the next list)
+; record: count, then two bytes (screen / position nibbles) per entry
+WorldMapMarkers00A::
+Data_0A1_5A8F:: ; address name
+    db $01, $10, $44 ; id 0
 
-Data_0A1_5D4B:: ; heuristic: target of a monotone pointer table; C0
-    db $09, $00, $00, $D4, $01, $09, $00
+; E-0215 (C1: SetSpriteYFromCursorCellY's path scans 5-byte records from $5A92 for the current map id (no terminator) and takes bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records, map ids rising, end exactly at WorldMapScreenPositionTable).
+; record: map id; cursor cell X, Y; second X, Y used when wLastWarpIndex = 2
+WorldMapCursorCellTable::
+Data_0A1_5A92:: ; address name
+    db $21, $11, $09, $00, $00 ; id 0
+    db $22, $11, $09, $00, $00 ; id 1
+    db $23, $11, $29, $00, $00 ; id 2
+    db $24, $11, $29, $00, $00 ; id 3
+    db $25, $11, $29, $00, $00 ; id 4
+    db $26, $11, $29, $00, $00 ; id 5
+    db $28, $29, $29, $00, $00 ; id 6
+    db $2A, $11, $09, $00, $00 ; id 7
+    db $2B, $11, $09, $11, $29 ; id 8
+    db $2D, $11, $29, $00, $00 ; id 9
+    db $2E, $11, $29, $00, $00 ; id 10
+    db $2F, $29, $29, $00, $00 ; id 11
+    db $31, $29, $31, $00, $00 ; id 12
+    db $32, $21, $11, $00, $00 ; id 13
+    db $33, $21, $11, $00, $00 ; id 14
+    db $34, $21, $11, $00, $00 ; id 15
+    db $35, $01, $19, $00, $00 ; id 16
+    db $36, $29, $29, $00, $00 ; id 17
+    db $37, $29, $29, $00, $00 ; id 18
+    db $38, $29, $19, $00, $00 ; id 19
+    db $39, $29, $19, $00, $00 ; id 20
+    db $3A, $29, $19, $00, $00 ; id 21
+    db $3B, $29, $19, $00, $00 ; id 22
+    db $3C, $11, $21, $00, $00 ; id 23
+    db $3D, $11, $21, $00, $00 ; id 24
+    db $3E, $31, $0D, $00, $00 ; id 25
+    db $3F, $31, $0D, $00, $00 ; id 26
+    db $40, $31, $0D, $00, $00 ; id 27
+    db $41, $11, $21, $00, $00 ; id 28
+    db $42, $29, $29, $00, $00 ; id 29
+    db $43, $29, $29, $00, $00 ; id 30
+    db $44, $29, $29, $00, $00 ; id 31
+    db $49, $29, $01, $00, $00 ; id 32
+    db $4A, $41, $11, $00, $00 ; id 33
+    db $4B, $41, $11, $00, $00 ; id 34
+    db $4C, $41, $11, $00, $00 ; id 35
+    db $4D, $41, $11, $00, $00 ; id 36
+    db $4E, $39, $19, $39, $21 ; id 37
+    db $4F, $39, $29, $00, $00 ; id 38
+    db $50, $39, $29, $00, $00 ; id 39
+    db $51, $39, $29, $00, $00 ; id 40
+    db $52, $21, $31, $21, $31 ; id 41
+    db $53, $21, $31, $21, $31 ; id 42
+    db $54, $21, $31, $21, $31 ; id 43
+    db $55, $21, $31, $21, $31 ; id 44
+    db $56, $21, $31, $21, $31 ; id 45
+    db $57, $21, $31, $21, $31 ; id 46
+    db $58, $21, $41, $00, $00 ; id 47
+    db $59, $21, $41, $00, $00 ; id 48
+    db $5A, $11, $49, $00, $00 ; id 49
+    db $5B, $11, $49, $00, $00 ; id 50
+    db $5C, $11, $49, $00, $00 ; id 51
+    db $5D, $28, $51, $00, $00 ; id 52
+    db $5E, $49, $49, $00, $00 ; id 53
+    db $5F, $49, $49, $00, $00 ; id 54
+    db $60, $49, $49, $00, $00 ; id 55
+    db $61, $49, $49, $00, $00 ; id 56
+    db $62, $51, $29, $00, $00 ; id 57
+    db $63, $41, $39, $00, $00 ; id 58
+    db $64, $41, $39, $00, $00 ; id 59
+    db $65, $41, $39, $00, $00 ; id 60
+    db $66, $41, $39, $00, $00 ; id 61
+    db $67, $41, $39, $00, $00 ; id 62
+    db $71, $59, $09, $00, $00 ; id 63
+    db $72, $59, $09, $00, $00 ; id 64
+    db $73, $59, $09, $00, $00 ; id 65
+    db $74, $59, $09, $00, $00 ; id 66
+    db $75, $59, $09, $00, $00 ; id 67
+    db $76, $59, $09, $00, $00 ; id 68
+    db $77, $51, $21, $49, $21 ; id 69
+    db $78, $29, $31, $00, $00 ; id 70
+    db $79, $29, $31, $00, $00 ; id 71
+    db $7A, $01, $21, $00, $00 ; id 72
+    db $7B ; id 73
+Data_0A1_5C00:: ; heuristic: label inside a table; C0
+    db $19, $31, $19, $39
+    db $7C, $29, $49, $00, $00 ; id 74
+    db $7D, $29, $49, $00, $00 ; id 75
+    db $7E, $29, $49, $00, $00 ; id 76
+    db $7F, $29, $49, $00, $00 ; id 77
+    db $80, $41, $21, $49, $21 ; id 78
+    db $81, $29, $59, $00, $00 ; id 79
+    db $82, $29, $59, $00, $00 ; id 80
+    db $83, $29, $59, $00, $00 ; id 81
+    db $84, $29, $59, $00, $00 ; id 82
+    db $85, $09, $59, $00, $00 ; id 83
+    db $86, $09, $59, $00, $00 ; id 84
+    db $87, $09, $59, $00, $00 ; id 85
+    db $88, $09, $59, $00, $00 ; id 86
+    db $89, $59, $09, $00, $00 ; id 87
+    db $8A, $59, $51, $00, $00 ; id 88
+    db $8B, $59, $51, $00, $00 ; id 89
+    db $8C, $59, $51, $00, $00 ; id 90
+    db $8D, $59, $51, $00, $00 ; id 91
+    db $8E, $59, $51, $00, $00 ; id 92
+    db $8F, $59, $51, $00, $00 ; id 93
+    db $90, $59, $51, $00, $00 ; id 94
+    db $91, $59, $51, $00, $00 ; id 95
+    db $92, $29, $11, $00, $00 ; id 96
+    db $93, $11, $01, $00, $00 ; id 97
+    db $94, $11, $01, $00, $00 ; id 98
+    db $95, $11, $01, $00, $00 ; id 99
+    db $96, $11, $01, $00, $00 ; id 100
+    db $97, $11, $01, $00, $00 ; id 101
+    db $98, $11, $01, $00, $00 ; id 102
+    db $99, $11, $01, $00, $00 ; id 103
+    db $9A, $11, $01, $00, $00 ; id 104
+    db $9B, $11, $01, $00, $00 ; id 105
+    db $A1, $09, $11, $00, $00 ; id 106
+    db $A2, $09, $09, $00, $00 ; id 107
+    db $A3, $09, $09, $00, $00 ; id 108
+    db $A9, $11, $21, $00, $00 ; id 109
+    db $AA, $09, $09, $00, $00 ; id 110
+    db $AB, $21, $19, $00, $00 ; id 111
+    db $AC, $29, $09, $00, $00 ; id 112
+    db $AD, $29, $09, $00, $00 ; id 113
+    db $AE, $29, $09, $00, $00 ; id 114
+    db $B1, $09, $01, $00, $00 ; id 115
+    db $B3, $09, $01, $00, $00 ; id 116
+    db $B4, $09, $01, $00, $00 ; id 117
+    db $B5, $09, $01, $00, $00 ; id 118
+    db $B6, $09, $01, $00, $00 ; id 119
+    db $B9, $21, $19, $00, $00 ; id 120
+    db $BA, $09, $09, $00, $00 ; id 121
+    db $BB, $21, $01, $00, $00 ; id 122
+    db $BC, $21, $19, $00, $00 ; id 123
+    db $BD, $21, $01, $00, $00 ; id 124
+    db $BE, $21, $01, $00, $00 ; id 125
+    db $BF, $21, $01, $00, $00 ; id 126
+    db $C0, $21, $01, $00, $00 ; id 127
+    db $C1, $21, $01, $00, $00 ; id 128
+    db $C2, $21, $01, $00, $00 ; id 129
+    db $C3, $21, $01, $00, $00 ; id 130
+    db $C4, $21, $01, $00, $00 ; id 131
+    db $C9, $01, $01, $00, $00 ; id 132
+    db $CA, $01, $01, $00, $00 ; id 133
+    db $CB, $01, $01, $00, $00 ; id 134
+    db $CC, $01, $01, $00, $00 ; id 135
+    db $CD, $01, $01, $00, $00 ; id 136
+    db $CE, $01, $01, $00, $00 ; id 137
+    db $D2 ; id 138
+Data_0A1_5D45:: ; heuristic: label inside a table; C0
+    db $01, $09, $00, $00
+    db $D3, $01, $09, $00, $00 ; id 139
+    db $D4, $01, $09, $00, $00 ; id 140
+    db $D5, $01, $09, $00, $00 ; id 141
+    db $D6, $01, $09, $00, $00 ; id 142
+    db $D7, $01, $09 ; id 143
+Data_0A1_5D60:: ; heuristic: label inside a table; C0
+    db $00, $00
+    db $DB, $09, $01, $00, $00 ; id 144
+    db $DC, $09, $01, $00, $00 ; id 145
+    db $DD, $09, $01 ; id 146
+Data_0A1_5D6F:: ; heuristic: label inside a table; C0
+    db $00, $00
+    db $DE ; id 147
+Data_0A1_5D72:: ; heuristic: label inside a table; C0
+    db $09, $01, $00, $00
+Data_0A1_5D76:: ; heuristic: label inside a table; C0
+    db $DF, $09, $01, $00, $00 ; id 148
+    db $E0, $09, $01, $00, $00 ; id 149
 
-Data_0A1_5D52:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $D5, $01, $09, $00, $00, $D6, $01, $09, $00, $00, $D7, $01, $09
-
-Data_0A1_5D60:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $DB, $09, $01, $00, $00, $DC, $09, $01, $00, $00, $DD, $09
-
-Data_0A1_5D6E:: ; heuristic: target of a monotone pointer table; C0
-    db $01
-
-Data_0A1_5D6F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $DE
-
-Data_0A1_5D72:: ; heuristic: target of a monotone pointer table; C0
-    db $09
-
-Data_0A1_5D73:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00
-
-Data_0A1_5D75:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_0A1_5D76:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $285D76, $8A
-
-Data_0A1_5E00:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $285E00, $8D
-    dw Data_0A1_5F00
-    db $99, $44, $00
-    dw Data_0A1_6000
-    db $99, $44, $00
-    dw Data_0A1_6100
-    db $99, $44, $00
-    dw Data_0A1_6200
-    db $A5, $44, $00
-    dw Data_0A1_6300
-    db $87, $44, $00
-    dw Data_0A1_6400
-    db $87, $44, $00
-    dw Data_0A1_6500
-    db $87, $44, $00
-    dw Data_0A1_6600
-    db $87, $44, $00
-    dw Data_0A1_6700
-    db $87, $44, $00
-    dw Data_0A1_7100
-    db $B1, $44, $00
-    dw Data_0A1_7200
-    db $B1, $44, $00
-    dw Data_0A1_7300
-    db $B1, $44, $00
-    dw Data_0A1_7400
-    db $B1, $44, $00
-    dw Data_0A1_7500
-    db $B1, $44, $00
-    dw Data_0A1_7600
-    db $B1, $44, $00
-    dw Data_0A1_7700
-    db $A4, $44, $94
-    dw Data_0A1_7844
-    db $56, $44, $00
-    dw Data_0A1_7900
-    db $56, $44, $00
-    dw Data_0A1_7A00
-    db $04, $44, $00
-    dw Data_0A1_7B00
-    db $36, $44, $37
-    dw Data_0A1_7C44
-    db $59, $44, $00
-    dw Data_0A1_7D00
-    db $59, $44, $00
-    dw Data_0A1_7E00
-    db $59, $44, $00
-
-Data_0A1_5F00:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0A1_7F00
-    INCBIN "dwm2-cobi-us.gbc", $285F02, $FE
-
-Data_0A1_6000:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $286000, $6C
-    ds $94, $00
+; E-0215 (C1: the routine before Jump_0A1_4A18 scans 5-byte records from $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero padding from $606E).
+; record: map id; screen / position nibbles; the same for wLastWarpIndex = 2
+WorldMapScreenPositionTable::
+Data_0A1_5D80:: ; address name
+    db $21, $21, $44, $00, $00 ; id 0
+    db $22, $21, $44, $00, $00 ; id 1
+    db $23, $25, $44, $00, $00 ; id 2
+    db $24, $25, $44, $00, $00 ; id 3
+    db $25, $25, $44, $00, $00 ; id 4
+    db $26, $25, $44, $00, $00 ; id 5
+    db $28, $55, $44, $00, $00 ; id 6
+    db $2A, $21, $44, $00, $00 ; id 7
+    db $2B, $21, $44, $25, $44 ; id 8
+    db $2D, $25, $44, $00, $00 ; id 9
+    db $2E, $25, $44, $00, $00 ; id 10
+    db $2F, $55, $44, $00, $00 ; id 11
+    db $31, $56, $44, $00, $00 ; id 12
+    db $32, $42, $44, $00, $00 ; id 13
+    db $33, $42, $44, $00, $00 ; id 14
+    db $34, $42, $44, $00, $00 ; id 15
+    db $35, $03, $44, $00, $00 ; id 16
+    db $36, $55, $44, $00, $00 ; id 17
+    db $37, $55, $44, $00, $00 ; id 18
+    db $38, $53, $44, $00, $00 ; id 19
+    db $39, $53, $44, $00, $00 ; id 20
+    db $3A, $53, $44, $00, $00 ; id 21
+    db $3B, $53, $44, $00, $00 ; id 22
+    db $3C, $24, $44, $00, $00 ; id 23
+    db $3D, $24, $44, $00, $00 ; id 24
+    db $3E, $62, $44 ; id 25
+Data_0A1_5E00:: ; heuristic: label inside a table; C0
+    db $00, $00
+    db $3F, $62, $44, $00, $00 ; id 26
+    db $40, $62, $44, $00, $00 ; id 27
+    db $41, $24, $44, $00, $00 ; id 28
+    db $42, $55, $44, $00, $00 ; id 29
+    db $43, $55, $44, $00, $00 ; id 30
+    db $44, $55, $44, $00, $00 ; id 31
+    db $49, $50, $44, $00, $00 ; id 32
+    db $4A, $82, $44, $00, $00 ; id 33
+    db $4B, $82, $44, $00, $00 ; id 34
+    db $4C, $82, $44, $00, $00 ; id 35
+    db $4D, $82, $44, $00, $00 ; id 36
+    db $4E, $73, $44, $74, $44 ; id 37
+    db $4F, $75, $44, $00, $00 ; id 38
+    db $50, $75, $44, $00, $00 ; id 39
+    db $51, $75, $44, $00, $00 ; id 40
+    db $52, $46, $44, $46, $64 ; id 41
+    db $53, $46, $44, $46, $64 ; id 42
+    db $54, $46, $44, $46, $64 ; id 43
+    db $55, $46, $44, $46, $64 ; id 44
+    db $56, $46, $44, $46, $64 ; id 45
+    db $57, $46, $44, $46, $64 ; id 46
+    db $58, $48, $44, $00, $00 ; id 47
+    db $59, $48, $44, $00, $00 ; id 48
+    db $5A, $29, $44, $00, $00 ; id 49
+    db $5B, $29, $44, $00, $00 ; id 50
+    db $5C, $29, $44, $00, $00 ; id 51
+    db $5D, $5A, $43, $00, $00 ; id 52
+    db $5E, $99, $44, $00, $00 ; id 53
+    db $5F, $99, $44, $00, $00 ; id 54
+    db $60, $99, $44, $00, $00 ; id 55
+    db $61, $99, $44, $00, $00 ; id 56
+    db $62, $A5, $44, $00, $00 ; id 57
+    db $63, $87, $44, $00, $00 ; id 58
+    db $64, $87, $44, $00, $00 ; id 59
+    db $65, $87, $44, $00, $00 ; id 60
+    db $66, $87, $44, $00, $00 ; id 61
+    db $67, $87, $44, $00, $00 ; id 62
+    db $71, $B1, $44, $00, $00 ; id 63
+    db $72, $B1, $44, $00, $00 ; id 64
+    db $73, $B1, $44, $00, $00 ; id 65
+    db $74, $B1, $44, $00, $00 ; id 66
+    db $75, $B1, $44, $00, $00 ; id 67
+    db $76, $B1, $44, $00, $00 ; id 68
+    db $77, $A4, $44, $94, $44 ; id 69
+    db $78, $56, $44, $00, $00 ; id 70
+    db $79, $56, $44, $00, $00 ; id 71
+    db $7A, $04, $44, $00, $00 ; id 72
+    db $7B, $36, $44, $37, $44 ; id 73
+    db $7C, $59, $44, $00, $00 ; id 74
+    db $7D, $59, $44, $00, $00 ; id 75
+    db $7E, $59, $44, $00, $00 ; id 76
+    db $7F, $59, $44, $00, $00 ; id 77
+    db $80, $89, $44, $99, $44 ; id 78
+    db $81, $5B, $44, $00, $00 ; id 79
+    db $82, $5B, $44, $00, $00 ; id 80
+    db $83, $5B, $44, $00, $00 ; id 81
+    db $84, $5B, $44, $00, $00 ; id 82
+    db $85, $1B, $44, $00, $00 ; id 83
+    db $86, $1B, $44, $00, $00 ; id 84
+    db $87, $1B, $44, $00, $00 ; id 85
+    db $88, $1B, $44, $00, $00 ; id 86
+    db $89, $B1, $44, $00, $00 ; id 87
+    db $8A, $BA, $44, $00, $00 ; id 88
+    db $8B, $BA, $44, $00, $00 ; id 89
+    db $8C, $BA, $44, $00, $00 ; id 90
+    db $8D, $BA, $44, $00, $00 ; id 91
+    db $8E, $BA, $44, $00, $00 ; id 92
+    db $8F, $BA, $44, $00, $00 ; id 93
+    db $90, $BA, $44, $00, $00 ; id 94
+    db $91, $BA, $44, $00, $00 ; id 95
+    db $92, $52, $44, $00, $00 ; id 96
+    db $93, $41, $44, $00, $00 ; id 97
+    db $94, $41, $44, $00, $00 ; id 98
+    db $95, $41, $44, $00, $00 ; id 99
+    db $96, $41, $44, $00, $00 ; id 100
+    db $97, $41, $44, $00, $00 ; id 101
+    db $98, $41, $44, $00, $00 ; id 102
+    db $99, $41, $44, $00, $00 ; id 103
+    db $9A, $41, $44, $00, $00 ; id 104
+    db $9B, $41, $44, $00, $00 ; id 105
+    db $A1, $12, $44, $00, $00 ; id 106
+    db $A2, $11, $44, $00, $00 ; id 107
+    db $A3, $11, $44, $00, $00 ; id 108
+    db $A9, $24, $44, $00, $00 ; id 109
+    db $AA, $11, $44, $00, $00 ; id 110
+    db $AB, $43, $44, $00, $00 ; id 111
+    db $AC, $51, $44, $00, $00 ; id 112
+    db $AD, $51, $44, $00, $00 ; id 113
+    db $AE, $51, $44, $00, $00 ; id 114
+    db $B1, $10, $44, $00, $00 ; id 115
+    db $B3, $10, $44, $00, $00 ; id 116
+    db $B4, $10, $44, $00, $00 ; id 117
+    db $B5, $10, $44, $00, $00 ; id 118
+    db $B6, $10, $44, $00, $00 ; id 119
+    db $B9, $43, $44, $00, $00 ; id 120
+    db $BA, $11, $44, $00, $00 ; id 121
+    db $BB, $40, $44, $00, $00 ; id 122
+    db $BC, $43, $44, $00, $00 ; id 123
+    db $BD, $40, $44, $00, $00 ; id 124
+    db $BE, $40, $44, $00, $00 ; id 125
+    db $BF, $40, $44, $00, $00 ; id 126
+    db $C0, $40, $44, $00, $00 ; id 127
+Data_0A1_6000:: ; heuristic: label inside a table; C0
+    db $C1, $40, $44, $00, $00 ; id 128
+    db $C2, $40, $44, $00, $00 ; id 129
+    db $C3, $40, $44, $00, $00 ; id 130
+    db $C4, $40, $44, $00, $00 ; id 131
+    db $C9, $00, $44, $00, $00 ; id 132
+    db $CA, $00, $44, $00, $00 ; id 133
+    db $CB, $00, $44, $00, $00 ; id 134
+    db $CC, $00, $44, $00, $00 ; id 135
+    db $CD, $00, $44, $00, $00 ; id 136
+    db $CE, $00, $44, $00, $00 ; id 137
+    db $D2, $01, $44, $00, $00 ; id 138
+    db $D3, $01, $44, $00, $00 ; id 139
+    db $D4, $01, $44, $00, $00 ; id 140
+    db $D5, $01, $44, $00, $00 ; id 141
+    db $D6, $01, $44, $00, $00 ; id 142
+    db $D7, $01, $44, $00, $00 ; id 143
+    db $DB, $10, $44, $00, $00 ; id 144
+    db $DC, $10, $44, $00, $00 ; id 145
+    db $DD, $10, $44, $00, $00 ; id 146
+    db $DE, $10, $44, $00, $00 ; id 147
+    db $DF, $10, $44, $00, $00 ; id 148
+    db $E0, $10, $44, $00, $00 ; id 149
+    ds $92, $00
 
 Data_0A1_6100:: ; heuristic: target of a monotone pointer table; C0
     ds $100, $00
