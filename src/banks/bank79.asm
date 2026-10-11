@@ -75,7 +75,7 @@ Data_079_50B0:: ; address name
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $10F (PomPomBom) (MonsterPictureTable / MonsterAttributeMapTable)
 ; LZSS-compressed asset: 294 bytes expand to 576 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MonsterPic_PomPomBom:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterPic_PomBom:: ; heuristic: stream in a run of back-to-back compressed streams; C0
 Data_079_5193:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1E5193, $126
 

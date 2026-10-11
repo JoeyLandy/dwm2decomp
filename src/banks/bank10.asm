@@ -10,7 +10,7 @@ Func_010_4001:: ; address name
     ret
 
 ; does nothing during a fade or unless wScriptStartRequest bit 7 is set (then it clears that bit and sets wScriptRunning); reads the opcode at wScriptPointer (through ReadWordFromDataBank when wScriptInDataBank is set) and jumps through a 13-entry opcode table; $FF ends the script (wScriptRunning, wScriptCommandType and wScriptInDataBank cleared, wModeState = 0, or 5 when wCC44 bit 7 is set); the opcode handlers set wScriptCommandType and its parameters and advance wScriptPointer
-; 5 call sites from 5 routines (e.g. RunEventScriptFrame, RunWC8C7Phase_Case02, RunWC46BMenuState_Case05, GameMode5_Update_Case02, ...)
+; 5 call sites from 5 routines (e.g. RunEventScriptFrame, RunFieldReturnPhase_Case02, RunMenuStateMenuState_Case05, GameMode5_Update_Case02, ...)
 ; reads: wFadeState, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wMapType
 ; writes: wScriptStartRequest, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 FetchScriptCommand::

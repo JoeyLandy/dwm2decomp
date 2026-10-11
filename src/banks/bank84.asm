@@ -37,7 +37,7 @@ Jump_084_4029::
     dec hl
     ld a, [hl]
     ldh [hTemp0], a
-    call RunDebugAutomapCaseHFFC6
+    call RunDebugAutomapCaseTemp0
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -64,36 +64,36 @@ Jump_084_405A::
 ; debug automap: runs the routine for hFFC6 (jump table of seven) (E-0122)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub0C)
 ; reads: hTemp0
-RunDebugAutomapCaseHFFC6::
+RunDebugAutomapCaseTemp0::
 Func_084_405C:: ; address name
     ldh a, [hTemp0]
     rst $00
-    dw RunDebugAutomapCaseHFFC6_Case00
-    dw RunDebugAutomapCaseHFFC6_Case01
-    dw RunDebugAutomapCaseHFFC6_Case02
-    dw RunDebugAutomapCaseHFFC6_Case03
-    dw RunDebugAutomapCaseHFFC6_Case04
-    dw RunDebugAutomapCaseHFFC6_Case05
-    dw RunDebugAutomapCaseHFFC6_Case06
+    dw RunDebugAutomapCaseTemp0_Case00
+    dw RunDebugAutomapCaseTemp0_Case01
+    dw RunDebugAutomapCaseTemp0_Case02
+    dw RunDebugAutomapCaseTemp0_Case03
+    dw RunDebugAutomapCaseTemp0_Case04
+    dw RunDebugAutomapCaseTemp0_Case05
+    dw RunDebugAutomapCaseTemp0_Case06
 
-; entry 0 of the `rst $00` table in RunDebugAutomapCaseHFFC6
+; entry 0 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
-RunDebugAutomapCaseHFFC6_Case00::
+RunDebugAutomapCaseTemp0_Case00::
 Jump_084_406D:: ; address name
     ret
 
-; entry 6 of the `rst $00` table in RunDebugAutomapCaseHFFC6
+; entry 6 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
-RunDebugAutomapCaseHFFC6_Case06::
+RunDebugAutomapCaseTemp0_Case06::
 Jump_084_406E:: ; address name
     ld a, $54
     ld [de], a
     ret
 
-; entry 1 of the `rst $00` table in RunDebugAutomapCaseHFFC6
+; entry 1 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind, hTemp8, hTemp9
-RunDebugAutomapCaseHFFC6_Case01::
+RunDebugAutomapCaseTemp0_Case01::
 Jump_084_4072:: ; address name
     ld hl, Data_084_41AE
     ld a, [wKeyWorldGoalKind]
@@ -117,10 +117,10 @@ Jump_084_408A::
     jr nz, Jump_084_408A
     ret
 
-; entry 2 of the `rst $00` table in RunDebugAutomapCaseHFFC6
+; entry 2 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
-RunDebugAutomapCaseHFFC6_Case02::
+RunDebugAutomapCaseTemp0_Case02::
 Jump_084_4091:: ; address name
     ld hl, Data_084_41B8
     ld a, [wKeyWorldGoalKind]
@@ -155,10 +155,10 @@ Jump_084_40BB::
     jr nz, Jump_084_40BB
     ret
 
-; entry 3 of the `rst $00` table in RunDebugAutomapCaseHFFC6
+; entry 3 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
-RunDebugAutomapCaseHFFC6_Case03::
+RunDebugAutomapCaseTemp0_Case03::
 Jump_084_40C2:: ; address name
     ld hl, Data_084_41B8
     ld a, [wKeyWorldGoalKind]
@@ -193,11 +193,11 @@ Jump_084_40EC::
     jr nz, Jump_084_40EC
     ret
 
-; entry 4 of the `rst $00` table in RunDebugAutomapCaseHFFC6
+; entry 4 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyWorldGoalKind, wKeyRandomHi
 ; writes: hTemp0
-RunDebugAutomapCaseHFFC6_Case04::
+RunDebugAutomapCaseTemp0_Case04::
 Jump_084_40F3:: ; address name
     ldh a, [hTemp8]
     ld l, a
@@ -259,14 +259,14 @@ Jump_084_4126::
 
 Jump_084_4150::
     ld a, $01
-    call RunDebugAutomapCaseHFFC6_Shared01
+    call RunDebugAutomapCaseTemp0_Shared01
     ret
 
-; entry 5 of the `rst $00` table in RunDebugAutomapCaseHFFC6
+; entry 5 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyRandomHi
 ; writes: hTemp0
-RunDebugAutomapCaseHFFC6_Case05::
+RunDebugAutomapCaseTemp0_Case05::
 Jump_084_4156:: ; address name
     ldh a, [hTemp8]
     ld l, a
@@ -324,7 +324,7 @@ Jump_084_417F::
 
 Jump_084_41A9::
     xor a, a
-    call RunDebugAutomapCaseHFFC6_Shared01
+    call RunDebugAutomapCaseTemp0_Shared01
     ret
 
 Data_084_41AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -341,12 +341,12 @@ Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0B, $01, $00, $0B, $00, $0B
 
-; only called from routines of RunDebugAutomapCaseHFFC6 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseHFFC6_Case05, RunDebugAutomapCaseHFFC6_Case04)
+; only called from routines of RunDebugAutomapCaseTemp0 (E-0098)
+; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseTemp0_Case05, RunDebugAutomapCaseTemp0_Case04)
 ; reads: wKeyWorldByte46, hTemp2, hTemp4, hTemp0, hTemp3
 ; writes: hTemp2, hTemp3, wKeyWorldByte46
 ; points at: wKeyWorldRoomTable
-RunDebugAutomapCaseHFFC6_Shared01::
+RunDebugAutomapCaseTemp0_Shared01::
 Func_084_41F2:: ; address name
     push af
     ld a, [wKeyWorldByte46]
@@ -379,7 +379,7 @@ Func_084_41F2:: ; address name
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseHFFC6_Shared01_Sub02
+    call RunDebugAutomapCaseTemp0_Shared01_Sub02
     ldh a, [hTemp4]
     swap a
     or a, $0F
@@ -415,7 +415,7 @@ Jump_084_4241::
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseHFFC6_Shared01_Sub02
+    call RunDebugAutomapCaseTemp0_Shared01_Sub02
     ldh a, [hTemp4]
     swap a
     ld c, a
@@ -464,7 +464,7 @@ Jump_084_429B::
     rl d
     ldh a, [hTemp4]
     ldh [hTemp3], a
-    call RunDebugAutomapCaseHFFC6_Shared01_Sub01
+    call RunDebugAutomapCaseTemp0_Shared01_Sub01
     ldh a, [hTemp3]
     ld c, a
     ldh a, [hTemp4]
@@ -482,11 +482,11 @@ Jump_084_429B::
 Data_084_42C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $2102C7, $60
 
-; only called from RunDebugAutomapCaseHFFC6_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugAutomapCaseHFFC6_Shared01)
+; only called from RunDebugAutomapCaseTemp0_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugAutomapCaseTemp0_Shared01)
 ; reads: hTemp3
 ; writes: hTemp4
-RunDebugAutomapCaseHFFC6_Shared01_Sub01::
+RunDebugAutomapCaseTemp0_Shared01_Sub01::
 Func_084_4327:: ; address name
     push hl
     ld a, e
@@ -524,11 +524,11 @@ Jump_084_433C::
     pop hl
     ret
 
-; only called from RunDebugAutomapCaseHFFC6_Shared01 (E-0047)
-; 2 call sites from 1 routine (e.g. RunDebugAutomapCaseHFFC6_Shared01)
+; only called from RunDebugAutomapCaseTemp0_Shared01 (E-0047)
+; 2 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_Shared01)
 ; reads: hTemp3
 ; writes: hTemp3, hTemp4
-RunDebugAutomapCaseHFFC6_Shared01_Sub02::
+RunDebugAutomapCaseTemp0_Shared01_Sub02::
 Func_084_435C:: ; address name
     push hl
     ld a, e
@@ -585,7 +585,7 @@ Jump_084_438C::
     ret
 
 ; repeats NextRandomSeed until wCD04 & $0F is below C (C must be 1-16); returns A = that value (E-0077)
-; 5 call sites from 1 routine (e.g. RunDebugAutomapCaseHFFC6_Shared01)
+; 5 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_Shared01)
 ; reads: wKeyRandomHi
 RandomBelowC::
 Func_084_43AC:: ; address name
@@ -1403,11 +1403,11 @@ Jump_084_4A87::
     xor a, a
     ret
 
-; only called from RunWC8C7Phase_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC8C7Phase_Case01)
+; only called from RunFieldReturnPhase_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunFieldReturnPhase_Case01)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wSpriteSnapshot, wSnapshotByte3E, wSnapshotByte3D, wSnapshotByte3C, ...
 ; writes: hSpriteWindowClipMode, hTemp0, rSVBK
-RunWC8C7Phase_Case01_Sub02::
+RunFieldReturnPhase_Case01_Sub02::
 Func_084_4A89:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
@@ -1450,7 +1450,7 @@ Jump_084_4AA5::
     jp nz, Jump_084_4B46
     ld a, [wSnapshotByte3C]
     ld c, a
-    call RunWC8C7Phase_Case01_Sub02_Sub01
+    call RunFieldReturnPhase_Case01_Sub02_Sub01
     jr Jump_084_4B46
 
 Jump_084_4ACE::
@@ -1462,7 +1462,7 @@ Jump_084_4ACE::
     dec hl
     ld a, [hl]
     ld c, a
-    call RunWC8C7Phase_Case01_Sub02_Sub01
+    call RunFieldReturnPhase_Case01_Sub02_Sub01
     jr Jump_084_4B46
 
 Data_084_4ADC:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1493,7 +1493,7 @@ Jump_084_4AFE::
     jr nz, Jump_084_4B46
     ld a, [wSnapshotByte3C]
     ld c, a
-    call RunWC8C7Phase_Case01_Sub02_Sub01
+    call RunFieldReturnPhase_Case01_Sub02_Sub01
     jr Jump_084_4B46
 
 Jump_084_4B2C::
@@ -1508,7 +1508,7 @@ Jump_084_4B2C::
     swap a
     or a, c
     ld c, a
-    call RunWC8C7Phase_Case01_Sub02_Sub01
+    call RunFieldReturnPhase_Case01_Sub02_Sub01
     jr Jump_084_4B46
 
 Jump_084_4B46::
@@ -1625,11 +1625,11 @@ Jump_084_4BFE::
     call DrawFullScreenBufferToBGMap
     ret
 
-; only called from RunWC8C7Phase_Case01_Sub02 (E-0047)
-; 4 call sites from 1 routine (e.g. RunWC8C7Phase_Case01_Sub02)
+; only called from RunFieldReturnPhase_Case01_Sub02 (E-0047)
+; 4 call sites from 1 routine (e.g. RunFieldReturnPhase_Case01_Sub02)
 ; reads: wIsCGB, wMapType
 ; writes: rSVBK
-RunWC8C7Phase_Case01_Sub02_Sub01::
+RunFieldReturnPhase_Case01_Sub02_Sub01::
 Func_084_4C04:: ; address name
     ld a, c
     and a, $0F
@@ -1712,10 +1712,10 @@ Data_084_4C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $03, $02, $02
 
 ; when wC88E is set and key entry hFFC6 matches wC891, clears wC88E (E-0127)
-; 1 call site from 1 routine (e.g. DeleteKeyEntryHFFC6)
+; 1 call site from 1 routine (e.g. DeleteKeyEntryTemp0)
 ; reads: wKeyWorldActive, hTemp0, wKeyWorldKey
 ; writes: wKeyWorldActive
-ClearWC88EForMatchingKeyEntry::
+ClearKeyWorldActiveForMatchingKeyEntry::
 Func_084_4C84:: ; address name
     ld a, [wKeyWorldActive]
     or a, a

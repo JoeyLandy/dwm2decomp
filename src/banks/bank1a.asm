@@ -1545,7 +1545,7 @@ Jump_01A_6318::
 ; hFFC6 = 0 and A = 0 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case09_Case01)
 ; writes: hTemp0
-ClearHFFC6AndA::
+ClearTemp0AndA::
 Func_01A_631A:: ; address name
     xor a, a
     ldh [hTemp0], a
@@ -1702,7 +1702,7 @@ Jump_01A_63A4::
 ; 12 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3
-SumTable6616RowForHFFC6::
+SumTable6616RowForTemp0::
 Func_01A_63A7:: ; address name
     ldh a, [hTemp0]
     ld c, $63
@@ -1753,7 +1753,7 @@ Data_01A_63F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wBattleArg1, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wLevelUpGains
 ; points at: wLevelUpGains
-ComputeLevelUpStatGainsForWD869::
+ComputeLevelUpStatGainsForBattleArg1::
 Func_01A_6418:: ; address name
     ld hl, wLevelUpGains
     ld bc, $0008
@@ -1779,48 +1779,48 @@ Func_01A_6418:: ; address name
     cp a, [hl]
     jr nc, Jump_01A_64A1
     ld d, a
-    call ComputeLevelUpStatGainsForWD869_Sub01
+    call ComputeLevelUpStatGainsForBattleArg1_Sub01
     ld a, [wSpeciesRecord + $C]
     call ReadByteTable6616Row
     ld b, $00
-    call AddWD09CIfWD09BMatchesB
+    call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains], a
     ld a, [wSpeciesRecord + $D]
     call ReadByteTable6616Row
     ld b, $01
-    call AddWD09CIfWD09BMatchesB
+    call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $1], a
     ld a, [wSpeciesRecord + $E]
     call ReadByteTable6616Row
     ld b, $02
-    call AddWD09CIfWD09BMatchesB
+    call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $2], a
     ld a, [wSpeciesRecord + $F]
     call ReadByteTable6616Row
     ld b, $03
-    call AddWD09CIfWD09BMatchesB
+    call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $3], a
     ld a, [wSpeciesRecord + $10]
     call ReadByteTable6616Row
     ld b, $04
-    call AddWD09CIfWD09BMatchesB
+    call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $4], a
     ld a, [wSpeciesRecord + $11]
     call ReadByteTable6616Row
     ld b, $05
-    call AddWD09CIfWD09BMatchesB
+    call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $5], a
     call ClampLevelUpGainsTo999
 
 Jump_01A_64A1::
     ret
 
-; only called from ComputeLevelUpStatGainsForWD869 (E-0047)
-; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
+; only called from ComputeLevelUpStatGainsForBattleArg1 (E-0047)
+; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1, wGrowthTemp0
 ; writes: wGrowthTemp0, wGrowthTemp1
 ; points at: wLevelUpGains
-ComputeLevelUpStatGainsForWD869_Sub01::
+ComputeLevelUpStatGainsForBattleArg1_Sub01::
 Func_01A_64A2:: ; address name
     push de
     ld a, [wBattleArg1]
@@ -1945,7 +1945,7 @@ Jump_01A_654C::
     ret
 
 ; if bit 0 of E is set, C += 1 when bit 0 of [HL] is set; otherwise B += 1 when bit 0 of [HL] is clear (E-0122)
-; 8 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForWD869_Sub01)
+; 8 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForBattleArg1_Sub01)
 CountBit0MatchOfEAndHL::
 Func_01A_6551:: ; address name
     bit 0, e
@@ -1964,7 +1964,7 @@ Jump_01A_6561::
     ret
 
 ; C = the byte at $6616 + $63 * A + D (a table with $63-byte rows); DE kept (E-0119)
-; 6 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
+; 6 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForBattleArg1)
 ReadByteTable6616Row::
 Func_01A_6562:: ; address name
     push de
@@ -1983,9 +1983,9 @@ Func_01A_6562:: ; address name
     ret
 
 ; A = C + (wD09C when wD09B = B, else 0) (E-0078)
-; 6 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
+; 6 call sites from 1 routine (e.g. ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wGrowthTemp0, wGrowthTemp1
-AddWD09CIfWD09BMatchesB::
+AddGrowthTemp1IfGrowthTemp0MatchesB::
 Func_01A_6579:: ; address name
     ld a, [wGrowthTemp0]
     cp a, b
@@ -2001,7 +2001,7 @@ Jump_01A_6585::
     ret
 
 ; limits each gain in wD095-wD09A so the record's stat words from field $5D stay at or below 999 (E-0127)
-; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForWD869)
+; 1 call site from 1 routine (e.g. ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1, wLevelUpGains
 ; writes: wLevelUpGains
 ClampLevelUpGainsTo999::
@@ -2244,7 +2244,7 @@ Func_01A_7307:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7923 (E-0115)
-; 1 call site from 1 routine (e.g. CopyRect7923AndDrawWD868Values)
+; 1 call site from 1 routine (e.g. CopyRect7923AndDrawBattleArg0Values)
 CopyRectRecord7923ToScreenBuffer::
 Func_01A_730E:: ; address name
     ld hl, Data_01A_7923

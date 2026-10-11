@@ -2,9 +2,9 @@ SECTION "Bank 32", ROMX[$4000], BANK[$32]
     db $32
 
 ; for the sequence at wCB75: runs the frame timer (Func_032_401C) when started, otherwise marks it started, clears byte 4 and loads the first frame (Func_032_403F) (E-0124)
-; 8 call sites from 6 routines (e.g. GameMode4_Update, SelectEffectByWDAD2Flags, RunBattleEffectAnimation, DrawHexByteAtBGMap8A_Sub01, ...)
+; 8 call sites from 6 routines (e.g. GameMode4_Update, SelectEffectByEffectFlags, RunBattleEffectAnimation, DrawHexByteAtBGMap8A_Sub01, ...)
 ; reads: wSequencePtrLo, wSequencePtrHi
-TickWCB75Sequence::
+TickSequencePtrLoSequence::
 Func_032_4001:: ; address name
     ld a, [wSequencePtrLo]
     ld l, a
@@ -13,7 +13,7 @@ Func_032_4001:: ; address name
     ld a, [hl]
     or a, a
     jr z, Jump_032_4012
-    call CountDownWCB75FrameTimer
+    call CountDownSequencePtrLoFrameTimer
     jr Jump_032_401B
 
 Jump_032_4012::
@@ -22,15 +22,15 @@ Jump_032_4012::
     inc hl
     inc hl
     ld [hl], $00
-    call TickWCB75Sequence_Sub01
+    call TickSequencePtrLoSequence_Sub01
 
 Jump_032_401B::
     ret
 
 ; counts down byte 5 of the wCB75 sequence ($FF = hold); at zero advances byte 3 (E-0124)
-; 1 call site from 1 routine (e.g. TickWCB75Sequence)
+; 1 call site from 1 routine (e.g. TickSequencePtrLoSequence)
 ; reads: wSequencePtrLo, wSequencePtrHi
-CountDownWCB75FrameTimer::
+CountDownSequencePtrLoFrameTimer::
 Func_032_401C:: ; address name
     ld a, [wSequencePtrLo]
     add a, $05
@@ -56,12 +56,12 @@ Jump_032_4032::
     ld h, a
     inc [hl]
 
-; only called from TickWCB75Sequence (E-0047)
-; 1 call site from 1 routine (e.g. TickWCB75Sequence)
+; only called from TickSequencePtrLoSequence (E-0047)
+; 1 call site from 1 routine (e.g. TickSequencePtrLoSequence)
 ; reads: wSequencePtrLo, wSequencePtrHi
-TickWCB75Sequence_Sub01::
+TickSequencePtrLoSequence_Sub01::
 Func_032_403F:: ; address name
-    call LookupWCB75FrameWord
+    call LookupSequencePtrLoFrameWord
     ld a, b
     and a, c
     cp a, $FF
@@ -108,9 +108,9 @@ Jump_032_4073::
     ret
 
 ; BC = word ([seq + 3]) of the table Data_032_40A6[[seq + 2]] (E-0124)
-; 1 call site from 1 routine (e.g. TickWCB75Sequence_Sub01)
+; 1 call site from 1 routine (e.g. TickSequencePtrLoSequence_Sub01)
 ; reads: wSequencePtrLo, wSequencePtrHi
-LookupWCB75FrameWord::
+LookupSequencePtrLoFrameWord::
 Func_032_4083:: ; address name
     ld a, [wSequencePtrLo]
     ld c, a
@@ -590,7 +590,7 @@ Jump_032_4B38::
 
 Jump_032_4B3F::
     ld [wBattleActor], a
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_032_4B5D
     ld a, [wBattleActor]
     ld hl, wSlotMarks
@@ -889,7 +889,7 @@ Jump_032_4CD4::
     or a, l
     jr z, Jump_032_4CB7
     ld a, [wBattleActor]
-    call SetBit0OfWD095Indexed_Bank32
+    call SetBit0OfLevelUpGainsIndexed_Bank32
     ld d, $10
     call ShowBattleTextCategory0Entry
     ld a, [wBattleActor]
@@ -905,7 +905,7 @@ Jump_032_4CF7::
     or a, c
     jr z, Jump_032_4CB7
     ld a, [wBattleActor]
-    call SetBit1OfWD095Indexed_Bank32
+    call SetBit1OfLevelUpGainsIndexed_Bank32
     ld d, $11
     call ShowBattleTextCategory0Entry
     jr Jump_032_4D2A
@@ -916,7 +916,7 @@ Jump_032_4D0B::
     call AddAx9ToHL
     set 4, [hl]
     ld a, [wBattleActor]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld d, $12
     call ShowBattleTextCategory0Entry
     jr Jump_032_4D2A
@@ -1197,7 +1197,7 @@ Jump_032_4E8F::
     and a, $73
     ld [hl], a
     ld a, [wBattleActor]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
     ld a, [wBattleActor]
@@ -1296,7 +1296,7 @@ Func_032_4F0A:: ; address name
     cp a, $01
     call nz, CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
-    farcall ActorFormationSlotToHFFC6
+    farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
@@ -1306,7 +1306,7 @@ Func_032_4F0A:: ; address name
 Jump_032_4F32::
     farcall ShowSpecialActionMessage
     call SetSubPhase7AndResetSteps
-    farcall ActorFormationSlotToHFFC6
+    farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
@@ -1336,7 +1336,7 @@ Jump_032_4F53:: ; address name
     bit 7, [hl]
     jr z, Jump_032_4F85
     ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank32
+    call ReadSlotAIModeIndexed_Bank32
     cp a, $02
     jr nc, Jump_032_4FC8
 
@@ -1367,7 +1367,7 @@ Jump_032_4F9C::
     bit 2, a
     jr nz, Jump_032_4FFB
     ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank32
+    call ReadSlotAIModeIndexed_Bank32
     cp a, $03
     jr c, Jump_032_4FFB
 
@@ -1513,7 +1513,7 @@ Jump_032_50B7:: ; address name
 
 Jump_032_50DD::
     ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank32
+    call ReadSlotAIModeIndexed_Bank32
     cp a, $02
     jr nc, Jump_032_50F6
     ld a, [wRecordBufferData + $4]
@@ -1618,7 +1618,7 @@ Jump_032_5181::
     push de
     ld a, [wBattleActor]
     push af
-    farcall ActorFormationSlotToHFFC6
+    farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
     add a, a
@@ -1755,7 +1755,7 @@ Jump_032_524E::
 
 Jump_032_5259::
     ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank32
+    call ReadSlotAIModeIndexed_Bank32
     cp a, $02
     jr c, Jump_032_5294
     ld a, [wRecordBufferData + $5]
@@ -1771,7 +1771,7 @@ Jump_032_5259::
 
 Jump_032_527A::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_032_5284
     bit 3, [hl]
     jr z, Jump_032_5294
@@ -1825,7 +1825,7 @@ Jump_032_52B8::
     bit 3, [hl]
     jp nz, Jump_032_52FD
     ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank32
+    call ReadSlotAIModeIndexed_Bank32
     cp a, $02
     jr c, Jump_032_5301
     ld a, [wRecordBufferData + $4]
@@ -1841,7 +1841,7 @@ Jump_032_52B8::
 
 Jump_032_52DE::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_032_52E9
     ld a, [hl]
     and a, $22
@@ -1887,7 +1887,7 @@ Func_032_5303:: ; address name
     bit 7, [hl]
     jr nz, Jump_032_5344
     ld a, [wBattleActor]
-    call ReadWDA53Indexed_Bank32
+    call ReadSlotAIModeIndexed_Bank32
     cp a, $02
     jr c, Jump_032_5348
     ld a, [wBattleActor]
@@ -1900,7 +1900,7 @@ Func_032_5303:: ; address name
 
 Jump_032_532A::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_032_5334
     bit 6, [hl]
     jr z, Jump_032_5348
@@ -2034,7 +2034,7 @@ Jump_032_53B6::
 
 Jump_032_53C1::
     ld a, [wBattleActor]
-    call SetBit1OfWD095Indexed_Bank32
+    call SetBit1OfLevelUpGainsIndexed_Bank32
     ret
 
 Jump_032_53C8::
@@ -2053,7 +2053,7 @@ Jump_032_53C8::
     call PayActorMPCost
     ld a, [wBattleActor]
     push af
-    farcall ActorFormationSlotToHFFC6
+    farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
     ld hl, wSavedActionChoices
@@ -2075,7 +2075,7 @@ Jump_032_541A::
     call PayActorMPCost
     ld a, [wBattleActor]
     push af
-    farcall ActorFormationSlotToHFFC6
+    farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
     call PayActorMPCost
@@ -2141,7 +2141,7 @@ Jump_032_5474:: ; address name
     farcall ShowActionBattleTextFrom6DAA
     ld a, $80
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
     ld a, [wLinkMode]
     or a, a
     ret nz
@@ -2257,7 +2257,7 @@ Jump_032_5519:: ; address name
     ret z
     ld a, $80
     ld [wEffectFlags], a
-    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByEffectFlags
     ret
 
 ; compares wBattleActionId with $CD: carry when below, Z when equal (E-0115)
@@ -2323,7 +2323,7 @@ Jump_032_5585::
 
 Jump_032_5593::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_032_559D
     bit 4, [hl]
     jr nz, Jump_032_55B2
@@ -2571,7 +2571,7 @@ Jump_032_57BA:: ; address name
     ld b, $03
 
 Jump_032_57C7::
-    call SlotCStatusCheckOrWDA63
+    call SlotCStatusCheckOrBattleSlotOut
     jr nc, Jump_032_57DA
     inc c
     dec b
@@ -2602,7 +2602,7 @@ Func_032_57E4:: ; address name
 ; in link battles or for slots 0-3 checks slot C's status block; otherwise carry unless the wDA63 slot is empty (E-0122)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case09_Case01)
 ; reads: wLinkMode
-SlotCStatusCheckOrWDA63::
+SlotCStatusCheckOrBattleSlotOut::
 Func_032_57E8:: ; address name
     ld a, [wLinkMode]
     cp a, $01
@@ -2610,7 +2610,7 @@ Func_032_57E8:: ; address name
     ld a, c
     cp a, $04
     jr c, Jump_032_57F8
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     ret
 
 Jump_032_57F8::
@@ -2778,7 +2778,7 @@ Jump_032_58DA:: ; address name
     farcall ShowActionBattleTextFrom6DAA
     ld a, $80
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
 
 Jump_032_58F2::
     ld hl, wBattleResolveStep
@@ -2799,7 +2799,7 @@ Jump_032_58F7:: ; address name
     ret nz
     ld a, $80
     ld [wEffectFlags], a
-    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByEffectFlags
     ld hl, wBattleResolveStep
     inc [hl]
     xor a, a
@@ -2857,7 +2857,7 @@ Jump_032_5952::
 
 Jump_032_5960::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_032_596A
     bit 4, [hl]
     jr nz, Jump_032_5983
@@ -3021,11 +3021,11 @@ Jump_032_5A1B::
 
 Jump_032_5A26::
     ld a, [wBattleTarget]
-    call SetBit0OfWD095Indexed_Bank32
+    call SetBit0OfLevelUpGainsIndexed_Bank32
     ld a, [wBattleTarget]
-    call SetBit1OfWD095Indexed_Bank32
+    call SetBit1OfLevelUpGainsIndexed_Bank32
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ret
 
 Jump_032_5A39::
@@ -3081,7 +3081,7 @@ Jump_032_5A63:: ; address name
     xor a, a
     ld [wBattleSubStep2], a
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     call RunDefeatSequence_Case02_Sub01
     ret z
     ld a, [wBattleActionId]
@@ -3277,7 +3277,7 @@ Jump_032_5B78::
 
 Jump_032_5B8D::
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
 
 Jump_032_5B93::
     ret
@@ -3595,7 +3595,7 @@ Jump_032_5E0B::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadWD868PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRun44C9
     ret
 
 ; only called from RecomputeTargetMaxHPAndMP (E-0047)
@@ -3647,7 +3647,7 @@ Jump_032_5E44::
     push bc
     ld a, c
     ld [wBattleTarget], a
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_032_5E79
     call RecomputeTargetMaxHPAndMP
     ld a, [wBattleTarget]
@@ -3812,7 +3812,7 @@ Jump_032_5F3B::
 Jump_032_5F4B::
     ld a, [wBattleActor]
     push af
-    farcall ActorFormationSlotToHFFC6
+    farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
     call ResolveStep0EEffect_Case00_Sub01
@@ -3822,7 +3822,7 @@ Jump_032_5F4B::
 
 Jump_032_5F63::
     ld a, [wBattleTarget]
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jp c, SetBattleSubStep1
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -3831,27 +3831,27 @@ Jump_032_5F63::
     and a, $03
     jp nz, SetBattleSubStep1
     push hl
-    farcall RollTargetWDA72Byte4Bits01ChanceToE
+    farcall RollTargetSlotResistancesByte4Bits01ChanceToE
     pop hl
     ld a, e
     or a, a
     jp nz, SetBattleSubStep1
     set 0, [hl]
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $20
     ld [wEffectFlags], a
-    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByEffectFlags
     ld a, $08
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
     ld a, $75
     ld [wEffectSubStep], a
     jp SetBattleSubStep1
 
 Jump_032_5FAE::
     ld a, [wBattleTarget]
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jp c, SetBattleSubStep1
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -3859,27 +3859,27 @@ Jump_032_5FAE::
     bit 6, [hl]
     jp nz, SetBattleSubStep1
     push hl
-    farcall RollTargetWDA72Byte5Bits67ChanceToE
+    farcall RollTargetSlotResistancesByte5Bits67ChanceToE
     pop hl
     ld a, e
     or a, a
     jp nz, SetBattleSubStep1
     set 6, [hl]
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $20
     ld [wEffectFlags], a
-    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByEffectFlags
     ld a, $08
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
     ld a, $76
     ld [wEffectSubStep], a
     jp SetBattleSubStep1
 
 Jump_032_5FF8::
     ld a, [wBattleTarget]
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jp c, SetBattleSubStep1
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -3896,13 +3896,13 @@ Jump_032_5FF8::
     or a, $8C
     ld [hl], a
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $20
     ld [wEffectFlags], a
-    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByEffectFlags
     ld a, $08
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
     call TargetOnLocalSide_Bank32
     ld a, $74
     jr c, Jump_032_6044
@@ -3945,7 +3945,7 @@ Func_032_604A:: ; address name
 
 Jump_032_607C::
     ld b, a
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, Jump_032_6090
     ld a, b
     and a, $03
@@ -4020,10 +4020,10 @@ Jump_032_60C0:: ; address name
     ret c
     ld a, $20
     ld [wEffectFlags], a
-    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByEffectFlags
     ld a, $08
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
     ret
 
 ; entry 1 of the `rst $00` table in ResolveStep0EEffect_Case03
@@ -4113,7 +4113,7 @@ Jump_032_612F::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ld a, [wBattleActor]
-    call SetBit0OfWD095Indexed_Bank32
+    call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
 ; entry 2 of the `rst $00` table in ResolveStep0EEffect_Case03
@@ -4126,7 +4126,7 @@ Jump_032_6174:: ; address name
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunWCFCEStep_618A
+    call RunEffectSubStep_618A
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
@@ -4134,19 +4134,19 @@ Jump_032_6174:: ; address name
 ; runs the routine for wCFCE (jump table of three) (E-0122)
 ; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case03_Case02)
 ; reads: wEffectSubStep
-RunWCFCEStep_618A::
+RunEffectSubStep_618A::
 Func_032_618A:: ; address name
     ld a, [wEffectSubStep]
     rst $00
-    dw RunWCFCEStep_618A_Case00
-    dw RunWCFCEStep_618A_Case01
-    dw RunWCFCEStep_618A_Case02
+    dw RunEffectSubStep_618A_Case00
+    dw RunEffectSubStep_618A_Case01
+    dw RunEffectSubStep_618A_Case02
 
-; entry 0 of the `rst $00` table in RunWCFCEStep_618A
+; entry 0 of the `rst $00` table in RunEffectSubStep_618A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wEffectSubStep, wSlotMarks
-RunWCFCEStep_618A_Case00::
+RunEffectSubStep_618A_Case00::
 Jump_032_6194:: ; address name
     ld hl, wEffectSubStep
     inc [hl]
@@ -4157,25 +4157,25 @@ Jump_032_6194:: ; address name
     call DefeatTarget
     ret
 
-; entry 1 of the `rst $00` table in RunWCFCEStep_618A
+; entry 1 of the `rst $00` table in RunEffectSubStep_618A
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wEffectSubStep
-RunWCFCEStep_618A_Case01::
+RunEffectSubStep_618A_Case01::
 Jump_032_61A9:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunWCFCEStep_618A
+; entry 2 of the `rst $00` table in RunEffectSubStep_618A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wTemp0
 ; writes: wTemp0, wEffectSubStep
 ; points at: wBattleSubStep2
-RunWCFCEStep_618A_Case02::
+RunEffectSubStep_618A_Case02::
 Jump_032_61B1:: ; address name
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $90
     ld [wTemp0], a
     call ActorOnLocalSide_Bank32
@@ -4226,10 +4226,10 @@ Jump_032_61EF:: ; address name
     ret c
     ld a, $20
     ld [wEffectFlags], a
-    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByEffectFlags
     ld a, $08
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
     ld hl, wBattleSubStep2
     inc [hl]
     ret
@@ -4287,7 +4287,7 @@ Jump_032_6245::
 
 Jump_032_625F::
     ld a, [wBattleActor]
-    call SetBit0OfWD095Indexed_Bank32
+    call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
 ; entry 2 of the `rst $00` table in ResolveStep0EEffect_Case04
@@ -4349,7 +4349,7 @@ Jump_032_629B:: ; address name
 Func_032_627C_Case02::
 Jump_032_62A3:: ; address name
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $90
     ld [wTemp0], a
     call ActorOnLocalSide_Bank32
@@ -4390,7 +4390,7 @@ Jump_032_62CF:: ; address name
     jr nz, Jump_032_62F1
     set 7, a
     ld [wSavedActorByte], a
-    farcall ActorFormationSlotToHFFC6
+    farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
 
@@ -4412,7 +4412,7 @@ Jump_032_62FD:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
     ld a, [wBattleActor]
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jp c, Func_032_627C_Table2_Case03
     ret
 
@@ -4428,7 +4428,7 @@ Jump_032_630B:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
     ld a, [wBattleActor]
-    call SetBit0OfWD095Indexed_Bank32
+    call SetBit0OfLevelUpGainsIndexed_Bank32
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $01
@@ -4530,7 +4530,7 @@ Jump_032_63AC:: ; address name
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunWCFCEStep_63C2
+    call RunEffectSubStep_63C2
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
@@ -4538,19 +4538,19 @@ Jump_032_63AC:: ; address name
 ; runs the routine for wCFCE (jump table of three) (E-0122)
 ; 1 call site from 1 routine (e.g. Func_032_627C_Table2_Case02)
 ; reads: wEffectSubStep
-RunWCFCEStep_63C2::
+RunEffectSubStep_63C2::
 Func_032_63C2:: ; address name
     ld a, [wEffectSubStep]
     rst $00
-    dw RunWCFCEStep_63C2_Case00
-    dw RunWCFCEStep_63C2_Case01
-    dw RunWCFCEStep_63C2_Case02
+    dw RunEffectSubStep_63C2_Case00
+    dw RunEffectSubStep_63C2_Case01
+    dw RunEffectSubStep_63C2_Case02
 
-; entry 0 of the `rst $00` table in RunWCFCEStep_63C2
+; entry 0 of the `rst $00` table in RunEffectSubStep_63C2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wEffectSubStep, wSlotMarks
-RunWCFCEStep_63C2_Case00::
+RunEffectSubStep_63C2_Case00::
 Jump_032_63CC:: ; address name
     ld hl, wEffectSubStep
     inc [hl]
@@ -4561,24 +4561,24 @@ Jump_032_63CC:: ; address name
     call DefeatTarget
     ret
 
-; entry 1 of the `rst $00` table in RunWCFCEStep_63C2
+; entry 1 of the `rst $00` table in RunEffectSubStep_63C2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wEffectSubStep
-RunWCFCEStep_63C2_Case01::
+RunEffectSubStep_63C2_Case01::
 Jump_032_63E1:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunWCFCEStep_63C2
+; entry 2 of the `rst $00` table in RunEffectSubStep_63C2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActionId, wSavedActorByte, wSavedActorSlot
 ; writes: wEffectSubStep, wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep2, wSavedActorByte
-RunWCFCEStep_63C2_Case02::
+RunEffectSubStep_63C2_Case02::
 Jump_032_63E9:: ; address name
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, [wBattleActionId]
     cp a, $7B
     ld d, $8C
@@ -4657,10 +4657,10 @@ Jump_032_6449:: ; address name
     ret c
     ld a, $20
     ld [wEffectFlags], a
-    farcall SelectEffectByWDAD2Flags
+    farcall SelectEffectByEffectFlags
     ld a, $08
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
     ret
 
 ; entry 1 of the `rst $00` table in ResolveStep0EEffect_Case09
@@ -4766,7 +4766,7 @@ Jump_032_64D3::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ld a, [wBattleActor]
-    call SetBit0OfWD095Indexed_Bank32
+    call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
 ; entry 2 of the `rst $00` table in ResolveStep0EEffect_Case09
@@ -4779,7 +4779,7 @@ Jump_032_6518:: ; address name
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunWCFCEStep_652E
+    call RunEffectSubStep_652E
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
@@ -4787,19 +4787,19 @@ Jump_032_6518:: ; address name
 ; runs the routine for wCFCE (jump table of three) (E-0122)
 ; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case09_Case02)
 ; reads: wEffectSubStep
-RunWCFCEStep_652E::
+RunEffectSubStep_652E::
 Func_032_652E:: ; address name
     ld a, [wEffectSubStep]
     rst $00
-    dw RunWCFCEStep_652E_Case00
-    dw RunWCFCEStep_652E_Case01
-    dw RunWCFCEStep_652E_Case02
+    dw RunEffectSubStep_652E_Case00
+    dw RunEffectSubStep_652E_Case01
+    dw RunEffectSubStep_652E_Case02
 
-; entry 0 of the `rst $00` table in RunWCFCEStep_652E
+; entry 0 of the `rst $00` table in RunEffectSubStep_652E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wEffectSubStep, wSlotMarks
-RunWCFCEStep_652E_Case00::
+RunEffectSubStep_652E_Case00::
 Jump_032_6538:: ; address name
     ld hl, wEffectSubStep
     inc [hl]
@@ -4810,25 +4810,25 @@ Jump_032_6538:: ; address name
     call DefeatTarget
     ret
 
-; entry 1 of the `rst $00` table in RunWCFCEStep_652E
+; entry 1 of the `rst $00` table in RunEffectSubStep_652E
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wEffectSubStep
-RunWCFCEStep_652E_Case01::
+RunEffectSubStep_652E_Case01::
 Jump_032_654D:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunWCFCEStep_652E
+; entry 2 of the `rst $00` table in RunEffectSubStep_652E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wTemp0
 ; writes: wTemp0, wEffectSubStep
 ; points at: wBattleSubStep2
-RunWCFCEStep_652E_Case02::
+RunEffectSubStep_652E_Case02::
 Jump_032_6555:: ; address name
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $90
     ld [wTemp0], a
     call ActorOnLocalSide_Bank32
@@ -4864,11 +4864,11 @@ Func_032_6581:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $D0
-    call nz, SetTargetWDA5BTo3
+    call nz, SetTargetSlotMarksTo3
     xor a, a
     ld [hl+], a
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, [hl]
     and a, $3C
     ld [hl+], a
@@ -4935,7 +4935,7 @@ Jump_032_65DF::
 ; 3 call sites from 2 routines (e.g. ActionEffect_Surge_Sub01, ActionEffect_DeMagic_Sub01)
 ; reads: wBattleTarget
 ; points at: wSlotMarks
-SetTargetWDA5BTo3::
+SetTargetSlotMarksTo3::
 Func_032_660F:: ; address name
     push hl
     push bc
@@ -4959,12 +4959,12 @@ Func_032_6622:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $90
-    call nz, SetTargetWDA5BTo3
+    call nz, SetTargetSlotMarksTo3
     ld a, [hl]
     and a, $63
     ld [hl], a
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     inc hl
     ld a, [hl]
     and a, $30
@@ -4980,7 +4980,7 @@ Func_032_6622:: ; address name
     ld [hl+], a
     ld a, [hl]
     and a, $C0
-    call nz, SetTargetWDA5BTo3
+    call nz, SetTargetSlotMarksTo3
     ld a, [hl]
     and a, $33
     ld [hl+], a
@@ -5013,8 +5013,8 @@ RunBattleSubStep_6662_Case00::
 Jump_032_666C:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
-    farcall SelectEffectByWDAD2Flags
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags
+    farcall SelectEffectByEffectFlags2Flags
     ret
 
 ; entry 1 of the `rst $00` table in RunBattleSubStep_6662
@@ -5066,7 +5066,7 @@ Jump_032_66AD::
 
 Jump_032_66B5::
     ld a, [wBattleTarget]
-    call SetBit0OfWD095Indexed_Bank32
+    call SetBit0OfLevelUpGainsIndexed_Bank32
     call ActorOnLocalSide_Bank32
     ld d, $35
     jr c, Jump_032_66C4
@@ -5143,7 +5143,7 @@ Jump_032_6710:: ; address name
 RunBattleSubStep2_66F1_Case02::
 Jump_032_6718:: ; address name
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $8A
     ld [wTemp0], a
     call ActorOnLocalSide_Bank32
@@ -5165,13 +5165,13 @@ Jump_032_672D::
     ld [wDefeatFlagsBA], a
     ret
 
-; when the actor's slot is absent (CarryUnlessWDA63SlotEmpty) runs SetBattleSubStep1 and returns carry set; otherwise returns carry clear (E-0115)
+; when the actor's slot is absent (CarryUnlessBattleSlotOutSlotEmpty) runs SetBattleSubStep1 and returns carry set; otherwise returns carry clear (E-0115)
 ; 3 call sites from 3 routines (e.g. ResolveStep0EEffect_Case03_Case00, ResolveStep0EEffect_Case04_Case00, ResolveStep0EEffect_Case09_Case00)
 ; reads: wBattleActor
 SkipTurnIfActorAbsent::
 Func_032_6749:: ; address name
     ld a, [wBattleActor]
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     ret nc
     call SetBattleSubStep1
     scf
@@ -5241,7 +5241,7 @@ Jump_032_678D:: ; address name
     xor a, a
     ld [wBattleSubStep2], a
     ld a, [wBattleTarget]
-    call SetBit2OfWD095Indexed_Bank32
+    call SetBit2OfLevelUpGainsIndexed_Bank32
     ld d, $8B
     call TargetOnLocalSide_Bank32
     jr nc, Jump_032_67A3
@@ -5333,7 +5333,7 @@ Func_032_6808:: ; address name
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
 ; 6 call sites from 5 routines (e.g. CheckSkillMPCost, CheckActorStatusAndFoeTargets, CheckActorStatusBit7AndFoeBit6, Func_032_4ADC_Case01_Case02, ...)
 ; points at: wSlotAIMode
-ReadWDA53Indexed_Bank32::
+ReadSlotAIModeIndexed_Bank32::
 Func_032_6812:: ; address name
     ld hl, wSlotAIMode
     add_a_to_hl
@@ -5401,7 +5401,7 @@ Jump_032_685D::
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 7 call sites from 7 routines (e.g. RunBattleSubStep_6662_Case01, RollStatusTickEffect, ApplyDamageToTarget, ResolveStep0EEffect_Case03_Case01, ...)
 ; points at: wLevelUpGains
-SetBit0OfWD095Indexed_Bank32::
+SetBit0OfLevelUpGainsIndexed_Bank32::
 Func_032_687F:: ; address name
     push hl
     ld hl, wLevelUpGains
@@ -5413,7 +5413,7 @@ Func_032_687F:: ; address name
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 3 call sites from 3 routines (e.g. PayActorMPCost, RollStatusTickEffect, ApplyDamageToTarget)
 ; points at: wLevelUpGains
-SetBit1OfWD095Indexed_Bank32::
+SetBit1OfLevelUpGainsIndexed_Bank32::
 Func_032_688C:: ; address name
     push hl
     ld hl, wLevelUpGains
@@ -5425,7 +5425,7 @@ Func_032_688C:: ; address name
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
 ; 16 call sites from 14 routines (e.g. ActionEffect_Surge_Sub01, ActionEffect_DeMagic_Sub01, DefeatTarget, RunBattleSubStep2_6764_Case02, ...)
 ; points at: wLevelUpGains
-SetBit2OfWD095Indexed_Bank32::
+SetBit2OfLevelUpGainsIndexed_Bank32::
 Func_032_6899:: ; address name
     push hl
     ld hl, wLevelUpGains

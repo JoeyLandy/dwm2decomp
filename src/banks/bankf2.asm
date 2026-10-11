@@ -336,7 +336,7 @@ Func_0F2_41CC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
-RunTextUntilWC8CBDone_BankF2:: ; heuristic: follows a terminator; C0
+RunTextUntilTextWindowStateDone_BankF2:: ; heuristic: follows a terminator; C0
 Func_0F2_4202:: ; address name
     ld hl, vTiles1
     ld de, $1202
@@ -427,7 +427,7 @@ Jump_0F2_4286::
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_BankF2
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, [wBankF0BlockC7]
     and a, a
     jr nz, Jump_0F2_429F
@@ -441,10 +441,10 @@ Jump_0F2_42A2::
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_BankF2
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, $0D
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     xor a, a
     ld [wObject5], a
     ld a, $48
@@ -892,7 +892,7 @@ Data_0F2_48D1:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case0D_Case01, Func_037_4AFD_Case0D_Case1C, RunWD780StateWhenNotFading_F1_Case0D_Case01, RunWD780StateWhenNotFading_F1_Case0D_Case1C)
+; 4 call sites from 4 routines (e.g. Func_037_4AFD_Case0D_Case01, Func_037_4AFD_Case0D_Case1C, RunScreenStateWhenNotFading_F1_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_Case1C)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowString10Bank0EAtTiles2020ThenDefault::
 Func_0F2_49CF:: ; address name
@@ -982,7 +982,7 @@ Func_0F2_4A61:: ; address name
     ld hl, $2940
     call CopyTileBytesToVRAMCounted_BankF2
     ld hl, wRecordBufB + $F
-    call CopyShortStringToWC8CF_BankF2
+    call CopyShortStringToNameGlyphBuf_BankF2
     ld de, vTiles2 + $290
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -1059,7 +1059,7 @@ Func_0F2_4AF3:: ; address name
     ret
 
 ; ShowCombinedPersonalityName, then DrawWCA3ANameAtTiles2290 (E-0122)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case12, RunWD780StateWhenNotFading_F1_Case0D_Case12)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case12, RunScreenStateWhenNotFading_F1_Case0D_Case12)
 ShowPersonalityNameAndWCA3AName::
 Func_0F2_4AFE:: ; address name
     call ShowCombinedPersonalityName
@@ -1067,7 +1067,7 @@ Func_0F2_4AFE:: ; address name
     ret
 
 ; writes the EXP wCA83-wCA85 as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunScreenStateWhenNotFading_F1_Case0D_Case13)
 ; reads: wRecordBufB, hTemp0, wSpeciesExpCurve, hTemp1, hTemp2
 ; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wArg1, wArg2, ...
 ; points at: hTemp2
@@ -1080,12 +1080,12 @@ Func_0F2_4B05:: ; address name
     ld a, [wRecordBufB + $5A]
     ld [wDigits + $2], a
     call Number24ToPackedBCD
-    farcall UnpackBCDToDigitsWD7F1_Bank1E
+    farcall UnpackBCDToDigitsArg1_Bank1E
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $018C
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call DrawSevenDigitsFromWD7F1_BankF2
+    call DrawSevenDigitsFromArg1_BankF2
     ld a, [wRecordBufB + $56]
     ldh [hTemp0], a
     ld a, [wRecordBufB + $57]
@@ -1107,7 +1107,7 @@ Func_0F2_4B05:: ; address name
     pop bc
     ld a, b
     ldh [hTemp1], a
-    farcall LoadTable4E60EntryToHFFC8
+    farcall LoadTable4E60EntryToTemp2
     ld de, hTemp2
     ld a, [de]
     ld c, a
@@ -1149,14 +1149,14 @@ Func_0F2_4B05:: ; address name
     ld a, e
     ld [wDigits + $2], a
     call Number24ToPackedBCD
-    farcall UnpackBCDToDigitsWD7F1_Bank1E
+    farcall UnpackBCDToDigitsArg1_Bank1E
 
 Jump_0F2_4BA8::
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $020C
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call DrawSevenDigitsFromWD7F1_BankF2
+    call DrawSevenDigitsFromArg1_BankF2
     ret
 
 Jump_0F2_4BB6::
@@ -1172,7 +1172,7 @@ Jump_0F2_4BB6::
     jr Jump_0F2_4BA8
 
 ; shows string wCACF of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case14, RunWD780StateWhenNotFading_F1_Case0D_Case14)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case14, RunScreenStateWhenNotFading_F1_Case0D_Case14)
 ; reads: wRecordBufB
 ; writes: wStringIndex, wStringCategory, rRAMG2, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowWCACFCategory11StringAtTiles2320::
@@ -1197,7 +1197,7 @@ Func_0F2_4BD0:: ; address name
     ret
 
 ; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1A, RunWD780StateWhenNotFading_F1_Case0D_Case1A)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1A, RunScreenStateWhenNotFading_F1_Case0D_Case1A)
 ; reads: wRecordBufB, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowSpeciesCategory13StringAtTiles2680::
@@ -1225,7 +1225,7 @@ Func_0F2_4BFC:: ; address name
     ret
 
 ; runs Func_0F2_4C3D and Func_0F2_4D72 (E-0126)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1F, RunWD780StateWhenNotFading_F1_Case0D_Case1F)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1F, RunScreenStateWhenNotFading_F1_Case0D_Case1F)
 RunF24C3DAnd4D72::
 Func_0F2_4C36:: ; address name
     call RunF24C3DAnd4D72_Sub01
@@ -1252,7 +1252,7 @@ Jump_0F2_4C4A::
 Jump_0F2_4C4D::
     ld a, [de]
     push de
-    call LoadHFFC6WordFromWCA2B
+    call LoadTemp0WordFromRecordBufB
     pop de
     ldh a, [hTemp1]
     cp a, $FF
@@ -1285,7 +1285,7 @@ Jump_0F2_4C7E::
     push de
     ld hl, wRecordBufB
     add_a_to_hl
-    call CopyShortStringToWC8CF_BankF2
+    call CopyShortStringToNameGlyphBuf_BankF2
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
     pop de
@@ -1297,7 +1297,7 @@ Jump_0F2_4C7E::
     inc de
     push de
     ld [wArg3], a
-    call ShowWCA2BEntryStringAtWD7F1
+    call ShowRecordBufBEntryStringAtArg1
     pop de
 
 Jump_0F2_4CA8::
@@ -1306,13 +1306,13 @@ Jump_0F2_4CA8::
     push de
     ld hl, wRecordBufB
     add_a_to_hl
-    call CopyShortStringToWC8CF_BankF2
+    call CopyShortStringToNameGlyphBuf_BankF2
     ld de, vTiles2 + $2F0
     call CopyGlyphTilesToVRAM
     pop de
     ld a, [de]
     push de
-    call LoadHFFC6WordFromWCA2B
+    call LoadTemp0WordFromRecordBufB
     pop de
     ldh a, [hTemp1]
     cp a, $FF
@@ -1345,7 +1345,7 @@ Jump_0F2_4CEE::
     push de
     ld hl, wRecordBufB
     add_a_to_hl
-    call CopyShortStringToWC8CF_BankF2
+    call CopyShortStringToNameGlyphBuf_BankF2
     ld de, vTiles2 + $340
     call CopyGlyphTilesToVRAM
     pop de
@@ -1357,14 +1357,14 @@ Jump_0F2_4CEE::
     inc de
     push de
     ld [wArg3], a
-    call ShowWCA2BEntryStringAtWD7F1
+    call ShowRecordBufBEntryStringAtArg1
     pop de
 
 Jump_0F2_4D18::
     ld a, [de]
     ld hl, wRecordBufB
     add_a_to_hl
-    call CopyShortStringToWC8CF_BankF2
+    call CopyShortStringToNameGlyphBuf_BankF2
     ld de, vTiles2 + $430
     call CopyGlyphTilesToVRAM
     ret
@@ -1374,7 +1374,7 @@ Jump_0F2_4D18::
 ; reads: wArg3, wArg1, wArg2
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wRecordBufB
-ShowWCA2BEntryStringAtWD7F1::
+ShowRecordBufBEntryStringAtArg1::
 Func_0F2_4D2B:: ; address name
     ld a, [wArg3]
     ld hl, wRecordBufB
@@ -1425,7 +1425,7 @@ Jump_0F2_4D7F::
 Jump_0F2_4D82::
     ld a, [de]
     push de
-    call LoadHFFC6WordFromWCA2B
+    call LoadTemp0WordFromRecordBufB
     pop de
     ldh a, [hTemp1]
     cp a, $FF
@@ -1455,7 +1455,7 @@ Jump_0F2_4D9E::
     ld [wArg3], a
     ld a, $6C
     ld [wArg4], a
-    call DrawSpeciesIconForWCA2BEntry
+    call DrawSpeciesIconForRecordBufBEntry
     pop de
     call PickNameBufferForFirstByte_BankF2
     inc de
@@ -1475,7 +1475,7 @@ Jump_0F2_4D9E::
 Jump_0F2_4DD4::
     ld a, [de]
     push de
-    call LoadHFFC6WordFromWCA2B
+    call LoadTemp0WordFromRecordBufB
     pop de
     ldh a, [hTemp1]
     cp a, $FF
@@ -1505,7 +1505,7 @@ Jump_0F2_4DF0::
     ld [wArg3], a
     ld a, $6D
     ld [wArg4], a
-    call DrawSpeciesIconForWCA2BEntry
+    call DrawSpeciesIconForRecordBufBEntry
     pop de
     call PickNameBufferForFirstByte_BankF2
     push de
@@ -1547,10 +1547,10 @@ Data_0F2_4E3A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $A3, $1C, $1A, $98, $1A
 
 ; A = byte offset: hFFC6/hFFC7 = the word at wCA2B + A (E-0079)
-; 5 call sites from 3 routines (e.g. DrawWCA2BSpeciesSprites, RunF24C3DAnd4D72_Sub02, RunF24C3DAnd4D72_Sub01)
+; 5 call sites from 3 routines (e.g. DrawRecordBufBSpeciesSprites, RunF24C3DAnd4D72_Sub02, RunF24C3DAnd4D72_Sub01)
 ; writes: hTemp0, hTemp1
 ; points at: wRecordBufB
-LoadHFFC6WordFromWCA2B::
+LoadTemp0WordFromRecordBufB::
 Func_0F2_4E40:: ; address name
     ld de, wRecordBufB
     add a, e
@@ -1569,7 +1569,7 @@ Jump_0F2_4E48::
 ; Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
 ; 5 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, RunF24C3DAnd4D72_Sub01)
 ; points at: wNameGlyphBuf
-CopyShortStringToWC8CF_BankF2::
+CopyShortStringToNameGlyphBuf_BankF2::
 Func_0F2_4E50:: ; address name
     ld de, wNameGlyphBuf
     ld c, $0A
@@ -1591,7 +1591,7 @@ Jump_0F2_4E5F::
 ; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. DrawWCA83ExpAndToNextLevel)
 ; points at: wArg1
-DrawSevenDigitsFromWD7F1_BankF2::
+DrawSevenDigitsFromArg1_BankF2::
 Func_0F2_4E63:: ; address name
     ld de, wArg1
     ld c, $07
@@ -1609,11 +1609,11 @@ Jump_0F2_4E68::
     ret
 
 ; for the three species words of wCA2B (offsets Data_0F2_4F41 or 4F44 by bit 4 of wCA38) decompresses their graphics to the targets in Data_0F2_4ED4 (E-0127)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1E, RunWD780StateWhenNotFading_F1_Case0D_Case1E)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1E, RunScreenStateWhenNotFading_F1_Case0D_Case1E)
 ; reads: wRecordBufB, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1, wArg1, wArg2
 ; points at: wRecordBufB, wArg3
-DecompressWCA2BSpeciesGraphics::
+DecompressRecordBufBSpeciesGraphics::
 Func_0F2_4E76:: ; address name
     ld c, $00
 
@@ -1673,7 +1673,7 @@ Jump_0F2_4EC0::
     inc de
     dec c
     jr nz, Jump_0F2_4EC0
-    farcall DecompressGraphicsWD7F1ToWD7F4
+    farcall DecompressGraphicsArg1ToArg4
 
 Jump_0F2_4ECC::
     pop bc
@@ -1687,11 +1687,11 @@ Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three species words of wCA2B draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkScreenState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wRecordBufB, hTemp1, hTemp0
 ; writes: hTemp0, wArg1, wArg2
 ; points at: wArg3
-DrawWCA2BSpeciesSprites::
+DrawRecordBufBSpeciesSprites::
 Func_0F2_4EDD:: ; address name
     ld c, $00
 
@@ -1718,7 +1718,7 @@ Jump_0F2_4EF1::
 
 Jump_0F2_4EF9::
     ld a, [de]
-    call LoadHFFC6WordFromWCA2B
+    call LoadTemp0WordFromRecordBufB
     ldh a, [hTemp1]
     cp a, $FF
     jr z, Jump_0F2_4F2D
@@ -1768,7 +1768,7 @@ Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
 ; writes the level wCA81 (marked $6F at the cap wCA82), its digits and the status marks from wCA80 into the BG map (E-0129)
-; 5 call sites from 5 routines (e.g. DrawWCA2BStatsScreen, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case16, ...)
+; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, Func_037_4AFD_Case0D_Case16, Func_037_4AFD_Case0D_Case1D, RunScreenStateWhenNotFading_F1_Case0D_Case16, ...)
 ; reads: hTemp1, hTemp0, wDigits, wRecordBufB
 ; writes: hTemp0, hTemp1
 DrawLevelAndStatusRowForWCA81::
@@ -1815,7 +1815,7 @@ Jump_0F2_4F74::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall BlankLeadingZeroDigitsWC8C0
+    farcall BlankLeadingZeroDigits_F
     pop hl
     ld a, [wDigits + $1]
     add a, $E0
@@ -1911,19 +1911,19 @@ Func_0F2_4FF9:: ; address name
     ei
     ret
 
-; runs Func_0F2_4F47, DrawFiveWCA2BStatsColumn and DrawFourWCA2BStatsDigits (E-0126)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case04, RunWD780StateWhenNotFading_F1_Case0D_Case04)
-DrawWCA2BStatsScreen::
+; runs Func_0F2_4F47, DrawFiveRecordBufBStatsColumn and DrawFourRecordBufBStatsDigits (E-0126)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case04, RunScreenStateWhenNotFading_F1_Case0D_Case04)
+DrawRecordBufBStatsScreen::
 Func_0F2_5002:: ; address name
     call DrawLevelAndStatusRowForWCA81
-    call DrawFiveWCA2BStatsColumn
-    call DrawFourWCA2BStatsDigits
+    call DrawFiveRecordBufBStatsColumn
+    call DrawFourRecordBufBStatsDigits
     ret
 
 ; writes four stat words from wCA2B (offsets Data_0F2_5050) as three digits at the scroll offsets Data_0F2_5054 (E-0125)
-; 1 call site from 1 routine (e.g. DrawWCA2BStatsScreen)
+; 1 call site from 1 routine (e.g. DrawRecordBufBStatsScreen)
 ; points at: wRecordBufB
-DrawFourWCA2BStatsDigits::
+DrawFourRecordBufBStatsDigits::
 Func_0F2_500C:: ; address name
     ld c, $00
 
@@ -1941,7 +1941,7 @@ Jump_0F2_500E::
     ld h, a
     ld l, b
     call HLToDecimalDigits
-    farcall BlankLeadingZeroDigitsWC8C0
+    farcall BlankLeadingZeroDigits_F
     pop bc
     ld a, c
     add a, a
@@ -1955,7 +1955,7 @@ Jump_0F2_500E::
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call WriteThreeDigitsWC8C0AtHL
+    call WriteThreeDigitsAtHL
     inc c
     ld a, c
     cp a, $04
@@ -1969,9 +1969,9 @@ Data_0F2_5054:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CC, $01, $D0, $01, $0C, $02, $10, $02
 
 ; writes five stat words from wCA2B (offsets Data_0F2_509F) as three digits down a column at scroll + $70 (E-0125)
-; 1 call site from 1 routine (e.g. DrawWCA2BStatsScreen)
+; 1 call site from 1 routine (e.g. DrawRecordBufBStatsScreen)
 ; points at: wRecordBufB
-DrawFiveWCA2BStatsColumn::
+DrawFiveRecordBufBStatsColumn::
 Func_0F2_505C:: ; address name
     call BGMapAddressAtScroll_BankF2_514D
     ld de, $0070
@@ -1999,10 +1999,10 @@ Jump_0F2_5073::
     ld h, a
     ld l, b
     call HLToDecimalDigits
-    farcall BlankLeadingZeroDigitsWC8C0
+    farcall BlankLeadingZeroDigits_F
     pop hl
     push hl
-    call WriteThreeDigitsWC8C0AtHL
+    call WriteThreeDigitsAtHL
     pop hl
     ld a, $40
     add_a_to_hl
@@ -2017,9 +2017,9 @@ Data_0F2_509F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $63, $65, $67, $69, $6B
 
 ; writes wC8C0, wC8C1, wC8C2 as digit tiles ($E0 + n) at HL (E-0121)
-; 2 call sites from 2 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn)
+; 2 call sites from 2 routines (e.g. DrawFourRecordBufBStatsDigits, DrawFiveRecordBufBStatsColumn)
 ; reads: wDigits
-WriteThreeDigitsWC8C0AtHL::
+WriteThreeDigitsAtHL::
 Func_0F2_50A4:: ; address name
     di
     call WaitForVRAMAccess
@@ -2041,12 +2041,12 @@ Func_0F2_50A4:: ; address name
     ei
     ret
 
-; hFFC6/7 = the word wCA2B[wD7F5], far-calls DrawSpeciesAndFamilyIconForHFFC6 and continues at Jump_0F2_50F8 (E-0126)
+; hFFC6/7 = the word wCA2B[wD7F5], far-calls DrawSpeciesAndFamilyIconForTemp0 and continues at Jump_0F2_50F8 (E-0126)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub02)
 ; reads: wArg5, wArg1, wArg2, wArg3, wDigits
 ; writes: hTemp0, hTemp1
 ; points at: wRecordBufB
-DrawSpeciesIconForWCA2BEntry::
+DrawSpeciesIconForRecordBufBEntry::
 Func_0F2_50C6:: ; address name
     push bc
     ld hl, wRecordBufB
@@ -2056,12 +2056,12 @@ Func_0F2_50C6:: ; address name
     ldh [hTemp0], a
     ld a, [hl]
     ldh [hTemp1], a
-    farcall DrawSpeciesAndFamilyIconForHFFC6
+    farcall DrawSpeciesAndFamilyIconForTemp0
     pop bc
     jp Jump_0F2_50F8
 
 ; loads the family icon of wCA38 & $0F into tile wD7F4; the next entry draws tile $1E and the count wCA2B[wD7F1] at the scroll offset wD7F2/3 (E-0127)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunScreenStateWhenNotFading_F1_Case0D_Case13)
 ; reads: wRecordBufB, wArg4, wArg1, wArg2, wArg3, wDigits
 ; writes: wWorkBuf
 ; points at: wRecordBufB
@@ -2073,7 +2073,7 @@ Func_0F2_50E2:: ; address name
     ld [wWorkBuf], a
     ld a, [wArg4]
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     pop bc
 
 Jump_0F2_50F8::
@@ -2104,7 +2104,7 @@ Jump_0F2_5108::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall BlankLeadingZeroDigitsWC8C0
+    farcall BlankLeadingZeroDigits_F
     pop hl
     ld a, [wDigits + $1]
     cp a, $E3
@@ -2126,7 +2126,7 @@ Jump_0F2_5141::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 8 call sites from 6 routines (e.g. DrawFourWCA2BStatsDigits, DrawFiveWCA2BStatsColumn, DrawWCA83ExpAndToNextLevel, DrawFamilyIconAndCountForWCA38, ...)
+; 8 call sites from 6 routines (e.g. DrawFourRecordBufBStatsDigits, DrawFiveRecordBufBStatsColumn, DrawWCA83ExpAndToNextLevel, DrawFamilyIconAndCountForWCA38, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_BankF2_514D::
 Func_0F2_514D:: ; address name
@@ -2417,7 +2417,7 @@ Data_0F2_616B:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $3CA1FB, $138
 
 ; a bare ret (E-0116)
-; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_1B_Case01_Case05)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_1B_Case01_Case05)
 ReturnStub_6333::
 Func_0F2_6333:: ; address name
     ret
@@ -2648,12 +2648,12 @@ Jump_0F2_643C::
 ; reads: wScreenState, wCounterPtr0Lo
 ; writes: wCounterPtr0Lo
 ; points at: wWorkBuf, wInventory, wItemGrid
-Run64C7UnlessWD780Is3::
+Run64C7UnlessScreenStateIs3::
 Func_0F2_6449:: ; address name
     ld a, [wScreenState]
     cp a, $03
     jr z, Jump_0F2_6470
-    call Run64C7UnlessWD780Is3_Sub01
+    call Run64C7UnlessScreenStateIs3_Sub01
     ret
 
 ; only called from ScriptCommandE5_Run_Case03_Case0E (E-0047)
@@ -2762,12 +2762,12 @@ Jump_0F2_64C0::
     jr nz, Jump_0F2_64C0
     ret
 
-; only called from Run64C7UnlessWD780Is3 (E-0047)
-; 1 call site from 1 routine (e.g. Run64C7UnlessWD780Is3)
+; only called from Run64C7UnlessScreenStateIs3 (E-0047)
+; 1 call site from 1 routine (e.g. Run64C7UnlessScreenStateIs3)
 ; reads: wCounterPtr0Lo
 ; writes: wCounterPtr0Lo
 ; points at: wWorkBuf, wItemStorage
-Run64C7UnlessWD780Is3_Sub01::
+Run64C7UnlessScreenStateIs3_Sub01::
 Func_0F2_64C7:: ; address name
     ld hl, wWorkBuf
     ld b, $C8

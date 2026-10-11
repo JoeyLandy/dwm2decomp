@@ -112,7 +112,7 @@ Jump_0A1_4164::
     jr z, Jump_0A1_417F
     ld e, $03
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A1_417F
     ld e, $01
 
@@ -152,7 +152,7 @@ Jump_0A1_41A2::
 
 Jump_0A1_41A9::
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A1_41A2
     ld [wBattleActor], a
     ld hl, wBattleSubPhase
@@ -231,7 +231,7 @@ Jump_0A1_41F4:: ; address name
 
 Jump_0A1_422A::
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A1_4266
     ld a, e
     ld hl, wSlotMarks
@@ -425,7 +425,7 @@ Func_0A1_4356:: ; address name
 
 Jump_0A1_435A::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A1_4378
     ld a, c
     add a, a
@@ -566,10 +566,10 @@ Jump_0A1_4433::
     ret
 
 ; on map type $80 sets the bit for the current map screen in the visited-screen bitmap wCE93 (E-0125)
-; 6 call sites from 3 routines (e.g. MarkVisitedScreens5x5AroundPlayer, RunWC468ActionIfBit7_Case01, RunWC46BMenuState_Case05)
+; 6 call sites from 3 routines (e.g. MarkVisitedScreens5x5AroundPlayer, RunFieldActionRequestActionIfBit7_Case01, RunMenuStateMenuState_Case05)
 ; reads: wMapType, hMapScreenY, hMapScreenX
 ; points at: wVisitedScreens
-MarkVisitedMapScreenInWCE93::
+MarkVisitedMapScreenInVisitedScreens::
 Func_0A1_4435:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -612,11 +612,11 @@ Jump_0A1_4470::
     ld [hl], a
     ret
 
-; only called from RunWC46BMenuState_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case05)
+; only called from RunMenuStateMenuState_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunMenuStateMenuState_Case05)
 ; reads: wKeyWorldFloor
 ; points at: wKeyWorldAreaExits, wVisitedScreens
-RunWC46BMenuState_Case05_Sub02::
+RunMenuStateMenuState_Case05_Sub02::
 Func_0A1_4474:: ; address name
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
@@ -712,7 +712,7 @@ Jump_0A1_44DD::
     cp a, d
     jr nc, Jump_0A1_44FC
     push bc
-    call MarkVisitedMapScreenInWCE93
+    call MarkVisitedMapScreenInVisitedScreens
     pop bc
 
 Jump_0A1_44FC::
@@ -738,25 +738,25 @@ Jump_0A1_4503::
 ; runs the routine for wC5DD & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case08)
 ; reads: wGameMode2State
-RunWC5DDState::
+RunGameMode2State::
 Func_0A1_4519:: ; address name
     ld a, [wGameMode2State]
     and a, $07
     rst $00
-    dw RunWC5DDState_Case00
-    dw RunWC5DDState_Case01
-    dw RunWC5DDState_Case02
-    dw RunWC5DDState_Case00
-    dw RunWC5DDState_Case04
-    dw RunWC5DDState_Case05
-    dw RunWC5DDState_Case06
+    dw RunGameMode2State_Case00
+    dw RunGameMode2State_Case01
+    dw RunGameMode2State_Case02
+    dw RunGameMode2State_Case00
+    dw RunGameMode2State_Case04
+    dw RunGameMode2State_Case05
+    dw RunGameMode2State_Case06
 
-; entry 4 of the `rst $00` table in RunWC5DDState
+; entry 4 of the `rst $00` table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, wIsCGB
 ; writes: hScrollX, hScrollY, wOBJPaletteUploadRequest, wBGPaletteUploadRequest
 ; points at: wDMGPaletteBGP, wOBJPaletteBuffer, wBGPaletteBuffer, wGameMode2State
-RunWC5DDState_Case04::
+RunGameMode2State_Case04::
 Jump_0A1_452D:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -779,15 +779,15 @@ Jump_0A1_452D:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     call FillBGMap0With57
-    call RunWC5DDState_Case04_Sub03
+    call RunGameMode2State_Case04_Sub03
     ld a, [wMapType]
     bit 7, a
     jr nz, Jump_0A1_4573
-    call RunWC5DDState_Case04_Sub02
+    call RunGameMode2State_Case04_Sub02
     jr Jump_0A1_4576
 
 Jump_0A1_4573::
-    call RunWC5DDState_Case04_Sub01
+    call RunGameMode2State_Case04_Sub01
 
 Jump_0A1_4576::
     ld hl, wDMGPaletteBGP
@@ -832,14 +832,14 @@ Jump_0A1_45C0::
     inc [hl]
     ret
 
-; only called from RunWC5DDState_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04)
+; only called from RunGameMode2State_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04)
 ; reads: hTemp5, hTemp7, hTempA, hTemp3, hTemp8, hTemp4, hTemp9, hTemp6
 ; writes: hTemp9, hTempA, hTemp8, hTemp6
-RunWC5DDState_Case04_Sub01::
+RunGameMode2State_Case04_Sub01::
 Func_0A1_45C5:: ; address name
-    call RunWC5DDState_Case04_Sub01_Sub02
-    call StoreHFFCBValuesToWC945
+    call RunGameMode2State_Case04_Sub01_Sub02
+    call StoreTemp5ValuesToCursorCellX
     ld hl, vBGMap0
     ld c, $12
 
@@ -884,7 +884,7 @@ Jump_0A1_45DB::
     pop de
     or a, a
     jr z, Jump_0A1_4610
-    call RunWC5DDState_Case04_Sub01_Sub01
+    call RunGameMode2State_Case04_Sub01_Sub01
 
 Jump_0A1_4610::
     ldh a, [hTemp9]
@@ -921,11 +921,11 @@ Jump_0A1_4632::
     jr nz, Jump_0A1_45D0
     ret
 
-; only called from RunWC5DDState_Case04_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub01)
+; only called from RunGameMode2State_Case04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub01)
 ; reads: hTemp8, hTempA, hTemp6, hTemp9
 ; writes: hTemp0, hTemp1
-RunWC5DDState_Case04_Sub01_Sub01::
+RunGameMode2State_Case04_Sub01_Sub01::
 Func_0A1_4640:: ; address name
     push hl
     ldh a, [hTemp8]
@@ -1023,12 +1023,12 @@ Func_0A1_4640:: ; address name
     call WriteVRAMByte
     ret
 
-; only called from RunWC5DDState_Case04_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub01)
+; only called from RunGameMode2State_Case04_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub01)
 ; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wKeyWorldWidth, wKeyWorldHeight
 ; writes: hTemp3, hTemp4, hTemp7, hTemp8, hTemp5, hTemp6, hPlayerY, hMapScreenY, ...
 ; points at: hTemp7, hTemp8
-RunWC5DDState_Case04_Sub01_Sub02::
+RunGameMode2State_Case04_Sub01_Sub02::
 Func_0A1_46DF:: ; address name
     ldh a, [hPlayerX]
     ld l, a
@@ -1040,7 +1040,7 @@ Func_0A1_46DF:: ; address name
     ldh a, [hMapScreenY]
     ld h, a
     push hl
-    call RunWCC44Type_A1_4744
+    call RunMapType_A1_4744
     ld a, [wKeyWorldWidth]
     ldh [hTemp3], a
     ld a, [wKeyWorldHeight]
@@ -1097,34 +1097,34 @@ Jump_0A1_4733::
     ret
 
 ; runs the routine for wCC44 & 7 (jump table) (E-0122)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub01_Sub02)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub01_Sub02)
 ; reads: wMapType
-RunWCC44Type_A1_4744::
+RunMapType_A1_4744::
 Func_0A1_4744:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw RunWCC44Type_A1_4744_Case00
-    dw RunWCC44Type_A1_4744_Case01
-    dw RunWCC44Type_A1_4744_Case01
-    dw RunWCC44Type_A1_4744_Case03
-    dw RunWCC44Type_A1_4744_Case03
-    dw RunWCC44Type_A1_4744_Case03
-    dw RunWCC44Type_A1_4744_Case03
-    dw RunWCC44Type_A1_4744_Case07
+    dw RunMapType_A1_4744_Case00
+    dw RunMapType_A1_4744_Case01
+    dw RunMapType_A1_4744_Case01
+    dw RunMapType_A1_4744_Case03
+    dw RunMapType_A1_4744_Case03
+    dw RunMapType_A1_4744_Case03
+    dw RunMapType_A1_4744_Case03
+    dw RunMapType_A1_4744_Case07
 
-; entry 0 of the `rst $00` table in RunWCC44Type_A1_4744
+; entry 0 of the `rst $00` table in RunMapType_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
-RunWCC44Type_A1_4744_Case00::
+RunMapType_A1_4744_Case00::
 Jump_0A1_475A:: ; address name
     ret
 
-; entry 1 of the `rst $00` table in RunWCC44Type_A1_4744
+; entry 1 of the `rst $00` table in RunMapType_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; points at: wKeyWorldAreaExits
-RunWCC44Type_A1_4744_Case01::
+RunMapType_A1_4744_Case01::
 Jump_0A1_475B:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
@@ -1141,12 +1141,12 @@ Jump_0A1_4772::
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 3 of the `rst $00` table in RunWCC44Type_A1_4744
+; entry 3 of the `rst $00` table in RunMapType_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; points at: wKeyWorldFloorInfo
-RunWCC44Type_A1_4744_Case03::
+RunMapType_A1_4744_Case03::
 Jump_0A1_4775:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
@@ -1157,11 +1157,11 @@ Jump_0A1_4775:: ; address name
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 7 of the `rst $00` table in RunWCC44Type_A1_4744
+; entry 7 of the `rst $00` table in RunMapType_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoal, wKeyWorldGoalScreen, wKeyWorldGoalPos, wKeyWorldGoalPos2
 ; writes: hPlayerX, hPlayerY
-RunWCC44Type_A1_4744_Case07::
+RunMapType_A1_4744_Case07::
 Jump_0A1_4787:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
@@ -1195,7 +1195,7 @@ Jump_0A1_47B4::
     ret
 
 ; hMapScreenX = A >> 4, hMapScreenY = A & $0F, hPlayerX = hPlayerY = $40 (E-0118)
-; 2 call sites from 1 routine (e.g. RunWCC44Type_A1_4744_Case07)
+; 2 call sites from 1 routine (e.g. RunMapType_A1_4744_Case07)
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 SetMapScreenFromAAndCenterPlayer::
 Func_0A1_47C5:: ; address name
@@ -1211,14 +1211,14 @@ Func_0A1_47C5:: ; address name
     ldh [hPlayerY], a
     ret
 
-; only called from RunWC5DDState_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04)
+; only called from RunGameMode2State_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04)
 ; reads: hTemp0, hTemp1, hTemp5, hTemp7, hTempA, hTemp3, hTemp8, hTemp4, ...
 ; writes: hTemp9, hTempA, hTemp8, hTemp6
-RunWC5DDState_Case04_Sub02::
+RunGameMode2State_Case04_Sub02::
 Func_0A1_47D8:: ; address name
-    call RunWC5DDState_Case04_Sub02_Sub01
-    call StoreHFFCBValuesToWC945
+    call RunGameMode2State_Case04_Sub02_Sub01
+    call StoreTemp5ValuesToCursorCellX
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -1327,12 +1327,12 @@ Jump_0A1_4865::
     jp nz, Jump_0A1_47E9
     ret
 
-; only called from RunWC5DDState_Case04_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub02)
+; only called from RunGameMode2State_Case04_Sub02 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub02)
 ; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wGameMode2Byte44, hMapId, hTemp0, hTemp1, ...
 ; writes: hTemp3, hTemp4, hTemp0, hTemp1, hTemp2, hTemp7, hTemp8, hTemp5, ...
 ; points at: hTemp7, hTemp8
-RunWC5DDState_Case04_Sub02_Sub01::
+RunGameMode2State_Case04_Sub02_Sub01::
 Func_0A1_4874:: ; address name
     ldh a, [hPlayerX]
     ld l, a
@@ -1344,7 +1344,7 @@ Func_0A1_4874:: ; address name
     ldh a, [hMapScreenY]
     ld h, a
     push hl
-    call RunWC5DDState_Case04_Sub02_Sub01_Sub01
+    call RunGameMode2State_Case04_Sub02_Sub01_Sub01
     ld a, [wGameMode2Byte44]
     add a, a
     add a, a
@@ -1524,11 +1524,11 @@ Jump_0A1_4954::
     db $21, $60
     dw Data_0A1_5D76
 
-; only called from RunWC5DDState_Case04_Sub02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub02_Sub01)
+; only called from RunGameMode2State_Case04_Sub02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub02_Sub01)
 ; reads: hMapId, wLastWarpIndex, wGameMode2Byte44, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldGoal
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-RunWC5DDState_Case04_Sub02_Sub01_Sub01::
+RunGameMode2State_Case04_Sub02_Sub01_Sub01::
 Func_0A1_49A8:: ; address name
     ldh a, [hMapId]
     ld c, $01
@@ -1652,7 +1652,7 @@ Jump_0A1_4A67::
     ret
 
 ; hMapScreenX/Y = the nibbles of [HL]; hPlayerX = [HL + 1] & $F0, hPlayerY = ([HL + 1] & $0F) << 4 (E-0118)
-; 2 call sites from 1 routine (e.g. RunWC5DDState_Case04_Sub02_Sub01_Sub01)
+; 2 call sites from 1 routine (e.g. RunGameMode2State_Case04_Sub02_Sub01_Sub01)
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 LoadMapPositionFromHL::
 Func_0A1_4A77:: ; address name
@@ -1674,10 +1674,10 @@ Func_0A1_4A77:: ; address name
     ret
 
 ; wC945 = hFFCB, wC946 = hFFCD, wC947 = hFFCC, wC948 = hFFCE (E-0118)
-; 2 call sites from 2 routines (e.g. RunWC5DDState_Case04_Sub02, RunWC5DDState_Case04_Sub01)
+; 2 call sites from 2 routines (e.g. RunGameMode2State_Case04_Sub02, RunGameMode2State_Case04_Sub01)
 ; reads: hTemp5, hTemp7, hTemp6, hTemp8
 ; writes: wCursorCellX, wCursorCellY, wCursorCellW, wCursorCellH
-StoreHFFCBValuesToWC945::
+StoreTemp5ValuesToCursorCellX::
 Func_0A1_4A91:: ; address name
     ldh a, [hTemp5]
     ld [wCursorCellX], a
@@ -1689,25 +1689,25 @@ Func_0A1_4A91:: ; address name
     ld [wCursorCellH], a
     ret
 
-; entry 5 of the `rst $00` table in RunWC5DDState
+; entry 5 of the `rst $00` table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wIsCGB
 ; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
 ; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
-RunWC5DDState_Case05::
+RunGameMode2State_Case05::
 Jump_0A1_4AA6:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
-    jr nz, RunWC5DDState_Case02_Sub01
+    jr nz, RunGameMode2State_Case02_Sub01
     bit 2, a
     jr z, Jump_0A1_4ADC
 
-; only called from RunWC5DDState_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
+; only called from RunGameMode2State_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)
 ; reads: wIsCGB
 ; writes: wBGPaletteUploadRequest, wOBJPaletteUploadRequest
 ; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
-RunWC5DDState_Case02_Sub01::
+RunGameMode2State_Case02_Sub01::
 Func_0A1_4AB1:: ; address name
     ld hl, wDMGPaletteBGP
     ld a, $00
@@ -1734,17 +1734,17 @@ Jump_0A1_4AD7::
 
 Jump_0A1_4ADC::
     call DrawBlinkingMetaSprite8
-    call RunWC5DDState_Case02_Sub01_Sub03
-    call RunWC5DDState_Case02_Sub01_Sub04
-    call RunWC5DDState_Case02_Sub01_Sub02
-    call RunWC5DDState_Case02_Sub01_Sub01
+    call RunGameMode2State_Case02_Sub01_Sub03
+    call RunGameMode2State_Case02_Sub01_Sub04
+    call RunGameMode2State_Case02_Sub01_Sub02
+    call RunGameMode2State_Case02_Sub01_Sub01
     ret
 
-; only called from RunWC5DDState_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
+; only called from RunGameMode2State_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_Sub01)
 ; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldGoal, wKeyWorldSlot, wKeyWorldGoalScreen, ...
 ; writes: hTemp1, hTemp2
-RunWC5DDState_Case02_Sub01_Sub01::
+RunGameMode2State_Case02_Sub01_Sub01::
 Func_0A1_4AEC:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -1793,7 +1793,7 @@ Jump_0A1_4B34::
     ldh [hTemp1], a
     ld a, [wKeyWorldGoal]
     ldh [hTemp2], a
-    call RunWC5DDState_Case02_Sub01_Sub01_Sub01
+    call RunGameMode2State_Case02_Sub01_Sub01_Sub01
     ret
 
 Jump_0A1_4B4E::
@@ -1807,7 +1807,7 @@ Jump_0A1_4B4E::
     ldh [hTemp1], a
     ld a, [hl]
     ldh [hTemp2], a
-    call RunWC5DDState_Case02_Sub01_Sub01_Sub01
+    call RunGameMode2State_Case02_Sub01_Sub01_Sub01
     ret
 
 Jump_0A1_4B64::
@@ -1826,7 +1826,7 @@ Jump_0A1_4B64::
     ldh [hTemp1], a
     ld a, [wKeyWorldGoal]
     ldh [hTemp2], a
-    call RunWC5DDState_Case02_Sub01_Sub01_Sub01
+    call RunGameMode2State_Case02_Sub01_Sub01_Sub01
     ret
 
 Jump_0A1_4B88::
@@ -1840,14 +1840,14 @@ Jump_0A1_4B88::
     swap a
     or a, c
     ldh [hTemp2], a
-    call RunWC5DDState_Case02_Sub01_Sub01_Sub01
+    call RunGameMode2State_Case02_Sub01_Sub01_Sub01
     ret
 
-; only called from RunWC5DDState_Case02_Sub01_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub01_Sub01)
+; only called from RunGameMode2State_Case02_Sub01_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub01_Sub01)
 ; reads: wCursorCellY, hTemp1, wCursorCellH, wCursorCellX, hTemp2, hSpriteOriginX, wCursorCellW, hSpriteOriginY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-RunWC5DDState_Case02_Sub01_Sub01_Sub01::
+RunGameMode2State_Case02_Sub01_Sub01_Sub01::
 Func_0A1_4BA1:: ; address name
     ld a, [wCursorCellY]
     ld c, a
@@ -1925,12 +1925,12 @@ Func_0A1_4BA1:: ; address name
 Jump_0A1_4C2D::
     ret
 
-; only called from RunWC5DDState_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
+; only called from RunGameMode2State_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_Sub01)
 ; reads: wGameMode2Byte50, wMapType, wMapObjectCount, wCursorCellY, wCursorCellH, wCursorCellX, hSpriteOriginX, wCursorCellW, ...
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 ; points at: wMapObjects
-RunWC5DDState_Case02_Sub01_Sub02::
+RunGameMode2State_Case02_Sub01_Sub02::
 Func_0A1_4C2E:: ; address name
     ld a, [wGameMode2Byte50]
     or a, a
@@ -2155,11 +2155,11 @@ Jump_0A1_4D8E::
     ret
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
-; only called from RunWC5DDState_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
+; only called from RunGameMode2State_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_Sub01)
 ; reads: wMapType, wGameMode2Byte44, wCursorCellY, wCursorCellH, wCursorCellX, hSpriteOriginX, wCursorCellW, hSpriteOriginY, ...
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-RunWC5DDState_Case02_Sub01_Sub03::
+RunGameMode2State_Case02_Sub01_Sub03::
 Func_0A1_4DA4:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -2372,11 +2372,11 @@ Jump_0A1_4EDF::
     inc de
     jp Jump_0A1_4E50
 
-; only called from RunWC5DDState_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
+; only called from RunGameMode2State_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_Sub01)
 ; reads: wMapType
 ; points at: wKeyWorldObjects
-RunWC5DDState_Case02_Sub01_Sub04::
+RunGameMode2State_Case02_Sub01_Sub04::
 Func_0A1_4EE7:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -2395,9 +2395,9 @@ Jump_0A1_4EF8::
     dec de
     dec de
     dec de
-    call RunWC5DDState_Case02_Sub01_Sub04_Sub01
+    call RunGameMode2State_Case02_Sub01_Sub04_Sub01
     inc de
-    call RunWC5DDState_Case02_Sub01_Sub04_Sub01
+    call RunGameMode2State_Case02_Sub01_Sub04_Sub01
     pop de
     inc de
     inc de
@@ -2405,11 +2405,11 @@ Jump_0A1_4EF8::
     inc de
     jp Jump_0A1_4EF0
 
-; only called from RunWC5DDState_Case02_Sub01_Sub04 (E-0047)
-; 2 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub01_Sub04)
+; only called from RunGameMode2State_Case02_Sub01_Sub04 (E-0047)
+; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub01_Sub04)
 ; reads: wCursorCellY, wCursorCellH, wGameMode2Byte50, wCursorCellX, hSpriteOriginX, wCursorCellW, hSpriteOriginY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-RunWC5DDState_Case02_Sub01_Sub04_Sub01::
+RunGameMode2State_Case02_Sub01_Sub04_Sub01::
 Func_0A1_4F0A:: ; address name
     ld a, [wCursorCellY]
     ld c, a
@@ -2496,7 +2496,7 @@ Jump_0A1_4F48::
     ret
 
 ; while bit 5 of wFrameCounterLo is set, draws metasprite set 8 at ($4E, $46) (E-0121)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_Sub01)
 ; reads: wFrameCounterLo
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawBlinkingMetaSprite8::
@@ -2526,12 +2526,12 @@ Func_0A1_4F8B:: ; address name
     farcall DrawMetaSprite
     ret
 
-; entry 0 of the `rst $00` table in RunWC5DDState
+; entry 0 of the `rst $00` table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wSpriteSlotCount, wBGPaletteUploadRequest
 ; points at: wDMGPaletteBGP, wBGPaletteBuffer, wGameMode2State
-RunWC5DDState_Case00::
+RunGameMode2State_Case00::
 Jump_0A1_4FB8:: ; address name
     xor a, a
     ld [wSpriteSlotCount], a
@@ -2556,12 +2556,12 @@ Jump_0A1_4FDD::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunWC5DDState
+; entry 1 of the `rst $00` table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, wIsCGB
 ; writes: hScrollX, hScrollY, wOBJPaletteUploadRequest, wBGPaletteUploadRequest
 ; points at: wDMGPaletteBGP, wOBJPaletteBuffer, wBGPaletteBuffer, wGameMode2State
-RunWC5DDState_Case01::
+RunGameMode2State_Case01::
 Jump_0A1_4FE2:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -2589,15 +2589,15 @@ Jump_0A1_4FE2:: ; address name
     ld hl, vBGMap0
     call CopyRectFromBankToVRAM
     call DrawRect12x12FromBankA1
-    call RunWC5DDState_Case01_Sub03
+    call RunGameMode2State_Case01_Sub03
     ld a, [wMapType]
     bit 7, a
     jr nz, Jump_0A1_5036
-    call RunWC5DDState_Case01_Sub02
+    call RunGameMode2State_Case01_Sub02
     jr Jump_0A1_5039
 
 Jump_0A1_5036::
-    call RunWC5DDState_Case01_Sub01
+    call RunGameMode2State_Case01_Sub01
 
 Jump_0A1_5039::
     ld hl, wDMGPaletteBGP
@@ -2647,17 +2647,17 @@ Jump_0A1_5090::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunWC5DDState
+; entry 2 of the `rst $00` table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; writes: wGameMode2State
 ; points at: wGameMode2State
-RunWC5DDState_Case02::
+RunGameMode2State_Case02::
 Jump_0A1_5095:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_0A1_50A5
-    call RunWC5DDState_Case02_Sub01
+    call RunGameMode2State_Case02_Sub01
     ld a, $06
     ld [wGameMode2State], a
     ret
@@ -2670,25 +2670,25 @@ Jump_0A1_50A5::
     ret
 
 Jump_0A1_50AE::
-    call RunWC5DDState_Case02_Sub03
-    call RunWC5DDState_Case02_Sub04
-    call RunWC5DDState_Case02_Sub05
-    call RunWC5DDState_Case02_Sub02
+    call RunGameMode2State_Case02_Sub03
+    call RunGameMode2State_Case02_Sub04
+    call RunGameMode2State_Case02_Sub05
+    call RunGameMode2State_Case02_Sub02
     ret
 
-; entry 6 of the `rst $00` table in RunWC5DDState
+; entry 6 of the `rst $00` table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
-RunWC5DDState_Case06::
+RunGameMode2State_Case06::
 Jump_0A1_50BB:: ; address name
     call EnterGameMode1WithDefaultPalettes
     ret
 
-; only called from RunWC5DDState_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
+; only called from RunGameMode2State_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case01)
 ; reads: wKeyWorldHeight, wKeyWorldWidth, hTemp4, hTemp5, hTemp0, hTemp1, hTemp2, hTemp3, ...
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTemp7
 ; points at: wVisitedScreens, wKeyWorldChunks, wNameGlyphBuf
-RunWC5DDState_Case01_Sub01::
+RunGameMode2State_Case01_Sub01::
 Func_0A1_50BF:: ; address name
     ld a, [wKeyWorldHeight]
     ld c, a
@@ -2746,10 +2746,10 @@ Jump_0A1_50FA::
     ldh a, [hTemp5]
     ld d, a
     ld a, [de]
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
     push af
     ldh a, [hTemp0]
     ld e, a
@@ -2767,10 +2767,10 @@ Jump_0A1_512C::
     ld a, d
     ldh [hTemp1], a
     pop af
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -2796,10 +2796,10 @@ Jump_0A1_514C::
     ld a, d
     ldh [hTemp5], a
     ld a, [de]
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
     push af
     ldh a, [hTemp0]
     ld e, a
@@ -2817,10 +2817,10 @@ Jump_0A1_517A::
     ld a, d
     ldh [hTemp1], a
     pop af
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
-    call RunWC5DDState_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
+    call RunGameMode2State_Case01_Sub01_Sub01
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -2922,7 +2922,7 @@ Jump_0A1_5214::
     ld de, wNameGlyphBuf
     ld a, [wCurrentKeyIndex]
     call WriteKeyNameToDE
-    call RunWC5DDState_Shared01
+    call RunGameMode2State_Shared01
     ld de, vTiles1
     call CopyGlyphTilesToVRAM
     ld e, $80
@@ -2937,11 +2937,11 @@ Jump_0A1_5239::
     jr nz, Jump_0A1_5239
     ret
 
-; only called from RunWC5DDState_Case01_Sub01 (E-0047)
-; 16 call sites from 1 routine (e.g. RunWC5DDState_Case01_Sub01)
+; only called from RunGameMode2State_Case01_Sub01 (E-0047)
+; 16 call sites from 1 routine (e.g. RunGameMode2State_Case01_Sub01)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp0
-RunWC5DDState_Case01_Sub01_Sub01::
+RunGameMode2State_Case01_Sub01_Sub01::
 Func_0A1_5242:: ; address name
     sra a
     push af
@@ -2991,10 +2991,10 @@ Jump_0A1_5255::
     pop af
     ret
 
-; only called from routines of RunWC5DDState (E-0098)
-; 2 call sites from 2 routines (e.g. RunWC5DDState_Case01_Sub02, RunWC5DDState_Case01_Sub01)
+; only called from routines of RunGameMode2State (E-0098)
+; 2 call sites from 2 routines (e.g. RunGameMode2State_Case01_Sub02, RunGameMode2State_Case01_Sub01)
 ; points at: wNameGlyphBuf
-RunWC5DDState_Shared01::
+RunGameMode2State_Shared01::
 Func_0A1_528B:: ; address name
     push hl
     push de
@@ -3054,12 +3054,12 @@ Jump_0A1_52D1::
     pop hl
     ret
 
-; only called from RunWC5DDState_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
+; only called from RunGameMode2State_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case01)
 ; reads: wGameMode2Byte44, hMapId
 ; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
 ; points at: wNameGlyphBuf
-RunWC5DDState_Case01_Sub02::
+RunGameMode2State_Case01_Sub02::
 Func_0A1_52D4:: ; address name
     ld a, [wGameMode2Byte44]
     add a, a
@@ -3103,7 +3103,7 @@ Jump_0A1_52FB::
     ld a, d
     ld [wStringDestHi], a
     farcall CopyStringToBuffer_Bank08
-    call RunWC5DDState_Shared01
+    call RunGameMode2State_Shared01
     ld de, vTiles1
     call CopyGlyphTilesToVRAM
     ld e, $80
@@ -3119,11 +3119,11 @@ Jump_0A1_5333::
     ret
     INCBIN "dwm2-cobi-us.gbc", $28533C, $58
 
-; only called from RunWC5DDState_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
+; only called from RunGameMode2State_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)
 ; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldSlot, wKeyWorldGoalScreen
 ; writes: hTemp1
-RunWC5DDState_Case02_Sub02::
+RunGameMode2State_Case02_Sub02::
 Func_0A1_5394:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -3170,7 +3170,7 @@ Jump_0A1_53DC::
     jr nz, Jump_0A1_53F1
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
-    call DrawCursorSpriteAtHFFC7Cell
+    call DrawCursorSpriteAtTemp1Cell
     ret
 
 Jump_0A1_53F1::
@@ -3182,7 +3182,7 @@ Jump_0A1_53F1::
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp1], a
-    call DrawCursorSpriteAtHFFC7Cell
+    call DrawCursorSpriteAtTemp1Cell
     ret
 
 Jump_0A1_5406::
@@ -3199,20 +3199,20 @@ Jump_0A1_5406::
     jr nz, Jump_0A1_5425
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
-    call DrawCursorSpriteAtHFFC7Cell
+    call DrawCursorSpriteAtTemp1Cell
     ret
 
 Jump_0A1_5425::
     ld a, [wKeyWorldGoalScreen]
     ldh [hTemp1], a
-    call DrawCursorSpriteAtHFFC7Cell
+    call DrawCursorSpriteAtTemp1Cell
     ret
 
 ; draws metasprite set $26 at X = 8 * (wC945 + 8 * high nibble of hFFC7), Y = 8 * (wC946 + 8 * low nibble) (E-0121)
-; 4 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub02)
+; 4 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub02)
 ; reads: hTemp1, wCursorCellX, wCursorCellY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-DrawCursorSpriteAtHFFC7Cell::
+DrawCursorSpriteAtTemp1Cell::
 Func_0A1_542E:: ; address name
     ldh a, [hTemp1]
     and a, $F0
@@ -3253,10 +3253,10 @@ Func_0A1_542E:: ; address name
     farcall DrawMetaSprite
     ret
 
-; only called from RunWC5DDState_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
+; only called from RunGameMode2State_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)
 ; reads: wFrameCounterLo, wMapType, hMapId, wLastWarpIndex, hMapScreenX, hMapScreenY, wKeyWorldActive, wKeyWorldKey, ...
-RunWC5DDState_Case02_Sub03::
+RunGameMode2State_Case02_Sub03::
 Func_0A1_5479:: ; address name
     ld a, [wFrameCounterLo]
     bit 5, a
@@ -3299,27 +3299,27 @@ Func_0A1_5479:: ; address name
     cp a, $E2
     jr z, Jump_0A1_553D
     cp a, $20
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $30
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $48
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $70
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $A0
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $A8
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $B0
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $B8
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $C8
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $D1
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     cp a, $DA
-    jr z, SetSpriteYFromWC946_Case00
+    jr z, SetSpriteYFromCursorCellY_Case00
     ld c, a
     ld hl, $5A92
 
@@ -3345,27 +3345,27 @@ Jump_0A1_550D::
 Jump_0A1_5516::
     inc hl
     ld a, [hl+]
-    call SetSpriteXFromWC945
+    call SetSpriteXFromCursorCellX
     ld a, [hl]
-    call SetSpriteYFromWC946
+    call SetSpriteYFromCursorCellY
     call DrawMetaSpriteSet08
     ret
 
-; entry 0 of the `rst $00` table in SetSpriteYFromWC946
+; entry 0 of the `rst $00` table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX, hMapScreenY
-SetSpriteYFromWC946_Case00::
+SetSpriteYFromCursorCellY_Case00::
 Jump_0A1_5523:: ; address name
     ldh a, [hMapScreenX]
     sla a
     sla a
     sla a
-    call SetSpriteXFromWC945
+    call SetSpriteXFromCursorCellX
     ldh a, [hMapScreenY]
     sla a
     sla a
     sla a
-    call SetSpriteYFromWC946
+    call SetSpriteYFromCursorCellY
     call DrawMetaSpriteSet08
     ret
 
@@ -3382,13 +3382,13 @@ Jump_0A1_553D::
     add a, a
     add a, a
     add a, a
-    call SetSpriteXFromWC945
+    call SetSpriteXFromCursorCellX
     ld a, [wKeyWorldGoalCell]
     and a, $0F
     add a, a
     add a, a
     add a, a
-    call SetSpriteYFromWC946
+    call SetSpriteYFromCursorCellY
     call DrawMetaSpriteSet08
     ret
 
@@ -3399,21 +3399,21 @@ Jump_0A1_5565::
     add a, a
     add a, a
     add a, a
-    call SetSpriteXFromWC945
+    call SetSpriteXFromCursorCellX
     ld a, [wKeyWorldGoalScreen]
     and a, $0F
     add a, a
     add a, a
     add a, a
-    call SetSpriteYFromWC946
+    call SetSpriteYFromCursorCellY
     call DrawMetaSpriteSet08
     ret
 
 ; hSpriteOriginX = 8 * wC945 + A + 6 (E-0122)
-; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, SetSpriteYFromWC946_Case00)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_Case00)
 ; reads: wCursorCellX
 ; writes: hSpriteOriginX
-SetSpriteXFromWC945::
+SetSpriteXFromCursorCellX::
 Func_0A1_5581:: ; address name
     ld c, a
     ld a, [wCursorCellX]
@@ -3426,10 +3426,10 @@ Func_0A1_5581:: ; address name
     ret
 
 ; hSpriteOriginY = 8 * wC946 + A + 6; the next entry dispatches on wCC44 & 7 (E-0124)
-; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, SetSpriteYFromWC946_Case00)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_Case00)
 ; reads: wCursorCellY
 ; writes: hSpriteOriginY
-SetSpriteYFromWC946::
+SetSpriteYFromCursorCellY::
 Func_0A1_5591:: ; address name
     ld c, a
     ld a, [wCursorCellY]
@@ -3445,20 +3445,20 @@ Jump_0A1_55A1::
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw SetSpriteYFromWC946_Case00
-    dw SetSpriteYFromWC946_Case01
-    dw SetSpriteYFromWC946_Case01
-    dw SetSpriteYFromWC946_Case03
-    dw SetSpriteYFromWC946_Case03
-    dw SetSpriteYFromWC946_Case03
-    dw SetSpriteYFromWC946_Case03
-    dw SetSpriteYFromWC946_Case07
+    dw SetSpriteYFromCursorCellY_Case00
+    dw SetSpriteYFromCursorCellY_Case01
+    dw SetSpriteYFromCursorCellY_Case01
+    dw SetSpriteYFromCursorCellY_Case03
+    dw SetSpriteYFromCursorCellY_Case03
+    dw SetSpriteYFromCursorCellY_Case03
+    dw SetSpriteYFromCursorCellY_Case03
+    dw SetSpriteYFromCursorCellY_Case07
 
-; entry 1 of the `rst $00` table in SetSpriteYFromWC946
+; entry 1 of the `rst $00` table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; points at: wKeyWorldAreaExits
-SetSpriteYFromWC946_Case01::
+SetSpriteYFromCursorCellY_Case01::
 Jump_0A1_55B7:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
@@ -3476,11 +3476,11 @@ Jump_0A1_55D0::
     call SetSpriteXYFromCellA
     ret
 
-; entry 3 of the `rst $00` table in SetSpriteYFromWC946
+; entry 3 of the `rst $00` table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; points at: wKeyWorldFloorInfo
-SetSpriteYFromWC946_Case03::
+SetSpriteYFromCursorCellY_Case03::
 Jump_0A1_55D5:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
@@ -3492,10 +3492,10 @@ Jump_0A1_55D5:: ; address name
     call SetSpriteXYFromCellA
     ret
 
-; entry 7 of the `rst $00` table in SetSpriteYFromWC946
+; entry 7 of the `rst $00` table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoalScreen
-SetSpriteYFromWC946_Case07::
+SetSpriteYFromCursorCellY_Case07::
 Jump_0A1_55E9:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
@@ -3518,7 +3518,7 @@ Jump_0A1_5606::
     ret
 
 ; hSpriteOriginX = 8 * wC945 + (A >> 4) * 8 + 6 and hSpriteOriginY = 8 * wC946 + (A & $0F) * 8 + 6 (E-0124)
-; 4 call sites from 3 routines (e.g. SetSpriteYFromWC946_Case07, SetSpriteYFromWC946_Case03, SetSpriteYFromWC946_Case01)
+; 4 call sites from 3 routines (e.g. SetSpriteYFromCursorCellY_Case07, SetSpriteYFromCursorCellY_Case03, SetSpriteYFromCursorCellY_Case01)
 ; reads: wCursorCellX, wCursorCellY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 SetSpriteXYFromCellA::
@@ -3549,7 +3549,7 @@ Func_0A1_560D:: ; address name
     ldh [hSpriteOriginY], a
 
 ; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0) (E-0118)
-; 4 call sites from 2 routines (e.g. RunWC5DDState_Case02_Sub03, SetSpriteYFromWC946_Case00)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_Case00)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawMetaSpriteSet08::
 Func_0A1_5639:: ; address name
@@ -3567,11 +3567,11 @@ Func_0A1_5639:: ; address name
     farcall DrawMetaSprite
     ret
 
-; only called from RunWC5DDState_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
+; only called from RunGameMode2State_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)
 ; reads: wMapType, wGameMode2Byte44, wCursorCellX, wCursorCellY, wGameMode2Byte50
 ; writes: hSpriteOriginX, hSpriteOriginY
-RunWC5DDState_Case02_Sub04::
+RunGameMode2State_Case02_Sub04::
 Func_0A1_5654:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -3679,7 +3679,7 @@ Jump_0A1_56DA::
     jr Jump_0A1_5697
 
 ; DrawMetaSprite with set $26, sub-index 0, tile offset $10, attribute XOR $01 (origin high bytes 0) (E-0118)
-; 2 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub04)
+; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub04)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawMetaSpriteSet26::
 Func_0A1_56DC:: ; address name
@@ -3697,11 +3697,11 @@ Func_0A1_56DC:: ; address name
     farcall DrawMetaSprite
     ret
 
-; only called from RunWC5DDState_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
+; only called from RunGameMode2State_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)
 ; reads: wMapType
 ; points at: wKeyWorldObjects
-RunWC5DDState_Case02_Sub05::
+RunGameMode2State_Case02_Sub05::
 Func_0A1_56F7:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -3716,9 +3716,9 @@ Jump_0A1_5700::
     dec de
     dec de
     dec de
-    call RunWC5DDState_Case02_Sub05_Sub01
+    call RunGameMode2State_Case02_Sub05_Sub01
     inc de
-    call RunWC5DDState_Case02_Sub05_Sub01
+    call RunGameMode2State_Case02_Sub05_Sub01
     pop de
     ld a, $04
     add a, e
@@ -3729,11 +3729,11 @@ Jump_0A1_5700::
 Jump_0A1_5717::
     jr Jump_0A1_5700
 
-; only called from RunWC5DDState_Case02_Sub05 (E-0047)
-; 2 call sites from 1 routine (e.g. RunWC5DDState_Case02_Sub05)
+; only called from RunGameMode2State_Case02_Sub05 (E-0047)
+; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub05)
 ; reads: wGameMode2Byte50, wCursorCellX, wCursorCellY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-RunWC5DDState_Case02_Sub05_Sub01::
+RunGameMode2State_Case02_Sub05_Sub01::
 Func_0A1_5719:: ; address name
     ld a, [wGameMode2Byte50]
     or a, a
@@ -3786,7 +3786,7 @@ Jump_0A1_5725::
     ret
 
 ; row = 9 - C/2 (wC946), column = 10 - B/2 (wC945); HL = vBGMap0 + 32 * row + column (E-0121)
-; 2 call sites from 2 routines (e.g. RunWC5DDState_Case01_Sub02, RunWC5DDState_Case01_Sub01)
+; 2 call sites from 2 routines (e.g. RunGameMode2State_Case01_Sub02, RunGameMode2State_Case01_Sub01)
 ; writes: wCursorCellY, wCursorCellX
 CenteredBGMapOriginForSizeBC::
 Func_0A1_5764:: ; address name
@@ -3819,7 +3819,7 @@ Func_0A1_5764:: ; address name
     ret
 
 ; fills the $400 bytes of vBGMap0 with tile $57 (E-0122)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04)
 FillBGMap0With57::
 Func_0A1_578E:: ; address name
     ld hl, vBGMap0
@@ -3834,10 +3834,10 @@ Jump_0A1_5794::
     jr nz, Jump_0A1_5794
     ret
 
-; only called from RunWC5DDState_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case04)
+; only called from RunGameMode2State_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case04)
 ; reads: wIsCGB
-RunWC5DDState_Case04_Sub03::
+RunGameMode2State_Case04_Sub03::
 Func_0A1_579F:: ; address name
     ld a, [wIsCGB]
     or a, a
@@ -3860,10 +3860,10 @@ Jump_0A1_57AF::
     ldh [c], a
     ret
 
-; only called from RunWC5DDState_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
+; only called from RunGameMode2State_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case01)
 ; reads: wIsCGB
-RunWC5DDState_Case01_Sub03::
+RunGameMode2State_Case01_Sub03::
 Func_0A1_57BE:: ; address name
     ld a, [wIsCGB]
     or a, a
@@ -3905,7 +3905,7 @@ Jump_0A1_57E0::
     ret
 
 ; copies a 12 x 12 tile rectangle from A1:$5808 to vBGMap0 + $64 (CopyRectFromBankToVRAM) (E-0116)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case01)
 DrawRect12x12FromBankA1::
 Func_0A1_57F9:: ; address name
     ld de, $5808
@@ -3917,7 +3917,7 @@ Func_0A1_57F9:: ; address name
     ds $90, $34
 
 ; wC5E0 = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
-; 1 call site from 1 routine (e.g. RunWC5DDState_Case06)
+; 1 call site from 1 routine (e.g. RunGameMode2State_Case06)
 ; writes: wFieldInitStage, wDataBankSave, wGameMode
 ; points at: wDMGPaletteBGP
 EnterGameMode1WithDefaultPalettes::
@@ -3939,7 +3939,7 @@ Func_0A1_5898:: ; address name
     ret
 
 ; A = 1 when the bit for screen A (high nibble x, low nibble y) is set in wCE93, else 0 (E-0125)
-; 5 call sites from 5 routines (e.g. RunWC5DDState_Case02_Sub01_Sub04_Sub01, RunWC5DDState_Case02_Sub01_Sub03, RunWC5DDState_Case04_Sub01, RunWC5DDState_Case02_Sub05_Sub01, ...)
+; 5 call sites from 5 routines (e.g. RunGameMode2State_Case02_Sub01_Sub04_Sub01, RunGameMode2State_Case02_Sub01_Sub03, RunGameMode2State_Case04_Sub01, RunGameMode2State_Case02_Sub05_Sub01, ...)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wVisitedScreens

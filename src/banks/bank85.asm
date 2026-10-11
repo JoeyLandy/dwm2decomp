@@ -100,7 +100,7 @@ Jump_085_4071:: ; address name
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld hl, $4D52
     call StartMessageHL_B85
     ld hl, wSpriteSlotCount
@@ -145,7 +145,7 @@ Jump_085_40C3:: ; address name
     ldh [hTemp2], a
     ld a, $02
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld hl, wPartyCount
     inc [hl]
     ld a, [wScriptMsgSelect]
@@ -237,7 +237,7 @@ Jump_085_4174:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
     jr nz, Jump_085_41C1
-    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_085_4192
@@ -372,7 +372,7 @@ Jump_085_4249:: ; address name
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld hl, $4D52
     call StartMessageHL_B85
     ld hl, wSpriteSlotCount
@@ -417,7 +417,7 @@ Jump_085_429B:: ; address name
     ldh [hTemp2], a
     ld a, $02
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld hl, wPartyCount
     inc [hl]
     ld a, [wScriptMsgSelect]
@@ -612,7 +612,7 @@ Jump_085_43D5:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
     jr nz, Jump_085_4422
-    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_085_43F3
@@ -1056,7 +1056,7 @@ Func_085_46E4:: ; address name
     jr nz, Jump_085_4703
     ld a, $05
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $50
     ld [wObject5 + $4], a
     ld a, $10
@@ -1402,7 +1402,7 @@ Jump_085_48C2:: ; address name
     call SetFlagBit
     ld a, $09
     ldh [hTemp0], a
-    farcall KeyListHasKindHFFC6
+    farcall KeyListHasKindTemp0
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_085_4912
@@ -1428,7 +1428,7 @@ Jump_085_48F5::
     ldh [hTemp1], a
 
 Jump_085_4905::
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld a, $01
     ld [wScriptParam0], a
     jr Jump_085_4921
@@ -1465,7 +1465,7 @@ ScriptCommand72_Run_Case00::
 Jump_085_493E:: ; address name
     ld a, $30
     ldh [hTemp0], a
-    farcall StartScriptedEncounterHFFC6
+    farcall StartScriptedEncounterTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1515,7 +1515,7 @@ Jump_085_496F:: ; address name
     call SetFlagBit
     ld a, $07
     ldh [hTemp0], a
-    farcall KeyListHasKindHFFC6
+    farcall KeyListHasKindTemp0
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_085_49BF
@@ -1541,7 +1541,7 @@ Jump_085_49A2::
     ldh [hTemp1], a
 
 Jump_085_49B2::
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld a, $01
     ld [wScriptParam0], a
     jr Jump_085_49CE
@@ -1578,7 +1578,7 @@ ScriptCommand71_Run_Case00::
 Jump_085_49EB:: ; address name
     ld a, $2F
     ldh [hTemp0], a
-    farcall StartScriptedEncounterHFFC6
+    farcall StartScriptedEncounterTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1622,7 +1622,7 @@ ScriptCommand7B_Run_Case00::
 Jump_085_4A1C:: ; address name
     ld a, $15
     ldh [hTemp0], a
-    farcall StartScriptedEncounterHFFC6
+    farcall StartScriptedEncounterTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1673,7 +1673,7 @@ Jump_085_4A58:: ; address name
     call SetFlagBit
     ld a, $14
     ldh [hTemp0], a
-    farcall StartScriptedEncounterHFFC6
+    farcall StartScriptedEncounterTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1819,7 +1819,7 @@ Jump_085_4B33:: ; address name
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld de, $002B
     call SetFlagBit
     ld a, $80
@@ -1924,7 +1924,7 @@ Jump_085_4BEC::
 ; points at: wScriptStep
 ScriptCommand6E_Run_Case00::
 Jump_085_4C00:: ; address name
-    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_085_4C18
@@ -2016,7 +2016,7 @@ Jump_085_4C7F::
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld de, $002A
     call SetFlagBit
     xor a, a
@@ -2138,7 +2138,7 @@ Jump_085_4D55::
 ; points at: wScriptStep
 ScriptCommand6D_Run_Case00::
 Jump_085_4D69:: ; address name
-    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_085_4D81
@@ -2167,7 +2167,7 @@ Func_085_4D8D:: ; address name
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -2683,7 +2683,7 @@ Jump_085_5086:: ; address name
     ld a, [hl]
     push af
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld hl, wNameGlyphBuf
     ld de, wTextBuf1 + $7
     ld b, $0A
@@ -2925,7 +2925,7 @@ Jump_085_51DC:: ; address name
 Jump_085_51E9::
     ld a, [de]
     ldh [hTemp0], a
-    farcall StartScriptedEncounterHFFC6
+    farcall StartScriptedEncounterTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3136,7 +3136,7 @@ Jump_085_5302:: ; address name
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $40
     ld [wObject5 + $4], a
     ld a, $30
@@ -3248,7 +3248,7 @@ Jump_085_53A2:: ; address name
 Jump_085_53B0::
     xor a, a
     ldh [hTemp0], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -3273,7 +3273,7 @@ Jump_085_53C3:: ; address name
 Jump_085_53D0::
     ld a, $1B
     ldh [hTemp0], a
-    farcall StartScriptedEncounterHFFC6
+    farcall StartScriptedEncounterTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3378,7 +3378,7 @@ Jump_085_5455::
     ldh [hTemp1], a
     ld a, $00
     ldh [hTemp0], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -3823,7 +3823,7 @@ ScriptCommand18_Run_Case00::
 Jump_085_571A:: ; address name
     ld a, $02
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $40
     ld [wObject5 + $4], a
     ld a, $30
@@ -4478,7 +4478,7 @@ Jump_085_5B12::
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wKeyList
-KeyListHasKindHFFC6::
+KeyListHasKindTemp0::
 Func_085_5B23:: ; address name
     ldh a, [hTemp0]
     ld c, a
@@ -4611,7 +4611,7 @@ Jump_085_5BE9::
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld b, $00
     ld de, wEncounterMonsters
     ld hl, vTiles0 + $500
@@ -4649,7 +4649,7 @@ Jump_085_5C08::
     ld [hl], a
     xor a, a
     ldh [hTemp2], a
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     pop bc
     pop de
     pop hl
@@ -4718,7 +4718,7 @@ Jump_085_5CBE::
     jr Jump_085_5D41
 
 Jump_085_5CD8::
-    farcall ComputePartyStrengthLevelWCD05
+    farcall ComputePartyStrengthLevelPartyStrength
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $1F

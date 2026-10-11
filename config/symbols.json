@@ -408,7 +408,7 @@
   },
   "C61D": {
     "name": "wInventory",
-    "note": "24-slot bag of item ids (searched by FindHFFC6InWC61DList; empty at the start of a new game)",
+    "note": "24-slot bag of item ids (searched by FindTemp0InInventoryList; empty at the start of a new game)",
     "evidence": "reading",
     "size": "18"
   },
@@ -592,7 +592,7 @@
   },
   "DA63": {
     "name": "wBattleSlotOut",
-    "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it)",
+    "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessBattleSlotOutSlotEmpty reads it)",
     "evidence": "reading (E-0043)",
     "size": "8"
   },
@@ -641,7 +641,7 @@
   },
   "D958": {
     "name": "wBattleMonsterId",
-    "note": "word per battle slot: the monster id (the species-record and monster-name number; CopyMonsterNameOfWDAABSlotToDE, GetSlotSpeciesFamily) (E-0069)",
+    "note": "word per battle slot: the monster id (the species-record and monster-name number; CopyMonsterNameOfDisplaySlotToDE, GetSlotSpeciesFamily) (E-0069)",
     "evidence": "reading + data (E-0069)",
     "size": "10"
   },
@@ -747,7 +747,7 @@
   },
   "FF8B": {
     "name": "hPlayerSpriteMode",
-    "note": "sprite mode 0-2 chosen from story flags $19F, $25, 2 and bit 3 of hPlayerStateFlags (LoadPlayerAndFollowerSpriteGraphics); AdvanceHFF99AndRunHFF8BMode dispatches on it",
+    "note": "sprite mode 0-2 chosen from story flags $19F, $25, 2 and bit 3 of hPlayerStateFlags (LoadPlayerAndFollowerSpriteGraphics); AdvancePlayerAnimCounterAndRunPlayerSpriteMode dispatches on it",
     "evidence": "E-0132"
   },
   "FF8C": {
@@ -922,12 +922,12 @@
   },
   "FFCA": {
     "name": "hTemp4",
-    "note": "general argument/result byte (also a VRAM destination low byte for DecompressGraphicsHFFC6ToHFFCA)",
+    "note": "general argument/result byte (also a VRAM destination low byte for DecompressGraphicsTemp0ToTemp4)",
     "evidence": "E-0132"
   },
   "FFCB": {
     "name": "hTemp5",
-    "note": "general argument/result byte (destination high byte for DecompressGraphicsHFFC6ToHFFCA)",
+    "note": "general argument/result byte (destination high byte for DecompressGraphicsTemp0ToTemp4)",
     "evidence": "E-0132"
   },
   "FFCC": {
@@ -1105,25 +1105,25 @@
   "C130": {
     "name": "wTextBuf0",
     "size": "10",
-    "note": "16-byte text slot filled before a message: the actor or player name (CopyActorNameToWC130, WritePlayerNameWithFlag0SuffixToWC130); $F0-terminated",
+    "note": "16-byte text slot filled before a message: the actor or player name (CopyActorNameToTextBuf0, WritePlayerNameWithFlag0SuffixToTextBuf0); $F0-terminated",
     "evidence": "E-0132"
   },
   "C140": {
     "name": "wTextBuf1",
     "size": "10",
-    "note": "16-byte text slot: the skill or second name of a message (CopyActionSkillNameToWC140, CopyMappedSlotNameToWC140)",
+    "note": "16-byte text slot: the skill or second name of a message (CopyActionSkillNameToTextBuf1, CopyMappedSlotNameToTextBuf1)",
     "evidence": "E-0132"
   },
   "C150": {
     "name": "wTextBuf2",
     "size": "10",
-    "note": "16-byte text slot: the target or item name of a message (CopyActionItemNameToWC150, BuildActionMessageNames)",
+    "note": "16-byte text slot: the target or item name of a message (CopyActionItemNameToTextBuf2, BuildActionMessageNames)",
     "evidence": "E-0132"
   },
   "C160": {
     "name": "wTextBuf3",
     "size": "10",
-    "note": "16-byte text slot: a further name (CopyEligibleRecordNameToWC160Row, EquipItemOnRecordWD083)",
+    "note": "16-byte text slot: a further name (CopyEligibleRecordNameToTextBuf3Row, EquipItemOnRecordTargetRecord)",
     "evidence": "E-0132"
   },
   "C17E": {
@@ -1144,7 +1144,7 @@
   },
   "C0A4": {
     "name": "wPauseMenuScreen",
-    "note": "screen index of the pause menu (RunWC0A4Screen dispatches on it; PauseMenu_Main cases set it)",
+    "note": "screen index of the pause menu (RunPauseMenuScreen dispatches on it; PauseMenu_Main cases set it)",
     "evidence": "E-0133"
   },
   "C0A7": {
@@ -1204,12 +1204,12 @@
   },
   "C194": {
     "name": "wMapMoveType",
-    "note": "map header byte selecting the player movement routine (RunPlayerMoveTypeWC194)",
+    "note": "map header byte selecting the player movement routine (RunPlayerMoveTypeMapMoveType)",
     "evidence": "E-0133"
   },
   "C195": {
     "name": "wMapSpriteKind",
-    "note": "map header byte: high nibble picks the script sprite set ($23 + n - 1), low nibble 1 selects the follower-style sprite; set for special maps by SetWC195AndWC197ForSpecialMaps",
+    "note": "map header byte: high nibble picks the script sprite set ($23 + n - 1), low nibble 1 selects the follower-style sprite; set for special maps by SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps",
     "evidence": "E-0133"
   },
   "C196": {
@@ -1224,7 +1224,7 @@
   },
   "C468": {
     "name": "wFieldActionRequest",
-    "note": "bit 7 set requests a field action; RunWC468ActionIfBit7 runs the routine for bits 0-1 (UpdatePlayerMovement sets $80 for a screen scroll)",
+    "note": "bit 7 set requests a field action; RunFieldActionRequestActionIfBit7 runs the routine for bits 0-1 (UpdatePlayerMovement sets $80 for a screen scroll)",
     "evidence": "E-0133"
   },
   "C469": {
@@ -1239,7 +1239,7 @@
   },
   "C46B": {
     "name": "wMenuState",
-    "note": "state of the current menu or debug screen (RunWC46BMenuState dispatches on it); cleared by LoadMapHeader",
+    "note": "state of the current menu or debug screen (RunMenuStateMenuState dispatches on it); cleared by LoadMapHeader",
     "evidence": "E-0133"
   },
   "C46C": {
@@ -1269,7 +1269,7 @@
   },
   "C471": {
     "name": "wMenuOption",
-    "note": "selected option of a menu (also the link menu choice sent by SendLinkByteForWC471)",
+    "note": "selected option of a menu (also the link menu choice sent by SendLinkByteForMenuOption)",
     "evidence": "E-0133"
   },
   "C472": {
@@ -1354,7 +1354,7 @@
   },
   "C533": {
     "name": "wTextPosLo",
-    "note": "pointer to the next string byte, low byte (IncrementWC533Word)",
+    "note": "pointer to the next string byte, low byte (IncrementTextPosLoWord)",
     "evidence": "E-0133"
   },
   "C534": {
@@ -1409,12 +1409,12 @@
   },
   "C552": {
     "name": "wTextYesNoResult",
-    "note": "result of a text yes/no prompt (0 = first choice); AcknowledgeTextPrompt clears it, StartChoiceMessageByWC552 branches on it",
+    "note": "result of a text yes/no prompt (0 = first choice); AcknowledgeTextPrompt clears it, StartChoiceMessageByTextYesNoResult branches on it",
     "evidence": "E-0133"
   },
   "C554": {
     "name": "wTextCursorLo",
-    "note": "BG map address where the next text row starts, low byte (AddHLToTextCursorWC554)",
+    "note": "BG map address where the next text row starts, low byte (AddHLToTextCursorTextCursorLo)",
     "evidence": "E-0133"
   },
   "C555": {
@@ -1550,7 +1550,7 @@
   },
   "C582": {
     "name": "wLinkExchangeState",
-    "note": "state of the per-frame link exchange (RunWC582State dispatches on it)",
+    "note": "state of the per-frame link exchange (RunLinkExchangeState dispatches on it)",
     "evidence": "E-0133"
   },
   "C583": {
@@ -1658,7 +1658,7 @@
   },
   "C597": {
     "name": "wLinkRecvBuffer",
-    "note": "start of the link receive area (RunWD06AState_6C12 points the transfer buffer here)",
+    "note": "start of the link receive area (RunLinkScreenState_6C12 points the transfer buffer here)",
     "evidence": "E-0133"
   },
   "C598": {
@@ -1693,12 +1693,12 @@
   },
   "C5A8": {
     "name": "wBankF0ByteA8",
-    "note": "work byte of the bank-$F0 screens (read by Run67EEWithWD7F1ForWD7EC)",
+    "note": "work byte of the bank-$F0 screens (read by Run67EEWithArg1ForF0ScreenKind)",
     "evidence": "E-0133"
   },
   "C5A9": {
     "name": "wBankF0ByteA9",
-    "note": "work byte of the bank-$F0 screens (read by Run67EEWithWD7F1ForWD7EC)",
+    "note": "work byte of the bank-$F0 screens (read by Run67EEWithArg1ForF0ScreenKind)",
     "evidence": "E-0133"
   },
   "C5AA": {
@@ -1778,7 +1778,7 @@
   },
   "C5DD": {
     "name": "wGameMode2State",
-    "note": "state of game mode 2 (RunWC5DDState); CheckInteractionInFront sets it",
+    "note": "state of game mode 2 (RunGameMode2State); CheckInteractionInFront sets it",
     "evidence": "E-0133"
   },
   "C5DE": {
@@ -1893,17 +1893,17 @@
   },
   "C5FD": {
     "name": "wDebugState",
-    "note": "debug screens: state (RunWC5FDState_E0); also loaded with key entry fields",
+    "note": "debug screens: state (RunDebugState_E0); also loaded with key entry fields",
     "evidence": "E-0133"
   },
   "C5FE": {
     "name": "wDebugSubState",
-    "note": "debug screens: sub-state (RunWC5FEState_E0)",
+    "note": "debug screens: sub-state (RunDebugSubState_E0)",
     "evidence": "E-0133"
   },
   "C5FF": {
     "name": "wDebugCounter",
-    "note": "debug screens: cursor blink and position counter (StepDebugCursorWC5FF)",
+    "note": "debug screens: cursor blink and position counter (StepDebugCursorDebugCounter)",
     "evidence": "E-0133"
   },
   "C600": {
@@ -2038,7 +2038,7 @@
   },
   "C838": {
     "name": "wArenaWinsLo",
-    "note": "16-bit count shown by DrawWC838CountBoxAndStep (script command $F3), low byte",
+    "note": "16-bit count shown by DrawArenaWinsLoCountBoxAndStep (script command $F3), low byte",
     "evidence": "E-0133"
   },
   "C839": {
@@ -2103,7 +2103,7 @@
   },
   "C88C": {
     "name": "wStatusStepFlags",
-    "note": "bit 7 and bit 0 used by the field status-effect state (EnterStatusEffectFieldState, ToggleWC88CLowBitOnce)",
+    "note": "bit 7 and bit 0 used by the field status-effect state (EnterStatusEffectFieldState, ToggleStatusStepFlagsLowBitOnce)",
     "evidence": "E-0133"
   },
   "C88D": {
@@ -2188,17 +2188,17 @@
   },
   "C89E": {
     "name": "wScriptTileBuf0",
-    "note": "16-byte tile uploaded by UploadTwoTilesFromWC89E (filled by script fetch 6)",
+    "note": "16-byte tile uploaded by UploadTwoTilesFromScriptTileBuf0 (filled by script fetch 6)",
     "evidence": "E-0133"
   },
   "C8AE": {
     "name": "wScriptTileBuf1",
-    "note": "second 16-byte tile uploaded by UploadTwoTilesFromWC89E",
+    "note": "second 16-byte tile uploaded by UploadTwoTilesFromScriptTileBuf0",
     "evidence": "E-0133"
   },
   "C8BF": {
     "name": "wFieldStepFlags",
-    "note": "field flags: bit 7 set by SetWC8BFBit7; $C0 blocks step triggers",
+    "note": "field flags: bit 7 set by SetFieldStepFlagsBit7; $C0 blocks step triggers",
     "evidence": "E-0133"
   },
   "C8C0": {
@@ -2229,7 +2229,7 @@
   },
   "C8C7": {
     "name": "wFieldReturnPhase",
-    "note": "phase used when returning to the field (RunWC8C7Phase); non-zero keeps the screen",
+    "note": "phase used when returning to the field (RunFieldReturnPhase); non-zero keeps the screen",
     "evidence": "E-0133"
   },
   "C60C": {
@@ -2241,7 +2241,7 @@
   "C635": {
     "name": "wItemStorage",
     "size": "C8",
-    "note": "100 two-byte entries (WC635HasNonZeroEntry); ends right before wPartyCount; item storage of the save data",
+    "note": "100 two-byte entries (ItemStorageHasNonZeroEntry); ends right before wPartyCount; item storage of the save data",
     "evidence": "E-0133"
   },
   "C6FE": {
@@ -2253,7 +2253,7 @@
   "C787": {
     "name": "wKeySeeds",
     "size": "40",
-    "note": "two bytes per key entry: the random seed saved when a key is generated (GenerateNewKeyEntry, DeleteKeyEntryHFFC6)",
+    "note": "two bytes per key entry: the random seed saved when a key is generated (GenerateNewKeyEntry, DeleteKeyEntryTemp0)",
     "evidence": "E-0133"
   },
   "C8C8": {
@@ -2313,17 +2313,17 @@
   },
   "C902": {
     "name": "wEncounterCountdown",
-    "note": "steps left before a random encounter (PickRandomWC902FromTable478F)",
+    "note": "steps left before a random encounter (PickRandomEncounterCountdownFromTable478F)",
     "evidence": "E-0134"
   },
   "C903": {
     "name": "wBattleIntroKind",
-    "note": "battle intro kind (RunWC903Case dispatches on it; 2 normal, 7 special)",
+    "note": "battle intro kind (RunBattleIntroKindCase dispatches on it; 2 normal, 7 special)",
     "evidence": "E-0134"
   },
   "C904": {
     "name": "wBattleTransitionStep",
-    "note": "step of the battle transition effect (RunWC904Step)",
+    "note": "step of the battle transition effect (RunBattleTransitionStep)",
     "evidence": "E-0134"
   },
   "C905": {
@@ -2348,7 +2348,7 @@
   },
   "C909": {
     "name": "wTransitionBGPtrLo",
-    "note": "BG map pointer of the battle transition effect, low byte (AddHLToWC909InBGMap)",
+    "note": "BG map pointer of the battle transition effect, low byte (AddHLToTransitionBGPtrLoInBGMap)",
     "evidence": "E-0134"
   },
   "C90A": {
@@ -2368,7 +2368,7 @@
   },
   "C90D": {
     "name": "wFieldEventKind",
-    "note": "field event kind of the map (map header; RunFieldEventWC90D dispatches on its low nibble)",
+    "note": "field event kind of the map (map header; RunFieldEventFieldEventKind dispatches on its low nibble)",
     "evidence": "E-0134"
   },
   "C90E": {
@@ -2449,7 +2449,7 @@
   },
   "C92D": {
     "name": "wScriptSubStep",
-    "note": "sub-step of script commands that run several stages (RunWC92DStep)",
+    "note": "sub-step of script commands that run several stages (RunScriptSubStep)",
     "evidence": "E-0134"
   },
   "C92E": {
@@ -2530,7 +2530,7 @@
   },
   "C949": {
     "name": "wSpriteFloatY",
-    "note": "vertical offset of an animated sprite (CycleWC949Down)",
+    "note": "vertical offset of an animated sprite (CycleSpriteFloatYDown)",
     "evidence": "E-0134"
   },
   "C94A": {
@@ -2575,7 +2575,7 @@
   },
   "C952": {
     "name": "wEffectFlags52",
-    "note": "set by SelectEffectByWDAD2Flags",
+    "note": "set by SelectEffectByEffectFlags",
     "evidence": "E-0134"
   },
   "C953": {
@@ -2645,7 +2645,7 @@
   },
   "C969": {
     "name": "wKeyWorldLevelBase",
-    "note": "key-world level base (LoadWC969TripleForWCD05)",
+    "note": "key-world level base (LoadKeyWorldLevelBaseTripleForPartyStrength)",
     "evidence": "E-0134"
   },
   "C96A": {
@@ -2660,7 +2660,7 @@
   },
   "C96C": {
     "name": "wBattleIntroFlag",
-    "note": "set by RunWC903Case; read by ScaleStatAndCapByBattleKind",
+    "note": "set by RunBattleIntroKindCase; read by ScaleStatAndCapByBattleKind",
     "evidence": "E-0134"
   },
   "C96D": {
@@ -2726,7 +2726,7 @@
   },
   "CB75": {
     "name": "wSequencePtrLo",
-    "note": "pointer to the running animation sequence, low byte (TickWCB75Sequence)",
+    "note": "pointer to the running animation sequence, low byte (TickSequencePtrLoSequence)",
     "evidence": "E-0134"
   },
   "CB76": {
@@ -2778,7 +2778,7 @@
   "C8CF": {
     "name": "wNameGlyphBuf",
     "size": "10",
-    "note": "name text copied before drawing its glyphs (CopyRecordNameToWC8CF, CopyGlyphTilesToVRAM); $F0-terminated",
+    "note": "name text copied before drawing its glyphs (CopyRecordNameToNameGlyphBuf, CopyGlyphTilesToVRAM); $F0-terminated",
     "evidence": "E-0134"
   },
   "C986": {
@@ -2837,7 +2837,7 @@
   },
   "CCE9": {
     "name": "wScreenTriggerCount",
-    "note": "number of 4-byte screen trigger entries at wScreenTriggers (FindTriggerEntryForCurrentScreen_WCCEB)",
+    "note": "number of 4-byte screen trigger entries at wScreenTriggers (FindTriggerEntryForCurrentScreen_ScreenTriggers)",
     "evidence": "E-0135"
   },
   "CCEA": {
@@ -2853,13 +2853,13 @@
   },
   "CCF7": {
     "name": "wKeyWorldMonsterBands",
-    "note": "$FF-terminated list of monster band indexes for the key world (LoadKeyWorldParamsForWC833)",
+    "note": "$FF-terminated list of monster band indexes for the key world (LoadKeyWorldParamsForCurrentKeyIndex)",
     "evidence": "E-0135",
     "size": "B"
   },
   "CD02": {
     "name": "wKeyWorldBandAdjust",
-    "note": "band adjustment from the key world level (LoadKeyWorldParamsForWC833)",
+    "note": "band adjustment from the key world level (LoadKeyWorldParamsForCurrentKeyIndex)",
     "evidence": "E-0135"
   },
   "CD03": {
@@ -2874,7 +2874,7 @@
   },
   "CD05": {
     "name": "wPartyStrength",
-    "note": "party strength value (ComputePartyStrengthLevelWCD05); used for key and encounter levels",
+    "note": "party strength value (ComputePartyStrengthLevelPartyStrength); used for key and encounter levels",
     "evidence": "E-0135"
   },
   "CD06": {
@@ -2924,7 +2924,7 @@
   },
   "CD0F": {
     "name": "wKeyWorldBand",
-    "note": "key-world level band 0-15 (SetWCD0FBandForA)",
+    "note": "key-world level band 0-15 (SetKeyWorldBandForA)",
     "evidence": "E-0135"
   },
   "CD10": {
@@ -2935,7 +2935,7 @@
   },
   "CD50": {
     "name": "wKeyWorldBossMonsters",
-    "note": "8 two-byte monster entries for the deeper areas (FillWCD51LevelsForWCD05)",
+    "note": "8 two-byte monster entries for the deeper areas (FillWCD51LevelsForPartyStrength)",
     "evidence": "E-0135",
     "size": "10"
   },
@@ -3012,13 +3012,13 @@
   },
   "CE93": {
     "name": "wVisitedScreens",
-    "note": "visited-screen bitmap of the key world (8 bytes; MarkVisitedMapScreenInWCE93)",
+    "note": "visited-screen bitmap of the key world (8 bytes; MarkVisitedMapScreenInVisitedScreens)",
     "evidence": "E-0135",
     "size": "8"
   },
   "CE9B": {
     "name": "wGM2TimerFrames",
-    "note": "first byte of the $D8-byte block saved to SRAM bank 1 by SaveWCE9BBlockToSRAMBank1; a timer byte (CallF072B4WhenWCE9DIs59)",
+    "note": "first byte of the $D8-byte block saved to SRAM bank 1 by SaveGM2TimerFramesBlockToSRAMBank1; a timer byte (CallF072B4WhenGM2TimerMinutesIs59)",
     "evidence": "E-0135"
   },
   "CE9C": {
@@ -3033,12 +3033,12 @@
   },
   "CE9E": {
     "name": "wFamilyBitCount",
-    "note": "count of bits set in wFamilyBits (MarkBitBInWCE9FAndCount)",
+    "note": "count of bits set in wFamilyBits (MarkBitBInFamilyBitsAndCount)",
     "evidence": "E-0135"
   },
   "CE9F": {
     "name": "wFamilyBits",
-    "note": "bit array marked by MarkBitBInWCE9FAndCount",
+    "note": "bit array marked by MarkBitBInFamilyBitsAndCount",
     "evidence": "E-0135",
     "size": "20"
   },
@@ -3054,7 +3054,7 @@
   },
   "CEC1": {
     "name": "wRollState",
-    "note": "state byte of the bank-$F0 roll (RollWCEC2ChanceAndRun72C8)",
+    "note": "state byte of the bank-$F0 roll (RollCounterChanceAndRun72C8)",
     "evidence": "E-0135"
   },
   "CEC2": {
@@ -3064,7 +3064,7 @@
   },
   "CEC3": {
     "name": "wFamilyScores",
-    "note": "11 scores (one per family) ranked by RankWCEC3ScoresIntoWCF7E",
+    "note": "11 scores (one per family) ranked by RankFamilyScoresIntoFamilyRanking",
     "evidence": "E-0135",
     "size": "B"
   },
@@ -3095,7 +3095,7 @@
   },
   "CF0A": {
     "name": "wTopSpeciesGrowth",
-    "note": "species growth bytes copied by LoadWCED9SpeciesStatsToWCF0A ($CF0A-$CF0C)",
+    "note": "species growth bytes copied by LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth ($CF0A-$CF0C)",
     "evidence": "E-0135",
     "size": "3"
   },
@@ -3164,7 +3164,7 @@
   },
   "CF8A": {
     "name": "wRankBand",
-    "note": "band of wFamilyBitCount (BandOfWCE9E)",
+    "note": "band of wFamilyBitCount (BandOfFamilyBitCount)",
     "evidence": "E-0135"
   },
   "CF8B": {
@@ -3204,7 +3204,7 @@
   },
   "CFA8": {
     "name": "wNameEntryState",
-    "note": "state of the name-entry and naming screens (RunWCFA8StateWhenNotFading); also set by breeding",
+    "note": "state of the name-entry and naming screens (RunNameEntryStateWhenNotFading); also set by breeding",
     "evidence": "E-0135"
   },
   "CFA9": {
@@ -3245,7 +3245,7 @@
   },
   "CFBE": {
     "name": "wNameEntryBlink",
-    "note": "cursor blink counter of the name-entry screen (BlinkCursorWCFBE_Bank14)",
+    "note": "cursor blink counter of the name-entry screen (BlinkCursorNameEntryBlink_Bank14)",
     "evidence": "E-0135"
   },
   "CFBF": {
@@ -3346,7 +3346,7 @@
   },
   "CFDC": {
     "name": "wEncounterKind",
-    "note": "encounter entry byte 0 (StartScriptedEncounterHFFC6 copies the entry from $481C + 8 * id)",
+    "note": "encounter entry byte 0 (StartScriptedEncounterTemp0 copies the entry from $481C + 8 * id)",
     "evidence": "E-0135"
   },
   "CFDD": {
@@ -3438,13 +3438,13 @@
   },
   "D043": {
     "name": "wLinkRules",
-    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckWD044Bit6, UnpackLinkRecordToWD09D)",
+    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckWD044Bit6, UnpackLinkRecordToWorkBuf)",
     "evidence": "E-0136",
     "size": "A"
   },
   "D04B": {
     "name": "wLinkRuleTurnLimit",
-    "note": "rule byte with the turn limit (LinkRuleCheckWD04BTurnLimit)",
+    "note": "rule byte with the turn limit (LinkRuleCheckLinkRuleTurnLimitTurnLimit)",
     "evidence": "E-0136"
   },
   "D04D": {
@@ -3496,12 +3496,12 @@
   },
   "D069": {
     "name": "wTalkCountdown",
-    "note": "frames before a talk event is dispatched (CountDownWD069ThenDispatchTalkEvent)",
+    "note": "frames before a talk event is dispatched (CountDownTalkCountdownThenDispatchTalkEvent)",
     "evidence": "E-0136"
   },
   "D06A": {
     "name": "wLinkScreenState",
-    "note": "state of the link and title screens of game mode 5 (StartFadeToWD06AState1/2)",
+    "note": "state of the link and title screens of game mode 5 (StartFadeToLinkScreenState1/2)",
     "evidence": "E-0136"
   },
   "D06B": {
@@ -3516,7 +3516,7 @@
   },
   "D082": {
     "name": "wInventorySlot",
-    "note": "inventory slot chosen in the pause menu (LookupWD082ForRecordBuffer)",
+    "note": "inventory slot chosen in the pause menu (LookupInventorySlotForRecordBuffer)",
     "evidence": "E-0136"
   },
   "D083": {
@@ -3561,13 +3561,13 @@
   },
   "D095": {
     "name": "wLevelUpGains",
-    "note": "stat gains of a level up (ComputeLevelUpStatGainsForWD869, ClampLevelUpGainsTo999, ItemApply_WorldLeaf)",
+    "note": "stat gains of a level up (ComputeLevelUpStatGainsForBattleArg1, ClampLevelUpGainsTo999, ItemApply_WorldLeaf)",
     "evidence": "E-0136",
     "size": "6"
   },
   "D09B": {
     "name": "wGrowthTemp0",
-    "note": "growth calculation work byte (ComputeLevelUpStatGainsForWD869_Sub01, AddWD09CIfWD09BMatchesB)",
+    "note": "growth calculation work byte (ComputeLevelUpStatGainsForWD869_Sub01, AddGrowthTemp1IfGrowthTemp0MatchesB)",
     "evidence": "E-0136"
   },
   "D09C": {
@@ -3577,7 +3577,7 @@
   },
   "D09D": {
     "name": "wWorkBuf",
-    "note": "shared work area: arguments and pointers of many routines (record index and destination of BuildRecordSummaryForWD09D, menu lists, palette rows of the screen fades)",
+    "note": "shared work area: arguments and pointers of many routines (record index and destination of BuildRecordSummaryForWorkBuf, menu lists, palette rows of the screen fades)",
     "evidence": "E-0136",
     "size": "38"
   },
@@ -3613,17 +3613,17 @@
   },
   "D0E6": {
     "name": "wTitlePartySummary",
-    "note": "title screen: party summaries, 12 bytes each (BuildRecordSummaryForWD09D); the second and third sit at battler-record offsets $1D and $29",
+    "note": "title screen: party summaries, 12 bytes each (BuildRecordSummaryForWorkBuf); the second and third sit at battler-record offsets $1D and $29",
     "evidence": "E-0136"
   },
   "D0E7": {
     "name": "wLinkMenuCounter",
-    "note": "counter of the RunWD06BSubState_5B14 screen",
+    "note": "counter of the RunLinkScreenSubStateSubState_5B14 screen",
     "evidence": "E-0136"
   },
   "D0E8": {
     "name": "wLinkMenuEntry",
-    "note": "entry number for table $555D (LoadTable555DEntryForWD0A6ToWD0EA)",
+    "note": "entry number for table $555D (LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes)",
     "evidence": "E-0136"
   },
   "D0EA": {
@@ -3638,7 +3638,7 @@
   },
   "D10B": {
     "name": "wTitleKeyFlag",
-    "note": "title summary byte from sBE0D: picks a key name or a string (ShowKeyNameOrStringForWD10B)",
+    "note": "title summary byte from sBE0D: picks a key name or a string (ShowKeyNameOrStringForTitleKeyFlag)",
     "evidence": "E-0136"
   },
   "D10C": {
@@ -3724,7 +3724,7 @@
   },
   "D2C1": {
     "name": "wAIDamageEstimates",
-    "note": "AI damage estimates (CheckLoneFoeHPNotBelowWD2C1)",
+    "note": "AI damage estimates (CheckLoneFoeHPNotBelowAIDamageEstimates)",
     "evidence": "E-0136",
     "size": "6"
   },
@@ -3746,7 +3746,7 @@
   },
   "D2CE": {
     "name": "wBattleEndTimer",
-    "note": "battle end wait timer (CountDownWD2CEWhenSoundIdle)",
+    "note": "battle end wait timer (CountDownBattleEndTimerWhenSoundIdle)",
     "evidence": "E-0136"
   },
   "D580": {
@@ -3767,7 +3767,7 @@
   },
   "D588": {
     "name": "wArenaRound",
-    "note": "arena counter (IncWD588AndCopyWD7FCToWD78C)",
+    "note": "arena counter (IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea)",
     "evidence": "E-0136"
   },
   "D589": {
@@ -3782,7 +3782,7 @@
   },
   "D780": {
     "name": "wScreenState",
-    "note": "state of the current menu or script screen (RunWD780StepEveryOtherFrame, RunWD780StateWhenNotFading_*); $FF = idle",
+    "note": "state of the current menu or script screen (RunScreenStateStepEveryOtherFrame, RunWD780StateWhenNotFading_*); $FF = idle",
     "evidence": "E-0136"
   },
   "D781": {
@@ -3802,7 +3802,7 @@
   },
   "D784": {
     "name": "wGlyphListPos",
-    "note": "position in the glyph tile list (DrawWC8CFGlyphsOverlaying8DAnd8E, CopyGlyphTileListFromBank1F)",
+    "note": "position in the glyph tile list (DrawNameGlyphBufGlyphsOverlaying8DAnd8E, CopyGlyphTileListFromBank1F)",
     "evidence": "E-0136"
   },
   "D785": {
@@ -3812,28 +3812,28 @@
   },
   "D786": {
     "name": "wGridCursorX",
-    "note": "column in a 6-column grid (GridIndexFromWD786WD787)",
+    "note": "column in a 6-column grid (GridIndexFromGridCursorXGridCursorY)",
     "evidence": "E-0136"
   },
   "D787": {
     "name": "wGridCursorY",
-    "note": "row in that grid (also a blink counter in BlinkCursorWD787_Bank15)",
+    "note": "row in that grid (also a blink counter in BlinkCursorGridCursorY_Bank15)",
     "evidence": "E-0136"
   },
   "D788": {
     "name": "wScreenList",
-    "note": "first byte of a screen work list (InitItemListWD788AndCount copies $28 bytes here; script commands $EC and $F1 keep a state here)",
+    "note": "first byte of a screen work list (InitItemListScreenListAndCount copies $28 bytes here; script commands $EC and $F1 keep a state here)",
     "evidence": "E-0136"
   },
   "D789": {
     "name": "wListEntries",
-    "note": "entries of the current list (record or key indexes; BuildKeyListIndexWD789, ListRecordsInUseWithByte6EClear)",
+    "note": "entries of the current list (record or key indexes; BuildKeyListIndexListEntries, ListRecordsInUseWithByte6EClear)",
     "evidence": "E-0136",
     "size": "20"
   },
   "D78A": {
     "name": "wGrid2CursorX",
-    "note": "column of a second 6-column grid (GridIndexFromWD78AWD78B; script command $F6)",
+    "note": "column of a second 6-column grid (GridIndexFromGrid2CursorXGrid2CursorY; script command $F6)",
     "evidence": "E-0136"
   },
   "D78B": {
@@ -3843,7 +3843,7 @@
   },
   "D78C": {
     "name": "wScreenArea",
-    "note": "copy of wAreaGraphicsIndex (IncWD588AndCopyWD7FCToWD78C)",
+    "note": "copy of wAreaGraphicsIndex (IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea)",
     "evidence": "E-0136"
   },
   "D78D": {
@@ -3853,7 +3853,7 @@
   },
   "D78E": {
     "name": "wScreenCountPlusOne",
-    "note": "wRecordCapacity + 1 (SetupWD78EFromWD7FF)",
+    "note": "wRecordCapacity + 1 (SetupScreenCountPlusOneFromRecordCapacity)",
     "evidence": "E-0136"
   },
   "D790": {
@@ -3903,7 +3903,7 @@
   },
   "D7A5": {
     "name": "wItemCountTens",
-    "note": "tens digit of the item count (InitItemListWD788AndCount)",
+    "note": "tens digit of the item count (InitItemListScreenListAndCount)",
     "evidence": "E-0136"
   },
   "D7A6": {
@@ -3923,17 +3923,17 @@
   },
   "D7AB": {
     "name": "wListCursor",
-    "note": "cursor row in the current list or page (UpdateListCursorWD7AB, UpdatePagedListCursor)",
+    "note": "cursor row in the current list or page (UpdateListCursorListCursor, UpdatePagedListCursor)",
     "evidence": "E-0136"
   },
   "D7AC": {
     "name": "wListCursorAux",
-    "note": "byte kept with wListCursor by UpdateListCursorWD7AB",
+    "note": "byte kept with wListCursor by UpdateListCursorListCursor",
     "evidence": "E-0136"
   },
   "D7AD": {
     "name": "wChoiceCursor",
-    "note": "cursor of the two-entry choice (HandleTwoChoiceCursorInput_0D, DrawArrowTileBCAtWD7ADEntry)",
+    "note": "cursor of the two-entry choice (HandleTwoChoiceCursorInput_0D, DrawArrowTileBCAtChoiceCursorEntry)",
     "evidence": "E-0136"
   },
   "D7AE": {
@@ -3968,12 +3968,12 @@
   },
   "D7B4": {
     "name": "wSelectedRecord",
-    "note": "SRAM record index chosen on a screen (LoadRecordWD7B4Byte0EBit0); also a blink counter in BlinkCursorWD7B4_Bank1C",
+    "note": "SRAM record index chosen on a screen (LoadRecordSelectedRecordByte0EBit0); also a blink counter in BlinkCursorSelectedRecord_Bank1C",
     "evidence": "E-0136"
   },
   "D7B5": {
     "name": "wItemGridX",
-    "note": "column 0-3 of the item grid (DrawWD7B5Cursor)",
+    "note": "column 0-3 of the item grid (DrawItemGridXCursor)",
     "evidence": "E-0136"
   },
   "D7B6": {
@@ -4038,7 +4038,7 @@
   },
   "D7C2": {
     "name": "wTextCounter0",
-    "note": "text counter cleared by ResetWD7C2Counters",
+    "note": "text counter cleared by ResetTextCounter0Counters",
     "evidence": "E-0136"
   },
   "D7C3": {
@@ -4063,12 +4063,12 @@
   },
   "D7C7": {
     "name": "wTextTimer",
-    "note": "text timer set to 60 by ResetWD7C2Counters",
+    "note": "text timer set to 60 by ResetTextCounter0Counters",
     "evidence": "E-0136"
   },
   "D7C8": {
     "name": "wTextCounter5",
-    "note": "text counter cleared by ResetWD7C2Counters",
+    "note": "text counter cleared by ResetTextCounter0Counters",
     "evidence": "E-0136"
   },
   "D7C9": {
@@ -4078,7 +4078,7 @@
   },
   "D7CA": {
     "name": "wNumberTens",
-    "note": "tens digit of a two-digit number being edited (TenTimesWD7CAPlusWD7CB)",
+    "note": "tens digit of a two-digit number being edited (TenTimesNumberTensPlusNumberOnes)",
     "evidence": "E-0136"
   },
   "D7CB": {
@@ -4088,7 +4088,7 @@
   },
   "D7CC": {
     "name": "wNumberEditPos",
-    "note": "position of the number editor (DrawRect0147AndResetWD7CC sets 2)",
+    "note": "position of the number editor (DrawRect0147AndResetNumberEditPos sets 2)",
     "evidence": "E-0136"
   },
   "D7CD": {
@@ -4114,7 +4114,7 @@
   },
   "D7D3": {
     "name": "wCountTens",
-    "note": "tens digit of a count (CountItemInInventoryToDigits, SplitWC635EntryIntoDigits)",
+    "note": "tens digit of a count (CountItemInInventoryToDigits, SplitItemStorageEntryIntoDigits)",
     "evidence": "E-0136"
   },
   "D7D4": {
@@ -4124,18 +4124,18 @@
   },
   "D7D5": {
     "name": "wItemGrid",
-    "note": "24 item ids in rows of 4 (CountNonZeroWD7D5Bytes, StepItemDescriptionText)",
+    "note": "24 item ids in rows of 4 (CountNonZeroItemGridBytes, StepItemDescriptionText)",
     "evidence": "E-0136",
     "size": "18"
   },
   "D7DC": {
     "name": "wPickCount",
-    "note": "number of records picked into wPickedRecords (4 marks the end; FinishWD7DDEntryAndAdvance)",
+    "note": "number of records picked into wPickedRecords (4 marks the end; FinishPickedRecordsEntryAndAdvance)",
     "evidence": "E-0136"
   },
   "D7DD": {
     "name": "wPickedRecords",
-    "note": "up to three picked record indexes ($FF padded by PadWD7DDWithFFToThree)",
+    "note": "up to three picked record indexes ($FF padded by PadPickedRecordsWithFFToThree)",
     "evidence": "E-0136",
     "size": "3"
   },
@@ -4151,7 +4151,7 @@
   },
   "D7E2": {
     "name": "wPackFields",
-    "note": "four 2-bit fields packed into one byte by Pack2BitFieldsFromWD7E2",
+    "note": "four 2-bit fields packed into one byte by Pack2BitFieldsFromPackFields",
     "evidence": "E-0136",
     "size": "4"
   },
@@ -4182,7 +4182,7 @@
   },
   "D7EC": {
     "name": "wF0ScreenKind",
-    "note": "bank-$F0 screen kind (Run67EEWithWD7F1ForWD7EC checks 3 or 4)",
+    "note": "bank-$F0 screen kind (Run67EEWithArg1ForF0ScreenKind checks 3 or 4)",
     "evidence": "E-0136"
   },
   "D7ED": {
@@ -4197,7 +4197,7 @@
   },
   "D7EF": {
     "name": "wCursorBlinkEF",
-    "note": "cursor blink counter (BlinkCursorWD7EF_Bank1D_4801)",
+    "note": "cursor blink counter (BlinkCursorBlinkEF_Bank1D_4801)",
     "evidence": "E-0136"
   },
   "D7F0": {
@@ -4227,7 +4227,7 @@
   },
   "D7F5": {
     "name": "wArg5",
-    "note": "fifth argument/result byte: pointer high byte (SetWD7F5ToWD789Cell4), BG destination, first 2-bit field, $FF results",
+    "note": "fifth argument/result byte: pointer high byte (SetArg5ToListEntriesCell4), BG destination, first 2-bit field, $FF results",
     "evidence": "E-0136"
   },
   "D7F6": {
@@ -4252,12 +4252,12 @@
   },
   "D7FC": {
     "name": "wAreaGraphicsIndex",
-    "note": "area graphics entry (LoadAreaGraphicsForWD7FC)",
+    "note": "area graphics entry (LoadAreaGraphicsForAreaGraphicsIndex)",
     "evidence": "E-0136"
   },
   "D7FF": {
     "name": "wRecordCapacity",
-    "note": "number of SRAM records the farm holds (LoadWD7FFFromWC7C7Table); also reused as a count by script command $F7",
+    "note": "number of SRAM records the farm holds (LoadRecordCapacityFromFarmLevelTable); also reused as a count by script command $F7",
     "evidence": "E-0136"
   },
   "D800": {
@@ -4277,7 +4277,7 @@
   },
   "D803": {
     "name": "wEffectRoutine",
-    "note": "effect routine run every fifth frame (RunWD803EffectEvery5Frames, table of 14)",
+    "note": "effect routine run every fifth frame (RunEffectRoutineEffectEvery5Frames, table of 14)",
     "evidence": "E-0137"
   },
   "D804": {
@@ -4287,7 +4287,7 @@
   },
   "D805": {
     "name": "wEffectStep",
-    "note": "effect step (RunWD805Step); also the per-target X list and the row width of CopyVRAMRectToBuffer",
+    "note": "effect step (RunEffectStep); also the per-target X list and the row width of CopyVRAMRectToBuffer",
     "evidence": "E-0137"
   },
   "D806": {
@@ -4352,7 +4352,7 @@
   },
   "D814": {
     "name": "wBattleStatus8",
-    "note": "status byte 8 (array base, stride 9; RollChanceVsTargetWDA72Byte5Bits23)",
+    "note": "status byte 8 (array base, stride 9; RollChanceVsTargetSlotResistancesByte5Bits23)",
     "evidence": "E-0137"
   },
   "D854": {
@@ -4382,7 +4382,7 @@
   },
   "D869": {
     "name": "wBattleArg1",
-    "note": "argument byte: byte count for LoadSkillRecordPart, record index for ApplyLevelUpToRecordWD869",
+    "note": "argument byte: byte count for LoadSkillRecordPart, record index for ApplyLevelUpToRecordBattleArg1",
     "evidence": "E-0137"
   },
   "D86A": {
@@ -4397,18 +4397,18 @@
   },
   "D86C": {
     "name": "wNameSlot",
-    "note": "slot whose name is copied to wC130 (CopyTargetNameToWC130)",
+    "note": "slot whose name is copied to wC130 (CopyTargetNameToTextBuf0)",
     "evidence": "E-0137"
   },
   "D86D": {
     "name": "wSlotChoices",
-    "note": "up to three slot numbers picked from at random (PickRandomEntryOfWD86D)",
+    "note": "up to three slot numbers picked from at random (PickRandomEntryOfSlotChoices)",
     "evidence": "E-0137",
     "size": "3"
   },
   "D871": {
     "name": "wLoadSlot",
-    "note": "slot being loaded from a battler record or weighted by the AI (StoreBCAtWordEntryWD871)",
+    "note": "slot being loaded from a battler record or weighted by the AI (StoreBCAtWordEntryLoadSlot)",
     "evidence": "E-0137"
   },
   "D873": {
@@ -4418,7 +4418,7 @@
   },
   "D874": {
     "name": "wTargetEstimates",
-    "note": "four words: HP + DEF estimates of target slots (StoreSlotHPPlusDEFToWD874, PickWeakestEstimatedTarget)",
+    "note": "four words: HP + DEF estimates of target slots (StoreSlotHPPlusDEFToTargetEstimates, PickWeakestEstimatedTarget)",
     "evidence": "E-0137",
     "size": "8"
   },
@@ -4479,7 +4479,7 @@
   },
   "D88B": {
     "name": "wSpeciesGroups",
-    "note": "targets grouped by shared species (GroupTargetsBySpeciesToWD88B; bit 7 marks a group)",
+    "note": "targets grouped by shared species (GroupTargetsBySpeciesToSpeciesGroups; bit 7 marks a group)",
     "evidence": "E-0137",
     "size": "3"
   },
@@ -4490,12 +4490,12 @@
   },
   "D890": {
     "name": "wBattleFoeCount",
-    "note": "number of foe monsters, 1-3 (LayoutTileBlocksForWD890Count, SetEffectSpriteXForTargets)",
+    "note": "number of foe monsters, 1-3 (LayoutTileBlocksForBattleFoeCount, SetEffectSpriteXForTargets)",
     "evidence": "E-0137"
   },
   "D891": {
     "name": "wBattleTurn",
-    "note": "battle turn counter (BattlePhase0_Step3; LinkRuleCheckWD04BTurnLimit)",
+    "note": "battle turn counter (BattlePhase0_Step3; LinkRuleCheckLinkRuleTurnLimitTurnLimit)",
     "evidence": "E-0137"
   },
   "D892": {
@@ -4510,12 +4510,12 @@
   },
   "D894": {
     "name": "wBattleEndFlag",
-    "note": "set with message $98 (SetWD894AndMessage98); read at the battle end",
+    "note": "set with message $98 (SetBattleEndFlagAndMessage98); read at the battle end",
     "evidence": "E-0137"
   },
   "D895": {
     "name": "wActionQueue",
-    "note": "8-byte queue of slots waiting to act ($FF = empty; RemoveCFromWD895Queue)",
+    "note": "8-byte queue of slots waiting to act ($FF = empty; RemoveCFromActionQueue)",
     "evidence": "E-0137",
     "size": "8"
   },
@@ -4526,7 +4526,7 @@
   },
   "D89F": {
     "name": "wBattleMeter",
-    "note": "16-bit battle meter: each action adds an amount, capped at 1800 (AddHLToWD89FCappedAt1800, SubtractHLFromWD89FFloored)",
+    "note": "16-bit battle meter: each action adds an amount, capped at 1800 (AddHLToBattleMeterCappedAt1800, SubtractHLFromBattleMeterFloored)",
     "evidence": "E-0137",
     "size": "2"
   },
@@ -4547,7 +4547,7 @@
   },
   "D8A7": {
     "name": "wSlotDamageFlags",
-    "note": "per-slot flags: bit 0 multiplies some damage (MultiplyDamageBy50IfWD8A7Bit0, AttackDamageTimes1_5IfWD8A7Bit0)",
+    "note": "per-slot flags: bit 0 multiplies some damage (MultiplyDamageBy50IfSlotDamageFlagsBit0, AttackDamageTimes1_5IfSlotDamageFlagsBit0)",
     "evidence": "E-0137",
     "size": "8"
   },
@@ -4565,7 +4565,7 @@
   },
   "D93F": {
     "name": "wBattleWordArray3F",
-    "note": "word per slot after wBattleINT (ActorWD93FBand, AddActorWD93FDiv16ToWD86A)",
+    "note": "word per slot after wBattleINT (ActorBattleWordArray3FBand, AddActorBattleWordArray3FDiv16ToBattleArg2)",
     "evidence": "E-0137",
     "size": "10"
   },
@@ -4582,7 +4582,7 @@
   },
   "D980": {
     "name": "wSlotTrait",
-    "note": "per-slot AI trait byte (RollWD980LowFlag80)",
+    "note": "per-slot AI trait byte (RollSlotTraitLowFlag80)",
     "evidence": "E-0137",
     "size": "8"
   },
@@ -4622,7 +4622,7 @@
   },
   "DA43": {
     "name": "wSlotTactic",
-    "note": "per-slot battle tactic, low 2 bits; 3 = manual command (GetActorWDA43Low2, SetWDA43AndWDA4BForWCFD4)",
+    "note": "per-slot battle tactic, low 2 bits; 3 = manual command (GetActorSlotTacticLow2, SetSlotTacticAndSlotLastTacticForCommandMonster)",
     "evidence": "E-0137",
     "size": "8"
   },
@@ -4640,31 +4640,31 @@
   },
   "DA5B": {
     "name": "wSlotMarks",
-    "note": "per-slot mark set for present slots (SetWDA5BForPresentSlots, SetTargetWDA5BTo3)",
+    "note": "per-slot mark set for present slots (SetSlotMarksForPresentSlots, SetTargetSlotMarksTo3)",
     "evidence": "E-0137",
     "size": "8"
   },
   "DA6B": {
     "name": "wBattleExpAward",
-    "note": "24-bit EXP award at the battle end (DivideWDA6BByModeFactor, AddExpToRecordCCapped); the AI scoring loop keeps its routine table pointer in the first two bytes",
+    "note": "24-bit EXP award at the battle end (DivideBattleExpAwardByModeFactor, AddExpToRecordCCapped); the AI scoring loop keeps its routine table pointer in the first two bytes",
     "evidence": "E-0137",
     "size": "3"
   },
   "DA6E": {
     "name": "wAISkillScore",
-    "note": "AI score word of the skill being scored (ResetWDA6E, AddBCToWDA6E)",
+    "note": "AI score word of the skill being scored (ResetAISkillScore, AddBCToAISkillScore)",
     "evidence": "E-0137",
     "size": "2"
   },
   "DA70": {
     "name": "wAISkillScore2",
-    "note": "second AI score word ($FFFF after reset; AddBCToWDA70)",
+    "note": "second AI score word ($FFFF after reset; AddBCToAISkillScore2)",
     "evidence": "E-0137",
     "size": "2"
   },
   "DA72": {
     "name": "wSlotResistances",
-    "note": "8 seven-byte resistance records, one per slot (GetTargetWDA72Byte0-6; 2-bit levels)",
+    "note": "8 seven-byte resistance records, one per slot (GetTargetSlotResistancesByte0-6; 2-bit levels)",
     "evidence": "E-0137",
     "size": "38"
   },
@@ -4675,7 +4675,7 @@
   },
   "DAAB": {
     "name": "wDisplaySlot",
-    "note": "slot whose name or picture is shown (CopyMonsterNameOfWDAABSlotToDE, LoadBattleMonsterPictureAndTitle)",
+    "note": "slot whose name or picture is shown (CopyMonsterNameOfDisplaySlotToDE, LoadBattleMonsterPictureAndTitle)",
     "evidence": "E-0137"
   },
   "DAAD": {
@@ -4695,7 +4695,7 @@
   },
   "DAB3": {
     "name": "wEffectByteB3",
-    "note": "effect selection byte (SelectEffectByWDAD2Flags)",
+    "note": "effect selection byte (SelectEffectByEffectFlags)",
     "evidence": "E-0137"
   },
   "DAB5": {
@@ -4725,7 +4725,7 @@
   },
   "DABE": {
     "name": "wDefeatStep",
-    "note": "defeat sequence step + 1 (RunWDABEMinus1Step; set by DefeatTarget)",
+    "note": "defeat sequence step + 1 (RunDefeatStepMinus1Step; set by DefeatTarget)",
     "evidence": "E-0137"
   },
   "DABF": {
@@ -4765,12 +4765,12 @@
   },
   "DAD2": {
     "name": "wEffectFlags",
-    "note": "effect flags read by SelectEffectByWDAD2Flags",
+    "note": "effect flags read by SelectEffectByEffectFlags",
     "evidence": "E-0137"
   },
   "DAD3": {
     "name": "wEffectFlags2",
-    "note": "effect flags read by SelectEffectByWDAD3Flags",
+    "note": "effect flags read by SelectEffectByEffectFlags2Flags",
     "evidence": "E-0137"
   },
   "DAD4": {
@@ -4801,7 +4801,7 @@
   },
   "DAE9": {
     "name": "wCommandBytesE9",
-    "note": "bytes indexed per slot (ChooseTargetForActor, AddCommandWeightToWDA3C)",
+    "note": "bytes indexed per slot (ChooseTargetForActor, AddCommandWeightToAIChoiceWeights)",
     "evidence": "E-0137"
   },
   "DAEA": {
@@ -4856,17 +4856,17 @@
   },
   "DD08": {
     "name": "wSoundSkipMaskA",
-    "note": "ANDed with wSoundSkipMaskB; non-zero makes ReturnTwiceIfWDD08AndWDD0B skip the caller",
+    "note": "ANDed with wSoundSkipMaskB; non-zero makes ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB skip the caller",
     "evidence": "E-0137"
   },
   "DD09": {
     "name": "wSoundEngineMode",
-    "note": "sound engine mode (SetWDD15To0AndWDD09FromWDD16, SetWDD15To4AndClearWDD09)",
+    "note": "sound engine mode (SetSoundEngineStateTo0AndSoundEngineModeFromSoundSavedMode, SetSoundEngineStateTo4AndClearSoundEngineMode)",
     "evidence": "E-0137"
   },
   "DD0B": {
     "name": "wSoundSkipMaskB",
-    "note": "second mask of ReturnTwiceIfWDD08AndWDD0B",
+    "note": "second mask of ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB",
     "evidence": "E-0137"
   },
   "DD0C": {
@@ -5025,7 +5025,7 @@
   },
   "BEC0": {
     "name": "sSavedCE9BBlock",
-    "note": "SRAM bank 1: copy of the $D8-byte block at wGM2TimerFrames (SaveWCE9BBlockToSRAMBank1)",
+    "note": "SRAM bank 1: copy of the $D8-byte block at wGM2TimerFrames (SaveGM2TimerFramesBlockToSRAMBank1)",
     "evidence": "E-0137"
   },
   "BEF3": {

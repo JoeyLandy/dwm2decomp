@@ -430,11 +430,11 @@ Jump_033_51DC::
     ret
 
 Jump_033_51ED::
-    farcall DrawWD789Cell5SpeciesSprite
+    farcall DrawListEntriesCell5SpeciesSprite
     ret
 
 Jump_033_51F4::
-    farcall CallFunc6899PreservingWD7F1AndHFFC6
+    farcall CallFunc6899PreservingArg1AndTemp0
     ret
 
 Jump_033_51FB::
@@ -450,13 +450,13 @@ Jump_033_5207::
     ret
 
 Jump_033_520E::
-    farcall DrawWCA2BSpeciesSprites
+    farcall DrawRecordBufBSpeciesSprites
     ret
 
-; only called from RunWC582State_450D_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC582State_450D_Case01)
+; only called from RunLinkExchangeState_450D_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunLinkExchangeState_450D_Case01)
 ; reads: wLinkScreenState, wLinkScreenSubState, wFadeState, wScreenState
-RunWC582State_450D_Case01_Sub01::
+RunLinkExchangeState_450D_Case01_Sub01::
 Func_033_5215:: ; address name
     ld a, [wLinkScreenState]
     or a, a
@@ -1169,9 +1169,9 @@ Jump_033_55E5:: ; address name
     dw Func_033_5215_Table2_Case04_Case00
     dw Func_033_5215_Table2_Case04_Case02
     dw Func_033_5215_Table2_Case04_Case00
-    dw CallDrawWD789Cell5RecordPanel
-    dw CallClearAndDrawWD789Cell5Name
-    dw CopyRect62C3ToWC36EAndIncWD781
+    dw CallDrawListEntriesCell5RecordPanel
+    dw CallClearAndDrawListEntriesCell5Name
+    dw CopyRect62C3ToWC36EAndIncScreenStep
     dw Func_033_5215_Table2_Case04_Case07
     dw Func_033_5215_Table2_Case04_Case08
     dw Func_033_5215_Table2_Case04_Case09
@@ -1200,24 +1200,24 @@ Jump_033_5615:: ; address name
     farcall DrawRecordListPageIndicators_1B
     ret
 
-; far-calls DrawWD789Cell5RecordPanel (E-0122)
+; far-calls DrawListEntriesCell5RecordPanel (E-0122)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case0F_Case03)
-CallDrawWD789Cell5RecordPanel::
+CallDrawListEntriesCell5RecordPanel::
 Func_033_561C:: ; address name
-    farcall DrawWD789Cell5RecordPanel
+    farcall DrawListEntriesCell5RecordPanel
     ret
 
-; far-calls ClearAndDrawWD789Cell5NameAtTiles1780 (E-0122)
+; far-calls ClearAndDrawListEntriesCell5NameAtTiles1780 (E-0122)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case0F_Case04)
-CallClearAndDrawWD789Cell5Name::
+CallClearAndDrawListEntriesCell5Name::
 Func_033_5623:: ; address name
-    farcall ClearAndDrawWD789Cell5NameAtTiles1780
+    farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
 ; copies the 10 x 11 rectangle Data_033_62C3 into wC36E (CopyRectTo20ByteRowsJp_Bank33), then wD781 += 1 (E-0119)
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case0F_Case05)
 ; points at: wScreenStep
-CopyRect62C3ToWC36EAndIncWD781::
+CopyRect62C3ToWC36EAndIncScreenStep::
 Func_033_562A:: ; address name
     ld de, Data_033_62C3
     ld hl, wWindowTileBuffer + $6E
@@ -1323,12 +1323,12 @@ Jump_033_56CA::
     ret
 
 Jump_033_56E1::
-    call StoreWD789Cell5RecordInWD7DD
+    call StoreListEntriesCell5RecordInPickedRecords
     ld a, [wListCursor]
     ld b, $BC
     ld hl, Data_033_63EF
     call StoreBAtWordTableEntry_Bank33
-    call CopyWD789Cell5NameToWC130_Bank33
+    call CopyListEntriesCell5NameToTextBuf0_Bank33
     ld hl, wScreenStep
     inc [hl]
     ld a, $02
@@ -1432,7 +1432,7 @@ Jump_033_578A::
     ret
 
 Jump_033_57A9::
-    call StoreWD789Cell5RecordInWD7DD
+    call StoreListEntriesCell5RecordInPickedRecords
     ld hl, wScreenStep
     inc [hl]
     inc [hl]
@@ -1476,7 +1476,7 @@ Jump_033_57DC:: ; address name
     inc [hl]
     ld a, $0C
     call ShowStringA10_Bank33
-    call FinishWD7DDEntryAndStep_33
+    call FinishPickedRecordsEntryAndStep_33
     ret
 
 ; entry 13 of the `rst $00` table in Func_033_5215_Table2_Case04
@@ -2019,7 +2019,7 @@ Jump_033_5B38:: ; address name
     ld de, wLinkSeedCopy
     ld bc, $000B
     call CopyBytes
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2165,7 +2165,7 @@ Jump_033_5C1A:: ; address name
 ; writes: wListCursor, wListPageIndex
 Func_033_5215_Table2_Case0D::
 Jump_033_5C36:: ; address name
-    farcall RunWD780StateWhenNotFading_F1
+    farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
     cp a, $0E
     ret nz
@@ -2238,7 +2238,7 @@ Jump_033_5CA7:: ; address name
 ; writes: wArg1, rRAMG2, rRAMB, wWorkBuf, wArg2, wArg3, wScreenStep
 Func_033_5215_Table2_Case0E_Case03::
 Jump_033_5CAC:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2260,7 +2260,7 @@ Jump_033_5CAC:: ; address name
     ld [wWorkBuf], a
     ld a, [wArg1]
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     xor a, a
     ld [rRAMG2], a
     ld de, Data_033_5D5F
@@ -2293,7 +2293,7 @@ Jump_033_5CAC:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    farcall BlankLeadingZeroDigitsWC8C0
+    farcall BlankLeadingZeroDigits_F
     ld a, [wDigits + $1]
     add a, $E0
     pop hl
@@ -2333,7 +2333,7 @@ Data_033_5D5F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 Func_033_5215_Table2_Case0E_Case04::
 Jump_033_5D79:: ; address name
-    farcall ClearAndDrawWD789Cell5NameAtTiles1780
+    farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
 ; entry 5 of the `rst $00` table in Func_033_5215_Table2_Case0E
@@ -2404,7 +2404,7 @@ Jump_033_5DDF:: ; address name
     ld hl, wWindowTileBuffer + $E7
     ld bc, $0907
     call CopyRectTo20ByteRowsJp_Bank33
-    call CopyWD789Cell5NameToWC130_Bank33
+    call CopyListEntriesCell5NameToTextBuf0_Bank33
     call SetDefaultStringWindow_Bank33
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -2481,7 +2481,7 @@ Jump_033_5E6B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_033_5215_Table2_Case0F_Case03::
 Jump_033_5E93:: ; address name
-    call CallDrawWD789Cell5RecordPanel
+    call CallDrawListEntriesCell5RecordPanel
     ret
 
 ; entry 1 of the `rst $00` table in Func_033_5215_Table2_Case0F
@@ -2502,7 +2502,7 @@ Jump_033_5E97:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    farcall DrawPageOfPagesAtWD7F1_Bank1E
+    farcall DrawPageOfPagesAtArg1_Bank1E
 
 Jump_033_5EBE::
     ld a, [wScreenStep]
@@ -2525,14 +2525,14 @@ Jump_033_5EC6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_033_5215_Table2_Case0F_Case04::
 Jump_033_5ED7:: ; address name
-    call CallClearAndDrawWD789Cell5Name
+    call CallClearAndDrawListEntriesCell5Name
     ret
 
 ; entry 5 of the `rst $00` table in Func_033_5215_Table2_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 Func_033_5215_Table2_Case0F_Case05::
 Jump_033_5EDB:: ; address name
-    call CopyRect62C3ToWC36EAndIncWD781
+    call CopyRect62C3ToWC36EAndIncScreenStep
     ret
 
 ; entry 6 of the `rst $00` table in Func_033_5215_Table2_Case0F
@@ -2557,7 +2557,7 @@ Jump_033_5EDF:: ; address name
     ld a, $1E
     ld [wStringIndex], a
     farcall ShowString_Bank1B_481A
-    call CopyWD789Cell5NameToWC130_Bank33
+    call CopyListEntriesCell5NameToTextBuf0_Bank33
     call SetDefaultStringWindow_Bank33
     xor a, a
     ld a, $12
@@ -2608,7 +2608,7 @@ Jump_033_5F37:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG2, rRAMB
 ; points at: wPickedRecords
-LoadRecordByteForWD7DD:: ; heuristic: follows a terminator; C0
+LoadRecordByteForPickedRecords:: ; heuristic: follows a terminator; C0
 Func_033_5F6B:: ; address name
     ld hl, wPickedRecords
     ld a, $0A
@@ -2792,9 +2792,9 @@ Func_033_6049:: ; address name
 ; 2 call sites from 2 routines (e.g. Func_033_5215_Table2_Case04_Case0A, Func_033_5215_Table2_Case04_Case08)
 ; reads: wArg5, wArg6
 ; points at: wPickedRecords
-StoreWD789Cell5RecordInWD7DD::
+StoreListEntriesCell5RecordInPickedRecords::
 Func_033_6060:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2809,20 +2809,20 @@ Func_033_6060:: ; address name
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wNameGlyphBuf, wTextBuf0
-CopyWD789Cell5NameToWC130_Bank33::
+CopyListEntriesCell5NameToTextBuf0_Bank33::
 Func_033_6074:: ; address name
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld b, $0B
@@ -2842,7 +2842,7 @@ Jump_033_6099::
 ; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case04_Case0C)
 ; reads: wPickCount, wScreenStep
 ; writes: wSelectedRecord, wPackWork, wPickCount, wScreenSubStep, wScreenStep
-FinishWD7DDEntryAndStep_33::
+FinishPickedRecordsEntryAndStep_33::
 Func_033_60A7:: ; address name
     ld a, [wPickCount]
     ld [wSelectedRecord], a
@@ -2975,7 +2975,7 @@ Func_033_60FC:: ; address name
     ret
 
 ; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2 (E-0072)
-; 14 call sites from 11 routines (e.g. Func_033_5215_Case00, DrawBox639FAndKeyRows, Func_033_5215_Table2_Case04_Case09, CopyRect62C3ToWC36EAndIncWD781, ...)
+; 14 call sites from 11 routines (e.g. Func_033_5215_Case00, DrawBox639FAndKeyRows, Func_033_5215_Table2_Case04_Case09, CopyRect62C3ToWC36EAndIncScreenStep, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRowsJp_Bank33::

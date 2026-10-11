@@ -2,24 +2,24 @@ SECTION "Bank E0", ROMX[$4000], BANK[$E0]
     db $E0
 
 ; runs the routine for wC5FE (jump table of six) (E-0122)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0C)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0C)
 ; reads: wDebugSubState
-RunWC5FEState_E0::
+RunDebugSubState_E0::
 Func_0E0_4001:: ; address name
     ld a, [wDebugSubState]
     rst $00
-    dw RunWC5FEState_E0_Case00
-    dw RunWC5FEState_E0_Case01
-    dw RunWC5FEState_E0_Case02
-    dw RunWC5FEState_E0_Case03
-    dw RunWC5FEState_E0_Case04
-    dw RunWC5FEState_E0_Case05
+    dw RunDebugSubState_E0_Case00
+    dw RunDebugSubState_E0_Case01
+    dw RunDebugSubState_E0_Case02
+    dw RunDebugSubState_E0_Case03
+    dw RunDebugSubState_E0_Case04
+    dw RunDebugSubState_E0_Case05
 
-; entry 0 of the `rst $00` table in RunWC5FEState_E0
+; entry 0 of the `rst $00` table in RunDebugSubState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wDebugSubState
-RunWC5FEState_E0_Case00::
+RunDebugSubState_E0_Case00::
 Jump_0E0_4011:: ; address name
     ld hl, vTiles1 + $6D0
     ld de, $2101
@@ -56,10 +56,10 @@ Jump_0E0_4045::
     pop bc
     dec c
     jr nz, Jump_0E0_4043
-    call RunWC5FEState_E0_Shared01
+    call RunDebugSubState_E0_Shared01
     call ShowSkillNumberAndName_BankE0
-    call RunWC5FEState_E0_Shared02
-    call RunWC5FEState_E0_Shared03
+    call RunDebugSubState_E0_Shared02
+    call RunDebugSubState_E0_Shared03
     ld hl, wDebugSubState
     inc [hl]
     ld a, $BB
@@ -67,11 +67,11 @@ Jump_0E0_4045::
     call WriteVRAMByte
     ret
 
-; entry 1 of the `rst $00` table in RunWC5FEState_E0
+; entry 1 of the `rst $00` table in RunDebugSubState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugCursor
 ; writes: wDebugSubState, wDebugCursor
-RunWC5FEState_E0_Case01::
+RunDebugSubState_E0_Case01::
 Jump_0E0_406F:: ; address name
     ld a, [wJoypadPressed]
     bit 2, a
@@ -102,7 +102,7 @@ Jump_0E0_4095::
     and a, $01
     xor a, $01
     ld [wDebugCursor], a
-    call RunWC5FEState_E0_Shared01
+    call RunDebugSubState_E0_Shared01
     ret
 
 Jump_0E0_40A6::
@@ -114,11 +114,11 @@ Jump_0E0_40A6::
     call WriteVRAMByte
     ret
 
-; entry 2 of the `rst $00` table in RunWC5FEState_E0
+; entry 2 of the `rst $00` table in RunDebugSubState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugValue0
 ; writes: wDebugSubState, wDebugValue0
-RunWC5FEState_E0_Case02::
+RunDebugSubState_E0_Case02::
 Jump_0E0_40B7:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
@@ -189,11 +189,11 @@ Jump_0E0_4112::
     call WriteVRAMByte
     ret
 
-; entry 3 of the `rst $00` table in RunWC5FEState_E0
+; entry 3 of the `rst $00` table in RunDebugSubState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugValue1
 ; writes: wDebugSubState, wDebugValue1
-RunWC5FEState_E0_Case03::
+RunDebugSubState_E0_Case03::
 Jump_0E0_4123:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
@@ -233,7 +233,7 @@ Jump_0E0_4156::
     ld [wDebugValue1], a
 
 Jump_0E0_4160::
-    call RunWC5FEState_E0_Shared02
+    call RunDebugSubState_E0_Shared02
     ret
 
 Jump_0E0_4164::
@@ -245,11 +245,11 @@ Jump_0E0_4164::
     call WriteVRAMByte
     ret
 
-; entry 4 of the `rst $00` table in RunWC5FEState_E0
+; entry 4 of the `rst $00` table in RunDebugSubState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wBattleEndFlag
 ; writes: wDebugSubState, wBattleEndFlag
-RunWC5FEState_E0_Case04::
+RunDebugSubState_E0_Case04::
 Jump_0E0_4175:: ; address name
     ld a, [wJoypadPressed]
     bit 2, a
@@ -280,7 +280,7 @@ Jump_0E0_419B::
     and a, $01
     xor a, $01
     ld [wBattleEndFlag], a
-    call RunWC5FEState_E0_Shared03
+    call RunDebugSubState_E0_Shared03
     ret
 
 Jump_0E0_41AC::
@@ -292,10 +292,10 @@ Jump_0E0_41AC::
     call WriteVRAMByte
     ret
 
-; entry 5 of the `rst $00` table in RunWC5FEState_E0
+; entry 5 of the `rst $00` table in RunDebugSubState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState, wDebugState
-RunWC5FEState_E0_Case05::
+RunDebugSubState_E0_Case05::
 Jump_0E0_41BD:: ; address name
     xor a, a
     ld [wDebugSubState], a
@@ -303,10 +303,10 @@ Jump_0E0_41BD:: ; address name
     ld [wDebugState], a
     ret
 
-; only called from routines of RunWC5FEState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunWC5FEState_E0_Case01, RunWC5FEState_E0_Case00)
+; only called from routines of RunDebugSubState_E0 (E-0098)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case01, RunDebugSubState_E0_Case00)
 ; reads: wDebugCursor
-RunWC5FEState_E0_Shared01::
+RunDebugSubState_E0_Shared01::
 Func_0E0_41C7:: ; address name
     ld a, [wDebugCursor]
     and a, $01
@@ -329,7 +329,7 @@ Jump_0E0_41D6::
     db $BB, $C3, $BB
 
 ; writes the two nibbles of wC5F9, each plus 1, as tiles at vBGMap0 + $CA; copies string wC5F9 of category 4 (skill names) to wC130 (CopyStringHLToDE) and shows string 5 of category 8 (ShowString_Bank08) (E-0112)
-; 3 call sites from 2 routines (e.g. RunWC5FEState_E0_Case02, RunWC5FEState_E0_Case00)
+; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_Case02, RunDebugSubState_E0_Case00)
 ; reads: wDebugValue0
 ; writes: wStringCategory, wStringIndex
 ; points at: wTextBuf0
@@ -357,10 +357,10 @@ Func_0E0_41E9:: ; address name
     farcall ShowString_Bank08
     ret
 
-; only called from routines of RunWC5FEState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunWC5FEState_E0_Case03, RunWC5FEState_E0_Case00)
+; only called from routines of RunDebugSubState_E0 (E-0098)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case03, RunDebugSubState_E0_Case00)
 ; reads: wDebugValue1, wDigits
-RunWC5FEState_E0_Shared02::
+RunDebugSubState_E0_Shared02::
 Func_0E0_421F:: ; address name
     ld a, [wDebugValue1]
     ld l, a
@@ -400,10 +400,10 @@ Jump_0E0_424E::
     call WriteVRAMByte
     ret
 
-; only called from routines of RunWC5FEState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunWC5FEState_E0_Case04, RunWC5FEState_E0_Case00)
+; only called from routines of RunDebugSubState_E0 (E-0098)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case04, RunDebugSubState_E0_Case00)
 ; reads: wBattleEndFlag
-RunWC5FEState_E0_Shared03::
+RunDebugSubState_E0_Shared03::
 Func_0E0_425A:: ; address name
     ld a, [wBattleEndFlag]
     and a, $01
@@ -425,7 +425,7 @@ Jump_0E0_4269::
     ret
 
 ; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
-; 3 call sites from 2 routines (e.g. RunWC5FEState_E0_Case00, RunWC5FDState_E0_Case0D_Case00)
+; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_Case00, RunDebugState_E0_Case0D_Case00)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHLThenDefault_BankE0::
 Func_0E0_4279:: ; address name
@@ -451,7 +451,7 @@ Func_0E0_4279:: ; address name
     ret
 
 ; shows the selected string (ShowString_Bank09) in a window at HL with size DE, then restores the default window (vTiles1, $1202) (E-0121)
-; 1 call site from 1 routine (e.g. RunWC5FEState_E0_Case00)
+; 1 call site from 1 routine (e.g. RunDebugSubState_E0_Case00)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank09AtHLSizeDEThenDefault::
 Func_0E0_42A6:: ; address name
@@ -507,31 +507,31 @@ Func_0E0_42A6:: ; address name
 ; runs the routine for wC5FD (jump table of fourteen) (E-0122)
 ; 2 call sites from 2 routines (e.g. CallFunc443BInBankE0, CallFunc443BInBankE0_BankA0)
 ; reads: wDebugState
-RunWC5FDState_E0::
+RunDebugState_E0::
 Func_0E0_443B:: ; address name
     ld a, [wDebugState]
     rst $00
-    dw RunWC5FDState_E0_Case00
-    dw RunWC5FDState_E0_Case01
-    dw RunWC5FDState_E0_Case02
-    dw RunWC5FDState_E0_Case03
-    dw RunWC5FDState_E0_Case04
-    dw RunWC5FDState_E0_Case05
-    dw RunWC5FDState_E0_Case06
+    dw RunDebugState_E0_Case00
+    dw RunDebugState_E0_Case01
+    dw RunDebugState_E0_Case02
+    dw RunDebugState_E0_Case03
+    dw RunDebugState_E0_Case04
+    dw RunDebugState_E0_Case05
+    dw RunDebugState_E0_Case06
     dw DrawTileMap4946AndStep
-    dw RunWC5FDState_E0_Case08
-    dw RunWC5FDState_E0_Case09
-    dw RunWC5FDState_E0_Case0A
-    dw RunWC5FDState_E0_Case0B
-    dw RunWC5FDState_E0_Case0C
-    dw RunWC5FDState_E0_Case0D
+    dw RunDebugState_E0_Case08
+    dw RunDebugState_E0_Case09
+    dw RunDebugState_E0_Case0A
+    dw RunDebugState_E0_Case0B
+    dw RunDebugState_E0_Case0C
+    dw RunDebugState_E0_Case0D
 
-; entry 0 of the `rst $00` table in RunWC5FDState_E0
+; entry 0 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDebugSubState
 ; writes: wStringCategory, wStringIndex
 ; points at: wDebugState
-RunWC5FDState_E0_Case00::
+RunDebugState_E0_Case00::
 Jump_0E0_445B:: ; address name
     ld hl, vTiles1 + $6D0
     ld de, $2301
@@ -553,11 +553,11 @@ Jump_0E0_445B:: ; address name
     ret
     db $24, $98, $2A, $98
 
-; entry 1 of the `rst $00` table in RunWC5FDState_E0
+; entry 1 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDebugSubState
 ; points at: wBattleMeter, wDebugState
-RunWC5FDState_E0_Case01::
+RunDebugState_E0_Case01::
 Jump_0E0_448E:: ; address name
     ld a, [wDebugSubState]
     or a, a
@@ -576,13 +576,13 @@ Jump_0E0_449A::
     call DrawSlotHPMPStats_BankE0
     ld hl, vBGMap0 + $20B
     ld de, wBattleMeter
-    call RunWC5FDState_E0_Case01_Sub01
+    call RunDebugState_E0_Case01_Sub01
     ld hl, wDebugState
     inc [hl]
     ret
 
 ; C = slot: unless its wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words (Func_0E0_4593 for each) at the position from the table at $4652 (C & 3); the rest is not read (E-0112)
-; 3 call sites from 1 routine (e.g. RunWC5FDState_E0_Case01)
+; 3 call sites from 1 routine (e.g. RunDebugState_E0_Case01)
 ; writes: hTemp0, hTemp1
 ; points at: wBattleSlotOut, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wBattleLevel, wBattleATK, wBattleDEF, ...
 DrawSlotHPMPStats_BankE0::
@@ -722,12 +722,12 @@ Func_0E0_4593:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, RunWC5FDState_E0_Case01_Sub01
+    jr nc, RunDebugState_E0_Case01_Sub01
     inc d
 
-; only called from RunWC5FDState_E0_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case01)
-RunWC5FDState_E0_Case01_Sub01::
+; only called from RunDebugState_E0_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case01)
+RunDebugState_E0_Case01_Sub01::
 Func_0E0_459A:: ; address name
     call WordAtDEToPackedBCD
 
@@ -804,7 +804,7 @@ Jump_0E0_45E3::
     ret
 
 ; wC8C0/wC8C1 = the word at DE, wC8C2 = 0, then Number24ToPackedBCD; BC, HL kept (E-0118)
-; 2 call sites from 2 routines (e.g. RunWC5FDState_E0_Case01_Sub01, DrawSlotHPMPStats_BankE0_Sub01)
+; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case01_Sub01, DrawSlotHPMPStats_BankE0_Sub01)
 ; writes: wDigits
 WordAtDEToPackedBCD::
 Func_0E0_45EE:: ; address name
@@ -872,12 +872,12 @@ Jump_0E0_4634::
     db $C6, $98, $CC, $98, $D2, $98, $42, $98, $48, $98, $4E, $98, $46, $99, $4C, $99
     db $52, $99, $0B, $0A, $09, $08, $EF
 
-; entry 2 of the `rst $00` table in RunWC5FDState_E0
+; entry 2 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugSubState
 ; writes: wBattlePartyCount, wBattleFoeCount, wDebugState, wDebugSubState, wEffectId
 ; points at: wWorkBuf, wDebugState
-RunWC5FDState_E0_Case02::
+RunDebugState_E0_Case02::
 Jump_0E0_4663:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
@@ -944,12 +944,12 @@ Jump_0E0_46D1::
     ld [wDebugState], a
     ret
 
-; entry 3 of the `rst $00` table in RunWC5FDState_E0
+; entry 3 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattlePartyCount, wLinkRole
 ; writes: wDebugValue3
 ; points at: wScreenTileBuffer, wLevelUpGains
-RunWC5FDState_E0_Case03::
+RunDebugState_E0_Case03::
 Jump_0E0_46DD:: ; address name
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -999,17 +999,17 @@ Jump_0E0_4710::
     ld [wDebugValue3], a
     ret
 
-; entry 4 of the `rst $00` table in RunWC5FDState_E0
+; entry 4 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
-RunWC5FDState_E0_Case04::
+RunDebugState_E0_Case04::
 Jump_0E0_4724:: ; address name
     call DrawTileMap4946AndStep
     ret
 
-; entry 5 of the `rst $00` table in RunWC5FDState_E0
+; entry 5 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotResistances, wDebugState
-RunWC5FDState_E0_Case05::
+RunDebugState_E0_Case05::
 Jump_0E0_4728:: ; address name
     ld hl, vBGMap0 + $61
     ld de, wSlotResistances
@@ -1034,7 +1034,7 @@ Jump_0E0_4728:: ; address name
     ret
 
 ; writes a run of 2-bit fields from [DE] onward as digit tiles with the four DrawBitsNN routines, five per row, moving HL to the next BG map row (+$1B) after each five; the end is not read (E-0112)
-; 6 call sites from 1 routine (e.g. RunWC5FDState_E0_Case05)
+; 6 call sites from 1 routine (e.g. RunDebugState_E0_Case05)
 DrawPacked2BitFieldsInRows::
 Func_0E0_4763:: ; address name
     ld a, [de]
@@ -1139,11 +1139,11 @@ Jump_0E0_47F1::
     call WriteVRAMByteInc
     ret
 
-; entry 6 of the `rst $00` table in RunWC5FDState_E0
+; entry 6 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; writes: wDebugState
-RunWC5FDState_E0_Case06::
+RunDebugState_E0_Case06::
 Jump_0E0_47F9:: ; address name
     ld a, [wJoypadPressed]
     and a, $01
@@ -1153,7 +1153,7 @@ Jump_0E0_47F9:: ; address name
     ret
 
 ; writes the 20 x 16 tile map $4946 to vBGMap0 + $20, then wC5FD += 1 (E-0124)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case04)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case04)
 ; points at: wDebugState
 DrawTileMap4946AndStep::
 Func_0E0_4804:: ; address name
@@ -1181,10 +1181,10 @@ Jump_0E0_480F::
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in RunWC5FDState_E0
+; entry 8 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSkills, wDebugState
-RunWC5FDState_E0_Case08::
+RunDebugState_E0_Case08::
 Jump_0E0_4825:: ; address name
     ld de, wBattleSkills
     ld hl, vBGMap0 + $62
@@ -1210,7 +1210,7 @@ Jump_0E0_4825:: ; address name
     ret
 
 ; DrawFourBytesAsHexRows at HL, then the next four bytes in a second column three entries to the right (E-0112)
-; 6 call sites from 1 routine (e.g. RunWC5FDState_E0_Case08)
+; 6 call sites from 1 routine (e.g. RunDebugState_E0_Case08)
 DrawEightBytesAsHexColumns::
 Func_0E0_4863:: ; address name
     push hl
@@ -1266,7 +1266,7 @@ Jump_0E0_4898::
     ret
 
 ; runs Func_0E0_48B7 for B = 0, 1, 2 on the 78-byte records from wD0ED + 3 * $4E (E-0122)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case08)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case08)
 Run48B7ForThreeBattlerRecords::
 Func_0E0_489C:: ; address name
     ld de, $004E
@@ -1374,11 +1374,11 @@ Jump_0E0_4929::
     ret
     db $E2, $99, $E8, $99, $EE, $99
 
-; entry 9 of the `rst $00` table in RunWC5FDState_E0
+; entry 9 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; writes: wDebugState
-RunWC5FDState_E0_Case09::
+RunDebugState_E0_Case09::
 Jump_0E0_493B:: ; address name
     ld a, [wJoypadPressed]
     and a, $02
@@ -1418,17 +1418,17 @@ Jump_0E0_493B:: ; address name
     ds $12, $B4
     db $B5
 
-; entry 10 of the `rst $00` table in RunWC5FDState_E0
+; entry 10 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectId, wJoypadPressed
 ; writes: wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugState, wDebugSubState, wDebugCounter, ...
 ; points at: wDebugSubState, wWorkBuf
-RunWC5FDState_E0_Case0A::
+RunDebugState_E0_Case0A::
 Jump_0E0_4A86:: ; address name
     ld a, [wEffectId]
     cp a, $FF
     jr z, Jump_0E0_4A94
-    farcall RunWC5FDState_E0_Case0A_Sub01
+    farcall RunDebugState_E0_Case0A_Sub01
     ret
 
 Jump_0E0_4A94::
@@ -1457,7 +1457,7 @@ Jump_0E0_4AA8::
     ld [hl], a
 
 ; writes A as two hex-digit tiles (0-9 as $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A, then the high digit (the second write is not read to its end) (E-0112)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case02)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case02)
 DrawHexByteAtBGMap8A::
 Func_0E0_4ABB:: ; address name
     push af
@@ -1521,7 +1521,7 @@ Jump_0E0_4AF8::
     call DrawSlotStatusBitsDebug
     xor a, a
     ld [wDebugCounter], a
-    call ReadBGTileAtWC5FFCell
+    call ReadBGTileAtDebugCounterCell
     ret
 
 Jump_0E0_4B2D::
@@ -1545,12 +1545,12 @@ Jump_0E0_4B2D::
     ld [wEffectId], a
     ret
 
-; entry 11 of the `rst $00` table in RunWC5FDState_E0
+; entry 11 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuRowCount, wTemp0, wTemp1, wDebugSubState, wDebugCounter
 ; writes: wDebugCounter, wMenuRowCount, wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugState, ...
 ; points at: wDebugSubState, wDebugCounter, wBattleStatus, wWorkBuf
-RunWC5FDState_E0_Case0B::
+RunDebugState_E0_Case0B::
 Jump_0E0_4B54:: ; address name
     call BlinkWC0A0Tile
     ld a, [wJoypadPressed]
@@ -1568,7 +1568,7 @@ Jump_0E0_4B69::
     call DrawSlotStatusBitsDebug
     xor a, a
     ld [wDebugCounter], a
-    call ReadBGTileAtWC5FFCell
+    call ReadBGTileAtDebugCounterCell
     ret
 
 Jump_0E0_4B74::
@@ -1673,7 +1673,7 @@ Jump_0E0_4C09::
     ld [hl], a
 
 Jump_0E0_4C10::
-    call ReadBGTileAtWC5FFCell
+    call ReadBGTileAtDebugCounterCell
     ret
 
 Jump_0E0_4C14::
@@ -1736,7 +1736,7 @@ Jump_0E0_4C6B::
     db $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F, $01, $02, $04, $08, $10, $20, $40, $80
 
 ; writes either $C3 (bit 3 of wFrameCounterLo clear) or wMenuRowCount at the VRAM address in wC0A0/1 (E-0122)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0B)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0B)
 ; reads: wTemp0, wTemp1, wFrameCounterLo, wMenuRowCount
 BlinkWC0A0Tile::
 Func_0E0_4C7E:: ; address name
@@ -1754,31 +1754,31 @@ Jump_0E0_4C92::
     call WriteVRAMByte
     ret
 
-; entry 12 of the `rst $00` table in RunWC5FDState_E0
+; entry 12 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
-RunWC5FDState_E0_Case0C::
+RunDebugState_E0_Case0C::
 Jump_0E0_4C96:: ; address name
-    call RunWC5FEState_E0
+    call RunDebugSubState_E0
     ret
 
-; entry 13 of the `rst $00` table in RunWC5FDState_E0
+; entry 13 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDebugSubState
-RunWC5FDState_E0_Case0D::
+RunDebugState_E0_Case0D::
 Jump_0E0_4C9A:: ; address name
     ld a, [wDebugSubState]
     rst $00
-    dw RunWC5FDState_E0_Case0D_Case00
-    dw RunWC5FDState_E0_Case0D_Case01
-    dw RunWC5FDState_E0_Case0D_Case02
-    dw RunWC5FDState_E0_Case0D_Case03
-    dw RunWC5FDState_E0_Case0D_Case04
-    dw RunWC5FDState_E0_Case0D_Case05
+    dw RunDebugState_E0_Case0D_Case00
+    dw RunDebugState_E0_Case0D_Case01
+    dw RunDebugState_E0_Case0D_Case02
+    dw RunDebugState_E0_Case0D_Case03
+    dw RunDebugState_E0_Case0D_Case04
+    dw RunDebugState_E0_Case0D_Case05
 
-; entry 0 of the `rst $00` table in RunWC5FDState_E0_Case0D
+; entry 0 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex, wBattleActor, wDebugSubState
-RunWC5FDState_E0_Case0D_Case00::
+RunDebugState_E0_Case0D_Case00::
 Jump_0E0_4CAA:: ; address name
     ld hl, vTiles2 + $10
     ld de, $1001
@@ -1820,36 +1820,36 @@ Jump_0E0_4CDB::
     ld [wDebugSubState], a
     ret
 
-; entry 1 of the `rst $00` table in RunWC5FDState_E0_Case0D
+; entry 1 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wPersonalityIndex, wDebugSubState
-RunWC5FDState_E0_Case0D_Case01::
+RunDebugState_E0_Case0D_Case01::
 Jump_0E0_4CF6:: ; address name
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_BankE0
     ld [wPersonalityIndex], a
-    farcall RunWC5FDState_E0_Case0D_Case01_Sub01
+    farcall RunDebugState_E0_Case0D_Case01_Sub01
     ld a, $02
     ld [wDebugSubState], a
     ret
 
-; entry 2 of the `rst $00` table in RunWC5FDState_E0_Case0D
+; entry 2 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunWC5FDState_E0_Case0D_Case02::
+RunDebugState_E0_Case0D_Case02::
 Jump_0E0_4D0B:: ; address name
-    farcall RunWC5FDState_E0_Case0D_Case02_Sub01
+    farcall RunDebugState_E0_Case0D_Case02_Sub01
     ld a, $03
     ld [wDebugSubState], a
     ret
 
-; entry 3 of the `rst $00` table in RunWC5FDState_E0_Case0D
+; entry 3 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wBattleActor
 ; writes: wDebugSubState, wBattleActor
 ; points at: wBattleSubPhase
-RunWC5FDState_E0_Case0D_Case03::
+RunDebugState_E0_Case0D_Case03::
 Jump_0E0_4D17:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1879,7 +1879,7 @@ Jump_0E0_4D3B::
     dec a
     and a, $07
     ld [wBattleActor], a
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr z, Jump_0E0_4D3B
     ld a, $01
     ld [wDebugSubState], a
@@ -1894,7 +1894,7 @@ Jump_0E0_4D53::
     inc a
     and a, $07
     ld [wBattleActor], a
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr z, Jump_0E0_4D53
     ld a, $01
     ld [wDebugSubState], a
@@ -1910,11 +1910,11 @@ Jump_0E0_4D67::
 Jump_0E0_4D71::
     ret
 
-; entry 4 of the `rst $00` table in RunWC5FDState_E0_Case0D
+; entry 4 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wDebugSubState, wDebugState
 ; points at: wBattleActionChoice
-RunWC5FDState_E0_Case0D_Case04::
+RunDebugState_E0_Case0D_Case04::
 Jump_0E0_4D72:: ; address name
     xor a, a
     ld [wBattleActor], a
@@ -1926,12 +1926,12 @@ Jump_0E0_4D72:: ; address name
     ld bc, $0010
     jp FillBytes
 
-; entry 5 of the `rst $00` table in RunWC5FDState_E0_Case0D
+; entry 5 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunWC5FDState_E0_Case0D_Case05::
+RunDebugState_E0_Case0D_Case05::
 Jump_0E0_4D89:: ; address name
-    farcall RunWC5FDState_E0_Case0D_Case05_Sub01
+    farcall RunDebugState_E0_Case0D_Case05_Sub01
     ld a, $02
     ld [wDebugSubState], a
     ret
@@ -1949,10 +1949,10 @@ Jump_0E0_4D89:: ; address name
     db $B5
 
 ; wC5FF = row (high nibble) and column (low nibble): stores vBGMap0 + $89 + 32 * row + column in wC0A0/1 and reads the tile there into wMenuRowCount (E-0121)
-; 3 call sites from 2 routines (e.g. RunWC5FDState_E0_Case0B, DrawHexByteAtBGMap8A)
+; 3 call sites from 2 routines (e.g. RunDebugState_E0_Case0B, DrawHexByteAtBGMap8A)
 ; reads: wDebugCounter
 ; writes: wTemp0, wTemp1, wMenuRowCount
-ReadBGTileAtWC5FFCell::
+ReadBGTileAtDebugCounterCell::
 Func_0E0_4EFD:: ; address name
     ld a, [wDebugCounter]
     ld b, a
@@ -1982,7 +1982,7 @@ Func_0E0_4EFD:: ; address name
     ret
 
 ; debug: draws the four-tile strip for wC5FE, then the 9 status bytes of slot wC5FE as rows of 0/1 digit tiles from vBGMap0 + $89 (E-0127)
-; 2 call sites from 2 routines (e.g. RunWC5FDState_E0_Case0B, DrawHexByteAtBGMap8A)
+; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0B, DrawHexByteAtBGMap8A)
 ; reads: wDebugSubState, wBattleArg0, wBattleArg1
 ; writes: wBattleArg0, wBattleArg1
 ; points at: wBattleStatus
@@ -2093,11 +2093,11 @@ Data_0E0_4FC6:: ; heuristic: target of a monotone pointer table; C0
 Data_0E0_4FCA:: ; heuristic: target of a monotone pointer table; C0
     db $F8, $F9, $E3, $C3
 
-; DrawSkillRecordByte0DigitsForWC5F9, Func_0E0_502B, then far-calls Func_03A_53B9 (E-0122)
-; 2 call sites from 2 routines (e.g. DrawHexByteAtBGMap8A, RunWC5FDState_E0_Case02)
+; DrawSkillRecordByte0DigitsForDebugValue0, Func_0E0_502B, then far-calls Func_03A_53B9 (E-0122)
+; 2 call sites from 2 routines (e.g. DrawHexByteAtBGMap8A, RunDebugState_E0_Case02)
 DrawSkillByte0AndRun502BAnd53B9::
 Func_0E0_4FCE:: ; address name
-    call DrawSkillRecordByte0DigitsForWC5F9
+    call DrawSkillRecordByte0DigitsForDebugValue0
     call DrawSkillByte0AndRun502BAnd53B9_Sub02
     farcall DrawSkillByte0AndRun502BAnd53B9_Sub01
     ret
@@ -2107,7 +2107,7 @@ Func_0E0_4FCE:: ; address name
 ; reads: wDebugValue0, wRecordBufferData, wDigits
 ; writes: wBattleArg0, wRecordBuffer, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wRecordBufferData
-DrawSkillRecordByte0DigitsForWC5F9::
+DrawSkillRecordByte0DigitsForDebugValue0::
 Func_0E0_4FDB:: ; address name
     ld a, $00
     ld [wBattleArg0], a
@@ -2227,7 +2227,7 @@ Func_0E0_502B:: ; address name
     ret
 
 ; copies a 20 x 18 tile map from E0:$511B to vBGMap0 (CopyRectFromBankToVRAM) (E-0116)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case00)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case00)
 DrawFullScreenFromBankE0_511B::
 Func_0E0_50EE:: ; address name
     ld hl, vBGMap0
@@ -2238,7 +2238,7 @@ Func_0E0_50EE:: ; address name
     ret
 
 ; copies a 20 x 18 tile map from E0:$5283 to vBGMap0 (E-0116)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case02)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case02)
 DrawFullScreenFromBankE0_5283::
 Func_0E0_50FD:: ; address name
     ld hl, vBGMap0
@@ -2304,7 +2304,7 @@ Func_0E0_510C:: ; address name
     db $B5
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case00)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case00)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank09AtTilesHL_BankE0::
@@ -2352,7 +2352,7 @@ Func_0E0_558E:: ; address name
     call QueueSoundEffect
     ret
 
-; loads wBattleActor, wBattleTarget, wBattleActionId and wDAD3 from the 4-byte entry A of the table at $55FB, then far-calls SelectEffectByWDAD3Flags (a test or debug entry list) (E-0118)
+; loads wBattleActor, wBattleTarget, wBattleActionId and wDAD3 from the 4-byte entry A of the table at $55FB, then far-calls SelectEffectByEffectFlags2Flags (a test or debug entry list) (E-0118)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wBattleTarget, wBattleActionId, wEffectFlags2
 RunEffectTestEntryA:: ; heuristic: follows a terminator; C0
@@ -2369,16 +2369,16 @@ Func_0E0_559E:: ; address name
     ld [wBattleActionId], a
     ld a, [hl]
     ld [wEffectFlags2], a
-    farcall SelectEffectByWDAD3Flags
+    farcall SelectEffectByEffectFlags2Flags
     ret
     INCBIN "dwm2-cobi-us.gbc", $3815BF, $108
 
-; only called from RunWC5FDState_E0_Case0D_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case01)
+; only called from RunDebugState_E0_Case0D_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case01)
 ; reads: wBattleActor, wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 ; points at: wBattleActionChoice
-RunWC5FDState_E0_Case0D_Case01_Sub01::
+RunDebugState_E0_Case0D_Case01_Sub01::
 Func_0E0_56C7:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -2420,7 +2420,7 @@ Jump_0E0_570B::
     ret
 
 ; when the actor's wBattleTargetChoice entry is $FF (no target yet), far-calls ChooseActionTarget (E-0112)
-; 2 call sites from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case01_Sub01)
+; 2 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case01_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleTargetChoice
 ChooseTargetIfUnset::
@@ -2437,12 +2437,12 @@ Func_0E0_5715:: ; address name
 Jump_0E0_572C::
     ret
 
-; only called from RunWC5FDState_E0_Case0D_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02)
+; only called from RunDebugState_E0_Case0D_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02)
 ; reads: wBattleActor, wLinkMode, hTemp3, hTemp2
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wDigits, hTemp1, ...
 ; points at: wSlotTactic, wSlotAIMode, wBattleSkillsPrefix, wAIWeights, wBattleActionChoice, wAIChoiceOrder
-RunWC5FDState_E0_Case0D_Case02_Sub01::
+RunDebugState_E0_Case0D_Case02_Sub01::
 Func_0E0_572D:: ; address name
     call DisplayedSlotOfActor
     ld hl, $5A05
@@ -2682,7 +2682,7 @@ Jump_0E0_58BB::
     push bc
     push hl
     ld c, $00
-    call RunWC5FDState_E0_Case0D_Case02_Sub01_Sub02
+    call RunDebugState_E0_Case0D_Case02_Sub01_Sub02
     pop hl
     pop bc
 
@@ -2736,7 +2736,7 @@ Jump_0E0_5905::
     di
     call WriteVRAMByteInc
     ei
-    call RunWC5FDState_E0_Case0D_Case02_Sub01_Sub01
+    call RunDebugState_E0_Case0D_Case02_Sub01_Sub01
     ld hl, $5A05
     call ReadWordTableEntry_Bank00
     ld d, h
@@ -2783,7 +2783,7 @@ Jump_0E0_5941::
     push bc
     push hl
     ld c, $00
-    call RunWC5FDState_E0_Case0D_Case02_Sub01_Sub03
+    call RunDebugState_E0_Case0D_Case02_Sub01_Sub03
     pop hl
     pop bc
     jr Jump_0E0_5970
@@ -2819,7 +2819,7 @@ Jump_0E0_597E::
     ret
 
 ; A = wBattleActor, with bit 2 flipped when wC58A = 1 and wC57F bit 1 is set (the side swap of the battle panels) (E-0118)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02_Sub01)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRole
 DisplayedSlotOfActor::
@@ -2834,11 +2834,11 @@ Func_0E0_5992:: ; address name
     xor a, $04
     ret
 
-; only called from RunWC5FDState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02_Sub01)
+; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
 ; reads: wBattleActor, wLinkMode
 ; points at: wBattleTargetChoice, wLinkRole
-RunWC5FDState_E0_Case0D_Case02_Sub01_Sub01::
+RunDebugState_E0_Case0D_Case02_Sub01_Sub01::
 Func_0E0_59A4:: ; address name
     ld a, [wBattleActor]
     add a, a
@@ -2859,10 +2859,10 @@ Jump_0E0_59B0::
     xor a, $04
     ret
 
-; only called from RunWC5FDState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02_Sub01)
+; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
 ; reads: hTemp1, hTemp0
-RunWC5FDState_E0_Case0D_Case02_Sub01_Sub02::
+RunDebugState_E0_Case0D_Case02_Sub01_Sub02::
 Func_0E0_59C0:: ; address name
     ldh a, [hTemp1]
     and a, $F0
@@ -2880,10 +2880,10 @@ Jump_0E0_59CE::
     call WriteVRAMByteInc
     ei
 
-; only called from RunWC5FDState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02_Sub01)
+; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
 ; reads: hTemp1, hTemp0
-RunWC5FDState_E0_Case0D_Case02_Sub01_Sub03::
+RunDebugState_E0_Case0D_Case02_Sub01_Sub03::
 Func_0E0_59D4:: ; address name
     ldh a, [hTemp1]
     and a, $0F
@@ -2954,11 +2954,11 @@ Data_0E0_5A2D:: ; heuristic: target of a monotone pointer table; C0
 Data_0E0_5A31:: ; heuristic: target of a monotone pointer table; C0
     db $83, $84, $04, $C3
 
-; only called from RunWC5FDState_E0_Case0D_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case05)
+; only called from RunDebugState_E0_Case0D_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case05)
 ; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
-RunWC5FDState_E0_Case0D_Case05_Sub01::
+RunDebugState_E0_Case0D_Case05_Sub01::
 Func_0E0_5A35:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -2993,7 +2993,7 @@ Jump_0E0_5A6C::
     ret
 
 ; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
-; 3 call sites from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02_Sub01)
+; 3 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHLThenDefault_BankE0_5A79::
 Func_0E0_5A79:: ; address name
@@ -3029,7 +3029,7 @@ Func_0E0_5AD3:: ; address name
     ld a, [wWorkBuf]
     or a, a
     jp z, Jump_0E0_6FF7
-    farcall RunFieldEventWC90D
+    farcall RunFieldEventFieldEventKind
     call IncrementSpriteSlotCounters
     ld a, [wWorkBuf + $2]
     dec a
@@ -7115,7 +7115,7 @@ Func_0E0_75BF:: ; address name
     ld [hl+], a
     ld a, [wDMGPaletteOBP1]
     ld [hl], a
-    call ResetFadeFromWC5E9
+    call ResetFadeFromDMGPaletteBGP
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_0E0_7640
@@ -7374,7 +7374,7 @@ Data_0E0_79BA:: ; heuristic: target of a monotone pointer table; C0
     INCBIN "dwm2-cobi-us.gbc", $3839BE, $C2
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
-; 2 call sites from 2 routines (e.g. RunWC5FDState_E0_Case0D_Case02_Sub01, RunWC5FDState_E0_Case0D_Case01)
+; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_Sub01, RunDebugState_E0_Case0D_Case01)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankE0::
 Func_0E0_7A80:: ; address name

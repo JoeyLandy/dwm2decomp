@@ -199,13 +199,13 @@ Jump_011_4105::
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     pop de
     ld c, $01
     ret
 
-; special maps use RunWCC44Type_596F; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
-; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
+; special maps use RunMapType_596F; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
+; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunFieldActionRequestActionIfBit7_Case03)
 ; reads: wMapType, hMapId, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestY
 ; writes: hPlayerStateFlags, wWarpDestFacing, wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
 ; points at: wFieldInitStage
@@ -214,7 +214,7 @@ Func_011_4130:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_011_413E
-    farcall RunWCC44Type_596F
+    farcall RunMapType_596F
     ret
 
 Jump_011_413E::
@@ -402,7 +402,7 @@ Jump_011_4235::
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     pop de
     xor a, a
     ld [wJoypadPressed], a
@@ -566,7 +566,7 @@ Func_011_4340:: ; address name
     or a, $20
     and a, $7F
     ldh [hPlayerStateFlags], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     pop de
     ld c, $01
     ret
@@ -730,7 +730,7 @@ Jump_011_442B::
     ldh a, [hPlayerStateFlags]
     or a, $20
     ldh [hPlayerStateFlags], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     ld c, $01
     ret
 

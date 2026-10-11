@@ -562,17 +562,17 @@ Func_002_42FA:: ; address name
 Data_002_4322:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $7C, $FF, $7F, $E0, $01, $00, $00
 
-; only called from RunWC46BMenuState_Case04 (E-0047)
-; 2 call sites from 1 routine (e.g. RunWC46BMenuState_Case04)
+; only called from RunMenuStateMenuState_Case04 (E-0047)
+; 2 call sites from 1 routine (e.g. RunMenuStateMenuState_Case04)
 ; reads: wIsCGB, wDMGPaletteBGP, wDMGPaletteOBP0
 ; writes: wDMGPaletteBytes
 ; points at: wDMGPaletteBytes
-RunWC46BMenuState_Case04_Sub01::
+RunMenuStateMenuState_Case04_Sub01::
 Func_002_432A:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
-    call RunWD780StepEveryOtherFrame
+    call RunScreenStateStepEveryOtherFrame
     ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp a, [hl]
@@ -582,10 +582,10 @@ Func_002_432A:: ; address name
     jp Jump_002_4519
 
 ; wD781 += 1; on odd values, unless wD780 is $FF, runs the step for wD780 (jump table) (E-0122)
-; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case04_Sub01)
+; 1 call site from 1 routine (e.g. RunMenuStateMenuState_Case04_Sub01)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep
-RunWD780StepEveryOtherFrame::
+RunScreenStateStepEveryOtherFrame::
 Func_002_4345:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -599,17 +599,17 @@ Jump_002_4351::
     cp a, $FF
     ret z
     rst $00
-    dw RunWD780StepEveryOtherFrame_Case00
-    dw RunWD780StepEveryOtherFrame_Case01
-    dw RunWD780StepEveryOtherFrame_Case02
-    dw RunWD780StepEveryOtherFrame_Case03
+    dw RunScreenStateStepEveryOtherFrame_Case00
+    dw RunScreenStateStepEveryOtherFrame_Case01
+    dw RunScreenStateStepEveryOtherFrame_Case02
+    dw RunScreenStateStepEveryOtherFrame_Case03
 
-; entry 0 of the `rst $00` table in RunWD780StepEveryOtherFrame
+; entry 0 of the `rst $00` table in RunScreenStateStepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, rSTAT, wScreenState
 ; writes: wScreenState
 ; points at: wWorkBuf
-RunWD780StepEveryOtherFrame_Case00::
+RunScreenStateStepEveryOtherFrame_Case00::
 Jump_002_4360:: ; address name
     ld hl, wWorkBuf
     ld a, [wScreenCounter]
@@ -630,11 +630,11 @@ Jump_002_4360:: ; address name
     ld [de], a
     inc de
 
-; only called from RunWD780StepEveryOtherFrame_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. RunWD780StepEveryOtherFrame_Case03)
+; only called from RunScreenStateStepEveryOtherFrame_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. RunScreenStateStepEveryOtherFrame_Case03)
 ; reads: rSTAT, wScreenState
 ; writes: wScreenState
-RunWD780StepEveryOtherFrame_Case03_Sub01::
+RunScreenStateStepEveryOtherFrame_Case03_Sub01::
 Func_002_4380:: ; address name
     di
 
@@ -715,11 +715,11 @@ Jump_002_43C7::
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in RunWD780StepEveryOtherFrame
+; entry 1 of the `rst $00` table in RunScreenStateStepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, rSTAT, wScreenState
 ; writes: wScreenState
-RunWD780StepEveryOtherFrame_Case01::
+RunScreenStateStepEveryOtherFrame_Case01::
 Jump_002_43DA:: ; address name
     ld hl, wWorkBuf + $10
     ld a, [wScreenCounter]
@@ -739,13 +739,13 @@ Jump_002_43DA:: ; address name
     ld a, $90
     ld [de], a
     inc de
-    jp RunWD780StepEveryOtherFrame_Case03_Sub01
+    jp RunScreenStateStepEveryOtherFrame_Case03_Sub01
 
-; entry 2 of the `rst $00` table in RunWD780StepEveryOtherFrame
+; entry 2 of the `rst $00` table in RunScreenStateStepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, rSTAT, wScreenState
 ; writes: wScreenState
-RunWD780StepEveryOtherFrame_Case02::
+RunScreenStateStepEveryOtherFrame_Case02::
 Jump_002_43FD:: ; address name
     ld hl, wWorkBuf + $20
     ld a, [wScreenCounter]
@@ -765,13 +765,13 @@ Jump_002_43FD:: ; address name
     ld a, $A0
     ld [de], a
     inc de
-    jp RunWD780StepEveryOtherFrame_Case03_Sub01
+    jp RunScreenStateStepEveryOtherFrame_Case03_Sub01
 
-; entry 3 of the `rst $00` table in RunWD780StepEveryOtherFrame
+; entry 3 of the `rst $00` table in RunScreenStateStepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter
 ; writes: wScreenCounter, wScreenSubStep, wScreenState
-RunWD780StepEveryOtherFrame_Case03::
+RunScreenStateStepEveryOtherFrame_Case03::
 Jump_002_4420:: ; address name
     ld hl, wWorkBuf + $30
     ld a, [wScreenCounter]
@@ -791,7 +791,7 @@ Jump_002_4420:: ; address name
     ld a, $B0
     ld [de], a
     inc de
-    call RunWD780StepEveryOtherFrame_Case03_Sub01
+    call RunScreenStateStepEveryOtherFrame_Case03_Sub01
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
@@ -810,12 +810,12 @@ Jump_002_445B::
     ld [wScreenState], a
     ret
 
-; only called from RunWC46BMenuState_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case01)
+; only called from RunMenuStateMenuState_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunMenuStateMenuState_Case01)
 ; reads: wScreenCounter
 ; writes: wScreenCounter
 ; points at: wBGPaletteBuffer, wWorkBuf
-RunWC46BMenuState_Case01_Sub01::
+RunMenuStateMenuState_Case01_Sub01::
 Func_002_4463:: ; address name
     ld hl, wBGPaletteBuffer
     ld de, wWorkBuf
@@ -825,7 +825,7 @@ Jump_002_446B::
     push bc
     push hl
     push de
-    call RunWC46BMenuState_Case01_Sub01_Sub01
+    call RunMenuStateMenuState_Case01_Sub01_Sub01
     pop de
     pop hl
     pop bc
@@ -851,12 +851,12 @@ Jump_002_447B::
     ld [wScreenCounter], a
     ret
 
-; only called from RunWC46BMenuState_Case01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case01_Sub01)
+; only called from RunMenuStateMenuState_Case01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunMenuStateMenuState_Case01_Sub01)
 ; reads: wScreenCounter, wTextCounter2, wTextCounter3, wTextCounter4, wScreenSubStep
 ; writes: wTextCounter2, wTextCounter3, wTextCounter4, wScreenSubStep
 ; points at: wTextCounter2
-RunWC46BMenuState_Case01_Sub01_Sub01::
+RunMenuStateMenuState_Case01_Sub01_Sub01::
 Func_002_449A:: ; address name
     ld c, [hl]
     inc hl
@@ -924,7 +924,7 @@ Jump_002_44DA::
     inc a
     ld [wScreenSubStep], a
     cp a, $08
-    jr c, RunWC46BMenuState_Case01_Sub01_Sub01
+    jr c, RunMenuStateMenuState_Case01_Sub01_Sub01
     xor a, a
     ld [wScreenSubStep], a
     ret
@@ -945,7 +945,7 @@ Jump_002_4519::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDMGPaletteOBP0
 ; writes: rOBPD
-WriteCGBObjPaletteFromDMGShadesWC5EA:: ; heuristic: follows a terminator; C0
+WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0:: ; heuristic: follows a terminator; C0
 Func_002_452C:: ; address name
     push hl
     ld a, [wDMGPaletteOBP0]
@@ -1134,7 +1134,7 @@ Func_002_4628:: ; address name
     call MoveIncapacitatedPartyMembersBack
     farcall SetupTownObjectsForMap
     farcall RefreshKeyWorldObjectsOnEntry
-    call WritePlayerNameWithFlag0SuffixToWC130
+    call WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, [wMapType]
     bit 7, a
     jr nz, Jump_002_467D
@@ -1148,7 +1148,7 @@ Jump_002_467D::
 Jump_002_4680::
     farcall LoadPlayerAndFollowerSpriteGraphics
     farcall FindTriggerEntryForCurrentScreen
-    farcall FindTriggerEntryForCurrentScreen_WCCEB
+    farcall FindTriggerEntryForCurrentScreen_ScreenTriggers
     xor a, a
     ld [wFieldActionRequest], a
     ld a, [wFieldReturnPhase]
@@ -1157,7 +1157,7 @@ Jump_002_4680::
     call LoadMapScreen
     farcall LoadMapObjectsForScreen
     farcall SetupMap0BMonsterObjects
-    farcall ClearWC935WhenFieldIdle
+    farcall ClearPendingFieldEventWhenFieldIdle
     jr Jump_002_46BC
 
 Jump_002_46B3::
@@ -1180,7 +1180,7 @@ Jump_002_46BC::
     jr z, Jump_002_46EE
     and a, $7F
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     xor a, a
     ld [wFieldInitFlag], a
 
@@ -1192,7 +1192,7 @@ Jump_002_46EE::
 
 Jump_002_46F7::
     call SendSGBFieldPaletteSet
-    call RunWC8C7Phase
+    call RunFieldReturnPhase
     xor a, a
     ldh [hFieldDrawFlags], a
     ld a, [wIsCGB]
@@ -1206,7 +1206,7 @@ Jump_002_46F7::
 ; 10 call sites from 10 routines (e.g. InitFieldScreen, ScriptCommandF6_Run_Case08, ScriptCommandF7_Run_Case23, ScriptCommandF7_Run_Case23_Sub01, ...)
 ; writes: wTextBuf0
 ; points at: wPlayerName, wTextBuf0
-WritePlayerNameWithFlag0SuffixToWC130::
+WritePlayerNameWithFlag0SuffixToTextBuf0::
 Func_002_470B:: ; address name
     ld hl, wPlayerName
     ld de, wTextBuf0
@@ -1237,21 +1237,21 @@ Jump_002_4735::
 ; runs the routine for wC8C7 & 3 (jump table; phase 3 reuses phase 0) (E-0122)
 ; 1 call site from 1 routine (e.g. InitFieldScreen)
 ; reads: wFieldReturnPhase
-RunWC8C7Phase::
+RunFieldReturnPhase::
 Func_002_4745:: ; address name
     ld a, [wFieldReturnPhase]
     and a, $03
     rst $00
-    dw RunWC8C7Phase_Case00
-    dw RunWC8C7Phase_Case01
-    dw RunWC8C7Phase_Case02
-    dw RunWC8C7Phase_Case00
+    dw RunFieldReturnPhase_Case00
+    dw RunFieldReturnPhase_Case01
+    dw RunFieldReturnPhase_Case02
+    dw RunFieldReturnPhase_Case00
 
-; entry 0 of the `rst $00` table in RunWC8C7Phase
+; entry 0 of the `rst $00` table in RunFieldReturnPhase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wMapType
 ; writes: wFieldReturnPhase, wMenuState, wMenuSubState, wModeState
-RunWC8C7Phase_Case00::
+RunFieldReturnPhase_Case00::
 Jump_002_4753:: ; address name
     xor a, a
     ld [wFieldReturnPhase], a
@@ -1294,25 +1294,25 @@ Jump_002_4792::
     call StartPaletteFade
     ret
 
-; entry 2 of the `rst $00` table in RunWC8C7Phase
+; entry 2 of the `rst $00` table in RunFieldReturnPhase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleKind, wBattleScene, wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wMapType, hPlayerStateFlags, ...
 ; writes: wFieldReturnPhase, wMenuState, wMenuSubState, wModeState, hMapId, hMapScreenX, hMapScreenY, hPlayerFacing, ...
-RunWC8C7Phase_Case02::
+RunFieldReturnPhase_Case02::
 Jump_002_4798:: ; address name
     ld a, [wBattleKind]
     cp a, $05
     jp z, Jump_002_48AE
     ld a, [wBattleScene]
     or a, a
-    jr z, RunWC8C7Phase_Case00
+    jr z, RunFieldReturnPhase_Case00
     cp a, $03
     jp z, Jump_002_4846
     cp a, $02
     jr nz, Jump_002_47B6
     ld a, [wBattleKind]
     cp a, $04
-    jr nz, RunWC8C7Phase_Case00
+    jr nz, RunFieldReturnPhase_Case00
 
 Jump_002_47B6::
     ld a, [wBattleKind]
@@ -1325,7 +1325,7 @@ Jump_002_47B6::
 
 Jump_002_47C6::
     call ResetLeadRecordFields55And5B
-    jr RunWC8C7Phase_Case00
+    jr RunFieldReturnPhase_Case00
 
 Jump_002_47CB::
     xor a, a
@@ -1368,7 +1368,7 @@ Jump_002_47E8::
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_002_4824
-    farcall SaveWCD07RecordToSRAMSlotWCC42
+    farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
 
 Jump_002_4824::
     xor a, a
@@ -1430,17 +1430,17 @@ Jump_002_48AE::
     call RunFunc5E85Twice
     call LoadRecordListNameTiles
     farcall LoadPlayerAndFollowerSpriteGraphics
-    jp RunWC8C7Phase_Case00
+    jp RunFieldReturnPhase_Case00
 
-; entry 1 of the `rst $00` table in RunWC8C7Phase
+; entry 1 of the `rst $00` table in RunFieldReturnPhase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDataBankSave, wMapType, wCurrentKeyIndex, wJoypadPressed
 ; writes: wFieldReturnPhase, wFieldInitStage, wModeState, wCurrentKeyIndex, wMapToggleFlag, wDataBankSave, wMenuState, wMenuSubState, ...
-RunWC8C7Phase_Case01::
+RunFieldReturnPhase_Case01::
 Jump_002_48C3:: ; address name
     xor a, a
     ld [wFieldReturnPhase], a
-    call RunWC8C7Phase_Case01_Sub01
+    call RunFieldReturnPhase_Case01_Sub01
     ld a, [wDataBankSave]
     cp a, $40
     jr nz, Jump_002_48D9
@@ -1617,7 +1617,7 @@ Jump_002_4A0E::
     jr nz, Jump_002_4A1C
     xor a, a
     ld [wDataBankSave], a
-    farcall RunWC8C7Phase_Case01_Sub02
+    farcall RunFieldReturnPhase_Case01_Sub02
     ret
 
 Jump_002_4A1C::
@@ -1629,7 +1629,7 @@ Jump_002_4A1C::
     ret
 
 ; hPlayerFacing and the three follower directions = 0, every follower position = hPlayerX/hPlayerY, wDataBankSave = 0 (E-0117)
-; 3 call sites from 1 routine (e.g. RunWC8C7Phase_Case01)
+; 3 call sites from 1 routine (e.g. RunFieldReturnPhase_Case01)
 ; reads: hPlayerX, hPlayerY
 ; writes: hPlayerFacing, wFollowerRecords, wDataBankSave
 ResetFollowersToPlayer::
@@ -1652,7 +1652,7 @@ Func_002_4A2C:: ; address name
     ret
 
 ; for the lead record wC6FE: field $55 = 0, field $5B = $0001, then far-calls Func_004_4AA8 (E-0122)
-; 1 call site from 1 routine (e.g. RunWC8C7Phase_Case02)
+; 1 call site from 1 routine (e.g. RunFieldReturnPhase_Case02)
 ; reads: wPartyList
 ; writes: rRAMG
 ResetLeadRecordFields55And5B::
@@ -1674,11 +1674,11 @@ Func_002_4A53:: ; address name
     farcall LoadPlayerAndFollowerSpriteGraphics
     ret
 
-; only called from RunWC8C7Phase_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC8C7Phase_Case01)
+; only called from RunFieldReturnPhase_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunFieldReturnPhase_Case01)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wGM2Mode, wCounterPtr0Lo
 ; writes: wObject5, wCounterPtr0Lo, hTemp0
-RunWC8C7Phase_Case01_Sub01::
+RunFieldReturnPhase_Case01_Sub01::
 Func_002_4A7A:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -1707,7 +1707,7 @@ Jump_002_4AA1::
     ld [wCounterPtr0Lo], a
     ld a, $15
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $80
     ld [wObject5], a
     ret
@@ -1799,7 +1799,7 @@ Jump_002_4B13::
     farcall FieldModeStateDispatch_Case00_Sub02
     call FieldModeStateDispatch_Case00_Sub01
     call UpdatePlayerMovement
-    call RunWC468ActionIfBit7
+    call RunFieldActionRequestActionIfBit7
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_002_4B44
@@ -1815,8 +1815,8 @@ Jump_002_4B44::
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
     farcall RunFunc722AAnd6EB7
-    call RunFieldEventWC90D
-    call CallF072B4WhenWCE9DIs59
+    call RunFieldEventFieldEventKind
+    call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
 ; entry 1 of the `rst $00` table in FieldModeStateDispatch
@@ -1835,14 +1835,14 @@ Jump_002_4B5D:: ; address name
 
 Jump_002_4B76::
     call UpdatePlayerMovement
-    call RunWC468ActionIfBit7
+    call RunFieldActionRequestActionIfBit7
 
 Jump_002_4B7C::
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
     farcall RunFunc722AAnd6EB7
-    call RunFieldEventWC90D
-    call CallF072B4WhenWCE9DIs59
+    call RunFieldEventFieldEventKind
+    call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
 ; entry 2 of the `rst $00` table in FieldModeStateDispatch
@@ -1853,19 +1853,19 @@ Jump_002_4B95:: ; address name
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
     farcall RunFunc722AAnd6EB7
-    call RunFieldEventWC90D
-    call CallF072B4WhenWCE9DIs59
+    call RunFieldEventFieldEventKind
+    call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
 ; entry 3 of the `rst $00` table in FieldModeStateDispatch
 ; no direct call (reached through a table, a jump or a vector)
 FieldModeStateDispatch_Case03::
 Jump_002_4BB1:: ; address name
-    farcall RunWC904Step
+    farcall RunBattleTransitionStep
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
     farcall RunFunc722AAnd6EB7
-    call RunFieldEventWC90D
+    call RunFieldEventFieldEventKind
     ret
 
 ; entry 4 of the `rst $00` table in FieldModeStateDispatch
@@ -1876,9 +1876,9 @@ Jump_002_4BB1:: ; address name
 FieldModeStateDispatch_Case04::
 Jump_002_4BCD:: ; address name
     farcall DrawFieldSprites
-    farcall AdvanceHFF99AndRunHFF8BMode
+    farcall AdvancePlayerAnimCounterAndRunPlayerSpriteMode
     farcall RunFunc722AAnd6EB7
-    call RunFieldEventWC90D
+    call RunFieldEventFieldEventKind
     ld a, [wFadeState]
     or a, a
     ret nz
@@ -2065,7 +2065,7 @@ Jump_002_4D28:: ; address name
 
 Jump_002_4D3F::
     call UpdatePlayerMovement
-    call RunWC468ActionIfBit7
+    call RunFieldActionRequestActionIfBit7
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_002_4D6D
@@ -2082,8 +2082,8 @@ Jump_002_4D6D::
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
     farcall RunFunc722AAnd6EB7
-    call RunFieldEventWC90D
-    call CallF072B4WhenWCE9DIs59
+    call RunFieldEventFieldEventKind
+    call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
 ; entry 6 of the `rst $00` table in FieldModeStateDispatch
@@ -2091,7 +2091,7 @@ Jump_002_4D6D::
 ; reads: wMenuSubState
 FieldModeStateDispatch_Case06::
 Jump_002_4D86:: ; address name
-    farcall RunWC46BMenuState
+    farcall RunMenuStateMenuState
     ld a, [wMenuSubState]
     or a, a
     jr nz, Jump_002_4D98
@@ -2125,14 +2125,14 @@ Jump_002_4D99:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 FieldModeStateDispatch_Case08::
 Jump_002_4DCC:: ; address name
-    farcall RunWC5DDState
-    call CallF072B4WhenWCE9DIs59
+    farcall RunGameMode2State
+    call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
 ; when wCE9D = $3B and wCE9C = wCE9B = 0, far-calls Func_0F0_72B4 (E-0122)
 ; 5 call sites from 5 routines (e.g. FieldModeStateDispatch_Case08, FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case02, FieldModeStateDispatch_Case01, ...)
 ; reads: wGM2TimerMinutes, wGM2TimerSeconds, wGM2TimerFrames
-CallF072B4WhenWCE9DIs59::
+CallF072B4WhenGM2TimerMinutesIs59::
 Func_002_4DD6:: ; address name
     ld a, [wGM2TimerMinutes]
     cp a, $3B
@@ -2143,7 +2143,7 @@ Func_002_4DD6:: ; address name
     ld a, [wGM2TimerFrames]
     and a, a
     ret nz
-    farcall ClearWCEC2WhenWCE9DIs59
+    farcall ClearRollCounterWhenGM2TimerMinutesIs59
     ret
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
@@ -2313,7 +2313,7 @@ Jump_002_4EA6::
     ld a, [wPartyWindowFlags]
     bit 7, a
     jr z, Jump_002_4ED3
-    farcall RedrawScreenBufferIfWC8CDBit7
+    farcall RedrawScreenBufferIfPartyWindowFlagsBit7
 
 Jump_002_4ED3::
     ld a, $01
@@ -2358,7 +2358,7 @@ Jump_002_4EF0::
     ld a, [wPartyWindowFlags]
     bit 7, a
     ret z
-    farcall RedrawScreenBufferIfWC8CDBit7
+    farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 Jump_002_4F13::
@@ -2394,7 +2394,7 @@ Jump_002_4F29::
     ld a, [wPartyWindowFlags]
     bit 7, a
     ret z
-    farcall RedrawScreenBufferIfWC8CDBit7
+    farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 ; only called from FieldModeStateDispatch_Case05 (E-0047)
@@ -2486,8 +2486,8 @@ Jump_002_4FAB:: ; address name
     jr Jump_002_4FBC
 
 Jump_002_4FBC::
-    farcall SaveWCD07RecordToSRAMSlotWCC42
-    call RedrawScreenBufferIfWC8CDBit7
+    farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
+    call RedrawScreenBufferIfPartyWindowFlagsBit7
     call SaveScreenBufferToBGMap1
     ld a, $01
     ld [wFieldReturnPhase], a
@@ -2585,7 +2585,7 @@ Jump_002_504A::
     ret
 
 Jump_002_504E::
-    call RedrawScreenBufferIfWC8CDBit7
+    call RedrawScreenBufferIfPartyWindowFlagsBit7
     call SaveScreenBufferToBGMap1
     ld a, $01
     ld [wFieldReturnPhase], a
@@ -2605,7 +2605,7 @@ Jump_002_504E::
 ; unless a fade runs or bit 7 of wC468 is set, runs the field event for wC90D & $0F (jump table of sixteen) (E-0124)
 ; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case04, FieldModeStateDispatch_Case03, FieldModeStateDispatch_Case02, ...)
 ; reads: wFadeState, wFieldActionRequest, wFieldEventKind
-RunFieldEventWC90D::
+RunFieldEventFieldEventKind::
 Func_002_5074:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -2616,45 +2616,45 @@ Func_002_5074:: ; address name
     ld a, [wFieldEventKind]
     and a, $0F
     rst $00
-    dw RunFieldEventWC90D_Case00
+    dw RunFieldEventFieldEventKind_Case00
     dw AnimateTilesByRotatingVTiles2
     dw AnimateTilesByRotatingVTiles2
-    dw RunFieldEventWC90D_Case03
-    dw RunFieldEventWC90D_Case04
-    dw RunFieldEventWC90D_Case05
-    dw RunFieldEventWC90D_Case06
-    dw RunFieldEventWC90D_Case07
-    dw RunFieldEventWC90D_Case08
-    dw RunFieldEventWC90D_Case09
-    dw RunFieldEventWC90D_Case0A
-    dw RunFieldEventWC90D_Case0B
-    dw RunFieldEventWC90D_Case0C
-    dw RunFieldEventWC90D_Case0D
-    dw RunFieldEventWC90D_Case0E
-    dw RunFieldEventWC90D_Case0F
+    dw RunFieldEventFieldEventKind_Case03
+    dw RunFieldEventFieldEventKind_Case04
+    dw RunFieldEventFieldEventKind_Case05
+    dw RunFieldEventFieldEventKind_Case06
+    dw RunFieldEventFieldEventKind_Case07
+    dw RunFieldEventFieldEventKind_Case08
+    dw RunFieldEventFieldEventKind_Case09
+    dw RunFieldEventFieldEventKind_Case0A
+    dw RunFieldEventFieldEventKind_Case0B
+    dw RunFieldEventFieldEventKind_Case0C
+    dw RunFieldEventFieldEventKind_Case0D
+    dw RunFieldEventFieldEventKind_Case0E
+    dw RunFieldEventFieldEventKind_Case0F
 
-; entry 12 of the `rst $00` table in RunFieldEventWC90D
+; entry 12 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
-RunFieldEventWC90D_Case0C::
+RunFieldEventFieldEventKind_Case0C::
 Jump_002_50A5:: ; address name
-    call RunFieldEventWC90D_Case0C_Sub01
+    call RunFieldEventFieldEventKind_Case0C_Sub01
     ret
 
-; entry 8 of the `rst $00` table in RunFieldEventWC90D
+; entry 8 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
-RunFieldEventWC90D_Case08::
+RunFieldEventFieldEventKind_Case08::
 Jump_002_50A9:: ; address name
-    call RunFieldEventWC90D_Case08_Sub01
+    call RunFieldEventFieldEventKind_Case08_Sub01
     ret
 
-; entry 0 of the `rst $00` table in RunFieldEventWC90D
+; entry 0 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
-RunFieldEventWC90D_Case00::
+RunFieldEventFieldEventKind_Case00::
 Jump_002_50AD:: ; address name
     ret
 
 ; every 8 frames rotates each byte pair of the first 16 tile rows at vTiles2 left by one bit (tile animation) (E-0124)
-; 1 call site from 1 routine (e.g. RunFieldEventWC90D_Case05)
+; 1 call site from 1 routine (e.g. RunFieldEventFieldEventKind_Case05)
 ; reads: wFrameCounterLo, rSTAT
 AnimateTilesByRotatingVTiles2::
 Func_002_50AE:: ; address name
@@ -2689,10 +2689,10 @@ Jump_002_50C6::
     jr nz, Jump_002_50B9
     ret
 
-; entry 13 of the `rst $00` table in RunFieldEventWC90D
+; entry 13 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case0D::
+RunFieldEventFieldEventKind_Case0D::
 Jump_002_50D5:: ; address name
     ld a, [wFrameCounterLo]
     and a, $07
@@ -2711,10 +2711,10 @@ Jump_002_50E0::
     jr nz, Jump_002_50E0
     ret
 
-; entry 14 of the `rst $00` table in RunFieldEventWC90D
+; entry 14 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case0E::
+RunFieldEventFieldEventKind_Case0E::
 Jump_002_50EE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $07
@@ -2745,10 +2745,10 @@ Jump_002_510B::
     jr nz, Jump_002_510B
     ret
 
-; entry 3 of the `rst $00` table in RunFieldEventWC90D
+; entry 3 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case03::
+RunFieldEventFieldEventKind_Case03::
 Jump_002_5119:: ; address name
     ld a, [wFrameCounterLo]
     and a, $0F
@@ -2757,10 +2757,10 @@ Jump_002_5119:: ; address name
     ld hl, vTiles2 + $320
     jp Jump_002_51AD
 
-; entry 4 of the `rst $00` table in RunFieldEventWC90D
+; entry 4 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case04::
+RunFieldEventFieldEventKind_Case04::
 Jump_002_5128:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2769,10 +2769,10 @@ Jump_002_5128:: ; address name
     ld hl, vTiles2 + $2C0
     jr Jump_002_5176
 
-; entry 5 of the `rst $00` table in RunFieldEventWC90D
+; entry 5 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case05::
+RunFieldEventFieldEventKind_Case05::
 Jump_002_5136:: ; address name
     call AnimateTilesByRotatingVTiles2
     ld a, [wFrameCounterLo]
@@ -2782,10 +2782,10 @@ Jump_002_5136:: ; address name
     ld hl, vTiles2 + $180
     jr Jump_002_5176
 
-; entry 9 of the `rst $00` table in RunFieldEventWC90D
+; entry 9 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case09::
+RunFieldEventFieldEventKind_Case09::
 Jump_002_5147:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2794,10 +2794,10 @@ Jump_002_5147:: ; address name
     ld hl, vTiles2 + $2C0
     jr Jump_002_5176
 
-; entry 10 of the `rst $00` table in RunFieldEventWC90D
+; entry 10 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case0A::
+RunFieldEventFieldEventKind_Case0A::
 Jump_002_5155:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2806,10 +2806,10 @@ Jump_002_5155:: ; address name
     ld hl, vTiles2 + $4C0
     jr Jump_002_5176
 
-; entry 15 of the `rst $00` table in RunFieldEventWC90D
+; entry 15 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX, wFrameCounterLo
-RunFieldEventWC90D_Case0F::
+RunFieldEventFieldEventKind_Case0F::
 Jump_002_5163:: ; address name
     ldh a, [hMapScreenX]
     cp a, $01
@@ -2898,10 +2898,10 @@ Jump_002_51C0::
     jr nz, Jump_002_51C0
     ret
 
-; entry 6 of the `rst $00` table in RunFieldEventWC90D
+; entry 6 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case06::
+RunFieldEventFieldEventKind_Case06::
 Jump_002_51DE:: ; address name
     ld de, $0043
     call TestFlagBit
@@ -2930,10 +2930,10 @@ Data_002_5205:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $93, $40, $93, $30, $93, $50, $93, $80, $93, $A0, $93, $90, $93, $B0, $93
     db $20, $94, $40, $94, $30, $94, $50, $94, $80, $94, $A0, $94, $90, $94, $B0, $94
 
-; entry 7 of the `rst $00` table in RunFieldEventWC90D
+; entry 7 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventWC90D_Case07::
+RunFieldEventFieldEventKind_Case07::
 Jump_002_5235:: ; address name
     ld a, [wFrameCounterLo]
     and a, $1F
@@ -2959,10 +2959,10 @@ Data_002_5254:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $94, $E0, $94, $D0, $94, $F0, $94, $60, $95, $80, $95, $70, $95, $90, $95
     db $20, $96, $60, $96, $30, $96, $70, $96, $A0, $96, $E0, $96, $B0, $96, $F0, $96
 
-; entry 11 of the `rst $00` table in RunFieldEventWC90D
+; entry 11 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenY, wFrameCounterLo
-RunFieldEventWC90D_Case0B::
+RunFieldEventFieldEventKind_Case0B::
 Jump_002_5284:: ; address name
     ldh a, [hMapScreenY]
     or a, a
@@ -3015,12 +3015,12 @@ Jump_002_52BA::
     jr nz, Jump_002_52BA
     ret
 
-; only called from RunFieldEventWC90D_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. RunFieldEventWC90D_Case08)
+; only called from RunFieldEventFieldEventKind_Case08 (E-0047)
+; 1 call site from 1 routine (e.g. RunFieldEventFieldEventKind_Case08)
 ; reads: wScriptCommandType, wSavedPositionValid, wMenuSubState, wMenuState
 ; writes: wMenuSubState, wMenuState, hTemp0, wBGPaletteUploadRequest
 ; points at: wBGPaletteBuffer, wBGPaletteCopy
-RunFieldEventWC90D_Case08_Sub01::
+RunFieldEventFieldEventKind_Case08_Sub01::
 Func_002_52D8:: ; address name
     ld a, [wScriptCommandType]
     cp a, $ED
@@ -3063,25 +3063,25 @@ Jump_002_5321::
     ldh [hTemp0], a
     ld hl, wBGPaletteCopy + $8
     ld de, wBGPaletteBuffer + $8
-    call RunFieldEventWC90D_Case08_Sub01_Sub01
+    call RunFieldEventFieldEventKind_Case08_Sub01_Sub01
     ld hl, wBGPaletteCopy + $10
     ld de, wBGPaletteBuffer + $10
     ld hl, wBGPaletteCopy + $18
     ld de, wBGPaletteBuffer + $18
-    call RunFieldEventWC90D_Case08_Sub01_Sub01
+    call RunFieldEventFieldEventKind_Case08_Sub01_Sub01
     ld hl, wBGPaletteCopy + $20
     ld de, wBGPaletteBuffer + $20
-    call RunFieldEventWC90D_Case08_Sub01_Sub01
+    call RunFieldEventFieldEventKind_Case08_Sub01_Sub01
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
     ret
 
-; only called from RunFieldEventWC90D_Case08_Sub01 (E-0047)
-; 3 call sites from 1 routine (e.g. RunFieldEventWC90D_Case08_Sub01)
+; only called from RunFieldEventFieldEventKind_Case08_Sub01 (E-0047)
+; 3 call sites from 1 routine (e.g. RunFieldEventFieldEventKind_Case08_Sub01)
 ; reads: hTemp0, wMenuSubState, wTextCounter2, wTextCounter3, wTextCounter4
 ; writes: wTextCounter2, wTextCounter3, wTextCounter4
 ; points at: wTextCounter2
-RunFieldEventWC90D_Case08_Sub01_Sub01::
+RunFieldEventFieldEventKind_Case08_Sub01_Sub01::
 Func_002_534A:: ; address name
     ld a, [hl]
     ld c, a
@@ -3167,11 +3167,11 @@ Jump_002_539B::
 Data_002_53C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FC, $F8, $F4, $F0, $EC, $E8, $E4, $E4, $E8, $EC, $F0, $F4, $F8, $FC, $00
 
-; only called from RunFieldEventWC90D_Case0C (E-0047)
-; 1 call site from 1 routine (e.g. RunFieldEventWC90D_Case0C)
+; only called from RunFieldEventFieldEventKind_Case0C (E-0047)
+; 1 call site from 1 routine (e.g. RunFieldEventFieldEventKind_Case0C)
 ; reads: wFieldEventTimer, wKeyRandomLo, wFieldEventArg, wFrameCounterLo, hScrollX, wKeyRandomHi
 ; writes: wFieldEventTimer, hScrollX
-RunFieldEventWC90D_Case0C_Sub01::
+RunFieldEventFieldEventKind_Case0C_Sub01::
 Func_002_53D5:: ; address name
     ld a, [wFieldEventTimer]
     bit 7, a
@@ -3231,7 +3231,7 @@ Func_002_541B:: ; address name
     jr z, Jump_002_542C
     dec a
     ldh [hPlayerTurnDelay], a
-    call RedrawScreenBufferIfWC8CDBit7
+    call RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 Jump_002_542C::
@@ -3256,7 +3256,7 @@ Jump_002_544D::
     ldh [hPlayerFacing], a
     ld a, $04
     ldh [hPlayerTurnDelay], a
-    call RedrawScreenBufferIfWC8CDBit7
+    call RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 Jump_002_5459::
@@ -3343,7 +3343,7 @@ Jump_002_54E4::
     ldh [hPlayerFacing], a
     ld a, $04
     ldh [hPlayerTurnDelay], a
-    call RedrawScreenBufferIfWC8CDBit7
+    call RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 Jump_002_54F0::
@@ -3431,7 +3431,7 @@ Jump_002_557C::
     ldh [hPlayerFacing], a
     ld a, $04
     ldh [hPlayerTurnDelay], a
-    call RedrawScreenBufferIfWC8CDBit7
+    call RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 Jump_002_5588::
@@ -3533,7 +3533,7 @@ Jump_002_5639::
     ldh [hPlayerFacing], a
     ld a, $04
     ldh [hPlayerTurnDelay], a
-    call RedrawScreenBufferIfWC8CDBit7
+    call RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 Jump_002_5645::
@@ -3626,7 +3626,7 @@ Jump_002_56C5::
 ; points at: hPlayerY, hPlayerX
 UpdatePlayerMovement_Sub01::
 Func_002_56DC:: ; address name
-    call RedrawScreenBufferIfWC8CDBit7
+    call RedrawScreenBufferIfPartyWindowFlagsBit7
     ldh a, [hPlayerStepDXLo]
     ld l, a
     ldh a, [hPlayerStepDXHi]
@@ -3904,9 +3904,9 @@ Jump_002_58BF::
     farcall TickRandomEncounterCounter
     farcall CheckStepTriggerAndDispatchTalk
     farcall CheckWarpsAtPlayerPosition
-    farcall RunPlayerMoveTypeWC194
+    farcall RunPlayerMoveTypeMapMoveType
     farcall EnterStatusEffectFieldState
-    farcall CountDownWD069ThenDispatchTalkEvent
+    farcall CountDownTalkCountdownThenDispatchTalkEvent
     ret
 
 ; only called from UpdatePlayerMovement_Sub01 (E-0047)
@@ -4393,7 +4393,7 @@ Data_002_5B89:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, UpdatePlayerMovement_Sub01, Func_002_4F4C_Case07, ...)
 ; reads: wPartyWindowFlags, hScrollY, hScrollX
 ; writes: wPartyWindowTimer, wPartyWindowFlags
-RedrawScreenBufferIfWC8CDBit7::
+RedrawScreenBufferIfPartyWindowFlagsBit7::
 Func_002_5B9E:: ; address name
     xor a, a
     ld [wPartyWindowTimer], a
@@ -4427,23 +4427,23 @@ Func_002_5B9E:: ; address name
 ; if bit 7 of wC468 is set, runs the routine for wC468 & 3 (jump table) (E-0122)
 ; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case00, ScriptCommand49_Run_Case01, ...)
 ; reads: wFieldActionRequest
-RunWC468ActionIfBit7::
+RunFieldActionRequestActionIfBit7::
 Func_002_5BD7:: ; address name
     ld a, [wFieldActionRequest]
     bit 7, a
     ret z
     and a, $03
     rst $00
-    dw RunWC468ActionIfBit7_Case00
-    dw RunWC468ActionIfBit7_Case01
-    dw RunWC468ActionIfBit7_Case02
-    dw RunWC468ActionIfBit7_Case03
+    dw RunFieldActionRequestActionIfBit7_Case00
+    dw RunFieldActionRequestActionIfBit7_Case01
+    dw RunFieldActionRequestActionIfBit7_Case02
+    dw RunFieldActionRequestActionIfBit7_Case03
 
-; entry 0 of the `rst $00` table in RunWC468ActionIfBit7
+; entry 0 of the `rst $00` table in RunFieldActionRequestActionIfBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldActionStep
 ; points at: wFieldActionRequest
-RunWC468ActionIfBit7_Case00::
+RunFieldActionRequestActionIfBit7_Case00::
 Jump_002_5BE8:: ; address name
     call LoadMapScreen
     xor a, a
@@ -4452,10 +4452,10 @@ Jump_002_5BE8:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunWC468ActionIfBit7
+; entry 3 of the `rst $00` table in RunFieldActionRequestActionIfBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStepTriggerFlag, wFieldActionRequest
-RunWC468ActionIfBit7_Case03::
+RunFieldActionRequestActionIfBit7_Case03::
 Jump_002_5BF4:: ; address name
     xor a, a
     ld [wStepTriggerFlag], a
@@ -4463,24 +4463,24 @@ Jump_002_5BF4:: ; address name
     farcall RunPeriodicFieldEventChecks
     farcall TickRandomEncounterCounter
     farcall CheckWarpsAtPlayerPosition
-    farcall RunPlayerMoveTypeWC194
+    farcall RunPlayerMoveTypeMapMoveType
     farcall EnterStatusEffectFieldState
-    farcall CountDownWD069ThenDispatchTalkEvent
+    farcall CountDownTalkCountdownThenDispatchTalkEvent
     xor a, a
     ld [wFieldActionRequest], a
     ret
 
-; entry 2 of the `rst $00` table in RunWC468ActionIfBit7
+; entry 2 of the `rst $00` table in RunFieldActionRequestActionIfBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPendingFieldEvent
 ; writes: wPendingFieldEvent, wObject5
 ; points at: wFieldActionRequest
-RunWC468ActionIfBit7_Case02::
+RunFieldActionRequestActionIfBit7_Case02::
 Jump_002_5C27:: ; address name
     ld hl, wFieldActionRequest
     inc [hl]
     farcall FindTriggerEntryForCurrentScreen
-    farcall FindTriggerEntryForCurrentScreen_WCCEB
+    farcall FindTriggerEntryForCurrentScreen_ScreenTriggers
     farcall LoadMapObjectsForScreen
     ld a, [wPendingFieldEvent]
     bit 7, a
@@ -4492,7 +4492,7 @@ Jump_002_5C27:: ; address name
     jr Jump_002_5C54
 
 Jump_002_5C4E::
-    farcall ClearWC935WhenFieldIdle
+    farcall ClearPendingFieldEventWhenFieldIdle
 
 Jump_002_5C54::
     xor a, a
@@ -4500,12 +4500,12 @@ Jump_002_5C54::
     farcall PlaceSpecialMapObjectsOnEntry
     ret
 
-; entry 1 of the `rst $00` table in RunWC468ActionIfBit7
+; entry 1 of the `rst $00` table in RunFieldActionRequestActionIfBit7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hScrollY, hScrollX, wScreenScrollDir, wFieldActionStep
 ; writes: hScrollX, hScrollY
 ; points at: wScreenTileBuffer, wFieldActionStep, wFieldActionRequest
-RunWC468ActionIfBit7_Case01::
+RunFieldActionRequestActionIfBit7_Case01::
 Jump_002_5C5F:: ; address name
     ldh a, [hScrollY]
     and a, $F8
@@ -4545,7 +4545,7 @@ Jump_002_5C83::
     ld hl, wScreenTileBuffer
     ld a, [wFieldActionStep]
     add_a_to_hl
-    call RunWC468ActionIfBit7_Case01_Sub01
+    call RunFieldActionRequestActionIfBit7_Case01_Sub01
     ldh a, [hScrollX]
     add a, $08
     ldh [hScrollX], a
@@ -4561,7 +4561,7 @@ Jump_002_5CB8::
     ldh a, [hScrollX]
     and a, $F8
     ldh [hScrollX], a
-    farcall MarkVisitedMapScreenInWCE93
+    farcall MarkVisitedMapScreenInVisitedScreens
     ld hl, wFieldActionRequest
     inc [hl]
     call ComputeSpriteScrollOffsets
@@ -4584,7 +4584,7 @@ Jump_002_5CCC::
     ld a, $13
     sub a, c
     add_a_to_hl
-    call RunWC468ActionIfBit7_Case01_Sub01
+    call RunFieldActionRequestActionIfBit7_Case01_Sub01
     ldh a, [hScrollX]
     sub a, $08
     ldh [hScrollX], a
@@ -4600,7 +4600,7 @@ Jump_002_5D01::
     ldh a, [hScrollX]
     and a, $F8
     ldh [hScrollX], a
-    farcall MarkVisitedMapScreenInWCE93
+    farcall MarkVisitedMapScreenInVisitedScreens
     ld hl, wFieldActionRequest
     inc [hl]
     call ComputeSpriteScrollOffsets
@@ -4632,7 +4632,7 @@ Jump_002_5D15::
     ld a, h
     adc a, $C1
     ld h, a
-    call RunWC468ActionIfBit7_Case01_Sub02
+    call RunFieldActionRequestActionIfBit7_Case01_Sub02
     ldh a, [hScrollY]
     add a, $08
     ldh [hScrollY], a
@@ -4648,7 +4648,7 @@ Jump_002_5D54::
     ldh a, [hScrollY]
     and a, $F8
     ldh [hScrollY], a
-    farcall MarkVisitedMapScreenInWCE93
+    farcall MarkVisitedMapScreenInVisitedScreens
     ld hl, wFieldActionRequest
     inc [hl]
     call ComputeSpriteScrollOffsets
@@ -4691,7 +4691,7 @@ Jump_002_5D81::
     ld a, h
     adc a, $C1
     ld h, a
-    call RunWC468ActionIfBit7_Case01_Sub02
+    call RunFieldActionRequestActionIfBit7_Case01_Sub02
     ldh a, [hScrollY]
     sub a, $08
     ldh [hScrollY], a
@@ -4707,7 +4707,7 @@ Jump_002_5DB4::
     ldh a, [hScrollY]
     and a, $F8
     ldh [hScrollY], a
-    farcall MarkVisitedMapScreenInWCE93
+    farcall MarkVisitedMapScreenInVisitedScreens
     ld hl, wFieldActionRequest
     inc [hl]
     call ComputeSpriteScrollOffsets
@@ -4715,12 +4715,12 @@ Jump_002_5DB4::
 Jump_002_5DC7::
     ret
 
-; only called from RunWC468ActionIfBit7_Case01 (E-0047)
-; 2 call sites from 1 routine (e.g. RunWC468ActionIfBit7_Case01)
+; only called from RunFieldActionRequestActionIfBit7_Case01 (E-0047)
+; 2 call sites from 1 routine (e.g. RunFieldActionRequestActionIfBit7_Case01)
 ; reads: wIsCGB, hTemp0
 ; writes: wBGWriteDestLo, wBGWriteDestHi, wBGWriteVertical, wBGWriteCount, wAttrWriteDestLo, wAttrWriteDestHi, wAttrWriteVertical, wAttrWriteCount, ...
 ; points at: wBGWriteData, wAttrWriteData
-RunWC468ActionIfBit7_Case01_Sub01::
+RunFieldActionRequestActionIfBit7_Case01_Sub01::
 Func_002_5DC8:: ; address name
     ld a, e
     ld [wBGWriteDestLo], a
@@ -4778,12 +4778,12 @@ Jump_002_5E10::
     jr nz, Jump_002_5E10
     ret
 
-; only called from RunWC468ActionIfBit7_Case01 (E-0047)
-; 2 call sites from 1 routine (e.g. RunWC468ActionIfBit7_Case01)
+; only called from RunFieldActionRequestActionIfBit7_Case01 (E-0047)
+; 2 call sites from 1 routine (e.g. RunFieldActionRequestActionIfBit7_Case01)
 ; reads: wIsCGB, hTemp0
 ; writes: wBGWriteDestLo, wBGWriteDestHi, wBGWriteVertical, wBGWriteCount, wAttrWriteDestLo, wAttrWriteDestHi, wAttrWriteVertical, wAttrWriteCount, ...
 ; points at: wBGWriteData, wAttrWriteData
-RunWC468ActionIfBit7_Case01_Sub02::
+RunFieldActionRequestActionIfBit7_Case01_Sub02::
 Func_002_5E2C:: ; address name
     ld a, e
     ld [wBGWriteDestLo], a
@@ -4839,7 +4839,7 @@ Jump_002_5E6C::
     ret
 
 ; calls Func_002_5E85 and falls into it, running it twice (E-0126)
-; 4 call sites from 4 routines (e.g. RunWC8C7Phase_Case02, RefreshRecordListAndNameTiles, ScriptCommandF8_Run_Case02_Case10, RefreshRecordListAndNameTiles_BankF1)
+; 4 call sites from 4 routines (e.g. RunFieldReturnPhase_Case02, RefreshRecordListAndNameTiles, ScriptCommandF8_Run_Case02_Case10, RefreshRecordListAndNameTiles_BankF1)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
 RunFunc5E85Twice::
@@ -5116,7 +5116,7 @@ Jump_002_5FF7::
     ld [hl+], a
     ld a, [wDMGPaletteOBP1]
     ld [hl], a
-    call ResetFadeFromWC5E9
+    call ResetFadeFromDMGPaletteBGP
     ld a, [wSGBActive]
     or a, a
     jr z, Jump_002_6045
@@ -5137,7 +5137,7 @@ Jump_002_6045::
     ret
 
 ; wC608 = $FF (no current music), then falls into PlayMapMusic so the map's music always restarts (E-0122)
-; 10 call sites from 10 routines (e.g. GameMode1_Init, InitFieldScreen, Func_000_2950_Case09, RunWC46BMenuState_Case05, ...)
+; 10 call sites from 10 routines (e.g. GameMode1_Init, InitFieldScreen, Func_000_2950_Case09, RunMenuStateMenuState_Case05, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 ; writes: wCurrentMusic
 RestartMapMusic::
@@ -5146,7 +5146,7 @@ Func_002_604B:: ; address name
     ld [wCurrentMusic], a
 
 ; chooses the music for the current map (by wCC44 and hMapId, with story-flag cases) and queues it unless it is already wC608 (E-0122)
-; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case04, RunWC8C7Phase_Case02, ScriptCommand58_Run_Case28, ScriptCommand46_Run_Case0A, ...)
+; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case04, RunFieldReturnPhase_Case02, ScriptCommand58_Run_Case28, ScriptCommand46_Run_Case0A, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 PlayMapMusic::
 Func_002_6050:: ; address name
@@ -5386,7 +5386,7 @@ Jump_002_6307::
 ; map music case: music $2B when bit 3 of hFF8C is set, else $1C (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, wCurrentMusic
-MapMusicByHFF8CBit3:: ; heuristic: follows a terminator; C0
+MapMusicByPlayerStateFlagsBit3:: ; heuristic: follows a terminator; C0
 Func_002_630C:: ; address name
     ld c, $1C
     ldh a, [hPlayerStateFlags]
@@ -5647,7 +5647,7 @@ Jump_002_64D7::
     ret
 
 ; in the field, when A is pressed and nothing blocks it: saves the screen, sets the object flags and draws the field menu windows (Data_002_6606, 6642) (E-0130)
-; 3 call sites from 3 routines (e.g. RunWC8C7Phase_Case01, FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
+; 3 call sites from 3 routines (e.g. RunFieldReturnPhase_Case01, FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
 ; reads: wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wIsCGB, hScrollY, hScrollX, ...
 ; writes: hSpriteWindowClipMode, wFieldReturnPhase, rSVBK, wPartyWindowTimer, wModeState, wMenuState
 ; points at: wWindowTileBuffer, wScreenTileBuffer, wWindowAttrBuffer, wScreenAttrBuffer
@@ -5743,7 +5743,7 @@ Jump_002_6585::
     ld h, d
     push hl
     ld bc, $1405
-    call CopyScreenRectToBGMapSetWC554
+    call CopyScreenRectToBGMapSetTextCursorLo
     ld a, $B3
     ld [wPartyWindowTimer], a
     call ShowIdlePartyStatusWindow
@@ -6467,7 +6467,7 @@ Jump_002_6A75:: ; address name
     ld l, e
     ld h, d
     ld bc, $1405
-    call CopyScreenRectToBGMapSetWC554
+    call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
 Jump_002_6A92::
@@ -6480,7 +6480,7 @@ Jump_002_6A92::
     ld l, e
     ld h, d
     ld bc, $1405
-    call CopyScreenRectToBGMapSetWC554
+    call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
 ; entry 1 of the `rst $00` table in StepTextWindowOpenClose
@@ -6500,7 +6500,7 @@ Jump_002_6AA8:: ; address name
     ld l, e
     ld h, d
     ld bc, $1405
-    call CopyScreenRectToBGMapSetWC554
+    call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
 Jump_002_6AC5::
@@ -6513,7 +6513,7 @@ Jump_002_6AC5::
     ld l, e
     ld h, d
     ld bc, $1405
-    call CopyScreenRectToBGMapSetWC554
+    call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
 ; entry 2 of the `rst $00` table in StepTextWindowOpenClose
@@ -6535,7 +6535,7 @@ Jump_002_6ADB:: ; address name
     ld l, e
     ld h, d
     ld bc, $1405
-    call CopyScreenRectToBGMapSetWC554
+    call CopyScreenRectToBGMapSetTextCursorLo
     ld a, [wTextWindowState]
     and a, $80
     ld [wTextWindowState], a
@@ -6547,7 +6547,7 @@ Jump_002_6B04::
     ld l, e
     ld h, d
     ld bc, $1405
-    call CopyScreenRectToBGMapSetWC554
+    call CopyScreenRectToBGMapSetTextCursorLo
     ld a, [wTextWindowState]
     and a, $80
     ld [wTextWindowState], a
@@ -6560,7 +6560,7 @@ Jump_002_6B04::
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wWindowTileBuffer, wWindowAttrBuffer
-CopyScreenRectToBGMapSetWC554::
+CopyScreenRectToBGMapSetTextCursorLo::
 Func_002_6B19:: ; address name
     push bc
     push hl
@@ -6678,7 +6678,7 @@ Data_002_6BDC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; runs the routine for wC46B & $0F (jump table) (E-0122)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case06)
 ; reads: wMenuState
-RunWC46BMenuState::
+RunMenuStateMenuState::
 Func_002_6C40:: ; address name
     ld a, [wMenuState]
     or a, a
@@ -6688,28 +6688,28 @@ Jump_002_6C46::
     ld a, [wMenuState]
     and a, $0F
     rst $00
-    dw RunWC46BMenuState_Case00
-    dw RunWC46BMenuState_Case01
-    dw RunWC46BMenuState_Case02
-    dw RunWC46BMenuState_Case03
-    dw RunWC46BMenuState_Case04
-    dw RunWC46BMenuState_Case05
-    dw RunWC46BMenuState_Case06
-    dw RunWC46BMenuState_Case06
-    dw RunWC46BMenuState_Case06
+    dw RunMenuStateMenuState_Case00
+    dw RunMenuStateMenuState_Case01
+    dw RunMenuStateMenuState_Case02
+    dw RunMenuStateMenuState_Case03
+    dw RunMenuStateMenuState_Case04
+    dw RunMenuStateMenuState_Case05
+    dw RunMenuStateMenuState_Case06
+    dw RunMenuStateMenuState_Case06
+    dw RunMenuStateMenuState_Case06
 
-; entry 6 of the `rst $00` table in RunWC46BMenuState
+; entry 6 of the `rst $00` table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
-RunWC46BMenuState_Case06::
+RunMenuStateMenuState_Case06::
 Jump_002_6C5E:: ; address name
     ret
 
-; entry 0 of the `rst $00` table in RunWC46BMenuState
+; entry 0 of the `rst $00` table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapToggleFlag
 ; writes: wMenuSubState, wMenuCursor
 ; points at: wMenuState
-RunWC46BMenuState_Case00::
+RunMenuStateMenuState_Case00::
 Jump_002_6C5F:: ; address name
     ld a, $02
     call QueueMusic
@@ -6733,12 +6733,12 @@ Jump_002_6C7F::
     ld [wMenuCursor], a
     ret
 
-; entry 1 of the `rst $00` table in RunWC46BMenuState
+; entry 1 of the `rst $00` table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuCursor, hScrollX
 ; writes: wMenuCursor, wMenuSubState, wMenuSelectedMember, wSubMenuCursor, wSubMenuCursor2, wMenuOption, wMenuOption2, wScreenState, ...
 ; points at: wBGPaletteCopy, wMenuState
-RunWC46BMenuState_Case01::
+RunMenuStateMenuState_Case01::
 Jump_002_6C89:: ; address name
     ld a, [wMenuCursor]
     inc a
@@ -6747,7 +6747,7 @@ Jump_002_6C89:: ; address name
     ret c
     ld a, $61
     call QueueSoundEffect
-    call RunWC46BMenuState_Case01_Sub02
+    call RunMenuStateMenuState_Case01_Sub02
     xor a, a
     ld [wMenuSubState], a
     ld [wMenuSelectedMember], a
@@ -6771,15 +6771,15 @@ Jump_002_6CB6::
     xor a, a
     ld [wScreenState], a
     ld [wScreenSubStep], a
-    call RunWC46BMenuState_Case01_Sub01
+    call RunMenuStateMenuState_Case01_Sub01
     xor a, a
     ld [wScreenState], a
     ret
 
-; only called from RunWC46BMenuState_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case01)
+; only called from RunMenuStateMenuState_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunMenuStateMenuState_Case01)
 ; reads: hScrollY, hScrollX
-RunWC46BMenuState_Case01_Sub02::
+RunMenuStateMenuState_Case01_Sub02::
 Func_002_6CD4:: ; address name
     ldh a, [hScrollY]
     and a, $F8
@@ -6835,12 +6835,12 @@ Jump_002_6D05::
     jr nz, Jump_002_6D02
     ret
 
-; entry 2 of the `rst $00` table in RunWC46BMenuState
+; entry 2 of the `rst $00` table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember
 ; writes: wMenuSubState, wMenuSelectedMember, wMenuCursor, rLYC, wSTATSplitEnable
 ; points at: wMenuState
-RunWC46BMenuState_Case02::
+RunMenuStateMenuState_Case02::
 Jump_002_6D28:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $01
@@ -6861,12 +6861,12 @@ Jump_002_6D28:: ; address name
     ei
     ret
 
-; entry 3 of the `rst $00` table in RunWC46BMenuState
+; entry 3 of the `rst $00` table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo, wMenuCursor, hTemp0, hScrollX, hTemp1
 ; writes: wMenuSubState, wMenuCursor, wSubMenuCursor, hTemp0, hTemp1
 ; points at: wMenuState, wBGPaletteCopy
-RunWC46BMenuState_Case03::
+RunMenuStateMenuState_Case03::
 Jump_002_6D4D:: ; address name
     ld a, $01
     ld [wMenuSubState], a
@@ -6962,12 +6962,12 @@ Jump_002_6DD4::
 Data_002_6DDE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $60, $B6, $EC, $FF, $EC, $B6, $60, $00, $60, $B6, $EC, $FF, $EC, $B6, $60
 
-; entry 4 of the `rst $00` table in RunWC46BMenuState
+; entry 4 of the `rst $00` table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo, wSubMenuCursor, wMenuCursor, hTemp0, hScrollX, hTemp1
 ; writes: wSubMenuCursor, wSTATSplitEnable, wDMGPaletteBGP, hTemp0, hTemp1
 ; points at: wMenuState, wBGPaletteCopy
-RunWC46BMenuState_Case04::
+RunMenuStateMenuState_Case04::
 Jump_002_6DEE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $0F
@@ -6977,7 +6977,7 @@ Jump_002_6DEE:: ; address name
     ld [wSubMenuCursor], a
     cp a, $04
     jr nz, Jump_002_6E0B
-    call RunWC46BMenuState_Case04_Sub01
+    call RunMenuStateMenuState_Case04_Sub01
     ld hl, wMenuState
     inc [hl]
     xor a, a
@@ -6989,18 +6989,18 @@ Jump_002_6E0B::
     add_a_to_hl
     ld a, [hl]
     ld [wDMGPaletteBGP], a
-    call RunWC46BMenuState_Case04_Sub01
+    call RunMenuStateMenuState_Case04_Sub01
     jp Jump_002_6D75
 
 Data_002_6E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D2, $81, $40, $00, $00
 
-; entry 5 of the `rst $00` table in RunWC46BMenuState
+; entry 5 of the `rst $00` table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapToggleFlag, wWarpDestFacing, wKeyWorldWidth, wKeyWorldHeight, wWarpDestX, wWarpDestY, hPlayerFacing, hPlayerX, ...
 ; writes: wScreenState, wScreenCounter, wScreenStep, wMapType, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hPlayerX, ...
 ; points at: wModeChangeRequest
-RunWC46BMenuState_Case05::
+RunMenuStateMenuState_Case05::
 Jump_002_6E25:: ; address name
     call InitSoundHardware
     farcall RestartMapMusic
@@ -7066,14 +7066,14 @@ Jump_002_6EA5::
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
-    farcall RunWC46BMenuState_Case05_Sub02
+    farcall RunMenuStateMenuState_Case05_Sub02
     ret
 
 Jump_002_6EBA::
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_002_6EC7
-    farcall SaveWCD07RecordToSRAMSlotWCC42
+    farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
 
 Jump_002_6EC7::
     ld a, [wCurrentKeyIndex]
@@ -7161,14 +7161,14 @@ Jump_002_6F59::
     inc hl
     ld a, [hl]
     ld [wPartyStrength], a
-    farcall RunWC46BMenuState_Case05_Sub01
-    farcall SaveWCD07RecordToSRAMSlotWCC42
+    farcall RunMenuStateMenuState_Case05_Sub01
+    farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     jr Jump_002_6F7E
 
 Jump_002_6F73::
     and a, $3F
     ld [wKeyWorldSlot], a
-    farcall LoadWCD07RecordFromSRAMSlotWCC42
+    farcall LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot
 
 Jump_002_6F7E::
     ld a, $80
@@ -7198,7 +7198,7 @@ Jump_002_6F7E::
     ld [wGameMode2Byte50], a
     ld a, $80
     ld [wMapType], a
-    farcall MarkVisitedMapScreenInWCE93
+    farcall MarkVisitedMapScreenInVisitedScreens
     ld a, $87
     ld [wMapType], a
     ld a, $01
@@ -7520,7 +7520,7 @@ Func_002_717D:: ; address name
 Jump_002_719A::
     dec a
     jr nz, Jump_002_71A2
-    call ScanBank1RecordStepWC8C4
+    call ScanBank1RecordStepSaveRecordIndex
     jr Jump_002_71AA
 
 Jump_002_71A2::
@@ -7539,7 +7539,7 @@ Jump_002_71AA::
 ; reads: wSaveRecordIndex, wArg5
 ; writes: wArg1, wArg3, wArg4, wArg2, wSaveRecordIndex
 ; points at: wSaveStep
-ScanBank1RecordStepWC8C4::
+ScanBank1RecordStepSaveRecordIndex::
 Func_002_71B2:: ; address name
     ld a, [wSaveRecordIndex]
     ld [wArg1], a
@@ -7805,7 +7805,7 @@ Jump_002_7305::
 ; reads: wGM2Mode
 ; writes: rRAMB, rSVBK
 ; points at: wGM2TimerFrames, sSavedCE9BBlock
-SaveWCE9BBlockToSRAMBank1::
+SaveGM2TimerFramesBlockToSRAMBank1::
 Func_002_730E:: ; address name
     ld hl, wGM2TimerFrames
     ld bc, $00D8
@@ -7832,7 +7832,7 @@ Jump_002_732A::
     ret
 
 ; with SRAM enabled: on the first step (wC8C3 = 0) copies the save blocks with their checksum and continues with the next save stage (E-0122)
-; 9 call sites from 9 routines (e.g. GameMode5_Update_Case02, RunWD06AState_6C12_Case08_Case04_Sub01, RunWD780StateWhenNotFading_1B_Case01_Case22, GameMode6_Init, ...)
+; 9 call sites from 9 routines (e.g. GameMode5_Update_Case02, RunLinkScreenState_6C12_Case08_Case04_Sub01, RunScreenStateWhenNotFading_1B_Case01_Case22, GameMode6_Init, ...)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveGameSteps::
@@ -7848,7 +7848,7 @@ Func_002_7333:: ; address name
     jr Jump_002_7359
 
 ; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of wC8C3) (E-0124)
-; 3 call sites from 3 routines (e.g. RunWC0A4Screen_Case02, ScriptCommandF2_Run_Case03_Case0E, ScriptCommandED_Run_Case04_Case36)
+; 3 call sites from 3 routines (e.g. RunPauseMenuScreen_Case02, ScriptCommandF2_Run_Case03_Case0E, ScriptCommandED_Run_Case04_Case36)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveGameSteps_7347::
@@ -7865,13 +7865,13 @@ Func_002_7347:: ; address name
 Jump_002_7359::
     call RunSaveGameSteps_7347_Sub01
     call BackupRecordsToSRAMBank1
-    call SaveWCE9BBlockToSRAMBank1
+    call SaveGM2TimerFramesBlockToSRAMBank1
     jr Jump_002_7377
 
 Jump_002_7364::
     dec a
     jr nz, Jump_002_736C
-    call SaveStepCopyBank1RecordWC8C4
+    call SaveStepCopyBank1RecordSaveRecordIndex
     jr Jump_002_7377
 
 Jump_002_736C::
@@ -7997,7 +7997,7 @@ Jump_002_73C9::
 ; reads: wSaveRecordIndex
 ; writes: wArg1, wArg3, wArg4, wArg2, wSaveRecordIndex
 ; points at: wSaveStep
-SaveStepCopyBank1RecordWC8C4::
+SaveStepCopyBank1RecordSaveRecordIndex::
 Func_002_73E6:: ; address name
     ld a, [wSaveRecordIndex]
     ld [wArg1], a
@@ -8131,7 +8131,7 @@ Jump_002_749A::
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_002_74AC
-    farcall SaveWCD07RecordToSRAMSlotWCC42
+    farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     ld a, $0A
     ld [rRAMG], a
 
@@ -8556,7 +8556,7 @@ Func_002_76F2:: ; address name
     call RestoreRecordsFromSRAMBank1Backup
 
 Jump_002_7704::
-    call ScanBank1RecordStepWC8C4
+    call ScanBank1RecordStepSaveRecordIndex
     ld a, [wSaveStep]
     cp a, $02
     jr nz, Jump_002_7713
@@ -8584,7 +8584,7 @@ Func_002_7718:: ; address name
     call BackupRecordsToSRAMBank1
 
 Jump_002_772A::
-    call SaveStepCopyBank1RecordWC8C4
+    call SaveStepCopyBank1RecordSaveRecordIndex
     ld a, [wSaveStep]
     cp a, $02
     jr nz, Jump_002_7741

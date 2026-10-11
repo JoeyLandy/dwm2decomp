@@ -121,7 +121,7 @@ Jump_014_40B1::
     jr nz, Jump_014_40B1
     ld a, $80
     ldh [hSpriteHideTile], a
-    farcall WritePlayerNameWithFlag0SuffixToWC130
+    farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -230,7 +230,7 @@ Jump_014_413E:: ; address name
 ; writes: wScreenStep
 ScriptCommandEB_Run_Case01_Case02::
 Jump_014_414F:: ; address name
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -453,7 +453,7 @@ Jump_014_429B::
     and a, a
     jr z, Jump_014_42F1
     farcall CountFlaggedSRAMRecords
-    farcall LoadWD7FFFromWC7C7Table
+    farcall LoadRecordCapacityFromFarmLevelTable
     ld a, [wArg5]
     cp a, c
     jr c, Jump_014_42DA
@@ -502,7 +502,7 @@ Jump_014_4309::
     and a, a
     jp z, Jump_014_43B1
     farcall ListRecordsInUseWithByte6EClear
-    farcall LoadWD7FFFromWC7C7Table
+    farcall LoadRecordCapacityFromFarmLevelTable
     ld a, [wListCount]
     cp a, c
     jr nc, Jump_014_4339
@@ -910,7 +910,7 @@ Jump_014_45DE:: ; address name
     ret
 
 Jump_014_4630::
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -943,7 +943,7 @@ Jump_014_4654::
     ld a, [wArg5]
     cp a, $FF
     ret nz
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -1002,7 +1002,7 @@ Jump_014_46C6::
     ld [wItemGridX], a
     ld [wItemGridY], a
     ld [wSelectedRecord], a
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wListCursor], a
@@ -1165,7 +1165,7 @@ Jump_014_47E8:: ; address name
     jp nz, Jump_014_482E
     bit 1, a
     jp nz, Jump_014_48D7
-    call BlinkCursorWD7AE_Bank14
+    call BlinkCursorBlinkAE_Bank14
     ret
 
 Jump_014_4804::
@@ -1299,7 +1299,7 @@ Jump_014_48D7::
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case2F)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
-BlinkCursorWD7AE_Bank14::
+BlinkCursorBlinkAE_Bank14::
 Func_014_48ED:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
@@ -1625,7 +1625,7 @@ Func_014_4BA0:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    farcall DrawPageOfPagesAtWD7F1_Bank1E
+    farcall DrawPageOfPagesAtArg1_Bank1E
 
 Jump_014_4BDB::
     ld a, [wScreenStep]
@@ -1646,7 +1646,7 @@ Jump_014_4BE3:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandEB_Run_Case05_Case21::
 Jump_014_4BEA:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -1661,7 +1661,7 @@ Jump_014_4BEA:: ; address name
     call CopyRectTo20ByteRows_Bank14
     pop af
     ld [wArg1], a
-    farcall DrawRecordStatsBoxForWD7F1
+    farcall DrawRecordStatsBoxForArg1
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1673,7 +1673,7 @@ Jump_014_4BEA:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandEB_Run_Case05_Case23::
 Jump_014_4C1C:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -1776,7 +1776,7 @@ Jump_014_4CA8:: ; address name
 ScriptCommandEB_Run_Case05_Case0E::
 Jump_014_4CBC:: ; address name
     farcall DrawRecordListNameTiles_Bank1D
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1961,7 +1961,7 @@ Jump_014_4E07:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandEB_Run_Case05_Case04::
 Jump_014_4E0E:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -1970,7 +1970,7 @@ Jump_014_4E0E:: ; address name
     ld b, a
     push af
     ld [wArg1], a
-    farcall LoadFamilyIconTileForWD7F1Record
+    farcall LoadFamilyIconTileForArg1Record
     ld de, Data_014_5B8E
     ld hl, wWindowTileBuffer + $6C
     ld bc, $0C09
@@ -1989,7 +1989,7 @@ Jump_014_4E0E:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandEB_Run_Case05_Case06::
 Jump_014_4E46:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2225,7 +2225,7 @@ Jump_014_5002:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2333,7 +2333,7 @@ Jump_014_50CE::
     jr nz, Jump_014_50CE
     xor a, a
     ld [rRAMG2], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2379,7 +2379,7 @@ Jump_014_511F:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2403,7 +2403,7 @@ Jump_014_514B::
     inc a
     inc a
     ld [wScreenStep], a
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wListCursor], a
@@ -2446,7 +2446,7 @@ Jump_014_5171:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2457,7 +2457,7 @@ Jump_014_5171:: ; address name
     ld [rRAMG2], a
     ld [wArg2], a
     farcall DeleteSRAMRecordAndCompact
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wListCursor], a
@@ -2578,7 +2578,7 @@ Jump_014_529C:: ; address name
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld [wItemGridX], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2712,7 +2712,7 @@ Jump_014_538C:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2829,7 +2829,7 @@ Jump_014_5464::
     ld [wItemGridX], a
     ld [wItemGridY], a
     ld [wSelectedRecord], a
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     call DrawBox4965AndMenuAndStep
     xor a, a
     ld [wListCursor], a
@@ -2870,7 +2870,7 @@ Jump_014_5492:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandEB_Run_Case06_Case04::
 Jump_014_54B8:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2885,14 +2885,14 @@ Jump_014_54B8:: ; address name
     xor a, a
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
     ld [wArg1], a
-    farcall DrawRecordStatsBoxForWD7F1
+    farcall DrawRecordStatsBoxForArg1
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3097,7 +3097,7 @@ ScriptCommandEB_Run_Case07_Case12::
 Jump_014_5649:: ; address name
     ld a, $0A
     ld [rRAMG2], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -3127,7 +3127,7 @@ Jump_014_5677::
     jr nz, Jump_014_5677
     xor a, a
     ld [rRAMG2], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -3166,7 +3166,7 @@ Func_014_56B0:: ; address name
     ld a, b
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     xor a, a
@@ -3207,7 +3207,7 @@ Jump_014_56E7::
 ; points at: sCompactRecords, wNameGlyphBuf, wTextBuf1, sRecords
 ScriptCommandEB_Run_Shared03::
 Func_014_56EB:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -3270,7 +3270,7 @@ Jump_014_573F::
 ; points at: wNameGlyphBuf, wTextBuf1
 ScriptCommandEB_Run_Case05_Case2F_Sub02::
 Func_014_574E:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -3281,7 +3281,7 @@ Func_014_574E:: ; address name
     ld [rRAMB], a
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     xor a, a
@@ -3705,7 +3705,7 @@ Jump_014_5975::
     jr nz, CopyScreenBufferRectWithAttrs_Bank14
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWD09D (E-0122)
+; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
 ; 2 call sites from 2 routines (e.g. ScriptCommandEB_Run_Case05_Case21, ScriptCommandEB_Run_Case06_Case04)
 ; reads: hTemp0
 ; writes: rRAMG2, rRAMB, wWorkBuf
@@ -3723,7 +3723,7 @@ Func_014_5979:: ; address name
     ld [wWorkBuf], a
     ld a, $C7
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     xor a, a
     ld [rRAMG2], a
     ret
@@ -3879,41 +3879,41 @@ Data_014_5C9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; unless a fade is running, runs the routine for wCFA8 (jump table of eight) (E-0122)
 ; 5 call sites from 5 routines (e.g. GameMode5_Update_Case01_Case06_Case05, ScriptCommandF0_Run_Case05, ScriptCommandED_Run_Case06, RunBattleSubStep_6A4E_Case02, ...)
 ; reads: wFadeState, wNameEntryState
-RunWCFA8StateWhenNotFading::
+RunNameEntryStateWhenNotFading::
 Func_014_5CA8:: ; address name
     ld a, [wFadeState]
     and a, a
     ret nz
     ld a, [wNameEntryState]
     rst $00
-    dw RunWCFA8StateWhenNotFading_Case00
-    dw RunWCFA8StateWhenNotFading_Case01
-    dw RunWCFA8StateWhenNotFading_Case02
-    dw RunWCFA8StateWhenNotFading_Case03
-    dw RunWCFA8StateWhenNotFading_Case04
-    dw RunWCFA8StateWhenNotFading_Case05
-    dw RunWCFA8StateWhenNotFading_Case06
-    dw RunWCFA8StateWhenNotFading_Case07
+    dw RunNameEntryStateWhenNotFading_Case00
+    dw RunNameEntryStateWhenNotFading_Case01
+    dw RunNameEntryStateWhenNotFading_Case02
+    dw RunNameEntryStateWhenNotFading_Case03
+    dw RunNameEntryStateWhenNotFading_Case04
+    dw RunNameEntryStateWhenNotFading_Case05
+    dw RunNameEntryStateWhenNotFading_Case06
+    dw RunNameEntryStateWhenNotFading_Case07
 
-; entry 0 of the `rst $00` table in RunWCFA8StateWhenNotFading
+; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntrySubState
-RunWCFA8StateWhenNotFading_Case00::
+RunNameEntryStateWhenNotFading_Case00::
 Jump_014_5CC1:: ; address name
     ld a, [wNameEntrySubState]
     rst $00
-    dw RunWCFA8StateWhenNotFading_Case00_Case00
-    dw RunWCFA8StateWhenNotFading_Case00_Case01
-    dw RunWCFA8StateWhenNotFading_Case00_Case02
-    dw RunWCFA8StateWhenNotFading_Case00_Case03
-    dw RunWCFA8StateWhenNotFading_Case00_Case04
+    dw RunNameEntryStateWhenNotFading_Case00_Case00
+    dw RunNameEntryStateWhenNotFading_Case00_Case01
+    dw RunNameEntryStateWhenNotFading_Case00_Case02
+    dw RunNameEntryStateWhenNotFading_Case00_Case03
+    dw RunNameEntryStateWhenNotFading_Case00_Case04
 
-; entry 0 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case00
+; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hSpriteWindowClipMode, wNameEntrySubState
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, hScrollY, ...
 ; points at: wNameEntryState
-RunWCFA8StateWhenNotFading_Case00_Case00::
+RunNameEntryStateWhenNotFading_Case00_Case00::
 Jump_014_5CCF:: ; address name
     ld hl, wNameEntryState
     ld bc, $001D
@@ -3988,15 +3988,15 @@ Jump_014_5CD5::
     ld [wArg5], a
     ret
 
-; entry 1 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case00
+; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntrySubState
 ; writes: wNameEntrySubState, wArg5
-RunWCFA8StateWhenNotFading_Case00_Case01::
+RunNameEntryStateWhenNotFading_Case00_Case01::
 Jump_014_5D72:: ; address name
     ld hl, Data_014_6D56
     ld de, Data_014_6DF8
-    call RunWCFA8StateWhenNotFading_Shared05
+    call RunNameEntryStateWhenNotFading_Shared05
     cp a, $FF
     jr nz, Jump_014_5D86
     ld a, [wNameEntrySubState]
@@ -4008,11 +4008,11 @@ Jump_014_5D86::
     ld [wArg5], a
     ret
 
-; entry 2 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case00
+; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg2, wNameEntrySubState
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wNameEntrySubState
-RunWCFA8StateWhenNotFading_Case00_Case02::
+RunNameEntryStateWhenNotFading_Case00_Case02::
 Jump_014_5D8B:: ; address name
     ld a, [wArg2]
     push af
@@ -4032,7 +4032,7 @@ Jump_014_5D8B:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank14_6BCF
     ld de, $0043
     add hl, de
@@ -4053,12 +4053,12 @@ Jump_014_5D8B:: ; address name
     ld [wArg5], a
     ret
 
-; entry 3 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case00
+; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg1, wArg2, wIsCGB, wNameEntrySubState, wArg4, wArg5
 ; writes: wSpriteSlotCount, wOBJPaletteUploadRequest, wNameEntrySubState, wArg5, wArg1, wArg2, wArg3, wArg4
 ; points at: wArg1, wCounterPtr0Lo, wSpriteSlots, hTemp0
-RunWCFA8StateWhenNotFading_Case00_Case03::
+RunNameEntryStateWhenNotFading_Case00_Case03::
 Jump_014_5DE0:: ; address name
     ld hl, wArg1
     ld de, wCounterPtr0Lo
@@ -4109,7 +4109,7 @@ Jump_014_5E24::
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank14
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, $01
     ld [wSpriteSlotCount], a
     ld a, [wIsCGB]
@@ -4129,7 +4129,7 @@ Jump_014_5E44::
     ld [wArg4], a
     ld a, $80
     ld [wArg5], a
-    farcall DecompressGraphicsWD7F1ToWD7F4
+    farcall DecompressGraphicsArg1ToArg4
 
 Jump_014_5E62::
     ld hl, wCounterPtr0Lo
@@ -4166,7 +4166,7 @@ Jump_014_5E62::
     ret
 
 ; the same 7 bytes as CopyBytesDEFromHL (34:406E)
-; 2 call sites from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case00_Case03)
+; 2 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case00_Case03)
 CopyBytesDEFromHL_Bank14::
 Func_014_5E8C:: ; address name
     ld a, [hl+]
@@ -4188,14 +4188,14 @@ Data_014_5E9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5EAF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $01, $00, $08, $08, $01, $00, $00, $00, $00, $08, $08, $04, $00, $00
 
-; entry 4 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case00
+; entry 4 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg1, wGridCursorX, wNameEntryState
 ; writes: rRAMG2, rRAMB, wNameEntryCursorX, wNameEntryCursorY, wNameEntrySubState, wNameEntryState, wArg5, wNameEntryLength
 ; points at: wPartyList, wNameEntryText
-RunWCFA8StateWhenNotFading_Case00_Case04::
+RunNameEntryStateWhenNotFading_Case00_Case04::
 Jump_014_5EBF:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared03
+    call RunNameEntryStateWhenNotFading_Shared03
     ld a, [wArg1]
     and a, a
     jp z, Jump_014_5F12
@@ -4222,7 +4222,7 @@ Jump_014_5EF2::
     ld a, [hl]
     cp a, $F0
     jr z, Jump_014_5F07
-    call RunWCFA8StateWhenNotFading_Case00_Case04_Sub01
+    call RunNameEntryStateWhenNotFading_Case00_Case04_Sub01
     pop bc
     pop hl
     inc hl
@@ -4273,7 +4273,7 @@ Jump_014_5F30::
     ld [wNameEntryLength], a
 
 Jump_014_5F44::
-    call RunWCFA8StateWhenNotFading_Shared01
+    call RunNameEntryStateWhenNotFading_Shared01
     xor a, a
     ld [wNameEntrySubState], a
     ld a, [wNameEntryState]
@@ -4283,34 +4283,34 @@ Jump_014_5F44::
     ld [wArg5], a
     ret
 
-; entry 1 of the `rst $00` table in RunWCFA8StateWhenNotFading
+; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntrySubState
-RunWCFA8StateWhenNotFading_Case01::
+RunNameEntryStateWhenNotFading_Case01::
 Jump_014_5F57:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared01
+    call RunNameEntryStateWhenNotFading_Shared01
     ld a, [wNameEntrySubState]
     rst $00
-    dw RunWCFA8StateWhenNotFading_Case01_Case00
-    dw RunWCFA8StateWhenNotFading_Case01_Case01
-    dw RunWCFA8StateWhenNotFading_Case01_Case02
-    dw RunWCFA8StateWhenNotFading_Case01_Case03
-    dw RunWCFA8StateWhenNotFading_Case01_Case04
-    dw RunWCFA8StateWhenNotFading_Case01_Case00
-    dw RunWCFA8StateWhenNotFading_Case01_Case01
-    dw RunWCFA8StateWhenNotFading_Case01_Case02
-    dw RunWCFA8StateWhenNotFading_Case01_Case03
-    dw RunWCFA8StateWhenNotFading_Case01_Case09
+    dw RunNameEntryStateWhenNotFading_Case01_Case00
+    dw RunNameEntryStateWhenNotFading_Case01_Case01
+    dw RunNameEntryStateWhenNotFading_Case01_Case02
+    dw RunNameEntryStateWhenNotFading_Case01_Case03
+    dw RunNameEntryStateWhenNotFading_Case01_Case04
+    dw RunNameEntryStateWhenNotFading_Case01_Case00
+    dw RunNameEntryStateWhenNotFading_Case01_Case01
+    dw RunNameEntryStateWhenNotFading_Case01_Case02
+    dw RunNameEntryStateWhenNotFading_Case01_Case03
+    dw RunNameEntryStateWhenNotFading_Case01_Case09
 
-; entry 0 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case01
+; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wNameEntrySubState, wNameEntryCursorX, wNameEntryCursorY
 ; writes: wNameEntryCursorX, wNameEntryCursorY, wArg5, wNameEntrySubState
-RunWCFA8StateWhenNotFading_Case01_Case00::
+RunNameEntryStateWhenNotFading_Case01_Case00::
 Jump_014_5F72:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared02
+    call RunNameEntryStateWhenNotFading_Shared02
     ld b, $55
-    call WriteTileBAtScrollOffset47PlusWCFC2
+    call WriteTileBAtScrollOffset47PlusNameEntryLength
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jp nz, Jump_014_5FA7
@@ -4327,7 +4327,7 @@ Jump_014_5F72:: ; address name
     jp nz, Jump_014_60BB
     bit 3, a
     jp nz, Jump_014_60CF
-    call RunWCFA8StateWhenNotFading_Case01_Case00_Sub01
+    call RunNameEntryStateWhenNotFading_Case01_Case00_Sub01
     ret
 
 Jump_014_5FA7::
@@ -4349,7 +4349,7 @@ Jump_014_5FC3::
     ld [wNameEntryCursorY], a
 
 Jump_014_5FC7::
-    call RunWCFA8StateWhenNotFading_Case01_Case00_Sub01
+    call RunNameEntryStateWhenNotFading_Case01_Case00_Sub01
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -4390,7 +4390,7 @@ Jump_014_6006::
     ld [wNameEntryCursorY], a
 
 Jump_014_600D::
-    call RunWCFA8StateWhenNotFading_Case01_Case00_Sub01
+    call RunNameEntryStateWhenNotFading_Case01_Case00_Sub01
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -4427,7 +4427,7 @@ Jump_014_604A::
     ld [wNameEntryCursorX], a
 
 Jump_014_6051::
-    call RunWCFA8StateWhenNotFading_Case01_Case00_Sub01
+    call RunNameEntryStateWhenNotFading_Case01_Case00_Sub01
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -4466,7 +4466,7 @@ Jump_014_6092::
     ld [wNameEntryCursorX], a
 
 Jump_014_6099::
-    call RunWCFA8StateWhenNotFading_Case01_Case00_Sub01
+    call RunNameEntryStateWhenNotFading_Case01_Case00_Sub01
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -4476,7 +4476,7 @@ Jump_014_6099::
 Jump_014_60A6::
     ld a, $69
     call QueueSoundEffect
-    call RunWCFA8StateWhenNotFading_Case01_Case00_Sub02
+    call RunNameEntryStateWhenNotFading_Case01_Case00_Sub02
     ld a, [wNameEntrySubState]
     inc a
     inc a
@@ -4488,7 +4488,7 @@ Jump_014_60A6::
 Jump_014_60BB::
     ld a, $69
     call QueueSoundEffect
-    call RunWCFA8StateWhenNotFading_Case01_Case00_Sub01
+    call RunNameEntryStateWhenNotFading_Case01_Case00_Sub01
     ld a, [wNameEntrySubState]
     inc a
     ld [wNameEntrySubState], a
@@ -4514,7 +4514,7 @@ Jump_014_60CF::
 ; points at: wNameEntryText
 ToggleVoicingMarkOnNameEntry:: ; heuristic: follows a terminator; C0
 Func_014_60E6:: ; address name
-    call CopyTileForWCFC2
+    call CopyTileForNameEntryLength
     ld hl, wNameEntryText
 
 Jump_014_60EC::
@@ -4620,11 +4620,11 @@ Jump_014_6164::
     ld [wArg5], a
     ret
 
-; only called from RunWCFA8StateWhenNotFading_Case01_Case00 (E-0047)
-; 6 call sites from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case01_Case00)
+; only called from RunNameEntryStateWhenNotFading_Case01_Case00 (E-0047)
+; 6 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case01_Case00)
 ; reads: wNameEntryCursorByte, wNameEntryCursorY, wNameEntryCursorX
 ; writes: wNameEntryCursorByte
-RunWCFA8StateWhenNotFading_Case01_Case00_Sub01::
+RunNameEntryStateWhenNotFading_Case01_Case00_Sub01::
 Func_014_6172:: ; address name
     ld a, [wNameEntryCursorByte]
     inc a
@@ -4641,17 +4641,17 @@ Jump_014_6185::
     jr Jump_014_618F
 
 ; B = $C3 (blank tile) and joins the tile draw at Jump_014_618F (E-0122)
-; 7 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, RunWCFA8StateWhenNotFading_Case01_Case00)
+; 7 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, RunNameEntryStateWhenNotFading_Case01_Case00)
 ; reads: wNameEntryCursorY, wNameEntryCursorX
 DrawBlankTileC3_6189::
 Func_014_6189:: ; address name
     ld b, $C3
     jr Jump_014_618F
 
-; only called from RunWCFA8StateWhenNotFading_Case01_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case01_Case00)
+; only called from RunNameEntryStateWhenNotFading_Case01_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case01_Case00)
 ; reads: wNameEntryCursorY, wNameEntryCursorX
-RunWCFA8StateWhenNotFading_Case01_Case00_Sub02::
+RunNameEntryStateWhenNotFading_Case01_Case00_Sub02::
 Func_014_618D:: ; address name
     ld b, $55
 
@@ -4716,19 +4716,19 @@ Jump_014_61D2::
 Data_014_61E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0521E2, $AA
 
-; entry 1 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case01
+; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryLength, wNameEntrySubState, wNameEntryByteC3
 ; writes: wNameEntrySubState, wArg5, wNameEntryByteC3, wNameEntryLength
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Case01_Case01::
+RunNameEntryStateWhenNotFading_Case01_Case01::
 Jump_014_628C:: ; address name
     ld b, $55
-    call WriteTileBAtScrollOffset47PlusWCFC2
+    call WriteTileBAtScrollOffset47PlusNameEntryLength
     ld a, [wNameEntryLength]
     and a, a
     jr nz, Jump_014_62A6
-    call RunWCFA8StateWhenNotFading_Shared03
+    call RunNameEntryStateWhenNotFading_Shared03
     ld a, [wNameEntrySubState]
     dec a
     ld [wNameEntrySubState], a
@@ -4738,7 +4738,7 @@ Jump_014_628C:: ; address name
 
 Jump_014_62A6::
     ld b, $C3
-    call WriteTileBAtScrollOffset47PlusWCFC2
+    call WriteTileBAtScrollOffset47PlusNameEntryLength
     ld hl, wNameEntryText
 
 Jump_014_62AE::
@@ -4784,7 +4784,7 @@ Jump_014_62DD::
     ld [hl-], a
 
 Jump_014_62E0::
-    call CopyTileForWCFC2
+    call CopyTileForNameEntryLength
     ld a, [wNameEntryByteC3]
     and a, a
     jr z, Jump_014_62EF
@@ -4805,12 +4805,12 @@ Jump_014_62F6::
     ld [wArg5], a
     ret
 
-; entry 2 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case01
+; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryCursorY, wNameEntryCursorX, wNameEntryLength, wNameEntrySubState, wNameEntryByteC3, wNameEntryState
 ; writes: wNameEntryByteC3, wNameEntryLength, wNameEntrySubState, wArg5, wNameEntryCursorX, wNameEntryCursorY, wNameEntryState
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Case01_Case02::
+RunNameEntryStateWhenNotFading_Case01_Case02::
 Jump_014_6302:: ; address name
     ld a, [wNameEntryCursorY]
     ld hl, Data_014_6F4E
@@ -4828,15 +4828,15 @@ Jump_014_6314::
     ld a, [wNameEntryCursorX]
     add a, l
     ld l, a
-    jr nc, RunWCFA8StateWhenNotFading_Case00_Case04_Sub01
+    jr nc, RunNameEntryStateWhenNotFading_Case00_Case04_Sub01
     inc h
 
-; only called from RunWCFA8StateWhenNotFading_Case00_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case00_Case04)
+; only called from RunNameEntryStateWhenNotFading_Case00_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case00_Case04)
 ; reads: wNameEntryLength, wNameEntrySubState, wNameEntryByteC3, wNameEntryState
 ; writes: wNameEntryByteC3, wNameEntryLength, wNameEntrySubState, wArg5, wNameEntryCursorX, wNameEntryCursorY, wNameEntryState
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Case00_Case04_Sub01::
+RunNameEntryStateWhenNotFading_Case00_Case04_Sub01::
 Func_014_631C:: ; address name
     ld a, [hl]
     cp a, $FD
@@ -4967,7 +4967,7 @@ Jump_014_63C7::
 
 Jump_014_63CE::
     ld b, $C3
-    call WriteTileBAtScrollOffset47PlusWCFC2
+    call WriteTileBAtScrollOffset47PlusNameEntryLength
     ld a, [wNameEntryLength]
     cp a, $04
     jr nc, Jump_014_63E3
@@ -5021,7 +5021,7 @@ Jump_014_641A::
     inc hl
     ld a, $8E
     ld [hl], a
-    call CopyTileForWCFC2
+    call CopyTileForNameEntryLength
     jr Jump_014_63FD
 
 Jump_014_6431::
@@ -5031,7 +5031,7 @@ Jump_014_6431::
     jr z, Jump_014_63FD
     ld a, $8D
     ld [hl], a
-    call CopyTileForWCFC2
+    call CopyTileForNameEntryLength
     jr Jump_014_63FD
 
 Jump_014_643F::
@@ -5070,14 +5070,14 @@ Jump_014_646A::
     ld [wArg5], a
     ret
 
-; entry 3 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case01
+; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryState
 ; writes: wNameEntryState, wArg5
-RunWCFA8StateWhenNotFading_Case01_Case03::
+RunNameEntryStateWhenNotFading_Case01_Case03::
 Jump_014_6476:: ; address name
-    call RunWCFA8StateWhenNotFading_Case01_Case03_Sub01
-    call RunWCFA8StateWhenNotFading_Shared02
+    call RunNameEntryStateWhenNotFading_Case01_Case03_Sub01
+    call RunNameEntryStateWhenNotFading_Shared02
     ld a, [wNameEntryState]
     inc a
     ld [wNameEntryState], a
@@ -5085,15 +5085,15 @@ Jump_014_6476:: ; address name
     ld [wArg5], a
     ret
 
-; entry 4 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case01
+; entry 4 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntrySubState
 ; writes: wNameEntrySubState, wArg5
-RunWCFA8StateWhenNotFading_Case01_Case04::
+RunNameEntryStateWhenNotFading_Case01_Case04::
 Jump_014_6488:: ; address name
     ld hl, Data_014_6DF6
     ld de, Data_014_6E98
-    call RunWCFA8StateWhenNotFading_Shared05
+    call RunNameEntryStateWhenNotFading_Shared05
     cp a, $FF
     jr nz, Jump_014_64A9
     ld a, [wNameEntrySubState]
@@ -5110,14 +5110,14 @@ Jump_014_64A9::
     ld [wArg5], a
     ret
 
-; entry 9 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case01
+; entry 9 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wNameEntrySubState, wArg5
-RunWCFA8StateWhenNotFading_Case01_Case09::
+RunNameEntryStateWhenNotFading_Case01_Case09::
 Jump_014_64AE:: ; address name
     ld hl, Data_014_6DF6
     ld de, Data_014_6DF8
-    call RunWCFA8StateWhenNotFading_Shared05
+    call RunNameEntryStateWhenNotFading_Shared05
     cp a, $FF
     jr nz, Jump_014_64BF
     xor a, a
@@ -5128,24 +5128,24 @@ Jump_014_64BF::
     ld [wArg5], a
     ret
 
-; entry 2 of the `rst $00` table in RunWCFA8StateWhenNotFading
+; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
-RunWCFA8StateWhenNotFading_Case02::
+RunNameEntryStateWhenNotFading_Case02::
 Jump_014_64C4:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared01
+    call RunNameEntryStateWhenNotFading_Shared01
     ld a, [wNameEntryStep]
     rst $00
-    dw RunWCFA8StateWhenNotFading_Case02_Case00
-    dw RunWCFA8StateWhenNotFading_Case02_Case01
-    dw RunWCFA8StateWhenNotFading_Case02_Case02
-    dw RunWCFA8StateWhenNotFading_Case02_Case03
+    dw RunNameEntryStateWhenNotFading_Case02_Case00
+    dw RunNameEntryStateWhenNotFading_Case02_Case01
+    dw RunNameEntryStateWhenNotFading_Case02_Case02
+    dw RunNameEntryStateWhenNotFading_Case02_Case03
 
-; entry 0 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case02
+; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameEntryStep, wArg5
-RunWCFA8StateWhenNotFading_Case02_Case00::
+RunNameEntryStateWhenNotFading_Case02_Case00::
 Jump_014_64D3:: ; address name
     ld hl, vTiles2 + $5C0
     ld a, l
@@ -5165,11 +5165,11 @@ Jump_014_64D3:: ; address name
     ld [wArg5], a
     ret
 
-; entry 1 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case02
+; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wNameEntryStep
-RunWCFA8StateWhenNotFading_Case02_Case01::
+RunNameEntryStateWhenNotFading_Case02_Case01::
 Jump_014_64F8:: ; address name
     call BGMapAddressAtScroll_Bank14_6BCF
     ld de, $01E0
@@ -5189,7 +5189,7 @@ Jump_014_64F8:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     ld a, [wNameEntryStep]
     inc a
     ld [wNameEntryStep], a
@@ -5197,11 +5197,11 @@ Jump_014_64F8:: ; address name
     ld [wArg5], a
     ret
 
-; entry 2 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case02
+; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wNameEntryStep
-RunWCFA8StateWhenNotFading_Case02_Case02::
+RunNameEntryStateWhenNotFading_Case02_Case02::
 Jump_014_6532:: ; address name
     call BGMapAddressAtScroll_Bank14_6BCF
     ld de, $01C0
@@ -5221,7 +5221,7 @@ Jump_014_6532:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     ld a, [wNameEntryStep]
     inc a
     ld [wNameEntryStep], a
@@ -5229,11 +5229,11 @@ Jump_014_6532:: ; address name
     ld [wArg5], a
     ret
 
-; entry 3 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case02
+; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryState
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wNameEntryStep, ...
-RunWCFA8StateWhenNotFading_Case02_Case03::
+RunNameEntryStateWhenNotFading_Case02_Case03::
 Jump_014_656C:: ; address name
     call BGMapAddressAtScroll_Bank14_6BCF
     ld de, $01A0
@@ -5253,7 +5253,7 @@ Jump_014_656C:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     xor a, a
     ld [wNameEntryStep], a
     ld a, [wNameEntryState]
@@ -5263,32 +5263,32 @@ Jump_014_656C:: ; address name
     ld [wArg5], a
     ret
 
-; entry 3 of the `rst $00` table in RunWCFA8StateWhenNotFading
+; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
-RunWCFA8StateWhenNotFading_Case03::
+RunNameEntryStateWhenNotFading_Case03::
 Jump_014_65AA:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared01
+    call RunNameEntryStateWhenNotFading_Shared01
     ld a, [wNameEntryStep]
     rst $00
-    dw RunWCFA8StateWhenNotFading_Case03_Case00
-    dw RunWCFA8StateWhenNotFading_Case03_Case01
-    dw RunWCFA8StateWhenNotFading_Case03_Case02
-    dw RunWCFA8StateWhenNotFading_Case03_Case03
-    dw RunWCFA8StateWhenNotFading_Case03_Case04
-    dw RunWCFA8StateWhenNotFading_Case03_Case05
+    dw RunNameEntryStateWhenNotFading_Case03_Case00
+    dw RunNameEntryStateWhenNotFading_Case03_Case01
+    dw RunNameEntryStateWhenNotFading_Case03_Case02
+    dw RunNameEntryStateWhenNotFading_Case03_Case03
+    dw RunNameEntryStateWhenNotFading_Case03_Case04
+    dw RunNameEntryStateWhenNotFading_Case03_Case05
 
-; entry 5 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case03
+; entry 5 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryState
 ; writes: wStringCategory, wStringIndex, wNameEntryState, wNameEntryMenuCursor, wArg5
-RunWCFA8StateWhenNotFading_Case03_Case05::
+RunNameEntryStateWhenNotFading_Case03_Case05::
 Jump_014_65BD:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $03
     ld [wStringIndex], a
-    call RunWCFA8StateWhenNotFading_Shared04
+    call RunNameEntryStateWhenNotFading_Shared04
     cp a, $FF
     ret nz
     ld a, [wNameEntryState]
@@ -5299,22 +5299,22 @@ Jump_014_65BD:: ; address name
     ld [wArg5], a
     ret
 
-; entry 0 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case03
+; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg1, wNameEntryStep
 ; writes: wNameEntryStep, wArg5
-RunWCFA8StateWhenNotFading_Case03_Case00::
+RunNameEntryStateWhenNotFading_Case03_Case00::
 Jump_014_65DC:: ; address name
     ld a, [wArg1]
     and a, a
     jp z, Jump_014_661F
-    call RunWCFA8StateWhenNotFading_Case03_Case00_Sub02
+    call RunNameEntryStateWhenNotFading_Case03_Case00_Sub02
     cp a, $FF
     jr z, Jump_014_663A
-    call RunWCFA8StateWhenNotFading_Case03_Case00_Sub03
+    call RunNameEntryStateWhenNotFading_Case03_Case00_Sub03
     cp a, $FF
     jr z, Jump_014_663A
-    call RunWCFA8StateWhenNotFading_Case03_Case00_Sub01
+    call RunNameEntryStateWhenNotFading_Case03_Case00_Sub01
     cp a, $FF
     jr nz, Jump_014_6604
     ld a, [wNameEntryStep]
@@ -5325,10 +5325,10 @@ Jump_014_65DC:: ; address name
     ret
 
 Jump_014_6604::
-    call RunWCFA8StateWhenNotFading_Case03_Case00_Sub02
+    call RunNameEntryStateWhenNotFading_Case03_Case00_Sub02
     cp a, $FF
     jr z, Jump_014_663A
-    call RunWCFA8StateWhenNotFading_Case03_Case00_Sub03
+    call RunNameEntryStateWhenNotFading_Case03_Case00_Sub03
     cp a, $FF
     jr z, Jump_014_663A
     ld a, [wNameEntryStep]
@@ -5339,10 +5339,10 @@ Jump_014_6604::
     ret
 
 Jump_014_661F::
-    call RunWCFA8StateWhenNotFading_Case03_Case00_Sub02
+    call RunNameEntryStateWhenNotFading_Case03_Case00_Sub02
     cp a, $FF
     jr z, Jump_014_663A
-    call RunWCFA8StateWhenNotFading_Case03_Case00_Sub03
+    call RunNameEntryStateWhenNotFading_Case03_Case00_Sub03
     cp a, $FF
     jr z, Jump_014_663A
     ld a, [wNameEntryStep]
@@ -5361,17 +5361,17 @@ Jump_014_663A::
     ld [wArg5], a
     ret
 
-; entry 1 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case03
+; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
 ; writes: wStringCategory, wStringIndex, wNameEntryStep, wArg5
-RunWCFA8StateWhenNotFading_Case03_Case01::
+RunNameEntryStateWhenNotFading_Case03_Case01::
 Jump_014_6647:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld a, $02
     ld [wStringIndex], a
-    call RunWCFA8StateWhenNotFading_Shared04
+    call RunNameEntryStateWhenNotFading_Shared04
     cp a, $FF
     jr nz, Jump_014_665F
     ld a, [wNameEntryStep]
@@ -5384,25 +5384,25 @@ Jump_014_665F::
     ld [wArg5], a
     ret
 
-; entry 2 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case03
+; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
 ; writes: wNameEntryStep, wArg5
 ; points at: wTextBuf0, wNameEntryText
-RunWCFA8StateWhenNotFading_Case03_Case02::
+RunNameEntryStateWhenNotFading_Case03_Case02::
 Jump_014_6664:: ; address name
     ld de, wTextBuf0
     ld a, [wNameEntryStep]
     inc a
     ld [wNameEntryStep], a
-    jp RunWCFA8StateWhenNotFading_Case03_Case03
+    jp RunNameEntryStateWhenNotFading_Case03_Case03
 
-; entry 3 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case03
+; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
 ; writes: wNameEntryStep, wArg5
 ; points at: wNameEntryText, wTextBuf0
-RunWCFA8StateWhenNotFading_Case03_Case03::
+RunNameEntryStateWhenNotFading_Case03_Case03::
 Jump_014_6671:: ; address name
     ld hl, wNameEntryText
     ld de, wTextBuf0
@@ -5428,16 +5428,16 @@ Jump_014_6685::
     ld [wArg5], a
     ret
 
-; entry 4 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case03
+; entry 4 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryState
 ; writes: wStringCategory, wStringIndex, wNameEntryStep, wNameEntryState, wArg5
-RunWCFA8StateWhenNotFading_Case03_Case04::
+RunNameEntryStateWhenNotFading_Case03_Case04::
 Jump_014_6694:: ; address name
     xor a, a
     ld [wStringCategory], a
     ld [wStringIndex], a
-    call RunWCFA8StateWhenNotFading_Shared04
+    call RunNameEntryStateWhenNotFading_Shared04
     cp a, $FF
     ret nz
     xor a, a
@@ -5449,13 +5449,13 @@ Jump_014_6694:: ; address name
     ld [wArg5], a
     ret
 
-; entry 4 of the `rst $00` table in RunWCFA8StateWhenNotFading
+; entry 4 of the `rst $00` table in RunNameEntryStateWhenNotFading
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryState
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wNameEntryState
-RunWCFA8StateWhenNotFading_Case04::
+RunNameEntryStateWhenNotFading_Case04::
 Jump_014_66B1:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared01
+    call RunNameEntryStateWhenNotFading_Shared01
     call BGMapAddressAtScroll_Bank14_6BCF
     ld de, $010E
     add hl, de
@@ -5474,7 +5474,7 @@ Jump_014_66B1:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     ld a, [wNameEntryState]
     inc a
     ld [wNameEntryState], a
@@ -5484,14 +5484,14 @@ Jump_014_66B1:: ; address name
     ld [wArg5], a
     ret
 
-; entry 5 of the `rst $00` table in RunWCFA8StateWhenNotFading
+; entry 5 of the `rst $00` table in RunNameEntryStateWhenNotFading
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryMenuCursor, wNameEntryState
 ; writes: wNameEntryState, wNameEntryMenuCursor, wArg5
-RunWCFA8StateWhenNotFading_Case05::
+RunNameEntryStateWhenNotFading_Case05::
 Jump_014_66F3:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared01
-    call RunWCFA8StateWhenNotFading_Case05_Sub01
+    call RunNameEntryStateWhenNotFading_Shared01
+    call RunNameEntryStateWhenNotFading_Case05_Sub01
     and a, a
     ret z
     cp a, $FE
@@ -5522,22 +5522,22 @@ Jump_014_6714::
     ld [wArg5], a
     ret
 
-; entry 6 of the `rst $00` table in RunWCFA8StateWhenNotFading
+; entry 6 of the `rst $00` table in RunNameEntryStateWhenNotFading
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
-RunWCFA8StateWhenNotFading_Case06::
+RunNameEntryStateWhenNotFading_Case06::
 Jump_014_6729:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared01
+    call RunNameEntryStateWhenNotFading_Shared01
     ld a, [wNameEntryStep]
     rst $00
-    dw RunWCFA8StateWhenNotFading_Case06_Case00
-    dw RunWCFA8StateWhenNotFading_Case06_Case01
+    dw RunNameEntryStateWhenNotFading_Case06_Case00
+    dw RunNameEntryStateWhenNotFading_Case06_Case01
 
-; entry 0 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case06
+; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntryStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wNameEntryStep
-RunWCFA8StateWhenNotFading_Case06_Case00::
+RunNameEntryStateWhenNotFading_Case06_Case00::
 Jump_014_6734:: ; address name
     call BGMapAddressAtScroll_Bank14_6BCF
     ld a, h
@@ -5563,12 +5563,12 @@ Jump_014_6734:: ; address name
     ld [wArg5], a
     ret
 
-; entry 1 of the `rst $00` table in RunWCFA8StateWhenNotFading_Case06
+; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSavedSpriteClipMode
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, hSpriteHideTile, wArg5
 ; points at: wNameEntryText, wNameGlyphBuf, wNameEntryState
-RunWCFA8StateWhenNotFading_Case06_Case01::
+RunNameEntryStateWhenNotFading_Case06_Case01::
 Jump_014_676A:: ; address name
     ld hl, wNameEntryText
     ld de, wNameGlyphBuf
@@ -5614,13 +5614,13 @@ Jump_014_6787::
     ld [wArg5], a
     ret
 
-; entry 7 of the `rst $00` table in RunWCFA8StateWhenNotFading
+; entry 7 of the `rst $00` table in RunNameEntryStateWhenNotFading
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntrySubState
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wNameEntryState, ...
-RunWCFA8StateWhenNotFading_Case07::
+RunNameEntryStateWhenNotFading_Case07::
 Jump_014_67B0:: ; address name
-    call RunWCFA8StateWhenNotFading_Shared01
+    call RunNameEntryStateWhenNotFading_Shared01
     call BGMapAddressAtScroll_Bank14_6BCF
     ld de, $0100
     add hl, de
@@ -5639,7 +5639,7 @@ Jump_014_67B0:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     ld a, $01
     ld [wNameEntryState], a
     xor a, a
@@ -5660,12 +5660,12 @@ Jump_014_67FA::
     ld [wArg5], a
     ret
 
-; only called from routines of RunWCFA8StateWhenNotFading (E-0098)
-; 8 call sites from 8 routines (e.g. RunWCFA8StateWhenNotFading_Case07, RunWCFA8StateWhenNotFading_Case06, RunWCFA8StateWhenNotFading_Case05, RunWCFA8StateWhenNotFading_Case04, ...)
+; only called from routines of RunNameEntryStateWhenNotFading (E-0098)
+; 8 call sites from 8 routines (e.g. RunNameEntryStateWhenNotFading_Case07, RunNameEntryStateWhenNotFading_Case06, RunNameEntryStateWhenNotFading_Case05, RunNameEntryStateWhenNotFading_Case04, ...)
 ; reads: wArg1, wArg4, wArg5
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 ; points at: wArg1, wCounterPtr0Lo
-RunWCFA8StateWhenNotFading_Shared01::
+RunNameEntryStateWhenNotFading_Shared01::
 Func_014_6804:: ; address name
     ld hl, wArg1
     ld de, wCounterPtr0Lo
@@ -5745,7 +5745,7 @@ Jump_014_6856::
     ret
 
 ; A = 0 when [HL] is in the $FF-terminated list Data_014_688A, else $FF (E-0124)
-; 2 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
+; 2 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
 IsHLByteInList688A::
 Func_014_6875:: ; address name
     ld de, Data_014_688A
@@ -5775,7 +5775,7 @@ Data_014_688A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $67, $68, $69, $6A, $6B, $6C, $6E, $6F, $26, $5A, $FF
 
 ; A = 0 when [HL] is in the $FF-terminated list Data_014_68CA, else $FF (E-0124)
-; 3 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
+; 3 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
 IsHLByteInList68CA::
 Func_014_68B5:: ; address name
     ld de, Data_014_68CA
@@ -5802,11 +5802,11 @@ Jump_014_68C7::
 Data_014_68CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3E, $3F, $40, $41, $42, $75, $76, $77, $78, $79, $FF
 
-; only called from RunWCFA8StateWhenNotFading_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case05)
+; only called from RunNameEntryStateWhenNotFading_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case05)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wNameEntryMenuCursor
 ; writes: wMenuInputResult, wNameEntryMenuCursor, wNameEntryBlink
-RunWCFA8StateWhenNotFading_Case05_Sub01::
+RunNameEntryStateWhenNotFading_Case05_Sub01::
 Func_014_68D5:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5818,7 +5818,7 @@ Func_014_68D5:: ; address name
     jr nz, Jump_014_692F
     bit 1, a
     jr nz, Jump_014_693D
-    call BlinkCursorWCFBE_Bank14
+    call BlinkCursorNameEntryBlink_Bank14
     xor a, a
     ld [wMenuInputResult], a
     ret
@@ -5853,7 +5853,7 @@ Jump_014_6919::
 Jump_014_691D::
     xor a, a
     ld [wNameEntryBlink], a
-    call BlinkCursorWCFBE_Bank14
+    call BlinkCursorNameEntryBlink_Bank14
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
@@ -5863,7 +5863,7 @@ Jump_014_691D::
 Jump_014_692F::
     ld a, $69
     call QueueSoundEffect
-    call RunWCFA8StateWhenNotFading_Case05_Sub01_Sub01
+    call RunNameEntryStateWhenNotFading_Case05_Sub01_Sub01
     ld a, $FF
     ld [wMenuInputResult], a
     ret
@@ -5874,10 +5874,10 @@ Jump_014_693D::
     ret
 
 ; cycles wCFBE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
-; 2 call sites from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case05_Sub01)
+; 2 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case05_Sub01)
 ; reads: wNameEntryBlink, wNameEntryMenuCursor
 ; writes: wNameEntryBlink
-BlinkCursorWCFBE_Bank14::
+BlinkCursorNameEntryBlink_Bank14::
 Func_014_6943:: ; address name
     ld a, [wNameEntryBlink]
     inc a
@@ -5894,17 +5894,17 @@ Jump_014_6956::
     jr Jump_014_6960
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case05_Sub01)
+; 2 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case05_Sub01)
 ; reads: wNameEntryMenuCursor
 DrawBlankTileC3_695A::
 Func_014_695A:: ; address name
     ld b, $C3
     jr Jump_014_6960
 
-; only called from RunWCFA8StateWhenNotFading_Case05_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case05_Sub01)
+; only called from RunNameEntryStateWhenNotFading_Case05_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case05_Sub01)
 ; reads: wNameEntryMenuCursor
-RunWCFA8StateWhenNotFading_Case05_Sub01_Sub01::
+RunNameEntryStateWhenNotFading_Case05_Sub01_Sub01::
 Func_014_695E:: ; address name
     ld b, $BC
 
@@ -5931,7 +5931,7 @@ Data_014_697D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 2 call sites from 2 routines (e.g. CopyTileForWCFC2, RunWCFA8StateWhenNotFading_Case00_Case02)
+; 2 call sites from 2 routines (e.g. CopyTileForNameEntryLength, RunNameEntryStateWhenNotFading_Case00_Case02)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank14::
 Func_014_6981:: ; address name
@@ -5952,11 +5952,11 @@ Jump_014_6984::
     jr nz, Jump_014_6983
     ret
 
-; only called from routines of RunWCFA8StateWhenNotFading (E-0098)
-; 2 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case01_Case03, RunWCFA8StateWhenNotFading_Case01_Case00)
+; only called from routines of RunNameEntryStateWhenNotFading (E-0098)
+; 2 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case01_Case03, RunNameEntryStateWhenNotFading_Case01_Case00)
 ; writes: wNameEntryByteBC
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Shared02::
+RunNameEntryStateWhenNotFading_Shared02::
 Func_014_6992:: ; address name
     ld hl, wNameEntryText
     ld bc, $0000
@@ -6005,9 +6005,9 @@ Jump_014_69CA::
     db $EA, $38, $C5, $3E, $01, $EA, $2B, $C5, $AF, $EA, $2C, $C5, $EA, $4F, $C5, $C9
 
 ; writes B at the BG map entry BGMapAddressAtScroll + $47 (row 2, column 7 of the view) + wCFC2, with interrupts off after rSTAT bit 1 clears; BC kept (E-0079)
-; 6 call sites from 4 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, RunWCFA8StateWhenNotFading_Case01_Case03_Sub01_Sub01, RunWCFA8StateWhenNotFading_Case01_Case01, RunWCFA8StateWhenNotFading_Case01_Case00)
+; 6 call sites from 4 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, Func_014_6CEA, RunNameEntryStateWhenNotFading_Case01_Case01, RunNameEntryStateWhenNotFading_Case01_Case00)
 ; reads: wNameEntryLength, rSTAT
-WriteTileBAtScrollOffset47PlusWCFC2::
+WriteTileBAtScrollOffset47PlusNameEntryLength::
 Func_014_6A0D:: ; address name
     push bc
     call BGMapAddressAtScroll_Bank14_6BCF
@@ -6026,10 +6026,10 @@ Jump_014_6A1F::
     ei
     ret
 
-; only called from routines of RunWCFA8StateWhenNotFading (E-0098)
-; 2 call sites from 2 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04, RunWCFA8StateWhenNotFading_Case01_Case01)
+; only called from routines of RunNameEntryStateWhenNotFading (E-0098)
+; 2 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04, RunNameEntryStateWhenNotFading_Case01_Case01)
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Shared03::
+RunNameEntryStateWhenNotFading_Shared03::
 Func_014_6A28:: ; address name
     ld hl, wNameEntryText
     ld c, $00
@@ -6053,12 +6053,12 @@ Jump_014_6A3B::
     jr c, Jump_014_6A3B
     ret
 
-; only called from RunWCFA8StateWhenNotFading_Case03_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case03_Case00)
+; only called from RunNameEntryStateWhenNotFading_Case03_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case03_Case00)
 ; reads: wArg1, wGridCursorX
 ; writes: rRAMG2, rRAMB
 ; points at: sRecords, wNameEntryText, wPartyList
-RunWCFA8StateWhenNotFading_Case03_Case00_Sub01::
+RunNameEntryStateWhenNotFading_Case03_Case00_Sub01::
 Func_014_6A45:: ; address name
     ld hl, sRecords
     ld a, $0A
@@ -6148,11 +6148,11 @@ Jump_014_6AB2::
     ld a, $FF
     ret
 
-; only called from RunWCFA8StateWhenNotFading_Case03_Case00 (E-0047)
-; 3 call sites from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case03_Case00)
+; only called from RunNameEntryStateWhenNotFading_Case03_Case00 (E-0047)
+; 3 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case03_Case00)
 ; reads: wArg1
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Case03_Case00_Sub02::
+RunNameEntryStateWhenNotFading_Case03_Case00_Sub02::
 Func_014_6AB7:: ; address name
     ld hl, Data_014_70F0
     ld c, $00
@@ -6223,10 +6223,10 @@ Jump_014_6B03::
     ld a, $FF
     ret
 
-; only called from RunWCFA8StateWhenNotFading_Case03_Case00 (E-0047)
-; 3 call sites from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case03_Case00)
+; only called from RunNameEntryStateWhenNotFading_Case03_Case00 (E-0047)
+; 3 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case03_Case00)
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Case03_Case00_Sub03::
+RunNameEntryStateWhenNotFading_Case03_Case00_Sub03::
 Func_014_6B08:: ; address name
     ld hl, wNameEntryText
     ld c, $00
@@ -6318,11 +6318,11 @@ Jump_014_6B74::
     xor a, a
     ret
 
-; only called from routines of RunWCFA8StateWhenNotFading (E-0098)
-; 3 call sites from 3 routines (e.g. RunWCFA8StateWhenNotFading_Case03_Case05, RunWCFA8StateWhenNotFading_Case03_Case04, RunWCFA8StateWhenNotFading_Case03_Case01)
+; only called from routines of RunNameEntryStateWhenNotFading (E-0098)
+; 3 call sites from 3 routines (e.g. RunNameEntryStateWhenNotFading_Case03_Case05, RunNameEntryStateWhenNotFading_Case03_Case04, RunNameEntryStateWhenNotFading_Case03_Case01)
 ; reads: wNameEntryByteC4, wTextFlags, wArg1
 ; writes: wNameEntryByteC4, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-RunWCFA8StateWhenNotFading_Shared04::
+RunNameEntryStateWhenNotFading_Shared04::
 Func_014_6B76:: ; address name
     ld a, [wNameEntryByteC4]
     and a, a
@@ -6381,7 +6381,7 @@ Jump_014_6BCD::
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 12 call sites from 11 routines (e.g. RunWCFA8StateWhenNotFading_Case07, RunWCFA8StateWhenNotFading_Case05_Sub01_Sub01, RunWCFA8StateWhenNotFading_Case04, RunWCFA8StateWhenNotFading_Case01_Case00_Sub02, ...)
+; 12 call sites from 11 routines (e.g. RunNameEntryStateWhenNotFading_Case07, RunNameEntryStateWhenNotFading_Case05_Sub01_Sub01, RunNameEntryStateWhenNotFading_Case04, RunNameEntryStateWhenNotFading_Case01_Case00_Sub02, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank14_6BCF::
 Func_014_6BCF:: ; address name
@@ -6415,11 +6415,11 @@ Jump_014_6BF3::
     ld h, a
     ret
 
-; only called from routines of RunWCFA8StateWhenNotFading (E-0098)
-; 3 call sites from 3 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case01, RunWCFA8StateWhenNotFading_Case01_Case09, RunWCFA8StateWhenNotFading_Case01_Case04)
+; only called from routines of RunNameEntryStateWhenNotFading (E-0098)
+; 3 call sites from 3 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case01, RunNameEntryStateWhenNotFading_Case01_Case09, RunNameEntryStateWhenNotFading_Case01_Case04)
 ; reads: wNameEntryTimer
 ; writes: wNameEntryTimer, wNameEntryByteAC
-RunWCFA8StateWhenNotFading_Shared05::
+RunNameEntryStateWhenNotFading_Shared05::
 Func_014_6BF8:: ; address name
     push hl
     push de
@@ -6460,7 +6460,7 @@ Jump_014_6C19::
     ld a, [wNameEntryTimer]
     inc a
     ld [wNameEntryTimer], a
-    jr RunWCFA8StateWhenNotFading_Shared05
+    jr RunNameEntryStateWhenNotFading_Shared05
 
 Jump_014_6C33::
     pop de
@@ -6472,9 +6472,9 @@ Jump_014_6C33::
     ret
 
 ; copies the 16-byte tile at Data_014_6C60 to the VRAM address from the word table Data_014_6C56 + 2 * wCFC2 (CopyTileBytesToVRAM_Bank14) (E-0119)
-; 4 call sites from 3 routines (e.g. RunWCFA8StateWhenNotFading_Case00_Case04_Sub01, RunWCFA8StateWhenNotFading_Case01_Case01, ToggleVoicingMarkOnNameEntry)
+; 4 call sites from 3 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, RunNameEntryStateWhenNotFading_Case01_Case01, ToggleVoicingMarkOnNameEntry)
 ; reads: wNameEntryLength
-CopyTileForWCFC2::
+CopyTileForNameEntryLength::
 Func_014_6C3F:: ; address name
     ld hl, Data_014_6C56
     ld a, [wNameEntryLength]
@@ -6494,12 +6494,12 @@ Data_014_6C56:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_6C60:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
-; only called from RunWCFA8StateWhenNotFading_Case01_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case01_Case03)
+; only called from RunNameEntryStateWhenNotFading_Case01_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case01_Case03)
 ; reads: wArg1, wRandomLo, wArg3, wArg2
 ; writes: wNameEntryLength, wNameEntryByteC3
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Case01_Case03_Sub01::
+RunNameEntryStateWhenNotFading_Case01_Case03_Sub01::
 Func_014_6C70:: ; address name
     ld a, [wArg1]
     or a, a
@@ -6553,7 +6553,7 @@ Jump_014_6CB4::
     ld a, [de]
     ld h, a
     ld de, wNameEntryText
-    call RunWCFA8StateWhenNotFading_Case01_Case03_Sub01_Sub01
+    call Func_014_6CEA
     ret
 
 Jump_014_6CC0::
@@ -6581,26 +6581,24 @@ Jump_014_6CC0::
     ld a, [de]
     ld h, a
     ld de, wNameEntryText
-    call RunWCFA8StateWhenNotFading_Case01_Case03_Sub01_Sub01
+    call Func_014_6CEA
     ret
 
-; only called from RunWCFA8StateWhenNotFading_Case01_Case03_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. RunWCFA8StateWhenNotFading_Case01_Case03_Sub01)
+; 2 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case01_Case03_Sub01)
 ; writes: wNameEntryLength, wNameEntryByteC3
 ; points at: wNameEntryText
-RunWCFA8StateWhenNotFading_Case01_Case03_Sub01_Sub01::
-Func_014_6CEA:: ; address name
+Func_014_6CEA::
     ld a, [hl]
     cp a, $F0
     jr z, Jump_014_6CF4
     ld [de], a
     inc de
     inc hl
-    jr RunWCFA8StateWhenNotFading_Case01_Case03_Sub01_Sub01
+    jr Func_014_6CEA
 
 Jump_014_6CF4::
     ld b, $C3
-    call WriteTileBAtScrollOffset47PlusWCFC2
+    call WriteTileBAtScrollOffset47PlusNameEntryLength
     ld hl, wNameEntryText
     ld c, $00
 
@@ -6633,7 +6631,7 @@ Jump_014_6D18::
 Jump_014_6D1F::
     ld [wNameEntryLength], a
     ld b, $55
-    call WriteTileBAtScrollOffset47PlusWCFC2
+    call WriteTileBAtScrollOffset47PlusNameEntryLength
     ret
 
 Jump_014_6D28::
@@ -8161,7 +8159,7 @@ Jump_014_7E89::
     ret
 
 ; clears SRAM record wD7F1 (when below 30) and moves the later stored records up to fill the gap, updating the party list (E-0131)
-; 19 call sites from 18 routines (e.g. RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case17, ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case04_Case16, ...)
+; 19 call sites from 18 routines (e.g. RunLinkScreenState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case17, ScriptCommandEB_Run_Case05_Case3F, ScriptCommandEB_Run_Case04_Case16, ...)
 ; reads: wArg1, wArg2, wPartyCount
 ; writes: rRAMG2, rRAMB, wArg3, wArg5, wArg6, wArg7, wPartyCount
 ; points at: sRecords, sRecord1, wPartyList
@@ -8355,10 +8353,10 @@ Jump_014_7F85::
     ld [rRAMG2], a
     ret
 
-; only called from CreateMonsterRecordOfKindHFFC7_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01)
+; only called from CreateMonsterRecordOfKindTemp1_Sub01_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01_Sub01)
 ; reads: wWorkBuf
-CreateMonsterRecordOfKindHFFC7_Sub01_Sub01_Sub01::
+CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01::
 Func_014_7F9C:: ; address name
     ld a, [wWorkBuf]
     ld c, a

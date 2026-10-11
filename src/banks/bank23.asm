@@ -39,7 +39,7 @@ Data_023_449F:: ; address name
 
 ; compressed sprite graphics of monster id $10F (PomPomBom) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 207 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-MonsterSprite_PomPomBom:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_PomBom:: ; heuristic: stream in a run of back-to-back compressed streams; C0
 Data_023_4581:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $08C581, $CF
 

@@ -541,7 +541,7 @@ Jump_001_46B4:: ; address name
     ld [wDebugCursor], a
     ld a, [wCurrentKeyIndex]
     push af
-    call LoadKeyEntryFieldsToWC5FD
+    call LoadKeyEntryFieldsToDebugState
     pop af
     or a, $80
     ld [wDebugValue0], a
@@ -2494,7 +2494,7 @@ Jump_001_5590::
     ld [wArg3], a
     ld a, d
     ld [wArg4], a
-    farcall TestBitInFieldAtWD7F3
+    farcall TestBitInFieldAtArg3
     ld a, [wArg5]
     cp a, $FF
     jr z, Jump_001_561F
@@ -2685,7 +2685,7 @@ Jump_001_56F1::
     jp nz, Jump_001_5800
     bit 2, a
     jp nz, Jump_001_5720
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ret
 
 Jump_001_5720::
@@ -2777,7 +2777,7 @@ Jump_001_57B6::
     jr c, Jump_001_57B6
     ret
 
-; for C up to $1A, loads byte C of wD01A (LoadWD01AByteWD7F4) and stores it at DE (E-0122)
+; for C up to $1A, loads byte C of wD01A (LoadWD01AByteArg4) and stores it at DE (E-0122)
 ; 2 call sites from 1 routine (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01)
 ; reads: wArg5
 ; writes: wArg4
@@ -2787,7 +2787,7 @@ Func_001_57C7:: ; address name
     push de
     ld a, c
     ld [wArg4], a
-    farcall LoadWD01AByteWD7F4
+    farcall LoadWD01AByteArg4
     pop de
     pop bc
     ld a, [wArg5]
@@ -2800,10 +2800,10 @@ Func_001_57C7:: ; address name
     ret
 
 ; debug: toggles wD7F1 between 0 and 2 and writes tile $10 + wD7F1 at vBGMap0 + $81; the following entries are the debug results screen input handlers (E-0131)
-; 1 call site from 1 routine (e.g. DebugToggleWD7F1Marker)
+; 1 call site from 1 routine (e.g. DebugToggleArg1Marker)
 ; reads: wArg1
 ; writes: wArg1
-DebugToggleWD7F1Marker::
+DebugToggleArg1Marker::
 Func_001_57E1:: ; address name
     ld a, [wArg1]
     and a, a
@@ -2831,12 +2831,12 @@ Jump_001_5800::
     jr z, Jump_001_5812
     cp a, $07
     jr z, Jump_001_5812
-    call DebugToggleWD7F1Marker
-    call StepDebugCursorWC5FF
+    call DebugToggleArg1Marker
+    call StepDebugCursorDebugCounter
     ret
 
 Jump_001_5812::
-    call DrawDebugFieldValueWC5F8
+    call DrawDebugFieldValueDebugCursor
     ld a, [wScreenState]
     inc a
     inc a
@@ -2846,23 +2846,23 @@ Jump_001_5812::
     ret
 
 Jump_001_5822::
-    call DrawDebugFieldValueWC5F8
+    call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
     and a, a
     ret z
     dec a
     ld [wDebugCursor], a
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ret
 
 Jump_001_5832::
-    call DrawDebugFieldValueWC5F8
+    call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
     cp a, $09
     ret z
     inc a
     ld [wDebugCursor], a
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ret
 
 Jump_001_5843::
@@ -2898,7 +2898,7 @@ Jump_001_5868::
     pop hl
     ld a, c
     ld [hl], a
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ret
 
 Jump_001_5871::
@@ -2928,7 +2928,7 @@ Jump_001_588A::
     ld [hl+], a
     ld a, b
     ld [hl], a
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ld a, [wDebugCursor]
     cp a, $02
     jr z, Jump_001_58A2
@@ -2988,7 +2988,7 @@ Jump_001_58EB::
     dec a
     pop hl
     ld [hl], a
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ret
 
 Jump_001_58F2::
@@ -3018,7 +3018,7 @@ Jump_001_5909::
     ld [hl+], a
     ld a, b
     ld [hl], a
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ld a, [wDebugCursor]
     cp a, $02
     jp z, Jump_001_58A2
@@ -3059,7 +3059,7 @@ Jump_001_594C::
     inc a
     pop hl
     ld [hl], a
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ret
 
 Jump_001_5953::
@@ -3115,7 +3115,7 @@ Jump_001_5997::
     dec a
     pop hl
     ld [hl], a
-    call StepDebugCursorWC5FF
+    call StepDebugCursorDebugCounter
     ret
 
 Jump_001_599E::
@@ -3201,7 +3201,7 @@ Jump_001_59FB::
     ld [wArg6], a
     ld a, [wDebugValue1]
     ld [wArg7], a
-    farcall FamilyForSpeciesIdWD7F6
+    farcall FamilyForSpeciesIdArg6
     ld a, [wArg5]
     ld hl, wRecordBufA + $D
     ld [hl], a
@@ -3209,7 +3209,7 @@ Jump_001_59FB::
     ld [wArg6], a
     ld a, [wDebugState]
     ld [wArg7], a
-    farcall FamilyForSpeciesIdWD7F6
+    farcall FamilyForSpeciesIdArg6
     ld a, [wArg5]
     ld hl, wRecordBufB + $D
     ld [hl], a
@@ -3261,25 +3261,25 @@ Jump_001_5A99::
     ret
 
 ; debug: wC5FF += 1; below $10 continues at Func_001_5AC0, below $18 at Jump_001_5B45, then wraps to 0 (E-0126)
-; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, DebugToggleWD7F1Marker)
+; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_Sub01, DebugToggleArg1Marker)
 ; reads: wDebugCounter, wDebugCursor
 ; writes: wDebugCounter
-StepDebugCursorWC5FF::
+StepDebugCursorDebugCounter::
 Func_001_5AAC:: ; address name
     ld a, [wDebugCounter]
     inc a
     ld [wDebugCounter], a
     cp a, $10
-    jr c, DrawDebugFieldValueWC5F8
+    jr c, DrawDebugFieldValueDebugCursor
     cp a, $18
     jp c, Jump_001_5B45
     xor a, a
     ld [wDebugCounter], a
 
 ; debug: draws the value of field wC5F8 (Data_001_5B70) at Data_001_5B84[wC5F8] as hex, a tile or BCD (E-0128)
-; 3 call sites from 1 routine (e.g. DebugToggleWD7F1Marker)
+; 3 call sites from 1 routine (e.g. DebugToggleArg1Marker)
 ; reads: wDebugCursor
-DrawDebugFieldValueWC5F8::
+DrawDebugFieldValueDebugCursor::
 Func_001_5AC0:: ; address name
     ld a, [wDebugCursor]
     sla a
@@ -3350,7 +3350,7 @@ Jump_001_5B14::
     ret
 
 ; C = the last two decimal digits of C packed as BCD (E-0125)
-; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueWC5F8)
+; 4 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueDebugCursor)
 ; reads: wDigits
 PackTwoDigitsOfCAsBCD::
 Func_001_5B2D:: ; address name
@@ -3408,7 +3408,7 @@ Data_001_5B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $9A, $22, $9A
 
 ; reads a monster id word at DE, copies its name and draws its glyphs at HL (E-0122)
-; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DebugToggleWD7F1Marker)
+; 2 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DebugToggleArg1Marker)
 ; writes: wNameGlyphBuf
 DrawMonsterNameForWordAtDE_Bank01::
 Func_001_5B98:: ; address name
@@ -3547,7 +3547,7 @@ Jump_001_5C5B::
     ld a, [wDebugState]
     and a, $7F
     ld [wKeyWorldSlot], a
-    farcall LoadWCD07RecordFromSRAMSlotWCC42
+    farcall LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot
     ld a, $80
     ld [wMapType], a
     xor a, a
@@ -3636,7 +3636,7 @@ Jump_001_5CF4::
     or a, $80
     ld [wDebugValue0], a
     and a, $7F
-    call LoadKeyEntryFieldsToWC5FD
+    call LoadKeyEntryFieldsToDebugState
     jr Jump_001_5D3C
 
 Jump_001_5D00::
@@ -3753,7 +3753,7 @@ DebugAutomap_Update_Sub01::
 Func_001_5DBA:: ; address name
     ld a, [wDebugValue1]
     ldh [hTemp0], a
-    farcall RollKeyContentsForLevelHFFC6
+    farcall RollKeyContentsForLevelTemp0
     ld a, [wDebugValue0]
     ld [wCurrentKeyIndex], a
     ld l, a
@@ -3793,7 +3793,7 @@ Jump_001_5DF3::
     ld [hl], a
     ld [wPartyStrength], a
     farcall DebugAutomap_Update_Sub01_Sub01
-    farcall SaveWCD07RecordToSRAMSlotWCC42
+    farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
     ld a, [wKeyWorldHeight]
@@ -3836,7 +3836,7 @@ Jump_001_5DF3::
 ; A = key slot: wC5FD = byte 0 and wC5FE = byte 3 of its wKeyList entry, wC5FA = byte 3 | $80 (E-0120)
 ; 2 call sites from 2 routines (e.g. DebugAutomap_Update, DebugAutomap_Init)
 ; writes: wDebugState, wDebugSubState, wDebugValue1
-LoadKeyEntryFieldsToWC5FD::
+LoadKeyEntryFieldsToDebugState::
 Func_001_5E6C:: ; address name
     ld l, a
     ld h, $00
@@ -5027,7 +5027,7 @@ Jump_001_6734::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr z, Jump_001_674E
-    call DrawDebugValueHexForWC46B
+    call DrawDebugValueHexForMenuState
     ld a, [wMenuState]
     dec a
     cp a, $FF
@@ -5041,7 +5041,7 @@ Jump_001_6748::
 Jump_001_674E::
     bit 7, a
     jr z, Jump_001_6764
-    call DrawDebugValueHexForWC46B
+    call DrawDebugValueHexForMenuState
     ld a, [wMenuState]
     inc a
     cp a, $0C
@@ -5093,7 +5093,7 @@ Jump_001_679B::
     call SubtractDEFromDebugLimit
 
 Jump_001_679F::
-    call DrawDebugValueHexForWC46B
+    call DrawDebugValueHexForMenuState
     jr Jump_001_6801
 
 Jump_001_67A4::
@@ -5124,7 +5124,7 @@ Jump_001_67C0::
     call SubtractDEFromDebugLimit
 
 Jump_001_67C4::
-    call DrawDebugValueHexForWC46B
+    call DrawDebugValueHexForMenuState
     jr Jump_001_6801
 
 Jump_001_67C9::
@@ -5167,7 +5167,7 @@ Jump_001_6808::
 ; 4 call sites from 1 routine (e.g. DebugBattleSetupLoadWords)
 ; reads: wMenuState
 ; points at: wWorkBuf
-DrawDebugValueHexForWC46B::
+DrawDebugValueHexForMenuState::
 Func_001_6809:: ; address name
     ld a, [wMenuState]
     ld hl, Data_001_68D3
@@ -5549,7 +5549,7 @@ Func_001_6A7E:: ; address name
     ret
 
 ; writes the low nibble of B, then both nibbles of C, as tiles $10 + nibble at DE (WaitForVRAMAccess each); DE ends on the last tile (E-0120)
-; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueWC5F8, DrawDebugValueHexForWC46B, DebugBattleSetupLoadWords, ...)
+; 7 call sites from 5 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, DrawDebugFieldValueDebugCursor, DrawDebugValueHexForMenuState, DebugBattleSetupLoadWords, ...)
 WriteThreeHexDigitsAtDE::
 Func_001_6A98:: ; address name
     ld a, b
@@ -5774,12 +5774,12 @@ Func_001_6C1F:: ; address name
     call PickRandomMonsterSkipping7ETo82_Sub01
     ret
 
-; only called from CreateMonsterRecordOfKindHFFC7_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01)
+; only called from CreateMonsterRecordOfKindTemp1_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01)
 ; reads: hTemp3, wBattleArg0, wRecordBuffer, wBattleArg1, wRandomHi, wRecordBufferData, wScreenAttrBuffer, wBattleArg2, ...
 ; writes: wMonsterId, wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wWorkBuf
 ; points at: wPlayerName
-CreateMonsterRecordOfKindHFFC7_Sub01_Sub01::
+CreateMonsterRecordOfKindTemp1_Sub01_Sub01::
 Func_001_6C48:: ; address name
     ldh a, [hTemp3]
     push af
@@ -5999,7 +5999,7 @@ Jump_001_6D33::
     ld [wWorkBuf + $2], a
     ld a, h
     ld [wWorkBuf + $3], a
-    farcall CreateMonsterRecordOfKindHFFC7_Sub01_Sub01_Sub01
+    farcall CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01
     jr Jump_001_6DF4
 
 Jump_001_6DD9::
@@ -6043,7 +6043,7 @@ Jump_001_6DF4::
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
-; 3 call sites from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01)
+; 3 call sites from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01_Sub01)
 CopyBBytesDEToHL_Bank01::
 Func_001_6E25:: ; address name
     ld a, [de]
@@ -6054,7 +6054,7 @@ Func_001_6E25:: ; address name
     ret
 
 ; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01_Sub01)
 FillBBytesAtHL_Bank01::
 Func_001_6E2C:: ; address name
     ld [hl+], a
@@ -6063,7 +6063,7 @@ Func_001_6E2C:: ; address name
     ret
 
 ; writes '???' ($98 x 3), seven $F0 bytes and a 0 at HL (E-0122)
-; 4 call sites from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01)
+; 4 call sites from 1 routine (e.g. CreateMonsterRecordOfKindTemp1_Sub01_Sub01)
 WriteUnknownNamePlaceholder_Bank01::
 Func_001_6E31:: ; address name
     ld a, $98
@@ -6084,10 +6084,10 @@ Jump_001_6E3E::
     ret
 
 ; with SRAM enabled creates a record from the template Data_001_7098[hFFC7] (wD869 = hFFC7, level hFFC8); kinds 1 and 2 also set field $6E = 1 (E-0124)
-; 10 call sites from 10 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, AddRecordWD7F5AsFollower, ScriptCommand2A_Run_Case10, ...)
+; 10 call sites from 10 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, AddRecordArg5AsFollower, ScriptCommand2A_Run_Case10, ...)
 ; reads: hTemp1, hTemp2, wBattleArg0
 ; writes: rRAMG, rRAMB, wBattleArg1, wBattleArg2
-CreateMonsterRecordOfKindHFFC7::
+CreateMonsterRecordOfKindTemp1::
 Func_001_6E46:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -6104,7 +6104,7 @@ Func_001_6E46:: ; address name
     xor a, a
     ld [wBattleArg2], a
     ldh a, [hTemp2]
-    call CreateMonsterRecordOfKindHFFC7_Sub01
+    call CreateMonsterRecordOfKindTemp1_Sub01
     ldh a, [hTemp1]
     cp a, $01
     jr z, Jump_001_6E73
@@ -6135,13 +6135,13 @@ Func_001_6E82:: ; address name
     ldh [hTemp3], a
     ld a, [wBattleArg0]
 
-; only called from CreateMonsterRecordOfKindHFFC7 (E-0047)
-; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7)
+; only called from CreateMonsterRecordOfKindTemp1 (E-0047)
+; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindTemp1)
 ; writes: wBattleArg0
-CreateMonsterRecordOfKindHFFC7_Sub01::
+CreateMonsterRecordOfKindTemp1_Sub01::
 Func_001_6E91:: ; address name
     ld [wBattleArg0], a
-    call CreateMonsterRecordOfKindHFFC7_Sub01_Sub01
+    call CreateMonsterRecordOfKindTemp1_Sub01_Sub01
     ret
 
 ; only called from DebugBattleSetup_Update_Shared01 (E-0047)

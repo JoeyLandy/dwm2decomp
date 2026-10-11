@@ -2,7 +2,7 @@ SECTION "Bank 25", ROMX[$4000], BANK[$25]
     db $25
 
 ; ORs the attribute bits from Data_025_411E[hSpriteSetIndex] (when its bit 0 is set) into hSpriteAttrXor, then builds the sprite from Data_025_401E (E-0124)
-; 6 call sites from 6 routines (e.g. DebugMonsterPictureViewer_Update, UpdateAndDrawSpriteSlots, AdvanceHFF99AndRunHFF8BMode_Shared01, AdvanceHFF99AndRunHFF8BMode_Case00_Sub01, ...)
+; 6 call sites from 6 routines (e.g. DebugMonsterPictureViewer_Update, UpdateAndDrawSpriteSlots, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01, Func_004_4D43, ...)
 ; reads: hSpriteSetIndex, hSpriteAttrXor
 ; writes: hSpriteAttrXor
 DrawMetaSpriteSet_Bank25::
@@ -637,7 +637,7 @@ Jump_025_4342::
 Jump_025_4349::
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsHFFBA_Bank25
+    call BGTileUnderPointIsSpriteHideTile_Bank25
     jr nc, Jump_025_4342
     inc e
     ldh a, [hSpriteTileOffset]
@@ -739,7 +739,7 @@ Jump_025_43BD::
 Jump_025_43C4::
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsHFFBA_Bank25
+    call BGTileUnderPointIsSpriteHideTile_Bank25
     jr nc, Jump_025_43BD
     inc e
     ldh a, [hSpriteTileOffset]
@@ -764,7 +764,7 @@ Jump_025_43C4::
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. DrawMetaSpriteSet_Bank25_Sub01)
 ; reads: hScrollY, hScrollX, hSpriteHideTile, rSTAT
-BGTileUnderPointIsHFFBA_Bank25::
+BGTileUnderPointIsSpriteHideTile_Bank25::
 Func_025_43E4:: ; address name
     push hl
     push bc

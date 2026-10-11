@@ -726,7 +726,7 @@ Func_012_43DA:: ; address name
 ScriptCommand96_Run_Case15::
 Jump_012_4412:: ; address name
     ld a, $07
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld hl, wScriptStep
     inc [hl]
     ld hl, wRecordCapacity
@@ -746,19 +746,19 @@ Jump_012_4420:: ; address name
     cp a, $02
     jr nz, Jump_012_4437
     ld a, $07
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld a, $16
     ld [wScriptStep], a
     jr Jump_012_4440
 
 Jump_012_4437::
     ld a, $05
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld hl, wScriptStep
     inc [hl]
 
 Jump_012_4440::
-    farcall IncWD588AndCopyWD7FCToWD78C
+    farcall IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     farcall ScriptCommand96_Run_Shared01
     ret
 
@@ -775,19 +775,19 @@ Jump_012_444D:: ; address name
     cp a, $02
     jr nz, Jump_012_4464
     ld a, $07
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld a, $16
     ld [wScriptStep], a
     jr Jump_012_446D
 
 Jump_012_4464::
     ld a, $03
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld hl, wScriptStep
     inc [hl]
 
 Jump_012_446D::
-    farcall IncWD588AndCopyWD7FCToWD78C
+    farcall IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     farcall ScriptCommand96_Run_Shared01
     ret
 
@@ -959,7 +959,7 @@ Jump_012_457B::
 ScriptCommand95_Run_Case16::
 Jump_012_4587:: ; address name
     ld a, $07
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld hl, wScriptStep
     inc [hl]
     ld hl, wRecordCapacity
@@ -972,7 +972,7 @@ Jump_012_4587:: ; address name
 ScriptCommand96_Run_Case12::
 Jump_012_4595:: ; address name
     ld a, $06
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -984,7 +984,7 @@ Jump_012_4595:: ; address name
 ScriptCommand95_Run_Case0E::
 Jump_012_459F:: ; address name
     ld a, $05
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld hl, wScriptStep
     inc [hl]
     ld hl, wRecordCapacity
@@ -992,12 +992,12 @@ Jump_012_459F:: ; address name
     ld a, [wArenaRank]
     or a, a
     jr nz, Jump_012_45BF
-    farcall SetupWD78EFromWD7FF
+    farcall SetupScreenCountPlusOneFromRecordCapacity
     farcall ScriptCommand95_Run_Shared01
     ret
 
 Jump_012_45BF::
-    farcall SetupWD78EFromWD7FF
+    farcall SetupScreenCountPlusOneFromRecordCapacity
     farcall ScriptCommand95_Run_Shared02
     ret
 
@@ -1007,7 +1007,7 @@ Jump_012_45BF::
 ScriptCommand96_Run_Case0A::
 Jump_012_45CC:: ; address name
     ld a, $04
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1188,7 +1188,7 @@ Jump_012_469E:: ; address name
 ScriptCommand95_Run_Case06::
 Jump_012_46D8:: ; address name
     ld a, $03
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld hl, wScriptStep
     inc [hl]
     ld hl, wRecordCapacity
@@ -1196,12 +1196,12 @@ Jump_012_46D8:: ; address name
     ld a, [wArenaRank]
     or a, a
     jr nz, Jump_012_46F8
-    farcall SetupWD78EFromWD7FF
+    farcall SetupScreenCountPlusOneFromRecordCapacity
     farcall ScriptCommand95_Run_Shared01
     ret
 
 Jump_012_46F8::
-    farcall SetupWD78EFromWD7FF
+    farcall SetupScreenCountPlusOneFromRecordCapacity
     farcall ScriptCommand95_Run_Shared02
     ret
 
@@ -1224,7 +1224,7 @@ Jump_012_4705:: ; address name
     ld hl, wObject3 + $B
     dec [hl]
     ld b, $10
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -1364,7 +1364,7 @@ Jump_012_47D8::
     ld [wFollowerRecords + $5], a
     ld [wFollowerRecords + $A], a
     ld a, $02
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld a, [wScriptParam1]
     ld [wFieldEventKind], a
     ld a, $00
@@ -1421,7 +1421,7 @@ Jump_012_4850:: ; address name
     call RunMessageBoxThenContinue_684A
     ret nc
     ld a, $01
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     ld a, $0E
     ldh [hFieldDrawFlags], a
     ld hl, wScriptStep
@@ -1446,7 +1446,7 @@ Jump_012_4863:: ; address name
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
     ld a, $00
-    call StartMessageFromTable48B9ByWC82C
+    call StartMessageFromTable48B9ByArenaRank
     xor a, a
     ld [wArenaFlags], a
     ret
@@ -1454,7 +1454,7 @@ Jump_012_4863:: ; address name
 ; starts the message at Data_012_48B9 + 2 * A + 16 * wC82C (16 * 5 when bit 7 of wC94A is set) (E-0125)
 ; 13 call sites from 11 routines (e.g. ScriptCommand96_Run_Case15, ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05, ScriptCommand95_Run_Case16, ...)
 ; reads: wArenaFlags, wArenaRank
-StartMessageFromTable48B9ByWC82C::
+StartMessageFromTable48B9ByArenaRank::
 Func_012_488B:: ; address name
     ld de, Data_012_48B9
     sla a
@@ -1706,10 +1706,10 @@ Jump_012_4A5A:: ; address name
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, $0D
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
     ld hl, wScriptStep
@@ -1869,7 +1869,7 @@ Jump_012_4B77:: ; address name
 
 Jump_012_4B83::
     ld b, $E0
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     xor a, a
     ld [wObject5], a
@@ -1889,7 +1889,7 @@ ScriptCommand8D_Run_Case14::
 Jump_012_4B9B:: ; address name
     ld a, $0E
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1936,10 +1936,10 @@ Jump_012_4BB4:: ; address name
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, $0D
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     xor a, a
     ld [wObject5], a
     ld a, $7F
@@ -2139,7 +2139,7 @@ Jump_012_4CDF:: ; address name
 ScriptCommand9F_Run_Case05::
 Jump_012_4D05:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ld a, $40
     ld [wObject2 + $C], a
@@ -2180,7 +2180,7 @@ Jump_012_4D15:: ; address name
 ScriptCommand9F_Run_Case03::
 Jump_012_4D3B:: ; address name
     ld b, $1E
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -2193,7 +2193,7 @@ Jump_012_4D3B:: ; address name
 ScriptCommand9F_Run_Case02::
 Jump_012_4D46:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ld a, $40
     ld [wObject1 + $C], a
@@ -2249,7 +2249,7 @@ Jump_012_4D6B:: ; address name
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, $0B
     ld hl, wRecordBufB
     add_a_to_hl
@@ -2268,7 +2268,7 @@ Jump_012_4D6B:: ; address name
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
     ld hl, wSpriteSlots + $D
@@ -2570,7 +2570,7 @@ Jump_012_4F5C:: ; address name
 ScriptCommand92_Run_Case03::
 Jump_012_4F77:: ; address name
     farcall UpdatePlayerMovement
-    farcall RunWC468ActionIfBit7
+    farcall RunFieldActionRequestActionIfBit7
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
@@ -2600,7 +2600,7 @@ Jump_012_4F8E:: ; address name
     ld a, h
     ldh [hPlayerStepDYHi], a
     farcall UpdatePlayerMovement
-    farcall RunWC468ActionIfBit7
+    farcall RunFieldActionRequestActionIfBit7
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3251,7 +3251,7 @@ Jump_012_55BF::
 
 Jump_012_55D7::
     ld b, $5A
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ldh a, [hPlayerStateFlags]
     and a, $B7
@@ -3283,7 +3283,7 @@ Func_012_55F8:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_012_5605
-    farcall SaveWCD07RecordToSRAMSlotWCC42
+    farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
 
 Jump_012_5605::
     ld a, $50
@@ -3518,7 +3518,7 @@ Jump_012_574E:: ; address name
 ScriptCommand87_Run_Case06::
 Jump_012_575B:: ; address name
     ld b, $B4
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -3656,7 +3656,7 @@ Jump_012_5817::
     ld a, $0A
     ld [rRAMG], a
     pop af
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     xor a, a
     ld [rRAMG], a
     ld hl, wNameGlyphBuf
@@ -4040,7 +4040,7 @@ Func_012_5A2F:: ; address name
 Jump_012_5A3D::
     ld a, [wScriptStep]
     rst $00
-    dw SetupScriptSpriteFromWC195
+    dw SetupScriptSpriteFromMapSpriteKind
     dw PlaySound83AndAdvanceScriptStep
     dw ScriptStepAnimateSpriteBySteps
     dw ScriptCommand84_Run_Case03
@@ -4309,7 +4309,7 @@ Jump_012_5BC6::
 Jump_012_5BCB::
     call DrawScriptMetaSpriteAtScrollOffset
     ld b, $1E
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -4375,7 +4375,7 @@ Func_012_5C27:: ; address name
 ; reads: wMapSpriteKind, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wOBJPaletteUploadRequest, wMessageIndex, wMessageGroup, wFollowerRecords, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
-SetupScriptSpriteFromWC195::
+SetupScriptSpriteFromMapSpriteKind::
 Func_012_5C31:: ; address name
     ld a, [wMapSpriteKind]
     swap a
@@ -4867,7 +4867,7 @@ Func_012_5EE7:: ; address name
 Func_012_5DB6_Case04::
 Jump_012_5F06:: ; address name
     ld b, $1E
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -5363,7 +5363,7 @@ Func_012_61EF:: ; address name
 Jump_012_6200::
     farcall StepFollowersTowardTargets
     ld b, $11
-    call StepWC921Counter_Bank12
+    call StepScriptParam0Counter_Bank12
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -5395,7 +5395,7 @@ Jump_012_621F:: ; address name
     add_a_to_hl
     ld a, $FF
     ld [hl], a
-    farcall DrawDoorTilesForWCC45
+    farcall DrawDoorTilesForKeyWorldFloor
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -5433,7 +5433,7 @@ Jump_012_6257::
     jr Jump_012_6279
 
 Jump_012_6279::
-    farcall DrawDoorTilesForWCC45
+    farcall DrawDoorTilesForKeyWorldFloor
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -5565,7 +5565,7 @@ Jump_012_6328::
     inc hl
     ld [hl], $01
     farcall AppendItemWC928ToInventory
-    farcall CheckTwoWCDB0EntriesForWCC43
+    farcall CheckTwoWCDB0EntriesForKeyWorldArea
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -5874,7 +5874,7 @@ Jump_012_64EA::
     ret
 
 ; with SRAM enabled sets every party record's HP to max HP, MP to max MP and field $55 to 0 (E-0125)
-; 10 call sites from 9 routines (e.g. ScriptCommand96_Run_Case18, ScriptCommand9B_Run_Case04, RunWC8C7Phase_Case02, GameMode5_Init_Case06, ...)
+; 10 call sites from 9 routines (e.g. ScriptCommand96_Run_Case18, ScriptCommand9B_Run_Case04, RunFieldReturnPhase_Case02, GameMode5_Init_Case06, ...)
 ; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG
 ; points at: wPartyList
@@ -5996,7 +5996,7 @@ Jump_012_6591::
 ; 10 call sites from 10 routines (e.g. ScriptCommand96_Run_Case04, ScriptCommand8D_Run_Case15, ScriptCommand9F_Run_Case05, ScriptCommand9F_Run_Case03, ...)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
-StepWC921Counter_Bank12::
+StepScriptParam0Counter_Bank12::
 Func_012_65A4:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -6473,7 +6473,7 @@ Func_012_6813:: ; address name
     ret
 
 ; wMessageIndex = A, wMessageState = 0: the next RunMessageBox call opens the window and shows that string of the group already in wMessageGroup (E-0063, E-0079)
-; 35 call sites from 15 routines (e.g. ScriptCommandA1_Run_Case00, ScriptCommand9D_Run_Case00, ScriptCommand9C_Run_Case00, StartMessageFromTable48B9ByWC82C, ...)
+; 35 call sites from 15 routines (e.g. ScriptCommandA1_Run_Case00, ScriptCommand9D_Run_Case00, ScriptCommand9C_Run_Case00, StartMessageFromTable48B9ByArenaRank, ...)
 ; writes: wMessageIndex, wMessageState
 StartMessageA::
 Func_012_6820:: ; address name
@@ -6592,7 +6592,7 @@ Func_012_689A:: ; address name
     ld [wKeyRetryCount], a
 
 Jump_012_689E::
-    call FindFreeKeySlotToHFFC6
+    call FindFreeKeySlotToTemp0
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_012_68AB
@@ -6604,7 +6604,7 @@ Jump_012_68AB::
     push af
     ld a, $FE
     ldh [hTemp1], a
-    call WriteKeyEntryHFFC6
+    call WriteKeyEntryTemp0
     pop af
     or a, a
     jr z, Jump_012_68FF
@@ -6686,7 +6686,7 @@ Jump_012_68FF::
 ; 3 call sites from 3 routines (e.g. GenerateNewKeyEntry, ScriptStepCheckKeyListFull_6A80, ScriptStepCheckKeyListFull_6B45)
 ; writes: hTemp0
 ; points at: wKeyList
-FindFreeKeySlotToHFFC6::
+FindFreeKeySlotToTemp0::
 Func_012_691F:: ; address name
     ld b, $00
     ld d, $00
@@ -6732,7 +6732,7 @@ Jump_012_6948::
 ; 12 call sites from 10 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
 ; reads: hTemp0, hTemp1, wPartyStrength, hTemp2, hTemp3
 ; writes: hTemp0
-WriteKeyEntryHFFC6::
+WriteKeyEntryTemp0::
 Func_012_6955:: ; address name
     ldh a, [hTemp0]
     ld l, a
@@ -6761,7 +6761,7 @@ Jump_012_6973::
     farcall ComputePartyStrengthForKey
     ld a, [wPartyStrength]
     ldh [hTemp0], a
-    farcall RollKeyContentsForLevelHFFC6
+    farcall RollKeyContentsForLevelTemp0
     pop hl
     inc hl
     ldh a, [hTemp1]
@@ -6801,11 +6801,11 @@ Jump_012_69AC::
     ret
 
 ; removes key entry hFFC6: clears the matching wC88E link, marks its SRAM-bank-2 slot free and shifts the later entries down (E-0130)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_Case10, RunWD780StateWhenNotFading_1B_Case01_Case21)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_Case10, RunScreenStateWhenNotFading_1B_Case01_Case21)
 ; reads: hTemp0, wCurrentKeyIndex
 ; writes: rRAMB, rRAMG
 ; points at: wKeySeeds, wCurrentKeyIndex
-DeleteKeyEntryHFFC6::
+DeleteKeyEntryTemp0::
 Func_012_69B0:: ; address name
     ldh a, [hTemp0]
     ld l, a
@@ -6827,7 +6827,7 @@ Func_012_69B0:: ; address name
 
 Jump_012_69C9::
     push hl
-    farcall ClearWC88EForMatchingKeyEntry
+    farcall ClearKeyWorldActiveForMatchingKeyEntry
     pop hl
     dec hl
     dec hl
@@ -6946,7 +6946,7 @@ Jump_012_6A5D::
     ret
 
 ; on map $7F or $92 at screen (0, 0), or with wCC44 = $82, runs field command $12 and places objects at wCBD3/4 and wCBCF (E-0127)
-; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_Case02)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY
 ; writes: hTemp0, wObject5
 PlaceSpecialMapObjectsOnEntry::
@@ -6965,7 +6965,7 @@ Func_012_6A6A:: ; address name
     jr nz, Jump_012_6A98
     ld a, $12
     ldh [hTemp0], a
-    call RunFieldCommandHFFC6
+    call RunFieldCommandTemp0
     ld a, $40
     ld [wObject5 + $4], a
     ld a, $10
@@ -6986,7 +6986,7 @@ Jump_012_6A98::
     ret nz
     ld a, $12
     ldh [hTemp0], a
-    call RunFieldCommandHFFC6
+    call RunFieldCommandTemp0
     ld a, $40
     ld [wObject5 + $4], a
     ld a, $40
@@ -7001,7 +7001,7 @@ Jump_012_6ABC::
     ret nz
     ld a, $12
     ldh [hTemp0], a
-    call RunFieldCommandHFFC6
+    call RunFieldCommandTemp0
     ld a, $40
     ld [wObject5 + $4], a
     ld a, $30
@@ -7011,7 +7011,7 @@ Jump_012_6ABC::
     ret
 
 ; decompresses Data_07E_5595 to vTiles0 + $300 (or + $700 when hFFC6 is set), wC949 = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125)
-; 2 call sites from 2 routines (e.g. RunWC92DStep_7363_Case00, ScriptCommand16_Run_Case0F)
+; 2 call sites from 2 routines (e.g. RunScriptSubStep_7363_Case00, ScriptCommand16_Run_Case0F)
 ; reads: hTemp0, wIsCGB
 ; writes: wSpriteFloatY, wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
@@ -7063,10 +7063,10 @@ Jump_012_6B15::
     ret
 
 ; wC949 -= 2, and when the result is $C0 or more it becomes $30 (E-0117)
-; 11 call sites from 11 routines (e.g. RunWC92DStep_7363_Case0F, RunWC92DStep_7363_Case0D, RunWC92DStep_7363_Case0C, RunWC92DStep_7363_Case0B, ...)
+; 11 call sites from 11 routines (e.g. RunScriptSubStep_7363_Case0F, RunScriptSubStep_7363_Case0D, RunScriptSubStep_7363_Case0C, RunScriptSubStep_7363_Case0B, ...)
 ; reads: wSpriteFloatY
 ; writes: wSpriteFloatY
-CycleWC949Down::
+CycleSpriteFloatYDown::
 Func_012_6B22:: ; address name
     ld a, [wSpriteFloatY]
     dec a
@@ -7079,7 +7079,7 @@ Func_012_6B22:: ; address name
     ret
 
 ; draws metasprite set $1B with a frame from Data_012_6B7A chosen by the frame counter / 30, at ($48, wC949 + $10) (E-0125)
-; 11 call sites from 11 routines (e.g. RunWC92DStep_7363_Case0F, RunWC92DStep_7363_Case0D, RunWC92DStep_7363_Case0C, RunWC92DStep_7363_Case0B, ...)
+; 11 call sites from 11 routines (e.g. RunScriptSubStep_7363_Case0F, RunScriptSubStep_7363_Case0D, RunScriptSubStep_7363_Case0C, RunScriptSubStep_7363_Case0B, ...)
 ; reads: hTemp0, wFrameCounterLo, wFrameCounterHi, wSpriteFloatY
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
 DrawAnimatedMetaSprite1B::
@@ -7126,41 +7126,41 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
 ; runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)
-; 51 call sites from 49 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunWC8C7Phase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
+; 51 call sites from 49 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunFieldReturnPhase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
 ; reads: hTemp0
-RunFieldCommandHFFC6::
+RunFieldCommandTemp0::
 Func_012_6B98:: ; address name
     ldh a, [hTemp0]
     rst $00
-    dw RunFieldCommandHFFC6_Case00
-    dw RunFieldCommandHFFC6_Case01
-    dw RunFieldCommandHFFC6_Case02
-    dw RunFieldCommandHFFC6_Case03
-    dw RunFieldCommandHFFC6_Case04
-    dw RunFieldCommandHFFC6_Case05
-    dw RunFieldCommandHFFC6_Case06
-    dw RunFieldCommandHFFC6_Case07
-    dw RunFieldCommandHFFC6_Case08
-    dw RunFieldCommandHFFC6_Case09
-    dw RunFieldCommandHFFC6_Case0A
-    dw RunFieldCommandHFFC6_Case0B
-    dw RunFieldCommandHFFC6_Case0C
-    dw RunFieldCommandHFFC6_Case0D
-    dw RunFieldCommandHFFC6_Case0D
-    dw RunFieldCommandHFFC6_Case0F
-    dw RunFieldCommandHFFC6_Case10
-    dw RunFieldCommandHFFC6_Case11
-    dw RunFieldCommandHFFC6_Case12
-    dw RunFieldCommandHFFC6_Case13
-    dw RunFieldCommandHFFC6_Case14
-    dw RunFieldCommandHFFC6_Case14
+    dw RunFieldCommandTemp0_Case00
+    dw RunFieldCommandTemp0_Case01
+    dw RunFieldCommandTemp0_Case02
+    dw RunFieldCommandTemp0_Case03
+    dw RunFieldCommandTemp0_Case04
+    dw RunFieldCommandTemp0_Case05
+    dw RunFieldCommandTemp0_Case06
+    dw RunFieldCommandTemp0_Case07
+    dw RunFieldCommandTemp0_Case08
+    dw RunFieldCommandTemp0_Case09
+    dw RunFieldCommandTemp0_Case0A
+    dw RunFieldCommandTemp0_Case0B
+    dw RunFieldCommandTemp0_Case0C
+    dw RunFieldCommandTemp0_Case0D
+    dw RunFieldCommandTemp0_Case0D
+    dw RunFieldCommandTemp0_Case0F
+    dw RunFieldCommandTemp0_Case10
+    dw RunFieldCommandTemp0_Case11
+    dw RunFieldCommandTemp0_Case12
+    dw RunFieldCommandTemp0_Case13
+    dw RunFieldCommandTemp0_Case14
+    dw RunFieldCommandTemp0_Case14
 
-; entry 20 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 20 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case14::
+RunFieldCommandTemp0_Case14::
 Jump_012_6BC7:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7182,12 +7182,12 @@ Jump_012_6BC7:: ; address name
     ld [wObject5 + $7], a
     ret
 
-; entry 19 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 19 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case13::
+RunFieldCommandTemp0_Case13::
 Jump_012_6BED:: ; address name
-    call RunFieldCommandHFFC6_Shared02
+    call RunFieldCommandTemp0_Shared02
     push af
     ld hl, wObject5 + $1
     ld [hl], $30
@@ -7200,12 +7200,12 @@ Jump_012_6BED:: ; address name
     ld [wObject5], a
     ret
 
-; entry 18 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 18 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case12::
+RunFieldCommandTemp0_Case12::
 Jump_012_6C01:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7223,12 +7223,12 @@ Jump_012_6C01:: ; address name
     ld [wObject5 + $7], a
     ret
 
-; entry 17 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 17 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case11::
+RunFieldCommandTemp0_Case11::
 Jump_012_6C20:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7246,12 +7246,12 @@ Jump_012_6C20:: ; address name
     ld [wObject5 + $7], a
     ret
 
-; entry 16 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 16 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case10::
+RunFieldCommandTemp0_Case10::
 Jump_012_6C3F:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7268,12 +7268,12 @@ Jump_012_6C3F:: ; address name
     ld [wObject5], a
     ret
 
-; entry 15 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 15 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case0F::
+RunFieldCommandTemp0_Case0F::
 Jump_012_6C59:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7290,12 +7290,12 @@ Jump_012_6C59:: ; address name
     ld [wObject5], a
     ret
 
-; entry 13 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 13 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case0D::
+RunFieldCommandTemp0_Case0D::
 Jump_012_6C73:: ; address name
-    call RunFieldCommandHFFC6_Shared02
+    call RunFieldCommandTemp0_Shared02
     push af
     ld hl, wObject5 + $1
     ld [hl], $30
@@ -7319,12 +7319,12 @@ Jump_012_6C73:: ; address name
     ld [wObject5 + $7], a
     ret
 
-; entry 12 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 12 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case0C::
+RunFieldCommandTemp0_Case0C::
 Jump_012_6C9B:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7348,13 +7348,13 @@ Jump_012_6C9B:: ; address name
     ld [wObject5 + $7], a
     ret
 
-; entry 11 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 11 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hPlayerY
 ; writes: wObject5
-RunFieldCommandHFFC6_Case0B::
+RunFieldCommandTemp0_Case0B::
 Jump_012_6CC2:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7378,12 +7378,12 @@ Jump_012_6CC2:: ; address name
     ld [wObject5 + $7], a
     ret
 
-; entry 10 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 10 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case0A::
+RunFieldCommandTemp0_Case0A::
 Jump_012_6CE9:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7400,12 +7400,12 @@ Jump_012_6CE9:: ; address name
     ld [wObject5], a
     ret
 
-; entry 9 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 9 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case09::
+RunFieldCommandTemp0_Case09::
 Jump_012_6D03:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7422,12 +7422,12 @@ Jump_012_6D03:: ; address name
     ld [wObject5], a
     ret
 
-; entry 8 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 8 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case08::
+RunFieldCommandTemp0_Case08::
 Jump_012_6D1E:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7444,12 +7444,12 @@ Jump_012_6D1E:: ; address name
     ld [wObject5], a
     ret
 
-; entry 7 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 7 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case07::
+RunFieldCommandTemp0_Case07::
 Jump_012_6D38:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7466,12 +7466,12 @@ Jump_012_6D38:: ; address name
     ld [wObject5], a
     ret
 
-; entry 6 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 6 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case06::
+RunFieldCommandTemp0_Case06::
 Jump_012_6D53:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7493,12 +7493,12 @@ Jump_012_6D53:: ; address name
     ld [wObject5 + $7], a
     ret
 
-; entry 5 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 5 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case05::
+RunFieldCommandTemp0_Case05::
 Jump_012_6D79:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7515,12 +7515,12 @@ Jump_012_6D79:: ; address name
     ld [wObject5], a
     ret
 
-; entry 4 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 4 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case04::
+RunFieldCommandTemp0_Case04::
 Jump_012_6D94:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7537,12 +7537,12 @@ Jump_012_6D94:: ; address name
     ld [wObject5], a
     ret
 
-; entry 3 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 3 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case03::
+RunFieldCommandTemp0_Case03::
 Jump_012_6DAE:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7555,12 +7555,12 @@ Jump_012_6DAE:: ; address name
     ld [wObject5], a
     ret
 
-; entry 2 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 2 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case02::
+RunFieldCommandTemp0_Case02::
 Jump_012_6DC2:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7577,12 +7577,12 @@ Jump_012_6DC2:: ; address name
     ld [wObject5], a
     ret
 
-; entry 1 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 1 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case01::
+RunFieldCommandTemp0_Case01::
 Jump_012_6DDC:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7595,12 +7595,12 @@ Jump_012_6DDC:: ; address name
     ld [wObject5], a
     ret
 
-; entry 0 of the `rst $00` table in RunFieldCommandHFFC6
+; entry 0 of the `rst $00` table in RunFieldCommandTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
-RunFieldCommandHFFC6_Case00::
+RunFieldCommandTemp0_Case00::
 Jump_012_6DF0:: ; address name
-    call RunFieldCommandHFFC6_Shared01
+    call RunFieldCommandTemp0_Shared01
     push af
     ld hl, wObject5 + $1
     ld [hl], $40
@@ -7617,12 +7617,12 @@ Jump_012_6DF0:: ; address name
     ld [wObject5], a
     ret
 
-; only called from routines of RunFieldCommandHFFC6 (E-0098)
-; 18 call sites from 18 routines (e.g. RunFieldCommandHFFC6_Case14, RunFieldCommandHFFC6_Case12, RunFieldCommandHFFC6_Case11, RunFieldCommandHFFC6_Case10, ...)
+; only called from routines of RunFieldCommandTemp0 (E-0098)
+; 18 call sites from 18 routines (e.g. RunFieldCommandTemp0_Case14, RunFieldCommandTemp0_Case12, RunFieldCommandTemp0_Case11, RunFieldCommandTemp0_Case10, ...)
 ; reads: hTemp0, wIsCGB
 ; writes: wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
-RunFieldCommandHFFC6_Shared01::
+RunFieldCommandTemp0_Shared01::
 Func_012_6E0B:: ; address name
     ldh a, [hTemp0]
     and a, $7F
@@ -7673,12 +7673,12 @@ Jump_012_6E5E::
     ld a, [hl]
     ret
 
-; only called from routines of RunFieldCommandHFFC6 (E-0098)
-; 2 call sites from 2 routines (e.g. RunFieldCommandHFFC6_Case13, RunFieldCommandHFFC6_Case0D)
+; only called from routines of RunFieldCommandTemp0 (E-0098)
+; 2 call sites from 2 routines (e.g. RunFieldCommandTemp0_Case13, RunFieldCommandTemp0_Case0D)
 ; reads: hTemp0, wIsCGB
 ; writes: wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
-RunFieldCommandHFFC6_Shared02::
+RunFieldCommandTemp0_Shared02::
 Func_012_6E61:: ; address name
     ldh a, [hTemp0]
     and a, $7F
@@ -7983,7 +7983,7 @@ Data_012_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B04C, $58
 
 ; wC8FE = $FF; on town maps (or special maps of type 0) finds the wCC48 entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
-; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_Case02)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wMapObjectCount, wTriggerKind, wIsCGB
 ; writes: wTriggerKind, wTriggerIndex, wTriggerCell, wOBJPaletteUploadRequest
 ; points at: wMapObjects, wOBJPaletteBuffer
@@ -8057,11 +8057,11 @@ Jump_012_7101::
     jr Jump_012_715E
 
 ; on maps from $30 (or special map $85) finds the wCCEB entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
-; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_Case02)
 ; reads: wMapType, hMapId, wScreenTriggerCount, hMapScreenX, hMapScreenY, wTriggerKind, wIsCGB
 ; writes: wScreenTriggerCount, wTriggerIndex, wTriggerCell, wTriggerKind, wOBJPaletteUploadRequest
 ; points at: wScreenTriggers, wOBJPaletteBuffer
-FindTriggerEntryForCurrentScreen_WCCEB::
+FindTriggerEntryForCurrentScreen_ScreenTriggers::
 Func_012_710A:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -8419,7 +8419,7 @@ Jump_012_7377::
     ld a, [wPartyWindowFlags]
     bit 7, a
     ret z
-    farcall RedrawScreenBufferIfWC8CDBit7
+    farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 Jump_012_73A0::
@@ -8738,7 +8738,7 @@ Data_012_7581:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. RunPendingFieldEventWC935, FieldModeStateDispatch_Case05_Sub02)
+; 2 call sites from 2 routines (e.g. RunPendingFieldEventPendingFieldEvent, FieldModeStateDispatch_Case05_Sub02)
 ; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank12::
 Func_012_75A1:: ; address name
@@ -8777,7 +8777,7 @@ Func_012_75A1:: ; address name
     ret
 
 ; on town maps, every 100 calls (wC832), tries the gold, party-stat and digit events in turn until one sets wC935 (E-0128)
-; 3 call sites from 3 routines (e.g. RunPendingFieldEventWC935, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
+; 3 call sites from 3 routines (e.g. RunPendingFieldEventPendingFieldEvent, UpdatePlayerMovement_Sub01, RunFieldActionRequestActionIfBit7_Case03)
 ; reads: wScriptRunning, wPendingFieldEvent, wMapType, hMapId, wTownEventTimer
 ; writes: wTownEventTimer
 RunPeriodicFieldEventChecks::
@@ -9119,7 +9119,7 @@ Jump_012_77D0::
     push hl
     ld a, [hl]
     ld c, $58
-    call LoadRecordThreeBytesToHFFC6
+    call LoadRecordThreeBytesToTemp0
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -9812,7 +9812,7 @@ Jump_012_7B92::
 ; 9 call sites from 7 routines (e.g. CheckWarpAtPlayer, CheckWarpsAtPlayerPosition, ScriptWarpToMapFromBytesAtDE, CheckMapExitTable4480_Sub01, ...)
 ; reads: wPendingFieldEvent
 ; writes: wPendingFieldEvent, wTownEventTimer
-ClearWC935IfBit7AndNot6::
+ClearPendingFieldEventIfBit7AndNot6::
 Func_012_7B9F:: ; address name
     ld a, [wPendingFieldEvent]
     bit 7, a
@@ -9825,12 +9825,12 @@ Func_012_7B9F:: ; address name
     ret
 
 ; returns unless Func_012_7D5E is 0, wC8FE is $FF and no script runs; then, unless bit 7 of wCC44 is set, wC935 = 0 (E-0122)
-; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_Case02)
 ; reads: wTriggerKind, wScriptRunning, wMapType, wPendingFieldEvent, wRandomHi, wSpriteSlots, wInventory
 ; writes: wPendingFieldEvent, wSpriteSlots, wSpriteSlotCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
-ClearWC935WhenFieldIdle::
+ClearPendingFieldEventWhenFieldIdle::
 Func_012_7BB0:: ; address name
-    call ClearWC935WhenFieldIdle_Sub01
+    call ClearPendingFieldEventWhenFieldIdle_Sub01
     or a, a
     ret nz
     ld a, [wTriggerKind]
@@ -9850,7 +9850,7 @@ Func_012_7BB0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPendingFieldEvent, hMapId, wRandomHi, wSpriteSlots, wInventory
 ; writes: wPendingFieldEvent, wSpriteSlots, wSpriteSlotCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
-RunPendingFieldEventWC935:: ; heuristic: follows a terminator; C0
+RunPendingFieldEventPendingFieldEvent:: ; heuristic: follows a terminator; C0
 Func_012_7BCC:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
@@ -9981,13 +9981,13 @@ Jump_012_7CA1::
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
     ret
 
 ; on map type 1, standing on tiles at or above wC196, a 1-in-8 roll sets event $0A in wC935 unless item $2C is owned or the gold is below 100; then A = 1 when any tile under the player is blocking (E-0128)
-; 1 call site from 1 routine (e.g. RunPendingFieldEventWC935)
+; 1 call site from 1 routine (e.g. RunPendingFieldEventPendingFieldEvent)
 ; reads: wMapSpriteKind, wMapTallTileMin, wKeyRandomHi, hTemp0, wInventory, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: hTemp0, wPendingFieldEvent
 ; points at: wTilesUnderPoint
@@ -10012,7 +10012,7 @@ Jump_012_7CE6::
     jr nz, Jump_012_7D2F
     ld a, $2C
     ldh [hTemp0], a
-    call FindHFFC6InWC61DList
+    call FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_012_7D2F
@@ -10072,11 +10072,11 @@ Data_012_7D46:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_012_7D56:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $20, $70, $60, $20, $60, $70, $20
 
-; only called from ClearWC935WhenFieldIdle (E-0047)
-; 1 call site from 1 routine (e.g. ClearWC935WhenFieldIdle)
+; only called from ClearPendingFieldEventWhenFieldIdle (E-0047)
+; 1 call site from 1 routine (e.g. ClearPendingFieldEventWhenFieldIdle)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY
 ; writes: wPendingFieldEvent
-ClearWC935WhenFieldIdle_Sub01::
+ClearPendingFieldEventWhenFieldIdle_Sub01::
 Func_012_7D5E:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -10106,11 +10106,11 @@ Jump_012_7D93::
     ret
 
 ; hFFC6 = the party index whose record species (field $0B) equals the word hFFC6/7, or $80 when none (E-0125)
-; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case07_Sub01, DispatchTalkEvent_Case01_Case27, DispatchTalkEvent_Case01_Case7F, LoadListedRecordNameTilesForHFFC6, ...)
+; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case07_Sub01, DispatchTalkEvent_Case01_Case27, DispatchTalkEvent_Case01_Case7F, LoadListedRecordNameTilesForTemp0, ...)
 ; reads: hTemp0, hTemp1, wPartyCount
 ; writes: rRAMG, hTemp0
 ; points at: wPartyList
-FindPartyIndexOfSpeciesHFFC6::
+FindPartyIndexOfSpeciesTemp0::
 Func_012_7D95:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -10155,7 +10155,7 @@ Jump_012_7DC3::
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wInventory
-FindHFFC6InWC61DList::
+FindTemp0InInventoryList::
 Func_012_7DCE:: ; address name
     ldh a, [hTemp0]
     ld c, a

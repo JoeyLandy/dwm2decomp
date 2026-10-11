@@ -2,7 +2,7 @@ SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7F
 
 ; DrawMetaSpriteAt_40CC with DE = Data_07F_4008 (E-0116)
-; 3 call sites from 3 routines (e.g. UpdateAndDrawSpriteSlots, AdvanceHFF99AndRunHFF8BMode_Case01_Sub01, AdvanceHFF99AndRunHFF8BMode_Shared01)
+; 3 call sites from 3 routines (e.g. UpdateAndDrawSpriteSlots, Func_004_4C25, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01)
 DrawMetaSprite4008::
 Func_07F_4001:: ; address name
     ld de, Data_07F_4008
@@ -457,7 +457,7 @@ Jump_07F_4270::
 Jump_07F_4277::
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsHFFBA_Bank7F_4312
+    call BGTileUnderPointIsSpriteHideTile_Bank7F_4312
     jr nc, Jump_07F_4270
     inc e
     ldh a, [hSpriteTileOffset]
@@ -559,7 +559,7 @@ Jump_07F_42EB::
 Jump_07F_42F2::
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsHFFBA_Bank7F_4312
+    call BGTileUnderPointIsSpriteHideTile_Bank7F_4312
     jr nc, Jump_07F_42EB
     inc e
     ldh a, [hSpriteTileOffset]
@@ -584,7 +584,7 @@ Jump_07F_42F2::
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. DrawMetaSpriteAt_40CC)
 ; reads: hScrollY, hScrollX, hSpriteHideTile, rSTAT
-BGTileUnderPointIsHFFBA_Bank7F_4312::
+BGTileUnderPointIsSpriteHideTile_Bank7F_4312::
 Func_07F_4312:: ; address name
     push hl
     push bc
@@ -7508,7 +7508,7 @@ Data_07F_6FF9:: ; heuristic: meta-sprite frame; C0
     db $80 ; end
 
 ; DE = Data_07F_7011 (the table of meta-sprite sets), then DrawMetaSpriteAt
-; 25 call sites from 20 routines (e.g. PauseMenu_State3_Shared03, AdvanceHFF99AndRunHFF8BMode_Case02_Sub01, AdvanceHFF99AndRunHFF8BMode_Case00_Sub01, DrawMetaSprite0AtX50YWD09E, ...)
+; 25 call sites from 20 routines (e.g. PauseMenu_State3_Shared03, Func_004_4BE4, Func_004_4D43, DrawMetaSprite0AtX50YWD09E, ...)
 DrawMetaSprite::
 Func_07F_700A:: ; address name
     ld de, Data_07F_7011
@@ -7907,7 +7907,7 @@ Jump_07F_7209::
 Jump_07F_7210::
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsHFFBA_Bank7F
+    call BGTileUnderPointIsSpriteHideTile_Bank7F
     jr nc, Jump_07F_7209
     inc e
     ldh a, [hSpriteTileOffset]
@@ -8009,7 +8009,7 @@ Jump_07F_7284::
 Jump_07F_728B::
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsHFFBA_Bank7F
+    call BGTileUnderPointIsSpriteHideTile_Bank7F
     jr nc, Jump_07F_7284
     inc e
     ldh a, [hSpriteTileOffset]
@@ -8034,7 +8034,7 @@ Jump_07F_728B::
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. DrawMetaSpriteAt)
 ; reads: hScrollY, hScrollX, hSpriteHideTile, rSTAT
-BGTileUnderPointIsHFFBA_Bank7F::
+BGTileUnderPointIsSpriteHideTile_Bank7F::
 Func_07F_72AB:: ; address name
     push hl
     push bc

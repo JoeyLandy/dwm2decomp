@@ -97,7 +97,7 @@ Func_031_40A5:: ; address name
     cp a, $02
     ret nz
     di
-    farcall TickWCB75Sequence
+    farcall TickSequencePtrLoSequence
     ei
     ret
 
@@ -105,7 +105,7 @@ Jump_031_40C9::
     call IncrementPlayTime_Bank31
 
 ; runs BattlePhase0, BattlePhaseFight or BattlePhaseEnd for wBattlePhase (E-0122)
-; 1 call site from 1 routine (e.g. RunWC582State_Case01)
+; 1 call site from 1 routine (e.g. RunLinkExchangeState_Case01)
 ; reads: wBattlePhase
 RunBattlePhase::
 Func_031_40CC:: ; address name
@@ -423,7 +423,7 @@ Jump_031_429D::
     ld hl, wSlotMarks
     add_a_to_hl
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr z, Jump_031_42B0
     ld [hl], $03
     jr Jump_031_42B2
@@ -1230,7 +1230,7 @@ Jump_031_46EE::
     ld a, h
     ld [wBattlePictureIds + $1], a
     call ClearAttributesAndScreenBuffer_Bank31
-    call CopyRectRecordForWD88F_Bank31
+    call CopyRectRecordForBattlePartyCount_Bank31
     call DrawPartySlotStatusPanels
     call ClearWindowAndCopyRect7345Far
     ld a, $6C
@@ -1263,7 +1263,7 @@ Jump_031_4724:: ; address name
     ld bc, $1412
     call CopyRect32StrideToVRAM
     call LoadBattleMonsterPictureAndTitle
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call LoadBattleMonsterPictureAttributes
     ld de, wScreenTileBuffer + $E7
     ld hl, vBGMap0 + $E7
@@ -1351,15 +1351,15 @@ Jump_031_47B9:: ; address name
     call nz, LoadBattleMonsterPictureAndTitle
     ret
 
-; runs Func_031_47DD, ClearAttributesAndScreenBuffer_Bank31, CopyRectRecordForWD88F_Bank31, Func_031_7389, LayoutTileBlocksForWD890Count, Func_031_7321 and Func_031_746F in turn (E-0115)
+; runs Func_031_47DD, ClearAttributesAndScreenBuffer_Bank31, CopyRectRecordForBattlePartyCount_Bank31, Func_031_7389, LayoutTileBlocksForBattleFoeCount, Func_031_7321 and Func_031_746F in turn (E-0115)
 ; 2 call sites from 2 routines (e.g. BuildAndDrawBattleScreen, BattleEnd_Step5_Case02)
 BuildBattleScreenBuffer::
 Func_031_47C7:: ; address name
     call LoadBattleMonsterPictureAndTitle
     call ClearAttributesAndScreenBuffer_Bank31
-    call CopyRectRecordForWD88F_Bank31
+    call CopyRectRecordForBattlePartyCount_Bank31
     call DrawPartySlotStatusPanels
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call LoadBattleMonsterPictureAttributes
     call ClearWindowAndCopyRect7345Far
     ret
@@ -1893,7 +1893,7 @@ Jump_031_4AD1::
 Jump_031_4AD2::
     ld e, $03
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_031_4B01
     ld e, $01
     ld a, c
@@ -2040,7 +2040,7 @@ Jump_031_4B8F:: ; address name
     inc hl
     set 7, [hl]
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call DrawWC278RowsToBGMapRow7
     ld hl, vTiles1 + $6D0
     ld de, $0701
@@ -2096,7 +2096,7 @@ Jump_031_4BEE:: ; address name
     ld a, $00
     call FillBytes
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -2326,7 +2326,7 @@ Jump_031_4D4E:: ; address name
     or a, a
     ret nz
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call DrawWC338RowsToBGMapRow13
     call RunBattleSetup_Shared04
     ld a, $02
@@ -2389,7 +2389,7 @@ Jump_031_4D95:: ; address name
 
 Jump_031_4DB5::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_031_4DC0
     ld a, [hl]
     cp a, e
@@ -2409,7 +2409,7 @@ Jump_031_4DC0::
 
 Jump_031_4DD0::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_031_4DDB
     ld a, [hl]
     cp a, d
@@ -2506,7 +2506,7 @@ Func_031_4E54:: ; address name
 
 Jump_031_4E5A::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_031_4EB4
     ld hl, wBattleLevel
     add_a_to_hl
@@ -2597,7 +2597,7 @@ Jump_031_4EE6:: ; address name
 
 Jump_031_4EF4::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_031_4EFE
     ld [hl], $03
     jr Jump_031_4F00
@@ -2681,7 +2681,7 @@ Jump_031_4F50:: ; address name
     and a, $01
     jr z, Jump_031_4F8F
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call DrawWC278Rect12x11ToBGMapRow7
     ld a, $01
     ld [wBattleResolveStep], a
@@ -2893,7 +2893,7 @@ Jump_031_50BF:: ; address name
     ld a, [wMenuSubState]
     and a, $03
     ld [hl], a
-    call SetWDA43AndWDA4BForWCFD4
+    call SetSlotTacticAndSlotLastTacticForCommandMonster
     cp a, $03
     jr nz, Jump_031_514E
     ld a, [wBattleSetupD7]
@@ -2908,7 +2908,7 @@ Jump_031_50BF:: ; address name
 
 Jump_031_5104::
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -2966,7 +2966,7 @@ Jump_031_515E::
 
 Jump_031_5172::
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -3059,7 +3059,7 @@ Jump_031_51F0:: ; address name
     ld a, $00
     ld [wBattleArg1], a
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     jp Jump_031_52B4
@@ -3089,7 +3089,7 @@ Jump_031_5212::
     jr Jump_031_5292
 
 Jump_031_5242::
-    call CountPresentFoesOfWC57FSide_Bank31
+    call CountPresentFoesOfLinkRoleSide_Bank31
     ld a, d
     cp a, $01
     jr nz, Jump_031_525C
@@ -3104,7 +3104,7 @@ Jump_031_5242::
 
 Jump_031_525C::
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $0C
     ld [wBattleResolveStep], a
     xor a, a
@@ -3117,14 +3117,14 @@ Jump_031_526D::
     or a, a
     jr nz, Jump_031_5281
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $08
     ld [wBattleResolveStep], a
     jr Jump_031_52B4
 
 Jump_031_5281::
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     xor a, a
     ld [wBattleArg1], a
     ld a, $10
@@ -3145,7 +3145,7 @@ Jump_031_52A5::
     ld a, $01
     ld [wBattleArg1], a
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -3205,7 +3205,7 @@ Jump_031_52E7:: ; address name
     or a, a
     ret nz
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -3290,7 +3290,7 @@ Jump_031_5350:: ; address name
     bit 1, a
     jr z, Jump_031_537B
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $00
     ld [wBattleArg0], a
     ld hl, wBattleResolveStep
@@ -3303,7 +3303,7 @@ Jump_031_537B::
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, [wCommandMonster]
     ld hl, wBattleActionChoice
     add a, a
@@ -3320,7 +3320,7 @@ Jump_031_537B::
     or a, b
     ld [hl], a
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $01
     ld [wBattleArg0], a
     ld hl, wBattleResolveStep
@@ -3442,7 +3442,7 @@ Jump_031_5454:: ; address name
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $20
     ld [wBattleArg1], a
     call LoadSelectedSkillRecord_Bank31
@@ -3546,7 +3546,7 @@ Jump_031_5523::
     jr Jump_031_5598
 
 Jump_031_552F::
-    call CountPresentFoesOfWC57FSide_Bank31
+    call CountPresentFoesOfLinkRoleSide_Bank31
     ld a, d
     cp a, $01
     jr nz, Jump_031_553E
@@ -3563,7 +3563,7 @@ Jump_031_553E::
     jr Jump_031_5598
 
 Jump_031_5549::
-    call CountPresentSlotsOfWC57FSide_Bank31
+    call CountPresentSlotsOfLinkRoleSide_Bank31
     ld a, d
     cp a, $01
     jr nz, Jump_031_5566
@@ -3597,7 +3597,7 @@ Jump_031_557A::
     bit 1, a
     jr z, Jump_031_5592
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $04
     ld [wBattleArg1], a
     ld hl, wBattleResolveStep
@@ -3652,7 +3652,7 @@ Jump_031_55C1:: ; address name
 RunBattleSetup_Case01_Case14::
 Jump_031_55CF:: ; address name
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call DrawWC2A4AndWC2B8Rects
     call ClearWindowAndCopyRect7345Far
     ld hl, wBattleResolveStep
@@ -3683,7 +3683,7 @@ Jump_031_55F2:: ; address name
     or a, a
     ret nz
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -3776,7 +3776,7 @@ Jump_031_566A:: ; address name
     bit 1, a
     jr z, Jump_031_5693
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $10
     ld [wBattleArg0], a
     ld hl, wBattleResolveStep
@@ -3807,7 +3807,7 @@ Jump_031_56AF::
     cp a, c
     jr nz, Jump_031_56D5
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call DrawWC2A4AndWC2B8Rects
     call ClearWindowAndCopyRect7345Far
     ld a, $65
@@ -3829,7 +3829,7 @@ Jump_031_56D5::
     or a, b
     ld [hl], a
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $20
     ld [wBattleArg0], a
     ld hl, wBattleResolveStep
@@ -3935,7 +3935,7 @@ Jump_031_576F:: ; address name
     bit 1, a
     jr z, Jump_031_579A
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $10
     ld [wBattleArg0], a
     ld hl, wBattleResolveStep
@@ -3948,7 +3948,7 @@ Jump_031_579A::
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, [wCommandMonster]
     ld hl, wBattleTargetChoice
     add a, a
@@ -3963,7 +3963,7 @@ Jump_031_579A::
     or a, b
     ld [hl], a
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $20
     ld [wBattleArg0], a
     ld hl, wBattleResolveStep
@@ -4079,7 +4079,7 @@ Jump_031_5829:: ; address name
 RunBattleSetup_Case02_Case00::
 Jump_031_5855:: ; address name
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call DrawWC278RowsToBGMapRow7
     ld hl, wCommandCursor
     res 7, [hl]
@@ -4156,7 +4156,7 @@ Jump_031_58CF:: ; address name
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $00
     ld [wBattleArg1], a
     call LoadSelectedInventoryItemRecord
@@ -4184,7 +4184,7 @@ Jump_031_58CF:: ; address name
 
 Jump_031_5921::
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $10
     ld [wBattleResolveStep], a
     ld a, $1E
@@ -4193,7 +4193,7 @@ Jump_031_5921::
 
 Jump_031_5933::
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call DrawWC2B8RowsToBGMapRow9
     ld a, $08
     ld [wBattleResolveStep], a
@@ -4238,7 +4238,7 @@ Jump_031_597D::
     bit 1, a
     jr z, Jump_031_5995
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $FF
     ld [wBattleFlag92], a
     ld [wBattleFlag93], a
@@ -4398,7 +4398,7 @@ Jump_031_5A78::
 
 Jump_031_5A85::
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -4499,7 +4499,7 @@ Jump_031_5AFD:: ; address name
     bit 1, a
     jr z, Jump_031_5B26
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $00
     ld [wBattleArg0], a
     ld hl, wBattleResolveStep
@@ -4512,7 +4512,7 @@ Jump_031_5B26::
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, [wSubMenuCursor2]
     and a, $03
     ld [wBattleFlag92], a
@@ -4641,7 +4641,7 @@ Jump_031_5BD6:: ; address name
     bit 1, a
     jr z, Jump_031_5C01
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, $00
     ld [wBattleArg0], a
     ld hl, wBattleResolveStep
@@ -4654,7 +4654,7 @@ Jump_031_5C01::
     ld a, $69
     call QueueSoundEffect
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ld a, [wSubMenuCursor2]
     and a, $03
     set 2, a
@@ -4737,7 +4737,7 @@ Jump_031_5C6B:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     ret
 
 ; entry 19 of the `rst $00` table in RunBattleSetup_Case02
@@ -4776,7 +4776,7 @@ Jump_031_5C98::
     xor a, a
     ld [wBattleActor], a
     call FillWC278WithC3_Bank31
-    call LayoutTileBlocksForWD890Count
+    call LayoutTileBlocksForBattleFoeCount
     call ClearWindowAndCopyRect7345Far
     call DrawWC278RowsToBGMapRow7
     ld hl, wBattleSubPhase
@@ -6051,7 +6051,7 @@ Data_031_63C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case02)
 ; reads: wCommandMonster
 ; points at: wSlotTactic, wSlotLastTactic
-SetWDA43AndWDA4BForWCFD4::
+SetSlotTacticAndSlotLastTacticForCommandMonster::
 Func_031_63CD:: ; address name
     push af
     ld a, [wCommandMonster]
@@ -6097,10 +6097,10 @@ Func_031_63ED:: ; address name
     farcall LoadSkillRecord
     ret
 
-; side base = ((wC57F << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfWC57FSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
+; side base = ((wC57F << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfLinkRoleSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_Case01_Case12, RunBattleSetup_Case01_Case06)
 ; reads: wLinkRole
-CountPresentFoesOfWC57FSide_Bank31::
+CountPresentFoesOfLinkRoleSide_Bank31::
 Func_031_641D:: ; address name
     ld de, $0000
     ld b, $03
@@ -6112,7 +6112,7 @@ Func_031_641D:: ; address name
 
 Jump_031_642C::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_031_6434
     inc d
     ld e, c
@@ -6126,7 +6126,7 @@ Jump_031_6434::
 ; side base = (wC57F << 1) & 4: D = how many of its three slots are present; clobbers A, BC (E-0067) (the same 24 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case12)
 ; reads: wLinkRole
-CountPresentSlotsOfWC57FSide_Bank31::
+CountPresentSlotsOfLinkRoleSide_Bank31::
 Func_031_6439:: ; address name
     ld d, $00
     ld b, $03
@@ -6137,7 +6137,7 @@ Func_031_6439:: ; address name
 
 Jump_031_6445::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_031_644C
     inc d
 
@@ -6295,7 +6295,7 @@ Jump_031_64F5::
     cp a, $03
     jr z, Jump_031_650A
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, Jump_031_6513
     jr z, Jump_031_650A
     ld a, [wNameSlot]
@@ -6372,7 +6372,7 @@ Jump_031_6563::
 ; no direct call (reached through a table, a jump or a vector)
 CallFunc443BInBankE0:: ; heuristic: follows a terminator; C0
 Func_031_6564:: ; address name
-    farcall RunWC5FDState_E0
+    farcall RunDebugState_E0
     ret
 
 ; only called from BattleEnd_Step1 (E-0047)
@@ -7091,14 +7091,14 @@ Jump_031_6925:: ; address name
     ld a, [wBattleArg0]
     ld c, $01
     call SRAMRecordAddressMapped
-    call CopyTenByteNameToWC130
+    call CopyTenByteNameToTextBuf0
     push hl
     ld a, [wBattleArg0]
     ld hl, wPartyList
     add_a_to_hl
     ld a, [hl]
     ld [wBattleArg1], a
-    farcall ComputeLevelUpStatGainsForWD869
+    farcall ComputeLevelUpStatGainsForBattleArg1
     pop hl
     call WriteRecordField4BAndStatsDecimal
     ld hl, $0501
@@ -7116,7 +7116,7 @@ Jump_031_6925:: ; address name
 ; reads: wBattleResolveStep
 Func_031_67AA_Case03::
 Jump_031_6966:: ; address name
-    call CountDownWD2CEWhenSoundIdle
+    call CountDownBattleEndTimerWhenSoundIdle
     ld a, [wBattleResolveStep]
     rst $00
     dw Func_031_67AA_Case03_Case00
@@ -7241,8 +7241,8 @@ Jump_031_6A0A:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    call StoreWD09DToRecordSkills
-    call ApplyLevelUpToRecordWD868
+    call StoreWorkBufToRecordSkills
+    call ApplyLevelUpToRecordBattleArg0
     call ShowString0ACat5IfField56AtLeast57
     xor a, a
     ld [rRAMG], a
@@ -7257,7 +7257,7 @@ Jump_031_6A0A:: ; address name
 ; record wD868: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case04)
 ; reads: wBattleArg0, wLevelUpGains
-ApplyLevelUpToRecordWD868::
+ApplyLevelUpToRecordBattleArg0::
 Func_031_6A2D:: ; address name
     ld a, [wBattleArg0]
     ld c, $56
@@ -7314,7 +7314,7 @@ Func_031_6A2D:: ; address name
     ret
 
 ; the word at HL += A (unsigned); HL ends on the high byte; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
-; 6 call sites from 1 routine (e.g. ApplyLevelUpToRecordWD868)
+; 6 call sites from 1 routine (e.g. ApplyLevelUpToRecordBattleArg0)
 AddAToWordAtHL_Bank31_6A8B::
 Func_031_6A8B:: ; address name
     add a, [hl]
@@ -7347,7 +7347,7 @@ Func_031_6A92:: ; address name
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case04)
 ; reads: wBattleArg0
 ; points at: wWorkBuf
-StoreWD09DToRecordSkills::
+StoreWorkBufToRecordSkills::
 Func_031_6AAE:: ; address name
     ld a, [wBattleArg0]
     ld c, $34
@@ -7369,7 +7369,7 @@ Jump_031_6ABB::
 ; points at: sRecords, wBattleSubPhase
 Func_031_67AA_Case05::
 Jump_031_6AC2:: ; address name
-    call DivideWDA6BByModeFactor
+    call DivideBattleExpAwardByModeFactor
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -7414,7 +7414,7 @@ Jump_031_6AE9::
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case05)
 ; reads: wBattleExpAward, wFarmLevel
 ; writes: wBattleExpAward
-DivideWDA6BByModeFactor::
+DivideBattleExpAwardByModeFactor::
 Func_031_6AFE:: ; address name
     ld a, [wBattleExpAward]
     ld l, a
@@ -7559,8 +7559,8 @@ Jump_031_6BAC:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    farcall ComputeLevelUpStatGainsForWD869
-    call ApplyLevelUpToRecordWD869
+    farcall ComputeLevelUpStatGainsForBattleArg1
+    call ApplyLevelUpToRecordBattleArg1
     call CopyRecordFields5DTo5BAnd61To5F
     xor a, a
     ld [rRAMG], a
@@ -7571,7 +7571,7 @@ Jump_031_6BAC:: ; address name
 ; record wD869: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case07)
 ; reads: wBattleArg1, wLevelUpGains
-ApplyLevelUpToRecordWD869::
+ApplyLevelUpToRecordBattleArg1::
 Func_031_6BCA:: ; address name
     ld a, [wBattleArg1]
     ld c, $56
@@ -7628,7 +7628,7 @@ Func_031_6BCA:: ; address name
     ret
 
 ; the word at HL += A (unsigned); HL ends on the high byte; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
-; 6 call sites from 1 routine (e.g. ApplyLevelUpToRecordWD869)
+; 6 call sites from 1 routine (e.g. ApplyLevelUpToRecordBattleArg1)
 AddAToWordAtHL_Bank31::
 Func_031_6C28:: ; address name
     add a, [hl]
@@ -7764,7 +7764,7 @@ Jump_031_6CBB::
     inc de
     dec b
     jr nz, Jump_031_6CBB
-    farcall ClearHFFC6AndA
+    farcall ClearTemp0AndA
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_031_6CD2
@@ -7868,7 +7868,7 @@ Func_031_6D28:: ; address name
     farcall LoadSpeciesRecord
     ld a, [wSpeciesExpCurve]
     ldh [hTemp0], a
-    farcall LoadTable4E60EntryToHFFC8
+    farcall LoadTable4E60EntryToTemp2
     pop hl
     ldh a, [hTemp2]
     sub a, [hl]
@@ -7900,7 +7900,7 @@ Jump_031_6D82::
 ; copies 10 bytes from HL to wC130 and appends a $F0 terminator (E-0122)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case02_Case01)
 ; points at: wTextBuf0
-CopyTenByteNameToWC130::
+CopyTenByteNameToTextBuf0::
 Func_031_6D87:: ; address name
     ld de, wTextBuf0
     ld b, $0A
@@ -8105,7 +8105,7 @@ Jump_031_6E79:: ; address name
     xor a, a
     ld [wBattleResolveStep], a
     farcall ClearAttributesAndScreenBuffer_Bank31
-    farcall CopyRectRecordForWD88F_Bank31
+    farcall CopyRectRecordForBattlePartyCount_Bank31
     farcall DrawPartySlotStatusPanels
     call FillTilesFromRequest
     farcall CopyRectRecord7345ToScreenBuffer
@@ -8204,7 +8204,7 @@ Jump_031_6EF7:: ; address name
     ld hl, vBGMap0 + $120
     ld bc, $1409
     call CopyRect32StrideToVRAM
-    call DrawWCFD5PageNumber
+    call DrawCommandCursorPageNumber
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -8257,7 +8257,7 @@ Jump_031_6F9C::
     res 7, [hl]
     call RunBattleSubStep_6E67_Shared01
     call DrawWC39EThreeTilesAtBGMap206
-    call DrawWCFD5PageNumber
+    call DrawCommandCursorPageNumber
     ret
 
 ; entry 3 of the `rst $00` table in RunBattleSubStep_6E67
@@ -8575,7 +8575,7 @@ Func_031_719E:: ; address name
 ; writes tile $E1 + (wCFD5 & $0F) at vBGMap0 + $10F (E-0115)
 ; 2 call sites from 2 routines (e.g. RunBattleSubStep_6E67_Case02, RunBattleSubStep_6E67_Case01)
 ; reads: wCommandCursor
-DrawWCFD5PageNumber::
+DrawCommandCursorPageNumber::
 Func_031_71B6:: ; address name
     ld a, [wCommandCursor]
     and a, $0F
@@ -8589,7 +8589,7 @@ Func_031_71B6:: ; address name
 ; reads: wSoundChannelSlots, wBattleEndTimer
 ; writes: wBattleEndTimer
 ; points at: wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5
-CountDownWD2CEWhenSoundIdle::
+CountDownBattleEndTimerWhenSoundIdle::
 Func_031_71C4:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
@@ -8753,7 +8753,7 @@ Jump_031_7285::
 ; picks record wD88F - 1 from Data_031_72C3 and copies it into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31) (E-0078)
 ; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_Sub02, ...)
 ; reads: wBattlePartyCount
-CopyRectRecordForWD88F_Bank31::
+CopyRectRecordForBattlePartyCount_Bank31::
 Func_031_72AC:: ; address name
     ld a, [wBattlePartyCount]
     dec a
@@ -8768,17 +8768,17 @@ Func_031_72AC:: ; address name
 Data_031_72C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7C, $75, $B8, $75, $1E, $76
 
-; FillWC278WithC3_Bank31, then falls into LayoutTileBlocksForWD890Count (E-0071)
+; FillWC278WithC3_Bank31, then falls into LayoutTileBlocksForBattleFoeCount (E-0071)
 ; 16 call sites from 10 routines (e.g. RunBattleSetup_BankA0_Case00_Case00, RunBattleSetup_BankA0_Case00_Case02, RunBattleSetup_BankA0_Case00_Case07, RunBattleSetup_BankA0_Case01_Case02, ...)
 ; reads: wBattleFoeCount
-ClearAndLayoutTileBlocksForWD890Count::
+ClearAndLayoutTileBlocksForBattleFoeCount::
 Func_031_72C9:: ; address name
     call FillWC278WithC3_Bank31
 
 ; wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)
 ; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_Case03, RunBattleSetup_Case00_Case0D, RunBattleSetup_Case00_Case07, ...)
 ; reads: wBattleFoeCount
-LayoutTileBlocksForWD890Count::
+LayoutTileBlocksForBattleFoeCount::
 Func_031_72CC:: ; address name
     ld d, $14
     ld a, [wBattleFoeCount]
@@ -8786,7 +8786,7 @@ Func_031_72CC:: ; address name
     ld hl, Data_031_7317
     add a, a
     add_a_to_hl
-    call LayoutTileBlocksForWD890Count_Sub01
+    call LayoutTileBlocksForBattleFoeCount_Sub01
     ld a, [wBattleFoeCount]
     cp a, $01
     jr z, Jump_031_7316
@@ -8795,16 +8795,16 @@ Func_031_72CC:: ; address name
     ld hl, Data_031_731D
     add a, a
     add_a_to_hl
-    call LayoutTileBlocksForWD890Count_Sub01
+    call LayoutTileBlocksForBattleFoeCount_Sub01
     ld a, [wBattleFoeCount]
     cp a, $03
     jr nz, Jump_031_7316
     ld hl, wScreenTileBuffer + $ED
     jr Jump_031_7302
 
-; only called from LayoutTileBlocksForWD890Count (E-0047)
-; 2 call sites from 1 routine (e.g. LayoutTileBlocksForWD890Count)
-LayoutTileBlocksForWD890Count_Sub01::
+; only called from LayoutTileBlocksForBattleFoeCount (E-0047)
+; 2 call sites from 1 routine (e.g. LayoutTileBlocksForBattleFoeCount)
+LayoutTileBlocksForBattleFoeCount_Sub01::
 Func_031_72FF:: ; address name
     deref_hl
 
@@ -9274,7 +9274,7 @@ Jump_031_7557::
     ret
 
 ; reads a 4-byte header at HL (word offset, width, rows): returns HL = wScreenTileBuffer + offset, B = width, C = rows, DE = the byte after the header (E-0065) (the same 15 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. CopyRectRecordForWD88F_Bank31)
+; 1 call site from 1 routine (e.g. CopyRectRecordForBattlePartyCount_Bank31)
 ; points at: wScreenTileBuffer
 ReadScreenBufferRectHeader_Bank31::
 Func_031_755B:: ; address name
@@ -9293,7 +9293,7 @@ Func_031_755B:: ; address name
     ret
 
 ; DE = source (rows packed), HL = destination with rows 32 bytes apart, B = width, C = rows: copies a B x C rectangle; DE ends past the source, HL at the start of the row below; B kept, C = 0 (E-0065) (the same 18 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. CopyRectRecordForWD88F_Bank31)
+; 1 call site from 1 routine (e.g. CopyRectRecordForBattlePartyCount_Bank31)
 CopyRectToStride32_Bank31::
 Func_031_756A:: ; address name
     push bc
@@ -9359,7 +9359,7 @@ Jump_031_76D6::
     cp a, $03
     jr z, Jump_031_773A
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_031_7726
     ld a, c
     ld hl, wBattleStatus

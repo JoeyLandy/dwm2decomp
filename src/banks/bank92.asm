@@ -2,10 +2,10 @@ SECTION "Bank 92", ROMX[$4000], BANK[$92]
     db $92
 
 ; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
-; 1 call site from 1 routine (e.g. DrawEffectSpriteForWD801Range)
+; 1 call site from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange)
 ; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
 ; points at: hSpriteOriginX
-DrawEffectSpriteAtWD804_Bank92::
+DrawEffectSpriteAtEffectSpriteX_Bank92::
 Func_092_4001:: ; address name
     ld hl, hSpriteOriginX
     ld a, [wEffectSpriteX]
@@ -93,7 +93,7 @@ Data_092_4024:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw MetaSprites92_4024Set3B ; id 59
 
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8, tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
-; 1 call site from 1 routine (e.g. DrawEffectSpriteAtWD804_Bank92)
+; 1 call site from 1 routine (e.g. DrawEffectSpriteAtEffectSpriteX_Bank92)
 ; reads: hOamNextEntry, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginY, hSpriteOriginX, hSpriteTileOffset, hSpriteAttrXor
 ; writes: hOamNextEntry
 BuildOamFromSpriteTable_Bank92::

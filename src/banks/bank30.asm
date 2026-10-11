@@ -101,7 +101,7 @@ Jump_030_408C::
 RunBattleCommandEntry_Case00_Sub01::
 Func_030_408D:: ; address name
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_030_409A
     ld a, e
     add a, [hl]
@@ -145,7 +145,7 @@ Jump_030_40BC::
 
 Jump_030_40C3::
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_030_40BC
     ld [wBattleActor], a
     ld hl, wBattleSubPhase
@@ -277,7 +277,7 @@ Jump_030_4160:: ; address name
 
 Jump_030_4196::
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_030_41D2
     ld a, e
     ld hl, wSlotMarks
@@ -613,7 +613,7 @@ Func_030_439D:: ; address name
 
 Jump_030_43A1::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_030_43BF
     ld a, c
     add a, a
@@ -736,16 +736,16 @@ Jump_030_4438::
     call AddAx9ToHL
     bit 6, [hl]
     jr nz, Jump_030_4480
-    call ActorWD93FBand
+    call ActorBattleWordArray3FBand
     or a, a
     jr z, Jump_030_4480
     cp a, $01
     jr z, Jump_030_4497
     call RunBattleResolveStep_43C4_Case01_Sub01
     call RunBattleResolveStep_43C4_Case01_Sub02
-    call AddPersonalityWeightToWD868
-    call AddActorWD93FDiv16ToWD86A
-    call AddRandom0To63ToWD86A
+    call AddPersonalityWeightToBattleArg0
+    call AddActorBattleWordArray3FDiv16ToBattleArg2
+    call AddRandom0To63ToBattleArg2
     ld a, [wBattleArg0]
     ld l, a
     ld a, [wBattleArg1]
@@ -758,7 +758,7 @@ Jump_030_4438::
     jr c, Jump_030_4497
 
 Jump_030_4480::
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     res 6, [hl]
     ld a, [wBattleActor]
     ld hl, wResolveBytesE0
@@ -768,7 +768,7 @@ Jump_030_4480::
     jr Jump_030_44DF
 
 Jump_030_4497::
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     set 6, [hl]
     ld a, [wBattleActor]
     ld hl, wResolveBytesE0
@@ -802,7 +802,7 @@ Jump_030_44DF::
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01)
 ; reads: wBattleActor
 ; points at: wBattleWordArray3F
-ActorWD93FBand::
+ActorBattleWordArray3FBand::
 Func_030_44E0:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleWordArray3F
@@ -837,7 +837,7 @@ Func_030_4506:: ; address name
 ; points at: wBattleArg0
 RunBattleResolveStep_43C4_Case01_Sub02::
 Func_030_450B:: ; address name
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     cp a, $03
     ret z
     ld hl, Data_030_4519
@@ -865,7 +865,7 @@ Jump_030_451F::
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01)
 ; reads: wPersonalityIndex
 ; points at: wBattleArg0
-AddPersonalityWeightToWD868::
+AddPersonalityWeightToBattleArg0::
 Func_030_4536:: ; address name
     ld a, [wPersonalityIndex]
     add a, a
@@ -873,7 +873,7 @@ Func_030_4536:: ; address name
     ld hl, Data_030_5587
     add_a_to_hl
     push hl
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     pop hl
     add_a_to_hl
     ld a, [hl]
@@ -890,7 +890,7 @@ Func_030_4536:: ; address name
 ; reads: wBattleActor, wBattleArg2, wBattleArg3
 ; writes: wBattleArg2, wBattleArg3
 ; points at: wBattleWordArray3F
-AddActorWD93FDiv16ToWD86A::
+AddActorBattleWordArray3FDiv16ToBattleArg2::
 Func_030_4558:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleWordArray3F
@@ -911,7 +911,7 @@ Func_030_4558:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01)
 ; reads: wRandomLo, wBattleArg2, wBattleArg3
 ; writes: wBattleArg2, wBattleArg3
-AddRandom0To63ToWD86A::
+AddRandom0To63ToBattleArg2::
 Func_030_4579:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -930,7 +930,7 @@ Jump_030_4586::
     ret
 
 ; when the actor has no forced action and bit 7 of its wDAD8 byte is set, initialises the AI weights and runs the routine for its AI mode; a forced action is stored directly; then wBattleResolveStep += 1 (E-0124)
-; 2 call sites from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case01_Sub01)
+; 2 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case01_Sub01)
 ; reads: wBattleActor
 ; writes: wAIFlag
 ; points at: wSideControl, wSlotAIMode, wBattleResolveStep
@@ -993,8 +993,8 @@ Func_030_45DA:: ; address name
     ld [wAIChoiceOrder + $2], a
     ld a, $03
     ld [wAIChoiceIndex], a
-    call AddCommandWeightToWDA3C
-    call AddActorPersonalityTensToWDA3C
+    call AddCommandWeightToAIChoiceWeights
+    call AddActorPersonalityTensToAIChoiceWeights
     call AddStatusAndHPWeightsToAI
     call AddRandomPersonalityWeights
     call SortThreeAIWeightsRandomTies
@@ -1006,7 +1006,7 @@ Func_030_45DA:: ; address name
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wLinkMode, wBattleActor, wMenuState, wCommandBytesE9
 ; points at: wAIChoiceWeights, wSlotLastTactic, wCommandBytesE9
-AddCommandWeightToWDA3C::
+AddCommandWeightToAIChoiceWeights::
 Func_030_4617:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -1042,7 +1042,7 @@ Jump_030_4650::
     and a, $03
     cp a, $01
     jr nz, Jump_030_466C
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     cp a, $03
     jr z, Jump_030_4687
     ld hl, wAIChoiceWeights
@@ -1069,7 +1069,7 @@ Jump_030_4687::
 ; 2 call sites from 2 routines (e.g. InitAIWeightsForActor, AIChooseActionForActor_Sub01)
 ; reads: wBattleActor
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wAIChoiceWeights
-AddActorPersonalityTensToWDA3C::
+AddActorPersonalityTensToAIChoiceWeights::
 Func_030_4688:: ; address name
     ld hl, wSlotPersonalityHi
     ld a, $00
@@ -1081,7 +1081,7 @@ Func_030_4688:: ; address name
     ld a, $02
 
 ; B = [HL + actor] / 10, then Func_030_5428 on wDA3C + A with E = B (E-0122)
-; 2 call sites from 1 routine (e.g. AddActorPersonalityTensToWDA3C)
+; 2 call sites from 1 routine (e.g. AddActorPersonalityTensToAIChoiceWeights)
 ; reads: wBattleActor
 ; points at: wAIChoiceWeights
 AddActorPersonalityTensForIndexA::
@@ -1196,7 +1196,7 @@ Jump_030_4752::
     jr Jump_030_4768
 
 Jump_030_4759::
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     cp a, $03
     jr z, Jump_030_4768
     ld hl, wAIChoiceWeights + $2
@@ -1236,7 +1236,7 @@ Func_030_478B:: ; address name
 Jump_030_4793::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_030_47AE
     ld a, c
     call ReadBattleMaxHPOfSlot_Bank30
@@ -1278,7 +1278,7 @@ Func_030_47B9:: ; address name
     jr c, Jump_030_47E6
 
 Jump_030_47CA::
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     cp a, $03
     ret z
     ld hl, wAIChoiceWeights
@@ -1514,7 +1514,7 @@ Jump_030_4923::
     jr Jump_030_493C
 
 Jump_030_492F::
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     cp a, $03
     jr z, Jump_030_493A
     sla e
@@ -1556,7 +1556,7 @@ Jump_030_4959::
     jr nc, Jump_030_496E
 
 Jump_030_4960::
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     cp a, $03
     jr nz, Jump_030_496E
 
@@ -1633,7 +1633,7 @@ Jump_030_4AF1::
     jr nc, Jump_030_4B06
 
 Jump_030_4AF8::
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     cp a, $03
     jr nz, Jump_030_4B06
     ld b, $00
@@ -1642,7 +1642,7 @@ Jump_030_4AF8::
     ret
 
 Jump_030_4B06::
-    call EstimateDamageVsEachFoeToWD2C1
+    call EstimateDamageVsEachFoeToAIDamageEstimates
     ld a, [wBattleActor]
     ld hl, wBattleSkillsPrefix
     swap a
@@ -1910,7 +1910,7 @@ Jump_030_4C5E::
 ; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
-EstimateDamageVsEachFoeToWD2C1::
+EstimateDamageVsEachFoeToAIDamageEstimates::
 Func_030_4C63:: ; address name
     ld a, [wBattleActor]
     call ReadBattleATKOfSlot_Bank30
@@ -1925,7 +1925,7 @@ Func_030_4C63:: ; address name
 Jump_030_4C75::
     push de
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_030_4C8D
     call ReadBattleDEFOfSlot_Bank30
     srl h
@@ -2164,8 +2164,8 @@ Data_030_4F46:: ; address name
     dw RollPersonalityMidLowFlag08
     dw RollPersonalityLoHighFlag10
     dw RollPersonalityLoLowFlag20
-    dw RollWD980HighFlag40
-    dw RollWD980LowFlag80
+    dw RollSlotTraitHighFlag40
+    dw RollSlotTraitLowFlag80
     db $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F, $C6, $4F
 
 ; AI trait roll with mask DE = $01: when the actor's value is at least $80 rolls a chance that grows with its distance from $80 (E-0122)
@@ -2232,7 +2232,7 @@ Func_030_4FAE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo, wBattleActor
 ; points at: wSlotTrait, wSlotFlags854
-RollWD980HighFlag40:: ; heuristic: target of a pointer table; C0
+RollSlotTraitHighFlag40:: ; heuristic: target of a pointer table; C0
 Func_030_4FB6:: ; address name
     ld hl, wSlotTrait
     ld de, $0040
@@ -2242,7 +2242,7 @@ Func_030_4FB6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo, wBattleActor
 ; points at: wSlotTrait, wSlotFlags854
-RollWD980LowFlag80:: ; heuristic: target of a pointer table; C0
+RollSlotTraitLowFlag80:: ; heuristic: target of a pointer table; C0
 Func_030_4FBE:: ; address name
     ld hl, wSlotTrait
     ld de, $0080
@@ -2799,22 +2799,22 @@ Jump_030_52F2::
     ld e, $10
 
 Jump_030_5307::
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     ld hl, Data_030_5384
     call ReadBattleWordFromArray_Bank30
     add hl, de
     add hl, bc
-    call CopyFourBytesNegatedByActorWDA43
+    call CopyFourBytesNegatedByActorSlotTactic
     call RunBattleResolveStep_43C4_Case01_Sub04_Sub01
     ret
 
 ; copies four bytes from HL to hFFC6, negating each when bit 6 of the actor's wDA43 byte is set (CopyByteNegateIfCBit6) (E-0122)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub04)
 ; points at: hTemp0
-CopyFourBytesNegatedByActorWDA43::
+CopyFourBytesNegatedByActorSlotTactic::
 Func_030_5319:: ; address name
     push hl
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     ld c, [hl]
     pop hl
     ld de, hTemp0
@@ -2831,7 +2831,7 @@ Func_030_5319:: ; address name
     ret
 
 ; [DE] = [HL], negated (two's complement) when bit 6 of C is set (E-0115)
-; 4 call sites from 1 routine (e.g. CopyFourBytesNegatedByActorWDA43)
+; 4 call sites from 1 routine (e.g. CopyFourBytesNegatedByActorSlotTactic)
 CopyByteNegateIfCBit6::
 Func_030_5335:: ; address name
     ld a, [hl]
@@ -2856,7 +2856,7 @@ Func_030_533E:: ; address name
     add hl, bc
     ld e, [hl]
     push hl
-    call GetActorWDA43Low2
+    call GetActorSlotTacticLow2
     bit 6, [hl]
     pop hl
     jr z, Jump_030_5357
@@ -2897,10 +2897,10 @@ Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
 
 ; A = wDA43[wBattleActor] & 3 (E-0072)
-; 13 call sites from 12 routines (e.g. AddWeightsForSkillD_Sub01, AddRandomPersonalityWeights, AddStatusAndHPWeightsToAI, AddCommandWeightToWDA3C, ...)
+; 13 call sites from 12 routines (e.g. AddWeightsForSkillD_Sub01, AddRandomPersonalityWeights, AddStatusAndHPWeightsToAI, AddCommandWeightToAIChoiceWeights, ...)
 ; reads: wBattleActor
 ; points at: wSlotTactic
-GetActorWDA43Low2::
+GetActorSlotTacticLow2::
 Func_030_540C:: ; address name
     ld a, [wBattleActor]
     ld hl, wSlotTactic
@@ -2948,7 +2948,7 @@ Jump_030_543E::
     ret
 
 ; wPersonalityIndex = PersonalityIndexOfSlot_Bank30(actor); resets the AI workspace (Func_030_5472); with wD2CC = 1 runs the routine for the actor's AI mode (Data_030_45D0 indexed by wDA53[actor], JumpToHL) and stores its result B as the actor's chosen action; runs Func_030_4CFC; wD2CC = 0 (E-0120)
-; 3 call sites from 2 routines (e.g. Func_032_4ADC_Case01_Case00, RunWC5FDState_E0_Case0D_Case05_Sub01)
+; 3 call sites from 2 routines (e.g. Func_032_4ADC_Case01_Case00, RunDebugState_E0_Case0D_Case05_Sub01)
 ; reads: wBattleActor
 ; writes: wPersonalityIndex, wAIFlag
 ; points at: wSlotAIMode
@@ -2997,8 +2997,8 @@ Func_030_5472:: ; address name
     ld a, $03
     ld [wAIChoiceIndex], a
     call AIChooseActionForActor_Sub01_Sub01
-    call AddCommandWeightToWDA3C
-    call AddActorPersonalityTensToWDA3C
+    call AddCommandWeightToAIChoiceWeights
+    call AddActorPersonalityTensToAIChoiceWeights
     call AddStatusAndHPWeightsToAI
     call AIChooseActionForActor_Sub01_Sub02
     call AddRandomPersonalityWeights
@@ -3141,7 +3141,7 @@ Jump_030_556B::
 ; advances the random seed; when wC5F8 is set and the random value is below wC5FA, stores wC5F9 as the actor's action choice (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDebugCursor, wDebugValue1, wRandomLo, wDebugValue0
-MaybeOverrideActorActionWithWC5F9:: ; heuristic: follows a terminator; C0
+MaybeOverrideActorActionWithDebugValue0:: ; heuristic: follows a terminator; C0
 Func_030_556C:: ; address name
     call AdvanceRandom
     call ActorActionChoiceAddress
@@ -3413,7 +3413,7 @@ Data_030_59E0:: ; address name
     db $E2
 
 ; HL = wBattleATK, then ReadBattleWordFromArray_Bank30 (E-0122)
-; 1 call site from 1 routine (e.g. EstimateDamageVsEachFoeToWD2C1)
+; 1 call site from 1 routine (e.g. EstimateDamageVsEachFoeToAIDamageEstimates)
 ; points at: wBattleATK
 ReadBattleATKOfSlot_Bank30::
 Func_030_5C3B:: ; address name
@@ -3421,7 +3421,7 @@ Func_030_5C3B:: ; address name
     jr ReadBattleWordFromArray_Bank30
 
 ; HL = wBattleDEF, then ReadBattleWordFromArray_Bank30 (E-0122)
-; 1 call site from 1 routine (e.g. EstimateDamageVsEachFoeToWD2C1)
+; 1 call site from 1 routine (e.g. EstimateDamageVsEachFoeToAIDamageEstimates)
 ; points at: wBattleDEF
 ReadBattleDEFOfSlot_Bank30::
 Func_030_5C40:: ; address name

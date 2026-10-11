@@ -210,8 +210,8 @@ GameMode4_Init_Sub01_Sub02::
 Func_019_419B:: ; address name
     farcall GameMode4_Init_Sub01_Sub02_Sub01
     farcall ClearAttributesAndScreenBuffer_Bank31
-    farcall CopyRectRecordForWD88F_Bank31
-    farcall LayoutTileBlocksForWD890Count
+    farcall CopyRectRecordForBattlePartyCount_Bank31
+    farcall LayoutTileBlocksForBattleFoeCount
     farcall DrawPartySlotStatusPanels
     farcall LoadBattleMonsterPictureAttributes
     ld hl, vBGMap0
@@ -506,7 +506,7 @@ Jump_019_433F::
 ; reads: wBattleArg0, wBattleArg2, wBattleArg3
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkillsPrefix, wBattleSkills
-SetCFromWD868ThenRun434D::
+SetCFromBattleArg0ThenRun434D::
 Func_019_4349:: ; address name
     ld a, [wBattleArg0]
     ld c, a
@@ -640,7 +640,7 @@ Func_019_43ED:: ; address name
 
 Jump_019_43F3::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_019_43FE
     ld a, [hl]
     or a, a
@@ -659,7 +659,7 @@ Jump_019_43FE::
 
 Jump_019_440E::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_019_4430
     ld d, $04
 
@@ -831,7 +831,7 @@ Jump_019_44B3::
 ; HL = the word wD868, DE = the word wD86A, then falls into Func_019_44C9 (E-0126)
 ; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01, ActionEffect_TatsuCall_Sub01, ...)
 ; reads: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
-LoadWD868PointersThenRun44C9::
+LoadBattleArg0PointersThenRun44C9::
 Func_019_44B9:: ; address name
     ld a, [wBattleArg0]
     ld l, a
@@ -1378,27 +1378,27 @@ Jump_019_4771::
     push hl
     ld a, [wSpeciesRecord + $C]
     ldh [hTemp0], a
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
     ld a, $01
     ld [wBattleArg0], a
     call ScaleStatAndCapByBattleKind
-    call StoreHFFC8WordAtHL_Bank19
+    call StoreTemp2WordAtHL_Bank19
     ld a, [wSpeciesRecord + $D]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
     ld a, $00
     ld [wBattleArg0], a
     call ScaleStatAndCapByBattleKind
-    call StoreHFFC8WordAtHL_Bank19
+    call StoreTemp2WordAtHL_Bank19
     ld a, $02
     ld [wBattleArg0], a
     ld a, [wSpeciesRecord + $E]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
     call ScaleStatAndCapByBattleKind
     ld a, $03
@@ -1406,7 +1406,7 @@ Jump_019_4771::
     ld a, [wSpeciesRecord + $F]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
     call ScaleStatAndCapByBattleKind
     ld a, $00
@@ -1414,13 +1414,13 @@ Jump_019_4771::
     ld a, [wSpeciesRecord + $10]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
     call ScaleStatAndCapByBattleKind
     ld a, [wSpeciesRecord + $11]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
     call ScaleStatAndCapByBattleKind
     ld a, $E7
@@ -1449,7 +1449,7 @@ Jump_019_4771::
     pop hl
     ld [hl+], a
     call RollRecordField0DState
-    call AccumulateGrowthForLevelsHFFC7
+    call AccumulateGrowthForLevelsTemp1
     farcall CheckSkillsLearnableAtLevel
     ld a, [wBattleArg2]
     ld e, a
@@ -1621,7 +1621,7 @@ Jump_019_494B::
 ; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: hTemp2, hTemp3
-StoreHFFC8WordAtHL_Bank19::
+StoreTemp2WordAtHL_Bank19::
 Func_019_495C:: ; address name
     ldh a, [hTemp2]
     ld [hl+], a
@@ -1704,7 +1704,7 @@ Jump_019_49A7::
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
 ; reads: wBattleArg2, wBattleArg3, hTemp1, hTemp7, hTemp8, wBattleKind, hTemp9, hTemp4, ...
 ; writes: hTemp4, hTemp5, hTemp6, hTemp9, hTemp7, hTemp8
-AccumulateGrowthForLevelsHFFC7::
+AccumulateGrowthForLevelsTemp1::
 Func_019_49B1:: ; address name
     ld a, [wBattleArg2]
     add a, $18
@@ -1835,7 +1835,7 @@ Jump_019_4A68::
     ret
 
 ; DEHL = A * EHL (a 24-bit by 8-bit multiply from three Multiply8 calls) (E-0121)
-; 2 call sites from 2 routines (e.g. AccumulateGrowthForLevelsHFFC7, ScaleWordBy6Or12Capped10000)
+; 2 call sites from 2 routines (e.g. AccumulateGrowthForLevelsTemp1, ScaleWordBy6Or12Capped10000)
 Multiply24By8::
 Func_019_4A74:: ; address name
     push af
@@ -2237,7 +2237,7 @@ Jump_019_4C2E::
     jr Jump_019_4C3E
 
 Jump_019_4C3B::
-    call SetCFromWD868ThenRun434D
+    call SetCFromBattleArg0ThenRun434D
 
 Jump_019_4C3E::
     pop bc
@@ -2401,7 +2401,7 @@ Jump_019_4D29::
     jr Jump_019_4D3C
 
 Jump_019_4D39::
-    call SetCFromWD868ThenRun434D
+    call SetCFromBattleArg0ThenRun434D
 
 Jump_019_4D3C::
     pop bc
@@ -2553,7 +2553,7 @@ Func_019_4E1C:: ; address name
 
 Jump_019_4E28::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr z, Jump_019_4E32
     ld [hl], $01
     jr Jump_019_4E34
@@ -2577,7 +2577,7 @@ Jump_019_4E41::
 
 Jump_019_4E44::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr z, Jump_019_4E58
     ld a, c
     call CheckSlotStatusBlock
@@ -2896,7 +2896,7 @@ Data_019_4E60:: ; heuristic: start of a structured table; C0
 ; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, ScriptCommandE8_Run_Case09_Case13_Sub01, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3, hTemp4
-LoadTable4E60EntryToHFFC8::
+LoadTable4E60EntryToTemp2::
 Func_019_7380:: ; address name
     ld bc, $0129
     ldh a, [hTemp0]
@@ -2922,7 +2922,7 @@ Func_019_7380:: ; address name
     ret
 
 ; loads species record [wC991] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wC9DC] - 1)) to wC9DE (E-0121)
-; 2 call sites from 2 routines (e.g. CreateMonsterRecordOfKindHFFC7_Sub01_Sub01, BattleEnd_Step3)
+; 2 call sites from 2 routines (e.g. CreateMonsterRecordOfKindTemp1_Sub01_Sub01, BattleEnd_Step3)
 ; reads: wRecordBufA, wSpeciesExpCurve
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 LoadTable4E60EntryForWC991ToWC9DE::
@@ -2964,7 +2964,7 @@ Func_019_73A2:: ; address name
     ret
 
 ; loads species record [wCA36] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wCA81] - 1)) to wCA83 (E-0121)
-; 1 call site from 1 routine (e.g. UnpackLinkRecordToWCA2B)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToRecordBufB)
 ; reads: wRecordBufB, wSpeciesExpCurve
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 LoadTable4E60EntryForWCA36ToWCA83::

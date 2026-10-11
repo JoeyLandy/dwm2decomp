@@ -64,14 +64,14 @@ Jump_0A0_405B::
 Jump_0A0_405F::
     ld hl, wSlotMarks
     ld a, $00
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, Jump_0A0_406B
     ld a, $03
 
 Jump_0A0_406B::
     ld [hl+], a
     ld a, $01
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     ld a, $00
     jr nc, Jump_0A0_4077
     ld a, $03
@@ -81,7 +81,7 @@ Jump_0A0_4077::
     ld a, $FF
     ld [hl+], a
     ld a, $03
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     ld a, $00
     jr nc, Jump_0A0_4086
     ld a, $FF
@@ -325,7 +325,7 @@ Func_0A0_41F2:: ; address name
 
 Jump_0A0_41F8::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A0_4203
     ld a, [hl]
     or a, a
@@ -341,7 +341,7 @@ Jump_0A0_4203::
 
 Jump_0A0_420E::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A0_4230
     ld d, $04
 
@@ -835,7 +835,7 @@ Jump_0A0_4489::
     jr Jump_0A0_449F
 
 Jump_0A0_4499::
-    farcall SetCFromWD868ThenRun434D
+    farcall SetCFromBattleArg0ThenRun434D
 
 Jump_0A0_449F::
     pop bc
@@ -943,7 +943,7 @@ Jump_0A0_4550::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadWD868PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRun44C9
     pop bc
     farcall SetSlotAIModeFromINT
     ret
@@ -1008,7 +1008,7 @@ Jump_0A0_45A0::
     jr Jump_0A0_45B9
 
 Jump_0A0_45B3::
-    farcall SetCFromWD868ThenRun434D
+    farcall SetCFromBattleArg0ThenRun434D
 
 Jump_0A0_45B9::
     pop bc
@@ -1117,7 +1117,7 @@ Jump_0A0_466B::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadWD868PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRun44C9
     pop bc
     farcall SetSlotAIModeFromINT
     ret
@@ -1154,7 +1154,7 @@ Func_0A0_46A1:: ; address name
 
 Jump_0A0_46A7::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr z, Jump_0A0_46BB
     ld a, c
     call CheckSlotStatusBlock
@@ -1682,45 +1682,45 @@ Func_0A0_494F:: ; address name
     push hl
     ld a, [wSpeciesRecord + $C]
     ldh [hTemp0], a
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
     ld a, $01
     ld [wBattleArg0], a
-    call ScaleStatByWCFE3Capped999
-    call StoreHFFC8WordAtHL_BankA0
+    call ScaleStatByWildLevelCapped999
+    call StoreTemp2WordAtHL_BankA0
     ld a, [wSpeciesRecord + $D]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
     ld a, $00
     ld [wBattleArg0], a
-    call ScaleStatByWCFE3Capped999
-    call StoreHFFC8WordAtHL_BankA0
+    call ScaleStatByWildLevelCapped999
+    call StoreTemp2WordAtHL_BankA0
     ld a, [wSpeciesRecord + $E]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
-    call ScaleStatByWCFE3Capped999
+    call ScaleStatByWildLevelCapped999
     ld a, [wSpeciesRecord + $F]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
-    call ScaleStatByWCFE3Capped999
+    call ScaleStatByWildLevelCapped999
     ld a, [wSpeciesRecord + $10]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
-    call ScaleStatByWCFE3Capped999
+    call ScaleStatByWildLevelCapped999
     ld a, [wSpeciesRecord + $11]
     ldh [hTemp0], a
     push hl
-    farcall SumTable6616RowForHFFC6
+    farcall SumTable6616RowForTemp0
     pop hl
-    call ScaleStatByWCFE3Capped999
+    call ScaleStatByWildLevelCapped999
     ld a, $E7
     ld [hl+], a
     ld a, $03
@@ -1765,7 +1765,7 @@ Func_0A0_4A45:: ; address name
 ; 6 call sites from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: hTemp2, hTemp3, wWildLevel
 ; writes: hTemp2, hTemp3
-ScaleStatByWCFE3Capped999::
+ScaleStatByWildLevelCapped999::
 Func_0A0_4A55:: ; address name
     push af
     push bc
@@ -1818,7 +1818,7 @@ Jump_0A0_4A86::
 ; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
 ; reads: hTemp2, hTemp3
-StoreHFFC8WordAtHL_BankA0::
+StoreTemp2WordAtHL_BankA0::
 Func_0A0_4A97:: ; address name
     ldh a, [hTemp2]
     ld [hl+], a
@@ -2388,12 +2388,12 @@ Func_0A0_4F70:: ; address name
     cp a, $02
     ret nz
     di
-    farcall TickWCB75Sequence
+    farcall TickSequencePtrLoSequence
     ei
     ret
 
 ; unless wC52B is set (text busy), runs the routine for wBattlePhase (jump table of four) (E-0122)
-; 1 call site from 1 routine (e.g. RunWC582State_4544_Case01)
+; 1 call site from 1 routine (e.g. RunLinkExchangeState_4544_Case01)
 ; reads: wTextFlags, wBattlePhase
 RunBattlePhaseWhenTextIdle_A0::
 Func_0A0_4F8E:: ; address name
@@ -3710,7 +3710,7 @@ Jump_0A0_56F7:: ; address name
     jr Jump_0A0_5737
 
 Jump_0A0_5704::
-    call CopyF0StringFromTable5A4AToWC140
+    call CopyF0StringFromTable5A4AToTextBuf1
     ld a, [wWorkBuf + $A]
     ld hl, wTextBuf2
     call WriteDecimalByteString
@@ -3744,7 +3744,7 @@ Jump_0A0_5732:: ; address name
 
 Jump_0A0_5737::
     ld a, [wBattleSubPhase]
-    call CopyF0StringFromTable5A4AToWC140
+    call CopyF0StringFromTable5A4AToTextBuf1
     ld a, [wBattleSubPhase]
     ld hl, wWorkBuf + $A
     add_a_to_hl
@@ -4153,7 +4153,7 @@ Jump_0A0_59EB:: ; address name
 ; copies the $F0-terminated string at Data_0A0_5A4A[A] to wC140, including the terminator (E-0122)
 ; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case07, RunBattlePhaseWhenTextIdle_A0_Case03_Case06)
 ; points at: wTextBuf1
-CopyF0StringFromTable5A4AToWC140::
+CopyF0StringFromTable5A4AToTextBuf1::
 Func_0A0_5A30:: ; address name
     ld hl, Data_0A0_5A4A
     add a, a
@@ -4753,7 +4753,7 @@ Jump_0A0_5DC8::
 Jump_0A0_5DC9::
     ld e, $03
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A0_5DF8
     ld e, $01
     ld a, c
@@ -4839,7 +4839,7 @@ Jump_0A0_5E39:: ; address name
     set 7, [hl]
     inc hl
     set 7, [hl]
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     farcall DrawWC278RowsToBGMapRow7
     ld hl, vTiles1 + $6D0
     ld de, $0701
@@ -4894,7 +4894,7 @@ Jump_0A0_5E93:: ; address name
     ld bc, $0007
     ld a, $00
     call FillBytes
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -5027,7 +5027,7 @@ Jump_0A0_5F5C:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     call DrawWC338RowsToBGMapRow13_BankA0
     farcall CopyRectRecord73ADToScreenBuffer
     ld a, $01
@@ -5150,10 +5150,10 @@ Jump_0A0_6021:: ; address name
     ld a, [wMenuSubState]
     and a, $03
     ld [hl], a
-    call SetWDA43AndWDA4BForWCFD4_BankA0
+    call SetSlotTacticAndSlotLastTacticForCommandMonster_BankA0
     cp a, $03
     jr nz, Jump_0A0_606D
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -5188,7 +5188,7 @@ Jump_0A0_606D::
     jr Jump_0A0_609F
 
 Jump_0A0_6095::
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -5280,7 +5280,7 @@ Jump_0A0_6115:: ; address name
     jr z, Jump_0A0_6137
     ld a, $00
     ld [wBattleArg1], a
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     jp Jump_0A0_61D9
@@ -5319,14 +5319,14 @@ Jump_0A0_6167::
     ld a, [wCommandMonster]
     xor a, $01
     ld c, a
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A0_6185
     ld a, c
     ld [hl], a
     jr Jump_0A0_61CA
 
 Jump_0A0_6185::
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld a, $15
     ld [wBattleResolveStep], a
     jr Jump_0A0_61D9
@@ -5336,13 +5336,13 @@ Jump_0A0_6192::
     ld a, d
     or a, a
     jr nz, Jump_0A0_61A6
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld a, $08
     ld [wBattleResolveStep], a
     jr Jump_0A0_61D9
 
 Jump_0A0_61A6::
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     xor a, a
     ld [wBattleArg1], a
     ld a, $0C
@@ -5362,7 +5362,7 @@ Jump_0A0_61B7::
 Jump_0A0_61CA::
     ld a, $01
     ld [wBattleArg1], a
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
 
@@ -5438,7 +5438,7 @@ Jump_0A0_622A:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5545,7 +5545,7 @@ Jump_0A0_62CD:: ; address name
     jp z, Jump_0A0_6354
     ld a, $69
     call QueueSoundEffect
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld a, $14
     ld [wBattleArg1], a
     call LoadSelectedSkillRecord_BankA0
@@ -5604,7 +5604,7 @@ Jump_0A0_6354::
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_0A0_636C
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld a, $04
     ld [wBattleArg1], a
     ld hl, wBattleResolveStep
@@ -5658,7 +5658,7 @@ Jump_0A0_639B:: ; address name
 ; points at: wBattleResolveStep
 RunBattleSetup_BankA0_Case01_Case10::
 Jump_0A0_63A9:: ; address name
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     call DrawWC2A4AndWC2B8Rects_BankA0
     farcall CopyRectRecord7345ToScreenBuffer
     ld hl, wBattleResolveStep
@@ -5688,7 +5688,7 @@ Jump_0A0_63CF:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5741,7 +5741,7 @@ Jump_0A0_63FE::
     jr nz, Jump_0A0_63F8
     xor a, a
     ld [wBattleActor], a
-    farcall ClearAndLayoutTileBlocksForWD890Count
+    farcall ClearAndLayoutTileBlocksForBattleFoeCount
     call RunBattleSetup_BankA0_Shared04
     farcall CopyRectRecord7345ToScreenBuffer
     farcall DrawWC278RowsToBGMapRow7
@@ -6703,7 +6703,7 @@ Data_0A0_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Case01_Case02)
 ; reads: wCommandMonster
 ; points at: wSlotTactic, wSlotLastTactic
-SetWDA43AndWDA4BForWCFD4_BankA0::
+SetSlotTacticAndSlotLastTacticForCommandMonster_BankA0::
 Func_0A0_69A1:: ; address name
     push af
     ld a, [wCommandMonster]
@@ -6749,10 +6749,10 @@ Func_0A0_69C1:: ; address name
     farcall LoadSkillRecord
     ret
 
-; side base = ((wC57F << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfWC57FSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
+; side base = ((wC57F << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfLinkRoleSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkRole
-CountPresentFoesOfWC57FSide_BankA0:: ; heuristic: follows a terminator; C0
+CountPresentFoesOfLinkRoleSide_BankA0:: ; heuristic: follows a terminator; C0
 Func_0A0_69F1:: ; address name
     ld de, $0000
     ld b, $03
@@ -6764,7 +6764,7 @@ Func_0A0_69F1:: ; address name
 
 Jump_0A0_6A00::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A0_6A08
     inc d
     ld e, c
@@ -6778,7 +6778,7 @@ Jump_0A0_6A08::
 ; side base = (wC57F << 1) & 4: D = how many of its three slots are present; clobbers A, BC (E-0067) (the same 24 bytes appear in 2 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkRole
-CountPresentSlotsOfWC57FSide_BankA0:: ; heuristic: follows a terminator; C0
+CountPresentSlotsOfLinkRoleSide_BankA0:: ; heuristic: follows a terminator; C0
 Func_0A0_6A0D:: ; address name
     ld d, $00
     ld b, $03
@@ -6789,7 +6789,7 @@ Func_0A0_6A0D:: ; address name
 
 Jump_0A0_6A19::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A0_6A20
     inc d
 
@@ -6799,11 +6799,11 @@ Jump_0A0_6A20::
     jr nz, Jump_0A0_6A19
     ret
 
-; far-calls RunWC5FDState_E0 (E-0122)
+; far-calls RunDebugState_E0 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 CallFunc443BInBankE0_BankA0:: ; heuristic: follows a terminator; C0
 Func_0A0_6A25:: ; address name
-    farcall RunWC5FDState_E0
+    farcall RunDebugState_E0
     ret
 
 ; only called from routines of RunBattleSetup_BankA0 (E-0098)
@@ -6842,7 +6842,7 @@ Func_0A0_6A45:: ; address name
     cp a, $03
     jr nc, Jump_0A0_6AA9
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A0_6A95
     ld a, c
     ld hl, wBattleStatus

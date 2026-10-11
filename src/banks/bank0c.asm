@@ -201,7 +201,7 @@ Jump_00C_4114::
     ld [wArg3], a
     ld a, d
     ld [wArg4], a
-    farcall TestBitInFieldAtWD7F3
+    farcall TestBitInFieldAtArg3
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_00C_4141
@@ -658,7 +658,7 @@ Jump_00C_440E::
     ld [hl+], a
     dec b
     jr nz, Jump_00C_440E
-    farcall WritePlayerNameWithFlag0SuffixToWC130
+    farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -701,7 +701,7 @@ Jump_00C_4448:: ; address name
     ld hl, wWindowTileBuffer + $6C
     ld bc, $0C0D
     call CopyRectTo20ByteRows_Bank0C
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -766,7 +766,7 @@ Jump_00C_449D:: ; address name
     ret
 
 Jump_00C_44C3::
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -788,7 +788,7 @@ Jump_00C_44D9::
 Jump_00C_44DA::
     ld [wGrid2CursorY], a
     push af
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -801,7 +801,7 @@ Jump_00C_44E9::
     pop af
     cp a, b
     jr c, Jump_00C_450B
-    call ReadGridCellByteForWD786WD787
+    call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
     cp a, b
@@ -828,7 +828,7 @@ Jump_00C_451C::
     ld a, [wGrid2CursorY]
     and a, a
     jr nz, Jump_00C_4530
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -845,7 +845,7 @@ Jump_00C_4530::
 
 Jump_00C_4533::
     call ScriptCommandF6_Run_Case0C_Sub03
-    call ReadGridCellByteForWD786WD787
+    call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
     and a, a
@@ -865,7 +865,7 @@ Jump_00C_4544::
 
 Jump_00C_4550::
     call ScriptCommandF6_Run_Case0C_Sub03
-    call ReadGridCellByteForWD786WD787
+    call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
     cp a, b
@@ -878,7 +878,7 @@ Jump_00C_4560::
     jr Jump_00C_4544
 
 Jump_00C_4563::
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     add a, a
     ld de, Data_00C_5916
     add a, e
@@ -893,7 +893,7 @@ Jump_00C_456F::
     ld a, [de]
     ld h, a
     push hl
-    call GridIndexFromWD78AWD78B
+    call GridIndexFromGrid2CursorXGrid2CursorY
     pop hl
     add_a_to_hl
     call ScriptCommandF6_Run_Shared08
@@ -1320,8 +1320,8 @@ Jump_00C_490A:: ; address name
     ld [wArg4], a
     ld a, $00
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
-    call GridCellAddressFromWD786AndWD78A
+    farcall DrawTileRectFromArg1Params
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld e, l
     ld d, h
     push de
@@ -1335,7 +1335,7 @@ Jump_00C_490A:: ; address name
     ret
 
 Jump_00C_4957::
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_00C_497A
@@ -1372,7 +1372,7 @@ Jump_00C_497A::
     ld [wArg4], a
     ld a, $01
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     xor a, a
     ld [wScreenSubStep], a
     ld a, [wScreenStep]
@@ -1386,7 +1386,7 @@ Jump_00C_497A::
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wScreenStep
 ScriptCommandF6_Run_Case10_Case03::
 Jump_00C_49B5:: ; address name
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -1396,7 +1396,7 @@ Jump_00C_49B5:: ; address name
     ld [wArg4], a
     ld a, $80
     ld [wArg5], a
-    farcall DecompressGraphicsWD7F1ToWD7F4
+    farcall DecompressGraphicsArg1ToArg4
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1410,7 +1410,7 @@ Jump_00C_49B5:: ; address name
 ScriptCommandF6_Run_Case10_Case04::
 Jump_00C_49DA:: ; address name
     call DrawThreeMetaSpritePartsFor5050
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, h
     add a, $02
     ld [wStringCategory], a
@@ -1427,13 +1427,13 @@ Jump_00C_49DA:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     farcall ShowString_Bank08
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     and a, $0F
     ld [wWorkBuf], a
     ld a, $2F
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
-    call GridIndexFromWD786WD787
+    farcall LoadFamilyIconTileForWorkBuf
+    call GridIndexFromGridCursorXGridCursorY
     ld [wStringIndex], a
     ld a, $02
     ld [wStringCategory], a
@@ -1448,12 +1448,12 @@ Jump_00C_49DA:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     farcall ShowString_Bank0B
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, l
     ld [wArg1], a
     ld a, h
     ld [wArg2], a
-    farcall LoadSpeciesBytes8To10ToWD7F5
+    farcall LoadSpeciesBytes8To10ToArg5
     farcall ScriptCommandF6_Run_Case10_Case04_Sub01
     ld a, $04
     ld [wStringCategory], a
@@ -1511,7 +1511,7 @@ Data_00C_4AA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ScriptCommandF6_Run_Case10_Case05::
 Jump_00C_4AA6:: ; address name
     call DrawThreeMetaSpritePartsFor5050
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     call ScriptCommandF6_Run_Shared08
     cp a, $FF
     jr z, Jump_00C_4B0A
@@ -1564,7 +1564,7 @@ Jump_00C_4B0A::
 ScriptCommandF6_Run_Case10_Case06::
 Jump_00C_4B12:: ; address name
     call DrawThreeMetaSpritePartsFor5050
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     push hl
     sla l
     rl h
@@ -1607,7 +1607,7 @@ Jump_00C_4B12:: ; address name
 ScriptCommandF6_Run_Case10_Case07::
 Jump_00C_4B5C:: ; address name
     call DrawThreeMetaSpritePartsFor5050
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, $10
     add_a_to_hl
     ld a, h
@@ -1671,7 +1671,7 @@ Jump_00C_4BCB::
     jr c, Jump_00C_4BF8
     xor a, a
     ld [wGrid2CursorX], a
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -1701,9 +1701,9 @@ Jump_00C_4BF8::
     ld [wGrid2CursorX], a
 
 Jump_00C_4BFC::
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     push hl
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     add a, a
     ld hl, Data_00C_592E
     add_a_to_hl
@@ -1721,7 +1721,7 @@ Jump_00C_4BFC::
     jr Jump_00C_4BE9
 
 Jump_00C_4C1C::
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     call ScriptCommandF6_Run_Shared08
     and a, a
     jr z, Jump_00C_4BCB
@@ -1753,7 +1753,7 @@ Jump_00C_4C4F::
     jr nz, Jump_00C_4C72
 
 Jump_00C_4C5B::
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -1763,14 +1763,14 @@ Jump_00C_4C5B::
 Jump_00C_4C66::
     ld a, [de]
     ld [wGrid2CursorY], a
-    call ReadGridCellByteForWD786WD787
+    call ReadGridCellByteForGridCursorXGridCursorY
     ld [wGrid2CursorX], a
     jr Jump_00C_4C82
 
 Jump_00C_4C72::
     dec a
     ld [wGrid2CursorY], a
-    call ReadGridCellByteForWD786WD787
+    call ReadGridCellByteForGridCursorXGridCursorY
     ld [wGrid2CursorX], a
     jr Jump_00C_4C82
 
@@ -1779,9 +1779,9 @@ Jump_00C_4C7E::
     ld [wGrid2CursorX], a
 
 Jump_00C_4C82::
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     push hl
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     add a, a
     ld hl, Data_00C_592E
     add_a_to_hl
@@ -1799,7 +1799,7 @@ Jump_00C_4C82::
     jr nz, Jump_00C_4C5B
 
 Jump_00C_4CA2::
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     call ScriptCommandF6_Run_Shared08
     and a, a
     jr z, Jump_00C_4C4F
@@ -2066,7 +2066,7 @@ Func_00C_4E75:: ; address name
     ld [wArg6], a
     ld a, [hl]
     ld [wArg7], a
-    farcall FamilyForSpeciesIdWD7F6
+    farcall FamilyForSpeciesIdArg6
     ld a, [wArg5]
     jr Jump_00C_4E94
 
@@ -2080,7 +2080,7 @@ Jump_00C_4E94::
     ld [wWorkBuf], a
     pop af
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     ret
 
 Jump_00C_4EA4::
@@ -2109,7 +2109,7 @@ Jump_00C_4EA4::
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ScriptCommandF6_Run_Shared01::
 Func_00C_4EC7:: ; address name
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     add a, a
     ld de, Data_00C_5916
     add a, e
@@ -2209,7 +2209,7 @@ Jump_00C_4F57::
     inc hl
     push hl
     inc c
-    call ReadGridCellByteForWD786WD787
+    call ReadGridCellByteForGridCursorXGridCursorY
     inc a
     ld b, a
     pop hl
@@ -2256,7 +2256,7 @@ Jump_00C_4F95::
     inc a
     inc a
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     pop bc
     pop de
 
@@ -2277,7 +2277,7 @@ Data_00C_4FAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, hSpriteSubIndex
 DrawThreeMetaSpritePartsFor5050::
 Func_00C_4FC2:: ; address name
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -2337,7 +2337,7 @@ Func_00C_501F:: ; address name
     inc hl
     inc hl
     push hl
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     ld de, Data_00C_5944
     add a, e
     ld e, a
@@ -2356,11 +2356,11 @@ Jump_00C_5043::
     ei
     ret
 
-; HL = the word Data_00C_5916[GridIndexFromWD786WD787] + GridIndexFromWD78AWD78B (E-0124)
+; HL = the word Data_00C_5916[GridIndexFromGridCursorXGridCursorY] + GridIndexFromGrid2CursorXGrid2CursorY (E-0124)
 ; 15 call sites from 10 routines (e.g. ScriptCommandF6_Run_Case10_Case08, DrawThreeMetaSpritePartsFor5050, ScriptCommandF6_Run_Case10_Case07, ScriptCommandF6_Run_Case10_Case06, ...)
-GridCellAddressFromWD786AndWD78A::
+GridCellAddressFromGridCursorXAndGrid2CursorX::
 Func_00C_5050:: ; address name
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     add a, a
     ld de, Data_00C_5916
     add a, e
@@ -2375,17 +2375,17 @@ Jump_00C_505C::
     ld a, [de]
     ld h, a
     push hl
-    call GridIndexFromWD78AWD78B
+    call GridIndexFromGrid2CursorXGrid2CursorY
     pop hl
     add_a_to_hl
     ret
 
-; A = the byte at Data_00C_594F[GridIndexFromWD786WD787] + wD78B (E-0122)
+; A = the byte at Data_00C_594F[GridIndexFromGridCursorXGridCursorY] + wD78B (E-0122)
 ; 6 call sites from 3 routines (e.g. ScriptCommandF6_Run_Case0C, ScriptCommandF6_Run_Shared01, ScriptCommandF6_Run_Case10_Case08)
 ; reads: wGrid2CursorY
-ReadGridCellByteForWD786WD787::
+ReadGridCellByteForGridCursorXGridCursorY::
 Func_00C_506C:: ; address name
-    call GridIndexFromWD786WD787
+    call GridIndexFromGridCursorXGridCursorY
     add a, a
     ld hl, Data_00C_594F
     add_a_to_hl
@@ -2865,9 +2865,9 @@ Jump_00C_52DD::
     ret
 
 ; A = 6 * wD787 + wD786 (row-major index in a 6-column grid: wD786 column, wD787 row); BC kept (E-0072)
-; 15 call sites from 8 routines (e.g. ScriptCommandF6_Run_Case0C, ReadGridCellByteForWD786WD787, ScriptCommandF6_Run_Shared03, ScriptCommandF6_Run_Case0A, ...)
+; 15 call sites from 8 routines (e.g. ScriptCommandF6_Run_Case0C, ReadGridCellByteForGridCursorXGridCursorY, ScriptCommandF6_Run_Shared03, ScriptCommandF6_Run_Case0A, ...)
 ; reads: wGridCursorY, wGridCursorX
-GridIndexFromWD786WD787::
+GridIndexFromGridCursorXGridCursorY::
 Func_00C_52EC:: ; address name
     push bc
     ld a, [wGridCursorY]
@@ -2882,9 +2882,9 @@ Func_00C_52EC:: ; address name
     ret
 
 ; A = 6 * wD78B + wD78A (row-major index in a 6-column grid); BC kept (E-0117)
-; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case0C, GridCellAddressFromWD786AndWD78A)
+; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case0C, GridCellAddressFromGridCursorXAndGrid2CursorX)
 ; reads: wGrid2CursorY, wGrid2CursorX
-GridIndexFromWD78AWD78B::
+GridIndexFromGrid2CursorXGrid2CursorY::
 Func_00C_52FB:: ; address name
     push bc
     ld a, [wGrid2CursorY]
@@ -2915,7 +2915,7 @@ Func_00C_530A:: ; address name
     ld [wArg3], a
     ld a, d
     ld [wArg4], a
-    farcall TestBitInFieldAtWD7F3
+    farcall TestBitInFieldAtArg3
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_00C_532F
@@ -2948,7 +2948,7 @@ Jump_00C_5346::
 ; points at: wScreenBlock9C
 ScriptCommandF6_Run_Case10_Case01_Sub01::
 Func_00C_534A:: ; address name
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, Data_00C_536A
     add hl, de
     ld a, [hl]
@@ -2983,7 +2983,7 @@ Data_00C_54DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wScreenBlock9C
 ScriptCommandF6_Run_Case10_Case01_Sub02::
 Func_00C_54F3:: ; address name
-    call GridCellAddressFromWD786AndWD78A
+    call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, Data_00C_5562
     add hl, de
     ld a, [hl]
@@ -3851,7 +3851,7 @@ Jump_00C_698B::
     ld [wArg2], a
     ld a, l
     ld [wArg1], a
-    farcall IsAmountInWD7F1AboveGold
+    farcall IsAmountInArg1AboveGold
     ld a, [wArg1]
     cp a, $FF
     jr nz, Jump_00C_69BF
@@ -3958,7 +3958,7 @@ Jump_00C_6A39::
     ld [wArg2], a
     ld a, l
     ld [wArg1], a
-    farcall SubtractWD7F1AmountFromGold
+    farcall SubtractArg1AmountFromGold
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -3982,7 +3982,7 @@ Jump_00C_6A6A:: ; address name
     ld a, [wRecordCapacity]
     cp a, $02
     jr nc, Jump_00C_6A8B
-    call SetupWD78EFromWD7FF
+    call SetupScreenCountPlusOneFromRecordCapacity
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -4463,7 +4463,7 @@ Jump_00C_6D76::
     ld [wArg2], a
     xor a, a
     ld [wArg3], a
-    farcall IsAmountInWD7F1AboveGold
+    farcall IsAmountInArg1AboveGold
     ld a, [wArg1]
     cp a, $FF
     jr nz, Jump_00C_6DAF
@@ -4537,7 +4537,7 @@ Jump_00C_6E0C:: ; address name
     ld [wArg2], a
     ld a, [wArenaByte86]
     ld [wArg1], a
-    farcall SubtractWD7F1AmountFromGold
+    farcall SubtractArg1AmountFromGold
     call ScriptCommandF7_Run_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
@@ -4580,7 +4580,7 @@ Jump_00C_6E59:: ; address name
     ld a, [wArenaRound]
     cp a, $02
     jr nc, Jump_00C_6E85
-    call IncWD588AndCopyWD7FCToWD78C
+    call IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     ld a, $01
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -4733,7 +4733,7 @@ Jump_00C_6F30::
     ret
 
 Jump_00C_6F49::
-    farcall WritePlayerNameWithFlag0SuffixToWC130
+    farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, $01
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -4757,7 +4757,7 @@ Jump_00C_6F5E:: ; address name
     farcall CountKeysOrFull
     ld a, $03
     ldh [hTemp1], a
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld a, [wGameFlags836]
     set 7, a
     ld [wGameFlags836], a
@@ -4853,7 +4853,7 @@ Jump_00C_6FFF::
 ; writes: wTextBuf0
 ScriptCommandF7_Run_Case23_Sub01::
 Func_00C_701C:: ; address name
-    farcall WritePlayerNameWithFlag0SuffixToWC130
+    farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, [wAreaGraphicsIndex]
     ld hl, Data_00C_7037
     add_a_to_hl
@@ -4870,7 +4870,7 @@ Data_00C_7037:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case1B, ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
 ; reads: wArenaRound, wAreaGraphicsIndex
 ; writes: wArenaRound, wScreenArea
-IncWD588AndCopyWD7FCToWD78C::
+IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
 Func_00C_703D:: ; address name
     ld a, [wArenaRound]
     inc a
@@ -4883,7 +4883,7 @@ Func_00C_703D:: ; address name
 ; 5 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case08, ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wRecordCapacity, wAreaGraphicsIndex, wScreenCountPlusOne
 ; writes: wScreenCountPlusOne, wGridCursorX, wTwoChoiceCursor, wRecordCapacity
-SetupWD78EFromWD7FF::
+SetupScreenCountPlusOneFromRecordCapacity::
 Func_00C_704B:: ; address name
     ld a, [wRecordCapacity]
     inc a
@@ -4951,7 +4951,7 @@ Func_00C_7098:: ; address name
     ld a, [wGoldHi]
     ld [wDigits + $2], a
     call Number24ToPackedBCD
-    farcall UnpackBCDToDigitsWD7F1_Bank1E
+    farcall UnpackBCDToDigitsArg1_Bank1E
     ld hl, wWindowTileBuffer + $86
     ld de, wArg3
     ld c, $00
@@ -5031,7 +5031,7 @@ Jump_00C_7116::
     ld c, $5D
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     ld hl, $0000
@@ -5040,7 +5040,7 @@ Jump_00C_7116::
     ld c, $61
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     push hl
@@ -5048,7 +5048,7 @@ Jump_00C_7116::
     ld c, $63
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     push hl
@@ -5056,7 +5056,7 @@ Jump_00C_7116::
     ld c, $65
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     push hl
@@ -5064,7 +5064,7 @@ Jump_00C_7116::
     ld c, $67
     call LoadSRAMRecordWord
     ld hl, $0000
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     ld c, l
     ld b, h
     pop hl
@@ -5076,7 +5076,7 @@ Jump_00C_7116::
     ld c, $69
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     srl h
     rr l
     ld c, l
@@ -5122,7 +5122,7 @@ Jump_00C_719D::
     ld c, $5D
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     ld hl, $0000
@@ -5131,7 +5131,7 @@ Jump_00C_719D::
     ld c, $61
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     push hl
@@ -5139,7 +5139,7 @@ Jump_00C_719D::
     ld c, $63
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     push hl
@@ -5147,7 +5147,7 @@ Jump_00C_719D::
     ld c, $65
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     push hl
@@ -5155,7 +5155,7 @@ Jump_00C_719D::
     ld c, $67
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     push hl
@@ -5163,7 +5163,7 @@ Jump_00C_719D::
     ld c, $69
     call LoadSRAMRecordWord
     pop hl
-    call AddHFFC6WordToHL
+    call AddTemp0WordToHL
     pop de
     push de
     push hl
@@ -5230,7 +5230,7 @@ Jump_00C_7231::
 ; HL += the word in hFFC6/hFFC7; clobbers A (E-0073)
 ; 12 call sites from 1 routine (e.g. ScriptCommandF7_Run_Shared05_Sub02)
 ; reads: hTemp0, hTemp1
-AddHFFC6WordToHL::
+AddTemp0WordToHL::
 Func_00C_7246:: ; address name
     ldh a, [hTemp0]
     add a, l
@@ -5899,7 +5899,7 @@ Func_00C_75BC:: ; address name
     ld [wArg2], a
     xor a, a
     ld [wArg3], a
-    farcall AddWD7F1ToGoldCapped99999
+    farcall AddArg1ToGoldCapped99999
     ret
 
 Data_00C_75D2:: ; heuristic: pointer load in the same bank (bank assumed); C0

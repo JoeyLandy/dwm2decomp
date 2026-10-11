@@ -75,7 +75,7 @@ Jump_0A3_406F::
 ; points at: wSlotMarks
 RunA3414FAndMarkWDA5B3::
 Func_0A3_413F:: ; address name
-    call ActorFormationSlotToHFFC6
+    call ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld hl, wSlotMarks
     add_a_to_hl
@@ -87,7 +87,7 @@ Func_0A3_413F:: ; address name
 ; reads: wBattleActor
 ; writes: hTemp0
 ; points at: wFormationSlot0
-ActorFormationSlotToHFFC6::
+ActorFormationSlotToTemp0::
 Func_0A3_414F:: ; address name
     push bc
     ld a, [wBattleActor]
@@ -625,12 +625,12 @@ Jump_0A3_49D0::
     pop hl
     ret
 
-; only called from RollWC5E7BelowChance (E-0047)
-; 1 call site from 1 routine (e.g. RollWC5E7BelowChance)
+; only called from RollRandomLoBelowChance (E-0047)
+; 1 call site from 1 routine (e.g. RollRandomLoBelowChance)
 ; reads: wLinkMode, wBattleActor
 ; writes: hTemp0
 ; points at: wBattleMonsterId
-RollWC5E7BelowChance_Sub01::
+RollRandomLoBelowChance_Sub01::
 Func_0A3_49D5:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -699,7 +699,7 @@ Jump_0A3_4A2B::
 ; removes the first byte equal to C from the 8-byte queue at wD895, shifting later bytes down and filling with $FF (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wActionQueue
-RemoveCFromWD895Queue_A3:: ; heuristic: follows a terminator; C0
+RemoveCFromActionQueue_A3:: ; heuristic: follows a terminator; C0
 Func_0A3_4A39:: ; address name
     push de
     ld hl, wActionQueue
@@ -755,7 +755,7 @@ Func_0A3_4A5F:: ; address name
 
 Jump_0A3_4A7A::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_0A3_4A8E
     cp a, d
     jr z, Jump_0A3_4A7A

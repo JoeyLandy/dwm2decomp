@@ -278,7 +278,7 @@ Data_038_42A4:: ; heuristic: label inside a table; C0
     dfar MonsterPic_Lazamanus ; id 268 Lazamanus
     dfar MonsterPic_Copycat ; id 269 Copycat
     dfar MonsterPic_MadSpirit ; id 270 MadSpirit
-    dfar MonsterPic_PomPomBom ; id 271 PomPomBom
+    dfar MonsterPic_PomBom ; id 271 PomPomBom
     dfar MonsterPic_Niterich ; id 272 Niterich
     dfar MonsterPic_DrakSlime ; id 273 ?
     dfar MonsterPic_DrakSlime ; id 274 ?
@@ -671,7 +671,7 @@ Data_038_476F:: ; heuristic: label inside a table; C0
     dfar MonsterPicAttr_Lazamanus ; id 268 Lazamanus
     dfar JumpTable ; id 269 Copycat
     dfar JumpTable ; id 270 MadSpirit
-    dfar MonsterPicAttr_PomPomBom ; id 271 PomPomBom
+    dfar MonsterPicAttr_PomBom ; id 271 PomPomBom
     dfar JumpTable ; id 272 Niterich
     dfar JumpTable ; id 273 ?
     dfar JumpTable ; id 274 ?

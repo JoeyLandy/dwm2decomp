@@ -2,11 +2,11 @@ SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
 ; wCD05 = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
-; 2 call sites from 2 routines (e.g. RunWC903Case_Case05, ScriptCommand84_Run_Case04_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_Case05, ScriptCommand84_Run_Case04_Sub01)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp4, hTemp5
 ; writes: wPartyStrength, hTemp4, hTemp5, rRAMG
 ; points at: wPartyList
-ComputePartyStrengthLevelWCD05::
+ComputePartyStrengthLevelPartyStrength::
 Func_061_4001:: ; address name
     ld a, [wPartyCount]
     or a, a
@@ -126,7 +126,7 @@ Jump_061_40B0::
     ret
 
 ; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hFFCA-hFFCD and wCD05 for key generation (E-0131)
-; 2 call sites from 2 routines (e.g. RunWC903Case_Case06, WriteKeyEntryHFFC6)
+; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_Case06, WriteKeyEntryTemp0)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
 ; writes: wPartyStrength, hTemp4, hTemp5, hTemp6, hTemp7, rRAMG, hTemp2, hTemp3
 ; points at: wPartyList
@@ -368,35 +368,35 @@ Jump_061_4209::
 ; runs the routine for wCC44 & 7 (jump table; 4 reuses 3) (E-0122)
 ; 1 call site from 1 routine (e.g. LoadMapHeader)
 ; reads: wMapType
-RunWCC44Type_420D::
+RunMapType_420D::
 Func_061_420D:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
     dw LoadKeyWorldTilesetAndHeader
-    dw RunWCC44Type_420D_Case01
-    dw RunWCC44Type_420D_Case02
-    dw RunWCC44Type_420D_Case03
-    dw RunWCC44Type_420D_Case03
+    dw RunMapType_420D_Case01
+    dw RunMapType_420D_Case02
+    dw RunMapType_420D_Case03
+    dw RunMapType_420D_Case03
     dw LoadMapType5TilesetAndHeader
-    dw RunWCC44Type_420D_Case06
-    dw RunWCC44Type_420D_Case07
+    dw RunMapType_420D_Case06
+    dw RunMapType_420D_Case07
 
-; entry 7 of the `rst $00` table in RunWCC44Type_420D
+; entry 7 of the `rst $00` table in RunMapType_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-RunWCC44Type_420D_Case07::
+RunMapType_420D_Case07::
 Jump_061_4223:: ; address name
     ld a, $66
     ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
 
-; entry 6 of the `rst $00` table in RunWCC44Type_420D
+; entry 6 of the `rst $00` table in RunMapType_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0
-RunWCC44Type_420D_Case06::
+RunMapType_420D_Case06::
 Jump_061_422B:: ; address name
     ld a, [wKeyWorldFloor]
     sla a
@@ -529,12 +529,12 @@ Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dfar MapType5Tiles11 ; id 11
     dfar MapType5Palettes11
 
-; entry 1 of the `rst $00` table in RunWCC44Type_420D
+; entry 1 of the `rst $00` table in RunMapType_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wKeyWorldFloor
 ; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wFieldEventKind, wMapSpriteKind, wMapTallTileMin, wMapWidthScreens, wMapHeightScreens, wEncounterRate, ...
 ; points at: wBGPaletteBuffer, wKeyWorldObjects
-RunWCC44Type_420D_Case01::
+RunMapType_420D_Case01::
 Jump_061_4325:: ; address name
     ld de, MapType5Tiles5
     ld b, $6E
@@ -603,12 +603,12 @@ Jump_061_4380::
     ld [wMapMoveType], a
     ret
 
-; entry 2 of the `rst $00` table in RunWCC44Type_420D
+; entry 2 of the `rst $00` table in RunMapType_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0, wKeyWorldByte06
 ; points at: hTemp0
-RunWCC44Type_420D_Case02::
+RunMapType_420D_Case02::
 Jump_061_439F:: ; address name
     ld a, $61
     ldh [hTemp0], a
@@ -625,12 +625,12 @@ Jump_061_43AE::
     call LoadSpecialMapHeader
     ret
 
-; entry 3 of the `rst $00` table in RunWCC44Type_420D
+; entry 3 of the `rst $00` table in RunMapType_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: wKeyWorldFloorState
-RunWCC44Type_420D_Case03::
+RunMapType_420D_Case03::
 Jump_061_43B9:: ; address name
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
@@ -818,14 +818,14 @@ Jump_061_44BF::
     ret z
 
 Jump_061_44D7::
-    call DrawDoorTilesForWCC45
+    call DrawDoorTilesForKeyWorldFloor
     ret
 
 ; writes a 2 x 2 tile block ($1A or $1C by the wCDAF entry, then $1E) at wC244, with CGB attribute 5 (E-0127)
 ; 3 call sites from 3 routines (e.g. Func_061_4472_Case06, ScriptCommand86_Run_Case04, ScriptCommand86_Run_Case02)
 ; reads: wKeyWorldFloor, wIsCGB
 ; writes: rSVBK
-DrawDoorTilesForWCC45::
+DrawDoorTilesForKeyWorldFloor::
 Func_061_44DB:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
@@ -1002,14 +1002,14 @@ Jump_061_454E::
 
 Jump_061_45E1::
     call DrawKeyWorldExitTile
-    call CheckTwoWCDB0EntriesForWCC43
+    call CheckTwoWCDB0EntriesForKeyWorldArea
     ret
 
 ; for the two wCDB0 entries of wCC45 matching wCC43 runs Func_061_462F with C = $80 or the stored value (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_061_4472_Case05, ScriptCommand81_Run_Case02)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
-CheckTwoWCDB0EntriesForWCC43::
+CheckTwoWCDB0EntriesForKeyWorldArea::
 Func_061_45E8:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
@@ -1039,7 +1039,7 @@ Jump_061_460A::
 
 Jump_061_460E::
     push hl
-    call CheckTwoWCDB0EntriesForWCC43_Sub01
+    call CheckTwoWCDB0EntriesForKeyWorldArea_Sub01
     pop hl
 
 Jump_061_4613::
@@ -1061,7 +1061,7 @@ Jump_061_4613::
     or a, a
     jr z, Jump_061_462B
     ld c, $80
-    jr CheckTwoWCDB0EntriesForWCC43_Sub01
+    jr CheckTwoWCDB0EntriesForKeyWorldArea_Sub01
 
 Jump_061_462B::
     dec hl
@@ -1069,11 +1069,11 @@ Jump_061_462B::
     ld a, [hl]
     ld c, a
 
-; only called from CheckTwoWCDB0EntriesForWCC43 (E-0047)
-; 1 call site from 1 routine (e.g. CheckTwoWCDB0EntriesForWCC43)
+; only called from CheckTwoWCDB0EntriesForKeyWorldArea (E-0047)
+; 1 call site from 1 routine (e.g. CheckTwoWCDB0EntriesForKeyWorldArea)
 ; reads: hMapScreenX, hMapScreenY, wKeyWorldFloor, wKeyWorldArea, wIsCGB
 ; writes: rSVBK
-CheckTwoWCDB0EntriesForWCC43_Sub01::
+CheckTwoWCDB0EntriesForKeyWorldArea_Sub01::
 Func_061_462F:: ; address name
     ld a, b
     ld hl, Data_061_4810
@@ -1229,7 +1229,7 @@ Jump_061_468E::
 ; 1 call site from 1 routine (e.g. WriteRandomEntryFromTable690E)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hTemp0
 ; writes: hTemp0
-LookupTable4818NibblePairForHFFC6::
+LookupTable4818NibblePairForTemp0::
 Func_061_4706:: ; address name
     push hl
     ld a, [wKeyWorldFloor]
@@ -1619,7 +1619,7 @@ Jump_061_5443:: ; address name
     ldh [rSVBK], a
 
 Jump_061_54E2::
-    call DrawWCD7BEntryTilesForScreen
+    call DrawKeyWorldObjectsEntryTilesForScreen
     call DrawWCD8BObjectTilesForScreen
     call DrawKeyWorldGoalAtScreen
     ret
@@ -1760,7 +1760,7 @@ Jump_061_5585::
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wKeyWorldObjects
-DrawWCD7BEntryTilesForScreen::
+DrawKeyWorldObjectsEntryTilesForScreen::
 Func_061_55AF:: ; address name
     ld hl, wKeyWorldObjects
 
@@ -1993,7 +1993,7 @@ Jump_061_56E2::
     ret
 
 ; writes tiles A, A+1 at DE and A+$10, A+$11 one 20-tile row below (E-0121)
-; 6 call sites from 3 routines (e.g. DrawKeyWorldGoalAtScreen, DrawWCD8BObjectTilesForScreen, DrawWCD7BEntryTilesForScreen)
+; 6 call sites from 3 routines (e.g. DrawKeyWorldGoalAtScreen, DrawWCD8BObjectTilesForScreen, DrawKeyWorldObjectsEntryTilesForScreen)
 Write2x2TileBlockAtDE::
 Func_061_56E3:: ; address name
     ld [de], a
@@ -2051,7 +2051,7 @@ Func_061_56F8:: ; address name
     ret
 
 ; writes tile A to two cells at DE and two cells one 20-tile row below (E-0125)
-; 5 call sites from 3 routines (e.g. DrawKeyWorldGoalAtScreen, DrawWCD8BObjectTilesForScreen, DrawWCD7BEntryTilesForScreen)
+; 5 call sites from 3 routines (e.g. DrawKeyWorldGoalAtScreen, DrawWCD8BObjectTilesForScreen, DrawKeyWorldObjectsEntryTilesForScreen)
 Write2x2SameTileAtDE::
 Func_061_5718:: ; address name
     ld [de], a
@@ -2131,7 +2131,7 @@ Jump_061_577D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_061_5764_Case02::
 Jump_061_5780:: ; address name
-    call WarpByWCD78EntryAtScreenRow1
+    call WarpByKeyWorldAreaExitsEntryAtScreenRow1
     ret
 
 ; entry 3 of the `rst $00` table in Func_061_5764
@@ -2287,7 +2287,7 @@ Jump_061_5810::
 ; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wKeyWorldAreaExits
-WarpByWCD78EntryAtScreenRow1::
+WarpByKeyWorldAreaExitsEntryAtScreenRow1::
 Func_061_585A:: ; address name
     ldh a, [hMapScreenY]
     cp a, $01
@@ -2464,81 +2464,81 @@ Jump_061_594D::
 ; runs the routine for wCC44 & 7 (jump table; 7 reuses 4) (E-0122)
 ; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
 ; reads: wMapType
-RunWCC44Type_596F::
+RunMapType_596F::
 Func_061_596F:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw RunWCC44Type_596F_Case00
-    dw RunWCC44Type_596F_Case01
-    dw RunWCC44Type_596F_Case02
-    dw RunWCC44Type_596F_Case03
-    dw RunWCC44Type_596F_Case04
-    dw RunWCC44Type_596F_Case05
-    dw RunWCC44Type_596F_Case06
-    dw RunWCC44Type_596F_Case04
+    dw RunMapType_596F_Case00
+    dw RunMapType_596F_Case01
+    dw RunMapType_596F_Case02
+    dw RunMapType_596F_Case03
+    dw RunMapType_596F_Case04
+    dw RunMapType_596F_Case05
+    dw RunMapType_596F_Case06
+    dw RunMapType_596F_Case04
 
-; entry 4 of the `rst $00` table in RunWCC44Type_596F
+; entry 4 of the `rst $00` table in RunMapType_596F
 ; no direct call (reached through a table, a jump or a vector)
-RunWCC44Type_596F_Case04::
+RunMapType_596F_Case04::
 Jump_061_5985:: ; address name
     ret
 
-; entry 0 of the `rst $00` table in RunWCC44Type_596F
+; entry 0 of the `rst $00` table in RunMapType_596F
 ; no direct call (reached through a table, a jump or a vector)
-RunWCC44Type_596F_Case00::
+RunMapType_596F_Case00::
 Jump_061_5986:: ; address name
-    call RunWCC44Type_596F_Case00_Sub02
+    call RunMapType_596F_Case00_Sub02
     or a, a
     ret nz
-    call RunWCC44Type_596F_Case00_Sub03
+    call RunMapType_596F_Case00_Sub03
     or a, a
     ret nz
-    call RunWCC44Type_596F_Case00_Sub01
+    call RunMapType_596F_Case00_Sub01
     or a, a
     ret nz
     ret
 
-; entry 1 of the `rst $00` table in RunWCC44Type_596F
+; entry 1 of the `rst $00` table in RunMapType_596F
 ; no direct call (reached through a table, a jump or a vector)
-RunWCC44Type_596F_Case01::
+RunMapType_596F_Case01::
 Jump_061_5996:: ; address name
     call ReturnStub_5CCF
     ret
 
-; entry 2 of the `rst $00` table in RunWCC44Type_596F
+; entry 2 of the `rst $00` table in RunMapType_596F
 ; no direct call (reached through a table, a jump or a vector)
-RunWCC44Type_596F_Case02::
+RunMapType_596F_Case02::
 Jump_061_599A:: ; address name
-    call RunWCC44Type_596F_Case02_Sub01
+    call RunMapType_596F_Case02_Sub01
     ret
 
-; entry 3 of the `rst $00` table in RunWCC44Type_596F
+; entry 3 of the `rst $00` table in RunMapType_596F
 ; no direct call (reached through a table, a jump or a vector)
-RunWCC44Type_596F_Case03::
+RunMapType_596F_Case03::
 Jump_061_599E:: ; address name
-    call RunWCC44Type_596F_Case03_Sub01
+    call RunMapType_596F_Case03_Sub01
     ret
 
-; entry 5 of the `rst $00` table in RunWCC44Type_596F
+; entry 5 of the `rst $00` table in RunMapType_596F
 ; no direct call (reached through a table, a jump or a vector)
-RunWCC44Type_596F_Case05::
+RunMapType_596F_Case05::
 Jump_061_59A2:: ; address name
-    call RunWCC44Type_596F_Case05_Sub01
+    call RunMapType_596F_Case05_Sub01
     ret
 
-; entry 6 of the `rst $00` table in RunWCC44Type_596F
+; entry 6 of the `rst $00` table in RunMapType_596F
 ; no direct call (reached through a table, a jump or a vector)
-RunWCC44Type_596F_Case06::
+RunMapType_596F_Case06::
 Jump_061_59A6:: ; address name
-    call RunWCC44Type_596F_Case06_Sub01
+    call RunMapType_596F_Case06_Sub01
     ret
 
-; only called from RunWCC44Type_596F_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case06)
+; only called from RunMapType_596F_Case06 (E-0047)
+; 1 call site from 1 routine (e.g. RunMapType_596F_Case06)
 ; reads: hPlayerX, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hPlayerStateFlags
 ; writes: wKeyWorldArea, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wWarpPending, ...
-RunWCC44Type_596F_Case06_Sub01::
+RunMapType_596F_Case06_Sub01::
 Func_061_59AA:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
@@ -2615,12 +2615,12 @@ Jump_061_59DD::
 Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
-; only called from RunWCC44Type_596F_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case05)
+; only called from RunMapType_596F_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunMapType_596F_Case05)
 ; reads: hPlayerX, hPlayerStateFlags, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp1, ...
 ; writes: hPlayerStateFlags, hTemp0, hTemp1, wKeyWorldArea, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
 ; points at: wKeyWorldFloorState, wKeyWorldFloorInfo
-RunWCC44Type_596F_Case05_Sub01::
+RunMapType_596F_Case05_Sub01::
 Func_061_5A33:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
@@ -2836,11 +2836,11 @@ Jump_061_5B6B::
 Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
-; only called from RunWCC44Type_596F_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case02)
+; only called from RunMapType_596F_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunMapType_596F_Case02)
 ; reads: hPlayerX, hPlayerY, wMapToggleRequest, wKeyWorldFloor, hPlayerStateFlags
 ; writes: wMapToggleRequest, wKeyWorldFloor, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapToggleFlag, wModeState, wMenuState, ...
-RunWCC44Type_596F_Case02_Sub01::
+RunMapType_596F_Case02_Sub01::
 Func_061_5BBB:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
@@ -2882,12 +2882,12 @@ Jump_061_5BC4::
     ld [wFieldTransitionKind], a
     ret
 
-; only called from RunWCC44Type_596F_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case03)
+; only called from RunMapType_596F_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. RunMapType_596F_Case03)
 ; reads: wKeyWorldFloor, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; writes: hPlayerStateFlags, wWarpDestFacing, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wMapType, wModeState, ...
 ; points at: wKeyWorldFloorState
-RunWCC44Type_596F_Case03_Sub01::
+RunMapType_596F_Case03_Sub01::
 Func_061_5C07:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
@@ -3020,17 +3020,17 @@ Jump_061_5CCB::
     ret
 
 ; a bare ret (E-0116)
-; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case01)
+; 1 call site from 1 routine (e.g. RunMapType_596F_Case01)
 ReturnStub_5CCF::
 Func_061_5CCF:: ; address name
     ret
 
-; only called from RunWCC44Type_596F_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
+; only called from RunMapType_596F_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunMapType_596F_Case00)
 ; reads: hPlayerStateFlags, hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hTemp2, hTemp1
 ; writes: hTemp1, hPlayerStateFlags, hTemp2, wKeyWorldFloor, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
 ; points at: wKeyWorldFloorState
-RunWCC44Type_596F_Case00_Sub01::
+RunMapType_596F_Case00_Sub01::
 Func_061_5CD0:: ; address name
     ld hl, wKeyWorldFloorInfo + $3
     xor a, a
@@ -3186,7 +3186,7 @@ Jump_061_5D92::
     ldh [hPlayerStateFlags], a
     ld a, $03
     ld [wFieldTransitionKind], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     pop hl
     ld a, $01
     ret
@@ -3258,7 +3258,7 @@ Jump_061_5E44::
     ldh a, [hPlayerStateFlags]
     or a, $80
     ldh [hPlayerStateFlags], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     pop hl
     ld a, $01
     ret
@@ -3277,11 +3277,11 @@ Jump_061_5E7A::
 Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
-; only called from RunWCC44Type_596F_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
+; only called from RunMapType_596F_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunMapType_596F_Case00)
 ; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, hPlayerX, hPlayerY, ...
 ; writes: wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
-RunWCC44Type_596F_Case00_Sub02::
+RunMapType_596F_Case00_Sub02::
 Func_061_5E8D:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
@@ -3376,16 +3376,16 @@ Jump_061_5EF0::
     ld [wWarpDestFacing], a
     ld a, $03
     ld [wFieldTransitionKind], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     ld a, $01
     ret
 
-; only called from RunWCC44Type_596F_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
+; only called from RunMapType_596F_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunMapType_596F_Case00)
 ; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, wFieldReturnPhase, wFieldTransitionStep, wModeState, hPlayerStateFlags, wKeyWorldFloor, ...
 ; points at: wKeyWorldObjects
-RunWCC44Type_596F_Case00_Sub03::
+RunMapType_596F_Case00_Sub03::
 Func_061_5F39:: ; address name
     ldh a, [hPlayerX]
     ld c, a
@@ -3482,7 +3482,7 @@ Jump_061_5F56::
     ld [wWarpDestY], a
     ld a, $03
     ld [wFieldTransitionKind], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     pop hl
     ld a, $01
     ret
@@ -3555,7 +3555,7 @@ Jump_061_5FE0::
     ld [wWarpDestY], a
     ld a, $03
     ld [wFieldTransitionKind], a
-    farcall ClearWC935IfBit7AndNot6
+    farcall ClearPendingFieldEventIfBit7AndNot6
     pop hl
     ld a, $01
     ret

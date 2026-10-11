@@ -262,7 +262,7 @@ Jump_0F1_4183::
 
 Jump_0F1_4187::
     ld [wArg1], a
-    farcall RollWCEC2ChanceAndRun72C8
+    farcall RollCounterChanceAndRun72C8
     ld a, $FF
     ld [wCounterPtr0Lo], a
     ld a, $69
@@ -797,7 +797,7 @@ Jump_0F1_44A3::
 
 Jump_0F1_44BA::
     ld a, c
-    call MapIndexViaWC6FE
+    call MapIndexViaPartyList
     call PersonalityIndexOfRecord
     ld c, a
     ld [wStringIndex], a
@@ -1472,7 +1472,7 @@ Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $8C, $99, $8E, $99, $90, $99
 
 ; fills the $2D0 bytes $C198-$C467 (wScreenTileBuffer, $240 bytes, and the $90 bytes after it) with $C3; on CGB continues with the attribute buffer (not fully read) (E-0077)
-; 6 call sites from 6 routines (e.g. GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, RunWD06AState_6C12_Case06_Sub01, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, RunLinkScreenState_6C12_Case06_Sub01, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -1508,39 +1508,39 @@ Jump_0F1_4AC5::
     ret
 
 ; unless a fade is running, runs the routine for wD780 (jump table of eighteen) (E-0124)
-; 3 call sites from 3 routines (e.g. RunWC582State_4431_Case01, ScriptCommandEF_Run_Bank1B_Case0D, Func_033_5215_Table2_Case0D)
+; 3 call sites from 3 routines (e.g. RunLinkExchangeState_4431_Case01, ScriptCommandEF_Run_Bank1B_Case0D, Func_033_5215_Table2_Case0D)
 ; reads: wFadeState, wScreenState
-RunWD780StateWhenNotFading_F1::
+RunScreenStateWhenNotFading_F1::
 Func_0F1_4AD0:: ; address name
     ld a, [wFadeState]
     and a, a
     ret nz
     ld a, [wScreenState]
     rst $00
-    dw RunWD780StateWhenNotFading_F1_Case00
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case02
-    dw RunWD780StateWhenNotFading_F1_Case03
-    dw RunWD780StateWhenNotFading_F1_Case04
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case0C
-    dw RunWD780StateWhenNotFading_F1_Case0D
-    dw RunWD780StateWhenNotFading_F1_Case0E
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case01
-    dw RunWD780StateWhenNotFading_F1_Case11
+    dw RunScreenStateWhenNotFading_F1_Case00
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case02
+    dw RunScreenStateWhenNotFading_F1_Case03
+    dw RunScreenStateWhenNotFading_F1_Case04
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case0C
+    dw RunScreenStateWhenNotFading_F1_Case0D
+    dw RunScreenStateWhenNotFading_F1_Case0E
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case01
+    dw RunScreenStateWhenNotFading_F1_Case11
 
-; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunWD780StateWhenNotFading_F1_Case00::
+RunScreenStateWhenNotFading_F1_Case00::
 Jump_0F1_4AFD:: ; address name
     farcall ScriptCommandE8_Run
     ld a, [wScreenState]
@@ -1548,12 +1548,12 @@ Jump_0F1_4AFD:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
-RunWD780StateWhenNotFading_F1_Case01::
+RunScreenStateWhenNotFading_F1_Case01::
 Jump_0F1_4B0B:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -1576,12 +1576,12 @@ Jump_0F1_4B17::
     ld [wModeChangeRequest], a
     ret
 
-; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState, wStringCategory, wLinkSendByte
 ; points at: wLinkScreenState
-RunWD780StateWhenNotFading_F1_Case02::
+RunScreenStateWhenNotFading_F1_Case02::
 Jump_0F1_4B2E:: ; address name
     ld a, [wScreenState]
     inc a
@@ -1596,23 +1596,23 @@ Jump_0F1_4B2E:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunWD780StateWhenNotFading_F1_Case03::
+RunScreenStateWhenNotFading_F1_Case03::
 Jump_0F1_4B47:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunWD780StateWhenNotFading_F1_Case03_Case00
-    dw RunWD780StateWhenNotFading_F1_Case03_Case01
-    dw RunWD780StateWhenNotFading_F1_Case03_Case02
-    dw RunWD780StateWhenNotFading_F1_Case03_Case03
+    dw RunScreenStateWhenNotFading_F1_Case03_Case00
+    dw RunScreenStateWhenNotFading_F1_Case03_Case01
+    dw RunScreenStateWhenNotFading_F1_Case03_Case02
+    dw RunScreenStateWhenNotFading_F1_Case03_Case03
 
-; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case03
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case03_Case00::
+RunScreenStateWhenNotFading_F1_Case03_Case00::
 Jump_0F1_4B53:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1624,11 +1624,11 @@ Jump_0F1_4B53:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case03
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunWD780StateWhenNotFading_F1_Case03_Case01::
+RunScreenStateWhenNotFading_F1_Case03_Case01::
 Jump_0F1_4B65:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1640,11 +1640,11 @@ Jump_0F1_4B65:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case03
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunWD780StateWhenNotFading_F1_Case03_Case02::
+RunScreenStateWhenNotFading_F1_Case03_Case02::
 Jump_0F1_4B77:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -1658,11 +1658,11 @@ Jump_0F1_4B77:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case03
+; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenState
 ; writes: wScreenStep, wScreenState
-RunWD780StateWhenNotFading_F1_Case03_Case03::
+RunScreenStateWhenNotFading_F1_Case03_Case03::
 Jump_0F1_4B8E:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1674,52 +1674,52 @@ Jump_0F1_4B8E:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 4 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 4 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunWD780StateWhenNotFading_F1_Case04::
+RunScreenStateWhenNotFading_F1_Case04::
 Jump_0F1_4B9F:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case04
-    dw RunWD780StateWhenNotFading_F1_Case04_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case08
-    dw RunWD780StateWhenNotFading_F1_Case04_Case09
-    dw RunWD780StateWhenNotFading_F1_Case04_Case0A
-    dw RunWD780StateWhenNotFading_F1_Case04_Case0B
-    dw RunWD780StateWhenNotFading_F1_Case04_Case0C
-    dw RunWD780StateWhenNotFading_F1_Case04_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case0E
-    dw RunWD780StateWhenNotFading_F1_Case04_Case0F
-    dw RunWD780StateWhenNotFading_F1_Case04_Case10
-    dw RunWD780StateWhenNotFading_F1_Case04_Case11
-    dw RunWD780StateWhenNotFading_F1_Case04_Case12
-    dw RunWD780StateWhenNotFading_F1_Case04_Case13
-    dw RunWD780StateWhenNotFading_F1_Case04_Case14
-    dw RunWD780StateWhenNotFading_F1_Case04_Case15
-    dw RunWD780StateWhenNotFading_F1_Case04_Case16
-    dw RunWD780StateWhenNotFading_F1_Case04_Case17
-    dw RunWD780StateWhenNotFading_F1_Case04_Case18
-    dw RunWD780StateWhenNotFading_F1_Case04_Case19
-    dw RunWD780StateWhenNotFading_F1_Case04_Case1A
-    dw RunWD780StateWhenNotFading_F1_Case04_Case13
-    dw RunWD780StateWhenNotFading_F1_Case04_Case1C
-    dw RunWD780StateWhenNotFading_F1_Case04_Case1D
-    dw RunWD780StateWhenNotFading_F1_Case04_Case1E
-    dw RunWD780StateWhenNotFading_F1_Case04_Case13
-    dw RunWD780StateWhenNotFading_F1_Case04_Case20
+    dw RunScreenStateWhenNotFading_F1_Case04_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case04
+    dw RunScreenStateWhenNotFading_F1_Case04_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case08
+    dw RunScreenStateWhenNotFading_F1_Case04_Case09
+    dw RunScreenStateWhenNotFading_F1_Case04_Case0A
+    dw RunScreenStateWhenNotFading_F1_Case04_Case0B
+    dw RunScreenStateWhenNotFading_F1_Case04_Case0C
+    dw RunScreenStateWhenNotFading_F1_Case04_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case0E
+    dw RunScreenStateWhenNotFading_F1_Case04_Case0F
+    dw RunScreenStateWhenNotFading_F1_Case04_Case10
+    dw RunScreenStateWhenNotFading_F1_Case04_Case11
+    dw RunScreenStateWhenNotFading_F1_Case04_Case12
+    dw RunScreenStateWhenNotFading_F1_Case04_Case13
+    dw RunScreenStateWhenNotFading_F1_Case04_Case14
+    dw RunScreenStateWhenNotFading_F1_Case04_Case15
+    dw RunScreenStateWhenNotFading_F1_Case04_Case16
+    dw RunScreenStateWhenNotFading_F1_Case04_Case17
+    dw RunScreenStateWhenNotFading_F1_Case04_Case18
+    dw RunScreenStateWhenNotFading_F1_Case04_Case19
+    dw RunScreenStateWhenNotFading_F1_Case04_Case1A
+    dw RunScreenStateWhenNotFading_F1_Case04_Case13
+    dw RunScreenStateWhenNotFading_F1_Case04_Case1C
+    dw RunScreenStateWhenNotFading_F1_Case04_Case1D
+    dw RunScreenStateWhenNotFading_F1_Case04_Case1E
+    dw RunScreenStateWhenNotFading_F1_Case04_Case13
+    dw RunScreenStateWhenNotFading_F1_Case04_Case20
 
-; entry 14 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 14 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage
 ; writes: wScreenStep, wLinkSendByte
-RunWD780StateWhenNotFading_F1_Case04_Case0E::
+RunScreenStateWhenNotFading_F1_Case04_Case0E::
 Jump_0F1_4BE5:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1739,11 +1739,11 @@ Jump_0F1_4C01::
     farcall ScriptCommandED_Run
     ret
 
-; entry 8 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage, wMenuInputResult
 ; writes: wScreenStep, wLinkSendByte
-RunWD780StateWhenNotFading_F1_Case04_Case08::
+RunScreenStateWhenNotFading_F1_Case04_Case08::
 Jump_0F1_4C08:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1772,10 +1772,10 @@ Jump_0F1_4C24::
     ld [wLinkSendByte], a
     ret
 
-; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
-RunWD780StateWhenNotFading_F1_Case04_Case00::
+RunScreenStateWhenNotFading_F1_Case04_Case00::
 Jump_0F1_4C40:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1783,10 +1783,10 @@ Jump_0F1_4C40:: ; address name
     farcall ScriptCommandED_Run
     ret
 
-; entry 16 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 16 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord, wTextFlags, wScreenSubStep
-RunWD780StateWhenNotFading_F1_Case04_Case10::
+RunScreenStateWhenNotFading_F1_Case04_Case10::
 Jump_0F1_4C4C:: ; address name
     ld a, [wSelectedRecord]
     cp a, $FF
@@ -1802,20 +1802,20 @@ Jump_0F1_4C4C:: ; address name
 Jump_0F1_4C64::
     ld a, [wScreenSubStep]
     rst $00
-    dw RunWD780StateWhenNotFading_F1_Table2_Case00
-    dw RunWD780StateWhenNotFading_F1_Table2_Case01
-    dw RunWD780StateWhenNotFading_F1_Table2_Case02
-    dw RunWD780StateWhenNotFading_F1_Table2_Case03
-    dw RunWD780StateWhenNotFading_F1_Table2_Case00
-    dw RunWD780StateWhenNotFading_F1_Table2_Case01
-    dw RunWD780StateWhenNotFading_F1_Table2_Case02
-    dw RunWD780StateWhenNotFading_F1_Table2_Case03
+    dw RunScreenStateWhenNotFading_F1_Table2_Case00
+    dw RunScreenStateWhenNotFading_F1_Table2_Case01
+    dw RunScreenStateWhenNotFading_F1_Table2_Case02
+    dw RunScreenStateWhenNotFading_F1_Table2_Case03
+    dw RunScreenStateWhenNotFading_F1_Table2_Case00
+    dw RunScreenStateWhenNotFading_F1_Table2_Case01
+    dw RunScreenStateWhenNotFading_F1_Table2_Case02
+    dw RunScreenStateWhenNotFading_F1_Table2_Case03
 
-; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunWD780StateWhenNotFading_F1_Table2_Case00::
+RunScreenStateWhenNotFading_F1_Table2_Case00::
 Jump_0F1_4C78:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1829,11 +1829,11 @@ Jump_0F1_4C78:: ; address name
     call BeginString_Bank0E_Cat0
     ret
 
-; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wScreenSubStep, wLinkSendByte
-RunWD780StateWhenNotFading_F1_Table2_Case01::
+RunScreenStateWhenNotFading_F1_Table2_Case01::
 Jump_0F1_4C8E:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1845,11 +1845,11 @@ Jump_0F1_4C8E:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunWD780StateWhenNotFading_F1_Table2_Case02::
+RunScreenStateWhenNotFading_F1_Table2_Case02::
 Jump_0F1_4CA0:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -1863,11 +1863,11 @@ Jump_0F1_4CA0:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wSelectedRecord, wScreenSubStep
-RunWD780StateWhenNotFading_F1_Table2_Case03::
+RunScreenStateWhenNotFading_F1_Table2_Case03::
 Jump_0F1_4CB7:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1878,11 +1878,11 @@ Jump_0F1_4CB7:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 12 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 12 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wScreenSubStep
-RunWD780StateWhenNotFading_F1_Case04_Case0C::
+RunScreenStateWhenNotFading_F1_Case04_Case0C::
 Jump_0F1_4CCA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1913,13 +1913,13 @@ Jump_0F1_4CE2::
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 4 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
-RunWD780StateWhenNotFading_F1_Case04_Case04::
+RunScreenStateWhenNotFading_F1_Case04_Case04::
 Jump_0F1_4D07:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -1947,18 +1947,18 @@ Jump_0F1_4D07:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 15 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep, wSelectedRecord
-RunWD780StateWhenNotFading_F1_Case04_Case0F::
+RunScreenStateWhenNotFading_F1_Case04_Case0F::
 Jump_0F1_4D49:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
 
 ; runs Func_0F1_58FA (C = 5, HL = $0278, DE = $00AC, wD7F1/2 = 0/8), wD781 += 1 and clears wD7B4 (E-0122)
-; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case04_Case12)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_Case04_Case12)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep, wSelectedRecord
 RunFunc58FAAt0278AndStep_BankF1::
@@ -1978,12 +1978,12 @@ Func_0F1_4D4E:: ; address name
     ld [wSelectedRecord], a
     ret
 
-; entry 17 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 17 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wArg5, wArg6, hTemp0, wScreenStep, wPartyCount, wListCursor, wListPageIndex
 ; writes: rRAMG2, rRAMB, wScreenStep, wSelectedRecord, wItemGridX, wItemGridY
 ; points at: wPartyList
-RunWD780StateWhenNotFading_F1_Case04_Case11::
+RunScreenStateWhenNotFading_F1_Case04_Case11::
 Jump_0F1_4D6F:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1992,7 +1992,7 @@ Jump_0F1_4D6F:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2043,7 +2043,7 @@ Jump_0F1_4DBE::
     ret
 
 Jump_0F1_4DD0::
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2061,12 +2061,12 @@ Jump_0F1_4DD0::
     ld [wScreenStep], a
     ret
 
-; entry 18 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 18 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSelectedRecord
 ; writes: rRAMG2, rRAMB
 ; points at: sRecords, wRecordBufA
-RunWD780StateWhenNotFading_F1_Case04_Case12::
+RunScreenStateWhenNotFading_F1_Case04_Case12::
 Jump_0F1_4DFA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2100,11 +2100,11 @@ Jump_0F1_4E19::
     call DrawScreenBufferRect_BankF1
     ret
 
-; entry 19 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 19 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep, wLinkSendByte
-RunWD780StateWhenNotFading_F1_Case04_Case13::
+RunScreenStateWhenNotFading_F1_Case04_Case13::
 Jump_0F1_4E38:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2116,12 +2116,12 @@ Jump_0F1_4E38:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 20 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 20 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wLinkSendByte, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, ...
 ; points at: wRecordBufA, wRecordBufB
-RunWD780StateWhenNotFading_F1_Case04_Case14::
+RunScreenStateWhenNotFading_F1_Case04_Case14::
 Jump_0F1_4E4A:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -2160,11 +2160,11 @@ Jump_0F1_4E64::
     ld [wLinkReady], a
     ret
 
-; entry 21 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 21 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkReady, wScreenStep
-RunWD780StateWhenNotFading_F1_Case04_Case15::
+RunScreenStateWhenNotFading_F1_Case04_Case15::
 Jump_0F1_4E95:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -2176,12 +2176,12 @@ Jump_0F1_4E95:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 22 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 22 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wRecordBufA, wRecordBufB, wArg5, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wSelectedRecord, wLinkSendByte, wStringIndex, wStringCategory
 ; points at: wTextWindowTileLo
-RunWD780StateWhenNotFading_F1_Case04_Case16::
+RunScreenStateWhenNotFading_F1_Case04_Case16::
 Jump_0F1_4EA7:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2205,7 +2205,7 @@ Jump_0F1_4EA7:: ; address name
     ret
 
 Jump_0F1_4ED1::
-    farcall PersonalityPairValueToWD7F5
+    farcall PersonalityPairValueToArg5
     ld a, [wArg5]
     cp a, $03
     jr nz, Jump_0F1_4EF2
@@ -2268,11 +2268,11 @@ Jump_0F1_4F12::
     ld [wScreenStep], a
     ret
 
-; entry 29 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 29 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wArg5, wScreenStep
 ; writes: wArg1, wScreenStep
-RunWD780StateWhenNotFading_F1_Case04_Case1D::
+RunScreenStateWhenNotFading_F1_Case04_Case1D::
 Jump_0F1_4F4C:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2290,12 +2290,12 @@ Jump_0F1_4F4C:: ; address name
     call BeginString_Bank0E_Cat0
     ret
 
-; entry 23 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 23 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wTwoChoiceCursor, wScreenStep
 ; points at: wTextWindowTileLo
-RunWD780StateWhenNotFading_F1_Case04_Case17::
+RunScreenStateWhenNotFading_F1_Case04_Case17::
 Jump_0F1_4F6F:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2325,11 +2325,11 @@ Jump_0F1_4F6F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 24 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 24 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage, wTwoChoiceCursor, wScreenStep, wScreenState, wListCursor, wListPageIndex
 ; writes: wScreenStep, wLinkSendByte, wScreenSubStep, wScreenByteB2, wScreenByteB3, wItemGridX, wItemGridY, wListCursor, ...
-RunWD780StateWhenNotFading_F1_Case04_Case18::
+RunScreenStateWhenNotFading_F1_Case04_Case18::
 Jump_0F1_4FAA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2401,11 +2401,11 @@ Jump_0F1_500C::
     ld [wScreenState], a
     ret
 
-; entry 25 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 25 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep, wScreenStep, wTwoChoiceCursor
 ; writes: wScreenSubStep, wTwoChoiceCursor, wScreenStep
-RunWD780StateWhenNotFading_F1_Case04_Case19::
+RunScreenStateWhenNotFading_F1_Case04_Case19::
 Jump_0F1_5037:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2474,11 +2474,11 @@ Jump_0F1_5067::
     ld [wScreenStep], a
     ret
 
-; entry 26 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 26 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wMenuInputResult, wTwoChoiceCursor, wScreenStep
 ; writes: wScreenStep, wScreenSubStep
-RunWD780StateWhenNotFading_F1_Case04_Case1A::
+RunScreenStateWhenNotFading_F1_Case04_Case1A::
 Jump_0F1_50C3:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2513,12 +2513,12 @@ Jump_0F1_50E7::
     call BeginString_Bank0E_Cat0
     ret
 
-; entry 30 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 30 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep, wScreenByteEE, wScreenStep, wItemGridX, wItemGridY, wArg5, wArg6, ...
 ; writes: wScreenSubStep, wScreenStep, wListCursor, wListPageIndex, wArg1, wArg2, rRAMG2, rRAMB, ...
 ; points at: wChildRecord, wMonsterLibraryBuf, wPackWork
-RunWD780StateWhenNotFading_F1_Case04_Case1E::
+RunScreenStateWhenNotFading_F1_Case04_Case1E::
 Jump_0F1_50FF:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2541,7 +2541,7 @@ Jump_0F1_511B::
     ld [wListCursor], a
     ld a, [wItemGridY]
     ld [wListPageIndex], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2583,7 +2583,7 @@ Jump_0F1_515A::
     ld [wArg3], a
     ld a, d
     ld [wArg4], a
-    farcall SetBitInFieldAtWD7F3
+    farcall SetBitInFieldAtArg3
     ld hl, wPackWork
     ld b, $07
 
@@ -2600,11 +2600,11 @@ Jump_0F1_518C::
     ld [wScreenByteEE], a
     ret
 
-; entry 28 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 28 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wLinkSendByte
-RunWD780StateWhenNotFading_F1_Case04_Case1C::
+RunScreenStateWhenNotFading_F1_Case04_Case1C::
 Jump_0F1_51A4:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -2627,11 +2627,11 @@ Jump_0F1_51BE::
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 9 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunWD780StateWhenNotFading_F1_Case04_Case09::
+RunScreenStateWhenNotFading_F1_Case04_Case09::
 Jump_0F1_51CA:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -2643,11 +2643,11 @@ Jump_0F1_51CA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 10 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep, wScreenSubStep
-RunWD780StateWhenNotFading_F1_Case04_Case0A::
+RunScreenStateWhenNotFading_F1_Case04_Case0A::
 Jump_0F1_51DC:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2661,21 +2661,21 @@ Jump_0F1_51DC:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 11 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 11 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-RunWD780StateWhenNotFading_F1_Case04_Case0B::
+RunScreenStateWhenNotFading_F1_Case04_Case0B::
 Jump_0F1_51F2:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case0B_Case00
-    dw RunWD780StateWhenNotFading_F1_Case04_Case0B_Case01
+    dw RunScreenStateWhenNotFading_F1_Case04_Case0B_Case00
+    dw RunScreenStateWhenNotFading_F1_Case04_Case0B_Case01
 
-; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04_Case0B
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04_Case0B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunWD780StateWhenNotFading_F1_Case04_Case0B_Case00::
+RunScreenStateWhenNotFading_F1_Case04_Case0B_Case00::
 Jump_0F1_51FA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2687,11 +2687,11 @@ Jump_0F1_51FA:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04_Case0B
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04_Case0B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wScreenStep, wScreenState
-RunWD780StateWhenNotFading_F1_Case04_Case0B_Case01::
+RunScreenStateWhenNotFading_F1_Case04_Case0B_Case01::
 Jump_0F1_520C:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -2704,12 +2704,12 @@ Jump_0F1_520C:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 32 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
+; entry 32 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage
 ; writes: wLinkSendByte, wLinkSceneByte4B
 ; points at: wScreenState
-RunWD780StateWhenNotFading_F1_Case04_Case20::
+RunScreenStateWhenNotFading_F1_Case04_Case20::
 Jump_0F1_5220:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2733,11 +2733,11 @@ Jump_0F1_5235::
     ld [wLinkSceneByte4B], a
     ret
 
-; entry 12 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 12 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep, wScreenSubStep, wScreenState
-RunWD780StateWhenNotFading_F1_Case0C::
+RunScreenStateWhenNotFading_F1_Case0C::
 Jump_0F1_5242:: ; address name
     farcall ScriptCommandE8_Run
     ld a, [wScreenStep]
@@ -2751,36 +2751,36 @@ Jump_0F1_5242:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 17 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 17 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunWD780StateWhenNotFading_F1_Case11::
+RunScreenStateWhenNotFading_F1_Case11::
 Jump_0F1_525E:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunWD780StateWhenNotFading_F1_Case11_Case00
+    dw RunScreenStateWhenNotFading_F1_Case11_Case00
     dw ShowString0EAndStep_BankF1
-    dw RunWD780StateWhenNotFading_F1_Case11_Case02
-    dw RunWD780StateWhenNotFading_F1_Case11_Case02
-    dw RunWD780StateWhenNotFading_F1_Case11_Case02
-    dw RunWD780StateWhenNotFading_F1_Case04_Case04
-    dw RunWD780StateWhenNotFading_F1_Case11_Case06
-    dw RunWD780StateWhenNotFading_F1_Case11_Case07
-    dw RunWD780StateWhenNotFading_F1_Case11_Case02
-    dw RunWD780StateWhenNotFading_F1_Case11_Case02
+    dw RunScreenStateWhenNotFading_F1_Case11_Case02
+    dw RunScreenStateWhenNotFading_F1_Case11_Case02
+    dw RunScreenStateWhenNotFading_F1_Case11_Case02
+    dw RunScreenStateWhenNotFading_F1_Case04_Case04
+    dw RunScreenStateWhenNotFading_F1_Case11_Case06
+    dw RunScreenStateWhenNotFading_F1_Case11_Case07
+    dw RunScreenStateWhenNotFading_F1_Case11_Case02
+    dw RunScreenStateWhenNotFading_F1_Case11_Case02
 
-; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case11
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
 ; no direct call (reached through a table, a jump or a vector)
-RunWD780StateWhenNotFading_F1_Case11_Case02::
+RunScreenStateWhenNotFading_F1_Case11_Case02::
 Jump_0F1_5276:: ; address name
     farcall ScriptCommandED_Run
     ret
 
-; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case11
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case11_Case00::
+RunScreenStateWhenNotFading_F1_Case11_Case00::
 Jump_0F1_527D:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -2788,7 +2788,7 @@ Jump_0F1_527D:: ; address name
     ret
 
 ; far-calls ShowString0EBank0EAtTiles2700AndLoadTiles, then wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case0D_Case1C)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_Case0D_Case1C)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ShowString0EAndStep_BankF1::
@@ -2799,10 +2799,10 @@ Func_0F1_5285:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case11
+; entry 6 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextWindowTileLo, wScreenStep
-RunWD780StateWhenNotFading_F1_Case11_Case06::
+RunScreenStateWhenNotFading_F1_Case11_Case06::
 Jump_0F1_5293:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -2822,13 +2822,13 @@ Jump_0F1_5293:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case11
+; entry 7 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-RunWD780StateWhenNotFading_F1_Case11_Case07::
+RunScreenStateWhenNotFading_F1_Case11_Case07::
 Jump_0F1_52B7:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -2842,58 +2842,58 @@ Jump_0F1_52B7:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 13 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D::
+RunScreenStateWhenNotFading_F1_Case0D::
 Jump_0F1_52D8:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case00
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case01
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case02
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case03
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case04
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case05
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case06
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case07
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case08
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case08
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case08
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case08
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case08
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case08
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case0E
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case0F
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case10
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case11
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case12
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case13
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case14
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case15
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case16
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case17
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case18
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case19
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case1A
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case1B
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case1C
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case1D
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case1E
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case1F
-    dw RunWD780StateWhenNotFading_F1_Case0D_Case20
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case00
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case01
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case02
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case03
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case04
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case05
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case06
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case07
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case0E
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case0F
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case10
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case11
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case12
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case13
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case14
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case15
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case16
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case17
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case18
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case19
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case1A
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case1B
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case1C
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case1D
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case1E
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case1F
+    dw RunScreenStateWhenNotFading_F1_Case0D_Case20
 
-; entry 8 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-RunWD780StateWhenNotFading_F1_Case0D_Case08::
+RunScreenStateWhenNotFading_F1_Case0D_Case08::
 Jump_0F1_531E:: ; address name
     ret
 
-; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case00::
+RunScreenStateWhenNotFading_F1_Case0D_Case00::
 Jump_0F1_531F:: ; address name
     farcall DrawTileMap5E12AndLoadFrameTiles
     ld a, [wScreenStep]
@@ -2901,21 +2901,21 @@ Jump_0F1_531F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case01::
+RunScreenStateWhenNotFading_F1_Case0D_Case01::
 Jump_0F1_532D:: ; address name
     farcall ShowString10Bank0EAtTiles2020ThenDefault
     farcall LoadSixteenGlyphTilesFromTable73BC
     call DrawShortStringWCA2CAtTiles1500
 
-; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case02::
+RunScreenStateWhenNotFading_F1_Case0D_Case02::
 Jump_0F1_533C:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -2923,23 +2923,23 @@ Jump_0F1_533C:: ; address name
     ret
 
 ; clears a 5 x 1 tile area at vTiles1 + $500 (FillTilesBxC), copies the short string at wCA2C to wC8CF (CopyShortStringToWC8CF_BankF1) and draws its glyphs at vTiles1 + $500 (E-0116)
-; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case0D_Case01)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_Case0D_Case01)
 DrawShortStringWCA2CAtTiles1500::
 Func_0F1_5344:: ; address name
     ld hl, vTiles1 + $500
     ld bc, $0501
     call FillTilesBxC
     ld hl, wRecordBufB + $1
-    call CopyShortStringToWC8CF_BankF1
+    call CopyShortStringToNameGlyphBuf_BankF1
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
     ret
 
-; entry 3 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case03::
+RunScreenStateWhenNotFading_F1_Case0D_Case03::
 Jump_0F1_535A:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, Data_0F1_687F
@@ -2955,30 +2955,30 @@ Jump_0F1_535A:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 4 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case04::
+RunScreenStateWhenNotFading_F1_Case0D_Case04::
 Jump_0F1_5379:: ; address name
-    farcall DrawWCA2BStatsScreen
+    farcall DrawRecordBufBStatsScreen
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 5 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-RunWD780StateWhenNotFading_F1_Case0D_Case05::
+RunScreenStateWhenNotFading_F1_Case0D_Case05::
 Jump_0F1_5387:: ; address name
     farcall DrawWCA36MonsterPictureInTwoSteps
     ret
 
-; entry 6 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 6 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult, wScreenStep
 ; writes: wJoypadPressedRepeat, wMenuInputResult, wArg3, wArg4, wArg7, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case06::
+RunScreenStateWhenNotFading_F1_Case0D_Case06::
 Jump_0F1_538E:: ; address name
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -3018,11 +3018,11 @@ Jump_0F1_53B8::
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 7 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenStep, ...
-RunWD780StateWhenNotFading_F1_Case0D_Case07::
+RunScreenStateWhenNotFading_F1_Case0D_Case07::
 Jump_0F1_53D9:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld a, h
@@ -3049,11 +3049,11 @@ Jump_0F1_53D9:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 14 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 14 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case0E::
+RunScreenStateWhenNotFading_F1_Case0D_Case0E::
 Jump_0F1_5412:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $0F02
@@ -3063,11 +3063,11 @@ Jump_0F1_5412:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 15 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case0F::
+RunScreenStateWhenNotFading_F1_Case0D_Case0F::
 Jump_0F1_5423:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -3080,11 +3080,11 @@ Jump_0F1_5423:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 16 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 16 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case10::
+RunScreenStateWhenNotFading_F1_Case0D_Case10::
 Jump_0F1_543D:: ; address name
     call DrawWCA2CNameAndWCA36String
     ld a, [wScreenStep]
@@ -3092,11 +3092,11 @@ Jump_0F1_543D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 17 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 17 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case11::
+RunScreenStateWhenNotFading_F1_Case0D_Case11::
 Jump_0F1_5448:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, $0068
@@ -3114,22 +3114,22 @@ Jump_0F1_5448:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 18 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 18 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wRecordBufB
 ; writes: wScreenStep, wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, wArg7
-RunWD780StateWhenNotFading_F1_Case0D_Case12::
+RunScreenStateWhenNotFading_F1_Case0D_Case12::
 Jump_0F1_546B:: ; address name
     farcall ShowPersonalityNameAndWCA3AName
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
 
-; entry 19 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 19 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wRecordBufB
 ; writes: wArg1, wArg2, wArg3, wArg4, wScreenStep, wArg5, hSpriteHideTile, wArg7
-RunWD780StateWhenNotFading_F1_Case0D_Case13::
+RunScreenStateWhenNotFading_F1_Case0D_Case13::
 Jump_0F1_5478:: ; address name
     ld a, $6D
     ld [wArg1], a
@@ -3145,11 +3145,11 @@ Jump_0F1_5478:: ; address name
     inc a
     ld [wScreenStep], a
 
-; entry 20 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 20 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, wArg7, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case14::
+RunScreenStateWhenNotFading_F1_Case0D_Case14::
 Jump_0F1_549E:: ; address name
     ld a, [wRecordBufB + $B]
     ld [wArg1], a
@@ -3160,7 +3160,7 @@ Jump_0F1_549E:: ; address name
     ld [wArg4], a
     ld a, $80
     ld [wArg5], a
-    farcall DecompressGraphicsWD7F1ToWD7F4
+    farcall DecompressGraphicsArg1ToArg4
     ld a, $F0
     ldh [hSpriteHideTile], a
     farcall ShowWCACFCategory11StringAtTiles2320
@@ -3180,11 +3180,11 @@ Jump_0F1_549E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 21 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 21 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult, wScreenStep
 ; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case15::
+RunScreenStateWhenNotFading_F1_Case0D_Case15::
 Jump_0F1_54E9:: ; address name
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -3219,21 +3219,21 @@ Jump_0F1_5517::
     ld [wScreenStep], a
     ret
 
-; entry 22 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 22 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case16::
+RunScreenStateWhenNotFading_F1_Case0D_Case16::
 Jump_0F1_5526:: ; address name
     farcall DrawLevelAndStatusRowForWCA81
     ld a, $0F
     ld [wScreenStep], a
     ret
 
-; entry 23 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 23 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case17::
+RunScreenStateWhenNotFading_F1_Case0D_Case17::
 Jump_0F1_5532:: ; address name
     farcall DrawRects6B4FAnd6C27
     ld a, [wScreenStep]
@@ -3241,11 +3241,11 @@ Jump_0F1_5532:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 24 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 24 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case18::
+RunScreenStateWhenNotFading_F1_Case0D_Case18::
 Jump_0F1_5540:: ; address name
     farcall ClearTilesAndDrawRects6C5FAnd6D37
     ld a, [wScreenStep]
@@ -3253,22 +3253,22 @@ Jump_0F1_5540:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 25 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 25 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case19::
+RunScreenStateWhenNotFading_F1_Case0D_Case19::
 Jump_0F1_554E:: ; address name
-    farcall ShowWCA2BSkillNamesOrNone
+    farcall ShowRecordBufBSkillNamesOrNone
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
 
-; entry 26 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 26 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case1A::
+RunScreenStateWhenNotFading_F1_Case0D_Case1A::
 Jump_0F1_555B:: ; address name
     farcall ShowSpeciesCategory13StringAtTiles2680
     ld a, [wScreenStep]
@@ -3276,11 +3276,11 @@ Jump_0F1_555B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 27 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 27 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult, wScreenStep
 ; writes: wJoypadPressedRepeat, wMenuInputResult, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case1B::
+RunScreenStateWhenNotFading_F1_Case0D_Case1B::
 Jump_0F1_5569:: ; address name
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -3315,11 +3315,11 @@ Jump_0F1_559C::
     ld [wScreenStep], a
     ret
 
-; entry 28 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 28 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenSubStep
-RunWD780StateWhenNotFading_F1_Case0D_Case1C::
+RunScreenStateWhenNotFading_F1_Case0D_Case1C::
 Jump_0F1_55AE:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -3348,11 +3348,11 @@ Jump_0F1_55DB::
     ld [wScreenSubStep], a
     ret
 
-; entry 29 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 29 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-RunWD780StateWhenNotFading_F1_Case0D_Case1D::
+RunScreenStateWhenNotFading_F1_Case0D_Case1D::
 Jump_0F1_55E9:: ; address name
     farcall DrawLevelAndStatusRowForWCA81
     ld hl, vTiles1 + $270
@@ -3376,11 +3376,11 @@ Jump_0F1_55E9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 30 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 30 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case1E::
+RunScreenStateWhenNotFading_F1_Case0D_Case1E::
 Jump_0F1_561B:: ; address name
     call BGMapAddressAtScroll_BankF1
     ld de, $0008
@@ -3393,17 +3393,17 @@ Jump_0F1_561B:: ; address name
     xor a, a
     ld [wArg7], a
     call DrawTileRectAtHLFromDE_BankF1
-    farcall DecompressWCA2BSpeciesGraphics
+    farcall DecompressRecordBufBSpeciesGraphics
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 31 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 31 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: hSpriteHideTile, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case1F::
+RunScreenStateWhenNotFading_F1_Case0D_Case1F::
 Jump_0F1_5644:: ; address name
     farcall RunF24C3DAnd4D72
     ld a, $F0
@@ -3413,11 +3413,11 @@ Jump_0F1_5644:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 32 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
+; entry 32 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult
 ; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0D_Case20::
+RunScreenStateWhenNotFading_F1_Case0D_Case20::
 Jump_0F1_5656:: ; address name
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -3451,29 +3451,29 @@ Jump_0F1_5682::
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in RunWD780StateWhenNotFading_F1
+; entry 14 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunWD780StateWhenNotFading_F1_Case0E::
+RunScreenStateWhenNotFading_F1_Case0E::
 Jump_0F1_568B:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunWD780StateWhenNotFading_F1_Case0E_Case00
+    dw RunScreenStateWhenNotFading_F1_Case0E_Case00
     dw ShowString0EAndStep_BankF1
-    dw RunWD780StateWhenNotFading_F1_Case0E_Case02
-    dw RunWD780StateWhenNotFading_F1_Case0E_Case02
-    dw RunWD780StateWhenNotFading_F1_Case0E_Case02
-    dw RunWD780StateWhenNotFading_F1_Case04_Case04
-    dw RunWD780StateWhenNotFading_F1_Case11_Case06
-    dw RunWD780StateWhenNotFading_F1_Case11_Case07
-    dw RunWD780StateWhenNotFading_F1_Case0E_Case08
-    dw RunWD780StateWhenNotFading_F1_Case0E_Case09
+    dw RunScreenStateWhenNotFading_F1_Case0E_Case02
+    dw RunScreenStateWhenNotFading_F1_Case0E_Case02
+    dw RunScreenStateWhenNotFading_F1_Case0E_Case02
+    dw RunScreenStateWhenNotFading_F1_Case04_Case04
+    dw RunScreenStateWhenNotFading_F1_Case11_Case06
+    dw RunScreenStateWhenNotFading_F1_Case11_Case07
+    dw RunScreenStateWhenNotFading_F1_Case0E_Case08
+    dw RunScreenStateWhenNotFading_F1_Case0E_Case09
 
-; entry 0 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0E
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemGridX, wItemGridY, wScreenStep
 ; writes: wListCursor, wListPageIndex, wScreenStep
-RunWD780StateWhenNotFading_F1_Case0E_Case00::
+RunScreenStateWhenNotFading_F1_Case0E_Case00::
 Jump_0F1_56A3:: ; address name
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -3484,11 +3484,11 @@ Jump_0F1_56A3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0E
+; entry 9 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunWD780StateWhenNotFading_F1_Case0E_Case09::
+RunScreenStateWhenNotFading_F1_Case0E_Case09::
 Jump_0F1_56B7:: ; address name
     ld a, [wScreenState]
     push af
@@ -3498,11 +3498,11 @@ Jump_0F1_56B7:: ; address name
     pop af
     ret
 
-; entry 2 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0E
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunWD780StateWhenNotFading_F1_Case0E_Case02::
+RunScreenStateWhenNotFading_F1_Case0E_Case02::
 Jump_0F1_56C8:: ; address name
     ld a, [wScreenState]
     push af
@@ -3513,12 +3513,12 @@ Jump_0F1_56C8:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 8 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0E
+; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringIndex, wStringCategory, wScreenStep
 ; points at: wTextWindowTileLo
-RunWD780StateWhenNotFading_F1_Case0E_Case08::
+RunScreenStateWhenNotFading_F1_Case0E_Case08::
 Jump_0F1_56DC:: ; address name
     ld de, Data_0F1_5A90
     ld hl, wWindowTileBuffer + $E7
@@ -3551,7 +3551,7 @@ Jump_0F1_56DC:: ; address name
     ret
 
 ; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkScreenState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wRecordBufB
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawWCA36SpritePart_BankF1::
@@ -3572,7 +3572,7 @@ Func_0F1_5719:: ; address name
     ret
 
 ; copies tiles from Data_0F1_5757: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (E-0118)
-; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case0D_Case1B)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_Case0D_Case1B)
 UploadTilesFromData5757_BankF1::
 Func_0F1_573E:: ; address name
     ld hl, Data_0F1_5757
@@ -3615,7 +3615,7 @@ Jump_0F1_57AB::
 ; Copies up to 10 bytes from [HL] to wC8CF, stopping at a $F0 byte, then stores a $F0 terminator (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 2 routines (e.g. DrawWCA2CNameAndWCA36String, DrawShortStringWCA2CAtTiles1500)
 ; points at: wNameGlyphBuf
-CopyShortStringToWC8CF_BankF1::
+CopyShortStringToNameGlyphBuf_BankF1::
 Func_0F1_57BA:: ; address name
     ld de, wNameGlyphBuf
     ld c, $0A
@@ -3635,13 +3635,13 @@ Jump_0F1_57C9::
     ret
 
 ; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at $8A70 with size $0109 (E-0121)
-; 2 call sites from 2 routines (e.g. RunWD780StateWhenNotFading_F1_Case0D_Case1D, RunWD780StateWhenNotFading_F1_Case0D_Case10)
+; 2 call sites from 2 routines (e.g. RunScreenStateWhenNotFading_F1_Case0D_Case1D, RunScreenStateWhenNotFading_F1_Case0D_Case10)
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextWindowTileLo
 DrawWCA2CNameAndWCA36String::
 Func_0F1_57CD:: ; address name
     ld hl, wRecordBufB + $1
-    call CopyShortStringToWC8CF_BankF1
+    call CopyShortStringToNameGlyphBuf_BankF1
     ld de, vTiles1 + $780
     call CopyGlyphTilesToVRAM
     ld hl, wRecordBufB + $B
@@ -3661,8 +3661,8 @@ Func_0F1_57CD:: ; address name
     farcall ShowString_Bank08
     ret
 
-; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromWD7F1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
-; 5 call sites from 5 routines (e.g. RunWD780StateWhenNotFading_F1_Case0D_Case1E, RunWD780StateWhenNotFading_F1_Case0D_Case14, RunWD780StateWhenNotFading_F1_Case0D_Case11, RunWD780StateWhenNotFading_F1_Case0D_Case06, ...)
+; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
+; 5 call sites from 5 routines (e.g. RunScreenStateWhenNotFading_F1_Case0D_Case1E, RunScreenStateWhenNotFading_F1_Case0D_Case14, RunScreenStateWhenNotFading_F1_Case0D_Case11, RunScreenStateWhenNotFading_F1_Case0D_Case06, ...)
 ; writes: wArg5, wArg6, wArg1, wArg2
 DrawTileRectAtHLFromDE_BankF1::
 Func_0F1_57FB:: ; address name
@@ -3674,11 +3674,11 @@ Func_0F1_57FB:: ; address name
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     ret
 
 ; runs Func_0F1_58FA (C = 7, HL = $024F, DE = $0083, wD7F1/2 = 0/9), then draws the box at scroll + $1CC (E-0122)
-; 2 call sites from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case04_Case18)
+; 2 call sites from 1 routine (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18)
 ; writes: wArg1, wArg2
 RunFunc58FAAt024FAndDrawBox_BankF1::
 Func_0F1_5812:: ; address name
@@ -3697,7 +3697,7 @@ Func_0F1_5812:: ; address name
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E
-; 26 call sites from 19 routines (e.g. RunWD780StateWhenNotFading_F1_Case02, RunWD780StateWhenNotFading_F1_Case03_Case02, RunWD780StateWhenNotFading_F1_Case03_Case00, RunWD780StateWhenNotFading_F1_Case04_Case1D, ...)
+; 26 call sites from 19 routines (e.g. RunScreenStateWhenNotFading_F1_Case02, RunScreenStateWhenNotFading_F1_Case03_Case02, RunScreenStateWhenNotFading_F1_Case03_Case00, RunScreenStateWhenNotFading_F1_Case04_Case1D, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank0E_Cat0::
 Func_0F1_5834:: ; address name
@@ -3708,7 +3708,7 @@ Func_0F1_5834:: ; address name
     ret
 
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
-; 3 call sites from 3 routines (e.g. RunWD780StateWhenNotFading_F1_Case04_Case18, ScriptCommandEF_Run_Bank1B_Case05_Case07, Func_033_5215_Table2_Case05_Case06)
+; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18, ScriptCommandEF_Run_Bank1B_Case05_Case07, Func_033_5215_Table2_Case05_Case06)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
 HandleThreeChoiceCursorInput_F1::
@@ -3723,7 +3723,7 @@ Func_0F1_5842:: ; address name
     jr nz, Jump_0F1_589C
     bit 1, a
     jr nz, Jump_0F1_58AA
-    call BlinkCursorWD783_BankF1
+    call BlinkCursorScreenCounter_BankF1
     xor a, a
     ld [wMenuInputResult], a
     ret
@@ -3782,7 +3782,7 @@ Jump_0F1_58AA::
 ; 1 call site from 1 routine (e.g. HandleThreeChoiceCursorInput_F1)
 ; reads: wJoypadRepeatTimer, wScreenCounter, wTwoChoiceCursor
 ; writes: wScreenCounter
-BlinkCursorWD783_BankF1::
+BlinkCursorScreenCounter_BankF1::
 Func_0F1_58B0:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
@@ -3941,8 +3941,8 @@ Jump_0F1_595B::
     ldh [rSVBK], a
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWD09D (E-0122)
-; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case04_Case04)
+; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWorkBuf (E-0122)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_Case04_Case04)
 ; reads: hTemp0, wArg1
 ; writes: rRAMG2, rRAMB, wWorkBuf
 LoadFamilyIconTileForRecordB_BankF1::
@@ -3959,13 +3959,13 @@ Func_0F1_5969:: ; address name
     ld [wWorkBuf], a
     ld a, [wArg1]
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     xor a, a
     ld [rRAMG2], a
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 4 call sites from 4 routines (e.g. RunWD780StateWhenNotFading_F1_Case04_Case19, RunWD780StateWhenNotFading_F1_Case04_Case17, RunWD780StateWhenNotFading_F1_Case0E_Case08, RunWD780StateWhenNotFading_F1_Case04_Case04)
+; 4 call sites from 4 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case19, RunScreenStateWhenNotFading_F1_Case04_Case17, RunScreenStateWhenNotFading_F1_Case0E_Case08, RunScreenStateWhenNotFading_F1_Case04_Case04)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_BankF1::
@@ -4023,7 +4023,7 @@ Jump_0F1_59B8::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (E-0062)
-; 4 call sites from 4 routines (e.g. RunWD780StateWhenNotFading_F1_Case04_Case19, RunFunc58FAAt024FAndDrawBox_BankF1, RunWD780StateWhenNotFading_F1_Case04_Case17, RunWD780StateWhenNotFading_F1_Case04_Case12)
+; 4 call sites from 4 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case19, RunFunc58FAAt024FAndDrawBox_BankF1, RunScreenStateWhenNotFading_F1_Case04_Case17, RunScreenStateWhenNotFading_F1_Case04_Case12)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -4070,7 +4070,7 @@ Func_0F1_59CA:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 11 call sites from 11 routines (e.g. DrawArrowTileBCAtTwoChoiceEntry_BankF1, RunWD780StateWhenNotFading_F1_Case04_Case19, RunFunc58FAAt024FAndDrawBox_BankF1, RunWD780StateWhenNotFading_F1_Case04_Case17, ...)
+; 11 call sites from 11 routines (e.g. DrawArrowTileBCAtTwoChoiceEntry_BankF1, RunScreenStateWhenNotFading_F1_Case04_Case19, RunFunc58FAAt024FAndDrawBox_BankF1, RunScreenStateWhenNotFading_F1_Case04_Case17, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_BankF1::
 Func_0F1_5A07:: ; address name
@@ -4092,7 +4092,7 @@ Func_0F1_5A07:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case04_Case18)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18)
 StoreBAtWordTableEntry_BankF1::
 Func_0F1_5A28:: ; address name
     push bc
@@ -4141,7 +4141,7 @@ Jump_0F1_5AE0::
     ld a, [wScreenByteEE]
     cp a, $02
     jr nz, Jump_0F1_5AF7
-    farcall SendSGBPaletteSetForWC51F
+    farcall SendSGBPaletteSetForSGBPaletteSet
     ld a, $FC
     call StartPaletteFade
     xor a, a
@@ -4215,13 +4215,13 @@ Jump_0F1_5B45::
     ret
 
 Jump_0F1_5B56::
-    farcall DrawWD789Cell5SpeciesSprite
+    farcall DrawListEntriesCell5SpeciesSprite
     ret
 
 Jump_0F1_5B5D::
     ld a, $01
     ldh [hSpriteWindowClipMode], a
-    farcall CallFunc6899PreservingWD7F1AndHFFC6
+    farcall CallFunc6899PreservingArg1AndTemp0
     ret
 
 Jump_0F1_5B68::
@@ -4231,7 +4231,7 @@ Jump_0F1_5B68::
     ld a, [wLinkByteE9]
     cp a, $07
     ret nz
-    farcall GetWD789Cell4Address
+    farcall GetListEntriesCell4Address
     ld c, $00
     ld a, l
     ld [wArg1], a
@@ -4274,7 +4274,7 @@ Func_0F1_5BA5:: ; address name
     ld [wArg4], a
     ld a, [wTopSpeciesHi]
     ld [wArg5], a
-    farcall RunWCFA8StateWhenNotFading
+    farcall RunNameEntryStateWhenNotFading
     ld a, [wArg5]
     cp a, $FF
     ret nz

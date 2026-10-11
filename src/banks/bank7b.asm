@@ -1522,7 +1522,7 @@ Data_07B_71E1:: ; address name
     db $00, $00, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $10F (PomPomBom) (MonsterPictureTable / MonsterAttributeMapTable)
-MonsterPicAttr_PomPomBom:: ; heuristic: monster picture attribute map; C0
+MonsterPicAttr_PomBom:: ; heuristic: monster picture attribute map; C0
 Data_07B_7205:: ; address name
     ds $24, $00
 

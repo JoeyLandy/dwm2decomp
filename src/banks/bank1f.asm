@@ -670,7 +670,7 @@ Jump_01F_5C4A::
     push bc
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     pop bc
@@ -678,7 +678,7 @@ Jump_01F_5C4A::
     ld a, c
     cp a, $04
     jr nz, Jump_01F_5C71
-    call DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1F
+    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F
     jr Jump_01F_5C81
 
 Jump_01F_5C71::
@@ -719,7 +719,7 @@ Data_01F_5C9C:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wGlyphListPos, wGlyphListStart
 ; writes: wGlyphListPos, wGlyphListStart
 ; points at: wNameGlyphBuf
-DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1F::
+DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F::
 Func_01F_5CA6:: ; address name
     xor a, a
     ld [wGlyphListPos], a
@@ -768,7 +768,7 @@ Jump_01F_5CEF::
     ret
 
 ; DE = Data_01F_4010 + 16 * A (the glyph's tile), HL = the VRAM address from Data_01F_5D20 + 2 * wD785, B = $1F (bank), C = 16 (bytes) (E-0120)
-; 2 call sites from 1 routine (e.g. DrawWC8CFGlyphsOverlaying8DAnd8E_Bank1F)
+; 2 call sites from 1 routine (e.g. DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F)
 ; reads: wGlyphListStart
 GlyphCopyArgsForA::
 Func_01F_5CF8:: ; address name
@@ -805,7 +805,7 @@ Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wArg6, rSTAT, wIsCGB, wArg7
 ; writes: rVBK
 ; points at: wArg1
-DrawTileRectFromWD7F1Params::
+DrawTileRectFromArg1Params::
 Func_01F_5D2A:: ; address name
     ld hl, wArg1
     ld d, [hl]
@@ -901,7 +901,7 @@ Jump_01F_5D89::
     ret
 
 ; writes a wD7F3 x wD7F4 tile rectangle from wD7F1/2 to the BG map at wD7F5/6 (wrapping); on CGB, unless wD7F7 is set, clears its attributes (E-0129)
-; 10 call sites from 10 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, ScriptCommandF6_Run_Shared06, RunWCFA8StateWhenNotFading_Case00_Case00, RunWCFA8StateWhenNotFading_Case06_Case00, ...)
+; 10 call sites from 10 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, ScriptCommandF6_Run_Shared06, RunNameEntryStateWhenNotFading_Case00_Case00, RunNameEntryStateWhenNotFading_Case06_Case00, ...)
 ; reads: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, rSTAT, wIsCGB, ...
 ; writes: rVBK
 DrawTileRectAndClearAttrs_5D9A::
@@ -1079,7 +1079,7 @@ Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07F1EE, $187
 
 ; copies 16 glyph tiles (Data_01F_73BC) from bank $1F to the VRAM addresses in Data_01F_73CC (E-0127)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, RunWD780StateWhenNotFading_F1_Case0D_Case01)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_Case01)
 LoadSixteenGlyphTilesFromTable73BC::
 Func_01F_7375:: ; address name
     ld c, $00
@@ -1143,7 +1143,7 @@ Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
 ; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wCA36 at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case05, RunWD780StateWhenNotFading_F1_Case0D_Case05)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case05, RunScreenStateWhenNotFading_F1_Case0D_Case05)
 ; reads: wScreenSubStep, wRecordBufB, wIsCGB, wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenSubStep, ...
 DrawWCA36MonsterPictureInTwoSteps::
@@ -1169,7 +1169,7 @@ Func_01F_73EC:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     ld a, [wRecordBufB + $B]
     ld e, a
     ld a, [wRecordBufB + $C]
@@ -1221,7 +1221,7 @@ Jump_01F_745C::
     ld [wArg4], a
     ld a, $01
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     xor a, a
     ld [wScreenSubStep], a
     ld a, [wScreenStep]
@@ -1230,7 +1230,7 @@ Jump_01F_745C::
     ret
 
 ; draws the 32 x 32 tile map Data_01F_5E12 at the scroll origin, then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case00, RunWD780StateWhenNotFading_F1_Case0D_Case00)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case00, RunScreenStateWhenNotFading_F1_Case0D_Case00)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawTileMap5E12AndLoadFrameTiles::
 Func_01F_7494:: ; address name
@@ -1269,7 +1269,7 @@ Func_01F_7494:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_662B (12 x 15 at scroll + $68) and Data_01F_653F (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case15, RunWD780StateWhenNotFading_F1_Case0D_Case15)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case15, RunScreenStateWhenNotFading_F1_Case0D_Case15)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects662BAnd653F::
 Func_01F_74E3:: ; address name
@@ -1291,7 +1291,7 @@ Func_01F_74E3:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1310,11 +1310,11 @@ Func_01F_74E3:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     ret
 
 ; draws the tile rectangles Data_01F_6B4F (12 x 18 at scroll + 8) and Data_01F_6C27 (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case17, RunWD780StateWhenNotFading_F1_Case0D_Case17)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case17, RunScreenStateWhenNotFading_F1_Case0D_Case17)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects6B4FAnd6C27::
 Func_01F_753A:: ; address name
@@ -1336,7 +1336,7 @@ Func_01F_753A:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1355,11 +1355,11 @@ Func_01F_753A:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     ret
 
 ; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles Data_01F_6C5F (12 x 18) and Data_01F_6D37 (8 x 7) (E-0127)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case18, RunWD780StateWhenNotFading_F1_Case0D_Case18)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case18, RunScreenStateWhenNotFading_F1_Case0D_Case18)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wArg5, wArg6, wArg1, wArg2, ...
 ClearTilesAndDrawRects6C5FAnd6D37::
 Func_01F_7591:: ; address name
@@ -1392,7 +1392,7 @@ Func_01F_7591:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1411,15 +1411,15 @@ Func_01F_7591:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     ret
 
 ; shows the eight skill names of the record at wCA2B (field $34) in rows from vTiles2 + $200, or string $0E of category 8 when it has none (E-0129)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case19, RunWD780StateWhenNotFading_F1_Case0D_Case19)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case19, RunScreenStateWhenNotFading_F1_Case0D_Case19)
 ; reads: wRecordBufB
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
 ; points at: wRecordBufB
-ShowWCA2BSkillNamesOrNone::
+ShowRecordBufBSkillNamesOrNone::
 Func_01F_7601:: ; address name
     ld a, [wRecordBufB + $34]
     cp a, $FF
@@ -1521,7 +1521,7 @@ Jump_01F_769E::
     ret
 
 ; draws the tile rectangles Data_01F_6E47 and Data_01F_6D6F, clears tile rows and sets up the summary text window (E-0128)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1B, RunWD780StateWhenNotFading_F1_Case0D_Case1B)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1B, RunScreenStateWhenNotFading_F1_Case0D_Case1B)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wTextWindowTileLo, ...
 DrawSummaryFrames6E47And6D6F::
 Func_01F_76B5:: ; address name
@@ -1543,7 +1543,7 @@ Func_01F_76B5:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     ld hl, vTiles2 + $6C0
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1573,7 +1573,7 @@ Func_01F_76B5:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     ld hl, vTiles2 + $200
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1598,7 +1598,7 @@ Func_01F_76B5:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_5E13 (12 x 3 at scroll + 8) and Data_01F_66DF (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1C, RunWD780StateWhenNotFading_F1_Case0D_Case1C)
+; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1C, RunScreenStateWhenNotFading_F1_Case0D_Case1C)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects5E13And66DF::
 Func_01F_7754:: ; address name
@@ -1620,7 +1620,7 @@ Func_01F_7754:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
     add hl, de
@@ -1639,7 +1639,7 @@ Func_01F_7754:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectFromWD7F1Params
+    call DrawTileRectFromArg1Params
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)

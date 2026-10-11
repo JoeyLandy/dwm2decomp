@@ -1,28 +1,28 @@
 SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
     db $3F
 
-; only called from DrawEffectSpriteForWD801Range (E-0047)
-; 1 call site from 1 routine (e.g. DrawEffectSpriteForWD801Range)
+; only called from DrawEffectSpriteForEffectTileOffsetRange (E-0047)
+; 1 call site from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange)
 ; reads: wEffectTileOffset, wEffectFlags, wBattlePartyCount, wBattleTarget, wEffectSpriteX, wEffectSpriteAttrXor
 ; writes: wLoadSlot, wBattleArg0
 ; points at: wLoadSlot, wBattleArg0, hSpriteOriginX
-DrawEffectSpriteForWD801Range_Sub02::
+DrawEffectSpriteForEffectTileOffsetRange_Sub02::
 Func_03F_4001:: ; address name
     ld a, [wEffectTileOffset]
     cp a, $15
-    jr nz, DrawEffectSpriteAtWD804_Bank3F
+    jr nz, DrawEffectSpriteAtEffectSpriteX_Bank3F
     ld a, [wEffectFlags]
     bit 3, a
-    jr z, DrawEffectSpriteAtWD804_Bank3F
+    jr z, DrawEffectSpriteAtEffectSpriteX_Bank3F
     ld a, [wBattlePartyCount]
     ld [wLoadSlot], a
     ld a, [wBattleTarget]
     and a, $04
     ld [wBattleArg0], a
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_03F_402B
     farcall SetEffectSpriteXForTargets
-    call DrawEffectSpriteAtWD804_Bank3F
+    call DrawEffectSpriteAtEffectSpriteX_Bank3F
 
 Jump_03F_402B::
     ld hl, wLoadSlot
@@ -33,10 +33,10 @@ Jump_03F_402B::
     ld hl, wBattleArg0
     inc [hl]
     ld a, [hl]
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_03F_4045
     farcall SetEffectSpriteXForTargets
-    call DrawEffectSpriteAtWD804_Bank3F
+    call DrawEffectSpriteAtEffectSpriteX_Bank3F
 
 Jump_03F_4045::
     ld hl, wLoadSlot
@@ -47,15 +47,15 @@ Jump_03F_4045::
     ld hl, wBattleArg0
     inc [hl]
     ld a, [hl]
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     ret c
     farcall SetEffectSpriteXForTargets
 
 ; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
-; 2 call sites from 1 routine (e.g. DrawEffectSpriteForWD801Range_Sub02)
+; 2 call sites from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange_Sub02)
 ; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
 ; points at: hSpriteOriginX
-DrawEffectSpriteAtWD804_Bank3F::
+DrawEffectSpriteAtEffectSpriteX_Bank3F::
 Func_03F_405B:: ; address name
     ld hl, hSpriteOriginX
     ld a, [wEffectSpriteX]
@@ -115,7 +115,7 @@ Data_03F_407E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw MetaSprites3F_407ESet1F ; id 31
 
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8, tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28 (40 entries) (the same 81 bytes appear in 5 banks)
-; 1 call site from 1 routine (e.g. DrawEffectSpriteAtWD804_Bank3F)
+; 1 call site from 1 routine (e.g. DrawEffectSpriteAtEffectSpriteX_Bank3F)
 ; reads: hOamNextEntry, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginY, hSpriteOriginX, hSpriteTileOffset, hSpriteAttrXor
 ; writes: hOamNextEntry
 BuildOamFromSpriteTable_Bank3F::

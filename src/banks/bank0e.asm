@@ -803,7 +803,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. Func_037_4AFD_Case04_Case16, Func_037_4AFD_Case0E_Case08, RunWD780StateWhenNotFading_F1_Case04_Case16, RunWD780StateWhenNotFading_F1_Case0E_Case08, ...)
+; 6 call sites from 6 routines (e.g. Func_037_4AFD_Case04_Case16, Func_037_4AFD_Case0E_Case08, RunScreenStateWhenNotFading_F1_Case04_Case16, RunScreenStateWhenNotFading_F1_Case0E_Case08, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E
@@ -962,7 +962,7 @@ Data_00E_5662:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
-; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunWD06AState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case14, ScriptCommandED_Run_Case04_Case1C, ...)
+; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunLinkScreenState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case14, ScriptCommandED_Run_Case04_Case1C, ...)
 ; reads: wArg6, wArg7, wArg5, wSaveByte16, wArg1, wSpeciesRecord, wNameEntryState
 ; writes: wArg6, wArg7, wSpeciesIdLo, wSpeciesIdHi, wNameEntryState, wArg5
 ; points at: wChildRecord, wRecordBufA, wRecordBufB
@@ -1309,7 +1309,7 @@ Jump_00E_5862::
     swap a
     ld b, a
     push bc
-    call FamilyForSpeciesIdWD7F6
+    call FamilyForSpeciesIdArg6
     ld a, [wArg5]
     pop bc
     or a, b
@@ -1899,7 +1899,7 @@ Func_00E_5C11:: ; address name
 ; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case04)
 ; reads: wArg1, wArg2, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wArg5, wArg6, wArg7
-LoadSpeciesBytes8To10ToWD7F5::
+LoadSpeciesBytes8To10ToArg5::
 Func_00E_5C2B:: ; address name
     ld a, [wArg1]
     ld [wSpeciesIdLo], a
@@ -1955,7 +1955,7 @@ Jump_00E_5C8C::
     push bc
     ld a, c
     ld [wArg4], a
-    call LoadWD01AByteWD7F4
+    call LoadWD01AByteArg4
     ld a, [wArg5]
     pop bc
     pop hl
@@ -1997,7 +1997,7 @@ Jump_00E_5CCD::
     push bc
     ld a, c
     ld [wArg4], a
-    call LoadWD01AByteWD7F4
+    call LoadWD01AByteArg4
     ld a, [wArg5]
     cp a, $03
     jr nc, Jump_00E_5D01
@@ -2040,7 +2040,7 @@ Jump_00E_5D0B::
     jr nz, Jump_00E_5CCD
     ret
 
-; when wCB3D is set rolls RollWCB3DChanceOrIncWD7F5 with factor 1, 3 or 10 (then 3) for B = 3, 4, 5, or 5 after counting otherwise (E-0125)
+; when wCB3D is set rolls RollWCB3DChanceOrIncArg5 with factor 1, 3 or 10 (then 3) for B = 3, 4, 5, or 5 after counting otherwise (E-0125)
 ; 1 call site from 1 routine (e.g. RollChildResistancesToWCB43)
 ; reads: wArg5
 ; writes: wArg5
@@ -2068,7 +2068,7 @@ Jump_00E_5D20::
     ld a, $05
 
 Jump_00E_5D36::
-    call RollWCB3DChanceOrIncWD7F5
+    call RollWCB3DChanceOrIncArg5
 
 Jump_00E_5D39::
     pop bc
@@ -2084,7 +2084,7 @@ Jump_00E_5D3F::
 
 Jump_00E_5D43::
     ld a, $0A
-    call RollWCB3DChanceOrIncWD7F5
+    call RollWCB3DChanceOrIncArg5
     cp a, $FF
     jr z, Jump_00E_5D39
     jr Jump_00E_5D3F
@@ -2093,7 +2093,7 @@ Jump_00E_5D43::
 ; 3 call sites from 2 routines (e.g. RollWCB3DForCaseB_5D16, RollWCB3DForCaseB_5D77)
 ; reads: wArg5
 ; writes: wArg5
-RollWCB3DChanceOrIncWD7F5::
+RollWCB3DChanceOrIncArg5::
 Func_00E_5D4E:: ; address name
     ld c, a
     ld hl, wChildRecord + $6D
@@ -2144,7 +2144,7 @@ Jump_00E_5D81::
     cp a, $05
     jr z, Jump_00E_5D8D
     ld a, $02
-    call RollWCB3DChanceOrIncWD7F5
+    call RollWCB3DChanceOrIncArg5
     pop bc
     ret
 
@@ -2245,7 +2245,7 @@ Data_00E_5E02:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 3 call sites from 3 routines (e.g. RollChildResistancesToWCB43, RefreshRecordResistancesFromSpecies, CopyWD01ABytesFromIndexCToDE)
 ; reads: wArg4
 ; writes: wArg5
-LoadWD01AByteWD7F4::
+LoadWD01AByteArg4::
 Func_00E_5E1D:: ; address name
     ld hl, wSpeciesRecord + $12
     ld a, [wArg4]
@@ -2393,7 +2393,7 @@ Data_00E_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wChildRecord
 ApplyBreedingBonusToChildStats::
 Func_00E_5EE8:: ; address name
-    call PersonalityPairValueToWD7F5
+    call PersonalityPairValueToArg5
     ld c, $00
     ld a, [wArg5]
     and a, a
@@ -2522,10 +2522,10 @@ Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
 ; wD7F5 = the 2-bit entry of the matrix Data_00E_603F for the combined personality indexes of wC986 and wCA2B (E-0128)
-; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunWD780StateWhenNotFading_F1_Case04_Case16)
+; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunScreenStateWhenNotFading_F1_Case04_Case16)
 ; writes: wArg5
 ; points at: wRecordBufA, wRecordBufB
-PersonalityPairValueToWD7F5::
+PersonalityPairValueToArg5::
 Func_00E_5F91:: ; address name
     ld hl, wRecordBufA
     call CombinedPersonalityLevelIndexOfRecord
@@ -2600,7 +2600,7 @@ Jump_00E_5FF4::
     ret
 
 ; for the record at HL returns 9 * grade(field $6F) + 3 * grade(field $72) + grade(field $70) (GradeHFFC6_Bank0E); compare CombinedPersonalityLevelIndex (E-0121)
-; 2 call sites from 1 routine (e.g. PersonalityPairValueToWD7F5)
+; 2 call sites from 1 routine (e.g. PersonalityPairValueToArg5)
 ; writes: hTemp0
 CombinedPersonalityLevelIndexOfRecord::
 Func_00E_5FF9:: ; address name
@@ -2609,7 +2609,7 @@ Func_00E_5FF9:: ; address name
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
-    call GradeHFFC6_Bank0E
+    call GradeTemp0_Bank0E
     ld a, $09
     call Multiply8
     ld b, l
@@ -2619,7 +2619,7 @@ Func_00E_5FF9:: ; address name
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
-    call GradeHFFC6_Bank0E
+    call GradeTemp0_Bank0E
     ld a, c
     add a, a
     add a, c
@@ -2630,15 +2630,15 @@ Func_00E_5FF9:: ; address name
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
-    call GradeHFFC6_Bank0E
+    call GradeTemp0_Bank0E
     ld a, c
     add a, b
     ret
 
-; the same 13 bytes as GradeHFFC6 (00:23BD)
+; the same 13 bytes as GradeTemp0 (00:23BD)
 ; 3 call sites from 1 routine (e.g. CombinedPersonalityLevelIndexOfRecord)
 ; reads: hTemp0
-GradeHFFC6_Bank0E::
+GradeTemp0_Bank0E::
 Func_00E_6032:: ; address name
     ldh a, [hTemp0]
     ld c, $00
@@ -2657,7 +2657,7 @@ Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $30, $0C, $03
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0117)
-; 3 call sites from 3 routines (e.g. RollWCB3DChanceOrIncWD7F5, RollWCB3DForCaseB_5D77, RollWCADEFromSpeciesFlag)
+; 3 call sites from 3 routines (e.g. RollWCB3DChanceOrIncArg5, RollWCB3DForCaseB_5D77, RollWCADEFromSpeciesFlag)
 ; reads: wRandomLo
 RandomModulo29::
 Func_00E_611B:: ; address name
@@ -2673,11 +2673,11 @@ Func_00E_611B:: ; address name
     call DivideHLByA
     ret
 
-; loads word field wD7F5 of record A (LoadSRAMRecordWord) and falls into DrawSpeciesAndFamilyIconForHFFC6 (E-0126)
+; loads word field wD7F5 of record A (LoadSRAMRecordWord) and falls into DrawSpeciesAndFamilyIconForTemp0 (E-0126)
 ; 1 call site from 1 routine (e.g. LoadRecordWordFieldAndContinue710A)
 ; reads: wArg5, hTemp0, hTemp1, wArg4
 ; writes: wArg6, wArg7, wWorkBuf
-LoadRecordWordFieldWD7F5AndShowIcon::
+LoadRecordWordFieldArg5AndShowIcon::
 Func_00E_612E:: ; address name
     ld a, c
     push af
@@ -2687,29 +2687,29 @@ Func_00E_612E:: ; address name
     call LoadSRAMRecordWord
 
 ; wD7F6/7 = hFFC6/7, runs Func_00E_615A, then loads the family icon tile for wD7F5 & $0F into tile wD7F4 (E-0126)
-; 1 call site from 1 routine (e.g. DrawSpeciesIconForWCA2BEntry)
+; 1 call site from 1 routine (e.g. DrawSpeciesIconForRecordBufBEntry)
 ; reads: hTemp0, hTemp1, wArg5, wArg4
 ; writes: wArg6, wArg7, wWorkBuf
-DrawSpeciesAndFamilyIconForHFFC6::
+DrawSpeciesAndFamilyIconForTemp0::
 Func_00E_6138:: ; address name
     ldh a, [hTemp0]
     ld [wArg6], a
     ldh a, [hTemp1]
     ld [wArg7], a
-    call FamilyForSpeciesIdWD7F6
+    call FamilyForSpeciesIdArg6
     ld a, [wArg5]
     and a, $0F
     ld [wWorkBuf], a
     ld a, [wArg4]
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     ret
 
 ; wD7F5 = the family (0-10) of species id wD7F6/7 by id ranges (< $1B, $43, $67, $85, $A8, $CA, $F1, $111, $139, $15C, or more) (E-0128)
-; 5 call sites from 4 routines (e.g. ComputeBreedingChild, DrawSpeciesAndFamilyIconForHFFC6, DebugToggleWD7F1Marker, ScriptCommandF6_Run_Case10_Case06_Sub02)
+; 5 call sites from 4 routines (e.g. ComputeBreedingChild, DrawSpeciesAndFamilyIconForTemp0, DebugToggleArg1Marker, ScriptCommandF6_Run_Case10_Case06_Sub02)
 ; reads: wArg6, wArg7
 ; writes: wArg5
-FamilyForSpeciesIdWD7F6::
+FamilyForSpeciesIdArg6::
 Func_00E_615A:: ; address name
     ld a, [wArg6]
     ld l, a

@@ -61,7 +61,7 @@ Func_013_4049:: ; address name
     ret
 
 ; unless wCC44 says otherwise (several special values), starts an event: when wC916 is not $FD it runs script command $09 with a parameter from wCDAE; otherwise (and for the other paths) it jumps through an 11-entry table by wC917 (the handler group: cases far-call bank-$04 dispatchers or, for group 4, dispatch on wC916 through a 257-entry table of talk handlers such as TalkMsg0DD7_OurHeartsAreLike). Group/entry meaning beyond talk handlers is not read (E-0097)
-; 39 call sites from 26 routines (e.g. RunWC8C7Phase_Case02, RunWC8C7Phase_Case01, FieldModeStateDispatch_Shared01_Sub02, FieldModeStateDispatch_Shared01_Sub03, ...)
+; 39 call sites from 26 routines (e.g. RunFieldReturnPhase_Case02, RunFieldReturnPhase_Case01, FieldModeStateDispatch_Shared01_Sub02, FieldModeStateDispatch_Shared01_Sub03, ...)
 ; reads: wMapType, wTalkEventIndex, wKeyWorldFloor, wTalkEventGroup
 ; writes: wScriptStartRequest, wModeState, wTalkEventIndex, wTalkEventGroup, wScriptParam0, wScriptParam1, wScriptCommandType, wScriptRunning, ...
 DispatchTalkEvent::
@@ -984,19 +984,19 @@ Jump_013_4548:: ; address name
     jr c, Jump_013_459F
     ld a, $39
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4582
     ld a, $3A
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4582
     ld a, $3B
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4582
@@ -1039,19 +1039,19 @@ Jump_013_45A6:: ; address name
     jr c, Jump_013_460B
     ld a, $39
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_45E8
     ld a, $3A
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_45E8
     ld a, $3B
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_45E8
@@ -1519,19 +1519,19 @@ Jump_013_4806:: ; address name
     jr c, Jump_013_4856
     ld a, $39
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4848
     ld a, $3A
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4848
     ld a, $3B
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4848
@@ -1689,19 +1689,19 @@ Jump_013_48EA:: ; address name
     jr c, Jump_013_4962
     ld a, $39
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4924
     ld a, $3A
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4924
     ld a, $3B
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4924
@@ -1715,15 +1715,15 @@ Jump_013_4924::
 Jump_013_492B::
     ld a, $39
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld a, $3A
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld a, $3B
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld hl, Script_6133
     call StartScriptAtHL_B13
@@ -2206,7 +2206,7 @@ Jump_013_4C24:: ; address name
     jr c, Jump_013_4C4A
     ld a, $32
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_4C43
@@ -2786,7 +2786,7 @@ Jump_013_4F10:: ; address name
 Jump_013_4F1F::
     ld a, $34
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_4F3C
@@ -3790,7 +3790,7 @@ Jump_013_5497::
 Jump_013_549E::
     ld a, $33
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_5497
@@ -3944,7 +3944,7 @@ Jump_013_5563:: ; address name
     jr c, Jump_013_5596
     ld a, $32
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5582
@@ -4108,7 +4108,7 @@ Jump_013_56BB::
     jr nc, Jump_013_56AD
     ld a, $34
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_56B4
@@ -4627,7 +4627,7 @@ Jump_013_5941:: ; address name
     db $FD, $7D, $00, $00
     dw Talk0B56_WhenYouBreedMonsters
     dw Talk0B6D_BreedingFireAndIce
-    dw Talk0D90_HumphImTerryTerry
+    dw Talk0D90_HumphImTerry
     dw SetWCB8A30IfFlag25AndCountAtLeast50
     dw SetFlagsC9AndCAFrom32And33
     dw SetFlagsCBAndCCFrom35And36
@@ -4691,7 +4691,7 @@ Jump_013_5B8D::
     jr c, Jump_013_5BAC
     ld a, $01
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld hl, Script_4FAF
     call StartScriptAtHL_B13
     ld de, $000D
@@ -4783,7 +4783,7 @@ Func_013_5C0B:: ; address name
 Jump_013_5C36::
     ld a, $02
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5C4D
@@ -4820,7 +4820,7 @@ Jump_013_5C6D::
 Jump_013_5C84::
     ld a, $04
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5C9B
@@ -4848,7 +4848,7 @@ Jump_013_5CA8::
 Jump_013_5CBF::
     ld a, $1B
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5CD6
@@ -4892,7 +4892,7 @@ Jump_013_5D11::
 Jump_013_5D18::
     ld a, $1C
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5D2F
@@ -5190,7 +5190,7 @@ Jump_013_5F0C::
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall FindPartyIndexOfSpeciesHFFC6
+    farcall FindPartyIndexOfSpeciesTemp0
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5F28
@@ -5960,7 +5960,7 @@ Jump_013_6438::
     call StartScriptAtHL_B13
     ld a, $01
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $20
     ld [wObject5 + $4], a
     ld a, $50
@@ -6032,7 +6032,7 @@ Jump_013_64CF::
 Jump_013_64D6::
     ld a, $02
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld de, $0016
     call TestFlagBit
     jr c, Jump_013_64EF
@@ -6646,7 +6646,7 @@ Jump_013_68E2:: ; address name
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall FindPartyIndexOfSpeciesHFFC6
+    farcall FindPartyIndexOfSpeciesTemp0
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_691C
@@ -6817,7 +6817,7 @@ Jump_013_69D3::
 ; writes: hTemp1, hTemp2, hTemp3
 DispatchTalkEvent_Case01_Case33::
 Jump_013_69DA:: ; address name
-    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_013_69EE
@@ -6840,7 +6840,7 @@ Jump_013_69EE::
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ret
 
 ; entry 54 of the `rst $00` table in DispatchTalkEvent_Case01
@@ -7020,7 +7020,7 @@ Jump_013_6AEF::
     ld de, $00CD
     call TestFlagBit
     jr c, Jump_013_6B2B
-    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_013_6B0B
@@ -7035,7 +7035,7 @@ Jump_013_6B0B::
     ldh [hTemp2], a
     ld a, $01
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld hl, $0B43
     call StartMessageCommand09HL_B13
     ld de, $00CD
@@ -8008,7 +8008,7 @@ Jump_013_704D::
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall FindPartyIndexOfSpeciesHFFC6
+    farcall FindPartyIndexOfSpeciesTemp0
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_7046
@@ -8720,7 +8720,7 @@ Jump_013_75DE::
 Jump_013_75E5::
     ld a, $07
     ldh [hTemp0], a
-    farcall KeyListHasKindHFFC6
+    farcall KeyListHasKindTemp0
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_7624
@@ -8744,7 +8744,7 @@ Jump_013_7607::
     ldh [hTemp1], a
 
 Jump_013_7617::
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld hl, Script_58C3
     call StartScriptAtHL_B13
     ret
@@ -8784,7 +8784,7 @@ Jump_013_765E::
 Jump_013_7665::
     ld a, $09
     ldh [hTemp0], a
-    farcall KeyListHasKindHFFC6
+    farcall KeyListHasKindTemp0
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_76A4
@@ -8808,7 +8808,7 @@ Jump_013_7687::
     ldh [hTemp1], a
 
 Jump_013_7697::
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld hl, Script_58EF
     call StartScriptAtHL_B13
     ret
@@ -9105,7 +9105,7 @@ Jump_013_78ED::
     ld de, $0029
     call TestFlagBit
     jr c, Jump_013_78E6
-    farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_013_7909
@@ -9704,7 +9704,7 @@ Jump_013_7EFB::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0D90, whose string begins 'Humph I'm Terry. Terry I'm a'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1, hTemp0
-Talk0D90_HumphImTerryTerry:: ; heuristic: target of a pointer table; C0
+Talk0D90_HumphImTerry:: ; heuristic: target of a pointer table; C0
 Func_013_7F02:: ; address name
     ld de, $0038
     call TestFlagBit

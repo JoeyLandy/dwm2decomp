@@ -1580,10 +1580,10 @@ Data_081_5451:: ; heuristic: target of a monotone pointer table; C0
     db $FF, $0A
 
 ; copies three bytes of table $555D entry ($5486[wD0A6] * $129 + 3 * (wD0E8 - 1)) to wD0EA (E-0121)
-; 1 call site from 1 routine (e.g. UnpackLinkRecordToWD09D)
+; 1 call site from 1 routine (e.g. UnpackLinkRecordToWorkBuf)
 ; reads: wWorkBuf, wLinkMenuEntry
 ; points at: wLinkMenuEntryBytes
-LoadTable555DEntryForWD0A6ToWD0EA::
+LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes::
 Func_081_5453:: ; address name
     ld a, [wWorkBuf + $9]
     ld l, a
@@ -1621,7 +1621,7 @@ Func_081_5453:: ; address name
     ld [de], a
     ret
 
-; E-0151 (C1: LoadTable555DEntryForWD0A6ToWD0EA reads the byte $5486 + wWorkBuf+9 and uses it as the row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31).
+; E-0151 (C1: LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes reads the byte $5486 + wWorkBuf+9 and uses it as the row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31).
 ; record: row of ExpTable81 (0-31)
 ExpCurveIndex81::
 Data_081_5486:: ; heuristic: start of a structured table; C0
@@ -1841,7 +1841,7 @@ Data_081_5486:: ; heuristic: start of a structured table; C0
     db $1F ; id 213
     db $1E ; id 214
 
-; E-0151 (C1: LoadTable555DEntryForWD0A6ToWD0EA copies the 3 bytes at $555D + $129 * row + 3 * (wLinkMenuEntry - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different values; 31 of the 32 rows rise from 0).
+; E-0151 (C1: LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes copies the 3 bytes at $555D + $129 * row + 3 * (wLinkMenuEntry - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different values; 31 of the 32 rows rise from 0).
 ; record: 24-bit values for levels 1-99
 ExpTable81::
 Data_081_555D:: ; heuristic: start of a structured table; C0

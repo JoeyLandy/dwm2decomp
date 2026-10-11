@@ -68,7 +68,7 @@ Func_039_4055:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld c, a
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, Jump_039_406A
     jr TargetRandomFoe
 
@@ -94,7 +94,7 @@ Func_039_4078:: ; address name
 
 Jump_039_4082::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, Jump_039_408C
     inc c
     dec b
@@ -122,7 +122,7 @@ Func_039_40A2:: ; address name
 
 Jump_039_40AA::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, Jump_039_40B4
     inc c
     dec b
@@ -211,7 +211,7 @@ Jump_039_4153::
     and a, $07
     cp a, e
     jr z, Jump_039_4153
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_4153
     and a, $03
     cp a, $03
@@ -232,7 +232,7 @@ Jump_039_417C::
 
 Jump_039_4181::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_419A
     ld a, d
     cp a, $FF
@@ -1336,7 +1336,7 @@ Func_039_5390:: ; address name
 
 Jump_039_53A7::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_53B2
     call SlotStatus4Bits23
     jr z, Jump_039_53BC
@@ -1355,7 +1355,7 @@ Jump_039_53BC::
 
 Jump_039_53C2::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_53CD
     call AnySlotStatusMaskSet
     jr z, Jump_039_53D7
@@ -1375,7 +1375,7 @@ Jump_039_53D7::
 Jump_039_53DD::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_540D
     call AnySlotStatusMaskSet
     jr nz, Jump_039_540D
@@ -1409,12 +1409,12 @@ Jump_039_540D::
 
 Jump_039_5415::
     pop bc
-    call MultiplyDamageBy50IfWD8A7Bit0
+    call MultiplyDamageBy50IfSlotDamageFlagsBit0
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
     ld h, a
-    call StoreHLToWD874SlotC
+    call StoreHLToTargetEstimatesSlotC
     inc c
     dec b
     jr nz, Jump_039_53DD
@@ -1449,7 +1449,7 @@ Func_039_543C:: ; address name
 
 Jump_039_5453::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_545E
     call SlotStatus4Bits23
     jr z, Jump_039_5468
@@ -1468,7 +1468,7 @@ Jump_039_5468::
 
 Jump_039_546E::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_547E
     call AnySlotStatusMaskSet
     jr z, Jump_039_5488
@@ -1549,12 +1549,12 @@ Jump_039_54E5::
 
 Jump_039_54ED::
     pop bc
-    call MultiplyDamageBy50IfWD8A7Bit0
+    call MultiplyDamageBy50IfSlotDamageFlagsBit0
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
     ld h, a
-    call StoreHLToWD874SlotC
+    call StoreHLToTargetEstimatesSlotC
     inc c
     dec b
     jr nz, Jump_039_54AF
@@ -1587,7 +1587,7 @@ Jump_039_551C::
     ld a, d
     ld [wNameSlot], a
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, Jump_039_5532
     ld bc, $0000
     ld hl, $0000
@@ -1676,7 +1676,7 @@ Jump_039_55A8::
     ld a, b
     ld [wNameSlot], a
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_55E4
     ld hl, wBattleArg0
     inc [hl]
@@ -1746,7 +1746,7 @@ Jump_039_561A::
     ld a, d
     ld [wBattleArg1], a
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_566D
     ld a, e
     ld hl, wBattleMaxHP
@@ -1911,7 +1911,7 @@ Func_039_5716:: ; address name
 
 Jump_039_5728::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5738
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -2046,7 +2046,7 @@ Func_039_57D8:: ; address name
 
 Jump_039_57E9::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5831
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -2130,7 +2130,7 @@ Func_039_5857:: ; address name
 Jump_039_5867::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5891
     call GetBattleDEF_Bank39
     push hl
@@ -2198,7 +2198,7 @@ Func_039_58B7:: ; address name
 
 Jump_039_58CD::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5909
     ldh [hTemp2], a
     ld hl, wBattleStatus2
@@ -2260,7 +2260,7 @@ Func_039_5911:: ; address name
 
 Jump_039_5927::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5963
     ldh [hTemp2], a
     ld hl, wBattleStatus2
@@ -2320,7 +2320,7 @@ Func_039_596B:: ; address name
 Jump_039_597B::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_59A5
     call GetBattleAGL_Bank39
     push hl
@@ -2387,7 +2387,7 @@ Func_039_59CB:: ; address name
 
 Jump_039_59E1::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5A1F
     ldh [hTemp2], a
     call GetBattleDEF_Bank39
@@ -2454,7 +2454,7 @@ Func_039_5A27:: ; address name
 Jump_039_5A40::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5A7B
     ldh [hTemp3], a
     cp a, e
@@ -2518,7 +2518,7 @@ Func_039_5A84:: ; address name
 
 Jump_039_5A9C::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5AD3
     ldh [hTemp2], a
     call ChooseTarget_MouthShut_Sub01
@@ -2576,7 +2576,7 @@ Func_039_5ADB:: ; address name
 
 Jump_039_5AF3::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5B38
     ldh [hTemp2], a
     call GetBattleDEF_Bank39
@@ -2647,7 +2647,7 @@ Func_039_5B40:: ; address name
 
 Jump_039_5B58::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5B9D
     ldh [hTemp2], a
     ld hl, wSlotDamageFlags
@@ -2712,7 +2712,7 @@ Func_039_5BA5:: ; address name
 
 Jump_039_5BBB::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5BF1
     ldh [hTemp2], a
     ld hl, wBattleStatus
@@ -2770,7 +2770,7 @@ Func_039_5BF9:: ; address name
 
 Jump_039_5C0F::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5C3B
     ldh [hTemp2], a
     call GetBattleMP_Bank39
@@ -2824,7 +2824,7 @@ Func_039_5C43:: ; address name
 Jump_039_5C59::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5C8E
     ldh [hTemp3], a
     ld hl, wSlotDamageFlags
@@ -2856,7 +2856,7 @@ Jump_039_5C8E::
     inc c
     dec b
     jr nz, Jump_039_5C59
-    call SetActorTargetFromHFFC6OrHFFC9
+    call SetActorTargetFromTemp0OrTemp3
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -2952,7 +2952,7 @@ Func_039_5CCD:: ; address name
 
 Jump_039_5CE3::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5D11
     ldh [hTemp2], a
     ld hl, wBattleStatus
@@ -3004,7 +3004,7 @@ Func_039_5D19:: ; address name
 
 Jump_039_5D2F::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5D5F
     ldh [hTemp2], a
     ld hl, wBattleStatus
@@ -3058,7 +3058,7 @@ Func_039_5D67:: ; address name
 
 Jump_039_5D7D::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5DB3
     ldh [hTemp2], a
     ld hl, wBattleStatus
@@ -3118,7 +3118,7 @@ Func_039_5DBB:: ; address name
 Jump_039_5DD2::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5DFA
     ldh [hTemp3], a
     call GetBattleMaxHP_Bank39
@@ -3145,7 +3145,7 @@ Jump_039_5DFA::
     inc c
     dec b
     jr nz, Jump_039_5DD2
-    call SetActorTargetFromHFFC6OrHFFC9
+    call SetActorTargetFromTemp0OrTemp3
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -3173,7 +3173,7 @@ Func_039_5E03:: ; address name
 
 Jump_039_5E20::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5E53
     ld hl, wBattleStatus2
     ldh [hTemp5], a
@@ -3217,7 +3217,7 @@ Jump_039_5E53::
 Jump_039_5E65::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5EA5
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -3266,7 +3266,7 @@ Jump_039_5EAC::
 Jump_039_5EB1::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5ED1
     ldh [hTemp5], a
     call GetBattleHP_Bank39
@@ -3299,7 +3299,7 @@ Jump_039_5ED8::
 
 Jump_039_5EE0::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_5EF3
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank39
@@ -3382,7 +3382,7 @@ Jump_039_5F3A::
 Jump_039_5F6B::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jp c, Jump_039_5FF2
     ldh [hTemp3], a
     ld hl, wBattleStatus2
@@ -3498,7 +3498,7 @@ Func_039_6014:: ; address name
 Jump_039_602D::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6079
     ldh [hTemp3], a
     ld hl, wBattleStatus6
@@ -3556,7 +3556,7 @@ Jump_039_6079::
 Jump_039_608A::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_60B6
     ldh [hTemp3], a
     ld hl, wBattleStatus7
@@ -3593,7 +3593,7 @@ Jump_039_60B6::
 Jump_039_60C6::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_60E4
     ldh [hTemp3], a
     call GetBattleHP_Bank39
@@ -3616,7 +3616,7 @@ Jump_039_60E4::
     jr nz, Jump_039_60C6
 
 Jump_039_60E9::
-    call SetActorTargetFromHFFC6OrHFFC9
+    call SetActorTargetFromTemp0OrTemp3
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -3641,7 +3641,7 @@ Func_039_60ED:: ; address name
 
 Jump_039_6105::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6143
     ldh [hTemp2], a
     ld hl, wBattleStatus
@@ -3705,7 +3705,7 @@ Func_039_614B:: ; address name
 
 Jump_039_6161::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6199
     ldh [hTemp2], a
     call GetBattleMP_Bank39
@@ -3766,7 +3766,7 @@ Func_039_61A1:: ; address name
 
 Jump_039_61BD::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_621A
     ldh [hTemp2], a
     ld hl, wBattleStatus3
@@ -3847,7 +3847,7 @@ Func_039_6222:: ; address name
 
 Jump_039_623E::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_629B
     ldh [hTemp2], a
     ld hl, wBattleStatus3
@@ -3928,7 +3928,7 @@ Func_039_62A3:: ; address name
 
 Jump_039_62BF::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_631C
     ldh [hTemp2], a
     ld hl, wBattleStatus3
@@ -4010,7 +4010,7 @@ Func_039_6324:: ; address name
 
 Jump_039_6340::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_639D
     ldh [hTemp2], a
     ld hl, wBattleStatus3
@@ -4091,7 +4091,7 @@ Func_039_63A5:: ; address name
 
 Jump_039_63C1::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_640E
     ldh [hTemp2], a
     ld a, c
@@ -4166,7 +4166,7 @@ Func_039_6416:: ; address name
 
 Jump_039_6435::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6440
     call SlotStatus4Bits23
     jr z, Jump_039_644A
@@ -4185,7 +4185,7 @@ Jump_039_644A::
 
 Jump_039_6450::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6460
     call AnySlotStatusMaskSet
     jr z, Jump_039_646A
@@ -4201,7 +4201,7 @@ Jump_039_6460::
 
 Jump_039_646A::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_64C2
     call TestSlotStatus2Bit3OrStatus5Bits67
     jr nz, Jump_039_64C2
@@ -4289,7 +4289,7 @@ Func_039_64DB:: ; address name
 
 Jump_039_64F7::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6554
     ldh [hTemp2], a
     ld hl, wBattleStatus3
@@ -4371,7 +4371,7 @@ Func_039_655C:: ; address name
 
 Jump_039_6578::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_65C5
     ldh [hTemp2], a
     ld a, c
@@ -4451,7 +4451,7 @@ Func_039_65CD:: ; address name
 Jump_039_65F4::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jp c, Jump_039_666F
     ldh [hTemp3], a
     ld hl, wSlotResistances + $4
@@ -4560,7 +4560,7 @@ Func_039_6691:: ; address name
 
 Jump_039_66A9::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_66BD
     ld hl, hTemp0
     ld a, [hl]
@@ -4604,7 +4604,7 @@ Func_039_66C5:: ; address name
 
 Jump_039_66EF::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6722
     ld hl, hTemp0
     ld e, [hl]
@@ -4740,7 +4740,7 @@ Func_039_67AD:: ; address name
 
 Jump_039_67DB::
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_680E
     call GetBattleHP_Bank39
     push hl
@@ -4792,7 +4792,7 @@ Jump_039_680E::
 
 Jump_039_6820::
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6895
     ld hl, hTemp1
     ld a, [hl+]
@@ -4915,7 +4915,7 @@ Func_039_68B0:: ; address name
 
 Jump_039_68DA::
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_68F1
     call GetBattleMaxHP_Bank39
     ldh a, [hTemp4]
@@ -4947,7 +4947,7 @@ Jump_039_68F1::
 
 Jump_039_690A::
     ld a, e
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_693C
     call GetBattleHP_Bank39
     ldh a, [hTemp4]
@@ -5378,7 +5378,7 @@ Func_039_6A25:: ; address name
 
 Jump_039_6A41::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6A8E
     ldh [hTemp2], a
     ld a, c
@@ -5469,7 +5469,7 @@ Func_039_6A9C:: ; address name
 
 Jump_039_6AB4::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6AF2
     ldh [hTemp2], a
     ld hl, wBattleStatus
@@ -5555,7 +5555,7 @@ Func_039_6B0A:: ; address name
 Jump_039_6B1D::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6B41
     call GetBattleDEF_Bank39
     push hl
@@ -5609,7 +5609,7 @@ Func_039_6B5D:: ; address name
 Jump_039_6B70::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6B94
     call GetBattleAGL_Bank39
     push hl
@@ -5668,7 +5668,7 @@ Jump_039_6BE3::
 
 Jump_039_6BF4::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6C0E
     ld a, [hl]
     and a, d
@@ -5714,7 +5714,7 @@ Jump_039_6C30::
 
 Jump_039_6C45::
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6C67
     ld h, d
     ld l, e
@@ -5766,7 +5766,7 @@ Func_039_6C75:: ; address name
 Jump_039_6C8A::
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6CD4
     call GetBattleHP_Bank39
     push hl
@@ -5851,7 +5851,7 @@ Jump_039_6CFE::
     cp a, c
     jr z, Jump_039_6D4E
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_6D4E
     call GetBattleMP_Bank39
     push hl
@@ -5943,7 +5943,7 @@ Func_039_6D74:: ; address name
     ld c, a
 
 Jump_039_6D82::
-    call StoreSlotHPPlusDEFToWD874
+    call StoreSlotHPPlusDEFToTargetEstimates
     inc c
     dec b
     jr nz, Jump_039_6D82
@@ -6000,11 +6000,11 @@ Jump_039_6DBC::
 ; 2 call sites from 2 routines (e.g. EstimateAndPickWeakestTarget, EstimateThreeTargets)
 ; reads: hTemp1
 ; points at: wBattleStatus6, wTargetEstimates
-StoreSlotHPPlusDEFToWD874::
+StoreSlotHPPlusDEFToTargetEstimates::
 Func_039_6DC8:: ; address name
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
-    jr c, StoreFFFFToWD874SlotC
+    call CarryUnlessBattleSlotOutSlotEmpty
+    jr c, StoreFFFFToTargetEstimatesSlotC
     call GetBattleHP_Bank39
     push hl
     ld a, c
@@ -6026,19 +6026,19 @@ Func_039_6DC8:: ; address name
 Jump_039_6DED::
     pop de
     add hl, de
-    jr StoreHLToWD874SlotC
+    jr StoreHLToTargetEstimatesSlotC
 
-; HL = $FFFF, then falls into StoreHLToWD874SlotC (E-0122)
+; HL = $FFFF, then falls into StoreHLToTargetEstimatesSlotC (E-0122)
 ; 1 call site from 1 routine (e.g. EstimateThreeTargets)
 ; points at: wTargetEstimates
-StoreFFFFToWD874SlotC::
+StoreFFFFToTargetEstimatesSlotC::
 Func_039_6DF1:: ; address name
     ld hl, $FFFF
 
 ; stores HL in the word wD874[C & 3] (E-0122)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
 ; points at: wTargetEstimates
-StoreHLToWD874SlotC::
+StoreHLToTargetEstimatesSlotC::
 Func_039_6DF4:: ; address name
     ld a, c
     and a, $03
@@ -6130,7 +6130,7 @@ Jump_039_6E5F::
 ; reads: wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleDamageLo, wBattleDamageHi
 ; points at: wSlotDamageFlags
-MultiplyDamageBy50IfWD8A7Bit0::
+MultiplyDamageBy50IfSlotDamageFlagsBit0::
 Func_039_6E61:: ; address name
     ld a, c
     ld hl, wSlotDamageFlags
@@ -6180,11 +6180,11 @@ Jump_039_6E95::
     ld a, [hl]
     and a, $0C
     jr nz, Jump_039_6EAB
-    call StoreSlotHPPlusDEFToWD874
+    call StoreSlotHPPlusDEFToTargetEstimates
     jr Jump_039_6EAE
 
 Jump_039_6EAB::
-    call StoreFFFFToWD874SlotC
+    call StoreFFFFToTargetEstimatesSlotC
 
 Jump_039_6EAE::
     inc c
@@ -6372,7 +6372,7 @@ Jump_039_6FC0::
 ; 5 call sites from 5 routines (e.g. TargetRandomFoeOfFamilyD, ChooseTarget_Ramming, ChooseTarget_MetalCut, TargetWeakestFoeOfFamilyD, ...)
 ; reads: wBattleActor, hTemp0, hTemp3, hTempA
 ; points at: wBattleTargetChoice
-SetActorTargetFromHFFC6OrHFFC9::
+SetActorTargetFromTemp0OrTemp3::
 Func_039_6FC8:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -6518,7 +6518,7 @@ Jump_039_7084::
     ld [hl], b
     ret
 
-; D = family: among the actor's present opposite slots whose species family (LoadSpeciesFamily) is D, targets the one with the smallest HP + DEF; when none matches, the last present foe (hFFC9) is used (SetActorTargetFromHFFC6OrHFFC9). Used by the family-slaying moves' target routines (E-0096)
+; D = family: among the actor's present opposite slots whose species family (LoadSpeciesFamily) is D, targets the one with the smallest HP + DEF; when none matches, the last present foe (hFFC9) is used (SetActorTargetFromTemp0OrTemp3). Used by the family-slaying moves' target routines (E-0096)
 ; 9 call sites from 9 routines (e.g. ChooseTarget_CleanCut, ChooseTarget_ZombieCut, ChooseTarget_DevilCut, ChooseTarget_Shears, ...)
 ; reads: wBattleActor, wSpeciesRecord, hTemp1, hTemp2, hTemp3
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wSpeciesIdLo, wSpeciesIdHi
@@ -6541,7 +6541,7 @@ Jump_039_70A9::
     ld a, c
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_70F4
     ldh [hTemp3], a
     ld hl, wBattleMonsterId
@@ -6584,7 +6584,7 @@ Jump_039_70F4::
     inc c
     dec b
     jr nz, Jump_039_70A9
-    call SetActorTargetFromHFFC6OrHFFC9
+    call SetActorTargetFromTemp0OrTemp3
     ret
 
 ; D = family: picks among the actor's present opposite slots whose species family is D, using AdvanceRandom when more than one matches (the choice rule is not read to the end); falls back to the last present foe; used by ChooseTarget routines of family-slaying moves (CleanCut, ZombieCut, DevilCut, Shears, ...) (E-0096)
@@ -6608,7 +6608,7 @@ Jump_039_710F::
     ld a, c
     push bc
     ld a, c
-    call CarryUnlessWDA63SlotEmpty
+    call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_039_714C
     ldh [hTemp3], a
     ld hl, wBattleMonsterId
@@ -6641,7 +6641,7 @@ Jump_039_714C::
     inc c
     dec b
     jr nz, Jump_039_710F
-    call SetActorTargetFromHFFC6OrHFFC9
+    call SetActorTargetFromTemp0OrTemp3
     ret
 
 ; only called from ChooseTarget_Blaze (E-0047)
@@ -6767,7 +6767,7 @@ Func_039_71E5:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0060)
-; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_SquallHit_66C5, StoreSlotHPPlusDEFToWD874, ChooseTarget_SickLick, ...)
+; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_SquallHit_66C5, StoreSlotHPPlusDEFToTargetEstimates, ChooseTarget_SickLick, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank39::
 Func_039_71EA:: ; address name
@@ -6817,7 +6817,7 @@ Func_039_7203:: ; address name
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotAIMode
-ReadWDA53Indexed_Bank39:: ; heuristic: follows a terminator; C0
+ReadSlotAIModeIndexed_Bank39:: ; heuristic: follows a terminator; C0
 Func_039_7208:: ; address name
     ld hl, wSlotAIMode
     add_a_to_hl

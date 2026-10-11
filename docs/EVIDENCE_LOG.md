@@ -1878,6 +1878,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Whether these change play depends on callers and on reachable game states, which are not traced. ROM bytes are unchanged; these are observations, not fixes.
 - Binary verification: build/run154 PASS, 0 differing bytes; tests OK (now 47 behaviour tests).
 
+### E-0155 — Routine names use the RAM names
+
+- Kind: PROJECT DECISION (mechanical rename; no new semantic claim beyond the RAM names' own evidence).
+- **Rule.** In 508 routine and family names, each token WCxxx/WDxxx/HFFxx was replaced by the name of that RAM address (E-0132 to E-0137), without its w/h prefix, and a CamelCase word doubled by the substitution was collapsed. For example:
+  - ReadJoypadIntoWC560 now uses the joypad variable's name;
+  - SetWDA43AndWDA4BForWCFD4 → SetSlotTacticAndSlotLastTacticForCommandMonster;
+  - RemoveCFromWD895Queue → RemoveCFromActionQueue.
+- **Safeguards.**
+  - Tokens of RAM bytes whose notes say other routines borrow them as scratch (for example wStepPtrLo) are kept as addresses, because the RAM name would mislead there.
+  - No collisions arose.
+  - The old names are replaced in config/names.json, name_families.json, symbols.json and tables.json notes. The evidence log keeps the names as they were when written.
+- **Result.** Of 9,100 code labels, 148 still carry a raw RAM token (borrowed scratch bytes, and addresses inside sized buffers that have no exact name); 5,337 remain structural (Parent_CaseNN / _SubNN / _SharedNN).
+- Binary verification: build/run155 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

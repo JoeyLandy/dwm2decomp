@@ -1354,7 +1354,7 @@
           "reason": "field sprite graphics stream"
         }
       ],
-      "note": "E-0143 (C1: DecompressGraphicsHFFC6ToHFFCA with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode)."
+      "note": "E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode)."
     },
     {
       "bank": "04",
@@ -1371,7 +1371,7 @@
           "reason": "field sprite graphics stream"
         }
       ],
-      "note": "E-0143 (C1: DecompressGraphicsHFFC6ToHFFCA with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61."
+      "note": "E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61."
     },
     {
       "bank": "04",
@@ -1386,7 +1386,7 @@
           "name": "palette number in FieldSpritePalettes"
         }
       ],
-      "note": "E-0143 (C1: on CGB, with hFFC8 non-zero, DecompressGraphicsHFFC6ToHFFCA reads the byte $4A46 + hFFC6 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hFFC9; values 0-20)."
+      "note": "E-0143 (C1: on CGB, with hFFC8 non-zero, DecompressGraphicsTemp0ToTemp4 reads the byte $4A46 + hFFC6 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hFFC9; values 0-20)."
     },
     {
       "bank": "7E",
@@ -1401,7 +1401,7 @@
           "name": "one CGB OBJ palette: 4 BGR555 colours"
         }
       ],
-      "note": "E-0143 (C1: the palettes FieldSpritePaletteIndex selects; DecompressGraphicsHFFC6ToHFFCA copies one to wOBJPaletteBuffer + 8 * hFFC9)."
+      "note": "E-0143 (C1: the palettes FieldSpritePaletteIndex selects; DecompressGraphicsTemp0ToTemp4 copies one to wOBJPaletteBuffer + 8 * hFFC9)."
     },
     {
       "bank": "27",
@@ -1417,7 +1417,7 @@
           "name": "one CGB OBJ palette: 4 BGR555 colours"
         }
       ],
-      "note": "E-0143 (C1: on CGB, with hFFC8 = 0, DecompressGraphicsHFFC6ToHFFCA copies the 8 bytes at 27:$7328 + 8 * monster id to wOBJPaletteBuffer + 8 * hFFC9; the count matches MonsterSpriteTable)."
+      "note": "E-0143 (C1: on CGB, with hFFC8 = 0, DecompressGraphicsTemp0ToTemp4 copies the 8 bytes at 27:$7328 + 8 * monster id to wOBJPaletteBuffer + 8 * hFFC9; the count matches MonsterSpriteTable)."
     },
     {
       "bank": "61",
@@ -1541,7 +1541,7 @@
           "name": "its ROM bank"
         }
       ],
-      "note": "E-0145 (C1: LoadAreaGraphicsForWD7FC decompresses the far pointer at $5D78 + 3 * wAreaGraphicsIndex to vTiles2; two entries decode, the bytes after them are AreaPaletteTable)."
+      "note": "E-0145 (C1: LoadAreaGraphicsForAreaGraphicsIndex decompresses the far pointer at $5D78 + 3 * wAreaGraphicsIndex to vTiles2; two entries decode, the bytes after them are AreaPaletteTable)."
     },
     {
       "bank": "1D",
@@ -1562,7 +1562,7 @@
           "name": "its ROM bank"
         }
       ],
-      "note": "E-0145 (C1: LoadAreaGraphicsForWD7FC copies $40 bytes from the far pointer at $5D7E + 3 * wAreaGraphicsIndex to wBGPaletteBuffer)."
+      "note": "E-0145 (C1: LoadAreaGraphicsForAreaGraphicsIndex copies $40 bytes from the far pointer at $5D7E + 3 * wAreaGraphicsIndex to wBGPaletteBuffer)."
     },
     {
       "bank": "48",
@@ -1900,7 +1900,7 @@
           "name": "row of ExpTable81 (0-31)"
         }
       ],
-      "note": "E-0151 (C1: LoadTable555DEntryForWD0A6ToWD0EA reads the byte $5486 + wWorkBuf+9 and uses it as the row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31)."
+      "note": "E-0151 (C1: LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes reads the byte $5486 + wWorkBuf+9 and uses it as the row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31)."
     },
     {
       "bank": "81",
@@ -1915,7 +1915,7 @@
           "name": "24-bit values for levels 1-99"
         }
       ],
-      "note": "E-0151 (C1: LoadTable555DEntryForWD0A6ToWD0EA copies the 3 bytes at $555D + $129 * row + 3 * (wLinkMenuEntry - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different values; 31 of the 32 rows rise from 0)."
+      "note": "E-0151 (C1: LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes copies the 3 bytes at $555D + $129 * row + 3 * (wLinkMenuEntry - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different values; 31 of the 32 rows rise from 0)."
     },
     {
       "bank": "84",

@@ -378,7 +378,7 @@ Jump_024_4271:: ; address name
 
 Jump_024_4284::
     farcall CountRecordsInUse
-    farcall LoadWD7FFFromWC7C7Table
+    farcall LoadRecordCapacityFromFarmLevelTable
     ld a, [wRecordCapacity]
     ld b, a
     ld a, [wRecordsInUse]
@@ -406,7 +406,7 @@ Jump_024_42A4::
 ; points at: sRecords, wRecordBufB
 GameMode6_Update_Case02_Case01::
 Jump_024_42B3:: ; address name
-    farcall LoadWD7FFFromWC7C7Table
+    farcall LoadRecordCapacityFromFarmLevelTable
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -528,7 +528,7 @@ Jump_024_4369::
 
 Jump_024_437D::
     call GameMode6_Update_Shared02
-    call CopyWCA2CNameToWC130
+    call CopyWCA2CNameToTextBuf0
     ld a, $06
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenStep]
@@ -978,7 +978,7 @@ Jump_024_4621::
     ld b, $BC
     ld hl, Data_024_5AAE
     call StoreBAtWordTableEntry_Bank24_52CE
-    farcall CopyWD789Cell5NameToWC130
+    farcall CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1147,7 +1147,7 @@ Jump_024_4724:: ; address name
 ; points at: sRecords, wRecordBufB
 GameMode6_Update_Case04_Case0C::
 Jump_024_475C:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -1266,7 +1266,7 @@ Jump_024_480A:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    farcall DrawPageOfPagesAtWD7F1_Bank1E
+    farcall DrawPageOfPagesAtArg1_Bank1E
 
 Jump_024_482E::
     call BGMapAddressAtScroll_Bank24
@@ -1357,7 +1357,7 @@ Jump_024_48AE::
     ld b, $BC
     ld hl, Data_024_5AAE
     call StoreBAtWordTableEntry_Bank24_52CE
-    farcall CopyWD789Cell5NameToWC130
+    farcall CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
     add a, $02
     ld [wScreenStep], a
@@ -1472,7 +1472,7 @@ Jump_024_496E::
     ret
 
 Jump_024_498D::
-    farcall SetWD7F5ToWD789Cell4
+    farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -1521,7 +1521,7 @@ Jump_024_49AF:: ; address name
 ; points at: sRecords, wRecordBufB
 GameMode6_Update_Case05_Case0A::
 Jump_024_49E8:: ; address name
-    farcall SetWD7F5ToWD789Cell4
+    farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -1703,7 +1703,7 @@ Jump_024_4B0E:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    farcall DrawPageOfPagesAtWD7F1_Bank1E
+    farcall DrawPageOfPagesAtArg1_Bank1E
 
 Jump_024_4B38::
     ld a, [wScreenStep]
@@ -1918,7 +1918,7 @@ Jump_024_4CA0:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    farcall DrawPageOfPagesAtWD7F1_Bank1E
+    farcall DrawPageOfPagesAtArg1_Bank1E
 
 Jump_024_4CCA::
     ld a, [wScreenStep]
@@ -2342,7 +2342,7 @@ Func_024_4EE8:: ; address name
 ; HL = wCA2C, then copies up to 10 name bytes to wC130 with a $F0 terminator (E-0124)
 ; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case05, Func_024_5553_Case08)
 ; points at: wTextBuf0
-CopyWCA2CNameToWC130::
+CopyWCA2CNameToTextBuf0::
 Func_024_4F0C:: ; address name
     ld hl, wRecordBufB + $1
     jp Jump_024_4F15
@@ -2350,7 +2350,7 @@ Func_024_4F0C:: ; address name
 ; copies up to 10 name bytes from wC987 (stopping at $F0) to wC130 with a $F0 terminator (E-0124)
 ; 1 call site from 1 routine (e.g. Func_024_5434_Case08)
 ; points at: wTextBuf0
-CopyWC987NameToWC130::
+CopyWC987NameToTextBuf0::
 Func_024_4F12:: ; address name
     ld hl, wRecordBufA + $1
 
@@ -2473,14 +2473,14 @@ Func_024_4FA3:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     ld hl, wNameGlyphBuf
@@ -2726,7 +2726,7 @@ Jump_024_513A::
     ld [wArg4], a
     ld a, $01
     ld [wArg7], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     ret
 
 ; only called from GameMode6_Init_Sub01 (E-0047)
@@ -2984,7 +2984,7 @@ Func_024_52CE:: ; address name
 ; copies the $A5 bytes at Data_024_52ED to wCA2B (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wRecordBufB
-CopyDefaultRecordToWCA2B:: ; heuristic: follows a terminator; C0
+CopyDefaultRecordToRecordBufB:: ; heuristic: follows a terminator; C0
 Func_024_52DE:: ; address name
     ld hl, Data_024_52ED
     ld de, wRecordBufB
@@ -3228,7 +3228,7 @@ Jump_024_54D2::
 ; writes: wScreenSubStep
 Func_024_5434_Case08::
 Jump_024_54DA:: ; address name
-    call CopyWC987NameToWC130
+    call CopyWC987NameToTextBuf0
     ld a, $03
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenSubStep]
@@ -3447,7 +3447,7 @@ Jump_024_55FB::
 ; writes: wScreenSubStep
 Func_024_5553_Case08::
 Jump_024_5603:: ; address name
-    call CopyWCA2CNameToWC130
+    call CopyWCA2CNameToTextBuf0
     ld a, $04
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenSubStep]
@@ -3577,12 +3577,12 @@ Jump_024_56C1::
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank24
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld hl, Data_024_5BDD
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank24
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, [wRecordBufB + $6E]
     and a, a
     jr nz, Jump_024_5762
@@ -3609,7 +3609,7 @@ Jump_024_5709::
     ldh [hTemp1], a
 
 Jump_024_5713::
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, [wBattleScene]
     cp a, $08
     jr z, Jump_024_572A
@@ -3652,7 +3652,7 @@ Jump_024_575B::
 Jump_024_5762::
     ld a, $0D
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     xor a, a
     ld [wObject5], a
     ld a, $48
@@ -4270,7 +4270,7 @@ Jump_024_6183:: ; address name
     ld [wMenuInputResult], a
     ld a, $04
     ld [wListCount], a
-    farcall UpdateListCursorWD7AB
+    farcall UpdateListCursorListCursor
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -4616,7 +4616,7 @@ Jump_024_63C9::
     ld [wGrid2CursorY], a
     ld [wDigits + $2], a
     call Number24ToPackedBCD
-    farcall UnpackBCDToDigitsWD7F1
+    farcall UnpackBCDToDigitsArg1
     ld hl, wArg4
     ld de, wTextBuf0
     ld b, $04
@@ -4720,7 +4720,7 @@ Jump_024_64C8::
     ld [wArg2], a
     ld a, [wListEntries]
     ld [wArg1], a
-    farcall IsAmountInWD7F1AboveGold
+    farcall IsAmountInArg1AboveGold
     ld a, [wArg1]
     cp a, $FF
     jr z, Jump_024_650A
@@ -4789,7 +4789,7 @@ Jump_024_6541::
     ld [wArg2], a
     ld a, [wListEntries]
     ld [wArg1], a
-    farcall SubtractWD7F1AmountFromGold
+    farcall SubtractArg1AmountFromGold
     call DrawGoldPanel_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
@@ -5381,7 +5381,7 @@ Func_024_68B0:: ; address name
     ld a, [wGoldHi]
     ld [wDigits + $2], a
     call Number24ToPackedBCD
-    farcall UnpackBCDToDigitsWD7F1
+    farcall UnpackBCDToDigitsArg1
     ld hl, wWindowTileBuffer + $86
     ld de, wArg3
     ld c, $00
@@ -5838,7 +5838,7 @@ Func_024_6B3A:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     xor a, a
@@ -5944,7 +5944,7 @@ Jump_024_704B::
     jr Jump_024_7062
 
 Jump_024_7057::
-    farcall LoadWD7F1ByteForWD7B5WD7B6
+    farcall LoadArg1ByteForItemGridXItemGridY
     ld a, [wArg1]
     jr Jump_024_707A
 

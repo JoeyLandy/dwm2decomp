@@ -5,7 +5,7 @@ SECTION "Bank 04", ROMX[$4000], BANK[$04]
 ; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case02, FieldModeStateDispatch_Case03, ...)
 FieldStateCommonUpdate::
 Func_004_4001:: ; address name
-    call AdvanceHFF99AndRunHFF8BMode
+    call AdvancePlayerAnimCounterAndRunPlayerSpriteMode
     call UpdateAndDrawSpriteSlots
     ret
 
@@ -109,7 +109,7 @@ Jump_004_4093::
     ld a, [wKeyWorldObjFlag]
     or a, a
     ret z
-    call PlaceObjectCB86ForWCD0B
+    call PlaceObjectCB86ForKeyWorldGoalKind
     ret
 
 Jump_004_40A9::
@@ -392,7 +392,7 @@ Jump_004_420B::
     inc de
     push hl
     push de
-    call DecompressGraphicsHFFC6ToHFFCA
+    call DecompressGraphicsTemp0ToTemp4
     pop de
     pop hl
     pop bc
@@ -407,7 +407,7 @@ Jump_004_420B::
 ; 1 call site from 1 routine (e.g. SetupKeyWorldObjectsForMapType)
 ; reads: hMapScreenY, hMapScreenX, wKeyWorldGoalKind
 ; writes: wSpriteSlots
-PlaceObjectCB86ForWCD0B::
+PlaceObjectCB86ForKeyWorldGoalKind::
 Func_004_42CD:: ; address name
     ldh a, [hMapScreenY]
     or a, a
@@ -460,7 +460,7 @@ Jump_004_4309::
 ; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, LoadPlayerAndFollowerSpriteGraphics, SetupKeyWorldObjectsForMapType_Sub01, ScriptCommand41_Run_Case09, ...)
 ; reads: hTemp2, hTemp0, hTemp1, hTemp4, hTemp5, wIsCGB, hTemp3
 ; points at: wOBJPaletteBuffer
-DecompressGraphicsHFFC6ToHFFCA::
+DecompressGraphicsTemp0ToTemp4::
 Func_004_431F:: ; address name
     ldh a, [hTemp2]
     or a, a
@@ -566,7 +566,7 @@ Jump_004_4396::
     call CopyFromBank
     ret
 
-; E-0143 (C1: DecompressGraphicsHFFC6ToHFFCA with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode).
+; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode).
 ; record: compressed sprite graphics in bank $7D
 FieldSpriteGraphicsTable::
 Data_004_43AC:: ; heuristic: start of a structured table; C0
@@ -651,7 +651,7 @@ Data_004_43AC:: ; heuristic: start of a structured table; C0
     dw FieldSpriteGfx4E ; id 78
     dw FieldSpriteGfx4F ; id 79
 
-; E-0143 (C1: DecompressGraphicsHFFC6ToHFFCA with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61.
+; E-0143 (C1: DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero reads the word $43AC + 2 * hFFC6/7 in bank $04 and decompresses it from bank $7D, or $7E for numbers $50 and up; all 98 entries decode); numbers $50-$61.
 ; record: compressed sprite graphics in bank $7E
 FieldSpriteGraphicsTable50::
 Data_004_444C:: ; heuristic: start of a structured table; C0
@@ -701,7 +701,7 @@ Func_004_4470:: ; address name
     ret
 
 ; clears bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (E-0072)
-; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_Sub01, RunWD06BSubState_60E9_Case02_Case00_Case02, ScriptCommandF7_Run_Case1A_Sub01, ScriptCommandF7_Run_Shared03, ...)
+; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_Sub01, RunLinkScreenSubStateSubState_60E9_Case02_Case00_Case02, ScriptCommandF7_Run_Case1A_Sub01, ScriptCommandF7_Run_Shared03, ...)
 ; reads: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
 ; writes: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
 ClearBit1OfPlayerAndObjectFlags::
@@ -727,7 +727,7 @@ Func_004_449F:: ; address name
     ret
 
 ; unless bit 7 of wC468 is set: updates the sprite slots, then draws each slot's metasprite at its position relative to the scroll (E-0129)
-; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunWCFA8StateWhenNotFading_Shared01, GameMode6_Update_Shared06, GameMode5_Update_Case07_Sub01_Sub03, ...)
+; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunNameEntryStateWhenNotFading_Shared01, GameMode6_Update_Shared06, GameMode5_Update_Case07_Sub01_Sub03, ...)
 ; reads: wFieldActionRequest, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hTemp0
 ; writes: hTemp0, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
 ; points at: wSpriteSlots
@@ -1278,7 +1278,7 @@ Jump_004_4784::
     ld b, a
     ld a, [hl]
     ld c, a
-    call RunWC935Type0AOrOther
+    call RunPendingFieldEventType0AOrOther
     cp a, $01
     jp z, Jump_004_4845
     call UpdateSpriteSlots_Shared01
@@ -1306,7 +1306,7 @@ Jump_004_47CD::
     ld b, a
     ld a, [hl]
     ld c, a
-    call RunWC935Type0AOrOther
+    call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
     call UpdateSpriteSlots_Shared01
@@ -1336,7 +1336,7 @@ Jump_004_47F4::
     ld a, [hl]
     sub a, $10
     ld c, a
-    call RunWC935Type0AOrOther
+    call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
     call UpdateSpriteSlots_Shared01
@@ -1366,7 +1366,7 @@ Jump_004_481C::
     ld a, [hl]
     add a, $11
     ld c, a
-    call RunWC935Type0AOrOther
+    call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
     call UpdateSpriteSlots_Shared01
@@ -1396,7 +1396,7 @@ Jump_004_4846::
 ; runs Func_004_495A when wC935 & $0F = $0A, else Func_004_4904 (E-0122)
 ; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_Case03)
 ; reads: wPendingFieldEvent
-RunWC935Type0AOrOther::
+RunPendingFieldEventType0AOrOther::
 Func_004_4852:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
@@ -1406,7 +1406,7 @@ Func_004_4852:: ; address name
     ret
 
 Jump_004_485F::
-    call RunWC935Type0AOrOther_Sub01
+    call RunPendingFieldEventType0AOrOther_Sub01
     ret
 
 ; entry 4 of the `rst $00` table in UpdateSpriteSlots
@@ -1517,7 +1517,7 @@ Jump_004_48CD::
     db $06, $0E, $FF, $FF, $00, $0E, $01, $0E, $02, $0E, $01, $0E, $FF, $FF
 
 ; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wC910-wC913; A = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
-; 3 call sites from 2 routines (e.g. RunWC935Type0AOrOther, UpdateSpriteSlots_Case02)
+; 3 call sites from 2 routines (e.g. RunPendingFieldEventType0AOrOther, UpdateSpriteSlots_Case02)
 ; reads: wMaxBlockingTile
 ; points at: wScreenTileBuffer, wTilesUnderPoint
 IsTileUnderCellBlocking::
@@ -1584,11 +1584,11 @@ Jump_004_4955::
     pop bc
     ret
 
-; only called from RunWC935Type0AOrOther (E-0047)
-; 1 call site from 1 routine (e.g. RunWC935Type0AOrOther)
+; only called from RunPendingFieldEventType0AOrOther (E-0047)
+; 1 call site from 1 routine (e.g. RunPendingFieldEventType0AOrOther)
 ; reads: wMapTallTileMin
 ; points at: wScreenTileBuffer, wTilesUnderPoint
-RunWC935Type0AOrOther_Sub01::
+RunPendingFieldEventType0AOrOther_Sub01::
 Func_004_495A:: ; address name
     push bc
     push de
@@ -1766,7 +1766,7 @@ Jump_004_4A43::
     pop bc
     ret
 
-; E-0143 (C1: on CGB, with hFFC8 non-zero, DecompressGraphicsHFFC6ToHFFCA reads the byte $4A46 + hFFC6 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hFFC9; values 0-20).
+; E-0143 (C1: on CGB, with hFFC8 non-zero, DecompressGraphicsTemp0ToTemp4 reads the byte $4A46 + hFFC6 in bank $04 and copies the 8 bytes at 7E:$4B15 + 8 * it to the OBJ palette hFFC9; values 0-20).
 ; record: palette number in FieldSpritePalettes
 FieldSpritePaletteIndex::
 Data_004_4A46:: ; heuristic: start of a structured table; C0
@@ -1870,7 +1870,7 @@ Data_004_4A46:: ; heuristic: start of a structured table; C0
     db $14 ; id 97
 
 ; hFF8B = sprite mode from story flags $19F, $25 and 2 and bit 3 of hFF8C, then loads the matching player and follower sprite graphics (E-0128)
-; 32 call sites from 32 routines (e.g. InitFieldScreen, RunWC8C7Phase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
+; 32 call sites from 32 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
 ; reads: hPlayerStateFlags, hPlayerSpriteMode
 ; writes: hPlayerSpriteMode, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
 LoadPlayerAndFollowerSpriteGraphics::
@@ -1933,7 +1933,7 @@ Jump_004_4AF1::
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    call DecompressGraphicsHFFC6ToHFFCA
+    call DecompressGraphicsTemp0ToTemp4
     ld a, $04
     ldh [hTemp0], a
     xor a, a
@@ -1947,13 +1947,13 @@ Jump_004_4AF1::
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    call DecompressGraphicsHFFC6ToHFFCA
+    call DecompressGraphicsTemp0ToTemp4
     ret
 
 Jump_004_4B23::
     call LoadPlayerSpriteGraphics
     call LoadPlayerAndFollowerSpriteGraphics_Sub01
-    call LoadAltObjectGraphicsIfHFF8CBit3
+    call LoadAltObjectGraphicsIfPlayerStateFlagsBit3
     ret
 
 ; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream named by hFF94/hFF95 when bit 7 of hFF93 is set (E-0127)
@@ -1989,7 +1989,7 @@ Jump_004_4B48::
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    call DecompressGraphicsHFFC6ToHFFCA
+    call DecompressGraphicsTemp0ToTemp4
     ret
 
 Jump_004_4B5E::
@@ -2010,7 +2010,7 @@ Jump_004_4B5E::
     ldh [hTemp4], a
     ld a, h
     ldh [hTemp5], a
-    call DecompressGraphicsHFFC6ToHFFCA
+    call DecompressGraphicsTemp0ToTemp4
     ret
 
 ; when hFF8C bit 3 is set: decompresses Data_07E_58FF (bank $7E) to vTiles0 + $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer (wC527 = $7F) (E-0120)
@@ -2018,7 +2018,7 @@ Jump_004_4B5E::
 ; reads: hPlayerStateFlags
 ; writes: wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
-LoadAltObjectGraphicsIfHFF8CBit3::
+LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
 Func_004_4B7E:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -2049,7 +2049,7 @@ Func_004_4B7E:: ; address name
 ; reads: hPlayerStateFlags, hPlayerAnimCounter, hPlayerSpriteMode
 ; writes: hPlayerAnimCounter
 ; points at: hPlayerAnimCounter
-AdvanceHFF99AndRunHFF8BMode::
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode::
 Func_004_4BB0:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 1, a
@@ -2066,40 +2066,38 @@ Func_004_4BB0:: ; address name
 Jump_004_4BC6::
     ldh a, [hPlayerSpriteMode]
     rst $00
-    dw AdvanceHFF99AndRunHFF8BMode_Case00
-    dw AdvanceHFF99AndRunHFF8BMode_Case01
-    dw AdvanceHFF99AndRunHFF8BMode_Case02
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case00
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case01
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case02
 
-; entry 0 of the `rst $00` table in AdvanceHFF99AndRunHFF8BMode
+; entry 0 of the `rst $00` table in AdvancePlayerAnimCounterAndRunPlayerSpriteMode
 ; no direct call (reached through a table, a jump or a vector)
-AdvanceHFF99AndRunHFF8BMode_Case00::
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case00::
 Jump_004_4BCF:: ; address name
-    call AdvanceHFF99AndRunHFF8BMode_Shared01
-    call AdvanceHFF99AndRunHFF8BMode_Case00_Sub01
+    call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01
+    call Func_004_4D43
     ret
 
-; entry 1 of the `rst $00` table in AdvanceHFF99AndRunHFF8BMode
+; entry 1 of the `rst $00` table in AdvancePlayerAnimCounterAndRunPlayerSpriteMode
 ; no direct call (reached through a table, a jump or a vector)
-AdvanceHFF99AndRunHFF8BMode_Case01::
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case01::
 Jump_004_4BD6:: ; address name
-    call AdvanceHFF99AndRunHFF8BMode_Shared01
-    call AdvanceHFF99AndRunHFF8BMode_Case01_Sub01
+    call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01
+    call Func_004_4C25
     ret
 
-; entry 2 of the `rst $00` table in AdvanceHFF99AndRunHFF8BMode
+; entry 2 of the `rst $00` table in AdvancePlayerAnimCounterAndRunPlayerSpriteMode
 ; no direct call (reached through a table, a jump or a vector)
-AdvanceHFF99AndRunHFF8BMode_Case02::
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case02::
 Jump_004_4BDD:: ; address name
-    call AdvanceHFF99AndRunHFF8BMode_Shared01
-    call AdvanceHFF99AndRunHFF8BMode_Case02_Sub01
+    call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01
+    call Func_004_4BE4
     ret
 
-; only called from AdvanceHFF99AndRunHFF8BMode_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. AdvanceHFF99AndRunHFF8BMode_Case02)
+; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case02)
 ; reads: hSpriteOriginY, hSpriteOriginYHi, hSpriteAttrXor, hPlayerStateFlags
 ; writes: hSpriteOriginY, hSpriteOriginYHi, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex
-AdvanceHFF99AndRunHFF8BMode_Case02_Sub01::
-Func_004_4BE4:: ; address name
+Func_004_4BE4::
     ldh a, [hSpriteOriginY]
     ld l, a
     ldh a, [hSpriteOriginYHi]
@@ -2134,12 +2132,10 @@ Jump_004_4C17::
     farcall DrawMetaSprite
     ret
 
-; only called from AdvanceHFF99AndRunHFF8BMode_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. AdvanceHFF99AndRunHFF8BMode_Case01)
+; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case01)
 ; reads: hFieldDrawFlags, hPlayerSpriteVariant, wFollowerRecords, hPlayerAnimCounter, hScrollX, hScrollXHi, hScrollY, hScrollYHi
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
-AdvanceHFF99AndRunHFF8BMode_Case01_Sub01::
-Func_004_4C25:: ; address name
+Func_004_4C25::
     ldh a, [hFieldDrawFlags]
     bit 1, a
     ret nz
@@ -2156,7 +2152,7 @@ Func_004_4C25:: ; address name
     ld b, a
     ld a, [wFollowerRecords + $2]
     ld c, a
-    call AdvanceHFF99AndRunHFF8BMode_Shared02
+    call Func_004_4E0F
     or a, a
     jr z, Jump_004_4C4E
     ld a, $02
@@ -2202,11 +2198,11 @@ Jump_004_4C5B::
     farcall DrawMetaSprite4008
     ret
 
-; only called from routines of AdvanceHFF99AndRunHFF8BMode (E-0098)
-; 3 call sites from 3 routines (e.g. AdvanceHFF99AndRunHFF8BMode_Case02, AdvanceHFF99AndRunHFF8BMode_Case01, AdvanceHFF99AndRunHFF8BMode_Case00)
+; only called from routines of AdvancePlayerAnimCounterAndRunPlayerSpriteMode (E-0098)
+; 3 call sites from 3 routines (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case02, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case01, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case00)
 ; reads: hFieldDrawFlags, hPlayerSpriteVariant, hPlayerX, hPlayerY, hPlayerAnimCounter, hScrollX, hScrollXHi, hScrollY, ...
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
-AdvanceHFF99AndRunHFF8BMode_Shared01::
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01::
 Func_004_4C96:: ; address name
     ldh a, [hFieldDrawFlags]
     bit 0, a
@@ -2219,7 +2215,7 @@ Func_004_4C96:: ; address name
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call AdvanceHFF99AndRunHFF8BMode_Shared02
+    call Func_004_4E0F
     or a, a
     jr z, Jump_004_4CB3
     ld a, $02
@@ -2315,13 +2311,11 @@ Jump_004_4D3C::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
-; only called from AdvanceHFF99AndRunHFF8BMode_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. AdvanceHFF99AndRunHFF8BMode_Case00)
+; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case00)
 ; reads: wPartyCount, hTemp9, hFieldDrawFlags, hPlayerAnimCounter, hTemp0, hScrollX, hScrollXHi, hScrollY, ...
 ; writes: hTemp9, hTemp0, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, ...
 ; points at: wFollowerRecords
-AdvanceHFF99AndRunHFF8BMode_Case00_Sub01::
-Func_004_4D43:: ; address name
+Func_004_4D43::
     ld a, $02
     ldh [hTemp9], a
     ld a, [wPartyCount]
@@ -2353,7 +2347,7 @@ Jump_004_4D57::
     ld a, [hl-]
     ld c, a
     dec hl
-    call AdvanceHFF99AndRunHFF8BMode_Shared02
+    call Func_004_4E0F
     pop bc
     or a, a
     jr z, Jump_004_4D7C
@@ -2449,11 +2443,9 @@ Jump_004_4DF3::
     jp nz, Jump_004_4D57
     ret
 
-; only called from routines of AdvanceHFF99AndRunHFF8BMode (E-0098)
-; 3 call sites from 3 routines (e.g. AdvanceHFF99AndRunHFF8BMode_Shared01, AdvanceHFF99AndRunHFF8BMode_Case01_Sub01, AdvanceHFF99AndRunHFF8BMode_Case00_Sub01)
+; 3 call sites from 3 routines (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01, Func_004_4C25, Func_004_4D43)
 ; reads: wFadeState, hMapId, hMapScreenX, hMapScreenY, hPlayerY
-AdvanceHFF99AndRunHFF8BMode_Shared02::
-Func_004_4E0F:: ; address name
+Func_004_4E0F::
     ld a, [wFadeState]
     or a, a
     jr z, Jump_004_4E30
@@ -2811,7 +2803,7 @@ Data_004_4EAA:: ; heuristic: argument of a bank-switching copy helper; C0
     dfar MonsterSprite_Lazamanus ; id 268 Lazamanus
     dfar MonsterSprite_Copycat ; id 269 Copycat
     dfar MonsterSprite_MadSpirit ; id 270 MadSpirit
-    dfar MonsterSprite_PomPomBom ; id 271 PomPomBom
+    dfar MonsterSprite_PomBom ; id 271 PomPomBom
     dfar MonsterSprite_Niterich ; id 272 Niterich
     dfar MonsterSprite_DrakSlime ; id 273 ?
     dfar MonsterSprite_DrakSlime ; id 274 ?
@@ -3081,7 +3073,7 @@ Func_004_5698:: ; address name
     call StartScriptAtHL_B04
     ld a, $00
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld de, $0006
     call SetFlagBit
     ret
@@ -3116,7 +3108,7 @@ Func_004_56BD:: ; address name
     jr c, Jump_004_56F4
     ld a, $01
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld hl, Script_4F88
     call StartScriptAtHL_B04
     ld de, $0007
@@ -3225,11 +3217,11 @@ Func_004_581C:: ; address name
     farcall CountKeysOrFull
     ld a, $01
     ldh [hTemp1], a
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     farcall CountKeysOrFull
     ld a, $02
     ldh [hTemp1], a
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld a, [wGameFlags836]
     set 7, a
     ld [wGameFlags836], a
@@ -3695,7 +3687,7 @@ Jump_004_5AD3::
     add_a_to_hl
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     xor a, a
     ld [rRAMG], a
     ld hl, wNameGlyphBuf
@@ -4556,7 +4548,7 @@ Jump_004_5F35:: ; address name
     jr c, Jump_004_5F53
     ld a, $31
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     ret z
@@ -4890,7 +4882,7 @@ Jump_004_60DF:: ; address name
     call StartScriptAtHL_B04
     ld a, $31
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld de, $007A
     call SetFlagBit
@@ -5965,25 +5957,25 @@ Jump_004_66E9:: ; address name
     jr c, Jump_004_6746
     ld a, $19
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_004_673F
     ld a, $1A
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_004_673F
     ld a, $1B
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_004_673F
     ld a, $1C
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_004_673F
@@ -6014,7 +6006,7 @@ Jump_004_674D:: ; address name
     call StartScriptAtHL_B04
     ld a, $30
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ret
 
@@ -6057,7 +6049,7 @@ Func_004_612B_Case3C::
 Jump_004_6798:: ; address name
     ld a, $03
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld de, $0059
     call TestFlagBit
     jr c, Jump_004_67B1
@@ -6189,19 +6181,19 @@ Jump_004_682F:: ; address name
     jr c, Jump_004_6875
     ld a, $36
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_004_686E
     ld a, $37
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_004_686E
     ld a, $38
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_004_686E
@@ -6701,7 +6693,7 @@ Func_004_6A35:: ; address name
     dw Talk07C1_WhatMonstersAttackedYou
     dw TalkMsg07AE_ThatDealersWaresCould
     dw Talk07AF_HowDoesThisOrnament
-    dw TalkMsg07B8_WhoAreYouYou
+    dw TalkMsg07B8_WhoAreYou
     dw StartScript6496Or64A6ByFlag1BA
     dw Talk07BF_HeroFoundThePretty
     dw StartScript6509Or652CByFlag1C2
@@ -7460,7 +7452,7 @@ Jump_004_6FF0::
 Jump_004_6FF7::
     ld a, $3C
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_004_702B
@@ -7474,7 +7466,7 @@ Jump_004_6FF7::
     call StartScriptAtHL_B04
     ld a, $08
     ldh [hTemp0], a
-    farcall MarkKeyEntryKindHFFC6Bit6
+    farcall MarkKeyEntryKindTemp0Bit6
     ret
 
 Jump_004_702B::
@@ -7840,7 +7832,7 @@ Jump_004_728A::
 Jump_004_7291::
     ld a, $3D
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_004_728A
@@ -8361,7 +8353,7 @@ Jump_004_75FF::
 
 ; tests story flags in turn (flag $01BA set: jr to Jump_004_761D); when none of them branches, starts message $07B8 through StartMessageCommand09HL_B04 (script command $09); that string begins 'Who are you? You shouldn't be' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-TalkMsg07B8_WhoAreYouYou:: ; heuristic: target of a pointer table; C0
+TalkMsg07B8_WhoAreYou:: ; heuristic: target of a pointer table; C0
 Func_004_760E:: ; address name
     ld de, $01BA
     call TestFlagBit
@@ -9288,7 +9280,7 @@ Jump_004_7B82:: ; address name
     jr Jump_004_7B9C
 
 Jump_004_7B91::
-    call IsPlayerAtWCD0BTriggerColumn
+    call IsPlayerAtKeyWorldGoalKindTriggerColumn
     or a, a
     ret z
     ld hl, Script_65B1
@@ -9307,7 +9299,7 @@ Jump_004_7B9C::
 ; A = 1 when the player stands on one of the trigger columns for wCD0B (1, 7, 8 or 9) on the matching map screen, else 0 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_004_7B29_Case02)
 ; reads: wKeyWorldGoalKind, hMapScreenX, hPlayerX
-IsPlayerAtWCD0BTriggerColumn::
+IsPlayerAtKeyWorldGoalKindTriggerColumn::
 Func_004_7BAB:: ; address name
     ld a, [wKeyWorldGoalKind]
     cp a, $01

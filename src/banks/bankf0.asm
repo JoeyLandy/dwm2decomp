@@ -289,7 +289,7 @@ Func_0F0_48A0:: ; address name
     db $11, $B5, $48, $CD, $FE, $25, $C9
 
 ; Func_0F0_48A0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. Func_0F0_4CA0_Table2_Case05, Func_0F0_4CA0_Table3_Case04, Func_0F0_4CA0_Table3_Case01, RunWD781Step_F0_5DE8_Case0B, ...)
+; 6 call sites from 6 routines (e.g. Func_0F0_4CA0_Table2_Case05, Func_0F0_4CA0_Table3_Case04, Func_0F0_4CA0_Table3_Case01, RunScreenStep_F0_5DE8_Case0B, ...)
 ShowString_BankF0::
 Func_0F0_48AE:: ; address name
     call BeginStringDisplay_BankF0_48A0
@@ -495,11 +495,11 @@ Data_0F0_4C83:: ; heuristic: target of a monotone pointer table; C0
     db "given to an egg.", $F7
     db $F0
 
-; only called from RunWC582State_457B_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunWC582State_457B_Case01)
+; only called from RunLinkExchangeState_457B_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunLinkExchangeState_457B_Case01)
 ; reads: wFadeState, wScreenState, wTextFlags
 ; writes: wLinkScreenState
-RunWC582State_457B_Case01_Sub01::
+RunLinkExchangeState_457B_Case01_Sub01::
 Func_0F0_4CA0:: ; address name
     ld a, $01
     ld [wLinkScreenState], a
@@ -819,7 +819,7 @@ Jump_0F0_4E54:: ; address name
     ret
 
 Jump_0F0_4E6D::
-    call RunWD781Step_F0_5B50
+    call RunScreenStep_F0_5B50
     ret
 
 ; entry 2 of the `rst $00` table in Func_0F0_4CA0
@@ -1051,7 +1051,7 @@ Jump_0F0_4FBB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_0F0_4CA0_Case03::
 Jump_0F0_4FED:: ; address name
-    call RunWD781Step_F0_5DE8
+    call RunScreenStep_F0_5DE8
     ret
 
 ; entry 4 of the `rst $00` table in Func_0F0_4CA0
@@ -1223,7 +1223,7 @@ Jump_0F0_50AF:: ; address name
 ; points at: wTextWindowTileLo, wScreenStep
 Func_0F0_4CA0_Table4_Case03::
 Jump_0F0_50BF:: ; address name
-    farcall DrawBottomBoxForLinkAndSetWD782
+    farcall DrawBottomBoxForLinkAndSetScreenSubStep
     ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
@@ -1597,8 +1597,8 @@ Jump_0F0_52F9::
     ld a, [wBankF0Byte99]
     and a, a
     jp z, Jump_0F0_5323
-    call RankWCEC3ScoresIntoWCF7E
-    call LoadWCED9SpeciesStatsToWCF0A
+    call RankFamilyScoresIntoFamilyRanking
+    call LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth
     ld a, [wFamilyBitCount]
     ld c, a
     ld a, [wRankBand]
@@ -1696,8 +1696,8 @@ Jump_0F0_5398:: ; address name
     ld [wBattleSetupByte98], a
     ld a, [wBankF0ByteA3]
     ld b, a
-    call MarkBitBInWCE9FAndCount
-    call RollWCEC0Chance
+    call MarkBitBInFamilyBitsAndCount
+    call RollMarkChangeCountChance
     ld [wBankF0Byte99], a
     ld a, [wScreenStep]
     inc a
@@ -1928,7 +1928,7 @@ Jump_0F0_54B9:: ; address name
     xor a, a
     ld [wArg7], a
     farcall DrawTileRectAndClearAttrs_5D9A
-    call Run67EEWithWD7F1ForWD7EC
+    call Run67EEWithArg1ForF0ScreenKind
     xor a, a
     ldh [hSpriteWindowClipMode], a
     ld a, [wScreenStep]
@@ -2110,7 +2110,7 @@ Jump_0F0_55B6:: ; address name
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
 Func_0F0_4CA0_Case07_Case0B::
 Jump_0F0_55DC:: ; address name
-    call RunTextUntilWC8CBDone_BankF0
+    call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
     ld de, wTextBuf0
     ld b, $0A
@@ -2176,7 +2176,7 @@ Jump_0F0_5619:: ; address name
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
 Func_0F0_4CA0_Case08_Case0B::
 Jump_0F0_563F:: ; address name
-    call RunTextUntilWC8CBDone_BankF0
+    call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
     ld de, wTextBuf0
     ld b, $0A
@@ -2285,7 +2285,7 @@ Func_0F0_56C2:: ; address name
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
 Func_0F0_4CA0_Case09_Case0F::
 Jump_0F0_56D9:: ; address name
-    call RunTextUntilWC8CBDone_BankF0
+    call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
     ld de, wTextBuf0
     ld b, $0A
@@ -2351,7 +2351,7 @@ Jump_0F0_5742:: ; address name
     ld a, [wScreenByteEE]
     and a, a
     ret nz
-    call RunTextUntilWC8CBDone_BankF0
+    call RunTextUntilTextWindowStateDone_BankF0
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -2466,7 +2466,7 @@ Jump_0F0_57F0:: ; address name
     ret nz
     ld a, $0E
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $48
     ld [wObject5 + $4], a
     ld a, $40
@@ -2564,7 +2564,7 @@ Func_0F0_5888:: ; address name
     jr nz, Jump_0F0_58B2
     ld a, $0E
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $48
     ld [wObject5 + $4], a
     ld a, $40
@@ -2624,7 +2624,7 @@ Jump_0F0_58D9::
 Func_0F0_4CA0_Case0A_Case0B::
 Jump_0F0_58FE:: ; address name
     ld de, wObject1 + $C
-    call StepWD781OffsetTableEvery4Frames
+    call StepScreenStepOffsetTableEvery4Frames
     ld a, $01
     ld [wSpriteSlots + $7], a
     ret
@@ -2664,7 +2664,7 @@ Jump_0F0_590A:: ; address name
 ; points at: wBankF0ByteA8, wTextBuf1, wScreenSubStep
 Func_0F0_4CA0_Case0A_Case1E::
 Jump_0F0_593A:: ; address name
-    call RunTextUntilWC8CBDone_BankF0
+    call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0ByteA8
     ld de, wTextBuf1
     call CopyNameStringFromBank08Database
@@ -2746,7 +2746,7 @@ Jump_0F0_59AB:: ; address name
     ret nz
     ld a, $0E
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $48
     ld [wObject5 + $4], a
     ld a, $40
@@ -2818,7 +2818,7 @@ Func_0F0_5A29:: ; address name
     jr nz, Jump_0F0_5A53
     ld a, $0E
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $48
     ld [wObject5 + $4], a
     ld a, $40
@@ -2844,7 +2844,7 @@ Jump_0F0_5A53::
 Func_0F0_4CA0_Case0B_Case0B::
 Jump_0F0_5A6C:: ; address name
     ld de, wSpriteSlots + $C
-    call StepWD781OffsetTableEvery4Frames
+    call StepScreenStepOffsetTableEvery4Frames
     ret
 
 ; entry 28 of the `rst $00` table in Func_0F0_4CA0_Case0B
@@ -2882,7 +2882,7 @@ Jump_0F0_5A73:: ; address name
 ; points at: wBankF0BlockCB, wTextBuf0, wBankF0ByteC8, wTextBuf1, wScreenSubStep
 Func_0F0_4CA0_Case0B_Case1E::
 Jump_0F0_5AA3:: ; address name
-    call RunTextUntilWC8CBDone_BankF0
+    call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
     ld de, wTextBuf0
     ld b, $0A
@@ -2960,7 +2960,7 @@ Jump_0F0_5AF4:: ; address name
 ; reads: wScreenCounter, wScreenStep, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep, wScreenStep
 ; points at: wScreenStep
-StepWD781OffsetTableEvery4Frames::
+StepScreenStepOffsetTableEvery4Frames::
 Func_0F0_5B06:: ; address name
     ld a, [wScreenCounter]
     inc a
@@ -3014,33 +3014,33 @@ Jump_0F0_5B4C::
 ; runs the routine for wD781 (jump table of ten) (E-0122)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Case01)
 ; reads: wScreenStep
-RunWD781Step_F0_5B50::
+RunScreenStep_F0_5B50::
 Func_0F0_5B50:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunWD781Step_F0_5B50_Case00
-    dw RunWD781Step_F0_5B50_Case01
-    dw RunWD781Step_F0_5B50_Case02
-    dw RunWD781Step_F0_5B50_Case03
-    dw RunWD781Step_F0_5B50_Case04
-    dw RunWD781Step_F0_5B50_Case05
-    dw RunWD781Step_F0_5B50_Case06
-    dw RunWD781Step_F0_5B50_Case07
-    dw RunWD781Step_F0_5B50_Case08
-    dw RunWD781Step_F0_5B50_Case09
+    dw RunScreenStep_F0_5B50_Case00
+    dw RunScreenStep_F0_5B50_Case01
+    dw RunScreenStep_F0_5B50_Case02
+    dw RunScreenStep_F0_5B50_Case03
+    dw RunScreenStep_F0_5B50_Case04
+    dw RunScreenStep_F0_5B50_Case05
+    dw RunScreenStep_F0_5B50_Case06
+    dw RunScreenStep_F0_5B50_Case07
+    dw RunScreenStep_F0_5B50_Case08
+    dw RunScreenStep_F0_5B50_Case09
 
-; entry 0 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 0 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
-RunWD781Step_F0_5B50_Case00::
+RunScreenStep_F0_5B50_Case00::
 Jump_0F0_5B68:: ; address name
     farcall LoadTileList6DC4SixPerFrame
     ret
 
-; entry 1 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 1 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wChoiceCursorF0, wScreenStep
 ; writes: wScreenStep
-RunWD781Step_F0_5B50_Case01::
+RunScreenStep_F0_5B50_Case01::
 Jump_0F0_5B6F:: ; address name
     ld de, Data_0F0_5BA0
     ld hl, wWindowTileBuffer + $6B
@@ -3063,12 +3063,12 @@ Jump_0F0_5B6F:: ; address name
 Data_0F0_5BA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3C1BA0, $75
 
-; entry 2 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 2 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-RunWD781Step_F0_5B50_Case02::
+RunScreenStep_F0_5B50_Case02::
 Jump_0F0_5C15:: ; address name
     ld hl, vTiles1 + $3F0
     ld bc, $0401
@@ -3098,11 +3098,11 @@ Jump_0F0_5C15:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 3 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-RunWD781Step_F0_5B50_Case03::
+RunScreenStep_F0_5B50_Case03::
 Jump_0F0_5C57:: ; address name
     ld de, Data_0F0_6530
     ld hl, wWindowTileBuffer + $6B
@@ -3127,7 +3127,7 @@ Jump_0F0_5C57:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    call DrawPageOfPagesAtWD7F1_BankF0
+    call DrawPageOfPagesAtArg1_BankF0
 
 Jump_0F0_5C98::
     call BGMapAddressAtScroll_BankF0
@@ -3139,11 +3139,11 @@ Jump_0F0_5C98::
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 4 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-RunWD781Step_F0_5B50_Case04::
+RunScreenStep_F0_5B50_Case04::
 Jump_0F0_5CAC:: ; address name
     xor a, a
     ld [wArg5], a
@@ -3153,11 +3153,11 @@ Jump_0F0_5CAC:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 5 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-RunWD781Step_F0_5B50_Case05::
+RunScreenStep_F0_5B50_Case05::
 Jump_0F0_5CBE:: ; address name
     ld de, Data_01F_4990
     ld hl, vTiles1 + $4E0
@@ -3173,11 +3173,11 @@ Jump_0F0_5CBE:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 6 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenState, wScreenStep
 ; writes: wMenuInputResult, wScreenStep, wScreenSubStep, wScreenState
-RunWD781Step_F0_5B50_Case06::
+RunScreenStep_F0_5B50_Case06::
 Jump_0F0_5CE0:: ; address name
     ld a, $01
     ld [wMenuInputResult], a
@@ -3222,11 +3222,11 @@ Jump_0F0_5D17::
     call SaveAndHideSpriteState_BankF0
     ret
 
-; entry 7 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 7 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-RunWD781Step_F0_5B50_Case07::
+RunScreenStep_F0_5B50_Case07::
 Jump_0F0_5D29:: ; address name
     ld c, $09
     ld hl, $01D3
@@ -3248,11 +3248,11 @@ Jump_0F0_5D29:: ; address name
 Data_0F0_5D51:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B2
 
-; entry 8 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 8 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD781Step_F0_5B50_Case08::
+RunScreenStep_F0_5B50_Case08::
 Jump_0F0_5D58:: ; address name
     call BGMapAddressAtScroll_BankF0
     ld bc, $1409
@@ -3283,11 +3283,11 @@ Jump_0F0_5D58:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in RunWD781Step_F0_5B50
+; entry 9 of the `rst $00` table in RunScreenStep_F0_5B50
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wChoiceCursorF0
 ; writes: wArg1, wArg2, wArg3, wArg4, wScreenState, wScreenSubStep, wScreenStep
-RunWD781Step_F0_5B50_Case09::
+RunScreenStep_F0_5B50_Case09::
 Jump_0F0_5DA0:: ; address name
     ld a, $9E
     ld [wArg1], a
@@ -3316,7 +3316,7 @@ Jump_0F0_5DA0:: ; address name
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_48A0
-; 19 call sites from 15 routines (e.g. Func_0F0_4CA0_Table2_Case07, Func_0F0_4CA0_Table2_Case05, RunWD781Step_F0_5B50_Case09, Func_0F0_4CA0_Table3_Case03, ...)
+; 19 call sites from 15 routines (e.g. Func_0F0_4CA0_Table2_Case07, Func_0F0_4CA0_Table2_Case05, RunScreenStep_F0_5B50_Case09, Func_0F0_4CA0_Table3_Case03, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_BankF0_Cat0::
 Func_0F0_5DDD:: ; address name
@@ -3329,31 +3329,31 @@ Func_0F0_5DDD:: ; address name
 ; runs the routine for wD781 (jump table of seventeen) (E-0124)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Case03)
 ; reads: wScreenStep
-RunWD781Step_F0_5DE8::
+RunScreenStep_F0_5DE8::
 Func_0F0_5DE8:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunWD781Step_F0_5DE8_Case00
-    dw RunWD781Step_F0_5DE8_Case01
-    dw RunWD781Step_F0_5DE8_Case02
-    dw RunWD781Step_F0_5DE8_Case03
-    dw RunWD781Step_F0_5DE8_Case04
-    dw RunWD781Step_F0_5DE8_Case05
-    dw RunWD781Step_F0_5DE8_Case06
-    dw RunWD781Step_F0_5DE8_Case07
-    dw RunWD781Step_F0_5DE8_Case08
+    dw RunScreenStep_F0_5DE8_Case00
+    dw RunScreenStep_F0_5DE8_Case01
+    dw RunScreenStep_F0_5DE8_Case02
+    dw RunScreenStep_F0_5DE8_Case03
+    dw RunScreenStep_F0_5DE8_Case04
+    dw RunScreenStep_F0_5DE8_Case05
+    dw RunScreenStep_F0_5DE8_Case06
+    dw RunScreenStep_F0_5DE8_Case07
+    dw RunScreenStep_F0_5DE8_Case08
     dw DrawTileMap5E12AtScrollAndResetScroll_BankF0
-    dw RunWD781Step_F0_5DE8_Case0A
-    dw RunWD781Step_F0_5DE8_Case0B
-    dw RunWD781Step_F0_5DE8_Case0C
-    dw RunWD781Step_F0_5DE8_Case0D
-    dw RunWD781Step_F0_5DE8_Case0E
-    dw RunWD781Step_F0_5DE8_Case0F
-    dw RunWD781Step_F0_5DE8_Case10
+    dw RunScreenStep_F0_5DE8_Case0A
+    dw RunScreenStep_F0_5DE8_Case0B
+    dw RunScreenStep_F0_5DE8_Case0C
+    dw RunScreenStep_F0_5DE8_Case0D
+    dw RunScreenStep_F0_5DE8_Case0E
+    dw RunScreenStep_F0_5DE8_Case0F
+    dw RunScreenStep_F0_5DE8_Case10
 
-; entry 0 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 0 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
-RunWD781Step_F0_5DE8_Case00::
+RunScreenStep_F0_5DE8_Case00::
 Jump_0F0_5E0E:: ; address name
     call DrawTileMap5E12AtScrollAndResetScroll_BankF0
     ld de, Data_01F_4250
@@ -3369,7 +3369,7 @@ Jump_0F0_5E0E:: ; address name
     ret
 
 ; draws the 32 x 32 tile map at $5E12 at the scroll origin (Func_01F_5D9A with wD7F7 = 0), then hScrollX = hScrollY = 0 and wD781 += 1 (E-0121)
-; 1 call site from 1 routine (e.g. RunWD781Step_F0_5DE8_Case00)
+; 1 call site from 1 routine (e.g. RunScreenStep_F0_5DE8_Case00)
 ; reads: wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, hScrollX, ...
 DrawTileMap5E12AtScrollAndResetScroll_BankF0::
@@ -3399,25 +3399,25 @@ Func_0F0_5E2C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 1 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD781Step_F0_5DE8_Case01::
+RunScreenStep_F0_5DE8_Case01::
 Jump_0F0_5E63:: ; address name
     ld hl, Data_0F0_6442
     ld de, Data_0F0_6482
-    call RunWD781Step_F0_5DE8_Shared01
+    call RunScreenStep_F0_5DE8_Shared01
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 2 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD781Step_F0_5DE8_Case02::
+RunScreenStep_F0_5DE8_Case02::
 Jump_0F0_5E74:: ; address name
     ld de, Data_01F_48E0
     ld hl, vTiles2 + $20
@@ -3454,11 +3454,11 @@ Jump_0F0_5E74:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 3 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPageIndex, wListCursor, wScreenStep
 ; writes: wListCursor, wListPageIndex, wScreenStep
-RunWD781Step_F0_5DE8_Case03::
+RunScreenStep_F0_5DE8_Case03::
 Jump_0F0_5ECA:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $1304
@@ -3482,11 +3482,11 @@ Jump_0F0_5ECA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 4 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wArg1, wArg2, wScreenStep
-RunWD781Step_F0_5DE8_Case04::
+RunScreenStep_F0_5DE8_Case04::
 Jump_0F0_5EF9:: ; address name
     farcall UploadTilesFromData6D20
     call BGMapAddressAtScroll_BankF0
@@ -3498,7 +3498,7 @@ Jump_0F0_5EF9:: ; address name
     xor a, a
     ld [wArg7], a
     call DrawTileRectAtHLFromDE_BankF0
-    call GetWD789Cell4Address_BankF0
+    call GetListEntriesCell4Address_BankF0
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -3509,16 +3509,16 @@ Jump_0F0_5EF9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 5 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCount, wScreenStep
 ; writes: hSpriteHideTile, wScreenStep
-RunWD781Step_F0_5DE8_Case05::
+RunScreenStep_F0_5DE8_Case05::
 Jump_0F0_5F2F:: ; address name
-    call GetWD789Cell4Address_BankF0
+    call GetListEntriesCell4Address_BankF0
     ld a, [hl]
     ld e, a
-    farcall RunWD781Step_F0_5DE8_Case05_Sub01
+    farcall RunScreenStep_F0_5DE8_Case05_Sub01
     ld a, $F0
     ldh [hSpriteHideTile], a
     call BGMapAddressAtScroll_BankF0
@@ -3573,17 +3573,17 @@ Jump_0F0_5F9B::
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 6 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, hTemp0, hTemp1, wIsCGB, wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenSubStep, wBGPaletteUploadRequest, hTemp0, wArg3, wArg4, wArg7, ...
-RunWD781Step_F0_5DE8_Case06::
+RunScreenStep_F0_5DE8_Case06::
 Jump_0F0_5FA3:: ; address name
     ld a, [wScreenSubStep]
     and a, a
     jp nz, Jump_0F0_5FDD
     call DrawRect6x6From651BAtScroll41_BankF0
-    call GetWD789Cell4Address_BankF0
+    call GetListEntriesCell4Address_BankF0
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3610,7 +3610,7 @@ Jump_0F0_5FA3:: ; address name
     ret
 
 Jump_0F0_5FDD::
-    call GetWD789Cell4Address_BankF0
+    call GetListEntriesCell4Address_BankF0
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -3660,11 +3660,11 @@ Jump_0F0_6014::
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 7 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wRecordsFlagged
 ; writes: hSpriteHideTile, wScreenStep
-RunWD781Step_F0_5DE8_Case07::
+RunScreenStep_F0_5DE8_Case07::
 Jump_0F0_6041:: ; address name
     farcall HandleListCursorInput_1D
     ld a, [wMenuInputResult]
@@ -3692,7 +3692,7 @@ Jump_0F0_605A::
     ret
 
 Jump_0F0_606C::
-    call SplitWD7ABBy4_BankF0
+    call SplitListCursorBy4_BankF0
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -3700,11 +3700,11 @@ Jump_0F0_606C::
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 8 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD781Step_F0_5DE8_Case08::
+RunScreenStep_F0_5DE8_Case08::
 Jump_0F0_607B:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $0805
@@ -3717,29 +3717,29 @@ Jump_0F0_607B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 10 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD781Step_F0_5DE8_Case0A::
+RunScreenStep_F0_5DE8_Case0A::
 Jump_0F0_6096:: ; address name
     ld hl, Data_0F0_64C2
     ld de, Data_0F0_64D2
-    call RunWD781Step_F0_5DE8_Shared01
+    call RunScreenStep_F0_5DE8_Shared01
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 11 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
-RunWD781Step_F0_5DE8_Case0B::
+RunScreenStep_F0_5DE8_Case0B::
 Jump_0F0_60A7:: ; address name
     ld hl, Data_0F0_6500
     ld de, Data_0F0_64E0
-    call RunWD781Step_F0_5DE8_Shared01
+    call RunScreenStep_F0_5DE8_Shared01
     xor a, a
     ld [wStringCategory], a
     ld a, $1E
@@ -3765,12 +3765,12 @@ Jump_0F0_60A7:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 12 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-RunWD781Step_F0_5DE8_Case0C::
+RunScreenStep_F0_5DE8_Case0C::
 Jump_0F0_60E7:: ; address name
     ld hl, vTiles1 + $3F0
     ld bc, $0401
@@ -3800,11 +3800,11 @@ Jump_0F0_60E7:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 13 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunWD781Step_F0_5DE8_Case0D::
+RunScreenStep_F0_5DE8_Case0D::
 Jump_0F0_6129:: ; address name
     ld de, Data_0F0_6530
     ld hl, wWindowTileBuffer + $6B
@@ -3829,7 +3829,7 @@ Func_0F0_613D:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    call DrawPageOfPagesAtWD7F1_BankF0
+    call DrawPageOfPagesAtArg1_BankF0
 
 Jump_0F0_6158::
     ld a, [wScreenStep]
@@ -3847,11 +3847,11 @@ Jump_0F0_6160::
 Data_0F0_616E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
 
-; entry 14 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 14 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-RunWD781Step_F0_5DE8_Case0E::
+RunScreenStep_F0_5DE8_Case0E::
 Jump_0F0_6176:: ; address name
     xor a, a
     ld [wArg5], a
@@ -3861,11 +3861,11 @@ Jump_0F0_6176:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 15 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-RunWD781Step_F0_5DE8_Case0F::
+RunScreenStep_F0_5DE8_Case0F::
 Jump_0F0_6188:: ; address name
     ld de, Data_01F_4990
     ld hl, vTiles1 + $4E0
@@ -3886,11 +3886,11 @@ Jump_0F0_6188:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 16 of the `rst $00` table in RunWD781Step_F0_5DE8
+; entry 16 of the `rst $00` table in RunScreenStep_F0_5DE8
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep
 ; points at: wTextWindowTileLo
-RunWD781Step_F0_5DE8_Case10::
+RunScreenStep_F0_5DE8_Case10::
 Jump_0F0_61B7:: ; address name
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
@@ -3922,7 +3922,7 @@ Jump_0F0_61B7:: ; address name
     ret
 
 ; wD7BC = hFFB9, then hFFB9 = hFFBA = 0; wD7BA = hFF8D, wD7BB = wSpriteSlotCount; then hFF8D = $FF and wSpriteSlotCount = 0 (E-0078) (the same 30 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. RunWD781Step_F0_5B50_Case06)
+; 1 call site from 1 routine (e.g. RunScreenStep_F0_5B50_Case06)
 ; reads: hSpriteWindowClipMode, hFieldDrawFlags, wSpriteSlotCount
 ; writes: wSavedSpriteClipMode, hSpriteWindowClipMode, hSpriteHideTile, wSavedFieldDrawFlags, wSavedSpriteSlotCount, hFieldDrawFlags, wSpriteSlotCount
 SaveAndHideSpriteState_BankF0::
@@ -3942,8 +3942,8 @@ Func_0F0_61F6:: ; address name
     ld [wSpriteSlotCount], a
     ret
 
-; hFFB9 = wD7BC, hFFBA = $80, hFF8D = wD7BA, wSpriteSlotCount = 0 (unlike RestoreSpriteStateFromWD7BA, the count is cleared rather than restored) (E-0118)
-; 1 call site from 1 routine (e.g. RunWD781Step_F0_5DE8_Case10)
+; hFFB9 = wD7BC, hFFBA = $80, hFF8D = wD7BA, wSpriteSlotCount = 0 (unlike RestoreSpriteStateFromSavedFieldDrawFlags, the count is cleared rather than restored) (E-0118)
+; 1 call site from 1 routine (e.g. RunScreenStep_F0_5DE8_Case10)
 ; reads: wSavedSpriteClipMode, wSavedFieldDrawFlags, wSavedSpriteSlotCount
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wSpriteSlotCount
 RestoreSpriteStateClearCount_BankF0::
@@ -3963,7 +3963,7 @@ Func_0F0_6214:: ; address name
 ; 6 call sites from 6 routines (e.g. Func_0F0_4CA0_Case07_Case0B, Func_0F0_4CA0_Case08_Case0B, Func_0F0_4CA0_Case09_Case0F, Func_0F0_4CA0_Case0A_Case20, ...)
 ; reads: wTextWindowState
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
-RunTextUntilWC8CBDone_BankF0::
+RunTextUntilTextWindowStateDone_BankF0::
 Func_0F0_622A:: ; address name
     ld hl, vTiles1
     ld de, $1202
@@ -3983,10 +3983,10 @@ Jump_0F0_6241::
     ret
 
 ; wD7AF = wD7AB / 4 and wD7AB = wD7AB mod 4 (DivideHLByA) (E-0067) (the same 19 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. RunWD781Step_F0_5DE8_Case07)
+; 1 call site from 1 routine (e.g. RunScreenStep_F0_5DE8_Case07)
 ; reads: wListCursor
 ; writes: wListCursor, wListPageIndex
-SplitWD7ABBy4_BankF0::
+SplitListCursorBy4_BankF0::
 Func_0F0_624F:: ; address name
     ld a, [wListCursor]
     ld l, a
@@ -3999,7 +3999,7 @@ Func_0F0_624F:: ; address name
     ret
 
 ; draws a 6 x 6 tile rectangle from Data_0F0_651B at BGMapAddressAtScroll + $41 (DrawTileRectAtHLFromDE_BankF0) (E-0118)
-; 1 call site from 1 routine (e.g. RunWD781Step_F0_5DE8_Case06)
+; 1 call site from 1 routine (e.g. RunScreenStep_F0_5DE8_Case06)
 ; writes: wArg3, wArg4, wArg7
 DrawRect6x6From651BAtScroll41_BankF0::
 Func_0F0_6262:: ; address name
@@ -4016,10 +4016,10 @@ Func_0F0_6262:: ; address name
     call DrawTileRectAtHLFromDE_BankF0
     ret
 
-; only called from routines of RunWD781Step_F0_5DE8 (E-0098)
-; 3 call sites from 3 routines (e.g. RunWD781Step_F0_5DE8_Case0B, RunWD781Step_F0_5DE8_Case0A, RunWD781Step_F0_5DE8_Case01)
+; only called from routines of RunScreenStep_F0_5DE8 (E-0098)
+; 3 call sites from 3 routines (e.g. RunScreenStep_F0_5DE8_Case0B, RunScreenStep_F0_5DE8_Case0A, RunScreenStep_F0_5DE8_Case01)
 ; writes: wGlyphListPos
-RunWD781Step_F0_5DE8_Shared01::
+RunScreenStep_F0_5DE8_Shared01::
 Func_0F0_627E:: ; address name
     ld b, $00
 
@@ -4067,7 +4067,7 @@ Jump_0F0_62B0::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 13 call sites from 13 routines (e.g. Func_0F0_4CA0_Table2_Case06, RunWD781Step_F0_5B50_Case07, RunWD781Step_F0_5B50_Case03, RunWD781Step_F0_5B50_Case01, ...)
+; 13 call sites from 13 routines (e.g. Func_0F0_4CA0_Table2_Case06, RunScreenStep_F0_5B50_Case07, RunScreenStep_F0_5B50_Case03, RunScreenStep_F0_5B50_Case01, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_BankF0::
@@ -4125,7 +4125,7 @@ Jump_0F0_62E0::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (E-0062)
-; 12 call sites from 11 routines (e.g. Func_0F0_4CA0_Table2_Case06, RunWD781Step_F0_5B50_Case08, RunWD781Step_F0_5B50_Case03, RunWD781Step_F0_5B50_Case01, ...)
+; 12 call sites from 11 routines (e.g. Func_0F0_4CA0_Table2_Case06, RunScreenStep_F0_5B50_Case08, RunScreenStep_F0_5B50_Case03, RunScreenStep_F0_5B50_Case01, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -4172,7 +4172,7 @@ Func_0F0_62F2:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 23 call sites from 20 routines (e.g. DrawArrowTileBCAtWD7F2Entry_F0, Func_0F0_4CA0_Table2_Case06, RunWD781Step_F0_5B50_Case08, RunWD781Step_F0_5B50_Case03, ...)
+; 23 call sites from 20 routines (e.g. DrawArrowTileBCAtArg2Entry_F0, Func_0F0_4CA0_Table2_Case06, RunScreenStep_F0_5B50_Case08, RunScreenStep_F0_5B50_Case03, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_BankF0::
 Func_0F0_632F:: ; address name
@@ -4194,7 +4194,7 @@ Func_0F0_632F:: ; address name
     ret
 
 ; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll + DE, two entries apart (E-0121)
-; 1 call site from 1 routine (e.g. RunWD781Step_F0_5B50_Case03)
+; 1 call site from 1 routine (e.g. RunScreenStep_F0_5B50_Case03)
 DrawC5BEC6AtScrollOffsetDE_BankF0::
 Func_0F0_6350:: ; address name
     push de
@@ -4224,7 +4224,7 @@ Func_0F0_6350:: ; address name
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 2 call sites from 2 routines (e.g. RunWD781Step_F0_5B50_Case03, DrawPageIndicatorWhenTwoPagesAndStep)
+; 2 call sites from 2 routines (e.g. RunScreenStep_F0_5B50_Case03, DrawPageIndicatorWhenTwoPagesAndStep)
 StoreC5BEC6AtHLStride2_BankF0::
 Func_0F0_6376:: ; address name
     ld a, $C5
@@ -4240,7 +4240,7 @@ Func_0F0_6376:: ; address name
     ret
 
 ; the same instruction sequence as DrawPageOfPagesAtScrollOffset (bank $1E) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. RunWD781Step_F0_5B50_Case03)
+; 1 call site from 1 routine (e.g. RunScreenStep_F0_5B50_Case03)
 ; reads: wArg1, wArg2, wListPageIndex, wListPages
 DrawPageOfPagesAtScrollOffset_BankF0::
 Func_0F0_6384:: ; address name
@@ -4280,9 +4280,9 @@ Func_0F0_6384:: ; address name
     ret
 
 ; HL = the address in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two bytes later (current page and page count, 1-based display) (E-0093) (the same 25 bytes appear in 2 banks)
-; 2 call sites from 2 routines (e.g. RunWD781Step_F0_5B50_Case03, DrawPageIndicatorWhenTwoPagesAndStep)
+; 2 call sites from 2 routines (e.g. RunScreenStep_F0_5B50_Case03, DrawPageIndicatorWhenTwoPagesAndStep)
 ; reads: wArg1, wArg2, wListPageIndex, wListPages
-DrawPageOfPagesAtWD7F1_BankF0::
+DrawPageOfPagesAtArg1_BankF0::
 Func_0F0_63BA:: ; address name
     ld a, [wArg1]
     ld h, a
@@ -4335,7 +4335,7 @@ Jump_0F0_63E0::
     ret
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
-; 2 call sites from 2 routines (e.g. RunWD781Step_F0_5B50_Case07, Func_0F0_4CA0_Table4_Case00)
+; 2 call sites from 2 routines (e.g. RunScreenStep_F0_5B50_Case07, Func_0F0_4CA0_Table4_Case00)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
 CopyScreenBufferRectWithAttrs_F0::
@@ -4465,8 +4465,8 @@ Data_0F0_6685:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F0_66AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $28, $C3
 
-; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromWD7F1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
-; 3 call sites from 3 routines (e.g. DrawRect6x6From651BAtScroll41_BankF0, RunWD781Step_F0_5DE8_Case06, RunWD781Step_F0_5DE8_Case04)
+; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
+; 3 call sites from 3 routines (e.g. DrawRect6x6From651BAtScroll41_BankF0, RunScreenStep_F0_5DE8_Case06, RunScreenStep_F0_5DE8_Case04)
 ; writes: wArg5, wArg6, wArg1, wArg2
 DrawTileRectAtHLFromDE_BankF0::
 Func_0F0_66D5:: ; address name
@@ -4478,15 +4478,15 @@ Func_0F0_66D5:: ; address name
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     ret
 
-; the same 15 bytes as GetWD789Cell4Address (1E:76F3)
-; 4 call sites from 3 routines (e.g. RunWD781Step_F0_5DE8_Case06, RunWD781Step_F0_5DE8_Case05, RunWD781Step_F0_5DE8_Case04)
+; the same 15 bytes as GetListEntriesCell4Address (1E:76F3)
+; 4 call sites from 3 routines (e.g. RunScreenStep_F0_5DE8_Case06, RunScreenStep_F0_5DE8_Case05, RunScreenStep_F0_5DE8_Case04)
 ; reads: wArg5, wArg6
-GetWD789Cell4Address_BankF0::
+GetListEntriesCell4Address_BankF0::
 Func_0F0_66EC:: ; address name
-    farcall SetWD7F5ToWD789Cell4
+    farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -4494,7 +4494,7 @@ Func_0F0_66EC:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 6 call sites from 6 routines (e.g. RunWD781Step_F0_5B50_Case09, RunWD781Step_F0_5B50_Case01, Func_0F0_4CA0_Table3_Case05, Func_0F0_4CA0_Table3_Case04, ...)
+; 6 call sites from 6 routines (e.g. RunScreenStep_F0_5B50_Case09, RunScreenStep_F0_5B50_Case01, Func_0F0_4CA0_Table3_Case05, Func_0F0_4CA0_Table3_Case04, ...)
 StoreBAtWordTableEntry_BankF0::
 Func_0F0_66FB:: ; address name
     push bc
@@ -4524,7 +4524,7 @@ Func_0F0_6709:: ; address name
     jr nz, Jump_0F0_6727
     bit 1, a
     jr nz, Jump_0F0_6735
-    call BlinkCursorWD7B8_BankF0
+    call BlinkCursorBlinkB8_BankF0
     xor a, a
     ld [wMenuInputResult], a
     ret
@@ -4532,13 +4532,13 @@ Func_0F0_6709:: ; address name
 Jump_0F0_6727::
     ld a, $69
     call QueueSoundEffect
-    call DrawArrowTileBCAtWD7F2Entry_F0
+    call DrawArrowTileBCAtArg2Entry_F0
     ld a, $FF
     ld [wMenuInputResult], a
     ret
 
 Jump_0F0_6735::
-    call DrawArrowTileBCAtWD7F2Entry_F0
+    call DrawArrowTileBCAtArg2Entry_F0
     ld a, $FE
     ld [wMenuInputResult], a
     ret
@@ -4579,7 +4579,7 @@ Jump_0F0_675C::
 ; 1 call site from 1 routine (e.g. HandleTwoChoiceCursorInput_F0)
 ; reads: wJoypadRepeatTimer, wCursorBlinkB8, wArg2, wChoiceCursorF0
 ; writes: wCursorBlinkB8
-BlinkCursorWD7B8_BankF0::
+BlinkCursorBlinkB8_BankF0::
 Func_0F0_676D:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
@@ -4613,7 +4613,7 @@ Func_0F0_678B:: ; address name
 ; B = $BC, then writes B at the scroll position + the offset from Data_0F0_67C0[wD7F2] entry wD7B7 (E-0125)
 ; 2 call sites from 1 routine (e.g. HandleTwoChoiceCursorInput_F0)
 ; reads: wArg2, wChoiceCursorF0
-DrawArrowTileBCAtWD7F2Entry_F0::
+DrawArrowTileBCAtArg2Entry_F0::
 Func_0F0_678F:: ; address name
     ld b, $BC
 
@@ -4659,7 +4659,7 @@ Data_0F0_67C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case17)
 ; reads: wF0ScreenKind
 ; writes: wArg1
-Run67EEWithWD7F1ForWD7EC::
+Run67EEWithArg1ForF0ScreenKind::
 Func_0F0_67D2:: ; address name
     ld a, [wF0ScreenKind]
     cp a, $03
@@ -4668,21 +4668,21 @@ Func_0F0_67D2:: ; address name
     jr z, Jump_0F0_67E5
     xor a, a
     ld [wArg1], a
-    call Run67EEWithWD7F1ForWD7EC_Sub01
+    call Run67EEWithArg1ForF0ScreenKind_Sub01
     ret
 
 Jump_0F0_67E5::
     ld a, $01
     ld [wArg1], a
-    call Run67EEWithWD7F1ForWD7EC_Sub01
+    call Run67EEWithArg1ForF0ScreenKind_Sub01
     ret
 
-; only called from Run67EEWithWD7F1ForWD7EC (E-0047)
-; 2 call sites from 1 routine (e.g. Run67EEWithWD7F1ForWD7EC)
+; only called from Run67EEWithArg1ForF0ScreenKind (E-0047)
+; 2 call sites from 1 routine (e.g. Run67EEWithArg1ForF0ScreenKind)
 ; reads: wBankF0BlockC7, wArg1, wF0ScreenKind, wBankF0ByteA8, wBankF0ByteA9, wIsCGB, wBankF0ByteC8, wBankF0ByteC9
 ; writes: hTemp0, wObject5, wSpriteSlotCount, wObject2, hTemp1, wOBJPaletteUploadRequest
 ; points at: wSpriteSlots, wObject1, hTemp0, wObject2
-Run67EEWithWD7F1ForWD7EC_Sub01::
+Run67EEWithArg1ForF0ScreenKind_Sub01::
 Func_0F0_67EE:: ; address name
     ld de, $0000
     call TestFlagBit
@@ -4723,7 +4723,7 @@ Jump_0F0_682C::
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_BankF0
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, [wBankF0BlockC7]
     and a, a
     jr nz, Jump_0F0_6845
@@ -4737,10 +4737,10 @@ Jump_0F0_6848::
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_BankF0
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
     ld a, $0D
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     xor a, a
     ld [wObject5], a
     ld a, $48
@@ -4792,7 +4792,7 @@ Jump_0F0_68C3::
     ldh [hTemp1], a
 
 Jump_0F0_68CD::
-    farcall DecompressGraphicsHFFC6ToHFFCA
+    farcall DecompressGraphicsTemp0ToTemp4
 
 Jump_0F0_68D3::
     ld a, [wIsCGB]
@@ -4805,7 +4805,7 @@ Jump_0F0_68DE::
     ret
 
 ; the same 7 bytes as CopyBytesDEFromHL (34:406E)
-; 6 call sites from 1 routine (e.g. Run67EEWithWD7F1ForWD7EC_Sub01)
+; 6 call sites from 1 routine (e.g. Run67EEWithArg1ForF0ScreenKind_Sub01)
 CopyBytesDEFromHL_BankF0::
 Func_0F0_68DF:: ; address name
     ld a, [hl+]
@@ -4976,7 +4976,7 @@ Jump_0F0_6B93::
 ; reads: wTopSpeciesLo, wTopSpeciesHi, wSpeciesRecord, wTopStat1, wTopStat3
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wTopSpeciesGrowth, wTopStat0, wTopStat2
 ; points at: wResistanceLevels
-LoadWCED9SpeciesStatsToWCF0A::
+LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth::
 Func_0F0_6BA1:: ; address name
     ld a, [wTopSpeciesLo]
     ld [wSpeciesIdLo], a
@@ -5005,12 +5005,12 @@ Jump_0F0_6BCD::
     ld [wTopStat2], a
     ret
 
-; ranks the 11 scores at wCEC3 in descending order (ties at random) into wCF7E, then wCF8A = BandOfWCE9E (E-0130)
+; ranks the 11 scores at wCEC3 in descending order (ties at random) into wCF7E, then wCF8A = BandOfFamilyBitCount (E-0130)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case11)
 ; reads: wRankIndex, wRankBand
 ; writes: wRankIndex, wRankBand, wTopSpeciesLo, wTopSpeciesHi, wTopSpeciesByte
 ; points at: wFamilyScores, wFamilyRankTaken, wFamilyRanking
-RankWCEC3ScoresIntoWCF7E::
+RankFamilyScoresIntoFamilyRanking::
 Func_0F0_6BE0:: ; address name
     xor a, a
     ld [wRankIndex], a
@@ -5074,7 +5074,7 @@ Jump_0F0_6C15::
     ld [wRankIndex], a
     cp a, $0B
     jr c, Jump_0F0_6BE4
-    call BandOfWCE9E
+    call BandOfFamilyBitCount
     ld [wRankBand], a
     xor a, a
     ld [wRankIndex], a
@@ -5627,7 +5627,7 @@ Data_0F0_7085:: ; heuristic: target of a monotone pointer table; C0
     db $FE, $FE
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0118)
-; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, RankWCEC3ScoresIntoWCF7E, RollWCEC0Chance, RollWCEC2ChanceAndRun72C8)
+; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, RankFamilyScoresIntoFamilyRanking, RollMarkChangeCountChance, RollCounterChanceAndRun72C8)
 ; reads: wRandomLo
 RandomModulo29_BankF0::
 Func_0F0_7097:: ; address name
@@ -5644,9 +5644,9 @@ Func_0F0_7097:: ; address name
     ret
 
 ; A = 4, 5, 6 or 7 for wCE9E < 4, < 6, < $0A, or more (E-0124)
-; 1 call site from 1 routine (e.g. RankWCEC3ScoresIntoWCF7E)
+; 1 call site from 1 routine (e.g. RankFamilyScoresIntoFamilyRanking)
 ; reads: wFamilyBitCount
-BandOfWCE9E::
+BandOfFamilyBitCount::
 Func_0F0_70AA:: ; address name
     ld a, [wFamilyBitCount]
     cp a, $04
@@ -5676,7 +5676,7 @@ Jump_0F0_70C2::
 ; reads: wLastMarkedBit, wMarkChangeCount, wFamilyBitCount
 ; writes: wMarkChangeCount, wLastMarkedBit, wFamilyBitCount
 ; points at: wFamilyBits
-MarkBitBInWCE9FAndCount::
+MarkBitBInFamilyBitsAndCount::
 Func_0F0_7245:: ; address name
     ld a, [wLastMarkedBit]
     cp a, b
@@ -5721,7 +5721,7 @@ Jump_0F0_7281::
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Case02_Case00)
 ; reads: wRollCounter, wRollState, wArg1
 ; writes: wRollCounter, wRollState
-RollWCEC2ChanceAndRun72C8::
+RollCounterChanceAndRun72C8::
 Func_0F0_7284:: ; address name
     ld a, [wRollCounter]
     cp a, $0F
@@ -5745,7 +5745,7 @@ Jump_0F0_728F::
     pop de
     ld a, l
     cp a, e
-    call c, RollWCEC2ChanceAndRun72C8_Sub01
+    call c, RollCounterChanceAndRun72C8_Sub01
 
 Jump_0F0_72AD::
     ld a, [wArg1]
@@ -5753,10 +5753,10 @@ Jump_0F0_72AD::
     ret
 
 ; when wCE9D = $3B and wCE9C = wCE9B = 0, clears wCEC2 and falls through (E-0122)
-; 1 call site from 1 routine (e.g. CallF072B4WhenWCE9DIs59)
+; 1 call site from 1 routine (e.g. CallF072B4WhenGM2TimerMinutesIs59)
 ; reads: wGM2TimerMinutes, wGM2TimerSeconds, wGM2TimerFrames, wRollState
 ; writes: wRollCounter
-ClearWCEC2WhenWCE9DIs59::
+ClearRollCounterWhenGM2TimerMinutesIs59::
 Func_0F0_72B4:: ; address name
     ld a, [wGM2TimerMinutes]
     cp a, $3B
@@ -5770,10 +5770,10 @@ Func_0F0_72B4:: ; address name
     xor a, a
     ld [wRollCounter], a
 
-; only called from RollWCEC2ChanceAndRun72C8 (E-0047)
-; 1 call site from 1 routine (e.g. RollWCEC2ChanceAndRun72C8)
+; only called from RollCounterChanceAndRun72C8 (E-0047)
+; 1 call site from 1 routine (e.g. RollCounterChanceAndRun72C8)
 ; reads: wRollState
-RollWCEC2ChanceAndRun72C8_Sub01::
+RollCounterChanceAndRun72C8_Sub01::
 Func_0F0_72C8:: ; address name
     ld a, [wRollState]
     rst $00
@@ -7462,7 +7462,7 @@ Jump_0F0_7CD0::
     ret
 
 ; A = $FF when bit DE of the bit array at HL is set (mask Data_0F0_7CFB), else 0; HL is left at the byte (E-0124)
-; 2 call sites from 2 routines (e.g. MarkBitBInWCE9FAndCount, OrDIntoFunc7CD4Byte)
+; 2 call sites from 2 routines (e.g. MarkBitBInFamilyBitsAndCount, OrDIntoFunc7CD4Byte)
 TestBitDEOfBitArrayHL::
 Func_0F0_7CD4:: ; address name
     push de
@@ -7496,7 +7496,7 @@ Data_0F0_7CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; [HL from Func_0F0_7CD4] |= D (E-0122)
-; 1 call site from 1 routine (e.g. MarkBitBInWCE9FAndCount)
+; 1 call site from 1 routine (e.g. MarkBitBInFamilyBitsAndCount)
 OrDIntoFunc7CD4Byte::
 Func_0F0_7D03:: ; address name
     call TestBitDEOfBitArrayHL
@@ -7779,7 +7779,7 @@ Jump_0F0_7E64::
 ; A = 1 with a chance growing with wCEC0 (none below 5, 10 per step to 80 from 13), else 0 (E-0124)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case00)
 ; reads: wMarkChangeCount
-RollWCEC0Chance::
+RollMarkChangeCountChance::
 Func_0F0_7E69:: ; address name
     ld a, [wMarkChangeCount]
     cp a, $05

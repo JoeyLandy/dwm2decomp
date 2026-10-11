@@ -1424,7 +1424,7 @@ Func_073_49E6:: ; address name
     ld [rRAMG], a
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     xor a, a
     ld [rRAMG], a
     ld hl, wNameGlyphBuf
@@ -2792,7 +2792,7 @@ Jump_073_5194:: ; address name
     ld a, $02
     ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
-    farcall PickRandomWC902FromTable478F
+    farcall PickRandomEncounterCountdownFromTable478F
     ret
 
 ; implements script command type CB; reached through ScriptCommandCB in bank $10 (E-0038)
@@ -2874,7 +2874,7 @@ Jump_073_524B:: ; address name
     ldh [hTemp0], a
     ld a, $30
     ldh [hTemp1], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -2905,7 +2905,7 @@ Jump_073_5265:: ; address name
 Jump_073_5278::
     ld a, $0A
     ldh [hTemp0], a
-    farcall MarkKeyEntryKindHFFC6Bit6
+    farcall MarkKeyEntryKindTemp0Bit6
     ld de, $0206
     call SetFlagBit
     jr Jump_073_52AC
@@ -2913,7 +2913,7 @@ Jump_073_5278::
 Jump_073_528A::
     ld a, $0B
     ldh [hTemp0], a
-    farcall MarkKeyEntryKindHFFC6Bit6
+    farcall MarkKeyEntryKindTemp0Bit6
     ld de, $0207
     call SetFlagBit
     jr Jump_073_52AC
@@ -2921,7 +2921,7 @@ Jump_073_528A::
 Jump_073_529C::
     ld a, $0C
     ldh [hTemp0], a
-    farcall MarkKeyEntryKindHFFC6Bit6
+    farcall MarkKeyEntryKindTemp0Bit6
     ld de, $0208
     call SetFlagBit
 
@@ -2956,7 +2956,7 @@ Jump_073_52B9:: ; address name
 Jump_073_52C5::
     ld a, [de]
     ldh [hTemp0], a
-    farcall StartScriptedEncounterHFFC6
+    farcall StartScriptedEncounterTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3007,13 +3007,13 @@ Func_073_5378:: ; address name
     ldh [hTemp0], a
     ld a, $20
     ldh [hTemp1], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
     ld a, $09
     ldh [hTemp0], a
-    farcall MarkKeyEntryKindHFFC6Bit6
+    farcall MarkKeyEntryKindTemp0Bit6
     ld a, [wStoryFlags + $68]
     set 1, a
     ld [wStoryFlags + $68], a
@@ -3342,7 +3342,7 @@ Func_073_5546:: ; address name
 ScriptCommandCC_Run_Case01::
 Jump_073_554E:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     xor a, a
     ld [wObject5], a
@@ -3358,7 +3358,7 @@ ScriptCommandCC_Run_Case00::
 Jump_073_555E:: ; address name
     ld a, $05
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $40
     ld [wObject5 + $4], a
     ld a, $20
@@ -3406,13 +3406,13 @@ Func_073_55A4:: ; address name
     ldh [hTemp0], a
     ld a, $30
     ldh [hTemp1], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
     ld a, $07
     ldh [hTemp0], a
-    farcall MarkKeyEntryKindHFFC6Bit6
+    farcall MarkKeyEntryKindTemp0Bit6
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -3517,7 +3517,7 @@ Jump_073_5659:: ; address name
     ldh [hTemp0], a
     ld a, $40
     ldh [hTemp1], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ld a, [wObject2 + $C]
     cp a, $40
     jr z, Jump_073_5670
@@ -3903,7 +3903,7 @@ Jump_073_5888:: ; address name
     ld [wObject5], a
     ld a, $2C
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld a, $80
     ld [wScriptStartRequest], a
@@ -3915,7 +3915,7 @@ Jump_073_5888:: ; address name
 ScriptCommand60_Run_Case03::
 Jump_073_58B1:: ; address name
     ld b, $5A
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -3953,7 +3953,7 @@ ScriptCommand60_Run_Case00::
 Jump_073_58E0:: ; address name
     ld a, $10
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $50
     ld [wObject5 + $4], a
     ld a, $30
@@ -3974,7 +3974,7 @@ Func_073_58FE:: ; address name
     ldh [hTemp0], a
     ld a, $30
     ldh [hTemp1], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -4028,15 +4028,15 @@ Jump_073_5942::
     ld [wObject1 + $C], a
     ld a, $36
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld a, $37
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld a, $38
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     farcall RemoveInventorySlotShiftDown
     ld a, $80
     ld [wScriptStartRequest], a
@@ -4062,7 +4062,7 @@ Jump_073_5991:: ; address name
     farcall CountKeysOrFull
     ld a, $05
     ldh [hTemp1], a
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld a, [wGameFlags836]
     set 7, a
     ld [wGameFlags836], a
@@ -4151,7 +4151,7 @@ Jump_073_5A22:: ; address name
     ldh [hTemp0], a
     ld a, $20
     ldh [hTemp1], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -4180,7 +4180,7 @@ ScriptCommand57_Run_Case00::
 Jump_073_5A48:: ; address name
     ld a, $1C
     ldh [hTemp0], a
-    farcall StartScriptedEncounterHFFC6
+    farcall StartScriptedEncounterTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4264,7 +4264,7 @@ Func_073_5ABB:: ; address name
     ldh [hTemp0], a
     ld a, $30
     ldh [hTemp1], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -4310,7 +4310,7 @@ Jump_073_5AF2:: ; address name
     ldh [hTemp0], a
     ld a, $20
     ldh [hTemp1], a
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -4716,7 +4716,7 @@ Func_073_5D71:: ; address name
     ldh [hTemp1], a
 
 Jump_073_5D88::
-    farcall ScriptStepBlinkObjectHFFC6
+    farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -4907,7 +4907,7 @@ Func_073_5E73:: ; address name
 ScriptCommand51_Run_Case00::
 Jump_073_5E97:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, wSpriteSlots + $D
     call SetBit2AtHL_B73
@@ -5009,7 +5009,7 @@ Func_073_5EF9:: ; address name
 ScriptCommand50_Run_Case00::
 Jump_073_5F1D:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, wSpriteSlots + $D
     call SetBit2AtHL_B73
@@ -5045,7 +5045,7 @@ Func_073_5F39:: ; address name
 ; reads: wArg5, wPartyCount, wObject3
 ; writes: hTemp1, hTemp2, hTemp3, wOBJPaletteUploadRequest, wScriptStartRequest
 ; points at: wPartyCount, wFollowerRecords, wPartyList, wSpriteSlotCount
-AddRecordWD7F5AsFollower:: ; heuristic: follows a terminator; C0
+AddRecordArg5AsFollower:: ; heuristic: follows a terminator; C0
 Func_073_5F55:: ; address name
     ld a, $00
     ldh [hTemp1], a
@@ -5053,7 +5053,7 @@ Func_073_5F55:: ; address name
     ldh [hTemp2], a
     ld a, $02
     ldh [hTemp3], a
-    farcall CreateMonsterRecordOfKindHFFC7
+    farcall CreateMonsterRecordOfKindTemp1
     ld hl, wPartyCount
     inc [hl]
     ld a, [wPartyCount]
@@ -5114,7 +5114,7 @@ Jump_073_5FC4:: ; address name
 
 Jump_073_5FD4::
     ld b, $5A
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     xor a, a
     ld [wObject5], a
@@ -5131,7 +5131,7 @@ ScriptCommand4C_Run_Case00::
 Jump_073_5FE4:: ; address name
     ld a, $11
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld hl, $6020
     ld de, $00D1
     call TestFlagBit
@@ -5203,7 +5203,7 @@ Jump_073_604F:: ; address name
     ld hl, wSpriteSlots + $D
     call SetBit1AtHL_Bank73
     ld b, $1E
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     xor a, a
     ld [wSpriteSlots + $7], a
@@ -5238,7 +5238,7 @@ Func_073_6079:: ; address name
 ScriptCommand44_Run_Case02::
 Jump_073_6083:: ; address name
     ld b, $78
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld a, $40
     ld [wObject2 + $C], a
@@ -5302,7 +5302,7 @@ Jump_073_60CD:: ; address name
     ret nz
     ld a, $0C
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $40
     ld [wObject5 + $4], a
     ld a, $48
@@ -5422,7 +5422,7 @@ ScriptCommand3E_Run_Case00::
 Jump_073_618F:: ; address name
     ld a, $10
     ld [wMapSpriteKind], a
-    farcall SetupScriptSpriteFromWC195
+    farcall SetupScriptSpriteFromMapSpriteKind
     ret
 
 ; entry 0 of the `rst $00` table in ScriptCommand64_Run
@@ -5486,7 +5486,7 @@ Jump_073_61EC::
     farcall CountKeysOrFull
     ld a, $04
     ldh [hTemp1], a
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld a, [wGameFlags836]
     set 7, a
     ld [wGameFlags836], a
@@ -5551,7 +5551,7 @@ Jump_073_622D:: ; address name
 ScriptCommand3D_Run_Case04::
 Jump_073_6252:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -5579,7 +5579,7 @@ Jump_073_625D:: ; address name
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall LoadListedRecordNameTilesForHFFC6
+    farcall LoadListedRecordNameTilesForTemp0
     xor a, a
     ldh [hFieldDrawFlags], a
     xor a, a
@@ -5671,7 +5671,7 @@ Jump_073_62D7:: ; address name
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall FindPartyIndexOfSpeciesHFFC6
+    farcall FindPartyIndexOfSpeciesTemp0
     ldh a, [hTemp0]
     ld c, a
     sla a
@@ -5754,7 +5754,7 @@ Jump_073_6368::
     farcall CountKeysOrFull
     ld a, $04
     ldh [hTemp1], a
-    farcall WriteKeyEntryHFFC6
+    farcall WriteKeyEntryTemp0
     ld a, [wGameFlags836]
     set 7, a
     ld [wGameFlags836], a
@@ -5849,7 +5849,7 @@ Jump_073_63DA:: ; address name
 ScriptCommand3C_Run_Case0E::
 Jump_073_63FF:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -5877,7 +5877,7 @@ Jump_073_640A:: ; address name
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall LoadListedRecordNameTilesForHFFC6
+    farcall LoadListedRecordNameTilesForTemp0
     xor a, a
     ldh [hFieldDrawFlags], a
     xor a, a
@@ -6126,7 +6126,7 @@ Jump_073_653D:: ; address name
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall FindPartyIndexOfSpeciesHFFC6
+    farcall FindPartyIndexOfSpeciesTemp0
     ldh a, [hTemp0]
     ld c, a
     sla a
@@ -6277,7 +6277,7 @@ Jump_073_65ED:: ; address name
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall LoadListedRecordNameTilesForHFFC6
+    farcall LoadListedRecordNameTilesForTemp0
     xor a, a
     ldh [hFieldDrawFlags], a
     ld hl, wScriptStep
@@ -6542,7 +6542,7 @@ Jump_073_6729:: ; address name
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    farcall FindPartyIndexOfSpeciesHFFC6
+    farcall FindPartyIndexOfSpeciesTemp0
     ldh a, [hTemp0]
     ld c, a
     sla a
@@ -6867,7 +6867,7 @@ Jump_073_6910:: ; address name
 ScriptCommand35_Run_Case01::
 Jump_073_691C:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -7055,7 +7055,7 @@ Jump_073_69E3:: ; address name
 ScriptCommand33_Run_Case02::
 Jump_073_6A0B:: ; address name
     farcall UpdatePlayerMovement
-    farcall RunWC468ActionIfBit7
+    farcall RunFieldActionRequestActionIfBit7
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
@@ -7099,7 +7099,7 @@ Jump_073_6A2B:: ; address name
     ld a, h
     ldh [hPlayerStepDYHi], a
     farcall UpdatePlayerMovement
-    farcall RunWC468ActionIfBit7
+    farcall RunFieldActionRequestActionIfBit7
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -7433,7 +7433,7 @@ Jump_073_6C21:: ; address name
     ret nc
     ld a, $10
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld a, $80
     ld [wObject5], a
     ld a, $0E
@@ -7685,25 +7685,25 @@ ScriptCommand1E_Run::
 Func_073_6E5F:: ; address name
     ld a, $19
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1A
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1B
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_073_6EA0
     ld a, $1C
     ldh [hTemp0], a
-    farcall FindHFFC6InWC61DList
+    farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_073_6EA0
@@ -7776,11 +7776,11 @@ Func_073_6EE7:: ; address name
 ScriptCommand21_Run_Case00::
 Jump_073_6EEF:: ; address name
     ld b, $5A
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld a, $05
     ldh [hTemp0], a
-    farcall RunFieldCommandHFFC6
+    farcall RunFieldCommandTemp0
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -7791,7 +7791,7 @@ Jump_073_6EEF:: ; address name
 ScriptCommand21_Run_Case01::
 Jump_073_6F04:: ; address name
     ld b, $28
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     xor a, a
     ld [wObject5], a
@@ -8111,7 +8111,7 @@ Jump_073_70A9:: ; address name
 ScriptCommand16_Run_Case18::
 Jump_073_70C2:: ; address name
     ld b, $B4
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, $005C
     call StartMessageHL_B73b
@@ -8170,7 +8170,7 @@ Jump_073_711D::
     ld [wScriptParam0], a
     cp a, $20
     jr z, Jump_073_7138
-    farcall CycleWC949Down
+    farcall CycleSpriteFloatYDown
     xor a, a
     ldh [hTemp0], a
     farcall DrawAnimatedMetaSprite1B
@@ -8199,14 +8199,14 @@ Jump_073_7138::
 ; points at: wScriptStep
 ScriptCommand16_Run_Case16::
 Jump_073_715A:: ; address name
-    farcall CycleWC949Down
+    farcall CycleSpriteFloatYDown
     xor a, a
     ldh [hTemp0], a
     farcall DrawAnimatedMetaSprite1B
     ld de, wSpriteSlots + $7
     call RotateDirectionAtDEEvery32_Bank73
     ld b, $78
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, $005B
     call StartMessageHL_B73b
@@ -8221,7 +8221,7 @@ Jump_073_715A:: ; address name
 ; points at: wScriptParam0, wScriptStep
 ScriptCommand16_Run_Case15::
 Jump_073_7180:: ; address name
-    farcall CycleWC949Down
+    farcall CycleSpriteFloatYDown
     xor a, a
     ldh [hTemp0], a
     farcall DrawAnimatedMetaSprite1B
@@ -8250,7 +8250,7 @@ Jump_073_7180:: ; address name
 ; writes: hTemp0
 ScriptCommand16_Run_Case13::
 Jump_073_71BC:: ; address name
-    farcall CycleWC949Down
+    farcall CycleSpriteFloatYDown
     xor a, a
     ldh [hTemp0], a
     farcall DrawAnimatedMetaSprite1B
@@ -8293,7 +8293,7 @@ Jump_073_71F6:: ; address name
     ld [wFollowerRecords + $1], a
     ld a, $40
     ld [wFollowerRecords + $2], a
-    farcall CycleWC949Down
+    farcall CycleSpriteFloatYDown
     xor a, a
     ldh [hTemp0], a
     farcall DrawAnimatedMetaSprite1B
@@ -8847,7 +8847,7 @@ Func_073_75DD:: ; address name
 ScriptCommand14_Run_Case03::
 Jump_073_75E9:: ; address name
     ld b, $3C
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld a, $80
     ld [wScriptStartRequest], a
@@ -9099,7 +9099,7 @@ Jump_073_7741:: ; address name
 ScriptCommand13_Run_Case02::
 Jump_073_775A:: ; address name
     ld b, $1E
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -9312,7 +9312,7 @@ Jump_073_78B2:: ; address name
     call ScriptCommand12_Run_Shared01
     call ScriptCommand12_Run_Shared02
     ld b, $A0
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld a, $40
     ld [wScriptParam1], a
@@ -9331,7 +9331,7 @@ Jump_073_78CC:: ; address name
     call ScriptCommand12_Run_Shared01
     call ScriptCommand12_Run_Shared02
     ld b, $80
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld a, $81
     ld [wMessageIndex], a
@@ -9558,7 +9558,7 @@ Jump_073_7A11:: ; address name
     ld a, $80
     ld [wObject5], a
     ld b, $3C
-    call StepWC921Counter_Bank73
+    call StepScriptParam0Counter_Bank73
     ret nc
     ld hl, wScriptStep
     inc [hl]
@@ -9568,7 +9568,7 @@ Jump_073_7A11:: ; address name
 ; 19 call sites from 19 routines (e.g. ScriptCommandCC_Run_Case01, ScriptCommand60_Run_Case03, ScriptCommand51_Run_Case00, ScriptCommand50_Run_Case00, ...)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
-StepWC921Counter_Bank73::
+StepScriptParam0Counter_Bank73::
 Func_073_7A2B:: ; address name
     ld a, [wScriptParam0]
     inc a

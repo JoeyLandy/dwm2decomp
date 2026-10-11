@@ -359,7 +359,7 @@ Jump_087_43DC::
     ld a, [wPartyWindowFlags]
     bit 7, a
     ret z
-    farcall RedrawScreenBufferIfWC8CDBit7
+    farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
 Jump_087_43FC::
@@ -539,7 +539,7 @@ Jump_087_44D1::
     ld a, [wPartyWindowFlags]
     bit 7, a
     jr z, Jump_087_44FA
-    farcall RedrawScreenBufferIfWC8CDBit7
+    farcall RedrawScreenBufferIfPartyWindowFlagsBit7
 
 Jump_087_44FA::
     pop hl

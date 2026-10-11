@@ -2,7 +2,7 @@ SECTION "Bank 27", ROMX[$4000], BANK[$27]
     db $27
 
 ; ORs the attribute bits from Data_027_411C[hSpriteSetIndex] (when its bit 0 is set) into hSpriteAttrXor, then builds the sprite from Data_027_401E (E-0124)
-; 6 call sites from 6 routines (e.g. DebugMonsterPictureViewer_Update, UpdateAndDrawSpriteSlots, AdvanceHFF99AndRunHFF8BMode_Shared01, AdvanceHFF99AndRunHFF8BMode_Case00_Sub01, ...)
+; 6 call sites from 6 routines (e.g. DebugMonsterPictureViewer_Update, UpdateAndDrawSpriteSlots, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01, Func_004_4D43, ...)
 ; reads: hSpriteSetIndex, hSpriteAttrXor
 ; writes: hSpriteAttrXor
 DrawMetaSpriteSet_Bank27::
@@ -636,7 +636,7 @@ Jump_027_4340::
 Jump_027_4347::
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsHFFBA_Bank27
+    call BGTileUnderPointIsSpriteHideTile_Bank27
     jr nc, Jump_027_4340
     inc e
     ldh a, [hSpriteTileOffset]
@@ -738,7 +738,7 @@ Jump_027_43BB::
 Jump_027_43C2::
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsHFFBA_Bank27
+    call BGTileUnderPointIsSpriteHideTile_Bank27
     jr nc, Jump_027_43BB
     inc e
     ldh a, [hSpriteTileOffset]
@@ -763,7 +763,7 @@ Jump_027_43C2::
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. DrawMetaSpriteSet_Bank27_Sub01)
 ; reads: hScrollY, hScrollX, hSpriteHideTile, rSTAT
-BGTileUnderPointIsHFFBA_Bank27::
+BGTileUnderPointIsSpriteHideTile_Bank27::
 Func_027_43E2:: ; address name
     push hl
     push bc
@@ -8326,7 +8326,7 @@ Data_027_7317:: ; heuristic: meta-sprite frame; C0
     db $F8, $F8, $0F, $20 ; entry 3
     db $80 ; end
 
-; E-0143 (C1: on CGB, with hFFC8 = 0, DecompressGraphicsHFFC6ToHFFCA copies the 8 bytes at 27:$7328 + 8 * monster id to wOBJPaletteBuffer + 8 * hFFC9; the count matches MonsterSpriteTable).
+; E-0143 (C1: on CGB, with hFFC8 = 0, DecompressGraphicsTemp0ToTemp4 copies the 8 bytes at 27:$7328 + 8 * monster id to wOBJPaletteBuffer + 8 * hFFC9; the count matches MonsterSpriteTable).
 ; record: one CGB OBJ palette: 4 BGR555 colours
 MonsterSpritePalettes::
 Data_027_7328:: ; heuristic: start of a structured table; C0

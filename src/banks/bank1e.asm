@@ -178,7 +178,7 @@ Jump_01E_40E4:: ; address name
 ; writes: wScreenStep
 ScriptCommandE8_Run_Case01_Case02::
 Jump_01E_40F2:: ; address name
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -487,7 +487,7 @@ Jump_01E_42D1::
     ld a, [hl]
     ld b, a
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     pop bc
@@ -513,7 +513,7 @@ Jump_01E_42D1::
     ret
 
 Jump_01E_430D::
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     ld hl, wWindowTileBuffer + $78
     ld c, $28
     call ScriptCommandE8_Run_Shared07
@@ -632,7 +632,7 @@ ScriptCommandE8_Run_Case04_Case05::
 Jump_01E_440A:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall UpdateListCursorWD7AB
+    farcall UpdateListCursorListCursor
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -793,7 +793,7 @@ Jump_01E_4517:: ; address name
     jp nz, Jump_01E_455D
     bit 1, a
     jp nz, Jump_01E_4687
-    call BlinkCursorWD7AE_Bank1E
+    call BlinkCursorBlinkAE_Bank1E
     ret
 
 Jump_01E_4533::
@@ -933,7 +933,7 @@ Jump_01E_460F::
     ld a, [wPartyCount]
     cp a, $02
     jr nc, Jump_01E_465C
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -966,7 +966,7 @@ Jump_01E_465C::
     ld a, [wScreenStep]
     cp a, $0C
     jr nz, Jump_01E_4670
-    farcall WritePlayerNameWithFlag0SuffixToWC130
+    farcall WritePlayerNameWithFlag0SuffixToTextBuf0
 
 Jump_01E_4670::
     ld a, $01
@@ -996,7 +996,7 @@ Jump_01E_4687::
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case04_Case0C)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
-BlinkCursorWD7AE_Bank1E::
+BlinkCursorBlinkAE_Bank1E::
 Func_01E_469D:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
@@ -1119,13 +1119,13 @@ Jump_01E_473B:: ; address name
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
+    call StoreTemp0BytesToSRAMRecord
     xor a, a
     ldh [hTemp0], a
     ld a, [hl]
     ld c, $55
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
+    call StoreTemp0BytesToSRAMRecord
     xor a, a
     ld [rRAMG2], a
     ld a, [wPartyCount]
@@ -1135,7 +1135,7 @@ Jump_01E_473B:: ; address name
     ld [wPartyCount], a
 
 Jump_01E_4774::
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     ld hl, wListEntries
     ld de, wPartyList
     ld b, $03
@@ -1170,7 +1170,7 @@ Jump_01E_4782::
 ; points at: sRecords
 ScriptCommandE8_Run_Case04_Case10::
 Jump_01E_47B2:: ; address name
-    farcall LoadWD7FFFromWC7C7Table
+    farcall LoadRecordCapacityFromFarmLevelTable
     ld d, c
     ld a, $0A
     ld [rRAMG2], a
@@ -1472,7 +1472,7 @@ Func_01E_49F8:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    call DrawPageOfPagesAtWD7F1_Bank1E
+    call DrawPageOfPagesAtArg1_Bank1E
 
 Jump_01E_4A2A::
     ld a, [wScreenStep]
@@ -1493,7 +1493,7 @@ Func_01E_4A32:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandE8_Run_Case04_Case17::
 Jump_01E_4A39:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     push af
@@ -1517,7 +1517,7 @@ Jump_01E_4A39:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandE8_Run_Case04_Case19::
 Jump_01E_4A5E:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     ld [wArg1], a
@@ -1615,7 +1615,7 @@ Jump_01E_4AE0:: ; address name
 ScriptCommandE8_Run_Case04_Case21::
 Jump_01E_4AF1:: ; address name
     farcall DrawRecordListNameTiles_Bank1D
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1680,7 +1680,7 @@ Jump_01E_4B5D:: ; address name
     ld [rRAMB], a
     ld a, [wPartyList]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     ld hl, wNameGlyphBuf
@@ -1719,10 +1719,10 @@ Jump_01E_4B89::
     ld [de], a
     inc de
     push de
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     pop de
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -1774,27 +1774,27 @@ Jump_01E_4BE1:: ; address name
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
+    call StoreTemp0BytesToSRAMRecord
     xor a, a
     ldh [hTemp0], a
     ld a, [hl]
     ld c, $55
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
-    call GetWD789Cell5Address
+    call StoreTemp0BytesToSRAMRecord
+    call GetListEntriesCell5Address
     push hl
     ld a, $02
     ldh [hTemp0], a
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
+    call StoreTemp0BytesToSRAMRecord
     xor a, a
     ld [rRAMG2], a
     pop hl
     ld a, [hl]
     ld [wPartyList], a
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
@@ -1945,7 +1945,7 @@ Jump_01E_4D1C:: ; address name
 ; points at: wTextWindowTileLo
 ScriptCommandE8_Run_Case05_Case15::
 Jump_01E_4D37:: ; address name
-    farcall WritePlayerNameWithFlag0SuffixToWC130
+    farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1974,18 +1974,18 @@ Jump_01E_4D5B:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, $02
     ldh [hTemp0], a
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
+    call StoreTemp0BytesToSRAMRecord
     ld a, [wPartyCount]
     ld hl, wPartyList
     add_a_to_hl
     push hl
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     pop hl
     ld [hl], a
@@ -1994,7 +1994,7 @@ Jump_01E_4D5B:: ; address name
     ld [wPartyCount], a
     xor a, a
     ld [rRAMG2], a
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
@@ -2015,7 +2015,7 @@ ScriptCommandE8_Run_Case05_Case25::
 Jump_01E_4DB5:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall UpdateListCursorWD7AB
+    farcall UpdateListCursorListCursor
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -2207,7 +2207,7 @@ Jump_01E_4EFE:: ; address name
     ld [wScreenStep], a
     ld a, $01
     ld [wTwoChoiceCursor], a
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
@@ -2345,7 +2345,7 @@ Jump_01E_4FD6:: ; address name
     ld [rRAMB], a
     ld a, [wSelectedRecord]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     ld hl, wNameGlyphBuf
@@ -2364,30 +2364,30 @@ Jump_01E_4FF7:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, $02
     ldh [hTemp0], a
     ld a, [hl]
     ld c, $00
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
+    call StoreTemp0BytesToSRAMRecord
     ld a, $01
     ldh [hTemp0], a
     ld a, [wSelectedRecord]
     ld c, $00
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
+    call StoreTemp0BytesToSRAMRecord
     xor a, a
     ldh [hTemp0], a
     ld a, [wSelectedRecord]
     ld c, $55
     ld b, $01
-    call StoreHFFC6BytesToSRAMRecord
+    call StoreTemp0BytesToSRAMRecord
     ld a, [wItemGridX]
     ld hl, wPartyList
     add_a_to_hl
     push hl
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     pop hl
     ld [hl], a
@@ -2396,7 +2396,7 @@ Jump_01E_4FF7:: ; address name
     ld [wSelectedRecord], a
     xor a, a
     ld [rRAMG2], a
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
@@ -2478,7 +2478,7 @@ Jump_01E_50BE:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $129
     ld a, [wDigits + $1]
     add a, $E0
@@ -2490,7 +2490,7 @@ Jump_01E_50BE:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $151
     ld a, [wDigits + $1]
     add a, $E0
@@ -2673,7 +2673,7 @@ Jump_01E_51E6:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandE8_Run_Case06_Case08::
 Jump_01E_525F:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     call LoadFamilyIconTileForRecordB_Bank1E
@@ -2684,7 +2684,7 @@ Jump_01E_525F:: ; address name
     xor a, a
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     ld [wArg1], a
@@ -2785,7 +2785,7 @@ Jump_01E_5300:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $129
     ld a, [wDigits + $1]
     add a, $E0
@@ -2831,7 +2831,7 @@ Jump_01E_536A:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $129
     ld a, [wDigits + $1]
     add a, $E0
@@ -2843,7 +2843,7 @@ Jump_01E_536A:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $151
     ld a, [wDigits + $1]
     add a, $E0
@@ -2984,7 +2984,7 @@ Jump_01E_5518:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    call DrawPageOfPagesAtWD7F1_Bank1E
+    call DrawPageOfPagesAtArg1_Bank1E
 
 Jump_01E_5556::
     call BGMapAddressAtScroll_Bank1E
@@ -3309,7 +3309,7 @@ Jump_01E_5774:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $129
     ld a, [wDigits + $1]
     add a, $E0
@@ -3321,7 +3321,7 @@ Jump_01E_5774:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $151
     ld a, [wDigits + $1]
     add a, $E0
@@ -3372,10 +3372,10 @@ Jump_01E_581C:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld c, $01
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     ld hl, wNameGlyphBuf
@@ -3425,14 +3425,14 @@ Jump_01E_586E:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld [wArg1], a
     xor a, a
     ld [rRAMG2], a
     ld [wArg2], a
     farcall DeleteSRAMRecordAndCompact
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
@@ -3540,7 +3540,7 @@ Jump_01E_592B:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $129
     ld a, [wDigits + $1]
     add a, $E0
@@ -3552,7 +3552,7 @@ Jump_01E_592B:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     ld hl, wWindowTileBuffer + $151
     ld a, [wDigits + $1]
     add a, $E0
@@ -3592,7 +3592,7 @@ Jump_01E_5994:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    call DrawPageOfPagesAtWD7F1_Bank1E
+    call DrawPageOfPagesAtArg1_Bank1E
 
 Jump_01E_59CC::
     ld a, [wScreenStep]
@@ -3650,14 +3650,14 @@ Jump_01E_5A16:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call GetWD789Cell4Address
+    call GetListEntriesCell4Address
     ld a, [hl]
     ld [wArg1], a
     xor a, a
     ld [rRAMG2], a
     ld [wArg2], a
     farcall DeleteSRAMRecordAndCompact
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     call ScriptCommandE8_Run_Shared03
     xor a, a
     ld [wListCursor], a
@@ -3812,13 +3812,13 @@ Jump_01E_5B50:: ; address name
     dw ScriptCommandE8_Run_Case09_Case01
     dw ScriptCommandE8_Run_Case09_Case02
     dw ScriptCommandE8_Run_Case09_Case03
-    dw DrawWD789Cell5RecordDetails
+    dw DrawListEntriesCell5RecordDetails
     dw ScriptCommandE8_Run_Case09_Case05
     dw ScriptCommandE8_Run_Case09_Case06
     dw DrawTileMap5E12AtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case08
     dw ScriptCommandE8_Run_Case09_Case09
-    dw ListRecordsAndDrawWD789Cell5Panel
+    dw ListRecordsAndDrawListEntriesCell5Panel
     dw ScriptCommandE8_Run_Case09_Case0B
     dw ScriptCommandE8_Run_Case09_Case0C
     dw ScriptCommandE8_Run_Case09_Case0D
@@ -3883,7 +3883,7 @@ Jump_01E_5BD0:: ; address name
     ld a, [wScreenSubStep]
     rst $00
     dw ScriptCommandE8_Run_Case09_Case06_Case00
-    dw ClearTileAreasAndIncWD782
+    dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw ScriptCommandE8_Run_Case09_Case06_Case03
 
@@ -3948,7 +3948,7 @@ Jump_01E_5C16::
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case0E_Case01)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep
-ClearTileAreasAndIncWD782::
+ClearTileAreasAndIncScreenSubStep::
 Func_01E_5C37:: ; address name
     ld hl, vTiles1 + $240
     ld bc, $0C01
@@ -4050,7 +4050,7 @@ Jump_01E_5CD5::
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
-    call RestoreSpriteStateFromWD7BA
+    call RestoreSpriteStateFromSavedFieldDrawFlags
     ld a, $70
     ldh [hSpriteHideTile], a
     xor a, a
@@ -4081,7 +4081,7 @@ Jump_01E_5D1F:: ; address name
     ld a, [wScreenSubStep]
     rst $00
     dw ScriptCommandE8_Run_Case09_Case15_Case00
-    dw ClearTileAreasAndIncWD782
+    dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw ScriptCommandE8_Run_Case09_Case15_Case03
 
@@ -4094,7 +4094,7 @@ Jump_01E_5D2B:: ; address name
     ld a, [wGameMode]
     cp a, $05
     jr z, Jump_01E_5D38
-    farcall DrawWD789Cell5SpeciesSprite
+    farcall DrawListEntriesCell5SpeciesSprite
 
 Jump_01E_5D38::
     xor a, a
@@ -4187,7 +4187,7 @@ Jump_01E_5DC5:: ; address name
     ld a, [wScreenSubStep]
     rst $00
     dw ScriptCommandE8_Run_Case09_Case1B_Case00
-    dw ClearTileAreasAndIncWD782
+    dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw ScriptCommandE8_Run_Case09_Case1B_Case03
 
@@ -4376,7 +4376,7 @@ Jump_01E_5F1D:: ; address name
     ld a, [wScreenSubStep]
     rst $00
     dw ScriptCommandE8_Run_Case09_Case20_Case00
-    dw ClearTileAreasAndIncWD782
+    dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw ScriptCommandE8_Run_Case09_Case20_Case03
 
@@ -4408,7 +4408,7 @@ Jump_01E_5F4D::
     ld a, [wGameMode]
     cp a, $05
     ret z
-    farcall CallFunc6899PreservingWD7F1AndHFFC6
+    farcall CallFunc6899PreservingArg1AndTemp0
     ret
 
 Jump_01E_5F5A::
@@ -4579,7 +4579,7 @@ Jump_01E_6055:: ; address name
     ld de, $78DA
     call ScriptCommandE8_Run_Shared05
     call ScriptCommandE8_Run_Shared04
-    call ClearTileAreasAndIncWD782
+    call ClearTileAreasAndIncScreenSubStep
     call RedrawRecordListAndNextStep
     call ScriptCommandE8_Run_Shared02
     xor a, a
@@ -4718,7 +4718,7 @@ Jump_01E_613A:: ; address name
     ld de, $791C
     call ScriptCommandE8_Run_Shared05
     farcall ListRecordsInUseWithByte6EClear
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     push hl
     ld a, [hl]
     ld b, a
@@ -4743,7 +4743,7 @@ Jump_01E_613A:: ; address name
 ; writes: wArg1
 ScriptCommandE8_Run_Case0E_Case04::
 Jump_01E_616A:: ; address name
-    call DrawWD789Cell5RecordDetails
+    call DrawListEntriesCell5RecordDetails
     ld a, $01
     ld [wArg1], a
     farcall MarkPartyMembersInRecordListPage
@@ -4760,7 +4760,7 @@ Jump_01E_6183:: ; address name
     ld a, [wScreenSubStep]
     rst $00
     dw ScriptCommandE8_Run_Case09_Case06_Case00
-    dw ClearTileAreasAndIncWD782
+    dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw ScriptCommandE8_Run_Case0E_Case06_Case03
 
@@ -4784,8 +4784,8 @@ Jump_01E_619F:: ; address name
     ld hl, $793C
     ld de, $791C
     call ScriptCommandE8_Run_Shared05
-    call ListRecordsAndDrawWD789Cell5Panel
-    call GetWD789Cell5Address
+    call ListRecordsAndDrawListEntriesCell5Panel
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     call LoadFamilyIconTileForRecordB_Bank1E
@@ -4811,7 +4811,7 @@ Jump_01E_61C5:: ; address name
     ld a, [wScreenSubStep]
     rst $00
     dw ScriptCommandE8_Run_Case09_Case15_Case00
-    dw ClearTileAreasAndIncWD782
+    dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw ScriptCommandE8_Run_Case0E_Case15_Case03
 
@@ -4840,7 +4840,7 @@ Jump_01E_61F1:: ; address name
     ld a, [wScreenSubStep]
     rst $00
     dw ScriptCommandE8_Run_Case09_Case1B_Case00
-    dw ClearTileAreasAndIncWD782
+    dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw ScriptCommandE8_Run_Case0E_Case1B_Case03
 
@@ -4873,7 +4873,7 @@ Jump_01E_6225:: ; address name
     ld a, [wScreenSubStep]
     rst $00
     dw ScriptCommandE8_Run_Case09_Case20_Case00
-    dw ClearTileAreasAndIncWD782
+    dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
     dw ScriptCommandE8_Run_Case0E_Case20_Case03
 
@@ -5010,7 +5010,7 @@ Jump_01E_62EF:: ; address name
     xor a, a
     ld [wArg7], a
     call DrawTileRectAtHLFromDE_Bank1E
-    call GetWD789Cell4Address
+    call GetListEntriesCell4Address
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -5027,7 +5027,7 @@ Jump_01E_62EF:: ; address name
 ; writes: hSpriteHideTile, wScreenStep
 ScriptCommandE8_Run_Case0D_Case05::
 Jump_01E_6325:: ; address name
-    call GetWD789Cell4Address
+    call GetListEntriesCell4Address
     ld a, [hl]
     ld b, a
     call DrawRecordParentNames
@@ -5096,7 +5096,7 @@ Jump_01E_6399:: ; address name
     and a, a
     jp nz, Jump_01E_63D3
     call DrawRect6x6From651BAtScroll41
-    call GetWD789Cell4Address
+    call GetListEntriesCell4Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5123,7 +5123,7 @@ Jump_01E_6399:: ; address name
     ret
 
 Jump_01E_63D3::
-    call GetWD789Cell4Address
+    call GetListEntriesCell4Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5200,7 +5200,7 @@ Jump_01E_644F::
     ret
 
 Jump_01E_645D::
-    call GetWD789Cell4Address
+    call GetListEntriesCell4Address
     ld c, $00
     ld a, l
     ld [wArg1], a
@@ -5221,7 +5221,7 @@ Jump_01E_6471::
     ret
 
 Jump_01E_6483::
-    call SplitWD7ABBy4_Bank1E
+    call SplitListCursorBy4_Bank1E
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -5280,7 +5280,7 @@ Jump_01E_64BE:: ; address name
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
-    call RestoreSpriteStateFromWD7BA
+    call RestoreSpriteStateFromSavedFieldDrawFlags
     ld a, $70
     ldh [hSpriteHideTile], a
     xor a, a
@@ -5330,7 +5330,7 @@ Jump_01E_6519:: ; address name
     ld [wArg1], a
     ld a, l
     ld [wArg2], a
-    call DrawPageOfPagesAtWD7F1_Bank1E
+    call DrawPageOfPagesAtArg1_Bank1E
 
 Jump_01E_654A::
     ld a, [wScreenStep]
@@ -5400,13 +5400,13 @@ Jump_01E_65B8:: ; address name
     dw ScriptCommandE8_Run_Case09_Case01
     dw ScriptCommandE8_Run_Case09_Case02
     dw ScriptCommandE8_Run_Case08_Case03
-    dw DrawWD789Cell5RecordDetails
+    dw DrawListEntriesCell5RecordDetails
     dw ScriptCommandE8_Run_Case09_Case05
     dw ScriptCommandE8_Run_Case08_Case06
     dw DrawTileMap5E12AtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case08
     dw ScriptCommandE8_Run_Case09_Case09
-    dw ListRecordsAndDrawWD789Cell5Panel
+    dw ListRecordsAndDrawListEntriesCell5Panel
     dw ScriptCommandE8_Run_Case09_Case0B
     dw ScriptCommandE8_Run_Case09_Case0C
     dw ScriptCommandE8_Run_Case08_Case0D
@@ -5516,16 +5516,16 @@ Jump_01E_664E:: ; address name
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case0E_Case04)
 ; reads: wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenStep
-DrawWD789Cell5RecordDetails::
+DrawListEntriesCell5RecordDetails::
 Func_01E_667C:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
     call DrawRecordLevelAndStatusRow_1E
-    call DrawWD789Cell5RecordDetails_Sub01
-    call DrawWD789Cell5RecordDetails_Sub02
+    call DrawListEntriesCell5RecordDetails_Sub01
+    call DrawListEntriesCell5RecordDetails_Sub02
     xor a, a
     ld [rRAMG2], a
     ld a, [wScreenStep]
@@ -5553,7 +5553,7 @@ Jump_01E_669D:: ; address name
     xor a, a
     ld [wArg7], a
     call DrawTileRectAtHLFromDE_Bank1E
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5580,7 +5580,7 @@ Jump_01E_669D:: ; address name
     ret
 
 Jump_01E_66EF::
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5638,7 +5638,7 @@ ScriptCommandE8_Run_Case08_Case06::
 Jump_01E_6753:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall UpdateListCursorWD7AB
+    farcall UpdateListCursorListCursor
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -5683,7 +5683,7 @@ Jump_01E_677D::
 ; writes: wBGPaletteUploadRequest, wScreenStep
 ScriptCommandE8_Run_Case09_Case08::
 Jump_01E_679E:: ; address name
-    farcall LoadAreaGraphicsForWD7FC
+    farcall LoadAreaGraphicsForAreaGraphicsIndex
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
     ld a, [wScreenStep]
@@ -5745,23 +5745,23 @@ Jump_01E_6808::
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case0E_Case0A)
 ; reads: wScreenState, wScreenStep
 ; writes: wArg1, wScreenStep
-ListRecordsAndDrawWD789Cell5Panel::
+ListRecordsAndDrawListEntriesCell5Panel::
 Func_01E_6810:: ; address name
     ld a, [wScreenState]
     cp a, $08
     jr nz, Jump_01E_681F
-    farcall ListPartyRecordsWithState2ToWD789
+    farcall ListPartyRecordsWithState2ToListEntries
     jr Jump_01E_6825
 
 Jump_01E_681F::
     farcall ListRecordsState1WithByte6EClear
 
 Jump_01E_6825::
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     call LoadFamilyIconTileForRecordB_Bank1E
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     ld [wArg1], a
@@ -5794,7 +5794,7 @@ Jump_01E_6840:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandE8_Run_Case09_Case0C::
 Jump_01E_685A:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     ld [wArg1], a
@@ -5811,8 +5811,8 @@ Jump_01E_685A:: ; address name
 ; points at: wTextWindowTileLo
 ScriptCommandE8_Run_Case08_Case0D::
 Jump_01E_6870:: ; address name
-    farcall ListPartyRecordsWithState2ToWD789
-    call GetWD789Cell4Address
+    farcall ListPartyRecordsWithState2ToListEntries
+    call GetListEntriesCell4Address
     ld a, [hl]
     ld b, a
     call LoadFamilyIconTileForRecordB_Bank1E
@@ -5829,7 +5829,7 @@ Jump_01E_6870:: ; address name
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank1E
-    call RestoreSpriteStateFromWD7BA
+    call RestoreSpriteStateFromSavedFieldDrawFlags
     ld a, $70
     ldh [hSpriteHideTile], a
     xor a, a
@@ -5894,7 +5894,7 @@ Jump_01E_68E4:: ; address name
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, ...
 ScriptCommandE8_Run_Case09_Case12::
 Jump_01E_6907:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     push hl
     ld a, $0A
@@ -5913,7 +5913,7 @@ Jump_01E_6907:: ; address name
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, ...
 ScriptCommandE8_Run_Case09_Case13::
 Jump_01E_6920:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     push hl
     ld a, $0A
     ld [rRAMG2], a
@@ -5941,7 +5941,7 @@ Jump_01E_6920:: ; address name
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, ...
 ScriptCommandE8_Run_Case09_Case14::
 Jump_01E_694D:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -5960,10 +5960,10 @@ Jump_01E_694D:: ; address name
     ld [wArg4], a
     ld a, $80
     ld [wArg5], a
-    farcall DecompressGraphicsWD7F1ToWD7F4
+    farcall DecompressGraphicsArg1ToArg4
     ld a, $F0
     ldh [hSpriteHideTile], a
-    farcall ShowCategory11StringOfWD789Cell5Record
+    farcall ShowCategory11StringOfListEntriesCell5Record
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
@@ -5986,7 +5986,7 @@ Jump_01E_694D:: ; address name
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, ...
 ScriptCommandE8_Run_Case08_Case15::
 Jump_01E_69AD:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -6011,7 +6011,7 @@ Jump_01E_69AD:: ; address name
     farcall DrawMetaSpritePartC0
     xor a, a
     ld [wMenuInputResult], a
-    farcall UpdateListCursorWD7AB
+    farcall UpdateListCursorListCursor
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -6074,7 +6074,7 @@ Jump_01E_6A18::
 ; writes: rRAMG2, rRAMB, wScreenStep
 ScriptCommandE8_Run_Case09_Case16::
 Jump_01E_6A57:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, $0A
     ld [rRAMG2], a
     xor a, a
@@ -6097,7 +6097,7 @@ Jump_01E_6A70:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ldh [hTemp5], a
     ld c, $34
@@ -6190,7 +6190,7 @@ Jump_01E_6AFF::
 ; writes: wScreenStep
 ScriptCommandE8_Run_Case09_Case1A::
 Jump_01E_6B10:: ; address name
-    farcall ShowSpeciesCategory13StringOfWD789Cell5Record
+    farcall ShowSpeciesCategory13StringOfListEntriesCell5Record
     ld a, [wScreenStep]
     add a, $02
     ld [wScreenStep], a
@@ -6205,7 +6205,7 @@ ScriptCommandE8_Run_Case08_Case1B::
 Jump_01E_6B1F:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall UpdateListCursorWD7AB
+    farcall UpdateListCursorListCursor
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -6337,7 +6337,7 @@ Jump_01E_6C1F:: ; address name
     ld [rRAMG2], a
     xor a, a
     ld [rRAMB], a
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
     push bc
@@ -6385,7 +6385,7 @@ Jump_01E_6C69:: ; address name
     xor a, a
     ld [wArg7], a
     call DrawTileRectAtHLFromDE_Bank1E
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -6419,7 +6419,7 @@ ScriptCommandE8_Run_Case08_Case20::
 Jump_01E_6CAB:: ; address name
     xor a, a
     ld [wMenuInputResult], a
-    farcall UpdateListCursorWD7AB
+    farcall UpdateListCursorListCursor
     ld a, [wMenuInputResult]
     and a, a
     jr z, Jump_01E_6CC7
@@ -6431,7 +6431,7 @@ Jump_01E_6CAB:: ; address name
     jr z, Jump_01E_6D06
 
 Jump_01E_6CC7::
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     ld c, $00
     ld a, l
     ld [wArg1], a
@@ -6492,7 +6492,7 @@ Func_01E_6D0F:: ; address name
     call DrawTileRectAtHLFromDE_Bank1E
     ret
 
-; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromWD7F1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
+; wD7F5/wD7F6 = HL (destination), wD7F1/wD7F2 = DE (source), then far-calls DrawTileRectFromArg1Params (width and rows already in wD7F3/wD7F4) (E-0093) (the same 23 bytes appear in 4 banks)
 ; 27 call sites from 19 routines (e.g. ScriptCommandE8_Run_Case08_Case1B, ScriptCommandE8_Run_Case08_Case15, ScriptCommandE8_Run_Case08_Case06, ScriptCommandE8_Run_Case08_Case03, ...)
 ; writes: wArg5, wArg6, wArg1, wArg2
 DrawTileRectAtHLFromDE_Bank1E::
@@ -6505,7 +6505,7 @@ Func_01E_6D2B:: ; address name
     ld [wArg1], a
     ld a, e
     ld [wArg2], a
-    farcall DrawTileRectFromWD7F1Params
+    farcall DrawTileRectFromArg1Params
     ret
 
 ; A = [HL] (a record): shows string PersonalityIndexOfRecord of category 7 (personality names) in a window at $9200 with size $0109 (ShowString_Bank08), then restores the default window ($8800, $1202) (E-0120)
@@ -6540,7 +6540,7 @@ Func_01E_6D42:: ; address name
     ret
 
 ; for record B draws the names of its parents (fields from $6ED2 or $6EDA by bit 4 of field $0D), or '???' when unknown (E-0131)
-; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunWD781Step_F0_5DE8_Case05_Sub01)
+; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunScreenStep_F0_5DE8_Case05_Sub01)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wArg1, wArg2, wArg3
 DrawRecordParentNames::
@@ -6606,7 +6606,7 @@ Jump_01E_6DC5::
     inc de
     push de
     ld a, b
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     ld de, vTiles2 + $200
@@ -6633,7 +6633,7 @@ Jump_01E_6DF3::
     inc de
     push de
     ld a, b
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld de, vTiles2 + $2F0
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -6681,7 +6681,7 @@ Jump_01E_6E3E::
     inc de
     push de
     ld a, b
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
     ld de, vTiles2 + $340
@@ -6706,7 +6706,7 @@ Jump_01E_6E6C::
     ld a, [de]
     ld c, a
     ld a, b
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld de, vTiles2 + $430
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -6768,7 +6768,7 @@ Func_01E_6E84:: ; address name
     ret
     db $1A, $8E, $1A, $1E, $1C, $99, $1C, $29, $1C, $99, $1C, $29, $1A, $8E, $1A, $1E
 
-; clears five tiles at vTiles2 + $290 (copying the tile at $2940), then copies the name at record [HL] field $0F (CopyRecordNameToWC8CF) and draws it there (E-0120)
+; clears five tiles at vTiles2 + $290 (copying the tile at $2940), then copies the name at record [HL] field $0F (CopyRecordNameToNameGlyphBuf) and draws it there (E-0120)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case09_Case12)
 ; writes: wNameGlyphBuf
 DrawRecordName0FAtTiles2290::
@@ -6788,7 +6788,7 @@ Func_01E_6EE2:: ; address name
     pop hl
     ld a, [hl]
     ld c, $0F
-    call CopyRecordNameToWC8CF
+    call CopyRecordNameToNameGlyphBuf
     ld de, vTiles2 + $290
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -6802,11 +6802,11 @@ Func_01E_6EE2:: ; address name
 ; points at: hTemp2
 ScriptCommandE8_Run_Case09_Case13_Sub01::
 Func_01E_6F17:: ; address name
-    call GetWD789Cell5Address
+    call GetListEntriesCell5Address
     push hl
     ld a, [hl]
     ld c, $58
-    call LoadRecordThreeBytesToHFFC6
+    call LoadRecordThreeBytesToTemp0
     ldh a, [hTemp0]
     ld [wDigits], a
     ldh a, [hTemp1]
@@ -6814,12 +6814,12 @@ Func_01E_6F17:: ; address name
     ldh a, [hTemp2]
     ld [wDigits + $2], a
     call Number24ToPackedBCD
-    call UnpackBCDToDigitsWD7F1_Bank1E
+    call UnpackBCDToDigitsArg1_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld de, $018C
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call DrawSevenDigitsFromWD7F1_Bank1E
+    call DrawSevenDigitsFromArg1_Bank1E
     pop hl
     push hl
     ld a, [hl]
@@ -6848,7 +6848,7 @@ Func_01E_6F17:: ; address name
     pop bc
     ld a, b
     ldh [hTemp1], a
-    farcall LoadTable4E60EntryToHFFC8
+    farcall LoadTable4E60EntryToTemp2
     ld de, hTemp2
     ld a, [de]
     ld c, a
@@ -6864,7 +6864,7 @@ Func_01E_6F17:: ; address name
     push de
     ld a, [hl]
     ld c, $58
-    call LoadRecordThreeBytesToHFFC6
+    call LoadRecordThreeBytesToTemp0
     pop de
     pop bc
     ldh a, [hTemp0]
@@ -6889,14 +6889,14 @@ Func_01E_6F17:: ; address name
     ld a, e
     ld [wDigits + $2], a
     call Number24ToPackedBCD
-    call UnpackBCDToDigitsWD7F1_Bank1E
+    call UnpackBCDToDigitsArg1_Bank1E
 
 Jump_01E_6FBA::
     call BGMapAddressAtScroll_Bank1E
     ld de, $020C
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
-    call DrawSevenDigitsFromWD7F1_Bank1E
+    call DrawSevenDigitsFromArg1_Bank1E
     pop hl
     ret
 
@@ -6912,9 +6912,9 @@ Jump_01E_6FC9::
     ld [wArg7], a
     jr Jump_01E_6FBA
 
-; only called from RunWD781Step_F0_5DE8_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunWD781Step_F0_5DE8_Case05)
-RunWD781Step_F0_5DE8_Case05_Sub01::
+; only called from RunScreenStep_F0_5DE8_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunScreenStep_F0_5DE8_Case05)
+RunScreenStep_F0_5DE8_Case05_Sub01::
 Func_01E_6FE3:: ; address name
     ld b, e
     call DrawRecordParentNames
@@ -6922,7 +6922,7 @@ Func_01E_6FE3:: ; address name
     ret
 
 ; for record B draws the species names and marks named by the field lists $70D7 or $70DD (by bit 4 of field $0D), or a blank tile for missing entries (E-0130)
-; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunWD781Step_F0_5DE8_Case05_Sub01)
+; 3 call sites from 3 routines (e.g. ScriptCommandE8_Run_Case0D_Case05, ScriptCommandE8_Run_Case09_Case1F, RunScreenStep_F0_5DE8_Case05_Sub01)
 ; reads: hTemp0, hTemp1, rSTAT
 ; writes: rRAMG2, rRAMB, wArg1, wArg5, wArg2, wArg3, wArg4
 DrawRecordFamilyEntries_6FEB::
@@ -7091,14 +7091,14 @@ Jump_01E_70D6::
     ret
     db $1A, $98, $1A, $1C, $A3, $1C, $1C, $A3, $1C, $1A, $98, $1A
 
-; far-calls LoadRecordWordFieldWD7F5AndShowIcon for record B and continues at Jump_01E_710A (E-0126)
+; far-calls LoadRecordWordFieldArg5AndShowIcon for record B and continues at Jump_01E_710A (E-0126)
 ; 2 call sites from 1 routine (e.g. DrawRecordFamilyEntries_6FEB)
 ; reads: wArg1, hTemp0, wArg2, wArg3, rSTAT, wDigits
 LoadRecordWordFieldAndContinue710A::
 Func_01E_70E3:: ; address name
     push bc
     ld c, b
-    farcall LoadRecordWordFieldWD7F5AndShowIcon
+    farcall LoadRecordWordFieldArg5AndShowIcon
     pop bc
     jp Jump_01E_710A
 
@@ -7117,7 +7117,7 @@ Func_01E_70EF:: ; address name
     ld [wWorkBuf], a
     ld a, [wArg4]
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     pop bc
 
 Jump_01E_710A::
@@ -7153,7 +7153,7 @@ Jump_01E_7129::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     pop hl
     ld a, [wDigits + $1]
     cp a, $E3
@@ -7229,7 +7229,7 @@ Jump_01E_7193::
     jr z, Jump_01E_71B4
     push bc
     push hl
-    call EraseCursorAt71D7ForWD7AB
+    call EraseCursorAt71D7ForListCursor
     pop hl
     pop bc
     ld a, b
@@ -7247,7 +7247,7 @@ Jump_01E_71B4::
 ; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $71D7 + 2 * wD7AB (E-0120)
 ; 1 call site from 1 routine (e.g. ClampRecordListPageCursor5)
 ; reads: wListCursor
-EraseCursorAt71D7ForWD7AB::
+EraseCursorAt71D7ForListCursor::
 Func_01E_71B5:: ; address name
     ld b, $C3
     ld a, [wListCursor]
@@ -7317,7 +7317,7 @@ Jump_01E_7211::
     jr z, Jump_01E_7232
     push bc
     push hl
-    call EraseCursorAt7255ForWD7AB
+    call EraseCursorAt7255ForListCursor
     pop hl
     pop bc
     ld a, b
@@ -7335,7 +7335,7 @@ Jump_01E_7232::
 ; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $7255 + 2 * wD7AB (E-0120)
 ; 1 call site from 1 routine (e.g. ClampRecordListPageCursor4)
 ; reads: wListCursor
-EraseCursorAt7255ForWD7AB::
+EraseCursorAt7255ForListCursor::
 Func_01E_7233:: ; address name
     ld b, $C3
     ld a, [wListCursor]
@@ -7359,7 +7359,7 @@ Func_01E_7233:: ; address name
     db $28, $00, $68, $00, $A8, $00, $E8, $00
 
 ; writes the record's level (field $56, marked $6F at the cap in field $57) and its status marks into the BG map at scroll + $29 (E-0130)
-; 3 call sites from 3 routines (e.g. DrawWD789Cell5RecordDetails, ScriptCommandE8_Run_Case09_Case1D, ScriptCommandE8_Run_Case09_Case16)
+; 3 call sites from 3 routines (e.g. DrawListEntriesCell5RecordDetails, ScriptCommandE8_Run_Case09_Case1D, ScriptCommandE8_Run_Case09_Case16)
 ; reads: hTemp1, hTemp0, wDigits
 DrawRecordLevelAndStatusRow_1E::
 Func_01E_725D:: ; address name
@@ -7405,7 +7405,7 @@ Jump_01E_728A::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     pop hl
     ld a, [wDigits + $1]
     add a, $E0
@@ -7525,10 +7525,10 @@ Func_01E_7329:: ; address name
     ei
     ret
 
-; only called from DrawWD789Cell5RecordDetails (E-0047)
-; 1 call site from 1 routine (e.g. DrawWD789Cell5RecordDetails)
+; only called from DrawListEntriesCell5RecordDetails (E-0047)
+; 1 call site from 1 routine (e.g. DrawListEntriesCell5RecordDetails)
 ; reads: hTemp0, hTemp1, wDigits
-DrawWD789Cell5RecordDetails_Sub01::
+DrawListEntriesCell5RecordDetails_Sub01::
 Func_01E_7332:: ; address name
     push hl
     call BGMapAddressAtScroll_Bank1E
@@ -7561,7 +7561,7 @@ Jump_01E_734E::
     ldh a, [hTemp1]
     ld h, a
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     pop de
     ld l, e
     ld h, d
@@ -7599,10 +7599,10 @@ Jump_01E_738B::
     ret
     db $63, $65, $67, $69, $6B
 
-; only called from DrawWD789Cell5RecordDetails (E-0047)
-; 1 call site from 1 routine (e.g. DrawWD789Cell5RecordDetails)
+; only called from DrawListEntriesCell5RecordDetails (E-0047)
+; 1 call site from 1 routine (e.g. DrawListEntriesCell5RecordDetails)
 ; reads: hTemp0, hTemp1, wDigits
-DrawWD789Cell5RecordDetails_Sub02::
+DrawListEntriesCell5RecordDetails_Sub02::
 Func_01E_7399:: ; address name
     ld c, $00
 
@@ -7623,7 +7623,7 @@ Jump_01E_739B::
     ldh a, [hTemp1]
     ld h, a
     call HLToDecimalDigits
-    call BlankLeadingZeroDigitsWC8C0
+    call BlankLeadingZeroDigits_F
     pop bc
     ld a, c
     add a, a
@@ -7920,7 +7920,7 @@ Jump_01E_74EE::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 86 call sites from 67 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case02_Sub04, EraseCursorAt7255ForWD7AB, DrawPageOfPagesAtScrollOffset, ...)
+; 86 call sites from 67 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case02_Sub04, EraseCursorAt7255ForListCursor, DrawPageOfPagesAtScrollOffset, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1E::
 Func_01E_750F:: ; address name
@@ -8030,7 +8030,7 @@ Func_01E_7564:: ; address name
 ; HL = the address in wD7F1 (high) / wD7F2 (low): writes tile $E0 + wD7AF + 1 there and tile $E0 + wD7B0 two bytes later (current page and page count, 1-based display) (E-0093) (the same 25 bytes appear in 2 banks)
 ; 20 call sites from 20 routines (e.g. ScriptCommandE8_Run_Shared02, ScriptCommandE8_Run_Case07_Case30, ScriptCommandE8_Run_Case06_Case18, ScriptCommandE8_Run_Case0D_Case0E, ...)
 ; reads: wArg1, wArg2, wListPageIndex, wListPages
-DrawPageOfPagesAtWD7F1_Bank1E::
+DrawPageOfPagesAtArg1_Bank1E::
 Func_01E_759A:: ; address name
     ld a, [wArg1]
     ld h, a
@@ -8051,7 +8051,7 @@ Func_01E_759A:: ; address name
 ; when wC8C0 is 0 it becomes $E3, and then when wC8C1 is 0 too it becomes $E3 (the same effect as the bank-$15 copy, coded through HL): leading zeros become the blank tile once $E0 is added (E-0093)
 ; 21 call sites from 16 routines (e.g. ScriptCommandE8_Run_Case07_Case2F, ScriptCommandE8_Run_Case07_Case17, ScriptCommandE8_Run_Case06_Case13, ScriptCommandE8_Run_Case06_Case0D, ...)
 ; points at: wDigits
-BlankLeadingZeroDigitsWC8C0::
+BlankLeadingZeroDigits_F::
 Func_01E_75B3:: ; address name
     ld hl, wDigits
     ld a, [hl]
@@ -8068,7 +8068,7 @@ Func_01E_75B3:: ; address name
 Jump_01E_75C4::
     ret
 
-; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWD09D (E-0122)
+; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
 ; 8 call sites from 7 routines (e.g. ScriptCommandE8_Run_Case04_Case01, ScriptCommandE8_Run_Case04_Case17, ScriptCommandE8_Run_Case06_Case08, ScriptCommandE8_Run_Case08_Case0D, ...)
 ; reads: hTemp0
 ; writes: rRAMG2, rRAMB, wWorkBuf
@@ -8086,16 +8086,16 @@ Func_01E_75C5:: ; address name
     ld [wWorkBuf], a
     ld a, $C7
     ld [wWorkBuf + $1], a
-    farcall LoadFamilyIconTileForWD09D
+    farcall LoadFamilyIconTileForWorkBuf
     xor a, a
     ld [rRAMG2], a
     ret
 
 ; far-calls Func_01D_5B4D (E-0122)
-; 5 call sites from 5 routines (e.g. ScriptCommandE8_Run_Case04_Case01, ScriptCommandE8_Run_Case04_Case17, ScriptCommandE8_Run_Case06_Case08, ListRecordsAndDrawWD789Cell5Panel, ...)
+; 5 call sites from 5 routines (e.g. ScriptCommandE8_Run_Case04_Case01, ScriptCommandE8_Run_Case04_Case17, ScriptCommandE8_Run_Case06_Case08, ListRecordsAndDrawListEntriesCell5Panel, ...)
 CallFunc5B4DInBank1D::
 Func_01E_75EB:: ; address name
-    farcall DrawRecordStatsBoxForWD7F1
+    farcall DrawRecordStatsBoxForArg1
     ret
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
@@ -8216,10 +8216,10 @@ Jump_01E_7684::
     jr nz, Jump_01E_7648
     ret
 
-; the same 57 bytes as UnpackBCDToDigitsWD7F1 (15:6676)
+; the same 57 bytes as UnpackBCDToDigitsArg1 (15:6676)
 ; 6 call sites from 4 routines (e.g. ScriptCommandE8_Run_Case09_Case13_Sub01, ScriptCommandF7_Run_Shared02, ScriptCommandE2_Run_Case03_Case05, DrawWCA83ExpAndToNextLevel)
 ; points at: hTemp3, wArg1
-UnpackBCDToDigitsWD7F1_Bank1E::
+UnpackBCDToDigitsArg1_Bank1E::
 Func_01E_768E:: ; address name
     ld de, hTemp3
     ld hl, wArg1
@@ -8267,7 +8267,7 @@ Jump_01E_76C6::
 ; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. ScriptCommandE8_Run_Case09_Case13_Sub01)
 ; points at: wArg1
-DrawSevenDigitsFromWD7F1_Bank1E::
+DrawSevenDigitsFromArg1_Bank1E::
 Func_01E_76C7:: ; address name
     ld de, wArg1
     ld c, $07
@@ -8287,7 +8287,7 @@ Jump_01E_76CC::
 ; A = record, C = field offset (SRAMRecordAddress), B = count: copies B bytes from hFFC6 onward into the SRAM record (SRAM must be enabled); DE and HL kept (E-0074)
 ; 9 call sites from 4 routines (e.g. ScriptCommandE8_Run_Case04_Case29, ScriptCommandE8_Run_Case04_Case0F, ScriptCommandE8_Run_Case05_Case48, ScriptCommandE8_Run_Case05_Case16)
 ; points at: hTemp0
-StoreHFFC6BytesToSRAMRecord::
+StoreTemp0BytesToSRAMRecord::
 Func_01E_76DA:: ; address name
     push hl
     push de
@@ -8304,20 +8304,20 @@ Jump_01E_76E2::
     pop hl
     ret
 
-; far-calls SetWD7F5ToWD789Cell5, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
+; far-calls SetArg5ToListEntriesCell5, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
 ; 30 call sites from 25 routines (e.g. ScriptCommandE8_Run_Case04_Case29, ScriptCommandE8_Run_Case04_Case28, ScriptCommandE8_Run_Case05_Case48, ScriptCommandE8_Run_Case05_Case16, ...)
 ; reads: wArg5, wArg6
-GetWD789Cell5Address::
+GetListEntriesCell5Address::
 Func_01E_76EB:: ; address name
-    farcall SetWD7F5ToWD789Cell5
+    farcall SetArg5ToListEntriesCell5
     jr Jump_01E_76F9
 
-; far-calls SetWD7F5ToWD789Cell4, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
+; far-calls SetArg5ToListEntriesCell4, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
 ; 8 call sites from 7 routines (e.g. ScriptCommandE8_Run_Case07_Case33, ScriptCommandE8_Run_Case08_Case0D, ScriptCommandE8_Run_Case0D_Case07, ScriptCommandE8_Run_Case0D_Case06, ...)
 ; reads: wArg5, wArg6
-GetWD789Cell4Address::
+GetListEntriesCell4Address::
 Func_01E_76F3:: ; address name
-    farcall SetWD7F5ToWD789Cell4
+    farcall SetArg5ToListEntriesCell4
 
 Jump_01E_76F9::
     ld a, [wArg5]
@@ -8359,7 +8359,7 @@ Jump_01E_770E::
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case0D_Case07)
 ; reads: wListCursor
 ; writes: wListCursor, wListPageIndex
-SplitWD7ABBy4_Bank1E::
+SplitListCursorBy4_Bank1E::
 Func_01E_7732:: ; address name
     ld a, [wListCursor]
     ld l, a
@@ -8396,7 +8396,7 @@ Func_01E_7745:: ; address name
 ; 5 call sites from 5 routines (e.g. ScriptCommandE8_Run_Case08_Case0D, ScriptCommandE8_Run_Case0D_Case11, ScriptCommandE8_Run_Case09_Case0D, ScriptCommandEF_Run_Case0F_Case08, ...)
 ; reads: wSavedSpriteClipMode, wSavedFieldDrawFlags, wSavedSpriteSlotCount
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wSpriteSlotCount
-RestoreSpriteStateFromWD7BA::
+RestoreSpriteStateFromSavedFieldDrawFlags::
 Func_01E_7763:: ; address name
     ld a, [wSavedSpriteClipMode]
     ldh [hSpriteWindowClipMode], a
