@@ -1129,7 +1129,7 @@ Jump_00D_4B5D:: ; address name
 ScriptCommandEF_Run_Case0F_Case00::
 Jump_00D_4B73:: ; address name
     ld hl, vTiles2
-    ld de, Data_049_4418
+    ld de, Map0ATileset
     ld b, $49
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
@@ -2280,7 +2280,7 @@ Jump_00D_530F:: ; address name
 ScriptCommandF0_Run_Case06_Case00::
 Jump_00D_531D:: ; address name
     ld hl, vTiles2
-    ld de, Data_049_4832
+    ld de, Map13Tileset
     ld b, $49
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer

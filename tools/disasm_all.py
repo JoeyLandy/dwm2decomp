@@ -1232,6 +1232,108 @@ class Rom:
         o = bank * BANK + (addr - self.base(bank))
         return self.data[o] | (self.data[o + 1] << 8)
 
+    def add_map_schemas(self) -> None:
+        """Derive layouts for the bank-$11 map records and their screen arrays (E-0142).
+
+        LoadMapHeader / LoadMapScreen read a record as: far pointer to the tileset stream,
+        far pointer to the BG palette, 10 header bytes (width and height in screens first),
+        the RAM address of a flag byte, then 6-byte variants (far pointer to the tile-map
+        array, far pointer to the attribute-map array); the highest set bit of the flag byte
+        picks variant 1-8, none picks variant 0. An array holds width * height far pointers,
+        row by row, to compressed 20 x 18 screens. A record ends where the next begins (the
+        last at MapWarpTable). Leading variants are kept while both arrays decode completely;
+        later bytes stay `db`."""
+        from lzss_gfx import decompress
+        mt = next((t for t in self.schemas if t["label"] == "MapTable"), None)
+        wt = next((t for t in self.schemas if t["label"] == "MapWarpTable"), None)
+        if not mt or not wt:
+            return
+        b11, end_all = mt["bank"], wt["addr"]
+        ptrs = [self._u16(b11, mt["addr"] + 2 * i) for i in range(mt["count"])]
+        recs = sorted({p for p in ptrs if mt["addr"] + 2 * mt["count"] <= p < end_all})
+        nb = len(self.data) // BANK
+
+        def fp(bank: int, addr: int) -> tuple[int, int]:
+            o = bank * BANK + addr - self.base(bank)
+            return self.data[o + 2], self.data[o] | self.data[o + 1] << 8
+
+        def screens_ok(bank: int, addr: int, n: int) -> bool:
+            if not (0 < bank < nb and 0x4000 <= addr and addr + 3 * n <= 0x8000):
+                return False
+            for i in range(n):
+                sb, sa = fp(bank, addr + 3 * i)
+                if not (0 < sb < nb and 0x4000 <= sa < 0x7FF0):
+                    return False
+                try:
+                    out, _, ev = decompress(self.data, sb, sa)
+                except IndexError:
+                    return False
+                if ev["unwritten_reads"] or len(out) != 360:
+                    return False
+            return True
+
+        dfar = lambda name, reason, stream: [
+            {"type": "ptr", "bank_from": None, "name": name, "reason": reason, **({"stream": True} if stream else {})},
+            {"type": "db", "size": 1, "name": "its ROM bank"}]
+        arrays: dict[tuple[int, int], tuple[int, str]] = {}
+        palettes: dict[tuple[int, int], str] = {}
+        named: set[tuple[int, int]] = set()
+        added = 0
+        for r, nxt in zip(recs, recs[1:] + [end_all]):
+            first = min(i for i, p in enumerate(ptrs) if p == r)
+            o = b11 * BANK + r - self.base(b11)
+            wd, ht = self.data[o + 6], self.data[o + 7]
+            fields = dfar("tileset", "map tileset stream", True) + dfar("palettes", "map BG palettes", False) + [
+                {"type": "db", "size": 10, "name": "width, height, wMaxBlockingTile, wMapHeaderByte7, "
+                 "wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes"},
+                {"type": "words", "size": 2, "ram": True, "name": "variant flag byte"}]
+            tiles, pal = fp(b11, r), fp(b11, r + 3)
+            if tiles not in self.names and tiles not in named:
+                named.add(tiles)
+                self.names[tiles] = {"name": f"Map{first:02X}Tileset", "data": True, "evidence": "E-0142",
+                                     "note": f"compressed tileset of map ${first:02X} (the first map record using it)"}
+            palettes.setdefault(pal, f"Map{first:02X}Palettes")
+            k, q = 0, r + 0x12
+            while q + 6 <= nxt and k < 9:
+                (tb, ta), (ab, aa) = fp(b11, q), fp(b11, q + 3)
+                if not (screens_ok(tb, ta, wd * ht) and screens_ok(ab, aa, wd * ht)):
+                    break
+                for (bb, aa_, kind) in ((tb, ta, "Screens"), (ab, aa, "Attrs")):
+                    arrays.setdefault((bb, aa_), (wd * ht, f"Map{first:02X}{kind}{k}"))
+                fields += dfar(f"variant {k} screens", "map screen array", False) + \
+                    dfar(f"variant {k} attributes", "map screen array", False)
+                k, q = k + 1, q + 6
+            if nxt > q:
+                fields.append({"type": "db", "size": nxt - q, "name": "bytes after the decoded variants"})
+            for i, f in enumerate(fields):
+                if f.get("bank_from", 0) is None:
+                    f["bank_from"] = i + 1
+            self.schemas.append({"bank": b11, "addr": r, "label": f"MapRecord{first:02X}", "count": 1,
+                                 "fields": fields, "note": f"E-0142 (derived: map record of map ${first:02X}, "
+                                 f"{wd} x {ht} screens, {k} decoded variant(s))"})
+            added += 1
+        taken: list[tuple[int, int, int]] = []
+        for (bank, addr), (n, label) in sorted(arrays.items()):
+            if any(b == bank and lo < addr + 3 * n and addr < hi for b, lo, hi in taken):
+                continue  # arrays that overlap another stay inside it
+            taken.append((bank, addr, addr + 3 * n))
+            self.schemas.append({"bank": bank, "addr": addr, "label": label, "count": n,
+                                 "fields": dfar("compressed 20 x 18 screen", "map screen stream", True),
+                                 "note": f"E-0142 (derived: {n} screen far pointers, row by row)"})
+            self.schemas[-1]["fields"][0]["bank_from"] = 1
+            added += 1
+        npal = 0
+        for (bank, addr), label in sorted(palettes.items()):
+            if not (0 < bank < nb and 0x4000 <= addr <= 0x8000 - 0x40) or any(
+                    b == bank and lo < addr + 0x40 and addr < hi for b, lo, hi in taken):
+                continue
+            taken.append((bank, addr, addr + 0x40))
+            self.schemas.append({"bank": bank, "addr": addr, "label": label, "count": 8,
+                                 "fields": [{"type": "words", "size": 8, "name": "one CGB palette: 4 BGR555 colours"}],
+                                 "note": "E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)"})
+            npal += 1
+        log(f"map layouts derived from MapTable: {len(recs)} records, {len(arrays)} screen arrays, {npal} palette sets")
+
     def prepare_tables(self) -> None:
         """Validate config/tables.json against the ROM and register data labels for their
         pointer targets. Raises if a layout overlaps code or an existing label would fall in
@@ -1401,7 +1503,8 @@ class Rom:
                 if f["type"] == "words":  # little-endian 16-bit values, e.g. BGR555 colours (E-0139)
                     flush()
                     r = raws[fi]
-                    out.append("    dw " + ", ".join(f"${r[j] | r[j + 1] << 8:04X}" for j in range(0, len(r), 2))
+                    words = [r[j] | r[j + 1] << 8 for j in range(0, len(r), 2)]
+                    out.append("    dw " + ", ".join((f.get("ram") and self.sym_name(v, True)) or f"${v:04X}" for v in words)
                                + ("" if tagged else tag))
                     tagged = True
                 elif skip_bank == fi:
@@ -1917,6 +2020,7 @@ def main() -> int:
         for t in json.loads(tables_path.read_text(encoding="utf-8"))["tables"]:
             rom.schemas.append(dict(t, bank=int(t["bank"], 16), addr=int(t["addr"], 16)))
         log(f"loaded {len(rom.schemas)} table layouts from {tables_path.name}")
+    rom.add_map_schemas()
     rom.run()
     if "--export-streams" in sys.argv:
         dest = Path(sys.argv[sys.argv.index("--export-streams") + 1])

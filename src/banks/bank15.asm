@@ -4730,7 +4730,7 @@ Jump_015_6028:: ; address name
 ScriptCommandED_Run_Case0F_Case00::
 Jump_015_603E:: ; address name
     ld hl, vTiles2
-    ld de, Data_047_629A
+    ld de, Map0DTileset
     ld b, $47
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer

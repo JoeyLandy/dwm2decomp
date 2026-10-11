@@ -746,111 +746,111 @@ Data_011_44AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; record: map record in this bank, indexed by the map number hMapId
 MapTable::
 Data_011_44B8:: ; heuristic: start of a structured table; C0
-    dw Data_011_46B8 ; entry 0
-    dw Data_011_46FA ; entry 1
-    dw Data_011_473C ; entry 2
-    dw Data_011_477E ; entry 3
-    dw Data_011_47C0 ; entry 4
-    dw Data_011_4802 ; entry 5
-    dw Data_011_4844 ; entry 6
-    dw Data_011_4886 ; entry 7
-    dw Data_011_490A ; entry 8
-    dw Data_011_48C8 ; entry 9
-    dw Data_011_494C ; entry 10
-    dw Data_011_498E ; entry 11
-    dw Data_011_49D0 ; entry 12
-    dw Data_011_4A12 ; entry 13
-    dw Data_011_4A54 ; entry 14
-    dw Data_011_4A96 ; entry 15
-    dw Data_011_4AD8 ; entry 16
-    dw Data_011_4B1A ; entry 17
-    dw Data_011_4B5C ; entry 18
-    dw Data_011_4B9E ; entry 19
-    dw Data_011_4BE0 ; entry 20
-    dw Data_011_4C22 ; entry 21
-    dw Data_011_4C64 ; entry 22
-    dw Data_011_4CA6 ; entry 23
-    dw Data_011_4CE8 ; entry 24
-    dw Data_011_4D2A ; entry 25
-    dw Data_011_4D6C ; entry 26
-    dw Data_011_4DAE ; entry 27
-    dw Data_011_4DF0 ; entry 28
-    dw Data_011_4E0E ; entry 29
+    dw MapRecord00 ; entry 0
+    dw MapRecord01 ; entry 1
+    dw MapRecord02 ; entry 2
+    dw MapRecord03 ; entry 3
+    dw MapRecord04 ; entry 4
+    dw MapRecord05 ; entry 5
+    dw MapRecord06 ; entry 6
+    dw MapRecord07 ; entry 7
+    dw MapRecord08 ; entry 8
+    dw MapRecord09 ; entry 9
+    dw MapRecord0A ; entry 10
+    dw MapRecord0B ; entry 11
+    dw MapRecord0C ; entry 12
+    dw MapRecord0D ; entry 13
+    dw MapRecord0E ; entry 14
+    dw MapRecord0F ; entry 15
+    dw MapRecord10 ; entry 16
+    dw MapRecord11 ; entry 17
+    dw MapRecord12 ; entry 18
+    dw MapRecord13 ; entry 19
+    dw MapRecord14 ; entry 20
+    dw MapRecord15 ; entry 21
+    dw MapRecord16 ; entry 22
+    dw MapRecord17 ; entry 23
+    dw MapRecord18 ; entry 24
+    dw MapRecord19 ; entry 25
+    dw MapRecord1A ; entry 26
+    dw MapRecord1B ; entry 27
+    dw MapRecord1C ; entry 28
+    dw MapRecord1D ; entry 29
     dw $0000 ; entry 30
     dw $0000 ; entry 31
-    dw Data_011_4E2C ; entry 32
-    dw Data_011_4E68 ; entry 33
-    dw Data_011_4EA4 ; entry 34
-    dw Data_011_4EE0 ; entry 35
-    dw Data_011_4F1C ; entry 36
-    dw Data_011_4F58 ; entry 37
-    dw Data_011_4F94 ; entry 38
+    dw MapRecord20 ; entry 32
+    dw MapRecord21 ; entry 33
+    dw MapRecord22 ; entry 34
+    dw MapRecord23 ; entry 35
+    dw MapRecord24 ; entry 36
+    dw MapRecord25 ; entry 37
+    dw MapRecord26 ; entry 38
     dw $0000 ; entry 39
-    dw Data_011_4FD0 ; entry 40
-    dw Data_011_500C ; entry 41
-    dw Data_011_5048 ; entry 42
-    dw Data_011_5084 ; entry 43
+    dw MapRecord28 ; entry 40
+    dw MapRecord29 ; entry 41
+    dw MapRecord2A ; entry 42
+    dw MapRecord2B ; entry 43
     dw $0000 ; entry 44
-    dw Data_011_50C0 ; entry 45
-    dw Data_011_50FC ; entry 46
-    dw Data_011_5138 ; entry 47
-    dw Data_011_5174 ; entry 48
-    dw Data_011_51A4 ; entry 49
-    dw Data_011_51D4 ; entry 50
-    dw Data_011_5204 ; entry 51
-    dw Data_011_5234 ; entry 52
-    dw Data_011_5264 ; entry 53
-    dw Data_011_5294 ; entry 54
-    dw Data_011_52C4 ; entry 55
-    dw Data_011_52F4 ; entry 56
-    dw Data_011_5324 ; entry 57
-    dw Data_011_5354 ; entry 58
-    dw Data_011_5384 ; entry 59
-    dw Data_011_53B4 ; entry 60
-    dw Data_011_53E4 ; entry 61
-    dw Data_011_5414 ; entry 62
-    dw Data_011_5444 ; entry 63
-    dw Data_011_5474 ; entry 64
-    dw Data_011_54A4 ; entry 65
-    dw Data_011_54D4 ; entry 66
-    dw Data_011_5504 ; entry 67
-    dw Data_011_5534 ; entry 68
-    dw Data_011_500C ; entry 69
+    dw MapRecord2D ; entry 45
+    dw MapRecord2E ; entry 46
+    dw MapRecord2F ; entry 47
+    dw MapRecord30 ; entry 48
+    dw MapRecord31 ; entry 49
+    dw MapRecord32 ; entry 50
+    dw MapRecord33 ; entry 51
+    dw MapRecord34 ; entry 52
+    dw MapRecord35 ; entry 53
+    dw MapRecord36 ; entry 54
+    dw MapRecord37 ; entry 55
+    dw MapRecord38 ; entry 56
+    dw MapRecord39 ; entry 57
+    dw MapRecord3A ; entry 58
+    dw MapRecord3B ; entry 59
+    dw MapRecord3C ; entry 60
+    dw MapRecord3D ; entry 61
+    dw MapRecord3E ; entry 62
+    dw MapRecord3F ; entry 63
+    dw MapRecord40 ; entry 64
+    dw MapRecord41 ; entry 65
+    dw MapRecord42 ; entry 66
+    dw MapRecord43 ; entry 67
+    dw MapRecord44 ; entry 68
+    dw MapRecord29 ; entry 69
     dw $0000 ; entry 70
     dw $0000 ; entry 71
-    dw Data_011_5564 ; entry 72
-    dw Data_011_5588 ; entry 73
-    dw Data_011_55AC ; entry 74
-    dw Data_011_55D0 ; entry 75
-    dw Data_011_55F4 ; entry 76
-    dw Data_011_5618 ; entry 77
-    dw Data_011_563C ; entry 78
-    dw Data_011_5660 ; entry 79
-    dw Data_011_5684 ; entry 80
-    dw Data_011_56A8 ; entry 81
-    dw Data_011_56CC ; entry 82
-    dw Data_011_56F0 ; entry 83
-    dw Data_011_5714 ; entry 84
-    dw Data_011_5738 ; entry 85
-    dw Data_011_575C ; entry 86
-    dw Data_011_5780 ; entry 87
-    dw Data_011_57A4 ; entry 88
-    dw Data_011_57C8 ; entry 89
-    dw Data_011_57EC ; entry 90
-    dw Data_011_5810 ; entry 91
-    dw Data_011_5834 ; entry 92
-    dw Data_011_5858 ; entry 93
-    dw Data_011_587C ; entry 94
-    dw Data_011_58A0 ; entry 95
-    dw Data_011_58C4 ; entry 96
-    dw Data_011_58E8 ; entry 97
-    dw Data_011_590C ; entry 98
-    dw Data_011_5930 ; entry 99
-    dw Data_011_5954 ; entry 100
-    dw Data_011_5978 ; entry 101
-    dw Data_011_599C ; entry 102
-    dw Data_011_59C0 ; entry 103
-    dw Data_011_500C ; entry 104
+    dw MapRecord48 ; entry 72
+    dw MapRecord49 ; entry 73
+    dw MapRecord4A ; entry 74
+    dw MapRecord4B ; entry 75
+    dw MapRecord4C ; entry 76
+    dw MapRecord4D ; entry 77
+    dw MapRecord4E ; entry 78
+    dw MapRecord4F ; entry 79
+    dw MapRecord50 ; entry 80
+    dw MapRecord51 ; entry 81
+    dw MapRecord52 ; entry 82
+    dw MapRecord53 ; entry 83
+    dw MapRecord54 ; entry 84
+    dw MapRecord55 ; entry 85
+    dw MapRecord56 ; entry 86
+    dw MapRecord57 ; entry 87
+    dw MapRecord58 ; entry 88
+    dw MapRecord59 ; entry 89
+    dw MapRecord5A ; entry 90
+    dw MapRecord5B ; entry 91
+    dw MapRecord5C ; entry 92
+    dw MapRecord5D ; entry 93
+    dw MapRecord5E ; entry 94
+    dw MapRecord5F ; entry 95
+    dw MapRecord60 ; entry 96
+    dw MapRecord61 ; entry 97
+    dw MapRecord62 ; entry 98
+    dw MapRecord63 ; entry 99
+    dw MapRecord64 ; entry 100
+    dw MapRecord65 ; entry 101
+    dw MapRecord66 ; entry 102
+    dw MapRecord67 ; entry 103
+    dw MapRecord29 ; entry 104
     dw $0000 ; entry 105
     dw $0000 ; entry 106
     dw $0000 ; entry 107
@@ -858,121 +858,121 @@ Data_011_44B8:: ; heuristic: start of a structured table; C0
     dw $0000 ; entry 109
     dw $0000 ; entry 110
     dw $0000 ; entry 111
-    dw Data_011_5A08 ; entry 112
-    dw Data_011_5A38 ; entry 113
-    dw Data_011_5A68 ; entry 114
-    dw Data_011_5A98 ; entry 115
-    dw Data_011_5AC8 ; entry 116
-    dw Data_011_5AF8 ; entry 117
-    dw Data_011_5B28 ; entry 118
-    dw Data_011_5B58 ; entry 119
-    dw Data_011_5B88 ; entry 120
-    dw Data_011_5BB8 ; entry 121
-    dw Data_011_5BE8 ; entry 122
-    dw Data_011_5C18 ; entry 123
-    dw Data_011_5C48 ; entry 124
-    dw Data_011_5C78 ; entry 125
-    dw Data_011_5CA8 ; entry 126
-    dw Data_011_5CD8 ; entry 127
-    dw Data_011_5D08 ; entry 128
-    dw Data_011_5D38 ; entry 129
-    dw Data_011_5D68 ; entry 130
-    dw Data_011_5D98 ; entry 131
-    dw Data_011_5DC8 ; entry 132
-    dw Data_011_5DF8 ; entry 133
-    dw Data_011_5E28 ; entry 134
-    dw Data_011_5E58 ; entry 135
-    dw Data_011_5E88 ; entry 136
-    dw Data_011_5EB8 ; entry 137
-    dw Data_011_5EE8 ; entry 138
-    dw Data_011_5F18 ; entry 139
-    dw Data_011_5F48 ; entry 140
-    dw Data_011_5F78 ; entry 141
-    dw Data_011_5FA8 ; entry 142
-    dw Data_011_5FD8 ; entry 143
-    dw Data_011_6008 ; entry 144
-    dw Data_011_6038 ; entry 145
-    dw Data_011_6068 ; entry 146
-    dw Data_011_6098 ; entry 147
-    dw Data_011_60C8 ; entry 148
-    dw Data_011_60F8 ; entry 149
-    dw Data_011_6128 ; entry 150
-    dw Data_011_6158 ; entry 151
-    dw Data_011_6188 ; entry 152
-    dw Data_011_61B8 ; entry 153
-    dw Data_011_61E8 ; entry 154
-    dw Data_011_6218 ; entry 155
+    dw MapRecord70 ; entry 112
+    dw MapRecord71 ; entry 113
+    dw MapRecord72 ; entry 114
+    dw MapRecord73 ; entry 115
+    dw MapRecord74 ; entry 116
+    dw MapRecord75 ; entry 117
+    dw MapRecord76 ; entry 118
+    dw MapRecord77 ; entry 119
+    dw MapRecord78 ; entry 120
+    dw MapRecord79 ; entry 121
+    dw MapRecord7A ; entry 122
+    dw MapRecord7B ; entry 123
+    dw MapRecord7C ; entry 124
+    dw MapRecord7D ; entry 125
+    dw MapRecord7E ; entry 126
+    dw MapRecord7F ; entry 127
+    dw MapRecord80 ; entry 128
+    dw MapRecord81 ; entry 129
+    dw MapRecord82 ; entry 130
+    dw MapRecord83 ; entry 131
+    dw MapRecord84 ; entry 132
+    dw MapRecord85 ; entry 133
+    dw MapRecord86 ; entry 134
+    dw MapRecord87 ; entry 135
+    dw MapRecord88 ; entry 136
+    dw MapRecord89 ; entry 137
+    dw MapRecord8A ; entry 138
+    dw MapRecord8B ; entry 139
+    dw MapRecord8C ; entry 140
+    dw MapRecord8D ; entry 141
+    dw MapRecord8E ; entry 142
+    dw MapRecord8F ; entry 143
+    dw MapRecord90 ; entry 144
+    dw MapRecord91 ; entry 145
+    dw MapRecord92 ; entry 146
+    dw MapRecord93 ; entry 147
+    dw MapRecord94 ; entry 148
+    dw MapRecord95 ; entry 149
+    dw MapRecord96 ; entry 150
+    dw MapRecord97 ; entry 151
+    dw MapRecord98 ; entry 152
+    dw MapRecord99 ; entry 153
+    dw MapRecord9A ; entry 154
+    dw MapRecord9B ; entry 155
     dw $0000 ; entry 156
-    dw Data_011_500C ; entry 157
+    dw MapRecord29 ; entry 157
     dw $0000 ; entry 158
     dw $0000 ; entry 159
-    dw Data_011_6278 ; entry 160
-    dw Data_011_6296 ; entry 161
-    dw Data_011_62B4 ; entry 162
-    dw Data_011_62D2 ; entry 163
-    dw Data_011_500C ; entry 164
+    dw MapRecordA0 ; entry 160
+    dw MapRecordA1 ; entry 161
+    dw MapRecordA2 ; entry 162
+    dw MapRecordA3 ; entry 163
+    dw MapRecord29 ; entry 164
     dw $0000 ; entry 165
     dw $0000 ; entry 166
     dw $0000 ; entry 167
-    dw Data_011_630E ; entry 168
-    dw Data_011_6326 ; entry 169
-    dw Data_011_633E ; entry 170
-    dw Data_011_6356 ; entry 171
-    dw Data_011_636E ; entry 172
-    dw Data_011_6386 ; entry 173
-    dw Data_011_639E ; entry 174
-    dw Data_011_500C ; entry 175
-    dw Data_011_63B6 ; entry 176
-    dw Data_011_63D4 ; entry 177
-    dw Data_011_500C ; entry 178
-    dw Data_011_63F2 ; entry 179
-    dw Data_011_6410 ; entry 180
-    dw Data_011_642E ; entry 181
-    dw Data_011_644C ; entry 182
+    dw MapRecordA8 ; entry 168
+    dw MapRecordA9 ; entry 169
+    dw MapRecordAA ; entry 170
+    dw MapRecordAB ; entry 171
+    dw MapRecordAC ; entry 172
+    dw MapRecordAD ; entry 173
+    dw MapRecordAE ; entry 174
+    dw MapRecord29 ; entry 175
+    dw MapRecordB0 ; entry 176
+    dw MapRecordB1 ; entry 177
+    dw MapRecord29 ; entry 178
+    dw MapRecordB3 ; entry 179
+    dw MapRecordB4 ; entry 180
+    dw MapRecordB5 ; entry 181
+    dw MapRecordB6 ; entry 182
     dw $0000 ; entry 183
-    dw Data_011_646A ; entry 184
-    dw Data_011_648E ; entry 185
-    dw Data_011_64B2 ; entry 186
-    dw Data_011_64D6 ; entry 187
-    dw Data_011_64FA ; entry 188
-    dw Data_011_651E ; entry 189
-    dw Data_011_6542 ; entry 190
-    dw Data_011_6566 ; entry 191
-    dw Data_011_658A ; entry 192
-    dw Data_011_65AE ; entry 193
-    dw Data_011_65D2 ; entry 194
-    dw Data_011_65F6 ; entry 195
-    dw Data_011_661A ; entry 196
-    dw Data_011_500C ; entry 197
+    dw MapRecordB8 ; entry 184
+    dw MapRecordB9 ; entry 185
+    dw MapRecordBA ; entry 186
+    dw MapRecordBB ; entry 187
+    dw MapRecordBC ; entry 188
+    dw MapRecordBD ; entry 189
+    dw MapRecordBE ; entry 190
+    dw MapRecordBF ; entry 191
+    dw MapRecordC0 ; entry 192
+    dw MapRecordC1 ; entry 193
+    dw MapRecordC2 ; entry 194
+    dw MapRecordC3 ; entry 195
+    dw MapRecordC4 ; entry 196
+    dw MapRecord29 ; entry 197
     dw $0000 ; entry 198
     dw $0000 ; entry 199
-    dw Data_011_663E ; entry 200
-    dw Data_011_665C ; entry 201
-    dw Data_011_667A ; entry 202
-    dw Data_011_667A ; entry 203
-    dw Data_011_667A ; entry 204
-    dw Data_011_667A ; entry 205
-    dw Data_011_6698 ; entry 206
+    dw MapRecordC8 ; entry 200
+    dw MapRecordC9 ; entry 201
+    dw MapRecordCA ; entry 202
+    dw MapRecordCA ; entry 203
+    dw MapRecordCA ; entry 204
+    dw MapRecordCA ; entry 205
+    dw MapRecordCE ; entry 206
     dw $0000 ; entry 207
-    dw Data_011_500C ; entry 208
-    dw Data_011_66B6 ; entry 209
-    dw Data_011_66D4 ; entry 210
-    dw Data_011_66F2 ; entry 211
-    dw Data_011_66F2 ; entry 212
-    dw Data_011_66F2 ; entry 213
-    dw Data_011_66F2 ; entry 214
-    dw Data_011_6710 ; entry 215
+    dw MapRecord29 ; entry 208
+    dw MapRecordD1 ; entry 209
+    dw MapRecordD2 ; entry 210
+    dw MapRecordD3 ; entry 211
+    dw MapRecordD3 ; entry 212
+    dw MapRecordD3 ; entry 213
+    dw MapRecordD3 ; entry 214
+    dw MapRecordD7 ; entry 215
     dw $0000 ; entry 216
-    dw Data_011_500C ; entry 217
-    dw Data_011_672E ; entry 218
-    dw Data_011_674C ; entry 219
-    dw Data_011_676A ; entry 220
-    dw Data_011_676A ; entry 221
-    dw Data_011_676A ; entry 222
-    dw Data_011_676A ; entry 223
-    dw Data_011_6788 ; entry 224
+    dw MapRecord29 ; entry 217
+    dw MapRecordDA ; entry 218
+    dw MapRecordDB ; entry 219
+    dw MapRecordDC ; entry 220
+    dw MapRecordDC ; entry 221
+    dw MapRecordDC ; entry 222
+    dw MapRecordDC ; entry 223
+    dw MapRecordE0 ; entry 224
     dw $0000 ; entry 225
-    dw Data_011_500C ; entry 226
+    dw MapRecord29 ; entry 226
     dw $0000 ; entry 227
     dw $0000 ; entry 228
     dw $0000 ; entry 229
@@ -1003,919 +1003,3331 @@ Data_011_44B8:: ; heuristic: start of a structured table; C0
     dw $0000 ; entry 254
     dw $0000 ; entry 255
 
+; E-0142 (derived: map record of map $00, 3 x 4 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord00::
 Data_011_46B8:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0446B8, $42
+    dfar Map00Tileset ; entry 0
+    dfar Map00Palettes
+    db $03, $04, $4E, $00, $01, $00, $00, $01, $10, $00
+    dw wStoryFlags + $60
+    dfar Map00Screens0
+    dfar Map00Attrs0
+    dfar Map00Screens0
+    dfar Map00Attrs0
+    dfar Map00Screens2
+    dfar Map00Attrs2
+    dfar Map00Screens3
+    dfar Map00Attrs3
+    dfar Map00Screens4
+    dfar Map00Attrs4
+    dfar Map00Screens5
+    dfar Map00Attrs5
+    dfar Map00Screens6
+    dfar Map00Attrs6
+    dfar Map00Screens6
+    dfar Map00Attrs6
 
+; E-0142 (derived: map record of map $01, 4 x 3 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord01::
 Data_011_46FA:: ; heuristic: map record of the map table; C0
-    db $0C, $57, $46, $41, $40, $48, $04, $03, $4F, $00, $01, $00, $00, $01, $0D, $00
-    db $37, $CC
-    dw Data_011_5C54
-    db $46, $78, $5C, $46
-    dw Data_011_5C54
-    db $46, $78, $5C, $46
-    dw Data_011_5C54
-    db $46, $78, $5C, $46
-    dw Data_011_5C9C
-    db $46, $C0, $5C, $46
-    dw Data_011_5CE4
-    db $46, $08, $5D, $46
-    dw Data_011_5D2C
-    db $46, $50, $5D, $46
-    dw Data_011_5D74
-    db $46, $98, $5D, $46
-    dw Data_011_5D74
-    db $46, $98, $5D, $46
+    dfar Map01Tileset ; entry 0
+    dfar Map01Palettes
+    db $04, $03, $4F, $00, $01, $00, $00, $01, $0D, $00
+    dw wStoryFlags + $60
+    dfar Map01Screens0
+    dfar Map01Attrs0
+    dfar Map01Screens0
+    dfar Map01Attrs0
+    dfar Map01Screens0
+    dfar Map01Attrs0
+    dfar Map01Screens3
+    dfar Map01Attrs3
+    dfar Map01Screens4
+    dfar Map01Attrs4
+    dfar Map01Screens5
+    dfar Map01Attrs5
+    dfar Map01Screens6
+    dfar Map01Attrs6
+    dfar Map01Screens6
+    dfar Map01Attrs6
 
+; E-0142 (derived: map record of map $02, 3 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord02::
 Data_011_473C:: ; heuristic: map record of the map table; C0
-    dw Data_011_7025
-    db $46, $81, $40, $48, $03, $01, $31, $00, $01, $00, $00, $01, $0D, $00, $37, $CC
-    dw Data_011_7360
-    db $46, $69, $73, $46
-    dw Data_011_7372
-    db $46, $7B, $73, $46
-    dw Data_011_7372
-    db $46, $7B, $73, $46
-    dw Data_011_7384
-    db $46, $8D, $73, $46
-    dw Data_011_7396
-    db $46, $9F, $73, $46
-    dw Data_011_73A8
-    db $46, $B1, $73, $46
-    dw Data_011_73BA
-    db $46, $C3, $73, $46
-    dw Data_011_73BA
-    db $46, $C3, $73, $46
+    dfar Map02Tileset ; entry 0
+    dfar Map02Palettes
+    db $03, $01, $31, $00, $01, $00, $00, $01, $0D, $00
+    dw wStoryFlags + $60
+    dfar Map02Screens0
+    dfar Map02Attrs0
+    dfar Map02Screens1
+    dfar Map02Attrs1
+    dfar Map02Screens1
+    dfar Map02Attrs1
+    dfar Map02Screens3
+    dfar Map02Attrs3
+    dfar Map02Screens4
+    dfar Map02Attrs4
+    dfar Map02Screens5
+    dfar Map02Attrs5
+    dfar Map02Screens6
+    dfar Map02Attrs6
+    dfar Map02Screens6
+    dfar Map02Attrs6
 
+; E-0142 (derived: map record of map $03, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord03::
 Data_011_477E:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $04477E, $42
+    dfar Map03Tileset ; entry 0
+    dfar Map03Palettes
+    db $01, $01, $2F, $2C, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map03Screens0
+    dfar Map03Attrs0
+    dfar Map03Screens0
+    dfar Map03Attrs0
+    dfar Map03Screens0
+    dfar Map03Attrs0
+    dfar Map03Screens0
+    dfar Map03Attrs0
+    dfar Map03Screens0
+    dfar Map03Attrs0
+    dfar Map03Screens0
+    dfar Map03Attrs0
+    dfar Map03Screens0
+    dfar Map03Attrs0
+    dfar Map03Screens0
+    dfar Map03Attrs0
 
+; E-0142 (derived: map record of map $04, 3 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord04::
 Data_011_47C0:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0447C0, $42
+    dfar Map04Tileset ; entry 0
+    dfar Map04Palettes
+    db $03, $01, $2E, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map04Screens0
+    dfar Map04Attrs0
+    dfar Map04Screens0
+    dfar Map04Attrs0
+    dfar Map04Screens0
+    dfar Map04Attrs0
+    dfar Map04Screens0
+    dfar Map04Attrs0
+    dfar Map04Screens0
+    dfar Map04Attrs0
+    dfar Map04Screens0
+    dfar Map04Attrs0
+    dfar Map04Screens0
+    dfar Map04Attrs0
+    dfar Map04Screens0
+    dfar Map04Attrs0
 
+; E-0142 (derived: map record of map $05, 3 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord05::
 Data_011_4802:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044802, $42
+    dfar Map05Tileset ; entry 0
+    dfar Map05Palettes
+    db $03, $01, $67, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map05Screens0
+    dfar Map05Attrs0
+    dfar Map05Screens0
+    dfar Map05Attrs0
+    dfar Map05Screens0
+    dfar Map05Attrs0
+    dfar Map05Screens0
+    dfar Map05Attrs0
+    dfar Map05Screens0
+    dfar Map05Attrs0
+    dfar Map05Screens0
+    dfar Map05Attrs0
+    dfar Map05Screens0
+    dfar Map05Attrs0
+    dfar Map05Screens7
+    dfar Map05Attrs7
 
+; E-0142 (derived: map record of map $06, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord06::
 Data_011_4844:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044844, $42
+    dfar Map06Tileset ; entry 0
+    dfar Map06Palettes
+    db $01, $01, $33, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map06Screens0
+    dfar Map06Attrs0
+    dfar Map06Screens0
+    dfar Map06Attrs0
+    dfar Map06Screens0
+    dfar Map06Attrs0
+    dfar Map06Screens0
+    dfar Map06Attrs0
+    dfar Map06Screens0
+    dfar Map06Attrs0
+    dfar Map06Screens0
+    dfar Map06Attrs0
+    dfar Map06Screens0
+    dfar Map06Attrs0
+    dfar Map06Screens0
+    dfar Map06Attrs0
 
+; E-0142 (derived: map record of map $07, 1 x 2 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord07::
 Data_011_4886:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044886, $42
+    dfar Map07Tileset ; entry 0
+    dfar Map07Palettes
+    db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map07Screens0
+    dfar Map07Attrs0
+    dfar Map07Screens0
+    dfar Map07Attrs0
+    dfar Map07Screens0
+    dfar Map07Attrs0
+    dfar Map07Screens0
+    dfar Map07Attrs0
+    dfar Map07Screens0
+    dfar Map07Attrs0
+    dfar Map07Screens0
+    dfar Map07Attrs0
+    dfar Map07Screens0
+    dfar Map07Attrs0
+    dfar Map07Screens7
+    dfar Map07Attrs7
 
+; E-0142 (derived: map record of map $09, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord09::
 Data_011_48C8:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0448C8, $42
+    dfar Map09Tileset ; entry 0
+    dfar Map09Palettes
+    db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map09Screens0
+    dfar Map09Attrs0
+    dfar Map09Screens0
+    dfar Map09Attrs0
+    dfar Map09Screens0
+    dfar Map09Attrs0
+    dfar Map09Screens0
+    dfar Map09Attrs0
+    dfar Map09Screens0
+    dfar Map09Attrs0
+    dfar Map09Screens0
+    dfar Map09Attrs0
+    dfar Map09Screens0
+    dfar Map09Attrs0
+    dfar Map09Screens0
+    dfar Map09Attrs0
 
+; E-0142 (derived: map record of map $08, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord08::
 Data_011_490A:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $04490A, $42
+    dfar Map08Tileset ; entry 0
+    dfar Map08Palettes
+    db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map08Screens0
+    dfar Map08Attrs0
+    dfar Map08Screens0
+    dfar Map08Attrs0
+    dfar Map08Screens0
+    dfar Map08Attrs0
+    dfar Map08Screens0
+    dfar Map08Attrs0
+    dfar Map08Screens0
+    dfar Map08Attrs0
+    dfar Map08Screens0
+    dfar Map08Attrs0
+    dfar Map08Screens0
+    dfar Map08Attrs0
+    dfar Map08Screens0
+    dfar Map08Attrs0
 
+; E-0142 (derived: map record of map $0A, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord0A::
 Data_011_494C:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $04494C, $42
+    dfar Map0ATileset ; entry 0
+    dfar Map0APalettes
+    db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map0AScreens0
+    dfar Map0AAttrs0
+    dfar Map0AScreens0
+    dfar Map0AAttrs0
+    dfar Map0AScreens0
+    dfar Map0AAttrs0
+    dfar Map0AScreens0
+    dfar Map0AAttrs0
+    dfar Map0AScreens0
+    dfar Map0AAttrs0
+    dfar Map0AScreens0
+    dfar Map0AAttrs0
+    dfar Map0AScreens0
+    dfar Map0AAttrs0
+    dfar Map0AScreens0
+    dfar Map0AAttrs0
 
+; E-0142 (derived: map record of map $0B, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord0B::
 Data_011_498E:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $04498E, $42
+    dfar Map0BTileset ; entry 0
+    dfar Map0BPalettes
+    db $01, $01, $00, $00, $07, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map0BScreens0
+    dfar Map0BAttrs0
+    dfar Map0BScreens0
+    dfar Map0BAttrs0
+    dfar Map0BScreens0
+    dfar Map0BAttrs0
+    dfar Map0BScreens0
+    dfar Map0BAttrs0
+    dfar Map0BScreens0
+    dfar Map0BAttrs0
+    dfar Map0BScreens0
+    dfar Map0BAttrs0
+    dfar Map0BScreens0
+    dfar Map0BAttrs0
+    dfar Map0BScreens0
+    dfar Map0BAttrs0
 
+; E-0142 (derived: map record of map $0C, 2 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord0C::
 Data_011_49D0:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0449D0, $42
+    dfar Map0CTileset ; entry 0
+    dfar Map0CPalettes
+    db $02, $01, $2F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map0CScreens0
+    dfar Map0CAttrs0
+    dfar Map0CScreens0
+    dfar Map0CAttrs0
+    dfar Map0CScreens0
+    dfar Map0CAttrs0
+    dfar Map0CScreens0
+    dfar Map0CAttrs0
+    dfar Map0CScreens0
+    dfar Map0CAttrs0
+    dfar Map0CScreens0
+    dfar Map0CAttrs0
+    dfar Map0CScreens0
+    dfar Map0CAttrs0
+    dfar Map0CScreens0
+    dfar Map0CAttrs0
 
+; E-0142 (derived: map record of map $0D, 4 x 2 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord0D::
 Data_011_4A12:: ; heuristic: map record of the map table; C0
-    db $9A, $62, $47, $E2, $67, $47, $04, $02, $3F, $00, $0F, $00, $00, $00, $00, $00
-    db $37, $CC
-    dw Data_011_6822
-    db $47, $3A, $68, $47
-    dw Data_011_6822
-    db $47, $3A, $68, $47
-    dw Data_011_6822
-    db $47, $3A, $68, $47
-    dw Data_011_6822
-    db $47, $3A, $68, $47
-    dw Data_011_6852
-    db $47, $6A, $68, $47
-    dw Data_011_6852
-    db $47, $6A, $68, $47
-    dw Data_011_6852
-    db $47, $6A, $68, $47
-    dw Data_011_6882
-    db $47, $9A, $68, $47
+    dfar Map0DTileset ; entry 0
+    dfar Map0DPalettes
+    db $04, $02, $3F, $00, $0F, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map0DScreens0
+    dfar Map0DAttrs0
+    dfar Map0DScreens0
+    dfar Map0DAttrs0
+    dfar Map0DScreens0
+    dfar Map0DAttrs0
+    dfar Map0DScreens0
+    dfar Map0DAttrs0
+    dfar Map0DScreens4
+    dfar Map0DAttrs4
+    dfar Map0DScreens4
+    dfar Map0DAttrs4
+    dfar Map0DScreens4
+    dfar Map0DAttrs4
+    dfar Map0DScreens7
+    dfar Map0DAttrs7
 
+; E-0142 (derived: map record of map $0E, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord0E::
 Data_011_4A54:: ; heuristic: map record of the map table; C0
-    dw Data_011_6E1E
-    db $47, $6B, $71, $47, $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00, $37, $CC
-    db $AB, $71, $47, $AE, $71, $47, $AB, $71, $47, $AE, $71, $47, $AB, $71, $47, $AE
-    db $71, $47, $AB, $71, $47, $AE, $71, $47, $AB, $71, $47, $AE, $71, $47, $AB, $71
-    db $47, $AE, $71, $47, $AB, $71, $47, $AE, $71, $47, $AB, $71, $47, $AE, $71, $47
+    dfar Map0ETileset ; entry 0
+    dfar Map0EPalettes
+    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map0EScreens0
+    dfar Map0EAttrs0
+    dfar Map0EScreens0
+    dfar Map0EAttrs0
+    dfar Map0EScreens0
+    dfar Map0EAttrs0
+    dfar Map0EScreens0
+    dfar Map0EAttrs0
+    dfar Map0EScreens0
+    dfar Map0EAttrs0
+    dfar Map0EScreens0
+    dfar Map0EAttrs0
+    dfar Map0EScreens0
+    dfar Map0EAttrs0
+    dfar Map0EScreens0
+    dfar Map0EAttrs0
 
+; E-0142 (derived: map record of map $0F, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord0F::
 Data_011_4A96:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044A96, $42
+    dfar Map0FTileset ; entry 0
+    dfar Map0FPalettes
+    db $01, $01, $50, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map0FScreens0
+    dfar Map0FAttrs0
+    dfar Map0FScreens0
+    dfar Map0FAttrs0
+    dfar Map0FScreens0
+    dfar Map0FAttrs0
+    dfar Map0FScreens0
+    dfar Map0FAttrs0
+    dfar Map0FScreens0
+    dfar Map0FAttrs0
+    dfar Map0FScreens0
+    dfar Map0FAttrs0
+    dfar Map0FScreens0
+    dfar Map0FAttrs0
+    dfar Map0FScreens7
+    dfar Map0FAttrs7
 
+; E-0142 (derived: map record of map $10, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord10::
 Data_011_4AD8:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044AD8, $42
+    dfar Map10Tileset ; entry 0
+    dfar Map10Palettes
+    db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map10Screens0
+    dfar Map10Attrs0
+    dfar Map10Screens0
+    dfar Map10Attrs0
+    dfar Map10Screens0
+    dfar Map10Attrs0
+    dfar Map10Screens0
+    dfar Map10Attrs0
+    dfar Map10Screens0
+    dfar Map10Attrs0
+    dfar Map10Screens0
+    dfar Map10Attrs0
+    dfar Map10Screens0
+    dfar Map10Attrs0
+    dfar Map10Screens0
+    dfar Map10Attrs0
 
+; E-0142 (derived: map record of map $11, 1 x 2 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord11::
 Data_011_4B1A:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044B1A, $42
+    dfar Map11Tileset ; entry 0
+    dfar Map11Palettes
+    db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map11Screens0
+    dfar Map11Attrs0
+    dfar Map11Screens0
+    dfar Map11Attrs0
+    dfar Map11Screens0
+    dfar Map11Attrs0
+    dfar Map11Screens0
+    dfar Map11Attrs0
+    dfar Map11Screens0
+    dfar Map11Attrs0
+    dfar Map11Screens0
+    dfar Map11Attrs0
+    dfar Map11Screens0
+    dfar Map11Attrs0
+    dfar Map11Screens0
+    dfar Map11Attrs0
 
+; E-0142 (derived: map record of map $12, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord12::
 Data_011_4B5C:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044B5C, $42
+    dfar Map12Tileset ; entry 0
+    dfar Map12Palettes
+    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map12Screens0
+    dfar Map12Attrs0
+    dfar Map12Screens0
+    dfar Map12Attrs0
+    dfar Map12Screens0
+    dfar Map12Attrs0
+    dfar Map12Screens0
+    dfar Map12Attrs0
+    dfar Map12Screens0
+    dfar Map12Attrs0
+    dfar Map12Screens0
+    dfar Map12Attrs0
+    dfar Map12Screens0
+    dfar Map12Attrs0
+    dfar Map12Screens0
+    dfar Map12Attrs0
 
+; E-0142 (derived: map record of map $13, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord13::
 Data_011_4B9E:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044B9E, $42
+    dfar Map13Tileset ; entry 0
+    dfar Map13Palettes
+    db $01, $01, $27, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map13Screens0
+    dfar Map13Attrs0
+    dfar Map13Screens0
+    dfar Map13Attrs0
+    dfar Map13Screens0
+    dfar Map13Attrs0
+    dfar Map13Screens0
+    dfar Map13Attrs0
+    dfar Map13Screens0
+    dfar Map13Attrs0
+    dfar Map13Screens0
+    dfar Map13Attrs0
+    dfar Map13Screens0
+    dfar Map13Attrs0
+    dfar Map13Screens0
+    dfar Map13Attrs0
 
+; E-0142 (derived: map record of map $14, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord14::
 Data_011_4BE0:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044BE0, $42
+    dfar Map14Tileset ; entry 0
+    dfar Map14Palettes
+    db $01, $01, $00, $00, $08, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map14Screens0
+    dfar Map14Attrs0
+    dfar Map14Screens0
+    dfar Map14Attrs0
+    dfar Map14Screens0
+    dfar Map14Attrs0
+    dfar Map14Screens0
+    dfar Map14Attrs0
+    dfar Map14Screens0
+    dfar Map14Attrs0
+    dfar Map14Screens0
+    dfar Map14Attrs0
+    dfar Map14Screens0
+    dfar Map14Attrs0
+    dfar Map14Screens0
+    dfar Map14Attrs0
 
+; E-0142 (derived: map record of map $15, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord15::
 Data_011_4C22:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044C22, $42
+    dfar Map15Tileset ; entry 0
+    dfar Map15Palettes
+    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map15Screens0
+    dfar Map15Attrs0
+    dfar Map15Screens0
+    dfar Map15Attrs0
+    dfar Map15Screens0
+    dfar Map15Attrs0
+    dfar Map15Screens0
+    dfar Map15Attrs0
+    dfar Map15Screens0
+    dfar Map15Attrs0
+    dfar Map15Screens0
+    dfar Map15Attrs0
+    dfar Map15Screens0
+    dfar Map15Attrs0
+    dfar Map15Screens0
+    dfar Map15Attrs0
 
+; E-0142 (derived: map record of map $16, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord16::
 Data_011_4C64:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044C64, $42
+    dfar Map16Tileset ; entry 0
+    dfar Map16Palettes
+    db $01, $01, $2B, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map16Screens0
+    dfar Map16Attrs0
+    dfar Map16Screens0
+    dfar Map16Attrs0
+    dfar Map16Screens0
+    dfar Map16Attrs0
+    dfar Map16Screens0
+    dfar Map16Attrs0
+    dfar Map16Screens0
+    dfar Map16Attrs0
+    dfar Map16Screens0
+    dfar Map16Attrs0
+    dfar Map16Screens0
+    dfar Map16Attrs0
+    dfar Map16Screens0
+    dfar Map16Attrs0
 
+; E-0142 (derived: map record of map $17, 1 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord17::
 Data_011_4CA6:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044CA6, $42
+    dfar Map17Tileset ; entry 0
+    dfar Map17Palettes
+    db $01, $01, $3A, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map17Screens0
+    dfar Map17Attrs0
+    dfar Map17Screens0
+    dfar Map17Attrs0
+    dfar Map17Screens0
+    dfar Map17Attrs0
+    dfar Map17Screens0
+    dfar Map17Attrs0
+    dfar Map17Screens0
+    dfar Map17Attrs0
+    dfar Map17Screens0
+    dfar Map17Attrs0
+    dfar Map17Screens0
+    dfar Map17Attrs0
+    dfar Map17Screens0
+    dfar Map17Attrs0
 
+; E-0142 (derived: map record of map $18, 3 x 2 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord18::
 Data_011_4CE8:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044CE8, $42
+    dfar Map18Tileset ; entry 0
+    dfar Map18Palettes
+    db $03, $02, $39, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map18Screens0
+    dfar Map18Attrs0
+    dfar Map18Screens0
+    dfar Map18Attrs0
+    dfar Map18Screens0
+    dfar Map18Attrs0
+    dfar Map18Screens0
+    dfar Map18Attrs0
+    dfar Map18Screens0
+    dfar Map18Attrs0
+    dfar Map18Screens0
+    dfar Map18Attrs0
+    dfar Map18Screens0
+    dfar Map18Attrs0
+    dfar Map18Screens0
+    dfar Map18Attrs0
 
+; E-0142 (derived: map record of map $19, 2 x 3 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord19::
 Data_011_4D2A:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044D2A, $42
+    dfar Map19Tileset ; entry 0
+    dfar Map19Palettes
+    db $02, $03, $57, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map19Screens0
+    dfar Map19Attrs0
+    dfar Map19Screens0
+    dfar Map19Attrs0
+    dfar Map19Screens0
+    dfar Map19Attrs0
+    dfar Map19Screens0
+    dfar Map19Attrs0
+    dfar Map19Screens0
+    dfar Map19Attrs0
+    dfar Map19Screens0
+    dfar Map19Attrs0
+    dfar Map19Screens6
+    dfar Map19Attrs6
+    dfar Map19Screens0
+    dfar Map19Attrs0
 
+; E-0142 (derived: map record of map $1A, 3 x 1 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord1A::
 Data_011_4D6C:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044D6C, $42
+    dfar Map1ATileset ; entry 0
+    dfar Map1APalettes
+    db $03, $01, $4B, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map1AScreens0
+    dfar Map1AAttrs0
+    dfar Map1AScreens0
+    dfar Map1AAttrs0
+    dfar Map1AScreens0
+    dfar Map1AAttrs0
+    dfar Map1AScreens0
+    dfar Map1AAttrs0
+    dfar Map1AScreens0
+    dfar Map1AAttrs0
+    dfar Map1AScreens5
+    dfar Map1AAttrs5
+    dfar Map1AScreens5
+    dfar Map1AAttrs5
+    dfar Map1AScreens5
+    dfar Map1AAttrs5
 
+; E-0142 (derived: map record of map $1B, 1 x 3 screens, 8 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
+MapRecord1B::
 Data_011_4DAE:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $044DAE, $42
+    dfar Map1BTileset ; entry 0
+    dfar Map1BPalettes
+    db $01, $03, $1F, $00, $00, $00, $00, $02, $00, $00
+    dw wStoryFlags + $60
+    dfar Map1BScreens0
+    dfar Map1BAttrs0
+    dfar Map1BScreens0
+    dfar Map1BAttrs0
+    dfar Map1BScreens0
+    dfar Map1BAttrs0
+    dfar Map1BScreens0
+    dfar Map1BAttrs0
+    dfar Map1BScreens0
+    dfar Map1BAttrs0
+    dfar Map1BScreens0
+    dfar Map1BAttrs0
+    dfar Map1BScreens0
+    dfar Map1BAttrs0
+    dfar Map1BScreens0
+    dfar Map1BAttrs0
 
+; E-0142 (derived: map record of map $1C, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecord1C::
 Data_011_4DF0:: ; heuristic: map record of the map table; C0
-    db $75, $78, $90, $DE, $7C, $90, $01, $02, $00, $00, $01, $00, $00, $00, $00, $00
-    db $37, $CC, $1E, $7D, $90, $24, $7D, $90, $1E, $7D, $90, $24, $7D, $90
+    dfar Map1CTileset ; entry 0
+    dfar Map1CPalettes
+    db $01, $02, $00, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map1CScreens0
+    dfar Map1CAttrs0
+    dfar Map1CScreens0
+    dfar Map1CAttrs0
 
+; E-0142 (derived: map record of map $1D, 2 x 1 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecord1D::
 Data_011_4E0E:: ; heuristic: map record of the map table; C0
-    db $33, $72, $90, $9E, $75, $90, $02, $01, $37, $00, $0E, $00, $00, $00, $00, $00
-    db $37, $CC, $DE, $75, $90, $E4, $75, $90, $DE, $75, $90, $E4, $75, $90
+    dfar Map1DTileset ; entry 0
+    dfar Map1DPalettes
+    db $02, $01, $37, $00, $0E, $00, $00, $00, $00, $00
+    dw wStoryFlags + $60
+    dfar Map1DScreens0
+    dfar Map1DAttrs0
+    dfar Map1DScreens0
+    dfar Map1DAttrs0
 
+; E-0142 (derived: map record of map $20, 8 x 8 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord20::
 Data_011_4E2C:: ; heuristic: map record of the map table; C0
-    db $01, $40, $4A, $A1, $42, $4A, $08, $08, $2B, $00, $00, $01, $00, $00, $00, $00
-    db $38, $CC, $E1, $42, $4A, $A1, $43, $4A, $E1, $42, $4A, $A1, $43, $4A, $E1, $42
-    db $4A, $A1, $43, $4A, $E1, $42, $4A, $A1, $43, $4A, $E1, $42, $4A, $A1, $43, $4A
-    db $E1, $42, $4A, $A1, $43, $4A, $E1, $42, $4A, $A1, $43, $4A
+    dfar Map20Tileset ; entry 0
+    dfar Map20Palettes
+    db $08, $08, $2B, $00, $00, $01, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map20Screens0
+    dfar Map20Attrs0
+    dfar Map20Screens0
+    dfar Map20Attrs0
+    dfar Map20Screens0
+    dfar Map20Attrs0
+    dfar Map20Screens0
+    dfar Map20Attrs0
+    dfar Map20Screens0
+    dfar Map20Attrs0
+    dfar Map20Screens0
+    dfar Map20Attrs0
+    dfar Map20Screens0
+    dfar Map20Attrs0
 
+; E-0142 (derived: map record of map $21, 2 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord21::
 Data_011_4E68:: ; heuristic: map record of the map table; C0
-    db $0B, $70, $4A, $EB, $74, $4A, $02, $01, $4E, $00, $01, $00, $00, $00, $00, $00
-    db $38, $CC, $2B, $75, $4A, $31, $75, $4A, $2B, $75, $4A, $31, $75, $4A, $2B, $75
-    db $4A, $31, $75, $4A, $2B, $75, $4A, $31, $75, $4A, $2B, $75, $4A, $31, $75, $4A
-    db $2B, $75, $4A, $31, $75, $4A, $2B, $75, $4A, $31, $75, $4A
+    dfar Map21Tileset ; entry 0
+    dfar Map21Palettes
+    db $02, $01, $4E, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map21Screens0
+    dfar Map21Attrs0
+    dfar Map21Screens0
+    dfar Map21Attrs0
+    dfar Map21Screens0
+    dfar Map21Attrs0
+    dfar Map21Screens0
+    dfar Map21Attrs0
+    dfar Map21Screens0
+    dfar Map21Attrs0
+    dfar Map21Screens0
+    dfar Map21Attrs0
+    dfar Map21Screens0
+    dfar Map21Attrs0
 
+; E-0142 (derived: map record of map $22, 1 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord22::
 Data_011_4EA4:: ; heuristic: map record of the map table; C0
-    db $D2, $61, $49, $5C, $64, $49, $01, $01, $30, $00, $00, $00, $00, $00, $00, $00
-    db $38, $CC, $9C, $64, $49, $9F, $64, $49, $9C, $64, $49, $9F, $64, $49, $9C, $64
-    db $49, $9F, $64, $49, $9C, $64, $49, $9F, $64, $49, $9C, $64, $49, $9F, $64, $49
-    db $9C, $64, $49, $9F, $64, $49, $9C, $64, $49, $9F, $64, $49
+    dfar Map22Tileset ; entry 0
+    dfar Map22Palettes
+    db $01, $01, $30, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map22Screens0
+    dfar Map22Attrs0
+    dfar Map22Screens0
+    dfar Map22Attrs0
+    dfar Map22Screens0
+    dfar Map22Attrs0
+    dfar Map22Screens0
+    dfar Map22Attrs0
+    dfar Map22Screens0
+    dfar Map22Attrs0
+    dfar Map22Screens0
+    dfar Map22Attrs0
+    dfar Map22Screens0
+    dfar Map22Attrs0
 
+; E-0142 (derived: map record of map $23, 1 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord23::
 Data_011_4EE0:: ; heuristic: map record of the map table; C0
-    db $E1, $65, $49, $85, $68, $49, $01, $01, $31, $00, $00, $00, $00, $00, $00, $00
-    db $38, $CC, $C5, $68, $49, $C8, $68, $49, $C5, $68, $49, $C8, $68, $49, $C5, $68
-    db $49, $C8, $68, $49, $C5, $68, $49, $C8, $68, $49, $C5, $68, $49, $C8, $68, $49
-    db $C5, $68, $49, $C8, $68, $49, $C5, $68, $49, $C8, $68, $49
+    dfar Map23Tileset ; entry 0
+    dfar Map23Palettes
+    db $01, $01, $31, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map23Screens0
+    dfar Map23Attrs0
+    dfar Map23Screens0
+    dfar Map23Attrs0
+    dfar Map23Screens0
+    dfar Map23Attrs0
+    dfar Map23Screens0
+    dfar Map23Attrs0
+    dfar Map23Screens0
+    dfar Map23Attrs0
+    dfar Map23Screens0
+    dfar Map23Attrs0
+    dfar Map23Screens0
+    dfar Map23Attrs0
 
+; E-0142 (derived: map record of map $24, 2 x 2 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord24::
 Data_011_4F1C:: ; heuristic: map record of the map table; C0
-    db $E6, $69, $49, $06, $6F, $49, $02, $02, $48, $00, $00, $00, $00, $00, $00, $00
-    db $38, $CC, $46, $6F, $49, $52, $6F, $49, $46, $6F, $49, $52, $6F, $49, $46, $6F
-    db $49, $52, $6F, $49, $46, $6F, $49, $52, $6F, $49, $46, $6F, $49, $52, $6F, $49
-    db $46, $6F, $49, $52, $6F, $49, $46, $6F, $49, $52, $6F, $49
+    dfar Map24Tileset ; entry 0
+    dfar Map24Palettes
+    db $02, $02, $48, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map24Screens0
+    dfar Map24Attrs0
+    dfar Map24Screens0
+    dfar Map24Attrs0
+    dfar Map24Screens0
+    dfar Map24Attrs0
+    dfar Map24Screens0
+    dfar Map24Attrs0
+    dfar Map24Screens0
+    dfar Map24Attrs0
+    dfar Map24Screens0
+    dfar Map24Attrs0
+    dfar Map24Screens0
+    dfar Map24Attrs0
 
+; E-0142 (derived: map record of map $25, 2 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord25::
 Data_011_4F58:: ; heuristic: map record of the map table; C0
-    db $14, $74, $49, $A6, $78, $49, $02, $01, $37, $00, $00, $00, $00, $00, $00, $00
-    db $38, $CC, $E6, $78, $49, $EC, $78, $49, $E6, $78, $49, $EC, $78, $49, $E6, $78
-    db $49, $EC, $78, $49, $E6, $78, $49, $EC, $78, $49, $E6, $78, $49, $EC, $78, $49
-    db $E6, $78, $49, $EC, $78, $49, $E6, $78, $49, $EC, $78, $49
+    dfar Map25Tileset ; entry 0
+    dfar Map25Palettes
+    db $02, $01, $37, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map25Screens0
+    dfar Map25Attrs0
+    dfar Map25Screens0
+    dfar Map25Attrs0
+    dfar Map25Screens0
+    dfar Map25Attrs0
+    dfar Map25Screens0
+    dfar Map25Attrs0
+    dfar Map25Screens0
+    dfar Map25Attrs0
+    dfar Map25Screens0
+    dfar Map25Attrs0
+    dfar Map25Screens0
+    dfar Map25Attrs0
 
+; E-0142 (derived: map record of map $26, 1 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord26::
 Data_011_4F94:: ; heuristic: map record of the map table; C0
-    db $0F, $45, $90, $CF, $77, $4A, $01, $01, $58, $00, $06, $00, $00, $00, $00, $00
-    db $38, $CC, $01, $40, $4B, $04, $40, $4B, $07, $40, $4B, $0A, $40, $4B, $07, $40
-    db $4B, $0A, $40, $4B, $07, $40, $4B, $0A, $40, $4B, $07, $40, $4B, $0A, $40, $4B
-    db $07, $40, $4B, $0A, $40, $4B, $07, $40, $4B, $0A, $40, $4B
+    dfar Map26Tileset ; entry 0
+    dfar Map26Palettes
+    db $01, $01, $58, $00, $06, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map26Screens0
+    dfar Map26Attrs0
+    dfar Map26Screens1
+    dfar Map26Attrs1
+    dfar Map26Screens1
+    dfar Map26Attrs1
+    dfar Map26Screens1
+    dfar Map26Attrs1
+    dfar Map26Screens1
+    dfar Map26Attrs1
+    dfar Map26Screens1
+    dfar Map26Attrs1
+    dfar Map26Screens1
+    dfar Map26Attrs1
 
+; E-0142 (derived: map record of map $28, 1 x 2 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord28::
 Data_011_4FD0:: ; heuristic: map record of the map table; C0
-    db $92, $42, $4B, $0F, $78, $4A, $01, $02, $2F, $00, $01, $00, $00, $00, $00, $00
-    db $38, $CC, $FF, $45, $4B, $05, $46, $4B, $FF, $45, $4B, $05, $46, $4B, $FF, $45
-    db $4B, $05, $46, $4B, $FF, $45, $4B, $05, $46, $4B, $FF, $45, $4B, $05, $46, $4B
-    db $FF, $45, $4B, $05, $46, $4B, $FF, $45, $4B, $05, $46, $4B
+    dfar Map28Tileset ; entry 0
+    dfar Map28Palettes
+    db $01, $02, $2F, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map28Screens0
+    dfar Map28Attrs0
+    dfar Map28Screens0
+    dfar Map28Attrs0
+    dfar Map28Screens0
+    dfar Map28Attrs0
+    dfar Map28Screens0
+    dfar Map28Attrs0
+    dfar Map28Screens0
+    dfar Map28Attrs0
+    dfar Map28Screens0
+    dfar Map28Attrs0
+    dfar Map28Screens0
+    dfar Map28Attrs0
 
+; E-0142 (derived: map record of map $29, 1 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord29::
 Data_011_500C:: ; heuristic: map record of the map table; C0
-    db $08, $4B, $90, $FE, $4E, $90, $01, $01, $32, $2C, $00, $00, $00, $00, $00, $00
-    db $38, $CC, $3E, $4F, $90, $41, $4F, $90, $3E, $4F, $90, $41, $4F, $90, $3E, $4F
-    db $90, $41, $4F, $90, $3E, $4F, $90, $41, $4F, $90, $3E, $4F, $90, $41, $4F, $90
-    db $3E, $4F, $90, $41, $4F, $90, $3E, $4F, $90, $41, $4F, $90
+    dfar Map29Tileset ; entry 0
+    dfar Map29Palettes
+    db $01, $01, $32, $2C, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map29Screens0
+    dfar Map29Attrs0
+    dfar Map29Screens0
+    dfar Map29Attrs0
+    dfar Map29Screens0
+    dfar Map29Attrs0
+    dfar Map29Screens0
+    dfar Map29Attrs0
+    dfar Map29Screens0
+    dfar Map29Attrs0
+    dfar Map29Screens0
+    dfar Map29Attrs0
+    dfar Map29Screens0
+    dfar Map29Attrs0
 
+; E-0142 (derived: map record of map $2A, 1 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord2A::
 Data_011_5048:: ; heuristic: map record of the map table; C0
-    db $4F, $78, $4A, $19, $7B, $4A, $01, $01, $27, $00, $01, $00, $00, $01, $0F, $00
-    db $38, $CC, $59, $7B, $4A, $5C, $7B, $4A, $59, $7B, $4A, $5C, $7B, $4A, $59, $7B
-    db $4A, $5C, $7B, $4A, $59, $7B, $4A, $5C, $7B, $4A, $59, $7B, $4A, $5C, $7B, $4A
-    db $59, $7B, $4A, $5C, $7B, $4A, $59, $7B, $4A, $5C, $7B, $4A
+    dfar Map2ATileset ; entry 0
+    dfar Map2APalettes
+    db $01, $01, $27, $00, $01, $00, $00, $01, $0F, $00
+    dw wStoryFlags + $61
+    dfar Map2AScreens0
+    dfar Map2AAttrs0
+    dfar Map2AScreens0
+    dfar Map2AAttrs0
+    dfar Map2AScreens0
+    dfar Map2AAttrs0
+    dfar Map2AScreens0
+    dfar Map2AAttrs0
+    dfar Map2AScreens0
+    dfar Map2AAttrs0
+    dfar Map2AScreens0
+    dfar Map2AAttrs0
+    dfar Map2AScreens0
+    dfar Map2AAttrs0
 
+; E-0142 (derived: map record of map $2B, 4 x 4 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord2B::
 Data_011_5084:: ; heuristic: map record of the map table; C0
-    db $DC, $48, $4B, $27, $4E, $4B, $04, $04, $4F, $00, $01, $02, $00, $01, $0D, $00
-    db $38, $CC, $67, $4E, $4B, $97, $4E, $4B, $67, $4E, $4B, $97, $4E, $4B, $C7, $4E
-    db $4B, $F7, $4E, $4B, $C7, $4E, $4B, $F7, $4E, $4B, $C7, $4E, $4B, $F7, $4E, $4B
-    db $C7, $4E, $4B, $F7, $4E, $4B, $C7, $4E, $4B, $F7, $4E, $4B
+    dfar Map2BTileset ; entry 0
+    dfar Map2BPalettes
+    db $04, $04, $4F, $00, $01, $02, $00, $01, $0D, $00
+    dw wStoryFlags + $61
+    dfar Map2BScreens0
+    dfar Map2BAttrs0
+    dfar Map2BScreens0
+    dfar Map2BAttrs0
+    dfar Map2BScreens2
+    dfar Map2BAttrs2
+    dfar Map2BScreens2
+    dfar Map2BAttrs2
+    dfar Map2BScreens2
+    dfar Map2BAttrs2
+    dfar Map2BScreens2
+    dfar Map2BAttrs2
+    dfar Map2BScreens2
+    dfar Map2BAttrs2
 
+; E-0142 (derived: map record of map $2D, 1 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord2D::
 Data_011_50C0:: ; heuristic: map record of the map table; C0
-    db $7F, $7B, $49, $6E, $7E, $49, $01, $01, $21, $00, $00, $00, $00, $00, $00, $00
-    db $38, $CC, $AE, $7E, $49, $B1, $7E, $49, $AE, $7E, $49, $B1, $7E, $49, $AE, $7E
-    db $49, $B1, $7E, $49, $AE, $7E, $49, $B1, $7E, $49, $AE, $7E, $49, $B1, $7E, $49
-    db $AE, $7E, $49, $B1, $7E, $49, $AE, $7E, $49, $B1, $7E, $49
+    dfar Map2DTileset ; entry 0
+    dfar Map2DPalettes
+    db $01, $01, $21, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map2DScreens0
+    dfar Map2DAttrs0
+    dfar Map2DScreens0
+    dfar Map2DAttrs0
+    dfar Map2DScreens0
+    dfar Map2DAttrs0
+    dfar Map2DScreens0
+    dfar Map2DAttrs0
+    dfar Map2DScreens0
+    dfar Map2DAttrs0
+    dfar Map2DScreens0
+    dfar Map2DAttrs0
+    dfar Map2DScreens0
+    dfar Map2DAttrs0
 
+; E-0142 (derived: map record of map $2E, 1 x 1 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord2E::
 Data_011_50FC:: ; heuristic: map record of the map table; C0
-    db $14, $74, $49, $A6, $78, $49, $01, $01, $37, $00, $00, $00, $00, $00, $00, $00
-    db $38, $CC, $C1, $5E, $4B, $C4, $5E, $4B, $C1, $5E, $4B, $C4, $5E, $4B, $C1, $5E
-    db $4B, $C4, $5E, $4B, $C7, $5E, $4B, $CA, $5E, $4B, $C7, $5E, $4B, $CA, $5E, $4B
-    db $C7, $5E, $4B, $CA, $5E, $4B, $C1, $5E, $4B, $C4, $5E, $4B
+    dfar Map25Tileset ; entry 0
+    dfar Map25Palettes
+    db $01, $01, $37, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $61
+    dfar Map2EScreens0
+    dfar Map2EAttrs0
+    dfar Map2EScreens0
+    dfar Map2EAttrs0
+    dfar Map2EScreens0
+    dfar Map2EAttrs0
+    dfar Map2EScreens3
+    dfar Map2EAttrs3
+    dfar Map2EScreens3
+    dfar Map2EAttrs3
+    dfar Map2EScreens3
+    dfar Map2EAttrs3
+    dfar Map2EScreens0
+    dfar Map2EAttrs0
 
+; E-0142 (derived: map record of map $2F, 2 x 2 screens, 7 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank
+MapRecord2F::
 Data_011_5138:: ; heuristic: map record of the map table; C0
-    db $3D, $53, $93, $60, $57, $93, $02, $02, $37, $00, $01, $00, $00, $01, $09, $00
-    db $38, $CC, $A0, $57, $93, $AC, $57, $93, $A0, $57, $93, $AC, $57, $93, $A0, $57
-    db $93, $AC, $57, $93, $A0, $57, $93, $AC, $57, $93, $B8, $57, $93, $C4, $57, $93
-    db $D0, $57, $93, $DC, $57, $93, $D0, $57, $93, $DC, $57, $93
+    dfar Map2FTileset ; entry 0
+    dfar Map2FPalettes
+    db $02, $02, $37, $00, $01, $00, $00, $01, $09, $00
+    dw wStoryFlags + $61
+    dfar Map2FScreens0
+    dfar Map2FAttrs0
+    dfar Map2FScreens0
+    dfar Map2FAttrs0
+    dfar Map2FScreens0
+    dfar Map2FAttrs0
+    dfar Map2FScreens0
+    dfar Map2FAttrs0
+    dfar Map2FScreens4
+    dfar Map2FAttrs4
+    dfar Map2FScreens5
+    dfar Map2FAttrs5
+    dfar Map2FScreens5
+    dfar Map2FAttrs5
 
+; E-0142 (derived: map record of map $30, 8 x 8 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord30::
 Data_011_5174:: ; heuristic: map record of the map table; C0
-    db $01, $40, $5F, $6E, $44, $5F, $08, $08, $3D, $00, $01, $03, $00, $01, $27, $00
-    db $39, $CC, $01, $40, $56, $C1, $40, $56, $01, $40, $56, $C1, $40, $56, $81, $41
-    db $56, $41, $42, $56, $81, $41, $56, $41, $42, $56, $81, $41, $56, $41, $42, $56
+    dfar Map30Tileset ; entry 0
+    dfar Map30Palettes
+    db $08, $08, $3D, $00, $01, $03, $00, $01, $27, $00
+    dw wStoryFlags + $62
+    dfar Map30Screens0
+    dfar Map30Attrs0
+    dfar Map30Screens0
+    dfar Map30Attrs0
+    dfar Map30Screens2
+    dfar Map30Attrs2
+    dfar Map30Screens2
+    dfar Map30Attrs2
+    dfar Map30Screens2
+    dfar Map30Attrs2
 
+; E-0142 (derived: map record of map $31, 1 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord31::
 Data_011_51A4:: ; heuristic: map record of the map table; C0
-    db $AE, $44, $5F, $C0, $49, $5F, $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
-    db $39, $CC, $00, $4A, $5F, $06, $4A, $5F, $00, $4A, $5F, $06, $4A, $5F, $00, $4A
-    db $5F, $06, $4A, $5F, $00, $4A, $5F, $06, $4A, $5F, $00, $4A, $5F, $06, $4A, $5F
+    dfar Map31Tileset ; entry 0
+    dfar Map31Palettes
+    db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map31Screens0
+    dfar Map31Attrs0
+    dfar Map31Screens0
+    dfar Map31Attrs0
+    dfar Map31Screens0
+    dfar Map31Attrs0
+    dfar Map31Screens0
+    dfar Map31Attrs0
+    dfar Map31Screens0
+    dfar Map31Attrs0
 
+; E-0142 (derived: map record of map $32, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord32::
 Data_011_51D4:: ; heuristic: map record of the map table; C0
-    db $D6, $62, $93, $01, $40, $58, $02, $02, $4B, $00, $01, $00, $00, $00, $00, $00
-    db $39, $CC, $01, $40, $57, $0D, $40, $57, $01, $40, $57, $0D, $40, $57, $19, $40
-    db $57, $25, $40, $57, $19, $40, $57, $25, $40, $57, $19, $40, $57, $25, $40, $57
+    dfar Map32Tileset ; entry 0
+    dfar Map32Palettes
+    db $02, $02, $4B, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map32Screens0
+    dfar Map32Attrs0
+    dfar Map32Screens0
+    dfar Map32Attrs0
+    dfar Map32Screens2
+    dfar Map32Attrs2
+    dfar Map32Screens2
+    dfar Map32Attrs2
+    dfar Map32Screens2
+    dfar Map32Attrs2
 
+; E-0142 (derived: map record of map $33, 1 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord33::
 Data_011_5204:: ; heuristic: map record of the map table; C0
-    db $A2, $48, $57, $41, $40, $58, $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $39, $CC, $7B, $4B, $57, $81, $4B, $57, $7B, $4B, $57, $81, $4B, $57, $7B, $4B
-    db $57, $81, $4B, $57, $7B, $4B, $57, $81, $4B, $57, $7B, $4B, $57, $81, $4B, $57
+    dfar Map33Tileset ; entry 0
+    dfar Map33Palettes
+    db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map33Screens0
+    dfar Map33Attrs0
+    dfar Map33Screens0
+    dfar Map33Attrs0
+    dfar Map33Screens0
+    dfar Map33Attrs0
+    dfar Map33Screens0
+    dfar Map33Attrs0
+    dfar Map33Screens0
+    dfar Map33Attrs0
 
+; E-0142 (derived: map record of map $34, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord34::
 Data_011_5234:: ; heuristic: map record of the map table; C0
-    db $04, $4D, $57, $81, $40, $58, $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00
-    db $39, $CC, $B6, $4F, $57, $B9, $4F, $57, $B6, $4F, $57, $B9, $4F, $57, $B6, $4F
-    db $57, $B9, $4F, $57, $B6, $4F, $57, $B9, $4F, $57, $B6, $4F, $57, $B9, $4F, $57
+    dfar Map34Tileset ; entry 0
+    dfar Map34Palettes
+    db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map34Screens0
+    dfar Map34Attrs0
+    dfar Map34Screens0
+    dfar Map34Attrs0
+    dfar Map34Screens0
+    dfar Map34Attrs0
+    dfar Map34Screens0
+    dfar Map34Attrs0
+    dfar Map34Screens0
+    dfar Map34Attrs0
 
+; E-0142 (derived: map record of map $35, 4 x 4 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord35::
 Data_011_5264:: ; heuristic: map record of the map table; C0
-    db $C7, $50, $57, $C1, $40, $58, $04, $04, $29, $00, $01, $04, $00, $01, $0F, $00
-    db $39, $CC, $AA, $53, $57, $DA, $53, $57, $AA, $53, $57, $DA, $53, $57, $AA, $53
-    db $57, $DA, $53, $57, $AA, $53, $57, $DA, $53, $57, $AA, $53, $57, $DA, $53, $57
+    dfar Map35Tileset ; entry 0
+    dfar Map35Palettes
+    db $04, $04, $29, $00, $01, $04, $00, $01, $0F, $00
+    dw wStoryFlags + $62
+    dfar Map35Screens0
+    dfar Map35Attrs0
+    dfar Map35Screens0
+    dfar Map35Attrs0
+    dfar Map35Screens0
+    dfar Map35Attrs0
+    dfar Map35Screens0
+    dfar Map35Attrs0
+    dfar Map35Screens0
+    dfar Map35Attrs0
 
+; E-0142 (derived: map record of map $36, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord36::
 Data_011_5294:: ; heuristic: map record of the map table; C0
-    db $83, $4C, $5F, $01, $41, $58, $01, $01, $23, $00, $01, $00, $00, $01, $09, $00
-    db $39, $CC, $0C, $4E, $5F, $0F, $4E, $5F, $0C, $4E, $5F, $0F, $4E, $5F, $0C, $4E
-    db $5F, $0F, $4E, $5F, $0C, $4E, $5F, $0F, $4E, $5F, $0C, $4E, $5F, $0F, $4E, $5F
+    dfar Map36Tileset ; entry 0
+    dfar Map36Palettes
+    db $01, $01, $23, $00, $01, $00, $00, $01, $09, $00
+    dw wStoryFlags + $62
+    dfar Map36Screens0
+    dfar Map36Attrs0
+    dfar Map36Screens0
+    dfar Map36Attrs0
+    dfar Map36Screens0
+    dfar Map36Attrs0
+    dfar Map36Screens0
+    dfar Map36Attrs0
+    dfar Map36Screens0
+    dfar Map36Attrs0
 
+; E-0142 (derived: map record of map $37, 3 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord37::
 Data_011_52C4:: ; heuristic: map record of the map table; C0
-    db $7D, $65, $57, $41, $41, $58, $03, $01, $4F, $00, $01, $07, $00, $01, $0D, $00
-    db $39, $CC, $0B, $6A, $57, $14, $6A, $57, $0B, $6A, $57, $14, $6A, $57, $0B, $6A
-    db $57, $14, $6A, $57, $0B, $6A, $57, $14, $6A, $57, $0B, $6A, $57, $14, $6A, $57
+    dfar Map37Tileset ; entry 0
+    dfar Map37Palettes
+    db $03, $01, $4F, $00, $01, $07, $00, $01, $0D, $00
+    dw wStoryFlags + $62
+    dfar Map37Screens0
+    dfar Map37Attrs0
+    dfar Map37Screens0
+    dfar Map37Attrs0
+    dfar Map37Screens0
+    dfar Map37Attrs0
+    dfar Map37Screens0
+    dfar Map37Attrs0
+    dfar Map37Screens0
+    dfar Map37Attrs0
 
+; E-0142 (derived: map record of map $38, 4 x 4 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord38::
 Data_011_52F4:: ; heuristic: map record of the map table; C0
-    db $96, $6E, $57, $26, $71, $57, $04, $04, $3F, $00, $00, $05, $00, $00, $01, $00
-    db $39, $CC, $66, $71, $57, $96, $71, $57, $66, $71, $57, $96, $71, $57, $66, $71
-    db $57, $96, $71, $57, $66, $71, $57, $96, $71, $57, $66, $71, $57, $96, $71, $57
+    dfar Map38Tileset ; entry 0
+    dfar Map38Palettes
+    db $04, $04, $3F, $00, $00, $05, $00, $00, $01, $00
+    dw wStoryFlags + $62
+    dfar Map38Screens0
+    dfar Map38Attrs0
+    dfar Map38Screens0
+    dfar Map38Attrs0
+    dfar Map38Screens0
+    dfar Map38Attrs0
+    dfar Map38Screens0
+    dfar Map38Attrs0
+    dfar Map38Screens0
+    dfar Map38Attrs0
 
+; E-0142 (derived: map record of map $39, 4 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord39::
 Data_011_5324:: ; heuristic: map record of the map table; C0
-    db $96, $6E, $57, $26, $71, $57, $04, $03, $3F, $00, $00, $05, $00, $02, $01, $00
-    db $39, $CC, $BD, $60, $4B, $E1, $60, $4B, $BD, $60, $4B, $E1, $60, $4B, $BD, $60
-    db $4B, $E1, $60, $4B, $05, $61, $4B, $29, $61, $4B, $05, $61, $4B, $29, $61, $4B
+    dfar Map38Tileset ; entry 0
+    dfar Map38Palettes
+    db $04, $03, $3F, $00, $00, $05, $00, $02, $01, $00
+    dw wStoryFlags + $62
+    dfar Map39Screens0
+    dfar Map39Attrs0
+    dfar Map39Screens0
+    dfar Map39Attrs0
+    dfar Map39Screens0
+    dfar Map39Attrs0
+    dfar Map39Screens3
+    dfar Map39Attrs3
+    dfar Map39Screens3
+    dfar Map39Attrs3
 
+; E-0142 (derived: map record of map $3A, 3 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord3A::
 Data_011_5354:: ; heuristic: map record of the map table; C0
-    db $96, $6E, $57, $26, $71, $57, $03, $03, $3F, $00, $00, $05, $06, $02, $01, $00
-    db $39, $CC, $4C, $6C, $4B, $67, $6C, $4B, $4C, $6C, $4B, $67, $6C, $4B, $4C, $6C
-    db $4B, $67, $6C, $4B, $4C, $6C, $4B, $67, $6C, $4B, $4C, $6C, $4B, $67, $6C, $4B
+    dfar Map38Tileset ; entry 0
+    dfar Map38Palettes
+    db $03, $03, $3F, $00, $00, $05, $06, $02, $01, $00
+    dw wStoryFlags + $62
+    dfar Map3AScreens0
+    dfar Map3AAttrs0
+    dfar Map3AScreens0
+    dfar Map3AAttrs0
+    dfar Map3AScreens0
+    dfar Map3AAttrs0
+    dfar Map3AScreens0
+    dfar Map3AAttrs0
+    dfar Map3AScreens0
+    dfar Map3AAttrs0
 
+; E-0142 (derived: map record of map $3B, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord3B::
 Data_011_5384:: ; heuristic: map record of the map table; C0
-    db $3C, $4F, $5F, $DD, $52, $5F, $01, $01, $37, $2C, $00, $00, $00, $02, $01, $00
-    db $39, $CC, $1D, $53, $5F, $20, $53, $5F, $1D, $53, $5F, $20, $53, $5F, $1D, $53
-    db $5F, $20, $53, $5F, $1D, $53, $5F, $20, $53, $5F, $23, $53, $5F, $26, $53, $5F
+    dfar Map3BTileset ; entry 0
+    dfar Map3BPalettes
+    db $01, $01, $37, $2C, $00, $00, $00, $02, $01, $00
+    dw wStoryFlags + $62
+    dfar Map3BScreens0
+    dfar Map3BAttrs0
+    dfar Map3BScreens0
+    dfar Map3BAttrs0
+    dfar Map3BScreens0
+    dfar Map3BAttrs0
+    dfar Map3BScreens0
+    dfar Map3BAttrs0
+    dfar Map3BScreens4
+    dfar Map3BAttrs4
 
+; E-0142 (derived: map record of map $3C, 3 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord3C::
 Data_011_53B4:: ; heuristic: map record of the map table; C0
-    db $D4, $54, $5F, $28, $59, $5F, $03, $01, $3F, $00, $01, $00, $00, $00, $00, $00
-    db $39, $CC, $68, $59, $5F, $71, $59, $5F, $68, $59, $5F, $71, $59, $5F, $68, $59
-    db $5F, $71, $59, $5F, $68, $59, $5F, $71, $59, $5F, $68, $59, $5F, $71, $59, $5F
+    dfar Map3CTileset ; entry 0
+    dfar Map3CPalettes
+    db $03, $01, $3F, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map3CScreens0
+    dfar Map3CAttrs0
+    dfar Map3CScreens0
+    dfar Map3CAttrs0
+    dfar Map3CScreens0
+    dfar Map3CAttrs0
+    dfar Map3CScreens0
+    dfar Map3CAttrs0
+    dfar Map3CScreens0
+    dfar Map3CAttrs0
 
+; E-0142 (derived: map record of map $3D, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord3D::
 Data_011_53E4:: ; heuristic: map record of the map table; C0
-    db $D7, $50, $90, $7B, $53, $90, $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00
-    db $39, $CC, $BB, $53, $90, $BE, $53, $90, $BB, $53, $90, $BE, $53, $90, $BB, $53
-    db $90, $BE, $53, $90, $BB, $53, $90, $BE, $53, $90, $BB, $53, $90, $BE, $53, $90
+    dfar Map3DTileset ; entry 0
+    dfar Map3DPalettes
+    db $01, $01, $2A, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map3DScreens0
+    dfar Map3DAttrs0
+    dfar Map3DScreens0
+    dfar Map3DAttrs0
+    dfar Map3DScreens0
+    dfar Map3DAttrs0
+    dfar Map3DScreens0
+    dfar Map3DAttrs0
+    dfar Map3DScreens0
+    dfar Map3DAttrs0
 
+; E-0142 (derived: map record of map $3E, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord3E::
 Data_011_5414:: ; heuristic: map record of the map table; C0
-    db $DE, $68, $93, $D8, $6B, $93, $02, $02, $2F, $00, $01, $06, $00, $01, $0E, $00
-    db $39, $CC, $18, $6C, $93, $24, $6C, $93, $18, $6C, $93, $24, $6C, $93, $18, $6C
-    db $93, $24, $6C, $93, $18, $6C, $93, $24, $6C, $93, $18, $6C, $93, $24, $6C, $93
+    dfar Map3ETileset ; entry 0
+    dfar Map3EPalettes
+    db $02, $02, $2F, $00, $01, $06, $00, $01, $0E, $00
+    dw wStoryFlags + $62
+    dfar Map3EScreens0
+    dfar Map3EAttrs0
+    dfar Map3EScreens0
+    dfar Map3EAttrs0
+    dfar Map3EScreens0
+    dfar Map3EAttrs0
+    dfar Map3EScreens0
+    dfar Map3EAttrs0
+    dfar Map3EScreens0
+    dfar Map3EAttrs0
 
+; E-0142 (derived: map record of map $3F, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord3F::
 Data_011_5444:: ; heuristic: map record of the map table; C0
-    db $DE, $68, $93, $D8, $6B, $93, $02, $02, $2F, $00, $01, $06, $00, $01, $0E, $00
-    db $39, $CC, $31, $71, $93, $3D, $71, $93, $31, $71, $93, $3D, $71, $93, $31, $71
-    db $93, $3D, $71, $93, $31, $71, $93, $3D, $71, $93, $31, $71, $93, $3D, $71, $93
+    dfar Map3ETileset ; entry 0
+    dfar Map3EPalettes
+    db $02, $02, $2F, $00, $01, $06, $00, $01, $0E, $00
+    dw wStoryFlags + $62
+    dfar Map3FScreens0
+    dfar Map3FAttrs0
+    dfar Map3FScreens0
+    dfar Map3FAttrs0
+    dfar Map3FScreens0
+    dfar Map3FAttrs0
+    dfar Map3FScreens0
+    dfar Map3FAttrs0
+    dfar Map3FScreens0
+    dfar Map3FAttrs0
 
+; E-0142 (derived: map record of map $40, 1 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord40::
 Data_011_5474:: ; heuristic: map record of the map table; C0
-    db $81, $41, $58, $A7, $45, $58, $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
-    db $39, $CC, $E7, $45, $58, $ED, $45, $58, $E7, $45, $58, $ED, $45, $58, $F3, $45
-    db $58, $F9, $45, $58, $F3, $45, $58, $F9, $45, $58, $F3, $45, $58, $F9, $45, $58
+    dfar Map40Tileset ; entry 0
+    dfar Map40Palettes
+    db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map40Screens0
+    dfar Map40Attrs0
+    dfar Map40Screens0
+    dfar Map40Attrs0
+    dfar Map40Screens2
+    dfar Map40Attrs2
+    dfar Map40Screens2
+    dfar Map40Attrs2
+    dfar Map40Screens2
+    dfar Map40Attrs2
 
+; E-0142 (derived: map record of map $41, 1 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord41::
 Data_011_54A4:: ; heuristic: map record of the map table; C0
-    db $81, $4E, $58, $E4, $53, $58, $01, $02, $3B, $00, $01, $00, $00, $00, $00, $00
-    db $39, $CC, $24, $54, $58, $2A, $54, $58, $24, $54, $58, $2A, $54, $58, $24, $54
-    db $58, $2A, $54, $58, $24, $54, $58, $2A, $54, $58, $24, $54, $58, $2A, $54, $58
+    dfar Map41Tileset ; entry 0
+    dfar Map41Palettes
+    db $01, $02, $3B, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map41Screens0
+    dfar Map41Attrs0
+    dfar Map41Screens0
+    dfar Map41Attrs0
+    dfar Map41Screens0
+    dfar Map41Attrs0
+    dfar Map41Screens0
+    dfar Map41Attrs0
+    dfar Map41Screens0
+    dfar Map41Attrs0
 
+; E-0142 (derived: map record of map $42, 3 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord42::
 Data_011_54D4:: ; heuristic: map record of the map table; C0
-    db $7D, $65, $57, $41, $41, $58, $03, $01, $4F, $00, $01, $08, $00, $02, $10, $00
-    db $39, $CC, $85, $57, $58, $8E, $57, $58, $85, $57, $58, $8E, $57, $58, $85, $57
-    db $58, $8E, $57, $58, $85, $57, $58, $8E, $57, $58, $85, $57, $58, $8E, $57, $58
+    dfar Map37Tileset ; entry 0
+    dfar Map37Palettes
+    db $03, $01, $4F, $00, $01, $08, $00, $02, $10, $00
+    dw wStoryFlags + $62
+    dfar Map42Screens0
+    dfar Map42Attrs0
+    dfar Map42Screens0
+    dfar Map42Attrs0
+    dfar Map42Screens0
+    dfar Map42Attrs0
+    dfar Map42Screens0
+    dfar Map42Attrs0
+    dfar Map42Screens0
+    dfar Map42Attrs0
 
+; E-0142 (derived: map record of map $43, 3 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord43::
 Data_011_5504:: ; heuristic: map record of the map table; C0
-    db $99, $5D, $5F, $A4, $62, $5F, $03, $01, $4F, $00, $0D, $08, $00, $02, $02, $00
-    db $39, $CC, $E4, $62, $5F, $ED, $62, $5F, $F6, $62, $5F, $FF, $62, $5F, $F6, $62
-    db $5F, $FF, $62, $5F, $F6, $62, $5F, $FF, $62, $5F, $F6, $62, $5F, $FF, $62, $5F
+    dfar Map43Tileset ; entry 0
+    dfar Map43Palettes
+    db $03, $01, $4F, $00, $0D, $08, $00, $02, $02, $00
+    dw wStoryFlags + $62
+    dfar Map43Screens0
+    dfar Map43Attrs0
+    dfar Map43Screens1
+    dfar Map43Attrs1
+    dfar Map43Screens1
+    dfar Map43Attrs1
+    dfar Map43Screens1
+    dfar Map43Attrs1
+    dfar Map43Screens1
+    dfar Map43Attrs1
 
+; E-0142 (derived: map record of map $44, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord44::
 Data_011_5534:: ; heuristic: map record of the map table; C0
-    db $68, $5B, $58, $F4, $5F, $58, $01, $01, $4F, $00, $00, $00, $00, $00, $00, $00
-    db $39, $CC, $34, $60, $58, $37, $60, $58, $34, $60, $58, $37, $60, $58, $34, $60
-    db $58, $37, $60, $58, $34, $60, $58, $37, $60, $58, $34, $60, $58, $37, $60, $58
+    dfar Map44Tileset ; entry 0
+    dfar Map44Palettes
+    db $01, $01, $4F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $62
+    dfar Map44Screens0
+    dfar Map44Attrs0
+    dfar Map44Screens0
+    dfar Map44Attrs0
+    dfar Map44Screens0
+    dfar Map44Attrs0
+    dfar Map44Screens0
+    dfar Map44Attrs0
+    dfar Map44Screens0
+    dfar Map44Attrs0
 
+; E-0142 (derived: map record of map $48, 12 x 12 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord48::
 Data_011_5564:: ; heuristic: map record of the map table; C0
-    db $01, $40, $4C, $7D, $45, $4C, $0C, $0C, $2B, $00, $01, $09, $00, $01, $27, $00
-    db $3A, $CC, $BD, $45, $4C, $01, $40, $4D, $BD, $45, $4C, $01, $40, $4D, $6D, $47
-    db $4C, $B1, $41, $4D
+    dfar Map48Tileset ; entry 0
+    dfar Map48Palettes
+    db $0C, $0C, $2B, $00, $01, $09, $00, $01, $27, $00
+    dw wStoryFlags + $63
+    dfar Map48Screens0
+    dfar Map48Attrs0
+    dfar Map48Screens0
+    dfar Map48Attrs0
+    dfar Map48Screens2
+    dfar Map48Attrs2
 
+; E-0142 (derived: map record of map $49, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord49::
 Data_011_5588:: ; heuristic: map record of the map table; C0
-    db $2A, $5F, $5E, $6D, $62, $5E, $01, $01, $2B, $00, $01, $00, $00, $01, $0A, $00
-    db $3A, $CC, $B3, $62, $5E, $B6, $62, $5E, $B3, $62, $5E, $B6, $62, $5E, $AD, $62
-    db $5E, $B0, $62, $5E
+    dfar Map49Tileset ; entry 0
+    dfar Map49Palettes
+    db $01, $01, $2B, $00, $01, $00, $00, $01, $0A, $00
+    dw wStoryFlags + $63
+    dfar Map49Screens0
+    dfar Map49Attrs0
+    dfar Map49Screens0
+    dfar Map49Attrs0
+    dfar Map49Screens2
+    dfar Map49Attrs2
 
+; E-0142 (derived: map record of map $4A, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord4A::
 Data_011_55AC:: ; heuristic: map record of the map table; C0
-    db $45, $61, $4D, $09, $65, $5E, $02, $02, $4C, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $CC, $66, $4D, $D8, $66, $4D, $CC, $66, $4D, $D8, $66, $4D, $CC, $66
-    db $4D, $D8, $66, $4D
+    dfar Map4ATileset ; entry 0
+    dfar Map4APalettes
+    db $02, $02, $4C, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map4AScreens0
+    dfar Map4AAttrs0
+    dfar Map4AScreens0
+    dfar Map4AAttrs0
+    dfar Map4AScreens0
+    dfar Map4AAttrs0
 
+; E-0142 (derived: map record of map $4B, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord4B::
 Data_011_55D0:: ; heuristic: map record of the map table; C0
-    db $D9, $54, $90, $92, $57, $90, $01, $01, $2B, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $D2, $57, $90, $D5, $57, $90, $D2, $57, $90, $D5, $57, $90, $D2, $57
-    db $90, $D5, $57, $90
+    dfar Map4BTileset ; entry 0
+    dfar Map4BPalettes
+    db $01, $01, $2B, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map4BScreens0
+    dfar Map4BAttrs0
+    dfar Map4BScreens0
+    dfar Map4BAttrs0
+    dfar Map4BScreens0
+    dfar Map4BAttrs0
 
+; E-0142 (derived: map record of map $4C, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord4C::
 Data_011_55F4:: ; heuristic: map record of the map table; C0
-    db $2B, $6C, $4D, $01, $40, $5B, $02, $02, $46, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $36, $72, $4D, $42, $72, $4D, $36, $72, $4D, $42, $72, $4D, $36, $72
-    db $4D, $42, $72, $4D
+    dfar Map4CTileset ; entry 0
+    dfar Map4CPalettes
+    db $02, $02, $46, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map4CScreens0
+    dfar Map4CAttrs0
+    dfar Map4CScreens0
+    dfar Map4CAttrs0
+    dfar Map4CScreens0
+    dfar Map4CAttrs0
 
+; E-0142 (derived: map record of map $4D, 1 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord4D::
 Data_011_5618:: ; heuristic: map record of the map table; C0
-    db $5A, $77, $4D, $2E, $7A, $4D, $01, $02, $17, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $6E, $7A, $4D, $74, $7A, $4D, $7A, $7A, $4D, $80, $7A, $4D, $7A, $7A
-    db $4D, $80, $7A, $4D
+    dfar Map4DTileset ; entry 0
+    dfar Map4DPalettes
+    db $01, $02, $17, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map4DScreens0
+    dfar Map4DAttrs0
+    dfar Map4DScreens1
+    dfar Map4DAttrs1
+    dfar Map4DScreens1
+    dfar Map4DAttrs1
 
+; E-0142 (derived: map record of map $4E, 1 x 3 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord4E::
 Data_011_563C:: ; heuristic: map record of the map table; C0
-    db $01, $40, $95, $A5, $7E, $4D, $01, $03, $2F, $00, $09, $00, $00, $00, $00, $00
-    db $3A, $CC, $02, $42, $95, $0B, $42, $95, $02, $42, $95, $0B, $42, $95, $02, $42
-    db $95, $0B, $42, $95
+    dfar Map4ETileset ; entry 0
+    dfar Map4EPalettes
+    db $01, $03, $2F, $00, $09, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map4EScreens0
+    dfar Map4EAttrs0
+    dfar Map4EScreens0
+    dfar Map4EAttrs0
+    dfar Map4EScreens0
+    dfar Map4EAttrs0
 
+; E-0142 (derived: map record of map $4F, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord4F::
 Data_011_5660:: ; heuristic: map record of the map table; C0
-    db $01, $40, $4E, $E5, $7E, $4D, $02, $02, $57, $00, $01, $00, $00, $00, $00, $00
-    db $3A, $CC, $D3, $45, $4E, $DF, $45, $4E, $D3, $45, $4E, $DF, $45, $4E, $EB, $45
-    db $4E, $F7, $45, $4E
+    dfar Map4FTileset ; entry 0
+    dfar Map4FPalettes
+    db $02, $02, $57, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map4FScreens0
+    dfar Map4FAttrs0
+    dfar Map4FScreens0
+    dfar Map4FAttrs0
+    dfar Map4FScreens2
+    dfar Map4FAttrs2
 
+; E-0142 (derived: map record of map $50, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord50::
 Data_011_5684:: ; heuristic: map record of the map table; C0
-    db $DB, $4C, $4E, $25, $7F, $4D, $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $79, $51, $4E, $7C, $51, $4E, $79, $51, $4E, $7C, $51, $4E, $79, $51
-    db $4E, $7C, $51, $4E
+    dfar Map50Tileset ; entry 0
+    dfar Map50Palettes
+    db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map50Screens0
+    dfar Map50Attrs0
+    dfar Map50Screens0
+    dfar Map50Attrs0
+    dfar Map50Screens0
+    dfar Map50Attrs0
 
+; E-0142 (derived: map record of map $51, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord51::
 Data_011_56A8:: ; heuristic: map record of the map table; C0
-    db $DB, $4C, $4E, $25, $7F, $4D, $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $7F, $51, $4E, $82, $51, $4E, $7F, $51, $4E, $82, $51, $4E, $7F, $51
-    db $4E, $82, $51, $4E
+    dfar Map50Tileset ; entry 0
+    dfar Map50Palettes
+    db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map51Screens0
+    dfar Map51Attrs0
+    dfar Map51Screens0
+    dfar Map51Attrs0
+    dfar Map51Screens0
+    dfar Map51Attrs0
 
+; E-0142 (derived: map record of map $52, 3 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord52::
 Data_011_56CC:: ; heuristic: map record of the map table; C0
-    db $78, $53, $4E, $65, $7F, $4D, $03, $02, $2F, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $A3, $56, $4E, $B5, $56, $4E, $A3, $56, $4E, $B5, $56, $4E, $A3, $56
-    db $4E, $B5, $56, $4E
+    dfar Map52Tileset ; entry 0
+    dfar Map52Palettes
+    db $03, $02, $2F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map52Screens0
+    dfar Map52Attrs0
+    dfar Map52Screens0
+    dfar Map52Attrs0
+    dfar Map52Screens0
+    dfar Map52Attrs0
 
+; E-0142 (derived: map record of map $53, 4 x 4 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord53::
 Data_011_56F0:: ; heuristic: map record of the map table; C0
-    db $E2, $5B, $4E, $41, $40, $5B, $04, $04, $33, $00, $00, $0A, $00, $10, $30, $00
-    db $3A, $CC, $31, $60, $4E, $61, $60, $4E, $31, $60, $4E, $61, $60, $4E, $31, $60
-    db $4E, $61, $60, $4E
+    dfar Map53Tileset ; entry 0
+    dfar Map53Palettes
+    db $04, $04, $33, $00, $00, $0A, $00, $10, $30, $00
+    dw wStoryFlags + $63
+    dfar Map53Screens0
+    dfar Map53Attrs0
+    dfar Map53Screens0
+    dfar Map53Attrs0
+    dfar Map53Screens0
+    dfar Map53Attrs0
 
+; E-0142 (derived: map record of map $54, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord54::
 Data_011_5714:: ; heuristic: map record of the map table; C0
-    db $E2, $5B, $4E, $41, $40, $5B, $01, $01, $33, $00, $00, $0B, $00, $10, $30, $00
-    db $3A, $CC, $D8, $62, $66, $DB, $62, $66, $D8, $62, $66, $DB, $62, $66, $D8, $62
-    db $66, $DB, $62, $66
+    dfar Map53Tileset ; entry 0
+    dfar Map53Palettes
+    db $01, $01, $33, $00, $00, $0B, $00, $10, $30, $00
+    dw wStoryFlags + $63
+    dfar Map54Screens0
+    dfar Map54Attrs0
+    dfar Map54Screens0
+    dfar Map54Attrs0
+    dfar Map54Screens0
+    dfar Map54Attrs0
 
+; E-0142 (derived: map record of map $55, 2 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord55::
 Data_011_5738:: ; heuristic: map record of the map table; C0
-    db $E2, $5B, $4E, $41, $40, $5B, $02, $01, $33, $00, $00, $0B, $00, $10, $30, $00
-    db $3A, $CC, $81, $40, $5B, $87, $40, $5B, $81, $40, $5B, $87, $40, $5B, $81, $40
-    db $5B, $87, $40, $5B
+    dfar Map53Tileset ; entry 0
+    dfar Map53Palettes
+    db $02, $01, $33, $00, $00, $0B, $00, $10, $30, $00
+    dw wStoryFlags + $63
+    dfar Map55Screens0
+    dfar Map55Attrs0
+    dfar Map55Screens0
+    dfar Map55Attrs0
+    dfar Map55Screens0
+    dfar Map55Attrs0
 
+; E-0142 (derived: map record of map $56, 1 x 3 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord56::
 Data_011_575C:: ; heuristic: map record of the map table; C0
-    db $E2, $5B, $4E, $41, $40, $5B, $01, $03, $33, $00, $00, $0B, $00, $10, $30, $00
-    db $3A, $CC, $20, $71, $4E, $29, $71, $4E, $20, $71, $4E, $29, $71, $4E, $20, $71
-    db $4E, $29, $71, $4E
+    dfar Map53Tileset ; entry 0
+    dfar Map53Palettes
+    db $01, $03, $33, $00, $00, $0B, $00, $10, $30, $00
+    dw wStoryFlags + $63
+    dfar Map56Screens0
+    dfar Map56Attrs0
+    dfar Map56Screens0
+    dfar Map56Attrs0
+    dfar Map56Screens0
+    dfar Map56Attrs0
 
+; E-0142 (derived: map record of map $57, 3 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord57::
 Data_011_5780:: ; heuristic: map record of the map table; C0
-    db $87, $74, $4E, $C8, $79, $4E, $03, $01, $3F, $00, $00, $00, $00, $10, $2C, $00
-    db $3A, $CC, $08, $7A, $4E, $11, $7A, $4E, $08, $7A, $4E, $11, $7A, $4E, $08, $7A
-    db $4E, $11, $7A, $4E
+    dfar Map57Tileset ; entry 0
+    dfar Map57Palettes
+    db $03, $01, $3F, $00, $00, $00, $00, $10, $2C, $00
+    dw wStoryFlags + $63
+    dfar Map57Screens0
+    dfar Map57Attrs0
+    dfar Map57Screens0
+    dfar Map57Attrs0
+    dfar Map57Screens0
+    dfar Map57Attrs0
 
+; E-0142 (derived: map record of map $58, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord58::
 Data_011_57A4:: ; heuristic: map record of the map table; C0
-    db $49, $65, $5E, $03, $6B, $5E, $02, $02, $57, $00, $01, $00, $00, $00, $00, $00
-    db $3A, $CC, $43, $6B, $5E, $4F, $6B, $5E, $43, $6B, $5E, $4F, $6B, $5E, $43, $6B
-    db $5E, $4F, $6B, $5E
+    dfar Map58Tileset ; entry 0
+    dfar Map58Palettes
+    db $02, $02, $57, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map58Screens0
+    dfar Map58Attrs0
+    dfar Map58Screens0
+    dfar Map58Attrs0
+    dfar Map58Screens0
+    dfar Map58Attrs0
 
+; E-0142 (derived: map record of map $59, 2 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord59::
 Data_011_57C8:: ; heuristic: map record of the map table; C0
-    db $26, $70, $5E, $AE, $74, $5E, $02, $01, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $EE, $74, $5E, $F4, $74, $5E, $EE, $74, $5E, $F4, $74, $5E, $EE, $74
-    db $5E, $F4, $74, $5E
+    dfar Map59Tileset ; entry 0
+    dfar Map59Palettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map59Screens0
+    dfar Map59Attrs0
+    dfar Map59Screens0
+    dfar Map59Attrs0
+    dfar Map59Screens0
+    dfar Map59Attrs0
 
+; E-0142 (derived: map record of map $5A, 2 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord5A::
 Data_011_57EC:: ; heuristic: map record of the map table; C0
-    db $01, $40, $4F, $8C, $43, $4F, $02, $01, $21, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $CC, $43, $4F, $D2, $43, $4F, $CC, $43, $4F, $D2, $43, $4F, $CC, $43
-    db $4F, $D2, $43, $4F
+    dfar Map5ATileset ; entry 0
+    dfar Map5APalettes
+    db $02, $01, $21, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map5AScreens0
+    dfar Map5AAttrs0
+    dfar Map5AScreens0
+    dfar Map5AAttrs0
+    dfar Map5AScreens0
+    dfar Map5AAttrs0
 
+; E-0142 (derived: map record of map $5B, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord5B::
 Data_011_5810:: ; heuristic: map record of the map table; C0
-    db $42, $46, $4F, $07, $4C, $4F, $02, $02, $43, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $47, $4C, $4F, $53, $4C, $4F, $47, $4C, $4F, $53, $4C, $4F, $47, $4C
-    db $4F, $53, $4C, $4F
+    dfar Map5BTileset ; entry 0
+    dfar Map5BPalettes
+    db $02, $02, $43, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map5BScreens0
+    dfar Map5BAttrs0
+    dfar Map5BScreens0
+    dfar Map5BAttrs0
+    dfar Map5BScreens0
+    dfar Map5BAttrs0
 
+; E-0142 (derived: map record of map $5C, 1 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord5C::
 Data_011_5834:: ; heuristic: map record of the map table; C0
-    db $3F, $51, $4F, $3D, $55, $4F, $01, $02, $33, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $7D, $55, $4F, $83, $55, $4F, $7D, $55, $4F, $83, $55, $4F, $7D, $55
-    db $4F, $83, $55, $4F
+    dfar Map5CTileset ; entry 0
+    dfar Map5CPalettes
+    db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map5CScreens0
+    dfar Map5CAttrs0
+    dfar Map5CScreens0
+    dfar Map5CAttrs0
+    dfar Map5CScreens0
+    dfar Map5CAttrs0
 
+; E-0142 (derived: map record of map $5D, 4 x 4 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord5D::
 Data_011_5858:: ; heuristic: map record of the map table; C0
-    db $87, $57, $4F, $4D, $59, $4F, $04, $04, $11, $00, $00, $0C, $00, $00, $00, $00
-    db $3A, $CC, $8D, $59, $4F, $BD, $59, $4F, $8D, $59, $4F, $BD, $59, $4F, $8D, $59
-    db $4F, $BD, $59, $4F
+    dfar Map5DTileset ; entry 0
+    dfar Map5DPalettes
+    db $04, $04, $11, $00, $00, $0C, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map5DScreens0
+    dfar Map5DAttrs0
+    dfar Map5DScreens0
+    dfar Map5DAttrs0
+    dfar Map5DScreens0
+    dfar Map5DAttrs0
 
+; E-0142 (derived: map record of map $5E, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord5E::
 Data_011_587C:: ; heuristic: map record of the map table; C0
-    db $1A, $66, $4F, $F7, $6B, $4F, $02, $02, $4B, $00, $01, $00, $00, $00, $00, $00
-    db $3A, $CC, $37, $6C, $4F, $43, $6C, $4F, $37, $6C, $4F, $43, $6C, $4F, $37, $6C
-    db $4F, $43, $6C, $4F
+    dfar Map5ETileset ; entry 0
+    dfar Map5EPalettes
+    db $02, $02, $4B, $00, $01, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map5EScreens0
+    dfar Map5EAttrs0
+    dfar Map5EScreens0
+    dfar Map5EAttrs0
+    dfar Map5EScreens0
+    dfar Map5EAttrs0
 
+; E-0142 (derived: map record of map $5F, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord5F::
 Data_011_58A0:: ; heuristic: map record of the map table; C0
-    db $87, $76, $5E, $1F, $79, $5E, $01, $01, $1F, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $5F, $79, $5E, $62, $79, $5E, $5F, $79, $5E, $62, $79, $5E, $5F, $79
-    db $5E, $62, $79, $5E
+    dfar Map5FTileset ; entry 0
+    dfar Map5FPalettes
+    db $01, $01, $1F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map5FScreens0
+    dfar Map5FAttrs0
+    dfar Map5FScreens0
+    dfar Map5FAttrs0
+    dfar Map5FScreens0
+    dfar Map5FAttrs0
 
+; E-0142 (derived: map record of map $60, 1 x 3 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord60::
 Data_011_58C4:: ; heuristic: map record of the map table; C0
-    db $6D, $71, $4F, $9A, $76, $4F, $01, $03, $31, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $DA, $76, $4F, $E3, $76, $4F, $DA, $76, $4F, $E3, $76, $4F, $DA, $76
-    db $4F, $E3, $76, $4F
+    dfar Map60Tileset ; entry 0
+    dfar Map60Palettes
+    db $01, $03, $31, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map60Screens0
+    dfar Map60Attrs0
+    dfar Map60Screens0
+    dfar Map60Attrs0
+    dfar Map60Screens0
+    dfar Map60Attrs0
 
+; E-0142 (derived: map record of map $61, 1 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord61::
 Data_011_58E8:: ; heuristic: map record of the map table; C0
-    db $94, $7A, $4F, $D4, $7E, $4F, $01, $02, $33, $00, $00, $00, $00, $00, $00, $00
-    db $3A, $CC, $71, $7A, $5E, $77, $7A, $5E, $71, $7A, $5E, $77, $7A, $5E, $71, $7A
-    db $5E, $77, $7A, $5E
+    dfar Map61Tileset ; entry 0
+    dfar Map61Palettes
+    db $01, $02, $33, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map61Screens0
+    dfar Map61Attrs0
+    dfar Map61Screens0
+    dfar Map61Attrs0
+    dfar Map61Screens0
+    dfar Map61Attrs0
 
+; E-0142 (derived: map record of map $62, 2 x 4 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord62::
 Data_011_590C:: ; heuristic: map record of the map table; C0
-    db $02, $64, $66, $82, $68, $66, $02, $04, $32, $00, $00, $0D, $00, $00, $00, $00
-    db $3A, $CC, $C2, $68, $66, $DA, $68, $66, $C2, $68, $66, $DA, $68, $66, $C2, $68
-    db $66, $DA, $68, $66
+    dfar Map62Tileset ; entry 0
+    dfar Map62Palettes
+    db $02, $04, $32, $00, $00, $0D, $00, $00, $00, $00
+    dw wStoryFlags + $63
+    dfar Map62Screens0
+    dfar Map62Attrs0
+    dfar Map62Screens0
+    dfar Map62Attrs0
+    dfar Map62Screens0
+    dfar Map62Attrs0
 
+; E-0142 (derived: map record of map $63, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord63::
 Data_011_5930:: ; heuristic: map record of the map table; C0
-    db $5F, $71, $66, $B7, $74, $66, $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
-    db $3A, $CC, $F7, $74, $66, $03, $75, $66, $F7, $74, $66, $03, $75, $66, $F7, $74
-    db $66, $03, $75, $66
+    dfar Map63Tileset ; entry 0
+    dfar Map63Palettes
+    db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
+    dw wStoryFlags + $63
+    dfar Map63Screens0
+    dfar Map63Attrs0
+    dfar Map63Screens0
+    dfar Map63Attrs0
+    dfar Map63Screens0
+    dfar Map63Attrs0
 
+; E-0142 (derived: map record of map $64, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord64::
 Data_011_5954:: ; heuristic: map record of the map table; C0
-    db $5F, $71, $66, $B7, $74, $66, $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
-    db $3A, $CC, $71, $78, $66, $7D, $78, $66, $71, $78, $66, $7D, $78, $66, $71, $78
-    db $66, $7D, $78, $66
+    dfar Map63Tileset ; entry 0
+    dfar Map63Palettes
+    db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
+    dw wStoryFlags + $63
+    dfar Map64Screens0
+    dfar Map64Attrs0
+    dfar Map64Screens0
+    dfar Map64Attrs0
+    dfar Map64Screens0
+    dfar Map64Attrs0
 
+; E-0142 (derived: map record of map $65, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord65::
 Data_011_5978:: ; heuristic: map record of the map table; C0
-    db $5F, $71, $66, $B7, $74, $66, $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
-    db $3A, $CC, $EA, $7B, $66, $F6, $7B, $66, $EA, $7B, $66, $F6, $7B, $66, $EA, $7B
-    db $66, $F6, $7B, $66
+    dfar Map63Tileset ; entry 0
+    dfar Map63Palettes
+    db $02, $02, $33, $00, $00, $0E, $07, $02, $01, $00
+    dw wStoryFlags + $63
+    dfar Map65Screens0
+    dfar Map65Attrs0
+    dfar Map65Screens0
+    dfar Map65Attrs0
+    dfar Map65Screens0
+    dfar Map65Attrs0
 
+; E-0142 (derived: map record of map $66, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecord66::
 Data_011_599C:: ; heuristic: map record of the map table; C0
-    db $5F, $71, $66, $B7, $74, $66, $02, $02, $33, $00, $00, $0F, $07, $02, $01, $00
-    db $3A, $CC, $73, $42, $5B, $7F, $42, $5B, $73, $42, $5B, $7F, $42, $5B, $73, $42
-    db $5B, $7F, $42, $5B
+    dfar Map63Tileset ; entry 0
+    dfar Map63Palettes
+    db $02, $02, $33, $00, $00, $0F, $07, $02, $01, $00
+    dw wStoryFlags + $63
+    dfar Map66Screens0
+    dfar Map66Attrs0
+    dfar Map66Screens0
+    dfar Map66Attrs0
+    dfar Map66Screens0
+    dfar Map66Attrs0
 
+; E-0142 (derived: map record of map $67, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; bytes after the decoded variants
+MapRecord67::
 Data_011_59C0:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0459C0, $48
+    dfar Map63Tileset ; entry 0
+    dfar Map63Palettes
+    db $01, $01, $33, $00, $00, $0F, $00, $02, $01, $00
+    dw wStoryFlags + $63
+    dfar Map67Screens0
+    dfar Map67Attrs0
+    dfar Map67Screens0
+    dfar Map67Attrs0
+    dfar Map67Screens0
+    dfar Map67Attrs0
+    db $E9, $58, $90, $28, $5B, $90, $01, $01, $1F, $1C, $00, $00, $00, $00, $00, $00, $3A, $CC, $68, $5B, $90, $6B, $5B, $90, $68, $5B, $90, $6B, $5B, $90, $68, $5B, $90, $6B, $5B, $90
 
+; E-0142 (derived: map record of map $70, 12 x 12 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord70::
 Data_011_5A08:: ; heuristic: map record of the map table; C0
-    db $91, $4C, $51, $01, $40, $50, $0C, $0C, $2D, $00, $00, $10, $00, $02, $29, $00
-    db $3B, $CC, $41, $40, $50, $66, $52, $51, $41, $40, $50, $66, $52, $51, $41, $40
-    db $50, $66, $52, $51, $41, $40, $50, $66, $52, $51, $41, $40, $50, $66, $52, $51
+    dfar Map70Tileset ; entry 0
+    dfar Map70Palettes
+    db $0C, $0C, $2D, $00, $00, $10, $00, $02, $29, $00
+    dw wStoryFlags + $64
+    dfar Map70Screens0
+    dfar Map70Attrs0
+    dfar Map70Screens0
+    dfar Map70Attrs0
+    dfar Map70Screens0
+    dfar Map70Attrs0
+    dfar Map70Screens0
+    dfar Map70Attrs0
+    dfar Map70Screens0
+    dfar Map70Attrs0
 
+; E-0142 (derived: map record of map $71, 3 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord71::
 Data_011_5A38:: ; heuristic: map record of the map table; C0
-    db $68, $6C, $51, $56, $70, $51, $03, $01, $31, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $96, $70, $51, $9F, $70, $51, $96, $70, $51, $9F, $70, $51, $96, $70
-    db $51, $9F, $70, $51, $96, $70, $51, $9F, $70, $51, $96, $70, $51, $9F, $70, $51
+    dfar Map71Tileset ; entry 0
+    dfar Map71Palettes
+    db $03, $01, $31, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map71Screens0
+    dfar Map71Attrs0
+    dfar Map71Screens0
+    dfar Map71Attrs0
+    dfar Map71Screens0
+    dfar Map71Attrs0
+    dfar Map71Screens0
+    dfar Map71Attrs0
+    dfar Map71Screens0
+    dfar Map71Attrs0
 
+; E-0142 (derived: map record of map $72, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord72::
 Data_011_5A68:: ; heuristic: map record of the map table; C0
-    db $89, $74, $51, $BD, $76, $51, $01, $01, $23, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $FD, $76, $51, $00, $77, $51, $FD, $76, $51, $00, $77, $51, $FD, $76
-    db $51, $00, $77, $51, $FD, $76, $51, $00, $77, $51, $FD, $76, $51, $00, $77, $51
+    dfar Map72Tileset ; entry 0
+    dfar Map72Palettes
+    db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map72Screens0
+    dfar Map72Attrs0
+    dfar Map72Screens0
+    dfar Map72Attrs0
+    dfar Map72Screens0
+    dfar Map72Attrs0
+    dfar Map72Screens0
+    dfar Map72Attrs0
+    dfar Map72Screens0
+    dfar Map72Attrs0
 
+; E-0142 (derived: map record of map $73, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord73::
 Data_011_5A98:: ; heuristic: map record of the map table; C0
-    db $01, $40, $52, $43, $45, $52, $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
-    db $3B, $CC, $83, $45, $52, $8F, $45, $52, $83, $45, $52, $8F, $45, $52, $83, $45
-    db $52, $8F, $45, $52, $83, $45, $52, $8F, $45, $52, $83, $45, $52, $8F, $45, $52
+    dfar Map73Tileset ; entry 0
+    dfar Map73Palettes
+    db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map73Screens0
+    dfar Map73Attrs0
+    dfar Map73Screens0
+    dfar Map73Attrs0
+    dfar Map73Screens0
+    dfar Map73Attrs0
+    dfar Map73Screens0
+    dfar Map73Attrs0
+    dfar Map73Screens0
+    dfar Map73Attrs0
 
+; E-0142 (derived: map record of map $74, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord74::
 Data_011_5AC8:: ; heuristic: map record of the map table; C0
-    db $01, $40, $52, $43, $45, $52, $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
-    db $3B, $CC, $C7, $49, $52, $D3, $49, $52, $C7, $49, $52, $D3, $49, $52, $C7, $49
-    db $52, $D3, $49, $52, $C7, $49, $52, $D3, $49, $52, $C7, $49, $52, $D3, $49, $52
+    dfar Map73Tileset ; entry 0
+    dfar Map73Palettes
+    db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map74Screens0
+    dfar Map74Attrs0
+    dfar Map74Screens0
+    dfar Map74Attrs0
+    dfar Map74Screens0
+    dfar Map74Attrs0
+    dfar Map74Screens0
+    dfar Map74Attrs0
+    dfar Map74Screens0
+    dfar Map74Attrs0
 
+; E-0142 (derived: map record of map $75, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord75::
 Data_011_5AF8:: ; heuristic: map record of the map table; C0
-    db $01, $40, $52, $43, $45, $52, $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
-    db $3B, $CC, $BE, $4D, $52, $CA, $4D, $52, $BE, $4D, $52, $CA, $4D, $52, $BE, $4D
-    db $52, $CA, $4D, $52, $BE, $4D, $52, $CA, $4D, $52, $BE, $4D, $52, $CA, $4D, $52
+    dfar Map73Tileset ; entry 0
+    dfar Map73Palettes
+    db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map75Screens0
+    dfar Map75Attrs0
+    dfar Map75Screens0
+    dfar Map75Attrs0
+    dfar Map75Screens0
+    dfar Map75Attrs0
+    dfar Map75Screens0
+    dfar Map75Attrs0
+    dfar Map75Screens0
+    dfar Map75Attrs0
 
+; E-0142 (derived: map record of map $76, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord76::
 Data_011_5B28:: ; heuristic: map record of the map table; C0
-    db $01, $40, $52, $43, $45, $52, $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
-    db $3B, $CC, $08, $52, $52, $14, $52, $52, $08, $52, $52, $14, $52, $52, $08, $52
-    db $52, $14, $52, $52, $08, $52, $52, $14, $52, $52, $08, $52, $52, $14, $52, $52
+    dfar Map73Tileset ; entry 0
+    dfar Map73Palettes
+    db $02, $02, $4F, $00, $00, $11, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map76Screens0
+    dfar Map76Attrs0
+    dfar Map76Screens0
+    dfar Map76Attrs0
+    dfar Map76Screens0
+    dfar Map76Attrs0
+    dfar Map76Screens0
+    dfar Map76Attrs0
+    dfar Map76Screens0
+    dfar Map76Attrs0
 
+; E-0142 (derived: map record of map $77, 3 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord77::
 Data_011_5B58:: ; heuristic: map record of the map table; C0
-    db $A0, $56, $52, $B3, $5B, $52, $03, $01, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $F3, $5B, $52, $FC, $5B, $52, $F3, $5B, $52, $FC, $5B, $52, $F3, $5B
-    db $52, $FC, $5B, $52, $F3, $5B, $52, $FC, $5B, $52, $F3, $5B, $52, $FC, $5B, $52
+    dfar Map77Tileset ; entry 0
+    dfar Map77Palettes
+    db $03, $01, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map77Screens0
+    dfar Map77Attrs0
+    dfar Map77Screens0
+    dfar Map77Attrs0
+    dfar Map77Screens0
+    dfar Map77Attrs0
+    dfar Map77Screens0
+    dfar Map77Attrs0
+    dfar Map77Screens0
+    dfar Map77Attrs0
 
+; E-0142 (derived: map record of map $78, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord78::
 Data_011_5B88:: ; heuristic: map record of the map table; C0
-    db $B2, $5F, $52, $10, $65, $52, $02, $02, $3D, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $50, $65, $52, $5C, $65, $52, $50, $65, $52, $5C, $65, $52, $50, $65
-    db $52, $5C, $65, $52, $50, $65, $52, $5C, $65, $52, $50, $65, $52, $5C, $65, $52
+    dfar Map78Tileset ; entry 0
+    dfar Map78Palettes
+    db $02, $02, $3D, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map78Screens0
+    dfar Map78Attrs0
+    dfar Map78Screens0
+    dfar Map78Attrs0
+    dfar Map78Screens0
+    dfar Map78Attrs0
+    dfar Map78Screens0
+    dfar Map78Attrs0
+    dfar Map78Screens0
+    dfar Map78Attrs0
 
+; E-0142 (derived: map record of map $79, 1 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord79::
 Data_011_5BB8:: ; heuristic: map record of the map table; C0
-    db $91, $6B, $52, $E3, $6F, $52, $01, $02, $45, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $23, $70, $52, $29, $70, $52, $23, $70, $52, $29, $70, $52, $23, $70
-    db $52, $29, $70, $52, $23, $70, $52, $29, $70, $52, $23, $70, $52, $29, $70, $52
+    dfar Map79Tileset ; entry 0
+    dfar Map79Palettes
+    db $01, $02, $45, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map79Screens0
+    dfar Map79Attrs0
+    dfar Map79Screens0
+    dfar Map79Attrs0
+    dfar Map79Screens0
+    dfar Map79Attrs0
+    dfar Map79Screens0
+    dfar Map79Attrs0
+    dfar Map79Screens0
+    dfar Map79Attrs0
 
+; E-0142 (derived: map record of map $7A, 1 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord7A::
 Data_011_5BE8:: ; heuristic: map record of the map table; C0
-    db $84, $72, $52, $A5, $78, $52, $01, $02, $4B, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $E5, $78, $52, $EB, $78, $52, $E5, $78, $52, $EB, $78, $52, $E5, $78
-    db $52, $EB, $78, $52, $E5, $78, $52, $EB, $78, $52, $E5, $78, $52, $EB, $78, $52
+    dfar Map7ATileset ; entry 0
+    dfar Map7APalettes
+    db $01, $02, $4B, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map7AScreens0
+    dfar Map7AAttrs0
+    dfar Map7AScreens0
+    dfar Map7AAttrs0
+    dfar Map7AScreens0
+    dfar Map7AAttrs0
+    dfar Map7AScreens0
+    dfar Map7AAttrs0
+    dfar Map7AScreens0
+    dfar Map7AAttrs0
 
+; E-0142 (derived: map record of map $7B, 1 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord7B::
 Data_011_5C18:: ; heuristic: map record of the map table; C0
-    db $01, $40, $53, $CE, $42, $53, $01, $03, $1F, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $0E, $43, $53, $17, $43, $53, $0E, $43, $53, $17, $43, $53, $0E, $43
-    db $53, $17, $43, $53, $0E, $43, $53, $17, $43, $53, $0E, $43, $53, $17, $43, $53
+    dfar Map7BTileset ; entry 0
+    dfar Map7BPalettes
+    db $01, $03, $1F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map7BScreens0
+    dfar Map7BAttrs0
+    dfar Map7BScreens0
+    dfar Map7BAttrs0
+    dfar Map7BScreens0
+    dfar Map7BAttrs0
+    dfar Map7BScreens0
+    dfar Map7BAttrs0
+    dfar Map7BScreens0
+    dfar Map7BAttrs0
 
+; E-0142 (derived: map record of map $7C, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord7C::
 Data_011_5C48:: ; heuristic: map record of the map table; C0
-    db $AF, $45, $53, $9A, $4B, $53, $02, $02, $45, $00, $00, $00
+    dfar Map7CTileset ; entry 0
+    dfar Map7CPalettes
+    db $02, $02, $45, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map7CScreens0
+    dfar Map7CAttrs0
+    dfar Map7CScreens0
+    dfar Map7CAttrs0
+    dfar Map7CScreens0
+    dfar Map7CAttrs0
+    dfar Map7CScreens0
+    dfar Map7CAttrs0
+    dfar Map7CScreens0
+    dfar Map7CAttrs0
 
-Data_011_5C54:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $3B, $CC, $DA, $4B, $53, $E6, $4B, $53, $DA, $4B, $53, $E6
-    db $4B, $53, $DA, $4B, $53, $E6, $4B, $53, $DA, $4B, $53, $E6, $4B, $53, $DA, $4B
-    db $53, $E6, $4B, $53
-
+; E-0142 (derived: map record of map $7D, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord7D::
 Data_011_5C78:: ; heuristic: map record of the map table; C0
-    db $69, $52, $53, $C1, $56, $53, $01, $01, $3B, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $01, $57, $53, $04, $57, $53, $01, $57, $53, $04, $57, $53, $01, $57
-    db $53, $04, $57, $53
+    dfar Map7DTileset ; entry 0
+    dfar Map7DPalettes
+    db $01, $01, $3B, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map7DScreens0
+    dfar Map7DAttrs0
+    dfar Map7DScreens0
+    dfar Map7DAttrs0
+    dfar Map7DScreens0
+    dfar Map7DAttrs0
+Data_011_5C9C:: ; heuristic: label inside a table; C0
+    dfar Map7DScreens0
+    dfar Map7DAttrs0
+    dfar Map7DScreens0
+    dfar Map7DAttrs0
 
-Data_011_5C9C:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $57, $53, $04, $57, $53, $01, $57, $53, $04, $57, $53
-
+; E-0142 (derived: map record of map $7E, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord7E::
 Data_011_5CA8:: ; heuristic: map record of the map table; C0
-    db $69, $52, $53, $C1, $56, $53, $01, $01, $3B, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $0B, $58, $53, $0E, $58, $53, $0B, $58, $53, $0E, $58, $53, $0B, $58
-    db $53, $0E, $58, $53, $0B, $58, $53, $0E, $58, $53, $0B, $58, $53, $0E, $58, $53
+    dfar Map7DTileset ; entry 0
+    dfar Map7DPalettes
+    db $01, $01, $3B, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map7EScreens0
+    dfar Map7EAttrs0
+    dfar Map7EScreens0
+    dfar Map7EAttrs0
+    dfar Map7EScreens0
+    dfar Map7EAttrs0
+    dfar Map7EScreens0
+    dfar Map7EAttrs0
+    dfar Map7EScreens0
+    dfar Map7EAttrs0
 
+; E-0142 (derived: map record of map $7F, 1 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord7F::
 Data_011_5CD8:: ; heuristic: map record of the map table; C0
-    db $FF, $58, $53, $E8, $5C, $53, $01, $02, $2F, $00, $00, $00
+    dfar Map7FTileset ; entry 0
+    dfar Map7FPalettes
+    db $01, $02, $2F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map7FScreens0
+    dfar Map7FAttrs0
+    dfar Map7FScreens0
+    dfar Map7FAttrs0
+    dfar Map7FScreens0
+    dfar Map7FAttrs0
+    dfar Map7FScreens0
+    dfar Map7FAttrs0
+    dfar Map7FScreens0
+    dfar Map7FAttrs0
 
-Data_011_5CE4:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $3B, $CC, $28, $5D, $53, $2E, $5D, $53, $28, $5D, $53, $2E
-    db $5D, $53, $28, $5D, $53, $2E, $5D, $53, $28, $5D, $53, $2E, $5D, $53, $28, $5D
-    db $53, $2E, $5D, $53
-
+; E-0142 (derived: map record of map $80, 3 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord80::
 Data_011_5D08:: ; heuristic: map record of the map table; C0
-    db $E9, $5F, $53, $FB, $64, $53, $03, $01, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $3B, $65, $53, $44, $65, $53, $3B, $65, $53, $44, $65, $53, $3B, $65
-    db $53, $44, $65, $53
+    dfar Map80Tileset ; entry 0
+    dfar Map80Palettes
+    db $03, $01, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map80Screens0
+    dfar Map80Attrs0
+    dfar Map80Screens0
+    dfar Map80Attrs0
+    dfar Map80Screens0
+    dfar Map80Attrs0
+Data_011_5D2C:: ; heuristic: label inside a table; C0
+    dfar Map80Screens0
+    dfar Map80Attrs0
+    dfar Map80Screens0
+    dfar Map80Attrs0
 
-Data_011_5D2C:: ; heuristic: target of a monotone pointer table; C0
-    db $3B, $65, $53, $44, $65, $53, $3B, $65, $53, $44, $65, $53
-
+; E-0142 (derived: map record of map $81, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord81::
 Data_011_5D38:: ; heuristic: map record of the map table; C0
-    db $01, $40, $54, $2C, $43, $54, $01, $01, $2F, $00, $00, $12, $00, $00, $00, $00
-    db $3B, $CC, $6C, $43, $54, $6F, $43, $54, $6C, $43, $54, $6F, $43, $54, $6C, $43
-    db $54, $6F, $43, $54, $6C, $43, $54, $6F, $43, $54, $6C, $43, $54, $6F, $43, $54
+    dfar Map81Tileset ; entry 0
+    dfar Map81Palettes
+    db $01, $01, $2F, $00, $00, $12, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map81Screens0
+    dfar Map81Attrs0
+    dfar Map81Screens0
+    dfar Map81Attrs0
+    dfar Map81Screens0
+    dfar Map81Attrs0
+    dfar Map81Screens0
+    dfar Map81Attrs0
+    dfar Map81Screens0
+    dfar Map81Attrs0
 
+; E-0142 (derived: map record of map $82, 3 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord82::
 Data_011_5D68:: ; heuristic: map record of the map table; C0
-    db $01, $40, $54, $2C, $43, $54, $03, $03, $2F, $00, $00, $13
+    dfar Map81Tileset ; entry 0
+    dfar Map81Palettes
+    db $03, $03, $2F, $00, $00, $13, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map82Screens0
+    dfar Map82Attrs0
+    dfar Map82Screens0
+    dfar Map82Attrs0
+    dfar Map82Screens0
+    dfar Map82Attrs0
+    dfar Map82Screens0
+    dfar Map82Attrs0
+    dfar Map82Screens0
+    dfar Map82Attrs0
 
-Data_011_5D74:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $3B, $CC, $63, $44, $54, $7E, $44, $54, $63, $44, $54, $7E
-    db $44, $54, $63, $44, $54, $7E, $44, $54, $63, $44, $54, $7E, $44, $54, $63, $44
-    db $54, $7E, $44, $54
-
+; E-0142 (derived: map record of map $83, 3 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord83::
 Data_011_5D98:: ; heuristic: map record of the map table; C0
-    db $01, $40, $54, $2C, $43, $54, $03, $03, $2F, $00, $00, $13, $00, $00, $00, $00
-    db $3B, $CC, $C7, $4E, $54, $E2, $4E, $54, $C7, $4E, $54, $E2, $4E, $54, $C7, $4E
-    db $54, $E2, $4E, $54, $C7, $4E, $54, $E2, $4E, $54, $C7, $4E, $54, $E2, $4E, $54
+    dfar Map81Tileset ; entry 0
+    dfar Map81Palettes
+    db $03, $03, $2F, $00, $00, $13, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map83Screens0
+    dfar Map83Attrs0
+    dfar Map83Screens0
+    dfar Map83Attrs0
+    dfar Map83Screens0
+    dfar Map83Attrs0
+    dfar Map83Screens0
+    dfar Map83Attrs0
+    dfar Map83Screens0
+    dfar Map83Attrs0
 
+; E-0142 (derived: map record of map $84, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord84::
 Data_011_5DC8:: ; heuristic: map record of the map table; C0
-    db $01, $40, $54, $2C, $43, $54, $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $1A, $57, $54, $1D, $57, $54, $1A, $57, $54, $1D, $57, $54, $1A, $57
-    db $54, $1D, $57, $54, $1A, $57, $54, $1D, $57, $54, $1A, $57, $54, $1D, $57, $54
+    dfar Map81Tileset ; entry 0
+    dfar Map81Palettes
+    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map84Screens0
+    dfar Map84Attrs0
+    dfar Map84Screens0
+    dfar Map84Attrs0
+    dfar Map84Screens0
+    dfar Map84Attrs0
+    dfar Map84Screens0
+    dfar Map84Attrs0
+    dfar Map84Screens0
+    dfar Map84Attrs0
 
+; E-0142 (derived: map record of map $85, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord85::
 Data_011_5DF8:: ; heuristic: map record of the map table; C0
-    db $56, $58, $54, $25, $5D, $54, $02, $02, $3F, $00, $00, $14, $00, $02, $01, $00
-    db $3B, $CC, $65, $5D, $54, $71, $5D, $54, $65, $5D, $54, $71, $5D, $54, $65, $5D
-    db $54, $71, $5D, $54, $65, $5D, $54, $71, $5D, $54, $65, $5D, $54, $71, $5D, $54
+    dfar Map85Tileset ; entry 0
+    dfar Map85Palettes
+    db $02, $02, $3F, $00, $00, $14, $00, $02, $01, $00
+    dw wStoryFlags + $64
+    dfar Map85Screens0
+    dfar Map85Attrs0
+    dfar Map85Screens0
+    dfar Map85Attrs0
+    dfar Map85Screens0
+    dfar Map85Attrs0
+    dfar Map85Screens0
+    dfar Map85Attrs0
+    dfar Map85Screens0
+    dfar Map85Attrs0
 
+; E-0142 (derived: map record of map $86, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord86::
 Data_011_5E28:: ; heuristic: map record of the map table; C0
-    db $56, $58, $54, $25, $5D, $54, $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
-    db $3B, $CC, $63, $62, $54, $6F, $62, $54, $63, $62, $54, $6F, $62, $54, $63, $62
-    db $54, $6F, $62, $54, $63, $62, $54, $6F, $62, $54, $63, $62, $54, $6F, $62, $54
+    dfar Map85Tileset ; entry 0
+    dfar Map85Palettes
+    db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
+    dw wStoryFlags + $64
+    dfar Map86Screens0
+    dfar Map86Attrs0
+    dfar Map86Screens0
+    dfar Map86Attrs0
+    dfar Map86Screens0
+    dfar Map86Attrs0
+    dfar Map86Screens0
+    dfar Map86Attrs0
+    dfar Map86Screens0
+    dfar Map86Attrs0
 
+; E-0142 (derived: map record of map $87, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord87::
 Data_011_5E58:: ; heuristic: map record of the map table; C0
-    db $56, $58, $54, $25, $5D, $54, $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
-    db $3B, $CC, $73, $67, $54, $7F, $67, $54, $73, $67, $54, $7F, $67, $54, $73, $67
-    db $54, $7F, $67, $54, $73, $67, $54, $7F, $67, $54, $73, $67, $54, $7F, $67, $54
+    dfar Map85Tileset ; entry 0
+    dfar Map85Palettes
+    db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
+    dw wStoryFlags + $64
+    dfar Map87Screens0
+    dfar Map87Attrs0
+    dfar Map87Screens0
+    dfar Map87Attrs0
+    dfar Map87Screens0
+    dfar Map87Attrs0
+    dfar Map87Screens0
+    dfar Map87Attrs0
+    dfar Map87Screens0
+    dfar Map87Attrs0
 
+; E-0142 (derived: map record of map $88, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord88::
 Data_011_5E88:: ; heuristic: map record of the map table; C0
-    db $56, $58, $54, $25, $5D, $54, $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
-    db $3B, $CC, $6F, $6C, $54, $7B, $6C, $54, $6F, $6C, $54, $7B, $6C, $54, $6F, $6C
-    db $54, $7B, $6C, $54, $6F, $6C, $54, $7B, $6C, $54, $6F, $6C, $54, $7B, $6C, $54
+    dfar Map85Tileset ; entry 0
+    dfar Map85Palettes
+    db $02, $02, $2F, $00, $00, $14, $00, $02, $01, $00
+    dw wStoryFlags + $64
+    dfar Map88Screens0
+    dfar Map88Attrs0
+    dfar Map88Screens0
+    dfar Map88Attrs0
+    dfar Map88Screens0
+    dfar Map88Attrs0
+    dfar Map88Screens0
+    dfar Map88Attrs0
+    dfar Map88Screens0
+    dfar Map88Attrs0
 
+; E-0142 (derived: map record of map $89, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord89::
 Data_011_5EB8:: ; heuristic: map record of the map table; C0
-    db $1C, $69, $53, $2C, $6F, $53, $02, $02, $48, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $6C, $6F, $53, $78, $6F, $53, $6C, $6F, $53, $78, $6F, $53, $6C, $6F
-    db $53, $78, $6F, $53, $6C, $6F, $53, $78, $6F, $53, $6C, $6F, $53, $78, $6F, $53
+    dfar Map89Tileset ; entry 0
+    dfar Map89Palettes
+    db $02, $02, $48, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map89Screens0
+    dfar Map89Attrs0
+    dfar Map89Screens0
+    dfar Map89Attrs0
+    dfar Map89Screens0
+    dfar Map89Attrs0
+    dfar Map89Screens0
+    dfar Map89Attrs0
+    dfar Map89Screens0
+    dfar Map89Attrs0
 
+; E-0142 (derived: map record of map $8A, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord8A::
 Data_011_5EE8:: ; heuristic: map record of the map table; C0
-    db $FD, $73, $53, $8B, $77, $53, $01, $01, $33, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $B5, $70, $54, $B8, $70, $54, $B5, $70, $54, $B8, $70, $54, $B5, $70
-    db $54, $B8, $70, $54, $B5, $70, $54, $B8, $70, $54, $B5, $70, $54, $B8, $70, $54
+    dfar Map8ATileset ; entry 0
+    dfar Map8APalettes
+    db $01, $01, $33, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map8AScreens0
+    dfar Map8AAttrs0
+    dfar Map8AScreens0
+    dfar Map8AAttrs0
+    dfar Map8AScreens0
+    dfar Map8AAttrs0
+    dfar Map8AScreens0
+    dfar Map8AAttrs0
+    dfar Map8AScreens0
+    dfar Map8AAttrs0
 
+; E-0142 (derived: map record of map $8B, 3 x 4 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord8B::
 Data_011_5F18:: ; heuristic: map record of the map table; C0
-    db $EB, $7B, $52, $4A, $72, $54, $03, $04, $2D, $00, $00, $15, $00, $00, $00, $00
-    db $3B, $CC, $CB, $77, $53, $EF, $77, $53, $CB, $77, $53, $EF, $77, $53, $CB, $77
-    db $53, $EF, $77, $53, $CB, $77, $53, $EF, $77, $53, $CB, $77, $53, $EF, $77, $53
+    dfar Map8BTileset ; entry 0
+    dfar Map8BPalettes
+    db $03, $04, $2D, $00, $00, $15, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map8BScreens0
+    dfar Map8BAttrs0
+    dfar Map8BScreens0
+    dfar Map8BAttrs0
+    dfar Map8BScreens0
+    dfar Map8BAttrs0
+    dfar Map8BScreens0
+    dfar Map8BAttrs0
+    dfar Map8BScreens0
+    dfar Map8BAttrs0
 
+; E-0142 (derived: map record of map $8C, 3 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord8C::
 Data_011_5F48:: ; heuristic: map record of the map table; C0
-    db $01, $40, $55, $45, $76, $93, $03, $03, $4F, $00, $00, $15, $00, $00, $00, $00
-    db $3B, $CC, $DC, $42, $55, $F7, $42, $55, $DC, $42, $55, $F7, $42, $55, $DC, $42
-    db $55, $F7, $42, $55, $DC, $42, $55, $F7, $42, $55, $DC, $42, $55, $F7, $42, $55
+    dfar Map8CTileset ; entry 0
+    dfar Map8CPalettes
+    db $03, $03, $4F, $00, $00, $15, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map8CScreens0
+    dfar Map8CAttrs0
+    dfar Map8CScreens0
+    dfar Map8CAttrs0
+    dfar Map8CScreens0
+    dfar Map8CAttrs0
+    dfar Map8CScreens0
+    dfar Map8CAttrs0
+    dfar Map8CScreens0
+    dfar Map8CAttrs0
 
+; E-0142 (derived: map record of map $8D, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord8D::
 Data_011_5F78:: ; heuristic: map record of the map table; C0
-    db $8A, $72, $54, $6C, $76, $54, $01, $01, $2C, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $AC, $76, $54, $AF, $76, $54, $B2, $76, $54, $B5, $76, $54, $B2, $76
-    db $54, $B5, $76, $54, $B2, $76, $54, $B5, $76, $54, $B2, $76, $54, $B5, $76, $54
+    dfar Map8DTileset ; entry 0
+    dfar Map8DPalettes
+    db $01, $01, $2C, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map8DScreens0
+    dfar Map8DAttrs0
+    dfar Map8DScreens1
+    dfar Map8DAttrs1
+    dfar Map8DScreens1
+    dfar Map8DAttrs1
+    dfar Map8DScreens1
+    dfar Map8DAttrs1
+    dfar Map8DScreens1
+    dfar Map8DAttrs1
 
+; E-0142 (derived: map record of map $8E, 3 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord8E::
 Data_011_5FA8:: ; heuristic: map record of the map table; C0
-    db $24, $51, $55, $85, $76, $93, $03, $03, $53, $00, $00, $15, $00, $00, $00, $00
-    db $3B, $CC, $42, $57, $55, $5D, $57, $55, $42, $57, $55, $5D, $57, $55, $42, $57
-    db $55, $5D, $57, $55, $78, $57, $55, $93, $57, $55, $78, $57, $55, $93, $57, $55
+    dfar Map8ETileset ; entry 0
+    dfar Map8EPalettes
+    db $03, $03, $53, $00, $00, $15, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map8EScreens0
+    dfar Map8EAttrs0
+    dfar Map8EScreens0
+    dfar Map8EAttrs0
+    dfar Map8EScreens0
+    dfar Map8EAttrs0
+    dfar Map8EScreens3
+    dfar Map8EAttrs3
+    dfar Map8EScreens3
+    dfar Map8EAttrs3
 
+; E-0142 (derived: map record of map $8F, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord8F::
 Data_011_5FD8:: ; heuristic: map record of the map table; C0
-    db $02, $7A, $93, $28, $7F, $93, $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $F2, $77, $51, $F5, $77, $51, $F2, $77, $51, $F5, $77, $51, $F8, $77
-    db $51, $FB, $77, $51, $F8, $77, $51, $FB, $77, $51, $F8, $77, $51, $FB, $77, $51
+    dfar Map8FTileset ; entry 0
+    dfar Map8FPalettes
+    db $01, $01, $2F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map8FScreens0
+    dfar Map8FAttrs0
+    dfar Map8FScreens0
+    dfar Map8FAttrs0
+    dfar Map8FScreens2
+    dfar Map8FAttrs2
+    dfar Map8FScreens2
+    dfar Map8FAttrs2
+    dfar Map8FScreens2
+    dfar Map8FAttrs2
 
+; E-0142 (derived: map record of map $90, 3 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord90::
 Data_011_6008:: ; heuristic: map record of the map table; C0
-    db $01, $40, $55, $45, $76, $93, $03, $02, $4F, $00, $00, $15, $00, $00, $00, $00
-    db $3B, $CC, $FF, $4A, $55, $11, $4B, $55, $FF, $4A, $55, $11, $4B, $55, $FF, $4A
-    db $55, $11, $4B, $55, $FF, $4A, $55, $11, $4B, $55, $FF, $4A, $55, $11, $4B, $55
+    dfar Map8CTileset ; entry 0
+    dfar Map8CPalettes
+    db $03, $02, $4F, $00, $00, $15, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map90Screens0
+    dfar Map90Attrs0
+    dfar Map90Screens0
+    dfar Map90Attrs0
+    dfar Map90Screens0
+    dfar Map90Attrs0
+    dfar Map90Screens0
+    dfar Map90Attrs0
+    dfar Map90Screens0
+    dfar Map90Attrs0
 
+; E-0142 (derived: map record of map $91, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord91::
 Data_011_6038:: ; heuristic: map record of the map table; C0
-    db $70, $79, $54, $58, $7D, $54, $01, $01, $3B, $00, $03, $00, $00, $00, $00, $00
-    db $3B, $CC, $98, $7D, $54, $9B, $7D, $54, $98, $7D, $54, $9B, $7D, $54, $98, $7D
-    db $54, $9B, $7D, $54, $98, $7D, $54, $9B, $7D, $54, $98, $7D, $54, $9B, $7D, $54
+    dfar Map91Tileset ; entry 0
+    dfar Map91Palettes
+    db $01, $01, $3B, $00, $03, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map91Screens0
+    dfar Map91Attrs0
+    dfar Map91Screens0
+    dfar Map91Attrs0
+    dfar Map91Screens0
+    dfar Map91Attrs0
+    dfar Map91Screens0
+    dfar Map91Attrs0
+    dfar Map91Screens0
+    dfar Map91Attrs0
 
+; E-0142 (derived: map record of map $92, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord92::
 Data_011_6068:: ; heuristic: map record of the map table; C0
-    db $E6, $43, $95, $C5, $76, $93, $01, $01, $17, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $81, $45, $95, $84, $45, $95, $81, $45, $95, $84, $45, $95, $81, $45
-    db $95, $84, $45, $95, $81, $45, $95, $84, $45, $95, $81, $45, $95, $84, $45, $95
+    dfar Map92Tileset ; entry 0
+    dfar Map92Palettes
+    db $01, $01, $17, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map92Screens0
+    dfar Map92Attrs0
+    dfar Map92Screens0
+    dfar Map92Attrs0
+    dfar Map92Screens0
+    dfar Map92Attrs0
+    dfar Map92Screens0
+    dfar Map92Attrs0
+    dfar Map92Screens0
+    dfar Map92Attrs0
 
+; E-0142 (derived: map record of map $93, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord93::
 Data_011_6098:: ; heuristic: map record of the map table; C0
-    db $40, $7B, $51, $55, $7E, $51, $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $95, $7E, $51, $98, $7E, $51, $95, $7E, $51, $98, $7E, $51, $95, $7E
-    db $51, $98, $7E, $51, $95, $7E, $51, $98, $7E, $51, $95, $7E, $51, $98, $7E, $51
+    dfar Map93Tileset ; entry 0
+    dfar Map93Palettes
+    db $01, $01, $24, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map93Screens0
+    dfar Map93Attrs0
+    dfar Map93Screens0
+    dfar Map93Attrs0
+    dfar Map93Screens0
+    dfar Map93Attrs0
+    dfar Map93Screens0
+    dfar Map93Attrs0
+    dfar Map93Screens0
+    dfar Map93Attrs0
 
+; E-0142 (derived: map record of map $94, 3 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord94::
 Data_011_60C8:: ; heuristic: map record of the map table; C0
-    db $34, $65, $55, $05, $77, $93, $03, $03, $3F, $00, $04, $00, $00, $00, $00, $00
-    db $3B, $CC, $70, $69, $55, $8B, $69, $55, $70, $69, $55, $8B, $69, $55, $70, $69
-    db $55, $8B, $69, $55, $70, $69, $55, $8B, $69, $55, $70, $69, $55, $8B, $69, $55
+    dfar Map94Tileset ; entry 0
+    dfar Map94Palettes
+    db $03, $03, $3F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map94Screens0
+    dfar Map94Attrs0
+    dfar Map94Screens0
+    dfar Map94Attrs0
+    dfar Map94Screens0
+    dfar Map94Attrs0
+    dfar Map94Screens0
+    dfar Map94Attrs0
+    dfar Map94Screens0
+    dfar Map94Attrs0
 
+; E-0142 (derived: map record of map $95, 2 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord95::
 Data_011_60F8:: ; heuristic: map record of the map table; C0
-    db $34, $65, $55, $05, $77, $93, $02, $03, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $5E, $73, $55, $70, $73, $55, $5E, $73, $55, $70, $73, $55, $5E, $73
-    db $55, $70, $73, $55, $5E, $73, $55, $70, $73, $55, $5E, $73, $55, $70, $73, $55
+    dfar Map94Tileset ; entry 0
+    dfar Map94Palettes
+    db $02, $03, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map95Screens0
+    dfar Map95Attrs0
+    dfar Map95Screens0
+    dfar Map95Attrs0
+    dfar Map95Screens0
+    dfar Map95Attrs0
+    dfar Map95Screens0
+    dfar Map95Attrs0
+    dfar Map95Screens0
+    dfar Map95Attrs0
 
+; E-0142 (derived: map record of map $96, 2 x 2 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord96::
 Data_011_6128:: ; heuristic: map record of the map table; C0
-    db $34, $65, $55, $05, $77, $93, $02, $02, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $3B, $CC, $89, $79, $55, $95, $79, $55, $89, $79, $55, $95, $79, $55, $89, $79
-    db $55, $95, $79, $55, $89, $79, $55, $95, $79, $55, $89, $79, $55, $95, $79, $55
+    dfar Map94Tileset ; entry 0
+    dfar Map94Palettes
+    db $02, $02, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $64
+    dfar Map96Screens0
+    dfar Map96Attrs0
+    dfar Map96Screens0
+    dfar Map96Attrs0
+    dfar Map96Screens0
+    dfar Map96Attrs0
+    dfar Map96Screens0
+    dfar Map96Attrs0
+    dfar Map96Screens0
+    dfar Map96Attrs0
 
+; E-0142 (derived: map record of map $97, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord97::
 Data_011_6158:: ; heuristic: map record of the map table; C0
-    db $4F, $5C, $90, $1F, $60, $90, $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
-    db $3B, $CC, $5F, $60, $90, $62, $60, $90, $5F, $60, $90, $62, $60, $90, $5F, $60
-    db $90, $62, $60, $90, $5F, $60, $90, $62, $60, $90, $5F, $60, $90, $62, $60, $90
+    dfar Map97Tileset ; entry 0
+    dfar Map97Palettes
+    db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
+    dw wStoryFlags + $64
+    dfar Map97Screens0
+    dfar Map97Attrs0
+    dfar Map97Screens0
+    dfar Map97Attrs0
+    dfar Map97Screens0
+    dfar Map97Attrs0
+    dfar Map97Screens0
+    dfar Map97Attrs0
+    dfar Map97Screens0
+    dfar Map97Attrs0
 
+; E-0142 (derived: map record of map $98, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord98::
 Data_011_6188:: ; heuristic: map record of the map table; C0
-    db $4F, $5C, $90, $1F, $60, $90, $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
-    db $3B, $CC, $65, $60, $90, $68, $60, $90, $65, $60, $90, $68, $60, $90, $65, $60
-    db $90, $68, $60, $90, $65, $60, $90, $68, $60, $90, $65, $60, $90, $68, $60, $90
+    dfar Map97Tileset ; entry 0
+    dfar Map97Palettes
+    db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
+    dw wStoryFlags + $64
+    dfar Map98Screens0
+    dfar Map98Attrs0
+    dfar Map98Screens0
+    dfar Map98Attrs0
+    dfar Map98Screens0
+    dfar Map98Attrs0
+    dfar Map98Screens0
+    dfar Map98Attrs0
+    dfar Map98Screens0
+    dfar Map98Attrs0
 
+; E-0142 (derived: map record of map $99, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord99::
 Data_011_61B8:: ; heuristic: map record of the map table; C0
-    db $4F, $5C, $90, $1F, $60, $90, $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
-    db $3B, $CC, $6B, $60, $90, $6E, $60, $90, $6B, $60, $90, $6E, $60, $90, $6B, $60
-    db $90, $6E, $60, $90, $6B, $60, $90, $6E, $60, $90, $6B, $60, $90, $6E, $60, $90
+    dfar Map97Tileset ; entry 0
+    dfar Map97Palettes
+    db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
+    dw wStoryFlags + $64
+    dfar Map99Screens0
+    dfar Map99Attrs0
+    dfar Map99Screens0
+    dfar Map99Attrs0
+    dfar Map99Screens0
+    dfar Map99Attrs0
+    dfar Map99Screens0
+    dfar Map99Attrs0
+    dfar Map99Screens0
+    dfar Map99Attrs0
 
+; E-0142 (derived: map record of map $9A, 1 x 1 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank
+MapRecord9A::
 Data_011_61E8:: ; heuristic: map record of the map table; C0
-    db $4F, $5C, $90, $1F, $60, $90, $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
-    db $3B, $CC, $71, $60, $90, $74, $60, $90, $71, $60, $90, $74, $60, $90, $71, $60
-    db $90, $74, $60, $90, $71, $60, $90, $74, $60, $90, $71, $60, $90, $74, $60, $90
+    dfar Map97Tileset ; entry 0
+    dfar Map97Palettes
+    db $01, $01, $3F, $00, $00, $00, $00, $02, $1F, $00
+    dw wStoryFlags + $64
+    dfar Map9AScreens0
+    dfar Map9AAttrs0
+    dfar Map9AScreens0
+    dfar Map9AAttrs0
+    dfar Map9AScreens0
+    dfar Map9AAttrs0
+    dfar Map9AScreens0
+    dfar Map9AAttrs0
+    dfar Map9AScreens0
+    dfar Map9AAttrs0
 
+; E-0142 (derived: map record of map $9B, 1 x 3 screens, 5 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; bytes after the decoded variants
+MapRecord9B::
 Data_011_6218:: ; heuristic: map record of the map table; C0
-    INCBIN "dwm2-cobi-us.gbc", $046218, $60
+    dfar Map9BTileset ; entry 0
+    dfar Map9BPalettes
+    db $01, $03, $4F, $00, $00, $00, $00, $02, $0F, $00
+    dw wStoryFlags + $64
+    dfar Map9BScreens0
+    dfar Map9BAttrs0
+    dfar Map9BScreens0
+    dfar Map9BAttrs0
+    dfar Map9BScreens0
+    dfar Map9BAttrs0
+    dfar Map9BScreens0
+    dfar Map9BAttrs0
+    dfar Map9BScreens4
+    dfar Map9BAttrs4
+    db $45, $77, $93, $D4, $78, $93, $01, $01, $1F, $1C, $00, $00, $00, $02, $06, $00, $3B, $CC, $14, $79, $93, $17, $79, $93, $14, $79, $93, $17, $79, $93, $14, $79, $93, $17, $79, $93, $14, $79, $93, $17, $79, $93, $14, $79, $93, $17, $79, $93
 
+; E-0142 (derived: map record of map $A0, 4 x 3 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordA0::
 Data_011_6278:: ; heuristic: map record of the map table; C0
-    db $C4, $61, $58, $92, $65, $58, $04, $03, $3F, $00, $01, $16, $00, $02, $29, $00
-    db $3C, $CC, $D2, $65, $58, $F6, $65, $58, $1A, $66, $58, $3E, $66, $58
+    dfar MapA0Tileset ; entry 0
+    dfar MapA0Palettes
+    db $04, $03, $3F, $00, $01, $16, $00, $02, $29, $00
+    dw wStoryFlags + $65
+    dfar MapA0Screens0
+    dfar MapA0Attrs0
+    dfar MapA0Screens1
+    dfar MapA0Attrs1
 
+; E-0142 (derived: map record of map $A1, 1 x 3 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordA1::
 Data_011_6296:: ; heuristic: map record of the map table; C0
-    db $F4, $6E, $58, $28, $74, $58, $01, $03, $5F, $00, $05, $00, $00, $00, $00, $00
-    db $3C, $CC, $68, $74, $58, $71, $74, $58, $7A, $74, $58, $83, $74, $58
+    dfar MapA1Tileset ; entry 0
+    dfar MapA1Palettes
+    db $01, $03, $5F, $00, $05, $00, $00, $00, $00, $00
+    dw wStoryFlags + $65
+    dfar MapA1Screens0
+    dfar MapA1Attrs0
+    dfar MapA1Screens1
+    dfar MapA1Attrs1
 
+; E-0142 (derived: map record of map $A2, 3 x 4 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordA2::
 Data_011_62B4:: ; heuristic: map record of the map table; C0
-    db $79, $6D, $68, $14, $73, $68, $03, $04, $55, $00, $01, $17, $00, $02, $07, $00
-    db $3C, $CC, $54, $73, $68, $78, $73, $68, $54, $73, $68, $78, $73, $68
+    dfar MapA2Tileset ; entry 0
+    dfar MapA2Palettes
+    db $03, $04, $55, $00, $01, $17, $00, $02, $07, $00
+    dw wStoryFlags + $65
+    dfar MapA2Screens0
+    dfar MapA2Attrs0
+    dfar MapA2Screens0
+    dfar MapA2Attrs0
 
+; E-0142 (derived: map record of map $A3, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; bytes after the decoded variants
+MapRecordA3::
 Data_011_62D2:: ; heuristic: map record of the map table; C0
-    db $41, $40, $94, $68, $46, $94, $01, $02, $68, $00, $0A, $00, $00, $00, $00, $00
-    db $3C, $CC, $A8, $46, $94, $AE, $46, $94, $A8, $46, $94, $AE, $46, $94, $B4, $6F
-    db $90, $BE, $7D, $68, $01, $01, $1F, $1C, $00, $00, $00, $00, $00, $00, $3C, $CC
-    db $FE, $7D, $68, $01, $7E, $68, $FE, $7D, $68, $01, $7E, $68
+    dfar MapA3Tileset ; entry 0
+    dfar MapA3Palettes
+    db $01, $02, $68, $00, $0A, $00, $00, $00, $00, $00
+    dw wStoryFlags + $65
+    dfar MapA3Screens0
+    dfar MapA3Attrs0
+    dfar MapA3Screens0
+    dfar MapA3Attrs0
+    db $B4, $6F, $90, $BE, $7D, $68, $01, $01, $1F, $1C, $00, $00, $00, $00, $00, $00, $3C, $CC, $FE, $7D, $68, $01, $7E, $68, $FE, $7D, $68, $01, $7E, $68
 
+; E-0142 (derived: map record of map $A8, 6 x 6 screens, 1 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank
+MapRecordA8::
 Data_011_630E:: ; heuristic: map record of the map table; C0
-    db $01, $40, $59, $A3, $44, $59, $06, $06, $3B, $00, $00, $18, $00, $00, $00, $00
-    db $3D, $CC, $E3, $44, $59, $4F, $45, $59
+    dfar MapA8Tileset ; entry 0
+    dfar MapA8Palettes
+    db $06, $06, $3B, $00, $00, $18, $00, $00, $00, $00
+    dw wStoryFlags + $66
+    dfar MapA8Screens0
+    dfar MapA8Attrs0
 
+; E-0142 (derived: map record of map $A9, 2 x 2 screens, 1 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank
+MapRecordA9::
 Data_011_6326:: ; heuristic: map record of the map table; C0
-    db $3E, $5D, $59, $60, $62, $59, $02, $02, $2D, $00, $00, $00, $00, $00, $00, $00
-    db $3D, $CC, $A0, $62, $59, $AC, $62, $59
+    dfar MapA9Tileset ; entry 0
+    dfar MapA9Palettes
+    db $02, $02, $2D, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $66
+    dfar MapA9Screens0
+    dfar MapA9Attrs0
 
+; E-0142 (derived: map record of map $AA, 1 x 2 screens, 1 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank
+MapRecordAA::
 Data_011_633E:: ; heuristic: map record of the map table; C0
-    db $3E, $5D, $59, $60, $62, $59, $01, $02, $2D, $00, $00, $00, $00, $00, $00, $00
-    db $3D, $CC, $99, $67, $59, $9F, $67, $59
+    dfar MapA9Tileset ; entry 0
+    dfar MapA9Palettes
+    db $01, $02, $2D, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $66
+    dfar MapAAScreens0
+    dfar MapAAAttrs0
 
+; E-0142 (derived: map record of map $AB, 1 x 1 screens, 1 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank
+MapRecordAB::
 Data_011_6356:: ; heuristic: map record of the map table; C0
-    db $3E, $5D, $59, $60, $62, $59, $01, $01, $2D, $00, $00, $00, $00, $00, $00, $00
-    db $3D, $CC, $6B, $69, $59, $6E, $69, $59
+    dfar MapA9Tileset ; entry 0
+    dfar MapA9Palettes
+    db $01, $01, $2D, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $66
+    dfar MapABScreens0
+    dfar MapABAttrs0
 
+; E-0142 (derived: map record of map $AC, 1 x 1 screens, 1 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank
+MapRecordAC::
 Data_011_636E:: ; heuristic: map record of the map table; C0
-    db $BC, $6A, $59, $0C, $6E, $59, $01, $01, $31, $00, $00, $00, $00, $00, $00, $00
-    db $3D, $CC, $4C, $6E, $59, $4F, $6E, $59
+    dfar MapACTileset ; entry 0
+    dfar MapACPalettes
+    db $01, $01, $31, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $66
+    dfar MapACScreens0
+    dfar MapACAttrs0
 
+; E-0142 (derived: map record of map $AD, 3 x 4 screens, 1 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank
+MapRecordAD::
 Data_011_6386:: ; heuristic: map record of the map table; C0
-    db $FB, $6F, $59, $43, $72, $59, $03, $04, $3F, $00, $00, $19, $01, $00, $00, $00
-    db $3D, $CC, $83, $72, $59, $A7, $72, $59
+    dfar MapADTileset ; entry 0
+    dfar MapADPalettes
+    db $03, $04, $3F, $00, $00, $19, $01, $00, $00, $00
+    dw wStoryFlags + $66
+    dfar MapADScreens0
+    dfar MapADAttrs0
 
+; E-0142 (derived: map record of map $AE, 3 x 4 screens, 1 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank
+MapRecordAE::
 Data_011_639E:: ; heuristic: map record of the map table; C0
-    db $FB, $6F, $59, $43, $72, $59, $03, $04, $3F, $00, $00, $19, $01, $00, $00, $00
-    db $3D, $CC, $01, $40, $5A, $25, $40, $5A
+    dfar MapADTileset ; entry 0
+    dfar MapADPalettes
+    db $03, $04, $3F, $00, $00, $19, $01, $00, $00, $00
+    dw wStoryFlags + $66
+    dfar MapAEScreens0
+    dfar MapAEAttrs0
 
+; E-0142 (derived: map record of map $B0, 3 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordB0::
 Data_011_63B6:: ; heuristic: map record of the map table; C0
-    db $C4, $49, $5A, $68, $7F, $93, $03, $02, $3F, $00, $00, $1A, $00, $00, $00, $00
-    db $3E, $CC, $87, $4E, $5A, $99, $4E, $5A, $87, $4E, $5A, $99, $4E, $5A
+    dfar MapB0Tileset ; entry 0
+    dfar MapB0Palettes
+    db $03, $02, $3F, $00, $00, $1A, $00, $00, $00, $00
+    dw wStoryFlags + $67
+    dfar MapB0Screens0
+    dfar MapB0Attrs0
+    dfar MapB0Screens0
+    dfar MapB0Attrs0
 
+; E-0142 (derived: map record of map $B1, 1 x 1 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordB1::
 Data_011_63D4:: ; heuristic: map record of the map table; C0
-    db $A2, $53, $5A, $B7, $57, $5A, $01, $01, $37, $00, $00, $00, $00, $00, $00, $00
-    db $3E, $CC, $F7, $57, $5A, $FA, $57, $5A, $F7, $57, $5A, $FA, $57, $5A
+    dfar MapB1Tileset ; entry 0
+    dfar MapB1Palettes
+    db $01, $01, $37, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $67
+    dfar MapB1Screens0
+    dfar MapB1Attrs0
+    dfar MapB1Screens0
+    dfar MapB1Attrs0
 
+; E-0142 (derived: map record of map $B3, 2 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordB3::
 Data_011_63F2:: ; heuristic: map record of the map table; C0
-    db $35, $59, $5A, $F8, $5B, $5A, $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
-    db $3E, $CC, $38, $5C, $5A, $44, $5C, $5A, $38, $5C, $5A, $44, $5C, $5A
+    dfar MapB3Tileset ; entry 0
+    dfar MapB3Palettes
+    db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
+    dw wStoryFlags + $67
+    dfar MapB3Screens0
+    dfar MapB3Attrs0
+    dfar MapB3Screens0
+    dfar MapB3Attrs0
 
+; E-0142 (derived: map record of map $B4, 2 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordB4::
 Data_011_6410:: ; heuristic: map record of the map table; C0
-    db $35, $59, $5A, $F8, $5B, $5A, $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
-    db $3E, $CC, $0B, $60, $5A, $17, $60, $5A, $0B, $60, $5A, $17, $60, $5A
+    dfar MapB3Tileset ; entry 0
+    dfar MapB3Palettes
+    db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
+    dw wStoryFlags + $67
+    dfar MapB4Screens0
+    dfar MapB4Attrs0
+    dfar MapB4Screens0
+    dfar MapB4Attrs0
 
+; E-0142 (derived: map record of map $B5, 2 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordB5::
 Data_011_642E:: ; heuristic: map record of the map table; C0
-    db $35, $59, $5A, $F8, $5B, $5A, $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
-    db $3E, $CC, $43, $64, $5A, $4F, $64, $5A, $43, $64, $5A, $4F, $64, $5A
+    dfar MapB3Tileset ; entry 0
+    dfar MapB3Palettes
+    db $02, $02, $1F, $00, $00, $1B, $00, $00, $00, $00
+    dw wStoryFlags + $67
+    dfar MapB5Screens0
+    dfar MapB5Attrs0
+    dfar MapB5Screens0
+    dfar MapB5Attrs0
 
+; E-0142 (derived: map record of map $B6, 1 x 1 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordB6::
 Data_011_644C:: ; heuristic: map record of the map table; C0
-    db $35, $59, $5A, $F8, $5B, $5A, $01, $01, $1F, $00, $00, $00, $00, $00, $00, $00
-    db $3E, $CC, $5C, $67, $5A, $5F, $67, $5A, $5C, $67, $5A, $5F, $67, $5A
+    dfar MapB3Tileset ; entry 0
+    dfar MapB3Palettes
+    db $01, $01, $1F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $67
+    dfar MapB6Screens0
+    dfar MapB6Attrs0
+    dfar MapB6Screens0
+    dfar MapB6Attrs0
 
+; E-0142 (derived: map record of map $B8, 5 x 5 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordB8::
 Data_011_646A:: ; heuristic: map record of the map table; C0
-    db $A9, $68, $5A, $6F, $6D, $5A, $05, $05, $3F, $00, $01, $1C, $00, $01, $29, $00
-    db $3F, $CC, $AF, $6D, $5A, $FA, $6D, $5A, $AF, $6D, $5A, $FA, $6D, $5A, $AF, $6D
-    db $5A, $FA, $6D, $5A
+    dfar MapB8Tileset ; entry 0
+    dfar MapB8Palettes
+    db $05, $05, $3F, $00, $01, $1C, $00, $01, $29, $00
+    dw wStoryFlags + $68
+    dfar MapB8Screens0
+    dfar MapB8Attrs0
+    dfar MapB8Screens0
+    dfar MapB8Attrs0
+    dfar MapB8Screens0
+    dfar MapB8Attrs0
 
+; E-0142 (derived: map record of map $B9, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordB9::
 Data_011_648E:: ; heuristic: map record of the map table; C0
-    db $5D, $46, $5B, $66, $4B, $5B, $02, $02, $3D, $00, $00, $00, $00, $00, $00, $00
-    db $3F, $CC, $A6, $4B, $5B, $B2, $4B, $5B, $A6, $4B, $5B, $B2, $4B, $5B, $A6, $4B
-    db $5B, $B2, $4B, $5B
+    dfar MapB9Tileset ; entry 0
+    dfar MapB9Palettes
+    db $02, $02, $3D, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapB9Screens0
+    dfar MapB9Attrs0
+    dfar MapB9Screens0
+    dfar MapB9Attrs0
+    dfar MapB9Screens0
+    dfar MapB9Attrs0
 
+; E-0142 (derived: map record of map $BA, 1 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordBA::
 Data_011_64B2:: ; heuristic: map record of the map table; C0
-    db $5C, $51, $5B, $94, $55, $5B, $01, $02, $39, $00, $00, $00, $00, $00, $00, $00
-    db $3F, $CC, $D4, $55, $5B, $DA, $55, $5B, $D4, $55, $5B, $DA, $55, $5B, $D4, $55
-    db $5B, $DA, $55, $5B
+    dfar MapBATileset ; entry 0
+    dfar MapBAPalettes
+    db $01, $02, $39, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapBAScreens0
+    dfar MapBAAttrs0
+    dfar MapBAScreens0
+    dfar MapBAAttrs0
+    dfar MapBAScreens0
+    dfar MapBAAttrs0
 
+; E-0142 (derived: map record of map $BB, 1 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordBB::
 Data_011_64D6:: ; heuristic: map record of the map table; C0
-    db $66, $58, $5B, $4B, $5A, $5B, $01, $02, $0F, $00, $00, $00, $00, $00, $00, $00
-    db $3F, $CC, $8B, $5A, $5B, $91, $5A, $5B, $97, $5A, $5B, $9D, $5A, $5B, $97, $5A
-    db $5B, $9D, $5A, $5B
+    dfar MapBBTileset ; entry 0
+    dfar MapBBPalettes
+    db $01, $02, $0F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapBBScreens0
+    dfar MapBBAttrs0
+    dfar MapBBScreens1
+    dfar MapBBAttrs1
+    dfar MapBBScreens1
+    dfar MapBBAttrs1
 
+; E-0142 (derived: map record of map $BC, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordBC::
 Data_011_64FA:: ; heuristic: map record of the map table; C0
-    db $46, $5E, $5B, $E9, $60, $5B, $01, $01, $2C, $00, $00, $00, $00, $00, $00, $00
-    db $3F, $CC, $29, $61, $5B, $2C, $61, $5B, $29, $61, $5B, $2C, $61, $5B, $29, $61
-    db $5B, $2C, $61, $5B
+    dfar MapBCTileset ; entry 0
+    dfar MapBCPalettes
+    db $01, $01, $2C, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapBCScreens0
+    dfar MapBCAttrs0
+    dfar MapBCScreens0
+    dfar MapBCAttrs0
+    dfar MapBCScreens0
+    dfar MapBCAttrs0
 
+; E-0142 (derived: map record of map $BD, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordBD::
 Data_011_651E:: ; heuristic: map record of the map table; C0
-    db $46, $62, $5B, $EA, $64, $5B, $01, $01, $3F, $00, $00, $00, $03, $00, $00, $00
-    db $3F, $CC, $2A, $65, $5B, $2D, $65, $5B, $2A, $65, $5B, $2D, $65, $5B, $2A, $65
-    db $5B, $2D, $65, $5B
+    dfar MapBDTileset ; entry 0
+    dfar MapBDPalettes
+    db $01, $01, $3F, $00, $00, $00, $03, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapBDScreens0
+    dfar MapBDAttrs0
+    dfar MapBDScreens0
+    dfar MapBDAttrs0
+    dfar MapBDScreens0
+    dfar MapBDAttrs0
 
+; E-0142 (derived: map record of map $BE, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordBE::
 Data_011_6542:: ; heuristic: map record of the map table; C0
-    db $46, $62, $5B, $EA, $64, $5B, $01, $01, $3F, $00, $00, $1D, $03, $00, $00, $00
-    db $3F, $CC, $28, $66, $5B, $2B, $66, $5B, $28, $66, $5B, $2B, $66, $5B, $28, $66
-    db $5B, $2B, $66, $5B
+    dfar MapBDTileset ; entry 0
+    dfar MapBDPalettes
+    db $01, $01, $3F, $00, $00, $1D, $03, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapBEScreens0
+    dfar MapBEAttrs0
+    dfar MapBEScreens0
+    dfar MapBEAttrs0
+    dfar MapBEScreens0
+    dfar MapBEAttrs0
 
+; E-0142 (derived: map record of map $BF, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordBF::
 Data_011_6566:: ; heuristic: map record of the map table; C0
-    db $46, $62, $5B, $EA, $64, $5B, $02, $02, $3F, $00, $00, $1E, $03, $00, $00, $00
-    db $3F, $CC, $E3, $66, $5B, $EF, $66, $5B, $E3, $66, $5B, $EF, $66, $5B, $FB, $66
-    db $5B, $07, $67, $5B
+    dfar MapBDTileset ; entry 0
+    dfar MapBDPalettes
+    db $02, $02, $3F, $00, $00, $1E, $03, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapBFScreens0
+    dfar MapBFAttrs0
+    dfar MapBFScreens0
+    dfar MapBFAttrs0
+    dfar MapBFScreens2
+    dfar MapBFAttrs2
 
+; E-0142 (derived: map record of map $C0, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordC0::
 Data_011_658A:: ; heuristic: map record of the map table; C0
-    db $46, $62, $5B, $EA, $64, $5B, $02, $02, $3F, $00, $00, $1F, $03, $00, $00, $00
-    db $3F, $CC, $4C, $69, $5B, $58, $69, $5B, $4C, $69, $5B, $58, $69, $5B, $4C, $69
-    db $5B, $58, $69, $5B
+    dfar MapBDTileset ; entry 0
+    dfar MapBDPalettes
+    db $02, $02, $3F, $00, $00, $1F, $03, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapC0Screens0
+    dfar MapC0Attrs0
+    dfar MapC0Screens0
+    dfar MapC0Attrs0
+    dfar MapC0Screens0
+    dfar MapC0Attrs0
 
+; E-0142 (derived: map record of map $C1, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordC1::
 Data_011_65AE:: ; heuristic: map record of the map table; C0
-    db $46, $62, $5B, $EA, $64, $5B, $02, $02, $3F, $00, $00, $1F, $03, $00, $00, $00
-    db $3F, $CC, $AC, $6B, $5B, $B8, $6B, $5B, $AC, $6B, $5B, $B8, $6B, $5B, $AC, $6B
-    db $5B, $B8, $6B, $5B
+    dfar MapBDTileset ; entry 0
+    dfar MapBDPalettes
+    db $02, $02, $3F, $00, $00, $1F, $03, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapC1Screens0
+    dfar MapC1Attrs0
+    dfar MapC1Screens0
+    dfar MapC1Attrs0
+    dfar MapC1Screens0
+    dfar MapC1Attrs0
 
+; E-0142 (derived: map record of map $C2, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordC2::
 Data_011_65D2:: ; heuristic: map record of the map table; C0
-    db $46, $62, $5B, $EA, $64, $5B, $02, $02, $3F, $00, $00, $20, $03, $00, $00, $00
-    db $3F, $CC, $F8, $6E, $5B, $04, $6F, $5B, $F8, $6E, $5B, $04, $6F, $5B, $F8, $6E
-    db $5B, $04, $6F, $5B
+    dfar MapBDTileset ; entry 0
+    dfar MapBDPalettes
+    db $02, $02, $3F, $00, $00, $20, $03, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapC2Screens0
+    dfar MapC2Attrs0
+    dfar MapC2Screens0
+    dfar MapC2Attrs0
+    dfar MapC2Screens0
+    dfar MapC2Attrs0
 
+; E-0142 (derived: map record of map $C3, 2 x 2 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordC3::
 Data_011_65F6:: ; heuristic: map record of the map table; C0
-    db $46, $62, $5B, $EA, $64, $5B, $02, $02, $3F, $00, $00, $20, $03, $00, $00, $00
-    db $3F, $CC, $88, $72, $5B, $94, $72, $5B, $88, $72, $5B, $94, $72, $5B, $88, $72
-    db $5B, $94, $72, $5B
+    dfar MapBDTileset ; entry 0
+    dfar MapBDPalettes
+    db $02, $02, $3F, $00, $00, $20, $03, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapC3Screens0
+    dfar MapC3Attrs0
+    dfar MapC3Screens0
+    dfar MapC3Attrs0
+    dfar MapC3Screens0
+    dfar MapC3Attrs0
 
+; E-0142 (derived: map record of map $C4, 1 x 1 screens, 3 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank
+MapRecordC4::
 Data_011_661A:: ; heuristic: map record of the map table; C0
-    db $46, $62, $5B, $EA, $64, $5B, $01, $01, $3F, $00, $00, $00, $03, $00, $00, $00
-    db $3F, $CC, $ED, $75, $5B, $F0, $75, $5B, $ED, $75, $5B, $F0, $75, $5B, $ED, $75
-    db $5B, $F0, $75, $5B
+    dfar MapBDTileset ; entry 0
+    dfar MapBDPalettes
+    db $01, $01, $3F, $00, $00, $00, $03, $00, $00, $00
+    dw wStoryFlags + $68
+    dfar MapC4Screens0
+    dfar MapC4Attrs0
+    dfar MapC4Screens0
+    dfar MapC4Attrs0
+    dfar MapC4Screens0
+    dfar MapC4Attrs0
 
+; E-0142 (derived: map record of map $C8, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordC8::
 Data_011_663E:: ; heuristic: map record of the map table; C0
-    db $01, $40, $5C, $D6, $45, $5C, $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $40, $CC, $0A, $77, $5B, $10, $77, $5B, $0A, $77, $5B, $10, $77, $5B
+    dfar MapC8Tileset ; entry 0
+    dfar MapC8Palettes
+    db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapC8Screens0
+    dfar MapC8Attrs0
+    dfar MapC8Screens0
+    dfar MapC8Attrs0
 
+; E-0142 (derived: map record of map $C9, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordC9::
 Data_011_665C:: ; heuristic: map record of the map table; C0
-    db $16, $46, $5C, $04, $4B, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC, $44, $4B, $5C, $4A, $4B, $5C, $44, $4B, $5C, $4A, $4B, $5C
+    dfar MapC9Tileset ; entry 0
+    dfar MapC9Palettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapC9Screens0
+    dfar MapC9Attrs0
+    dfar MapC9Screens0
+    dfar MapC9Attrs0
 
+; E-0142 (derived: map record of map $CA, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordCA::
 Data_011_667A:: ; heuristic: map record of the map table; C0
-    db $16, $46, $5C, $04, $4B, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC, $35, $4D, $5C, $3B, $4D, $5C, $35, $4D, $5C, $3B, $4D, $5C
+    dfar MapC9Tileset ; entry 0
+    dfar MapC9Palettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapCAScreens0
+    dfar MapCAAttrs0
+    dfar MapCAScreens0
+    dfar MapCAAttrs0
 
+; E-0142 (derived: map record of map $CE, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordCE::
 Data_011_6698:: ; heuristic: map record of the map table; C0
-    db $16, $46, $5C, $04, $4B, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC, $71, $4F, $5C, $77, $4F, $5C, $71, $4F, $5C, $77, $4F, $5C
+    dfar MapC9Tileset ; entry 0
+    dfar MapC9Palettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapCEScreens0
+    dfar MapCEAttrs0
+    dfar MapCEScreens0
+    dfar MapCEAttrs0
 
+; E-0142 (derived: map record of map $D1, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordD1::
 Data_011_66B6:: ; heuristic: map record of the map table; C0
-    db $BF, $51, $5C, $37, $54, $5C, $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $40, $CC, $77, $54, $5C, $7D, $54, $5C, $77, $54, $5C, $7D, $54, $5C
+    dfar MapD1Tileset ; entry 0
+    dfar MapD1Palettes
+    db $01, $02, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapD1Screens0
+    dfar MapD1Attrs0
+    dfar MapD1Screens0
+    dfar MapD1Attrs0
 
+; E-0142 (derived: map record of map $D2, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordD2::
 Data_011_66D4:: ; heuristic: map record of the map table; C0
-    db $E3, $55, $5C, $DB, $5A, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC, $44, $4B, $5C, $4A, $4B, $5C, $44, $4B, $5C, $4A, $4B, $5C
+    dfar MapD2Tileset ; entry 0
+    dfar MapD2Palettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapC9Screens0
+    dfar MapC9Attrs0
+    dfar MapC9Screens0
+    dfar MapC9Attrs0
 
+; E-0142 (derived: map record of map $D3, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordD3::
 Data_011_66F2:: ; heuristic: map record of the map table; C0
-    db $E3, $55, $5C, $DB, $5A, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC, $35, $4D, $5C, $3B, $4D, $5C, $35, $4D, $5C, $3B, $4D, $5C
+    dfar MapD2Tileset ; entry 0
+    dfar MapD2Palettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapCAScreens0
+    dfar MapCAAttrs0
+    dfar MapCAScreens0
+    dfar MapCAAttrs0
 
+; E-0142 (derived: map record of map $D7, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordD7::
 Data_011_6710:: ; heuristic: map record of the map table; C0
-    db $E3, $55, $5C, $DB, $5A, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC, $1B, $5B, $5C, $21, $5B, $5C, $1B, $5B, $5C, $21, $5B, $5C
+    dfar MapD2Tileset ; entry 0
+    dfar MapD2Palettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapD7Screens0
+    dfar MapD7Attrs0
+    dfar MapD7Screens0
+    dfar MapD7Attrs0
 
+; E-0142 (derived: map record of map $DA, 2 x 1 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordDA::
 Data_011_672E:: ; heuristic: map record of the map table; C0
-    db $85, $5D, $5C, $CD, $60, $5C, $02, $01, $3F, $00, $00, $00, $00, $00, $00, $00
-    db $40, $CC, $0D, $61, $5C, $13, $61, $5C, $0D, $61, $5C, $13, $61, $5C
+    dfar MapDATileset ; entry 0
+    dfar MapDAPalettes
+    db $02, $01, $3F, $00, $00, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapDAScreens0
+    dfar MapDAAttrs0
+    dfar MapDAScreens0
+    dfar MapDAAttrs0
 
+; E-0142 (derived: map record of map $DB, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordDB::
 Data_011_674C:: ; heuristic: map record of the map table; C0
-    db $7C, $62, $5C, $76, $67, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC, $44, $4B, $5C, $4A, $4B, $5C, $44, $4B, $5C, $4A, $4B, $5C
+    dfar MapDBTileset ; entry 0
+    dfar MapDBPalettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapC9Screens0
+    dfar MapC9Attrs0
+    dfar MapC9Screens0
+    dfar MapC9Attrs0
 
+; E-0142 (derived: map record of map $DC, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordDC::
 Data_011_676A:: ; heuristic: map record of the map table; C0
-    db $7C, $62, $5C, $76, $67, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC, $35, $4D, $5C, $3B, $4D, $5C, $35, $4D, $5C, $3B, $4D, $5C
+    dfar MapDBTileset ; entry 0
+    dfar MapDBPalettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapCAScreens0
+    dfar MapCAAttrs0
+    dfar MapCAScreens0
+    dfar MapCAAttrs0
 
+; E-0142 (derived: map record of map $E0, 1 x 2 screens, 2 decoded variant(s))
+; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank
+MapRecordE0::
 Data_011_6788:: ; heuristic: map record of the map table; C0
-    db $7C, $62, $5C, $76, $67, $5C, $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
-    db $40, $CC
-    dw Data_011_67B6
-    db $5C, $BC, $67, $5C
-    dw Data_011_67B6
-    db $5C, $BC, $67, $5C
+    dfar MapDBTileset ; entry 0
+    dfar MapDBPalettes
+    db $01, $02, $4F, $00, $04, $00, $00, $00, $00, $00
+    dw wStoryFlags + $69
+    dfar MapE0Screens0
+    dfar MapE0Attrs0
+    dfar MapE0Screens0
+    dfar MapE0Attrs0
 
 ; E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table).
 ; record: list of warps for this map number (hMapId); a list ends with $80; maps without warps share one empty list

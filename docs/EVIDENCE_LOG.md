@@ -1669,6 +1669,33 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The meaning of the 3-byte room header is not read; the screens are tile maps that are not described further.
 - Binary verification: build/run141 PASS, 0 differing bytes; tests OK.
 
+### E-0142 — Map records, screen arrays and palettes derived from MapTable
+
+- Kind: OBSERVATION (reading of LoadMapHeader 00:1C0C and LoadMapScreen 00:19A9, plus decoding; C1).
+- **Record layout.** A bank-$11 map record is:
+  - +0: far pointer to the tileset stream (decompressed to vTiles2);
+  - +3: far pointer to the $40-byte BG palette set (LoadBGPaletteBufferFromBank);
+  - +6 to +$0F: width and height in screens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, the encounter rate (stored OR $80), wMapMoveType, wMapSpriteKind, and two bytes LoadMapHeader reads depending on wMapSpriteKind;
+  - +$10: the RAM address of a flag byte;
+  - +$12 onward: 6-byte variants, each a far pointer to a tile-map array and one to an attribute-map array. LoadMapScreen starts at +$42 and steps back 6 bytes for each clear bit of the flag byte from bit 7, so the highest set bit picks variant 1-8 and no bit picks variant 0.
+- **Screen arrays.** An array holds width * height far pointers. LoadMapScreen indexes it with 3 * (hMapScreenY * width + hMapScreenX) and decompresses the screen into wScreenTileBuffer (or, for attributes, into wScreenAttrBuffer).
+- **Generator.** add_map_schemas in tools/disasm_all.py derives the layouts from MapTable instead of listing them in config.
+  - A record ends where the next one starts; the last ends at MapWarpTable.
+  - Leading variants are kept while both of their arrays decode completely to 360-byte screens. Later bytes stay `db`, because some records carry bytes that do not decode as variants.
+  - Overlapping arrays and palette sets are skipped.
+  - Results: 183 records, 446 arrays, 135 palette sets, and 844 screen streams the stream finders had missed.
+  - Labels:
+    - MapRecordNN, MapNNTileset, MapNNPalettes;
+    - MapNNScreensK / MapNNAttrsK, named after the first map number using them.
+  - The variant flag address prints as a RAM symbol through a new `ram` option of the `words` field.
+- **Findings.**
+  - The "20x18 grids of unknown meaning" in banks $4A-$4D (PROJECT_STATUS) are compressed map screens.
+  - Unidentified INCBIN data fell to 405,041 bytes, from 609,917 before E-0139 (727,264 bytes are now in known streams).
+- **Limits.**
+  - Which flag byte values occur, and therefore which variants are reachable, is not read.
+  - The two conditional header bytes and wMapHeaderByte7 are named by their stores only.
+- Binary verification: build/run142 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

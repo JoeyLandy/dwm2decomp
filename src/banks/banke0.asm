@@ -3088,7 +3088,7 @@ Jump_0E0_5B16:: ; address name
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $93
-    ld de, Data_093_4001
+    ld de, Map00Tileset
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $46
@@ -3591,7 +3591,7 @@ Jump_0E0_5E83:: ; address name
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $46
-    ld de, Data_046_7025
+    ld de, Map02Tileset
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $46
@@ -4221,7 +4221,7 @@ Jump_0E0_62A0:: ; address name
     ld hl, vTiles0 + $500
     call DecompressToVRAM
     ld b, $48
-    ld de, Data_048_4DDC
+    ld de, Map18Tileset
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $48
@@ -5067,7 +5067,7 @@ Jump_0E0_685B:: ; address name
     ld hl, vTiles0 + $600
     call DecompressToVRAM
     ld b, $48
-    ld de, Data_048_55DA
+    ld de, Map19Tileset
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $48
@@ -5590,7 +5590,7 @@ Jump_0E0_6C2C:: ; address name
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $49
-    ld de, Data_049_4C1B
+    ld de, Map1ATileset
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $49
