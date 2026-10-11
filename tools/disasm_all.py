@@ -1620,6 +1620,28 @@ class Rom:
             spec, bank = t["lists"], t["bank"]
             base = bank * BANK - self.base(bank)
             words = [self._u16(bank, t["addr"] + 2 * i) for i in range(t["count"])]
+            if spec.get("until"):  # E-0199: contiguous lists, each running to the next target
+                end, size = int(spec["until"], 16), spec["size"]
+                targets = sorted(set(words) - {end})  # a pointer to the end names an empty list
+                ok = all(0x4000 <= a < end for a in targets) and all(
+                    (b - a) % size == 0 for a, b in zip(targets, targets[1:] + [end]))
+                if not ok or any(b == bank and lo < end and targets[0] < e for b, lo, e in taken):
+                    log(f"{t['label']}: lists do not tile [{targets[0]:04X}, {end:04X})")
+                    continue
+                for a, b in zip(targets, targets[1:] + [end]):
+                    first = words.index(a) + t.get("id_base", 0)
+                    taken.append((bank, a, b))
+                    one = spec.get("one_line")  # the whole list as one db line
+                    self.schemas.append({"bank": bank, "addr": a, "label": f"{spec['label']}{first:03X}",
+                                         "count": 1 if one else (b - a) // size, "id_base": 0,
+                                         "fields": [dict(spec["fields"][0], size=b - a)] if one else spec["fields"],
+                                         "record": spec.get("record"),
+                                         "note": f"E-0199 (derived: list for entry ${first:02X}"
+                                                 + (f" ({self.monster_name(first)})" if t.get("id_names") == "monster"
+                                                    and 0 < first < 0x180 else "")
+                                                 + f" of {t['label']}; it runs to the next list)"})
+                    made += 1
+                continue
             for a in sorted(set(words)):
                 if not 0x4000 <= a < 0x8000:
                     continue
@@ -2581,6 +2603,24 @@ class Rom:
             p += 1
         return "".join(chars)
 
+    def word_note(self, kind: str, v: int) -> str:
+        """What a 16-bit word in a table names (E-0199): a monster id, or a breeding-rule code
+        as ComputeBreedingChild reads it (codes are in the high byte)."""
+        hi, lo = v >> 8, v & 0xFF
+        if kind == "breeding":
+            codes = {0xFF: "end of list", 0xFD: "next result",
+                     0xFE: f"same species, parent B +{lo} or more",
+                     0xFC: f"same species, parent A +{lo} or more",
+                     0xFB: "next result when wArg1 = 2, else end of list"}
+            if hi in codes:
+                return codes[hi]
+        if kind == "breeding_result":
+            if v == 0xFFFF:
+                return "parent A's species"
+            if hi == 0xFE:
+                return "no child"
+        return self.monster_name(v) if 0 < v < 0x180 else ""
+
     def emit_table(self, bank: int, t: dict, out: list[str]) -> None:
         """Emit a schema table: one record per entry, `db` runs and `dw` pointers."""
         dl = self.dlabels[bank]
@@ -2633,7 +2673,11 @@ class Rom:
                     r = raws[fi]
                     words = [r[j] | r[j + 1] << 8 for j in range(0, len(r), 2)]
                     per = f.get("per_line", len(words))  # long rows wrap after "per_line" words
-                    for j in range(0, len(words), per):
+                    for v in words if f.get("names") else []:  # one word per line with what it names (E-0199)
+                        note = self.word_note(f["names"], v)
+                        out.append(f"    dw ${v:04X}" + (tag if not tagged else " ;") + (f" {note}" if note else ""))
+                        tagged = True
+                    for j in range(0, len(words) if not f.get("names") else 0, per):
                         out.append("    dw " + ", ".join((f.get("ram") and self.sym_name(v, True))
                                                          or (str(v) if f.get("decimal") else f"${v:04X}")
                                                          for v in words[j:j + per]) + ("" if tagged else tag))

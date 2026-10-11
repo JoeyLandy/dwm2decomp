@@ -2391,6 +2391,32 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - Bank $87 has no INCBIN left.
 - Binary verification: build/run216 PASS, 0 differing bytes.
 
+### E-0199 — Breeding tables (bank $0E)
+
+- Kind: OBSERVATION (reading ComputeBreedingChild, 0E:5688; C1).
+- **Overview.** The child's species comes from the first of four stages that matches. Parent A is wRecordBufA (species at +$B, family at +$D & $0F, + value at +$6D); parent B is wRecordBufB.
+  1. **BreedSpeciesRuleTable ($6208, 384 words, by parent A's species).** Each list is words:
+     - a species equal to parent B's species matches;
+     - $FDxx moves to the next result;
+     - $FExx / $FCxx match when both parents are the same species and parent B / parent A has + of at least xx;
+     - $FBxx moves on only when wArg1 = 2;
+     - $FFxx ends the list.
+     - A match takes result [number of moves] from BreedSpeciesResultTable ($6E14).
+  2. **BreedFamilyRuleTable ($734E, by parent A's species).** Each list is family bytes compared with parent B's family ($FE = only when wArg1 = 2, $FF = end). Results come from BreedFamilyResultTable ($774F).
+  3. **FamilyBreedRuleTable ($7B83, 11 words, by parent A's family).** Each list holds partner species ($FDxx = next result, $FFxx = end). Results come from FamilyBreedResultTable ($7DBF).
+  4. **FamilyPairResultTable ($7E83, 11 rows of 11 words).** Word [parent B's family] of row [parent A's family]:
+     - $FFFF = parent A's species;
+     - $FExx = no child (wNameEntryState = 6, wArg5 = $FF);
+     - otherwise the child's species.
+     - The rows end at Script_0E_7F8B.
+- **Layout.** In each table the lists are contiguous and run to the next table. Pointers equal to the table end name empty lists.
+- **Tools.**
+  - The `lists` option gains `until` (lists tile the range up to an address) and `one_line`.
+  - Word fields gain `names`: monster names, rule codes, or breeding results. Notes of species-indexed lists name parent A's species.
+  - The output shows, for example, the Slime-family row giving DrakSlime, SpotSlime, WingSlime and so on for the other ten families.
+- **Limits.** What wArg1 = 2 selects, and the family names, are not read here.
+- Binary verification: build/run219 PASS, 0 differing bytes; tests OK. Unidentified INCBIN is 50,799 bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

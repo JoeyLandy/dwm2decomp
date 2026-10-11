@@ -398,6 +398,14 @@ class DerivedLayouts(unittest.TestCase):
         self.assertIn("MapRecord1D::\n", text)
         self.assertIn("    dfar Map1DScreens0\n    dfar Map1DAttrs0\n", text)
 
+    def test_breeding_tables_name_species_and_codes(self):
+        """E-0199: breeding rule lists show partners and rule codes; family rows end at $7F8B."""
+        text = (BANKS / "bank0e.asm").read_text(encoding="utf-8")
+        self.assertIn("    dw $FE04 ; id 0 same species, parent B +4 or more\n", text)
+        self.assertIn("FamilyPairResults000::\nData_00E_7E99:: ; address name\n    dw $FFFF ; id 0 parent A's species\n"
+                      "    dw $0001 ; DrakSlime\n", text)
+        self.assertNotIn("$03A508", text)  # the old INCBIN over the rule lists
+
     def test_fill_tile_callers_use_the_callee_bank(self):
         """E-0186: wArg1/wArg2 sources of far calls take the called routine's bank."""
         text = "".join(p.read_text(encoding="utf-8") for p in BANKS.glob("bank*.asm"))

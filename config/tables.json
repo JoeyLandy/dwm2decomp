@@ -8090,6 +8090,213 @@
         ]
       },
       "note": "E-0198 (C1: FieldModeStateDispatch_Case00_Sub02, once per step (wStepTriggerFlag), reads the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and position (unless player X is $FF) match and whose flag is $FFFF or clear sets wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0)."
+    },
+    {
+      "bank": "0E",
+      "addr": "6208",
+      "label": "BreedSpeciesRuleTable",
+      "count": 384,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "breeding list"
+        }
+      ],
+      "lists": {
+        "until": "6E14",
+        "size": 2,
+        "label": "BreedSpeciesRules",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "breeding",
+            "name": "partner species or rule code"
+          }
+        ],
+        "record": "partner species or rule code"
+      },
+      "note": "E-0199 (C1: ComputeBreedingChild stage 1 reads the word at $6208 + 2 * parent A's species (record +$B) and walks the list's words: a species equal to parent B's matches; $FDxx moves to the next result; $FExx / $FCxx match when parent B / parent A has + (record +$6D) of at least xx and both parents are the same species; $FBxx moves on only when wArg1 = 2; $FFxx ends the list; a match takes result [count of moves] from BreedSpeciesResultTable)",
+      "id_names": "monster"
+    },
+    {
+      "bank": "0E",
+      "addr": "6E14",
+      "label": "BreedSpeciesResultTable",
+      "count": 384,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "breeding list"
+        }
+      ],
+      "lists": {
+        "until": "734E",
+        "size": 2,
+        "label": "BreedSpeciesResults",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "child species"
+          }
+        ],
+        "record": "child species"
+      },
+      "note": "E-0199 (C1: stage 1 result lists, indexed like BreedSpeciesRuleTable; the matched result word becomes the child's species (wArg6/wArg7))",
+      "id_names": "monster"
+    },
+    {
+      "bank": "0E",
+      "addr": "734E",
+      "label": "BreedFamilyRuleTable",
+      "count": 384,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "breeding list"
+        }
+      ],
+      "lists": {
+        "until": "774F",
+        "size": 1,
+        "one_line": true,
+        "label": "BreedFamilyRules",
+        "fields": [
+          {
+            "type": "db",
+            "size": 1,
+            "name": "partner families ($FE = only when wArg1 = 2, $FF = end)"
+          }
+        ],
+        "record": "partner families, then $FF"
+      },
+      "note": "E-0199 (C1: stage 2, when stage 1 finds nothing: the byte list at $734E + 2 * parent A's species holds families compared with parent B's family (record +$D & $0F); $FE moves on only when wArg1 = 2; $FF ends; a match takes result [index] from BreedFamilyResultTable)",
+      "id_names": "monster"
+    },
+    {
+      "bank": "0E",
+      "addr": "774F",
+      "label": "BreedFamilyResultTable",
+      "count": 384,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "breeding list"
+        }
+      ],
+      "lists": {
+        "until": "7B83",
+        "size": 2,
+        "label": "BreedFamilyResults",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "child species"
+          }
+        ],
+        "record": "child species"
+      },
+      "note": "E-0199 (C1: stage 2 result lists, indexed by parent A's species)",
+      "id_names": "monster"
+    },
+    {
+      "bank": "0E",
+      "addr": "7B83",
+      "label": "FamilyBreedRuleTable",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "breeding list"
+        }
+      ],
+      "lists": {
+        "until": "7DBF",
+        "size": 2,
+        "label": "FamilyBreedRules",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "breeding",
+            "name": "partner species or rule code"
+          }
+        ],
+        "record": "partner species or rule code"
+      },
+      "note": "E-0199 (C1: stage 3, when stage 2 finds nothing: the word list at $7B83 + 2 * parent A's family holds partner species ($FDxx = next result, $FFxx = end); a match takes result [count] from FamilyBreedResultTable)"
+    },
+    {
+      "bank": "0E",
+      "addr": "7DBF",
+      "label": "FamilyBreedResultTable",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "breeding list"
+        }
+      ],
+      "lists": {
+        "until": "7E83",
+        "size": 2,
+        "label": "FamilyBreedResults",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "child species"
+          }
+        ],
+        "record": "child species"
+      },
+      "note": "E-0199 (C1: stage 3 result lists, indexed by parent A's family)"
+    },
+    {
+      "bank": "0E",
+      "addr": "7E83",
+      "label": "FamilyPairResultTable",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list",
+          "reason": "breeding list"
+        }
+      ],
+      "lists": {
+        "until": "7F8B",
+        "size": 22,
+        "label": "FamilyPairResults",
+        "fields": [
+          {
+            "type": "words",
+            "size": 22,
+            "names": "breeding_result",
+            "name": "child for each parent-B family"
+          }
+        ],
+        "record": "child species for parent-B families 0-10"
+      },
+      "note": "E-0199 (C1: stage 4, when stage 3 finds nothing: the row at $7E83 + 2 * parent A's family, word [parent B's family]: $FFFF = parent A's species, $FExx = no child (wNameEntryState = 6, wArg5 = $FF), otherwise the child's species; 11 rows of 11 words end at Script_0E_7F8B)"
     }
   ]
 }

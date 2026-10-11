@@ -984,7 +984,7 @@ Jump_00E_568D::
     ld d, [hl]
     sla e
     rl d
-    ld hl, Data_00E_6208
+    ld hl, BreedSpeciesRuleTable
     add hl, de
     ld e, [hl]
     inc hl
@@ -1082,7 +1082,7 @@ Jump_00E_5710::
     ld d, [hl]
     sla e
     rl d
-    ld hl, Data_00E_6E14
+    ld hl, BreedSpeciesResultTable
     add hl, de
     ld e, [hl]
     inc hl
@@ -1105,7 +1105,7 @@ Jump_00E_5737::
     ld d, [hl]
     sla e
     rl d
-    ld hl, Data_00E_734E
+    ld hl, BreedFamilyRuleTable
     add hl, de
     ld e, [hl]
     inc hl
@@ -1160,7 +1160,7 @@ Jump_00E_577A::
     ld d, [hl]
     sla e
     rl d
-    ld hl, Data_00E_774F
+    ld hl, BreedFamilyResultTable
     add hl, de
     ld e, [hl]
     inc hl
@@ -1181,7 +1181,7 @@ Jump_00E_57A1::
     ld a, [hl]
     and a, $0F
     add a, a
-    ld hl, Data_00E_7B83
+    ld hl, FamilyBreedRuleTable
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1233,7 +1233,7 @@ Jump_00E_57E0::
     ld a, [hl]
     and a, $0F
     add a, a
-    ld hl, Data_00E_7DBF
+    ld hl, FamilyBreedResultTable
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1254,7 +1254,7 @@ Jump_00E_5808::
     ld a, [hl]
     and a, $0F
     add a, a
-    ld hl, Data_00E_7E83
+    ld hl, FamilyPairResultTable
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2852,2670 +2852,6692 @@ Data_00E_61FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00E_6200:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5D, $5D, $61, $61, $63, $65, $67, $69
 
-; address loaded by ComputeBreedingChild
-Data_00E_6208:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $03A208, $82
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_66E6
-    dw Data_00E_6716
-    dw Data_00E_671C
-    dw Data_00E_6508
-    db $08, $65, $2C, $67
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $5E, $67, $6E, $67
-    dw Data_00E_6508
-    db $8A, $67, $90, $67
-    dw Data_00E_67B2
-    db $D4, $67, $E0, $67
-    dw Data_00E_67E4
-    db $EA, $67, $08, $65
-    dw Data_00E_67EE
-    db $06, $68, $22, $68
-    dw Data_00E_684C
-    db $08, $65, $72, $68
-    dw Data_00E_6876
-    db $08, $65, $08, $65
-    dw Data_00E_6888
-    db $8E, $68
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $AA, $68
-    dw Data_00E_6508
-    db $08, $65, $AE, $68
-    dw Data_00E_6508
-    db $08, $65, $B4, $68
-    dw Data_00E_6508
-    db $BA, $68, $08, $65
-    dw Data_00E_6508
-    db $BE, $68, $CE, $68
-    dw Data_00E_68DE
-    db $08, $65, $F6, $68
-    dw Data_00E_6910
-    db $18, $69, $2C, $69
-    dw Data_00E_6932
-    db $3C, $69, $40, $69, $08, $65, $44, $69, $48, $69, $08, $65, $08, $65, $08, $65
-    db $08, $65, $08, $65, $08, $65, $08, $65, $08, $65, $08, $65, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $54, $69, $08, $65
-    dw Data_00E_6508
-    db $58, $69, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6960
-    db $66, $69, $08, $65
-    dw Data_00E_696A
-    db $72, $69, $08, $65
-    dw Data_00E_6976
-    db $08, $65, $08, $65
-    dw Data_00E_697C
-    INCBIN "dwm2-cobi-us.gbc", $03A358, $44
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_69C8
-    dw Data_00E_6A08
-    dw Data_00E_6A0C
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6A12
-    dw Data_00E_6A1C
-    dw Data_00E_6A26
-    dw Data_00E_6A2C
-    dw Data_00E_6A34
-    INCBIN "dwm2-cobi-us.gbc", $03A3C8, $44
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6508
-    dw Data_00E_6B9A
-    dw Data_00E_6BBC
-    dw Data_00E_6BC8
-    dw Data_00E_6BD0
-    dw Data_00E_6BE6
-    dw Data_00E_6C18
-    dw Data_00E_6508
-    db $1E, $6C, $24, $6C
-    dw Data_00E_6508
-    db $32, $6C, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $46, $6C
-    dw Data_00E_6C50
-    db $08, $65, $08, $65
-    dw Data_00E_6C5E
-    db $62, $6C, $08, $65
-    dw Data_00E_6C70
-    db $76, $6C, $8A, $6C
-    dw Data_00E_6C94
-    db $08, $65, $A8, $6C
-    dw Data_00E_6CBA
-    db $08, $65, $C0, $6C
-    dw Data_00E_6CD6
-    db $DE, $6C, $E4, $6C
-    dw Data_00E_6CF6
-    db $FA, $6C, $FE, $6C, $08, $65, $02, $6D, $06, $6D, $1E, $6D
-    dw Data_00E_6508
-    db $3A, $6D, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $3E, $6D, $44, $6D
-    dw Data_00E_6508
-    db $08, $65, $4A, $6D
-    dw Data_00E_6D50
-    db $08, $65, $60, $6D
-    dw Data_00E_6D6C
-    db $70, $6D, $74, $6D
-    dw Data_00E_6D80
-    db $08, $65, $08, $65
-    dw Data_00E_6D84
-    db $8C, $6D, $08, $65
-    dw Data_00E_6D92
-    dw Data_00E_6508
-    db $A2, $6D, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $AA, $6D
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6508
-    db $08, $65, $08, $65
-    dw Data_00E_6DAE
-    db $B6, $6D, $08, $65
-    dw Data_00E_6DBE
-    db $C2, $6D, $08, $65
-    dw Data_00E_6DC6
-    db $CC, $6D, $08, $65
-    dw Data_00E_6DD8
-    db $E2, $6D, $E6, $6D
-    dw Data_00E_6DEA
-    db $F4, $6D, $08, $65
-    dw Data_00E_6DF8
-    db $FE, $6D, $06, $6E, $08, $65, $0E, $6E, $08, $65, $08, $65, $08, $65, $08, $65
-    db $08, $65, $08, $65, $08, $65, $08, $65, $08, $65, $08, $65, $08, $65, $08, $65
-    db $08, $65
-
-Data_00E_6508:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03A508, $1DE
-
-Data_00E_66E6:: ; heuristic: target of a monotone pointer table; C0
-    db $C7, $00, $F7, $00, $07, $01, $08, $01, $0A, $01, $FD, $FD, $04, $00, $0C, $00
-    db $2F, $00, $80, $00, $8D, $00, $9B, $00, $B6, $00, $D6, $00, $DD, $00, $0D, $01
-    db $19, $01, $2F, $01, $FD, $FD, $77, $00, $79, $00, $7D, $00, $7F, $00, $FF, $FF
-
-Data_00E_6716:: ; heuristic: target of a monotone pointer table; C0
-    db $FB, $FB, $0B, $00, $FF, $FF
-
-Data_00E_671C:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03A71C, $96
-
-Data_00E_67B2:: ; heuristic: target of a monotone pointer table; C0
-    db $C7, $00, $F7, $00, $07, $01, $08, $01, $0A, $01, $24, $01, $29, $01, $2D, $01
-    db $2E, $01, $32, $01, $33, $01, $FD, $FD, $77, $00, $79, $00, $7D, $00, $7F, $00
-    db $FF, $FF, $73, $00, $FD, $00, $FD, $FD, $04, $FE, $04, $FC, $FF, $FF, $EA, $00
-    db $FF, $FF
-
-Data_00E_67E4:: ; heuristic: target of a monotone pointer table; C0
-    db $FB, $FB, $50, $01, $FF, $FF, $66, $00, $FF, $FF
-
-Data_00E_67EE:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03A7EE, $5E
-
-Data_00E_684C:: ; heuristic: target of a monotone pointer table; C0
-    db $C7, $00, $F7, $00, $07, $01, $08, $01, $0A, $01, $29, $01, $2D, $01, $2E, $01
-    db $32, $01, $33, $01, $FD, $FD, $5F, $00, $E5, $00, $24, $01, $25, $01, $35, $01
-    db $FB, $FB, $7E, $00, $FF, $FF, $3C, $00, $FF, $FF
-
-Data_00E_6876:: ; heuristic: target of a monotone pointer table; C0
-    db $26, $00, $27, $00, $2B, $00, $2F, $00, $3D, $00, $3E, $00, $FB, $FB, $F0, $00
-    db $FF, $FF
-
-Data_00E_6888:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03A888, $56
-
-Data_00E_68DE:: ; heuristic: target of a monotone pointer table; C0
-    db $6F, $00, $FD, $FD, $2C, $01, $FD, $FD, $0D, $00, $0E, $00, $C7, $00, $24, $01
-    db $32, $01, $33, $01, $42, $01, $FF, $FF, $DF, $00, $FD, $FD, $0D, $00, $0E, $00
-    db $C7, $00, $24, $01, $32, $01, $33, $01, $42, $01, $FD, $FD, $35, $00, $7C, $00
-    db $FF, $FF
-
-Data_00E_6910:: ; heuristic: target of a monotone pointer table; C0
-    db $2C, $01, $FD, $FD, $DF, $00, $FF, $FF, $DF, $00, $FD, $FD, $0D, $00, $0E, $00
-    db $C7, $00, $24, $01, $32, $01, $33, $01, $42, $01, $FF, $FF, $FB, $FB, $5F, $00
-    db $FF, $FF
-
-Data_00E_6932:: ; heuristic: target of a monotone pointer table; C0
-    db $2C, $01, $FD, $FD, $38, $00, $ED, $00, $FF, $FF, $ED, $00, $FF, $FF, $35, $01
-    db $FF, $FF, $35, $01, $FF, $FF, $6E, $00, $70, $00, $FD, $FD, $04, $FE, $04, $FC
-    db $FF, $FF, $21, $01, $FF, $FF, $06, $00, $54, $00, $59, $00, $FF, $FF
-
-Data_00E_6960:: ; heuristic: target of a monotone pointer table; C0
-    db $95, $00, $9E, $00, $FF, $FF, $9F, $00, $FF, $FF
-
-Data_00E_696A:: ; heuristic: target of a monotone pointer table; C0
-    db $A1, $00, $FD, $FD, $A0, $00, $FF, $FF, $EA, $00, $FF, $FF
-
-Data_00E_6976:: ; heuristic: target of a monotone pointer table; C0
-    db $FB, $FB, $A5, $00, $FF, $FF
-
-Data_00E_697C:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03A97C, $4C
-
-; LZSS-compressed asset: 19 bytes expand to 16 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_69C8:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $00, $13, $00, $17, $00, $33, $00, $38, $00, $3C, $00, $5F, $00, $60, $00
-    db $7D, $00, $7E, $00, $7F, $00, $24, $01, $FD, $FD, $4C, $00, $5C, $00, $C7, $00
-    db $29, $01, $3E, $01, $50, $01, $FD, $FD, $0E, $00, $2B, $00, $3B, $00, $71, $00
-    db $79, $00, $A2, $00, $BE, $00, $F7, $00, $07, $01, $08, $01, $51, $01, $FF, $FF
-
-Data_00E_6A08:: ; heuristic: target of a monotone pointer table; C0
-    db $D6, $00, $FF, $FF
-
-; LZSS-compressed asset: 40 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_6A0C:: ; heuristic: target of a monotone pointer table; C0
-    db $41, $01, $45, $01, $FF, $FF
-
-Data_00E_6A12:: ; heuristic: target of a monotone pointer table; C0
-    db $FB, $FB, $FC, $00, $FD, $FD, $2B, $01, $FF, $FF
-
-; LZSS-compressed asset: 54 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_6A1C:: ; heuristic: target of a monotone pointer table; C0
-    db $41, $01, $45, $01, $FD, $FD, $DC, $00, $FF, $FF
-
-; LZSS-compressed asset: 324 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_6A26:: ; heuristic: target of a monotone pointer table; C0
-    db $41, $01, $45, $01, $FF, $FF
-
-; LZSS-compressed asset: 86 bytes expand to 126 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_6A2C:: ; heuristic: target of a monotone pointer table; C0
-    db $7E, $00, $FD, $FD, $E3, $00, $FF, $FF
-
-; LZSS-compressed asset: 19 bytes expand to 21 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_6A34:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03AA34, $166
-
-Data_00E_6B9A:: ; heuristic: target of a monotone pointer table; C0
-    db $DE, $00, $DF, $00, $E3, $00, $0D, $01, $24, $01, $29, $01, $FD, $FD, $4C, $00
-    db $55, $00, $62, $00, $70, $00, $79, $00, $DA, $00, $E2, $00, $32, $01, $33, $01
-    db $FF, $FF
-
-Data_00E_6BBC:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $00, $FD, $FD, $3F, $00, $2A, $01, $57, $01, $FF, $FF
-
-Data_00E_6BC8:: ; heuristic: target of a monotone pointer table; C0
-    db $5F, $01, $FD, $FD, $17, $00, $FF, $FF
-
-Data_00E_6BD0:: ; heuristic: target of a monotone pointer table; C0
-    db $DE, $00, $DF, $00, $E3, $00, $0D, $01, $24, $01, $29, $01, $FD, $FD, $17, $00
-    db $FD, $FD, $09, $01, $FF, $FF
-
-Data_00E_6BE6:: ; heuristic: target of a monotone pointer table; C0
-    db $DE, $00, $DF, $00, $E3, $00, $0D, $01, $24, $01, $29, $01, $FD, $FD, $33, $00
-    db $38, $00, $60, $00, $7B, $00, $7D, $00, $7F, $00, $35, $01, $55, $01, $58, $01
-    db $FD, $FD, $0A, $01, $FD, $FD, $3F, $00, $2A, $01, $57, $01, $FB, $FB, $E6, $00
-    db $FF, $FF
-
-Data_00E_6C18:: ; heuristic: target of a monotone pointer table; C0
-    db $33, $00, $38, $00, $FF, $FF, $27, $00, $BF, $00, $FF, $FF, $DE, $00, $DF, $00
-    db $E3, $00, $24, $01, $29, $01, $2A, $01, $FF, $FF, $33, $00, $38, $00, $60, $00
-    db $7B, $00, $7D, $00, $7F, $00, $35, $01, $55, $01, $58, $01, $FF, $FF, $77, $00
-    db $78, $00, $7C, $00, $80, $00, $FF, $FF
-
-Data_00E_6C50:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $6B, $00, $71, $00, $8E, $00, $9E, $00, $40, $01, $FF, $FF
-
-Data_00E_6C5E:: ; heuristic: target of a monotone pointer table; C0
-    db $1E, $01, $FF, $FF, $01, $00, $6B, $00, $71, $00, $8E, $00, $9E, $00, $40, $01
-    db $FF, $FF
-
-Data_00E_6C70:: ; heuristic: target of a monotone pointer table; C0
-    db $D3, $00, $D6, $00, $FF, $FF, $01, $00, $6B, $00, $71, $00, $8E, $00, $9E, $00
-    db $40, $01, $FD, $FD, $22, $01, $4B, $01, $FF, $FF, $77, $00, $78, $00, $7C, $00
-    db $80, $00, $FF, $FF
-
-Data_00E_6C94:: ; heuristic: target of a monotone pointer table; C0
-    db $3C, $00, $60, $00, $7D, $00, $DE, $00, $E5, $00, $EB, $00, $FD, $FD, $F7, $00
-    db $08, $01, $FF, $FF, $0E, $00, $38, $00, $5C, $00, $E2, $00, $E6, $00, $EC, $00
-    db $07, $01, $0A, $01, $FF, $FF
-
-Data_00E_6CBA:: ; heuristic: target of a monotone pointer table; C0
-    db $FB, $FB, $E5, $00, $FF, $FF, $24, $01, $FD, $FD, $05, $FE, $05, $FC, $FD, $FD
-    db $60, $00, $FD, $FD, $48, $01, $FB, $FB, $29, $01, $FF, $FF
-
-Data_00E_6CD6:: ; heuristic: target of a monotone pointer table; C0
-    db $24, $01, $FD, $FD, $60, $00, $FF, $FF, $FB, $FB, $DB, $00, $FF, $FF, $10, $00
-    db $13, $00, $3E, $00, $F0, $00, $08, $01, $53, $01, $55, $01, $5F, $01, $FF, $FF
-
-Data_00E_6CF6:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03ACF6, $5A
-
-Data_00E_6D50:: ; heuristic: target of a monotone pointer table; C0
-    db $D3, $00, $D6, $00, $D9, $00, $DD, $00, $FD, $FD, $4C, $00, $BF, $00, $FF, $FF
-    db $37, $00, $4C, $01, $78, $00, $EA, $00, $32, $01, $FF, $FF
-
-Data_00E_6D6C:: ; heuristic: target of a monotone pointer table; C0
-    db $C0, $00, $FF, $FF, $4A, $01, $FF, $FF, $1A, $01, $55, $01, $FD, $FD, $3D, $00
-    db $DE, $00, $FF, $FF
-
-Data_00E_6D80:: ; heuristic: target of a monotone pointer table; C0
-    db $2F, $01, $FF, $FF
-
-Data_00E_6D84:: ; heuristic: target of a monotone pointer table; C0
-    db $DC, $00, $03, $01, $48, $01, $FF, $FF, $FB, $FB, $59, $00, $FF, $FF
-
-Data_00E_6D92:: ; heuristic: target of a monotone pointer table; C0
-    db $DF, $00, $E3, $00, $E4, $00, $EC, $00, $FD, $FD, $05, $FE, $05, $FC, $FF, $FF
-    db $38, $00, $3B, $00, $41, $00, $FF, $FF, $6D, $01, $FF, $FF
-
-Data_00E_6DAE:: ; heuristic: target of a monotone pointer table; C0
-    db $40, $00, $FD, $FD, $63, $01, $FF, $FF, $41, $00, $FD, $FD, $63, $01, $FF, $FF
-
-Data_00E_6DBE:: ; heuristic: target of a monotone pointer table; C0
-    db $3C, $00, $FF, $FF, $EF, $00, $FF, $FF
-
-Data_00E_6DC6:: ; heuristic: target of a monotone pointer table; C0
-    db $61, $00, $64, $00, $FF, $FF, $69, $01, $FD, $FD, $82, $00, $6B, $01, $6C, $01
-    db $FF, $FF
-
-Data_00E_6DD8:: ; heuristic: target of a monotone pointer table; C0
-    db $6A, $01, $FD, $FD, $60, $00, $64, $00, $FF, $FF, $10, $01, $FF, $FF, $18, $00
-    db $FF, $FF
-
-Data_00E_6DEA:: ; heuristic: target of a monotone pointer table; C0
-    db $37, $00, $41, $00, $FD, $FD, $82, $00, $FF, $FF, $66, $01, $FF, $FF
-
-Data_00E_6DF8:: ; heuristic: target of a monotone pointer table; C0
-    db $C6, $00, $EF, $00, $FF, $FF, $36, $01, $59, $01, $6D, $01, $FF, $FF, $19, $00
-    db $A5, $00, $67, $01, $FF, $FF, $61, $01, $42, $00, $FF, $FF
-
-; address loaded by ComputeBreedingChild
-Data_00E_6E14:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00E_7114
-    dw Data_00E_7116
-    dw Data_00E_7118
-    dw Data_00E_711A
-    dw Data_00E_711A
-    dw Data_00E_711A
-    dw Data_00E_711A
-    dw Data_00E_711C
-    dw Data_00E_711C
-    dw Data_00E_711C
-    dw Data_00E_711C
-    dw Data_00E_7124
-    dw Data_00E_7126
-    dw Data_00E_7126
-    dw Data_00E_7128
-    dw Data_00E_7128
-    dw Data_00E_7128
-    dw Data_00E_712E
-    dw Data_00E_7130
-    dw Data_00E_7134
-    dw Data_00E_713A
-    dw Data_00E_713A
-    dw Data_00E_713C
-    dw Data_00E_713C
-    dw Data_00E_7140
-    dw Data_00E_7142
-    dw Data_00E_7142
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_7148
-    dw Data_00E_714C
-    dw Data_00E_714C
-    dw Data_00E_7150
-    dw Data_00E_7154
-    dw Data_00E_7154
-    dw Data_00E_7158
-    dw Data_00E_7158
-    dw Data_00E_7158
-    dw Data_00E_7158
-    dw Data_00E_715E
-    dw Data_00E_715E
-    dw Data_00E_7160
-    dw Data_00E_7160
-    dw Data_00E_7160
-    dw Data_00E_7160
-    dw Data_00E_7164
-    dw Data_00E_7166
-    dw Data_00E_716A
-    dw Data_00E_716A
-    dw Data_00E_716A
-    dw Data_00E_7170
-    dw Data_00E_7172
-    dw Data_00E_7174
-    dw Data_00E_7174
-    dw Data_00E_7174
-    dw Data_00E_717A
-    dw Data_00E_7182
-    dw Data_00E_7182
-    dw Data_00E_7184
-    dw Data_00E_7184
-    dw Data_00E_7184
-    dw Data_00E_7184
-    dw Data_00E_7184
-    dw Data_00E_7184
-    dw Data_00E_7184
-    dw Data_00E_718A
-    dw Data_00E_718E
-    dw Data_00E_7190
-    dw Data_00E_7190
-    dw Data_00E_7190
-    dw Data_00E_7194
-    dw Data_00E_7194
-    dw Data_00E_7194
-    dw Data_00E_7194
-    dw Data_00E_7194
-    dw Data_00E_7196
-    dw Data_00E_719A
-    dw Data_00E_719A
-    dw Data_00E_719E
-    dw Data_00E_71A2
-    dw Data_00E_71A6
-    dw Data_00E_71AA
-    dw Data_00E_71AC
-    dw Data_00E_71B0
-    dw Data_00E_71B2
-    dw Data_00E_71B2
-    dw Data_00E_71B4
-    dw Data_00E_71B8
-    dw Data_00E_71BE
-    dw Data_00E_71C4
-    dw Data_00E_71C4
-    dw Data_00E_71C6
-    dw Data_00E_71CA
-    dw Data_00E_71CA
-    dw Data_00E_71CA
-    dw Data_00E_71CC
-    dw Data_00E_71D0
-    dw Data_00E_71D0
-    dw Data_00E_71D0
-    dw Data_00E_71D0
-    dw Data_00E_71D0
-    dw Data_00E_71D0
-    dw Data_00E_71D2
-    dw Data_00E_71D2
-    dw Data_00E_71D2
-    dw Data_00E_71D4
-    dw Data_00E_71D4
-    dw Data_00E_71D4
-    dw Data_00E_71D8
-    dw Data_00E_71D8
-    dw Data_00E_71DA
-    dw Data_00E_71DA
-    dw Data_00E_71DA
-    dw Data_00E_71DC
-    dw Data_00E_71DE
-    dw Data_00E_71E4
-    dw Data_00E_71E4
-    dw Data_00E_71EA
-    dw Data_00E_71EE
-    dw Data_00E_71F2
-    dw Data_00E_71F6
-    dw Data_00E_71FA
-    dw Data_00E_71FC
-    dw Data_00E_71FE
-    dw Data_00E_71FE
-    dw Data_00E_7200
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7204
-    dw Data_00E_7206
-    dw Data_00E_7206
-    dw Data_00E_7206
-    dw Data_00E_7208
-    dw Data_00E_7208
-    dw Data_00E_7208
-    dw Data_00E_7208
-    dw Data_00E_7208
-    dw Data_00E_720A
-    dw Data_00E_720C
-    dw Data_00E_720C
-    dw Data_00E_7210
-    dw Data_00E_7212
-    dw Data_00E_7212
-    dw Data_00E_7216
-    dw Data_00E_7216
-    dw Data_00E_7216
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_7218
-    dw Data_00E_721A
-    dw Data_00E_721A
-    dw Data_00E_721E
-    dw Data_00E_7220
-    dw Data_00E_7220
-    dw Data_00E_7222
-    dw Data_00E_7224
-    dw Data_00E_7224
-    dw Data_00E_7224
-    dw Data_00E_7224
-    dw Data_00E_7226
-    dw Data_00E_7226
-    dw Data_00E_7228
-    dw Data_00E_7228
-    dw Data_00E_7228
-    dw Data_00E_722A
-    dw Data_00E_722C
-    dw Data_00E_722C
-    dw Data_00E_722E
-    dw Data_00E_7230
-    dw Data_00E_7230
-    dw Data_00E_7232
-    dw Data_00E_7232
-    dw Data_00E_7232
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_7236
-    dw Data_00E_723C
-    dw Data_00E_723E
-    dw Data_00E_7240
-    dw Data_00E_7240
-    dw Data_00E_7240
-    dw Data_00E_7240
-    dw Data_00E_7246
-    dw Data_00E_724A
-    dw Data_00E_724C
-    dw Data_00E_7250
-    dw Data_00E_7252
-    dw Data_00E_7252
-    dw Data_00E_7252
-    dw Data_00E_7256
-    dw Data_00E_7256
-    dw Data_00E_7256
-    dw Data_00E_725A
-    dw Data_00E_7264
-    dw Data_00E_7266
-    dw Data_00E_7266
-    dw Data_00E_7266
-    dw Data_00E_726C
-    dw Data_00E_7270
-    dw Data_00E_7270
-    dw Data_00E_7274
-    dw Data_00E_7278
-    dw Data_00E_7278
-    dw Data_00E_727C
-    dw Data_00E_727C
-    dw Data_00E_727C
-    dw Data_00E_727C
-    dw Data_00E_727C
-    dw Data_00E_727C
-    dw Data_00E_727C
-    dw Data_00E_7280
-    dw Data_00E_7282
-    dw Data_00E_7282
-    dw Data_00E_7286
-    dw Data_00E_7286
-    dw Data_00E_728E
-    dw Data_00E_728E
-    dw Data_00E_728E
-    dw Data_00E_7292
-    dw Data_00E_7296
-    dw Data_00E_7298
-    dw Data_00E_7298
-    dw Data_00E_7298
-    dw Data_00E_7298
-    dw Data_00E_7298
-    dw Data_00E_729C
-    dw Data_00E_72A0
-    dw Data_00E_72A4
-    dw Data_00E_72AA
-    dw Data_00E_72B4
-    dw Data_00E_72B6
-    dw Data_00E_72B6
-    dw Data_00E_72B8
-    dw Data_00E_72BA
-    dw Data_00E_72BA
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BC
-    dw Data_00E_72BE
-    dw Data_00E_72C0
-    dw Data_00E_72C0
-    dw Data_00E_72C0
-    dw Data_00E_72C2
-    dw Data_00E_72C4
-    dw Data_00E_72C4
-    dw Data_00E_72C6
-    dw Data_00E_72CA
-    dw Data_00E_72CC
-    dw Data_00E_72D0
-    dw Data_00E_72D0
-    dw Data_00E_72D2
-    dw Data_00E_72D6
-    dw Data_00E_72D6
-    dw Data_00E_72E0
-    dw Data_00E_72E4
-    dw Data_00E_72E8
-    dw Data_00E_72EA
-    dw Data_00E_72EC
-    dw Data_00E_72EE
-    dw Data_00E_72F0
-    dw Data_00E_72F0
-    dw Data_00E_72F2
-    dw Data_00E_72F8
-    dw Data_00E_72FE
-    dw Data_00E_72FE
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7300
-    dw Data_00E_7302
-    dw Data_00E_7306
-    dw Data_00E_7306
-    dw Data_00E_7306
-    dw Data_00E_7308
-    dw Data_00E_730C
-    dw Data_00E_730C
-    dw Data_00E_730E
-    dw Data_00E_7310
-    dw Data_00E_7312
-    dw Data_00E_7316
-    dw Data_00E_7318
-    dw Data_00E_7318
-    dw Data_00E_7318
-    dw Data_00E_731A
-    dw Data_00E_731E
-    dw Data_00E_731E
-    dw Data_00E_7322
-    dw Data_00E_7322
-    dw Data_00E_7324
-    dw Data_00E_7324
-    dw Data_00E_7324
-    dw Data_00E_7324
-    dw Data_00E_7326
-    dw Data_00E_7326
-    dw Data_00E_7326
-    dw Data_00E_7326
-    dw Data_00E_7326
-    dw Data_00E_7326
-    dw Data_00E_7326
-    dw Data_00E_732A
-    dw Data_00E_732E
-    dw Data_00E_732E
-    dw Data_00E_7330
-    dw Data_00E_7332
-    dw Data_00E_7332
-    dw Data_00E_7334
-    dw Data_00E_7338
-    dw Data_00E_7338
-    dw Data_00E_733C
-    dw Data_00E_733E
-    dw Data_00E_7340
-    dw Data_00E_7344
-    dw Data_00E_7346
-    dw Data_00E_7346
-    dw Data_00E_7348
-    dw Data_00E_734A
-    dw Data_00E_734C
-    dw Data_00E_734C
-    dw Data_00E_734E
-    dw Data_00E_734E
-    dw Data_00E_734E
-    dw Data_00E_734E
-    dw Data_00E_734E
-    db $14, $71, $14, $71, $14, $71, $14, $71, $14, $71, $14, $71, $14, $71, $14, $71
-
-Data_00E_7114:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-; LZSS-compressed asset: 17 bytes expand to 14 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7116:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $00
-
-; LZSS-compressed asset: 18 bytes expand to 19 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7118:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $00
-
-; LZSS-compressed asset: 17 bytes expand to 14 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_711A:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $00
-
-; LZSS-compressed asset: 19 bytes expand to 16 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_711C:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $00, $14, $00, $16, $00, $1A, $00
-
-; LZSS-compressed asset: 16 bytes expand to 21 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7124:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $00
-
-; LZSS-compressed asset: 17 bytes expand to 14 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7126:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $00
-
-; LZSS-compressed asset: 17 bytes expand to 19 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7128:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $00, $17, $00, $18, $00
-
-; LZSS-compressed asset: 21 bytes expand to 18 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_712E:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $00
-
-; LZSS-compressed asset: 9 bytes expand to 14 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7130:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $00, $17, $00
-
-; LZSS-compressed asset: 17 bytes expand to 16 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7134:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $00, $17, $00, $18, $00
-
-; LZSS-compressed asset: 25 bytes expand to 22 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_713A:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $00
-
-; LZSS-compressed asset: 12 bytes expand to 19 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_713C:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $00, $18, $00
-
-; LZSS-compressed asset: 28 bytes expand to 25 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7140:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $00
-
-; LZSS-compressed asset: 26 bytes expand to 23 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7142:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $00, $18, $00, $19, $00
-
-; LZSS-compressed asset: 59 bytes expand to 56 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7148:: ; heuristic: target of a monotone pointer table; C0
-    db $38, $00, $2D, $00
-
-; LZSS-compressed asset: 41 bytes expand to 53 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_714C:: ; heuristic: target of a monotone pointer table; C0
-    db $35, $00, $3B, $00
-
-; LZSS-compressed asset: 37 bytes expand to 51 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7150:: ; heuristic: target of a monotone pointer table; C0
-    db $33, $00, $3B, $00
-
-; LZSS-compressed asset: 38 bytes expand to 48 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7154:: ; heuristic: target of a monotone pointer table; C0
-    db $30, $00, $3B, $00
-
-; LZSS-compressed asset: 59 bytes expand to 56 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7158:: ; heuristic: target of a monotone pointer table; C0
-    db $38, $00, $3E, $00, $3F, $00
-
-; LZSS-compressed asset: 39 bytes expand to 51 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_715E:: ; heuristic: target of a monotone pointer table; C0
-    db $33, $00
-
-; LZSS-compressed asset: 46 bytes expand to 60 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7160:: ; heuristic: target of a monotone pointer table; C0
-    db $3C, $00, $42, $00
-
-; LZSS-compressed asset: 49 bytes expand to 54 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7164:: ; heuristic: target of a monotone pointer table; C0
-    db $36, $00
-
-; LZSS-compressed asset: 62 bytes expand to 59 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7166:: ; heuristic: target of a monotone pointer table; C0
-    db $3B, $00, $35, $00
-
-; LZSS-compressed asset: 63 bytes expand to 60 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_716A:: ; heuristic: target of a monotone pointer table; C0
-    db $3C, $00, $3F, $00, $42, $00
-
-; LZSS-compressed asset: 57 bytes expand to 58 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7170:: ; heuristic: target of a monotone pointer table; C0
-    db $3A, $00
-
-; LZSS-compressed asset: 50 bytes expand to 59 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7172:: ; heuristic: target of a monotone pointer table; C0
-    db $3B, $00
-
-; LZSS-compressed asset: 53 bytes expand to 51 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7174:: ; heuristic: target of a monotone pointer table; C0
-    db $33, $00, $3B, $00, $42, $00
-
-; LZSS-compressed asset: 54 bytes expand to 51 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_717A:: ; heuristic: target of a monotone pointer table; C0
-    db $33, $00, $3B, $00, $40, $00, $42, $00
-
-; LZSS-compressed asset: 36 bytes expand to 65 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7182:: ; heuristic: target of a monotone pointer table; C0
-    db $41, $00
-
-; LZSS-compressed asset: 64 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7184:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $51, $00, $5F, $00
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_718A:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $5C, $00
-
-; LZSS-compressed asset: 104 bytes expand to 101 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_718E:: ; heuristic: target of a monotone pointer table; C0
-    db $65, $00
-
-; LZSS-compressed asset: 49 bytes expand to 81 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7190:: ; heuristic: target of a monotone pointer table; C0
-    db $51, $00, $5F, $00
-
-; LZSS-compressed asset: 49 bytes expand to 102 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7194:: ; heuristic: target of a monotone pointer table; C0
-    db $66, $00
-
-; LZSS-compressed asset: 51 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7196:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $56, $00
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_719A:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $66, $00
-
-; LZSS-compressed asset: 57 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_719E:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $5F, $00
-
-; LZSS-compressed asset: 66 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71A2:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $5F, $00
-
-; LZSS-compressed asset: 78 bytes expand to 88 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71A6:: ; heuristic: target of a monotone pointer table; C0
-    db $58, $00, $62, $00
-
-; LZSS-compressed asset: 91 bytes expand to 102 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71AA:: ; heuristic: target of a monotone pointer table; C0
-    db $66, $00
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71AC:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $58, $00
-
-; LZSS-compressed asset: 65 bytes expand to 89 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71B0:: ; heuristic: target of a monotone pointer table; C0
-    db $59, $00
-
-; LZSS-compressed asset: 59 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71B2:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00
-
-; LZSS-compressed asset: 54 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71B4:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $56, $00
-
-; LZSS-compressed asset: 69 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71B8:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $56, $00, $5F, $00
-
-; LZSS-compressed asset: 79 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71BE:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $60, $00, $4C, $00
-
-; LZSS-compressed asset: 95 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71C4:: ; heuristic: target of a monotone pointer table; C0
-    db $64, $00
-
-; LZSS-compressed asset: 89 bytes expand to 86 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71C6:: ; heuristic: target of a monotone pointer table; C0
-    db $56, $00, $61, $00
-
-; LZSS-compressed asset: 101 bytes expand to 98 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71CA:: ; heuristic: target of a monotone pointer table; C0
-    db $62, $00
-
-; LZSS-compressed asset: 79 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71CC:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $56, $00
-
-; LZSS-compressed asset: 108 bytes expand to 119 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71D0:: ; heuristic: target of a monotone pointer table; C0
-    db $77, $00
-
-; LZSS-compressed asset: 113 bytes expand to 122 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71D2:: ; heuristic: target of a monotone pointer table; C0
-    db $7A, $00
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71D4:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $79, $00
-
-; LZSS-compressed asset: 94 bytes expand to 121 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71D8:: ; heuristic: target of a monotone pointer table; C0
-    db $79, $00
-
-; LZSS-compressed asset: 111 bytes expand to 127 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71DA:: ; heuristic: target of a monotone pointer table; C0
-    db $7F, $00
-
-; LZSS-compressed asset: 130 bytes expand to 127 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71DC:: ; heuristic: target of a monotone pointer table; C0
-    db $7F, $00
-
-; LZSS-compressed asset: 106 bytes expand to 122 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71DE:: ; heuristic: target of a monotone pointer table; C0
-    db $7A, $00, $7D, $00, $7F, $00
-
-; LZSS-compressed asset: 127 bytes expand to 126 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71E4:: ; heuristic: target of a monotone pointer table; C0
-    db $7E, $00, $7F, $00, $81, $00
-
-; LZSS-compressed asset: 110 bytes expand to 125 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71EA:: ; heuristic: target of a monotone pointer table; C0
-    db $7D, $00, $7E, $00
-
-; LZSS-compressed asset: 129 bytes expand to 126 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71EE:: ; heuristic: target of a monotone pointer table; C0
-    db $7E, $00, $7F, $00
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71F2:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $83, $00
-
-; LZSS-compressed asset: 128 bytes expand to 125 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71F6:: ; heuristic: target of a monotone pointer table; C0
-    db $7D, $00, $83, $00
-
-; LZSS-compressed asset: 120 bytes expand to 126 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71FA:: ; heuristic: target of a monotone pointer table; C0
-    db $7E, $00
-
-; LZSS-compressed asset: 133 bytes expand to 130 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71FC:: ; heuristic: target of a monotone pointer table; C0
-    db $82, $00
-
-; LZSS-compressed asset: 133 bytes expand to 130 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_71FE:: ; heuristic: target of a monotone pointer table; C0
-    db $82, $00
-
-; LZSS-compressed asset: 123 bytes expand to 120 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7200:: ; heuristic: target of a monotone pointer table; C0
-    db $78, $00, $80, $00
-
-; LZSS-compressed asset: 164 bytes expand to 161 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7204:: ; heuristic: target of a monotone pointer table; C0
-    db $A1, $00
-
-; LZSS-compressed asset: 170 bytes expand to 167 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7206:: ; heuristic: target of a monotone pointer table; C0
-    db $A7, $00
-
-; LZSS-compressed asset: 162 bytes expand to 159 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7208:: ; heuristic: target of a monotone pointer table; C0
-    db $9F, $00
-
-; LZSS-compressed asset: 163 bytes expand to 160 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_720A:: ; heuristic: target of a monotone pointer table; C0
-    db $A0, $00
-
-; LZSS-compressed asset: 153 bytes expand to 150 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_720C:: ; heuristic: target of a monotone pointer table; C0
-    db $96, $00, $9B, $00
-
-; LZSS-compressed asset: 144 bytes expand to 163 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7210:: ; heuristic: target of a monotone pointer table; C0
-    db $A3, $00
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7212:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $A5, $00
-
-; LZSS-compressed asset: 156 bytes expand to 153 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7216:: ; heuristic: target of a monotone pointer table; C0
-    db $99, $00
-
-; LZSS-compressed asset: 184 bytes expand to 201 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7218:: ; heuristic: target of a monotone pointer table; C0
-    db $C9, $00
-
-; LZSS-compressed asset: 194 bytes expand to 191 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_721A:: ; heuristic: target of a monotone pointer table; C0
-    db $BF, $00, $C1, $00
-
-; LZSS-compressed asset: 175 bytes expand to 187 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_721E:: ; heuristic: target of a monotone pointer table; C0
-    db $BB, $00
-
-; LZSS-compressed asset: 194 bytes expand to 191 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7220:: ; heuristic: target of a monotone pointer table; C0
-    db $BF, $00
-
-; LZSS-compressed asset: 191 bytes expand to 196 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7222:: ; heuristic: target of a monotone pointer table; C0
-    db $C4, $00
-
-; LZSS-compressed asset: 194 bytes expand to 191 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7224:: ; heuristic: target of a monotone pointer table; C0
-    db $BF, $00
-
-; LZSS-compressed asset: 194 bytes expand to 191 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7226:: ; heuristic: target of a monotone pointer table; C0
-    db $BF, $00
-
-; LZSS-compressed asset: 189 bytes expand to 199 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7228:: ; heuristic: target of a monotone pointer table; C0
-    db $C7, $00
-
-; LZSS-compressed asset: 188 bytes expand to 194 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_722A:: ; heuristic: target of a monotone pointer table; C0
-    db $C2, $00
-
-; LZSS-compressed asset: 201 bytes expand to 198 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_722C:: ; heuristic: target of a monotone pointer table; C0
-    db $C6, $00
-
-; LZSS-compressed asset: 201 bytes expand to 198 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_722E:: ; heuristic: target of a monotone pointer table; C0
-    db $C6, $00
-
-; LZSS-compressed asset: 203 bytes expand to 200 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7230:: ; heuristic: target of a monotone pointer table; C0
-    db $C8, $00
-
-; LZSS-compressed asset: 197 bytes expand to 194 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7232:: ; heuristic: target of a monotone pointer table; C0
-    db $C2, $00, $BC, $00
-
-; LZSS-compressed asset: 217 bytes expand to 222 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7236:: ; heuristic: target of a monotone pointer table; C0
-    db $DE, $00, $E2, $00, $E3, $00
-
-; LZSS-compressed asset: 210 bytes expand to 227 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_723C:: ; heuristic: target of a monotone pointer table; C0
-    db $E3, $00
-
-; LZSS-compressed asset: 166 bytes expand to 212 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_723E:: ; heuristic: target of a monotone pointer table; C0
-    db $D4, $00
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7240:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $E3, $00, $E9, $00
-
-; LZSS-compressed asset: 195 bytes expand to 212 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7246:: ; heuristic: target of a monotone pointer table; C0
-    db $D4, $00, $E4, $00
-
-; LZSS-compressed asset: 215 bytes expand to 212 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_724A:: ; heuristic: target of a monotone pointer table; C0
-    db $D4, $00
-
-; LZSS-compressed asset: 221 bytes expand to 223 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_724C:: ; heuristic: target of a monotone pointer table; C0
-    db $DF, $00, $E7, $00
-
-; LZSS-compressed asset: 216 bytes expand to 228 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7250:: ; heuristic: target of a monotone pointer table; C0
-    db $E4, $00
-
-; LZSS-compressed asset: 231 bytes expand to 229 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7252:: ; heuristic: target of a monotone pointer table; C0
-    db $E5, $00, $E9, $00
-
-; LZSS-compressed asset: 236 bytes expand to 233 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7256:: ; heuristic: target of a monotone pointer table; C0
-    db $E9, $00, $F0, $00
-
-; LZSS-compressed asset: 221 bytes expand to 222 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_725A:: ; heuristic: target of a monotone pointer table; C0
-    db $DE, $00, $E2, $00, $E3, $00, $E7, $00, $E4, $00
-
-; LZSS-compressed asset: 232 bytes expand to 237 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7264:: ; heuristic: target of a monotone pointer table; C0
-    db $ED, $00
-
-; LZSS-compressed asset: 225 bytes expand to 222 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7266:: ; heuristic: target of a monotone pointer table; C0
-    db $DE, $00, $E2, $00, $E3, $00
-
-; LZSS-compressed asset: 228 bytes expand to 229 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_726C:: ; heuristic: target of a monotone pointer table; C0
-    db $E5, $00, $EE, $00
-
-; LZSS-compressed asset: 241 bytes expand to 238 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7270:: ; heuristic: target of a monotone pointer table; C0
-    db $EE, $00, $63, $01
-
-; LZSS-compressed asset: 242 bytes expand to 239 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7274:: ; heuristic: target of a monotone pointer table; C0
-    db $EF, $00, $68, $01
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7278:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $DE, $00
-
-Data_00E_727C:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01, $08, $01
-
-; LZSS-compressed asset: 253 bytes expand to 261 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7280:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $01
-
-; LZSS-compressed asset: 229 bytes expand to 265 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7282:: ; heuristic: target of a monotone pointer table; C0
-    db $09, $01, $0A, $01
-
-; LZSS-compressed asset: 266 bytes expand to 263 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7286:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01, $09, $01, $0A, $01, $06, $01
-
-; LZSS-compressed asset: 239 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_728E:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $01, $0A, $01
-
-; LZSS-compressed asset: 249 bytes expand to 263 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7292:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01, $0A, $01
-
-; LZSS-compressed asset: 238 bytes expand to 262 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7296:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $01
-
-; LZSS-compressed asset: 258 bytes expand to 263 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7298:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01, $0A, $01
-
-Data_00E_729C:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $01, $10, $01
-
-; LZSS-compressed asset: 271 bytes expand to 268 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72A0:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $01, $62, $01
-
-; LZSS-compressed asset: 247 bytes expand to 263 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72A4:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01, $08, $01, $0A, $01
-
-; LZSS-compressed asset: 259 bytes expand to 263 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72AA:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01, $08, $01, $0B, $01, $10, $01, $10, $01
-
-; LZSS-compressed asset: 354 bytes expand to 351 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72B4:: ; heuristic: target of a monotone pointer table; C0
-    db $5F, $01
-
-; LZSS-compressed asset: 274 bytes expand to 271 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72B6:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $01
-
-; LZSS-compressed asset: 266 bytes expand to 263 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72B8:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01
-
-; LZSS-compressed asset: 242 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72BA:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $01
-
-; LZSS-compressed asset: 286 bytes expand to 294 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72BC:: ; heuristic: target of a monotone pointer table; C0
-    db $26, $01
-
-; LZSS-compressed asset: 294 bytes expand to 300 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72BE:: ; heuristic: target of a monotone pointer table; C0
-    db $2C, $01
-
-; LZSS-compressed asset: 309 bytes expand to 308 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72C0:: ; heuristic: target of a monotone pointer table; C0
-    db $34, $01
-
-; LZSS-compressed asset: 303 bytes expand to 300 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72C2:: ; heuristic: target of a monotone pointer table; C0
-    db $2C, $01
-
-; LZSS-compressed asset: 299 bytes expand to 296 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72C4:: ; heuristic: target of a monotone pointer table; C0
-    db $28, $01
-
-; LZSS-compressed asset: 303 bytes expand to 300 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72C6:: ; heuristic: target of a monotone pointer table; C0
-    db $2C, $01, $31, $01
-
-; LZSS-compressed asset: 297 bytes expand to 294 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72CA:: ; heuristic: target of a monotone pointer table; C0
-    db $26, $01
-
-; LZSS-compressed asset: 286 bytes expand to 301 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72CC:: ; heuristic: target of a monotone pointer table; C0
-    db $2D, $01, $2E, $01
-
-Data_00E_72D0:: ; heuristic: target of a monotone pointer table; C0
-    db $29, $01
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72D2:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $25, $01
-
-; LZSS-compressed asset: 290 bytes expand to 292 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72D6:: ; heuristic: target of a monotone pointer table; C0
-    db $24, $01, $2A, $01, $2E, $01, $2F, $01, $2A, $01
-
-; LZSS-compressed asset: 295 bytes expand to 292 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72E0:: ; heuristic: target of a monotone pointer table; C0
-    db $24, $01, $2E, $01
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72E4:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $34, $01
-
-; LZSS-compressed asset: 303 bytes expand to 312 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72E8:: ; heuristic: target of a monotone pointer table; C0
-    db $38, $01
-
-; LZSS-compressed asset: 312 bytes expand to 309 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72EA:: ; heuristic: target of a monotone pointer table; C0
-    db $35, $01
-
-; LZSS-compressed asset: 309 bytes expand to 309 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72EC:: ; heuristic: target of a monotone pointer table; C0
-    db $35, $01
-
-; LZSS-compressed asset: 302 bytes expand to 299 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72EE:: ; heuristic: target of a monotone pointer table; C0
-    db $2B, $01
-
-; LZSS-compressed asset: 304 bytes expand to 306 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72F0:: ; heuristic: target of a monotone pointer table; C0
-    db $32, $01
-
-; LZSS-compressed asset: 287 bytes expand to 291 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72F2:: ; heuristic: target of a monotone pointer table; C0
-    db $23, $01, $26, $01, $33, $01
-
-; LZSS-compressed asset: 294 bytes expand to 291 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72F8:: ; heuristic: target of a monotone pointer table; C0
-    db $23, $01, $24, $01, $26, $01
-
-; LZSS-compressed asset: 313 bytes expand to 310 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_72FE:: ; heuristic: target of a monotone pointer table; C0
-    db $36, $01
-
-; LZSS-compressed asset: 332 bytes expand to 329 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7300:: ; heuristic: target of a monotone pointer table; C0
-    db $49, $01
-
-; LZSS-compressed asset: 339 bytes expand to 336 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7302:: ; heuristic: target of a monotone pointer table; C0
-    db $50, $01, $2B, $01
-
-; LZSS-compressed asset: 341 bytes expand to 338 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7306:: ; heuristic: target of a monotone pointer table; C0
-    db $52, $01
-
-; LZSS-compressed asset: 330 bytes expand to 327 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7308:: ; heuristic: target of a monotone pointer table; C0
-    db $47, $01, $48, $01
-
-; LZSS-compressed asset: 343 bytes expand to 340 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_730C:: ; heuristic: target of a monotone pointer table; C0
-    db $54, $01
-
-; LZSS-compressed asset: 333 bytes expand to 330 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_730E:: ; heuristic: target of a monotone pointer table; C0
-    db $4A, $01
-
-; LZSS-compressed asset: 319 bytes expand to 331 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7310:: ; heuristic: target of a monotone pointer table; C0
-    db $4B, $01
-
-; LZSS-compressed asset: 315 bytes expand to 335 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7312:: ; heuristic: target of a monotone pointer table; C0
-    db $4F, $01, $51, $01
-
-; LZSS-compressed asset: 336 bytes expand to 333 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7316:: ; heuristic: target of a monotone pointer table; C0
-    db $4D, $01
-
-Data_00E_7318:: ; heuristic: target of a monotone pointer table; C0
-    db $55, $01
-
-; LZSS-compressed asset: 4 bytes expand to 1 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_731A:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $51, $01
-
-; LZSS-compressed asset: 346 bytes expand to 343 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_731E:: ; heuristic: target of a monotone pointer table; C0
-    db $57, $01, $53, $01
-
-; LZSS-compressed asset: 345 bytes expand to 342 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7322:: ; heuristic: target of a monotone pointer table; C0
-    db $56, $01
-
-; LZSS-compressed asset: 333 bytes expand to 345 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7324:: ; heuristic: target of a monotone pointer table; C0
-    db $59, $01
-
-; LZSS-compressed asset: 334 bytes expand to 352 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7326:: ; heuristic: target of a monotone pointer table; C0
-    db $60, $01, $66, $01
-
-; LZSS-compressed asset: 341 bytes expand to 353 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_732A:: ; heuristic: target of a monotone pointer table; C0
-    db $61, $01, $66, $01
-
-; LZSS-compressed asset: 345 bytes expand to 357 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_732E:: ; heuristic: target of a monotone pointer table; C0
-    db $65, $01
-
-; LZSS-compressed asset: 359 bytes expand to 356 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7330:: ; heuristic: target of a monotone pointer table; C0
-    db $64, $01
-
-; LZSS-compressed asset: 368 bytes expand to 365 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7332:: ; heuristic: target of a monotone pointer table; C0
-    db $6D, $01
-
-; LZSS-compressed asset: 347 bytes expand to 359 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7334:: ; heuristic: target of a monotone pointer table; C0
-    db $67, $01, $6E, $01
-
-; LZSS-compressed asset: 364 bytes expand to 361 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7338:: ; heuristic: target of a monotone pointer table; C0
-    db $69, $01, $6A, $01
-
-; LZSS-compressed asset: 373 bytes expand to 370 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_733C:: ; heuristic: target of a monotone pointer table; C0
-    db $72, $01
-
-; LZSS-compressed asset: 351 bytes expand to 363 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_733E:: ; heuristic: target of a monotone pointer table; C0
-    db $6B, $01
-
-; LZSS-compressed asset: 351 bytes expand to 364 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7340:: ; heuristic: target of a monotone pointer table; C0
-    db $6C, $01, $6E, $01
-
-; LZSS-compressed asset: 367 bytes expand to 366 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7344:: ; heuristic: target of a monotone pointer table; C0
-    db $6E, $01
-
-; LZSS-compressed asset: 370 bytes expand to 367 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7346:: ; heuristic: target of a monotone pointer table; C0
-    db $6F, $01
-
-; LZSS-compressed asset: 367 bytes expand to 368 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7348:: ; heuristic: target of a monotone pointer table; C0
-    db $70, $01
-
-; LZSS-compressed asset: 357 bytes expand to 369 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_734A:: ; heuristic: target of a monotone pointer table; C0
-    db $71, $01
-
-; LZSS-compressed asset: 63 bytes expand to 371 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_734C:: ; heuristic: target of a monotone pointer table; C0
-    db $73, $01
-
-; address loaded by ComputeBreedingChild
-Data_00E_734E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $03B34E, $50
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_765C
-    dw Data_00E_765E
-    dw Data_00E_7660
-    db $4E, $76, $62, $76, $64, $76, $4E, $76, $4E, $76, $4E, $76, $4E, $76, $66, $76
-    db $4E, $76, $4E, $76, $4E, $76, $68, $76, $6C, $76
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_764E
-    dw Data_00E_766F
-    dw Data_00E_7671
-    dw Data_00E_7673
-    INCBIN "dwm2-cobi-us.gbc", $03B40E, $4C
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $A0, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $A2, $76
-    dw Data_00E_764E
-    db $A4, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $A6, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $A8, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_76AB
-    db $4E, $76, $4E, $76
-    dw Data_00E_76AD
-    db $AF, $76, $B1, $76
-    dw Data_00E_76B3
-    dw Data_00E_764E
-    db $B5, $76
-    dw Data_00E_764E
-    db $4E, $76
-    dw Data_00E_76B7
-    db $B9, $76
-    dw Data_00E_76BB
-    db $4E, $76
-    dw Data_00E_76BD
-    db $4E, $76
-    dw Data_00E_76C0
-    db $4E, $76
-    dw Data_00E_76C2
-    db $4E, $76
-    dw Data_00E_76C5
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76
-    dw Data_00E_764E
-    db $4E, $76
-    dw Data_00E_764E
-    db $4E, $76
-    dw Data_00E_764E
-    db $4E, $76
-    dw Data_00E_764E
-    db $4E, $76
-    dw Data_00E_764E
-    db $C7, $76
-    dw Data_00E_76C9
-    db $4E, $76
-    dw Data_00E_76CD
-    db $CF, $76
-    dw Data_00E_76D1
-    db $D3, $76
-    dw Data_00E_76D7
-    db $4E, $76
-    dw Data_00E_76DB
-    db $DD, $76
-    dw Data_00E_76E1
-    db $4E, $76
-    dw Data_00E_76E6
-    db $4E, $76
-    dw Data_00E_76E8
-    db $ED, $76, $4E, $76, $F1, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $F3, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $F5, $76, $F8, $76
-    dw Data_00E_764E
-    db $FB, $76, $4E, $76
-    dw Data_00E_76FD
-    db $FF, $76, $4E, $76
-    dw Data_00E_7702
-    db $05, $77, $07, $77
-    dw Data_00E_7709
-    INCBIN "dwm2-cobi-us.gbc", $03B552, $5E
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $35, $77
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $37, $77
-    dw Data_00E_764E
-    db $4E, $76, $4E, $76
-    dw Data_00E_764E
-    db $3C, $77, $4E, $76
-    dw Data_00E_764E
-    db $4E, $76, $3E, $77
-    dw Data_00E_7740
-    db $4E, $76, $4E, $76
-    dw Data_00E_7742
-    db $44, $77, $4E, $76
-    dw Data_00E_7746
-    db $4E, $76, $4E, $76
-    dw Data_00E_7748
-    db $4E, $76, $4E, $76
-    dw Data_00E_774A
-    INCBIN "dwm2-cobi-us.gbc", $03B5F4, $5A
-
-Data_00E_764E:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $02, $FF, $FE, $07, $FF, $07, $FF, $04, $06, $03, $FF, $02, $FF
-
-Data_00E_765C:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $FF
-
-Data_00E_765E:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $FF
-
-Data_00E_7660:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $FF, $01, $FF, $00, $FF, $01, $FF, $01, $06, $00, $FF, $01, $00, $FF
-
-Data_00E_766F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $FF
-
-Data_00E_7671:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $FF
-
-Data_00E_7673:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $FF, $0A, $FF, $01, $FF, $06, $FF, $01, $00, $FF, $00, $FF, $01, $07
-    db $FF, $06, $FF, $08, $FF, $02, $FF, $02, $FF, $01, $07, $06, $FF, $02, $FF, $01
-    db $07, $FF, $02, $FF, $01, $07, $FF, $00, $FF, $0A, $FF, $0A, $FF, $02, $FF, $02
-    db $FF, $07, $FF, $01, $FF, $06, $07, $FF
-
-Data_00E_76AB:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $FF
-
-Data_00E_76AD:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $FF, $04, $FF, $08, $FF
-
-Data_00E_76B3:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $FF, $07, $FF
-
-Data_00E_76B7:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $FF, $06, $FF
-
-Data_00E_76BB:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $FF
-
-Data_00E_76BD:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $07, $FF
-
-Data_00E_76C0:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $FF
-
-Data_00E_76C2:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $00, $FF
-
-Data_00E_76C5:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $FF, $00, $FF
-
-Data_00E_76C9:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $07, $FF
-
-Data_00E_76CD:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $FF, $07, $FF
-
-Data_00E_76D1:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $FF, $01, $02, $07, $FF
-
-Data_00E_76D7:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $07, $FF
-
-Data_00E_76DB:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $FF, $01, $07, $02, $FF
-
-Data_00E_76E1:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $02, $01, $08, $FF
-
-Data_00E_76E6:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $FF
-
-Data_00E_76E8:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $07, $02, $08, $FF, $01, $02, $08, $FF, $02, $FF, $0A, $FF, $06, $02, $FF
-    db $01, $03, $FF, $03, $FF
-
-Data_00E_76FD:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $FF, $09, $03, $FF
-
-Data_00E_7702:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $06, $FF, $06, $FF, $03, $FF
-
-Data_00E_7709:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $FF, $02, $FF, $01, $03, $FF, $01, $06, $FF, $01, $09, $03, $FF, $01, $03
-    db $FF, $06, $01, $FF, $03, $FF, $08, $FF, $06, $FF, $06, $FF, $00, $01, $03, $07
-    db $05, $FF, $00, $01, $03, $FF, $06, $FF, $06, $FF, $06, $FF, $05, $FF, $02, $08
-    db $01, $06, $FF, $05, $FF, $00, $FF
-
-Data_00E_7740:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $FF
-
-Data_00E_7742:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $FF, $06, $FF
-
-Data_00E_7746:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $FF
-
-Data_00E_7748:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $FF
-
-Data_00E_774A:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $0A, $FF, $00, $FF
-
-; address loaded by ComputeBreedingChild
-Data_00E_774F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00E_7A4F
-    dw Data_00E_7A51
-    dw Data_00E_7A51
-    dw Data_00E_7A51
-    dw Data_00E_7A51
-    dw Data_00E_7A53
-    dw Data_00E_7A53
-    dw Data_00E_7A53
-    dw Data_00E_7A53
-    dw Data_00E_7A53
-    dw Data_00E_7A53
-    dw Data_00E_7A53
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A55
-    dw Data_00E_7A57
-    dw Data_00E_7A57
-    dw Data_00E_7A57
-    dw Data_00E_7A57
-    dw Data_00E_7A57
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5D
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A5F
-    dw Data_00E_7A61
-    dw Data_00E_7A63
-    dw Data_00E_7A65
-    dw Data_00E_7A65
-    dw Data_00E_7A67
-    dw Data_00E_7A69
-    dw Data_00E_7A69
-    dw Data_00E_7A69
-    dw Data_00E_7A69
-    dw Data_00E_7A69
-    dw Data_00E_7A6B
-    dw Data_00E_7A6B
-    dw Data_00E_7A6B
-    dw Data_00E_7A6B
-    dw Data_00E_7A71
-    dw Data_00E_7A75
-    dw Data_00E_7A75
-    dw Data_00E_7A75
-    dw Data_00E_7A75
-    dw Data_00E_7A75
-    dw Data_00E_7A75
-    dw Data_00E_7A75
-    dw Data_00E_7A77
-    dw Data_00E_7A79
-    dw Data_00E_7A7D
-    dw Data_00E_7A7D
-    dw Data_00E_7A7F
-    dw Data_00E_7A7F
-    dw Data_00E_7A81
-    dw Data_00E_7A81
-    dw Data_00E_7A83
-    dw Data_00E_7A87
-    dw Data_00E_7A87
-    dw Data_00E_7A87
-    dw Data_00E_7A87
-    dw Data_00E_7A89
-    dw Data_00E_7A8D
-    dw Data_00E_7A8F
-    dw Data_00E_7A8F
-    dw Data_00E_7A91
-    dw Data_00E_7A91
-    dw Data_00E_7A91
-    dw Data_00E_7A91
-    dw Data_00E_7A91
-    dw Data_00E_7A91
-    dw Data_00E_7A93
-    dw Data_00E_7A95
-    dw Data_00E_7A95
-    dw Data_00E_7A9B
-    dw Data_00E_7A9D
-    dw Data_00E_7AA1
-    dw Data_00E_7AA3
-    dw Data_00E_7AA3
-    dw Data_00E_7AA7
-    dw Data_00E_7AA7
-    dw Data_00E_7AA9
-    dw Data_00E_7AA9
-    dw Data_00E_7AA9
-    dw Data_00E_7AAB
-    dw Data_00E_7AAB
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAD
-    dw Data_00E_7AAF
-    dw Data_00E_7AAF
-    dw Data_00E_7AAF
-    dw Data_00E_7AAF
-    dw Data_00E_7AAF
-    dw Data_00E_7AAF
-    dw Data_00E_7AAF
-    dw Data_00E_7AB1
-    dw Data_00E_7AB1
-    dw Data_00E_7AB3
-    dw Data_00E_7AB3
-    dw Data_00E_7AB3
-    dw Data_00E_7AB3
-    dw Data_00E_7AB3
-    dw Data_00E_7AB3
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB5
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7AB9
-    dw Data_00E_7ABB
-    dw Data_00E_7ABB
-    dw Data_00E_7ABB
-    dw Data_00E_7ABD
-    dw Data_00E_7ABF
-    dw Data_00E_7AC1
-    dw Data_00E_7AC3
-    dw Data_00E_7AC3
-    dw Data_00E_7AC5
-    dw Data_00E_7AC5
-    dw Data_00E_7AC5
-    dw Data_00E_7AC7
-    dw Data_00E_7AC9
-    dw Data_00E_7ACB
-    dw Data_00E_7ACB
-    dw Data_00E_7ACF
-    dw Data_00E_7ACF
-    dw Data_00E_7AD1
-    dw Data_00E_7AD1
-    dw Data_00E_7AD5
-    dw Data_00E_7AD5
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD7
-    dw Data_00E_7AD9
-    dw Data_00E_7ADF
-    dw Data_00E_7ADF
-    dw Data_00E_7AE1
-    dw Data_00E_7AE3
-    dw Data_00E_7AE5
-    dw Data_00E_7AEB
-    dw Data_00E_7AF1
-    dw Data_00E_7AF1
-    dw Data_00E_7AF3
-    dw Data_00E_7AF9
-    dw Data_00E_7B01
-    dw Data_00E_7B01
-    dw Data_00E_7B03
-    dw Data_00E_7B03
-    dw Data_00E_7B0B
-    dw Data_00E_7B11
-    dw Data_00E_7B11
-    dw Data_00E_7B13
-    dw Data_00E_7B13
-    dw Data_00E_7B13
-    dw Data_00E_7B13
-    dw Data_00E_7B13
-    dw Data_00E_7B13
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B15
-    dw Data_00E_7B19
-    dw Data_00E_7B1D
-    dw Data_00E_7B1D
-    dw Data_00E_7B1F
-    dw Data_00E_7B1F
-    dw Data_00E_7B21
-    dw Data_00E_7B25
-    dw Data_00E_7B25
-    dw Data_00E_7B29
-    dw Data_00E_7B2B
-    dw Data_00E_7B2D
-    dw Data_00E_7B2F
-    dw Data_00E_7B2F
-    dw Data_00E_7B2F
-    dw Data_00E_7B2F
-    dw Data_00E_7B31
-    dw Data_00E_7B31
-    dw Data_00E_7B35
-    dw Data_00E_7B39
-    dw Data_00E_7B3F
-    dw Data_00E_7B43
-    dw Data_00E_7B43
-    dw Data_00E_7B43
-    dw Data_00E_7B43
-    dw Data_00E_7B47
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B49
-    dw Data_00E_7B4B
-    dw Data_00E_7B4B
-    dw Data_00E_7B4B
-    dw Data_00E_7B4B
-    dw Data_00E_7B4B
-    dw Data_00E_7B4B
-    dw Data_00E_7B4B
-    dw Data_00E_7B4D
-    dw Data_00E_7B4F
-    dw Data_00E_7B4F
-    dw Data_00E_7B4F
-    dw Data_00E_7B4F
-    dw Data_00E_7B4F
-    dw Data_00E_7B4F
-    dw Data_00E_7B4F
-    dw Data_00E_7B4F
-    dw Data_00E_7B59
-    dw Data_00E_7B5F
-    dw Data_00E_7B5F
-    dw Data_00E_7B61
-    dw Data_00E_7B63
-    dw Data_00E_7B65
-    dw Data_00E_7B65
-    dw Data_00E_7B65
-    dw Data_00E_7B65
-    dw Data_00E_7B65
-    dw Data_00E_7B65
-    dw Data_00E_7B65
-    dw Data_00E_7B65
-    dw Data_00E_7B67
-    dw Data_00E_7B67
-    dw Data_00E_7B67
-    dw Data_00E_7B67
-    dw Data_00E_7B67
-    dw Data_00E_7B67
-    dw Data_00E_7B6F
-    dw Data_00E_7B6F
-    dw Data_00E_7B6F
-    dw Data_00E_7B6F
-    dw Data_00E_7B6F
-    dw Data_00E_7B71
-    dw Data_00E_7B71
-    dw Data_00E_7B71
-    dw Data_00E_7B71
-    dw Data_00E_7B73
-    dw Data_00E_7B75
-    dw Data_00E_7B75
-    dw Data_00E_7B75
-    dw Data_00E_7B77
-    dw Data_00E_7B79
-    dw Data_00E_7B79
-    dw Data_00E_7B7B
-    dw Data_00E_7B7B
-    dw Data_00E_7B7B
-    dw Data_00E_7B7D
-    dw Data_00E_7B7D
-    dw Data_00E_7B7D
-    dw Data_00E_7B81
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    dw Data_00E_7B83
-    db $4F, $7A, $4F, $7A, $4F, $7A, $4F, $7A, $4F, $7A, $4F, $7A, $4F, $7A, $4F, $7A
-
-Data_00E_7A4F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-; LZSS-compressed asset: 14 bytes expand to 20 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A51:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $00
-
-; LZSS-compressed asset: 12 bytes expand to 22 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A53:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $00
-
-; LZSS-compressed asset: 25 bytes expand to 22 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A55:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $00
-
-; LZSS-compressed asset: 23 bytes expand to 20 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A57:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $00, $15, $00, $16, $00
-
-; LZSS-compressed asset: 22 bytes expand to 47 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A5D:: ; heuristic: target of a monotone pointer table; C0
-    db $2F, $00
-
-; LZSS-compressed asset: 95 bytes expand to 92 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A5F:: ; heuristic: target of a monotone pointer table; C0
-    db $5C, $00
-
-; LZSS-compressed asset: 97 bytes expand to 94 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A61:: ; heuristic: target of a monotone pointer table; C0
-    db $5E, $00
-
-; LZSS-compressed asset: 81 bytes expand to 78 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A63:: ; heuristic: target of a monotone pointer table; C0
-    db $4E, $00
-
-; LZSS-compressed asset: 39 bytes expand to 80 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A65:: ; heuristic: target of a monotone pointer table; C0
-    db $50, $00
-
-; LZSS-compressed asset: 95 bytes expand to 92 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A67:: ; heuristic: target of a monotone pointer table; C0
-    db $5C, $00
-
-; LZSS-compressed asset: 47 bytes expand to 95 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A69:: ; heuristic: target of a monotone pointer table; C0
-    db $5F, $00
-
-; LZSS-compressed asset: 41 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A6B:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $4C, $00, $5C, $00
-
-; LZSS-compressed asset: 61 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A71:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $5C, $00
-
-; LZSS-compressed asset: 90 bytes expand to 92 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A75:: ; heuristic: target of a monotone pointer table; C0
-    db $5C, $00
-
-; LZSS-compressed asset: 83 bytes expand to 92 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A77:: ; heuristic: target of a monotone pointer table; C0
-    db $5C, $00
-
-; LZSS-compressed asset: 79 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A79:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $5C, $00
-
-; LZSS-compressed asset: 101 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A7D:: ; heuristic: target of a monotone pointer table; C0
-    db $64, $00
-
-; LZSS-compressed asset: 79 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A7F:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00
-
-; LZSS-compressed asset: 92 bytes expand to 89 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A81:: ; heuristic: target of a monotone pointer table; C0
-    db $59, $00
-
-; LZSS-compressed asset: 79 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A83:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $51, $00
-
-; LZSS-compressed asset: 83 bytes expand to 115 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A87:: ; heuristic: target of a monotone pointer table; C0
-    db $73, $00
-
-; LZSS-compressed asset: 96 bytes expand to 120 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A89:: ; heuristic: target of a monotone pointer table; C0
-    db $78, $00, $78, $00
-
-; LZSS-compressed asset: 122 bytes expand to 119 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A8D:: ; heuristic: target of a monotone pointer table; C0
-    db $77, $00
-
-; LZSS-compressed asset: 119 bytes expand to 116 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A8F:: ; heuristic: target of a monotone pointer table; C0
-    db $74, $00
-
-; LZSS-compressed asset: 107 bytes expand to 122 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A91:: ; heuristic: target of a monotone pointer table; C0
-    db $7A, $00
-
-; LZSS-compressed asset: 107 bytes expand to 132 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A93:: ; heuristic: target of a monotone pointer table; C0
-    db $84, $00
-
-; LZSS-compressed asset: 105 bytes expand to 120 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A95:: ; heuristic: target of a monotone pointer table; C0
-    db $78, $00, $78, $00, $79, $00
-
-; LZSS-compressed asset: 121 bytes expand to 132 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A9B:: ; heuristic: target of a monotone pointer table; C0
-    db $84, $00
-
-; LZSS-compressed asset: 114 bytes expand to 120 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7A9D:: ; heuristic: target of a monotone pointer table; C0
-    db $78, $00, $78, $00
-
-; LZSS-compressed asset: 127 bytes expand to 132 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AA1:: ; heuristic: target of a monotone pointer table; C0
-    db $84, $00
-
-; LZSS-compressed asset: 123 bytes expand to 120 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AA3:: ; heuristic: target of a monotone pointer table; C0
-    db $78, $00, $78, $00
-
-; LZSS-compressed asset: 113 bytes expand to 119 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AA7:: ; heuristic: target of a monotone pointer table; C0
-    db $77, $00
-
-; LZSS-compressed asset: 133 bytes expand to 130 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AA9:: ; heuristic: target of a monotone pointer table; C0
-    db $82, $00
-
-; LZSS-compressed asset: 133 bytes expand to 130 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AAB:: ; heuristic: target of a monotone pointer table; C0
-    db $82, $00
-
-; LZSS-compressed asset: 155 bytes expand to 152 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AAD:: ; heuristic: target of a monotone pointer table; C0
-    db $98, $00
-
-; LZSS-compressed asset: 153 bytes expand to 150 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AAF:: ; heuristic: target of a monotone pointer table; C0
-    db $96, $00
-
-; LZSS-compressed asset: 164 bytes expand to 161 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AB1:: ; heuristic: target of a monotone pointer table; C0
-    db $A1, $00
-
-; LZSS-compressed asset: 158 bytes expand to 155 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AB3:: ; heuristic: target of a monotone pointer table; C0
-    db $9B, $00
-
-; LZSS-compressed asset: 160 bytes expand to 157 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AB5:: ; heuristic: target of a monotone pointer table; C0
-    db $9D, $00, $9E, $00
-
-; LZSS-compressed asset: 188 bytes expand to 185 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AB9:: ; heuristic: target of a monotone pointer table; C0
-    db $B9, $00
-
-; LZSS-compressed asset: 193 bytes expand to 190 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7ABB:: ; heuristic: target of a monotone pointer table; C0
-    db $BE, $00
-
-; LZSS-compressed asset: 188 bytes expand to 187 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7ABD:: ; heuristic: target of a monotone pointer table; C0
-    db $BB, $00
-
-; LZSS-compressed asset: 191 bytes expand to 188 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7ABF:: ; heuristic: target of a monotone pointer table; C0
-    db $BC, $00
-
-; LZSS-compressed asset: 178 bytes expand to 191 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AC1:: ; heuristic: target of a monotone pointer table; C0
-    db $BF, $00
-
-; LZSS-compressed asset: 196 bytes expand to 193 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AC3:: ; heuristic: target of a monotone pointer table; C0
-    db $C1, $00
-
-; LZSS-compressed asset: 198 bytes expand to 201 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AC5:: ; heuristic: target of a monotone pointer table; C0
-    db $C9, $00
-
-; LZSS-compressed asset: 196 bytes expand to 196 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AC7:: ; heuristic: target of a monotone pointer table; C0
-    db $C4, $00
-
-; LZSS-compressed asset: 196 bytes expand to 193 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AC9:: ; heuristic: target of a monotone pointer table; C0
-    db $C1, $00
-
-; LZSS-compressed asset: 191 bytes expand to 188 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7ACB:: ; heuristic: target of a monotone pointer table; C0
-    db $BC, $00, $C1, $00
-
-; LZSS-compressed asset: 197 bytes expand to 194 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7ACF:: ; heuristic: target of a monotone pointer table; C0
-    db $C2, $00
-
-; LZSS-compressed asset: 199 bytes expand to 196 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AD1:: ; heuristic: target of a monotone pointer table; C0
-    db $C4, $00, $C5, $00
-
-; LZSS-compressed asset: 187 bytes expand to 195 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AD5:: ; heuristic: target of a monotone pointer table; C0
-    db $C3, $00
-
-; LZSS-compressed asset: 204 bytes expand to 220 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AD7:: ; heuristic: target of a monotone pointer table; C0
-    db $DC, $00
-
-; LZSS-compressed asset: 179 bytes expand to 213 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AD9:: ; heuristic: target of a monotone pointer table; C0
-    db $D5, $00, $E6, $00, $EA, $00
-
-; LZSS-compressed asset: 210 bytes expand to 220 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7ADF:: ; heuristic: target of a monotone pointer table; C0
-    db $DC, $00
-
-; LZSS-compressed asset: 215 bytes expand to 212 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AE1:: ; heuristic: target of a monotone pointer table; C0
-    db $D4, $00
-
-; LZSS-compressed asset: 211 bytes expand to 220 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AE3:: ; heuristic: target of a monotone pointer table; C0
-    db $DC, $00
-
-; LZSS-compressed asset: 190 bytes expand to 213 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AE5:: ; heuristic: target of a monotone pointer table; C0
-    db $D5, $00, $E6, $00, $EA, $00
-
-; LZSS-compressed asset: 201 bytes expand to 213 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AEB:: ; heuristic: target of a monotone pointer table; C0
-    db $D5, $00, $E6, $00, $EA, $00
-
-; LZSS-compressed asset: 215 bytes expand to 212 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AF1:: ; heuristic: target of a monotone pointer table; C0
-    db $D4, $00
-
-; LZSS-compressed asset: 216 bytes expand to 213 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AF3:: ; heuristic: target of a monotone pointer table; C0
-    db $D5, $00, $D4, $00, $E6, $00
-
-; LZSS-compressed asset: 226 bytes expand to 223 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7AF9:: ; heuristic: target of a monotone pointer table; C0
-    db $DF, $00, $E0, $00, $EB, $00, $EC, $00
-
-; LZSS-compressed asset: 232 bytes expand to 229 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B01:: ; heuristic: target of a monotone pointer table; C0
-    db $E5, $00
-
-; LZSS-compressed asset: 225 bytes expand to 222 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B03:: ; heuristic: target of a monotone pointer table; C0
-    db $DE, $00, $E3, $00, $EB, $00, $EC, $00
-
-; LZSS-compressed asset: 228 bytes expand to 226 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B0B:: ; heuristic: target of a monotone pointer table; C0
-    db $E2, $00, $EB, $00, $EC, $00
-
-; LZSS-compressed asset: 238 bytes expand to 235 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B11:: ; heuristic: target of a monotone pointer table; C0
-    db $EB, $00
-
-; LZSS-compressed asset: 228 bytes expand to 240 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B13:: ; heuristic: target of a monotone pointer table; C0
-    db $F0, $00
-
-; LZSS-compressed asset: 251 bytes expand to 259 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B15:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $01, $FF, $00
-
-; LZSS-compressed asset: 215 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B19:: ; heuristic: target of a monotone pointer table; C0
-    db $F7, $00, $0E, $01
-
-Data_00E_7B1D:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $01
-
-; LZSS-compressed asset: 260 bytes expand to 257 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B1F:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01
-
-; LZSS-compressed asset: 230 bytes expand to 254 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B21:: ; heuristic: target of a monotone pointer table; C0
-    db $FE, $00, $0E, $01
-
-; LZSS-compressed asset: 247 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B25:: ; heuristic: target of a monotone pointer table; C0
-    db $F7, $00, $FC, $00
-
-; LZSS-compressed asset: 241 bytes expand to 259 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B29:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $01
-
-; LZSS-compressed asset: 273 bytes expand to 270 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B2B:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $01
-
-; LZSS-compressed asset: 264 bytes expand to 261 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B2D:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $01
-
-; LZSS-compressed asset: 240 bytes expand to 271 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B2F:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $01
-
-; LZSS-compressed asset: 237 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B31:: ; heuristic: target of a monotone pointer table; C0
-    db $F7, $00, $0E, $01
-
-; LZSS-compressed asset: 250 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B35:: ; heuristic: target of a monotone pointer table; C0
-    db $F7, $00, $0B, $01
-
-; LZSS-compressed asset: 250 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B39:: ; heuristic: target of a monotone pointer table; C0
-    db $F7, $00, $06, $01, $0E, $01
-
-; LZSS-compressed asset: 247 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B3F:: ; heuristic: target of a monotone pointer table; C0
-    db $F7, $00, $0E, $01
-
-; LZSS-compressed asset: 260 bytes expand to 257 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B43:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $0A, $01
-
-; LZSS-compressed asset: 273 bytes expand to 270 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B47:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $01
-
-; LZSS-compressed asset: 283 bytes expand to 290 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B49:: ; heuristic: target of a monotone pointer table; C0
-    db $22, $01
-
-; LZSS-compressed asset: 300 bytes expand to 311 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B4B:: ; heuristic: target of a monotone pointer table; C0
-    db $37, $01
-
-; LZSS-compressed asset: 289 bytes expand to 291 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B4D:: ; heuristic: target of a monotone pointer table; C0
-    db $23, $01
-
-; LZSS-compressed asset: 126 bytes expand to 311 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B4F:: ; heuristic: target of a monotone pointer table; C0
-    db $37, $01, $24, $01, $27, $01, $2F, $01, $34, $01
-
-; LZSS-compressed asset: 116 bytes expand to 311 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B59:: ; heuristic: target of a monotone pointer table; C0
-    db $37, $01, $24, $01, $27, $01
-
-; LZSS-compressed asset: 283 bytes expand to 299 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B5F:: ; heuristic: target of a monotone pointer table; C0
-    db $2B, $01
-
-; LZSS-compressed asset: 282 bytes expand to 293 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B61:: ; heuristic: target of a monotone pointer table; C0
-    db $25, $01
-
-; LZSS-compressed asset: 282 bytes expand to 293 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B63:: ; heuristic: target of a monotone pointer table; C0
-    db $25, $01
-
-; LZSS-compressed asset: 311 bytes expand to 308 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B65:: ; heuristic: target of a monotone pointer table; C0
-    db $34, $01
-
-; LZSS-compressed asset: 328 bytes expand to 325 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B67:: ; heuristic: target of a monotone pointer table; C0
-    db $45, $01, $46, $01, $4E, $01, $4E, $01
-
-; LZSS-compressed asset: 310 bytes expand to 329 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B6F:: ; heuristic: target of a monotone pointer table; C0
-    db $49, $01
-
-; LZSS-compressed asset: 337 bytes expand to 347 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B71:: ; heuristic: target of a monotone pointer table; C0
-    db $5B, $01
-
-; LZSS-compressed asset: 330 bytes expand to 328 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B73:: ; heuristic: target of a monotone pointer table; C0
-    db $48, $01
-
-; LZSS-compressed asset: 333 bytes expand to 330 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B75:: ; heuristic: target of a monotone pointer table; C0
-    db $4A, $01
-
-; LZSS-compressed asset: 320 bytes expand to 331 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B77:: ; heuristic: target of a monotone pointer table; C0
-    db $4B, $01
-
-; LZSS-compressed asset: 322 bytes expand to 333 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B79:: ; heuristic: target of a monotone pointer table; C0
-    db $4D, $01
-
-; LZSS-compressed asset: 340 bytes expand to 347 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B7B:: ; heuristic: target of a monotone pointer table; C0
-    db $5B, $01
-
-; LZSS-compressed asset: 350 bytes expand to 347 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B7D:: ; heuristic: target of a monotone pointer table; C0
-    db $5B, $01, $53, $01
-
-; LZSS-compressed asset: 350 bytes expand to 347 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7B81:: ; heuristic: target of a monotone pointer table; C0
-    db $5B, $01
-
-; address loaded by ComputeBreedingChild
-Data_00E_7B83:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00E_7B99
-    dw Data_00E_7BCD
-    dw Data_00E_7C1F
-    dw Data_00E_7C65
-    dw Data_00E_7CAF
-    dw Data_00E_7CED
-    dw Data_00E_7D17
-    dw Data_00E_7D39
-    dw Data_00E_7D73
-    dw Data_00E_7DA9
-    dw Data_00E_7DBD
-
-Data_00E_7B99:: ; heuristic: target of a monotone pointer table; C0
-    db $2A, $00, $BE, $00, $FD, $FD, $4A, $00, $80, $00, $8D, $00, $0D, $01, $FD, $FD
-    db $48, $00, $4C, $00, $5F, $00, $60, $00, $61, $00, $62, $00, $FD, $FD, $FC, $00
-    db $32, $01, $33, $01, $34, $01, $FD, $FD, $29, $01, $FD, $FD, $4D, $00, $FD, $FD
-    db $24, $01, $FF, $FF
-
-Data_00E_7BCD:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03BBCD, $52
-
-Data_00E_7C1F:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03BC1F, $46
-
-Data_00E_7C65:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $03BC65, $4A
-
-Data_00E_7CAF:: ; heuristic: target of a monotone pointer table; C0
-    db $B2, $00, $40, $01, $FD, $FD, $1D, $01, $FD, $FD, $D3, $00, $FD, $FD, $92, $00
-    db $FD, $FD, $01, $01, $FD, $FD, $80, $00, $FD, $FD, $4A, $00, $47, $01, $FD, $FD
-    db $0D, $00, $63, $00, $6E, $00, $74, $00, $B3, $00, $BD, $00, $D7, $00, $D8, $00
-    db $1F, $01, $49, $01, $FD, $FD, $B6, $00, $BF, $00, $41, $01, $FF, $FF
-
-Data_00E_7CED:: ; heuristic: target of a monotone pointer table; C0
-    db $8F, $00, $FD, $FD, $52, $00, $FD, $FD, $94, $00, $45, $01, $49, $01, $FD, $FD
-    db $4B, $00, $3F, $01, $FD, $FD, $F6, $00, $FD, $FD, $FB, $00, $4B, $01, $FD, $FD
-    db $5B, $00, $FD, $FD, $DC, $00, $03, $01, $FF, $FF
-
-Data_00E_7D17:: ; heuristic: target of a monotone pointer table; C0
-    db $29, $00, $FD, $FD, $61, $00, $FD, $FD, $9D, $00, $FD, $FD, $54, $00, $FD, $FD
-    db $2F, $00, $59, $00, $FD, $FD, $20, $01, $FD, $FD, $63, $00, $FD, $FD, $BC, $00
-    db $FF, $FF
-
-Data_00E_7D39:: ; heuristic: target of a monotone pointer table; C0
-    db $2B, $00, $30, $00, $33, $00, $38, $00, $3C, $00, $3D, $00, $40, $00, $FD, $FD
-    db $49, $01, $4A, $01, $4B, $01, $FD, $FD, $08, $00, $0C, $00, $47, $00, $56, $00
-    db $80, $00, $8D, $00, $98, $00, $B0, $00, $B6, $00, $BF, $00, $FD, $FD, $71, $00
-    db $FD, $FD, $4E, $00, $FD, $FD, $B4, $00, $FF, $FF
-
-Data_00E_7D73:: ; heuristic: target of a monotone pointer table; C0
-    db $DD, $00, $FD, $FD, $B6, $00, $FD, $FD, $33, $00, $FD, $FD, $B5, $00, $FD, $FD
-    db $90, $00, $FD, $FD, $4C, $00, $55, $00, $5F, $00, $60, $00, $D9, $00, $FD, $FD
-    db $05, $00, $FD, $FD, $08, $00, $FD, $FD, $73, $00, $FD, $FD, $C4, $00, $C7, $00
-    db $FD, $FD, $EC, $00, $FF, $FF
-
-Data_00E_7DA9:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $01, $FD, $FD, $53, $00, $6E, $00, $6F, $00, $78, $00, $84, $00, $1E, $01
-    db $34, $01, $FF, $FF
-
-Data_00E_7DBD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-; address loaded by ComputeBreedingChild
-Data_00E_7DBF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00E_7DD5
-    dw Data_00E_7DE3
-    dw Data_00E_7DFF
-    dw Data_00E_7E1B
-    dw Data_00E_7E2B
-    dw Data_00E_7E3D
-    dw Data_00E_7E4D
-    dw Data_00E_7E5D
-    dw Data_00E_7E69
-    dw Data_00E_7E7F
-    dw Data_00E_7E83
-
-; LZSS-compressed asset: 10 bytes expand to 7 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7DD5:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $00, $0B, $00, $0C, $00, $0D, $00, $0E, $00, $0F, $00, $11, $00
-
-; LZSS-compressed asset: 49 bytes expand to 46 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7DE3:: ; heuristic: target of a monotone pointer table; C0
-    db $2E, $00, $2F, $00, $30, $00, $31, $00, $32, $00, $33, $00, $34, $00, $35, $00
-    db $36, $00, $37, $00, $38, $00, $39, $00, $3D, $00, $3E, $00
-
-; LZSS-compressed asset: 84 bytes expand to 81 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7DFF:: ; heuristic: target of a monotone pointer table; C0
-    db $51, $00, $52, $00, $53, $00, $54, $00, $55, $00, $57, $00, $59, $00, $5A, $00
-    db $5B, $00, $5C, $00, $5D, $00, $5E, $00, $62, $00, $63, $00
-
-; LZSS-compressed asset: 119 bytes expand to 116 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7E1B:: ; heuristic: target of a monotone pointer table; C0
-    db $74, $00, $76, $00, $78, $00, $79, $00, $7B, $00, $7C, $00, $7F, $00, $80, $00
-
-; LZSS-compressed asset: 154 bytes expand to 151 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7E2B:: ; heuristic: target of a monotone pointer table; C0
-    db $97, $00, $98, $00, $99, $00, $9A, $00, $9B, $00, $9C, $00, $9D, $00, $9E, $00
-    db $A6, $00
-
-; LZSS-compressed asset: 190 bytes expand to 187 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7E3D:: ; heuristic: target of a monotone pointer table; C0
-    db $BB, $00, $BC, $00, $BD, $00, $BE, $00, $BF, $00, $C0, $00, $C1, $00, $C5, $00
-
-; LZSS-compressed asset: 226 bytes expand to 223 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7E4D:: ; heuristic: target of a monotone pointer table; C0
-    db $DF, $00, $E0, $00, $E1, $00, $E2, $00, $E6, $00, $E8, $00, $EA, $00, $EC, $00
-
-; LZSS-compressed asset: 237 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7E5D:: ; heuristic: target of a monotone pointer table; C0
-    db $F7, $00, $FB, $00, $00, $01, $01, $01, $02, $01, $03, $01
-
-; LZSS-compressed asset: 292 bytes expand to 289 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7E69:: ; heuristic: target of a monotone pointer table; C0
-    db $21, $01, $23, $01, $24, $01, $26, $01, $27, $01, $29, $01, $2B, $01, $2F, $01
-    db $30, $01, $33, $01, $37, $01
-
-; LZSS-compressed asset: 335 bytes expand to 332 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_00E_7E7F:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $01, $5A, $01
-
-; address loaded by ComputeBreedingChild
-Data_00E_7E83:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00E_7E99
-    dw Data_00E_7EAF
-    dw Data_00E_7EC5
-    dw Data_00E_7EDB
-    dw Data_00E_7EF1
-    dw Data_00E_7F07
-    dw Data_00E_7F1D
-    dw Data_00E_7F33
-    dw Data_00E_7F49
-    dw Data_00E_7F5F
-    dw Data_00E_7F75
-
-Data_00E_7E99:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF, $01, $00, $02, $00, $03, $00, $04, $00, $05, $00, $06, $00, $07, $00
-    db $08, $00, $09, $00, $10, $00
-
-Data_00E_7EAF:: ; heuristic: target of a monotone pointer table; C0
-    db $24, $00, $FF, $FF, $25, $00, $26, $00, $27, $00, $28, $00, $29, $00, $2A, $00
-    db $2B, $00, $2C, $00, $3C, $00
-
-Data_00E_7EC5:: ; heuristic: target of a monotone pointer table; C0
-    db $47, $00, $48, $00, $FF, $FF, $49, $00, $4A, $00, $4B, $00, $55, $00, $4D, $00
-    db $4E, $00, $4F, $00, $61, $00
-
-Data_00E_7EDB:: ; heuristic: target of a monotone pointer table; C0
-    db $6A, $00, $6B, $00, $6C, $00, $FF, $FF, $6D, $00, $6E, $00, $6F, $00, $70, $00
-    db $71, $00, $72, $00, $7D, $00
-
-Data_00E_7EF1:: ; heuristic: target of a monotone pointer table; C0
-    db $8D, $00, $8E, $00, $8F, $00, $90, $00, $FF, $FF, $91, $00, $92, $00, $93, $00
-    db $94, $00, $95, $00, $A2, $00
-
-Data_00E_7F07:: ; heuristic: target of a monotone pointer table; C0
-    db $B0, $00, $B1, $00, $B2, $00, $B3, $00, $B4, $00, $FF, $FF, $B5, $00, $B6, $00
-    db $B7, $00, $B8, $00, $C7, $00
-
-Data_00E_7F1D:: ; heuristic: target of a monotone pointer table; C0
-    db $D3, $00, $D4, $00, $DD, $00, $D6, $00, $D7, $00, $D8, $00, $FF, $FF, $D9, $00
-    db $DA, $00, $DB, $00, $DE, $00
-
-Data_00E_7F33:: ; heuristic: target of a monotone pointer table; C0
-    db $F6, $00, $0E, $01, $F8, $00, $F9, $00, $FA, $00, $FB, $00, $FC, $00, $FF, $FF
-    db $FD, $00, $FE, $00, $08, $01
-
-Data_00E_7F49:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $01, $1A, $01, $1B, $01, $1C, $01, $1D, $01, $1E, $01, $1F, $01, $20, $01
-    db $FF, $FF, $28, $01, $25, $01
-
-Data_00E_7F5F:: ; heuristic: target of a monotone pointer table; C0
-    db $3C, $01, $3D, $01, $3E, $01, $3F, $01, $40, $01, $41, $01, $42, $01, $44, $01
-    db $43, $01, $FF, $FF, $58, $01
-
-Data_00E_7F75:: ; heuristic: target of a monotone pointer table; C0
-    ds $16, $FF
+; E-0199 (C1: ComputeBreedingChild stage 1 reads the word at $6208 + 2 * parent A's species (record +$B) and walks the list's words: a species equal to parent B's matches; $FDxx moves to the next result; $FExx / $FCxx match when parent B / parent A has + (record +$6D) of at least xx and both parents are the same species; $FBxx moves on only when wArg1 = 2; $FFxx ends the list; a match takes result [count of moves] from BreedSpeciesResultTable)
+; record: list
+BreedSpeciesRuleTable::
+Data_00E_6208:: ; address name
+    dw BreedSpeciesRules000 ; id 0
+    dw BreedSpeciesRules001 ; id 1 DrakSlime
+    dw BreedSpeciesRules002 ; id 2 SpotSlime
+    dw BreedSpeciesRules000 ; id 3 WingSlime
+    dw BreedSpeciesRules000 ; id 4 TreeSlime
+    dw BreedSpeciesRules000 ; id 5 Snaily
+    dw BreedSpeciesRules006 ; id 6 SlimeNite
+    dw BreedSpeciesRules000 ; id 7 Babble
+    dw BreedSpeciesRules000 ; id 8 BoxSlime
+    dw BreedSpeciesRules000 ; id 9 PearlGel
+    dw BreedSpeciesRules00A ; id 10 Slime
+    dw BreedSpeciesRules00B ; id 11 Healer
+    dw BreedSpeciesRules000 ; id 12 FangSlime
+    dw BreedSpeciesRules00D ; id 13 RockSlime
+    dw BreedSpeciesRules000 ; id 14 SlimeBorg
+    dw BreedSpeciesRules000 ; id 15 Slabbit
+    dw BreedSpeciesRules010 ; id 16 KingSlime
+    dw BreedSpeciesRules011 ; id 17 Metaly
+    dw BreedSpeciesRules012 ; id 18 Metabble
+    dw BreedSpeciesRules013 ; id 19 SpotKing
+    dw BreedSpeciesRules000 ; id 20 TropicGel
+    dw BreedSpeciesRules015 ; id 21 MimeSlime
+    dw BreedSpeciesRules000 ; id 22 HaloSlime
+    dw BreedSpeciesRules017 ; id 23 MetalKing
+    dw BreedSpeciesRules018 ; id 24 GoldSlime
+    dw BreedSpeciesRules000 ; id 25 GranSlime
+    dw BreedSpeciesRules01A ; id 26 WonderEgg
+    dw BreedSpeciesRules000 ; id 27 Butch
+    dw BreedSpeciesRules000 ; id 28 ?
+    dw BreedSpeciesRules000 ; id 29 ?
+    dw BreedSpeciesRules000 ; id 30 ?
+    dw BreedSpeciesRules000 ; id 31 ?
+    dw BreedSpeciesRules000 ; id 32 ?
+    dw BreedSpeciesRules000 ; id 33 ?
+    dw BreedSpeciesRules000 ; id 34 ?
+    dw BreedSpeciesRules000 ; id 35 ?
+    dw BreedSpeciesRules024 ; id 36 DragonKid
+    dw BreedSpeciesRules000 ; id 37 Tortragon
+    dw BreedSpeciesRules026 ; id 38 Pteranod
+    dw BreedSpeciesRules027 ; id 39 Gasgon
+    dw BreedSpeciesRules000 ; id 40 FairyDrak
+    dw BreedSpeciesRules029 ; id 41 LizardMan
+    dw BreedSpeciesRules000 ; id 42 Poisongon
+    dw BreedSpeciesRules000 ; id 43 Swordgon
+    dw BreedSpeciesRules000 ; id 44 Drygon
+    dw BreedSpeciesRules02D ; id 45 Dragon
+    dw BreedSpeciesRules000 ; id 46 MiniDrak
+    dw BreedSpeciesRules02F ; id 47 MadDragon
+    dw BreedSpeciesRules000 ; id 48 Rayburn
+    dw BreedSpeciesRules000 ; id 49 Chamelgon
+    dw BreedSpeciesRules000 ; id 50 LizardFly
+    dw BreedSpeciesRules033 ; id 51 Andreal
+    dw BreedSpeciesRules034 ; id 52 KingCobra
+    dw BreedSpeciesRules035 ; id 53 Vampirus
+    dw BreedSpeciesRules000 ; id 54 SnakeBat
+    dw BreedSpeciesRules000 ; id 55 Spikerous
+    dw BreedSpeciesRules038 ; id 56 GreatDrak
+    dw BreedSpeciesRules039 ; id 57 Crestpent
+    dw BreedSpeciesRules03A ; id 58 WingSnake
+    dw BreedSpeciesRules000 ; id 59 Coatol
+    dw BreedSpeciesRules000 ; id 60 Orochi
+    dw BreedSpeciesRules03D ; id 61 BattleRex
+    dw BreedSpeciesRules03E ; id 62 SkyDragon
+    dw BreedSpeciesRules000 ; id 63 Serpentia
+    dw BreedSpeciesRules040 ; id 64 Divinegon
+    dw BreedSpeciesRules000 ; id 65 Orligon
+    dw BreedSpeciesRules000 ; id 66 GigaDraco
+    dw BreedSpeciesRules000 ; id 67 ?
+    dw BreedSpeciesRules000 ; id 68 ?
+    dw BreedSpeciesRules000 ; id 69 ?
+    dw BreedSpeciesRules000 ; id 70 ?
+    dw BreedSpeciesRules047 ; id 71 Tonguella
+    dw BreedSpeciesRules048 ; id 72 Almiraj
+    dw BreedSpeciesRules049 ; id 73 CatFly
+    dw BreedSpeciesRules000 ; id 74 PillowRat
+    dw BreedSpeciesRules000 ; id 75 Saccer
+    dw BreedSpeciesRules04C ; id 76 GulpBeast
+    dw BreedSpeciesRules000 ; id 77 Skullroo
+    dw BreedSpeciesRules000 ; id 78 WindBeast
+    dw BreedSpeciesRules000 ; id 79 Beavern
+    dw BreedSpeciesRules000 ; id 80 Antbear
+    dw BreedSpeciesRules051 ; id 81 SuperTen
+    dw BreedSpeciesRules052 ; id 82 IronTurt
+    dw BreedSpeciesRules000 ; id 83 Mommonja
+    dw BreedSpeciesRules054 ; id 84 HammerMan
+    dw BreedSpeciesRules055 ; id 85 Grizzly
+    dw BreedSpeciesRules056 ; id 86 Yeti
+    dw BreedSpeciesRules057 ; id 87 ArrowDog
+    dw BreedSpeciesRules058 ; id 88 NoctoKing
+    dw BreedSpeciesRules059 ; id 89 BeastNite
+    dw BreedSpeciesRules05A ; id 90 MadGopher
+    dw BreedSpeciesRules000 ; id 91 FairyRat
+    dw BreedSpeciesRules05C ; id 92 Unicorn
+    dw BreedSpeciesRules05D ; id 93 Goategon
+    dw BreedSpeciesRules05E ; id 94 WildApe
+    dw BreedSpeciesRules05F ; id 95 Trumpeter
+    dw BreedSpeciesRules000 ; id 96 KingLeo
+    dw BreedSpeciesRules061 ; id 97 DarkHorn
+    dw BreedSpeciesRules062 ; id 98 MadCat
+    dw BreedSpeciesRules000 ; id 99 BigEye
+    dw BreedSpeciesRules000 ; id 100 Gorago
+    dw BreedSpeciesRules065 ; id 101 CatMage
+    dw BreedSpeciesRules066 ; id 102 Dumbira
+    dw BreedSpeciesRules000 ; id 103 ?
+    dw BreedSpeciesRules000 ; id 104 ?
+    dw BreedSpeciesRules000 ; id 105 ?
+    dw BreedSpeciesRules000 ; id 106 Picky
+    dw BreedSpeciesRules000 ; id 107 Wyvern
+    dw BreedSpeciesRules06C ; id 108 BullBird
+    dw BreedSpeciesRules000 ; id 109 Florajay
+    dw BreedSpeciesRules000 ; id 110 DuckKite
+    dw BreedSpeciesRules06F ; id 111 MadPecker
+    dw BreedSpeciesRules000 ; id 112 MadRaven
+    dw BreedSpeciesRules000 ; id 113 MistyWing
+    dw BreedSpeciesRules072 ; id 114 AquaHawk
+    dw BreedSpeciesRules000 ; id 115 Dracky
+    dw BreedSpeciesRules074 ; id 116 KiteHawk
+    dw BreedSpeciesRules000 ; id 117 BigRoost
+    dw BreedSpeciesRules000 ; id 118 StubBird
+    dw BreedSpeciesRules077 ; id 119 LandOwl
+    dw BreedSpeciesRules078 ; id 120 MadGoose
+    dw BreedSpeciesRules079 ; id 121 MadCondor
+    dw BreedSpeciesRules000 ; id 122 Emyu
+    dw BreedSpeciesRules07B ; id 123 Blizzardy
+    dw BreedSpeciesRules07C ; id 124 Phoenix
+    dw BreedSpeciesRules07D ; id 125 ZapBird
+    dw BreedSpeciesRules07E ; id 126 Garudian
+    dw BreedSpeciesRules07F ; id 127 WhipBird
+    dw BreedSpeciesRules080 ; id 128 FunkyBird
+    dw BreedSpeciesRules081 ; id 129 RainHawk
+    dw BreedSpeciesRules000 ; id 130 Azurile
+    dw BreedSpeciesRules083 ; id 131 Shantak
+    dw BreedSpeciesRules084 ; id 132 CragDevil
+    dw BreedSpeciesRules000 ; id 133 ?
+    dw BreedSpeciesRules000 ; id 134 ?
+    dw BreedSpeciesRules000 ; id 135 ?
+    dw BreedSpeciesRules000 ; id 136 ?
+    dw BreedSpeciesRules000 ; id 137 ?
+    dw BreedSpeciesRules000 ; id 138 ?
+    dw BreedSpeciesRules000 ; id 139 ?
+    dw BreedSpeciesRules000 ; id 140 ?
+    dw BreedSpeciesRules000 ; id 141 MadPlant
+    dw BreedSpeciesRules000 ; id 142 FireWeed
+    dw BreedSpeciesRules000 ; id 143 FloraMan
+    dw BreedSpeciesRules000 ; id 144 WingTree
+    dw BreedSpeciesRules000 ; id 145 CactiBall
+    dw BreedSpeciesRules000 ; id 146 Gulpple
+    dw BreedSpeciesRules000 ; id 147 Toadstool
+    dw BreedSpeciesRules000 ; id 148 AmberWeed
+    dw BreedSpeciesRules000 ; id 149 Slurperon
+    dw BreedSpeciesRules096 ; id 150 Stubsuck
+    dw BreedSpeciesRules000 ; id 151 Oniono
+    dw BreedSpeciesRules000 ; id 152 DanceVegi
+    dw BreedSpeciesRules099 ; id 153 TreeBoy
+    dw BreedSpeciesRules000 ; id 154 Devipine
+    dw BreedSpeciesRules000 ; id 155 FaceTree
+    dw BreedSpeciesRules000 ; id 156 HerbMan
+    dw BreedSpeciesRules000 ; id 157 BeanMan
+    dw BreedSpeciesRules09E ; id 158 EvilSeed
+    dw BreedSpeciesRules09F ; id 159 ManEater
+    dw BreedSpeciesRules000 ; id 160 Snapper
+    dw BreedSpeciesRules0A1 ; id 161 GhosTree
+    dw BreedSpeciesRules0A2 ; id 162 Rosevine
+    dw BreedSpeciesRules000 ; id 163 Egdracil
+    dw BreedSpeciesRules0A4 ; id 164 Warubou
+    dw BreedSpeciesRules000 ; id 165 Watabou
+    dw BreedSpeciesRules000 ; id 166 Eggplaton
+    dw BreedSpeciesRules0A7 ; id 167 FooHero
+    dw BreedSpeciesRules000 ; id 168 ?
+    dw BreedSpeciesRules000 ; id 169 ?
+    dw BreedSpeciesRules000 ; id 170 ?
+    dw BreedSpeciesRules000 ; id 171 ?
+    dw BreedSpeciesRules000 ; id 172 ?
+    dw BreedSpeciesRules000 ; id 173 ?
+    dw BreedSpeciesRules000 ; id 174 ?
+    dw BreedSpeciesRules000 ; id 175 ?
+    dw BreedSpeciesRules000 ; id 176 GiantSlug
+    dw BreedSpeciesRules0B1 ; id 177 Catapila
+    dw BreedSpeciesRules000 ; id 178 Gophecada
+    dw BreedSpeciesRules0B3 ; id 179 Butterfly
+    dw BreedSpeciesRules0B4 ; id 180 WeedBug
+    dw BreedSpeciesRules000 ; id 181 GiantWorm
+    dw BreedSpeciesRules0B6 ; id 182 Lipsy
+    dw BreedSpeciesRules0B7 ; id 183 StagBug
+    dw BreedSpeciesRules000 ; id 184 Pyuro
+    dw BreedSpeciesRules000 ; id 185 ArmyAnt
+    dw BreedSpeciesRules000 ; id 186 GoHopper
+    dw BreedSpeciesRules0BB ; id 187 TailEater
+    dw BreedSpeciesRules000 ; id 188 ArmorPede
+    dw BreedSpeciesRules0BD ; id 189 Eyeder
+    dw BreedSpeciesRules000 ; id 190 GiantMoth
+    dw BreedSpeciesRules000 ; id 191 Droll
+    dw BreedSpeciesRules0C0 ; id 192 ArmyCrab
+    dw BreedSpeciesRules0C1 ; id 193 MadHornet
+    dw BreedSpeciesRules000 ; id 194 Belzebub
+    dw BreedSpeciesRules0C3 ; id 195 WarMantis
+    dw BreedSpeciesRules0C4 ; id 196 HornBeet
+    dw BreedSpeciesRules000 ; id 197 Sickler
+    dw BreedSpeciesRules0C6 ; id 198 Armorpion
+    dw BreedSpeciesRules000 ; id 199 Digster
+    dw BreedSpeciesRules000 ; id 200 Skularach
+    dw BreedSpeciesRules0C9 ; id 201 MultiEyes
+    dw BreedSpeciesRules000 ; id 202 ?
+    dw BreedSpeciesRules000 ; id 203 ?
+    dw BreedSpeciesRules000 ; id 204 ?
+    dw BreedSpeciesRules000 ; id 205 ?
+    dw BreedSpeciesRules000 ; id 206 ?
+    dw BreedSpeciesRules000 ; id 207 ?
+    dw BreedSpeciesRules000 ; id 208 ?
+    dw BreedSpeciesRules000 ; id 209 ?
+    dw BreedSpeciesRules000 ; id 210 ?
+    dw BreedSpeciesRules000 ; id 211 Pixy
+    dw BreedSpeciesRules000 ; id 212 MedusaEye
+    dw BreedSpeciesRules0D5 ; id 213 AgDevil
+    dw BreedSpeciesRules0D6 ; id 214 Demonite
+    dw BreedSpeciesRules0D7 ; id 215 DarkEye
+    dw BreedSpeciesRules000 ; id 216 EyeBall
+    dw BreedSpeciesRules000 ; id 217 SkulRider
+    dw BreedSpeciesRules000 ; id 218 EvilBeast
+    dw BreedSpeciesRules0DB ; id 219 Bubblemon
+    dw BreedSpeciesRules0DC ; id 220 1EyeClown
+    dw BreedSpeciesRules0DD ; id 221 Gremlin
+    dw BreedSpeciesRules0DE ; id 222 ArcDemon
+    dw BreedSpeciesRules0DF ; id 223 Lionex
+    dw BreedSpeciesRules000 ; id 224 GoatHorn
+    dw BreedSpeciesRules000 ; id 225 Orc
+    dw BreedSpeciesRules0E2 ; id 226 Ogre
+    dw BreedSpeciesRules000 ; id 227 GateGuard
+    dw BreedSpeciesRules000 ; id 228 ChopClown
+    dw BreedSpeciesRules0E5 ; id 229 BossTroll
+    dw BreedSpeciesRules0E6 ; id 230 Grendal
+    dw BreedSpeciesRules0E7 ; id 231 Akubar
+    dw BreedSpeciesRules000 ; id 232 MadKnight
+    dw BreedSpeciesRules000 ; id 233 EvilWell
+    dw BreedSpeciesRules0EA ; id 234 Gigantes
+    dw BreedSpeciesRules0EB ; id 235 Centasaur
+    dw BreedSpeciesRules000 ; id 236 EvilArmor
+    dw BreedSpeciesRules0ED ; id 237 Jamirus
+    dw BreedSpeciesRules0EE ; id 238 Durran
+    dw BreedSpeciesRules000 ; id 239 Titanis
+    dw BreedSpeciesRules0F0 ; id 240 LampGenie
+    dw BreedSpeciesRules000 ; id 241 ?
+    dw BreedSpeciesRules000 ; id 242 ?
+    dw BreedSpeciesRules000 ; id 243 ?
+    dw BreedSpeciesRules000 ; id 244 ?
+    dw BreedSpeciesRules000 ; id 245 ?
+    dw BreedSpeciesRules000 ; id 246 Spooky
+    dw BreedSpeciesRules0F7 ; id 247 Skullgon
+    dw BreedSpeciesRules0F8 ; id 248 PutrePup
+    dw BreedSpeciesRules000 ; id 249 RotRaven
+    dw BreedSpeciesRules0FA ; id 250 Mummy
+    dw BreedSpeciesRules000 ; id 251 DarkCrab
+    dw BreedSpeciesRules0FC ; id 252 DeadNite
+    dw BreedSpeciesRules000 ; id 253 Shadow
+    dw BreedSpeciesRules000 ; id 254 Skulpent
+    dw BreedSpeciesRules0FF ; id 255 Hork
+    dw BreedSpeciesRules100 ; id 256 Mudron
+    dw BreedSpeciesRules101 ; id 257 NiteWhip
+    dw BreedSpeciesRules000 ; id 258 WindMerge
+    dw BreedSpeciesRules000 ; id 259 Reaper
+    dw BreedSpeciesRules000 ; id 260 Inverzon
+    dw BreedSpeciesRules000 ; id 261 FoxFire
+    dw BreedSpeciesRules106 ; id 262 CaptDead
+    dw BreedSpeciesRules107 ; id 263 DeadNoble
+    dw BreedSpeciesRules108 ; id 264 WhiteKing
+    dw BreedSpeciesRules109 ; id 265 BoneSlave
+    dw BreedSpeciesRules10A ; id 266 Skeletor
+    dw BreedSpeciesRules10B ; id 267 Servant
+    dw BreedSpeciesRules000 ; id 268 Lazamanus
+    dw BreedSpeciesRules10D ; id 269 Copycat
+    dw BreedSpeciesRules10E ; id 270 MadSpirit
+    dw BreedSpeciesRules000 ; id 271 PomPomBom
+    dw BreedSpeciesRules110 ; id 272 Niterich
+    dw BreedSpeciesRules000 ; id 273 ?
+    dw BreedSpeciesRules000 ; id 274 ?
+    dw BreedSpeciesRules000 ; id 275 ?
+    dw BreedSpeciesRules000 ; id 276 ?
+    dw BreedSpeciesRules000 ; id 277 ?
+    dw BreedSpeciesRules000 ; id 278 ?
+    dw BreedSpeciesRules000 ; id 279 ?
+    dw BreedSpeciesRules000 ; id 280 ?
+    dw BreedSpeciesRules000 ; id 281 JewelBag
+    dw BreedSpeciesRules11A ; id 282 EvilWand
+    dw BreedSpeciesRules11B ; id 283 MadCandle
+    dw BreedSpeciesRules000 ; id 284 CoilBird
+    dw BreedSpeciesRules000 ; id 285 Facer
+    dw BreedSpeciesRules11E ; id 286 SpikyBoy
+    dw BreedSpeciesRules11F ; id 287 MadMirror
+    dw BreedSpeciesRules000 ; id 288 RogueNite
+    dw BreedSpeciesRules121 ; id 289 Puppetor
+    dw BreedSpeciesRules122 ; id 290 Goopi
+    dw BreedSpeciesRules123 ; id 291 Voodoll
+    dw BreedSpeciesRules124 ; id 292 MetalDrak
+    dw BreedSpeciesRules000 ; id 293 Balzak
+    dw BreedSpeciesRules126 ; id 294 SabreMan
+    dw BreedSpeciesRules127 ; id 295 CurseLamp
+    dw BreedSpeciesRules000 ; id 296 Brushead
+    dw BreedSpeciesRules129 ; id 297 Roboster
+    dw BreedSpeciesRules12A ; id 298 Roboster2
+    dw BreedSpeciesRules12B ; id 299 EvilPot
+    dw BreedSpeciesRules12C ; id 300 Gismo
+    dw BreedSpeciesRules12D ; id 301 LavaMan
+    dw BreedSpeciesRules12E ; id 302 IceMan
+    dw BreedSpeciesRules12F ; id 303 Mimic
+    dw BreedSpeciesRules000 ; id 304 Exaucers
+    dw BreedSpeciesRules131 ; id 305 MudDoll
+    dw BreedSpeciesRules132 ; id 306 Golem
+    dw BreedSpeciesRules133 ; id 307 StoneMan
+    dw BreedSpeciesRules000 ; id 308 BombCrag
+    dw BreedSpeciesRules135 ; id 309 GoldGolem
+    dw BreedSpeciesRules000 ; id 310 DarkMate
+    dw BreedSpeciesRules000 ; id 311 ProtoMech
+    dw BreedSpeciesRules000 ; id 312 CloudKing
+    dw BreedSpeciesRules000 ; id 313 ?
+    dw BreedSpeciesRules000 ; id 314 ?
+    dw BreedSpeciesRules000 ; id 315 ?
+    dw BreedSpeciesRules000 ; id 316 Petiteel
+    dw BreedSpeciesRules000 ; id 317 Moray
+    dw BreedSpeciesRules000 ; id 318 WalrusMan
+    dw BreedSpeciesRules000 ; id 319 RayGigas
+    dw BreedSpeciesRules000 ; id 320 Anemon
+    dw BreedSpeciesRules141 ; id 321 Aquarella
+    dw BreedSpeciesRules142 ; id 322 Merman
+    dw BreedSpeciesRules000 ; id 323 Octokid
+    dw BreedSpeciesRules000 ; id 324 PutreFish
+    dw BreedSpeciesRules145 ; id 325 Octoreach
+    dw BreedSpeciesRules146 ; id 326 Angleron
+    dw BreedSpeciesRules000 ; id 327 FishRider
+    dw BreedSpeciesRules148 ; id 328 RushFish
+    dw BreedSpeciesRules149 ; id 329 Gamanian
+    dw BreedSpeciesRules14A ; id 330 Clawster
+    dw BreedSpeciesRules14B ; id 331 CancerMan
+    dw BreedSpeciesRules14C ; id 332 RogueWave
+    dw BreedSpeciesRules000 ; id 333 Scallopa
+    dw BreedSpeciesRules000 ; id 334 SeaHorse
+    dw BreedSpeciesRules14F ; id 335 HoodSquid
+    dw BreedSpeciesRules150 ; id 336 MerTiger
+    dw BreedSpeciesRules000 ; id 337 AxeShark
+    dw BreedSpeciesRules152 ; id 338 Octogon
+    dw BreedSpeciesRules000 ; id 339 KingSquid
+    dw BreedSpeciesRules154 ; id 340 Digong
+    dw BreedSpeciesRules000 ; id 341 WhaleMage
+    dw BreedSpeciesRules000 ; id 342 Aquadon
+    dw BreedSpeciesRules000 ; id 343 Octoraid
+    dw BreedSpeciesRules158 ; id 344 Grakos
+    dw BreedSpeciesRules000 ; id 345 Poseidon
+    dw BreedSpeciesRules000 ; id 346 Pumpoise
+    dw BreedSpeciesRules000 ; id 347 Starfish
+    dw BreedSpeciesRules000 ; id 348 ?
+    dw BreedSpeciesRules000 ; id 349 ?
+    dw BreedSpeciesRules000 ; id 350 ?
+    dw BreedSpeciesRules15F ; id 351 DracoLord
+    dw BreedSpeciesRules160 ; id 352 DracoLord
+    dw BreedSpeciesRules000 ; id 353 LordDraco
+    dw BreedSpeciesRules162 ; id 354 Hargon
+    dw BreedSpeciesRules163 ; id 355 Sidoh
+    dw BreedSpeciesRules000 ; id 356 Genosidoh
+    dw BreedSpeciesRules165 ; id 357 Baramos
+    dw BreedSpeciesRules166 ; id 358 Zoma
+    dw BreedSpeciesRules000 ; id 359 AsuraZoma
+    dw BreedSpeciesRules168 ; id 360 Pizzaro
+    dw BreedSpeciesRules169 ; id 361 PsychoPiz
+    dw BreedSpeciesRules16A ; id 362 Esterk
+    dw BreedSpeciesRules16B ; id 363 Mirudraas
+    dw BreedSpeciesRules16C ; id 364 Mirudraas
+    dw BreedSpeciesRules000 ; id 365 Mudou
+    dw BreedSpeciesRules16E ; id 366 DeathMore
+    dw BreedSpeciesRules16F ; id 367 DeathMore
+    dw BreedSpeciesRules170 ; id 368 DeathMore
+    dw BreedSpeciesRules000 ; id 369 Darkdrium
+    dw BreedSpeciesRules172 ; id 370 Orgodemir
+    dw BreedSpeciesRules000 ; id 371 Orgodemir
+    dw BreedSpeciesRules000 ; id 372 Darck
+    dw BreedSpeciesRules000 ; id 373 Tatsu
+    dw BreedSpeciesRules000 ; id 374 Diago
+    dw BreedSpeciesRules000 ; id 375 Samsi
+    dw BreedSpeciesRules000 ; id 376 Bazoo
+    dw BreedSpeciesRules000 ; id 377 ?
+    dw BreedSpeciesRules000 ; id 378 ?
+    dw BreedSpeciesRules000 ; id 379 ?
+    dw BreedSpeciesRules000 ; id 380 Lamia
+    dw BreedSpeciesRules000 ; id 381 Dimensaur
+    dw BreedSpeciesRules000 ; id 382 Kagebou
+    dw BreedSpeciesRules000 ; id 383 ?
+
+; E-0199 (derived: list for entry $00 of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules000::
+Data_00E_6508:: ; address name
+    dw $FFFF ; id 0 end of list
+
+; E-0199 (derived: list for entry $01 (DrakSlime) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules001::
+Data_00E_650A:: ; address name
+    dw $002B ; id 0 Swordgon
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $02 (SpotSlime) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules002::
+Data_00E_650E:: ; address name
+    dw $FE04 ; id 0 same species, parent B +4 or more
+    dw $FC04 ; id 1 same species, parent A +4 or more
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $06 (SlimeNite) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules006::
+Data_00E_6514:: ; address name
+    dw $0037 ; id 0 Spikerous
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $0A (Slime) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules00A::
+Data_00E_6518:: ; address name
+    dw $FE04 ; id 0 same species, parent B +4 or more
+    dw $FC04 ; id 1 same species, parent A +4 or more
+    dw $FDFD ; id 2 next result
+    dw $004A ; id 3 PillowRat
+    dw $0053 ; id 4 Mommonja
+    dw $FDFD ; id 5 next result
+    dw $010D ; id 6 Copycat
+    dw $FBFB ; id 7 next result when wArg1 = 2, else end of list
+    dw $0075 ; id 8 BigRoost
+    dw $FFFF ; id 9 end of list
+
+; E-0199 (derived: list for entry $0B (Healer) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules00B::
+Data_00E_652C:: ; address name
+    dw $0099 ; id 0 TreeBoy
+    dw $00DC ; id 1 1EyeClown
+    dw $011A ; id 2 EvilWand
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $0D (RockSlime) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules00D::
+Data_00E_6534:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $10 (KingSlime) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules010::
+Data_00E_6538:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $003D ; id 1 BattleRex
+    dw $0040 ; id 2 Divinegon
+    dw $005C ; id 3 Unicorn
+    dw $0060 ; id 4 KingLeo
+    dw $0079 ; id 5 MadCondor
+    dw $007D ; id 6 ZapBird
+    dw $007F ; id 7 WhipBird
+    dw $00E5 ; id 8 BossTroll
+    dw $00EA ; id 9 Gigantes
+    dw $00EB ; id 10 Centasaur
+    dw $0107 ; id 11 DeadNoble
+    dw $0108 ; id 12 WhiteKing
+    dw $FDFD ; id 13 next result
+    dw $0124 ; id 14 MetalDrak
+    dw $FDFD ; id 15 next result
+    dw $0135 ; id 16 GoldGolem
+    dw $FFFF ; id 17 end of list
+
+; E-0199 (derived: list for entry $11 (Metaly) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules011::
+Data_00E_655C:: ; address name
+    dw $0011 ; id 0 Metaly
+    dw $001A ; id 1 WonderEgg
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $12 (Metabble) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules012::
+Data_00E_6562:: ; address name
+    dw $003D ; id 0 BattleRex
+    dw $003E ; id 1 SkyDragon
+    dw $FDFD ; id 2 next result
+    dw $0012 ; id 3 Metabble
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $13 (SpotKing) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules013::
+Data_00E_656C:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $003D ; id 1 BattleRex
+    dw $0040 ; id 2 Divinegon
+    dw $005C ; id 3 Unicorn
+    dw $0060 ; id 4 KingLeo
+    dw $0079 ; id 5 MadCondor
+    dw $007D ; id 6 ZapBird
+    dw $007F ; id 7 WhipBird
+    dw $00E5 ; id 8 BossTroll
+    dw $00EA ; id 9 Gigantes
+    dw $00EB ; id 10 Centasaur
+    dw $0107 ; id 11 DeadNoble
+    dw $0108 ; id 12 WhiteKing
+    dw $FDFD ; id 13 next result
+    dw $0124 ; id 14 MetalDrak
+    dw $FDFD ; id 15 next result
+    dw $0135 ; id 16 GoldGolem
+    dw $FFFF ; id 17 end of list
+
+; E-0199 (derived: list for entry $15 (MimeSlime) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules015::
+Data_00E_6590:: ; address name
+    dw $0076 ; id 0 StubBird
+    dw $00D3 ; id 1 Pixy
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $17 (MetalKing) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules017::
+Data_00E_6596:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $003D ; id 1 BattleRex
+    dw $0040 ; id 2 Divinegon
+    dw $005C ; id 3 Unicorn
+    dw $0060 ; id 4 KingLeo
+    dw $0079 ; id 5 MadCondor
+    dw $007D ; id 6 ZapBird
+    dw $007F ; id 7 WhipBird
+    dw $00E5 ; id 8 BossTroll
+    dw $00EA ; id 9 Gigantes
+    dw $00EB ; id 10 Centasaur
+    dw $0107 ; id 11 DeadNoble
+    dw $0108 ; id 12 WhiteKing
+    dw $FDFD ; id 13 next result
+    dw $0017 ; id 14 MetalKing
+    dw $0135 ; id 15 GoldGolem
+    dw $FFFF ; id 16 end of list
+
+; E-0199 (derived: list for entry $18 (GoldSlime) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules018::
+Data_00E_65B8:: ; address name
+    dw $0018 ; id 0 GoldSlime
+    dw $0136 ; id 1 DarkMate
+    dw $016E ; id 2 DeathMore
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $1A (WonderEgg) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules01A::
+Data_00E_65C0:: ; address name
+    dw $0012 ; id 0 Metabble
+    dw $FDFD ; id 1 next result
+    dw $0017 ; id 2 MetalKing
+    dw $FDFD ; id 3 next result
+    dw $0018 ; id 4 GoldSlime
+    dw $FFFF ; id 5 end of list
+
+; E-0199 (derived: list for entry $24 (DragonKid) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules024::
+Data_00E_65CC:: ; address name
+    dw $FE04 ; id 0 same species, parent B +4 or more
+    dw $FC04 ; id 1 same species, parent A +4 or more
+    dw $FDFD ; id 2 next result
+    dw $0024 ; id 3 DragonKid
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $26 (Pteranod) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules026::
+Data_00E_65D6:: ; address name
+    dw $0026 ; id 0 Pteranod
+    dw $FDFD ; id 1 next result
+    dw $0061 ; id 2 DarkHorn
+    dw $00E8 ; id 3 MadKnight
+    dw $010D ; id 4 Copycat
+    dw $0133 ; id 5 StoneMan
+    dw $007F ; id 6 WhipBird
+    dw $FFFF ; id 7 end of list
+
+; E-0199 (derived: list for entry $27 (Gasgon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules027::
+Data_00E_65E6:: ; address name
+    dw $005D ; id 0 Goategon
+    dw $005F ; id 1 Trumpeter
+    dw $0079 ; id 2 MadCondor
+    dw $0080 ; id 3 FunkyBird
+    dw $00DE ; id 4 ArcDemon
+    dw $00DF ; id 5 Lionex
+    dw $00E0 ; id 6 GoatHorn
+    dw $00E2 ; id 7 Ogre
+    dw $00E7 ; id 8 Akubar
+    dw $0107 ; id 9 DeadNoble
+    dw $0132 ; id 10 Golem
+    dw $FDFD ; id 11 next result
+    dw $0061 ; id 12 DarkHorn
+    dw $00E8 ; id 13 MadKnight
+    dw $010D ; id 14 Copycat
+    dw $0133 ; id 15 StoneMan
+    dw $007F ; id 16 WhipBird
+    dw $FFFF ; id 17 end of list
+
+; E-0199 (derived: list for entry $29 (LizardMan) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules029::
+Data_00E_660A:: ; address name
+    dw $0003 ; id 0 WingSlime
+    dw $005F ; id 1 Trumpeter
+    dw $0062 ; id 2 MadCat
+    dw $009B ; id 3 FaceTree
+    dw $00DF ; id 4 Lionex
+    dw $00E0 ; id 5 GoatHorn
+    dw $00E3 ; id 6 GateGuard
+    dw $00EA ; id 7 Gigantes
+    dw $FDFD ; id 8 next result
+    dw $0061 ; id 9 DarkHorn
+    dw $00E8 ; id 10 MadKnight
+    dw $010D ; id 11 Copycat
+    dw $0133 ; id 12 StoneMan
+    dw $007F ; id 13 WhipBird
+    dw $FFFF ; id 14 end of list
+
+; E-0199 (derived: list for entry $2D (Dragon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules02D::
+Data_00E_6628:: ; address name
+    dw $FE04 ; id 0 same species, parent B +4 or more
+    dw $FC04 ; id 1 same species, parent A +4 or more
+    dw $FBFB ; id 2 next result when wArg1 = 2, else end of list
+    dw $0072 ; id 3 AquaHawk
+    dw $FDFD ; id 4 next result
+    dw $00DF ; id 5 Lionex
+    dw $FFFF ; id 6 end of list
+
+; E-0199 (derived: list for entry $2F (MadDragon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules02F::
+Data_00E_6636:: ; address name
+    dw $005D ; id 0 Goategon
+    dw $005F ; id 1 Trumpeter
+    dw $0079 ; id 2 MadCondor
+    dw $0080 ; id 3 FunkyBird
+    dw $00DE ; id 4 ArcDemon
+    dw $00DF ; id 5 Lionex
+    dw $00E0 ; id 6 GoatHorn
+    dw $00E2 ; id 7 Ogre
+    dw $00E7 ; id 8 Akubar
+    dw $0107 ; id 9 DeadNoble
+    dw $0132 ; id 10 Golem
+    dw $FFFF ; id 11 end of list
+
+; E-0199 (derived: list for entry $33 (Andreal) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules033::
+Data_00E_664E:: ; address name
+    dw $00D4 ; id 0 MedusaEye
+    dw $FDFD ; id 1 next result
+    dw $00E5 ; id 2 BossTroll
+    dw $00EA ; id 3 Gigantes
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $34 (KingCobra) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules034::
+Data_00E_6658:: ; address name
+    dw $0073 ; id 0 Dracky
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $35 (Vampirus) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules035::
+Data_00E_665C:: ; address name
+    dw $0061 ; id 0 DarkHorn
+    dw $00E8 ; id 1 MadKnight
+    dw $010D ; id 2 Copycat
+    dw $0133 ; id 3 StoneMan
+    dw $007F ; id 4 WhipBird
+    dw $FBFB ; id 5 next result when wArg1 = 2, else end of list
+    dw $0072 ; id 6 AquaHawk
+    dw $FFFF ; id 7 end of list
+
+; E-0199 (derived: list for entry $38 (GreatDrak) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules038::
+Data_00E_666C:: ; address name
+    dw $00D4 ; id 0 MedusaEye
+    dw $FDFD ; id 1 next result
+    dw $00DF ; id 2 Lionex
+    dw $010A ; id 3 Skeletor
+    dw $0157 ; id 4 Octoraid
+    dw $FDFD ; id 5 next result
+    dw $00E5 ; id 6 BossTroll
+    dw $00EA ; id 7 Gigantes
+    dw $FFFF ; id 8 end of list
+
+; E-0199 (derived: list for entry $39 (Crestpent) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules039::
+Data_00E_667E:: ; address name
+    dw $0039 ; id 0 Crestpent
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $3A (WingSnake) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules03A::
+Data_00E_6682:: ; address name
+    dw $003A ; id 0 WingSnake
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $3D (BattleRex) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules03D::
+Data_00E_6686:: ; address name
+    dw $005D ; id 0 Goategon
+    dw $005F ; id 1 Trumpeter
+    dw $0079 ; id 2 MadCondor
+    dw $0080 ; id 3 FunkyBird
+    dw $00DE ; id 4 ArcDemon
+    dw $00DF ; id 5 Lionex
+    dw $00E0 ; id 6 GoatHorn
+    dw $00E2 ; id 7 Ogre
+    dw $00E7 ; id 8 Akubar
+    dw $0107 ; id 9 DeadNoble
+    dw $0132 ; id 10 Golem
+    dw $FDFD ; id 11 next result
+    dw $0061 ; id 12 DarkHorn
+    dw $00E8 ; id 13 MadKnight
+    dw $010D ; id 14 Copycat
+    dw $0133 ; id 15 StoneMan
+    dw $007F ; id 16 WhipBird
+    dw $FDFD ; id 17 next result
+    dw $00E5 ; id 18 BossTroll
+    dw $00EA ; id 19 Gigantes
+    dw $FFFF ; id 20 end of list
+
+; E-0199 (derived: list for entry $3E (SkyDragon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules03E::
+Data_00E_66B0:: ; address name
+    dw $005D ; id 0 Goategon
+    dw $005F ; id 1 Trumpeter
+    dw $0079 ; id 2 MadCondor
+    dw $0080 ; id 3 FunkyBird
+    dw $00DE ; id 4 ArcDemon
+    dw $00DF ; id 5 Lionex
+    dw $00E0 ; id 6 GoatHorn
+    dw $00E2 ; id 7 Ogre
+    dw $00E7 ; id 8 Akubar
+    dw $0107 ; id 9 DeadNoble
+    dw $0132 ; id 10 Golem
+    dw $FDFD ; id 11 next result
+    dw $0061 ; id 12 DarkHorn
+    dw $00E8 ; id 13 MadKnight
+    dw $010D ; id 14 Copycat
+    dw $0133 ; id 15 StoneMan
+    dw $007F ; id 16 WhipBird
+    dw $FDFD ; id 17 next result
+    dw $003C ; id 18 Orochi
+    dw $003F ; id 19 Serpentia
+    dw $FDFD ; id 20 next result
+    dw $00E5 ; id 21 BossTroll
+    dw $00EA ; id 22 Gigantes
+    dw $FFFF ; id 23 end of list
+
+; E-0199 (derived: list for entry $40 (Divinegon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules040::
+Data_00E_66E0:: ; address name
+    dw $0135 ; id 0 GoldGolem
+    dw $0042 ; id 1 GigaDraco
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $47 (Tonguella) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules047::
+Data_00E_66E6:: ; address name
+    dw $00C7 ; id 0 Digster
+    dw $00F7 ; id 1 Skullgon
+    dw $0107 ; id 2 DeadNoble
+    dw $0108 ; id 3 WhiteKing
+    dw $010A ; id 4 Skeletor
+    dw $FDFD ; id 5 next result
+    dw $0004 ; id 6 TreeSlime
+    dw $000C ; id 7 FangSlime
+    dw $002F ; id 8 MadDragon
+    dw $0080 ; id 9 FunkyBird
+    dw $008D ; id 10 MadPlant
+    dw $009B ; id 11 FaceTree
+    dw $00B6 ; id 12 Lipsy
+    dw $00D6 ; id 13 Demonite
+    dw $00DD ; id 14 Gremlin
+    dw $010D ; id 15 Copycat
+    dw $0119 ; id 16 JewelBag
+    dw $012F ; id 17 Mimic
+    dw $FDFD ; id 18 next result
+    dw $0077 ; id 19 LandOwl
+    dw $0079 ; id 20 MadCondor
+    dw $007D ; id 21 ZapBird
+    dw $007F ; id 22 WhipBird
+    dw $FFFF ; id 23 end of list
+
+; E-0199 (derived: list for entry $48 (Almiraj) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules048::
+Data_00E_6716:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $000B ; id 1 Healer
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $49 (CatFly) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules049::
+Data_00E_671C:: ; address name
+    dw $0015 ; id 0 MimeSlime
+    dw $0065 ; id 1 CatMage
+    dw $0099 ; id 2 TreeBoy
+    dw $00C5 ; id 3 Sickler
+    dw $00DC ; id 4 1EyeClown
+    dw $0103 ; id 5 Reaper
+    dw $011A ; id 6 EvilWand
+    dw $FFFF ; id 7 end of list
+
+; E-0199 (derived: list for entry $4C (GulpBeast) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules04C::
+Data_00E_672C:: ; address name
+    dw $0004 ; id 0 TreeSlime
+    dw $000C ; id 1 FangSlime
+    dw $002F ; id 2 MadDragon
+    dw $0080 ; id 3 FunkyBird
+    dw $008D ; id 4 MadPlant
+    dw $009B ; id 5 FaceTree
+    dw $00B6 ; id 6 Lipsy
+    dw $00D6 ; id 7 Demonite
+    dw $00DD ; id 8 Gremlin
+    dw $010D ; id 9 Copycat
+    dw $0119 ; id 10 JewelBag
+    dw $012F ; id 11 Mimic
+    dw $FDFD ; id 12 next result
+    dw $0077 ; id 13 LandOwl
+    dw $0079 ; id 14 MadCondor
+    dw $007D ; id 15 ZapBird
+    dw $007F ; id 16 WhipBird
+    dw $0124 ; id 17 MetalDrak
+    dw $0125 ; id 18 Balzak
+    dw $0129 ; id 19 Roboster
+    dw $012D ; id 20 LavaMan
+    dw $012E ; id 21 IceMan
+    dw $0132 ; id 22 Golem
+    dw $0133 ; id 23 StoneMan
+    dw $FFFF ; id 24 end of list
+
+; E-0199 (derived: list for entry $51 (SuperTen) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules051::
+Data_00E_675E:: ; address name
+    dw $0029 ; id 0 LizardMan
+    dw $0059 ; id 1 BeastNite
+    dw $00DB ; id 2 Bubblemon
+    dw $00E1 ; id 3 Orc
+    dw $0126 ; id 4 SabreMan
+    dw $013E ; id 5 WalrusMan
+    dw $0150 ; id 6 MerTiger
+    dw $FFFF ; id 7 end of list
+
+; E-0199 (derived: list for entry $52 (IronTurt) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules052::
+Data_00E_676E:: ; address name
+    dw $0124 ; id 0 MetalDrak
+    dw $0129 ; id 1 Roboster
+    dw $012D ; id 2 LavaMan
+    dw $012E ; id 3 IceMan
+    dw $0132 ; id 4 Golem
+    dw $0133 ; id 5 StoneMan
+    dw $FDFD ; id 6 next result
+    dw $0026 ; id 7 Pteranod
+    dw $0027 ; id 8 Gasgon
+    dw $002B ; id 9 Swordgon
+    dw $002F ; id 10 MadDragon
+    dw $003D ; id 11 BattleRex
+    dw $003E ; id 12 SkyDragon
+    dw $FFFF ; id 13 end of list
+
+; E-0199 (derived: list for entry $54 (HammerMan) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules054::
+Data_00E_678A:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $0029 ; id 1 LizardMan
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $55 (Grizzly) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules055::
+Data_00E_6790:: ; address name
+    dw $00C7 ; id 0 Digster
+    dw $00F7 ; id 1 Skullgon
+    dw $0107 ; id 2 DeadNoble
+    dw $0108 ; id 3 WhiteKing
+    dw $010A ; id 4 Skeletor
+    dw $0124 ; id 5 MetalDrak
+    dw $0129 ; id 6 Roboster
+    dw $012D ; id 7 LavaMan
+    dw $012E ; id 8 IceMan
+    dw $0132 ; id 9 Golem
+    dw $0133 ; id 10 StoneMan
+    dw $FDFD ; id 11 next result
+    dw $0077 ; id 12 LandOwl
+    dw $0079 ; id 13 MadCondor
+    dw $007D ; id 14 ZapBird
+    dw $007F ; id 15 WhipBird
+    dw $FFFF ; id 16 end of list
+
+; E-0199 (derived: list for entry $56 (Yeti) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules056::
+Data_00E_67B2:: ; address name
+    dw $00C7 ; id 0 Digster
+    dw $00F7 ; id 1 Skullgon
+    dw $0107 ; id 2 DeadNoble
+    dw $0108 ; id 3 WhiteKing
+    dw $010A ; id 4 Skeletor
+    dw $0124 ; id 5 MetalDrak
+    dw $0129 ; id 6 Roboster
+    dw $012D ; id 7 LavaMan
+    dw $012E ; id 8 IceMan
+    dw $0132 ; id 9 Golem
+    dw $0133 ; id 10 StoneMan
+    dw $FDFD ; id 11 next result
+    dw $0077 ; id 12 LandOwl
+    dw $0079 ; id 13 MadCondor
+    dw $007D ; id 14 ZapBird
+    dw $007F ; id 15 WhipBird
+    dw $FFFF ; id 16 end of list
+
+; E-0199 (derived: list for entry $57 (ArrowDog) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules057::
+Data_00E_67D4:: ; address name
+    dw $0073 ; id 0 Dracky
+    dw $00FD ; id 1 Shadow
+    dw $FDFD ; id 2 next result
+    dw $FE04 ; id 3 same species, parent B +4 or more
+    dw $FC04 ; id 4 same species, parent A +4 or more
+    dw $FFFF ; id 5 end of list
+
+; E-0199 (derived: list for entry $58 (NoctoKing) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules058::
+Data_00E_67E0:: ; address name
+    dw $00EA ; id 0 Gigantes
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $59 (BeastNite) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules059::
+Data_00E_67E4:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $0150 ; id 1 MerTiger
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $5A (MadGopher) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules05A::
+Data_00E_67EA:: ; address name
+    dw $0066 ; id 0 Dumbira
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $5C (Unicorn) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules05C::
+Data_00E_67EE:: ; address name
+    dw $00C7 ; id 0 Digster
+    dw $00F7 ; id 1 Skullgon
+    dw $0107 ; id 2 DeadNoble
+    dw $0108 ; id 3 WhiteKing
+    dw $010A ; id 4 Skeletor
+    dw $0124 ; id 5 MetalDrak
+    dw $0129 ; id 6 Roboster
+    dw $012D ; id 7 LavaMan
+    dw $012E ; id 8 IceMan
+    dw $0132 ; id 9 Golem
+    dw $0133 ; id 10 StoneMan
+    dw $FFFF ; id 11 end of list
+
+; E-0199 (derived: list for entry $5D (Goategon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules05D::
+Data_00E_6806:: ; address name
+    dw $0124 ; id 0 MetalDrak
+    dw $0129 ; id 1 Roboster
+    dw $012D ; id 2 LavaMan
+    dw $012E ; id 3 IceMan
+    dw $0132 ; id 4 Golem
+    dw $0133 ; id 5 StoneMan
+    dw $FDFD ; id 6 next result
+    dw $0026 ; id 7 Pteranod
+    dw $0027 ; id 8 Gasgon
+    dw $002B ; id 9 Swordgon
+    dw $002F ; id 10 MadDragon
+    dw $003D ; id 11 BattleRex
+    dw $003E ; id 12 SkyDragon
+    dw $FFFF ; id 13 end of list
+
+; E-0199 (derived: list for entry $5E (WildApe) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules05E::
+Data_00E_6822:: ; address name
+    dw $00C7 ; id 0 Digster
+    dw $00F7 ; id 1 Skullgon
+    dw $0107 ; id 2 DeadNoble
+    dw $0108 ; id 3 WhiteKing
+    dw $010A ; id 4 Skeletor
+    dw $0124 ; id 5 MetalDrak
+    dw $0129 ; id 6 Roboster
+    dw $012D ; id 7 LavaMan
+    dw $012E ; id 8 IceMan
+    dw $0132 ; id 9 Golem
+    dw $0133 ; id 10 StoneMan
+    dw $FDFD ; id 11 next result
+    dw $0026 ; id 12 Pteranod
+    dw $0027 ; id 13 Gasgon
+    dw $002B ; id 14 Swordgon
+    dw $002F ; id 15 MadDragon
+    dw $003D ; id 16 BattleRex
+    dw $003E ; id 17 SkyDragon
+    dw $FDFD ; id 18 next result
+    dw $005E ; id 19 WildApe
+    dw $FFFF ; id 20 end of list
+
+; E-0199 (derived: list for entry $5F (Trumpeter) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules05F::
+Data_00E_684C:: ; address name
+    dw $00C7 ; id 0 Digster
+    dw $00F7 ; id 1 Skullgon
+    dw $0107 ; id 2 DeadNoble
+    dw $0108 ; id 3 WhiteKing
+    dw $010A ; id 4 Skeletor
+    dw $0129 ; id 5 Roboster
+    dw $012D ; id 6 LavaMan
+    dw $012E ; id 7 IceMan
+    dw $0132 ; id 8 Golem
+    dw $0133 ; id 9 StoneMan
+    dw $FDFD ; id 10 next result
+    dw $005F ; id 11 Trumpeter
+    dw $00E5 ; id 12 BossTroll
+    dw $0124 ; id 13 MetalDrak
+    dw $0125 ; id 14 Balzak
+    dw $0135 ; id 15 GoldGolem
+    dw $FBFB ; id 16 next result when wArg1 = 2, else end of list
+    dw $007E ; id 17 Garudian
+    dw $FFFF ; id 18 end of list
+
+; E-0199 (derived: list for entry $61 (DarkHorn) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules061::
+Data_00E_6872:: ; address name
+    dw $003C ; id 0 Orochi
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $62 (MadCat) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules062::
+Data_00E_6876:: ; address name
+    dw $0026 ; id 0 Pteranod
+    dw $0027 ; id 1 Gasgon
+    dw $002B ; id 2 Swordgon
+    dw $002F ; id 3 MadDragon
+    dw $003D ; id 4 BattleRex
+    dw $003E ; id 5 SkyDragon
+    dw $FBFB ; id 6 next result when wArg1 = 2, else end of list
+    dw $00F0 ; id 7 LampGenie
+    dw $FFFF ; id 8 end of list
+
+; E-0199 (derived: list for entry $65 (CatMage) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules065::
+Data_00E_6888:: ; address name
+    dw $005C ; id 0 Unicorn
+    dw $005D ; id 1 Goategon
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $66 (Dumbira) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules066::
+Data_00E_688E:: ; address name
+    dw $00C7 ; id 0 Digster
+    dw $00F7 ; id 1 Skullgon
+    dw $0107 ; id 2 DeadNoble
+    dw $0108 ; id 3 WhiteKing
+    dw $010A ; id 4 Skeletor
+    dw $0124 ; id 5 MetalDrak
+    dw $0129 ; id 6 Roboster
+    dw $012D ; id 7 LavaMan
+    dw $012E ; id 8 IceMan
+    dw $0132 ; id 9 Golem
+    dw $0133 ; id 10 StoneMan
+    dw $FDFD ; id 11 next result
+    dw $007B ; id 12 Blizzardy
+    dw $FFFF ; id 13 end of list
+
+; E-0199 (derived: list for entry $6C (BullBird) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules06C::
+Data_00E_68AA:: ; address name
+    dw $0055 ; id 0 Grizzly
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $6F (MadPecker) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules06F::
+Data_00E_68AE:: ; address name
+    dw $0063 ; id 0 BigEye
+    dw $00D7 ; id 1 DarkEye
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $72 (AquaHawk) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules072::
+Data_00E_68B4:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $003A ; id 1 WingSnake
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $74 (KiteHawk) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules074::
+Data_00E_68BA:: ; address name
+    dw $0075 ; id 0 BigRoost
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $77 (LandOwl) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules077::
+Data_00E_68BE:: ; address name
+    dw $000D ; id 0 RockSlime
+    dw $000E ; id 1 SlimeBorg
+    dw $00C7 ; id 2 Digster
+    dw $0124 ; id 3 MetalDrak
+    dw $0132 ; id 4 Golem
+    dw $0133 ; id 5 StoneMan
+    dw $0142 ; id 6 Merman
+    dw $FFFF ; id 7 end of list
+
+; E-0199 (derived: list for entry $78 (MadGoose) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules078::
+Data_00E_68CE:: ; address name
+    dw $000D ; id 0 RockSlime
+    dw $000E ; id 1 SlimeBorg
+    dw $00C7 ; id 2 Digster
+    dw $0124 ; id 3 MetalDrak
+    dw $0132 ; id 4 Golem
+    dw $0133 ; id 5 StoneMan
+    dw $0142 ; id 6 Merman
+    dw $FFFF ; id 7 end of list
+
+; E-0199 (derived: list for entry $79 (MadCondor) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules079::
+Data_00E_68DE:: ; address name
+    dw $006F ; id 0 MadPecker
+    dw $FDFD ; id 1 next result
+    dw $012C ; id 2 Gismo
+    dw $FDFD ; id 3 next result
+    dw $000D ; id 4 RockSlime
+    dw $000E ; id 5 SlimeBorg
+    dw $00C7 ; id 6 Digster
+    dw $0124 ; id 7 MetalDrak
+    dw $0132 ; id 8 Golem
+    dw $0133 ; id 9 StoneMan
+    dw $0142 ; id 10 Merman
+    dw $FFFF ; id 11 end of list
+
+; E-0199 (derived: list for entry $7B (Blizzardy) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules07B::
+Data_00E_68F6:: ; address name
+    dw $00DF ; id 0 Lionex
+    dw $FDFD ; id 1 next result
+    dw $000D ; id 2 RockSlime
+    dw $000E ; id 3 SlimeBorg
+    dw $00C7 ; id 4 Digster
+    dw $0124 ; id 5 MetalDrak
+    dw $0132 ; id 6 Golem
+    dw $0133 ; id 7 StoneMan
+    dw $0142 ; id 8 Merman
+    dw $FDFD ; id 9 next result
+    dw $0035 ; id 10 Vampirus
+    dw $007C ; id 11 Phoenix
+    dw $FFFF ; id 12 end of list
+
+; E-0199 (derived: list for entry $7C (Phoenix) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules07C::
+Data_00E_6910:: ; address name
+    dw $012C ; id 0 Gismo
+    dw $FDFD ; id 1 next result
+    dw $00DF ; id 2 Lionex
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $7D (ZapBird) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules07D::
+Data_00E_6918:: ; address name
+    dw $00DF ; id 0 Lionex
+    dw $FDFD ; id 1 next result
+    dw $000D ; id 2 RockSlime
+    dw $000E ; id 3 SlimeBorg
+    dw $00C7 ; id 4 Digster
+    dw $0124 ; id 5 MetalDrak
+    dw $0132 ; id 6 Golem
+    dw $0133 ; id 7 StoneMan
+    dw $0142 ; id 8 Merman
+    dw $FFFF ; id 9 end of list
+
+; E-0199 (derived: list for entry $7E (Garudian) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules07E::
+Data_00E_692C:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $005F ; id 1 Trumpeter
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $7F (WhipBird) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules07F::
+Data_00E_6932:: ; address name
+    dw $012C ; id 0 Gismo
+    dw $FDFD ; id 1 next result
+    dw $0038 ; id 2 GreatDrak
+    dw $00ED ; id 3 Jamirus
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $80 (FunkyBird) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules080::
+Data_00E_693C:: ; address name
+    dw $00ED ; id 0 Jamirus
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $81 (RainHawk) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules081::
+Data_00E_6940:: ; address name
+    dw $0135 ; id 0 GoldGolem
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $83 (Shantak) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules083::
+Data_00E_6944:: ; address name
+    dw $0135 ; id 0 GoldGolem
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $84 (CragDevil) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules084::
+Data_00E_6948:: ; address name
+    dw $006E ; id 0 DuckKite
+    dw $0070 ; id 1 MadRaven
+    dw $FDFD ; id 2 next result
+    dw $FE04 ; id 3 same species, parent B +4 or more
+    dw $FC04 ; id 4 same species, parent A +4 or more
+    dw $FFFF ; id 5 end of list
+
+; E-0199 (derived: list for entry $96 (Stubsuck) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules096::
+Data_00E_6954:: ; address name
+    dw $0121 ; id 0 Puppetor
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $99 (TreeBoy) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules099::
+Data_00E_6958:: ; address name
+    dw $0006 ; id 0 SlimeNite
+    dw $0054 ; id 1 HammerMan
+    dw $0059 ; id 2 BeastNite
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $9E (EvilSeed) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules09E::
+Data_00E_6960:: ; address name
+    dw $0095 ; id 0 Slurperon
+    dw $009E ; id 1 EvilSeed
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $9F (ManEater) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules09F::
+Data_00E_6966:: ; address name
+    dw $009F ; id 0 ManEater
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $A1 (GhosTree) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0A1::
+Data_00E_696A:: ; address name
+    dw $00A1 ; id 0 GhosTree
+    dw $FDFD ; id 1 next result
+    dw $00A0 ; id 2 Snapper
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $A2 (Rosevine) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0A2::
+Data_00E_6972:: ; address name
+    dw $00EA ; id 0 Gigantes
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $A4 (Warubou) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0A4::
+Data_00E_6976:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $00A5 ; id 1 Watabou
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $A7 (FooHero) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0A7::
+Data_00E_697C:: ; address name
+    dw $011A ; id 0 EvilWand
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $B1 (Catapila) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0B1::
+Data_00E_6980:: ; address name
+    dw $00B1 ; id 0 Catapila
+
+; E-0199 (derived: list for entry $B3 (Butterfly) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0B3::
+Data_00E_6982:: ; address name
+    dw $00B3 ; id 0 Butterfly
+    dw $FDFD ; id 1 next result
+    dw $00B8 ; id 2 Pyuro
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $B4 (WeedBug) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0B4::
+Data_00E_698A:: ; address name
+    dw $0140 ; id 0 Anemon
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $B6 (Lipsy) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0B6::
+Data_00E_698E:: ; address name
+    dw $0141 ; id 0 Aquarella
+    dw $0143 ; id 1 Octokid
+    dw $0146 ; id 2 Angleron
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $B7 (StagBug) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0B7::
+Data_00E_6996:: ; address name
+    dw $00B7 ; id 0 StagBug
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $BB (TailEater) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0BB::
+Data_00E_699A:: ; address name
+    dw $00BB ; id 0 TailEater
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $BD (Eyeder) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0BD::
+Data_00E_699E:: ; address name
+    dw $00BD ; id 0 Eyeder
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $C0 (ArmyCrab) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0C0::
+Data_00E_69A2:: ; address name
+    dw $014A ; id 0 Clawster
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $C1 (MadHornet) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0C1::
+Data_00E_69A6:: ; address name
+    dw $00BA ; id 0 GoHopper
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $C3 (WarMantis) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0C3::
+Data_00E_69AA:: ; address name
+    dw $0120 ; id 0 RogueNite
+    dw $014B ; id 1 CancerMan
+    dw $0157 ; id 2 Octoraid
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $C4 (HornBeet) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0C4::
+Data_00E_69B2:: ; address name
+    dw $00C4 ; id 0 HornBeet
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $C6 (Armorpion) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0C6::
+Data_00E_69B6:: ; address name
+    dw $0108 ; id 0 WhiteKing
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $C9 (MultiEyes) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0C9::
+Data_00E_69BA:: ; address name
+    dw $00B3 ; id 0 Butterfly
+    dw $00B8 ; id 1 Pyuro
+    dw $FDFD ; id 2 next result
+    dw $000D ; id 3 RockSlime
+    dw $0025 ; id 4 Tortragon
+    dw $0052 ; id 5 IronTurt
+    dw $FFFF ; id 6 end of list
+
+; E-0199 (derived: list for entry $D5 (AgDevil) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0D5::
+Data_00E_69C8:: ; address name
+    dw $0010 ; id 0 KingSlime
+    dw $0013 ; id 1 SpotKing
+    dw $0017 ; id 2 MetalKing
+    dw $0033 ; id 3 Andreal
+    dw $0038 ; id 4 GreatDrak
+    dw $003C ; id 5 Orochi
+    dw $005F ; id 6 Trumpeter
+    dw $0060 ; id 7 KingLeo
+    dw $007D ; id 8 ZapBird
+    dw $007E ; id 9 Garudian
+    dw $007F ; id 10 WhipBird
+    dw $0124 ; id 11 MetalDrak
+    dw $FDFD ; id 12 next result
+    dw $004C ; id 13 GulpBeast
+    dw $005C ; id 14 Unicorn
+    dw $00C7 ; id 15 Digster
+    dw $0129 ; id 16 Roboster
+    dw $013E ; id 17 WalrusMan
+    dw $0150 ; id 18 MerTiger
+    dw $FDFD ; id 19 next result
+    dw $000E ; id 20 SlimeBorg
+    dw $002B ; id 21 Swordgon
+    dw $003B ; id 22 Coatol
+    dw $0071 ; id 23 MistyWing
+    dw $0079 ; id 24 MadCondor
+    dw $00A2 ; id 25 Rosevine
+    dw $00BE ; id 26 GiantMoth
+    dw $00F7 ; id 27 Skullgon
+    dw $0107 ; id 28 DeadNoble
+    dw $0108 ; id 29 WhiteKing
+    dw $0151 ; id 30 AxeShark
+    dw $FFFF ; id 31 end of list
+
+; E-0199 (derived: list for entry $D6 (Demonite) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0D6::
+Data_00E_6A08:: ; address name
+    dw $00D6 ; id 0 Demonite
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $D7 (DarkEye) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0D7::
+Data_00E_6A0C:: ; address name
+    dw $0141 ; id 0 Aquarella
+    dw $0145 ; id 1 Octoreach
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $DB (Bubblemon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0DB::
+Data_00E_6A12:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $00FC ; id 1 DeadNite
+    dw $FDFD ; id 2 next result
+    dw $012B ; id 3 EvilPot
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $DC (1EyeClown) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0DC::
+Data_00E_6A1C:: ; address name
+    dw $0141 ; id 0 Aquarella
+    dw $0145 ; id 1 Octoreach
+    dw $FDFD ; id 2 next result
+    dw $00DC ; id 3 1EyeClown
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $DD (Gremlin) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0DD::
+Data_00E_6A26:: ; address name
+    dw $0141 ; id 0 Aquarella
+    dw $0145 ; id 1 Octoreach
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $DE (ArcDemon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0DE::
+Data_00E_6A2C:: ; address name
+    dw $007E ; id 0 Garudian
+    dw $FDFD ; id 1 next result
+    dw $00E3 ; id 2 GateGuard
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $DF (Lionex) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0DF::
+Data_00E_6A34:: ; address name
+    dw $0015 ; id 0 MimeSlime
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $E2 (Ogre) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0E2::
+Data_00E_6A38:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $0125 ; id 1 Balzak
+    dw $0133 ; id 2 StoneMan
+    dw $013E ; id 3 WalrusMan
+    dw $FDFD ; id 4 next result
+    dw $012D ; id 5 LavaMan
+    dw $FFFF ; id 6 end of list
+
+; E-0199 (derived: list for entry $E5 (BossTroll) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0E5::
+Data_00E_6A46:: ; address name
+    dw $012E ; id 0 IceMan
+    dw $FBFB ; id 1 next result when wArg1 = 2, else end of list
+    dw $0127 ; id 2 CurseLamp
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $E6 (Grendal) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0E6::
+Data_00E_6A4E:: ; address name
+    dw $0010 ; id 0 KingSlime
+    dw $0013 ; id 1 SpotKing
+    dw $0017 ; id 2 MetalKing
+    dw $0033 ; id 3 Andreal
+    dw $0038 ; id 4 GreatDrak
+    dw $003C ; id 5 Orochi
+    dw $005F ; id 6 Trumpeter
+    dw $0060 ; id 7 KingLeo
+    dw $007D ; id 8 ZapBird
+    dw $007E ; id 9 Garudian
+    dw $007F ; id 10 WhipBird
+    dw $0124 ; id 11 MetalDrak
+    dw $FDFD ; id 12 next result
+    dw $004C ; id 13 GulpBeast
+    dw $005C ; id 14 Unicorn
+    dw $00C7 ; id 15 Digster
+    dw $0129 ; id 16 Roboster
+    dw $013E ; id 17 WalrusMan
+    dw $0150 ; id 18 MerTiger
+    dw $FDFD ; id 19 next result
+    dw $000E ; id 20 SlimeBorg
+    dw $002B ; id 21 Swordgon
+    dw $003B ; id 22 Coatol
+    dw $0071 ; id 23 MistyWing
+    dw $0079 ; id 24 MadCondor
+    dw $00A2 ; id 25 Rosevine
+    dw $00BE ; id 26 GiantMoth
+    dw $00F7 ; id 27 Skullgon
+    dw $0107 ; id 28 DeadNoble
+    dw $0108 ; id 29 WhiteKing
+    dw $0151 ; id 30 AxeShark
+    dw $FDFD ; id 31 next result
+    dw $00E6 ; id 32 Grendal
+    dw $FBFB ; id 33 next result when wArg1 = 2, else end of list
+    dw $010A ; id 34 Skeletor
+    dw $FFFF ; id 35 end of list
+
+; E-0199 (derived: list for entry $E7 (Akubar) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0E7::
+Data_00E_6A96:: ; address name
+    dw $0081 ; id 0 RainHawk
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $EA (Gigantes) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0EA::
+Data_00E_6A9A:: ; address name
+    dw $0010 ; id 0 KingSlime
+    dw $0013 ; id 1 SpotKing
+    dw $0017 ; id 2 MetalKing
+    dw $0033 ; id 3 Andreal
+    dw $0038 ; id 4 GreatDrak
+    dw $003C ; id 5 Orochi
+    dw $005F ; id 6 Trumpeter
+    dw $0060 ; id 7 KingLeo
+    dw $007D ; id 8 ZapBird
+    dw $007E ; id 9 Garudian
+    dw $007F ; id 10 WhipBird
+    dw $0124 ; id 11 MetalDrak
+    dw $FDFD ; id 12 next result
+    dw $004C ; id 13 GulpBeast
+    dw $005C ; id 14 Unicorn
+    dw $00C7 ; id 15 Digster
+    dw $0129 ; id 16 Roboster
+    dw $013E ; id 17 WalrusMan
+    dw $0150 ; id 18 MerTiger
+    dw $FDFD ; id 19 next result
+    dw $000E ; id 20 SlimeBorg
+    dw $002B ; id 21 Swordgon
+    dw $003B ; id 22 Coatol
+    dw $0071 ; id 23 MistyWing
+    dw $0079 ; id 24 MadCondor
+    dw $00A2 ; id 25 Rosevine
+    dw $00BE ; id 26 GiantMoth
+    dw $00F7 ; id 27 Skullgon
+    dw $0107 ; id 28 DeadNoble
+    dw $0108 ; id 29 WhiteKing
+    dw $0151 ; id 30 AxeShark
+    dw $FFFF ; id 31 end of list
+
+; E-0199 (derived: list for entry $EB (Centasaur) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0EB::
+Data_00E_6ADA:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $0125 ; id 1 Balzak
+    dw $0133 ; id 2 StoneMan
+    dw $013E ; id 3 WalrusMan
+    dw $FDFD ; id 4 next result
+    dw $0135 ; id 5 GoldGolem
+    dw $FFFF ; id 6 end of list
+
+; E-0199 (derived: list for entry $ED (Jamirus) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0ED::
+Data_00E_6AE8:: ; address name
+    dw $003F ; id 0 Serpentia
+    dw $FDFD ; id 1 next result
+    dw $00A2 ; id 2 Rosevine
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $EE (Durran) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0EE::
+Data_00E_6AF0:: ; address name
+    dw $0061 ; id 0 DarkHorn
+    dw $FDFD ; id 1 next result
+    dw $0040 ; id 2 Divinegon
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $F0 (LampGenie) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0F0::
+Data_00E_6AF8:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $0062 ; id 1 MadCat
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $F7 (Skullgon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0F7::
+Data_00E_6AFE:: ; address name
+    dw $010D ; id 0 Copycat
+    dw $FDFD ; id 1 next result
+    dw $0010 ; id 2 KingSlime
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $F8 (PutrePup) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0F8::
+Data_00E_6B06:: ; address name
+    dw $0071 ; id 0 MistyWing
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $FA (Mummy) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0FA::
+Data_00E_6B0A:: ; address name
+    dw $000D ; id 0 RockSlime
+    dw $000E ; id 1 SlimeBorg
+    dw $0077 ; id 2 LandOwl
+    dw $0078 ; id 3 MadGoose
+    dw $008F ; id 4 FloraMan
+    dw $00C4 ; id 5 HornBeet
+    dw $00DD ; id 6 Gremlin
+    dw $FDFD ; id 7 next result
+    dw $004C ; id 8 GulpBeast
+    dw $0055 ; id 9 Grizzly
+    dw $0062 ; id 10 MadCat
+    dw $0070 ; id 11 MadRaven
+    dw $0079 ; id 12 MadCondor
+    dw $00DA ; id 13 EvilBeast
+    dw $00E2 ; id 14 Ogre
+    dw $0132 ; id 15 Golem
+    dw $0133 ; id 16 StoneMan
+    dw $FFFF ; id 17 end of list
+
+; E-0199 (derived: list for entry $FC (DeadNite) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0FC::
+Data_00E_6B2E:: ; address name
+    dw $00FC ; id 0 DeadNite
+    dw $010D ; id 1 Copycat
+    dw $FDFD ; id 2 next result
+    dw $000D ; id 3 RockSlime
+    dw $000E ; id 4 SlimeBorg
+    dw $0077 ; id 5 LandOwl
+    dw $0078 ; id 6 MadGoose
+    dw $008F ; id 7 FloraMan
+    dw $00C4 ; id 8 HornBeet
+    dw $00DD ; id 9 Gremlin
+    dw $FDFD ; id 10 next result
+    dw $004C ; id 11 GulpBeast
+    dw $0055 ; id 12 Grizzly
+    dw $0062 ; id 13 MadCat
+    dw $0070 ; id 14 MadRaven
+    dw $0079 ; id 15 MadCondor
+    dw $00DA ; id 16 EvilBeast
+    dw $00E2 ; id 17 Ogre
+    dw $0132 ; id 18 Golem
+    dw $0133 ; id 19 StoneMan
+    dw $FBFB ; id 20 next result when wArg1 = 2, else end of list
+    dw $00DB ; id 21 Bubblemon
+    dw $FFFF ; id 22 end of list
+
+; E-0199 (derived: list for entry $FF (Hork) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules0FF::
+Data_00E_6B5C:: ; address name
+    dw $00FF ; id 0 Hork
+    dw $FDFD ; id 1 next result
+    dw $004C ; id 2 GulpBeast
+    dw $0055 ; id 3 Grizzly
+    dw $0062 ; id 4 MadCat
+    dw $0070 ; id 5 MadRaven
+    dw $0079 ; id 6 MadCondor
+    dw $00DA ; id 7 EvilBeast
+    dw $00E2 ; id 8 Ogre
+    dw $0132 ; id 9 Golem
+    dw $0133 ; id 10 StoneMan
+    dw $FFFF ; id 11 end of list
+
+; E-0199 (derived: list for entry $100 (Mudron) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules100::
+Data_00E_6B74:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00DF ; id 1 Lionex
+    dw $00E3 ; id 2 GateGuard
+    dw $010D ; id 3 Copycat
+    dw $0124 ; id 4 MetalDrak
+    dw $0129 ; id 5 Roboster
+    dw $FDFD ; id 6 next result
+    dw $004C ; id 7 GulpBeast
+    dw $0055 ; id 8 Grizzly
+    dw $0062 ; id 9 MadCat
+    dw $0070 ; id 10 MadRaven
+    dw $0079 ; id 11 MadCondor
+    dw $00DA ; id 12 EvilBeast
+    dw $00E2 ; id 13 Ogre
+    dw $0132 ; id 14 Golem
+    dw $0133 ; id 15 StoneMan
+    dw $FFFF ; id 16 end of list
+
+; E-0199 (derived: list for entry $101 (NiteWhip) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules101::
+Data_00E_6B96:: ; address name
+    dw $013D ; id 0 Moray
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $106 (CaptDead) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules106::
+Data_00E_6B9A:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00DF ; id 1 Lionex
+    dw $00E3 ; id 2 GateGuard
+    dw $010D ; id 3 Copycat
+    dw $0124 ; id 4 MetalDrak
+    dw $0129 ; id 5 Roboster
+    dw $FDFD ; id 6 next result
+    dw $004C ; id 7 GulpBeast
+    dw $0055 ; id 8 Grizzly
+    dw $0062 ; id 9 MadCat
+    dw $0070 ; id 10 MadRaven
+    dw $0079 ; id 11 MadCondor
+    dw $00DA ; id 12 EvilBeast
+    dw $00E2 ; id 13 Ogre
+    dw $0132 ; id 14 Golem
+    dw $0133 ; id 15 StoneMan
+    dw $FFFF ; id 16 end of list
+
+; E-0199 (derived: list for entry $107 (DeadNoble) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules107::
+Data_00E_6BBC:: ; address name
+    dw $0013 ; id 0 SpotKing
+    dw $FDFD ; id 1 next result
+    dw $003F ; id 2 Serpentia
+    dw $012A ; id 3 Roboster2
+    dw $0157 ; id 4 Octoraid
+    dw $FFFF ; id 5 end of list
+
+; E-0199 (derived: list for entry $108 (WhiteKing) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules108::
+Data_00E_6BC8:: ; address name
+    dw $015F ; id 0 DracoLord
+    dw $FDFD ; id 1 next result
+    dw $0017 ; id 2 MetalKing
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $109 (BoneSlave) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules109::
+Data_00E_6BD0:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00DF ; id 1 Lionex
+    dw $00E3 ; id 2 GateGuard
+    dw $010D ; id 3 Copycat
+    dw $0124 ; id 4 MetalDrak
+    dw $0129 ; id 5 Roboster
+    dw $FDFD ; id 6 next result
+    dw $0017 ; id 7 MetalKing
+    dw $FDFD ; id 8 next result
+    dw $0109 ; id 9 BoneSlave
+    dw $FFFF ; id 10 end of list
+
+; E-0199 (derived: list for entry $10A (Skeletor) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules10A::
+Data_00E_6BE6:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00DF ; id 1 Lionex
+    dw $00E3 ; id 2 GateGuard
+    dw $010D ; id 3 Copycat
+    dw $0124 ; id 4 MetalDrak
+    dw $0129 ; id 5 Roboster
+    dw $FDFD ; id 6 next result
+    dw $0033 ; id 7 Andreal
+    dw $0038 ; id 8 GreatDrak
+    dw $0060 ; id 9 KingLeo
+    dw $007B ; id 10 Blizzardy
+    dw $007D ; id 11 ZapBird
+    dw $007F ; id 12 WhipBird
+    dw $0135 ; id 13 GoldGolem
+    dw $0155 ; id 14 WhaleMage
+    dw $0158 ; id 15 Grakos
+    dw $FDFD ; id 16 next result
+    dw $010A ; id 17 Skeletor
+    dw $FDFD ; id 18 next result
+    dw $003F ; id 19 Serpentia
+    dw $012A ; id 20 Roboster2
+    dw $0157 ; id 21 Octoraid
+    dw $FBFB ; id 22 next result when wArg1 = 2, else end of list
+    dw $00E6 ; id 23 Grendal
+    dw $FFFF ; id 24 end of list
+
+; E-0199 (derived: list for entry $10B (Servant) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules10B::
+Data_00E_6C18:: ; address name
+    dw $0033 ; id 0 Andreal
+    dw $0038 ; id 1 GreatDrak
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $10D (Copycat) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules10D::
+Data_00E_6C1E:: ; address name
+    dw $0027 ; id 0 Gasgon
+    dw $00BF ; id 1 Droll
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $10E (MadSpirit) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules10E::
+Data_00E_6C24:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00DF ; id 1 Lionex
+    dw $00E3 ; id 2 GateGuard
+    dw $0124 ; id 3 MetalDrak
+    dw $0129 ; id 4 Roboster
+    dw $012A ; id 5 Roboster2
+    dw $FFFF ; id 6 end of list
+
+; E-0199 (derived: list for entry $110 (Niterich) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules110::
+Data_00E_6C32:: ; address name
+    dw $0033 ; id 0 Andreal
+    dw $0038 ; id 1 GreatDrak
+    dw $0060 ; id 2 KingLeo
+    dw $007B ; id 3 Blizzardy
+    dw $007D ; id 4 ZapBird
+    dw $007F ; id 5 WhipBird
+    dw $0135 ; id 6 GoldGolem
+    dw $0155 ; id 7 WhaleMage
+    dw $0158 ; id 8 Grakos
+    dw $FFFF ; id 9 end of list
+
+; E-0199 (derived: list for entry $11A (EvilWand) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules11A::
+Data_00E_6C46:: ; address name
+    dw $0077 ; id 0 LandOwl
+    dw $0078 ; id 1 MadGoose
+    dw $007C ; id 2 Phoenix
+    dw $0080 ; id 3 FunkyBird
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $11B (MadCandle) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules11B::
+Data_00E_6C50:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $006B ; id 1 Wyvern
+    dw $0071 ; id 2 MistyWing
+    dw $008E ; id 3 FireWeed
+    dw $009E ; id 4 EvilSeed
+    dw $0140 ; id 5 Anemon
+    dw $FFFF ; id 6 end of list
+
+; E-0199 (derived: list for entry $11E (SpikyBoy) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules11E::
+Data_00E_6C5E:: ; address name
+    dw $011E ; id 0 SpikyBoy
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $11F (MadMirror) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules11F::
+Data_00E_6C62:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $006B ; id 1 Wyvern
+    dw $0071 ; id 2 MistyWing
+    dw $008E ; id 3 FireWeed
+    dw $009E ; id 4 EvilSeed
+    dw $0140 ; id 5 Anemon
+    dw $FFFF ; id 6 end of list
+
+; E-0199 (derived: list for entry $121 (Puppetor) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules121::
+Data_00E_6C70:: ; address name
+    dw $00D3 ; id 0 Pixy
+    dw $00D6 ; id 1 Demonite
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $122 (Goopi) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules122::
+Data_00E_6C76:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $006B ; id 1 Wyvern
+    dw $0071 ; id 2 MistyWing
+    dw $008E ; id 3 FireWeed
+    dw $009E ; id 4 EvilSeed
+    dw $0140 ; id 5 Anemon
+    dw $FDFD ; id 6 next result
+    dw $0122 ; id 7 Goopi
+    dw $014B ; id 8 CancerMan
+    dw $FFFF ; id 9 end of list
+
+; E-0199 (derived: list for entry $123 (Voodoll) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules123::
+Data_00E_6C8A:: ; address name
+    dw $0077 ; id 0 LandOwl
+    dw $0078 ; id 1 MadGoose
+    dw $007C ; id 2 Phoenix
+    dw $0080 ; id 3 FunkyBird
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $124 (MetalDrak) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules124::
+Data_00E_6C94:: ; address name
+    dw $003C ; id 0 Orochi
+    dw $0060 ; id 1 KingLeo
+    dw $007D ; id 2 ZapBird
+    dw $00DE ; id 3 ArcDemon
+    dw $00E5 ; id 4 BossTroll
+    dw $00EB ; id 5 Centasaur
+    dw $FDFD ; id 6 next result
+    dw $00F7 ; id 7 Skullgon
+    dw $0108 ; id 8 WhiteKing
+    dw $FFFF ; id 9 end of list
+
+; E-0199 (derived: list for entry $126 (SabreMan) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules126::
+Data_00E_6CA8:: ; address name
+    dw $000E ; id 0 SlimeBorg
+    dw $0038 ; id 1 GreatDrak
+    dw $005C ; id 2 Unicorn
+    dw $00E2 ; id 3 Ogre
+    dw $00E6 ; id 4 Grendal
+    dw $00EC ; id 5 EvilArmor
+    dw $0107 ; id 6 DeadNoble
+    dw $010A ; id 7 Skeletor
+    dw $FFFF ; id 8 end of list
+
+; E-0199 (derived: list for entry $127 (CurseLamp) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules127::
+Data_00E_6CBA:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $00E5 ; id 1 BossTroll
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $129 (Roboster) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules129::
+Data_00E_6CC0:: ; address name
+    dw $0124 ; id 0 MetalDrak
+    dw $FDFD ; id 1 next result
+    dw $FE05 ; id 2 same species, parent B +5 or more
+    dw $FC05 ; id 3 same species, parent A +5 or more
+    dw $FDFD ; id 4 next result
+    dw $0060 ; id 5 KingLeo
+    dw $FDFD ; id 6 next result
+    dw $0148 ; id 7 RushFish
+    dw $FBFB ; id 8 next result when wArg1 = 2, else end of list
+    dw $0129 ; id 9 Roboster
+    dw $FFFF ; id 10 end of list
+
+; E-0199 (derived: list for entry $12A (Roboster2) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules12A::
+Data_00E_6CD6:: ; address name
+    dw $0124 ; id 0 MetalDrak
+    dw $FDFD ; id 1 next result
+    dw $0060 ; id 2 KingLeo
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $12B (EvilPot) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules12B::
+Data_00E_6CDE:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $00DB ; id 1 Bubblemon
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $12C (Gismo) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules12C::
+Data_00E_6CE4:: ; address name
+    dw $0010 ; id 0 KingSlime
+    dw $0013 ; id 1 SpotKing
+    dw $003E ; id 2 SkyDragon
+    dw $00F0 ; id 3 LampGenie
+    dw $0108 ; id 4 WhiteKing
+    dw $0153 ; id 5 KingSquid
+    dw $0155 ; id 6 WhaleMage
+    dw $015F ; id 7 DracoLord
+    dw $FFFF ; id 8 end of list
+
+; E-0199 (derived: list for entry $12D (LavaMan) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules12D::
+Data_00E_6CF6:: ; address name
+    dw $00E5 ; id 0 BossTroll
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $12E (IceMan) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules12E::
+Data_00E_6CFA:: ; address name
+    dw $012D ; id 0 LavaMan
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $12F (Mimic) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules12F::
+Data_00E_6CFE:: ; address name
+    dw $014D ; id 0 Scallopa
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $131 (MudDoll) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules131::
+Data_00E_6D02:: ; address name
+    dw $0131 ; id 0 MudDoll
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $132 (Golem) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules132::
+Data_00E_6D06:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0005 ; id 1 Snaily
+    dw $0006 ; id 2 SlimeNite
+    dw $000D ; id 3 RockSlime
+    dw $FDFD ; id 4 next result
+    dw $0077 ; id 5 LandOwl
+    dw $0078 ; id 6 MadGoose
+    dw $007C ; id 7 Phoenix
+    dw $0080 ; id 8 FunkyBird
+    dw $FDFD ; id 9 next result
+    dw $0132 ; id 10 Golem
+    dw $FFFF ; id 11 end of list
+
+; E-0199 (derived: list for entry $133 (StoneMan) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules133::
+Data_00E_6D1E:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0005 ; id 1 Snaily
+    dw $0006 ; id 2 SlimeNite
+    dw $000D ; id 3 RockSlime
+    dw $FDFD ; id 4 next result
+    dw $0033 ; id 5 Andreal
+    dw $0037 ; id 6 Spikerous
+    dw $0038 ; id 7 GreatDrak
+    dw $FDFD ; id 8 next result
+    dw $0077 ; id 9 LandOwl
+    dw $0078 ; id 10 MadGoose
+    dw $007C ; id 11 Phoenix
+    dw $0080 ; id 12 FunkyBird
+    dw $FFFF ; id 13 end of list
+
+; E-0199 (derived: list for entry $135 (GoldGolem) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules135::
+Data_00E_6D3A:: ; address name
+    dw $0017 ; id 0 MetalKing
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $141 (Aquarella) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules141::
+Data_00E_6D3E:: ; address name
+    dw $00D7 ; id 0 DarkEye
+    dw $00D4 ; id 1 MedusaEye
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $142 (Merman) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules142::
+Data_00E_6D44:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $0062 ; id 1 MadCat
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $145 (Octoreach) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules145::
+Data_00E_6D4A:: ; address name
+    dw $FE05 ; id 0 same species, parent B +5 or more
+    dw $FC05 ; id 1 same species, parent A +5 or more
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $146 (Angleron) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules146::
+Data_00E_6D50:: ; address name
+    dw $00D3 ; id 0 Pixy
+    dw $00D6 ; id 1 Demonite
+    dw $00D9 ; id 2 SkulRider
+    dw $00DD ; id 3 Gremlin
+    dw $FDFD ; id 4 next result
+    dw $004C ; id 5 GulpBeast
+    dw $00BF ; id 6 Droll
+    dw $FFFF ; id 7 end of list
+
+; E-0199 (derived: list for entry $148 (RushFish) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules148::
+Data_00E_6D60:: ; address name
+    dw $0037 ; id 0 Spikerous
+    dw $014C ; id 1 RogueWave
+    dw $0078 ; id 2 MadGoose
+    dw $00EA ; id 3 Gigantes
+    dw $0132 ; id 4 Golem
+    dw $FFFF ; id 5 end of list
+
+; E-0199 (derived: list for entry $149 (Gamanian) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules149::
+Data_00E_6D6C:: ; address name
+    dw $00C0 ; id 0 ArmyCrab
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $14A (Clawster) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules14A::
+Data_00E_6D70:: ; address name
+    dw $014A ; id 0 Clawster
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $14B (CancerMan) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules14B::
+Data_00E_6D74:: ; address name
+    dw $011A ; id 0 EvilWand
+    dw $0155 ; id 1 WhaleMage
+    dw $FDFD ; id 2 next result
+    dw $003D ; id 3 BattleRex
+    dw $00DE ; id 4 ArcDemon
+    dw $FFFF ; id 5 end of list
+
+; E-0199 (derived: list for entry $14C (RogueWave) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules14C::
+Data_00E_6D80:: ; address name
+    dw $012F ; id 0 Mimic
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $14F (HoodSquid) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules14F::
+Data_00E_6D84:: ; address name
+    dw $00DC ; id 0 1EyeClown
+    dw $0103 ; id 1 Reaper
+    dw $0148 ; id 2 RushFish
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $150 (MerTiger) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules150::
+Data_00E_6D8C:: ; address name
+    dw $FBFB ; id 0 next result when wArg1 = 2, else end of list
+    dw $0059 ; id 1 BeastNite
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $152 (Octogon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules152::
+Data_00E_6D92:: ; address name
+    dw $00DF ; id 0 Lionex
+    dw $00E3 ; id 1 GateGuard
+    dw $00E4 ; id 2 ChopClown
+    dw $00EC ; id 3 EvilArmor
+    dw $FDFD ; id 4 next result
+    dw $FE05 ; id 5 same species, parent B +5 or more
+    dw $FC05 ; id 6 same species, parent A +5 or more
+    dw $FFFF ; id 7 end of list
+
+; E-0199 (derived: list for entry $154 (Digong) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules154::
+Data_00E_6DA2:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $003B ; id 1 Coatol
+    dw $0041 ; id 2 Orligon
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $158 (Grakos) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules158::
+Data_00E_6DAA:: ; address name
+    dw $016D ; id 0 Mudou
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $15F (DracoLord) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules15F::
+Data_00E_6DAE:: ; address name
+    dw $0040 ; id 0 Divinegon
+    dw $FDFD ; id 1 next result
+    dw $0163 ; id 2 Sidoh
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $160 (DracoLord) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules160::
+Data_00E_6DB6:: ; address name
+    dw $0041 ; id 0 Orligon
+    dw $FDFD ; id 1 next result
+    dw $0163 ; id 2 Sidoh
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $162 (Hargon) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules162::
+Data_00E_6DBE:: ; address name
+    dw $003C ; id 0 Orochi
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $163 (Sidoh) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules163::
+Data_00E_6DC2:: ; address name
+    dw $00EF ; id 0 Titanis
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $165 (Baramos) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules165::
+Data_00E_6DC6:: ; address name
+    dw $0061 ; id 0 DarkHorn
+    dw $0064 ; id 1 Gorago
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $166 (Zoma) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules166::
+Data_00E_6DCC:: ; address name
+    dw $0169 ; id 0 PsychoPiz
+    dw $FDFD ; id 1 next result
+    dw $0082 ; id 2 Azurile
+    dw $016B ; id 3 Mirudraas
+    dw $016C ; id 4 Mirudraas
+    dw $FFFF ; id 5 end of list
+
+; E-0199 (derived: list for entry $168 (Pizzaro) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules168::
+Data_00E_6DD8:: ; address name
+    dw $016A ; id 0 Esterk
+    dw $FDFD ; id 1 next result
+    dw $0060 ; id 2 KingLeo
+    dw $0064 ; id 3 Gorago
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $169 (PsychoPiz) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules169::
+Data_00E_6DE2:: ; address name
+    dw $0110 ; id 0 Niterich
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $16A (Esterk) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules16A::
+Data_00E_6DE6:: ; address name
+    dw $0018 ; id 0 GoldSlime
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $16B (Mirudraas) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules16B::
+Data_00E_6DEA:: ; address name
+    dw $0037 ; id 0 Spikerous
+    dw $0041 ; id 1 Orligon
+    dw $FDFD ; id 2 next result
+    dw $0082 ; id 3 Azurile
+    dw $FFFF ; id 4 end of list
+
+; E-0199 (derived: list for entry $16C (Mirudraas) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules16C::
+Data_00E_6DF4:: ; address name
+    dw $0166 ; id 0 Zoma
+    dw $FFFF ; id 1 end of list
+
+; E-0199 (derived: list for entry $16E (DeathMore) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules16E::
+Data_00E_6DF8:: ; address name
+    dw $00C6 ; id 0 Armorpion
+    dw $00EF ; id 1 Titanis
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (derived: list for entry $16F (DeathMore) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules16F::
+Data_00E_6DFE:: ; address name
+    dw $0136 ; id 0 DarkMate
+    dw $0159 ; id 1 Poseidon
+    dw $016D ; id 2 Mudou
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $170 (DeathMore) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules170::
+Data_00E_6E06:: ; address name
+    dw $0019 ; id 0 GranSlime
+    dw $00A5 ; id 1 Watabou
+    dw $0167 ; id 2 AsuraZoma
+    dw $FFFF ; id 3 end of list
+
+; E-0199 (derived: list for entry $172 (Orgodemir) of BreedSpeciesRuleTable; it runs to the next list)
+; record: partner species or rule code
+BreedSpeciesRules172::
+Data_00E_6E0E:: ; address name
+    dw $0161 ; id 0 LordDraco
+    dw $0042 ; id 1 GigaDraco
+    dw $FFFF ; id 2 end of list
+
+; E-0199 (C1: stage 1 result lists, indexed like BreedSpeciesRuleTable; the matched result word becomes the child's species (wArg6/wArg7))
+; record: list
+BreedSpeciesResultTable::
+Data_00E_6E14:: ; address name
+    dw BreedSpeciesResults000 ; id 0
+    dw BreedSpeciesResults001 ; id 1 DrakSlime
+    dw BreedSpeciesResults002 ; id 2 SpotSlime
+    dw BreedSpeciesResults003 ; id 3 WingSlime
+    dw BreedSpeciesResults003 ; id 4 TreeSlime
+    dw BreedSpeciesResults003 ; id 5 Snaily
+    dw BreedSpeciesResults003 ; id 6 SlimeNite
+    dw BreedSpeciesResults007 ; id 7 Babble
+    dw BreedSpeciesResults007 ; id 8 BoxSlime
+    dw BreedSpeciesResults007 ; id 9 PearlGel
+    dw BreedSpeciesResults007 ; id 10 Slime
+    dw BreedSpeciesResults00B ; id 11 Healer
+    dw BreedSpeciesResults00C ; id 12 FangSlime
+    dw BreedSpeciesResults00C ; id 13 RockSlime
+    dw BreedSpeciesResults00E ; id 14 SlimeBorg
+    dw BreedSpeciesResults00E ; id 15 Slabbit
+    dw BreedSpeciesResults00E ; id 16 KingSlime
+    dw BreedSpeciesResults011 ; id 17 Metaly
+    dw BreedSpeciesResults012 ; id 18 Metabble
+    dw BreedSpeciesResults013 ; id 19 SpotKing
+    dw BreedSpeciesResults014 ; id 20 TropicGel
+    dw BreedSpeciesResults014 ; id 21 MimeSlime
+    dw BreedSpeciesResults016 ; id 22 HaloSlime
+    dw BreedSpeciesResults016 ; id 23 MetalKing
+    dw BreedSpeciesResults018 ; id 24 GoldSlime
+    dw BreedSpeciesResults019 ; id 25 GranSlime
+    dw BreedSpeciesResults019 ; id 26 WonderEgg
+    dw BreedSpeciesResults01B ; id 27 Butch
+    dw BreedSpeciesResults01B ; id 28 ?
+    dw BreedSpeciesResults01B ; id 29 ?
+    dw BreedSpeciesResults01B ; id 30 ?
+    dw BreedSpeciesResults01B ; id 31 ?
+    dw BreedSpeciesResults01B ; id 32 ?
+    dw BreedSpeciesResults01B ; id 33 ?
+    dw BreedSpeciesResults01B ; id 34 ?
+    dw BreedSpeciesResults01B ; id 35 ?
+    dw BreedSpeciesResults01B ; id 36 DragonKid
+    dw BreedSpeciesResults025 ; id 37 Tortragon
+    dw BreedSpeciesResults025 ; id 38 Pteranod
+    dw BreedSpeciesResults027 ; id 39 Gasgon
+    dw BreedSpeciesResults028 ; id 40 FairyDrak
+    dw BreedSpeciesResults028 ; id 41 LizardMan
+    dw BreedSpeciesResults02A ; id 42 Poisongon
+    dw BreedSpeciesResults02A ; id 43 Swordgon
+    dw BreedSpeciesResults02A ; id 44 Drygon
+    dw BreedSpeciesResults02A ; id 45 Dragon
+    dw BreedSpeciesResults02E ; id 46 MiniDrak
+    dw BreedSpeciesResults02E ; id 47 MadDragon
+    dw BreedSpeciesResults030 ; id 48 Rayburn
+    dw BreedSpeciesResults030 ; id 49 Chamelgon
+    dw BreedSpeciesResults030 ; id 50 LizardFly
+    dw BreedSpeciesResults030 ; id 51 Andreal
+    dw BreedSpeciesResults034 ; id 52 KingCobra
+    dw BreedSpeciesResults035 ; id 53 Vampirus
+    dw BreedSpeciesResults036 ; id 54 SnakeBat
+    dw BreedSpeciesResults036 ; id 55 Spikerous
+    dw BreedSpeciesResults036 ; id 56 GreatDrak
+    dw BreedSpeciesResults039 ; id 57 Crestpent
+    dw BreedSpeciesResults03A ; id 58 WingSnake
+    dw BreedSpeciesResults03B ; id 59 Coatol
+    dw BreedSpeciesResults03B ; id 60 Orochi
+    dw BreedSpeciesResults03B ; id 61 BattleRex
+    dw BreedSpeciesResults03E ; id 62 SkyDragon
+    dw BreedSpeciesResults03F ; id 63 Serpentia
+    dw BreedSpeciesResults03F ; id 64 Divinegon
+    dw BreedSpeciesResults041 ; id 65 Orligon
+    dw BreedSpeciesResults041 ; id 66 GigaDraco
+    dw BreedSpeciesResults041 ; id 67 ?
+    dw BreedSpeciesResults041 ; id 68 ?
+    dw BreedSpeciesResults041 ; id 69 ?
+    dw BreedSpeciesResults041 ; id 70 ?
+    dw BreedSpeciesResults041 ; id 71 Tonguella
+    dw BreedSpeciesResults048 ; id 72 Almiraj
+    dw BreedSpeciesResults049 ; id 73 CatFly
+    dw BreedSpeciesResults04A ; id 74 PillowRat
+    dw BreedSpeciesResults04A ; id 75 Saccer
+    dw BreedSpeciesResults04A ; id 76 GulpBeast
+    dw BreedSpeciesResults04D ; id 77 Skullroo
+    dw BreedSpeciesResults04D ; id 78 WindBeast
+    dw BreedSpeciesResults04D ; id 79 Beavern
+    dw BreedSpeciesResults04D ; id 80 Antbear
+    dw BreedSpeciesResults04D ; id 81 SuperTen
+    dw BreedSpeciesResults052 ; id 82 IronTurt
+    dw BreedSpeciesResults053 ; id 83 Mommonja
+    dw BreedSpeciesResults053 ; id 84 HammerMan
+    dw BreedSpeciesResults055 ; id 85 Grizzly
+    dw BreedSpeciesResults056 ; id 86 Yeti
+    dw BreedSpeciesResults057 ; id 87 ArrowDog
+    dw BreedSpeciesResults058 ; id 88 NoctoKing
+    dw BreedSpeciesResults059 ; id 89 BeastNite
+    dw BreedSpeciesResults05A ; id 90 MadGopher
+    dw BreedSpeciesResults05B ; id 91 FairyRat
+    dw BreedSpeciesResults05B ; id 92 Unicorn
+    dw BreedSpeciesResults05D ; id 93 Goategon
+    dw BreedSpeciesResults05E ; id 94 WildApe
+    dw BreedSpeciesResults05F ; id 95 Trumpeter
+    dw BreedSpeciesResults060 ; id 96 KingLeo
+    dw BreedSpeciesResults060 ; id 97 DarkHorn
+    dw BreedSpeciesResults062 ; id 98 MadCat
+    dw BreedSpeciesResults063 ; id 99 BigEye
+    dw BreedSpeciesResults063 ; id 100 Gorago
+    dw BreedSpeciesResults063 ; id 101 CatMage
+    dw BreedSpeciesResults066 ; id 102 Dumbira
+    dw BreedSpeciesResults067 ; id 103 ?
+    dw BreedSpeciesResults067 ; id 104 ?
+    dw BreedSpeciesResults067 ; id 105 ?
+    dw BreedSpeciesResults067 ; id 106 Picky
+    dw BreedSpeciesResults067 ; id 107 Wyvern
+    dw BreedSpeciesResults067 ; id 108 BullBird
+    dw BreedSpeciesResults06D ; id 109 Florajay
+    dw BreedSpeciesResults06D ; id 110 DuckKite
+    dw BreedSpeciesResults06D ; id 111 MadPecker
+    dw BreedSpeciesResults070 ; id 112 MadRaven
+    dw BreedSpeciesResults070 ; id 113 MistyWing
+    dw BreedSpeciesResults070 ; id 114 AquaHawk
+    dw BreedSpeciesResults073 ; id 115 Dracky
+    dw BreedSpeciesResults073 ; id 116 KiteHawk
+    dw BreedSpeciesResults075 ; id 117 BigRoost
+    dw BreedSpeciesResults075 ; id 118 StubBird
+    dw BreedSpeciesResults075 ; id 119 LandOwl
+    dw BreedSpeciesResults078 ; id 120 MadGoose
+    dw BreedSpeciesResults079 ; id 121 MadCondor
+    dw BreedSpeciesResults07A ; id 122 Emyu
+    dw BreedSpeciesResults07A ; id 123 Blizzardy
+    dw BreedSpeciesResults07C ; id 124 Phoenix
+    dw BreedSpeciesResults07D ; id 125 ZapBird
+    dw BreedSpeciesResults07E ; id 126 Garudian
+    dw BreedSpeciesResults07F ; id 127 WhipBird
+    dw BreedSpeciesResults080 ; id 128 FunkyBird
+    dw BreedSpeciesResults081 ; id 129 RainHawk
+    dw BreedSpeciesResults082 ; id 130 Azurile
+    dw BreedSpeciesResults082 ; id 131 Shantak
+    dw BreedSpeciesResults084 ; id 132 CragDevil
+    dw BreedSpeciesResults085 ; id 133 ?
+    dw BreedSpeciesResults085 ; id 134 ?
+    dw BreedSpeciesResults085 ; id 135 ?
+    dw BreedSpeciesResults085 ; id 136 ?
+    dw BreedSpeciesResults085 ; id 137 ?
+    dw BreedSpeciesResults085 ; id 138 ?
+    dw BreedSpeciesResults085 ; id 139 ?
+    dw BreedSpeciesResults085 ; id 140 ?
+    dw BreedSpeciesResults085 ; id 141 MadPlant
+    dw BreedSpeciesResults085 ; id 142 FireWeed
+    dw BreedSpeciesResults085 ; id 143 FloraMan
+    dw BreedSpeciesResults085 ; id 144 WingTree
+    dw BreedSpeciesResults085 ; id 145 CactiBall
+    dw BreedSpeciesResults085 ; id 146 Gulpple
+    dw BreedSpeciesResults085 ; id 147 Toadstool
+    dw BreedSpeciesResults085 ; id 148 AmberWeed
+    dw BreedSpeciesResults085 ; id 149 Slurperon
+    dw BreedSpeciesResults085 ; id 150 Stubsuck
+    dw BreedSpeciesResults097 ; id 151 Oniono
+    dw BreedSpeciesResults097 ; id 152 DanceVegi
+    dw BreedSpeciesResults097 ; id 153 TreeBoy
+    dw BreedSpeciesResults09A ; id 154 Devipine
+    dw BreedSpeciesResults09A ; id 155 FaceTree
+    dw BreedSpeciesResults09A ; id 156 HerbMan
+    dw BreedSpeciesResults09A ; id 157 BeanMan
+    dw BreedSpeciesResults09A ; id 158 EvilSeed
+    dw BreedSpeciesResults09F ; id 159 ManEater
+    dw BreedSpeciesResults0A0 ; id 160 Snapper
+    dw BreedSpeciesResults0A0 ; id 161 GhosTree
+    dw BreedSpeciesResults0A2 ; id 162 Rosevine
+    dw BreedSpeciesResults0A3 ; id 163 Egdracil
+    dw BreedSpeciesResults0A3 ; id 164 Warubou
+    dw BreedSpeciesResults0A5 ; id 165 Watabou
+    dw BreedSpeciesResults0A5 ; id 166 Eggplaton
+    dw BreedSpeciesResults0A5 ; id 167 FooHero
+    dw BreedSpeciesResults0A8 ; id 168 ?
+    dw BreedSpeciesResults0A8 ; id 169 ?
+    dw BreedSpeciesResults0A8 ; id 170 ?
+    dw BreedSpeciesResults0A8 ; id 171 ?
+    dw BreedSpeciesResults0A8 ; id 172 ?
+    dw BreedSpeciesResults0A8 ; id 173 ?
+    dw BreedSpeciesResults0A8 ; id 174 ?
+    dw BreedSpeciesResults0A8 ; id 175 ?
+    dw BreedSpeciesResults0A8 ; id 176 GiantSlug
+    dw BreedSpeciesResults0A8 ; id 177 Catapila
+    dw BreedSpeciesResults0B2 ; id 178 Gophecada
+    dw BreedSpeciesResults0B2 ; id 179 Butterfly
+    dw BreedSpeciesResults0B4 ; id 180 WeedBug
+    dw BreedSpeciesResults0B5 ; id 181 GiantWorm
+    dw BreedSpeciesResults0B5 ; id 182 Lipsy
+    dw BreedSpeciesResults0B7 ; id 183 StagBug
+    dw BreedSpeciesResults0B8 ; id 184 Pyuro
+    dw BreedSpeciesResults0B8 ; id 185 ArmyAnt
+    dw BreedSpeciesResults0B8 ; id 186 GoHopper
+    dw BreedSpeciesResults0B8 ; id 187 TailEater
+    dw BreedSpeciesResults0BC ; id 188 ArmorPede
+    dw BreedSpeciesResults0BC ; id 189 Eyeder
+    dw BreedSpeciesResults0BE ; id 190 GiantMoth
+    dw BreedSpeciesResults0BE ; id 191 Droll
+    dw BreedSpeciesResults0BE ; id 192 ArmyCrab
+    dw BreedSpeciesResults0C1 ; id 193 MadHornet
+    dw BreedSpeciesResults0C2 ; id 194 Belzebub
+    dw BreedSpeciesResults0C2 ; id 195 WarMantis
+    dw BreedSpeciesResults0C4 ; id 196 HornBeet
+    dw BreedSpeciesResults0C5 ; id 197 Sickler
+    dw BreedSpeciesResults0C5 ; id 198 Armorpion
+    dw BreedSpeciesResults0C7 ; id 199 Digster
+    dw BreedSpeciesResults0C7 ; id 200 Skularach
+    dw BreedSpeciesResults0C7 ; id 201 MultiEyes
+    dw BreedSpeciesResults0CA ; id 202 ?
+    dw BreedSpeciesResults0CA ; id 203 ?
+    dw BreedSpeciesResults0CA ; id 204 ?
+    dw BreedSpeciesResults0CA ; id 205 ?
+    dw BreedSpeciesResults0CA ; id 206 ?
+    dw BreedSpeciesResults0CA ; id 207 ?
+    dw BreedSpeciesResults0CA ; id 208 ?
+    dw BreedSpeciesResults0CA ; id 209 ?
+    dw BreedSpeciesResults0CA ; id 210 ?
+    dw BreedSpeciesResults0CA ; id 211 Pixy
+    dw BreedSpeciesResults0CA ; id 212 MedusaEye
+    dw BreedSpeciesResults0CA ; id 213 AgDevil
+    dw BreedSpeciesResults0D6 ; id 214 Demonite
+    dw BreedSpeciesResults0D7 ; id 215 DarkEye
+    dw BreedSpeciesResults0D8 ; id 216 EyeBall
+    dw BreedSpeciesResults0D8 ; id 217 SkulRider
+    dw BreedSpeciesResults0D8 ; id 218 EvilBeast
+    dw BreedSpeciesResults0D8 ; id 219 Bubblemon
+    dw BreedSpeciesResults0DC ; id 220 1EyeClown
+    dw BreedSpeciesResults0DD ; id 221 Gremlin
+    dw BreedSpeciesResults0DE ; id 222 ArcDemon
+    dw BreedSpeciesResults0DF ; id 223 Lionex
+    dw BreedSpeciesResults0E0 ; id 224 GoatHorn
+    dw BreedSpeciesResults0E0 ; id 225 Orc
+    dw BreedSpeciesResults0E0 ; id 226 Ogre
+    dw BreedSpeciesResults0E3 ; id 227 GateGuard
+    dw BreedSpeciesResults0E3 ; id 228 ChopClown
+    dw BreedSpeciesResults0E3 ; id 229 BossTroll
+    dw BreedSpeciesResults0E6 ; id 230 Grendal
+    dw BreedSpeciesResults0E7 ; id 231 Akubar
+    dw BreedSpeciesResults0E8 ; id 232 MadKnight
+    dw BreedSpeciesResults0E8 ; id 233 EvilWell
+    dw BreedSpeciesResults0E8 ; id 234 Gigantes
+    dw BreedSpeciesResults0EB ; id 235 Centasaur
+    dw BreedSpeciesResults0EC ; id 236 EvilArmor
+    dw BreedSpeciesResults0EC ; id 237 Jamirus
+    dw BreedSpeciesResults0EE ; id 238 Durran
+    dw BreedSpeciesResults0EF ; id 239 Titanis
+    dw BreedSpeciesResults0EF ; id 240 LampGenie
+    dw BreedSpeciesResults0F1 ; id 241 ?
+    dw BreedSpeciesResults0F1 ; id 242 ?
+    dw BreedSpeciesResults0F1 ; id 243 ?
+    dw BreedSpeciesResults0F1 ; id 244 ?
+    dw BreedSpeciesResults0F1 ; id 245 ?
+    dw BreedSpeciesResults0F1 ; id 246 Spooky
+    dw BreedSpeciesResults0F1 ; id 247 Skullgon
+    dw BreedSpeciesResults0F8 ; id 248 PutrePup
+    dw BreedSpeciesResults0F9 ; id 249 RotRaven
+    dw BreedSpeciesResults0F9 ; id 250 Mummy
+    dw BreedSpeciesResults0FB ; id 251 DarkCrab
+    dw BreedSpeciesResults0FB ; id 252 DeadNite
+    dw BreedSpeciesResults0FD ; id 253 Shadow
+    dw BreedSpeciesResults0FD ; id 254 Skulpent
+    dw BreedSpeciesResults0FD ; id 255 Hork
+    dw BreedSpeciesResults100 ; id 256 Mudron
+    dw BreedSpeciesResults101 ; id 257 NiteWhip
+    dw BreedSpeciesResults102 ; id 258 WindMerge
+    dw BreedSpeciesResults102 ; id 259 Reaper
+    dw BreedSpeciesResults102 ; id 260 Inverzon
+    dw BreedSpeciesResults102 ; id 261 FoxFire
+    dw BreedSpeciesResults102 ; id 262 CaptDead
+    dw BreedSpeciesResults107 ; id 263 DeadNoble
+    dw BreedSpeciesResults108 ; id 264 WhiteKing
+    dw BreedSpeciesResults109 ; id 265 BoneSlave
+    dw BreedSpeciesResults10A ; id 266 Skeletor
+    dw BreedSpeciesResults10B ; id 267 Servant
+    dw BreedSpeciesResults10C ; id 268 Lazamanus
+    dw BreedSpeciesResults10C ; id 269 Copycat
+    dw BreedSpeciesResults10E ; id 270 MadSpirit
+    dw BreedSpeciesResults10F ; id 271 PomPomBom
+    dw BreedSpeciesResults10F ; id 272 Niterich
+    dw BreedSpeciesResults111 ; id 273 ?
+    dw BreedSpeciesResults111 ; id 274 ?
+    dw BreedSpeciesResults111 ; id 275 ?
+    dw BreedSpeciesResults111 ; id 276 ?
+    dw BreedSpeciesResults111 ; id 277 ?
+    dw BreedSpeciesResults111 ; id 278 ?
+    dw BreedSpeciesResults111 ; id 279 ?
+    dw BreedSpeciesResults111 ; id 280 ?
+    dw BreedSpeciesResults111 ; id 281 JewelBag
+    dw BreedSpeciesResults111 ; id 282 EvilWand
+    dw BreedSpeciesResults11B ; id 283 MadCandle
+    dw BreedSpeciesResults11C ; id 284 CoilBird
+    dw BreedSpeciesResults11C ; id 285 Facer
+    dw BreedSpeciesResults11C ; id 286 SpikyBoy
+    dw BreedSpeciesResults11F ; id 287 MadMirror
+    dw BreedSpeciesResults120 ; id 288 RogueNite
+    dw BreedSpeciesResults120 ; id 289 Puppetor
+    dw BreedSpeciesResults122 ; id 290 Goopi
+    dw BreedSpeciesResults123 ; id 291 Voodoll
+    dw BreedSpeciesResults124 ; id 292 MetalDrak
+    dw BreedSpeciesResults125 ; id 293 Balzak
+    dw BreedSpeciesResults125 ; id 294 SabreMan
+    dw BreedSpeciesResults127 ; id 295 CurseLamp
+    dw BreedSpeciesResults128 ; id 296 Brushead
+    dw BreedSpeciesResults128 ; id 297 Roboster
+    dw BreedSpeciesResults12A ; id 298 Roboster2
+    dw BreedSpeciesResults12B ; id 299 EvilPot
+    dw BreedSpeciesResults12C ; id 300 Gismo
+    dw BreedSpeciesResults12D ; id 301 LavaMan
+    dw BreedSpeciesResults12E ; id 302 IceMan
+    dw BreedSpeciesResults12F ; id 303 Mimic
+    dw BreedSpeciesResults130 ; id 304 Exaucers
+    dw BreedSpeciesResults130 ; id 305 MudDoll
+    dw BreedSpeciesResults132 ; id 306 Golem
+    dw BreedSpeciesResults133 ; id 307 StoneMan
+    dw BreedSpeciesResults134 ; id 308 BombCrag
+    dw BreedSpeciesResults134 ; id 309 GoldGolem
+    dw BreedSpeciesResults136 ; id 310 DarkMate
+    dw BreedSpeciesResults136 ; id 311 ProtoMech
+    dw BreedSpeciesResults136 ; id 312 CloudKing
+    dw BreedSpeciesResults136 ; id 313 ?
+    dw BreedSpeciesResults136 ; id 314 ?
+    dw BreedSpeciesResults136 ; id 315 ?
+    dw BreedSpeciesResults136 ; id 316 Petiteel
+    dw BreedSpeciesResults136 ; id 317 Moray
+    dw BreedSpeciesResults136 ; id 318 WalrusMan
+    dw BreedSpeciesResults136 ; id 319 RayGigas
+    dw BreedSpeciesResults136 ; id 320 Anemon
+    dw BreedSpeciesResults136 ; id 321 Aquarella
+    dw BreedSpeciesResults142 ; id 322 Merman
+    dw BreedSpeciesResults143 ; id 323 Octokid
+    dw BreedSpeciesResults143 ; id 324 PutreFish
+    dw BreedSpeciesResults143 ; id 325 Octoreach
+    dw BreedSpeciesResults146 ; id 326 Angleron
+    dw BreedSpeciesResults147 ; id 327 FishRider
+    dw BreedSpeciesResults147 ; id 328 RushFish
+    dw BreedSpeciesResults149 ; id 329 Gamanian
+    dw BreedSpeciesResults14A ; id 330 Clawster
+    dw BreedSpeciesResults14B ; id 331 CancerMan
+    dw BreedSpeciesResults14C ; id 332 RogueWave
+    dw BreedSpeciesResults14D ; id 333 Scallopa
+    dw BreedSpeciesResults14D ; id 334 SeaHorse
+    dw BreedSpeciesResults14D ; id 335 HoodSquid
+    dw BreedSpeciesResults150 ; id 336 MerTiger
+    dw BreedSpeciesResults151 ; id 337 AxeShark
+    dw BreedSpeciesResults151 ; id 338 Octogon
+    dw BreedSpeciesResults153 ; id 339 KingSquid
+    dw BreedSpeciesResults153 ; id 340 Digong
+    dw BreedSpeciesResults155 ; id 341 WhaleMage
+    dw BreedSpeciesResults155 ; id 342 Aquadon
+    dw BreedSpeciesResults155 ; id 343 Octoraid
+    dw BreedSpeciesResults155 ; id 344 Grakos
+    dw BreedSpeciesResults159 ; id 345 Poseidon
+    dw BreedSpeciesResults159 ; id 346 Pumpoise
+    dw BreedSpeciesResults159 ; id 347 Starfish
+    dw BreedSpeciesResults159 ; id 348 ?
+    dw BreedSpeciesResults159 ; id 349 ?
+    dw BreedSpeciesResults159 ; id 350 ?
+    dw BreedSpeciesResults159 ; id 351 DracoLord
+    dw BreedSpeciesResults160 ; id 352 DracoLord
+    dw BreedSpeciesResults161 ; id 353 LordDraco
+    dw BreedSpeciesResults161 ; id 354 Hargon
+    dw BreedSpeciesResults163 ; id 355 Sidoh
+    dw BreedSpeciesResults164 ; id 356 Genosidoh
+    dw BreedSpeciesResults164 ; id 357 Baramos
+    dw BreedSpeciesResults166 ; id 358 Zoma
+    dw BreedSpeciesResults167 ; id 359 AsuraZoma
+    dw BreedSpeciesResults167 ; id 360 Pizzaro
+    dw BreedSpeciesResults169 ; id 361 PsychoPiz
+    dw BreedSpeciesResults16A ; id 362 Esterk
+    dw BreedSpeciesResults16B ; id 363 Mirudraas
+    dw BreedSpeciesResults16C ; id 364 Mirudraas
+    dw BreedSpeciesResults16D ; id 365 Mudou
+    dw BreedSpeciesResults16D ; id 366 DeathMore
+    dw BreedSpeciesResults16F ; id 367 DeathMore
+    dw BreedSpeciesResults170 ; id 368 DeathMore
+    dw BreedSpeciesResults171 ; id 369 Darkdrium
+    dw BreedSpeciesResults171 ; id 370 Orgodemir
+    dw BreedFamilyRuleTable ; id 371 Orgodemir
+    dw BreedFamilyRuleTable ; id 372 Darck
+    dw BreedFamilyRuleTable ; id 373 Tatsu
+    dw BreedFamilyRuleTable ; id 374 Diago
+    dw BreedFamilyRuleTable ; id 375 Samsi
+    dw BreedSpeciesResults000 ; id 376 Bazoo
+    dw BreedSpeciesResults000 ; id 377 ?
+    dw BreedSpeciesResults000 ; id 378 ?
+    dw BreedSpeciesResults000 ; id 379 ?
+    dw BreedSpeciesResults000 ; id 380 Lamia
+    dw BreedSpeciesResults000 ; id 381 Dimensaur
+    dw BreedSpeciesResults000 ; id 382 Kagebou
+    dw BreedSpeciesResults000 ; id 383 ?
+
+; E-0199 (derived: list for entry $00 of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults000::
+Data_00E_7114:: ; address name
+    dw $FFFF ; id 0
+
+; E-0199 (derived: list for entry $01 (DrakSlime) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults001::
+Data_00E_7116:: ; address name
+    dw $000E ; id 0 SlimeBorg
+
+; E-0199 (derived: list for entry $02 (SpotSlime) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults002::
+Data_00E_7118:: ; address name
+    dw $0013 ; id 0 SpotKing
+
+; E-0199 (derived: list for entry $03 (WingSlime) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults003::
+Data_00E_711A:: ; address name
+    dw $000E ; id 0 SlimeBorg
+
+; E-0199 (derived: list for entry $07 (Babble) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults007::
+Data_00E_711C:: ; address name
+    dw $0010 ; id 0 KingSlime
+    dw $0014 ; id 1 TropicGel
+    dw $0016 ; id 2 HaloSlime
+    dw $001A ; id 3 WonderEgg
+
+; E-0199 (derived: list for entry $0B (Healer) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults00B::
+Data_00E_7124:: ; address name
+    dw $0015 ; id 0 MimeSlime
+
+; E-0199 (derived: list for entry $0C (FangSlime) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults00C::
+Data_00E_7126:: ; address name
+    dw $000E ; id 0 SlimeBorg
+
+; E-0199 (derived: list for entry $0E (SlimeBorg) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults00E::
+Data_00E_7128:: ; address name
+    dw $0013 ; id 0 SpotKing
+    dw $0017 ; id 1 MetalKing
+    dw $0018 ; id 2 GoldSlime
+
+; E-0199 (derived: list for entry $11 (Metaly) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults011::
+Data_00E_712E:: ; address name
+    dw $0012 ; id 0 Metabble
+
+; E-0199 (derived: list for entry $12 (Metabble) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults012::
+Data_00E_7130:: ; address name
+    dw $000E ; id 0 SlimeBorg
+    dw $0017 ; id 1 MetalKing
+
+; E-0199 (derived: list for entry $13 (SpotKing) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults013::
+Data_00E_7134:: ; address name
+    dw $0010 ; id 0 KingSlime
+    dw $0017 ; id 1 MetalKing
+    dw $0018 ; id 2 GoldSlime
+
+; E-0199 (derived: list for entry $14 (TropicGel) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults014::
+Data_00E_713A:: ; address name
+    dw $0016 ; id 0 HaloSlime
+
+; E-0199 (derived: list for entry $16 (HaloSlime) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults016::
+Data_00E_713C:: ; address name
+    dw $0013 ; id 0 SpotKing
+    dw $0018 ; id 1 GoldSlime
+
+; E-0199 (derived: list for entry $18 (GoldSlime) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults018::
+Data_00E_7140:: ; address name
+    dw $0019 ; id 0 GranSlime
+
+; E-0199 (derived: list for entry $19 (GranSlime) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults019::
+Data_00E_7142:: ; address name
+    dw $0017 ; id 0 MetalKing
+    dw $0018 ; id 1 GoldSlime
+    dw $0019 ; id 2 GranSlime
+
+; E-0199 (derived: list for entry $1B (Butch) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults01B::
+Data_00E_7148:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $002D ; id 1 Dragon
+
+; E-0199 (derived: list for entry $25 (Tortragon) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults025::
+Data_00E_714C:: ; address name
+    dw $0035 ; id 0 Vampirus
+    dw $003B ; id 1 Coatol
+
+; E-0199 (derived: list for entry $27 (Gasgon) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults027::
+Data_00E_7150:: ; address name
+    dw $0033 ; id 0 Andreal
+    dw $003B ; id 1 Coatol
+
+; E-0199 (derived: list for entry $28 (FairyDrak) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults028::
+Data_00E_7154:: ; address name
+    dw $0030 ; id 0 Rayburn
+    dw $003B ; id 1 Coatol
+
+; E-0199 (derived: list for entry $2A (Poisongon) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults02A::
+Data_00E_7158:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $003E ; id 1 SkyDragon
+    dw $003F ; id 2 Serpentia
+
+; E-0199 (derived: list for entry $2E (MiniDrak) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults02E::
+Data_00E_715E:: ; address name
+    dw $0033 ; id 0 Andreal
+
+; E-0199 (derived: list for entry $30 (Rayburn) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults030::
+Data_00E_7160:: ; address name
+    dw $003C ; id 0 Orochi
+    dw $0042 ; id 1 GigaDraco
+
+; E-0199 (derived: list for entry $34 (KingCobra) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults034::
+Data_00E_7164:: ; address name
+    dw $0036 ; id 0 SnakeBat
+
+; E-0199 (derived: list for entry $35 (Vampirus) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults035::
+Data_00E_7166:: ; address name
+    dw $003B ; id 0 Coatol
+    dw $0035 ; id 1 Vampirus
+
+; E-0199 (derived: list for entry $36 (SnakeBat) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults036::
+Data_00E_716A:: ; address name
+    dw $003C ; id 0 Orochi
+    dw $003F ; id 1 Serpentia
+    dw $0042 ; id 2 GigaDraco
+
+; E-0199 (derived: list for entry $39 (Crestpent) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults039::
+Data_00E_7170:: ; address name
+    dw $003A ; id 0 WingSnake
+
+; E-0199 (derived: list for entry $3A (WingSnake) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults03A::
+Data_00E_7172:: ; address name
+    dw $003B ; id 0 Coatol
+
+; E-0199 (derived: list for entry $3B (Coatol) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults03B::
+Data_00E_7174:: ; address name
+    dw $0033 ; id 0 Andreal
+    dw $003B ; id 1 Coatol
+    dw $0042 ; id 2 GigaDraco
+
+; E-0199 (derived: list for entry $3E (SkyDragon) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults03E::
+Data_00E_717A:: ; address name
+    dw $0033 ; id 0 Andreal
+    dw $003B ; id 1 Coatol
+    dw $0040 ; id 2 Divinegon
+    dw $0042 ; id 3 GigaDraco
+
+; E-0199 (derived: list for entry $3F (Serpentia) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults03F::
+Data_00E_7182:: ; address name
+    dw $0041 ; id 0 Orligon
+
+; E-0199 (derived: list for entry $41 (Orligon) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults041::
+Data_00E_7184:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $0051 ; id 1 SuperTen
+    dw $005F ; id 2 Trumpeter
+
+; E-0199 (derived: list for entry $48 (Almiraj) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults048::
+Data_00E_718A:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $005C ; id 1 Unicorn
+
+; E-0199 (derived: list for entry $49 (CatFly) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults049::
+Data_00E_718E:: ; address name
+    dw $0065 ; id 0 CatMage
+
+; E-0199 (derived: list for entry $4A (PillowRat) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults04A::
+Data_00E_7190:: ; address name
+    dw $0051 ; id 0 SuperTen
+    dw $005F ; id 1 Trumpeter
+
+; E-0199 (derived: list for entry $4D (Skullroo) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults04D::
+Data_00E_7194:: ; address name
+    dw $0066 ; id 0 Dumbira
+
+; E-0199 (derived: list for entry $52 (IronTurt) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults052::
+Data_00E_7196:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $0056 ; id 1 Yeti
+
+; E-0199 (derived: list for entry $53 (Mommonja) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults053::
+Data_00E_719A:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0066 ; id 1 Dumbira
+
+; E-0199 (derived: list for entry $55 (Grizzly) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults055::
+Data_00E_719E:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $005F ; id 1 Trumpeter
+
+; E-0199 (derived: list for entry $56 (Yeti) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults056::
+Data_00E_71A2:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $005F ; id 1 Trumpeter
+
+; E-0199 (derived: list for entry $57 (ArrowDog) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults057::
+Data_00E_71A6:: ; address name
+    dw $0058 ; id 0 NoctoKing
+    dw $0062 ; id 1 MadCat
+
+; E-0199 (derived: list for entry $58 (NoctoKing) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults058::
+Data_00E_71AA:: ; address name
+    dw $0066 ; id 0 Dumbira
+
+; E-0199 (derived: list for entry $59 (BeastNite) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults059::
+Data_00E_71AC:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0058 ; id 1 NoctoKing
+
+; E-0199 (derived: list for entry $5A (MadGopher) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults05A::
+Data_00E_71B0:: ; address name
+    dw $0059 ; id 0 BeastNite
+
+; E-0199 (derived: list for entry $5B (FairyRat) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults05B::
+Data_00E_71B2:: ; address name
+    dw $004C ; id 0 GulpBeast
+
+; E-0199 (derived: list for entry $5D (Goategon) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults05D::
+Data_00E_71B4:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $0056 ; id 1 Yeti
+
+; E-0199 (derived: list for entry $5E (WildApe) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults05E::
+Data_00E_71B8:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $0056 ; id 1 Yeti
+    dw $005F ; id 2 Trumpeter
+
+; E-0199 (derived: list for entry $5F (Trumpeter) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults05F::
+Data_00E_71BE:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $0060 ; id 1 KingLeo
+    dw $004C ; id 2 GulpBeast
+
+; E-0199 (derived: list for entry $60 (KingLeo) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults060::
+Data_00E_71C4:: ; address name
+    dw $0064 ; id 0 Gorago
+
+; E-0199 (derived: list for entry $62 (MadCat) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults062::
+Data_00E_71C6:: ; address name
+    dw $0056 ; id 0 Yeti
+    dw $0061 ; id 1 DarkHorn
+
+; E-0199 (derived: list for entry $63 (BigEye) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults063::
+Data_00E_71CA:: ; address name
+    dw $0062 ; id 0 MadCat
+
+; E-0199 (derived: list for entry $66 (Dumbira) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults066::
+Data_00E_71CC:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $0056 ; id 1 Yeti
+
+; E-0199 (derived: list for entry $67 (?) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults067::
+Data_00E_71D0:: ; address name
+    dw $0077 ; id 0 LandOwl
+
+; E-0199 (derived: list for entry $6D (Florajay) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults06D::
+Data_00E_71D2:: ; address name
+    dw $007A ; id 0 Emyu
+
+; E-0199 (derived: list for entry $70 (MadRaven) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults070::
+Data_00E_71D4:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0079 ; id 1 MadCondor
+
+; E-0199 (derived: list for entry $73 (Dracky) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults073::
+Data_00E_71D8:: ; address name
+    dw $0079 ; id 0 MadCondor
+
+; E-0199 (derived: list for entry $75 (BigRoost) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults075::
+Data_00E_71DA:: ; address name
+    dw $007F ; id 0 WhipBird
+
+; E-0199 (derived: list for entry $78 (MadGoose) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults078::
+Data_00E_71DC:: ; address name
+    dw $007F ; id 0 WhipBird
+
+; E-0199 (derived: list for entry $79 (MadCondor) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults079::
+Data_00E_71DE:: ; address name
+    dw $007A ; id 0 Emyu
+    dw $007D ; id 1 ZapBird
+    dw $007F ; id 2 WhipBird
+
+; E-0199 (derived: list for entry $7A (Emyu) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults07A::
+Data_00E_71E4:: ; address name
+    dw $007E ; id 0 Garudian
+    dw $007F ; id 1 WhipBird
+    dw $0081 ; id 2 RainHawk
+
+; E-0199 (derived: list for entry $7C (Phoenix) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults07C::
+Data_00E_71EA:: ; address name
+    dw $007D ; id 0 ZapBird
+    dw $007E ; id 1 Garudian
+
+; E-0199 (derived: list for entry $7D (ZapBird) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults07D::
+Data_00E_71EE:: ; address name
+    dw $007E ; id 0 Garudian
+    dw $007F ; id 1 WhipBird
+
+; E-0199 (derived: list for entry $7E (Garudian) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults07E::
+Data_00E_71F2:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0083 ; id 1 Shantak
+
+; E-0199 (derived: list for entry $7F (WhipBird) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults07F::
+Data_00E_71F6:: ; address name
+    dw $007D ; id 0 ZapBird
+    dw $0083 ; id 1 Shantak
+
+; E-0199 (derived: list for entry $80 (FunkyBird) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults080::
+Data_00E_71FA:: ; address name
+    dw $007E ; id 0 Garudian
+
+; E-0199 (derived: list for entry $81 (RainHawk) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults081::
+Data_00E_71FC:: ; address name
+    dw $0082 ; id 0 Azurile
+
+; E-0199 (derived: list for entry $82 (Azurile) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults082::
+Data_00E_71FE:: ; address name
+    dw $0082 ; id 0 Azurile
+
+; E-0199 (derived: list for entry $84 (CragDevil) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults084::
+Data_00E_7200:: ; address name
+    dw $0078 ; id 0 MadGoose
+    dw $0080 ; id 1 FunkyBird
+
+; E-0199 (derived: list for entry $85 (?) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults085::
+Data_00E_7204:: ; address name
+    dw $00A1 ; id 0 GhosTree
+
+; E-0199 (derived: list for entry $97 (Oniono) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults097::
+Data_00E_7206:: ; address name
+    dw $00A7 ; id 0 FooHero
+
+; E-0199 (derived: list for entry $9A (Devipine) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults09A::
+Data_00E_7208:: ; address name
+    dw $009F ; id 0 ManEater
+
+; E-0199 (derived: list for entry $9F (ManEater) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults09F::
+Data_00E_720A:: ; address name
+    dw $00A0 ; id 0 Snapper
+
+; E-0199 (derived: list for entry $A0 (Snapper) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0A0::
+Data_00E_720C:: ; address name
+    dw $0096 ; id 0 Stubsuck
+    dw $009B ; id 1 FaceTree
+
+; E-0199 (derived: list for entry $A2 (Rosevine) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0A2::
+Data_00E_7210:: ; address name
+    dw $00A3 ; id 0 Egdracil
+
+; E-0199 (derived: list for entry $A3 (Egdracil) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0A3::
+Data_00E_7212:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $00A5 ; id 1 Watabou
+
+; E-0199 (derived: list for entry $A5 (Watabou) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0A5::
+Data_00E_7216:: ; address name
+    dw $0099 ; id 0 TreeBoy
+
+; E-0199 (derived: list for entry $A8 (?) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0A8::
+Data_00E_7218:: ; address name
+    dw $00C9 ; id 0 MultiEyes
+
+; E-0199 (derived: list for entry $B2 (Gophecada) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0B2::
+Data_00E_721A:: ; address name
+    dw $00BF ; id 0 Droll
+    dw $00C1 ; id 1 MadHornet
+
+; E-0199 (derived: list for entry $B4 (WeedBug) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0B4::
+Data_00E_721E:: ; address name
+    dw $00BB ; id 0 TailEater
+
+; E-0199 (derived: list for entry $B5 (GiantWorm) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0B5::
+Data_00E_7220:: ; address name
+    dw $00BF ; id 0 Droll
+
+; E-0199 (derived: list for entry $B7 (StagBug) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0B7::
+Data_00E_7222:: ; address name
+    dw $00C4 ; id 0 HornBeet
+
+; E-0199 (derived: list for entry $B8 (Pyuro) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0B8::
+Data_00E_7224:: ; address name
+    dw $00BF ; id 0 Droll
+
+; E-0199 (derived: list for entry $BC (ArmorPede) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0BC::
+Data_00E_7226:: ; address name
+    dw $00BF ; id 0 Droll
+
+; E-0199 (derived: list for entry $BE (GiantMoth) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0BE::
+Data_00E_7228:: ; address name
+    dw $00C7 ; id 0 Digster
+
+; E-0199 (derived: list for entry $C1 (MadHornet) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0C1::
+Data_00E_722A:: ; address name
+    dw $00C2 ; id 0 Belzebub
+
+; E-0199 (derived: list for entry $C2 (Belzebub) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0C2::
+Data_00E_722C:: ; address name
+    dw $00C6 ; id 0 Armorpion
+
+; E-0199 (derived: list for entry $C4 (HornBeet) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0C4::
+Data_00E_722E:: ; address name
+    dw $00C6 ; id 0 Armorpion
+
+; E-0199 (derived: list for entry $C5 (Sickler) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0C5::
+Data_00E_7230:: ; address name
+    dw $00C8 ; id 0 Skularach
+
+; E-0199 (derived: list for entry $C7 (Digster) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0C7::
+Data_00E_7232:: ; address name
+    dw $00C2 ; id 0 Belzebub
+    dw $00BC ; id 1 ArmorPede
+
+; E-0199 (derived: list for entry $CA (?) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0CA::
+Data_00E_7236:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00E2 ; id 1 Ogre
+    dw $00E3 ; id 2 GateGuard
+
+; E-0199 (derived: list for entry $D6 (Demonite) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0D6::
+Data_00E_723C:: ; address name
+    dw $00E3 ; id 0 GateGuard
+
+; E-0199 (derived: list for entry $D7 (DarkEye) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0D7::
+Data_00E_723E:: ; address name
+    dw $00D4 ; id 0 MedusaEye
+
+; E-0199 (derived: list for entry $D8 (EyeBall) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0D8::
+Data_00E_7240:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $00E3 ; id 1 GateGuard
+    dw $00E9 ; id 2 EvilWell
+
+; E-0199 (derived: list for entry $DC (1EyeClown) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0DC::
+Data_00E_7246:: ; address name
+    dw $00D4 ; id 0 MedusaEye
+    dw $00E4 ; id 1 ChopClown
+
+; E-0199 (derived: list for entry $DD (Gremlin) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0DD::
+Data_00E_724A:: ; address name
+    dw $00D4 ; id 0 MedusaEye
+
+; E-0199 (derived: list for entry $DE (ArcDemon) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0DE::
+Data_00E_724C:: ; address name
+    dw $00DF ; id 0 Lionex
+    dw $00E7 ; id 1 Akubar
+
+; E-0199 (derived: list for entry $DF (Lionex) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0DF::
+Data_00E_7250:: ; address name
+    dw $00E4 ; id 0 ChopClown
+
+; E-0199 (derived: list for entry $E0 (GoatHorn) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0E0::
+Data_00E_7252:: ; address name
+    dw $00E5 ; id 0 BossTroll
+    dw $00E9 ; id 1 EvilWell
+
+; E-0199 (derived: list for entry $E3 (GateGuard) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0E3::
+Data_00E_7256:: ; address name
+    dw $00E9 ; id 0 EvilWell
+    dw $00F0 ; id 1 LampGenie
+
+; E-0199 (derived: list for entry $E6 (Grendal) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0E6::
+Data_00E_725A:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00E2 ; id 1 Ogre
+    dw $00E3 ; id 2 GateGuard
+    dw $00E7 ; id 3 Akubar
+    dw $00E4 ; id 4 ChopClown
+
+; E-0199 (derived: list for entry $E7 (Akubar) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0E7::
+Data_00E_7264:: ; address name
+    dw $00ED ; id 0 Jamirus
+
+; E-0199 (derived: list for entry $E8 (MadKnight) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0E8::
+Data_00E_7266:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00E2 ; id 1 Ogre
+    dw $00E3 ; id 2 GateGuard
+
+; E-0199 (derived: list for entry $EB (Centasaur) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0EB::
+Data_00E_726C:: ; address name
+    dw $00E5 ; id 0 BossTroll
+    dw $00EE ; id 1 Durran
+
+; E-0199 (derived: list for entry $EC (EvilArmor) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0EC::
+Data_00E_7270:: ; address name
+    dw $00EE ; id 0 Durran
+    dw $0163 ; id 1 Sidoh
+
+; E-0199 (derived: list for entry $EE (Durran) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0EE::
+Data_00E_7274:: ; address name
+    dw $00EF ; id 0 Titanis
+    dw $0168 ; id 1 Pizzaro
+
+; E-0199 (derived: list for entry $EF (Titanis) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0EF::
+Data_00E_7278:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $00DE ; id 1 ArcDemon
+
+; E-0199 (derived: list for entry $F1 (?) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0F1::
+Data_00E_727C:: ; address name
+    dw $0107 ; id 0 DeadNoble
+    dw $0108 ; id 1 WhiteKing
+
+; E-0199 (derived: list for entry $F8 (PutrePup) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0F8::
+Data_00E_7280:: ; address name
+    dw $0105 ; id 0 FoxFire
+
+; E-0199 (derived: list for entry $F9 (RotRaven) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0F9::
+Data_00E_7282:: ; address name
+    dw $0109 ; id 0 BoneSlave
+    dw $010A ; id 1 Skeletor
+
+; E-0199 (derived: list for entry $FB (DarkCrab) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0FB::
+Data_00E_7286:: ; address name
+    dw $0107 ; id 0 DeadNoble
+    dw $0109 ; id 1 BoneSlave
+    dw $010A ; id 2 Skeletor
+    dw $0106 ; id 3 CaptDead
+
+; E-0199 (derived: list for entry $FD (Shadow) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults0FD::
+Data_00E_728E:: ; address name
+    dw $0104 ; id 0 Inverzon
+    dw $010A ; id 1 Skeletor
+
+; E-0199 (derived: list for entry $100 (Mudron) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults100::
+Data_00E_7292:: ; address name
+    dw $0107 ; id 0 DeadNoble
+    dw $010A ; id 1 Skeletor
+
+; E-0199 (derived: list for entry $101 (NiteWhip) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults101::
+Data_00E_7296:: ; address name
+    dw $0106 ; id 0 CaptDead
+
+; E-0199 (derived: list for entry $102 (WindMerge) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults102::
+Data_00E_7298:: ; address name
+    dw $0107 ; id 0 DeadNoble
+    dw $010A ; id 1 Skeletor
+
+; E-0199 (derived: list for entry $107 (DeadNoble) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults107::
+Data_00E_729C:: ; address name
+    dw $0108 ; id 0 WhiteKing
+    dw $0110 ; id 1 Niterich
+
+; E-0199 (derived: list for entry $108 (WhiteKing) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults108::
+Data_00E_72A0:: ; address name
+    dw $010C ; id 0 Lazamanus
+    dw $0162 ; id 1 Hargon
+
+; E-0199 (derived: list for entry $109 (BoneSlave) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults109::
+Data_00E_72A4:: ; address name
+    dw $0107 ; id 0 DeadNoble
+    dw $0108 ; id 1 WhiteKing
+    dw $010A ; id 2 Skeletor
+
+; E-0199 (derived: list for entry $10A (Skeletor) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults10A::
+Data_00E_72AA:: ; address name
+    dw $0107 ; id 0 DeadNoble
+    dw $0108 ; id 1 WhiteKing
+    dw $010B ; id 2 Servant
+    dw $0110 ; id 3 Niterich
+    dw $0110 ; id 4 Niterich
+
+; E-0199 (derived: list for entry $10B (Servant) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults10B::
+Data_00E_72B4:: ; address name
+    dw $015F ; id 0 DracoLord
+
+; E-0199 (derived: list for entry $10C (Lazamanus) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults10C::
+Data_00E_72B6:: ; address name
+    dw $010F ; id 0 PomPomBom
+
+; E-0199 (derived: list for entry $10E (MadSpirit) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults10E::
+Data_00E_72B8:: ; address name
+    dw $0107 ; id 0 DeadNoble
+
+; E-0199 (derived: list for entry $10F (PomPomBom) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults10F::
+Data_00E_72BA:: ; address name
+    dw $0108 ; id 0 WhiteKing
+
+; E-0199 (derived: list for entry $111 (?) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults111::
+Data_00E_72BC:: ; address name
+    dw $0126 ; id 0 SabreMan
+
+; E-0199 (derived: list for entry $11B (MadCandle) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults11B::
+Data_00E_72BE:: ; address name
+    dw $012C ; id 0 Gismo
+
+; E-0199 (derived: list for entry $11C (CoilBird) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults11C::
+Data_00E_72C0:: ; address name
+    dw $0134 ; id 0 BombCrag
+
+; E-0199 (derived: list for entry $11F (MadMirror) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults11F::
+Data_00E_72C2:: ; address name
+    dw $012C ; id 0 Gismo
+
+; E-0199 (derived: list for entry $120 (RogueNite) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults120::
+Data_00E_72C4:: ; address name
+    dw $0128 ; id 0 Brushead
+
+; E-0199 (derived: list for entry $122 (Goopi) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults122::
+Data_00E_72C6:: ; address name
+    dw $012C ; id 0 Gismo
+    dw $0131 ; id 1 MudDoll
+
+; E-0199 (derived: list for entry $123 (Voodoll) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults123::
+Data_00E_72CA:: ; address name
+    dw $0126 ; id 0 SabreMan
+
+; E-0199 (derived: list for entry $124 (MetalDrak) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults124::
+Data_00E_72CC:: ; address name
+    dw $012D ; id 0 LavaMan
+    dw $012E ; id 1 IceMan
+
+; E-0199 (derived: list for entry $125 (Balzak) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults125::
+Data_00E_72D0:: ; address name
+    dw $0129 ; id 0 Roboster
+
+; E-0199 (derived: list for entry $127 (CurseLamp) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults127::
+Data_00E_72D2:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0125 ; id 1 Balzak
+
+; E-0199 (derived: list for entry $128 (Brushead) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults128::
+Data_00E_72D6:: ; address name
+    dw $0124 ; id 0 MetalDrak
+    dw $012A ; id 1 Roboster2
+    dw $012E ; id 2 IceMan
+    dw $012F ; id 3 Mimic
+    dw $012A ; id 4 Roboster2
+
+; E-0199 (derived: list for entry $12A (Roboster2) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults12A::
+Data_00E_72E0:: ; address name
+    dw $0124 ; id 0 MetalDrak
+    dw $012E ; id 1 IceMan
+
+; E-0199 (derived: list for entry $12B (EvilPot) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults12B::
+Data_00E_72E4:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0134 ; id 1 BombCrag
+
+; E-0199 (derived: list for entry $12C (Gismo) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults12C::
+Data_00E_72E8:: ; address name
+    dw $0138 ; id 0 CloudKing
+
+; E-0199 (derived: list for entry $12D (LavaMan) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults12D::
+Data_00E_72EA:: ; address name
+    dw $0135 ; id 0 GoldGolem
+
+; E-0199 (derived: list for entry $12E (IceMan) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults12E::
+Data_00E_72EC:: ; address name
+    dw $0135 ; id 0 GoldGolem
+
+; E-0199 (derived: list for entry $12F (Mimic) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults12F::
+Data_00E_72EE:: ; address name
+    dw $012B ; id 0 EvilPot
+
+; E-0199 (derived: list for entry $130 (Exaucers) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults130::
+Data_00E_72F0:: ; address name
+    dw $0132 ; id 0 Golem
+
+; E-0199 (derived: list for entry $132 (Golem) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults132::
+Data_00E_72F2:: ; address name
+    dw $0123 ; id 0 Voodoll
+    dw $0126 ; id 1 SabreMan
+    dw $0133 ; id 2 StoneMan
+
+; E-0199 (derived: list for entry $133 (StoneMan) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults133::
+Data_00E_72F8:: ; address name
+    dw $0123 ; id 0 Voodoll
+    dw $0124 ; id 1 MetalDrak
+    dw $0126 ; id 2 SabreMan
+
+; E-0199 (derived: list for entry $134 (BombCrag) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults134::
+Data_00E_72FE:: ; address name
+    dw $0136 ; id 0 DarkMate
+
+; E-0199 (derived: list for entry $136 (DarkMate) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults136::
+Data_00E_7300:: ; address name
+    dw $0149 ; id 0 Gamanian
+
+; E-0199 (derived: list for entry $142 (Merman) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults142::
+Data_00E_7302:: ; address name
+    dw $0150 ; id 0 MerTiger
+    dw $012B ; id 1 EvilPot
+
+; E-0199 (derived: list for entry $143 (Octokid) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults143::
+Data_00E_7306:: ; address name
+    dw $0152 ; id 0 Octogon
+
+; E-0199 (derived: list for entry $146 (Angleron) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults146::
+Data_00E_7308:: ; address name
+    dw $0147 ; id 0 FishRider
+    dw $0148 ; id 1 RushFish
+
+; E-0199 (derived: list for entry $147 (FishRider) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults147::
+Data_00E_730C:: ; address name
+    dw $0154 ; id 0 Digong
+
+; E-0199 (derived: list for entry $149 (Gamanian) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults149::
+Data_00E_730E:: ; address name
+    dw $014A ; id 0 Clawster
+
+; E-0199 (derived: list for entry $14A (Clawster) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults14A::
+Data_00E_7310:: ; address name
+    dw $014B ; id 0 CancerMan
+
+; E-0199 (derived: list for entry $14B (CancerMan) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults14B::
+Data_00E_7312:: ; address name
+    dw $014F ; id 0 HoodSquid
+    dw $0151 ; id 1 AxeShark
+
+; E-0199 (derived: list for entry $14C (RogueWave) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults14C::
+Data_00E_7316:: ; address name
+    dw $014D ; id 0 Scallopa
+
+; E-0199 (derived: list for entry $14D (Scallopa) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults14D::
+Data_00E_7318:: ; address name
+    dw $0155 ; id 0 WhaleMage
+
+; E-0199 (derived: list for entry $150 (MerTiger) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults150::
+Data_00E_731A:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0151 ; id 1 AxeShark
+
+; E-0199 (derived: list for entry $151 (AxeShark) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults151::
+Data_00E_731E:: ; address name
+    dw $0157 ; id 0 Octoraid
+    dw $0153 ; id 1 KingSquid
+
+; E-0199 (derived: list for entry $153 (KingSquid) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults153::
+Data_00E_7322:: ; address name
+    dw $0156 ; id 0 Aquadon
+
+; E-0199 (derived: list for entry $155 (WhaleMage) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults155::
+Data_00E_7324:: ; address name
+    dw $0159 ; id 0 Poseidon
+
+; E-0199 (derived: list for entry $159 (Poseidon) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults159::
+Data_00E_7326:: ; address name
+    dw $0160 ; id 0 DracoLord
+    dw $0166 ; id 1 Zoma
+
+; E-0199 (derived: list for entry $160 (DracoLord) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults160::
+Data_00E_732A:: ; address name
+    dw $0161 ; id 0 LordDraco
+    dw $0166 ; id 1 Zoma
+
+; E-0199 (derived: list for entry $161 (LordDraco) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults161::
+Data_00E_732E:: ; address name
+    dw $0165 ; id 0 Baramos
+
+; E-0199 (derived: list for entry $163 (Sidoh) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults163::
+Data_00E_7330:: ; address name
+    dw $0164 ; id 0 Genosidoh
+
+; E-0199 (derived: list for entry $164 (Genosidoh) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults164::
+Data_00E_7332:: ; address name
+    dw $016D ; id 0 Mudou
+
+; E-0199 (derived: list for entry $166 (Zoma) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults166::
+Data_00E_7334:: ; address name
+    dw $0167 ; id 0 AsuraZoma
+    dw $016E ; id 1 DeathMore
+
+; E-0199 (derived: list for entry $167 (AsuraZoma) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults167::
+Data_00E_7338:: ; address name
+    dw $0169 ; id 0 PsychoPiz
+    dw $016A ; id 1 Esterk
+
+; E-0199 (derived: list for entry $169 (PsychoPiz) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults169::
+Data_00E_733C:: ; address name
+    dw $0172 ; id 0 Orgodemir
+
+; E-0199 (derived: list for entry $16A (Esterk) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults16A::
+Data_00E_733E:: ; address name
+    dw $016B ; id 0 Mirudraas
+
+; E-0199 (derived: list for entry $16B (Mirudraas) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults16B::
+Data_00E_7340:: ; address name
+    dw $016C ; id 0 Mirudraas
+    dw $016E ; id 1 DeathMore
+
+; E-0199 (derived: list for entry $16C (Mirudraas) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults16C::
+Data_00E_7344:: ; address name
+    dw $016E ; id 0 DeathMore
+
+; E-0199 (derived: list for entry $16D (Mudou) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults16D::
+Data_00E_7346:: ; address name
+    dw $016F ; id 0 DeathMore
+
+; E-0199 (derived: list for entry $16F (DeathMore) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults16F::
+Data_00E_7348:: ; address name
+    dw $0170 ; id 0 DeathMore
+
+; E-0199 (derived: list for entry $170 (DeathMore) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults170::
+Data_00E_734A:: ; address name
+    dw $0171 ; id 0 Darkdrium
+
+; E-0199 (derived: list for entry $171 (Darkdrium) of BreedSpeciesResultTable; it runs to the next list)
+; record: child species
+BreedSpeciesResults171::
+Data_00E_734C:: ; address name
+    dw $0173 ; id 0 Orgodemir
+
+; E-0199 (C1: stage 2, when stage 1 finds nothing: the byte list at $734E + 2 * parent A's species holds families compared with parent B's family (record +$D & $0F); $FE moves on only when wArg1 = 2; $FF ends; a match takes result [index] from BreedFamilyResultTable)
+; record: list
+BreedFamilyRuleTable::
+Data_00E_734E:: ; address name
+    dw BreedFamilyRules000 ; id 0
+    dw BreedFamilyRules000 ; id 1 DrakSlime
+    dw BreedFamilyRules000 ; id 2 SpotSlime
+    dw BreedFamilyRules000 ; id 3 WingSlime
+    dw BreedFamilyRules004 ; id 4 TreeSlime
+    dw BreedFamilyRules000 ; id 5 Snaily
+    dw BreedFamilyRules000 ; id 6 SlimeNite
+    dw BreedFamilyRules000 ; id 7 Babble
+    dw BreedFamilyRules000 ; id 8 BoxSlime
+    dw BreedFamilyRules000 ; id 9 PearlGel
+    dw BreedFamilyRules000 ; id 10 Slime
+    dw BreedFamilyRules00B ; id 11 Healer
+    dw BreedFamilyRules000 ; id 12 FangSlime
+    dw BreedFamilyRules000 ; id 13 RockSlime
+    dw BreedFamilyRules000 ; id 14 SlimeBorg
+    dw BreedFamilyRules000 ; id 15 Slabbit
+    dw BreedFamilyRules000 ; id 16 KingSlime
+    dw BreedFamilyRules000 ; id 17 Metaly
+    dw BreedFamilyRules000 ; id 18 Metabble
+    dw BreedFamilyRules000 ; id 19 SpotKing
+    dw BreedFamilyRules000 ; id 20 TropicGel
+    dw BreedFamilyRules015 ; id 21 MimeSlime
+    dw BreedFamilyRules000 ; id 22 HaloSlime
+    dw BreedFamilyRules000 ; id 23 MetalKing
+    dw BreedFamilyRules000 ; id 24 GoldSlime
+    dw BreedFamilyRules000 ; id 25 GranSlime
+    dw BreedFamilyRules01A ; id 26 WonderEgg
+    dw BreedFamilyRules000 ; id 27 Butch
+    dw BreedFamilyRules000 ; id 28 ?
+    dw BreedFamilyRules000 ; id 29 ?
+    dw BreedFamilyRules000 ; id 30 ?
+    dw BreedFamilyRules000 ; id 31 ?
+    dw BreedFamilyRules000 ; id 32 ?
+    dw BreedFamilyRules000 ; id 33 ?
+    dw BreedFamilyRules000 ; id 34 ?
+    dw BreedFamilyRules000 ; id 35 ?
+    dw BreedFamilyRules000 ; id 36 DragonKid
+    dw BreedFamilyRules000 ; id 37 Tortragon
+    dw BreedFamilyRules000 ; id 38 Pteranod
+    dw BreedFamilyRules027 ; id 39 Gasgon
+    dw BreedFamilyRules000 ; id 40 FairyDrak
+    dw BreedFamilyRules000 ; id 41 LizardMan
+    dw BreedFamilyRules000 ; id 42 Poisongon
+    dw BreedFamilyRules000 ; id 43 Swordgon
+    dw BreedFamilyRules000 ; id 44 Drygon
+    dw BreedFamilyRules000 ; id 45 Dragon
+    dw BreedFamilyRules000 ; id 46 MiniDrak
+    dw BreedFamilyRules000 ; id 47 MadDragon
+    dw BreedFamilyRules000 ; id 48 Rayburn
+    dw BreedFamilyRules000 ; id 49 Chamelgon
+    dw BreedFamilyRules000 ; id 50 LizardFly
+    dw BreedFamilyRules000 ; id 51 Andreal
+    dw BreedFamilyRules000 ; id 52 KingCobra
+    dw BreedFamilyRules000 ; id 53 Vampirus
+    dw BreedFamilyRules000 ; id 54 SnakeBat
+    dw BreedFamilyRules000 ; id 55 Spikerous
+    dw BreedFamilyRules000 ; id 56 GreatDrak
+    dw BreedFamilyRules000 ; id 57 Crestpent
+    dw BreedFamilyRules000 ; id 58 WingSnake
+    dw BreedFamilyRules000 ; id 59 Coatol
+    dw BreedFamilyRules000 ; id 60 Orochi
+    dw BreedFamilyRules000 ; id 61 BattleRex
+    dw BreedFamilyRules000 ; id 62 SkyDragon
+    dw BreedFamilyRules000 ; id 63 Serpentia
+    dw BreedFamilyRules000 ; id 64 Divinegon
+    dw BreedFamilyRules000 ; id 65 Orligon
+    dw BreedFamilyRules000 ; id 66 GigaDraco
+    dw BreedFamilyRules000 ; id 67 ?
+    dw BreedFamilyRules000 ; id 68 ?
+    dw BreedFamilyRules000 ; id 69 ?
+    dw BreedFamilyRules000 ; id 70 ?
+    dw BreedFamilyRules047 ; id 71 Tonguella
+    dw BreedFamilyRules048 ; id 72 Almiraj
+    dw BreedFamilyRules049 ; id 73 CatFly
+    dw BreedFamilyRules000 ; id 74 PillowRat
+    dw BreedFamilyRules04B ; id 75 Saccer
+    dw BreedFamilyRules04C ; id 76 GulpBeast
+    dw BreedFamilyRules000 ; id 77 Skullroo
+    dw BreedFamilyRules000 ; id 78 WindBeast
+    dw BreedFamilyRules000 ; id 79 Beavern
+    dw BreedFamilyRules000 ; id 80 Antbear
+    dw BreedFamilyRules051 ; id 81 SuperTen
+    dw BreedFamilyRules000 ; id 82 IronTurt
+    dw BreedFamilyRules000 ; id 83 Mommonja
+    dw BreedFamilyRules000 ; id 84 HammerMan
+    dw BreedFamilyRules055 ; id 85 Grizzly
+    dw BreedFamilyRules056 ; id 86 Yeti
+    dw BreedFamilyRules000 ; id 87 ArrowDog
+    dw BreedFamilyRules000 ; id 88 NoctoKing
+    dw BreedFamilyRules000 ; id 89 BeastNite
+    dw BreedFamilyRules000 ; id 90 MadGopher
+    dw BreedFamilyRules000 ; id 91 FairyRat
+    dw BreedFamilyRules000 ; id 92 Unicorn
+    dw BreedFamilyRules05D ; id 93 Goategon
+    dw BreedFamilyRules05E ; id 94 WildApe
+    dw BreedFamilyRules05F ; id 95 Trumpeter
+    dw BreedFamilyRules000 ; id 96 KingLeo
+    dw BreedFamilyRules061 ; id 97 DarkHorn
+    dw BreedFamilyRules000 ; id 98 MadCat
+    dw BreedFamilyRules063 ; id 99 BigEye
+    dw BreedFamilyRules000 ; id 100 Gorago
+    dw BreedFamilyRules065 ; id 101 CatMage
+    dw BreedFamilyRules066 ; id 102 Dumbira
+    dw BreedFamilyRules000 ; id 103 ?
+    dw BreedFamilyRules000 ; id 104 ?
+    dw BreedFamilyRules000 ; id 105 ?
+    dw BreedFamilyRules06A ; id 106 Picky
+    dw BreedFamilyRules06B ; id 107 Wyvern
+    dw BreedFamilyRules06C ; id 108 BullBird
+    dw BreedFamilyRules000 ; id 109 Florajay
+    dw BreedFamilyRules06E ; id 110 DuckKite
+    dw BreedFamilyRules000 ; id 111 MadPecker
+    dw BreedFamilyRules000 ; id 112 MadRaven
+    dw BreedFamilyRules000 ; id 113 MistyWing
+    dw BreedFamilyRules000 ; id 114 AquaHawk
+    dw BreedFamilyRules000 ; id 115 Dracky
+    dw BreedFamilyRules074 ; id 116 KiteHawk
+    dw BreedFamilyRules075 ; id 117 BigRoost
+    dw BreedFamilyRules000 ; id 118 StubBird
+    dw BreedFamilyRules077 ; id 119 LandOwl
+    dw BreedFamilyRules078 ; id 120 MadGoose
+    dw BreedFamilyRules079 ; id 121 MadCondor
+    dw BreedFamilyRules07A ; id 122 Emyu
+    dw BreedFamilyRules000 ; id 123 Blizzardy
+    dw BreedFamilyRules07C ; id 124 Phoenix
+    dw BreedFamilyRules000 ; id 125 ZapBird
+    dw BreedFamilyRules07E ; id 126 Garudian
+    dw BreedFamilyRules000 ; id 127 WhipBird
+    dw BreedFamilyRules000 ; id 128 FunkyBird
+    dw BreedFamilyRules081 ; id 129 RainHawk
+    dw BreedFamilyRules000 ; id 130 Azurile
+    dw BreedFamilyRules083 ; id 131 Shantak
+    dw BreedFamilyRules000 ; id 132 CragDevil
+    dw BreedFamilyRules000 ; id 133 ?
+    dw BreedFamilyRules000 ; id 134 ?
+    dw BreedFamilyRules000 ; id 135 ?
+    dw BreedFamilyRules000 ; id 136 ?
+    dw BreedFamilyRules000 ; id 137 ?
+    dw BreedFamilyRules000 ; id 138 ?
+    dw BreedFamilyRules000 ; id 139 ?
+    dw BreedFamilyRules000 ; id 140 ?
+    dw BreedFamilyRules08D ; id 141 MadPlant
+    dw BreedFamilyRules000 ; id 142 FireWeed
+    dw BreedFamilyRules000 ; id 143 FloraMan
+    dw BreedFamilyRules000 ; id 144 WingTree
+    dw BreedFamilyRules000 ; id 145 CactiBall
+    dw BreedFamilyRules000 ; id 146 Gulpple
+    dw BreedFamilyRules000 ; id 147 Toadstool
+    dw BreedFamilyRules094 ; id 148 AmberWeed
+    dw BreedFamilyRules000 ; id 149 Slurperon
+    dw BreedFamilyRules096 ; id 150 Stubsuck
+    dw BreedFamilyRules000 ; id 151 Oniono
+    dw BreedFamilyRules000 ; id 152 DanceVegi
+    dw BreedFamilyRules000 ; id 153 TreeBoy
+    dw BreedFamilyRules000 ; id 154 Devipine
+    dw BreedFamilyRules000 ; id 155 FaceTree
+    dw BreedFamilyRules09C ; id 156 HerbMan
+    dw BreedFamilyRules000 ; id 157 BeanMan
+    dw BreedFamilyRules000 ; id 158 EvilSeed
+    dw BreedFamilyRules000 ; id 159 ManEater
+    dw BreedFamilyRules000 ; id 160 Snapper
+    dw BreedFamilyRules000 ; id 161 GhosTree
+    dw BreedFamilyRules000 ; id 162 Rosevine
+    dw BreedFamilyRules000 ; id 163 Egdracil
+    dw BreedFamilyRules000 ; id 164 Warubou
+    dw BreedFamilyRules000 ; id 165 Watabou
+    dw BreedFamilyRules0A6 ; id 166 Eggplaton
+    dw BreedFamilyRules000 ; id 167 FooHero
+    dw BreedFamilyRules000 ; id 168 ?
+    dw BreedFamilyRules000 ; id 169 ?
+    dw BreedFamilyRules000 ; id 170 ?
+    dw BreedFamilyRules000 ; id 171 ?
+    dw BreedFamilyRules000 ; id 172 ?
+    dw BreedFamilyRules000 ; id 173 ?
+    dw BreedFamilyRules000 ; id 174 ?
+    dw BreedFamilyRules000 ; id 175 ?
+    dw BreedFamilyRules0B0 ; id 176 GiantSlug
+    dw BreedFamilyRules000 ; id 177 Catapila
+    dw BreedFamilyRules000 ; id 178 Gophecada
+    dw BreedFamilyRules0B3 ; id 179 Butterfly
+    dw BreedFamilyRules0B4 ; id 180 WeedBug
+    dw BreedFamilyRules0B5 ; id 181 GiantWorm
+    dw BreedFamilyRules0B6 ; id 182 Lipsy
+    dw BreedFamilyRules000 ; id 183 StagBug
+    dw BreedFamilyRules0B8 ; id 184 Pyuro
+    dw BreedFamilyRules000 ; id 185 ArmyAnt
+    dw BreedFamilyRules000 ; id 186 GoHopper
+    dw BreedFamilyRules0BB ; id 187 TailEater
+    dw BreedFamilyRules0BC ; id 188 ArmorPede
+    dw BreedFamilyRules0BD ; id 189 Eyeder
+    dw BreedFamilyRules000 ; id 190 GiantMoth
+    dw BreedFamilyRules0BF ; id 191 Droll
+    dw BreedFamilyRules000 ; id 192 ArmyCrab
+    dw BreedFamilyRules0C1 ; id 193 MadHornet
+    dw BreedFamilyRules000 ; id 194 Belzebub
+    dw BreedFamilyRules0C3 ; id 195 WarMantis
+    dw BreedFamilyRules000 ; id 196 HornBeet
+    dw BreedFamilyRules0C5 ; id 197 Sickler
+    dw BreedFamilyRules000 ; id 198 Armorpion
+    dw BreedFamilyRules000 ; id 199 Digster
+    dw BreedFamilyRules000 ; id 200 Skularach
+    dw BreedFamilyRules000 ; id 201 MultiEyes
+    dw BreedFamilyRules000 ; id 202 ?
+    dw BreedFamilyRules000 ; id 203 ?
+    dw BreedFamilyRules000 ; id 204 ?
+    dw BreedFamilyRules000 ; id 205 ?
+    dw BreedFamilyRules000 ; id 206 ?
+    dw BreedFamilyRules000 ; id 207 ?
+    dw BreedFamilyRules000 ; id 208 ?
+    dw BreedFamilyRules000 ; id 209 ?
+    dw BreedFamilyRules000 ; id 210 ?
+    dw BreedFamilyRules0D3 ; id 211 Pixy
+    dw BreedFamilyRules0D4 ; id 212 MedusaEye
+    dw BreedFamilyRules000 ; id 213 AgDevil
+    dw BreedFamilyRules0D6 ; id 214 Demonite
+    dw BreedFamilyRules0D7 ; id 215 DarkEye
+    dw BreedFamilyRules0D8 ; id 216 EyeBall
+    dw BreedFamilyRules0D9 ; id 217 SkulRider
+    dw BreedFamilyRules0DA ; id 218 EvilBeast
+    dw BreedFamilyRules000 ; id 219 Bubblemon
+    dw BreedFamilyRules0DC ; id 220 1EyeClown
+    dw BreedFamilyRules0DD ; id 221 Gremlin
+    dw BreedFamilyRules0DE ; id 222 ArcDemon
+    dw BreedFamilyRules000 ; id 223 Lionex
+    dw BreedFamilyRules0E0 ; id 224 GoatHorn
+    dw BreedFamilyRules000 ; id 225 Orc
+    dw BreedFamilyRules0E2 ; id 226 Ogre
+    dw BreedFamilyRules0E3 ; id 227 GateGuard
+    dw BreedFamilyRules000 ; id 228 ChopClown
+    dw BreedFamilyRules0E5 ; id 229 BossTroll
+    dw BreedFamilyRules000 ; id 230 Grendal
+    dw BreedFamilyRules000 ; id 231 Akubar
+    dw BreedFamilyRules000 ; id 232 MadKnight
+    dw BreedFamilyRules000 ; id 233 EvilWell
+    dw BreedFamilyRules000 ; id 234 Gigantes
+    dw BreedFamilyRules0EB ; id 235 Centasaur
+    dw BreedFamilyRules000 ; id 236 EvilArmor
+    dw BreedFamilyRules000 ; id 237 Jamirus
+    dw BreedFamilyRules000 ; id 238 Durran
+    dw BreedFamilyRules000 ; id 239 Titanis
+    dw BreedFamilyRules000 ; id 240 LampGenie
+    dw BreedFamilyRules000 ; id 241 ?
+    dw BreedFamilyRules000 ; id 242 ?
+    dw BreedFamilyRules000 ; id 243 ?
+    dw BreedFamilyRules000 ; id 244 ?
+    dw BreedFamilyRules000 ; id 245 ?
+    dw BreedFamilyRules0F6 ; id 246 Spooky
+    dw BreedFamilyRules0F7 ; id 247 Skullgon
+    dw BreedFamilyRules000 ; id 248 PutrePup
+    dw BreedFamilyRules0F9 ; id 249 RotRaven
+    dw BreedFamilyRules000 ; id 250 Mummy
+    dw BreedFamilyRules0FB ; id 251 DarkCrab
+    dw BreedFamilyRules0FC ; id 252 DeadNite
+    dw BreedFamilyRules000 ; id 253 Shadow
+    dw BreedFamilyRules0FE ; id 254 Skulpent
+    dw BreedFamilyRules0FF ; id 255 Hork
+    dw BreedFamilyRules100 ; id 256 Mudron
+    dw BreedFamilyRules101 ; id 257 NiteWhip
+    dw BreedFamilyRules000 ; id 258 WindMerge
+    dw BreedFamilyRules000 ; id 259 Reaper
+    dw BreedFamilyRules000 ; id 260 Inverzon
+    dw BreedFamilyRules105 ; id 261 FoxFire
+    dw BreedFamilyRules000 ; id 262 CaptDead
+    dw BreedFamilyRules107 ; id 263 DeadNoble
+    dw BreedFamilyRules108 ; id 264 WhiteKing
+    dw BreedFamilyRules109 ; id 265 BoneSlave
+    dw BreedFamilyRules10A ; id 266 Skeletor
+    dw BreedFamilyRules000 ; id 267 Servant
+    dw BreedFamilyRules000 ; id 268 Lazamanus
+    dw BreedFamilyRules000 ; id 269 Copycat
+    dw BreedFamilyRules10E ; id 270 MadSpirit
+    dw BreedFamilyRules10F ; id 271 PomPomBom
+    dw BreedFamilyRules000 ; id 272 Niterich
+    dw BreedFamilyRules000 ; id 273 ?
+    dw BreedFamilyRules000 ; id 274 ?
+    dw BreedFamilyRules000 ; id 275 ?
+    dw BreedFamilyRules000 ; id 276 ?
+    dw BreedFamilyRules000 ; id 277 ?
+    dw BreedFamilyRules000 ; id 278 ?
+    dw BreedFamilyRules000 ; id 279 ?
+    dw BreedFamilyRules000 ; id 280 ?
+    dw BreedFamilyRules119 ; id 281 JewelBag
+    dw BreedFamilyRules000 ; id 282 EvilWand
+    dw BreedFamilyRules000 ; id 283 MadCandle
+    dw BreedFamilyRules000 ; id 284 CoilBird
+    dw BreedFamilyRules000 ; id 285 Facer
+    dw BreedFamilyRules000 ; id 286 SpikyBoy
+    dw BreedFamilyRules000 ; id 287 MadMirror
+    dw BreedFamilyRules120 ; id 288 RogueNite
+    dw BreedFamilyRules121 ; id 289 Puppetor
+    dw BreedFamilyRules000 ; id 290 Goopi
+    dw BreedFamilyRules000 ; id 291 Voodoll
+    dw BreedFamilyRules000 ; id 292 MetalDrak
+    dw BreedFamilyRules000 ; id 293 Balzak
+    dw BreedFamilyRules000 ; id 294 SabreMan
+    dw BreedFamilyRules000 ; id 295 CurseLamp
+    dw BreedFamilyRules000 ; id 296 Brushead
+    dw BreedFamilyRules129 ; id 297 Roboster
+    dw BreedFamilyRules12A ; id 298 Roboster2
+    dw BreedFamilyRules000 ; id 299 EvilPot
+    dw BreedFamilyRules12C ; id 300 Gismo
+    dw BreedFamilyRules12D ; id 301 LavaMan
+    dw BreedFamilyRules12E ; id 302 IceMan
+    dw BreedFamilyRules000 ; id 303 Mimic
+    dw BreedFamilyRules000 ; id 304 Exaucers
+    dw BreedFamilyRules000 ; id 305 MudDoll
+    dw BreedFamilyRules000 ; id 306 Golem
+    dw BreedFamilyRules000 ; id 307 StoneMan
+    dw BreedFamilyRules000 ; id 308 BombCrag
+    dw BreedFamilyRules000 ; id 309 GoldGolem
+    dw BreedFamilyRules136 ; id 310 DarkMate
+    dw BreedFamilyRules000 ; id 311 ProtoMech
+    dw BreedFamilyRules000 ; id 312 CloudKing
+    dw BreedFamilyRules000 ; id 313 ?
+    dw BreedFamilyRules000 ; id 314 ?
+    dw BreedFamilyRules000 ; id 315 ?
+    dw BreedFamilyRules13C ; id 316 Petiteel
+    dw BreedFamilyRules000 ; id 317 Moray
+    dw BreedFamilyRules000 ; id 318 WalrusMan
+    dw BreedFamilyRules000 ; id 319 RayGigas
+    dw BreedFamilyRules000 ; id 320 Anemon
+    dw BreedFamilyRules141 ; id 321 Aquarella
+    dw BreedFamilyRules000 ; id 322 Merman
+    dw BreedFamilyRules000 ; id 323 Octokid
+    dw BreedFamilyRules000 ; id 324 PutreFish
+    dw BreedFamilyRules145 ; id 325 Octoreach
+    dw BreedFamilyRules146 ; id 326 Angleron
+    dw BreedFamilyRules000 ; id 327 FishRider
+    dw BreedFamilyRules000 ; id 328 RushFish
+    dw BreedFamilyRules149 ; id 329 Gamanian
+    dw BreedFamilyRules14A ; id 330 Clawster
+    dw BreedFamilyRules000 ; id 331 CancerMan
+    dw BreedFamilyRules14C ; id 332 RogueWave
+    dw BreedFamilyRules000 ; id 333 Scallopa
+    dw BreedFamilyRules000 ; id 334 SeaHorse
+    dw BreedFamilyRules14F ; id 335 HoodSquid
+    dw BreedFamilyRules000 ; id 336 MerTiger
+    dw BreedFamilyRules000 ; id 337 AxeShark
+    dw BreedFamilyRules152 ; id 338 Octogon
+    dw BreedFamilyRules153 ; id 339 KingSquid
+    dw BreedFamilyRules000 ; id 340 Digong
+    dw BreedFamilyRules000 ; id 341 WhaleMage
+    dw BreedFamilyRules000 ; id 342 Aquadon
+    dw BreedFamilyRules000 ; id 343 Octoraid
+    dw BreedFamilyRules000 ; id 344 Grakos
+    dw BreedFamilyRules000 ; id 345 Poseidon
+    dw BreedFamilyRules000 ; id 346 Pumpoise
+    dw BreedFamilyRules000 ; id 347 Starfish
+    dw BreedFamilyRules000 ; id 348 ?
+    dw BreedFamilyRules000 ; id 349 ?
+    dw BreedFamilyRules000 ; id 350 ?
+    dw BreedFamilyRules000 ; id 351 DracoLord
+    dw BreedFamilyRules000 ; id 352 DracoLord
+    dw BreedFamilyRules000 ; id 353 LordDraco
+    dw BreedFamilyRules000 ; id 354 Hargon
+    dw BreedFamilyRules000 ; id 355 Sidoh
+    dw BreedFamilyRules000 ; id 356 Genosidoh
+    dw BreedFamilyRules000 ; id 357 Baramos
+    dw BreedFamilyRules000 ; id 358 Zoma
+    dw BreedFamilyRules000 ; id 359 AsuraZoma
+    dw BreedFamilyRules000 ; id 360 Pizzaro
+    dw BreedFamilyRules000 ; id 361 PsychoPiz
+    dw BreedFamilyRules000 ; id 362 Esterk
+    dw BreedFamilyRules000 ; id 363 Mirudraas
+    dw BreedFamilyRules000 ; id 364 Mirudraas
+    dw BreedFamilyRules000 ; id 365 Mudou
+    dw BreedFamilyRules000 ; id 366 DeathMore
+    dw BreedFamilyRules000 ; id 367 DeathMore
+    dw BreedFamilyRules000 ; id 368 DeathMore
+    dw BreedFamilyRules000 ; id 369 Darkdrium
+    dw BreedFamilyRules000 ; id 370 Orgodemir
+    dw BreedFamilyRules000 ; id 371 Orgodemir
+    dw BreedFamilyRules000 ; id 372 Darck
+    dw BreedFamilyRules000 ; id 373 Tatsu
+    dw BreedFamilyRules000 ; id 374 Diago
+    dw BreedFamilyRules000 ; id 375 Samsi
+    dw BreedFamilyRules000 ; id 376 Bazoo
+    dw BreedFamilyRules000 ; id 377 ?
+    dw BreedFamilyRules000 ; id 378 ?
+    dw BreedFamilyRules000 ; id 379 ?
+    dw BreedFamilyRules000 ; id 380 Lamia
+    dw BreedFamilyRules000 ; id 381 Dimensaur
+    dw BreedFamilyRules000 ; id 382 Kagebou
+    dw BreedFamilyRules000 ; id 383 ?
+
+; E-0199 (derived: list for entry $00 of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules000::
+Data_00E_764E:: ; address name
+    db $FF ; id 0
+
+; E-0199 (derived: list for entry $04 (TreeSlime) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules004::
+Data_00E_764F:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $0B (Healer) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules00B::
+Data_00E_7651:: ; address name
+    db $FE, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $15 (MimeSlime) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules015::
+Data_00E_7654:: ; address name
+    db $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $1A (WonderEgg) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules01A::
+Data_00E_7656:: ; address name
+    db $04, $06, $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $27 (Gasgon) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules027::
+Data_00E_765A:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $47 (Tonguella) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules047::
+Data_00E_765C:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $48 (Almiraj) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules048::
+Data_00E_765E:: ; address name
+    db $01, $FF ; id 0
+
+; E-0199 (derived: list for entry $49 (CatFly) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules049::
+Data_00E_7660:: ; address name
+    db $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $4B (Saccer) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules04B::
+Data_00E_7662:: ; address name
+    db $01, $FF ; id 0
+
+; E-0199 (derived: list for entry $4C (GulpBeast) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules04C::
+Data_00E_7664:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $51 (SuperTen) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules051::
+Data_00E_7666:: ; address name
+    db $01, $FF ; id 0
+
+; E-0199 (derived: list for entry $55 (Grizzly) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules055::
+Data_00E_7668:: ; address name
+    db $01, $06, $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $56 (Yeti) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules056::
+Data_00E_766C:: ; address name
+    db $01, $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $5D (Goategon) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules05D::
+Data_00E_766F:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $5E (WildApe) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules05E::
+Data_00E_7671:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $5F (Trumpeter) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules05F::
+Data_00E_7673:: ; address name
+    db $01, $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $61 (DarkHorn) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules061::
+Data_00E_7676:: ; address name
+    db $0A, $FF ; id 0
+
+; E-0199 (derived: list for entry $63 (BigEye) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules063::
+Data_00E_7678:: ; address name
+    db $01, $FF ; id 0
+
+; E-0199 (derived: list for entry $65 (CatMage) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules065::
+Data_00E_767A:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $66 (Dumbira) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules066::
+Data_00E_767C:: ; address name
+    db $01, $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $6A (Picky) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules06A::
+Data_00E_767F:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $6B (Wyvern) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules06B::
+Data_00E_7681:: ; address name
+    db $01, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $6C (BullBird) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules06C::
+Data_00E_7684:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $6E (DuckKite) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules06E::
+Data_00E_7686:: ; address name
+    db $08, $FF ; id 0
+
+; E-0199 (derived: list for entry $74 (KiteHawk) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules074::
+Data_00E_7688:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $75 (BigRoost) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules075::
+Data_00E_768A:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $77 (LandOwl) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules077::
+Data_00E_768C:: ; address name
+    db $01, $07, $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $78 (MadGoose) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules078::
+Data_00E_7690:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $79 (MadCondor) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules079::
+Data_00E_7692:: ; address name
+    db $01, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $7A (Emyu) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules07A::
+Data_00E_7695:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $7C (Phoenix) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules07C::
+Data_00E_7697:: ; address name
+    db $01, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $7E (Garudian) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules07E::
+Data_00E_769A:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $81 (RainHawk) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules081::
+Data_00E_769C:: ; address name
+    db $0A, $FF ; id 0
+
+; E-0199 (derived: list for entry $83 (Shantak) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules083::
+Data_00E_769E:: ; address name
+    db $0A, $FF ; id 0
+
+; E-0199 (derived: list for entry $8D (MadPlant) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules08D::
+Data_00E_76A0:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $94 (AmberWeed) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules094::
+Data_00E_76A2:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $96 (Stubsuck) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules096::
+Data_00E_76A4:: ; address name
+    db $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $9C (HerbMan) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules09C::
+Data_00E_76A6:: ; address name
+    db $01, $FF ; id 0
+
+; E-0199 (derived: list for entry $A6 (Eggplaton) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0A6::
+Data_00E_76A8:: ; address name
+    db $06, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $B0 (GiantSlug) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0B0::
+Data_00E_76AB:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $B3 (Butterfly) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0B3::
+Data_00E_76AD:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $B4 (WeedBug) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0B4::
+Data_00E_76AF:: ; address name
+    db $04, $FF ; id 0
+
+; E-0199 (derived: list for entry $B5 (GiantWorm) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0B5::
+Data_00E_76B1:: ; address name
+    db $08, $FF ; id 0
+
+; E-0199 (derived: list for entry $B6 (Lipsy) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0B6::
+Data_00E_76B3:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $B8 (Pyuro) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0B8::
+Data_00E_76B5:: ; address name
+    db $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $BB (TailEater) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0BB::
+Data_00E_76B7:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $BC (ArmorPede) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0BC::
+Data_00E_76B9:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $BD (Eyeder) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0BD::
+Data_00E_76BB:: ; address name
+    db $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $BF (Droll) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0BF::
+Data_00E_76BD:: ; address name
+    db $01, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $C1 (MadHornet) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0C1::
+Data_00E_76C0:: ; address name
+    db $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $C3 (WarMantis) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0C3::
+Data_00E_76C2:: ; address name
+    db $06, $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $C5 (Sickler) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0C5::
+Data_00E_76C5:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $D3 (Pixy) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0D3::
+Data_00E_76C7:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $D4 (MedusaEye) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0D4::
+Data_00E_76C9:: ; address name
+    db $01, $02, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $D6 (Demonite) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0D6::
+Data_00E_76CD:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $D7 (DarkEye) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0D7::
+Data_00E_76CF:: ; address name
+    db $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $D8 (EyeBall) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0D8::
+Data_00E_76D1:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $D9 (SkulRider) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0D9::
+Data_00E_76D3:: ; address name
+    db $01, $02, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $DA (EvilBeast) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0DA::
+Data_00E_76D7:: ; address name
+    db $01, $02, $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $DC (1EyeClown) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0DC::
+Data_00E_76DB:: ; address name
+    db $07, $FF ; id 0
+
+; E-0199 (derived: list for entry $DD (Gremlin) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0DD::
+Data_00E_76DD:: ; address name
+    db $01, $07, $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $DE (ArcDemon) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0DE::
+Data_00E_76E1:: ; address name
+    db $07, $02, $01, $08, $FF ; id 0
+
+; E-0199 (derived: list for entry $E0 (GoatHorn) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0E0::
+Data_00E_76E6:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $E2 (Ogre) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0E2::
+Data_00E_76E8:: ; address name
+    db $01, $07, $02, $08, $FF ; id 0
+
+; E-0199 (derived: list for entry $E3 (GateGuard) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0E3::
+Data_00E_76ED:: ; address name
+    db $01, $02, $08, $FF ; id 0
+
+; E-0199 (derived: list for entry $E5 (BossTroll) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0E5::
+Data_00E_76F1:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $EB (Centasaur) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0EB::
+Data_00E_76F3:: ; address name
+    db $0A, $FF ; id 0
+
+; E-0199 (derived: list for entry $F6 (Spooky) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0F6::
+Data_00E_76F5:: ; address name
+    db $06, $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $F7 (Skullgon) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0F7::
+Data_00E_76F8:: ; address name
+    db $01, $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $F9 (RotRaven) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0F9::
+Data_00E_76FB:: ; address name
+    db $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $FB (DarkCrab) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0FB::
+Data_00E_76FD:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $FC (DeadNite) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0FC::
+Data_00E_76FF:: ; address name
+    db $09, $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $FE (Skulpent) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0FE::
+Data_00E_7702:: ; address name
+    db $01, $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $FF (Hork) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules0FF::
+Data_00E_7705:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $100 (Mudron) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules100::
+Data_00E_7707:: ; address name
+    db $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $101 (NiteWhip) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules101::
+Data_00E_7709:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $105 (FoxFire) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules105::
+Data_00E_770B:: ; address name
+    db $02, $FF ; id 0
+
+; E-0199 (derived: list for entry $107 (DeadNoble) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules107::
+Data_00E_770D:: ; address name
+    db $01, $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $108 (WhiteKing) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules108::
+Data_00E_7710:: ; address name
+    db $01, $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $109 (BoneSlave) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules109::
+Data_00E_7713:: ; address name
+    db $01, $09, $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $10A (Skeletor) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules10A::
+Data_00E_7717:: ; address name
+    db $01, $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $10E (MadSpirit) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules10E::
+Data_00E_771A:: ; address name
+    db $06, $01, $FF ; id 0
+
+; E-0199 (derived: list for entry $10F (PomPomBom) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules10F::
+Data_00E_771D:: ; address name
+    db $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $119 (JewelBag) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules119::
+Data_00E_771F:: ; address name
+    db $08, $FF ; id 0
+
+; E-0199 (derived: list for entry $120 (RogueNite) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules120::
+Data_00E_7721:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $121 (Puppetor) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules121::
+Data_00E_7723:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $129 (Roboster) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules129::
+Data_00E_7725:: ; address name
+    db $00, $01, $03, $07, $05, $FF ; id 0
+
+; E-0199 (derived: list for entry $12A (Roboster2) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules12A::
+Data_00E_772B:: ; address name
+    db $00, $01, $03, $FF ; id 0
+
+; E-0199 (derived: list for entry $12C (Gismo) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules12C::
+Data_00E_772F:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $12D (LavaMan) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules12D::
+Data_00E_7731:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $12E (IceMan) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules12E::
+Data_00E_7733:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $136 (DarkMate) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules136::
+Data_00E_7735:: ; address name
+    db $05, $FF ; id 0
+
+; E-0199 (derived: list for entry $13C (Petiteel) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules13C::
+Data_00E_7737:: ; address name
+    db $02, $08, $01, $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $141 (Aquarella) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules141::
+Data_00E_773C:: ; address name
+    db $05, $FF ; id 0
+
+; E-0199 (derived: list for entry $145 (Octoreach) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules145::
+Data_00E_773E:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $146 (Angleron) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules146::
+Data_00E_7740:: ; address name
+    db $01, $FF ; id 0
+
+; E-0199 (derived: list for entry $149 (Gamanian) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules149::
+Data_00E_7742:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $14A (Clawster) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules14A::
+Data_00E_7744:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $14C (RogueWave) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules14C::
+Data_00E_7746:: ; address name
+    db $06, $FF ; id 0
+
+; E-0199 (derived: list for entry $14F (HoodSquid) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules14F::
+Data_00E_7748:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (derived: list for entry $152 (Octogon) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules152::
+Data_00E_774A:: ; address name
+    db $00, $0A, $FF ; id 0
+
+; E-0199 (derived: list for entry $153 (KingSquid) of BreedFamilyRuleTable; it runs to the next list)
+; record: partner families, then $FF
+BreedFamilyRules153::
+Data_00E_774D:: ; address name
+    db $00, $FF ; id 0
+
+; E-0199 (C1: stage 2 result lists, indexed by parent A's species)
+; record: list
+BreedFamilyResultTable::
+Data_00E_774F:: ; address name
+    dw BreedFamilyResults000 ; id 0
+    dw BreedFamilyResults001 ; id 1 DrakSlime
+    dw BreedFamilyResults001 ; id 2 SpotSlime
+    dw BreedFamilyResults001 ; id 3 WingSlime
+    dw BreedFamilyResults001 ; id 4 TreeSlime
+    dw BreedFamilyResults005 ; id 5 Snaily
+    dw BreedFamilyResults005 ; id 6 SlimeNite
+    dw BreedFamilyResults005 ; id 7 Babble
+    dw BreedFamilyResults005 ; id 8 BoxSlime
+    dw BreedFamilyResults005 ; id 9 PearlGel
+    dw BreedFamilyResults005 ; id 10 Slime
+    dw BreedFamilyResults005 ; id 11 Healer
+    dw BreedFamilyResults00C ; id 12 FangSlime
+    dw BreedFamilyResults00C ; id 13 RockSlime
+    dw BreedFamilyResults00C ; id 14 SlimeBorg
+    dw BreedFamilyResults00C ; id 15 Slabbit
+    dw BreedFamilyResults00C ; id 16 KingSlime
+    dw BreedFamilyResults00C ; id 17 Metaly
+    dw BreedFamilyResults00C ; id 18 Metabble
+    dw BreedFamilyResults00C ; id 19 SpotKing
+    dw BreedFamilyResults00C ; id 20 TropicGel
+    dw BreedFamilyResults00C ; id 21 MimeSlime
+    dw BreedFamilyResults016 ; id 22 HaloSlime
+    dw BreedFamilyResults016 ; id 23 MetalKing
+    dw BreedFamilyResults016 ; id 24 GoldSlime
+    dw BreedFamilyResults016 ; id 25 GranSlime
+    dw BreedFamilyResults016 ; id 26 WonderEgg
+    dw BreedFamilyResults01B ; id 27 Butch
+    dw BreedFamilyResults01B ; id 28 ?
+    dw BreedFamilyResults01B ; id 29 ?
+    dw BreedFamilyResults01B ; id 30 ?
+    dw BreedFamilyResults01B ; id 31 ?
+    dw BreedFamilyResults01B ; id 32 ?
+    dw BreedFamilyResults01B ; id 33 ?
+    dw BreedFamilyResults01B ; id 34 ?
+    dw BreedFamilyResults01B ; id 35 ?
+    dw BreedFamilyResults01B ; id 36 DragonKid
+    dw BreedFamilyResults01B ; id 37 Tortragon
+    dw BreedFamilyResults01B ; id 38 Pteranod
+    dw BreedFamilyResults01B ; id 39 Gasgon
+    dw BreedFamilyResults028 ; id 40 FairyDrak
+    dw BreedFamilyResults028 ; id 41 LizardMan
+    dw BreedFamilyResults028 ; id 42 Poisongon
+    dw BreedFamilyResults028 ; id 43 Swordgon
+    dw BreedFamilyResults028 ; id 44 Drygon
+    dw BreedFamilyResults028 ; id 45 Dragon
+    dw BreedFamilyResults028 ; id 46 MiniDrak
+    dw BreedFamilyResults028 ; id 47 MadDragon
+    dw BreedFamilyResults028 ; id 48 Rayburn
+    dw BreedFamilyResults028 ; id 49 Chamelgon
+    dw BreedFamilyResults028 ; id 50 LizardFly
+    dw BreedFamilyResults028 ; id 51 Andreal
+    dw BreedFamilyResults028 ; id 52 KingCobra
+    dw BreedFamilyResults028 ; id 53 Vampirus
+    dw BreedFamilyResults028 ; id 54 SnakeBat
+    dw BreedFamilyResults028 ; id 55 Spikerous
+    dw BreedFamilyResults028 ; id 56 GreatDrak
+    dw BreedFamilyResults028 ; id 57 Crestpent
+    dw BreedFamilyResults028 ; id 58 WingSnake
+    dw BreedFamilyResults028 ; id 59 Coatol
+    dw BreedFamilyResults028 ; id 60 Orochi
+    dw BreedFamilyResults028 ; id 61 BattleRex
+    dw BreedFamilyResults028 ; id 62 SkyDragon
+    dw BreedFamilyResults028 ; id 63 Serpentia
+    dw BreedFamilyResults028 ; id 64 Divinegon
+    dw BreedFamilyResults028 ; id 65 Orligon
+    dw BreedFamilyResults028 ; id 66 GigaDraco
+    dw BreedFamilyResults028 ; id 67 ?
+    dw BreedFamilyResults028 ; id 68 ?
+    dw BreedFamilyResults028 ; id 69 ?
+    dw BreedFamilyResults028 ; id 70 ?
+    dw BreedFamilyResults028 ; id 71 Tonguella
+    dw BreedFamilyResults048 ; id 72 Almiraj
+    dw BreedFamilyResults049 ; id 73 CatFly
+    dw BreedFamilyResults04A ; id 74 PillowRat
+    dw BreedFamilyResults04A ; id 75 Saccer
+    dw BreedFamilyResults04C ; id 76 GulpBeast
+    dw BreedFamilyResults04D ; id 77 Skullroo
+    dw BreedFamilyResults04D ; id 78 WindBeast
+    dw BreedFamilyResults04D ; id 79 Beavern
+    dw BreedFamilyResults04D ; id 80 Antbear
+    dw BreedFamilyResults04D ; id 81 SuperTen
+    dw BreedFamilyResults052 ; id 82 IronTurt
+    dw BreedFamilyResults052 ; id 83 Mommonja
+    dw BreedFamilyResults052 ; id 84 HammerMan
+    dw BreedFamilyResults052 ; id 85 Grizzly
+    dw BreedFamilyResults056 ; id 86 Yeti
+    dw BreedFamilyResults057 ; id 87 ArrowDog
+    dw BreedFamilyResults057 ; id 88 NoctoKing
+    dw BreedFamilyResults057 ; id 89 BeastNite
+    dw BreedFamilyResults057 ; id 90 MadGopher
+    dw BreedFamilyResults057 ; id 91 FairyRat
+    dw BreedFamilyResults057 ; id 92 Unicorn
+    dw BreedFamilyResults057 ; id 93 Goategon
+    dw BreedFamilyResults05E ; id 94 WildApe
+    dw BreedFamilyResults05F ; id 95 Trumpeter
+    dw BreedFamilyResults060 ; id 96 KingLeo
+    dw BreedFamilyResults060 ; id 97 DarkHorn
+    dw BreedFamilyResults062 ; id 98 MadCat
+    dw BreedFamilyResults062 ; id 99 BigEye
+    dw BreedFamilyResults064 ; id 100 Gorago
+    dw BreedFamilyResults064 ; id 101 CatMage
+    dw BreedFamilyResults066 ; id 102 Dumbira
+    dw BreedFamilyResults067 ; id 103 ?
+    dw BreedFamilyResults067 ; id 104 ?
+    dw BreedFamilyResults067 ; id 105 ?
+    dw BreedFamilyResults067 ; id 106 Picky
+    dw BreedFamilyResults06B ; id 107 Wyvern
+    dw BreedFamilyResults06C ; id 108 BullBird
+    dw BreedFamilyResults06D ; id 109 Florajay
+    dw BreedFamilyResults06D ; id 110 DuckKite
+    dw BreedFamilyResults06F ; id 111 MadPecker
+    dw BreedFamilyResults06F ; id 112 MadRaven
+    dw BreedFamilyResults06F ; id 113 MistyWing
+    dw BreedFamilyResults06F ; id 114 AquaHawk
+    dw BreedFamilyResults06F ; id 115 Dracky
+    dw BreedFamilyResults06F ; id 116 KiteHawk
+    dw BreedFamilyResults075 ; id 117 BigRoost
+    dw BreedFamilyResults076 ; id 118 StubBird
+    dw BreedFamilyResults076 ; id 119 LandOwl
+    dw BreedFamilyResults078 ; id 120 MadGoose
+    dw BreedFamilyResults079 ; id 121 MadCondor
+    dw BreedFamilyResults07A ; id 122 Emyu
+    dw BreedFamilyResults07B ; id 123 Blizzardy
+    dw BreedFamilyResults07B ; id 124 Phoenix
+    dw BreedFamilyResults07D ; id 125 ZapBird
+    dw BreedFamilyResults07D ; id 126 Garudian
+    dw BreedFamilyResults07F ; id 127 WhipBird
+    dw BreedFamilyResults07F ; id 128 FunkyBird
+    dw BreedFamilyResults07F ; id 129 RainHawk
+    dw BreedFamilyResults082 ; id 130 Azurile
+    dw BreedFamilyResults082 ; id 131 Shantak
+    dw BreedFamilyResults084 ; id 132 CragDevil
+    dw BreedFamilyResults084 ; id 133 ?
+    dw BreedFamilyResults084 ; id 134 ?
+    dw BreedFamilyResults084 ; id 135 ?
+    dw BreedFamilyResults084 ; id 136 ?
+    dw BreedFamilyResults084 ; id 137 ?
+    dw BreedFamilyResults084 ; id 138 ?
+    dw BreedFamilyResults084 ; id 139 ?
+    dw BreedFamilyResults084 ; id 140 ?
+    dw BreedFamilyResults084 ; id 141 MadPlant
+    dw BreedFamilyResults08E ; id 142 FireWeed
+    dw BreedFamilyResults08E ; id 143 FloraMan
+    dw BreedFamilyResults08E ; id 144 WingTree
+    dw BreedFamilyResults08E ; id 145 CactiBall
+    dw BreedFamilyResults08E ; id 146 Gulpple
+    dw BreedFamilyResults08E ; id 147 Toadstool
+    dw BreedFamilyResults08E ; id 148 AmberWeed
+    dw BreedFamilyResults095 ; id 149 Slurperon
+    dw BreedFamilyResults095 ; id 150 Stubsuck
+    dw BreedFamilyResults097 ; id 151 Oniono
+    dw BreedFamilyResults097 ; id 152 DanceVegi
+    dw BreedFamilyResults097 ; id 153 TreeBoy
+    dw BreedFamilyResults097 ; id 154 Devipine
+    dw BreedFamilyResults097 ; id 155 FaceTree
+    dw BreedFamilyResults097 ; id 156 HerbMan
+    dw BreedFamilyResults09D ; id 157 BeanMan
+    dw BreedFamilyResults09D ; id 158 EvilSeed
+    dw BreedFamilyResults09D ; id 159 ManEater
+    dw BreedFamilyResults09D ; id 160 Snapper
+    dw BreedFamilyResults09D ; id 161 GhosTree
+    dw BreedFamilyResults09D ; id 162 Rosevine
+    dw BreedFamilyResults09D ; id 163 Egdracil
+    dw BreedFamilyResults09D ; id 164 Warubou
+    dw BreedFamilyResults09D ; id 165 Watabou
+    dw BreedFamilyResults09D ; id 166 Eggplaton
+    dw BreedFamilyResults0A7 ; id 167 FooHero
+    dw BreedFamilyResults0A7 ; id 168 ?
+    dw BreedFamilyResults0A7 ; id 169 ?
+    dw BreedFamilyResults0A7 ; id 170 ?
+    dw BreedFamilyResults0A7 ; id 171 ?
+    dw BreedFamilyResults0A7 ; id 172 ?
+    dw BreedFamilyResults0A7 ; id 173 ?
+    dw BreedFamilyResults0A7 ; id 174 ?
+    dw BreedFamilyResults0A7 ; id 175 ?
+    dw BreedFamilyResults0A7 ; id 176 GiantSlug
+    dw BreedFamilyResults0B1 ; id 177 Catapila
+    dw BreedFamilyResults0B1 ; id 178 Gophecada
+    dw BreedFamilyResults0B1 ; id 179 Butterfly
+    dw BreedFamilyResults0B4 ; id 180 WeedBug
+    dw BreedFamilyResults0B5 ; id 181 GiantWorm
+    dw BreedFamilyResults0B6 ; id 182 Lipsy
+    dw BreedFamilyResults0B7 ; id 183 StagBug
+    dw BreedFamilyResults0B7 ; id 184 Pyuro
+    dw BreedFamilyResults0B9 ; id 185 ArmyAnt
+    dw BreedFamilyResults0B9 ; id 186 GoHopper
+    dw BreedFamilyResults0B9 ; id 187 TailEater
+    dw BreedFamilyResults0BC ; id 188 ArmorPede
+    dw BreedFamilyResults0BD ; id 189 Eyeder
+    dw BreedFamilyResults0BE ; id 190 GiantMoth
+    dw BreedFamilyResults0BE ; id 191 Droll
+    dw BreedFamilyResults0C0 ; id 192 ArmyCrab
+    dw BreedFamilyResults0C0 ; id 193 MadHornet
+    dw BreedFamilyResults0C2 ; id 194 Belzebub
+    dw BreedFamilyResults0C2 ; id 195 WarMantis
+    dw BreedFamilyResults0C4 ; id 196 HornBeet
+    dw BreedFamilyResults0C4 ; id 197 Sickler
+    dw BreedFamilyResults0C6 ; id 198 Armorpion
+    dw BreedFamilyResults0C6 ; id 199 Digster
+    dw BreedFamilyResults0C6 ; id 200 Skularach
+    dw BreedFamilyResults0C6 ; id 201 MultiEyes
+    dw BreedFamilyResults0C6 ; id 202 ?
+    dw BreedFamilyResults0C6 ; id 203 ?
+    dw BreedFamilyResults0C6 ; id 204 ?
+    dw BreedFamilyResults0C6 ; id 205 ?
+    dw BreedFamilyResults0C6 ; id 206 ?
+    dw BreedFamilyResults0C6 ; id 207 ?
+    dw BreedFamilyResults0C6 ; id 208 ?
+    dw BreedFamilyResults0C6 ; id 209 ?
+    dw BreedFamilyResults0C6 ; id 210 ?
+    dw BreedFamilyResults0C6 ; id 211 Pixy
+    dw BreedFamilyResults0D4 ; id 212 MedusaEye
+    dw BreedFamilyResults0D5 ; id 213 AgDevil
+    dw BreedFamilyResults0D5 ; id 214 Demonite
+    dw BreedFamilyResults0D7 ; id 215 DarkEye
+    dw BreedFamilyResults0D8 ; id 216 EyeBall
+    dw BreedFamilyResults0D9 ; id 217 SkulRider
+    dw BreedFamilyResults0DA ; id 218 EvilBeast
+    dw BreedFamilyResults0DB ; id 219 Bubblemon
+    dw BreedFamilyResults0DB ; id 220 1EyeClown
+    dw BreedFamilyResults0DD ; id 221 Gremlin
+    dw BreedFamilyResults0DE ; id 222 ArcDemon
+    dw BreedFamilyResults0DF ; id 223 Lionex
+    dw BreedFamilyResults0DF ; id 224 GoatHorn
+    dw BreedFamilyResults0E1 ; id 225 Orc
+    dw BreedFamilyResults0E1 ; id 226 Ogre
+    dw BreedFamilyResults0E3 ; id 227 GateGuard
+    dw BreedFamilyResults0E4 ; id 228 ChopClown
+    dw BreedFamilyResults0E4 ; id 229 BossTroll
+    dw BreedFamilyResults0E6 ; id 230 Grendal
+    dw BreedFamilyResults0E6 ; id 231 Akubar
+    dw BreedFamilyResults0E6 ; id 232 MadKnight
+    dw BreedFamilyResults0E6 ; id 233 EvilWell
+    dw BreedFamilyResults0E6 ; id 234 Gigantes
+    dw BreedFamilyResults0E6 ; id 235 Centasaur
+    dw BreedFamilyResults0EC ; id 236 EvilArmor
+    dw BreedFamilyResults0EC ; id 237 Jamirus
+    dw BreedFamilyResults0EC ; id 238 Durran
+    dw BreedFamilyResults0EC ; id 239 Titanis
+    dw BreedFamilyResults0EC ; id 240 LampGenie
+    dw BreedFamilyResults0EC ; id 241 ?
+    dw BreedFamilyResults0EC ; id 242 ?
+    dw BreedFamilyResults0EC ; id 243 ?
+    dw BreedFamilyResults0EC ; id 244 ?
+    dw BreedFamilyResults0EC ; id 245 ?
+    dw BreedFamilyResults0EC ; id 246 Spooky
+    dw BreedFamilyResults0F7 ; id 247 Skullgon
+    dw BreedFamilyResults0F8 ; id 248 PutrePup
+    dw BreedFamilyResults0F8 ; id 249 RotRaven
+    dw BreedFamilyResults0FA ; id 250 Mummy
+    dw BreedFamilyResults0FA ; id 251 DarkCrab
+    dw BreedFamilyResults0FC ; id 252 DeadNite
+    dw BreedFamilyResults0FD ; id 253 Shadow
+    dw BreedFamilyResults0FD ; id 254 Skulpent
+    dw BreedFamilyResults0FF ; id 255 Hork
+    dw BreedFamilyResults100 ; id 256 Mudron
+    dw BreedFamilyResults101 ; id 257 NiteWhip
+    dw BreedFamilyResults102 ; id 258 WindMerge
+    dw BreedFamilyResults102 ; id 259 Reaper
+    dw BreedFamilyResults102 ; id 260 Inverzon
+    dw BreedFamilyResults102 ; id 261 FoxFire
+    dw BreedFamilyResults106 ; id 262 CaptDead
+    dw BreedFamilyResults106 ; id 263 DeadNoble
+    dw BreedFamilyResults108 ; id 264 WhiteKing
+    dw BreedFamilyResults109 ; id 265 BoneSlave
+    dw BreedFamilyResults10A ; id 266 Skeletor
+    dw BreedFamilyResults10B ; id 267 Servant
+    dw BreedFamilyResults10B ; id 268 Lazamanus
+    dw BreedFamilyResults10B ; id 269 Copycat
+    dw BreedFamilyResults10B ; id 270 MadSpirit
+    dw BreedFamilyResults10F ; id 271 PomPomBom
+    dw BreedFamilyResults110 ; id 272 Niterich
+    dw BreedFamilyResults110 ; id 273 ?
+    dw BreedFamilyResults110 ; id 274 ?
+    dw BreedFamilyResults110 ; id 275 ?
+    dw BreedFamilyResults110 ; id 276 ?
+    dw BreedFamilyResults110 ; id 277 ?
+    dw BreedFamilyResults110 ; id 278 ?
+    dw BreedFamilyResults110 ; id 279 ?
+    dw BreedFamilyResults110 ; id 280 ?
+    dw BreedFamilyResults110 ; id 281 JewelBag
+    dw BreedFamilyResults11A ; id 282 EvilWand
+    dw BreedFamilyResults11A ; id 283 MadCandle
+    dw BreedFamilyResults11A ; id 284 CoilBird
+    dw BreedFamilyResults11A ; id 285 Facer
+    dw BreedFamilyResults11A ; id 286 SpikyBoy
+    dw BreedFamilyResults11A ; id 287 MadMirror
+    dw BreedFamilyResults11A ; id 288 RogueNite
+    dw BreedFamilyResults121 ; id 289 Puppetor
+    dw BreedFamilyResults122 ; id 290 Goopi
+    dw BreedFamilyResults122 ; id 291 Voodoll
+    dw BreedFamilyResults122 ; id 292 MetalDrak
+    dw BreedFamilyResults122 ; id 293 Balzak
+    dw BreedFamilyResults122 ; id 294 SabreMan
+    dw BreedFamilyResults122 ; id 295 CurseLamp
+    dw BreedFamilyResults122 ; id 296 Brushead
+    dw BreedFamilyResults122 ; id 297 Roboster
+    dw BreedFamilyResults12A ; id 298 Roboster2
+    dw BreedFamilyResults12B ; id 299 EvilPot
+    dw BreedFamilyResults12B ; id 300 Gismo
+    dw BreedFamilyResults12D ; id 301 LavaMan
+    dw BreedFamilyResults12E ; id 302 IceMan
+    dw BreedFamilyResults12F ; id 303 Mimic
+    dw BreedFamilyResults12F ; id 304 Exaucers
+    dw BreedFamilyResults12F ; id 305 MudDoll
+    dw BreedFamilyResults12F ; id 306 Golem
+    dw BreedFamilyResults12F ; id 307 StoneMan
+    dw BreedFamilyResults12F ; id 308 BombCrag
+    dw BreedFamilyResults12F ; id 309 GoldGolem
+    dw BreedFamilyResults12F ; id 310 DarkMate
+    dw BreedFamilyResults137 ; id 311 ProtoMech
+    dw BreedFamilyResults137 ; id 312 CloudKing
+    dw BreedFamilyResults137 ; id 313 ?
+    dw BreedFamilyResults137 ; id 314 ?
+    dw BreedFamilyResults137 ; id 315 ?
+    dw BreedFamilyResults137 ; id 316 Petiteel
+    dw BreedFamilyResults13D ; id 317 Moray
+    dw BreedFamilyResults13D ; id 318 WalrusMan
+    dw BreedFamilyResults13D ; id 319 RayGigas
+    dw BreedFamilyResults13D ; id 320 Anemon
+    dw BreedFamilyResults13D ; id 321 Aquarella
+    dw BreedFamilyResults142 ; id 322 Merman
+    dw BreedFamilyResults142 ; id 323 Octokid
+    dw BreedFamilyResults142 ; id 324 PutreFish
+    dw BreedFamilyResults142 ; id 325 Octoreach
+    dw BreedFamilyResults146 ; id 326 Angleron
+    dw BreedFamilyResults147 ; id 327 FishRider
+    dw BreedFamilyResults147 ; id 328 RushFish
+    dw BreedFamilyResults147 ; id 329 Gamanian
+    dw BreedFamilyResults14A ; id 330 Clawster
+    dw BreedFamilyResults14B ; id 331 CancerMan
+    dw BreedFamilyResults14B ; id 332 RogueWave
+    dw BreedFamilyResults14D ; id 333 Scallopa
+    dw BreedFamilyResults14D ; id 334 SeaHorse
+    dw BreedFamilyResults14D ; id 335 HoodSquid
+    dw BreedFamilyResults150 ; id 336 MerTiger
+    dw BreedFamilyResults150 ; id 337 AxeShark
+    dw BreedFamilyResults150 ; id 338 Octogon
+    dw BreedFamilyResults153 ; id 339 KingSquid
+    dw FamilyBreedRuleTable ; id 340 Digong
+    dw FamilyBreedRuleTable ; id 341 WhaleMage
+    dw FamilyBreedRuleTable ; id 342 Aquadon
+    dw FamilyBreedRuleTable ; id 343 Octoraid
+    dw FamilyBreedRuleTable ; id 344 Grakos
+    dw FamilyBreedRuleTable ; id 345 Poseidon
+    dw FamilyBreedRuleTable ; id 346 Pumpoise
+    dw FamilyBreedRuleTable ; id 347 Starfish
+    dw FamilyBreedRuleTable ; id 348 ?
+    dw FamilyBreedRuleTable ; id 349 ?
+    dw FamilyBreedRuleTable ; id 350 ?
+    dw FamilyBreedRuleTable ; id 351 DracoLord
+    dw FamilyBreedRuleTable ; id 352 DracoLord
+    dw FamilyBreedRuleTable ; id 353 LordDraco
+    dw FamilyBreedRuleTable ; id 354 Hargon
+    dw FamilyBreedRuleTable ; id 355 Sidoh
+    dw FamilyBreedRuleTable ; id 356 Genosidoh
+    dw FamilyBreedRuleTable ; id 357 Baramos
+    dw FamilyBreedRuleTable ; id 358 Zoma
+    dw FamilyBreedRuleTable ; id 359 AsuraZoma
+    dw FamilyBreedRuleTable ; id 360 Pizzaro
+    dw FamilyBreedRuleTable ; id 361 PsychoPiz
+    dw FamilyBreedRuleTable ; id 362 Esterk
+    dw FamilyBreedRuleTable ; id 363 Mirudraas
+    dw FamilyBreedRuleTable ; id 364 Mirudraas
+    dw FamilyBreedRuleTable ; id 365 Mudou
+    dw FamilyBreedRuleTable ; id 366 DeathMore
+    dw FamilyBreedRuleTable ; id 367 DeathMore
+    dw FamilyBreedRuleTable ; id 368 DeathMore
+    dw FamilyBreedRuleTable ; id 369 Darkdrium
+    dw FamilyBreedRuleTable ; id 370 Orgodemir
+    dw FamilyBreedRuleTable ; id 371 Orgodemir
+    dw FamilyBreedRuleTable ; id 372 Darck
+    dw FamilyBreedRuleTable ; id 373 Tatsu
+    dw FamilyBreedRuleTable ; id 374 Diago
+    dw FamilyBreedRuleTable ; id 375 Samsi
+    dw BreedFamilyResults000 ; id 376 Bazoo
+    dw BreedFamilyResults000 ; id 377 ?
+    dw BreedFamilyResults000 ; id 378 ?
+    dw BreedFamilyResults000 ; id 379 ?
+    dw BreedFamilyResults000 ; id 380 Lamia
+    dw BreedFamilyResults000 ; id 381 Dimensaur
+    dw BreedFamilyResults000 ; id 382 Kagebou
+    dw BreedFamilyResults000 ; id 383 ?
+
+; E-0199 (derived: list for entry $00 of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults000::
+Data_00E_7A4F:: ; address name
+    dw $FFFF ; id 0
+
+; E-0199 (derived: list for entry $01 (DrakSlime) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults001::
+Data_00E_7A51:: ; address name
+    dw $0014 ; id 0 TropicGel
+
+; E-0199 (derived: list for entry $05 (Snaily) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults005::
+Data_00E_7A53:: ; address name
+    dw $0016 ; id 0 HaloSlime
+
+; E-0199 (derived: list for entry $0C (FangSlime) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults00C::
+Data_00E_7A55:: ; address name
+    dw $0016 ; id 0 HaloSlime
+
+; E-0199 (derived: list for entry $16 (HaloSlime) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults016::
+Data_00E_7A57:: ; address name
+    dw $0014 ; id 0 TropicGel
+    dw $0015 ; id 1 MimeSlime
+    dw $0016 ; id 2 HaloSlime
+
+; E-0199 (derived: list for entry $1B (Butch) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults01B::
+Data_00E_7A5D:: ; address name
+    dw $002F ; id 0 MadDragon
+
+; E-0199 (derived: list for entry $28 (FairyDrak) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults028::
+Data_00E_7A5F:: ; address name
+    dw $005C ; id 0 Unicorn
+
+; E-0199 (derived: list for entry $48 (Almiraj) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults048::
+Data_00E_7A61:: ; address name
+    dw $005E ; id 0 WildApe
+
+; E-0199 (derived: list for entry $49 (CatFly) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults049::
+Data_00E_7A63:: ; address name
+    dw $004E ; id 0 WindBeast
+
+; E-0199 (derived: list for entry $4A (PillowRat) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults04A::
+Data_00E_7A65:: ; address name
+    dw $0050 ; id 0 Antbear
+
+; E-0199 (derived: list for entry $4C (GulpBeast) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults04C::
+Data_00E_7A67:: ; address name
+    dw $005C ; id 0 Unicorn
+
+; E-0199 (derived: list for entry $4D (Skullroo) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults04D::
+Data_00E_7A69:: ; address name
+    dw $005F ; id 0 Trumpeter
+
+; E-0199 (derived: list for entry $52 (IronTurt) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults052::
+Data_00E_7A6B:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $004C ; id 1 GulpBeast
+    dw $005C ; id 2 Unicorn
+
+; E-0199 (derived: list for entry $56 (Yeti) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults056::
+Data_00E_7A71:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $005C ; id 1 Unicorn
+
+; E-0199 (derived: list for entry $57 (ArrowDog) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults057::
+Data_00E_7A75:: ; address name
+    dw $005C ; id 0 Unicorn
+
+; E-0199 (derived: list for entry $5E (WildApe) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults05E::
+Data_00E_7A77:: ; address name
+    dw $005C ; id 0 Unicorn
+
+; E-0199 (derived: list for entry $5F (Trumpeter) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults05F::
+Data_00E_7A79:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $005C ; id 1 Unicorn
+
+; E-0199 (derived: list for entry $60 (KingLeo) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults060::
+Data_00E_7A7D:: ; address name
+    dw $0064 ; id 0 Gorago
+
+; E-0199 (derived: list for entry $62 (MadCat) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults062::
+Data_00E_7A7F:: ; address name
+    dw $004C ; id 0 GulpBeast
+
+; E-0199 (derived: list for entry $64 (Gorago) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults064::
+Data_00E_7A81:: ; address name
+    dw $0059 ; id 0 BeastNite
+
+; E-0199 (derived: list for entry $66 (Dumbira) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults066::
+Data_00E_7A83:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $0051 ; id 1 SuperTen
+
+; E-0199 (derived: list for entry $67 (?) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults067::
+Data_00E_7A87:: ; address name
+    dw $0073 ; id 0 Dracky
+
+; E-0199 (derived: list for entry $6B (Wyvern) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults06B::
+Data_00E_7A89:: ; address name
+    dw $0078 ; id 0 MadGoose
+    dw $0078 ; id 1 MadGoose
+
+; E-0199 (derived: list for entry $6C (BullBird) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults06C::
+Data_00E_7A8D:: ; address name
+    dw $0077 ; id 0 LandOwl
+
+; E-0199 (derived: list for entry $6D (Florajay) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults06D::
+Data_00E_7A8F:: ; address name
+    dw $0074 ; id 0 KiteHawk
+
+; E-0199 (derived: list for entry $6F (MadPecker) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults06F::
+Data_00E_7A91:: ; address name
+    dw $007A ; id 0 Emyu
+
+; E-0199 (derived: list for entry $75 (BigRoost) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults075::
+Data_00E_7A93:: ; address name
+    dw $0084 ; id 0 CragDevil
+
+; E-0199 (derived: list for entry $76 (StubBird) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults076::
+Data_00E_7A95:: ; address name
+    dw $0078 ; id 0 MadGoose
+    dw $0078 ; id 1 MadGoose
+    dw $0079 ; id 2 MadCondor
+
+; E-0199 (derived: list for entry $78 (MadGoose) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults078::
+Data_00E_7A9B:: ; address name
+    dw $0084 ; id 0 CragDevil
+
+; E-0199 (derived: list for entry $79 (MadCondor) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults079::
+Data_00E_7A9D:: ; address name
+    dw $0078 ; id 0 MadGoose
+    dw $0078 ; id 1 MadGoose
+
+; E-0199 (derived: list for entry $7A (Emyu) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults07A::
+Data_00E_7AA1:: ; address name
+    dw $0084 ; id 0 CragDevil
+
+; E-0199 (derived: list for entry $7B (Blizzardy) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults07B::
+Data_00E_7AA3:: ; address name
+    dw $0078 ; id 0 MadGoose
+    dw $0078 ; id 1 MadGoose
+
+; E-0199 (derived: list for entry $7D (ZapBird) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults07D::
+Data_00E_7AA7:: ; address name
+    dw $0077 ; id 0 LandOwl
+
+; E-0199 (derived: list for entry $7F (WhipBird) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults07F::
+Data_00E_7AA9:: ; address name
+    dw $0082 ; id 0 Azurile
+
+; E-0199 (derived: list for entry $82 (Azurile) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults082::
+Data_00E_7AAB:: ; address name
+    dw $0082 ; id 0 Azurile
+
+; E-0199 (derived: list for entry $84 (CragDevil) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults084::
+Data_00E_7AAD:: ; address name
+    dw $0098 ; id 0 DanceVegi
+
+; E-0199 (derived: list for entry $8E (FireWeed) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults08E::
+Data_00E_7AAF:: ; address name
+    dw $0096 ; id 0 Stubsuck
+
+; E-0199 (derived: list for entry $95 (Slurperon) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults095::
+Data_00E_7AB1:: ; address name
+    dw $00A1 ; id 0 GhosTree
+
+; E-0199 (derived: list for entry $97 (Oniono) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults097::
+Data_00E_7AB3:: ; address name
+    dw $009B ; id 0 FaceTree
+
+; E-0199 (derived: list for entry $9D (BeanMan) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults09D::
+Data_00E_7AB5:: ; address name
+    dw $009D ; id 0 BeanMan
+    dw $009E ; id 1 EvilSeed
+
+; E-0199 (derived: list for entry $A7 (FooHero) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0A7::
+Data_00E_7AB9:: ; address name
+    dw $00B9 ; id 0 ArmyAnt
+
+; E-0199 (derived: list for entry $B1 (Catapila) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0B1::
+Data_00E_7ABB:: ; address name
+    dw $00BE ; id 0 GiantMoth
+
+; E-0199 (derived: list for entry $B4 (WeedBug) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0B4::
+Data_00E_7ABD:: ; address name
+    dw $00BB ; id 0 TailEater
+
+; E-0199 (derived: list for entry $B5 (GiantWorm) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0B5::
+Data_00E_7ABF:: ; address name
+    dw $00BC ; id 0 ArmorPede
+
+; E-0199 (derived: list for entry $B6 (Lipsy) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0B6::
+Data_00E_7AC1:: ; address name
+    dw $00BF ; id 0 Droll
+
+; E-0199 (derived: list for entry $B7 (StagBug) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0B7::
+Data_00E_7AC3:: ; address name
+    dw $00C1 ; id 0 MadHornet
+
+; E-0199 (derived: list for entry $B9 (ArmyAnt) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0B9::
+Data_00E_7AC5:: ; address name
+    dw $00C9 ; id 0 MultiEyes
+
+; E-0199 (derived: list for entry $BC (ArmorPede) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0BC::
+Data_00E_7AC7:: ; address name
+    dw $00C4 ; id 0 HornBeet
+
+; E-0199 (derived: list for entry $BD (Eyeder) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0BD::
+Data_00E_7AC9:: ; address name
+    dw $00C1 ; id 0 MadHornet
+
+; E-0199 (derived: list for entry $BE (GiantMoth) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0BE::
+Data_00E_7ACB:: ; address name
+    dw $00BC ; id 0 ArmorPede
+    dw $00C1 ; id 1 MadHornet
+
+; E-0199 (derived: list for entry $C0 (ArmyCrab) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0C0::
+Data_00E_7ACF:: ; address name
+    dw $00C2 ; id 0 Belzebub
+
+; E-0199 (derived: list for entry $C2 (Belzebub) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0C2::
+Data_00E_7AD1:: ; address name
+    dw $00C4 ; id 0 HornBeet
+    dw $00C5 ; id 1 Sickler
+
+; E-0199 (derived: list for entry $C4 (HornBeet) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0C4::
+Data_00E_7AD5:: ; address name
+    dw $00C3 ; id 0 WarMantis
+
+; E-0199 (derived: list for entry $C6 (Armorpion) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0C6::
+Data_00E_7AD7:: ; address name
+    dw $00DC ; id 0 1EyeClown
+
+; E-0199 (derived: list for entry $D4 (MedusaEye) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0D4::
+Data_00E_7AD9:: ; address name
+    dw $00D5 ; id 0 AgDevil
+    dw $00E6 ; id 1 Grendal
+    dw $00EA ; id 2 Gigantes
+
+; E-0199 (derived: list for entry $D5 (AgDevil) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0D5::
+Data_00E_7ADF:: ; address name
+    dw $00DC ; id 0 1EyeClown
+
+; E-0199 (derived: list for entry $D7 (DarkEye) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0D7::
+Data_00E_7AE1:: ; address name
+    dw $00D4 ; id 0 MedusaEye
+
+; E-0199 (derived: list for entry $D8 (EyeBall) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0D8::
+Data_00E_7AE3:: ; address name
+    dw $00DC ; id 0 1EyeClown
+
+; E-0199 (derived: list for entry $D9 (SkulRider) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0D9::
+Data_00E_7AE5:: ; address name
+    dw $00D5 ; id 0 AgDevil
+    dw $00E6 ; id 1 Grendal
+    dw $00EA ; id 2 Gigantes
+
+; E-0199 (derived: list for entry $DA (EvilBeast) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0DA::
+Data_00E_7AEB:: ; address name
+    dw $00D5 ; id 0 AgDevil
+    dw $00E6 ; id 1 Grendal
+    dw $00EA ; id 2 Gigantes
+
+; E-0199 (derived: list for entry $DB (Bubblemon) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0DB::
+Data_00E_7AF1:: ; address name
+    dw $00D4 ; id 0 MedusaEye
+
+; E-0199 (derived: list for entry $DD (Gremlin) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0DD::
+Data_00E_7AF3:: ; address name
+    dw $00D5 ; id 0 AgDevil
+    dw $00D4 ; id 1 MedusaEye
+    dw $00E6 ; id 2 Grendal
+
+; E-0199 (derived: list for entry $DE (ArcDemon) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0DE::
+Data_00E_7AF9:: ; address name
+    dw $00DF ; id 0 Lionex
+    dw $00E0 ; id 1 GoatHorn
+    dw $00EB ; id 2 Centasaur
+    dw $00EC ; id 3 EvilArmor
+
+; E-0199 (derived: list for entry $DF (Lionex) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0DF::
+Data_00E_7B01:: ; address name
+    dw $00E5 ; id 0 BossTroll
+
+; E-0199 (derived: list for entry $E1 (Orc) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0E1::
+Data_00E_7B03:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00E3 ; id 1 GateGuard
+    dw $00EB ; id 2 Centasaur
+    dw $00EC ; id 3 EvilArmor
+
+; E-0199 (derived: list for entry $E3 (GateGuard) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0E3::
+Data_00E_7B0B:: ; address name
+    dw $00E2 ; id 0 Ogre
+    dw $00EB ; id 1 Centasaur
+    dw $00EC ; id 2 EvilArmor
+
+; E-0199 (derived: list for entry $E4 (ChopClown) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0E4::
+Data_00E_7B11:: ; address name
+    dw $00EB ; id 0 Centasaur
+
+; E-0199 (derived: list for entry $E6 (Grendal) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0E6::
+Data_00E_7B13:: ; address name
+    dw $00F0 ; id 0 LampGenie
+
+; E-0199 (derived: list for entry $EC (EvilArmor) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0EC::
+Data_00E_7B15:: ; address name
+    dw $0103 ; id 0 Reaper
+    dw $00FF ; id 1 Hork
+
+; E-0199 (derived: list for entry $F7 (Skullgon) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0F7::
+Data_00E_7B19:: ; address name
+    dw $00F7 ; id 0 Skullgon
+    dw $010E ; id 1 MadSpirit
+
+; E-0199 (derived: list for entry $F8 (PutrePup) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0F8::
+Data_00E_7B1D:: ; address name
+    dw $0102 ; id 0 WindMerge
+
+; E-0199 (derived: list for entry $FA (Mummy) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0FA::
+Data_00E_7B1F:: ; address name
+    dw $0101 ; id 0 NiteWhip
+
+; E-0199 (derived: list for entry $FC (DeadNite) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0FC::
+Data_00E_7B21:: ; address name
+    dw $00FE ; id 0 Skulpent
+    dw $010E ; id 1 MadSpirit
+
+; E-0199 (derived: list for entry $FD (Shadow) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0FD::
+Data_00E_7B25:: ; address name
+    dw $00F7 ; id 0 Skullgon
+    dw $00FC ; id 1 DeadNite
+
+; E-0199 (derived: list for entry $FF (Hork) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults0FF::
+Data_00E_7B29:: ; address name
+    dw $0103 ; id 0 Reaper
+
+; E-0199 (derived: list for entry $100 (Mudron) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults100::
+Data_00E_7B2B:: ; address name
+    dw $010E ; id 0 MadSpirit
+
+; E-0199 (derived: list for entry $101 (NiteWhip) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults101::
+Data_00E_7B2D:: ; address name
+    dw $0105 ; id 0 FoxFire
+
+; E-0199 (derived: list for entry $102 (WindMerge) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults102::
+Data_00E_7B2F:: ; address name
+    dw $010F ; id 0 PomPomBom
+
+; E-0199 (derived: list for entry $106 (CaptDead) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults106::
+Data_00E_7B31:: ; address name
+    dw $00F7 ; id 0 Skullgon
+    dw $010E ; id 1 MadSpirit
+
+; E-0199 (derived: list for entry $108 (WhiteKing) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults108::
+Data_00E_7B35:: ; address name
+    dw $00F7 ; id 0 Skullgon
+    dw $010B ; id 1 Servant
+
+; E-0199 (derived: list for entry $109 (BoneSlave) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults109::
+Data_00E_7B39:: ; address name
+    dw $00F7 ; id 0 Skullgon
+    dw $0106 ; id 1 CaptDead
+    dw $010E ; id 2 MadSpirit
+
+; E-0199 (derived: list for entry $10A (Skeletor) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults10A::
+Data_00E_7B3F:: ; address name
+    dw $00F7 ; id 0 Skullgon
+    dw $010E ; id 1 MadSpirit
+
+; E-0199 (derived: list for entry $10B (Servant) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults10B::
+Data_00E_7B43:: ; address name
+    dw $0101 ; id 0 NiteWhip
+    dw $010A ; id 1 Skeletor
+
+; E-0199 (derived: list for entry $10F (PomPomBom) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults10F::
+Data_00E_7B47:: ; address name
+    dw $010E ; id 0 MadSpirit
+
+; E-0199 (derived: list for entry $110 (Niterich) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults110::
+Data_00E_7B49:: ; address name
+    dw $0122 ; id 0 Goopi
+
+; E-0199 (derived: list for entry $11A (EvilWand) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults11A::
+Data_00E_7B4B:: ; address name
+    dw $0137 ; id 0 ProtoMech
+
+; E-0199 (derived: list for entry $121 (Puppetor) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults121::
+Data_00E_7B4D:: ; address name
+    dw $0123 ; id 0 Voodoll
+
+; E-0199 (derived: list for entry $122 (Goopi) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults122::
+Data_00E_7B4F:: ; address name
+    dw $0137 ; id 0 ProtoMech
+    dw $0124 ; id 1 MetalDrak
+    dw $0127 ; id 2 CurseLamp
+    dw $012F ; id 3 Mimic
+    dw $0134 ; id 4 BombCrag
+
+; E-0199 (derived: list for entry $12A (Roboster2) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults12A::
+Data_00E_7B59:: ; address name
+    dw $0137 ; id 0 ProtoMech
+    dw $0124 ; id 1 MetalDrak
+    dw $0127 ; id 2 CurseLamp
+
+; E-0199 (derived: list for entry $12B (EvilPot) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults12B::
+Data_00E_7B5F:: ; address name
+    dw $012B ; id 0 EvilPot
+
+; E-0199 (derived: list for entry $12D (LavaMan) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults12D::
+Data_00E_7B61:: ; address name
+    dw $0125 ; id 0 Balzak
+
+; E-0199 (derived: list for entry $12E (IceMan) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults12E::
+Data_00E_7B63:: ; address name
+    dw $0125 ; id 0 Balzak
+
+; E-0199 (derived: list for entry $12F (Mimic) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults12F::
+Data_00E_7B65:: ; address name
+    dw $0134 ; id 0 BombCrag
+
+; E-0199 (derived: list for entry $137 (ProtoMech) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults137::
+Data_00E_7B67:: ; address name
+    dw $0145 ; id 0 Octoreach
+    dw $0146 ; id 1 Angleron
+    dw $014E ; id 2 SeaHorse
+    dw $014E ; id 3 SeaHorse
+
+; E-0199 (derived: list for entry $13D (Moray) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults13D::
+Data_00E_7B6F:: ; address name
+    dw $0149 ; id 0 Gamanian
+
+; E-0199 (derived: list for entry $142 (Merman) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults142::
+Data_00E_7B71:: ; address name
+    dw $015B ; id 0 Starfish
+
+; E-0199 (derived: list for entry $146 (Angleron) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults146::
+Data_00E_7B73:: ; address name
+    dw $0148 ; id 0 RushFish
+
+; E-0199 (derived: list for entry $147 (FishRider) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults147::
+Data_00E_7B75:: ; address name
+    dw $014A ; id 0 Clawster
+
+; E-0199 (derived: list for entry $14A (Clawster) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults14A::
+Data_00E_7B77:: ; address name
+    dw $014B ; id 0 CancerMan
+
+; E-0199 (derived: list for entry $14B (CancerMan) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults14B::
+Data_00E_7B79:: ; address name
+    dw $014D ; id 0 Scallopa
+
+; E-0199 (derived: list for entry $14D (Scallopa) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults14D::
+Data_00E_7B7B:: ; address name
+    dw $015B ; id 0 Starfish
+
+; E-0199 (derived: list for entry $150 (MerTiger) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults150::
+Data_00E_7B7D:: ; address name
+    dw $015B ; id 0 Starfish
+    dw $0153 ; id 1 KingSquid
+
+; E-0199 (derived: list for entry $153 (KingSquid) of BreedFamilyResultTable; it runs to the next list)
+; record: child species
+BreedFamilyResults153::
+Data_00E_7B81:: ; address name
+    dw $015B ; id 0 Starfish
+
+; E-0199 (C1: stage 3, when stage 2 finds nothing: the word list at $7B83 + 2 * parent A's family holds partner species ($FDxx = next result, $FFxx = end); a match takes result [count] from FamilyBreedResultTable)
+; record: list
+FamilyBreedRuleTable::
+Data_00E_7B83:: ; address name
+    dw FamilyBreedRules000 ; id 0
+    dw FamilyBreedRules001 ; id 1
+    dw FamilyBreedRules002 ; id 2
+    dw FamilyBreedRules003 ; id 3
+    dw FamilyBreedRules004 ; id 4
+    dw FamilyBreedRules005 ; id 5
+    dw FamilyBreedRules006 ; id 6
+    dw FamilyBreedRules007 ; id 7
+    dw FamilyBreedRules008 ; id 8
+    dw FamilyBreedRules009 ; id 9
+    dw FamilyBreedRules00A ; id 10
+
+; E-0199 (derived: list for entry $00 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules000::
+Data_00E_7B99:: ; address name
+    dw $002A ; id 0 Poisongon
+    dw $00BE ; id 1 GiantMoth
+    dw $FDFD ; id 2 next result
+    dw $004A ; id 3 PillowRat
+    dw $0080 ; id 4 FunkyBird
+    dw $008D ; id 5 MadPlant
+    dw $010D ; id 6 Copycat
+    dw $FDFD ; id 7 next result
+    dw $0048 ; id 8 Almiraj
+    dw $004C ; id 9 GulpBeast
+    dw $005F ; id 10 Trumpeter
+    dw $0060 ; id 11 KingLeo
+    dw $0061 ; id 12 DarkHorn
+    dw $0062 ; id 13 MadCat
+    dw $FDFD ; id 14 next result
+    dw $00FC ; id 15 DeadNite
+    dw $0132 ; id 16 Golem
+    dw $0133 ; id 17 StoneMan
+    dw $0134 ; id 18 BombCrag
+    dw $FDFD ; id 19 next result
+    dw $0129 ; id 20 Roboster
+    dw $FDFD ; id 21 next result
+    dw $004D ; id 22 Skullroo
+    dw $FDFD ; id 23 next result
+    dw $0124 ; id 24 MetalDrak
+    dw $FFFF ; id 25 end of list
+
+; E-0199 (derived: list for entry $01 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules001::
+Data_00E_7BCD:: ; address name
+    dw $006A ; id 0 Picky
+    dw $FDFD ; id 1 next result
+    dw $004C ; id 2 GulpBeast
+    dw $FDFD ; id 3 next result
+    dw $0079 ; id 4 MadCondor
+    dw $FDFD ; id 5 next result
+    dw $0123 ; id 6 Voodoll
+    dw $FDFD ; id 7 next result
+    dw $00BA ; id 8 GoHopper
+    dw $FDFD ; id 9 next result
+    dw $0092 ; id 10 Gulpple
+    dw $FDFD ; id 11 next result
+    dw $0007 ; id 12 Babble
+    dw $FDFD ; id 13 next result
+    dw $0078 ; id 14 MadGoose
+    dw $FDFD ; id 15 next result
+    dw $0049 ; id 16 CatFly
+    dw $FDFD ; id 17 next result
+    dw $00C0 ; id 18 ArmyCrab
+    dw $00C7 ; id 19 Digster
+    dw $FDFD ; id 20 next result
+    dw $0010 ; id 21 KingSlime
+    dw $0013 ; id 22 SpotKing
+    dw $0017 ; id 23 MetalKing
+    dw $003D ; id 24 BattleRex
+    dw $005C ; id 25 Unicorn
+    dw $007D ; id 26 ZapBird
+    dw $007F ; id 27 WhipBird
+    dw $00EA ; id 28 Gigantes
+    dw $00EB ; id 29 Centasaur
+    dw $FDFD ; id 30 next result
+    dw $0075 ; id 31 BigRoost
+    dw $FDFD ; id 32 next result
+    dw $0060 ; id 33 KingLeo
+    dw $00DF ; id 34 Lionex
+    dw $00E2 ; id 35 Ogre
+    dw $00E8 ; id 36 MadKnight
+    dw $00EC ; id 37 EvilArmor
+    dw $FDFD ; id 38 next result
+    dw $007C ; id 39 Phoenix
+    dw $FFFF ; id 40 end of list
+
+; E-0199 (derived: list for entry $02 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules002::
+Data_00E_7C1F:: ; address name
+    dw $0100 ; id 0 Mudron
+    dw $FDFD ; id 1 next result
+    dw $0025 ; id 2 Tortragon
+    dw $FDFD ; id 3 next result
+    dw $006E ; id 4 DuckKite
+    dw $FDFD ; id 5 next result
+    dw $0096 ; id 6 Stubsuck
+    dw $FDFD ; id 7 next result
+    dw $0124 ; id 8 MetalDrak
+    dw $0129 ; id 9 Roboster
+    dw $012D ; id 10 LavaMan
+    dw $012E ; id 11 IceMan
+    dw $0132 ; id 12 Golem
+    dw $0133 ; id 13 StoneMan
+    dw $FDFD ; id 14 next result
+    dw $00F8 ; id 15 PutrePup
+    dw $FDFD ; id 16 next result
+    dw $00EC ; id 17 EvilArmor
+    dw $FDFD ; id 18 next result
+    dw $0126 ; id 19 SabreMan
+    dw $FDFD ; id 20 next result
+    dw $0032 ; id 21 LizardFly
+    dw $FDFD ; id 22 next result
+    dw $000C ; id 23 FangSlime
+    dw $FDFD ; id 24 next result
+    dw $0001 ; id 25 DrakSlime
+    dw $0029 ; id 26 LizardMan
+    dw $FDFD ; id 27 next result
+    dw $006F ; id 28 MadPecker
+    dw $FDFD ; id 29 next result
+    dw $002D ; id 30 Dragon
+    dw $FDFD ; id 31 next result
+    dw $002C ; id 32 Drygon
+    dw $00D8 ; id 33 EyeBall
+    dw $FFFF ; id 34 end of list
+
+; E-0199 (derived: list for entry $03 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules003::
+Data_00E_7C65:: ; address name
+    dw $011D ; id 0 Facer
+    dw $FDFD ; id 1 next result
+    dw $000D ; id 2 RockSlime
+    dw $FDFD ; id 3 next result
+    dw $00BF ; id 4 Droll
+    dw $FDFD ; id 5 next result
+    dw $011C ; id 6 CoilBird
+    dw $FDFD ; id 7 next result
+    dw $0011 ; id 8 Metaly
+    dw $0012 ; id 9 Metabble
+    dw $0051 ; id 10 SuperTen
+    dw $0056 ; id 11 Yeti
+    dw $005D ; id 12 Goategon
+    dw $005F ; id 13 Trumpeter
+    dw $00F7 ; id 14 Skullgon
+    dw $0107 ; id 15 DeadNoble
+    dw $0108 ; id 16 WhiteKing
+    dw $010A ; id 17 Skeletor
+    dw $012E ; id 18 IceMan
+    dw $FDFD ; id 19 next result
+    dw $0001 ; id 20 DrakSlime
+    dw $004C ; id 21 GulpBeast
+    dw $0052 ; id 22 IronTurt
+    dw $0055 ; id 23 Grizzly
+    dw $00DE ; id 24 ArcDemon
+    dw $010D ; id 25 Copycat
+    dw $012C ; id 26 Gismo
+    dw $012D ; id 27 LavaMan
+    dw $FDFD ; id 28 next result
+    dw $0030 ; id 29 Rayburn
+    dw $0036 ; id 30 SnakeBat
+    dw $FDFD ; id 31 next result
+    dw $0014 ; id 32 TropicGel
+    dw $0098 ; id 33 DanceVegi
+    dw $00B8 ; id 34 Pyuro
+    dw $0128 ; id 35 Brushead
+    dw $FFFF ; id 36 end of list
+
+; E-0199 (derived: list for entry $04 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules004::
+Data_00E_7CAF:: ; address name
+    dw $00B2 ; id 0 Gophecada
+    dw $0140 ; id 1 Anemon
+    dw $FDFD ; id 2 next result
+    dw $011D ; id 3 Facer
+    dw $FDFD ; id 4 next result
+    dw $00D3 ; id 5 Pixy
+    dw $FDFD ; id 6 next result
+    dw $0092 ; id 7 Gulpple
+    dw $FDFD ; id 8 next result
+    dw $0101 ; id 9 NiteWhip
+    dw $FDFD ; id 10 next result
+    dw $0080 ; id 11 FunkyBird
+    dw $FDFD ; id 12 next result
+    dw $004A ; id 13 PillowRat
+    dw $0147 ; id 14 FishRider
+    dw $FDFD ; id 15 next result
+    dw $000D ; id 16 RockSlime
+    dw $0063 ; id 17 BigEye
+    dw $006E ; id 18 DuckKite
+    dw $0074 ; id 19 KiteHawk
+    dw $00B3 ; id 20 Butterfly
+    dw $00BD ; id 21 Eyeder
+    dw $00D7 ; id 22 DarkEye
+    dw $00D8 ; id 23 EyeBall
+    dw $011F ; id 24 MadMirror
+    dw $0149 ; id 25 Gamanian
+    dw $FDFD ; id 26 next result
+    dw $00B6 ; id 27 Lipsy
+    dw $00BF ; id 28 Droll
+    dw $0141 ; id 29 Aquarella
+    dw $FFFF ; id 30 end of list
+
+; E-0199 (derived: list for entry $05 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules005::
+Data_00E_7CED:: ; address name
+    dw $008F ; id 0 FloraMan
+    dw $FDFD ; id 1 next result
+    dw $0052 ; id 2 IronTurt
+    dw $FDFD ; id 3 next result
+    dw $0094 ; id 4 AmberWeed
+    dw $0145 ; id 5 Octoreach
+    dw $0149 ; id 6 Gamanian
+    dw $FDFD ; id 7 next result
+    dw $004B ; id 8 Saccer
+    dw $013F ; id 9 RayGigas
+    dw $FDFD ; id 10 next result
+    dw $00F6 ; id 11 Spooky
+    dw $FDFD ; id 12 next result
+    dw $00FB ; id 13 DarkCrab
+    dw $014B ; id 14 CancerMan
+    dw $FDFD ; id 15 next result
+    dw $005B ; id 16 FairyRat
+    dw $FDFD ; id 17 next result
+    dw $00DC ; id 18 1EyeClown
+    dw $0103 ; id 19 Reaper
+    dw $FFFF ; id 20 end of list
+
+; E-0199 (derived: list for entry $06 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules006::
+Data_00E_7D17:: ; address name
+    dw $0029 ; id 0 LizardMan
+    dw $FDFD ; id 1 next result
+    dw $0061 ; id 2 DarkHorn
+    dw $FDFD ; id 3 next result
+    dw $009D ; id 4 BeanMan
+    dw $FDFD ; id 5 next result
+    dw $0054 ; id 6 HammerMan
+    dw $FDFD ; id 7 next result
+    dw $002F ; id 8 MadDragon
+    dw $0059 ; id 9 BeastNite
+    dw $FDFD ; id 10 next result
+    dw $0120 ; id 11 RogueNite
+    dw $FDFD ; id 12 next result
+    dw $0063 ; id 13 BigEye
+    dw $FDFD ; id 14 next result
+    dw $00BC ; id 15 ArmorPede
+    dw $FFFF ; id 16 end of list
+
+; E-0199 (derived: list for entry $07 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules007::
+Data_00E_7D39:: ; address name
+    dw $002B ; id 0 Swordgon
+    dw $0030 ; id 1 Rayburn
+    dw $0033 ; id 2 Andreal
+    dw $0038 ; id 3 GreatDrak
+    dw $003C ; id 4 Orochi
+    dw $003D ; id 5 BattleRex
+    dw $0040 ; id 6 Divinegon
+    dw $FDFD ; id 7 next result
+    dw $0149 ; id 8 Gamanian
+    dw $014A ; id 9 Clawster
+    dw $014B ; id 10 CancerMan
+    dw $FDFD ; id 11 next result
+    dw $0008 ; id 12 BoxSlime
+    dw $000C ; id 13 FangSlime
+    dw $0047 ; id 14 Tonguella
+    dw $0056 ; id 15 Yeti
+    dw $0080 ; id 16 FunkyBird
+    dw $008D ; id 17 MadPlant
+    dw $0098 ; id 18 DanceVegi
+    dw $00B0 ; id 19 GiantSlug
+    dw $00B6 ; id 20 Lipsy
+    dw $00BF ; id 21 Droll
+    dw $FDFD ; id 22 next result
+    dw $0071 ; id 23 MistyWing
+    dw $FDFD ; id 24 next result
+    dw $004E ; id 25 WindBeast
+    dw $FDFD ; id 26 next result
+    dw $00B4 ; id 27 WeedBug
+    dw $FFFF ; id 28 end of list
+
+; E-0199 (derived: list for entry $08 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules008::
+Data_00E_7D73:: ; address name
+    dw $00DD ; id 0 Gremlin
+    dw $FDFD ; id 1 next result
+    dw $00B6 ; id 2 Lipsy
+    dw $FDFD ; id 3 next result
+    dw $0033 ; id 4 Andreal
+    dw $FDFD ; id 5 next result
+    dw $00B5 ; id 6 GiantWorm
+    dw $FDFD ; id 7 next result
+    dw $0090 ; id 8 WingTree
+    dw $FDFD ; id 9 next result
+    dw $004C ; id 10 GulpBeast
+    dw $0055 ; id 11 Grizzly
+    dw $005F ; id 12 Trumpeter
+    dw $0060 ; id 13 KingLeo
+    dw $00D9 ; id 14 SkulRider
+    dw $FDFD ; id 15 next result
+    dw $0005 ; id 16 Snaily
+    dw $FDFD ; id 17 next result
+    dw $0008 ; id 18 BoxSlime
+    dw $FDFD ; id 19 next result
+    dw $0073 ; id 20 Dracky
+    dw $FDFD ; id 21 next result
+    dw $00C4 ; id 22 HornBeet
+    dw $00C7 ; id 23 Digster
+    dw $FDFD ; id 24 next result
+    dw $00EC ; id 25 EvilArmor
+    dw $FFFF ; id 26 end of list
+
+; E-0199 (derived: list for entry $09 of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules009::
+Data_00E_7DA9:: ; address name
+    dw $0119 ; id 0 JewelBag
+    dw $FDFD ; id 1 next result
+    dw $0053 ; id 2 Mommonja
+    dw $006E ; id 3 DuckKite
+    dw $006F ; id 4 MadPecker
+    dw $0078 ; id 5 MadGoose
+    dw $0084 ; id 6 CragDevil
+    dw $011E ; id 7 SpikyBoy
+    dw $0134 ; id 8 BombCrag
+    dw $FFFF ; id 9 end of list
+
+; E-0199 (derived: list for entry $0A of FamilyBreedRuleTable; it runs to the next list)
+; record: partner species or rule code
+FamilyBreedRules00A::
+Data_00E_7DBD:: ; address name
+    dw $FFFF ; id 0 end of list
+
+; E-0199 (C1: stage 3 result lists, indexed by parent A's family)
+; record: list
+FamilyBreedResultTable::
+Data_00E_7DBF:: ; address name
+    dw FamilyBreedResults000 ; id 0
+    dw FamilyBreedResults001 ; id 1
+    dw FamilyBreedResults002 ; id 2
+    dw FamilyBreedResults003 ; id 3
+    dw FamilyBreedResults004 ; id 4
+    dw FamilyBreedResults005 ; id 5
+    dw FamilyBreedResults006 ; id 6
+    dw FamilyBreedResults007 ; id 7
+    dw FamilyBreedResults008 ; id 8
+    dw FamilyBreedResults009 ; id 9
+    dw FamilyPairResultTable ; id 10
+
+; E-0199 (derived: list for entry $00 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults000::
+Data_00E_7DD5:: ; address name
+    dw $0007 ; id 0 Babble
+    dw $000B ; id 1 Healer
+    dw $000C ; id 2 FangSlime
+    dw $000D ; id 3 RockSlime
+    dw $000E ; id 4 SlimeBorg
+    dw $000F ; id 5 Slabbit
+    dw $0011 ; id 6 Metaly
+
+; E-0199 (derived: list for entry $01 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults001::
+Data_00E_7DE3:: ; address name
+    dw $002E ; id 0 MiniDrak
+    dw $002F ; id 1 MadDragon
+    dw $0030 ; id 2 Rayburn
+    dw $0031 ; id 3 Chamelgon
+    dw $0032 ; id 4 LizardFly
+    dw $0033 ; id 5 Andreal
+    dw $0034 ; id 6 KingCobra
+    dw $0035 ; id 7 Vampirus
+    dw $0036 ; id 8 SnakeBat
+    dw $0037 ; id 9 Spikerous
+    dw $0038 ; id 10 GreatDrak
+    dw $0039 ; id 11 Crestpent
+    dw $003D ; id 12 BattleRex
+    dw $003E ; id 13 SkyDragon
+
+; E-0199 (derived: list for entry $02 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults002::
+Data_00E_7DFF:: ; address name
+    dw $0051 ; id 0 SuperTen
+    dw $0052 ; id 1 IronTurt
+    dw $0053 ; id 2 Mommonja
+    dw $0054 ; id 3 HammerMan
+    dw $0055 ; id 4 Grizzly
+    dw $0057 ; id 5 ArrowDog
+    dw $0059 ; id 6 BeastNite
+    dw $005A ; id 7 MadGopher
+    dw $005B ; id 8 FairyRat
+    dw $005C ; id 9 Unicorn
+    dw $005D ; id 10 Goategon
+    dw $005E ; id 11 WildApe
+    dw $0062 ; id 12 MadCat
+    dw $0063 ; id 13 BigEye
+
+; E-0199 (derived: list for entry $03 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults003::
+Data_00E_7E1B:: ; address name
+    dw $0074 ; id 0 KiteHawk
+    dw $0076 ; id 1 StubBird
+    dw $0078 ; id 2 MadGoose
+    dw $0079 ; id 3 MadCondor
+    dw $007B ; id 4 Blizzardy
+    dw $007C ; id 5 Phoenix
+    dw $007F ; id 6 WhipBird
+    dw $0080 ; id 7 FunkyBird
+
+; E-0199 (derived: list for entry $04 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults004::
+Data_00E_7E2B:: ; address name
+    dw $0097 ; id 0 Oniono
+    dw $0098 ; id 1 DanceVegi
+    dw $0099 ; id 2 TreeBoy
+    dw $009A ; id 3 Devipine
+    dw $009B ; id 4 FaceTree
+    dw $009C ; id 5 HerbMan
+    dw $009D ; id 6 BeanMan
+    dw $009E ; id 7 EvilSeed
+    dw $00A6 ; id 8 Eggplaton
+
+; E-0199 (derived: list for entry $05 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults005::
+Data_00E_7E3D:: ; address name
+    dw $00BB ; id 0 TailEater
+    dw $00BC ; id 1 ArmorPede
+    dw $00BD ; id 2 Eyeder
+    dw $00BE ; id 3 GiantMoth
+    dw $00BF ; id 4 Droll
+    dw $00C0 ; id 5 ArmyCrab
+    dw $00C1 ; id 6 MadHornet
+    dw $00C5 ; id 7 Sickler
+
+; E-0199 (derived: list for entry $06 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults006::
+Data_00E_7E4D:: ; address name
+    dw $00DF ; id 0 Lionex
+    dw $00E0 ; id 1 GoatHorn
+    dw $00E1 ; id 2 Orc
+    dw $00E2 ; id 3 Ogre
+    dw $00E6 ; id 4 Grendal
+    dw $00E8 ; id 5 MadKnight
+    dw $00EA ; id 6 Gigantes
+    dw $00EC ; id 7 EvilArmor
+
+; E-0199 (derived: list for entry $07 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults007::
+Data_00E_7E5D:: ; address name
+    dw $00F7 ; id 0 Skullgon
+    dw $00FB ; id 1 DarkCrab
+    dw $0100 ; id 2 Mudron
+    dw $0101 ; id 3 NiteWhip
+    dw $0102 ; id 4 WindMerge
+    dw $0103 ; id 5 Reaper
+
+; E-0199 (derived: list for entry $08 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults008::
+Data_00E_7E69:: ; address name
+    dw $0121 ; id 0 Puppetor
+    dw $0123 ; id 1 Voodoll
+    dw $0124 ; id 2 MetalDrak
+    dw $0126 ; id 3 SabreMan
+    dw $0127 ; id 4 CurseLamp
+    dw $0129 ; id 5 Roboster
+    dw $012B ; id 6 EvilPot
+    dw $012F ; id 7 Mimic
+    dw $0130 ; id 8 Exaucers
+    dw $0133 ; id 9 StoneMan
+    dw $0137 ; id 10 ProtoMech
+
+; E-0199 (derived: list for entry $09 of FamilyBreedResultTable; it runs to the next list)
+; record: child species
+FamilyBreedResults009::
+Data_00E_7E7F:: ; address name
+    dw $014C ; id 0 RogueWave
+    dw $015A ; id 1 Pumpoise
+
+; E-0199 (C1: stage 4, when stage 3 finds nothing: the row at $7E83 + 2 * parent A's family, word [parent B's family]: $FFFF = parent A's species, $FExx = no child (wNameEntryState = 6, wArg5 = $FF), otherwise the child's species; 11 rows of 11 words end at Script_0E_7F8B)
+; record: list
+FamilyPairResultTable::
+Data_00E_7E83:: ; address name
+    dw FamilyPairResults000 ; id 0
+    dw FamilyPairResults001 ; id 1
+    dw FamilyPairResults002 ; id 2
+    dw FamilyPairResults003 ; id 3
+    dw FamilyPairResults004 ; id 4
+    dw FamilyPairResults005 ; id 5
+    dw FamilyPairResults006 ; id 6
+    dw FamilyPairResults007 ; id 7
+    dw FamilyPairResults008 ; id 8
+    dw FamilyPairResults009 ; id 9
+    dw FamilyPairResults00A ; id 10
+
+; E-0199 (derived: list for entry $00 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults000::
+Data_00E_7E99:: ; address name
+    dw $FFFF ; id 0 parent A's species
+    dw $0001 ; DrakSlime
+    dw $0002 ; SpotSlime
+    dw $0003 ; WingSlime
+    dw $0004 ; TreeSlime
+    dw $0005 ; Snaily
+    dw $0006 ; SlimeNite
+    dw $0007 ; Babble
+    dw $0008 ; BoxSlime
+    dw $0009 ; PearlGel
+    dw $0010 ; KingSlime
+
+; E-0199 (derived: list for entry $01 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults001::
+Data_00E_7EAF:: ; address name
+    dw $0024 ; id 0 DragonKid
+    dw $FFFF ; parent A's species
+    dw $0025 ; Tortragon
+    dw $0026 ; Pteranod
+    dw $0027 ; Gasgon
+    dw $0028 ; FairyDrak
+    dw $0029 ; LizardMan
+    dw $002A ; Poisongon
+    dw $002B ; Swordgon
+    dw $002C ; Drygon
+    dw $003C ; Orochi
+
+; E-0199 (derived: list for entry $02 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults002::
+Data_00E_7EC5:: ; address name
+    dw $0047 ; id 0 Tonguella
+    dw $0048 ; Almiraj
+    dw $FFFF ; parent A's species
+    dw $0049 ; CatFly
+    dw $004A ; PillowRat
+    dw $004B ; Saccer
+    dw $0055 ; Grizzly
+    dw $004D ; Skullroo
+    dw $004E ; WindBeast
+    dw $004F ; Beavern
+    dw $0061 ; DarkHorn
+
+; E-0199 (derived: list for entry $03 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults003::
+Data_00E_7EDB:: ; address name
+    dw $006A ; id 0 Picky
+    dw $006B ; Wyvern
+    dw $006C ; BullBird
+    dw $FFFF ; parent A's species
+    dw $006D ; Florajay
+    dw $006E ; DuckKite
+    dw $006F ; MadPecker
+    dw $0070 ; MadRaven
+    dw $0071 ; MistyWing
+    dw $0072 ; AquaHawk
+    dw $007D ; ZapBird
+
+; E-0199 (derived: list for entry $04 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults004::
+Data_00E_7EF1:: ; address name
+    dw $008D ; id 0 MadPlant
+    dw $008E ; FireWeed
+    dw $008F ; FloraMan
+    dw $0090 ; WingTree
+    dw $FFFF ; parent A's species
+    dw $0091 ; CactiBall
+    dw $0092 ; Gulpple
+    dw $0093 ; Toadstool
+    dw $0094 ; AmberWeed
+    dw $0095 ; Slurperon
+    dw $00A2 ; Rosevine
+
+; E-0199 (derived: list for entry $05 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults005::
+Data_00E_7F07:: ; address name
+    dw $00B0 ; id 0 GiantSlug
+    dw $00B1 ; Catapila
+    dw $00B2 ; Gophecada
+    dw $00B3 ; Butterfly
+    dw $00B4 ; WeedBug
+    dw $FFFF ; parent A's species
+    dw $00B5 ; GiantWorm
+    dw $00B6 ; Lipsy
+    dw $00B7 ; StagBug
+    dw $00B8 ; Pyuro
+    dw $00C7 ; Digster
+
+; E-0199 (derived: list for entry $06 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults006::
+Data_00E_7F1D:: ; address name
+    dw $00D3 ; id 0 Pixy
+    dw $00D4 ; MedusaEye
+    dw $00DD ; Gremlin
+    dw $00D6 ; Demonite
+    dw $00D7 ; DarkEye
+    dw $00D8 ; EyeBall
+    dw $FFFF ; parent A's species
+    dw $00D9 ; SkulRider
+    dw $00DA ; EvilBeast
+    dw $00DB ; Bubblemon
+    dw $00DE ; ArcDemon
+
+; E-0199 (derived: list for entry $07 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults007::
+Data_00E_7F33:: ; address name
+    dw $00F6 ; id 0 Spooky
+    dw $010E ; MadSpirit
+    dw $00F8 ; PutrePup
+    dw $00F9 ; RotRaven
+    dw $00FA ; Mummy
+    dw $00FB ; DarkCrab
+    dw $00FC ; DeadNite
+    dw $FFFF ; parent A's species
+    dw $00FD ; Shadow
+    dw $00FE ; Skulpent
+    dw $0108 ; WhiteKing
+
+; E-0199 (derived: list for entry $08 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults008::
+Data_00E_7F49:: ; address name
+    dw $0119 ; id 0 JewelBag
+    dw $011A ; EvilWand
+    dw $011B ; MadCandle
+    dw $011C ; CoilBird
+    dw $011D ; Facer
+    dw $011E ; SpikyBoy
+    dw $011F ; MadMirror
+    dw $0120 ; RogueNite
+    dw $FFFF ; parent A's species
+    dw $0128 ; Brushead
+    dw $0125 ; Balzak
+
+; E-0199 (derived: list for entry $09 of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults009::
+Data_00E_7F5F:: ; address name
+    dw $013C ; id 0 Petiteel
+    dw $013D ; Moray
+    dw $013E ; WalrusMan
+    dw $013F ; RayGigas
+    dw $0140 ; Anemon
+    dw $0141 ; Aquarella
+    dw $0142 ; Merman
+    dw $0144 ; PutreFish
+    dw $0143 ; Octokid
+    dw $FFFF ; parent A's species
+    dw $0158 ; Grakos
+
+; E-0199 (derived: list for entry $0A of FamilyPairResultTable; it runs to the next list)
+; record: child species for parent-B families 0-10
+FamilyPairResults00A::
+Data_00E_7F75:: ; address name
+    dw $FFFF ; id 0 parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
+    dw $FFFF ; parent A's species
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_0E_7F8B:: ; heuristic: event script entry or jump target; C0
