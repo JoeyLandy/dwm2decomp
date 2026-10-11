@@ -2743,6 +2743,122 @@
         }
       ],
       "note": "E-0181 (C1: AIChooseActionResolveStep and AIChooseActionForActor read the word at $45D0 + 2 * AI mode and call it: mode 0 AIRunNextChoice, modes 1-3 ScoreActionsWithAIScoreTableA, mode 4 UseAIScoreTableB)."
+    },
+    {
+      "bank": "12",
+      "addr": "52AD",
+      "label": "MapExitDestinationTable",
+      "count": 87,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "map id the entry belongs to (matched against hMapId)"
+        },
+        {
+          "type": "db",
+          "size": 3,
+          "name": "exit A: destination map; screen X (high nibble) / Y (low nibble); position X (high nibble, x16) / Y (low nibble, x16)"
+        },
+        {
+          "type": "db",
+          "size": 3,
+          "name": "exit B (used when wLastWarpIndex = 2); same layout, zero when unused"
+        }
+      ],
+      "record": "map id; exit A (map, screen XY nibbles, position XY nibbles); exit B (same, used when wLastWarpIndex = 2)",
+      "note": "E-0182 (C1: ScriptCommand8A_Run_Case01, for maps without bit 7 of wMapType, scans 7-byte records from $52AD for the one whose first byte equals hMapId (there is no terminator and no bounds check), skips three more bytes when wLastWarpIndex = 2, then loads hMapId, hMapScreenX/Y from the nibbles of the next byte and wWarpDestX/Y from the nibbles of the byte after (each nibble x16), clearing wWarpDestFacing; 87 records end at the routine at $550E, and every map id is unique)."
+    },
+    {
+      "bank": "0C",
+      "addr": "78FF",
+      "label": "ArenaEncounterListSizes",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "number of usable entries in the list (39 each)"
+        }
+      ],
+      "note": "E-0183 (C1: ScriptCommand96_Run_Shared01_Sub01 reads the byte at $78FF + wAreaGraphicsIndex and reduces a random number below it by repeated subtraction before indexing the list)."
+    },
+    {
+      "bank": "0C",
+      "addr": "7905",
+      "label": "ArenaEncounterLists",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter word list for this wAreaGraphicsIndex",
+          "reason": "arena encounter list"
+        }
+      ],
+      "note": "E-0183 (C1: ScriptCommand96_Run_Shared01_Sub01 doubles wAreaGraphicsIndex, reads the word at $7905 + 2 * index and then the word at that pointer + 2 * the chosen entry; indexes 0-2 share one list)."
+    },
+    {
+      "bank": "0C",
+      "addr": "7911",
+      "label": "ArenaEncounterList0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 80,
+          "per_line": 8,
+          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
+        }
+      ],
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+    },
+    {
+      "bank": "0C",
+      "addr": "7961",
+      "label": "ArenaEncounterList1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 80,
+          "per_line": 8,
+          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
+        }
+      ],
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+    },
+    {
+      "bank": "0C",
+      "addr": "79B1",
+      "label": "ArenaEncounterList2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 80,
+          "per_line": 8,
+          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
+        }
+      ],
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+    },
+    {
+      "bank": "0C",
+      "addr": "7A01",
+      "label": "ArenaEncounterList3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 80,
+          "per_line": 8,
+          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
+        }
+      ],
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     }
   ]
 }

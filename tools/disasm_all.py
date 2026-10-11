@@ -2165,6 +2165,12 @@ class Rom:
         ld_a = re.compile(r"ld a, \$([0-9A-F]{2})$")
         sites: list[tuple[int, int, int]] = []
         site_bank: dict[int, set] = {}  # script address -> data banks its callers set (None = unknown)
+        entry_like = {k for k, info in self.names.items() if not info.get("data")}
+        entry_like |= {t for ts in self.dispatch.values() for t in ts}
+        for cb in range(self.nbanks):
+            for v in self.insn[cb].values():
+                if v[0] != "dw" and v[2] in ("call", "callc") and v[3] is not None:
+                    entry_like.add(self.resolve(cb, v[3]))
         for cb in range(self.nbanks):
             ins = self.insn[cb]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
@@ -2182,6 +2188,30 @@ class Rom:
                 for j, x in enumerate(window):  # ld a, $BB / ld [wDataBank], a before the call
                     if ins[x][1] == "ld [$D7FE], a" and j and (m := ld_a.match(ins[window[j - 1]][1])):
                         dbank = int(m.group(1), 16)
+                pc, prev = a + v[0], ""  # E-0184: a store after the call, before the script next runs
+                for _ in range(16):
+                    x = ins.get(pc)
+                    if x is None or x[0] == "dw":
+                        break
+                    if x[2] in ("jr", "jp") and "," not in x[1] and x[3] is not None:
+                        pc, prev = x[3], ""  # follow an unconditional jump
+                        continue
+                    if x[2] in SETUP_BARRIER:
+                        break
+                    if x[1] == "ld [$D7FE], a":
+                        if m := ld_a.match(prev):
+                            dbank = int(m.group(1), 16)
+                        break
+                    pc, prev = pc + x[0], x[1]
+                if dbank is None:  # E-0184: the store can open the routine, above its other branches
+                    i = k - 1
+                    while i > 0 and k - i < 120 and order[i - 1] + ins[order[i - 1]][0] == order[i] \
+                            and (cb, order[i]) not in entry_like:
+                        if ins[order[i]][1] == "ld [$D7FE], a":
+                            if m := ld_a.match(ins[order[i - 1]][1]):
+                                dbank = int(m.group(1), 16)
+                            break
+                        i -= 1
                 if hl and 0x4000 <= hl[1] < 0x8000:
                     sites.append((cb, hl[0], hl[1]))
                     site_bank.setdefault(hl[1], set()).add(dbank)

@@ -421,6 +421,14 @@ class EventScripts(unittest.TestCase):
         text = (BANKS / "bank13.asm").read_text(encoding="utf-8")
         self.assertIn("    ld hl, Script_6083\n    call StartScriptAtHL_B13\n", text)
 
+    def test_data_bank_jumps_name_their_target(self):
+        """E-0184: wDataBank stores at the routine head or after the start call are found."""
+        text = "".join(p.read_text(encoding="utf-8") for p in BANKS.glob("bank*.asm"))
+        self.assertNotIn("data bank not known here", text)
+        self.assertIn("Script_5559::", text)
+        self.assertIn("    script_jump_data_bank Script_0C_7A51\n", text)
+        self.assertIn("Script_0C_7A51::", text)
+
 
 class BufferOffsetAliases(unittest.TestCase):
     """An "of" symbol renders as an offset into the buffer it names (E-0136)."""

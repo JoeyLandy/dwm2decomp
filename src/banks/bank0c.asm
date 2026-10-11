@@ -6107,13 +6107,232 @@ Data_00C_787D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_7897:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $033897, $68
 
-; address loaded by ScriptCommand96_Run_Shared01_Sub01
+; E-0183 (C1: ScriptCommand96_Run_Shared01_Sub01 reads the byte at $78FF + wAreaGraphicsIndex and reduces a random number below it by repeated subtraction before indexing the list).
+; record: number of usable entries in the list (39 each)
+ArenaEncounterListSizes::
 Data_00C_78FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $27, $27, $27, $27, $27, $27
+    db $27 ; id 0
+    db $27 ; id 1
+    db $27 ; id 2
+    db $27 ; id 3
+    db $27 ; id 4
+    db $27 ; id 5
 
-; address loaded by ScriptCommand96_Run_Shared01_Sub01
+; E-0183 (C1: ScriptCommand96_Run_Shared01_Sub01 doubles wAreaGraphicsIndex, reads the word at $7905 + 2 * index and then the word at that pointer + 2 * the chosen entry; indexes 0-2 share one list).
+; record: encounter word list for this wAreaGraphicsIndex
+ArenaEncounterLists::
 Data_00C_7905:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $033905, $2A4
+    dw ArenaEncounterList0 ; id 0
+    dw ArenaEncounterList0 ; id 1
+    dw ArenaEncounterList0 ; id 2
+    dw ArenaEncounterList1 ; id 3
+    dw ArenaEncounterList2 ; id 4
+    dw ArenaEncounterList3 ; id 5
+
+; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
+; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
+ArenaEncounterList0::
+Data_00C_7911:: ; heuristic: arena encounter list; C0
+    dw $0104, $0105, $0106, $0107, $0108, $0109, $010A, $010B ; entry 0
+    dw $010C, $010D, $010E, $010F, $0110, $0111, $0112, $0113
+    dw $0114, $0115, $0116, $0117, $0118, $0119, $011A, $011B
+    dw $0152, $0153, $0154, $0155, $0156, $0157, $0158, $0159
+    dw $015A, $015B, $015C, $015D, $015E, $015F, $0160, $0161
+
+; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
+; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
+ArenaEncounterList1::
+Data_00C_7961:: ; heuristic: arena encounter list; C0
+    dw $0136, $0137, $0138, $0139, $013A, $013B, $013C, $013D ; entry 0
+    dw $013E, $013F, $0140, $0141, $0142, $0143, $0144, $0145
+    dw $0146, $0147, $0148, $0149, $014A, $014B, $0162, $0163
+    dw $0164, $0165, $0166, $0167, $0168, $0169, $016A, $016B
+    dw $016C, $016D, $016E, $016F, $0170, $0171, $0172, $0173
+
+; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
+; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
+ArenaEncounterList2::
+Data_00C_79B1:: ; heuristic: arena encounter list; C0
+    dw $021E, $021F, $0220, $0221, $0222, $0223, $0224, $0225 ; entry 0
+    dw $0226, $0227, $0228, $0229, $022A, $022B, $022C, $022D
+    dw $022E, $022F, $0230, $0231, $0232, $0233, $0234, $0235
+    dw $0236, $0237, $0238, $0239, $023A, $023B, $023C, $023D
+    dw $023E, $023F, $0240, $0241, $0242, $0243, $0244, $0245
+
+; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
+; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
+ArenaEncounterList3::
+Data_00C_7A01:: ; heuristic: arena encounter list; C0
+    dw $01FF, $0200, $0201, $0202, $0203, $0204, $0246, $0247 ; entry 0
+    dw $0248, $0249, $024A, $024B, $024C, $024D, $024E, $024F
+    dw $0250, $0251, $0252, $0253, $0254, $0255, $0256, $0257
+    dw $0267, $0268, $0269, $026A, $026B, $026C, $026D, $026E
+    dw $026F, $0270, $0271, $0272, $0273, $0274, $0275, $0276
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7A51:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7A5C, Script_0C_7A59
+    db $00, $07, $5F, $7A
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7A59:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7AFE
+Script_0C_7A5C:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7A75
+    db $F7, $F7, $E4, $0B, $07, $00, $E9, $00, $25, $00, $E9, $FF, $07, $5F, $7A, $00
+    db $20, $40, $F7, $07, $DB, $7A
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7A75:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7A8D, Script_0C_7A87
+    db $07, $00, $E9, $00, $03, $80, $E9, $FF, $00, $16, $C0, $07, $75, $7A
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7A87:: ; heuristic: event script entry or jump target; C0
+    script_message $C001 ; 'In the middle of the sea'
+    script_jump Script_0C_7A75
+Script_0C_7A8D:: ; heuristic: event script entry or jump target; C0
+    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_command $F7
+    script_choice_jump Script_0C_7A9E, Script_0C_7A98
+    db $00, $07, $75, $7A
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7A98:: ; heuristic: event script entry or jump target; C0
+    script_message $C006 ; 'You folks run a monster farm?'
+    script_jump Script_0C_7A75
+Script_0C_7A9E:: ; heuristic: event script entry or jump target; C0
+    script_message $C005 ; 'Tara Hurry! Papa will be angry!'
+Script_0C_7AA1:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_command $F7
+    script_choice_jump Script_0C_7AAD, Script_0C_7AAA
+    db $00, $07, $EB, $7A
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7AAA:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7AA1
+Script_0C_7AAD:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7AB0
+Script_0C_7AB0:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7AC8, Script_0C_7AC2
+    db $07, $00, $E9, $00, $24, $00, $E9, $FF, $00, $23, $40, $07, $CB, $7A
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7AC2:: ; heuristic: event script entry or jump target; C0
+    script_message $4022 ; 'Tara We'll be OK! I'm going'
+    script_jump Script_0C_7ACB
+Script_0C_7AC8:: ; heuristic: event script entry or jump target; C0
+    script_message $4021 ; 'Good, that's settled then. The Vault'
+Script_0C_7ACB:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7ACF, Script_0C_7AD5
+Script_0C_7ACF:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $802A ; 'Oh? Well, that's fine then. Go'
+    script_command $E9
+    script_end
+Script_0C_7AD5:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $802B ; 'Monster masters are those people who'
+    script_command $E9
+    script_end
+    db $F7, $E4, $01, $06, $E9, $00, $2D, $80, $E9, $FF, $E9, $00, $2B, $80, $E9, $FF
+    db $F7, $E4, $07, $00, $E9, $00, $26, $00, $E9, $FF, $E9, $00, $25, $00, $E9, $FF
+    db $00, $0B, $C0
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7AFE:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7B08, Script_0C_7B02
+Script_0C_7B02:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $8009 ; 'Good. That's good to hear! You'
+    script_command $E9
+    script_end
+Script_0C_7B08:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_command $F7
+Script_0C_7B0A:: ; heuristic: event script entry or jump target; C0
+    script_choice_jump Script_0C_7B2F, Script_0C_7B29
+    db $15, $0E, $07, $00, $00, $11, $C0, $07, $32, $7B, $00, $10, $C0, $07, $32, $7B
+    db $00, $0F, $C0, $07, $32, $7B, $00, $0E, $C0, $07, $32, $7B
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7B29:: ; heuristic: event script entry or jump target; C0
+    script_message $C00D ; 'GreatLog's King asked us to settle'
+    script_jump Script_0C_7B32
+Script_0C_7B2F:: ; heuristic: event script entry or jump target; C0
+    script_message $C00C ; 'GreatLog's King asked us to settle'
+Script_0C_7B32:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7B3C, Script_0C_7B36
+Script_0C_7B36:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $8009 ; 'Good. That's good to hear! You'
+    script_command $E9
+    script_end
+Script_0C_7B3C:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_message $C012 ; 'Cobi 0! They said GreatLog will'
+    script_command $F7
+    script_choice_jump Script_0C_7B50, Script_0C_7B49
+    db $00, $F7, $07, $0A, $7B
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7B49:: ; heuristic: event script entry or jump target; C0
+    script_message $C014 ; 'Tara Big brother! GreatLog will be'
+    script_command $F7
+    script_jump Script_0C_7B0A
+Script_0C_7B50:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_message $C013 ; 'Land ho! There's GreatLog!'
+Script_0C_7B54:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_command $F7
+    script_choice_jump Script_0C_7B60, Script_0C_7B5D
+    db $00, $07, $99, $7B
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7B5D:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7B54
+Script_0C_7B60:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_0C_7B63
+Script_0C_7B63:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_message $402F ; 'Go help your mother now.'
+    script_message $C031 ; 'Heh, so these are the newcomers?'
+Script_0C_7B6A:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7B7B, Script_0C_7B6E
+Script_0C_7B6E:: ; heuristic: event script entry or jump target; C0
+    script_message $C030 ; 'If some monster masters keep their'
+    script_command $F7
+    script_choice_jump Script_0C_7B7B, Script_0C_7B75
+Script_0C_7B75:: ; heuristic: event script entry or jump target; C0
+    script_message $C031 ; 'Heh, so these are the newcomers?'
+    script_jump Script_0C_7B6A
+Script_0C_7B7B:: ; heuristic: event script entry or jump target; C0
+    script_command $F7
+    script_choice_jump Script_0C_7B81, Script_0C_7B87
+    db $0D, $12
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_0C_7B81:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $8032 ; 'C'mon, Warubou!'
+    script_command $E9
+    script_end
+Script_0C_7B87:: ; heuristic: event script entry or jump target; C0
+    script_command $E9
+    script_message $8033 ; 'Hello, there! You must be the'
+    script_command $E9
+    script_end
+    db $E9, $00, $34, $80, $E9, $FF, $E9, $00, $35, $80, $E9, $FF, $F7, $E4, $07, $00
+    db $E9, $00, $29, $00, $E9, $FF, $E9, $00, $28, $00, $E9, $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_0C_7BA9:: ; heuristic: event script entry or jump target; C0

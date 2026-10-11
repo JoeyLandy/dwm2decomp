@@ -2175,6 +2175,43 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** What the per-skill kind byte means (it is set when the battler is loaded) is not read.
 - Binary verification: build/run184 PASS, 0 differing bytes; tests OK.
 
+### E-0182 — Map exit destination table (bank $12)
+
+- Kind: OBSERVATION (reading; C1).
+- **Reader.** ScriptCommand8A_Run_Case01, on maps where bit 7 of wMapType is clear, looks up MapExitDestinationTable ($52AD):
+  - It scans 7-byte records for the one whose first byte equals hMapId. There is no terminator and no bounds check.
+  - When wLastWarpIndex = 2 it skips three more bytes.
+  - It loads hMapId from the next byte, hMapScreenX/Y from the high and low nibbles of the byte after that, and wWarpDestX/Y from the nibbles of the third byte (each nibble x16). It clears wWarpDestFacing.
+- **Layout.** 87 records end exactly at the routine at $550E, and every map id appears once. Exit B (the second three bytes) is non-zero only in records 0 and 9-13.
+- **Limits.** What sets wLastWarpIndex to 2, and what the player sees, are not read; the label is a neutral description.
+- Binary verification: build/run185 PASS, 0 differing bytes.
+
+### E-0183 — Arena encounter lists (bank $0C)
+
+- Kind: OBSERVATION (reading; C1).
+- **Sizes.** ScriptCommand96_Run_Shared01_Sub01 reads ArenaEncounterListSizes[wAreaGraphicsIndex] ($78FF; six bytes, all 39). It reduces a random number below that size by repeated subtraction, and steps past entries already drawn three times (counted in wArenaList).
+- **Lists.** It reads the word at ArenaEncounterLists ($7905) + 2 * wAreaGraphicsIndex, then the word at that pointer + 2 * entry, and stores it in wArenaList2 (3 rounds x 3 words). Indexes 0-2 share one list, so there are four lists of 40 words at $7911, $7961, $79B1 and $7A01. Entry 39 is never drawn.
+- **Use.** ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words (wArenaRound) to wEncounterMonsters.
+- **Limits.** The words are encounter identifiers ($0104-$0276). Which table they index is not traced. The bytes after the last list ($7A51) are an event script (E-0184).
+- Binary verification: build/run186 PASS, 0 differing bytes.
+
+### E-0184 — Data banks of $E7 script jumps from wider caller context
+
+- Kind: TOOL (generator heuristic; C1 per site).
+- **Problem.** prepare_scripts (E-0160) took a script's data bank only from an `ld a, n` / `ld [wDataBank], a` pair within the ten instructions before the StartScriptAtHL call. That left 51 $E7 jumps without a bank.
+- **New searches.** When that window has no store, the generator now looks in two more places:
+  - **After the call.** It walks forward from the call, following unconditional `jr` and `jp`, for up to 16 instructions. It stops at any other control-flow instruction. A store found here is used first.
+    - Example: DispatchTalkEvent_Case01_Case4C sets wDataBank to $1D after starting Script_54AB.
+    - Example: Func_004_7B29_Case02 sets it to $10 at a shared tail after starting Script_65AA.
+    - StartScriptAtHL only queues the script, so the value stored before the routine returns is the one the script sees.
+  - **Above the call.** It walks back through contiguous instructions until it reaches a routine entry (a named routine, a call target or an rst $00 table target).
+    - Example: DispatchTalkEvent_Case01_Case65 stores $0C at its head, above the branches that start Script_5559, Script_5560, Script_556A and Script_5571.
+- **Result.** All 89 $E7 jumps now resolve to exactly one bank, and none is left marked "data bank not known here".
+  - New data-bank scripts include Script_0C_7A51 (the arena scripts), Script_1D_4335 and Script_15_764B.
+  - The decoder covers 2,885 commands in 193 regions (it was 2,672). Unidentified INCBIN is 73,764 bytes.
+- **Limits.** A callee between the store and the script's next run could change wDataBank. This is not checked, so each resolution stays C1.
+- Binary verification: build/run189 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

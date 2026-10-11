@@ -3106,9 +3106,97 @@ Jump_012_52A6::
     ldh [hPlayerStateFlags], a
     ret
 
-; address loaded by ScriptCommand8A_Run_Case01
+; E-0182 (C1: ScriptCommand8A_Run_Case01, for maps without bit 7 of wMapType, scans 7-byte records from $52AD for the one whose first byte equals hMapId (there is no terminator and no bounds check), skips three more bytes when wLastWarpIndex = 2, then loads hMapId, hMapScreenX/Y from the nibbles of the next byte and wWarpDestX/Y from the nibbles of the byte after (each nibble x16), clearing wWarpDestFacing; 87 records end at the routine at $550E, and every map id is unique).
+; record: map id; exit A (map, screen XY nibbles, position XY nibbles); exit B (same, used when wLastWarpIndex = 2)
+MapExitDestinationTable::
 Data_012_52AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0492AD, $261
+    db $2B, $2A, $00, $12, $24, $11, $25 ; id 0
+    db $35, $30, $03, $44, $00, $00, $00 ; id 1
+    db $38, $30, $53, $44, $00, $00, $00 ; id 2
+    db $39, $30, $53, $44, $00, $00, $00 ; id 3
+    db $3A, $30, $53, $44, $00, $00, $00 ; id 4
+    db $3B, $30, $53, $44, $00, $00, $00 ; id 5
+    db $3E, $30, $62, $44, $00, $00, $00 ; id 6
+    db $3F, $30, $62, $44, $00, $00, $00 ; id 7
+    db $40, $30, $62, $44, $00, $00, $00 ; id 8
+    db $53, $52, $20, $41, $52, $00, $41 ; id 9
+    db $54, $52, $20, $41, $52, $00, $41 ; id 10
+    db $55, $52, $20, $41, $52, $00, $41 ; id 11
+    db $56, $52, $20, $41, $52, $00, $41 ; id 12
+    db $57, $52, $20, $41, $52, $00, $41 ; id 13
+    db $5D, $48, $5A, $44, $00, $00, $00 ; id 14
+    db $62, $48, $A5, $44, $00, $00, $00 ; id 15
+    db $63, $48, $87, $44, $00, $00, $00 ; id 16
+    db $64, $48, $87, $44, $00, $00, $00 ; id 17
+    db $65, $48, $87, $44, $00, $00, $00 ; id 18
+    db $66, $48, $87, $44, $00, $00, $00 ; id 19
+    db $67, $48, $87, $44, $00, $00, $00 ; id 20
+    db $73, $89, $01, $56, $00, $00, $00 ; id 21
+    db $74, $89, $01, $56, $00, $00, $00 ; id 22
+    db $75, $89, $01, $56, $00, $00, $00 ; id 23
+    db $76, $89, $01, $56, $00, $00, $00 ; id 24
+    db $81, $70, $5B, $44, $00, $00, $00 ; id 25
+    db $82, $70, $5B, $44, $00, $00, $00 ; id 26
+    db $83, $70, $5B, $44, $00, $00, $00 ; id 27
+    db $84, $70, $5B, $44, $00, $00, $00 ; id 28
+    db $85, $70, $1B, $44, $00, $00, $00 ; id 29
+    db $86, $70, $1B, $44, $00, $00, $00 ; id 30
+    db $87, $70, $1B, $44, $00, $00, $00 ; id 31
+    db $88, $70, $1B, $44, $00, $00, $00 ; id 32
+    db $8A, $70, $BA, $44, $00, $00, $00 ; id 33
+    db $8B, $70, $BA, $44, $00, $00, $00 ; id 34
+    db $8C, $70, $BA, $44, $00, $00, $00 ; id 35
+    db $8D, $70, $BA, $44, $00, $00, $00 ; id 36
+    db $8E, $70, $BA, $44, $00, $00, $00 ; id 37
+    db $8F, $70, $BA, $44, $00, $00, $00 ; id 38
+    db $90, $70, $BA, $44, $00, $00, $00 ; id 39
+    db $91, $70, $BA, $44, $00, $00, $00 ; id 40
+    db $93, $70, $41, $44, $00, $00, $00 ; id 41
+    db $94, $70, $41, $44, $00, $00, $00 ; id 42
+    db $95, $70, $41, $44, $00, $00, $00 ; id 43
+    db $96, $70, $41, $44, $00, $00, $00 ; id 44
+    db $97, $70, $41, $44, $00, $00, $00 ; id 45
+    db $98, $70, $41, $44, $00, $00, $00 ; id 46
+    db $99, $70, $41, $44, $00, $00, $00 ; id 47
+    db $9A, $70, $41, $44, $00, $00, $00 ; id 48
+    db $9B, $70, $41, $44, $00, $00, $00 ; id 49
+    db $A1, $A0, $12, $44, $00, $00, $00 ; id 50
+    db $A2, $A0, $12, $44, $00, $00, $00 ; id 51
+    db $A3, $A0, $12, $44, $00, $00, $00 ; id 52
+    db $AC, $A8, $51, $44, $00, $00, $00 ; id 53
+    db $AD, $A8, $51, $44, $00, $00, $00 ; id 54
+    db $AE, $A8, $51, $44, $00, $00, $00 ; id 55
+    db $B3, $B1, $00, $13, $00, $00, $00 ; id 56
+    db $B4, $B1, $00, $13, $00, $00, $00 ; id 57
+    db $B5, $B1, $00, $13, $00, $00, $00 ; id 58
+    db $B6, $B1, $00, $13, $00, $00, $00 ; id 59
+    db $BB, $B8, $40, $44, $00, $00, $00 ; id 60
+    db $BD, $BB, $00, $41, $00, $00, $00 ; id 61
+    db $BE, $BB, $00, $41, $00, $00, $00 ; id 62
+    db $BF, $BB, $00, $41, $00, $00, $00 ; id 63
+    db $C0, $BB, $00, $41, $00, $00, $00 ; id 64
+    db $C1, $BB, $00, $41, $00, $00, $00 ; id 65
+    db $C2, $BB, $00, $41, $00, $00, $00 ; id 66
+    db $C3, $BB, $00, $41, $00, $00, $00 ; id 67
+    db $C4, $BB, $00, $41, $00, $00, $00 ; id 68
+    db $C9, $C8, $00, $44, $00, $00, $00 ; id 69
+    db $CA, $C8, $00, $44, $00, $00, $00 ; id 70
+    db $CB, $C8, $00, $44, $00, $00, $00 ; id 71
+    db $CC, $C8, $00, $44, $00, $00, $00 ; id 72
+    db $CD, $C8, $00, $44, $00, $00, $00 ; id 73
+    db $CE, $C8, $00, $44, $00, $00, $00 ; id 74
+    db $D2, $D1, $01, $44, $00, $00, $00 ; id 75
+    db $D3, $D1, $01, $44, $00, $00, $00 ; id 76
+    db $D4, $D1, $01, $44, $00, $00, $00 ; id 77
+    db $D5, $D1, $01, $44, $00, $00, $00 ; id 78
+    db $D6, $D1, $01, $44, $00, $00, $00 ; id 79
+    db $D7, $D1, $01, $44, $00, $00, $00 ; id 80
+    db $DB, $DA, $10, $44, $00, $00, $00 ; id 81
+    db $DC, $DA, $10, $44, $00, $00, $00 ; id 82
+    db $DD, $DA, $10, $44, $00, $00, $00 ; id 83
+    db $DE, $DA, $10, $44, $00, $00, $00 ; id 84
+    db $DF, $DA, $10, $44, $00, $00, $00 ; id 85
+    db $E0, $DA, $10, $44, $00, $00, $00 ; id 86
 
 ; implements script command type 9B; reached through ScriptCommand9B in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9B)

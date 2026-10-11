@@ -3475,96 +3475,96 @@ Script_522B:: ; heuristic: event script entry or jump target; C0
 Script_5256:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0102
     script_message $410D ; 'Oh, that's cute! Hahahahaha! We have'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5260:: ; heuristic: event script entry or jump target; C0
     script_message $410E ; 'Cobi Hi, I'm helping Papa to'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5267:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0105
     script_message $4207 ; 'You're the child of the farmer?'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5271:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0109
     script_message $48BC ; 'You have to tamp the ground'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_527B:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0115
     script_message $4A30 ; 'Oh, don't be that way. I'm'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5285:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0121
     script_message $4502 ; 'People have been whispering that GreatLog'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_528F:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0131
     script_message $4B02 ; 'You and your monsters saved GreatLog'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5299:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0102
     script_message $410F ; 'Cobi Hi, 0! What's up today?'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52A3:: ; heuristic: event script entry or jump target; C0
     script_message $4110 ; 'Tara I'm helping Papa take care'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52AA:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0105
     script_message $4208 ; 'Cobi 0, what was it like'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52B4:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0109
     script_message $48BD ; 'Cobi 0, what was it like'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52BE:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0115
     script_message $4A31 ; 'Cobi 0, what was it like'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52C8:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0121
     script_message $4503 ; 'Cobi 0, tell me about what'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52D2:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0131
     script_message $4B03 ; 'Cobi 0, I envied you for'
-    script_jump_data_bank $5A3A ; data bank not known here
+    script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -3795,13 +3795,13 @@ Script_549D:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_54A4:: ; heuristic: event script entry or jump target; C0
     script_message $44C4 ; 'Welcome. I'm the Christener. I can'
-    script_jump_data_bank $6FF8 ; data bank not known here
+    script_jump_data_bank Script_96_6FF8
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_54AB:: ; heuristic: event script entry or jump target; C0
     script_message $4A4E ; 'The island used to be lush'
-    script_jump_data_bank $4335 ; data bank not known here
+    script_jump_data_bank Script_1D_4335
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -3910,26 +3910,26 @@ Script_5550:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5559:: ; heuristic: event script entry or jump target; C0
     script_message $C26C ; 'Welcome to the Arena! Masters pit'
-    script_jump_data_bank $7A51 ; data bank not known here
+    script_jump_data_bank Script_0C_7A51
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5560:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0189
     script_message $4270 ; 'Congratulations! You're the champ! For winning'
-    script_jump_data_bank $7A51 ; data bank not known here
+    script_jump_data_bank Script_0C_7A51
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_556A:: ; heuristic: event script entry or jump target; C0
     script_message $4271 ; 'Welcome to the Arena! The rules'
-    script_jump_data_bank $7A51 ; data bank not known here
+    script_jump_data_bank Script_0C_7A51
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5571:: ; heuristic: event script entry or jump target; C0
     script_message $4D86 ; 'A master who can satisfy me'
-    script_jump_data_bank $7A51 ; data bank not known here
+    script_jump_data_bank Script_0C_7A51
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -3964,14 +3964,14 @@ Script_5598:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55A2:: ; heuristic: event script entry or jump target; C0
     script_message $48D0 ; 'Um I'm the Egg Evaluator. You'
-    script_jump_data_bank $6EF7 ; data bank not known here
+    script_jump_data_bank Script_96_6EF7
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55A9:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0028
     script_message $4B20 ; 'My grandpa gave me a key,'
-    script_jump_data_bank $6EF7 ; data bank not known here
+    script_jump_data_bank Script_96_6EF7
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -3984,14 +3984,14 @@ Script_55B3:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55BD:: ; heuristic: event script entry or jump target; C0
     script_message $48D4 ; 'Welcome to the Starry Shrine. I'm'
-    script_jump_data_bank $764B ; data bank not known here
+    script_jump_data_bank Script_15_764B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55C4:: ; heuristic: event script entry or jump target; C0
     script_set_flag $002C
     script_message $4B2E ; 'Warubou Wa-hey, the bond between human'
-    script_jump_data_bank $764B ; data bank not known here
+    script_jump_data_bank Script_15_764B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4012,14 +4012,14 @@ Script_55DB:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55E5:: ; heuristic: event script entry or jump target; C0
     script_message $4A6E ; 'You can call me the Medal'
-    script_jump_data_bank $7BA9 ; data bank not known here
+    script_jump_data_bank Script_0C_7BA9
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55EC:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0031
     script_message $4B50 ; '0 found a Magic Key. But'
-    script_jump_data_bank $7BA9 ; data bank not known here
+    script_jump_data_bank Script_0C_7BA9
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4075,7 +4075,7 @@ Data_010_564B:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5652:: ; heuristic: event script entry or jump target; C0
     script_message $48CC ; 'ArmyAnt helped me get my shop'
-    script_jump_data_bank $6659 ; data bank not known here
+    script_jump_data_bank Script_6659
     db $FF, $00, $8A, $4D, $E7, $59, $66, $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4086,7 +4086,7 @@ Script_5660:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5669:: ; heuristic: event script entry or jump target; C0
     script_message $CA47 ; 'I'm a traveling merchant. I'm also'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4097,7 +4097,7 @@ Script_5670:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5679:: ; heuristic: event script entry or jump target; C0
     script_message $C514 ; 'I'm a scientist. I e been'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4108,7 +4108,7 @@ Script_5680:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5689:: ; heuristic: event script entry or jump target; C0
     script_message $C4B8 ; 'Hm? Little one, are you a'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4141,7 +4141,7 @@ Script_56C8:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_56D1:: ; heuristic: event script entry or jump target; C0
     script_message $C4BE ; 'Yo! Up close, you look tougher'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4257,7 +4257,7 @@ Script_581C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5825:: ; heuristic: event script entry or jump target; C0
     script_message $CB54 ; 'Didn't you save GreatLog? That is'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4268,7 +4268,7 @@ Script_582C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5835:: ; heuristic: event script entry or jump target; C0
     script_message $CB58 ; 'Ah, you must be the little'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4279,7 +4279,7 @@ Script_583C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5845:: ; heuristic: event script entry or jump target; C0
     script_message $CB5C ; 'I didn't think GreatLog's hero could'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4290,7 +4290,7 @@ Script_584C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5855:: ; heuristic: event script entry or jump target; C0
     script_message $CB6B ; 'Are you perhaps GreatLog's savior? Hey,'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4301,7 +4301,7 @@ Script_585C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5865:: ; heuristic: event script entry or jump target; C0
     script_message $CB71 ; 'Hey! You're still at it, youngster?'
-    script_jump_data_bank $7F8B ; data bank not known here
+    script_jump_data_bank Script_0E_7F8B
     db $FF, $00, $C3, $0B, $6F, $00, $4E, $0B, $0A, $3D, $00, $FF, $00, $C3, $0B, $6F
     db $00, $B5, $0B, $0A, $3D, $00, $FF, $00, $C3, $0B, $6F, $00, $B7, $0B, $0A, $C8
     db $00, $FF, $00, $C3, $0B, $6F, $00, $C0, $0B, $FF
@@ -4457,7 +4457,7 @@ Script_599F:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59BA:: ; heuristic: event script entry or jump target; C0
     script_message $41BB ; 'Tch, I think I can help'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4470,7 +4470,7 @@ Data_010_59C1:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59C8:: ; heuristic: event script entry or jump target; C0
     script_message $4145 ; 'Welcome to my item shop! You'
-    script_jump_data_bank $6707 ; data bank not known here
+    script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4482,7 +4482,7 @@ Script_59CF:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59D6:: ; heuristic: event script entry or jump target; C0
     script_message $4147 ; 'The church welcomes you. We can'
-    script_jump_data_bank $77D4 ; data bank not known here
+    script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4526,7 +4526,7 @@ Script_5A17:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5A25:: ; heuristic: event script entry or jump target; C0
     script_message $41BB ; 'Tch, I think I can help'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4696,7 +4696,7 @@ Script_5B76:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5B7D:: ; heuristic: event script entry or jump target; C0
     script_message $4147 ; 'The church welcomes you. We can'
-    script_jump_data_bank $77D4 ; data bank not known here
+    script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4714,7 +4714,7 @@ Data_010_5B8C:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5B94:: ; heuristic: event script entry or jump target; C0
     script_message $41BB ; 'Tch, I think I can help'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4745,7 +4745,7 @@ Script_5BB6:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5BBD:: ; heuristic: event script entry or jump target; C0
     script_message $41BB ; 'Tch, I think I can help'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4973,7 +4973,7 @@ Script_5D4D:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5D54:: ; heuristic: event script entry or jump target; C0
     script_message $4147 ; 'The church welcomes you. We can'
-    script_jump_data_bank $77D4 ; data bank not known here
+    script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -4994,7 +4994,7 @@ Data_010_5D68:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5D6F:: ; heuristic: event script entry or jump target; C0
     script_message $41BB ; 'Tch, I think I can help'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -5051,7 +5051,7 @@ Data_010_5DBE:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5DC5:: ; heuristic: event script entry or jump target; C0
     script_message $41BB ; 'Tch, I think I can help'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -5142,7 +5142,7 @@ Script_5E77:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5E87:: ; heuristic: event script entry or jump target; C0
     script_message $41BB ; 'Tch, I think I can help'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -5829,7 +5829,7 @@ Data_010_643E:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6445:: ; heuristic: event script entry or jump target; C0
     script_message $479E ; 'Hello! What may I do for'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -5998,20 +5998,20 @@ Script_659C:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_65A3:: ; heuristic: event script entry or jump target; C0
     script_message $4123 ; 'Warubou Wa-hey! You did it, 0!'
-    script_jump_data_bank $6707 ; data bank not known here
+    script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_65AA:: ; heuristic: event script entry or jump target; C0
 Data_010_65AA:: ; address name
     script_message $4124 ; 'Warubou Wa-hey! You did it, 0!'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_65B1:: ; heuristic: event script entry or jump target; C0
     script_message $4128 ; 'Warubou Wa-hey! So, this is it?'
-    script_jump_data_bank $690B ; data bank not known here
+    script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
