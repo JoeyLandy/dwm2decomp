@@ -81,6 +81,59 @@ MACRO dfar
     db BANK(\\1)
 ENDM
 
+; Event script commands (E-0152). FetchScriptCommand (bank $10) reads one opcode byte and
+; the inline bytes of the dedicated opcodes; any other opcode is a command type with no
+; inline bytes. Relative targets are forward offsets from the byte after the offset
+; (in a db list, @ is the address of the byte being assembled).
+MACRO script_end
+    db $FF
+ENDM
+
+MACRO script_message
+    db $00
+    dw \\1
+ENDM
+
+MACRO script_skip_if_no
+    db $06, (\\1) - @ - 1 ; in a db list, @ is the address of the byte being assembled
+ENDM
+
+MACRO script_jump
+    db $07
+    dw \\1
+ENDM
+
+MACRO script_set_flag
+    db $0A
+    dw \\1
+ENDM
+
+MACRO script_add_gold
+    db $0E
+    dw \\1
+ENDM
+
+MACRO script_sound
+    db $0F, \\1
+ENDM
+
+MACRO script_choice_jump
+    db $E4, (\\1) - @ - 1, (\\2) - @ - 1
+ENDM
+
+MACRO script_jump_data_bank
+    db $E7
+    dw \\1
+ENDM
+
+MACRO script_op
+    db \\#
+ENDM
+
+MACRO script_command
+    db \\1
+ENDM
+
 ; 24-bit little-endian values in data (E-0148).
 MACRO d24
     REPT _NARG
@@ -1582,6 +1635,144 @@ class Rom:
         log(f"sound tracks emitted as events: {used} (skipped {skipped}; "
             f"{sum(len(v['events']) for v in self.track_at.values())} events)")
 
+    SCRIPT_ARGS = {0x00: 2, 0x01: 3, 0x02: 3, 0x03: 2, 0x04: 2, 0x05: 2, 0x06: 1, 0x07: 2, 0x0A: 2, 0x0B: 1,
+                   0x0C: 1, 0x0D: 1, 0x0E: 2, 0x0F: 1, 0xE4: 2, 0xE7: 2, 0xEA: 2, 0xF5: 2}
+
+    def prepare_scripts(self) -> None:
+        """Decode the event scripts that code starts in bank $10 (E-0152).
+
+        An entry is the `ld hl, n` before a call to StartScriptAtHL_*, unless wScriptInDataBank
+        is written nearby (then the bytes come from the data bank instead). FetchScriptCommand
+        (bank $10) reads the opcode; ScriptOpcodeHandlers says which opcodes exist; SCRIPT_ARGS
+        gives the inline bytes the dedicated fetch handlers read (every other opcode only names
+        the command type). $06 skips forward by its byte when wTextYesNoResult is 0, $07 jumps,
+        $E4 jumps by one of two forward offsets (wTwoChoiceCursor), $E7 continues in the data
+        bank, $FF ends the script."""
+        b = 0x10
+        oh = next((t for t in self.schemas if t["label"] == "ScriptOpcodeHandlers"), None)
+        self.script_at: dict[tuple[int, int], dict] = {}
+        self.script_refs: dict[tuple[int, int], str] = {}
+        if not oh:
+            return
+        valid = {i for i in range(oh["count"]) if self._u16(b, oh["addr"] + 2 * i)}
+        starters = {(sb, a) for (sb, a), info in self.names.items()
+                    if info["name"].startswith("StartScriptAtHL") and not info.get("data")}
+        ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")
+        sites: list[tuple[int, int, int]] = []
+        for cb in range(self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in starters:
+                    continue
+                hl = None
+                for x in reversed(order[max(0, k - 8):k]):
+                    if ins[x][2] in SETUP_BARRIER or "[$D7FD]" in ins[x][1]:
+                        break
+                    if (m := ld_hl.match(ins[x][1])):
+                        hl = (x, int(m.group(1), 16))
+                        break
+                if hl and 0x4000 <= hl[1] < 0x8000:
+                    sites.append((cb, hl[0], hl[1]))
+        base = b * BANK - self.base(b)
+        code: dict[int, tuple[int, bytes]] = {}
+        targets = {a for _, _, a in sites}
+        todo, seen = sorted(targets), set()
+        while todo:
+            pc = todo.pop()
+            while 0x4000 <= pc < 0x8000 and pc not in seen:
+                seen.add(pc)
+                op = self.data[base + pc]
+                if op != 0xFF and op not in valid:
+                    break
+                n = 0 if op == 0xFF else self.SCRIPT_ARGS.get(op, 0)
+                code[pc] = (op, bytes(self.data[base + pc + 1:base + pc + 1 + n]))
+                arg = code[pc][1]
+                if op == 0x06:
+                    targets.add(pc + 2 + arg[0]); todo.append(pc + 2 + arg[0])
+                if op == 0x07:
+                    t = arg[0] | arg[1] << 8
+                    targets.add(t); todo.append(t)
+                if op == 0xE4:
+                    for t in (pc + 2 + arg[0], pc + 3 + arg[1]):
+                        targets.add(t); todo.append(t)
+                if op in (0xFF, 0x07, 0xE4, 0xE7):
+                    break
+                pc += 1 + n
+        dl, dt = self.dlabels[b], self.dtab[b]
+        regions, cur = [], []
+        for pc in sorted(code):
+            if cur and cur[-1] + 1 + len(code[cur[-1]][1]) != pc:
+                regions.append(cur)
+                cur = []
+            cur.append(pc)
+        if cur:
+            regions.append(cur)
+        used = 0
+        for reg in regions:
+            lo, hi = reg[0], reg[-1] + 1 + len(code[reg[-1]][1])
+            bounds = set(reg)
+            if any(a in self.covered[b] for a in range(lo, hi)) or any(
+                    (b, a) in self.table_at or (b, a) in self.track_at for a in range(lo, hi)):
+                continue
+            for a in [a for a in dl if lo <= a < hi and a not in bounds]:
+                del dl[a]  # a C0 guess inside a decoded script instruction
+            for a in [a for a in dt if lo <= a < hi]:
+                del dt[a]
+            for a in reg:
+                if a in targets:
+                    if a in dl and dl[a].startswith("Data_"):
+                        self.dalias.setdefault((b, a), dl[a])
+                    if a not in dl or dl[a].startswith("Data_"):
+                        dl[a] = f"Script_{a:04X}"
+                        self.dreason[(b, a)] = "event script entry or jump target"
+            self.script_at[(b, lo)] = {"ins": [(a, *code[a]) for a in reg], "end": hi}
+            used += 1
+        for cb, x, a in sites:
+            if a in dl and any(r["ins"][0][0] <= a < r["end"] for r in self.script_at.values()):
+                self.script_refs[(cb, x)] = dl[a]
+                wrong = self.dref.pop((cb, x), None)  # the load names the script, not wDataBank data
+                if wrong and wrong[0] != b and "$D7FE" in self.dreason.get(wrong, "") and \
+                        wrong not in self.dref.values() and wrong[1] in self.dlabels[wrong[0]] and \
+                        not self.dlabels[wrong[0]][wrong[1]].startswith(("Script", "Map")):
+                    del self.dlabels[wrong[0]][wrong[1]]
+        log(f"event scripts: {len(sites)} start sites, {len(code)} commands in {used} regions")
+
+    def emit_script(self, bank: int, p: int, sc: dict, out: list[str]) -> None:
+        dl = self.dlabels[bank]
+        out.append("")
+        out.append("; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)")
+        for a, op, arg in sc["ins"]:
+            if a in dl:
+                out.append(f"{dl[a]}:: ; heuristic: {self.dreason.get((bank, a), 'inside an event script')}; C0")
+                if (bank, a) in self.dalias:
+                    out.append(f"{self.dalias[(bank, a)]}:: ; address name")
+            w = arg[0] | arg[1] << 8 if len(arg) >= 2 else None
+            lab = lambda t: dl.get(t, f"${t:04X}")
+            if op == 0xFF:
+                out.append("    script_end")
+            elif op == 0x00:
+                out.append(f"    script_message ${w:04X}")
+            elif op == 0x06:
+                out.append(f"    script_skip_if_no {lab(a + 2 + arg[0])}")
+            elif op == 0x07:
+                out.append(f"    script_jump {lab(w)}")
+            elif op == 0x0A:
+                out.append(f"    script_set_flag ${w:04X}")
+            elif op == 0x0E:
+                out.append(f"    script_add_gold {w}")
+            elif op == 0x0F:
+                out.append(f"    script_sound ${arg[0]:02X}")
+            elif op == 0xE4:
+                out.append(f"    script_choice_jump {lab(a + 2 + arg[0])}, {lab(a + 3 + arg[1])}")
+            elif op == 0xE7:
+                out.append(f"    script_jump_data_bank ${w:04X}")
+            elif arg:
+                out.append(f"    script_op ${op:02X}, " + ", ".join(f"${v:02X}" for v in arg))
+            else:
+                out.append(f"    script_command ${op:02X}")
+
     def emit_track(self, bank: int, p: int, tr: dict, out: list[str]) -> None:
         dl = self.dlabels[bank]
         h = tr["header"]
@@ -1755,6 +1946,7 @@ class Rom:
         self.label_data_refs()
         self.prepare_tables()
         self.prepare_tracks()
+        self.prepare_scripts()
         self.expand_families(self.families)
         self.name_dispatch_cases()
         self.apply_names()
@@ -1787,6 +1979,9 @@ class Rom:
         for (b, a), tr in self.track_at.items():
             if b == bank:
                 mask(a, tr["end"])
+        for (b, a), sc in getattr(self, "script_at", {}).items():
+            if b == bank:
+                mask(a, sc["end"])
         for (b, a), (size, used) in self.streams.items():
             if b == bank:
                 mask(a, a + used)
@@ -2073,6 +2268,11 @@ class Rom:
                 self.emit_track(bank, pc, tr, out)
                 pc = tr["end"]
                 continue
+            if it is None and (bank, pc) in getattr(self, "script_at", {}):
+                sc = self.script_at[(bank, pc)]
+                self.emit_script(bank, pc, sc, out)
+                pc = sc["end"]
+                continue
             if it is None and (bank, pc) in self.table_at:
                 tbl = self.table_at[(bank, pc)]
                 self.emit_table(bank, tbl, out)
@@ -2137,6 +2337,8 @@ class Rom:
                 look.append(nx[1])
                 q += nx[0]
             text = self.symbolize(text, tuple(look), (bank, pc))
+            if (bank, pc) in getattr(self, "script_refs", {}):
+                text = f"ld hl, {self.script_refs[(bank, pc)]}"  # the script FetchScriptCommand runs (bank $10)
             sp = self.split_ptr.get((bank, pc))
             if sp and sp[2] in self.dlabels.get(sp[1], {}):
                 text = re.sub(r"\$[0-9A-F]{2}$", f"{sp[0]}({self.dlabels[sp[1]][sp[2]]})", text)

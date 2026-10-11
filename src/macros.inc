@@ -21,6 +21,59 @@ MACRO dfar
     db BANK(\1)
 ENDM
 
+; Event script commands (E-0152). FetchScriptCommand (bank $10) reads one opcode byte and
+; the inline bytes of the dedicated opcodes; any other opcode is a command type with no
+; inline bytes. Relative targets are forward offsets from the byte after the offset
+; (in a db list, @ is the address of the byte being assembled).
+MACRO script_end
+    db $FF
+ENDM
+
+MACRO script_message
+    db $00
+    dw \1
+ENDM
+
+MACRO script_skip_if_no
+    db $06, (\1) - @ - 1 ; in a db list, @ is the address of the byte being assembled
+ENDM
+
+MACRO script_jump
+    db $07
+    dw \1
+ENDM
+
+MACRO script_set_flag
+    db $0A
+    dw \1
+ENDM
+
+MACRO script_add_gold
+    db $0E
+    dw \1
+ENDM
+
+MACRO script_sound
+    db $0F, \1
+ENDM
+
+MACRO script_choice_jump
+    db $E4, (\1) - @ - 1, (\2) - @ - 1
+ENDM
+
+MACRO script_jump_data_bank
+    db $E7
+    dw \1
+ENDM
+
+MACRO script_op
+    db \#
+ENDM
+
+MACRO script_command
+    db \1
+ENDM
+
 ; 24-bit little-endian values in data (E-0148).
 MACRO d24
     REPT _NARG

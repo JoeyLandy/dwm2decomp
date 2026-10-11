@@ -3057,86 +3057,2967 @@ ScriptCommandCF:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F4D:: ; address name
     farcall ScriptCommandCF_Run
     ret
-    INCBIN "dwm2-cobi-us.gbc", $040F54, $3EA
 
-Data_010_533E:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $0D, $42, $E7, $59, $66, $FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_4F54:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_message $0030
+    script_op $05, $81, $01
+    script_message $0031
+    script_command $1B
+    script_sound $FF
+    script_set_flag $0015
+    script_end
+Script_4F66:: ; heuristic: event script entry or jump target; C0
+    script_message $404C
+    script_skip_if_no Script_4F6F
+    script_message $804E
+    script_end
+Script_4F6F:: ; heuristic: event script entry or jump target; C0
+    script_message $804D
+    script_end
+Script_4F73:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_command $12
+    script_message $0033
+    script_sound $FF
+    script_end
+Script_4F7C:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_op $03, $64, $00
+    script_command $13
+    script_op $03, $1E, $00
+    script_sound $FF
+    script_end
+Script_4F88:: ; heuristic: event script entry or jump target; C0
+    script_message $0045
+    script_command $11
+    script_end
+Script_4F8D:: ; heuristic: event script entry or jump target; C0
+    script_op $0B, $82
+    script_message $0050
+    script_command $14
+    script_message $0051
+    script_set_flag $000A
+    script_command $15
+    script_sound $FF
+    script_end
+Script_4F9D:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_command $16
+    script_message $005D
+    script_end
+Script_4FA4:: ; heuristic: event script entry or jump target; C0
+    script_message $001E
+    script_command $6B
+    script_message $0020
+    script_set_flag $0003
+    script_end
+Script_4FAF:: ; heuristic: event script entry or jump target; C0
+    script_message $006A
+    script_command $17
+    script_message $006B
+    script_end
+Script_4FB7:: ; heuristic: event script entry or jump target; C0
+    script_message $4028
+    script_skip_if_no Script_4FCC
+    script_message $802A
+    script_command $73
+    script_op $0B, $01
+    script_message $002D
+    script_message $002C
+    script_set_flag $0014
+    script_end
+Script_4FCC:: ; heuristic: event script entry or jump target; C0
+    script_message $8029
+    script_end
+Script_4FD0:: ; heuristic: event script entry or jump target; C0
+    script_message $4028
+    script_skip_if_no Script_4FE4
+    script_message $802A
+    script_op $0B, $01
+    script_message $002B
+    script_message $002C
+    script_set_flag $0014
+    script_end
+Script_4FE4:: ; heuristic: event script entry or jump target; C0
+    script_message $8029
+    script_end
+Script_4FE8:: ; heuristic: event script entry or jump target; C0
+    script_message $0060
+    script_op $0B, $01
+    script_message $0063
+    script_message $0062
+    script_set_flag $000E
+    script_end
+Script_4FF7:: ; heuristic: event script entry or jump target; C0
+    script_message $0060
+    script_op $0B, $01
+    script_message $0061
+    script_message $0062
+    script_set_flag $000E
+    script_end
+Script_5006:: ; heuristic: event script entry or jump target; C0
+    script_message $007A
+    script_op $0B, $01
+    script_message $407B
+    script_skip_if_no Script_5017
+    script_message $807C
+    script_set_flag $0016
+    script_end
+Script_5017:: ; heuristic: event script entry or jump target; C0
+    script_message $807F
+    script_command $19
+    script_message $0080
+    script_command $1A
+    script_message $0081
+    script_message $0082
+    script_set_flag $001A
+    script_end
+Script_5029:: ; heuristic: event script entry or jump target; C0
+    script_message $407D
+    script_skip_if_no Script_5036
+Script_502E:: ; heuristic: event script entry or jump target; C0
+    script_message $C07E
+    script_skip_if_no Script_5036
+    script_jump Script_502E
+Script_5036:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_5017
+Script_5039:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0011
+    script_set_flag $0017
+    script_command $18
+    script_message $0085
+    script_message $0086
+    script_command $1C
+    script_op $01, $00, $02, $03
+    script_op $01, $00, $01, $02
+    script_op $05, $80, $02
+    script_op $05, $00, $00
+    script_op $05, $01, $00
+    script_message $008C
+    script_op $05, $00, $01
+    script_op $05, $01, $03
+    script_command $1D
+    script_end
+Script_5063:: ; heuristic: event script entry or jump target; C0
+    script_op $03, $1E, $00
+    script_message $0000
+    script_command $75
+    script_op $03, $3C, $00
+    script_op $01, $03, $00, $01
+    script_op $05, $81, $02
+    script_op $03, $5A, $00
+    script_op $05, $81, $00
+    script_op $01, $03, $03, $03
+    script_op $03, $3C, $00
+    script_op $01, $02, $01, $06
+    script_op $01, $02, $02, $01
+    script_op $05, $82, $01
+    script_op $05, $00, $03
+    script_op $0B, $82
+    script_message $0002
+    script_op $01, $02, $03, $01
+    script_op $05, $82, $01
+    script_set_flag $0012
+    script_end
+Script_509F:: ; heuristic: event script entry or jump target; C0
+    script_op $03, $1E, $00
+    script_message $0000
+    script_command $75
+    script_op $03, $3C, $00
+    script_op $01, $03, $00, $01
+    script_op $05, $81, $02
+    script_op $03, $5A, $00
+    script_op $05, $81, $00
+    script_op $01, $03, $03, $03
+    script_op $03, $3C, $00
+    script_op $01, $02, $01, $06
+    script_op $01, $02, $02, $01
+    script_op $05, $82, $01
+    script_op $05, $00, $03
+    script_op $0B, $82
+    script_message $0001
+    script_op $01, $02, $03, $01
+    script_op $05, $82, $01
+    script_set_flag $0012
+    script_end
+Script_50DB:: ; heuristic: event script entry or jump target; C0
+    script_message $0013
+    script_op $05, $80, $01
+    script_op $0B, $80
+    script_message $0012
+    script_op $05, $81, $01
+    script_op $05, $82, $01
+    script_op $05, $00, $01
+    script_op $0B, $82
+    script_op $03, $78, $00
+    script_command $77
+    script_end
+Script_50F6:: ; heuristic: event script entry or jump target; C0
+    script_message $0011
+    script_op $05, $80, $01
+    script_op $0B, $80
+    script_message $0012
+    script_op $05, $81, $01
+    script_op $05, $82, $01
+    script_op $05, $00, $01
+    script_op $0B, $82
+    script_op $03, $78, $00
+    script_command $77
+    script_end
+Script_5111:: ; heuristic: event script entry or jump target; C0
+    script_command $6A
+    script_message $0015
+    script_op $01, $00, $02, $05
+    script_op $05, $80, $01
+    script_op $05, $81, $03
+    script_end
+Script_5120:: ; heuristic: event script entry or jump target; C0
+    script_message $4007
+    script_skip_if_no Script_5129
+    script_message $8009
+    script_end
+Script_5129:: ; heuristic: event script entry or jump target; C0
+    script_message $8008
+    script_end
+Script_512D:: ; heuristic: event script entry or jump target; C0
+    script_command $82
+    script_end
+Script_512F:: ; heuristic: event script entry or jump target; C0
+    script_command $83
+    script_end
+Script_5131:: ; heuristic: event script entry or jump target; C0
+    script_command $84
+    script_end
+Script_5133:: ; heuristic: event script entry or jump target; C0
+    script_command $85
+    script_end
+Script_5135:: ; heuristic: event script entry or jump target; C0
+    script_command $9E
+    script_end
+Script_5137:: ; heuristic: event script entry or jump target; C0
+    script_command $87
+    script_end
+Script_5139:: ; heuristic: event script entry or jump target; C0
+    script_command $88
+    script_end
+Script_513B:: ; heuristic: event script entry or jump target; C0
+    script_command $89
+    script_end
+Script_513D:: ; heuristic: event script entry or jump target; C0
+    script_command $8A
+    script_end
+Script_513F:: ; heuristic: event script entry or jump target; C0
+    script_command $8E
+    script_end
+Script_5141:: ; heuristic: event script entry or jump target; C0
+    script_command $A0
+    script_end
+Script_5143:: ; heuristic: event script entry or jump target; C0
+    script_command $A1
+    script_end
+Script_5145:: ; heuristic: event script entry or jump target; C0
+    script_command $86
+    script_end
+Script_5147:: ; heuristic: event script entry or jump target; C0
+    script_command $81
+    script_end
+Script_5149:: ; heuristic: event script entry or jump target; C0
+    script_command $80
+    script_end
+Script_514B:: ; heuristic: event script entry or jump target; C0
+    script_command $90
+    script_end
+Script_514D:: ; heuristic: event script entry or jump target; C0
+    script_command $91
+    script_end
+Script_514F:: ; heuristic: event script entry or jump target; C0
+    script_command $92
+    script_end
+Script_5151:: ; heuristic: event script entry or jump target; C0
+    script_command $93
+    script_end
+Script_5153:: ; heuristic: event script entry or jump target; C0
+    script_command $94
+    script_end
+Script_5155:: ; heuristic: event script entry or jump target; C0
+    script_command $8B
+    script_end
+Script_5157:: ; heuristic: event script entry or jump target; C0
+    script_command $8C
+    script_end
+Script_5159:: ; heuristic: event script entry or jump target; C0
+    script_command $8D
+    script_end
+Script_515B:: ; heuristic: event script entry or jump target; C0
+    script_command $8F
+    script_end
+Script_515D:: ; heuristic: event script entry or jump target; C0
+    script_command $9F
+    script_end
+Script_515F:: ; heuristic: event script entry or jump target; C0
+    script_op $04, $00, $05
+    script_command $95
+    script_end
+Script_5164:: ; heuristic: event script entry or jump target; C0
+    script_op $04, $00, $05
+    script_command $96
+    script_end
+Script_5169:: ; heuristic: event script entry or jump target; C0
+    script_command $9A
+    script_end
+Script_516B:: ; heuristic: event script entry or jump target; C0
+    script_command $9B
+    script_end
+Script_516D:: ; heuristic: event script entry or jump target; C0
+    script_command $98
+    script_end
+Script_516F:: ; heuristic: event script entry or jump target; C0
+    script_command $99
+    script_end
+Script_5171:: ; heuristic: event script entry or jump target; C0
+    script_command $9C
+    script_end
+Script_5173:: ; heuristic: event script entry or jump target; C0
+    script_command $9D
+    script_end
+Script_5175:: ; heuristic: event script entry or jump target; C0
+    script_message $0100
+    script_message $0101
+    script_set_flag $01A7
+    script_end
+Script_517F:: ; heuristic: event script entry or jump target; C0
+    script_message $0200
+    script_message $0201
+    script_add_gold 200
+    script_end
+Script_5189:: ; heuristic: event script entry or jump target; C0
+    script_message $48A1
+    script_skip_if_no Script_5192
+    script_message $88A4
+    script_end
+Script_5192:: ; heuristic: event script entry or jump target; C0
+    script_message $88A2
+    script_message $08A3
+    script_add_gold 400
+    script_set_flag $0183
+    script_end
+Script_519F:: ; heuristic: event script entry or jump target; C0
+    script_message $08A6
+    script_message $08A7
+    script_set_flag $0184
+    script_end
+Script_51A9:: ; heuristic: event script entry or jump target; C0
+    script_message $48A1
+    script_skip_if_no Script_51B2
+    script_message $88A4
+    script_end
+Script_51B2:: ; heuristic: event script entry or jump target; C0
+    script_message $88A8
+    script_message $08A9
+    script_add_gold 600
+    script_set_flag $0185
+    script_end
+Script_51BF:: ; heuristic: event script entry or jump target; C0
+    script_message $08A6
+    script_message $08AC
+    script_set_flag $0186
+    script_end
+    db $00, $01, $43, $06, $04, $00, $04, $83, $FF, $00, $02, $83, $00, $03, $03, $0E
+    db $B0, $04, $0A, $87, $01, $FF, $00, $01, $43, $06, $04, $00, $04, $83, $FF, $00
+    db $07, $83, $00, $08, $03, $0E, $B0, $04, $0A, $89, $01, $FF
 
-Data_010_5345:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $0E, $42, $E7, $59, $66, $FF
-
-Data_010_534C:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $89, $4D, $E7, $59, $66, $FF
-
-Data_010_5353:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $0A, $03, $01, $00, $1C, $41, $E7, $B5, $67, $FF, $00, $1D, $41, $E7, $B5, $67
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_51F5:: ; heuristic: event script entry or jump target; C0
+    script_message $4A25
+    script_skip_if_no Script_51FE
+    script_message $8A26
+    script_end
+Script_51FE:: ; heuristic: event script entry or jump target; C0
+    script_message $8A22
+    script_message $0A23
+    script_add_gold 1200
+    script_set_flag $018B
+    script_end
+Script_520B:: ; heuristic: event script entry or jump target; C0
+    script_message $4A21
+    script_skip_if_no Script_5214
+    script_message $8A24
+    script_end
+Script_5214:: ; heuristic: event script entry or jump target; C0
+    script_message $8A22
+    script_message $0A23
+    script_add_gold 1200
+    script_set_flag $018B
+    script_end
+Script_5221:: ; heuristic: event script entry or jump target; C0
+    script_message $0A28
+    script_message $0A29
+    script_set_flag $018C
+    script_end
+Script_522B:: ; heuristic: event script entry or jump target; C0
+    script_message $0212
+    script_message $0213
+    script_op $01, $00, $03, $01
+    script_op $01, $00, $02, $02
+    script_op $05, $80, $03
+    script_op $03, $3C, $00
+    script_op $05, $81, $00
+    script_op $0B, $81
+    script_op $0B, $81
+    script_op $03, $1E, $00
+    script_op $02, $01, $00, $02
+    script_op $02, $01, $01, $02
+    script_op $02, $01, $00, $06
+    script_end
+Script_5256:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0102
+    script_message $410D
+    script_jump_data_bank $5A3A
     db $FF
 
-Data_010_5364:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $041364, $2E7
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5260:: ; heuristic: event script entry or jump target; C0
+    script_message $410E
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_564B:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $04164B, $1A2
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5267:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0105
+    script_message $4207
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_57ED:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $0417ED, $1D4
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5271:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0109
+    script_message $48BC
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_59C1:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $0419C1, $1CB
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_527B:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0115
+    script_message $4A30
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_5B8C:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $09, $48, $E7, $07, $67, $FF, $FF, $00, $BB, $41, $E7, $0B, $69, $FF, $00
-    db $18, $48, $06, $04, $00, $1A, $88, $FF, $00, $19, $88, $FF, $00, $20, $48, $E7
-    db $D4, $77, $FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5285:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0121
+    script_message $4502
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_5BAF:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $041BAF, $1B9
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_528F:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0131
+    script_message $4B02
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_5D68:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $041D68, $48
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5299:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0102
+    script_message $410F
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_5DB0:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $31, $43, $E7, $59, $66, $FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_52A3:: ; heuristic: event script entry or jump target; C0
+    script_message $4110
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_5DB7:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $32, $43, $E7, $07, $67, $FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_52AA:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0105
+    script_message $4208
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_5DBE:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $041DBE, $D0
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_52B4:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0109
+    script_message $48BD
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_5E8E:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $041E8E, $7D
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_52BE:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0115
+    script_message $4A31
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_5F0B:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $041F0B, $F8
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_52C8:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0121
+    script_message $4503
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_6003:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $BB, $41, $E7, $0B, $69, $FF, $00, $12, $04, $00, $E6, $0D, $50, $0A, $A4
-    db $00, $FF, $00, $1D, $04, $01, $00, $01, $01, $05, $80, $03, $FF, $00, $26, $44
-    db $06, $04, $00, $28, $84, $FF, $00, $27, $84, $FF, $00, $26, $44, $06, $04, $00
-    db $28, $84, $FF, $00, $29, $84, $FF, $00, $2E, $44, $E7, $D4, $77, $FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_52D2:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0131
+    script_message $4B03
+    script_jump_data_bank $5A3A
+    db $FF
 
-Data_010_6041:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $2D, $44, $E7, $07, $67, $FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_52DC:: ; heuristic: event script entry or jump target; C0
+    script_message $0105
+    script_message $0106
+    script_end
+Script_52E3:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0190
+    script_message $48AF
+    script_skip_if_no Script_52EF
+    script_message $88B1
+    script_end
+Script_52EF:: ; heuristic: event script entry or jump target; C0
+    script_message $88B0
+    script_end
+Script_52F3:: ; heuristic: event script entry or jump target; C0
+    script_message $48B3
+    script_skip_if_no Script_52FC
+    script_message $88B5
+    script_end
+Script_52FC:: ; heuristic: event script entry or jump target; C0
+    script_message $88B4
+    script_command $3C
+    script_message $0D17
+    script_message $0D18
+    script_message $0D19
+    script_set_flag $0191
+    script_end
+Script_530D:: ; heuristic: event script entry or jump target; C0
+    script_message $48B3
+    script_skip_if_no Script_5316
+    script_message $88B5
+    script_end
+Script_5316:: ; heuristic: event script entry or jump target; C0
+    script_message $88B4
+    script_command $3C
+    script_message $0D48
+    script_set_flag $01A3
+    script_set_flag $0191
+    script_end
+Script_5324:: ; heuristic: event script entry or jump target; C0
+    script_message $48B3
+    script_skip_if_no Script_532D
+    script_message $88B5
+    script_end
+Script_532D:: ; heuristic: event script entry or jump target; C0
+    script_message $88B4
+    script_command $3C
+    script_message $0D47
+    script_message $0D41
+    script_message $0D19
+    script_set_flag $0191
+    script_end
+Script_533E:: ; heuristic: event script entry or jump target; C0
+Data_010_533E:: ; address name
+    script_message $420D
+    script_jump_data_bank $6659
+    db $FF
 
-Data_010_6048:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $32, $44, $E7, $0B, $69, $FF, $00, $33, $04, $51, $0D, $05, $0A, $A8, $00
-    db $FF, $00, $33, $04, $0D, $05, $0A, $A8, $00, $FF, $00, $39, $44, $06, $04, $00
-    db $3B, $84, $FF, $00, $3A, $84, $FF, $00, $47, $44, $06, $04, $00, $49, $84, $FF
-    db $00, $48, $84, $FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5345:: ; heuristic: event script entry or jump target; C0
+Data_010_5345:: ; address name
+    script_message $420E
+    script_jump_data_bank $6659
+    db $FF
 
-Data_010_607C:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $04207C, $2FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_534C:: ; heuristic: event script entry or jump target; C0
+Data_010_534C:: ; address name
+    script_message $4D89
+    script_jump_data_bank $6659
+    db $FF
 
-Data_010_637B:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $04237B, $C3
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5353:: ; heuristic: event script entry or jump target; C0
+Data_010_5353:: ; address name
+    script_set_flag $0103
+    script_message $411C
+    script_jump_data_bank $67B5
+    db $FF
 
-Data_010_643E:: ; heuristic: bank from RAM variable $D7FE; C0
-    INCBIN "dwm2-cobi-us.gbc", $04243E, $16C
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_535D:: ; heuristic: event script entry or jump target; C0
+    script_message $411D
+    script_jump_data_bank $67B5
+    db $FF
 
-Data_010_65AA:: ; heuristic: bank from RAM variable $D7FE; C0
-    db $00, $24, $41, $E7, $0B, $69, $FF, $00, $28, $41, $E7, $0B, $69, $FF, $00, $27
-    db $41, $E7, $D4, $77, $FF
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5364:: ; heuristic: event script entry or jump target; C0
+Data_010_5364:: ; address name
+    script_set_flag $0127
+    script_message $4B1C
+    script_jump_data_bank $67B5
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_536E:: ; heuristic: event script entry or jump target; C0
+    script_message $411F
+    script_skip_if_no Script_5377
+    script_message $8121
+    script_end
+Script_5377:: ; heuristic: event script entry or jump target; C0
+    script_message $8120
+    script_end
+    db $00, $9E, $42, $06, $04, $00, $A2, $82, $FF, $00, $9F, $82, $FF, $00, $9E, $42
+    db $06, $04, $00, $A2, $82, $FF, $00, $A0, $82, $FF, $00, $A3, $02, $3B, $0A, $2F
+    db $01, $FF, $00, $A3, $02, $3B, $0A, $35, $01, $FF, $00, $A3, $02, $3B, $0A, $39
+    db $01, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_53AD:: ; heuristic: event script entry or jump target; C0
+    script_message $452A
+    script_skip_if_no Script_53B6
+    script_message $8531
+    script_end
+Script_53B6:: ; heuristic: event script entry or jump target; C0
+    script_message $8530
+    script_end
+Script_53BA:: ; heuristic: event script entry or jump target; C0
+    script_message $452A
+    script_skip_if_no Script_53C3
+    script_message $8531
+    script_end
+Script_53C3:: ; heuristic: event script entry or jump target; C0
+    script_message $852B
+    script_command $5B
+    script_message $052F
+    script_set_flag $013B
+    script_end
+Script_53CE:: ; heuristic: event script entry or jump target; C0
+    script_command $6D
+    script_end
+Script_53D0:: ; heuristic: event script entry or jump target; C0
+    script_command $6E
+    script_end
+Script_53D2:: ; heuristic: event script entry or jump target; C0
+    script_message $4A36
+    script_skip_if_no Script_53DB
+    script_message $8A38
+    script_end
+Script_53DB:: ; heuristic: event script entry or jump target; C0
+    script_message $8A37
+    script_set_flag $0117
+    script_command $59
+    script_message $0A3A
+    script_message $0A3B
+    script_op $01, $00, $00, $01
+    script_message $0D28
+    script_op $01, $00, $02, $01
+    script_op $05, $80, $00
+    script_message $0D29
+    script_end
+Script_53FA:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0117
+    script_message $4504
+    script_skip_if_no Script_540D
+    script_message $8506
+    script_command $5A
+    script_message $0507
+    script_set_flag $0122
+    script_end
+Script_540D:: ; heuristic: event script entry or jump target; C0
+    script_message $8505
+    script_command $5A
+    script_message $0507
+    script_set_flag $0122
+    script_end
+Script_5418:: ; heuristic: event script entry or jump target; C0
+    script_message $021D
+    script_sound $65
+    script_op $01, $01, $00, $03
+    script_end
+Script_5422:: ; heuristic: event script entry or jump target; C0
+    script_message $4264
+    script_skip_if_no Script_542B
+    script_message $8266
+    script_end
+Script_542B:: ; heuristic: event script entry or jump target; C0
+    script_message $8265
+    script_command $3A
+    script_set_flag $012D
+    script_end
+Script_5433:: ; heuristic: event script entry or jump target; C0
+    script_message $4B47
+    script_skip_if_no Script_543C
+    script_message $8D81
+    script_end
+Script_543C:: ; heuristic: event script entry or jump target; C0
+    script_message $8D80
+    script_command $7B
+    script_end
+    db $00, $27, $42, $06, $04, $00, $29, $82, $FF, $00, $28, $82, $FF, $0A, $08, $01
+    db $00, $2A, $42, $E7, $7B, $78, $FF, $00, $2B, $42, $E7, $7B, $78, $FF, $0A, $2D
+    db $00, $00, $49, $4B, $E7, $7B, $78, $FF, $0A, $9E, $01, $00, $F0, $4D, $00, $F1
+    db $CD, $E7, $7B, $78, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5476:: ; heuristic: event script entry or jump target; C0
+    script_message $4230
+    script_skip_if_no Script_547F
+    script_message $8232
+    script_end
+Script_547F:: ; heuristic: event script entry or jump target; C0
+    script_message $8231
+    script_end
+Script_5483:: ; heuristic: event script entry or jump target; C0
+    script_message $4246
+    script_skip_if_no Script_548C
+    script_message $8248
+    script_end
+Script_548C:: ; heuristic: event script entry or jump target; C0
+    script_message $8247
+    script_end
+Script_5490:: ; heuristic: event script entry or jump target; C0
+    script_message $4257
+    script_skip_if_no Script_5499
+    script_message $8259
+    script_end
+Script_5499:: ; heuristic: event script entry or jump target; C0
+    script_message $8258
+    script_end
+Script_549D:: ; heuristic: event script entry or jump target; C0
+    script_message $44C3
+    script_jump_data_bank $6FF8
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_54A4:: ; heuristic: event script entry or jump target; C0
+    script_message $44C4
+    script_jump_data_bank $6FF8
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_54AB:: ; heuristic: event script entry or jump target; C0
+    script_message $4A4E
+    script_jump_data_bank $4335
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_54B2:: ; heuristic: event script entry or jump target; C0
+    script_message $4A4F
+    script_jump_data_bank $4335
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_54B9:: ; heuristic: event script entry or jump target; C0
+    script_message $4A5A
+    script_message $8A5B
+    script_end
+Script_54C0:: ; heuristic: event script entry or jump target; C0
+    script_message $4A5A
+    script_message $8A5C
+    script_end
+Script_54C7:: ; heuristic: event script entry or jump target; C0
+    script_message $4A5E
+    script_message $8A5F
+    script_end
+Script_54CE:: ; heuristic: event script entry or jump target; C0
+    script_message $4281
+    script_skip_if_no Script_54D7
+    script_message $8283
+    script_end
+Script_54D7:: ; heuristic: event script entry or jump target; C0
+    script_message $8282
+    script_end
+Script_54DB:: ; heuristic: event script entry or jump target; C0
+    script_message $4A60
+    script_skip_if_no Script_54E4
+    script_message $8283
+    script_end
+Script_54E4:: ; heuristic: event script entry or jump target; C0
+    script_message $8A61
+    script_end
+Script_54E8:: ; heuristic: event script entry or jump target; C0
+    script_message $4A62
+    script_skip_if_no Script_54F1
+    script_message $8283
+    script_end
+Script_54F1:: ; heuristic: event script entry or jump target; C0
+    script_message $8A63
+    script_end
+Script_54F5:: ; heuristic: event script entry or jump target; C0
+    script_message $4A64
+    script_skip_if_no Script_54FE
+    script_message $8283
+    script_end
+Script_54FE:: ; heuristic: event script entry or jump target; C0
+    script_message $8A65
+    script_end
+Script_5502:: ; heuristic: event script entry or jump target; C0
+    script_message $4A66
+    script_skip_if_no Script_550B
+    script_message $8283
+    script_end
+Script_550B:: ; heuristic: event script entry or jump target; C0
+    script_message $8A67
+    script_end
+Script_550F:: ; heuristic: event script entry or jump target; C0
+    script_message $4281
+    script_skip_if_no Script_5518
+    script_message $8283
+    script_end
+Script_5518:: ; heuristic: event script entry or jump target; C0
+    script_message $8216
+    script_end
+Script_551C:: ; heuristic: event script entry or jump target; C0
+    script_message $4A60
+    script_skip_if_no Script_5525
+    script_message $8283
+    script_end
+Script_5525:: ; heuristic: event script entry or jump target; C0
+    script_message $8A7F
+    script_end
+Script_5529:: ; heuristic: event script entry or jump target; C0
+    script_message $4A62
+    script_skip_if_no Script_5532
+    script_message $8283
+    script_end
+Script_5532:: ; heuristic: event script entry or jump target; C0
+    script_message $8A80
+    script_end
+Script_5536:: ; heuristic: event script entry or jump target; C0
+    script_message $4A64
+    script_skip_if_no Script_553F
+    script_message $8283
+    script_end
+Script_553F:: ; heuristic: event script entry or jump target; C0
+    script_message $8A81
+    script_end
+Script_5543:: ; heuristic: event script entry or jump target; C0
+    script_message $4A66
+    script_skip_if_no Script_554C
+    script_message $8283
+    script_end
+Script_554C:: ; heuristic: event script entry or jump target; C0
+    script_message $8A82
+    script_end
+Script_5550:: ; heuristic: event script entry or jump target; C0
+    script_message $426B
+    script_skip_if_no Script_5559
+    script_message $826D
+    script_end
+Script_5559:: ; heuristic: event script entry or jump target; C0
+    script_message $C26C
+    script_jump_data_bank $7A51
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5560:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0189
+    script_message $4270
+    script_jump_data_bank $7A51
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_556A:: ; heuristic: event script entry or jump target; C0
+    script_message $4271
+    script_jump_data_bank $7A51
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5571:: ; heuristic: event script entry or jump target; C0
+    script_message $4D86
+    script_jump_data_bank $7A51
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5578:: ; heuristic: event script entry or jump target; C0
+    script_message $4275
+    script_message $8274
+    script_end
+Script_557F:: ; heuristic: event script entry or jump target; C0
+    script_message $0275
+    script_message $0273
+    script_end
+Script_5586:: ; heuristic: event script entry or jump target; C0
+    script_message $04B0
+    script_end
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_558B:: ; heuristic: event script entry or jump target; C0
+    script_message $44B3
+    script_skip_if_no Script_5594
+    script_message $84B2
+    script_end
+Script_5594:: ; heuristic: event script entry or jump target; C0
+    script_message $C4B1
+    script_end
+Script_5598:: ; heuristic: event script entry or jump target; C0
+    script_message $48CF
+    script_set_flag $010F
+    script_jump_data_bank $6EF7
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55A2:: ; heuristic: event script entry or jump target; C0
+    script_message $48D0
+    script_jump_data_bank $6EF7
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55A9:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0028
+    script_message $4B20
+    script_jump_data_bank $6EF7
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55B3:: ; heuristic: event script entry or jump target; C0
+    script_message $48D3
+    script_set_flag $0110
+    script_jump_data_bank $764B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55BD:: ; heuristic: event script entry or jump target; C0
+    script_message $48D4
+    script_jump_data_bank $764B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55C4:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $002C
+    script_message $4B2E
+    script_jump_data_bank $764B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55CE:: ; heuristic: event script entry or jump target; C0
+    script_message $48D5
+    script_skip_if_no Script_55D7
+    script_message $88D7
+    script_end
+Script_55D7:: ; heuristic: event script entry or jump target; C0
+    script_message $88D6
+    script_end
+Script_55DB:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0112
+    script_message $4A6D
+    script_jump_data_bank $7BA9
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55E5:: ; heuristic: event script entry or jump target; C0
+    script_message $4A6E
+    script_jump_data_bank $7BA9
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55EC:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0031
+    script_message $4B50
+    script_jump_data_bank $7BA9
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_55F6:: ; heuristic: event script entry or jump target; C0
+    script_message $025F
+    script_message $0260
+    script_set_flag $012E
+    script_end
+Script_5600:: ; heuristic: event script entry or jump target; C0
+    script_message $48C8
+    script_skip_if_no Script_5609
+    script_message $88CA
+    script_end
+Script_5609:: ; heuristic: event script entry or jump target; C0
+    script_message $88C9
+    script_command $3D
+    script_message $0D40
+    script_message $0D18
+    script_message $0D42
+    script_set_flag $0134
+    script_end
+Script_561A:: ; heuristic: event script entry or jump target; C0
+    script_message $48C8
+    script_skip_if_no Script_5623
+    script_message $88CA
+    script_end
+Script_5623:: ; heuristic: event script entry or jump target; C0
+    script_message $88C9
+    script_command $3D
+    script_message $0D43
+    script_set_flag $01A5
+    script_set_flag $0134
+    script_end
+Script_5631:: ; heuristic: event script entry or jump target; C0
+    script_message $48C8
+    script_skip_if_no Script_563A
+    script_message $88CA
+    script_end
+Script_563A:: ; heuristic: event script entry or jump target; C0
+    script_message $88C9
+    script_command $3D
+    script_message $0D40
+    script_message $0D41
+    script_message $0D42
+    script_set_flag $0134
+    script_end
+Script_564B:: ; heuristic: event script entry or jump target; C0
+Data_010_564B:: ; address name
+    script_message $48CB
+    script_jump_data_bank $6659
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5652:: ; heuristic: event script entry or jump target; C0
+    script_message $48CC
+    script_jump_data_bank $6659
+    db $FF, $00, $8A, $4D, $E7, $59, $66, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5660:: ; heuristic: event script entry or jump target; C0
+    script_message $4A46
+    script_skip_if_no Script_5669
+    script_message $8A48
+    script_end
+Script_5669:: ; heuristic: event script entry or jump target; C0
+    script_message $CA47
+    script_jump_data_bank $7F8B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5670:: ; heuristic: event script entry or jump target; C0
+    script_message $4513
+    script_skip_if_no Script_5679
+    script_message $8515
+    script_end
+Script_5679:: ; heuristic: event script entry or jump target; C0
+    script_message $C514
+    script_jump_data_bank $7F8B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5680:: ; heuristic: event script entry or jump target; C0
+    script_message $44B7
+    script_skip_if_no Script_5689
+    script_message $84B9
+    script_end
+Script_5689:: ; heuristic: event script entry or jump target; C0
+    script_message $C4B8
+    script_jump_data_bank $7F8B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5690:: ; heuristic: event script entry or jump target; C0
+    script_message $44C8
+    script_skip_if_no Script_569C
+    script_message $84CA
+    script_set_flag $011D
+    script_end
+Script_569C:: ; heuristic: event script entry or jump target; C0
+    script_message $84C9
+    script_end
+Script_56A0:: ; heuristic: event script entry or jump target; C0
+    script_message $0B4C
+    script_command $CF
+    script_set_flag $002F
+    script_end
+Script_56A8:: ; heuristic: event script entry or jump target; C0
+    script_message $0BBF
+    script_command $CF
+    script_end
+    db $0A, $1F, $01, $00, $97, $42, $E7, $B8, $62, $FF, $00, $98, $42, $E7, $B8, $62
+    db $FF, $0A, $13, $01, $00, $1E, $4B, $E7, $B8, $62, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_56C8:: ; heuristic: event script entry or jump target; C0
+    script_message $44BD
+    script_skip_if_no Script_56D1
+    script_message $84BF
+    script_end
+Script_56D1:: ; heuristic: event script entry or jump target; C0
+    script_message $C4BE
+    script_jump_data_bank $7F8B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_56D8:: ; heuristic: event script entry or jump target; C0
+    script_message $4277
+    script_skip_if_no Script_56E1
+    script_message $8279
+    script_end
+Script_56E1:: ; heuristic: event script entry or jump target; C0
+    script_message $8278
+    script_end
+Script_56E5:: ; heuristic: event script entry or jump target; C0
+    script_message $4277
+    script_skip_if_no Script_56EE
+    script_message $8B66
+    script_end
+Script_56EE:: ; heuristic: event script entry or jump target; C0
+    script_message $8B65
+    script_end
+    db $0D, $1A, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_56F5:: ; heuristic: event script entry or jump target; C0
+    script_op $01, $02, $03, $02
+    script_op $05, $00, $01
+    script_message $0546
+    script_op $03, $3C, $00
+    script_sound $28
+    script_message $0547
+    script_command $5F
+    script_end
+Script_5709:: ; heuristic: event script entry or jump target; C0
+    script_op $01, $02, $03, $02
+    script_op $05, $00, $01
+    script_message $054A
+    script_op $03, $3C, $00
+    script_sound $28
+    script_message $0547
+    script_command $5F
+    script_end
+    INCBIN "dwm2-cobi-us.gbc", $04171D, $85
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_57A2:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0138
+    script_op $03, $1E, $00
+    script_command $7A
+    script_op $02, $00, $00, $05
+    script_message $4A36
+    script_skip_if_no Script_57BD
+    script_message $8A38
+    script_op $02, $00, $02, $05
+    script_op $05, $80, $00
+    script_end
+Script_57BD:: ; heuristic: event script entry or jump target; C0
+    script_message $8A37
+    script_set_flag $0117
+    script_command $59
+    script_message $0A3A
+    script_message $0A3B
+    script_op $01, $00, $00, $01
+    script_message $0D28
+    script_op $01, $00, $02, $01
+    script_op $05, $80, $00
+    script_message $0D29
+    script_end
+Script_57DC:: ; heuristic: event script entry or jump target; C0
+    script_op $05, $00, $03
+    script_command $61
+    script_end
+Script_57E1:: ; heuristic: event script entry or jump target; C0
+    script_command $62
+    script_end
+    db $00, $60, $0D, $78, $FF, $00, $61, $0D, $78, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_57ED:: ; heuristic: event script entry or jump target; C0
+Data_010_57ED:: ; address name
+    script_set_flag $012C
+    script_message $4B16
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_57F7:: ; heuristic: event script entry or jump target; C0
+    script_message $4B17
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_57FE:: ; heuristic: event script entry or jump target; C0
+    script_message $4B21
+    script_skip_if_no Script_5807
+    script_message $8B24
+    script_end
+Script_5807:: ; heuristic: event script entry or jump target; C0
+    script_message $8B23
+    script_end
+Script_580B:: ; heuristic: event script entry or jump target; C0
+    script_message $4B21
+    script_skip_if_no Script_5814
+    script_message $8B24
+    script_end
+Script_5814:: ; heuristic: event script entry or jump target; C0
+    script_message $8B22
+    script_command $6C
+    script_set_flag $0029
+    script_end
+Script_581C:: ; heuristic: event script entry or jump target; C0
+    script_message $4B53
+    script_skip_if_no Script_5825
+    script_message $8B55
+    script_end
+Script_5825:: ; heuristic: event script entry or jump target; C0
+    script_message $CB54
+    script_jump_data_bank $7F8B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_582C:: ; heuristic: event script entry or jump target; C0
+    script_message $4B57
+    script_skip_if_no Script_5835
+    script_message $8B59
+    script_end
+Script_5835:: ; heuristic: event script entry or jump target; C0
+    script_message $CB58
+    script_jump_data_bank $7F8B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_583C:: ; heuristic: event script entry or jump target; C0
+    script_message $4B5B
+    script_skip_if_no Script_5845
+    script_message $8B5D
+    script_end
+Script_5845:: ; heuristic: event script entry or jump target; C0
+    script_message $CB5C
+    script_jump_data_bank $7F8B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_584C:: ; heuristic: event script entry or jump target; C0
+    script_message $4B6A
+    script_skip_if_no Script_5855
+    script_message $8B6C
+    script_end
+Script_5855:: ; heuristic: event script entry or jump target; C0
+    script_message $CB6B
+    script_jump_data_bank $7F8B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_585C:: ; heuristic: event script entry or jump target; C0
+    script_message $4B70
+    script_skip_if_no Script_5865
+    script_message $8B72
+    script_end
+Script_5865:: ; heuristic: event script entry or jump target; C0
+    script_message $CB71
+    script_jump_data_bank $7F8B
+    db $FF, $00, $C3, $0B, $6F, $00, $4E, $0B, $0A, $3D, $00, $FF, $00, $C3, $0B, $6F
+    db $00, $B5, $0B, $0A, $3D, $00, $FF, $00, $C3, $0B, $6F, $00, $B7, $0B, $0A, $C8
+    db $00, $FF, $00, $C3, $0B, $6F, $00, $C0, $0B, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5895:: ; heuristic: event script entry or jump target; C0
+    script_sound $60
+    script_command $70
+    script_end
+Script_5899:: ; heuristic: event script entry or jump target; C0
+    script_message $4BAD
+    script_skip_if_no Script_58A2
+    script_message $8BAF
+    script_end
+Script_58A2:: ; heuristic: event script entry or jump target; C0
+    script_message $8BAE
+    script_command $7C
+    script_end
+    db $00, $B0, $4B, $06, $04, $00, $AF, $8B, $FF, $00, $AE, $8B, $7C, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_58B5:: ; heuristic: event script entry or jump target; C0
+    script_message $4B8F
+    script_skip_if_no Script_58BE
+    script_message $8B91
+    script_end
+Script_58BE:: ; heuristic: event script entry or jump target; C0
+    script_message $8B90
+    script_command $71
+    script_end
+Script_58C3:: ; heuristic: event script entry or jump target; C0
+    script_message $0B95
+    script_message $0B93
+    script_set_flag $003A
+    script_end
+Script_58CD:: ; heuristic: event script entry or jump target; C0
+    script_message $0B95
+    script_message $0BC2
+    script_set_flag $003A
+    script_end
+    db $00, $95, $0B, $00, $9A, $0B, $0A, $3A, $00, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_58E1:: ; heuristic: event script entry or jump target; C0
+    script_message $4B8F
+    script_skip_if_no Script_58EA
+    script_message $8B91
+    script_end
+Script_58EA:: ; heuristic: event script entry or jump target; C0
+    script_message $8B90
+    script_command $72
+    script_end
+Script_58EF:: ; heuristic: event script entry or jump target; C0
+    script_message $0B95
+    script_message $0B9D
+    script_set_flag $003C
+    script_end
+Script_58F9:: ; heuristic: event script entry or jump target; C0
+    script_message $0B95
+    script_message $0BC2
+    script_set_flag $003C
+    script_end
+Script_5903:: ; heuristic: event script entry or jump target; C0
+    script_message $4B7C
+    script_skip_if_no Script_590C
+    script_message $8B7E
+    script_end
+Script_590C:: ; heuristic: event script entry or jump target; C0
+    script_message $8B7D
+    script_set_flag $0192
+    script_end
+Script_5913:: ; heuristic: event script entry or jump target; C0
+    script_message $0B80
+    script_message $0B81
+    script_set_flag $0194
+    script_end
+Script_591D:: ; heuristic: event script entry or jump target; C0
+    script_message $4B83
+    script_skip_if_no Script_5926
+    script_message $8B7E
+    script_end
+Script_5926:: ; heuristic: event script entry or jump target; C0
+    script_message $8B84
+    script_set_flag $0195
+    script_end
+Script_592D:: ; heuristic: event script entry or jump target; C0
+    script_message $0B80
+    script_message $0B86
+    script_set_flag $0197
+    script_end
+Script_5937:: ; heuristic: event script entry or jump target; C0
+    script_message $4B83
+    script_skip_if_no Script_5940
+    script_message $8B7E
+    script_end
+Script_5940:: ; heuristic: event script entry or jump target; C0
+    script_message $8B87
+    script_set_flag $0198
+    script_end
+Script_5947:: ; heuristic: event script entry or jump target; C0
+    script_message $0B80
+    script_message $0B89
+    script_set_flag $019A
+    script_end
+Script_5951:: ; heuristic: event script entry or jump target; C0
+    script_message $4B83
+    script_skip_if_no Script_595A
+    script_message $8B7E
+    script_end
+Script_595A:: ; heuristic: event script entry or jump target; C0
+    script_message $8B8A
+    script_set_flag $019B
+    script_end
+Script_5961:: ; heuristic: event script entry or jump target; C0
+    script_message $0B80
+    script_message $0B8C
+    script_set_flag $019D
+    script_end
+Script_596B:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $012A
+    script_message $41D0
+    script_skip_if_no Script_5977
+    script_message $81D2
+    script_end
+Script_5977:: ; heuristic: event script entry or jump target; C0
+    script_message $81D1
+    script_end
+Script_597B:: ; heuristic: event script entry or jump target; C0
+    script_message $41D3
+    script_skip_if_no Script_5984
+    script_message $81D2
+    script_end
+Script_5984:: ; heuristic: event script entry or jump target; C0
+    script_message $81D1
+    script_end
+Script_5988:: ; heuristic: event script entry or jump target; C0
+    script_op $01, $02, $01, $06
+    script_op $05, $00, $03
+    script_message $01D4
+    script_op $0B, $82
+    script_message $0DDE
+    script_op $01, $02, $03, $06
+    script_set_flag $0187
+    script_end
+Script_599F:: ; heuristic: event script entry or jump target; C0
+    script_message $0D49
+    script_message $0D41
+    script_set_flag $01A4
+    script_end
+    db $00, $44, $0D, $00, $41, $0D, $0A, $A6, $01, $FF, $00, $FA, $40, $E7, $59, $66
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_59BA:: ; heuristic: event script entry or jump target; C0
+    script_message $41BB
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_59C1:: ; heuristic: event script entry or jump target; C0
+Data_010_59C1:: ; address name
+    script_message $4144
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_59C8:: ; heuristic: event script entry or jump target; C0
+    script_message $4145
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_59CF:: ; heuristic: event script entry or jump target; C0
+    script_message $4146
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_59D6:: ; heuristic: event script entry or jump target; C0
+    script_message $4147
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_59DD:: ; heuristic: event script entry or jump target; C0
+    script_message $4148
+    script_skip_if_no Script_59E6
+    script_message $814C
+    script_end
+Script_59E6:: ; heuristic: event script entry or jump target; C0
+    script_message $8149
+    script_set_flag $0042
+    script_command $1F
+    script_op $05, $83, $02
+    script_message $0153
+    script_set_flag $0043
+    script_end
+Script_59F7:: ; heuristic: event script entry or jump target; C0
+    script_message $4148
+    script_skip_if_no Script_5A00
+    script_message $814C
+    script_end
+Script_5A00:: ; heuristic: event script entry or jump target; C0
+    script_message $814B
+    script_set_flag $0042
+    script_end
+Script_5A07:: ; heuristic: event script entry or jump target; C0
+    script_message $4148
+    script_skip_if_no Script_5A10
+    script_message $814C
+    script_end
+Script_5A10:: ; heuristic: event script entry or jump target; C0
+    script_message $814A
+    script_set_flag $0042
+    script_end
+Script_5A17:: ; heuristic: event script entry or jump target; C0
+    script_message $014D
+    script_command $1F
+    script_op $05, $83, $02
+    script_message $0153
+    script_set_flag $0043
+    script_end
+Script_5A25:: ; heuristic: event script entry or jump target; C0
+    script_message $41BB
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5A2C:: ; heuristic: event script entry or jump target; C0
+    script_message $4160
+    script_skip_if_no Script_5A35
+    script_message $8D01
+    script_end
+Script_5A35:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0044
+    script_message $8D02
+    script_command $21
+    script_message $4161
+    script_skip_if_no Script_5A45
+    script_message $8163
+    script_end
+Script_5A45:: ; heuristic: event script entry or jump target; C0
+    script_message $8162
+    script_set_flag $0045
+    script_end
+Script_5A4C:: ; heuristic: event script entry or jump target; C0
+    script_message $4165
+    script_skip_if_no Script_5A55
+    script_message $8163
+    script_end
+Script_5A55:: ; heuristic: event script entry or jump target; C0
+    script_message $8162
+    script_set_flag $0045
+    script_end
+Script_5A5C:: ; heuristic: event script entry or jump target; C0
+    script_message $016C
+    script_op $02, $00, $02, $04
+    script_op $01, $01, $01, $01
+    script_op $01, $01, $00, $04
+    script_message $016D
+    script_op $0B, $80
+    script_message $016E
+    script_op $02, $01, $03, $01
+    script_op $02, $01, $01, $02
+    script_op $02, $01, $03, $02
+    script_op $02, $01, $01, $01
+    script_op $05, $81, $00
+    script_message $016F
+    script_op $02, $01, $03, $01
+    script_op $02, $01, $00, $05
+    script_set_flag $0049
+    script_end
+Script_5A95:: ; heuristic: event script entry or jump target; C0
+    script_message $0171
+    script_command $22
+    script_op $03, $1E, $00
+    script_op $02, $00, $02, $02
+    script_op $02, $00, $03, $01
+    script_op $02, $00, $02, $01
+    script_op $0C, $00
+    script_end
+Script_5AAB:: ; heuristic: event script entry or jump target; C0
+    script_message $0175
+    script_op $0D, $16
+    script_message $0176
+    script_op $05, $80, $02
+    script_op $0B, $80
+    script_message $0177
+    script_op $05, $81, $00
+    script_message $0178
+    script_op $0C, $01
+    script_set_flag $0053
+    script_command $25
+    script_set_flag $0054
+    script_message $0179
+    script_op $01, $00, $00, $03
+    script_end
+Script_5AD2:: ; heuristic: event script entry or jump target; C0
+    script_command $4D
+    script_end
+    db $4D, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5AD6:: ; heuristic: event script entry or jump target; C0
+    script_message $0181
+    script_set_flag $0055
+    script_op $01, $01, $00, $08
+    script_command $23
+    script_op $02, $00, $01, $03
+    script_op $05, $80, $02
+    script_message $0182
+    script_op $05, $81, $00
+    script_message $0183
+    script_op $0B, $80
+    script_message $0184
+    script_command $24
+    script_op $01, $00, $00, $01
+    script_op $01, $00, $01, $01
+    script_op $05, $00, $03
+    script_message $0187
+    script_op $01, $00, $00, $08
+    script_set_flag $0056
+    script_end
+Script_5B0D:: ; heuristic: event script entry or jump target; C0
+    script_message $4188
+    script_skip_if_no Script_5B16
+    script_message $818D
+    script_end
+Script_5B16:: ; heuristic: event script entry or jump target; C0
+    script_message $818C
+    script_message $018D
+    script_end
+Script_5B1D:: ; heuristic: event script entry or jump target; C0
+    script_message $4188
+    script_skip_if_no Script_5B26
+    script_message $818D
+    script_end
+Script_5B26:: ; heuristic: event script entry or jump target; C0
+    script_message $8189
+    script_message $018A
+    script_message $018B
+    script_message $0D03
+    script_command $1E
+    script_set_flag $0057
+    script_end
+Script_5B37:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0058
+    script_command $26
+    script_end
+Script_5B3C:: ; heuristic: event script entry or jump target; C0
+    script_message $0196
+    script_set_flag $0059
+    script_op $0D, $00
+    script_message $0198
+    script_command $27
+    script_end
+Script_5B49:: ; heuristic: event script entry or jump target; C0
+    script_message $0197
+    script_op $0D, $00
+    script_message $0198
+    script_command $27
+    script_end
+Script_5B53:: ; heuristic: event script entry or jump target; C0
+    script_sound $60
+    script_command $63
+    script_end
+Script_5B57:: ; heuristic: event script entry or jump target; C0
+    script_message $415C
+    script_skip_if_no Script_5B60
+    script_message $815E
+    script_end
+Script_5B60:: ; heuristic: event script entry or jump target; C0
+    script_message $815D
+    script_end
+Script_5B64:: ; heuristic: event script entry or jump target; C0
+    script_message $4D04
+    script_skip_if_no Script_5B6D
+    script_message $8D06
+    script_end
+Script_5B6D:: ; heuristic: event script entry or jump target; C0
+    script_message $8D05
+    script_end
+Script_5B71:: ; heuristic: event script entry or jump target; C0
+    script_op $03, $14, $00
+    script_command $79
+    script_end
+Script_5B76:: ; heuristic: event script entry or jump target; C0
+    script_message $4DA0
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5B7D:: ; heuristic: event script entry or jump target; C0
+    script_message $4147
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5B84:: ; heuristic: event script entry or jump target; C0
+    script_message $0806
+    script_command $28
+    script_message $0807
+    script_end
+Script_5B8C:: ; heuristic: event script entry or jump target; C0
+Data_010_5B8C:: ; address name
+    script_message $4809
+    script_jump_data_bank $6707
+    db $FF, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5B94:: ; heuristic: event script entry or jump target; C0
+    script_message $41BB
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5B9B:: ; heuristic: event script entry or jump target; C0
+    script_message $4818
+    script_skip_if_no Script_5BA4
+    script_message $881A
+    script_end
+Script_5BA4:: ; heuristic: event script entry or jump target; C0
+    script_message $8819
+    script_end
+Script_5BA8:: ; heuristic: event script entry or jump target; C0
+    script_message $4820
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5BAF:: ; heuristic: event script entry or jump target; C0
+Data_010_5BAF:: ; address name
+    script_message $4823
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5BB6:: ; heuristic: event script entry or jump target; C0
+    script_message $082C
+    script_message $082D
+    script_end
+Script_5BBD:: ; heuristic: event script entry or jump target; C0
+    script_message $41BB
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5BC4:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_op $03, $8C, $00
+    script_command $29
+    script_op $01, $00, $01, $01
+    script_op $01, $00, $00, $03
+    script_op $02, $01, $01, $01
+    script_op $02, $01, $00, $07
+    script_op $02, $02, $03, $01
+    script_op $02, $02, $00, $07
+    script_op $03, $1E, $00
+    script_sound $FF
+    script_end
+Script_5BE8:: ; heuristic: event script entry or jump target; C0
+    script_message $0838
+    script_op $0D, $01
+    script_command $2A
+    script_set_flag $0066
+    script_end
+Script_5BF2:: ; heuristic: event script entry or jump target; C0
+    script_message $0839
+    script_op $0D, $01
+    script_command $2A
+    script_set_flag $0066
+    script_end
+Script_5BFC:: ; heuristic: event script entry or jump target; C0
+    script_command $2A
+    script_end
+Script_5BFE:: ; heuristic: event script entry or jump target; C0
+    script_message $083A
+    script_op $0B, $83
+    script_message $483B
+    script_skip_if_no Script_5C0C
+    script_message $883E
+    script_end
+Script_5C0C:: ; heuristic: event script entry or jump target; C0
+    script_message $883C
+    script_op $03, $78, $00
+    script_message $083D
+    script_set_flag $006D
+    script_end
+Script_5C19:: ; heuristic: event script entry or jump target; C0
+    script_message $483F
+    script_skip_if_no Script_5C22
+    script_message $8841
+    script_end
+Script_5C22:: ; heuristic: event script entry or jump target; C0
+    script_message $8840
+    script_end
+Script_5C26:: ; heuristic: event script entry or jump target; C0
+    script_message $083A
+    script_op $0B, $83
+    script_message $0DC4
+    script_end
+Script_5C2F:: ; heuristic: event script entry or jump target; C0
+    script_message $4810
+    script_skip_if_no Script_5C38
+    script_message $8817
+    script_end
+Script_5C38:: ; heuristic: event script entry or jump target; C0
+    script_message $8811
+    script_command $2C
+    script_message $0816
+    script_end
+Script_5C40:: ; heuristic: event script entry or jump target; C0
+    script_message $4810
+    script_skip_if_no Script_5C49
+    script_message $8817
+    script_end
+Script_5C49:: ; heuristic: event script entry or jump target; C0
+    script_message $8811
+    script_command $2B
+    script_end
+Script_5C4E:: ; heuristic: event script entry or jump target; C0
+    script_message $4810
+    script_skip_if_no Script_5C57
+    script_message $8817
+    script_end
+Script_5C57:: ; heuristic: event script entry or jump target; C0
+    script_message $8811
+    script_command $2D
+    script_end
+Script_5C5C:: ; heuristic: event script entry or jump target; C0
+    script_message $4810
+    script_skip_if_no Script_5C65
+    script_message $8817
+    script_end
+Script_5C65:: ; heuristic: event script entry or jump target; C0
+    script_message $8892
+    script_end
+Script_5C69:: ; heuristic: event script entry or jump target; C0
+    script_message $484B
+    script_skip_if_no Script_5C72
+    script_message $884D
+    script_end
+Script_5C72:: ; heuristic: event script entry or jump target; C0
+    script_message $884C
+    script_command $2E
+    script_end
+Script_5C77:: ; heuristic: event script entry or jump target; C0
+    script_message $0855
+    script_set_flag $0070
+    script_end
+Script_5C7E:: ; heuristic: event script entry or jump target; C0
+    script_message $0DC5
+    script_message $0DC6
+    script_set_flag $005E
+    script_end
+Script_5C88:: ; heuristic: event script entry or jump target; C0
+    script_command $30
+    script_end
+Script_5C8A:: ; heuristic: event script entry or jump target; C0
+    script_message $0859
+    script_op $0D, $17
+    script_set_flag $0071
+    script_command $31
+    script_end
+Script_5C94:: ; heuristic: event script entry or jump target; C0
+    script_message $085A
+    script_op $0D, $17
+    script_set_flag $0072
+    script_command $31
+    script_end
+Script_5C9E:: ; heuristic: event script entry or jump target; C0
+    script_message $085C
+    script_op $0D, $17
+    script_set_flag $0073
+    script_command $31
+    script_end
+Script_5CA8:: ; heuristic: event script entry or jump target; C0
+    script_message $085E
+    script_op $0D, $02
+    script_message $0860
+    script_command $32
+    script_set_flag $0075
+    script_end
+Script_5CB5:: ; heuristic: event script entry or jump target; C0
+    script_message $085F
+    script_op $0D, $02
+    script_message $0860
+    script_command $32
+    script_set_flag $0075
+    script_end
+Script_5CC2:: ; heuristic: event script entry or jump target; C0
+    script_message $0887
+    script_command $33
+    script_set_flag $0076
+    script_end
+Script_5CCA:: ; heuristic: event script entry or jump target; C0
+    script_message $0863
+    script_command $34
+    script_end
+Script_5CCF:: ; heuristic: event script entry or jump target; C0
+    script_command $35
+    script_end
+Script_5CD1:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_message $0868
+    script_command $36
+    script_op $03, $1E, $00
+    script_sound $FF
+    script_end
+Script_5CDD:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_op $0B, $80
+    script_message $0869
+    script_op $05, $80, $01
+    script_op $02, $01, $03, $03
+    script_op $02, $01, $02, $01
+    script_op $05, $81, $01
+    script_op $02, $02, $03, $03
+    script_op $02, $02, $00, $03
+    script_op $05, $82, $01
+    script_message $086A
+    script_command $37
+    script_sound $65
+    script_op $0C, $00
+    script_op $03, $0F, $00
+    script_sound $65
+    script_op $0C, $01
+    script_op $03, $0F, $00
+    script_sound $65
+    script_op $0C, $02
+    script_set_flag $007C
+    script_op $03, $5A, $00
+    script_sound $FF
+    script_end
+Script_5D1C:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_message $086B
+    script_command $38
+    script_sound $00
+    script_message $0891
+    script_sound $65
+    script_op $03, $5A, $00
+    script_sound $FF
+    script_end
+Script_5D2F:: ; heuristic: event script entry or jump target; C0
+    script_op $03, $8C, $00
+    script_command $39
+    script_sound $FF
+    script_end
+Script_5D36:: ; heuristic: event script entry or jump target; C0
+    script_message $488E
+    script_skip_if_no Script_5D3F
+    script_message $8890
+    script_end
+Script_5D3F:: ; heuristic: event script entry or jump target; C0
+    script_message $888F
+    script_command $2F
+    script_end
+Script_5D44:: ; heuristic: event script entry or jump target; C0
+    script_message $0893
+    script_op $0D, $1E
+    script_set_flag $00F4
+    script_end
+Script_5D4D:: ; heuristic: event script entry or jump target; C0
+    script_message $4DA1
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5D54:: ; heuristic: event script entry or jump target; C0
+    script_message $4147
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5D5B:: ; heuristic: event script entry or jump target; C0
+    script_message $4308
+    script_skip_if_no Script_5D64
+    script_message $830A
+    script_end
+Script_5D64:: ; heuristic: event script entry or jump target; C0
+    script_message $8309
+    script_end
+Script_5D68:: ; heuristic: event script entry or jump target; C0
+Data_010_5D68:: ; address name
+    script_message $4310
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5D6F:: ; heuristic: event script entry or jump target; C0
+    script_message $41BB
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5D76:: ; heuristic: event script entry or jump target; C0
+    script_message $0316
+    script_message $4317
+    script_skip_if_no Script_5D82
+    script_message $831A
+    script_end
+Script_5D82:: ; heuristic: event script entry or jump target; C0
+    script_message $8318
+    script_command $3F
+    script_set_flag $01E8
+    script_end
+Script_5D8A:: ; heuristic: event script entry or jump target; C0
+    script_message $031C
+    script_op $01, $00, $02, $01
+    script_op $0C, $00
+    script_set_flag $0081
+    script_end
+Script_5D97:: ; heuristic: event script entry or jump target; C0
+    script_message $0321
+    script_set_flag $0083
+    script_command $40
+    script_op $01, $01, $00, $02
+    script_set_flag $0082
+    script_end
+Script_5DA6:: ; heuristic: event script entry or jump target; C0
+    script_message $0359
+    script_command $42
+    script_sound $28
+    script_set_flag $0087
+    script_end
+Script_5DB0:: ; heuristic: event script entry or jump target; C0
+Data_010_5DB0:: ; address name
+    script_message $4331
+    script_jump_data_bank $6659
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5DB7:: ; heuristic: event script entry or jump target; C0
+Data_010_5DB7:: ; address name
+    script_message $4332
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5DBE:: ; heuristic: event script entry or jump target; C0
+Data_010_5DBE:: ; address name
+    script_message $4333
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5DC5:: ; heuristic: event script entry or jump target; C0
+    script_message $41BB
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5DCC:: ; heuristic: event script entry or jump target; C0
+    script_message $4820
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5DD3:: ; heuristic: event script entry or jump target; C0
+    script_sound $65
+    script_command $41
+    script_op $02, $01, $03, $04
+    script_op $02, $02, $01, $03
+    script_op $0B, $81
+    script_message $0349
+    script_op $0B, $82
+    script_message $034A
+    script_op $0B, $81
+    script_message $034B
+    script_op $0B, $82
+    script_message $034C
+    script_op $02, $02, $03, $03
+    script_message $034D
+    script_op $02, $01, $01, $04
+    script_command $7E
+    script_set_flag $0086
+    script_end
+Script_5E02:: ; heuristic: event script entry or jump target; C0
+    script_command $41
+    script_op $02, $01, $03, $04
+    script_op $02, $02, $01, $03
+    script_op $0B, $81
+    script_message $0349
+    script_op $0B, $82
+    script_message $034A
+    script_op $0B, $81
+    script_message $034B
+    script_op $0B, $82
+    script_message $034C
+    script_op $02, $02, $03, $03
+    script_message $034D
+    script_op $02, $01, $01, $04
+    script_command $7E
+    script_set_flag $0086
+    script_end
+Script_5E2F:: ; heuristic: event script entry or jump target; C0
+    script_message $0360
+    script_op $05, $81, $02
+    script_command $43
+    script_end
+Script_5E37:: ; heuristic: event script entry or jump target; C0
+    script_message $0363
+    script_op $05, $81, $02
+    script_command $43
+    script_message $0364
+    script_op $02, $01, $02, $03
+    script_op $0C, $01
+    script_op $03, $1E, $00
+    script_set_flag $008A
+    script_sound $FF
+    script_op $02, $00, $03, $04
+    script_op $02, $00, $02, $05
+    script_op $0C, $00
+    script_end
+Script_5E5A:: ; heuristic: event script entry or jump target; C0
+    script_command $44
+    script_message $0365
+    script_op $0B, $81
+    script_message $0366
+    script_set_flag $008B
+    script_end
+Script_5E67:: ; heuristic: event script entry or jump target; C0
+    script_message $0370
+    script_command $45
+    script_op $05, $81, $02
+    script_op $0B, $81
+    script_message $0374
+    script_set_flag $0094
+    script_end
+Script_5E77:: ; heuristic: event script entry or jump target; C0
+    script_message $0372
+    script_command $45
+    script_op $05, $81, $02
+    script_op $0B, $81
+    script_message $0374
+    script_set_flag $0094
+    script_end
+Script_5E87:: ; heuristic: event script entry or jump target; C0
+    script_message $41BB
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5E8E:: ; heuristic: event script entry or jump target; C0
+Data_010_5E8E:: ; address name
+    script_message $438B
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5E95:: ; heuristic: event script entry or jump target; C0
+    script_message $0394
+    script_sound $28
+    script_command $64
+    script_op $03, $5A, $00
+    script_op $02, $03, $02, $04
+    script_op $05, $83, $01
+    script_message $0395
+    script_op $01, $03, $00, $01
+    script_op $05, $83, $02
+    script_op $03, $1E, $00
+    script_op $02, $03, $02, $01
+    script_sound $63
+    script_op $02, $01, $02, $01
+    script_op $0C, $01
+    script_op $01, $03, $00, $01
+    script_op $05, $83, $02
+    script_op $03, $1E, $00
+    script_op $02, $03, $02, $01
+    script_sound $63
+    script_op $02, $02, $02, $02
+    script_op $0C, $02
+    script_op $03, $1E, $00
+    script_op $02, $03, $02, $03
+    script_op $0C, $03
+    script_op $03, $1E, $00
+    script_sound $FF
+    script_set_flag $0095
+    script_end
+Script_5EE6:: ; heuristic: event script entry or jump target; C0
+    script_message $039D
+    script_op $01, $00, $02, $01
+    script_op $01, $00, $01, $01
+    script_op $05, $80, $00
+    script_end
+Script_5EF5:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_command $46
+    script_message $03A2
+    script_op $05, $80, $01
+    script_message $03A3
+    script_op $05, $80, $00
+    script_message $03A4
+    script_set_flag $0096
+    script_end
+Script_5F0B:: ; heuristic: event script entry or jump target; C0
+Data_010_5F0B:: ; address name
+    script_message $43B3
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5F12:: ; heuristic: event script entry or jump target; C0
+    script_message $43B5
+    script_skip_if_no Script_5F1B
+    script_message $83B7
+    script_end
+Script_5F1B:: ; heuristic: event script entry or jump target; C0
+    script_message $83B6
+    script_end
+    db $00, $BB, $41, $E7, $0B, $69, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5F26:: ; heuristic: event script entry or jump target; C0
+    script_message $03B0
+    script_op $0B, $80
+    script_message $03B1
+    script_op $01, $00, $02, $01
+    script_op $0C, $00
+    script_set_flag $0097
+    script_end
+Script_5F38:: ; heuristic: event script entry or jump target; C0
+    script_message $03B0
+    script_op $0B, $81
+    script_message $03B1
+    script_op $01, $01, $02, $01
+    script_op $0C, $01
+    script_set_flag $0097
+    script_end
+    INCBIN "dwm2-cobi-us.gbc", $041F4A, $5B
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5FA5:: ; heuristic: event script entry or jump target; C0
+    script_message $0D3C
+    script_message $0AD1
+    script_command $48
+    script_end
+Script_5FAD:: ; heuristic: event script entry or jump target; C0
+    script_message $03A3
+    script_message $0DD2
+    script_message $0AD3
+    script_command $48
+    script_end
+Script_5FB8:: ; heuristic: event script entry or jump target; C0
+    script_message $0AEA
+    script_op $01, $02, $01, $02
+    script_op $0C, $02
+    script_op $04, $01, $03
+    script_command $49
+    script_set_flag $01F1
+    script_end
+    db $66, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5FCB:: ; heuristic: event script entry or jump target; C0
+    script_command $66
+    script_end
+Script_5FCD:: ; heuristic: event script entry or jump target; C0
+    script_message $0A01
+    script_command $4A
+    script_end
+Script_5FD2:: ; heuristic: event script entry or jump target; C0
+    script_command $4A
+    script_end
+    db $4B, $FF, $00, $20, $48, $E7, $D4, $77, $FF, $00, $19, $03, $0C, $01, $0A, $80
+    db $00, $FF, $7F, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5FE8:: ; heuristic: event script entry or jump target; C0
+    script_message $442E
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_5FEF:: ; heuristic: event script entry or jump target; C0
+    script_message $040B
+    script_command $4E
+    script_set_flag $00A0
+    script_end
+Script_5FF7:: ; heuristic: event script entry or jump target; C0
+    script_message $040B
+    script_command $4E
+    script_end
+Script_5FFC:: ; heuristic: event script entry or jump target; C0
+    script_message $0411
+    script_sound $66
+    script_command $4F
+    script_end
+Script_6003:: ; heuristic: event script entry or jump target; C0
+Data_010_6003:: ; address name
+    script_message $41BB
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_600A:: ; heuristic: event script entry or jump target; C0
+    script_message $0412
+    script_message $0DE6
+    script_command $50
+    script_set_flag $00A4
+    script_end
+Script_6015:: ; heuristic: event script entry or jump target; C0
+    script_message $041D
+    script_op $01, $00, $01, $01
+    script_op $05, $80, $03
+    script_end
+Script_6020:: ; heuristic: event script entry or jump target; C0
+    script_message $4426
+    script_skip_if_no Script_6029
+    script_message $8428
+    script_end
+Script_6029:: ; heuristic: event script entry or jump target; C0
+    script_message $8427
+    script_end
+Script_602D:: ; heuristic: event script entry or jump target; C0
+    script_message $4426
+    script_skip_if_no Script_6036
+    script_message $8428
+    script_end
+Script_6036:: ; heuristic: event script entry or jump target; C0
+    script_message $8429
+    script_end
+Script_603A:: ; heuristic: event script entry or jump target; C0
+    script_message $442E
+    script_jump_data_bank $77D4
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_6041:: ; heuristic: event script entry or jump target; C0
+Data_010_6041:: ; address name
+    script_message $442D
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_6048:: ; heuristic: event script entry or jump target; C0
+Data_010_6048:: ; address name
+    script_message $4432
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_604F:: ; heuristic: event script entry or jump target; C0
+    script_message $0433
+    script_command $51
+    script_op $0D, $05
+    script_set_flag $00A8
+    script_end
+Script_6059:: ; heuristic: event script entry or jump target; C0
+    script_message $0433
+    script_op $0D, $05
+    script_set_flag $00A8
+    script_end
+Script_6062:: ; heuristic: event script entry or jump target; C0
+    script_message $4439
+    script_skip_if_no Script_606B
+    script_message $843B
+    script_end
+Script_606B:: ; heuristic: event script entry or jump target; C0
+    script_message $843A
+    script_end
+Script_606F:: ; heuristic: event script entry or jump target; C0
+    script_message $4447
+    script_skip_if_no Script_6078
+    script_message $8449
+    script_end
+Script_6078:: ; heuristic: event script entry or jump target; C0
+    script_message $8448
+    script_end
+Script_607C:: ; heuristic: event script entry or jump target; C0
+Data_010_607C:: ; address name
+    script_message $444B
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_6083:: ; heuristic: event script entry or jump target; C0
+    script_message $444C
+    script_jump_data_bank $77D4
+    db $FF, $00, $51, $44, $E7, $0B, $69, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_6091:: ; heuristic: event script entry or jump target; C0
+    script_message $045A
+    script_command $52
+    script_end
+Script_6096:: ; heuristic: event script entry or jump target; C0
+    script_message $045D
+    script_set_flag $00AD
+    script_op $0D, $06
+    script_message $045F
+    script_op $01, $00, $00, $02
+    script_op $01, $00, $03, $02
+    script_op $0C, $00
+    script_set_flag $00AE
+    script_command $CE
+    script_end
+Script_60B0:: ; heuristic: event script entry or jump target; C0
+    script_message $045E
+    script_op $0D, $06
+    script_message $045F
+    script_op $01, $00, $00, $02
+    script_op $01, $00, $03, $02
+    script_op $0C, $00
+    script_set_flag $00AE
+    script_command $CE
+    script_end
+Script_60C7:: ; heuristic: event script entry or jump target; C0
+    script_message $0460
+    script_op $0D, $07
+    script_command $67
+    script_end
+Script_60CE:: ; heuristic: event script entry or jump target; C0
+    script_command $53
+    script_end
+Script_60D0:: ; heuristic: event script entry or jump target; C0
+    script_sound $9B
+    script_command $54
+    script_end
+Script_60D4:: ; heuristic: event script entry or jump target; C0
+    script_message $4464
+    script_skip_if_no Script_60DD
+    script_message $849F
+    script_end
+Script_60DD:: ; heuristic: event script entry or jump target; C0
+    script_sound $66
+    script_op $03, $3C, $00
+    script_message $8465
+    script_command $55
+    script_set_flag $00B2
+    script_end
+Script_60EA:: ; heuristic: event script entry or jump target; C0
+    script_message $0466
+    script_set_flag $00B3
+    script_op $0D, $08
+    script_message $0468
+    script_command $56
+    script_set_flag $00B4
+    script_set_flag $00C5
+    script_set_flag $00C6
+    script_set_flag $00C7
+    script_end
+Script_6103:: ; heuristic: event script entry or jump target; C0
+    script_message $0467
+    script_op $0D, $08
+    script_message $0468
+    script_command $56
+    script_set_flag $00B4
+    script_set_flag $00C5
+    script_set_flag $00C6
+    script_set_flag $00C7
+    script_end
+Script_6119:: ; heuristic: event script entry or jump target; C0
+    script_message $0469
+    script_op $01, $00, $02, $01
+    script_op $0C, $00
+    script_set_flag $00B6
+    script_end
+Script_6126:: ; heuristic: event script entry or jump target; C0
+    script_message $0471
+    script_command $68
+    script_op $05, $80, $00
+    script_set_flag $00B8
+    script_end
+Script_6131:: ; heuristic: event script entry or jump target; C0
+    script_command $69
+    script_end
+Script_6133:: ; heuristic: event script entry or jump target; C0
+    script_message $047A
+    script_message $447B
+    script_message $C47C
+    script_message $847D
+    script_message $047E
+    script_set_flag $00C0
+    script_command $57
+    script_set_flag $00C1
+    script_end
+Script_614A:: ; heuristic: event script entry or jump target; C0
+    script_message $047F
+    script_command $57
+    script_set_flag $00C1
+    script_end
+Script_6152:: ; heuristic: event script entry or jump target; C0
+    script_sound $28
+    script_op $04, $02, $04
+    script_op $0B, $80
+    script_op $01, $00, $00, $01
+    script_message $0481
+    script_op $01, $00, $03, $01
+    script_op $03, $14, $00
+    script_op $01, $00, $01, $01
+    script_op $03, $14, $00
+    script_op $01, $00, $01, $01
+    script_op $03, $14, $00
+    script_op $01, $00, $01, $01
+    script_op $03, $14, $00
+    script_op $01, $00, $03, $01
+    script_op $03, $14, $00
+    script_op $05, $80, $00
+    script_message $0482
+    script_command $58
+    script_end
+Script_618B:: ; heuristic: event script entry or jump target; C0
+    script_sound $65
+    script_op $01, $01, $00, $04
+    script_op $03, $0A, $00
+    script_set_flag $00C4
+    script_end
+Script_6198:: ; heuristic: event script entry or jump target; C0
+    script_message $04A7
+    script_command $7D
+    script_end
+Script_619D:: ; heuristic: event script entry or jump target; C0
+    script_message $4550
+    script_skip_if_no Script_61A6
+    script_message $855D
+    script_end
+Script_61A6:: ; heuristic: event script entry or jump target; C0
+    script_message $855C
+    script_end
+Script_61AA:: ; heuristic: event script entry or jump target; C0
+    script_message $4550
+    script_skip_if_no Script_61B3
+    script_message $855D
+    script_end
+Script_61B3:: ; heuristic: event script entry or jump target; C0
+    script_message $8551
+    script_message $0552
+    script_op $05, $80, $02
+    script_command $5C
+    script_message $0553
+    script_op $01, $01, $02, $05
+    script_op $03, $1E, $00
+    script_op $0C, $01
+    script_op $05, $80, $00
+    script_message $0554
+    script_set_flag $00D2
+    script_op $0D, $1D
+    script_message $0556
+    script_command $5D
+    script_set_flag $00D3
+    script_end
+Script_61DC:: ; heuristic: event script entry or jump target; C0
+    script_message $0555
+    script_op $0D, $1D
+    script_message $0556
+    script_command $5D
+    script_set_flag $00D3
+    script_end
+Script_61E9:: ; heuristic: event script entry or jump target; C0
+    script_message $0557
+    script_set_flag $00D0
+    script_op $0D, $0A
+    script_message $0559
+    script_command $5E
+    script_end
+Script_61F6:: ; heuristic: event script entry or jump target; C0
+    script_message $0558
+    script_op $0D, $0A
+    script_message $0559
+    script_command $5E
+    script_end
+Script_6200:: ; heuristic: event script entry or jump target; C0
+    script_op $05, $80, $00
+    script_command $CC
+    script_op $01, $00, $02, $05
+    script_set_flag $0140
+    script_end
+Script_620C:: ; heuristic: event script entry or jump target; C0
+    script_message $0704
+    script_op $0B, $81
+    script_message $0705
+    script_set_flag $0143
+    script_end
+Script_6218:: ; heuristic: event script entry or jump target; C0
+    script_message $0710
+    script_command $C0
+    script_message $0711
+    script_op $0B, $82
+    script_message $0712
+    script_op $01, $02, $00, $02
+    script_set_flag $0146
+    script_end
+Script_622C:: ; heuristic: event script entry or jump target; C0
+    script_message $0713
+    script_command $C0
+    script_message $0711
+    script_op $0B, $82
+    script_message $0712
+    script_op $01, $02, $00, $02
+    script_set_flag $0146
+    script_end
+Script_6240:: ; heuristic: event script entry or jump target; C0
+    script_message $0716
+    script_op $02, $02, $00, $04
+    script_set_flag $0147
+    script_end
+Script_624B:: ; heuristic: event script entry or jump target; C0
+    script_op $05, $80, $00
+    script_op $0B, $80
+    script_message $071D
+    script_op $02, $00, $02, $05
+    script_op $03, $1E, $00
+    script_op $05, $00, $00
+    script_message $071E
+    script_op $03, $1E, $00
+    script_message $071F
+    script_set_flag $0148
+    script_end
+Script_626A:: ; heuristic: event script entry or jump target; C0
+    script_op $0B, $82
+    script_message $0720
+    script_op $0B, $83
+    script_message $0721
+    script_op $01, $01, $00, $01
+    script_op $05, $82, $02
+    script_op $05, $83, $01
+    script_message $0722
+    script_op $01, $01, $02, $01
+    script_op $01, $01, $01, $01
+    script_op $05, $81, $02
+    script_set_flag $0149
+    script_end
+Script_6290:: ; heuristic: event script entry or jump target; C0
+    script_message $0724
+    script_set_flag $014A
+    script_op $0D, $09
+    script_message $0754
+    script_command $C1
+    script_set_flag $014B
+    script_end
+Script_62A0:: ; heuristic: event script entry or jump target; C0
+    script_message $0727
+    script_op $0D, $09
+    script_message $0754
+    script_command $C1
+    script_set_flag $014B
+    script_end
+Script_62AD:: ; heuristic: event script entry or jump target; C0
+    script_message $0728
+    script_op $02, $01, $00, $07
+    script_op $0B, $80
+    script_message $0729
+    script_set_flag $014C
+    script_end
+Script_62BD:: ; heuristic: event script entry or jump target; C0
+    script_message $4739
+    script_op $0D, $0B
+    script_message $073B
+    script_command $C3
+    script_message $073C
+    script_op $02, $02, $03, $01
+    script_op $02, $02, $02, $01
+    script_op $02, $02, $03, $01
+    script_op $05, $82, $02
+    script_op $03, $1E, $00
+    script_op $05, $81, $01
+    script_op $03, $1E, $00
+    script_op $05, $81, $03
+    script_op $03, $1E, $00
+    script_op $05, $81, $01
+    script_op $03, $1E, $00
+    script_op $05, $81, $03
+    script_message $073D
+    script_op $03, $1E, $00
+    script_op $05, $81, $00
+    script_message $073E
+    script_message $073F
+    script_op $05, $82, $00
+    script_message $0740
+    script_set_flag $0151
+    script_set_flag $0203
+    script_command $C6
+    script_op $05, $80, $03
+    script_message $0741
+    script_end
+Script_6313:: ; heuristic: event script entry or jump target; C0
+    script_message $073A
+    script_op $0D, $0B
+    script_message $073B
+    script_command $C3
+    script_message $073C
+    script_op $02, $02, $03, $01
+    script_op $02, $02, $02, $01
+    script_op $02, $02, $03, $01
+    script_op $05, $82, $02
+    script_op $03, $1E, $00
+    script_op $05, $81, $01
+    script_op $03, $1E, $00
+    script_op $05, $81, $03
+    script_op $03, $1E, $00
+    script_op $05, $81, $01
+    script_op $03, $1E, $00
+    script_op $05, $81, $03
+    script_message $073D
+    script_op $03, $1E, $00
+    script_op $05, $81, $00
+    script_message $073E
+    script_message $073F
+    script_op $05, $82, $00
+    script_message $0740
+    script_set_flag $0151
+    script_set_flag $0203
+    script_command $C6
+    script_op $05, $80, $03
+    script_message $0741
+    script_end
+Script_6369:: ; heuristic: event script entry or jump target; C0
+    script_message $0734
+    script_message $0735
+    script_message $0736
+    script_op $02, $02, $02, $02
+    script_command $C2
+    script_set_flag $014F
+    script_end
+Script_637B:: ; heuristic: event script entry or jump target; C0
+Data_010_637B:: ; address name
+    script_message $470E
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_6382:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $0142
+    script_message $4703
+Script_6388:: ; heuristic: event script entry or jump target; C0
+    script_skip_if_no Script_6392
+    script_op $0B, $81
+    script_message $CC57
+    script_jump Script_6388
+Script_6392:: ; heuristic: event script entry or jump target; C0
+    script_op $0B, $81
+    script_message $8C56
+    script_end
+Script_6398:: ; heuristic: event script entry or jump target; C0
+    script_op $0B, $80
+    script_message $4759
+    script_skip_if_no Script_63A6
+    script_message $875D
+    script_set_flag $0159
+    script_end
+Script_63A6:: ; heuristic: event script entry or jump target; C0
+    script_message $875B
+    script_op $01, $00, $03, $02
+    script_op $05, $80, $01
+    script_op $03, $1E, $00
+    script_op $0B, $80
+    script_message $075C
+    script_set_flag $015A
+    script_end
+Script_63BC:: ; heuristic: event script entry or jump target; C0
+    script_message $475E
+    script_skip_if_no Script_63C5
+    script_message $875D
+    script_end
+Script_63C5:: ; heuristic: event script entry or jump target; C0
+    script_message $875B
+    script_op $01, $00, $03, $02
+    script_op $05, $80, $01
+    script_op $03, $1E, $00
+    script_op $0B, $80
+    script_message $075C
+    script_set_flag $015A
+    script_end
+Script_63DB:: ; heuristic: event script entry or jump target; C0
+    script_message $0767
+    script_op $0D, $1F
+    script_set_flag $015D
+    script_end
+Script_63E4:: ; heuristic: event script entry or jump target; C0
+    script_message $0767
+    script_op $0D, $1F
+    script_set_flag $015E
+    script_end
+Script_63ED:: ; heuristic: event script entry or jump target; C0
+    script_message $0769
+    script_message $076A
+    script_end
+Script_63F4:: ; heuristic: event script entry or jump target; C0
+    script_message $076D
+    script_message $076E
+    script_end
+Script_63FB:: ; heuristic: event script entry or jump target; C0
+    script_message $0770
+    script_message $0771
+    script_end
+Script_6402:: ; heuristic: event script entry or jump target; C0
+    script_message $0773
+    script_message $0774
+    script_end
+Script_6409:: ; heuristic: event script entry or jump target; C0
+    script_message $0776
+    script_op $03, $1E, $00
+    script_message $0777
+    script_set_flag $0162
+    script_end
+Script_6416:: ; heuristic: event script entry or jump target; C0
+    script_message $076B
+    script_command $C4
+    script_end
+Script_641B:: ; heuristic: event script entry or jump target; C0
+    script_message $077D
+    script_message $077E
+    script_message $077F
+    script_op $02, $00, $01, $03
+    script_command $C5
+    script_set_flag $0165
+    script_set_flag $0204
+    script_end
+Script_6430:: ; heuristic: event script entry or jump target; C0
+    script_message $0795
+    script_message $0796
+    script_end
+Script_6437:: ; heuristic: event script entry or jump target; C0
+    script_message $0797
+    script_message $0798
+    script_end
+Script_643E:: ; heuristic: event script entry or jump target; C0
+Data_010_643E:: ; address name
+    script_message $479D
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_6445:: ; heuristic: event script entry or jump target; C0
+    script_message $479E
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_644C:: ; heuristic: event script entry or jump target; C0
+    script_op $0B, $81
+    script_message $47A0
+    script_skip_if_no Script_645A
+    script_message $87A2
+    script_set_flag $01B0
+    script_end
+Script_645A:: ; heuristic: event script entry or jump target; C0
+    script_message $87A1
+    script_op $01, $01, $03, $02
+    script_op $01, $01, $00, $06
+    script_set_flag $01B1
+    script_end
+Script_6469:: ; heuristic: event script entry or jump target; C0
+    script_message $47A3
+    script_skip_if_no Script_6472
+    script_message $87A2
+    script_end
+Script_6472:: ; heuristic: event script entry or jump target; C0
+    script_message $87A1
+    script_op $01, $01, $03, $02
+    script_op $01, $01, $00, $06
+    script_set_flag $01B1
+    script_end
+Script_6481:: ; heuristic: event script entry or jump target; C0
+    script_message $47AB
+    script_skip_if_no Script_648A
+    script_message $87AD
+    script_end
+Script_648A:: ; heuristic: event script entry or jump target; C0
+    script_message $87AC
+    script_end
+Script_648E:: ; heuristic: event script entry or jump target; C0
+    script_message $07B6
+    script_command $C7
+    script_set_flag $01B9
+    script_end
+Script_6496:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $01BA
+    script_message $07B9
+    script_op $0D, $11
+    script_message $07BC
+    script_command $C8
+    script_set_flag $01BB
+    script_end
+Script_64A6:: ; heuristic: event script entry or jump target; C0
+    script_message $07BB
+    script_op $0D, $11
+    script_message $07BC
+    script_command $C8
+    script_set_flag $01BB
+    script_end
+Script_64B3:: ; heuristic: event script entry or jump target; C0
+    script_message $07BD
+    script_op $0C, $00
+    script_op $0C, $02
+    script_set_flag $01BC
+    script_end
+Script_64BE:: ; heuristic: event script entry or jump target; C0
+    script_message $07C3
+    script_op $0B, $81
+    script_message $07C4
+    script_set_flag $01BD
+    script_end
+Script_64CA:: ; heuristic: event script entry or jump target; C0
+    script_message $07CA
+    script_op $0B, $80
+    script_message $07CB
+    script_message $07CC
+    script_message $07CD
+    script_set_flag $01BE
+    script_end
+Script_64DC:: ; heuristic: event script entry or jump target; C0
+    script_message $07CF
+    script_message $07D1
+    script_end
+Script_64E3:: ; heuristic: event script entry or jump target; C0
+    script_message $07CF
+    script_message $07D0
+    script_set_flag $01BF
+    script_end
+Script_64ED:: ; heuristic: event script entry or jump target; C0
+    script_message $07DA
+    script_command $C7
+    script_op $02, $01, $00, $02
+    script_op $02, $01, $01, $01
+    script_op $02, $01, $00, $04
+    script_set_flag $01C0
+    script_end
+Script_6501:: ; heuristic: event script entry or jump target; C0
+    script_message $07DC
+    script_command $C9
+    script_set_flag $01C1
+    script_end
+Script_6509:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $01C2
+    script_message $0CDE
+    script_op $0D, $12
+    script_message $0CE0
+    script_command $CA
+    script_op $01, $01, $02, $02
+    script_op $05, $00, $00
+    script_message $0CE1
+    script_op $01, $01, $00, $02
+    script_op $0C, $01
+    script_set_flag $01C3
+    script_set_flag $0205
+    script_end
+Script_652C:: ; heuristic: event script entry or jump target; C0
+    script_message $0CDF
+    script_op $0D, $12
+    script_message $0CE0
+    script_command $CA
+    script_op $01, $01, $02, $02
+    script_op $05, $00, $00
+    script_message $0CE1
+    script_op $01, $01, $00, $02
+    script_op $0C, $01
+    script_set_flag $01C3
+    script_set_flag $0205
+    script_end
+Script_654C:: ; heuristic: event script entry or jump target; C0
+    script_message $0CEF
+    script_op $0B, $00
+    script_message $0CF0
+    script_set_flag $01C4
+    script_end
+Script_6558:: ; heuristic: event script entry or jump target; C0
+    script_set_flag $01C6
+    script_message $4CF5
+    script_skip_if_no Script_6564
+    script_message $8CF7
+    script_end
+Script_6564:: ; heuristic: event script entry or jump target; C0
+    script_message $8CF6
+    script_op $0D, $13
+    script_message $0CF9
+    script_op $01, $01, $03, $02
+    script_op $01, $01, $00, $06
+    script_set_flag $01C7
+    script_end
+Script_6578:: ; heuristic: event script entry or jump target; C0
+    script_message $4CF8
+    script_skip_if_no Script_6581
+    script_message $8CF7
+    script_end
+Script_6581:: ; heuristic: event script entry or jump target; C0
+    script_message $8CF6
+    script_op $0D, $13
+    script_message $0CF9
+    script_op $01, $01, $03, $02
+    script_op $01, $01, $00, $06
+    script_set_flag $01C7
+    script_end
+    db $00, $48, $0C, $0D, $32, $74, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_659C:: ; heuristic: event script entry or jump target; C0
+    script_command $CB
+    script_end
+    db $00, $49, $0C, $CD, $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_65A3:: ; heuristic: event script entry or jump target; C0
+    script_message $4123
+    script_jump_data_bank $6707
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_65AA:: ; heuristic: event script entry or jump target; C0
+Data_010_65AA:: ; address name
+    script_message $4124
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_65B1:: ; heuristic: event script entry or jump target; C0
+    script_message $4128
+    script_jump_data_bank $690B
+    db $FF
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_65B8:: ; heuristic: event script entry or jump target; C0
+    script_message $4127
+    script_jump_data_bank $77D4
+    db $FF
 
 ; runs one frame of script command type E0 (entry 223 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)

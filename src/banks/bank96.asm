@@ -530,11 +530,7 @@ Data_096_547E:: ; heuristic: target of a monotone pointer table; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Quick, give the", $F1
-    db "medicine to "
-
-Data_096_549D:: ; heuristic: bank from RAM variable $D7FE; C0
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "our", $FA, $F7
+    db "medicine to our", $FA, $F7
     db $EF, $EE, "Queen Helen.", $EF, $EE, "Please, hurry!", $F7
     db $F0
 
@@ -560,11 +556,7 @@ Data_096_554B:: ; heuristic: target of a monotone pointer table; C0
     db " Queen Helen isn't", $F1
     db "bedridden by", $FA, $F7
     db $EF, $EE, "nightmares", $EF, $EE, "anymore.", $FA, $F7
-    db $EF, $EE, "From now on, it's", $EF
-
-Data_096_5598:: ; heuristic: bank from RAM variable $D7FE; C0
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EE, "our turn to do our", $FA, $F7
+    db $EF, $EE, "From now on, it's", $EF, $EE, "our turn to do our", $FA, $F7
     db $EF, $EE, "best for Queen", $EF, $EE, "Helen.", $F7
     db $F0
 

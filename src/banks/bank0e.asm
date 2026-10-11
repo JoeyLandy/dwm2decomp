@@ -921,11 +921,7 @@ Data_00E_556E:: ; heuristic: target of a monotone pointer table; C0
 
 Data_00E_557B:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "ATKDEFGLINW"
-
-Data_00E_5586:: ; heuristic: bank from RAM variable $D7FE; C0
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "MextvlBas        "
+    db "ATKDEFGLINWMextvlBas        "
     db $A2, $90, $F0
 
 Data_00E_559A:: ; heuristic: target of a monotone pointer table; C0

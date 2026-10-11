@@ -408,6 +408,20 @@ class DerivedLayouts(unittest.TestCase):
         self.assertIn("KeyWorldChunkGroup00::", text)
 
 
+class EventScripts(unittest.TestCase):
+    """Event scripts in bank $10 are decoded into script macros (E-0152)."""
+
+    def test_script_uses_macros_and_labels(self):
+        text = (BANKS / "bank10.asm").read_text(encoding="utf-8")
+        self.assertIn("Script_4F66::", text)
+        self.assertIn("    script_skip_if_no Script_4F6F\n", text)
+        self.assertGreater(text.count("    script_end\n"), 100)
+
+    def test_callers_name_their_script(self):
+        text = (BANKS / "bank13.asm").read_text(encoding="utf-8")
+        self.assertIn("    ld hl, Script_6083\n    call StartScriptAtHL_B13\n", text)
+
+
 class BufferOffsetAliases(unittest.TestCase):
     """An "of" symbol renders as an offset into the buffer it names (E-0136)."""
 

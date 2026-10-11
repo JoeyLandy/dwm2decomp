@@ -1825,6 +1825,31 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - There are 108 entries.
 - Binary verification: build/run151 PASS, 0 differing bytes; tests OK.
 
+### E-0152 — Event scripts in bank $10
+
+- Kind: OBSERVATION (reading of FetchScriptCommand, ScriptOpcodeHandlers and the fetch handlers in bank $10; C2 for the byte grammar, C1 for what the commands do).
+- **Grammar.** FetchScriptCommand reads one opcode from the script pointer, in the current bank $10 unless wScriptInDataBank is set. $FF ends the script. The dedicated fetch handlers read these inline bytes:
+  - $00, $EA, $F5 (message word): 2;
+  - $01, $02: 3;
+  - $03, $04, $05: 2;
+  - $06 (skip forward by the byte when wTextYesNoResult is 0): 1;
+  - $07 (jump to the word): 2;
+  - $0A (SetFlagBit): 2;
+  - $0B, $0C, $0D: 1;
+  - $0E (AddGoldCapped): 2;
+  - $0F (music below $60, sound effect from $60, $FF restarts the map music): 1;
+  - $E4 (forward offset chosen by wTwoChoiceCursor): 2 for the two-choice menus;
+  - $E7 (continue at the word in the data bank): 2.
+  - Every other valid opcode only sets the command type: no generic handler or command reads inline bytes (the few that touch the pointer save and restore it around nested talk events).
+- **Entry points.** Each `ld hl, n` before a call to StartScriptAtHL_* is an entry, unless wScriptInDataBank is written nearby. There are 392 start sites, and the scripts are in bank $10, not in the bank set in wDataBank. For example, talk event 5/$3B sets wDataBank = $1F, but its script runs at 10:6083; 1F:6083 holds box tiles.
+- **What changed.**
+  - prepare_scripts traces 2,120 commands in 107 regions and emits them with new macros: script_message, script_skip_if_no, script_jump, script_set_flag, script_add_gold, script_sound, script_choice_jump, script_jump_data_bank, script_op, script_command, script_end. The macros expand to the same bytes; inside a db list `@` is the address of the byte being assembled, which the offset macros account for.
+  - Entries and jump targets are labelled Script_XXXX, and callers load them as `ld hl, Script_XXXX`. The wrong wDataBank-based labels at those loads are removed.
+- **Limits.**
+  - Scripts that run in data-bank mode (reached through $E7 or code that sets wScriptInDataBank) are not traced.
+  - Message words are left as numbers, and the command types are not named beyond their handler labels (ScriptCommandXX).
+- Binary verification: build/run152 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

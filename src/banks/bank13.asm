@@ -442,7 +442,7 @@ DispatchTalkEvent_Case05_Case0B::
 Jump_013_42A7:: ; address name
     ld a, $1F
     ld [wDataBank], a
-    ld hl, Data_01F_5FE8
+    ld hl, Script_5FE8
     call StartScriptAtHL_B13
     ret
 
@@ -461,12 +461,12 @@ Jump_013_42BA:: ; address name
     ld de, $00A0
     call TestFlagBit
     jr c, Jump_013_42C9
-    ld hl, $5FEF
+    ld hl, Script_5FEF
     call StartScriptAtHL_B13
     ret
 
 Jump_013_42C9::
-    ld hl, $5FF7
+    ld hl, Script_5FF7
     call StartScriptAtHL_B13
     ret
 
@@ -477,7 +477,7 @@ DispatchTalkEvent_Case05_Case0E::
 Jump_013_42D0:: ; address name
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_6003
+    ld hl, Script_6003
     call StartScriptAtHL_B13
     ret
 
@@ -498,7 +498,7 @@ Jump_013_42DC:: ; address name
     ret
 
 Jump_013_42F4::
-    ld hl, $5FFC
+    ld hl, Script_5FFC
     call StartScriptAtHL_B13
     ret
 
@@ -553,7 +553,7 @@ Jump_013_4324:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case14::
 Jump_013_4335:: ; address name
-    ld hl, $600A
+    ld hl, Script_600A
     call StartScriptAtHL_B13
     ret
 
@@ -614,7 +614,7 @@ Jump_013_438E::
     ld a, [wSpriteSlots + $B]
     cp a, $50
     jr z, Jump_013_43A2
-    ld hl, $6015
+    ld hl, Script_6015
     call StartScriptAtHL_B13
     ld de, $0209
     call SetFlagBit
@@ -738,12 +738,12 @@ Jump_013_4424:: ; address name
     jr z, Jump_013_4435
 
 Jump_013_442E::
-    ld hl, $6020
+    ld hl, Script_6020
     call StartScriptAtHL_B13
     ret
 
 Jump_013_4435::
-    ld hl, $602D
+    ld hl, Script_602D
     call StartScriptAtHL_B13
     ret
 
@@ -778,7 +778,7 @@ DispatchTalkEvent_Case05_Case23::
 Jump_013_4451:: ; address name
     ld a, $1F
     ld [wDataBank], a
-    ld hl, Data_01F_603A
+    ld hl, Script_603A
     call StartScriptAtHL_B13
     ret
 
@@ -791,7 +791,7 @@ Jump_013_445D:: ; address name
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_6041
+    ld hl, Script_6041
     call StartScriptAtHL_B13
     ret
 
@@ -826,7 +826,7 @@ DispatchTalkEvent_Case05_Case28::
 Jump_013_4483:: ; address name
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_6048
+    ld hl, Script_6048
     call StartScriptAtHL_B13
     ret
 
@@ -842,7 +842,7 @@ Jump_013_448F:: ; address name
     ldh a, [hTemp0]
     or a, a
     ret z
-    ld hl, $604F
+    ld hl, Script_604F
     call StartScriptAtHL_B13
     ret
 
@@ -913,7 +913,7 @@ Jump_013_44F1::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case2F::
 Jump_013_44F8:: ; address name
-    ld hl, $6062
+    ld hl, Script_6062
     call StartScriptAtHL_B13
     ret
 
@@ -1016,7 +1016,7 @@ Jump_013_4591::
     ret
 
 Jump_013_4598::
-    ld hl, $6119
+    ld hl, Script_6119
     call StartScriptAtHL_B13
     ret
 
@@ -1123,7 +1123,7 @@ Jump_013_463E::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case38::
 Jump_013_4645:: ; address name
-    ld hl, $606F
+    ld hl, Script_606F
     call StartScriptAtHL_B13
     ret
 
@@ -1144,7 +1144,7 @@ Jump_013_4653:: ; address name
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_607C
+    ld hl, Script_607C
     call StartScriptAtHL_B13
     ret
 
@@ -1155,7 +1155,7 @@ DispatchTalkEvent_Case05_Case3B::
 Jump_013_4664:: ; address name
     ld a, $1F
     ld [wDataBank], a
-    ld hl, Data_01F_6083
+    ld hl, Script_6083
     call StartScriptAtHL_B13
     ret
 
@@ -1206,7 +1206,7 @@ DispatchTalkEvent_Case05_Case3F::
 Jump_013_46A3:: ; address name
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_6048
+    ld hl, Script_6048
     call StartScriptAtHL_B13
     ret
 
@@ -1295,7 +1295,7 @@ Jump_013_4701::
     ret
 
 Jump_013_470B::
-    ld hl, $6091
+    ld hl, Script_6091
     call StartScriptAtHL_B13
     ret
 
@@ -1332,12 +1332,12 @@ Jump_013_4734:: ; address name
     ld de, $00AD
     call TestFlagBit
     jr c, Jump_013_4743
-    ld hl, $6096
+    ld hl, Script_6096
     call StartScriptAtHL_B13
     ret
 
 Jump_013_4743::
-    ld hl, $60B0
+    ld hl, Script_60B0
     call StartScriptAtHL_B13
     ret
 
@@ -1363,7 +1363,7 @@ Jump_013_475B:: ; address name
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_476D
-    ld hl, $60C7
+    ld hl, Script_60C7
     call StartScriptAtHL_B13
     ret
 
@@ -1384,7 +1384,7 @@ Jump_013_4774:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case4E::
 Jump_013_477B:: ; address name
-    ld hl, $60CE
+    ld hl, Script_60CE
     call StartScriptAtHL_B13
     ret
 
@@ -1408,7 +1408,7 @@ Jump_013_4789:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case51::
 Jump_013_4790:: ; address name
-    ld hl, $60D0
+    ld hl, Script_60D0
     call StartScriptAtHL_B13
     ret
 
@@ -1435,7 +1435,7 @@ Jump_013_47A5:: ; address name
     ld de, $00B2
     call TestFlagBit
     jr c, Jump_013_47B4
-    ld hl, $60D4
+    ld hl, Script_60D4
     call StartScriptAtHL_B13
     ret
 
@@ -1451,12 +1451,12 @@ Jump_013_47BB:: ; address name
     ld de, $00B3
     call TestFlagBit
     jr c, Jump_013_47CA
-    ld hl, $60EA
+    ld hl, Script_60EA
     call StartScriptAtHL_B13
     ret
 
 Jump_013_47CA::
-    ld hl, $6103
+    ld hl, Script_6103
     call StartScriptAtHL_B13
     ret
 
@@ -1543,7 +1543,7 @@ Jump_013_4848::
     ret
 
 Jump_013_484F::
-    ld hl, $6126
+    ld hl, Script_6126
     call StartScriptAtHL_B13
     ret
 
@@ -1574,7 +1574,7 @@ Jump_013_4864:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case5C::
 Jump_013_4875:: ; address name
-    ld hl, $6131
+    ld hl, Script_6131
     call StartScriptAtHL_B13
     ret
 
@@ -1582,7 +1582,7 @@ Jump_013_4875:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case5D::
 Jump_013_487C:: ; address name
-    ld hl, $6059
+    ld hl, Script_6059
     call StartScriptAtHL_B13
     ret
 
@@ -1725,12 +1725,12 @@ Jump_013_492B::
     ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
     farcall RemoveInventorySlotShiftDown
-    ld hl, $6133
+    ld hl, Script_6133
     call StartScriptAtHL_B13
     ret
 
 Jump_013_4962::
-    ld hl, $614A
+    ld hl, Script_614A
     call StartScriptAtHL_B13
     ret
 
@@ -1738,7 +1738,7 @@ Jump_013_4962::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case68::
 Jump_013_4969:: ; address name
-    ld hl, $6152
+    ld hl, Script_6152
     call StartScriptAtHL_B13
     ret
 
@@ -1746,7 +1746,7 @@ Jump_013_4969:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case05_Case69::
 Jump_013_4970:: ; address name
-    ld hl, $6198
+    ld hl, Script_6198
     call StartScriptAtHL_B13
     ret
 
@@ -1761,7 +1761,7 @@ Jump_013_4977:: ; address name
     ldh a, [hPlayerY]
     cp a, $70
     ret z
-    ld hl, $618B
+    ld hl, Script_618B
     call StartScriptAtHL_B13
     ret
 
@@ -1798,7 +1798,7 @@ Jump_013_499C:: ; address name
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_49AE
-    ld hl, $60C7
+    ld hl, Script_60C7
     call StartScriptAtHL_B13
     ret
 
@@ -1816,7 +1816,7 @@ Jump_013_49B5:: ; address name
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_49C7
-    ld hl, $60C7
+    ld hl, Script_60C7
     call StartScriptAtHL_B13
     ret
 
@@ -2159,7 +2159,7 @@ Jump_013_4BEA::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case04_Case08::
 Jump_013_4BF1:: ; address name
-    ld hl, $5D5B
+    ld hl, Script_5D5B
     call StartScriptAtHL_B13
     ret
 
@@ -2215,7 +2215,7 @@ Jump_013_4C24:: ; address name
     ret
 
 Jump_013_4C43::
-    ld hl, $5D8A
+    ld hl, Script_5D8A
     call StartScriptAtHL_B13
     ret
 
@@ -2249,7 +2249,7 @@ Jump_013_4C67:: ; address name
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_5D68
+    ld hl, Script_5D68
     call StartScriptAtHL_B13
     ret
 
@@ -2295,7 +2295,7 @@ Jump_013_4C97:: ; address name
 ; writes: wDataBank
 DispatchTalkEvent_Case04_Case12::
 Jump_013_4C9E:: ; address name
-    ld hl, $5D6F
+    ld hl, Script_5D6F
     call StartScriptAtHL_B13
     ld a, $10
     ld [wDataBank], a
@@ -2323,7 +2323,7 @@ Jump_013_4CB1:: ; address name
     ld de, $01E8
     call TestFlagBit
     jr c, Jump_013_4CD0
-    ld hl, $5D76
+    ld hl, Script_5D76
     call StartScriptAtHL_B13
     ret
 
@@ -2336,12 +2336,12 @@ Jump_013_4CD7::
     ld de, $01E3
     call TestFlagBit
     jr c, Jump_013_4CE6
-    ld hl, $5FCD
+    ld hl, Script_5FCD
     call StartScriptAtHL_B13
     ret
 
 Jump_013_4CE6::
-    ld hl, $5FD2
+    ld hl, Script_5FD2
     call StartScriptAtHL_B13
     ret
 
@@ -2432,7 +2432,7 @@ Jump_013_4D57:: ; address name
     ld de, $0082
     call TestFlagBit
     jr c, Jump_013_4D7E
-    ld hl, $5D97
+    ld hl, Script_5D97
     call StartScriptAtHL_B13
     ret
 
@@ -2442,7 +2442,7 @@ Jump_013_4D7E::
     ret
 
 Jump_013_4D85::
-    ld hl, $5DA6
+    ld hl, Script_5DA6
     call StartScriptAtHL_B13
     ret
 
@@ -2657,7 +2657,7 @@ Jump_013_4E82:: ; address name
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_5DB0
+    ld hl, Script_5DB0
     call StartScriptAtHL_B13
     ret
 
@@ -2670,7 +2670,7 @@ Jump_013_4E93:: ; address name
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_5DB7
+    ld hl, Script_5DB7
     call StartScriptAtHL_B13
     ret
 
@@ -2683,7 +2683,7 @@ Jump_013_4EA4:: ; address name
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_5DBE
+    ld hl, Script_5DBE
     call StartScriptAtHL_B13
     ret
 
@@ -2694,7 +2694,7 @@ DispatchTalkEvent_Case04_Case2C::
 Jump_013_4EB5:: ; address name
     ld a, $1F
     ld [wDataBank], a
-    ld hl, $5DCC
+    ld hl, Script_5DCC
     call StartScriptAtHL_B13
     ret
 
@@ -2814,7 +2814,7 @@ Jump_013_4F43:: ; address name
 ; writes: wDataBank
 DispatchTalkEvent_Case04_Case36::
 Jump_013_4F4A:: ; address name
-    ld hl, $5DC5
+    ld hl, Script_5DC5
     call StartScriptAtHL_B13
     ld a, $10
     ld [wDataBank], a
@@ -3024,7 +3024,7 @@ Jump_013_5056:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case04_Case45::
 Jump_013_505D:: ; address name
-    ld hl, $5DD3
+    ld hl, Script_5DD3
     call StartScriptAtHL_B13
     ret
 
@@ -3032,7 +3032,7 @@ Jump_013_505D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case04_Case46::
 Jump_013_5064:: ; address name
-    ld hl, $5E02
+    ld hl, Script_5E02
     call StartScriptAtHL_B13
     ret
 
@@ -3151,7 +3151,7 @@ Jump_013_5129::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case04_Case4A::
 Jump_013_5130:: ; address name
-    ld hl, $5E2F
+    ld hl, Script_5E2F
     call StartScriptAtHL_B13
     ret
 
@@ -3159,7 +3159,7 @@ Jump_013_5130:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case04_Case4B::
 Jump_013_5137:: ; address name
-    ld hl, $5E37
+    ld hl, Script_5E37
     call StartScriptAtHL_B13
     ret
 
@@ -3167,7 +3167,7 @@ Jump_013_5137:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case04_Case4C::
 Jump_013_513E:: ; address name
-    ld hl, $5E5A
+    ld hl, Script_5E5A
     call StartScriptAtHL_B13
     ret
 
@@ -3218,12 +3218,12 @@ Jump_013_5194::
     ret
 
 Jump_013_51A1::
-    ld hl, $5E67
+    ld hl, Script_5E67
     call StartScriptAtHL_B13
     ret
 
 Jump_013_51A8::
-    ld hl, $5E77
+    ld hl, Script_5E77
     call StartScriptAtHL_B13
     ret
 
@@ -3445,7 +3445,7 @@ Jump_013_52B8:: ; address name
 ; writes: wDataBank
 DispatchTalkEvent_Case04_Case5E::
 Jump_013_52BF:: ; address name
-    ld hl, $5E87
+    ld hl, Script_5E87
     call StartScriptAtHL_B13
     ld a, $10
     ld [wDataBank], a
@@ -3460,7 +3460,7 @@ Jump_013_52CB:: ; address name
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_5E8E
+    ld hl, Script_5E8E
     call StartScriptAtHL_B13
     ret
 
@@ -3578,7 +3578,7 @@ Jump_013_535F:: ; address name
     ld de, $0095
     call TestFlagBit
     jr c, Jump_013_5376
-    ld hl, $5E95
+    ld hl, Script_5E95
     call StartScriptAtHL_B13
     ret
 
@@ -3702,7 +3702,7 @@ Jump_013_540E::
     ld a, [wStepArrived]
     or a, a
     jr nz, Jump_013_5428
-    ld hl, $5EE6
+    ld hl, Script_5EE6
     call StartScriptAtHL_B13
     ret
 
@@ -3735,7 +3735,7 @@ Jump_013_5444::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case04_Case70::
 Jump_013_544B:: ; address name
-    ld hl, $5EF5
+    ld hl, Script_5EF5
     call StartScriptAtHL_B13
     ret
 
@@ -3794,12 +3794,12 @@ Jump_013_549E::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_5497
-    ld hl, $5FA5
+    ld hl, Script_5FA5
     call StartScriptAtHL_B13
     ret
 
 Jump_013_54B5::
-    ld hl, $5FAD
+    ld hl, Script_5FAD
     call StartScriptAtHL_B13
     ret
 
@@ -3956,12 +3956,12 @@ Jump_013_5582::
     ldh a, [hPlayerX]
     cp a, $41
     jr nc, Jump_013_558F
-    ld hl, $5F26
+    ld hl, Script_5F26
     call StartScriptAtHL_B13
     ret
 
 Jump_013_558F::
-    ld hl, $5F38
+    ld hl, Script_5F38
     call StartScriptAtHL_B13
     ret
 
@@ -3979,7 +3979,7 @@ Jump_013_559D:: ; address name
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_5F0B
+    ld hl, Script_5F0B
     call StartScriptAtHL_B13
     ret
 
@@ -4003,7 +4003,7 @@ Jump_013_55BD::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case04_Case7F::
 Jump_013_55C4:: ; address name
-    ld hl, $5F12
+    ld hl, Script_5F12
     call StartScriptAtHL_B13
     ret
 
@@ -4112,7 +4112,7 @@ Jump_013_56BB::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_56B4
-    ld hl, $5FB8
+    ld hl, Script_5FB8
     call StartScriptAtHL_B13
     ret
 
@@ -4205,7 +4205,7 @@ Jump_013_5759::
 Jump_013_575E::
     xor a, a
     ld [wSpriteSlots + $7], a
-    ld hl, $5FCB
+    ld hl, Script_5FCB
     call StartScriptAtHL_B13
     ret
 
@@ -4384,7 +4384,7 @@ Func_013_5922:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case08::
 Jump_013_593A:: ; address name
-    ld hl, $512D
+    ld hl, Script_512D
     call StartScriptAtHL_B13
     ret
 
@@ -4643,7 +4643,7 @@ Jump_013_5B33:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case01_Case01::
 Jump_013_5B34:: ; address name
-    ld hl, $5895
+    ld hl, Script_5895
     call StartScriptAtHL_B13
     ret
 
@@ -4676,7 +4676,7 @@ Jump_013_5B3B:: ; address name
     ld de, $0003
     call TestFlagBit
     jr c, Jump_013_5B86
-    ld hl, $4FA4
+    ld hl, Script_4FA4
     call StartScriptAtHL_B13
     ret
 
@@ -4692,7 +4692,7 @@ Jump_013_5B8D::
     ld a, $01
     ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
-    ld hl, $4FAF
+    ld hl, Script_4FAF
     call StartScriptAtHL_B13
     ld de, $000D
     call SetFlagBit
@@ -4717,7 +4717,7 @@ Jump_013_5BC0::
 
 Jump_013_5BC7::
     ld [hl], $01
-    ld hl, $5175
+    ld hl, Script_5175
     call StartScriptAtHL_B13
     ret
 
@@ -4772,7 +4772,7 @@ Func_013_5C0B:: ; address name
     ld de, $0180
     call TestFlagBit
     jr c, Jump_013_5C36
-    ld hl, $517F
+    ld hl, Script_517F
     call StartScriptAtHL_B13
     ld de, $0104
     call SetFlagBit
@@ -4793,7 +4793,7 @@ Jump_013_5C36::
 
 Jump_013_5C4D::
     farcall RemoveInventorySlotShiftDown
-    ld hl, $522B
+    ld hl, Script_522B
     call StartScriptAtHL_B13
     ld de, $0181
     call SetFlagBit
@@ -4813,7 +4813,7 @@ Jump_013_5C6D::
     ld de, $0183
     call TestFlagBit
     jr c, Jump_013_5C84
-    ld hl, $5189
+    ld hl, Script_5189
     call StartScriptAtHL_B13
     ret
 
@@ -4829,7 +4829,7 @@ Jump_013_5C84::
     ret
 
 Jump_013_5C9B::
-    ld hl, $519F
+    ld hl, Script_519F
     call StartScriptAtHL_B13
     farcall RemoveInventorySlotShiftDown
     ret
@@ -4841,7 +4841,7 @@ Jump_013_5CA8::
     ld de, $0185
     call TestFlagBit
     jr c, Jump_013_5CBF
-    ld hl, $51A9
+    ld hl, Script_51A9
     call StartScriptAtHL_B13
     ret
 
@@ -4857,7 +4857,7 @@ Jump_013_5CBF::
     ret
 
 Jump_013_5CD6::
-    ld hl, $51BF
+    ld hl, Script_51BF
     call StartScriptAtHL_B13
     farcall RemoveInventorySlotShiftDown
     ret
@@ -4880,12 +4880,12 @@ Jump_013_5CF2::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_5D11
-    ld hl, $51F5
+    ld hl, Script_51F5
     call StartScriptAtHL_B13
     ret
 
 Jump_013_5D11::
-    ld hl, $520B
+    ld hl, Script_520B
     call StartScriptAtHL_B13
     ret
 
@@ -4902,7 +4902,7 @@ Jump_013_5D18::
 
 Jump_013_5D2F::
     farcall RemoveInventorySlotShiftDown
-    ld hl, $5221
+    ld hl, Script_5221
     call StartScriptAtHL_B13
     ret
 
@@ -4934,12 +4934,12 @@ Jump_013_5D59::
     ld de, $012A
     call TestFlagBit
     jr c, Jump_013_5D68
-    ld hl, $596B
+    ld hl, Script_596B
     call StartScriptAtHL_B13
     ret
 
 Jump_013_5D68::
-    ld hl, $597B
+    ld hl, Script_597B
     call StartScriptAtHL_B13
     ret
 
@@ -5002,12 +5002,12 @@ Jump_013_5DDA::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_5DE9
-    ld hl, $4FB7
+    ld hl, Script_4FB7
     call StartScriptAtHL_B13
     ret
 
 Jump_013_5DE9::
-    ld hl, $4FD0
+    ld hl, Script_4FD0
     call StartScriptAtHL_B13
     ret
 
@@ -5020,12 +5020,12 @@ Jump_013_5DF7::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_5E06
-    ld hl, $4FE8
+    ld hl, Script_4FE8
     call StartScriptAtHL_B13
     ret
 
 Jump_013_5E06::
-    ld hl, $4FF7
+    ld hl, Script_4FF7
     call StartScriptAtHL_B13
     ret
 
@@ -5046,7 +5046,7 @@ Jump_013_5E14::
 
 Jump_013_5E28::
     ld [hl], $1A
-    ld hl, $52DC
+    ld hl, Script_52DC
     call StartScriptAtHL_B13
     ld de, $0100
     call SetFlagBit
@@ -5180,7 +5180,7 @@ Func_013_5EF4:: ; address name
     ld de, $0190
     call TestFlagBit
     jr c, Jump_013_5F0C
-    ld hl, $52E3
+    ld hl, Script_52E3
     call StartScriptAtHL_B13
     ret
 
@@ -5194,7 +5194,7 @@ Jump_013_5F0C::
     ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5F28
-    ld hl, $52E3
+    ld hl, Script_52E3
     call StartScriptAtHL_B13
     ret
 
@@ -5210,17 +5210,17 @@ Jump_013_5F28::
     jr z, Jump_013_5F47
     or a, a
     jr z, Jump_013_5F47
-    ld hl, $530D
+    ld hl, Script_530D
     call StartScriptAtHL_B13
     ret
 
 Jump_013_5F47::
-    ld hl, $5324
+    ld hl, Script_5324
     call StartScriptAtHL_B13
     ret
 
 Jump_013_5F4E::
-    ld hl, $52F3
+    ld hl, Script_52F3
     call StartScriptAtHL_B13
     ret
 
@@ -5393,7 +5393,7 @@ Jump_013_6048:: ; address name
     ret
 
 Jump_013_607F::
-    ld hl, $4F66
+    ld hl, Script_4F66
     call StartScriptAtHL_B13
     ret
 
@@ -5631,12 +5631,12 @@ Jump_013_61FD::
     ld de, $012C
     call TestFlagBit
     jr c, Jump_013_6216
-    ld hl, Data_010_57ED
+    ld hl, Script_57ED
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6216::
-    ld hl, $57F7
+    ld hl, Script_57F7
     call StartScriptAtHL_B13
     ret
 
@@ -5682,7 +5682,7 @@ Jump_013_6252::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_533E
+    ld hl, Script_533E
     call StartScriptAtHL_B13
     ld de, $0106
     call SetFlagBit
@@ -5693,7 +5693,7 @@ Jump_013_6279::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_5345
+    ld hl, Script_5345
     call StartScriptAtHL_B13
     ret
 
@@ -5705,7 +5705,7 @@ Jump_013_628A::
     ld [wScreenTableIndex], a
     ld a, $10
     ld [wDataBank], a
-    ld hl, Data_010_534C
+    ld hl, Script_534C
     call StartScriptAtHL_B13
     ld de, $00CE
     call SetFlagBit
@@ -5956,7 +5956,7 @@ Jump_013_6438::
     ldh a, [hMapScreenX]
     cp a, $02
     jr nz, Jump_013_642A
-    ld hl, $4F8D
+    ld hl, Script_4F8D
     call StartScriptAtHL_B13
     ld a, $01
     ldh [hTemp0], a
@@ -6036,12 +6036,12 @@ Jump_013_64D6::
     ld de, $0016
     call TestFlagBit
     jr c, Jump_013_64EF
-    ld hl, $5006
+    ld hl, Script_5006
     call StartScriptAtHL_B13
     ret
 
 Jump_013_64EF::
-    ld hl, $5029
+    ld hl, Script_5029
     call StartScriptAtHL_B13
     ret
 
@@ -6051,7 +6051,7 @@ Jump_013_64F6::
     ret
 
 Jump_013_64FD::
-    ld hl, $536E
+    ld hl, Script_536E
     call StartScriptAtHL_B13
     ret
 
@@ -6119,12 +6119,12 @@ Jump_013_6577::
     jr z, Jump_013_6590
     cp a, $FF
     jr z, Jump_013_6590
-    ld hl, $53AD
+    ld hl, Script_53AD
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6590::
-    ld hl, $53BA
+    ld hl, Script_53BA
     call StartScriptAtHL_B13
     ret
 
@@ -6151,7 +6151,7 @@ Jump_013_659E::
     jr c, Jump_013_65D0
 
 Jump_013_65C3::
-    ld hl, $53D0
+    ld hl, Script_53D0
     call StartScriptAtHL_B13
     ret
 
@@ -6161,7 +6161,7 @@ Jump_013_65CA::
     jr c, Jump_013_65D7
 
 Jump_013_65D0::
-    ld hl, $53CE
+    ld hl, Script_53CE
     call StartScriptAtHL_B13
     ret
 
@@ -6269,12 +6269,12 @@ Jump_013_668C::
     ld de, $0102
     call TestFlagBit
     jr c, Jump_013_669B
-    ld hl, $5256
+    ld hl, Script_5256
     call StartScriptAtHL_B13
     ret
 
 Jump_013_669B::
-    ld hl, $5260
+    ld hl, Script_5260
     call StartScriptAtHL_B13
     ret
 
@@ -6282,7 +6282,7 @@ Jump_013_66A2::
     ld de, $0105
     call TestFlagBit
     jr c, Jump_013_669B
-    ld hl, $5267
+    ld hl, Script_5267
     call StartScriptAtHL_B13
     ret
 
@@ -6290,7 +6290,7 @@ Jump_013_66B1::
     ld de, $0109
     call TestFlagBit
     jr c, Jump_013_669B
-    ld hl, $5271
+    ld hl, Script_5271
     call StartScriptAtHL_B13
     ret
 
@@ -6298,7 +6298,7 @@ Jump_013_66C0::
     ld de, $0115
     call TestFlagBit
     jr c, Jump_013_669B
-    ld hl, $527B
+    ld hl, Script_527B
     call StartScriptAtHL_B13
     ret
 
@@ -6306,7 +6306,7 @@ Jump_013_66CF::
     ld de, $0121
     call TestFlagBit
     jr c, Jump_013_669B
-    ld hl, $5285
+    ld hl, Script_5285
     call StartScriptAtHL_B13
     ret
 
@@ -6314,7 +6314,7 @@ Jump_013_66DE::
     ld de, $0131
     call TestFlagBit
     jr c, Jump_013_669B
-    ld hl, $528F
+    ld hl, Script_528F
     call StartScriptAtHL_B13
     ret
 
@@ -6351,12 +6351,12 @@ Jump_013_672C::
     ld de, $0102
     call TestFlagBit
     jr c, Jump_013_673B
-    ld hl, $5299
+    ld hl, Script_5299
     call StartScriptAtHL_B13
     ret
 
 Jump_013_673B::
-    ld hl, $52A3
+    ld hl, Script_52A3
     call StartScriptAtHL_B13
     ret
 
@@ -6364,7 +6364,7 @@ Jump_013_6742::
     ld de, $0105
     call TestFlagBit
     jr c, Jump_013_673B
-    ld hl, $52AA
+    ld hl, Script_52AA
     call StartScriptAtHL_B13
     ret
 
@@ -6372,7 +6372,7 @@ Jump_013_6751::
     ld de, $0109
     call TestFlagBit
     jr c, Jump_013_673B
-    ld hl, $52B4
+    ld hl, Script_52B4
     call StartScriptAtHL_B13
     ret
 
@@ -6380,7 +6380,7 @@ Jump_013_6760::
     ld de, $0115
     call TestFlagBit
     jr c, Jump_013_673B
-    ld hl, $52BE
+    ld hl, Script_52BE
     call StartScriptAtHL_B13
     ret
 
@@ -6388,7 +6388,7 @@ Jump_013_676F::
     ld de, $0121
     call TestFlagBit
     jr c, Jump_013_673B
-    ld hl, $52C8
+    ld hl, Script_52C8
     call StartScriptAtHL_B13
     ret
 
@@ -6396,7 +6396,7 @@ Jump_013_677E::
     ld de, $0131
     call TestFlagBit
     jr c, Jump_013_673B
-    ld hl, $52D2
+    ld hl, Script_52D2
     call StartScriptAtHL_B13
     ret
 
@@ -6487,7 +6487,7 @@ Jump_013_680D::
     ld de, $0117
     call TestFlagBit
     jr c, Jump_013_681C
-    ld hl, $53D2
+    ld hl, Script_53D2
     call StartScriptAtHL_B13
     ret
 
@@ -6500,7 +6500,7 @@ Jump_013_6823::
     ld de, $0117
     call TestFlagBit
     jr c, Jump_013_681C
-    ld hl, $53FA
+    ld hl, Script_53FA
     call StartScriptAtHL_B13
     ret
 
@@ -6514,7 +6514,7 @@ Jump_013_6832:: ; address name
     ld de, $0107
     call TestFlagBit
     jr c, Jump_013_684F
-    ld hl, $5418
+    ld hl, Script_5418
     call StartScriptAtHL_B13
     ld de, $0107
     call SetFlagBit
@@ -6657,7 +6657,7 @@ Jump_013_6915::
     ret
 
 Jump_013_691C::
-    ld hl, $5422
+    ld hl, Script_5422
     call StartScriptAtHL_B13
     ret
 
@@ -6680,7 +6680,7 @@ Jump_013_6939::
     ret
 
 Jump_013_6940::
-    ld hl, $5433
+    ld hl, Script_5433
     call StartScriptAtHL_B13
     ret
 
@@ -6712,7 +6712,7 @@ Jump_013_6955:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case01_Case2B::
 Jump_013_695C:: ; address name
-    ld hl, $5476
+    ld hl, Script_5476
     call StartScriptAtHL_B13
     ret
 
@@ -6756,12 +6756,12 @@ Jump_013_6988::
     ld a, $01
     or a, a
     jr z, Jump_013_6994
-    ld hl, $50DB
+    ld hl, Script_50DB
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6994::
-    ld hl, $50F6
+    ld hl, Script_50F6
     call StartScriptAtHL_B13
     ret
 
@@ -6769,7 +6769,7 @@ Jump_013_6994::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case01_Case30::
 Jump_013_699B:: ; address name
-    ld hl, $5120
+    ld hl, Script_5120
     call StartScriptAtHL_B13
     ret
 
@@ -6957,7 +6957,7 @@ Jump_013_6A97:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, Jump_013_6AAE
-    ld hl, $5483
+    ld hl, Script_5483
     call StartScriptAtHL_B13
     ret
 
@@ -7007,7 +7007,7 @@ Jump_013_6AD1:: ; address name
     ld de, $0024
     call TestFlagBit
     jr c, Jump_013_6AE8
-    ld hl, $5490
+    ld hl, Script_5490
     call StartScriptAtHL_B13
     ret
 
@@ -7084,14 +7084,14 @@ Jump_013_6B4E:: ; address name
     ld de, $0111
     call TestFlagBit
     jr c, Jump_013_6B68
-    ld hl, Data_096_549D
+    ld hl, Script_549D
     call StartScriptAtHL_B13
     ld de, $0111
     call SetFlagBit
     ret
 
 Jump_013_6B68::
-    ld hl, $54A4
+    ld hl, Script_54A4
     call StartScriptAtHL_B13
     ret
 
@@ -7149,7 +7149,7 @@ Jump_013_6B8B:: ; address name
     ret
 
 Jump_013_6BAC::
-    ld hl, $599F
+    ld hl, Script_599F
     call StartScriptAtHL_B13
     ld a, $2C
     ld [wStepPtrLo], a
@@ -7177,7 +7177,7 @@ Jump_013_6BD4:: ; address name
     ld de, $010A
     call TestFlagBit
     jr c, Jump_013_6BEE
-    ld hl, $54AB
+    ld hl, Script_54AB
     call StartScriptAtHL_B13
     ld a, $1D
     ld [wDataBank], a
@@ -7186,7 +7186,7 @@ Jump_013_6BD4:: ; address name
     ret
 
 Jump_013_6BEE::
-    ld hl, $54B2
+    ld hl, Script_54B2
     call StartScriptAtHL_B13
     ld a, $1D
     ld [wDataBank], a
@@ -7228,7 +7228,7 @@ Jump_013_6C0F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case01_Case51::
 Jump_013_6C16:: ; address name
-    ld hl, $54B9
+    ld hl, Script_54B9
     call StartScriptAtHL_B13
     ret
 
@@ -7236,7 +7236,7 @@ Jump_013_6C16:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case01_Case52::
 Jump_013_6C1D:: ; address name
-    ld hl, $54C0
+    ld hl, Script_54C0
     call StartScriptAtHL_B13
     ret
 
@@ -7252,7 +7252,7 @@ Jump_013_6C24:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case01_Case54::
 Jump_013_6C2B:: ; address name
-    ld hl, $54C7
+    ld hl, Script_54C7
     call StartScriptAtHL_B13
     ret
 
@@ -7387,12 +7387,12 @@ Jump_013_6CB3:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_6CC8
-    ld hl, $54CE
+    ld hl, Script_54CE
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6CC8::
-    ld hl, $550F
+    ld hl, Script_550F
     call StartScriptAtHL_B13
     ret
 
@@ -7402,12 +7402,12 @@ Jump_013_6CCF::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_6CE1
-    ld hl, $54DB
+    ld hl, Script_54DB
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6CE1::
-    ld hl, $551C
+    ld hl, Script_551C
     call StartScriptAtHL_B13
     ret
 
@@ -7417,12 +7417,12 @@ Jump_013_6CE8::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_6CFA
-    ld hl, $54E8
+    ld hl, Script_54E8
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6CFA::
-    ld hl, $5529
+    ld hl, Script_5529
     call StartScriptAtHL_B13
     ret
 
@@ -7432,12 +7432,12 @@ Jump_013_6D01::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_6D13
-    ld hl, $54F5
+    ld hl, Script_54F5
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6D13::
-    ld hl, $5536
+    ld hl, Script_5536
     call StartScriptAtHL_B13
     ret
 
@@ -7447,12 +7447,12 @@ Jump_013_6D1A::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_6D2C
-    ld hl, $5502
+    ld hl, Script_5502
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6D2C::
-    ld hl, $5543
+    ld hl, Script_5543
     call StartScriptAtHL_B13
     ret
 
@@ -7524,12 +7524,12 @@ Jump_013_6D68:: ; address name
     ld [wTalkEventByte92], a
     or a, a
     jr nz, Jump_013_6DA0
-    ld hl, $5578
+    ld hl, Script_5578
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6DA0::
-    ld hl, $557F
+    ld hl, Script_557F
     call StartScriptAtHL_B13
     ret
 
@@ -7539,7 +7539,7 @@ Jump_013_6DA7::
     jr nz, Jump_013_6DB4
 
 Jump_013_6DAD::
-    ld hl, $5550
+    ld hl, Script_5550
     call StartScriptAtHL_B13
     ret
 
@@ -7547,17 +7547,17 @@ Jump_013_6DB4::
     ld de, $0189
     call TestFlagBit
     jr c, Jump_013_6DC3
-    ld hl, $5560
+    ld hl, Script_5560
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6DC3::
-    ld hl, $556A
+    ld hl, Script_556A
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6DCA::
-    ld hl, $5571
+    ld hl, Script_5571
     call StartScriptAtHL_B13
     ret
 
@@ -7578,12 +7578,12 @@ Jump_013_6DD1:: ; address name
     ld de, $010D
     call TestFlagBit
     jr c, Jump_013_6DFB
-    ld hl, Data_00E_5586
+    ld hl, Script_5586
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6DFB::
-    ld hl, $558B
+    ld hl, Script_558B
     call StartScriptAtHL_B13
     ret
 
@@ -7669,12 +7669,12 @@ Jump_013_6E71:: ; address name
     ld de, $010F
     call TestFlagBit
     jr c, Jump_013_6E8D
-    ld hl, Data_096_5598
+    ld hl, Script_5598
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6E8D::
-    ld hl, $55A2
+    ld hl, Script_55A2
     call StartScriptAtHL_B13
     ret
 
@@ -7682,7 +7682,7 @@ Jump_013_6E94::
     ld de, $0028
     call TestFlagBit
     jr c, Jump_013_6E8D
-    ld hl, $55A9
+    ld hl, Script_55A9
     call StartScriptAtHL_B13
     ret
 
@@ -7701,12 +7701,12 @@ Jump_013_6EA3:: ; address name
     ld de, $0110
     call TestFlagBit
     jr c, Jump_013_6EC8
-    ld hl, $55B3
+    ld hl, Script_55B3
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6EC8::
-    ld hl, $55BD
+    ld hl, Script_55BD
     call StartScriptAtHL_B13
     ret
 
@@ -7714,7 +7714,7 @@ Jump_013_6ECF::
     ld de, $002C
     call TestFlagBit
     jr c, Jump_013_6EC8
-    ld hl, $55C4
+    ld hl, Script_55C4
     call StartScriptAtHL_B13
     ret
 
@@ -7722,7 +7722,7 @@ Jump_013_6ECF::
 ; no direct call (reached through a table, a jump or a vector)
 DispatchTalkEvent_Case01_Case6B::
 Jump_013_6EDE:: ; address name
-    ld hl, $55CE
+    ld hl, Script_55CE
     call StartScriptAtHL_B13
     ret
 
@@ -7787,12 +7787,12 @@ Jump_013_6F0F:: ; address name
     ld de, $0112
     call TestFlagBit
     jr c, Jump_013_6F2B
-    ld hl, Data_00C_55DB
+    ld hl, Script_55DB
     call StartScriptAtHL_B13
     ret
 
 Jump_013_6F2B::
-    ld hl, $55E5
+    ld hl, Script_55E5
     call StartScriptAtHL_B13
     ret
 
@@ -7800,7 +7800,7 @@ Jump_013_6F32::
     ld de, $0031
     call TestFlagBit
     jr c, Jump_013_6F2B
-    ld hl, $55EC
+    ld hl, Script_55EC
     call StartScriptAtHL_B13
     ret
 
@@ -7870,7 +7870,7 @@ Jump_013_6F90::
     ld a, [wGameFlags836]
     set 6, a
     ld [wGameFlags836], a
-    ld hl, $55F6
+    ld hl, Script_55F6
     call StartScriptAtHL_B13
     ret
 
@@ -8023,17 +8023,17 @@ Jump_013_704D::
     jr z, Jump_013_7081
     or a, a
     jr z, Jump_013_7081
-    ld hl, $561A
+    ld hl, Script_561A
     call StartScriptAtHL_B13
     ret
 
 Jump_013_7081::
-    ld hl, $5631
+    ld hl, Script_5631
     call StartScriptAtHL_B13
     ret
 
 Jump_013_7088::
-    ld hl, $5600
+    ld hl, Script_5600
     call StartScriptAtHL_B13
     ret
 
@@ -8063,14 +8063,14 @@ Jump_013_70AA::
     ld de, $0116
     call TestFlagBit
     jr c, Jump_013_70CB
-    ld hl, Data_010_564B
+    ld hl, Script_564B
     call StartScriptAtHL_B13
     ld de, $0116
     call SetFlagBit
     ret
 
 Jump_013_70CB::
-    ld hl, $5652
+    ld hl, Script_5652
     call StartScriptAtHL_B13
     ret
     db $21, $39, $0A, $CD, $01, $40, $C9
@@ -8138,7 +8138,7 @@ Jump_013_7122::
     ret
 
 Jump_013_7152::
-    ld hl, $5903
+    ld hl, Script_5903
     call StartScriptAtHL_B13
     ret
 
@@ -8154,7 +8154,7 @@ Jump_013_7160::
     ld a, h
     ldh [hTemp1], a
     farcall AddGoldCapped
-    ld hl, $5913
+    ld hl, Script_5913
     call StartScriptAtHL_B13
     ret
 
@@ -8180,7 +8180,7 @@ Jump_013_7176::
     ret
 
 Jump_013_71A6::
-    ld hl, $591D
+    ld hl, Script_591D
     call StartScriptAtHL_B13
     ret
 
@@ -8196,7 +8196,7 @@ Jump_013_71B4::
     ld a, h
     ldh [hTemp1], a
     farcall AddGoldCapped
-    ld hl, $592D
+    ld hl, Script_592D
     call StartScriptAtHL_B13
     ret
 
@@ -8222,7 +8222,7 @@ Jump_013_71CA::
     ret
 
 Jump_013_71FA::
-    ld hl, $5937
+    ld hl, Script_5937
     call StartScriptAtHL_B13
     ret
 
@@ -8238,7 +8238,7 @@ Jump_013_7208::
     ld a, h
     ldh [hTemp1], a
     farcall AddGoldCapped
-    ld hl, $5947
+    ld hl, Script_5947
     call StartScriptAtHL_B13
     ret
 
@@ -8264,7 +8264,7 @@ Jump_013_721E::
     ret
 
 Jump_013_724F::
-    ld hl, $5951
+    ld hl, Script_5951
     call StartScriptAtHL_B13
     ret
 
@@ -8280,7 +8280,7 @@ Jump_013_725D::
     ld a, h
     ldh [hTemp1], a
     farcall AddGoldCapped
-    ld hl, $5961
+    ld hl, Script_5961
     call StartScriptAtHL_B13
     ret
 
@@ -8415,7 +8415,7 @@ Func_013_7364:: ; address name
     jr c, Jump_013_738F
     ld a, $01
     ld [wScreenTableIndex], a
-    ld hl, $5660
+    ld hl, Script_5660
     call StartScriptAtHL_B13
     ld a, $0E
     ld [wDataBank], a
@@ -8434,7 +8434,7 @@ Jump_013_7396::
     jr c, Jump_013_73B8
     ld a, $03
     ld [wScreenTableIndex], a
-    ld hl, $5670
+    ld hl, Script_5670
     call StartScriptAtHL_B13
     ld a, $0E
     ld [wDataBank], a
@@ -8540,7 +8540,7 @@ Func_013_7441:: ; address name
     ld de, $011A
     call TestFlagBit
     jr c, Jump_013_7463
-    ld hl, $5680
+    ld hl, Script_5680
     call StartScriptAtHL_B13
     ld a, $02
     ld [wScreenTableIndex], a
@@ -8564,7 +8564,7 @@ Func_013_746A:: ; address name
     ld de, $011D
     call TestFlagBit
     jr c, Jump_013_7481
-    ld hl, $5690
+    ld hl, Script_5690
     call StartScriptAtHL_B13
     ret
 
@@ -8599,7 +8599,7 @@ Jump_013_74AD::
     ret
 
 Jump_013_74BF::
-    ld hl, $56A0
+    ld hl, Script_56A0
     call StartScriptAtHL_B13
     ret
 
@@ -8617,7 +8617,7 @@ Jump_013_74D6::
     ret
 
 Jump_013_74DD::
-    ld hl, $56A8
+    ld hl, Script_56A8
     call StartScriptAtHL_B13
     ld de, $003E
     call SetFlagBit
@@ -8713,7 +8713,7 @@ Jump_013_75B6::
     ret
 
 Jump_013_75DE::
-    ld hl, $58B5
+    ld hl, Script_58B5
     call StartScriptAtHL_B13
     ret
 
@@ -8745,7 +8745,7 @@ Jump_013_7607::
 
 Jump_013_7617::
     farcall WriteKeyEntryHFFC6
-    ld hl, $58C3
+    ld hl, Script_58C3
     call StartScriptAtHL_B13
     ret
 
@@ -8754,7 +8754,7 @@ Jump_013_7624::
     ldh a, [hTemp0]
     or a, a
     jr z, Jump_013_7600
-    ld hl, $58CD
+    ld hl, Script_58CD
     call StartScriptAtHL_B13
     ret
 
@@ -8777,7 +8777,7 @@ Jump_013_7636::
     ret
 
 Jump_013_765E::
-    ld hl, $58E1
+    ld hl, Script_58E1
     call StartScriptAtHL_B13
     ret
 
@@ -8809,7 +8809,7 @@ Jump_013_7687::
 
 Jump_013_7697::
     farcall WriteKeyEntryHFFC6
-    ld hl, $58EF
+    ld hl, Script_58EF
     call StartScriptAtHL_B13
     ret
 
@@ -8818,7 +8818,7 @@ Jump_013_76A4::
     ldh a, [hTemp0]
     or a, a
     jr z, Jump_013_7680
-    ld hl, $58F9
+    ld hl, Script_58F9
     call StartScriptAtHL_B13
     ret
 
@@ -8863,7 +8863,7 @@ Func_013_76DF:: ; address name
     ld de, $0129
     call TestFlagBit
     jr c, Jump_013_7701
-    ld hl, $56C8
+    ld hl, Script_56C8
     call StartScriptAtHL_B13
     ld a, $04
     ld [wScreenTableIndex], a
@@ -8891,12 +8891,12 @@ Func_013_7708:: ; address name
     ret
 
 Jump_013_7719::
-    ld hl, $56D8
+    ld hl, Script_56D8
     call StartScriptAtHL_B13
     ret
 
 Jump_013_7720::
-    ld hl, $56E5
+    ld hl, Script_56E5
     call StartScriptAtHL_B13
     ret
 
@@ -8913,12 +8913,12 @@ Func_013_772E:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, Jump_013_7744
-    ld hl, $5709
+    ld hl, Script_5709
     call StartScriptAtHL_B13
     ret
 
 Jump_013_7744::
-    ld hl, $56F5
+    ld hl, Script_56F5
     call StartScriptAtHL_B13
     ret
 
@@ -9025,7 +9025,7 @@ StartScript5660WithBank0E:: ; heuristic: target of a pointer table; C0
 Func_013_781C:: ; address name
     ld a, $01
     ld [wScreenTableIndex], a
-    ld hl, $5660
+    ld hl, Script_5660
     call StartScriptAtHL_B13
     ld a, $0E
     ld [wDataBank], a
@@ -9109,12 +9109,12 @@ Jump_013_78ED::
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_013_7909
-    ld hl, $57FE
+    ld hl, Script_57FE
     call StartScriptAtHL_B13
     ret
 
 Jump_013_7909::
-    ld hl, $580B
+    ld hl, Script_580B
     call StartScriptAtHL_B13
     ret
 
@@ -9306,7 +9306,7 @@ Func_013_7ABD:: ; address name
     ld de, $0023
     call TestFlagBit
     ret nc
-    ld hl, $57A2
+    ld hl, Script_57A2
     call StartScriptAtHL_B13
     ret
 
@@ -9584,7 +9584,7 @@ Func_013_7E05:: ; address name
     jr c, Jump_013_7E32
     ld a, $05
     ld [wScreenTableIndex], a
-    ld hl, $581C
+    ld hl, Script_581C
     call StartScriptAtHL_B13
     ret
 
@@ -9611,7 +9611,7 @@ Jump_013_7E39::
 Jump_013_7E59::
     ld a, $06
     ld [wScreenTableIndex], a
-    ld hl, $582C
+    ld hl, Script_582C
     call StartScriptAtHL_B13
     ret
 
@@ -9638,7 +9638,7 @@ Jump_013_7E6C::
 Jump_013_7E8C::
     ld a, $07
     ld [wScreenTableIndex], a
-    ld hl, $583C
+    ld hl, Script_583C
     call StartScriptAtHL_B13
     ret
 
@@ -9665,7 +9665,7 @@ Func_013_7E9F:: ; address name
     jr c, Jump_013_7EC8
     ld a, $08
     ld [wScreenTableIndex], a
-    ld hl, $584C
+    ld hl, Script_584C
     call StartScriptAtHL_B13
     ret
 
@@ -9692,7 +9692,7 @@ Jump_013_7ECF::
 Jump_013_7EEF::
     ld a, $09
     ld [wScreenTableIndex], a
-    ld hl, $585C
+    ld hl, Script_585C
     call StartScriptAtHL_B13
     ret
 
@@ -9721,7 +9721,7 @@ Func_013_7F02:: ; address name
     ret
 
 Jump_013_7F23::
-    ld hl, $5899
+    ld hl, Script_5899
     call StartScriptAtHL_B13
     ret
 
@@ -9795,7 +9795,7 @@ Func_013_7F86:: ; address name
     ld de, $0021
     call TestFlagBit
     ret nc
-    ld hl, $5988
+    ld hl, Script_5988
     call StartScriptAtHL_B13
     ret
 
