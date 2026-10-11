@@ -1813,6 +1813,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The streams that BootAndMainLoop sends through SGBTransferCompressed (SGB system data) are not named.
 - Binary verification: build/run150 PASS, 0 differing bytes; tests OK.
 
+### E-0151 — A second EXP table (bank $81) and map-screen flag tiles
+
+- Kind: OBSERVATION (reading plus a value check; C1).
+- **ExpCurveIndex81 / ExpTable81.**
+  - LoadTable555DEntryForWD0A6ToWD0EA (81:5453; called from bank $37) reads the row from the byte $5486 + wWorkBuf+9 (215 bytes, values 0-31).
+  - It copies 3 bytes from $555D + $129 * row + 3 * (wLinkMenuEntry - 1) to wLinkMenuEntryBytes.
+  - The table at $555D has ExpTable's layout (32 rows of 99 24-bit values) with different values; row 6 is the only one that does not rise throughout.
+- **MapScreenFlagTiles (84:4461).** ApplyMapScreenFlagEvents walks 8-byte entries until $FF: map number, screen X, screen Y, tile, story flag number, offset into wScreenTileBuffer.
+  - When the map, the screen and the story flag match, ApplyMapScreenFlagEvents_Sub01 writes the tile and tile + 1 at that offset.
+  - There are 108 entries.
+- Binary verification: build/run151 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

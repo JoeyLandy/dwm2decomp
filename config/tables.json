@@ -1886,6 +1886,62 @@
         }
       ],
       "note": "E-0149 (C1: ReadBank6TableWord reads the word at 06:$4001 + $36 * BC + 2 * wPersonalityIndex; AccumulateBank6WordToDA6E / DA70 add it to the AI score (a low byte of $FF counts as 5000, a negative word is subtracted); the 527 call sites pass rows $00-$D3, and the bank is zero after row $D3)."
+    },
+    {
+      "bank": "81",
+      "addr": "5486",
+      "label": "ExpCurveIndex81",
+      "count": 215,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "row of ExpTable81 (0-31)"
+        }
+      ],
+      "note": "E-0151 (C1: LoadTable555DEntryForWD0A6ToWD0EA reads the byte $5486 + wWorkBuf+9 and uses it as the row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31)."
+    },
+    {
+      "bank": "81",
+      "addr": "555D",
+      "label": "ExpTable81",
+      "count": 32,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "u24",
+          "size": 297,
+          "name": "24-bit values for levels 1-99"
+        }
+      ],
+      "note": "E-0151 (C1: LoadTable555DEntryForWD0A6ToWD0EA copies the 3 bytes at $555D + $129 * row + 3 * (wLinkMenuEntry - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different values; 31 of the 32 rows rise from 0)."
+    },
+    {
+      "bank": "84",
+      "addr": "4461",
+      "label": "MapScreenFlagTiles",
+      "count": 108,
+      "tail": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "name": "map number, screen X, screen Y, tile"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "name": "story flag number (TestFlagBit)"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        }
+      ],
+      "note": "E-0151 (C1: ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match and the story flag is set, ApplyMapScreenFlagEvents_Sub01 writes the tile and tile + 1 at wScreenTileBuffer + offset (tile $FF takes another path); 108 entries)."
     }
   ]
 }

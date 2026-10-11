@@ -735,8 +735,335 @@ Jump_084_4457::
     ldh [rSVBK], a
     ret
 
+; E-0151 (C1: ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match and the story flag is set, ApplyMapScreenFlagEvents_Sub01 writes the tile and tile + 1 at wScreenTileBuffer + offset (tile $FF takes another path); 108 entries).
+; record: map number, screen X, screen Y, tile; story flag number (TestFlagBit); offset into wScreenTileBuffer
+MapScreenFlagTiles::
 Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $210461, $361
+    db $19, $00, $02, $3E ; id 0
+    dw $011B
+    dw $0088
+    db $19, $00, $02, $3E ; id 1
+    dw $011C
+    dw $0100
+    db $1B, $00, $02, $1A ; id 2
+    dw $013E
+    dw $00A6
+    db $1B, $00, $02, $1A ; id 3
+    dw $013F
+    dw $00AC
+    db $2B, $01, $02, $3C ; id 4
+    dw $004F
+    dw $0054
+    db $2B, $02, $02, $3C ; id 5
+    dw $0050
+    dw $0084
+    db $2B, $00, $03, $3C ; id 6
+    dw $0051
+    dw $011E
+    db $2B, $00, $03, $3C ; id 7
+    dw $0052
+    dw $0122
+    db $35, $00, $00, $16 ; id 8
+    dw $0067
+    dw $00D2
+    db $35, $01, $00, $16 ; id 9
+    dw $0068
+    dw $00A8
+    db $35, $03, $00, $16 ; id 10
+    dw $0069
+    dw $0086
+    db $35, $03, $00, $16 ; id 11
+    dw $006A
+    dw $00D6
+    db $35, $03, $00, $16 ; id 12
+    dw $006B
+    dw $0126
+    db $35, $02, $03, $16 ; id 13
+    dw $006C
+    dw $0056
+    db $42, $00, $00, $4C ; id 14
+    dw $00EB
+    dw $0030
+    db $42, $00, $00, $4C ; id 15
+    dw $00EC
+    dw $0032
+    db $42, $00, $00, $4C ; id 16
+    dw $00ED
+    dw $0034
+    db $42, $01, $00, $4C ; id 17
+    dw $00EE
+    dw $00AA
+    db $44, $00, $00, $4C ; id 18
+    dw $0076
+    dw $0034
+    db $39, $03, $00, $06 ; id 19
+    dw $00E0
+    dw $00A4
+    db $39, $03, $00, $06 ; id 20
+    dw $00E1
+    dw $00AE
+    db $39, $03, $02, $06 ; id 21
+    dw $00E2
+    dw $00F6
+    db $39, $03, $02, $06 ; id 22
+    dw $00E3
+    dw $00FA
+    db $39, $03, $02, $06 ; id 23
+    dw $00E4
+    dw $00FE
+    db $3A, $00, $00, $06 ; id 24
+    dw $00E5
+    dw $00D0
+    db $3A, $00, $00, $06 ; id 25
+    dw $00E6
+    dw $00D2
+    db $3E, $01, $01, $1C ; id 26
+    dw $0079
+    dw $0084
+    db $55, $00, $00, $2C ; id 27
+    dw $0084
+    dw $00A6
+    db $62, $01, $01, $2C ; id 28
+    dw $01E0
+    dw $005E
+    db $73, $00, $01, $4C ; id 29
+    dw $00A1
+    dw $0060
+    db $76, $00, $00, $4C ; id 30
+    dw $00A2
+    dw $00CE
+    db $76, $00, $00, $4C ; id 31
+    dw $00A3
+    dw $0100
+    db $7A, $00, $00, $2E ; id 32
+    dw $00AA
+    dw $0030
+    db $82, $02, $02, $2C ; id 33
+    dw $00AB
+    dw $00AA
+    db $84, $00, $00, $2C ; id 34
+    dw $00AC
+    dw $0034
+    db $85, $01, $00, $3C ; id 35
+    dw $00AF
+    dw $005A
+    db $91, $00, $00, $2C ; id 36
+    dw $00B5
+    dw $0058
+    db $94, $02, $00, $3E ; id 37
+    dw $00BC
+    dw $00A8
+    db $96, $00, $00, $3E ; id 38
+    dw $00BD
+    dw $00A8
+    db $98, $00, $00, $3E ; id 39
+    dw $00BE
+    dw $00F2
+    db $9A, $00, $00, $3E ; id 40
+    dw $00BF
+    dw $0128
+    db $63, $01, $00, $2C ; id 41
+    dw $01E9
+    dw $011A
+    db $63, $00, $01, $2C ; id 42
+    dw $01EA
+    dw $0038
+    db $64, $00, $00, $2C ; id 43
+    dw $01EB
+    dw $00A2
+    db $64, $00, $00, $2C ; id 44
+    dw $01EC
+    dw $00D0
+    db $66, $00, $00, $2C ; id 45
+    dw $01ED
+    dw $00A2
+    db $66, $00, $00, $2C ; id 46
+    dw $01EE
+    dw $00A6
+    db $67, $00, $00, $2C ; id 47
+    dw $01EF
+    dw $011E
+    db $67, $00, $00, $2C ; id 48
+    dw $01F0
+    dw $0124
+    db $AD, $00, $00, $2E ; id 49
+    dw $0156
+    dw $00AC
+    db $AE, $00, $02, $2E ; id 50
+    dw $0157
+    dw $00AC
+    db $AE, $02, $03, $2E ; id 51
+    dw $0158
+    dw $0060
+    db $BE, $00, $00, $2E ; id 52
+    dw $01CB
+    dw $0082
+    db $C0, $00, $01, $2E ; id 53
+    dw $01CC
+    dw $011A
+    db $C2, $01, $01, $2E ; id 54
+    dw $01CD
+    dw $0080
+    db $C4, $00, $00, $2E ; id 55
+    dw $01CE
+    dw $00F6
+    db $C4, $00, $00, $FF ; id 56
+    dw $01CF
+    dw $007C
+    db $C4, $00, $00, $FF ; id 57
+    dw $01D0
+    dw $00A8
+    db $C4, $00, $00, $FF ; id 58
+    dw $01D1
+    dw $005A
+    db $C4, $00, $00, $FF ; id 59
+    dw $01D2
+    dw $00D8
+    db $CA, $00, $00, $3E ; id 60
+    dw $01D5
+    dw $0052
+    db $CA, $00, $00, $3E ; id 61
+    dw $01D6
+    dw $002E
+    db $CA, $00, $00, $3E ; id 62
+    dw $01D8
+    dw $0060
+    db $CB, $00, $00, $3E ; id 63
+    dw $01DA
+    dw $0052
+    db $CB, $00, $00, $3E ; id 64
+    dw $01DB
+    dw $002E
+    db $CB, $00, $00, $3E ; id 65
+    dw $01DC
+    dw $0034
+    db $CC, $00, $00, $3E ; id 66
+    dw $01DE
+    dw $002E
+    db $CC, $00, $00, $3E ; id 67
+    dw $01DF
+    dw $0034
+    db $CC, $00, $00, $3E ; id 68
+    dw $0169
+    dw $0060
+    db $CD, $00, $00, $3E ; id 69
+    dw $016B
+    dw $0052
+    db $CD, $00, $00, $3E ; id 70
+    dw $016C
+    dw $002E
+    db $CD, $00, $00, $3E ; id 71
+    dw $016D
+    dw $0034
+    db $CE, $00, $00, $3E ; id 72
+    dw $016F
+    dw $00A4
+    db $CE, $00, $00, $3E ; id 73
+    dw $0170
+    dw $007E
+    db $CE, $00, $00, $3E ; id 74
+    dw $0171
+    dw $0084
+    db $CE, $00, $00, $3E ; id 75
+    dw $0172
+    dw $00AE
+    db $D3, $00, $00, $3E ; id 76
+    dw $0175
+    dw $0052
+    db $D3, $00, $00, $3E ; id 77
+    dw $0176
+    dw $002E
+    db $D3, $00, $00, $3E ; id 78
+    dw $0177
+    dw $0034
+    db $D4, $00, $00, $3E ; id 79
+    dw $0179
+    dw $002E
+    db $D4, $00, $00, $3E ; id 80
+    dw $017A
+    dw $0034
+    db $D4, $00, $00, $3E ; id 81
+    dw $017B
+    dw $0060
+    db $D5, $00, $00, $3E ; id 82
+    dw $017D
+    dw $002E
+    db $D5, $00, $00, $3E ; id 83
+    dw $017E
+    dw $0034
+    db $D5, $00, $00, $3E ; id 84
+    dw $017F
+    dw $0060
+    db $D6, $00, $00, $3E ; id 85
+    dw $00D6
+    dw $002E
+    db $D6, $00, $00, $3E ; id 86
+    dw $00D7
+    dw $0034
+    db $D6, $00, $00, $3E ; id 87
+    dw $00D8
+    dw $0060
+    db $D7, $00, $00, $3E ; id 88
+    dw $00DA
+    dw $00A4
+    db $D7, $00, $00, $3E ; id 89
+    dw $00DB
+    dw $007E
+    db $D7, $00, $00, $3E ; id 90
+    dw $00DC
+    dw $0084
+    db $D7, $00, $00, $3E ; id 91
+    dw $00DD
+    dw $00AE
+    db $DC, $00, $00, $3E ; id 92
+    dw $00F5
+    dw $002E
+    db $DC, $00, $00, $3E ; id 93
+    dw $00F6
+    dw $0034
+    db $DC, $00, $00, $3E ; id 94
+    dw $00F7
+    dw $0060
+    db $DD, $00, $00, $3E ; id 95
+    dw $00F9
+    dw $0052
+    db $DD, $00, $00, $3E ; id 96
+    dw $00FA
+    dw $002E
+    db $DD, $00, $00, $3E ; id 97
+    dw $00FB
+    dw $0034
+    db $DE, $00, $00, $3E ; id 98
+    dw $00FD
+    dw $002E
+    db $DE, $00, $00, $3E ; id 99
+    dw $00FE
+    dw $0034
+    db $DE, $00, $00, $3E ; id 100
+    dw $00FF
+    dw $0060
+    db $DF, $00, $00, $3E ; id 101
+    dw $01F3
+    dw $002E
+    db $DF, $00, $00, $3E ; id 102
+    dw $01F4
+    dw $0034
+    db $DF, $00, $00, $3E ; id 103
+    dw $01F5
+    dw $0060
+    db $E0, $00, $00, $3E ; id 104
+    dw $01F7
+    dw $00A4
+    db $E0, $00, $00, $3E ; id 105
+    dw $01F8
+    dw $007E
+    db $E0, $00, $00, $3E ; id 106
+    dw $01F9
+    dw $0084
+    db $E0, $00, $00, $3E ; id 107
+    dw $01FA
+    dw $00AE
+    db $FF ; end
 
 ; only called from ItemUsable_LogTwig (E-0047)
 ; 1 call site from 1 routine (e.g. ItemUsable_LogTwig)
