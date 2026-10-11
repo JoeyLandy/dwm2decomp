@@ -2163,6 +2163,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Also named.** WriteBCAsDecimalString (00:2F84), now reached through those routines. tools/rank_unnamed.py reports 0 again.
 - Binary verification: build/run183 PASS, 0 differing bytes; tests OK.
 
+### E-0181 — AI mode and choice routine tables (bank $30)
+
+- Kind: OBSERVATION (reading; C1).
+- **AIModeRoutineTable ($45D0).** AIChooseActionResolveStep and AIChooseActionForActor call the word at $45D0 + 2 * AI mode: mode 0 AIRunNextChoice, modes 1-3 ScoreActionsWithAIScoreTableA, mode 4 UseAIScoreTableB. It is declared explicitly because declaring the next table removed the heuristic pointer run that had found it.
+- **AIChoiceRoutineTable ($4998).** AIRunNextChoice calls the word at $4998 + 2 * (wAIChoiceWeights[wAIChoiceIndex] - 1). It has three words, and the three routines follow it directly in what had been an INCBIN slice ($12E bytes):
+  - AIPickRandomActionOfKind1: action 0 plus the skills of kind 1 (the byte before each skill number in wBattleSkills);
+  - AIPickRandomSkillOfKind2;
+  - AIPickRandomSkillOfKind3 (adds skill $AC in one case).
+  - Each picks one entry at random as the action choice.
+- **Limits.** What the per-skill kind byte means (it is set when the battler is loaded) is not read.
+- Binary verification: build/run184 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -2708,6 +2708,41 @@
         }
       ],
       "note": "E-0180 (C1: ShowBattleText reads the word $71B4 + 2 * D and, when it is non-zero, calls it (JumpToWordAtHL) before showing string D of category 1 from bank $2F; 256 words up to the first routine at $73B4; 211 are non-zero)."
+    },
+    {
+      "bank": "30",
+      "addr": "4998",
+      "label": "AIChoiceRoutineTable",
+      "count": 3,
+      "id_base": 1,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name_targets": "AIChoiceRoutine",
+          "name_base": 1,
+          "name_note": "AI action choice routine for choice weight value",
+          "name": "AI choice routine for this wAIChoiceWeights value",
+          "reason": "AI choice routine"
+        }
+      ],
+      "note": "E-0181 (C1: AIRunNextChoice reads the word at $4998 + 2 * (wAIChoiceWeights[wAIChoiceIndex] - 1) and calls it (JumpToHL); three words, and the three routines follow directly)."
+    },
+    {
+      "bank": "30",
+      "addr": "45D0",
+      "label": "AIModeRoutineTable",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "routine run for this AI mode (wSlotAIMode)",
+          "reason": "AI mode routine"
+        }
+      ],
+      "note": "E-0181 (C1: AIChooseActionResolveStep and AIChooseActionForActor read the word at $45D0 + 2 * AI mode and call it: mode 0 AIRunNextChoice, modes 1-3 ScoreActionsWithAIScoreTableA, mode 4 UseAIScoreTableB)."
     }
   ]
 }

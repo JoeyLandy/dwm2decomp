@@ -965,13 +965,15 @@ Jump_030_45CB::
     inc [hl]
     ret
 
-; address loaded by AIChooseActionResolveStep, AIChooseActionForActor
+; E-0181 (C1: AIChooseActionResolveStep and AIChooseActionForActor read the word at $45D0 + 2 * AI mode and call it: mode 0 AIRunNextChoice, modes 1-3 ScoreActionsWithAIScoreTableA, mode 4 UseAIScoreTableB).
+; record: routine run for this AI mode (wSlotAIMode)
+AIModeRoutineTable::
 Data_030_45D0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $46, $49
-    dw ScoreActionsWithAIScoreTableA
-    dw ScoreActionsWithAIScoreTableA
-    dw ScoreActionsWithAIScoreTableA
-    dw UseAIScoreTableB
+    dw AIRunNextChoice ; id 0
+    dw ScoreActionsWithAIScoreTableA ; id 1
+    dw ScoreActionsWithAIScoreTableA ; id 2
+    dw ScoreActionsWithAIScoreTableA ; id 3
+    dw UseAIScoreTableB ; id 4
 
 ; clears wD2AD ($14 bytes), sets wDA3C-wDA42 = 0, 0, 0, 1, 2, 3, 3, then adds personality, HP and other weights (Func_030_4617, 46BA, 47B9, 483F); wD871 = 0 (E-0124)
 ; 1 call site from 1 routine (e.g. AIChooseActionResolveStep)
@@ -1540,7 +1542,7 @@ Jump_030_493C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wLinkMode, wAIChoiceIndex, wLoadSlot
 ; points at: wAIChoiceWeights, wAIChoiceIndex
-AIRunNextChoice:: ; heuristic: follows a terminator; C0
+AIRunNextChoice:: ; code pointer of the table AIModeRoutineTable; C0
 Func_030_4946:: ; address name
     ld a, [wBattleActor]
     and a, $03
@@ -1588,16 +1590,210 @@ Jump_030_496E::
     inc [hl]
     jr AIRunNextChoice
 
-; address loaded by AIRunNextChoice
+; E-0181 (C1: AIRunNextChoice reads the word at $4998 + 2 * (wAIChoiceWeights[wAIChoiceIndex] - 1) and calls it (JumpToHL); three words, and the three routines follow directly).
+; record: AI choice routine for this wAIChoiceWeights value
+AIChoiceRoutineTable::
 Data_030_4998:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0C0998, $12E
+    dw AIPickRandomActionOfKind1 ; id 1
+    dw AIPickRandomSkillOfKind2 ; id 2
+    dw AIPickRandomSkillOfKind3 ; id 3
+
+; lists action 0 plus every skill of the actor whose kind byte (the byte before it in wBattleSkills, wBattleSkillsPrefix + 16 * slot) is 1, picks one at random as the actor's action choice and sets wLoadSlot = $FF (choice weight 1 of AIChoiceRoutineTable) (E-0181)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, wRandomLo
+; writes: wBattleArg0, wLoadSlot
+; points at: wBattleArg0, wBattleSkillsPrefix, wBattleArg1
+AIPickRandomActionOfKind1:: ; code pointer of the table AIChoiceRoutineTable; C0
+Func_030_499E:: ; address name
+    ld hl, wBattleArg0
+    ld bc, $0009
+    ld a, $FF
+    call FillBytes
+    ld a, $00
+    ld [wBattleArg0], a
+    ld a, [wBattleActor]
+    swap a
+    ld hl, wBattleSkillsPrefix
+    add_a_to_hl
+    ld b, $08
+    ld c, $00
+
+Jump_030_49BF::
+    ld a, [hl]
+    or a, a
+    jr z, Jump_030_49DB
+    cp a, $01
+    jr nz, Jump_030_49D6
+    push hl
+    inc hl
+    ld d, [hl]
+    ld a, c
+    ld hl, wBattleArg1
+    add_a_to_hl
+    ld [hl], d
+    inc c
+    pop hl
+
+Jump_030_49D6::
+    inc hl
+    inc hl
+    dec b
+    jr nz, Jump_030_49BF
+
+Jump_030_49DB::
+    call AdvanceRandom
+    ld a, [wRandomLo]
+    ld b, a
+    ld a, c
+    add a, $01
+    call DivideBByA
+    ld hl, wBattleArg0
+    add_a_to_hl
+    ld a, [hl]
+    push af
+    call ActorActionChoiceAddress
+    pop af
+    ld [hl], a
+    ld a, $FF
+    ld [wLoadSlot], a
+    ret
+
+; lists the actor's skills of kind 2 (as AIPickRandomActionOfKind1, without action 0) and picks one at random as the action choice; returns when there is none (choice weight 2) (E-0181)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, wRandomLo
+; writes: wLoadSlot
+; points at: wBattleArg0, wBattleSkillsPrefix
+AIPickRandomSkillOfKind2:: ; code pointer of the table AIChoiceRoutineTable; C0
+Func_030_49FD:: ; address name
+    ld hl, wBattleArg0
+    ld bc, $0008
+    ld a, $FF
+    call FillBytes
+    ld a, [wBattleActor]
+    swap a
+    ld hl, wBattleSkillsPrefix
+    add_a_to_hl
+    ld b, $08
+    ld c, $00
+
+Jump_030_4A19::
+    ld a, [hl]
+    or a, a
+    jr z, Jump_030_4A35
+    cp a, $02
+    jr nz, Jump_030_4A30
+    push hl
+    inc hl
+    ld d, [hl]
+    ld a, c
+    ld hl, wBattleArg0
+    add_a_to_hl
+    ld [hl], d
+    inc c
+    pop hl
+
+Jump_030_4A30::
+    inc hl
+    inc hl
+    dec b
+    jr nz, Jump_030_4A19
+
+Jump_030_4A35::
+    ld a, c
+    or a, a
+    ret z
+    call AdvanceRandom
+    ld a, [wRandomLo]
+    ld b, a
+    ld a, c
+    call DivideBByA
+    ld hl, wBattleArg0
+    add_a_to_hl
+    ld a, [hl]
+    push af
+    call ActorActionChoiceAddress
+    pop af
+    ld [hl], a
+    ld a, $FF
+    ld [wLoadSlot], a
+    ret
+
+; lists the actor's skills of kind 3, adds skill $AC when Func_030_540C returns 2, and picks one at random as the action choice; returns when there is none (choice weight 3) (E-0181)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, wRandomLo
+; writes: wLoadSlot
+; points at: wBattleArg0, wBattleSkillsPrefix
+AIPickRandomSkillOfKind3:: ; code pointer of the table AIChoiceRoutineTable; C0
+Func_030_4A58:: ; address name
+    ld hl, wBattleArg0
+    ld bc, $0009
+    ld a, $FF
+    call FillBytes
+    ld a, [wBattleActor]
+    swap a
+    ld hl, wBattleSkillsPrefix
+    add_a_to_hl
+    ld b, $08
+    ld c, $00
+
+Jump_030_4A74::
+    ld a, [hl]
+    or a, a
+    jr z, Jump_030_4A90
+    cp a, $03
+    jr nz, Jump_030_4A8B
+    push hl
+    inc hl
+    ld d, [hl]
+    ld a, c
+    ld hl, wBattleArg0
+    add_a_to_hl
+    ld [hl], d
+    inc c
+    pop hl
+
+Jump_030_4A8B::
+    inc hl
+    inc hl
+    dec b
+    jr nz, Jump_030_4A74
+
+Jump_030_4A90::
+    call GetActorSlotTacticLow2
+    cp a, $02
+    jr nz, Jump_030_4AA3
+    ld a, c
+    ld hl, wBattleArg0
+    add_a_to_hl
+    ld [hl], $AC
+    inc c
+
+Jump_030_4AA3::
+    ld a, c
+    or a, a
+    ret z
+    call AdvanceRandom
+    ld a, [wRandomLo]
+    ld b, a
+    ld a, c
+    call DivideBByA
+    ld hl, wBattleArg0
+    add_a_to_hl
+    ld a, [hl]
+    push af
+    call ActorActionChoiceAddress
+    pop af
+    ld [hl], a
+    ld a, $FF
+    ld [wLoadSlot], a
+    ret
 
 ; wDA6B/wDA6C = AIScoreRoutineTableB, then continues with the scoring loop (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wLinkMode, wAIChoiceOrder
 ; writes: wBattleExpAward
 ; points at: wBattleSkillsPrefix, wAIWeights
-UseAIScoreTableB:: ; heuristic: target of a pointer table; C0
+UseAIScoreTableB:: ; code pointer of the table AIModeRoutineTable; C0
 Func_030_4AC6:: ; address name
     ld hl, AIScoreRoutineTableB
     ld a, l
@@ -1611,7 +1807,7 @@ Func_030_4AC6:: ; address name
 ; reads: wBattleActor, wLinkMode, wAIChoiceOrder
 ; writes: wBattleExpAward
 ; points at: wBattleSkillsPrefix, wAIWeights
-ScoreActionsWithAIScoreTableA:: ; heuristic: target of a pointer table; C0
+ScoreActionsWithAIScoreTableA:: ; code pointer of the table AIModeRoutineTable; C0
 Func_030_4AD3:: ; address name
     ld hl, AIScoreRoutineTableA
     ld a, l
@@ -2903,7 +3099,7 @@ Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
 
 ; A = wDA43[wBattleActor] & 3 (E-0072)
-; 13 call sites from 12 routines (e.g. AddWeightsForSkillD_Sub01, AddRandomPersonalityWeights, AddStatusAndHPWeightsToAI, AddCommandWeightToAIChoiceWeights, ...)
+; 14 call sites from 13 routines (e.g. ScoreActionsWithAIScoreTableA, AIRunNextChoice, AIPickRandomSkillOfKind3, AddWeightsForSkillD_Sub01, ...)
 ; reads: wBattleActor
 ; points at: wSlotTactic
 GetActorSlotTacticLow2::
@@ -2916,7 +3112,7 @@ Func_030_540C:: ; address name
     ret
 
 ; HL = wBattleActionChoice + 2 * wBattleActor (the actor's action byte; the target follows) (E-0072)
-; 12 call sites from 8 routines (e.g. ActorActionDataWord, AIChooseActionResolveStep, RunBattleResolveStep_43C4_Case01_Sub03, AIChooseActionForActor, ...)
+; 15 call sites from 11 routines (e.g. ScoreActionsWithAIScoreTableA, ChooseHighestWeightedAction, AIRunNextChoice, AIPickRandomSkillOfKind3, ...)
 ; reads: wBattleActor
 ; points at: wBattleActionChoice
 ActorActionChoiceAddress::
@@ -3746,7 +3942,7 @@ Func_030_5C4F:: ; address name
     db $01, $24, $7E, $C9
 
 ; the same 10 bytes as ReadBattleWordFromArray (36:7E5B)
-; 5 call sites from 5 routines (e.g. AIChooseActionResolveStep, RunBattleResolveStep_43C4_Case01_Sub04, RunBattleResolveStep_43C4_Case01_Sub02, AIChooseActionForActor, ...)
+; 5 call sites from 5 routines (e.g. AIRunNextChoice, AIChooseActionResolveStep, RunBattleResolveStep_43C4_Case01_Sub04, RunBattleResolveStep_43C4_Case01_Sub02, ...)
 ReadBattleWordFromArray_Bank30::
 Func_030_5C68:: ; address name
     add a, a

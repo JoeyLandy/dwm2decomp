@@ -20,7 +20,7 @@ Func_000_000B:: ; address name
     deref_hl
 
 ; jp hl; the call target used by CallInBank
-; 5 call sites from 5 routines (e.g. CallInBank, AIChooseActionResolveStep, AIChooseActionForActor, AIRunNextChoice, ...)
+; 5 call sites from 5 routines (e.g. CallInBank, AIRunNextChoice, AIChooseActionResolveStep, AIChooseActionForActor, ...)
 JumpToHL::
 Func_000_000E:: ; address name
     jp hl
@@ -1492,7 +1492,7 @@ Jump_000_0945::
     ret
 
 ; A = value, HL = destination, BC = count; HL ends past the last byte (memset)
-; 152 call sites from 89 routines (e.g. BootAndMainLoop, ClearBGMapOrFillWithC3, SGBTransferCompressed, ClearWRAMHRAMAndSRAMBanks0And2, ...)
+; 155 call sites from 92 routines (e.g. BootAndMainLoop, ClearBGMapOrFillWithC3, SGBTransferCompressed, ClearWRAMHRAMAndSRAMBanks0And2, ...)
 FillBytes::
 Func_000_0949:: ; address name
     ld d, a
@@ -3911,7 +3911,7 @@ Func_000_16AA:: ; address name
     ret
 
 ; B = B / A (quotient), A = remainder; clobbers D, E
-; 29 call sites from 29 routines (e.g. CreateMonsterRecordOfKindTemp1_Sub01_Sub01, DebugBattleSetupShowFieldString, SetupInventoryMenuPages_Bank03, ResistanceAverageGateForAISide, ...)
+; 32 call sites from 32 routines (e.g. CreateMonsterRecordOfKindTemp1_Sub01_Sub01, DebugBattleSetupShowFieldString, SetupInventoryMenuPages_Bank03, ResistanceAverageGateForAISide, ...)
 DivideBByA::
 Func_000_16BF:: ; address name
     ld d, $08
@@ -10831,7 +10831,7 @@ Jump_000_3ED3::
     ret
 
 ; when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB
-; 73 call sites from 57 routines (e.g. RandomInRange, RunBattleCommandEntry_Case04_Sub02, RunBattleCommandEntry_Case04_Sub01, AddRandomPersonalityWeights, ...)
+; 76 call sites from 60 routines (e.g. RandomInRange, ChooseHighestWeightedAction, AddSkillBaseWeightAndLoadSkill_Sub01, AIPickRandomSkillOfKind3, ...)
 ; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 AdvanceRandom::
