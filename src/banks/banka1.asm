@@ -3914,7 +3914,23 @@ Func_0A1_57F9:: ; address name
     ld a, $A1
     call CopyRectFromBankToVRAM
     ret
-    ds $90, $34
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 12 x 12 tiles, one row per line
+TileRect_A1_5808::
+Data_0A1_5808:: ; heuristic: start of a structured table; C0
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 0
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 1
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 2
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 3
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 4
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 5
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 6
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 7
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 8
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 9
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 10
+    db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 11
 
 ; wC5E0 = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case06)

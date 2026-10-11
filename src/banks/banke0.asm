@@ -2258,50 +2258,75 @@ Func_0E0_510C:: ; address name
     ld a, $E0
     call CopyRectFromBankToVRAM
     ret
-    db $B0
-    ds $12, $B1
-    db $B2, $B6, $C3, $C3, $C3, $C3, $F5, $F6, $F7, $C3, $C3, $C3, $F8, $F9, $C3, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3
-    db $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    INCBIN "dwm2-cobi-us.gbc", $381192, $DE
-    ds $12, $B4
-    db $B5, $B0
-    ds $12, $B1
-    db $B2, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $C3, $C3, $C3, $0E, $09, $0F, $C3, $0C, $0D, $0D, $0C, $0A, $FF
-    db $C3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    INCBIN "dwm2-cobi-us.gbc", $38130E, $CA
-    ds $12, $B4
-    db $B5, $B0
-    ds $12, $B1
-    db $B2, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $C3, $C3, $C3, $09, $F0, $FF, $C3, $E0, $E1, $E2, $E3, $E4, $E5
-    db $E6, $E7, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    INCBIN "dwm2-cobi-us.gbc", $38143A, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B3
-    ds $12, $B4
-    db $B5
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 20 x 18 tiles, one row per line
+TileRect_E0_511B::
+Data_0E0_511B:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $F5, $F6, $F7, $C3, $C3, $C3, $F8, $F9, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $EA, $C3, $C3, $C3, $C3, $C3, $EA, $C3, $C3, $C3, $C3, $C3, $EA, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $ED, $FF, $C3, $C3, $C3, $C3, $ED, $FF, $C3, $C3, $C3, $C3, $ED, $FF, $C3, $C3, $C3, $C3, $B7 ; id 7
+    db $B6, $EE, $00, $C3, $C3, $C3, $C3, $EE, $00, $C3, $C3, $C3, $C3, $EE, $00, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $EF, $01, $C3, $C3, $C3, $C3, $EF, $01, $C3, $C3, $C3, $C3, $EF, $01, $C3, $C3, $C3, $C3, $B7 ; id 9
+    db $B6, $F0, $02, $C3, $C3, $C3, $C3, $F0, $02, $C3, $C3, $C3, $C3, $F0, $02, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $B6, $F2, $04, $C3, $C3, $C3, $C3, $F2, $04, $C3, $C3, $C3, $C3, $F2, $04, $C3, $C3, $C3, $C3, $B7 ; id 11
+    db $B6, $F4, $06, $C3, $C3, $C3, $C3, $F4, $06, $C3, $C3, $C3, $C3, $F4, $06, $C3, $C3, $C3, $C3, $B7 ; id 12
+    db $B6, $F3, $05, $C3, $C3, $C3, $C3, $F3, $05, $C3, $C3, $C3, $C3, $F3, $05, $C3, $C3, $C3, $C3, $B7 ; id 13
+    db $B6, $F1, $03, $C3, $C3, $C3, $C3, $F1, $03, $C3, $C3, $C3, $C3, $F1, $03, $C3, $C3, $C3, $C3, $B7 ; id 14
+    db $B6, $F1, $07, $C3, $C3, $C3, $C3, $F1, $07, $C3, $C3, $C3, $C3, $F1, $07, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $B6, $C3, $C3, $C3, $C3, $FA, $FB, $FC, $FD, $FE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 20 x 18 tiles, one row per line
+TileRect_E0_5283::
+Data_0E0_5283:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $0E, $09, $0F, $C3, $0C, $0D, $0D, $0C, $0A, $FF, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $14, $15, $16, $17, $18, $19, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $1A, $1B, $1C, $1D, $1E, $1F, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $20, $21, $22, $23, $24, $25, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $26, $27, $28, $29, $2A, $2B, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $2C, $2D, $2E, $2F, $30, $31, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 11
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $32, $33, $34, $35, $36, $37, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
+    db $B6, $0B, $C3, $F5, $F6, $F7, $C3, $F8, $F9, $C3, $C3, $EC, $C3, $F5, $F6, $F7, $C3, $F8, $F9, $B7 ; id 13
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $E1, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 14
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $E2, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $B6, $EC, $01, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $E3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 20 x 18 tiles, one row per line
+TileRect_E0_53EB::
+Data_0E0_53EB:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $09, $F0, $FF, $C3, $E0, $E1, $E2, $E3, $E4, $E5, $E6, $E7, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $09, $FF, $E0, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $09, $FF, $E1, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $09, $FF, $E2, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $09, $FF, $E3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
+    db $B6, $C3, $09, $FF, $E4, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $09, $FF, $E5, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
+    db $B6, $C3, $09, $FF, $E6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $B6, $C3, $09, $FF, $E7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 11
+    db $B6, $C3, $09, $FF, $E8, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 12
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 13
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 14
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 15
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_Case00)

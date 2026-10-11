@@ -1960,6 +1960,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The copiers CopyRectToBGMap, CopyRectToBGMapWrapped (and its two bank copies), CopyRectTo20ByteRowsJp_Bank24, and every routine with the same first 16 bytes as the CopyRectTo20ByteRows family read a packed rectangle at DE, with B = width and C = rows.
   - Literal `ld de, n` / `ld bc, $WWRR` before such a call give 159 rectangles. When call sites disagree on the width the source is skipped; otherwise the largest row count is used.
   - The copiers that read 32-byte source rows are excluded.
+  - CopyRectFromBankToVRAM and CopyRectFromBankToBGMapWrapped also read a packed source. Their bank is A, taken from the `ld a, n` before the call (for example the 20 x 18 screen 5E:4238 of game mode 2), which adds 14 rectangles (173 in all, build/run164).
 - **Safety.**
   - A rectangle is used only when it touches no code, table, layout or stream.
   - An inline `dw` whose guessed target label was dropped inside a new layout now prints its number. The one case, 33:41BB `dw $6362`, is tile bytes $62, $63, not a pointer.

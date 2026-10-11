@@ -1811,6 +1811,10 @@ class Rom:
                        if a in self.insn[b] and a <= self.base(b) + BANK - 16 and sig(b, a) in sigs}
         ld_de = re.compile(r"ld de, \$([0-9A-F]{4})$")
         ld_bc = re.compile(r"ld bc, \$([0-9A-F]{2})([0-9A-F]{2})$")
+        ld_a = re.compile(r"ld a, \$([0-9A-F]{2})$")
+        bank_copiers = {(b, a) for (b, a), info in self.names.items() if not info.get("data") and
+                        info["name"] in ("CopyRectFromBankToVRAM", "CopyRectFromBankToBGMapWrapped")}
+        raw_copiers |= bank_copiers  # A = the source's ROM bank
         uses: dict[tuple[int, int], set] = {}
         for cb in range(self.nbanks):
             ins = self.insn[cb]
@@ -1819,7 +1823,7 @@ class Rom:
                 v = ins[a]
                 if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in raw_copiers:
                     continue
-                de = bc = None
+                de = bc = sb = None
                 for x in reversed(order[max(0, k - 4):k]):
                     if ins[x][2] in SETUP_BARRIER:
                         break
@@ -1827,9 +1831,13 @@ class Rom:
                         de = int(m.group(1), 16)
                     if bc is None and (m := ld_bc.match(ins[x][1])):
                         bc = (int(m.group(1), 16), int(m.group(2), 16))
-                if de is None or bc is None or not 0x4000 <= de < 0x8000:
+                    if sb is None and (m := ld_a.match(ins[x][1])):
+                        sb = int(m.group(1), 16)
+                if self.resolve(cb, v[3]) not in bank_copiers:
+                    sb = cb
+                if de is None or bc is None or sb is None or not 0x4000 <= de < 0x8000 or not 0 < sb < self.nbanks:
                     continue
-                uses.setdefault((cb, de), set()).add(bc)
+                uses.setdefault((sb, de), set()).add(bc)
         raw = 0
         for (cb, src), dims in sorted(uses.items()):
             widths = {w for w, _ in dims}

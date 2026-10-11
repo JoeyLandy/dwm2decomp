@@ -141,15 +141,28 @@ Jump_001_4061:: ; address name
     ld [wMenuRowCount], a
     ret
 
-; address loaded by DebugMessageTest_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 20 x 18 tiles, one row per line
+TileRect_01_412F::
 Data_001_412F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $40, $00
-    db $20, $21, $1B, $22, $23, $00, $00, $00, $00, $10, $10
-    ds $1D, $00
-    db $24, $1E, $25, $22, $23, $10, $00, $00, $00, $10, $10
-    ds $1D, $00
-    db $24, $1E, $25, $22, $23, $11, $00, $00, $00, $10, $10
-    ds $CD, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
+    db $00, $00, $00, $00, $20, $21, $1B, $22, $23, $00, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 3
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 4
+    db $00, $00, $00, $00, $24, $1E, $25, $22, $23, $10, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 5
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 6
+    db $00, $00, $00, $00, $24, $1E, $25, $22, $23, $11, $00, $00, $00, $10, $10, $00, $00, $00, $00, $00 ; id 7
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 8
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
 ; init for debug-mode state 10: the screen shows the monster record viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
@@ -170,30 +183,28 @@ Jump_001_4297:: ; address name
     call DebugShowMonsterRecord
     ret
 
-; address loaded by DebugMonsterRecordViewer_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 20 x 18 tiles, one row per line
+TileRect_01_42BC::
 Data_001_42BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $1B, $00
-    db $11, $40, $41, $42, $43, $44, $45, $46, $47, $48, $00, $00, $00, $00, $12, $13
-    db $14, $15
-    ds $10, $00
-    db $17, $15, $18
-    ds $11, $00
-    db $0F, $1A, $1B
-    ds $11, $00
-    db $1C, $19, $1D, $19, $15, $1E, $1F, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $20, $21, $22
-    ds $11, $00
-    INCBIN "dwm2-cobi-us.gbc", $004349, $54
-    ds $10, $00
-    db $19, $12, $29, $23
-    ds $10, $00
-    db $31, $16, $19, $23
-    ds $10, $00
-    db $12, $1E, $2C
-    ds $11, $00
-    db $33, $34, $24, $30, $1E, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $30, $35, $2B
-    ds $24, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $00, $00, $00, $00, $00, $00, $00, $11, $40, $41, $42, $43, $44, $45, $46, $47, $48, $00, $00, $00 ; id 1
+    db $00, $12, $13, $14, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
+    db $00, $17, $15, $18, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 3
+    db $00, $0F, $1A, $1B, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 4
+    db $00, $1C, $19, $1D, $19, $15, $1E, $1F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 5
+    db $00, $20, $21, $22, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 6
+    db $00, $23, $24, $25, $24, $26, $27, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 7
+    db $00, $23, $24, $25, $24, $28, $27, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 8
+    db $00, $29, $16, $2A, $2B, $1E, $2C, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
+    db $00, $12, $13, $2D, $1E, $2C, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
+    db $00, $2E, $2F, $30, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+    db $00, $19, $12, $29, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
+    db $00, $31, $16, $19, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $00, $12, $1E, $2C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
+    db $00, $33, $34, $24, $30, $1E, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $00, $30, $35, $2B, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
 ; init for debug-mode state 9: the screen shows the skill viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
@@ -491,9 +502,11 @@ Jump_001_461E:: ; address name
     ld [wDebugSubState], a
     ret
 
-; address loaded by DebugMapEditor_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 16 x 1 tiles, one row per line
+TileRect_01_46A4::
 Data_001_46A4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F
+    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F ; id 0
 
 ; init for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
@@ -554,9 +567,11 @@ Jump_001_46B4:: ; address name
     ld [wDebugValue3], a
     ret
 
-; address loaded by DebugAutomap_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 16 x 1 tiles, one row per line
+TileRect_01_4733::
 Data_001_4733:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F
+    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F ; id 0
 
 ; init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
@@ -631,15 +646,27 @@ Jump_001_47C4::
     ld [wDebugState], a
     ret
 
-; address loaded by DebugMonsterPictureViewer_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 6 x 6 tiles, one row per line
+TileRect_01_47DE::
 Data_001_47DE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F
-    db $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F
-    db $40, $41, $42, $43
+    db $20, $21, $22, $23, $24, $25 ; id 0
+    db $26, $27, $28, $29, $2A, $2B ; id 1
+    db $2C, $2D, $2E, $2F, $30, $31 ; id 2
+    db $32, $33, $34, $35, $36, $37 ; id 3
+    db $38, $39, $3A, $3B, $3C, $3D ; id 4
+    db $3E, $3F, $40, $41, $42, $43 ; id 5
 
-; address loaded by DebugMonsterPictureViewer_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 6 x 6 tiles, one row per line
+TileRect_01_4802::
 Data_001_4802:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $24, $01
+    db $01, $01, $01, $01, $01, $01 ; id 0
+    db $01, $01, $01, $01, $01, $01 ; id 1
+    db $01, $01, $01, $01, $01, $01 ; id 2
+    db $01, $01, $01, $01, $01, $01 ; id 3
+    db $01, $01, $01, $01, $01, $01 ; id 4
+    db $01, $01, $01, $01, $01, $01 ; id 5
 
 ; init for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
@@ -688,11 +715,14 @@ Jump_001_4826:: ; address name
     ld [wTemp1], a
     ret
 
-; address loaded by DebugSoundTest_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 11 x 4 tiles, one row per line
+TileRect_01_488A::
 Data_001_488A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $90, $91, $92, $93, $94
-    db $95, $96, $97, $98, $99, $9A, $A0, $A1, $A2, $A3, $A4, $A5, $10, $10, $A8, $10
-    db $12, $B0, $B1, $B2, $B3, $B4, $B5, $10, $10, $B8, $10, $10
+    db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A ; id 0
+    db $90, $91, $92, $93, $94, $95, $96, $97, $98, $99, $9A ; id 1
+    db $A0, $A1, $A2, $A3, $A4, $A5, $10, $10, $A8, $10, $12 ; id 2
+    db $B0, $B1, $B2, $B3, $B4, $B5, $10, $10, $B8, $10, $10 ; id 3
 
 ; init for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
@@ -767,11 +797,24 @@ Jump_001_48B6:: ; address name
     ld [wMenuState], a
     ret
 
-; address loaded by DebugBattleSetup_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 20 x 14 tiles, one row per line
+TileRect_01_495D::
 Data_001_495D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A
-    ds $19, $00
-    INCBIN "dwm2-cobi-us.gbc", $004985, $F0
+    db $00, $00, $00, $00, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $00, $00, $00, $00, $00 ; id 0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
+    db $8B, $8C, $8D, $8E, $8F, $90, $91, $10, $10, $10, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
+    db $96, $97, $98, $99, $9A, $9B, $9C, $10, $10, $10, $A0, $20, $21, $22, $23, $24, $25, $26, $27, $28 ; id 3
+    db $A1, $A2, $A3, $A4, $A5, $A6, $A7, $10, $10, $10, $AB, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32 ; id 4
+    db $AC, $AD, $AE, $AF, $B0, $B1, $B2, $10, $10, $10, $B6, $33, $34, $35, $36, $37, $38, $39, $3A, $3B ; id 5
+    db $B7, $B8, $B9, $BA, $BB, $BC, $BD, $10, $10, $10, $C1, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44 ; id 6
+    db $C2, $C3, $C4, $C5, $C6, $C7, $C8, $10, $10, $10, $CC, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D ; id 7
+    db $CD, $CE, $CF, $D0, $D1, $D2, $D3, $10, $10, $10, $D7, $4E, $4F, $50, $51, $52, $53, $54, $55, $56 ; id 8
+    db $D8, $D9, $DA, $DB, $DC, $DD, $DE, $10, $10, $10, $E2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
+    db $CD, $CE, $CF, $D0, $D1, $D2, $D3, $10, $10, $10, $D7, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F ; id 10
+    db $D8, $D9, $DA, $DB, $DC, $DD, $DE, $10, $10, $10, $E2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+    db $CD, $CE, $CF, $D0, $D1, $D2, $D3, $10, $10, $10, $D7, $60, $61, $62, $63, $64, $65, $66, $67, $68 ; id 12
+    db $D8, $D9, $DA, $DB, $DC, $DD, $DE, $10, $10, $10, $E2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
 
 ; A = first tile, B = width, C = rows, HL = BG map address (rows 32 apart): writes consecutive tile numbers A, A + 1, ... row by row; on CGB then zero-fills the $240 bytes at vBGMap0 in VRAM bank 1 (all attributes 0, regardless of the rectangle) (E-0073)
 ; 11 call sites from 5 routines (e.g. DebugResultsDisplay_Init, DebugMonsterPictureViewer_Init, DebugAutomap_Init, DebugMapEditor_Init, ...)
@@ -6198,18 +6241,28 @@ Jump_001_6EA0::
 Data_001_6EB0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $80, $FF
 
-; address loaded by DebugSkillViewer_Init
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 20 x 18 tiles, one row per line
+TileRect_01_6F30::
 Data_001_6F30:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $29, $00
-    db $11, $12, $13, $35, $0E, $00, $00, $00, $00, $A0, $A1, $A2, $A3, $A4, $A5, $A6
-    db $A7, $A8
-    ds $16, $00
-    INCBIN "dwm2-cobi-us.gbc", $006F81, $B9
-    ds $17, $00
-    db $31, $29, $14, $15, $16, $00, $31, $29, $32, $29, $00, $00, $2D, $27, $2E, $1A
-    db $30, $26, $16, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $2F, $25, $1A, $30, $26, $16
-    ds $21, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
+    db $00, $11, $12, $13, $35, $0E, $00, $00, $00, $00, $A0, $A1, $A2, $A3, $A4, $A5, $A6, $A7, $A8, $00 ; id 2
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 3
+    db $00, $14, $15, $16, $17, $18, $19, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 4
+    db $00, $1A, $1B, $1C, $1D, $14, $1E, $1F, $20, $15, $12, $00, $00, $00, $80, $81, $82, $83, $84, $00 ; id 5
+    db $00, $14, $1E, $1F, $20, $15, $12, $21, $22, $23, $00, $00, $00, $00, $00, $85, $86, $87, $88, $00 ; id 6
+    db $00, $14, $24, $16, $1A, $25, $00, $00, $00, $00, $00, $00, $00, $00, $00, $89, $8A, $8B, $8C, $00 ; id 7
+    db $00, $33, $29, $34, $29, $28, $1D, $29, $00, $00, $00, $8D, $8E, $8F, $90, $91, $92, $93, $94, $00 ; id 8
+    db $00, $26, $16, $27, $28, $1D, $29, $00, $00, $00, $00, $95, $96, $97, $98, $99, $9A, $9B, $9C, $00 ; id 9
+    db $00, $2A, $2B, $2C, $36, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
+    db $00, $2A, $2B, $2C, $36, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+    db $00, $2A, $2B, $2C, $36, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
+    db $00, $2A, $2B, $2C, $36, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $31, $29, $14, $15, $16, $00, $31, $29, $32, $29, $00 ; id 14
+    db $00, $2D, $27, $2E, $1A, $30, $26, $16, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $00, $2F, $25, $1A, $30, $26, $16, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
 ; address loaded by CreateMonsterRecordOfKindTemp1
 Data_001_7098:: ; heuristic: pointer load in the same bank (bank assumed); C0
