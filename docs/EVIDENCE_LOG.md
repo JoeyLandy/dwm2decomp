@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0211 — Monster pedigree tables (bank $0C)
+
+- Kind: OBSERVATION (reading plus a cross-check against E-0199; C1, C2 where cross-checked).
+- **Reader.** ScriptCommandF6_Run_Case10_Case06 takes a monster number from GridCellAddressFromGridCursorXAndGrid2CursorX: a page base from Data_00C_5916 plus the grid position. It draws the words at $599F + 2 * number and $5F9F + 2 * number (graphics at vTiles2 + $300 / + $390, sprite parts $42 / $43).
+- **Layout.** MonsterPedigreeTableA ($599F) and MonsterPedigreeTableB ($5F9F) have 384 words each, one per monster: $00xx/$01xx is a specific monster, $FExx is "any monster of family xx", and $FEFE is none.
+  - A third table with the same layout, MonsterPedigreeTableUnused ($5C9F), lies between them with no reader found.
+  - Table B runs to the code at $629F.
+- **Cross-check.** For all 95 monsters whose two entries are both families, FamilyPairResultTable (E-0199) row A, column B gives that monster or "parent A's species". So the tables list the parents shown for each monster.
+- **Correction.** `ld hl, $6101` in ScriptCommandF6_Run_Shared07 is the text window's rows and width (L and H go straight to wTextWindowRows and wTextWindowWidth). It is no longer labelled as data (Data_00C_6101 removed).
+- The `names` word option gains `pedigree`.
+- Binary verification: build/run243 PASS, 0 differing bytes; tests OK.
+
 ### E-0210 — Action sound and battle text tables, battle text hooks (bank $3A)
 
 - Kind: OBSERVATION (reading; C1).

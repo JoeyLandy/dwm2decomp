@@ -1062,6 +1062,10 @@ class Rom:
                 if not m:
                     continue
                 imm = int(m.group(2), 16)
+                n1 = ins.get(a + ins[a][0], ("", ""))
+                n2 = ins.get(a + ins[a][0] + n1[0], ("", "")) if isinstance(n1[0], int) else ("", "")
+                if n1[1] == "ld a, l" and n2[1] == "ld [$C52F], a":
+                    continue  # E-0211: rows / width of the text window (wTextWindowRows/Width), not an address
                 if imm in bank0_tables:  # E-0189: a bank-0 address is in bank 0 from any bank
                     self.dlabels[0].setdefault(imm, f"Data_000_{imm:04X}")
                     self.dreason.setdefault((0, imm), "load of a declared bank-0 table")
@@ -2631,6 +2635,11 @@ class Rom:
                      0xFB: "next result when wArg1 = 2, else end of list"}
             if hi in codes:
                 return codes[hi]
+        if kind == "pedigree":  # E-0211: $FExx = family xx, $FEFE = none
+            if v == 0xFEFE:
+                return "none"
+            if hi == 0xFE:
+                return f"family {lo}"
         if kind == "breeding_result":
             if v == 0xFFFF:
                 return "parent A's species"

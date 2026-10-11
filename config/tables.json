@@ -12903,6 +12903,57 @@
         }
       ],
       "note": "E-0210 (C1: ShowActionBattleText (from Func_03B_42F4) reads the byte at $6EA5 + wBattleActionId and, unless it is $FF, passes it to ShowBattleText; 64 bytes end at ShowBattleTextCategory0 ($6EE5))."
+    },
+    {
+      "bank": "0C",
+      "addr": "599F",
+      "label": "MonsterPedigreeTableA",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "names": "pedigree",
+          "name": "monster id, or $FExx = any monster of family xx ($FEFE = none)"
+        }
+      ],
+      "note": "E-0211 (C1: ScriptCommandF6_Run_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $599F + 2 * number: the first word ScriptCommandF6_Run_Case10_Case06 draws (graphics at vTiles2 + $300, sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words)."
+    },
+    {
+      "bank": "0C",
+      "addr": "5F9F",
+      "label": "MonsterPedigreeTableB",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "names": "pedigree",
+          "name": "monster id, or $FExx = any monster of family xx ($FEFE = none)"
+        }
+      ],
+      "note": "E-0211 (C1: ScriptCommandF6_Run_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $5F9F + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words)."
+    },
+    {
+      "bank": "0C",
+      "addr": "5C9F",
+      "label": "MonsterPedigreeTableUnused",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "names": "pedigree",
+          "name": "monster id, or $FExx = any monster of family xx ($FEFE = none)"
+        }
+      ],
+      "note": "E-0211 (C1: 384 words with the same layout between MonsterPedigreeTableA and MonsterPedigreeTableB; no reader found)."
     }
   ]
 }

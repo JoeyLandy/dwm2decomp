@@ -1595,7 +1595,7 @@ Jump_00C_4B12:: ; address name
     push hl
     sla l
     rl h
-    ld de, Data_00C_599F
+    ld de, MonsterPedigreeTableA
     add hl, de
     ld a, $42
     call ScriptCommandF6_Run_Case10_Case06_Sub02
@@ -1603,7 +1603,7 @@ Jump_00C_4B12:: ; address name
     push hl
     sla l
     rl h
-    ld de, Data_00C_5F9F
+    ld de, MonsterPedigreeTableB
     add hl, de
     ld a, $43
     call ScriptCommandF6_Run_Case10_Case06_Sub02
@@ -1611,14 +1611,14 @@ Jump_00C_4B12:: ; address name
     push hl
     sla l
     rl h
-    ld de, Data_00C_599F
+    ld de, MonsterPedigreeTableA
     add hl, de
     ld de, vTiles2 + $300
     call ScriptCommandF6_Run_Case10_Case06_Sub01
     pop hl
     sla l
     rl h
-    ld de, Data_00C_5F9F
+    ld de, MonsterPedigreeTableB
     add hl, de
     ld de, vTiles2 + $390
     call ScriptCommandF6_Run_Case10_Case06_Sub01
@@ -2843,7 +2843,7 @@ Func_00C_529D:: ; address name
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld hl, Data_00C_6101
+    ld hl, $6101
     ld a, l
     ld [wTextWindowRows], a
     ld a, h
@@ -3989,82 +3989,1176 @@ Data_00C_5995:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_599B:: ; heuristic: target of a monotone pointer table; C0
     db $05, $05, $05, $03
 
-; address loaded by ScriptCommandF6_Run_Case10_Case06
-Data_00C_599F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $FE, $00, $FE, $00, $FE, $00, $FE, $00, $FE, $00, $FE, $00, $FE, $00, $FE
-    db $00, $FE, $00, $FE, $FE, $FE, $00, $FE, $00, $FE, $00, $FE, $01, $00, $00, $FE
-    db $00, $FE, $00, $FE, $11, $00, $10, $00, $04, $00, $0B, $00, $15, $00, $13, $00
-    db $17, $00, $18, $00
-    ds $14, $FE
-    INCBIN "dwm2-cobi-us.gbc", $0319E7, $C2
-    ds $10, $FE
-    db $04, $FE, $04, $FE, $04, $FE, $04, $FE, $04, $FE, $04, $FE, $04, $FE, $04, $FE
-    db $04, $FE, $94, $00, $04, $FE, $04, $FE, $04, $FE, $04, $FE, $9C, $00, $04, $FE
-    db $04, $FE, $04, $FE, $9E, $00, $9F, $00, $96, $00, $04, $FE, $A2, $00, $FE, $FE
-    db $FE, $FE, $04, $FE, $99, $00
-    ds $10, $FE
-    db $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE
-    db $05, $FE, $B0, $00, $FE, $FE, $B4, $00, $B5, $00, $05, $FE, $B3, $00, $05, $FE
-    db $05, $FE, $B8, $00, $C1, $00, $C5, $00, $B7, $00, $05, $FE, $C4, $00, $05, $FE
-    db $C6, $00, $B1, $00
-    ds $12, $FE
-    INCBIN "dwm2-cobi-us.gbc", $031B45, $7C
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $031BD1, $B6
-    ds $18, $FE
-    db $00, $FE, $00, $FE, $00, $FE, $00, $FE, $00, $FE, $00, $FE, $00, $FE, $00, $FE
-    db $00, $FE, $00, $FE, $FE, $FE, $00, $FE, $00, $FE, $00, $FE, $01, $00, $00, $FE
-    db $00, $FE, $00, $FE, $11, $00, $10, $00, $04, $00, $0B, $00, $15, $00, $13, $00
-    db $17, $00, $18, $00
-    ds $14, $FE
-    INCBIN "dwm2-cobi-us.gbc", $031CE7, $C2
-    ds $10, $FE
-    db $04, $FE, $04, $FE, $04, $FE, $04, $FE, $04, $FE, $04, $FE, $04, $FE, $04, $FE
-    db $04, $FE, $94, $00, $04, $FE, $8D, $00, $04, $FE, $04, $FE, $04, $FE, $04, $FE
-    db $04, $FE, $04, $FE, $9E, $00, $9F, $00, $96, $00, $04, $FE, $A2, $00, $FE, $FE
-    db $FE, $FE, $04, $FE, $99, $00
-    ds $10, $FE
-    db $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE
-    db $05, $FE, $B0, $00, $FE, $FE, $B4, $00, $B5, $00, $05, $FE, $B3, $00, $05, $FE
-    db $05, $FE, $B8, $00, $C1, $00, $C5, $00, $B7, $00, $05, $FE, $C4, $00, $05, $FE
-    db $C6, $00, $B1, $00
-    ds $12, $FE
-    INCBIN "dwm2-cobi-us.gbc", $031E45, $7C
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $031ED1, $B6
-    ds $18, $FE
+; E-0211 (C1: ScriptCommandF6_Run_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $599F + 2 * number: the first word ScriptCommandF6_Run_Case10_Case06 draws (graphics at vTiles2 + $300, sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words).
+; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
+MonsterPedigreeTableA::
+Data_00C_599F:: ; address name
+    dw $FE00 ; id 0 family 0
+    dw $FE00 ; id 1 DrakSlime family 0
+    dw $FE00 ; id 2 SpotSlime family 0
+    dw $FE00 ; id 3 WingSlime family 0
+    dw $FE00 ; id 4 TreeSlime family 0
+    dw $FE00 ; id 5 Snaily family 0
+    dw $FE00 ; id 6 SlimeNite family 0
+    dw $FE00 ; id 7 Babble family 0
+    dw $FE00 ; id 8 BoxSlime family 0
+    dw $FE00 ; id 9 PearlGel family 0
+    dw $FEFE ; id 10 Slime none
+    dw $FE00 ; id 11 Healer family 0
+    dw $FE00 ; id 12 FangSlime family 0
+    dw $FE00 ; id 13 RockSlime family 0
+    dw $0001 ; id 14 SlimeBorg DrakSlime
+    dw $FE00 ; id 15 Slabbit family 0
+    dw $FE00 ; id 16 KingSlime family 0
+    dw $FE00 ; id 17 Metaly family 0
+    dw $0011 ; id 18 Metabble Metaly
+    dw $0010 ; id 19 SpotKing KingSlime
+    dw $0004 ; id 20 TropicGel TreeSlime
+    dw $000B ; id 21 MimeSlime Healer
+    dw $0015 ; id 22 HaloSlime MimeSlime
+    dw $0013 ; id 23 MetalKing SpotKing
+    dw $0017 ; id 24 GoldSlime MetalKing
+    dw $0018 ; id 25 GranSlime GoldSlime
+    dw $FEFE ; id 26 WonderEgg none
+    dw $FEFE ; id 27 Butch none
+    dw $FEFE ; id 28 ? none
+    dw $FEFE ; id 29 ? none
+    dw $FEFE ; id 30 ? none
+    dw $FEFE ; id 31 ? none
+    dw $FEFE ; id 32 ? none
+    dw $FEFE ; id 33 ? none
+    dw $FEFE ; id 34 ? none
+    dw $FEFE ; id 35 ? none
+    dw $FE01 ; id 36 DragonKid family 1
+    dw $FE01 ; id 37 Tortragon family 1
+    dw $FE01 ; id 38 Pteranod family 1
+    dw $FE01 ; id 39 Gasgon family 1
+    dw $FE01 ; id 40 FairyDrak family 1
+    dw $FE01 ; id 41 LizardMan family 1
+    dw $FE01 ; id 42 Poisongon family 1
+    dw $FE01 ; id 43 Swordgon family 1
+    dw $FE01 ; id 44 Drygon family 1
+    dw $0024 ; id 45 Dragon DragonKid
+    dw $FE01 ; id 46 MiniDrak family 1
+    dw $0027 ; id 47 MadDragon Gasgon
+    dw $0029 ; id 48 Rayburn LizardMan
+    dw $FE01 ; id 49 Chamelgon family 1
+    dw $FE01 ; id 50 LizardFly family 1
+    dw $FE01 ; id 51 Andreal family 1
+    dw $FE01 ; id 52 KingCobra family 1
+    dw $FE01 ; id 53 Vampirus family 1
+    dw $0034 ; id 54 SnakeBat KingCobra
+    dw $FE01 ; id 55 Spikerous family 1
+    dw $002D ; id 56 GreatDrak Dragon
+    dw $FE01 ; id 57 Crestpent family 1
+    dw $0039 ; id 58 WingSnake Crestpent
+    dw $003A ; id 59 Coatol WingSnake
+    dw $0033 ; id 60 Orochi Andreal
+    dw $FE01 ; id 61 BattleRex family 1
+    dw $FE01 ; id 62 SkyDragon family 1
+    dw $0038 ; id 63 Serpentia GreatDrak
+    dw $003E ; id 64 Divinegon SkyDragon
+    dw $0040 ; id 65 Orligon Divinegon
+    dw $0038 ; id 66 GigaDraco GreatDrak
+    dw $FEFE ; id 67 ? none
+    dw $FEFE ; id 68 ? none
+    dw $FEFE ; id 69 ? none
+    dw $FEFE ; id 70 ? none
+    dw $FE02 ; id 71 Tonguella family 2
+    dw $FE02 ; id 72 Almiraj family 2
+    dw $FE02 ; id 73 CatFly family 2
+    dw $FE02 ; id 74 PillowRat family 2
+    dw $FE02 ; id 75 Saccer family 2
+    dw $0055 ; id 76 GulpBeast Grizzly
+    dw $FE02 ; id 77 Skullroo family 2
+    dw $FE02 ; id 78 WindBeast family 2
+    dw $FE02 ; id 79 Beavern family 2
+    dw $004B ; id 80 Antbear Saccer
+    dw $0047 ; id 81 SuperTen Tonguella
+    dw $FE02 ; id 82 IronTurt family 2
+    dw $FE02 ; id 83 Mommonja family 2
+    dw $FE02 ; id 84 HammerMan family 2
+    dw $FE02 ; id 85 Grizzly family 2
+    dw $005E ; id 86 Yeti WildApe
+    dw $FE02 ; id 87 ArrowDog family 2
+    dw $0057 ; id 88 NoctoKing ArrowDog
+    dw $FE02 ; id 89 BeastNite family 2
+    dw $FE02 ; id 90 MadGopher family 2
+    dw $FE02 ; id 91 FairyRat family 2
+    dw $0056 ; id 92 Unicorn Yeti
+    dw $FE02 ; id 93 Goategon family 2
+    dw $0048 ; id 94 WildApe Almiraj
+    dw $005E ; id 95 Trumpeter WildApe
+    dw $005F ; id 96 KingLeo Trumpeter
+    dw $FE02 ; id 97 DarkHorn family 2
+    dw $FE02 ; id 98 MadCat family 2
+    dw $FE02 ; id 99 BigEye family 2
+    dw $0061 ; id 100 Gorago DarkHorn
+    dw $0049 ; id 101 CatMage CatFly
+    dw $0051 ; id 102 Dumbira SuperTen
+    dw $FEFE ; id 103 ? none
+    dw $FEFE ; id 104 ? none
+    dw $FEFE ; id 105 ? none
+    dw $FE03 ; id 106 Picky family 3
+    dw $FE03 ; id 107 Wyvern family 3
+    dw $FE03 ; id 108 BullBird family 3
+    dw $FE03 ; id 109 Florajay family 3
+    dw $FE03 ; id 110 DuckKite family 3
+    dw $FE03 ; id 111 MadPecker family 3
+    dw $FE03 ; id 112 MadRaven family 3
+    dw $FE03 ; id 113 MistyWing family 3
+    dw $FE03 ; id 114 AquaHawk family 3
+    dw $006A ; id 115 Dracky Picky
+    dw $006E ; id 116 KiteHawk DuckKite
+    dw $FEFE ; id 117 BigRoost none
+    dw $FE03 ; id 118 StubBird family 3
+    dw $006C ; id 119 LandOwl BullBird
+    dw $006B ; id 120 MadGoose Wyvern
+    dw $0077 ; id 121 MadCondor LandOwl
+    dw $006F ; id 122 Emyu MadPecker
+    dw $FE03 ; id 123 Blizzardy family 3
+    dw $FE03 ; id 124 Phoenix family 3
+    dw $007C ; id 125 ZapBird Phoenix
+    dw $007D ; id 126 Garudian ZapBird
+    dw $FE03 ; id 127 WhipBird family 3
+    dw $FE03 ; id 128 FunkyBird family 3
+    dw $007B ; id 129 RainHawk Blizzardy
+    dw $0081 ; id 130 Azurile RainHawk
+    dw $007F ; id 131 Shantak WhipBird
+    dw $007A ; id 132 CragDevil Emyu
+    dw $FEFE ; id 133 ? none
+    dw $FEFE ; id 134 ? none
+    dw $FEFE ; id 135 ? none
+    dw $FEFE ; id 136 ? none
+    dw $FEFE ; id 137 ? none
+    dw $FEFE ; id 138 ? none
+    dw $FEFE ; id 139 ? none
+    dw $FEFE ; id 140 ? none
+    dw $FE04 ; id 141 MadPlant family 4
+    dw $FE04 ; id 142 FireWeed family 4
+    dw $FE04 ; id 143 FloraMan family 4
+    dw $FE04 ; id 144 WingTree family 4
+    dw $FE04 ; id 145 CactiBall family 4
+    dw $FE04 ; id 146 Gulpple family 4
+    dw $FE04 ; id 147 Toadstool family 4
+    dw $FE04 ; id 148 AmberWeed family 4
+    dw $FE04 ; id 149 Slurperon family 4
+    dw $0094 ; id 150 Stubsuck AmberWeed
+    dw $FE04 ; id 151 Oniono family 4
+    dw $FE04 ; id 152 DanceVegi family 4
+    dw $FE04 ; id 153 TreeBoy family 4
+    dw $FE04 ; id 154 Devipine family 4
+    dw $009C ; id 155 FaceTree HerbMan
+    dw $FE04 ; id 156 HerbMan family 4
+    dw $FE04 ; id 157 BeanMan family 4
+    dw $FE04 ; id 158 EvilSeed family 4
+    dw $009E ; id 159 ManEater EvilSeed
+    dw $009F ; id 160 Snapper ManEater
+    dw $0096 ; id 161 GhosTree Stubsuck
+    dw $FE04 ; id 162 Rosevine family 4
+    dw $00A2 ; id 163 Egdracil Rosevine
+    dw $FEFE ; id 164 Warubou none
+    dw $FEFE ; id 165 Watabou none
+    dw $FE04 ; id 166 Eggplaton family 4
+    dw $0099 ; id 167 FooHero TreeBoy
+    dw $FEFE ; id 168 ? none
+    dw $FEFE ; id 169 ? none
+    dw $FEFE ; id 170 ? none
+    dw $FEFE ; id 171 ? none
+    dw $FEFE ; id 172 ? none
+    dw $FEFE ; id 173 ? none
+    dw $FEFE ; id 174 ? none
+    dw $FEFE ; id 175 ? none
+    dw $FE05 ; id 176 GiantSlug family 5
+    dw $FE05 ; id 177 Catapila family 5
+    dw $FE05 ; id 178 Gophecada family 5
+    dw $FE05 ; id 179 Butterfly family 5
+    dw $FE05 ; id 180 WeedBug family 5
+    dw $FE05 ; id 181 GiantWorm family 5
+    dw $FE05 ; id 182 Lipsy family 5
+    dw $FE05 ; id 183 StagBug family 5
+    dw $FE05 ; id 184 Pyuro family 5
+    dw $00B0 ; id 185 ArmyAnt GiantSlug
+    dw $FEFE ; id 186 GoHopper none
+    dw $00B4 ; id 187 TailEater WeedBug
+    dw $00B5 ; id 188 ArmorPede GiantWorm
+    dw $FE05 ; id 189 Eyeder family 5
+    dw $00B3 ; id 190 GiantMoth Butterfly
+    dw $FE05 ; id 191 Droll family 5
+    dw $FE05 ; id 192 ArmyCrab family 5
+    dw $00B8 ; id 193 MadHornet Pyuro
+    dw $00C1 ; id 194 Belzebub MadHornet
+    dw $00C5 ; id 195 WarMantis Sickler
+    dw $00B7 ; id 196 HornBeet StagBug
+    dw $FE05 ; id 197 Sickler family 5
+    dw $00C4 ; id 198 Armorpion HornBeet
+    dw $FE05 ; id 199 Digster family 5
+    dw $00C6 ; id 200 Skularach Armorpion
+    dw $00B1 ; id 201 MultiEyes Catapila
+    dw $FEFE ; id 202 ? none
+    dw $FEFE ; id 203 ? none
+    dw $FEFE ; id 204 ? none
+    dw $FEFE ; id 205 ? none
+    dw $FEFE ; id 206 ? none
+    dw $FEFE ; id 207 ? none
+    dw $FEFE ; id 208 ? none
+    dw $FEFE ; id 209 ? none
+    dw $FEFE ; id 210 ? none
+    dw $FE06 ; id 211 Pixy family 6
+    dw $FE06 ; id 212 MedusaEye family 6
+    dw $00DD ; id 213 AgDevil Gremlin
+    dw $FE06 ; id 214 Demonite family 6
+    dw $FE06 ; id 215 DarkEye family 6
+    dw $FE06 ; id 216 EyeBall family 6
+    dw $FE06 ; id 217 SkulRider family 6
+    dw $FE06 ; id 218 EvilBeast family 6
+    dw $FE06 ; id 219 Bubblemon family 6
+    dw $00D8 ; id 220 1EyeClown EyeBall
+    dw $FE06 ; id 221 Gremlin family 6
+    dw $00E2 ; id 222 ArcDemon Ogre
+    dw $FE06 ; id 223 Lionex family 6
+    dw $00DE ; id 224 GoatHorn ArcDemon
+    dw $FE06 ; id 225 Orc family 6
+    dw $FE06 ; id 226 Ogre family 6
+    dw $00D6 ; id 227 GateGuard Demonite
+    dw $00DC ; id 228 ChopClown 1EyeClown
+    dw $00E0 ; id 229 BossTroll GoatHorn
+    dw $FE06 ; id 230 Grendal family 6
+    dw $00E6 ; id 231 Akubar Grendal
+    dw $FE06 ; id 232 MadKnight family 6
+    dw $00E5 ; id 233 EvilWell BossTroll
+    dw $00DA ; id 234 Gigantes EvilBeast
+    dw $00E2 ; id 235 Centasaur Ogre
+    dw $FE06 ; id 236 EvilArmor family 6
+    dw $00E7 ; id 237 Jamirus Akubar
+    dw $00ED ; id 238 Durran Jamirus
+    dw $00EE ; id 239 Titanis Durran
+    dw $00EB ; id 240 LampGenie Centasaur
+    dw $FEFE ; id 241 ? none
+    dw $FEFE ; id 242 ? none
+    dw $FEFE ; id 243 ? none
+    dw $FEFE ; id 244 ? none
+    dw $FEFE ; id 245 ? none
+    dw $FE07 ; id 246 Spooky family 7
+    dw $00FE ; id 247 Skullgon Skulpent
+    dw $00FE ; id 248 PutrePup Skulpent
+    dw $FE07 ; id 249 RotRaven family 7
+    dw $FE07 ; id 250 Mummy family 7
+    dw $FE07 ; id 251 DarkCrab family 7
+    dw $FE07 ; id 252 DeadNite family 7
+    dw $FE07 ; id 253 Shadow family 7
+    dw $FE07 ; id 254 Skulpent family 7
+    dw $00F6 ; id 255 Hork Spooky
+    dw $FE07 ; id 256 Mudron family 7
+    dw $FE07 ; id 257 NiteWhip family 7
+    dw $FE07 ; id 258 WindMerge family 7
+    dw $00F6 ; id 259 Reaper Spooky
+    dw $00FF ; id 260 Inverzon Hork
+    dw $0101 ; id 261 FoxFire NiteWhip
+    dw $0109 ; id 262 CaptDead BoneSlave
+    dw $00FC ; id 263 DeadNoble DeadNite
+    dw $0107 ; id 264 WhiteKing DeadNoble
+    dw $00FA ; id 265 BoneSlave Mummy
+    dw $0109 ; id 266 Skeletor BoneSlave
+    dw $010A ; id 267 Servant Skeletor
+    dw $0108 ; id 268 Lazamanus WhiteKing
+    dw $FEFE ; id 269 Copycat none
+    dw $FE07 ; id 270 MadSpirit family 7
+    dw $010D ; id 271 PomPomBom Copycat
+    dw $010A ; id 272 Niterich Skeletor
+    dw $FEFE ; id 273 ? none
+    dw $FEFE ; id 274 ? none
+    dw $FEFE ; id 275 ? none
+    dw $FEFE ; id 276 ? none
+    dw $FEFE ; id 277 ? none
+    dw $FEFE ; id 278 ? none
+    dw $FEFE ; id 279 ? none
+    dw $FEFE ; id 280 ? none
+    dw $FE08 ; id 281 JewelBag family 8
+    dw $FE08 ; id 282 EvilWand family 8
+    dw $FE08 ; id 283 MadCandle family 8
+    dw $FE08 ; id 284 CoilBird family 8
+    dw $FE08 ; id 285 Facer family 8
+    dw $FE08 ; id 286 SpikyBoy family 8
+    dw $FE08 ; id 287 MadMirror family 8
+    dw $FE08 ; id 288 RogueNite family 8
+    dw $FE08 ; id 289 Puppetor family 8
+    dw $0119 ; id 290 Goopi JewelBag
+    dw $0121 ; id 291 Voodoll Puppetor
+    dw $FE08 ; id 292 MetalDrak family 8
+    dw $FE08 ; id 293 Balzak family 8
+    dw $FE08 ; id 294 SabreMan family 8
+    dw $FE08 ; id 295 CurseLamp family 8
+    dw $FE08 ; id 296 Brushead family 8
+    dw $0126 ; id 297 Roboster SabreMan
+    dw $0129 ; id 298 Roboster2 Roboster
+    dw $FE08 ; id 299 EvilPot family 8
+    dw $011B ; id 300 Gismo MadCandle
+    dw $0124 ; id 301 LavaMan MetalDrak
+    dw $0124 ; id 302 IceMan MetalDrak
+    dw $FE08 ; id 303 Mimic family 8
+    dw $FE08 ; id 304 Exaucers family 8
+    dw $0122 ; id 305 MudDoll Goopi
+    dw $0131 ; id 306 Golem MudDoll
+    dw $0132 ; id 307 StoneMan Golem
+    dw $011E ; id 308 BombCrag SpikyBoy
+    dw $012E ; id 309 GoldGolem IceMan
+    dw $0135 ; id 310 DarkMate GoldGolem
+    dw $0120 ; id 311 ProtoMech RogueNite
+    dw $012C ; id 312 CloudKing Gismo
+    dw $FEFE ; id 313 ? none
+    dw $FEFE ; id 314 ? none
+    dw $FEFE ; id 315 ? none
+    dw $FE09 ; id 316 Petiteel family 9
+    dw $FE09 ; id 317 Moray family 9
+    dw $FE09 ; id 318 WalrusMan family 9
+    dw $FE09 ; id 319 RayGigas family 9
+    dw $FE09 ; id 320 Anemon family 9
+    dw $FE09 ; id 321 Aquarella family 9
+    dw $FE09 ; id 322 Merman family 9
+    dw $FE09 ; id 323 Octokid family 9
+    dw $FE09 ; id 324 PutreFish family 9
+    dw $013C ; id 325 Octoreach Petiteel
+    dw $013C ; id 326 Angleron Petiteel
+    dw $0146 ; id 327 FishRider Angleron
+    dw $0146 ; id 328 RushFish Angleron
+    dw $0141 ; id 329 Gamanian Aquarella
+    dw $0149 ; id 330 Clawster Gamanian
+    dw $014A ; id 331 CancerMan Clawster
+    dw $FE09 ; id 332 RogueWave family 9
+    dw $014C ; id 333 Scallopa RogueWave
+    dw $013C ; id 334 SeaHorse Petiteel
+    dw $014B ; id 335 HoodSquid CancerMan
+    dw $0142 ; id 336 MerTiger Merman
+    dw $014B ; id 337 AxeShark CancerMan
+    dw $0145 ; id 338 Octogon Octoreach
+    dw $0152 ; id 339 KingSquid Octogon
+    dw $0148 ; id 340 Digong RushFish
+    dw $014F ; id 341 WhaleMage HoodSquid
+    dw $0154 ; id 342 Aquadon Digong
+    dw $0152 ; id 343 Octoraid Octogon
+    dw $FE09 ; id 344 Grakos family 9
+    dw $0158 ; id 345 Poseidon Grakos
+    dw $FE09 ; id 346 Pumpoise family 9
+    dw $0145 ; id 347 Starfish Octoreach
+    dw $FEFE ; id 348 ? none
+    dw $FEFE ; id 349 ? none
+    dw $FEFE ; id 350 ? none
+    dw $010B ; id 351 DracoLord Servant
+    dw $015F ; id 352 DracoLord DracoLord
+    dw $0160 ; id 353 LordDraco DracoLord
+    dw $0108 ; id 354 Hargon WhiteKing
+    dw $00ED ; id 355 Sidoh Jamirus
+    dw $0163 ; id 356 Genosidoh Sidoh
+    dw $0162 ; id 357 Baramos Hargon
+    dw $015F ; id 358 Zoma DracoLord
+    dw $0166 ; id 359 AsuraZoma Zoma
+    dw $00EE ; id 360 Pizzaro Durran
+    dw $0168 ; id 361 PsychoPiz Pizzaro
+    dw $0168 ; id 362 Esterk Pizzaro
+    dw $016A ; id 363 Mirudraas Esterk
+    dw $016B ; id 364 Mirudraas Mirudraas
+    dw $0165 ; id 365 Mudou Baramos
+    dw $016B ; id 366 DeathMore Mirudraas
+    dw $016E ; id 367 DeathMore DeathMore
+    dw $016F ; id 368 DeathMore DeathMore
+    dw $0170 ; id 369 Darkdrium DeathMore
+    dw $0169 ; id 370 Orgodemir PsychoPiz
+    dw $0172 ; id 371 Orgodemir Orgodemir
+    dw $FEFE ; id 372 Darck none
+    dw $FEFE ; id 373 Tatsu none
+    dw $FEFE ; id 374 Diago none
+    dw $FEFE ; id 375 Samsi none
+    dw $FEFE ; id 376 Bazoo none
+    dw $FEFE ; id 377 ? none
+    dw $FEFE ; id 378 ? none
+    dw $FEFE ; id 379 ? none
+    dw $FEFE ; id 380 Lamia none
+    dw $FEFE ; id 381 Dimensaur none
+    dw $FEFE ; id 382 Kagebou none
+    dw $FEFE ; id 383 ? none
 
-; address loaded by ScriptCommandF6_Run_Case10_Case06
-Data_00C_5F9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; E-0211 (C1: 384 words with the same layout between MonsterPedigreeTableA and MonsterPedigreeTableB; no reader found).
+; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
+MonsterPedigreeTableUnused::
+Data_00C_5C9F:: ; address name
+    dw $FE00 ; id 0 family 0
+    dw $FE00 ; id 1 DrakSlime family 0
+    dw $FE00 ; id 2 SpotSlime family 0
+    dw $FE00 ; id 3 WingSlime family 0
+    dw $FE00 ; id 4 TreeSlime family 0
+    dw $FE00 ; id 5 Snaily family 0
+    dw $FE00 ; id 6 SlimeNite family 0
+    dw $FE00 ; id 7 Babble family 0
+    dw $FE00 ; id 8 BoxSlime family 0
+    dw $FE00 ; id 9 PearlGel family 0
+    dw $FEFE ; id 10 Slime none
+    dw $FE00 ; id 11 Healer family 0
+    dw $FE00 ; id 12 FangSlime family 0
+    dw $FE00 ; id 13 RockSlime family 0
+    dw $0001 ; id 14 SlimeBorg DrakSlime
+    dw $FE00 ; id 15 Slabbit family 0
+    dw $FE00 ; id 16 KingSlime family 0
+    dw $FE00 ; id 17 Metaly family 0
+    dw $0011 ; id 18 Metabble Metaly
+    dw $0010 ; id 19 SpotKing KingSlime
+    dw $0004 ; id 20 TropicGel TreeSlime
+    dw $000B ; id 21 MimeSlime Healer
+    dw $0015 ; id 22 HaloSlime MimeSlime
+    dw $0013 ; id 23 MetalKing SpotKing
+    dw $0017 ; id 24 GoldSlime MetalKing
+    dw $0018 ; id 25 GranSlime GoldSlime
+    dw $FEFE ; id 26 WonderEgg none
+    dw $FEFE ; id 27 Butch none
+    dw $FEFE ; id 28 ? none
+    dw $FEFE ; id 29 ? none
+    dw $FEFE ; id 30 ? none
+    dw $FEFE ; id 31 ? none
+    dw $FEFE ; id 32 ? none
+    dw $FEFE ; id 33 ? none
+    dw $FEFE ; id 34 ? none
+    dw $FEFE ; id 35 ? none
+    dw $FE01 ; id 36 DragonKid family 1
+    dw $FE01 ; id 37 Tortragon family 1
+    dw $FE01 ; id 38 Pteranod family 1
+    dw $FE01 ; id 39 Gasgon family 1
+    dw $FE01 ; id 40 FairyDrak family 1
+    dw $FE01 ; id 41 LizardMan family 1
+    dw $FE01 ; id 42 Poisongon family 1
+    dw $FE01 ; id 43 Swordgon family 1
+    dw $FE01 ; id 44 Drygon family 1
+    dw $0024 ; id 45 Dragon DragonKid
+    dw $FE01 ; id 46 MiniDrak family 1
+    dw $0027 ; id 47 MadDragon Gasgon
+    dw $0029 ; id 48 Rayburn LizardMan
+    dw $FE01 ; id 49 Chamelgon family 1
+    dw $FE01 ; id 50 LizardFly family 1
+    dw $FE01 ; id 51 Andreal family 1
+    dw $FE01 ; id 52 KingCobra family 1
+    dw $FE01 ; id 53 Vampirus family 1
+    dw $0034 ; id 54 SnakeBat KingCobra
+    dw $FE01 ; id 55 Spikerous family 1
+    dw $002D ; id 56 GreatDrak Dragon
+    dw $FE01 ; id 57 Crestpent family 1
+    dw $0039 ; id 58 WingSnake Crestpent
+    dw $003A ; id 59 Coatol WingSnake
+    dw $0033 ; id 60 Orochi Andreal
+    dw $FE01 ; id 61 BattleRex family 1
+    dw $FE01 ; id 62 SkyDragon family 1
+    dw $0038 ; id 63 Serpentia GreatDrak
+    dw $003E ; id 64 Divinegon SkyDragon
+    dw $0040 ; id 65 Orligon Divinegon
+    dw $0038 ; id 66 GigaDraco GreatDrak
+    dw $FEFE ; id 67 ? none
+    dw $FEFE ; id 68 ? none
+    dw $FEFE ; id 69 ? none
+    dw $FEFE ; id 70 ? none
+    dw $FE02 ; id 71 Tonguella family 2
+    dw $FE02 ; id 72 Almiraj family 2
+    dw $FE02 ; id 73 CatFly family 2
+    dw $FE02 ; id 74 PillowRat family 2
+    dw $FE02 ; id 75 Saccer family 2
+    dw $0055 ; id 76 GulpBeast Grizzly
+    dw $FE02 ; id 77 Skullroo family 2
+    dw $FE02 ; id 78 WindBeast family 2
+    dw $FE02 ; id 79 Beavern family 2
+    dw $004B ; id 80 Antbear Saccer
+    dw $FE02 ; id 81 SuperTen family 2
+    dw $FE02 ; id 82 IronTurt family 2
+    dw $FE02 ; id 83 Mommonja family 2
+    dw $FE02 ; id 84 HammerMan family 2
+    dw $FE02 ; id 85 Grizzly family 2
+    dw $005E ; id 86 Yeti WildApe
+    dw $FE02 ; id 87 ArrowDog family 2
+    dw $0057 ; id 88 NoctoKing ArrowDog
+    dw $FE02 ; id 89 BeastNite family 2
+    dw $FE02 ; id 90 MadGopher family 2
+    dw $FE02 ; id 91 FairyRat family 2
+    dw $0056 ; id 92 Unicorn Yeti
+    dw $FE02 ; id 93 Goategon family 2
+    dw $0048 ; id 94 WildApe Almiraj
+    dw $005E ; id 95 Trumpeter WildApe
+    dw $005F ; id 96 KingLeo Trumpeter
+    dw $FE02 ; id 97 DarkHorn family 2
+    dw $FE02 ; id 98 MadCat family 2
+    dw $FE02 ; id 99 BigEye family 2
+    dw $0061 ; id 100 Gorago DarkHorn
+    dw $0049 ; id 101 CatMage CatFly
+    dw $0051 ; id 102 Dumbira SuperTen
+    dw $FEFE ; id 103 ? none
+    dw $FEFE ; id 104 ? none
+    dw $FEFE ; id 105 ? none
+    dw $FE03 ; id 106 Picky family 3
+    dw $FE03 ; id 107 Wyvern family 3
+    dw $FE03 ; id 108 BullBird family 3
+    dw $FE03 ; id 109 Florajay family 3
+    dw $FE03 ; id 110 DuckKite family 3
+    dw $FE03 ; id 111 MadPecker family 3
+    dw $FE03 ; id 112 MadRaven family 3
+    dw $FE03 ; id 113 MistyWing family 3
+    dw $FE03 ; id 114 AquaHawk family 3
+    dw $006A ; id 115 Dracky Picky
+    dw $FE03 ; id 116 KiteHawk family 3
+    dw $FEFE ; id 117 BigRoost none
+    dw $FE03 ; id 118 StubBird family 3
+    dw $006C ; id 119 LandOwl BullBird
+    dw $006B ; id 120 MadGoose Wyvern
+    dw $0077 ; id 121 MadCondor LandOwl
+    dw $006F ; id 122 Emyu MadPecker
+    dw $FE03 ; id 123 Blizzardy family 3
+    dw $FE03 ; id 124 Phoenix family 3
+    dw $007C ; id 125 ZapBird Phoenix
+    dw $007D ; id 126 Garudian ZapBird
+    dw $FE03 ; id 127 WhipBird family 3
+    dw $FE03 ; id 128 FunkyBird family 3
+    dw $007B ; id 129 RainHawk Blizzardy
+    dw $0081 ; id 130 Azurile RainHawk
+    dw $007F ; id 131 Shantak WhipBird
+    dw $007A ; id 132 CragDevil Emyu
+    dw $FEFE ; id 133 ? none
+    dw $FEFE ; id 134 ? none
+    dw $FEFE ; id 135 ? none
+    dw $FEFE ; id 136 ? none
+    dw $FEFE ; id 137 ? none
+    dw $FEFE ; id 138 ? none
+    dw $FEFE ; id 139 ? none
+    dw $FEFE ; id 140 ? none
+    dw $FE04 ; id 141 MadPlant family 4
+    dw $FE04 ; id 142 FireWeed family 4
+    dw $FE04 ; id 143 FloraMan family 4
+    dw $FE04 ; id 144 WingTree family 4
+    dw $FE04 ; id 145 CactiBall family 4
+    dw $FE04 ; id 146 Gulpple family 4
+    dw $FE04 ; id 147 Toadstool family 4
+    dw $FE04 ; id 148 AmberWeed family 4
+    dw $FE04 ; id 149 Slurperon family 4
+    dw $0094 ; id 150 Stubsuck AmberWeed
+    dw $FE04 ; id 151 Oniono family 4
+    dw $008D ; id 152 DanceVegi MadPlant
+    dw $FE04 ; id 153 TreeBoy family 4
+    dw $FE04 ; id 154 Devipine family 4
+    dw $FE04 ; id 155 FaceTree family 4
+    dw $FE04 ; id 156 HerbMan family 4
+    dw $FE04 ; id 157 BeanMan family 4
+    dw $FE04 ; id 158 EvilSeed family 4
+    dw $009E ; id 159 ManEater EvilSeed
+    dw $009F ; id 160 Snapper ManEater
+    dw $0096 ; id 161 GhosTree Stubsuck
+    dw $FE04 ; id 162 Rosevine family 4
+    dw $00A2 ; id 163 Egdracil Rosevine
+    dw $FEFE ; id 164 Warubou none
+    dw $FEFE ; id 165 Watabou none
+    dw $FE04 ; id 166 Eggplaton family 4
+    dw $0099 ; id 167 FooHero TreeBoy
+    dw $FEFE ; id 168 ? none
+    dw $FEFE ; id 169 ? none
+    dw $FEFE ; id 170 ? none
+    dw $FEFE ; id 171 ? none
+    dw $FEFE ; id 172 ? none
+    dw $FEFE ; id 173 ? none
+    dw $FEFE ; id 174 ? none
+    dw $FEFE ; id 175 ? none
+    dw $FE05 ; id 176 GiantSlug family 5
+    dw $FE05 ; id 177 Catapila family 5
+    dw $FE05 ; id 178 Gophecada family 5
+    dw $FE05 ; id 179 Butterfly family 5
+    dw $FE05 ; id 180 WeedBug family 5
+    dw $FE05 ; id 181 GiantWorm family 5
+    dw $FE05 ; id 182 Lipsy family 5
+    dw $FE05 ; id 183 StagBug family 5
+    dw $FE05 ; id 184 Pyuro family 5
+    dw $00B0 ; id 185 ArmyAnt GiantSlug
+    dw $FEFE ; id 186 GoHopper none
+    dw $00B4 ; id 187 TailEater WeedBug
+    dw $00B5 ; id 188 ArmorPede GiantWorm
+    dw $FE05 ; id 189 Eyeder family 5
+    dw $00B3 ; id 190 GiantMoth Butterfly
+    dw $FE05 ; id 191 Droll family 5
+    dw $FE05 ; id 192 ArmyCrab family 5
+    dw $00B8 ; id 193 MadHornet Pyuro
+    dw $00C1 ; id 194 Belzebub MadHornet
+    dw $00C5 ; id 195 WarMantis Sickler
+    dw $00B7 ; id 196 HornBeet StagBug
+    dw $FE05 ; id 197 Sickler family 5
+    dw $00C4 ; id 198 Armorpion HornBeet
+    dw $FE05 ; id 199 Digster family 5
+    dw $00C6 ; id 200 Skularach Armorpion
+    dw $00B1 ; id 201 MultiEyes Catapila
+    dw $FEFE ; id 202 ? none
+    dw $FEFE ; id 203 ? none
+    dw $FEFE ; id 204 ? none
+    dw $FEFE ; id 205 ? none
+    dw $FEFE ; id 206 ? none
+    dw $FEFE ; id 207 ? none
+    dw $FEFE ; id 208 ? none
+    dw $FEFE ; id 209 ? none
+    dw $FEFE ; id 210 ? none
+    dw $FE06 ; id 211 Pixy family 6
+    dw $FE06 ; id 212 MedusaEye family 6
+    dw $00DD ; id 213 AgDevil Gremlin
+    dw $FE06 ; id 214 Demonite family 6
+    dw $FE06 ; id 215 DarkEye family 6
+    dw $FE06 ; id 216 EyeBall family 6
+    dw $FE06 ; id 217 SkulRider family 6
+    dw $FE06 ; id 218 EvilBeast family 6
+    dw $FE06 ; id 219 Bubblemon family 6
+    dw $00D8 ; id 220 1EyeClown EyeBall
+    dw $FE06 ; id 221 Gremlin family 6
+    dw $00E2 ; id 222 ArcDemon Ogre
+    dw $FE06 ; id 223 Lionex family 6
+    dw $00DE ; id 224 GoatHorn ArcDemon
+    dw $FE06 ; id 225 Orc family 6
+    dw $FE06 ; id 226 Ogre family 6
+    dw $00D6 ; id 227 GateGuard Demonite
+    dw $00DC ; id 228 ChopClown 1EyeClown
+    dw $00E0 ; id 229 BossTroll GoatHorn
+    dw $FE06 ; id 230 Grendal family 6
+    dw $00E6 ; id 231 Akubar Grendal
+    dw $FE06 ; id 232 MadKnight family 6
+    dw $00E5 ; id 233 EvilWell BossTroll
+    dw $00DA ; id 234 Gigantes EvilBeast
+    dw $00E2 ; id 235 Centasaur Ogre
+    dw $FE06 ; id 236 EvilArmor family 6
+    dw $00E7 ; id 237 Jamirus Akubar
+    dw $00ED ; id 238 Durran Jamirus
+    dw $00EE ; id 239 Titanis Durran
+    dw $00EB ; id 240 LampGenie Centasaur
+    dw $FEFE ; id 241 ? none
+    dw $FEFE ; id 242 ? none
+    dw $FEFE ; id 243 ? none
+    dw $FEFE ; id 244 ? none
+    dw $FEFE ; id 245 ? none
+    dw $FE07 ; id 246 Spooky family 7
+    dw $00FE ; id 247 Skullgon Skulpent
+    dw $00FE ; id 248 PutrePup Skulpent
+    dw $FE07 ; id 249 RotRaven family 7
+    dw $FE07 ; id 250 Mummy family 7
+    dw $FE07 ; id 251 DarkCrab family 7
+    dw $FE07 ; id 252 DeadNite family 7
+    dw $FE07 ; id 253 Shadow family 7
+    dw $FE07 ; id 254 Skulpent family 7
+    dw $00F6 ; id 255 Hork Spooky
+    dw $FE07 ; id 256 Mudron family 7
+    dw $FE07 ; id 257 NiteWhip family 7
+    dw $FE07 ; id 258 WindMerge family 7
+    dw $00F6 ; id 259 Reaper Spooky
+    dw $00FF ; id 260 Inverzon Hork
+    dw $0101 ; id 261 FoxFire NiteWhip
+    dw $0109 ; id 262 CaptDead BoneSlave
+    dw $00FC ; id 263 DeadNoble DeadNite
+    dw $0107 ; id 264 WhiteKing DeadNoble
+    dw $00FA ; id 265 BoneSlave Mummy
+    dw $0109 ; id 266 Skeletor BoneSlave
+    dw $010A ; id 267 Servant Skeletor
+    dw $0108 ; id 268 Lazamanus WhiteKing
+    dw $FEFE ; id 269 Copycat none
+    dw $FE07 ; id 270 MadSpirit family 7
+    dw $010D ; id 271 PomPomBom Copycat
+    dw $010A ; id 272 Niterich Skeletor
+    dw $FEFE ; id 273 ? none
+    dw $FEFE ; id 274 ? none
+    dw $FEFE ; id 275 ? none
+    dw $FEFE ; id 276 ? none
+    dw $FEFE ; id 277 ? none
+    dw $FEFE ; id 278 ? none
+    dw $FEFE ; id 279 ? none
+    dw $FEFE ; id 280 ? none
+    dw $FE08 ; id 281 JewelBag family 8
+    dw $FE08 ; id 282 EvilWand family 8
+    dw $FE08 ; id 283 MadCandle family 8
+    dw $FE08 ; id 284 CoilBird family 8
+    dw $FE08 ; id 285 Facer family 8
+    dw $FE08 ; id 286 SpikyBoy family 8
+    dw $FE08 ; id 287 MadMirror family 8
+    dw $FE08 ; id 288 RogueNite family 8
+    dw $FE08 ; id 289 Puppetor family 8
+    dw $0119 ; id 290 Goopi JewelBag
+    dw $0121 ; id 291 Voodoll Puppetor
+    dw $FE08 ; id 292 MetalDrak family 8
+    dw $FE08 ; id 293 Balzak family 8
+    dw $FE08 ; id 294 SabreMan family 8
+    dw $FE08 ; id 295 CurseLamp family 8
+    dw $FE08 ; id 296 Brushead family 8
+    dw $0126 ; id 297 Roboster SabreMan
+    dw $0129 ; id 298 Roboster2 Roboster
+    dw $FE08 ; id 299 EvilPot family 8
+    dw $011B ; id 300 Gismo MadCandle
+    dw $0124 ; id 301 LavaMan MetalDrak
+    dw $0124 ; id 302 IceMan MetalDrak
+    dw $FE08 ; id 303 Mimic family 8
+    dw $FE08 ; id 304 Exaucers family 8
+    dw $0122 ; id 305 MudDoll Goopi
+    dw $0131 ; id 306 Golem MudDoll
+    dw $0132 ; id 307 StoneMan Golem
+    dw $011E ; id 308 BombCrag SpikyBoy
+    dw $012E ; id 309 GoldGolem IceMan
+    dw $0135 ; id 310 DarkMate GoldGolem
+    dw $0120 ; id 311 ProtoMech RogueNite
+    dw $012C ; id 312 CloudKing Gismo
+    dw $FEFE ; id 313 ? none
+    dw $FEFE ; id 314 ? none
+    dw $FEFE ; id 315 ? none
+    dw $FE09 ; id 316 Petiteel family 9
+    dw $FE09 ; id 317 Moray family 9
+    dw $FE09 ; id 318 WalrusMan family 9
+    dw $FE09 ; id 319 RayGigas family 9
+    dw $FE09 ; id 320 Anemon family 9
+    dw $FE09 ; id 321 Aquarella family 9
+    dw $FE09 ; id 322 Merman family 9
+    dw $FE09 ; id 323 Octokid family 9
+    dw $FE09 ; id 324 PutreFish family 9
+    dw $013C ; id 325 Octoreach Petiteel
+    dw $013C ; id 326 Angleron Petiteel
+    dw $0146 ; id 327 FishRider Angleron
+    dw $0146 ; id 328 RushFish Angleron
+    dw $0141 ; id 329 Gamanian Aquarella
+    dw $0149 ; id 330 Clawster Gamanian
+    dw $014A ; id 331 CancerMan Clawster
+    dw $FE09 ; id 332 RogueWave family 9
+    dw $014C ; id 333 Scallopa RogueWave
+    dw $013C ; id 334 SeaHorse Petiteel
+    dw $014B ; id 335 HoodSquid CancerMan
+    dw $0142 ; id 336 MerTiger Merman
+    dw $014B ; id 337 AxeShark CancerMan
+    dw $0145 ; id 338 Octogon Octoreach
+    dw $0152 ; id 339 KingSquid Octogon
+    dw $0148 ; id 340 Digong RushFish
+    dw $014F ; id 341 WhaleMage HoodSquid
+    dw $0154 ; id 342 Aquadon Digong
+    dw $0152 ; id 343 Octoraid Octogon
+    dw $FE09 ; id 344 Grakos family 9
+    dw $0158 ; id 345 Poseidon Grakos
+    dw $FE09 ; id 346 Pumpoise family 9
+    dw $0145 ; id 347 Starfish Octoreach
+    dw $FEFE ; id 348 ? none
+    dw $FEFE ; id 349 ? none
+    dw $FEFE ; id 350 ? none
+    dw $010B ; id 351 DracoLord Servant
+    dw $015F ; id 352 DracoLord DracoLord
+    dw $0160 ; id 353 LordDraco DracoLord
+    dw $0108 ; id 354 Hargon WhiteKing
+    dw $00ED ; id 355 Sidoh Jamirus
+    dw $0163 ; id 356 Genosidoh Sidoh
+    dw $0162 ; id 357 Baramos Hargon
+    dw $015F ; id 358 Zoma DracoLord
+    dw $0166 ; id 359 AsuraZoma Zoma
+    dw $00EE ; id 360 Pizzaro Durran
+    dw $0168 ; id 361 PsychoPiz Pizzaro
+    dw $0168 ; id 362 Esterk Pizzaro
+    dw $016A ; id 363 Mirudraas Esterk
+    dw $016B ; id 364 Mirudraas Mirudraas
+    dw $0165 ; id 365 Mudou Baramos
+    dw $016B ; id 366 DeathMore Mirudraas
+    dw $016E ; id 367 DeathMore DeathMore
+    dw $016F ; id 368 DeathMore DeathMore
+    dw $0170 ; id 369 Darkdrium DeathMore
+    dw $0169 ; id 370 Orgodemir PsychoPiz
+    dw $0172 ; id 371 Orgodemir Orgodemir
+    dw $FEFE ; id 372 Darck none
+    dw $FEFE ; id 373 Tatsu none
+    dw $FEFE ; id 374 Diago none
+    dw $FEFE ; id 375 Samsi none
+    dw $FEFE ; id 376 Bazoo none
+    dw $FEFE ; id 377 ? none
+    dw $FEFE ; id 378 ? none
+    dw $FEFE ; id 379 ? none
+    dw $FEFE ; id 380 Lamia none
+    dw $FEFE ; id 381 Dimensaur none
+    dw $FEFE ; id 382 Kagebou none
+    dw $FEFE ; id 383 ? none
+
+; E-0211 (C1: ScriptCommandF6_Run_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $5F9F + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words).
+; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
+MonsterPedigreeTableB::
+Data_00C_5F9F:: ; address name
+    dw $FEFE ; id 0 none
+    dw $FE01 ; id 1 DrakSlime family 1
+    dw $FE02 ; id 2 SpotSlime family 2
+    dw $FE03 ; id 3 WingSlime family 3
+    dw $FE04 ; id 4 TreeSlime family 4
+    dw $FE05 ; id 5 Snaily family 5
+    dw $FE06 ; id 6 SlimeNite family 6
+    dw $FE07 ; id 7 Babble family 7
+    dw $FE08 ; id 8 BoxSlime family 8
+    dw $FE09 ; id 9 PearlGel family 9
+    dw $FEFE ; id 10 Slime none
+    dw $004A ; id 11 Healer PillowRat
+    dw $0048 ; id 12 FangSlime Almiraj
+    dw $0132 ; id 13 RockSlime Golem
+    dw $002B ; id 14 SlimeBorg Swordgon
+    dw $004D ; id 15 Slabbit Skullroo
+    dw $FE0A ; id 16 KingSlime family 10
+    dw $0124 ; id 17 Metaly MetalDrak
+    dw $0011 ; id 18 Metabble Metaly
+    dw $005C ; id 19 SpotKing Unicorn
+    dw $FE02 ; id 20 TropicGel family 2
+    dw $00DC ; id 21 MimeSlime 1EyeClown
+    dw $FE07 ; id 22 HaloSlime family 7
+    dw $0124 ; id 23 MetalKing MetalDrak
+    dw $0017 ; id 24 GoldSlime MetalKing
+    dw $0018 ; id 25 GranSlime GoldSlime
+    dw $FEFE ; id 26 WonderEgg none
+    dw $FEFE ; id 27 Butch none
+    dw $FEFE ; id 28 ? none
+    dw $FEFE ; id 29 ? none
+    dw $FEFE ; id 30 ? none
+    dw $FEFE ; id 31 ? none
+    dw $FEFE ; id 32 ? none
+    dw $FEFE ; id 33 ? none
+    dw $FEFE ; id 34 ? none
+    dw $FEFE ; id 35 ? none
+    dw $FE00 ; id 36 DragonKid family 0
+    dw $FE02 ; id 37 Tortragon family 2
+    dw $FE03 ; id 38 Pteranod family 3
+    dw $FE04 ; id 39 Gasgon family 4
+    dw $FE05 ; id 40 FairyDrak family 5
+    dw $FE06 ; id 41 LizardMan family 6
+    dw $FE07 ; id 42 Poisongon family 7
+    dw $FE08 ; id 43 Swordgon family 8
+    dw $FE09 ; id 44 Drygon family 9
+    dw $0024 ; id 45 Dragon DragonKid
+    dw $006A ; id 46 MiniDrak Picky
+    dw $FE02 ; id 47 MadDragon family 2
+    dw $0003 ; id 48 Rayburn WingSlime
+    dw $0123 ; id 49 Chamelgon Voodoll
+    dw $00BA ; id 50 LizardFly GoHopper
+    dw $0092 ; id 51 Andreal Gulpple
+    dw $0007 ; id 52 KingCobra Babble
+    dw $0078 ; id 53 Vampirus MadGoose
+    dw $0073 ; id 54 SnakeBat Dracky
+    dw $00C0 ; id 55 Spikerous ArmyCrab
+    dw $002D ; id 56 GreatDrak Dragon
+    dw $0075 ; id 57 Crestpent BigRoost
+    dw $0039 ; id 58 WingSnake Crestpent
+    dw $003A ; id 59 Coatol WingSnake
+    dw $00D4 ; id 60 Orochi MedusaEye
+    dw $00E8 ; id 61 BattleRex MadKnight
+    dw $007C ; id 62 SkyDragon Phoenix
+    dw $00DF ; id 63 Serpentia Lionex
+    dw $003C ; id 64 Divinegon Orochi
+    dw $0135 ; id 65 Orligon GoldGolem
+    dw $00EA ; id 66 GigaDraco Gigantes
+    dw $FEFE ; id 67 ? none
+    dw $FEFE ; id 68 ? none
+    dw $FEFE ; id 69 ? none
+    dw $FEFE ; id 70 ? none
+    dw $FE00 ; id 71 Tonguella family 0
+    dw $FE01 ; id 72 Almiraj family 1
+    dw $FE03 ; id 73 CatFly family 3
+    dw $FE04 ; id 74 PillowRat family 4
+    dw $FE05 ; id 75 Saccer family 5
+    dw $FE01 ; id 76 GulpBeast family 1
+    dw $FE07 ; id 77 Skullroo family 7
+    dw $FE08 ; id 78 WindBeast family 8
+    dw $FE09 ; id 79 Beavern family 9
+    dw $FE01 ; id 80 Antbear family 1
+    dw $00D6 ; id 81 SuperTen Demonite
+    dw $0025 ; id 82 IronTurt Tortragon
+    dw $006E ; id 83 Mommonja DuckKite
+    dw $0096 ; id 84 HammerMan Stubsuck
+    dw $FE06 ; id 85 Grizzly family 6
+    dw $002B ; id 86 Yeti Swordgon
+    dw $00F8 ; id 87 ArrowDog PutrePup
+    dw $00FD ; id 88 NoctoKing Shadow
+    dw $00EC ; id 89 BeastNite EvilArmor
+    dw $0126 ; id 90 MadGopher SabreMan
+    dw $0032 ; id 91 FairyRat LizardFly
+    dw $FE00 ; id 92 Unicorn family 0
+    dw $0029 ; id 93 Goategon LizardMan
+    dw $FE01 ; id 94 WildApe family 1
+    dw $005E ; id 95 Trumpeter WildApe
+    dw $005F ; id 96 KingLeo Trumpeter
+    dw $FE0A ; id 97 DarkHorn family 10
+    dw $002D ; id 98 MadCat Dragon
+    dw $00D8 ; id 99 BigEye EyeBall
+    dw $003C ; id 100 Gorago Orochi
+    dw $0099 ; id 101 CatMage TreeBoy
+    dw $0126 ; id 102 Dumbira SabreMan
+    dw $FEFE ; id 103 ? none
+    dw $FEFE ; id 104 ? none
+    dw $FEFE ; id 105 ? none
+    dw $FE00 ; id 106 Picky family 0
+    dw $FE01 ; id 107 Wyvern family 1
+    dw $FE02 ; id 108 BullBird family 2
+    dw $FE04 ; id 109 Florajay family 4
+    dw $FE05 ; id 110 DuckKite family 5
+    dw $FE06 ; id 111 MadPecker family 6
+    dw $FE07 ; id 112 MadRaven family 7
+    dw $FE08 ; id 113 MistyWing family 8
+    dw $FE09 ; id 114 AquaHawk family 9
+    dw $FE00 ; id 115 Dracky family 0
+    dw $FE08 ; id 116 KiteHawk family 8
+    dw $FEFE ; id 117 BigRoost none
+    dw $000D ; id 118 StubBird RockSlime
+    dw $FE06 ; id 119 LandOwl family 6
+    dw $FE07 ; id 120 MadGoose family 7
+    dw $FE06 ; id 121 MadCondor family 6
+    dw $00D7 ; id 122 Emyu DarkEye
+    dw $0011 ; id 123 Blizzardy Metaly
+    dw $0001 ; id 124 Phoenix DrakSlime
+    dw $012C ; id 125 ZapBird Gismo
+    dw $00DF ; id 126 Garudian Lionex
+    dw $0030 ; id 127 WhipBird Rayburn
+    dw $0098 ; id 128 FunkyBird DanceVegi
+    dw $007C ; id 129 RainHawk Phoenix
+    dw $FE0A ; id 130 Azurile family 10
+    dw $0038 ; id 131 Shantak GreatDrak
+    dw $FE02 ; id 132 CragDevil family 2
+    dw $FEFE ; id 133 ? none
+    dw $FEFE ; id 134 ? none
+    dw $FEFE ; id 135 ? none
+    dw $FEFE ; id 136 ? none
+    dw $FEFE ; id 137 ? none
+    dw $FEFE ; id 138 ? none
+    dw $FEFE ; id 139 ? none
+    dw $FEFE ; id 140 ? none
+    dw $FE00 ; id 141 MadPlant family 0
+    dw $FE01 ; id 142 FireWeed family 1
+    dw $FE02 ; id 143 FloraMan family 2
+    dw $FE03 ; id 144 WingTree family 3
+    dw $FE05 ; id 145 CactiBall family 5
+    dw $FE06 ; id 146 Gulpple family 6
+    dw $FE07 ; id 147 Toadstool family 7
+    dw $FE08 ; id 148 AmberWeed family 8
+    dw $FE09 ; id 149 Slurperon family 9
+    dw $FE02 ; id 150 Stubsuck family 2
+    dw $0140 ; id 151 Oniono Anemon
+    dw $011D ; id 152 DanceVegi Facer
+    dw $00D3 ; id 153 TreeBoy Pixy
+    dw $0092 ; id 154 Devipine Gulpple
+    dw $FE01 ; id 155 FaceTree family 1
+    dw $0080 ; id 156 HerbMan FunkyBird
+    dw $004A ; id 157 BeanMan PillowRat
+    dw $000D ; id 158 EvilSeed RockSlime
+    dw $009E ; id 159 ManEater EvilSeed
+    dw $009F ; id 160 Snapper ManEater
+    dw $FE07 ; id 161 GhosTree family 7
+    dw $FE0A ; id 162 Rosevine family 10
+    dw $00EA ; id 163 Egdracil Gigantes
+    dw $FEFE ; id 164 Warubou none
+    dw $FEFE ; id 165 Watabou none
+    dw $00B6 ; id 166 Eggplaton Lipsy
+    dw $0006 ; id 167 FooHero SlimeNite
+    dw $FEFE ; id 168 ? none
+    dw $FEFE ; id 169 ? none
+    dw $FEFE ; id 170 ? none
+    dw $FEFE ; id 171 ? none
+    dw $FEFE ; id 172 ? none
+    dw $FEFE ; id 173 ? none
+    dw $FEFE ; id 174 ? none
+    dw $FEFE ; id 175 ? none
+    dw $FE00 ; id 176 GiantSlug family 0
+    dw $FE01 ; id 177 Catapila family 1
+    dw $FE02 ; id 178 Gophecada family 2
+    dw $FE03 ; id 179 Butterfly family 3
+    dw $FE04 ; id 180 WeedBug family 4
+    dw $FE06 ; id 181 GiantWorm family 6
+    dw $FE07 ; id 182 Lipsy family 7
+    dw $FE08 ; id 183 StagBug family 8
+    dw $FE09 ; id 184 Pyuro family 9
+    dw $FE00 ; id 185 ArmyAnt family 0
+    dw $FEFE ; id 186 GoHopper none
+    dw $FE04 ; id 187 TailEater family 4
+    dw $FE08 ; id 188 ArmorPede family 8
+    dw $0149 ; id 189 Eyeder Gamanian
+    dw $FE06 ; id 190 GiantMoth family 6
+    dw $00F6 ; id 191 Droll Spooky
+    dw $00FB ; id 192 ArmyCrab DarkCrab
+    dw $FE07 ; id 193 MadHornet family 7
+    dw $FE07 ; id 194 Belzebub family 7
+    dw $FE06 ; id 195 WarMantis family 6
+    dw $00B7 ; id 196 HornBeet StagBug
+    dw $00DC ; id 197 Sickler 1EyeClown
+    dw $00C4 ; id 198 Armorpion HornBeet
+    dw $FE0A ; id 199 Digster family 10
+    dw $0108 ; id 200 Skularach WhiteKing
+    dw $00B1 ; id 201 MultiEyes Catapila
+    dw $FEFE ; id 202 ? none
+    dw $FEFE ; id 203 ? none
+    dw $FEFE ; id 204 ? none
+    dw $FEFE ; id 205 ? none
+    dw $FEFE ; id 206 ? none
+    dw $FEFE ; id 207 ? none
+    dw $FEFE ; id 208 ? none
+    dw $FEFE ; id 209 ? none
+    dw $FEFE ; id 210 ? none
+    dw $FE00 ; id 211 Pixy family 0
+    dw $FE01 ; id 212 MedusaEye family 1
+    dw $FE01 ; id 213 AgDevil family 1
+    dw $FE03 ; id 214 Demonite family 3
+    dw $FE04 ; id 215 DarkEye family 4
+    dw $FE05 ; id 216 EyeBall family 5
+    dw $FE07 ; id 217 SkulRider family 7
+    dw $FE08 ; id 218 EvilBeast family 8
+    dw $FE09 ; id 219 Bubblemon family 9
+    dw $FE00 ; id 220 1EyeClown family 0
+    dw $FE02 ; id 221 Gremlin family 2
+    dw $FE01 ; id 222 ArcDemon family 1
+    dw $0029 ; id 223 Lionex LizardMan
+    dw $FE02 ; id 224 GoatHorn family 2
+    dw $009D ; id 225 Orc BeanMan
+    dw $0054 ; id 226 Ogre HammerMan
+    dw $00D6 ; id 227 GateGuard Demonite
+    dw $00DC ; id 228 ChopClown 1EyeClown
+    dw $FE02 ; id 229 BossTroll family 2
+    dw $0059 ; id 230 Grendal BeastNite
+    dw $00E6 ; id 231 Akubar Grendal
+    dw $0120 ; id 232 MadKnight RogueNite
+    dw $012E ; id 233 EvilWell IceMan
+    dw $FE07 ; id 234 Gigantes family 7
+    dw $FE02 ; id 235 Centasaur family 2
+    dw $00BC ; id 236 EvilArmor ArmorPede
+    dw $0081 ; id 237 Jamirus RainHawk
+    dw $003F ; id 238 Durran Serpentia
+    dw $0061 ; id 239 Titanis DarkHorn
+    dw $FE0A ; id 240 LampGenie family 10
+    dw $FEFE ; id 241 ? none
+    dw $FEFE ; id 242 ? none
+    dw $FEFE ; id 243 ? none
+    dw $FEFE ; id 244 ? none
+    dw $FEFE ; id 245 ? none
+    dw $FE00 ; id 246 Spooky family 0
+    dw $FE01 ; id 247 Skullgon family 1
+    dw $FE02 ; id 248 PutrePup family 2
+    dw $FE03 ; id 249 RotRaven family 3
+    dw $FE04 ; id 250 Mummy family 4
+    dw $FE05 ; id 251 DarkCrab family 5
+    dw $FE06 ; id 252 DeadNite family 6
+    dw $FE08 ; id 253 Shadow family 8
+    dw $FE09 ; id 254 Skulpent family 9
+    dw $FE02 ; id 255 Hork family 2
+    dw $00BF ; id 256 Mudron Droll
+    dw $0071 ; id 257 NiteWhip MistyWing
+    dw $004E ; id 258 WindMerge WindBeast
+    dw $FE06 ; id 259 Reaper family 6
+    dw $00FF ; id 260 Inverzon Hork
+    dw $FE02 ; id 261 FoxFire family 2
+    dw $FE09 ; id 262 CaptDead family 9
+    dw $00FC ; id 263 DeadNoble DeadNite
+    dw $0013 ; id 264 WhiteKing SpotKing
+    dw $008F ; id 265 BoneSlave FloraMan
+    dw $0109 ; id 266 Skeletor BoneSlave
+    dw $010A ; id 267 Servant Skeletor
+    dw $015F ; id 268 Lazamanus DracoLord
+    dw $FEFE ; id 269 Copycat none
+    dw $FE01 ; id 270 MadSpirit family 1
+    dw $0027 ; id 271 PomPomBom Gasgon
+    dw $012A ; id 272 Niterich Roboster2
+    dw $FEFE ; id 273 ? none
+    dw $FEFE ; id 274 ? none
+    dw $FEFE ; id 275 ? none
+    dw $FEFE ; id 276 ? none
+    dw $FEFE ; id 277 ? none
+    dw $FEFE ; id 278 ? none
+    dw $FEFE ; id 279 ? none
+    dw $FEFE ; id 280 ? none
+    dw $FE00 ; id 281 JewelBag family 0
+    dw $FE01 ; id 282 EvilWand family 1
+    dw $FE02 ; id 283 MadCandle family 2
+    dw $FE03 ; id 284 CoilBird family 3
+    dw $FE04 ; id 285 Facer family 4
+    dw $FE05 ; id 286 SpikyBoy family 5
+    dw $FE06 ; id 287 MadMirror family 6
+    dw $FE07 ; id 288 RogueNite family 7
+    dw $00DD ; id 289 Puppetor Gremlin
+    dw $FE08 ; id 290 Goopi family 8
+    dw $FE06 ; id 291 Voodoll family 6
+    dw $0033 ; id 292 MetalDrak Andreal
+    dw $FE0A ; id 293 Balzak family 10
+    dw $00B5 ; id 294 SabreMan GiantWorm
+    dw $0090 ; id 295 CurseLamp WingTree
+    dw $FE09 ; id 296 Brushead family 9
+    dw $000E ; id 297 Roboster SlimeBorg
+    dw $0129 ; id 298 Roboster2 Roboster
+    dw $0005 ; id 299 EvilPot Snaily
+    dw $006B ; id 300 Gismo Wyvern
+    dw $007D ; id 301 LavaMan ZapBird
+    dw $00F7 ; id 302 IceMan Skullgon
+    dw $0008 ; id 303 Mimic BoxSlime
+    dw $0073 ; id 304 Exaucers Dracky
+    dw $0122 ; id 305 MudDoll Goopi
+    dw $0131 ; id 306 Golem MudDoll
+    dw $0132 ; id 307 StoneMan Golem
+    dw $011E ; id 308 BombCrag SpikyBoy
+    dw $012D ; id 309 GoldGolem LavaMan
+    dw $0017 ; id 310 DarkMate MetalKing
+    dw $FE06 ; id 311 ProtoMech family 6
+    dw $003E ; id 312 CloudKing SkyDragon
+    dw $FEFE ; id 313 ? none
+    dw $FEFE ; id 314 ? none
+    dw $FEFE ; id 315 ? none
+    dw $FE00 ; id 316 Petiteel family 0
+    dw $FE01 ; id 317 Moray family 1
+    dw $FE02 ; id 318 WalrusMan family 2
+    dw $FE03 ; id 319 RayGigas family 3
+    dw $FE04 ; id 320 Anemon family 4
+    dw $FE05 ; id 321 Aquarella family 5
+    dw $FE06 ; id 322 Merman family 6
+    dw $FE08 ; id 323 Octokid family 8
+    dw $FE07 ; id 324 PutreFish family 7
+    dw $FE02 ; id 325 Octoreach family 2
+    dw $FE08 ; id 326 Angleron family 8
+    dw $00D9 ; id 327 FishRider SkulRider
+    dw $FE01 ; id 328 RushFish family 1
+    dw $FE05 ; id 329 Gamanian family 5
+    dw $00C0 ; id 330 Clawster ArmyCrab
+    dw $014A ; id 331 CancerMan Clawster
+    dw $0119 ; id 332 RogueWave JewelBag
+    dw $FE06 ; id 333 Scallopa family 6
+    dw $FE01 ; id 334 SeaHorse family 1
+    dw $0155 ; id 335 HoodSquid WhaleMage
+    dw $0062 ; id 336 MerTiger MadCat
+    dw $003D ; id 337 AxeShark BattleRex
+    dw $0145 ; id 338 Octogon Octoreach
+    dw $0152 ; id 339 KingSquid Octogon
+    dw $0037 ; id 340 Digong Spikerous
+    dw $00DC ; id 341 WhaleMage 1EyeClown
+    dw $0038 ; id 342 Aquadon GreatDrak
+    dw $00DF ; id 343 Octoraid Lionex
+    dw $FE0A ; id 344 Grakos family 10
+    dw $016D ; id 345 Poseidon Mudou
+    dw $011E ; id 346 Pumpoise SpikyBoy
+    dw $FE00 ; id 347 Starfish family 0
+    dw $FEFE ; id 348 ? none
+    dw $FEFE ; id 349 ? none
+    dw $FEFE ; id 350 ? none
+    dw $0033 ; id 351 DracoLord Andreal
+    dw $0040 ; id 352 DracoLord Divinegon
+    dw $0041 ; id 353 LordDraco Orligon
+    dw $0017 ; id 354 Hargon MetalKing
+    dw $00A2 ; id 355 Sidoh Rosevine
+    dw $00EF ; id 356 Genosidoh Titanis
+    dw $003C ; id 357 Baramos Orochi
+    dw $0163 ; id 358 Zoma Sidoh
+    dw $0169 ; id 359 AsuraZoma PsychoPiz
+    dw $0040 ; id 360 Pizzaro Divinegon
+    dw $016A ; id 361 PsychoPiz Esterk
+    dw $0064 ; id 362 Esterk Gorago
+    dw $0018 ; id 363 Mirudraas GoldSlime
+    dw $0041 ; id 364 Mirudraas Orligon
+    dw $0064 ; id 365 Mudou Gorago
+    dw $0082 ; id 366 DeathMore Azurile
+    dw $00EF ; id 367 DeathMore Titanis
+    dw $0136 ; id 368 DeathMore DarkMate
+    dw $0019 ; id 369 Darkdrium GranSlime
+    dw $0110 ; id 370 Orgodemir Niterich
+    dw $0161 ; id 371 Orgodemir LordDraco
+    dw $FEFE ; id 372 Darck none
+    dw $FEFE ; id 373 Tatsu none
+    dw $FEFE ; id 374 Diago none
+    dw $FEFE ; id 375 Samsi none
+    dw $FEFE ; id 376 Bazoo none
+    dw $FEFE ; id 377 ? none
+    dw $FEFE ; id 378 ? none
+    dw $FEFE ; id 379 ? none
+    dw $FEFE ; id 380 Lamia none
+    dw $FEFE ; id 381 Dimensaur none
+    dw $FEFE ; id 382 Kagebou none
+    dw $FEFE ; id 383 ? none
     db $FE, $FE, $01, $FE, $02, $FE, $03, $FE, $04, $FE, $05, $FE, $06, $FE, $07, $FE
     db $08, $FE, $09, $FE, $FE, $FE, $4A, $00, $48, $00, $32, $01, $2B, $00, $4D, $00
     db $0A, $FE, $24, $01, $11, $00, $5C, $00, $02, $FE, $DC, $00, $07, $FE, $24, $01
     db $17, $00, $18, $00
-    ds $14, $FE
-    INCBIN "dwm2-cobi-us.gbc", $031FE7, $C1
-    ds $11, $FE
-    db $00, $FE, $01, $FE, $02, $FE, $03, $FE, $05, $FE, $06, $FE, $07, $FE, $08, $FE
-    db $09, $FE, $02, $FE, $40, $01, $1D, $01, $D3, $00, $92, $00, $01, $FE, $80, $00
-    db $4A, $00, $0D, $00, $9E, $00, $9F, $00, $07, $FE, $0A, $FE, $EA, $00, $FE, $FE
-    db $FE, $FE, $B6, $00, $06, $00
-    ds $10, $FE
-    db $00, $FE
-
-; address loaded by ScriptCommandF6_Run_Shared07
-Data_00C_6101:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $01, $FE, $02, $FE, $03, $FE, $04, $FE, $06, $FE, $07, $FE, $08, $FE, $09, $FE
-    db $00, $FE, $FE, $FE, $04, $FE, $08, $FE, $49, $01, $06, $FE, $F6, $00, $FB, $00
-    db $07, $FE, $07, $FE, $06, $FE, $B7, $00, $DC, $00, $C4, $00, $0A, $FE, $08, $01
-    db $B1, $00
-    ds $12, $FE
-    INCBIN "dwm2-cobi-us.gbc", $032145, $7C
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $0321D1, $B6
-    ds $1A, $FE
-    db $01, $FE, $02, $FE, $03, $FE, $04, $FE, $05, $FE, $06, $FE, $07, $FE, $08, $FE
-    db $09, $FE, $FE, $FE, $4A, $00, $48, $00, $32, $01, $2B, $00, $4D, $00, $0A, $FE
-    db $24, $01, $11, $00, $5C, $00, $02, $FE, $DC, $00, $07, $FE, $24, $01, $17, $00
-    db $18, $00
     ds $14, $FE
     INCBIN "dwm2-cobi-us.gbc", $0322E7, $C1
     ds $11, $FE
