@@ -1606,6 +1606,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Many names here are role names (wBattleTemp7A, wEffectByte06, wScreenByteB2): they say which routines use the byte, not what it means in the game.
 - Binary verification: build/run137 PASS, 0 differing bytes; tests OK.
 
+### E-0138 — Monster asset streams named by monster
+
+- Kind: OBSERVATION (C1 for the names; the table links are C1 from E-0041).
+- **Source.** MonsterPictureTable (38:4001), MonsterAttributeMapTable (38:447E), and MonsterSpriteTable (04:4EAA) are indexed by monster id.
+- **Name lookup.** The monster name comes from the routine CopyMonsterNameOfWDAABSlotToDE reads with:
+  - ids below $100: StringTable_MonsterNames (08:4258);
+  - ids from $100 to $1FF: StringTable_MonsterNames2 (08:4458), indexed by the low byte.
+- **What changed.**
+  - Each distinct stream or attribute map is named `MonsterPic_<Name>`, `MonsterPicAttr_<Name>` or `MonsterSprite_<Name>`, after the first non-zero id that points to it. 864 data labels in all.
+  - The generator appends the monster name to the `; id N` comment of tables marked `"id_names": "monster"` in config/tables.json (the three tables above and MonsterPaletteTable).
+- **Limits.**
+  - Many unused ids point to the DrakSlime stream; its note gives the count of those ids.
+  - MonsterSpriteTable id $17F points to 8C:5347, which has no data label and no name, so it stays unnamed.
+  - MonsterTable (592 records) is not marked: the mapping from its ids above $1FF to names is not read.
+- Binary verification: build/run138 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

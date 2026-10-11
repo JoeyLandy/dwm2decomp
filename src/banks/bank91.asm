@@ -1,92 +1,136 @@
 SECTION "Bank 91", ROMX[$4000], BANK[$91]
     db $91
 
+; compressed sprite graphics of monster id $15F (DracoLord) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 240 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4001:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_DracoLord:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4001:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244001, $F0
 
+; compressed sprite graphics of monster id $160 (DracoLord) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 246 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_40F1:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_DracoLord_160:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_40F1:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2440F1, $F6
 
+; compressed sprite graphics of monster id $161 (LordDraco) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 227 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_41E7:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_LordDraco:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_41E7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2441E7, $E3
 
+; compressed sprite graphics of monster id $162 (Hargon) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 237 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_42CA:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Hargon:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_42CA:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2442CA, $ED
 
+; compressed sprite graphics of monster id $163 (Sidoh) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 201 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_43B7:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Sidoh:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_43B7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2443B7, $C9
 
+; compressed sprite graphics of monster id $164 (Genosidoh) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 229 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4480:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Genosidoh:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4480:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244480, $E5
 
+; compressed sprite graphics of monster id $165 (Baramos) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 221 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4565:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Baramos:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4565:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244565, $DD
 
+; compressed sprite graphics of monster id $166 (Zoma) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 211 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4642:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Zoma:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4642:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244642, $D3
 
+; compressed sprite graphics of monster id $167 (AsuraZoma) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 199 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4715:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_AsuraZoma:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4715:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244715, $C7
 
+; compressed sprite graphics of monster id $168 (Pizzaro) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 214 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_47DC:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Pizzaro:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_47DC:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2447DC, $D6
 
+; compressed sprite graphics of monster id $169 (PsychoPiz) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 226 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_48B2:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_PsychoPiz:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_48B2:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2448B2, $E2
 
+; compressed sprite graphics of monster id $16A (Esterk) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 239 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4994:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Esterk:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4994:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244994, $EF
 
+; compressed sprite graphics of monster id $16B (Mirudraas) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 202 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4A83:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Mirudraas:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4A83:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244A83, $CA
 
+; compressed sprite graphics of monster id $16C (Mirudraas) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 214 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4B4D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Mirudraas_16C:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4B4D:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244B4D, $D6
 
+; compressed sprite graphics of monster id $16D (Mudou) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 236 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4C23:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Mudou:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4C23:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244C23, $EC
 
+; compressed sprite graphics of monster id $16E (DeathMore) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 214 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4D0F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_DeathMore:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4D0F:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244D0F, $D6
 
+; compressed sprite graphics of monster id $16F (DeathMore) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 248 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4DE5:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_DeathMore_16F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4DE5:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244DE5, $F8
 
+; compressed sprite graphics of monster id $170 (DeathMore) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 183 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4EDD:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_DeathMore_170:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4EDD:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244EDD, $B7
 
+; compressed sprite graphics of monster id $171 (Darkdrium) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 255 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_4F94:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Darkdrium:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_4F94:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $244F94, $FF
 
+; compressed sprite graphics of monster id $172 (Orgodemir) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 222 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_5093:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Orgodemir:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_5093:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $245093, $DE
 
+; compressed sprite graphics of monster id $173 (Orgodemir) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 230 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_5171:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Orgodemir_173:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_5171:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $245171, $E6
 
+; compressed sprite graphics of monster id $174 (Darck) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
 ; LZSS-compressed asset: 247 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_5257:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+MonsterSprite_Darck:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_5257:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $245257, $F7
 
 ; LZSS-compressed asset: 665 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)

@@ -312,6 +312,8 @@ class CompressedAssetNotes(unittest.TestCase):
                 if not m:
                     continue
                 lm = label.match(lines[i + 1])
+                if lm is None and i + 2 < len(lines) and re.match(r"^[A-Za-z_]\w*::", lines[i + 1]):
+                    lm = label.match(lines[i + 2])  # a named stream keeps Data_BBB_AAAA as its alias (E-0138)
                 self.assertIsNotNone(lm, f"{f.name}:{i + 1}: note is not followed by a Data_ label")
                 bank, addr = int(lm.group(1), 16), int(lm.group(2), 16)
                 out, used, ev = lzss_gfx.decompress(rom, bank, addr)
@@ -373,6 +375,16 @@ class NumericArguments(unittest.TestCase):
         text = (BANKS / "banke0.asm").read_text(encoding="utf-8")
         self.assertIn("ld de, $A070", text)
         self.assertNotIn("sA070", text)
+
+
+class MonsterAssetNames(unittest.TestCase):
+    """Monster picture and sprite streams are named after their monster (E-0138)."""
+
+    def test_picture_table_uses_monster_names(self):
+        text = (BANKS / "bank38.asm").read_text(encoding="utf-8")
+        self.assertIn("    dw MonsterPic_SpotSlime ; id 2 SpotSlime", text)
+        self.assertIn("    dw MonsterPicAttr_", text)
+        self.assertIn("MonsterSprite_DrakSlime::", (BANKS / "bank20.asm").read_text(encoding="utf-8"))
 
 
 class BufferOffsetAliases(unittest.TestCase):

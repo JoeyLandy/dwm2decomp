@@ -1327,6 +1327,17 @@ class Rom:
             else:
                 out.append(f"    db ${ev['b0']:02X}, ${ev['b1']:02X} ; {ev['text']}")
 
+    def monster_name(self, mid: int) -> str:
+        """Name of monster id `mid`: StringTable_MonsterNames (bank 8, $4258) for ids below 256,
+        StringTable_MonsterNames2 ($4458) above, indexed by the low byte (E-0138)."""
+        table = 0x4258 if mid < 0x100 else 0x4458
+        p = self._u16(8, table + 2 * (mid & 0xFF))
+        chars = []
+        while (c := self.data[8 * BANK + p - BANK]) != 0xF0 and len(chars) < 16:
+            chars.append(gb_text.BYTE_TO_TEXT.get(c, "?"))
+            p += 1
+        return "".join(chars)
+
     def emit_table(self, bank: int, t: dict, out: list[str]) -> None:
         """Emit a schema table: one record per entry, `db` runs and `dw` pointers."""
         dl = self.dlabels[bank]
@@ -1344,6 +1355,8 @@ class Rom:
                 raws.append(list(self.data[o:o + f.get("size", 1)]))  # every byte of a db field
                 q += 2 if f["type"] == "ptr" else f.get("size", 1)
             tag = f" ; id {t['id_base'] + i}" if "id_base" in t else f" ; entry {i}"
+            if t.get("id_names") == "monster" and 0 < t["id_base"] + i < 0x200:
+                tag += f" {self.monster_name(t['id_base'] + i)}"
             run: list[int] = []
             tagged = False
 

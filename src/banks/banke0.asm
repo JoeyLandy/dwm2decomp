@@ -4209,7 +4209,7 @@ Jump_0E0_62A0:: ; address name
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $21
-    ld de, Data_021_7548
+    ld de, MonsterSprite_Watabou
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $7D

@@ -471,7 +471,7 @@
     {
       "bank": "38",
       "addr": "4001",
-      "label": "MonsterPictureTable",
+      "label": "MonsterPictureTable", "id_names": "monster",
       "count": 383,
       "id_base": 0,
       "fields": [
@@ -492,7 +492,7 @@
     {
       "bank": "38",
       "addr": "447E",
-      "label": "MonsterAttributeMapTable",
+      "label": "MonsterAttributeMapTable", "id_names": "monster",
       "count": 383,
       "id_base": 0,
       "fields": [
@@ -513,7 +513,7 @@
     {
       "bank": "04",
       "addr": "4EAA",
-      "label": "MonsterSpriteTable",
+      "label": "MonsterSpriteTable", "id_names": "monster",
       "count": 384,
       "id_base": 0,
       "fields": [
@@ -534,7 +534,7 @@
     {
       "bank": "7B",
       "addr": "4209",
-      "label": "MonsterPaletteTable",
+      "label": "MonsterPaletteTable", "id_names": "monster",
       "count": 383,
       "id_base": 0,
       "fields": [
