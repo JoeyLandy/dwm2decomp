@@ -160,6 +160,8 @@ class Rom:
         self.dalias: dict[tuple[int, int], str] = {}  # the same for data labels
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
         self.symbols: dict[int, dict] = {}  # config/symbols.json: evidence-named RAM addresses
+        self.zeroed_streams: set[tuple[int, int]] = set()  # streams that read their cleared destination (E-0150)
+        self.split_ptr: dict[tuple[int, int], tuple[str, int, int]] = {}  # ld e/d/b of a stream address (E-0150)
         self.data_regions: dict[int, list[tuple[int, int]]] = {}  # config/data_regions.json: proven data
         self.ram_used: dict[int, str] = {}  # RAM address -> symbol name used in the source
         self.schemas: list[dict] = []  # config/tables.json
@@ -655,7 +657,8 @@ class Rom:
         >= 8 distinct targets exist and >= 60% of them parse; such a miss rate is far above
         what random data gives, and in real indexes each stream usually ends exactly where
         the next target begins. Only comments change; no bytes."""
-        def parse(bank: int, addr: int):
+        def parse(bank: int, addr: int, zeroed: bool = False):
+            """zeroed: the destination is cleared first, so reading not-yet-written output is fine"""
             fo = bank * BANK + addr - 0x4000
             try:
                 size = self.data[fo] | (self.data[fo + 1] << 8)
@@ -664,7 +667,7 @@ class Rom:
                 out, used, ev = lzss_decompress(self.data, bank, addr)
             except IndexError:
                 return None
-            if ev["unwritten_reads"] or addr - 0x4000 + used > BANK:
+            if (ev["unwritten_reads"] and not zeroed) or addr - 0x4000 + used > BANK:
                 return None
             return len(out), used
 
@@ -697,8 +700,11 @@ class Rom:
         # Second source: literal arguments of calls to the decompress routines (b = bank,
         # de = stream), which no pointer table need mention.
         entries = self._decompress_entries()
+        sgb = {a for (b, a), info in self.names.items() if b == 0 and info["name"] == "SGBTransferCompressed"}
         ld_de = re.compile(r"ld de, \$([0-9A-F]{4})$")
         ld_b = re.compile(r"ld b, \$([0-9A-F]{2})$")
+        ld_e = re.compile(r"ld e, \$([0-9A-F]{2})$")  # LoadSGBBorderForSetA loads E and D apart (E-0150)
+        ld_d = re.compile(r"ld d, \$([0-9A-F]{2})$")
         calls = literal = added = 0
         for bank in range(self.nbanks):
             ins = self.insn[bank]
@@ -708,14 +714,23 @@ class Rom:
                 if kind != "call" or tgt not in entries:
                     continue
                 calls += 1
-                de = bnk = None
+                de = bnk = lo = hi = None
+                at: dict[str, int] = {}
                 for x in reversed(order[max(0, k - 10):k]):
                     if ins[x][2] in SETUP_BARRIER:
                         break
                     if de is None and (m := ld_de.match(ins[x][1])):
                         de = int(m.group(1), 16)
                     if bnk is None and (m := ld_b.match(ins[x][1])):
-                        bnk = int(m.group(1), 16)
+                        bnk, at["BANK"] = int(m.group(1), 16), x
+                    if lo is None and (m := ld_e.match(ins[x][1])):
+                        lo, at["LOW"] = int(m.group(1), 16), x
+                    if hi is None and (m := ld_d.match(ins[x][1])):
+                        hi, at["HIGH"] = int(m.group(1), 16), x
+                if de is None and lo is not None and hi is not None:
+                    de = hi << 8 | lo
+                    for fn, x in at.items():  # print the split loads as LOW/HIGH/BANK of the stream label
+                        self.split_ptr[(bank, x)] = (fn, bnk, de)
                 if de is None or bnk is None or not 0x4000 <= de < 0x8000:
                     continue
                 if not 0 < bnk < self.nbanks or bnk in self.zero:
@@ -723,9 +738,11 @@ class Rom:
                 literal += 1
                 if (bnk, de) in self.streams or de in self.covered[bnk] or (de - 1) in self.dtab[bnk]:
                     continue
-                r = parse(bnk, de)
+                r = parse(bnk, de, zeroed=tgt in sgb)  # SGBTransferCompressed clears vTiles1 first (E-0150)
                 if r:
                     self.streams[(bnk, de)] = r
+                    if tgt in sgb and not parse(bnk, de):
+                        self.zeroed_streams.add((bnk, de))
                     self.dlabels[bnk].setdefault(de, f"Data_{bnk:03X}_{de:04X}")
                     self.dreason.setdefault((bnk, de), "stream decompressed by a call to DecompressTo*")
                     added += 1
@@ -791,8 +808,10 @@ class Rom:
         log(f"compressed assets from table fields: {from_tables} new streams")
 
     def _decompress_entries(self) -> set[int]:
-        """Bank-0 addresses of the decompress routines, taken from config/names.json."""
-        return {a for (b, a), info in self.names.items() if b == 0 and info["name"].startswith("DecompressTo")}
+        """Bank-0 addresses of the decompress routines, taken from config/names.json.
+        SGBTransferCompressed also decompresses DE from bank B (E-0150)."""
+        return {a for (b, a), info in self.names.items()
+                if b == 0 and info["name"].startswith(("DecompressTo", "SGBTransferCompressed"))}
 
     def label_data_refs(self) -> None:
         """Resolve `ld hl|de|bc, $4000-$7FFF` in traced code to labelled data starts (C1).
@@ -2068,7 +2087,8 @@ class Rom:
                     if dinfo and dinfo.get("data") and dinfo.get("note"):
                         out.append(f"; {dinfo['note']}")
                     if stream:
-                        out.append(f"; LZSS-compressed asset: {stream[1]} bytes expand to {stream[0]} "
+                        zf = " into a zero-filled buffer" if (bank, pc) in self.zeroed_streams else ""
+                        out.append(f"; LZSS-compressed asset: {stream[1]} bytes expand to {stream[0]}{zf} "
                                    f"(tools/lzss_gfx.py, E-0016/E-0017; C1)")
                     out.append(f"{dl[pc]}:: ; heuristic: {why}; C0")
                     if (bank, pc) in self.dalias:
@@ -2117,6 +2137,9 @@ class Rom:
                 look.append(nx[1])
                 q += nx[0]
             text = self.symbolize(text, tuple(look), (bank, pc))
+            sp = self.split_ptr.get((bank, pc))
+            if sp and sp[2] in self.dlabels.get(sp[1], {}):
+                text = re.sub(r"\$[0-9A-F]{2}$", f"{sp[0]}({self.dlabels[sp[1]][sp[2]]})", text)
             if text == "stop":
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:

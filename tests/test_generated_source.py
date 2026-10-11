@@ -320,7 +320,8 @@ class CompressedAssetNotes(unittest.TestCase):
                 bank, addr = int(lm.group(1), 16), int(lm.group(2), 16)
                 out, used, ev = lzss_gfx.decompress(rom, bank, addr)
                 checked += 1
-                if (used, len(out)) != (int(m.group(1)), int(m.group(2))) or ev["unwritten_reads"]:
+                zero_filled = "into a zero-filled buffer" in line  # SGB transfers clear vTiles1 first (E-0150)
+                if (used, len(out)) != (int(m.group(1)), int(m.group(2))) or (ev["unwritten_reads"] and not zero_filled):
                     wrong.append(f"{f.name}:{i + 1} {lm.group(0)}")
         self.assertGreater(checked, 1000, "expected the generated source to annotate many streams")
         self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} stream notes disagree with the ROM")

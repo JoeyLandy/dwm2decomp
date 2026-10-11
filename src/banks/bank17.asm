@@ -260,8 +260,48 @@ Jump_017_4265::
     ret
 
 Data_017_426C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $05C26C, $1B0D
+    INCBIN "dwm2-cobi-us.gbc", $05C26C, $220
+
+; LZSS-compressed asset: 7 bytes expand to 90 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_017_448C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+    db $5A, $00, $01, $01, $A0, $FF, $47
+
+; Super Game Boy border set 0: border tiles $00-$7F (4096 bytes, sent with packet set $10); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed asset: 3015 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py, E-0016/E-0017; C1)
+SGBBorder0TilesA:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_017_4493:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $05C493, $BC7
+
+; Super Game Boy border set 0: border tiles $80-$FF (4096 bytes, packet set $11); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed asset: 2729 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py, E-0016/E-0017; C1)
+SGBBorder0TilesB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_017_505A:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $05D05A, $AA9
+
+; Super Game Boy border set 0: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed asset: 989 bytes expand to 2176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+SGBBorder0MapAndPalettes:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_017_5B03:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $05DB03, $276
 
 Data_017_5D79:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $05DD79, $BBF
+    INCBIN "dwm2-cobi-us.gbc", $05DD79, $167
+
+; Super Game Boy border set 1: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed asset: 710 bytes expand to 2176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+SGBBorder1MapAndPalettes:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_017_5EE0:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $05DEE0, $2C6
+
+; Super Game Boy border set 2: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed asset: 949 bytes expand to 2176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+SGBBorder2MapAndPalettes:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_017_61A6:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $05E1A6, $3B5
+
+; Super Game Boy border set 3: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
+; LZSS-compressed asset: 989 bytes expand to 2176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+SGBBorder3MapAndPalettes:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_017_655B:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $05E55B, $3DD
     ds $16C8, $00

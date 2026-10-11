@@ -1795,6 +1795,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** What each row number means (the situation an AI routine scores) is known only through its callers' names (AIScore_*).
 - Binary verification: build/run149 PASS, 0 differing bytes; tests OK.
 
+### E-0150 — Super Game Boy border streams
+
+- Kind: OBSERVATION (reading of LoadSGBBorderForSetA 00:13E5 and SGBTransferCompressed 00:06A8, plus decoding; C1).
+- **Source.** For each of five border sets, LoadSGBBorderForSetA calls SGBTransferCompressed three times with A = packet set $10, $11, $0F.
+  - It loads the stream address as separate `ld e` / `ld d` immediates and the bank with `ld b`.
+  - SGBTransferCompressed clears vTiles1 ($1000 bytes), decompresses the stream there and sends it with SendSGBPacketSet.
+- **Checks.**
+  - The 4096-byte streams read output positions before writing them. With the cleared buffer those reads are zeros, so the streams are valid only under that condition.
+  - The sizes (4096, 4096, $880) match two CHR_TRN tile halves and a PCT_TRN map with palettes (Pan Docs SGB command layout; the packet contents were not decoded).
+- **What changed.**
+  - SGBTransferCompressed counts as a decompress routine.
+  - The literal-argument stream finder combines split `ld e`/`ld d` loads.
+  - Streams found at SGBTransferCompressed calls may read their zero-filled destination; their note says "into a zero-filled buffer" and the CompressedAssetNotes test accepts them.
+  - 10 more streams in all. The 15 border streams are named SGBBorderN{TilesA,TilesB,MapAndPalettes}.
+  - The split loads print as `ld e, LOW(Label)` / `ld d, HIGH(Label)` / `ld b, BANK(Label)`, with the same bytes.
+- **Limits.** The streams that BootAndMainLoop sends through SGBTransferCompressed (SGB system data) are not named.
+- Binary verification: build/run150 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

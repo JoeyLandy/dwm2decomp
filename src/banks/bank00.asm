@@ -253,9 +253,9 @@ Jump_000_01DF::
     call SGBTransferRaw
     call SpinDelay
     ld a, $0D
-    ld e, $8C
-    ld d, $44
-    ld b, $17
+    ld e, LOW(Data_017_448C)
+    ld d, HIGH(Data_017_448C)
+    ld b, BANK(Data_017_448C)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $12
@@ -3409,21 +3409,21 @@ Func_000_13E5:: ; address name
     cp a, $00
     jr nz, Jump_000_1419
     ld a, $10
-    ld e, $93
-    ld d, $44
-    ld b, $17
+    ld e, LOW(SGBBorder0TilesA)
+    ld d, HIGH(SGBBorder0TilesA)
+    ld b, BANK(SGBBorder0TilesA)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $11
-    ld e, $5A
-    ld d, $50
-    ld b, $17
+    ld e, LOW(SGBBorder0TilesB)
+    ld d, HIGH(SGBBorder0TilesB)
+    ld b, BANK(SGBBorder0TilesB)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
-    ld e, $03
-    ld d, $5B
-    ld b, $17
+    ld e, LOW(SGBBorder0MapAndPalettes)
+    ld d, HIGH(SGBBorder0MapAndPalettes)
+    ld b, BANK(SGBBorder0MapAndPalettes)
     call SGBTransferCompressed
     jp Jump_000_14CF
 
@@ -3431,21 +3431,21 @@ Jump_000_1419::
     cp a, $01
     jr nz, Jump_000_1447
     ld a, $10
-    ld e, $01
-    ld d, $40
-    ld b, $18
+    ld e, LOW(SGBBorder1TilesA)
+    ld d, HIGH(SGBBorder1TilesA)
+    ld b, BANK(SGBBorder1TilesA)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $11
-    ld e, $0B
-    ld d, $49
-    ld b, $18
+    ld e, LOW(SGBBorder1TilesB)
+    ld d, HIGH(SGBBorder1TilesB)
+    ld b, BANK(SGBBorder1TilesB)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
-    ld e, $E0
-    ld d, $5E
-    ld b, $17
+    ld e, LOW(SGBBorder1MapAndPalettes)
+    ld d, HIGH(SGBBorder1MapAndPalettes)
+    ld b, BANK(SGBBorder1MapAndPalettes)
     call SGBTransferCompressed
     jp Jump_000_14CF
 
@@ -3453,21 +3453,21 @@ Jump_000_1447::
     cp a, $02
     jr nz, Jump_000_1474
     ld a, $10
-    ld e, $C1
-    ld d, $49
-    ld b, $18
+    ld e, LOW(SGBBorder2TilesA)
+    ld d, HIGH(SGBBorder2TilesA)
+    ld b, BANK(SGBBorder2TilesA)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $11
-    ld e, $6F
-    ld d, $55
-    ld b, $18
+    ld e, LOW(SGBBorder2TilesB)
+    ld d, HIGH(SGBBorder2TilesB)
+    ld b, BANK(SGBBorder2TilesB)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
-    ld e, $A6
-    ld d, $61
-    ld b, $17
+    ld e, LOW(SGBBorder2MapAndPalettes)
+    ld d, HIGH(SGBBorder2MapAndPalettes)
+    ld b, BANK(SGBBorder2MapAndPalettes)
     call SGBTransferCompressed
     jr Jump_000_14CF
 
@@ -3475,21 +3475,21 @@ Jump_000_1474::
     cp a, $03
     jr nz, Jump_000_14A1
     ld a, $10
-    ld e, $2D
-    ld d, $60
-    ld b, $18
+    ld e, LOW(SGBBorder3TilesA)
+    ld d, HIGH(SGBBorder3TilesA)
+    ld b, BANK(SGBBorder3TilesA)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $11
-    ld e, $F4
-    ld d, $6B
-    ld b, $18
+    ld e, LOW(SGBBorder3TilesB)
+    ld d, HIGH(SGBBorder3TilesB)
+    ld b, BANK(SGBBorder3TilesB)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
-    ld e, $5B
-    ld d, $65
-    ld b, $17
+    ld e, LOW(SGBBorder3MapAndPalettes)
+    ld d, HIGH(SGBBorder3MapAndPalettes)
+    ld b, BANK(SGBBorder3MapAndPalettes)
     call SGBTransferCompressed
     jr Jump_000_14CF
 
@@ -3497,21 +3497,21 @@ Jump_000_14A1::
     cp a, $04
     jr nz, Jump_000_14CF
     ld a, $10
-    ld e, $AA
-    ld d, $5D
-    ld b, $E1
+    ld e, LOW(SGBBorder4TilesA)
+    ld d, HIGH(SGBBorder4TilesA)
+    ld b, BANK(SGBBorder4TilesA)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $11
-    ld e, $90
-    ld d, $69
-    ld b, $E1
+    ld e, LOW(SGBBorder4TilesB)
+    ld d, HIGH(SGBBorder4TilesB)
+    ld b, BANK(SGBBorder4TilesB)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $0F
-    ld e, $E2
-    ld d, $76
-    ld b, $E1
+    ld e, LOW(SGBBorder4MapAndPalettes)
+    ld d, HIGH(SGBBorder4MapAndPalettes)
+    ld b, BANK(SGBBorder4MapAndPalettes)
     call SGBTransferCompressed
     call SpinDelay
 
