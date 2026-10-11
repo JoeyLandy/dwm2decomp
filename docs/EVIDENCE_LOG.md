@@ -2042,6 +2042,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** One source (Tiles_BB_AAAA). Most tile copies take their arguments from tables or registers, so this rule finds little.
 - Binary verification: build/run169 PASS, 0 differing bytes; tests OK.
 
+### E-0169 — The text glyph font (bank $1F)
+
+- Kind: OBSERVATION (reading of GlyphCopyArgsForA 1F:5CF8, LoadSixteenGlyphTilesFromTable73BC and CopyGlyphTilesToVRAM; C2 for "glyph number = text byte", because the bit patterns match the charmap).
+- **Source.** The glyph copiers take the 16 bytes at 1F:$4010 + 16 * glyph. CopyGlyphTilesToVRAM copies one glyph per byte of a text string. The patterns agree with the charmap (tools/gb_text.py): glyph 0 is a drawn 0, glyph 10 an A, glyph 12 a C.
+- **Declared.** GlyphFont: 259 glyphs up to SendSGBPacketSet at $5040, one per line. A new `id_names: "charmap"` option appends the character for each glyph number. About 4 KB of slices and labels inside are now laid out.
+- Binary verification: build/run170 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

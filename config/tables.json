@@ -2385,6 +2385,23 @@
       ],
       "record": "2 x 1 tiles, one row per line",
       "note": "E-0167 (C1: entry 10 of WorldMapViewTable)."
+    },
+    {
+      "bank": "1F",
+      "addr": "4010",
+      "label": "GlyphFont",
+      "count": 259,
+      "id_base": 0,
+      "id_names": "charmap",
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "glyph tile (2bpp, 16 bytes)"
+        }
+      ],
+      "note": "E-0169 (C1: GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable73BC copy the 16 bytes at $4010 + 16 * glyph from bank $1F to VRAM, and CopyGlyphTilesToVRAM takes one glyph per text byte, so the glyph number is the character code; 259 glyphs up to SendSGBPacketSet at $5040)."
     }
   ]
 }

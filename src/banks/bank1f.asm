@@ -1,202 +1,310 @@
 SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
     db $1F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-; address loaded by GlyphCopyArgsForA, LoadSixteenGlyphTilesFromTable73BC
+; E-0169 (C1: GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable73BC copy the 16 bytes at $4010 + 16 * glyph from bank $1F to VRAM, and CopyGlyphTilesToVRAM takes one glyph per text byte, so the glyph number is the character code; 259 glyphs up to SendSGBPacketSet at $5040).
+; record: glyph tile (2bpp, 16 bytes)
+GlyphFont::
 Data_01F_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $07C010, $D0
-
-; address loaded by ScriptCommandE5_Run_Case01_Case03
+    db $FF, $7C, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 0 '0'
+    db $FF, $10, $FF, $30, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00 ; id 1 '1'
+    db $FF, $7C, $FF, $82, $FF, $02, $FF, $0C, $FF, $30, $FF, $40, $FF, $FE, $FF, $00 ; id 2 '2'
+    db $FF, $7C, $FF, $82, $FF, $02, $FF, $3C, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 3 '3'
+    db $FF, $0C, $FF, $14, $FF, $24, $FF, $44, $FF, $84, $FF, $FE, $FF, $04, $FF, $00 ; id 4 '4'
+    db $FF, $FC, $FF, $80, $FF, $80, $FF, $FC, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 5 '5'
+    db $FF, $7C, $FF, $82, $FF, $80, $FF, $FC, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 6 '6'
+    db $FF, $7E, $FF, $82, $FF, $02, $FF, $04, $FF, $04, $FF, $08, $FF, $08, $FF, $00 ; id 7 '7'
+    db $FF, $7C, $FF, $82, $FF, $82, $FF, $7C, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 8 '8'
+    db $FF, $7C, $FF, $82, $FF, $82, $FF, $7E, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 9 '9'
+    db $FF, $10, $FF, $28, $FF, $28, $FF, $44, $FF, $7C, $FF, $82, $FF, $82, $FF, $00 ; id 10 'A'
+    db $FF, $F8, $FF, $84, $FF, $84, $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $00 ; id 11 'B'
+    db $FF, $3C, $FF, $42, $FF, $80, $FF, $80, $FF, $80, $FF, $42, $FF, $3C, $FF, $00 ; id 12 'C'
 Data_01F_40E0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $F8, $FF, $84, $FF, $82, $FF, $82, $FF, $82, $FF, $84, $FF, $F8, $FF, $00
-    db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $FE, $FF, $00
-    db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00
-
-; address loaded by ScriptCommandF6_Run_Case10_Case00
+    db $FF, $F8, $FF, $84, $FF, $82, $FF, $82, $FF, $82, $FF, $84, $FF, $F8, $FF, $00 ; id 13 'D'
+    db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $FE, $FF, $00 ; id 14 'E'
+    db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00 ; id 15 'F'
 Data_01F_4110:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $3C, $FF, $42, $FF, $80, $FF, $9E, $FF, $82, $FF, $42, $FF, $3C, $FF, $00
-
-; address loaded by LoadFourFrameTilesAndStep, ScriptCommandE8_Run_Case06_Case1D, ScriptCommandE8_Run_Case07_Case37, RunScreenStep_F0_5B50_Case08
+    db $FF, $3C, $FF, $42, $FF, $80, $FF, $9E, $FF, $82, $FF, $42, $FF, $3C, $FF, $00 ; id 16 'G'
 Data_01F_4120:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $82, $FF, $82, $FF, $82, $FF, $FE, $FF, $82, $FF, $82, $FF, $82, $FF, $00
-
-; address loaded by DebugMessageTest_Init, ScriptCommandEB_Run_Shared02, LoadThreeTilesAndDrawRows4603To460B
+    db $FF, $82, $FF, $82, $FF, $82, $FF, $FE, $FF, $82, $FF, $82, $FF, $82, $FF, $00 ; id 17 'H'
 Data_01F_4130:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $7C, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00
-    db $FF, $7E, $FF, $08, $FF, $08, $FF, $08, $FF, $88, $FF, $88, $FF, $70, $FF, $00
-    db $FF, $84, $FF, $88, $FF, $90, $FF, $B0, $FF, $C8, $FF, $84, $FF, $82, $FF, $00
-
-; address loaded by DebugMessageTest_Init, DebugResultsDisplay_Init, ScriptCommandF6_Run_Case10_Case00
+    db $FF, $7C, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00 ; id 18 'I'
+    db $FF, $7E, $FF, $08, $FF, $08, $FF, $08, $FF, $88, $FF, $88, $FF, $70, $FF, $00 ; id 19 'J'
+    db $FF, $84, $FF, $88, $FF, $90, $FF, $B0, $FF, $C8, $FF, $84, $FF, $82, $FF, $00 ; id 20 'K'
 Data_01F_4160:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $FE, $FF, $00
-
-; address loaded by DebugMessageTest_Init, ScriptCommandF6_Run_Case10_Case00, ScriptCommandF3_Run_Case03_Case00, ScriptCommandE8_Run_Case06_Case1D and 2 more
+    db $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $FE, $FF, $00 ; id 21 'L'
 Data_01F_4170:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $82, $FF, $C6, $FF, $AA, $FF, $92, $FF, $82, $FF, $82, $FF, $82, $FF, $00
-
-; address loaded by AcknowledgeTextPrompt_Sub01, DebugMessageTest_Init, ScriptCommandF2_Run_Case00, ScriptCommandF3_Run_Case03_Case00 and 7 more
+    db $FF, $82, $FF, $C6, $FF, $AA, $FF, $92, $FF, $82, $FF, $82, $FF, $82, $FF, $00 ; id 22 'M'
 Data_01F_4180:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00
-
-; address loaded by DebugMessageTest_Init, LoadFourFrameTilesAndStep
+    db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00 ; id 23 'N'
 Data_01F_4190:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $82, $FF, $44, $FF, $38, $FF, $00
-
-; address loaded by ScriptCommandE8_Run_Case06_Case1D, ScriptCommandE8_Run_Case07_Case37, RunScreenStep_F0_5B50_Case08
+    db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $82, $FF, $44, $FF, $38, $FF, $00 ; id 24 'O'
 Data_01F_41A0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00
-    db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $8A, $FF, $44, $FF, $3A, $FF, $00
-    db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $88, $FF, $84, $FF, $82, $FF, $00
-
-; address loaded by DebugMessageTest_Init, ScriptCommandF6_Run_Case10_Case00
+    db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00 ; id 25 'P'
+    db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $8A, $FF, $44, $FF, $3A, $FF, $00 ; id 26 'Q'
+    db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $88, $FF, $84, $FF, $82, $FF, $00 ; id 27 'R'
 Data_01F_41D0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $78, $FF, $84, $FF, $80, $FF, $7C, $FF, $02, $FF, $82, $FF, $7C, $FF, $00
-    db $FF, $FE, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
-    db $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00
-    db $FF, $82, $FF, $82, $FF, $44, $FF, $44, $FF, $28, $FF, $28, $FF, $10, $FF, $00
-
-; address loaded by LoadFourFrameTilesAndStep
+    db $FF, $78, $FF, $84, $FF, $80, $FF, $7C, $FF, $02, $FF, $82, $FF, $7C, $FF, $00 ; id 28 'S'
+    db $FF, $FE, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 29 'T'
+    db $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00 ; id 30 'U'
+    db $FF, $82, $FF, $82, $FF, $44, $FF, $44, $FF, $28, $FF, $28, $FF, $10, $FF, $00 ; id 31 'V'
 Data_01F_4210:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $82, $FF, $92, $FF, $AA, $FF, $AA, $FF, $C6, $FF, $C6, $FF, $82, $FF, $00
-    db $FF, $C6, $FF, $44, $FF, $28, $FF, $10, $FF, $28, $FF, $44, $FF, $C6, $FF, $00
-
-; address loaded by ScriptCommandF4_Run_Case04_Case15, ScriptCommandEB_Run_Case05_Case10, RunNameEntryStateWhenNotFading_Case00_Case00, ScriptCommandEE_Run_Case02 and 5 more
+    db $FF, $82, $FF, $92, $FF, $AA, $FF, $AA, $FF, $C6, $FF, $C6, $FF, $82, $FF, $00 ; id 32 'W'
+    db $FF, $C6, $FF, $44, $FF, $28, $FF, $10, $FF, $28, $FF, $44, $FF, $C6, $FF, $00 ; id 33 'X'
 Data_01F_4230:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $82, $FF, $44, $FF, $28, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
-    db $FF, $FE, $FF, $04, $FF, $08, $FF, $10, $FF, $20, $FF, $40, $FF, $FE, $FF, $00
-
-; address loaded by ScriptCommandF3_Run_Case03_Case00, DrawTileMap5E12AndLoadFrameTiles, RunScreenStep_F0_5DE8_Case00
+    db $FF, $82, $FF, $44, $FF, $28, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 34 'Y'
+    db $FF, $FE, $FF, $04, $FF, $08, $FF, $10, $FF, $20, $FF, $40, $FF, $FE, $FF, $00 ; id 35 'Z'
 Data_01F_4250:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $04, $FF, $7C, $FF, $84, $FF, $7E, $FF, $00
-
-; address loaded by RunScreenStep_F0_5B50_Case08
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $04, $FF, $7C, $FF, $84, $FF, $7E, $FF, $00 ; id 36 'a'
 Data_01F_4260:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $00
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $80, $FF, $84, $FF, $78, $FF, $00
-
-; address loaded by ScriptCommandF3_Run_Case03_Case00
+    db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $00 ; id 37 'b'
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $80, $FF, $84, $FF, $78, $FF, $00 ; id 38 'c'
 Data_01F_4280:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $04, $FF, $04, $FF, $04, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $00
-
-; address loaded by ScriptCommandF4_Run_Case04_Case15, ScriptCommandEB_Run_Case05_Case10, RunNameEntryStateWhenNotFading_Case00_Case00, ScriptCommandEE_Run_Case02 and 5 more
+    db $FF, $04, $FF, $04, $FF, $04, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $00 ; id 39 'd'
 Data_01F_4290:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $FC, $FF, $80, $FF, $7C, $FF, $00
-    db $FF, $18, $FF, $24, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $00
-    db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8
-    db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $00
-
-; address loaded by ScriptCommandED_Run_Case07_Case08, ScriptCommandED_Run_Case07_Case1E, ScriptCommandE8_Run_Case09_Case1B_Case00, ScriptCommandE8_Run_Case08_Case1B and 1 more
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $FC, $FF, $80, $FF, $7C, $FF, $00 ; id 40 'e'
+    db $FF, $18, $FF, $24, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $00 ; id 41 'f'
+    db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8 ; id 42 'g'
+    db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $00 ; id 43 'h'
 Data_01F_42D0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
-    db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $60
-    db $FF, $80, $FF, $80, $FF, $8C, $FF, $B0, $FF, $C0, $FF, $B0, $FF, $8C, $FF, $00
-
-; address loaded by ScriptCommandF3_Run_Case03_Case00, LoadThreeTilesAndDrawRows4603To460B
+    db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 44 'i'
+    db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $60 ; id 45 'j'
+    db $FF, $80, $FF, $80, $FF, $8C, $FF, $B0, $FF, $C0, $FF, $B0, $FF, $8C, $FF, $00 ; id 46 'k'
 Data_01F_4300:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
-
-; address loaded by LoadThreeTilesAndDrawRows4603To460B
+    db $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00 ; id 47 'l'
 Data_01F_4310:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $00, $FF, $EC, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $00
-
-; address loaded by ScriptCommandEB_Run_Shared02
+    db $FF, $00, $FF, $00, $FF, $EC, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $00 ; id 48 'm'
 Data_01F_4320:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $00
-
-; address loaded by AcknowledgeTextPrompt_Sub01, PauseMenu_State3_Case06_Case01, LoadFourFrameTilesAndStep, ScriptCommandF2_Run_Case00 and 9 more
+    db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $00 ; id 49 'n'
 Data_01F_4330:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00
-
-; address loaded by ScriptCommandE5_Run_Case01_Case03
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00 ; id 50 'o'
 Data_01F_4340:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $80, $FF, $80
-    db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $04
-    db $FF, $00, $FF, $00, $FF, $9C, $FF, $A0, $FF, $C0, $FF, $80, $FF, $80, $FF, $00
-
-; address loaded by ScriptCommandF4_Run_Case04_Case15, RunNameEntryStateWhenNotFading_Case00_Case00, ScriptCommandEE_Run_Case02, ScriptCommandED_Run_Case04_Case3D and 5 more
+    db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $80, $FF, $80 ; id 51 'p'
+    db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $04 ; id 52 'q'
+    db $FF, $00, $FF, $00, $FF, $9C, $FF, $A0, $FF, $C0, $FF, $80, $FF, $80, $FF, $00 ; id 53 'r'
 Data_01F_4370:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $07C370, $50
-
-; address loaded by ScriptCommandED_Run_Case07_Case08, ScriptCommandED_Run_Case07_Case1E, ScriptCommandE5_Run_Case01_Case03
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $80, $FF, $78, $FF, $04, $FF, $F8, $FF, $00 ; id 54 's'
+    db $FF, $00, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $1C, $FF, $00 ; id 55 't'
+    db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00 ; id 56 'u'
+    db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $48, $FF, $30, $FF, $00 ; id 57 'v'
+    db $FF, $00, $FF, $00, $FF, $82, $FF, $92, $FF, $92, $FF, $AA, $FF, $44, $FF, $00 ; id 58 'w'
 Data_01F_43C0:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $07C3C0, $90
-
-; address loaded by ScriptCommandF4_Run_Case04_Case0C, ScriptCommandF4_Run_Case11_Case01, Func_037_4AFD_Case04_Case0C, RunScreenStateWhenNotFading_F1_Case04_Case0C and 1 more
+    db $FF, $00, $FF, $00, $FF, $84, $FF, $48, $FF, $30, $FF, $48, $FF, $84, $FF, $00 ; id 59 'x'
+    db $FF, $00, $FF, $00, $FF, $84, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8 ; id 60 'y'
+    db $FF, $00, $FF, $00, $FF, $FC, $FF, $08, $FF, $30, $FF, $40, $FF, $FC, $FF, $00 ; id 61 'z'
+    db $FF, $80, $FF, $80, $FF, $3C, $FF, $40, $FF, $3C, $FF, $02, $FF, $7C, $FF, $00 ; id 62 ''s'
+    db $FF, $80, $FF, $80, $FF, $76, $FF, $49, $FF, $49, $FF, $49, $FF, $49, $FF, $00 ; id 63 ''m'
+    db $FF, $80, $FF, $80, $FF, $0E, $FF, $50, $FF, $60, $FF, $40, $FF, $40, $FF, $00 ; id 64 ''r'
+    db $FF, $80, $FF, $90, $FF, $7E, $FF, $10, $FF, $10, $FF, $10, $FF, $0E, $FF, $00 ; id 65 ''t'
+    db $FF, $80, $FF, $80, $FF, $00, $FF, $42, $FF, $42, $FF, $24, $FF, $18, $FF, $00 ; id 66
+    db $FF, $88, $FF, $88, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $00 ; id 67 ''l'
 Data_01F_4450:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $82, $FF, $82, $FF, $02, $FF, $3E, $FF, $42, $FF, $42, $FF, $3E, $FF, $00
-    db $FF, $00, $FF, $20, $FF, $A8, $FF, $72, $FF, $70, $FF, $A8, $FF, $22, $FF, $00
-    db $FF, $70, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $70, $FF, $00
-
-; address loaded by DebugResultsDisplay_Init
+    db $FF, $82, $FF, $82, $FF, $02, $FF, $3E, $FF, $42, $FF, $42, $FF, $3E, $FF, $00 ; id 68
+    db $FF, $00, $FF, $20, $FF, $A8, $FF, $72, $FF, $70, $FF, $A8, $FF, $22, $FF, $00 ; id 69
+    db $FF, $70, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $70, $FF, $00 ; id 70
 Data_01F_4480:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $07C480, $80
-
-; address loaded by ScriptCommandE5_Run_Case03_Case12
+    db $FF, $F8, $FF, $50, $FF, $50, $FF, $50, $FF, $50, $FF, $50, $FF, $F8, $FF, $00 ; id 71
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 72
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 73
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 74
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 75
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 76
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 77
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 78
 Data_01F_4500:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
-
-; address loaded by ScriptCommandF4_Run_Case04_Case0C, ScriptCommandF4_Run_Case11_Case01, Func_037_4AFD_Case04_Case0C, RunScreenStateWhenNotFading_F1_Case04_Case0C and 1 more
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 79
 Data_01F_4510:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $07C510, $270
-
-; address loaded by DebugResultsDisplay_Init
+    db $FF, $00, $FF, $EE, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $D6, $FF, $FE ; id 80
+    db $FF, $0E, $FF, $1B, $FF, $11, $FF, $1B, $FF, $3E, $FF, $70, $FF, $E0, $FF, $C0 ; id 81
+    db $FF, $0C, $FF, $1E, $FF, $65, $FF, $B9, $FF, $C9, $FF, $7F, $FF, $4A, $FF, $4E ; id 82
+    db $FF, $03, $FF, $05, $FF, $CA, $FF, $74, $FF, $28, $FF, $78, $FF, $EC, $FF, $C4 ; id 83
+    db $FF, $00, $FF, $FF, $FF, $4E, $FF, $2C, $FF, $18, $FF, $3C, $FF, $6E, $FF, $FF ; id 84
+    db $FF, $18, $FF, $24, $FF, $7E, $FF, $C3, $FF, $81, $FF, $81, $FF, $42, $FF, $3C ; id 85
+    db $FF, $06, $FF, $0A, $FF, $12, $FF, $12, $FF, $62, $FF, $BF, $FF, $81, $FF, $7E ; id 86
+    db $FF, $3C, $FF, $7E, $FF, $FF, $FF, $FF, $FF, $81, $FF, $A5, $FF, $85, $FF, $FF ; id 87
+    db $FF, $1C, $FF, $10, $FF, $D6, $FF, $BA, $FF, $82, $FF, $BA, $FF, $AA, $FF, $EE ; id 88
+    db $FF, $38, $FF, $6C, $FF, $C6, $FF, $EE, $FF, $82, $FF, $FE, $FF, $AA, $FF, $EE ; id 89
+    db $FF, $3C, $FF, $42, $FF, $99, $FF, $BD, $FF, $BD, $FF, $A5, $FF, $BD, $FF, $C3 ; id 90
+    db $FF, $0E, $FF, $11, $FF, $15, $FF, $19, $FF, $2E, $FF, $58, $FF, $A0, $FF, $E0 ; id 91
+    db $FF, $3C, $FF, $7E, $FF, $B9, $FF, $99, $FF, $D1, $FF, $46, $FF, $3C, $FF, $00 ; id 92
+    db $FF, $36, $FF, $2A, $FF, $22, $FF, $2A, $FF, $22, $FF, $2A, $FF, $5D, $FF, $55 ; id 93
+    db $FF, $7F, $FF, $41, $FF, $7F, $FF, $49, $FF, $7F, $FF, $49, $FF, $2A, $FF, $1C ; id 94
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 95
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 96
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 97
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 98
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 99
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 100
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 101
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 102
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 103
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 104
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 105
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 106
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 107
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 108
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 109
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 110
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 111
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 112
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 113
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 114
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 115
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 116
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 117
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 118
 Data_01F_4780:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $07C780, $160
-
-; address loaded by RunNameEntryStateWhenNotFading_Case01_Case04, RunScreenStep_F0_5DE8_Case02, RunScreenStep_F0_5DE8_Case0B
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 119
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 120
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 121
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 122
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 123
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 124
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 125
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 126
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 127
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 128
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 129
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 130
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 131
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 132
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 133
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 134
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 135
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 136
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 137
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 138
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 139
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 140
 Data_01F_48E0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $05, $FF, $05, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
-
-; address loaded by DebugResultsDisplay_Init
+    db $FF, $05, $FF, $05, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 141
 Data_01F_48F0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $02, $FF, $05, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $30, $FF, $48, $FF, $48, $FF, $30
-
-; address loaded by PauseMenu_State3_Case01_Case00, ScriptCommandF1_Run_Case01, RunNameEntryStateWhenNotFading_Case00_Case00, ScriptCommandE2_Run_Case03_Case03 and 2 more
+    db $FF, $02, $FF, $05, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 142
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $30, $FF, $48, $FF, $48, $FF, $30 ; id 143
 Data_01F_4910:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $07C910, $80
-
-; address loaded by ScriptCommandF6_Run_Case10_Case05, ScriptCommandF6_Run_Case10_Case06_Sub02, ScriptCommandEF_Run_Case05_Case11, ScriptCommandEF_Run_Case0F_Case05 and 9 more
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 144 ' '
+    db $FF, $00, $EB, $08, $ED, $70, $FF, $82, $B7, $CA, $8B, $FE, $F7, $74, $FF, $00 ; id 145
+    db $FF, $00, $FF, $24, $FF, $54, $FF, $58, $FF, $2A, $FF, $15, $FF, $15, $FF, $22 ; id 146
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $66, $FF, $66, $FF, $00 ; id 147
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $00, $FF, $60, $FF, $20, $FF, $40 ; id 148
+    db $FF, $60, $FF, $60, $FF, $20, $FF, $40, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 149
+    db $FF, $00, $FF, $0E, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $00, $FF, $00 ; id 150
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $E0 ; id 151
 Data_01F_4990:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $07C990, $B0
-
-; address loaded by ScriptCommandF3_Run_Case03_Case00, ScriptCommandE8_Run_Case0D_Case03, Func_0F0_4CA0_Table4_Case00, RunScreenStep_F0_5DE8_Case03
+    db $FF, $00, $FF, $3C, $FF, $66, $FF, $66, $FF, $0C, $FF, $18, $FF, $00, $FF, $18 ; id 152 '?'
+    db $FF, $00, $FF, $0C, $FF, $0C, $FF, $0C, $FF, $08, $FF, $08, $FF, $00, $FF, $18 ; id 153 '!'
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $40, $FF, $60, $FF, $60 ; id 154
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $00 ; id 155
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $FE, $FF, $00, $FF, $00, $FF, $00 ; id 156 '-'
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $92, $FF, $0C, $FF, $00, $FF, $00 ; id 157
+    db $FF, $00, $FF, $02, $FF, $04, $FF, $08, $FF, $10, $FF, $20, $FF, $40, $FF, $80 ; id 158
+    db $FF, $00, $FF, $10, $FF, $92, $FF, $54, $FF, $38, $FF, $54, $FF, $92, $FF, $10 ; id 159
+    db $FF, $00, $FF, $08, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $08 ; id 160
+    db $FF, $00, $FF, $10, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $08, $FF, $10 ; id 161
+    db $FF, $00, $FF, $00, $FF, $10, $FF, $10, $FF, $7C, $FF, $10, $FF, $10, $FF, $00 ; id 162
 Data_01F_4A40:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $92, $FF, $00
-
-; address loaded by Func_0F0_4CA0_Table4_Case00
+    db $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00 ; id 163
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $92, $FF, $00 ; id 164
 Data_01F_4A60:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $80, $FF, $80, $FF, $80, $FF, $8A, $FF, $8A, $FF, $84, $FF, $F4
-
-; address loaded by ScriptCommandE8_Run_Case06_Case03, ScriptCommandE8_Run_Case0E_Case00, DrawTileMap5E12AndLoadFrameTiles, RunScreenStep_F0_5DE8_Case00
+    db $FF, $00, $FF, $80, $FF, $80, $FF, $80, $FF, $8A, $FF, $8A, $FF, $84, $FF, $F4 ; id 165
 Data_01F_4A70:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $E0, $FF, $80, $FF, $80, $FF, $EA, $FF, $84, $FF, $84, $FF, $EA
-
-; address loaded by DebugResultsDisplay_Init, RunNameEntryStateWhenNotFading_Case00_Case00
+    db $FF, $00, $FF, $E0, $FF, $80, $FF, $80, $FF, $EA, $FF, $84, $FF, $84, $FF, $EA ; id 166
 Data_01F_4A80:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $1E, $FF, $06, $FF, $0A, $FF, $72, $FF, $90, $FF, $90, $FF, $60
-
-; address loaded by DebugResultsDisplay_Init, RunNameEntryStateWhenNotFading_Case00_Case00
+    db $FF, $00, $FF, $1E, $FF, $06, $FF, $0A, $FF, $72, $FF, $90, $FF, $90, $FF, $60 ; id 167
 Data_01F_4A90:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $38, $FF, $44, $FF, $44, $FF, $38, $FF, $10, $FF, $7C, $FF, $10
-
-; address loaded by ScriptCommandE8_Run_Case0D_Case05, RunScreenStep_F0_5DE8_Case05
+    db $FF, $00, $FF, $38, $FF, $44, $FF, $44, $FF, $38, $FF, $10, $FF, $7C, $FF, $10 ; id 168
 Data_01F_4AA0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $10, $FF, $38, $FF, $7C, $FF, $FE, $FF, $38, $FF, $38, $FF, $38
-    db $FF, $00, $FF, $6C, $FF, $6C, $FF, $24, $FF, $48, $FF, $00, $FF, $00, $FF, $00
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $60, $FF, $20, $FF, $40
-
-; address loaded by ScriptCommandF2_Run_Case00, RunScreenStateWhenNotFading_1B_Case00_Case00, ScriptCommandE8_Run_Case09_Case1D, DrawTileMap5E12AndLoadFrameTiles and 2 more
+    db $FF, $00, $FF, $10, $FF, $38, $FF, $7C, $FF, $FE, $FF, $38, $FF, $38, $FF, $38 ; id 169
+    db $FF, $00, $FF, $6C, $FF, $6C, $FF, $24, $FF, $48, $FF, $00, $FF, $00, $FF, $00 ; id 170
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $60, $FF, $20, $FF, $40 ; id 171 ','
 Data_01F_4AD0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6
-
-; address loaded by ScriptCommandE8_Run_Case0D_Case05, RunScreenStep_F0_5DE8_Case05
+    db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6 ; id 172
 Data_01F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
-    INCBIN "dwm2-cobi-us.gbc", $07CAE0, $C0
-    ds $470, $00
-    db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00
-    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00
-    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+    db $FF, $38, $FF, $38, $FF, $38, $FF, $FE, $FF, $7C, $FF, $38, $FF, $10, $FF, $00 ; id 173
+    db $FF, $00, $FF, $10, $FF, $30, $FF, $7E, $FF, $FE, $FF, $7E, $FF, $30, $FF, $10 ; id 174
+    db $FF, $00, $FF, $10, $FF, $18, $FF, $FC, $FF, $FE, $FF, $FC, $FF, $18, $FF, $10 ; id 175
+    db $FF, $00, $FF, $7C, $FF, $78, $FF, $7C, $FF, $7E, $FF, $5C, $FF, $08, $FF, $00 ; id 176
+    db $FF, $00, $FF, $3E, $FF, $1E, $FF, $3E, $FF, $7E, $FF, $3A, $FF, $10, $FF, $00 ; id 177
+    db $FF, $00, $FF, $08, $FF, $5C, $FF, $7E, $FF, $7C, $FF, $78, $FF, $7C, $FF, $00 ; id 178
+    db $FF, $00, $FF, $10, $FF, $3A, $FF, $7E, $FF, $3E, $FF, $1E, $FF, $3E, $FF, $00 ; id 179
+    db $FF, $F0, $FF, $20, $FF, $40, $FF, $F0, $FF, $0F, $FF, $02, $FF, $04, $FF, $0F ; id 180
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $18, $FF, $18 ; id 181 '.'
+    db $FF, $00, $FF, $20, $FF, $50, $FF, $50, $FF, $20, $FF, $54, $FF, $8C, $FF, $72 ; id 182
+    db $FF, $00, $FF, $06, $FF, $06, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 183
+    db $FF, $00, $FF, $38, $FF, $44, $FF, $BA, $FF, $A2, $FF, $BA, $FF, $44, $FF, $38 ; id 184
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 185
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 186
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 187
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 188
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 189
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 190
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 191
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 192
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 193
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 194
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 195
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 196
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 197
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 198
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 199
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 200
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 201
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 202
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 203
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 204
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 205
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 206
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 207
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 208
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 209
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 210
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 211
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 212
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 213
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 214
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 215
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 216
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 217
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 218
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 219
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 220
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 221
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 222
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 223
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 224
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 225
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 226
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 227
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 228
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 229
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 230
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 231
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 232
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 233
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 234
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 235
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 236
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 237
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 238
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 239
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 240
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 241
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 242
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 243
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 244
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 245
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 246
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 247
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 248
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 249
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 250
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 251
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 252
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 253
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 254
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 255
+    db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00 ; id 256
+    db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00 ; id 257
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 258
 
 ; returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse, 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit
 ; 25 call sites from 10 routines (e.g. BootAndMainLoop, DetectSGB, SGBTransferCompressed, SGBTransferRaw, ...)

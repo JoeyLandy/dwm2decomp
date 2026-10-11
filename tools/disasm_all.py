@@ -2367,6 +2367,8 @@ class Rom:
             tag = f" ; id {t['id_base'] + i}" if "id_base" in t else f" ; entry {i}"
             if t.get("id_names") == "monster" and 0 < t["id_base"] + i < 0x200:
                 tag += f" {self.monster_name(t['id_base'] + i)}"
+            if t.get("id_names") == "charmap" and (t["id_base"] + i) in gb_text.BYTE_TO_TEXT:
+                tag += f" '{gb_text.BYTE_TO_TEXT[t['id_base'] + i]}'"  # glyph number = text byte (E-0169)
             run: list[int] = []
             tagged = False
 
