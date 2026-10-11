@@ -2130,6 +2130,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **What changed.** The MapObjects_ record descriptions list these fields.
 - Binary verification: build/run179 PASS, 0 differing bytes; tests OK.
 
+### E-0177 — Rectangles drawn through wArg parameters
+
+- Kind: OBSERVATION (derived from call sites; C1).
+- **Rule.** DrawTileRectFromArg1Params (and every routine with its first 16 bytes) takes the source in wArg1/wArg2 (high, low), the width in wArg3 and the rows in wArg4. Call sites set them with `ld a, n` / `ld [wArgN], a`, or with `ld de, n` / `ld a, d` / `ld a, e`. The raw-rectangle rule of E-0161 now reads those stores too, which adds 12 rectangles (185 raw rectangles in all), for example 1F:5E13 (12 x 3) and 1F:66DF (8 x 7).
+- **Limits.** The bytes after such a rectangle stay data unless another call site names them. The larger slices after 1F:5E13 and 1F:66DF are still undecoded.
+- Binary verification: build/run180 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

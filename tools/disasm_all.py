@@ -1878,6 +1878,40 @@ class Rom:
                 if de is None or bc is None or sb is None or not 0x4000 <= de < 0x8000 or not 0 < sb < self.nbanks:
                     continue
                 uses.setdefault((sb, de), set()).add(bc)
+        # DrawTileRectFromArg1Params (and copies with the same first 16 bytes): wArg1/wArg2 = source
+        # (high, low), wArg3 = width, wArg4 = rows, set through `ld a, n` / `ld [wArgN], a` (E-0177).
+        arg_canon = {(b, a) for (b, a), info in self.names.items() if not info.get("data") and
+                     info["name"] == "DrawTileRectFromArg1Params"}
+        arg_sigs = {sig(b, a) for b, a in arg_canon}
+        arg_copiers = {(b, a) for b in range(self.nbanks) for a in self.labels[b]
+                       if a in self.insn[b] and a <= self.base(b) + BANK - 16 and sig(b, a) in arg_sigs}
+        for cb in range(self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in arg_copiers:
+                    continue
+                window = order[max(0, k - 16):k]
+                stores: dict[int, int] = {}
+                de = None
+                for j, x in enumerate(window):
+                    t = ins[x][1]
+                    if (m := ld_de.match(t)):
+                        de = int(m.group(1), 16)
+                    m = re.match(r"ld \[\$D7F([1-4])\], a$", t)
+                    if m and j:
+                        prev = ins[window[j - 1]][1]
+                        if (mm := ld_a.match(prev)):
+                            stores[int(m.group(1))] = int(mm.group(1), 16)
+                        elif prev == "ld a, d" and de is not None:
+                            stores[int(m.group(1))] = de >> 8
+                        elif prev == "ld a, e" and de is not None:
+                            stores[int(m.group(1))] = de & 0xFF
+                if all(i in stores for i in (1, 2, 3, 4)):
+                    src = stores[1] << 8 | stores[2]
+                    if 0x4000 <= src < 0x8000:
+                        uses.setdefault((cb, src), set()).add((stores[3], stores[4]))
         raw = 0
         for (cb, src), dims in sorted(uses.items()):
             widths = {w for w, _ in dims}
