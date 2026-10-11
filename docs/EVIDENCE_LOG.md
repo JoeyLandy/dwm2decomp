@@ -2430,15 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
-### E-0201 — A map record that no map uses (11:$6248)
+### E-0201 — Map records that no map uses (11:$59E4, $6248, $62F0)
 
 - Kind: OBSERVATION (byte search and layout; C1).
 - **The record.** After MapRecord9B (11:$6218) comes a complete second 48-byte map record at $6248, up to MapRecordA0 at $6278. It has tileset 93:$7745, palettes 93:$78D4, a 1 x 1 screen size, flag wStoryFlags + $64, and five variants that all name the same screen arrays (93:$7914 / $7917).
   - No MapTable word points to $6248; a ROM search found the word only inside the record itself.
   - E-0142 had folded it into MapRecord9B as trailing bytes.
 - **Its data.** The tileset stream (608 bytes) and the two screens (360 bytes each, tile and attribute maps) decompress cleanly. They had been the INCBIN slices 93:$7745 and 93:$7914.
+- **Two more.** The same search found two more: $59E4 (after MapRecord67; tileset 90:$58E9, three variants) and $62F0 (after MapRecordA3; tileset 90:$6FB4, palettes 68:$7DBE, two variants). Both are 1 x 1, and no word in bank $11 points to either.
 - **Tool.** MapTable gains `extra_records` for records reached by no entry; such records are labelled MapRecordX<address>.
-- Binary verification: build/run223 PASS, 0 differing bytes; tests OK.
+- Binary verification: build/run223 PASS (the $6248 record), then build/run224 PASS with all three, 0 differing bytes; tests OK.
 
 ## Reusable investigation record
 

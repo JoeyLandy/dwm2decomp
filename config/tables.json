@@ -415,9 +415,11 @@
           "reason": "map record of the map table"
         }
       ],
-      "note": "E-0036 (C1: the pointer for map 56 is the record whose tileset stream (57:6E96) the game decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the tile map for $C198 and the attribute map for $D000. E-0201: the complete map record at $6248 (tileset 93:$7745, one 1 x 1 screen variant repeated) has no entry here and is listed as an extra record.",
+      "note": "E-0036 (C1: the pointer for map 56 is the record whose tileset stream (57:6E96) the game decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the tile map for $C198 and the attribute map for $D000. E-0201: the complete map records at $59E4, $6248 and $62F0 (1 x 1 screens, found as trailing bytes of the records before them) have no entry here and are listed as extra records.",
       "extra_records": [
-        "6248"
+        "59E4",
+        "6248",
+        "62F0"
       ]
     },
     {

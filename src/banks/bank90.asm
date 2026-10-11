@@ -154,9 +154,49 @@ Data_090_57D8:: ; heuristic: map screen stream; C0
 
 ; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_090_589F:: ; heuristic: map screen stream; C0
-    INCBIN "dwm2-cobi-us.gbc", $24189F, $2A7
-    ds $22, $00
-    INCBIN "dwm2-cobi-us.gbc", $241B68, $E7
+    INCBIN "dwm2-cobi-us.gbc", $24189F, $4A
+
+; compressed tileset of map $X59E4 (the first map record using it)
+; LZSS-compressed asset: 575 bytes expand to 736 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+MapX59E4Tileset:: ; heuristic: map tileset stream; C0
+Data_090_58E9:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $2418E9, $23F
+
+; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
+; record: one CGB palette: 4 BGR555 colours
+MapX59E4Palettes::
+Data_090_5B28:: ; address name
+    dw $7DA0, $7FFF, $7FE0, $0000 ; entry 0
+    dw $012F, $035F, $01DA, $0000 ; entry 1
+    dw $7DA0, $7F75, $6B40, $0063 ; entry 2
+    dw $396B, $7FFF, $5A94, $0000 ; entry 3
+    dw $0000, $0000, $0000, $0000 ; entry 4
+    dw $0000, $0000, $0000, $0000 ; entry 5
+    dw $0000, $0000, $0000, $0000 ; entry 6
+    dw $0000, $0000, $0000, $0000 ; entry 7
+
+; E-0142 (derived: 1 screen far pointers, row by row)
+; record: compressed 20 x 18 screen; its ROM bank
+MapX59E4Screens0::
+Data_090_5B68:: ; address name
+    dfar Data_090_5B6E ; entry 0
+
+; E-0142 (derived: 1 screen far pointers, row by row)
+; record: compressed 20 x 18 screen; its ROM bank
+MapX59E4Attrs0::
+Data_090_5B6B:: ; address name
+    dfar Data_090_5C12 ; entry 0
+
+; LZSS-compressed asset: 164 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_090_5B6E:: ; heuristic: map screen stream; C0
+    INCBIN "dwm2-cobi-us.gbc", $241B6E, $A4
+
+; LZSS-compressed asset: 61 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_090_5C12:: ; heuristic: map screen stream; C0
+    db $68, $01, $04, $04, $FF, $F0, $02, $04, $04, $07, $04, $FC, $FF, $07, $04, $04
+    db $04, $01, $01, $04, $0A, $06, $04, $2A, $0F, $05, $03, $04, $56, $03, $04, $4A
+    db $0F, $0B, $04, $56, $04, $04, $5A, $02, $04, $76, $0F, $4D, $04, $AE, $0F, $1F
+    db $04, $54, $0F, $13, $04, $50, $06, $04, $0C, $0C, $04, $48, $18
 
 ; compressed tileset of map $97 (the first map record using it)
 ; LZSS-compressed asset: 976 bytes expand to 1792 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -346,7 +386,16 @@ Data_090_6F2C:: ; heuristic: map screen stream; C0
 
 ; LZSS-compressed asset: 63 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_090_6F75:: ; heuristic: map screen stream; C0
-    INCBIN "dwm2-cobi-us.gbc", $242F75, $2BE
+    db $68, $01, $01, $02, $02, $03, $03, $03, $03, $01, $FA, $F2, $01, $04, $02, $02
+    db $02, $01, $00, $0F, $0F, $01, $02, $00, $01, $26, $0F, $07, $01, $F8, $F4, $01
+    db $48, $0F, $15, $01, $32, $02, $01, $76, $0F, $2F, $01, $04, $02, $01, $34, $02
+    db $01, $C4, $0F, $0B, $01, $F2, $08, $01, $EE, $0F, $2D, $01, $3E, $1F, $13
+
+; compressed tileset of map $X62F0 (the first map record using it)
+; LZSS-compressed asset: 639 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+MapX62F0Tileset:: ; heuristic: map tileset stream; C0
+Data_090_6FB4:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $242FB4, $27F
 
 ; compressed tileset of map $1D (the first map record using it)
 ; LZSS-compressed asset: 875 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
