@@ -42,13 +42,13 @@ Jump_03A_4019::
 Jump_03A_4037::
     ld a, [wBattleTarget]
     ld [wBattleActor], a
-    ld hl, Data_03A_47EC
+    ld hl, ActionEffectTable_Flag2
     jr Jump_03A_407E
 
 Jump_03A_4042::
     ld a, [wBattleTarget]
     ld [wBattleActor], a
-    ld hl, Data_03A_486C
+    ld hl, ActionEffectTable_Flag3
     jr Jump_03A_407E
 
 Jump_03A_404D::
@@ -74,17 +74,17 @@ Jump_03A_4062::
     jr Jump_03A_40B3
 
 Jump_03A_406E::
-    ld hl, Data_03A_40CC
+    ld hl, ActionEffectTable_Flag7
     jr Jump_03A_407E
 
 Jump_03A_4073::
     bit 0, a
     ret z
-    ld hl, Data_03A_4294
+    ld hl, ActionEffectTable_Flag6
     jr Jump_03A_407E
 
 Jump_03A_407B::
-    ld hl, Data_03A_445C
+    ld hl, ActionEffectTable_Flag5
 
 Jump_03A_407E::
     ld a, [wBattleActionId]
@@ -133,56 +133,1075 @@ Jump_03A_40B3::
     ld [wEffectFrameCounter], a
     ret
 
-; address loaded by SelectEffectByEffectFlags, DrawSkillByte0AndRun502BAnd53B9_Sub01
-Data_03A_40CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $FF, $FF, $00, $FF, $01, $FF, $02, $FF, $03, $FF, $04, $FF, $05, $FF, $06
-    db $FF, $07, $FF, $08, $FF, $09, $FF, $0A, $FF, $0B, $FF, $0F, $FF, $10, $FF, $11
-    db $FF, $0C, $FF, $0D, $FF, $0E
-    ds $52, $FF
-    INCBIN "dwm2-cobi-us.gbc", $0E8144, $64
-    ds $22, $FF
-    db $84, $84, $84, $84, $84, $84, $85, $85, $2B, $2B, $85, $85
-    ds $19, $FF
-    db $30
-    ds $12, $FF
-    db $31, $FF, $84, $84
-    ds $2C, $FF
-    db $85, $85
-    ds $33, $FF
-    db $30, $FF, $FF, $FF, $FF, $FF, $33, $FF, $34, $FF, $35, $FF, $36, $FF, $37, $FF
-    db $38, $FF, $FF, $FF, $30, $FF, $1D, $FF, $2A, $FF, $FF, $85, $85, $FF, $FF, $FF
-    db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $3B, $FF
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 7, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
+; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
+ActionEffectTable_Flag7::
+Data_03A_40CC:: ; address name
+    db $FF, $FF ; id 0
+    db $FF, $00 ; id 1
+    db $FF, $01 ; id 2
+    db $FF, $02 ; id 3
+    db $FF, $03 ; id 4
+    db $FF, $04 ; id 5
+    db $FF, $05 ; id 6
+    db $FF, $06 ; id 7
+    db $FF, $07 ; id 8
+    db $FF, $08 ; id 9
+    db $FF, $09 ; id 10
+    db $FF, $0A ; id 11
+    db $FF, $0B ; id 12
+    db $FF, $0F ; id 13
+    db $FF, $10 ; id 14
+    db $FF, $11 ; id 15
+    db $FF, $0C ; id 16
+    db $FF, $0D ; id 17
+    db $FF, $0E ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $FF, $FF ; id 25
+    db $FF, $FF ; id 26
+    db $FF, $FF ; id 27
+    db $FF, $FF ; id 28
+    db $FF, $FF ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $FF, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $FF, $FF ; id 36
+    db $FF, $FF ; id 37
+    db $FF, $FF ; id 38
+    db $FF, $FF ; id 39
+    db $FF, $FF ; id 40
+    db $FF, $FF ; id 41
+    db $FF, $FF ; id 42
+    db $FF, $FF ; id 43
+    db $FF, $FF ; id 44
+    db $FF, $FF ; id 45
+    db $FF, $FF ; id 46
+    db $FF, $FF ; id 47
+    db $FF, $FF ; id 48
+    db $FF, $FF ; id 49
+    db $FF, $FF ; id 50
+    db $FF, $FF ; id 51
+    db $FF, $FF ; id 52
+    db $FF, $FF ; id 53
+    db $FF, $FF ; id 54
+    db $FF, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $FF, $FF ; id 58
+    db $FF, $FF ; id 59
+    db $86, $86 ; id 60
+    db $FF, $2A ; id 61
+    db $FF, $29 ; id 62
+    db $FF, $28 ; id 63
+    db $FF, $03 ; id 64
+    db $FF, $04 ; id 65
+    db $FF, $05 ; id 66
+    db $FF, $1C ; id 67
+    db $FF, $0C ; id 68
+    db $FF, $0D ; id 69
+    db $FF, $0E ; id 70
+    db $FF, $1A ; id 71
+    db $FF, $09 ; id 72
+    db $FF, $0B ; id 73
+    db $FF, $0F ; id 74
+    db $FF, $1B ; id 75
+    db $FF, $2D ; id 76
+    db $FF, $2E ; id 77
+    db $FF, $FF ; id 78
+    db $FF, $FF ; id 79
+    db $FF, $1E ; id 80
+    db $FF, $20 ; id 81
+    db $FF, $1F ; id 82
+    db $FF, $21 ; id 83
+    db $FF, $22 ; id 84
+    db $FF, $1D ; id 85
+    db $FF, $1D ; id 86
+    db $FF, $23 ; id 87
+    db $FF, $22 ; id 88
+    db $FF, $1D ; id 89
+    db $FF, $24 ; id 90
+    db $FF, $24 ; id 91
+    db $FF, $25 ; id 92
+    db $FF, $2F ; id 93
+    db $FF, $25 ; id 94
+    db $FF, $FF ; id 95
+    db $FF, $FF ; id 96
+    db $FF, $FF ; id 97
+    db $FF, $1D ; id 98
+    db $FF, $FF ; id 99
+    db $FF, $FF ; id 100
+    db $FF, $1D ; id 101
+    db $FF, $27 ; id 102
+    db $FF, $26 ; id 103
+    db $FF, $FF ; id 104
+    db $FF, $FF ; id 105
+    db $FF, $FF ; id 106
+    db $FF, $1D ; id 107
+    db $FF, $1D ; id 108
+    db $FF, $1D ; id 109
+    db $FF, $FF ; id 110
+    db $FF, $FF ; id 111
+    db $FF, $FF ; id 112
+    db $FF, $FF ; id 113
+    db $FF, $FF ; id 114
+    db $FF, $FF ; id 115
+    db $FF, $FF ; id 116
+    db $FF, $FF ; id 117
+    db $FF, $FF ; id 118
+    db $FF, $FF ; id 119
+    db $FF, $FF ; id 120
+    db $FF, $FF ; id 121
+    db $FF, $FF ; id 122
+    db $FF, $FF ; id 123
+    db $FF, $FF ; id 124
+    db $FF, $FF ; id 125
+    db $FF, $FF ; id 126
+    db $84, $84 ; id 127
+    db $84, $84 ; id 128
+    db $84, $84 ; id 129
+    db $85, $85 ; id 130
+    db $2B, $2B ; id 131
+    db $85, $85 ; id 132
+    db $FF, $FF ; id 133
+    db $FF, $FF ; id 134
+    db $FF, $FF ; id 135
+    db $FF, $FF ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $FF, $FF ; id 139
+    db $FF, $FF ; id 140
+    db $FF, $FF ; id 141
+    db $FF, $FF ; id 142
+    db $FF, $FF ; id 143
+    db $FF, $FF ; id 144
+    db $FF, $30 ; id 145
+    db $FF, $FF ; id 146
+    db $FF, $FF ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $31, $FF ; id 155
+    db $84, $84 ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $FF, $FF ; id 159
+    db $FF, $FF ; id 160
+    db $FF, $FF ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $FF, $FF ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $FF, $FF ; id 173
+    db $FF, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $FF, $FF ; id 176
+    db $FF, $FF ; id 177
+    db $FF, $FF ; id 178
+    db $85, $85 ; id 179
+    db $FF, $FF ; id 180
+    db $FF, $FF ; id 181
+    db $FF, $FF ; id 182
+    db $FF, $FF ; id 183
+    db $FF, $FF ; id 184
+    db $FF, $FF ; id 185
+    db $FF, $FF ; id 186
+    db $FF, $FF ; id 187
+    db $FF, $FF ; id 188
+    db $FF, $FF ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $FF, $FF ; id 192
+    db $FF, $FF ; id 193
+    db $FF, $FF ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $FF, $FF ; id 200
+    db $FF, $FF ; id 201
+    db $FF, $FF ; id 202
+    db $FF, $FF ; id 203
+    db $FF, $FF ; id 204
+    db $FF, $30 ; id 205
+    db $FF, $FF ; id 206
+    db $FF, $FF ; id 207
+    db $FF, $33 ; id 208
+    db $FF, $34 ; id 209
+    db $FF, $35 ; id 210
+    db $FF, $36 ; id 211
+    db $FF, $37 ; id 212
+    db $FF, $38 ; id 213
+    db $FF, $FF ; id 214
+    db $FF, $30 ; id 215
+    db $FF, $1D ; id 216
+    db $FF, $2A ; id 217
+    db $FF, $FF ; id 218
+    db $85, $85 ; id 219
+    db $FF, $FF ; id 220
+    db $FF, $FF ; id 221
+    db $FF, $FF ; id 222
+    db $FF, $FF ; id 223
+    db $FF, $FF ; id 224
+    db $FF, $FF ; id 225
+    db $FF, $FF ; id 226
+    db $3B, $FF ; id 227
 
-; address loaded by SelectEffectByEffectFlags, DrawSkillByte0AndRun502BAnd53B9_Sub01
-Data_03A_4294:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0E8294, $124
-    ds $1A, $FF
-    db $14, $FF, $FF, $FF, $32, $32
-    ds $10, $FF
-    INCBIN "dwm2-cobi-us.gbc", $0E83E8, $74
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 6 (with bit 0), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
+; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
+ActionEffectTable_Flag6::
+Data_03A_4294:: ; address name
+    db $83, $82 ; id 0
+    db $83, $82 ; id 1
+    db $83, $82 ; id 2
+    db $83, $82 ; id 3
+    db $83, $82 ; id 4
+    db $83, $82 ; id 5
+    db $83, $82 ; id 6
+    db $83, $82 ; id 7
+    db $83, $82 ; id 8
+    db $83, $82 ; id 9
+    db $83, $82 ; id 10
+    db $83, $82 ; id 11
+    db $83, $82 ; id 12
+    db $83, $82 ; id 13
+    db $83, $82 ; id 14
+    db $83, $82 ; id 15
+    db $83, $82 ; id 16
+    db $83, $82 ; id 17
+    db $83, $82 ; id 18
+    db $FF, $81 ; id 19
+    db $FF, $81 ; id 20
+    db $FF, $81 ; id 21
+    db $14, $FF ; id 22
+    db $14, $FF ; id 23
+    db $14, $FF ; id 24
+    db $14, $FF ; id 25
+    db $14, $FF ; id 26
+    db $14, $FF ; id 27
+    db $14, $FF ; id 28
+    db $14, $FF ; id 29
+    db $80, $FF ; id 30
+    db $80, $FF ; id 31
+    db $14, $FF ; id 32
+    db $14, $FF ; id 33
+    db $14, $FF ; id 34
+    db $14, $FF ; id 35
+    db $14, $FF ; id 36
+    db $13, $FF ; id 37
+    db $13, $FF ; id 38
+    db $FF, $12 ; id 39
+    db $FF, $12 ; id 40
+    db $13, $FF ; id 41
+    db $13, $FF ; id 42
+    db $FF, $12 ; id 43
+    db $FF, $12 ; id 44
+    db $13, $FF ; id 45
+    db $FF, $17 ; id 46
+    db $FF, $15 ; id 47
+    db $FF, $15 ; id 48
+    db $13, $FF ; id 49
+    db $13, $12 ; id 50
+    db $FF, $12 ; id 51
+    db $FF, $16 ; id 52
+    db $FF, $FF ; id 53
+    db $19, $FF ; id 54
+    db $19, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $18, $FF ; id 58
+    db $18, $FF ; id 59
+    db $FF, $FF ; id 60
+    db $83, $82 ; id 61
+    db $83, $82 ; id 62
+    db $83, $82 ; id 63
+    db $83, $82 ; id 64
+    db $83, $82 ; id 65
+    db $83, $82 ; id 66
+    db $83, $82 ; id 67
+    db $83, $82 ; id 68
+    db $83, $82 ; id 69
+    db $83, $82 ; id 70
+    db $83, $82 ; id 71
+    db $83, $82 ; id 72
+    db $83, $82 ; id 73
+    db $83, $82 ; id 74
+    db $83, $82 ; id 75
+    db $83, $82 ; id 76
+    db $83, $82 ; id 77
+    db $83, $82 ; id 78
+    db $83, $82 ; id 79
+    db $83, $82 ; id 80
+    db $83, $82 ; id 81
+    db $83, $82 ; id 82
+    db $83, $82 ; id 83
+    db $83, $82 ; id 84
+    db $83, $82 ; id 85
+    db $83, $82 ; id 86
+    db $83, $82 ; id 87
+    db $83, $82 ; id 88
+    db $83, $82 ; id 89
+    db $83, $82 ; id 90
+    db $83, $82 ; id 91
+    db $83, $82 ; id 92
+    db $83, $82 ; id 93
+    db $83, $82 ; id 94
+    db $83, $82 ; id 95
+    db $83, $82 ; id 96
+    db $83, $82 ; id 97
+    db $83, $82 ; id 98
+    db $83, $82 ; id 99
+    db $83, $82 ; id 100
+    db $83, $82 ; id 101
+    db $83, $82 ; id 102
+    db $83, $82 ; id 103
+    db $FF, $FF ; id 104
+    db $83, $82 ; id 105
+    db $83, $82 ; id 106
+    db $83, $82 ; id 107
+    db $83, $82 ; id 108
+    db $83, $82 ; id 109
+    db $83, $82 ; id 110
+    db $83, $82 ; id 111
+    db $83, $82 ; id 112
+    db $FF, $15 ; id 113
+    db $FF, $15 ; id 114
+    db $FF, $15 ; id 115
+    db $FF, $15 ; id 116
+    db $FF, $16 ; id 117
+    db $FF, $12 ; id 118
+    db $13, $12 ; id 119
+    db $FF, $16 ; id 120
+    db $FF, $FF ; id 121
+    db $FF, $16 ; id 122
+    db $14, $FF ; id 123
+    db $14, $FF ; id 124
+    db $FF, $FF ; id 125
+    db $FF, $17 ; id 126
+    db $83, $82 ; id 127
+    db $FF, $FF ; id 128
+    db $FF, $FF ; id 129
+    db $FF, $FF ; id 130
+    db $FF, $FF ; id 131
+    db $FF, $FF ; id 132
+    db $84, $84 ; id 133
+    db $84, $84 ; id 134
+    db $84, $84 ; id 135
+    db $84, $84 ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $FF, $15 ; id 139
+    db $FF, $15 ; id 140
+    db $83, $82 ; id 141
+    db $83, $82 ; id 142
+    db $FF, $16 ; id 143
+    db $83, $82 ; id 144
+    db $8D, $83 ; id 145
+    db $FF, $FF ; id 146
+    db $FF, $FF ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $FF, $FF ; id 155
+    db $FF, $FF ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $14, $FF ; id 159
+    db $FF, $FF ; id 160
+    db $32, $32 ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $83, $82 ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $FF, $FF ; id 173
+    db $FF, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $FF, $81 ; id 176
+    db $14, $FF ; id 177
+    db $FF, $81 ; id 178
+    db $FF, $82 ; id 179
+    db $FF, $FF ; id 180
+    db $FF, $15 ; id 181
+    db $12, $FF ; id 182
+    db $FF, $FF ; id 183
+    db $18, $FF ; id 184
+    db $83, $82 ; id 185
+    db $FF, $82 ; id 186
+    db $FF, $FF ; id 187
+    db $14, $FF ; id 188
+    db $83, $82 ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $82, $83 ; id 192
+    db $83, $82 ; id 193
+    db $82, $83 ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $FF, $FF ; id 200
+    db $82, $83 ; id 201
+    db $82, $83 ; id 202
+    db $82, $83 ; id 203
+    db $83, $82 ; id 204
+    db $8D, $83 ; id 205
+    db $FF, $FF ; id 206
+    db $32, $32 ; id 207
+    db $83, $82 ; id 208
+    db $83, $82 ; id 209
+    db $83, $82 ; id 210
+    db $83, $82 ; id 211
+    db $83, $82 ; id 212
+    db $83, $82 ; id 213
+    db $FF, $81 ; id 214
+    db $83, $82 ; id 215
+    db $83, $82 ; id 216
+    db $83, $82 ; id 217
+    db $14, $FF ; id 218
+    db $FF, $FF ; id 219
+    db $18, $FF ; id 220
+    db $13, $FF ; id 221
+    db $FF, $FF ; id 222
+    db $13, $12 ; id 223
+    db $FF, $FF ; id 224
+    db $FF, $16 ; id 225
+    db $FF, $FF ; id 226
+    db $FF, $FF ; id 227
 
-; address loaded by SelectEffectByEffectFlags, DrawSkillByte0AndRun502BAnd53B9_Sub01
-Data_03A_445C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $BF, $FF
-    db $15, $FF, $15, $FF, $15
-    ds $16, $FF
-    db $8D, $83, $FF, $FF, $8D, $83, $8D, $83
-    ds $2AE, $FF
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 5, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
+; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
+ActionEffectTable_Flag5::
+Data_03A_445C:: ; address name
+    db $FF, $FF ; id 0
+    db $FF, $FF ; id 1
+    db $FF, $FF ; id 2
+    db $FF, $FF ; id 3
+    db $FF, $FF ; id 4
+    db $FF, $FF ; id 5
+    db $FF, $FF ; id 6
+    db $FF, $FF ; id 7
+    db $FF, $FF ; id 8
+    db $FF, $FF ; id 9
+    db $FF, $FF ; id 10
+    db $FF, $FF ; id 11
+    db $FF, $FF ; id 12
+    db $FF, $FF ; id 13
+    db $FF, $FF ; id 14
+    db $FF, $FF ; id 15
+    db $FF, $FF ; id 16
+    db $FF, $FF ; id 17
+    db $FF, $FF ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $FF, $FF ; id 25
+    db $FF, $FF ; id 26
+    db $FF, $FF ; id 27
+    db $FF, $FF ; id 28
+    db $FF, $FF ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $FF, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $FF, $FF ; id 36
+    db $FF, $FF ; id 37
+    db $FF, $FF ; id 38
+    db $FF, $FF ; id 39
+    db $FF, $FF ; id 40
+    db $FF, $FF ; id 41
+    db $FF, $FF ; id 42
+    db $FF, $FF ; id 43
+    db $FF, $FF ; id 44
+    db $FF, $FF ; id 45
+    db $FF, $FF ; id 46
+    db $FF, $FF ; id 47
+    db $FF, $FF ; id 48
+    db $FF, $FF ; id 49
+    db $FF, $FF ; id 50
+    db $FF, $FF ; id 51
+    db $FF, $FF ; id 52
+    db $FF, $FF ; id 53
+    db $FF, $FF ; id 54
+    db $FF, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $FF, $FF ; id 58
+    db $FF, $FF ; id 59
+    db $FF, $FF ; id 60
+    db $FF, $FF ; id 61
+    db $FF, $FF ; id 62
+    db $FF, $FF ; id 63
+    db $FF, $FF ; id 64
+    db $FF, $FF ; id 65
+    db $FF, $FF ; id 66
+    db $FF, $FF ; id 67
+    db $FF, $FF ; id 68
+    db $FF, $FF ; id 69
+    db $FF, $FF ; id 70
+    db $FF, $FF ; id 71
+    db $FF, $FF ; id 72
+    db $FF, $FF ; id 73
+    db $FF, $FF ; id 74
+    db $FF, $FF ; id 75
+    db $FF, $FF ; id 76
+    db $FF, $FF ; id 77
+    db $FF, $FF ; id 78
+    db $FF, $FF ; id 79
+    db $FF, $FF ; id 80
+    db $FF, $FF ; id 81
+    db $FF, $FF ; id 82
+    db $FF, $FF ; id 83
+    db $FF, $FF ; id 84
+    db $FF, $FF ; id 85
+    db $FF, $FF ; id 86
+    db $FF, $FF ; id 87
+    db $FF, $FF ; id 88
+    db $FF, $FF ; id 89
+    db $FF, $FF ; id 90
+    db $FF, $FF ; id 91
+    db $FF, $FF ; id 92
+    db $FF, $FF ; id 93
+    db $FF, $FF ; id 94
+    db $FF, $15 ; id 95
+    db $FF, $15 ; id 96
+    db $FF, $15 ; id 97
+    db $FF, $FF ; id 98
+    db $FF, $FF ; id 99
+    db $FF, $FF ; id 100
+    db $FF, $FF ; id 101
+    db $FF, $FF ; id 102
+    db $FF, $FF ; id 103
+    db $FF, $FF ; id 104
+    db $FF, $FF ; id 105
+    db $FF, $FF ; id 106
+    db $FF, $FF ; id 107
+    db $FF, $FF ; id 108
+    db $8D, $83 ; id 109
+    db $FF, $FF ; id 110
+    db $8D, $83 ; id 111
+    db $8D, $83 ; id 112
+    db $FF, $FF ; id 113
+    db $FF, $FF ; id 114
+    db $FF, $FF ; id 115
+    db $FF, $FF ; id 116
+    db $FF, $FF ; id 117
+    db $FF, $FF ; id 118
+    db $FF, $FF ; id 119
+    db $FF, $FF ; id 120
+    db $FF, $FF ; id 121
+    db $FF, $FF ; id 122
+    db $FF, $FF ; id 123
+    db $FF, $FF ; id 124
+    db $FF, $FF ; id 125
+    db $FF, $FF ; id 126
+    db $FF, $FF ; id 127
+    db $FF, $FF ; id 128
+    db $FF, $FF ; id 129
+    db $FF, $FF ; id 130
+    db $FF, $FF ; id 131
+    db $FF, $FF ; id 132
+    db $FF, $FF ; id 133
+    db $FF, $FF ; id 134
+    db $FF, $FF ; id 135
+    db $FF, $FF ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $FF, $FF ; id 139
+    db $FF, $FF ; id 140
+    db $FF, $FF ; id 141
+    db $FF, $FF ; id 142
+    db $FF, $FF ; id 143
+    db $FF, $FF ; id 144
+    db $FF, $FF ; id 145
+    db $FF, $FF ; id 146
+    db $FF, $FF ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $FF, $FF ; id 155
+    db $FF, $FF ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $FF, $FF ; id 159
+    db $FF, $FF ; id 160
+    db $FF, $FF ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $FF, $FF ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $FF, $FF ; id 173
+    db $FF, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $FF, $FF ; id 176
+    db $FF, $FF ; id 177
+    db $FF, $FF ; id 178
+    db $FF, $FF ; id 179
+    db $FF, $FF ; id 180
+    db $FF, $FF ; id 181
+    db $FF, $FF ; id 182
+    db $FF, $FF ; id 183
+    db $FF, $FF ; id 184
+    db $FF, $FF ; id 185
+    db $FF, $FF ; id 186
+    db $FF, $FF ; id 187
+    db $FF, $FF ; id 188
+    db $FF, $FF ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $FF, $FF ; id 192
+    db $FF, $FF ; id 193
+    db $FF, $FF ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $FF, $FF ; id 200
+    db $FF, $FF ; id 201
+    db $FF, $FF ; id 202
+    db $FF, $FF ; id 203
+    db $FF, $FF ; id 204
+    db $FF, $FF ; id 205
+    db $FF, $FF ; id 206
+    db $FF, $FF ; id 207
+    db $FF, $FF ; id 208
+    db $FF, $FF ; id 209
+    db $FF, $FF ; id 210
+    db $FF, $FF ; id 211
+    db $FF, $FF ; id 212
+    db $FF, $FF ; id 213
+    db $FF, $FF ; id 214
+    db $FF, $FF ; id 215
+    db $FF, $FF ; id 216
+    db $FF, $FF ; id 217
+    db $FF, $FF ; id 218
+    db $FF, $FF ; id 219
+    db $FF, $FF ; id 220
+    db $FF, $FF ; id 221
+    db $FF, $FF ; id 222
+    db $FF, $FF ; id 223
+    db $FF, $FF ; id 224
+    db $FF, $FF ; id 225
+    db $FF, $FF ; id 226
+    db $FF, $FF ; id 227
 
-; address loaded by SelectEffectByEffectFlags
-Data_03A_47EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $FF, $14, $FF, $14, $FF, $14, $FF, $14, $FF, $14, $FF, $14, $FF, $14, $FF
-    db $14, $FF, $14, $FF, $14, $FF, $14
-    ds $2D, $FF
-    db $12, $FF, $FF, $FF, $82, $FF, $82, $FF, $82, $FF, $82
-    ds $31, $FF
+; E-0209 (C1: 228 entries of $FF $FF between ActionEffectTable_Flag5 and ActionEffectTable_Flag2, the size of one more table; no reader found).
+; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
+ActionEffectTable_Unused::
+Data_03A_4624:: ; address name
+    db $FF, $FF ; id 0
+    db $FF, $FF ; id 1
+    db $FF, $FF ; id 2
+    db $FF, $FF ; id 3
+    db $FF, $FF ; id 4
+    db $FF, $FF ; id 5
+    db $FF, $FF ; id 6
+    db $FF, $FF ; id 7
+    db $FF, $FF ; id 8
+    db $FF, $FF ; id 9
+    db $FF, $FF ; id 10
+    db $FF, $FF ; id 11
+    db $FF, $FF ; id 12
+    db $FF, $FF ; id 13
+    db $FF, $FF ; id 14
+    db $FF, $FF ; id 15
+    db $FF, $FF ; id 16
+    db $FF, $FF ; id 17
+    db $FF, $FF ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $FF, $FF ; id 25
+    db $FF, $FF ; id 26
+    db $FF, $FF ; id 27
+    db $FF, $FF ; id 28
+    db $FF, $FF ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $FF, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $FF, $FF ; id 36
+    db $FF, $FF ; id 37
+    db $FF, $FF ; id 38
+    db $FF, $FF ; id 39
+    db $FF, $FF ; id 40
+    db $FF, $FF ; id 41
+    db $FF, $FF ; id 42
+    db $FF, $FF ; id 43
+    db $FF, $FF ; id 44
+    db $FF, $FF ; id 45
+    db $FF, $FF ; id 46
+    db $FF, $FF ; id 47
+    db $FF, $FF ; id 48
+    db $FF, $FF ; id 49
+    db $FF, $FF ; id 50
+    db $FF, $FF ; id 51
+    db $FF, $FF ; id 52
+    db $FF, $FF ; id 53
+    db $FF, $FF ; id 54
+    db $FF, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $FF, $FF ; id 58
+    db $FF, $FF ; id 59
+    db $FF, $FF ; id 60
+    db $FF, $FF ; id 61
+    db $FF, $FF ; id 62
+    db $FF, $FF ; id 63
+    db $FF, $FF ; id 64
+    db $FF, $FF ; id 65
+    db $FF, $FF ; id 66
+    db $FF, $FF ; id 67
+    db $FF, $FF ; id 68
+    db $FF, $FF ; id 69
+    db $FF, $FF ; id 70
+    db $FF, $FF ; id 71
+    db $FF, $FF ; id 72
+    db $FF, $FF ; id 73
+    db $FF, $FF ; id 74
+    db $FF, $FF ; id 75
+    db $FF, $FF ; id 76
+    db $FF, $FF ; id 77
+    db $FF, $FF ; id 78
+    db $FF, $FF ; id 79
+    db $FF, $FF ; id 80
+    db $FF, $FF ; id 81
+    db $FF, $FF ; id 82
+    db $FF, $FF ; id 83
+    db $FF, $FF ; id 84
+    db $FF, $FF ; id 85
+    db $FF, $FF ; id 86
+    db $FF, $FF ; id 87
+    db $FF, $FF ; id 88
+    db $FF, $FF ; id 89
+    db $FF, $FF ; id 90
+    db $FF, $FF ; id 91
+    db $FF, $FF ; id 92
+    db $FF, $FF ; id 93
+    db $FF, $FF ; id 94
+    db $FF, $FF ; id 95
+    db $FF, $FF ; id 96
+    db $FF, $FF ; id 97
+    db $FF, $FF ; id 98
+    db $FF, $FF ; id 99
+    db $FF, $FF ; id 100
+    db $FF, $FF ; id 101
+    db $FF, $FF ; id 102
+    db $FF, $FF ; id 103
+    db $FF, $FF ; id 104
+    db $FF, $FF ; id 105
+    db $FF, $FF ; id 106
+    db $FF, $FF ; id 107
+    db $FF, $FF ; id 108
+    db $FF, $FF ; id 109
+    db $FF, $FF ; id 110
+    db $FF, $FF ; id 111
+    db $FF, $FF ; id 112
+    db $FF, $FF ; id 113
+    db $FF, $FF ; id 114
+    db $FF, $FF ; id 115
+    db $FF, $FF ; id 116
+    db $FF, $FF ; id 117
+    db $FF, $FF ; id 118
+    db $FF, $FF ; id 119
+    db $FF, $FF ; id 120
+    db $FF, $FF ; id 121
+    db $FF, $FF ; id 122
+    db $FF, $FF ; id 123
+    db $FF, $FF ; id 124
+    db $FF, $FF ; id 125
+    db $FF, $FF ; id 126
+    db $FF, $FF ; id 127
+    db $FF, $FF ; id 128
+    db $FF, $FF ; id 129
+    db $FF, $FF ; id 130
+    db $FF, $FF ; id 131
+    db $FF, $FF ; id 132
+    db $FF, $FF ; id 133
+    db $FF, $FF ; id 134
+    db $FF, $FF ; id 135
+    db $FF, $FF ; id 136
+    db $FF, $FF ; id 137
+    db $FF, $FF ; id 138
+    db $FF, $FF ; id 139
+    db $FF, $FF ; id 140
+    db $FF, $FF ; id 141
+    db $FF, $FF ; id 142
+    db $FF, $FF ; id 143
+    db $FF, $FF ; id 144
+    db $FF, $FF ; id 145
+    db $FF, $FF ; id 146
+    db $FF, $FF ; id 147
+    db $FF, $FF ; id 148
+    db $FF, $FF ; id 149
+    db $FF, $FF ; id 150
+    db $FF, $FF ; id 151
+    db $FF, $FF ; id 152
+    db $FF, $FF ; id 153
+    db $FF, $FF ; id 154
+    db $FF, $FF ; id 155
+    db $FF, $FF ; id 156
+    db $FF, $FF ; id 157
+    db $FF, $FF ; id 158
+    db $FF, $FF ; id 159
+    db $FF, $FF ; id 160
+    db $FF, $FF ; id 161
+    db $FF, $FF ; id 162
+    db $FF, $FF ; id 163
+    db $FF, $FF ; id 164
+    db $FF, $FF ; id 165
+    db $FF, $FF ; id 166
+    db $FF, $FF ; id 167
+    db $FF, $FF ; id 168
+    db $FF, $FF ; id 169
+    db $FF, $FF ; id 170
+    db $FF, $FF ; id 171
+    db $FF, $FF ; id 172
+    db $FF, $FF ; id 173
+    db $FF, $FF ; id 174
+    db $FF, $FF ; id 175
+    db $FF, $FF ; id 176
+    db $FF, $FF ; id 177
+    db $FF, $FF ; id 178
+    db $FF, $FF ; id 179
+    db $FF, $FF ; id 180
+    db $FF, $FF ; id 181
+    db $FF, $FF ; id 182
+    db $FF, $FF ; id 183
+    db $FF, $FF ; id 184
+    db $FF, $FF ; id 185
+    db $FF, $FF ; id 186
+    db $FF, $FF ; id 187
+    db $FF, $FF ; id 188
+    db $FF, $FF ; id 189
+    db $FF, $FF ; id 190
+    db $FF, $FF ; id 191
+    db $FF, $FF ; id 192
+    db $FF, $FF ; id 193
+    db $FF, $FF ; id 194
+    db $FF, $FF ; id 195
+    db $FF, $FF ; id 196
+    db $FF, $FF ; id 197
+    db $FF, $FF ; id 198
+    db $FF, $FF ; id 199
+    db $FF, $FF ; id 200
+    db $FF, $FF ; id 201
+    db $FF, $FF ; id 202
+    db $FF, $FF ; id 203
+    db $FF, $FF ; id 204
+    db $FF, $FF ; id 205
+    db $FF, $FF ; id 206
+    db $FF, $FF ; id 207
+    db $FF, $FF ; id 208
+    db $FF, $FF ; id 209
+    db $FF, $FF ; id 210
+    db $FF, $FF ; id 211
+    db $FF, $FF ; id 212
+    db $FF, $FF ; id 213
+    db $FF, $FF ; id 214
+    db $FF, $FF ; id 215
+    db $FF, $FF ; id 216
+    db $FF, $FF ; id 217
+    db $FF, $FF ; id 218
+    db $FF, $FF ; id 219
+    db $FF, $FF ; id 220
+    db $FF, $FF ; id 221
+    db $FF, $FF ; id 222
+    db $FF, $FF ; id 223
+    db $FF, $FF ; id 224
+    db $FF, $FF ; id 225
+    db $FF, $FF ; id 226
+    db $FF, $FF ; id 227
 
-; address loaded by SelectEffectByEffectFlags
-Data_03A_486C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $32, $FF
-    db $2C, $FF, $2C, $FF, $2C, $FF, $2C, $FF, $15, $FF, $32, $FF, $FF, $FF, $FF, $FF
-    db $FF, $FF, $FF, $FF, $FF, $FF, $09, $FF, $0F, $FF, $0E, $FF, $02
-    ds $31, $FF
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 2 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 64 entries).
+; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
+ActionEffectTable_Flag2::
+Data_03A_47EC:: ; address name
+    db $FF, $FF ; id 0
+    db $14, $FF ; id 1
+    db $14, $FF ; id 2
+    db $14, $FF ; id 3
+    db $14, $FF ; id 4
+    db $14, $FF ; id 5
+    db $14, $FF ; id 6
+    db $14, $FF ; id 7
+    db $14, $FF ; id 8
+    db $14, $FF ; id 9
+    db $14, $FF ; id 10
+    db $14, $FF ; id 11
+    db $FF, $FF ; id 12
+    db $FF, $FF ; id 13
+    db $FF, $FF ; id 14
+    db $FF, $FF ; id 15
+    db $FF, $FF ; id 16
+    db $FF, $FF ; id 17
+    db $FF, $FF ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $FF, $FF ; id 25
+    db $FF, $FF ; id 26
+    db $FF, $FF ; id 27
+    db $FF, $FF ; id 28
+    db $FF, $FF ; id 29
+    db $FF, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $12, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $82, $FF ; id 36
+    db $82, $FF ; id 37
+    db $82, $FF ; id 38
+    db $82, $FF ; id 39
+    db $FF, $FF ; id 40
+    db $FF, $FF ; id 41
+    db $FF, $FF ; id 42
+    db $FF, $FF ; id 43
+    db $FF, $FF ; id 44
+    db $FF, $FF ; id 45
+    db $FF, $FF ; id 46
+    db $FF, $FF ; id 47
+    db $FF, $FF ; id 48
+    db $FF, $FF ; id 49
+    db $FF, $FF ; id 50
+    db $FF, $FF ; id 51
+    db $FF, $FF ; id 52
+    db $FF, $FF ; id 53
+    db $FF, $FF ; id 54
+    db $FF, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $FF, $FF ; id 58
+    db $FF, $FF ; id 59
+    db $FF, $FF ; id 60
+    db $FF, $FF ; id 61
+    db $FF, $FF ; id 62
+    db $FF, $FF ; id 63
+
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 3 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 64 entries).
+; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
+ActionEffectTable_Flag3::
+Data_03A_486C:: ; address name
+    db $FF, $FF ; id 0
+    db $FF, $FF ; id 1
+    db $FF, $FF ; id 2
+    db $FF, $FF ; id 3
+    db $FF, $FF ; id 4
+    db $FF, $FF ; id 5
+    db $FF, $FF ; id 6
+    db $FF, $FF ; id 7
+    db $FF, $FF ; id 8
+    db $FF, $FF ; id 9
+    db $FF, $FF ; id 10
+    db $FF, $FF ; id 11
+    db $FF, $FF ; id 12
+    db $FF, $FF ; id 13
+    db $FF, $FF ; id 14
+    db $FF, $FF ; id 15
+    db $FF, $FF ; id 16
+    db $FF, $FF ; id 17
+    db $FF, $FF ; id 18
+    db $FF, $FF ; id 19
+    db $FF, $FF ; id 20
+    db $FF, $FF ; id 21
+    db $FF, $FF ; id 22
+    db $FF, $FF ; id 23
+    db $FF, $FF ; id 24
+    db $2C, $FF ; id 25
+    db $2C, $FF ; id 26
+    db $2C, $FF ; id 27
+    db $2C, $FF ; id 28
+    db $15, $FF ; id 29
+    db $32, $FF ; id 30
+    db $FF, $FF ; id 31
+    db $FF, $FF ; id 32
+    db $FF, $FF ; id 33
+    db $FF, $FF ; id 34
+    db $FF, $FF ; id 35
+    db $09, $FF ; id 36
+    db $0F, $FF ; id 37
+    db $0E, $FF ; id 38
+    db $02, $FF ; id 39
+    db $FF, $FF ; id 40
+    db $FF, $FF ; id 41
+    db $FF, $FF ; id 42
+    db $FF, $FF ; id 43
+    db $FF, $FF ; id 44
+    db $FF, $FF ; id 45
+    db $FF, $FF ; id 46
+    db $FF, $FF ; id 47
+    db $FF, $FF ; id 48
+    db $FF, $FF ; id 49
+    db $FF, $FF ; id 50
+    db $FF, $FF ; id 51
+    db $FF, $FF ; id 52
+    db $FF, $FF ; id 53
+    db $FF, $FF ; id 54
+    db $FF, $FF ; id 55
+    db $FF, $FF ; id 56
+    db $FF, $FF ; id 57
+    db $FF, $FF ; id 58
+    db $FF, $FF ; id 59
+    db $FF, $FF ; id 60
+    db $FF, $FF ; id 61
+    db $FF, $FF ; id 62
+    db $FF, $FF ; id 63
 
 Jump_03A_48EC::
     push af
@@ -2061,7 +3080,7 @@ Func_03A_53B9:: ; address name
     ld [wBattleArg2], a
     ld a, h
     ld [wBattleArg3], a
-    ld hl, Data_03A_40CC
+    ld hl, ActionEffectTable_Flag7
     call DrawSkillByte0AndRun502BAnd53B9_Sub01_Sub01
     ld hl, vBGMap0 + $1EE
     ld a, l
@@ -2073,7 +3092,7 @@ Func_03A_53B9:: ; address name
     ld [wBattleArg2], a
     ld a, h
     ld [wBattleArg3], a
-    ld hl, Data_03A_4294
+    ld hl, ActionEffectTable_Flag6
     call DrawSkillByte0AndRun502BAnd53B9_Sub01_Sub01
     ld hl, vBGMap0 + $20E
     ld a, l
@@ -2085,7 +3104,7 @@ Func_03A_53B9:: ; address name
     ld [wBattleArg2], a
     ld a, h
     ld [wBattleArg3], a
-    ld hl, Data_03A_445C
+    ld hl, ActionEffectTable_Flag5
 
 ; only called from DrawSkillByte0AndRun502BAnd53B9_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9_Sub01)

@@ -10103,7 +10103,7 @@ Jump_000_3905::
 
 Jump_000_3918::
     ld d, $00
-    ld hl, $3B5C
+    ld hl, SoundNotePeriodTable
     add hl, de
     deref_hl
     ld a, b
@@ -10278,7 +10278,7 @@ Func_000_39F8:: ; address name
     or a, b
     ld e, a
     ld d, $00
-    ld hl, $3C8C
+    ld hl, SoundPitchOffsetRows
     add hl, de
     ldh a, [hSndFreqLo]
     add a, [hl]
@@ -10491,7 +10491,7 @@ Jump_000_3B0E::
     ld b, a
     bit 0, h
     jr z, Jump_000_3B20
-    ld hl, $3B8C
+    ld hl, SoundEnvelopeScaleTable
     add hl, de
     ld a, [hl]
     or a, b
@@ -10509,7 +10509,7 @@ Jump_000_3B20::
     and a, $08
     cp a, l
     ret z
-    ld hl, $3B8C
+    ld hl, SoundEnvelopeScaleTable
     add hl, de
     ld a, [hl]
     or a, b
@@ -10551,16 +10551,54 @@ Func_000_3B51:: ; address name
     ret z
     pop af
     ret
-    db $D4, $07, $64, $07, $F9, $06, $95, $06, $37, $06, $DD, $05, $89, $05, $3A, $05
-    db $F0, $04, $A8, $04, $65, $04, $26, $04, $9C, $07, $2E, $07, $C7, $06, $66, $06
-    db $0A, $06, $B3, $05, $61, $05, $15, $05, $CC, $04, $86, $04, $45, $04, $08, $04
-    ds $18, $00
-    INCBIN "dwm2-cobi-us.gbc", $003BA4, $126
-    ds $12, $FF
-    ds $10, $FE
-    ds $10, $01
-    ds $10, $02
-    ds $70, $00
+
+; E-0209 (C2 for the use, from E-0019's matched formula: the note routine indexes $3B5C by the semitone, or $3B74 when $FFDE bit 4 is set; row 1 is the alternative tuning).
+; record: 12 semitone periods (shifted right by the octave and subtracted from $0800)
+SoundNotePeriodTable::
+Data_000_3B5C:: ; address name
+    dw $07D4, $0764, $06F9, $0695, $0637, $05DD, $0589, $053A, $04F0, $04A8, $0465, $0426 ; id 0
+    dw $079C, $072E, $06C7, $0666, $060A, $05B3, $0561, $0515, $04CC, $0486, $0445, $0408 ; id 1
+
+; E-0209 (C1: Jump_000_3B0E reads the byte at $3B8C + DE (DE = level row * 16 + input) and ORs it into the envelope written by WriteChannelEnvelopeIfChanged; the rows rise from all $10 to $00-$F0).
+; record: 16 scaled volumes (high nibble) for one level
+SoundEnvelopeScaleTable::
+Data_000_3B8C:: ; address name
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $10, $10, $10, $10, $10, $10, $10, $10 ; id 1
+    db $00, $00, $00, $00, $10, $10, $10, $10, $10, $10, $10, $10, $20, $20, $20, $20 ; id 2
+    db $00, $00, $00, $10, $10, $10, $10, $10, $20, $20, $20, $20, $20, $30, $30, $30 ; id 3
+    db $00, $00, $10, $10, $10, $10, $20, $20, $20, $20, $30, $30, $30, $30, $40, $40 ; id 4
+    db $00, $00, $10, $10, $10, $20, $20, $20, $30, $30, $30, $40, $40, $40, $50, $50 ; id 5
+    db $00, $00, $10, $10, $20, $20, $20, $30, $30, $40, $40, $40, $50, $50, $60, $60 ; id 6
+    db $00, $00, $10, $10, $20, $20, $30, $30, $40, $40, $50, $50, $60, $60, $70, $70 ; id 7
+    db $00, $10, $10, $20, $20, $30, $30, $40, $40, $50, $50, $60, $60, $70, $70, $80 ; id 8
+    db $00, $10, $10, $20, $20, $30, $40, $40, $50, $50, $60, $70, $70, $80, $80, $90 ; id 9
+    db $00, $10, $10, $20, $30, $30, $40, $50, $50, $60, $70, $70, $80, $90, $90, $A0 ; id 10
+    db $00, $10, $10, $20, $30, $40, $40, $50, $60, $70, $70, $80, $90, $A0, $A0, $B0 ; id 11
+    db $00, $10, $20, $20, $30, $40, $50, $60, $60, $70, $80, $90, $A0, $A0, $B0, $C0 ; id 12
+    db $00, $10, $20, $30, $30, $40, $50, $60, $70, $80, $90, $A0, $A0, $B0, $C0, $D0 ; id 13
+    db $00, $10, $20, $30, $40, $50, $60, $70, $70, $80, $90, $A0, $B0, $C0, $D0, $E0 ; id 14
+    db $00, $10, $20, $30, $40, $50, $60, $70, $80, $90, $A0, $B0, $C0, $D0, $E0, $F0 ; id 15
+
+; E-0209 (C1: the routine before SoundNextEvent_Sub01 adds the byte at $3C8C + ((hSndChanFlags & $F0) - $10) + (wSoundTickBuf0E & $0F) to hSndFreqLo and writes it to register $13 of the channel; row 1 is the first; 15 rows end at SoundNextEvent_Sub04 ($3D7C)).
+; record: 16 signed frequency offsets, one per tick phase
+SoundPitchOffsetRows::
+Data_000_3C8C:: ; address name
+    db $00, $00, $01, $01, $00, $00, $FF, $FF, $00, $00, $01, $01, $00, $00, $FF, $FF ; id 1
+    db $00, $00, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $FF, $FF, $FF, $FF ; id 2
+    db $00, $01, $02, $01, $00, $FF, $FE, $FF, $00, $01, $02, $01, $00, $FF, $FE, $FF ; id 3
+    db $00, $00, $01, $01, $02, $02, $01, $01, $00, $00, $FF, $FF, $FE, $FE, $FF, $FF ; id 4
+    db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF ; id 5
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 6
+    db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01 ; id 7
+    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02 ; id 8
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)

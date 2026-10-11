@@ -2430,6 +2430,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0209 — Sound note tables (bank 0); action effect tables (bank $3A)
+
+- Kind: OBSERVATION (reading; C1, the period table C2 through E-0019).
+- **SoundNotePeriodTable (00:$3B5C).** Two rows of 12 periods. The note routine indexes $3B5C by the semitone, or $3B74 when $FFDE bit 4 is set (E-0019's formula matched every emulated note).
+- **SoundEnvelopeScaleTable (00:$3B8C).** 16 rows of 16 scaled volume nibbles. Jump_000_3B0E reads it before WriteChannelEnvelopeIfChanged.
+- **SoundPitchOffsetRows (00:$3C8C).** 15 rows of 16 signed offsets added to hSndFreqLo by tick phase. They end at SoundNextEvent_Sub04.
+- **ActionEffectTable_Flag7/6/5 ($40CC, $4294, $445C; 228 entries) and _Flag2/_Flag3 ($47EC, $486C; 64 entries).** SelectEffectByEffectFlags picks the table from wEffectFlags and indexes it by wBattleActionId. Each entry has two bytes:
+  - byte 1 is used for an actor on the near side (ActorOnLocalSide), byte 0 otherwise;
+  - $FF does nothing;
+  - with bit 7 set, the value & $7F starts wEffectRoutine;
+  - other values go to Jump_03A_48EC.
+  - The debug viewer shows the first three tables by skill number, which fits the 228 records of SkillTable (E-0204).
+- **ActionEffectTable_Unused ($4624).** 456 bytes of $FF, the size of one more table, with no reader found.
+- Binary verification: build/run239 PASS, 0 differing bytes.
+
 ### E-0208 — Species record byte, AI skill weights, screen number lists
 
 - Kind: OBSERVATION (reading; C1).
