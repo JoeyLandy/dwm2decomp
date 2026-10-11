@@ -1135,6 +1135,7 @@ Data_01A_5D89:: ; heuristic: skill prerequisite list; C0
     db $9A ; entry 73
     db $FF ; entry 74
 
+; address loaded by AddSkillCToFreeSlotUnlessExcluded
 Data_01A_5D8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $DF, $5E
     dw Data_01A_5EE0

@@ -465,9 +465,11 @@ Jump_011_42A6::
     ld c, $01
     ret
 
+; address loaded by WarpToLinkedMapForCurrentMap
 Data_011_42AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2, $FF
 
+; address loaded by WarpToLinkedMapForCurrentMap
 Data_011_42B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
@@ -734,11 +736,13 @@ Jump_011_442B::
     ld c, $01
     ret
 
+; address loaded by CheckMapExitTable4480
 Data_011_4480:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $44, $00, $01, $30, $44, $76, $02, $48, $44, $B4, $03, $70, $44, $B4, $04
     db $A0, $44, $10, $05, $A8, $44, $00, $06, $B0, $44, $01, $07, $B8, $44, $44, $08
     db $C8, $44, $01, $09, $D1, $44, $00, $0A, $DA, $44, $00, $0B, $FF
 
+; address loaded by CheckMapExitTable4480_Sub01
 Data_011_44AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2
 

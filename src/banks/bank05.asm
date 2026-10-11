@@ -5068,6 +5068,7 @@ Jump_005_5A30::
     ld c, $01
     ret
 
+; address loaded by FailIfAllyLacksMPForHealSkill
 Data_005_5A33:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $015A33, $189
 
@@ -6198,6 +6199,7 @@ Func_005_6141:: ; address name
     bit 6, [hl]
     ret
 
+; address loaded by SlotCHasCastableHealSkill
 Data_005_614B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $05, $07, $12, $24, $01, $0C, $1C
 
@@ -8865,6 +8867,7 @@ Func_005_6F60:: ; address name
     ld a, [hl]
     ret
 
+; address loaded by AnyFoeNotFullyResistant, PassIfFoesAverageResistanceAtLeast2, FailIfAnyFoeFullyResistant, AIScore_Ramming_Sub01 and 4 more
 Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $02, $00, $01, $00, $00, $01, $03, $01, $02, $01, $01, $01, $00, $02, $03
     db $02, $02, $02, $01, $02, $00, $03, $03, $03, $02, $03, $01, $03, $00, $04, $03

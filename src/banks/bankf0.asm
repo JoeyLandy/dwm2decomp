@@ -10,10 +10,12 @@ Func_0F0_4001:: ; address name
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
 
+; address loaded by BeginStringDisplay_BankF0_4001
 Data_0F0_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $18, $40, $A2, $40, $DA, $40, $FB, $40, $1E, $41, $65, $41, $84, $41, $BA, $41
     db $D9, $41, $FE, $41, $19, $42, $3C, $42, $44, $42, $53, $42, $72, $42, $95, $42
 
+; address loaded by CopyNameStringFromBank08Database
 Data_0F0_4036:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3C0036, $6E
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -296,6 +298,7 @@ Func_0F0_48AE:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_BankF0_48A0
 Data_0F0_48B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0F0_48B7
 
@@ -2991,6 +2994,7 @@ Jump_0F0_5B2A::
     ld [wScreenCounter], a
     ret
 
+; address loaded by StepScreenStepOffsetTableEvery4Frames
 Data_0F0_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FD, $FD, $FE, $00, $01, $01, $03, $03, $80
 
@@ -4415,41 +4419,51 @@ Jump_0F0_643E::
     jr nz, CopyScreenBufferRectWithAttrs_F0
     ret
 
+; address loaded by RunScreenStep_F0_5DE8_Case01
 Data_0F0_6442:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $90, $30, $90, $40, $90, $50, $90, $60, $90, $70, $90, $80, $90, $90, $90
     db $A0, $90, $B0, $90, $C0, $90, $D0, $90, $E0, $90, $F0, $90, $00, $91, $10, $91
     db $20, $91, $30, $91, $40, $91, $50, $91, $60, $91, $70, $91, $80, $91, $90, $91
     db $A0, $91, $B0, $91, $C0, $91, $D0, $91, $E0, $91, $F0, $91, $F0, $96, $FF, $FF
 
+; address loaded by RunScreenStep_F0_5DE8_Case01
 Data_0F0_6482:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $42, $B0, $42, $00, $43, $C0, $44, $00, $44, $B0, $4A, $10, $43, $F0, $43
     db $E0, $42, $F0, $42, $A0, $42, $20, $43, $60, $42, $90, $43, $B0, $47, $80, $46
     db $B0, $46, $D0, $49, $B0, $42, $E0, $43, $90, $48, $90, $47, $80, $48, $40, $44
     db $80, $43, $00, $45, $E0, $44, $C0, $42, $30, $4A, $70, $42, $D0, $4A, $FF, $FF
 
+; address loaded by RunScreenStep_F0_5DE8_Case0A
 Data_0F0_64C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97, $FF, $FF
 
+; address loaded by RunScreenStep_F0_5DE8_Case0A
 Data_0F0_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $41, $20, $43, $A0, $42, $30, $43, $90, $41, $50, $41, $FF, $FF
 
+; address loaded by RunScreenStep_F0_5DE8_Case0B
 Data_0F0_64E0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $44, $80, $44, $E0, $43, $E0, $42, $B0, $46, $B0, $47, $50, $46, $00, $44
     db $B0, $42, $30, $41, $20, $43, $A0
 
+; address loaded by RunScreenStep_F0_5DE8_Case06
 Data_0F0_64F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $42, $30, $43, $90, $41, $50, $41, $FF, $FF
 
+; address loaded by RunScreenStep_F0_5DE8_Case0B
 Data_0F0_6500:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $97, $D0, $97, $E0, $97, $F0, $97, $F0, $8D, $E0, $8F, $F0, $8F, $70, $97
     db $80, $97, $00, $97, $10, $97, $20, $97, $30, $97, $40
 
+; address loaded by DrawRect6x6From651BAtScroll41_BankF0
 Data_0F0_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $97, $50, $97, $60, $97, $FF, $FF
 
+; address loaded by Func_0F0_4CA0_Table3_Case05, RunScreenStep_F0_5B50_Case01, RunScreenStep_F0_5B50_Case09
 Data_0F0_6522:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $26, $C4, $4E, $C4
 
+; address loaded by Func_0F0_4CA0_Table3_Case01, Func_0F0_4CA0_Table3_Case04, RunScreenStep_F0_5DE8_Case0F
 Data_0F0_6526:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $C3, $A8, $C3, $D0, $C3, $F8, $C3, $20, $C4
 
@@ -4713,6 +4727,7 @@ Jump_0F0_67A9::
     ei
     ret
 
+; address loaded by DrawArrowTileBCAtArg2Entry_F0
 Data_0F0_67C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C6, $67, $CA, $67, $CE, $67, $2D, $01, $6D, $01, $2E, $01, $6E, $01, $2F, $01
     db $6F, $01
@@ -4895,36 +4910,47 @@ Data_0F0_68E6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 11
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 12
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_69EA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $01, $04, $00, $80
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_69F0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $00, $01, $01, $00, $80
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_69F6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $01, $04, $00, $81
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_69FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $00, $01, $01, $00, $81
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_6A02:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $02, $00, $82
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_6A08:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $F0, $40, $04, $01, $00, $00, $00, $F0, $40, $04, $00, $00
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_6A18:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $01, $00, $F0, $40, $01, $01, $00, $00, $00, $F0, $40, $04, $00, $00
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_6A28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $F0, $40, $04, $03, $10, $00, $00, $F0, $40, $04, $00, $00
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_6A38:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $01, $00, $F0, $40, $01, $03, $10, $00, $00, $F0, $40, $04, $00, $00
 
+; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_6A48:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
 
+; address loaded by Func_0F0_4CA0_Table5_Case09
 Data_0F0_6A58:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $A6, $FF
 
@@ -5236,6 +5262,7 @@ Jump_0F0_6CA5::
     ld [wTopSpeciesByte], a
     ret
 
+; address loaded by RankFamilyScoresIntoFamilyRanking
 Data_0F0_6CB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0F0_6CCB
     dw Data_0F0_6D1F
@@ -5351,6 +5378,7 @@ Data_0F0_6DA9:: ; heuristic: target of a monotone pointer table; C0
 Data_0F0_6DB7:: ; heuristic: target of a monotone pointer table; C0
     db $55, $00, $56, $00, $5D, $00, $5E, $00, $65, $00, $66, $00, $FE
 
+; address loaded by RunScreenStep_F0_5B50_Case09
 Data_0F0_6DC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE
 
@@ -5450,6 +5478,7 @@ Data_0F0_6E77:: ; heuristic: target of a monotone pointer table; C0
 Data_0F0_6E7D:: ; heuristic: target of a monotone pointer table; C0
     db $A2, $00
 
+; address loaded by RunScreenStep_F0_5DE8_Case04
 Data_0F0_6E7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FE
 
@@ -7569,6 +7598,7 @@ Jump_0F0_7CF8::
     ld a, $FF
     ret
 
+; address loaded by TestBitDEOfBitArrayHL
 Data_0F0_7CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $40, $20, $10, $08, $04, $02, $01
 

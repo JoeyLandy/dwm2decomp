@@ -133,6 +133,7 @@ Jump_03A_40B3::
     ld [wEffectFrameCounter], a
     ret
 
+; address loaded by SelectEffectByEffectFlags, DrawSkillByte0AndRun502BAnd53B9_Sub01
 Data_03A_40CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF, $FF, $00, $FF, $01, $FF, $02, $FF, $03, $FF, $04, $FF, $05, $FF, $06
     db $FF, $07, $FF, $08, $FF, $09, $FF, $0A, $FF, $0B, $FF, $0F, $FF, $10, $FF, $11
@@ -152,6 +153,7 @@ Data_03A_40CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $38, $FF, $FF, $FF, $30, $FF, $1D, $FF, $2A, $FF, $FF, $85, $85, $FF, $FF, $FF
     db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $3B, $FF
 
+; address loaded by SelectEffectByEffectFlags, DrawSkillByte0AndRun502BAnd53B9_Sub01
 Data_03A_4294:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0E8294, $124
     ds $1A, $FF
@@ -159,6 +161,7 @@ Data_03A_4294:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $10, $FF
     INCBIN "dwm2-cobi-us.gbc", $0E83E8, $74
 
+; address loaded by SelectEffectByEffectFlags, DrawSkillByte0AndRun502BAnd53B9_Sub01
 Data_03A_445C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $BF, $FF
     db $15, $FF, $15, $FF, $15
@@ -166,6 +169,7 @@ Data_03A_445C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $8D, $83, $FF, $FF, $8D, $83, $8D, $83
     ds $2AE, $FF
 
+; address loaded by SelectEffectByEffectFlags
 Data_03A_47EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF, $14, $FF, $14, $FF, $14, $FF, $14, $FF, $14, $FF, $14, $FF, $14, $FF
     db $14, $FF, $14, $FF, $14, $FF, $14
@@ -173,6 +177,7 @@ Data_03A_47EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $12, $FF, $FF, $FF, $82, $FF, $82, $FF, $82, $FF, $82
     ds $31, $FF
 
+; address loaded by SelectEffectByEffectFlags
 Data_03A_486C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $32, $FF
     db $2C, $FF, $2C, $FF, $2C, $FF, $2C, $FF, $15, $FF, $32, $FF, $FF, $FF, $FF, $FF
@@ -287,6 +292,7 @@ Jump_03A_4970::
     call LoadEffectOBJPaletteC
     ret
 
+; address loaded by SelectEffectByEffectFlags
 Data_03A_49AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $01, $01, $01, $02, $02, $01, $02, $01, $01, $01, $02, $01, $02
     db $02, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $01, $00, $00, $00
@@ -464,6 +470,7 @@ Jump_03A_4ACA::
     ld [wEffectSpriteX], a
     ret
 
+; address loaded by SetEffectSpriteXForTargets
 Data_03A_4AD5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $50, $80, $38, $68, $50
 
@@ -619,6 +626,7 @@ Jump_03A_4BB5::
     call LoadEffectOBJPaletteC
     ret
 
+; address loaded by RunBattleEffectAnimation
 Data_03A_4C12:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $22, $00
 
@@ -857,9 +865,11 @@ Func_03A_4D47:: ; address name
     deref_hl
     ret
 
+; address loaded by RunEffectRoutineEffectEvery5Frames_Table2_Case00, RunEffectRoutineEffectEvery5Frames_Table2_Case01, Func_03A_50D9_Case00, Func_03A_50D9_Case01
 Data_03A_4D52:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E7, $00, $E4, $00, $EA, $00, $E1, $00, $ED, $00
 
+; address loaded by RunEffectRoutineEffectEvery5Frames_Table2_Case00, RunEffectRoutineEffectEvery5Frames_Table2_Case01, Func_03A_50D9_Case00, Func_03A_50D9_Case01
 Data_03A_4D5C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0E8D5C, $74
     ds $24, $C3
@@ -2683,6 +2693,7 @@ Jump_03A_5749::
 Jump_03A_575D::
     ret
 
+; address loaded by UploadBGPalettesWithFade_Sub01, UploadBGPalettesWithFade_Sub01_Sub01
 Data_03A_575E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $04, $00, $06
 
@@ -2794,6 +2805,7 @@ Jump_03A_57F1::
     bit 6, a
     ret
 
+; address loaded by SelectEffectByEffectFlags2Flags
 Data_03A_57F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $7C
     ds $78, $7A
@@ -2803,6 +2815,7 @@ Data_03A_57F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $15, $FF
     INCBIN "dwm2-cobi-us.gbc", $0E9969, $56
 
+; address loaded by SelectEffectByEffectFlags2Flags
 Data_03A_59BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF, $FF, $89, $FF, $8B, $FF, $8B, $FF, $8D, $FF, $8D, $FF, $8F, $FF, $90
     db $FF, $D9, $FF, $91, $FF, $93, $FF, $93, $FF, $94, $FF, $97, $FF, $97, $FF, $98
@@ -2821,6 +2834,7 @@ Data_03A_59BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $12, $FF
     db $CB, $FF
 
+; address loaded by SelectEffectByEffectFlags2Flags
 Data_03A_5B87:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $26, $81
     db $B1, $B1, $B1, $B1, $B1, $B1
@@ -2845,6 +2859,7 @@ Data_03A_5B87:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $85, $85, $FF, $FF, $9A, $9A, $86, $86, $FF, $FF, $86, $87, $FF, $FF, $88, $88
     db $FF, $FF, $FF, $FF
 
+; address loaded by SelectEffectByEffectFlags2Flags
 Data_03A_5D4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $84, $84
     ds $9E, $FF
@@ -2860,6 +2875,7 @@ Data_03A_5D4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF, $84, $84, $84, $84, $84, $84, $84, $84, $FF, $FF, $84, $84, $84, $84
     ds $16, $FF
 
+; address loaded by SelectEffectByEffectFlags2Flags
 Data_03A_5F17:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $BE, $FF
     db $88, $88, $88, $88, $88, $88
@@ -2867,12 +2883,14 @@ Data_03A_5F17:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $81, $81, $FF, $FF, $81, $81, $81, $81
     ds $BE, $FF
 
+; address loaded by SelectEffectByEffectFlags2Flags
 Data_03A_60B7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF
     ds $18, $85
     ds $2A, $FF
     db $87, $FF, $86, $FF, $81, $FF, $81, $FF, $81, $FF, $81, $FF
 
+; address loaded by SelectEffectByEffectFlags2Flags
 Data_03A_6107:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $32, $FF
     db $85, $FF, $85, $FF, $85, $FF, $85, $FF, $88, $88, $85, $FF, $FF, $FF, $FF, $FF
@@ -5013,6 +5031,7 @@ Jump_03A_6DA2::
     ld d, $D6
     ret
 
+; address loaded by ShowActionBattleTextFrom6DAA
 Data_03A_6DAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00
     ds $3C, $01
@@ -5033,6 +5052,7 @@ Func_03A_6E92:: ; address name
     ld d, a
     jp ShowBattleText
 
+; address loaded by ShowActionBattleText
 Data_03A_6EA5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $9F, $9F, $A2, $9F, $9F, $9F, $9F, $9F, $9F, $9F, $A1, $9F, $FF, $FF, $FF
     db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $94, $94, $94, $94, $94, $97, $99
@@ -5065,6 +5085,7 @@ Jump_03A_6EF6::
     farcall BeginStringDisplay_Bank2F
     ret
 
+; address loaded by ShowBattleTextCategory0
 Data_03A_6F06:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_03A_7106
     dw Data_03A_7106
@@ -5125,6 +5146,7 @@ Jump_03A_71A4::
     farcall BeginStringDisplay_Bank2F
     ret
 
+; address loaded by ShowBattleText
 Data_03A_71B4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0EB1B4, $1C2
     dw Data_03A_73B4
@@ -5282,18 +5304,22 @@ Jump_03A_75B7::
     jr nz, Jump_03A_75A4
     ret
 
+; address loaded by BuildActionMessageNames
 Data_03A_75C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6C, $6E, $FF, $FF, $FF, $FF, $70, $FF, $80, $72, $FF, $FF, $76, $FF, $FF, $78
     db $FF, $81, $FF, $FF
 
+; address loaded by BuildActionMessageNames
 Data_03A_75DB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $74, $75, $FF, $FF, $82, $83
     db $FF, $7A, $FF, $FF
 
+; address loaded by BuildActionMessageNames
 Data_03A_75EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6D, $6F, $FF, $FF, $FF, $FF, $71, $FF, $84, $73, $FF, $FF, $77, $FF, $FF, $79
     db $FF, $85, $FF, $FF
 
+; address loaded by BuildActionMessageNames
 Data_03A_7603:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $3D, $00
     db $04, $04, $04, $01, $01, $01, $01, $01, $01, $01, $01, $04, $04, $11, $03, $10
@@ -5307,10 +5333,12 @@ Data_03A_7603:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $14, $14, $15, $15, $15, $15, $15, $15, $15, $16, $15, $15, $14, $15, $15, $15
     db $15, $15, $15, $15
 
+; address loaded by BuildActionMessageNames
 Data_03A_76E7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $36, $37, $38, $46, $47, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43
     db $44, $45, $48, $FF, $69, $6A, $6B
 
+; address loaded by BuildActionMessageNames
 Data_03A_76FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4D, $4F, $56, $4E, $50, $55, $51, $52, $54, $5F, $5A, $58, $5B, $59, $5C, $FF
     db $4D, $4E, $57, $53, $FF, $FF, $FF
@@ -5334,6 +5362,7 @@ Func_03A_7715:: ; address name
     farcall BeginStringDisplay_Bank2F
     ret
 
+; address loaded by ShowSpecialActionMessage
 Data_03A_7738:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $66, $66, $67, $67, $67, $67, $67, $67, $67, $68, $67, $67, $66, $67, $67, $67
     db $67, $67, $67, $67
@@ -6588,6 +6617,7 @@ Jump_03A_7D98::
     pop hl
     ret
 
+; address loaded by LoadEffectOBJPaletteC
 Data_03A_7D9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0EBD9A, $1DF
     ds $87, $00

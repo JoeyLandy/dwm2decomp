@@ -327,15 +327,19 @@ Jump_084_41A9::
     call RunDebugAutomapCaseTemp0_Shared01
     ret
 
+; address loaded by RunDebugAutomapCaseTemp0_Case01
 Data_084_41AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
+; address loaded by RunDebugAutomapCaseTemp0_Case02, RunDebugAutomapCaseTemp0_Case03
 Data_084_41B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
+; address loaded by RunDebugAutomapCaseTemp0_Case05
 Data_084_41C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $06, $07, $08, $09, $05, $07, $09
 
+; address loaded by RunDebugAutomapCaseTemp0_Case04
 Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $0B, $00, $0B, $00, $02, $00, $02, $02, $03, $0B, $02, $02, $04, $02, $04
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
@@ -479,6 +483,7 @@ Jump_084_429B::
     jr nz, Jump_084_4282
     ret
 
+; address loaded by RunDebugAutomapCaseTemp0_Shared01
 Data_084_42C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $2102C7, $60
 
@@ -1207,6 +1212,7 @@ Jump_084_4870::
     ldh [hTempA], a
     ret
 
+; address loaded by ItemUsable_LogTwig_Sub01
 Data_084_4887:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
@@ -1374,6 +1380,7 @@ Jump_084_499F::
     pop hl
     ret
 
+; address loaded by ItemUsable_LogTwig_Sub01
 Data_084_49A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $2109A1, $C9
 
@@ -1465,6 +1472,7 @@ Jump_084_4ACE::
     call RunFieldReturnPhase_Case01_Sub02_Sub01
     jr Jump_084_4B46
 
+; address loaded by RunFieldReturnPhase_Case01_Sub02
 Data_084_4ADC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
@@ -1708,6 +1716,7 @@ Jump_084_4C61::
     ldh [rSVBK], a
     ret
 
+; address loaded by RunFieldReturnPhase_Case01_Sub02_Sub01
 Data_084_4C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $03, $02, $02
 
@@ -1767,6 +1776,7 @@ Jump_084_4CB1::
     ld [wKeyWorldActive], a
     ret
 
+; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub0C
 Data_084_4CCB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_084_4D2B
     dw Data_084_4D5D

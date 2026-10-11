@@ -73,6 +73,7 @@ Jump_017_403B::
     call SpinDelay
     jr Jump_017_4026
 
+; address loaded by SendSGBPaletteSetPacket_Sub01
 Data_017_4055:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $40, $0F, $41
     dw Data_017_407F
@@ -259,6 +260,7 @@ Jump_017_4265::
     jr nz, Jump_017_4265
     ret
 
+; address loaded by SendSGBPaletteSetPacket
 Data_017_426C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $05C26C, $220
 

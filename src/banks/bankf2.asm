@@ -473,27 +473,35 @@ Func_0F2_42D9:: ; address name
     jr nz, CopyBytesDEFromHL_BankF2
     ret
 
+; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_42E0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $01, $04, $00, $80
 
+; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_42E6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $00, $01, $01, $00, $80
 
+; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_42EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $00, $01, $05, $00, $81
 
+; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_42F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $00, $01, $05, $00, $81, $00, $00, $00, $02, $00, $82
 
+; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_42FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $F0, $40, $04, $01, $00, $00, $00, $F0, $40, $04, $00, $00
 
+; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_430E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $01, $00, $F0, $40, $01, $01, $00, $00, $00, $F0, $40, $04, $00, $00
 
+; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_431E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $0C, $00, $F0, $40, $05, $03, $10, $00, $00, $F0, $40, $04, $00, $00
 
+; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_432E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $0C, $00, $F0, $40, $05, $03, $10, $00, $00, $F0, $40, $04, $00, $00
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
@@ -609,6 +617,7 @@ Func_0F2_43DE:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_BankF2
 Data_0F2_43E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0F2_43E7
 
@@ -1400,9 +1409,11 @@ Func_0F2_4D2B:: ; address name
     farcall ShowString_Bank08
     ret
 
+; address loaded by RunF24C3DAnd4D72_Sub01
 Data_0F2_4D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1A, $8E, $1A, $1E, $1C, $99, $1C, $29
 
+; address loaded by RunF24C3DAnd4D72_Sub01
 Data_0F2_4D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $99, $1C, $29, $1A, $8E, $1A, $1E
 
@@ -1540,9 +1551,11 @@ Jump_0F2_4E30::
 Jump_0F2_4E33::
     ret
 
+; address loaded by RunF24C3DAnd4D72_Sub02
 Data_0F2_4E34:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1A, $98, $1A, $1C, $A3, $1C
 
+; address loaded by RunF24C3DAnd4D72_Sub02
 Data_0F2_4E3A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $A3, $1C, $1A, $98, $1A
 
@@ -1683,6 +1696,7 @@ Jump_0F2_4ECC::
     jr c, Jump_0F2_4E78
     ret
 
+; address loaded by DecompressRecordBufBSpeciesGraphics
 Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
@@ -1758,12 +1772,15 @@ Jump_0F2_4F2D::
     jr c, Jump_0F2_4EDF
     ret
 
+; address loaded by DrawRecordBufBSpeciesSprites
 Data_0F2_4F35:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
+; address loaded by DecompressRecordBufBSpeciesGraphics, DrawRecordBufBSpeciesSprites
 Data_0F2_4F41:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1A, $1C
 
+; address loaded by DecompressRecordBufBSpeciesGraphics, DrawRecordBufBSpeciesSprites
 Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
@@ -1962,9 +1979,11 @@ Jump_0F2_500E::
     jr c, Jump_0F2_500E
     ret
 
+; address loaded by DrawFourRecordBufBStatsDigits
 Data_0F2_5050:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61
 
+; address loaded by DrawFourRecordBufBStatsDigits
 Data_0F2_5054:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CC, $01, $D0, $01, $0C, $02, $10, $02
 
@@ -2013,6 +2032,7 @@ Jump_0F2_5073::
     jr c, Jump_0F2_5068
     ret
 
+; address loaded by DrawFiveRecordBufBStatsColumn
 Data_0F2_509F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $63, $65, $67, $69, $6B
 
@@ -2216,9 +2236,11 @@ Jump_0F2_519F::
     ld [wArg7], a
     ret
 
+; address loaded by ScriptCommandF6_Run_Case10_Case04_Sub01
 Data_0F2_51C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3C91C3, $480
 
+; address loaded by ReadF2FarPointerForScreenTableIndex
 Data_0F2_5643:: ; heuristic: argument of a bank-switching copy helper; C0
     dw Data_0F2_5673
     dw Data_0F2_577B
@@ -2847,9 +2869,11 @@ Jump_0F2_651F::
     jr nz, Jump_0F2_651F
     ret
 
+; address loaded by ScriptCommandE5_Run_Case03_Case0E_Sub03, Run64C7UnlessScreenStateIs3_Sub01
 Data_0F2_6526:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3CA526, $60
 
+; address loaded by ScriptCommandE5_Run_Case03_Case0E_Sub03, Run64C7UnlessScreenStateIs3_Sub01
 Data_0F2_6586:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3CA586, $60
 

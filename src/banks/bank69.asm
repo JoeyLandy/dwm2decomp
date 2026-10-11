@@ -691,6 +691,7 @@ Data_069_76E4:: ; heuristic: target of a monotone pointer table; C0
     ds $12, $00
     INCBIN "dwm2-cobi-us.gbc", $1A7C0B, $213
 
+; address loaded by LoadMapObjectsForScreen
 Data_069_7E1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $85, $01, $22, $00, $00, $60, $30, $05, $03, $50, $2B, $86, $01, $4D, $00
     db $00, $10, $10, $06, $02, $60, $25, $86, $01, $4D, $00, $02, $20, $40, $06, $01

@@ -10,6 +10,7 @@ Func_037_4001:: ; address name
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
 
+; address loaded by BeginStringDisplay_Bank37
 Data_037_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0DC016, $B0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -2480,6 +2481,7 @@ Func_037_5895:: ; address name
     call CopyTileBytesToVRAM_Bank37
     ret
 
+; address loaded by UploadTilesFromData58AE
 Data_037_58AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0DD8AE, $50
 
@@ -2740,6 +2742,7 @@ Jump_037_5A35::
     ei
     ret
 
+; address loaded by DrawArrowTileBCAtTwoChoiceEntry_Bank37
 Data_037_5A57:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EC, $00, $2C, $01, $6C, $01
 
@@ -3908,6 +3911,7 @@ Func_037_5FB8:: ; address name
     pop af
     ret
 
+; address loaded by FamilyNibbleOrSpeciesFamily
 Data_037_5FC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0DDFC7, $85
     dw Data_037_6100
@@ -3968,6 +3972,7 @@ Data_037_6201:: ; heuristic: target of a monotone pointer table; C0
     dw Data_037_7E7D
     INCBIN "dwm2-cobi-us.gbc", $0DE237, $BE
 
+; address loaded by MapAndCompactSkillList62F5
 Data_037_62F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B
 
@@ -3979,9 +3984,11 @@ Data_037_6301:: ; heuristic: target of a monotone pointer table; C0
     ds $25, $FF
     db $3B, $54, $58, $59, $67, $34, $C8, $35, $8F
 
+; address loaded by MapAndCompactSkillList63D3
 Data_037_63D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3A, $00, $01, $02
 
+; address loaded by Func_037_4AFD_Case0D_Case1E
 Data_037_63D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0DE3D7, $A6
 
@@ -4017,25 +4024,30 @@ Data_037_64D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $C3, $68, $69, $6A, $6B, $C3, $B7 ; id 5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
+; address loaded by Func_037_4AFD_Case04_Case18
 Data_037_6516:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FC, $C3, $24, $C4, $4C
 
+; address loaded by Func_037_4AFD_Case0D_Case06
 Data_037_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C4
     ds $5B, $00
 
+; address loaded by Func_037_4AFD_Case0D_Case11
 Data_037_6577:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $8A, $00
 
 Data_037_6601:: ; heuristic: target of a monotone pointer table; C0
     ds $DE, $00
 
+; address loaded by Func_037_4AFD_Case0D_Case14
 Data_037_66DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $122, $00
 
 Data_037_6801:: ; heuristic: target of a monotone pointer table; C0
     ds $7E, $00
 
+; address loaded by Func_037_4AFD_Case0D_Case03
 Data_037_687F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $181, $00
 

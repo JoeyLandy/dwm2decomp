@@ -741,6 +741,7 @@ Jump_061_445B::
 Jump_061_4467::
     ret
 
+; address loaded by LoadKeyWorldTilesetAndHeader
 Data_061_4468:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $11, $11, $21, $11, $12, $12, $11, $11, $11, $31
 
@@ -1405,9 +1406,11 @@ Jump_061_47C5::
     ldh [rSVBK], a
     ret
 
+; address loaded by DrawKeyWorldExitTile
 Data_061_480A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
+; address loaded by CheckTwoWCDB0EntriesForKeyWorldArea_Sub01
 Data_061_4810:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $184810, $98
     ds $40, $04
@@ -2612,6 +2615,7 @@ Jump_061_59DD::
     ld c, $01
     ret
 
+; address loaded by RunMapType_596F_Case06_Sub01
 Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
@@ -2833,6 +2837,7 @@ Jump_061_5B6B::
     ld c, $01
     ret
 
+; address loaded by RunMapType_596F_Case05_Sub01
 Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
@@ -3274,6 +3279,7 @@ Jump_061_5E7A::
     ldh [hTemp1], a
     jp Jump_061_5CD6
 
+; address loaded by RunMapType_596F_Case00_Sub01
 Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
@@ -3998,6 +4004,7 @@ Data_061_654C:: ; heuristic: special map record; C0
     dfar Map29Screens0
     dfar Map29Attrs0
 
+; address loaded by CheckKeyWorldWarpTable, RunMapType_596F_Case03_Sub01
 Data_061_6566:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $67, $66, $67, $66, $67, $66, $67, $66, $67, $66, $67
     ds $35, $66

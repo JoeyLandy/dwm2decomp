@@ -83,6 +83,7 @@ Func_098_405A:: ; address name
     db $CD, $4B, $40, $CD, $11, $26, $C9
 
 ; string-pointer table for message bank $2B, strings from $8A up (index minus $8A) (E-0080)
+; address loaded by BeginStringDisplay_Bank2B_Overflow, CopyStringToBuffer_Bank2B_Overflow
 MessageStrings_Bank2B_Overflow:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_098_4070:: ; address name
     dw Data_098_4072
@@ -651,6 +652,7 @@ Data_098_572D:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; string-pointer table for message bank $2C, strings from $91 up (index minus $91) (E-0080)
+; address loaded by BeginStringDisplay_Bank2C_Overflow, CopyStringToBuffer_Bank2C_Overflow
 MessageStrings_Bank2C_Overflow:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_098_572E:: ; address name
     dw Data_098_5730
@@ -1318,6 +1320,7 @@ Data_098_7031:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; string-pointer table for message bank $89, strings from $DE up (index minus $DE) (E-0080)
+; address loaded by BeginStringDisplay_Bank89_Overflow, CopyStringToBuffer_Bank89_Overflow
 MessageStrings_Bank89_Overflow:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_098_7032:: ; address name
     dw Data_098_7034

@@ -42,6 +42,7 @@ Func_028_402B:: ; address name
     ret
 
 ; string-pointer table of message bank $28: strings 0 to $DA - 1; the rest are in MessageStrings_Bank28_Overflow (E-0080)
+; address loaded by BeginStringDisplay_Bank28, CopyStringToBuffer_Bank28
 MessageStrings_Bank28:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_028_4032:: ; address name
     dw Data_028_4034

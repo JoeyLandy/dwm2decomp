@@ -145,6 +145,7 @@ Func_0A2_49E2:: ; address name
     ret
     db $CD, $E2, $49, $CD, $11, $26, $C9
 
+; address loaded by BeginStringDisplay_BankE0_Sub01
 Data_0A2_49F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0A2_49FC
     dw Data_0A2_4A3E

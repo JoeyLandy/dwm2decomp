@@ -10,6 +10,7 @@ Func_086_4001:: ; address name
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
 
+; address loaded by BeginStringDisplay_Bank86
 Data_086_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_086_4018
 

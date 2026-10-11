@@ -206,6 +206,7 @@ Jump_060_4105::
     jp nz, Jump_060_409D
     ret
 
+; address loaded by RollKeyWorldMonsterTableKeyWorldBossMonsters
 Data_060_4123:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $21, $00
     INCBIN "dwm2-cobi-us.gbc", $180144, $EF
@@ -532,9 +533,11 @@ Jump_060_43C3::
     ld [wKeyWorldBandAdjust], a
     ret
 
+; address loaded by LoadKeyWorldParamsForCurrentKeyIndex
 Data_060_43C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D
 
+; address loaded by LoadKeyWorldParamsForCurrentKeyIndex
 Data_060_43D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $1803D7, $1C0
 
@@ -1156,6 +1159,7 @@ Jump_060_4BF3::
     db $44, $44, $44, $44, $44, $44, $44, $44, $44, $44
     ds $5A, $88
 
+; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub02
 Data_060_4C58:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $0F, $08, $0F, $08, $0F, $10, $1F, $10, $1F, $10, $1F, $10, $1F, $10, $1F
     db $10, $1F, $10, $1F
@@ -1220,6 +1224,7 @@ Func_060_4C85:: ; address name
     ld [wKeyWorldGoalKind], a
     ret
 
+; address loaded by PickRandomNonzeroFromTable4CC1
 Data_060_4CC1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $180CC1, $E0
 
@@ -1966,6 +1971,7 @@ Jump_060_5159::
 Jump_060_5174::
     jp Jump_060_50F4
 
+; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub08
 Data_060_5177:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F
     db $50, $51, $52, $53, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $40, $41, $42, $43
@@ -2353,6 +2359,7 @@ Jump_060_53A7::
     jr z, Jump_060_5379
     ret
 
+; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub0A
 Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
@@ -2648,6 +2655,7 @@ Jump_060_555B::
     ld [de], a
     ret
 
+; address loaded by RollKeyWorldObjectKind
 Data_060_555F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $13, $00
     db $5E
@@ -2845,6 +2853,7 @@ Jump_060_5A15::
     ld [de], a
     ret
 
+; address loaded by FieldModeStateDispatch_Shared05
 Data_060_5A19:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $13, $00
     db $55
@@ -3007,6 +3016,7 @@ Jump_060_5EBE::
     ld [wKeyWorldGoalPos2], a
     ret
 
+; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub0B
 Data_060_5ED1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
@@ -3677,6 +3687,7 @@ Jump_060_6382::
     jr nz, Jump_060_6377
     ret
 
+; address loaded by RefreshKeyWorldObjectsOnEntry
 Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
@@ -4122,9 +4133,11 @@ Jump_060_661E::
     jr nz, Jump_060_661E
     ret
 
+; address loaded by FieldModeStateDispatch_Case04_Sub02
 Data_060_6634:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $03, $03, $03, $03, $06, $06, $09, $09, $0C, $0C
 
+; address loaded by FieldModeStateDispatch_Case04_Sub02
 Data_060_663F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $38, $39, $3A, $53, $5D, $82, $83, $AD, $AE, $FF
 
@@ -4163,9 +4176,11 @@ Func_060_664A:: ; address name
     ld [de], a
     ret
 
+; address loaded by WriteTable669CWordForTemp2Temp3
 Data_060_6677:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182677, $8E
 
+; address loaded by SetupTownObjectsForMap
 Data_060_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $44, $11, $22, $21, $15, $10, $54, $00, $26, $10, $32, $11, $54, $12, $34, $02
     db $44, $02, $44, $02, $44, $02, $44, $10, $42, $22, $44, $21, $76, $12, $74, $11
@@ -4456,6 +4471,7 @@ Func_060_68EB:: ; address name
     ld [de], a
     ret
 
+; address loaded by WriteRandomEntryFromTable690E
 Data_060_690E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $10, $12, $13, $20, $21, $23, $32
 
@@ -4527,12 +4543,15 @@ Func_060_695C:: ; address name
     jr nc, RandomBelow100
     ret
 
+; address loaded by RollKeyContentsForLevelTemp0
 Data_060_6969:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182969, $A0
 
+; address loaded by RollKeyContentsForLevelTemp0
 Data_060_6A09:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182A09, $FC
 
+; address loaded by SetupTownObjectsForMap
 Data_060_6B05:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182B05, $15C
 
@@ -4654,9 +4673,11 @@ Jump_060_6D05::
     ld [rRAMB], a
     ret
 
+; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub09, PlaceObjectInAreaC
 Data_060_6D0D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $182D0D, $60
 
+; address loaded by RollKeyWorldMonsterTableKeyWorldMonsters, RollKeyWorldMonsterTableKeyWorldBossMonsters, PickRandomMonsterFromBandList
 Data_060_6D6D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_060_6E1D
     dw Data_060_6E24
@@ -4879,6 +4900,7 @@ Data_060_6F73:: ; heuristic: target of a monotone pointer table; C0
 Data_060_6F7E:: ; heuristic: target of a monotone pointer table; C0
     db $07, $B1, $00, $B4, $00, $BC, $00
 
+; address loaded by SetupTownObjectsForMap
 Data_060_6F85:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $BE, $00, $BF, $00, $C1, $00, $C9, $00
 
@@ -5020,11 +5042,14 @@ Data_060_710D:: ; heuristic: target of a monotone pointer table; C0
     db $01
     ds $2D7, $00
 
+; address loaded by SetupTownObjectsForMap
 Data_060_7405:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $120, $00
 
+; address loaded by SetupTownObjectsForMap
 Data_060_7525:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $30, $00
 
+; address loaded by SetupTownObjectsForMap
 Data_060_7555:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $AAB, $00

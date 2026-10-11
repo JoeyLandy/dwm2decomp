@@ -10,9 +10,11 @@ Func_01D_4001:: ; address name
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD
 
+; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
 Data_01D_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $40, $CD, $11, $26, $C9
 
+; address loaded by BeginStringDisplay_Bank1D
 Data_01D_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $18, $40, $48, $40, $48, $40, $69, $40, $8E, $40, $AF, $40, $D0, $40, $F4, $40
     db $13, $41, $33, $41, $4C, $41, $65, $41, $84, $41, $BD, $41, $D6, $41, $F3, $41
@@ -307,9 +309,11 @@ Jump_01D_44DB::
     ld [wScreenStep], a
     ret
 
+; address loaded by ScriptCommandE5_Run_Case03_Case00_Sub01
 Data_01D_44E3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0744E3, $64
 
+; address loaded by ScriptCommandE5_Run_Case03_Case00_Sub01
 Data_01D_4547:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $074547, $64
 
@@ -352,12 +356,15 @@ Func_01D_45AB:: ; address name
     call ClearRectSetTextCursorLoPlus21_Bank1D
     ret
 
+; address loaded by LoadThreeTilesAndDrawRows4603To460B
 Data_01D_4603:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7A, $AD, $CF, $7B
 
+; address loaded by LoadThreeTilesAndDrawRows4603To460B
 Data_01D_4607:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $BF, $A7, $7C, $EE
 
+; address loaded by LoadThreeTilesAndDrawRows4603To460B
 Data_01D_460B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $A4, $EB, $AD
 
@@ -721,6 +728,7 @@ Jump_01D_4825::
     ei
     ret
 
+; address loaded by ScriptCommandE5_Run_Shared03_Sub01
 Data_01D_4842:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $00, $A1, $00, $E1, $00
 
@@ -844,9 +852,11 @@ Jump_01D_48C9::
     ld [wScreenStep], a
     ret
 
+; address loaded by ScriptCommandE5_Run_Case03_Case07_Sub01
 Data_01D_48FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0748FC, $6C
 
+; address loaded by ScriptCommandE5_Run_Case03_Case07_Sub01
 Data_01D_4968:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $074968, $6C
 
@@ -1042,6 +1052,7 @@ Jump_01D_4AB7::
     ei
     ret
 
+; address loaded by ScriptCommandE5_Run_Shared05_Sub01
 Data_01D_4AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
@@ -1216,6 +1227,7 @@ Jump_01D_4BB1::
     ld [wScreenStep], a
     ret
 
+; address loaded by ScriptCommandE5_Run_Case03_Case0A_Sub01
 Data_01D_4BE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $BE, $C3, $C3, $B7, $B3, $B4
     db $B4, $B4, $B4, $B4, $B5
@@ -1469,6 +1481,7 @@ Jump_01D_4D65::
     ei
     ret
 
+; address loaded by ScriptCommandE5_Run_Case03_Case0B_Sub01_Sub01
 Data_01D_4D82:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
@@ -1869,6 +1882,7 @@ Jump_01D_4FC8::
     ei
     ret
 
+; address loaded by ScriptCommandE5_Run_Case03_Case0D_Sub01_Sub01
 Data_01D_4FE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $01, $62, $01
 
@@ -2389,6 +2403,7 @@ Jump_01D_536F::
     ld [wScreenStep], a
     ret
 
+; address loaded by ScriptCommandE5_Run_Shared02
 Data_01D_53A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3
     db $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
@@ -2501,6 +2516,7 @@ Jump_01D_5461::
     ld [wItemGrid], a
     jp Jump_01D_5427
 
+; address loaded by ScriptCommandE5_Run_Case03_Case14_Sub01
 Data_01D_548D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $BF, $C3, $C3, $C3, $E0, $E0, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
@@ -3163,6 +3179,7 @@ Jump_01D_58A5::
     ei
     ret
 
+; address loaded by ScriptCommandE5_Run_Shared04_Sub01
 Data_01D_58C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6E, $00, $6F, $00, $70, $00
 
@@ -3754,9 +3771,11 @@ Jump_01D_5B98::
     ld [rRAMG2], a
     ret
 
+; address loaded by DrawRecordStatsBoxForArg1
 Data_01D_5BE6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61
 
+; address loaded by DrawRecordStatsBoxForArg1
 Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
@@ -4843,19 +4862,24 @@ Jump_01D_61C0::
     ld c, $10
     ret
 
+; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
 Data_01D_61D9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0761D9, $50
 
+; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
 Data_01D_6229:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $076229, $50
 
+; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
 Data_01D_6279:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7B, $62, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
 
+; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
 Data_01D_6285:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $87, $62, $70, $97, $80, $97, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97
     db $50, $97, $60, $97
 
+; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
 Data_01D_6299:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $9B, $62, $C0, $97, $D0, $97, $E0, $97, $F0, $97, $00, $8C, $10, $8C, $20, $8C
     db $A0, $8C, $B0, $8C
@@ -4910,6 +4934,7 @@ Jump_01D_62B8::
     ld [hl], $12
     ret
 
+; address loaded by DrawRecordListNameTiles_Bank1D
 Data_01D_62F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D
 
@@ -5095,21 +5120,27 @@ Jump_01D_63F5::
     ld [rRAMG2], a
     ret
 
+; address loaded by DrawRecordListPageMarks
 Data_01D_63FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $32, $00, $72, $00, $B2, $00, $F2, $00
 
+; address loaded by DrawRecordListPageMarks
 Data_01D_6402:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B2, $00, $F2, $00, $32, $01, $72, $01
 
+; address loaded by DrawRecordListPageMarks
 Data_01D_640A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $00, $6B, $00, $AB, $00, $EB, $00
 
+; address loaded by DrawRecordListPageMarks
 Data_01D_6412:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $8A, $C3, $B2, $C3, $DA, $C3, $02, $C4
 
+; address loaded by DrawRecordListPageMarks
 Data_01D_641A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $DA, $C3, $02, $C4, $2A, $C4, $52, $C4
 
+; address loaded by DrawRecordListPageMarks
 Data_01D_6422:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $83, $C3, $AB, $C3, $D3, $C3, $FB, $C3
 
@@ -5242,6 +5273,7 @@ Jump_01D_64B2::
     ei
     ret
 
+; address loaded by ScriptCommandE8_Run_Shared01_Sub01
 Data_01D_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $28, $01, $68, $01
 
@@ -5454,6 +5486,7 @@ Jump_01D_65D2::
     ei
     ret
 
+; address loaded by DrawTwoChoiceCursorConfirmed
 Data_01D_65F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
@@ -5594,6 +5627,7 @@ Jump_01D_668E::
     ei
     ret
 
+; address loaded by UpdateListCursorListCursor_Sub04
 Data_01D_66AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00
 
@@ -5810,6 +5844,7 @@ Jump_01D_67C1::
     ei
     ret
 
+; address loaded by UpdatePagedListCursor_Sub04
 Data_01D_67EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01, $28, $00, $68, $00, $A8, $00
     db $E8, $00, $28, $01, $A8, $00, $E8, $00, $28, $01, $68, $01, $A8, $01, $A6, $00
@@ -5900,6 +5935,7 @@ Jump_01D_6885::
     ld [rRAMG], a
     ret
 
+; address loaded by LoadPartySpeciesSpriteGraphics
 Data_01D_6890:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
@@ -5986,6 +6022,7 @@ Jump_01D_68FE::
     ld [rRAMG2], a
     ret
 
+; address loaded by DrawPartySpeciesSprites
 Data_01D_6909:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
@@ -6361,9 +6398,11 @@ Jump_01D_6B10::
     ei
     jp Jump_01D_6AD6
 
+; address loaded by MarkPartyMembersInRecordListPage
 Data_01D_6B1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $78, $C3, $A0, $C3, $C8, $C3, $F0, $C3, $18, $C4
 
+; address loaded by MarkPartyMembersInRecordListPage
 Data_01D_6B28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $00, $60, $00, $A0, $00, $E0, $00, $20, $01
 
@@ -6687,6 +6726,7 @@ Func_01D_6D07:: ; address name
     call CopyTileBytesToVRAM_Bank1D
     ret
 
+; address loaded by UploadTilesFromData6D20
 Data_01D_6D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $076D20, $50
 
@@ -6709,22 +6749,27 @@ Jump_01D_6D7B::
     ld [wRecordCapacity], a
     ret
 
+; address loaded by LoadRecordCapacityFromFarmLevelTable
 Data_01D_6D81:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E
 
+; address loaded by SetupTileMap6D84AtBGMap1
 Data_01D_6D84:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $70, $8A, $80, $8A, $90, $8A, $A0, $8A, $B0, $8A
     db $C0, $8A, $D0, $8A, $E0, $8A, $F0, $8A, $E0, $8E, $F0, $8E, $00, $8F, $10, $8F
     db $20, $8F, $30, $8F, $40, $8F, $50, $8F, $60, $8F, $70, $8F, $80, $8F, $90, $8F
     db $A0, $8F, $B0, $8F, $C0, $8F, $D0, $8F, $E0, $8F, $F0, $8F, $B0, $8E, $FF, $FF
 
+; address loaded by LoadTileList6DC4SixPerFrame
 Data_01D_6DC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0, $8C, $B0, $8C
     db $F0, $8B, $A0, $8E, $B0, $8E, $C0, $8E, $D0, $8E, $FF, $FF
 
+; address loaded by LoadPartySpeciesSpriteGraphics, DrawPartySpeciesSprites
 Data_01D_6DE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1A, $1C
 
+; address loaded by LoadPartySpeciesSpriteGraphics, DrawPartySpeciesSprites
 Data_01D_6DE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A, $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0
     db $8C, $B0, $8C, $FF, $FF
@@ -7022,6 +7067,7 @@ Jump_01D_6F7C::
     jp z, Jump_01D_708D
     jp Jump_01D_70C6
 
+; address loaded by PackRecordFieldsToBank1Slot
 Data_01D_6F9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $0F, $1E, $29, $8E, $99
 

@@ -2739,6 +2739,7 @@ Data_016_4CC2:: ; heuristic: start of a structured table; C0
     db $06, $D0, $07, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 97
     db $06, $0D, $00, $64, $01, $00, $00, $00, $00, $30, $27, $00, $00 ; id 98
 
+; address loaded by ItemUsable_WarpWing, ItemUsable_ExitBell, Bank16Func4645ResultTest_Sub01
 Data_016_51C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $20, $10
     INCBIN "dwm2-cobi-us.gbc", $0591E9, $C3
@@ -4137,9 +4138,11 @@ Func_016_598C:: ; address name
     pop hl
     ret
 
+; address loaded by SortInventory
 Data_016_599E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $05999E, $70
 
+; address loaded by SortInventory
 Data_016_5A0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $059A0E, $70
 
@@ -4172,6 +4175,7 @@ Func_016_5A7E:: ; address name
     ld c, a
     ret
 
+; address loaded by TestSpeciesFlag
 Data_016_5AA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $04, $08, $10, $20, $40, $80
 
@@ -4532,12 +4536,15 @@ Jump_016_5CF5::
 Jump_016_5CFA::
     ret
 
+; address loaded by BattleEnd_Step5_Case00_Sub01
 Data_016_5CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $64, $32, $18, $0A, $06, $02, $01, $00
 
+; address loaded by BattleEnd_Step5_Case00_Sub01
 Data_016_5D03:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $02, $03, $04, $05, $06, $07
 
+; address loaded by BattleEnd_Step5_Case00_Sub01
 Data_016_5D0B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $11, $12, $13, $14, $15, $16, $07
 
@@ -6004,21 +6011,27 @@ Func_016_66CB:: ; address name
     pop hl
     ret
 
+; address loaded by Func_016_5D13_Case11, Func_016_6C16_Case0F
 Data_016_66DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B9, $C1, $F9, $C1, $39, $C2, $79, $C2, $B9, $C2
 
+; address loaded by Func_016_5D13_Case04, Func_016_6C16_Case02
 Data_016_66E7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $99, $6F, $99
 
+; address loaded by Func_016_5D13_Case0F, Func_016_5D13_Case19, Func_016_6C16_Case0C
 Data_016_66EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2D, $99, $6D, $99
 
+; address loaded by Func_016_5D13_Case17, Func_016_5D13_Case18, Func_016_5D13_Case1B
 Data_016_66EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $98, $E1, $98, $21, $99, $61, $99
 
+; address loaded by Func_016_5D13_Case0D, Func_016_5D13_Case0E, Func_016_6C16_Case09, Func_016_6C16_Case0A and 1 more
 Data_016_66F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $98, $61, $98, $A1, $98, $E1, $98, $21, $99
 
+; address loaded by Func_016_5D13_Case0B
 Data_016_6701:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $99, $6B, $99
 
@@ -6350,6 +6363,7 @@ Func_016_68F0:: ; address name
     farcall ShowString_Bank08
     ret
 
+; address loaded by DrawFourListEntriesForPageListPage_Sub01
 Data_016_690F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $43, $C2, $83, $C2, $C3, $C2, $03, $C3
 
@@ -8210,6 +8224,7 @@ Jump_016_7577::
     ld [wTextWindowWidth], a
     ret
 
+; address loaded by Func_016_5D13_Case05, CountRecordsByField6E, ListPartyAndStoredRecordsForPage, ListRecordsWithField6EToListEntries and 1 more
 Data_016_75EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E
 
@@ -8902,15 +8917,19 @@ Jump_016_7A22::
     farcall ShowString_Bank09
     ret
 
+; address loaded by DrawSaveSummaryPartyEntryC
 Data_016_7A36:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $25, $2B, $31
 
+; address loaded by DrawSaveSummaryPartyEntryC
 Data_016_7A39:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $45, $4B, $51
 
+; address loaded by DrawSaveSummaryPartyEntryC
 Data_016_7A3C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $22, $C2, $62, $C2, $A2, $C2
 
+; address loaded by DrawSaveSummaryPartyEntryC
 Data_016_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $62, $C2, $A2, $C2, $E2, $C2
 
@@ -9021,9 +9040,11 @@ Jump_016_7AC4::
     jr nz, Jump_016_7AC4
     ret
 
+; address loaded by LoadFamilyIconTileForWorkBuf, LoadAllFamilyIconTiles, LoadTileForRecordByte0D
 Data_016_7ACD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $05BACD, $B0
 
+; address loaded by DecompressMenuTilesTo16E0
 ; LZSS-compressed asset: 405 bytes expand to 624 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_016_7B7D:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $05BB7D, $1D7

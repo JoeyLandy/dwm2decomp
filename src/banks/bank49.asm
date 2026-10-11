@@ -41,6 +41,7 @@ Data_049_43B5:: ; heuristic: map screen stream; C0
     INCBIN "dwm2-cobi-us.gbc", $1243B5, $63
 
 ; compressed tileset of map $0A (the first map record using it)
+; address loaded by ScriptCommandEF_Run_Case0F_Case00
 ; LZSS-compressed asset: 708 bytes expand to 1168 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map0ATileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_4418:: ; address name
@@ -83,6 +84,7 @@ Data_049_47F3:: ; heuristic: map screen stream; C0
     db $0F, $4D, $06, $D6, $0F, $1D, $06, $10, $04, $06, $3C, $1A, $06, $44, $1C
 
 ; compressed tileset of map $13 (the first map record using it)
+; address loaded by ScriptCommandF0_Run_Case06_Case00
 ; LZSS-compressed asset: 659 bytes expand to 960 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map13Tileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_4832:: ; address name
@@ -122,6 +124,7 @@ Data_049_4BCA:: ; heuristic: map screen stream; C0
     INCBIN "dwm2-cobi-us.gbc", $124BCA, $51
 
 ; compressed tileset of map $1A (the first map record using it)
+; address loaded by Func_0E0_5AD3_Case04_Case00
 ; LZSS-compressed asset: 1696 bytes expand to 1984 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map1ATileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_4C1B:: ; address name
@@ -172,6 +175,7 @@ Data_049_5316:: ; heuristic: map screen array; C0
     dfar Data_049_57D0 ; entry 1
     dfar Data_049_58FC ; entry 2
 
+; address loaded by Func_0E0_5AD3_Case04_Case00
 ; LZSS-compressed asset: 250 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_049_531F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $12531F, $FA
@@ -188,6 +192,7 @@ Data_049_552B:: ; heuristic: map screen stream; C0
 Data_049_5626:: ; heuristic: map screen stream; C0
     INCBIN "dwm2-cobi-us.gbc", $125626, $107
 
+; address loaded by Func_0E0_5AD3_Case04_Case00
 ; LZSS-compressed asset: 163 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_049_572D:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $12572D, $A3

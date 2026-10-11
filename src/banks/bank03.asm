@@ -1022,37 +1022,48 @@ Jump_003_45E5::
     ret
 
 ; ten BG map addresses: rows 3, 5, 7, 9, 11 and 13 of column 1 ($9861 ... $99A1) and rows 1, 3, 5 and 7 of column 9 ($9829 ... $98E9), indexed by the cursor slot (wC46D & 3 or & 7) by the bank-$03 menu cursor routines (E-0101)
+; address loaded by DrawMenuCursorTileInBuffer, PauseMenu_Main_Case00_Case02, PauseMenu_Main_Case01_Case02, PauseMenu_Main_Case02_Case02 and 12 more
 MenuCursorPositions_Bank03:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_460B:: ; address name
     db $61, $98, $A1, $98, $E1, $98, $21, $99, $61, $99, $A1, $99
 
+; address loaded by PauseMenu_Items_Case00_Case01, BuildScreenBlock0EWithCursor, PauseMenu_Skills_Case01_Case01, PauseMenu_Skills_Case02_Case01_Sub01 and 2 more
 Data_003_4617:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $98, $69, $98, $A9, $98, $E9, $98
 
+; address loaded by PauseMenu_Items_Case01_Case01, BuildScreenBlocks0EAnd0FWithCursor, BuildScreenBlock0EWithSubMenuCursor
 Data_003_461F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $98, $E1, $98
 
+; address loaded by PauseMenu_Items_Case03_Case03
 Data_003_4623:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $99, $61, $99
 
+; address loaded by PauseMenu_State3_Case01_Case0E
 Data_003_4627:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $99, $41, $99
 
+; address loaded by PauseMenu_State3_Case01_Case01
 Data_003_462B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $47, $99, $87, $99, $C7, $99, $07, $9A
 
+; address loaded by PauseMenu_State3_Case01_Case03, PauseMenu_State3_Shared04, BuildScreenBlocks21To25WithCursor
 Data_003_4633:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $98, $A1, $98
 
+; address loaded by PauseMenu_State3_Case02_Case02
 Data_003_4637:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4A, $99, $8A, $99, $CA, $99, $0A, $9A
 
+; address loaded by PauseMenu_State3_Case04_Case02
 Data_003_463F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $64, $98, $A4, $98, $E4, $98
 
+; address loaded by PauseMenu_Items_Case02_Case1D, PauseMenu_State3_Case06_Case02
 Data_003_4645:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $99, $6F, $99
 
+; address loaded by MenuCursorAddressMenuCursor
 Data_003_4649:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $99, $84, $99, $86, $99, $88, $99, $8A, $99, $8C, $99, $8E, $99, $90, $99
 
@@ -2309,6 +2320,7 @@ Jump_003_4DDD::
     pop hl
     ret
 
+; address loaded by ShowSkillNameAtSlotB
 Data_003_4DF2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $93, $10, $94, $A0, $94, $30, $95, $C0, $95, $50, $96, $E0, $96, $70, $97
 
@@ -2521,18 +2533,23 @@ Jump_003_4F5B::
     pop hl
     ret
 
+; address loaded by ShowSpeciesNameAndIconForSlotB
 Data_003_4F5D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E0, $95, $20, $97
 
+; address loaded by ShowSpeciesNameAndIconForSlotB
 Data_003_4F61:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5D, $71
 
+; address loaded by WithSRAMRun4E02_Sub01_Sub02
 Data_003_4F63:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $70, $96, $B0, $97
 
+; address loaded by WithSRAMRun4E02_Sub01_Sub03
 Data_003_4F67:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $95, $C0, $96
 
+; address loaded by WithSRAMRun4E02_Sub01_Sub03
 Data_003_4F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $C2, $22, $C3
 
@@ -2876,21 +2893,27 @@ Func_003_5171:: ; address name
     pop bc
     ret
 
+; address loaded by Func_003_4FBB_Case01
 Data_003_518F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $03, $05
 
+; address loaded by Func_003_4FBB_Case01
 Data_003_5192:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $91, $80, $93, $C0, $95
 
+; address loaded by Func_003_4FBB_Case01
 Data_003_5198:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $00, $00, $01
 
+; address loaded by DrawRecordHPMPAndLevelForRowC
 Data_003_519E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FA, $C1, $00, $C2, $06, $C2
 
+; address loaded by ShowRecordSpeciesNameForRowC
 Data_003_51A4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $88, $90, $88, $20, $89
 
+; address loaded by DrawRecordByte0EMarkTile
 Data_003_51AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $66, $C3, $86, $C3, $A6, $C3
 
@@ -3019,6 +3042,7 @@ Jump_003_525B::
     jr nz, Jump_003_525B
     ret
 
+; address loaded by WriteSixteenTilesFrom5264AtTiles2140
 Data_003_5264:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6
 
@@ -4686,19 +4710,23 @@ Func_003_5C22:: ; address name
     ld [wScreenTileBuffer + $146], a
     ret
 
+; address loaded by DrawItemTargetStatPreview
 Data_003_5C28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
 
+; address loaded by DrawItemTargetStatPreview
 Data_003_5C43:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $00DC43, $48
 
+; address loaded by BuildItemScreenForWItemId, DrawItemTargetStatPreview
 Data_003_5C8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $04, $05, $06
     db $07, $00, $01, $02, $02, $02, $02, $02, $02, $03, $03, $03, $03, $03
     ds $22, $00
     ds $23, $08
 
+; address loaded by BuildItemScreenForWItemId
 Data_003_5CEE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_003_5D00
     dw Data_003_5D28
@@ -6105,6 +6133,7 @@ Func_003_66EE:: ; address name
     cp a, $FF
     ret
 
+; address loaded by LookupInventorySlotForRecordBuffer
 Data_003_6700:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $16, $FF
     db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $FF, $0A, $FF, $FF, $0B
@@ -6215,17 +6244,21 @@ Jump_003_681F::
     db $01, $01, $01
     ds $B2, $00
 
+; address loaded by PauseMenu_Skills_Case02_Case01_Sub01, BuildSkillScreenTileBuffer
 Data_003_6921:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $00E921, $66
 
+; address loaded by PauseMenu_Skills_Case03_Case01
 Data_003_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $FF, $FF, $FF, $FF
     db $FF, $FF, $FF, $FF
 
+; address loaded by PauseMenu_Skills_Case03_Case06
 Data_003_699B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $FF, $FF, $FF, $FF
     db $FF, $FF, $FF, $FF
 
+; address loaded by PauseMenu_Skills_Case03_Case01
 Data_003_69AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $00, $00
     db $03, $04, $05, $00
@@ -7262,6 +7295,7 @@ Jump_003_6F9C::
     dec [hl]
     ret
 
+; address loaded by PauseMenu_State3_Case02_Case01
 Data_003_6FBB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $D5, $DA
 
@@ -7909,6 +7943,7 @@ Jump_003_7389::
 Jump_003_7394::
     ret
 
+; address loaded by PauseMenu_State3_Shared02_Sub01
 Data_003_7395:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $D5, $DA
 
@@ -8688,9 +8723,11 @@ Jump_003_78B4::
     pop af
     ret
 
+; address loaded by PauseMenu_State3_Shared06
 Data_003_78B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $94, $00, $95, $C0, $95, $80, $96, $40, $97
 
+; address loaded by PauseMenu_State3_Shared06_Sub01
 Data_003_78C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $46, $99, $86, $99, $C6, $99, $06, $9A
 
@@ -9185,9 +9222,11 @@ Func_003_7B61:: ; address name
     ld [wTextWindowTileHi], a
     ret
 
+; address loaded by PauseMenu_State3_Case02_Case00_Sub01
 Data_003_7B9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $50, $90, $60, $90, $70, $90, $80, $90, $90, $90, $A0, $90, $B0, $90, $FF, $FF
 
+; address loaded by PauseMenu_State3_Case02_Case00_Sub01
 Data_003_7BAF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E0, $40, $70, $43, $B0, $42, $D0, $42, $10, $43, $C0, $42, $B0, $43, $FF, $FF
 
@@ -9238,6 +9277,7 @@ Jump_003_7BF1::
     pop bc
     ret
 
+; address loaded by PauseMenu_State4
 Data_003_7BF5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $11, $20, $FF, $7F, $7D, $3D
     ds $405, $00

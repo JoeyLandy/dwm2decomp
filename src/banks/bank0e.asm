@@ -35,6 +35,7 @@ Jump_00E_4024::
     db $CD, $01, $40, $CD, $11, $26, $C9
 
 ; string-pointer table of message bank $0E: strings 0 to $88 - 1; the rest are in MessageStrings_Bank0E_Overflow (E-0080)
+; address loaded by DebugMessageTest_Update_Case1C_Sub01, CopyStringToBuffer_Bank0E
 MessageStrings_Bank0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00E_4032:: ; address name
     dw Data_00E_4034
@@ -810,6 +811,7 @@ Func_00E_537E:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_Bank0E
 Data_00E_5385:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00E_5387
 
@@ -1673,6 +1675,7 @@ Jump_00E_5A69::
     pop de
     ret
 
+; address loaded by AdjustStatForWCA2AAndWCACF
 Data_00E_5A6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00E_5A7B
     dw Data_00E_5A7B
@@ -1701,6 +1704,7 @@ Data_00E_5A88:: ; heuristic: target of a monotone pointer table; C0
 Data_00E_5A8B:: ; heuristic: target of a monotone pointer table; C0
     db $0B, $0C, $FF
 
+; address loaded by AdjustStatForWCA2AAndWCACF
 Data_00E_5A8E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $1E, $50, $1E, $50, $0A, $32, $0A, $32, $0A, $32, $32, $64, $00, $00, $00
     db $00, $00, $00, $00, $05, $00
@@ -1768,6 +1772,7 @@ Jump_00E_5AFE::
     jr nz, Jump_00E_5AEF
     ret
 
+; address loaded by MapWCB0CEntriesThroughTable5B03
 Data_00E_5B03:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $039B03, $B0
 
@@ -2237,6 +2242,7 @@ Jump_00E_5DFF::
     pop af
     jr Jump_00E_5DD9
 
+; address loaded by SumFunc5DCDOfWC9F9AndWCA9E_Sub01
 Data_00E_5E02:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $02, $03, $04, $05, $06, $0E, $0F, $07, $10, $11, $12, $13, $14, $08
     db $09, $0A, $0B, $15, $16, $17, $18, $19, $1A, $0C, $0D
@@ -2299,12 +2305,15 @@ Jump_00E_5E42::
     jr nz, Jump_00E_5E42
     ret
 
+; address loaded by CopySixBytesByWCADDBit4Table
 Data_00E_5E61:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $91, $C9, $92, $C9, $36, $CA, $37, $CA, $F3, $C9, $98, $CA
 
+; address loaded by CopySixBytesByWCADDBit4Table
 Data_00E_5E6D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $36, $CA, $37, $CA, $91, $C9, $92, $C9, $98, $CA, $F3, $C9
 
+; address loaded by CopySixBytesByWCADDBit4Table
 Data_00E_5E79:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EA, $CA, $EB, $CA, $EC, $CA, $ED, $CA, $68, $CB, $73, $CB
 
@@ -2378,12 +2387,15 @@ Jump_00E_5EC1::
     jr nz, Jump_00E_5EA9
     ret
 
+; address loaded by CopyFourNamesByWCADDBit4Table
 Data_00E_5ED0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $87, $C9, $2C, $CA, $95, $C9, $3A, $CA
 
+; address loaded by CopyFourNamesByWCADDBit4Table
 Data_00E_5ED8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2C, $CA, $87, $C9, $3A, $CA, $95, $C9
 
+; address loaded by CopyFourNamesByWCADDBit4Table
 Data_00E_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5E, $CB, $69, $CB, $EE, $CA, $F9, $CA
 
@@ -2518,6 +2530,7 @@ Jump_00E_5F7C::
     jr nz, Jump_00E_5F39
     ret
 
+; address loaded by ApplyBreedingBonusToChildStats
 Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
@@ -2650,9 +2663,11 @@ Func_00E_6032:: ; address name
     inc c
     ret
 
+; address loaded by PersonalityPairValueToArg5
 Data_00E_603F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $03A03F, $D8
 
+; address loaded by PersonalityPairValueToArg5
 Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $30, $0C, $03
 
@@ -2829,12 +2844,15 @@ Jump_00E_61F6::
     ld [hl], a
     ret
 
+; address loaded by RollWCADEFromSpeciesFlag
 Data_00E_61FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $0A, $32, $5A
 
+; address loaded by ComputeBreedingChild
 Data_00E_6200:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5D, $5D, $61, $61, $63, $65, $67, $69
 
+; address loaded by ComputeBreedingChild
 Data_00E_6208:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $03A208, $82
     dw Data_00E_6508
@@ -3197,6 +3215,7 @@ Data_00E_6DF8:: ; heuristic: target of a monotone pointer table; C0
     db $C6, $00, $EF, $00, $FF, $FF, $36, $01, $59, $01, $6D, $01, $FF, $FF, $19, $00
     db $A5, $00, $67, $01, $FF, $FF, $61, $01, $42, $00, $FF, $FF
 
+; address loaded by ComputeBreedingChild
 Data_00E_6E14:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00E_7114
     dw Data_00E_7116
@@ -4255,6 +4274,7 @@ Data_00E_734A:: ; heuristic: target of a monotone pointer table; C0
 Data_00E_734C:: ; heuristic: target of a monotone pointer table; C0
     db $73, $01
 
+; address loaded by ComputeBreedingChild
 Data_00E_734E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $03B34E, $50
     dw Data_00E_764E
@@ -4528,6 +4548,7 @@ Data_00E_7748:: ; heuristic: target of a monotone pointer table; C0
 Data_00E_774A:: ; heuristic: target of a monotone pointer table; C0
     db $00, $0A, $FF, $00, $FF
 
+; address loaded by ComputeBreedingChild
 Data_00E_774F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00E_7A4F
     dw Data_00E_7A51
@@ -5317,6 +5338,7 @@ Data_00E_7B7D:: ; heuristic: target of a monotone pointer table; C0
 Data_00E_7B81:: ; heuristic: target of a monotone pointer table; C0
     db $5B, $01
 
+; address loaded by ComputeBreedingChild
 Data_00E_7B83:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00E_7B99
     dw Data_00E_7BCD
@@ -5380,6 +5402,7 @@ Data_00E_7DA9:: ; heuristic: target of a monotone pointer table; C0
 Data_00E_7DBD:: ; heuristic: target of a monotone pointer table; C0
     db $FF, $FF
 
+; address loaded by ComputeBreedingChild
 Data_00E_7DBF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00E_7DD5
     dw Data_00E_7DE3
@@ -5437,6 +5460,7 @@ Data_00E_7E69:: ; heuristic: target of a monotone pointer table; C0
 Data_00E_7E7F:: ; heuristic: target of a monotone pointer table; C0
     db $4C, $01, $5A, $01
 
+; address loaded by ComputeBreedingChild
 Data_00E_7E83:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00E_7E99
     dw Data_00E_7EAF

@@ -25,6 +25,7 @@ Func_009_400F:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_Bank09, CopyStringToBuffer_Bank09, DrawKeyListPageNames, CopyDataBankString4078ToTextBuf0
 Data_009_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_009_402A
     dw Data_009_4030

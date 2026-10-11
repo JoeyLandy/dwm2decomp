@@ -42,16 +42,19 @@ Func_008_402B:: ; address name
     ret
 
 ; nine pointers, one per string category; each points at a table of string pointers; strings end in $F0 (E-0026)
+; address loaded by CopyMonsterNameToBuffer_B01, BeginStringDisplay_Bank08, CopyStringToBuffer_Bank08, CopyMonsterNameToBuffer_B0D and 7 more
 StringDatabase:: ; heuristic: bank from RAM variable $D7FE; C0
 Data_008_4032:: ; address name
     dw StringTable_System
     dw StringTable_MonsterFamilies
     dw StringTable_MonsterNames
 
+; address loaded by CopyNameStringFromBank08Database
 Data_008_4038:: ; heuristic: argument of a bank-switching copy helper; C0
     dw StringTable_MonsterNames2
     dw StringTable_SkillNames
 
+; address loaded by ScriptCommandF7_Run_Case27_Sub02_Sub01
 Data_008_403C:: ; heuristic: argument of a bank-switching copy helper; C0
     dw StringTable_ItemNames
     dw StringTable_ItemDescriptions

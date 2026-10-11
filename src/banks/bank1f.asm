@@ -1,154 +1,196 @@
 SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
     db $1F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
+; address loaded by GlyphCopyArgsForA, LoadSixteenGlyphTilesFromTable73BC
 Data_01F_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07C010, $D0
 
+; address loaded by ScriptCommandE5_Run_Case01_Case03
 Data_01F_40E0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $F8, $FF, $84, $FF, $82, $FF, $82, $FF, $82, $FF, $84, $FF, $F8, $FF, $00
     db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $FE, $FF, $00
     db $FF, $FE, $FF, $80, $FF, $80, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00
 
+; address loaded by ScriptCommandF6_Run_Case10_Case00
 Data_01F_4110:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $3C, $FF, $42, $FF, $80, $FF, $9E, $FF, $82, $FF, $42, $FF, $3C, $FF, $00
 
+; address loaded by LoadFourFrameTilesAndStep, ScriptCommandE8_Run_Case06_Case1D, ScriptCommandE8_Run_Case07_Case37, RunScreenStep_F0_5B50_Case08
 Data_01F_4120:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $82, $FF, $82, $FF, $82, $FF, $FE, $FF, $82, $FF, $82, $FF, $82, $FF, $00
 
+; address loaded by DebugMessageTest_Init, ScriptCommandEB_Run_Shared02, LoadThreeTilesAndDrawRows4603To460B
 Data_01F_4130:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $7C, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $7C, $FF, $00
     db $FF, $7E, $FF, $08, $FF, $08, $FF, $08, $FF, $88, $FF, $88, $FF, $70, $FF, $00
     db $FF, $84, $FF, $88, $FF, $90, $FF, $B0, $FF, $C8, $FF, $84, $FF, $82, $FF, $00
 
+; address loaded by DebugMessageTest_Init, DebugResultsDisplay_Init, ScriptCommandF6_Run_Case10_Case00
 Data_01F_4160:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $80, $FF, $FE, $FF, $00
 
+; address loaded by DebugMessageTest_Init, ScriptCommandF6_Run_Case10_Case00, ScriptCommandF3_Run_Case03_Case00, ScriptCommandE8_Run_Case06_Case1D and 2 more
 Data_01F_4170:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $82, $FF, $C6, $FF, $AA, $FF, $92, $FF, $82, $FF, $82, $FF, $82, $FF, $00
 
+; address loaded by AcknowledgeTextPrompt_Sub01, DebugMessageTest_Init, ScriptCommandF2_Run_Case00, ScriptCommandF3_Run_Case03_Case00 and 7 more
 Data_01F_4180:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $82, $FF, $C2, $FF, $A2, $FF, $92, $FF, $8A, $FF, $86, $FF, $82, $FF, $00
 
+; address loaded by DebugMessageTest_Init, LoadFourFrameTilesAndStep
 Data_01F_4190:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $82, $FF, $44, $FF, $38, $FF, $00
 
+; address loaded by ScriptCommandE8_Run_Case06_Case1D, ScriptCommandE8_Run_Case07_Case37, RunScreenStep_F0_5B50_Case08
 Data_01F_41A0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $80, $FF, $80, $FF, $80, $FF, $00
     db $FF, $38, $FF, $44, $FF, $82, $FF, $82, $FF, $8A, $FF, $44, $FF, $3A, $FF, $00
     db $FF, $FC, $FF, $82, $FF, $82, $FF, $FC, $FF, $88, $FF, $84, $FF, $82, $FF, $00
 
+; address loaded by DebugMessageTest_Init, ScriptCommandF6_Run_Case10_Case00
 Data_01F_41D0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $78, $FF, $84, $FF, $80, $FF, $7C, $FF, $02, $FF, $82, $FF, $7C, $FF, $00
     db $FF, $FE, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
     db $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $82, $FF, $7C, $FF, $00
     db $FF, $82, $FF, $82, $FF, $44, $FF, $44, $FF, $28, $FF, $28, $FF, $10, $FF, $00
 
+; address loaded by LoadFourFrameTilesAndStep
 Data_01F_4210:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $82, $FF, $92, $FF, $AA, $FF, $AA, $FF, $C6, $FF, $C6, $FF, $82, $FF, $00
     db $FF, $C6, $FF, $44, $FF, $28, $FF, $10, $FF, $28, $FF, $44, $FF, $C6, $FF, $00
 
+; address loaded by ScriptCommandF4_Run_Case04_Case15, ScriptCommandEB_Run_Case05_Case10, RunNameEntryStateWhenNotFading_Case00_Case00, ScriptCommandEE_Run_Case02 and 5 more
 Data_01F_4230:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $82, $FF, $44, $FF, $28, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
     db $FF, $FE, $FF, $04, $FF, $08, $FF, $10, $FF, $20, $FF, $40, $FF, $FE, $FF, $00
 
+; address loaded by ScriptCommandF3_Run_Case03_Case00, DrawTileMap5E12AndLoadFrameTiles, RunScreenStep_F0_5DE8_Case00
 Data_01F_4250:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $78, $FF, $04, $FF, $7C, $FF, $84, $FF, $7E, $FF, $00
 
+; address loaded by RunScreenStep_F0_5B50_Case08
 Data_01F_4260:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $00
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $80, $FF, $84, $FF, $78, $FF, $00
 
+; address loaded by ScriptCommandF3_Run_Case03_Case00
 Data_01F_4280:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $04, $FF, $04, $FF, $04, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $00
 
+; address loaded by ScriptCommandF4_Run_Case04_Case15, ScriptCommandEB_Run_Case05_Case10, RunNameEntryStateWhenNotFading_Case00_Case00, ScriptCommandEE_Run_Case02 and 5 more
 Data_01F_4290:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $FC, $FF, $80, $FF, $7C, $FF, $00
     db $FF, $18, $FF, $24, $FF, $20, $FF, $FC, $FF, $20, $FF, $20, $FF, $20, $FF, $00
     db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $F8
     db $FF, $80, $FF, $80, $FF, $80, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $00
 
+; address loaded by ScriptCommandED_Run_Case07_Case08, ScriptCommandED_Run_Case07_Case1E, ScriptCommandE8_Run_Case09_Case1B_Case00, ScriptCommandE8_Run_Case08_Case1B and 1 more
 Data_01F_42D0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
     db $FF, $00, $FF, $10, $FF, $00, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $60
     db $FF, $80, $FF, $80, $FF, $8C, $FF, $B0, $FF, $C0, $FF, $B0, $FF, $8C, $FF, $00
 
+; address loaded by ScriptCommandF3_Run_Case03_Case00, LoadThreeTilesAndDrawRows4603To460B
 Data_01F_4300:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $10, $FF, $00
 
+; address loaded by LoadThreeTilesAndDrawRows4603To460B
 Data_01F_4310:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $EC, $FF, $92, $FF, $92, $FF, $92, $FF, $92, $FF, $00
 
+; address loaded by ScriptCommandEB_Run_Shared02
 Data_01F_4320:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $84, $FF, $84, $FF, $00
 
+; address loaded by AcknowledgeTextPrompt_Sub01, PauseMenu_State3_Case06_Case01, LoadFourFrameTilesAndStep, ScriptCommandF2_Run_Case00 and 9 more
 Data_01F_4330:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $78, $FF, $84, $FF, $84, $FF, $84, $FF, $78, $FF, $00
 
+; address loaded by ScriptCommandE5_Run_Case01_Case03
 Data_01F_4340:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $F8, $FF, $84, $FF, $84, $FF, $F8, $FF, $80, $FF, $80
     db $FF, $00, $FF, $00, $FF, $7C, $FF, $84, $FF, $84, $FF, $7C, $FF, $04, $FF, $04
     db $FF, $00, $FF, $00, $FF, $9C, $FF, $A0, $FF, $C0, $FF, $80, $FF, $80, $FF, $00
 
+; address loaded by ScriptCommandF4_Run_Case04_Case15, RunNameEntryStateWhenNotFading_Case00_Case00, ScriptCommandEE_Run_Case02, ScriptCommandED_Run_Case04_Case3D and 5 more
 Data_01F_4370:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07C370, $50
 
+; address loaded by ScriptCommandED_Run_Case07_Case08, ScriptCommandED_Run_Case07_Case1E, ScriptCommandE5_Run_Case01_Case03
 Data_01F_43C0:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07C3C0, $90
 
+; address loaded by ScriptCommandF4_Run_Case04_Case0C, ScriptCommandF4_Run_Case11_Case01, Func_037_4AFD_Case04_Case0C, RunScreenStateWhenNotFading_F1_Case04_Case0C and 1 more
 Data_01F_4450:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $82, $FF, $82, $FF, $02, $FF, $3E, $FF, $42, $FF, $42, $FF, $3E, $FF, $00
     db $FF, $00, $FF, $20, $FF, $A8, $FF, $72, $FF, $70, $FF, $A8, $FF, $22, $FF, $00
     db $FF, $70, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $20, $FF, $70, $FF, $00
 
+; address loaded by DebugResultsDisplay_Init
 Data_01F_4480:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07C480, $80
 
+; address loaded by ScriptCommandE5_Run_Case03_Case12
 Data_01F_4500:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
+; address loaded by ScriptCommandF4_Run_Case04_Case0C, ScriptCommandF4_Run_Case11_Case01, Func_037_4AFD_Case04_Case0C, RunScreenStateWhenNotFading_F1_Case04_Case0C and 1 more
 Data_01F_4510:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07C510, $270
 
+; address loaded by DebugResultsDisplay_Init
 Data_01F_4780:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07C780, $160
 
+; address loaded by RunNameEntryStateWhenNotFading_Case01_Case04, RunScreenStep_F0_5DE8_Case02, RunScreenStep_F0_5DE8_Case0B
 Data_01F_48E0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $05, $FF, $05, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
+; address loaded by DebugResultsDisplay_Init
 Data_01F_48F0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $02, $FF, $05, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $30, $FF, $48, $FF, $48, $FF, $30
 
+; address loaded by PauseMenu_State3_Case01_Case00, ScriptCommandF1_Run_Case01, RunNameEntryStateWhenNotFading_Case00_Case00, ScriptCommandE2_Run_Case03_Case03 and 2 more
 Data_01F_4910:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07C910, $80
 
+; address loaded by ScriptCommandF6_Run_Case10_Case05, ScriptCommandF6_Run_Case10_Case06_Sub02, ScriptCommandEF_Run_Case05_Case11, ScriptCommandEF_Run_Case0F_Case05 and 9 more
 Data_01F_4990:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07C990, $B0
 
+; address loaded by ScriptCommandF3_Run_Case03_Case00, ScriptCommandE8_Run_Case0D_Case03, Func_0F0_4CA0_Table4_Case00, RunScreenStep_F0_5DE8_Case03
 Data_01F_4A40:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $18, $FF, $18, $FF, $00, $FF, $00, $FF, $18, $FF, $18, $FF, $00
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $92, $FF, $00
 
+; address loaded by Func_0F0_4CA0_Table4_Case00
 Data_01F_4A60:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $80, $FF, $80, $FF, $80, $FF, $8A, $FF, $8A, $FF, $84, $FF, $F4
 
+; address loaded by ScriptCommandE8_Run_Case06_Case03, ScriptCommandE8_Run_Case0E_Case00, DrawTileMap5E12AndLoadFrameTiles, RunScreenStep_F0_5DE8_Case00
 Data_01F_4A70:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $E0, $FF, $80, $FF, $80, $FF, $EA, $FF, $84, $FF, $84, $FF, $EA
 
+; address loaded by DebugResultsDisplay_Init, RunNameEntryStateWhenNotFading_Case00_Case00
 Data_01F_4A80:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $1E, $FF, $06, $FF, $0A, $FF, $72, $FF, $90, $FF, $90, $FF, $60
 
+; address loaded by DebugResultsDisplay_Init, RunNameEntryStateWhenNotFading_Case00_Case00
 Data_01F_4A90:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $38, $FF, $44, $FF, $44, $FF, $38, $FF, $10, $FF, $7C, $FF, $10
 
+; address loaded by ScriptCommandE8_Run_Case0D_Case05, RunScreenStep_F0_5DE8_Case05
 Data_01F_4AA0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $10, $FF, $38, $FF, $7C, $FF, $FE, $FF, $38, $FF, $38, $FF, $38
     db $FF, $00, $FF, $6C, $FF, $6C, $FF, $24, $FF, $48, $FF, $00, $FF, $00, $FF, $00
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $60, $FF, $60, $FF, $20, $FF, $40
 
+; address loaded by ScriptCommandF2_Run_Case00, RunScreenStateWhenNotFading_1B_Case00_Case00, ScriptCommandE8_Run_Case09_Case1D, DrawTileMap5E12AndLoadFrameTiles and 2 more
 Data_01F_4AD0:: ; heuristic: argument of a bank-switching copy helper; C0
     db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6
 
+; address loaded by ScriptCommandE8_Run_Case0D_Case05, RunScreenStep_F0_5DE8_Case05
 Data_01F_4AE0:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $07CAE0, $C0
     ds $470, $00
@@ -228,6 +270,7 @@ Jump_01F_507A::
     call SpinDelay
     jr Jump_01F_5065
 
+; address loaded by SendSGBPacketSet
 Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07D094, $17A
 
@@ -240,6 +283,7 @@ Func_01F_520E:: ; address name
     ret
     db $11, $23, $52, $CD, $FE, $25, $C9, $CD, $0E, $52, $CD, $11, $26, $C9
 
+; address loaded by BeginStringDisplay_Bank1F
 Data_01F_5223:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_01F_5225
 
@@ -711,6 +755,7 @@ Jump_01F_5C90::
     ld [wScreenStep], a
     ret
 
+; address loaded by DrawRecordListPageNames
 Data_01F_5C9C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
 
@@ -797,6 +842,7 @@ Func_01F_5CF8:: ; address name
     ld c, $10
     ret
 
+; address loaded by GlyphCopyArgsForA
 Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
@@ -999,43 +1045,56 @@ Jump_01F_5DFF::
     jr nz, Jump_01F_5DB2
     ret
 
+; address loaded by DrawTileMap5E12AndLoadFrameTiles
 Data_01F_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3
 
+; address loaded by DrawRects5E13And66DF
 Data_01F_5E13:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07DE13, $69C
 
+; address loaded by DrawWCA36MonsterPictureInTwoSteps
 Data_01F_64AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07E4AF, $6C
 
+; address loaded by DrawWCA36MonsterPictureInTwoSteps
 Data_01F_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $24, $C3
 
+; address loaded by DrawRects662BAnd653F
 Data_01F_653F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $38, $C3
     INCBIN "dwm2-cobi-us.gbc", $07E577, $B4
 
+; address loaded by DrawRects662BAnd653F
 Data_01F_662B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07E62B, $B4
 
+; address loaded by DrawRects5E13And66DF
 Data_01F_66DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07E6DF, $470
 
+; address loaded by DrawRects6B4FAnd6C27
 Data_01F_6B4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07EB4F, $D8
 
+; address loaded by DrawRects6B4FAnd6C27
 Data_01F_6C27:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $38, $C3
 
+; address loaded by ClearTilesAndDrawRects6C5FAnd6D37
 Data_01F_6C5F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07EC5F, $D8
 
+; address loaded by ClearTilesAndDrawRects6C5FAnd6D37
 Data_01F_6D37:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $38, $C3
 
+; address loaded by DrawSummaryFrames6E47And6D6F
 Data_01F_6D6F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $07ED6F, $D8
 
+; address loaded by DrawSummaryFrames6E47And6D6F
 Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $7C, $C3, $C3, $C3
     db $C3, $C3, $C3, $6E, $7E, $C3, $C3, $C3, $C3, $C3, $C3, $6F, $7E, $C3, $C3, $C3
@@ -1135,9 +1194,11 @@ Jump_01F_73A7::
     jr c, Jump_01F_7377
     ret
 
+; address loaded by LoadSixteenGlyphTilesFromTable73BC
 Data_01F_73BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A3, $54, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $25
 
+; address loaded by LoadSixteenGlyphTilesFromTable73BC
 Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97

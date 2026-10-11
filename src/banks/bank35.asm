@@ -62,6 +62,7 @@ Jump_035_4034::
     ret
 
 ; 384 pointers indexed by monster id (the numbering of StringTable_MonsterNames and StringTable_MonsterNames2) to 47-byte species records; byte 0 is the family index of StringTable_MonsterFamilies, $FF for an unused id (E-0069)
+; address loaded by CopySpeciesRecordPrefix
 SpeciesRecordPointers:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_035_403B:: ; address name
     dw Data_035_433B

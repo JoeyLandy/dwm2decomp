@@ -660,6 +660,7 @@ Func_00A_4362:: ; address name
     ld [wStatusStepFlags], a
     ret
 
+; address loaded by EnterStatusEffectFieldState
 Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $22, $23, $24, $25, $26, $29, $2A, $2B, $2D, $2E, $31, $32, $33, $34, $3C
     db $3D, $41, $45, $49, $4A, $4B, $4C, $4D, $4F
@@ -1035,11 +1036,13 @@ Jump_00A_46E3::
     jr nz, Jump_00A_46E3
     jr Jump_00A_46C5
 
+; address loaded by RunBattleIntroKindCase_Case06
 Data_00A_46EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AC, $00, $BC, $00, $CC, $00, $DC, $00, $EC, $00, $FC, $00, $0C, $01, $1C, $01
     db $2C, $01, $3C, $01, $1E, $02, $23, $02, $28, $02, $2D, $02, $32, $02, $37, $02
     db $3C, $02, $41, $02, $46, $02, $48, $02
 
+; address loaded by RunBattleIntroKindCase_Case06
 Data_00A_4716:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $02, $0C, $02, $0D, $02, $0E, $02, $0F, $02, $0E, $02, $10, $02, $11, $02
     db $12, $02, $13, $02, $14, $02, $15, $02
@@ -1108,6 +1111,7 @@ Func_00A_476E:: ; address name
     ld [wEncounterCountdown], a
     ret
 
+; address loaded by PickRandomEncounterCountdownFromTable478F
 Data_00A_478F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $19, $1E, $23, $28, $2A, $2C, $2D, $2E, $30, $32, $34, $36, $38, $3A
     db $3C, $41, $46, $50, $50
@@ -2369,9 +2373,11 @@ Jump_00A_5116::
     ld [wBattleKind], a
     ret
 
+; address loaded by RunBattleIntroKindCase_Case00_Sub01, RunBattleIntroKindCase_Case01
 Data_00A_514C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $02, $01, $02
 
+; address loaded by RunBattleIntroKindCase_Case00_Sub01
 Data_00A_5150:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $01
 
@@ -3173,12 +3179,15 @@ Func_00A_5593:: ; address name
     jp hl
     INCBIN "dwm2-cobi-us.gbc", $029597, $63
 
+; address loaded by RunBattleTransitionStep_Case01_Case02_Case00
 Data_00A_55FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $14, $12, $10, $0E, $0C, $0A, $08, $06, $04
 
+; address loaded by RunBattleTransitionStep_Case01_Case02_Case00
 Data_00A_5603:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $12, $10, $0E, $0C, $0A, $08, $06, $04, $02
 
+; address loaded by RunBattleTransitionStep_Case01_Case02_Case00
 Data_00A_560C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $97, $55, $A2, $55, $AD, $55, $B8, $55, $C3, $55, $CE, $55, $D9, $55, $E4, $55
     db $EF, $55
@@ -3443,6 +3452,7 @@ Func_00A_5748:: ; address name
     farcall DispatchTalkEvent
     ret
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5773:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00A_57F3
     dw Data_00A_57F3
@@ -3512,22 +3522,27 @@ Data_00A_5845:: ; heuristic: target of a monotone pointer table; C0
 Data_00A_5852:: ; heuristic: target of a monotone pointer table; C0
     db $04, $00, $06, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5856:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $81, $58, $81, $58, $81, $58, $81, $58, $81, $58, $81, $58, $81, $58, $81, $58
     db $81, $58, $81, $58, $81, $58, $81, $58, $81, $58, $76, $58, $76, $58, $76, $58
     db $02, $08, $04, $08, $00, $00, $00, $80, $01, $81, $01, $02, $0B, $03, $06, $0B
     db $00, $00, $80, $01, $81, $01, $84, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_588E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $0C, $05, $0A, $0C, $00, $00, $80, $01, $81, $01, $86, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_589B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $02989B, $1A0
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5A3B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $12, $04, $08, $0B, $0E, $12, $1D, $00, $1F, $00, $18, $00, $20, $00, $21
     db $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5A4C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6C, $5A, $6C, $5A, $6C, $5A, $6C, $5A, $6C, $5A, $6C, $5A, $6C
 
@@ -3537,41 +3552,50 @@ Data_00A_5A59:: ; heuristic: target of a monotone pointer table; C0
     db $18, $00, $02, $0F, $03, $05, $0A, $0F, $00, $22, $00, $15, $00, $17, $00, $18
     db $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5A8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A
     db $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A, $AA, $5A
     db $03, $0C, $04, $08, $0C, $00, $00, $24, $00, $25, $00, $27, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5AB7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CF, $5A, $CF, $5A, $CF, $5A, $CF, $5A, $CF, $5A, $CF, $5A, $CF, $5A, $CF, $5A
     db $CF, $5A, $CF, $5A, $CF, $5A, $CF, $5A, $03, $12, $03, $08, $0D, $12, $00, $23
     db $00, $24, $00, $25, $00, $27, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5ADE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F0, $5A, $F0, $5A, $F0, $5A, $F0, $5A, $F0, $5A, $F0, $5A, $F0, $5A, $F0, $5A
     db $F0, $5A, $03, $0F, $03, $05, $0A, $0F, $00, $8D, $01, $23, $00, $19, $00, $1E
     db $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5AFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $07, $5B, $07, $5B, $07, $5B, $07, $5B, $03, $0C, $04, $08, $0C, $00, $00, $13
     db $00, $26, $00, $16, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5B14:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $5B, $1C, $5B, $1C, $5B, $1C, $5B, $03, $0A, $02, $06, $0A, $00, $00, $0F
     db $00, $12, $00, $16, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5B29:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $5B, $2F, $5B, $2F, $5B, $02, $08, $04, $08, $00, $00, $00, $26, $00, $0E
     db $00, $02, $08, $04, $08, $00, $00, $00, $26, $00, $0E, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5B45:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4B, $5B, $4B, $5B, $4B, $5B, $02, $0B, $04, $08, $0B, $00, $00, $26, $00, $0E
     db $00, $0D, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5B58:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5E, $5B, $5E, $5B, $5E, $5B, $03, $0B, $04, $08, $0B, $00, $00, $26, $00, $0E
     db $00, $0D, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5B6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $029B6B, $60
     dw Data_00A_5C8B
@@ -3632,43 +3656,54 @@ Data_00A_5D1D:: ; heuristic: target of a monotone pointer table; C0
     db $03, $15, $05, $0A, $0E, $12, $15, $3F, $00, $40, $00, $37, $00, $29, $00, $33
     db $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5D4E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $12, $05, $0A, $0F, $12, $00, $40, $00, $93, $01, $94, $01, $95, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5D5D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D
     db $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D, $7D, $5D
     db $03, $13, $04, $09, $0E, $13, $00, $2E, $00, $2F, $00, $30, $00, $31, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5D8C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $13, $04, $09, $0E, $13, $00, $2E, $00, $2F, $00, $30, $00, $31, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5D9B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D
     db $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D, $BB, $5D
     db $03, $10, $04, $08, $0C, $10, $00, $41, $00, $96, $01, $97, $01, $35, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5DCA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $DA, $5D, $DA, $5D, $DA, $5D, $DA, $5D, $DA, $5D, $DA, $5D, $DA, $5D, $DA, $5D
     db $03, $0C, $04, $08, $0C, $00, $00, $42, $00, $43, $00, $98, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5DE7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $5D, $FF, $5D, $FF, $5D, $FF, $5D
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5DEF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $5D, $FF, $5D, $FF, $5D, $FF, $5D
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5DF7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $5D, $FF, $5D, $FF, $5D, $FF, $5D, $03, $0C, $04, $09, $0C, $00, $00, $9E
     db $01, $9F, $01, $A0, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5E0C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $5E, $1C, $5E, $1C, $5E, $1C, $5E
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5E14:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $5E, $1C, $5E, $1C, $5E, $1C, $5E, $03, $0E, $01, $05, $0A, $0E, $00, $9D
     db $01, $9E, $01, $9F, $01, $A0, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_5E2B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4B, $5F, $0A, $60, $0A, $60, $FB, $5F, $FB, $5F, $FB, $5F, $4B, $5F, $4B, $5F
     db $4B, $5F, $4B, $5F, $4B, $5F, $4B, $5F, $4B, $5F, $0A, $60, $0A, $60, $4B, $5F
@@ -3727,100 +3762,122 @@ Data_00A_5FEE:: ; heuristic: target of a monotone pointer table; C0
     db $0D, $0F, $00, $65, $00, $46, $00, $54, $00, $58, $00, $02, $0D, $02, $03, $0A
     db $0D, $00, $58, $00, $4B, $00, $51, $00, $AD, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6028:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $60, $30, $60, $30, $60, $30, $60, $03, $0C, $04, $08, $0C, $00, $00, $4E
     db $00, $4F, $00, $50, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_603D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $45, $60, $45, $60, $45, $60, $45, $60, $03, $0C, $04, $08, $0C, $00, $00, $4E
     db $00, $4F, $00, $50, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6052:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5A, $60, $5A, $60, $5A, $60, $5A, $60, $03, $16, $04, $08, $0C
 
 Data_00A_605F:: ; heuristic: target of a monotone pointer table; C0
     db $11, $16, $4E, $00, $4F, $00, $50, $00, $57, $00, $66, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_606B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $73, $60, $73, $60, $73, $60, $73, $60, $03, $16, $04, $08, $0C, $11, $16, $4E
     db $00, $4F, $00, $50, $00, $51, $00, $57, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6084:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $86, $60, $03, $14, $04, $08, $0C, $10, $14, $A1, $01, $A2, $01, $A3, $01, $A4
     db $01, $A5, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6097:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $60, $A9, $60, $A9, $60, $A9, $60, $A9, $60, $A9, $60, $A9, $60, $A9, $60
     db $A9, $60, $03, $14, $04, $08, $0C, $10, $14, $A1, $01, $A2, $01, $A3, $01, $A4
     db $01, $A5, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_60BA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CC, $60, $CC, $60, $CC, $60, $CC, $60, $CC, $60, $CC, $60, $CC, $60, $CC, $60
     db $CC, $60, $03, $14, $04, $08, $0C, $10, $14, $A1, $01, $A2, $01, $A3, $01, $A4
     db $01, $A5, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_60DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E5, $60, $E5, $60, $E5, $60, $E5, $60, $03, $0E, $05, $09, $0E, $00, $00, $5F
     db $00, $68, $00, $69, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_60F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FA, $60, $FA, $60, $FA, $60, $FA, $60, $03, $0E, $05, $09, $0E, $00, $00, $5F
     db $00, $68, $00, $69, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6107:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0F, $61, $0F, $61, $0F, $61, $0F, $61, $03, $17, $04, $09, $0D, $12, $17, $5F
     db $00, $67, $00, $68, $00, $69, $00, $6A, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6120:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $28, $61, $28, $61, $28, $61, $28, $61, $03, $17, $04, $09, $0D, $12, $17, $5F
     db $00, $67, $00, $68, $00, $69, $00, $6A, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6139:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $51, $61, $51, $61, $51, $61, $51, $61, $51, $61, $51, $61, $51, $61, $51, $61
     db $51, $61, $51, $61, $51, $61, $51, $61, $03, $12, $05, $09, $0E, $12, $00, $59
     db $00, $5A, $00, $60, $00, $62, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6160:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $72, $61, $72, $61, $72, $61, $72, $61, $72, $61, $72, $61, $72, $61, $72, $61
     db $72, $61, $03, $11, $04, $09, $0E, $11, $00, $5A, $00, $60, $00, $61, $00, $63
     db $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6181:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $93, $61, $93, $61, $93, $61, $93, $61, $93, $61, $93, $61, $93, $61, $93, $61
     db $93, $61, $03, $12, $05, $09, $0E, $12, $00, $57, $00, $59, $00, $60, $00, $62
     db $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_61A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AE, $61, $AE, $61, $AE, $61, $AE, $61, $AE, $61, $AE, $61, $03, $11, $04, $09
     db $0E, $11, $00, $5A, $00, $60, $00, $61, $00, $63, $00
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_61BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EC, $61, $EC, $61, $DD, $61, $DD, $61, $EC, $61, $EC, $61, $EC, $61, $DD, $61
     db $EC, $61, $EC, $61, $EC, $61, $DD, $61, $DD, $61, $DD, $61, $DD, $61, $DD, $61
     db $03, $0E, $04, $07, $0B, $0E, $00, $70, $00, $71, $00, $72, $00, $AE, $01, $03
     db $0E, $04, $07, $0B, $0E, $00, $70, $00, $71, $00, $72, $00, $AE, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_61FB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $13, $62, $13, $62, $13, $62, $13, $62, $13, $62, $13, $62, $13, $62, $13, $62
     db $13, $62, $13, $62, $13, $62, $13, $62, $03, $0A, $04, $08, $0A, $00, $00, $70
     db $00, $71, $00, $65, $02
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6220:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $02A220, $8B
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_62AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $62, $C3, $62, $C3, $62, $C3, $62, $C3, $62, $C3, $62, $C3, $62, $C3, $62
     db $C3, $62, $C3, $62, $C3, $62, $C3, $62, $03, $0A, $03, $05, $07, $0A, $00, $DC
     db $01, $DD, $01, $E0, $01, $E1, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_62D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $DE, $62, $DE, $62, $DE, $62, $DE, $62, $DE, $62, $DE, $62, $02, $0A, $04, $07
     db $0A, $00, $00, $E3, $01, $E4, $01, $E5, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_62EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F3, $62, $F3, $62, $F3, $62, $F3, $62, $03, $0A, $06, $08, $0A, $00, $00, $E6
     db $01, $E7, $01, $E8, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6300:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3F, $63, $3F, $63, $3F, $63, $3F, $63, $3F, $63
     dw Data_00A_6332
@@ -3857,21 +3914,26 @@ Data_00A_635D:: ; heuristic: target of a monotone pointer table; C0
 Data_00A_636A:: ; heuristic: target of a monotone pointer table; C0
     db $02, $0A, $06, $0A, $00, $00, $00, $F1, $01, $F2, $01
 
+; address loaded by RunBattleIntroKindCase_Case00
 Data_00A_6375:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $0A, $04, $06, $0A, $00, $00, $16, $02, $17, $02, $18, $02
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6382:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $84, $63, $03, $0A, $02, $04, $08, $0A, $00, $F0, $01, $F2, $01, $F4, $01, $F7
     db $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_6393:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $9B, $63, $9B, $63, $9B, $63, $9B, $63, $03, $0A, $03, $05, $08, $0A, $00, $F0
     db $01, $F4, $01, $F6, $01, $F7, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_63AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B2, $63, $B2, $63, $B2, $63, $B2, $63, $03, $0A, $04, $07, $0A, $00, $00, $F0
     db $01, $F5, $01, $F6, $01
 
+; address loaded by RunBattleIntroKindCase_Case00, CollectUniqueEncounterIdsToWD09F_Sub01
 Data_00A_63BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C7, $63, $C7, $63, $C7, $63, $C7, $63, $03, $0A, $03, $07, $0A, $00, $00, $EF
     db $01, $F5, $01, $F6, $01

@@ -35,6 +35,7 @@ Jump_083_4024::
     db $CD, $01, $40, $CD, $11, $26, $C9
 
 ; string-pointer table of message bank $83: strings 0 to $C7 - 1; the rest are in MessageStrings_Bank83_Overflow (E-0080)
+; address loaded by BeginStringDisplay_Bank83, CopyStringToBuffer_Bank83
 MessageStrings_Bank83:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_083_4032:: ; address name
     dw Data_083_4034

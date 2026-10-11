@@ -980,19 +980,23 @@ Func_0F1_45AA:: ; address name
     ld [wScreenTileBuffer + $146], a
     ret
 
+; address loaded by BuildItemScreenForWItemId_BankF1_Sub01
 Data_0F1_45B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
 
+; address loaded by BuildItemScreenForWItemId_BankF1_Sub01
 Data_0F1_45CB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3C45CB, $48
 
+; address loaded by BuildItemScreenForWItemId_BankF1, BuildItemScreenForWItemId_BankF1_Sub01
 Data_0F1_4613:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $04, $05, $06
     db $07, $00, $01, $02, $02, $02, $02, $02, $02, $03, $03, $03, $03, $03
     ds $22, $00
     ds $23, $08
 
+; address loaded by BuildItemScreenForWItemId_BankF1
 Data_0F1_4676:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0F1_4688
     dw Data_0F1_46B0
@@ -1459,12 +1463,15 @@ Func_0F1_4A23:: ; address name
     ld [wTextWindowTileHi], a
     ret
 
+; address loaded by BuildItemScreenWithRecordCursor_BankF1
 Data_0F1_4A5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $98, $A1, $98, $E1, $98, $21, $99, $61, $99, $A1, $99
 
+; address loaded by Func_0F1_4001_Case00_Case01, BuildScreenBlock32WithCursor_BankF1
 Data_0F1_4A6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $98, $69, $98, $A9, $98, $E9, $98
 
+; address loaded by Func_0F1_4001_Case01_Case01, BuildScreenBlocks32And0FWithCursor_BankF1, ClearWindowAndBuildBlock32WithCursor_BankF1
 Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $98, $E1, $98, $21, $99, $61, $99, $47, $99, $87, $99, $C7, $99, $07, $9A
     db $61, $98, $A1, $98, $4A, $99, $8A, $99, $CA, $99, $0A, $9A, $64, $98, $A4, $98
@@ -3585,6 +3592,7 @@ Func_0F1_573E:: ; address name
     call UploadTilesFromData5757_BankF1_Sub01
     ret
 
+; address loaded by UploadTilesFromData5757_BankF1
 Data_0F1_5757:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $3C5757, $50
 
@@ -3840,6 +3848,7 @@ Jump_0F1_58D4::
     ei
     ret
 
+; address loaded by DrawArrowTileBCAtTwoChoiceEntry_BankF1
 Data_0F1_58F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EC, $00, $2C, $01, $6C, $01
 
@@ -4138,6 +4147,7 @@ Data_0F1_5A90:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $C3, $68, $69, $6A, $6B, $C3, $B7 ; id 5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
+; address loaded by RunScreenStateWhenNotFading_F1_Case04_Case18
 Data_0F1_5ACF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FC, $C3, $24, $C4, $4C, $C4
 
@@ -4353,19 +4363,23 @@ Jump_0F1_5C0D::
     jr nz, Jump_0F1_5C0D
     ret
 
+; address loaded by ScriptCommandF6_Run_Case10_Case01
 ; LZSS-compressed asset: 304 bytes expand to 544 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5C14:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $3C5C14, $130
 
+; address loaded by ScriptCommandF6_Run_Case10_Case01
 ; LZSS-compressed asset: 88 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5D44:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $3C5D44, $58
 
+; address loaded by ScriptCommandF6_Run_Case10_Case01
 ; LZSS-compressed asset: 32 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5D9C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $64, $00, $00, $9C, $80, $00, $01, $02, $90, $91, $00, $09, $04, $92, $9D, $00
     db $00, $04, $00, $15, $07, $00, $13, $0F, $16, $9E, $9F, $A0, $00, $52, $0C, $A1
 
+; address loaded by ScriptCommandF6_Run_Case10_Case01
 ; LZSS-compressed asset: 50 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5DBC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $04, $01, $03, $01, $03, $00, $0F, $01, $03, $EE, $FF, $01, $03, $F8, $FD, $03
@@ -4373,14 +4387,17 @@ Data_0F1_5DBC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $06, $03, $9E, $07, $03, $09, $0B, $02, $02, $02, $02, $03, $A8, $0F, $11, $03
     db $A4, $0C
 
+; address loaded by ScriptCommandF6_Run_Case10_Case01
 ; LZSS-compressed asset: 22 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5DEE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $64, $00, $02, $01, $02, $F9, $F4, $02, $08, $08, $02, $EE, $FF, $00, $02, $14
     db $0F, $16, $02, $4F, $0F, $00
 
+; address loaded by LoadBGPalettesFrom5E04
 Data_0F1_5E04:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EE, $3D, $FF, $7F, $D6, $5A, $63, $00, $12, $36, $FF, $7F, $D8, $42
 
+; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case07
 Data_0F1_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $66, $00, $12, $36, $FF, $7F, $D8, $42, $BF, $30, $FF, $7F, $FF, $7F, $FF, $7F
     db $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
@@ -4388,17 +4405,22 @@ Data_0F1_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $7F
     ds $593, $00
 
+; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case1E
 Data_0F1_63D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $144, $00
 
+; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case06
 Data_0F1_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $5C, $00
 
+; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case11
 Data_0F1_6577:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $168, $00
 
+; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case14
 Data_0F1_66DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $1A0, $00
 
+; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case03
 Data_0F1_687F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $1781, $00

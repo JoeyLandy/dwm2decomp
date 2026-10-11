@@ -844,6 +844,7 @@ Func_030_450B:: ; address name
     call ReadBattleWordFromArray_Bank30
     jr Jump_030_451F
 
+; address loaded by RunBattleResolveStep_43C4_Case01_Sub02
 Data_030_4519:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $68, $D9, $70, $D9, $78, $D9
 
@@ -964,6 +965,7 @@ Jump_030_45CB::
     inc [hl]
     ret
 
+; address loaded by AIChooseActionResolveStep, AIChooseActionForActor
 Data_030_45D0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $46, $49
     dw ScoreActionsWithAIScoreTableA
@@ -1586,6 +1588,7 @@ Jump_030_496E::
     inc [hl]
     jr AIRunNextChoice
 
+; address loaded by AIRunNextChoice
 Data_030_4998:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C0998, $12E
 
@@ -2086,6 +2089,7 @@ Func_030_4D25:: ; address name
     ld c, a
     ret
 
+; address loaded by ActorActionDataWord
 Data_030_4D34:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C0D34, $6A
     ds $10, $FF
@@ -2154,6 +2158,7 @@ Func_030_4F3B:: ; address name
     ret
 
 ; 16 words $0001, $0002, ... $8000, one bit each (E-0102)
+; address loaded by RunHandlersForSetBitsInBC
 BitMaskWords16:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_030_4F46:: ; address name
     db $01, $00, $02, $00, $04, $00, $08, $00, $10, $00, $20, $00, $40, $00, $80, $00
@@ -2893,6 +2898,7 @@ Func_030_5378:: ; address name
     call AddSignedEToByteAtHLClamped
     ret
 
+; address loaded by RunBattleResolveStep_43C4_Case01_Sub04
 Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
 
@@ -3159,6 +3165,7 @@ Func_030_556C:: ; address name
 Jump_030_5586::
     ret
 
+; address loaded by AddPersonalityWeightToBattleArg0
 Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C1587, $1AF
     ds $11, $00
@@ -3167,6 +3174,7 @@ Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $64, $00
 
 ; 201 three-byte far pointers (address, bank $E2) indexed by skill number: the AI scoring routine for each skill, called by Func_030_4BA0 with wDA6E-wDA71 cleared (E-0083)
+; address loaded by ScoreActionsWithAIScoreTableA
 AIScoreRoutineTableA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_030_5785:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C1785, $189
@@ -3290,6 +3298,7 @@ Data_030_5785:: ; address name
     db $E2
 
 ; a second copy of AIScoreRoutineTableA (all 201 entries equal), selected by Func_030_4AC6 instead of Func_030_4AD3 (E-0083)
+; address loaded by UseAIScoreTableB
 AIScoreRoutineTableB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_030_59E0:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C19E0, $189

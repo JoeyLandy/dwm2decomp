@@ -1182,6 +1182,7 @@ Func_019_4632:: ; address name
     ld [hl], a
     ret
 
+; address loaded by ApplyTable4641IncrementsForA0DTo13
 Data_019_4641:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $064641, $70
 

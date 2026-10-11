@@ -536,6 +536,7 @@ Jump_01B_43DC::
     call SerialSendByte
     ret
 
+; address loaded by SendLinkByteForMenuOption_Bank1B
 Data_01B_43E1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3
 
@@ -1298,6 +1299,7 @@ Func_01B_481A:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_Bank1B_480C
 Data_01B_4821:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_01B_4823
 
@@ -1548,6 +1550,7 @@ Func_01B_4C94:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_Bank1B_4C86
 Data_01B_4C9B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_01B_4C9D
 
@@ -1861,6 +1864,7 @@ Func_01B_53AF:: ; address name
     ld [wBGPaletteUploadRequest], a
     ret
 
+; address loaded by LoadPalette0FromData53C6
 Data_01B_53C6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4D, $5E, $FF, $7F, $F2, $66, $00, $00
 
@@ -4782,6 +4786,7 @@ Jump_01B_645D::
     ei
     ret
 
+; address loaded by UpdateTwoChoiceCursor_Bank1B_Sub04
 Data_01B_647F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2D, $01, $6D, $01
 
@@ -4842,9 +4847,11 @@ TileRect_1B_65CE::
 Data_01B_65CE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $C3, $B7 ; id 0
 
+; address loaded by RunScreenStateWhenNotFading_1B_Case01_Case02, RunScreenStateWhenNotFading_1B_Case01_Case04, RunScreenStateWhenNotFading_1B_Case01_Case05, RunScreenStateWhenNotFading_1B_Case01_Case0A
 Data_01B_65DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CA, $C3, $F2, $C3, $1A, $C4, $42, $C4
 
+; address loaded by RunScreenStateWhenNotFading_1B_Case01_Case14
 Data_01B_65E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $25, $C4, $4D, $C4
 
@@ -4858,9 +4865,11 @@ Data_01B_65E9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $A5, $71, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
+; address loaded by RunScreenStateWhenNotFading_1B_Case01_Case1C, RunScreenCounterStep_61A7_Case05
 Data_01B_6607:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $BC, $BC, $BC
 
+; address loaded by RunScreenStateWhenNotFading_1B_Case01_Case21
 Data_01B_660A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A0, $A1, $A2
 
@@ -7424,9 +7433,11 @@ Jump_01B_75A0::
 Jump_01B_75A7::
     ret
 
+; address loaded by DrawPickedRecordsRecordNamesAndIcons
 Data_01B_75A8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $91, $70, $91, $D0, $91, $30, $92
 
+; address loaded by DrawPickedRecordsRecordNamesAndIcons
 Data_01B_75B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $16, $1C, $22
 
@@ -7749,9 +7760,11 @@ Data_01B_7847:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
+; address loaded by ScriptCommandEF_Run_Bank1B_Case04_Case07, ScriptCommandEF_Run_Bank1B_Case04_Case08, ScriptCommandEF_Run_Bank1B_Case04_Case0B, ScriptCommandEF_Run_Bank1B_Case04_Case0A_Sub01 and 1 more
 Data_01B_786F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
+; address loaded by ScriptCommandEF_Run_Bank1B_Shared02
 Data_01B_7879:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $40, $00, $20, $00, $10, $00, $08, $00, $04, $00, $02, $00, $01, $80, $00
     db $40, $00, $20, $00, $10, $00

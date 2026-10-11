@@ -18,6 +18,7 @@ Func_00B_400F:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_Bank0B
 Data_00B_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00B_401C
     dw Data_00B_421C

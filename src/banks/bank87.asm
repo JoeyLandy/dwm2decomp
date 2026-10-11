@@ -3248,14 +3248,17 @@ Data_087_5C7B:: ; heuristic: map interaction list; C0
     db $B7, $07
     db $FF ; end
 
+; address loaded by FieldModeStateDispatch_Shared03_Sub01
 Data_087_5CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $21DCA4, $5B
 
+; address loaded by FieldModeStateDispatch_Shared03_Sub01
 Data_087_5CFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $00, $00, $00, $40, $30, $FF, $FF, $04, $09, $05, $00, $00, $00, $60, $30
     db $FF, $FF, $05, $09, $05, $00, $00, $00, $80, $30, $FF, $FF, $04, $09, $05, $00
     db $01, $00, $10, $20, $FF, $FF, $04, $09, $FF
 
+; address loaded by FieldModeStateDispatch_Shared03_Sub01
 Data_087_5D28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $21DD28, $1FD
     ds $20DB, $00

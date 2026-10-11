@@ -694,6 +694,7 @@ Func_0A0_4378:: ; address name
     ld [hl], a
     ret
 
+; address loaded by ApplyTable4387IncrementsForA0DTo13
 Data_0A0_4387:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $280387, $70
 
@@ -1567,6 +1568,7 @@ Jump_0A0_48F3::
     ld a, c
     ret
 
+; address loaded by PickRandomBand0To10
 Data_0A0_48F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $19, $32, $4B, $64, $7D, $96, $AF, $C8, $E1, $FA, $FF
 
@@ -1895,6 +1897,7 @@ Jump_0A0_4AE2::
     db $F1, $E5, $CD, $82, $16, $C1, $79, $84, $67, $78, $CE, $00, $5F, $C1, $79, $83
     db $5F, $78, $CE, $00, $57, $C9
 
+; address loaded by ApplyLevelScaledStatsToSlots
 Data_0A0_4B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $BF, $D1, $0D, $D2, $5B, $D2
 
@@ -2289,9 +2292,11 @@ Jump_0A0_4D27::
     jr nz, CopyRectToStride32_BankA0
     ret
 
+; address loaded by GameMode7_Init_Sub01_Sub02_Sub02
 Data_0A0_4D37:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $280D37, $90
 
+; address loaded by DrawRect4DC7AndWriteDATiles
 Data_0A0_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $280DC7, $108
 
@@ -3671,6 +3676,7 @@ Jump_0A0_56BA::
     ld h, a
     ret
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case04
 Data_0A0_56CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $F7, $04, $0E, $04, $12, $04, $16
 
@@ -4082,6 +4088,7 @@ Jump_0A0_5973::
     jr nz, Jump_0A0_5973
     ret
 
+; address loaded by AppendMappedSkillsToWCA67
 Data_0A0_597A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28197A, $5A
 
@@ -4173,6 +4180,7 @@ Jump_0A0_5A48::
     ld [de], a
     ret
 
+; address loaded by CopyF0StringFromTable5A4AToTextBuf1
 Data_0A0_5A4A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $56, $5A, $59, $5A, $5C, $5A, $60, $5A, $64, $5A, $68, $5A, $11, $19, $F0, $16
     db $19, $F0, $0A, $1D, $14, $F0, $0D, $0E, $0F, $F0, $0A, $10, $15, $F0, $12, $17
@@ -4306,18 +4314,23 @@ Jump_0A0_5B23::
     ld a, c
     ret
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub02
 Data_0A0_5B25:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06, $0B, $15, $29, $33, $3D, $FF
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub02
 Data_0A0_5B2C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $14, $0A, $05, $00, $FB, $F6, $EC
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub02
 Data_0A0_5B33:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $03, $05, $07, $09, $FF
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub02
 Data_0A0_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EC, $F6, $FB, $00, $05, $0A
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub02
 Data_0A0_5B3F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $14, $28, $32, $3C, $46, $50, $5A, $FF
 
@@ -4685,15 +4698,19 @@ Func_0A0_5D4B:: ; address name
     cp a, $80
     ret
 
+; address loaded by OffsetByIndexOfMinOfFiveWords, OffsetByIndexOfMaxOfFiveWords
 Data_0A0_5D54:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $04, $06, $08, $0A, $0C
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub03
 Data_0A0_5D5A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $03, $04, $05, $06, $08, $0A
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub03
 Data_0A0_5D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $01, $01, $01, $01
 
+; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub03
 Data_0A0_5D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03
 
@@ -6406,6 +6423,7 @@ Jump_0A0_67CC::
     jr nz, Jump_0A0_67CC
     ret
 
+; address loaded by WriteFiveTilesFromTable67D2
 Data_0A0_67D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $D5
 
@@ -6689,12 +6707,15 @@ Func_0A0_694B:: ; address name
     call WriteVRAMByte
     ret
 
+; address loaded by RunBattleSetup_BankA0_Case00_Case01, RunBattleSetup_BankA0_Case00_Case02
 Data_0A0_6977:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C1, $01, $01, $02, $C7, $01, $07, $02
 
+; address loaded by RunBattleSetup_BankA0_Case01_Case01, RunBattleSetup_BankA0_Case01_Case02, RunBattleSetup_BankA0_Case01_Case0C, RunBattleSetup_BankA0_Case01_Case0D and 1 more
 Data_0A0_697F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $41, $01, $81, $01, $C1, $01, $01, $02
 
+; address loaded by RunBattleSetup_BankA0_Case01_Case05, RunBattleSetup_BankA0_Case01_Case06
 Data_0A0_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $81, $01, $C1, $01, $01, $02, $C1, $01, $01, $02, $C1, $01, $01, $02, $29, $00
     db $69, $00, $A9, $00, $E9, $00, $2F, $01, $6F, $01
@@ -6991,18 +7012,23 @@ Func_0A0_6B06:: ; address name
     deref_hl
     ret
 
+; address loaded by DrawSlotStatusMarks_BankA0_Sub01, DrawSlotStatusMarks_BankA0_Sub02
 Data_0A0_6B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $39, $C2, $46, $C2
 
+; address loaded by DrawSlotStatusMarks_BankA0_Sub06
 Data_0A0_6B0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3A, $C2, $47, $C2
 
+; address loaded by DrawSlotStatusMarks_BankA0_Sub03, DrawSlotStatusMarks_BankA0_Sub04
 Data_0A0_6B12:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3B, $C2, $48, $C2
 
+; address loaded by DrawSlotStatusMarks_BankA0_Sub05
 Data_0A0_6B16:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $C2, $49, $C2
 
+; address loaded by DrawSlotStatusMarks_BankA0, DrawSlotStatusMarks_BankA0_Sub07
 Data_0A0_6B1A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3D, $C2, $4A, $C2
 
@@ -7327,18 +7353,23 @@ Func_0A0_6CBC:: ; address name
     ret
     INCBIN "dwm2-cobi-us.gbc", $282CF7, $50
 
+; address loaded by DrawSlotHPDigits_BankA0, CopySlotPanelPart6D47ToVRAM
 Data_0A0_6D47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $62, $00, $6F, $00
 
+; address loaded by DrawSlotMPDigits_BankA0, CopySlotPanelPart6D4BToVRAM
 Data_0A0_6D4B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $00, $8F, $00
 
+; address loaded by DrawSlotLevel_BankA0, CopySlotPanelPart6D4FToVRAM
 Data_0A0_6D4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $00, $AE, $00
 
+; address loaded by CopySlotPanelRowToVRAM_BankA0
 Data_0A0_6D53:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $00, $AE, $00
 
+; address loaded by PickEncounterMonsterForSlotC
 Data_0A0_6D57:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_0A0_6E07
     dw Data_0A0_6E0E

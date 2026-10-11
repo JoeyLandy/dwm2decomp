@@ -583,9 +583,11 @@ Jump_031_4384::
     ld [wStringIndex], a
     ret
 
+; address loaded by BattlePhase0_Step3_Sub01
 Data_031_438E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $32, $31, $36, $37, $28, $35, $36, $F0
 
+; address loaded by BattlePhase0_Step3_Sub01
 Data_031_4397:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $16, $32, $31, $36, $37, $28, $35, $36, $F0
 
@@ -1030,6 +1032,7 @@ Jump_031_45E7::
     jr nz, Jump_031_45B3
     ret
 
+; address loaded by BattleEnd_Step3_Sub05
 Data_031_45EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D7, $D1, $25, $D2, $73, $D2
 
@@ -2574,9 +2577,11 @@ Jump_031_4EBF::
     ld [de], a
     ret
 
+; address loaded by RunBattleSetup_Case00_Case09_Sub02
 Data_031_4EC6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $00, $00, $0A, $03, $00, $00, $05, $02, $00, $00, $03, $01, $00, $00, $02
 
+; address loaded by RunBattleSetup_Case00_Case09_Sub02
 Data_031_4ED6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $00, $00, $0F, $06, $00, $00, $0A, $04, $00, $00, $05, $02, $00, $00, $03
 
@@ -2699,6 +2704,7 @@ Jump_031_4F8F::
     inc [hl]
     ret
 
+; address loaded by RunBattleSetup_Case00_Case0D
 Data_031_4FA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $99, $6F, $99
 
@@ -5575,6 +5581,7 @@ Jump_031_60FC::
     jr nz, Jump_031_60FC
     ret
 
+; address loaded by WriteFiveTilesFromTable6102
 Data_031_6102:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $D5, $DA
 
@@ -6029,21 +6036,27 @@ Func_031_6373:: ; address name
     call WriteVRAMByte
     ret
 
+; address loaded by RunBattleSetup_Case00_Case02, RunBattleSetup_Case00_Case03, RunBattleSetup_Case02_Case05
 Data_031_639F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C1, $01, $01, $02, $C8, $01, $08, $02
 
+; address loaded by RunBattleSetup_Case01_Case01, RunBattleSetup_Case01_Case02, RunBattleSetup_Case01_Case10, RunBattleSetup_Case01_Case11 and 4 more
 Data_031_63A7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $41, $01, $81, $01, $C1, $01, $01, $02
 
+; address loaded by RunBattleSetup_Case01_Case05, RunBattleSetup_Case01_Case06, RunBattleSetup_Case01_Case0D, RunBattleSetup_Case01_Case0E and 8 more
 Data_031_63AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $81, $01, $C1, $01, $01, $02
 
+; address loaded by RunBattleSetup_Case02_Case06
 Data_031_63B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C1, $01, $01, $02, $C1, $01, $01, $02
 
+; address loaded by RunBattleSubStep_6E67_Case02, RunBattleSubStep_6E67_Case03
 Data_031_63BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $00, $69, $00, $A9, $00, $E9, $00
 
+; address loaded by RunBattleSetup_Case00_Case0D, RunBattleSubStep_6E67_Case05
 Data_031_63C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01, $2F, $01, $6F, $01
 
@@ -8472,6 +8485,7 @@ Jump_031_70D2::
     ld [wTextWindowTileHi], a
     ret
 
+; address loaded by RunBattleSubStep_6E67_Shared01
 Data_031_70FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
@@ -8765,6 +8779,7 @@ Func_031_72AC:: ; address name
     call CopyRectToStride32_Bank31
     ret
 
+; address loaded by CopyRectRecordForBattlePartyCount_Bank31
 Data_031_72C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7C, $75, $B8, $75, $1E, $76
 
@@ -8831,9 +8846,11 @@ Jump_031_7307::
 Jump_031_7316::
     ret
 
+; address loaded by LayoutTileBlocksForBattleFoeCount
 Data_031_7317:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7F, $C2, $7C, $C2, $79, $C2
 
+; address loaded by LayoutTileBlocksForBattleFoeCount
 Data_031_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $C2, $7F, $C2
 
@@ -9508,18 +9525,23 @@ Func_031_7797:: ; address name
     deref_hl
     ret
 
+; address loaded by DrawSlotStatusMarks_Sub01, DrawSlotStatusMarks_Sub02
 Data_031_779B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $39, $C2, $3F, $C2, $45, $C2
 
+; address loaded by DrawSlotStatusMarks_Sub06
 Data_031_77A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3A, $C2, $40, $C2, $46, $C2
 
+; address loaded by DrawSlotStatusMarks_Sub03, DrawSlotStatusMarks_Sub04
 Data_031_77A7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3B, $C2, $41, $C2, $47, $C2
 
+; address loaded by DrawSlotStatusMarks_Sub05
 Data_031_77AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $C2, $42, $C2, $48, $C2
 
+; address loaded by DrawSlotStatusMarks, DrawSlotStatusMarks_Sub07
 Data_031_77B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3D, $C2, $43, $C2, $49, $C2
 
@@ -9998,15 +10020,19 @@ Func_031_7A3D:: ; address name
     ret
     INCBIN "dwm2-cobi-us.gbc", $0C7A78, $50
 
+; address loaded by DrawSlotHPDigits, CopySlotPanelPart7AC8ToVRAM
 Data_031_7AC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $62, $00, $68, $00, $6E, $00
 
+; address loaded by DrawSlotMPDigits, CopySlotPanelPart7ACEToVRAM
 Data_031_7ACE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $00, $88, $00, $8E, $00
 
+; address loaded by DrawSlotStatusMarks_Sub08, CopySlotPanelPart7AD4ToVRAM
 Data_031_7AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $00, $A7, $00, $AD, $00
 
+; address loaded by CopySlotPanelRowToVRAM
 Data_031_7ADA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C7ADA, $114
 
@@ -10058,10 +10084,12 @@ Jump_031_7C1C::
     pop hl
     ret
 
+; address loaded by GameMode5_Init_Case04, RunBattleSubStep_6A4E_Case02, Func_016_6C16_Case0E, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 477 bytes expand to 704 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_031_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
 
+; address loaded by GameMode5_Init_Case04, RunBattleSubStep_6A4E_Case02, Func_016_6C16_Case0E, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 151 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_031_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $0C7DFB, $97

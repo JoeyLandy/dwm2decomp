@@ -277,6 +277,7 @@ Data_056_4241:: ; heuristic: map screen array; C0
     dfar Data_056_7F5D ; entry 62
     dfar Data_056_6D99 ; entry 63
 
+; address loaded by ScriptCommand35_Run_Case0A
 ; LZSS-compressed asset: 28 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_056_4301:: ; heuristic: argument of a bank-switching copy helper; C0
     db $68, $01, $02, $00, $01, $02, $00, $0E, $02, $01, $0F, $00, $02, $FF, $FF, $4D

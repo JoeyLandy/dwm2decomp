@@ -748,6 +748,7 @@ Jump_024_44BA::
     ld [wScreenState], a
     ret
 
+; address loaded by GameMode6_Update_Case02_Case0C
 Data_024_44FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
@@ -2755,12 +2756,15 @@ Jump_024_518A::
     pop hl
     ret
 
+; address loaded by GameMode6_Init_Sub01_Sub02
 Data_024_5191:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E7, $00, $00, $00, $00, $00
 
+; address loaded by GameMode6_Init_Sub01_Sub02
 Data_024_5197:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E4, $00, $EA, $00, $00, $00
 
+; address loaded by GameMode6_Init_Sub01_Sub02
 Data_024_519D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E1, $00, $E7, $00, $ED, $00
 
@@ -2807,6 +2811,7 @@ Jump_024_51BC::
     ldh [rSVBK], a
     ret
 
+; address loaded by CopyAttributeBlock51D3ToWD25F
 Data_024_51D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $24, $01
 
@@ -2998,6 +3003,7 @@ Jump_024_52E6::
     jr nz, Jump_024_52E6
     ret
 
+; address loaded by CopyDefaultRecordToRecordBufB
 Data_024_52ED:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $D4, $00, $07, $00, $98
     db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
@@ -3690,11 +3696,13 @@ Data_024_5792:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E0, $E1, $E2, $E3, $E4, $E5, $C3, $E6, $E7, $E8, $E9, $EA, $EB, $EC, $ED, $EE, $EF ; id 0
     db $F0, $F1, $F2, $F3, $F4, $F5, $C3, $F6, $F7, $F8, $F9, $FA, $FB, $FC, $FD, $FE, $FF ; id 1
 
+; address loaded by GameMode6_Update_Case00_Case00
 Data_024_57B4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $C3, $E0, $E1, $E2, $E3, $E4, $E5, $E6, $E7, $C3, $C3, $C3
     db $C3, $C3, $C3, $C3, $C3, $C3, $F0, $F1, $F2, $F3, $F4, $F5, $F6, $F7, $C3, $C3
     db $C3, $C3
 
+; address loaded by GameMode6_Update_Case00_Case00_Sub01
 Data_024_57D6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $1C, $07
 
@@ -3723,6 +3731,7 @@ Data_024_5814:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 11
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 12
 
+; address loaded by GameMode6_Update_Case01, GameMode6_Update_Case02_Case0B, GameMode6_Update_Case04_Case08_Case01, GameMode6_Update_Case0E_Case00 and 1 more
 Data_024_58CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $78, $C3
 
@@ -3786,9 +3795,11 @@ Data_024_5A82:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7D, $7F, $7F, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
+; address loaded by GameMode6_Update_Case02_Case08, GameMode6_Update_Case02_Case0A, GameMode6_Update_Case04_Case08_Case01, GameMode6_Update_Case04_Case0B and 2 more
 Data_024_5AAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $23, $C4, $4B, $C4
 
+; address loaded by GameMode6_Update_Case04_Case07, GameMode6_Update_Case04_Case08_Case00, GameMode6_Update_Case04_Case0B, GameMode6_Update_Case05_Case05 and 4 more
 Data_024_5AAE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
@@ -3835,30 +3846,39 @@ Data_024_5B85:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F
     db $40, $41, $42, $43
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5BD1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $01, $04, $00, $80
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5BD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $00, $01, $01, $00, $80
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5BDD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $00, $01, $05, $00, $81
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5BE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $02, $00, $82
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5BE9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $A0, $40, $04, $03, $00, $00, $00, $A0, $40, $04, $00, $00
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5BF9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $01, $00, $A0, $40, $01, $03, $00, $00, $00, $A0, $40, $04, $00, $00
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5C09:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $0C, $00, $E0, $40, $05, $01, $10, $00, $00, $E0, $40, $04, $00, $00
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5C19:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $D0, $40, $02, $01, $20, $00, $00, $D0, $40, $04, $00, $00
 
+; address loaded by GameMode6_Update_Shared07
 Data_024_5C29:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $B0, $40, $02, $03, $20, $00, $00, $B0, $40, $04, $00, $00
 
@@ -4017,6 +4037,7 @@ Func_024_5CEB:: ; address name
     add_a_to_hl
     ret
 
+; address loaded by GameMode6_Update_Case02_Case08_Sub01_Sub04
 Data_024_5D0C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $01, $6B, $01
 
@@ -4037,6 +4058,7 @@ Func_024_5D1E:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_Bank24
 Data_024_5D25:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_024_5D27
 
@@ -4437,12 +4459,15 @@ Jump_024_620A:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; address loaded by ScriptCommandF8_Run_Case02_Case01
 Data_024_6239:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $06, $FF, $06, $FF, $06, $FF, $FF, $FF, $FF, $FF, $00, $FF, $00, $FF, $00
 
+; address loaded by ScriptCommandF8_Run_Case02_Case01
 Data_024_6249:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $F8, $FF, $FC, $FF, $0E, $FF, $06, $FF, $06
 
+; address loaded by ScriptCommandF8_Run_Case02_Case01
 Data_024_6259:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $60, $FF, $60, $FF, $60, $FF, $1F, $FF, $3F, $FF, $70, $FF, $60, $FF, $60
 
@@ -5231,6 +5256,7 @@ Jump_024_6797::
     ld [wScriptStartRequest], a
     ret
 
+; address loaded by ScriptCommandF8_Run_Case02_Case10
 Data_024_67BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FB, $FE
 
@@ -5630,12 +5656,15 @@ Func_024_69AD:: ; address name
     pop de
     ret
 
+; address loaded by ScriptCommandF8_Run_Case02_Case02_Sub01_Sub01
 Data_024_69C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F7, $C3, $1F, $C4, $47, $C4
 
+; address loaded by ScriptCommandF8_Run_Case02_Case02_Sub01_Sub02
 Data_024_69C6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F8, $C3, $20, $C4, $48, $C4
 
+; address loaded by ScriptCommandF8_Run_Case02_Case02_Sub01_Sub03
 Data_024_69CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F9, $C3, $21, $C4, $49, $C4
 
@@ -5776,6 +5805,7 @@ Jump_024_6A6A::
     ei
     ret
 
+; address loaded by ScriptCommandF8_Run_Case02_Case03_Sub01_Sub04
 Data_024_6A8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E1, $00, $21, $01, $61, $01
 
@@ -6002,24 +6032,30 @@ Data_024_6C49:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $C3, $C3, $B7 ; id 5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
+; address loaded by ScriptCommandF8_Run_Case02_Case00, ScriptCommandF8_Run_Case02_Case04
 Data_024_6C96:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3
 
+; address loaded by ScriptCommandF8_Run_Case02_Case07
 Data_024_6C9E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F1, $C3, $19, $C4, $41, $C4
 
+; address loaded by GameMode6_Update_Case00_Case00_Sub01
 Data_024_6CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $38, $00
     db $1F, $00, $FF, $7F, $00, $7E, $00, $00
 
+; address loaded by GameMode6_Init, GameMode6_Update_Shared01_Sub01
 ; LZSS-compressed asset: 303 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_024_6CE4:: ; heuristic: stream decompressed while the game ran on the emulator; C0
     INCBIN "dwm2-cobi-us.gbc", $092CE4, $12F
 
+; address loaded by GameMode6_Init, GameMode6_Update_Shared01_Sub01
 ; LZSS-compressed asset: 315 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_024_6E13:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $092E13, $13B
 
+; address loaded by GameMode6_Init
 Data_024_6F4E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
 
@@ -6185,6 +6221,7 @@ Jump_024_7139::
     ld [wTextCounter4], a
     jp StepItemDescriptionText
 
+; address loaded by StepItemDescriptionText
 Data_024_7158:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_024_721E
     dw Data_024_721E

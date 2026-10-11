@@ -119,6 +119,7 @@ Jump_0A3_417D::
     pop bc
     ret
 
+; address loaded by ActorFormationSlotToTemp0
 Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $02, $01, $02
 
@@ -314,6 +315,7 @@ Jump_0A3_4287::
     pop hl
     ret
 
+; address loaded by SaveActionChoicesAndPickFormations_Sub01
 Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28C289, $23B
 
@@ -468,6 +470,7 @@ Jump_0A3_45A0::
     ld a, $01
     ret
 
+; address loaded by SaveActionChoicesAndPickFormations_Sub01_Sub01
 Data_0A3_45A3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28C5A3, $374
 
@@ -836,6 +839,7 @@ Jump_0A3_4AF3::
     jr z, ActionEffect_Chance_Sub01
     ret
 
+; address loaded by ActionEffect_Chance_Sub01
 Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
 
@@ -899,9 +903,11 @@ Jump_0A3_4B4C::
     ld [rRAMG], a
     ret
 
+; address loaded by RollRandomLoBelowChance_Sub01
 Data_0A3_4B57:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $28CB57, $180
 
+; address loaded by RollRandomLoBelowChance_Sub01
 Data_0A3_4CD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $01, $00, $00, $01

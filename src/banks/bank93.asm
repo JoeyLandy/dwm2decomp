@@ -2,6 +2,7 @@ SECTION "Bank 93", ROMX[$4000], BANK[$93]
     db $93
 
 ; compressed BG tiles, entry 0 of AreaTilesetTable
+; address loaded by Func_0E0_5AD3_Case00_Case00
 ; LZSS-compressed asset: 1313 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 AreaTileset0:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_093_4001:: ; address name

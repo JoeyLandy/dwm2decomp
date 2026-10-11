@@ -842,6 +842,7 @@ Func_05F_6BCD:: ; address name
     ld [de], a
     ret
 
+; address loaded by AddStepDeltaToPointedByte
 Data_05F_6BE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
@@ -1144,6 +1145,7 @@ Func_05F_6D78:: ; address name
     ld [wArg5], a
     ret
 
+; address loaded by ClearArg5IfAtOrAboveLimitForFarmLevel
 Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E, $1E
 
@@ -1683,6 +1685,7 @@ Jump_05F_708D::
     inc [hl]
     ret
 
+; address loaded by Func_05F_6EC3_Case04, Func_05F_6EC3_Case02
 Data_05F_7092:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $00, $FF, $00, $FE, $FF, $FF, $FF, $FF, $FF, $FF, $FE, $00, $FF, $00, $FE
     db $00, $FE, $00, $FF, $01, $FE, $01, $FF, $01, $FF, $02, $FF, $01, $00, $02, $00
@@ -1949,6 +1952,7 @@ Jump_05F_7231::
     jp nz, Jump_05F_71BA
     ret
 
+; address loaded by RunScriptSubStep_Case04
 Data_05F_7240:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $11, $00
     db $01, $05, $08, $0A, $0C, $0D, $0E, $0E, $0F, $0F, $10, $10, $10, $11, $11, $11
@@ -2771,6 +2775,7 @@ Jump_05F_7775::
     ld [wMessageState], a
     ret
 
+; address loaded by StartMessageFromTable7787
 Data_05F_7787:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $26, $01, $27, $01, $28, $01, $29, $01, $2A, $01, $00, $00, $00, $00, $00, $00
     db $A8, $02, $A9, $02, $AA, $02, $AB, $02, $AC, $02, $00, $00, $00, $00, $00, $00
@@ -3072,6 +3077,7 @@ Jump_05F_7933::
     ld [wScriptStartRequest], a
     ret
 
+; address loaded by ScriptSlideObjectY
 Data_05F_7959:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 

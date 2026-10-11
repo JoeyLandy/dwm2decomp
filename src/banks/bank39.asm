@@ -258,6 +258,7 @@ Jump_039_419A::
     ld [hl], d
     ret
 
+; address loaded by ChooseActionTarget
 Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0E41AC, $7E
     dw TargetFirstAlly

@@ -3099,6 +3099,7 @@ Jump_015_54C2::
     ei
     ret
 
+; address loaded by ScriptCommandED_Run_Case04_Case0E_Sub01
 Data_015_54E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2D, $01, $6D, $01
 
@@ -3901,9 +3902,11 @@ Jump_015_5A55::
     jr nz, Jump_015_5A2F
     ret
 
+; address loaded by ScriptCommandED_Run_Case07_Case0B_Sub01
 Data_015_5A67:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A3, $50, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $25
 
+; address loaded by ScriptCommandED_Run_Case07_Case0B_Sub01
 Data_015_5A77:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
@@ -5574,6 +5577,7 @@ Jump_015_6548::
     ei
     ret
 
+; address loaded by DrawArrowTileBCAtGridCursorXEntry_Bank15
 Data_015_6566:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00
 
@@ -6352,6 +6356,7 @@ Jump_015_6931::
     ld [wArg5], a
     ret
 
+; address loaded by TestBitInFieldAtArg3
 Data_015_6937:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $40, $20, $10, $08, $04, $02, $01
 
@@ -7044,6 +7049,7 @@ Jump_015_6DB4::
     ld [wScreenSubStep], a
     ret
 
+; address loaded by ShowSaveFileInfoWindow
 Data_015_6DD0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A8, $C3, $D0, $C3, $F8, $C3
 
@@ -7086,9 +7092,11 @@ Func_015_6DE6:: ; address name
     ld [rRAMG2], a
     ret
 
+; address loaded by ShowSaveFileInfoWindow
 Data_015_6E08:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $C3, $D2, $C3, $FA, $C3
 
+; address loaded by ShowSaveFileInfoWindow
 Data_015_6E0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D
 
@@ -7422,34 +7430,43 @@ Data_015_7291:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
 
+; address loaded by ScriptCommandEE_Run_Case01, DrawPair72A9And72C5AndStep, DrawPair72A9And72C5AndStep_570C
 Data_015_72A9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $70, $8A, $80, $8A, $90, $8A, $A0, $8A, $B0, $8A
     db $C0, $8A, $D0, $8A, $E0, $8A, $E0, $8E, $F0, $8E, $FF, $FF
 
+; address loaded by DrawPair72A9And72C5AndStep, DrawPair72A9And72C5AndStep_570C
 Data_015_72C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $40, $60, $43, $80, $42, $20, $41, $50, $42, $80, $43, $70, $42, $C0, $42
     db $F0, $40, $C0, $43, $D0, $42, $90, $42, $10, $49, $FF, $FF
 
+; address loaded by ScriptCommandED_Run_Case04_Case0D, ScriptCommandED_Run_Case05_Case0A, ScriptCommandED_Run_Case0F_Case01
 Data_015_72E1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97, $FF, $FF
 
+; address loaded by ScriptCommandED_Run_Case04_Case0D, ScriptCommandED_Run_Case05_Case0A, ScriptCommandED_Run_Case0F_Case01
 Data_015_72F1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $41, $20, $43, $A0, $42, $30, $43, $90, $41, $50, $41, $FF, $FF
 
+; address loaded by ScriptCommandEE_Run_Case01
 Data_015_72FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $41, $80, $41, $00, $41, $90, $41, $E0, $41, $F0, $40, $D0, $41, $50, $41
     db $60, $41, $A0, $41, $B0, $40, $10, $49, $10, $49, $FF, $FF
 
+; address loaded by ScriptCommandED_Run_Case04_Case13_Sub01, ScriptCommandED_Run_Case05_Case00_Sub01
 Data_015_731B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0, $8C, $B0, $8C
     db $FF, $FF
 
+; address loaded by ScriptCommandED_Run_Case04_Case0A, ScriptCommandED_Run_Case04_Case34, ScriptCommandED_Run_Case05_Case01, ScriptCommandED_Run_Case04_Case0B and 4 more
 Data_015_732D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3
 
+; address loaded by ScriptCommandED_Run_Case05_Case03, ScriptCommandED_Run_Case05_Case06, ScriptCommandED_Run_Case0F_Case06
 Data_015_7333:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $C3, $F8, $C3, $20, $C4, $48, $C4
 
+; address loaded by ScriptCommandED_Run_Case07_Case0A, ScriptCommandED_Run_Case07_Case19
 Data_015_733B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $27, $C4, $4F, $C4
 
@@ -7489,6 +7506,7 @@ Data_015_7379:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
+; address loaded by ScriptCommandED_Run_Case04_Case07, ScriptCommandED_Run_Case04_Case08, ScriptCommandED_Run_Case04_Case10, ScriptCommandED_Run_Case04_Case12 and 6 more
 Data_015_73A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
@@ -7589,6 +7607,7 @@ Data_015_7589:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $FF, $77, $78, $70, $71, $72, $73, $74, $75, $76, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
+; address loaded by ScriptCommandED_Run_Case04_Case1C, ScriptCommandED_Run_Case04_Case27
 Data_015_75C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF, $DC, $00, $0F, $FF, $FF, $F1, $01, $FF, $FF, $3F, $36, $3F, $FF, $E2
     db $88, $07, $FF, $FF, $C3, $00, $FF, $FF, $FC, $40, $1F, $FF, $FE, $F8, $83, $FF
@@ -7614,6 +7633,7 @@ Data_015_761D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $72, $73, $74, $75, $76, $B7 ; id 3
     db $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
+; address loaded by ShowSaveFileInfoWindow
 Data_015_763B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
@@ -8021,6 +8041,7 @@ Jump_015_78AF::
     ld [wScreenStep], a
     ret
 
+; address loaded by ScriptCommandEB_Run_Case05_Case03_Sub01
 Data_015_78BB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
 
@@ -8112,6 +8133,7 @@ Func_015_7917:: ; address name
     ld c, $10
     ret
 
+; address loaded by GlyphCopyArgsForA_Bank15
 Data_015_794A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
@@ -8251,6 +8273,7 @@ Jump_015_7A01::
     ld [rRAMG2], a
     ret
 
+; address loaded by ScriptCommandEB_Run_Case05_Case04_Sub01
 Data_015_7A3B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 

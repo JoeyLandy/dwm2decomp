@@ -1571,6 +1571,23 @@ class Rom:
                     frames += 1
         log(f"meta-sprite layouts: {sets} sets, {frames} frames")
 
+    def data_readers(self, bank: int, addr: int) -> list[str]:
+        """Names of the routines whose instructions load the address of data label (bank, addr)
+        (from the resolved `ld rr, n` references), nearest named code label first (E-0162)."""
+        if not hasattr(self, "_readers"):
+            self._readers: dict[tuple[int, int], list[str]] = {}
+            starts = {b: sorted(a for a in self.labels[b] if a in self.insn[b] and not
+                                self.labels[b][a].startswith("Jump_")) for b in range(self.nbanks)}
+            import bisect
+            for (b, pc), tgt in self.dref.items():
+                lst = starts[b]
+                i = bisect.bisect_right(lst, pc) - 1
+                if i >= 0:
+                    name = self.labels[b][lst[i]]
+                    if name not in self._readers.setdefault(tgt, []):
+                        self._readers[tgt].append(name)
+        return self._readers.get((bank, addr), [])
+
     def add_rect_record_schemas(self) -> None:
         """Lay out the tile-rectangle records HL points at for the record copiers (E-0161).
 
@@ -2498,6 +2515,10 @@ class Rom:
                     dinfo = self.names.get((bank, pc))
                     if dinfo and dinfo.get("data") and dinfo.get("note"):
                         out.append(f"; {dinfo['note']}")
+                    readers = self.data_readers(bank, pc)
+                    if readers:
+                        more = f" and {len(readers) - 4} more" if len(readers) > 4 else ""
+                        out.append(f"; address loaded by {', '.join(readers[:4])}{more}")
                     if stream:
                         zf = " into a zero-filled buffer" if (bank, pc) in self.zeroed_streams else ""
                         out.append(f"; LZSS-compressed asset: {stream[1]} bytes expand to {stream[0]}{zf} "

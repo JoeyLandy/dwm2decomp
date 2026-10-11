@@ -106,6 +106,7 @@ Func_095_465F:: ; address name
     ret
     db $CD, $50, $46, $CD, $11, $26, $C9
 
+; address loaded by BeginStringDisplay_Bank08_Sub01, CopyStringToBuffer_Bank08_Sub01
 Data_095_4675:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw StringTable95_Cat09_SkillDescriptions
     dw StringTable95_Cat0A

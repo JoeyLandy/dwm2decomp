@@ -1492,6 +1492,7 @@ Jump_012_48B4::
     call StartMessageA
     ret
 
+; address loaded by StartMessageFromTable48B9ByArenaRank
 Data_012_48B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0488B9, $60
 
@@ -1643,6 +1644,7 @@ Jump_012_49F6::
     ld [wSavedPositionValid], a
     ret
 
+; address loaded by ScriptCommand8F_Run_Case17
 Data_012_4A14:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $17, $04, $17, $04, $17, $17, $17, $04, $04
 
@@ -2911,6 +2913,7 @@ Jump_012_512C::
     call ScriptCommand8E_Run_Case01_Sub01
     ret
 
+; address loaded by ScriptCommand8E_Run_Case01
 Data_012_5130:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $049130, $51
 
@@ -3103,6 +3106,7 @@ Jump_012_52A6::
     ldh [hPlayerStateFlags], a
     ret
 
+; address loaded by ScriptCommand8A_Run_Case01
 Data_012_52AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0492AD, $261
 
@@ -4756,6 +4760,7 @@ Jump_012_5E5C::
     call QueueMusic
     ret
 
+; address loaded by Func_012_5DB6_Case07
 Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $FF
 
@@ -7121,6 +7126,7 @@ Jump_012_6B4A::
     farcall DrawMetaSprite
     ret
 
+; address loaded by DrawAnimatedMetaSprite1B
 Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
@@ -7953,32 +7959,41 @@ Jump_012_6FD9::
     ld a, [hl]
     ret
 
+; address loaded by DrawFieldSprites_Sub01
 Data_012_6FF2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $08, $08, $08, $FF
 
+; address loaded by DrawFieldSprites_Sub01
 Data_012_6FF7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $08, $FF
 
+; address loaded by DrawFieldSprites_Sub01
 Data_012_6FFA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $07, $07, $09, $FF
 
+; address loaded by DrawFieldSprites_Sub01
 Data_012_6FFE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0E, $0E, $0E, $0E, $0E, $0E, $0E, $36, $0E, $0E, $0E, $40, $FF, $FF, $FF, $FF
 
+; address loaded by DrawFieldSprites_Sub01
 Data_012_700E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $02, $01, $02, $01, $02, $00, $03, $04, $05, $06, $FF, $FF, $FF, $FF
 
+; address loaded by DrawFieldSprites_Sub01
 Data_012_701E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $07, $07, $04, $FF
 
+; address loaded by DrawFieldSprites_Sub01
 Data_012_7023:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $20, $FF
 
+; address loaded by DrawFieldSprites_Sub01
 Data_012_7026:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $1E, $00, $05, $01, $04, $02, $05, $01, $04, $00, $05, $01, $04, $02, $05
     db $03, $04, $04, $05, $03, $04, $02, $05, $05, $04, $06, $05, $05, $04, $02, $05
     db $01, $04, $00, $05, $FF, $FF
 
+; address loaded by RunFieldCommandTemp0_Shared01, RunFieldCommandTemp0_Shared02
 Data_012_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B04C, $58
 
@@ -8187,11 +8202,13 @@ Jump_012_71A4::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+; address loaded by FindTriggerEntryForCurrentScreen_ScreenTriggers
 Data_012_71BB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
     db $05, $00, $09, $09, $09, $09, $09, $09, $09, $0A, $06, $00, $01
 
+; address loaded by ScriptCommand84_Run_Case04_Sub01_Sub01
 Data_012_71E8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $04B1E8, $42
 
@@ -8342,9 +8359,11 @@ Jump_012_72FB::
     farcall DrawMetaSprite
     ret
 
+; address loaded by DrawTriggerMarkerSprite
 Data_012_7308:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $09, $01, $01, $02, $03, $04, $05, $06, $07, $08
 
+; address loaded by DrawTriggerMarkerSprite
 Data_012_7313:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $20, $10, $70, $20, $10, $20, $40, $20, $60, $30, $30, $40, $50, $40, $70
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
@@ -8673,6 +8692,7 @@ Jump_012_7508::
     ld [wJoypadPressed], a
     ret
 
+; address loaded by FieldModeStateDispatch_Case05_Sub02
 Data_012_752E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $10, $12, $13, $20, $21, $23, $32
 
@@ -8733,6 +8753,7 @@ Jump_012_7565::
     pop bc
     ret
 
+; address loaded by IsPlayerOnTriggerCell
 Data_012_7581:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
@@ -10066,9 +10087,11 @@ Jump_012_7D43::
     ld a, $01
     ret
 
+; address loaded by RunPendingFieldEventPendingFieldEvent
 Data_012_7D46:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $12, $15, $3D, $3E, $10, $11, $17, $15, $14, $13, $57, $12, $15, $12, $14, $10
 
+; address loaded by RunPendingFieldEventPendingFieldEvent
 Data_012_7D56:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $20, $70, $60, $20, $60, $70, $20
 

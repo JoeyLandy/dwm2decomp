@@ -132,6 +132,7 @@ Func_032_4083:: ; address name
     ld c, a
     ret
 
+; address loaded by LookupSequencePtrLoFrameWord
 Data_032_40A6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_032_411E
     dw Data_032_4132
@@ -1101,9 +1102,11 @@ Jump_032_4DF7::
     ld [wBattleTarget], a
     ret
 
+; address loaded by PickRandomActionWhenUncontrolled
 Data_032_4E1C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $03, $C2, $C3, $C5
 
+; address loaded by PickRandomActionWhenUncontrolled
 Data_032_4E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $C2, $C3, $C4, $C5, $C6, $C7, $C8, $C6
 
@@ -1482,6 +1485,7 @@ Jump_032_5073::
     inc [hl]
     ret
 
+; address loaded by Func_032_4ADC_Case01_Case01
 Data_032_5078:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $12, $13
     db $14, $15, $19, $1A, $26, $28, $2A, $2C, $2E, $2F, $30, $33, $3D, $3E, $3F, $40
@@ -2486,6 +2490,7 @@ Jump_032_565F::
     ld [wDataBankSave], a
     ret
 
+; address loaded by CheckLinkRuleViolation
 Data_032_5688:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00
     ds $15, $40
@@ -3965,6 +3970,7 @@ Jump_032_6090::
     ld [hl], a
     ret
 
+; address loaded by ResolveStep0EEffect_Case00_Sub01
 Data_032_6094:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00
 

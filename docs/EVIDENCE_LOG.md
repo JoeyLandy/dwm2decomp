@@ -1966,6 +1966,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Labels.** TileRect_BB_AAAA.
 - Binary verification: build/run161 PASS, 0 differing bytes; tests OK.
 
+### E-0162 — Data labels name the routines that load them
+
+- Kind: OBSERVATION (cross-reference from the resolved `ld rr, n` data references; no meaning claimed).
+- **What changed.** Every data label that code loads by address now has a comment `; address loaded by A, B (and N more)`. The names are the nearest named code label before each loading instruction. 950 labels get one, so each remaining INCBIN slice says where to start reading.
+- **Limits.** Pointers held in tables (the `dw` heuristics) are not listed as readers.
+- Binary verification: build/run162 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

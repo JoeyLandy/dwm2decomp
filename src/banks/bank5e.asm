@@ -1,10 +1,12 @@
 SECTION "Bank 5E", ROMX[$4000], BANK[$5E]
     db $5E
 
+; address loaded by RunGameMode2State_Case01
 ; LZSS-compressed asset: 558 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_05E_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $178001, $22E
 
+; address loaded by RunGameMode2State_Case01
 Data_05E_422F:: ; heuristic: argument of a bank-switching copy helper; C0
     db $4D, $01, $FF, $6B, $55, $2A, $00, $00, $88, $6E, $53, $57, $54, $55, $53, $54
     db $53, $54, $55, $55, $57, $53, $55, $54, $55, $54, $58, $59, $5A, $66

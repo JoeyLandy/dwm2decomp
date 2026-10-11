@@ -426,6 +426,7 @@ Jump_014_4263::
     ei
     ret
 
+; address loaded by ScriptCommandEB_Run_Case02_Sub04
 Data_014_4280:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
@@ -824,6 +825,7 @@ Jump_014_450C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; address loaded by ScriptCommandEB_Run_Case05_Case3C
 Data_014_4586:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
@@ -1361,6 +1363,7 @@ Jump_014_4911::
     ei
     ret
 
+; address loaded by ScriptCommandEB_Run_Case05_Case2F_Sub01
 Data_014_492E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2D, $01, $6D, $01
 
@@ -2141,9 +2144,11 @@ Jump_014_4EFD::
     call CopyFromBankWaitVRAM
     ret
 
+; address loaded by ScriptCommandEB_Run_Shared02
 Data_014_4F24:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B4, $B4, $B4, $B4, $B4, $B5
 
+; address loaded by ScriptCommandEB_Run_Shared02
 Data_014_4F2A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $00
 
@@ -3879,9 +3884,11 @@ Jump_014_5A15::
     xor a, a
     ret
 
+; address loaded by ScriptCommandEB_Run_Case01_Case01
 Data_014_5A28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $051A28, $5C
 
+; address loaded by ScriptCommandEB_Run_Case01_Case01
 Data_014_5A84:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $41, $00, $43, $90, $42, $40, $43, $10, $42, $50, $42, $F0, $42, $C0, $41
     db $70, $43, $F0, $40, $C0, $43, $D0, $42, $80, $43, $80, $41, $10, $49, $10, $49
@@ -3902,6 +3909,7 @@ Data_014_5AC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $AD, $AE, $AF, $EE, $C3, $C3, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
+; address loaded by ScriptCommandEB_Run_Case02, ScriptCommandEB_Run_Case05_Case3E, ScriptCommandEB_Run_Case05_Case07, DrawBox4965AndMenuAndStep and 10 more
 Data_014_5B1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4, $22, $C4, $4A, $C4, $80, $C3
     db $A8, $C3, $D0, $C3, $F8, $C3, $20, $C4
@@ -3940,25 +3948,31 @@ Data_014_5B8E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $49, $10, $49, $10, $49, $10, $49, $10, $49, $10, $49, $10, $49, $10, $49
     db $10, $49, $10, $49, $10, $49, $10, $49, $10, $49, $FF, $FF
 
+; address loaded by ScriptCommandEB_Run_Case05_Case0B
 Data_014_5C36:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $70, $8A, $80, $8A, $90, $8A, $A0, $8A, $B0, $8A, $C0, $8A, $D0, $8A, $E0, $8A
     db $F0, $8A, $FF, $FF
 
+; address loaded by ScriptCommandEB_Run_Case05_Case0B
 Data_014_5C4A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $43, $10, $42, $50, $42, $F0, $42, $C0, $41, $70, $43, $F0, $40, $C0, $43
     db $D0, $42, $FF, $FF
 
+; address loaded by ScriptCommandEB_Run_Case05_Case0D
 Data_014_5C5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $8A, $50, $8A, $60, $8A, $00, $8F, $10, $8F, $20, $8F, $30, $8F, $40, $8F
     db $E0, $8C, $F0, $8C, $FF, $FF
 
+; address loaded by ScriptCommandEB_Run_Case05_Case0D
 Data_014_5C74:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $41, $00, $43, $90, $42, $10, $49, $10, $49, $10, $49, $10, $49, $10, $49
     db $30, $42, $90, $42, $FF, $FF
 
+; address loaded by ScriptCommandEB_Run_Case05_Case2D, ScriptCommandEB_Run_Case06_Case10
 Data_014_5C8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97, $FF, $FF
 
+; address loaded by ScriptCommandEB_Run_Case05_Case2D, ScriptCommandEB_Run_Case06_Case10
 Data_014_5C9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $41, $20, $43, $A0, $42, $30, $43, $90, $41, $50, $41, $FF, $FF
 
@@ -4262,15 +4276,19 @@ Func_014_5E8C:: ; address name
     jr nz, CopyBytesDEFromHL_Bank14
     ret
 
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
 Data_014_5E93:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $01, $04, $00, $80
 
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
 Data_014_5E99:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $00, $01, $01, $00, $80
 
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
 Data_014_5E9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $08, $08, $04, $00, $00, $00, $00, $08, $08, $04, $00, $00
 
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
 Data_014_5EAF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $01, $00, $08, $08, $01, $00, $00, $00, $00, $08, $08, $04, $00, $00
 
@@ -4520,6 +4538,7 @@ Jump_014_6051::
     ld [wArg5], a
     ret
 
+; address loaded by RunNameEntryStateWhenNotFading_Case01_Case00
 Data_014_605E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $10, $10, $0D, $0D
 
@@ -4799,6 +4818,7 @@ Jump_014_61D2::
     ei
     ret
 
+; address loaded by RunNameEntryStateWhenNotFading_Case01_Case00_Sub02
 Data_014_61E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0521E2, $AA
 
@@ -5855,6 +5875,7 @@ Jump_014_6887::
     ld a, $FF
     ret
 
+; address loaded by IsHLByteInList688A
 Data_014_688A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3E, $3F, $40, $41, $42, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33
     db $34, $35, $37, $38, $75, $76, $77, $78, $79, $60, $61, $62, $63, $64, $65, $66
@@ -5885,6 +5906,7 @@ Jump_014_68C7::
     ld a, $FF
     ret
 
+; address loaded by IsHLByteInList68CA
 Data_014_68CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3E, $3F, $40, $41, $42, $75, $76, $77, $78, $79, $FF
 
@@ -6013,6 +6035,7 @@ Jump_014_6960::
     ei
     ret
 
+; address loaded by RunNameEntryStateWhenNotFading_Case05_Sub01_Sub01
 Data_014_697D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
@@ -6574,9 +6597,11 @@ Func_014_6C3F:: ; address name
     call CopyTileBytesToVRAM_Bank14
     ret
 
+; address loaded by CopyTileForNameEntryLength
 Data_014_6C56:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $95, $10, $95, $20, $95, $30, $95, $40, $95
 
+; address loaded by CopyTileForNameEntryLength
 Data_014_6C60:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
@@ -6751,33 +6776,42 @@ Jump_014_6D42::
 Jump_014_6D54::
     jr Jump_014_6CF4
 
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case01
 Data_014_6D56:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $90, $30, $90, $40, $90, $50, $90, $60, $90, $70, $90, $80, $90, $90, $90
     db $A0, $90, $B0, $90, $C0, $90, $D0, $90, $E0, $90, $F0, $90, $00, $91, $10, $91
     db $20, $91, $30, $91, $40, $91, $50, $91, $60, $91, $70, $91, $80, $91
 
+; address loaded by ScriptCommandEC_Run_Case01
 Data_014_6D84:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $052D84, $72
 
+; address loaded by RunNameEntryStateWhenNotFading_Case01_Case04, RunNameEntryStateWhenNotFading_Case01_Case09
 Data_014_6DF6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $FF
 
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case01, RunNameEntryStateWhenNotFading_Case01_Case09
 Data_014_6DF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $052DF8, $A0
 
+; address loaded by RunNameEntryStateWhenNotFading_Case01_Case04
 Data_014_6E98:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $052E98, $A6
 
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case02
 Data_014_6F3E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $FF, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
+; address loaded by RunNameEntryStateWhenNotFading_Case01_Case02
 Data_014_6F4E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $052F4E, $99
 
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case02
 Data_014_6FE7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $74, $8A, $8B, $8C, $6D, $9C, $FE, $FF, $FF, $FF, $FF, $FF, $01, $02, $03, $04
     db $05, $06, $07, $08, $09, $00, $FF, $FF, $FF, $FF, $FF, $FF
 
+; address loaded by RunNameEntryStateWhenNotFading_Shared04
 Data_014_7003:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $70, $0D, $70, $1C, $70, $2B, $70, $4D, $70
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -6787,10 +6821,12 @@ Data_014_7003:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db "can't be used.", $F7
     db $F0
 
+; address loaded by RunNameEntryStateWhenNotFading_Shared04
 Data_014_706D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6F, $70, $77, $70, $84, $70, $91, $70, $B2, $70, $EB, $45, $90, $12, $36, $90
     db $F9, $00, $90, $18, $14, $98, $F0, $EB, $45, $90
 
+; address loaded by RunNameEntryStateWhenNotFading_Case07
 Data_014_7087:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $12, $36, $90, $F9, $00, $90, $18, $14, $98, $F0, $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -6802,29 +6838,35 @@ Data_014_7087:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $90, $2B, $24, $39, $28, $90, $37, $32, $90, $38, $36, $28, $F1, $24, $31
     db $32, $37, $2B, $28, $35, $90, $31, $24, $30, $28, $B5, $F7, $F0
 
+; address loaded by RunNameEntryStateWhenNotFading_Case03_Case00_Sub02
 Data_014_70F0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0530F0, $5F
 
+; address loaded by RunNameEntryStateWhenNotFading_Case02_Case03
 Data_014_714F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $0F, $38, $26, $2E, $F0, $00, $00, $00, $00, $00, $0F
     db $1E, $0C, $14, $F0, $00, $00, $00, $00, $00, $1C, $2B, $2C, $37, $F0, $00, $00
     db $00, $00, $00, $1C, $11, $12, $1D, $F0
 
+; address loaded by RunNameEntryStateWhenNotFading_Case02_Case01
 Data_014_7177:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $1C, $28, $3B, $F0, $00, $00, $00, $00, $00, $00, $1C
     db $0E, $21, $F0, $00, $00, $00, $00, $00, $00, $19, $32, $32, $33, $F0, $00, $00
     db $00, $00, $00, $19, $18, $18, $19, $F0, $00, $00, $00, $00, $00, $0D, $32, $31
     db $2A, $F0, $00, $00, $00, $00, $00, $0D, $18, $17, $10, $F0
 
+; address loaded by RunNameEntryStateWhenNotFading_Case02_Case02
 Data_014_71B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $00, $19, $28, $31, $28, $F0, $00, $00, $00, $00, $00, $19
     db $0E, $17, $0E, $F0, $00, $00, $00, $00, $00, $0C, $2F, $2C, $37, $F0, $00, $00
     db $00, $00, $00, $0C, $15, $12, $1D, $F0, $00, $00, $00, $00, $00, $1D, $3A, $24
     db $37, $F0, $00, $00, $00, $00, $00, $1D, $20, $0A, $1D, $F0
 
+; address loaded by RunNameEntryStateWhenNotFading_Case04
 Data_014_71EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0531EF, $24A
 
+; address loaded by RunNameEntryStateWhenNotFading_Case01_Case03_Sub01, CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01
 Data_014_7439:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_014_744F
     dw Data_014_74BF
@@ -7476,6 +7518,7 @@ Data_014_7913:: ; heuristic: target of a monotone pointer table; C0
 Data_014_7919:: ; heuristic: target of a monotone pointer table; C0
     db $20, $24, $2F, $37, $3D, $F0
 
+; address loaded by RunNameEntryStateWhenNotFading_Case01_Case03_Sub01
 Data_014_791F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_014_7A37
     dw Data_014_7A3D

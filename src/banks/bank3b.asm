@@ -1579,6 +1579,7 @@ Jump_03B_4925::
     ld [hl], b
     ret
 
+; address loaded by SubtractActionAmountFromTargetBattleWordArray3F
 Data_03B_492A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $00, $0A, $00, $14, $00, $64, $00, $05, $00
 
@@ -1596,6 +1597,7 @@ Func_03B_4934:: ; address name
     call AddHLToBattleMeterCappedAt1800
     ret
 
+; address loaded by AddActionAmountToBattleMeter
 Data_03B_4949:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $00, $1E, $00, $64, $00, $E7, $03, $05, $00
 
@@ -1755,6 +1757,7 @@ Jump_03B_4A1C::
     ld [wBattleDamageHi], a
     ret
 
+; address loaded by RollTableDamageScaledByResistance
 Data_03B_4A24:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8C, $00, $B4, $00, $C8, $00
 

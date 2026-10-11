@@ -5572,9 +5572,11 @@ Jump_0E2_66AC::
     call AccumulateBank6WordToDA6E
     ret
 
+; address loaded by AIScore_HealUs_Sub01_Sub01_Sub01
 Data_0E2_66B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1E, $1F, $20, $21, $22, $22
 
+; address loaded by AIScore_HealUs_Sub01_Sub01_Sub01
 Data_0E2_66BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AB, $AC, $AD, $AE, $AF, $AF
 
@@ -5626,9 +5628,11 @@ Jump_0E2_66F2::
     call AccumulateBank6WordToDA6E
     ret
 
+; address loaded by ForEachPresentSlotOfSideRun66DC_Sub01
 Data_0E2_66FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1D, $1E, $1F, $20, $21, $22
 
+; address loaded by ForEachPresentSlotOfSideRun66DC_Sub01
 Data_0E2_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $AB, $AC, $AD, $AE, $AF
 
@@ -5651,6 +5655,7 @@ Func_0E2_670B:: ; address name
     call AccumulateBank6WordToDA6E
     ret
 
+; address loaded by AIScore_Ramming_Sub02
 Data_0E2_6727:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1D, $1E, $1F, $20, $21, $22
 
@@ -5702,9 +5707,11 @@ Jump_0E2_675A::
     call AccumulateBank6WordToDA6E
     ret
 
+; address loaded by AIScore_Cover_Sub02_Sub01
 Data_0E2_6767:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $20, $1F, $1E, $1D, $1D
 
+; address loaded by AIScore_Cover_Sub02_Sub01
 Data_0E2_676D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $AA, $AB, $AC, $AD, $AE
 

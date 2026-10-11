@@ -90,6 +90,7 @@ Jump_033_4050::
     jr nz, Jump_033_4043
     ret
 
+; address loaded by CopyBlockToTileBuffer, CopyBlockToTileBufferBlankingText
 Data_033_405F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_033_40C5
     dw Data_033_4111
@@ -3306,6 +3307,7 @@ Data_033_63C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
+; address loaded by Func_033_5215_Table2_Case04_Case07, Func_033_5215_Table2_Case04_Case08, Func_033_5215_Table2_Case04_Case0B, Func_033_5215_Table2_Case0F_Case00
 Data_033_63EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
@@ -3354,6 +3356,7 @@ Func_033_649E:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_Bank33_6490
 Data_033_64A5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0CE4A5, $72
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -3616,6 +3619,7 @@ Func_033_7045:: ; address name
     call RunStringDisplayToEnd
     ret
 
+; address loaded by BeginStringDisplay_Bank33_7037
 Data_033_704C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_033_704E
 

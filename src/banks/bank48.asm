@@ -173,6 +173,7 @@ Data_048_4D9A:: ; heuristic: map screen stream; C0
     INCBIN "dwm2-cobi-us.gbc", $120D9A, $42
 
 ; compressed tileset of map $18 (the first map record using it)
+; address loaded by Func_0E0_5AD3_Case02_Case00
 ; LZSS-compressed asset: 860 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map18Tileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_048_4DDC:: ; address name
@@ -217,6 +218,7 @@ Data_048_518A:: ; heuristic: map screen array; C0
 Data_048_519C:: ; heuristic: map screen stream; C0
     INCBIN "dwm2-cobi-us.gbc", $12119C, $A0
 
+; address loaded by Func_0E0_5AD3_Case02_Case00
 ; LZSS-compressed asset: 151 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_048_523C:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $12123C, $97
@@ -241,6 +243,7 @@ Data_048_541D:: ; heuristic: map screen stream; C0
 Data_048_547C:: ; heuristic: map screen stream; C0
     INCBIN "dwm2-cobi-us.gbc", $12147C, $43
 
+; address loaded by Func_0E0_5AD3_Case02_Case00
 ; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_048_54BF:: ; heuristic: argument of a bank-switching copy helper; C0
     INCBIN "dwm2-cobi-us.gbc", $1214BF, $4A
@@ -273,6 +276,7 @@ Data_048_55A4:: ; heuristic: map screen stream; C0
     db $EE, $0F, $4D, $00, $D6, $02
 
 ; compressed tileset of map $19 (the first map record using it)
+; address loaded by Func_0E0_5AD3_Case03_Case00
 ; LZSS-compressed asset: 1627 bytes expand to 1920 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map19Tileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_048_55DA:: ; address name
@@ -322,6 +326,7 @@ Data_048_5C6B:: ; heuristic: map screen array; C0
     dfar Data_048_6432 ; entry 4
     dfar Data_048_61F2 ; entry 5
 
+; address loaded by Func_0E0_5AD3_Case03_Case00
 ; LZSS-compressed asset: 229 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_048_5C7D:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $121C7D, $E5
@@ -346,6 +351,7 @@ Data_048_6016:: ; heuristic: stream in a run of back-to-back compressed streams;
 Data_048_60DF:: ; heuristic: stream in a run of back-to-back compressed streams; C0
     INCBIN "dwm2-cobi-us.gbc", $1220DF, $113
 
+; address loaded by Func_0E0_5AD3_Case03_Case00
 ; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_048_61F2:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1221F2, $82
@@ -492,6 +498,7 @@ Map14Tileset:: ; heuristic: map tileset stream; C0
 Data_048_7330:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $123330, $531
 
+; address loaded by LoadMapHeader
 ; LZSS-compressed asset: 1494 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_048_7861:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $123861, $5D6
