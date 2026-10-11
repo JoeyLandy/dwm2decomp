@@ -2499,6 +2499,63 @@
         }
       ],
       "note": "E-0171 (C1: PermuteArg5To7ByMonster reads the 3 bytes at $51C3 + 3 * (wArg2:wArg1), stores wArg5 + k at wArg1 + byte k, then copies wArg1-3 back to wArg5-7; all 384 entries are permutations; the caller, script command $F6 case $10/4, indexes it with the id it shows as a monster name)."
+    },
+    {
+      "bank": "A3",
+      "addr": "4289",
+      "label": "FormationTable",
+      "count": 114,
+      "tail": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 3,
+          "name": "action each of the three slots must have chosen ($FF = any)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "1 = roll FormationCompatibilityRoll (always rolled in link mode 2)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "combined action id ($D0-$E3)"
+        }
+      ],
+      "note": "E-0172 (C1: SaveActionChoicesAndPickFormations_Sub01 walks these 5-byte records until a 0 byte; a record applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock, SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll when byte 3 is 1 or in link mode 2)."
+    },
+    {
+      "bank": "A3",
+      "addr": "45A3",
+      "label": "FormationChanceFactors",
+      "count": 20,
+      "id_base": 208,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "factor of this combined action in the roll"
+        }
+      ],
+      "note": "E-0172 (C1: the roll multiplies (matrix value + 1) * (the two slots' wSlotTrait sum) by FormationChanceFactors[action - $D0], divides by 10 and succeeds when a random 0-99 is below it)."
+    },
+    {
+      "bank": "A3",
+      "addr": "45B7",
+      "label": "PersonalityCompatibility",
+      "count": 27,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 32,
+          "line": true,
+          "name": "value for the first slot's personality index 0-31 (27 used)"
+        }
+      ],
+      "note": "E-0172 (C1: the roll reads $45B7 + 32 * (second slot's PersonalityIndexOfSlot) + (first slot's index) for the two slots of the pair chosen by B / 3; 27 rows fill the slice up to $4917)."
     }
   ]
 }

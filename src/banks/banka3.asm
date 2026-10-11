@@ -147,11 +147,11 @@ Jump_0A3_418F::
     cp a, $01
     ret z
     ld de, wBattleActionChoice
-    call SaveActionChoicesAndPickFormations_Sub01
+    call FindFormationForSide
     or a, a
     jr z, Jump_0A3_41B5
     ld de, wBattleActionChoice
-    call SaveActionChoicesAndPickFormations_Sub02
+    call SaveActionChoicesAndPickFormations_Sub01
     ld [wFormationSlot0], a
 
 Jump_0A3_41B5::
@@ -161,19 +161,19 @@ Jump_0A3_41B5::
     cp a, $02
     ret z
     ld de, wBattleActionChoice + $8
-    call SaveActionChoicesAndPickFormations_Sub01
+    call FindFormationForSide
     or a, a
     ret z
     ld de, wBattleActionChoice + $8
-    call SaveActionChoicesAndPickFormations_Sub02
+    call SaveActionChoicesAndPickFormations_Sub01
     ld [wFormationSlot1], a
     ret
 
-; only called from SaveActionChoicesAndPickFormations (E-0047)
+; walks FormationTable for the actor's side (wBattleActor & 4): the first record whose three actions match the side's chosen actions (DE) with every required slot able to act gives A = 1 and hFFC6 = its combined action, after FormationCompatibilityRoll when its flag is 1 or in link mode 2; A = 0 when none applies (E-0172)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
 ; reads: wBattleActor, hTemp0, wLinkMode
 ; writes: hTemp0
-SaveActionChoicesAndPickFormations_Sub01::
+FindFormationForSide::
 Func_0A3_41CF:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -262,7 +262,7 @@ Jump_0A3_4239::
     inc hl
     push bc
     push hl
-    call SaveActionChoicesAndPickFormations_Sub01_Sub01
+    call FormationCompatibilityRoll
     pop hl
     pop bc
     or a, a
@@ -284,7 +284,7 @@ Jump_0A3_4264::
     inc hl
     push bc
     push hl
-    call SaveActionChoicesAndPickFormations_Sub01_Sub01
+    call FormationCompatibilityRoll
     pop hl
     pop bc
     or a, a
@@ -298,7 +298,7 @@ Jump_0A3_4274::
     ret
 
 ; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
-; 3 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01)
+; 3 call sites from 1 routine (e.g. FindFormationForSide)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_BankA3::
 Func_0A3_4278:: ; address name
@@ -315,15 +315,131 @@ Jump_0A3_4287::
     pop hl
     ret
 
-; address loaded by SaveActionChoicesAndPickFormations_Sub01
+; E-0172 (C1: SaveActionChoicesAndPickFormations_Sub01 walks these 5-byte records until a 0 byte; a record applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock, SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll when byte 3 is 1 or in link mode 2).
+; record: action each of the three slots must have chosen ($FF = any); 1 = roll FormationCompatibilityRoll (always rolled in link mode 2); combined action id ($D0-$E3)
+FormationTable::
 Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $28C289, $23B
+    db $0F, $0F, $FF, $01, $D0 ; id 0
+    db $0F, $FF, $0F, $01, $D0 ; id 1
+    db $FF, $0F, $0F, $01, $D0 ; id 2
+    db $03, $12, $FF, $01, $D1 ; id 3
+    db $03, $FF, $12, $01, $D1 ; id 4
+    db $FF, $03, $12, $01, $D1 ; id 5
+    db $12, $03, $FF, $01, $D1 ; id 6
+    db $12, $FF, $03, $01, $D1 ; id 7
+    db $FF, $12, $03, $01, $D1 ; id 8
+    db $4D, $67, $FF, $01, $D2 ; id 9
+    db $4D, $FF, $67, $01, $D2 ; id 10
+    db $FF, $4D, $67, $01, $D2 ; id 11
+    db $67, $4D, $FF, $01, $D2 ; id 12
+    db $67, $FF, $4D, $01, $D2 ; id 13
+    db $FF, $67, $4D, $01, $D2 ; id 14
+    db $49, $67, $FF, $01, $D3 ; id 15
+    db $49, $FF, $67, $01, $D3 ; id 16
+    db $FF, $49, $67, $01, $D3 ; id 17
+    db $67, $49, $FF, $01, $D3 ; id 18
+    db $67, $FF, $49, $01, $D3 ; id 19
+    db $FF, $67, $49, $01, $D3 ; id 20
+    db $4B, $67, $FF, $01, $D4 ; id 21
+    db $4B, $FF, $67, $01, $D4 ; id 22
+    db $FF, $4B, $67, $01, $D4 ; id 23
+    db $67, $4B, $FF, $01, $D4 ; id 24
+    db $67, $FF, $4B, $01, $D4 ; id 25
+    db $FF, $67, $4B, $01, $D4 ; id 26
+    db $67, $67, $FF, $01, $D5 ; id 27
+    db $67, $FF, $67, $01, $D5 ; id 28
+    db $FF, $67, $67, $01, $D5 ; id 29
+    db $70, $15, $FF, $01, $D6 ; id 30
+    db $70, $FF, $15, $01, $D6 ; id 31
+    db $FF, $70, $15, $01, $D6 ; id 32
+    db $15, $70, $FF, $01, $D6 ; id 33
+    db $15, $FF, $70, $01, $D6 ; id 34
+    db $FF, $15, $70, $01, $D6 ; id 35
+    db $91, $6A, $FF, $01, $D7 ; id 36
+    db $91, $FF, $6A, $01, $D7 ; id 37
+    db $FF, $91, $6A, $01, $D7 ; id 38
+    db $6A, $91, $FF, $01, $D7 ; id 39
+    db $6A, $FF, $91, $01, $D7 ; id 40
+    db $FF, $6A, $91, $01, $D7 ; id 41
+    db $2A, $62, $FF, $01, $D8 ; id 42
+    db $2A, $FF, $62, $01, $D8 ; id 43
+    db $FF, $2A, $62, $01, $D8 ; id 44
+    db $62, $2A, $FF, $01, $D8 ; id 45
+    db $62, $FF, $2A, $01, $D8 ; id 46
+    db $FF, $62, $2A, $01, $D8 ; id 47
+    db $1D, $3D, $FF, $01, $D9 ; id 48
+    db $1D, $FF, $3D, $01, $D9 ; id 49
+    db $FF, $1D, $3D, $01, $D9 ; id 50
+    db $3D, $1D, $FF, $01, $D9 ; id 51
+    db $3D, $FF, $1D, $01, $D9 ; id 52
+    db $FF, $3D, $1D, $01, $D9 ; id 53
+    db $A0, $7C, $FF, $00, $DA ; id 54
+    db $A0, $FF, $7C, $00, $DA ; id 55
+    db $FF, $A0, $7C, $00, $DA ; id 56
+    db $7C, $A0, $FF, $00, $DA ; id 57
+    db $7C, $FF, $A0, $00, $DA ; id 58
+    db $FF, $7C, $A0, $00, $DA ; id 59
+    db $75, $79, $FF, $00, $DB ; id 60
+    db $75, $FF, $79, $00, $DB ; id 61
+    db $FF, $75, $79, $00, $DB ; id 62
+    db $79, $75, $FF, $00, $DB ; id 63
+    db $79, $FF, $75, $00, $DB ; id 64
+    db $FF, $79, $75, $00, $DB ; id 65
+    db $3A, $3C, $FF, $00, $DC ; id 66
+    db $3A, $FF, $3C, $00, $DC ; id 67
+    db $FF, $3A, $3C, $00, $DC ; id 68
+    db $3C, $3A, $FF, $00, $DC ; id 69
+    db $3C, $FF, $3A, $00, $DC ; id 70
+    db $FF, $3C, $3A, $00, $DC ; id 71
+    db $81, $82, $FF, $00, $DD ; id 72
+    db $81, $FF, $82, $00, $DD ; id 73
+    db $FF, $81, $82, $00, $DD ; id 74
+    db $82, $81, $FF, $00, $DD ; id 75
+    db $82, $FF, $81, $00, $DD ; id 76
+    db $FF, $82, $81, $00, $DD ; id 77
+    db $9C, $92, $FF, $00, $DE ; id 78
+    db $9C, $FF, $92, $00, $DE ; id 79
+    db $FF, $9C, $92, $00, $DE ; id 80
+    db $92, $9C, $FF, $00, $DE ; id 81
+    db $92, $FF, $9C, $00, $DE ; id 82
+    db $FF, $92, $9C, $00, $DE ; id 83
+    db $32, $77, $FF, $00, $DF ; id 84
+    db $32, $FF, $77, $00, $DF ; id 85
+    db $FF, $32, $77, $00, $DF ; id 86
+    db $77, $32, $FF, $00, $DF ; id 87
+    db $77, $FF, $32, $00, $DF ; id 88
+    db $FF, $77, $32, $00, $DF ; id 89
+    db $95, $96, $FF, $00, $E0 ; id 90
+    db $95, $FF, $96, $00, $E0 ; id 91
+    db $FF, $95, $96, $00, $E0 ; id 92
+    db $96, $95, $FF, $00, $E0 ; id 93
+    db $96, $FF, $95, $00, $E0 ; id 94
+    db $FF, $96, $95, $00, $E0 ; id 95
+    db $34, $78, $FF, $00, $E1 ; id 96
+    db $34, $FF, $78, $00, $E1 ; id 97
+    db $FF, $34, $78, $00, $E1 ; id 98
+    db $78, $34, $FF, $00, $E1 ; id 99
+    db $78, $FF, $34, $00, $E1 ; id 100
+    db $FF, $78, $34, $00, $E1 ; id 101
+    db $98, $94, $FF, $00, $E2 ; id 102
+    db $98, $FF, $94, $00, $E2 ; id 103
+    db $FF, $98, $94, $00, $E2 ; id 104
+    db $94, $98, $FF, $00, $E2 ; id 105
+    db $94, $FF, $98, $00, $E2 ; id 106
+    db $FF, $94, $98, $00, $E2 ; id 107
+    db $8A, $9F, $FF, $00, $E3 ; id 108
+    db $8A, $FF, $9F, $00, $E3 ; id 109
+    db $FF, $8A, $9F, $00, $E3 ; id 110
+    db $9F, $8A, $FF, $00, $E3 ; id 111
+    db $9F, $FF, $8A, $00, $E3 ; id 112
+    db $FF, $9F, $8A, $00, $E3 ; id 113
+    db $00 ; end
 
-; only called from SaveActionChoicesAndPickFormations_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01)
+; picks the slot pair by B / 3, reads PersonalityCompatibility[personality of the second][personality of the first] + 1, multiplies it by the pair's wSlotTrait sum and by FormationChanceFactors[action - $D0], divides by 10 (capped at 255) and returns A = 1 when a random 0-99 is below that (E-0172)
+; 2 call sites from 1 routine (e.g. FindFormationForSide)
 ; reads: wSlotTrait, hTemp0, wRandomLo
 ; writes: hTemp0
-SaveActionChoicesAndPickFormations_Sub01_Sub01::
+FormationCompatibilityRoll::
 Func_0A3_44C4:: ; address name
     push hl
     ld a, $03
@@ -470,14 +586,67 @@ Jump_0A3_45A0::
     ld a, $01
     ret
 
-; address loaded by SaveActionChoicesAndPickFormations_Sub01_Sub01
+; E-0172 (C1: the roll multiplies (matrix value + 1) * (the two slots' wSlotTrait sum) by FormationChanceFactors[action - $D0], divides by 10 and succeeds when a random 0-99 is below it).
+; record: factor of this combined action in the roll
+FormationChanceFactors::
 Data_0A3_45A3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $28C5A3, $374
+    db $0A ; id 208
+    db $14 ; id 209
+    db $32 ; id 210
+    db $32 ; id 211
+    db $32 ; id 212
+    db $1E ; id 213
+    db $14 ; id 214
+    db $64 ; id 215
+    db $64 ; id 216
+    db $0A ; id 217
+    db $50 ; id 218
+    db $50 ; id 219
+    db $32 ; id 220
+    db $3C ; id 221
+    db $3C ; id 222
+    db $28 ; id 223
+    db $64 ; id 224
+    db $50 ; id 225
+    db $64 ; id 226
+    db $0A ; id 227
+
+; E-0172 (C1: the roll reads $45B7 + 32 * (second slot's PersonalityIndexOfSlot) + (first slot's index) for the two slots of the pair chosen by B / 3; 27 rows fill the slice up to $4917).
+; record: value for the first slot's personality index 0-31 (27 used)
+PersonalityCompatibility::
+Data_0A3_45B7:: ; heuristic: start of a structured table; C0
+    db $08, $09, $02, $07, $06, $05, $02, $06, $07, $08, $07, $04, $06, $07, $07, $06, $06, $04, $07, $06, $09, $07, $08, $02, $08, $03, $04, $00, $00, $00, $00, $00 ; id 0
+    db $09, $08, $03, $07, $07, $03, $06, $07, $07, $08, $08, $05, $07, $09, $08, $07, $08, $05, $08, $03, $02, $08, $08, $03, $08, $05, $09, $00, $00, $00, $00, $00 ; id 1
+    db $02, $03, $05, $07, $06, $02, $07, $06, $06, $06, $03, $02, $07, $08, $02, $09, $02, $01, $08, $07, $01, $08, $07, $02, $08, $08, $03, $00, $00, $00, $00, $00 ; id 2
+    db $07, $07, $07, $08, $08, $07, $08, $08, $08, $09, $08, $07, $08, $08, $08, $08, $03, $04, $07, $02, $01, $04, $07, $02, $08, $02, $03, $00, $00, $00, $00, $00 ; id 3
+    db $06, $07, $06, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $02, $01, $07, $05, $09, $03, $02, $09, $08, $02, $06, $02, $05, $00, $00, $00, $00, $00 ; id 4
+    db $05, $03, $02, $07, $08, $05, $01, $02, $07, $02, $08, $07, $02, $08, $07, $05, $08, $07, $01, $07, $07, $02, $03, $09, $08, $08, $04, $00, $00, $00, $00, $00 ; id 5
+    db $02, $06, $07, $08, $08, $01, $05, $09, $08, $07, $09, $08, $02, $07, $02, $01, $07, $08, $02, $08, $07, $02, $02, $01, $08, $08, $05, $00, $00, $00, $00, $00 ; id 6
+    db $06, $07, $06, $08, $08, $02, $09, $08, $08, $09, $02, $02, $07, $07, $08, $08, $08, $02, $01, $07, $02, $04, $05, $01, $07, $02, $05, $00, $00, $00, $00, $00 ; id 7
+    db $07, $07, $06, $08, $08, $07, $08, $08, $08, $08, $02, $07, $02, $04, $08, $02, $08, $08, $02, $01, $07, $01, $09, $09, $08, $07, $04, $00, $00, $00, $00, $00 ; id 8
+    db $08, $08, $06, $09, $08, $02, $07, $09, $08, $08, $07, $05, $08, $08, $02, $01, $02, $01, $08, $07, $07, $07, $08, $02, $08, $08, $05, $00, $00, $00, $00, $00 ; id 9
+    db $07, $08, $04, $08, $08, $08, $09, $02, $02, $07, $08, $04, $08, $08, $02, $07, $02, $02, $08, $09, $01, $07, $08, $07, $08, $08, $05, $00, $00, $00, $00, $00 ; id 10
+    db $04, $05, $03, $07, $08, $07, $08, $02, $07, $05, $04, $05, $04, $04, $07, $02, $08, $07, $08, $07, $07, $09, $02, $01, $05, $07, $04, $00, $00, $00, $00, $00 ; id 11
+    db $06, $07, $07, $08, $08, $02, $02, $07, $02, $08, $08, $04, $07, $09, $07, $07, $07, $08, $07, $02, $01, $07, $08, $07, $07, $08, $05, $00, $00, $00, $00, $00 ; id 12
+    db $07, $09, $08, $08, $08, $08, $07, $07, $04, $08, $08, $04, $09, $08, $07, $08, $07, $08, $07, $07, $07, $08, $08, $08, $08, $08, $09, $00, $00, $00, $00, $00 ; id 13
+    db $07, $08, $02, $08, $02, $07, $02, $08, $08, $02, $02, $07, $07, $07, $08, $05, $05, $04, $02, $02, $01, $06, $07, $03, $09, $07, $05, $00, $00, $00, $00, $00 ; id 14
+    db $06, $07, $09, $08, $01, $06, $01, $08, $02, $01, $07, $02, $07, $08, $05, $05, $02, $02, $07, $01, $02, $02, $02, $07, $08, $02, $04, $00, $00, $00, $00, $00 ; id 15
+    db $06, $08, $02, $03, $07, $08, $07, $08, $08, $02, $02, $08, $07, $07, $05, $02, $08, $02, $08, $07, $07, $08, $09, $07, $08, $07, $04, $00, $00, $00, $00, $00 ; id 16
+    db $05, $05, $01, $04, $05, $07, $08, $02, $08, $01, $02, $07, $08, $08, $04, $02, $02, $05, $07, $08, $02, $08, $09, $01, $07, $07, $05, $00, $00, $00, $00, $00 ; id 17
+    db $07, $08, $08, $07, $09, $01, $02, $01, $02, $08, $08, $08, $07, $07, $02, $07, $08, $07, $08, $07, $07, $07, $07, $07, $07, $09, $05, $00, $00, $00, $00, $00 ; id 18
+    db $06, $03, $07, $02, $03, $07, $08, $07, $01, $07, $09, $07, $02, $07, $02, $01, $07, $08, $07, $05, $08, $07, $07, $08, $08, $08, $06, $00, $00, $00, $00, $00 ; id 19
+    db $09, $02, $01, $01, $02, $07, $07, $02, $07, $07, $01, $07, $01, $07, $01, $02, $07, $02, $07, $08, $08, $07, $05, $04, $04, $02, $05, $00, $00, $00, $00, $00 ; id 20
+    db $07, $08, $08, $04, $09, $02, $02, $04, $01, $07, $07, $09, $07, $08, $06, $02, $08, $08, $07, $07, $07, $08, $08, $08, $08, $02, $04, $00, $00, $00, $00, $00 ; id 21
+    db $08, $08, $07, $07, $08, $03, $02, $05, $09, $08, $08, $02, $08, $08, $07, $02, $09, $09, $07, $07, $05, $08, $08, $08, $08, $08, $09, $00, $00, $00, $00, $00 ; id 22
+    db $02, $03, $02, $02, $02, $09, $01, $01, $09, $02, $07, $01, $07, $08, $03, $07, $01, $01, $07, $08, $04, $08, $08, $05, $07, $07, $04, $00, $00, $00, $00, $00 ; id 23
+    db $08, $08, $08, $08, $06, $08, $08, $07, $08, $08, $08, $05, $07, $08, $09, $08, $07, $07, $07, $08, $04, $08, $08, $07, $07, $08, $09, $00, $00, $00, $00, $00 ; id 24
+    db $03, $05, $08, $02, $02, $08, $08, $02, $07, $08, $08, $07, $08, $08, $07, $02, $07, $07, $09, $08, $02, $02, $08, $07, $08, $08, $09, $00, $00, $00, $00, $00 ; id 25
+    db $04, $09, $03, $03, $05, $04, $05, $05, $04, $05, $05, $04, $05, $09, $05, $04, $05, $05, $05, $06, $05, $04, $09, $04, $09, $09, $05, $00, $00, $00, $00, $00 ; id 26
 
 ; only called from SaveActionChoicesAndPickFormations (E-0047)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
 ; reads: hTemp0
-SaveActionChoicesAndPickFormations_Sub02::
+SaveActionChoicesAndPickFormations_Sub01::
 Func_0A3_4917:: ; address name
     push bc
     push de
@@ -570,7 +739,7 @@ Jump_0A3_497A::
     ret
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
-; 6 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01_Sub01)
+; 6 call sites from 1 routine (e.g. FormationCompatibilityRoll)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankA3::
 Func_0A3_497E:: ; address name

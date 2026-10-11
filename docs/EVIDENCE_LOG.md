@@ -2068,6 +2068,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** What the three bytes stand for in that screen is not read.
 - Binary verification: build/run173 PASS, 0 differing bytes; tests OK.
 
+### E-0172 — Formations: combined actions and the compatibility roll (bank $A3)
+
+- Kind: OBSERVATION (reading of A3:41CF and A3:44C4; C1).
+- **FindFormationForSide** (was SaveActionChoicesAndPickFormations_Sub01) walks FormationTable ($4289), 114 five-byte records up to a 0 byte. Each record holds:
+  - the action each of the side's three slots must have chosen ($FF = any);
+  - a roll flag;
+  - a combined action $D0-$E3.
+  - A record applies when the actions match and each required slot can act. It then returns the combined action in hFFC6, after FormationCompatibilityRoll when the flag is 1, or always in link mode 2.
+- **FormationCompatibilityRoll** (was ..._Sub01_Sub01).
+  - It picks the slot pair from B / 3 and reads PersonalityCompatibility[personality of one][personality of the other] ($45B7, 27 rows of 32), adding 1.
+  - It multiplies that by the pair's wSlotTrait sum and by FormationChanceFactors[action - $D0] ($45A3, 20 bytes), then divides by 10, capped at 255.
+  - It succeeds when a random 0-99 is below the result.
+- **Bounds.** The three tables fill $4289-$4916.
+- **Limits.** That these combined actions are the game's combination attacks rests only on the names; which actions they are is in the skill tables, not read here.
+- Binary verification: build/run174 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
