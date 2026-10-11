@@ -1902,6 +1902,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Battler record +$17 as the level and +$1D as base HP rest on E-0131/E-0062; the other four words' stats are not named. Record N is taken to be skill N because of the lookup at wRecordBufA + $34, which was not executed.
 - Binary verification: build/run156 PASS, 0 differing bytes; tests OK.
 
+### E-0157 — Map interaction spots (bank $87)
+
+- Kind: OBSERVATION (reading of FieldModeStateDispatch_Shared03 87:42A0; C1).
+- **Source.** When A is pressed in the field (and no sprite slot answers), the routine reads the word at $4539 + 2 * hMapId (`add $39` / `adc $45`). It walks that list of 10-byte entries until $FF.
+- **Entry.**
+  - byte 0, kind: 0 skips; 1-4 require hPlayerFacing = kind - 1; 5 matches the tile in front of the player;
+  - map number (ignored on special maps);
+  - screen X and Y; player X and Y;
+  - a story flag word ($FFFF = none; a set flag skips the entry);
+  - a talk event group and index for DispatchTalkEvent.
+- **Bounds.** The table holds 232 words, up to FieldModeStateDispatch_Shared03_Sub02 at $4709.
+- **Generator.** A new `lists` option on pointer tables derives one table per distinct list: records of a given size plus the terminator, labelled MapInteractionsNN after the first map number that uses them. 128 lists, about 3.6 KB that had been INCBIN or bogus `dw`/`db`.
+- Binary verification: build/run157 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -1969,6 +1969,44 @@
       ],
       "record": "required level; six required stat words (battler record +$1D, +$21, +$23, +$25, +$27, +$29); five skill numbers ($FF = none)",
       "note": "E-0156 (C1: CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the record's; BattleEnd_Step3_Sub02_Sub02 scans the five bytes at +13 of all 170 records ($5005, stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end exactly at the prerequisite pointer table $5BEC)."
+    },
+    {
+      "bank": "87",
+      "addr": "4539",
+      "label": "MapInteractionTable",
+      "count": 232,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of interaction spots for this map ($0000 = none)",
+          "reason": "map interaction list"
+        }
+      ],
+      "lists": {
+        "size": 10,
+        "end": 255,
+        "label": "MapInteractions",
+        "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
+        "fields": [
+          {
+            "type": "db",
+            "size": 6,
+            "name": "kind, map, screen X, screen Y, player X, player Y"
+          },
+          {
+            "type": "words",
+            "size": 2,
+            "name": "story flag that disables the entry ($FFFF = none)"
+          },
+          {
+            "type": "db",
+            "size": 2,
+            "name": "talk event group, index"
+          }
+        ]
+      },
+      "note": "E-0157 (C1: FieldModeStateDispatch_Shared03 reads the word $4539 + 2 * hMapId when A is pressed (232 words, up to FieldModeStateDispatch_Shared03_Sub02 at $4709); its list of 10-byte entries ends with $FF; an entry matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front), map, screen and player position; unless its story flag is set it runs DispatchTalkEvent with the group and index)."
     }
   ]
 }

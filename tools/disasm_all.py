@@ -1486,6 +1486,38 @@ class Rom:
         log(f"map layouts derived from MapTable: {len(recs)} records, {len(arrays)} screen arrays, {npal} palette sets, "
             f"{len(chunk_groups)} key-world chunk groups")
 
+    def add_list_schemas(self) -> None:
+        """Derive layouts for terminated record lists named by pointer tables marked "lists" (E-0157).
+
+        The option gives the record size, the terminator byte (checked at a record start), the
+        record fields and a label prefix; each distinct non-zero target becomes a table of its
+        records plus the terminator, labelled <prefix><first index>."""
+        taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+        made = 0
+        for t in [t for t in self.schemas if t.get("lists")]:
+            spec, bank = t["lists"], t["bank"]
+            base = bank * BANK - self.base(bank)
+            words = [self._u16(bank, t["addr"] + 2 * i) for i in range(t["count"])]
+            for a in sorted(set(words)):
+                if not 0x4000 <= a < 0x8000:
+                    continue
+                n = 0
+                while n < 255 and a + spec["size"] * n < 0x8000 and self.data[base + a + spec["size"] * n] != spec["end"]:
+                    n += 1
+                hi = a + spec["size"] * n + 1
+                if n == 255 or hi > 0x8000 or any(b == bank and lo < hi and a < e for b, lo, e in taken):
+                    continue
+                taken.append((bank, a, hi))
+                first = words.index(a) + t.get("id_base", 0)
+                self.schemas.append({"bank": bank, "addr": a, "label": f"{spec['label']}{first:02X}", "count": n,
+                                     "tail": 1, "fields": spec["fields"], "id_base": 0,
+                                     "record": spec.get("record"),
+                                     "note": f"E-0157 (derived: list for entry ${first:02X} of {t['label']}; "
+                                             f"{n} record(s), then ${spec['end']:02X})"})
+                made += 1
+        log(f"record lists derived from pointer tables: {made}")
+
     def add_metasprite_schemas(self) -> None:
         """Derive set, frame-list and frame layouts below tables marked "metasprite" (E-0147).
 
@@ -2432,6 +2464,7 @@ def main() -> int:
         log(f"loaded {len(rom.schemas)} table layouts from {tables_path.name}")
     rom.add_map_schemas()
     rom.add_metasprite_schemas()
+    rom.add_list_schemas()
     rom.run()
     if "--export-streams" in sys.argv:
         dest = Path(sys.argv[sys.argv.index("--export-streams") + 1])
