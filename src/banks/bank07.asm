@@ -1705,101 +1705,178 @@ Func_007_513A:: ; address name
     ld [wStringIndex], a
     farcall ShowString_Bank07
     ret
-    INCBIN "dwm2-cobi-us.gbc", $01D149, $1BB
-    ds $12, $B1
-    db $B2, $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D
-    db $8E, $8F, $90, $91, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F
-    db $A0, $A1, $A2, $A3, $B7, $B3
-    ds $12, $B4
-    db $B5, $60, $00, $14, $0B, $B0
-    ds $12, $B1
-    db $B2, $B6, $68, $69, $6A, $6B, $6C, $6D, $ED, $40, $41, $42, $43, $44, $C3, $C3
-    db $C3, $ED, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $45, $46, $47, $48, $49, $4A, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3
-    db $57, $58, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $59, $5A, $C3, $C3, $B7, $B6, $4B, $4C, $4D, $4E, $4F, $50
-    db $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $51, $52, $53, $54, $55, $56, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B3
-    ds $12, $B4
-    INCBIN "dwm2-cobi-us.gbc", $01D446, $9A
-    ds $12, $B1
-    db $B2, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $0C, $0B, $15, $15, $10, $0D, $C3, $14, $15, $0B, $13, $15, $C3
-    db $0D, $16, $0F, $15, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $14, $1E, $1D, $1F, $1F, $C3, $10, $1D, $20, $1D, $23, $C3, $C3
-    db $17, $C3, $C3, $11, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $10, $1A, $25, $1A, $1F, $C3, $10, $1D, $20, $1D, $23, $C3, $C3
-    db $17, $C3, $C3, $11, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $0E, $18, $20, $1D, $1F, $27, $10, $1D, $20, $1D, $23, $C3, $C3
-    db $17, $C3, $C3, $11, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $15, $24, $22, $21, $C3, $10, $1D, $20, $1D, $23, $C3, $C3, $C3
-    db $17, $C3, $C3, $11, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $0D, $26, $19, $1C, $18, $21, $1B, $1A, $C3, $C3, $C3, $C3, $C3
-    db $17, $C3, $C3, $11, $B7, $B6
-    ds $12, $C3
-    db $B7, $B3
-    ds $12, $B4
-    db $B5, $00, $00, $14, $12, $B0
-    ds $12, $B1
-    db $B2, $B6, $C3, $C3, $C3, $14, $28, $0F, $10, $10, $C3, $10, $0F, $29, $0F, $15
-    db $C3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $10, $0F
-    db $29, $0F, $15, $C3, $B7, $B6, $C3, $0B, $23, $1E, $C3, $29, $18, $1B, $1D, $19
-    db $C3, $C3, $E0, $C3, $E1, $C3, $11, $2C, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $14, $24, $2B, $2B, $2C, $22, $23, $C3, $C3, $C3, $C3, $E0, $C3
-    db $E1, $C3, $11, $2C, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $13, $1A, $19, $2C, $25, $1A, $22, $C3, $C3, $C3, $C3, $E0, $C3
-    db $E1, $C3, $11, $2C, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $0C, $22, $1A, $18, $23, $1C, $C3, $C3, $C3, $C3, $C3, $E0, $C3
-    db $E1, $C3, $11, $2C, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $2A, $18, $21, $19, $1A, $C3, $C3, $C3, $C3, $C3, $C3, $E0, $C3
-    db $E1, $C3, $11, $2C, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $0B, $23, $1E, $C3, $14, $1E, $1D, $1F, $1F, $C3, $C3, $E0, $C3
-    db $E1, $C3, $11, $2C, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $29, $1A, $1B, $18, $20, $18, $1B, $1D, $19, $C3, $C3, $E0, $C3
-    db $E1, $C3, $11, $2C, $B7, $B3
-    ds $12, $B4
-    db $B5, $E0, $00, $14, $05, $B0
-    ds $12, $B1
-    db $B2, $B6, $C3, $15, $2C, $23, $18, $1F, $C3, $10, $1A, $25, $1A, $1F, $2D, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $C3, $29, $18, $26, $C3, $10, $1A, $25, $1A, $1F, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B3
-    ds $12, $B4
-    INCBIN "dwm2-cobi-us.gbc", $01D7F2, $AF
-    ds $10, $B1
-    db $B2, $B6
-    ds $10, $C3
-    db $B7, $B6, $15, $24, $22, $21, $C3, $10, $1D, $20, $1D, $23, $C3, $C3, $C5, $C3
-    db $C3, $C6, $B7, $B6
-    ds $10, $C3
-    db $B7, $B3
-    ds $10, $B4
-    db $B5, $DE, $67, $1F, $33, $3C, $12, $00, $00
+    INCBIN "dwm2-cobi-us.gbc", $01D149, $BE
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0000 (row 0, column 0); 12 x 17 tiles
+TileRect_07_5207::
+Data_007_5207:: ; heuristic: start of a structured table; C0
+    dw $0000 ; entry 0
+    db $0C, $11
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $00, $01, $02, $03, $04, $05, $06, $07, $08, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $12, $13, $14, $15, $16, $17, $18, $19, $1A, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $1B, $1C, $1D, $1E, $1F, $20, $21, $22, $23, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $70, $71, $72, $73, $74, $75, $76, $77, $78, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $2D, $2E, $2F, $30, $31, $32, $33, $34, $35, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0000 (row 0, column 0); 12 x 3 tiles
+TileRect_07_52D7::
+Data_007_52D7:: ; heuristic: start of a structured table; C0
+    dw $0000 ; entry 0
+    db $0C, $03
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
+TileRect_07_52FF::
+Data_007_52FF:: ; heuristic: start of a structured table; C0
+    dw $01A0 ; entry 0
+    db $14, $05
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0060 (row 3, column 0); 20 x 11 tiles
+TileRect_07_5367::
+Data_007_5367:: ; heuristic: start of a structured table; C0
+    dw $0060 ; entry 0
+    db $14, $0B
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $68, $69, $6A, $6B, $6C, $6D, $ED, $40, $41, $42, $43, $44, $C3, $C3, $C3, $ED, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $45, $46, $47, $48, $49, $4A, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $57, $58, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $59, $5A, $C3, $C3, $B7
+    db $B6, $4B, $4C, $4D, $4E, $4F, $50, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $51, $52, $53, $54, $55, $56, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0082 (row 4, column 2); 16 x 9 tiles
+TileRect_07_5447::
+Data_007_5447:: ; heuristic: start of a structured table; C0
+    dw $0082 ; entry 0
+    db $10, $09
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $C3, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $61, $62, $63, $64, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0020 (row 1, column 0); 20 x 16 tiles
+TileRect_07_54DB::
+Data_007_54DB:: ; heuristic: start of a structured table; C0
+    dw $0020 ; entry 0
+    db $14, $10
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $0C, $0B, $15, $15, $10, $0D, $C3, $14, $15, $0B, $13, $15, $C3, $0D, $16, $0F, $15, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $14, $1E, $1D, $1F, $1F, $C3, $10, $1D, $20, $1D, $23, $C3, $C3, $17, $C3, $C3, $11, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $10, $1A, $25, $1A, $1F, $C3, $10, $1D, $20, $1D, $23, $C3, $C3, $17, $C3, $C3, $11, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $0E, $18, $20, $1D, $1F, $27, $10, $1D, $20, $1D, $23, $C3, $C3, $17, $C3, $C3, $11, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $15, $24, $22, $21, $C3, $10, $1D, $20, $1D, $23, $C3, $C3, $C3, $17, $C3, $C3, $11, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $0D, $26, $19, $1C, $18, $21, $1B, $1A, $C3, $C3, $C3, $C3, $C3, $17, $C3, $C3, $11, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0000 (row 0, column 0); 20 x 18 tiles
+TileRect_07_561F::
+Data_007_561F:: ; heuristic: start of a structured table; C0
+    dw $0000 ; entry 0
+    db $14, $12
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $C3, $C3, $14, $28, $0F, $10, $10, $C3, $10, $0F, $29, $0F, $15, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $10, $0F, $29, $0F, $15, $C3, $B7
+    db $B6, $C3, $0B, $23, $1E, $C3, $29, $18, $1B, $1D, $19, $C3, $C3, $E0, $C3, $E1, $C3, $11, $2C, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $14, $24, $2B, $2B, $2C, $22, $23, $C3, $C3, $C3, $C3, $E0, $C3, $E1, $C3, $11, $2C, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $13, $1A, $19, $2C, $25, $1A, $22, $C3, $C3, $C3, $C3, $E0, $C3, $E1, $C3, $11, $2C, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $0C, $22, $1A, $18, $23, $1C, $C3, $C3, $C3, $C3, $C3, $E0, $C3, $E1, $C3, $11, $2C, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $2A, $18, $21, $19, $1A, $C3, $C3, $C3, $C3, $C3, $C3, $E0, $C3, $E1, $C3, $11, $2C, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $0B, $23, $1E, $C3, $14, $1E, $1D, $1F, $1F, $C3, $C3, $E0, $C3, $E1, $C3, $11, $2C, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $29, $1A, $1B, $18, $20, $18, $1B, $1D, $19, $C3, $C3, $E0, $C3, $E1, $C3, $11, $2C, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $00E0 (row 7, column 0); 20 x 5 tiles
+TileRect_07_578B::
+Data_007_578B:: ; heuristic: start of a structured table; C0
+    dw $00E0 ; entry 0
+    db $14, $05
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $15, $2C, $23, $18, $1F, $C3, $10, $1A, $25, $1A, $1F, $2D, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $29, $18, $26, $C3, $10, $1A, $25, $1A, $1F, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0062 (row 3, column 2); 15 x 11 tiles
+TileRect_07_57F3::
+Data_007_57F3:: ; heuristic: start of a structured table; C0
+    dw $0062 ; entry 0
+    db $0F, $0B
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $C3, $0B, $25, $18, $1D, $1F, $1D, $2E, $1F, $1A, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $0E, $18, $20, $1D, $1F, $1D, $1A, $2D, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $00, $C3, $01, $C3, $02, $C3, $03, $C3, $04, $C3, $05, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $06, $C3, $07, $C3, $08, $C3, $09, $C3, $0A, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $00E1 (row 7, column 1); 18 x 5 tiles
+TileRect_07_589C::
+Data_007_589C:: ; heuristic: start of a structured table; C0
+    dw $00E1 ; entry 0
+    db $12, $05
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $15, $24, $22, $21, $C3, $10, $1D, $20, $1D, $23, $C3, $C3, $C5, $C3, $C3, $C6, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $DE, $67, $1F, $33, $3C, $12, $00, $00
 
 ; entry 0 of the `rst $00` table in GameMode5_Update
 ; no direct call (reached through a table, a jump or a vector)

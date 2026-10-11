@@ -1571,6 +1571,109 @@ class Rom:
                     frames += 1
         log(f"meta-sprite layouts: {sets} sets, {frames} frames")
 
+    def add_rect_record_schemas(self) -> None:
+        """Lay out the tile-rectangle records HL points at for the record copiers (E-0161).
+
+        CopyRecordRectToScreenBuffer and its copies read a word offset into wScreenTileBuffer
+        (32-byte rows), a width and a row count, then width * rows tile bytes. Sources are the
+        `ld hl, n` within three instructions before a call or jump to one of them; a record is
+        used only when it fits the bank and touches no code, table or other layout."""
+        copiers = {(b, a) for (b, a), info in self.names.items()
+                   if info["name"].startswith(("CopyRecordRectToScreenBuffer",)) and not info.get("data")}
+        taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+        ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")
+        found = 0
+        for cb in range(self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in copiers:
+                    continue
+                src = None
+                for x in reversed(order[max(0, k - 3):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    if (m := ld_hl.match(ins[x][1])):
+                        src = int(m.group(1), 16)
+                        break
+                if src is None or not 0x4000 <= src < 0x8000:
+                    continue
+                o = cb * BANK + src - self.base(cb)
+                w, rows = self.data[o + 2], self.data[o + 3]
+                end = src + 4 + w * rows
+                if not (0 < w <= 32 and 0 < rows <= 32) or end > 0x8000 or \
+                        any(p in self.covered[cb] for p in range(src, end)) or \
+                        any(b == cb and lo < end and src < hi for b, lo, hi in taken) or \
+                        any(b == cb and a2 < end and src < a2 + used for (b, a2), (_, used) in self.streams.items()):
+                    continue
+                taken.append((cb, src, end))
+                off = self.data[o] | self.data[o + 1] << 8
+                self.schemas.append({
+                    "bank": cb, "addr": src, "label": f"TileRect_{cb:02X}_{src:04X}", "count": 1,
+                    "fields": [{"type": "words", "size": 2, "name": "offset into wScreenTileBuffer"},
+                               {"type": "db", "size": 2, "line": True, "name": "width, rows"}]
+                              + [{"type": "db", "size": w, "line": True, "name": f"row {r}"} for r in range(rows)],
+                    "record": f"offset ${off:04X} (row {off // 32}, column {off % 32}); {w} x {rows} tiles",
+                    "note": "E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)"})
+                found += 1
+        log(f"tile-rectangle records: {found}")
+        # Raw rectangles (E-0161): DE = packed source, B = width, C = rows, for the copiers whose
+        # source rows are contiguous. Copies of a canonical routine (same first 16 bytes) count too.
+        canon = {(b, a) for (b, a), info in self.names.items() if not info.get("data") and
+                 info["name"] in ("CopyRectToBGMap", "CopyRectToBGMapWrapped", "CopyRectToBGMapWrapped_Bank1D",
+                                  "CopyRectToBGMapWrapped_1C", "CopyRectTo20ByteRowsJp_Bank24")}
+        canon |= {(int(f["canonical"][:2], 16), int(f["canonical"][3:], 16)) for f in self.families
+                  if f["name"] == "CopyRectTo20ByteRows"}
+        sig = lambda b, a: bytes(self.data[b * BANK + a - self.base(b):b * BANK + a - self.base(b) + 16])
+        sigs = {sig(b, a) for b, a in canon}
+        raw_copiers = {(b, a) for b in range(self.nbanks) for a in self.labels[b]
+                       if a in self.insn[b] and a <= self.base(b) + BANK - 16 and sig(b, a) in sigs}
+        ld_de = re.compile(r"ld de, \$([0-9A-F]{4})$")
+        ld_bc = re.compile(r"ld bc, \$([0-9A-F]{2})([0-9A-F]{2})$")
+        uses: dict[tuple[int, int], set] = {}
+        for cb in range(self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in raw_copiers:
+                    continue
+                de = bc = None
+                for x in reversed(order[max(0, k - 4):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    if de is None and (m := ld_de.match(ins[x][1])):
+                        de = int(m.group(1), 16)
+                    if bc is None and (m := ld_bc.match(ins[x][1])):
+                        bc = (int(m.group(1), 16), int(m.group(2), 16))
+                if de is None or bc is None or not 0x4000 <= de < 0x8000:
+                    continue
+                uses.setdefault((cb, de), set()).add(bc)
+        raw = 0
+        for (cb, src), dims in sorted(uses.items()):
+            widths = {w for w, _ in dims}
+            if len(widths) != 1:
+                continue
+            w = widths.pop()
+            rows = max(r for _, r in dims)
+            end = src + w * rows
+            if not (0 < w <= 32 and 0 < rows <= 32) or end > 0x8000 or \
+                    any(p in self.covered[cb] for p in range(src, end)) or \
+                    any(b == cb and lo < end and src < hi for b, lo, hi in taken) or \
+                    any(b == cb and a2 < end and src < a2 + used for (b, a2), (_, used) in self.streams.items()):
+                continue
+            taken.append((cb, src, end))
+            self.schemas.append({
+                "bank": cb, "addr": src, "label": f"TileRect_{cb:02X}_{src:04X}", "count": rows,
+                "fields": [{"type": "db", "size": w, "line": True, "name": "row"}], "id_base": 0,
+                "record": f"{w} x {rows} tiles, one row per line",
+                "note": "E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, "
+                        "to a rectangle copier)"})
+            raw += 1
+        log(f"raw tile rectangles: {raw}")
+
     def prepare_tables(self) -> None:
         """Validate config/tables.json against the ROM and register data labels for their
         pointer targets. Raises if a layout overlaps code or an existing label would fall in
@@ -2052,6 +2155,7 @@ class Rom:
         self.structure_data()
         self.find_compressed_assets()
         self.label_data_refs()
+        self.add_rect_record_schemas()
         self.prepare_tables()
         self.prepare_tracks()
         self.prepare_scripts()
@@ -2401,8 +2505,8 @@ class Rom:
                     out.append(f"{dl[pc]}:: ; heuristic: {why}; C0")
                     if (bank, pc) in self.dalias:
                         out.append(f"{self.dalias[(bank, pc)]}:: ; address name")
-                if pc in dt:
-                    out.append(f"    dw {dl[dt[pc]]}")
+                if pc in dt:  # the target's guessed label may have been dropped inside a layout
+                    out.append(f"    dw {dl.get(dt[pc], f'${dt[pc]:04X}')}")
                     pc += 2
                     continue
                 q = pc + 1

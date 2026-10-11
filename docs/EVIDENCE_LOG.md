@@ -1952,6 +1952,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The callers whose wDataBank is set elsewhere are not traced.
 - Binary verification: build/run160 PASS, 0 differing bytes; tests OK.
 
+### E-0161 — Tile rectangles from their copiers
+
+- Kind: OBSERVATION (derived from call sites; C1 for the sizes, which come from the code that copies them).
+- **Records.** CopyRecordRectToScreenBuffer and its copies read a word offset into wScreenTileBuffer (32-byte rows), a width, a row count, then width * rows tiles from HL. The `ld hl, n` within three instructions before such a call gives 29 records, laid out with the header and one row per line; the note gives the row and column.
+- **Raw rectangles.**
+  - The copiers CopyRectToBGMap, CopyRectToBGMapWrapped (and its two bank copies), CopyRectTo20ByteRowsJp_Bank24, and every routine with the same first 16 bytes as the CopyRectTo20ByteRows family read a packed rectangle at DE, with B = width and C = rows.
+  - Literal `ld de, n` / `ld bc, $WWRR` before such a call give 159 rectangles. When call sites disagree on the width the source is skipped; otherwise the largest row count is used.
+  - The copiers that read 32-byte source rows are excluded.
+- **Safety.**
+  - A rectangle is used only when it touches no code, table, layout or stream.
+  - An inline `dw` whose guessed target label was dropped inside a new layout now prints its number. The one case, 33:41BB `dw $6362`, is tile bytes $62, $63, not a pointer.
+- **Labels.** TileRect_BB_AAAA.
+- Binary verification: build/run161 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

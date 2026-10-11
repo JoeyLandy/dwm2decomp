@@ -527,10 +527,19 @@ Jump_01E_430D::
     inc a
     ld [wScreenStep], a
     ret
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $00, $8D, $50, $8D, $A0, $8D
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 7 tiles, one row per line
+TileRect_1E_4333::
+Data_01E_4333:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; id 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
+    db $00, $8D, $50, $8D, $A0, $8D
 
 ; entry 1 of the `rst $00` table in ScriptCommandE8_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -773,9 +782,16 @@ Jump_01E_44C3:: ; address name
     inc a
     ld [wScreenStep], a
     ret
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $70, $71, $72, $73, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $74, $75, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 5 tiles, one row per line
+TileRect_1E_44EF::
+Data_01E_44EF:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $70, $71, $72, $73, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; entry 12 of the `rst $00` table in ScriptCommandE8_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -1081,7 +1097,12 @@ Func_01E_46E5:: ; address name
     inc a
     ld [wScreenStep], a
     ret
-    db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 1 tiles, one row per line
+TileRect_1E_4718::
+Data_01E_4718:: ; heuristic: start of a structured table; C0
+    db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
 
 ; entry 14 of the `rst $00` table in ScriptCommandE8_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -1273,8 +1294,16 @@ Jump_01E_4831:: ; address name
     xor a, a
     ld [wTwoChoiceCursor], a
     ret
-    db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
-    db $C3, $B7, $B6, $C3, $F3, $A6, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 6 x 5 tiles, one row per line
+TileRect_1E_4872::
+Data_01E_4872:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $CE, $CF, $DF, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $F3, $A6, $C3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; entry 18 of the `rst $00` table in ScriptCommandE8_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -1401,7 +1430,22 @@ Jump_01E_4933:: ; address name
     inc a
     ld [wScreenStep], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $07895A, $58
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 11 tiles, one row per line
+TileRect_1E_495A::
+Data_01E_495A:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
 ; entry 20 of the `rst $00` table in ScriptCommandE8_Run_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -2797,9 +2841,14 @@ Jump_01E_5300:: ; address name
     inc a
     ld [wScreenStep], a
     ret
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BC, $7C
-    db $7D, $7E, $DF, $7F, $FE, $FF, $76, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $B7
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 13 x 3 tiles, one row per line
+TileRect_1E_5343::
+Data_01E_5343:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $BC, $7C, $7D, $7E, $DF, $7F, $FE, $FF, $76, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
 
 ; entry 19 of the `rst $00` table in ScriptCommandE8_Run_Case06
 ; no direct call (reached through a table, a jump or a vector)
@@ -2918,7 +2967,20 @@ Jump_01E_5430:: ; address name
     inc a
     ld [wScreenStep], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $079461, $75
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 13 x 9 tiles, one row per line
+TileRect_1E_5461::
+Data_01E_5461:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; entry 23 of the `rst $00` table in ScriptCommandE8_Run_Case06
 ; no direct call (reached through a table, a jump or a vector)
@@ -3333,7 +3395,19 @@ Jump_01E_5774:: ; address name
     inc a
     ld [wScreenStep], a
     ret
-    db $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B7, $B5
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 13 x 1 tiles, one row per line
+TileRect_1E_57DC::
+Data_01E_57DC:: ; heuristic: start of a structured table; C0
+    db $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 1 x 2 tiles, one row per line
+TileRect_1E_57E9::
+Data_01E_57E9:: ; heuristic: start of a structured table; C0
+    db $B7 ; id 0
+    db $B5 ; id 1
 
 ; entry 24 of the `rst $00` table in ScriptCommandE8_Run_Case07
 ; no direct call (reached through a table, a jump or a vector)
@@ -3564,7 +3638,12 @@ Jump_01E_592B:: ; address name
     inc a
     ld [wScreenStep], a
     ret
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 13 x 1 tiles, one row per line
+TileRect_1E_5987::
+Data_01E_5987:: ; heuristic: start of a structured table; C0
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
 
 ; entry 48 of the `rst $00` table in ScriptCommandE8_Run_Case07
 ; no direct call (reached through a table, a jump or a vector)
@@ -3693,7 +3772,12 @@ Func_01E_5A4D:: ; address name
     inc a
     ld [wScreenStep], a
     ret
-    db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 1 tiles, one row per line
+TileRect_1E_5A80::
+Data_01E_5A80:: ; heuristic: start of a structured table; C0
+    db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
 
 ; entry 54 of the `rst $00` table in ScriptCommandE8_Run_Case07
 ; no direct call (reached through a table, a jump or a vector)
@@ -5349,7 +5433,12 @@ Jump_01E_6559::
     ld bc, $0801
     call CopyRectTo20ByteRows_Bank1E
     jr Jump_01E_654A
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 1 tiles, one row per line
+TileRect_1E_6567::
+Data_01E_6567:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
 
 ; entry 16 of the `rst $00` table in ScriptCommandE8_Run_Case0D
 ; no direct call (reached through a table, a jump or a vector)
@@ -8421,5 +8510,128 @@ Func_01E_7778:: ; address name
     ld hl, $788A
     call StoreBAtWordTableEntry_Bank1E
     ret
-    INCBIN "dwm2-cobi-us.gbc", $07B78C, $49F
+    INCBIN "dwm2-cobi-us.gbc", $07B78C, $1D0
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 12 x 9 tiles, one row per line
+TileRect_1E_795C::
+Data_01E_795C:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $F8, $F9, $FA, $FB, $FC, $C3, $EA, $ED, $C3, $C3, $B7 ; id 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 2
+    db $B6, $C7, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 11 x 11 tiles, one row per line
+TileRect_1E_79C8::
+Data_01E_79C8:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $A9, $AF, $A6, $A7, $C3, $A6, $A8, $A8, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $F4, $A5, $AA, $AB, $C3, $AC, $A7, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $AD, $AE, $CF, $AA, $AB, $C3, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $A4, $CF, $EE, $CF, $EF, $DF, $CF, $C3, $B7 ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $F0, $F1, $A5, $F2, $C3, $C3, $C3, $C3, $B7 ; id 9
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 11 tiles, one row per line
+TileRect_1E_7A41::
+Data_01E_7A41:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $F0, $F1, $F2, $F3, $F4, $B7 ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $A4, $A5, $A6, $CE, $CF, $B7 ; id 9
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 11 tiles, one row per line
+TileRect_1E_7A99::
+Data_01E_7A99:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 9
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 11 tiles, one row per line
+TileRect_1E_7AF1::
+Data_01E_7AF1:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
+    db $B6, $C3, $A4, $CF, $EE, $CF, $EF, $DF ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 8
+    db $B6, $C3, $F0, $F1, $A5, $F2, $C3, $C3 ; id 9
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4 ; id 10
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 13 x 9 tiles, one row per line
+TileRect_1E_7B49::
+Data_01E_7B49:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $D5, $D6, $D7, $D8, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $D9, $DA, $DB, $DC, $DD, $DE, $C0, $C1, $C2, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $F5, $F6, $F7, $F8, $F9, $FA, $FB, $FC, $BF, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $C7, $C8, $C9, $CA, $CB, $EA, $EB, $EC, $ED, $C3, $B7 ; id 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 13 x 5 tiles, one row per line
+TileRect_1E_7BBE::
+Data_01E_7BBE:: ; heuristic: start of a structured table; C0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $7C, $7D, $7E, $DF, $7F, $FE, $FF, $76, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $77, $78, $78, $76, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 4 x 8 tiles, one row per line
+TileRect_1E_7BFF::
+Data_01E_7BFF:: ; heuristic: start of a structured table; C0
+    db $B1, $B1, $B1, $B2 ; id 0
+    db $A6, $A8, $A8, $B7 ; id 1
+    db $C3, $C3, $C3, $B7 ; id 2
+    db $AC, $A7, $C3, $B7 ; id 3
+    db $C3, $C3, $C3, $B7 ; id 4
+    db $C3, $C3, $C3, $B7 ; id 5
+    db $C3, $C3, $C3, $B7 ; id 6
+    db $DF, $CF, $C3, $B7 ; id 7
+
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 4 x 3 tiles, one row per line
+TileRect_1E_7C1F::
+Data_01E_7C1F:: ; heuristic: start of a structured table; C0
+    db $C3, $C3, $C3, $B7 ; id 0
+    db $C3, $C3, $C3, $B7 ; id 1
+    db $B4, $B4, $B4, $B5 ; id 2
     ds $3D5, $00

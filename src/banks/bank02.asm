@@ -5840,15 +5840,23 @@ Jump_002_65EF::
     ldh [rSVBK], a
     ret
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 12 x 5 tiles, one row per line
+TileRect_02_6606::
 Data_002_6606:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $A4, $A5
-    db $A6, $A7, $C3, $A4, $A8, $A9, $EC, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $B7, $B6, $C3, $AA, $AB, $A4, $AC, $C3, $AD, $AC, $AE, $A5, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $A4, $A5, $A6, $A7, $C3, $A4, $A8, $A9, $EC, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $AA, $AB, $A4, $AC, $C3, $AD, $AC, $AE, $A5, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 3 tiles, one row per line
+TileRect_02_6642::
 Data_002_6642:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
 
 ; writes the gold as up to five decimal digit tiles without leading zeros at HL in VRAM, wrapping at the row end (E-0128)
 ; 1 call site from 1 routine (e.g. OpenFieldMenuOnA)
@@ -6314,20 +6322,38 @@ Jump_002_68CF::
     ldh [rSVBK], a
     ret
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 7 x 6 tiles, one row per line
+TileRect_02_68E6::
 Data_002_68E6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $D0, $D1, $D2, $D3, $D4, $B7, $B6, $C7
-    db $EB, $C3, $C3, $C3, $B7, $B6, $C3, $EC, $C3, $C3, $C3, $B7, $B6, $C3, $EA, $ED
-    db $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $B7 ; id 1
+    db $B6, $C7, $EB, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $EC, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $EA, $ED, $C3, $C3, $B7 ; id 4
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; id 5
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 13 x 6 tiles, one row per line
+TileRect_02_6910::
 Data_002_6910:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $00A910, $4E
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; id 1
+    db $B6, $C7, $EB, $C3, $C3, $C3, $C3, $C8, $EB, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $B7 ; id 4
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 5
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 19 x 6 tiles, one row per line
+TileRect_02_695E::
 Data_002_695E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0
-    ds $11, $B1
-    INCBIN "dwm2-cobi-us.gbc", $00A970, $4E
-    ds $11, $B4
-    db $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; id 1
+    db $B6, $C7, $EB, $C3, $C3, $C3, $C3, $C8, $EB, $C3, $C3, $C3, $C3, $C9, $EB, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $B7 ; id 4
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 5
 
 ; while wC8CB & 3 is set: copies the text window rows to or from wC300 (with CGB attributes) and redraws them at the scroll position (E-0130)
 ; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case01, GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, ...)

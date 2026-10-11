@@ -1267,31 +1267,54 @@ Jump_00C_4883::
     ld [wScreenSubStep], a
     ret
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 10 x 1 tiles, one row per line
+TileRect_0C_48AB::
 Data_00C_48AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $2F, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E
+    db $2F, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E ; id 0
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 10 x 1 tiles, one row per line
+TileRect_0C_48B5::
 Data_00C_48B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $42, $30, $31, $32, $33, $34, $35, $36, $37, $38
+    db $42, $30, $31, $32, $33, $34, $35, $36, $37, $38 ; id 0
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 10 x 1 tiles, one row per line
+TileRect_0C_48BF::
 Data_00C_48BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $43, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41
+    db $43, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41 ; id 0
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 9 x 1 tiles, one row per line
+TileRect_0C_48C9::
 Data_00C_48C9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $44, $45, $46, $47, $48, $49, $4A, $4B, $4C
+    db $44, $45, $46, $47, $48, $49, $4A, $4B, $4C ; id 0
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 9 x 1 tiles, one row per line
+TileRect_0C_48D2::
 Data_00C_48D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $4D, $4E, $4F, $50, $51, $52, $53, $54, $55
+    db $4D, $4E, $4F, $50, $51, $52, $53, $54, $55 ; id 0
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 9 x 1 tiles, one row per line
+TileRect_0C_48DB::
 Data_00C_48DB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E
+    db $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E ; id 0
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 18 x 1 tiles, one row per line
+TileRect_0C_48E4::
 Data_00C_48E4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $A2, $A3, $A4, $A5, $A6, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $B0, $B1
-    db $B2, $B3
+    db $A2, $A3, $A4, $A5, $A6, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $B0, $B1, $B2, $B3 ; id 0
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 18 x 1 tiles, one row per line
+TileRect_0C_48F6::
 Data_00C_48F6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD, $BE, $BF, $C0, $C1, $C2, $C3
-    db $C4, $C5, $7E, $7F
+    db $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD, $BE, $BF, $C0, $C1, $C2, $C3, $C4, $C5 ; id 0
+    db $7E, $7F
 
 ; entry 2 of the `rst $00` table in ScriptCommandF6_Run_Case10
 ; no direct call (reached through a table, a jump or a vector)
@@ -3070,25 +3093,71 @@ Data_00C_5562:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_56D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $04
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 9 x 13 tiles, one row per line
+TileRect_0C_56D9::
 Data_00C_56D9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0316D9, $75
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $02, $C3, $C3, $ED, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $03, $C3, $C3, $ED, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $04, $C3, $C3, $ED, $C3, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $05, $C3, $C3, $ED, $C3, $C3, $B7 ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $06, $C3, $C3, $ED, $C3, $C3, $B7 ; id 9
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $B6, $C3, $07, $C3, $C3, $ED, $C3, $C3, $B7 ; id 11
+    db $B3, $C5, $C3, $BE, $E2, $C6, $B4, $B4, $B5 ; id 12
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 12 x 13 tiles, one row per line
+TileRect_0C_574E::
 Data_00C_574E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $03174E, $9C
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $B7 ; id 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
+    db $B6, $C3, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $B7 ; id 9
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
+    db $B6, $C3, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $B7 ; id 11
+    db $B3, $B4, $B4, $B4, $B4, $B4, $C5, $C3, $BE, $C3, $C6, $B5 ; id 12
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 12 x 13 tiles, one row per line
+TileRect_0C_57EA::
 Data_00C_57EA:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0317EA, $B0
+    db $B2, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 7
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 8
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 9
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 10
+    db $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 11
+    db $B5, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 12
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $66, $B9, $B9, $B9, $B9, $B9, $B9, $B9
+    db $B9, $B9, $B9, $BA
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 20 x 5 tiles, one row per line
+TileRect_0C_589A::
 Data_00C_589A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0
-    ds $12, $B1
-    db $B2, $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D
-    db $8E, $8F, $90, $91, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F
-    db $A0, $A1, $A2, $A3, $B7, $B3
-    ds $12, $B4
-    db $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 Data_00C_58FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4, $41, $C4
@@ -5912,24 +5981,72 @@ Data_00C_7602:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $24, $0B, $1C, $44, $02, $18, $0F, $10, $13, $15, $45, $FE, $03, $0D, $11, $12
     db $17, $2C, $FD, $FE, $23, $2C, $0D, $0E, $17, $FD, $1E, $FE
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 17 x 9 tiles, one row per line
+TileRect_0C_762E::
 Data_00C_762E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $03362E, $99
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $AA, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $C3, $E1, $E0, $E0, $BF, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $A9, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $C3, $E5, $E0, $E0, $BF, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $C3, $A8, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $E1, $E0, $E0, $E0, $BF, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $C3, $A7, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $E5, $E0, $E0, $E0, $BF, $B7 ; id 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 3 x 5 tiles, one row per line
+TileRect_0C_76C7::
 Data_00C_76C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $C3, $C3, $B7, $E0, $BF, $B7, $C3, $C3, $B7, $E0, $BF, $B7, $B4, $B4, $B5
+    db $C3, $C3, $B7 ; id 0
+    db $E0, $BF, $B7 ; id 1
+    db $C3, $C3, $B7 ; id 2
+    db $E0, $BF, $B7 ; id 3
+    db $B4, $B4, $B5 ; id 4
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 17 x 9 tiles, one row per line
+TileRect_0C_76D6::
 Data_00C_76D6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0336D6, $99
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $AA, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $E1, $E0, $E0, $E0, $BF, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $A9, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $E2, $E0, $E0, $E0, $BF, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $A8, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $E3, $E0, $E0, $E0, $BF, $C3, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $A7, $C3, $AA, $A4, $A5, $A6, $A6, $C3, $E5, $E0, $E0, $E0, $BF, $C3, $B7 ; id 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 3 x 5 tiles, one row per line
+TileRect_0C_776F::
 Data_00C_776F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $C3, $C3, $B7, $BF, $C3, $B7, $C3, $C3, $B7, $BF, $C3, $B7, $B4, $B4, $B5
+    db $C3, $C3, $B7 ; id 0
+    db $BF, $C3, $B7 ; id 1
+    db $C3, $C3, $B7 ; id 2
+    db $BF, $C3, $B7 ; id 3
+    db $B4, $B4, $B5 ; id 4
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 3 tiles, one row per line
+TileRect_0C_777E::
 Data_00C_777E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $03377E, $B3
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
+    INCBIN "dwm2-cobi-us.gbc", $033796, $9B
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 6 x 5 tiles, one row per line
+TileRect_0C_7831::
 Data_00C_7831:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
-    db $C3, $B7, $B6, $C3, $AE, $AF, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
+    db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $CE, $CF, $DF, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $AE, $AF, $C3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 Data_00C_784F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CA, $C3, $F2, $C3, $1A, $C4, $42, $C4

@@ -1236,11 +1236,17 @@ Jump_01C_4714:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 8 x 7 tiles, one row per line
+TileRect_1C_4738::
 Data_01C_4738:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $EA, $EB, $EC, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $ED, $CF, $EF, $EF, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $A9, $AB, $AC, $AD, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $EA, $EB, $EC, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $ED, $CF, $EF, $EF, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $A9, $AB, $AC, $AD, $C3, $B7 ; id 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
 ; entry 4 of the `rst $00` table in ScriptCommandE2_Run_Case01
 ; no direct call (reached through a table, a jump or a vector)
@@ -6729,8 +6735,17 @@ Jump_01C_6DCB:: ; address name
     ld [wScriptStartRequest], a
     ret
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 11 x 7 tiles, one row per line
+TileRect_1C_6DEF::
 Data_01C_6DEF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $072DEF, $4D
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $A6, $CF, $A5, $A7, $DF, $EB, $AD, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $EA, $EB, $AD, $ED, $EE, $EF, $AB, $AC, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $A9, $A4, $EB, $AD, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
 ; entry 2 of the `rst $00` table in ScriptCommandE5_Run
 ; no direct call (reached through a table, a jump or a vector)

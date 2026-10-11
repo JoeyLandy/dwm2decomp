@@ -6396,8 +6396,11 @@ Jump_003_6A7E::
     call WriteVRAMByte
     ret
 
+; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
+; record: 5 x 1 tiles, one row per line
+TileRect_03_6A98::
 Data_003_6A98:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B4, $B4, $B4, $B4, $B4
+    db $B4, $B4, $B4, $B4, $B4 ; id 0
 
 ; GameMode2_Update, wModeState 3: an item list screen (state 3) (E-0046)
 ; no direct call (reached through a table, a jump or a vector)
