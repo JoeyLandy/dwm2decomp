@@ -165,8 +165,8 @@ Jump_01E_40DD:: ; address name
 ; points at: wScreenStep
 ScriptCommandE8_Run_Case01_Case01::
 Jump_01E_40E4:: ; address name
-    ld hl, $778C
-    ld de, $77CE
+    ld hl, GlyphCopyDestList0
+    ld de, GlyphCopySrcList0
     call ScriptCommandE8_Run_Shared05
     ld hl, wScreenStep
     inc [hl]
@@ -276,7 +276,7 @@ Jump_01E_418E::
 Jump_01E_4198::
     ld a, c
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     push bc
     push hl
     call StoreBAtWordTableEntry_Bank1E
@@ -618,7 +618,7 @@ ScriptCommandE8_Run_Case04_Case04::
 Jump_01E_43E0:: ; address name
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140B
@@ -626,7 +626,7 @@ Jump_01E_43E0:: ; address name
     call DrawScreenBufferRect_Bank1E
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wScreenStep]
     inc a
@@ -673,7 +673,7 @@ Jump_01E_442C::
 Jump_01E_4442::
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     xor a, a
     ld [wTwoChoiceCursor], a
@@ -725,8 +725,8 @@ Jump_01E_447F:: ; address name
 ; points at: wScreenStep
 ScriptCommandE8_Run_Case04_Case08::
 Jump_01E_4493:: ; address name
-    ld hl, $7810
-    ld de, $7824
+    ld hl, GlyphCopyDestList1
+    ld de, GlyphCopySrcList1
     call ScriptCommandE8_Run_Shared05
     ld hl, wScreenStep
     inc [hl]
@@ -752,8 +752,8 @@ Jump_01E_44A1:: ; address name
 ; points at: wScreenStep
 ScriptCommandE8_Run_Case04_Case0A::
 Jump_01E_44B5:: ; address name
-    ld hl, $7864
-    ld de, $7872
+    ld hl, GlyphCopyDestList3
+    ld de, GlyphCopySrcList3
     call ScriptCommandE8_Run_Shared05
     ld hl, wScreenStep
     inc [hl]
@@ -1091,7 +1091,7 @@ Func_01E_46E5:: ; address name
     call CopyScreenBufferRectWithAttrs_1E
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wScreenStep]
     inc a
@@ -1241,7 +1241,7 @@ Jump_01E_47EC::
     ld [rRAMG2], a
     ld a, [wGridCursorX]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     xor a, a
     ld [wScriptCommandType], a
@@ -1282,7 +1282,7 @@ Jump_01E_4831:: ; address name
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wGridCursorX]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -1616,7 +1616,7 @@ Jump_01E_4AA9::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld hl, wTextWindowTileLo
     xor a, a
@@ -1644,8 +1644,8 @@ Jump_01E_4AD7::
 ; writes: wScreenStep
 ScriptCommandE8_Run_Case04_Case20::
 Jump_01E_4AE0:: ; address name
-    ld hl, $7838
-    ld de, $784E
+    ld hl, GlyphCopyDestList2
+    ld de, GlyphCopySrcList2
     call ScriptCommandE8_Run_Shared05
     ld a, [wScreenStep]
     inc a
@@ -1677,7 +1677,7 @@ Jump_01E_4B05:: ; address name
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wGridCursorX]
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140B
@@ -2091,7 +2091,7 @@ Jump_01E_4DD7::
 Jump_01E_4DED::
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     xor a, a
     ld [wTwoChoiceCursor], a
@@ -2116,7 +2116,7 @@ Jump_01E_4E0E:: ; address name
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wGridCursorX]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140B
@@ -2206,8 +2206,8 @@ Jump_01E_4EA3:: ; address name
 ; writes: wScreenStep
 ScriptCommandE8_Run_Case05_Case3B::
 Jump_01E_4EC3:: ; address name
-    ld hl, $7838
-    ld de, $784E
+    ld hl, GlyphCopyDestList2
+    ld de, GlyphCopySrcList2
     call ScriptCommandE8_Run_Shared05
     ld a, [wScreenStep]
     inc a
@@ -2311,7 +2311,7 @@ Jump_01E_4F66::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld hl, wTextWindowTileLo
     xor a, a
@@ -2341,7 +2341,7 @@ Jump_01E_4F9D:: ; address name
     call DrawBox4718AndMenuAndStep_1E
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ret
 
@@ -2498,8 +2498,8 @@ Jump_01E_506C:: ; address name
 ; writes: wScreenStep, wChoiceCursorF0
 ScriptCommandE8_Run_Case06_Case00::
 Jump_01E_50AE:: ; address name
-    ld hl, $793C
-    ld de, $791C
+    ld hl, GlyphCopyDestList5
+    ld de, GlyphCopySrcList5
     call ScriptCommandE8_Run_Shared05
     ld a, [wScreenStep]
     inc a
@@ -2544,7 +2544,7 @@ Jump_01E_50BE:: ; address name
     ld [hl], a
     ld a, [wGridCursorX]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -2598,7 +2598,7 @@ Jump_01E_5162::
     call BlankTwoTableEntries788A
     ld a, [wChoiceCursorF0]
     ld b, $BC
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wScreenStep]
     add a, $02
@@ -2635,7 +2635,7 @@ Jump_01E_51AE::
     call BlankTwoTableEntries788A
     ld a, [wChoiceCursorF0]
     ld b, $BC
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -2675,7 +2675,7 @@ Jump_01E_51E6:: ; address name
     call CopyScreenBufferRectWithAttrs_1E
     ld a, [wGridCursorX]
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -2785,7 +2785,7 @@ Jump_01E_52C9::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld hl, wTextWindowTileLo
     xor a, a
@@ -2862,7 +2862,7 @@ Jump_01E_536A:: ; address name
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wGridCursorX]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140B
@@ -2902,7 +2902,7 @@ Jump_01E_536A:: ; address name
     ld [hl], a
     ld a, [wGridCursorX]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -2956,7 +2956,7 @@ Jump_01E_5430:: ; address name
     call CopyRectTo20ByteRows_Bank1E
     ld a, [wChoiceCursorF0]
     ld b, $BC
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -3211,7 +3211,7 @@ Jump_01E_5654:: ; address name
     ret nz
     ld a, [wChoiceCursorF0]
     ld b, $C3
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     ld a, $02
     ld [wScreenStep], a
@@ -3332,7 +3332,7 @@ Jump_01E_5743::
     call BlankTwoTableEntries788A
     ld a, [wChoiceCursorF0]
     ld b, $BC
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     ld hl, wTextWindowTileLo
     xor a, a
@@ -3417,11 +3417,11 @@ ScriptCommandE8_Run_Case07_Case18::
 Jump_01E_57EB:: ; address name
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wChoiceCursorF0]
     ld b, $BC
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -3691,7 +3691,7 @@ Jump_01E_59D4:: ; address name
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wChoiceCursorF0]
     ld b, $BC
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -3766,7 +3766,7 @@ Func_01E_5A4D:: ; address name
     call CopyScreenBufferRectWithAttrs_1E
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wScreenStep]
     inc a
@@ -4090,7 +4090,7 @@ Jump_01E_5C85:: ; address name
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
     ld c, $05
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call EraseCEntriesOfWordTable_Bank1E
     ld a, [wDataBank]
     cp a, $1F
@@ -4120,7 +4120,7 @@ Jump_01E_5CB3::
 Jump_01E_5CCA::
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
 
 Jump_01E_5CD5::
@@ -4659,8 +4659,8 @@ Jump_01E_600F:: ; address name
 ; writes: wScreenSubStep, wScreenStep
 ScriptCommandE8_Run_Case0E_Case01::
 Jump_01E_6055:: ; address name
-    ld hl, $7898
-    ld de, $78DA
+    ld hl, GlyphCopyDestList4
+    ld de, GlyphCopySrcList4
     call ScriptCommandE8_Run_Shared05
     call ScriptCommandE8_Run_Shared04
     call ClearTileAreasAndIncScreenSubStep
@@ -4798,8 +4798,8 @@ Jump_01E_60F4:: ; address name
 ; writes: wArg1, wScreenStep
 ScriptCommandE8_Run_Case0A_Case0A::
 Jump_01E_613A:: ; address name
-    ld hl, $793C
-    ld de, $791C
+    ld hl, GlyphCopyDestList5
+    ld de, GlyphCopySrcList5
     call ScriptCommandE8_Run_Shared05
     farcall ListRecordsInUseWithByte6EClear
     call GetListEntriesCell5Address
@@ -4865,8 +4865,8 @@ Jump_01E_618F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE8_Run_Case0E_Case0A::
 Jump_01E_619F:: ; address name
-    ld hl, $793C
-    ld de, $791C
+    ld hl, GlyphCopyDestList5
+    ld de, GlyphCopySrcList5
     call ScriptCommandE8_Run_Shared05
     call ListRecordsAndDrawListEntriesCell5Panel
     call GetListEntriesCell5Address
@@ -5014,8 +5014,8 @@ Jump_01E_625A:: ; address name
 ; writes: wScreenSubStep, wScreenStep
 ScriptCommandE8_Run_Case0D_Case01::
 Jump_01E_6282:: ; address name
-    ld hl, $7898
-    ld de, $78DA
+    ld hl, GlyphCopyDestList4
+    ld de, GlyphCopySrcList4
     call ScriptCommandE8_Run_Shared05
     call ScriptCommandE8_Run_Shared04
     xor a, a
@@ -5336,8 +5336,8 @@ Jump_01E_6492:: ; address name
 ; writes: wScreenStep
 ScriptCommandE8_Run_Case0D_Case0C::
 Jump_01E_64AD:: ; address name
-    ld hl, $793C
-    ld de, $791C
+    ld hl, GlyphCopyDestList5
+    ld de, GlyphCopySrcList5
     call ScriptCommandE8_Run_Shared05
     ld a, [wScreenStep]
     inc a
@@ -5458,7 +5458,7 @@ Jump_01E_656F:: ; address name
     farcall DrawRecordListPageMarks
     ld a, [wGridCursorX]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wScreenByteB2]
     cp a, $07
@@ -5556,8 +5556,8 @@ Func_01E_65FE:: ; address name
 ; writes: wScreenStep
 ScriptCommandE8_Run_Case09_Case01::
 Jump_01E_6635:: ; address name
-    ld hl, $7898
-    ld de, $78DA
+    ld hl, GlyphCopyDestList4
+    ld de, GlyphCopySrcList4
     call ScriptCommandE8_Run_Shared05
     ld a, [wScreenStep]
     inc a
@@ -5786,31 +5786,31 @@ Jump_01E_679E:: ; address name
 ; writes: wScreenStep
 ScriptCommandE8_Run_Case09_Case09::
 Jump_01E_67B1:: ; address name
-    ld hl, $7864
-    ld de, $7872
+    ld hl, GlyphCopyDestList3
+    ld de, GlyphCopySrcList3
     call ScriptCommandE8_Run_Shared05
     xor a, a
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, $01
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, $02
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wScreenState]
     cp a, $08
     jr z, Jump_01E_67F2
     ld a, $03
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
     ld a, $04
     ld b, $C3
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
 
 Jump_01E_67F2::
@@ -5821,7 +5821,7 @@ Jump_01E_67F2::
     jr z, Jump_01E_6808
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, $7880
+    ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
 
 Jump_01E_6808::
@@ -6406,8 +6406,8 @@ Jump_01E_6BC6:: ; address name
     ret
 
 Jump_01E_6C0A::
-    ld hl, $7864
-    ld de, $7872
+    ld hl, GlyphCopyDestList3
+    ld de, GlyphCopySrcList3
     call ScriptCommandE8_Run_Shared05
     xor a, a
     ld [wScreenSubStep], a
@@ -8503,14 +8503,129 @@ BlankTwoTableEntries788A::
 Func_01E_7778:: ; address name
     xor a, a
     ld b, $C3
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     ld a, $01
     ld b, $C3
-    ld hl, $788A
+    ld hl, CursorCellTable788A
     call StoreBAtWordTableEntry_Bank1E
     ret
-    INCBIN "dwm2-cobi-us.gbc", $07B78C, $1D0
+
+; E-0200 (C1: passed in HL, with GlyphCopySrcList0 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF).
+; record: 32 VRAM tile addresses, then $FFFF
+GlyphCopyDestList0::
+Data_01E_778C:: ; address name
+    dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2A0, vTiles1 + $2B0 ; entry 0
+    dw vTiles1 + $2C0, vTiles1 + $2D0, vTiles1 + $2E0, vTiles1 + $2F0, vTiles1 + $6E0, vTiles1 + $6F0, vTiles1 + $700, vTiles1 + $710
+    dw vTiles1 + $720, vTiles1 + $730, vTiles1 + $740, vTiles1 + $750, vTiles1 + $760, vTiles1 + $770, vTiles1 + $780, vTiles1 + $790
+    dw vTiles1 + $7A0, vTiles1 + $7B0, vTiles1 + $7C0, vTiles1 + $7D0, vTiles1 + $7E0, vTiles1 + $7F0, vTiles1 + $6B0, vTiles2 + $760
+    dw rIE
+
+; E-0200 (C1: the source list paired with GlyphCopyDestList0; its own $FFFF is not read).
+; record: 32 source addresses in bank $1F, then $FFFF (not read)
+GlyphCopySrcList0::
+Data_01E_77CE:: ; address name
+    dw $41C0, $42D0, $4330, $4340, $42A0, $40E0, $4270, $42F0 ; entry 0
+    dw $4390, $40D0, $42C0, $4360, $4300, $4250, $40F0, $43C0
+    dw $4380, $4180, $41A0, $4120, $4170, $41A0, $4910, $4910
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4A40
+    dw $FFFF
+
+; E-0200 (C1: passed in HL, with GlyphCopySrcList1 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF).
+; record: 9 VRAM tile addresses, then $FFFF
+GlyphCopyDestList1::
+Data_01E_7810:: ; address name
+    dw vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2A0, vTiles1 + $2B0, vTiles1 + $2C0, vTiles1 + $2D0, vTiles1 + $2E0 ; entry 0
+    dw vTiles1 + $2F0, rIE
+
+; E-0200 (C1: the source list paired with GlyphCopyDestList1; its own $FFFF is not read).
+; record: 9 source addresses in bank $1F, then $FFFF (not read)
+GlyphCopySrcList1::
+Data_01E_7824:: ; address name
+    dw $4340, $42A0, $40E0, $4270, $42F0, $4390, $40D0, $42C0 ; entry 0
+    dw $4360, $FFFF
+
+; E-0200 (C1: passed in HL, with GlyphCopySrcList2 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF).
+; record: 10 VRAM tile addresses, then $FFFF
+GlyphCopyDestList2::
+Data_01E_7838:: ; address name
+    dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $700, vTiles1 + $710, vTiles1 + $720, vTiles1 + $730, vTiles1 + $740 ; entry 0
+    dw vTiles1 + $4E0, vTiles1 + $4F0, rIE
+
+; E-0200 (C1: the source list paired with GlyphCopyDestList2; its own $FFFF is not read).
+; record: 10 source addresses in bank $1F, then $FFFF (not read)
+GlyphCopySrcList2::
+Data_01E_784E:: ; address name
+    dw $41C0, $42D0, $4330, $40F0, $43C0, $4380, $4180, $41A0 ; entry 0
+    dw $4230, $4290, $FFFF
+
+; E-0200 (C1: passed in HL, with GlyphCopySrcList3 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF).
+; record: 6 VRAM tile addresses, then $FFFF
+GlyphCopyDestList3::
+Data_01E_7864:: ; address name
+    dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, rIE ; entry 0
+
+; E-0200 (C1: the source list paired with GlyphCopyDestList3; its own $FFFF is not read).
+; record: 6 source addresses in bank $1F, then $FFFF (not read)
+GlyphCopySrcList3::
+Data_01E_7872:: ; address name
+    dw $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF ; entry 0
+
+; E-0200 (C1: StoreBAtWordTableEntry_Bank1E writes a tile at entry wD7AB of $7880 (cursor blanking); entries from 5 on are the table at $788A).
+; record: screen buffer address
+CursorCellTable7880::
+Data_01E_7880:: ; address name
+    dw wWindowTileBuffer + $79 ; id 0
+    dw wWindowTileBuffer + $A1 ; id 1
+    dw wWindowTileBuffer + $C9 ; id 2
+    dw wWindowTileBuffer + $F1 ; id 3
+    dw wWindowTileBuffer + $119 ; id 4
+
+; E-0200 (C1: BlankTwoTableEntries788A stores tile $C3 at entries 0 and 1 through StoreBAtWordTableEntry_Bank1E; 7 words end at GlyphCopyDestList4).
+; record: screen buffer address
+CursorCellTable788A::
+Data_01E_788A:: ; address name
+    dw wWindowTileBuffer + $120 ; id 0
+    dw wWindowTileBuffer + $148 ; id 1
+    dw wWindowTileBuffer + $80 ; id 2
+    dw wWindowTileBuffer + $A8 ; id 3
+    dw wWindowTileBuffer + $D0 ; id 4
+    dw wWindowTileBuffer + $F8 ; id 5
+    dw wWindowTileBuffer + $120 ; id 6
+
+; E-0200 (C1: passed in HL, with GlyphCopySrcList4 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF).
+; record: 32 VRAM tile addresses, then $FFFF
+GlyphCopyDestList4::
+Data_01E_7898:: ; address name
+    dw vTiles2 + $20, vTiles2 + $30, vTiles2 + $40, vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90 ; entry 0
+    dw vTiles2 + $A0, vTiles2 + $B0, vTiles2 + $C0, vTiles2 + $D0, vTiles2 + $E0, vTiles2 + $F0, vTiles2 + $100, vTiles2 + $110
+    dw vTiles2 + $120, vTiles2 + $130, vTiles2 + $140, vTiles2 + $150, vTiles2 + $160, vTiles2 + $170, vTiles2 + $180, vTiles2 + $190
+    dw vTiles2 + $1A0, vTiles2 + $1B0, vTiles2 + $1C0, vTiles2 + $1D0, vTiles2 + $1E0, vTiles2 + $1F0, vTiles2 + $6F0, vTiles1 + $7F0
+    dw rIE
+
+; E-0200 (C1: the source list paired with GlyphCopyDestList4; its own $FFFF is not read).
+; record: 32 source addresses in bank $1F, then $FFFF (not read)
+GlyphCopySrcList4::
+Data_01E_78DA:: ; address name
+    dw $40B0, $41E0, $4150, $40E0, $40F0, $4100, $4110, $4160 ; entry 0
+    dw $4130, $4180, $4210, $4170, $4290, $43C0, $4380, $43A0
+    dw $4300, $40C0, $4250, $4370, $4910, $4910, $4910, $4910
+    dw $4910, $4910, $4910, $4910, $4A30, $4910, $4AD0, $4A70
+    dw $FFFF
+
+; E-0200 (C1: the source list paired with GlyphCopyDestList5; its own $FFFF is not read).
+; record: 15 source addresses in bank $1F, then $FFFF (not read)
+GlyphCopySrcList5::
+Data_01E_791C:: ; address name
+    dw $4170, $4330, $4320, $4380, $4370, $4290, $4360, $40F0 ; entry 0
+    dw $42B0, $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF
+
+; E-0200 (C1: passed in HL, with GlyphCopySrcList5 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF).
+; record: 15 VRAM tile addresses, then $FFFF
+GlyphCopyDestList5::
+Data_01E_793C:: ; address name
+    dw vTiles2 + $7C0, vTiles2 + $7D0, vTiles2 + $7E0, vTiles2 + $7F0, vTiles1 + $5F0, vTiles1 + $7E0, vTiles1 + $7F0, vTiles2 + $770 ; entry 0
+    dw vTiles2 + $780, vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, rIE
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 9 tiles, one row per line

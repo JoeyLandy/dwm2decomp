@@ -1756,7 +1756,7 @@ Jump_00E_5AEF::
     ld a, [hl]
     cp a, $FF
     jr z, Jump_00E_5AFE
-    ld de, Data_00E_5B03
+    ld de, SkillLineBaseTable
     add a, e
     ld e, a
     jr nc, Jump_00E_5AFC
@@ -1772,9 +1772,21 @@ Jump_00E_5AFE::
     jr nz, Jump_00E_5AEF
     ret
 
-; address loaded by MapWCB0CEntriesThroughTable5B03
-Data_00E_5B03:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $039B03, $B0
+; E-0200 (C1: MapWCB0CEntriesThroughTable5B03 replaces each of the $19 skill bytes at wChildRecord + $3C (other than $FF) by the byte at $5B03 + skill; the values never exceed the index and repeat for runs of related skills (for example 1-3 map to 1, 4-6 to 4), so the table maps a skill to the first of its line; 176 entries, skills 0-$AF).
+; record: replacement skill numbers for skills $X0-$XF (X = id)
+SkillLineBaseTable::
+Data_00E_5B03:: ; address name
+    db $00, $01, $01, $01, $04, $04, $04, $07, $07, $07, $0A, $0A, $0A, $0D, $0D, $0D ; id 0
+    db $10, $10, $10, $13, $13, $15, $16, $16, $16, $19, $19, $1B, $1B, $1B, $1E, $1E ; id 1
+    db $20, $21, $22, $23, $24, $25, $25, $27, $27, $29, $29, $2B, $2B, $2D, $2E, $2F ; id 2
+    db $2F, $31, $32, $33, $34, $35, $36, $36, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F ; id 3
+    db $40, $40, $40, $40, $44, $44, $44, $44, $48, $48, $4A, $4B, $4C, $4C, $4E, $4E ; id 4
+    db $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F ; id 5
+    db $60, $61, $62, $63, $63, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $6E, $6F ; id 6
+    db $70, $71, $72, $73, $73, $75, $76, $76, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F ; id 7
+    db $80, $81, $82, $83, $84, $85, $85, $85, $85, $89, $8A, $8B, $8B, $8D, $8D, $8F ; id 8
+    db $90, $91, $92, $93, $94, $95, $96, $97, $97, $99, $99, $9B, $9C, $9D, $9E, $9F ; id 9
+    db $A0, $A1, $A2, $A3, $A4, $A5, $A6, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF ; id 10
 
 ; moves the non-$FF bytes of the $19-byte list at wCB0C to its front (E-0124)
 ; 1 call site from 1 routine (e.g. BuildWCB0CCandidateList)
@@ -2563,7 +2575,7 @@ Func_00E_5F91:: ; address name
     sla e
     rl d
     add hl, de
-    ld de, Data_00E_603F
+    ld de, PersonalityPairMatrix
     add hl, de
     ld a, b
     and a, $03
@@ -2663,9 +2675,37 @@ Func_00E_6032:: ; address name
     inc c
     ret
 
-; address loaded by PersonalityPairValueToArg5
-Data_00E_603F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $03A03F, $D8
+; E-0200 (C1: PersonalityPairValueToArg5 takes CombinedPersonalityLevelIndexOfRecord of both parents (A, B), reads the byte at $603F + 8 * A + B / 4 and masks it with Data_00E_6117[B & 3]; the selected two bits go to wArg5; 27 rows, one per index of parent A).
+; record: two-bit values for parent B's combined personality index 0-26 (four per byte), padded with $FF
+PersonalityPairMatrix::
+Data_00E_603F:: ; address name
+    db $4D, $75, $46, $55, $65, $17, $7B, $FF ; id 0
+    db $1D, $75, $56, $45, $67, $D7, $63, $FF ; id 1
+    db $F9, $75, $5F, $5C, $F5, $D7, $5B, $FF ; id 2
+    db $55, $55, $45, $55, $E7, $E7, $7B, $FF ; id 3
+    db $55, $55, $55, $5F, $63, $C7, $BB, $FF ; id 4
+    db $FD, $6F, $75, $D6, $5D, $7C, $5B, $FF ; id 5
+    db $55, $78, $51, $DF, $5D, $7F, $5B, $FF ; id 6
+    db $55, $71, $4F, $55, $7D, $EB, $7B, $FF ; id 7
+    db $55, $55, $5D, $E7, $5F, $70, $5B, $FF ; id 8
+    db $14, $74, $56, $5F, $F5, $57, $5B, $FF ; id 9
+    db $5D, $53, $D6, $5D, $F4, $D5, $5B, $FF ; id 10
+    db $AD, $57, $6A, $A7, $55, $4F, $9B, $FF ; id 11
+    db $55, $7D, $D6, $45, $57, $D5, $5B, $FF ; id 12
+    db $45, $55, $96, $15, $55, $55, $53, $FF ; id 13
+    db $5D, $DD, $7D, $56, $AF, $D7, $1B, $FF ; id 14
+    db $51, $ED, $F7, $5A, $F7, $FD, $7B, $FF ; id 15
+    db $5F, $55, $7D, $5B, $75, $51, $5B, $FF ; id 16
+    db $AE, $97, $7D, $5B, $E5, $D3, $5B, $FF ; id 17
+    db $55, $3F, $D5, $5D, $55, $55, $4B, $FF ; id 18
+    db $77, $D5, $D1, $DF, $56, $55, $5B, $FF ; id 19
+    db $3F, $D7, $5D, $DF, $75, $5A, $BB, $FF ; id 20
+    db $56, $3E, $D4, $57, $55, $55, $7B, $FF ; id 21
+    db $55, $7E, $17, $57, $05, $95, $53, $FF ; id 22
+    db $FF, $CF, $37, $5D, $75, $96, $5B, $FF ; id 23
+    db $55, $95, $56, $51, $55, $95, $53, $FF ; id 24
+    db $E7, $D7, $55, $57, $51, $F5, $53, $FF ; id 25
+    db $8A, $AA, $AA, $8A, $AA, $A2, $0B, $FF ; id 26
 
 ; address loaded by PersonalityPairValueToArg5
 Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0

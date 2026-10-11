@@ -8297,6 +8297,268 @@
         "record": "child species for parent-B families 0-10"
       },
       "note": "E-0199 (C1: stage 4, when stage 3 finds nothing: the row at $7E83 + 2 * parent A's family, word [parent B's family]: $FFFF = parent A's species, $FExx = no child (wNameEntryState = 6, wArg5 = $FF), otherwise the child's species; 11 rows of 11 words end at Script_0E_7F8B)"
+    },
+    {
+      "bank": "0E",
+      "addr": "5B03",
+      "label": "SkillLineBaseTable",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "replacement for skills row * 16 + 0-15"
+        }
+      ],
+      "record": "replacement skill numbers for skills $X0-$XF (X = id)",
+      "note": "E-0200 (C1: MapWCB0CEntriesThroughTable5B03 replaces each of the $19 skill bytes at wChildRecord + $3C (other than $FF) by the byte at $5B03 + skill; the values never exceed the index and repeat for runs of related skills (for example 1-3 map to 1, 4-6 to 4), so the table maps a skill to the first of its line; 176 entries, skills 0-$AF)."
+    },
+    {
+      "bank": "0E",
+      "addr": "603F",
+      "label": "PersonalityPairMatrix",
+      "count": 27,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "27 two-bit values for parent B's index, four per byte, then $FF"
+        }
+      ],
+      "record": "two-bit values for parent B's combined personality index 0-26 (four per byte), padded with $FF",
+      "note": "E-0200 (C1: PersonalityPairValueToArg5 takes CombinedPersonalityLevelIndexOfRecord of both parents (A, B), reads the byte at $603F + 8 * A + B / 4 and masks it with Data_00E_6117[B & 3]; the selected two bits go to wArg5; 27 rows, one per index of parent A)."
+    },
+    {
+      "bank": "1E",
+      "addr": "778C",
+      "label": "GlyphCopyDestList0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 66,
+          "per_line": 8,
+          "ram": true,
+          "name": "VRAM destinations, then $FFFF"
+        }
+      ],
+      "record": "32 VRAM tile addresses, then $FFFF",
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList0 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+    },
+    {
+      "bank": "1E",
+      "addr": "77CE",
+      "label": "GlyphCopySrcList0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 66,
+          "per_line": 8,
+          "name": "bank-$1F tile sources, then $FFFF"
+        }
+      ],
+      "record": "32 source addresses in bank $1F, then $FFFF (not read)",
+      "note": "E-0200 (C1: the source list paired with GlyphCopyDestList0; its own $FFFF is not read)."
+    },
+    {
+      "bank": "1E",
+      "addr": "7810",
+      "label": "GlyphCopyDestList1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 20,
+          "per_line": 8,
+          "ram": true,
+          "name": "VRAM destinations, then $FFFF"
+        }
+      ],
+      "record": "9 VRAM tile addresses, then $FFFF",
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList1 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+    },
+    {
+      "bank": "1E",
+      "addr": "7824",
+      "label": "GlyphCopySrcList1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 20,
+          "per_line": 8,
+          "name": "bank-$1F tile sources, then $FFFF"
+        }
+      ],
+      "record": "9 source addresses in bank $1F, then $FFFF (not read)",
+      "note": "E-0200 (C1: the source list paired with GlyphCopyDestList1; its own $FFFF is not read)."
+    },
+    {
+      "bank": "1E",
+      "addr": "7838",
+      "label": "GlyphCopyDestList2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 22,
+          "per_line": 8,
+          "ram": true,
+          "name": "VRAM destinations, then $FFFF"
+        }
+      ],
+      "record": "10 VRAM tile addresses, then $FFFF",
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList2 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+    },
+    {
+      "bank": "1E",
+      "addr": "784E",
+      "label": "GlyphCopySrcList2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 22,
+          "per_line": 8,
+          "name": "bank-$1F tile sources, then $FFFF"
+        }
+      ],
+      "record": "10 source addresses in bank $1F, then $FFFF (not read)",
+      "note": "E-0200 (C1: the source list paired with GlyphCopyDestList2; its own $FFFF is not read)."
+    },
+    {
+      "bank": "1E",
+      "addr": "7864",
+      "label": "GlyphCopyDestList3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 14,
+          "per_line": 8,
+          "ram": true,
+          "name": "VRAM destinations, then $FFFF"
+        }
+      ],
+      "record": "6 VRAM tile addresses, then $FFFF",
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList3 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+    },
+    {
+      "bank": "1E",
+      "addr": "7872",
+      "label": "GlyphCopySrcList3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 14,
+          "per_line": 8,
+          "name": "bank-$1F tile sources, then $FFFF"
+        }
+      ],
+      "record": "6 source addresses in bank $1F, then $FFFF (not read)",
+      "note": "E-0200 (C1: the source list paired with GlyphCopyDestList3; its own $FFFF is not read)."
+    },
+    {
+      "bank": "1E",
+      "addr": "7898",
+      "label": "GlyphCopyDestList4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 66,
+          "per_line": 8,
+          "ram": true,
+          "name": "VRAM destinations, then $FFFF"
+        }
+      ],
+      "record": "32 VRAM tile addresses, then $FFFF",
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList4 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+    },
+    {
+      "bank": "1E",
+      "addr": "78DA",
+      "label": "GlyphCopySrcList4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 66,
+          "per_line": 8,
+          "name": "bank-$1F tile sources, then $FFFF"
+        }
+      ],
+      "record": "32 source addresses in bank $1F, then $FFFF (not read)",
+      "note": "E-0200 (C1: the source list paired with GlyphCopyDestList4; its own $FFFF is not read)."
+    },
+    {
+      "bank": "1E",
+      "addr": "793C",
+      "label": "GlyphCopyDestList5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 32,
+          "per_line": 8,
+          "ram": true,
+          "name": "VRAM destinations, then $FFFF"
+        }
+      ],
+      "record": "15 VRAM tile addresses, then $FFFF",
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList5 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+    },
+    {
+      "bank": "1E",
+      "addr": "791C",
+      "label": "GlyphCopySrcList5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 32,
+          "per_line": 8,
+          "name": "bank-$1F tile sources, then $FFFF"
+        }
+      ],
+      "record": "15 source addresses in bank $1F, then $FFFF (not read)",
+      "note": "E-0200 (C1: the source list paired with GlyphCopyDestList5; its own $FFFF is not read)."
+    },
+    {
+      "bank": "1E",
+      "addr": "7880",
+      "label": "CursorCellTable7880",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "ram": true,
+          "name": "screen buffer address"
+        }
+      ],
+      "note": "E-0200 (C1: StoreBAtWordTableEntry_Bank1E writes a tile at entry wD7AB of $7880 (cursor blanking); entries from 5 on are the table at $788A)."
+    },
+    {
+      "bank": "1E",
+      "addr": "788A",
+      "label": "CursorCellTable788A",
+      "count": 7,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "ram": true,
+          "name": "screen buffer address"
+        }
+      ],
+      "note": "E-0200 (C1: BlankTwoTableEntries788A stores tile $C3 at entries 0 and 1 through StoreBAtWordTableEntry_Bank1E; 7 words end at GlyphCopyDestList4)."
     }
   ]
 }

@@ -2417,6 +2417,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** What wArg1 = 2 selects, and the family names, are not read here.
 - Binary verification: build/run219 PASS, 0 differing bytes; tests OK. Unidentified INCBIN is 50,799 bytes.
 
+### E-0200 — Skill line table, personality matrix (bank $0E); glyph copy lists (bank $1E)
+
+- Kind: OBSERVATION (reading; C1).
+- **SkillLineBaseTable (0E:$5B03, 176 bytes).** MapWCB0CEntriesThroughTable5B03 replaces each of the $19 skill bytes at wChildRecord + $3C by the byte at $5B03 + skill.
+  - A script confirmed that no entry exceeds its index. Runs of related skills share the first one's number (1-3 → 1, 4-6 → 4), so the table maps a skill to the first skill of its line.
+- **PersonalityPairMatrix (0E:$603F, 27 rows of 8).** PersonalityPairValueToArg5 reads the byte at $603F + 8 * A + B / 4 (A, B = CombinedPersonalityLevelIndexOfRecord of the two parents). It masks two bits with Data_00E_6117[B & 3] into wArg5. Each row ends with $FF padding.
+- **GlyphCopyDestList0-5 / GlyphCopySrcList0-5 (1E:$778C-$795C).** These are the HL/DE pairs that bank-$1E callers pass to ScriptCommandE8_Run_Shared05.
+  - It copies 16 bytes from bank $1F at each source to each VRAM destination, until a destination of $FFFF.
+  - Each source list has the same length as its destination list, including an unread $FFFF.
+- **CursorCellTable7880 / CursorCellTable788A.** Screen-buffer addresses used with StoreBAtWordTableEntry_Bank1E for cursor cells.
+- **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
+- Binary verification: build/run221 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
