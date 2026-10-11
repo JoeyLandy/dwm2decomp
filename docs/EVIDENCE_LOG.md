@@ -2084,6 +2084,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** That these combined actions are the game's combination attacks rests only on the names; which actions they are is in the skill tables, not read here.
 - Binary verification: build/run174 PASS, 0 differing bytes; tests OK.
 
+### E-0173 — Effect OBJ palettes and personality/tactic weights
+
+- Kind: OBSERVATION (reading; C1).
+- **EffectOBJPalettes (3A:7D9A).** LoadEffectOBJPaletteC copies the 8 bytes at $7D9A + 8 * C to wOBJPaletteBuffer on CGB. 59 whole palettes lie before the label at $7F79.
+- **PersonalityTacticWeights (30:5587).** AddPersonalityWeightToBattleArg0 adds the byte $5587 + 4 * wPersonalityIndex + (the actor's wSlotTactic & 3) to wBattleArg0. That gives 27 rows of 4 tactic weights.
+- Binary verification: build/run175 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

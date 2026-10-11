@@ -3165,9 +3165,38 @@ Func_030_556C:: ; address name
 Jump_030_5586::
     ret
 
-; address loaded by AddPersonalityWeightToBattleArg0
+; E-0173 (C1: AddPersonalityWeightToBattleArg0 adds the byte $5587 + 4 * wPersonalityIndex + (the actor's wSlotTactic & 3) to the word wBattleArg0; 27 personality rows).
+; record: weight added for tactic 0, 1, 2, 3
+PersonalityTacticWeights::
 Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0C1587, $1AF
+    db $14, $14, $14, $00 ; id 0
+    db $14, $14, $0F, $00 ; id 1
+    db $14, $14, $05, $00 ; id 2
+    db $14, $0F, $14, $00 ; id 3
+    db $14, $0F, $0F, $00 ; id 4
+    db $14, $0F, $05, $0A ; id 5
+    db $14, $05, $14, $00 ; id 6
+    db $14, $05, $0F, $00 ; id 7
+    db $14, $05, $05, $00 ; id 8
+    db $0F, $14, $14, $00 ; id 9
+    db $0F, $14, $0F, $00 ; id 10
+    db $0F, $14, $05, $00 ; id 11
+    db $0F, $0F, $14, $00 ; id 12
+    db $0F, $0F, $0F, $00 ; id 13
+    db $0F, $0F, $05, $00 ; id 14
+    db $0F, $05, $14, $00 ; id 15
+    db $0F, $05, $0F, $00 ; id 16
+    db $0F, $05, $05, $00 ; id 17
+    db $05, $14, $14, $00 ; id 18
+    db $05, $14, $0F, $00 ; id 19
+    db $05, $14, $05, $00 ; id 20
+    db $05, $0F, $14, $00 ; id 21
+    db $05, $0F, $0F, $00 ; id 22
+    db $05, $0F, $05, $00 ; id 23
+    db $05, $05, $14, $00 ; id 24
+    db $05, $05, $0F, $00 ; id 25
+    db $05, $05, $05, $00 ; id 26
+    INCBIN "dwm2-cobi-us.gbc", $0C15F3, $143
     ds $11, $00
     db $50, $00, $00, $00, $50, $00, $5A, $00, $3C
     ds $33, $00

@@ -2556,6 +2556,36 @@
         }
       ],
       "note": "E-0172 (C1: the roll reads $45B7 + 32 * (second slot's PersonalityIndexOfSlot) + (first slot's index) for the two slots of the pair chosen by B / 3; 27 rows fill the slice up to $4917)."
+    },
+    {
+      "bank": "3A",
+      "addr": "7D9A",
+      "label": "EffectOBJPalettes",
+      "count": 59,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB OBJ palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0173 (C1: LoadEffectOBJPaletteC copies the 8 bytes at $7D9A + 8 * C to wOBJPaletteBuffer on CGB; 59 whole palettes lie before the label at $7F79)."
+    },
+    {
+      "bank": "30",
+      "addr": "5587",
+      "label": "PersonalityTacticWeights",
+      "count": 27,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "name": "weight added for tactic 0, 1, 2, 3"
+        }
+      ],
+      "note": "E-0173 (C1: AddPersonalityWeightToBattleArg0 adds the byte $5587 + 4 * wPersonalityIndex + (the actor's wSlotTactic & 3) to the word wBattleArg0; 27 personality rows)."
     }
   ]
 }

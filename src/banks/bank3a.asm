@@ -6617,7 +6617,68 @@ Jump_03A_7D98::
     pop hl
     ret
 
-; address loaded by LoadEffectOBJPaletteC
+; E-0173 (C1: LoadEffectOBJPaletteC copies the 8 bytes at $7D9A + 8 * C to wOBJPaletteBuffer on CGB; 59 whole palettes lie before the label at $7F79).
+; record: one CGB OBJ palette: 4 BGR555 colours
+EffectOBJPalettes::
 Data_03A_7D9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0EBD9A, $1DF
+    dw $0000, $02FF, $0017, $01DF ; id 0
+    dw $0000, $02FF, $0017, $01DF ; id 1
+    dw $0000, $02FF, $0017, $01DF ; id 2
+    dw $0000, $035F, $001F, $01FF ; id 3
+    dw $0000, $035F, $001F, $01FF ; id 4
+    dw $0000, $035F, $001F, $01FF ; id 5
+    dw $0000, $7FFF, $02FF, $3DD3 ; id 6
+    dw $0000, $7FFF, $02FF, $3DD3 ; id 7
+    dw $0000, $7FFF, $02FF, $4DAF ; id 8
+    dw $0000, $4BFF, $55F3, $3D6D ; id 9
+    dw $0000, $4BFF, $55F3, $3D6D ; id 10
+    dw $0000, $4BFF, $55F3, $3D6D ; id 11
+    dw $0000, $7F34, $5A0C, $7DC0 ; id 12
+    dw $0000, $7F34, $5A0C, $7DC0 ; id 13
+    dw $0000, $7F34, $5A0C, $7DC0 ; id 14
+    dw $0000, $03FF, $55F3, $3D6D ; id 15
+    dw $0000, $03FF, $55F3, $3D6D ; id 16
+    dw $0000, $03FF, $55F3, $3D6D ; id 17
+    dw $0000, $2DDF, $4AB8, $7DF2 ; id 18
+    dw $0000, $4BE0, $02FF, $7DC8 ; id 19
+    dw $0000, $02FF, $60B9, $0000 ; id 20
+    dw $0000, $4B1C, $3D7B, $0000 ; id 21
+    dw $0000, $4BE0, $7E3F, $64F3 ; id 22
+    dw $0000, $56B2, $1E37, $64F3 ; id 23
+    dw $0000, $4B1C, $119F, $20B1 ; id 24
+    dw $0000, $5F72, $7D37, $20B1 ; id 25
+    dw $0000, $6BF5, $5A0C, $7DC8 ; id 26
+    dw $0000, $4B1C, $1DF4, $00E9 ; id 27
+    dw $0000, $02FF, $00FF, $00B1 ; id 28
+    dw $0000, $4BFF, $017F, $0000 ; id 29
+    dw $0000, $4BFF, $017F, $0000 ; id 30
+    dw $0000, $03FF, $55F3, $3D6D ; id 31
+    dw $0000, $4BFF, $55F3, $3D6D ; id 32
+    dw $0000, $7F34, $5A0C, $7DC0 ; id 33
+    dw $0000, $4B1C, $1DF4, $00E9 ; id 34
+    dw $0000, $375F, $01DD, $00E9 ; id 35
+    dw $0000, $5FFF, $6BEB, $00E9 ; id 36
+    dw $0000, $5FFF, $01DF, $00E9 ; id 37
+    dw $0000, $7F59, $7D37, $00E9 ; id 38
+    dw $0000, $5FFF, $02FF, $01DF ; id 39
+    dw $0000, $339F, $50CB, $4C1A ; id 40
+    dw $0000, $47FF, $0A9C, $00E9 ; id 41
+    dw $0000, $63F9, $01DF, $0015 ; id 42
+    dw $0000, $7FFB, $6E21, $72AB ; id 43
+    dw $0000, $7FFF, $7FFF, $013B ; id 44
+    dw $0000, $7FE8, $7CC0, $4520 ; id 45
+    dw $0000, $7FE8, $7CC0, $48D1 ; id 46
+    dw $0000, $7FE8, $7CC0, $48D1 ; id 47
+    dw $0000, $7FE8, $7CC0, $0000 ; id 48
+    dw $0000, $7FE8, $7CC0, $0000 ; id 49
+    dw $0000, $5FF2, $7CCB, $0000 ; id 50
+    dw $0000, $03FF, $55F3, $3D6D ; id 51
+    dw $0000, $7FFF, $7E59, $002B ; id 52
+    dw $0000, $7FE8, $7CC0, $48D1 ; id 53
+    dw $0000, $7F59, $7D37, $3D6D ; id 54
+    dw $0000, $4B1C, $1DF4, $00E9 ; id 55
+    dw $0000, $7F59, $7D37, $3D6D ; id 56
+    dw $0000, $63FF, $01DF, $0015 ; id 57
+    dw $0000, $63FF, $01DF, $0015 ; id 58
+    db $00, $00, $FD, $03, $DF, $01, $15
     ds $87, $00
