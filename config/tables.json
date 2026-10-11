@@ -12941,7 +12941,7 @@
     {
       "bank": "0C",
       "addr": "5C9F",
-      "label": "MonsterPedigreeTableUnused",
+      "label": "MonsterPedigreeTableA_Alt",
       "count": 384,
       "id_base": 0,
       "id_names": "monster",
@@ -12953,7 +12953,24 @@
           "name": "monster id, or $FExx = any monster of family xx ($FEFE = none)"
         }
       ],
-      "note": "E-0211 (C1: 384 words with the same layout between MonsterPedigreeTableA and MonsterPedigreeTableB; no reader found)."
+      "note": "E-0211 (C1: a second copy of MonsterPedigreeTableA, paired with MonsterPedigreeTableB_Alt at $629F; the pair differs from A/B for 7 monsters only, and its 95 family-pair entries agree with FamilyPairResultTable too; no reader found)."
+    },
+    {
+      "bank": "0C",
+      "addr": "629F",
+      "label": "MonsterPedigreeTableB_Alt",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "names": "pedigree",
+          "name": "monster id, or $FExx = any monster of family xx ($FEFE = none)"
+        }
+      ],
+      "note": "E-0211 (C1: the partner of MonsterPedigreeTableA_Alt, a variant of MonsterPedigreeTableB; 384 words end at ScriptCommandF7_Run ($659F); no reader found)."
     }
   ]
 }
