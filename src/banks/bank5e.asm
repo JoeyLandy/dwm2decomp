@@ -91,64 +91,14 @@ Data_05E_4238:: ; heuristic: start of a structured table; C0
     ds $19, $56
     INCBIN "dwm2-cobi-us.gbc", $1787DD, $D5
     ds $10, $56
-    INCBIN "dwm2-cobi-us.gbc", $1788C2, $117
-    dw Data_05E_5600
-    dw Data_05E_5656
-    dw Data_05E_5656
-    dw Data_05E_5756
-    dw Data_05E_5757
-    dw Data_05E_5757
-    dw Data_05E_5757
-    dw Data_05E_5757
-    INCBIN "dwm2-cobi-us.gbc", $1789E9, $443
-    dw Data_05E_5656
-    db $56
-    dw Data_05E_5656
-    db $56
-    dw Data_05E_570D
-    db $0C
-    dw Data_05E_5756
-    db $57
-    dw Data_05E_5757
-    db $57
-    dw Data_05E_5757
-    db $57
-    dw Data_05E_5757
-    db $57
-    dw Data_05E_5757
-    db $57, $57
-    dw Data_05E_5656
-    db $56
-    dw Data_05E_5656
-    db $56
-    dw Data_05E_5703
-    db $07
-    dw Data_05E_5756
-    db $57
-    dw Data_05E_5757
-    db $57
-    dw Data_05E_5757
-    db $57
-    dw Data_05E_5757
-    db $57
-    dw Data_05E_5757
-    INCBIN "dwm2-cobi-us.gbc", $178E5C, $9F
+    INCBIN "dwm2-cobi-us.gbc", $1788C2, $639
     ds $12, $57
     INCBIN "dwm2-cobi-us.gbc", $178F0D, $D2
     ds $11, $57
     INCBIN "dwm2-cobi-us.gbc", $178FF0, $60
 
 Data_05E_5050:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $179050, $43
-    dw Data_05E_560C
-    dw Data_05E_5656
-    dw Data_05E_570D
-    dw Data_05E_5757
-    dw Data_05E_5757
-    dw Data_05E_5757
-    dw Data_05E_5757
-    dw Data_05E_5757
-    INCBIN "dwm2-cobi-us.gbc", $1790A3, $AE
+    INCBIN "dwm2-cobi-us.gbc", $179050, $101
 
 Data_05E_5151:: ; heuristic: target of a monotone pointer table; C0
     db $04, $56, $03, $07, $05, $56, $56, $57, $57, $57, $56, $56, $56, $01, $57, $56
@@ -195,28 +145,7 @@ Data_05E_5252:: ; heuristic: target of a monotone pointer table; C0
     ds $19, $56
     INCBIN "dwm2-cobi-us.gbc", $17942B, $D5
     ds $10, $56
-    INCBIN "dwm2-cobi-us.gbc", $179510, $F0
-
-Data_05E_5600:: ; heuristic: target of a monotone pointer table; C0
-    db $58, $58, $58, $58, $58, $58, $56, $56, $56, $56, $56, $56
-
-Data_05E_560C:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17960C, $4A
-
-Data_05E_5656:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $179656, $AD
-
-Data_05E_5703:: ; heuristic: target of a monotone pointer table; C0
-    db $58, $56, $58, $58, $58, $10, $56, $58, $58, $14
-
-Data_05E_570D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17970D, $49
-
-Data_05E_5756:: ; heuristic: target of a monotone pointer table; C0
-    db $58
-
-Data_05E_5757:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $179757, $3F2
+    INCBIN "dwm2-cobi-us.gbc", $179510, $639
     ds $12, $58
     INCBIN "dwm2-cobi-us.gbc", $179B5B, $D2
     ds $11, $58

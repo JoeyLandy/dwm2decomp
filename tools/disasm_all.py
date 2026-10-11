@@ -1598,6 +1598,44 @@ class Rom:
                     frames += 1
         log(f"meta-sprite layouts: {sets} sets, {frames} frames")
 
+    def drop_tile_pointer_runs(self) -> None:
+        """Undo heuristic `dw` runs that are tile bytes (E-0165): a run of four or more pointer
+        words (with up to 6 bytes between them), at least 60% of them with equal low and high bytes ($5757, $5656 ...), is data
+        such as a tile map. Its words go back to bytes, and the target labels that only these
+        words created (reason 'target of a monotone pointer table', no code reference, no
+        layout) are removed."""
+        dropped = labels = 0
+        for b in range(self.nbanks):
+            dt = self.dtab[b]
+            keys = sorted(dt)
+            runs, cur = [], []
+            for k in keys:
+                if cur and not 2 <= k - cur[-1] <= 8:  # the scan also makes runs of dw + db (strides 3-6)
+                    runs.append(cur)
+                    cur = []
+                cur.append(k)
+            if cur:
+                runs.append(cur)
+            for run in runs:
+                eq = sum(1 for k in run if dt[k] >> 8 == dt[k] & 0xFF)
+                if len(run) < 4 or eq * 5 < len(run) * 3:
+                    continue
+                targets = {dt[k] for k in run}
+                for k in run:
+                    del dt[k]
+                    dropped += 1
+                still = set(dt.values()) | {t for (bb, _), (tb, t) in self.dref.items() if tb == b}
+                for t in targets:
+                    if t in still or (b, t) in self.table_at or (b, t) in self.streams or \
+                            (b, t) in getattr(self, "script_at", {}) or (b, t) in self.names:
+                        continue
+                    if self.dreason.get((b, t), "target of a monotone pointer table").startswith(
+                            "target of a monotone pointer table") and \
+                            t in self.dlabels[b]:
+                        del self.dlabels[b][t]
+                        labels += 1
+        log(f"tile-byte pointer runs undone: {dropped} words, {labels} labels")
+
     def data_readers(self, bank: int, addr: int) -> list[str]:
         """Names of the routines whose instructions load the address of data label (bank, addr)
         (from the resolved `ld rr, n` references), nearest named code label first (E-0162)."""
@@ -2403,6 +2441,7 @@ class Rom:
         self.prepare_tables()
         self.prepare_tracks()
         self.prepare_scripts()
+        self.drop_tile_pointer_runs()
         self.expand_families(self.families)
         self.name_dispatch_cases()
         self.apply_names()

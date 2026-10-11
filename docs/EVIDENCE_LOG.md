@@ -2005,6 +2005,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** 5 palette sets (for example 5D:4139 and 5E:422F, loaded for game mode 2), labelled Palettes_BB_AAAA. A sixth candidate, 6E:77E0, was already MapType5Palettes5.
 - Binary verification: build/run165 PASS, 0 differing bytes; tests OK.
 
+### E-0165 — Tile bytes that the pointer scan had read as pointers
+
+- Kind: PROJECT DECISION (heuristic cleanup; removes C0 guesses, adds no claim).
+- **Problem.** The monotone pointer-table scan had turned runs of tile-map bytes into `dw` pointers, for example 179 × `dw Data_05D_5757` in game mode 2's screens in bank $5D. The words had equal low and high bytes ($5757, $5656, $5858) and alternated with `db` bytes.
+- **Rule.** drop_tile_pointer_runs undoes any run that meets all of these:
+  - four or more heuristic pointer words, at most 6 bytes apart;
+  - at least 60% of them with equal low and high bytes.
+  - Target labels that only those words created, with no code reference and no layout or name, are removed.
+- **Result.** 336 words go back to bytes and 30 bogus labels are removed. The remaining equal-byte `dw` operands outside such runs fell from 324 to 29.
+- Binary verification: build/run166 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
