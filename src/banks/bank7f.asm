@@ -8955,31 +8955,31 @@ Data_07F_779C:: ; heuristic: meta-sprite set; C0
     dw MetaSprites7F_7011Set1FFrame4 ; entry 4
     dw MetaSprites7F_7011Set1FFrame5 ; entry 5
     dw MetaSprites7F_7011Set1FFrame6 ; entry 6
-    dw Data_07F_7873 ; entry 7
-    dw Data_07F_7873 ; entry 8
-    dw Data_07F_7873 ; entry 9
-    dw Data_07F_7873 ; entry 10
-    dw Data_07F_7873 ; entry 11
-    dw Data_07F_7873 ; entry 12
-    dw Data_07F_7873 ; entry 13
-    dw Data_07F_7873 ; entry 14
-    dw Data_07F_7873 ; entry 15
-    dw Data_07F_7873 ; entry 16
-    dw Data_07F_7873 ; entry 17
-    dw Data_07F_7873 ; entry 18
-    dw Data_07F_7873 ; entry 19
-    dw Data_07F_7873 ; entry 20
-    dw Data_07F_7873 ; entry 21
-    dw Data_07F_7873 ; entry 22
-    dw Data_07F_7873 ; entry 23
-    dw Data_07F_7873 ; entry 24
-    dw Data_07F_7873 ; entry 25
-    dw Data_07F_7873 ; entry 26
-    dw Data_07F_7873 ; entry 27
-    dw Data_07F_7873 ; entry 28
-    dw Data_07F_7873 ; entry 29
-    dw Data_07F_7873 ; entry 30
-    dw Data_07F_7873 ; entry 31
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 7
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 8
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 9
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 10
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 11
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 12
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 13
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 14
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 15
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 16
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 17
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 18
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 19
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 20
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 21
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 22
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 23
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 24
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 25
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 26
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 27
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 28
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 29
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 30
+    dw MetaSprites7F_7011Set1FFrame7 ; entry 31
 
 ; E-0147 (derived: frame 0 of MetaSprites7F_7011Set1F; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
@@ -9059,8 +9059,75 @@ Data_07F_7856:: ; heuristic: meta-sprite frame; C0
     db $F8, $0C, $17, $00 ; entry 6
     db $80 ; end
 
+; E-0147 (derived: frame 7 of MetaSprites7F_7011Set1F; ends with $80)
+; record: sprite: Y offset, X offset, tile, attribute
+MetaSprites7F_7011Set1FFrame7::
 Data_07F_7873:: ; heuristic: meta-sprite frame; C0
-    INCBIN "dwm2-cobi-us.gbc", $1FF873, $101
+    db $08, $E0, $00, $00 ; entry 0
+    db $08, $E8, $01, $00 ; entry 1
+    db $08, $F0, $02, $00 ; entry 2
+    db $08, $F8, $03, $00 ; entry 3
+    db $08, $00, $04, $00 ; entry 4
+    db $08, $08, $05, $00 ; entry 5
+    db $08, $10, $06, $00 ; entry 6
+    db $08, $18, $07, $00 ; entry 7
+    db $10, $E0, $10, $00 ; entry 8
+    db $10, $E8, $11, $00 ; entry 9
+    db $10, $F0, $12, $00 ; entry 10
+    db $10, $F8, $13, $00 ; entry 11
+    db $10, $00, $14, $00 ; entry 12
+    db $10, $08, $15, $00 ; entry 13
+    db $10, $10, $16, $00 ; entry 14
+    db $10, $18, $17, $00 ; entry 15
+    db $18, $E0, $20, $00 ; entry 16
+    db $18, $E8, $21, $00 ; entry 17
+    db $18, $F0, $22, $00 ; entry 18
+    db $18, $F8, $23, $00 ; entry 19
+    db $18, $00, $24, $00 ; entry 20
+    db $18, $08, $25, $00 ; entry 21
+    db $18, $10, $26, $00 ; entry 22
+    db $18, $18, $27, $00 ; entry 23
+    db $20, $E0, $30, $00 ; entry 24
+    db $20, $E8, $31, $00 ; entry 25
+    db $20, $F0, $32, $00 ; entry 26
+    db $20, $F8, $33, $00 ; entry 27
+    db $20, $00, $34, $00 ; entry 28
+    db $20, $08, $35, $00 ; entry 29
+    db $20, $10, $36, $00 ; entry 30
+    db $20, $18, $37, $00 ; entry 31
+    db $28, $E0, $40, $00 ; entry 32
+    db $28, $E8, $41, $00 ; entry 33
+    db $28, $F0, $42, $00 ; entry 34
+    db $28, $F8, $43, $00 ; entry 35
+    db $28, $00, $44, $00 ; entry 36
+    db $28, $08, $45, $00 ; entry 37
+    db $28, $10, $46, $00 ; entry 38
+    db $28, $18, $47, $00 ; entry 39
+    db $30, $E0, $50, $00 ; entry 40
+    db $30, $E8, $51, $00 ; entry 41
+    db $30, $F0, $52, $00 ; entry 42
+    db $30, $F8, $53, $00 ; entry 43
+    db $30, $00, $54, $00 ; entry 44
+    db $30, $08, $55, $00 ; entry 45
+    db $30, $10, $56, $00 ; entry 46
+    db $30, $18, $57, $00 ; entry 47
+    db $38, $E0, $00, $00 ; entry 48
+    db $38, $E8, $01, $00 ; entry 49
+    db $38, $F0, $02, $00 ; entry 50
+    db $38, $F8, $03, $00 ; entry 51
+    db $38, $00, $04, $00 ; entry 52
+    db $38, $08, $05, $00 ; entry 53
+    db $38, $10, $06, $00 ; entry 54
+    db $38, $18, $07, $00 ; entry 55
+    db $40, $E0, $10, $00 ; entry 56
+    db $40, $E8, $11, $00 ; entry 57
+    db $40, $F0, $12, $00 ; entry 58
+    db $40, $F8, $13, $00 ; entry 59
+    db $40, $00, $14, $00 ; entry 60
+    db $40, $08, $15, $00 ; entry 61
+    db $40, $10, $16, $00 ; entry 62
+    db $40, $18, $17, $00 ; entry 63
+    db $80 ; end
 
 ; E-0147 (derived: meta-sprite set 32 of MetaSprites7F_7011Table: 7 frame pointer(s), chosen by hSpriteSubIndex)
 ; record: frame
