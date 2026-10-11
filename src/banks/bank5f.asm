@@ -1119,7 +1119,7 @@ Func_05F_6D3F:: ; address name
     ret
 
 ; for record $FF in bank 1 (Func_014_7E96): if wD7F5 is not $FF and is >= Data_05F_6DA8[wC7C7 & 3], sets wD7F5 = $FF (E-0121)
-; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, Talk08D1_TheEvaluatorSaidI, ScriptCommand2A_Run_Case02, ...)
+; 9 call sites from 9 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, Talk08D1_TheEvaluatorSaidI, UnreferencedScriptStepDispatch_73_6D52_Case05, ...)
 ; reads: wArg5, wFarmLevel
 ; writes: wArg1, wArg2, wArg5
 ClearArg5IfAtOrAboveLimitForFarmLevel::

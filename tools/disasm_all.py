@@ -2733,6 +2733,9 @@ class Rom:
                      0xFB: "next result when wArg1 = 2, else end of list"}
             if hi in codes:
                 return codes[hi]
+        if kind == "message":  # E-0214: a message word, quoted like script messages
+            text = self.message_preview(v) if v else None
+            return f"'{text}'" if text else ("none" if v == 0 else "")
         if kind == "pedigree":  # E-0211: $FExx = family xx, $FEFE = none
             if v == 0xFEFE:
                 return "none"

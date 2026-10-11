@@ -13193,6 +13193,98 @@
         "record": "first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers"
       },
       "note": "E-0213 (C1: Func_0E0_5AD3_Table2_Case00 reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read)."
+    },
+    {
+      "bank": "73",
+      "addr": "44EA",
+      "label": "SymbolTiles_73_44EA",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "one 8 x 8 tile, 2 bits per pixel"
+        }
+      ],
+      "record": "one 2bpp tile (16 bytes)",
+      "note": "E-0214 (C1: the routine at Jump_073_44C6 / Jump_073_44E1 copies 16 bytes, or a part of them, from $44EA + 16 * hTemp1 (or hTemp0) to VRAM with WriteVRAMByteInc; 5 tiles end at the first of three 10-byte tables)."
+    },
+    {
+      "bank": "73",
+      "addr": "453A",
+      "label": "SymbolRowTable_453A",
+      "count": 10,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "symbol number 0-4"
+        }
+      ],
+      "note": "E-0214 (C1: bank-$73 code reads the byte at $453A + (wMenuState >> 4) and compares the three tables' values with each other; values 0-4, one of the five tiles of SymbolTiles_73_44EA)."
+    },
+    {
+      "bank": "73",
+      "addr": "4544",
+      "label": "SymbolRowTable_4544",
+      "count": 10,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "symbol number 0-4"
+        }
+      ],
+      "note": "E-0214 (C1: bank-$73 code reads the byte at $4544 + (wMenuSubState >> 4) and compares the three tables' values with each other; values 0-4, one of the five tiles of SymbolTiles_73_44EA)."
+    },
+    {
+      "bank": "73",
+      "addr": "454E",
+      "label": "SymbolRowTable_454E",
+      "count": 10,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "symbol number 0-4"
+        }
+      ],
+      "note": "E-0214 (C1: bank-$73 code reads the byte at $454E + (wMenuSelectedMember >> 4) and compares the three tables' values with each other; values 0-4, one of the five tiles of SymbolTiles_73_44EA)."
+    },
+    {
+      "bank": "73",
+      "addr": "45CA",
+      "label": "RewardAmounts_73_45CA",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "amount added"
+        }
+      ],
+      "note": "E-0214 (C1: AddRewardToCounterCappedAt999 adds the byte at $45CA + wScriptParam0; 6 bytes end at the code after them)."
+    },
+    {
+      "bank": "73",
+      "addr": "530C",
+      "label": "MapMessageTable_530C",
+      "count": 54,
+      "id_base": 200,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "names": "message",
+          "name": "message word ($0000 = none)"
+        }
+      ],
+      "note": "E-0214 (C1: ScriptCommandCB_Run_Case00 passes $530C to ScriptCommandCB_Run_Shared01, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at ScriptCommandCA_Run)."
     }
   ]
 }

@@ -1870,7 +1870,7 @@ Data_004_4A46:: ; address name
     db $14 ; id 97
 
 ; hFF8B = sprite mode from story flags $19F, $25 and 2 and bit 3 of hFF8C, then loads the matching player and follower sprite graphics (E-0128)
-; 33 call sites from 33 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
+; 34 call sites from 34 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
 ; reads: hPlayerStateFlags, hPlayerSpriteMode
 ; writes: hPlayerSpriteMode, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
 LoadPlayerAndFollowerSpriteGraphics::

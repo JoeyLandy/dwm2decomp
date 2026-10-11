@@ -3847,7 +3847,7 @@ Func_000_1679:: ; address name
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C
-; 120 call sites from 101 routines (e.g. Func_000_2950_Case08, BattlerRecordFieldAddress, Multiply8By16, SRAMRecordAddressMapped, ...)
+; 120 call sites from 101 routines (e.g. Func_000_2950_Case08, SRAMRecordAddress, BattlerRecordFieldAddress, Multiply8By16, ...)
 Multiply8::
 Func_000_1682:: ; address name
     ld b, $00
@@ -4028,7 +4028,7 @@ Jump_000_171A::
     ret
 
 ; the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed
-; 45 call sites from 38 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, DrawGoldDigitsAtHLWrapped, WithSRAMDraw4ACEAnd4BE8_Sub01, ...)
+; 46 call sites from 39 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, DrawGoldDigitsAtHLWrapped, WithSRAMDraw4ACEAnd4BE8_Sub01, ...)
 ; reads: hTemp2, hTemp1, wDigits
 ; writes: hTemp3, hTemp2, hTemp1, hTemp0, wDigits
 ; points at: wDigits
@@ -4251,7 +4251,7 @@ Jump_000_1843::
     ret
 
 ; DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300
-; 166 call sites from 125 routines (e.g. RunFieldReturnPhase_Case01, RunMenuStateMenuState_Case05, PauseMenu_State4, Talk0046_ThanksForComingBy, ...)
+; 167 call sites from 126 routines (e.g. RunFieldReturnPhase_Case01, RunMenuStateMenuState_Case05, PauseMenu_State4, Talk0046_ThanksForComingBy, ...)
 SetFlagBit::
 Func_000_1845:: ; address name
     ld a, d
@@ -5579,7 +5579,7 @@ Func_000_1F80:: ; address name
     ret
 
 ; like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)
-; 98 call sites from 54 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, BuildPartyStatusWindowRows, PartyHasSpeciesLo3CTo5BWithHiSet, GameMode5_Init_Case06_Sub01, ...)
+; 99 call sites from 55 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, BuildPartyStatusWindowRows, PartyHasSpeciesLo3CTo5BWithHiSet, GameMode5_Init_Case06_Sub01, ...)
 ; writes: hTemp0, hTemp1
 LoadSRAMRecordWord::
 Func_000_1F89:: ; address name
@@ -5651,7 +5651,7 @@ Jump_000_1FBD::
     ret
 
 ; A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)
-; 90 call sites from 59 routines (e.g. CopyRecordNameToNameGlyphBuf, LoadSRAMRecordWord, LoadRecordThreeBytesToTemp0, LoadSRAMRecordByte, ...)
+; 91 call sites from 60 routines (e.g. LoadSRAMRecordWord, CopyRecordNameToNameGlyphBuf, LoadRecordThreeBytesToTemp0, LoadSRAMRecordByte, ...)
 ; points at: sRecords
 SRAMRecordAddress::
 Func_000_1FD1:: ; address name
@@ -6138,7 +6138,7 @@ Jump_000_2221::
     ret
 
 ; fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)
-; 23 call sites from 23 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
+; 24 call sites from 24 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, PauseMenu_State3_Case00_Case00, RefreshRecordListAndNameTiles, ...)
 ; reads: wPartyCount
 ; writes: wNameGlyphBuf, rRAMG
 ; points at: wPartyList
@@ -6418,7 +6418,7 @@ Func_000_23BD:: ; address name
     ret
 
 ; writes the packed BCD number in hFFC6-hFFC9 (most significant byte last) as digits at DE without leading zeros, then $F0; zero writes a single 0 (E-0127)
-; 9 call sites from 7 routines (e.g. ScriptCommand84_Run_Case06, ScriptCommand80_Run_Case00, ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Case03_Case00, ...)
+; 10 call sites from 8 routines (e.g. ScriptCommand84_Run_Case06, ScriptCommand80_Run_Case00, AddRewardToCounterCappedAt999, ScriptCommand82_Run_Case01_Case00, ...)
 ; reads: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: hTemp2
 WritePackedBCDNoLeadingZeros::

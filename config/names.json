@@ -6488,5 +6488,7 @@
   "3A:7183": {"name": "BattleText0HookTargetAndDefeatSlot", "note": "CopyTargetNameToTextBuf0, then the name of slot wDefeatByteD1 into wTextBuf1 (E-0210)", "evidence": "reading (E-0210)"},
   "3A:794E": {"name": "WriteBattleDamageToTextBuf1", "note": "wTextBuf1 = wBattleDamage as a decimal string (WriteBCAsDecimalString) (E-0210)", "evidence": "reading (E-0210)"},
   "31:7B54": {"name": "ClearBattleStatusBitsWithMaskD_Bank31", "note": "wBattleStatus + 9 * E &= ClearBitMaskTable_Bank31[D] (AddAx9ToHL); not reached from traced code (E-0212)", "evidence": "reading (E-0212)"},
-  "E0:79C9": {"name": "GetBattleATK_BankE0", "note": "A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$E0 copy of the battle library, after a string; E-0213)", "evidence": "reading (E-0213)"}
+  "E0:79C9": {"name": "GetBattleATK_BankE0", "note": "A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$E0 copy of the battle library, after a string; E-0213)", "evidence": "reading (E-0213)"},
+  "73:6D52": {"name": "UnreferencedScriptStepDispatch_73_6D52", "note": "ld a, [wScriptStep] / rst $00 with a six-entry table, the shape of a ScriptCommandXX_Run implementation; no script command stub or other code reaches it (E-0214)", "evidence": "reading (E-0214)"},
+  "73:4558": {"name": "AddRewardToCounterCappedAt999", "note": "HL = $C6FE + A; with SRAM enabled ($0100 = $0A) adds the byte at $45CA + wScriptParam0 to the 16-bit value read through Func_000_1F89, caps it at 999, writes it back through Func_000_1FD1, stores the difference in wC8C0/wC8C1 and shows it (Func_000_173A, Func_000_23CA); no caller found (E-0214)", "evidence": "reading (E-0214)"}
 }

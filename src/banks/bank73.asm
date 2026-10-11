@@ -247,7 +247,7 @@ Jump_073_4139:: ; address name
     ld a, [wMenuState]
     and a, $F0
     swap a
-    ld de, $453A
+    ld de, SymbolRowTable_453A
     add a, e
     ld e, a
     jr nc, Jump_073_4174
@@ -259,7 +259,7 @@ Jump_073_4174::
     ld a, [wMenuSubState]
     and a, $F0
     swap a
-    ld de, $4544
+    ld de, SymbolRowTable_4544
     add a, e
     ld e, a
     jr nc, Jump_073_4185
@@ -272,7 +272,7 @@ Jump_073_4185::
     ld a, [wMenuSelectedMember]
     and a, $F0
     swap a
-    ld de, $454E
+    ld de, SymbolRowTable_454E
     add a, e
     ld e, a
     jr nc, Jump_073_4199
@@ -285,7 +285,7 @@ Jump_073_4199::
     ld a, [wMenuState]
     and a, $F0
     swap a
-    ld de, $453A
+    ld de, SymbolRowTable_453A
     add a, e
     ld e, a
     jr nc, Jump_073_41AD
@@ -358,7 +358,7 @@ Jump_073_4227::
     ld a, [wMenuState]
     and a, $F0
     swap a
-    ld de, $453A
+    ld de, SymbolRowTable_453A
     add a, e
     ld e, a
     jr nc, Jump_073_4236
@@ -692,7 +692,7 @@ Func_073_441D:: ; address name
     and a, $F0
     swap a
     push af
-    ld de, $453A
+    ld de, SymbolRowTable_453A
     add a, e
     ld e, a
     jr nc, Jump_073_4430
@@ -708,7 +708,7 @@ Jump_073_4430::
     ld a, $00
 
 Jump_073_443B::
-    ld de, $453A
+    ld de, SymbolRowTable_453A
     add a, e
     ld e, a
     jr nc, Jump_073_4443
@@ -723,7 +723,7 @@ Jump_073_4443::
     and a, $F0
     swap a
     push af
-    ld de, $4544
+    ld de, SymbolRowTable_4544
     add a, e
     ld e, a
     jr nc, Jump_073_445C
@@ -739,7 +739,7 @@ Jump_073_445C::
     ld a, $00
 
 Jump_073_4467::
-    ld de, $4544
+    ld de, SymbolRowTable_4544
     add a, e
     ld e, a
     jr nc, Jump_073_446F
@@ -754,7 +754,7 @@ Jump_073_446F::
     and a, $F0
     swap a
     push af
-    ld de, $454E
+    ld de, SymbolRowTable_454E
     add a, e
     ld e, a
     jr nc, Jump_073_4488
@@ -770,7 +770,7 @@ Jump_073_4488::
     ld a, $00
 
 Jump_073_4493::
-    ld de, $454E
+    ld de, SymbolRowTable_454E
     add a, e
     ld e, a
     jr nc, Jump_073_449B
@@ -795,7 +795,7 @@ Func_073_44A5:: ; address name
     jr z, Jump_073_44CE
     ldh a, [hTemp1]
     swap a
-    ld de, $44EA
+    ld de, SymbolTiles_73_44EA
     add a, e
     ld e, a
     jr nc, Jump_073_44B8
@@ -830,7 +830,7 @@ Jump_073_44CE::
     ld b, a
     ldh a, [hTemp0]
     swap a
-    ld de, $44EA
+    ld de, SymbolTiles_73_44EA
     add a, e
     ld e, a
     jr nc, Jump_073_44E1
@@ -843,7 +843,143 @@ Jump_073_44E1::
     dec b
     jr nz, Jump_073_44E1
     ret
-    INCBIN "dwm2-cobi-us.gbc", $1CC4EA, $E6
+
+; E-0214 (C1: the routine at Jump_073_44C6 / Jump_073_44E1 copies 16 bytes, or a part of them, from $44EA + 16 * hTemp1 (or hTemp0) to VRAM with WriteVRAMByteInc; 5 tiles end at the first of three 10-byte tables).
+; record: one 2bpp tile (16 bytes)
+SymbolTiles_73_44EA::
+Data_073_44EA:: ; address name
+    db $FF, $00, $FF, $10, $FF, $38, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6 ; id 0
+    db $FF, $00, $FF, $38, $FF, $7C, $FF, $FE, $FF, $FE, $FF, $FE, $FF, $7C, $FF, $38 ; id 1
+    db $FF, $00, $FF, $7E, $FF, $7E, $FF, $7E, $FF, $7E, $FF, $7E, $FF, $7E, $FF, $00 ; id 2
+    db $FF, $00, $FF, $00, $FF, $10, $FF, $38, $FF, $7C, $FF, $FE, $FF, $FE, $FF, $00 ; id 3
+    db $FF, $00, $FF, $00, $FF, $44, $FF, $28, $FF, $10, $FF, $28, $FF, $44, $FF, $00 ; id 4
+
+; E-0214 (C1: bank-$73 code reads the byte at $453A + (wMenuState >> 4) and compares the three tables' values with each other; values 0-4, one of the five tiles of SymbolTiles_73_44EA).
+; record: symbol number 0-4
+SymbolRowTable_453A::
+Data_073_453A:: ; address name
+    db $01 ; id 0
+    db $03 ; id 1
+    db $00 ; id 2
+    db $02 ; id 3
+    db $04 ; id 4
+    db $01 ; id 5
+    db $03 ; id 6
+    db $00 ; id 7
+    db $02 ; id 8
+    db $04 ; id 9
+
+; E-0214 (C1: bank-$73 code reads the byte at $4544 + (wMenuSubState >> 4) and compares the three tables' values with each other; values 0-4, one of the five tiles of SymbolTiles_73_44EA).
+; record: symbol number 0-4
+SymbolRowTable_4544::
+Data_073_4544:: ; address name
+    db $03 ; id 0
+    db $00 ; id 1
+    db $04 ; id 2
+    db $02 ; id 3
+    db $04 ; id 4
+    db $04 ; id 5
+    db $03 ; id 6
+    db $01 ; id 7
+    db $02 ; id 8
+    db $01 ; id 9
+
+; E-0214 (C1: bank-$73 code reads the byte at $454E + (wMenuSelectedMember >> 4) and compares the three tables' values with each other; values 0-4, one of the five tiles of SymbolTiles_73_44EA).
+; record: symbol number 0-4
+SymbolRowTable_454E::
+Data_073_454E:: ; address name
+    db $00 ; id 0
+    db $02 ; id 1
+    db $03 ; id 2
+    db $04 ; id 3
+    db $01 ; id 4
+    db $04 ; id 5
+    db $03 ; id 6
+    db $04 ; id 7
+    db $02 ; id 8
+    db $03 ; id 9
+
+; HL = $C6FE + A; with SRAM enabled ($0100 = $0A) adds the byte at $45CA + wScriptParam0 to the 16-bit value read through Func_000_1F89, caps it at 999, writes it back through Func_000_1FD1, stores the difference in wC8C0/wC8C1 and shows it (Func_000_173A, Func_000_23CA); no caller found (E-0214)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptParam0, wMenuState, hTemp0, hTemp1, hTemp3, hTemp2
+; writes: rRAMG, hTemp2, hTemp3, wDigits
+; points at: wPartyList, wTextNumber
+AddRewardToCounterCappedAt999:: ; configured code entry (E-0214); C0
+Func_073_4558:: ; address name
+    ld hl, wPartyList
+    add_a_to_hl
+    ld a, $0A
+    ld [rRAMG], a
+    ld a, [wScriptParam0]
+    ld de, RewardAmounts_73_45CA
+    add a, e
+    ld e, a
+    jr nc, Jump_073_4570
+    inc d
+
+Jump_073_4570::
+    ld a, [de]
+    ld c, a
+    ld a, [hl]
+    call LoadSRAMRecordWord
+    push bc
+    ld a, [wMenuState]
+    ld c, a
+    ldh a, [hTemp0]
+    add a, c
+    ldh [hTemp2], a
+    ldh a, [hTemp1]
+    adc a, $00
+    ldh [hTemp3], a
+    pop bc
+    ldh a, [hTemp3]
+    cp a, $03
+    jr nz, Jump_073_459C
+    ldh a, [hTemp2]
+    cp a, $E8
+    jr c, Jump_073_459C
+    ld de, $03E7
+    ld a, e
+    ldh [hTemp2], a
+    ld a, d
+    ldh [hTemp3], a
+
+Jump_073_459C::
+    ld a, [hl]
+    call SRAMRecordAddress
+    ldh a, [hTemp2]
+    ld [hl+], a
+    ldh a, [hTemp3]
+    ld [hl], a
+    xor a, a
+    ld [rRAMG], a
+    ldh a, [hTemp0]
+    ld c, a
+    ldh a, [hTemp2]
+    sub a, c
+    ld [wDigits], a
+    ldh a, [hTemp1]
+    ld c, a
+    ldh a, [hTemp3]
+    sbc a, c
+    ld [wDigits + $1], a
+    xor a, a
+    ld [wDigits + $2], a
+    call Number24ToPackedBCD
+    ld de, wTextNumber
+    call WritePackedBCDNoLeadingZeros
+    ret
+
+; E-0214 (C1: AddRewardToCounterCappedAt999 adds the byte at $45CA + wScriptParam0; 6 bytes end at the code after them).
+; record: amount added
+RewardAmounts_73_45CA::
+Data_073_45CA:: ; address name
+    db $5D ; id 0
+    db $61 ; id 1
+    db $63 ; id 2
+    db $65 ; id 3
+    db $67 ; id 4
+    db $69 ; id 5
 
 ; entry 8 of the `rst $00` table in ScriptCommand82_Run
 ; no direct call (reached through a table, a jump or a vector)
@@ -3020,7 +3156,7 @@ Jump_073_52C5::
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandCB_Run_Case00::
 Jump_073_52EE:: ; address name
-    ld de, $530C
+    ld de, MapMessageTable_530C
     call ScriptCommandCB_Run_Shared01
     ret
 
@@ -3048,7 +3184,65 @@ Jump_073_52FF::
     ld hl, wScriptStep
     inc [hl]
     ret
-    INCBIN "dwm2-cobi-us.gbc", $1CD30C, $6C
+
+; E-0214 (C1: ScriptCommandCB_Run_Case00 passes $530C to ScriptCommandCB_Run_Shared01, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at ScriptCommandCA_Run).
+; record: message word ($0000 = none)
+MapMessageTable_530C::
+Data_073_530C:: ; address name
+    dw $0000 ; id 200 none
+    dw $0000 ; id 201 none
+    dw $0C04 ; id 202 'The Tower's many treasures are heavily'
+    dw $0C08 ; id 203 'Not bad, not bad at all.'
+    dw $0C0C ; id 204 'You're quite good. The treasures are'
+    dw $0C10 ; id 205 'Wow, aren't you good. Go ahead'
+    dw $0C14 ; id 206 'Well done. So it shall be.'
+    dw $0000 ; id 207 none
+    dw $0000 ; id 208 none
+    dw $0000 ; id 209 none
+    dw $0000 ; id 210 none
+    dw $0C1C ; id 211 'It's not that easy to win'
+    dw $0C20 ; id 212 'Well played. I can't complain. Fine.'
+    dw $0C24 ; id 213 'Bravo. Take the treasures. Upstairs is'
+    dw $0C28 ; id 214 'Remarkable, I must admit. You have'
+    dw $0C2C ; id 215 'You're quite tough. The treasures are'
+    dw $0000 ; id 216 none
+    dw $0000 ; id 217 none
+    dw $0000 ; id 218 none
+    dw $0000 ; id 219 none
+    dw $0C34 ; id 220 'It's brutal up ahead. I wouldn't'
+    dw $0C38 ; id 221 'You're quite good at this. Sure,'
+    dw $0C3C ; id 222 'You e shown me your worth.'
+    dw $0C40 ; id 223 'Fine, we will confer all the'
+    dw $0C44 ; id 224 'All right. Good enough. The treasures'
+    dw $0000 ; id 225 none
+    dw $0000 ; id 226 none
+    dw $0000 ; id 227 none
+    dw $0000 ; id 228 none
+    dw $0C07 ; id 229
+    dw $0C0B ; id 230
+    dw $0C0F ; id 231
+    dw $0C13 ; id 232
+    dw $0C16 ; id 233
+    dw $0000 ; id 234 none
+    dw $0000 ; id 235 none
+    dw $0000 ; id 236 none
+    dw $0000 ; id 237 none
+    dw $0C1F ; id 238
+    dw $0C23 ; id 239
+    dw $0C27 ; id 240
+    dw $0C2B ; id 241
+    dw $0C2E ; id 242
+    dw $0000 ; id 243 none
+    dw $0000 ; id 244 none
+    dw $0000 ; id 245 none
+    dw $0000 ; id 246 none
+    dw $0C37 ; id 247
+    dw $0C3B ; id 248
+    dw $0C3F ; id 249
+    dw $0C43 ; id 250
+    dw $0C46 ; id 251 'Hello! You e come back! Are'
+    dw $0000 ; id 252 none
+    dw $0000 ; id 253 none
 
 ; implements script command type CA; reached through ScriptCommandCA in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommandCA)
@@ -7666,7 +7860,116 @@ Jump_073_6D4D::
     ld hl, wScriptStep
     inc [hl]
     ret
-    INCBIN "dwm2-cobi-us.gbc", $1CED52, $C5
+
+; ld a, [wScriptStep] / rst $00 with a six-entry table, the shape of a ScriptCommandXX_Run implementation; no script command stub or other code reaches it (E-0214)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wScriptStep
+UnreferencedScriptStepDispatch_73_6D52:: ; configured code entry (E-0214); C0
+Func_073_6D52:: ; address name
+    ld a, [wScriptStep]
+    rst $00
+    dw UnreferencedScriptStepDispatch_73_6D52_Case00
+    dw ScriptCommandCB_Run_Case01
+    dw UnreferencedScriptStepDispatch_73_6D52_Case02
+    dw ScriptCommandC5_Run_Case09
+    dw ScriptCommandCB_Run_Case01
+    dw UnreferencedScriptStepDispatch_73_6D52_Case05
+
+; entry 5 of the `rst $00` table in UnreferencedScriptStepDispatch_73_6D52
+; no direct call (reached through a table, a jump or a vector)
+; reads: wArg5, wPartyCount, wSpriteSlots
+; writes: hTemp1, hTemp2, hTemp3, wOBJPaletteUploadRequest, wScriptStartRequest
+; points at: wPartyCount, wFollowerRecords, wPartyList, wSpriteSlotCount
+UnreferencedScriptStepDispatch_73_6D52_Case05::
+Jump_073_6D62:: ; address name
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
+    ld a, $05
+    ldh [hTemp1], a
+    ld a, [wArg5]
+    ldh [hTemp2], a
+    ld a, $02
+    ldh [hTemp3], a
+    farcall CreateMonsterRecordOfKindTemp1
+    ld hl, wPartyCount
+    inc [hl]
+    ld a, [wPartyCount]
+    dec a
+    ld c, a
+    add a, a
+    add a, a
+    add a, c
+    ld hl, wFollowerRecords
+    add_a_to_hl
+    ld a, [wSpriteSlots + $7]
+    ld [hl+], a
+    ld a, [wSpriteSlots + $B]
+    ld [hl+], a
+    ld a, [wSpriteSlots + $C]
+    ld [hl], a
+    ld a, [wPartyCount]
+    dec a
+    ld hl, wPartyList
+    add_a_to_hl
+    ld a, [wArg5]
+    ld [hl], a
+    farcall MoveIncapacitatedPartyMembersBack
+    farcall MoveIncapacitatedPartyMembersBack
+    call LoadRecordListNameTiles
+    farcall LoadPlayerAndFollowerSpriteGraphics
+    ld a, $7F
+    ld [wOBJPaletteUploadRequest], a
+    ld hl, wSpriteSlotCount
+    dec [hl]
+    ld de, $0078
+    call SetFlagBit
+    ld a, $80
+    ld [wScriptStartRequest], a
+    ret
+
+; entry 2 of the `rst $00` table in UnreferencedScriptStepDispatch_73_6D52
+; no direct call (reached through a table, a jump or a vector)
+; reads: wTextYesNoResult, wArg5, wPartyCount
+; points at: wScriptStep
+UnreferencedScriptStepDispatch_73_6D52_Case02::
+Jump_073_6DD5:: ; address name
+    ld hl, wScriptStep
+    inc [hl]
+    ld a, [wTextYesNoResult]
+    or a, a
+    jr z, Jump_073_6DE6
+    ld hl, vTiles1 + $512
+    call StartMessageHL_B73b
+    ret
+
+Jump_073_6DE6::
+    farcall ClearArg5IfAtOrAboveLimitForFarmLevel
+    ld a, [wArg5]
+    cp a, $FF
+    jr z, Jump_073_6E05
+    ld a, [wPartyCount]
+    cp a, $03
+    jr z, Jump_073_6E05
+    ld hl, vTiles1 + $510
+    call StartMessageHL_B73b
+    ld hl, wScriptStep
+    inc [hl]
+    ret
+
+Jump_073_6E05::
+    ld hl, vTiles1 + $511
+    call StartMessageHL_B73b
+    ret
+
+; entry 0 of the `rst $00` table in UnreferencedScriptStepDispatch_73_6D52
+; no direct call (reached through a table, a jump or a vector)
+; points at: wScriptStep
+UnreferencedScriptStepDispatch_73_6D52_Case00::
+Jump_073_6E0C:: ; address name
+    ld hl, $4D0F
+    call StartMessageHL_B73b
+    ld hl, wScriptStep
+    inc [hl]
+    ret
 
 ; implements script command type 26; reached through ScriptCommand26 in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand26)
@@ -9740,7 +10043,7 @@ Func_073_7A7F:: ; address name
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 25 call sites from 22 routines (e.g. ScriptCommandCB_Run_Shared01, ScriptCommandC5_Run_Case08, ScriptCommandC5_Run_Case05, ScriptCommandC5_Run_Case02, ...)
+; 29 call sites from 24 routines (e.g. UnreferencedScriptStepDispatch_73_6D52_Case02, UnreferencedScriptStepDispatch_73_6D52_Case00, ScriptCommandCB_Run_Shared01, ScriptCommandC5_Run_Case08, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B73b::
 Func_073_7AA5:: ; address name

@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0214 — Bank $73: symbol tiles and tables, two unreferenced routines, a map message table
+
+- Kind: OBSERVATION (reading; C1).
+- **SymbolTiles_73_44EA.** Five 16-byte 2bpp tiles. The routine at Jump_073_44C6 copies all or part of one to VRAM.
+- **SymbolRowTable_453A / _4544 / _454E.** 10 bytes each, values 0-4, indexed by the high nibble of wMenuState, wMenuSubState and wMenuSelectedMember. Bank-$73 code compares the three values with each other.
+- **AddRewardToCounterCappedAt999 ($4558) and RewardAmounts_73_45CA.** The routine adds the byte at $45CA + wScriptParam0 to a 16-bit value read with SRAM enabled, caps it at 999, writes it back and shows the difference. No caller was found; it is a configured entry.
+- **UnreferencedScriptStepDispatch_73_6D52.** It starts `ld a, [wScriptStep] / rst $00` with a six-entry table, the shape of a ScriptCommandXX_Run implementation, but no stub reaches it. It was the only such prologue left in any INCBIN slice.
+- **MapMessageTable_530C.** 54 message words, one per map from $C8, read by ScriptCommandCB_Run_Shared01 at DE + 2 * (hMapId - $C8). The `names` word option gains `message`, which quotes the message as script messages do.
+- Binary verification: build/run255 PASS, 0 differing bytes.
+
 ### E-0213 — Bank $E0 debug tables and its library copy
 
 - Kind: OBSERVATION (reading; C1).
