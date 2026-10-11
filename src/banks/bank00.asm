@@ -14,7 +14,7 @@ Func_000_0000:: ; address name
     pop de
 
 ; HL = address of a word: HL = that word, then jumps to it (falls into JumpToHL); A = its low byte (E-0061)
-; 7 call sites from 7 routines (e.g. CallFlagBitHandlerE, DispatchActionEffectTable, RunEffectHandlerForActionId, ChooseActionTarget, ...)
+; 7 call sites from 7 routines (e.g. CallFlagBitHandlerE, RunEffectHandlerForActionId, DispatchActionEffectTable, ChooseActionTarget, ...)
 JumpToWordAtHL::
 Func_000_000B:: ; address name
     deref_hl
@@ -10788,7 +10788,7 @@ Jump_000_3E50::
     ret
 
 ; A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved
-; 289 call sites from 243 routines (e.g. CheckSlotStatusBlock, FoeHPCheckReadsWrongSlot, CheckFoeStatus7Bit2, CheckLoneFoeHPNotBelowAIDamageEstimates, ...)
+; 290 call sites from 244 routines (e.g. CheckSlotStatusBlock, FoeHPCheckReadsWrongSlot, CheckFoeStatus7Bit2, CheckLoneFoeHPNotBelowAIDamageEstimates, ...)
 ; points at: wBattleSlotOut
 CarryUnlessBattleSlotOutSlotEmpty::
 Func_000_3E54:: ; address name
@@ -10834,8 +10834,8 @@ Func_000_3E7A:: ; address name
     ret
 
 ; CompareHLToBC with shortcuts when BC or HL is zero: equal zeros give A = 0 and NC, HL = 0 < BC gives carry (E-0124)
-; 5 call sites from 4 routines (e.g. AIGateCompareAllyStatAverages, ChooseTarget_MegaMagic, ChooseTarget_Blaze, ChooseTarget_Beat)
-CompareHLToBCFastZero:: ; heuristic: follows a terminator; C0
+; 5 call sites from 4 routines (e.g. AIGateCompareAllyStatAverages, ChooseTarget_MegaMagic, ChooseTarget_Beat, ChooseTarget_Blaze)
+CompareHLToBCFastZero::
 Func_000_3E80:: ; address name
     ld a, b
     or a, c
@@ -10918,7 +10918,7 @@ Jump_000_3ED3::
     ret
 
 ; when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB
-; 76 call sites from 60 routines (e.g. RandomInRange, ChooseHighestWeightedAction, AddSkillBaseWeightAndLoadSkill_Sub01, AIPickRandomSkillOfKind3, ...)
+; 77 call sites from 61 routines (e.g. RandomInRange, ChooseHighestWeightedAction, AddSkillBaseWeightAndLoadSkill_Sub01, AIPickRandomSkillOfKind3, ...)
 ; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 AdvanceRandom::

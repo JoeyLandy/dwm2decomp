@@ -2430,6 +2430,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0219 — Action target routine tables (bank $39)
+
+- Kind: OBSERVATION (reading; C1).
+- **ActionTargetModeTable ($41AC).** 5 records of two words. ChooseActionTarget indexes it by 4 * wSlotAIMode[actor]. It takes the second word for battlers 4-7 when wLinkMode is 0 or 2, otherwise the first, then calls entry wBattleActionId through JumpToWordAtHL.
+- **ActionTargetRoutines0-9 ($41C0-$5390).** Ten tables of 228 code words, one per action id (the SkillTable count, E-0204), back to back. They had been split between INCBIN slices and a few `dw` runs.
+- **New code.** Their targets now trace six more routines, named by what they do: TargetRandomOtherAlly, TargetRandomAlly, TargetByAllyAGL and TargetAllyWithStatusBit10/40/20. `tools/rank_unnamed.py` reports 0 address-only routines.
+- Binary verification: build/run263 PASS, 0 differing bytes; tests OK.
+
 ### E-0218 — Map object lists and selectors found by tiling gaps (bank $69)
 
 - Kind: TOOL (C1).

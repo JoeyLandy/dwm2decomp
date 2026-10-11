@@ -10806,7 +10806,7 @@ Jump_036_7DC4::
 ; jumps to the handler for wBattleActionId (0, or id - $47) from the word table $7DDE (E-0124)
 ; 1 call site from 1 routine (e.g. ComputeDamageEstimateForAction)
 ; reads: wBattleActionId
-RunEffectHandlerForActionId:: ; heuristic: follows a terminator; C0
+RunEffectHandlerForActionId::
 Func_036_7DC9:: ; address name
     ld a, [wBattleActionId]
     or a, a

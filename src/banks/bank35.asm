@@ -32,7 +32,7 @@ Func_035_4013:: ; address name
     ret
 
 ; B = byte count, DE = destination: copies the first B bytes of the species record for monster id wSpeciesIdLo/Hi (pointer table SpeciesRecordPointers, 384 entries, 47-byte records) to DE (E-0062, E-0069)
-; 3 call sites from 3 routines (e.g. LoadSpeciesRecord, LoadSpeciesRecordWord0, LoadSpeciesFamily)
+; 3 call sites from 3 routines (e.g. LoadSpeciesFamily, LoadSpeciesRecord, LoadSpeciesRecordWord0)
 ; reads: wSpeciesIdLo, wSpeciesIdHi
 CopySpeciesRecordPrefix::
 Func_035_401C:: ; address name

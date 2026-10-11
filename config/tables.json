@@ -13496,6 +13496,187 @@
         }
       ],
       "note": "E-0217 (C1: MapAndCompactSkillList63D3, from UnpackLinkRecordToWorkBuf, maps $21 skill bytes through $63D3 + byte and compacts the lists; 170 entries end at TileRect_37_647D; for 155 of them LinkSkillMapTable_B maps the result back)."
+    },
+    {
+      "bank": "39",
+      "addr": "41AC",
+      "label": "ActionTargetModeTable",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "per-action target routines (near side, or link modes 1 and 3)",
+          "reason": "action target table"
+        },
+        {
+          "type": "ptr",
+          "name": "per-action target routines (slots 4-7 when wLinkMode is 0 or 2)",
+          "reason": "action target table"
+        }
+      ],
+      "record": "two tables of per-action target routines",
+      "note": "E-0219 (C1: ChooseActionTarget reads the record at $41AC + 4 * wSlotAIMode[actor] and takes the second word for battlers 4-7 when wLinkMode is 0 or 2, else the first; it then calls entry wBattleActionId of that table through JumpToWordAtHL)."
+    },
+    {
+      "bank": "39",
+      "addr": "41C0",
+      "label": "ActionTargetRoutines0",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 0 of ActionTargetModeTable (mode 0, near side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "4388",
+      "label": "ActionTargetRoutines1",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 1 of ActionTargetModeTable (mode 0, far side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "4550",
+      "label": "ActionTargetRoutines2",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 2 of ActionTargetModeTable (mode 1, near side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "4718",
+      "label": "ActionTargetRoutines3",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 3 of ActionTargetModeTable (mode 1, far side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "48E0",
+      "label": "ActionTargetRoutines4",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 4 of ActionTargetModeTable (mode 2, near side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "4AA8",
+      "label": "ActionTargetRoutines5",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 5 of ActionTargetModeTable (mode 2, far side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "4C70",
+      "label": "ActionTargetRoutines6",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 6 of ActionTargetModeTable (mode 3, near side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "4E38",
+      "label": "ActionTargetRoutines7",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 7 of ActionTargetModeTable (mode 3, far side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "5000",
+      "label": "ActionTargetRoutines8",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 8 of ActionTargetModeTable (mode 4, near side); 228 code words, one per action id, as SkillTable (E-0204))."
+    },
+    {
+      "bank": "39",
+      "addr": "51C8",
+      "label": "ActionTargetRoutines9",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "target routine for this action id",
+          "reason": "action target routine"
+        }
+      ],
+      "note": "E-0219 (C1: table 9 of ActionTargetModeTable (mode 4, far side); 228 code words, one per action id, as SkillTable (E-0204))."
     }
   ]
 }

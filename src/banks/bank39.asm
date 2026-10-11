@@ -20,7 +20,7 @@ Func_039_4001:: ; address name
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
-    ld hl, Data_039_41AC
+    ld hl, ActionTargetModeTable
     add a, a
     add a, a
     add_a_to_hl
@@ -49,7 +49,7 @@ Jump_039_403D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleTargetChoice
-TargetRandomFoe:: ; heuristic: follows a terminator; C0
+TargetRandomFoe:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_404B:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -60,7 +60,7 @@ Func_039_404B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleTargetChoice
-TargetSavedSlotOrRandomFoe:: ; heuristic: follows a terminator; C0
+TargetSavedSlotOrRandomFoe:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_4055:: ; address name
     ld a, [wBattleActor]
     add a, a
@@ -84,7 +84,7 @@ Jump_039_406A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleTargetChoice
-TargetFirstFoe:: ; heuristic: follows a terminator; C0
+TargetFirstFoe:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_4078:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -107,13 +107,22 @@ Jump_039_408C::
     add_a_to_hl
     ld [hl], c
     ret
-    db $FA, $A4, $D8, $E6, $04, $C3, $7C, $41
+
+; per-action target routine: A = the actor's side (slot 0 or 4), then the shared choice at $417C over that side's living slots (E-0219)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, wRandomLo
+; points at: wBattleTargetChoice
+TargetRandomAlly:: ; code pointer of the table ActionTargetRoutines0; C0
+Func_039_409A:: ; address name
+    ld a, [wBattleActor]
+    and a, $04
+    jp Jump_039_417C
 
 ; target = the first present slot of the actor's own three (the actor included); base + 3 when none is present (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleTargetChoice
-TargetFirstAlly:: ; heuristic: target of a pointer table; C0
+TargetFirstAlly:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_40A2:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -140,7 +149,7 @@ Jump_039_40B4::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleTargetChoice
-TargetRandomAllySlot:: ; heuristic: target of a pointer table; C0
+TargetRandomAllySlot:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_40C2:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -165,13 +174,64 @@ Jump_039_40D6::
     add_a_to_hl
     ld [hl], d
     ret
-    INCBIN "dwm2-cobi-us.gbc", $0E40E8, $43
+
+; per-action target routine (ActionTargetRoutines tables): a random living slot on the actor's side other than the actor (the first such slot when no coin flip picks one), else the side's first slot (E-0219)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, wRandomLo
+; points at: wBattleTargetChoice
+TargetRandomOtherAlly:: ; code pointer of the table ActionTargetRoutines0; C0
+Func_039_40E8:: ; address name
+    ld a, [wBattleActor]
+    ld e, a
+    and a, $04
+    ld c, a
+    ld b, $03
+    ld d, $FF
+
+Jump_039_40F3::
+    ld a, c
+    call CarryUnlessBattleSlotOutSlotEmpty
+    jr c, Jump_039_4110
+    ld a, c
+    cp a, e
+    jr z, Jump_039_4110
+    ld a, d
+    cp a, $FF
+    jr nz, Jump_039_4105
+    ld d, c
+    jr Jump_039_4110
+
+Jump_039_4105::
+    call AdvanceRandom
+    ld a, [wRandomLo]
+    bit 7, a
+    jr z, Jump_039_4110
+    ld d, c
+
+Jump_039_4110::
+    inc c
+    dec b
+    jr nz, Jump_039_40F3
+    ld a, d
+    cp a, $FF
+    jr nz, Jump_039_411D
+    ld a, e
+    and a, $04
+    ld d, a
+
+Jump_039_411D::
+    ld a, [wBattleActor]
+    ld hl, wBattleTargetChoice
+    add a, a
+    add_a_to_hl
+    ld [hl], d
+    ret
 
 ; target = wBattleActor; the per-action entry used most often (334 table entries) (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleTargetChoice
-TargetSelf:: ; heuristic: target of a pointer table; C0
+TargetSelf:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_412B:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -185,7 +245,7 @@ Func_039_412B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; points at: wBattleTargetChoice
-TargetOwnSideFirstSlot:: ; heuristic: target of a pointer table; C0
+TargetOwnSideFirstSlot:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_413C:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -200,7 +260,7 @@ Func_039_413C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleTargetChoice
-TargetRandomOtherSlot:: ; heuristic: target of a pointer table; C0
+TargetRandomOtherSlot:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_414F:: ; address name
     ld a, [wBattleActor]
     ld e, a
@@ -258,1071 +318,2357 @@ Jump_039_419A::
     ld [hl], d
     ret
 
-; address loaded by ChooseActionTarget
-Data_039_41AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0E41AC, $7E
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    INCBIN "dwm2-cobi-us.gbc", $0E4234, $96
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $4B, $40, $4B, $40, $4B, $40, $78, $40, $4B, $40, $78, $40, $4B, $40, $78, $40
-    db $4B, $40, $2B, $41, $2B, $41, $2B, $41, $E8, $40
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
-    db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
-    db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    INCBIN "dwm2-cobi-us.gbc", $0E4358, $9C
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    INCBIN "dwm2-cobi-us.gbc", $0E43FC, $96
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $4B, $40, $4B, $40, $4B, $40, $78, $40, $4B, $40, $78, $40, $4B, $40, $78, $40
-    db $4B, $40, $2B, $41, $2B, $41, $2B, $41, $E8, $40
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40, $2B, $41, $2B, $41, $4B, $40, $2B, $41, $00, $00, $78, $40, $A2, $40
-    db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
-    db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $4B, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40, $4B, $40, $4B, $40, $4B, $40
-    db $4B, $40, $78, $40, $78, $40, $4B, $40, $4B, $40, $78, $40, $A2, $40, $78, $40
-    db $2B, $41, $A2, $40, $78, $40, $4B, $40, $2B, $41, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
-    db $78, $40, $78, $40
-    dw ChooseTarget_Heal_6C75
-    dw ChooseTarget_Heal_6C75
-    dw ChooseTarget_Heal_6C75
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_MPass
-    dw ChooseTarget_MPass
-    dw ChooseTarget_MPass
-    dw TargetRandomAllySlot
-    dw TargetRandomAllySlot
-    dw TargetOwnSideFirstSlot
-    dw ChooseTarget_Antidote_6AFD
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Upper_6B0A
-    dw TargetFirstAlly
-    dw ChooseTarget_Sap_6BB0
-    db $78, $40, $5D, $6B, $A2, $40, $B6, $6B, $78, $40, $9A, $40, $78, $40, $91, $66
-    db $78, $40, $2B, $41, $4B, $40, $78, $40, $78, $40
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    db $4B, $40, $2B, $41, $2B, $41, $91, $66, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66, $78, $40
-    db $78, $40, $78, $40, $91, $66, $78, $40, $4B, $40, $4B, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $4B, $40, $78, $40, $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetRandomOtherSlot
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $4B, $40, $4B, $40, $78, $40
-    db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
-    db $A2, $40, $4B, $40, $78, $40, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $E8, $40
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
-    db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
-    db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $91, $66, $91, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
-    db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
-    db $78, $40, $78, $40
-    dw ChooseTarget_Heal_6C75
-    dw ChooseTarget_Heal_6C75
-    dw ChooseTarget_Heal_6C75
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_MPass
-    dw ChooseTarget_MPass
-    dw ChooseTarget_MPass
-    dw TargetRandomAllySlot
-    dw TargetRandomAllySlot
-    dw TargetOwnSideFirstSlot
-    dw ChooseTarget_Antidote_6AFD
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Upper_6B0A
-    dw TargetFirstAlly
-    dw ChooseTarget_Sap_6BB0
-    db $78, $40, $5D, $6B, $A2, $40, $B6, $6B, $78, $40, $9A, $40, $78, $40, $91, $66
-    db $78, $40, $2B, $41, $4B, $40, $78, $40, $00, $00, $00, $00
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    db $4B, $40, $2B, $41, $2B, $41, $91, $66, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66, $78, $40
-    db $78, $40, $78, $40, $91, $66, $78, $40, $4B, $40, $4B, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $4B, $40, $78, $40, $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetRandomOtherSlot
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $4B, $40, $4B, $40, $78, $40
-    db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
-    db $A2, $40, $4B, $40, $78, $40, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $E8, $40
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40, $2B, $41, $2B, $41, $4B, $40, $2B, $41, $00, $00, $78, $40, $A2, $40
-    db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
-    db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetOwnSideFirstSlot
-    dw TargetFirstAlly
-    db $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $91, $66, $91, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
-    db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_Blaze
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $03, $5E
-    db $78, $40, $78, $40
-    dw ChooseTarget_Heal
-    dw ChooseTarget_Heal
-    dw ChooseTarget_Heal
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    db $E8, $40, $E8, $40, $E8, $40
-    dw ChooseTarget_Vivify
-    dw ChooseTarget_Vivify
-    dw TargetOwnSideFirstSlot
-    dw ChooseTarget_Antidote
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Upper
-    dw TargetFirstAlly
-    dw ChooseTarget_Sap
-    db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
-    db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Transform
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_MegaMagic
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
-    db $4B, $40, $4B, $40
-    dw ChooseTarget_FireSlash
-    dw ChooseTarget_VacuSlash
-    dw ChooseTarget_BoltSlash
-    dw ChooseTarget_IceSlash
-    dw ChooseTarget_SlimeBlow
-    dw ChooseTarget_DrakSlash
-    dw ChooseTarget_BeastCut
-    dw ChooseTarget_BirdBlow
-    dw ChooseTarget_BugBlow
-    dw ChooseTarget_Shears
-    dw ChooseTarget_DevilCut
-    dw ChooseTarget_ZombieCut
-    dw ChooseTarget_CleanCut
-    dw ChooseTarget_AquaCut
-    dw ChooseTarget_MetalCut
-    dw ChooseTarget_PoisonHit
-    dw ChooseTarget_Paralyze
-    dw ChooseTarget_NapAttack
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    db $4B, $40, $78, $40, $78, $40
-    dw ChooseTarget_GigaSlash
-    dw TargetSelf
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    dw TargetRandomOtherSlot
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_Ramming
-    dw ChooseTarget_Ramming
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
-    db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
-    db $A2, $40, $CB, $59, $78, $40, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_LushLicks
-    dw ChooseTarget_SickLick
-    dw ChooseTarget_LegSweep
-    db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
-    dw ChooseTarget_MouthShut
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_Cover
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
-    db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
-    db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    db $78, $40, $78, $40, $90, $53, $90, $53, $78, $40, $A2, $40, $78, $40, $2B, $41
-    db $A2, $40, $78, $40, $0E, $5F, $2B, $41, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
-    db $78, $40, $78, $40
-    dw ChooseTarget_Heal_67AD
-    dw ChooseTarget_Heal_67AD
-    dw ChooseTarget_Heal_67AD
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    db $E8, $40, $E8, $40, $E8, $40
-    dw ChooseTarget_Vivify_6998
-    dw ChooseTarget_Vivify_6998
-    dw TargetOwnSideFirstSlot
-    dw ChooseTarget_Antidote_699B
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Upper_69A1
-    dw TargetFirstAlly
-    dw ChooseTarget_Sap_69A4
-    db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $91, $66
-    db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00, $00, $00
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Transform_6A04
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $91, $66, $78, $40, $78, $40, $78, $40, $91, $66, $78, $40
-    db $4B, $40, $4B, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw ChooseTarget_SlimeBlow_69E9
-    dw ChooseTarget_DrakSlash_69C5
-    dw ChooseTarget_BeastCut_69CB
-    dw ChooseTarget_BirdBlow_69D1
-    dw ChooseTarget_BugBlow_69EF
-    dw ChooseTarget_Shears_69F5
-    dw ChooseTarget_DevilCut_69D7
-    dw ChooseTarget_ZombieCut_69DD
-    dw ChooseTarget_CleanCut_69E3
-    dw TargetFoeWeightedBySlotOrder
-    dw ChooseTarget_MetalCut_69C2
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $4B, $40, $78, $40, $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetRandomOtherSlot
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $BF, $69, $BF, $69, $78, $40
-    db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
-    db $A2, $40, $AD, $69, $78, $40, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw ChooseTarget_SickLick_69B6
-    dw ChooseTarget_LegSweep_69B9
-    db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
-    dw ChooseTarget_MouthShut_69B3
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_Cover_69B0
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    db $00, $00, $78, $40, $A2, $40, $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40
-    db $2B, $41, $2B, $41, $78, $40, $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00
-    db $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetOwnSideFirstSlot
-    dw TargetFirstAlly
-    db $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $91, $66, $91, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
-    db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_Blaze
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $03, $5E
-    db $78, $40, $78, $40
-    dw ChooseTarget_Heal
-    dw ChooseTarget_Heal
-    dw ChooseTarget_Heal
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    db $E8, $40, $E8, $40, $E8, $40
-    dw ChooseTarget_Vivify
-    dw ChooseTarget_Vivify
-    dw TargetOwnSideFirstSlot
-    dw ChooseTarget_Antidote
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Upper
-    dw TargetFirstAlly
-    dw ChooseTarget_Sap
-    db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
-    db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Transform
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_MegaMagic
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
-    db $4B, $40, $4B, $40
-    dw ChooseTarget_FireSlash
-    dw ChooseTarget_VacuSlash
-    dw ChooseTarget_BoltSlash
-    dw ChooseTarget_IceSlash
-    dw ChooseTarget_SlimeBlow
-    dw ChooseTarget_DrakSlash
-    dw ChooseTarget_BeastCut
-    dw ChooseTarget_BirdBlow
-    dw ChooseTarget_BugBlow
-    dw ChooseTarget_Shears
-    dw ChooseTarget_DevilCut
-    dw ChooseTarget_ZombieCut
-    dw ChooseTarget_CleanCut
-    dw ChooseTarget_AquaCut
-    dw ChooseTarget_MetalCut
-    dw ChooseTarget_PoisonHit
-    dw ChooseTarget_Paralyze
-    dw ChooseTarget_NapAttack
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    db $4B, $40, $78, $40, $78, $40
-    dw ChooseTarget_GigaSlash
-    dw TargetSelf
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    dw TargetRandomOtherSlot
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_Ramming
-    dw ChooseTarget_Ramming
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
-    db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
-    db $A2, $40, $CB, $59, $78, $40, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_LushLicks
-    dw ChooseTarget_SickLick
-    dw ChooseTarget_LegSweep
-    db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
-    dw ChooseTarget_MouthShut
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_Cover
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
-    db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
-    db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    dw ChooseTarget_SquallHit
-    db $78, $40, $78, $40, $90, $53, $90, $53, $78, $40, $A2, $40, $78, $40, $2B, $41
-    db $A2, $40, $78, $40, $90, $53, $2B, $41, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $91, $66
-    db $78, $40, $78, $40
-    dw ChooseTarget_Heal_67AD
-    dw ChooseTarget_Heal_67AD
-    dw ChooseTarget_Heal_67AD
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    db $E8, $40, $E8, $40, $E8, $40
-    dw ChooseTarget_Vivify_6998
-    dw ChooseTarget_Vivify_6998
-    dw TargetOwnSideFirstSlot
-    dw ChooseTarget_Antidote_699B
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Upper_69A1
-    dw TargetFirstAlly
-    dw ChooseTarget_Sap_69A4
-    db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $91, $66
-    db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00, $00, $00
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Transform_6A04
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $91, $66, $78, $40, $78, $40, $78, $40, $91, $66, $78, $40
-    db $4B, $40, $4B, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw ChooseTarget_SlimeBlow_69E9
-    dw ChooseTarget_DrakSlash_69C5
-    dw ChooseTarget_BeastCut_69CB
-    dw ChooseTarget_BirdBlow_69D1
-    dw ChooseTarget_BugBlow_69EF
-    dw ChooseTarget_Shears_69F5
-    dw ChooseTarget_DevilCut_69D7
-    dw ChooseTarget_ZombieCut_69DD
-    dw ChooseTarget_CleanCut_69E3
-    dw TargetFoeWeightedBySlotOrder
-    dw ChooseTarget_MetalCut_69C2
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $4B, $40, $78, $40, $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetRandomOtherSlot
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $BF, $69, $BF, $69, $78, $40
-    db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
-    db $A2, $40, $AD, $69, $78, $40, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw ChooseTarget_SickLick_69B6
-    dw ChooseTarget_LegSweep_69B9
-    db $78, $40, $91, $66, $78, $40, $4B, $40, $78, $40
-    dw ChooseTarget_MouthShut_69B3
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_Cover_69B0
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    db $00, $00, $78, $40, $A2, $40, $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40
-    db $2B, $41, $2B, $41, $78, $40, $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00
-    db $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetSelf
-    dw TargetOwnSideFirstSlot
-    dw TargetFirstAlly
-    db $78, $40
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    dw TargetFoeWeightedBySlotOrder
-    db $78, $40, $78, $40, $91, $66, $91, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
-    db $A2, $40, $78, $40, $91, $66, $2B, $41, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_SquallHit_543C
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_Blaze
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $03, $5E
-    db $78, $40, $78, $40
-    dw ChooseTarget_Heal_5593
-    dw ChooseTarget_Heal_5593
-    dw ChooseTarget_Heal_5593
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    db $E8, $40, $E8, $40, $E8, $40
-    dw ChooseTarget_Vivify
-    dw ChooseTarget_Vivify
-    dw TargetOwnSideFirstSlot
-    dw ChooseTarget_Antidote
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Upper
-    dw TargetFirstAlly
-    dw ChooseTarget_Sap
-    db $78, $40, $6B, $59, $A2, $40, $11, $59, $78, $40, $D8, $57, $78, $40, $ED, $60
-    db $78, $40, $2B, $41, $4B, $61, $78, $40, $78, $40
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Transform
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_MegaMagic
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $A5, $63, $78, $40, $78, $40, $78, $40, $5C, $65, $78, $40
-    db $4B, $40, $4B, $40
-    dw ChooseTarget_FireSlash
-    dw ChooseTarget_VacuSlash
-    dw ChooseTarget_BoltSlash
-    dw ChooseTarget_IceSlash
-    dw ChooseTarget_SlimeBlow
-    dw ChooseTarget_DrakSlash
-    dw ChooseTarget_BeastCut
-    dw ChooseTarget_BirdBlow
-    dw ChooseTarget_BugBlow
-    dw ChooseTarget_Shears
-    dw ChooseTarget_DevilCut
-    dw ChooseTarget_ZombieCut
-    dw ChooseTarget_CleanCut
-    dw ChooseTarget_AquaCut
-    dw ChooseTarget_MetalCut
-    dw ChooseTarget_PoisonHit
-    dw ChooseTarget_Paralyze
-    dw ChooseTarget_NapAttack
-    dw ChooseTarget_SquallHit_543C
-    dw ChooseTarget_SquallHit_543C
-    db $4B, $40, $78, $40, $78, $40
-    dw ChooseTarget_GigaSlash
-    dw TargetSelf
-    dw ChooseTarget_SquallHit_543C
-    dw ChooseTarget_SquallHit_543C
-    dw ChooseTarget_SquallHit_543C
-    dw TargetRandomOtherSlot
-    dw ChooseTarget_SquallHit_543C
-    dw ChooseTarget_SquallHit_543C
-    dw ChooseTarget_Ramming
-    dw ChooseTarget_Ramming
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $F9, $5B, $F9, $5B, $78, $40
-    db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
-    db $A2, $40, $CB, $59, $78, $40, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_LushLicks
-    dw ChooseTarget_SickLick
-    dw ChooseTarget_LegSweep
-    db $78, $40, $67, $5D, $78, $40, $4B, $40, $78, $40
-    dw ChooseTarget_MouthShut
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_Cover
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40, $2B, $41, $2B, $41, $00, $00, $00, $00, $00, $00, $78, $40, $A2, $40
-    db $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40, $2B, $41, $2B, $41, $78, $40
-    db $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00, $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    db $55, $40, $2B, $41, $3C, $41, $A2, $40, $78, $40
-    dw ChooseTarget_Blaze
-    dw ChooseTarget_SquallHit_543C
-    dw ChooseTarget_SquallHit_543C
-    dw ChooseTarget_SquallHit_543C
-    db $78, $40, $78, $40, $3C, $54, $3C, $54, $78, $40, $A2, $40, $78, $40, $2B, $41
-    db $A2, $40, $78, $40, $0E, $5F, $2B, $41, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_SquallHit_66C5
-    dw ChooseTarget_Blaze_6A0A
-    dw ChooseTarget_Blaze_6A0A
-    dw ChooseTarget_Blaze_6A0A
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $07, $6A
-    db $78, $40, $78, $40
-    dw ChooseTarget_Heal_68B0
-    dw ChooseTarget_Heal_68B0
-    dw ChooseTarget_Heal_68B0
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    db $E8, $40, $E8, $40, $E8, $40
-    dw ChooseTarget_Vivify_6998
-    dw ChooseTarget_Vivify_6998
-    dw TargetOwnSideFirstSlot
-    dw ChooseTarget_Antidote_699B
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Upper_69A1
-    dw TargetFirstAlly
-    dw ChooseTarget_Sap_69A4
-    db $78, $40, $AA, $69, $A2, $40, $A7, $69, $78, $40, $9E, $69, $78, $40, $10, $6A
-    db $78, $40, $2B, $41, $13, $6A, $78, $40, $00, $00
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetFirstAlly
-    dw ChooseTarget_Transform_6A04
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_MegaMagic_6AFA
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $78, $40
-    db $78, $40, $78, $40, $22, $6A, $78, $40, $78, $40, $78, $40, $99, $6A, $78, $40
-    db $4B, $40, $4B, $40
-    dw ChooseTarget_FireSlash_6A16
-    dw ChooseTarget_VacuSlash_6A1C
-    dw ChooseTarget_BoltSlash_6A19
-    dw ChooseTarget_IceSlash_6A1F
-    dw ChooseTarget_SlimeBlow_69E9
-    dw ChooseTarget_DrakSlash_69C5
-    dw ChooseTarget_BeastCut_69CB
-    dw ChooseTarget_BirdBlow_69D1
-    dw ChooseTarget_BugBlow_69EF
-    dw ChooseTarget_Shears_69F5
-    dw ChooseTarget_DevilCut_69D7
-    dw ChooseTarget_ZombieCut_69DD
-    dw ChooseTarget_CleanCut_69E3
-    dw ChooseTarget_AquaCut_6A96
-    dw ChooseTarget_MetalCut_69C2
-    dw ChooseTarget_PoisonHit_69FB
-    dw ChooseTarget_Paralyze_69FE
-    dw ChooseTarget_NapAttack_69BC
-    dw ChooseTarget_SquallHit_66C5
-    dw ChooseTarget_SquallHit_66C5
-    db $4B, $40, $78, $40, $78, $40
-    dw ChooseTarget_GigaSlash_6A25
-    dw TargetSelf
-    dw ChooseTarget_SquallHit_66C5
-    dw ChooseTarget_SquallHit_66C5
-    dw ChooseTarget_SquallHit_66C5
-    dw TargetRandomOtherSlot
-    dw ChooseTarget_SquallHit_66C5
-    dw ChooseTarget_Berserker
-    dw ChooseTarget_Berserker
-    dw ChooseTarget_SquallHit_66C5
-    db $78, $40, $78, $40, $78, $40, $78, $40, $78, $40, $BF, $69, $BF, $69, $78, $40
-    db $78, $40, $78, $40, $3C, $41, $A2, $40, $2B, $41, $78, $40, $78, $40, $78, $40
-    db $A2, $40, $AD, $69, $78, $40, $78, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_LushLicks_6A01
-    dw ChooseTarget_SickLick_69B6
-    dw ChooseTarget_LegSweep_69B9
-    db $78, $40, $01, $6A, $78, $40, $4B, $40, $78, $40
-    dw ChooseTarget_MouthShut_69B3
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_Cover_69B0
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetFirstAlly
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    ds $10, $00
-    db $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_PanicAll
-    dw TargetSelf
-    db $00, $00, $78, $40, $A2, $40, $78, $40, $78, $40, $A2, $40, $78, $40, $78, $40
-    db $2B, $41, $2B, $41, $78, $40, $78, $40, $3C, $41, $A2, $40, $78, $40, $00, $00
-    db $2B, $41, $E8, $40, $4B, $40
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw TargetSelf
-    dw ChooseTarget_SquallHit_66C5
-    dw TargetSelf
-    dw TargetOwnSideFirstSlot
-    dw TargetFirstAlly
-    db $78, $40
-    dw ChooseTarget_Blaze_6A0A
-    dw ChooseTarget_SquallHit_66C5
-    dw ChooseTarget_SquallHit_66C5
-    dw ChooseTarget_SquallHit_66C5
-    db $78, $40, $78, $40, $C5, $66, $C5, $66, $78, $40, $A2, $40, $78, $40, $2B, $41
-    db $A2, $40, $78, $40, $0A, $6A, $2B, $41, $78, $40, $2B, $41, $2B, $41
+; E-0219 (C1: ChooseActionTarget reads the record at $41AC + 4 * wSlotAIMode[actor] and takes the second word for battlers 4-7 when wLinkMode is 0 or 2, else the first; it then calls entry wBattleActionId of that table through JumpToWordAtHL).
+; record: two tables of per-action target routines
+ActionTargetModeTable::
+Data_039_41AC:: ; address name
+    dw ActionTargetRoutines0 ; id 0
+    dw ActionTargetRoutines1
+    dw ActionTargetRoutines2 ; id 1
+    dw ActionTargetRoutines3
+    dw ActionTargetRoutines4 ; id 2
+    dw ActionTargetRoutines5
+    dw ActionTargetRoutines6 ; id 3
+    dw ActionTargetRoutines7
+    dw ActionTargetRoutines8 ; id 4
+    dw ActionTargetRoutines9
+
+; E-0219 (C1: table 0 of ActionTargetModeTable (mode 0, near side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines0::
+Data_039_41C0:: ; address name
+    dw TargetRandomFoe ; id 0
+    dw TargetRandomFoe ; id 1
+    dw TargetRandomFoe ; id 2
+    dw TargetRandomFoe ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw TargetRandomFoe ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw TargetRandomAlly ; id 22
+    dw TargetRandomAlly ; id 23
+    dw TargetRandomAlly ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw TargetRandomOtherAlly ; id 27
+    dw TargetRandomOtherAlly ; id 28
+    dw TargetRandomOtherAlly ; id 29
+    dw TargetRandomAllySlot ; id 30
+    dw TargetRandomAllySlot ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw TargetRandomAlly ; id 33
+    dw TargetRandomAlly ; id 34
+    dw TargetRandomAlly ; id 35
+    dw TargetRandomAlly ; id 36
+    dw TargetRandomAlly ; id 37
+    dw TargetFirstAlly ; id 38
+    dw TargetRandomFoe ; id 39
+    dw TargetFirstFoe ; id 40
+    dw TargetRandomAlly ; id 41
+    dw TargetFirstAlly ; id 42
+    dw TargetRandomFoe ; id 43
+    dw TargetFirstFoe ; id 44
+    dw TargetRandomAlly ; id 45
+    dw TargetFirstFoe ; id 46
+    dw TargetRandomFoe ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw TargetRandomFoe ; id 50
+    dw TargetFirstFoe ; id 51
+    dw TargetFirstFoe ; id 52
+    dw TargetFirstAlly ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw TargetRandomFoe ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw TargetRandomFoe ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw TargetRandomFoe ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw TargetRandomFoe ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw TargetRandomFoe ; id 80
+    dw TargetRandomFoe ; id 81
+    dw TargetRandomFoe ; id 82
+    dw TargetRandomFoe ; id 83
+    dw TargetRandomFoe ; id 84
+    dw TargetRandomFoe ; id 85
+    dw TargetRandomFoe ; id 86
+    dw TargetRandomFoe ; id 87
+    dw TargetRandomFoe ; id 88
+    dw TargetRandomFoe ; id 89
+    dw TargetRandomFoe ; id 90
+    dw TargetRandomFoe ; id 91
+    dw TargetRandomFoe ; id 92
+    dw TargetRandomFoe ; id 93
+    dw TargetRandomFoe ; id 94
+    dw TargetRandomFoe ; id 95
+    dw TargetRandomFoe ; id 96
+    dw TargetRandomFoe ; id 97
+    dw TargetRandomFoe ; id 98
+    dw TargetRandomFoe ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw TargetRandomFoe ; id 103
+    dw TargetSelf ; id 104
+    dw TargetRandomFoe ; id 105
+    dw TargetRandomFoe ; id 106
+    dw TargetRandomFoe ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw TargetRandomFoe ; id 109
+    dw TargetRandomFoe ; id 110
+    dw TargetRandomFoe ; id 111
+    dw TargetRandomFoe ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw TargetRandomFoe ; id 118
+    dw TargetRandomFoe ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw TargetRandomFoe ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw TargetRandomFoe ; id 139
+    dw TargetRandomFoe ; id 140
+    dw TargetRandomFoe ; id 141
+    dw TargetFirstFoe ; id 142
+    dw TargetRandomFoe ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw TargetRandomFoe ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw TargetRandomOtherAlly ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw $0000 ; id 173
+    dw $0000 ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetSavedSlotOrRandomFoe ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw TargetRandomFoe ; id 209
+    dw TargetRandomFoe ; id 210
+    dw TargetRandomFoe ; id 211
+    dw TargetRandomFoe ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw TargetRandomFoe ; id 215
+    dw TargetRandomFoe ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw TargetRandomFoe ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 1 of ActionTargetModeTable (mode 0, far side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines1::
+Data_039_4388:: ; address name
+    dw TargetRandomFoe ; id 0
+    dw TargetRandomFoe ; id 1
+    dw TargetRandomFoe ; id 2
+    dw TargetRandomFoe ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw TargetRandomFoe ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw TargetRandomAlly ; id 22
+    dw TargetRandomAlly ; id 23
+    dw TargetRandomAlly ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw TargetRandomOtherAlly ; id 27
+    dw TargetRandomOtherAlly ; id 28
+    dw TargetRandomOtherAlly ; id 29
+    dw TargetRandomAllySlot ; id 30
+    dw TargetRandomAllySlot ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw TargetRandomAlly ; id 33
+    dw TargetRandomAlly ; id 34
+    dw TargetRandomAlly ; id 35
+    dw TargetRandomAlly ; id 36
+    dw TargetRandomAlly ; id 37
+    dw TargetFirstAlly ; id 38
+    dw TargetRandomFoe ; id 39
+    dw TargetFirstFoe ; id 40
+    dw TargetRandomAlly ; id 41
+    dw TargetFirstAlly ; id 42
+    dw TargetRandomFoe ; id 43
+    dw TargetFirstFoe ; id 44
+    dw TargetRandomAlly ; id 45
+    dw TargetFirstFoe ; id 46
+    dw TargetRandomFoe ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw TargetRandomFoe ; id 50
+    dw TargetFirstFoe ; id 51
+    dw $0000 ; id 52
+    dw $0000 ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw TargetRandomFoe ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw TargetRandomFoe ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw TargetRandomFoe ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw TargetRandomFoe ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw TargetRandomFoe ; id 80
+    dw TargetRandomFoe ; id 81
+    dw TargetRandomFoe ; id 82
+    dw TargetRandomFoe ; id 83
+    dw TargetRandomFoe ; id 84
+    dw TargetRandomFoe ; id 85
+    dw TargetRandomFoe ; id 86
+    dw TargetRandomFoe ; id 87
+    dw TargetRandomFoe ; id 88
+    dw TargetRandomFoe ; id 89
+    dw TargetRandomFoe ; id 90
+    dw TargetRandomFoe ; id 91
+    dw TargetRandomFoe ; id 92
+    dw TargetRandomFoe ; id 93
+    dw TargetRandomFoe ; id 94
+    dw TargetRandomFoe ; id 95
+    dw TargetRandomFoe ; id 96
+    dw TargetRandomFoe ; id 97
+    dw TargetRandomFoe ; id 98
+    dw TargetRandomFoe ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw TargetRandomFoe ; id 103
+    dw TargetSelf ; id 104
+    dw TargetRandomFoe ; id 105
+    dw TargetRandomFoe ; id 106
+    dw TargetRandomFoe ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw TargetRandomFoe ; id 109
+    dw TargetRandomFoe ; id 110
+    dw TargetRandomFoe ; id 111
+    dw TargetRandomFoe ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw TargetRandomFoe ; id 118
+    dw TargetRandomFoe ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw TargetRandomFoe ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw TargetRandomFoe ; id 139
+    dw TargetRandomFoe ; id 140
+    dw TargetRandomFoe ; id 141
+    dw TargetFirstFoe ; id 142
+    dw TargetRandomFoe ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw TargetRandomFoe ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw TargetRandomOtherAlly ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw TargetRandomFoe ; id 173
+    dw TargetSelf ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetRandomFoe ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw TargetRandomFoe ; id 209
+    dw TargetRandomFoe ; id 210
+    dw TargetRandomFoe ; id 211
+    dw TargetRandomFoe ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw TargetRandomFoe ; id 215
+    dw TargetRandomFoe ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw TargetRandomFoe ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 2 of ActionTargetModeTable (mode 1, near side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines2::
+Data_039_4550:: ; address name
+    dw TargetFoeWeightedBySlotOrder ; id 0
+    dw TargetFoeWeightedBySlotOrder ; id 1
+    dw TargetFoeWeightedBySlotOrder ; id 2
+    dw TargetFoeWeightedBySlotOrder ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw TargetFoeWeightedBySlotOrder ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw ChooseTarget_Heal_6C75 ; id 22
+    dw ChooseTarget_Heal_6C75 ; id 23
+    dw ChooseTarget_Heal_6C75 ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw ChooseTarget_MPass ; id 27
+    dw ChooseTarget_MPass ; id 28
+    dw ChooseTarget_MPass ; id 29
+    dw TargetRandomAllySlot ; id 30
+    dw TargetRandomAllySlot ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw ChooseTarget_Antidote_6AFD ; id 33
+    dw TargetFirstAlly ; id 34
+    dw TargetFirstAlly ; id 35
+    dw TargetFirstAlly ; id 36
+    dw ChooseTarget_Upper_6B0A ; id 37
+    dw TargetFirstAlly ; id 38
+    dw ChooseTarget_Sap_6BB0 ; id 39
+    dw TargetFirstFoe ; id 40
+    dw ChooseTarget_Speed_6B5D ; id 41
+    dw TargetFirstAlly ; id 42
+    dw TargetByAllyAGL ; id 43
+    dw TargetFirstFoe ; id 44
+    dw TargetRandomAlly ; id 45
+    dw TargetFirstFoe ; id 46
+    dw TargetFoeWeightedBySlotOrder ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw TargetRandomFoe ; id 50
+    dw TargetFirstFoe ; id 51
+    dw TargetFirstFoe ; id 52
+    dw TargetFirstAlly ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw TargetRandomFoe ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw TargetFoeWeightedBySlotOrder ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw TargetFoeWeightedBySlotOrder ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw TargetFoeWeightedBySlotOrder ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw TargetFoeWeightedBySlotOrder ; id 80
+    dw TargetFoeWeightedBySlotOrder ; id 81
+    dw TargetFoeWeightedBySlotOrder ; id 82
+    dw TargetFoeWeightedBySlotOrder ; id 83
+    dw TargetFoeWeightedBySlotOrder ; id 84
+    dw TargetFoeWeightedBySlotOrder ; id 85
+    dw TargetFoeWeightedBySlotOrder ; id 86
+    dw TargetFoeWeightedBySlotOrder ; id 87
+    dw TargetFoeWeightedBySlotOrder ; id 88
+    dw TargetFoeWeightedBySlotOrder ; id 89
+    dw TargetFoeWeightedBySlotOrder ; id 90
+    dw TargetFoeWeightedBySlotOrder ; id 91
+    dw TargetFoeWeightedBySlotOrder ; id 92
+    dw TargetFoeWeightedBySlotOrder ; id 93
+    dw TargetFoeWeightedBySlotOrder ; id 94
+    dw TargetFoeWeightedBySlotOrder ; id 95
+    dw TargetFoeWeightedBySlotOrder ; id 96
+    dw TargetFoeWeightedBySlotOrder ; id 97
+    dw TargetFoeWeightedBySlotOrder ; id 98
+    dw TargetFoeWeightedBySlotOrder ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw TargetFoeWeightedBySlotOrder ; id 103
+    dw TargetSelf ; id 104
+    dw TargetFoeWeightedBySlotOrder ; id 105
+    dw TargetFoeWeightedBySlotOrder ; id 106
+    dw TargetFoeWeightedBySlotOrder ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw TargetFoeWeightedBySlotOrder ; id 109
+    dw TargetFoeWeightedBySlotOrder ; id 110
+    dw TargetFoeWeightedBySlotOrder ; id 111
+    dw TargetFoeWeightedBySlotOrder ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw TargetRandomFoe ; id 118
+    dw TargetRandomFoe ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw TargetRandomFoe ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw TargetFoeWeightedBySlotOrder ; id 139
+    dw TargetFoeWeightedBySlotOrder ; id 140
+    dw TargetFoeWeightedBySlotOrder ; id 141
+    dw TargetFirstFoe ; id 142
+    dw TargetFoeWeightedBySlotOrder ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw TargetFoeWeightedBySlotOrder ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw TargetRandomOtherAlly ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw $0000 ; id 173
+    dw $0000 ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetSavedSlotOrRandomFoe ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw TargetFoeWeightedBySlotOrder ; id 209
+    dw TargetFoeWeightedBySlotOrder ; id 210
+    dw TargetFoeWeightedBySlotOrder ; id 211
+    dw TargetFoeWeightedBySlotOrder ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw TargetFoeWeightedBySlotOrder ; id 215
+    dw TargetFoeWeightedBySlotOrder ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw TargetFoeWeightedBySlotOrder ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 3 of ActionTargetModeTable (mode 1, far side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines3::
+Data_039_4718:: ; address name
+    dw TargetFoeWeightedBySlotOrder ; id 0
+    dw TargetFoeWeightedBySlotOrder ; id 1
+    dw TargetFoeWeightedBySlotOrder ; id 2
+    dw TargetFoeWeightedBySlotOrder ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw TargetFoeWeightedBySlotOrder ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw ChooseTarget_Heal_6C75 ; id 22
+    dw ChooseTarget_Heal_6C75 ; id 23
+    dw ChooseTarget_Heal_6C75 ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw ChooseTarget_MPass ; id 27
+    dw ChooseTarget_MPass ; id 28
+    dw ChooseTarget_MPass ; id 29
+    dw TargetRandomAllySlot ; id 30
+    dw TargetRandomAllySlot ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw ChooseTarget_Antidote_6AFD ; id 33
+    dw TargetFirstAlly ; id 34
+    dw TargetFirstAlly ; id 35
+    dw TargetFirstAlly ; id 36
+    dw ChooseTarget_Upper_6B0A ; id 37
+    dw TargetFirstAlly ; id 38
+    dw ChooseTarget_Sap_6BB0 ; id 39
+    dw TargetFirstFoe ; id 40
+    dw ChooseTarget_Speed_6B5D ; id 41
+    dw TargetFirstAlly ; id 42
+    dw TargetByAllyAGL ; id 43
+    dw TargetFirstFoe ; id 44
+    dw TargetRandomAlly ; id 45
+    dw TargetFirstFoe ; id 46
+    dw TargetFoeWeightedBySlotOrder ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw TargetRandomFoe ; id 50
+    dw TargetFirstFoe ; id 51
+    dw $0000 ; id 52
+    dw $0000 ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw TargetRandomFoe ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw TargetFoeWeightedBySlotOrder ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw TargetFoeWeightedBySlotOrder ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw TargetFoeWeightedBySlotOrder ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw TargetFoeWeightedBySlotOrder ; id 80
+    dw TargetFoeWeightedBySlotOrder ; id 81
+    dw TargetFoeWeightedBySlotOrder ; id 82
+    dw TargetFoeWeightedBySlotOrder ; id 83
+    dw TargetFoeWeightedBySlotOrder ; id 84
+    dw TargetFoeWeightedBySlotOrder ; id 85
+    dw TargetFoeWeightedBySlotOrder ; id 86
+    dw TargetFoeWeightedBySlotOrder ; id 87
+    dw TargetFoeWeightedBySlotOrder ; id 88
+    dw TargetFoeWeightedBySlotOrder ; id 89
+    dw TargetFoeWeightedBySlotOrder ; id 90
+    dw TargetFoeWeightedBySlotOrder ; id 91
+    dw TargetFoeWeightedBySlotOrder ; id 92
+    dw TargetFoeWeightedBySlotOrder ; id 93
+    dw TargetFoeWeightedBySlotOrder ; id 94
+    dw TargetFoeWeightedBySlotOrder ; id 95
+    dw TargetFoeWeightedBySlotOrder ; id 96
+    dw TargetFoeWeightedBySlotOrder ; id 97
+    dw TargetFoeWeightedBySlotOrder ; id 98
+    dw TargetFoeWeightedBySlotOrder ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw TargetFoeWeightedBySlotOrder ; id 103
+    dw TargetSelf ; id 104
+    dw TargetFoeWeightedBySlotOrder ; id 105
+    dw TargetFoeWeightedBySlotOrder ; id 106
+    dw TargetFoeWeightedBySlotOrder ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw TargetFoeWeightedBySlotOrder ; id 109
+    dw TargetFoeWeightedBySlotOrder ; id 110
+    dw TargetFoeWeightedBySlotOrder ; id 111
+    dw TargetFoeWeightedBySlotOrder ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw TargetRandomFoe ; id 118
+    dw TargetRandomFoe ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw TargetRandomFoe ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw TargetFoeWeightedBySlotOrder ; id 139
+    dw TargetFoeWeightedBySlotOrder ; id 140
+    dw TargetFoeWeightedBySlotOrder ; id 141
+    dw TargetFirstFoe ; id 142
+    dw TargetFoeWeightedBySlotOrder ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw TargetFoeWeightedBySlotOrder ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw TargetRandomOtherAlly ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw TargetRandomFoe ; id 173
+    dw TargetSelf ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetFoeWeightedBySlotOrder ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw TargetFoeWeightedBySlotOrder ; id 209
+    dw TargetFoeWeightedBySlotOrder ; id 210
+    dw TargetFoeWeightedBySlotOrder ; id 211
+    dw TargetFoeWeightedBySlotOrder ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw TargetFoeWeightedBySlotOrder ; id 215
+    dw TargetFoeWeightedBySlotOrder ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw TargetFoeWeightedBySlotOrder ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 4 of ActionTargetModeTable (mode 2, near side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines4::
+Data_039_48E0:: ; address name
+    dw ChooseTarget_SquallHit ; id 0
+    dw ChooseTarget_Blaze ; id 1
+    dw ChooseTarget_Blaze ; id 2
+    dw ChooseTarget_Blaze ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw ChooseTarget_Beat ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw ChooseTarget_Heal ; id 22
+    dw ChooseTarget_Heal ; id 23
+    dw ChooseTarget_Heal ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw TargetRandomOtherAlly ; id 27
+    dw TargetRandomOtherAlly ; id 28
+    dw TargetRandomOtherAlly ; id 29
+    dw ChooseTarget_Vivify ; id 30
+    dw ChooseTarget_Vivify ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw ChooseTarget_Antidote ; id 33
+    dw TargetFirstAlly ; id 34
+    dw TargetFirstAlly ; id 35
+    dw TargetFirstAlly ; id 36
+    dw ChooseTarget_Upper ; id 37
+    dw TargetFirstAlly ; id 38
+    dw ChooseTarget_Sap ; id 39
+    dw TargetFirstFoe ; id 40
+    dw ChooseTarget_Speed ; id 41
+    dw TargetFirstAlly ; id 42
+    dw ChooseTarget_Slow ; id 43
+    dw TargetFirstFoe ; id 44
+    dw ChooseTarget_TwinHits ; id 45
+    dw TargetFirstFoe ; id 46
+    dw ChooseTarget_Sleep ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw ChooseTarget_RobMagic ; id 50
+    dw TargetFirstFoe ; id 51
+    dw TargetFirstFoe ; id 52
+    dw TargetFirstAlly ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw ChooseTarget_Transform ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw ChooseTarget_MegaMagic ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw ChooseTarget_WindBeast ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw ChooseTarget_Watershot ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw ChooseTarget_FireSlash ; id 80
+    dw ChooseTarget_VacuSlash ; id 81
+    dw ChooseTarget_BoltSlash ; id 82
+    dw ChooseTarget_IceSlash ; id 83
+    dw ChooseTarget_SlimeBlow ; id 84
+    dw ChooseTarget_DrakSlash ; id 85
+    dw ChooseTarget_BeastCut ; id 86
+    dw ChooseTarget_BirdBlow ; id 87
+    dw ChooseTarget_BugBlow ; id 88
+    dw ChooseTarget_Shears ; id 89
+    dw ChooseTarget_DevilCut ; id 90
+    dw ChooseTarget_ZombieCut ; id 91
+    dw ChooseTarget_CleanCut ; id 92
+    dw ChooseTarget_AquaCut ; id 93
+    dw ChooseTarget_MetalCut ; id 94
+    dw ChooseTarget_PoisonHit ; id 95
+    dw ChooseTarget_Paralyze ; id 96
+    dw ChooseTarget_NapAttack ; id 97
+    dw ChooseTarget_SquallHit ; id 98
+    dw ChooseTarget_SquallHit ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw ChooseTarget_GigaSlash ; id 103
+    dw TargetSelf ; id 104
+    dw ChooseTarget_SquallHit ; id 105
+    dw ChooseTarget_SquallHit ; id 106
+    dw ChooseTarget_SquallHit ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw ChooseTarget_SquallHit ; id 109
+    dw ChooseTarget_SquallHit ; id 110
+    dw ChooseTarget_Ramming ; id 111
+    dw ChooseTarget_Ramming ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw ChooseTarget_OddDance ; id 118
+    dw ChooseTarget_OddDance ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw ChooseTarget_UltraDown ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw ChooseTarget_LushLicks ; id 139
+    dw ChooseTarget_SickLick ; id 140
+    dw ChooseTarget_LegSweep ; id 141
+    dw TargetFirstFoe ; id 142
+    dw ChooseTarget_LushLicks ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw ChooseTarget_MouthShut ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw ChooseTarget_Cover ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw $0000 ; id 173
+    dw $0000 ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetSavedSlotOrRandomFoe ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw ChooseTarget_Blaze ; id 209
+    dw ChooseTarget_SquallHit ; id 210
+    dw ChooseTarget_SquallHit ; id 211
+    dw ChooseTarget_SquallHit ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw ChooseTarget_SquallHit ; id 215
+    dw ChooseTarget_SquallHit ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw ChooseTarget_Blaze ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 5 of ActionTargetModeTable (mode 2, far side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines5::
+Data_039_4AA8:: ; address name
+    dw TargetFoeWeightedBySlotOrder ; id 0
+    dw TargetFoeWeightedBySlotOrder ; id 1
+    dw TargetFoeWeightedBySlotOrder ; id 2
+    dw TargetFoeWeightedBySlotOrder ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw TargetFoeWeightedBySlotOrder ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw ChooseTarget_Heal_67AD ; id 22
+    dw ChooseTarget_Heal_67AD ; id 23
+    dw ChooseTarget_Heal_67AD ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw TargetRandomOtherAlly ; id 27
+    dw TargetRandomOtherAlly ; id 28
+    dw TargetRandomOtherAlly ; id 29
+    dw ChooseTarget_Vivify_6998 ; id 30
+    dw ChooseTarget_Vivify_6998 ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw ChooseTarget_Antidote_699B ; id 33
+    dw TargetFirstAlly ; id 34
+    dw TargetFirstAlly ; id 35
+    dw TargetFirstAlly ; id 36
+    dw ChooseTarget_Upper_69A1 ; id 37
+    dw TargetFirstAlly ; id 38
+    dw ChooseTarget_Sap_69A4 ; id 39
+    dw TargetFirstFoe ; id 40
+    dw ChooseTarget_Speed_69AA ; id 41
+    dw TargetFirstAlly ; id 42
+    dw ChooseTarget_Slow_69A7 ; id 43
+    dw TargetFirstFoe ; id 44
+    dw ChooseTarget_TwinHits_699E ; id 45
+    dw TargetFirstFoe ; id 46
+    dw TargetFoeWeightedBySlotOrder ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw ChooseTarget_RobMagic_6A13 ; id 50
+    dw TargetFirstFoe ; id 51
+    dw $0000 ; id 52
+    dw $0000 ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw ChooseTarget_Transform_6A04 ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw TargetFoeWeightedBySlotOrder ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw TargetFoeWeightedBySlotOrder ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw TargetFoeWeightedBySlotOrder ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw TargetFoeWeightedBySlotOrder ; id 80
+    dw TargetFoeWeightedBySlotOrder ; id 81
+    dw TargetFoeWeightedBySlotOrder ; id 82
+    dw TargetFoeWeightedBySlotOrder ; id 83
+    dw ChooseTarget_SlimeBlow_69E9 ; id 84
+    dw ChooseTarget_DrakSlash_69C5 ; id 85
+    dw ChooseTarget_BeastCut_69CB ; id 86
+    dw ChooseTarget_BirdBlow_69D1 ; id 87
+    dw ChooseTarget_BugBlow_69EF ; id 88
+    dw ChooseTarget_Shears_69F5 ; id 89
+    dw ChooseTarget_DevilCut_69D7 ; id 90
+    dw ChooseTarget_ZombieCut_69DD ; id 91
+    dw ChooseTarget_CleanCut_69E3 ; id 92
+    dw TargetFoeWeightedBySlotOrder ; id 93
+    dw ChooseTarget_MetalCut_69C2 ; id 94
+    dw TargetFoeWeightedBySlotOrder ; id 95
+    dw TargetFoeWeightedBySlotOrder ; id 96
+    dw TargetFoeWeightedBySlotOrder ; id 97
+    dw TargetFoeWeightedBySlotOrder ; id 98
+    dw TargetFoeWeightedBySlotOrder ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw TargetFoeWeightedBySlotOrder ; id 103
+    dw TargetSelf ; id 104
+    dw TargetFoeWeightedBySlotOrder ; id 105
+    dw TargetFoeWeightedBySlotOrder ; id 106
+    dw TargetFoeWeightedBySlotOrder ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw TargetFoeWeightedBySlotOrder ; id 109
+    dw TargetFoeWeightedBySlotOrder ; id 110
+    dw TargetFoeWeightedBySlotOrder ; id 111
+    dw TargetFoeWeightedBySlotOrder ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw ChooseTarget_OddDance_69BF ; id 118
+    dw ChooseTarget_OddDance_69BF ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw ChooseTarget_UltraDown_69AD ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw TargetFoeWeightedBySlotOrder ; id 139
+    dw ChooseTarget_SickLick_69B6 ; id 140
+    dw ChooseTarget_LegSweep_69B9 ; id 141
+    dw TargetFirstFoe ; id 142
+    dw TargetFoeWeightedBySlotOrder ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw ChooseTarget_MouthShut_69B3 ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw ChooseTarget_Cover_69B0 ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw TargetFoeWeightedBySlotOrder ; id 173
+    dw TargetSelf ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetFoeWeightedBySlotOrder ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw TargetFoeWeightedBySlotOrder ; id 209
+    dw TargetFoeWeightedBySlotOrder ; id 210
+    dw TargetFoeWeightedBySlotOrder ; id 211
+    dw TargetFoeWeightedBySlotOrder ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw TargetFoeWeightedBySlotOrder ; id 215
+    dw TargetFoeWeightedBySlotOrder ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw TargetFoeWeightedBySlotOrder ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 6 of ActionTargetModeTable (mode 3, near side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines6::
+Data_039_4C70:: ; address name
+    dw ChooseTarget_SquallHit ; id 0
+    dw ChooseTarget_Blaze ; id 1
+    dw ChooseTarget_Blaze ; id 2
+    dw ChooseTarget_Blaze ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw ChooseTarget_Beat ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw ChooseTarget_Heal ; id 22
+    dw ChooseTarget_Heal ; id 23
+    dw ChooseTarget_Heal ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw TargetRandomOtherAlly ; id 27
+    dw TargetRandomOtherAlly ; id 28
+    dw TargetRandomOtherAlly ; id 29
+    dw ChooseTarget_Vivify ; id 30
+    dw ChooseTarget_Vivify ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw ChooseTarget_Antidote ; id 33
+    dw TargetFirstAlly ; id 34
+    dw TargetFirstAlly ; id 35
+    dw TargetFirstAlly ; id 36
+    dw ChooseTarget_Upper ; id 37
+    dw TargetFirstAlly ; id 38
+    dw ChooseTarget_Sap ; id 39
+    dw TargetFirstFoe ; id 40
+    dw ChooseTarget_Speed ; id 41
+    dw TargetFirstAlly ; id 42
+    dw ChooseTarget_Slow ; id 43
+    dw TargetFirstFoe ; id 44
+    dw ChooseTarget_TwinHits ; id 45
+    dw TargetFirstFoe ; id 46
+    dw ChooseTarget_Sleep ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw ChooseTarget_RobMagic ; id 50
+    dw TargetFirstFoe ; id 51
+    dw TargetFirstFoe ; id 52
+    dw TargetFirstAlly ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw ChooseTarget_Transform ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw ChooseTarget_MegaMagic ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw ChooseTarget_WindBeast ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw ChooseTarget_Watershot ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw ChooseTarget_FireSlash ; id 80
+    dw ChooseTarget_VacuSlash ; id 81
+    dw ChooseTarget_BoltSlash ; id 82
+    dw ChooseTarget_IceSlash ; id 83
+    dw ChooseTarget_SlimeBlow ; id 84
+    dw ChooseTarget_DrakSlash ; id 85
+    dw ChooseTarget_BeastCut ; id 86
+    dw ChooseTarget_BirdBlow ; id 87
+    dw ChooseTarget_BugBlow ; id 88
+    dw ChooseTarget_Shears ; id 89
+    dw ChooseTarget_DevilCut ; id 90
+    dw ChooseTarget_ZombieCut ; id 91
+    dw ChooseTarget_CleanCut ; id 92
+    dw ChooseTarget_AquaCut ; id 93
+    dw ChooseTarget_MetalCut ; id 94
+    dw ChooseTarget_PoisonHit ; id 95
+    dw ChooseTarget_Paralyze ; id 96
+    dw ChooseTarget_NapAttack ; id 97
+    dw ChooseTarget_SquallHit ; id 98
+    dw ChooseTarget_SquallHit ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw ChooseTarget_GigaSlash ; id 103
+    dw TargetSelf ; id 104
+    dw ChooseTarget_SquallHit ; id 105
+    dw ChooseTarget_SquallHit ; id 106
+    dw ChooseTarget_SquallHit ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw ChooseTarget_SquallHit ; id 109
+    dw ChooseTarget_SquallHit ; id 110
+    dw ChooseTarget_Ramming ; id 111
+    dw ChooseTarget_Ramming ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw ChooseTarget_OddDance ; id 118
+    dw ChooseTarget_OddDance ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw ChooseTarget_UltraDown ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw ChooseTarget_LushLicks ; id 139
+    dw ChooseTarget_SickLick ; id 140
+    dw ChooseTarget_LegSweep ; id 141
+    dw TargetFirstFoe ; id 142
+    dw ChooseTarget_LushLicks ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw ChooseTarget_MouthShut ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw ChooseTarget_Cover ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw $0000 ; id 173
+    dw $0000 ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetSavedSlotOrRandomFoe ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw ChooseTarget_Blaze ; id 209
+    dw ChooseTarget_SquallHit ; id 210
+    dw ChooseTarget_SquallHit ; id 211
+    dw ChooseTarget_SquallHit ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw ChooseTarget_SquallHit ; id 215
+    dw ChooseTarget_SquallHit ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw ChooseTarget_SquallHit ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 7 of ActionTargetModeTable (mode 3, far side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines7::
+Data_039_4E38:: ; address name
+    dw TargetFoeWeightedBySlotOrder ; id 0
+    dw TargetFoeWeightedBySlotOrder ; id 1
+    dw TargetFoeWeightedBySlotOrder ; id 2
+    dw TargetFoeWeightedBySlotOrder ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw TargetFoeWeightedBySlotOrder ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw ChooseTarget_Heal_67AD ; id 22
+    dw ChooseTarget_Heal_67AD ; id 23
+    dw ChooseTarget_Heal_67AD ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw TargetRandomOtherAlly ; id 27
+    dw TargetRandomOtherAlly ; id 28
+    dw TargetRandomOtherAlly ; id 29
+    dw ChooseTarget_Vivify_6998 ; id 30
+    dw ChooseTarget_Vivify_6998 ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw ChooseTarget_Antidote_699B ; id 33
+    dw TargetFirstAlly ; id 34
+    dw TargetFirstAlly ; id 35
+    dw TargetFirstAlly ; id 36
+    dw ChooseTarget_Upper_69A1 ; id 37
+    dw TargetFirstAlly ; id 38
+    dw ChooseTarget_Sap_69A4 ; id 39
+    dw TargetFirstFoe ; id 40
+    dw ChooseTarget_Speed_69AA ; id 41
+    dw TargetFirstAlly ; id 42
+    dw ChooseTarget_Slow_69A7 ; id 43
+    dw TargetFirstFoe ; id 44
+    dw ChooseTarget_TwinHits_699E ; id 45
+    dw TargetFirstFoe ; id 46
+    dw TargetFoeWeightedBySlotOrder ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw ChooseTarget_RobMagic_6A13 ; id 50
+    dw TargetFirstFoe ; id 51
+    dw $0000 ; id 52
+    dw $0000 ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw ChooseTarget_Transform_6A04 ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw TargetFoeWeightedBySlotOrder ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw TargetFoeWeightedBySlotOrder ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw TargetFoeWeightedBySlotOrder ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw TargetFoeWeightedBySlotOrder ; id 80
+    dw TargetFoeWeightedBySlotOrder ; id 81
+    dw TargetFoeWeightedBySlotOrder ; id 82
+    dw TargetFoeWeightedBySlotOrder ; id 83
+    dw ChooseTarget_SlimeBlow_69E9 ; id 84
+    dw ChooseTarget_DrakSlash_69C5 ; id 85
+    dw ChooseTarget_BeastCut_69CB ; id 86
+    dw ChooseTarget_BirdBlow_69D1 ; id 87
+    dw ChooseTarget_BugBlow_69EF ; id 88
+    dw ChooseTarget_Shears_69F5 ; id 89
+    dw ChooseTarget_DevilCut_69D7 ; id 90
+    dw ChooseTarget_ZombieCut_69DD ; id 91
+    dw ChooseTarget_CleanCut_69E3 ; id 92
+    dw TargetFoeWeightedBySlotOrder ; id 93
+    dw ChooseTarget_MetalCut_69C2 ; id 94
+    dw TargetFoeWeightedBySlotOrder ; id 95
+    dw TargetFoeWeightedBySlotOrder ; id 96
+    dw TargetFoeWeightedBySlotOrder ; id 97
+    dw TargetFoeWeightedBySlotOrder ; id 98
+    dw TargetFoeWeightedBySlotOrder ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw TargetFoeWeightedBySlotOrder ; id 103
+    dw TargetSelf ; id 104
+    dw TargetFoeWeightedBySlotOrder ; id 105
+    dw TargetFoeWeightedBySlotOrder ; id 106
+    dw TargetFoeWeightedBySlotOrder ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw TargetFoeWeightedBySlotOrder ; id 109
+    dw TargetFoeWeightedBySlotOrder ; id 110
+    dw TargetFoeWeightedBySlotOrder ; id 111
+    dw TargetFoeWeightedBySlotOrder ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw ChooseTarget_OddDance_69BF ; id 118
+    dw ChooseTarget_OddDance_69BF ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw ChooseTarget_UltraDown_69AD ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw TargetFoeWeightedBySlotOrder ; id 139
+    dw ChooseTarget_SickLick_69B6 ; id 140
+    dw ChooseTarget_LegSweep_69B9 ; id 141
+    dw TargetFirstFoe ; id 142
+    dw TargetFoeWeightedBySlotOrder ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw ChooseTarget_MouthShut_69B3 ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw ChooseTarget_Cover_69B0 ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw TargetFoeWeightedBySlotOrder ; id 173
+    dw TargetSelf ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetFoeWeightedBySlotOrder ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw TargetFoeWeightedBySlotOrder ; id 209
+    dw TargetFoeWeightedBySlotOrder ; id 210
+    dw TargetFoeWeightedBySlotOrder ; id 211
+    dw TargetFoeWeightedBySlotOrder ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw TargetFoeWeightedBySlotOrder ; id 215
+    dw TargetFoeWeightedBySlotOrder ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw TargetFoeWeightedBySlotOrder ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 8 of ActionTargetModeTable (mode 4, near side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines8::
+Data_039_5000:: ; address name
+    dw ChooseTarget_SquallHit_543C ; id 0
+    dw ChooseTarget_Blaze ; id 1
+    dw ChooseTarget_Blaze ; id 2
+    dw ChooseTarget_Blaze ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw ChooseTarget_Beat ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw ChooseTarget_Heal_5593 ; id 22
+    dw ChooseTarget_Heal_5593 ; id 23
+    dw ChooseTarget_Heal_5593 ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw TargetRandomOtherAlly ; id 27
+    dw TargetRandomOtherAlly ; id 28
+    dw TargetRandomOtherAlly ; id 29
+    dw ChooseTarget_Vivify ; id 30
+    dw ChooseTarget_Vivify ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw ChooseTarget_Antidote ; id 33
+    dw TargetFirstAlly ; id 34
+    dw TargetFirstAlly ; id 35
+    dw TargetFirstAlly ; id 36
+    dw ChooseTarget_Upper ; id 37
+    dw TargetFirstAlly ; id 38
+    dw ChooseTarget_Sap ; id 39
+    dw TargetFirstFoe ; id 40
+    dw ChooseTarget_Speed ; id 41
+    dw TargetFirstAlly ; id 42
+    dw ChooseTarget_Slow ; id 43
+    dw TargetFirstFoe ; id 44
+    dw ChooseTarget_TwinHits ; id 45
+    dw TargetFirstFoe ; id 46
+    dw ChooseTarget_Sleep ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw ChooseTarget_RobMagic ; id 50
+    dw TargetFirstFoe ; id 51
+    dw TargetFirstFoe ; id 52
+    dw TargetFirstAlly ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw ChooseTarget_Transform ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw ChooseTarget_MegaMagic ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw ChooseTarget_WindBeast ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw ChooseTarget_Watershot ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw ChooseTarget_FireSlash ; id 80
+    dw ChooseTarget_VacuSlash ; id 81
+    dw ChooseTarget_BoltSlash ; id 82
+    dw ChooseTarget_IceSlash ; id 83
+    dw ChooseTarget_SlimeBlow ; id 84
+    dw ChooseTarget_DrakSlash ; id 85
+    dw ChooseTarget_BeastCut ; id 86
+    dw ChooseTarget_BirdBlow ; id 87
+    dw ChooseTarget_BugBlow ; id 88
+    dw ChooseTarget_Shears ; id 89
+    dw ChooseTarget_DevilCut ; id 90
+    dw ChooseTarget_ZombieCut ; id 91
+    dw ChooseTarget_CleanCut ; id 92
+    dw ChooseTarget_AquaCut ; id 93
+    dw ChooseTarget_MetalCut ; id 94
+    dw ChooseTarget_PoisonHit ; id 95
+    dw ChooseTarget_Paralyze ; id 96
+    dw ChooseTarget_NapAttack ; id 97
+    dw ChooseTarget_SquallHit_543C ; id 98
+    dw ChooseTarget_SquallHit_543C ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw ChooseTarget_GigaSlash ; id 103
+    dw TargetSelf ; id 104
+    dw ChooseTarget_SquallHit_543C ; id 105
+    dw ChooseTarget_SquallHit_543C ; id 106
+    dw ChooseTarget_SquallHit_543C ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw ChooseTarget_SquallHit_543C ; id 109
+    dw ChooseTarget_SquallHit_543C ; id 110
+    dw ChooseTarget_Ramming ; id 111
+    dw ChooseTarget_Ramming ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw ChooseTarget_OddDance ; id 118
+    dw ChooseTarget_OddDance ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw ChooseTarget_UltraDown ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw ChooseTarget_LushLicks ; id 139
+    dw ChooseTarget_SickLick ; id 140
+    dw ChooseTarget_LegSweep ; id 141
+    dw TargetFirstFoe ; id 142
+    dw ChooseTarget_LushLicks ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw ChooseTarget_MouthShut ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw ChooseTarget_Cover ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw $0000 ; id 173
+    dw $0000 ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw TargetSavedSlotOrRandomFoe ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw ChooseTarget_Blaze ; id 209
+    dw ChooseTarget_SquallHit_543C ; id 210
+    dw ChooseTarget_SquallHit_543C ; id 211
+    dw ChooseTarget_SquallHit_543C ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw ChooseTarget_SquallHit_543C ; id 215
+    dw ChooseTarget_SquallHit_543C ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw ChooseTarget_Blaze ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
+
+; E-0219 (C1: table 9 of ActionTargetModeTable (mode 4, far side); 228 code words, one per action id, as SkillTable (E-0204)).
+; record: target routine for this action id
+ActionTargetRoutines9::
+Data_039_51C8:: ; address name
+    dw ChooseTarget_SquallHit_66C5 ; id 0
+    dw ChooseTarget_Blaze_6A0A ; id 1
+    dw ChooseTarget_Blaze_6A0A ; id 2
+    dw ChooseTarget_Blaze_6A0A ; id 3
+    dw TargetFirstFoe ; id 4
+    dw TargetFirstFoe ; id 5
+    dw TargetFirstFoe ; id 6
+    dw TargetFirstFoe ; id 7
+    dw TargetFirstFoe ; id 8
+    dw TargetFirstFoe ; id 9
+    dw TargetFirstFoe ; id 10
+    dw TargetFirstFoe ; id 11
+    dw TargetFirstFoe ; id 12
+    dw TargetFirstFoe ; id 13
+    dw TargetFirstFoe ; id 14
+    dw TargetFirstFoe ; id 15
+    dw TargetFirstFoe ; id 16
+    dw TargetFirstFoe ; id 17
+    dw TargetFirstFoe ; id 18
+    dw ChooseTarget_Beat_6A07 ; id 19
+    dw TargetFirstFoe ; id 20
+    dw TargetFirstFoe ; id 21
+    dw ChooseTarget_Heal_68B0 ; id 22
+    dw ChooseTarget_Heal_68B0 ; id 23
+    dw ChooseTarget_Heal_68B0 ; id 24
+    dw TargetFirstAlly ; id 25
+    dw TargetFirstAlly ; id 26
+    dw TargetRandomOtherAlly ; id 27
+    dw TargetRandomOtherAlly ; id 28
+    dw TargetRandomOtherAlly ; id 29
+    dw ChooseTarget_Vivify_6998 ; id 30
+    dw ChooseTarget_Vivify_6998 ; id 31
+    dw TargetOwnSideFirstSlot ; id 32
+    dw ChooseTarget_Antidote_699B ; id 33
+    dw TargetFirstAlly ; id 34
+    dw TargetFirstAlly ; id 35
+    dw TargetFirstAlly ; id 36
+    dw ChooseTarget_Upper_69A1 ; id 37
+    dw TargetFirstAlly ; id 38
+    dw ChooseTarget_Sap_69A4 ; id 39
+    dw TargetFirstFoe ; id 40
+    dw ChooseTarget_Speed_69AA ; id 41
+    dw TargetFirstAlly ; id 42
+    dw ChooseTarget_Slow_69A7 ; id 43
+    dw TargetFirstFoe ; id 44
+    dw ChooseTarget_TwinHits_699E ; id 45
+    dw TargetFirstFoe ; id 46
+    dw ChooseTarget_Sleep_6A10 ; id 47
+    dw TargetFirstFoe ; id 48
+    dw TargetSelf ; id 49
+    dw ChooseTarget_RobMagic_6A13 ; id 50
+    dw TargetFirstFoe ; id 51
+    dw $0000 ; id 52
+    dw TargetSelf ; id 53
+    dw TargetSelf ; id 54
+    dw TargetSelf ; id 55
+    dw TargetFirstAlly ; id 56
+    dw TargetFirstAlly ; id 57
+    dw ChooseTarget_Transform_6A04 ; id 58
+    dw TargetSelf ; id 59
+    dw TargetSelf ; id 60
+    dw ChooseTarget_MegaMagic_6AFA ; id 61
+    dw TargetFirstFoe ; id 62
+    dw TargetFirstFoe ; id 63
+    dw TargetFirstFoe ; id 64
+    dw TargetFirstFoe ; id 65
+    dw TargetFirstFoe ; id 66
+    dw TargetFirstFoe ; id 67
+    dw TargetFirstFoe ; id 68
+    dw TargetFirstFoe ; id 69
+    dw TargetFirstFoe ; id 70
+    dw TargetFirstFoe ; id 71
+    dw ChooseTarget_WindBeast_6A22 ; id 72
+    dw TargetFirstFoe ; id 73
+    dw TargetFirstFoe ; id 74
+    dw TargetFirstFoe ; id 75
+    dw ChooseTarget_Watershot_6A99 ; id 76
+    dw TargetFirstFoe ; id 77
+    dw TargetRandomFoe ; id 78
+    dw TargetRandomFoe ; id 79
+    dw ChooseTarget_FireSlash_6A16 ; id 80
+    dw ChooseTarget_VacuSlash_6A1C ; id 81
+    dw ChooseTarget_BoltSlash_6A19 ; id 82
+    dw ChooseTarget_IceSlash_6A1F ; id 83
+    dw ChooseTarget_SlimeBlow_69E9 ; id 84
+    dw ChooseTarget_DrakSlash_69C5 ; id 85
+    dw ChooseTarget_BeastCut_69CB ; id 86
+    dw ChooseTarget_BirdBlow_69D1 ; id 87
+    dw ChooseTarget_BugBlow_69EF ; id 88
+    dw ChooseTarget_Shears_69F5 ; id 89
+    dw ChooseTarget_DevilCut_69D7 ; id 90
+    dw ChooseTarget_ZombieCut_69DD ; id 91
+    dw ChooseTarget_CleanCut_69E3 ; id 92
+    dw ChooseTarget_AquaCut_6A96 ; id 93
+    dw ChooseTarget_MetalCut_69C2 ; id 94
+    dw ChooseTarget_PoisonHit_69FB ; id 95
+    dw ChooseTarget_Paralyze_69FE ; id 96
+    dw ChooseTarget_NapAttack_69BC ; id 97
+    dw ChooseTarget_SquallHit_66C5 ; id 98
+    dw ChooseTarget_SquallHit_66C5 ; id 99
+    dw TargetRandomFoe ; id 100
+    dw TargetFirstFoe ; id 101
+    dw TargetFirstFoe ; id 102
+    dw ChooseTarget_GigaSlash_6A25 ; id 103
+    dw TargetSelf ; id 104
+    dw ChooseTarget_SquallHit_66C5 ; id 105
+    dw ChooseTarget_SquallHit_66C5 ; id 106
+    dw ChooseTarget_SquallHit_66C5 ; id 107
+    dw TargetRandomOtherSlot ; id 108
+    dw ChooseTarget_SquallHit_66C5 ; id 109
+    dw ChooseTarget_Berserker ; id 110
+    dw ChooseTarget_Berserker ; id 111
+    dw ChooseTarget_SquallHit_66C5 ; id 112
+    dw TargetFirstFoe ; id 113
+    dw TargetFirstFoe ; id 114
+    dw TargetFirstFoe ; id 115
+    dw TargetFirstFoe ; id 116
+    dw TargetFirstFoe ; id 117
+    dw ChooseTarget_OddDance_69BF ; id 118
+    dw ChooseTarget_OddDance_69BF ; id 119
+    dw TargetFirstFoe ; id 120
+    dw TargetFirstFoe ; id 121
+    dw TargetFirstFoe ; id 122
+    dw TargetOwnSideFirstSlot ; id 123
+    dw TargetFirstAlly ; id 124
+    dw TargetSelf ; id 125
+    dw TargetFirstFoe ; id 126
+    dw TargetFirstFoe ; id 127
+    dw TargetFirstFoe ; id 128
+    dw TargetFirstAlly ; id 129
+    dw ChooseTarget_UltraDown_69AD ; id 130
+    dw TargetFirstFoe ; id 131
+    dw TargetFirstFoe ; id 132
+    dw TargetSelf ; id 133
+    dw TargetSelf ; id 134
+    dw TargetSelf ; id 135
+    dw TargetSelf ; id 136
+    dw TargetSelf ; id 137
+    dw TargetSelf ; id 138
+    dw ChooseTarget_LushLicks_6A01 ; id 139
+    dw ChooseTarget_SickLick_69B6 ; id 140
+    dw ChooseTarget_LegSweep_69B9 ; id 141
+    dw TargetFirstFoe ; id 142
+    dw ChooseTarget_LushLicks_6A01 ; id 143
+    dw TargetFirstFoe ; id 144
+    dw TargetRandomFoe ; id 145
+    dw TargetFirstFoe ; id 146
+    dw ChooseTarget_MouthShut_69B3 ; id 147
+    dw TargetSelf ; id 148
+    dw TargetSelf ; id 149
+    dw TargetSelf ; id 150
+    dw ChooseTarget_Cover_69B0 ; id 151
+    dw TargetFirstAlly ; id 152
+    dw TargetSelf ; id 153
+    dw TargetFirstAlly ; id 154
+    dw TargetSelf ; id 155
+    dw TargetSelf ; id 156
+    dw TargetSelf ; id 157
+    dw TargetSelf ; id 158
+    dw TargetSelf ; id 159
+    dw TargetSelf ; id 160
+    dw TargetSelf ; id 161
+    dw $0000 ; id 162
+    dw $0000 ; id 163
+    dw $0000 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw $0000 ; id 168
+    dw $0000 ; id 169
+    dw TargetRandomFoe ; id 170
+    dw TargetSelf ; id 171
+    dw TargetSelf ; id 172
+    dw ChooseTarget_PanicAll ; id 173
+    dw TargetSelf ; id 174
+    dw $0000 ; id 175
+    dw TargetFirstFoe ; id 176
+    dw TargetFirstAlly ; id 177
+    dw TargetFirstFoe ; id 178
+    dw TargetFirstFoe ; id 179
+    dw TargetFirstAlly ; id 180
+    dw TargetFirstFoe ; id 181
+    dw TargetFirstFoe ; id 182
+    dw TargetSelf ; id 183
+    dw TargetSelf ; id 184
+    dw TargetFirstFoe ; id 185
+    dw TargetFirstFoe ; id 186
+    dw TargetOwnSideFirstSlot ; id 187
+    dw TargetFirstAlly ; id 188
+    dw TargetFirstFoe ; id 189
+    dw $0000 ; id 190
+    dw TargetSelf ; id 191
+    dw TargetRandomOtherAlly ; id 192
+    dw TargetRandomFoe ; id 193
+    dw TargetSelf ; id 194
+    dw TargetSelf ; id 195
+    dw TargetSelf ; id 196
+    dw TargetSelf ; id 197
+    dw TargetSelf ; id 198
+    dw TargetSelf ; id 199
+    dw TargetSelf ; id 200
+    dw TargetSelf ; id 201
+    dw TargetSelf ; id 202
+    dw TargetSelf ; id 203
+    dw ChooseTarget_SquallHit_66C5 ; id 204
+    dw TargetSelf ; id 205
+    dw TargetOwnSideFirstSlot ; id 206
+    dw TargetFirstAlly ; id 207
+    dw TargetFirstFoe ; id 208
+    dw ChooseTarget_Blaze_6A0A ; id 209
+    dw ChooseTarget_SquallHit_66C5 ; id 210
+    dw ChooseTarget_SquallHit_66C5 ; id 211
+    dw ChooseTarget_SquallHit_66C5 ; id 212
+    dw TargetFirstFoe ; id 213
+    dw TargetFirstFoe ; id 214
+    dw ChooseTarget_SquallHit_66C5 ; id 215
+    dw ChooseTarget_SquallHit_66C5 ; id 216
+    dw TargetFirstFoe ; id 217
+    dw TargetFirstAlly ; id 218
+    dw TargetFirstFoe ; id 219
+    dw TargetSelf ; id 220
+    dw TargetFirstAlly ; id 221
+    dw TargetFirstFoe ; id 222
+    dw ChooseTarget_Blaze_6A0A ; id 223
+    dw TargetSelf ; id 224
+    dw TargetFirstFoe ; id 225
+    dw TargetSelf ; id 226
+    dw TargetSelf ; id 227
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 0 (no name), 98 SquallHit, 99 BiAttack, 105 PsycheUp, 106 HighJump, 107 EvilSlash, 109 TwinSlash, 110 Berserker, $D2, $D3 ...; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleTarget, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleDamageLo, wBattleTargetChoice
-ChooseTarget_SquallHit:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SquallHit:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5390:: ; address name
     ld hl, wBattleDamageLo
     ld bc, $0008
@@ -1435,7 +2781,7 @@ Jump_039_542B::
 ; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleTarget, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleDamageLo, wBattleTargetChoice
-ChooseTarget_SquallHit_543C:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SquallHit_543C:: ; code pointer of the table ActionTargetRoutines8; C0
 Func_039_543C:: ; address name
     ld hl, wBattleDamageLo
     ld bc, $0008
@@ -1575,7 +2921,7 @@ Jump_039_5503::
 ; reads: wBattleActor, wBattleArg3, wNameSlot
 ; writes: wBattleArg3, wNameSlot
 ; points at: wBattleTemp7D, wTargetEstimates, wBattleHP
-ChooseTarget_Heal:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5514:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1655,7 +3001,7 @@ Jump_039_5553::
 ; reads: wBattleActor, hTemp0, hTemp1, hTemp2, wBattleArg3, wNameSlot, wBattleArg0, wBattleTemp7D, ...
 ; writes: wBattleArg0, wBattleArg3, wNameSlot, hTemp0, hTemp1, hTemp2, wBattleTemp7D, wBattleTemp7E, ...
 ; points at: hTemp0, wBattleArg0, wSlotDamageFlags, wBattleMaxHP, wBattleTargetChoice, wBattleTemp7D, wTargetEstimates, wBattleHP
-ChooseTarget_Heal_5593:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal_5593:: ; code pointer of the table ActionTargetRoutines8; C0
 Func_039_5593:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1814,7 +3160,7 @@ Jump_039_5691::
 ; reads: wBattleActor, hTemp0, wRandomLo
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleSlotOut, hTemp1, hTemp0, wBattleTargetChoice
-ChooseTarget_Vivify:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Vivify:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_569C:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1898,7 +3244,7 @@ Jump_039_5708::
 ; reads: wBattleActor, wRandomLo, hTemp0
 ; writes: hTemp1, hTemp2, hTemp3, hTemp0
 ; points at: hTemp1, wBattleStatus, wBattleTargetChoice
-ChooseTarget_Antidote:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Antidote:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5716:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2033,7 +3379,7 @@ Jump_039_57C1::
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp0, wRandomLo
 ; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleStatus, wBattleTargetChoice
-ChooseTarget_TwinHits:: ; heuristic: follows a terminator; C0
+ChooseTarget_TwinHits:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_57D8:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2117,7 +3463,7 @@ Jump_039_5840::
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleTargetChoice
-ChooseTarget_Upper:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Upper:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5857:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2183,7 +3529,7 @@ Jump_039_58A1::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus2
-ChooseTarget_Sap:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Sap:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_58B7:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2245,7 +3591,7 @@ Jump_039_5909::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus2
-ChooseTarget_Slow:: ; heuristic: follows a terminator; C0
+ChooseTarget_Slow:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5911:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2307,7 +3653,7 @@ Jump_039_5963::
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleTargetChoice
-ChooseTarget_Speed:: ; heuristic: follows a terminator; C0
+ChooseTarget_Speed:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_596B:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2372,7 +3718,7 @@ Jump_039_59B5::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
-ChooseTarget_UltraDown:: ; heuristic: follows a terminator; C0
+ChooseTarget_UltraDown:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_59CB:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2436,7 +3782,7 @@ Jump_039_5A1F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp4, hTemp1, hTemp2
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
-ChooseTarget_Cover:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Cover:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5A27:: ; address name
     ld a, [wBattleActor]
     ld e, a
@@ -2502,7 +3848,7 @@ Jump_039_5A7B::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus1
-ChooseTarget_MouthShut:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MouthShut:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5A84:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2560,7 +3906,7 @@ Jump_039_5AD3::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus
-ChooseTarget_SickLick:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SickLick:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5ADB:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2631,7 +3977,7 @@ Jump_039_5B38::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wSlotDamageFlags, wBattleStatus
-ChooseTarget_LegSweep:: ; heuristic: target of a pointer table; C0
+ChooseTarget_LegSweep:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5B40:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2697,7 +4043,7 @@ Jump_039_5B9D::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus
-ChooseTarget_NapAttack:: ; heuristic: target of a pointer table; C0
+ChooseTarget_NapAttack:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5BA5:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2755,7 +4101,7 @@ Jump_039_5BF1::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
-ChooseTarget_OddDance:: ; heuristic: follows a terminator; C0
+ChooseTarget_OddDance:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5BF9:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2808,7 +4154,7 @@ Jump_039_5C3B::
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp3
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wSlotDamageFlags
-ChooseTarget_MetalCut:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MetalCut:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5C43:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2862,7 +4208,7 @@ Jump_039_5C8E::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_DrakSlash:: ; heuristic: target of a pointer table; C0
+ChooseTarget_DrakSlash:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5C97:: ; address name
     ld d, $01
     call TargetWeakestFoeOfFamilyD
@@ -2870,7 +4216,7 @@ Func_039_5C97:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_BeastCut:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BeastCut:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5C9D:: ; address name
     ld d, $02
     call TargetWeakestFoeOfFamilyD
@@ -2878,7 +4224,7 @@ Func_039_5C9D:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_BirdBlow:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BirdBlow:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5CA3:: ; address name
     ld d, $03
     call TargetWeakestFoeOfFamilyD
@@ -2886,7 +4232,7 @@ Func_039_5CA3:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_DevilCut:: ; heuristic: target of a pointer table; C0
+ChooseTarget_DevilCut:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5CA9:: ; address name
     ld d, $06
     call TargetWeakestFoeOfFamilyD
@@ -2894,7 +4240,7 @@ Func_039_5CA9:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_ZombieCut:: ; heuristic: target of a pointer table; C0
+ChooseTarget_ZombieCut:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5CAF:: ; address name
     ld d, $07
     call TargetWeakestFoeOfFamilyD
@@ -2902,7 +4248,7 @@ Func_039_5CAF:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_CleanCut:: ; heuristic: target of a pointer table; C0
+ChooseTarget_CleanCut:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5CB5:: ; address name
     ld d, $08
     call TargetWeakestFoeOfFamilyD
@@ -2910,7 +4256,7 @@ Func_039_5CB5:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_SlimeBlow:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SlimeBlow:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5CBB:: ; address name
     ld d, $00
     call TargetWeakestFoeOfFamilyD
@@ -2918,7 +4264,7 @@ Func_039_5CBB:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_BugBlow:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BugBlow:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5CC1:: ; address name
     ld d, $05
     call TargetWeakestFoeOfFamilyD
@@ -2926,7 +4272,7 @@ Func_039_5CC1:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_Shears:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Shears:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5CC7:: ; address name
     ld d, $04
     call TargetWeakestFoeOfFamilyD
@@ -2937,7 +4283,7 @@ Func_039_5CC7:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus
-ChooseTarget_PoisonHit:: ; heuristic: target of a pointer table; C0
+ChooseTarget_PoisonHit:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5CCD:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2989,7 +4335,7 @@ Jump_039_5D11::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus
-ChooseTarget_Paralyze:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Paralyze:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5D19:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3043,7 +4389,7 @@ Jump_039_5D5F::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus
-ChooseTarget_LushLicks:: ; heuristic: target of a pointer table; C0
+ChooseTarget_LushLicks:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5D67:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3101,7 +4447,7 @@ Jump_039_5DB3::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp3
 ; writes: hTempA, hTemp0, hTemp3, hTemp1, hTemp2
-ChooseTarget_Transform:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Transform:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5DBB:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3154,7 +4500,7 @@ Jump_039_5DFA::
 ; reads: wBattleActor, hTemp1, hTemp2, hTempA, hTemp3, hTemp4, hTemp0
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
 ; points at: wBattleStatus2, hTemp2, wBattleTargetChoice
-ChooseTarget_Beat:: ; heuristic: follows a terminator; C0
+ChooseTarget_Beat:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5E03:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3335,7 +4681,7 @@ Jump_039_5EFA::
 ; reads: wBattleActionId, wLinkMode, wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, ...
 ; writes: wRecordBuffer, wBattleArg1, wBattleArg2, wBattleArg3, wBattleArg0, hTempA, hTemp0, hTemp1, ...
 ; points at: hTemp8, wBattleStatus2, wSlotResistances, wBattleTargetChoice
-ChooseTarget_Blaze:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Blaze:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_5F0E:: ; address name
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
@@ -3480,7 +4826,7 @@ Jump_039_6012::
 ; reads: wBattleActor, hTemp4, hTemp3, hTemp0, hTempA, hTemp1, hTemp2
 ; writes: hTempA, hTemp0, hTemp3, hTemp4, hTemp1, hTemp2
 ; points at: wBattleStatus6, wBattleStatus7
-ChooseTarget_Ramming:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Ramming:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_6014:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3625,7 +4971,7 @@ Jump_039_60E9::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus
-ChooseTarget_Sleep:: ; heuristic: follows a terminator; C0
+ChooseTarget_Sleep:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_60ED:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3690,7 +5036,7 @@ Jump_039_6143::
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus2
-ChooseTarget_RobMagic:: ; heuristic: follows a terminator; C0
+ChooseTarget_RobMagic:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_614B:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3749,7 +5095,7 @@ Jump_039_6199::
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3, wSlotResistances
-ChooseTarget_FireSlash:: ; heuristic: target of a pointer table; C0
+ChooseTarget_FireSlash:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_61A1:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3830,7 +5176,7 @@ Jump_039_621A::
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3
-ChooseTarget_BoltSlash:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BoltSlash:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_6222:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3911,7 +5257,7 @@ Jump_039_629B::
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3
-ChooseTarget_VacuSlash:: ; heuristic: target of a pointer table; C0
+ChooseTarget_VacuSlash:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_62A3:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -3993,7 +5339,7 @@ Jump_039_631C::
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3
-ChooseTarget_IceSlash:: ; heuristic: target of a pointer table; C0
+ChooseTarget_IceSlash:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_6324:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -4074,7 +5420,7 @@ Jump_039_639D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
-ChooseTarget_WindBeast:: ; heuristic: follows a terminator; C0
+ChooseTarget_WindBeast:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_63A5:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -4148,7 +5494,7 @@ Jump_039_640E::
 ; reads: wBattleActor, wBattleTarget, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleTarget, hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleTargetChoice
-ChooseTarget_GigaSlash:: ; heuristic: target of a pointer table; C0
+ChooseTarget_GigaSlash:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_6416:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -4272,7 +5618,7 @@ Jump_039_64CA::
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3, wSlotResistances
-ChooseTarget_AquaCut:: ; heuristic: target of a pointer table; C0
+ChooseTarget_AquaCut:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_64DB:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -4354,7 +5700,7 @@ Jump_039_6554::
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wSlotResistances
-ChooseTarget_Watershot:: ; heuristic: follows a terminator; C0
+ChooseTarget_Watershot:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_655C:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -4428,7 +5774,7 @@ Jump_039_65C5::
 ; reads: wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, wTargetEstimates, wBattleDamageLo, ...
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wTargetEstimates, ...
 ; points at: wBattleTargetChoice
-ChooseTarget_MegaMagic:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MegaMagic:: ; code pointer of the table ActionTargetRoutines4; C0
 Func_039_65CD:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -4544,7 +5890,7 @@ Jump_039_668F::
 ; reads: wBattleActor
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: hTemp0, hTemp1
-TargetFoeWeightedBySlotOrder:: ; heuristic: target of a pointer table; C0
+TargetFoeWeightedBySlotOrder:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6691:: ; address name
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -4582,7 +5928,7 @@ Jump_039_66BD::
 ; reads: wBattleActor, wBattleDamageLo, wBattleDamageHi, wTargetEstimates, hTemp1, hTemp2, wEffectTemp0, wEffectTemp1, ...
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi, wTargetEstimates, wEffectTemp0, ...
 ; points at: hTemp0, hTemp1, wBattleDamageLo
-ChooseTarget_SquallHit_66C5:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SquallHit_66C5:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_66C5:: ; address name
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -4718,7 +6064,7 @@ Jump_039_67A9::
 ; reads: wBattleActor, hTemp5, hTemp6, hTemp1, hTemp2, hTemp0, hTemp3, hTemp4
 ; writes: wWorkBuf, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6
 ; points at: wWorkBuf, hTemp1, wBattleTargetChoice
-ChooseTarget_Heal_67AD:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal_67AD:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_67AD:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -4892,7 +6238,7 @@ Jump_039_68AE::
 ; reads: wBattleActor, hTemp4, hTemp5, hTemp0, wEffectTemp0, wEffectTemp1, wTargetEstimates, hTemp3, ...
 ; writes: hTemp0, hTemp4, hTemp5, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi, ...
 ; points at: hTemp0, wBattleDamageLo, hTemp1, wBattleTargetChoice, wWorkBuf
-ChooseTarget_Heal_68B0:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal_68B0:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_68B0:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -5034,7 +6380,7 @@ Jump_039_6988::
 ; reads: wBattleActor, hTemp0, wRandomLo
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleSlotOut, hTemp1, hTemp0, wBattleTargetChoice
-ChooseTarget_Vivify_6998:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Vivify_6998:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_6998:: ; address name
     jp ChooseTarget_Vivify
 
@@ -5043,7 +6389,7 @@ Func_039_6998:: ; address name
 ; reads: wBattleActor, wRandomLo, hTemp0
 ; writes: hTemp1, hTemp2, hTemp3, hTemp0
 ; points at: hTemp1, wBattleStatus, wBattleTargetChoice
-ChooseTarget_Antidote_699B:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Antidote_699B:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_699B:: ; address name
     jp ChooseTarget_Antidote
 
@@ -5052,7 +6398,7 @@ Func_039_699B:: ; address name
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp0, wRandomLo
 ; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleStatus, wBattleTargetChoice
-ChooseTarget_TwinHits_699E:: ; heuristic: follows a terminator; C0
+ChooseTarget_TwinHits_699E:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_699E:: ; address name
     jp ChooseTarget_TwinHits
 
@@ -5061,7 +6407,7 @@ Func_039_699E:: ; address name
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleTargetChoice
-ChooseTarget_Upper_69A1:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Upper_69A1:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69A1:: ; address name
     jp ChooseTarget_Upper
 
@@ -5070,7 +6416,7 @@ Func_039_69A1:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus2
-ChooseTarget_Sap_69A4:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Sap_69A4:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69A4:: ; address name
     jp ChooseTarget_Sap
 
@@ -5079,7 +6425,7 @@ Func_039_69A4:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus2
-ChooseTarget_Slow_69A7:: ; heuristic: follows a terminator; C0
+ChooseTarget_Slow_69A7:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69A7:: ; address name
     jp ChooseTarget_Slow
 
@@ -5088,7 +6434,7 @@ Func_039_69A7:: ; address name
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleTargetChoice
-ChooseTarget_Speed_69AA:: ; heuristic: follows a terminator; C0
+ChooseTarget_Speed_69AA:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69AA:: ; address name
     jp ChooseTarget_Speed
 
@@ -5096,7 +6442,7 @@ Func_039_69AA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
-ChooseTarget_UltraDown_69AD:: ; heuristic: follows a terminator; C0
+ChooseTarget_UltraDown_69AD:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69AD:: ; address name
     jp ChooseTarget_UltraDown
 
@@ -5104,7 +6450,7 @@ Func_039_69AD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp4, hTemp1, hTemp2
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
-ChooseTarget_Cover_69B0:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Cover_69B0:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69B0:: ; address name
     jp ChooseTarget_Cover
 
@@ -5113,7 +6459,7 @@ Func_039_69B0:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus1
-ChooseTarget_MouthShut_69B3:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MouthShut_69B3:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69B3:: ; address name
     jp ChooseTarget_MouthShut
 
@@ -5122,7 +6468,7 @@ Func_039_69B3:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus
-ChooseTarget_SickLick_69B6:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SickLick_69B6:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69B6:: ; address name
     jp ChooseTarget_SickLick
 
@@ -5131,7 +6477,7 @@ Func_039_69B6:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wSlotDamageFlags, wBattleStatus
-ChooseTarget_LegSweep_69B9:: ; heuristic: target of a pointer table; C0
+ChooseTarget_LegSweep_69B9:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69B9:: ; address name
     jp ChooseTarget_LegSweep
 
@@ -5140,7 +6486,7 @@ Func_039_69B9:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus
-ChooseTarget_NapAttack_69BC:: ; heuristic: target of a pointer table; C0
+ChooseTarget_NapAttack_69BC:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_69BC:: ; address name
     jp ChooseTarget_NapAttack
 
@@ -5148,7 +6494,7 @@ Func_039_69BC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
-ChooseTarget_OddDance_69BF:: ; heuristic: follows a terminator; C0
+ChooseTarget_OddDance_69BF:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69BF:: ; address name
     jp ChooseTarget_OddDance
 
@@ -5157,13 +6503,13 @@ Func_039_69BF:: ; address name
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp3
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wSlotDamageFlags
-ChooseTarget_MetalCut_69C2:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MetalCut_69C2:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69C2:: ; address name
     jp ChooseTarget_MetalCut
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_DrakSlash_69C5:: ; heuristic: target of a pointer table; C0
+ChooseTarget_DrakSlash_69C5:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69C5:: ; address name
     ld d, $01
     call TargetRandomFoeOfFamilyD
@@ -5171,7 +6517,7 @@ Func_039_69C5:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_BeastCut_69CB:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BeastCut_69CB:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69CB:: ; address name
     ld d, $02
     call TargetRandomFoeOfFamilyD
@@ -5179,7 +6525,7 @@ Func_039_69CB:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_BirdBlow_69D1:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BirdBlow_69D1:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69D1:: ; address name
     ld d, $03
     call TargetRandomFoeOfFamilyD
@@ -5187,7 +6533,7 @@ Func_039_69D1:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_DevilCut_69D7:: ; heuristic: target of a pointer table; C0
+ChooseTarget_DevilCut_69D7:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69D7:: ; address name
     ld d, $06
     call TargetRandomFoeOfFamilyD
@@ -5195,7 +6541,7 @@ Func_039_69D7:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_ZombieCut_69DD:: ; heuristic: target of a pointer table; C0
+ChooseTarget_ZombieCut_69DD:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69DD:: ; address name
     ld d, $07
     call TargetRandomFoeOfFamilyD
@@ -5203,7 +6549,7 @@ Func_039_69DD:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_CleanCut_69E3:: ; heuristic: target of a pointer table; C0
+ChooseTarget_CleanCut_69E3:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69E3:: ; address name
     ld d, $08
     call TargetRandomFoeOfFamilyD
@@ -5211,7 +6557,7 @@ Func_039_69E3:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_SlimeBlow_69E9:: ; heuristic: target of a pointer table; C0
+ChooseTarget_SlimeBlow_69E9:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69E9:: ; address name
     ld d, $00
     call TargetRandomFoeOfFamilyD
@@ -5219,7 +6565,7 @@ Func_039_69E9:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_BugBlow_69EF:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BugBlow_69EF:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69EF:: ; address name
     ld d, $05
     call TargetRandomFoeOfFamilyD
@@ -5227,7 +6573,7 @@ Func_039_69EF:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-ChooseTarget_Shears_69F5:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Shears_69F5:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_69F5:: ; address name
     ld d, $04
     call TargetRandomFoeOfFamilyD
@@ -5238,7 +6584,7 @@ Func_039_69F5:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus
-ChooseTarget_PoisonHit_69FB:: ; heuristic: target of a pointer table; C0
+ChooseTarget_PoisonHit_69FB:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_69FB:: ; address name
     jp ChooseTarget_PoisonHit
 
@@ -5247,7 +6593,7 @@ Func_039_69FB:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus
-ChooseTarget_Paralyze_69FE:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Paralyze_69FE:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_69FE:: ; address name
     jp ChooseTarget_Paralyze
 
@@ -5256,7 +6602,7 @@ Func_039_69FE:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus
-ChooseTarget_LushLicks_6A01:: ; heuristic: target of a pointer table; C0
+ChooseTarget_LushLicks_6A01:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A01:: ; address name
     jp ChooseTarget_LushLicks
 
@@ -5264,7 +6610,7 @@ Func_039_6A01:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp3
 ; writes: hTempA, hTemp0, hTemp3, hTemp1, hTemp2
-ChooseTarget_Transform_6A04:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Transform_6A04:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_6A04:: ; address name
     jp ChooseTarget_Transform
 
@@ -5273,7 +6619,7 @@ Func_039_6A04:: ; address name
 ; reads: wBattleActor, hTemp1, hTemp2, hTempA, hTemp3, hTemp4, hTemp0
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
 ; points at: wBattleStatus2, hTemp2, wBattleTargetChoice
-ChooseTarget_Beat_6A07:: ; heuristic: follows a terminator; C0
+ChooseTarget_Beat_6A07:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A07:: ; address name
     jp ChooseTarget_Beat
 
@@ -5282,7 +6628,7 @@ Func_039_6A07:: ; address name
 ; reads: wBattleActionId, wLinkMode, wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, ...
 ; writes: wRecordBuffer, wBattleArg1, wBattleArg2, wBattleArg3, wBattleArg0, hTempA, hTemp0, hTemp1, ...
 ; points at: hTemp8, wBattleStatus2, wSlotResistances, wBattleTargetChoice
-ChooseTarget_Blaze_6A0A:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Blaze_6A0A:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A0A:: ; address name
     jp ChooseTarget_Blaze
 
@@ -5291,7 +6637,7 @@ Func_039_6A0A:: ; address name
 ; reads: wBattleActor, hTemp4, hTemp3, hTemp0, hTempA, hTemp1, hTemp2
 ; writes: hTempA, hTemp0, hTemp3, hTemp4, hTemp1, hTemp2
 ; points at: wBattleStatus6, wBattleStatus7
-ChooseTarget_Berserker:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Berserker:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A0D:: ; address name
     jp ChooseTarget_Ramming
 
@@ -5300,7 +6646,7 @@ Func_039_6A0D:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus
-ChooseTarget_Sleep_6A10:: ; heuristic: follows a terminator; C0
+ChooseTarget_Sleep_6A10:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A10:: ; address name
     jp ChooseTarget_Sleep
 
@@ -5309,7 +6655,7 @@ Func_039_6A10:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus2
-ChooseTarget_RobMagic_6A13:: ; heuristic: follows a terminator; C0
+ChooseTarget_RobMagic_6A13:: ; code pointer of the table ActionTargetRoutines5; C0
 Func_039_6A13:: ; address name
     jp ChooseTarget_RobMagic
 
@@ -5318,7 +6664,7 @@ Func_039_6A13:: ; address name
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3, wSlotResistances
-ChooseTarget_FireSlash_6A16:: ; heuristic: target of a pointer table; C0
+ChooseTarget_FireSlash_6A16:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A16:: ; address name
     jp ChooseTarget_FireSlash
 
@@ -5327,7 +6673,7 @@ Func_039_6A16:: ; address name
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3
-ChooseTarget_BoltSlash_6A19:: ; heuristic: target of a pointer table; C0
+ChooseTarget_BoltSlash_6A19:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A19:: ; address name
     jp ChooseTarget_BoltSlash
 
@@ -5336,7 +6682,7 @@ Func_039_6A19:: ; address name
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3
-ChooseTarget_VacuSlash_6A1C:: ; heuristic: target of a pointer table; C0
+ChooseTarget_VacuSlash_6A1C:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A1C:: ; address name
     jp ChooseTarget_VacuSlash
 
@@ -5345,7 +6691,7 @@ Func_039_6A1C:: ; address name
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3
-ChooseTarget_IceSlash_6A1F:: ; heuristic: target of a pointer table; C0
+ChooseTarget_IceSlash_6A1F:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A1F:: ; address name
     jp ChooseTarget_IceSlash
 
@@ -5353,7 +6699,7 @@ Func_039_6A1F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
-ChooseTarget_WindBeast_6A22:: ; heuristic: follows a terminator; C0
+ChooseTarget_WindBeast_6A22:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A22:: ; address name
     jp ChooseTarget_WindBeast
 
@@ -5361,7 +6707,7 @@ Func_039_6A22:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
-ChooseTarget_GigaSlash_6A25:: ; heuristic: target of a pointer table; C0
+ChooseTarget_GigaSlash_6A25:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A25:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -5435,7 +6781,7 @@ Jump_039_6A8E::
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus3, wSlotResistances
-ChooseTarget_AquaCut_6A96:: ; heuristic: target of a pointer table; C0
+ChooseTarget_AquaCut_6A96:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A96:: ; address name
     jp ChooseTarget_AquaCut
 
@@ -5444,7 +6790,7 @@ Func_039_6A96:: ; address name
 ; reads: wBattleActor, hTemp1, wBattleDamageLo, wBattleDamageHi
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wBattleDamageHi
 ; points at: wSlotResistances
-ChooseTarget_Watershot_6A99:: ; heuristic: follows a terminator; C0
+ChooseTarget_Watershot_6A99:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A99:: ; address name
     jp ChooseTarget_Watershot
 
@@ -5453,7 +6799,7 @@ Func_039_6A99:: ; address name
 ; reads: wBattleActor, hTemp1
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus
-ChooseTarget_PanicAll:: ; heuristic: target of a pointer table; C0
+ChooseTarget_PanicAll:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6A9C:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -5518,7 +6864,7 @@ Jump_039_6AF2::
 ; reads: wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, wTargetEstimates, wBattleDamageLo, ...
 ; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wTargetEstimates, ...
 ; points at: wBattleTargetChoice
-ChooseTarget_MegaMagic_6AFA:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MegaMagic_6AFA:: ; code pointer of the table ActionTargetRoutines9; C0
 Func_039_6AFA:: ; address name
     jp ChooseTarget_MegaMagic
 
@@ -5527,7 +6873,7 @@ Func_039_6AFA:: ; address name
 ; reads: wBattleActor, hTemp0, hTemp1, wRandomLo, hTemp2
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, hTemp0, hTemp1, wBattleTargetChoice
-ChooseTarget_Antidote_6AFD:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Antidote_6AFD:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6AFD:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -5540,7 +6886,7 @@ Func_039_6AFD:: ; address name
 ; reads: wBattleActor, hTemp0, hTemp1, wRandomLo, hTemp2
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: hTemp0, hTemp1, wBattleTargetChoice
-ChooseTarget_Upper_6B0A:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Upper_6B0A:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6B0A:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -5594,7 +6940,7 @@ Jump_039_6B41::
 ; reads: wBattleActor, hTemp0, hTemp1, wRandomLo, hTemp2
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: hTemp0, hTemp1, wBattleTargetChoice
-ChooseTarget_Speed_6B5D:: ; heuristic: follows a terminator; C0
+ChooseTarget_Speed_6B5D:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6B5D:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -5648,13 +6994,59 @@ Jump_039_6B94::
 ; reads: wBattleActor, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: hTemp0, hTemp1
-ChooseTarget_Sap_6BB0:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Sap_6BB0:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6BB0:: ; address name
     ld de, GetBattleDEF_Bank39
     jp Jump_039_6C30
-    db $11, $03, $72, $C3, $30, $6C, $FA, $A4, $D8, $E6, $04, $21, $0C, $D8, $16, $10
-    db $C3, $E3, $6B, $FA, $A4, $D8, $E6, $04, $21, $0C, $D8, $16, $40, $C3, $E3, $6B
-    db $FA, $A4, $D8, $E6, $04, $21, $0C, $D8, $16, $20, $C3, $E3, $6B
+
+; per-action target routine: DE = GetBattleAGL_Bank39, then the shared stat comparison at $6C30 (E-0219)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, hTemp0
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: hTemp0, hTemp1
+TargetByAllyAGL:: ; code pointer of the table ActionTargetRoutines2; C0
+Func_039_6BB6:: ; address name
+    ld de, GetBattleAGL_Bank39
+    jp Jump_039_6C30
+
+; per-action target routine: scans the actor's side for wBattleStatus (+9 * slot) bit mask $10 (shared code at $6BE3) (E-0219)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, hTemp0, hTemp1, wRandomLo, hTemp2
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: wBattleStatus, hTemp0, hTemp1, wBattleTargetChoice
+TargetAllyWithStatusBit10:: ; heuristic: follows a terminator; C0
+Func_039_6BBC:: ; address name
+    ld a, [wBattleActor]
+    and a, $04
+    ld hl, wBattleStatus
+    ld d, $10
+    jp Jump_039_6BE3
+
+; as TargetAllyWithStatusBit10 with mask $40 (E-0219)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, hTemp0, hTemp1, wRandomLo, hTemp2
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: wBattleStatus, hTemp0, hTemp1, wBattleTargetChoice
+TargetAllyWithStatusBit40:: ; heuristic: follows a terminator; C0
+Func_039_6BC9:: ; address name
+    ld a, [wBattleActor]
+    and a, $04
+    ld hl, wBattleStatus
+    ld d, $40
+    jp Jump_039_6BE3
+
+; as TargetAllyWithStatusBit10 with mask $20 (E-0219)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor, hTemp0, hTemp1, wRandomLo, hTemp2
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: wBattleStatus, hTemp0, hTemp1, wBattleTargetChoice
+TargetAllyWithStatusBit20:: ; heuristic: follows a terminator; C0
+Func_039_6BD6:: ; address name
+    ld a, [wBattleActor]
+    and a, $04
+    ld hl, wBattleStatus
+    ld d, $20
+    jp Jump_039_6BE3
 
 Jump_039_6BE3::
     ld c, a
@@ -5750,7 +7142,7 @@ Jump_039_6C67::
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp3, hTemp4, wRandomLo, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleTargetChoice
-ChooseTarget_Heal_6C75:: ; heuristic: target of a pointer table; C0
+ChooseTarget_Heal_6C75:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6C75:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -5832,7 +7224,7 @@ Jump_039_6CD4::
 ; reads: wBattleActor, hTemp1, hTemp2, hTemp3, hTemp4, wRandomLo, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleTargetChoice
-ChooseTarget_MPass:: ; heuristic: target of a pointer table; C0
+ChooseTarget_MPass:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6CE9:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -6299,9 +7691,9 @@ Jump_039_6F65::
     ret
 
 ; HL = 999 when the base AGL doubled (quadrupled for allies or link battles) reaches 999, otherwise the base AGL times that factor (E-0124)
-; 2 call sites from 2 routines (e.g. ChooseTarget_Speed_6B5D, ChooseTarget_Speed)
+; 2 call sites from 2 routines (e.g. ChooseTarget_Speed, ChooseTarget_Speed_6B5D)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wLinkMode, wBattleActor
-BuffCapOfBaseAGL:: ; heuristic: follows a terminator; C0
+BuffCapOfBaseAGL::
 Func_039_6F66:: ; address name
     farcall GetBaseAGL
     ld a, [wBattleStatResultLo]
@@ -6392,7 +7784,7 @@ Jump_039_6FDC::
     ret
 
 ; HL = wBattleTargetChoice + 2 * wBattleActor; A = hFFC6, or hFFC9 when hFFC6 is $FF, or hFFC8 when both are $FF; stores A | hFFD0 at HL. What the bytes mean is not known (E-0060)
-; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_LushLicks, ChooseTarget_GigaSlash, ChooseTarget_NapAttack, ...)
+; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_LushLicks, ChooseTarget_UltraDown, ChooseTarget_OddDance, ...)
 ; reads: wBattleActor, hTemp0, hTemp3, hTemp2, hTempA
 ; points at: wBattleTargetChoice
 SetActorTargetFromHRAMChoice::
@@ -6473,7 +7865,7 @@ Jump_039_7048::
     ret
 
 ; hFFC6 = candidate count, hFFC7-hFFC9 = candidates in priority order: target = the first for one; with two the first when wC5E7 < $AB (171/256), else the second; with three the first when wC5E7 < $80, the second when < $D5, else the third (128, 85 and 43 of 256). Writes wBattleTargetChoice[2 * actor]; with no candidates it stores hFFC7 ($FF) (E-0061)
-; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_66C5, ChooseTarget_Sap_6BB0, TargetFoeWeightedBySlotOrder)
+; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_66C5, TargetAllyWithStatusBit20, TargetFoeWeightedBySlotOrder)
 ; reads: hTemp0, hTemp1, wBattleActor, wRandomLo, hTemp2
 ; points at: wBattleTargetChoice, hTemp1
 PickWeightedTargetCandidate::
@@ -6800,7 +8192,7 @@ Func_039_71F9:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0060)
-; 4 call sites from 4 routines (e.g. ChooseTarget_MegaMagic_Sub01, ChooseTarget_MPass, ChooseTarget_OddDance, ChooseTarget_RobMagic)
+; 4 call sites from 4 routines (e.g. ChooseTarget_OddDance, ChooseTarget_MegaMagic_Sub01, ChooseTarget_RobMagic, ChooseTarget_MPass)
 ; points at: wBattleMP
 GetBattleMP_Bank39::
 Func_039_71FE:: ; address name
@@ -6808,7 +8200,7 @@ Func_039_71FE:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0060)
-; 4 call sites from 4 routines (e.g. ChooseTarget_Speed_6B5D, ChooseTarget_Slow, ChooseTarget_Speed, ChooseTarget_UltraDown)
+; 4 call sites from 4 routines (e.g. ChooseTarget_UltraDown, ChooseTarget_Slow, ChooseTarget_Speed, ChooseTarget_Speed_6B5D)
 ; points at: wBattleAGL
 GetBattleAGL_Bank39::
 Func_039_7203:: ; address name
