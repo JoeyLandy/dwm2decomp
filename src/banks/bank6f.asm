@@ -63,7 +63,26 @@ Data_06F_4A06:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; LZSS-compressed asset: 264 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06F_4AC6:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $1BCAC6, $878
+    INCBIN "dwm2-cobi-us.gbc", $1BCAC6, $558
+
+; compressed BG tiles (2048 bytes, 128 tiles): entry 6 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
+; LZSS-compressed asset: 736 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+MapType5Tiles6:: ; heuristic: map type 5 tileset stream; C0
+Data_06F_501E:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $1BD01E, $2E0
+
+; E-0140 (C1: entry 6 of MapType5TilesetTable; copied to wBGPaletteBuffer).
+; record: one CGB palette: 4 BGR555 colours
+MapType5Palettes6::
+Data_06F_52FE:: ; heuristic: map type 5 BG palettes; C0
+    dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
+    dw $150B, $5F17, $15AE, $0044 ; entry 1
+    dw $1528, $5F17, $15AE, $0000 ; entry 2
+    dw $218C, $5F17, $15AE, $0044 ; entry 3
+    dw $5D8C, $5F17, $5AB1, $0000 ; entry 4
+    dw $7DA0, $5F17, $7FE0, $0063 ; entry 5
+    dw $001B, $2BFF, $023F, $0000 ; entry 6
+    dw $0000, $0000, $0000, $0000 ; entry 7
 
 ; LZSS-compressed asset: 136 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06F_533E:: ; heuristic: stream in a run of back-to-back compressed streams; C0
@@ -127,11 +146,31 @@ Data_06F_5D48:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; LZSS-compressed asset: 220 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06F_5E41:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $1BDE41, $634
+    INCBIN "dwm2-cobi-us.gbc", $1BDE41, $556
+
+; compressed BG tiles (2048 bytes, 128 tiles): entry 7 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
+; LZSS-compressed asset: 697 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+MapType5Tiles7:: ; heuristic: map type 5 tileset stream; C0
+Data_06F_6397:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $1BE397, $DE
 
 ; LZSS-compressed asset: 1043 bytes expand to 1040 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06F_6475:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $1BE475, $413
+    INCBIN "dwm2-cobi-us.gbc", $1BE475, $1DB
+
+; E-0140 (C1: entry 7 of MapType5TilesetTable; copied to wBGPaletteBuffer).
+; record: one CGB palette: 4 BGR555 colours
+MapType5Palettes7::
+Data_06F_6650:: ; heuristic: map type 5 BG palettes; C0
+    dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
+    dw $150B, $5F17, $15AE, $0044 ; entry 1
+    dw $1528, $5F17, $15AE, $0000 ; entry 2
+    dw $7DA0, $7FFF, $7FE0, $0063 ; entry 3
+    dw $5D8C, $5F17, $5AB1, $0000 ; entry 4
+    dw $218C, $5F17, $029A, $0000 ; entry 5
+    dw $001B, $2BFF, $023F, $0000 ; entry 6
+    dw $0000, $0000, $0000, $0000 ; entry 7
+    INCBIN "dwm2-cobi-us.gbc", $1BE690, $1F8
 
 ; LZSS-compressed asset: 202 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06F_6888:: ; heuristic: stream in a run of back-to-back compressed streams; C0

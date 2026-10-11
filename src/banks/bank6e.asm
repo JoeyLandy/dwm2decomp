@@ -1,5 +1,24 @@
 SECTION "Bank 6E", ROMX[$4000], BANK[$6E]
-    INCBIN "dwm2-cobi-us.gbc", $1B8000, $C45
+    INCBIN "dwm2-cobi-us.gbc", $1B8000, $871
+
+; compressed BG tiles (2048 bytes, 128 tiles): entry 3 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
+; LZSS-compressed asset: 916 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+MapType5Tiles3:: ; heuristic: map type 5 tileset stream; C0
+Data_06E_4871:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $1B8871, $394
+
+; E-0140 (C1: entry 3 of MapType5TilesetTable; copied to wBGPaletteBuffer).
+; record: one CGB palette: 4 BGR555 colours
+MapType5Palettes3::
+Data_06E_4C05:: ; heuristic: map type 5 BG palettes; C0
+    dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
+    dw $24C6, $7FD9, $7FE0, $0063 ; entry 1
+    dw $7DA0, $7F75, $6B40, $0063 ; entry 2
+    dw $7DA0, $7FD9, $7380, $0063 ; entry 3
+    dw $5D8C, $7FD9, $5AB1, $0000 ; entry 4
+    dw $7DA0, $7FD9, $7FE0, $0000 ; entry 5
+    dw $001B, $2BFF, $023F, $0000 ; entry 6
+    dw $1529, $7FD9, $3631, $0063 ; entry 7
 
 ; LZSS-compressed asset: 128 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06E_4C45:: ; heuristic: stream in a run of back-to-back compressed streams; C0
@@ -67,7 +86,27 @@ Data_06E_5881:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; LZSS-compressed asset: 2358 bytes expand to 5391 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06E_5A20:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $1B9A20, $936
+    INCBIN "dwm2-cobi-us.gbc", $1B9A20, $445
+
+; compressed BG tiles (2048 bytes, 128 tiles): entry 4 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
+; LZSS-compressed asset: 1071 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+MapType5Tiles4:: ; heuristic: map type 5 tileset stream; C0
+Data_06E_5E65:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $1B9E65, $42F
+
+; E-0140 (C1: entry 4 of MapType5TilesetTable; copied to wBGPaletteBuffer).
+; record: one CGB palette: 4 BGR555 colours
+MapType5Palettes4::
+Data_06E_6294:: ; heuristic: map type 5 BG palettes; C0
+    dw $000F, $7FFF, $3C1F, $0063 ; entry 0
+    dw $150B, $269F, $0157, $0044 ; entry 1
+    dw $000F, $269F, $0157, $0044 ; entry 2
+    dw $00CC, $269F, $01D5, $0044 ; entry 3
+    dw $5D8C, $269F, $5AB1, $0000 ; entry 4
+    dw $218C, $269F, $029A, $0000 ; entry 5
+    dw $001B, $2BFF, $023F, $0000 ; entry 6
+    dw $0000, $0000, $0000, $0000 ; entry 7
+    INCBIN "dwm2-cobi-us.gbc", $1BA2D4, $82
 
 ; LZSS-compressed asset: 213 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06E_6356:: ; heuristic: stream in a run of back-to-back compressed streams; C0
@@ -129,13 +168,22 @@ Data_06E_6E08:: ; heuristic: stream in a run of back-to-back compressed streams;
 Data_06E_6EF4:: ; heuristic: stream in a run of back-to-back compressed streams; C0
     INCBIN "dwm2-cobi-us.gbc", $1BAEF4, $5F0
 
+; compressed BG tiles (2048 bytes, 128 tiles): entry 5 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
 ; LZSS-compressed asset: 764 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06E_74E4:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+MapType5Tiles5:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_06E_74E4:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1BB4E4, $2FC
 
+; E-0140 (C1: entry 5 of MapType5TilesetTable; copied to wBGPaletteBuffer).
+; record: one CGB palette: 4 BGR555 colours
+MapType5Palettes5::
 Data_06E_77E0:: ; heuristic: argument of a bank-switching copy helper; C0
-    db $A0, $7D, $FF, $7F, $E0, $7F, $63, $00, $0B, $15, $17, $5F, $AE, $15, $44, $00
-    db $28, $15, $17, $5F, $AE, $15, $00, $00, $8C, $21, $17, $5F, $AE, $15, $44, $00
-    db $8C, $5D, $17, $5F, $B1, $5A, $00, $00, $8C, $21, $17, $5F, $9A, $02, $00, $00
-    db $1B, $00, $FF, $2B, $3F, $02
-    ds $7EA, $00
+    dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
+    dw $150B, $5F17, $15AE, $0044 ; entry 1
+    dw $1528, $5F17, $15AE, $0000 ; entry 2
+    dw $218C, $5F17, $15AE, $0044 ; entry 3
+    dw $5D8C, $5F17, $5AB1, $0000 ; entry 4
+    dw $218C, $5F17, $029A, $0000 ; entry 5
+    dw $001B, $2BFF, $023F, $0000 ; entry 6
+    dw $0000, $0000, $0000, $0000 ; entry 7
+    ds $7E0, $00

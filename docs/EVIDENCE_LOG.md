@@ -1640,6 +1640,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Which key-world kind each entry belongs to (the meaning of wKeyWorldGoalKind 0-9) is not read.
 - Binary verification: build/run139 PASS, 0 differing bytes; tests OK.
 
+### E-0140 — Map type 5 tilesets and palettes
+
+- Kind: OBSERVATION (reading plus decoding; C1).
+- **Source.** LoadMapType5TilesetAndHeader (61:4261, case 5 of RunWCC44Type_420D) indexes Data_061_42DD by 6 * byte 2 of the floor's wKeyWorldFloorState entry. Like LoadKeyWorldTilesetAndHeader (E-0139), it reads two far pointers:
+  - compressed tiles, decompressed to vTiles2;
+  - $40 bytes of CGB palettes, copied to wBGPaletteBuffer.
+- **Checks.** Entries 0-11 decode to 2048-byte tile sets with 15-bit palettes. Entry 12 onward gives nonsense pointers (for example bank $CD), so the table holds 12 records.
+- **What changed.** MapType5TilesetTable, MapType5Palettes0-11 and MapType5Tiles0-11 are declared (tables.json, names.json). This adds 12 streams the stream finders had missed.
+- **Limits.** Which places use map type 5 is not read.
+- Binary verification: build/run140 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

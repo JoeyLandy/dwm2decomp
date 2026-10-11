@@ -722,6 +722,207 @@
         }
       ],
       "note": "E-0139 (C1: entry 9 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "61",
+      "addr": "42DD",
+      "label": "MapType5TilesetTable",
+      "count": 12,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "stream": true,
+          "name": "compressed BG tiles decompressed to vTiles2 (128 tiles)",
+          "reason": "map type 5 tileset stream"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank of the tiles"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 3,
+          "name": "$40-byte CGB BG palette set copied to wBGPaletteBuffer",
+          "reason": "map type 5 BG palettes"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank of the palettes"
+        }
+      ],
+      "note": "E-0140 (C1: LoadMapType5TilesetAndHeader indexes it with 6 * byte 2 of the floor's wKeyWorldFloorState entry, decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; entries 0-11 decode to 2048-byte tile sets with 15-bit palettes, entry 12 onward is not a valid record)."
+    },
+    {
+      "bank": "6D",
+      "addr": "43AB",
+      "label": "MapType5Palettes0",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 0 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "6D",
+      "addr": "59F6",
+      "label": "MapType5Palettes1",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 1 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "6D",
+      "addr": "7039",
+      "label": "MapType5Palettes2",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 2 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "6E",
+      "addr": "4C05",
+      "label": "MapType5Palettes3",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 3 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "6E",
+      "addr": "6294",
+      "label": "MapType5Palettes4",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 4 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "6E",
+      "addr": "77E0",
+      "label": "MapType5Palettes5",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 5 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "6F",
+      "addr": "52FE",
+      "label": "MapType5Palettes6",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 6 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "6F",
+      "addr": "6650",
+      "label": "MapType5Palettes7",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 7 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "70",
+      "addr": "42CD",
+      "label": "MapType5Palettes8",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 8 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "70",
+      "addr": "5666",
+      "label": "MapType5Palettes9",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 9 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "70",
+      "addr": "6A84",
+      "label": "MapType5Palettes10",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 10 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "70",
+      "addr": "7EBA",
+      "label": "MapType5Palettes11",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0140 (C1: entry 11 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
     }
   ]
 }

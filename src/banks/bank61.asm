@@ -378,7 +378,7 @@ Func_061_420D:: ; address name
     dw RunWCC44Type_420D_Case02
     dw RunWCC44Type_420D_Case03
     dw RunWCC44Type_420D_Case03
-    dw RunWCC44Type_420D_Case05
+    dw LoadMapType5TilesetAndHeader
     dw RunWCC44Type_420D_Case06
     dw RunWCC44Type_420D_Case07
 
@@ -426,12 +426,12 @@ Jump_061_422B:: ; address name
     call LoadSpecialMapHeader
     ret
 
-; entry 5 of the `rst $00` table in RunWCC44Type_420D
+; map type 5 (wMapType & 7 = 5): takes byte 2 of the floor's wKeyWorldFloorState entry as the index into MapType5TilesetTable (61:42DD, 6 bytes each), decompresses its tiles to vTiles2, on CGB copies its $40-byte palettes to wBGPaletteBuffer and requests the upload, then sets a 4 x 4-screen map, wMaxBlockingTile = $3F and other map-header bytes (E-0140)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, wIsCGB
 ; writes: wBGPaletteUploadRequest, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wFieldEventKind, wMapSpriteKind, wMapHeaderByte11, wMapTallTileMin, ...
 ; points at: wBGPaletteBuffer
-RunWCC44Type_420D_Case05::
+LoadMapType5TilesetAndHeader::
 Jump_061_4261:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
@@ -500,55 +500,58 @@ Jump_061_42D7::
     ld [wMapMoveType], a
     ret
 
+; E-0140 (C1: LoadMapType5TilesetAndHeader indexes it with 6 * byte 2 of the floor's wKeyWorldFloorState entry, decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; entries 0-11 decode to 2048-byte tile sets with 15-bit palettes, entry 12 onward is not a valid record).
+; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
+MapType5TilesetTable::
 Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $01
-    dw Data_061_6D40
-    db $AB
-    dw Data_061_6D43
-    db $69
-    dw Data_061_6D56
-    db $F6
-    dw Data_061_6D59
-    db $A8
-    dw Data_061_6D6C
-    db $39
-    dw Data_061_6D70
-    db $71
-    dw Data_061_6E48
-    db $05
-    dw Data_061_6E4C
-    db $65
-    dw Data_061_6E5E
-    db $94
-    dw Data_061_6E62
-    db $E4
-    dw Data_061_6E74
-    db $E0
-    dw Data_061_6E77
-    db $1E
-    dw Data_061_6F50
-    db $FE
-    dw Data_061_6F52
-    db $97
-    dw Data_061_6F63
-    db $50
-    dw Data_061_6F66
-    db $01
-    dw Data_061_7040
-    db $CD
-    dw Data_061_7042
-    db $D9
-    dw Data_061_7053
-    db $66
-    dw Data_061_7056
-    db $F0
-    dw Data_061_7067
-    db $84
-    dw Data_061_706A
-    db $9D
-    dw Data_061_707A
-    db $BA
-    dw Data_061_707E
+    dw MapType5Tiles0 ; id 0
+    db $6D
+    dw MapType5Palettes0
+    db $6D
+    dw MapType5Tiles1 ; id 1
+    db $6D
+    dw MapType5Palettes1
+    db $6D
+    dw MapType5Tiles2 ; id 2
+    db $6D
+    dw MapType5Palettes2
+    db $6D
+    dw MapType5Tiles3 ; id 3
+    db $6E
+    dw MapType5Palettes3
+    db $6E
+    dw MapType5Tiles4 ; id 4
+    db $6E
+    dw MapType5Palettes4
+    db $6E
+    dw MapType5Tiles5 ; id 5
+    db $6E
+    dw MapType5Palettes5
+    db $6E
+    dw MapType5Tiles6 ; id 6
+    db $6F
+    dw MapType5Palettes6
+    db $6F
+    dw MapType5Tiles7 ; id 7
+    db $6F
+    dw MapType5Palettes7
+    db $6F
+    dw MapType5Tiles8 ; id 8
+    db $70
+    dw MapType5Palettes8
+    db $70
+    dw MapType5Tiles9 ; id 9
+    db $70
+    dw MapType5Palettes9
+    db $70
+    dw MapType5Tiles10 ; id 10
+    db $70
+    dw MapType5Palettes10
+    db $70
+    dw MapType5Tiles11 ; id 11
+    db $70
+    dw MapType5Palettes11
+    db $70
 
 ; entry 1 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
@@ -557,7 +560,7 @@ Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wBGPaletteBuffer, wKeyWorldObjects
 RunWCC44Type_420D_Case01::
 Jump_061_4325:: ; address name
-    ld de, Data_06E_74E4
+    ld de, MapType5Tiles5
     ld b, $6E
     ld hl, vTiles2
     call DecompressToVRAM
