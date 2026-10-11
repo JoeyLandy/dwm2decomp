@@ -4336,6 +4336,7 @@
   "3B:4EF1": {"name": "SetWDAC3B5AndWDAC0To0180", "note": "wDAC3 = $B5 and the word wDAC0 = $0180 (E-0122)", "evidence": "reading (E-0122)"},
   "5F:70D2": {"name": "RunWC92DStep", "note": "runs the routine for wC92D (jump table of eight) (E-0122)", "evidence": "reading (E-0122)"},
   "60:4C6C": {"name": "ClearWC88EWhenWC891MatchesWCC42", "note": "when wC88E is set and wC891 has bit 7 with low bits equal to wCC42, clears wC88E (E-0122)", "evidence": "reading (E-0122)"},
+  "61:43CF": {"name": "LoadKeyWorldTilesetAndHeader", "note": "map type 0 (wMapType & 7 = 0): decompresses entry wKeyWorldGoalKind of KeyWorldTilesetTable (61:5728, 6 bytes each) to vTiles2, on CGB copies its $40-byte palette set to wBGPaletteBuffer and requests the upload, then sets wMaxBlockingTile = $3D, wFieldEventKind, wEncounterRate and other map-header bytes (E-0139)", "evidence": "reading (E-0139)"},
   "61:420D": {"name": "RunWCC44Type_420D", "note": "runs the routine for wCC44 & 7 (jump table; 4 reuses 3) (E-0122)", "evidence": "reading (E-0122)"},
   "61:596F": {"name": "RunWCC44Type_596F", "note": "runs the routine for wCC44 & 7 (jump table; 7 reuses 4) (E-0122)", "evidence": "reading (E-0122)"},
   "61:5794": {"name": "CallF4268OnScreenY1", "note": "C = 0 unless hMapScreenY = 1, in which case far-calls Func_011_4268 (E-0122)", "evidence": "reading (E-0122)"},
@@ -6254,5 +6255,15 @@
   "91:5257": {"name": "MonsterSprite_Darck", "data": true, "note": "compressed sprite graphics of monster id $174 (Darck) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)", "evidence": "E-0138"},
   "22:7A62": {"name": "MonsterSprite_Lamia", "data": true, "note": "compressed sprite graphics of monster id $17C (Lamia) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)", "evidence": "E-0138"},
   "22:7B34": {"name": "MonsterSprite_Dimensaur", "data": true, "note": "compressed sprite graphics of monster id $17D (Dimensaur) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)", "evidence": "E-0138"},
-  "22:7C16": {"name": "MonsterSprite_Kagebou", "data": true, "note": "compressed sprite graphics of monster id $17E (Kagebou) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)", "evidence": "E-0138"}
+  "22:7C16": {"name": "MonsterSprite_Kagebou", "data": true, "note": "compressed sprite graphics of monster id $17E (Kagebou) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)", "evidence": "E-0138"},
+  "90:4001": {"name": "KeyWorldTiles0", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 0: entry 0 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "63:4001": {"name": "KeyWorldTiles1", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 1: entry 1 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "64:4001": {"name": "KeyWorldTiles2", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 2: entry 2 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "66:4001": {"name": "KeyWorldTiles3", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 3: entry 3 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "62:4B38": {"name": "KeyWorldTiles4", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 4: entry 4 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "63:4C6B": {"name": "KeyWorldTiles5", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 5: entry 5 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "64:4C61": {"name": "KeyWorldTiles6", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 6: entry 6 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "65:47D8": {"name": "KeyWorldTiles7", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 7: entry 7 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "62:5852": {"name": "KeyWorldTiles8", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 8: entry 8 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"},
+  "63:5907": {"name": "KeyWorldTiles9", "data": true, "note": "compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 9: entry 9 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00", "evidence": "E-0139"}
 }

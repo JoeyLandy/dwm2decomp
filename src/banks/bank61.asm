@@ -373,7 +373,7 @@ Func_061_420D:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw RunWCC44Type_420D_Case00
+    dw LoadKeyWorldTilesetAndHeader
     dw RunWCC44Type_420D_Case01
     dw RunWCC44Type_420D_Case02
     dw RunWCC44Type_420D_Case03
@@ -663,12 +663,12 @@ Jump_061_43B9:: ; address name
     call LoadSpecialMapHeader
     ret
 
-; entry 0 of the `rst $00` table in RunWCC44Type_420D
+; map type 0 (wMapType & 7 = 0): decompresses entry wKeyWorldGoalKind of KeyWorldTilesetTable (61:5728, 6 bytes each) to vTiles2, on CGB copies its $40-byte palette set to wBGPaletteBuffer and requests the upload, then sets wMaxBlockingTile = $3D, wFieldEventKind, wEncounterRate and other map-header bytes (E-0139)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind, wIsCGB, wMapSpriteKind
 ; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wFieldEventKind, wEncounterRate, wMapMoveType, wMapTallTileMin, wMapHeaderByte11, wMapSpriteKind
 ; points at: wBGPaletteBuffer
-RunWCC44Type_420D_Case00::
+LoadKeyWorldTilesetAndHeader::
 Jump_061_43CF:: ; address name
     ld a, [wKeyWorldGoalKind]
     ld c, a
@@ -2091,24 +2091,51 @@ Jump_061_5723::
     inc de
     ld [de], a
     ret
-    db $01, $40, $90, $8F, $44, $90, $01, $40, $63, $68, $44, $63, $01, $40, $64, $CF
-    db $44, $90, $01, $40, $66, $01, $40, $65, $38
-    dw Data_061_624B
-    db $8E
-    dw Data_061_6250
-    db $6B
-    dw Data_061_634C
-    db $70
-    dw Data_061_6351
-    db $61
-    dw Data_061_644C
-    db $E8
-    dw Data_061_6450
-    db $D8
-    dw Data_061_6547
-    db $79
-    dw Data_061_654C
-    db $52, $58, $62, $2D, $5D, $62, $07, $59, $63, $AD, $5D, $63
+
+; E-0139 (C1: RunWCC44Type_420D_Case00 indexes it with 6 * wKeyWorldGoalKind, decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; all 10 tile streams decode to 2048 bytes and all 10 palettes are 15-bit colours).
+; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
+KeyWorldTilesetTable::
+Data_061_5728:: ; heuristic: start of a structured table; C0
+    dw KeyWorldTiles0 ; id 0
+    db $90
+    dw KeyWorldPalettes0
+    db $90
+    dw KeyWorldTiles1 ; id 1
+    db $63
+    dw KeyWorldPalettes1
+    db $63
+    dw KeyWorldTiles2 ; id 2
+    db $64
+    dw KeyWorldPalettes2
+    db $90
+    dw KeyWorldTiles3 ; id 3
+    db $66
+    dw KeyWorldPalettes3
+    db $65
+    dw KeyWorldTiles4 ; id 4
+    db $62
+    dw KeyWorldPalettes4
+    db $62
+    dw KeyWorldTiles5 ; id 5
+    db $63
+    dw KeyWorldPalettes5
+    db $63
+    dw KeyWorldTiles6 ; id 6
+    db $64
+    dw KeyWorldPalettes6
+    db $64
+    dw KeyWorldTiles7 ; id 7
+    db $65
+    dw KeyWorldPalettes7
+    db $65
+    dw KeyWorldTiles8 ; id 8
+    db $62
+    dw KeyWorldPalettes8
+    db $62
+    dw KeyWorldTiles9 ; id 9
+    db $63
+    dw KeyWorldPalettes9
+    db $63
 
 ; only called from CheckWarpAtPlayer (E-0047)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer)

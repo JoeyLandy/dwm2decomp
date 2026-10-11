@@ -1622,6 +1622,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - MonsterTable (592 records) is not marked: the mapping from its ids above $1FF to names is not read.
 - Binary verification: build/run138 PASS, 0 differing bytes; tests OK.
 
+### E-0139 — Key-world tilesets and palettes; palette words
+
+- Kind: OBSERVATION (reading plus decoding; C1).
+- **Source.** LoadKeyWorldTilesetAndHeader (61:43CF, case 0 of RunWCC44Type_420D) computes HL = $5728 + 6 * wKeyWorldGoalKind (with `add a, $28` / `adc a, $57`, so no pointer to $5728 appears in the ROM) and reads two far pointers:
+  - the first goes to DecompressToVRAM with destination vTiles2;
+  - the second goes to CopyFromBank ($40 bytes to wBGPaletteBuffer) on CGB.
+- **Checks.** The 10 entries ($5728-$5763) were decoded with tools/lzss_gfx.py:
+  - every tile stream decodes to exactly 2048 bytes (128 tiles) with no unwritten reads;
+  - every palette set is 32 words with bit 15 clear.
+  - Before this, the generator had decoded these bytes as code-adjacent `db` and bogus `dw Data_061_*` pointers.
+- **What changed.**
+  - config/tables.json declares KeyWorldTilesetTable and the ten 8-palette tables KeyWorldPalettes0-9.
+  - The tile streams are named KeyWorldTiles0-9.
+  - A pointer field marked `"stream": true` now registers its target as a compressed stream (a fifth stream source in tools/disasm_all.py).
+  - A new field type `words` prints little-endian words; MonsterPaletteTable uses it too, so its colours read as BGR555 `dw` values.
+- **Limits.** Which key-world kind each entry belongs to (the meaning of wKeyWorldGoalKind 0-9) is not read.
+- Binary verification: build/run139 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

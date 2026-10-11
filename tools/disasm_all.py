@@ -758,6 +758,23 @@ class Rom:
                         chained += register(bnk, addr, "stream in a run of back-to-back compressed streams")
                         addr += r[1]
         log(f"compressed assets from emulated runs: {seen_new} new streams; from chains: {chained} new streams")
+        # Fifth source (E-0139): far-pointer fields marked "stream" in config/tables.json, whose
+        # consumer passes them to a decompress routine.
+        from_tables = 0
+        for t in self.schemas:
+            fields = t["fields"]
+            sizes = [2 if f["type"] == "ptr" else f.get("size", 1) for f in fields]
+            for i in range(t["count"]):
+                q, vals = t["addr"] + i * sum(sizes), []
+                for f, sz in zip(fields, sizes):
+                    vals.append(self._u16(t["bank"], q) if f["type"] == "ptr"
+                                else self.data[t["bank"] * BANK + q - self.base(t["bank"])])
+                    q += sz
+                for fi, f in enumerate(fields):
+                    if f.get("stream"):
+                        tb = vals[f["bank_from"]] if "bank_from" in f else t["bank"]
+                        from_tables += register(tb, vals[fi], f.get("reason", "stream named by a table field"))
+        log(f"compressed assets from table fields: {from_tables} new streams")
 
     def _decompress_entries(self) -> set[int]:
         """Bank-0 addresses of the decompress routines, taken from config/names.json."""
@@ -1374,7 +1391,13 @@ class Rom:
                     out.append(f"{dl[q]}:: ; heuristic: {self.dreason.get((bank, q), 'label inside a table')}; C0")
                     if (bank, q) in self.dalias:
                         out.append(f"{self.dalias[(bank, q)]}:: ; address name")
-                if f["type"] == "ptr":
+                if f["type"] == "words":  # little-endian 16-bit values, e.g. BGR555 colours (E-0139)
+                    flush()
+                    r = raws[fi]
+                    out.append("    dw " + ", ".join(f"${r[j] | r[j + 1] << 8:04X}" for j in range(0, len(r), 2))
+                               + ("" if tagged else tag))
+                    tagged = True
+                elif f["type"] == "ptr":
                     flush()
                     tb = vals[f["bank_from"]] if "bank_from" in f else bank
                     tgt = vals[fi]

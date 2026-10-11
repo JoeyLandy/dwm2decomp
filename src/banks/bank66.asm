@@ -1,5 +1,11 @@
 SECTION "Bank 66", ROMX[$4000], BANK[$66]
-    INCBIN "dwm2-cobi-us.gbc", $198000, $F5A
+    db $66
+
+; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 3: entry 3 of KeyWorldTilesetTable, decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; LZSS-compressed asset: 1188 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+KeyWorldTiles3:: ; heuristic: key-world tileset stream; C0
+Data_066_4001:: ; address name
+    INCBIN "dwm2-cobi-us.gbc", $198001, $F59
 
 ; LZSS-compressed asset: 560 bytes expand to 563 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_066_4F5A:: ; heuristic: stream in a run of back-to-back compressed streams; C0

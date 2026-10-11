@@ -1,5 +1,5 @@
 {
-  "_comment": "Understood table layouts, emitted field by field by tools/disasm_all.py. Each table: bank, addr (hex CPU address), label (an alias; Data_BBB_AAAA labels are kept), count, id_base (optional; record index + id_base is shown in comments), fields (db N bytes | ptr = 16-bit pointer into the same bank), and note. Every layout cites its evidence in docs/EVIDENCE_LOG.md. Field names state only what the evidence supports.",
+  "_comment": "Understood table layouts, emitted field by field by tools/disasm_all.py. Each table: bank, addr (hex CPU address), label (an alias; Data_BBB_AAAA labels are kept), count, id_base (optional; record index + id_base is shown in comments), id_names (\"monster\" appends the monster name to the id comment), fields (db N bytes | words N bytes shown as little-endian dw values | ptr = 16-bit pointer into the same bank, or into the bank given by the field bank_from indexes; \"stream\": true registers the target as a compressed stream), and note. Every layout cites its evidence in docs/EVIDENCE_LOG.md. Field names state only what the evidence supports.",
   "tables": [
     {
       "bank": "36",
@@ -471,7 +471,8 @@
     {
       "bank": "38",
       "addr": "4001",
-      "label": "MonsterPictureTable", "id_names": "monster",
+      "label": "MonsterPictureTable",
+      "id_names": "monster",
       "count": 383,
       "id_base": 0,
       "fields": [
@@ -492,7 +493,8 @@
     {
       "bank": "38",
       "addr": "447E",
-      "label": "MonsterAttributeMapTable", "id_names": "monster",
+      "label": "MonsterAttributeMapTable",
+      "id_names": "monster",
       "count": 383,
       "id_base": 0,
       "fields": [
@@ -513,7 +515,8 @@
     {
       "bank": "04",
       "addr": "4EAA",
-      "label": "MonsterSpriteTable", "id_names": "monster",
+      "label": "MonsterSpriteTable",
+      "id_names": "monster",
       "count": 384,
       "id_base": 0,
       "fields": [
@@ -534,17 +537,191 @@
     {
       "bank": "7B",
       "addr": "4209",
-      "label": "MonsterPaletteTable", "id_names": "monster",
+      "label": "MonsterPaletteTable",
+      "id_names": "monster",
       "count": 383,
       "id_base": 0,
       "fields": [
         {
-          "type": "db",
+          "type": "words",
           "size": 16,
-          "name": "CGB colours of the monster picture (two 4-colour palettes, 16 bytes)"
+          "name": "CGB colours of the monster picture (two 4-colour palettes, BGR555 words)"
         }
       ],
       "note": "E-0041 (C1: Func_000_1FE3 copies 16 bytes from bank $7B, $4209 + 16 * monster id to the palette buffer wC49F on CGB; the count matches the picture table)."
+    },
+    {
+      "bank": "61",
+      "addr": "5728",
+      "label": "KeyWorldTilesetTable",
+      "count": 10,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "stream": true,
+          "name": "compressed BG tiles decompressed to vTiles2 (128 tiles)",
+          "reason": "key-world tileset stream"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank of the tiles"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 3,
+          "name": "$40-byte CGB BG palette set copied to wBGPaletteBuffer",
+          "reason": "key-world BG palettes"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank of the palettes"
+        }
+      ],
+      "note": "E-0139 (C1: RunWCC44Type_420D_Case00 indexes it with 6 * wKeyWorldGoalKind, decompresses the first far pointer to vTiles2 and, on CGB, copies $40 bytes from the second to wBGPaletteBuffer; all 10 tile streams decode to 2048 bytes and all 10 palettes are 15-bit colours)."
+    },
+    {
+      "bank": "90",
+      "addr": "448F",
+      "label": "KeyWorldPalettes0",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 0 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "63",
+      "addr": "4468",
+      "label": "KeyWorldPalettes1",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 1 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "90",
+      "addr": "44CF",
+      "label": "KeyWorldPalettes2",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 2 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "65",
+      "addr": "4001",
+      "label": "KeyWorldPalettes3",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 3 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "62",
+      "addr": "508E",
+      "label": "KeyWorldPalettes4",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 4 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "63",
+      "addr": "5170",
+      "label": "KeyWorldPalettes5",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 5 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "64",
+      "addr": "50E8",
+      "label": "KeyWorldPalettes6",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 6 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "65",
+      "addr": "4C79",
+      "label": "KeyWorldPalettes7",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 7 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "62",
+      "addr": "5D2D",
+      "label": "KeyWorldPalettes8",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 8 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "63",
+      "addr": "5DAD",
+      "label": "KeyWorldPalettes9",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0139 (C1: entry 9 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to wBGPaletteBuffer)."
     }
   ]
 }
