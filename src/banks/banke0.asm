@@ -1794,7 +1794,7 @@ Jump_0E0_4CAA:: ; address name
     ld a, $00
     ld [wStringIndex], a
     call ShowStringBank08AtTilesHLThenDefault_BankE0
-    ld de, $4D95
+    ld de, DebugScreenLayout_E0_4D95
     ld bc, $1412
     ld hl, vBGMap0
 
@@ -1935,18 +1935,29 @@ Jump_0E0_4D89:: ; address name
     ld a, $02
     ld [wDebugSubState], a
     ret
-    db $B0
-    ds $12, $B1
-    db $B2, $B6, $C3, $C3, $80, $81, $82, $01, $C3, $C3, $9B, $9C, $9D, $9E, $9F, $A0
-    db $A1, $A2, $C3, $C3, $B7, $B6, $C3, $C3, $8B, $8C, $C3, $C3, $C3, $C3, $ED, $EE
-    db $EF, $F0, $F1, $F2, $F3, $C3, $C3, $C3, $B7, $B6
-    ds $12, $C3
-    INCBIN "dwm2-cobi-us.gbc", $380DE4, $DE
-    ds $12, $C3
-    db $B7, $B6, $C3, $C3, $C3, $C3, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B3
-    ds $12, $B4
-    db $B5
+
+; E-0213 (C1: a debug screen routine copies 20 x 18 bytes (BC = $1412) from $4D95 to vBGMap0 row by row with WriteVRAMByteInc).
+; record: 20 x 18 tiles, one row per line
+DebugScreenLayout_E0_4D95::
+Data_0E0_4D95:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0
+    db $B6, $C3, $C3, $80, $81, $82, $01, $C3, $C3, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $C3, $C3, $B7
+    db $B6, $C3, $C3, $8B, $8C, $C3, $C3, $C3, $C3, $ED, $EE, $EF, $F0, $F1, $F2, $F3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $85, $86, $87, $C3, $C3, $88, $89, $8A, $89, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $02, $AF, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $03, $AF, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $04, $AF, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $02, $AF, $01, $01, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $04, $AF, $0B, $0D, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; wC5FF = row (high nibble) and column (low nibble): stores vBGMap0 + $89 + 32 * row + column in wC0A0/1 and reads the tile there into wMenuRowCount (E-0121)
 ; 3 call sites from 2 routines (e.g. RunDebugState_E0_Case0B, DrawHexByteAtBGMap8A)
@@ -2371,7 +2382,7 @@ Func_0E0_5553:: ; address name
 DrawHexByteAtBGMap8A_Sub03::
 Func_0E0_558E:: ; address name
     ld a, [wDebugSubState]
-    ld hl, $55BF
+    ld hl, DebugSoundEffectList
     add_a_to_hl
     ld a, [hl]
     call QueueSoundEffect
@@ -2384,7 +2395,7 @@ RunEffectTestEntryA:: ; heuristic: follows a terminator; C0
 Func_0E0_559E:: ; address name
     add a, a
     add a, a
-    ld hl, $55FB
+    ld hl, EffectTestEntries
     add_a_to_hl
     ld a, [hl+]
     ld [wBattleActor], a
@@ -2396,7 +2407,127 @@ Func_0E0_559E:: ; address name
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
     ret
-    INCBIN "dwm2-cobi-us.gbc", $3815BF, $108
+
+; E-0213 (C1: DrawHexByteAtBGMap8A_Sub03 (debug menu) plays QueueSoundEffect with the byte at $55BF + wDebugSubState; 60 bytes end at EffectTestEntries).
+; record: sound effect number
+DebugSoundEffectList::
+Data_0E0_55BF:: ; address name
+    db $89 ; id 0
+    db $8B ; id 1
+    db $8B ; id 2
+    db $8D ; id 3
+    db $8D ; id 4
+    db $8F ; id 5
+    db $90 ; id 6
+    db $D9 ; id 7
+    db $91 ; id 8
+    db $93 ; id 9
+    db $93 ; id 10
+    db $94 ; id 11
+    db $95 ; id 12
+    db $95 ; id 13
+    db $96 ; id 14
+    db $97 ; id 15
+    db $97 ; id 16
+    db $98 ; id 17
+    db $87 ; id 18
+    db $86 ; id 19
+    db $85 ; id 20
+    db $88 ; id 21
+    db $88 ; id 22
+    db $99 ; id 23
+    db $9A ; id 24
+    db $9B ; id 25
+    db $9D ; id 26
+    db $9E ; id 27
+    db $9F ; id 28
+    db $99 ; id 29
+    db $A2 ; id 30
+    db $A3 ; id 31
+    db $A4 ; id 32
+    db $A5 ; id 33
+    db $A7 ; id 34
+    db $A8 ; id 35
+    db $DA ; id 36
+    db $99 ; id 37
+    db $A9 ; id 38
+    db $AA ; id 39
+    db $AB ; id 40
+    db $AC ; id 41
+    db $AE ; id 42
+    db $B0 ; id 43
+    db $85 ; id 44
+    db $B2 ; id 45
+    db $B4 ; id 46
+    db $B8 ; id 47
+    db $B6 ; id 48
+    db $DC ; id 49
+    db $BA ; id 50
+    db $BC ; id 51
+    db $BD ; id 52
+    db $BF ; id 53
+    db $C1 ; id 54
+    db $C3 ; id 55
+    db $C5 ; id 56
+    db $C7 ; id 57
+    db $C9 ; id 58
+    db $CB ; id 59
+
+; E-0213 (C1: RunEffectTestEntryA loads the 4-byte entry at $55FB + 4 * A into wBattleActor, wBattleTarget, wBattleActionId and wEffectFlags2, then far-calls SelectEffectByEffectFlags2Flags; 51 entries end at the code at $56C7).
+; record: wBattleActor, wBattleTarget, wBattleActionId, wEffectFlags2
+EffectTestEntries::
+Data_0E0_55FB:: ; address name
+    db $00, $04, $01, $40 ; id 0
+    db $00, $04, $02, $40 ; id 1
+    db $00, $04, $03, $40 ; id 2
+    db $00, $04, $04, $40 ; id 3
+    db $00, $04, $05, $40 ; id 4
+    db $00, $04, $06, $40 ; id 5
+    db $00, $04, $07, $40 ; id 6
+    db $00, $04, $08, $40 ; id 7
+    db $00, $04, $09, $40 ; id 8
+    db $00, $04, $0A, $40 ; id 9
+    db $00, $04, $0B, $40 ; id 10
+    db $00, $04, $0C, $40 ; id 11
+    db $00, $04, $10, $40 ; id 12
+    db $00, $04, $11, $40 ; id 13
+    db $00, $04, $12, $40 ; id 14
+    db $00, $04, $0D, $40 ; id 15
+    db $00, $04, $0E, $40 ; id 16
+    db $00, $04, $0F, $40 ; id 17
+    db $00, $04, $27, $40 ; id 18
+    db $04, $04, $25, $40 ; id 19
+    db $04, $04, $16, $40 ; id 20
+    db $00, $04, $2F, $40 ; id 21
+    db $00, $04, $34, $40 ; id 22
+    db $00, $04, $2E, $40 ; id 23
+    db $04, $04, $3B, $40 ; id 24
+    db $04, $04, $39, $40 ; id 25
+    db $00, $04, $47, $40 ; id 26
+    db $00, $04, $4B, $40 ; id 27
+    db $00, $04, $43, $40 ; id 28
+    db $00, $04, $62, $40 ; id 29
+    db $00, $04, $50, $40 ; id 30
+    db $00, $04, $52, $40 ; id 31
+    db $00, $04, $51, $40 ; id 32
+    db $00, $04, $53, $40 ; id 33
+    db $00, $04, $54, $40 ; id 34
+    db $00, $04, $57, $40 ; id 35
+    db $00, $04, $5A, $40 ; id 36
+    db $00, $04, $5C, $40 ; id 37
+    db $00, $04, $67, $40 ; id 38
+    db $00, $04, $66, $40 ; id 39
+    db $00, $04, $3F, $40 ; id 40
+    db $00, $04, $3E, $40 ; id 41
+    db $00, $04, $3D, $40 ; id 42
+    db $00, $04, $83, $40 ; id 43
+    db $10, $04, $FF, $04 ; id 44
+    db $00, $04, $4C, $40 ; id 45
+    db $00, $04, $4D, $40 ; id 46
+    db $00, $04, $5D, $40 ; id 47
+    db $00, $04, $91, $40 ; id 48
+    db $04, $04, $9B, $40 ; id 49
+    db $04, $04, $A1, $40 ; id 50
 
 ; only called from RunDebugState_E0_Case0D_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case01)
@@ -6195,7 +6326,7 @@ Jump_0E0_7011:: ; address name
     call FillTilesRequest
     ld a, [wWorkBuf + $2]
     dec a
-    ld hl, $7649
+    ld hl, WorkBufSequenceTable
     call ReadWordTableEntry_Bank00
     ld a, [hl+]
     ld [wWorkBuf + $4], a
@@ -7204,14 +7335,59 @@ Func_0E0_75BF:: ; address name
     farcall_b SendSGBPacketSet
     call SpinDelay
     farcall LoadSGBObjectPalettesFromPointers
-    ld hl, $7641
+    ld hl, Palette_E0_7641
     ld de, wOBJPaletteBuffer + $20
     ld bc, $0008
     call CopyBytes
 
 Jump_0E0_7640::
     ret
-    INCBIN "dwm2-cobi-us.gbc", $383641, $9F
+
+; E-0213 (C1: the routine before Jump_0E0_7640 copies these 8 bytes to wOBJPaletteBuffer + $20 with CopyBytes).
+; record: one CGB palette: 4 BGR555 colours
+Palette_E0_7641::
+Data_0E0_7641:: ; address name
+    dw $67DE, $331F, $123C, $0000 ; entry 0
+
+; E-0213 (C1: Func_0E0_5AD3_Table2_Case00 reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read).
+; record: sequence for wWorkBuf + 2 = id
+WorkBufSequenceTable::
+Data_0E0_7649:: ; address name
+    dw WorkBufSequence001 ; id 1
+    dw WorkBufSequence002 ; id 2
+    dw WorkBufSequence003 ; id 3
+    dw WorkBufSequence004 ; id 4
+    dw WorkBufSequence005 ; id 5
+
+; E-0199 (derived: list for entry $01 of WorkBufSequenceTable; it runs to the next list)
+; record: first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers
+WorkBufSequence001::
+Data_0E0_7653:: ; address name
+    db $05, $02, $00, $01, $00, $02, $01, $04, $01, $02, $02, $01, $02, $01, $03, $01, $03, $02, $04, $03, $04 ; id 0
+
+; E-0199 (derived: list for entry $02 of WorkBufSequenceTable; it runs to the next list)
+; record: first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers
+WorkBufSequence002::
+Data_0E0_7668:: ; address name
+    db $04, $01, $05, $00, $05, $FE, $02, $06, $01, $06, $01, $07, $01, $07, $02, $08, $01, $08, $FF, $01, $09, $03, $09, $01, $0A, $06, $0A ; id 0
+
+; E-0199 (derived: list for entry $03 of WorkBufSequenceTable; it runs to the next list)
+; record: first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers
+WorkBufSequence003::
+Data_0E0_7683:: ; address name
+    db $03, $FE, $02, $0B, $01, $0B, $02, $0C, $01, $0C, $01, $0D, $01, $0D, $FF, $01, $0E, $01, $0E, $01, $0F, $00, $0F ; id 0
+
+; E-0199 (derived: list for entry $04 of WorkBufSequenceTable; it runs to the next list)
+; record: first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers
+WorkBufSequence004::
+Data_0E0_769A:: ; address name
+    db $0B, $01, $10, $02, $10, $01, $11, $04, $11, $01, $12, $02, $12, $01, $13, $05, $13, $01, $14, $05, $14, $01, $15, $05, $15, $01, $16, $05, $16, $01, $17, $05, $17, $01, $18, $05, $18, $01, $19, $05, $19, $01, $1A, $05, $1A ; id 0
+
+; E-0199 (derived: list for entry $05 of WorkBufSequenceTable; it runs to the next list)
+; record: first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers
+WorkBufSequence005::
+Data_0E0_76C7:: ; address name
+    db $06, $02, $1B, $02, $1B, $01, $1C, $01, $1C, $02, $1D, $02, $1D, $01, $1E, $01, $1E, $00, $1F, $06, $1F, $01, $20, $00, $20 ; id 0
 
 ; if wC528 < 1, BeginStringDisplay with DE = $76FC; otherwise far-calls Func_0A2_49E2
 ; 1 call site from 1 routine (e.g. ShowString_BankE0)
@@ -7419,7 +7595,160 @@ Data_0E0_79B9:: ; heuristic: target of a monotone pointer table; C0
 Data_0E0_79BA:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "    "
-    INCBIN "dwm2-cobi-us.gbc", $3839BE, $C2
+    db $B8, $02, $00, $00, $01, $90, $0E, $17, $12, $21, $F0
+
+; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$E0 copy of the battle library, after a string; E-0213)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleATK
+GetBattleATK_BankE0:: ; configured code entry (E-0213); C0
+Func_0E0_79C9:: ; address name
+    ld hl, wBattleATK
+    jr Jump_0E0_79F6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleDEF
+GetBattleDEF_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4006; C0
+Func_0E0_79CE:: ; address name
+    ld hl, wBattleDEF
+    jr Jump_0E0_79F6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMaxHP
+GetBattleMaxHP_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:400B; C0
+Func_0E0_79D3:: ; address name
+    ld hl, wBattleMaxHP
+    jr Jump_0E0_79F6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMaxMP
+GetBattleMaxMP_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4010; C0
+Func_0E0_79D8:: ; address name
+    ld hl, wBattleMaxMP
+    jr Jump_0E0_79F6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleHP
+GetBattleHP_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
+Func_0E0_79DD:: ; address name
+    ld hl, wBattleHP
+    jr Jump_0E0_79F6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMP
+GetBattleMP_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
+Func_0E0_79E2:: ; address name
+    ld hl, wBattleMP
+    jr Jump_0E0_79F6
+    db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
+
+Jump_0E0_79F6::
+    add a, a
+    add_a_to_hl
+    deref_hl
+    ret
+
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
+; no direct call (reached through a table, a jump or a vector)
+AddDoubleAToHL_BankE0:: ; heuristic: follows a terminator; C0
+Func_0E0_7A00:: ; address name
+    add a, a
+    add_a_to_hl
+    ret
+
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wLinkMode, wLinkRole, wBattleActor
+ActorOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
+Func_0E0_7A07:: ; address name
+    ld a, [wLinkMode]
+    cp a, $01
+    jr nz, Jump_0E0_7A1C
+    ld a, [wLinkRole]
+    bit 1, a
+    jr z, Jump_0E0_7A1C
+    ld a, [wBattleActor]
+    cp a, $04
+    ccf
+    ret
+
+Jump_0E0_7A1C::
+    ld a, [wBattleActor]
+    cp a, $04
+    ret
+
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wLinkMode, wLinkRole, wBattleTarget
+TargetOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
+Func_0E0_7A22:: ; address name
+    ld a, [wLinkMode]
+    cp a, $01
+    jr nz, Jump_0E0_7A37
+    ld a, [wLinkRole]
+    bit 1, a
+    jr z, Jump_0E0_7A37
+    ld a, [wBattleTarget]
+    cp a, $04
+    ccf
+    ret
+
+Jump_0E0_7A37::
+    ld a, [wBattleTarget]
+    cp a, $04
+    ret
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus
+ClearBattleStatusBitsWithMaskD_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
+Func_0E0_7A3D:: ; address name
+    ld a, d
+    ld hl, $7A52
+    add_a_to_hl
+    ld d, [hl]
+    ld a, e
+    ld hl, wBattleStatus
+    call AddAx9ToHL
+    ld a, d
+    and a, [hl]
+    ld [hl], a
+    ret
+    db $DF, $FE, $00, $FD, $73, $EF, $BF
+
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit0OfLevelUpGainsIndexed_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4091; C0
+Func_0E0_7A59:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 0, [hl]
+    pop hl
+    ret
+
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit1OfLevelUpGainsIndexed_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:409E; C0
+Func_0E0_7A66:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 1, [hl]
+    pop hl
+    ret
+
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit2OfLevelUpGainsIndexed_BankE0:: ; heuristic: follows a terminator; C0
+Func_0E0_7A73:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 2, [hl]
+    pop hl
+    ret
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
 ; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_Sub01, RunDebugState_E0_Case0D_Case01)

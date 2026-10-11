@@ -13001,6 +13001,198 @@
         }
       ],
       "note": "E-0212 (C1: the copy in bank $31 of ClearBitMaskTable (E-0205), read by the routine at $7B54; the block $7B54-$7BEE has the same bytes as $4075-$410F in banks $05, $A1 and $A3, apart from the table address)."
+    },
+    {
+      "bank": "E0",
+      "addr": "55BF",
+      "label": "DebugSoundEffectList",
+      "count": 60,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "sound effect number"
+        }
+      ],
+      "note": "E-0213 (C1: DrawHexByteAtBGMap8A_Sub03 (debug menu) plays QueueSoundEffect with the byte at $55BF + wDebugSubState; 60 bytes end at EffectTestEntries)."
+    },
+    {
+      "bank": "E0",
+      "addr": "55FB",
+      "label": "EffectTestEntries",
+      "count": 51,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "name": "wBattleActor, wBattleTarget, wBattleActionId, wEffectFlags2"
+        }
+      ],
+      "record": "wBattleActor, wBattleTarget, wBattleActionId, wEffectFlags2",
+      "note": "E-0213 (C1: RunEffectTestEntryA loads the 4-byte entry at $55FB + 4 * A into wBattleActor, wBattleTarget, wBattleActionId and wEffectFlags2, then far-calls SelectEffectByEffectFlags2Flags; 51 entries end at the code at $56C7)."
+    },
+    {
+      "bank": "E0",
+      "addr": "4D95",
+      "label": "DebugScreenLayout_E0_4D95",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 14"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 15"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 16"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 17"
+        }
+      ],
+      "record": "20 x 18 tiles, one row per line",
+      "note": "E-0213 (C1: a debug screen routine copies 20 x 18 bytes (BC = $1412) from $4D95 to vBGMap0 row by row with WriteVRAMByteInc)."
+    },
+    {
+      "bank": "E0",
+      "addr": "7641",
+      "label": "Palette_E0_7641",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0213 (C1: the routine before Jump_0E0_7640 copies these 8 bytes to wOBJPaletteBuffer + $20 with CopyBytes)."
+    },
+    {
+      "bank": "E0",
+      "addr": "7649",
+      "label": "WorkBufSequenceTable",
+      "count": 5,
+      "id_base": 1,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "sequence for wWorkBuf + 2 = id",
+          "reason": "work buffer sequence"
+        }
+      ],
+      "lists": {
+        "until": "76E0",
+        "size": 1,
+        "one_line": true,
+        "label": "WorkBufSequence",
+        "fields": [
+          {
+            "type": "db",
+            "size": 1,
+            "name": "first byte (to wWorkBuf + 4), then count/value pairs with $FE / $FF markers"
+          }
+        ],
+        "record": "first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers"
+      },
+      "note": "E-0213 (C1: Func_0E0_5AD3_Table2_Case00 reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read)."
     }
   ]
 }

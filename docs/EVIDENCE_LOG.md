@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0213 — Bank $E0 debug tables and its library copy
+
+- Kind: OBSERVATION (reading; C1).
+- **DebugSoundEffectList ($55BF, 60 bytes).** DrawHexByteAtBGMap8A_Sub03 plays the byte at $55BF + wDebugSubState.
+- **EffectTestEntries ($55FB, 51 entries).** RunEffectTestEntryA loads actor, target, action id and wEffectFlags2 from entry A and far-calls SelectEffectByEffectFlags2Flags.
+- **DebugScreenLayout_E0_4D95.** 20 x 18 tiles copied to vBGMap0 (BC = $1412).
+- **Palette_E0_7641.** 8 bytes copied to wOBJPaletteBuffer + $20.
+- **WorkBufSequenceTable ($7649, 5 words).** Func_0E0_5AD3_Table2_Case00 walks one sequence per id: a first byte, then count/value pairs with $FE/$FF markers. The lists run to $76E0; the pairs are not interpreted.
+- **Library copy at $79C9.** It follows a short string. It is seeded as GetBattleATK_BankE0 (configured entry), and fall-through plus copy discovery (E-0212) trace the rest of the block.
+- **Result.** Bank $E0 has no INCBIN left.
+- Binary verification: build/run252 PASS, 0 differing bytes.
+
 ### E-0212 — Copies of traced routines; the bank-$31 library copy
 
 - Kind: TOOL (C1 per copy) plus OBSERVATION.

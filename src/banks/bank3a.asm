@@ -9843,7 +9843,7 @@ Jump_03A_7C89::
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
 ; 4 call sites from 4 routines (e.g. RunBattleActions_Case09_Case02_Sub02, RunBattleResolveStep_69AA_Case06, RunBattleResolveStep_69AA_Case04, RunBattleResolveStep_69AA_Case00)
 AddDoubleAToHL_Bank3A::
 Func_03A_7C93:: ; address name
@@ -9851,7 +9851,7 @@ Func_03A_7C93:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
 ; 4 call sites from 4 routines (e.g. SelectEffectByEffectFlags2Flags, SelectEffectByEffectFlags, BattleTextPrepBE, BattleTextPrep21)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank3A::
@@ -9872,7 +9872,7 @@ Jump_03A_7CAF::
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
 ; 8 call sites from 7 routines (e.g. SelectEffectByEffectFlags, BattleTextPrep95, BattleTextPrep94, BattleTextPrep4D, ...)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank3A::
@@ -9913,7 +9913,7 @@ Func_03A_7CD0:: ; address name
 Data_03A_7CE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; 1 call site from 1 routine (e.g. RunBattleActions_Case09_Case02_Sub02)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank3A::
@@ -9925,7 +9925,7 @@ Func_03A_7CEC:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case00)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank3A::
@@ -9937,7 +9937,7 @@ Func_03A_7CF9:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 11 banks)
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
 ; 3 call sites from 3 routines (e.g. RunBattleActions_Case09_Case02_Sub02, RunBattleResolveStep_69AA_Case02, RunBattleResolveStep_69AA_Case01)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank3A::

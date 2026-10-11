@@ -10994,7 +10994,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 317 call sites from 262 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ClearBattleStatusBitsWithMaskD_Bank05, ...)
+; 318 call sites from 263 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ClearBattleStatusBitsWithMaskD_Bank05, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de
