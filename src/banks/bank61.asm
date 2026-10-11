@@ -4018,180 +4018,523 @@ Data_061_6566:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $1D, $66
     db $04, $67
     ds $38, $66
-    INCBIN "dwm2-cobi-us.gbc", $186666, $AA
+    INCBIN "dwm2-cobi-us.gbc", $186666, $9F
 
-; LZSS-compressed asset: 607 bytes expand to 1543 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_061_6710:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $186710, $1B5
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $1868D5, $9A
+; E-0194 (C1: SetupTownObjectsForMap case 0 (band 0 (Jump_060_63E0), wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens).
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+TownObjectSpotGrid0::
+Data_061_6705:: ; address name
+    db $03, $02, $05, $05, $07, $04, $08, $06 ; id 0
+    db $02, $04, $03, $07, $06, $06, $08, $03 ; id 1
+    db $01, $03, $03, $07, $04, $05, $06, $06 ; id 2
+    db $04, $05, $06, $01, $07, $03, $FF, $FF ; id 3
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 4
+    db $02, $07, $05, $02, $06, $04, $07, $06 ; id 5
+    db $02, $05, $03, $02, $04, $07, $07, $04 ; id 6
+    db $02, $01, $02, $05, $04, $03, $06, $06 ; id 7
+    db $04, $06, $07, $02, $07, $07, $FF, $FF ; id 8
+    db $01, $03, $03, $05, $05, $02, $08, $04 ; id 9
+    db $03, $02, $03, $05, $04, $07, $06, $06 ; id 10
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 11
+    db $02, $02, $03, $06, $06, $03, $08, $05 ; id 12
+    db $02, $06, $03, $02, $05, $05, $07, $01 ; id 13
+    db $02, $03, $05, $05, $06, $01, $07, $06 ; id 14
+    db $02, $07, $03, $03, $05, $05, $06, $02 ; id 15
+    db $04, $03, $07, $04, $08, $01, $FF, $FF ; id 16
+    db $02, $02, $04, $07, $05, $01, $08, $06 ; id 17
+    db $02, $06, $03, $07, $04, $02, $05, $05 ; id 18
+    db $02, $05, $04, $03, $06, $06, $07, $02 ; id 19
+    db $02, $04, $05, $03, $07, $01, $07, $06 ; id 20
+    db $02, $07, $03, $02, $06, $03, $08, $06 ; id 21
+    db $02, $03, $04, $04, $05, $06, $07, $02 ; id 22
+    db $01, $06, $02, $07, $03, $01, $FF, $FF ; id 23
+    db $02, $06, $04, $03, $05, $04, $06, $05 ; id 24
+    db $04, $04, $06, $05, $07, $02, $08, $07 ; id 25
+    db $01, $04, $03, $02, $03, $06, $04, $03 ; id 26
+    db $02, $02, $04, $05, $05, $03, $07, $06 ; id 27
+    db $02, $05, $03, $02, $05, $03, $05, $06 ; id 28
+    db $02, $03, $04, $06, $06, $05, $07, $02 ; id 29
+    db $01, $07, $03, $05, $05, $03, $07, $06 ; id 30
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 31
+    db $03, $04, $05, $03, $06, $06, $08, $01 ; id 32
+    db $05, $05, $06, $07, $07, $03, $08, $06 ; id 33
+    db $02, $02, $03, $06, $05, $07, $07, $03 ; id 34
+    db $02, $02, $02, $06, $06, $03, $07, $05 ; id 35
+    db $02, $03, $02, $06, $04, $04, $06, $02 ; id 36
+    db $03, $06, $04, $04, $06, $07, $07, $03 ; id 37
+    db $03, $06, $05, $04, $07, $05, $08, $01 ; id 38
+    db $02, $05, $03, $02, $04, $03, $FF, $FF ; id 39
+    db $05, $06, $06, $07, $07, $05, $FF, $FF ; id 40
+    db $03, $06, $06, $02, $06, $04, $08, $07 ; id 41
+    db $02, $05, $04, $02, $05, $07, $07, $04 ; id 42
+    db $02, $04, $04, $07, $05, $01, $07, $05 ; id 43
+    db $02, $07, $03, $03, $04, $05, $FF, $FF ; id 44
+    db $02, $05, $03, $02, $05, $06, $07, $04 ; id 45
+    db $02, $05, $04, $07, $06, $03, $06, $06 ; id 46
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 47
+    db $06, $02, $07, $01, $08, $04, $FF, $FF ; id 48
+    db $01, $04, $04, $02, $06, $03, $FF, $FF ; id 49
+    db $01, $05, $03, $02, $04, $06, $07, $03 ; id 50
+    db $02, $07, $03, $03, $05, $02, $07, $06 ; id 51
+    db $02, $04, $05, $07, $06, $06, $08, $05 ; id 52
+    db $01, $04, $02, $02, $05, $03, $07, $06 ; id 53
+    db $01, $05, $02, $03, $04, $06, $07, $04 ; id 54
+    db $02, $02, $02, $04, $03, $05, $FF, $FF ; id 55
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 56
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 57
+    db $03, $02, $05, $05, $07, $03, $08, $01 ; id 58
+    db $02, $06, $03, $03, $07, $02, $07, $04 ; id 59
+    db $02, $05, $03, $02, $04, $07, $07, $03 ; id 60
+    db $02, $03, $03, $01, $06, $02, $FF, $FF ; id 61
+    db $03, $01, $05, $04, $06, $02, $07, $03 ; id 62
+    db $03, $04, $05, $01, $05, $05, $08, $03 ; id 63
 
-; LZSS-compressed asset: 166 bytes expand to 771 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_061_696F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $03, $03, $07, $02, $08, $06, $01, $06, $03, $03, $04, $07, $07, $02
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $18698D, $88
+; E-0194 (C1: SetupTownObjectsForMap case 1 (band 3, wMapObjectCount $0A) passes $6905 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens).
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+TownObjectSpotGrid1::
+Data_061_6905:: ; address name
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 0
+    db $01, $03, $04, $05, $05, $01, $07, $07 ; id 1
+    db $03, $04, $03, $06, $06, $07, $FF, $FF ; id 2
+    db $04, $06, $07, $04, $08, $07, $FF, $FF ; id 3
+    db $01, $04, $02, $05, $03, $07, $FF, $FF ; id 4
+    db $04, $04, $04, $07, $06, $02, $07, $06 ; id 5
+    db $02, $03, $03, $06, $06, $05, $07, $07 ; id 6
+    db $02, $06, $03, $05, $04, $04, $FF, $FF ; id 7
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 8
+    db $02, $06, $05, $05, $02, $06, $05, $05 ; id 9
+    db $03, $01, $04, $04, $07, $02, $08, $06 ; id 10
+    db $02, $05, $05, $02, $07, $06, $08, $03 ; id 11
+    db $03, $04, $05, $02, $05, $06, $08, $07 ; id 12
+    db $02, $05, $03, $03, $07, $02, $08, $06 ; id 13
+    db $01, $06, $03, $03, $04, $07, $07, $02 ; id 14
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 15
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 16
+    db $03, $03, $05, $05, $03, $05, $03, $05 ; id 17
+    db $03, $05, $07, $01, $07, $04, $FF, $FF ; id 18
+    db $02, $02, $04, $04, $06, $06, $FF, $FF ; id 19
+    db $01, $04, $03, $02, $06, $03, $07, $01 ; id 20
+    db $06, $04, $07, $05, $08, $02, $FF, $FF ; id 21
+    db $02, $02, $02, $06, $03, $03, $FF, $FF ; id 22
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 23
+    db $02, $03, $05, $06, $07, $05, $FF, $FF ; id 24
+    db $02, $05, $04, $03, $04, $07, $07, $06 ; id 25
+    db $02, $05, $05, $07, $06, $03, $07, $06 ; id 26
+    db $03, $02, $03, $06, $07, $05, $08, $03 ; id 27
+    db $03, $06, $05, $01, $06, $05, $07, $03 ; id 28
+    db $04, $06, $06, $07, $07, $05, $FF, $FF ; id 29
+    db $02, $04, $03, $06, $05, $07, $FF, $FF ; id 30
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 31
+    db $02, $04, $03, $05, $05, $06, $07, $03 ; id 32
+    db $01, $07, $03, $04, $04, $06, $05, $02 ; id 33
+    db $03, $07, $05, $06, $07, $03, $07, $05 ; id 34
+    db $02, $02, $05, $07, $07, $03, $FF, $FF ; id 35
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 36
+    db $05, $04, $06, $02, $06, $05, $FF, $FF ; id 37
+    db $02, $02, $02, $04, $03, $03, $FF, $FF ; id 38
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 39
+    db $04, $02, $06, $01, $07, $04, $FF, $FF ; id 40
+    db $02, $05, $04, $03, $06, $01, $FF, $FF ; id 41
+    db $02, $03, $05, $07, $06, $02, $07, $04 ; id 42
+    db $02, $04, $03, $02, $03, $07, $07, $05 ; id 43
+    db $01, $06, $03, $05, $07, $02, $FF, $FF ; id 44
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 45
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 46
+    db $04, $06, $06, $01, $06, $04, $FF, $FF ; id 47
+    db $03, $05, $06, $04, $03, $05, $06, $04 ; id 48
+    db $04, $05, $05, $03, $04, $05, $05, $03 ; id 49
+    db $06, $06, $07, $02, $06, $06, $07, $02 ; id 50
+    db $02, $05, $03, $02, $05, $04, $07, $03 ; id 51
+    db $02, $02, $03, $06, $04, $03, $06, $05 ; id 52
+    db $01, $07, $04, $06, $07, $03, $FF, $FF ; id 53
+    db $02, $06, $05, $05, $07, $04, $07, $07 ; id 54
+    db $01, $03, $02, $04, $04, $06, $07, $05 ; id 55
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 56
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 57
+    db $04, $02, $07, $01, $04, $02, $07, $01 ; id 58
+    db $03, $02, $07, $01, $03, $02, $07, $01 ; id 59
+    db $02, $06, $04, $04, $05, $05, $08, $03 ; id 60
+    db $02, $03, $04, $01, $07, $02, $FF, $FF ; id 61
+    db $01, $04, $03, $03, $05, $02, $FF, $FF ; id 62
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 63
 
-; LZSS-compressed asset: 1089 bytes expand to 1795 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_061_6A15:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $186A15, $58
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $186A7D, $48
-    ds $10, $FE
-    db $04, $02, $07, $01, $04, $02, $07, $01, $03, $02, $07, $01, $03, $02, $07, $01
-    db $02, $06, $04, $04, $05, $05, $08, $03, $02, $03, $04, $01, $07, $02, $FF, $FF
-    db $01, $04, $03, $03, $05, $02, $FF, $FF
-    ds $28, $FE
-    db $06, $07, $07, $06, $06, $07, $07, $06, $02, $03, $03, $06, $05, $01, $07, $05
-    ds $50, $FE
-    db $04, $04, $05, $06, $06, $02, $07, $05, $02, $02, $02, $06, $04, $04, $08, $03
-    db $02, $03, $03, $07, $05, $04, $07, $06, $02, $04, $04, $03, $05, $05, $07, $06
-    ds $40, $FE
-    db $05, $04, $06, $03, $07, $02, $07, $06, $02, $06, $04, $03, $07, $02, $07, $05
-    db $02, $05, $03, $02, $06, $06, $07, $01, $02, $05, $03, $06, $05, $03, $07, $02
-    db $02, $05, $03, $02, $07, $01, $07, $06, $01, $02, $03, $06, $05, $04, $07, $03
-    db $02, $05, $04, $03, $05, $02, $07, $06
-    ds $30, $FE
-    db $02, $06, $03, $03, $03, $07, $07, $04, $03, $05, $05, $02, $06, $03, $07, $06
-    db $02, $03, $07, $02, $07, $05, $FF, $FF, $01, $07, $03, $04, $05, $01, $07, $03
-    db $02, $03, $04, $04, $06, $05, $07, $02, $02, $03, $03, $06, $05, $05, $07, $02
-    db $02, $05, $02, $07, $03, $03, $05, $06
-    ds $28, $FE
-    db $03, $06, $06, $04, $06, $07, $07, $05, $02, $01, $02, $04, $04, $03, $FF, $FF
-    db $02, $06, $06, $04, $07, $05, $FF, $FF, $02, $03, $06, $06, $07, $04, $08, $02
-    db $02, $07, $03, $02, $04, $05, $06, $03, $04, $02, $05, $06, $07, $03, $07, $05
-    db $02, $02, $02, $05, $07, $03, $07, $06
-    ds $20, $FE
-    db $02, $03, $03, $02, $04, $05, $07, $04, $02, $02, $03, $01, $06, $03, $07, $05
-    db $02, $03, $02, $06, $06, $02, $FF, $FF, $02, $01, $02, $05, $07, $02, $FF, $FF
-    db $06, $03, $07, $02, $06, $03, $07, $02, $01, $02, $02, $01, $01, $02, $02, $01
-    db $03, $06, $06, $01, $06, $07, $07, $02, $02, $01, $04
+; E-0194 (C1: SetupTownObjectsForMap case 2 (band 6, wMapObjectCount $0F) passes $6B05 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens).
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+TownObjectSpotGrid2::
+Data_061_6B05:: ; address name
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 0
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 1
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 2
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 3
+    db $06, $07, $07, $06, $06, $07, $07, $06 ; id 4
+    db $02, $03, $03, $06, $05, $01, $07, $05 ; id 5
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 6
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 7
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 8
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 9
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 10
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 11
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 12
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 13
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 14
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 15
+    db $04, $04, $05, $06, $06, $02, $07, $05 ; id 16
+    db $02, $02, $02, $06, $04, $04, $08, $03 ; id 17
+    db $02, $03, $03, $07, $05, $04, $07, $06 ; id 18
+    db $02, $04, $04, $03, $05, $05, $07, $06 ; id 19
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 20
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 21
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 22
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 23
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 24
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 25
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 26
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 27
+    db $05, $04, $06, $03, $07, $02, $07, $06 ; id 28
+    db $02, $06, $04, $03, $07, $02, $07, $05 ; id 29
+    db $02, $05, $03, $02, $06, $06, $07, $01 ; id 30
+    db $02, $05, $03, $06, $05, $03, $07, $02 ; id 31
+    db $02, $05, $03, $02, $07, $01, $07, $06 ; id 32
+    db $01, $02, $03, $06, $05, $04, $07, $03 ; id 33
+    db $02, $05, $04, $03, $05, $02, $07, $06 ; id 34
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 35
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 36
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 37
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 38
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 39
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 40
+    db $02, $06, $03, $03, $03, $07, $07, $04 ; id 41
+    db $03, $05, $05, $02, $06, $03, $07, $06 ; id 42
+    db $02, $03, $07, $02, $07, $05, $FF, $FF ; id 43
+    db $01, $07, $03, $04, $05, $01, $07, $03 ; id 44
+    db $02, $03, $04, $04, $06, $05, $07, $02 ; id 45
+    db $02, $03, $03, $06, $05, $05, $07, $02 ; id 46
+    db $02, $05, $02, $07, $03, $03, $05, $06 ; id 47
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 48
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 49
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 50
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 51
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 52
+    db $03, $06, $06, $04, $06, $07, $07, $05 ; id 53
+    db $02, $01, $02, $04, $04, $03, $FF, $FF ; id 54
+    db $02, $06, $06, $04, $07, $05, $FF, $FF ; id 55
+    db $02, $03, $06, $06, $07, $04, $08, $02 ; id 56
+    db $02, $07, $03, $02, $04, $05, $06, $03 ; id 57
+    db $04, $02, $05, $06, $07, $03, $07, $05 ; id 58
+    db $02, $02, $02, $05, $07, $03, $07, $06 ; id 59
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 60
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 61
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 62
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 63
+    db $02, $03, $03, $02, $04, $05, $07, $04 ; id 64
+    db $02, $02, $03, $01, $06, $03, $07, $05 ; id 65
+    db $02, $03, $02, $06, $06, $02, $FF, $FF ; id 66
+    db $02, $01, $02, $05, $07, $02, $FF, $FF ; id 67
+    db $06, $03, $07, $02, $06, $03, $07, $02 ; id 68
+    db $01, $02, $02, $01, $01, $02, $02, $01 ; id 69
+    db $03, $06, $06, $01, $06, $07, $07, $02 ; id 70
+    db $02, $01, $04, $02, $02, $01, $04, $02 ; id 71
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 72
+    db $04, $05, $06, $06, $07, $04, $FF, $FF ; id 73
+    db $02, $03, $03, $06, $05, $05, $07, $04 ; id 74
+    db $02, $05, $04, $06, $06, $03, $07, $04 ; id 75
+    db $02, $03, $04, $06, $07, $02, $08, $05 ; id 76
+    db $02, $05, $03, $02, $06, $03, $06, $06 ; id 77
+    db $01, $02, $02, $04, $03, $06, $FF, $FF ; id 78
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 79
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 80
+    db $07, $06, $08, $04, $07, $06, $08, $04 ; id 81
+    db $02, $02, $04, $04, $06, $06, $07, $03 ; id 82
+    db $02, $02, $02, $04, $03, $05, $04, $03 ; id 83
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 84
+    db $03, $03, $04, $05, $07, $02, $07, $04 ; id 85
+    db $03, $06, $04, $03, $06, $02, $08, $05 ; id 86
+    db $02, $04, $04, $05, $06, $03, $07, $06 ; id 87
+    db $02, $02, $06, $04, $07, $01, $08, $03 ; id 88
+    db $05, $02, $06, $04, $07, $03, $FF, $FF ; id 89
+    db $01, $04, $02, $02, $03, $03, $FF, $FF ; id 90
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 91
+    db $03, $05, $05, $03, $03, $05, $05, $03 ; id 92
+    db $04, $06, $05, $04, $07, $02, $07, $07 ; id 93
+    db $02, $06, $03, $03, $03, $05, $06, $02 ; id 94
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 95
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 96
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 97
+    db $05, $02, $06, $06, $07, $04, $08, $01 ; id 98
+    db $02, $03, $04, $06, $05, $02, $07, $04 ; id 99
+    db $02, $03, $02, $05, $03, $02, $03, $06 ; id 100
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 101
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 102
+    db $07, $07, $08, $06, $07, $07, $08, $06 ; id 103
+    db $01, $06, $02, $07, $01, $06, $02, $07 ; id 104
+    db $05, $06, $06, $02, $08, $05, $FF, $FF ; id 105
+    db $02, $06, $03, $03, $04, $05, $FF, $FF ; id 106
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 107
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 108
+    db $03, $07, $05, $06, $07, $05, $FF, $FF ; id 109
+    db $02, $05, $05, $02, $08, $03, $08, $07 ; id 110
+    db $01, $07, $03, $04, $06, $02, $07, $05 ; id 111
+    db $02, $02, $02, $04, $02, $06, $08, $05 ; id 112
+    db $02, $04, $03, $03, $04, $06, $06, $05 ; id 113
+    db $02, $05, $03, $04, $05, $06, $06, $03 ; id 114
+    db $01, $05, $03, $04, $07, $02, $FF, $FF ; id 115
+    db $02, $02, $03, $04, $05, $05, $07, $06 ; id 116
+    db $02, $04, $04, $07, $07, $02, $07, $06 ; id 117
+    db $02, $06, $03, $03, $06, $02, $07, $04 ; id 118
+    db $02, $04, $02, $07, $03, $06, $FF, $FF ; id 119
+    db $03, $07, $05, $05, $07, $04, $08, $06 ; id 120
+    db $02, $06, $04, $05, $06, $02, $07, $03 ; id 121
+    db $02, $03, $05, $07, $07, $02, $07, $05 ; id 122
+    db $02, $04, $04, $06, $06, $01, $06, $07 ; id 123
+    db $03, $02, $03, $07, $06, $05, $07, $06 ; id 124
+    db $02, $06, $04, $02, $05, $05, $06, $07 ; id 125
+    db $01, $06, $02, $04, $04, $02, $FF, $FF ; id 126
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 127
+    db $04, $03, $06, $02, $07, $05, $FF, $FF ; id 128
+    db $02, $05, $03, $02, $04, $06, $06, $03 ; id 129
+    db $02, $06, $04, $03, $07, $02, $07, $05 ; id 130
+    db $02, $02, $02, $06, $05, $03, $06, $05 ; id 131
+    db $02, $01, $04, $03, $06, $02, $07, $04 ; id 132
+    db $02, $04, $04, $02, $04, $06, $07, $03 ; id 133
+    db $02, $04, $03, $02, $05, $01, $FF, $FF ; id 134
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 135
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 136
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 137
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 138
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 139
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 140
+    db $04, $01, $06, $02, $07, $03, $FF, $FF ; id 141
+    db $02, $03, $05, $04, $06, $02, $06, $05 ; id 142
+    db $02, $02, $03, $04, $05, $05, $07, $03 ; id 143
 
-Data_061_6D40:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $02, $01
+; E-0194 (C1: SetupTownObjectsForMap case 3 (band 9, wMapObjectCount $0F) passes $6F85 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens).
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+TownObjectSpotGrid3::
+Data_061_6F85:: ; address name
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 0
+    db $02, $06, $05, $04, $06, $07, $FF, $FF ; id 1
+    db $01, $05, $03, $02, $04, $06, $05, $04 ; id 2
+    db $02, $02, $03, $04, $06, $05, $07, $06 ; id 3
+    db $02, $04, $02, $07, $05, $06, $07, $05 ; id 4
+    db $01, $05, $02, $06, $06, $07, $FF, $FF ; id 5
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 6
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 7
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 8
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 9
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 10
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 11
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 12
+    db $03, $02, $03, $05, $05, $06, $07, $04 ; id 13
+    db $02, $04, $03, $02, $05, $03, $FF, $FF ; id 14
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 15
+    db $02, $04, $04, $02, $04, $07, $07, $06 ; id 16
+    db $02, $02, $02, $06, $04, $05, $06, $04 ; id 17
+    db $02, $04, $02, $06, $04, $05, $FF, $FF ; id 18
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 19
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 20
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 21
+    db $05, $06, $06, $01, $07, $05, $FF, $FF ; id 22
+    db $02, $04, $02, $06, $02, $04, $02, $06 ; id 23
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 24
+    db $04, $04, $06, $05, $04, $04, $06, $05 ; id 25
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 26
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 27
+    db $05, $04, $06, $02, $08, $03, $FF, $FF ; id 28
+    db $02, $02, $05, $07, $06, $01, $07, $04 ; id 29
+    db $02, $02, $03, $05, $07, $01, $07, $04 ; id 30
+    db $02, $03, $04, $04, $05, $02, $FF, $FF ; id 31
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 32
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 33
+    db $05, $02, $06, $05, $07, $03, $FF, $FF ; id 34
+    db $02, $03, $03, $06, $05, $05, $06, $02 ; id 35
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 36
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 37
+    db $03, $05, $06, $04, $07, $06, $FF, $FF ; id 38
+    db $01, $06, $03, $03, $05, $05, $06, $02 ; id 39
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 40
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 41
+    db $04, $02, $04, $05, $07, $03, $07, $06 ; id 42
+    db $02, $03, $03, $05, $05, $02, $05, $04 ; id 43
+    db $03, $07, $04, $04, $05, $05, $07, $03 ; id 44
+    db $02, $02, $02, $06, $04, $03, $05, $05 ; id 45
+    db $06, $02, $06, $06, $08, $05, $FF, $FF ; id 46
+    db $01, $06, $02, $04, $05, $03, $06, $02 ; id 47
+    db $05, $06, $06, $02, $07, $05, $FF, $FF ; id 48
+    db $01, $03, $02, $06, $06, $02, $07, $05 ; id 49
+    db $03, $06, $06, $02, $07, $05, $FF, $FF ; id 50
+    db $02, $02, $04, $06, $05, $04, $07, $05 ; id 51
+    db $01, $07, $02, $05, $03, $06, $FF, $FF ; id 52
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 53
+    db $03, $04, $05, $02, $06, $03, $07, $01 ; id 54
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 55
+    db $03, $05, $05, $02, $07, $03, $07, $06 ; id 56
+    db $02, $03, $03, $06, $05, $02, $FF, $FF ; id 57
+    db $03, $02, $06, $03, $08, $01, $FF, $FF ; id 58
+    db $02, $02, $06, $03, $05, $07, $FF, $FF ; id 59
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 60
+    db $02, $02, $05, $01, $06, $06, $07, $04 ; id 61
+    db $01, $07, $03, $05, $05, $01, $07, $05 ; id 62
+    db $02, $05, $04, $03, $06, $06, $07, $02 ; id 63
+    db $02, $05, $05, $03, $07, $06, $FF, $FF ; id 64
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 65
+    db $05, $04, $06, $02, $06, $06, $FF, $FF ; id 66
+    db $02, $05, $04, $04, $06, $06, $07, $03 ; id 67
+    db $02, $04, $04, $07, $05, $03, $07, $05 ; id 68
+    db $03, $04, $04, $06, $05, $03, $FF, $FF ; id 69
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 70
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 71
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 72
+    db $02, $07, $03, $05, $06, $04, $07, $06 ; id 73
+    db $02, $03, $03, $06, $05, $05, $06, $02 ; id 74
+    db $03, $02, $06, $01, $07, $05, $FF, $FF ; id 75
+    db $03, $06, $06, $04, $07, $05, $FF, $FF ; id 76
+    db $02, $03, $02, $07, $06, $06, $07, $04 ; id 77
+    db $02, $05, $03, $03, $06, $02, $07, $06 ; id 78
+    db $02, $02, $03, $05, $04, $07, $07, $02 ; id 79
+    db $03, $06, $04, $03, $05, $04, $07, $02 ; id 80
+    db $01, $04, $04, $02, $05, $03, $FF, $FF ; id 81
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 82
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 83
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 84
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 85
+    db $03, $03, $05, $05, $07, $07, $08, $02 ; id 86
+    db $02, $03, $06, $04, $07, $06, $FF, $FF ; id 87
+    db $03, $05, $06, $02, $06, $06, $07, $03 ; id 88
+    db $02, $04, $04, $05, $05, $02, $06, $07 ; id 89
+    db $02, $04, $03, $05, $04, $02, $06, $02 ; id 90
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 91
+    db $03, $03, $05, $06, $06, $01, $06, $04 ; id 92
+    db $02, $04, $03, $03, $04, $06, $FF, $FF ; id 93
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 94
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 95
+    db $04, $06, $06, $07, $07, $05, $FF, $FF ; id 96
+    db $02, $05, $03, $03, $04, $06, $05, $04 ; id 97
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 98
+    db $03, $04, $05, $06, $06, $02, $06, $05 ; id 99
+    db $02, $03, $03, $05, $06, $02, $07, $06 ; id 100
+    db $02, $04, $03, $06, $07, $05, $FF, $FF ; id 101
+    db $02, $04, $04, $02, $05, $06, $07, $05 ; id 102
+    db $04, $04, $04, $06, $06, $03, $07, $05 ; id 103
+    db $02, $01, $02, $03, $04, $07, $06, $03 ; id 104
+    db $02, $05, $03, $03, $05, $02, $FF, $FF ; id 105
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 106
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 107
+    db $04, $03, $04, $07, $05, $05, $07, $02 ; id 108
+    db $02, $04, $03, $02, $03, $06, $FF, $FF ; id 109
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 110
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 111
+    db $02, $06, $04, $05, $06, $02, $08, $03 ; id 112
+    db $03, $02, $07, $03, $07, $06, $FF, $FF ; id 113
+    db $01, $04, $05, $03, $07, $01, $07, $05 ; id 114
+    db $02, $01, $02, $05, $05, $04, $07, $03 ; id 115
+    db $02, $03, $02, $05, $03, $01, $07, $02 ; id 116
+    db $05, $07, $07, $04, $07, $06, $FF, $FF ; id 117
+    db $02, $04, $03, $01, $08, $02, $FF, $FF ; id 118
+    db $03, $06, $05, $01, $07, $05, $FF, $FF ; id 119
+    db $04, $01, $04, $06, $07, $02, $07, $05 ; id 120
+    db $01, $02, $02, $07, $04, $03, $06, $06 ; id 121
+    db $01, $07, $02, $05, $04, $06, $FF, $FF ; id 122
+    db $02, $04, $04, $06, $06, $03, $07, $05 ; id 123
+    db $06, $07, $07, $05, $07, $06, $FF, $FF ; id 124
+    db $02, $05, $05, $02, $05, $06, $06, $05 ; id 125
+    db $02, $07, $05, $02, $05, $06, $07, $04 ; id 126
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 127
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 128
+    db $03, $03, $05, $04, $06, $06, $07, $02 ; id 129
+    db $02, $06, $03, $02, $04, $05, $06, $03 ; id 130
+    db $02, $07, $03, $02, $04, $06, $07, $05 ; id 131
+    db $05, $02, $07, $03, $07, $05, $FF, $FF ; id 132
+    db $02, $05, $05, $01, $05, $06, $07, $02 ; id 133
+    db $02, $03, $02, $06, $04, $02, $07, $04 ; id 134
+    db $02, $03, $04, $02, $04, $04, $FF, $FF ; id 135
+    db $02, $03, $04, $04, $05, $02, $07, $01 ; id 136
+    db $02, $03, $04, $06, $06, $02, $07, $04 ; id 137
+    db $02, $03, $03, $04, $05, $02, $FF, $FF ; id 138
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 139
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 140
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 141
+    db $05, $05, $06, $01, $07, $04, $08, $02 ; id 142
+    db $02, $04, $03, $02, $04, $05, $06, $03 ; id 143
 
-Data_061_6D43:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $02, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $04, $05, $06, $06, $07, $04
-    db $FF, $FF, $02
+; E-0194 (C1: SetupTownObjectsForMap case 4 (band $0B, wMapObjectCount $0A) passes $7405 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 36 screens).
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+TownObjectSpotGrid4::
+Data_061_7405:: ; address name
+    db $02, $04, $03, $07, $06, $06, $07, $02 ; id 0
+    db $02, $03, $05, $05, $07, $01, $08, $07 ; id 1
+    db $02, $06, $08, $03, $02, $06, $08, $03 ; id 2
+    db $02, $04, $02, $04, $02, $04, $02, $04 ; id 3
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 4
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 5
+    db $02, $02, $05, $04, $07, $07, $08, $01 ; id 6
+    db $02, $04, $05, $06, $07, $02, $FF, $FF ; id 7
+    db $07, $07, $07, $07, $07, $07, $07, $07 ; id 8
+    db $02, $06, $06, $03, $08, $05, $FF, $FF ; id 9
+    db $03, $05, $05, $02, $07, $06, $FF, $FF ; id 10
+    db $02, $07, $04, $02, $06, $03, $FF, $FF ; id 11
+    db $05, $06, $07, $04, $05, $06, $07, $04 ; id 12
+    db $02, $06, $04, $03, $07, $05, $FF, $FF ; id 13
+    db $02, $03, $06, $02, $08, $06, $FF, $FF ; id 14
+    db $02, $07, $03, $01, $06, $04, $08, $02 ; id 15
+    db $02, $02, $03, $05, $06, $07, $07, $03 ; id 16
+    db $01, $03, $02, $04, $03, $02, $05, $06 ; id 17
+    db $02, $06, $03, $03, $07, $01, $07, $05 ; id 18
+    db $01, $01, $05, $05, $01, $01, $05, $05 ; id 19
+    db $02, $07, $03, $01, $05, $05, $FF, $FF ; id 20
+    db $02, $06, $07, $02, $02, $06, $07, $02 ; id 21
+    db $02, $05, $04, $02, $06, $06, $08, $03 ; id 22
+    db $02, $02, $04, $05, $05, $03, $07, $07 ; id 23
+    db $03, $06, $04, $03, $07, $05, $08, $02 ; id 24
+    db $02, $02, $04, $05, $08, $03, $FF, $FF ; id 25
+    db $02, $03, $02, $07, $04, $02, $06, $05 ; id 26
+    db $02, $03, $08, $05, $02, $03, $08, $05 ; id 27
+    db $02, $04, $05, $06, $06, $02, $FF, $FF ; id 28
+    db $01, $07, $03, $01, $04, $04, $07, $06 ; id 29
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 30
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 31
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 32
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 33
+    db $05, $05, $07, $02, $05, $05, $07, $02 ; id 34
+    db $03, $06, $06, $02, $03, $06, $06, $02 ; id 35
 
-Data_061_6D56:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $03, $06
+; E-0194 (C1: SetupTownObjectsForMap case 5 (band $0B, wMapObjectCount $02) passes $7525 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 6 screens).
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+TownObjectSpotGrid5::
+Data_061_7525:: ; address name
+    db $02, $03, $04, $06, $06, $02, $07, $07 ; id 0
+    db $03, $01, $06, $06, $03, $01, $06, $06 ; id 1
+    db $02, $02, $02, $05, $04, $03, $07, $06 ; id 2
+    db $03, $04, $04, $01, $06, $06, $07, $03 ; id 3
+    db $02, $04, $06, $01, $02, $04, $06, $01 ; id 4
+    db $02, $01, $03, $04, $07, $02, $FF, $FF ; id 5
 
-Data_061_6D59:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $05, $07, $04, $02, $05, $04, $06, $06, $03, $07, $04, $02, $03, $04, $06
-    db $07, $02, $08
-
-Data_061_6D6C:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $02, $05, $03
-
-Data_061_6D70:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $06, $03, $06, $06, $01, $02, $02, $04, $03, $06, $FF, $FF
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $186D8D, $70
-    ds $18, $FE
-    db $05, $02, $06, $06, $07, $04, $08, $01, $02, $03, $04, $06, $05, $02, $07, $04
-    db $02, $03, $02, $05, $03, $02, $03, $06
-    ds $10, $FE
-    db $07, $07, $08, $06, $07, $07, $08, $06, $01, $06, $02
-
-Data_061_6E48:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01, $06, $02
-
-Data_061_6E4C:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $05, $06, $06, $02, $08, $05, $FF, $FF, $02
-
-; LZSS-compressed asset: 341 bytes expand to 774 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_061_6E56:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $06, $03, $03, $04, $05, $FF, $FF, $FE
-
-Data_061_6E5E:: ; heuristic: target of a monotone pointer table; C0
-    db $FE, $FE, $FE, $FE
-
-Data_061_6E62:: ; heuristic: target of a monotone pointer table; C0
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $03, $07, $05, $06, $07
-    db $05, $FF
-
-Data_061_6E74:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $02, $05
-
-Data_061_6E77:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $186E77, $C6
-    ds $13, $FE
-
-Data_061_6F50:: ; heuristic: target of a monotone pointer table; C0
-    db $FE, $FE
-
-Data_061_6F52:: ; heuristic: target of a monotone pointer table; C0
-    ds $11, $FE
-
-Data_061_6F63:: ; heuristic: target of a monotone pointer table; C0
-    db $FE, $FE, $FE
-
-Data_061_6F66:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $186F66, $45
-
-; LZSS-compressed asset: 1130 bytes expand to 1287 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_061_6FAB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $07, $05, $01, $05, $02, $06, $06, $07, $FF, $FF
-    ds $38, $FE
-    db $03, $02, $03, $05, $05, $06, $07, $04, $02, $04, $03, $02, $05, $03, $FF, $FF
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $02, $04, $04, $02, $04, $07, $07, $06
-    db $02, $02, $02, $06, $04, $05, $06, $04, $02, $04, $02, $06, $04, $05, $FF, $FF
-    ds $18, $FE
-    db $05, $06, $06, $01, $07, $05, $FF, $FF, $02, $04, $02
-
-Data_061_7040:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $02
-
-Data_061_7042:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $02, $06, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $04, $04, $06, $05, $04
-    db $04
-
-Data_061_7053:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $05, $FE
-
-Data_061_7056:: ; heuristic: target of a monotone pointer table; C0
-    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $05
-    db $04
-
-Data_061_7067:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $02, $08
-
-Data_061_706A:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $FF, $FF, $02, $02, $05, $07, $06, $01, $07, $04, $02, $02, $03, $05, $07
-
-Data_061_707A:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $07, $04, $02
-
-Data_061_707E:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $04, $04, $05, $02, $FF, $FF
-    ds $10, $FE
-    db $05, $02, $06, $05, $07, $03, $FF, $FF, $02, $03, $03, $06, $05, $05, $06, $02
-    ds $10, $FE
-    db $03, $05, $06, $04, $07, $06, $FF, $FF, $01, $06, $03, $03, $05, $05, $06, $02
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $1870D5, $E0
-    ds $18, $FE
-    INCBIN "dwm2-cobi-us.gbc", $1871CD, $48
-    ds $20, $FE
-    db $03, $03, $05, $05, $07, $07, $08, $02, $02, $03, $06, $04, $07, $06, $FF, $FF
-    db $03, $05, $06, $02, $06, $06, $07, $03, $02, $04, $04, $05, $05, $02, $06, $07
-    db $02, $04, $03, $05, $04, $02, $06, $02, $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE
-    db $03, $03, $05, $06, $06, $01, $06, $04, $02, $04, $03, $03, $04, $06, $FF, $FF
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $187285, $50
-    ds $10, $FE
-    db $04, $03, $04, $07, $05, $05, $07, $02, $02, $04, $03, $02, $03, $06, $FF, $FF
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $187305, $78
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $18738D, $50
-    ds $18, $FE
-    db $05, $05, $06, $01, $07, $04, $08, $02, $02, $04, $03, $02, $04, $05, $06, $03
-    db $02, $04, $03, $07, $06, $06, $07, $02, $02, $03, $05, $05, $07, $01, $08, $07
-    db $02, $06, $08, $03, $02, $06, $08, $03, $02, $04, $02, $04, $02, $04, $02, $04
-    ds $10, $FE
-    INCBIN "dwm2-cobi-us.gbc", $187435, $C0
-    ds $20, $FE
-    INCBIN "dwm2-cobi-us.gbc", $187515, $108
+; E-0194 (C1: SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 25 screens).
+; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
+TownObjectSpotGrid6::
+Data_061_7555:: ; address name
+    db $03, $05, $05, $03, $07, $06, $FF, $FF ; id 0
+    db $03, $02, $04, $06, $07, $03, $FF, $FF ; id 1
+    db $02, $03, $04, $02, $05, $07, $07, $05 ; id 2
+    db $02, $04, $05, $05, $02, $04, $05, $05 ; id 3
+    db $FE, $FE, $FE, $FE, $FE, $FE, $FE, $FE ; id 4
+    db $03, $02, $04, $06, $07, $05, $FF, $FF ; id 5
+    db $02, $06, $05, $02, $07, $04, $FF, $FF ; id 6
+    db $02, $02, $03, $06, $05, $05, $07, $01 ; id 7
+    db $03, $02, $03, $06, $06, $05, $FF, $FF ; id 8
+    db $02, $06, $06, $03, $02, $06, $06, $03 ; id 9
+    db $02, $03, $04, $05, $07, $02, $07, $06 ; id 10
+    db $02, $02, $04, $07, $05, $04, $FF, $FF ; id 11
+    db $03, $04, $05, $02, $02, $06, $FF, $FF ; id 12
+    db $02, $06, $06, $02, $08, $05, $FF, $FF ; id 13
+    db $02, $05, $02, $05, $02, $05, $02, $05 ; id 14
+    db $03, $07, $04, $02, $07, $04, $FF, $FF ; id 15
+    db $03, $03, $04, $07, $05, $04, $08, $01 ; id 16
+    db $02, $01, $04, $05, $05, $03, $07, $06 ; id 17
+    db $03, $06, $04, $02, $07, $05, $FF, $FF ; id 18
+    db $04, $07, $07, $02, $04, $07, $07, $02 ; id 19
+    db $05, $05, $06, $02, $05, $05, $06, $02 ; id 20
+    db $02, $06, $04, $03, $07, $04, $FF, $FF ; id 21
+    db $02, $03, $04, $04, $07, $02, $FF, $FF ; id 22
+    db $02, $04, $04, $02, $05, $05, $FF, $FF ; id 23
+    db $02, $02, $03, $06, $06, $04, $FF, $FF ; id 24
     ds $9E3, $00

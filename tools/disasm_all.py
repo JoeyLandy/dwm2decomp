@@ -984,6 +984,23 @@ class Rom:
                         stored = True
                 if de is not None and stored:
                     arg_src[(bank, de)] = (t[0], f"wArg1/wArg2 source of a far call to {self.names[t]['name']}")
+        # config/arg_banks.json (E-0192): routines that read their pointer argument in a fixed bank.
+        fixed = {(b, a): (r["reg"], int(r["bank"], 16), r["name"]) for r in getattr(self, "arg_banks", [])
+                 for (b, a), info in self.names.items() if info["name"] == r["name"] and not info.get("data")}
+        for bank in range(self.nbanks):
+            ins = self.insn[bank]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] != "call" or v[3] is None or self.resolve(bank, v[3]) not in fixed:
+                    continue
+                reg, fb, nm = fixed[self.resolve(bank, v[3])]
+                for x in reversed(order[max(0, k - 8):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    if (m := ld16.match(ins[x][1])) and m.group(1) == reg:
+                        arg_src[(bank, x)] = (fb, f"{reg.upper()} argument of {nm}, read in bank ${fb:02X}")
+                        break
         # E-0187: the DrawTileRectAtHLFromDE_Bank* relays store DE in wArg1/wArg2 themselves, then far-call
         # DrawTileRectFromArg1Params: DE before a call to one points into that routine's bank.
         rect_bank = next((b for (b, a) in arg_readers
@@ -3158,6 +3175,9 @@ def main() -> int:
     if families_path.exists():
         rom.families = json.loads(families_path.read_text(encoding="utf-8"))["families"]
         log(f"loaded {len(rom.families)} routine families")
+    arg_banks_path = ROOT / "config/arg_banks.json"
+    if arg_banks_path.exists():
+        rom.arg_banks = json.loads(arg_banks_path.read_text(encoding="utf-8"))["routines"]
     symbols_path = ROOT / "config/symbols.json"
     if symbols_path.exists():
         for key, info in json.loads(symbols_path.read_text(encoding="utf-8")).items():

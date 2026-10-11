@@ -2303,6 +2303,46 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Tool.** A new `text` field type shows the bytes up to $F0 through charmap.inc and the padding as raw bytes, because $00 is the digit 0 in the charmap.
 - Binary verification: build/run202 PASS, 0 differing bytes.
 
+### E-0192 — Key generation tables (bank $60) and fixed-bank pointer arguments
+
+- Kind: OBSERVATION (reading; C1) plus TOOL.
+- **KeyWorldLevelTable ($47C5).** 100 records of 8 bytes, indexed by wPartyStrength. LoadKeyWorldLevelBaseTripleForPartyStrength copies bytes 0-2 to wKeyWorldLevelBase/Area/Monster. Bytes 3-7 are $64, $64, $64, 0, 0 in every record and are not read here.
+- **KeyWorldBandAdjustTable ($43C7, 16 bytes) and KeyWorldBandRows ($43D7, 56 rows of 8).** LoadKeyWorldParamsForCurrentKeyIndex indexes these by bytes 0 and 1 of the current key's entry.
+  - From a row it copies the $FF-terminated band list to wKeyWorldMonsterBands.
+  - It adds the row's byte 6 to wKeyWorldBandAdjust (negative becomes 0).
+- **KeyWorldBossBandPickRows ($4123).** 34 rows of 8. RollKeyWorldMonsterTableKeyWorldBossMonsters picks byte (random & 7) of row wKeyWorldBandAdjust; that byte selects a band-list pointer at $6D6D + $90.
+- **KeyWorldGoalKindRows ($4CC1).** 56 rows of 4, indexed by key entry byte 1. A random non-zero entry minus 1 becomes wKeyWorldGoalKind.
+- **KeyContentsKindChanceRows ($6969, 10 x 16) and KeyContentsChanceRows ($6A09, 10 x 60).** RollKeyContentsForLevelTemp0 compares these per 10 levels with a random 0-99.
+- **KeyContentsColumnPicks ($6677, 37 bytes) and KeyContentsWordRows ($669C, 29 x 16).** WriteTable669CWordForTemp2Temp3 reads these. Rows 10-28 are zero.
+  - The one-byte "monotone pointer table" labels over those zeros were artefacts and are gone.
+- **config/arg_banks.json (new).** It lists routines that read a pointer argument in a fixed bank.
+  - Its first entry is RemoveMapObjectsEntryMatching: the HL argument is read by Func_060_64F3 with ReadByteInBank, B = $61.
+  - The `ld hl` before each call now names bank-$61 data. Data_060_6705, _6B05, _6F85, _7405 and _7525 were wrong-bank labels; they now read Data_061_*.
+- Binary verification: build/run205 PASS, 0 differing bytes.
+
+### E-0193 — Key-world area layouts (banks $84 and $60)
+
+- Kind: OBSERVATION (reading; C1).
+- **Tables.** KeyWorldAreaLayoutTable (84:$4CCB) and KeyWorldAreaLayoutTable_Bank60 (60:$6D0D) hold the same 48 pointers, indexed by wKeyWorldAreaCount.
+- **Layouts.** Each layout KeyWorldAreaLayout00-47 is a block count n, then n blocks of 16 bytes, then $FF (size 2 + 16n for all 48, contiguous from $4D2B to $5E0B).
+  - DebugAutomap_Update_Sub01_Sub01_Sub0C passes one block per wKeyWorldFloorInfo entry to RunDebugAutomapCaseTemp0, with DE stepping through wKeyWorldFloorState.
+- **KeyWorldMonsterBaseRows (84:$42C7).** 6 rows: 10 base values then 6 zero bytes. Jump_084_4282 picks a random 0-9 and adds a random 0-7.
+- **LogTwigSpotList (84:$49A1).** 50 records of 4 bytes, then $FF: map id, screen XY, and two tile positions ($FF = none). ItemUsable_LogTwig_Sub01 matches these against hMapId, the screen and the player's tile.
+- **Limits.** The meaning of the bytes inside a layout block is not read.
+- Binary verification: build/run208 PASS, 0 differing bytes; tests OK.
+
+### E-0194 — Town object spot grids replace five false compressed streams (bank $61)
+
+- Kind: OBSERVATION (reading; C1) and a correction to E-0035.
+- **Reader.** SetupTownObjectsForMap passes seven bank-$61 pointers to RemoveMapObjectsEntryMatching ($6705, $6905, $6B05, $6F85, $7405, $7525, $7555, per E-0192).
+  - Func_060_64F3 picks a random screen and reads the pair at pointer + (screen Y * wMapWidthScreens + screen X) * 8 + 2 * (random & 3).
+  - A first byte of $FE draws a new screen, and $FF draws a new spot.
+- **Grids.** The pointer gaps give 64, 64, 144, 144, 36 and 6 screens. The last grid is 25 screens and ends at $761D, followed by zero padding. The bytes show the $FE screens and $FF pairs the reader expects.
+- **Correction.** E-0035's chain finder had registered five back-to-back LZSS streams at $6710, $696F, $6A15, $6E56 and $6FAB inside these grids. LZSS accepts almost any bytes, and nothing loads those addresses as streams.
+  - With the grids declared as tables, the finder skips them (it already rejects starts inside structured tables). config/stream_chains.json is unchanged.
+  - The streams count goes from 4,926 to 4,921.
+- Binary verification: build/run209 PASS, 0 differing bytes; tests OK. Unidentified INCBIN is 56,140 bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

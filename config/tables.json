@@ -3558,6 +3558,2767 @@
       ],
       "record": "a name the name entry screen refuses: text ending in $F0, zero padded to 10 bytes",
       "note": "E-0191 (C1: RunNameEntryStateWhenNotFading_Case03_Case00_Sub02 walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator)."
+    },
+    {
+      "bank": "60",
+      "addr": "47C5",
+      "label": "KeyWorldLevelTable",
+      "count": 100,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 3,
+          "name": "wKeyWorldLevelBase, wKeyWorldLevelArea, wKeyWorldLevelMonster"
+        },
+        {
+          "type": "db",
+          "size": 5,
+          "name": "not read here: $64, $64, $64, $00, $00 in every record after 0"
+        }
+      ],
+      "record": "three level bytes copied to wKeyWorldLevelBase/Area/Monster; five bytes not read ($64, $64, $64, 0, 0)",
+      "note": "E-0192 (C1: LoadKeyWorldLevelBaseTripleForPartyStrength reads the record at $47C5 + 8 * wPartyStrength and copies its first three bytes; 100 records end at the routine at $4AE5; record 0 is all zero, and the three levels rise with the index)."
+    },
+    {
+      "bank": "60",
+      "addr": "43C7",
+      "label": "KeyWorldBandAdjustTable",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "signed starting value of wKeyWorldBandAdjust"
+        }
+      ],
+      "note": "E-0192 (C1: LoadKeyWorldParamsForCurrentKeyIndex indexes it by byte 0 of the current key's 4-byte entry at wC708 + 4 * wCurrentKeyIndex: values -2 to 13)."
+    },
+    {
+      "bank": "60",
+      "addr": "43D7",
+      "label": "KeyWorldBandRows",
+      "count": 56,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "name": "monster band numbers, $FF-terminated (copied to wKeyWorldMonsterBands)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "signed adjustment added to wKeyWorldBandAdjust (negative results become 0)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "not read (0 in every row)"
+        }
+      ],
+      "record": "band list ($FF-terminated, 6 bytes); band adjustment; unused 0",
+      "note": "E-0192 (C1: LoadKeyWorldParamsForCurrentKeyIndex indexes it by 8 * byte 1 of the current key's entry, copies bytes up to and including the $FF to wKeyWorldMonsterBands, then adds byte 6 to wKeyWorldBandAdjust; 56 rows end at the routine after them; every row has its $FF within the first six bytes)."
+    },
+    {
+      "bank": "60",
+      "addr": "4123",
+      "label": "KeyWorldBossBandPickRows",
+      "count": 34,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "eight band picks (indexes into the band list pointers at $6DFD)"
+        }
+      ],
+      "record": "eight picks for one wKeyWorldBandAdjust value; a random 0-7 chooses one",
+      "note": "E-0192 (C1: RollKeyWorldMonsterTableKeyWorldBossMonsters reads the byte at $4123 + 8 * wKeyWorldBandAdjust + (random & 7), doubles it and reads the band-list pointer at $6D6D + $90 + that offset; it retries when the list is empty; 34 rows end at FillWCD11LevelsForPartyStrength ($4233); higher rows pick from more bands)."
+    },
+    {
+      "bank": "60",
+      "addr": "4CC1",
+      "label": "KeyWorldGoalKindRows",
+      "count": 56,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "name": "four goal choices: goal kind + 1, 0 = none"
+        }
+      ],
+      "record": "four choices of wKeyWorldGoalKind + 1 (0 = no choice; drawn again)",
+      "note": "E-0192 (C1: PickRandomNonzeroFromTable4CC1 reads the byte at $4CC1 + 4 * (byte 1 of the current key's entry at wC708) + (random & 3), repeating until it is non-zero, and stores it minus 1 in wKeyWorldGoalKind; 56 rows, the same count as KeyWorldBandRows, which the same byte indexes)."
+    },
+    {
+      "bank": "60",
+      "addr": "6969",
+      "label": "KeyContentsKindChanceRows",
+      "count": 10,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "rising thresholds below 100; 0 entries are skipped"
+        }
+      ],
+      "record": "one row per 10 levels: threshold bytes compared with a random 0-99",
+      "note": "E-0192 (C1: RollKeyContentsForLevelTemp0 takes level / 10, reads the 16-byte row at $6969 + 16 * that, and counts entries until one is non-zero and not below a random 0-99; the count goes to hTemp1)."
+    },
+    {
+      "bank": "60",
+      "addr": "6A09",
+      "label": "KeyContentsChanceRows",
+      "count": 10,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "thresholds"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "thresholds"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "thresholds"
+        }
+      ],
+      "record": "one row per 10 levels: 60 threshold bytes compared with a random 0-99, 20 per line",
+      "note": "E-0192 (C1: RollKeyContentsForLevelTemp0 reads the row at $6A09 + $3C * (level / 10) and counts entries below a random 0-99 until one is not; the count goes to hTemp2; 10 rows end at $6C61)."
+    },
+    {
+      "bank": "60",
+      "addr": "6677",
+      "label": "KeyContentsColumnPicks",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 37,
+          "name": "word index (0-7) within a KeyContentsWordRows row, by hTemp3"
+        }
+      ],
+      "record": "37 bytes, each a word index 0-7 within a row",
+      "note": "E-0192 (C1: WriteTable669CWordForTemp2Temp3 reads the byte at $6677 + hTemp3 and uses it as the word index in row hTemp2 of KeyContentsWordRows; the first 32 bytes are four permutations of 0-7; the table ends where the rows begin, and a larger hTemp3 would read into them)."
+    },
+    {
+      "bank": "60",
+      "addr": "669C",
+      "label": "KeyContentsWordRows",
+      "count": 29,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "name": "eight two-byte values"
+        }
+      ],
+      "record": "eight two-byte values (copied as a pair to DE)",
+      "note": "E-0192 (C1: WriteTable669CWordForTemp2Temp3 copies the two bytes at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] to DE + 2; rows 0-9 hold values, rows 10-28 are zero, and the 29 rows end at the code at $686C)."
+    },
+    {
+      "bank": "84",
+      "addr": "4CCB",
+      "label": "KeyWorldAreaLayoutTable",
+      "count": 48,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "area layout",
+          "reason": "key-world area layout"
+        }
+      ],
+      "note": "E-0193 (C1: DebugAutomap_Update_Sub01_Sub01_Sub0C reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16)."
+    },
+    {
+      "bank": "60",
+      "addr": "6D0D",
+      "label": "KeyWorldAreaLayoutTable_Bank60",
+      "count": 48,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "target_bank": "84",
+          "name": "area layout in bank $84",
+          "reason": "key-world area layout"
+        }
+      ],
+      "note": "E-0193 (C1: a copy of KeyWorldAreaLayoutTable (84:$4CCB), word for word; Func_060_51F9's code and PlaceObjectInAreaC read the layout's first byte or a block byte through ReadByteInBank with B = $84)."
+    },
+    {
+      "bank": "84",
+      "addr": "4D2B",
+      "label": "KeyWorldAreaLayout00",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        }
+      ],
+      "record": "block count 3, then 3 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 0 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4D5D",
+      "label": "KeyWorldAreaLayout01",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        }
+      ],
+      "record": "block count 3, then 3 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 1 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4D8F",
+      "label": "KeyWorldAreaLayout02",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        }
+      ],
+      "record": "block count 3, then 3 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 2 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4DC1",
+      "label": "KeyWorldAreaLayout03",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        }
+      ],
+      "record": "block count 3, then 3 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 3 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4DF3",
+      "label": "KeyWorldAreaLayout04",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 4 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4E35",
+      "label": "KeyWorldAreaLayout05",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 5 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4E77",
+      "label": "KeyWorldAreaLayout06",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 6 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4EB9",
+      "label": "KeyWorldAreaLayout07",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 7 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4EFB",
+      "label": "KeyWorldAreaLayout08",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 8 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4F3D",
+      "label": "KeyWorldAreaLayout09",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 9 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4F7F",
+      "label": "KeyWorldAreaLayout10",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 10 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "4FC1",
+      "label": "KeyWorldAreaLayout11",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 11 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5003",
+      "label": "KeyWorldAreaLayout12",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 12 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5045",
+      "label": "KeyWorldAreaLayout13",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 13 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5087",
+      "label": "KeyWorldAreaLayout14",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 14 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "50C9",
+      "label": "KeyWorldAreaLayout15",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        }
+      ],
+      "record": "block count 4, then 4 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 15 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "510B",
+      "label": "KeyWorldAreaLayout16",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 16 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "515D",
+      "label": "KeyWorldAreaLayout17",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 17 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "51AF",
+      "label": "KeyWorldAreaLayout18",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 18 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5201",
+      "label": "KeyWorldAreaLayout19",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 19 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5253",
+      "label": "KeyWorldAreaLayout20",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 20 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "52A5",
+      "label": "KeyWorldAreaLayout21",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 21 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "52F7",
+      "label": "KeyWorldAreaLayout22",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 22 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5349",
+      "label": "KeyWorldAreaLayout23",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 23 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "539B",
+      "label": "KeyWorldAreaLayout24",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 24 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "53ED",
+      "label": "KeyWorldAreaLayout25",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 25 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "543F",
+      "label": "KeyWorldAreaLayout26",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 26 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5491",
+      "label": "KeyWorldAreaLayout27",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        }
+      ],
+      "record": "block count 5, then 5 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 27 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "54E3",
+      "label": "KeyWorldAreaLayout28",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        }
+      ],
+      "record": "block count 6, then 6 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 28 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5545",
+      "label": "KeyWorldAreaLayout29",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        }
+      ],
+      "record": "block count 6, then 6 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 29 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "55A7",
+      "label": "KeyWorldAreaLayout30",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        }
+      ],
+      "record": "block count 6, then 6 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 30 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5609",
+      "label": "KeyWorldAreaLayout31",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        }
+      ],
+      "record": "block count 6, then 6 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 31 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "566B",
+      "label": "KeyWorldAreaLayout32",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        }
+      ],
+      "record": "block count 7, then 7 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 32 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "56DD",
+      "label": "KeyWorldAreaLayout33",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        }
+      ],
+      "record": "block count 7, then 7 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 33 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "574F",
+      "label": "KeyWorldAreaLayout34",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        }
+      ],
+      "record": "block count 7, then 7 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 34 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "57C1",
+      "label": "KeyWorldAreaLayout35",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        }
+      ],
+      "record": "block count 7, then 7 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 35 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5833",
+      "label": "KeyWorldAreaLayout36",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        }
+      ],
+      "record": "block count 7, then 7 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 36 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "58A5",
+      "label": "KeyWorldAreaLayout37",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        }
+      ],
+      "record": "block count 7, then 7 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 37 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5917",
+      "label": "KeyWorldAreaLayout38",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        }
+      ],
+      "record": "block count 7, then 7 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 38 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5989",
+      "label": "KeyWorldAreaLayout39",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        }
+      ],
+      "record": "block count 7, then 7 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 39 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "59FB",
+      "label": "KeyWorldAreaLayout40",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 7"
+        }
+      ],
+      "record": "block count 8, then 8 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 40 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5A7D",
+      "label": "KeyWorldAreaLayout41",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 7"
+        }
+      ],
+      "record": "block count 8, then 8 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 41 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5AFF",
+      "label": "KeyWorldAreaLayout42",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 7"
+        }
+      ],
+      "record": "block count 8, then 8 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 42 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5B81",
+      "label": "KeyWorldAreaLayout43",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 7"
+        }
+      ],
+      "record": "block count 8, then 8 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 43 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5C03",
+      "label": "KeyWorldAreaLayout44",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 7"
+        }
+      ],
+      "record": "block count 8, then 8 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 44 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5C85",
+      "label": "KeyWorldAreaLayout45",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 7"
+        }
+      ],
+      "record": "block count 8, then 8 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 45 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5D07",
+      "label": "KeyWorldAreaLayout46",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 7"
+        }
+      ],
+      "record": "block count 8, then 8 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 46 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "5D89",
+      "label": "KeyWorldAreaLayout47",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "block count"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 0"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 1"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 2"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 3"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 4"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 5"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 6"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "block 7"
+        }
+      ],
+      "record": "block count 8, then 8 blocks of 16 bytes; $FF ends the layout",
+      "note": "E-0193 (C1: entry 47 of KeyWorldAreaLayoutTable; size 2 + 16 * count)."
+    },
+    {
+      "bank": "84",
+      "addr": "42C7",
+      "label": "KeyWorldMonsterBaseRows",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 10,
+          "name": "ten base values (a random 0-9 picks one)"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "name": "not read (zero)"
+        }
+      ],
+      "record": "ten base values, then six zero bytes",
+      "note": "E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_Shared01_Sub01; 6 rows end at that routine)."
+    },
+    {
+      "bank": "84",
+      "addr": "49A1",
+      "label": "LogTwigSpotList",
+      "count": 50,
+      "id_base": 0,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "map id"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "screen X (high nibble) / Y (low nibble)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "two tile positions (X high nibble, Y low nibble); $FF = none"
+        }
+      ],
+      "record": "map id; screen XY; two tile positions ($FF = none)",
+      "note": "E-0193 (C1: ItemUsable_LogTwig_Sub01, on maps from $20, walks 4-byte records from $49A1 until $FF and returns at the first whose map id equals hMapId, whose screen byte equals hMapScreenX/Y and whose third or fourth byte equals the player's tile position; on no match it goes on to Data_084_4887; 50 records then $FF)."
+    },
+    {
+      "bank": "61",
+      "addr": "6705",
+      "label": "TownObjectSpotGrid0",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "four spots of two bytes; $FE = no spot on this screen, $FF = pick another spot"
+        }
+      ],
+      "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 0 (band 0 (Jump_060_63E0), wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens)."
+    },
+    {
+      "bank": "61",
+      "addr": "6905",
+      "label": "TownObjectSpotGrid1",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "four spots of two bytes; $FE = no spot on this screen, $FF = pick another spot"
+        }
+      ],
+      "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 1 (band 3, wMapObjectCount $0A) passes $6905 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6905 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens)."
+    },
+    {
+      "bank": "61",
+      "addr": "6B05",
+      "label": "TownObjectSpotGrid2",
+      "count": 144,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "four spots of two bytes; $FE = no spot on this screen, $FF = pick another spot"
+        }
+      ],
+      "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 2 (band 6, wMapObjectCount $0F) passes $6B05 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6B05 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens)."
+    },
+    {
+      "bank": "61",
+      "addr": "6F85",
+      "label": "TownObjectSpotGrid3",
+      "count": 144,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "four spots of two bytes; $FE = no spot on this screen, $FF = pick another spot"
+        }
+      ],
+      "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 3 (band 9, wMapObjectCount $0F) passes $6F85 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6F85 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 144 screens)."
+    },
+    {
+      "bank": "61",
+      "addr": "7405",
+      "label": "TownObjectSpotGrid4",
+      "count": 36,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "four spots of two bytes; $FE = no spot on this screen, $FF = pick another spot"
+        }
+      ],
+      "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 4 (band $0B, wMapObjectCount $0A) passes $7405 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7405 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 36 screens)."
+    },
+    {
+      "bank": "61",
+      "addr": "7525",
+      "label": "TownObjectSpotGrid5",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "four spots of two bytes; $FE = no spot on this screen, $FF = pick another spot"
+        }
+      ],
+      "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 5 (band $0B, wMapObjectCount $02) passes $7525 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7525 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 6 screens)."
+    },
+    {
+      "bank": "61",
+      "addr": "7555",
+      "label": "TownObjectSpotGrid6",
+      "count": 25,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "name": "four spots of two bytes; $FE = no spot on this screen, $FF = pick another spot"
+        }
+      ],
+      "record": "one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again",
+      "note": "E-0194 (C1: SetupTownObjectsForMap case 6 (band $0D, wMapObjectCount $08) passes $7555 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $7555 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 25 screens)."
     }
   ]
 }

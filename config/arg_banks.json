@@ -1,0 +1,6 @@
+{
+  "_comment": "Routines whose 16-bit pointer argument is read from a fixed ROM bank, whatever bank the caller runs in. The `ld <reg>, $XXXX` before a call to the routine names data in that bank (tools/disasm_all.py label_data_refs).",
+  "routines": [
+    {"name": "RemoveMapObjectsEntryMatching", "reg": "hl", "bank": "61", "evidence": "E-0192: Func_060_64F3 reads [hTemp6/7 + offset] with ReadByteInBank, B = $61"}
+  ]
+}

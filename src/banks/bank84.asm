@@ -12,7 +12,7 @@ Func_084_4001:: ; address name
     ld [wKeyWorldByte46], a
     ld a, [wKeyWorldAreaCount]
     add a, a
-    ld hl, Data_084_4CCB
+    ld hl, KeyWorldAreaLayoutTable
     add_a_to_hl
     ld a, [hl+]
     ldh [hTemp8], a
@@ -441,7 +441,7 @@ Jump_084_4282::
     ldh a, [hTemp4]
     and a, $0F
     swap a
-    ld de, Data_084_42C7
+    ld de, KeyWorldMonsterBaseRows
     add a, e
     ld e, a
     jr nc, Jump_084_4291
@@ -483,9 +483,16 @@ Jump_084_429B::
     jr nz, Jump_084_4282
     ret
 
-; address loaded by RunDebugAutomapCaseTemp0_Shared01
-Data_084_42C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $2102C7, $60
+; E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_Shared01_Sub01; 6 rows end at that routine).
+; record: ten base values, then six zero bytes
+KeyWorldMonsterBaseRows::
+Data_084_42C7:: ; address name
+    db $00, $08, $10, $18, $20, $28, $30, $38, $40, $48, $00, $00, $00, $00, $00, $00 ; id 0
+    db $00, $08, $10, $18, $50, $58, $60, $68, $70, $78, $00, $00, $00, $00, $00, $00 ; id 1
+    db $00, $20, $28, $30, $50, $58, $60, $80, $88, $90, $00, $00, $00, $00, $00, $00 ; id 2
+    db $08, $20, $38, $40, $50, $68, $70, $80, $88, $98, $00, $00, $00, $00, $00, $00 ; id 3
+    db $10, $28, $38, $48, $58, $68, $78, $80, $90, $98, $00, $00, $00, $00, $00, $00 ; id 4
+    db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
 ; only called from RunDebugAutomapCaseTemp0_Shared01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunDebugAutomapCaseTemp0_Shared01)
@@ -1098,7 +1105,7 @@ Func_084_47C2:: ; address name
 Jump_084_47E0::
     pop af
     ld e, a
-    ld hl, Data_084_49A1
+    ld hl, LogTwigSpotList
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -1380,9 +1387,61 @@ Jump_084_499F::
     pop hl
     ret
 
-; address loaded by ItemUsable_LogTwig_Sub01
-Data_084_49A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $2109A1, $C9
+; E-0193 (C1: ItemUsable_LogTwig_Sub01, on maps from $20, walks 4-byte records from $49A1 until $FF and returns at the first whose map id equals hMapId, whose screen byte equals hMapScreenX/Y and whose third or fourth byte equals the player's tile position; on no match it goes on to Data_084_4887; 50 records then $FF).
+; record: map id; screen XY; two tile positions ($FF = none)
+LogTwigSpotList::
+Data_084_49A1:: ; address name
+    db $20, $21, $44, $54 ; id 0
+    db $20, $25, $44, $54 ; id 1
+    db $20, $55, $44, $54 ; id 2
+    db $30, $56, $44, $54 ; id 3
+    db $30, $42, $44, $54 ; id 4
+    db $30, $24, $44, $54 ; id 5
+    db $30, $03, $44, $FF ; id 6
+    db $30, $62, $44, $FF ; id 7
+    db $30, $53, $44, $FF ; id 8
+    db $48, $82, $44, $54 ; id 9
+    db $48, $73, $44, $FF ; id 10
+    db $48, $74, $44, $FF ; id 11
+    db $48, $75, $44, $54 ; id 12
+    db $48, $46, $44, $64 ; id 13
+    db $48, $48, $44, $54 ; id 14
+    db $48, $29, $44, $54 ; id 15
+    db $48, $5A, $43, $53 ; id 16
+    db $48, $99, $44, $54 ; id 17
+    db $48, $A5, $44, $FF ; id 18
+    db $48, $87, $44, $FF ; id 19
+    db $48, $50, $44, $54 ; id 20
+    db $48, $4A, $51, $61 ; id 21
+    db $48, $79, $55, $65 ; id 22
+    db $70, $B1, $44, $FF ; id 23
+    db $70, $A4, $44, $FF ; id 24
+    db $70, $94, $44, $FF ; id 25
+    db $70, $56, $44, $54 ; id 26
+    db $70, $04, $44, $FF ; id 27
+    db $70, $36, $44, $FF ; id 28
+    db $70, $37, $44, $FF ; id 29
+    db $70, $59, $44, $54 ; id 30
+    db $70, $89, $44, $FF ; id 31
+    db $70, $99, $44, $FF ; id 32
+    db $70, $5B, $44, $FF ; id 33
+    db $70, $1B, $44, $FF ; id 34
+    db $70, $BA, $44, $54 ; id 35
+    db $70, $52, $44, $FF ; id 36
+    db $70, $41, $44, $54 ; id 37
+    db $A0, $12, $44, $FF ; id 38
+    db $A8, $11, $44, $FF ; id 39
+    db $A8, $24, $44, $54 ; id 40
+    db $A8, $43, $44, $FF ; id 41
+    db $A8, $51, $44, $FF ; id 42
+    db $B0, $10, $44, $FF ; id 43
+    db $B8, $43, $44, $54 ; id 44
+    db $B8, $11, $35, $FF ; id 45
+    db $B8, $40, $44, $FF ; id 46
+    db $C8, $00, $44, $FF ; id 47
+    db $D1, $01, $44, $FF ; id 48
+    db $DA, $10, $44, $FF ; id 49
+    db $FF ; end
 
 ; only called from ItemUsable_LogTwig_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. ItemUsable_LogTwig_Sub01)
@@ -1776,245 +1835,656 @@ Jump_084_4CB1::
     ld [wKeyWorldActive], a
     ret
 
-; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub0C
-Data_084_4CCB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_084_4D2B
-    dw Data_084_4D5D
-    dw Data_084_4D8F
-    dw Data_084_4DC1
-    dw Data_084_4DF3
-    dw Data_084_4E35
-    dw Data_084_4E77
-    dw Data_084_4EB9
-    dw Data_084_4EFB
-    dw Data_084_4F3D
-    dw Data_084_4F7F
-    dw Data_084_4FC1
-    dw Data_084_5003
-    dw Data_084_5045
-    dw Data_084_5087
-    dw Data_084_50C9
-    dw Data_084_510B
-    dw Data_084_515D
-    dw Data_084_51AF
-    dw Data_084_5201
-    dw Data_084_5253
-    dw Data_084_52A5
-    dw Data_084_52F7
-    dw Data_084_5349
-    dw Data_084_539B
-    dw Data_084_53ED
-    dw Data_084_543F
-    dw Data_084_5491
-    dw Data_084_54E3
-    dw Data_084_5545
-    dw Data_084_55A7
-    dw Data_084_5609
-    dw Data_084_566B
-    dw Data_084_56DD
-    dw Data_084_574F
-    dw Data_084_57C1
-    dw Data_084_5833
-    dw Data_084_58A5
-    dw Data_084_5917
-    dw Data_084_5989
-    dw Data_084_59FB
-    dw Data_084_5A7D
-    dw Data_084_5AFF
-    dw Data_084_5B81
-    dw Data_084_5C03
-    dw Data_084_5C85
-    dw Data_084_5D07
-    dw Data_084_5D89
+; E-0193 (C1: DebugAutomap_Update_Sub01_Sub01_Sub0C reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16).
+; record: area layout
+KeyWorldAreaLayoutTable::
+Data_084_4CCB:: ; address name
+    dw KeyWorldAreaLayout00 ; id 0
+    dw KeyWorldAreaLayout01 ; id 1
+    dw KeyWorldAreaLayout02 ; id 2
+    dw KeyWorldAreaLayout03 ; id 3
+    dw KeyWorldAreaLayout04 ; id 4
+    dw KeyWorldAreaLayout05 ; id 5
+    dw KeyWorldAreaLayout06 ; id 6
+    dw KeyWorldAreaLayout07 ; id 7
+    dw KeyWorldAreaLayout08 ; id 8
+    dw KeyWorldAreaLayout09 ; id 9
+    dw KeyWorldAreaLayout10 ; id 10
+    dw KeyWorldAreaLayout11 ; id 11
+    dw KeyWorldAreaLayout12 ; id 12
+    dw KeyWorldAreaLayout13 ; id 13
+    dw KeyWorldAreaLayout14 ; id 14
+    dw KeyWorldAreaLayout15 ; id 15
+    dw KeyWorldAreaLayout16 ; id 16
+    dw KeyWorldAreaLayout17 ; id 17
+    dw KeyWorldAreaLayout18 ; id 18
+    dw KeyWorldAreaLayout19 ; id 19
+    dw KeyWorldAreaLayout20 ; id 20
+    dw KeyWorldAreaLayout21 ; id 21
+    dw KeyWorldAreaLayout22 ; id 22
+    dw KeyWorldAreaLayout23 ; id 23
+    dw KeyWorldAreaLayout24 ; id 24
+    dw KeyWorldAreaLayout25 ; id 25
+    dw KeyWorldAreaLayout26 ; id 26
+    dw KeyWorldAreaLayout27 ; id 27
+    dw KeyWorldAreaLayout28 ; id 28
+    dw KeyWorldAreaLayout29 ; id 29
+    dw KeyWorldAreaLayout30 ; id 30
+    dw KeyWorldAreaLayout31 ; id 31
+    dw KeyWorldAreaLayout32 ; id 32
+    dw KeyWorldAreaLayout33 ; id 33
+    dw KeyWorldAreaLayout34 ; id 34
+    dw KeyWorldAreaLayout35 ; id 35
+    dw KeyWorldAreaLayout36 ; id 36
+    dw KeyWorldAreaLayout37 ; id 37
+    dw KeyWorldAreaLayout38 ; id 38
+    dw KeyWorldAreaLayout39 ; id 39
+    dw KeyWorldAreaLayout40 ; id 40
+    dw KeyWorldAreaLayout41 ; id 41
+    dw KeyWorldAreaLayout42 ; id 42
+    dw KeyWorldAreaLayout43 ; id 43
+    dw KeyWorldAreaLayout44 ; id 44
+    dw KeyWorldAreaLayout45 ; id 45
+    dw KeyWorldAreaLayout46 ; id 46
+    dw KeyWorldAreaLayout47 ; id 47
 
-; LZSS-compressed asset: 709 bytes expand to 771 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4D2B:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $03, $0A, $9E, $E0, $C2, $00, $00, $00, $00, $0A, $9E, $E0, $C2, $00, $00
-    db $00, $05, $03, $03, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00
-    db $00, $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $FF
+; E-0193 (C1: entry 0 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 3, then 3 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout00::
+Data_084_4D2B:: ; address name
+    db $03 ; entry 0
+    db $03, $0A, $9E, $E0, $C2, $00, $00, $00, $00, $0A, $9E, $E0, $C2, $00, $00, $00
+    db $05, $03, $03, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 763 bytes expand to 771 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4D5D:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $03, $A6, $09, $6A, $C8, $00, $00, $00, $00, $A6, $09, $6A, $C8, $00, $00
-    db $00, $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00
-    db $00, $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $FF
+; E-0193 (C1: entry 1 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 3, then 3 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout01::
+Data_084_4D5D:: ; address name
+    db $03 ; entry 0
+    db $03, $A6, $09, $6A, $C8, $00, $00, $00, $00, $A6, $09, $6A, $C8, $00, $00, $00
+    db $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 763 bytes expand to 771 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4D8F:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $03, $B1, $8E, $08, $C6, $00, $00, $00, $00, $00, $8E, $08, $C6, $00, $00
-    db $00, $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00
-    db $00, $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $FF
+; E-0193 (C1: entry 2 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 3, then 3 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout02::
+Data_084_4D8F:: ; address name
+    db $03 ; entry 0
+    db $03, $B1, $8E, $08, $C6, $00, $00, $00, $00, $00, $8E, $08, $C6, $00, $00, $00
+    db $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 517 bytes expand to 515 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4DC1:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $02, $69, $E5, $0A, $00, $BB, $92, $C9, $7B, $00, $00, $00, $00, $00, $00
-    db $00, $05, $03, $03, $00, $2C, $00, $00, $01, $2A, $00, $00, $00, $00, $00, $00
-    db $00, $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $FF
+; E-0193 (C1: entry 3 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 3, then 3 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout03::
+Data_084_4DC1:: ; address name
+    db $03 ; entry 0
+    db $02, $69, $E5, $0A, $00, $BB, $92, $C9, $7B, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $00, $2C, $00, $00, $01, $2A, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 772 bytes expand to 772 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4DF3:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $210DF3, $42
+; E-0193 (C1: entry 4 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout04::
+Data_084_4DF3:: ; address name
+    db $04 ; entry 0
+    db $03, $AF, $09, $72, $C0, $00, $00, $00, $00, $AF, $09, $72, $C0, $00, $00, $00
+    db $05, $04, $03, $01, $03, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $02, $6C, $E5, $B4, $DE, $BF, $97, $D4, $66, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_4E35:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $210E35, $42
+; E-0193 (C1: entry 5 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout05::
+Data_084_4E35:: ; address name
+    db $04 ; entry 0
+    db $03, $A2, $93, $08, $C3, $00, $00, $00, $00, $A2, $93, $08, $C3, $00, $00, $00
+    db $04, $04, $03, $01, $2C, $00, $00, $02, $03, $00, $00, $00, $00, $00, $00, $00
+    db $02, $73, $89, $B1, $D9, $BA, $84, $D5, $69, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 727 bytes expand to 772 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4E77:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $210E77, $42
+; E-0193 (C1: entry 6 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout06::
+Data_084_4E77:: ; address name
+    db $04 ; entry 0
+    db $03, $0A, $85, $6D, $CA, $00, $00, $00, $00, $0A, $85, $6D, $CA, $00, $00, $00
+    db $04, $04, $03, $01, $03, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00
+    db $02, $7C, $97, $A3, $C4, $B9, $9E, $DA, $77, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 768 bytes expand to 772 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4EB9:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $210EB9, $42
+; E-0193 (C1: entry 7 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout07::
+Data_084_4EB9:: ; address name
+    db $04 ; entry 0
+    db $03, $A1, $09, $66, $CB, $00, $00, $00, $00, $A1, $09, $66, $CB, $00, $00, $00
+    db $05, $04, $03, $01, $0D, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $02, $76, $94, $AD, $CF, $B6, $96, $D7, $68, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_4EFB:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $210EFB, $42
+; E-0193 (C1: entry 8 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout08::
+Data_084_4EFB:: ; address name
+    db $04 ; entry 0
+    db $03, $B7, $90, $08, $DB, $00, $00, $00, $00, $B7, $90, $08, $DB, $00, $00, $00
+    db $04, $04, $03, $01, $03, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $04, $03, $01, $0C, $00, $00, $02, $11, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 729 bytes expand to 772 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4F3D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $210F3D, $42
+; E-0193 (C1: entry 9 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout09::
+Data_084_4F3D:: ; address name
+    db $04 ; entry 0
+    db $03, $0A, $95, $6B, $CE, $00, $00, $00, $00, $0A, $95, $6B, $CE, $00, $00, $00
+    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $0C, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 252 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_4F7F:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $210F7F, $42
+; E-0193 (C1: entry 10 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout10::
+Data_084_4F7F:: ; address name
+    db $04 ; entry 0
+    db $01, $10, $31, $49, $08, $00, $00, $00, $00, $10, $31, $49, $08, $00, $00, $00
+    db $04, $03, $03, $01, $0E, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $05, $04, $03, $01, $0F, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_4FC1:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $210FC1, $42
+; E-0193 (C1: entry 11 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout11::
+Data_084_4FC1:: ; address name
+    db $04 ; entry 0
+    db $01, $16, $37, $08, $E1, $00, $00, $00, $00, $16, $37, $08, $E1, $00, $00, $00
+    db $05, $04, $03, $01, $03, $00, $00, $02, $10, $00, $00, $00, $00, $00, $00, $00
+    db $04, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 519 bytes expand to 516 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5003:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211003, $42
+; E-0193 (C1: entry 12 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout12::
+Data_084_5003:: ; address name
+    db $04 ; entry 0
+    db $02, $7D, $09, $A5, $D1, $B3, $99, $D8, $62, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $05, $00, $00, $02, $0C, $00, $00, $00, $00, $00, $00, $00
+    db $03, $BC, $9D, $78, $C7, $00, $00, $00, $00, $BC, $9D, $78, $C7, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 256 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5045:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211045, $42
+; E-0193 (C1: entry 13 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout13::
+Data_084_5045:: ; address name
+    db $04 ; entry 0
+    db $01, $2C, $08, $34, $3C, $00, $00, $00, $00, $2C, $08, $34, $3C, $00, $00, $00
+    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $03, $B0, $E6, $EA, $CC, $00, $00, $00, $00, $B0, $E6, $EA, $CC, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 261 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5087:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211087, $42
+; E-0193 (C1: entry 14 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout14::
+Data_084_5087:: ; address name
+    db $04 ; entry 0
+    db $01, $14, $42, $51, $08, $00, $00, $00, $00, $14, $42, $51, $08, $00, $00, $00
+    db $04, $04, $03, $01, $2C, $00, $00, $02, $0C, $00, $00, $00, $00, $00, $00, $00
+    db $03, $BD, $8D, $6E, $CD, $00, $00, $00, $00, $BD, $8D, $6E, $CD, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 516 bytes expand to 516 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_50C9:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2110C9, $42
+; E-0193 (C1: entry 15 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 4, then 4 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout15::
+Data_084_50C9:: ; address name
+    db $04 ; entry 0
+    db $02, $08, $8A, $E4, $D2, $AC, $98, $D6, $65, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $0C, $00, $00, $02, $0D, $00, $00, $00, $00, $00, $00, $00
+    db $01, $1C, $32, $3A, $3B, $00, $00, $00, $00, $1C, $32, $3A, $3B, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 520 bytes expand to 517 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_510B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $21110B, $52
+; E-0193 (C1: entry 16 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout16::
+Data_084_510B:: ; address name
+    db $05 ; entry 0
+    db $02, $7E, $9B, $0A, $D0, $A9, $8F, $D3, $6F, $00, $00, $00, $00, $00, $00, $00
+    db $04, $03, $03, $01, $05, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $03, $B2, $88, $71, $DF, $00, $00, $00, $00, $B2, $88, $71, $DF, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $05, $03, $02, $2C, $00, $00, $03, $12, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 520 bytes expand to 517 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_515D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $21115D, $52
+; E-0193 (C1: entry 17 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout17::
+Data_084_515D:: ; address name
+    db $05 ; entry 0
+    db $02, $71, $09, $AA, $D1, $AE, $91, $DC, $62, $00, $00, $00, $00, $00, $00, $00
+    db $04, $05, $03, $01, $05, $00, $00, $03, $0C, $00, $00, $00, $00, $00, $00, $00
+    db $03, $B5, $9C, $7A, $DD, $00, $00, $00, $00, $B5, $9C, $7A, $DD, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $05, $03, $02, $10, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 758 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_51AF:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2111AF, $52
+; E-0193 (C1: entry 18 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout18::
+Data_084_51AF:: ; address name
+    db $05 ; entry 0
+    db $03, $BE, $9A, $08, $D9, $00, $00, $00, $00, $BE, $9A, $64, $D9, $00, $00, $00
+    db $05, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $02, $6A, $95, $B9, $D3, $B3, $85, $C8, $01, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $05, $03, $02, $05, $00, $00, $03, $0F, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 718 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5201:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211201, $52
+; E-0193 (C1: entry 19 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout19::
+Data_084_5201:: ; address name
+    db $05 ; entry 0
+    db $03, $0A, $E6, $EB, $CC, $00, $00, $00, $00, $0A, $E6, $EB, $CC, $00, $00, $00
+    db $04, $05, $03, $01, $11, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00
+    db $02, $69, $84, $AB, $D8, $A4, $8C, $DD, $6D, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $05, $03, $02, $2C, $00, $00, $03, $0C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_5253:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211253, $52
+; E-0193 (C1: entry 20 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout20::
+Data_084_5253:: ; address name
+    db $05 ; entry 0
+    db $03, $A1, $09, $67, $CB, $00, $00, $00, $00, $A1, $09, $67, $CB, $00, $00, $00
+    db $04, $03, $03, $01, $03, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $01, $13, $35, $E1, $47, $00, $00, $00, $00, $13, $35, $E1, $47, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $05, $03, $01, $2C, $00, $00, $03, $0E, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_52A5:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2112A5, $52
+; E-0193 (C1: entry 21 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout21::
+Data_084_52A5:: ; address name
+    db $05 ; entry 0
+    db $03, $A1, $89, $08, $CB, $00, $00, $00, $00, $A1, $89, $08, $CB, $00, $00, $00
+    db $05, $05, $03, $01, $05, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00
+    db $01, $28, $38, $56, $E3, $00, $00, $00, $00, $28, $38, $56, $E3, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $05, $03, $02, $2C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 741 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_52F7:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2112F7, $52
+; E-0193 (C1: entry 22 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout22::
+Data_084_52F7:: ; address name
+    db $05 ; entry 0
+    db $03, $0A, $8B, $EA, $CD, $00, $00, $00, $00, $0A, $8B, $EA, $CD, $00, $00, $00
+    db $02, $75, $E5, $AD, $DB, $BA, $8C, $DE, $6C, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $0F, $00, $00, $02, $0D, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $05, $03, $02, $12, $00, $00, $03, $10, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 761 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5349:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211349, $52
+; E-0193 (C1: entry 23 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout23::
+Data_084_5349:: ; address name
+    db $05 ; entry 0
+    db $03, $A0, $09, $7E, $CA, $00, $00, $00, $00, $A0, $09, $7E, $CA, $00, $00, $00
+    db $02, $63, $94, $BB, $DA, $B3, $9B, $DF, $72, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $0F, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $06, $03, $02, $2C, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_539B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $21139B, $52
+; E-0193 (C1: entry 24 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout24::
+Data_084_539B:: ; address name
+    db $05 ; entry 0
+    db $03, $A5, $83, $08, $D7, $00, $00, $00, $00, $A5, $83, $08, $D7, $00, $00, $00
+    db $02, $EF, $93, $B4, $C3, $BE, $99, $DC, $74, $00, $00, $00, $00, $00, $00, $00
+    db $01, $15, $5F, $50, $45, $00, $00, $00, $00, $15, $5F, $50, $45, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $07, $03, $02, $0C, $00, $00, $04, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 644 bytes expand to 773 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_53ED:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2113ED, $52
+; E-0193 (C1: entry 25 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout25::
+Data_084_53ED:: ; address name
+    db $05 ; entry 0
+    db $03, $0A, $8A, $6B, $C2, $00, $00, $00, $00, $0A, $8A, $6B, $C2, $00, $00, $00
+    db $02, $71, $91, $AC, $D2, $B2, $98, $D5, $79, $00, $00, $00, $00, $00, $00, $00
+    db $01, $23, $30, $39, $4A, $00, $00, $00, $00, $23, $30, $39, $4A, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $06, $03, $02, $11, $00, $00, $04, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 261 bytes expand to 261 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_543F:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $21143F, $52
+; E-0193 (C1: entry 26 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout26::
+Data_084_543F:: ; address name
+    db $05 ; entry 0
+    db $01, $1D, $3F, $E2, $08, $00, $00, $00, $00, $1D, $3F, $E2, $08, $00, $00, $00
+    db $04, $05, $03, $01, $0E, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $0D, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $08, $03, $02, $2C, $00, $00, $05, $05, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_5491:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211491, $52
+; E-0193 (C1: entry 27 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 5, then 5 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout27::
+Data_084_5491:: ; address name
+    db $05 ; entry 0
+    db $01, $19, $58, $08, $4B, $00, $00, $00, $00, $19, $58, $08, $4B, $00, $00, $00
+    db $05, $03, $03, $01, $10, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $0D, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $08, $03, $02, $03, $00, $00, $05, $0F, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 261 bytes expand to 262 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_54E3:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2114E3, $62
+; E-0193 (C1: entry 28 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 6, then 6 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout28::
+Data_084_54E3:: ; address name
+    db $06 ; entry 0
+    db $01, $2D, $08, $E3, $3E, $00, $00, $00, $00, $2D, $08, $E3, $3E, $00, $00, $00
+    db $05, $03, $03, $01, $0E, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $03, $B0, $96, $7B, $CF, $00, $00, $00, $00, $B0, $96, $7B, $CF, $00, $00, $00
+    db $04, $04, $03, $01, $0D, $00, $00, $02, $0C, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $08, $03, $02, $11, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 252 bytes expand to 262 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5545:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211545, $62
+; E-0193 (C1: entry 29 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 6, then 6 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout29::
+Data_084_5545:: ; address name
+    db $06 ; entry 0
+    db $01, $1B, $59, $4C, $08, $00, $00, $00, $00, $1B, $59, $4C, $08, $00, $00, $00
+    db $05, $03, $03, $01, $0E, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $03, $AF, $E7, $78, $CE, $00, $00, $00, $00, $AF, $E7, $78, $CE, $00, $00, $00
+    db $04, $04, $03, $01, $0D, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $05, $03, $02, $2C, $00, $00, $03, $11, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_55A7:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2115A7, $62
+; E-0193 (C1: entry 30 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 6, then 6 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout30::
+Data_084_55A7:: ; address name
+    db $06 ; entry 0
+    db $01, $20, $5D, $08, $5A, $00, $00, $00, $00, $20, $5D, $08, $5A, $00, $00, $00
+    db $04, $04, $03, $01, $12, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $03, $B1, $9E, $73, $EE, $00, $00, $00, $00, $B1, $9E, $73, $EE, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $06, $03, $02, $05, $00, $00, $04, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 261 bytes expand to 262 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5609:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211609, $62
+; E-0193 (C1: entry 31 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 6, then 6 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout31::
+Data_084_5609:: ; address name
+    db $06 ; entry 0
+    db $01, $22, $08, $53, $54, $00, $00, $00, $00, $22, $08, $53, $54, $00, $00, $00
+    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $05, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $03, $B8, $E7, $68, $D0, $00, $00, $00, $00, $B8, $E7, $68, $D0, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $09, $03, $02, $2C, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 526 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_566B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $21166B, $72
+; E-0193 (C1: entry 32 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout32::
+Data_084_566B:: ; address name
+    db $07 ; entry 0
+    db $03, $0A, $9D, $7F, $CF, $00, $00, $00, $00, $0A, $9D, $7F, $CF, $00, $00, $00
+    db $04, $04, $03, $01, $0C, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $04, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $02, $75, $82, $E4, $C1, $03, $88, $C4, $6E, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $05, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $07, $03, $01, $0F, $00, $00, $04, $10, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 764 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_56DD:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2116DD, $72
+; E-0193 (C1: entry 33 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout33::
+Data_084_56DD:: ; address name
+    db $07 ; entry 0
+    db $03, $BC, $09, $7D, $C9, $00, $00, $00, $00, $BC, $09, $7D, $C9, $00, $00, $00
+    db $05, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $02, $70, $E6, $A9, $C0, $B7, $8F, $C6, $77, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $05, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $06, $03, $02, $2C, $00, $00, $03, $0F, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_574F:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $21174F, $72
+; E-0193 (C1: entry 34 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout34::
+Data_084_574F:: ; address name
+    db $07 ; entry 0
+    db $03, $B5, $95, $08, $C1, $00, $00, $00, $00, $B5, $95, $08, $C1, $00, $00, $00
+    db $04, $03, $03, $01, $0D, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $0E, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $04, $05, $03, $01, $0F, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $02, $76, $87, $A7, $C7, $AE, $8E, $D3, $7C, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $11, $00, $00, $02, $0C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 727 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_57C1:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2117C1, $72
+; E-0193 (C1: entry 35 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout35::
+Data_084_57C1:: ; address name
+    db $07 ; entry 0
+    db $03, $0A, $E8, $7E, $F1, $00, $00, $00, $00, $0A, $E8, $7E, $F1, $00, $00, $00
+    db $05, $04, $03, $01, $0D, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $05, $04, $03, $01, $0F, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00
+    db $02, $65, $8C, $A8, $C5, $B9, $92, $D2, $73, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $07, $03, $02, $2C, $00, $00, $04, $0C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 766 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5833:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211833, $72
+; E-0193 (C1: entry 36 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout36::
+Data_084_5833:: ; address name
+    db $07 ; entry 0
+    db $03, $B7, $09, $7B, $F0, $00, $00, $00, $00, $B7, $09, $7B, $F0, $00, $00, $00
+    db $04, $05, $03, $01, $11, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $02, $6E, $E8, $AA, $EE, $B3, $93, $DB, $79, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $12, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $01, $2B, $4E, $55, $35, $00, $00, $00, $00, $2B, $4E, $55, $35, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $06, $03, $02, $2C, $00, $00, $04, $0D, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_58A5:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2118A5, $72
+; E-0193 (C1: entry 37 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout37::
+Data_084_58A5:: ; address name
+    db $07 ; entry 0
+    db $03, $B5, $99, $08, $DA, $00, $00, $00, $00, $B5, $99, $08, $DA, $00, $00, $00
+    db $05, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $02, $64, $82, $A4, $C3, $AB, $8A, $D0, $6C, $00, $00, $00, $00, $00, $00, $00
+    db $05, $04, $03, $01, $12, $00, $00, $02, $0F, $00, $00, $00, $00, $00, $00, $00
+    db $01, $2F, $33, $4A, $04, $00, $00, $00, $00, $2F, $33, $4A, $04, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $07, $03, $02, $2C, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 755 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5917:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211917, $72
+; E-0193 (C1: entry 38 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout38::
+Data_084_5917:: ; address name
+    db $07 ; entry 0
+    db $03, $0A, $E7, $EC, $CF, $00, $00, $00, $00, $0A, $E7, $EC, $CF, $00, $00, $00
+    db $04, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $04, $05, $03, $01, $0E, $00, $00, $03, $11, $00, $00, $00, $00, $00, $00, $00
+    db $04, $06, $03, $01, $03, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $04, $07, $03, $01, $0C, $00, $00, $03, $05, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $04, $03, $01, $12, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 776 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5989:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211989, $72
+; E-0193 (C1: entry 39 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 7, then 7 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout39::
+Data_084_5989:: ; address name
+    db $07 ; entry 0
+    db $03, $AD, $09, $71, $F0, $00, $00, $00, $00, $AD, $09, $71, $F0, $00, $00, $00
+    db $05, $04, $03, $01, $0D, $00, $00, $02, $03, $00, $00, $00, $00, $00, $00, $00
+    db $05, $04, $03, $01, $0E, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $07, $03, $02, $2C, $00, $00, $05, $11, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_59FB:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2119FB, $82
+; E-0193 (C1: entry 40 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout40::
+Data_084_59FB:: ; address name
+    db $08 ; entry 0
+    db $03, $B8, $91, $08, $F1, $00, $00, $00, $00, $B8, $91, $08, $F1, $00, $00, $00
+    db $04, $06, $03, $01, $0D, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $04, $05, $03, $01, $0E, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00
+    db $02, $62, $E9, $A5, $C2, $B1, $8B, $D1, $6B, $00, $00, $00, $00, $00, $00, $00
+    db $04, $03, $03, $01, $12, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $01, $2E, $3B, $44, $3D, $00, $00, $00, $00, $2E, $3B, $44, $3D, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $07, $03, $02, $05, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 774 bytes expand to 776 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5A7D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211A7D, $82
+; E-0193 (C1: entry 41 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout41::
+Data_084_5A7D:: ; address name
+    db $08 ; entry 0
+    db $03, $0A, $98, $74, $D8, $00, $00, $00, $00, $0A, $98, $74, $D8, $00, $00, $00
+    db $05, $07, $03, $01, $0D, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $02, $69, $96, $A2, $CA, $AC, $8F, $D4, $6D, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $01, $2A, $43, $49, $57, $00, $00, $00, $00, $2A, $43, $49, $57, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $06, $03, $02, $2C, $00, $00, $04, $05, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 252 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5AFF:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211AFF, $82
+; E-0193 (C1: entry 42 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout42::
+Data_084_5AFF:: ; address name
+    db $08 ; entry 0
+    db $01, $2D, $5A, $5E, $08, $00, $00, $00, $00, $2D, $5A, $5E, $08, $00, $00, $00
+    db $04, $03, $03, $01, $11, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $03, $A7, $E9, $ED, $C4, $00, $00, $00, $00, $A7, $E9, $ED, $C4, $00, $00, $00
+    db $01, $24, $45, $47, $53, $00, $00, $00, $00, $24, $45, $47, $53, $00, $00, $00
+    db $04, $04, $03, $01, $0D, $00, $00, $02, $10, $00, $00, $00, $00, $00, $00, $00
+    db $05, $03, $03, $01, $03, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $07, $03, $02, $2C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_5B81:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211B81, $82
+; E-0193 (C1: entry 43 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout43::
+Data_084_5B81:: ; address name
+    db $08 ; entry 0
+    db $01, $29, $3A, $08, $42, $00, $00, $00, $00, $29, $3A, $08, $42, $00, $00, $00
+    db $05, $06, $03, $01, $11, $00, $00, $03, $12, $00, $00, $00, $00, $00, $00, $00
+    db $03, $B4, $8D, $75, $CD, $00, $00, $00, $00, $B4, $8D, $75, $CD, $00, $00, $00
+    db $01, $26, $4C, $34, $58, $00, $00, $00, $00, $26, $4C, $34, $58, $00, $00, $00
+    db $05, $06, $03, $01, $0E, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $04, $03, $03, $01, $03, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $07, $03, $04, $2C, $00, $00, $05, $0F, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 254 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5C03:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211C03, $82
+; E-0193 (C1: entry 44 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout44::
+Data_084_5C03:: ; address name
+    db $08 ; entry 0
+    db $01, $2C, $08, $52, $4D, $00, $00, $00, $00, $2C, $08, $52, $4D, $00, $00, $00
+    db $04, $09, $03, $01, $2C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $03, $AF, $9D, $7A, $C7, $00, $00, $00, $00, $AF, $9D, $7A, $C7, $00, $00, $00
+    db $04, $09, $03, $01, $2C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $01, $2B, $40, $3C, $54, $00, $00, $00, $00, $2B, $40, $3C, $54, $00, $00, $00
+    db $04, $09, $03, $01, $2C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $09, $03, $02, $2C, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 244 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5C85:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211C85, $82
+; E-0193 (C1: entry 45 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout45::
+Data_084_5C85:: ; address name
+    db $08 ; entry 0
+    db $01, $17, $39, $5F, $08, $00, $00, $00, $00, $17, $39, $5F, $08, $00, $00, $00
+    db $05, $09, $03, $01, $0D, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $02, $63, $88, $A3, $C8, $BA, $9F, $DC, $6F, $00, $00, $00, $00, $00, $00, $00
+    db $05, $09, $03, $01, $2C, $00, $00, $03, $10, $00, $00, $00, $00, $00, $00, $00
+    db $01, $18, $50, $3E, $5D, $00, $00, $00, $00, $18, $50, $3E, $5D, $00, $00, $00
+    db $05, $09, $03, $01, $12, $00, $00, $03, $05, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $09, $03, $02, $11, $00, $00, $05, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-Data_084_5D07:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211D07, $82
+; E-0193 (C1: entry 46 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout46::
+Data_084_5D07:: ; address name
+    db $08 ; entry 0
+    db $01, $1F, $31, $08, $56, $00, $00, $00, $00, $1F, $31, $08, $56, $00, $00, $00
+    db $04, $04, $03, $01, $2C, $00, $00, $02, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $0F, $00, $00, $02, $12, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $05, $00, $00, $02, $11, $00, $00, $00, $00, $00, $00, $00
+    db $04, $04, $03, $01, $03, $00, $00, $02, $10, $00, $00, $00, $00, $00, $00, $00
+    db $04, $03, $03, $01, $0C, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $05, $09, $03, $03, $0E, $00, $00, $05, $0D, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
 
-; LZSS-compressed asset: 252 bytes expand to 264 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_084_5D89:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $211D89, $82
+; E-0193 (C1: entry 47 of KeyWorldAreaLayoutTable; size 2 + 16 * count).
+; record: block count 8, then 8 blocks of 16 bytes; $FF ends the layout
+KeyWorldAreaLayout47::
+Data_084_5D89:: ; address name
+    db $08 ; entry 0
+    db $01, $1E, $08, $4E, $55, $00, $00, $00, $00, $1E, $08, $4E, $55, $00, $00, $00
+    db $05, $04, $03, $01, $0E, $00, $00, $03, $03, $00, $00, $00, $00, $00, $00, $00
+    db $05, $06, $03, $01, $2C, $00, $00, $03, $10, $00, $00, $00, $00, $00, $00, $00
+    db $05, $04, $03, $01, $0D, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $05, $06, $03, $01, $11, $00, $00, $03, $12, $00, $00, $00, $00, $00, $00, $00
+    db $05, $05, $03, $01, $0C, $00, $00, $03, $2C, $00, $00, $00, $00, $00, $00, $00
+    db $06, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $04, $09, $03, $02, $2C, $00, $00, $05, $11, $00, $00, $00, $00, $00, $00, $00
+    db $FF ; end
     ds $21F5, $00

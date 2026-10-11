@@ -206,10 +206,44 @@ Jump_060_4105::
     jp nz, Jump_060_409D
     ret
 
-; address loaded by RollKeyWorldMonsterTableKeyWorldBossMonsters
-Data_060_4123:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $21, $00
-    INCBIN "dwm2-cobi-us.gbc", $180144, $EF
+; E-0192 (C1: RollKeyWorldMonsterTableKeyWorldBossMonsters reads the byte at $4123 + 8 * wKeyWorldBandAdjust + (random & 7), doubles it and reads the band-list pointer at $6D6D + $90 + that offset; it retries when the list is empty; 34 rows end at FillWCD11LevelsForPartyStrength ($4233); higher rows pick from more bands).
+; record: eight picks for one wKeyWorldBandAdjust value; a random 0-7 chooses one
+KeyWorldBossBandPickRows::
+Data_060_4123:: ; address name
+    db $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
+    db $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
+    db $00, $00, $00, $00, $00, $00, $00, $00 ; id 3
+    db $00, $01, $00, $01, $00, $01, $00, $01 ; id 4
+    db $01, $00, $01, $00, $01, $00, $01, $00 ; id 5
+    db $00, $01, $00, $01, $00, $01, $00, $01 ; id 6
+    db $01, $00, $01, $00, $01, $00, $01, $00 ; id 7
+    db $00, $01, $02, $00, $01, $02, $00, $01 ; id 8
+    db $02, $00, $01, $02, $00, $01, $02, $00 ; id 9
+    db $01, $02, $00, $01, $02, $00, $01, $02 ; id 10
+    db $00, $01, $02, $00, $01, $02, $00, $01 ; id 11
+    db $00, $01, $02, $03, $00, $01, $02, $03 ; id 12
+    db $03, $02, $01, $00, $03, $02, $01, $00 ; id 13
+    db $00, $01, $02, $03, $00, $01, $02, $03 ; id 14
+    db $03, $02, $01, $00, $03, $02, $01, $00 ; id 15
+    db $00, $01, $02, $03, $04, $00, $01, $02 ; id 16
+    db $03, $04, $00, $01, $02, $03, $04, $00 ; id 17
+    db $01, $02, $03, $04, $00, $01, $02, $03 ; id 18
+    db $04, $00, $01, $02, $03, $04, $00, $01 ; id 19
+    db $00, $01, $02, $03, $04, $05, $00, $01 ; id 20
+    db $02, $03, $04, $05, $00, $01, $02, $03 ; id 21
+    db $04, $05, $00, $01, $02, $03, $04, $05 ; id 22
+    db $00, $01, $02, $03, $04, $05, $00, $01 ; id 23
+    db $00, $01, $02, $03, $04, $05, $06, $00 ; id 24
+    db $01, $02, $03, $04, $05, $06, $00, $01 ; id 25
+    db $02, $03, $04, $05, $06, $00, $01, $02 ; id 26
+    db $00, $01, $02, $03, $04, $05, $06, $00 ; id 27
+    db $01, $02, $03, $04, $05, $06, $01, $02 ; id 28
+    db $03, $04, $05, $06, $01, $02, $03, $04 ; id 29
+    db $05, $06, $01, $02, $03, $04, $05, $06 ; id 30
+    db $01, $02, $03, $04, $05, $06, $01, $02 ; id 31
+    db $00, $01, $02, $03, $04, $05, $06, $07 ; id 32
+    db $07, $06, $05, $04, $03, $02, $01, $00 ; id 33
 
 ; for 32 entries from wCD11 ORs 2 * min(wC969 + (32 - n) * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0125)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
@@ -297,7 +331,7 @@ Jump_060_4292::
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
-    ld de, Data_060_4123
+    ld de, KeyWorldBossBandPickRows
     add a, e
     ld e, a
     jr nc, Jump_060_42A3
@@ -488,7 +522,7 @@ Func_060_436B:: ; address name
     ld a, [hl]
     ld de, wKeyWorldMonsterBands
     push hl
-    ld hl, Data_060_43C7
+    ld hl, KeyWorldBandAdjustTable
     add_a_to_hl
     ld a, [hl]
     ld [wKeyWorldBandAdjust], a
@@ -503,7 +537,7 @@ Func_060_436B:: ; address name
     rl h
     sla l
     rl h
-    ld de, Data_060_43D7
+    ld de, KeyWorldBandRows
     add hl, de
     ld de, wKeyWorldMonsterBands
     push hl
@@ -533,13 +567,87 @@ Jump_060_43C3::
     ld [wKeyWorldBandAdjust], a
     ret
 
-; address loaded by LoadKeyWorldParamsForCurrentKeyIndex
-Data_060_43C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FE, $FF, $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D
+; E-0192 (C1: LoadKeyWorldParamsForCurrentKeyIndex indexes it by byte 0 of the current key's 4-byte entry at wC708 + 4 * wCurrentKeyIndex: values -2 to 13).
+; record: signed starting value of wKeyWorldBandAdjust
+KeyWorldBandAdjustTable::
+Data_060_43C7:: ; address name
+    db $FE ; id 0
+    db $FF ; id 1
+    db $00 ; id 2
+    db $01 ; id 3
+    db $02 ; id 4
+    db $03 ; id 5
+    db $04 ; id 6
+    db $05 ; id 7
+    db $06 ; id 8
+    db $07 ; id 9
+    db $08 ; id 10
+    db $09 ; id 11
+    db $0A ; id 12
+    db $0B ; id 13
+    db $0C ; id 14
+    db $0D ; id 15
 
-; address loaded by LoadKeyWorldParamsForCurrentKeyIndex
-Data_060_43D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $1803D7, $1C0
+; E-0192 (C1: LoadKeyWorldParamsForCurrentKeyIndex indexes it by 8 * byte 1 of the current key's entry, copies bytes up to and including the $FF to wKeyWorldMonsterBands, then adds byte 6 to wKeyWorldBandAdjust; 56 rows end at the routine after them; every row has its $FF within the first six bytes).
+; record: band list ($FF-terminated, 6 bytes); band adjustment; unused 0
+KeyWorldBandRows::
+Data_060_43D7:: ; address name
+    db $00, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 0
+    db $01, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 1
+    db $02, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 2
+    db $03, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 3
+    db $04, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 4
+    db $05, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 5
+    db $06, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 6
+    db $07, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 7
+    db $08, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 8
+    db $09, $FF, $FF, $FF, $FF, $FF, $02, $00 ; id 9
+    db $0A, $FF, $FF, $FF, $FF, $FF, $10, $00 ; id 10
+    db $00, $01, $FF, $FF, $FF, $FF, $00, $00 ; id 11
+    db $00, $02, $FF, $FF, $FF, $FF, $00, $00 ; id 12
+    db $00, $03, $FF, $FF, $FF, $FF, $00, $00 ; id 13
+    db $00, $04, $FF, $FF, $FF, $FF, $00, $00 ; id 14
+    db $00, $05, $FF, $FF, $FF, $FF, $00, $00 ; id 15
+    db $00, $06, $FF, $FF, $FF, $FF, $00, $00 ; id 16
+    db $00, $07, $FF, $FF, $FF, $FF, $00, $00 ; id 17
+    db $00, $08, $FF, $FF, $FF, $FF, $00, $00 ; id 18
+    db $00, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 19
+    db $01, $02, $FF, $FF, $FF, $FF, $00, $00 ; id 20
+    db $01, $03, $FF, $FF, $FF, $FF, $00, $00 ; id 21
+    db $01, $04, $FF, $FF, $FF, $FF, $00, $00 ; id 22
+    db $01, $05, $FF, $FF, $FF, $FF, $00, $00 ; id 23
+    db $01, $06, $FF, $FF, $FF, $FF, $00, $00 ; id 24
+    db $01, $07, $FF, $FF, $FF, $FF, $00, $00 ; id 25
+    db $01, $08, $FF, $FF, $FF, $FF, $00, $00 ; id 26
+    db $01, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 27
+    db $02, $03, $FF, $FF, $FF, $FF, $00, $00 ; id 28
+    db $02, $04, $FF, $FF, $FF, $FF, $00, $00 ; id 29
+    db $02, $05, $FF, $FF, $FF, $FF, $00, $00 ; id 30
+    db $02, $06, $FF, $FF, $FF, $FF, $00, $00 ; id 31
+    db $02, $07, $FF, $FF, $FF, $FF, $00, $00 ; id 32
+    db $02, $08, $FF, $FF, $FF, $FF, $00, $00 ; id 33
+    db $02, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 34
+    db $03, $04, $FF, $FF, $FF, $FF, $00, $00 ; id 35
+    db $03, $05, $FF, $FF, $FF, $FF, $00, $00 ; id 36
+    db $03, $06, $FF, $FF, $FF, $FF, $00, $00 ; id 37
+    db $03, $07, $FF, $FF, $FF, $FF, $00, $00 ; id 38
+    db $03, $08, $FF, $FF, $FF, $FF, $00, $00 ; id 39
+    db $03, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 40
+    db $04, $05, $FF, $FF, $FF, $FF, $00, $00 ; id 41
+    db $04, $06, $FF, $FF, $FF, $FF, $00, $00 ; id 42
+    db $04, $07, $FF, $FF, $FF, $FF, $00, $00 ; id 43
+    db $04, $08, $FF, $FF, $FF, $FF, $00, $00 ; id 44
+    db $04, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 45
+    db $05, $06, $FF, $FF, $FF, $FF, $00, $00 ; id 46
+    db $05, $07, $FF, $FF, $FF, $FF, $00, $00 ; id 47
+    db $05, $08, $FF, $FF, $FF, $FF, $00, $00 ; id 48
+    db $05, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 49
+    db $06, $07, $FF, $FF, $FF, $FF, $00, $00 ; id 50
+    db $06, $08, $FF, $FF, $FF, $FF, $00, $00 ; id 51
+    db $06, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 52
+    db $07, $08, $FF, $FF, $FF, $FF, $00, $00 ; id 53
+    db $07, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 54
+    db $08, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 55
 
 ; clears wCE7B ($10 bytes) and fills a 4-byte entry per map area (from wCD7B) with a random monster id and level from the band lists (E-0128)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
@@ -980,7 +1088,111 @@ Func_060_47A7:: ; address name
     ld a, [hl+]
     ld [wKeyWorldLevelMonster], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $1807C5, $320
+
+; E-0192 (C1: LoadKeyWorldLevelBaseTripleForPartyStrength reads the record at $47C5 + 8 * wPartyStrength and copies its first three bytes; 100 records end at the routine at $4AE5; record 0 is all zero, and the three levels rise with the index).
+; record: three level bytes copied to wKeyWorldLevelBase/Area/Monster; five bytes not read ($64, $64, $64, 0, 0)
+KeyWorldLevelTable::
+Data_060_47C5:: ; address name
+    db $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $0E, $12, $13, $64, $64, $64, $00, $00 ; id 1
+    db $0F, $13, $14, $64, $64, $64, $00, $00 ; id 2
+    db $10, $14, $15, $64, $64, $64, $00, $00 ; id 3
+    db $11, $15, $17, $64, $64, $64, $00, $00 ; id 4
+    db $12, $16, $18, $64, $64, $64, $00, $00 ; id 5
+    db $13, $17, $19, $64, $64, $64, $00, $00 ; id 6
+    db $14, $18, $1A, $64, $64, $64, $00, $00 ; id 7
+    db $15, $19, $1B, $64, $64, $64, $00, $00 ; id 8
+    db $16, $1A, $1C, $64, $64, $64, $00, $00 ; id 9
+    db $17, $1B, $1D, $64, $64, $64, $00, $00 ; id 10
+    db $17, $1C, $1D, $64, $64, $64, $00, $00 ; id 11
+    db $18, $1D, $1E, $64, $64, $64, $00, $00 ; id 12
+    db $18, $1D, $1F, $64, $64, $64, $00, $00 ; id 13
+    db $19, $1E, $20, $64, $64, $64, $00, $00 ; id 14
+    db $19, $1E, $20, $64, $64, $64, $00, $00 ; id 15
+    db $1A, $1F, $21, $64, $64, $64, $00, $00 ; id 16
+    db $1A, $1F, $21, $64, $64, $64, $00, $00 ; id 17
+    db $1A, $20, $22, $64, $64, $64, $00, $00 ; id 18
+    db $1A, $20, $22, $64, $64, $64, $00, $00 ; id 19
+    db $1B, $21, $23, $64, $64, $64, $00, $00 ; id 20
+    db $1B, $21, $23, $64, $64, $64, $00, $00 ; id 21
+    db $1B, $21, $23, $64, $64, $64, $00, $00 ; id 22
+    db $1C, $22, $24, $64, $64, $64, $00, $00 ; id 23
+    db $1C, $22, $24, $64, $64, $64, $00, $00 ; id 24
+    db $1C, $23, $24, $64, $64, $64, $00, $00 ; id 25
+    db $1D, $23, $25, $64, $64, $64, $00, $00 ; id 26
+    db $1D, $23, $25, $64, $64, $64, $00, $00 ; id 27
+    db $1E, $24, $26, $64, $64, $64, $00, $00 ; id 28
+    db $1E, $24, $26, $64, $64, $64, $00, $00 ; id 29
+    db $1F, $25, $27, $64, $64, $64, $00, $00 ; id 30
+    db $20, $25, $27, $64, $64, $64, $00, $00 ; id 31
+    db $21, $26, $28, $64, $64, $64, $00, $00 ; id 32
+    db $21, $26, $29, $64, $64, $64, $00, $00 ; id 33
+    db $22, $27, $2A, $64, $64, $64, $00, $00 ; id 34
+    db $23, $27, $2A, $64, $64, $64, $00, $00 ; id 35
+    db $24, $28, $2B, $64, $64, $64, $00, $00 ; id 36
+    db $25, $29, $2C, $64, $64, $64, $00, $00 ; id 37
+    db $26, $29, $2D, $64, $64, $64, $00, $00 ; id 38
+    db $27, $29, $2E, $64, $64, $64, $00, $00 ; id 39
+    db $28, $2A, $2F, $64, $64, $64, $00, $00 ; id 40
+    db $29, $2A, $30, $64, $64, $64, $00, $00 ; id 41
+    db $2A, $2B, $31, $64, $64, $64, $00, $00 ; id 42
+    db $2B, $2C, $32, $64, $64, $64, $00, $00 ; id 43
+    db $2C, $2D, $33, $64, $64, $64, $00, $00 ; id 44
+    db $2C, $2E, $34, $64, $64, $64, $00, $00 ; id 45
+    db $2D, $2F, $35, $64, $64, $64, $00, $00 ; id 46
+    db $2E, $30, $36, $64, $64, $64, $00, $00 ; id 47
+    db $2F, $31, $37, $64, $64, $64, $00, $00 ; id 48
+    db $2F, $31, $37, $64, $64, $64, $00, $00 ; id 49
+    db $31, $33, $39, $64, $64, $64, $00, $00 ; id 50
+    db $32, $34, $3A, $64, $64, $64, $00, $00 ; id 51
+    db $33, $35, $3B, $64, $64, $64, $00, $00 ; id 52
+    db $33, $35, $3B, $64, $64, $64, $00, $00 ; id 53
+    db $34, $36, $3C, $64, $64, $64, $00, $00 ; id 54
+    db $35, $38, $3E, $64, $64, $64, $00, $00 ; id 55
+    db $36, $39, $3F, $64, $64, $64, $00, $00 ; id 56
+    db $36, $39, $3F, $64, $64, $64, $00, $00 ; id 57
+    db $37, $3A, $40, $64, $64, $64, $00, $00 ; id 58
+    db $38, $3B, $41, $64, $64, $64, $00, $00 ; id 59
+    db $3A, $3D, $43, $64, $64, $64, $00, $00 ; id 60
+    db $3A, $3D, $43, $64, $64, $64, $00, $00 ; id 61
+    db $3B, $3E, $44, $64, $64, $64, $00, $00 ; id 62
+    db $3C, $3F, $45, $64, $64, $64, $00, $00 ; id 63
+    db $3C, $40, $46, $64, $64, $64, $00, $00 ; id 64
+    db $3D, $41, $47, $64, $64, $64, $00, $00 ; id 65
+    db $3E, $42, $48, $64, $64, $64, $00, $00 ; id 66
+    db $3F, $43, $49, $64, $64, $64, $00, $00 ; id 67
+    db $40, $44, $4A, $64, $64, $64, $00, $00 ; id 68
+    db $41, $45, $4B, $64, $64, $64, $00, $00 ; id 69
+    db $42, $46, $4C, $64, $64, $64, $00, $00 ; id 70
+    db $42, $47, $4D, $64, $64, $64, $00, $00 ; id 71
+    db $43, $48, $4E, $64, $64, $64, $00, $00 ; id 72
+    db $44, $49, $4F, $64, $64, $64, $00, $00 ; id 73
+    db $45, $4A, $50, $64, $64, $64, $00, $00 ; id 74
+    db $46, $4B, $51, $64, $64, $64, $00, $00 ; id 75
+    db $47, $4C, $52, $64, $64, $64, $00, $00 ; id 76
+    db $48, $4D, $53, $64, $64, $64, $00, $00 ; id 77
+    db $48, $4E, $54, $64, $64, $64, $00, $00 ; id 78
+    db $49, $4F, $55, $64, $64, $64, $00, $00 ; id 79
+    db $4A, $50, $56, $64, $64, $64, $00, $00 ; id 80
+    db $4B, $51, $57, $64, $64, $64, $00, $00 ; id 81
+    db $4C, $52, $58, $64, $64, $64, $00, $00 ; id 82
+    db $4C, $52, $58, $64, $64, $64, $00, $00 ; id 83
+    db $4C, $53, $59, $64, $64, $64, $00, $00 ; id 84
+    db $4C, $53, $59, $64, $64, $64, $00, $00 ; id 85
+    db $4D, $54, $5A, $64, $64, $64, $00, $00 ; id 86
+    db $4D, $54, $5A, $64, $64, $64, $00, $00 ; id 87
+    db $4E, $55, $5B, $64, $64, $64, $00, $00 ; id 88
+    db $4E, $56, $5B, $64, $64, $64, $00, $00 ; id 89
+    db $4E, $57, $5C, $64, $64, $64, $00, $00 ; id 90
+    db $4F, $57, $5C, $64, $64, $64, $00, $00 ; id 91
+    db $4F, $57, $5D, $64, $64, $64, $00, $00 ; id 92
+    db $4F, $58, $5E, $64, $64, $64, $00, $00 ; id 93
+    db $50, $58, $5E, $64, $64, $64, $00, $00 ; id 94
+    db $50, $59, $5F, $64, $64, $64, $00, $00 ; id 95
+    db $50, $5A, $5F, $64, $64, $64, $00, $00 ; id 96
+    db $51, $5B, $5F, $64, $64, $64, $00, $00 ; id 97
+    db $52, $5B, $60, $64, $64, $64, $00, $00 ; id 98
+    db $56, $60, $63, $64, $64, $64, $00, $00 ; id 99
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
@@ -1209,7 +1421,7 @@ Func_060_4C85:: ; address name
     adc a, $C7
     ld d, a
     inc de
-    ld hl, Data_060_4CC1
+    ld hl, KeyWorldGoalKindRows
     ld a, [de]
     add a, a
     add a, a
@@ -1224,9 +1436,66 @@ Func_060_4C85:: ; address name
     ld [wKeyWorldGoalKind], a
     ret
 
-; address loaded by PickRandomNonzeroFromTable4CC1
-Data_060_4CC1:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $180CC1, $E0
+; E-0192 (C1: PickRandomNonzeroFromTable4CC1 reads the byte at $4CC1 + 4 * (byte 1 of the current key's entry at wC708) + (random & 3), repeating until it is non-zero, and stores it minus 1 in wKeyWorldGoalKind; 56 rows, the same count as KeyWorldBandRows, which the same byte indexes).
+; record: four choices of wKeyWorldGoalKind + 1 (0 = no choice; drawn again)
+KeyWorldGoalKindRows::
+Data_060_4CC1:: ; address name
+    db $01, $02, $06, $00 ; id 0
+    db $04, $05, $07, $00 ; id 1
+    db $02, $03, $0A, $00 ; id 2
+    db $05, $09, $0A, $00 ; id 3
+    db $01, $05, $0A, $00 ; id 4
+    db $04, $08, $09, $00 ; id 5
+    db $06, $07, $08, $00 ; id 6
+    db $02, $06, $08, $00 ; id 7
+    db $03, $04, $07, $00 ; id 8
+    db $01, $03, $09, $00 ; id 9
+    db $06, $06, $06, $06 ; id 10
+    db $02, $02, $02, $02 ; id 11
+    db $09, $09, $09, $09 ; id 12
+    db $01, $01, $01, $01 ; id 13
+    db $01, $01, $01, $01 ; id 14
+    db $07, $07, $07, $07 ; id 15
+    db $06, $06, $06, $06 ; id 16
+    db $08, $08, $08, $08 ; id 17
+    db $07, $07, $07, $07 ; id 18
+    db $09, $09, $09, $09 ; id 19
+    db $04, $04, $04, $04 ; id 20
+    db $05, $05, $05, $05 ; id 21
+    db $03, $03, $03, $03 ; id 22
+    db $01, $01, $01, $01 ; id 23
+    db $06, $06, $06, $06 ; id 24
+    db $04, $04, $04, $04 ; id 25
+    db $04, $04, $04, $04 ; id 26
+    db $03, $03, $03, $03 ; id 27
+    db $0A, $0A, $0A, $0A ; id 28
+    db $05, $05, $05, $05 ; id 29
+    db $01, $01, $01, $01 ; id 30
+    db $0A, $0A, $0A, $0A ; id 31
+    db $08, $08, $08, $08 ; id 32
+    db $07, $07, $07, $07 ; id 33
+    db $02, $02, $02, $02 ; id 34
+    db $0A, $0A, $0A, $0A ; id 35
+    db $05, $05, $05, $05 ; id 36
+    db $02, $02, $02, $02 ; id 37
+    db $03, $03, $03, $03 ; id 38
+    db $05, $05, $05, $05 ; id 39
+    db $09, $09, $09, $09 ; id 40
+    db $05, $05, $05, $05 ; id 41
+    db $0A, $0A, $0A, $0A ; id 42
+    db $02, $02, $02, $02 ; id 43
+    db $06, $06, $06, $06 ; id 44
+    db $09, $09, $09, $09 ; id 45
+    db $04, $04, $04, $04 ; id 46
+    db $08, $08, $08, $08 ; id 47
+    db $07, $07, $07, $07 ; id 48
+    db $01, $01, $01, $01 ; id 49
+    db $08, $08, $08, $08 ; id 50
+    db $06, $06, $06, $06 ; id 51
+    db $03, $03, $03, $03 ; id 52
+    db $04, $04, $04, $04 ; id 53
+    db $02, $02, $02, $02 ; id 54
+    db $03, $03, $03, $03 ; id 55
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
@@ -2036,7 +2305,7 @@ Jump_060_51E8::
 Jump_060_51F9::
     ld a, [wKeyWorldAreaCount]
     sla a
-    ld hl, Data_060_6D0D
+    ld hl, KeyWorldAreaLayoutTable_Bank60
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -2261,7 +2530,7 @@ Jump_060_5310::
     push hl
     ld a, [wKeyWorldAreaCount]
     sla a
-    ld hl, Data_060_6D0D
+    ld hl, KeyWorldAreaLayoutTable_Bank60
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -3738,7 +4007,7 @@ Jump_060_63E0::
     ld [wMapObjectCount], a
     ld a, $00
     ld [wKeyWorldBand], a
-    ld hl, Data_060_6705
+    ld hl, TownObjectSpotGrid0
     call RemoveMapObjectsEntryMatching
     ld a, $01
     ldh [hTemp0], a
@@ -3750,7 +4019,7 @@ Jump_060_63F8::
     ld [wMapObjectCount], a
     ld a, $03
     ld [wKeyWorldBand], a
-    ld hl, $6905
+    ld hl, TownObjectSpotGrid1
     call RemoveMapObjectsEntryMatching
     ld a, $02
     ldh [hTemp0], a
@@ -3762,7 +4031,7 @@ Jump_060_6410::
     ld [wMapObjectCount], a
     ld a, $06
     ld [wKeyWorldBand], a
-    ld hl, Data_060_6B05
+    ld hl, TownObjectSpotGrid2
     call RemoveMapObjectsEntryMatching
     ld a, $03
     ldh [hTemp0], a
@@ -3774,7 +4043,7 @@ Jump_060_6428::
     ld [wMapObjectCount], a
     ld a, $09
     ld [wKeyWorldBand], a
-    ld hl, Data_060_6F85
+    ld hl, TownObjectSpotGrid3
     call RemoveMapObjectsEntryMatching
     ld a, $04
     ldh [hTemp0], a
@@ -3786,7 +4055,7 @@ Jump_060_6440::
     ld [wMapObjectCount], a
     ld a, $0B
     ld [wKeyWorldBand], a
-    ld hl, Data_060_7405
+    ld hl, TownObjectSpotGrid4
     call RemoveMapObjectsEntryMatching
     ld a, $05
     ldh [hTemp0], a
@@ -3798,7 +4067,7 @@ Jump_060_6458::
     ld [wMapObjectCount], a
     ld a, $0B
     ld [wKeyWorldBand], a
-    ld hl, Data_060_7525
+    ld hl, TownObjectSpotGrid5
     call RemoveMapObjectsEntryMatching
     ld a, $06
     ldh [hTemp0], a
@@ -3810,7 +4079,7 @@ Jump_060_6470::
     ld [wMapObjectCount], a
     ld a, $0D
     ld [wKeyWorldBand], a
-    ld hl, Data_060_7555
+    ld hl, TownObjectSpotGrid6
     call RemoveMapObjectsEntryMatching
     ld a, $07
     ldh [hTemp0], a
@@ -4163,7 +4432,7 @@ Func_060_664A:: ; address name
     ld h, a
     push hl
     ldh a, [hTemp3]
-    ld hl, Data_060_6677
+    ld hl, KeyContentsColumnPicks
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -4176,190 +4445,47 @@ Func_060_664A:: ; address name
     ld [de], a
     ret
 
-; address loaded by WriteTable669CWordForTemp2Temp3
-Data_060_6677:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $182677, $8E
+; E-0192 (C1: WriteTable669CWordForTemp2Temp3 reads the byte at $6677 + hTemp3 and uses it as the word index in row hTemp2 of KeyContentsWordRows; the first 32 bytes are four permutations of 0-7; the table ends where the rows begin, and a larger hTemp3 would read into them).
+; record: 37 bytes, each a word index 0-7 within a row
+KeyContentsColumnPicks::
+Data_060_6677:: ; address name
+    db $00, $02, $04, $06, $07, $01, $03, $05, $02, $06, $00, $07, $04, $05, $03, $01, $02, $07, $00, $05, $06, $03, $01, $04, $00, $05, $02, $06, $03, $07, $04, $01, $05, $00, $03, $06, $02 ; entry 0
 
-; address loaded by SetupTownObjectsForMap
-Data_060_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $44, $11, $22, $21, $15, $10, $54, $00, $26, $10, $32, $11, $54, $12, $34, $02
-    db $44, $02, $44, $02, $44, $02, $44, $10, $42, $22, $44, $21, $76, $12, $74, $11
-    db $44, $03, $62, $02, $86, $23, $53, $13, $56, $03, $73, $12, $54, $22, $55, $21
-    db $86, $01, $73, $20, $72, $00, $44, $00, $00, $00, $00
-
-Data_060_6740:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6741:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6742:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6743:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6744:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6745:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6746:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6747:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6748:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6749:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_674A:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_674B:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_674C:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_674D:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_674E:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_674F:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6750:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6751:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6752:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6753:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6754:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6755:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6756:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6757:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6758:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6759:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_675A:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_675B:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_675C:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_675D:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_675E:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_675F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_6761:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6762:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_6764:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6765:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_6767:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6768:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_676A:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_676B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_676D:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_676E:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_6770:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_6772:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6773:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_6775:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_060_6776:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00
-
-Data_060_677B:: ; heuristic: target of a monotone pointer table; C0
-    ds $C5, $00
-
-Data_060_6840:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00
-
-Data_060_6844:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00
-
-Data_060_6849:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_684B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00
-
-Data_060_684D:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00
-
-Data_060_6852:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00
-
-Data_060_6856:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00
-
-Data_060_685B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00
-
-Data_060_685F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $00
-
-Data_060_6866:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00
+; E-0192 (C1: WriteTable669CWordForTemp2Temp3 copies the two bytes at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] to DE + 2; rows 0-9 hold values, rows 10-28 are zero, and the 29 rows end at the code at $686C).
+; record: eight two-byte values (copied as a pair to DE)
+KeyContentsWordRows::
+Data_060_669C:: ; address name
+    db $03, $47, $23, $53, $12, $23, $21, $52, $11, $46, $00, $44, $00, $44, $00, $44 ; id 0
+    db $10, $54, $00, $44, $11, $64, $21, $74, $12, $44, $32, $72, $00, $44, $22, $26 ; id 1
+    db $10, $34, $01, $45, $11, $72, $21, $74, $20, $44, $12, $65, $22, $44, $32, $46 ; id 2
+    db $00, $35, $22, $44, $02, $26, $22, $44, $20, $43, $11, $35, $22, $44, $01, $44 ; id 3
+    db $10, $45, $30, $44, $21, $42, $11, $76, $01, $56, $12, $33, $32, $54, $33, $32 ; id 4
+    db $33, $42, $02, $46, $31, $22, $30, $74, $13, $33, $12, $43, $10, $85, $00, $47 ; id 5
+    db $44, $44, $44, $44, $44, $44, $44, $44, $44, $44, $11, $22, $21, $15, $10, $54 ; id 6
+    db $00, $26, $10, $32, $11, $54, $12, $34, $02, $44, $02, $44, $02, $44, $02, $44 ; id 7
+    db $10, $42, $22, $44, $21, $76, $12, $74, $11, $44, $03, $62, $02, $86, $23, $53 ; id 8
+    db $13, $56, $03, $73, $12, $54, $22, $55, $21, $86, $01, $73, $20, $72, $00, $44 ; id 9
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
+Data_060_674C:: ; heuristic: label inside a table; C0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+Data_060_675C:: ; heuristic: label inside a table; C0
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 20
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 21
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 22
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 23
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 24
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 25
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 26
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 27
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 28
 
 ; only called from FieldModeStateDispatch_Case04_Sub02 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02)
@@ -4490,7 +4616,7 @@ Func_060_6916:: ; address name
     ld a, l
     push af
     swap a
-    ld hl, Data_060_6969
+    ld hl, KeyContentsKindChanceRows
     add_a_to_hl
     call RandomBelow100
     ld c, a
@@ -4513,7 +4639,7 @@ Jump_060_693E::
     pop af
     ld c, $3C
     call Multiply8
-    ld de, Data_060_6A09
+    ld de, KeyContentsChanceRows
     add hl, de
     call RandomBelow100
     ld c, a
@@ -4543,17 +4669,55 @@ Func_060_695C:: ; address name
     jr nc, RandomBelow100
     ret
 
-; address loaded by RollKeyContentsForLevelTemp0
-Data_060_6969:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $182969, $A0
+; E-0192 (C1: RollKeyContentsForLevelTemp0 takes level / 10, reads the 16-byte row at $6969 + 16 * that, and counts entries until one is non-zero and not below a random 0-99; the count goes to hTemp1).
+; record: one row per 10 levels: threshold bytes compared with a random 0-99
+KeyContentsKindChanceRows::
+Data_060_6969:: ; address name
+    db $14, $28, $37, $46, $50, $5A, $5F, $64, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $0F, $1E, $2D, $3C, $4B, $55, $5A, $5F, $64, $00, $00, $00, $00, $00, $00, $00 ; id 1
+    db $00, $0A, $19, $28, $37, $46, $50, $5A, $5F, $64, $00, $00, $00, $00, $00, $00 ; id 2
+    db $00, $00, $0F, $1E, $2D, $3C, $4B, $55, $5A, $5F, $64, $00, $00, $00, $00, $00 ; id 3
+    db $00, $00, $05, $0F, $19, $28, $37, $46, $50, $5A, $5F, $64, $00, $00, $00, $00 ; id 4
+    db $00, $00, $03, $08, $12, $21, $30, $44, $4E, $58, $5D, $62, $64, $00, $00, $00 ; id 5
+    db $00, $00, $03, $08, $12, $1C, $26, $35, $44, $53, $58, $5D, $62, $64, $00, $00 ; id 6
+    db $00, $00, $00, $02, $05, $0F, $19, $28, $37, $46, $50, $5A, $5F, $62, $64, $00 ; id 7
+    db $00, $00, $00, $00, $03, $08, $0D, $12, $21, $30, $3F, $49, $53, $5D, $62, $64 ; id 8
+    db $00, $00, $00, $00, $00, $05, $0A, $0F, $19, $23, $2D, $37, $46, $55, $5F, $64 ; id 9
 
-; address loaded by RollKeyContentsForLevelTemp0
-Data_060_6A09:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $182A09, $FC
-
-; address loaded by SetupTownObjectsForMap
-Data_060_6B05:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $182B05, $15C
+; E-0192 (C1: RollKeyContentsForLevelTemp0 reads the row at $6A09 + $3C * (level / 10) and counts entries below a random 0-99 until one is not; the count goes to hTemp2; 10 rows end at $6C61).
+; record: one row per 10 levels: 60 threshold bytes compared with a random 0-99, 20 per line
+KeyContentsChanceRows::
+Data_060_6A09:: ; address name
+    db $01, $00, $02, $03, $04, $05, $00, $00, $06, $07, $00, $09, $0C, $0F, $12, $00, $00, $00, $15, $18 ; id 0
+    db $1B, $1E, $21, $24, $00, $26, $29, $2C, $2F, $00, $32, $35, $00, $38, $3B, $3E, $41, $44, $00, $47
+    db $4A, $4D, $50, $53, $00, $00, $00, $55, $57, $5A, $00, $5C, $5E, $61, $64, $00, $00, $00, $00, $00
+    db $01, $00, $02, $03, $04, $05, $00, $00, $06, $07, $00, $09, $0C, $0F, $12, $00, $00, $00, $15, $18 ; id 1
+    db $1B, $1E, $21, $24, $00, $26, $29, $2C, $2F, $00, $32, $35, $00, $38, $3B, $3E, $41, $44, $00, $47
+    db $4A, $4D, $50, $53, $00, $00, $00, $55, $57, $5A, $00, $5C, $5E, $61, $64, $00, $00, $00, $00, $00
+    db $01, $00, $02, $03, $04, $05, $00, $00, $06, $07, $00, $09, $0C, $0F, $12, $00, $00, $00, $15, $18 ; id 2
+    db $1B, $1E, $21, $24, $00, $26, $29, $2C, $2F, $00, $32, $35, $00, $38, $3B, $3E, $41, $44, $00, $47
+    db $4A, $4D, $50, $53, $00, $00, $00, $55, $57, $5A, $00, $5C, $5E, $61, $64, $00, $00, $00, $00, $00
+    db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $00, $0C, $0E, $10, $12, $14, $16, $18, $1A, $1C ; id 3
+    db $1E, $20, $22, $24, $26, $28, $2A, $2C, $2E, $30, $32, $34, $36, $38, $3A, $3C, $3E, $40, $42, $44
+    db $46, $48, $4A, $4C, $4E, $50, $52, $54, $56, $58, $5A, $5C, $5E, $60, $62, $64, $00, $00, $00, $00
+    db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $00, $0C, $0E, $10, $12, $14, $16, $18, $1A, $1C ; id 4
+    db $1E, $20, $22, $24, $26, $28, $2A, $2C, $2E, $30, $32, $34, $36, $38, $3A, $3C, $3E, $40, $42, $44
+    db $46, $48, $4A, $4C, $4E, $50, $52, $54, $56, $58, $5A, $5C, $5E, $60, $62, $64, $00, $00, $00, $00
+    db $06, $0C, $12, $18, $1E, $23, $28, $2D, $32, $37, $00, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40 ; id 5
+    db $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54
+    db $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $00, $00, $00, $00
+    db $06, $0C, $12, $18, $1E, $23, $28, $2D, $32, $37, $00, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40 ; id 6
+    db $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54
+    db $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $00, $00, $00, $00
+    db $06, $0C, $12, $18, $1E, $23, $28, $2D, $32, $37, $00, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40 ; id 7
+    db $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54
+    db $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $00, $00, $00, $00
+    db $06, $0C, $12, $18, $1E, $23, $28, $2D, $32, $37, $3A, $3B, $00, $3C, $3D, $3F, $41, $42, $00, $00 ; id 8
+    db $00, $00, $43, $00, $46, $47, $00, $00, $48, $4B, $00, $00, $4D, $00, $4E, $4F, $50, $00, $51, $52
+    db $53, $00, $54, $00, $55, $57, $58, $5A, $5B, $00, $5E, $60, $62, $00, $00, $64, $00, $00, $00, $00
+    db $06, $0C, $12, $18, $1D, $22, $27, $2C, $31, $36, $3B, $3C, $00, $3D, $3E, $40, $41, $42, $00, $00 ; id 9
+    db $00, $00, $43, $00, $46, $47, $00, $00, $48, $4B, $00, $00, $4D, $00, $4E, $4F, $50, $00, $51, $52
+    db $53, $00, $54, $00, $55, $57, $58, $5A, $5B, $00, $5E, $60, $62, $00, $00, $64, $00, $00, $00, $00
 
 ; hFFC6 = the index of the first of 20 SRAM-bank-2 slots ($195 bytes apart) whose marker is not $50 + index, or $FF when all match (E-0125)
 ; 3 call sites from 3 routines (e.g. RunMenuStateMenuState_Case05_Sub01, DebugAutomap_Update_Sub01, RunScreenStateWhenNotFading_1B_Case01_Case21)
@@ -4673,9 +4837,58 @@ Jump_060_6D05::
     ld [rRAMB], a
     ret
 
-; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub09, PlaceObjectInAreaC
-Data_060_6D0D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $182D0D, $60
+; E-0193 (C1: a copy of KeyWorldAreaLayoutTable (84:$4CCB), word for word; Func_060_51F9's code and PlaceObjectInAreaC read the layout's first byte or a block byte through ReadByteInBank with B = $84).
+; record: area layout in bank $84
+KeyWorldAreaLayoutTable_Bank60::
+Data_060_6D0D:: ; address name
+    dw KeyWorldAreaLayout00 ; id 0
+    dw KeyWorldAreaLayout01 ; id 1
+    dw KeyWorldAreaLayout02 ; id 2
+    dw KeyWorldAreaLayout03 ; id 3
+    dw KeyWorldAreaLayout04 ; id 4
+    dw KeyWorldAreaLayout05 ; id 5
+    dw KeyWorldAreaLayout06 ; id 6
+    dw KeyWorldAreaLayout07 ; id 7
+    dw KeyWorldAreaLayout08 ; id 8
+    dw KeyWorldAreaLayout09 ; id 9
+    dw KeyWorldAreaLayout10 ; id 10
+    dw KeyWorldAreaLayout11 ; id 11
+    dw KeyWorldAreaLayout12 ; id 12
+    dw KeyWorldAreaLayout13 ; id 13
+    dw KeyWorldAreaLayout14 ; id 14
+    dw KeyWorldAreaLayout15 ; id 15
+    dw KeyWorldAreaLayout16 ; id 16
+    dw KeyWorldAreaLayout17 ; id 17
+    dw KeyWorldAreaLayout18 ; id 18
+    dw KeyWorldAreaLayout19 ; id 19
+    dw KeyWorldAreaLayout20 ; id 20
+    dw KeyWorldAreaLayout21 ; id 21
+    dw KeyWorldAreaLayout22 ; id 22
+    dw KeyWorldAreaLayout23 ; id 23
+    dw KeyWorldAreaLayout24 ; id 24
+    dw KeyWorldAreaLayout25 ; id 25
+    dw KeyWorldAreaLayout26 ; id 26
+    dw KeyWorldAreaLayout27 ; id 27
+    dw KeyWorldAreaLayout28 ; id 28
+    dw KeyWorldAreaLayout29 ; id 29
+    dw KeyWorldAreaLayout30 ; id 30
+    dw KeyWorldAreaLayout31 ; id 31
+    dw KeyWorldAreaLayout32 ; id 32
+    dw KeyWorldAreaLayout33 ; id 33
+    dw KeyWorldAreaLayout34 ; id 34
+    dw KeyWorldAreaLayout35 ; id 35
+    dw KeyWorldAreaLayout36 ; id 36
+    dw KeyWorldAreaLayout37 ; id 37
+    dw KeyWorldAreaLayout38 ; id 38
+    dw KeyWorldAreaLayout39 ; id 39
+    dw KeyWorldAreaLayout40 ; id 40
+    dw KeyWorldAreaLayout41 ; id 41
+    dw KeyWorldAreaLayout42 ; id 42
+    dw KeyWorldAreaLayout43 ; id 43
+    dw KeyWorldAreaLayout44 ; id 44
+    dw KeyWorldAreaLayout45 ; id 45
+    dw KeyWorldAreaLayout46 ; id 46
+    dw KeyWorldAreaLayout47 ; id 47
 
 ; address loaded by RollKeyWorldMonsterTableKeyWorldMonsters, RollKeyWorldMonsterTableKeyWorldBossMonsters, PickRandomMonsterFromBandList
 Data_060_6D6D:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4898,11 +5111,7 @@ Data_060_6F73:: ; heuristic: target of a monotone pointer table; C0
     db $05, $B6, $00, $B7, $00, $B8, $00, $BD, $00, $C2, $00
 
 Data_060_6F7E:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $B1, $00, $B4, $00, $BC, $00
-
-; address loaded by SetupTownObjectsForMap
-Data_060_6F85:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $BE, $00, $BF, $00, $C1, $00, $C9, $00
+    db $07, $B1, $00, $B4, $00, $BC, $00, $BE, $00, $BF, $00, $C1, $00, $C9, $00
 
 Data_060_6F8D:: ; heuristic: target of a monotone pointer table; C0
     db $02, $C0, $00, $C5, $00
@@ -5040,16 +5249,4 @@ Data_060_710D:: ; heuristic: target of a monotone pointer table; C0
     db $10, $60, $01, $61, $01, $63, $01, $64, $01, $66, $01, $67, $01, $68, $01, $69
     db $01, $6C, $01, $6E, $01, $6F, $01, $70, $01, $71, $01, $72, $01, $73, $01, $74
     db $01
-    ds $2D7, $00
-
-; address loaded by SetupTownObjectsForMap
-Data_060_7405:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $120, $00
-
-; address loaded by SetupTownObjectsForMap
-Data_060_7525:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $30, $00
-
-; address loaded by SetupTownObjectsForMap
-Data_060_7555:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    ds $AAB, $00
+    ds $ED2, $00
