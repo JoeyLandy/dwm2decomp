@@ -1744,7 +1744,7 @@ Jump_037_5406:: ; address name
 ; writes: wScreenStep
 Func_037_4AFD_Case0D_Case00::
 Jump_037_5407:: ; address name
-    farcall DrawTileMap5E12AndLoadFrameTiles
+    farcall ClearBGMapAndLoadFrameTiles
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1887,7 +1887,7 @@ Jump_037_54D1:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, $5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1898,7 +1898,7 @@ Jump_037_54D1:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a

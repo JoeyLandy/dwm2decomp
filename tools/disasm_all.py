@@ -941,6 +941,32 @@ class Rom:
                 untrusted.add(bank)
         log(f"same-bank pointer guess withheld in {len(untrusted)} banks with high contradiction rate: "
             + " ".join(f"{b:02X}" for b in sorted(untrusted)))
+        # E-0186: `ld de, SRC` copied to wArg1/wArg2 ($D7F1/$D7F2) before a far call to a routine
+        # that reads its source there points into that routine's bank, not the caller's.
+        arg_readers = {k for k, info in self.names.items() if not info.get("data") and
+                       info["name"] in ("DrawTileRectFromArg1Params", "FillTileRectWithArg1Tile")}
+        far_targets = {}  # (bank, rst $10 address) -> (target bank, address)
+        for (bank, a), t in code_args.items():
+            ins = self.insn[bank]
+            for nxt in (a + 3, a + 5):  # ld hl / ld b / rst $10 in either order
+                if ins.get(nxt, ("", "", ""))[2] == "rst":
+                    far_targets[(bank, nxt)] = t
+        arg_src: dict[tuple[int, int], tuple[int, str]] = {}
+        for bank in range(self.nbanks):
+            ins = self.insn[bank]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                t = far_targets.get((bank, a))
+                if t not in arg_readers:
+                    continue
+                de, stored = None, False
+                for x in order[max(0, k - 20):k]:
+                    if (m := ld16.match(ins[x][1])) and m.group(1) == "de":
+                        de, stored = x, False
+                    if ins[x][1] in ("ld [$D7F1], a", "ld [$D7F2], a") and de is not None:
+                        stored = True
+                if de is not None and stored:
+                    arg_src[(bank, de)] = (t[0], f"wArg1/wArg2 source of a far call to {self.names[t]['name']}")
         for bank in range(self.nbanks):
             ins = self.insn[bank]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
@@ -974,6 +1000,8 @@ class Rom:
                     continue
                 if a in paired:
                     tb, why = paired[a][0], "argument of a bank-switching copy helper"
+                elif (bank, a) in arg_src:
+                    tb, why = arg_src[(bank, a)]
                 elif (bank, a) in bv_pairs:
                     tb = bv_pairs[(bank, a)][0]
                     why = f"bank from RAM variable ${bv_pairs[(bank, a)][2]}"

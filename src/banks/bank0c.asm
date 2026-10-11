@@ -1335,7 +1335,7 @@ Jump_00C_490A:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_00C_651B
+    ld de, Data_01F_651B
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1387,7 +1387,7 @@ Jump_00C_497A::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_00C_64D3
+    ld de, Data_01F_64D3
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2626,7 +2626,7 @@ Func_00C_5177:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_00C_5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2637,7 +2637,7 @@ Func_00C_5177:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     ret
 
 ; address loaded by ScriptCommandF6_Run_Shared06
@@ -3279,13 +3279,9 @@ Data_00C_599F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FE, $04, $FE, $99, $00
     ds $10, $FE
     db $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE, $05, $FE
-    db $05, $FE, $B0
-
-; address loaded by ScriptCommandF6_Run_Shared06
-Data_00C_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $FE, $FE, $B4, $00, $B5, $00, $05, $FE, $B3, $00, $05, $FE, $05, $FE, $B8
-    db $00, $C1, $00, $C5, $00, $B7, $00, $05, $FE, $C4, $00, $05, $FE, $C6, $00, $B1
-    db $00
+    db $05, $FE, $B0, $00, $FE, $FE, $B4, $00, $B5, $00, $05, $FE, $B3, $00, $05, $FE
+    db $05, $FE, $B8, $00, $C1, $00, $C5, $00, $B7, $00, $05, $FE, $C4, $00, $05, $FE
+    db $C6, $00, $B1, $00
     ds $12, $FE
     INCBIN "dwm2-cobi-us.gbc", $031E45, $7C
     ds $10, $FE
@@ -3338,15 +3334,7 @@ Data_00C_6101:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $12, $FE
     INCBIN "dwm2-cobi-us.gbc", $032445, $7C
     ds $10, $FE
-    db $00, $FE
-
-; address loaded by ScriptCommandF6_Run_Case10_Case02
-Data_00C_64D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0324D3, $48
-
-; address loaded by ScriptCommandF6_Run_Case10_Case02
-Data_00C_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $03251B, $6C
+    INCBIN "dwm2-cobi-us.gbc", $0324D1, $B6
     ds $18, $FE
 
 ; implements script command type F7; reached through ScriptCommandF7 in bank $10 (E-0038)

@@ -4585,7 +4585,7 @@ Jump_015_5F1F:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, $5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -4596,7 +4596,7 @@ Jump_015_5F1F:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a

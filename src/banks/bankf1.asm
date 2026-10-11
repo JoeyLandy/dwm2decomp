@@ -2902,7 +2902,7 @@ Jump_0F1_531E:: ; address name
 ; writes: wScreenStep
 RunScreenStateWhenNotFading_F1_Case0D_Case00::
 Jump_0F1_531F:: ; address name
-    farcall DrawTileMap5E12AndLoadFrameTiles
+    farcall ClearBGMapAndLoadFrameTiles
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3036,7 +3036,7 @@ Jump_0F1_53D9:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_0F1_5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -3047,7 +3047,7 @@ Jump_0F1_53D9:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
@@ -4395,14 +4395,10 @@ Data_0F1_5DEE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 
 ; address loaded by LoadBGPalettesFrom5E04
 Data_0F1_5E04:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $EE, $3D, $FF, $7F, $D6, $5A, $63, $00, $12, $36, $FF, $7F, $D8, $42
-
-; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case07
-Data_0F1_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $66, $00, $12, $36, $FF, $7F, $D8, $42, $BF, $30, $FF, $7F, $FF, $7F, $FF, $7F
+    db $EE, $3D, $FF, $7F, $D6, $5A, $63, $00, $12, $36, $FF, $7F, $D8, $42, $66, $00
+    db $12, $36, $FF, $7F, $D8, $42, $BF, $30, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
     db $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
     db $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
-    db $FF, $7F
     ds $593, $00
 
 ; address loaded by RunScreenStateWhenNotFading_F1_Case0D_Case1E

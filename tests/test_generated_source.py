@@ -398,6 +398,13 @@ class DerivedLayouts(unittest.TestCase):
         self.assertIn("MapRecord1D::\n", text)
         self.assertIn("    dfar Map1DScreens0\n    dfar Map1DAttrs0\n", text)
 
+    def test_fill_tile_callers_use_the_callee_bank(self):
+        """E-0186: wArg1/wArg2 sources of far calls take the called routine's bank."""
+        text = "".join(p.read_text(encoding="utf-8") for p in BANKS.glob("bank*.asm"))
+        self.assertEqual(text.count("    ld de, BGFillTile\n"), 10)
+        self.assertNotIn("Data_00C_5E12", text)
+        self.assertNotIn("Data_0F1_5E12", text)
+
     def test_world_map_screen_cells_fill_bank_5d(self):
         """E-0185: 11 grids of width * height screens, 25 cells each, end at $7692."""
         self.assertIn("    db $88 ; id 0\n    dfar WorldMapScreenCells0\n",

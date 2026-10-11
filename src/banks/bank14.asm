@@ -4030,7 +4030,7 @@ Jump_014_5CD5::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, $5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -4041,7 +4041,7 @@ Jump_014_5CD5::
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     xor a, a
     ldh [hScrollY], a
     ldh [hScrollX], a
@@ -4121,7 +4121,7 @@ Jump_014_5D8B:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_014_6FE7
+    ld de, Data_01F_6FE7
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5284,7 +5284,7 @@ Jump_014_64F8:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_014_7177
+    ld de, Data_01F_7177
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5316,7 +5316,7 @@ Jump_014_6532:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_014_71B3
+    ld de, Data_01F_71B3
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5348,7 +5348,7 @@ Jump_014_656C:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_014_714F
+    ld de, Data_01F_714F
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5569,7 +5569,7 @@ Jump_014_66B1:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_014_71EF
+    ld de, Data_01F_71EF
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5650,7 +5650,7 @@ Jump_014_6734:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, $5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5661,7 +5661,7 @@ Jump_014_6734:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     ld a, [wNameEntryStep]
     inc a
     ld [wNameEntryStep], a
@@ -5734,7 +5734,7 @@ Jump_014_67B0:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_014_7087
+    ld de, Data_01F_7087
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -6806,12 +6806,7 @@ Data_014_6F3E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case01_Case02
 Data_014_6F4E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $052F4E, $99
-
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case02
-Data_014_6FE7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $74, $8A, $8B, $8C, $6D, $9C, $FE, $FF, $FF, $FF, $FF, $FF, $01, $02, $03, $04
-    db $05, $06, $07, $08, $09, $00, $FF, $FF, $FF, $FF, $FF, $FF
+    INCBIN "dwm2-cobi-us.gbc", $052F4E, $B5
 
 ; address loaded by RunNameEntryStateWhenNotFading_Shared04
 Data_014_7003:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6826,11 +6821,8 @@ Data_014_7003:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; address loaded by RunNameEntryStateWhenNotFading_Shared04
 Data_014_706D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6F, $70, $77, $70, $84, $70, $91, $70, $B2, $70, $EB, $45, $90, $12, $36, $90
-    db $F9, $00, $90, $18, $14, $98, $F0, $EB, $45, $90
-
-; address loaded by RunNameEntryStateWhenNotFading_Case07
-Data_014_7087:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $12, $36, $90, $F9, $00, $90, $18, $14, $98, $F0, $EB, $45
+    db $F9, $00, $90, $18, $14, $98, $F0, $EB, $45, $90, $12, $36, $90, $F9, $00, $90
+    db $18, $14, $98, $F0, $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " That name is", $F1
     db "already in use.", $F7
@@ -6842,31 +6834,7 @@ Data_014_7087:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case03_Case00_Sub02
 Data_014_70F0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0530F0, $5F
-
-; address loaded by RunNameEntryStateWhenNotFading_Case02_Case03
-Data_014_714F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $0F, $38, $26, $2E, $F0, $00, $00, $00, $00, $00, $0F
-    db $1E, $0C, $14, $F0, $00, $00, $00, $00, $00, $1C, $2B, $2C, $37, $F0, $00, $00
-    db $00, $00, $00, $1C, $11, $12, $1D, $F0
-
-; address loaded by RunNameEntryStateWhenNotFading_Case02_Case01
-Data_014_7177:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $1C, $28, $3B, $F0, $00, $00, $00, $00, $00, $00, $1C
-    db $0E, $21, $F0, $00, $00, $00, $00, $00, $00, $19, $32, $32, $33, $F0, $00, $00
-    db $00, $00, $00, $19, $18, $18, $19, $F0, $00, $00, $00, $00, $00, $0D, $32, $31
-    db $2A, $F0, $00, $00, $00, $00, $00, $0D, $18, $17, $10, $F0
-
-; address loaded by RunNameEntryStateWhenNotFading_Case02_Case02
-Data_014_71B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $19, $28, $31, $28, $F0, $00, $00, $00, $00, $00, $19
-    db $0E, $17, $0E, $F0, $00, $00, $00, $00, $00, $0C, $2F, $2C, $37, $F0, $00, $00
-    db $00, $00, $00, $0C, $15, $12, $1D, $F0, $00, $00, $00, $00, $00, $1D, $3A, $24
-    db $37, $F0, $00, $00, $00, $00, $00, $1D, $20, $0A, $1D, $F0
-
-; address loaded by RunNameEntryStateWhenNotFading_Case04
-Data_014_71EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0531EF, $24A
+    INCBIN "dwm2-cobi-us.gbc", $0530F0, $349
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case01_Case03_Sub01, CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01
 Data_014_7439:: ; heuristic: pointer load in the same bank (bank assumed); C0

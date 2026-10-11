@@ -2224,6 +2224,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** What each cell value draws, and which world each index is, are not read.
 - Binary verification: build/run191 PASS, 0 differing bytes.
 
+### E-0186 — 1F:5D9A fills a rectangle with one tile (corrects E-0120, E-0121, E-0129)
+
+- Kind: OBSERVATION (reading; C2 for the instruction-level difference).
+- **The difference.** Func_01F_5D9A has the same structure as DrawTileRectFromArg1Params (1F:5D2A, E-0093) but no `inc de` in its row loop.
+  - It therefore writes the single byte at [wArg1/wArg2] to every entry of the wArg3 x wArg4 BG rectangle.
+  - On CGB, when wArg7 is 0, it also zeroes the attributes of those entries, as before.
+  - All ten callers pass $5E12, which holds the one byte $C3 (BGFillTile).
+- **Corrections.**
+  - E-0129 said Func_01F_5D9A "writes a rectangle from wD7F1/2". It is renamed FillTileRectWithArg1Tile.
+  - E-0120 and E-0121 said three routines "draw the 32 x 32 tile map at $5E12". They clear the 32 x 32 BG map to tile $C3, and are renamed ClearBGMapAtScrollAndResetScroll (1E:65FE, F0:5E2C) and ClearBGMapAndLoadFrameTiles (1F:7494).
+  - The rejected reading stays recorded here.
+  - The tile rectangles that follow $5E13 (E-0161) are separate data read by other routines.
+- **Generator.** `ld de, SRC` stored to wArg1/wArg2 before a far call (`rst $10`) to DrawTileRectFromArg1Params or FillTileRectWithArg1Tile now takes the callee's bank (C1).
+  - The callers in banks $0C and $F1 had produced wrong-bank labels Data_00C_5E12 and Data_0F1_5E12; these are removed.
+  - The callers in banks $14, $15, $1E, $37 and $F0 had raw operands; all ten now read `ld de, BGFillTile`.
+- Binary verification: build/run192 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

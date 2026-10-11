@@ -2715,7 +2715,7 @@ Jump_024_513A::
     dec a
     ld c, $78
     call Multiply8
-    ld de, $720D
+    ld de, Data_01F_720D
     add hl, de
     ld a, h
     ld [wArg1], a

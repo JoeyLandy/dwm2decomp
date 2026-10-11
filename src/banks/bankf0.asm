@@ -1919,7 +1919,7 @@ Jump_0F0_54B9:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, $5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1930,7 +1930,7 @@ Jump_0F0_54B9:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     call Run67EEWithArg1ForF0ScreenKind
     xor a, a
     ldh [hSpriteWindowClipMode], a
@@ -3360,7 +3360,7 @@ Func_0F0_5DE8:: ; address name
     dw RunScreenStep_F0_5DE8_Case06
     dw RunScreenStep_F0_5DE8_Case07
     dw RunScreenStep_F0_5DE8_Case08
-    dw DrawTileMap5E12AtScrollAndResetScroll_BankF0
+    dw ClearBGMapAtScrollAndResetScroll_BankF0
     dw RunScreenStep_F0_5DE8_Case0A
     dw RunScreenStep_F0_5DE8_Case0B
     dw RunScreenStep_F0_5DE8_Case0C
@@ -3373,7 +3373,7 @@ Func_0F0_5DE8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunScreenStep_F0_5DE8_Case00::
 Jump_0F0_5E0E:: ; address name
-    call DrawTileMap5E12AtScrollAndResetScroll_BankF0
+    call ClearBGMapAtScrollAndResetScroll_BankF0
     ld de, Data_01F_4250
     ld hl, vTiles1 + $7E0
     ld b, $1F
@@ -3386,18 +3386,18 @@ Jump_0F0_5E0E:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; draws the 32 x 32 tile map at $5E12 at the scroll origin (Func_01F_5D9A with wD7F7 = 0), then hScrollX = hScrollY = 0 and wD781 += 1 (E-0121)
+; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3) through FillTileRectWithArg1Tile with wArg7 = 0, then hScrollX = hScrollY = 0 and wD781 += 1 (E-0121; fill, not a tile map: E-0186)
 ; 1 call site from 1 routine (e.g. RunScreenStep_F0_5DE8_Case00)
 ; reads: wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, hScrollX, ...
-DrawTileMap5E12AtScrollAndResetScroll_BankF0::
+ClearBGMapAtScrollAndResetScroll_BankF0::
 Func_0F0_5E2C:: ; address name
     call BGMapAddressAtScroll_BankF0
     ld a, h
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, $5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -3408,7 +3408,7 @@ Func_0F0_5E2C:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollY], a

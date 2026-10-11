@@ -3892,14 +3892,14 @@ ScriptCommandE8_Run_Case09::
 Jump_01E_5B50:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw DrawTileMap5E12AtScrollAndResetScroll
+    dw ClearBGMapAtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case01
     dw ScriptCommandE8_Run_Case09_Case02
     dw ScriptCommandE8_Run_Case09_Case03
     dw DrawListEntriesCell5RecordDetails
     dw ScriptCommandE8_Run_Case09_Case05
     dw ScriptCommandE8_Run_Case09_Case06
-    dw DrawTileMap5E12AtScrollAndResetScroll
+    dw ClearBGMapAtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case08
     dw ScriptCommandE8_Run_Case09_Case09
     dw ListRecordsAndDrawListEntriesCell5Panel
@@ -4734,7 +4734,7 @@ Jump_01E_609E::
 ; writes: wScreenSubStep
 ScriptCommandE8_Run_Case0E_Case07::
 Jump_01E_60E1:: ; address name
-    call DrawTileMap5E12AtScrollAndResetScroll
+    call ClearBGMapAtScrollAndResetScroll
     call ScriptCommandE8_Run_Case0E_Case07_Sub01
     xor a, a
     ld [wScreenSubStep], a
@@ -4765,7 +4765,7 @@ Jump_01E_60F4:: ; address name
     dw ScriptCommandE8_Run_Case0E_Case04
     dw ScriptCommandE8_Run_Case09_Case05
     dw ScriptCommandE8_Run_Case0E_Case06
-    dw DrawTileMap5E12AtScrollAndResetScroll
+    dw ClearBGMapAtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case08
     dw ScriptCommandE8_Run_Case09_Case09
     dw ScriptCommandE8_Run_Case0A_Case0A
@@ -4879,7 +4879,7 @@ Jump_01E_619F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE8_Run_Case0E_Case00::
 Jump_01E_61B4:: ; address name
-    call DrawTileMap5E12AtScrollAndResetScroll
+    call ClearBGMapAtScrollAndResetScroll
     ld de, Data_01F_4A70
     ld hl, vTiles1 + $7F0
     ld b, $1F
@@ -5040,7 +5040,7 @@ Jump_01E_6298:: ; address name
     dw ScriptCommandE8_Run_Case0D_Case06
     dw ScriptCommandE8_Run_Case0D_Case07
     dw ScriptCommandE8_Run_Case0D_Case08
-    dw DrawTileMap5E12AtScrollAndResetScroll
+    dw ClearBGMapAtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case08
     dw ScriptCommandE8_Run_Case09_Case09
     dw ScriptCommandE8_Run_Case0D_Case0C
@@ -5485,14 +5485,14 @@ ScriptCommandE8_Run_Case08::
 Jump_01E_65B8:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw DrawTileMap5E12AtScrollAndResetScroll
+    dw ClearBGMapAtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case01
     dw ScriptCommandE8_Run_Case09_Case02
     dw ScriptCommandE8_Run_Case08_Case03
     dw DrawListEntriesCell5RecordDetails
     dw ScriptCommandE8_Run_Case09_Case05
     dw ScriptCommandE8_Run_Case08_Case06
-    dw DrawTileMap5E12AtScrollAndResetScroll
+    dw ClearBGMapAtScrollAndResetScroll
     dw ScriptCommandE8_Run_Case09_Case08
     dw ScriptCommandE8_Run_Case09_Case09
     dw ListRecordsAndDrawListEntriesCell5Panel
@@ -5519,18 +5519,18 @@ Jump_01E_65B8:: ; address name
     dw ScriptCommandE8_Run_Case09_Case1F
     dw ScriptCommandE8_Run_Case08_Case20
 
-; draws the 32 x 32 tile map at $5E12 at the scroll origin (Func_01F_5D9A with wD7F7 = 0), then hScrollX = hScrollY = 0 and wD781 += 1 (E-0120)
+; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3) through FillTileRectWithArg1Tile with wArg7 = 0, then hScrollX = hScrollY = 0 and wD781 += 1 (E-0120; fill, not a tile map: E-0186)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE8_Run_Case0E_Case07, ScriptCommandE8_Run_Case0E_Case00)
 ; reads: wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, hScrollX, ...
-DrawTileMap5E12AtScrollAndResetScroll::
+ClearBGMapAtScrollAndResetScroll::
 Func_01E_65FE:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld a, h
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, $5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5541,7 +5541,7 @@ Func_01E_65FE:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    farcall DrawTileRectAndClearAttrs_5D9A
+    farcall FillTileRectWithArg1Tile
     xor a, a
     ldh [hScrollX], a
     ldh [hScrollY], a
@@ -6571,7 +6571,7 @@ Func_01E_6D0F:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, $0041
     add hl, de
-    ld de, $651B
+    ld de, Data_01F_651B
     ld a, $06
     ld [wArg3], a
     ld a, $06

@@ -1273,11 +1273,11 @@ Jump_01F_5D89::
     jr nz, Jump_01F_5D3B
     ret
 
-; writes a wD7F3 x wD7F4 tile rectangle from wD7F1/2 to the BG map at wD7F5/6 (wrapping); on CGB, unless wD7F7 is set, clears its attributes (E-0129)
-; 10 call sites from 10 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, ScriptCommandF6_Run_Shared06, RunNameEntryStateWhenNotFading_Case00_Case00, RunNameEntryStateWhenNotFading_Case06_Case00, ...)
+; fills a wArg3 x wArg4 rectangle of the BG map at wArg5/6 (wrapping inside the 32-entry row) with the one tile byte at wArg1/2: unlike DrawTileRectFromArg1Params it never advances DE; on CGB, unless wArg7 is set, clears the same entries' attributes; every caller passes BGFillTile (E-0186, correcting E-0129)
+; 10 call sites from 10 routines (e.g. ClearBGMapAndLoadFrameTiles, ScriptCommandF6_Run_Shared06, RunNameEntryStateWhenNotFading_Case00_Case00, RunNameEntryStateWhenNotFading_Case06_Case00, ...)
 ; reads: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, rSTAT, wIsCGB, ...
 ; writes: rVBK
-DrawTileRectAndClearAttrs_5D9A::
+FillTileRectWithArg1Tile::
 Func_01F_5D9A:: ; address name
     ld a, [wArg1]
     ld d, a
@@ -1372,8 +1372,10 @@ Jump_01F_5DFF::
     jr nz, Jump_01F_5DB2
     ret
 
-; address loaded by DrawTileMap5E12AndLoadFrameTiles
-Data_01F_5E12:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; one byte, tile $C3: the tile FillTileRectWithArg1Tile repeats over the whole rectangle; all ten callers pass this address (E-0186)
+; address loaded by ScriptCommandF6_Run_Shared06, RunNameEntryStateWhenNotFading_Case00_Case00, RunNameEntryStateWhenNotFading_Case06_Case00, ScriptCommandED_Run_Case0B_Case00 and 6 more
+BGFillTile:: ; heuristic: wArg1/wArg2 source of a far call to FillTileRectWithArg1Tile; C0
+Data_01F_5E12:: ; address name
     db $C3
 
 ; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
@@ -1395,12 +1397,15 @@ Data_01F_64AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $32, $33, $34, $35, $36, $37 ; id 3
     db $38, $39, $3A, $3B, $3C, $3D ; id 4
     db $3E, $3F, $40, $41, $42, $43 ; id 5
+
+; address loaded by ScriptCommandF6_Run_Case10_Case02
+Data_01F_64D3:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
     INCBIN "dwm2-cobi-us.gbc", $07E4D3, $48
 
 ; E-0161 (derived: a packed tile rectangle passed in DE, with B = width and C = rows, to a rectangle copier)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_651B::
-Data_01F_651B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_651B:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
@@ -1558,13 +1563,21 @@ Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C3, $C3, $C3, $C3, $7D, $C3, $C3, $C3 ; id 4
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 6
-    INCBIN "dwm2-cobi-us.gbc", $07EE7F, $1B9
+    INCBIN "dwm2-cobi-us.gbc", $07EE7F, $168
+
+; address loaded by RunNameEntryStateWhenNotFading_Case00_Case02
+Data_01F_6FE7:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+    INCBIN "dwm2-cobi-us.gbc", $07EFE7, $51
     ds $12, $B1
     db $B2, $B6, $C3, $C3, $C3, $C3, $06, $35, $3B, $28, $39, $C3, $13, $24, $30, $28
     db $C3, $C3, $C3, $C3, $B7, $B8
     ds $12, $B9
     db $BA, $B6, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $C3
-    db $0F, $10, $11, $12, $B7, $B6
+    db $0F, $10, $11, $12, $B7
+
+; address loaded by RunNameEntryStateWhenNotFading_Case07
+Data_01F_7087:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+    db $B6
     ds $12, $C3
     db $B7, $B6, $13, $14, $15, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $C3
     db $20, $21, $22, $23, $B7, $B6
@@ -1580,20 +1593,41 @@ Data_01F_6E47:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $12, $C3
     db $B7, $B3
     ds $12, $B4
-    db $B5, $B0
+    db $B5
+
+; address loaded by RunNameEntryStateWhenNotFading_Case02_Case03
+Data_01F_714F:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+    db $B0
     ds $12, $B1
     db $B2, $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69
-    db $6A, $6B, $6C, $6D, $B7, $B6
+    db $6A, $6B, $6C, $6D, $B7
+
+; address loaded by RunNameEntryStateWhenNotFading_Case02_Case01
+Data_01F_7177:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+    db $B6
     ds $12, $C3
     db $B7, $B6, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $7B
     db $7C, $7D, $7E, $7F, $B7, $B3
     ds $12, $B4
-    db $B5, $B0
+    db $B5
+
+; address loaded by RunNameEntryStateWhenNotFading_Case02_Case02
+Data_01F_71B3:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+    db $B0
     ds $12, $B1
     db $B2, $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69
     db $6A, $6B, $6C, $6D, $B7, $B3
     ds $12, $B4
-    INCBIN "dwm2-cobi-us.gbc", $07F1EE, $187
+    db $B5
+
+; address loaded by RunNameEntryStateWhenNotFading_Case04
+Data_01F_71EF:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+    db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
+    db $C3, $B7, $B6, $C3, $13, $36, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
+
+; address loaded by GameMode6_Init_Sub01_Sub01
+Data_01F_720D:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+    INCBIN "dwm2-cobi-us.gbc", $07F20D, $168
 
 ; copies 16 glyph tiles (Data_01F_73BC) from bank $1F to the VRAM addresses in Data_01F_73CC (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_Case01)
@@ -1748,17 +1782,17 @@ Jump_01F_745C::
     ld [wScreenStep], a
     ret
 
-; draws the 32 x 32 tile map Data_01F_5E12 at the scroll origin, then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121)
+; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3), then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121; fill, not a tile map: E-0186)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case00, RunScreenStateWhenNotFading_F1_Case0D_Case00)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
-DrawTileMap5E12AndLoadFrameTiles::
+ClearBGMapAndLoadFrameTiles::
 Func_01F_7494:: ; address name
     call BGMapAddressAtScroll_Bank1F
     ld a, h
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_5E12
+    ld de, BGFillTile
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1769,7 +1803,7 @@ Func_01F_7494:: ; address name
     ld [wArg4], a
     xor a, a
     ld [wArg7], a
-    call DrawTileRectAndClearAttrs_5D9A
+    call FillTileRectWithArg1Tile
     ld de, Data_01F_4250
     ld hl, vTiles1 + $7E0
     ld b, $1F
@@ -2162,7 +2196,7 @@ Func_01F_7754:: ; address name
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 14 call sites from 7 routines (e.g. DrawTileMap5E12AndLoadFrameTiles, DrawWCA36MonsterPictureInTwoSteps, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ...)
+; 14 call sites from 7 routines (e.g. ClearBGMapAndLoadFrameTiles, DrawWCA36MonsterPictureInTwoSteps, DrawRects662BAnd653F, DrawRects6B4FAnd6C27, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1F::
 Func_01F_77AB:: ; address name
