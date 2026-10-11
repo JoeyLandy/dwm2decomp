@@ -38,7 +38,7 @@ Jump_069_401E::
     ld a, [wStoryFlags + $61]
     bit 3, a
     jr z, Jump_069_404C
-    ld hl, Data_069_7E1E
+    ld hl, MapObjects_7E1E
     jp Jump_069_40F4
 
 Jump_069_404C::
@@ -1048,19 +1048,56 @@ ObjSelector_4641:: ; heuristic: map object selector; C0
 Data_069_4641:: ; address name
     objsel_skip_if_set $01C0, $02, $00
     objsel_none
-    db $C1, $01, $53, $46, $C3, $01, $5F, $46, $FF, $FF, $01, $85, $01, $43, $00, $00
-    db $40, $20, $05, $02, $50, $3F, $01, $85, $01, $43, $00, $00, $30, $20, $05, $00
-    db $50, $3F
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4649:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4649:: ; address name
+    objsel_unless_flag $01C1, MapObjects_4653
+    objsel_unless_flag $01C3, MapObjects_465F
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_4653::
+Data_069_4653:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $43, $00, $00, $40, $20, $05, $02, $50, $3F
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_465F::
+Data_069_465F:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $43, $00, $00, $30, $20, $05, $00, $50, $3F
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_466B:: ; heuristic: map object selector; C0
 Data_069_466B:: ; address name
     objsel_skip_if_set $01B9, $02, $00
     objsel_none
-    db $BB, $01, $7D, $46, $BC, $01, $9F, $46, $FF, $FF, $03, $85, $00, $D3, $00, $00
-    db $40, $10, $05, $01, $50, $45, $86, $00, $D3, $00, $00, $50, $10, $06, $03, $60
-    db $46, $87, $01, $5A, $00, $00, $50, $E0, $07, $00, $70, $47, $01, $85, $01, $5A
-    db $00, $00, $50, $10, $05, $00, $50, $47
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4673:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4673:: ; address name
+    objsel_unless_flag $01BB, MapObjects_467D
+    objsel_unless_flag $01BC, MapObjects_469F
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_467D::
+Data_069_467D:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $D3, $00, $00, $40, $10, $05, $01, $50, $45
+    db $86, $00, $D3, $00, $00, $50, $10, $06, $03, $60, $46
+    db $87, $01, $5A, $00, $00, $50, $E0, $07, $00, $70, $47
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_469F::
+Data_069_469F:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $5A, $00, $00, $50, $10, $05, $00, $50, $47
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -1294,15 +1331,61 @@ ObjSelector_48BA:: ; heuristic: map object selector; C0
 Data_069_48BA:: ; address name
     objsel_skip_if_clear $014B, $02, $00
     objsel_none
-    INCBIN "dwm2-cobi-us.gbc", $1A48C2, $54
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_48C2:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_48C2:: ; address name
+    objsel_skip_if_clear $0147, $04, $00
+    objsel_list MapObjects_48E9
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_48CC:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_48CC:: ; address name
+    objsel_unless_flag $0146, MapObjects_48D2
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_48D2::
+Data_069_48D2:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $31, $00, $00, $40, $30, $05, $00, $50, $01
+    db $86, $01, $32, $00, $00, $50, $20, $06, $00, $60, $02
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_48E9::
+Data_069_48E9:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $32, $00, $00, $60, $10, $05, $00, $50, $02
+    db $86, $00, $D5, $00, $00, $50, $20, $06, $00, $60, $00
+    db $87, $00, $57, $00, $00, $50, $40, $07, $00, $70, $0D
+    db $87, $00, $57, $00, $00, $40, $30, $07, $00, $70, $0E
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_4916:: ; heuristic: map object selector; C0
 Data_069_4916:: ; address name
     objsel_skip_if_clear $0148, $02, $00
     objsel_none
-    db $FC, $FF, $47, $01, $04, $00, $FE, $FF, $2E, $49, $40, $01, $2E, $49, $FF, $FF
-    db $01, $85, $01, $32, $00, $00, $40, $30, $05, $02, $50, $02
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_491E:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_491E:: ; address name
+    objsel_skip_if_clear $0147, $04, $00
+    objsel_list MapObjects_492E
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4928:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4928:: ; address name
+    objsel_unless_flag $0140, MapObjects_492E
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_492E::
+Data_069_492E:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $32, $00, $00, $40, $30, $05, $02, $50, $02
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -1334,7 +1417,31 @@ ObjSelector_4959:: ; heuristic: map object selector; C0
 Data_069_4959:: ; address name
     objsel_skip_if_set $014C, $02, $00
     objsel_none
-    INCBIN "dwm2-cobi-us.gbc", $1A4961, $4E
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4961:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4961:: ; address name
+    objsel_unless_flag $014F, MapObjects_496B
+    objsel_unless_flag $0151, MapObjects_498D
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_496B::
+Data_069_496B:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $D5, $00, $00, $40, $30, $05, $00, $50, $11
+    db $86, $01, $32, $00, $00, $40, $20, $06, $00, $60, $02
+    db $87, $01, $31, $00, $00, $40, $60, $07, $02, $70, $01
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_498D::
+Data_069_498D:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $D5, $00, $00, $40, $30, $05, $00, $50, $11
+    db $86, $01, $32, $00, $00, $40, $20, $06, $00, $60, $02
+    db $87, $01, $31, $00, $00, $60, $40, $07, $03, $70, $01
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -1393,7 +1500,18 @@ Data_069_49F9:: ; address name
     objsel_skip_if_set $0025, $0A, $00
     objsel_skip_if_clear $00D1, $04, $00
     objsel_list MapObjects_4A24
-    db $FE, $FF, $0D, $4A, $02, $85, $00, $6D, $00, $00, $70, $20, $05, $00, $50, $0B
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4A09:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4A09:: ; address name
+    objsel_list MapObjects_4A0D
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_4A0D::
+Data_069_4A0D:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $6D, $00, $00, $70, $20, $05, $00, $50, $0B
     db $86, $00, $55, $01, $00, $20, $E0, $06, $00, $60, $00
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
@@ -1616,7 +1734,29 @@ ObjSelector_4BF9:: ; heuristic: map object selector; C0
 Data_069_4BF9:: ; address name
     objsel_skip_if_clear $00C4, $04, $00
     objsel_list MapObjects_4C44
-    INCBIN "dwm2-cobi-us.gbc", $1A4C03, $41
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4C03:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4C03:: ; address name
+    objsel_unless_flag $00A8, MapObjects_4C0B
+    objsel_list MapObjects_4C2D
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_4C0B::
+Data_069_4C0B:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $1F, $01, $00, $50, $40, $05, $00, $50, $2A
+    db $86, $01, $5E, $00, $00, $40, $60, $06, $02, $60, $6A
+    db $87, $00, $79, $00, $00, $40, $20, $07, $00, $70, $5D
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_4C2D::
+Data_069_4C2D:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $1F, $01, $00, $50, $40, $05, $00, $50, $2A
+    db $86, $01, $5E, $00, $00, $40, $60, $06, $02, $60, $6A
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -1651,7 +1791,29 @@ ObjSelector_4C68:: ; heuristic: map object selector; C0
 Data_069_4C68:: ; address name
     objsel_skip_if_clear $00B6, $04, $00
     objsel_list MapObjects_4CB3
-    INCBIN "dwm2-cobi-us.gbc", $1A4C72, $41
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4C72:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4C72:: ; address name
+    objsel_unless_flag $00A8, MapObjects_4C7A
+    objsel_list MapObjects_4C91
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_4C7A::
+Data_069_4C7A:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $59, $00, $00, $40, $50, $05, $00, $50, $34
+    db $86, $00, $59, $00, $00, $50, $50, $06, $00, $60, $35
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_4C91::
+Data_069_4C91:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $59, $00, $00, $40, $50, $05, $00, $50, $34
+    db $86, $00, $59, $00, $00, $50, $50, $06, $00, $60, $35
+    db $87, $00, $58, $00, $00, $20, $70, $07, $02, $70, $36
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -1930,7 +2092,11 @@ Data_069_4EBD:: ; address name
 ObjSelector_4ECF:: ; heuristic: map object selector; C0
 Data_069_4ECF:: ; address name
     objsel_list MapObjects_4ED5
-    db $FF, $FF
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4ED3:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4ED3:: ; address name
+    objsel_none
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -2101,24 +2267,57 @@ ObjSelector_4FF3:: ; heuristic: map object selector; C0
 Data_069_4FF3:: ; address name
     objsel_skip_if_clear $0024, $02, $00
     objsel_none
-    db $B9, $00, $01, $50, $FF, $FF, $01, $85, $00, $EC, $00, $00, $40, $20, $05, $00
-    db $50, $5C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_4FFB:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_4FFB:: ; address name
+    objsel_unless_flag $00B9, MapObjects_5001
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_5001::
+Data_069_5001:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $EC, $00, $00, $40, $20, $05, $00, $50, $5C
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_500D:: ; heuristic: map object selector; C0
 Data_069_500D:: ; address name
     objsel_skip_if_clear $0024, $02, $00
     objsel_none
-    db $BA, $00, $1B, $50, $FF, $FF, $01, $85, $00, $EC, $00, $00, $40, $20, $05, $00
-    db $50, $5C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5015:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5015:: ; address name
+    objsel_unless_flag $00BA, MapObjects_501B
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_501B::
+Data_069_501B:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $EC, $00, $00, $40, $20, $05, $00, $50, $5C
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5027:: ; heuristic: map object selector; C0
 Data_069_5027:: ; address name
     objsel_skip_if_clear $0024, $02, $00
     objsel_none
-    db $BB, $00, $35, $50, $FF, $FF, $01, $85, $00, $EC, $00, $00, $40, $20, $05, $00
-    db $50, $5C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_502F:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_502F:: ; address name
+    objsel_unless_flag $00BB, MapObjects_5035
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_5035::
+Data_069_5035:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $EC, $00, $00, $40, $20, $05, $00, $50, $5C
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5041:: ; heuristic: map object selector; C0
@@ -2184,8 +2383,19 @@ ObjSelector_508B:: ; heuristic: map object selector; C0
 Data_069_508B:: ; address name
     objsel_skip_if_clear $0024, $02, $00
     objsel_none
-    db $01, $02, $99, $50, $FF, $FF, $01, $85, $00, $EC, $00, $00, $10, $40, $05, $01
-    db $50, $5C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5093:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5093:: ; address name
+    objsel_unless_flag $0201, MapObjects_5099
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_5099::
+Data_069_5099:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $EC, $00, $00, $10, $40, $05, $01, $50, $5C
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -2200,8 +2410,26 @@ ObjSelector_50AB:: ; heuristic: map object selector; C0
 Data_069_50AB:: ; address name
     objsel_skip_if_clear $00C3, $02, $00
     objsel_none
-    db $C2, $00, $BB, $50, $FE, $FF, $D2, $50, $02, $85, $01, $03, $00, $00, $40, $20
-    db $05, $00, $50, $5C, $86, $01, $48, $00, $05, $48, $C0, $06, $00, $60, $00, $01
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_50B3:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_50B3:: ; address name
+    objsel_unless_flag $00C2, MapObjects_50BB
+    objsel_list MapObjects_50D2
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_50BB::
+Data_069_50BB:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $03, $00, $00, $40, $20, $05, $00, $50, $5C
+    db $86, $01, $48, $00, $05, $48, $C0, $06, $00, $60, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_50D2::
+Data_069_50D2:: ; address name
+    db $01 ; entry 0
     db $85, $01, $03, $00, $00, $50, $30, $05, $02, $50, $5C
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -2229,7 +2457,65 @@ Data_069_50F2:: ; address name
     objsel_skip_if_set $0025, $0A, $00
     objsel_skip_if_clear $00D1, $04, $00
     objsel_list MapObjects_519C
-    INCBIN "dwm2-cobi-us.gbc", $1A5102, $9A
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5102:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5102:: ; address name
+    objsel_skip_if_clear $01E5, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_510A:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_510A:: ; address name
+    objsel_skip_if_clear $01E4, $04, $00
+    objsel_list MapObjects_5158
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5114:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5114:: ; address name
+    objsel_skip_if_clear $0080, $08, $00
+    objsel_unless_flag $01E3, MapObjects_5158
+    objsel_list MapObjects_517A
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5122:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5122:: ; address name
+    objsel_unless_flag $01E8, MapObjects_512A
+    objsel_list MapObjects_5141
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_512A::
+Data_069_512A:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $5B, $00, $00, $40, $30, $05, $00, $50, $14
+    db $86, $01, $5A, $00, $00, $60, $E0, $06, $00, $60, $A0
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_5141::
+Data_069_5141:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $5B, $00, $00, $40, $30, $05, $00, $50, $14
+    db $86, $01, $5A, $00, $00, $60, $70, $06, $00, $60, $A0
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_5158::
+Data_069_5158:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $5B, $00, $00, $40, $30, $05, $00, $50, $14
+    db $86, $01, $5C, $00, $00, $40, $E0, $06, $00, $60, $9F
+    db $87, $01, $53, $00, $00, $40, $E0, $07, $00, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_517A::
+Data_069_517A:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $5B, $00, $00, $40, $30, $05, $00, $50, $14
+    db $86, $01, $5C, $00, $00, $40, $40, $06, $00, $60, $9F
+    db $87, $01, $53, $00, $00, $40, $E0, $07, $00, $70, $00
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -2362,7 +2648,43 @@ ObjSelector_52FB:: ; heuristic: map object selector; C0
 Data_069_52FB:: ; address name
     objsel_skip_if_clear $0094, $04, $00
     objsel_list MapObjects_5367
-    INCBIN "dwm2-cobi-us.gbc", $1A5305, $62
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5305:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5305:: ; address name
+    objsel_skip_if_clear $0093, $04, $00
+    objsel_list MapObjects_5350
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_530F:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_530F:: ; address name
+    objsel_unless_flag $008A, MapObjects_5317
+    objsel_list MapObjects_532E
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_5317::
+Data_069_5317:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $0E, $00, $00, $40, $30, $05, $00, $50, $00
+    db $86, $01, $10, $00, $00, $40, $70, $06, $02, $60, $18
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_532E::
+Data_069_532E:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $D5, $00, $00, $40, $E0, $05, $02, $50, $4D
+    db $86, $01, $0E, $00, $00, $40, $50, $06, $02, $60, $48
+    db $87, $01, $0E, $00, $00, $40, $40, $07, $00, $70, $4D
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_5350::
+Data_069_5350:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $D5, $00, $00, $40, $40, $05, $00, $50, $4D
+    db $86, $01, $0E, $00, $00, $40, $50, $06, $02, $60, $48
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -2389,10 +2711,34 @@ ObjSelector_538E:: ; heuristic: map object selector; C0
 Data_069_538E:: ; address name
     objsel_skip_if_clear $0087, $04, $00
     objsel_list MapObjects_53D8
-    db $FC, $FF, $82, $00, $04, $00, $FE, $FF, $AA, $53, $83, $00, $AA, $53, $FE, $FF
-    db $C1, $53, $02, $85, $01, $10, $00, $00, $50, $00, $05, $00, $50, $15, $86, $01
-    db $10, $00, $00, $40, $00, $06, $00, $60, $18, $02, $85, $01, $10, $00, $00, $50
-    db $00, $05, $00, $50, $15, $86, $01, $10, $00, $00, $40, $E0, $06, $00, $60, $18
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5398:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5398:: ; address name
+    objsel_skip_if_clear $0082, $04, $00
+    objsel_list MapObjects_53AA
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_53A2:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_53A2:: ; address name
+    objsel_unless_flag $0083, MapObjects_53AA
+    objsel_list MapObjects_53C1
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_53AA::
+Data_069_53AA:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $10, $00, $00, $50, $00, $05, $00, $50, $15
+    db $86, $01, $10, $00, $00, $40, $00, $06, $00, $60, $18
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_53C1::
+Data_069_53C1:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $10, $00, $00, $50, $00, $05, $00, $50, $15
+    db $86, $01, $10, $00, $00, $40, $E0, $06, $00, $60, $18
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -2743,7 +3089,30 @@ ObjSelector_56BA:: ; heuristic: map object selector; C0
 Data_069_56BA:: ; address name
     objsel_skip_if_clear $0086, $02, $00
     objsel_none
-    INCBIN "dwm2-cobi-us.gbc", $1A56C2, $4C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_56C2:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_56C2:: ; address name
+    objsel_unless_flag $0085, MapObjects_56CA
+    objsel_list MapObjects_56EC
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_56CA::
+Data_069_56CA:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $34, $01, $00, $40, $E0, $05, $00, $50, $46
+    db $86, $01, $10, $00, $00, $B0, $10, $06, $02, $60, $00
+    db $87, $01, $52, $00, $00, $E0, $10, $07, $00, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_56EC::
+Data_069_56EC:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $34, $01, $00, $40, $20, $05, $00, $50, $46
+    db $86, $01, $10, $00, $00, $B0, $10, $06, $02, $60, $00
+    db $87, $01, $52, $00, $00, $E0, $10, $07, $00, $70, $00
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_570E:: ; heuristic: map object selector; C0
@@ -2870,10 +3239,22 @@ ObjSelector_5814:: ; heuristic: map object selector; C0
 Data_069_5814:: ; address name
     objsel_skip_if_clear $01E5, $04, $00
     objsel_list MapObjects_5851
-    db $96, $00, $24, $58, $FF, $FF, $04, $85, $01, $52, $00, $00, $80, $60, $05, $00
-    db $50, $61, $85, $01, $52, $00, $00, $40, $50, $05, $00, $50, $67, $86, $01, $15
-    db $00, $02, $20, $70, $06, $01, $60, $63, $87, $01, $4C, $00, $00, $60, $80, $07
-    db $02, $70, $65
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_581E:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_581E:: ; address name
+    objsel_unless_flag $0096, MapObjects_5824
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_5824::
+Data_069_5824:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $52, $00, $00, $80, $60, $05, $00, $50, $61
+    db $85, $01, $52, $00, $00, $40, $50, $05, $00, $50, $67
+    db $86, $01, $15, $00, $02, $20, $70, $06, $01, $60, $63
+    db $87, $01, $4C, $00, $00, $60, $80, $07, $02, $70, $65
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -2887,7 +3268,29 @@ ObjSelector_585D:: ; heuristic: map object selector; C0
 Data_069_585D:: ; address name
     objsel_skip_if_clear $0096, $04, $00
     objsel_list MapObjects_58A8
-    INCBIN "dwm2-cobi-us.gbc", $1A5867, $41
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5867:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5867:: ; address name
+    objsel_unless_flag $0095, MapObjects_586F
+    objsel_list MapObjects_589C
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_586F::
+Data_069_586F:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $52, $00, $00, $30, $40, $05, $01, $50, $66
+    db $86, $01, $4C, $00, $00, $40, $40, $06, $02, $60, $62
+    db $86, $01, $4C, $00, $00, $40, $50, $06, $02, $60, $64
+    db $87, $01, $03, $00, $00, $40, $A0, $07, $02, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_589C::
+Data_069_589C:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $52, $00, $00, $30, $50, $05, $00, $50, $66
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -2925,7 +3328,29 @@ ObjSelector_58ED:: ; heuristic: map object selector; C0
 Data_069_58ED:: ; address name
     objsel_skip_if_clear $009B, $04, $00
     objsel_list MapObjects_5938
-    INCBIN "dwm2-cobi-us.gbc", $1A58F7, $41
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_58F7:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_58F7:: ; address name
+    objsel_unless_flag $0096, MapObjects_58FF
+    objsel_list MapObjects_5921
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_58FF::
+Data_069_58FF:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $0E, $00, $00, $40, $20, $05, $00, $50, $71
+    db $86, $01, $3A, $00, $00, $50, $20, $06, $00, $60, $72
+    db $87, $01, $03, $00, $00, $40, $40, $07, $02, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_5921::
+Data_069_5921:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $0E, $00, $00, $40, $20, $05, $00, $50, $71
+    db $86, $01, $3A, $00, $00, $50, $20, $06, $00, $60, $72
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -2983,7 +3408,29 @@ ObjSelector_59AF:: ; heuristic: map object selector; C0
 Data_069_59AF:: ; address name
     objsel_skip_if_clear $009D, $04, $00
     objsel_list MapObjects_59FA
-    INCBIN "dwm2-cobi-us.gbc", $1A59B9, $41
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_59B9:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_59B9:: ; address name
+    objsel_unless_flag $009B, MapObjects_59C1
+    objsel_list MapObjects_59D8
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_59C1::
+Data_069_59C1:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $3A, $00, $00, $E0, $E0, $05, $03, $50, $72
+    db $86, $01, $59, $00, $00, $80, $10, $06, $00, $60, $9A
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_59D8::
+Data_069_59D8:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $3A, $00, $00, $60, $30, $05, $03, $50, $72
+    db $86, $01, $59, $00, $00, $80, $10, $06, $00, $60, $9A
+    db $87, $00, $21, $01, $00, $80, $E0, $07, $00, $70, $9A
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -3196,9 +3643,30 @@ Data_069_5C07:: ; address name
     objsel_skip_if_set $0025, $0A, $00
     objsel_skip_if_clear $00D1, $04, $00
     objsel_list MapObjects_5C39
-    db $FC, $FF, $E5, $01, $04, $00, $FE, $FF, $2D, $5C, $FC, $FF, $9D, $00, $02, $00
-    db $FF, $FF, $FE, $FF, $2D, $5C, $01, $85, $01, $0F, $00, $00, $40, $10, $05, $00
-    db $50, $90
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5C17:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5C17:: ; address name
+    objsel_skip_if_clear $01E5, $04, $00
+    objsel_list MapObjects_5C2D
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5C21:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5C21:: ; address name
+    objsel_skip_if_clear $009D, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5C29:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5C29:: ; address name
+    objsel_list MapObjects_5C2D
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_5C2D::
+Data_069_5C2D:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $0F, $00, $00, $40, $10, $05, $00, $50, $90
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -3260,7 +3728,59 @@ ObjSelector_5CDC:: ; heuristic: map object selector; C0
 Data_069_5CDC:: ; address name
     objsel_skip_if_clear $01E5, $04, $00
     objsel_list MapObjects_5D7F
-    INCBIN "dwm2-cobi-us.gbc", $1A5CE6, $99
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5CE6:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5CE6:: ; address name
+    objsel_skip_if_clear $01E2, $04, $00
+    objsel_list MapObjects_5D68
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5CF0:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5CF0:: ; address name
+    objsel_skip_if_clear $01E1, $04, $00
+    objsel_list MapObjects_5D46
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5CFA:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5CFA:: ; address name
+    objsel_unless_flag $01F1, MapObjects_5D02
+    objsel_list MapObjects_5D24
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_5D02::
+Data_069_5D02:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $46, $00, $00, $40, $30, $05, $00, $50, $90
+    db $86, $01, $2A, $00, $00, $50, $70, $06, $02, $60, $8D
+    db $87, $00, $E0, $00, $00, $40, $E0, $07, $00, $70, $9E
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_5D24::
+Data_069_5D24:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $46, $00, $00, $40, $30, $05, $00, $50, $90
+    db $86, $01, $2A, $00, $00, $50, $40, $06, $02, $60, $8D
+    db $87, $00, $E0, $00, $00, $40, $E0, $07, $00, $70, $9E
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_5D46::
+Data_069_5D46:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $46, $00, $00, $40, $30, $05, $00, $50, $90
+    db $86, $01, $2A, $00, $00, $50, $40, $06, $02, $60, $8D
+    db $87, $00, $E0, $00, $00, $40, $20, $07, $00, $70, $9E
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_5D68::
+Data_069_5D68:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $0F, $00, $00, $60, $40, $05, $00, $50, $90
+    db $86, $01, $2A, $00, $02, $30, $50, $06, $00, $60, $8D
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -3356,16 +3876,43 @@ ObjSelector_5E1D:: ; heuristic: map object selector; C0
 Data_069_5E1D:: ; address name
     objsel_skip_if_set $0022, $02, $00
     objsel_none
-    db $F4, $00, $2B, $5E, $FF, $FF, $01, $85, $00, $53, $01, $00, $50, $50, $05, $00
-    db $50, $6C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5E25:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5E25:: ; address name
+    objsel_unless_flag $00F4, MapObjects_5E2B
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_5E2B::
+Data_069_5E2B:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $53, $01, $00, $50, $50, $05, $00, $50, $6C
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_5E37:: ; heuristic: map object selector; C0
 Data_069_5E37:: ; address name
     objsel_skip_if_clear $0076, $02, $00
     objsel_none
-    db $FB, $FF, $70, $00, $02, $00, $FF, $FF, $FE, $FF, $4B, $5E, $01, $85, $01, $55
-    db $00, $02, $40, $40, $05, $00, $50, $46
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5E3F:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5E3F:: ; address name
+    objsel_skip_if_set $0070, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5E47:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5E47:: ; address name
+    objsel_list MapObjects_5E4B
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_5E4B::
+Data_069_5E4B:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $55, $00, $02, $40, $40, $05, $00, $50, $46
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -3484,10 +4031,21 @@ Data_069_5F77:: ; address name
     objsel_skip_if_set $0025, $0A, $00
     objsel_skip_if_clear $00D1, $04, $00
     objsel_list MapObjects_5FB8
-    db $FE, $FF, $8B, $5F, $04, $85, $01, $16, $00, $00, $50, $30, $05, $00, $50, $30
-    db $86, $01, $29, $00, $00, $70, $50, $06, $00, $60, $31, $86, $01, $29, $00, $00
-    db $70, $60, $06, $02, $60, $32, $87, $01, $0C, $00, $00, $20, $40, $07, $01, $70
-    db $33
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_5F87:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_5F87:: ; address name
+    objsel_list MapObjects_5F8B
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_5F8B::
+Data_069_5F8B:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $16, $00, $00, $50, $30, $05, $00, $50, $30
+    db $86, $01, $29, $00, $00, $70, $50, $06, $00, $60, $31
+    db $86, $01, $29, $00, $00, $70, $60, $06, $02, $60, $32
+    db $87, $01, $0C, $00, $00, $20, $40, $07, $01, $70, $33
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -3667,7 +4225,30 @@ ObjSelector_6108:: ; heuristic: map object selector; C0
 Data_069_6108:: ; address name
     objsel_skip_if_clear $007C, $02, $00
     objsel_none
-    INCBIN "dwm2-cobi-us.gbc", $1A6110, $4C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6110:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6110:: ; address name
+    objsel_unless_flag $007D, MapObjects_6118
+    objsel_list MapObjects_613A
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6118::
+Data_069_6118:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $03, $00, $00, $40, $50, $05, $03, $50, $00
+    db $86, $01, $28, $00, $00, $60, $60, $06, $00, $60, $00
+    db $87, $01, $29, $00, $00, $50, $20, $07, $01, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_613A::
+Data_069_613A:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $03, $00, $00, $60, $50, $05, $01, $50, $00
+    db $86, $01, $28, $00, $00, $50, $50, $06, $01, $60, $00
+    db $87, $01, $29, $00, $00, $40, $50, $07, $01, $70, $00
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -3709,7 +4290,30 @@ ObjSelector_6198:: ; heuristic: map object selector; C0
 Data_069_6198:: ; address name
     objsel_skip_if_clear $005F, $02, $00
     objsel_none
-    INCBIN "dwm2-cobi-us.gbc", $1A61A0, $4C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_61A0:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_61A0:: ; address name
+    objsel_unless_flag $007F, MapObjects_61A8
+    objsel_list MapObjects_61CA
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_61A8::
+Data_069_61A8:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $28, $00, $00, $50, $E0, $05, $00, $50, $00
+    db $86, $01, $29, $00, $00, $50, $D0, $06, $00, $60, $00
+    db $87, $01, $03, $00, $00, $50, $F0, $07, $00, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_61CA::
+Data_069_61CA:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $45, $00, $00, $80, $40, $05, $00, $50, $00
+    db $86, $00, $E3, $00, $00, $50, $40, $06, $00, $60, $00
+    db $87, $00, $D6, $00, $00, $40, $50, $07, $00, $70, $00
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -3829,10 +4433,21 @@ Data_069_62C4:: ; address name
     objsel_skip_if_set $0025, $0A, $00
     objsel_skip_if_clear $00D1, $04, $00
     objsel_list MapObjects_6305
-    db $FE, $FF, $D8, $62, $04, $85, $01, $4F, $00, $00, $40, $20, $05, $00, $50, $45
-    db $86, $01, $2C, $00, $02, $50, $40, $06, $01, $60, $43, $86, $01, $2C, $00, $00
-    db $30, $60, $06, $00, $60, $44, $86, $01, $2C, $00, $00, $70, $70, $06, $00, $60
-    db $42
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_62D4:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_62D4:: ; address name
+    objsel_list MapObjects_62D8
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_62D8::
+Data_069_62D8:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $4F, $00, $00, $40, $20, $05, $00, $50, $45
+    db $86, $01, $2C, $00, $02, $50, $40, $06, $01, $60, $43
+    db $86, $01, $2C, $00, $00, $30, $60, $06, $00, $60, $44
+    db $86, $01, $2C, $00, $00, $70, $70, $06, $00, $60, $42
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -3974,10 +4589,28 @@ ObjSelector_641B:: ; heuristic: map object selector; C0
 Data_069_641B:: ; address name
     objsel_skip_if_clear $0023, $04, $00
     objsel_list MapObjects_645B
-    db $91, $01, $2D, $64, $FE, $FF, $44, $64, $02, $85, $01, $04, $00, $00, $60, $30
-    db $05, $01, $50, $07, $86, $00, $5A, $00, $00, $60, $E0, $06, $00, $60, $4B, $02
-    db $85, $01, $04, $00, $00, $60, $30, $05, $01, $50, $07, $86, $00, $5A, $00, $00
-    db $60, $20, $06, $00, $60, $4B
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6425:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6425:: ; address name
+    objsel_unless_flag $0191, MapObjects_642D
+    objsel_list MapObjects_6444
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_642D::
+Data_069_642D:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $04, $00, $00, $60, $30, $05, $01, $50, $07
+    db $86, $00, $5A, $00, $00, $60, $E0, $06, $00, $60, $4B
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6444::
+Data_069_6444:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $04, $00, $00, $60, $30, $05, $01, $50, $07
+    db $86, $00, $5A, $00, $00, $60, $20, $06, $00, $60, $4B
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -3993,8 +4626,20 @@ ObjSelector_647D:: ; heuristic: map object selector; C0
 Data_069_647D:: ; address name
     objsel_skip_if_clear $0024, $04, $00
     objsel_list MapObjects_649F
-    db $FC, $FF, $03, $00, $04, $00, $02, $00, $93, $64, $FF, $FF, $01, $85, $00, $0A
-    db $00, $00, $80, $40, $05, $00, $50, $08
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6487:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6487:: ; address name
+    objsel_skip_if_clear $0003, $04, $00
+    objsel_unless_flag $0002, MapObjects_6493
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6493::
+Data_069_6493:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $0A, $00, $00, $80, $40, $05, $00, $50, $08
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4009,7 +4654,58 @@ Data_069_64AB:: ; address name
     objsel_skip_if_clear $0025, $08, $00
     objsel_unless_flag $0000, MapObjects_655F
     objsel_list MapObjects_653D
-    INCBIN "dwm2-cobi-us.gbc", $1A64B9, $84
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_64B9:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_64B9:: ; address name
+    objsel_skip_if_set $0020, $12, $00
+    objsel_skip_if_set $0002, $08, $00
+    objsel_unless_flag $0003, MapObjects_64ED
+    objsel_list MapObjects_6504
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_64CD:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_64CD:: ; address name
+    objsel_list MapObjects_651B
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_64D1:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_64D1:: ; address name
+    objsel_skip_if_clear $0021, $0E, $00
+    objsel_skip_if_set $0181, $08, $00
+    objsel_unless_flag $0000, MapObjects_6598
+    objsel_list MapObjects_6581
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_64E5:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_64E5:: ; address name
+    objsel_unless_flag $0000, MapObjects_655F
+    objsel_list MapObjects_653D
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_64ED::
+Data_069_64ED:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $04, $00, $00, $40, $00, $05, $00, $50, $07
+    db $86, $00, $0A, $00, $00, $50, $00, $06, $00, $60, $08
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6504::
+Data_069_6504:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $04, $00, $00, $30, $20, $05, $00, $50, $07
+    db $86, $00, $01, $00, $02, $50, $50, $06, $01, $60, $1A
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_651B::
+Data_069_651B:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $04, $00, $00, $30, $20, $05, $00, $50, $07
+    db $86, $00, $01, $00, $02, $50, $50, $06, $01, $60, $1A
+    db $84, $00, $24, $00, $00, $70, $60, $04, $03, $40, $B2
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4028,16 +4724,69 @@ Data_069_655F:: ; address name
     db $85, $01, $01, $00, $00, $60, $30, $05, $00, $50, $1C
     db $86, $00, $01, $00, $02, $50, $50, $06, $03, $60, $1A
     db $84, $00, $24, $00, $00, $70, $60, $04, $03, $40, $B2
-    db $02, $85, $01, $00, $00, $00, $60, $30, $05, $00, $50, $1B, $86, $00, $24, $00
-    db $00, $70, $60, $06, $03, $60, $B2, $02, $85, $01, $01, $00, $00, $60, $30, $05
-    db $00, $50, $1C, $86, $00, $24, $00, $00, $70, $60, $06, $03, $60, $B2
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6581::
+Data_069_6581:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $00, $00, $00, $60, $30, $05, $00, $50, $1B
+    db $86, $00, $24, $00, $00, $70, $60, $06, $03, $60, $B2
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6598::
+Data_069_6598:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $01, $00, $00, $60, $30, $05, $00, $50, $1C
+    db $86, $00, $24, $00, $00, $70, $60, $06, $03, $60, $B2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_65AF:: ; heuristic: map object selector; C0
 Data_069_65AF:: ; address name
     objsel_skip_if_clear $0023, $04, $00
     objsel_list MapObjects_660D
-    INCBIN "dwm2-cobi-us.gbc", $1A65B9, $54
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_65B9:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_65B9:: ; address name
+    objsel_skip_if_clear $0022, $04, $00
+    objsel_list MapObjects_65F6
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_65C3:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_65C3:: ; address name
+    objsel_skip_if_clear $0021, $04, $00
+    objsel_list MapObjects_65DF
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_65CD:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_65CD:: ; address name
+    objsel_unless_flag $0003, MapObjects_65D3
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_65D3::
+Data_069_65D3:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $01, $00, $02, $20, $50, $05, $01, $50, $1A
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_65DF::
+Data_069_65DF:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $4F, $00, $00, $30, $20, $05, $00, $50, $B3
+    db $86, $01, $04, $00, $00, $20, $30, $06, $01, $60, $07
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_65F6::
+Data_069_65F6:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $4F, $00, $00, $30, $20, $05, $00, $50, $B3
+    db $86, $00, $D8, $00, $00, $50, $10, $06, $00, $60, $4A
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4065,7 +4814,46 @@ ObjSelector_663F:: ; heuristic: map object selector; C0
 Data_069_663F:: ; address name
     objsel_skip_if_clear $0023, $04, $00
     objsel_list MapObjects_669B
-    INCBIN "dwm2-cobi-us.gbc", $1A6649, $52
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6649:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6649:: ; address name
+    objsel_skip_if_clear $0021, $04, $00
+    objsel_list MapObjects_6684
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6653:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6653:: ; address name
+    objsel_skip_if_clear $0020, $04, $00
+    objsel_list MapObjects_666D
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_665D:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_665D:: ; address name
+    objsel_list MapObjects_6661
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6661::
+Data_069_6661:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $B9, $00, $02, $40, $20, $05, $01, $50, $09
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_666D::
+Data_069_666D:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $B9, $00, $02, $40, $20, $05, $01, $50, $09
+    db $86, $01, $04, $00, $00, $50, $40, $06, $03, $60, $07
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6684::
+Data_069_6684:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $B9, $00, $02, $40, $20, $05, $01, $50, $09
+    db $86, $00, $F6, $00, $00, $60, $40, $06, $00, $60, $B4
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4081,10 +4869,38 @@ ObjSelector_66BD:: ; heuristic: map object selector; C0
 Data_069_66BD:: ; address name
     objsel_skip_if_clear $0023, $04, $00
     objsel_list MapObjects_6700
-    db $FC, $FF, $22, $00, $04, $00, $FE, $FF, $E9, $66, $FC, $FF, $21, $00, $04, $00
-    db $FE, $FF, $DD, $66, $FF, $FF, $01, $85, $00, $3D, $00, $00, $40, $10, $05, $01
-    db $50, $7D, $02, $85, $00, $3D, $00, $00, $40, $10, $05, $01, $50, $7D, $86, $00
-    db $2E, $00, $00, $20, $30, $06, $00, $60, $7E
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_66C7:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_66C7:: ; address name
+    objsel_skip_if_clear $0022, $04, $00
+    objsel_list MapObjects_66E9
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_66D1:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_66D1:: ; address name
+    objsel_skip_if_clear $0021, $04, $00
+    objsel_list MapObjects_66DD
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_66DB:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_66DB:: ; address name
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_66DD::
+Data_069_66DD:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $3D, $00, $00, $40, $10, $05, $01, $50, $7D
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_66E9::
+Data_069_66E9:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $3D, $00, $00, $40, $10, $05, $01, $50, $7D
+    db $86, $00, $2E, $00, $00, $20, $30, $06, $00, $60, $7E
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4153,8 +4969,26 @@ ObjSelector_676A:: ; heuristic: map object selector; C0
 Data_069_676A:: ; address name
     objsel_skip_if_clear $0117, $02, $00
     objsel_none
-    db $07, $01, $7A, $67, $FE, $FF, $91, $67, $02, $85, $01, $10, $00, $00, $50, $20
-    db $05, $00, $50, $20, $86, $01, $18, $00, $00, $70, $70, $06, $03, $60, $21, $01
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6772:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6772:: ; address name
+    objsel_unless_flag $0107, MapObjects_677A
+    objsel_list MapObjects_6791
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_677A::
+Data_069_677A:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $10, $00, $00, $50, $20, $05, $00, $50, $20
+    db $86, $01, $18, $00, $00, $70, $70, $06, $03, $60, $21
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6791::
+Data_069_6791:: ; address name
+    db $01 ; entry 0
     db $85, $01, $10, $00, $00, $50, $20, $05, $00, $50, $20
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -4176,7 +5010,18 @@ ObjSelector_67BA:: ; heuristic: map object selector; C0
 Data_069_67BA:: ; address name
     objsel_skip_if_set $0002, $02, $00
     objsel_none
-    db $FE, $FF, $C6, $67, $01, $85, $01, $1A, $00, $00, $40, $60, $05, $00, $50, $EA
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_67C2:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_67C2:: ; address name
+    objsel_list MapObjects_67C6
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_67C6::
+Data_069_67C6:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $1A, $00, $00, $40, $60, $05, $00, $50, $EA
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_67D2:: ; heuristic: map object selector; C0
@@ -4208,9 +5053,32 @@ ObjSelector_6822:: ; heuristic: map object selector; C0
 Data_069_6822:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_685B
-    db $FC, $FF, $24, $00, $02, $00, $FF, $FF, $21, $00, $44, $68, $FB, $FF, $07, $01
-    db $02, $00, $FF, $FF, $FE, $FF, $5B, $68, $02, $85, $01, $1D, $00, $00, $20, $40
-    db $05, $00, $50, $15, $86, $01, $10, $00, $00, $50, $40, $06, $00, $60, $20
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_682C:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_682C:: ; address name
+    objsel_skip_if_clear $0024, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6834:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6834:: ; address name
+    objsel_unless_flag $0021, MapObjects_6844
+    objsel_skip_if_set $0107, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6840:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6840:: ; address name
+    objsel_list MapObjects_685B
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6844::
+Data_069_6844:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $1D, $00, $00, $20, $40, $05, $00, $50, $15
+    db $86, $01, $10, $00, $00, $50, $40, $06, $00, $60, $20
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4276,8 +5144,25 @@ ObjSelector_6908:: ; heuristic: map object selector; C0
 Data_069_6908:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_692E
-    db $FC, $FF, $24, $00, $02, $00, $FF, $FF, $21, $00, $22, $69, $FE, $FF, $2E, $69
-    db $01, $85, $01, $1B, $00, $02, $40, $40, $05, $01, $50, $14
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6912:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6912:: ; address name
+    objsel_skip_if_clear $0024, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_691A:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_691A:: ; address name
+    objsel_unless_flag $0021, MapObjects_6922
+    objsel_list MapObjects_692E
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6922::
+Data_069_6922:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $1B, $00, $02, $40, $40, $05, $01, $50, $14
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4301,7 +5186,51 @@ Data_069_694B:: ; address name
     objsel_skip_if_clear $0134, $08, $00
     objsel_unless_flag $0023, MapObjects_69D9
     objsel_list MapObjects_6A06
-    INCBIN "dwm2-cobi-us.gbc", $1A6959, $80
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6959:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6959:: ; address name
+    objsel_skip_if_clear $0022, $04, $00
+    objsel_list MapObjects_69AC
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6963:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6963:: ; address name
+    objsel_skip_if_clear $0021, $04, $00
+    objsel_list MapObjects_6995
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_696D:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_696D:: ; address name
+    objsel_unless_flag $0011, MapObjects_6973
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6973::
+Data_069_6973:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $15, $00, $00, $60, $50, $05, $02, $50, $10
+    db $86, $01, $03, $00, $00, $E0, $40, $06, $01, $60, $00
+    db $87, $01, $02, $00, $00, $E0, $10, $07, $00, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6995::
+Data_069_6995:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $1D, $00, $00, $40, $30, $05, $00, $50, $15
+    db $86, $01, $1D, $00, $00, $40, $40, $06, $02, $60, $16
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_69AC::
+Data_069_69AC:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $15, $00, $00, $60, $50, $05, $02, $50, $10
+    db $85, $01, $15, $00, $00, $20, $40, $05, $03, $50, $7F
+    db $86, $01, $57, $00, $00, $80, $60, $06, $02, $60, $00
+    db $87, $00, $B9, $00, $00, $20, $E0, $07, $01, $70, $CD
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4351,7 +5280,35 @@ ObjSelector_6A74:: ; heuristic: map object selector; C0
 Data_069_6A74:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_6AC2
-    INCBIN "dwm2-cobi-us.gbc", $1A6A7E, $44
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6A7E:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6A7E:: ; address name
+    objsel_skip_if_clear $0024, $04, $00
+    objsel_list MapObjects_6AE4
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6A88:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6A88:: ; address name
+    objsel_unless_flag $0005, MapObjects_6A94
+    objsel_unless_flag $0022, MapObjects_6AB6
+    objsel_list MapObjects_6AC2
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6A94::
+Data_069_6A94:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $1D, $00, $00, $40, $40, $05, $02, $50, $0E
+    db $86, $01, $02, $00, $00, $50, $30, $06, $01, $60, $00
+    db $87, $01, $03, $00, $00, $40, $30, $07, $01, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6AB6::
+Data_069_6AB6:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $1D, $00, $00, $40, $40, $05, $00, $50, $0E
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4361,8 +5318,14 @@ Data_069_6AC2:: ; address name
     db $85, $01, $1D, $00, $00, $40, $40, $05, $00, $50, $0E
     db $86, $01, $1D, $00, $00, $20, $50, $06, $00, $60, $15
     db $84, $01, $1D, $00, $00, $20, $60, $04, $02, $40, $16
-    db $02, $85, $01, $1D, $00, $00, $40, $30, $05, $00, $50, $15, $86, $01, $1D, $00
-    db $00, $40, $40, $06, $02, $60, $16
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6AE4::
+Data_069_6AE4:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $1D, $00, $00, $40, $30, $05, $00, $50, $15
+    db $86, $01, $1D, $00, $00, $40, $40, $06, $02, $60, $16
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -4406,7 +5369,45 @@ Data_069_6B42:: ; address name
     objsel_unless_flag $00CB, MapObjects_6BCC
     objsel_unless_flag $00CC, MapObjects_6BEE
     objsel_list MapObjects_6C10
-    INCBIN "dwm2-cobi-us.gbc", $1A6B54, $78
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6B54:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6B54:: ; address name
+    objsel_skip_if_set $0022, $04, $00
+    objsel_list MapObjects_6B66
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6B5E:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6B5E:: ; address name
+    objsel_unless_flag $0023, MapObjects_6B88
+    objsel_list MapObjects_6BAA
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6B66::
+Data_069_6B66:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $11, $00, $00, $50, $20, $05, $00, $50, $66
+    db $86, $00, $FA, $00, $00, $60, $40, $06, $00, $60, $67
+    db $87, $00, $F8, $00, $00, $60, $50, $07, $02, $70, $68
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6B88::
+Data_069_6B88:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $22, $00, $00, $50, $20, $05, $00, $50, $8E
+    db $86, $00, $58, $00, $00, $60, $40, $06, $00, $60, $67
+    db $87, $00, $E5, $00, $00, $60, $50, $07, $02, $70, $68
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6BAA::
+Data_069_6BAA:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $28, $00, $00, $50, $20, $05, $00, $50, $9C
+    db $86, $00, $06, $01, $00, $60, $40, $06, $00, $60, $67
+    db $87, $00, $52, $01, $00, $60, $50, $07, $02, $70, $68
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4448,7 +5449,89 @@ ObjSelector_6C38:: ; heuristic: map object selector; C0
 Data_069_6C38:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_6D0B
-    INCBIN "dwm2-cobi-us.gbc", $1A6C42, $C9
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6C42:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6C42:: ; address name
+    objsel_skip_if_clear $019F, $04, $00
+    objsel_list MapObjects_6C8C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6C4C:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6C4C:: ; address name
+    objsel_skip_if_clear $00D1, $04, $00
+    objsel_list MapObjects_6CE8
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6C56:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6C56:: ; address name
+    objsel_skip_if_clear $0024, $04, $00
+    objsel_unless_flag $00C3, MapObjects_6CD1
+    objsel_skip_if_clear $000C, $0E, $00
+    objsel_skip_if_clear $0018, $04, $00
+    objsel_unless_flag $0019, MapObjects_6CFF
+    objsel_list MapObjects_6CC5
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6C74:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6C74:: ; address name
+    objsel_unless_flag $000A, MapObjects_6C80
+    objsel_unless_flag $000B, MapObjects_6C8C
+    objsel_list MapObjects_6CAE
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6C80::
+Data_069_6C80:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $4A, $00, $00, $40, $30, $05, $00, $50, $A9
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6C8C::
+Data_069_6C8C:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $4A, $00, $00, $40, $30, $05, $00, $50, $A9
+    db $86, $01, $02, $00, $00, $78, $30, $06, $03, $60, $19
+    db $87, $01, $03, $00, $00, $58, $30, $07, $01, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6CAE::
+Data_069_6CAE:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $02, $00, $00, $80, $30, $05, $00, $50, $19
+    db $86, $01, $03, $00, $00, $40, $40, $06, $02, $60, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6CC5::
+Data_069_6CC5:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $49, $00, $00, $40, $30, $05, $00, $50, $19
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6CD1::
+Data_069_6CD1:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $49, $00, $00, $40, $30, $05, $01, $50, $19
+    db $86, $01, $03, $00, $00, $50, $40, $06, $03, $60, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6CE8::
+Data_069_6CE8:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $49, $00, $00, $40, $30, $05, $00, $50, $19
+    db $86, $01, $4A, $00, $00, $40, $E0, $06, $00, $60, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6CFF::
+Data_069_6CFF:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $49, $00, $00, $E0, $30, $05, $00, $50, $19
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4470,9 +5553,27 @@ ObjSelector_6D2F:: ; heuristic: map object selector; C0
 Data_069_6D2F:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_6D61
-    db $FB, $FF, $02, $00, $08, $00, $17, $00, $61, $6D, $FE, $FF, $9B, $6D, $FC, $FF
-    db $20, $00, $0C, $00, $21, $00, $61, $6D, $81, $01, $A7, $6D, $FE, $FF, $61, $6D
-    db $01, $00, $6D, $6D, $FE, $FF, $84, $6D
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6D39:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6D39:: ; address name
+    objsel_skip_if_set $0002, $08, $00
+    objsel_unless_flag $0017, MapObjects_6D61
+    objsel_list MapObjects_6D9B
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6D47:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6D47:: ; address name
+    objsel_skip_if_clear $0020, $0C, $00
+    objsel_unless_flag $0021, MapObjects_6D61
+    objsel_unless_flag $0181, MapObjects_6DA7
+    objsel_list MapObjects_6D61
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6D59:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6D59:: ; address name
+    objsel_unless_flag $0001, MapObjects_6D6D
+    objsel_list MapObjects_6D84
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4480,7 +5581,80 @@ MapObjects_6D61::
 Data_069_6D61:: ; address name
     db $01 ; entry 0
     db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02
-    INCBIN "dwm2-cobi-us.gbc", $1A6D6D, $CE
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6D6D::
+Data_069_6D6D:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02
+    db $86, $01, $00, $00, $00, $70, $70, $06, $03, $60, $1B
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6D84::
+Data_069_6D84:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02
+    db $86, $01, $01, $00, $00, $70, $70, $06, $03, $60, $1C
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_6D9B::
+Data_069_6D9B:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $0A, $00, $00, $50, $A0, $05, $00, $50, $08
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6DA7::
+Data_069_6DA7:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02
+    db $86, $00, $01, $00, $00, $20, $10, $06, $02, $60, $1A
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6DBE:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6DBE:: ; address name
+    objsel_list MapObjects_6DC2
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_6DC2::
+Data_069_6DC2:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $4A, $00, $00, $40, $30, $05, $00, $50, $9F
+    db $85, $01, $4A, $00, $00, $60, $40, $05, $00, $50, $CF
+    db $85, $01, $4A, $00, $00, $70, $50, $05, $03, $50, $0D
+    db $86, $01, $5F, $00, $00, $70, $70, $06, $03, $60, $A7
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6DEF:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6DEF:: ; address name
+    objsel_list MapObjects_6DF3
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6DF3::
+Data_069_6DF3:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $40, $00, $00, $40, $30, $05, $00, $50, $A4
+    db $86, $01, $15, $00, $00, $60, $20, $06, $00, $60, $A6
+    db $87, $01, $10, $00, $00, $70, $10, $07, $00, $70, $AC
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6E15:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6E15:: ; address name
+    objsel_list MapObjects_6E19
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_6E19::
+Data_069_6E19:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $7E, $01, $00, $40, $30, $05, $00, $50, $35
+    db $86, $00, $7D, $01, $00, $20, $40, $06, $00, $60, $34
+    db $87, $00, $7C, $01, $00, $60, $50, $07, $00, $70, $33
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -4618,7 +5792,12 @@ ObjSelector_6F4A:: ; heuristic: map object selector; C0
 Data_069_6F4A:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_6F5A
-    db $24, $00, $5A, $6F, $FF, $FF
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6F54:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6F54:: ; address name
+    objsel_unless_flag $0024, MapObjects_6F5A
+    objsel_none
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4633,7 +5812,12 @@ ObjSelector_6F71:: ; heuristic: map object selector; C0
 Data_069_6F71:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_6F83
-    db $24, $00, $83, $6F, $FE, $FF, $9A, $6F
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_6F7B:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_6F7B:: ; address name
+    objsel_unless_flag $0024, MapObjects_6F83
+    objsel_list MapObjects_6F9A
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4642,8 +5826,14 @@ Data_069_6F83:: ; address name
     db $02 ; entry 0
     db $85, $01, $10, $00, $00, $50, $30, $05, $00, $50, $23
     db $86, $01, $10, $00, $00, $60, $70, $06, $03, $60, $24
-    db $02, $85, $01, $10, $00, $00, $40, $50, $05, $00, $50, $23, $86, $01, $10, $00
-    db $00, $50, $50, $06, $00, $60, $24
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_6F9A::
+Data_069_6F9A:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $10, $00, $00, $40, $50, $05, $00, $50, $23
+    db $86, $01, $10, $00, $00, $50, $50, $06, $00, $60, $24
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -4731,8 +5921,19 @@ ObjSelector_7054:: ; heuristic: map object selector; C0
 Data_069_7054:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_7070
-    db $24, $00, $64, $70, $FF, $FF, $01, $85, $01, $1A, $00, $00, $10, $20, $05, $00
-    db $50, $3E
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_705E:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_705E:: ; address name
+    objsel_unless_flag $0024, MapObjects_7064
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_7064::
+Data_069_7064:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $1A, $00, $00, $10, $20, $05, $00, $50, $3E
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4815,9 +6016,21 @@ ObjSelector_7106:: ; heuristic: map object selector; C0
 Data_069_7106:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_713A
-    db $2D, $01, $18, $71, $FE, $FF, $3A, $71, $03, $85, $00, $02, $00, $00, $E0, $30
-    db $05, $00, $50, $AD, $86, $01, $1E, $00, $00, $60, $60, $06, $00, $60, $77, $87
-    db $01, $19, $00, $00, $40, $40, $07, $01, $70, $27
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7110:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7110:: ; address name
+    objsel_unless_flag $012D, MapObjects_7118
+    objsel_list MapObjects_713A
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_7118::
+Data_069_7118:: ; address name
+    db $03 ; entry 0
+    db $85, $00, $02, $00, $00, $E0, $30, $05, $00, $50, $AD
+    db $86, $01, $1E, $00, $00, $60, $60, $06, $00, $60, $77
+    db $87, $01, $19, $00, $00, $40, $40, $07, $01, $70, $27
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -4938,7 +6151,32 @@ Data_069_7214:: ; address name
     objsel_unless_flag $00C9, MapObjects_7288
     objsel_unless_flag $00CA, MapObjects_72B5
     objsel_list MapObjects_72E2
-    INCBIN "dwm2-cobi-us.gbc", $1A7226, $62
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7226:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7226:: ; address name
+    objsel_unless_flag $0024, MapObjects_722E
+    objsel_list MapObjects_725B
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_722E::
+Data_069_722E:: ; address name
+    db $04 ; entry 0
+    db $87, $01, $15, $00, $00, $40, $30, $07, $03, $70, $89
+    db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86
+    db $85, $01, $16, $00, $00, $10, $60, $05, $02, $50, $87
+    db $86, $01, $12, $00, $00, $50, $50, $06, $01, $60, $88
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_725B::
+Data_069_725B:: ; address name
+    db $04 ; entry 0
+    db $87, $01, $21, $00, $00, $40, $30, $07, $03, $70, $89
+    db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86
+    db $85, $01, $16, $00, $00, $10, $60, $05, $02, $50, $87
+    db $86, $01, $12, $00, $00, $50, $50, $06, $01, $60, $88
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5084,9 +6322,26 @@ ObjSelector_742C:: ; heuristic: map object selector; C0
 Data_069_742C:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_745F
-    db $FC, $FF, $D1, $00, $04, $00, $FE, $FF, $81, $74, $17, $01, $48, $74, $FE, $FF
-    db $5F, $74, $02, $85, $01, $3B, $00, $00, $40, $20, $05, $00, $50, $81, $86, $01
-    db $12, $00, $00, $60, $30, $06, $03, $60, $82
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7436:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7436:: ; address name
+    objsel_skip_if_clear $00D1, $04, $00
+    objsel_list MapObjects_7481
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7440:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7440:: ; address name
+    objsel_unless_flag $0117, MapObjects_7448
+    objsel_list MapObjects_745F
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_7448::
+Data_069_7448:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $3B, $00, $00, $40, $20, $05, $00, $50, $81
+    db $86, $01, $12, $00, $00, $60, $30, $06, $03, $60, $82
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5096,17 +6351,40 @@ Data_069_745F:: ; address name
     db $85, $01, $3B, $00, $00, $40, $20, $05, $00, $50, $81
     db $86, $01, $12, $00, $00, $60, $30, $06, $03, $60, $82
     db $87, $01, $10, $00, $00, $20, $40, $07, $02, $70, $20
-    db $03, $85, $01, $3B, $00, $00, $40, $20, $05, $00, $50, $81, $86, $01, $03, $00
-    db $00, $30, $40, $06, $01, $60, $99, $87, $01, $1A, $00, $00, $60, $60, $07, $02
-    db $70, $0A
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_7481::
+Data_069_7481:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $3B, $00, $00, $40, $20, $05, $00, $50, $81
+    db $86, $01, $03, $00, $00, $30, $40, $06, $01, $60, $99
+    db $87, $01, $1A, $00, $00, $60, $60, $07, $02, $70, $0A
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_74A3:: ; heuristic: map object selector; C0
 Data_069_74A3:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_74CB
-    db $FC, $FF, $D1, $00, $04, $00, $FE, $FF, $D7, $74, $22, $01, $BF, $74, $FE, $FF
-    db $CB, $74, $01, $85, $01, $10, $00, $00, $40, $70, $05, $02, $50, $83
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_74AD:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_74AD:: ; address name
+    objsel_skip_if_clear $00D1, $04, $00
+    objsel_list MapObjects_74D7
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_74B7:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_74B7:: ; address name
+    objsel_unless_flag $0122, MapObjects_74BF
+    objsel_list MapObjects_74CB
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_74BF::
+Data_069_74BF:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $10, $00, $00, $40, $70, $05, $02, $50, $83
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5114,16 +6392,32 @@ MapObjects_74CB::
 Data_069_74CB:: ; address name
     db $01 ; entry 0
     db $85, $01, $10, $00, $00, $30, $60, $05, $02, $50, $83
-    db $03, $85, $01, $10, $00, $00, $40, $70, $05, $02, $50, $83, $86, $01, $1B, $00
-    db $00, $30, $40, $06, $00, $60, $12, $87, $01, $1D, $00, $00, $60, $50, $07, $03
-    db $70, $15
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_74D7::
+Data_069_74D7:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $10, $00, $00, $40, $70, $05, $02, $50, $83
+    db $86, $01, $1B, $00, $00, $30, $40, $06, $00, $60, $12
+    db $87, $01, $1D, $00, $00, $60, $50, $07, $03, $70, $15
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_74F9:: ; heuristic: map object selector; C0
 Data_069_74F9:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_7511
-    db $FC, $FF, $D1, $00, $04, $00, $FE, $FF, $28, $75, $FE, $FF, $11, $75
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7503:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7503:: ; address name
+    objsel_skip_if_clear $00D1, $04, $00
+    objsel_list MapObjects_7528
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_750D:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_750D:: ; address name
+    objsel_list MapObjects_7511
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5132,9 +6426,15 @@ Data_069_7511:: ; address name
     db $02 ; entry 0
     db $85, $01, $10, $00, $00, $20, $30, $05, $01, $50, $84
     db $86, $01, $10, $00, $00, $20, $60, $06, $01, $60, $85
-    db $03, $85, $01, $10, $00, $00, $50, $70, $05, $00, $50, $84, $86, $01, $1C, $00
-    db $02, $30, $30, $06, $01, $60, $0C, $87, $01, $1E, $00, $00, $70, $40, $07, $00
-    db $70, $25
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_7528::
+Data_069_7528:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $10, $00, $00, $50, $70, $05, $00, $50, $84
+    db $86, $01, $1C, $00, $02, $30, $30, $06, $01, $60, $0C
+    db $87, $01, $1E, $00, $00, $70, $40, $07, $00, $70, $25
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_754A:: ; heuristic: map object selector; C0
@@ -5169,7 +6469,12 @@ ObjSelector_7570:: ; heuristic: map object selector; C0
 Data_069_7570:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_7582
-    db $24, $00, $82, $75, $FE, $FF, $99, $75
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_757A:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_757A:: ; address name
+    objsel_unless_flag $0024, MapObjects_7582
+    objsel_list MapObjects_7599
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5178,17 +6483,35 @@ Data_069_7582:: ; address name
     db $02 ; entry 0
     db $85, $01, $1E, $00, $00, $40, $60, $05, $00, $50, $8A
     db $86, $01, $1F, $00, $00, $50, $20, $06, $02, $60, $D9
-    db $04, $85, $01, $1E, $00, $00, $40, $60, $05, $00, $50, $8A, $86, $01, $1F, $00
-    db $00, $50, $20, $06, $02, $60, $D9, $87, $01, $1B, $00, $00, $70, $30, $07, $00
-    db $70, $DC, $87, $01, $1B, $00, $00, $70, $40, $07, $02, $70, $DD
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_7599::
+Data_069_7599:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $1E, $00, $00, $40, $60, $05, $00, $50, $8A
+    db $86, $01, $1F, $00, $00, $50, $20, $06, $02, $60, $D9
+    db $87, $01, $1B, $00, $00, $70, $30, $07, $00, $70, $DC
+    db $87, $01, $1B, $00, $00, $70, $40, $07, $02, $70, $DD
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_75C6:: ; heuristic: map object selector; C0
 Data_069_75C6:: ; address name
     objsel_skip_if_clear $0025, $04, $00
     objsel_list MapObjects_75E6
-    db $FC, $FF, $D1, $00, $08, $00, $01, $00, $1F, $76, $FE, $FF, $4C, $76, $24, $00
-    db $E6, $75, $FE, $FF, $F2, $75
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_75D0:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_75D0:: ; address name
+    objsel_skip_if_clear $00D1, $08, $00
+    objsel_unless_flag $0001, MapObjects_761F
+    objsel_list MapObjects_764C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_75DE:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_75DE:: ; address name
+    objsel_unless_flag $0024, MapObjects_75E6
+    objsel_list MapObjects_75F2
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5196,7 +6519,36 @@ MapObjects_75E6::
 Data_069_75E6:: ; address name
     db $01 ; entry 0
     db $85, $01, $12, $00, $00, $30, $50, $05, $00, $50, $8D
-    INCBIN "dwm2-cobi-us.gbc", $1A75F2, $87
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_75F2::
+Data_069_75F2:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $1A, $00, $00, $30, $50, $05, $00, $50, $DE
+    db $85, $01, $1A, $00, $00, $20, $10, $05, $02, $50, $DF
+    db $86, $01, $10, $00, $00, $50, $20, $06, $02, $60, $E0
+    db $87, $01, $11, $00, $02, $70, $30, $07, $01, $70, $E1
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_761F::
+Data_069_761F:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $04, $00, $00, $80, $20, $05, $03, $50, $00
+    db $86, $01, $05, $00, $00, $80, $30, $06, $03, $60, $00
+    db $87, $01, $00, $00, $00, $80, $40, $07, $03, $70, $00
+    db $84, $01, $02, $00, $00, $E0, $30, $04, $01, $40, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_764C::
+Data_069_764C:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $04, $00, $00, $80, $20, $05, $03, $50, $00
+    db $86, $01, $05, $00, $00, $80, $30, $06, $03, $60, $00
+    db $87, $01, $01, $00, $00, $80, $40, $07, $03, $70, $00
+    db $84, $01, $02, $00, $00, $E0, $30, $04, $01, $40, $00
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7679:: ; heuristic: map object selector; C0
@@ -5293,7 +6645,12 @@ Data_069_776E:: ; address name
     objsel_skip_if_set $0012, $08, $00
     objsel_unless_flag $0001, MapObjects_7784
     objsel_list MapObjects_77B1
-    db $01, $00, $DE, $77, $FE, $FF, $00, $78
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_777C:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_777C:: ; address name
+    objsel_unless_flag $0001, MapObjects_77DE
+    objsel_list MapObjects_7800
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5314,7 +6671,24 @@ Data_069_77B1:: ; address name
     db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2E
     db $87, $01, $01, $00, $00, $E0, $50, $07, $01, $70, $2F
     db $86, $01, $29, $00, $00, $20, $E0, $06, $02, $60, $00
-    INCBIN "dwm2-cobi-us.gbc", $1A77DE, $44
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_77DE::
+Data_069_77DE:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $29, $00, $02, $50, $30, $05, $01, $50, $2D
+    db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2E
+    db $87, $01, $00, $00, $00, $30, $40, $07, $01, $70, $2F
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_7800::
+Data_069_7800:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $29, $00, $02, $50, $30, $05, $01, $50, $2D
+    db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2E
+    db $87, $01, $01, $00, $00, $30, $40, $07, $01, $70, $2F
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -5489,9 +6863,31 @@ ObjSelector_79BD:: ; heuristic: map object selector; C0
 Data_069_79BD:: ; address name
     objsel_skip_if_clear $005A, $04, $00
     objsel_list MapObjects_79ED
-    db $FB, $FF, $43, $00, $02, $00, $FF, $FF, $FC, $FF, $55, $00, $06, $00, $56, $00
-    db $10, $7A, $FF, $FF, $FC, $FF, $53, $00, $04, $00, $FE, $FF, $ED, $79, $49, $00
-    db $ED, $79, $FE, $FF, $04, $7A
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_79C7:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_79C7:: ; address name
+    objsel_skip_if_set $0043, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_79CF:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_79CF:: ; address name
+    objsel_skip_if_clear $0055, $06, $00
+    objsel_unless_flag $0056, MapObjects_7A10
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_79DB:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_79DB:: ; address name
+    objsel_skip_if_clear $0053, $04, $00
+    objsel_list MapObjects_79ED
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_79E5:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_79E5:: ; address name
+    objsel_unless_flag $0049, MapObjects_79ED
+    objsel_list MapObjects_7A04
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5500,19 +6896,44 @@ Data_069_79ED:: ; address name
     db $02 ; entry 0
     db $85, $01, $4D, $00, $00, $30, $50, $05, $00, $50, $27
     db $86, $01, $24, $00, $02, $60, $40, $06, $00, $60, $28
-    db $01, $85, $01, $4D, $00, $00, $30, $50, $05, $00, $50, $27, $03, $85, $01, $22
-    db $00, $00, $40, $18, $05, $00, $50, $2B, $86, $01, $4D, $00, $00, $30, $50, $06
-    db $00, $60, $27, $87, $01, $24, $00, $00, $60, $40, $07, $00, $70, $28
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_7A04::
+Data_069_7A04:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $4D, $00, $00, $30, $50, $05, $00, $50, $27
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_7A10::
+Data_069_7A10:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $22, $00, $00, $40, $18, $05, $00, $50, $2B
+    db $86, $01, $4D, $00, $00, $30, $50, $06, $00, $60, $27
+    db $87, $01, $24, $00, $00, $60, $40, $07, $00, $70, $28
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7A32:: ; heuristic: map object selector; C0
 Data_069_7A32:: ; address name
     objsel_skip_if_clear $005A, $04, $00
     objsel_list MapObjects_7A6F
-    db $56, $00, $42, $7A, $FF, $FF, $04, $85, $01, $4C, $00, $00, $20, $10, $05, $03
-    db $50, $22, $85, $01, $4C, $00, $00, $20, $20, $05, $03, $50, $23, $85, $01, $4C
-    db $00, $00, $10, $30, $05, $02, $50, $24, $86, $01, $4B, $00, $00, $30, $50, $06
-    db $00, $60, $21
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7A3C:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7A3C:: ; address name
+    objsel_unless_flag $0056, MapObjects_7A42
+    objsel_none
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_7A42::
+Data_069_7A42:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $4C, $00, $00, $20, $10, $05, $03, $50, $22
+    db $85, $01, $4C, $00, $00, $20, $20, $05, $03, $50, $23
+    db $85, $01, $4C, $00, $00, $10, $30, $05, $02, $50, $24
+    db $86, $01, $4B, $00, $00, $30, $50, $06, $00, $60, $21
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5535,7 +6956,57 @@ Data_069_7A93:: ; address name
     objsel_skip_if_set $0025, $0A, $00
     objsel_skip_if_clear $00D1, $04, $00
     objsel_list MapObjects_7B26
-    INCBIN "dwm2-cobi-us.gbc", $1A7AA3, $83
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7AA3:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7AA3:: ; address name
+    objsel_skip_if_clear $005A, $04, $00
+    objsel_list MapObjects_7ACB
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7AAD:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7AAD:: ; address name
+    objsel_skip_if_clear $0055, $06, $00
+    objsel_unless_flag $0056, MapObjects_7AEE
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7AB9:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7AB9:: ; address name
+    objsel_skip_if_clear $0053, $04, $00
+    objsel_list MapObjects_7ACB
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7AC3:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7AC3:: ; address name
+    objsel_unless_flag $0049, MapObjects_7ACB
+    objsel_list MapObjects_7AE2
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_7ACB::
+Data_069_7ACB:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $24, $00, $00, $50, $A0, $05, $02, $50, $28
+    db $86, $01, $22, $00, $00, $40, $10, $06, $00, $60, $2B
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_7AE2::
+Data_069_7AE2:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $24, $00, $00, $50, $40, $05, $00, $50, $28
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 5 object(s), the layout of the other object lists
+MapObjects_7AEE::
+Data_069_7AEE:: ; address name
+    db $05 ; entry 0
+    db $85, $01, $22, $00, $00, $40, $10, $05, $00, $50, $2B
+    db $87, $01, $4D, $00, $00, $50, $50, $07, $02, $70, $00
+    db $86, $01, $24, $00, $00, $40, $50, $06, $02, $60, $28
+    db $87, $01, $4D, $00, $00, $30, $50, $06, $02, $70, $00
+    db $87, $01, $4D, $00, $00, $60, $50, $06, $02, $70, $00
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5572,10 +7043,21 @@ ObjSelector_7B72:: ; heuristic: map object selector; C0
 Data_069_7B72:: ; address name
     objsel_skip_if_clear $005A, $02, $00
     objsel_none
-    db $FE, $FF, $7E, $7B, $04, $85, $01, $5C, $00, $00, $40, $10, $05, $00, $50, $3C
-    db $86, $01, $22, $00, $00, $40, $A0, $06, $02, $60, $2B, $87, $01, $4D, $00, $00
-    db $40, $B0, $07, $02, $70, $00, $87, $01, $4D, $00, $00, $40, $C0, $07, $02, $70
-    db $00
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7B7A:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7B7A:: ; address name
+    objsel_list MapObjects_7B7E
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_7B7E::
+Data_069_7B7E:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $5C, $00, $00, $40, $10, $05, $00, $50, $3C
+    db $86, $01, $22, $00, $00, $40, $A0, $06, $02, $60, $2B
+    db $87, $01, $4D, $00, $00, $40, $B0, $07, $02, $70, $00
+    db $87, $01, $4D, $00, $00, $40, $C0, $07, $02, $70, $00
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -5589,7 +7071,11 @@ Data_069_7BAD:: ; address name
     objsel_skip_if_set $004A, $08, $00
     objsel_unless_flag $0049, MapObjects_7BBF
     objsel_list MapObjects_7BCB
-    db $FE, $FF, $E2, $7B
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7BBB:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7BBB:: ; address name
+    objsel_list MapObjects_7BE2
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5605,8 +7091,14 @@ Data_069_7BCB:: ; address name
     db $02 ; entry 0
     db $85, $01, $22, $00, $00, $20, $50, $05, $02, $50, $2B
     db $86, $01, $26, $00, $00, $20, $40, $06, $00, $60, $09
-    db $02, $85, $01, $22, $00, $00, $E0, $E0, $05, $02, $50, $2B, $86, $01, $26, $00
-    db $00, $20, $10, $06, $00, $60, $09
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_7BE2::
+Data_069_7BE2:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $22, $00, $00, $E0, $E0, $05, $02, $50, $2B
+    db $86, $01, $26, $00, $00, $20, $10, $06, $00, $60, $09
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -5634,8 +7126,26 @@ ObjSelector_7C19:: ; heuristic: map object selector; C0
 Data_069_7C19:: ; address name
     objsel_skip_if_clear $0054, $02, $00
     objsel_none
-    db $53, $00, $29, $7C, $FE, $FF, $40, $7C, $02, $85, $01, $22, $00, $00, $30, $70
-    db $05, $02, $50, $2B, $86, $00, $4F, $00, $00, $30, $60, $06, $00, $60, $37, $01
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7C21:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7C21:: ; address name
+    objsel_unless_flag $0053, MapObjects_7C29
+    objsel_list MapObjects_7C40
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_7C29::
+Data_069_7C29:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $22, $00, $00, $30, $70, $05, $02, $50, $2B
+    db $86, $00, $4F, $00, $00, $30, $60, $06, $00, $60, $37
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_7C40::
+Data_069_7C40:: ; address name
+    db $01 ; entry 0
     db $85, $01, $22, $00, $00, $30, $70, $05, $02, $50, $2B
 
 ; E-0163 (derived: one selector per screen, row by row)
@@ -5649,7 +7159,31 @@ ObjSelector_7C4E:: ; heuristic: map object selector; C0
 Data_069_7C4E:: ; address name
     objsel_skip_if_clear $005A, $04, $00
     objsel_list MapObjects_7CAF
-    INCBIN "dwm2-cobi-us.gbc", $1A7C58, $57
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7C58:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7C58:: ; address name
+    objsel_unless_flag $0056, MapObjects_7C60
+    objsel_list MapObjects_7C82
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_7C60::
+Data_069_7C60:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $4D, $00, $00, $50, $30, $05, $00, $50, $2C
+    db $86, $01, $4D, $00, $00, $20, $40, $06, $02, $60, $2D
+    db $87, $01, $24, $00, $00, $20, $20, $07, $00, $70, $00
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_7C82::
+Data_069_7C82:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $24, $00, $00, $20, $20, $05, $00, $50, $00
+    db $86, $01, $4B, $00, $00, $20, $60, $06, $02, $60, $00
+    db $87, $01, $4C, $00, $00, $20, $70, $07, $01, $70, $00
+    db $87, $01, $4C, $00, $00, $30, $70, $07, $03, $70, $00
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5672,7 +7206,18 @@ ObjSelector_7CDE:: ; heuristic: map object selector; C0
 Data_069_7CDE:: ; address name
     objsel_skip_if_clear $005A, $04, $00
     objsel_list MapObjects_7CF8
-    db $FC, $FF, $55, $00, $06, $00, $56, $00, $0F, $7D, $FF, $FF, $FE, $FF, $F8, $7C
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7CE8:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7CE8:: ; address name
+    objsel_skip_if_clear $0055, $06, $00
+    objsel_unless_flag $0056, MapObjects_7D0F
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7CF4:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7CF4:: ; address name
+    objsel_list MapObjects_7CF8
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5681,9 +7226,15 @@ Data_069_7CF8:: ; address name
     db $02 ; entry 0
     db $85, $01, $4D, $00, $00, $40, $40, $05, $00, $50, $25
     db $85, $01, $4D, $00, $00, $50, $40, $05, $00, $50, $26
-    db $03, $85, $01, $22, $00, $00, $30, $60, $05, $01, $50, $2B, $86, $01, $4D, $00
-    db $00, $60, $50, $06, $02, $60, $25, $86, $01, $4D, $00, $00, $70, $70, $06, $03
-    db $60, $26
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 3 object(s), the layout of the other object lists
+MapObjects_7D0F::
+Data_069_7D0F:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $22, $00, $00, $30, $60, $05, $01, $50, $2B
+    db $86, $01, $4D, $00, $00, $60, $50, $06, $02, $60, $25
+    db $86, $01, $4D, $00, $00, $70, $70, $06, $03, $60, $26
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen
@@ -5699,7 +7250,18 @@ ObjSelector_7D39:: ; heuristic: map object selector; C0
 Data_069_7D39:: ; address name
     objsel_skip_if_set $005A, $02, $00
     objsel_none
-    db $FE, $FF, $45, $7D, $01, $85, $00, $4F, $00, $00, $30, $60, $05, $01, $50, $3D
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7D41:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7D41:: ; address name
+    objsel_list MapObjects_7D45
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_7D45::
+Data_069_7D45:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $4F, $00, $00, $30, $60, $05, $01, $50, $3D
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_7D51:: ; heuristic: map object selector; C0
@@ -5707,7 +7269,52 @@ Data_069_7D51:: ; address name
     objsel_skip_if_set $0025, $0A, $00
     objsel_skip_if_clear $00D1, $04, $00
     objsel_list MapObjects_7DBB
-    INCBIN "dwm2-cobi-us.gbc", $1A7D61, $5A
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7D61:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7D61:: ; address name
+    objsel_skip_if_clear $005C, $04, $00
+    objsel_list MapObjects_7DAF
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7D6B:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7D6B:: ; address name
+    objsel_skip_if_clear $005A, $04, $00
+    objsel_list MapObjects_7D98
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7D75:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7D75:: ; address name
+    objsel_skip_if_set $0058, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7D7D:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7D7D:: ; address name
+    objsel_list MapObjects_7D81
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_7D81::
+Data_069_7D81:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $4F, $00, $00, $30, $60, $05, $00, $50, $3A
+    db $85, $00, $4F, $00, $00, $60, $40, $05, $03, $50, $3B
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 2 object(s), the layout of the other object lists
+MapObjects_7D98::
+Data_069_7D98:: ; address name
+    db $02 ; entry 0
+    db $85, $00, $4F, $00, $00, $30, $60, $05, $00, $50, $3A
+    db $85, $00, $4F, $00, $00, $60, $40, $05, $00, $50, $37
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 1 object(s), the layout of the other object lists
+MapObjects_7DAF::
+Data_069_7DAF:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $4F, $00, $00, $30, $60, $05, $00, $50, $3A
 
 ; E-0163 (derived: an object list of LoadMapObjectsForScreen)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, slot byte 7, talk event group, slot byte 15
@@ -5723,16 +7330,37 @@ ObjSelector_7DDD:: ; heuristic: map object selector; C0
 Data_069_7DDD:: ; address name
     objsel_skip_if_clear $0058, $02, $00
     objsel_none
-    db $FB, $FF, $56, $00, $02, $00, $FF, $FF, $FE, $FF, $F1, $7D, $04, $85, $01, $22
-    db $00, $00, $60, $60, $05, $02, $50, $2B, $86, $01, $4D, $00, $00, $10, $40, $06
-    db $02, $60, $25, $86, $01, $4D, $00, $02, $20, $70, $06, $02, $60, $26, $86, $01
-    db $4D, $00, $00, $80, $50, $06, $02, $60, $2D
 
-; address loaded by LoadMapObjectsForScreen
-Data_069_7E1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $04, $85, $01, $22, $00, $00, $60, $30, $05, $03, $50, $2B, $86, $01, $4D, $00
-    db $00, $10, $10, $06, $02, $60, $25, $86, $01, $4D, $00, $02, $20, $40, $06, $01
-    db $60, $26, $86, $01, $4D, $00, $00, $80, $20, $06, $03, $60, $2D
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7DE5:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7DE5:: ; address name
+    objsel_skip_if_set $0056, $02, $00
+    objsel_none
+
+; map object selector (E-0163): the first entry that applies picks the object list
+ObjSelector_7DED:: ; heuristic: map object selector found by tiling a gap; C0
+Data_069_7DED:: ; address name
+    objsel_list MapObjects_7DF1
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_7DF1::
+Data_069_7DF1:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $22, $00, $00, $60, $60, $05, $02, $50, $2B
+    db $86, $01, $4D, $00, $00, $10, $40, $06, $02, $60, $25
+    db $86, $01, $4D, $00, $02, $20, $70, $06, $02, $60, $26
+    db $86, $01, $4D, $00, $00, $80, $50, $06, $02, $60, $2D
+
+; E-0218 (derived: an object list found by tiling a gap between map object layouts)
+; record: count, then 4 object(s), the layout of the other object lists
+MapObjects_7E1E::
+Data_069_7E1E:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $22, $00, $00, $60, $30, $05, $03, $50, $2B
+    db $86, $01, $4D, $00, $00, $10, $10, $06, $02, $60, $25
+    db $86, $01, $4D, $00, $02, $20, $40, $06, $01, $60, $26
+    db $86, $01, $4D, $00, $00, $80, $20, $06, $03, $60, $2D
 
 ; E-0163 (derived: one selector per screen, row by row)
 ; record: selector for this screen

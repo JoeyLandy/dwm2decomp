@@ -2025,7 +2025,57 @@ class Rom:
             self.dreason[(B, s)] = "map object selector"
             self.objsel_at[(B, s)] = {"ops": ops, "end": end}
             ns += 1
-        log(f"map objects: {nl} object lists, {na} screen arrays, {ns} selectors")
+        # E-0218: gaps between these layouts that tile exactly as further lists and selectors
+        # (reached by no screen array the map records size): object lists start with a count and
+        # a VRAM page byte ($8x); selectors are read with the same grammar.
+        def add_list(a: int, n: int) -> None:
+            taken.append((B, a, a + 1 + 11 * n))
+            self.schemas.append({"bank": B, "addr": a, "label": f"MapObjects_{a:04X}", "count": 1,
+                                 "fields": [{"type": "db", "size": 1, "line": True, "name": "object count"}]
+                                 + [{"type": "db", "size": 11, "line": True, "name": f"object {k}"} for k in range(n)],
+                                 "record": f"count, then {n} object(s), the layout of the other object lists",
+                                 "note": "E-0218 (derived: an object list found by tiling a gap between map object layouts)"})
+
+        tiled = 0
+        spans = sorted((a, e) for b, a, e in taken if b == B)
+        for (a0, e0), (a1, e1) in zip(spans, spans[1:]):
+            lo, hi = e0, a1
+            if not 0 < hi - lo <= 0x400 or not free(lo, hi):
+                continue
+            pc, plan = lo, []
+            while pc < hi:
+                if rd(pc + 1) != 0xFF and list_ok(pc) and rd(pc + 1) & 0xF0 == 0x80 and pc + 1 + 11 * rd(pc) <= hi:
+                    plan.append(("list", pc, rd(pc))); pc += 1 + 11 * rd(pc); continue
+                ops, end = decode(pc)
+                if not ops or end > hi:
+                    break
+                ptrs = [op[3] if op[1] == "flag" else op[2] if op[1] == "list" else op[4]
+                        for op in ops if op[1] in ("flag", "list", "flags")]
+                if not all(list_ok(q) for q in ptrs):
+                    break
+                plan.append(("sel", pc, (ops, end))); pc = end
+            if pc != hi or not plan:
+                continue
+            for kind, a, x in plan:
+                if kind == "list":
+                    add_list(a, x)
+                    nl += 1
+                else:
+                    ops, end = x
+                    taken.append((B, a, end))
+                    for q in [q for q in dl if a < q < end]:
+                        del dl[q]
+                    for k in [k for k in self.dtab[B] if a <= k < end]:
+                        del self.dtab[B][k]
+                    dl.setdefault(a, f"Data_{B:03X}_{a:04X}")
+                    if dl[a].startswith("Data_"):
+                        self.dalias.setdefault((B, a), dl[a])
+                        dl[a] = f"ObjSelector_{a:04X}"
+                    self.dreason[(B, a)] = "map object selector found by tiling a gap"
+                    self.objsel_at[(B, a)] = {"ops": ops, "end": end}
+                    ns += 1
+            tiled += 1
+        log(f"map objects: {nl} object lists, {na} screen arrays, {ns} selectors ({tiled} gaps tiled)")
 
     def emit_object_selector(self, bank: int, p: int, sel: dict, out: list[str]) -> None:
         dl = self.dlabels[bank]

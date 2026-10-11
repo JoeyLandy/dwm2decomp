@@ -2430,6 +2430,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0218 — Map object lists and selectors found by tiling gaps (bank $69)
+
+- Kind: TOOL (C1).
+- **Problem.** E-0163 reaches selectors only through the screen arrays that the map records size (width x height). Lists and selectors between them that no such array reaches stayed INCBIN. An example is $6D6D-$6E3B: four lists, then `$FFFE` + pointer selectors each followed by their list.
+- **Rule.** Each gap between known bank-$69 layouts (at most $400 bytes, no code) is parsed in sequence. An object list (a count of 1-40 and a VRAM page byte $8x, then 11 bytes per object) or a selector (the E-0163 grammar, with every list pointer valid) is taken at each step. The gap is used only when it tiles exactly.
+- **Result.** 80 gaps tiled, and bank $69 has no INCBIN left. The totals are now 421 object lists, 135 screen arrays and 373 selectors. Unidentified INCBIN is 27,051 bytes.
+- **Limits.** Which maps or states use the tiled selectors is not traced.
+- Binary verification: build/run261 PASS, 0 differing bytes; tests OK.
+
 ### E-0217 — Link conversion tables (bank $37); string tables in every bank
 
 - Kind: OBSERVATION (reading plus a consistency check; C1, C2 for the species pairing) and TOOL.
