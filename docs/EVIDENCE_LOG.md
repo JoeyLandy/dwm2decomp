@@ -2145,6 +2145,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Declared.** SGBPaletteSets (64 entries, decimal palette numbers).
 - Binary verification: build/run181 PASS, 0 differing bytes; tests OK.
 
+### E-0179 — SGB packet sets (bank $1F)
+
+- Kind: OBSERVATION (reading of SendSGBPacketSet, 1F:5040; Pan Docs for the packet layout; C1).
+- **Source.** SendSGBPacketSet takes the word at $5094 + 2 * wSGBPacketIndex ($FF uses wSGBPacketBuffer instead). It sends (byte 0 & 7) 16-byte packets from there through the joypad register.
+- **Declared.**
+  - SGBPacketSetTable: 21 pointers.
+  - SGBPackets: 21 single-packet sets at $50BE-$520D, one per line. Byte 0 is command * 8 + count (the first is $79 = command $0F DATA_SND, one packet).
+- **Limits.** The packets' payloads (data sent to SGB RAM) are not interpreted.
+- Binary verification: build/run182 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

@@ -378,9 +378,77 @@ Jump_01F_507A::
     call SpinDelay
     jr Jump_01F_5065
 
-; address loaded by SendSGBPacketSet
+; E-0179 (C1: SendSGBPacketSet reads the word $5094 + 2 * wSGBPacketIndex ($FF selects wSGBPacketBuffer instead) and sends byte-0 & 7 packets of 16 bytes from there through the joypad register).
+; record: first 16-byte SGB packet of this set
+SGBPacketSetTable::
 Data_01F_5094:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $07D094, $17A
+    dw Data_01F_513E ; id 0
+    dw Data_01F_514E ; id 1
+    dw SGBPackets ; id 2
+    dw Data_01F_50CE ; id 3
+    dw Data_01F_50DE ; id 4
+    dw Data_01F_50EE ; id 5
+    dw Data_01F_50FE ; id 6
+    dw Data_01F_510E ; id 7
+    dw Data_01F_511E ; id 8
+    dw Data_01F_512E ; id 9
+    dw Data_01F_515E ; id 10
+    dw Data_01F_516E ; id 11
+    dw Data_01F_517E ; id 12
+    dw Data_01F_518E ; id 13
+    dw Data_01F_519E ; id 14
+    dw Data_01F_51AE ; id 15
+    dw Data_01F_51BE ; id 16
+    dw Data_01F_51CE ; id 17
+    dw Data_01F_51DE ; id 18
+    dw Data_01F_51EE ; id 19
+    dw Data_01F_51FE ; id 20
+
+; E-0179 (C1: the packets SGBPacketSetTable points at; each set is one packet here; 21 packets end at $520E).
+; record: SGB packet (byte 0 = command * 8 + packet count)
+SGBPackets::
+Data_01F_50BE:: ; heuristic: SGB packet; C0
+    db $79, $5D, $08, $00, $0B, $8C, $D0, $F4, $60, $00, $00, $00, $00, $00, $00, $00 ; id 0
+Data_01F_50CE:: ; heuristic: SGB packet; C0
+    db $79, $52, $08, $00, $0B, $A9, $E7, $9F, $01, $C0, $7E, $E8, $E8, $E8, $E8, $E0 ; id 1
+Data_01F_50DE:: ; heuristic: SGB packet; C0
+    db $79, $47, $08, $00, $0B, $C4, $D0, $16, $A5, $CB, $C9, $05, $D0, $10, $A2, $28 ; id 2
+Data_01F_50EE:: ; heuristic: SGB packet; C0
+    db $79, $3C, $08, $00, $0B, $F0, $12, $A5, $C9, $C9, $C8, $D0, $1C, $A5, $CA, $C9 ; id 3
+Data_01F_50FE:: ; heuristic: SGB packet; C0
+    db $79, $31, $08, $00, $0B, $0C, $A5, $CA, $C9, $7E, $D0, $06, $A5, $CB, $C9, $7E ; id 4
+Data_01F_510E:: ; heuristic: SGB packet; C0
+    db $79, $26, $08, $00, $0B, $39, $CD, $48, $0C, $D0, $34, $A5, $C9, $C9, $80, $D0 ; id 5
+Data_01F_511E:: ; heuristic: SGB packet; C0
+    db $79, $1B, $08, $00, $0B, $EA, $EA, $EA, $EA, $EA, $A9, $01, $CD, $4F, $0C, $D0 ; id 6
+Data_01F_512E:: ; heuristic: SGB packet; C0
+    db $79, $10, $08, $00, $0B, $4C, $20, $08, $EA, $EA, $EA, $EA, $EA, $60, $EA, $EA ; id 7
+Data_01F_513E:: ; heuristic: SGB packet; C0
+    db $B9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 8
+Data_01F_514E:: ; heuristic: SGB packet; C0
+    db $B9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 9
+Data_01F_515E:: ; heuristic: SGB packet; C0
+    db $89, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 10
+Data_01F_516E:: ; heuristic: SGB packet; C0
+    db $89, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 11
+Data_01F_517E:: ; heuristic: SGB packet; C0
+    db $59, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 12
+Data_01F_518E:: ; heuristic: SGB packet; C0
+    db $A9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+Data_01F_519E:: ; heuristic: SGB packet; C0
+    db $51, $00, $00, $01, $00, $02, $00, $03, $00, $C0, $00, $00, $00, $00, $00, $00 ; id 14
+Data_01F_51AE:: ; heuristic: SGB packet; C0
+    db $A1, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+Data_01F_51BE:: ; heuristic: SGB packet; C0
+    db $99, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+Data_01F_51CE:: ; heuristic: SGB packet; C0
+    db $99, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
+Data_01F_51DE:: ; heuristic: SGB packet; C0
+    db $C9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
+Data_01F_51EE:: ; heuristic: SGB packet; C0
+    db $71, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
+Data_01F_51FE:: ; heuristic: SGB packet; C0
+    db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 20
 
 ; ld de, this bank's string table / BeginStringDisplay
 ; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case17)

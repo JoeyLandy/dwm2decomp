@@ -2659,6 +2659,37 @@
         }
       ],
       "note": "E-0178 (C1: SendSGBPaletteSetPacket copies the 8 bytes at $426C + 8 * wSGBPaletteSet into a PAL_SET ($51) packet after the command byte and into wSGBPaletteNum0Lo onward, then adds the attribute file wSGBAttrFile | $80; entries 0-63 hold four words below 512 (the SGB's system palette count), the words after them do not)."
+    },
+    {
+      "bank": "1F",
+      "addr": "5094",
+      "label": "SGBPacketSetTable",
+      "count": 21,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "first 16-byte SGB packet of this set",
+          "reason": "SGB packet"
+        }
+      ],
+      "note": "E-0179 (C1: SendSGBPacketSet reads the word $5094 + 2 * wSGBPacketIndex ($FF selects wSGBPacketBuffer instead) and sends byte-0 & 7 packets of 16 bytes from there through the joypad register)."
+    },
+    {
+      "bank": "1F",
+      "addr": "50BE",
+      "label": "SGBPackets",
+      "count": 21,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "SGB packet (byte 0 = command * 8 + packet count)"
+        }
+      ],
+      "note": "E-0179 (C1: the packets SGBPacketSetTable points at; each set is one packet here; 21 packets end at $520E)."
     }
   ]
 }
