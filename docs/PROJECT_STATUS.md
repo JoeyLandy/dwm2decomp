@@ -55,9 +55,9 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code; the cartridge header (`$0104-$014F`) is an INCBIN slice, not annotated.
 
-## Readability state (2026-10-11, after E-0206)
+## Readability state (2026-10-11, after E-0217)
 
-Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run232). Measured from the generated `src/`:
+Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run260). Measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
@@ -65,9 +65,9 @@ Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/ru
 | `call`/`farcall` operands that reach a named routine | 100% |
 | Code labels | 9,100: 5,337 structural (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps), 148 still spelling a RAM address (E-0155), the rest descriptive |
 | RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 (from 1,611 before E-0132); buffers print as `Name + $offset`, and WRAM-bank-2 attribute positions use `of` aliases (E-0132 to E-0137) |
-| Data decoded field by field | monster pictures, sprites and palettes named by monster; all 183 map records and 35 special maps with screen arrays and palettes; key-world tilesets, rooms and chunk groups; 512 meta-sprite sets (3,397 frames); EXP, stat-growth and skill-requirement tables; AI personality weights; SGB borders; map-screen flag tiles; map interaction spots and step triggers; map object selectors and lists; tile rectangles; automap blocks; the text font; formations; the four-stage breeding tables; wild-encounter grids and groups, scripted encounters and encounter rates; key-world generation, area layouts, warp lists and object spot grids; world-map screen cells; arena encounter lists; sound wave sets; the rejected-name list (E-0138 to E-0206) |
+| Data decoded field by field | monster pictures, sprites and palettes named by monster; all 183 map records and 35 special maps with screen arrays and palettes; key-world tilesets, rooms and chunk groups; 512 meta-sprite sets (3,397 frames); EXP, stat-growth and skill-requirement tables; AI personality weights; SGB borders; map-screen flag tiles; map interaction spots and step triggers; map object selectors and lists; tile rectangles; automap blocks; the text font; formations; the four-stage breeding tables; wild-encounter grids and groups, scripted encounters and encounter rates; key-world generation, area layouts, warp lists and object spot grids; world-map screen cells; arena encounter lists; sound wave sets and note tables; the rejected-name list; monster pedigree and link conversion tables; action effect, sound and battle-text tables; string tables in every bank; copies of library routines found by relocated byte matching (E-0138 to E-0217) |
 | Event scripts | 3,359 commands decoded into `script_*` macros with message quotes, including data-bank scripts reached by `$E7`; all 89 `$E7` jumps name their target bank, and `$E4` menus branch N ways (E-0152, E-0153, E-0160, E-0184, E-0188) |
-| `INCBIN` bytes not inside a known compressed stream | 42,146 (from about 645,000 before E-0139); 371 false pointer-run streams removed (E-0203) and five false back-to-back streams replaced by tables (E-0194); every data label that code loads names its readers (E-0162) |
+| `INCBIN` bytes not inside a known compressed stream | 29,801 (from about 645,000 before E-0139); 371 false pointer-run streams removed (E-0203) and five false back-to-back streams replaced by tables (E-0194); every data label that code loads names its readers (E-0162) |
 | Likely game bugs | six executed and pinned by emulator tests (E-0075, E-0099, E-0154) |
 | Immediates kept numeric although they look like addresses | step deltas, battle message bytes, sprite positions (E-0132, E-0137) |
 
