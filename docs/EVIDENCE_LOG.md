@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0206 — Object path table (bank $0F); per-monster class tables (banks $16, $0C)
+
+- Kind: OBSERVATION (reading; C1).
+- **ObjectPathTable_5284 (0F:$5284).** 8 paths of 24 two-byte steps. ScriptCommand5E_Run_Case28_Case00 reads, every other frame, the pair at $5284 + $30 * ((wScriptParam1 & $70) >> 4) + 2 * step into wObject5 + 5 / + 4, for 23 steps.
+- **MonsterClassByteTable_71AC (16:$71AC, 373 bytes, values 0-7).** BattleMonsterTable71ACAtLeast6 returns 1 when a battler's entry is 6 or more.
+- **MonsterClassByteTable_5562 (0C:$5562).** The same 373 values except at 9 ids. ScriptCommandF6_Run_Case10_Case01_Sub02 uses the value to pick a 4-byte tile block (Data_00C_5513) for wScreenBlock9C.
+- **MonsterIconKindTable_536A (0C:$536A, values 0-4).** ScriptCommandF6_Run_Case10_Case01_Sub01 uses the value to pick one of the five 2-byte blocks of Data_00C_54DF for the same screen.
+- **Limits.** Each table has one byte per monster id up to $174. What the classes mean is not read.
+- Binary verification: build/run232 PASS, 0 differing bytes.
+
 ### E-0205 — An unreferenced routine block at $4075 in banks $05, $A1 and $A3
 
 - Kind: OBSERVATION (byte comparison and decoding; C1).

@@ -12466,6 +12466,77 @@
         }
       ],
       "note": "E-0205 (C1: the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 * E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks $05, $A1 and $A3)."
+    },
+    {
+      "bank": "0F",
+      "addr": "5284",
+      "label": "ObjectPathTable_5284",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 24,
+          "line": true,
+          "name": "steps 0-11: pairs (to wObject5 + 5, wObject5 + 4)"
+        },
+        {
+          "type": "db",
+          "size": 24,
+          "line": true,
+          "name": "steps 12-23"
+        }
+      ],
+      "record": "24 steps of two bytes (wObject5 + 5, wObject5 + 4), 12 per line",
+      "note": "E-0206 (C1: ScriptCommand5E_Run_Case28_Case00 reads, every other frame, the pair at $5284 + $30 * ((wScriptParam1 & $70) >> 4) + 2 * step into wObject5 + 5 and + 4, for 23 steps per path; 8 paths end at ScriptCommand58_Run)."
+    },
+    {
+      "bank": "16",
+      "addr": "71AC",
+      "label": "MonsterClassByteTable_71AC",
+      "count": 373,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "class 0-7"
+        }
+      ],
+      "note": "E-0206 (C1: BattleMonsterTable71ACAtLeast6 reads the byte at $71AC + the wBattleMonsterId of wDisplaySlot and returns A = 1 when it is 6 or more; Func_016_6C16_Case03 and _Case05 call it; 373 bytes (monster ids 0-$174) end at the rectangle copier after them; what the classes mean is not read)."
+    },
+    {
+      "bank": "0C",
+      "addr": "5562",
+      "label": "MonsterClassByteTable_5562",
+      "count": 373,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "class 0-7"
+        }
+      ],
+      "note": "E-0206 (C1: ScriptCommandF6_Run_Case10_Case01_Sub02 reads the byte at $5562 + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that Data_00C_5513[class] points to into wScreenBlock9C; the same 373 values as MonsterClassByteTable_71AC in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367, 372)."
+    },
+    {
+      "bank": "0C",
+      "addr": "536A",
+      "label": "MonsterIconKindTable_536A",
+      "count": 373,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "index into Data_00C_54DF"
+        }
+      ],
+      "note": "E-0206 (C1: ScriptCommandF6_Run_Case10_Case01_Sub01 reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174)."
     }
   ]
 }
