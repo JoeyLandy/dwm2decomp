@@ -185,6 +185,8 @@ class SkillTableSource(unittest.TestCase):
     def test_175_records_of_17_bytes(self):
         import re
         text = (ROOT / "src/banks/bank1a.asm").read_text(encoding="utf-8")
+        text = text[text.index("SkillTable::"):]
+        text = text[:text.index("\n\n")]  # the SkillTable block only (other tables follow in the bank)
         rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
         self.assertEqual([int(i) for _, i in rows], list(range(175)))
         self.assertTrue(all(len(v.split(", ")) == 17 for v, _ in rows))
@@ -193,6 +195,8 @@ class SkillTableSource(unittest.TestCase):
     def test_rows_equal_the_rom_bytes(self):
         import re
         text = (ROOT / "src/banks/bank1a.asm").read_text(encoding="utf-8")
+        text = text[text.index("SkillTable::"):]
+        text = text[:text.index("\n\n")]  # the SkillTable block only (other tables follow in the bank)
         rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
         rom = ROM.read_bytes()
         for values, ident in rows[:175]:
