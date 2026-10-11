@@ -10,7 +10,7 @@ Func_005_4001:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
-; 18 call sites from 15 routines (e.g. AnyFoeHasDEFAtLeast2, AIScore_Upper_Sub01_Sub01_Sub01, AIScore_BiAttack_Sub02_Sub01, AIScore_TwinHits_Shared01, ...)
+; 18 call sites from 15 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, AnyFoeHasDEFAtLeast2, AIScore_BiAttack_Sub02_Sub01, AIScore_TwinHits_Shared01, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank05::
 Func_005_4006:: ; address name
@@ -18,7 +18,7 @@ Func_005_4006:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, HPBandOfSlotTemp0, CompareHPWithThreeQuartersMax, FailIfTwoAlliesBelowHalfHP, ...)
+; 19 call sites from 14 routines (e.g. AIScore_Meditate_Sub01_Sub01, HPBandOfSlotTemp0, CompareHPWithThreeQuartersMax, CompareHPWithHalfMax, ...)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank05::
 Func_005_400B:: ; address name
@@ -42,7 +42,7 @@ Func_005_4015:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
-; 8 call sites from 8 routines (e.g. FailIfFoeSkill3DThreatensActorHP, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, AIScore_MPass_Sub01_Sub01, ...)
+; 9 call sites from 9 routines (e.g. FailIfAllyLacksMPForSkillList5AF8, FailIfFoeSkill3DThreatensActorHP, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, ...)
 ; points at: wBattleMP
 GetBattleMP_Bank05::
 Func_005_401A:: ; address name
@@ -50,7 +50,7 @@ Func_005_401A:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0064)
-; 10 call sites from 8 routines (e.g. AIScore_SquallHit_Sub01_Sub01, AIScore_Speed_Sub01_Sub01_Sub01, AverageAGLOfSideA, FastestFoeAGLAbove31PercentOfActor, ...)
+; 10 call sites from 8 routines (e.g. AIScore_Speed_Sub01_Sub01_Sub01, AIScore_SquallHit_Sub01_Sub01, AverageAGLOfSideA, FastestFoeAGLAbove31PercentOfActor, ...)
 ; points at: wBattleAGL
 GetBattleAGL_Bank05::
 Func_005_401F:: ; address name
@@ -4605,7 +4605,7 @@ Jump_005_57B5::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_005_57C0
-    call AIModeAtLeast2AndFoeLacks6D1A_Sub01
+    call CountSkillsInList6D1A
     jr nz, Jump_005_57C6
 
 Jump_005_57C0::
@@ -5077,7 +5077,162 @@ Data_005_5A33:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $07 ; id 24
     db $12 ; id 25
     db $24 ; id 26
-    INCBIN "dwm2-cobi-us.gbc", $015A38, $184
+
+; C = 1 when the actor's AI mode is below 3; otherwise C = $00 when another slot of the actor's side can act, has status byte 1 bit 6 clear and knows a skill CountSkillsInList6D1A counts, else $FF (E-0175)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor
+; points at: wBattleStatus1
+FailIfAbleAllyKnowsSkillList6D1A:: ; configured code entry (E-0175); C0
+Func_005_5A38:: ; address name
+    ld a, [wBattleActor]
+    call ReadSlotAIModeIndexed_Bank05
+    cp a, $03
+    jr c, Jump_005_5A70
+    ld a, [wBattleActor]
+    ld e, a
+    and a, $04
+    ld c, a
+    ld b, $03
+
+Jump_005_5A4B::
+    ld a, c
+    cp a, e
+    jr z, Jump_005_5A54
+    call CheckSlotStatusBlock
+    jr nc, Jump_005_5A5A
+
+Jump_005_5A54::
+    inc c
+    dec b
+    jr nz, Jump_005_5A4B
+    jr Jump_005_5A6D
+
+Jump_005_5A5A::
+    ld a, c
+    ld hl, wBattleStatus1
+    call AddAx9ToHL
+    bit 6, [hl]
+    jr nz, Jump_005_5A54
+    call CountSkillsInList6D1A
+    jr z, Jump_005_5A54
+    ld c, $00
+    ret
+
+Jump_005_5A6D::
+    ld c, $FF
+    ret
+
+Jump_005_5A70::
+    ld c, $01
+    ret
+
+; C = 1 when the actor's AI mode is below 3; otherwise C = $00 when another able slot of the actor's side knows skill $4D, $3D, $3E, $3F, $66, $67 ... and has less MP than its cost in Data_005_5AF8, else $FF (the pattern of FailIfAllyLacksMPForHealSkill) (E-0175)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor
+; points at: wBattleSkills
+FailIfAllyLacksMPForSkillList5AF8:: ; heuristic: follows a terminator; C0
+Func_005_5A73:: ; address name
+    ld a, [wBattleActor]
+    call ReadSlotAIModeIndexed_Bank05
+    cp a, $03
+    jr c, Jump_005_5AF5
+    ld a, [wBattleActor]
+    and a, $04
+    ld c, a
+    ld b, $03
+
+Jump_005_5A85::
+    ld a, [wBattleActor]
+    ld e, a
+    ld a, c
+    cp a, e
+    jr z, Jump_005_5A92
+    call CheckSlotStatusBlock
+    jr nc, Jump_005_5A98
+
+Jump_005_5A92::
+    inc c
+    dec b
+    jr nz, Jump_005_5A85
+    jr Jump_005_5AF2
+
+Jump_005_5A98::
+    ld a, c
+    swap a
+    ld hl, wBattleSkills
+    add_a_to_hl
+    ld d, $08
+
+Jump_005_5AA5::
+    ld a, [hl+]
+    ld e, $00
+    cp a, $4D
+    jr z, Jump_005_5ACB
+    inc e
+    cp a, $3D
+    jr z, Jump_005_5ACB
+    inc e
+    cp a, $3E
+    jr z, Jump_005_5ACB
+    inc e
+    cp a, $3F
+    jr z, Jump_005_5ACB
+    inc e
+    cp a, $66
+    jr z, Jump_005_5ACB
+    inc e
+    cp a, $67
+    jr z, Jump_005_5ACB
+
+Jump_005_5AC5::
+    inc hl
+    dec d
+    jr nz, Jump_005_5AA5
+    jr Jump_005_5AF2
+
+Jump_005_5ACB::
+    push hl
+    push bc
+    ld hl, Data_005_5AF8
+    ld a, e
+    add_a_to_hl
+    ld a, [hl]
+    push de
+    ld d, a
+    ld a, c
+    call GetBattleMP_Bank05
+    ld a, h
+    and a, a
+    jr nz, Jump_005_5AEA
+    ld a, l
+    cp a, d
+    jr nc, Jump_005_5AEA
+    pop de
+    pop bc
+    pop hl
+    jr Jump_005_5AEF
+
+Jump_005_5AEA::
+    pop de
+    pop bc
+    pop hl
+    jr Jump_005_5AC5
+
+Jump_005_5AEF::
+    ld c, $00
+    ret
+
+Jump_005_5AF2::
+    ld c, $FF
+    ret
+
+Jump_005_5AF5::
+    ld c, $01
+    ret
+
+; address loaded by FailIfAllyLacksMPForSkillList5AF8
+Data_005_5AF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+    INCBIN "dwm2-cobi-us.gbc", $015AF8, $C4
 
 ; only called from AIScore_BeDragon (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BeDragon)
@@ -8003,7 +8158,7 @@ Func_005_6B07:: ; address name
     ret
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
-; 31 call sites from 31 routines (e.g. CheckFoeStatus7Bit2, FailIfFoeSkill3DThreatensActorHP, ResistanceAverageGateForFoeAIMode3, FailIfAnyFoeFullyResistant, ...)
+; 33 call sites from 33 routines (e.g. FailIfAbleAllyKnowsSkillList6D1A, FailIfAllyLacksMPForSkillList5AF8, CheckFoeStatus7Bit2, FailIfFoeSkill3DThreatensActorHP, ...)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank05::
 Func_005_6B16:: ; address name
@@ -8437,10 +8592,10 @@ Func_005_6D07:: ; address name
 Jump_005_6D19::
     ret
 
-; only called from AIModeAtLeast2AndFoeLacks6D1A (E-0047)
-; 1 call site from 1 routine (e.g. AIModeAtLeast2AndFoeLacks6D1A)
+; A = how many of slot A's eight skills are $03, $06, $09, $0C, $0F, $12, $13 or $14 (Z set when none); BC kept (E-0175)
+; 2 call sites from 2 routines (e.g. FailIfAbleAllyKnowsSkillList6D1A, AIModeAtLeast2AndFoeLacks6D1A)
 ; points at: wBattleSkills
-AIModeAtLeast2AndFoeLacks6D1A_Sub01::
+CountSkillsInList6D1A::
 Func_005_6D1A:: ; address name
     ld hl, wBattleSkills
     swap a

@@ -22,8 +22,8 @@
     {
       "bank": "05",
       "start": "5A33",
-      "end": "5A4B",
-      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102)"
+      "end": "5A38",
+      "reason": "an indexed byte/word table: its only reference is an `ld hl/de` of its address followed by indexing (add_a_to_hl or add a, e) and a read; the region runs to the next label referenced from outside, and none of the labels the heuristics had placed inside it is referenced from outside (E-0102) Trimmed to the five bytes HealSkillMPCosts uses: a routine starts at $5A38 (E-0175)."
     },
     {
       "bank": "05",

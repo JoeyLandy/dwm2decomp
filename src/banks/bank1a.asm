@@ -2417,8 +2417,31 @@ Jump_01A_63C7::
     ld a, d
     ldh [hTemp3], a
     ret
-    db $F0, $C6, $0E, $63, $CD, $82, $16, $7D, $C6, $16, $6F, $7C, $CE, $66, $67, $F0
-    db $C7, $85, $6F, $30, $01, $24, $5E, $16, $00, $7B, $E0, $C8, $7A, $E0, $C9, $C9
+
+; hFFC8/9 = the byte StatGrowthTable[hFFC6][hFFC7] (high byte 0); no traced caller (E-0175)
+; no direct call (reached through a table, a jump or a vector)
+; reads: hTemp0, hTemp1
+; writes: hTemp2, hTemp3
+ReadStatGrowthGainToTemp2:: ; configured code entry (E-0175); C0
+Func_01A_63D8:: ; address name
+    ldh a, [hTemp0]
+    ld c, $63
+    call Multiply8
+    ld a, l
+    add a, $16
+    ld l, a
+    ld a, h
+    adc a, $66
+    ld h, a
+    ldh a, [hTemp1]
+    add_a_to_hl
+    ld e, [hl]
+    ld d, $00
+    ld a, e
+    ldh [hTemp2], a
+    ld a, d
+    ldh [hTemp3], a
+    ret
 
 ; E-0158 (C1: StatFromGrowthRow starts its sum from the byte $63F8 + row).
 ; record: value before the first gain of this growth row

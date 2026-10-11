@@ -2463,6 +2463,8 @@ class Rom:
     def run(self) -> None:
         for v in VECTORS:
             self.add_entry(0, v, "Func")
+        for b, a, why in getattr(self, "code_entries", []):  # config/code_entries.json (E-0175)
+            self.add_entry(b, a, "Func", why)
         self.seed_table_code()
         rnd = 0
         while True:
@@ -2946,6 +2948,11 @@ def main() -> int:
                     info = dict(info, of=int(info["of"], 16))
                 rom.symbols[int(key, 16)] = info
         log(f"loaded {len(rom.symbols)} evidence-named RAM symbols")
+    entries_path = ROOT / "config/code_entries.json"
+    if entries_path.exists():
+        rom.code_entries = [(int(e["bank"], 16), int(e["addr"], 16), f"configured code entry ({e['evidence']})")
+                            for e in json.loads(entries_path.read_text(encoding="utf-8"))["entries"]]
+        log(f"loaded {len(rom.code_entries)} configured code entries")
     regions_path = ROOT / "config/data_regions.json"
     if regions_path.exists():
         for r in json.loads(regions_path.read_text(encoding="utf-8"))["regions"]:

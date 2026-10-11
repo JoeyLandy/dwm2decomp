@@ -2,7 +2,7 @@ SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7F
 
 ; DrawMetaSpriteAt_40CC with DE = Data_07F_4008 (E-0116)
-; 3 call sites from 3 routines (e.g. UpdateAndDrawSpriteSlots, Func_004_4C25, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01)
+; 3 call sites from 3 routines (e.g. UpdateAndDrawSpriteSlots, DrawFollowerSpriteIfFlag1B, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01)
 DrawMetaSprite4008::
 Func_07F_4001:: ; address name
     ld de, Data_07F_4008
@@ -7508,7 +7508,7 @@ Data_07F_6FF9:: ; heuristic: meta-sprite frame; C0
     db $80 ; end
 
 ; DE = Data_07F_7011 (the table of meta-sprite sets), then DrawMetaSpriteAt
-; 25 call sites from 20 routines (e.g. PauseMenu_State3_Shared03, Func_004_4BE4, Func_004_4D43, DrawMetaSprite0AtX50YWD09E, ...)
+; 25 call sites from 20 routines (e.g. PauseMenu_State3_Shared03, DrawPlayerOverlaySprite21Or22, DrawPartyFollowerSprites, DrawMetaSprite0AtX50YWD09E, ...)
 DrawMetaSprite::
 Func_07F_700A:: ; address name
     ld de, Data_07F_7011

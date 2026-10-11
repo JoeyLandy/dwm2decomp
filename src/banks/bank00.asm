@@ -3847,7 +3847,7 @@ Func_000_1679:: ; address name
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C
-; 115 call sites from 98 routines (e.g. Func_000_2950_Case08, BattlerRecordFieldAddress, Multiply8By16, SRAMRecordAddressMapped, ...)
+; 116 call sites from 99 routines (e.g. Func_000_2950_Case08, BattlerRecordFieldAddress, Multiply8By16, SRAMRecordAddressMapped, ...)
 Multiply8::
 Func_000_1682:: ; address name
     ld b, $00
@@ -10660,7 +10660,7 @@ Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessBattleSlotOutSlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
-; 29 call sites from 26 routines (e.g. FailIfAllyLacksMPForHealSkill, AIScore_Kamikaze_Sub01, AIAddScoresFor5ECEAnd5FC7_Sub02, AIAddScoresFor5ECEAnd5FC7_Sub01, ...)
+; 31 call sites from 28 routines (e.g. FailIfAbleAllyKnowsSkillList6D1A, FailIfAllyLacksMPForSkillList5AF8, FailIfAllyLacksMPForHealSkill, AIScore_Kamikaze_Sub01, ...)
 ; points at: wBattleStatus
 CheckSlotStatusBlock::
 Func_000_3E25:: ; address name
@@ -10907,7 +10907,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 295 call sites from 240 routines (e.g. CheckSlotStatusBlock, ActorLacksStatus2Bit1And4Bits01, ActorStatus4CheckReadsAddress, ActorLacksStatus1Bits23And4Bits01, ...)
+; 296 call sites from 241 routines (e.g. CheckSlotStatusBlock, FailIfAbleAllyKnowsSkillList6D1A, ActorLacksStatus2Bit1And4Bits01, ActorStatus4CheckReadsAddress, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de

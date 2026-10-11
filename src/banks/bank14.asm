@@ -6114,7 +6114,7 @@ Jump_014_69CA::
     db $EA, $38, $C5, $3E, $01, $EA, $2B, $C5, $AF, $EA, $2C, $C5, $EA, $4F, $C5, $C9
 
 ; writes B at the BG map entry BGMapAddressAtScroll + $47 (row 2, column 7 of the view) + wCFC2, with interrupts off after rSTAT bit 1 clears; BC kept (E-0079)
-; 6 call sites from 4 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, Func_014_6CEA, RunNameEntryStateWhenNotFading_Case01_Case01, RunNameEntryStateWhenNotFading_Case01_Case00)
+; 6 call sites from 4 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, CopyF0StringAndRedrawNameEntry, RunNameEntryStateWhenNotFading_Case01_Case01, RunNameEntryStateWhenNotFading_Case01_Case00)
 ; reads: wNameEntryLength, rSTAT
 WriteTileBAtScrollOffset47PlusNameEntryLength::
 Func_014_6A0D:: ; address name
@@ -6664,7 +6664,7 @@ Jump_014_6CB4::
     ld a, [de]
     ld h, a
     ld de, wNameEntryText
-    call Func_014_6CEA
+    call CopyF0StringAndRedrawNameEntry
     ret
 
 Jump_014_6CC0::
@@ -6692,20 +6692,22 @@ Jump_014_6CC0::
     ld a, [de]
     ld h, a
     ld de, wNameEntryText
-    call Func_014_6CEA
+    call CopyF0StringAndRedrawNameEntry
     ret
 
+; copies the $F0-terminated string at HL to DE, then erases the name-entry cursor tile and redraws wNameEntryText glyph by glyph (handling the $9F cursor end and the $8D/$8E voicing marks) (E-0175)
 ; 2 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case01_Case03_Sub01)
 ; writes: wNameEntryLength, wNameEntryByteC3
 ; points at: wNameEntryText
-Func_014_6CEA::
+CopyF0StringAndRedrawNameEntry::
+Func_014_6CEA:: ; address name
     ld a, [hl]
     cp a, $F0
     jr z, Jump_014_6CF4
     ld [de], a
     inc de
     inc hl
-    jr Func_014_6CEA
+    jr CopyF0StringAndRedrawNameEntry
 
 Jump_014_6CF4::
     ld b, $C3

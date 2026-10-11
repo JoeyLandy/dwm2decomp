@@ -2075,7 +2075,7 @@ Jump_004_4BC6::
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case00::
 Jump_004_4BCF:: ; address name
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01
-    call Func_004_4D43
+    call DrawPartyFollowerSprites
     ret
 
 ; entry 1 of the `rst $00` table in AdvancePlayerAnimCounterAndRunPlayerSpriteMode
@@ -2083,7 +2083,7 @@ Jump_004_4BCF:: ; address name
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case01::
 Jump_004_4BD6:: ; address name
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01
-    call Func_004_4C25
+    call DrawFollowerSpriteIfFlag1B
     ret
 
 ; entry 2 of the `rst $00` table in AdvancePlayerAnimCounterAndRunPlayerSpriteMode
@@ -2091,13 +2091,15 @@ Jump_004_4BD6:: ; address name
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case02::
 Jump_004_4BDD:: ; address name
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01
-    call Func_004_4BE4
+    call DrawPlayerOverlaySprite21Or22
     ret
 
+; moves the sprite origin down 8, sets tile offset $70 and palette 7, then draws meta-sprite set $21 (hPlayerStateFlags bit 3 set) or $22 with DrawMetaSprite (E-0175)
 ; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case02)
 ; reads: hSpriteOriginY, hSpriteOriginYHi, hSpriteAttrXor, hPlayerStateFlags
 ; writes: hSpriteOriginY, hSpriteOriginYHi, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex
-Func_004_4BE4::
+DrawPlayerOverlaySprite21Or22::
+Func_004_4BE4:: ; address name
     ldh a, [hSpriteOriginY]
     ld l, a
     ldh a, [hSpriteOriginYHi]
@@ -2132,10 +2134,12 @@ Jump_004_4C17::
     farcall DrawMetaSprite
     ret
 
+; unless hFieldDrawFlags bit 1 is set, and only when story flag $1B is set: draws the follower sprite from wFollowerRecords bytes 1-2 (set from hPlayerSpriteVariant, with a different frame when IsFadingAtMap5AScreen00Y80) (E-0175)
 ; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case01)
 ; reads: hFieldDrawFlags, hPlayerSpriteVariant, wFollowerRecords, hPlayerAnimCounter, hScrollX, hScrollXHi, hScrollY, hScrollYHi
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
-Func_004_4C25::
+DrawFollowerSpriteIfFlag1B::
+Func_004_4C25:: ; address name
     ldh a, [hFieldDrawFlags]
     bit 1, a
     ret nz
@@ -2152,7 +2156,7 @@ Func_004_4C25::
     ld b, a
     ld a, [wFollowerRecords + $2]
     ld c, a
-    call Func_004_4E0F
+    call IsFadingAtMap5AScreen00Y80
     or a, a
     jr z, Jump_004_4C4E
     ld a, $02
@@ -2215,7 +2219,7 @@ Func_004_4C96:: ; address name
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call Func_004_4E0F
+    call IsFadingAtMap5AScreen00Y80
     or a, a
     jr z, Jump_004_4CB3
     ld a, $02
@@ -2311,11 +2315,13 @@ Jump_004_4D3C::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
+; for each party member (wPartyCount) walks wFollowerRecords and wPartyList and draws its follower sprite unless the matching hFieldDrawFlags bit is set (E-0175)
 ; 1 call site from 1 routine (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Case00)
 ; reads: wPartyCount, hTemp9, hFieldDrawFlags, hPlayerAnimCounter, hTemp0, hScrollX, hScrollXHi, hScrollY, ...
 ; writes: hTemp9, hTemp0, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, ...
 ; points at: wFollowerRecords
-Func_004_4D43::
+DrawPartyFollowerSprites::
+Func_004_4D43:: ; address name
     ld a, $02
     ldh [hTemp9], a
     ld a, [wPartyCount]
@@ -2347,7 +2353,7 @@ Jump_004_4D57::
     ld a, [hl-]
     ld c, a
     dec hl
-    call Func_004_4E0F
+    call IsFadingAtMap5AScreen00Y80
     pop bc
     or a, a
     jr z, Jump_004_4D7C
@@ -2443,9 +2449,11 @@ Jump_004_4DF3::
     jp nz, Jump_004_4D57
     ret
 
-; 3 call sites from 3 routines (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01, Func_004_4C25, Func_004_4D43)
+; A = 1 while a fade runs on map $5A, screen (0, 0), with hPlayerY = $80; otherwise A = 0 (E-0175)
+; 3 call sites from 3 routines (e.g. AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01, DrawFollowerSpriteIfFlag1B, DrawPartyFollowerSprites)
 ; reads: wFadeState, hMapId, hMapScreenX, hMapScreenY, hPlayerY
-Func_004_4E0F::
+IsFadingAtMap5AScreen00Y80::
+Func_004_4E0F:: ; address name
     ld a, [wFadeState]
     or a, a
     jr z, Jump_004_4E30

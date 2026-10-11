@@ -2099,6 +2099,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Generator.** A table whose first data label already carries the table's name (from names.json) prints that name once and keeps the address alias.
 - Binary verification: build/run177 PASS, 0 differing bytes; tests OK.
 
+### E-0175 — Configured code entries, and nine routines named
+
+- Kind: OBSERVATION (reading; C1) plus a PROJECT DECISION (the new config file).
+- **Configured code entries.** config/code_entries.json lists entry points that no traced code reaches but whose bytes decode as complete routines, and tools/disasm_all.py traces from them.
+  - 05:5A38 FailIfAbleAllyKnowsSkillList6D1A. It sits right after the five HealSkillMPCosts bytes. The E-0102 data region 05:5A33-5A4B is trimmed to end at $5A38. Tracing it exposes FailIfAllyLacksMPForSkillList5AF8 (05:5A73), the sibling of FailIfAllyLacksMPForHealSkill.
+  - 1A:63D8 ReadStatGrowthGainToTemp2, a one-gain reader of StatGrowthTable.
+- **Also named.**
+  - CountSkillsInList6D1A (05:6D1A; was a single-caller _Sub01 name until the new routine also called it).
+  - IsFadingAtMap5AScreen00Y80, DrawPlayerOverlaySprite21Or22, DrawFollowerSpriteIfFlag1B, DrawPartyFollowerSprites (bank $04).
+  - CopyF0StringAndRedrawNameEntry (14:6CEA).
+  - tools/rank_unnamed.py reports 0 address-only routines again.
+- **Limits.** Whether the two configured entries are ever called (for example through a table not yet decoded) is not known; they are code by shape, not by an observed caller.
+- Binary verification: build/run178 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
