@@ -103,7 +103,7 @@ Jump_004_408E::
 Jump_004_4093::
     dec a
     add a, a
-    ld hl, $5327
+    ld hl, KeyWorldObjectGridTable
     add_a_to_hl
     call SetupKeyWorldObjectsForMapType_Sub01
     ld a, [wKeyWorldObjFlag]
@@ -123,7 +123,7 @@ Jump_004_40A9::
 
 Jump_004_40B7::
     ld a, c
-    ld hl, $5327
+    ld hl, KeyWorldObjectGridTable
     add_a_to_hl
     call SetupKeyWorldObjectsForMapType_Sub01
     ret
@@ -151,7 +151,7 @@ Jump_004_40DF::
     ld a, $01
     ldh [hTemp9], a
     ld a, $08
-    ld hl, $5327
+    ld hl, KeyWorldObjectGridTable
     add_a_to_hl
     call SetupKeyWorldObjectsForMapType_Sub01
     ret
@@ -180,7 +180,7 @@ Jump_004_4117::
     ld a, $02
     ldh [hTemp9], a
     ld a, $0C
-    ld hl, $5327
+    ld hl, KeyWorldObjectGridTable
     add_a_to_hl
     call SetupKeyWorldObjectsForMapType_Sub01
     ret
@@ -465,7 +465,7 @@ Func_004_431F:: ; address name
     ldh a, [hTemp2]
     or a, a
     jr nz, Jump_004_433C
-    ld de, $4EAA
+    ld de, MonsterSpriteTable
     push de
     ldh a, [hTemp0]
     ld e, a
@@ -486,7 +486,7 @@ Func_004_431F:: ; address name
     jr Jump_004_4354
 
 Jump_004_433C::
-    ld de, $43AC
+    ld de, FieldSpriteGraphicsTable
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -535,7 +535,7 @@ Jump_004_4354::
 
 Jump_004_437E::
     ldh a, [hTemp0]
-    ld de, $4A46
+    ld de, FieldSpritePaletteIndex
     add a, e
     ld e, a
     jr nc, Jump_004_4388
@@ -2923,9 +2923,388 @@ Data_004_4EAA:: ; address name
     dfar MonsterSprite_Lamia ; id 380 Lamia
     dfar MonsterSprite_Dimensaur ; id 381 Dimensaur
     dfar MonsterSprite_Kagebou ; id 382 Kagebou
-    dw $5347 ; id 383 ?
-    db $8C
-    INCBIN "dwm2-cobi-us.gbc", $01132A, $291
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType passes $5327 + 2 * (kind - 1), or + 6 / + $E (goal kind 7) for the goal room, to SetupKeyWorldObjectsForMapType_Sub01; it follows MonsterSpriteTable, which therefore has 383 entries, not 384).
+; record: object grid for this map kind
+KeyWorldObjectGridTable::
+Data_004_5327:: ; address name
+    dw KeyWorldObjectGrid_5347 ; id 0
+    dw KeyWorldObjectGrid_538C ; id 1
+    dw KeyWorldObjectGrid_54C1 ; id 2
+    dw KeyWorldObjectGrid_5561 ; id 3
+    dw KeyWorldObjectGrid_5585 ; id 4
+    dw KeyWorldObjectGrid_5597 ; id 5
+    dw KeyWorldObjectGrid_55A9 ; id 6
+    dw KeyWorldObjectGrid_5573 ; id 7
+    dw KeyWorldObjectGrid_5347 ; id 8
+    dw KeyWorldObjectGrid_5421 ; id 9
+    dw KeyWorldObjectGrid_5511 ; id 10
+    dw KeyWorldObjectGrid_5561 ; id 11
+    dw KeyWorldObjectGrid_5585 ; id 12
+    dw KeyWorldObjectGrid_5597 ; id 13
+    dw KeyWorldObjectGrid_55A9 ; id 14
+    dw KeyWorldObjectGrid_5573 ; id 15
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_5347::
+Data_004_5347:: ; address name
+    dw KeyWorldScreenObjects_534B ; id 0
+    dw KeyWorldScreenObjects_5366 ; id 1
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_534B::
+Data_004_534B:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_534F
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_534F::
+Data_004_534F:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $00, $00, $00, $40, $20, $05, $00, $50, $00
+    db $86, $01, $01, $00, $00, $60, $50, $06, $03, $60, $01
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5366::
+Data_004_5366:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_536A
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_536A::
+Data_004_536A:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $01, $00, $00, $30, $20, $05, $00, $50, $02
+    db $86, $01, $01, $00, $00, $60, $60, $06, $00, $60, $03
+    db $87, $01, $06, $00, $00, $70, $10, $07, $00, $70, $FA
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_538C::
+Data_004_538C:: ; address name
+    dw KeyWorldScreenObjects_5394 ; id 0
+    dw KeyWorldScreenObjects_53AF ; id 1
+    dw KeyWorldScreenObjects_53E0 ; id 2
+    dw KeyWorldScreenObjects_53F0 ; id 3
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5394::
+Data_004_5394:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_5398
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_5398::
+Data_004_5398:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $08, $00, $00, $E0, $E0, $05, $00, $50, $FC
+    db $86, $01, $02, $00, $00, $20, $40, $06, $00, $60, $00
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_53AF::
+Data_004_53AF:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_53B3
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_53B3::
+Data_004_53B3:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $02, $00, $00, $E0, $E0, $05, $00, $50, $FC
+    db $86, $01, $03, $00, $02, $40, $20, $06, $01, $60, $01
+    db $87, $01, $04, $00, $00, $60, $50, $07, $00, $70, $02
+    db $84, $01, $05, $00, $00, $20, $60, $04, $01, $40, $03
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_53E0::
+Data_004_53E0:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_53E4
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_53E4::
+Data_004_53E4:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $04, $00, $00, $70, $50, $05, $00, $50, $04
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_53F0::
+Data_004_53F0:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_53F4
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_53F4::
+Data_004_53F4:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $03, $00, $00, $20, $40, $05, $03, $50, $05
+    db $86, $01, $05, $00, $02, $40, $70, $06, $01, $60, $06
+    db $87, $01, $02, $00, $00, $50, $30, $07, $00, $70, $07
+    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $FA
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_5421::
+Data_004_5421:: ; address name
+    dw KeyWorldScreenObjects_5429 ; id 0
+    dw KeyWorldScreenObjects_5444 ; id 1
+    dw KeyWorldScreenObjects_5475 ; id 2
+    dw KeyWorldScreenObjects_5490 ; id 3
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5429::
+Data_004_5429:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_542D
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_542D::
+Data_004_542D:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $08, $00, $00, $E0, $E0, $05, $00, $50, $FC
+    db $86, $01, $04, $00, $00, $20, $40, $06, $00, $60, $04
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5444::
+Data_004_5444:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_5448
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_5448::
+Data_004_5448:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $02, $00, $00, $E0, $E0, $05, $00, $50, $FC
+    db $86, $01, $03, $00, $00, $70, $50, $06, $01, $60, $05
+    db $87, $01, $02, $00, $02, $30, $60, $07, $01, $70, $07
+    db $84, $01, $07, $00, $00, $40, $20, $04, $00, $40, $FD
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5475::
+Data_004_5475:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_5479
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_5479::
+Data_004_5479:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $03, $00, $00, $70, $50, $05, $01, $50, $01
+    db $86, $01, $05, $00, $02, $30, $60, $06, $01, $60, $06
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5490::
+Data_004_5490:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_5494
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_5494::
+Data_004_5494:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $02, $00, $00, $70, $30, $05, $00, $50, $00
+    db $86, $01, $04, $00, $00, $40, $70, $06, $02, $60, $02
+    db $87, $01, $05, $00, $02, $40, $40, $07, $01, $70, $03
+    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $FA
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_54C1::
+Data_004_54C1:: ; address name
+    dw KeyWorldScreenObjects_54C5 ; id 0
+    dw KeyWorldScreenObjects_54E0 ; id 1
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_54C5::
+Data_004_54C5:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_54C9
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_54C9::
+Data_004_54C9:: ; address name
+    db $02 ; entry 0
+    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $FD
+    db $86, $01, $04, $00, $00, $60, $70, $06, $03, $60, $00
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_54E0::
+Data_004_54E0:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_54E4
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_54E4::
+Data_004_54E4:: ; address name
+    db $04 ; entry 0
+    db $85, $01, $03, $00, $00, $60, $30, $05, $03, $50, $01
+    db $86, $01, $02, $00, $00, $20, $60, $06, $02, $60, $02
+    db $87, $01, $05, $00, $02, $40, $70, $07, $01, $70, $03
+    db $84, $01, $06, $00, $00, $20, $20, $04, $00, $40, $FA
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_5511::
+Data_004_5511:: ; address name
+    dw KeyWorldScreenObjects_5515 ; id 0
+    dw KeyWorldScreenObjects_553B ; id 1
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5515::
+Data_004_5515:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_5519
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_5519::
+Data_004_5519:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $FD
+    db $86, $01, $02, $00, $00, $30, $60, $06, $00, $60, $02
+    db $87, $01, $05, $00, $00, $60, $70, $07, $00, $70, $03
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_553B::
+Data_004_553B:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_553F
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_553F::
+Data_004_553F:: ; address name
+    db $03 ; entry 0
+    db $85, $01, $03, $00, $02, $60, $60, $05, $01, $50, $01
+    db $86, $01, $04, $00, $00, $60, $30, $06, $00, $60, $00
+    db $87, $01, $06, $00, $00, $20, $20, $07, $00, $70, $FA
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_5561::
+Data_004_5561:: ; address name
+    dw KeyWorldScreenObjects_5563 ; id 0
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5563::
+Data_004_5563:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_5567
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_5567::
+Data_004_5567:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $15, $00, $00, $30, $20, $05, $00, $50, $FC
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_5573::
+Data_004_5573:: ; address name
+    dw KeyWorldScreenObjects_5575 ; id 0
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5575::
+Data_004_5575:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_5579
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_5579::
+Data_004_5579:: ; address name
+    db $01 ; entry 0
+    db $85, $01, $44, $00, $00, $30, $20, $05, $00, $50, $FC
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_5585::
+Data_004_5585:: ; address name
+    dw KeyWorldScreenObjects_5587 ; id 0
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5587::
+Data_004_5587:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_558B
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_558B::
+Data_004_558B:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $28, $00, $00, $50, $10, $05, $00, $50, $FE
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_5597::
+Data_004_5597:: ; address name
+    dw KeyWorldScreenObjects_5599 ; id 0
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_5599::
+Data_004_5599:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_559D
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_559D::
+Data_004_559D:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $28, $00, $00, $50, $10, $05, $00, $50, $FE
+
+; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
+; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
+KeyWorldObjectGrid_55A9::
+Data_004_55A9:: ; address name
+    dw KeyWorldScreenObjects_55AB ; id 0
+
+; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
+; record: marker word; pointer to the object list
+KeyWorldScreenObjects_55AB::
+Data_004_55AB:: ; address name
+    dw $FFFE ; entry 0
+    dw KeyWorldObjectList_55AF
+
+; E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set).
+; record: count 1, then 1 object records of 11 bytes (the map object layout of E-0176)
+KeyWorldObjectList_55AF::
+Data_004_55AF:: ; address name
+    db $01 ; entry 0
+    db $85, $00, $28, $00, $00, $40, $50, $05, $00, $50, $FB
 
 ; starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
 ; 316 call sites from 163 routines (e.g. Func_004_7B29_Case06, Func_004_7B29_Case05, Func_004_7B29_Case04, Func_004_6A35_Case1B, ...)

@@ -10814,7 +10814,7 @@ Func_036_7DC9:: ; address name
     sub a, $47
 
 Jump_036_7DD1::
-    ld hl, $7DDE
+    ld hl, EffectHandlerTable
     add a, a
     add_a_to_hl
     call JumpToWordAtHL

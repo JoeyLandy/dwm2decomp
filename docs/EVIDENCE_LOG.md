@@ -2355,6 +2355,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** Bank $61 has no INCBIN left.
 - Binary verification: build/run211 PASS, 0 differing bytes.
 
+### E-0196 — Key-world object grids (bank $04); MonsterSpriteTable has 383 entries
+
+- Kind: OBSERVATION (reading; C1) plus TOOL.
+- **Chain.** SetupKeyWorldObjectsForMapType passes $5327 + 2 * (kind - 1), or + 6 / + $E for the goal room, to SetupKeyWorldObjectsForMapType_Sub01. That routine follows four levels:
+  - KeyWorldObjectGridTable (16 words) gives a grid.
+  - The grid holds one word per screen (index hMapScreenY * wMapWidthScreens + hMapScreenX) pointing at a screen entry; 0 = none.
+  - A screen entry is a marker word ($FFFF = no objects; all 19 here are $FFFE) and a pointer to the object list.
+  - An object list is a count, then 11-byte records filling sprite slots like the bank-$69 map object records (E-0176). Bytes 2-3 are replaced by the key-world encounter when hTemp9 is set.
+- **Layout.** The 10 grids, 19 screen entries and 19 lists are contiguous and end exactly at $55BB, the end of the old INCBIN slice.
+- **Correction.** The word table starts at $5327, the last entry of MonsterSpriteTable as declared (E-0139, `dw $5347` with bank $8C). MonsterSpriteTable therefore has 383 far pointers, not 384.
+- **Tool.** A load whose value is the exact start of a declared table in the caller's own bank now names it, even in banks where the generic same-bank guess is withheld. This renamed 11 operands, each matching the loader in that table's note (for example `ld hl, KeyWorldObjectGridTable` ×4 and `ld hl, WorldMapViewTable`).
+- Binary verification: build/run213 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

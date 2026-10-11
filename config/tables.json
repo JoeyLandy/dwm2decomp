@@ -517,7 +517,7 @@
       "addr": "4EAA",
       "label": "MonsterSpriteTable",
       "id_names": "monster",
-      "count": 384,
+      "count": 383,
       "id_base": 0,
       "fields": [
         {
@@ -6388,6 +6388,1135 @@
         ]
       },
       "note": "E-0195 (C1: CheckKeyWorldWarpTable and RunMapType_596F_Case03_Sub01 read the word at $6566 + 2 * (floor state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3 equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen; 128 words, then the lists up to TownObjectSpotGrid0 at $6705)."
+    },
+    {
+      "bank": "04",
+      "addr": "5327",
+      "label": "KeyWorldObjectGridTable",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "object grid for this map kind",
+          "reason": "key-world object grid"
+        }
+      ],
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType passes $5327 + 2 * (kind - 1), or + 6 / + $E (goal kind 7) for the goal room, to SetupKeyWorldObjectsForMapType_Sub01; it follows MonsterSpriteTable, which therefore has 383 entries, not 384)."
+    },
+    {
+      "bank": "04",
+      "addr": "5347",
+      "label": "KeyWorldObjectGrid_5347",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "538C",
+      "label": "KeyWorldObjectGrid_538C",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "5421",
+      "label": "KeyWorldObjectGrid_5421",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "54C1",
+      "label": "KeyWorldObjectGrid_54C1",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "5511",
+      "label": "KeyWorldObjectGrid_5511",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "5561",
+      "label": "KeyWorldObjectGrid_5561",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "5573",
+      "label": "KeyWorldObjectGrid_5573",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "5585",
+      "label": "KeyWorldObjectGrid_5585",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "5597",
+      "label": "KeyWorldObjectGrid_5597",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "55A9",
+      "label": "KeyWorldObjectGrid_55A9",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen entry ($0000 = no objects)",
+          "reason": "key-world screen object entry"
+        }
+      ],
+      "record": "one screen, row by row (wMapWidthScreens per row): its object entry or 0",
+      "note": "E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure)."
+    },
+    {
+      "bank": "04",
+      "addr": "534B",
+      "label": "KeyWorldScreenObjects_534B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5366",
+      "label": "KeyWorldScreenObjects_5366",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5394",
+      "label": "KeyWorldScreenObjects_5394",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "53AF",
+      "label": "KeyWorldScreenObjects_53AF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "53E0",
+      "label": "KeyWorldScreenObjects_53E0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "53F0",
+      "label": "KeyWorldScreenObjects_53F0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5429",
+      "label": "KeyWorldScreenObjects_5429",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5444",
+      "label": "KeyWorldScreenObjects_5444",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5475",
+      "label": "KeyWorldScreenObjects_5475",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5490",
+      "label": "KeyWorldScreenObjects_5490",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "54C5",
+      "label": "KeyWorldScreenObjects_54C5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "54E0",
+      "label": "KeyWorldScreenObjects_54E0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5515",
+      "label": "KeyWorldScreenObjects_5515",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "553B",
+      "label": "KeyWorldScreenObjects_553B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5563",
+      "label": "KeyWorldScreenObjects_5563",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5575",
+      "label": "KeyWorldScreenObjects_5575",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5587",
+      "label": "KeyWorldScreenObjects_5587",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "5599",
+      "label": "KeyWorldScreenObjects_5599",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "55AB",
+      "label": "KeyWorldScreenObjects_55AB",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "marker: $FFFF = no objects, $FFFE = list follows"
+        },
+        {
+          "type": "ptr",
+          "name": "object list",
+          "reason": "key-world object list"
+        }
+      ],
+      "record": "marker word; pointer to the object list",
+      "note": "E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list)."
+    },
+    {
+      "bank": "04",
+      "addr": "534F",
+      "label": "KeyWorldObjectList_534F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        }
+      ],
+      "record": "count 2, then 2 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "536A",
+      "label": "KeyWorldObjectList_536A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 2"
+        }
+      ],
+      "record": "count 3, then 3 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "5398",
+      "label": "KeyWorldObjectList_5398",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        }
+      ],
+      "record": "count 2, then 2 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "53B3",
+      "label": "KeyWorldObjectList_53B3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 2"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 3"
+        }
+      ],
+      "record": "count 4, then 4 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "53E4",
+      "label": "KeyWorldObjectList_53E4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        }
+      ],
+      "record": "count 1, then 1 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "53F4",
+      "label": "KeyWorldObjectList_53F4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 2"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 3"
+        }
+      ],
+      "record": "count 4, then 4 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "542D",
+      "label": "KeyWorldObjectList_542D",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        }
+      ],
+      "record": "count 2, then 2 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "5448",
+      "label": "KeyWorldObjectList_5448",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 2"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 3"
+        }
+      ],
+      "record": "count 4, then 4 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "5479",
+      "label": "KeyWorldObjectList_5479",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        }
+      ],
+      "record": "count 2, then 2 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "5494",
+      "label": "KeyWorldObjectList_5494",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 2"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 3"
+        }
+      ],
+      "record": "count 4, then 4 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "54C9",
+      "label": "KeyWorldObjectList_54C9",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        }
+      ],
+      "record": "count 2, then 2 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "54E4",
+      "label": "KeyWorldObjectList_54E4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 2"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 3"
+        }
+      ],
+      "record": "count 4, then 4 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "5519",
+      "label": "KeyWorldObjectList_5519",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 2"
+        }
+      ],
+      "record": "count 3, then 3 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "553F",
+      "label": "KeyWorldObjectList_553F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 2"
+        }
+      ],
+      "record": "count 3, then 3 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "5567",
+      "label": "KeyWorldObjectList_5567",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        }
+      ],
+      "record": "count 1, then 1 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "5579",
+      "label": "KeyWorldObjectList_5579",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        }
+      ],
+      "record": "count 1, then 1 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "558B",
+      "label": "KeyWorldObjectList_558B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        }
+      ],
+      "record": "count 1, then 1 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "559D",
+      "label": "KeyWorldObjectList_559D",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        }
+      ],
+      "record": "count 1, then 1 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "04",
+      "addr": "55AF",
+      "label": "KeyWorldObjectList_55AF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "object count"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "object 0"
+        }
+      ],
+      "record": "count 1, then 1 object records of 11 bytes (the map object layout of E-0176)",
+      "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
     }
   ]
 }

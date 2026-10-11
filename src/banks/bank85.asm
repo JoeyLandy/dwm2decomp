@@ -2265,7 +2265,7 @@ Jump_085_4E1F:: ; address name
     add a, a
     add a, a
     add a, a
-    ld hl, $4E7A
+    ld hl, ScreenAnimationTable
     add_a_to_hl
     ld a, [wScriptParam0]
     and a, $01

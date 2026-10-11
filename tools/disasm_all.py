@@ -968,6 +968,7 @@ class Rom:
                 if ins.get(nxt, ("", "", ""))[2] == "rst":
                     far_targets[(bank, nxt)] = t
         bank0_tables = {t["addr"] for t in self.schemas if t["bank"] == 0 and 0x150 <= t["addr"] < 0x4000}
+        own_tables = {(t["bank"], t["addr"]) for t in self.schemas if "E-0157 (derived" not in t.get("note", "")}
         arg_src: dict[tuple[int, int], tuple[int, str]] = {}
         for bank in range(self.nbanks):
             ins = self.insn[bank]
@@ -1063,6 +1064,8 @@ class Rom:
                 elif (bank, a) in bv_pairs:
                     tb = bv_pairs[(bank, a)][0]
                     why = f"bank from RAM variable ${bv_pairs[(bank, a)][2]}"
+                elif bank != 0 and (bank, imm) in own_tables:  # E-0196: exact start of a declared table
+                    tb, why = bank, "same-bank load of a declared table's start"
                 elif bank != 0 and bank not in untrusted:
                     tb, why = bank, "pointer load in the same bank (bank assumed)"
                 else:

@@ -1348,7 +1348,7 @@ Func_0A1_4874:: ; address name
     ld a, [wGameMode2Byte44]
     add a, a
     add a, a
-    ld hl, $497C
+    ld hl, WorldMapScreenCellTable
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -3070,7 +3070,7 @@ Func_0A1_52D4:: ; address name
     add a, a
     add a, a
     add a, a
-    ld hl, $533C
+    ld hl, WorldMapViewTable
     add_a_to_hl
     ld a, [hl+]
     ld e, a
