@@ -1585,9 +1585,9 @@ class Rom:
                 sets += 1
                 for fi, fa in enumerate(sorted(set(ptrs))):
                     n = 0
-                    while n < 40 and fa + 4 * n < 0x8000 and self.data[base + fa + 4 * n] != 0x80:
+                    while n < 64 and fa + 4 * n < 0x8000 and self.data[base + fa + 4 * n] != 0x80:
                         n += 1
-                    if n == 40 or fa + 4 * n >= 0x8000 or not free(bank, fa, fa + 4 * n + 1):
+                    if n == 64 or fa + 4 * n >= 0x8000 or not free(bank, fa, fa + 4 * n + 1):
                         continue
                     taken.append((bank, fa, fa + 4 * n + 1))
                     self.schemas.append({"bank": bank, "addr": fa, "label": f"{prefix}Set{si:02X}Frame{fi}",

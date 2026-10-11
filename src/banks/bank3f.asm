@@ -190,8 +190,8 @@ Data_03F_410F:: ; heuristic: meta-sprite set; C0
     dw MetaSprites3F_407ESet00Frame0 ; entry 0
     dw MetaSprites3F_407ESet00Frame1 ; entry 1
     dw MetaSprites3F_407ESet00Frame2 ; entry 2
-    dw Data_03F_4302 ; entry 3
-    dw Data_03F_43A3 ; entry 4
+    dw MetaSprites3F_407ESet00Frame3 ; entry 3
+    dw MetaSprites3F_407ESet00Frame4 ; entry 4
     dw MetaSprites3F_407ESet00Frame5 ; entry 5
     dw MetaSprites3F_407ESet00Frame6 ; entry 6
     dw MetaSprites3F_407ESet00Frame7 ; entry 7
@@ -346,11 +346,97 @@ Data_03F_4271:: ; heuristic: meta-sprite frame; C0
     db $D0, $23, $11, $60 ; entry 35
     db $80 ; end
 
+; E-0147 (derived: frame 3 of MetaSprites3F_407ESet00; ends with $80)
+; record: sprite: Y offset, X offset, tile, attribute
+MetaSprites3F_407ESet00Frame3::
 Data_03F_4302:: ; heuristic: meta-sprite frame; C0
-    INCBIN "dwm2-cobi-us.gbc", $0FC302, $A1
+    db $E8, $F5, $07, $00 ; entry 0
+    db $F8, $DA, $01, $00 ; entry 1
+    db $F8, $CB, $10, $00 ; entry 2
+    db $E8, $FD, $0A, $60 ; entry 3
+    db $F0, $05, $08, $40 ; entry 4
+    db $F0, $FD, $06, $20 ; entry 5
+    db $E8, $ED, $09, $00 ; entry 6
+    db $E8, $D9, $02, $00 ; entry 7
+    db $F8, $F8, $05, $40 ; entry 8
+    db $F8, $02, $05, $40 ; entry 9
+    db $F0, $F0, $06, $20 ; entry 10
+    db $F8, $EB, $03, $40 ; entry 11
+    db $F3, $E3, $0F, $00 ; entry 12
+    db $E8, $E1, $07, $00 ; entry 13
+    db $E0, $E7, $00, $00 ; entry 14
+    db $E0, $D6, $03, $00 ; entry 15
+    db $F0, $D5, $03, $00 ; entry 16
+    db $E0, $C9, $0F, $00 ; entry 17
+    db $E0, $03, $07, $60 ; entry 18
+    db $D0, $1E, $01, $60 ; entry 19
+    db $D0, $2D, $10, $60 ; entry 20
+    db $E0, $FB, $0A, $00 ; entry 21
+    db $D8, $F3, $08, $20 ; entry 22
+    db $D8, $FB, $06, $40 ; entry 23
+    db $E0, $0B, $09, $60 ; entry 24
+    db $E0, $1F, $02, $60 ; entry 25
+    db $D0, $00, $05, $20 ; entry 26
+    db $D0, $F6, $05, $20 ; entry 27
+    db $D8, $08, $06, $40 ; entry 28
+    db $D0, $0D, $03, $20 ; entry 29
+    db $D5, $15, $0F, $60 ; entry 30
+    db $E0, $17, $07, $60 ; entry 31
+    db $D8, $23, $03, $60 ; entry 32
+    db $E8, $11, $00, $60 ; entry 33
+    db $E8, $22, $03, $60 ; entry 34
+    db $E8, $2F, $0F, $60 ; entry 35
+    db $F0, $1A, $06, $00 ; entry 36
+    db $F0, $38, $12, $00 ; entry 37
+    db $D8, $DE, $06, $60 ; entry 38
+    db $D8, $C0, $12, $60 ; entry 39
+    db $80 ; end
 
+; E-0147 (derived: frame 4 of MetaSprites3F_407ESet00; ends with $80)
+; record: sprite: Y offset, X offset, tile, attribute
+MetaSprites3F_407ESet00Frame4::
 Data_03F_43A3:: ; heuristic: meta-sprite frame; C0
-    INCBIN "dwm2-cobi-us.gbc", $0FC3A3, $A1
+    db $D8, $B8, $0F, $00 ; entry 0
+    db $E3, $C1, $0F, $00 ; entry 1
+    db $D4, $C8, $03, $00 ; entry 2
+    db $D0, $B0, $12, $00 ; entry 3
+    db $D0, $C0, $12, $00 ; entry 4
+    db $E0, $B4, $12, $00 ; entry 5
+    db $F0, $40, $0F, $60 ; entry 6
+    db $E5, $37, $0F, $60 ; entry 7
+    db $F4, $30, $03, $60 ; entry 8
+    db $F8, $48, $12, $60 ; entry 9
+    db $F8, $38, $12, $60 ; entry 10
+    db $E8, $44, $12, $60 ; entry 11
+    db $F8, $FB, $03, $40 ; entry 12
+    db $F8, $F3, $0F, $00 ; entry 13
+    db $F0, $F3, $07, $00 ; entry 14
+    db $E8, $03, $05, $00 ; entry 15
+    db $E8, $FB, $08, $40 ; entry 16
+    db $F8, $05, $06, $20 ; entry 17
+    db $F0, $FB, $09, $00 ; entry 18
+    db $E8, $EB, $02, $00 ; entry 19
+    db $E8, $0B, $00, $60 ; entry 20
+    db $E8, $F3, $09, $20 ; entry 21
+    db $F0, $03, $05, $20 ; entry 22
+    db $F0, $0B, $08, $20 ; entry 23
+    db $E0, $ED, $00, $00 ; entry 24
+    db $D0, $FD, $03, $20 ; entry 25
+    db $D0, $05, $0F, $60 ; entry 26
+    db $D8, $05, $07, $60 ; entry 27
+    db $E0, $F5, $05, $60 ; entry 28
+    db $E0, $FD, $08, $20 ; entry 29
+    db $D0, $F3, $06, $40 ; entry 30
+    db $D8, $FD, $09, $60 ; entry 31
+    db $E0, $05, $09, $40 ; entry 32
+    db $D8, $F5, $05, $40 ; entry 33
+    db $D8, $ED, $08, $40 ; entry 34
+    db $E0, $0D, $02, $60 ; entry 35
+    db $D0, $E8, $0A, $00 ; entry 36
+    db $F8, $10, $0A, $60 ; entry 37
+    db $F8, $1A, $06, $60 ; entry 38
+    db $D0, $DE, $06, $00 ; entry 39
+    db $80 ; end
 
 ; E-0147 (derived: frame 5 of MetaSprites3F_407ESet00; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
@@ -1101,7 +1187,7 @@ Data_03F_4C8D:: ; heuristic: meta-sprite set; C0
     dw MetaSprites3F_407ESet11Frame6 ; entry 6
     dw MetaSprites3F_407ESet11Frame7 ; entry 7
     dw MetaSprites3F_407ESet11Frame8 ; entry 8
-    dw Data_03F_4EE2 ; entry 9
+    dw MetaSprites3F_407ESet11Frame9 ; entry 9
     dw MetaSprites3F_407ESet11Frame10 ; entry 10
     dw MetaSprites3F_407ESet11Frame11 ; entry 11
     dw MetaSprites3F_407ESet11Frame12 ; entry 12
@@ -1310,8 +1396,51 @@ Data_03F_4E89:: ; heuristic: meta-sprite frame; C0
     db $F0, $E0, $05, $40 ; entry 21
     db $80 ; end
 
+; E-0147 (derived: frame 9 of MetaSprites3F_407ESet11; ends with $80)
+; record: sprite: Y offset, X offset, tile, attribute
+MetaSprites3F_407ESet11Frame9::
 Data_03F_4EE2:: ; heuristic: meta-sprite frame; C0
-    INCBIN "dwm2-cobi-us.gbc", $0FCEE2, $A1
+    db $D0, $30, $18, $20 ; entry 0
+    db $D8, $30, $19, $20 ; entry 1
+    db $D0, $28, $1A, $20 ; entry 2
+    db $D8, $28, $1B, $20 ; entry 3
+    db $D0, $20, $1C, $20 ; entry 4
+    db $D8, $20, $1D, $20 ; entry 5
+    db $D0, $18, $1E, $20 ; entry 6
+    db $D8, $18, $1E, $40 ; entry 7
+    db $D8, $10, $20, $60 ; entry 8
+    db $D9, $08, $09, $60 ; entry 9
+    db $D1, $06, $08, $60 ; entry 10
+    db $D0, $10, $21, $60 ; entry 11
+    db $E1, $07, $15, $40 ; entry 12
+    db $E4, $FF, $11, $60 ; entry 13
+    db $E4, $F9, $11, $00 ; entry 14
+    db $E7, $F1, $15, $20 ; entry 15
+    db $F7, $F2, $08, $00 ; entry 16
+    db $EF, $F0, $09, $00 ; entry 17
+    db $F8, $C8, $18, $40 ; entry 18
+    db $F0, $C8, $19, $40 ; entry 19
+    db $F8, $D0, $1A, $40 ; entry 20
+    db $F0, $D0, $1B, $40 ; entry 21
+    db $F8, $D8, $1C, $40 ; entry 22
+    db $F0, $D8, $1D, $40 ; entry 23
+    db $F8, $E0, $1E, $40 ; entry 24
+    db $F0, $E0, $1E, $20 ; entry 25
+    db $F0, $E8, $20, $00 ; entry 26
+    db $F8, $E8, $21, $00 ; entry 27
+    db $DF, $13, $08, $00 ; entry 28
+    db $E0, $1B, $24, $60 ; entry 29
+    db $E8, $1B, $05, $00 ; entry 30
+    db $E9, $E5, $08, $60 ; entry 31
+    db $E8, $DD, $24, $00 ; entry 32
+    db $E0, $DD, $05, $60 ; entry 33
+    db $E9, $07, $08, $60 ; entry 34
+    db $F8, $0B, $26, $20 ; entry 35
+    db $F1, $09, $0D, $60 ; entry 36
+    db $DF, $F1, $08, $00 ; entry 37
+    db $D0, $ED, $26, $40 ; entry 38
+    db $D7, $EF, $0D, $00 ; entry 39
+    db $80 ; end
 
 ; E-0147 (derived: frame 10 of MetaSprites3F_407ESet11; ends with $80)
 ; record: sprite: Y offset, X offset, tile, attribute
