@@ -180,15 +180,16 @@ class PersonalityIndex(unittest.TestCase):
 
 
 class SkillTableSource(unittest.TestCase):
-    """Audit of the committed src/: the skill table keeps every byte of its 17-byte records."""
+    """Audit of the committed src/: the skill table keeps every byte of its 17-byte records
+    (175 shown by the debug viewer, 228 up to SkillRequirementTable, E-0204)."""
 
-    def test_175_records_of_17_bytes(self):
+    def test_228_records_of_17_bytes(self):
         import re
         text = (ROOT / "src/banks/bank1a.asm").read_text(encoding="utf-8")
         text = text[text.index("SkillTable::"):]
         text = text[:text.index("\n\n")]  # the SkillTable block only (other tables follow in the bank)
         rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
-        self.assertEqual([int(i) for _, i in rows], list(range(175)))
+        self.assertEqual([int(i) for _, i in rows], list(range(228)))
         self.assertTrue(all(len(v.split(", ")) == 17 for v, _ in rows))
 
     @unittest.skipUnless(ROM.is_file(), "reference ROM not present")
@@ -199,7 +200,7 @@ class SkillTableSource(unittest.TestCase):
         text = text[:text.index("\n\n")]  # the SkillTable block only (other tables follow in the bank)
         rows = re.findall(r"^    db ((?:\$[0-9A-F]{2}(?:, )?)+) ; id (\d+)$", text, re.M)
         rom = ROM.read_bytes()
-        for values, ident in rows[:175]:
+        for values, ident in rows:
             at = 0x1A * 0x4000 + 0x40D4 - 0x4000 + 17 * int(ident)
             self.assertEqual(bytes(int(v[1:], 16) for v in values.split(", ")), rom[at:at + 17], ident)
 

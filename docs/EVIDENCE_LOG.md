@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0204 — SkillTable has 228 records; per-monster chance tables (bank $A3)
+
+- Kind: OBSERVATION (reading; C1).
+- **SkillTable (1A:$40D4).** LoadSkillRecord multiplies the 16-bit index in wRecordBuffer by 17. The records continue past the debug viewer's 175 (E-0032) up to SkillRequirementTable at $4FF8: 901 more bytes, exactly 53 records with the same layout.
+  - The table now has 228 records, and bank $1A has no INCBIN left.
+  - The SkillTableSource test checks all 228 against the ROM.
+- **MonsterResolveChanceTable (A3:$4B57) and MonsterResolveChanceTable_Foes (A3:$4CD7).** 384 bytes each, valued 0-3, one per monster id. RollRandomLoBelowChance_Sub01 indexes them by the actor's wBattleMonsterId:
+  - the foe table serves battlers 4 and up when wLinkMode is 0 or 2;
+  - the other table serves everyone else.
+  - RollRandomLoBelowChance treats 3 as 4 and returns carry when wRandomLo is below the value, a chance of 0-4 in 256 (ResolveStepChanceRoll).
+- Binary verification: build/run229 PASS, 0 differing bytes.
+
 ### E-0203 — Pointer-run stream guesses inside declared tables
 
 - Kind: TOOL (correction of a C1 heuristic from E-0016/E-0017).

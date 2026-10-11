@@ -162,7 +162,7 @@
       "bank": "1A",
       "addr": "40D4",
       "label": "SkillTable",
-      "count": 175,
+      "count": 228,
       "id_base": 0,
       "fields": [
         {
@@ -231,7 +231,7 @@
           "name": "16-bit value"
         }
       ],
-      "note": "E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10)."
+      "note": "E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10). E-0204: LoadSkillRecord takes a 16-bit index (wRecordBuffer) and the 17-byte records continue past the viewer's 175 up to SkillRequirementTable at $4FF8: 228 records; 175-227 have the same layout (no family or type strings in bytes 0-2 for most)."
     },
     {
       "bank": "34",
@@ -12389,6 +12389,38 @@
         }
       ],
       "note": "E-0202 (C1: RunBattleTransitionStep_Case01_Case02_Case00 calls JumpToWordAtHL_Bank0A with HL = $560C + 2 * wTransitionStage and DE = wTransitionCountA/B; each target adds a constant ($220, $1E0, $1A0, ...) to DE and returns it in HL; the nine targets were the INCBIN slice at $5597)."
+    },
+    {
+      "bank": "A3",
+      "addr": "4B57",
+      "label": "MonsterResolveChanceTable",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "chance class 0-3"
+        }
+      ],
+      "note": "E-0204 (C1: RollRandomLoBelowChance_Sub01 reads the byte at $4B57 + the actor's wBattleMonsterId for the party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id)."
+    },
+    {
+      "bank": "A3",
+      "addr": "4CD7",
+      "label": "MonsterResolveChanceTable_Foes",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "chance class 0-3"
+        }
+      ],
+      "note": "E-0204 (C1: RollRandomLoBelowChance_Sub01 reads the byte at $4CD7 + the actor's wBattleMonsterId for battlers 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id)."
     }
   ]
 }

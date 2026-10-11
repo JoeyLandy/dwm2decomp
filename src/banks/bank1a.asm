@@ -132,7 +132,7 @@ Jump_01A_40CB::
     ld [wBattleDamageHi], a
     ret
 
-; E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10).
+; E-0032 (C1: the debug mode's skill viewer, GameMode0 state 9, loads 17-byte records with LoadSkillRecord and prints these fields; the screens were read on the emulator; 175 records because the viewer wraps its index at $AF). The meaning of the numbers is not established beyond that the first byte rises across spell families (Blaze 2, Blazemore 4, Blazemost 10). E-0204: LoadSkillRecord takes a 16-bit index (wRecordBuffer) and the 17-byte records continue past the viewer's 175 up to SkillRequirementTable at $4FF8: 228 records; 175-227 have the same layout (no family or type strings in bytes 0-2 for most).
 ; record: first number the debug skill viewer shows; rises across a spell family (2, 4, 10 for Blaze, Blazemore, Blazemost); skill family: string index in category $12 (1 = Blaze, 2 = Firebal, 3 = Bang, ...); skill type: string index in category $13 ('Type A' ... 'Type G'); low 2 bits: when usable, string index in category $14 (0 None, 1 Battle, 2 Field, 3 Anytime); high nibble: string index in category $10 ('Charge', 'Mixed', 'Cautious', ...); target: string index in category $11 after Func_001_5311 ('1 enemy', 'All enemies', ...); number shown by the debug skill viewer; number shown by the debug skill viewer; number shown by the debug skill viewer; number shown by the debug skill viewer; 16-bit number shown by the debug skill viewer; 16-bit value read by the viewer (wCFF9); 16-bit value; 16-bit value
 SkillTable::
 Data_01A_40D4:: ; address name
@@ -311,14 +311,59 @@ Data_01A_40D4:: ; address name
     db $00, $00, $00, $31, $40, $04, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 172
     db $05, $0C, $03, $21, $11, $40, $03, $D3, $80, $00, $00, $00, $00, $00, $00, $00, $00 ; id 173
     db $02, $00, $00, $21, $40, $44, $02, $42, $80, $00, $00, $00, $00, $00, $00, $00, $00 ; id 174
-    ds $14, $00
-    INCBIN "dwm2-cobi-us.gbc", $068C87, $E1
-    ds $22, $00
-    INCBIN "dwm2-cobi-us.gbc", $068D8A, $99
-    ds $11, $00
-    db $08
-    ds $21, $00
-    INCBIN "dwm2-cobi-us.gbc", $068E56, $1A2
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 175
+    db $00, $00, $00, $51, $80, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 176
+    db $00, $00, $00, $51, $22, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 177
+    db $00, $00, $00, $51, $12, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 178
+    db $00, $00, $00, $51, $80, $00, $00, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 179
+    db $00, $00, $00, $51, $21, $00, $02, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 180
+    db $00, $00, $00, $51, $80, $00, $02, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 181
+    db $00, $00, $00, $51, $80, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 182
+    db $00, $00, $00, $51, $40, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 183
+    db $00, $00, $00, $51, $40, $00, $02, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 184
+    db $00, $00, $00, $51, $12, $81, $C7, $0A, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 185
+    db $00, $00, $00, $51, $12, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 186
+    db $00, $00, $00, $51, $22, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 187
+    db $00, $00, $00, $51, $22, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 188
+    db $00, $00, $00, $51, $80, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 189
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 190
+    db $00, $00, $00, $00, $00, $00, $00, $08, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 191
+    db $00, $00, $00, $61, $21, $81, $D7, $1A, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 192
+    db $00, $00, $00, $61, $11, $81, $DF, $1F, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 193
+    db $00, $00, $00, $61, $40, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 194
+    db $00, $00, $00, $61, $40, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 195
+    db $00, $00, $00, $61, $40, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 196
+    db $00, $00, $00, $61, $40, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 197
+    db $00, $00, $00, $61, $40, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 198
+    db $00, $00, $00, $61, $40, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 199
+    db $00, $00, $00, $21, $40, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 200
+    db $00, $00, $00, $00, $00, $00, $00, $08, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 201
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 202
+    db $00, $00, $00, $00, $00, $00, $00, $08, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 203
+    db $00, $00, $00, $11, $11, $89, $C7, $03, $80, $00, $00, $00, $00, $00, $00, $00, $00 ; id 204
+    db $00, $00, $00, $21, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 205
+    db $00, $00, $00, $31, $22, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 206
+    db $00, $00, $00, $31, $22, $00, $02, $02, $80, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF ; id 207
+    db $00, $05, $04, $11, $12, $48, $83, $83, $00, $F4, $01, $C8, $00, $F4, $01, $C8, $00 ; id 208
+    db $00, $01, $04, $11, $11, $40, $83, $83, $00, $BC, $02, $C8, $00, $BC, $02, $C8, $00 ; id 209
+    db $00, $05, $04, $11, $11, $81, $C7, $0B, $00, $F4, $01, $64, $00, $F4, $01, $64, $00 ; id 210
+    db $00, $05, $04, $11, $11, $89, $C7, $2B, $00, $F4, $01, $64, $00, $F4, $01, $64, $00 ; id 211
+    db $00, $05, $04, $11, $11, $89, $C7, $0B, $00, $F4, $01, $64, $00, $F4, $01, $64, $00 ; id 212
+    db $00, $05, $04, $11, $12, $89, $C7, $2B, $00, $BC, $02, $C8, $00, $BC, $02, $C8, $00 ; id 213
+    db $00, $0F, $01, $21, $12, $40, $03, $82, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 214
+    db $00, $00, $00, $11, $11, $89, $C7, $2B, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 215
+    db $00, $00, $00, $11, $11, $89, $FF, $3B, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 216
+    db $00, $10, $00, $21, $12, $08, $83, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 217
+    db $00, $00, $00, $51, $22, $20, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 218
+    db $00, $00, $00, $51, $12, $28, $02, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 219
+    db $00, $00, $00, $21, $40, $40, $02, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 220
+    db $00, $00, $00, $21, $22, $00, $02, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 221
+    db $00, $00, $00, $51, $12, $00, $00, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 222
+    db $00, $0A, $00, $21, $11, $40, $03, $82, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 223
+    db $00, $00, $00, $31, $40, $00, $02, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 224
+    db $00, $0C, $03, $21, $12, $20, $03, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 225
+    db $00, $00, $00, $31, $40, $04, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 226
+    db $00, $00, $00, $21, $40, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 227
 
 ; E-0156 (C1: CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the record's; BattleEnd_Step3_Sub02_Sub02 scans the five bytes at +13 of all 170 records ($5005, stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end exactly at the prerequisite pointer table $5BEC).
 ; record: required level; six required stat words (battler record +$1D, +$21, +$23, +$25, +$27, +$29); five skill numbers ($FF = none)
