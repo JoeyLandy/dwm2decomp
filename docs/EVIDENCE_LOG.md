@@ -2430,6 +2430,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0203 — Pointer-run stream guesses inside declared tables
+
+- Kind: TOOL (correction of a C1 heuristic from E-0016/E-0017).
+- **Problem.** The first stream source registers every target of a pointer run when at least 60% of the targets parse as LZSS. A short word list whose first word is a small number parses as an LZSS "size". The breeding result lists (E-0199) and the bank-$84 area layouts (E-0193) were registered as streams this way, although they are declared tables.
+- **Fix.** Targets inside a declared table are no longer tried.
+- **Result.** The stream registry shrinks from 4,931 to 4,560 entries. The generated source is unchanged (diff empty), because the tables already took precedence in the output.
+- Binary verification: build/run227 PASS, 0 differing bytes.
+
 ### E-0202 — Wild and scripted encounters (bank $0A)
 
 - Kind: OBSERVATION (reading; C1).

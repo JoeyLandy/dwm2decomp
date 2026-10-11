@@ -768,6 +768,8 @@ class Rom:
             return len(out), used
 
         tables = streams = exact = 0
+        spans = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
         for bank in range(1, self.nbanks):
             keys = sorted(self.dtab[bank])
             i = 0
@@ -780,7 +782,9 @@ class Rom:
                 targets = sorted({self.dtab[bank][k] for k in run})
                 if len(run) < 8 or len(targets) < 8:
                     continue
-                found = {t: parse(bank, t) for t in targets}
+                # E-0203: a target inside a declared table is that table's data, not a stream
+                found = {t: None if any(b == bank and lo <= t < hi for b, lo, hi in spans) else parse(bank, t)
+                         for t in targets}
                 ok = [t for t in targets if found[t]]
                 if len(ok) < 0.6 * len(targets):
                     continue
