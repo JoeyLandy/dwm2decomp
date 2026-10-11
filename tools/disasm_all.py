@@ -2125,6 +2125,8 @@ class Rom:
                 continue
             pc, plan = lo, []
             while pc < hi:
+                if hi - pc == 8 and (b, hi) in self.streams:  # the header of the stream that follows
+                    plan.append((pc, None, 0)); pc = hi; continue
                 u = screen(b, pc)
                 if u and pc + u <= hi:
                     plan.append((None, pc, u)); pc += u; continue
@@ -2136,6 +2138,11 @@ class Rom:
                 continue
             gaps += 1
             for hdr, s, u in plan:
+                if s is None:  # a header only
+                    self.schemas.append({"bank": b, "addr": hdr, "label": f"KeyWorldScreenHeader_{b:02X}_{hdr:04X}",
+                                         "count": 1, "fields": [{"type": "db", "size": 8, "name": "screen header"}],
+                                         "note": "E-0222 (derived: the 8-byte header of the screen stream that follows)"})
+                    continue
                 if hdr is not None:
                     self.schemas.append({"bank": b, "addr": hdr, "label": f"KeyWorldScreenHeader_{b:02X}_{hdr:04X}",
                                          "count": 1, "fields": [{"type": "db", "size": 8, "name": "screen header"}],

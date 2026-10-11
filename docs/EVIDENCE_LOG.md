@@ -2439,8 +2439,9 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** At first, 24 gaps tiled into 44 streams, with their headers as KeyWorldScreenHeader tables.
   - Widening the starting point to any 360-byte stream labelled as a screen (key-world room screens and map screens too) raises this to 50 gaps and 132 streams.
   - The stream count is now 4,693, and unidentified INCBIN is 14,638 bytes.
+  - A final 8-byte remainder before a known stream is that stream's header. With this, 282 gaps tile (154 streams), the stream count is 4,715, and unidentified INCBIN is 12,141 bytes.
 - **Limits.** Which rooms, if any, use these screens is not traced.
-- Binary verification: build/run268 PASS, then build/run269 PASS with the wider rule, 0 differing bytes; tests OK.
+- Binary verification: build/run268 PASS, build/run269 PASS with the wider rule, build/run270 PASS with trailing headers; 0 differing bytes; tests OK.
 
 ### E-0221 — Key-world goal graphics (bank $04); party-count rectangles (bank $31)
 

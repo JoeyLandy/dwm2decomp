@@ -5,22 +5,22 @@ SECTION "Bank 68", ROMX[$4000], BANK[$68]
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup44::
 Data_068_4001:: ; address name
-    dfar Data_066_54FD ; id 0
-    dfar Data_065_6693
-    dfar Data_065_6736
-    dfar Data_065_76ED
-    dfar Data_062_75B0
-    dfar Data_062_5337
-    dfar Data_065_431E
-    dfar Data_062_6F90
-    dfar Data_062_7626
-    dfar Data_064_4734
-    dfar Data_063_47D4
-    dfar Data_062_528E
-    dfar Data_064_7848
-    dfar Data_063_6DB3
-    dfar Data_062_42B3
-    dfar Data_064_46A7
+    dfar KeyWorldScreenHeader_66_54FD ; id 0
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_65_76ED
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_62_5337
+    dfar KeyWorldScreenHeader_65_431E
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_64_4734
+    dfar KeyWorldScreenHeader_63_47D4
+    dfar KeyWorldScreenHeader_62_528E
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_62_42B3
+    dfar KeyWorldScreenHeader_64_46A7
     dfar Data_066_5A5F
     dfar Data_065_6B2C
     dfar Data_065_6B50
@@ -37,22 +37,22 @@ Data_068_4001:: ; address name
     dfar Data_063_722B
     dfar Data_062_4967
     dfar Data_064_4AD9
-    dfar Data_066_5658 ; id 1
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_065_5E8C
-    dfar Data_062_6E33
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_064_5A34
-    dfar Data_065_416D
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_063_6636
-    dfar Data_064_5218
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5658 ; id 1
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_5A34
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_63_6636
+    dfar KeyWorldScreenHeader_64_5218
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_5AE7
     dfar Data_065_7A80
     dfar Data_066_615D
@@ -69,22 +69,22 @@ Data_068_4001:: ; address name
     dfar Data_064_56B0
     dfar Data_065_7290
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 2
-    dfar Data_064_7A7D
-    dfar Data_066_478E
-    dfar Data_063_6E4E
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_77EB
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_774A
-    dfar Data_066_5CC8
-    dfar Data_066_5705
-    dfar Data_065_6736
-    dfar Data_065_5F42
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_63_6E4E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_65_5F42
     dfar Data_066_615D
     dfar Data_064_7EB0
     dfar Data_066_4BC0
@@ -101,22 +101,22 @@ Data_068_4001:: ; address name
     dfar Data_066_5B0F
     dfar Data_065_6B50
     dfar Data_065_634B
-    dfar Data_063_60DA ; id 3
-    dfar Data_064_544D
-    dfar Data_062_6EDC
-    dfar Data_065_751D
-    dfar Data_063_6148
-    dfar Data_062_68C2
-    dfar Data_065_41F0
-    dfar Data_065_6D65
-    dfar Data_064_4843
-    dfar Data_063_6744
-    dfar Data_064_5284
-    dfar Data_065_6D0D
-    dfar Data_062_5485
-    dfar Data_062_613E
-    dfar Data_063_468C
-    dfar Data_065_6C81
+    dfar KeyWorldScreenHeader_63_60DA ; id 3
+    dfar KeyWorldScreenHeader_64_544D
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_63_6148
+    dfar KeyWorldScreenHeader_62_68C2
+    dfar KeyWorldScreenHeader_65_41F0
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_64_4843
+    dfar KeyWorldScreenHeader_63_6744
+    dfar KeyWorldScreenHeader_64_5284
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_62_5485
+    dfar KeyWorldScreenHeader_62_613E
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_65_6C81
     dfar Data_063_63CF
     dfar Data_064_5794
     dfar Data_062_73A7
@@ -133,22 +133,22 @@ Data_068_4001:: ; address name
     dfar Data_062_64F0
     dfar Data_063_4AF5
     dfar Data_065_7251
-    dfar Data_066_5560 ; id 4
-    dfar Data_065_5DD4
-    dfar Data_062_5337
-    dfar Data_064_5A34
-    dfar Data_062_7626
-    dfar Data_062_41C9
-    dfar Data_063_5F99
-    dfar Data_064_6145
-    dfar Data_064_78B1
-    dfar Data_063_6D0B
-    dfar Data_064_4734
-    dfar Data_063_472D
-    dfar Data_066_5CC8
-    dfar Data_064_7945
-    dfar Data_066_46C5
-    dfar Data_066_478E
+    dfar KeyWorldScreenHeader_66_5560 ; id 4
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_62_5337
+    dfar KeyWorldScreenHeader_64_5A34
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_63_5F99
+    dfar KeyWorldScreenHeader_64_6145
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_64_4734
+    dfar KeyWorldScreenHeader_63_472D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_478E
     dfar Data_066_5A87
     dfar Data_065_62D2
     dfar Data_062_573B
@@ -165,22 +165,22 @@ Data_068_4001:: ; address name
     dfar Data_064_7E51
     dfar Data_066_4B6F
     dfar Data_066_4BC0
-    dfar Data_065_5737 ; id 5
-    dfar Data_064_5394
-    dfar Data_064_6797
-    dfar Data_066_4D7D
-    dfar Data_063_5437
-    dfar Data_063_47D4
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_064_697E
-    dfar Data_066_478E
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_066_4F98
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_65_5737 ; id 5
+    dfar KeyWorldScreenHeader_64_5394
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_63_5437
+    dfar KeyWorldScreenHeader_63_47D4
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_4F98
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_065_5A75
     dfar Data_064_5742
     dfar Data_064_6D09
@@ -208,22 +208,22 @@ Data_068_4241:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup45::
 Data_068_4247:: ; address name
-    dfar Data_066_5560 ; id 0
-    dfar Data_065_6546
-    dfar Data_065_64CA
-    dfar Data_065_6808
-    dfar Data_062_7626
-    dfar Data_062_40EE
-    dfar Data_062_43CA
-    dfar Data_062_4365
-    dfar Data_062_75B0
-    dfar Data_062_41C9
-    dfar Data_064_6AEC
-    dfar Data_066_4859
-    dfar Data_064_78B1
-    dfar Data_066_4917
-    dfar Data_064_73B7
-    dfar Data_065_77A4
+    dfar KeyWorldScreenHeader_66_5560 ; id 0
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_43CA
+    dfar KeyWorldScreenHeader_62_4365
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_6AEC
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_64_73B7
+    dfar KeyWorldScreenHeader_65_77A4
     dfar Data_066_5A87
     dfar Data_065_6AC6
     dfar Data_065_6A8F
@@ -240,22 +240,22 @@ Data_068_4247:: ; address name
     dfar Data_066_4C37
     dfar Data_064_7730
     dfar Data_065_7B60
-    dfar Data_065_751D ; id 1
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_6F90
-    dfar Data_065_743F
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_46C5
-    dfar Data_066_4CD6
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5477
-    dfar Data_065_76ED
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_65_751D ; id 1
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_65_743F
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_4CD6
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_76ED
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_065_7A80
     dfar Data_066_615D
     dfar Data_066_615D
@@ -272,22 +272,22 @@ Data_068_4247:: ; address name
     dfar Data_066_5A3B
     dfar Data_065_7B11
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 2
-    dfar Data_066_5CC8
-    dfar Data_064_7C14
-    dfar Data_064_720E
-    dfar Data_066_5CC8
-    dfar Data_066_589C
-    dfar Data_065_68B7
-    dfar Data_065_5F42
-    dfar Data_066_589C
-    dfar Data_065_5C71
-    dfar Data_062_4365
-    dfar Data_064_697E
-    dfar Data_062_76AE
-    dfar Data_064_6797
-    dfar Data_066_478E
-    dfar Data_066_4F98
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_64_720E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_65_5F42
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_62_4365
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_66_4F98
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_064_7F35
@@ -304,22 +304,22 @@ Data_068_4247:: ; address name
     dfar Data_064_6D09
     dfar Data_066_4BC0
     dfar Data_066_5366
-    dfar Data_065_6693 ; id 3
-    dfar Data_065_5D1D
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_062_423A
-    dfar Data_062_41C9
-    dfar Data_065_6C81
-    dfar Data_066_5CC8
-    dfar Data_066_45B4
-    dfar Data_063_6D0B
-    dfar Data_062_6E33
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_062_76AE
-    dfar Data_062_40EE
-    dfar Data_065_6D65
+    dfar KeyWorldScreenHeader_65_6693 ; id 3
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_65_6C81
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_65_6D65
     dfar Data_065_6B2C
     dfar Data_065_6293
     dfar Data_065_7290
@@ -336,22 +336,22 @@ Data_068_4247:: ; address name
     dfar Data_062_7BC5
     dfar Data_062_48DA
     dfar Data_065_7290
-    dfar Data_062_76AE ; id 4
-    dfar Data_062_6D6B
-    dfar Data_065_751D
-    dfar Data_066_5658
-    dfar Data_062_7626
-    dfar Data_062_406A
-    dfar Data_065_6DE3
-    dfar Data_064_79CF
-    dfar Data_064_7848
-    dfar Data_063_6BCD
-    dfar Data_062_6EDC
-    dfar Data_065_6736
-    dfar Data_066_5CC8
-    dfar Data_064_77CC
-    dfar Data_066_45B4
-    dfar Data_066_478E
+    dfar KeyWorldScreenHeader_62_76AE ; id 4
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_63_6BCD
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_77CC
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_478E
     dfar Data_062_7BC5
     dfar Data_062_732E
     dfar Data_065_7A80
@@ -368,22 +368,22 @@ Data_068_4247:: ; address name
     dfar Data_064_7DD4
     dfar Data_066_4B1A
     dfar Data_066_4BC0
-    dfar Data_065_75A3 ; id 5
-    dfar Data_064_7945
-    dfar Data_063_6C79
-    dfar Data_065_6D0D
-    dfar Data_066_4EF7
-    dfar Data_066_5CC8
-    dfar Data_062_7626
-    dfar Data_065_6D65
-    dfar Data_065_6693
-    dfar Data_065_6546
-    dfar Data_063_74A4
-    dfar Data_066_4D7D
-    dfar Data_066_46C5
-    dfar Data_066_45B4
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_65_75A3 ; id 5
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_63_74A4
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_065_7AAA
     dfar Data_064_7E51
     dfar Data_063_71D4
@@ -411,22 +411,22 @@ Data_068_4487:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup46::
 Data_068_448D:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5658
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_066_5658
-    dfar Data_065_5E8C
-    dfar Data_062_6E33
-    dfar Data_065_75A3
-    dfar Data_062_774A
-    dfar Data_064_68E4
-    dfar Data_066_45B4
-    dfar Data_066_4E6E
-    dfar Data_062_77EB
-    dfar Data_065_6F70
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_65_6F70
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_615D
     dfar Data_066_5AE7
     dfar Data_065_7A80
@@ -443,22 +443,22 @@ Data_068_448D:: ; address name
     dfar Data_065_7334
     dfar Data_066_615D
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 1
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5705
-    dfar Data_065_76ED
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_77EB
-    dfar Data_062_702C
-    dfar Data_065_76ED
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_65_76ED
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_65_76ED
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
@@ -475,22 +475,22 @@ Data_068_448D:: ; address name
     dfar Data_062_7C25
     dfar Data_062_7409
     dfar Data_065_7B11
-    dfar Data_064_7848 ; id 2
-    dfar Data_064_73B7
-    dfar Data_065_743F
-    dfar Data_066_5CC8
-    dfar Data_066_5560
-    dfar Data_065_5FE5
-    dfar Data_062_6D6B
-    dfar Data_065_77A4
-    dfar Data_062_76AE
-    dfar Data_062_41C9
-    dfar Data_064_6797
-    dfar Data_066_4F98
-    dfar Data_062_774A
-    dfar Data_062_42B3
-    dfar Data_065_6DE3
-    dfar Data_066_5658
+    dfar KeyWorldScreenHeader_64_7848 ; id 2
+    dfar KeyWorldScreenHeader_64_73B7
+    dfar KeyWorldScreenHeader_65_743F
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_65_77A4
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4F98
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_62_42B3
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_66_5658
     dfar Data_064_7DFB
     dfar Data_064_7730
     dfar Data_065_7A30
@@ -507,22 +507,22 @@ Data_068_448D:: ; address name
     dfar Data_062_4967
     dfar Data_065_72B2
     dfar Data_066_5AE7
-    dfar Data_066_5CC8 ; id 3
-    dfar Data_064_7B56
-    dfar Data_063_6DB3
-    dfar Data_065_6D65
-    dfar Data_066_589C
-    dfar Data_065_6808
-    dfar Data_065_5E8C
-    dfar Data_065_6DE3
-    dfar Data_062_7985
-    dfar Data_064_6A43
-    dfar Data_066_46C5
-    dfar Data_066_4E6E
-    dfar Data_065_60A2
-    dfar Data_062_70C1
-    dfar Data_065_65EA
-    dfar Data_065_75A3
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 3
+    dfar KeyWorldScreenHeader_64_7B56
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_62_7985
+    dfar KeyWorldScreenHeader_64_6A43
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_65_60A2
+    dfar KeyWorldScreenHeader_62_70C1
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_75A3
     dfar Data_066_615D
     dfar Data_064_7F00
     dfar Data_063_722B
@@ -539,22 +539,22 @@ Data_068_448D:: ; address name
     dfar Data_062_744A
     dfar Data_065_6AEA
     dfar Data_065_7AAA
-    dfar Data_064_7848 ; id 4
-    dfar Data_063_6C79
-    dfar Data_062_6EDC
-    dfar Data_065_5DD4
-    dfar Data_066_54FD
-    dfar Data_065_5D1D
-    dfar Data_062_41C9
-    dfar Data_062_528E
-    dfar Data_064_7848
-    dfar Data_066_45B4
-    dfar Data_063_6D0B
-    dfar Data_064_46A7
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7945
-    dfar Data_066_4635
+    dfar KeyWorldScreenHeader_64_7848 ; id 4
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_66_54FD
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_62_528E
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_64_46A7
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_66_4635
     dfar Data_064_7DFB
     dfar Data_063_71D4
     dfar Data_062_73A7
@@ -571,22 +571,22 @@ Data_068_448D:: ; address name
     dfar Data_066_615D
     dfar Data_064_7E51
     dfar Data_066_4B3B
-    dfar Data_062_423A ; id 5
-    dfar Data_064_6797
-    dfar Data_063_6B43
-    dfar Data_065_6D0D
-    dfar Data_065_41F0
-    dfar Data_065_6D0D
-    dfar Data_064_7848
-    dfar Data_066_4D7D
-    dfar Data_063_468C
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_45B4
-    dfar Data_066_4D7D
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_62_423A ; id 5
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_63_6B43
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_65_41F0
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_062_494B
     dfar Data_064_6D09
     dfar Data_063_7151
@@ -614,22 +614,22 @@ Data_068_46CD:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup47::
 Data_068_46D3:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5CC8
-    dfar Data_066_5477
-    dfar Data_065_643F
-    dfar Data_066_5CC8
-    dfar Data_066_589C
-    dfar Data_065_60A2
-    dfar Data_062_5209
-    dfar Data_066_5560
-    dfar Data_065_5D1D
-    dfar Data_062_5209
-    dfar Data_065_55E2
-    dfar Data_062_75B0
-    dfar Data_062_40EE
-    dfar Data_063_5F99
-    dfar Data_064_6272
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_643F
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_60A2
+    dfar KeyWorldScreenHeader_62_5209
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_5209
+    dfar KeyWorldScreenHeader_65_55E2
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_63_5F99
+    dfar KeyWorldScreenHeader_64_6272
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_5A3B
@@ -646,22 +646,22 @@ Data_068_46D3:: ; address name
     dfar Data_062_48DA
     dfar Data_063_633B
     dfar Data_064_657E
-    dfar Data_065_6693 ; id 1
-    dfar Data_065_65EA
-    dfar Data_065_6808
-    dfar Data_065_74B6
-    dfar Data_064_5AD4
-    dfar Data_064_59BA
-    dfar Data_065_416D
-    dfar Data_065_6D65
-    dfar Data_064_6145
-    dfar Data_063_531D
-    dfar Data_063_453F
-    dfar Data_065_6DE3
-    dfar Data_063_47D4
-    dfar Data_064_6828
-    dfar Data_066_4635
-    dfar Data_066_4EF7
+    dfar KeyWorldScreenHeader_65_6693 ; id 1
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_64_5AD4
+    dfar KeyWorldScreenHeader_64_59BA
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_64_6145
+    dfar KeyWorldScreenHeader_63_531D
+    dfar KeyWorldScreenHeader_63_453F
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_63_47D4
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4EF7
     dfar Data_065_6B2C
     dfar Data_065_6AEA
     dfar Data_065_6B9F
@@ -678,22 +678,22 @@ Data_068_46D3:: ; address name
     dfar Data_064_6D28
     dfar Data_066_4B3B
     dfar Data_066_5342
-    dfar Data_062_7517 ; id 2
-    dfar Data_062_5337
-    dfar Data_062_5FBC
-    dfar Data_063_4867
-    dfar Data_062_75B0
-    dfar Data_064_46A7
-    dfar Data_065_75A3
-    dfar Data_065_43BD
-    dfar Data_064_78B1
-    dfar Data_063_6C79
-    dfar Data_063_5EAF
-    dfar Data_064_544D
-    dfar Data_066_54FD
-    dfar Data_065_5C71
-    dfar Data_063_5E57
-    dfar Data_064_5394
+    dfar KeyWorldScreenHeader_62_7517 ; id 2
+    dfar KeyWorldScreenHeader_62_5337
+    dfar KeyWorldScreenHeader_62_5FBC
+    dfar KeyWorldScreenHeader_63_4867
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_64_46A7
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_65_43BD
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_63_5EAF
+    dfar KeyWorldScreenHeader_64_544D
+    dfar KeyWorldScreenHeader_66_54FD
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_63_5E57
+    dfar KeyWorldScreenHeader_64_5394
     dfar Data_062_7B3B
     dfar Data_062_573B
     dfar Data_062_6450
@@ -710,22 +710,22 @@ Data_068_46D3:: ; address name
     dfar Data_065_6244
     dfar Data_063_62C3
     dfar Data_064_5742
-    dfar Data_062_41C9 ; id 3
-    dfar Data_065_6DE3
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_40EE
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_6828
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_065_6D0D
-    dfar Data_066_54FD
-    dfar Data_065_6693
-    dfar Data_065_751D
+    dfar KeyWorldScreenHeader_62_41C9 ; id 3
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_66_54FD
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_751D
     dfar Data_062_492F
     dfar Data_065_72B2
     dfar Data_066_615D
@@ -742,22 +742,22 @@ Data_068_46D3:: ; address name
     dfar Data_066_5A5F
     dfar Data_065_6B2C
     dfar Data_065_7A80
-    dfar Data_062_7985 ; id 4
-    dfar Data_062_5209
-    dfar Data_065_5056
-    dfar Data_063_472D
-    dfar Data_062_78C0
-    dfar Data_063_5E57
-    dfar Data_064_6272
-    dfar Data_064_68E4
-    dfar Data_062_76AE
-    dfar Data_064_46A7
-    dfar Data_063_4867
-    dfar Data_065_7023
-    dfar Data_064_7848
-    dfar Data_066_478E
-    dfar Data_066_4859
-    dfar Data_066_505C
+    dfar KeyWorldScreenHeader_62_7985 ; id 4
+    dfar KeyWorldScreenHeader_62_5209
+    dfar KeyWorldScreenHeader_65_5056
+    dfar KeyWorldScreenHeader_63_472D
+    dfar KeyWorldScreenHeader_62_78C0
+    dfar KeyWorldScreenHeader_63_5E57
+    dfar KeyWorldScreenHeader_64_6272
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_64_46A7
+    dfar KeyWorldScreenHeader_63_4867
+    dfar KeyWorldScreenHeader_65_7023
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_505C
     dfar Data_062_7CBA
     dfar Data_062_56DF
     dfar Data_065_5414
@@ -774,22 +774,22 @@ Data_068_46D3:: ; address name
     dfar Data_066_4BC0
     dfar Data_066_4C04
     dfar Data_066_53AD
-    dfar Data_062_70C1 ; id 5
-    dfar Data_065_5FE5
-    dfar Data_062_42B3
-    dfar Data_065_6D65
-    dfar Data_066_4859
-    dfar Data_066_4917
-    dfar Data_066_478E
-    dfar Data_066_4D7D
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_62_70C1 ; id 5
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_62_42B3
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_062_744A
     dfar Data_065_6391
     dfar Data_062_4967
@@ -817,22 +817,22 @@ Data_068_4913:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup48::
 Data_068_4919:: ; address name
-    dfar Data_066_55DC ; id 0
-    dfar Data_065_6693
-    dfar Data_065_64CA
-    dfar Data_065_76ED
-    dfar Data_062_7626
-    dfar Data_062_423A
-    dfar Data_062_423A
-    dfar Data_062_702C
-    dfar Data_064_7848
-    dfar Data_063_6DB3
-    dfar Data_062_41C9
-    dfar Data_064_697E
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
-    dfar Data_066_46C5
-    dfar Data_066_4F98
+    dfar KeyWorldScreenHeader_66_55DC ; id 0
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_65_76ED
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_4F98
     dfar Data_066_5AB9
     dfar Data_065_6B2C
     dfar Data_065_6A8F
@@ -849,22 +849,22 @@ Data_068_4919:: ; address name
     dfar Data_064_7E84
     dfar Data_066_4B6F
     dfar Data_066_5366
-    dfar Data_066_5560 ; id 1
-    dfar Data_065_7641
-    dfar Data_066_5CC8
-    dfar Data_066_5658
-    dfar Data_065_5E8C
-    dfar Data_062_702C
-    dfar Data_065_6546
-    dfar Data_063_7626
-    dfar Data_066_4635
-    dfar Data_063_6EFF
-    dfar Data_064_6797
-    dfar Data_066_4E6E
-    dfar Data_066_5CC8
-    dfar Data_064_7C14
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5560 ; id 1
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_63_7626
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_63_6EFF
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_5A87
     dfar Data_065_7AE1
     dfar Data_066_615D
@@ -881,22 +881,22 @@ Data_068_4919:: ; address name
     dfar Data_064_7F35
     dfar Data_066_52E9
     dfar Data_066_615D
-    dfar Data_065_65EA ; id 2
-    dfar Data_065_6808
-    dfar Data_065_74B6
-    dfar Data_066_5CC8
-    dfar Data_063_6DB3
-    dfar Data_064_6AEC
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_062_77EB
-    dfar Data_065_6F70
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7B56
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_65_65EA ; id 2
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_64_6AEC
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_65_6F70
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7B56
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_065_6AEA
     dfar Data_065_6B9F
     dfar Data_065_7A51
@@ -924,22 +924,22 @@ Data_068_4A39:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup49::
 Data_068_4A3C:: ; address name
-    dfar Data_066_54FD ; id 0
-    dfar Data_065_6693
-    dfar Data_065_77A4
-    dfar Data_066_5705
-    dfar Data_064_77CC
-    dfar Data_063_6E4E
-    dfar Data_062_6EDC
-    dfar Data_063_7626
-    dfar Data_066_5CC8
-    dfar Data_064_7A7D
-    dfar Data_063_6C79
-    dfar Data_062_6EDC
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7A7D
-    dfar Data_066_4546
+    dfar KeyWorldScreenHeader_66_54FD ; id 0
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_77A4
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_64_77CC
+    dfar KeyWorldScreenHeader_63_6E4E
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_63_7626
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_66_4546
     dfar Data_066_5A5F
     dfar Data_065_6B2C
     dfar Data_065_7B60
@@ -956,22 +956,22 @@ Data_068_4A3C:: ; address name
     dfar Data_066_615D
     dfar Data_064_7EB0
     dfar Data_066_4AF5
-    dfar Data_065_6546 ; id 1
-    dfar Data_065_64CA
-    dfar Data_065_6693
-    dfar Data_065_7878
-    dfar Data_063_6E4E
-    dfar Data_062_5337
-    dfar Data_065_416D
-    dfar Data_062_6EDC
-    dfar Data_065_5FE5
-    dfar Data_064_48DA
-    dfar Data_063_4867
-    dfar Data_064_697E
-    dfar Data_066_45B4
-    dfar Data_066_4635
-    dfar Data_066_46C5
-    dfar Data_066_4DE4
+    dfar KeyWorldScreenHeader_65_6546 ; id 1
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_7878
+    dfar KeyWorldScreenHeader_63_6E4E
+    dfar KeyWorldScreenHeader_62_5337
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_64_48DA
+    dfar KeyWorldScreenHeader_63_4867
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_4DE4
     dfar Data_065_6AC6
     dfar Data_065_6A8F
     dfar Data_065_6B2C
@@ -988,22 +988,22 @@ Data_068_4A3C:: ; address name
     dfar Data_066_4B3B
     dfar Data_066_4B6F
     dfar Data_066_52E9
-    dfar Data_066_5705 ; id 2
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_065_5FE5
-    dfar Data_065_6DE3
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_4635
-    dfar Data_064_720E
-    dfar Data_065_74B6
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7945
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5705 ; id 2
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_64_720E
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_5B0F
     dfar Data_065_7A80
     dfar Data_066_615D
@@ -1031,22 +1031,22 @@ Data_068_4B5C:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4A::
 Data_068_4B5F:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5658
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_066_5705
-    dfar Data_065_5E8C
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_064_7A7D
-    dfar Data_063_6DB3
-    dfar Data_062_6E33
-    dfar Data_065_68B7
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
-    dfar Data_066_45B4
-    dfar Data_066_4917
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4917
     dfar Data_066_615D
     dfar Data_066_5AE7
     dfar Data_065_7A80
@@ -1063,22 +1063,22 @@ Data_068_4B5F:: ; address name
     dfar Data_064_7E84
     dfar Data_066_4B1A
     dfar Data_066_4C37
-    dfar Data_066_57D9 ; id 1
-    dfar Data_065_77A4
-    dfar Data_066_5CC8
-    dfar Data_066_5477
-    dfar Data_062_78C0
-    dfar Data_062_70C1
-    dfar Data_065_75A3
-    dfar Data_062_7626
-    dfar Data_065_5FE5
-    dfar Data_064_6A43
-    dfar Data_064_706F
-    dfar Data_065_5D1D
-    dfar Data_066_4859
-    dfar Data_066_505C
-    dfar Data_064_7945
-    dfar Data_066_45B4
+    dfar KeyWorldScreenHeader_66_57D9 ; id 1
+    dfar KeyWorldScreenHeader_65_77A4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_62_78C0
+    dfar KeyWorldScreenHeader_62_70C1
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_64_6A43
+    dfar KeyWorldScreenHeader_64_706F
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_505C
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_66_45B4
     dfar Data_066_5B5A
     dfar Data_065_7B60
     dfar Data_066_615D
@@ -1095,22 +1095,22 @@ Data_068_4B5F:: ; address name
     dfar Data_066_53AD
     dfar Data_064_7E51
     dfar Data_066_4B1A
-    dfar Data_065_64CA ; id 2
-    dfar Data_065_6693
-    dfar Data_065_68B7
-    dfar Data_065_7878
-    dfar Data_062_5209
-    dfar Data_064_5AD4
-    dfar Data_065_445B
-    dfar Data_065_70BD
-    dfar Data_064_46A7
-    dfar Data_063_54F8
-    dfar Data_063_48FA
-    dfar Data_065_7023
-    dfar Data_066_46C5
-    dfar Data_066_4546
-    dfar Data_066_4917
-    dfar Data_066_5115
+    dfar KeyWorldScreenHeader_65_64CA ; id 2
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_65_7878
+    dfar KeyWorldScreenHeader_62_5209
+    dfar KeyWorldScreenHeader_64_5AD4
+    dfar KeyWorldScreenHeader_65_445B
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_64_46A7
+    dfar KeyWorldScreenHeader_63_54F8
+    dfar KeyWorldScreenHeader_63_48FA
+    dfar KeyWorldScreenHeader_65_7023
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_4546
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_66_5115
     dfar Data_065_6A8F
     dfar Data_065_6B2C
     dfar Data_065_6BD1
@@ -1138,22 +1138,22 @@ Data_068_4C7F:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4B::
 Data_068_4C82:: ; address name
-    dfar Data_066_54FD ; id 0
-    dfar Data_065_64CA
-    dfar Data_065_643F
-    dfar Data_065_6808
-    dfar Data_062_7626
-    dfar Data_062_5209
-    dfar Data_064_594F
-    dfar Data_065_416D
-    dfar Data_062_76AE
-    dfar Data_064_46A7
-    dfar Data_063_531D
-    dfar Data_063_468C
-    dfar Data_064_79CF
-    dfar Data_066_46C5
-    dfar Data_066_478E
-    dfar Data_066_4546
+    dfar KeyWorldScreenHeader_66_54FD ; id 0
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_65_643F
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_5209
+    dfar KeyWorldScreenHeader_64_594F
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_64_46A7
+    dfar KeyWorldScreenHeader_63_531D
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_66_4546
     dfar Data_066_5A5F
     dfar Data_065_6A8F
     dfar Data_065_6A71
@@ -1170,22 +1170,22 @@ Data_068_4C82:: ; address name
     dfar Data_066_4B6F
     dfar Data_066_4BC0
     dfar Data_066_4AF5
-    dfar Data_065_7878 ; id 1
-    dfar Data_066_5560
-    dfar Data_065_74B6
-    dfar Data_066_589C
-    dfar Data_062_6E33
-    dfar Data_065_5D1D
-    dfar Data_062_6E33
-    dfar Data_065_5D1D
-    dfar Data_064_6828
-    dfar Data_066_4635
-    dfar Data_066_4635
-    dfar Data_063_6D0B
-    dfar Data_066_4EF7
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
+    dfar KeyWorldScreenHeader_65_7878 ; id 1
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
     dfar Data_065_7B9E
     dfar Data_066_5A87
     dfar Data_065_7A51
@@ -1202,22 +1202,22 @@ Data_068_4C82:: ; address name
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_064_7E84
-    dfar Data_065_6546 ; id 2
-    dfar Data_065_7878
-    dfar Data_066_57D9
-    dfar Data_065_7641
-    dfar Data_064_6828
-    dfar Data_066_505C
-    dfar Data_062_77EB
-    dfar Data_065_6DE3
-    dfar Data_062_6F90
-    dfar Data_065_6736
-    dfar Data_065_5E8C
-    dfar Data_065_6D65
-    dfar Data_066_4859
-    dfar Data_066_46C5
-    dfar Data_066_4635
-    dfar Data_066_4D7D
+    dfar KeyWorldScreenHeader_65_6546 ; id 2
+    dfar KeyWorldScreenHeader_65_7878
+    dfar KeyWorldScreenHeader_66_57D9
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_505C
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4D7D
     dfar Data_065_6AC6
     dfar Data_065_7B9E
     dfar Data_066_5B5A
@@ -1245,22 +1245,22 @@ Data_068_4DA2:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4C::
 Data_068_4DA5:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5477
-    dfar Data_066_5CC8
-    dfar Data_066_5658
-    dfar Data_065_6693
-    dfar Data_065_5C71
-    dfar Data_066_55DC
-    dfar Data_065_5DD4
-    dfar Data_062_5337
-    dfar Data_064_58E6
-    dfar Data_062_7626
-    dfar Data_062_40EE
-    dfar Data_064_4734
-    dfar Data_063_64F3
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_62_5337
+    dfar KeyWorldScreenHeader_64_58E6
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_64_4734
+    dfar KeyWorldScreenHeader_63_64F3
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
@@ -1277,22 +1277,22 @@ Data_068_4DA5:: ; address name
     dfar Data_062_48DA
     dfar Data_064_4B1E
     dfar Data_063_694D
-    dfar Data_065_65EA ; id 1
-    dfar Data_065_76ED
-    dfar Data_066_5CC8
-    dfar Data_066_57D9
-    dfar Data_062_41C9
-    dfar Data_065_6F70
-    dfar Data_066_5705
-    dfar Data_065_5FE5
-    dfar Data_065_416D
-    dfar Data_062_702C
-    dfar Data_065_5F42
-    dfar Data_062_4365
-    dfar Data_062_662E
-    dfar Data_064_5A34
-    dfar Data_064_5AD4
-    dfar Data_065_43BD
+    dfar KeyWorldScreenHeader_65_65EA ; id 1
+    dfar KeyWorldScreenHeader_65_76ED
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_57D9
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_65_6F70
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_65_5F42
+    dfar KeyWorldScreenHeader_62_4365
+    dfar KeyWorldScreenHeader_62_662E
+    dfar KeyWorldScreenHeader_64_5A34
+    dfar KeyWorldScreenHeader_64_5AD4
+    dfar KeyWorldScreenHeader_65_43BD
     dfar Data_065_6AEA
     dfar Data_065_7B11
     dfar Data_066_615D
@@ -1309,22 +1309,22 @@ Data_068_4DA5:: ; address name
     dfar Data_064_5E47
     dfar Data_064_5E8E
     dfar Data_065_470B
-    dfar Data_065_64CA ; id 2
-    dfar Data_065_6546
-    dfar Data_065_6546
-    dfar Data_065_76ED
-    dfar Data_062_5166
-    dfar Data_064_594F
-    dfar Data_065_41F0
-    dfar Data_065_6E8B
-    dfar Data_063_5EAF
-    dfar Data_064_6073
-    dfar Data_063_4867
-    dfar Data_065_70BD
-    dfar Data_063_5E57
-    dfar Data_064_54EA
-    dfar Data_064_68E4
-    dfar Data_066_505C
+    dfar KeyWorldScreenHeader_65_64CA ; id 2
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_76ED
+    dfar KeyWorldScreenHeader_62_5166
+    dfar KeyWorldScreenHeader_64_594F
+    dfar KeyWorldScreenHeader_65_41F0
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_63_5EAF
+    dfar KeyWorldScreenHeader_64_6073
+    dfar KeyWorldScreenHeader_63_4867
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_63_5E57
+    dfar KeyWorldScreenHeader_64_54EA
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_505C
     dfar Data_065_6A8F
     dfar Data_065_6AC6
     dfar Data_065_6AC6
@@ -1341,22 +1341,22 @@ Data_068_4DA5:: ; address name
     dfar Data_064_57CD
     dfar Data_064_6D64
     dfar Data_066_53AD
-    dfar Data_064_7B56 ; id 3
-    dfar Data_063_6BCD
-    dfar Data_062_5209
-    dfar Data_065_56B8
-    dfar Data_066_5CC8
-    dfar Data_062_7626
-    dfar Data_063_5EAF
-    dfar Data_064_6145
-    dfar Data_066_5CC8
-    dfar Data_062_76AE
-    dfar Data_064_46A7
+    dfar KeyWorldScreenHeader_64_7B56 ; id 3
+    dfar KeyWorldScreenHeader_63_6BCD
+    dfar KeyWorldScreenHeader_62_5209
+    dfar KeyWorldScreenHeader_65_56B8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_63_5EAF
+    dfar KeyWorldScreenHeader_64_6145
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_64_46A7
     dfar Data_063_44A8
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
-    dfar Data_066_4635
-    dfar Data_066_4917
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4917
     dfar Data_064_7F00
     dfar Data_063_7181
     dfar Data_062_56DF
@@ -1373,22 +1373,22 @@ Data_068_4DA5:: ; address name
     dfar Data_064_7E84
     dfar Data_066_4B3B
     dfar Data_066_4C37
-    dfar Data_064_61C5 ; id 4
-    dfar Data_063_65BE
-    dfar Data_064_6073
+    dfar KeyWorldScreenHeader_64_61C5 ; id 4
+    dfar KeyWorldScreenHeader_63_65BE
+    dfar KeyWorldScreenHeader_64_6073
     dfar Data_065_4D49
-    dfar Data_063_468C
-    dfar Data_064_4843
-    dfar Data_063_472D
-    dfar Data_064_47BD
-    dfar Data_064_68E4
-    dfar Data_066_4917
-    dfar Data_066_4635
-    dfar Data_063_6D0B
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_64_4843
+    dfar KeyWorldScreenHeader_63_472D
+    dfar KeyWorldScreenHeader_64_47BD
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
     dfar Data_064_6532
     dfar Data_063_69A8
     dfar Data_064_64A7
@@ -1405,22 +1405,22 @@ Data_068_4DA5:: ; address name
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_064_7E84
-    dfar Data_065_5587 ; id 5
-    dfar Data_064_5218
-    dfar Data_062_6EDC
-    dfar Data_065_7878
-    dfar Data_063_557A
-    dfar Data_065_4FAD
-    dfar Data_065_416D
-    dfar Data_065_70BD
-    dfar Data_062_423A
-    dfar Data_064_454F
-    dfar Data_063_453F
-    dfar Data_065_7023
-    dfar Data_066_45B4
-    dfar Data_066_4859
-    dfar Data_066_46C5
-    dfar Data_066_5115
+    dfar KeyWorldScreenHeader_65_5587 ; id 5
+    dfar KeyWorldScreenHeader_64_5218
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_7878
+    dfar KeyWorldScreenHeader_63_557A
+    dfar KeyWorldScreenHeader_65_4FAD
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_64_454F
+    dfar KeyWorldScreenHeader_63_453F
+    dfar KeyWorldScreenHeader_65_7023
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_5115
     dfar Data_065_59BF
     dfar Data_064_56B0
     dfar Data_062_73A7
@@ -1448,22 +1448,22 @@ Data_068_4FE5:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4D::
 Data_068_4FEB:: ; address name
-    dfar Data_066_55DC ; id 0
-    dfar Data_065_7641
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_7626
-    dfar Data_062_6F90
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_064_7848
-    dfar Data_063_6DB3
-    dfar Data_062_6EDC
-    dfar Data_065_6546
-    dfar Data_066_5CC8
-    dfar Data_062_774A
-    dfar Data_062_5166
-    dfar Data_065_416D
+    dfar KeyWorldScreenHeader_66_55DC ; id 0
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_62_5166
+    dfar KeyWorldScreenHeader_65_416D
     dfar Data_066_5AB9
     dfar Data_065_7AE1
     dfar Data_066_615D
@@ -1480,22 +1480,22 @@ Data_068_4FEB:: ; address name
     dfar Data_062_7BFD
     dfar Data_062_569C
     dfar Data_065_4643
-    dfar Data_066_5705 ; id 1
-    dfar Data_065_77A4
-    dfar Data_066_5CC8
-    dfar Data_066_54FD
-    dfar Data_062_78C0
-    dfar Data_062_6E33
-    dfar Data_065_6693
-    dfar Data_065_5C71
-    dfar Data_065_60A2
-    dfar Data_062_5166
-    dfar Data_064_59BA
-    dfar Data_065_40C4
-    dfar Data_062_40EE
+    dfar KeyWorldScreenHeader_66_5705 ; id 1
+    dfar KeyWorldScreenHeader_65_77A4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_54FD
+    dfar KeyWorldScreenHeader_62_78C0
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_65_60A2
+    dfar KeyWorldScreenHeader_62_5166
+    dfar KeyWorldScreenHeader_64_59BA
+    dfar KeyWorldScreenHeader_65_40C4
+    dfar KeyWorldScreenHeader_62_40EE
     dfar Data_064_44CC
-    dfar Data_063_52A2
-    dfar Data_063_453F
+    dfar KeyWorldScreenHeader_63_52A2
+    dfar KeyWorldScreenHeader_63_453F
     dfar Data_066_5B0F
     dfar Data_065_7B60
     dfar Data_066_615D
@@ -1512,22 +1512,22 @@ Data_068_4FEB:: ; address name
     dfar Data_064_4A2C
     dfar Data_063_5744
     dfar Data_063_4A65
-    dfar Data_065_6546 ; id 2
-    dfar Data_065_6693
-    dfar Data_065_65EA
-    dfar Data_065_74B6
-    dfar Data_062_41C9
-    dfar Data_064_68E4
-    dfar Data_066_45B4
-    dfar Data_066_4D7D
-    dfar Data_064_697E
-    dfar Data_066_4EF7
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_6F90
-    dfar Data_065_65EA
-    dfar Data_065_6736
-    dfar Data_065_751D
+    dfar KeyWorldScreenHeader_65_6546 ; id 2
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_65_751D
     dfar Data_065_6AC6
     dfar Data_065_6B2C
     dfar Data_065_6AEA
@@ -1544,22 +1544,22 @@ Data_068_4FEB:: ; address name
     dfar Data_065_6AEA
     dfar Data_065_6B50
     dfar Data_065_7A80
-    dfar Data_066_5705 ; id 3
-    dfar Data_065_5C71
-    dfar Data_064_454F
-    dfar Data_063_468C
-    dfar Data_062_7985
-    dfar Data_062_40EE
-    dfar Data_062_40EE
-    dfar Data_064_6797
-    dfar Data_064_78B1
-    dfar Data_066_4859
-    dfar Data_063_6C79
-    dfar Data_062_6D6B
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_78B1
-    dfar Data_066_46C5
+    dfar KeyWorldScreenHeader_66_5705 ; id 3
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_64_454F
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_62_7985
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_66_46C5
     dfar Data_066_5B0F
     dfar Data_065_6244
     dfar Data_064_4A58
@@ -1576,22 +1576,22 @@ Data_068_4FEB:: ; address name
     dfar Data_066_615D
     dfar Data_064_7E22
     dfar Data_066_4B6F
-    dfar Data_064_66F6 ; id 4
-    dfar Data_066_4917
-    dfar Data_063_6FC0
-    dfar Data_062_4365
-    dfar Data_066_4D7D
-    dfar Data_066_589C
-    dfar Data_065_5DD4
-    dfar Data_064_697E
-    dfar Data_065_74B6
-    dfar Data_064_7C14
-    dfar Data_066_45B4
-    dfar Data_066_4EF7
-    dfar Data_066_4CD6
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_64_66F6 ; id 4
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_63_6FC0
+    dfar KeyWorldScreenHeader_62_4365
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_66_4CD6
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_064_6CC4
     dfar Data_066_4C37
     dfar Data_063_72C9
@@ -1608,22 +1608,22 @@ Data_068_4FEB:: ; address name
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
-    dfar Data_062_406A ; id 5
-    dfar Data_062_40EE
-    dfar Data_062_40EE
-    dfar Data_065_6DE3
-    dfar Data_063_6BCD
-    dfar Data_064_6797
-    dfar Data_066_45B4
-    dfar Data_066_4E6E
-    dfar Data_062_75B0
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_77CC
-    dfar Data_066_4CD6
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_62_406A ; id 5
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_63_6BCD
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_77CC
+    dfar KeyWorldScreenHeader_66_4CD6
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_062_48C0
     dfar Data_062_48DA
     dfar Data_062_48DA
@@ -1651,22 +1651,22 @@ Data_068_522B:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4E::
 Data_068_5231:: ; address name
-    dfar Data_066_5658 ; id 0
-    dfar Data_065_6693
-    dfar Data_065_7641
-    dfar Data_066_5CC8
-    dfar Data_062_774A
-    dfar Data_062_423A
-    dfar Data_062_6F90
-    dfar Data_065_65EA
-    dfar Data_064_79CF
-    dfar Data_063_6DB3
-    dfar Data_062_41C9
-    dfar Data_064_6828
-    dfar Data_066_5CC8
-    dfar Data_062_7517
-    dfar Data_064_6828
-    dfar Data_066_4E6E
+    dfar KeyWorldScreenHeader_66_5658 ; id 0
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7517
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_4E6E
     dfar Data_066_5AE7
     dfar Data_065_6B2C
     dfar Data_065_7AE1
@@ -1683,22 +1683,22 @@ Data_068_5231:: ; address name
     dfar Data_062_7B3B
     dfar Data_064_6D28
     dfar Data_066_5311
-    dfar Data_066_5CC8 ; id 1
-    dfar Data_066_5560
-    dfar Data_065_6736
-    dfar Data_065_6808
-    dfar Data_065_6546
-    dfar Data_065_5D1D
-    dfar Data_062_406A
-    dfar Data_062_5485
-    dfar Data_063_6C79
-    dfar Data_062_40EE
-    dfar Data_062_5166
-    dfar Data_065_55E2
-    dfar Data_064_78B1
-    dfar Data_063_6C79
-    dfar Data_064_454F
-    dfar Data_063_64F3
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_62_5485
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_5166
+    dfar KeyWorldScreenHeader_65_55E2
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_64_454F
+    dfar KeyWorldScreenHeader_63_64F3
     dfar Data_066_615D
     dfar Data_066_5A87
     dfar Data_065_6B50
@@ -1715,22 +1715,22 @@ Data_068_5231:: ; address name
     dfar Data_063_71D4
     dfar Data_064_4A58
     dfar Data_063_694D
-    dfar Data_065_64CA ; id 2
-    dfar Data_065_5F42
-    dfar Data_065_70BD
-    dfar Data_066_5CC8
-    dfar Data_065_416D
-    dfar Data_063_6EFF
-    dfar Data_062_70C1
-    dfar Data_065_75A3
-    dfar Data_064_5284
-    dfar Data_062_7985
-    dfar Data_062_41C9
-    dfar Data_065_6D65
-    dfar Data_062_6784
-    dfar Data_064_7C14
-    dfar Data_066_45B4
-    dfar Data_066_4D7D
+    dfar KeyWorldScreenHeader_65_64CA ; id 2
+    dfar KeyWorldScreenHeader_65_5F42
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_63_6EFF
+    dfar KeyWorldScreenHeader_62_70C1
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_64_5284
+    dfar KeyWorldScreenHeader_62_7985
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_62_6784
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4D7D
     dfar Data_065_6A8F
     dfar Data_065_634B
     dfar Data_065_73A8
@@ -1747,22 +1747,22 @@ Data_068_5231:: ; address name
     dfar Data_064_7F35
     dfar Data_066_4B1A
     dfar Data_066_52C5
-    dfar Data_066_5477 ; id 3
-    dfar Data_065_5F42
-    dfar Data_065_6F70
-    dfar Data_066_5CC8
-    dfar Data_064_7A7D
-    dfar Data_063_6E4E
-    dfar Data_062_702C
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_062_77EB
-    dfar Data_062_42B3
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_064_7A7D
-    dfar Data_066_478E
-    dfar Data_066_4DE4
+    dfar KeyWorldScreenHeader_66_5477 ; id 3
+    dfar KeyWorldScreenHeader_65_5F42
+    dfar KeyWorldScreenHeader_65_6F70
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_63_6E4E
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_62_42B3
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_66_4DE4
     dfar Data_066_5A3B
     dfar Data_065_634B
     dfar Data_065_7334
@@ -1779,22 +1779,22 @@ Data_068_5231:: ; address name
     dfar Data_064_7EB0
     dfar Data_066_4BC0
     dfar Data_066_52E9
-    dfar Data_066_5CC8 ; id 4
-    dfar Data_062_76AE
-    dfar Data_062_528E
-    dfar Data_065_56B8
-    dfar Data_066_5CC8
-    dfar Data_062_7626
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 4
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_62_528E
+    dfar KeyWorldScreenHeader_65_56B8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
     dfar Data_064_44CC
-    dfar Data_063_531D
-    dfar Data_066_5CC8
-    dfar Data_064_78B1
-    dfar Data_063_6D0B
-    dfar Data_062_41C9
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7945
-    dfar Data_066_4635
+    dfar KeyWorldScreenHeader_63_531D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_66_4635
     dfar Data_066_615D
     dfar Data_062_7BC5
     dfar Data_062_56FE
@@ -1811,22 +1811,22 @@ Data_068_5231:: ; address name
     dfar Data_066_615D
     dfar Data_064_7E51
     dfar Data_066_4B3B
-    dfar Data_065_5B98 ; id 5
-    dfar Data_062_68C2
-    dfar Data_065_4291
-    dfar Data_065_6D65
-    dfar Data_063_64F3
-    dfar Data_064_6272
-    dfar Data_063_468C
-    dfar Data_065_6D65
-    dfar Data_064_48DA
-    dfar Data_063_4867
-    dfar Data_064_6828
-    dfar Data_066_4DE4
-    dfar Data_066_4917
-    dfar Data_066_4859
-    dfar Data_066_505C
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_65_5B98 ; id 5
+    dfar KeyWorldScreenHeader_62_68C2
+    dfar KeyWorldScreenHeader_65_4291
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_63_64F3
+    dfar KeyWorldScreenHeader_64_6272
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_64_48DA
+    dfar KeyWorldScreenHeader_63_4867
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_505C
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_065_5BBD
     dfar Data_062_6BF7
     dfar Data_065_469B
@@ -1854,22 +1854,22 @@ Data_068_5471:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4F::
 Data_068_5477:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5705
-    dfar Data_066_5705
-    dfar Data_065_65EA
-    dfar Data_065_75A3
-    dfar Data_062_77EB
-    dfar Data_062_774A
-    dfar Data_064_6797
-    dfar Data_064_7139
-    dfar Data_063_76CB
-    dfar Data_064_7A7D
-    dfar Data_066_4D7D
-    dfar Data_062_77EB
-    dfar Data_062_702C
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_64_7139
+    dfar KeyWorldScreenHeader_63_76CB
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_62_702C
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
@@ -1886,22 +1886,22 @@ Data_068_5477:: ; address name
     dfar Data_066_52C5
     dfar Data_062_7C25
     dfar Data_062_7409
-    dfar Data_065_6736 ; id 1
-    dfar Data_065_6736
-    dfar Data_065_77A4
-    dfar Data_066_57D9
-    dfar Data_064_697E
-    dfar Data_063_6E4E
-    dfar Data_065_6F70
-    dfar Data_066_5705
-    dfar Data_066_4F98
-    dfar Data_062_77EB
-    dfar Data_065_7023
-    dfar Data_062_77EB
-    dfar Data_065_6693
-    dfar Data_063_76CB
-    dfar Data_066_505C
-    dfar Data_062_78C0
+    dfar KeyWorldScreenHeader_65_6736 ; id 1
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_65_77A4
+    dfar KeyWorldScreenHeader_66_57D9
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_63_6E4E
+    dfar KeyWorldScreenHeader_65_6F70
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_66_4F98
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_65_7023
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_63_76CB
+    dfar KeyWorldScreenHeader_66_505C
+    dfar KeyWorldScreenHeader_62_78C0
     dfar Data_065_6B50
     dfar Data_065_6B50
     dfar Data_065_7B60
@@ -1918,22 +1918,22 @@ Data_068_5477:: ; address name
     dfar Data_063_7B7B
     dfar Data_066_53AD
     dfar Data_062_7C82
-    dfar Data_066_5CC8 ; id 2
-    dfar Data_066_5560
-    dfar Data_065_75A3
-    dfar Data_066_5CC8
-    dfar Data_065_6546
-    dfar Data_065_5D1D
-    dfar Data_062_6EDC
-    dfar Data_065_7641
-    dfar Data_062_40EE
-    dfar Data_062_41C9
-    dfar Data_062_41C9
-    dfar Data_065_6E8B
-    dfar Data_064_6797
-    dfar Data_063_6C79
-    dfar Data_062_423A
-    dfar Data_065_6D65
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_65_6D65
     dfar Data_066_615D
     dfar Data_066_5A87
     dfar Data_065_7AAA
@@ -1950,22 +1950,22 @@ Data_068_5477:: ; address name
     dfar Data_063_71D4
     dfar Data_062_494B
     dfar Data_065_7290
-    dfar Data_066_589C ; id 3
-    dfar Data_065_68B7
-    dfar Data_065_5DD4
-    dfar Data_062_406A
-    dfar Data_062_7985
-    dfar Data_064_6AEC
-    dfar Data_063_6EFF
-    dfar Data_062_40EE
-    dfar Data_064_7C14
-    dfar Data_066_5115
-    dfar Data_062_7985
-    dfar Data_064_6797
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7C14
-    dfar Data_066_4DE4
+    dfar KeyWorldScreenHeader_66_589C ; id 3
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_62_7985
+    dfar KeyWorldScreenHeader_64_6AEC
+    dfar KeyWorldScreenHeader_63_6EFF
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_66_5115
+    dfar KeyWorldScreenHeader_62_7985
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_66_4DE4
     dfar Data_066_5B97
     dfar Data_065_6BD1
     dfar Data_065_62D2
@@ -1982,22 +1982,22 @@ Data_068_5477:: ; address name
     dfar Data_066_615D
     dfar Data_064_7F35
     dfar Data_066_52E9
-    dfar Data_062_406A ; id 4
-    dfar Data_062_6E33
-    dfar Data_065_6546
-    dfar Data_063_73F8
-    dfar Data_062_40EE
-    dfar Data_062_41C9
-    dfar Data_064_6828
-    dfar Data_064_6F23
-    dfar Data_063_6BCD
-    dfar Data_062_423A
-    dfar Data_065_6E8B
-    dfar Data_062_75B0
-    dfar Data_064_7848
-    dfar Data_066_4635
-    dfar Data_066_4E6E
-    dfar Data_064_7848
+    dfar KeyWorldScreenHeader_62_406A ; id 4
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_63_73F8
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_64_6F23
+    dfar KeyWorldScreenHeader_63_6BCD
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_64_7848
     dfar Data_062_48C0
     dfar Data_062_737B
     dfar Data_065_6AC6
@@ -2014,22 +2014,22 @@ Data_068_5477:: ; address name
     dfar Data_066_4B3B
     dfar Data_066_5311
     dfar Data_064_7DFB
-    dfar Data_066_4DE4 ; id 5
-    dfar Data_064_78B1
-    dfar Data_063_6DB3
-    dfar Data_065_6F70
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_062_77EB
-    dfar Data_065_7023
-    dfar Data_062_6E33
-    dfar Data_065_6546
-    dfar Data_063_7793
-    dfar Data_066_5115
-    dfar Data_066_45B4
-    dfar Data_066_4635
-    dfar Data_066_5115
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_4DE4 ; id 5
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_65_6F70
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_65_7023
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_63_7793
+    dfar KeyWorldScreenHeader_66_5115
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_5115
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_52E9
     dfar Data_064_7E22
     dfar Data_063_722B
@@ -2057,22 +2057,22 @@ Data_068_56B7:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup50::
 Data_068_56BD:: ; address name
-    dfar Data_066_54FD ; id 0
-    dfar Data_065_65EA
-    dfar Data_065_6736
-    dfar Data_065_75A3
-    dfar Data_062_7626
-    dfar Data_062_41C9
-    dfar Data_062_423A
-    dfar Data_062_6E33
-    dfar Data_062_76AE
-    dfar Data_062_40EE
-    dfar Data_062_42B3
-    dfar Data_062_41C9
-    dfar Data_064_7945
-    dfar Data_063_6D0B
-    dfar Data_062_53C7
-    dfar Data_065_416D
+    dfar KeyWorldScreenHeader_66_54FD ; id 0
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_42B3
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_62_53C7
+    dfar KeyWorldScreenHeader_65_416D
     dfar Data_066_5A5F
     dfar Data_065_6AEA
     dfar Data_065_6B50
@@ -2089,22 +2089,22 @@ Data_068_56BD:: ; address name
     dfar Data_063_71F3
     dfar Data_062_5761
     dfar Data_065_4643
-    dfar Data_066_5CC8 ; id 1
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_065_743F
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_774A
-    dfar Data_065_6C81
-    dfar Data_066_5477
-    dfar Data_065_74B6
-    dfar Data_062_77EB
-    dfar Data_062_6CE1
-    dfar Data_065_5BD1
-    dfar Data_062_6D6B
-    dfar Data_065_5FE5
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_743F
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_65_6C81
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_62_6CE1
+    dfar KeyWorldScreenHeader_65_5BD1
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_65_5FE5
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
@@ -2121,22 +2121,22 @@ Data_068_56BD:: ; address name
     dfar Data_065_6216
     dfar Data_062_732E
     dfar Data_065_6391
-    dfar Data_065_64CA ; id 2
-    dfar Data_065_68B7
-    dfar Data_065_77A4
-    dfar Data_066_5CC8
-    dfar Data_062_5166
-    dfar Data_065_43BD
-    dfar Data_062_70C1
-    dfar Data_065_751D
-    dfar Data_063_5E57
-    dfar Data_062_68C2
-    dfar Data_065_43BD
-    dfar Data_065_6D65
-    dfar Data_063_5EAF
-    dfar Data_064_6272
-    dfar Data_063_4867
-    dfar Data_065_6E8B
+    dfar KeyWorldScreenHeader_65_64CA ; id 2
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_65_77A4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_5166
+    dfar KeyWorldScreenHeader_65_43BD
+    dfar KeyWorldScreenHeader_62_70C1
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_63_5E57
+    dfar KeyWorldScreenHeader_62_68C2
+    dfar KeyWorldScreenHeader_65_43BD
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_63_5EAF
+    dfar KeyWorldScreenHeader_64_6272
+    dfar KeyWorldScreenHeader_63_4867
+    dfar KeyWorldScreenHeader_65_6E8B
     dfar Data_065_6A8F
     dfar Data_065_6BD1
     dfar Data_065_7B60
@@ -2153,22 +2153,22 @@ Data_068_56BD:: ; address name
     dfar Data_064_657E
     dfar Data_063_4BB7
     dfar Data_065_72E6
-    dfar Data_066_5560 ; id 3
-    dfar Data_065_5F42
+    dfar KeyWorldScreenHeader_66_5560 ; id 3
+    dfar KeyWorldScreenHeader_65_5F42
     dfar Data_063_5DED
-    dfar Data_062_694C
-    dfar Data_064_7848
-    dfar Data_063_6DB3
+    dfar KeyWorldScreenHeader_62_694C
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_63_6DB3
     dfar Data_064_44CC
-    dfar Data_063_53B1
-    dfar Data_066_5CC8
-    dfar Data_064_7B56
-    dfar Data_063_6DB3
-    dfar Data_064_6828
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
-    dfar Data_066_505C
+    dfar KeyWorldScreenHeader_63_53B1
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7B56
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_505C
     dfar Data_066_5A87
     dfar Data_065_634B
     dfar Data_063_6298
@@ -2185,22 +2185,22 @@ Data_068_56BD:: ; address name
     dfar Data_066_615D
     dfar Data_064_7E84
     dfar Data_066_53AD
-    dfar Data_064_59BA ; id 4
-    dfar Data_065_43BD
-    dfar Data_062_53C7
-    dfar Data_064_59BA
-    dfar Data_063_52A2
-    dfar Data_065_4FAD
-    dfar Data_065_5587
-    dfar Data_064_60D8
-    dfar Data_063_6DB3
-    dfar Data_064_454F
-    dfar Data_063_52A2
-    dfar Data_063_468C
-    dfar Data_064_77CC
-    dfar Data_066_46C5
-    dfar Data_066_4917
-    dfar Data_066_4635
+    dfar KeyWorldScreenHeader_64_59BA ; id 4
+    dfar KeyWorldScreenHeader_65_43BD
+    dfar KeyWorldScreenHeader_62_53C7
+    dfar KeyWorldScreenHeader_64_59BA
+    dfar KeyWorldScreenHeader_63_52A2
+    dfar KeyWorldScreenHeader_65_4FAD
+    dfar KeyWorldScreenHeader_65_5587
+    dfar KeyWorldScreenHeader_64_60D8
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_64_454F
+    dfar KeyWorldScreenHeader_63_52A2
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_64_77CC
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_66_4635
     dfar Data_064_5E12
     dfar Data_065_470B
     dfar Data_062_5761
@@ -2217,22 +2217,22 @@ Data_068_56BD:: ; address name
     dfar Data_066_4B6F
     dfar Data_066_4C37
     dfar Data_066_4B3B
-    dfar Data_062_5E91 ; id 5
-    dfar Data_063_453F
-    dfar Data_064_697E
-    dfar Data_066_4CD6
-    dfar Data_063_45E3
-    dfar Data_062_406A
-    dfar Data_065_6E8B
-    dfar Data_066_5CC8
-    dfar Data_064_6797
-    dfar Data_066_4546
-    dfar Data_066_4E6E
-    dfar Data_066_5CC8
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_62_5E91 ; id 5
+    dfar KeyWorldScreenHeader_63_453F
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_66_4CD6
+    dfar KeyWorldScreenHeader_63_45E3
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4546
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_062_63DA
     dfar Data_063_4A65
     dfar Data_064_6D86
@@ -2260,22 +2260,22 @@ Data_068_58FD:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup51::
 Data_068_5903:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_55DC
-    dfar Data_065_65EA
-    dfar Data_065_6546
-    dfar Data_066_5477
-    dfar Data_065_5DD4
-    dfar Data_062_41C9
-    dfar Data_064_6797
-    dfar Data_062_77EB
-    dfar Data_064_6828
-    dfar Data_066_4635
-    dfar Data_066_4DE4
-    dfar Data_062_774A
-    dfar Data_062_6EDC
-    dfar Data_065_75A3
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_615D
     dfar Data_066_5AB9
     dfar Data_065_6AEA
@@ -2292,22 +2292,22 @@ Data_068_5903:: ; address name
     dfar Data_062_73A7
     dfar Data_065_7AAA
     dfar Data_066_615D
-    dfar Data_065_68B7 ; id 1
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_4635
-    dfar Data_064_6FCF
-    dfar Data_065_77A4
-    dfar Data_066_57D9
-    dfar Data_066_5CC8
-    dfar Data_062_7626
-    dfar Data_062_6E33
-    dfar Data_065_5D1D
-    dfar Data_066_55DC
-    dfar Data_065_5D1D
-    dfar Data_062_41C9
-    dfar Data_064_6828
+    dfar KeyWorldScreenHeader_65_68B7 ; id 1
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_64_6FCF
+    dfar KeyWorldScreenHeader_65_77A4
+    dfar KeyWorldScreenHeader_66_57D9
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_64_6828
     dfar Data_065_6BD1
     dfar Data_065_7A80
     dfar Data_066_615D
@@ -2324,22 +2324,22 @@ Data_068_5903:: ; address name
     dfar Data_065_6293
     dfar Data_062_492F
     dfar Data_064_6D28
-    dfar Data_066_5CC8 ; id 2
-    dfar Data_066_5477
-    dfar Data_065_743F
-    dfar Data_066_5CC8
-    dfar Data_065_6808
-    dfar Data_065_5C71
-    dfar Data_062_6E33
-    dfar Data_065_751D
-    dfar Data_062_41C9
-    dfar Data_062_406A
-    dfar Data_062_40EE
-    dfar Data_065_6D65
-    dfar Data_066_45B4
-    dfar Data_063_6BCD
-    dfar Data_064_6797
-    dfar Data_066_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_743F
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_63_6BCD
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4DE4
     dfar Data_066_615D
     dfar Data_066_5A3B
     dfar Data_065_7A30
@@ -2356,22 +2356,22 @@ Data_068_5903:: ; address name
     dfar Data_063_7181
     dfar Data_064_6D09
     dfar Data_066_52E9
-    dfar Data_062_75B0 ; id 3
-    dfar Data_064_6659
-    dfar Data_064_706F
-    dfar Data_065_7641
-    dfar Data_062_7626
-    dfar Data_065_6E8B
-    dfar Data_064_78B1
-    dfar Data_066_4E6E
-    dfar Data_064_7848
-    dfar Data_064_720E
-    dfar Data_065_64CA
-    dfar Data_065_6736
-    dfar Data_066_5CC8
-    dfar Data_064_7B56
-    dfar Data_066_4546
-    dfar Data_066_4859
+    dfar KeyWorldScreenHeader_62_75B0 ; id 3
+    dfar KeyWorldScreenHeader_64_6659
+    dfar KeyWorldScreenHeader_64_706F
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_64_720E
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7B56
+    dfar KeyWorldScreenHeader_66_4546
+    dfar KeyWorldScreenHeader_66_4859
     dfar Data_062_7B66
     dfar Data_064_6C95
     dfar Data_064_761D
@@ -2388,22 +2388,22 @@ Data_068_5903:: ; address name
     dfar Data_064_7F00
     dfar Data_066_4AF5
     dfar Data_066_4C04
-    dfar Data_062_774A ; id 4
-    dfar Data_064_6797
-    dfar Data_066_4917
-    dfar Data_066_4DE4
-    dfar Data_062_77EB
-    dfar Data_065_6F70
-    dfar Data_066_5CC8
-    dfar Data_066_5477
-    dfar Data_065_60A2
-    dfar Data_065_6D0D
-    dfar Data_066_5CC8
-    dfar Data_064_78B1
-    dfar Data_066_4635
-    dfar Data_066_4E6E
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_62_774A ; id 4
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_65_6F70
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_60A2
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_062_7BFD
     dfar Data_064_6D09
     dfar Data_066_4C37
@@ -2420,22 +2420,22 @@ Data_068_5903:: ; address name
     dfar Data_066_5311
     dfar Data_066_615D
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 5
-    dfar Data_062_75B0
-    dfar Data_065_6D0D
-    dfar Data_066_5CC8
-    dfar Data_065_65EA
-    dfar Data_063_73F8
-    dfar Data_064_6F23
-    dfar Data_065_751D
-    dfar Data_066_478E
-    dfar Data_066_4D7D
-    dfar Data_064_7848
-    dfar Data_066_4D7D
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 5
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_63_73F8
+    dfar KeyWorldScreenHeader_64_6F23
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_615D
     dfar Data_062_7B66
     dfar Data_065_7279
@@ -2463,22 +2463,22 @@ Data_068_5B43:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup52::
 Data_068_5B49:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5658
-    dfar Data_065_6693
-    dfar Data_065_6546
-    dfar Data_066_589C
-    dfar Data_065_5E8C
-    dfar Data_062_423A
-    dfar Data_064_6797
-    dfar Data_064_7C14
-    dfar Data_063_6DB3
-    dfar Data_064_68E4
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
-    dfar Data_066_4EF7
-    dfar Data_066_5C32
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_66_5C32
     dfar Data_066_615D
     dfar Data_066_5AE7
     dfar Data_065_6B2C
@@ -2495,22 +2495,22 @@ Data_068_5B49:: ; address name
     dfar Data_064_7E84
     dfar Data_066_5342
     dfar Data_066_6138
-    dfar Data_065_751D ; id 1
-    dfar Data_066_5560
-    dfar Data_065_74B6
-    dfar Data_066_5CC8
-    dfar Data_064_6FCF
-    dfar Data_065_5D1D
-    dfar Data_062_6D6B
-    dfar Data_062_75B0
-    dfar Data_062_7626
-    dfar Data_064_6797
-    dfar Data_063_6BCD
-    dfar Data_062_406A
-    dfar Data_064_78B1
-    dfar Data_066_4D7D
-    dfar Data_064_7848
-    dfar Data_063_6BCD
+    dfar KeyWorldScreenHeader_65_751D ; id 1
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_6FCF
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_63_6BCD
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_63_6BCD
     dfar Data_065_7A80
     dfar Data_066_5A87
     dfar Data_065_7A51
@@ -2527,22 +2527,22 @@ Data_068_5B49:: ; address name
     dfar Data_066_52C5
     dfar Data_064_7DFB
     dfar Data_063_7181
-    dfar Data_066_5658 ; id 2
-    dfar Data_065_7641
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_065_5E8C
-    dfar Data_062_702C
-    dfar Data_065_6546
-    dfar Data_065_74B6
-    dfar Data_062_5337
-    dfar Data_064_5AD4
-    dfar Data_065_416D
-    dfar Data_065_6D0D
-    dfar Data_064_4734
-    dfar Data_063_5437
-    dfar Data_063_45E3
-    dfar Data_065_6D65
+    dfar KeyWorldScreenHeader_66_5658 ; id 2
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_62_5337
+    dfar KeyWorldScreenHeader_64_5AD4
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_64_4734
+    dfar KeyWorldScreenHeader_63_5437
+    dfar KeyWorldScreenHeader_63_45E3
+    dfar KeyWorldScreenHeader_65_6D65
     dfar Data_066_5AE7
     dfar Data_065_7AE1
     dfar Data_066_615D
@@ -2559,22 +2559,22 @@ Data_068_5B49:: ; address name
     dfar Data_063_57D1
     dfar Data_063_4AB5
     dfar Data_065_7290
-    dfar Data_066_5CC8 ; id 3
-    dfar Data_066_5CC8
-    dfar Data_066_5658
-    dfar Data_065_75A3
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_76AE
-    dfar Data_062_6EDC
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7945
-    dfar Data_066_4635
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_5AE7
@@ -2591,22 +2591,22 @@ Data_068_5B49:: ; address name
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 4
-    dfar Data_066_5CC8
-    dfar Data_066_54FD
-    dfar Data_065_5FE5
-    dfar Data_065_6693
-    dfar Data_065_751D
-    dfar Data_062_75B0
-    dfar Data_064_6A43
-    dfar Data_063_6DB3
-    dfar Data_062_6E33
-    dfar Data_063_73F8
-    dfar Data_066_505C
-    dfar Data_064_79CF
-    dfar Data_066_45B4
-    dfar Data_066_4D7D
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_54FD
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_64_6A43
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_63_73F8
+    dfar KeyWorldScreenHeader_66_505C
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_5A5F
@@ -2623,22 +2623,22 @@ Data_068_5B49:: ; address name
     dfar Data_066_4B1A
     dfar Data_066_52C5
     dfar Data_066_615D
-    dfar Data_062_43CA ; id 5
-    dfar Data_064_6828
-    dfar Data_066_45B4
-    dfar Data_066_4EF7
-    dfar Data_063_6FC0
-    dfar Data_062_6EDC
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_062_7985
-    dfar Data_062_41C9
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_064_7C14
-    dfar Data_066_4635
-    dfar Data_066_4D7D
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_62_43CA ; id 5
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_63_6FC0
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7985
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_062_49C6
     dfar Data_064_6D28
     dfar Data_066_4B1A
@@ -2666,22 +2666,22 @@ Data_068_5D89:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup53::
 Data_068_5D8F:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5CC8
-    dfar Data_066_5705
-    dfar Data_065_65EA
-    dfar Data_066_5477
-    dfar Data_065_6808
-    dfar Data_065_5FE5
-    dfar Data_062_423A
-    dfar Data_062_78C0
-    dfar Data_062_5485
-    dfar Data_064_5B93
-    dfar Data_065_41F0
-    dfar Data_062_76AE
-    dfar Data_064_4843
-    dfar Data_063_6744
-    dfar Data_062_6784
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_62_78C0
+    dfar KeyWorldScreenHeader_62_5485
+    dfar KeyWorldScreenHeader_64_5B93
+    dfar KeyWorldScreenHeader_65_41F0
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_64_4843
+    dfar KeyWorldScreenHeader_63_6744
+    dfar KeyWorldScreenHeader_62_6784
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_5B0F
@@ -2698,22 +2698,22 @@ Data_068_5D8F:: ; address name
     dfar Data_064_4B88
     dfar Data_063_6A61
     dfar Data_062_6B76
-    dfar Data_065_75A3 ; id 1
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5658
-    dfar Data_065_6E8B
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_77EB
-    dfar Data_062_6EDC
-    dfar Data_065_6546
-    dfar Data_065_76ED
-    dfar Data_064_7A7D
-    dfar Data_065_4291
-    dfar Data_062_41C9
-    dfar Data_062_702C
-    dfar Data_065_6736
+    dfar KeyWorldScreenHeader_65_75A3 ; id 1
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_76ED
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_65_4291
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_65_6736
     dfar Data_065_7AAA
     dfar Data_066_615D
     dfar Data_066_615D
@@ -2730,22 +2730,22 @@ Data_068_5D8F:: ; address name
     dfar Data_062_492F
     dfar Data_062_7409
     dfar Data_065_6B50
-    dfar Data_065_6546 ; id 2
-    dfar Data_065_643F
-    dfar Data_065_75A3
-    dfar Data_066_5CC8
-    dfar Data_062_40EE
-    dfar Data_062_406A
-    dfar Data_065_6DE3
-    dfar Data_066_5CC8
-    dfar Data_063_6C79
-    dfar Data_064_66F6
-    dfar Data_066_4E6E
-    dfar Data_066_5CC8
-    dfar Data_065_5D1D
-    dfar Data_062_6D6B
-    dfar Data_065_75A3
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_65_6546 ; id 2
+    dfar KeyWorldScreenHeader_65_643F
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_64_66F6
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_065_6AC6
     dfar Data_065_6A71
     dfar Data_065_7AAA
@@ -2762,22 +2762,22 @@ Data_068_5D8F:: ; address name
     dfar Data_062_732E
     dfar Data_065_7AAA
     dfar Data_066_615D
-    dfar Data_064_7848 ; id 3
-    dfar Data_063_6D0B
-    dfar Data_063_60DA
-    dfar Data_065_5B98
-    dfar Data_066_54FD
-    dfar Data_065_5DD4
-    dfar Data_064_4843
-    dfar Data_063_54F8
-    dfar Data_064_78B1
-    dfar Data_066_4635
-    dfar Data_063_6EFF
-    dfar Data_062_4365
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_77CC
-    dfar Data_066_4859
+    dfar KeyWorldScreenHeader_64_7848 ; id 3
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_63_60DA
+    dfar KeyWorldScreenHeader_65_5B98
+    dfar KeyWorldScreenHeader_66_54FD
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_64_4843
+    dfar KeyWorldScreenHeader_63_54F8
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_63_6EFF
+    dfar KeyWorldScreenHeader_62_4365
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_77CC
+    dfar KeyWorldScreenHeader_66_4859
     dfar Data_064_7DFB
     dfar Data_063_71F3
     dfar Data_063_63CF
@@ -2794,22 +2794,22 @@ Data_068_5D8F:: ; address name
     dfar Data_066_615D
     dfar Data_064_7DD4
     dfar Data_066_4C04
-    dfar Data_062_6807 ; id 4
-    dfar Data_063_6B43
-    dfar Data_062_53C7
-    dfar Data_064_5B93
-    dfar Data_063_6636
-    dfar Data_064_5284
-    dfar Data_064_454F
-    dfar Data_063_54F8
-    dfar Data_064_46A7
-    dfar Data_063_45E3
-    dfar Data_064_66F6
-    dfar Data_063_6DB3
+    dfar KeyWorldScreenHeader_62_6807 ; id 4
+    dfar KeyWorldScreenHeader_63_6B43
+    dfar KeyWorldScreenHeader_62_53C7
+    dfar KeyWorldScreenHeader_64_5B93
+    dfar KeyWorldScreenHeader_63_6636
+    dfar KeyWorldScreenHeader_64_5284
+    dfar KeyWorldScreenHeader_64_454F
+    dfar KeyWorldScreenHeader_63_54F8
+    dfar KeyWorldScreenHeader_64_46A7
+    dfar KeyWorldScreenHeader_63_45E3
+    dfar KeyWorldScreenHeader_64_66F6
+    dfar KeyWorldScreenHeader_63_6DB3
     dfar Data_066_44A5
-    dfar Data_066_4546
-    dfar Data_066_4D7D
-    dfar Data_064_78B1
+    dfar KeyWorldScreenHeader_66_4546
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_64_78B1
     dfar Data_062_6BA6
     dfar Data_063_7151
     dfar Data_062_5761
@@ -2826,22 +2826,22 @@ Data_068_5D8F:: ; address name
     dfar Data_066_4AF5
     dfar Data_066_52C5
     dfar Data_064_7E22
-    dfar Data_064_5B93 ; id 5
-    dfar Data_065_416D
-    dfar Data_062_6F90
-    dfar Data_065_74B6
-    dfar Data_063_531D
-    dfar Data_063_45E3
-    dfar Data_062_406A
-    dfar Data_065_6D0D
-    dfar Data_062_40EE
-    dfar Data_064_6797
-    dfar Data_066_4546
-    dfar Data_066_4D7D
-    dfar Data_066_4859
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_64_5B93 ; id 5
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_63_531D
+    dfar KeyWorldScreenHeader_63_45E3
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4546
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_064_5ED5
     dfar Data_065_4643
     dfar Data_062_73E8
@@ -2869,22 +2869,22 @@ Data_068_5FCF:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup54::
 Data_068_5FD5:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5CC8
-    dfar Data_066_589C
-    dfar Data_065_77A4
-    dfar Data_066_5CC8
-    dfar Data_066_5705
-    dfar Data_065_5FE5
-    dfar Data_062_70C1
-    dfar Data_066_5658
-    dfar Data_065_5E8C
-    dfar Data_062_53C7
-    dfar Data_064_5B93
-    dfar Data_062_77EB
-    dfar Data_062_423A
-    dfar Data_064_4734
-    dfar Data_063_54F8
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_77A4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_62_70C1
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_62_53C7
+    dfar KeyWorldScreenHeader_64_5B93
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_64_4734
+    dfar KeyWorldScreenHeader_63_54F8
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_5B97
@@ -2901,22 +2901,22 @@ Data_068_5FD5:: ; address name
     dfar Data_062_494B
     dfar Data_064_4B1E
     dfar Data_063_5822
-    dfar Data_066_5CC8 ; id 1
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_55DC
-    dfar Data_065_65EA
-    dfar Data_065_6808
-    dfar Data_065_7641
-    dfar Data_064_78B1
-    dfar Data_064_58E6
-    dfar Data_065_43BD
-    dfar Data_062_6EDC
-    dfar Data_065_751D
-    dfar Data_063_6744
-    dfar Data_062_668A
-    dfar Data_065_416D
-    dfar Data_065_6D0D
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_64_58E6
+    dfar KeyWorldScreenHeader_65_43BD
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_63_6744
+    dfar KeyWorldScreenHeader_62_668A
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_65_6D0D
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
@@ -2933,22 +2933,22 @@ Data_068_5FD5:: ; address name
     dfar Data_062_6B10
     dfar Data_065_4643
     dfar Data_065_7279
-    dfar Data_065_64CA ; id 2
-    dfar Data_065_643F
-    dfar Data_065_68B7
-    dfar Data_065_7641
-    dfar Data_063_6BCD
-    dfar Data_062_5166
-    dfar Data_065_41F0
-    dfar Data_065_70BD
-    dfar Data_062_75B0
-    dfar Data_063_5EAF
-    dfar Data_064_5218
-    dfar Data_065_6D65
-    dfar Data_062_7626
-    dfar Data_064_460E
-    dfar Data_063_45E3
-    dfar Data_065_6E8B
+    dfar KeyWorldScreenHeader_65_64CA ; id 2
+    dfar KeyWorldScreenHeader_65_643F
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_63_6BCD
+    dfar KeyWorldScreenHeader_62_5166
+    dfar KeyWorldScreenHeader_65_41F0
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_63_5EAF
+    dfar KeyWorldScreenHeader_64_5218
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_64_460E
+    dfar KeyWorldScreenHeader_63_45E3
+    dfar KeyWorldScreenHeader_65_6E8B
     dfar Data_065_6A8F
     dfar Data_065_6A71
     dfar Data_065_6BD1
@@ -2965,22 +2965,22 @@ Data_068_5FD5:: ; address name
     dfar Data_064_4AA9
     dfar Data_063_4AB5
     dfar Data_065_72E6
-    dfar Data_062_7626 ; id 3
-    dfar Data_064_66F6
-    dfar Data_066_45B4
-    dfar Data_063_6C79
-    dfar Data_064_7945
-    dfar Data_064_6F23
-    dfar Data_065_751D
-    dfar Data_062_7626
-    dfar Data_066_5CC8
-    dfar Data_062_75B0
-    dfar Data_062_6E33
-    dfar Data_065_5D1D
-    dfar Data_066_5CC8
-    dfar Data_062_7626
-    dfar Data_062_40EE
-    dfar Data_062_40EE
+    dfar KeyWorldScreenHeader_62_7626 ; id 3
+    dfar KeyWorldScreenHeader_64_66F6
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_64_7945
+    dfar KeyWorldScreenHeader_64_6F23
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_40EE
     dfar Data_062_7B96
     dfar Data_064_6CC4
     dfar Data_066_4B1A
@@ -2997,22 +2997,22 @@ Data_068_5FD5:: ; address name
     dfar Data_062_7B96
     dfar Data_062_48DA
     dfar Data_062_48DA
-    dfar Data_063_6047 ; id 4
-    dfar Data_064_6145
-    dfar Data_063_453F
-    dfar Data_065_6C81
-    dfar Data_064_4734
-    dfar Data_063_468C
-    dfar Data_064_66F6
-    dfar Data_066_4CD6
-    dfar Data_064_697E
-    dfar Data_066_45B4
-    dfar Data_066_4D7D
-    dfar Data_066_5477
-    dfar Data_065_6E8B
-    dfar Data_066_5658
-    dfar Data_065_64CA
-    dfar Data_065_5BD1
+    dfar KeyWorldScreenHeader_63_6047 ; id 4
+    dfar KeyWorldScreenHeader_64_6145
+    dfar KeyWorldScreenHeader_63_453F
+    dfar KeyWorldScreenHeader_65_6C81
+    dfar KeyWorldScreenHeader_64_4734
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_64_66F6
+    dfar KeyWorldScreenHeader_66_4CD6
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4D7D
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_65_5BD1
     dfar Data_063_6383
     dfar Data_064_6509
     dfar Data_063_4A65
@@ -3029,22 +3029,22 @@ Data_068_5FD5:: ; address name
     dfar Data_066_5AE7
     dfar Data_065_6A8F
     dfar Data_065_6216
-    dfar Data_064_7945 ; id 5
-    dfar Data_063_6EFF
-    dfar Data_064_6828
-    dfar Data_066_4E6E
-    dfar Data_066_5CC8
-    dfar Data_064_7A7D
-    dfar Data_064_706F
-    dfar Data_065_751D
-    dfar Data_065_65EA
-    dfar Data_065_6693
-    dfar Data_063_7545
-    dfar Data_066_4EF7
-    dfar Data_062_5337
-    dfar Data_065_431E
-    dfar Data_065_6DE3
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_64_7945 ; id 5
+    dfar KeyWorldScreenHeader_63_6EFF
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_64_706F
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_63_7545
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_62_5337
+    dfar KeyWorldScreenHeader_65_431E
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_064_7E51
     dfar Data_063_729A
     dfar Data_064_6D28
@@ -3061,22 +3061,22 @@ Data_068_5FD5:: ; address name
     dfar Data_065_46BF
     dfar Data_065_72B2
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 6
-    dfar Data_064_7B56
-    dfar Data_063_6D0B
-    dfar Data_064_68E4
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_7626
-    dfar Data_062_6EDC
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_77EB
-    dfar Data_064_6828
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7C14
-    dfar Data_066_4E6E
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 6
+    dfar KeyWorldScreenHeader_64_7B56
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_77EB
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_66_4E6E
     dfar Data_066_615D
     dfar Data_064_7F00
     dfar Data_063_71F3
@@ -3094,22 +3094,22 @@ Data_068_6266:: ; heuristic: label inside a table; C0
     dfar Data_066_615D
     dfar Data_064_7F35
     dfar Data_066_5311
-    dfar Data_066_4F98 ; id 7
-    dfar Data_062_7985
-    dfar Data_062_5519
-    dfar Data_064_5A34
-    dfar Data_065_65EA
-    dfar Data_065_5FE5
-    dfar Data_063_60DA
-    dfar Data_064_60D8
-    dfar Data_066_46C5
-    dfar Data_063_6EFF
-    dfar Data_064_4843
-    dfar Data_063_468C
-    dfar Data_066_5CC8
-    dfar Data_064_7B56
-    dfar Data_066_4859
-    dfar Data_066_4635
+    dfar KeyWorldScreenHeader_66_4F98 ; id 7
+    dfar KeyWorldScreenHeader_62_7985
+    dfar KeyWorldScreenHeader_62_5519
+    dfar KeyWorldScreenHeader_64_5A34
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_63_60DA
+    dfar KeyWorldScreenHeader_64_60D8
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_63_6EFF
+    dfar KeyWorldScreenHeader_64_4843
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7B56
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_4635
     dfar Data_066_5366
     dfar Data_062_7CBA
     dfar Data_062_57D8
@@ -3126,22 +3126,22 @@ Data_068_6266:: ; heuristic: label inside a table; C0
     dfar Data_064_7F00
     dfar Data_066_4C04
     dfar Data_066_4B3B
-    dfar Data_062_5E91 ; id 8
-    dfar Data_063_45E3
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_063_45E3
-    dfar Data_064_6797
-    dfar Data_066_4E6E
-    dfar Data_066_5CC8
-    dfar Data_064_6797
-    dfar Data_066_4E6E
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_62_5E91 ; id 8
+    dfar KeyWorldScreenHeader_63_45E3
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_63_45E3
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_062_63DA
     dfar Data_063_4AB5
     dfar Data_065_7290
@@ -3169,22 +3169,22 @@ Data_068_6335:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup55::
 Data_068_633E:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_54FD
-    dfar Data_065_65EA
-    dfar Data_065_64CA
-    dfar Data_066_5658
-    dfar Data_065_5C71
-    dfar Data_062_528E
-    dfar Data_065_40C4
-    dfar Data_062_78C0
-    dfar Data_062_406A
-    dfar Data_064_46A7
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_54FD
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_62_528E
+    dfar KeyWorldScreenHeader_65_40C4
+    dfar KeyWorldScreenHeader_62_78C0
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_64_46A7
     dfar Data_065_4D49
-    dfar Data_062_774A
-    dfar Data_062_40EE
-    dfar Data_062_41C9
-    dfar Data_063_5E57
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_63_5E57
     dfar Data_066_615D
     dfar Data_066_5A5F
     dfar Data_065_6AEA
@@ -3201,22 +3201,22 @@ Data_068_633E:: ; address name
     dfar Data_062_48DA
     dfar Data_062_492F
     dfar Data_063_62C3
-    dfar Data_065_6546 ; id 1
-    dfar Data_065_74B6
-    dfar Data_066_5CC8
-    dfar Data_066_589C
-    dfar Data_062_40EE
-    dfar Data_062_6EDC
-    dfar Data_065_6808
-    dfar Data_065_5FE5
-    dfar Data_064_594F
-    dfar Data_064_5A34
-    dfar Data_064_5B93
-    dfar Data_065_43BD
-    dfar Data_064_6073
-    dfar Data_063_5437
-    dfar Data_063_54F8
-    dfar Data_065_50F6
+    dfar KeyWorldScreenHeader_65_6546 ; id 1
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_6808
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_64_594F
+    dfar KeyWorldScreenHeader_64_5A34
+    dfar KeyWorldScreenHeader_64_5B93
+    dfar KeyWorldScreenHeader_65_43BD
+    dfar KeyWorldScreenHeader_64_6073
+    dfar KeyWorldScreenHeader_63_5437
+    dfar KeyWorldScreenHeader_63_54F8
+    dfar KeyWorldScreenHeader_65_50F6
     dfar Data_065_6AC6
     dfar Data_065_7A51
     dfar Data_066_615D
@@ -3233,22 +3233,22 @@ Data_068_633E:: ; address name
     dfar Data_063_57D1
     dfar Data_063_5822
     dfar Data_065_5457
-    dfar Data_065_643F ; id 2
-    dfar Data_065_6546
-    dfar Data_065_68B7
-    dfar Data_065_75A3
-    dfar Data_062_528E
-    dfar Data_065_416D
-    dfar Data_064_68E4
-    dfar Data_066_4E6E
-    dfar Data_063_5EAF
-    dfar Data_064_5218
-    dfar Data_065_6E8B
-    dfar Data_066_5CC8
-    dfar Data_065_5587
-    dfar Data_064_51A5
-    dfar Data_062_6F90
-    dfar Data_065_75A3
+    dfar KeyWorldScreenHeader_65_643F ; id 2
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_62_528E
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_63_5EAF
+    dfar KeyWorldScreenHeader_64_5218
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_5587
+    dfar KeyWorldScreenHeader_64_51A5
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_65_75A3
     dfar Data_065_6A71
     dfar Data_065_6AC6
     dfar Data_065_6BD1
@@ -3268,23 +3268,23 @@ Data_068_645A:: ; heuristic: label inside a table; C0
     db $62
     dfar Data_065_7AAA
 Data_068_645E:: ; heuristic: label inside a table; C0
-    dfar Data_064_7848 ; id 3
-    dfar Data_063_6D0B
-    dfar Data_062_528E
-    dfar Data_065_57D0
-    dfar Data_066_5CC8
-    dfar Data_065_5DD4
-    dfar Data_064_46A7
-    dfar Data_063_5437
-    dfar Data_062_75B0
+    dfar KeyWorldScreenHeader_64_7848 ; id 3
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_62_528E
+    dfar KeyWorldScreenHeader_65_57D0
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_64_46A7
+    dfar KeyWorldScreenHeader_63_5437
+    dfar KeyWorldScreenHeader_62_75B0
 Data_068_6479:: ; heuristic: label inside a table; C0
-    dfar Data_062_41C9
-    dfar Data_062_406A
-    dfar Data_064_697E
-    dfar Data_064_79CF
-    dfar Data_066_4635
-    dfar Data_066_4635
-    dfar Data_066_4F98
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_64_697E
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4F98
     dfar Data_064_7DFB
     dfar Data_063_71F3
     dfar Data_062_56FE
@@ -3301,22 +3301,22 @@ Data_068_6479:: ; heuristic: label inside a table; C0
     dfar Data_066_4B3B
     dfar Data_066_4B3B
     dfar Data_066_5366
-    dfar Data_064_5218 ; id 4
-    dfar Data_062_41C9
-    dfar Data_062_42B3
-    dfar Data_062_6E33
-    dfar Data_063_45E3
-    dfar Data_064_6828
-    dfar Data_063_6D0B
-    dfar Data_062_40EE
-    dfar Data_066_45B4
-    dfar Data_066_4E6E
-    dfar Data_062_76AE
-    dfar Data_064_68E4
-    dfar Data_066_5CC8
-    dfar Data_066_55DC
-    dfar Data_065_5DD4
-    dfar Data_065_6E8B
+    dfar KeyWorldScreenHeader_64_5218 ; id 4
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_62_42B3
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_63_45E3
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_65_6E8B
     dfar Data_064_56B0
     dfar Data_062_492F
     dfar Data_062_4967
@@ -3333,24 +3333,24 @@ Data_068_6479:: ; heuristic: label inside a table; C0
     dfar Data_066_5AB9
     dfar Data_065_62D2
     dfar Data_065_72E6
-    dfar Data_063_66AF ; id 5
-    dfar Data_064_5310
-    dfar Data_064_6828
-    dfar Data_066_4E6E
-    dfar Data_063_60DA
-    dfar Data_064_5394
-    dfar Data_062_6EDC
-    dfar Data_065_75A3
-    dfar Data_065_5852
-    dfar Data_062_694C
-    dfar Data_065_41F0
-    dfar Data_065_6DE3
-    dfar Data_065_5B98
-    dw Data_064_6311
+    dfar KeyWorldScreenHeader_63_66AF ; id 5
+    dfar KeyWorldScreenHeader_64_5310
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_63_60DA
+    dfar KeyWorldScreenHeader_64_5394
+    dfar KeyWorldScreenHeader_62_6EDC
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_65_5852
+    dfar KeyWorldScreenHeader_62_694C
+    dfar KeyWorldScreenHeader_65_41F0
+    dfar KeyWorldScreenHeader_65_6DE3
+    dfar KeyWorldScreenHeader_65_5B98
+    dw KeyWorldScreenHeader_64_6311
 Data_068_6547:: ; heuristic: label inside a table; C0
     db $64
-    dfar Data_063_468C
-    dfar Data_065_6F70
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_65_6F70
     dfar Data_063_6A11
     dfar Data_064_5719
     dfar Data_064_6D28
@@ -3374,22 +3374,22 @@ Data_068_6572:: ; heuristic: label inside a table; C0
     dfar Data_063_4AF5
 Data_068_657B:: ; heuristic: label inside a table; C0
     dfar Data_065_7334
-    dfar Data_066_5CC8 ; id 6
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 6
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
@@ -3406,22 +3406,22 @@ Data_068_657B:: ; heuristic: label inside a table; C0
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 7
-    dfar Data_062_7517
-    dfar Data_062_53C7
-    dfar Data_065_55E2
-    dfar Data_066_5CC8
-    dfar Data_062_774A
-    dfar Data_064_47BD
-    dfar Data_063_52A2
-    dfar Data_066_5CC8
-    dfar Data_064_78B1
-    dfar Data_066_478E
-    dfar Data_063_6C79
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_77CC
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 7
+    dfar KeyWorldScreenHeader_62_7517
+    dfar KeyWorldScreenHeader_62_53C7
+    dfar KeyWorldScreenHeader_65_55E2
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_64_47BD
+    dfar KeyWorldScreenHeader_63_52A2
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_77CC
     dfar Data_066_615D
     dfar Data_062_7B3B
     dfar Data_062_5761
@@ -3438,34 +3438,34 @@ Data_068_657B:: ; heuristic: label inside a table; C0
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_064_7DD4
-    dfar Data_065_5B98 ; id 8
-    dfar Data_062_68C2
-    dw Data_065_416D
+    dfar KeyWorldScreenHeader_65_5B98 ; id 8
+    dfar KeyWorldScreenHeader_62_68C2
+    dw KeyWorldScreenHeader_65_416D
 Data_068_6646:: ; heuristic: label inside a table; C0
     db $65
-    dw Data_065_70BD
+    dw KeyWorldScreenHeader_65_70BD
 Data_068_6649:: ; heuristic: label inside a table; C0
     db $65
-    dw Data_063_6744
+    dw KeyWorldScreenHeader_63_6744
 Data_068_664C:: ; heuristic: label inside a table; C0
     db $63
 Data_068_664D:: ; heuristic: label inside a table; C0
-    dfar Data_064_6272
-    dw Data_063_468C
+    dfar KeyWorldScreenHeader_64_6272
+    dw KeyWorldScreenHeader_63_468C
 Data_068_6652:: ; heuristic: label inside a table; C0
     db $63
-    dfar Data_065_7023
-    dfar Data_064_4843
-    dfar Data_063_4867
+    dfar KeyWorldScreenHeader_65_7023
+    dfar KeyWorldScreenHeader_64_4843
+    dfar KeyWorldScreenHeader_63_4867
 Data_068_665C:: ; heuristic: label inside a table; C0
-    dfar Data_064_6828
-    dw Data_066_4DE4
+    dfar KeyWorldScreenHeader_64_6828
+    dw KeyWorldScreenHeader_66_4DE4
 Data_068_6661:: ; heuristic: label inside a table; C0
     db $66
-    dfar Data_066_4859
-    dfar Data_066_4917
-    dfar Data_066_4EF7
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_065_5BBD
     dfar Data_062_6BF7
     dfar Data_065_4643
@@ -3493,22 +3493,22 @@ Data_068_669E:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup56::
 Data_068_66A7:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_5560
-    dfar Data_065_6693
-    dfar Data_065_64CA
-    dfar Data_066_589C
-    dfar Data_065_5C71
-    dfar Data_062_528E
-    dfar Data_065_40C4
-    dfar Data_062_7985
-    dfar Data_062_5166
-    dfar Data_065_564B
-    dfar Data_064_51A5
-    dfar Data_062_78C0
-    dfar Data_064_454F
-    dfar Data_063_65BE
-    dfar Data_064_5218
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_62_528E
+    dfar KeyWorldScreenHeader_65_40C4
+    dfar KeyWorldScreenHeader_62_7985
+    dfar KeyWorldScreenHeader_62_5166
+    dfar KeyWorldScreenHeader_65_564B
+    dfar KeyWorldScreenHeader_64_51A5
+    dfar KeyWorldScreenHeader_62_78C0
+    dfar KeyWorldScreenHeader_64_454F
+    dfar KeyWorldScreenHeader_63_65BE
+    dfar KeyWorldScreenHeader_64_5218
     dfar Data_066_615D
     dfar Data_066_5A87
     dfar Data_065_6B2C
@@ -3525,22 +3525,22 @@ Data_068_66A7:: ; address name
     dfar Data_064_4A58
     dfar Data_063_69A8
     dfar Data_064_56B0
-    dfar Data_065_77A4 ; id 1
-    dfar Data_066_5CC8
-    dfar Data_066_5658
-    dfar Data_065_6546
-    dfar Data_062_702C
-    dfar Data_065_65EA
-    dfar Data_065_5E8C
-    dfar Data_064_6828
-    dfar Data_064_6A43
-    dfar Data_066_45B4
-    dfar Data_063_6DB3
-    dfar Data_062_6F90
-    dfar Data_062_702C
-    dfar Data_065_64CA
-    dfar Data_063_7626
-    dfar Data_066_46C5
+    dfar KeyWorldScreenHeader_65_77A4 ; id 1
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_64_6828
+    dfar KeyWorldScreenHeader_64_6A43
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_62_702C
+    dfar KeyWorldScreenHeader_65_64CA
+    dfar KeyWorldScreenHeader_63_7626
+    dfar KeyWorldScreenHeader_66_46C5
     dfar Data_065_7B60
     dfar Data_066_615D
     dfar Data_066_5AE7
@@ -3557,22 +3557,22 @@ Data_068_66A7:: ; address name
     dfar Data_065_6A8F
     dfar Data_063_7B4F
     dfar Data_066_4B6F
-    dfar Data_065_65EA ; id 2
-    dfar Data_065_75A3
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_4635
-    dfar Data_064_706F
-    dfar Data_065_6546
-    dfar Data_065_74B6
-    dfar Data_065_75A3
-    dfar Data_062_76AE
-    dfar Data_062_40EE
-    dfar Data_065_6D0D
-    dfar Data_064_706F
-    dfar Data_063_7545
-    dfar Data_066_45B4
-    dfar Data_066_4D7D
+    dfar KeyWorldScreenHeader_65_65EA ; id 2
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_64_706F
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_64_706F
+    dfar KeyWorldScreenHeader_63_7545
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4D7D
     dfar Data_065_6AEA
     dfar Data_065_7AAA
     dfar Data_066_615D
@@ -3589,22 +3589,22 @@ Data_068_66A7:: ; address name
     dfar Data_063_7B05
     dfar Data_066_4B1A
     dfar Data_066_52C5
-    dfar Data_064_79CF ; id 3
-    dfar Data_063_6D0B
-    dfar Data_064_460E
-    dfar Data_063_468C
-    dfar Data_066_5705
-    dfar Data_063_74A4
-    dfar Data_066_4546
-    dfar Data_066_4635
-    dfar Data_064_7A7D
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5560
-    dfar Data_065_74B6
-    dfar Data_066_55DC
+    dfar KeyWorldScreenHeader_64_79CF ; id 3
+    dfar KeyWorldScreenHeader_63_6D0B
+    dfar KeyWorldScreenHeader_64_460E
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_66_5705
+    dfar KeyWorldScreenHeader_63_74A4
+    dfar KeyWorldScreenHeader_66_4546
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_64_7A7D
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_74B6
+    dfar KeyWorldScreenHeader_66_55DC
     dfar Data_064_7E84
     dfar Data_063_71F3
     dfar Data_064_4AA9
@@ -3621,21 +3621,21 @@ Data_068_66A7:: ; address name
     dfar Data_066_5A87
     dfar Data_065_7A51
     dfar Data_066_5AB9
-    dfar Data_062_423A ; id 4
-    dfar Data_062_4365
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_063_6E4E
-    dfar Data_064_6A43
-    dfar Data_066_4DE4
-    dfar Data_066_5477
-    dfar Data_064_78B1
-    dfar Data_064_72E0
-    dfar Data_065_6546
-    dfar Data_065_5BD1
-    dfar Data_065_6736
-    dfar Data_065_5FE5
-    dfar Data_062_5209
+    dfar KeyWorldScreenHeader_62_423A ; id 4
+    dfar KeyWorldScreenHeader_62_4365
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_63_6E4E
+    dfar KeyWorldScreenHeader_64_6A43
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_64_78B1
+    dfar KeyWorldScreenHeader_64_72E0
+    dfar KeyWorldScreenHeader_65_6546
+    dfar KeyWorldScreenHeader_65_5BD1
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_65_5FE5
+    dfar KeyWorldScreenHeader_62_5209
     dfar Data_065_4041
     dfar Data_062_494B
     dfar Data_062_49AA
@@ -3653,22 +3653,22 @@ Data_068_66A7:: ; address name
     dfar Data_065_6391
     dfar Data_062_56DF
     dfar Data_065_45C0
-    dfar Data_062_75B0 ; id 5
-    dfar Data_065_70BD
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_063_73F8
-    dfar Data_066_5115
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_065_6D0D
-    dfar Data_066_5CC8
-    dfar Data_066_55DC
-    dfar Data_065_751D
-    dfar Data_062_6D6B
-    dfar Data_065_68B7
-    dfar Data_065_5DD4
-    dfar Data_065_6D65
+    dfar KeyWorldScreenHeader_62_75B0 ; id 5
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_63_73F8
+    dfar KeyWorldScreenHeader_66_5115
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_65_6D65
     dfar Data_062_7B66
     dfar Data_065_73A8
     dfar Data_066_615D
@@ -3685,21 +3685,21 @@ Data_068_66A7:: ; address name
     dfar Data_065_6BD1
     dfar Data_065_62D2
     dfar Data_065_7290
-    dfar Data_066_5CC8 ; id 6
-    dfar Data_062_774A
-    dfar Data_062_6D6B
-    dfar Data_065_5F42
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
-    dfar Data_063_6C79
-    dfar Data_062_53C7
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_75B0
-    dfar Data_064_47BD
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_78B1
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 6
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_65_5F42
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_62_53C7
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_64_47BD
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_78B1
     dfar Data_066_44A5
     dfar Data_066_615D
     dfar Data_062_7BFD
@@ -3717,22 +3717,22 @@ Data_068_66A7:: ; address name
     dfar Data_066_615D
     dfar Data_064_7E22
     dfar Data_066_4AD3
-    dfar Data_062_5337 ; id 7
-    dfar Data_065_43BD
-    dfar Data_063_5F99
-    dfar Data_062_668A
-    dfar Data_062_6083
-    dfar Data_063_4867
-    dfar Data_064_46A7
-    dfar Data_063_64F3
-    dfar Data_063_472D
-    dfar Data_064_6A43
-    dfar Data_063_6DB3
-    dfar Data_064_460E
-    dfar Data_066_478E
-    dfar Data_066_505C
-    dfar Data_064_7B56
-    dfar Data_066_4635
+    dfar KeyWorldScreenHeader_62_5337 ; id 7
+    dfar KeyWorldScreenHeader_65_43BD
+    dfar KeyWorldScreenHeader_63_5F99
+    dfar KeyWorldScreenHeader_62_668A
+    dfar KeyWorldScreenHeader_62_6083
+    dfar KeyWorldScreenHeader_63_4867
+    dfar KeyWorldScreenHeader_64_46A7
+    dfar KeyWorldScreenHeader_63_64F3
+    dfar KeyWorldScreenHeader_63_472D
+    dfar KeyWorldScreenHeader_64_6A43
+    dfar KeyWorldScreenHeader_63_6DB3
+    dfar KeyWorldScreenHeader_64_460E
+    dfar KeyWorldScreenHeader_66_478E
+    dfar KeyWorldScreenHeader_66_505C
+    dfar KeyWorldScreenHeader_64_7B56
+    dfar KeyWorldScreenHeader_66_4635
     dfar Data_062_573B
     dfar Data_065_470B
     dfar Data_063_633B
@@ -3749,22 +3749,22 @@ Data_068_66A7:: ; address name
     dfar Data_066_53AD
     dfar Data_064_7F00
     dfar Data_066_4B3B
-    dfar Data_065_445B ; id 8
-    dfar Data_062_5519
-    dfar Data_065_41F0
-    dfar Data_065_6D0D
-    dfar Data_062_694C
-    dfar Data_065_5852
-    dfar Data_064_5284
-    dfar Data_065_70BD
-    dfar Data_063_557A
-    dfar Data_063_5437
-    dfar Data_063_468C
-    dfar Data_065_6E8B
-    dfar Data_066_4917
-    dfar Data_066_46C5
-    dfar Data_066_45B4
-    dfar Data_066_4D7D
+    dfar KeyWorldScreenHeader_65_445B ; id 8
+    dfar KeyWorldScreenHeader_62_5519
+    dfar KeyWorldScreenHeader_65_41F0
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_62_694C
+    dfar KeyWorldScreenHeader_65_5852
+    dfar KeyWorldScreenHeader_64_5284
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_63_557A
+    dfar KeyWorldScreenHeader_63_5437
+    dfar KeyWorldScreenHeader_63_468C
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_66_4917
+    dfar KeyWorldScreenHeader_66_46C5
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4D7D
     dfar Data_065_473E
     dfar Data_062_57D8
     dfar Data_065_4662
@@ -3792,22 +3792,22 @@ Data_068_6A07:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup57::
 Data_068_6A10:: ; address name
-    dfar Data_066_5CC8 ; id 0
-    dfar Data_066_589C
-    dfar Data_065_68B7
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_062_7626
-    dfar Data_062_43CA
-    dfar Data_065_6C81
-    dfar Data_066_57D9
-    dfar Data_065_5D1D
-    dfar Data_062_4365
-    dfar Data_062_6E33
-    dfar Data_064_7848
-    dfar Data_066_45B4
-    dfar Data_063_6FC0
-    dfar Data_062_40EE
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
+    dfar KeyWorldScreenHeader_66_589C
+    dfar KeyWorldScreenHeader_65_68B7
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_43CA
+    dfar KeyWorldScreenHeader_65_6C81
+    dfar KeyWorldScreenHeader_66_57D9
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_62_4365
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_64_7848
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_63_6FC0
+    dfar KeyWorldScreenHeader_62_40EE
     dfar Data_066_615D
     dfar Data_066_5B97
     dfar Data_065_6BD1
@@ -3824,22 +3824,22 @@ Data_068_6A10:: ; address name
     dfar Data_066_4B1A
     dfar Data_063_72C9
     dfar Data_062_48DA
-    dfar Data_066_5CC8 ; id 1
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_065_75A3
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_55DC
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_7626
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
@@ -3856,22 +3856,22 @@ Data_068_6A10:: ; address name
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_062_7B96
-    dfar Data_066_5CC8 ; id 2
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_5658
-    dfar Data_065_6693
-    dfar Data_065_751D
-    dfar Data_066_5CC8
-    dfar Data_065_5E8C
-    dfar Data_062_41C9
-    dfar Data_065_6E8B
-    dfar Data_066_5CC8
-    dfar Data_062_423A
-    dfar Data_064_68E4
-    dfar Data_066_4F98
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_6693
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_65_5E8C
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_65_6E8B
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_4F98
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_066_615D
@@ -3888,22 +3888,22 @@ Data_068_6A10:: ; address name
     dfar Data_064_6D64
     dfar Data_066_5366
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 3
-    dfar Data_066_5CC8
-    dfar Data_064_77CC
-    dfar Data_066_4635
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_54FD
-    dfar Data_065_6736
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_75B0
-    dfar Data_062_4365
-    dfar Data_066_5CC8
-    dfar Data_066_5477
-    dfar Data_065_5C71
-    dfar Data_062_40EE
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 3
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_77CC
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_54FD
+    dfar KeyWorldScreenHeader_65_6736
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_75B0
+    dfar KeyWorldScreenHeader_62_4365
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5477
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_62_40EE
     dfar Data_066_615D
     dfar Data_066_615D
     dfar Data_064_7DD4
@@ -3920,22 +3920,22 @@ Data_068_6A10:: ; address name
     dfar Data_066_5A3B
     dfar Data_065_6244
     dfar Data_062_48DA
-    dfar Data_064_6F23 ; id 4
-    dfar Data_065_75A3
-    dfar Data_066_5658
-    dfar Data_065_5D1D
-    dfar Data_063_73F8
-    dfar Data_066_4E6E
-    dfar Data_064_79CF
-    dfar Data_063_6C79
-    dfar Data_065_6D0D
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_062_7626
-    dfar Data_062_6D6B
-    dfar Data_065_65EA
-    dfar Data_065_7641
-    dfar Data_062_7517
+    dfar KeyWorldScreenHeader_64_6F23 ; id 4
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_66_5658
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_63_73F8
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_63_6C79
+    dfar KeyWorldScreenHeader_65_6D0D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_62_7626
+    dfar KeyWorldScreenHeader_62_6D6B
+    dfar KeyWorldScreenHeader_65_65EA
+    dfar KeyWorldScreenHeader_65_7641
+    dfar KeyWorldScreenHeader_62_7517
     dfar Data_064_75A9
     dfar Data_065_7AAA
     dfar Data_066_5AE7
@@ -3952,22 +3952,22 @@ Data_068_6A10:: ; address name
     dfar Data_065_6AEA
     dfar Data_065_7AE1
     dfar Data_062_7B3B
-    dfar Data_064_6828 ; id 5
-    dfar Data_066_4E6E
-    dfar Data_066_5560
-    dfar Data_065_751D
-    dfar Data_062_774A
-    dfar Data_066_55DC
-    dfar Data_065_5D1D
-    dfar Data_065_6D65
-    dfar Data_062_6F90
-    dfar Data_065_5DD4
-    dfar Data_064_6797
-    dfar Data_066_4DE4
-    dfar Data_062_423A
-    dfar Data_062_41C9
-    dfar Data_065_6D65
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_64_6828 ; id 5
+    dfar KeyWorldScreenHeader_66_4E6E
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_65_751D
+    dfar KeyWorldScreenHeader_62_774A
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_62_6F90
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_62_423A
+    dfar KeyWorldScreenHeader_62_41C9
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_064_6D28
     dfar Data_066_5311
     dfar Data_066_5A87
@@ -3984,22 +3984,22 @@ Data_068_6A10:: ; address name
     dfar Data_062_492F
     dfar Data_065_7290
     dfar Data_066_615D
-    dfar Data_066_5CC8 ; id 6
-    dfar Data_062_78C0
-    dfar Data_064_68E4
-    dfar Data_066_45B4
-    dfar Data_066_5CC8
-    dfar Data_064_79CF
-    dfar Data_066_4F98
-    dfar Data_066_5560
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_066_57D9
-    dfar Data_065_5D1D
-    dfar Data_066_5CC8
-    dfar Data_066_5CC8
-    dfar Data_064_7C14
-    dfar Data_066_4917
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 6
+    dfar KeyWorldScreenHeader_62_78C0
+    dfar KeyWorldScreenHeader_64_68E4
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_4F98
+    dfar KeyWorldScreenHeader_66_5560
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_57D9
+    dfar KeyWorldScreenHeader_65_5D1D
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7C14
+    dfar KeyWorldScreenHeader_66_4917
     dfar Data_066_615D
     dfar Data_062_7C82
     dfar Data_064_6D64
@@ -4016,22 +4016,22 @@ Data_068_6A10:: ; address name
     dfar Data_066_615D
     dfar Data_064_7F35
     dfar Data_066_4C37
-    dfar Data_063_6EFF ; id 7
-    dfar Data_064_6AEC
-    dfar Data_064_706F
-    dfar Data_063_7626
-    dfar Data_065_5DD4
-    dfar Data_065_7023
-    dfar Data_064_79CF
-    dfar Data_066_4DE4
-    dfar Data_062_42B3
-    dfar Data_065_70BD
-    dfar Data_066_5CC8
-    dfar Data_066_55DC
-    dfar Data_066_4859
-    dfar Data_066_5115
-    dfar Data_066_5CC8
-    dfar Data_064_7A7D
+    dfar KeyWorldScreenHeader_63_6EFF ; id 7
+    dfar KeyWorldScreenHeader_64_6AEC
+    dfar KeyWorldScreenHeader_64_706F
+    dfar KeyWorldScreenHeader_63_7626
+    dfar KeyWorldScreenHeader_65_5DD4
+    dfar KeyWorldScreenHeader_65_7023
+    dfar KeyWorldScreenHeader_64_79CF
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_62_42B3
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_66_55DC
+    dfar KeyWorldScreenHeader_66_4859
+    dfar KeyWorldScreenHeader_66_5115
+    dfar KeyWorldScreenHeader_66_5CC8
+    dfar KeyWorldScreenHeader_64_7A7D
     dfar Data_063_729A
     dfar Data_064_6DFE
     dfar Data_064_761D
@@ -4048,22 +4048,22 @@ Data_068_6A10:: ; address name
     dfar Data_066_53DF
     dfar Data_066_615D
     dfar Data_064_7EB0
-    dfar Data_063_6DB3 ; id 8
+    dfar KeyWorldScreenHeader_63_6DB3 ; id 8
     dfar Data_062_4001
-    dfar Data_062_6E33
-    dfar Data_065_75A3
-    dfar Data_062_76AE
-    dfar Data_062_406A
-    dfar Data_062_40EE
-    dfar Data_065_6D65
-    dfar Data_065_5C71
-    dfar Data_062_43CA
-    dfar Data_064_6797
-    dfar Data_066_4EF7
-    dfar Data_066_45B4
-    dfar Data_066_4635
-    dfar Data_066_4DE4
-    dfar Data_066_5CC8
+    dfar KeyWorldScreenHeader_62_6E33
+    dfar KeyWorldScreenHeader_65_75A3
+    dfar KeyWorldScreenHeader_62_76AE
+    dfar KeyWorldScreenHeader_62_406A
+    dfar KeyWorldScreenHeader_62_40EE
+    dfar KeyWorldScreenHeader_65_6D65
+    dfar KeyWorldScreenHeader_65_5C71
+    dfar KeyWorldScreenHeader_62_43CA
+    dfar KeyWorldScreenHeader_64_6797
+    dfar KeyWorldScreenHeader_66_4EF7
+    dfar KeyWorldScreenHeader_66_45B4
+    dfar KeyWorldScreenHeader_66_4635
+    dfar KeyWorldScreenHeader_66_4DE4
+    dfar KeyWorldScreenHeader_66_5CC8
     dfar Data_063_722B
     dfar Data_062_48AC
     dfar Data_062_737B
