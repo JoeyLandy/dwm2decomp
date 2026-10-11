@@ -3088,7 +3088,7 @@ Jump_0E0_5B16:: ; address name
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $93
-    ld de, Map00Tileset
+    ld de, AreaTileset0
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $46

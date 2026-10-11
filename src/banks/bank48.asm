@@ -1,9 +1,9 @@
 SECTION "Bank 48", ROMX[$4000], BANK[$48]
     db $48
 
-; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
+; E-0145 (C1: entry 0 of AreaPaletteTable).
 ; record: one CGB palette: 4 BGR555 colours
-Map00Palettes::
+AreaPalettes0::
 Data_048_4001:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $7DA0, $7FFF, $7FE0, $0063 ; entry 0
     dw $7DA0, $7FFF, $5AD6, $0063 ; entry 1

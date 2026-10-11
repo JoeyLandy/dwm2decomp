@@ -1007,8 +1007,8 @@ Data_011_44B8:: ; heuristic: start of a structured table; C0
 ; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
 MapRecord00::
 Data_011_46B8:: ; heuristic: map record of the map table; C0
-    dfar Map00Tileset ; entry 0
-    dfar Map00Palettes
+    dfar AreaTileset0 ; entry 0
+    dfar AreaPalettes0
     db $03, $04, $4E, $00, $01, $00, $00, $01, $10, $00
     dw wStoryFlags + $60
     dfar Map00Screens0
@@ -1182,8 +1182,8 @@ Data_011_4844:: ; heuristic: map record of the map table; C0
 ; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; variant flag byte; variant 0 screens; its ROM bank; variant 0 attributes; its ROM bank; variant 1 screens; its ROM bank; variant 1 attributes; its ROM bank; variant 2 screens; its ROM bank; variant 2 attributes; its ROM bank; variant 3 screens; its ROM bank; variant 3 attributes; its ROM bank; variant 4 screens; its ROM bank; variant 4 attributes; its ROM bank; variant 5 screens; its ROM bank; variant 5 attributes; its ROM bank; variant 6 screens; its ROM bank; variant 6 attributes; its ROM bank; variant 7 screens; its ROM bank; variant 7 attributes; its ROM bank
 MapRecord07::
 Data_011_4886:: ; heuristic: map record of the map table; C0
-    dfar Map07Tileset ; entry 0
-    dfar Map07Palettes
+    dfar AreaTileset1 ; entry 0
+    dfar AreaPalettes1
     db $01, $02, $3F, $00, $01, $00, $00, $00, $00, $00
     dw wStoryFlags + $60
     dfar Map07Screens0

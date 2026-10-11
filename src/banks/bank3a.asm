@@ -1919,8 +1919,70 @@ Func_03A_52A4:: ; address name
     call DecompressToVRAM
     ret
 
+; E-0145 (C1: DecompressGraphicsAToTiles0 decompresses the far pointer at $52B9 + 3 * A to vTiles0; RunBattleEffectAnimation and the debug effect viewer call it; all 60 entries decode).
+; record: compressed effect graphics (vTiles0); its ROM bank
+BattleEffectGraphicsTable::
 Data_03A_52B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0E92B9, $B4
+    dfar BattleEffectGfx00 ; id 0
+    dfar BattleEffectGfx01 ; id 1
+    dfar BattleEffectGfx02 ; id 2
+    dfar BattleEffectGfx03 ; id 3
+    dfar BattleEffectGfx04 ; id 4
+    dfar BattleEffectGfx05 ; id 5
+    dfar BattleEffectGfx06 ; id 6
+    dfar BattleEffectGfx07 ; id 7
+    dfar BattleEffectGfx08 ; id 8
+    dfar BattleEffectGfx09 ; id 9
+    dfar BattleEffectGfx0A ; id 10
+    dfar BattleEffectGfx0B ; id 11
+    dfar BattleEffectGfx0C ; id 12
+    dfar BattleEffectGfx0D ; id 13
+    dfar BattleEffectGfx0E ; id 14
+    dfar BattleEffectGfx0F ; id 15
+    dfar BattleEffectGfx10 ; id 16
+    dfar BattleEffectGfx11 ; id 17
+    dfar BattleEffectGfx12 ; id 18
+    dfar BattleEffectGfx13 ; id 19
+    dfar BattleEffectGfx14 ; id 20
+    dfar BattleEffectGfx15 ; id 21
+    dfar BattleEffectGfx16 ; id 22
+    dfar BattleEffectGfx17 ; id 23
+    dfar BattleEffectGfx18 ; id 24
+    dfar BattleEffectGfx19 ; id 25
+    dfar BattleEffectGfx1A ; id 26
+    dfar BattleEffectGfx1B ; id 27
+    dfar BattleEffectGfx1C ; id 28
+    dfar BattleEffectGfx1D ; id 29
+    dfar BattleEffectGfx1E ; id 30
+    dfar BattleEffectGfx1F ; id 31
+    dfar BattleEffectGfx20 ; id 32
+    dfar BattleEffectGfx21 ; id 33
+    dfar BattleEffectGfx22 ; id 34
+    dfar BattleEffectGfx23 ; id 35
+    dfar BattleEffectGfx24 ; id 36
+    dfar BattleEffectGfx25 ; id 37
+    dfar BattleEffectGfx26 ; id 38
+    dfar BattleEffectGfx27 ; id 39
+    dfar BattleEffectGfx28 ; id 40
+    dfar BattleEffectGfx29 ; id 41
+    dfar BattleEffectGfx2A ; id 42
+    dfar BattleEffectGfx2B ; id 43
+    dfar BattleEffectGfx2C ; id 44
+    dfar BattleEffectGfx2D ; id 45
+    dfar BattleEffectGfx2E ; id 46
+    dfar BattleEffectGfx2F ; id 47
+    dfar BattleEffectGfx30 ; id 48
+    dfar BattleEffectGfx31 ; id 49
+    dfar BattleEffectGfx32 ; id 50
+    dfar BattleEffectGfx33 ; id 51
+    dfar BattleEffectGfx34 ; id 52
+    dfar BattleEffectGfx35 ; id 53
+    dfar BattleEffectGfx36 ; id 54
+    dfar BattleEffectGfx37 ; id 55
+    dfar BattleEffectGfx38 ; id 56
+    dfar BattleEffectGfx39 ; id 57
+    dfar BattleEffectGfx3A ; id 58
+    dfar BattleEffectGfx3B ; id 59
 
 ; when wDAB9 is 3: wD804 += 4, and once it reaches $D0 wDAAA = 0 (E-0119)
 ; 2 call sites from 2 routines (e.g. RunBattleEffectAnimation, RunWC5FDState_E0_Case0A_Sub01)

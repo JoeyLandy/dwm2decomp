@@ -133,94 +133,138 @@ MonsterSprite_Darck:: ; heuristic: stream in a run of back-to-back compressed st
 Data_091_5257:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $245257, $F7
 
+; compressed battle effect graphics, entry 38 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 665 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_534E:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx26:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_534E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $24534E, $299
 
+; compressed battle effect graphics, entry 39 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 624 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_55E7:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx27:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_55E7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2455E7, $270
 
+; compressed battle effect graphics, entry 40 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 593 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_5857:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx28:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_5857:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $245857, $251
 
+; compressed battle effect graphics, entry 41 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 590 bytes expand to 752 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_5AA8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx29:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_5AA8:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $245AA8, $24E
 
+; compressed battle effect graphics, entry 42 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 541 bytes expand to 672 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_5CF6:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx2A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_5CF6:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $245CF6, $21D
 
+; compressed battle effect graphics, entry 43 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 506 bytes expand to 544 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_5F13:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx2B:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_5F13:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $245F13, $1FA
 
+; compressed battle effect graphics, entry 44 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 52 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_610D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx2C:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_610D:: ; address name
     db $40, $00, $02, $02, $FF, $F7, $01, $02, $0A, $01, $02, $FF, $F0, $40, $40, $F0
     db $70, $F8, $F8, $FC, $9C, $FE, $8C, $FE, $01, $03, $01, $1F, $1F, $3F, $3F, $7F
     db $1E, $7F, $00, $3F, $02, $FF, $F0, $84, $DE, $04, $CE, $00, $8C, $00, $84, $00
     db $80, $02, $A0, $F2
 
+; compressed battle effect graphics, entry 45 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 641 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_6141:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx2D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_6141:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $246141, $281
 
+; compressed battle effect graphics, entry 46 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 593 bytes expand to 720 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_63C2:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx2E:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_63C2:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2463C2, $251
 
+; compressed battle effect graphics, entry 47 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 685 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_6613:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx2F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_6613:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $246613, $2AD
 
+; compressed battle effect graphics, entry 48 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 644 bytes expand to 720 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_68C0:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx30:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_68C0:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2468C0, $284
 
+; compressed battle effect graphics, entry 49 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 156 bytes expand to 176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_6B44:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx31:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_6B44:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $246B44, $9C
 
+; compressed battle effect graphics, entry 50 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 74 bytes expand to 96 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_6BE0:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx32:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_6BE0:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $246BE0, $4A
 
+; compressed battle effect graphics, entry 51 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 637 bytes expand to 720 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_6C2A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx33:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_6C2A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $246C2A, $27D
 
+; compressed battle effect graphics, entry 52 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 679 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_6EA7:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx34:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_6EA7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $246EA7, $2A7
 
+; compressed battle effect graphics, entry 53 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 630 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_714E:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx35:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_714E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $24714E, $276
 
+; compressed battle effect graphics, entry 54 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 397 bytes expand to 544 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_73C4:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx36:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_73C4:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2473C4, $18D
 
+; compressed battle effect graphics, entry 55 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 658 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_7551:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx37:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_7551:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $247551, $292
 
+; compressed battle effect graphics, entry 56 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 661 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_77E3:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx38:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_77E3:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $2477E3, $295
 
+; compressed battle effect graphics, entry 57 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 277 bytes expand to 368 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_7A78:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx39:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_7A78:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $247A78, $115
 
+; compressed battle effect graphics, entry 58 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 409 bytes expand to 544 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_7B8D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx3A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_7B8D:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $247B8D, $199
 
+; compressed battle effect graphics, entry 59 of BattleEffectGraphicsTable
 ; LZSS-compressed asset: 554 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_091_7D26:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+BattleEffectGfx3B:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_091_7D26:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $247D26, $229
     ds $B1, $00

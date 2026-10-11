@@ -1497,6 +1497,137 @@
         }
       ],
       "note": "E-0144 (C1: LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with LoadBGPaletteBufferFromBank and stores the five header bytes; LoadMapScreenFromChunk takes the far pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one at +$17 as the attribute array; every array decodes to 360-byte screens)."
+    },
+    {
+      "bank": "3A",
+      "addr": "52B9",
+      "label": "BattleEffectGraphicsTable",
+      "count": 60,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "stream": true,
+          "name": "compressed effect graphics (vTiles0)",
+          "reason": "battle effect graphics stream"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "note": "E-0145 (C1: DecompressGraphicsAToTiles0 decompresses the far pointer at $52B9 + 3 * A to vTiles0; RunBattleEffectAnimation and the debug effect viewer call it; all 60 entries decode)."
+    },
+    {
+      "bank": "1D",
+      "addr": "5D78",
+      "label": "AreaTilesetTable",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "stream": true,
+          "name": "compressed BG tiles (vTiles2)",
+          "reason": "area tileset stream"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "note": "E-0145 (C1: LoadAreaGraphicsForWD7FC decompresses the far pointer at $5D78 + 3 * wAreaGraphicsIndex to vTiles2; two entries decode, the bytes after them are AreaPaletteTable)."
+    },
+    {
+      "bank": "1D",
+      "addr": "5D7E",
+      "label": "AreaPaletteTable",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "$40-byte BG palette set",
+          "reason": "area BG palettes"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "note": "E-0145 (C1: LoadAreaGraphicsForWD7FC copies $40 bytes from the far pointer at $5D7E + 3 * wAreaGraphicsIndex to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "48",
+      "addr": "4001",
+      "label": "AreaPalettes0",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0145 (C1: entry 0 of AreaPaletteTable)."
+    },
+    {
+      "bank": "47",
+      "addr": "5246",
+      "label": "AreaPalettes1",
+      "count": 8,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "note": "E-0145 (C1: entry 1 of AreaPaletteTable)."
+    },
+    {
+      "bank": "85",
+      "addr": "4E7A",
+      "label": "ScreenAnimationTable",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "target_bank": "93",
+          "stream": true,
+          "name": "frame 0 tile map (bank $93)",
+          "reason": "script screen animation tile map"
+        },
+        {
+          "type": "ptr",
+          "target_bank": "93",
+          "stream": true,
+          "name": "frame 0 attribute map",
+          "reason": "script screen animation attribute map"
+        },
+        {
+          "type": "ptr",
+          "target_bank": "93",
+          "stream": true,
+          "name": "frame 1 tile map",
+          "reason": "script screen animation tile map"
+        },
+        {
+          "type": "ptr",
+          "target_bank": "93",
+          "stream": true,
+          "name": "frame 1 attribute map",
+          "reason": "script screen animation attribute map"
+        }
+      ],
+      "note": "E-0145 (C1: ScriptCommand79_Run_Case01 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes after them do not)."
     }
   ]
 }

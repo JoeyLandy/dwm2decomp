@@ -3880,11 +3880,19 @@ Func_01D_5D47:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
+; E-0145 (C1: LoadAreaGraphicsForWD7FC decompresses the far pointer at $5D78 + 3 * wAreaGraphicsIndex to vTiles2; two entries decode, the bytes after them are AreaPaletteTable).
+; record: compressed BG tiles (vTiles2); its ROM bank
+AreaTilesetTable::
 Data_01D_5D78:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $01, $40, $93, $DE, $4D, $47
+    dfar AreaTileset0 ; id 0
+    dfar AreaTileset1 ; id 1
 
+; E-0145 (C1: LoadAreaGraphicsForWD7FC copies $40 bytes from the far pointer at $5D7E + 3 * wAreaGraphicsIndex to wBGPaletteBuffer).
+; record: $40-byte BG palette set; its ROM bank
+AreaPaletteTable::
 Data_01D_5D7E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $01, $40, $48, $46, $52, $47
+    dfar AreaPalettes0 ; id 0
+    dfar AreaPalettes1 ; id 1
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB
 ; 67 call sites from 58 routines (e.g. CallFunc6899PreservingWD7F1AndHFFC6, DrawWD789Cell5SpeciesSprite, ShowCategory11StringOfWD789Cell5Record, ShowSpeciesCategory13StringOfWD789Cell5Record, ...)

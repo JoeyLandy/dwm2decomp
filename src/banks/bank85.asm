@@ -2308,30 +2308,35 @@ Jump_085_4E61::
     ld hl, wScriptStep
     inc [hl]
     ret
-    db $91, $5A
-    dw Data_085_6124
-    db $36, $5B
-    dw Data_085_6153
-    db $36, $5B
-    dw Data_085_6153
-    db $E9, $5B
-    dw Data_085_6194
-    db $E9, $5B
-    dw Data_085_6194
-    db $99, $5C
-    dw Data_085_61CF
-    db $99, $5C
-    dw Data_085_61CF
-    db $4B, $5D
-    dw Data_085_6208
-    db $4B, $5D
-    dw Data_085_6208
-    db $F5, $5D
-    dw Data_085_623C
-    db $F5, $5D
-    dw Data_085_623C
-    db $96, $5E
-    dw Data_085_6266
+
+; E-0145 (C1: ScriptCommand79_Run_Case01 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes after them do not).
+; record: frame 0 tile map (bank $93); frame 0 attribute map; frame 1 tile map; frame 1 attribute map
+ScreenAnimationTable::
+Data_085_4E7A:: ; heuristic: start of a structured table; C0
+    dw Data_093_5A91 ; id 0
+    dw Data_093_6124
+    dw Data_093_5B36
+    dw Data_093_6153
+    dw Data_093_5B36 ; id 1
+    dw Data_093_6153
+    dw Data_093_5BE9
+    dw Data_093_6194
+    dw Data_093_5BE9 ; id 2
+    dw Data_093_6194
+    dw Data_093_5C99
+    dw Data_093_61CF
+    dw Data_093_5C99 ; id 3
+    dw Data_093_61CF
+    dw Data_093_5D4B
+    dw Data_093_6208
+    dw Data_093_5D4B ; id 4
+    dw Data_093_6208
+    dw Data_093_5DF5
+    dw Data_093_623C
+    dw Data_093_5DF5 ; id 5
+    dw Data_093_623C
+    dw Data_093_5E96
+    dw Data_093_6266
 
 ; entry 0 of the `rst $00` table in ScriptCommand79_Run
 ; no direct call (reached through a table, a jump or a vector)

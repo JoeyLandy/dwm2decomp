@@ -1328,7 +1328,11 @@ class Rom:
                     tb, ta = fp(sm["bank"], r + j)
                     if screens_ok(tb, ta, wd * ht):
                         arrays.setdefault((tb, ta), (wd * ht, f"SpecialMap{i:02X}{kind}"))
-        taken: list[tuple[int, int, int]] = []
+        taken: list[tuple[int, int, int]] = []  # config layouts win over derived ones
+        for t in self.schemas:
+            if not t["label"].startswith(("MapRecord",)):
+                size = sum(2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"]) * t["count"]
+                taken.append((t["bank"], t["addr"], t["addr"] + size))
         for (bank, addr), (n, label) in sorted(arrays.items()):
             if any(b == bank and lo < addr + 3 * n and addr < hi for b, lo, hi in taken):
                 continue  # arrays that overlap another stay inside it

@@ -1725,6 +1725,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The nine unread header bytes (they look like further far pointers to bank $80) are left as `db`.
 - Binary verification: build/run144 PASS, 0 differing bytes; tests OK.
 
+### E-0145 — Battle effect graphics, area graphics, script screen animations
+
+- Kind: OBSERVATION (reading plus decoding; C1).
+- **BattleEffectGraphicsTable (3A:52B9).** DecompressGraphicsAToTiles0 decompresses the far pointer at $52B9 + 3 * A to vTiles0. All 60 entries decode, and the streams are named BattleEffectGfxNN. These $B4 bytes had been an INCBIN slice.
+- **AreaTilesetTable / AreaPaletteTable (1D:5D78 / 1D:5D7E).** LoadAreaGraphicsForWD7FC indexes both with 3 * wAreaGraphicsIndex. Two tile streams and two $40-byte palette sets (AreaPalettes0-1) are valid; the third tile entry would run into the palette table.
+- **ScreenAnimationTable (85:4E7A).** ScriptCommand79_Run_Case01 takes 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses two words from bank $93: a tile map to wScreenTileBuffer and an attribute map to wScreenAttrBuffer, alternating the two frames over four steps. Six entries decode to 360-byte screens, which registers 5 new streams.
+- **Generator.** Derived map layouts now give way to layouts already in config/tables.json. Map00Palettes at 48:4001 is AreaPalettes0.
+- Binary verification: build/run145 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
