@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0222 — Key-world screens found by tiling gaps
+
+- Kind: TOOL (C1).
+- **Problem.** A key-world screen map stream was printed as an INCBIN up to the next label. When no chunk group (E-0146) reached the screens after it, they stayed inside that INCBIN. For example, 66:$5CD0's 28-byte stream sat in an INCBIN of $468 bytes.
+- **Rule.** After a 360-byte stream labelled as a key-world screen map, the bytes up to the next label, stream, layout or code are tiled with streams that decompress cleanly to 360 bytes. Each stream may sit behind an 8-byte screen header. A gap is used only when it tiles exactly.
+  - Example: 66:$5CEC-$6138 holds seven header-plus-tile-map pairs.
+- **Result.** 24 gaps tiled: 44 streams registered, with their headers as KeyWorldScreenHeader tables. The stream count is now 4,605, and unidentified INCBIN is 20,687 bytes.
+- **Limits.** Which rooms, if any, use these screens is not traced.
+- Binary verification: build/run268 PASS, 0 differing bytes; tests OK.
+
 ### E-0221 — Key-world goal graphics (bank $04); party-count rectangles (bank $31)
 
 - Kind: OBSERVATION (reading; C1) and TOOL.

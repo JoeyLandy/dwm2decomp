@@ -2098,6 +2098,55 @@ class Rom:
                 macro = "objsel_skip_if_clear" if op[2] == 0xFC else "objsel_skip_if_set"
                 out.append(f"    {macro} ${op[3]:04X}, ${op[4]:02X}, ${op[5]:02X}")
 
+    def tile_keyworld_screen_gaps(self) -> None:
+        """E-0222: after a key-world screen map stream, the bytes up to the next known layout that
+        tile exactly as further 360-byte screen streams, each optionally behind an 8-byte screen
+        header (the E-0146 layout), are those screens; no chunk group reaches them."""
+        from lzss_gfx import decompress as lz
+        spans = sorted([(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas])
+
+        def screen(b: int, a: int):
+            try:
+                out, used, ev = lz(self.data, b, a)
+            except IndexError:
+                return None
+            return used if len(out) == 360 and not ev["unwritten_reads"] and a - 0x4000 + used <= BANK else None
+
+        added = gaps = 0
+        for (b, a), (size, used) in sorted(self.streams.items()):
+            if size != 360 or "key-world screen" not in self.dreason.get((b, a), ""):
+                continue
+            lo = a + used
+            marks = [x for x in self.dlabels[b] if x >= lo] + [x for (bb, x) in self.streams if bb == b and x >= lo] + \
+                    [s for bb, s, e in spans if bb == b and s >= lo] + [0x8000]
+            hi = min(marks)
+            if hi == lo or hi - lo > 0x1000 or any(x in self.covered[b] for x in range(lo, hi)):
+                continue
+            pc, plan = lo, []
+            while pc < hi:
+                u = screen(b, pc)
+                if u and pc + u <= hi:
+                    plan.append((None, pc, u)); pc += u; continue
+                u = screen(b, pc + 8) if pc + 8 < hi else None
+                if u and pc + 8 + u <= hi:
+                    plan.append((pc, pc + 8, u)); pc += 8 + u; continue
+                break
+            if pc != hi or not plan:
+                continue
+            gaps += 1
+            for hdr, s, u in plan:
+                if hdr is not None:
+                    self.schemas.append({"bank": b, "addr": hdr, "label": f"KeyWorldScreenHeader_{b:02X}_{hdr:04X}",
+                                         "count": 1, "fields": [{"type": "db", "size": 8, "name": "screen header"}],
+                                         "note": "E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick "
+                                                 "the AutomapBlocks entry, E-0146) found by tiling a gap)"})
+                self.streams[(b, s)] = (360, u)
+                self.dlabels[b].setdefault(s, f"Data_{b:03X}_{s:04X}")
+                self.dreason.setdefault((b, s), "key-world screen map found by tiling a gap after another")
+                added += 1
+        log(f"key-world screen gaps tiled: {gaps} ({added} streams)")
+
     def add_string_table_schemas(self) -> None:
         """E-0217: string tables passed in DE to BeginStringDisplay / CopyStringToBuffer.
 
@@ -3092,6 +3141,7 @@ class Rom:
                 break
         self.structure_data()
         self.find_compressed_assets()
+        self.tile_keyworld_screen_gaps()
         self.label_data_refs()
         self.add_string_table_schemas()
         self.add_rect_record_schemas()
