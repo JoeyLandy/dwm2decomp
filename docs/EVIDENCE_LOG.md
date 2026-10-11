@@ -2035,6 +2035,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Byte 4 of each entry ($20, $30, $48, $70, $A0, ...) matches the map-number bands used elsewhere for talk events but is not read here. Which world area each view shows is not read.
 - Binary verification: build/run168 PASS, 0 differing bytes; tests OK.
 
+### E-0168 — Uncompressed tile sources
+
+- Kind: OBSERVATION (derived from call sites; C1).
+- **Rule.** Literal-argument copies into vTiles ($8000-$97FF) whose length is a multiple of 16 lay out their source as 16-byte tiles, one per line. The copiers are CopyBBytesToVRAMFromDE, CopyCBytesToVRAMWaitSTAT and CopyFromBank.
+- **Result.** One source (Tiles_BB_AAAA). Most tile copies take their arguments from tables or registers, so this rule finds little.
+- Binary verification: build/run169 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

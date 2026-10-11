@@ -1954,6 +1954,57 @@ class Rom:
                                          "CopyBytesDEToHL_Bank00 or LoadBGPaletteBufferFromBank)"})
             npal += 1
         log(f"palette sources: {npal}")
+        # Uncompressed tiles (E-0168): sources of copies into vTiles ($8000-$97FF) whose length is
+        # a multiple of 16: CopyBBytesToVRAMFromDE (DE -> HL, B bytes), CopyCBytesToVRAMWaitSTAT
+        # (HL -> DE, C bytes) and CopyFromBank (DE in bank B -> HL, C bytes).
+        tile_fns = {(b, a): info["name"] for (b, a), info in self.names.items() if not info.get("data") and
+                    info["name"] in ("CopyBBytesToVRAMFromDE", "CopyCBytesToVRAMWaitSTAT", "CopyFromBank")}
+        tiles: dict[tuple[int, int], int] = {}
+        for cb in range(self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                fn = tile_fns.get(self.resolve(cb, v[3])) if v[2] in ("call", "jp") and v[3] is not None else None
+                if not fn:
+                    continue
+                regs: dict[str, int] = {}
+                for x in reversed(order[max(0, k - 6):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    for r, rx in (("de", ld_de), ("hl", ld_hl), ("b", ld_b), ("c", ld_c)):
+                        if r not in regs and (m := rx.match(ins[x][1])):
+                            regs[r] = int("".join(m.groups()), 16)
+                if fn == "CopyBBytesToVRAMFromDE":
+                    src, dst, n, sb = regs.get("de"), regs.get("hl"), regs.get("b"), cb
+                elif fn == "CopyCBytesToVRAMWaitSTAT":
+                    src, dst, n, sb = regs.get("hl"), regs.get("de"), regs.get("c"), cb
+                else:
+                    src, dst, n, sb = regs.get("de"), regs.get("hl"), regs.get("c"), regs.get("b")
+                if None in (src, dst, n, sb) or not 0x8000 <= dst < 0x9800 or not n or n % 16:
+                    continue
+                if not 0x4000 <= src < 0x8000:
+                    if src < 0x4000:
+                        sb = 0
+                    else:
+                        continue
+                if not 0 <= sb < self.nbanks:
+                    continue
+                tiles[(sb, src)] = max(tiles.get((sb, src), 0), n)
+        nt = 0
+        for (sb, src), n in sorted(tiles.items()):
+            end = src + n
+            if end > self.base(sb) + BANK or any(p in self.covered[sb] for p in range(src, end)) or \
+                    any(b == sb and lo < end and src < hi for b, lo, hi in taken) or \
+                    any(b == sb and a2 < end and src < a2 + used for (b, a2), (_, used) in self.streams.items()):
+                continue
+            taken.append((sb, src, end))
+            self.schemas.append({"bank": sb, "addr": src, "label": f"Tiles_{sb:02X}_{src:04X}", "count": n // 16,
+                                 "id_base": 0, "fields": [{"type": "db", "size": 16, "line": True, "name": "tile"}],
+                                 "record": "one 16-byte tile (2bpp) per line",
+                                 "note": f"E-0168 (derived: {n} bytes copied into vTiles uncompressed)"})
+            nt += 1
+        log(f"uncompressed tile sources: {nt}")
 
     def prepare_tables(self) -> None:
         """Validate config/tables.json against the ROM and register data labels for their

@@ -5095,10 +5095,15 @@ Func_000_1CF9:: ; address name
     dec b
     jr nz, CopyBBytesToVRAMFromDE
     ret
-    db $FF, $1E, $E1, $21, $DF, $5F, $E2, $62, $9C, $9C, $A4, $A4, $C4, $C4, $CE, $4E
-    db $FF, $78, $87, $84, $FB, $FA, $67, $66, $39, $39, $25, $25, $23, $23, $33, $32
-    db $DF, $53, $FF, $62, $F6, $0A, $FF, $04, $FC, $04, $BF, $48, $FF, $10, $FF, $0F
-    db $7B, $6A, $BF, $E6, $FF, $22, $9F, $10, $FD, $12, $8F, $08, $FF, $04, $FF, $F8
+
+; E-0168 (derived: 64 bytes copied into vTiles uncompressed)
+; record: one 16-byte tile (2bpp) per line
+Tiles_00_1D07::
+Data_000_1D07:: ; heuristic: start of a structured table; C0
+    db $FF, $1E, $E1, $21, $DF, $5F, $E2, $62, $9C, $9C, $A4, $A4, $C4, $C4, $CE, $4E ; id 0
+    db $FF, $78, $87, $84, $FB, $FA, $67, $66, $39, $39, $25, $25, $23, $23, $33, $32 ; id 1
+    db $DF, $53, $FF, $62, $F6, $0A, $FF, $04, $FC, $04, $BF, $48, $FF, $10, $FF, $0F ; id 2
+    db $7B, $6A, $BF, $E6, $FF, $22, $9F, $10, $FD, $12, $8F, $08, $FF, $04, $FF, $F8 ; id 3
 
 ; sets wC195/wC197 to $11/$2C on maps $30 and $B8, $22/$30 on maps $63-$66, $12/$2C on map $70 (E-0125)
 ; 1 call site from 1 routine (e.g. LoadMapHeader)
