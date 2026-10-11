@@ -2643,6 +2643,22 @@
         }
       ],
       "note": "E-0174 (C1: FailIfAllyLacksMPForHealSkill reads the byte $5A33 + (skill - $16) for skills $16-$1A an ally knows and compares it with that ally's MP; the bytes after these five decode as an untraced routine (ld a, [wBattleActor] ...) and stay data)."
+    },
+    {
+      "bank": "17",
+      "addr": "426C",
+      "label": "SGBPaletteSets",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "decimal": true,
+          "name": "four SGB system palette numbers for PAL_SET"
+        }
+      ],
+      "note": "E-0178 (C1: SendSGBPaletteSetPacket copies the 8 bytes at $426C + 8 * wSGBPaletteSet into a PAL_SET ($51) packet after the command byte and into wSGBPaletteNum0Lo onward, then adds the attribute file wSGBAttrFile | $80; entries 0-63 hold four words below 512 (the SGB's system palette count), the words after them do not)."
     }
   ]
 }

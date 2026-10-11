@@ -260,9 +260,76 @@ Jump_017_4265::
     jr nz, Jump_017_4265
     ret
 
-; address loaded by SendSGBPaletteSetPacket
+; E-0178 (C1: SendSGBPaletteSetPacket copies the 8 bytes at $426C + 8 * wSGBPaletteSet into a PAL_SET ($51) packet after the command byte and into wSGBPaletteNum0Lo onward, then adds the attribute file wSGBAttrFile | $80; entries 0-63 hold four words below 512 (the SGB's system palette count), the words after them do not).
+; record: four SGB system palette numbers for PAL_SET
+SGBPaletteSets::
 Data_017_426C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $05C26C, $220
+    dw 0, 1, 2, 3 ; id 0
+    dw 4, 5, 6, 7 ; id 1
+    dw 8, 9, 10, 11 ; id 2
+    dw 12, 13, 14, 15 ; id 3
+    dw 16, 17, 18, 19 ; id 4
+    dw 20, 21, 22, 23 ; id 5
+    dw 24, 25, 26, 27 ; id 6
+    dw 28, 29, 30, 31 ; id 7
+    dw 32, 33, 34, 35 ; id 8
+    dw 36, 37, 38, 39 ; id 9
+    dw 40, 41, 42, 43 ; id 10
+    dw 44, 45, 46, 47 ; id 11
+    dw 48, 49, 50, 51 ; id 12
+    dw 52, 53, 54, 55 ; id 13
+    dw 56, 57, 58, 59 ; id 14
+    dw 60, 61, 62, 63 ; id 15
+    dw 64, 65, 66, 67 ; id 16
+    dw 68, 69, 70, 71 ; id 17
+    dw 72, 73, 74, 75 ; id 18
+    dw 76, 77, 78, 79 ; id 19
+    dw 80, 81, 82, 83 ; id 20
+    dw 84, 85, 86, 87 ; id 21
+    dw 88, 89, 90, 91 ; id 22
+    dw 92, 93, 94, 95 ; id 23
+    dw 96, 97, 98, 99 ; id 24
+    dw 100, 101, 102, 103 ; id 25
+    dw 104, 105, 106, 107 ; id 26
+    dw 108, 109, 110, 111 ; id 27
+    dw 112, 113, 114, 115 ; id 28
+    dw 116, 117, 118, 119 ; id 29
+    dw 120, 121, 122, 123 ; id 30
+    dw 124, 125, 126, 127 ; id 31
+    dw 128, 129, 130, 131 ; id 32
+    dw 132, 133, 134, 135 ; id 33
+    dw 136, 137, 138, 139 ; id 34
+    dw 140, 141, 142, 143 ; id 35
+    dw 144, 145, 146, 147 ; id 36
+    dw 148, 149, 150, 151 ; id 37
+    dw 152, 153, 154, 155 ; id 38
+    dw 156, 157, 158, 159 ; id 39
+    dw 160, 161, 162, 163 ; id 40
+    dw 164, 165, 166, 167 ; id 41
+    dw 168, 169, 170, 171 ; id 42
+    dw 172, 173, 174, 175 ; id 43
+    dw 176, 177, 178, 179 ; id 44
+    dw 180, 181, 182, 183 ; id 45
+    dw 184, 185, 186, 187 ; id 46
+    dw 188, 189, 190, 191 ; id 47
+    dw 192, 193, 194, 195 ; id 48
+    dw 196, 197, 198, 199 ; id 49
+    dw 200, 201, 202, 203 ; id 50
+    dw 204, 205, 206, 207 ; id 51
+    dw 208, 209, 210, 211 ; id 52
+    dw 212, 213, 214, 215 ; id 53
+    dw 216, 217, 218, 219 ; id 54
+    dw 220, 221, 222, 223 ; id 55
+    dw 224, 225, 226, 227 ; id 56
+    dw 228, 229, 230, 231 ; id 57
+    dw 232, 233, 234, 235 ; id 58
+    dw 236, 237, 238, 239 ; id 59
+    dw 240, 241, 242, 243 ; id 60
+    dw 244, 245, 246, 247 ; id 61
+    dw 248, 249, 250, 251 ; id 62
+    dw 252, 253, 254, 255 ; id 63
+    db $DE, $6F, $1F, $33, $3C, $12, $00, $00, $DE, $6F, $1F, $33, $3C, $12, $00, $00
+    db $DE, $6F, $1F, $33, $3C, $12, $00, $00, $DE, $6F, $1F, $33, $3C, $12, $00, $00
 
 ; LZSS-compressed asset: 7 bytes expand to 90 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_017_448C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0

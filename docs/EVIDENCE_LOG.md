@@ -2137,6 +2137,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The bytes after such a rectangle stay data unless another call site names them. The larger slices after 1F:5E13 and 1F:66DF are still undecoded.
 - Binary verification: build/run180 PASS, 0 differing bytes; tests OK.
 
+### E-0178 — SGB palette sets (bank $17)
+
+- Kind: OBSERVATION (reading of SendSGBPaletteSetPacket, 17:41CF; Pan Docs for the PAL_SET layout; C1).
+- **Source.** The routine starts a PAL_SET packet ($51), copies the 8 bytes at 17:$426C + 8 * wSGBPaletteSet after the command byte (and into wSGBPaletteNum0Lo onward), and adds the attribute file wSGBAttrFile | $80.
+- **Checks.** Entries 0-63 are four words below 512, the number of SGB system palettes. The words after them are not.
+- **Declared.** SGBPaletteSets (64 entries, decimal palette numbers).
+- Binary verification: build/run181 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
