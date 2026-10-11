@@ -3042,9 +3042,32 @@ Func_0E0_5A79:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     ret
-    db $7D, $EA, $2D, $C5, $7C, $EA, $2E, $C5, $7B, $EA, $2F, $C5, $7A, $EA, $30, $C5
-    db $21, $0F, $40, $06, $09, $D7, $21, $00, $88, $7D, $EA, $2D, $C5, $7C, $EA, $2E
-    db $C5, $21, $02, $12, $7D, $EA, $2F, $C5, $7C, $EA, $30, $C5, $C9
+
+; the same 45 bytes as ShowStringBank09AtHLSizeDEThenDefault (E0:42A6)
+; no direct call (reached through a table, a jump or a vector)
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+ShowStringBank09AtHLSizeDEThenDefault_BankE0:: ; heuristic: same first 16 bytes as the routine at 00:2E98; C0
+Func_0E0_5AA6:: ; address name
+    ld a, l
+    ld [wTextWindowTileLo], a
+    ld a, h
+    ld [wTextWindowTileHi], a
+    ld a, e
+    ld [wTextWindowRows], a
+    ld a, d
+    ld [wTextWindowWidth], a
+    farcall ShowString_Bank09
+    ld hl, vTiles1
+    ld a, l
+    ld [wTextWindowTileLo], a
+    ld a, h
+    ld [wTextWindowTileHi], a
+    ld hl, $1202
+    ld a, l
+    ld [wTextWindowRows], a
+    ld a, h
+    ld [wTextWindowWidth], a
+    ret
 
 ; only called from DebugStaffRoll_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugStaffRoll_Update)
@@ -7398,7 +7421,7 @@ Data_0E0_79BA:: ; heuristic: target of a monotone pointer table; C0
     db "    "
     INCBIN "dwm2-cobi-us.gbc", $3839BE, $C2
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
 ; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_Sub01, RunDebugState_E0_Case0D_Case01)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankE0::

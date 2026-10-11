@@ -9577,7 +9577,7 @@ Jump_031_77DD::
     and a, $03
     cp a, $03
     jr z, Jump_031_7805
-    ld hl, Data_031_7ADA
+    ld hl, SlotPanelRowOffsets
     add a, a
     add_a_to_hl
     deref_hl
@@ -10032,9 +10032,259 @@ Data_031_7ACE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_7AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $00, $A7, $00, $AD, $00
 
-; address loaded by CopySlotPanelRowToVRAM
-Data_031_7ADA:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0C7ADA, $114
+; E-0212 (C1: CopySlotPanelRowToVRAM reads the word at $7ADA + 2 * (slot & 3) and copies 5 tiles from wScreenTileBuffer + offset to the same offset of vBGMap0; three words for slots 0-2).
+; record: offset of the slot's panel row in the screen buffer / BG map
+SlotPanelRowOffsets::
+Data_031_7ADA:: ; address name
+    dw $00A1 ; id 0
+    dw $00A7 ; id 1
+    dw $00AD ; id 2
+
+; the same 55 bytes as GetBattleATK_Bank39 (39:71E5)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleATK
+GetBattleATK_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7AE0:: ; address name
+    ld hl, wBattleATK
+    jr Jump_031_7B0D
+
+; the same 50 bytes as GetBattleDEF_Bank39 (39:71EA)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleDEF
+GetBattleDEF_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7AE5:: ; address name
+    ld hl, wBattleDEF
+    jr Jump_031_7B0D
+
+; the same 45 bytes as GetBattleMaxHP_Bank39 (39:71EF)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMaxHP
+GetBattleMaxHP_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7AEA:: ; address name
+    ld hl, wBattleMaxHP
+    jr Jump_031_7B0D
+
+; the same 40 bytes as GetBattleMaxMP_Bank39 (39:71F4)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMaxMP
+GetBattleMaxMP_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7AEF:: ; address name
+    ld hl, wBattleMaxMP
+    jr Jump_031_7B0D
+
+; the same 35 bytes as GetBattleHP_Bank39 (39:71F9)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleHP
+GetBattleHP_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7AF4:: ; address name
+    ld hl, wBattleHP
+    jr Jump_031_7B0D
+
+; the same 30 bytes as GetBattleMP_Bank39 (39:71FE)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMP
+GetBattleMP_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7AF9:: ; address name
+    ld hl, wBattleMP
+    jr Jump_031_7B0D
+
+; the same 25 bytes as GetBattleAGL_Bank39 (39:7203)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleAGL
+GetBattleAGL_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7AFE:: ; address name
+    ld hl, wBattleAGL
+    jr Jump_031_7B0D
+
+; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wSlotAIMode
+ReadSlotAIModeIndexed_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7B03:: ; address name
+    ld hl, wSlotAIMode
+    add_a_to_hl
+    ld a, [hl]
+    ret
+
+Jump_031_7B0D::
+    add a, a
+    add_a_to_hl
+    deref_hl
+    ret
+
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+AddDoubleAToHL_Bank31:: ; heuristic: follows a terminator; C0
+Func_031_7B17:: ; address name
+    add a, a
+    add_a_to_hl
+    ret
+
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wLinkMode, wLinkRole, wBattleActor
+ActorOnLocalSide_Bank31:: ; heuristic: follows a terminator; C0
+Func_031_7B1E:: ; address name
+    ld a, [wLinkMode]
+    cp a, $01
+    jr nz, Jump_031_7B33
+    ld a, [wLinkRole]
+    bit 1, a
+    jr z, Jump_031_7B33
+    ld a, [wBattleActor]
+    cp a, $04
+    ccf
+    ret
+
+Jump_031_7B33::
+    ld a, [wBattleActor]
+    cp a, $04
+    ret
+
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wLinkMode, wLinkRole, wBattleTarget
+TargetOnLocalSide_Bank31:: ; heuristic: follows a terminator; C0
+Func_031_7B39:: ; address name
+    ld a, [wLinkMode]
+    cp a, $01
+    jr nz, Jump_031_7B4E
+    ld a, [wLinkRole]
+    bit 1, a
+    jr z, Jump_031_7B4E
+    ld a, [wBattleTarget]
+    cp a, $04
+    ccf
+    ret
+
+Jump_031_7B4E::
+    ld a, [wBattleTarget]
+    cp a, $04
+    ret
+
+; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank31[D] (AddAx9ToHL); not reached from traced code (E-0212)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus
+ClearBattleStatusBitsWithMaskD_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7B54:: ; address name
+    ld a, d
+    ld hl, ClearBitMaskTable_Bank31
+    add_a_to_hl
+    ld d, [hl]
+    ld a, e
+    ld hl, wBattleStatus
+    call AddAx9ToHL
+    ld a, d
+    and a, [hl]
+    ld [hl], a
+    ret
+
+; E-0212 (C1: the copy in bank $31 of ClearBitMaskTable (E-0205), read by the routine at $7B54; the block $7B54-$7BEE has the same bytes as $4075-$410F in banks $05, $A1 and $A3, apart from the table address).
+; record: AND mask
+ClearBitMaskTable_Bank31::
+Data_031_7B69:: ; address name
+    db $DF ; id 0
+    db $FE ; id 1
+    db $00 ; id 2
+    db $FD ; id 3
+    db $73 ; id 4
+    db $EF ; id 5
+    db $BF ; id 6
+
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit0OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7B70:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 0, [hl]
+    pop hl
+    ret
+
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit1OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7B7D:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 1, [hl]
+    pop hl
+    ret
+
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit2OfLevelUpGainsIndexed_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7B8A:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 2, [hl]
+    pop hl
+    ret
+
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+PersonalityIndexOfSlot_Bank31:: ; configured code entry (E-0212); C0
+Func_031_7B97:: ; address name
+    push hl
+    push bc
+    ld c, a
+    ld b, $00
+    ld hl, wSlotPersonalityHi
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_031_7BB3
+    ld l, $09
+    cp a, $40
+    jr nc, Jump_031_7BB3
+    ld l, $12
+
+Jump_031_7BB3::
+    ld a, l
+    add a, b
+    ld b, a
+    ld a, c
+    ld hl, wSlotPersonalityMid
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_031_7BCE
+    ld l, $03
+    cp a, $40
+    jr nc, Jump_031_7BCE
+    ld l, $06
+
+Jump_031_7BCE::
+    ld a, l
+    add a, b
+    ld b, a
+    ld a, c
+    ld hl, wSlotPersonalityLo
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_031_7BE9
+    ld l, $01
+    cp a, $40
+    jr nc, Jump_031_7BE9
+    ld l, $02
+
+Jump_031_7BE9::
+    ld a, l
+    add a, b
+    pop bc
+    pop hl
+    ret
 
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case09_Sub01)

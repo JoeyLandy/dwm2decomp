@@ -3847,7 +3847,7 @@ Func_000_1679:: ; address name
     ret
 
 ; HL = A * C (8 x 8 bit); clobbers A, B and C
-; 117 call sites from 100 routines (e.g. Func_000_2950_Case08, BattlerRecordFieldAddress, Multiply8By16, SRAMRecordAddressMapped, ...)
+; 120 call sites from 101 routines (e.g. Func_000_2950_Case08, BattlerRecordFieldAddress, Multiply8By16, SRAMRecordAddressMapped, ...)
 Multiply8::
 Func_000_1682:: ; address name
     ld b, $00
@@ -3890,7 +3890,7 @@ Jump_000_16A5::
     ret
 
 ; E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E
-; 64 call sites from 53 routines (e.g. MultiplyHLByAPercent, FastestFoeAGLAbove31PercentOfActor, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
+; 65 call sites from 54 routines (e.g. MultiplyHLByAPercent, FastestFoeAGLAbove31PercentOfActor, AIScore_BiAttack_Sub01, AIScore_Berserker_Sub01, ...)
 Multiply8By16::
 Func_000_16AA:: ; address name
     push af
@@ -10994,7 +10994,7 @@ Jump_000_3F24::
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
-; 305 call sites from 250 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ClearBattleStatusBitsWithMaskD_Bank05, ...)
+; 306 call sites from 251 routines (e.g. CheckSlotStatusBlock, SlotHasStatus3Or4Bits_Bank05, CheckSlotStatusBlockWide_Bank05, ClearBattleStatusBitsWithMaskD_Bank05, ...)
 AddAx9ToHL::
 Func_000_3F25:: ; address name
     push de

@@ -629,6 +629,45 @@ class Rom:
             return False
         return True
 
+    def discover_copies(self) -> bool:
+        """E-0212: untraced bytes whose first 16 equal the first 16 of a traced routine (all of
+        them decoded as code there) are a copy of that routine: queue them as code. Library
+        routines are copied into many banks; a copy no traced code reaches stays data otherwise."""
+        sig: dict[bytes, str] = {}
+        for b in range(self.nbanks):
+            base, ins, cov = self.base(b), self.insn[b], self.covered[b]
+            for a, lab in self.labels[b].items():
+                v = ins.get(a)
+                if v is None or v[0] == "dw" or a + 16 > base + BANK:
+                    continue
+                if not (lab.startswith("Func_") or (b, a) in self.names):
+                    continue
+                if not all(x in cov for x in range(a, a + 16)) or any(ins.get(x, ("",))[0] == "dw" for x in range(a, a + 16)):
+                    continue
+                o = b * BANK + a - base
+                sig.setdefault(bytes(self.data[o:o + 16]), f"{b:02X}:{a:04X}")
+        spans = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+        found = 0
+        for b in range(1, self.nbanks):
+            if b in self.zero:
+                continue
+            base, ins, cov = self.base(b), self.insn[b], self.covered[b]
+            o0 = b * BANK - base
+            cands = set()  # as for fall-through: right after a terminator or a table word
+            for a, v in ins.items():
+                nxt = a + 2 if v[0] == "dw" else (a + v[0] if v[2] in ("jr", "jp", "ret", "jphl") else None)
+                if nxt is not None and nxt + 16 <= base + BANK and nxt not in cov:
+                    cands.add(nxt)
+            for p in sorted(cands):
+                src = sig.get(bytes(self.data[o0 + p:o0 + p + 16]))
+                if src and not any(x in cov for x in range(p, p + 16)) and not self.in_data_region(b, p) \
+                        and not any(tb == b and lo <= p < hi for tb, lo, hi in spans) and f"{b:02X}:{p:04X}" != src:
+                    self.add_entry(b, p, "Func", f"heuristic: same first 16 bytes as the routine at {src}")
+                    found += 1
+        log(f"  (c) copies of traced routines: {found} queued")
+        return found > 0
+
     def discover_fallthrough(self) -> bool:
         """Cheap pass: queue plausible code that starts right after known code or a table."""
         did = False
@@ -1291,6 +1330,31 @@ class Rom:
             if kind in ("ret", "jp") and pc > far:
                 return pc - start
         return None
+
+    def name_copies(self) -> None:
+        """E-0212: a routine found as a copy (discover_copies: its first 16 bytes equal a traced
+        routine's) takes the source's name with its own bank suffix (`Name_BankBB`)."""
+        used = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
+        named = 0
+        for (b, a), why in sorted(self.reason.items()):
+            m = re.search(r"same first 16 bytes as the routine at ([0-9A-F]{2}):([0-9A-F]{4})", why or "")
+            if not m or not self.labels[b].get(a, "").startswith("Func_"):
+                continue
+            sb, sa = int(m.group(1), 16), int(m.group(2), 16)
+            src = self.labels[sb].get(sa, "")
+            if src.startswith(("Func_", "Jump_")) or not src:
+                continue  # the 16 equal bytes that found the copy are its evidence
+            stem = re.sub(r"_Bank[0-9A-F]{2}$", "", src)
+            name = f"{stem}_Bank{b:02X}"
+            if name in used:
+                name = f"{stem}_{b:02X}_{a:04X}"
+            if name in used:
+                continue
+            used.add(name)
+            self.alias[(b, a)] = self.labels[b][a]
+            self.labels[b][a] = name
+            named += 1
+        log(f"copies named after their source routine: {named}")
 
     def expand_families(self, families: list[dict]) -> None:
         """Name every function whose bytes equal a family's canonical routine (config/name_families.json).
@@ -2795,6 +2859,8 @@ class Rom:
             # chain); the slow pointer-table scan only runs once that is exhausted.
             if self.discover_fallthrough():
                 continue
+            if self.discover_copies():
+                continue
             log(f"round {rnd}: fall-through exhausted; pointer-table scan")
             if not self.discover_tables():
                 log(f"round {rnd}: no new entries; analysis complete")
@@ -2811,6 +2877,7 @@ class Rom:
         self.expand_families(self.families)
         self.name_dispatch_cases()
         self.apply_names()
+        self.name_copies()
         self.build_xrefs()
         self.name_single_caller_helpers()
         log(f"cross-references: {len(self.callers)} routines are called, "

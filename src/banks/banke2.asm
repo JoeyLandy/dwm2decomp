@@ -5959,9 +5959,42 @@ GetBattleATK_BankE2:: ; heuristic: follows a terminator; C0
 Func_0E2_68A9:: ; address name
     ld hl, wBattleATK
     jr Jump_0E2_68D6
-    db $21, $0F, $D9, $18, $23, $21, $CF, $D8, $18, $1E, $21, $EF, $D8, $18, $19, $21
-    db $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53
-    db $DA, $85, $6F, $30, $01, $24, $7E, $C9
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleDEF
+GetBattleDEF_BankE2:: ; heuristic: same first 16 bytes as the routine at 05:4006; C0
+Func_0E2_68AE:: ; address name
+    ld hl, wBattleDEF
+    jr Jump_0E2_68D6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMaxHP
+GetBattleMaxHP_BankE2:: ; heuristic: same first 16 bytes as the routine at 05:400B; C0
+Func_0E2_68B3:: ; address name
+    ld hl, wBattleMaxHP
+    jr Jump_0E2_68D6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMaxMP
+GetBattleMaxMP_BankE2:: ; heuristic: same first 16 bytes as the routine at 05:4010; C0
+Func_0E2_68B8:: ; address name
+    ld hl, wBattleMaxMP
+    jr Jump_0E2_68D6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleHP
+GetBattleHP_BankE2:: ; heuristic: same first 16 bytes as the routine at 05:4015; C0
+Func_0E2_68BD:: ; address name
+    ld hl, wBattleHP
+    jr Jump_0E2_68D6
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMP
+GetBattleMP_BankE2:: ; heuristic: same first 16 bytes as the routine at 05:401A; C0
+Func_0E2_68C2:: ; address name
+    ld hl, wBattleMP
+    jr Jump_0E2_68D6
+    db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
 Jump_0E2_68D6::
     add a, a
@@ -5969,7 +6002,7 @@ Jump_0E2_68D6::
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 AddDoubleAToHL_BankE2:: ; heuristic: follows a terminator; C0
 Func_0E2_68E0:: ; address name
@@ -5977,7 +6010,7 @@ Func_0E2_68E0:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_BankE2:: ; heuristic: follows a terminator; C0
@@ -5998,7 +6031,7 @@ Jump_0E2_68FC::
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_BankE2:: ; heuristic: follows a terminator; C0

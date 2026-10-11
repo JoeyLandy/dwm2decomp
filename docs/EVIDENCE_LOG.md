@@ -2430,6 +2430,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0212 — Copies of traced routines; the bank-$31 library copy
+
+- Kind: TOOL (C1 per copy) plus OBSERVATION.
+- **Bank $31.** SlotPanelRowOffsets ($7ADA, 3 words) feeds CopySlotPanelRowToVRAM. After it, $7AE0-$7BEE is a copy of the battle library:
+  - GetBattleATK/DEF/MaxHP/MaxMP/HP/MP/AGL stubs and their shared tail;
+  - the E-0205 block (ClearBattleStatusBitsWithMaskD_Bank31 and the set-bit routines);
+  - ClearBitMaskTable_Bank31 ($7B69).
+  - None of it is reached from traced code. It is seeded through configured code entries, and the existing comments match it to the traced bank-$39 copy ("the same 55 bytes as GetBattleATK_Bank39").
+- **Generator: discover_copies.** When fall-through discovery is exhausted, a fall-through candidate (right after a covered terminator or table word) whose next 16 bytes equal the first 16 bytes of a traced routine (all decoded as code there) is queued as code. Proven data regions and declared tables are excluded.
+  - It queued 25 copies, for example the GetBattle* stubs at $4006-$401A in banks $A1 and $A3, GetBattleDEF_BankE2, Multiply24By8_BankA0, and a bank-$E0 copy of the bank-0 routine at $2E98.
+  - A first version that tried every uncovered byte seeded inside a run of 6-byte target routines in bank $39 and broke ChooseTarget_BeastCut; limiting it to fall-through candidates fixed that.
+- **Generator: name_copies.** A copy takes its source routine's name with its own bank suffix; a second copy in the same bank adds its address.
+- Binary verification: build/run248 PASS, 0 differing bytes; `tools/rank_unnamed.py` reports 0 address-only routines.
+
 ### E-0211 — Monster pedigree tables (bank $0C)
 
 - Kind: OBSERVATION (reading plus a cross-check against E-0199; C1, C2 where cross-checked).

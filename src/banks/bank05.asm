@@ -57,7 +57,7 @@ Func_005_401F:: ; address name
     ld hl, wBattleAGL
     jr Jump_005_402E
 
-; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
+; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; 6 call sites from 5 routines (e.g. FailIfTwoAlliesBelowHalfHP, AIGateCompareAllyStatAverages, AIScore_Berserker_Sub01, AIScore_Ramming_Sub01, ...)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank05_4024:: ; heuristic: follows a terminator; C0
@@ -73,7 +73,7 @@ Jump_005_402E::
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 AddDoubleAToHL_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_4038:: ; address name
@@ -81,7 +81,7 @@ Func_005_4038:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank05:: ; heuristic: follows a terminator; C0
@@ -102,7 +102,7 @@ Jump_005_4054::
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank05:: ; heuristic: follows a terminator; C0
@@ -152,7 +152,7 @@ Data_005_408A:: ; address name
     db $EF ; id 5
     db $BF ; id 6
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
@@ -164,7 +164,7 @@ Func_005_4091:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
@@ -176,7 +176,7 @@ Func_005_409E:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
@@ -188,7 +188,7 @@ Func_005_40AB:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank05:: ; configured code entry (E-0205); C0
@@ -8328,7 +8328,7 @@ Func_005_6B07:: ; address name
     ld [wAISkillScore2 + $1], a
     ret
 
-; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
+; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; 33 call sites from 33 routines (e.g. FailIfAbleAllyKnowsSkillList6D1A, FailIfAllyLacksMPForSkillList5AF8, CheckFoeStatus7Bit2, FailIfFoeSkill3DThreatensActorHP, ...)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank05::

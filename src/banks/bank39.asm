@@ -6815,7 +6815,7 @@ Func_039_7203:: ; address name
     ld hl, wBattleAGL
     jr Jump_039_7212
 
-; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 4 banks)
+; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank39:: ; heuristic: follows a terminator; C0
@@ -6831,7 +6831,7 @@ Jump_039_7212::
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 AddDoubleAToHL_Bank39:: ; heuristic: follows a terminator; C0
 Func_039_721C:: ; address name
@@ -6839,7 +6839,7 @@ Func_039_721C:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank39:: ; heuristic: follows a terminator; C0
@@ -6860,7 +6860,7 @@ Jump_039_7238::
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank39:: ; heuristic: follows a terminator; C0

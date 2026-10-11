@@ -6486,5 +6486,6 @@
   "3A:7162": {"name": "BattleText0HookActorAndSkill_7162", "note": "CopyActorNameToTextBuf0, CopyActionSkillNameToTextBuf1 (the same as $7154) (E-0210)", "evidence": "reading (E-0210)"},
   "3A:7169": {"name": "BattleText0HookActorAndMappedSlot", "note": "CopyActorNameToTextBuf0, CopyMappedSlotNameToTextBuf1 (21 messages) (E-0210)", "evidence": "reading (E-0210)"},
   "3A:7183": {"name": "BattleText0HookTargetAndDefeatSlot", "note": "CopyTargetNameToTextBuf0, then the name of slot wDefeatByteD1 into wTextBuf1 (E-0210)", "evidence": "reading (E-0210)"},
-  "3A:794E": {"name": "WriteBattleDamageToTextBuf1", "note": "wTextBuf1 = wBattleDamage as a decimal string (WriteBCAsDecimalString) (E-0210)", "evidence": "reading (E-0210)"}
+  "3A:794E": {"name": "WriteBattleDamageToTextBuf1", "note": "wTextBuf1 = wBattleDamage as a decimal string (WriteBCAsDecimalString) (E-0210)", "evidence": "reading (E-0210)"},
+  "31:7B54": {"name": "ClearBattleStatusBitsWithMaskD_Bank31", "note": "wBattleStatus + 9 * E &= ClearBitMaskTable_Bank31[D] (AddAx9ToHL); not reached from traced code (E-0212)", "evidence": "reading (E-0212)"}
 }

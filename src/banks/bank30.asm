@@ -4139,8 +4139,14 @@ ReadBattleHPOfSlot_Bank30::
 Func_030_5C4F:: ; address name
     ld hl, wBattleHP
     jr ReadBattleWordFromArray_Bank30
-    db $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30
-    db $01, $24, $7E, $C9
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMP
+GetBattleMP_Bank30:: ; heuristic: same first 16 bytes as the routine at 05:401A; C0
+Func_030_5C54:: ; address name
+    ld hl, wBattleMP
+    jr ReadBattleWordFromArray_Bank30
+    db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
 ; the same 10 bytes as ReadBattleWordFromArray (36:7E5B)
 ; 5 call sites from 5 routines (e.g. AIRunNextChoice, AIChooseActionResolveStep, RunBattleResolveStep_43C4_Case01_Sub04, RunBattleResolveStep_43C4_Case01_Sub02, ...)
@@ -4151,7 +4157,7 @@ Func_030_5C68:: ; address name
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01)
 AddDoubleAToHL_Bank30::
 Func_030_5C72:: ; address name
@@ -4159,7 +4165,7 @@ Func_030_5C72:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank30:: ; heuristic: follows a terminator; C0
@@ -4180,7 +4186,7 @@ Jump_030_5C8E::
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank30:: ; heuristic: follows a terminator; C0
@@ -4202,7 +4208,7 @@ Jump_030_5CA9::
     ret
     INCBIN "dwm2-cobi-us.gbc", $0C1CAF, $43
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
 ; 2 call sites from 2 routines (e.g. RunBattleResolveStep_43C4_Case00, AIChooseActionForActor)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank30::

@@ -34,7 +34,7 @@ Jump_008_4024::
     ret
 
 ; Func_008_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 67 call sites from 48 routines (e.g. DebugMessageTest_Init, DebugMonsterRecordViewer_Init, DebugSkillViewer_Init, DebugResultsDisplay_Init, ...)
+; 69 call sites from 50 routines (e.g. DebugMessageTest_Init, DebugMonsterRecordViewer_Init, DebugSkillViewer_Init, DebugResultsDisplay_Init, ...)
 ShowString_Bank08::
 Func_008_402B:: ; address name
     call BeginStringDisplay_Bank08

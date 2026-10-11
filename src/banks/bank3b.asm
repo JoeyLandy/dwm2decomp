@@ -1814,12 +1814,18 @@ Func_03B_4A5B:: ; address name
 ; A = byte 2 of the target's 7-byte wDA72 record (wDA74 + 7 * target) (E-0124)
 ; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_Sub01)
 ; reads: wBattleTarget
-TargetWDA74Byte::
+TargetWDA74Byte:: ; heuristic: same first 16 bytes as the routine at 36:61B0; C0
 Func_03B_4A60:: ; address name
     ld de, wSlotResistances + $2
     jr Jump_03B_4A77
-    db $11, $75, $DA, $18, $0D, $11, $76, $DA, $18, $08, $11, $77, $DA, $18, $03, $11
-    db $78, $DA
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget
+GetTargetSlotResistancesByte3_Bank3B:: ; heuristic: same first 16 bytes as the routine at 36:61B5; C0
+Func_03B_4A65:: ; address name
+    ld de, wSlotResistances + $3
+    jr Jump_03B_4A77
+    db $11, $76, $DA, $18, $08, $11, $77, $DA, $18, $03, $11, $78, $DA
 
 Jump_03B_4A77::
     ld a, [wBattleTarget]
@@ -2513,8 +2519,21 @@ GetBattleMaxMP_Bank3B::
 Func_03B_4F2A:: ; address name
     ld hl, wBattleMaxMP
     jr Jump_03B_4F48
-    db $21, $BF, $D8, $18, $14, $21, $DF, $D8, $18, $0F, $21, $1F, $D9, $18, $0A, $21
-    db $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleHP
+GetBattleHP_Bank3B:: ; heuristic: same first 16 bytes as the routine at 05:4015; C0
+Func_03B_4F2F:: ; address name
+    ld hl, wBattleHP
+    jr Jump_03B_4F48
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleMP
+GetBattleMP_Bank3B:: ; heuristic: same first 16 bytes as the routine at 05:401A; C0
+Func_03B_4F34:: ; address name
+    ld hl, wBattleMP
+    jr Jump_03B_4F48
+    db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
 Jump_03B_4F48::
     add a, a
@@ -2522,7 +2541,7 @@ Jump_03B_4F48::
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; 10 call sites from 6 routines (e.g. Func_03B_42F4_Case08, SubtractActionAmountFromTargetBattleWordArray3F, RestoreTargetHPIfHurt, RestoreTargetHPIfHurt_Sub01, ...)
 AddDoubleAToHL_Bank3B::
 Func_03B_4F52:: ; address name
@@ -2530,7 +2549,7 @@ Func_03B_4F52:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank3B:: ; heuristic: follows a terminator; C0
@@ -2551,7 +2570,7 @@ Jump_03B_4F6E::
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; 3 call sites from 3 routines (e.g. Func_03B_42F4_Case02, InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank3B::
@@ -2574,7 +2593,7 @@ Jump_03B_4F89::
     db $7A, $21, $A4, $4F, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case08)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank3B::
@@ -2586,7 +2605,7 @@ Func_03B_4FAB:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case08)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank3B::
@@ -2598,7 +2617,7 @@ Func_03B_4FB8:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case08, InflictStatus0Bit0WithBattleWordArray3FReduction)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank3B::
@@ -2610,7 +2629,7 @@ Func_03B_4FC5:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank3B:: ; heuristic: follows a terminator; C0

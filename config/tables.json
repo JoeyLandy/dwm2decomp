@@ -12971,6 +12971,36 @@
         }
       ],
       "note": "E-0211 (C1: the partner of MonsterPedigreeTableA_Alt, a variant of MonsterPedigreeTableB; 384 words end at ScriptCommandF7_Run ($659F); no reader found)."
+    },
+    {
+      "bank": "31",
+      "addr": "7ADA",
+      "label": "SlotPanelRowOffsets",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset of the slot's panel row in the screen buffer / BG map"
+        }
+      ],
+      "note": "E-0212 (C1: CopySlotPanelRowToVRAM reads the word at $7ADA + 2 * (slot & 3) and copies 5 tiles from wScreenTileBuffer + offset to the same offset of vBGMap0; three words for slots 0-2)."
+    },
+    {
+      "bank": "31",
+      "addr": "7B69",
+      "label": "ClearBitMaskTable_Bank31",
+      "count": 7,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "AND mask"
+        }
+      ],
+      "note": "E-0212 (C1: the copy in bank $31 of ClearBitMaskTable (E-0205), read by the routine at $7B54; the block $7B54-$7BEE has the same bytes as $4075-$410F in banks $05, $A1 and $A3, apart from the table address)."
     }
   ]
 }

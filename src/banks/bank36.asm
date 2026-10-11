@@ -10923,7 +10923,7 @@ Func_036_7E5B:: ; address name
     deref_hl
     ret
 
-; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 10 banks)
+; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 11 banks)
 ; 60 call sites from 33 routines (e.g. ActionEffect_BiAttack_Sub01, ComputeAttackDamage, RaiseTargetAGL, ReadWordTableEntry_Bank36, ...)
 AddDoubleAToHL_Bank36::
 Func_036_7E65:: ; address name
@@ -10931,7 +10931,7 @@ Func_036_7E65:: ; address name
     add_a_to_hl
     ret
 
-; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 11 banks)
 ; 5 call sites from 4 routines (e.g. ResolveStepDamageMessage_Sub04, ResolveStepDamageMessage_Sub03, ResolveStepChanceRoll, ResolveStepEffectChecks_Sub03)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank36::
@@ -10952,7 +10952,7 @@ Jump_036_7E81::
     cp a, $04
     ret
 
-; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 10 banks)
+; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 11 banks)
 ; 6 call sites from 6 routines (e.g. ActionEffect_Vivify, ActionEffect_ActionC8, ActionEffect_ActionB5, ResolveStepDamageMessage_Sub03, ...)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank36::
@@ -10975,7 +10975,7 @@ Jump_036_7E9C::
     db $7A, $21, $B7, $7E, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; 3 call sites from 3 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, Func_036_4A38_Case01)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank36::
@@ -10987,7 +10987,7 @@ Func_036_7EBE:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; 5 call sites from 4 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage, Func_036_4A38_Case01)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank36::
@@ -10999,7 +10999,7 @@ Func_036_7ECB:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 8 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank36:: ; heuristic: follows a terminator; C0
@@ -11011,7 +11011,7 @@ Func_036_7ED8:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank36:: ; heuristic: follows a terminator; C0

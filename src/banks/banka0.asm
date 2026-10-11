@@ -1893,9 +1893,41 @@ Jump_0A0_4AE0::
 Jump_0A0_4AE2::
     ld [hl], a
     ret
-    db $F5, $E5, $4B, $CD, $82, $16, $C1, $F1, $E5, $F5, $C5, $48, $CD, $82, $16, $C1
-    db $F1, $E5, $CD, $82, $16, $C1, $79, $84, $67, $78, $CE, $00, $5F, $C1, $79, $83
-    db $5F, $78, $CE, $00, $57, $C9
+
+; the same 38 bytes as Multiply24By8 (19:4A74)
+; no direct call (reached through a table, a jump or a vector)
+Multiply24By8_BankA0:: ; heuristic: same first 16 bytes as the routine at 19:4A74; C0
+Func_0A0_4AE4:: ; address name
+    push af
+    push hl
+    ld c, e
+    call Multiply8
+    pop bc
+    pop af
+    push hl
+    push af
+    push bc
+    ld c, b
+    call Multiply8
+    pop bc
+    pop af
+    push hl
+    call Multiply8
+    pop bc
+    ld a, c
+    add a, h
+    ld h, a
+    ld a, b
+    adc a, $00
+    ld e, a
+    pop bc
+    ld a, c
+    add a, e
+    ld e, a
+    ld a, b
+    adc a, $00
+    ld d, a
+    ret
 
 ; address loaded by ApplyLevelScaledStatsToSlots
 Data_0A0_4B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0

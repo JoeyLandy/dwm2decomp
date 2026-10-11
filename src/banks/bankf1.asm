@@ -1359,10 +1359,42 @@ Func_0F1_4997:: ; address name
     ld a, $BC
     call WriteVRAMByte
     ret
-    db $FA, $2D, $C5, $4F, $FA, $2E, $C5, $47, $C5, $FA, $2F, $C5, $4F, $FA, $30, $C5
-    db $47, $C5, $7D, $EA, $2D, $C5, $7C, $EA, $2E, $C5, $7B, $EA, $2F, $C5, $7A, $EA
-    db $30, $C5, $21, $2B, $40, $06, $08, $D7, $E1, $7D, $EA, $2F, $C5, $7C, $EA, $30
-    db $C5, $E1, $7D, $EA, $2D, $C5, $7C, $EA, $2E, $C5, $C9
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
+ShowStringBank08AtTilesHL_F1_49A6:: ; heuristic: same first 16 bytes as the routine at 03:43D9; C0
+Func_0F1_49A6:: ; address name
+    ld a, [wTextWindowTileLo]
+    ld c, a
+    ld a, [wTextWindowTileHi]
+    ld b, a
+    push bc
+    ld a, [wTextWindowRows]
+    ld c, a
+    ld a, [wTextWindowWidth]
+    ld b, a
+    push bc
+    ld a, l
+    ld [wTextWindowTileLo], a
+    ld a, h
+    ld [wTextWindowTileHi], a
+    ld a, e
+    ld [wTextWindowRows], a
+    ld a, d
+    ld [wTextWindowWidth], a
+    farcall ShowString_Bank08
+    pop hl
+    ld a, l
+    ld [wTextWindowRows], a
+    ld a, h
+    ld [wTextWindowWidth], a
+    pop hl
+    ld a, l
+    ld [wTextWindowTileLo], a
+    ld a, h
+    ld [wTextWindowTileHi], a
+    ret
 
 ; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. BuildInventoryScreenBase_BankF1)

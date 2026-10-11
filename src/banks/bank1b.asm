@@ -4253,9 +4253,38 @@ Jump_01B_611B::
 
 Jump_01B_6122::
     jp Jump_01B_6063
-    db $21, $A1, $5D, $06, $1D, $D7, $FA, $F5, $D7, $67, $FA, $F6, $D7, $6F, $7E, $6F
-    db $26, $00, $29, $29, $7D, $C6, $07, $6F, $7C, $CE, $C7, $67, $7E, $E6, $7F, $01
-    db $95, $01, $CD, $AA, $16, $7D, $C6, $00, $6F, $7C, $CE, $A0, $67, $C9
+
+; no direct call (reached through a table, a jump or a vector)
+; reads: wArg5, wArg6
+KeyEntryAddressForListEntriesCell4_Bank1B:: ; heuristic: same first 16 bytes as the routine at 1B:6153; C0
+Func_01B_6125:: ; address name
+    farcall SetArg5ToListEntriesCell4
+    ld a, [wArg5]
+    ld h, a
+    ld a, [wArg6]
+    ld l, a
+    ld a, [hl]
+    ld l, a
+    ld h, $00
+    add hl, hl
+    add hl, hl
+    ld a, l
+    add a, $07
+    ld l, a
+    ld a, h
+    adc a, $C7
+    ld h, a
+    ld a, [hl]
+    and a, $7F
+    ld bc, $0195
+    call Multiply8By16
+    ld a, l
+    add a, $00
+    ld l, a
+    ld a, h
+    adc a, $A0
+    ld h, a
+    ret
 
 ; far-calls SetArg5ToListEntriesCell4, reads the key slot stored there and returns HL = wKeyList + 4 * slot (= $C707 + 4 * slot) (E-0120)
 ; 5 call sites from 5 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case21, RunScreenStateWhenNotFading_1B_Case01_Case1D, RunScreenStateWhenNotFading_1B_Case01_Case10_Sub02, RunScreenStateWhenNotFading_1B_Case01_Case0E, ...)
