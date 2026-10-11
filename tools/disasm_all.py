@@ -81,6 +81,14 @@ MACRO dfar
     db BANK(\\1)
 ENDM
 
+; 24-bit little-endian values in data (E-0148).
+MACRO d24
+    REPT _NARG
+        db LOW(\\1), HIGH(\\1), LOW((\\1) >> 16)
+        SHIFT
+    ENDR
+ENDM
+
 ; HL += A, the way the ROM spells it: add into L, carry into H.
 MACRO add_a_to_hl
     add a, l
@@ -1625,7 +1633,14 @@ class Rom:
                     out.append(f"{dl[q]}:: ; heuristic: {self.dreason.get((bank, q), 'label inside a table')}; C0")
                     if (bank, q) in self.dalias:
                         out.append(f"{self.dalias[(bank, q)]}:: ; address name")
-                if f["type"] == "words":  # little-endian 16-bit values, e.g. BGR555 colours (E-0139)
+                if f["type"] == "u24":  # 24-bit little-endian values in decimal, 11 per line (E-0148)
+                    flush()
+                    r = raws[fi]
+                    vals24 = [r[j] | r[j + 1] << 8 | r[j + 2] << 16 for j in range(0, len(r), 3)]
+                    for j in range(0, len(vals24), 11):
+                        out.append("    d24 " + ", ".join(str(v) for v in vals24[j:j + 11]) + ("" if tagged else tag))
+                        tagged = True
+                elif f["type"] == "words":  # little-endian 16-bit values, e.g. BGR555 colours (E-0139)
                     flush()
                     r = raws[fi]
                     words = [r[j] | r[j + 1] << 8 for j in range(0, len(r), 2)]

@@ -2020,7 +2020,7 @@ Func_003_4B52:: ; address name
 
 ; only called from WithSRAMDraw4ACEAnd4BE8 (E-0047)
 ; 1 call site from 1 routine (e.g. WithSRAMDraw4ACEAnd4BE8)
-; reads: wMenuSelectedMember, wDigits, wSpeciesRecord, hTemp2, hTemp3, hTemp4
+; reads: wMenuSelectedMember, wDigits, wSpeciesExpCurve, hTemp2, hTemp3, hTemp4
 ; writes: wStringIndex, wStringCategory, wScreenTileBuffer, wDigits, wSpeciesIdLo, wSpeciesIdHi, hTemp0, hTemp1
 WithSRAMDraw4ACEAnd4BE8_Sub01::
 Func_003_4BE8:: ; address name
@@ -2176,7 +2176,7 @@ Jump_003_4CB8::
     ld a, [hl]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $7]
+    ld a, [wSpeciesExpCurve]
     ldh [hTemp0], a
     ld c, $56
     ld a, [wMenuSelectedMember]

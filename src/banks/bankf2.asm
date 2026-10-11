@@ -1068,7 +1068,7 @@ Func_0F2_4AFE:: ; address name
 
 ; writes the EXP wCA83-wCA85 as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
 ; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case13, RunWD780StateWhenNotFading_F1_Case0D_Case13)
-; reads: wRecordBufB, hTemp0, wSpeciesRecord, hTemp1, hTemp2
+; reads: wRecordBufB, hTemp0, wSpeciesExpCurve, hTemp1, hTemp2
 ; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wArg1, wArg2, ...
 ; points at: hTemp2
 DrawWCA83ExpAndToNextLevel::
@@ -1102,7 +1102,7 @@ Func_0F2_4B05:: ; address name
     ld a, [wRecordBufB + $C]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $7]
+    ld a, [wSpeciesExpCurve]
     ldh [hTemp0], a
     pop bc
     ld a, b

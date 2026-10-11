@@ -5072,5 +5072,10 @@
     "name": "wTopSpeciesByteDC",
     "note": "byte passed as wArg2 with the picked species",
     "evidence": "E-0137"
+  },
+  "D00F": {
+    "name": "wSpeciesExpCurve",
+    "note": "species record byte 7: the ExpTable row (EXP curve) of the species (LoadTable4E60EntryForWC991ToWC9DE)",
+    "evidence": "E-0148"
   }
 }

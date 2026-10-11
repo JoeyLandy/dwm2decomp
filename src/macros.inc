@@ -21,6 +21,14 @@ MACRO dfar
     db BANK(\1)
 ENDM
 
+; 24-bit little-endian values in data (E-0148).
+MACRO d24
+    REPT _NARG
+        db LOW(\1), HIGH(\1), LOW((\1) >> 16)
+        SHIFT
+    ENDR
+ENDM
+
 ; HL += A, the way the ROM spells it: add into L, carry into H.
 MACRO add_a_to_hl
     add a, l

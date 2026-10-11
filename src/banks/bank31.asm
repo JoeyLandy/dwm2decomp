@@ -7832,7 +7832,7 @@ Func_031_6D1F:: ; address name
 
 ; record A below its level cap: C = 1 when its EXP (field $58) has reached the next level's total from the species growth table, else 0 (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_031_67AA_Case06, Func_031_67AA_Case02_Case00)
-; reads: wSpeciesRecord, hTemp2, hTemp3, hTemp4
+; reads: wSpeciesExpCurve, hTemp2, hTemp3, hTemp4
 ; writes: rRAMG, rRAMB, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp0
 RecordReachedNextLevelExp::
 Func_031_6D28:: ; address name
@@ -7866,7 +7866,7 @@ Func_031_6D28:: ; address name
     ld h, a
     push hl
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $7]
+    ld a, [wSpeciesExpCurve]
     ldh [hTemp0], a
     farcall LoadTable4E60EntryToHFFC8
     pop hl

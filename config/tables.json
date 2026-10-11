@@ -1855,6 +1855,21 @@
         }
       ],
       "note": "E-0147 (C1: the caller of DrawMetaSprite passes DE = $7F:7011; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 42 words, up to the next code or data)."
+    },
+    {
+      "bank": "19",
+      "addr": "4E60",
+      "label": "ExpTable",
+      "count": 32,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "u24",
+          "size": 297,
+          "name": "EXP needed for levels 1-99 (24-bit)"
+        }
+      ],
+      "note": "E-0148 (C1: LoadTable4E60EntryForWC991ToWC9DE copies the 3 bytes at $4E60 + $129 * (species record byte 7) + 3 * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and DrawWCA83ExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row starting at 0)."
     }
   ]
 }

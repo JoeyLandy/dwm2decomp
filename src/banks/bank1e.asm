@@ -6797,7 +6797,7 @@ Func_01E_6EE2:: ; address name
 
 ; only called from ScriptCommandE8_Run_Case09_Case13 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case09_Case13)
-; reads: hTemp0, hTemp1, hTemp2, wSpeciesRecord
+; reads: hTemp0, hTemp1, hTemp2, wSpeciesExpCurve
 ; writes: wDigits, wSpeciesIdLo, wSpeciesIdHi, hTemp0, hTemp1, wArg1, wArg2, wArg3, ...
 ; points at: hTemp2
 ScriptCommandE8_Run_Case09_Case13_Sub01::
@@ -6843,7 +6843,7 @@ Func_01E_6F17:: ; address name
     ldh a, [hTemp1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
-    ld a, [wSpeciesRecord + $7]
+    ld a, [wSpeciesExpCurve]
     ldh [hTemp0], a
     pop bc
     ld a, b

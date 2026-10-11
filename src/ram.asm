@@ -549,6 +549,7 @@ DEF wScreenAttrBuffer EQU $D000 ; WRAM bank 2: CGB attribute bytes for wScreenTi
 DEF wSpeciesIdLo EQU $D006 ; low byte of the monster id whose species record LoadSpeciesRecord loads (E-0069) (reading + data (E-0069))
 DEF wSpeciesIdHi EQU $D007 ; high byte of that monster id (E-0069) (reading + data (E-0069))
 DEF wSpeciesRecord EQU $D008 ; 47-byte copy of a species record (LoadSpeciesRecord); byte 0 is the family (E-0069) (reading + data (E-0069))
+DEF wSpeciesExpCurve EQU $D00F ; species record byte 7: the ExpTable row (EXP curve) of the species (LoadTable4E60EntryForWC991ToWC9DE) (E-0148)
 DEF wDMGPaletteBytes EQU $D040 ; three DMG palette bytes kept for the fades (SetDefaultDMGPaletteBytes, UploadBGPalettesWithFade) (E-0136)
 DEF wLinkRules EQU $D043 ; link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckWD044Bit6, UnpackLinkRecordToWD09D) (E-0136)
 DEF wLinkRuleTurnLimit EQU $D04B ; rule byte with the turn limit (LinkRuleCheckWD04BTurnLimit) (E-0136)

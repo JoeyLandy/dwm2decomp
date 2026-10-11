@@ -1773,6 +1773,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Which monster or object each set draws is not read (banks $25-$27 hold 383 sets, close to the 384 monster sprites, but no mapping was checked).
 - Binary verification: build/run147 PASS, 0 differing bytes; tests OK.
 
+### E-0148 — The EXP table
+
+- Kind: OBSERVATION (reading of LoadTable4E60EntryForWC991ToWC9DE 19:73A2 and its twin, plus a value check; C1).
+- **Source.** The routine loads the species record, multiplies species byte 7 by $129, adds 3 * (level - 1) and $4E60, and copies 3 bytes to the record's EXP field (+$58). $129 = 99 * 3, one 24-bit value per level. RecordReachedNextLevelExp and DrawWCA83ExpAndToNextLevel read the same table through a 3-byte copy helper.
+- **Checks.** The $2520-byte slice at 19:4E60 is exactly 32 rows. Every row starts at 0 and rises; for example row 0 ends at 1,521,048 and row 31 at 7,198,692.
+- **What changed.**
+  - ExpTable is declared with a new `u24` field type, printed through a new `d24` macro (`db LOW(x), HIGH(x), LOW(x >> 16)`) in decimal.
+  - wSpeciesExpCurve names species record byte 7 ($D00F).
+- **Limits.** Which EXP curve each species uses is data in the species records; the curves' game-facing names are not known.
+- Binary verification: build/run148 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
