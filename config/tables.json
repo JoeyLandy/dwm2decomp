@@ -2483,6 +2483,22 @@
       ],
       "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
       "note": "E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+    },
+    {
+      "bank": "F2",
+      "addr": "51C3",
+      "label": "MonsterArgOrderTable",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "db",
+          "size": 3,
+          "name": "destination offsets of wArg5-7 among wArg1-3 (always a permutation of 0, 1, 2)"
+        }
+      ],
+      "note": "E-0171 (C1: PermuteArg5To7ByMonster reads the 3 bytes at $51C3 + 3 * (wArg2:wArg1), stores wArg5 + k at wArg1 + byte k, then copies wArg1-3 back to wArg5-7; all 384 entries are permutations; the caller, script command $F6 case $10/4, indexes it with the id it shows as a monster name)."
     }
   ]
 }

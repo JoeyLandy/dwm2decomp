@@ -1480,7 +1480,7 @@ Jump_00C_49DA:: ; address name
     ld a, h
     ld [wArg2], a
     farcall LoadSpeciesBytes8To10ToArg5
-    farcall ScriptCommandF6_Run_Case10_Case04_Sub01
+    farcall PermuteArg5To7ByMonster
     ld a, $04
     ld [wStringCategory], a
     ld hl, wArg5

@@ -2059,6 +2059,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The entries have the 10-byte format of E-0157.
 - Binary verification: build/run172 PASS, 0 differing bytes; tests OK.
 
+### E-0171 — The per-monster argument permutation (bank $F2)
+
+- Kind: OBSERVATION (reading of F2:5181, plus a value check; C1).
+- **Source.** PermuteArg5To7ByMonster (was ScriptCommandF6_Run_Case10_Case04_Sub01) reads the 3 bytes at F2:$51C3 + 3 * (wArg2:wArg1). It stores wArg5 + k at wArg1 + byte k, then copies wArg1-3 back to wArg5-7.
+- **Checks.** All 384 triples are permutations of 0, 1, 2: 237 are the identity, the rest are the five other orders.
+- **Declared.** MonsterArgOrderTable, with monster names in the id comments. Its caller (script command $F6, case $10/4) shows the same id as a monster name (string category 2).
+- **Limits.** What the three bytes stand for in that screen is not read.
+- Binary verification: build/run173 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
