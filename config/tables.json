@@ -2007,6 +2007,86 @@
         ]
       },
       "note": "E-0157 (C1: FieldModeStateDispatch_Shared03 reads the word $4539 + 2 * hMapId when A is pressed (232 words, up to FieldModeStateDispatch_Shared03_Sub02 at $4709); its list of 10-byte entries ends with $FF; an entry matches on kind (0 skips; 1-4 need hPlayerFacing = kind - 1; 5 matches the tile in front), map, screen and player position; unless its story flag is set it runs DispatchTalkEvent with the group and index)."
+    },
+    {
+      "bank": "1A",
+      "addr": "6616",
+      "label": "StatGrowthTable",
+      "count": 32,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 1-11"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 12-22"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 23-33"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 34-44"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 45-55"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 56-66"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 67-77"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 78-88"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "gains for levels 89-99"
+        }
+      ],
+      "record": "99 per-level stat gains (levels 1-99), 11 per line",
+      "note": "E-0158 (C1: StatFromGrowthRow adds the first hFFC7 bytes of row hFFC6 ($6616 + $63 * row) to StatGrowthBase[row]; ReadStatGrowthGain reads one byte of a row for ComputeLevelUpStatGainsForBattleArg1; 32 rows of 99 bytes fill the slice)."
+    },
+    {
+      "bank": "1A",
+      "addr": "63F8",
+      "label": "StatGrowthBase",
+      "count": 32,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "value before the first gain of this growth row"
+        }
+      ],
+      "note": "E-0158 (C1: StatFromGrowthRow starts its sum from the byte $63F8 + row)."
     }
   ]
 }

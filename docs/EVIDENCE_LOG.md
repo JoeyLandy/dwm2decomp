@@ -1916,6 +1916,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Generator.** A new `lists` option on pointer tables derives one table per distinct list: records of a given size plus the terminator, labelled MapInteractionsNN after the first map number that uses them. 128 lists, about 3.6 KB that had been INCBIN or bogus `dw`/`db`.
 - Binary verification: build/run157 PASS, 0 differing bytes; tests OK.
 
+### E-0158 — The stat growth table (bank $1A)
+
+- Kind: OBSERVATION (reading of 1A:63A7 and 1A:6562; C1).
+- **Readers.**
+  - StatFromGrowthRow (was SumTable6616RowForTemp0) gives hFFC8/9 = the byte $63F8 + row, plus the sum of the first hFFC7 bytes of row hFFC6 at $6616 + $63 * row. That is the stat of growth row hFFC6 at level hFFC7.
+  - ReadStatGrowthGain (was ReadByteTable6616Row) reads one byte of a row for ComputeLevelUpStatGainsForBattleArg1.
+- **Bounds.** $C60 bytes = 32 rows of 99 per-level gains. StatGrowthBase holds the 32 starting values.
+- **Declared.** StatGrowthTable (11 gains per line) and StatGrowthBase.
+- **Limits.**
+  - The 32 bytes at 1A:63D8, just before StatGrowthBase, decode as an untraced routine of the same shape that copies one gain into hFFC8/9. It has no caller in the traced code and stays `db`.
+  - Which species stat uses which row is data in the species records.
+- Binary verification: build/run158 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
