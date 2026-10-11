@@ -320,5 +320,5 @@ class InlineTableTrim(unittest.TestCase):
         text = (BANKS / "bank12.asm").read_text(encoding="utf-8")
         start = text.index("Func_012_55F8::")
         body = text[start:start + 200]
-        self.assertIn("ld a, [wCC44]", body)
+        self.assertRegex(body, r"\n    ld a, \[w\w+\]\n    bit 7, a")  # decoded as code, whatever the RAM name
         self.assertNotIn("dw $44FA", text)
