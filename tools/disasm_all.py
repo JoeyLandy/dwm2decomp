@@ -1679,7 +1679,8 @@ class Rom:
         gives the inline bytes the dedicated fetch handlers read (every other opcode only names
         the command type). $06 skips forward by its byte when wTextYesNoResult is 0, $07 jumps,
         $E4 jumps by one of two forward offsets (wTwoChoiceCursor), $E7 continues in the data
-        bank, $FF ends the script."""
+        bank, $FF ends the script. The data bank is the one the caller stores in wDataBank before
+        StartScriptAtHL_* (`ld a, n` / `ld [wDataBank], a`); $E7 targets are traced there (E-0160)."""
         b = 0x10
         oh = next((t for t in self.schemas if t["label"] == "ScriptOpcodeHandlers"), None)
         self.script_at: dict[tuple[int, int], dict] = {}
@@ -1690,7 +1691,9 @@ class Rom:
         starters = {(sb, a) for (sb, a), info in self.names.items()
                     if info["name"].startswith("StartScriptAtHL") and not info.get("data")}
         ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")
+        ld_a = re.compile(r"ld a, \$([0-9A-F]{2})$")
         sites: list[tuple[int, int, int]] = []
+        site_bank: dict[int, set] = {}  # script address -> data banks its callers set (None = unknown)
         for cb in range(self.nbanks):
             ins = self.insn[cb]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
@@ -1698,78 +1701,112 @@ class Rom:
                 v = ins[a]
                 if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in starters:
                     continue
-                hl = None
-                for x in reversed(order[max(0, k - 8):k]):
+                hl, dbank = None, None
+                window = order[max(0, k - 10):k]
+                for x in reversed(window):
                     if ins[x][2] in SETUP_BARRIER or "[$D7FD]" in ins[x][1]:
                         break
-                    if (m := ld_hl.match(ins[x][1])):
+                    if hl is None and (m := ld_hl.match(ins[x][1])):
                         hl = (x, int(m.group(1), 16))
-                        break
+                for j, x in enumerate(window):  # ld a, $BB / ld [wDataBank], a before the call
+                    if ins[x][1] == "ld [$D7FE], a" and j and (m := ld_a.match(ins[window[j - 1]][1])):
+                        dbank = int(m.group(1), 16)
                 if hl and 0x4000 <= hl[1] < 0x8000:
                     sites.append((cb, hl[0], hl[1]))
-        base = b * BANK - self.base(b)
-        code: dict[int, tuple[int, bytes]] = {}
-        targets = {a for _, _, a in sites}
-        todo, seen = sorted(targets), set()
-        while todo:
-            pc = todo.pop()
-            while 0x4000 <= pc < 0x8000 and pc not in seen:
-                seen.add(pc)
-                op = self.data[base + pc]
-                if op != 0xFF and op not in valid:
-                    break
-                n = 0 if op == 0xFF else self.SCRIPT_ARGS.get(op, 0)
-                code[pc] = (op, bytes(self.data[base + pc + 1:base + pc + 1 + n]))
-                arg = code[pc][1]
-                if op == 0x06:
-                    targets.add(pc + 2 + arg[0]); todo.append(pc + 2 + arg[0])
-                if op == 0x07:
-                    t = arg[0] | arg[1] << 8
-                    targets.add(t); todo.append(t)
-                if op == 0xE4:
-                    for t in (pc + 2 + arg[0], pc + 3 + arg[1]):
-                        targets.add(t); todo.append(t)
-                if op in (0xFF, 0x07, 0xE4, 0xE7):
-                    break
-                pc += 1 + n
-        dl, dt = self.dlabels[b], self.dtab[b]
-        regions, cur = [], []
-        for pc in sorted(code):
-            if cur and cur[-1] + 1 + len(code[cur[-1]][1]) != pc:
-                regions.append(cur)
-                cur = []
-            cur.append(pc)
-        if cur:
-            regions.append(cur)
+                    site_bank.setdefault(hl[1], set()).add(dbank)
+        code: dict[tuple[int, int], tuple[int, bytes]] = {}
+        targets: set[tuple[int, int]] = set()
+        self.e7_banks: dict[tuple[int, int], set] = {}
+
+        def trace(sb: int, entry: int, dbanks: set) -> list[int]:
+            """Trace from (sb, entry); returns the $E7 targets reached."""
+            base = sb * BANK - self.base(sb)
+            out, todo, seen = [], [entry], set()
+            targets.add((sb, entry))
+            while todo:
+                pc = todo.pop()
+                while 0x4000 <= pc < 0x8000 and pc not in seen:
+                    seen.add(pc)
+                    op = self.data[base + pc]
+                    if op != 0xFF and op not in valid:
+                        break
+                    n = 0 if op == 0xFF else self.SCRIPT_ARGS.get(op, 0)
+                    code[(sb, pc)] = (op, bytes(self.data[base + pc + 1:base + pc + 1 + n]))
+                    arg = code[(sb, pc)][1]
+                    nxt = []
+                    if op == 0x06:
+                        nxt = [pc + 2 + arg[0]]
+                    if op == 0x07:
+                        nxt = [arg[0] | arg[1] << 8]
+                    if op == 0xE4:
+                        nxt = [pc + 2 + arg[0], pc + 3 + arg[1]]
+                    for t in nxt:
+                        targets.add((sb, t))
+                        todo.append(t)
+                    if op == 0xE7:
+                        out.append(arg[0] | arg[1] << 8)
+                        self.e7_banks.setdefault((sb, pc), set()).update(dbanks)
+                    if op in (0xFF, 0x07, 0xE4, 0xE7):
+                        break
+                    pc += 1 + n
+            return out
+
+        data_entries: set[tuple[int, int]] = set()
+        for a, banks in site_bank.items():
+            for t in trace(b, a, banks):
+                for db in banks - {None}:  # E-0160: $E7 continues in the bank the caller set in wDataBank
+                    data_entries.add((db, t))
+        done = set()
+        while data_entries - done:
+            sb, t = sorted(data_entries - done)[0]
+            done.add((sb, t))
+            if 0 < sb < self.nbanks and sb not in self.zero and 0x4000 <= t < 0x8000:
+                for t2 in trace(sb, t, {sb}):
+                    data_entries.add((sb, t2))
+        self.data_script_entries = done
         used = 0
-        for reg in regions:
-            lo, hi = reg[0], reg[-1] + 1 + len(code[reg[-1]][1])
-            bounds = set(reg)
-            if any(a in self.covered[b] for a in range(lo, hi)) or any(
-                    (b, a) in self.table_at or (b, a) in self.track_at for a in range(lo, hi)):
-                continue
-            for a in [a for a in dl if lo <= a < hi and a not in bounds]:
-                del dl[a]  # a C0 guess inside a decoded script instruction
-            for a in [a for a in dt if lo <= a < hi]:
-                del dt[a]
-            for a in reg:
-                if a in targets:
-                    if a in dl and dl[a].startswith("Data_"):
-                        self.dalias.setdefault((b, a), dl[a])
-                    if a not in dl or dl[a].startswith("Data_"):
-                        dl[a] = f"Script_{a:04X}"
-                        self.dreason[(b, a)] = "event script entry or jump target"
-            self.script_at[(b, lo)] = {"ins": [(a, *code[a]) for a in reg], "end": hi}
-            used += 1
+        for sb in sorted({k[0] for k in code}):
+            dl, dt = self.dlabels[sb], self.dtab[sb]
+            pcs = sorted(pc for bb, pc in code if bb == sb)
+            regions, cur = [], []
+            for pc in pcs:
+                if cur and cur[-1] + 1 + len(code[(sb, cur[-1])][1]) != pc:
+                    regions.append(cur)
+                    cur = []
+                cur.append(pc)
+            if cur:
+                regions.append(cur)
+            for reg in regions:
+                lo, hi = reg[0], reg[-1] + 1 + len(code[(sb, reg[-1])][1])
+                bounds = set(reg)
+                if any(a in self.covered[sb] for a in range(lo, hi)) or any(
+                        (sb, a) in self.table_at or (sb, a) in self.track_at or (sb, a) in self.streams
+                        for a in range(lo, hi)):
+                    continue
+                for a in [a for a in dl if lo <= a < hi and a not in bounds]:
+                    del dl[a]  # a C0 guess inside a decoded script instruction
+                for a in [a for a in dt if lo <= a < hi]:
+                    del dt[a]
+                for a in reg:
+                    if (sb, a) in targets:
+                        if a in dl and dl[a].startswith("Data_"):
+                            self.dalias.setdefault((sb, a), dl[a])
+                        if a not in dl or dl[a].startswith("Data_"):
+                            dl[a] = f"Script_{a:04X}" if sb == b else f"Script_{sb:02X}_{a:04X}"
+                            self.dreason[(sb, a)] = "event script entry or jump target"
+                self.script_at[(sb, lo)] = {"ins": [(a, *code[(sb, a)]) for a in reg], "end": hi}
+                used += 1
+        dl = self.dlabels[b]
         for cb, x, a in sites:
-            if a in dl and any(r["ins"][0][0] <= a < r["end"] for r in self.script_at.values()):
+            if a in dl and any(bb == b and r["ins"][0][0] <= a < r["end"] for (bb, _), r in self.script_at.items()):
                 self.script_refs[(cb, x)] = dl[a]
                 wrong = self.dref.pop((cb, x), None)  # the load names the script, not wDataBank data
                 if wrong and wrong[0] != b and "$D7FE" in self.dreason.get(wrong, "") and \
                         wrong not in self.dref.values() and wrong[1] in self.dlabels[wrong[0]] and \
                         not self.dlabels[wrong[0]][wrong[1]].startswith(("Script", "Map")):
                     del self.dlabels[wrong[0]][wrong[1]]
-        log(f"event scripts: {len(sites)} start sites, {len(code)} commands in {used} regions")
+        log(f"event scripts: {len(sites)} start sites, {len(code)} commands in {used} regions, "
+            f"{len(self.data_script_entries)} data-bank entries")
 
     MESSAGE_GROUP_BANKS = [0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2E, 0x7C, 0x80, 0x80, 0x82, 0x86, 0x89]
 
@@ -1833,7 +1870,11 @@ class Rom:
             elif op == 0xE4:
                 out.append(f"    script_choice_jump {lab(a + 2 + arg[0])}, {lab(a + 3 + arg[1])}")
             elif op == 0xE7:
-                out.append(f"    script_jump_data_bank ${w:04X}")
+                banks = getattr(self, "e7_banks", {}).get((bank, a), set())
+                tb = next(iter(banks)) if len(banks) == 1 and None not in banks else None
+                tl = self.dlabels.get(tb, {}).get(w) if tb is not None else None
+                out.append(f"    script_jump_data_bank {tl or f'${w:04X}'}"
+                           + ("" if tl else " ; data bank not known here"))
             elif arg:
                 out.append(f"    script_op ${op:02X}, " + ", ".join(f"${v:02X}" for v in arg))
             else:

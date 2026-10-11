@@ -114,8 +114,162 @@ Data_01D_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " No one else can", $F1
     db "hibernate,I see.", $F7
-    db $F0, $EB, $EB
-    INCBIN "dwm2-cobi-us.gbc", $074337, $183
+    db $F0
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1D_4335:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+Script_1D_4336:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_choice_jump Script_1D_434B, Script_1D_4348
+    db $07, $00, $EC, $00, $15, $80, $EC, $FF, $07, $8B, $44, $07, $6D, $44
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1D_4348:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1D_43D9
+Script_1D_434B:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_choice_jump Script_1D_435C, Script_1D_4353
+    db $00, $07, $5F, $43
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1D_4353:: ; heuristic: event script entry or jump target; C0
+    script_message $C005 ; 'Tara Hurry! Papa will be angry!'
+    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_jump Script_1D_4336
+Script_1D_435C:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1D_4389
+    db $00, $01, $C0, $EB, $E4, $07, $00, $00, $02, $C0, $07, $36, $43, $00, $03, $C0
+    db $EB, $E4, $09, $0C, $00, $00, $01, $C0, $EB, $07, $62, $43, $EB, $07, $6F, $43
+    db $00, $04, $C0, $EB, $00, $02, $C0, $07, $36, $43
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1D_4389:: ; heuristic: event script entry or jump target; C0
+    script_message $C006 ; 'You folks run a monster farm?'
+    script_message $C007 ; 'There's a spirit in GreatLog that's'
+Script_1D_438F:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_choice_jump Script_1D_4399, Script_1D_4393
+Script_1D_4393:: ; heuristic: event script entry or jump target; C0
+    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_jump Script_1D_4336
+Script_1D_4399:: ; heuristic: event script entry or jump target; C0
+    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_command $EB
+    script_choice_jump Script_1D_43A7, Script_1D_43A0
+Script_1D_43A0:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_message $C007 ; 'There's a spirit in GreatLog that's'
+    script_jump Script_1D_438F
+Script_1D_43A7:: ; heuristic: event script entry or jump target; C0
+    script_message $C009 ; 'Good. That's good to hear! You'
+    script_command $EB
+    script_choice_jump Script_1D_43B1, Script_1D_43AE
+Script_1D_43AE:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1D_4399
+Script_1D_43B1:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_message $C00A ; 'Is that so? Too bad! You'll'
+    script_command $EB
+    script_choice_jump Script_1D_43BC, Script_1D_43B9
+Script_1D_43B9:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1D_4399
+Script_1D_43BC:: ; heuristic: event script entry or jump target; C0
+    script_message $C003 ; 'Tara There you are, big brother!'
+Script_1D_43BF:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_choice_jump Script_1D_43CB, Script_1D_43CF
+    db $00, $00, $0A, $C0, $EB, $07, $B5, $43
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1D_43CB:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_jump Script_1D_43BF
+Script_1D_43CF:: ; heuristic: event script entry or jump target; C0
+    script_message $C00B ; 'We'll soon be reaching GreatLog. I'
+    script_command $EB
+    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_jump Script_1D_4336
+Script_1D_43D9:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_choice_jump Script_1D_43F8, Script_1D_43EF
+    db $14, $07, $00, $00, $17, $C0, $07, $E9, $43, $00, $0E, $C0, $00, $02, $C0, $07
+    db $36, $43
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1D_43EF:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1D_441B
+    db $00, $0F, $C0, $07, $E9, $43
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1D_43F8:: ; heuristic: event script entry or jump target; C0
+    script_message $C00C ; 'GreatLog's King asked us to settle'
+    script_command $EB
+    script_choice_jump Script_1D_4406, Script_1D_43FF
+Script_1D_43FF:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_jump Script_1D_4336
+Script_1D_4406:: ; heuristic: event script entry or jump target; C0
+    script_message $C009 ; 'Good. That's good to hear! You'
+    script_command $EB
+    script_choice_jump Script_1D_4410, Script_1D_440D
+Script_1D_440D:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1D_43F8
+Script_1D_4410:: ; heuristic: event script entry or jump target; C0
+    script_message $C00D ; 'GreatLog's King asked us to settle'
+    script_command $EB
+    script_command $EB
+    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_jump Script_1D_4336
+Script_1D_441B:: ; heuristic: event script entry or jump target; C0
+    script_message $C00F ; 'Worried about your monsters? Don't be!'
+    script_message $C010 ; '0 peered into the barrel. It'
+Script_1D_4421:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_choice_jump Script_1D_442B, Script_1D_4425
+Script_1D_4425:: ; heuristic: event script entry or jump target; C0
+    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_jump Script_1D_4336
+Script_1D_442B:: ; heuristic: event script entry or jump target; C0
+    script_message $C00A ; 'Is that so? Too bad! You'll'
+Script_1D_442E:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_choice_jump Script_1D_4438, Script_1D_4432
+Script_1D_4432:: ; heuristic: event script entry or jump target; C0
+    script_message $C010 ; '0 peered into the barrel. It'
+    script_jump Script_1D_4421
+Script_1D_4438:: ; heuristic: event script entry or jump target; C0
+    script_message $C003 ; 'Tara There you are, big brother!'
+Script_1D_443B:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_choice_jump Script_1D_4447, Script_1D_444B
+    db $00, $00, $0A, $C0, $EB, $07, $2E, $44
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1D_4447:: ; heuristic: event script entry or jump target; C0
+    script_command $EB
+    script_jump Script_1D_443B
+Script_1D_444B:: ; heuristic: event script entry or jump target; C0
+    script_message $C008 ; 'Sailing is sure exhilarating. Right?'
+    script_command $EB
+    script_choice_jump Script_1D_4459, Script_1D_4452
+Script_1D_4452:: ; heuristic: event script entry or jump target; C0
+    script_message $C00A ; 'Is that so? Too bad! You'll'
+    script_command $EB
+    script_jump Script_1D_442E
+Script_1D_4459:: ; heuristic: event script entry or jump target; C0
+    script_message $C009 ; 'Good. That's good to hear! You'
+    script_command $EB
+    script_choice_jump Script_1D_4463, Script_1D_4460
+Script_1D_4460:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1D_444B
+Script_1D_4463:: ; heuristic: event script entry or jump target; C0
+    script_message $C00B ; 'We'll soon be reaching GreatLog. I'
+    script_command $EB
+    script_message $C002 ; 'Cobi 0! Papa's calling. He's at'
+    script_jump Script_1D_4336
+    INCBIN "dwm2-cobi-us.gbc", $07446D, $4D
 
 ; only called from ScriptCommandE5_Run_Case03_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case00)

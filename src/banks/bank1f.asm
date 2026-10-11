@@ -1676,5 +1676,97 @@ Jump_01F_77CF::
     ld a, d
     ld h, a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $07F7D4, $D3
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1F_77D4:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+Script_1F_77D5:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_choice_jump Script_1F_77F4, Script_1F_77EE
+    db $0E, $07, $00, $EE, $00, $05, $80, $EE, $FF, $00, $03, $C0, $07, $F7, $77, $00
+    db $02, $C0, $07, $F7, $77
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1F_77EE:: ; heuristic: event script entry or jump target; C0
+    script_message $C001 ; 'In the middle of the sea'
+    script_jump Script_1F_77F7
+Script_1F_77F4:: ; heuristic: event script entry or jump target; C0
+    script_jump Script_1F_77FD
+Script_1F_77F7:: ; heuristic: event script entry or jump target; C0
+    script_message $C004 ; 'Cobi What's wrong, 0? Papa's calling'
+    script_jump Script_1F_77D5
+Script_1F_77FD:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_choice_jump Script_1F_780E, Script_1F_7808
+    db $00, $00, $08, $C0, $07, $11, $78
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1F_7808:: ; heuristic: event script entry or jump target; C0
+    script_message $C007 ; 'There's a spirit in GreatLog that's'
+    script_jump Script_1F_7811
+Script_1F_780E:: ; heuristic: event script entry or jump target; C0
+    script_message $C006 ; 'You folks run a monster farm?'
+Script_1F_7811:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_choice_jump Script_1F_7819, Script_1F_7815
+Script_1F_7815:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_jump Script_1F_77F7
+Script_1F_7819:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_choice_jump Script_1F_7831, Script_1F_782B
+    db $07, $00, $00, $0B, $C0, $07, $FD, $77, $00, $0A, $C0, $07, $FD, $77
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1F_782B:: ; heuristic: event script entry or jump target; C0
+    script_message $C009 ; 'Good. That's good to hear! You'
+    script_jump Script_1F_77FD
+Script_1F_7831:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_message $C00C ; 'GreatLog's King asked us to settle'
+    script_command $F8
+    script_choice_jump Script_1F_7845, Script_1F_783E
+    db $00, $F8, $07, $FD, $77
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1F_783E:: ; heuristic: event script entry or jump target; C0
+    script_message $C014 ; 'Tara Big brother! GreatLog will be'
+    script_command $F8
+    script_jump Script_1F_77F7
+Script_1F_7845:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_choice_jump Script_1F_7856, Script_1F_7850
+    db $00, $00, $0F, $C0, $07, $59, $78
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1F_7850:: ; heuristic: event script entry or jump target; C0
+    script_message $C00E ; 'When our farm gets established in'
+    script_jump Script_1F_7859
+Script_1F_7856:: ; heuristic: event script entry or jump target; C0
+    script_message $C00D ; 'GreatLog's King asked us to settle'
+Script_1F_7859:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_choice_jump Script_1F_786A, Script_1F_7864
+    db $00, $00, $12, $C0, $07, $6D, $78
+
+; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
+Script_1F_7864:: ; heuristic: event script entry or jump target; C0
+    script_message $C011 ; '0 peered into the vase. Freshly'
+    script_jump Script_1F_786D
+Script_1F_786A:: ; heuristic: event script entry or jump target; C0
+    script_message $C010 ; '0 peered into the barrel. It'
+Script_1F_786D:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_choice_jump Script_1F_7877, Script_1F_7871
+Script_1F_7871:: ; heuristic: event script entry or jump target; C0
+    script_command $EE
+    script_message $8013 ; 'Land ho! There's GreatLog!'
+    script_command $EE
+    script_end
+Script_1F_7877:: ; heuristic: event script entry or jump target; C0
+    script_command $F8
+    script_jump Script_1F_77F7
+    db $F6, $F6, $E4, $11, $07, $00, $F6, $00, $02, $80, $F6, $FF, $00, $05, $C0, $00
+    db $04, $C0, $07, $7C, $78, $00, $03, $C0, $F6, $E4, $09, $00, $F6, $00, $04, $C0
+    db $F6, $07, $7C, $78, $F6, $00, $03, $C0, $F6, $07, $93, $78
     ds $759, $00

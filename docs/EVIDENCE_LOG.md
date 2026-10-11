@@ -1937,6 +1937,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Declared.** SkillPrerequisitePointers, and SkillPrerequisiteLists (one byte per line, with each list's label on its first byte).
 - Binary verification: build/run159 PASS, 0 differing bytes; tests OK.
 
+### E-0160 — Data-bank scripts reached by $E7
+
+- Kind: OBSERVATION (reading of the start sites plus decoding; C1).
+- **Source.** Script opcode $E7 sets wScriptInDataBank = 1 and continues at its word, read through ReadWordFromDataBank, that is, in the bank held in wDataBank. Many StartScriptAtHL_* callers store a bank there just before the call (`ld a, n` / `ld [wDataBank], a`).
+- **Rule.** prepare_scripts now records that bank per start site and carries it along the traced script. Each $E7 target is traced as a script in that bank with the same grammar (the data-bank paths of the fetch handlers read the same byte counts).
+- **Result.**
+  - 10 data-bank entries in banks $10, $15, $1D, $96, $1F and $0C decode cleanly to $FF ends.
+  - 2,672 commands in 170 regions, from 2,120 in 107.
+  - Labels are Script_BB_XXXX outside bank $10.
+  - 38 `script_jump_data_bank` operands now name their target. The other 51 keep the number with a comment, because no caller in the scan window sets wDataBank or the callers disagree.
+- **Limits.**
+  - Bytes after a `script_choice_jump` that no offset reaches stay `db`. Some menus may have more than two choices, which this reading does not cover.
+  - The callers whose wDataBank is set elsewhere are not traced.
+- Binary verification: build/run160 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
