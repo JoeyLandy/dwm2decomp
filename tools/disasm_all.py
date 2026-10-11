@@ -891,16 +891,21 @@ class Rom:
         for bank in range(self.nbanks):
             ins = self.insn[bank]
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
-            for k, a in enumerate(order):
-                n, text, kind, tgt = ins[a]
-                if kind != "call" or tgt not in entries:
-                    continue
-                calls += 1
+            index = {a: k for k, a in enumerate(order)}
+            jumps_to: dict[int, list[int]] = {}
+            for a, v in ins.items():
+                if v[0] != "dw" and v[2] in ("jr", "jp") and v[3] is not None:
+                    jumps_to.setdefault(v[3], []).append(a)
+
+            def args_before(k: int):
+                """(de, bank, split loads, first address scanned) from the instructions before order[k]."""
                 de = bnk = lo = hi = None
                 at: dict[str, int] = {}
+                first = order[k]
                 for x in reversed(order[max(0, k - 10):k]):
                     if ins[x][2] in SETUP_BARRIER:
                         break
+                    first = x
                     if de is None and (m := ld_de.match(ins[x][1])):
                         de = int(m.group(1), 16)
                     if bnk is None and (m := ld_b.match(ins[x][1])):
@@ -911,23 +916,41 @@ class Rom:
                         hi, at["HIGH"] = int(m.group(1), 16), x
                 if de is None and lo is not None and hi is not None:
                     de = hi << 8 | lo
-                    for fn, x in at.items():  # print the split loads as LOW/HIGH/BANK of the stream label
-                        self.split_ptr[(bank, x)] = (fn, bnk, de)
-                if de is None or bnk is None or not 0x4000 <= de < 0x8000:
+                return de, bnk, at, first
+
+            for k, a in enumerate(order):
+                n, text, kind, tgt = ins[a]
+                if kind != "call" or tgt not in entries:
                     continue
-                if not 0 < bnk < self.nbanks or bnk in self.zero:
-                    continue
-                literal += 1
-                if (bnk, de) in self.streams or de in self.covered[bnk] or (de - 1) in self.dtab[bnk]:
-                    continue
-                r = parse(bnk, de, zeroed=tgt in sgb)  # SGBTransferCompressed clears vTiles1 first (E-0150)
-                if r:
-                    self.streams[(bnk, de)] = r
-                    if tgt in sgb and not parse(bnk, de):
-                        self.zeroed_streams.add((bnk, de))
-                    self.dlabels[bnk].setdefault(de, f"Data_{bnk:03X}_{de:04X}")
-                    self.dreason.setdefault((bnk, de), "stream decompressed by a call to DecompressTo*")
-                    added += 1
+                calls += 1
+                de, bnk, at, first = args_before(k)
+                found = [(de, bnk, at)]
+                if de is None and bnk is None:
+                    found = []
+                if True:  # E-0216: also the arguments set before each jump into the scanned instructions
+                    for src in [j for y in order[index[first]:k + 1] for j in jumps_to.get(y, [])]:
+                        if src in index:
+                            d2, b2, at2, _ = args_before(index[src])
+                            found.append((d2, b2, at2))
+                for de, bnk, at in found:
+                    if de is not None and at and ("LOW" in at or "HIGH" in at):
+                        for fn, x in at.items():  # print the split loads as LOW/HIGH/BANK of the stream label
+                            self.split_ptr[(bank, x)] = (fn, bnk, de)
+                    if de is None or bnk is None or not 0x4000 <= de < 0x8000:
+                        continue
+                    if not 0 < bnk < self.nbanks or bnk in self.zero:
+                        continue
+                    literal += 1
+                    if (bnk, de) in self.streams or de in self.covered[bnk] or (de - 1) in self.dtab[bnk]:
+                        continue
+                    r = parse(bnk, de, zeroed=tgt in sgb)  # SGBTransferCompressed clears vTiles1 first (E-0150)
+                    if r:
+                        self.streams[(bnk, de)] = r
+                        if tgt in sgb and not parse(bnk, de):
+                            self.zeroed_streams.add((bnk, de))
+                        self.dlabels[bnk].setdefault(de, f"Data_{bnk:03X}_{de:04X}")
+                        self.dreason.setdefault((bnk, de), "stream decompressed by a call to DecompressTo*")
+                        added += 1
         log(f"compressed assets from decompress call sites: {calls} calls, {literal} with literal "
             f"arguments, {added} new streams")
         # Third and fourth sources (E-0035): streams the emulated game decompressed
@@ -2034,6 +2057,12 @@ class Rom:
         used only when it fits the bank and touches no code, table or other layout."""
         copiers = {(b, a) for (b, a), info in self.names.items()
                    if info["name"].startswith(("CopyRecordRectToScreenBuffer",)) and not info.get("data")}
+        # E-0216: every copy of the two families that read this header (same first 16 bytes)
+        sig16 = lambda b, a: bytes(self.data[b * BANK + a - self.base(b):b * BANK + a - self.base(b) + 16])
+        fam_sigs = {sig16(int(f["canonical"][:2], 16), int(f["canonical"][3:], 16)) for f in self.families
+                    if f["name"] in ("CopyRecordRectToScreenBuffer", "ReadScreenBufferRectHeader")}
+        copiers |= {(b, a) for b in range(self.nbanks) for a in self.labels[b]
+                    if a in self.insn[b] and a <= self.base(b) + BANK - 16 and sig16(b, a) in fam_sigs}
         taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
             2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
         ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")

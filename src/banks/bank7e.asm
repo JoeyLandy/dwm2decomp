@@ -365,11 +365,11 @@ Data_07E_594A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F994A, $4A
 
 ; LZSS-compressed asset: 129 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5994:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5994:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F9994, $81
 
 ; LZSS-compressed asset: 133 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5A15:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5A15:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F9A15, $85
 
 ; address loaded by SpawnScriptSpriteInFrontOfPlayer

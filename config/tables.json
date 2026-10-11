@@ -13417,6 +13417,23 @@
       ],
       "record": "map id; screen / position nibbles; the same for wLastWarpIndex = 2",
       "note": "E-0215 (C1: the routine before Jump_0A1_4A18 scans 5-byte records from $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero padding from $606E)."
+    },
+    {
+      "bank": "14",
+      "addr": "6F4E",
+      "label": "NameEntryKeyboard",
+      "count": 10,
+      "id_base": 0,
+      "tail": 11,
+      "fields": [
+        {
+          "type": "text",
+          "size": 17,
+          "name": "one keyboard row of 17 character codes"
+        }
+      ],
+      "record": "one row of 17 character codes (charmap.inc; codes without a charmap entry print as bytes)",
+      "note": "E-0216 (C1: RunNameEntryStateWhenNotFading_Case01_Case02 reads the byte at $6F4E + 17 * wNameEntryCursorY + wNameEntryCursorX as the chosen character; rows 0-3 are A-M 0-3, N-Z 4-7, a-m 8 9 ! ?, n-z; 10 rows, then 11 bytes not placed in a row)."
     }
   ]
 }

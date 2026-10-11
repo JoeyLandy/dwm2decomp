@@ -2097,7 +2097,7 @@ Jump_0A0_4C23::
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01_Sub02)
 GameMode7_Init_Sub01_Sub02_Sub02::
 Func_0A0_4C2C:: ; address name
-    ld hl, Data_0A0_4D37
+    ld hl, TileRect_A0_4D37
     call ReadScreenBufferRectHeader_BankA0
     call CopyRectToStride32_BankA0
     ret
@@ -2107,7 +2107,7 @@ Func_0A0_4C2C:: ; address name
 ; reads: wLinkRole
 DrawRect4DC7AndWriteDATiles::
 Func_0A0_4C36:: ; address name
-    ld hl, Data_0A0_4DC7
+    ld hl, TileRect_A0_4DC7
     call ReadScreenBufferRectHeader_BankA0
     call CopyRectToStride32_BankA0
     ld a, [wLinkRole]
@@ -2324,13 +2324,39 @@ Jump_0A0_4D27::
     jr nz, CopyRectToStride32_BankA0
     ret
 
-; address loaded by GameMode7_Init_Sub01_Sub02_Sub02
-Data_0A0_4D37:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $280D37, $90
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0000 (row 0, column 0); 20 x 7 tiles
+TileRect_A0_4D37::
+Data_0A0_4D37:: ; address name
+    dw $0000 ; entry 0
+    db $14, $07
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $D0, $D1, $D2, $D3, $D4, $B7, $DA, $DB, $DC, $DD, $DE, $B7, $B6, $D5, $D6, $D7, $D8, $D9, $B7
+    db $B8, $B9, $B9, $B9, $B9, $B9, $BA, $B4, $B4, $B4, $B4, $B4, $B5, $B8, $B9, $B9, $B9, $B9, $B9, $BA
+    db $B6, $EB, $C3, $C3, $C3, $C3, $B7, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $EB, $C3, $C3, $C3, $C3, $B7
+    db $B6, $EC, $C3, $C3, $C3, $C3, $B7, $B0, $B1, $B1, $B1, $B1, $B1, $B6, $EC, $C3, $C3, $C3, $C3, $B7
+    db $B6, $EA, $AF, $C3, $C3, $C3, $B7, $B6, $A4, $A5, $CB, $CC, $CD, $B6, $EA, $AF, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B3, $B4, $B4, $B4, $B4, $B4, $B5
 
-; address loaded by DrawRect4DC7AndWriteDATiles
-Data_0A0_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $280DC7, $108
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0000 (row 0, column 0); 20 x 13 tiles
+TileRect_A0_4DC7::
+Data_0A0_4DC7:: ; address name
+    dw $0000 ; entry 0
+    db $14, $0D
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $F0, $F1, $F2, $F3, $F4, $F5, $F6, $C3, $B7, $B6, $A4, $A5, $CB, $CC, $CD, $C3, $C3, $C3, $B7
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA, $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
+    db $B6, $C3, $C3, $C3, $C3, $C3, $AF, $FB, $E1, $B7, $B6, $F7, $F8, $F9, $C3, $FA, $AF, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $FC, $FD, $FE, $FF, $00, $AF, $C3, $C3, $B7, $B6, $0E, $0F, $10, $C3, $11, $AF, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $01, $02, $03, $04, $05, $AF, $C3, $C3, $B7, $B6, $12, $13, $14, $C3, $15, $AF, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $06, $07, $08, $09, $C3, $AF, $C3, $C3, $B7, $B6, $16, $17, $18, $C3, $19, $AF, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B6, $0A, $0B, $0C, $0D, $C3, $AF, $C3, $C3, $B7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
 
 ; start-up for wGameMode = 7; forcing this mode on the emulator shows: two monster panels when forced (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit_Case07)

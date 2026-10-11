@@ -6047,7 +6047,7 @@ Data_024_6CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; address loaded by GameMode6_Init, GameMode6_Update_Shared01_Sub01
 ; LZSS-compressed asset: 303 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_024_6CE4:: ; heuristic: stream decompressed while the game ran on the emulator; C0
+Data_024_6CE4:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $092CE4, $12F
 
 ; address loaded by GameMode6_Init, GameMode6_Update_Shared01_Sub01
@@ -6056,7 +6056,8 @@ Data_024_6E13:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $092E13, $13B
 
 ; address loaded by GameMode6_Init
-Data_024_6F4E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; LZSS-compressed asset: 247 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_024_6F4E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
 
 ; draws the next glyph of the description of the item at wD7D5[4 * wD7B6 + wD7B5] (text table Data_024_7158), handling the $F0 and $F1 control bytes (E-0131)

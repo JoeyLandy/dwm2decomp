@@ -4919,7 +4919,7 @@ Jump_014_62F6::
 RunNameEntryStateWhenNotFading_Case01_Case02::
 Jump_014_6302:: ; address name
     ld a, [wNameEntryCursorY]
-    ld hl, Data_014_6F4E
+    ld hl, NameEntryKeyboard
     cp a, $00
     jr z, Jump_014_6314
     ld e, $11
@@ -6804,9 +6804,21 @@ Data_014_6E98:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_6F3E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $00, $FF, $FF, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
-; address loaded by RunNameEntryStateWhenNotFading_Case01_Case02
-Data_014_6F4E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $052F4E, $B5
+; E-0216 (C1: RunNameEntryStateWhenNotFading_Case01_Case02 reads the byte at $6F4E + 17 * wNameEntryCursorY + wNameEntryCursorX as the chosen character; rows 0-3 are A-M 0-3, N-Z 4-7, a-m 8 9 ! ?, n-z; 10 rows, then 11 bytes not placed in a row).
+; record: one row of 17 character codes (charmap.inc; codes without a charmap entry print as bytes)
+NameEntryKeyboard::
+Data_014_6F4E:: ; address name
+    db "ABCDEFGHIJKLM0123" ; id 0
+    db "NOPQRSTUVWXYZ4567" ; id 1
+    db "abcdefghijklm89!?" ; id 2
+    db "nopqrstuvwxyz", $FE, $FF, $FF, $FF ; id 3
+    db $95, ",.", $94, $93, " ", $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF ; id 4
+    db $56, $58, $5A, $5C, $5E, $75, $76, $77, $78, $79, $57, $59, $5B, $5D, $5F, $FF, $60 ; id 5
+    db $61, $62, $63, $64, $7A, $7B, $7C, $7D, $7E, $80, $82, $84, $8D, $8E, $FF, $65, $66 ; id 6
+    db $67, $68, $69, $7F, $FF, $81, $FF, $83, $FF, $FF, $FF, $FF, $FF, $FF, $6A, $6B, $6C ; id 7
+    db $6E, $6F, $85, $86, $87, $88, $89, $FD, $FF, $FF, $FF, $FF, $FF, $70, $71, $72, $73 ; id 8
+    db $74, $8A, $8B, $8C, $6D, "-", $FE, $FF, $FF, $FF, $FF, $FF, "12345" ; id 9
+    db $06, $07, $08, $09, $00, $FF, $FF, $FF, $FF, $FF, $FF ; end
 
 ; address loaded by RunNameEntryStateWhenNotFading_Shared04
 Data_014_7003:: ; heuristic: pointer load in the same bank (bank assumed); C0

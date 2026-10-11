@@ -420,11 +420,11 @@ Data_056_5A10:: ; heuristic: stream in a run of back-to-back compressed streams;
     INCBIN "dwm2-cobi-us.gbc", $159A10, $CB
 
 ; LZSS-compressed asset: 180 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_056_5ADB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_056_5ADB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $159ADB, $B4
 
 ; LZSS-compressed asset: 183 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_056_5B8F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_056_5B8F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $159B8F, $B7
 
 ; LZSS-compressed asset: 163 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)

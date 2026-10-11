@@ -2430,6 +2430,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0216 — Rectangle records through family copies, the name entry keyboard, decompress arguments set before a jump
+
+- Kind: TOOL plus OBSERVATION (C1).
+- **Rectangle records.** The E-0161 derivation now also takes every copy of the CopyRecordRectToScreenBuffer and ReadScreenBufferRectHeader families (same first 16 bytes) as a header reader. This adds the bank-$A0 records at $4D37 and $4DC7 (31 records in all).
+- **NameEntryKeyboard (14:$6F4E).** RunNameEntryStateWhenNotFading_Case01_Case02 reads the byte at $6F4E + 17 * wNameEntryCursorY + wNameEntryCursorX.
+  - It has 10 rows of 17 character codes (A-M 0-3, N-Z 4-7, a-m 8 9 ! ?, n-z, then symbols), then 11 bytes.
+- **Decompress arguments.** The call-site source of compressed streams now also scans back from every unconditional `jr`/`jp` that lands inside the scanned instructions before a DecompressTo* call.
+  - GameMode6_Init sets DE and B in three branches that jump to one call. Two of those streams (24:$6F4E and 24:$6CE4) had been missed.
+  - Literal call arguments go from 147 to 155, and new streams from 91 to 97.
+- Binary verification: build/run258 PASS, 0 differing bytes.
+
 ### E-0215 — World map viewer tables (bank $A1)
 
 - Kind: OBSERVATION (reading; C1).
