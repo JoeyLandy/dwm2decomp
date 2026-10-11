@@ -3541,6 +3541,23 @@
       ],
       "record": "16 steps for one depth value: high nibble is combined with hSndEnvelope, bit 2 selects a branch",
       "note": "E-0189 (C1: Jump_000_3A94 reads the byte at the rows - $10 + (hSndVibratoDepth | phase), where the phase is 4 bits computed from hSndVibratoCounter and hSndVibratoDelay, so row 1 is the first; 12 rows end at the routine at $3290; what each step does to the pitch or volume is not read)."
+    },
+    {
+      "bank": "14",
+      "addr": "70F0",
+      "label": "RejectedNameList",
+      "count": 84,
+      "id_base": 0,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "text",
+          "size": 10,
+          "name": "name text ending in $F0, padded with $00"
+        }
+      ],
+      "record": "a name the name entry screen refuses: text ending in $F0, zero padded to 10 bytes",
+      "note": "E-0191 (C1: RunNameEntryStateWhenNotFading_Case03_Case00_Sub02 walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator)."
     }
   ]
 }

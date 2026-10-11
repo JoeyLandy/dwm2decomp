@@ -2295,6 +2295,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** 218 tracks are decoded (214 before), with none skipped. Unidentified INCBIN is 60,460 bytes.
 - Binary verification: build/run201 PASS, 0 differing bytes; tests OK.
 
+### E-0191 — Rejected name list (bank $14)
+
+- Kind: OBSERVATION (reading; C1).
+- **Reader.** RunNameEntryStateWhenNotFading_Case03_Case00_Sub02 walks 10-byte records from $70F0 until a record starts with $FF. It compares each record with wNameEntryText, skipping $9F bytes in the entry, up to the record's $F0.
+- **Layout.** There are 84 records, then the $FF terminator. Each is a short word that the name entry refuses, given in mixed case and in capitals, and zero padded to 10 bytes.
+- **Tool.** A new `text` field type shows the bytes up to $F0 through charmap.inc and the padding as raw bytes, because $00 is the digit 0 in the charmap.
+- Binary verification: build/run202 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

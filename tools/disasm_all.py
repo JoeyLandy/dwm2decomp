@@ -2619,6 +2619,13 @@ class Rom:
                                                          for v in words[j:j + per]) + ("" if tagged else tag))
                         tagged = True
                     tagged = True
+                elif f["type"] == "text":  # a string up to $F0 through charmap.inc, then raw padding (E-0191)
+                    flush()
+                    r = raws[fi]
+                    k = r.index(0xF0) + 1 if 0xF0 in r else len(r)
+                    parts = gb_text.render(bytes(r[:k])) + [f"${v:02X}" for v in r[k:]]
+                    out.append("    db " + ", ".join(parts) + ("" if tagged else tag))
+                    tagged = True
                 elif skip_bank == fi:
                     pass  # emitted by the `dfar` of the pointer before it
                 elif f["type"] == "ptr":

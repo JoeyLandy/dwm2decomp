@@ -6263,7 +6263,7 @@ Jump_014_6AB2::
 ; points at: wNameEntryText
 RunNameEntryStateWhenNotFading_Case03_Case00_Sub02::
 Func_014_6AB7:: ; address name
-    ld hl, Data_014_70F0
+    ld hl, RejectedNameList
     ld c, $00
 
 Jump_014_6ABC::
@@ -6827,14 +6827,103 @@ Data_014_706D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db " That name is", $F1
     db "already in use.", $F7
     db $F0, $EB
-    db $45, $90, $1D, $2B, $24, $37, $90, $31, $24, $30, $28, $90, $26, $24, $31, $41
-    db $F1, $25, $28, $90, $38, $36, $28, $27, $B5, $FA, $F7, $F2, $22, $32, $38, $43
-    db $2F, $90, $2B, $24, $39, $28, $90, $37, $32, $90, $38, $36, $28, $F1, $24, $31
-    db $32, $37, $2B, $28, $35, $90, $31, $24, $30, $28, $B5, $F7, $F0
+    db $45
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db " That name can't", $F1
+    db "be used.", $FA, $F7
+    db $F2, "You'll have to use", $F1
+    db "another name.", $F7
+    db $F0
 
-; address loaded by RunNameEntryStateWhenNotFading_Case03_Case00_Sub02
-Data_014_70F0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0530F0, $349
+; E-0191 (C1: RunNameEntryStateWhenNotFading_Case03_Case00_Sub02 walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator).
+; record: a name the name entry screen refuses: text ending in $F0, zero padded to 10 bytes
+RejectedNameList::
+Data_014_70F0:: ; address name
+    db "Ass", $F0, $00, $00, $00, $00, $00, $00 ; id 0
+    db "ASS", $F0, $00, $00, $00, $00, $00, $00 ; id 1
+    db "Dink", $F0, $00, $00, $00, $00, $00 ; id 2
+    db "DINK", $F0, $00, $00, $00, $00, $00 ; id 3
+    db "Dork", $F0, $00, $00, $00, $00, $00 ; id 4
+    db "DORK", $F0, $00, $00, $00, $00, $00 ; id 5
+    db "Cunt", $F0, $00, $00, $00, $00, $00 ; id 6
+    db "CUNT", $F0, $00, $00, $00, $00, $00 ; id 7
+    db "Kunt", $F0, $00, $00, $00, $00, $00 ; id 8
+    db "KUNT", $F0, $00, $00, $00, $00, $00 ; id 9
+    db "Fuck", $F0, $00, $00, $00, $00, $00 ; id 10
+    db "FUCK", $F0, $00, $00, $00, $00, $00 ; id 11
+    db "Shit", $F0, $00, $00, $00, $00, $00 ; id 12
+    db "SHIT", $F0, $00, $00, $00, $00, $00 ; id 13
+    db "Sex", $F0, $00, $00, $00, $00, $00, $00 ; id 14
+    db "SEX", $F0, $00, $00, $00, $00, $00, $00 ; id 15
+    db "Poop", $F0, $00, $00, $00, $00, $00 ; id 16
+    db "POOP", $F0, $00, $00, $00, $00, $00 ; id 17
+    db "Dong", $F0, $00, $00, $00, $00, $00 ; id 18
+    db "DONG", $F0, $00, $00, $00, $00, $00 ; id 19
+    db "Pene", $F0, $00, $00, $00, $00, $00 ; id 20
+    db "PENE", $F0, $00, $00, $00, $00, $00 ; id 21
+    db "Clit", $F0, $00, $00, $00, $00, $00 ; id 22
+    db "CLIT", $F0, $00, $00, $00, $00, $00 ; id 23
+    db "Twat", $F0, $00, $00, $00, $00, $00 ; id 24
+    db "TWAT", $F0, $00, $00, $00, $00, $00 ; id 25
+    db "Snot", $F0, $00, $00, $00, $00, $00 ; id 26
+    db "SNOT", $F0, $00, $00, $00, $00, $00 ; id 27
+    db "Fag", $F0, $00, $00, $00, $00, $00, $00 ; id 28
+    db "FAG", $F0, $00, $00, $00, $00, $00, $00 ; id 29
+    db "Homo", $F0, $00, $00, $00, $00, $00 ; id 30
+    db "HOMO", $F0, $00, $00, $00, $00, $00 ; id 31
+    db "Poon", $F0, $00, $00, $00, $00, $00 ; id 32
+    db "POON", $F0, $00, $00, $00, $00, $00 ; id 33
+    db "Piss", $F0, $00, $00, $00, $00, $00 ; id 34
+    db "PISS", $F0, $00, $00, $00, $00, $00 ; id 35
+    db "Prick", $F0, $00, $00, $00, $00 ; id 36
+    db "PRICK", $F0, $00, $00, $00, $00 ; id 37
+    db "Fukk", $F0, $00, $00, $00, $00, $00 ; id 38
+    db "FUKK", $F0, $00, $00, $00, $00, $00 ; id 39
+    db "Coon", $F0, $00, $00, $00, $00, $00 ; id 40
+    db "COON", $F0, $00, $00, $00, $00, $00 ; id 41
+    db "Nazi", $F0, $00, $00, $00, $00, $00 ; id 42
+    db "NAZI", $F0, $00, $00, $00, $00, $00 ; id 43
+    db "Niga", $F0, $00, $00, $00, $00, $00 ; id 44
+    db "NIGA", $F0, $00, $00, $00, $00, $00 ; id 45
+    db "Nigga", $F0, $00, $00, $00, $00 ; id 46
+    db "NIGGA", $F0, $00, $00, $00, $00 ; id 47
+    db "Jap", $F0, $00, $00, $00, $00, $00, $00 ; id 48
+    db "JAP", $F0, $00, $00, $00, $00, $00, $00 ; id 49
+    db "Jew", $F0, $00, $00, $00, $00, $00, $00 ; id 50
+    db "JEW", $F0, $00, $00, $00, $00, $00, $00 ; id 51
+    db "Wop", $F0, $00, $00, $00, $00, $00, $00 ; id 52
+    db "WOP", $F0, $00, $00, $00, $00, $00, $00 ; id 53
+    db "Spic", $F0, $00, $00, $00, $00, $00 ; id 54
+    db "SPIC", $F0, $00, $00, $00, $00, $00 ; id 55
+    db "Butt", $F0, $00, $00, $00, $00, $00 ; id 56
+    db "BUTT", $F0, $00, $00, $00, $00, $00 ; id 57
+    db "Perv", $F0, $00, $00, $00, $00, $00 ; id 58
+    db "PERV", $F0, $00, $00, $00, $00, $00 ; id 59
+    db "Dumb", $F0, $00, $00, $00, $00, $00 ; id 60
+    db "DUMB", $F0, $00, $00, $00, $00, $00 ; id 61
+    db "Dolt", $F0, $00, $00, $00, $00, $00 ; id 62
+    db "DOLT", $F0, $00, $00, $00, $00, $00 ; id 63
+    db "Anus", $F0, $00, $00, $00, $00, $00 ; id 64
+    db "ANUS", $F0, $00, $00, $00, $00, $00 ; id 65
+    db "Anal", $F0, $00, $00, $00, $00, $00 ; id 66
+    db "ANAL", $F0, $00, $00, $00, $00, $00 ; id 67
+    db "Jerk", $F0, $00, $00, $00, $00, $00 ; id 68
+    db "JERK", $F0, $00, $00, $00, $00, $00 ; id 69
+    db "Puke", $F0, $00, $00, $00, $00, $00 ; id 70
+    db "PUKE", $F0, $00, $00, $00, $00, $00 ; id 71
+    db "Snot", $F0, $00, $00, $00, $00, $00 ; id 72
+    db "SNOT", $F0, $00, $00, $00, $00, $00 ; id 73
+    db "Barf", $F0, $00, $00, $00, $00, $00 ; id 74
+    db "BARF", $F0, $00, $00, $00, $00, $00 ; id 75
+    db "Pus", $F0, $00, $00, $00, $00, $00, $00 ; id 76
+    db "PUS", $F0, $00, $00, $00, $00, $00, $00 ; id 77
+    db "Pussy", $F0, $00, $00, $00, $00 ; id 78
+    db "PUSSY", $F0, $00, $00, $00, $00 ; id 79
+    db "Bung", $F0, $00, $00, $00, $00, $00 ; id 80
+    db "BUNG", $F0, $00, $00, $00, $00, $00 ; id 81
+    db "Suck", $F0, $00, $00, $00, $00, $00 ; id 82
+    db "SUCK", $F0, $00, $00, $00, $00, $00 ; id 83
+    db $FF ; end
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case01_Case03_Sub01, CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01
 Data_014_7439:: ; heuristic: pointer load in the same bank (bank assumed); C0
