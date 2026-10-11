@@ -2113,6 +2113,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Whether the two configured entries are ever called (for example through a table not yet decoded) is not known; they are code by shape, not by an observed caller.
 - Binary verification: build/run178 PASS, 0 differing bytes; tests OK.
 
+### E-0176 — Map object record fields
+
+- Kind: OBSERVATION (reading of LoadMapObjectsForScreen's copy loop, 69:40FC, and of the A-button handler 87:42A0; C1).
+- **Fields.** Each 11-byte object record (E-0163) feeds a 16-byte sprite slot and DecompressGraphicsHFFC6ToHFFCA:
+  - byte 0: hFFCB, the VRAM page of the object's graphics (hFFCA = 0);
+  - byte 1: hFFC8, the graphics table (0 = MonsterSpriteTable, otherwise FieldSpriteGraphicsTable); also slot +1;
+  - bytes 2-3: hFFC6/7, the graphics number; slot +2/+3;
+  - byte 4: slot +0;
+  - bytes 5-6: X and Y, stored twice, at slot +4/+5 and +$B/+$C. The A-button handler matches the screen-cell nibbles at +$B/+$C;
+  - byte 7: hFFC9, the palette slot; slot +6;
+  - byte 8: slot +7;
+  - byte 9: slot +8. The A-button handler treats it as the talk event group ($FF, $FE and $FC-$FA select fixed events; other values are paired with an index from the map-number band).
+  - byte 10: slot +$F.
+  - The loader also sets slot +9 = slot number & 3 and clears +$A and +$D.
+- **What changed.** The MapObjects_ record descriptions list these fields.
+- Binary verification: build/run179 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

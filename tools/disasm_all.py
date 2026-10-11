@@ -1737,7 +1737,9 @@ class Rom:
             self.schemas.append({"bank": B, "addr": a, "label": f"MapObjects_{a:04X}", "count": 1,
                                  "fields": [{"type": "db", "size": 1, "line": True, "name": "object count"}]
                                  + [{"type": "db", "size": 11, "line": True, "name": f"object {k}"} for k in range(n)],
-                                 "record": f"count, then {n} object(s) of 11 bytes",
+                                 "record": f"count, then {n} object(s): VRAM page, graphics table (0 = monster "
+                                           "sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, "
+                                           "slot byte 7, talk event group, slot byte 15",
                                  "note": "E-0163 (derived: an object list of LoadMapObjectsForScreen)"})
             nl += 1
         for p, n in sorted(arrays.items()):
