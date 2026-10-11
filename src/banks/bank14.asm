@@ -6466,7 +6466,7 @@ Jump_014_6BA4::
     jr Jump_014_6BB3
 
 Jump_014_6BB0::
-    ld de, Data_014_706D
+    ld de, StringCategories_14_706D
 
 Jump_014_6BB3::
     call BeginStringDisplay
@@ -6830,16 +6830,36 @@ Data_014_7003:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db "can't be used.", $F7
     db $F0
 
-; address loaded by RunNameEntryStateWhenNotFading_Shared04
-Data_014_706D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $6F, $70, $77, $70, $84, $70, $91, $70, $B2, $70, $EB, $45, $90, $12, $36, $90
-    db $F9, $00, $90, $18, $14, $98, $F0, $EB, $45, $90, $12, $36, $90, $F9, $00, $90
-    db $18, $14, $98, $F0, $EB, $45
+; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; record: string list
+StringCategories_14_706D::
+Data_014_706D:: ; address name
+    dw StringList_14_706F ; id 0
+
+; E-0217 (derived: category list of StringCategories_14_706D; one pointer per wStringIndex)
+; record: string
+StringList_14_706F::
+Data_014_706F:: ; address name
+    dw Data_014_7077 ; id 0
+    dw Data_014_7084 ; id 1
+    dw Data_014_7091 ; id 2
+    dw Data_014_70B2 ; id 3
+
+Data_014_7077:: ; heuristic: string; C0
+    db $EB, $45, $90, $12, $36, $90, $F9, $00, $90, $18, $14, $98, $F0
+
+Data_014_7084:: ; heuristic: string; C0
+    db $EB, $45, $90, $12, $36, $90, $F9, $00, $90, $18, $14, $98, $F0
+
+Data_014_7091:: ; heuristic: string; C0
+    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " That name is", $F1
     db "already in use.", $F7
-    db $F0, $EB
-    db $45
+    db $F0
+
+Data_014_70B2:: ; heuristic: string; C0
+    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " That name can't", $F1
     db "be used.", $FA, $F7

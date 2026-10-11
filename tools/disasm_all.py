@@ -2048,6 +2048,88 @@ class Rom:
                 macro = "objsel_skip_if_clear" if op[2] == 0xFC else "objsel_skip_if_set"
                 out.append(f"    {macro} ${op[3]:04X}, ${op[4]:02X}, ${op[5]:02X}")
 
+    def add_string_table_schemas(self) -> None:
+        """E-0217: string tables passed in DE to BeginStringDisplay / CopyStringToBuffer.
+
+        LookupString reads word wStringCategory of the table at DE (a category list), then word
+        wStringIndex of that list (a string). The category table runs to its lowest target; each
+        list runs to the next list, the last one to the lowest string it names. Tables that
+        overlap another layout are left alone."""
+        users = {(b, a) for (b, a), info in self.names.items() if not info.get("data")
+                 and info["name"] in ("BeginStringDisplay", "CopyStringToBuffer")}
+        if not users:
+            return
+        ld_de = re.compile(r"ld de, \$([0-9A-F]{4})$")
+        taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+        tables = set()
+        for cb in range(1, self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in users:
+                    continue
+                for x in reversed(order[max(0, k - 3):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    if (m := ld_de.match(ins[x][1])):
+                        tables.add((cb, int(m.group(1), 16)))
+                        break
+        made = 0
+        for cb, t in sorted(tables):
+            if not 0x4000 <= t < 0x8000:
+                continue
+            w = lambda a: self._u16(cb, a)
+            cats, p = [], t
+            while p < 0x8000 and (not cats or p < min(cats)):
+                x = w(p)
+                if not (p < x < 0x8000):
+                    break
+                cats.append(x)
+                p += 2
+            if not cats or p != min(cats):
+                continue
+            lists = sorted(set(cats))
+            strings: list[int] = []
+            ok = True
+            for i, ls in enumerate(lists):
+                end = lists[i + 1] if i + 1 < len(lists) else None
+                q, items = ls, []
+                while q < 0x8000 and (end is None or q < end) and (not strings or q < min(strings)) \
+                        and (not items or q < min(items)):
+                    x = w(q)
+                    if not (lists[-1] <= x < 0x8000):
+                        break
+                    items.append(x)
+                    q += 2
+                if not items or (end is not None and q != end):
+                    ok = False
+                    break
+                strings += items
+            if not ok:
+                continue
+            spans = [(t, p)] + [(ls, (lists[i + 1] if i + 1 < len(lists) else min(strings))) for i, ls in enumerate(lists)]
+            if any(b == cb and lo < e and s < hi for s, e in spans for b, lo, hi in taken) or \
+                    any(a in self.covered[cb] for s, e in spans for a in range(s, e)):
+                continue
+            label = self.labels[cb].get(t) or f"StringCategories_{cb:02X}_{t:04X}"
+            self.schemas.append({"bank": cb, "addr": t, "label": f"StringCategories_{cb:02X}_{t:04X}",
+                                 "count": len(cats), "id_base": 0,
+                                 "fields": [{"type": "ptr", "name": "string list", "reason": "string list"}],
+                                 "note": "E-0217 (derived: string table passed in DE to BeginStringDisplay or "
+                                         "CopyStringToBuffer; LookupString reads word wStringCategory, then word "
+                                         "wStringIndex of that list)"})
+            for i, (s, e) in enumerate(spans[1:]):
+                self.schemas.append({"bank": cb, "addr": s, "label": f"StringList_{cb:02X}_{s:04X}",
+                                     "count": (e - s) // 2, "id_base": 0,
+                                     "fields": [{"type": "ptr", "name": "string", "reason": "string"}],
+                                     "note": f"E-0217 (derived: category list of StringCategories_{cb:02X}_{t:04X}; "
+                                             f"one pointer per wStringIndex)"})
+            taken += [(cb, s, e) for s, e in spans]
+            made += 1
+        log(f"string tables derived: {made}")
+
     def add_rect_record_schemas(self) -> None:
         """Lay out the tile-rectangle records HL points at for the record copiers (E-0161).
 
@@ -2934,6 +3016,7 @@ class Rom:
         self.structure_data()
         self.find_compressed_assets()
         self.label_data_refs()
+        self.add_string_table_schemas()
         self.add_rect_record_schemas()
         self.prepare_object_selectors()
         self.prepare_tables()

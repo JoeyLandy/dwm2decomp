@@ -2430,6 +2430,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0217 — Link conversion tables (bank $37); string tables in every bank
+
+- Kind: OBSERVATION (reading plus a consistency check; C1, C2 for the species pairing) and TOOL.
+- **LinkCodeToSpeciesTable ($5FC7, 215 words) and SpeciesToLinkCodeTable ($6175, 384 bytes).**
+  - FamilyNibbleOrSpeciesFamily (in UnpackLinkRecordToWorkBuf) reads a species through the first; AppendTable6175ByteForWordAtDE appends a byte through the second.
+  - For all 215 codes, the second table maps the species back to its code.
+- **LinkSkillMapTable_B ($62F5, 222 bytes) and LinkSkillMapTable_A ($63D3, 170 bytes).** MapAndCompactSkillList62F5 (UnpackLinkRecordToRecordBufB) and MapAndCompactSkillList63D3 (UnpackLinkRecordToWorkBuf) map $21 skill bytes through them and drop $FE/$FF entries. For 155 of A's 170 entries, B maps the result back.
+- **String tables (generator).** LookupString reads word wStringCategory of the table at DE, then word wStringIndex of that list.
+  - For every `ld de, X` before a call or jump to BeginStringDisplay or CopyStringToBuffer, the table at X is laid out: the category table runs to its lowest target, and each list runs to the next list, the last one to the lowest string named.
+  - Tables that overlap another layout or code are skipped. 36 tables are derived, for example StringCategories_37_4016 with two lists of 54 and 32 strings.
+- Unidentified INCBIN is 29,801 bytes.
+- Binary verification: build/run260 PASS, 0 differing bytes.
+
 ### E-0216 — Rectangle records through family copies, the name entry keyboard, decompress arguments set before a jump
 
 - Kind: TOOL plus OBSERVATION (C1).

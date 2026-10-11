@@ -34,159 +34,163 @@ Jump_082_4024::
     ret
     db $CD, $01, $40, $CD, $11, $26, $C9
 
-; string-pointer table of message bank $82: strings 0 to $90 - 1; the rest are in MessageStrings_Bank82_Overflow (E-0080)
-; address loaded by BeginStringDisplay_Bank82, CopyStringToBuffer_Bank82
+; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; record: string list
+StringCategories_82_4032::
 MessageStrings_Bank82:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_082_4032:: ; address name
-    dw Data_082_4034
+    dw StringList_82_4034 ; id 0
 
-Data_082_4034:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_082_4154
-    dw Data_082_420D
-    dw Data_082_426B
-    dw Data_082_4375
-    dw Data_082_443E
-    dw Data_082_44A8
-    dw Data_082_4517
-    dw Data_082_45A2
-    dw Data_082_462C
-    dw Data_082_46B6
-    dw Data_082_4724
-    dw Data_082_47B5
-    dw Data_082_488C
-    dw Data_082_4964
-    dw Data_082_49F0
-    dw Data_082_4A57
-    dw Data_082_4AE2
-    dw Data_082_4B52
-    dw Data_082_4BE2
-    dw Data_082_4C6A
-    dw Data_082_4CD9
-    dw Data_082_4D43
-    dw Data_082_4D90
-    dw Data_082_4E07
-    dw Data_082_4E2D
-    dw Data_082_4E7C
-    dw Data_082_4F09
-    dw Data_082_4F75
-    dw Data_082_4FE1
-    dw Data_082_5074
-    dw Data_082_5111
-    dw Data_082_5150
-    dw Data_082_51E0
-    dw Data_082_5234
-    dw Data_082_52A2
-    dw Data_082_52DD
-    dw Data_082_5300
-    dw Data_082_5323
-    dw Data_082_5372
-    dw Data_082_53DF
-    dw Data_082_5477
-    dw Data_082_554D
-    dw Data_082_5600
-    dw Data_082_56AC
-    dw Data_082_571A
-    dw Data_082_57AE
-    dw Data_082_586E
-    dw Data_082_58FC
-    dw Data_082_5968
-    dw Data_082_5A47
-    dw Data_082_5AD9
-    dw Data_082_5B23
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5B8E
-    dw Data_082_5C1E
-    dw Data_082_5CFB
-    dw Data_082_5DD9
-    dw Data_082_5E43
-    dw Data_082_5EAD
-    dw Data_082_5F30
-    dw Data_082_5F9A
-    dw Data_082_6056
-    dw Data_082_616A
-    dw Data_082_61DD
-    dw Data_082_6295
-    dw Data_082_6359
-    dw Data_082_6379
-    dw Data_082_63CD
-    dw Data_082_64AB
-    dw Data_082_64F6
-    dw Data_082_659F
-    dw Data_082_660E
-    dw Data_082_662D
-    dw Data_082_6678
-    dw Data_082_676F
-    dw Data_082_67E9
-    dw Data_082_6828
-    dw Data_082_6869
-    dw Data_082_690F
-    dw Data_082_698B
-    dw Data_082_69AD
-    dw Data_082_69F4
-    dw Data_082_6A34
-    dw Data_082_6B29
-    dw Data_082_6B4E
-    dw Data_082_6B4E
-    dw Data_082_6B4E
-    dw Data_082_6B4E
-    dw Data_082_6B4E
-    dw Data_082_6C52
-    dw Data_082_6C9D
-    dw Data_082_6CF6
-    dw Data_082_6D66
-    dw Data_082_6DFB
-    dw Data_082_6E68
-    dw Data_082_6E89
-    dw Data_082_6EA9
-    dw Data_082_6F32
-    dw Data_082_6F5A
-    dw Data_082_6FA5
-    dw Data_082_7018
-    dw Data_082_7030
-    dw Data_082_7050
-    dw Data_082_70E5
-    dw Data_082_719B
-    dw Data_082_7226
-    dw Data_082_728D
-    dw Data_082_72D5
-    dw Data_082_72D6
-    dw Data_082_7385
-    dw Data_082_73E8
-    dw Data_082_749F
-    dw Data_082_7574
-    dw Data_082_75FD
-    dw Data_082_763D
-    dw Data_082_76C7
-    dw Data_082_7788
-    dw Data_082_779E
-    dw Data_082_7836
-    dw Data_082_792B
-    dw Data_082_79D3
-    dw Data_082_7A7C
-    dw Data_082_7A92
-    dw Data_082_7B41
-    dw Data_082_7BF1
-    dw Data_082_7C07
-    dw Data_082_7CB3
-    dw Data_082_7D60
-    dw Data_082_7D76
-    dw Data_082_7E05
-    dw Data_082_7E98
+; E-0217 (derived: category list of StringCategories_82_4032; one pointer per wStringIndex)
+; record: string
+StringList_82_4034::
+Data_082_4034:: ; address name
+    dw Data_082_4154 ; id 0
+    dw Data_082_420D ; id 1
+    dw Data_082_426B ; id 2
+    dw Data_082_4375 ; id 3
+    dw Data_082_443E ; id 4
+    dw Data_082_44A8 ; id 5
+    dw Data_082_4517 ; id 6
+    dw Data_082_45A2 ; id 7
+    dw Data_082_462C ; id 8
+    dw Data_082_46B6 ; id 9
+    dw Data_082_4724 ; id 10
+    dw Data_082_47B5 ; id 11
+    dw Data_082_488C ; id 12
+    dw Data_082_4964 ; id 13
+    dw Data_082_49F0 ; id 14
+    dw Data_082_4A57 ; id 15
+    dw Data_082_4AE2 ; id 16
+    dw Data_082_4B52 ; id 17
+    dw Data_082_4BE2 ; id 18
+    dw Data_082_4C6A ; id 19
+    dw Data_082_4CD9 ; id 20
+    dw Data_082_4D43 ; id 21
+    dw Data_082_4D90 ; id 22
+    dw Data_082_4E07 ; id 23
+    dw Data_082_4E2D ; id 24
+    dw Data_082_4E7C ; id 25
+    dw Data_082_4F09 ; id 26
+    dw Data_082_4F75 ; id 27
+    dw Data_082_4FE1 ; id 28
+    dw Data_082_5074 ; id 29
+    dw Data_082_5111 ; id 30
+    dw Data_082_5150 ; id 31
+    dw Data_082_51E0 ; id 32
+    dw Data_082_5234 ; id 33
+    dw Data_082_52A2 ; id 34
+    dw Data_082_52DD ; id 35
+    dw Data_082_5300 ; id 36
+    dw Data_082_5323 ; id 37
+    dw Data_082_5372 ; id 38
+    dw Data_082_53DF ; id 39
+    dw Data_082_5477 ; id 40
+    dw Data_082_554D ; id 41
+    dw Data_082_5600 ; id 42
+    dw Data_082_56AC ; id 43
+    dw Data_082_571A ; id 44
+    dw Data_082_57AE ; id 45
+    dw Data_082_586E ; id 46
+    dw Data_082_58FC ; id 47
+    dw Data_082_5968 ; id 48
+    dw Data_082_5A47 ; id 49
+    dw Data_082_5AD9 ; id 50
+    dw Data_082_5B23 ; id 51
+    dw Data_082_5B8E ; id 52
+    dw Data_082_5B8E ; id 53
+    dw Data_082_5B8E ; id 54
+    dw Data_082_5B8E ; id 55
+    dw Data_082_5B8E ; id 56
+    dw Data_082_5B8E ; id 57
+    dw Data_082_5B8E ; id 58
+    dw Data_082_5B8E ; id 59
+    dw Data_082_5B8E ; id 60
+    dw Data_082_5B8E ; id 61
+    dw Data_082_5B8E ; id 62
+    dw Data_082_5B8E ; id 63
+    dw Data_082_5B8E ; id 64
+    dw Data_082_5B8E ; id 65
+    dw Data_082_5B8E ; id 66
+    dw Data_082_5C1E ; id 67
+    dw Data_082_5CFB ; id 68
+    dw Data_082_5DD9 ; id 69
+    dw Data_082_5E43 ; id 70
+    dw Data_082_5EAD ; id 71
+    dw Data_082_5F30 ; id 72
+    dw Data_082_5F9A ; id 73
+    dw Data_082_6056 ; id 74
+    dw Data_082_616A ; id 75
+    dw Data_082_61DD ; id 76
+    dw Data_082_6295 ; id 77
+    dw Data_082_6359 ; id 78
+    dw Data_082_6379 ; id 79
+    dw Data_082_63CD ; id 80
+    dw Data_082_64AB ; id 81
+    dw Data_082_64F6 ; id 82
+    dw Data_082_659F ; id 83
+    dw Data_082_660E ; id 84
+    dw Data_082_662D ; id 85
+    dw Data_082_6678 ; id 86
+    dw Data_082_676F ; id 87
+    dw Data_082_67E9 ; id 88
+    dw Data_082_6828 ; id 89
+    dw Data_082_6869 ; id 90
+    dw Data_082_690F ; id 91
+    dw Data_082_698B ; id 92
+    dw Data_082_69AD ; id 93
+    dw Data_082_69F4 ; id 94
+    dw Data_082_6A34 ; id 95
+    dw Data_082_6B29 ; id 96
+    dw Data_082_6B4E ; id 97
+    dw Data_082_6B4E ; id 98
+    dw Data_082_6B4E ; id 99
+    dw Data_082_6B4E ; id 100
+    dw Data_082_6B4E ; id 101
+    dw Data_082_6C52 ; id 102
+    dw Data_082_6C9D ; id 103
+    dw Data_082_6CF6 ; id 104
+    dw Data_082_6D66 ; id 105
+    dw Data_082_6DFB ; id 106
+    dw Data_082_6E68 ; id 107
+    dw Data_082_6E89 ; id 108
+    dw Data_082_6EA9 ; id 109
+    dw Data_082_6F32 ; id 110
+    dw Data_082_6F5A ; id 111
+    dw Data_082_6FA5 ; id 112
+    dw Data_082_7018 ; id 113
+    dw Data_082_7030 ; id 114
+    dw Data_082_7050 ; id 115
+    dw Data_082_70E5 ; id 116
+    dw Data_082_719B ; id 117
+    dw Data_082_7226 ; id 118
+    dw Data_082_728D ; id 119
+    dw Data_082_72D5 ; id 120
+    dw Data_082_72D6 ; id 121
+    dw Data_082_7385 ; id 122
+    dw Data_082_73E8 ; id 123
+    dw Data_082_749F ; id 124
+    dw Data_082_7574 ; id 125
+    dw Data_082_75FD ; id 126
+    dw Data_082_763D ; id 127
+    dw Data_082_76C7 ; id 128
+    dw Data_082_7788 ; id 129
+    dw Data_082_779E ; id 130
+    dw Data_082_7836 ; id 131
+    dw Data_082_792B ; id 132
+    dw Data_082_79D3 ; id 133
+    dw Data_082_7A7C ; id 134
+    dw Data_082_7A92 ; id 135
+    dw Data_082_7B41 ; id 136
+    dw Data_082_7BF1 ; id 137
+    dw Data_082_7C07 ; id 138
+    dw Data_082_7CB3 ; id 139
+    dw Data_082_7D60 ; id 140
+    dw Data_082_7D76 ; id 141
+    dw Data_082_7E05 ; id 142
+    dw Data_082_7E98 ; id 143
 
-Data_082_4154:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4154:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The weather is", $F1
@@ -197,7 +201,7 @@ Data_082_4154:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "up all the time.", $EF, $EE, "Be good to them!", $F7
     db $F0
 
-Data_082_420D:: ; heuristic: target of a monotone pointer table; C0
+Data_082_420D:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " You and your", $F1
@@ -206,7 +210,7 @@ Data_082_420D:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I'm proud of you,", $EF, $EE, $F9, "0!", $F7
     db $F0
 
-Data_082_426B:: ; heuristic: target of a monotone pointer table; C0
+Data_082_426B:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Cobi", $A3, " ", $F9, "0, I", $F1
     db "envied you for", $FA, $F7
@@ -219,7 +223,7 @@ Data_082_426B:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Anyway, what do", $EF, $EE, "you need, sis?", $F7
     db $F0
 
-Data_082_4375:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4375:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EB, "Tara", $A3, " ", $F9, "0, I was", $F1
     db "a little jealous", $FA, $F7
@@ -230,7 +234,7 @@ Data_082_4375:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Anyway, did you", $EF, $EE, "need something?", $F7
     db $F0
 
-Data_082_443E:: ; heuristic: target of a monotone pointer table; C0
+Data_082_443E:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I heard about a", $F1
@@ -239,7 +243,7 @@ Data_082_443E:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "are members of my", $EF, $EE, "family!", $F7
     db $F0
 
-Data_082_44A8:: ; heuristic: target of a monotone pointer table; C0
+Data_082_44A8:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " This rope, it", $F1
@@ -248,7 +252,7 @@ Data_082_44A8:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "perhaps it will", $EF, $EE, "reach the clouds.", $F7
     db $F0
 
-Data_082_4517:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4517:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Many kinds of", $F1
@@ -258,7 +262,7 @@ Data_082_4517:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "you'll get a baby", $EF, $EE, "FoxFire.", $F7
     db $F0
 
-Data_082_45A2:: ; heuristic: target of a monotone pointer table; C0
+Data_082_45A2:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " A world with", $F1
@@ -268,7 +272,7 @@ Data_082_45A2:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "we should all move", $EF, $EE, "there.", $F7
     db $F0
 
-Data_082_462C:: ; heuristic: target of a monotone pointer table; C0
+Data_082_462C:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The items you", $F1
@@ -278,7 +282,7 @@ Data_082_462C:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "find Sirloin on", $EF, $EE, "the ground!", $F7
     db $F0
 
-Data_082_46B6:: ; heuristic: target of a monotone pointer table; C0
+Data_082_46B6:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Listen, even in", $F1
@@ -287,7 +291,7 @@ Data_082_46B6:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "locations.", $EF, $EE, "Did you know that?", $F7
     db $F0
 
-Data_082_4724:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4724:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Bugs like me", $F1
@@ -297,7 +301,7 @@ Data_082_4724:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "we'll be able to", $EF, $EE, "stick around more.", $F7
     db $F0
 
-Data_082_47B5:: ; heuristic: target of a monotone pointer table; C0
+Data_082_47B5:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Members of the", $F1
@@ -309,7 +313,7 @@ Data_082_47B5:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "longer than other", $EF, $EE, "families.", $F7
     db $F0
 
-Data_082_488C:: ; heuristic: target of a monotone pointer table; C0
+Data_082_488C:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The master's", $F1
@@ -321,7 +325,7 @@ Data_082_488C:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "it was ordered to", $EF, $EE, "Charge in battle.", $F7
     db $F0
 
-Data_082_4964:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4964:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Hello, GreatLog's", $F1
@@ -331,7 +335,7 @@ Data_082_4964:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Arena too.", $EF, $EE, "Go take a look!", $F7
     db $F0
 
-Data_082_49F0:: ; heuristic: target of a monotone pointer table; C0
+Data_082_49F0:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I'm beginning to", $F1
@@ -340,7 +344,7 @@ Data_082_49F0:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "things, including", $EF, $EE, "monsters.", $F7
     db $F0
 
-Data_082_4A57:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4A57:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Have you found", $F1
@@ -350,7 +354,7 @@ Data_082_4A57:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Keys, so you can", $EF, $EE, "keep searching.", $F7
     db $F0
 
-Data_082_4AE2:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4AE2:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The rope in the", $F1
@@ -359,7 +363,7 @@ Data_082_4AE2:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "It's supposed to", $EF, $EE, "be really quick.", $F7
     db $F0
 
-Data_082_4B52:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4B52:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " When you're", $F1
@@ -369,7 +373,7 @@ Data_082_4B52:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "You appear to have", $EF, $EE, "experienced much.", $F7
     db $F0
 
-Data_082_4BE2:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4BE2:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " A bard demanded", $F1
@@ -379,7 +383,7 @@ Data_082_4BE2:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "He gave me some", $EF, $EE, "amazing medicine.", $F7
     db $F0
 
-Data_082_4C6A:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4C6A:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I just happened", $F1
@@ -388,7 +392,7 @@ Data_082_4C6A:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "We tried our luck", $EF, $EE, "at slot machines.", $F7
     db $F0
 
-Data_082_4CD9:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4CD9:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " You know how to", $F1
@@ -397,7 +401,7 @@ Data_082_4CD9:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "you", $42, "e become a", $EF, $EE, "skilled master.", $F7
     db $F0
 
-Data_082_4D43:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4D43:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " When master's", $F1
@@ -408,7 +412,7 @@ Data_082_4D43:: ; heuristic: target of a monotone pointer table; C0
     db " like to", $EF, $EE, "start my own shop.", $F7
     db $F0
 
-Data_082_4D90:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4D90:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I'm sorry. I was", $F1
@@ -417,14 +421,14 @@ Data_082_4D90:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "May I please help", $EF, $EE, "you with anything?", $F7
     db $F0
 
-Data_082_4E07:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4E07:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Hello! How may I", $F1
     db "serve you today?", $F7
     db $F0
 
-Data_082_4E2D:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4E2D:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " GreatLog's shops", $F1
@@ -432,7 +436,7 @@ Data_082_4E2D:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "at lower sums than", $EF, $EE, "in other worlds.", $F7
     db $F0
 
-Data_082_4E7C:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4E7C:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Prince Kameha is", $F1
@@ -442,7 +446,7 @@ Data_082_4E7C:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "and go back to his", $EF, $EE, "usual antics.", $F7
     db $F0
 
-Data_082_4F09:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4F09:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I heard that", $F1
@@ -451,7 +455,7 @@ Data_082_4F09:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "impressed by what", $EF, $EE, "you did for us.", $F7
     db $F0
 
-Data_082_4F75:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4F75:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The woman next", $F1
@@ -460,7 +464,7 @@ Data_082_4F75:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "trinket in a", $EF, $EE, "charity raffle.", $F7
     db $F0
 
-Data_082_4FE1:: ; heuristic: target of a monotone pointer table; C0
+Data_082_4FE1:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Hello, GreatLog's", $F1
@@ -470,7 +474,7 @@ Data_082_4FE1:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Anyway, what can I", $EF, $EE, "do for you today?", $F7
     db $F0
 
-Data_082_5074:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5074:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " If you have a", $F1
@@ -481,14 +485,14 @@ Data_082_5074:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "It's something to", $EF, $EE, "think about.", $F7
     db $F0
 
-Data_082_5111:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5111:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " You're GreatLog's", $F1
     db "savior!", $FA, $F7
     db $EF, $EE, "Do you need any", $EF, $EE, "keys appraised?", $F0
 
-Data_082_5150:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5150:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " My grandpa gave", $F1
@@ -498,7 +502,7 @@ Data_082_5150:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "see new monsters", $EF, $EE, "for a change.", $F7
     db $F0
 
-Data_082_51E0:: ; heuristic: target of a monotone pointer table; C0
+Data_082_51E0:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Oh, the savior", $F1
@@ -507,7 +511,7 @@ Data_082_51E0:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "May I help you", $EF, $EE, "today?", $F7
     db $F0
 
-Data_082_5234:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5234:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Hello, hero!", $F1
@@ -516,7 +520,7 @@ Data_082_5234:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "certified by the", $EF, $EE, "Egg Evaluator."
     db $FF, $F0
 
-Data_082_52A2:: ; heuristic: target of a monotone pointer table; C0
+Data_082_52A2:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " You'll take it?", $F1
@@ -524,21 +528,21 @@ Data_082_52A2:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I'll send it to", $EF, $EE, "the farm.", $F7
     db $F0
 
-Data_082_52DD:: ; heuristic: target of a monotone pointer table; C0
+Data_082_52DD:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Oh? But there's", $F1
     db "no room for it.", $F7
     db $F0
 
-Data_082_5300:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5300:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Oh", $A4, " Well, that's", $F1
     db "too bad, then.", $F7
     db $F0
 
-Data_082_5323:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5323:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The Evaluator's", $F1
@@ -546,7 +550,7 @@ Data_082_5323:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "You should see how", $EF, $EE, "it affects an egg.", $F7
     db $F0
 
-Data_082_5372:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5372:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Warubou", $A3, " Wa-hey!", $F1
     db "How are you?", $FA, $F7
@@ -554,7 +558,7 @@ Data_082_5372:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "You saved GreatLog", $EF, $EE, "from its crisis!", $F7
     db $F0
 
-Data_082_53DF:: ; heuristic: target of a monotone pointer table; C0
+Data_082_53DF:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Warubou", $A3, " Wa-hey,", $F1
     db $F9, "0, wiped out?", $FA, $F7
@@ -563,7 +567,7 @@ Data_082_53DF:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "GreatLog's power", $EF, $EE, "with you, warooh!", $F7
     db $F0
 
-Data_082_5477:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5477:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Warubou", $A3, " Wa-hey,", $F1
     db "I have a favor to", $FA, $F7
@@ -574,7 +578,7 @@ Data_082_5477:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "But no, you have", $EF, $EE, "no room left.", $F7
     db $F0
 
-Data_082_554D:: ; heuristic: target of a monotone pointer table; C0
+Data_082_554D:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Warubou", $A3, " Wa-hey,", $F1
     db "I have a favor to", $FA, $F7
@@ -584,7 +588,7 @@ Data_082_554D:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Maybe my kid can", $EF, $EE, "go with you?"
     db $FF, $F0
 
-Data_082_5600:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5600:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Warubou", $A3, " Wa-hey!", $F1
     db "Good, good, good!", $FA, $F7
@@ -594,7 +598,7 @@ Data_082_5600:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Wa-hey, Petibou", $EF, $EE, "come here!", $F7
     db $F0
 
-Data_082_56AC:: ; heuristic: target of a monotone pointer table; C0
+Data_082_56AC:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Petibou", $A3, " What?", $F1
     db "This little kid?", $FA, $F7
@@ -602,7 +606,7 @@ Data_082_56AC:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "But Papa said, so", $EF, $EE, "I'll go with you.", $F7
     db $F0
 
-Data_082_571A:: ; heuristic: target of a monotone pointer table; C0
+Data_082_571A:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Warubou", $A3, " Wa-hey,", $F1
     db "my kid has a big", $FA, $F7
@@ -611,7 +615,7 @@ Data_082_571A:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Look after my", $EF, $EE, "Petibou good!", $F7
     db $F0
 
-Data_082_57AE:: ; heuristic: target of a monotone pointer table; C0
+Data_082_57AE:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Warubou", $A3, " Wa-hey,", $F1
     db "the bond between", $FA, $F7
@@ -621,7 +625,7 @@ Data_082_57AE:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "GreatLog is out of", $EF, $EE, "danger too.", $F7
     db $F0
 
-Data_082_586E:: ; heuristic: target of a monotone pointer table; C0
+Data_082_586E:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Aren't you", $F1
@@ -631,7 +635,7 @@ Data_082_586E:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Anyway, what do", $EF, $EE, "you need of me?", $F7
     db $F0
 
-Data_082_58FC:: ; heuristic: target of a monotone pointer table; C0
+Data_082_58FC:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Ah, GreatLog's", $F1
@@ -640,7 +644,7 @@ Data_082_58FC:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "tournaments for", $EF, $EE, "battling monsters?", $F7
     db $F0
 
-Data_082_5968:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5968:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Well, well, it's", $F1
@@ -652,7 +656,7 @@ Data_082_5968:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "you may not learn", $EF, $EE, "on your travels.", $F7
     db $F0
 
-Data_082_5A47:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5A47:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Make sure you're", $F1
@@ -662,7 +666,7 @@ Data_082_5A47:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "being a prodigy as", $EF, $EE, "a master", $A4, $F7
     db $F0
 
-Data_082_5AD9:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5AD9:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Have you used", $F1
@@ -670,7 +674,7 @@ Data_082_5AD9:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "It's a quick climb", $EF, $EE, "to the treetop.", $F7
     db $F0
 
-Data_082_5B23:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5B23:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Papa is a famous", $F1
@@ -679,7 +683,7 @@ Data_082_5B23:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I'm sure he will", $EF, $EE, "one day!", $F7
     db $F0
 
-Data_082_5B8E:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5B8E:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The girl next", $F1
@@ -689,7 +693,7 @@ Data_082_5B8E:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "So, uh, we're going", $EF, $EE, "to get married.", $F7
     db $F0
 
-Data_082_5C1E:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5C1E:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The way you", $F1
@@ -701,7 +705,7 @@ Data_082_5C1E:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "We'll send it to", $EF, $EE, "the farm for you.", $F7
     db $F0
 
-Data_082_5CFB:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5CFB:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " The way you", $F1
@@ -713,7 +717,7 @@ Data_082_5CFB:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Oh, but your farm", $EF, $EE, "is already full", $A4, $F7
     db $F0
 
-Data_082_5DD9:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5DD9:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Our monsters", $F1
@@ -722,7 +726,7 @@ Data_082_5DD9:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "not squabbling", $EF, $EE, "with each other", $A4, $F7
     db $F0
 
-Data_082_5E43:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5E43:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " My granddaughter", $F1
@@ -731,7 +735,7 @@ Data_082_5E43:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I won't have to", $EF, $EE, "worry about her.", $F7
     db $F0
 
-Data_082_5EAD:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5EAD:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I became a", $F1
@@ -741,7 +745,7 @@ Data_082_5EAD:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Do you want battle", $EF, $EE, "to see how good?"
     db $FF, $F0
 
-Data_082_5F30:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5F30:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " My master has", $F1
@@ -750,7 +754,7 @@ Data_082_5F30:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "you battle her at", $EF, $EE, "the Arena.", $F7
     db $F0
 
-Data_082_5F9A:: ; heuristic: target of a monotone pointer table; C0
+Data_082_5F9A:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Hello, our young", $F1
@@ -761,7 +765,7 @@ Data_082_5F9A:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Which family would", $EF, $EE, "you like to check?", $F7
     db $F0
 
-Data_082_6056:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6056:: ; heuristic: string; C0
     db $EA, $45, $90, $12, $44
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " heard that", $F1
@@ -775,7 +779,7 @@ Data_082_6056:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I'll be waiting", $EF, $EE, "for you.", $F7
     db $F0
 
-Data_082_616A:: ; heuristic: target of a monotone pointer table; C0
+Data_082_616A:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Those monsters", $F1
@@ -784,7 +788,7 @@ Data_082_616A:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Otherwise, I won't", $EF, $EE, "give you my key.", $F7
     db $F0
 
-Data_082_61DD:: ; heuristic: target of a monotone pointer table; C0
+Data_082_61DD:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Oh! Goodness!", $F1
@@ -795,7 +799,7 @@ Data_082_61DD:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I'll have to give", $EF, $EE, "you my Magic Key!", $F7
     db $F0
 
-Data_082_6295:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6295:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Obtain the other", $F1
@@ -807,13 +811,13 @@ Data_082_6295:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I will give you", $EF, $EE, "one more key.", $F7
     db $F0
 
-Data_082_6359:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6359:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 obtained the", $F1
     db "Brawn Key."
     db $E5, $58, $F7, $E9, $FF, $F0
 
-Data_082_6379:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6379:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 found a", $F1
     db "Magic Key.", $FA, $F7
@@ -821,7 +825,7 @@ Data_082_6379:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, $F9, "0 put the", $EF, $EE, "Magic Key back.", $F7
     db $F0
 
-Data_082_63CD:: ; heuristic: target of a monotone pointer table; C0
+Data_082_63CD:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Well, who would", $F1
@@ -833,7 +837,7 @@ Data_082_63CD:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "more of my beloved", $EF, $EE, "TinyMedals!", $F7
     db $F0
 
-Data_082_64AB:: ; heuristic: target of a monotone pointer table; C0
+Data_082_64AB:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " If you find even", $F1
@@ -841,7 +845,7 @@ Data_082_64AB:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "you can trade for", $EF, $EE, "rare monsters.", $F7
     db $F0
 
-Data_082_64F6:: ; heuristic: target of a monotone pointer table; C0
+Data_082_64F6:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Ah, the savior", $F1
@@ -852,7 +856,7 @@ Data_082_64F6:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Don't miss those", $EF, $EE, "opportunities!", $F7
     db $F0
 
-Data_082_659F:: ; heuristic: target of a monotone pointer table; C0
+Data_082_659F:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Didn't you save", $F1
@@ -861,14 +865,14 @@ Data_082_659F:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "to breed something", $EF, $EE, "with my FunkyBird?"
     db $FF, $F0
 
-Data_082_660E:: ; heuristic: target of a monotone pointer table; C0
+Data_082_660E:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Great! Let's", $F1
     db "give it a try!", $F7
     db $F0
 
-Data_082_662D:: ; heuristic: target of a monotone pointer table; C0
+Data_082_662D:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Oh. Too bad.", $F1
@@ -876,7 +880,7 @@ Data_082_662D:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I'll be here if you", $EF, $EE, "change your mind.", $F7
     db $F0
 
-Data_082_6678:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6678:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " When you breed", $F1
@@ -889,7 +893,7 @@ Data_082_6678:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "from your egg and", $EF, $EE, "mine too!", $F7
     db $F0
 
-Data_082_676F:: ; heuristic: target of a monotone pointer table; C0
+Data_082_676F:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Ah, you must be", $F1
@@ -899,7 +903,7 @@ Data_082_676F:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "with my Copycat?", $EF, $EE
     db $FF, $F0
 
-Data_082_67E9:: ; heuristic: target of a monotone pointer table; C0
+Data_082_67E9:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " May good fortune", $F1
@@ -907,7 +911,7 @@ Data_082_67E9:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Please, may we", $EF, $EE, "begin?", $F7
     db $F0
 
-Data_082_6828:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6828:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " May misfortune", $F1
@@ -915,7 +919,7 @@ Data_082_6828:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I'll await your", $EF, $EE, "reconsideration.", $F7
     db $F0
 
-Data_082_6869:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6869:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Generations of", $F1
@@ -926,7 +930,7 @@ Data_082_6869:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "attributes for the", $EF, $EE, "better.", $F7
     db $F0
 
-Data_082_690F:: ; heuristic: target of a monotone pointer table; C0
+Data_082_690F:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I didn't think", $F1
@@ -936,14 +940,14 @@ Data_082_690F:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "with my Andreal?", $EF, $EE
     db $FF, $F0
 
-Data_082_698B:: ; heuristic: target of a monotone pointer table; C0
+Data_082_698B:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Well, no time to", $F1
     db "lose! Quick!", $F7
     db $F0
 
-Data_082_69AD:: ; heuristic: target of a monotone pointer table; C0
+Data_082_69AD:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Oh", $A4, " That's so", $F1
@@ -951,7 +955,7 @@ Data_082_69AD:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Well, come back if", $EF, $EE, "you reconsider.", $F7
     db $F0
 
-Data_082_69F4:: ; heuristic: target of a monotone pointer table; C0
+Data_082_69F4:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Put accessories", $F1
@@ -959,7 +963,7 @@ Data_082_69F4:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "They can really", $EF, $EE, "help!", $F7
     db $F0
 
-Data_082_6A34:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6A34:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Welcome to the", $F1
@@ -972,14 +976,14 @@ Data_082_6A34:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Would you like to", $EF, $EE, "enter a tourny?", $F7
     db $F0
 
-Data_082_6B29:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6B29:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Welcome! Are you", $F1
     db "here to battle?", $F7
     db $F0
 
-Data_082_6B4E:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6B4E:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " As a pro master,", $F1
@@ -992,7 +996,7 @@ Data_082_6B4E:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Put on good shows", $EF, $EE, "for the audience!", $F7
     db $F0
 
-Data_082_6C52:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6C52:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Oops, it's not", $F1
@@ -1000,7 +1004,7 @@ Data_082_6C52:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Please excuse my", $EF, $EE, "rudeness, sweetie!", $F7
     db $F0
 
-Data_082_6C9D:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6C9D:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Listen, this is", $F1
@@ -1009,7 +1013,7 @@ Data_082_6C9D:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "for a MeteOrb.", $EF, $EE, $F7
     db $F0
 
-Data_082_6CF6:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6CF6:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Monsters that", $F1
@@ -1018,7 +1022,7 @@ Data_082_6CF6:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Conversely, a baby", $EF, $EE, "is obedient.", $F7
     db $F0
 
-Data_082_6D66:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6D66:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " When you're at", $F1
@@ -1028,7 +1032,7 @@ Data_082_6D66:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "battle within your", $EF, $EE, "party's abilities.", $F7
     db $F0
 
-Data_082_6DFB:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6DFB:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Are you perhaps", $F1
@@ -1037,21 +1041,21 @@ Data_082_6DFB:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Skeletor with one", $EF, $EE, "of your monsters?"
     db $FF, $F0
 
-Data_082_6E68:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6E68:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " OK! Let the", $F1
     db "breeding happen!", $F7
     db $F0
 
-Data_082_6E89:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6E89:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " No? Well, if we", $F1
     db "meet again", $A4, $F7
     db $F0
 
-Data_082_6EA9:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6EA9:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Breeding fire", $F1
@@ -1061,14 +1065,14 @@ Data_082_6EA9:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "never mind getting", $EF, $EE, "the other one.", $F7
     db $F0
 
-Data_082_6F32:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6F32:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " My frigid breath", $F1
     db "chills even souls.", $F7
     db $F0
 
-Data_082_6F5A:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6F5A:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " As I level up,", $F1
@@ -1076,7 +1080,7 @@ Data_082_6F5A:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "into the wickedly", $EF, $EE, "cold WhiteAir.", $F7
     db $F0
 
-Data_082_6FA5:: ; heuristic: target of a monotone pointer table; C0
+Data_082_6FA5:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Hey! You're still", $F1
@@ -1085,18 +1089,18 @@ Data_082_6FA5:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "breeding partner.", $EF, $EE, "Do you have one?"
     db $FF, $F0
 
-Data_082_7018:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7018:: ; heuristic: string; C0
     db $EA, $45, $90, $10, $35, $28, $24, $37, $99, $F1, $10, $32, $32, $27, $90, $24
     db $31, $36, $3A, $28, $35, $99, $F7, $F0
 
-Data_082_7030:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7030:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " That's too bad.", $F1
     db "It's a waste", $A4, $F7
     db $F0
 
-Data_082_7050:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7050:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Through breeding", $F1
@@ -1106,7 +1110,7 @@ Data_082_7050:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "breed high level", $EF, $EE, "monsters together.", $F7
     db $F0
 
-Data_082_70E5:: ; heuristic: target of a monotone pointer table; C0
+Data_082_70E5:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Some monsters", $F1
@@ -1117,7 +1121,7 @@ Data_082_70E5:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "problems can come", $EF, $EE, "in very handy.", $F7
     db $F0
 
-Data_082_719B:: ; heuristic: target of a monotone pointer table; C0
+Data_082_719B:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I", $42, "e learned how", $F1
@@ -1127,7 +1131,7 @@ Data_082_719B:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "This is my friend!", $EF, $EE, "Not food, Grizo!", $F7
     db $F0
 
-Data_082_7226:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7226:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " Have you become", $F1
@@ -1136,7 +1140,7 @@ Data_082_7226:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "prizes in the", $EF, $EE, "higher classes.", $F7
     db $F0
 
-Data_082_728D:: ; heuristic: target of a monotone pointer table; C0
+Data_082_728D:: ; heuristic: string; C0
     db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " My Mama gets so", $F1
@@ -1144,10 +1148,10 @@ Data_082_728D:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I", $42, "e only won the", $EF, $EE, "Kids", $95, " Class", $A4, $F7
     db $F0
 
-Data_082_72D5:: ; heuristic: target of a monotone pointer table; C0
+Data_082_72D5:: ; heuristic: string; C0
     db $EB
 
-Data_082_72D6:: ; heuristic: target of a monotone pointer table; C0
+Data_082_72D6:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " You have to pay", $F1
@@ -1158,7 +1162,7 @@ Data_082_72D6:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "the higher Classes", $EF, $EE, "too.", $F7
     db $F0
 
-Data_082_7385:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7385:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " I", $42, "e never heard", $F1
@@ -1167,7 +1171,7 @@ Data_082_7385:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Adventures cost a", $EF, $EE, "lot, I guess.", $F7
     db $F0
 
-Data_082_73E8:: ; heuristic: target of a monotone pointer table; C0
+Data_082_73E8:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " Oh? It's our", $F1
     db "savior ", $F9, "0!", $FA, $F7
@@ -1177,7 +1181,7 @@ Data_082_73E8:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "hardly ever comes", $EF, $EE, "home, the brat.", $F7
     db $F0
 
-Data_082_749F:: ; heuristic: target of a monotone pointer table; C0
+Data_082_749F:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " Oh? It's our", $F1
     db "savior ", $F9, "0!", $FA, $F7
@@ -1188,7 +1192,7 @@ Data_082_749F:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "could you capture", $EF, $EE, "him for us?"
     db $FF, $F0
 
-Data_082_7574:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7574:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " You will?", $F1
     db "I knew I could", $FA, $F7
@@ -1197,14 +1201,14 @@ Data_082_7574:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "He's greedy too.", $EF, $EE, "Be careful!", $F7
     db $F0
 
-Data_082_75FD:: ; heuristic: target of a monotone pointer table; C0
+Data_082_75FD:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " You refuse", $F1
     db "my request?", $FA, $F7
     db $EF, $EE, "After all we", $42, "e", $EF, $EE, "been through?", $F7
     db $F0
 
-Data_082_763D:: ; heuristic: target of a monotone pointer table; C0
+Data_082_763D:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " There is an", $F1
     db "evil master who", $FA, $F7
@@ -1213,7 +1217,7 @@ Data_082_763D:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "He's greedy too.", $EF, $EE, "Be careful!", $F7
     db $F0
 
-Data_082_76C7:: ; heuristic: target of a monotone pointer table; C0
+Data_082_76C7:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " Ah, you", $42, "e", $F1
     db "finally caught the", $FA, $F7
@@ -1223,13 +1227,13 @@ Data_082_76C7:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "It's not much, but", $EF, $EE, "here's your reward.", $F7
     db $F0
 
-Data_082_7788:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7788:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 received", $F1
     db "10,000G.", $F7
     db $F0
 
-Data_082_779E:: ; heuristic: target of a monotone pointer table; C0
+Data_082_779E:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " I was right", $F1
     db "to trust the great", $FA, $F7
@@ -1238,7 +1242,7 @@ Data_082_779E:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "I'll be sure to", $EF, $EE, "seek your help!", $F7
     db $F0
 
-Data_082_7836:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7836:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " Oh? It's our", $F1
     db "savior ", $F9, "0!", $FA, $F7
@@ -1250,7 +1254,7 @@ Data_082_7836:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "could you capture", $EF, $EE, "him for us?"
     db $FF, $F0
 
-Data_082_792B:: ; heuristic: target of a monotone pointer table; C0
+Data_082_792B:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " You will?", $F1
     db "I knew I could", $FA, $F7
@@ -1260,7 +1264,7 @@ Data_082_792B:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "battle.", $EF, $EE, "Be very cautious!", $F7
     db $F0
 
-Data_082_79D3:: ; heuristic: target of a monotone pointer table; C0
+Data_082_79D3:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " There is an", $F1
     db "evil master who", $FA, $F7
@@ -1270,13 +1274,13 @@ Data_082_79D3:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "battle.", $EF, $EE, "Be very cautious!", $F7
     db $F0
 
-Data_082_7A7C:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7A7C:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 received", $F1
     db "20,000G.", $F7
     db $F0
 
-Data_082_7A92:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7A92:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " You will?", $F1
     db "I knew I could", $FA, $F7
@@ -1286,7 +1290,7 @@ Data_082_7A92:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "power in battle.", $EF, $EE, "Beware of that!", $F7
     db $F0
 
-Data_082_7B41:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7B41:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " There is an", $F1
     db "evil master who", $FA, $F7
@@ -1296,13 +1300,13 @@ Data_082_7B41:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "power in battle.", $EF, $EE, "Beware of that!", $F7
     db $F0
 
-Data_082_7BF1:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7BF1:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 received", $F1
     db "30,000G.", $F7
     db $F0
 
-Data_082_7C07:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7C07:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " You will?", $F1
     db "I knew I could", $FA, $F7
@@ -1312,7 +1316,7 @@ Data_082_7C07:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "in battle.", $EF, $EE, "Be very wary!", $F7
     db $F0
 
-Data_082_7CB3:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7CB3:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " There is an", $F1
     db "evil master who", $FA, $F7
@@ -1322,13 +1326,13 @@ Data_082_7CB3:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "in battle.", $EF, $EE, "Be very wary!", $F7
     db $F0
 
-Data_082_7D60:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7D60:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 received", $F1
     db "40,000G.", $F7
     db $F0
 
-Data_082_7D76:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7D76:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "King", $A3, " I was right", $F1
     db "to trust the great", $FA, $F7
@@ -1337,7 +1341,7 @@ Data_082_7D76:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "that you are with", $EF, $EE, "us!", $F7
     db $F0
 
-Data_082_7E05:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7E05:: ; heuristic: string; C0
     db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " It would be our", $F1
@@ -1347,7 +1351,7 @@ Data_082_7E05:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Please bring them", $EF, $EE, "to justice here!", $F7
     db $F0
 
-Data_082_7E98:: ; heuristic: target of a monotone pointer table; C0
+Data_082_7E98:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $EA, "Kameha", $A3, " I", $42, "e gone", $F1
     db "to other worlds", $FA, $F7

@@ -5,123 +5,390 @@ SECTION "Bank 37", ROMX[$4000], BANK[$37]
 ; 17 call sites from 17 routines (e.g. DebugMessageTest_Update_Case10, PauseMenu_Items_Case02_Case07, PauseMenu_Items_Case02_Case09, PauseMenu_Items_Case02_Case0B, ...)
 BeginStringDisplay_Bank37::
 Func_037_4001:: ; address name
-    ld de, Data_037_4016
+    ld de, StringCategories_37_4016
     call BeginStringDisplay
     ret
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD, $01, $40, $CD, $11, $26, $C9
 
-; address loaded by BeginStringDisplay_Bank37
-Data_037_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0DC016, $B0
+; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; record: string list
+StringCategories_37_4016::
+Data_037_4016:: ; address name
+    dw StringList_37_401A ; id 0
+    dw StringList_37_4086 ; id 1
+
+; E-0217 (derived: category list of StringCategories_37_4016; one pointer per wStringIndex)
+; record: string
+StringList_37_401A::
+Data_037_401A:: ; address name
+    dw Data_037_40C6 ; id 0
+    dw Data_037_40D9 ; id 1
+    dw Data_037_40F1 ; id 2
+    dw Data_037_4108 ; id 3
+    dw Data_037_4120 ; id 4
+    dw Data_037_4139 ; id 5
+    dw Data_037_4150 ; id 6
+    dw Data_037_4166 ; id 7
+    dw Data_037_4177 ; id 8
+    dw Data_037_4190 ; id 9
+    dw Data_037_41AC ; id 10
+    dw Data_037_41CA ; id 11
+    dw Data_037_41DC ; id 12
+    dw Data_037_41E9 ; id 13
+    dw Data_037_4200 ; id 14
+    dw Data_037_4218 ; id 15
+    dw Data_037_4230 ; id 16
+    dw Data_037_4245 ; id 17
+    dw Data_037_425A ; id 18
+    dw Data_037_426F ; id 19
+    dw Data_037_4284 ; id 20
+    dw Data_037_4298 ; id 21
+    dw Data_037_42CE ; id 22
+    dw Data_037_4327 ; id 23
+    dw Data_037_433E ; id 24
+    dw Data_037_4354 ; id 25
+    dw Data_037_4365 ; id 26
+    dw Data_037_4379 ; id 27
+    dw Data_037_43BA ; id 28
+    dw Data_037_43EF ; id 29
+    dw Data_037_442A ; id 30
+    dw Data_037_4467 ; id 31
+    dw Data_037_44AB ; id 32
+    dw Data_037_44CD ; id 33
+    dw Data_037_44E3 ; id 34
+    dw Data_037_4506 ; id 35
+    dw Data_037_4527 ; id 36
+    dw Data_037_453C ; id 37
+    dw Data_037_4559 ; id 38
+    dw Data_037_457B ; id 39
+    dw Data_037_4590 ; id 40
+    dw Data_037_45A9 ; id 41
+    dw Data_037_45DB ; id 42
+    dw Data_037_4626 ; id 43
+    dw Data_037_463A ; id 44
+    dw Data_037_466B ; id 45
+    dw Data_037_46AF ; id 46
+    dw Data_037_46C4 ; id 47
+    dw Data_037_46E8 ; id 48
+    dw Data_037_46FC ; id 49
+    dw Data_037_471E ; id 50
+    dw Data_037_473A ; id 51
+    dw Data_037_474C ; id 52
+    dw Data_037_4770 ; id 53
+
+; E-0217 (derived: category list of StringCategories_37_4016; one pointer per wStringIndex)
+; record: string
+StringList_37_4086::
+Data_037_4086:: ; address name
+    dw Data_037_47A6 ; id 0
+    dw Data_037_47B3 ; id 1
+    dw Data_037_47C1 ; id 2
+    dw Data_037_47DD ; id 3
+    dw Data_037_47FC ; id 4
+    dw Data_037_481A ; id 5
+    dw Data_037_4838 ; id 6
+    dw Data_037_4851 ; id 7
+    dw Data_037_4862 ; id 8
+    dw Data_037_4879 ; id 9
+    dw Data_037_4892 ; id 10
+    dw Data_037_48A4 ; id 11
+    dw Data_037_48BE ; id 12
+    dw Data_037_48D9 ; id 13
+    dw Data_037_48EF ; id 14
+    dw Data_037_492B ; id 15
+    dw Data_037_495B ; id 16
+    dw Data_037_4977 ; id 17
+    dw Data_037_49B4 ; id 18
+    dw Data_037_49CB ; id 19
+    dw Data_037_49EA ; id 20
+    dw Data_037_4A08 ; id 21
+    dw Data_037_4A2C ; id 22
+    dw Data_037_4A4A ; id 23
+    dw Data_037_4A69 ; id 24
+    dw Data_037_4A89 ; id 25
+    dw Data_037_4A9A ; id 26
+    dw Data_037_4ABC ; id 27
+    dw Data_037_4ADD ; id 28
+    dw RunLinkExchangeState_44D6_Case01_Sub01 ; id 29
+    dw RunLinkExchangeState_44D6_Case01_Sub01 ; id 30
+    dw RunLinkExchangeState_44D6_Case01_Sub01 ; id 31
+
+Data_037_40C6:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "The ", $F9, "W", $F1
     db "shattered!", $F7
-    db $F0, $F9, "0 tried using", $F1
+    db $F0
+
+Data_037_40D9:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 tried using", $F1
     db "the ", $F9, "W.", $F7
-    db $F0, "But nothing", $F1
+    db $F0
+
+Data_037_40F1:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "But nothing", $F1
     db "happened!", $F7
-    db $F0, $F9, "0 used the", $F1
+    db $F0
+
+Data_037_4108:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 used the", $F1
     db $F9, "W on", $F7
     db $F2, $F9, "G!", $F7
-    db $F0, $F9, "G's wounds", $F1
+    db $F0
+
+Data_037_4120:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G's wounds", $F1
     db "were healed!", $F7
-    db $F0, $F9, "0 held aloft", $F1
+    db $F0
+
+Data_037_4139:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 held aloft", $F1
     db "the ", $F9, "W!", $F7
-    db $F0, $F9, "0 scattered", $F1
+    db $F0
+
+Data_037_4150:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 scattered", $F1
     db "the ", $F9, "W!", $F7
-    db $F0, $F9, "G", $F1
+    db $F0
+
+Data_037_4166:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G", $F1
     db "regained MP.", $F7
-    db $F0, $F9, "G was cured of", $F1
+    db $F0
+
+Data_037_4177:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G was cured of", $F1
     db "poison.", $F7
-    db $F0, $F9, "G was cured of", $F1
+    db $F0
+
+Data_037_4190:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G was cured of", $F1
     db "paralysis.", $F7
-    db $F0, $F9, "G snapped", $F1
+    db $F0
+
+Data_037_41AC:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G snapped", $F1
     db "out of confusion.", $F7
-    db $F0, $F9, "G was", $F1
+    db $F0
+
+Data_037_41CA:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G was", $F1
     db "uncursed.", $F7
-    db $F0, $F9, "G woke up.", $F7
-    db $F0, $F9, "G came", $F1
+    db $F0
+
+Data_037_41DC:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G woke up.", $F7
+    db $F0
+
+Data_037_41E9:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G came", $F1
     db "back to life.", $F7
-    db $F0, $F9, "G's max.HP", $F1
+    db $F0
+
+Data_037_4200:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G's max.HP", $F1
     db "rose by ", $F9, "m!", $F7
-    db $F0, $F9, "G's max.MP", $F1
+    db $F0
+
+Data_037_4218:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G's max.MP", $F1
     db "rose by ", $F9, "m!", $F7
-    db $F0, $F9, "G's ATK", $F1
+    db $F0
+
+Data_037_4230:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G's ATK", $F1
     db "rose by ", $F9, "m!", $F7
-    db $F0, $F9, "G's DEF", $F1
+    db $F0
+
+Data_037_4245:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G's DEF", $F1
     db "rose by ", $F9, "m!", $F7
-    db $F0, $F9, "G's AGL", $F1
+    db $F0
+
+Data_037_425A:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G's AGL", $F1
     db "rose by ", $F9, "m!", $F7
-    db $F0, $F9, "G's INT", $F1
+    db $F0
+
+Data_037_426F:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G's INT", $F1
     db "rose by ", $F9, "m!", $F7
-    db $F0, $F9, "0 gave ", $F9, "G", $F1
+    db $F0
+
+Data_037_4284:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 gave ", $F9, "G", $F1
     db "the ", $F9, "W.", $F7
-    db $F0, $F9, "G happily ate", $F1
+    db $F0
+
+Data_037_4298:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G happily ate", $F1
     db "the treat.", $F7
     db $F2, $F9, "G's affection", $F1
     db "for "
     db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " rose!", $F7
-    db $F0, $F9, "G fearfully", $F1
+    db $F0
+
+Data_037_42CE:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G fearfully", $F1
     db "ate the foul mess.", $F7
     db $F2, $F9, "G glared with", $F1
     db "a sour expression.", $F7
     db $F2, $F9, "G became", $F1
     db "poisoned.", $F7
-    db $F0, $F9, "0 held aloft", $F1
+    db $F0
+
+Data_037_4327:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 held aloft", $F1
     db "the ", $F9, "W!", $F7
-    db $F0, $F9, "0 tossed the", $F1
+    db $F0
+
+Data_037_433E:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 tossed the", $F1
     db $F9, "W up.", $F7
-    db $F0, $F9, "0 used the", $F1
+    db $F0
+
+Data_037_4354:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 used the", $F1
     db $F9, "W!", $F7
-    db $F0, $F9, "0 read ", $F9, "G", $F1
+    db $F0
+
+Data_037_4365:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 read ", $F9, "G", $F1
     db "the ", $F9, "W.", $F7
-    db $F0, "A stirring tale of", $F1
+    db $F0
+
+Data_037_4379:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A stirring tale of", $F1
     db "honor, sacrifice", $F7
     db $F2, "and heroism made", $F1
     db $F9, "G brave.", $F7
-    db $F0, "A bloodcurdling", $F1
+    db $F0
+
+Data_037_43BA:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A bloodcurdling", $F1
     db "tale of horror", $F7
     db $F2, "turned ", $F9, "G", $F1
     db "cowardly.", $F7
-    db $F0, "A heartwarming", $F1
+    db $F0
+
+Data_037_43EF:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A heartwarming", $F1
     db "tale of selfless", $F7
     db $F2, "compassion made", $F1
     db $F9, "G kind.", $F7
-    db $F0, "A shameless tale", $F1
+    db $F0
+
+Data_037_442A:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A shameless tale", $F1
     db "of greed, lies and", $F7
     db $F2, "deception made", $F1
     db $F9, "G sly.", $F7
-    db $F0, "A practical guide", $F1
+    db $F0
+
+Data_037_4467:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A practical guide", $F1
     db "on thinking in a", $F7
     db $F2, "rational manner", $F1
     db "made ", $F9, "G smart.", $F7
-    db $F0, "A hilarious tale", $F1
+    db $F0
+
+Data_037_44AB:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A hilarious tale", $F1
     db "made ", $F9, "G simple.", $F7
     db $F0
+
+Data_037_44CD:: ; heuristic: string; C0
     db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " held aloft", $F1
     db "the ", $F9, "W!", $F7
-    db $F0, "The Orb glowed", $F1
+    db $F0
+
+Data_037_44E3:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "The Orb glowed", $F1
     db "with a warm light.", $F7
-    db $F0, "The presence of", $F1
+    db $F0
+
+Data_037_4506:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "The presence of", $F1
     db "monsters faded.", $F7
-    db $F0, $F9, "0 strummed", $F1
+    db $F0
+
+Data_037_4527:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 strummed", $F1
     db "the ", $F9, "W!", $F7
-    db $F0, "Want to record", $F1
-    db "your journey?", $F0, "Your progress has", $F1
+    db $F0
+
+Data_037_453C:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Want to record", $F1
+    db "your journey?", $F0
+
+Data_037_4559:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Your progress has", $F1
     db "been recorded.", $F7
-    db $F0, $F9, "G equipped", $F1
+    db $F0
+
+Data_037_457B:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G equipped", $F1
     db "the ", $F9, "W.", $F7
-    db $F0, $F9, "m's wounds", $F1
+    db $F0
+
+Data_037_4590:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "m's wounds", $F1
     db "were healed.", $F7
-    db $F0, $F9, "m's wounds", $F1
+    db $F0
+
+Data_037_45A9:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "m's wounds", $F1
     db "were healed.", $F7
     db $F2, $F9, "'r's wounds", $F1
     db "were healed.", $F7
-    db $F0, $F9, "m's wounds", $F1
+    db $F0
+
+Data_037_45DB:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "m's wounds", $F1
     db "were healed.", $F7
     db $F2, $F9, "'r's wounds", $F1
     db "were healed.", $F7
@@ -130,34 +397,78 @@ Data_037_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "'s wounds", $F1
     db "were healed.", $F7
-    db $F0, $F9, "0 gripped", $F1
+    db $F0
+
+Data_037_4626:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 gripped", $F1
     db "the ", $F9, "W.", $F7
-    db $F0, "The MarkStaff", $F1
+    db $F0
+
+Data_037_463A:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "The MarkStaff", $F1
     db "was sensed at", $F7
     db $F2, $F9, "0", $A3, " ", $F9, "G and", $F1
     db $F9, "W", $A3, " ", $F9, "m.", $F7
-    db $F0, "The MarkStaff was", $F1
+    db $F0
+
+Data_037_466B:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "The MarkStaff was", $F1
     db "not sensed.", $F7
     db $F2, "It doesn't appear", $F1
     db "to have been used.", $F7
-    db $F0, $F9, "0 put down", $F1
+    db $F0
+
+Data_037_46AF:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 put down", $F1
     db "the ", $F9, "W.", $F7
-    db $F0, "The Guide Bell's", $F1
+    db $F0
+
+Data_037_46C4:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "The Guide Bell's", $F1
     db "clear note echoed!", $F7
-    db $F0, $F9, "0 gave ", $F9, "G", $F1
+    db $F0
+
+Data_037_46E8:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 gave ", $F9, "G", $F1
     db "the ", $F9, "W.", $F7
-    db $F0, $F9, "G switched its", $F1
+    db $F0
+
+Data_037_46FC:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G switched its", $F1
     db $F9, "m with the", $F7
     db $F2, $F9, "W.", $F7
-    db $F0, $A4, "But that monster", $F1
+    db $F0
+
+Data_037_471E:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $A4, "But that monster", $F1
     db "is dead", $A4, $F7
-    db $F0, $F9, "m was", $F1
+    db $F0
+
+Data_037_473A:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "m was", $F1
     db "uncursed.", $F7
-    db $F0, $F9, "m was", $F1
+    db $F0
+
+Data_037_474C:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "m was", $F1
     db "uncursed.", $F7
     db $F2, $F9, "'r was", $F1
     db "uncursed.", $F7
-    db $F0, $F9, "m was", $F1
+    db $F0
+
+Data_037_4770:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "m was", $F1
     db "uncursed.", $F7
     db $F2, $F9, "'r was", $F1
     db "uncursed.", $F7
@@ -166,75 +477,189 @@ Data_037_4016:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " was", $F1
     db "uncursed.", $F7
-    db $F0, $F9, "0 cast", $F1
+    db $F0
+
+Data_037_47A6:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 cast", $F1
     db $F9, "W!", $F7
-    db $F0, $F9, "0 whistled!", $F7
-    db $F0, $F9, "0 released its", $F1
+    db $F0
+
+Data_037_47B3:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 whistled!", $F7
+    db $F0
+
+Data_037_47C1:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 released its", $F1
     db "Pheromone.", $F7
-    db $F0, $F9, "0 scanned the", $F1
+    db $F0
+
+Data_037_47DD:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 scanned the", $F1
     db "surroundings.", $FA, $F7
     db $F0
+
+Data_037_47FC:: ; heuristic: string; C0
     db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " asked ", $F9, "0", $F1
     db "to run an errand.", $F7
-    db $F0, $F9, "0 scanned the", $F1
+    db $F0
+
+Data_037_481A:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 scanned the", $F1
     db "area sharply.", $F7
-    db $F0, $F9, "G's wounds", $F1
+    db $F0
+
+Data_037_4838:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G's wounds", $F1
     db "were healed!", $F7
-    db $F0, $F9, "G regained MP!", $F7
-    db $F0, $F9, "G came back to", $F1
+    db $F0
+
+Data_037_4851:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G regained MP!", $F7
+    db $F0
+
+Data_037_4862:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G came back to", $F1
     db "life!", $F7
-    db $F0, $F9, "G was cured of", $F1
+    db $F0
+
+Data_037_4879:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G was cured of", $F1
     db "poison.", $F7
-    db $F0, $F9, "G was", $F1
+    db $F0
+
+Data_037_4892:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G was", $F1
     db "uncursed.", $F7
-    db $F0, $F9, "0 whispered in", $F1
+    db $F0
+
+Data_037_48A4:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 whispered in", $F1
     db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "'s ear.", $FA, $F7
-    db $F0, $F9, "0", $A3, " There are", $F1
+    db $F0
+
+Data_037_48BE:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0", $A3, " There are", $F1
     db $F9, "m around.", $FA, $F7
-    db $F0, $F9, "0 finished", $F1
+    db $F0
+
+Data_037_48D9:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 finished", $F1
     db "talking.", $F7
-    db $F0, $F9, "0 ran off with", $F1
+    db $F0
+
+Data_037_48EF:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 ran off with", $F1
     db "100G.", $FA, $F7
     db $F2, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $F1
     db $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $A4, $FA, $F7
-    db $F0, $F9, "0 returned", $F1
+    db $F0
+
+Data_037_492B:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 returned", $F1
     db "with an item.", $FA, $F7
     db $F2
     db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " obtained one", $F1
     db $F9, "m.", $F7
-    db $F0, $F9, "0 came back", $F1
+    db $F0
+
+Data_037_495B:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 came back", $F1
     db "with nothing", $A4, $F7
-    db $F0, $F9, "0 sensed a", $F1
+    db $F0
+
+Data_037_4977:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "0 sensed a", $F1
     db "treasure nearby.", $FA, $F7
     db $F2, "It appears to be", $F1
     db "very close.", $F7
-    db $F0, "But nothing", $F1
+    db $F0
+
+Data_037_49B4:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "But nothing", $F1
     db "happened.", $F7
-    db $F0, $F9, "G did not come", $F1
+    db $F0
+
+Data_037_49CB:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $F9, "G did not come", $F1
     db "back to life", $A4, $F7
-    db $F0, "But it couldn't be", $F1
+    db $F0
+
+Data_037_49EA:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "But it couldn't be", $F1
     db "used here.", $F7
-    db $F0, "But there were no", $F1
+    db $F0
+
+Data_037_4A08:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "But there were no", $F1
     db "monsters nearby.", $F7
-    db $F0, "But there is no", $F1
+    db $F0
+
+Data_037_4A2C:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "But there is no", $F1
     db "room for it", $A4, $F7
-    db $F0, "But there wasn't", $F1
+    db $F0
+
+Data_037_4A4A:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "But there wasn't", $F1
     db "enough money.", $F7
-    db $F0, "There are no", $F1
+    db $F0
+
+Data_037_4A69:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "There are no", $F1
     db "treasures nearby.", $F7
-    db $F0, "Not enough MP!", $F1
+    db $F0
+
+Data_037_4A89:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Not enough MP!", $F1
     db $F7
-    db $F0, "A dead monster", $F1
+    db $F0
+
+Data_037_4A9A:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "A dead monster", $F1
     db "can't use a skill.", $F7
-    db $F0, "That can't be used", $F1
+    db $F0
+
+Data_037_4ABC:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "That can't be used", $F1
     db "in the field.", $F7
-    db $F0, "The surroundings", $F1
+    db $F0
+
+Data_037_4ADD:: ; heuristic: string; C0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "The surroundings", $F1
     db "became clear.", $F7
     db $F0
 
@@ -3459,7 +3884,7 @@ Func_037_5DBC:: ; address name
     push hl
     dec hl
     ld a, [hl]
-    ld hl, Data_037_5FC7
+    ld hl, LinkCodeToSpeciesTable
     ld c, a
     ld b, $00
     add hl, bc
@@ -3496,7 +3921,7 @@ Jump_037_5DEE::
     cp a, $FF
     jr z, Jump_037_5DFF
     push hl
-    ld hl, Data_037_63D3
+    ld hl, LinkSkillMapTable_A
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -3735,7 +4160,7 @@ Jump_037_5EFA::
     cp a, $FF
     jr z, Jump_037_5F0B
     push hl
-    ld hl, Data_037_62F5
+    ld hl, LinkSkillMapTable_B
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -3911,82 +4336,1020 @@ Func_037_5FB8:: ; address name
     pop af
     ret
 
-; address loaded by FamilyNibbleOrSpeciesFamily
-Data_037_5FC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0DDFC7, $85
-    dw Data_037_6100
-    dw Data_037_6200
-    dw Data_037_6300
-    dw Data_037_6A00
-    dw Data_037_6B00
-    dw Data_037_6C00
-    dw Data_037_6D00
-    dw Data_037_6E00
-    dw Data_037_6F00
-    dw Data_037_7000
-    dw Data_037_7100
-    dw Data_037_7300
-    dw Data_037_7500
-    dw Data_037_7600
-    dw Data_037_7700
-    dw Data_037_7800
-    dw Data_037_7900
-    dw Data_037_7B00
-    dw Data_037_7C00
-    dw Data_037_7D00
-    dw Data_037_7F00
-    INCBIN "dwm2-cobi-us.gbc", $0DE076, $8A
+; E-0217 (C1: FamilyNibbleOrSpeciesFamily reads the word at $5FC7 + 2 * code to look up a species' family while UnpackLinkRecordToWorkBuf unpacks a record; for all 215 codes, SpeciesToLinkCodeTable[species] gives the code back (C2 for the pairing)).
+; record: species for this link code
+LinkCodeToSpeciesTable::
+Data_037_5FC7:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0002 ; id 1 SpotSlime
+    dw $0003 ; id 2 WingSlime
+    dw $0004 ; id 3 TreeSlime
+    dw $0005 ; id 4 Snaily
+    dw $0006 ; id 5 SlimeNite
+    dw $0007 ; id 6 Babble
+    dw $0008 ; id 7 BoxSlime
+    dw $000A ; id 8 Slime
+    dw $000B ; id 9 Healer
+    dw $000C ; id 10 FangSlime
+    dw $000D ; id 11 RockSlime
+    dw $000E ; id 12 SlimeBorg
+    dw $000F ; id 13 Slabbit
+    dw $0013 ; id 14 SpotKing
+    dw $0010 ; id 15 KingSlime
+    dw $0011 ; id 16 Metaly
+    dw $0012 ; id 17 Metabble
+    dw $0017 ; id 18 MetalKing
+    dw $0018 ; id 19 GoldSlime
+    dw $0024 ; id 20 DragonKid
+    dw $0025 ; id 21 Tortragon
+    dw $0026 ; id 22 Pteranod
+    dw $0027 ; id 23 Gasgon
+    dw $0028 ; id 24 FairyDrak
+    dw $0029 ; id 25 LizardMan
+    dw $002A ; id 26 Poisongon
+    dw $002B ; id 27 Swordgon
+    dw $002D ; id 28 Dragon
+    dw $002E ; id 29 MiniDrak
+    dw $002F ; id 30 MadDragon
+    dw $0030 ; id 31 Rayburn
+    dw $0031 ; id 32 Chamelgon
+    dw $0032 ; id 33 LizardFly
+    dw $0033 ; id 34 Andreal
+    dw $0034 ; id 35 KingCobra
+    dw $0037 ; id 36 Spikerous
+    dw $0038 ; id 37 GreatDrak
+    dw $0039 ; id 38 Crestpent
+    dw $003A ; id 39 WingSnake
+    dw $003B ; id 40 Coatol
+    dw $003C ; id 41 Orochi
+    dw $003D ; id 42 BattleRex
+    dw $003E ; id 43 SkyDragon
+    dw $0040 ; id 44 Divinegon
+    dw $0047 ; id 45 Tonguella
+    dw $0048 ; id 46 Almiraj
+    dw $0049 ; id 47 CatFly
+    dw $004A ; id 48 PillowRat
+    dw $004B ; id 49 Saccer
+    dw $004C ; id 50 GulpBeast
+    dw $004D ; id 51 Skullroo
+    dw $004E ; id 52 WindBeast
+    dw $0050 ; id 53 Antbear
+    dw $0051 ; id 54 SuperTen
+    dw $0052 ; id 55 IronTurt
+    dw $0053 ; id 56 Mommonja
+    dw $0054 ; id 57 HammerMan
+    dw $0055 ; id 58 Grizzly
+    dw $0056 ; id 59 Yeti
+    dw $005A ; id 60 MadGopher
+    dw $005B ; id 61 FairyRat
+    dw $005C ; id 62 Unicorn
+    dw $005D ; id 63 Goategon
+    dw $005E ; id 64 WildApe
+    dw $005F ; id 65 Trumpeter
+    dw $0060 ; id 66 KingLeo
+    dw $0061 ; id 67 DarkHorn
+    dw $0062 ; id 68 MadCat
+    dw $0063 ; id 69 BigEye
+    dw $006A ; id 70 Picky
+    dw $006B ; id 71 Wyvern
+    dw $006C ; id 72 BullBird
+    dw $006D ; id 73 Florajay
+    dw $006E ; id 74 DuckKite
+    dw $006F ; id 75 MadPecker
+    dw $0070 ; id 76 MadRaven
+    dw $0071 ; id 77 MistyWing
+    dw $0073 ; id 78 Dracky
+    dw $0075 ; id 79 BigRoost
+    dw $0076 ; id 80 StubBird
+    dw $0077 ; id 81 LandOwl
+    dw $0078 ; id 82 MadGoose
+    dw $0079 ; id 83 MadCondor
+    dw $007B ; id 84 Blizzardy
+    dw $007C ; id 85 Phoenix
+    dw $007D ; id 86 ZapBird
+    dw $007F ; id 87 WhipBird
+    dw $0080 ; id 88 FunkyBird
+    dw $0081 ; id 89 RainHawk
+    dw $008D ; id 90 MadPlant
+    dw $008E ; id 91 FireWeed
+    dw $008F ; id 92 FloraMan
+    dw $0090 ; id 93 WingTree
+    dw $0091 ; id 94 CactiBall
+    dw $0092 ; id 95 Gulpple
+    dw $0093 ; id 96 Toadstool
+    dw $0094 ; id 97 AmberWeed
+    dw $0096 ; id 98 Stubsuck
+    dw $0097 ; id 99 Oniono
+    dw $0098 ; id 100 DanceVegi
+    dw $0099 ; id 101 TreeBoy
+    dw $009B ; id 102 FaceTree
+    dw $009C ; id 103 HerbMan
+    dw $009D ; id 104 BeanMan
+    dw $009E ; id 105 EvilSeed
+    dw $009F ; id 106 ManEater
+    dw $00A0 ; id 107 Snapper
+    dw $00A2 ; id 108 Rosevine
+    dw $00A5 ; id 109 Watabou
+    dw $00B0 ; id 110 GiantSlug
+    dw $00B1 ; id 111 Catapila
+    dw $00B2 ; id 112 Gophecada
+    dw $00B3 ; id 113 Butterfly
+    dw $00B4 ; id 114 WeedBug
+    dw $00B5 ; id 115 GiantWorm
+    dw $00B6 ; id 116 Lipsy
+    dw $00B7 ; id 117 StagBug
+    dw $00B9 ; id 118 ArmyAnt
+    dw $00BA ; id 119 GoHopper
+    dw $00BB ; id 120 TailEater
+    dw $00BC ; id 121 ArmorPede
+    dw $00BD ; id 122 Eyeder
+    dw $00BE ; id 123 GiantMoth
+    dw $00BF ; id 124 Droll
+    dw $00C0 ; id 125 ArmyCrab
+    dw $00C1 ; id 126 MadHornet
+    dw $00C4 ; id 127 HornBeet
+    dw $00C6 ; id 128 Armorpion
+    dw $00C7 ; id 129 Digster
+    dw $00D3 ; id 130 Pixy
+    dw $00DE ; id 131 ArcDemon
+    dw $00D5 ; id 132 AgDevil
+    dw $00D6 ; id 133 Demonite
+    dw $00D7 ; id 134 DarkEye
+    dw $00D8 ; id 135 EyeBall
+    dw $00D9 ; id 136 SkulRider
+    dw $00DA ; id 137 EvilBeast
+    dw $00DC ; id 138 1EyeClown
+    dw $00DD ; id 139 Gremlin
+    dw $00D4 ; id 140 MedusaEye
+    dw $00DF ; id 141 Lionex
+    dw $00E0 ; id 142 GoatHorn
+    dw $00E1 ; id 143 Orc
+    dw $00E2 ; id 144 Ogre
+    dw $00E3 ; id 145 GateGuard
+    dw $00E4 ; id 146 ChopClown
+    dw $00E6 ; id 147 Grendal
+    dw $00E7 ; id 148 Akubar
+    dw $00E8 ; id 149 MadKnight
+    dw $00EA ; id 150 Gigantes
+    dw $00EB ; id 151 Centasaur
+    dw $00EC ; id 152 EvilArmor
+    dw $00ED ; id 153 Jamirus
+    dw $00EE ; id 154 Durran
+    dw $00F6 ; id 155 Spooky
+    dw $00F7 ; id 156 Skullgon
+    dw $00F8 ; id 157 PutrePup
+    dw $00F9 ; id 158 RotRaven
+    dw $00FA ; id 159 Mummy
+    dw $00FB ; id 160 DarkCrab
+    dw $00FC ; id 161 DeadNite
+    dw $00FD ; id 162 Shadow
+    dw $00FF ; id 163 Hork
+    dw $0100 ; id 164 Mudron
+    dw $0101 ; id 165 NiteWhip
+    dw $010E ; id 166 MadSpirit
+    dw $0102 ; id 167 WindMerge
+    dw $0103 ; id 168 Reaper
+    dw $0107 ; id 169 DeadNoble
+    dw $0108 ; id 170 WhiteKing
+    dw $0109 ; id 171 BoneSlave
+    dw $010A ; id 172 Skeletor
+    dw $010B ; id 173 Servant
+    dw $010D ; id 174 Copycat
+    dw $0119 ; id 175 JewelBag
+    dw $011A ; id 176 EvilWand
+    dw $011B ; id 177 MadCandle
+    dw $011C ; id 178 CoilBird
+    dw $011D ; id 179 Facer
+    dw $011E ; id 180 SpikyBoy
+    dw $011F ; id 181 MadMirror
+    dw $0120 ; id 182 RogueNite
+    dw $0122 ; id 183 Goopi
+    dw $0123 ; id 184 Voodoll
+    dw $0124 ; id 185 MetalDrak
+    dw $0125 ; id 186 Balzak
+    dw $0126 ; id 187 SabreMan
+    dw $0127 ; id 188 CurseLamp
+    dw $0129 ; id 189 Roboster
+    dw $012B ; id 190 EvilPot
+    dw $012C ; id 191 Gismo
+    dw $012D ; id 192 LavaMan
+    dw $012E ; id 193 IceMan
+    dw $012F ; id 194 Mimic
+    dw $0131 ; id 195 MudDoll
+    dw $0132 ; id 196 Golem
+    dw $0133 ; id 197 StoneMan
+    dw $0134 ; id 198 BombCrag
+    dw $0135 ; id 199 GoldGolem
+    dw $015F ; id 200 DracoLord
+    dw $0160 ; id 201 DracoLord
+    dw $0162 ; id 202 Hargon
+    dw $0163 ; id 203 Sidoh
+    dw $0165 ; id 204 Baramos
+    dw $0166 ; id 205 Zoma
+    dw $0168 ; id 206 Pizzaro
+    dw $016A ; id 207 Esterk
+    dw $016B ; id 208 Mirudraas
+    dw $016C ; id 209 Mirudraas
+    dw $016D ; id 210 Mudou
+    dw $016E ; id 211 DeathMore
+    dw $016F ; id 212 DeathMore
+    dw $0170 ; id 213 DeathMore
+    dw $0171 ; id 214 Darkdrium
 
-Data_037_6100:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0DE100, $5A
-    dw Data_037_6201
-    dw Data_037_6301
-    dw $6501
-    dw Data_037_6601
-    dw Data_037_6801
-    dw Data_037_6A01
-    dw Data_037_6B01
-    dw Data_037_6C01
-    dw Data_037_6D01
-    dw Data_037_6E01
-    dw Data_037_6F01
-    dw Data_037_7001
-    dw Data_037_7101
-    INCBIN "dwm2-cobi-us.gbc", $0DE174, $8C
+; E-0217 (C1: AppendTable6175ByteForWordAtDE appends the byte at $6175 + species word; 384 bytes end at LinkSkillMapTable_B; the first two bytes are also the last word of LinkCodeToSpeciesTable's range end).
+; record: link code for this species (0 = none)
+SpeciesToLinkCodeTable::
+Data_037_6175:: ; address name
+    db $00 ; id 0
+    db $00 ; id 1 DrakSlime
+    db $01 ; id 2 SpotSlime
+    db $02 ; id 3 WingSlime
+    db $03 ; id 4 TreeSlime
+    db $04 ; id 5 Snaily
+    db $05 ; id 6 SlimeNite
+    db $06 ; id 7 Babble
+    db $07 ; id 8 BoxSlime
+    db $04 ; id 9 PearlGel
+    db $08 ; id 10 Slime
+    db $09 ; id 11 Healer
+    db $0A ; id 12 FangSlime
+    db $0B ; id 13 RockSlime
+    db $0C ; id 14 SlimeBorg
+    db $0D ; id 15 Slabbit
+    db $0F ; id 16 KingSlime
+    db $10 ; id 17 Metaly
+    db $11 ; id 18 Metabble
+    db $0E ; id 19 SpotKing
+    db $03 ; id 20 TropicGel
+    db $0D ; id 21 MimeSlime
+    db $12 ; id 22 HaloSlime
+    db $12 ; id 23 MetalKing
+    db $13 ; id 24 GoldSlime
+    db $13 ; id 25 GranSlime
+    db $12 ; id 26 WonderEgg
+    db $00 ; id 27 Butch
+    db $00 ; id 28 ?
+    db $00 ; id 29 ?
+    db $00 ; id 30 ?
+    db $00 ; id 31 ?
+    db $00 ; id 32 ?
+    db $00 ; id 33 ?
+    db $00 ; id 34 ?
+    db $00 ; id 35 ?
+    db $14 ; id 36 DragonKid
+    db $15 ; id 37 Tortragon
+    db $16 ; id 38 Pteranod
+    db $17 ; id 39 Gasgon
+    db $18 ; id 40 FairyDrak
+    db $19 ; id 41 LizardMan
+    db $1A ; id 42 Poisongon
+    db $1B ; id 43 Swordgon
+    db $1E ; id 44 Drygon
+    db $1C ; id 45 Dragon
+    db $1D ; id 46 MiniDrak
+    db $1E ; id 47 MadDragon
+    db $1F ; id 48 Rayburn
+    db $20 ; id 49 Chamelgon
+    db $21 ; id 50 LizardFly
+    db $22 ; id 51 Andreal
+    db $23 ; id 52 KingCobra
+    db $1F ; id 53 Vampirus
+    db $16 ; id 54 SnakeBat
+    db $24 ; id 55 Spikerous
+    db $25 ; id 56 GreatDrak
+    db $26 ; id 57 Crestpent
+    db $27 ; id 58 WingSnake
+    db $28 ; id 59 Coatol
+    db $29 ; id 60 Orochi
+    db $2A ; id 61 BattleRex
+    db $2B ; id 62 SkyDragon
+    db $29 ; id 63 Serpentia
+    db $2C ; id 64 Divinegon
+    db $2A ; id 65 Orligon
+    db $2A ; id 66 GigaDraco
+    db $00 ; id 67 ?
+    db $00 ; id 68 ?
+    db $00 ; id 69 ?
+    db $00 ; id 70 ?
+    db $2D ; id 71 Tonguella
+    db $2E ; id 72 Almiraj
+    db $2F ; id 73 CatFly
+    db $30 ; id 74 PillowRat
+    db $31 ; id 75 Saccer
+    db $32 ; id 76 GulpBeast
+    db $33 ; id 77 Skullroo
+    db $34 ; id 78 WindBeast
+    db $34 ; id 79 Beavern
+    db $35 ; id 80 Antbear
+    db $36 ; id 81 SuperTen
+    db $37 ; id 82 IronTurt
+    db $38 ; id 83 Mommonja
+    db $39 ; id 84 HammerMan
+    db $3A ; id 85 Grizzly
+    db $3B ; id 86 Yeti
+    db $2F ; id 87 ArrowDog
+    db $2D ; id 88 NoctoKing
+    db $39 ; id 89 BeastNite
+    db $3C ; id 90 MadGopher
+    db $3D ; id 91 FairyRat
+    db $3E ; id 92 Unicorn
+    db $3F ; id 93 Goategon
+    db $40 ; id 94 WildApe
+    db $41 ; id 95 Trumpeter
+    db $42 ; id 96 KingLeo
+    db $43 ; id 97 DarkHorn
+    db $44 ; id 98 MadCat
+    db $45 ; id 99 BigEye
+    db $44 ; id 100 Gorago
+    db $2F ; id 101 CatMage
+    db $2D ; id 102 Dumbira
+    db $00 ; id 103 ?
+    db $00 ; id 104 ?
+    db $00 ; id 105 ?
+    db $46 ; id 106 Picky
+    db $47 ; id 107 Wyvern
+    db $48 ; id 108 BullBird
+    db $49 ; id 109 Florajay
+    db $4A ; id 110 DuckKite
+    db $4B ; id 111 MadPecker
+    db $4C ; id 112 MadRaven
+    db $4D ; id 113 MistyWing
+    db $47 ; id 114 AquaHawk
+    db $4E ; id 115 Dracky
+    db $4A ; id 116 KiteHawk
+    db $4F ; id 117 BigRoost
+    db $50 ; id 118 StubBird
+    db $51 ; id 119 LandOwl
+    db $52 ; id 120 MadGoose
+    db $53 ; id 121 MadCondor
+    db $52 ; id 122 Emyu
+    db $54 ; id 123 Blizzardy
+    db $55 ; id 124 Phoenix
+    db $56 ; id 125 ZapBird
+    db $53 ; id 126 Garudian
+    db $57 ; id 127 WhipBird
+    db $58 ; id 128 FunkyBird
+    db $59 ; id 129 RainHawk
+    db $59 ; id 130 Azurile
+    db $56 ; id 131 Shantak
+    db $52 ; id 132 CragDevil
+    db $00 ; id 133 ?
+    db $00 ; id 134 ?
+    db $00 ; id 135 ?
+    db $00 ; id 136 ?
+    db $00 ; id 137 ?
+    db $00 ; id 138 ?
+Data_037_6200:: ; heuristic: label inside a table; C0
+    db $00 ; id 139 ?
+Data_037_6201:: ; heuristic: label inside a table; C0
+    db $00 ; id 140 ?
+    db $5A ; id 141 MadPlant
+    db $5B ; id 142 FireWeed
+    db $5C ; id 143 FloraMan
+    db $5D ; id 144 WingTree
+    db $5E ; id 145 CactiBall
+    db $5F ; id 146 Gulpple
+    db $60 ; id 147 Toadstool
+    db $61 ; id 148 AmberWeed
+    db $6A ; id 149 Slurperon
+    db $62 ; id 150 Stubsuck
+    db $63 ; id 151 Oniono
+    db $64 ; id 152 DanceVegi
+    db $65 ; id 153 TreeBoy
+    db $5F ; id 154 Devipine
+    db $66 ; id 155 FaceTree
+    db $67 ; id 156 HerbMan
+    db $68 ; id 157 BeanMan
+    db $69 ; id 158 EvilSeed
+    db $6A ; id 159 ManEater
+    db $6B ; id 160 Snapper
+    db $67 ; id 161 GhosTree
+    db $6C ; id 162 Rosevine
+    db $6C ; id 163 Egdracil
+    db $6D ; id 164 Warubou
+    db $6D ; id 165 Watabou
+    db $63 ; id 166 Eggplaton
+    db $65 ; id 167 FooHero
+    db $00 ; id 168 ?
+    db $00 ; id 169 ?
+    db $00 ; id 170 ?
+    db $00 ; id 171 ?
+    db $00 ; id 172 ?
+    db $00 ; id 173 ?
+    db $00 ; id 174 ?
+    db $00 ; id 175 ?
+    db $6E ; id 176 GiantSlug
+    db $6F ; id 177 Catapila
+    db $70 ; id 178 Gophecada
+    db $71 ; id 179 Butterfly
+    db $72 ; id 180 WeedBug
+    db $73 ; id 181 GiantWorm
+    db $74 ; id 182 Lipsy
+    db $75 ; id 183 StagBug
+    db $78 ; id 184 Pyuro
+    db $76 ; id 185 ArmyAnt
+    db $77 ; id 186 GoHopper
+    db $78 ; id 187 TailEater
+    db $79 ; id 188 ArmorPede
+    db $7A ; id 189 Eyeder
+    db $7B ; id 190 GiantMoth
+    db $7C ; id 191 Droll
+    db $7D ; id 192 ArmyCrab
+    db $7E ; id 193 MadHornet
+    db $7B ; id 194 Belzebub
+    db $7D ; id 195 WarMantis
+    db $7F ; id 196 HornBeet
+    db $75 ; id 197 Sickler
+    db $80 ; id 198 Armorpion
+    db $81 ; id 199 Digster
+    db $80 ; id 200 Skularach
+    db $7C ; id 201 MultiEyes
+    db $00 ; id 202 ?
+    db $00 ; id 203 ?
+    db $00 ; id 204 ?
+    db $00 ; id 205 ?
+    db $00 ; id 206 ?
+    db $00 ; id 207 ?
+    db $00 ; id 208 ?
+    db $00 ; id 209 ?
+    db $00 ; id 210 ?
+    db $82 ; id 211 Pixy
+    db $8C ; id 212 MedusaEye
+    db $84 ; id 213 AgDevil
+    db $85 ; id 214 Demonite
+    db $86 ; id 215 DarkEye
+    db $87 ; id 216 EyeBall
+    db $88 ; id 217 SkulRider
+    db $89 ; id 218 EvilBeast
+    db $8F ; id 219 Bubblemon
+    db $8A ; id 220 1EyeClown
+    db $8B ; id 221 Gremlin
+    db $83 ; id 222 ArcDemon
+    db $8D ; id 223 Lionex
+    db $8E ; id 224 GoatHorn
+    db $8F ; id 225 Orc
+    db $90 ; id 226 Ogre
+    db $91 ; id 227 GateGuard
+    db $92 ; id 228 ChopClown
+    db $96 ; id 229 BossTroll
+    db $93 ; id 230 Grendal
+    db $94 ; id 231 Akubar
+    db $95 ; id 232 MadKnight
+    db $93 ; id 233 EvilWell
+    db $96 ; id 234 Gigantes
+    db $97 ; id 235 Centasaur
+    db $98 ; id 236 EvilArmor
+    db $99 ; id 237 Jamirus
+    db $9A ; id 238 Durran
+    db $99 ; id 239 Titanis
+    db $97 ; id 240 LampGenie
+    db $00 ; id 241 ?
+    db $00 ; id 242 ?
+    db $00 ; id 243 ?
+    db $00 ; id 244 ?
+    db $00 ; id 245 ?
+    db $9B ; id 246 Spooky
+    db $9C ; id 247 Skullgon
+    db $9D ; id 248 PutrePup
+    db $9E ; id 249 RotRaven
+    db $9F ; id 250 Mummy
+    db $A0 ; id 251 DarkCrab
+    db $A1 ; id 252 DeadNite
+    db $A2 ; id 253 Shadow
+    db $9C ; id 254 Skulpent
+    db $A3 ; id 255 Hork
+    db $A4 ; id 256 Mudron
+    db $A5 ; id 257 NiteWhip
+    db $A7 ; id 258 WindMerge
+    db $A8 ; id 259 Reaper
+    db $A3 ; id 260 Inverzon
+    db $AE ; id 261 FoxFire
+    db $A1 ; id 262 CaptDead
+    db $A9 ; id 263 DeadNoble
+    db $AA ; id 264 WhiteKing
+    db $AB ; id 265 BoneSlave
+    db $AC ; id 266 Skeletor
+    db $AD ; id 267 Servant
+    db $AA ; id 268 Lazamanus
+    db $AE ; id 269 Copycat
+    db $A6 ; id 270 MadSpirit
+    db $AE ; id 271 PomPomBom
+    db $A9 ; id 272 Niterich
+    db $00 ; id 273 ?
+    db $00 ; id 274 ?
+    db $00 ; id 275 ?
+    db $00 ; id 276 ?
+    db $00 ; id 277 ?
+    db $00 ; id 278 ?
+    db $00 ; id 279 ?
+    db $00 ; id 280 ?
+    db $AF ; id 281 JewelBag
+    db $B0 ; id 282 EvilWand
+    db $B1 ; id 283 MadCandle
+    db $B2 ; id 284 CoilBird
+    db $B3 ; id 285 Facer
+    db $B4 ; id 286 SpikyBoy
+    db $B5 ; id 287 MadMirror
+    db $B6 ; id 288 RogueNite
+    db $C3 ; id 289 Puppetor
+    db $B7 ; id 290 Goopi
+    db $B8 ; id 291 Voodoll
+    db $B9 ; id 292 MetalDrak
+    db $BA ; id 293 Balzak
+    db $BB ; id 294 SabreMan
+    db $BC ; id 295 CurseLamp
+    db $B1 ; id 296 Brushead
+    db $BD ; id 297 Roboster
+    db $BD ; id 298 Roboster2
+    db $BE ; id 299 EvilPot
+    db $BF ; id 300 Gismo
+    db $C0 ; id 301 LavaMan
+    db $C1 ; id 302 IceMan
+    db $C2 ; id 303 Mimic
+    db $B5 ; id 304 Exaucers
+    db $C3 ; id 305 MudDoll
+    db $C4 ; id 306 Golem
+    db $C5 ; id 307 StoneMan
+    db $C6 ; id 308 BombCrag
+    db $C7 ; id 309 GoldGolem
+    db $C7 ; id 310 DarkMate
+    db $BD ; id 311 ProtoMech
+    db $BF ; id 312 CloudKing
+    db $00 ; id 313 ?
+    db $00 ; id 314 ?
+    db $00 ; id 315 ?
+    db $08 ; id 316 Petiteel
+    db $26 ; id 317 Moray
+    db $3A ; id 318 WalrusMan
+    db $4A ; id 319 RayGigas
+    db $5A ; id 320 Anemon
+    db $78 ; id 321 Aquarella
+    db $89 ; id 322 Merman
+    db $BE ; id 323 Octokid
+    db $9C ; id 324 PutreFish
+    db $06 ; id 325 Octoreach
+    db $1A ; id 326 Angleron
+    db $88 ; id 327 FishRider
+    db $3F ; id 328 RushFish
+    db $74 ; id 329 Gamanian
+    db $A0 ; id 330 Clawster
+    db $81 ; id 331 CancerMan
+    db $BF ; id 332 RogueWave
+    db $C2 ; id 333 Scallopa
+    db $85 ; id 334 SeaHorse
+    db $84 ; id 335 HoodSquid
+    db $41 ; id 336 MerTiger
+    db $2A ; id 337 AxeShark
+    db $AC ; id 338 Octogon
+    db $AD ; id 339 KingSquid
+    db $57 ; id 340 Digong
+    db $AA ; id 341 WhaleMage
+    db $2B ; id 342 Aquadon
+    db $98 ; id 343 Octoraid
+    db $83 ; id 344 Grakos
+    db $42 ; id 345 Poseidon
+    db $5E ; id 346 Pumpoise
+    db $84 ; id 347 Starfish
+    db $00 ; id 348 ?
+    db $00 ; id 349 ?
+    db $00 ; id 350 ?
+    db $C8 ; id 351 DracoLord
+    db $C9 ; id 352 DracoLord
+    db $C9 ; id 353 LordDraco
+    db $CA ; id 354 Hargon
+    db $CB ; id 355 Sidoh
+    db $CB ; id 356 Genosidoh
+    db $CC ; id 357 Baramos
+    db $CD ; id 358 Zoma
+    db $CD ; id 359 AsuraZoma
+    db $CE ; id 360 Pizzaro
+    db $CE ; id 361 PsychoPiz
+    db $CF ; id 362 Esterk
+    db $D0 ; id 363 Mirudraas
+    db $D1 ; id 364 Mirudraas
+    db $D2 ; id 365 Mudou
+    db $D3 ; id 366 DeathMore
+    db $D4 ; id 367 DeathMore
+    db $D5 ; id 368 DeathMore
+    db $D6 ; id 369 Darkdrium
+    db $D6 ; id 370 Orgodemir
+    db $D4 ; id 371 Orgodemir
+    db $D2 ; id 372 Darck
+    db $00 ; id 373 Tatsu
+    db $00 ; id 374 Diago
+    db $00 ; id 375 Samsi
+    db $00 ; id 376 Bazoo
+    db $00 ; id 377 ?
+    db $00 ; id 378 ?
+    db $00 ; id 379 ?
+    db $59 ; id 380 Lamia
+    db $2C ; id 381 Dimensaur
+    db $6D ; id 382 Kagebou
+    db $00 ; id 383 ?
 
-Data_037_6200:: ; heuristic: target of a monotone pointer table; C0
-    db $00
+; E-0217 (C1: MapAndCompactSkillList62F5, from UnpackLinkRecordToRecordBufB, maps $21 skill bytes through $62F5 + byte (except $FF) and compacts the lists, dropping $FE/$FF; 222 entries end at LinkSkillMapTable_A).
+; record: mapped skill ($FE/$FF = dropped)
+LinkSkillMapTable_B::
+Data_037_62F5:: ; address name
+    db $01 ; id 0
+    db $02 ; id 1
+    db $03 ; id 2
+    db $04 ; id 3
+    db $05 ; id 4
+    db $06 ; id 5
+    db $07 ; id 6
+    db $08 ; id 7
+    db $09 ; id 8
+    db $0A ; id 9
+    db $0B ; id 10
+Data_037_6300:: ; heuristic: label inside a table; C0
+    db $0C ; id 11
+Data_037_6301:: ; heuristic: label inside a table; C0
+    db $10 ; id 12
+    db $11 ; id 13
+    db $12 ; id 14
+    db $0D ; id 15
+    db $0E ; id 16
+    db $0F ; id 17
+    db $13 ; id 18
+    db $14 ; id 19
+    db $15 ; id 20
+    db $2F ; id 21
+    db $30 ; id 22
+    db $33 ; id 23
+    db $2E ; id 24
+    db $34 ; id 25
+    db $32 ; id 26
+    db $31 ; id 27
+    db $27 ; id 28
+    db $28 ; id 29
+    db $25 ; id 30
+    db $26 ; id 31
+    db $2B ; id 32
+    db $2C ; id 33
+    db $29 ; id 34
+    db $2A ; id 35
+    db $38 ; id 36
+    db $2D ; id 37
+    db $39 ; id 38
+    db $36 ; id 39
+    db $37 ; id 40
+    db $3A ; id 41
+    db $35 ; id 42
+    db $16 ; id 43
+    db $17 ; id 44
+    db $18 ; id 45
+    db $19 ; id 46
+    db $1A ; id 47
+    db $1E ; id 48
+    db $1F ; id 49
+    db $20 ; id 50
+    db $21 ; id 51
+    db $23 ; id 52
+    db $22 ; id 53
+    db $24 ; id 54
+    db $A4 ; id 55
+    db $A9 ; id 56
+    db $3C ; id 57
+    db $00 ; id 58
+    db $6D ; id 59
+    db $6F ; id 60
+    db $6E ; id 61
+    db $70 ; id 62
+    db $6C ; id 63
+    db $6B ; id 64
+    db $68 ; id 65
+    db $6A ; id 66
+    db $89 ; id 67
+    db $50 ; id 68
+    db $52 ; id 69
+    db $51 ; id 70
+    db $53 ; id 71
+    db $5E ; id 72
+    db $55 ; id 73
+    db $56 ; id 74
+    db $57 ; id 75
+    db $5A ; id 76
+    db $5B ; id 77
+    db $5C ; id 78
+    db $66 ; id 79
+    db $63 ; id 80
+    db $64 ; id 81
+    db $4E ; id 82
+    db $4F ; id 83
+    db $8A ; id 84
+    db $62 ; id 85
+    db $69 ; id 86
+    db $65 ; id 87
+    db $48 ; id 88
+    db $49 ; id 89
+    db $4A ; id 90
+    db $4B ; id 91
+    db $40 ; id 92
+    db $41 ; id 93
+    db $42 ; id 94
+    db $43 ; id 95
+    db $44 ; id 96
+    db $45 ; id 97
+    db $46 ; id 98
+    db $47 ; id 99
+    db $3F ; id 100
+    db $3E ; id 101
+    db $3D ; id 102
+    db $5F ; id 103
+    db $61 ; id 104
+    db $60 ; id 105
+    db $71 ; id 106
+    db $72 ; id 107
+    db $73 ; id 108
+    db $74 ; id 109
+    db $78 ; id 110
+    db $75 ; id 111
+    db $8F ; id 112
+    db $79 ; id 113
+    db $7E ; id 114
+    db $7F ; id 115
+    db $80 ; id 116
+    db $76 ; id 117
+    db $77 ; id 118
+    db $7D ; id 119
+    db $7A ; id 120
+    db $8B ; id 121
+    db $8C ; id 122
+    db $8D ; id 123
+    db $8E ; id 124
+    db $90 ; id 125
+    db $A2 ; id 126
+    db $9E ; id 127
+    db $83 ; id 128
+    db $81 ; id 129
+    db $82 ; id 130
+    db $84 ; id 131
+    db $85 ; id 132
+    db $86 ; id 133
+    db $87 ; id 134
+    db $88 ; id 135
+    db $97 ; id 136
+    db $98 ; id 137
+    db $99 ; id 138
+    db $9A ; id 139
+    db $95 ; id 140
+    db $95 ; id 141
+    db $94 ; id 142
+    db $9D ; id 143
+    db $96 ; id 144
+    db $92 ; id 145
+    db $93 ; id 146
+    db $9F ; id 147
+    db $7C ; id 148
+    db $A0 ; id 149
+    db $7B ; id 150
+    db $C8 ; id 151
+    db $AB ; id 152
+    db $C0 ; id 153
+    db $C1 ; id 154
+    db $C2 ; id 155
+    db $C3 ; id 156
+    db $C4 ; id 157
+    db $C5 ; id 158
+    db $C6 ; id 159
+    db $C7 ; id 160
+    db $C8 ; id 161
+    db $B0 ; id 162
+    db $B1 ; id 163
+    db $B2 ; id 164
+    db $B3 ; id 165
+    db $B4 ; id 166
+    db $B5 ; id 167
+    db $B6 ; id 168
+    db $B7 ; id 169
+    db $B8 ; id 170
+    db $B9 ; id 171
+    db $BA ; id 172
+    db $BB ; id 173
+    db $BC ; id 174
+    db $BD ; id 175
+    db $FF ; id 176
+    db $FF ; id 177
+    db $FF ; id 178
+    db $FF ; id 179
+    db $FF ; id 180
+    db $FF ; id 181
+    db $FF ; id 182
+    db $FF ; id 183
+    db $FF ; id 184
+    db $FF ; id 185
+    db $FF ; id 186
+    db $FF ; id 187
+    db $FF ; id 188
+    db $FF ; id 189
+    db $FF ; id 190
+    db $FF ; id 191
+    db $FF ; id 192
+    db $FF ; id 193
+    db $FF ; id 194
+    db $FF ; id 195
+    db $FF ; id 196
+    db $FF ; id 197
+    db $FF ; id 198
+    db $FF ; id 199
+    db $FF ; id 200
+    db $FF ; id 201
+    db $FF ; id 202
+    db $FF ; id 203
+    db $FF ; id 204
+    db $FF ; id 205
+    db $FF ; id 206
+    db $FF ; id 207
+    db $FF ; id 208
+    db $FF ; id 209
+    db $FF ; id 210
+    db $FF ; id 211
+    db $FF ; id 212
+    db $3B ; id 213
+    db $54 ; id 214
+    db $58 ; id 215
+    db $59 ; id 216
+    db $67 ; id 217
+    db $34 ; id 218
+    db $C8 ; id 219
+    db $35 ; id 220
+    db $8F ; id 221
 
-Data_037_6201:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $6A, $62, $63, $64, $65, $5F, $66
-    db $67, $68, $69, $6A, $6B, $67, $6C, $6C, $6D, $6D, $63, $65, $00, $00, $00, $00
-    db $00, $00, $00, $00
-    dw Data_037_6F6E
-    dw Data_037_7170
-    dw Data_037_7372
-    dw Data_037_7574
-    dw Data_037_7678
-    dw Data_037_7877
-    dw Data_037_7A79
-    dw Data_037_7C7B
-    dw Data_037_7E7D
-    INCBIN "dwm2-cobi-us.gbc", $0DE237, $BE
-
-; address loaded by MapAndCompactSkillList62F5
-Data_037_62F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B
-
-Data_037_6300:: ; heuristic: target of a monotone pointer table; C0
-    db $0C
-
-Data_037_6301:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0DE301, $A4
-    ds $25, $FF
-    db $3B, $54, $58, $59, $67, $34, $C8, $35, $8F
-
-; address loaded by MapAndCompactSkillList63D3
-Data_037_63D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0DE3D3, $AA
+; E-0217 (C1: MapAndCompactSkillList63D3, from UnpackLinkRecordToWorkBuf, maps $21 skill bytes through $63D3 + byte and compacts the lists; 170 entries end at TileRect_37_647D; for 155 of them LinkSkillMapTable_B maps the result back).
+; record: mapped skill ($FE = dropped)
+LinkSkillMapTable_A::
+Data_037_63D3:: ; address name
+    db $3A ; id 0
+    db $00 ; id 1
+    db $01 ; id 2
+    db $02 ; id 3
+    db $03 ; id 4
+    db $04 ; id 5
+    db $05 ; id 6
+    db $06 ; id 7
+    db $07 ; id 8
+    db $08 ; id 9
+    db $09 ; id 10
+    db $0A ; id 11
+    db $0B ; id 12
+    db $0F ; id 13
+    db $10 ; id 14
+    db $11 ; id 15
+    db $0C ; id 16
+    db $0D ; id 17
+    db $0E ; id 18
+    db $12 ; id 19
+    db $13 ; id 20
+    db $14 ; id 21
+    db $2B ; id 22
+    db $2C ; id 23
+    db $2D ; id 24
+    db $2E ; id 25
+    db $2F ; id 26
+    db $FE ; id 27
+    db $FE ; id 28
+    db $FE ; id 29
+    db $30 ; id 30
+    db $31 ; id 31
+    db $32 ; id 32
+    db $33 ; id 33
+    db $35 ; id 34
+    db $34 ; id 35
+    db $36 ; id 36
+    db $1E ; id 37
+    db $1F ; id 38
+    db $1C ; id 39
+    db $1D ; id 40
+    db $22 ; id 41
+    db $23 ; id 42
+    db $20 ; id 43
+    db $21 ; id 44
+    db $25 ; id 45
+    db $18 ; id 46
+    db $15 ; id 47
+    db $16 ; id 48
+    db $1B ; id 49
+    db $1A ; id 50
+    db $17 ; id 51
+    db $19 ; id 52
+    db $2A ; id 53
+    db $27 ; id 54
+    db $28 ; id 55
+    db $24 ; id 56
+    db $26 ; id 57
+    db $29 ; id 58
+    db $D5 ; id 59
+    db $39 ; id 60
+    db $66 ; id 61
+    db $65 ; id 62
+    db $64 ; id 63
+    db $5C ; id 64
+    db $5D ; id 65
+    db $5E ; id 66
+    db $5F ; id 67
+    db $60 ; id 68
+    db $61 ; id 69
+    db $62 ; id 70
+    db $63 ; id 71
+    db $58 ; id 72
+    db $59 ; id 73
+    db $5A ; id 74
+    db $5B ; id 75
+    db $FE ; id 76
+    db $FE ; id 77
+    db $52 ; id 78
+    db $53 ; id 79
+    db $44 ; id 80
+    db $46 ; id 81
+    db $45 ; id 82
+    db $47 ; id 83
+    db $D6 ; id 84
+    db $49 ; id 85
+    db $4A ; id 86
+    db $4B ; id 87
+    db $D7 ; id 88
+    db $D8 ; id 89
+    db $4C ; id 90
+    db $4D ; id 91
+    db $4E ; id 92
+    db $FE ; id 93
+    db $48 ; id 94
+    db $67 ; id 95
+    db $69 ; id 96
+    db $68 ; id 97
+    db $55 ; id 98
+    db $50 ; id 99
+    db $51 ; id 100
+    db $57 ; id 101
+    db $4F ; id 102
+    db $D9 ; id 103
+    db $41 ; id 104
+    db $56 ; id 105
+    db $42 ; id 106
+    db $40 ; id 107
+    db $3F ; id 108
+    db $3B ; id 109
+    db $3D ; id 110
+    db $3C ; id 111
+    db $3E ; id 112
+    db $6A ; id 113
+    db $6B ; id 114
+    db $6C ; id 115
+    db $6D ; id 116
+    db $6F ; id 117
+    db $75 ; id 118
+    db $76 ; id 119
+    db $6E ; id 120
+    db $71 ; id 121
+    db $78 ; id 122
+    db $96 ; id 123
+    db $94 ; id 124
+    db $77 ; id 125
+    db $72 ; id 126
+    db $73 ; id 127
+    db $74 ; id 128
+    db $81 ; id 129
+    db $82 ; id 130
+    db $80 ; id 131
+    db $83 ; id 132
+    db $84 ; id 133
+    db $85 ; id 134
+    db $86 ; id 135
+    db $87 ; id 136
+    db $43 ; id 137
+    db $54 ; id 138
+    db $79 ; id 139
+    db $7A ; id 140
+    db $7B ; id 141
+    db $7C ; id 142
+    db $70 ; id 143
+    db $7D ; id 144
+    db $FE ; id 145
+    db $91 ; id 146
+    db $92 ; id 147
+    db $8E ; id 148
+    db $8C ; id 149
+    db $90 ; id 150
+    db $88 ; id 151
+    db $89 ; id 152
+    db $8A ; id 153
+    db $8B ; id 154
+    db $FE ; id 155
+    db $FE ; id 156
+    db $8F ; id 157
+    db $7F ; id 158
+    db $93 ; id 159
+    db $95 ; id 160
+    db $FE ; id 161
+    db $7E ; id 162
+    db $FE ; id 163
+    db $37 ; id 164
+    db $FE ; id 165
+    db $FE ; id 166
+    db $FE ; id 167
+    db $FE ; id 168
+    db $38 ; id 169
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 12 x 5 tiles, one row per line
