@@ -3248,17 +3248,64 @@ Data_087_5C7B:: ; heuristic: map interaction list; C0
     db $B7, $07
     db $FF ; end
 
-; address loaded by FieldModeStateDispatch_Shared03_Sub01
+; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when the floor info byte is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+SpecialMapInteractions_5CA4::
 Data_087_5CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $21DCA4, $5B
+    db $05, $00, $00, $00, $50, $40 ; id 0
+    dw $FFFF
+    db $06, $09
+    db $05, $00, $00, $00, $30, $70 ; id 1
+    dw $FFFF
+    db $04, $09
+    db $05, $00, $01, $00, $70, $40 ; id 2
+    dw $FFFF
+    db $06, $09
+    db $05, $00, $01, $01, $80, $50 ; id 3
+    dw $FFFF
+    db $04, $09
+    db $04, $00, $00, $00, $40, $20 ; id 4
+    dw $FFFF
+    db $02, $09
+    db $03, $00, $00, $00, $20, $40 ; id 5
+    dw $FFFF
+    db $02, $09
+    db $02, $00, $00, $00, $10, $20 ; id 6
+    dw $FFFF
+    db $02, $09
+    db $03, $00, $00, $00, $30, $40 ; id 7
+    dw $FFFF
+    db $02, $09
+    db $02, $00, $01, $00, $50, $10 ; id 8
+    dw $FFFF
+    db $02, $09
+    db $FF ; end
 
-; address loaded by FieldModeStateDispatch_Shared03_Sub01
+; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+SpecialMapInteractions_5CFF::
 Data_087_5CFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $05, $00, $00, $00, $40, $30, $FF, $FF, $04, $09, $05, $00, $00, $00, $60, $30
-    db $FF, $FF, $05, $09, $05, $00, $00, $00, $80, $30, $FF, $FF, $04, $09, $05, $00
-    db $01, $00, $10, $20, $FF, $FF, $04, $09, $FF
+    db $05, $00, $00, $00, $40, $30 ; id 0
+    dw $FFFF
+    db $04, $09
+    db $05, $00, $00, $00, $60, $30 ; id 1
+    dw $FFFF
+    db $05, $09
+    db $05, $00, $00, $00, $80, $30 ; id 2
+    dw $FFFF
+    db $04, $09
+    db $05, $00, $01, $00, $10, $20 ; id 3
+    dw $FFFF
+    db $04, $09
+    db $FF ; end
 
-; address loaded by FieldModeStateDispatch_Shared03_Sub01
+; E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $84; the same 10-byte entries as MapInteractionTable's lists, ending with $FF).
+; record: kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index
+SpecialMapInteractions_5D28::
 Data_087_5D28:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $21DD28, $1FD
+    db $03, $00, $00, $00, $30, $40 ; id 0
+    dw $FFFF
+    db $07, $09
+    db $FF ; end
+    INCBIN "dwm2-cobi-us.gbc", $21DD33, $1F2
     ds $20DB, $00

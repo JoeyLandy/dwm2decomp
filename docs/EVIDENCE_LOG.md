@@ -2049,6 +2049,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Declared.** GlyphFont: 259 glyphs up to SendSGBPacketSet at $5040, one per line. A new `id_names: "charmap"` option appends the character for each glyph number. About 4 KB of slices and labels inside are now laid out.
 - Binary verification: build/run170 PASS, 0 differing bytes; tests OK.
 
+### E-0170 — Special-map interaction lists (bank $87)
+
+- Kind: OBSERVATION (reading of FieldModeStateDispatch_Shared03_Sub01, 87:4507; C1).
+- **Source.** On special maps the A-button handler takes its list from FieldModeStateDispatch_Shared03_Sub01 instead of MapInteractionTable:
+  - $5D28 for map type $84 (1 entry);
+  - $5CA4 for map type $83 when the floor's info byte is 2 (9 entries);
+  - $5CFF for map type $83 when it is 3 (4 entries).
+  - The entries have the 10-byte format of E-0157.
+- Binary verification: build/run172 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

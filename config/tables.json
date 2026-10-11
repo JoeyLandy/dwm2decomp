@@ -2402,6 +2402,87 @@
         }
       ],
       "note": "E-0169 (C1: GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable73BC copy the 16 bytes at $4010 + 16 * glyph from bank $1F to VRAM, and CopyGlyphTilesToVRAM takes one glyph per text byte, so the glyph number is the character code; 259 glyphs up to SendSGBPacketSet at $5040)."
+    },
+    {
+      "bank": "87",
+      "addr": "5D28",
+      "label": "SpecialMapInteractions_5D28",
+      "count": 1,
+      "tail": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "name": "kind, map, screen X, screen Y, player X, player Y"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "name": "story flag that disables the entry ($FFFF = none)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "talk event group, index"
+        }
+      ],
+      "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
+      "note": "E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $84; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+    },
+    {
+      "bank": "87",
+      "addr": "5CA4",
+      "label": "SpecialMapInteractions_5CA4",
+      "count": 9,
+      "tail": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "name": "kind, map, screen X, screen Y, player X, player Y"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "name": "story flag that disables the entry ($FFFF = none)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "talk event group, index"
+        }
+      ],
+      "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
+      "note": "E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when the floor info byte is 2; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
+    },
+    {
+      "bank": "87",
+      "addr": "5CFF",
+      "label": "SpecialMapInteractions_5CFF",
+      "count": 4,
+      "tail": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "name": "kind, map, screen X, screen Y, player X, player Y"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "name": "story flag that disables the entry ($FFFF = none)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "talk event group, index"
+        }
+      ],
+      "record": "kind (0 skip, 1-4 facing + 1, 5 any facing), map number, screen X, screen Y, player X, player Y; story flag ($FFFF = none; set = skip); talk event group, index",
+      "note": "E-0170 (C1: FieldModeStateDispatch_Shared03_Sub01 returns this list for map type $83 when that byte is 3; the same 10-byte entries as MapInteractionTable's lists, ending with $FF)."
     }
   ]
 }
