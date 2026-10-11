@@ -3202,11 +3202,141 @@ Data_030_5587:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $33, $00
     db $64, $00
 
-; 201 three-byte far pointers (address, bank $E2) indexed by skill number: the AI scoring routine for each skill, called by Func_030_4BA0 with wDA6E-wDA71 cleared (E-0083)
-; address loaded by ScoreActionsWithAIScoreTableA
-AIScoreRoutineTableA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; E-0174 (C1: ScoreActionsWithAIScoreTableA stores this table's address in wBattleExpAward / +1 (the AI's routine-table pointer) and ScoreSkillForAI far-calls entry 3 * skill; all 131 entries point at named AIScore_* routines).
+; record: AI scoring routine for this skill number; its ROM bank
+AIScoreRoutineTableA::
 Data_030_5785:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $0C1785, $189
+    dfar AIScore_Skill00 ; id 0
+    dfar AIScore_Blaze ; id 1
+    dfar AIScore_Blaze ; id 2
+    dfar AIScore_Blaze ; id 3
+    dfar AIScore_Firebal ; id 4
+    dfar AIScore_Firebal ; id 5
+    dfar AIScore_Firebal ; id 6
+    dfar AIScore_Firebal ; id 7
+    dfar AIScore_Firebal ; id 8
+    dfar AIScore_Firebal ; id 9
+    dfar AIScore_Firebal ; id 10
+    dfar AIScore_Firebal ; id 11
+    dfar AIScore_Firebal ; id 12
+    dfar AIScore_Firebal ; id 13
+    dfar AIScore_Firebal ; id 14
+    dfar AIScore_Firebal ; id 15
+    dfar AIScore_Firebal ; id 16
+    dfar AIScore_Firebal ; id 17
+    dfar AIScore_Firebal ; id 18
+    dfar AIScore_Beat ; id 19
+    dfar AIScore_Beat ; id 20
+    dfar AIScore_Sacrifice ; id 21
+    dfar AIScore_Heal ; id 22
+    dfar AIScore_Heal ; id 23
+    dfar AIScore_Heal ; id 24
+    dfar AIScore_HealUs ; id 25
+    dfar AIScore_HealUs ; id 26
+    dfar AIScore_MPass ; id 27
+    dfar AIScore_MPass ; id 28
+    dfar AIScore_MPass ; id 29
+    dfar AIScore_Vivify ; id 30
+    dfar AIScore_Vivify ; id 31
+    dfar AIScore_Farewell ; id 32
+    dfar AIScore_Antidote ; id 33
+    dfar AIScore_DeChaos ; id 34
+    dfar AIScore_NumbOff ; id 35
+    dfar AIScore_CurseOff ; id 36
+    dfar AIScore_Upper ; id 37
+    dfar AIScore_Upper ; id 38
+    dfar AIScore_Sap ; id 39
+    dfar AIScore_Sap ; id 40
+    dfar AIScore_Speed ; id 41
+    dfar AIScore_Speed ; id 42
+    dfar AIScore_Slow ; id 43
+    dfar AIScore_Slow ; id 44
+    dfar AIScore_TwinHits ; id 45
+    dfar AIScore_Surround ; id 46
+    dfar AIScore_Sleep ; id 47
+    dfar AIScore_Sleep ; id 48
+    dfar AIScore_TakeMagic ; id 49
+    dfar AIScore_RobMagic ; id 50
+    dfar AIScore_StopSpell ; id 51
+    dfar AIScore_PanicAll ; id 52
+    dfar AIScore_Ironize ; id 53
+    dfar AIScore_MagicBack ; id 54
+    dfar AIScore_MagicBack ; id 55
+    dfar AIScore_Barrier ; id 56
+    dfar AIScore_MagicWall ; id 57
+    dfar AIScore_Transform ; id 58
+    dfar AIScore_BeDragon ; id 59
+    dfar AIScore_Chance ; id 60
+    dfar AIScore_MegaMagic ; id 61
+    dfar AIScore_BigBang ; id 62
+    dfar AIScore_BigBang ; id 63
+    dfar AIScore_FireAir ; id 64
+    dfar AIScore_FireAir ; id 65
+    dfar AIScore_FireAir ; id 66
+    dfar AIScore_FireAir ; id 67
+    dfar AIScore_FireAir ; id 68
+    dfar AIScore_FireAir ; id 69
+    dfar AIScore_FireAir ; id 70
+    dfar AIScore_FireAir ; id 71
+    dfar AIScore_WindBeast ; id 72
+    dfar AIScore_Vacuum ; id 73
+    dfar AIScore_Vacuum ; id 74
+    dfar AIScore_RockThrow ; id 75
+    dfar AIScore_Watershot ; id 76
+    dfar AIScore_Tidalwave ; id 77
+    dfar AIScore_CallHelp ; id 78
+    dfar AIScore_CallHelp ; id 79
+    dfar AIScore_FireSlash ; id 80
+    dfar AIScore_FireSlash ; id 81
+    dfar AIScore_FireSlash ; id 82
+    dfar AIScore_FireSlash ; id 83
+    dfar AIScore_SlimeBlow ; id 84
+    dfar AIScore_DrakSlash ; id 85
+    dfar AIScore_BeastCut ; id 86
+    dfar AIScore_BirdBlow ; id 87
+    dfar AIScore_BugBlow ; id 88
+    dfar AIScore_Shears ; id 89
+    dfar AIScore_DevilCut ; id 90
+    dfar AIScore_ZombieCut ; id 91
+    dfar AIScore_CleanCut ; id 92
+    dfar AIScore_AquaCut ; id 93
+    dfar AIScore_MetalCut ; id 94
+    dfar AIScore_PoisonHit ; id 95
+    dfar AIScore_Paralyze ; id 96
+    dfar AIScore_NapAttack ; id 97
+    dfar AIScore_SquallHit ; id 98
+    dfar AIScore_BiAttack ; id 99
+    dfar AIScore_BiAttack ; id 100
+    dfar AIScore_RainSlash ; id 101
+    dfar AIScore_MultiCut ; id 102
+    dfar AIScore_GigaSlash ; id 103
+    dfar AIScore_ChargeUp ; id 104
+    dfar AIScore_PsycheUp ; id 105
+    dfar AIScore_HighJump ; id 106
+    dfar AIScore_EvilSlash ; id 107
+    dfar AIScore_Massacre ; id 108
+    dfar AIScore_TwinSlash ; id 109
+    dfar AIScore_Berserker ; id 110
+    dfar AIScore_Ramming ; id 111
+    dfar AIScore_Kamikaze ; id 112
+    dfar AIScore_SleepAir ; id 113
+    dfar AIScore_PalsyAir ; id 114
+    dfar AIScore_PoisonGas ; id 115
+    dfar AIScore_PoisonAir ; id 116
+    dfar AIScore_Curse ; id 117
+    dfar AIScore_OddDance ; id 118
+    dfar AIScore_OddDance ; id 119
+    dfar AIScore_PaniDance ; id 120
+    dfar AIScore_KODance ; id 121
+    dfar AIScore_LureDance ; id 122
+    dfar AIScore_LifeDance ; id 123
+    dfar AIScore_Hustle ; id 124
+    dfar AIScore_SideStep ; id 125
+    dfar AIScore_SandStorm ; id 126
+    dfar AIScore_Radiant ; id 127
+    dfar AIScore_EerieLite ; id 128
+    dfar AIScore_Surge ; id 129
+    dfar AIScore_UltraDown ; id 130
     dw Data_030_5D83
     db $E2
     dw Data_030_5DBC
@@ -3326,11 +3456,141 @@ Data_030_5785:: ; address name
     dw Data_030_64C1
     db $E2
 
-; a second copy of AIScoreRoutineTableA (all 201 entries equal), selected by Func_030_4AC6 instead of Func_030_4AD3 (E-0083)
-; address loaded by UseAIScoreTableB
-AIScoreRoutineTableB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; E-0174 (C1: UseAIScoreTableB stores this table's address in wBattleExpAward / +1 (the AI's routine-table pointer) and ScoreSkillForAI far-calls entry 3 * skill; all 131 entries point at named AIScore_* routines).
+; record: AI scoring routine for this skill number; its ROM bank
+AIScoreRoutineTableB::
 Data_030_59E0:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $0C19E0, $189
+    dfar AIScore_Skill00 ; id 0
+    dfar AIScore_Blaze ; id 1
+    dfar AIScore_Blaze ; id 2
+    dfar AIScore_Blaze ; id 3
+    dfar AIScore_Firebal ; id 4
+    dfar AIScore_Firebal ; id 5
+    dfar AIScore_Firebal ; id 6
+    dfar AIScore_Firebal ; id 7
+    dfar AIScore_Firebal ; id 8
+    dfar AIScore_Firebal ; id 9
+    dfar AIScore_Firebal ; id 10
+    dfar AIScore_Firebal ; id 11
+    dfar AIScore_Firebal ; id 12
+    dfar AIScore_Firebal ; id 13
+    dfar AIScore_Firebal ; id 14
+    dfar AIScore_Firebal ; id 15
+    dfar AIScore_Firebal ; id 16
+    dfar AIScore_Firebal ; id 17
+    dfar AIScore_Firebal ; id 18
+    dfar AIScore_Beat ; id 19
+    dfar AIScore_Beat ; id 20
+    dfar AIScore_Sacrifice ; id 21
+    dfar AIScore_Heal ; id 22
+    dfar AIScore_Heal ; id 23
+    dfar AIScore_Heal ; id 24
+    dfar AIScore_HealUs ; id 25
+    dfar AIScore_HealUs ; id 26
+    dfar AIScore_MPass ; id 27
+    dfar AIScore_MPass ; id 28
+    dfar AIScore_MPass ; id 29
+    dfar AIScore_Vivify ; id 30
+    dfar AIScore_Vivify ; id 31
+    dfar AIScore_Farewell ; id 32
+    dfar AIScore_Antidote ; id 33
+    dfar AIScore_DeChaos ; id 34
+    dfar AIScore_NumbOff ; id 35
+    dfar AIScore_CurseOff ; id 36
+    dfar AIScore_Upper ; id 37
+    dfar AIScore_Upper ; id 38
+    dfar AIScore_Sap ; id 39
+    dfar AIScore_Sap ; id 40
+    dfar AIScore_Speed ; id 41
+    dfar AIScore_Speed ; id 42
+    dfar AIScore_Slow ; id 43
+    dfar AIScore_Slow ; id 44
+    dfar AIScore_TwinHits ; id 45
+    dfar AIScore_Surround ; id 46
+    dfar AIScore_Sleep ; id 47
+    dfar AIScore_Sleep ; id 48
+    dfar AIScore_TakeMagic ; id 49
+    dfar AIScore_RobMagic ; id 50
+    dfar AIScore_StopSpell ; id 51
+    dfar AIScore_PanicAll ; id 52
+    dfar AIScore_Ironize ; id 53
+    dfar AIScore_MagicBack ; id 54
+    dfar AIScore_MagicBack ; id 55
+    dfar AIScore_Barrier ; id 56
+    dfar AIScore_MagicWall ; id 57
+    dfar AIScore_Transform ; id 58
+    dfar AIScore_BeDragon ; id 59
+    dfar AIScore_Chance ; id 60
+    dfar AIScore_MegaMagic ; id 61
+    dfar AIScore_BigBang ; id 62
+    dfar AIScore_BigBang ; id 63
+    dfar AIScore_FireAir ; id 64
+    dfar AIScore_FireAir ; id 65
+    dfar AIScore_FireAir ; id 66
+    dfar AIScore_FireAir ; id 67
+    dfar AIScore_FireAir ; id 68
+    dfar AIScore_FireAir ; id 69
+    dfar AIScore_FireAir ; id 70
+    dfar AIScore_FireAir ; id 71
+    dfar AIScore_WindBeast ; id 72
+    dfar AIScore_Vacuum ; id 73
+    dfar AIScore_Vacuum ; id 74
+    dfar AIScore_RockThrow ; id 75
+    dfar AIScore_Watershot ; id 76
+    dfar AIScore_Tidalwave ; id 77
+    dfar AIScore_CallHelp ; id 78
+    dfar AIScore_CallHelp ; id 79
+    dfar AIScore_FireSlash ; id 80
+    dfar AIScore_FireSlash ; id 81
+    dfar AIScore_FireSlash ; id 82
+    dfar AIScore_FireSlash ; id 83
+    dfar AIScore_SlimeBlow ; id 84
+    dfar AIScore_DrakSlash ; id 85
+    dfar AIScore_BeastCut ; id 86
+    dfar AIScore_BirdBlow ; id 87
+    dfar AIScore_BugBlow ; id 88
+    dfar AIScore_Shears ; id 89
+    dfar AIScore_DevilCut ; id 90
+    dfar AIScore_ZombieCut ; id 91
+    dfar AIScore_CleanCut ; id 92
+    dfar AIScore_AquaCut ; id 93
+    dfar AIScore_MetalCut ; id 94
+    dfar AIScore_PoisonHit ; id 95
+    dfar AIScore_Paralyze ; id 96
+    dfar AIScore_NapAttack ; id 97
+    dfar AIScore_SquallHit ; id 98
+    dfar AIScore_BiAttack ; id 99
+    dfar AIScore_BiAttack ; id 100
+    dfar AIScore_RainSlash ; id 101
+    dfar AIScore_MultiCut ; id 102
+    dfar AIScore_GigaSlash ; id 103
+    dfar AIScore_ChargeUp ; id 104
+    dfar AIScore_PsycheUp ; id 105
+    dfar AIScore_HighJump ; id 106
+    dfar AIScore_EvilSlash ; id 107
+    dfar AIScore_Massacre ; id 108
+    dfar AIScore_TwinSlash ; id 109
+    dfar AIScore_Berserker ; id 110
+    dfar AIScore_Ramming ; id 111
+    dfar AIScore_Kamikaze ; id 112
+    dfar AIScore_SleepAir ; id 113
+    dfar AIScore_PalsyAir ; id 114
+    dfar AIScore_PoisonGas ; id 115
+    dfar AIScore_PoisonAir ; id 116
+    dfar AIScore_Curse ; id 117
+    dfar AIScore_OddDance ; id 118
+    dfar AIScore_OddDance ; id 119
+    dfar AIScore_PaniDance ; id 120
+    dfar AIScore_KODance ; id 121
+    dfar AIScore_LureDance ; id 122
+    dfar AIScore_LifeDance ; id 123
+    dfar AIScore_Hustle ; id 124
+    dfar AIScore_SideStep ; id 125
+    dfar AIScore_SandStorm ; id 126
+    dfar AIScore_Radiant ; id 127
+    dfar AIScore_EerieLite ; id 128
+    dfar AIScore_Surge ; id 129
+    dfar AIScore_UltraDown ; id 130
     dw Data_030_5D83
     db $E2
     dw Data_030_5DBC

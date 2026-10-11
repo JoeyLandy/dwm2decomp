@@ -2384,7 +2384,8 @@ class Rom:
             for fi, (f, sz) in enumerate(zip(fields, sizes)):
                 if q in dl:
                     flush()
-                    out.append(f"{dl[q]}:: ; heuristic: {self.dreason.get((bank, q), 'label inside a table')}; C0")
+                    if dl[q] != t["label"]:  # a data name equal to the table label is printed once
+                        out.append(f"{dl[q]}:: ; heuristic: {self.dreason.get((bank, q), 'label inside a table')}; C0")
                     if (bank, q) in self.dalias:
                         out.append(f"{self.dalias[(bank, q)]}:: ; address name")
                 if f["type"] == "u24":  # 24-bit little-endian values in decimal, 11 per line (E-0148)

@@ -2091,6 +2091,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **PersonalityTacticWeights (30:5587).** AddPersonalityWeightToBattleArg0 adds the byte $5587 + 4 * wPersonalityIndex + (the actor's wSlotTactic & 3) to wBattleArg0. That gives 27 rows of 4 tactic weights.
 - Binary verification: build/run175 PASS, 0 differing bytes; tests OK.
 
+### E-0174 — AI scoring routine tables and heal-skill MP costs
+
+- Kind: OBSERVATION (reading; C1).
+- **AIScoreRoutineTableA / B (30:5785, 30:59E0).** ScoreActionsWithAIScoreTableA and UseAIScoreTableB store these addresses as the AI's routine-table pointer, and ScoreSkillForAI far-calls entry 3 * skill. Both are 131 far pointers, all to named AIScore_* routines, now printed as `dfar`.
+- **HealSkillMPCosts (05:5A33).** FailIfAllyLacksMPForHealSkill compares an ally's MP with the byte $5A33 + (skill - $16) for skills $16-$1A: 2, 5, 7, 18, 36. The $184 bytes after these five decode as an untraced routine starting `ld a, [wBattleActor]`, which no traced code reaches; they stay data.
+- **Generator.** A table whose first data label already carries the table's name (from names.json) prints that name once and keeps the address alias.
+- Binary verification: build/run177 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

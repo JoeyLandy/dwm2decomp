@@ -5068,9 +5068,16 @@ Jump_005_5A30::
     ld c, $01
     ret
 
-; address loaded by FailIfAllyLacksMPForHealSkill
+; E-0174 (C1: FailIfAllyLacksMPForHealSkill reads the byte $5A33 + (skill - $16) for skills $16-$1A an ally knows and compares it with that ally's MP; the bytes after these five decode as an untraced routine (ld a, [wBattleActor] ...) and stay data).
+; record: MP the AI assumes this skill costs
+HealSkillMPCosts::
 Data_005_5A33:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $015A33, $189
+    db $02 ; id 22
+    db $05 ; id 23
+    db $07 ; id 24
+    db $12 ; id 25
+    db $24 ; id 26
+    INCBIN "dwm2-cobi-us.gbc", $015A38, $184
 
 ; only called from AIScore_BeDragon (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BeDragon)
