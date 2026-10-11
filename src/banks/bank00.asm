@@ -309,9 +309,9 @@ Jump_000_02D2::
     ld [wC5ED], a
     ld [wFrameCounterLo], a
     ld [wFrameCounterHi], a
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ld a, $80
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     xor a, a
     ld [wC58D], a
     ld [wC58E], a
@@ -1187,7 +1187,7 @@ Func_000_07D8:: ; address name
 
 ; rSCX = hScrollX, rSCY = hScrollY
 ; 3 call sites from 3 routines (e.g. VBlankHandler, RunWC5DDState_Case04, RunWC5DDState_Case01)
-; reads: hScrollX, hScrollY, hFF9F, hFFA0
+; reads: hScrollX, hScrollY, hWindowX, hWindowY
 ; writes: rSCX, rSCY, rWX, rWY
 CopyScrollToHardware::
 Func_000_07E0:: ; address name
@@ -1195,9 +1195,9 @@ Func_000_07E0:: ; address name
     ldh [rSCX], a
     ldh a, [hScrollY]
     ldh [rSCY], a
-    ldh a, [hFF9F]
+    ldh a, [hWindowX]
     ldh [rWX], a
-    ldh a, [hFFA0]
+    ldh a, [hWindowY]
     ldh [rWY], a
     ret
 
@@ -1423,7 +1423,7 @@ Func_000_08C7:: ; address name
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK, rHDMA1, rHDMA2, rHDMA3, rHDMA4, rHDMA5, rBGPI, ...
-; points at: wC000, hFF8A, sA000
+; points at: wShadowOAM, hPlayerSpriteVariant, sA000
 ClearWRAMHRAMAndSRAMBanks0And2::
 Func_000_08D0:: ; address name
     ld a, [wIsCGB]
@@ -1443,11 +1443,11 @@ Func_000_08D0:: ; address name
 
 Jump_000_08EC::
     push af
-    ld hl, wC000
+    ld hl, wShadowOAM
     ld bc, $1E00
     ld a, $00
     call FillBytes
-    ld hl, hFF8A
+    ld hl, hPlayerSpriteVariant
     ld bc, $0074
     ld a, $00
     call FillBytes
@@ -1899,12 +1899,12 @@ Func_000_0BA2:: ; address name
 ; hOamNextEntry = 0 and clears the $A0 bytes of shadow OAM at wC000 (E-0122)
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
 ; writes: hOamNextEntry
-; points at: wC000
+; points at: wShadowOAM
 ClearShadowOAM::
 Func_000_0BA7:: ; address name
     xor a, a
     ldh [hOamNextEntry], a
-    ld hl, wC000
+    ld hl, wShadowOAM
     ld b, $A0
 
 Jump_000_0BAF::
@@ -2072,8 +2072,8 @@ Func_000_0C5A:: ; address name
 
 ; C2 (E-0016: static reading; 141 emulated calls matched tools/lzss_gfx.py byte for byte): expands the compressed stream at [DE] in ROM bank B into memory at [HL] with a plain store per byte (RAM destination). Header and format: see Func_000_0DA8. Restores the caller's bank on return.
 ; 1 call site from 1 routine (e.g. DecompressToRAMLocked)
-; reads: hFFBF, hFFC0, hDecompressDestLo, hDecompressDestHi, hFFC2, hFFC4, hFFC3, hFFC1
-; writes: rROMB0, hFFC0, hFFBF
+; reads: hDecompressRunCount, hDecompressRunByte, hDecompressDestLo, hDecompressDestHi, hDecompressHeader2, hDecompressHeader4, hDecompressHeader3, hDecompressHeader1
+; writes: rROMB0, hDecompressRunByte, hDecompressRunCount
 ; points at: hDecompressMarker
 DecompressToRAM::
 Func_000_0C69:: ; address name
@@ -2100,12 +2100,12 @@ Jump_000_0C70::
 Jump_000_0C83::
     pop hl
     ld a, [de]
-    ldh [hFFC0], a
+    ldh [hDecompressRunByte], a
     inc de
     ld a, [de]
-    ldh [hFFBF], a
+    ldh [hDecompressRunCount], a
     inc de
-    ldh a, [hFFBF]
+    ldh a, [hDecompressRunCount]
     push af
     and a, $0F
     add a, $04
@@ -2116,13 +2116,13 @@ Jump_000_0C83::
     add a, $13
 
 Jump_000_0C9B::
-    ldh [hFFBF], a
+    ldh [hDecompressRunCount], a
     pop af
     push de
     swap a
     and a, $0F
     ld d, a
-    ldh a, [hFFC0]
+    ldh a, [hDecompressRunByte]
     ld e, a
     push hl
     ldh a, [hDecompressDestLo]
@@ -2135,14 +2135,14 @@ Jump_000_0C9B::
     pop hl
 
 Jump_000_0CB2::
-    ldh a, [hFFC2]
+    ldh a, [hDecompressHeader2]
     cp a, d
     jr z, Jump_000_0CBB
     jr c, Jump_000_0CC2
     jr Jump_000_0CDD
 
 Jump_000_0CBB::
-    ldh a, [hFFC1]
+    ldh a, [hDecompressHeader1]
     cp a, e
     jr z, Jump_000_0CC2
     jr nc, Jump_000_0CDD
@@ -2151,14 +2151,14 @@ Jump_000_0CC2::
     ld a, $F0
     add a, d
     ld d, a
-    ldh a, [hFFC4]
+    ldh a, [hDecompressHeader4]
     cp a, d
     jr z, Jump_000_0CCF
     jr nc, Jump_000_0CD6
     jr Jump_000_0CDD
 
 Jump_000_0CCF::
-    ldh a, [hFFC3]
+    ldh a, [hDecompressHeader3]
     cp a, e
     jr z, Jump_000_0CDD
     jr c, Jump_000_0CDD
@@ -2180,9 +2180,9 @@ Jump_000_0CDE::
     ld a, b
     or a, c
     jr z, Jump_000_0CEF
-    ldh a, [hFFBF]
+    ldh a, [hDecompressRunCount]
     dec a
-    ldh [hFFBF], a
+    ldh [hDecompressRunCount], a
     jr nz, Jump_000_0CB2
     pop de
     jr Jump_000_0C70
@@ -2197,8 +2197,8 @@ Jump_000_0CF0::
 
 ; C2 (E-0016): the same expansion as Func_000_0C69 but for VRAM destinations: each store waits for STAT ($FF41) bit 1 to clear with interrupts disabled, back-references read the already-written VRAM, and the lock byte $FFD6 is taken on entry and cleared on exit.
 ; 126 call sites from 74 routines (e.g. LoadMonsterPicture, LoadPlayerAndFollowerSpriteGraphics_Sub01, LoadMapScreen, LoadMapHeader, ...)
-; reads: hDecompressLock, rSTAT, hFFC5, hFFBF, hFFC0, hDecompressDestLo, hDecompressDestHi, hFFC2, ...
-; writes: hDecompressLock, hFFC5, rROMB0, hFFC0, hFFBF
+; reads: hDecompressLock, rSTAT, hVRAMByteTemp, hDecompressRunCount, hDecompressRunByte, hDecompressDestLo, hDecompressDestHi, hDecompressHeader2, ...
+; writes: hDecompressLock, hVRAMByteTemp, rROMB0, hDecompressRunByte, hDecompressRunCount
 ; points at: hDecompressMarker
 DecompressToVRAM::
 Func_000_0CF5:: ; address name
@@ -2219,14 +2219,14 @@ Jump_000_0D04::
     cp a, [hl]
     jr z, Jump_000_0D22
     pop hl
-    ldh [hFFC5], a
+    ldh [hVRAMByteTemp], a
     di
 
 Jump_000_0D11::
     ldh a, [rSTAT]
     bit 1, a
     jr nz, Jump_000_0D11
-    ldh a, [hFFC5]
+    ldh a, [hVRAMByteTemp]
     ld [hl+], a
     ei
     dec bc
@@ -2238,13 +2238,13 @@ Jump_000_0D11::
 Jump_000_0D22::
     pop hl
     ld a, [de]
-    ldh [hFFC0], a
+    ldh [hDecompressRunByte], a
     inc de
     ld a, [de]
-    ldh [hFFBF], a
+    ldh [hDecompressRunCount], a
     inc de
-    ldh a, [hFFBF]
-    ldh [hFFC5], a
+    ldh a, [hDecompressRunCount]
+    ldh [hVRAMByteTemp], a
     and a, $0F
     add a, $04
     cp a, $13
@@ -2254,13 +2254,13 @@ Jump_000_0D22::
     add a, $13
 
 Jump_000_0D3B::
-    ldh [hFFBF], a
-    ldh a, [hFFC5]
+    ldh [hDecompressRunCount], a
+    ldh a, [hVRAMByteTemp]
     push de
     swap a
     and a, $0F
     ld d, a
-    ldh a, [hFFC0]
+    ldh a, [hDecompressRunByte]
     ld e, a
     ldh a, [hDecompressDestLo]
     add a, e
@@ -2270,14 +2270,14 @@ Jump_000_0D3B::
     ld d, a
 
 Jump_000_0D50::
-    ldh a, [hFFC2]
+    ldh a, [hDecompressHeader2]
     cp a, d
     jr z, Jump_000_0D59
     jr c, Jump_000_0D60
     jr Jump_000_0D84
 
 Jump_000_0D59::
-    ldh a, [hFFC1]
+    ldh a, [hDecompressHeader1]
     cp a, e
     jr z, Jump_000_0D60
     jr nc, Jump_000_0D84
@@ -2286,14 +2286,14 @@ Jump_000_0D60::
     ld a, $F0
     add a, d
     ld d, a
-    ldh a, [hFFC4]
+    ldh a, [hDecompressHeader4]
     cp a, d
     jr z, Jump_000_0D6D
     jr nc, Jump_000_0D74
     jr Jump_000_0D84
 
 Jump_000_0D6D::
-    ldh a, [hFFC3]
+    ldh a, [hDecompressHeader3]
     cp a, e
     jr z, Jump_000_0D84
     jr c, Jump_000_0D84
@@ -2330,9 +2330,9 @@ Jump_000_0D8E::
     ld a, b
     or a, c
     jr z, Jump_000_0D9F
-    ldh a, [hFFBF]
+    ldh a, [hDecompressRunCount]
     dec a
-    ldh [hFFBF], a
+    ldh [hDecompressRunCount], a
     jr nz, Jump_000_0D50
     pop de
     jp Jump_000_0D04
@@ -2349,7 +2349,7 @@ Jump_000_0DA0::
 
 ; C2 static reading (E-0016): selects ROM bank B, then reads the compressed-stream header from [DE]: u16 output size into BC, a marker byte into $FFBB. Saves the destination start (HL) in $FFBC/$FFBD and $FFC3/$FFC4 and the destination end (HL + size) in $FFC1/$FFC2.
 ; 2 call sites from 2 routines (e.g. DecompressToRAM, DecompressToVRAM)
-; writes: rROMB0, hDecompressMarker, hDecompressDestLo, hFFC3, hDecompressDestHi, hFFC4, hFFC1, hFFC2
+; writes: rROMB0, hDecompressMarker, hDecompressDestLo, hDecompressHeader3, hDecompressDestHi, hDecompressHeader4, hDecompressHeader1, hDecompressHeader2
 DecompressReadHeader::
 Func_000_0DA8:: ; address name
     ld a, b
@@ -2365,16 +2365,16 @@ Func_000_0DA8:: ; address name
     inc de
     ld a, l
     ldh [hDecompressDestLo], a
-    ldh [hFFC3], a
+    ldh [hDecompressHeader3], a
     ld a, h
     ldh [hDecompressDestHi], a
-    ldh [hFFC4], a
+    ldh [hDecompressHeader4], a
     push hl
     add hl, bc
     ld a, l
-    ldh [hFFC1], a
+    ldh [hDecompressHeader1], a
     ld a, h
-    ldh [hFFC2], a
+    ldh [hDecompressHeader2], a
     pop hl
     ret
 
@@ -3097,36 +3097,36 @@ Func_000_120A:: ; address name
 
 ; A = value, HL = address; disables interrupts, waits until VRAM is accessible, stores A at [HL]; clobbers hFFD1
 ; 171 call sites from 117 routines (e.g. StepStringDisplayUntilDone_Sub01, ShowTextContinueMark, AcknowledgeTextPrompt_Sub01, Func_000_2950_Case0F, ...)
-; reads: rSTAT, hFFD1
-; writes: hFFD1
+; reads: rSTAT, hVRAMWriteByte
+; writes: hVRAMWriteByte
 WriteVRAMByte::
 Func_000_1211:: ; address name
-    ldh [hFFD1], a
+    ldh [hVRAMWriteByte], a
     di
 
 Jump_000_1214::
     ldh a, [rSTAT]
     bit 1, a
     jr nz, Jump_000_1214
-    ldh a, [hFFD1]
+    ldh a, [hVRAMWriteByte]
     ld [hl], a
     ei
     ret
 
 ; like WriteVRAMByte but stores at [HL] and increments HL
 ; 145 call sites from 81 routines (e.g. Func_000_2950_Case0E, LoadMonsterPictureAttributes, DrawFullScreenBufferToBGMap, CopyBBytesToVRAMFromDE, ...)
-; reads: rSTAT, hFFD1
-; writes: hFFD1
+; reads: rSTAT, hVRAMWriteByte
+; writes: hVRAMWriteByte
 WriteVRAMByteInc::
 Func_000_121F:: ; address name
-    ldh [hFFD1], a
+    ldh [hVRAMWriteByte], a
     di
 
 Jump_000_1222::
     ldh a, [rSTAT]
     bit 1, a
     jr nz, Jump_000_1222
-    ldh a, [hFFD1]
+    ldh a, [hVRAMWriteByte]
     ld [hl+], a
     ei
     ret
@@ -3987,7 +3987,6 @@ Jump_000_16F1::
 ; 116 call sites from 78 routines (e.g. DebugResultsDisplay_Update_Sub02, PackTwoDigitsOfCAsBCD, BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, ...)
 ; reads: wC8C0, wC8C1
 ; writes: wC8C0, wC8C1, wC8C2
-; points at: hFF9C, hFFF6
 HLToDecimalDigits::
 Func_000_16F5:: ; address name
     xor a, a
@@ -4030,16 +4029,16 @@ Jump_000_171A::
 
 ; the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed
 ; 45 call sites from 38 routines (e.g. DebugShowMonsterRecord_Sub01, DebugSkillViewer_Update_Sub01, DrawGoldDigitsAtHLWrapped, WithSRAMDraw4ACEAnd4BE8_Sub01, ...)
-; reads: hFFC8, hFFC7, wC8C0
-; writes: hFFC9, hFFC8, hFFC7, hFFC6, wC8C0
+; reads: hTemp2, hTemp1, wC8C0
+; writes: hTemp3, hTemp2, hTemp1, hTemp0, wC8C0
 ; points at: wC8C0
 Number24ToPackedBCD::
 Func_000_173A:: ; address name
     xor a, a
-    ldh [hFFC9], a
-    ldh [hFFC8], a
-    ldh [hFFC7], a
-    ldh [hFFC6], a
+    ldh [hTemp3], a
+    ldh [hTemp2], a
+    ldh [hTemp1], a
+    ldh [hTemp0], a
     ld hl, wC8C0
     ld a, [hl+]
     ld c, a
@@ -4072,7 +4071,7 @@ Jump_000_174E::
 
 Jump_000_1768::
     ld a, e
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wC8C0
     ld a, [hl+]
     ld c, a
@@ -4106,7 +4105,7 @@ Jump_000_1776::
 Jump_000_1790::
     ld a, e
     swap a
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wC8C0
     ld a, [hl+]
     ld c, a
@@ -4138,9 +4137,9 @@ Jump_000_17A0::
     jr Jump_000_17A0
 
 Jump_000_17BA::
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     add a, e
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wC8C0
     ld a, [hl+]
     ld c, a
@@ -4167,7 +4166,7 @@ Jump_000_17C8::
 Jump_000_17DC::
     ld a, e
     swap a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld hl, wC8C0
     ld a, [hl+]
     ld c, a
@@ -4192,9 +4191,9 @@ Jump_000_17EA::
     jr Jump_000_17EA
 
 Jump_000_17FE::
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     add a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wC8C0]
     ld e, $00
 
@@ -4209,7 +4208,7 @@ Jump_000_1812::
     swap e
     ld a, [wC8C0]
     add a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 ; DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check
@@ -4417,8 +4416,8 @@ Func_000_18D6:: ; address name
 
 ; for the current map screen decompresses its tile block (chunk table in bank $61, indexed by hFFC6 and the screen position) into wScreenTileBuffer, and on CGB its attributes (E-0130)
 ; 4 call sites from 4 routines (e.g. Func_061_4472_Case07, Func_061_4472_Case06, Func_061_4472_Case03, Func_061_4472_Case02)
-; reads: hFFC6, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hFFC7, hFFC8, hFFC9
-; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
+; reads: hTemp0, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp1, hTemp2, hTemp3
+; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
 ; points at: wScreenTileBuffer, wD000
 LoadMapScreenFromChunk::
 Func_000_1906:: ; address name
@@ -4426,7 +4425,7 @@ Func_000_1906:: ; address name
     push af
     ld a, $61
     ld [rROMB0], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
     ld h, $00
     add hl, hl
@@ -4445,11 +4444,11 @@ Func_000_1906:: ; address name
     pop af
     add a, l
     ld l, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
     adc a, $00
     ld h, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -4471,9 +4470,9 @@ Func_000_1906:: ; address name
     add a, c
     add_a_to_hl
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     add hl, de
     ld e, [hl]
     inc hl
@@ -4487,9 +4486,9 @@ Func_000_1906:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr nz, Jump_000_1978
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     inc hl
     inc hl
@@ -4497,9 +4496,9 @@ Func_000_1906:: ; address name
     jr Jump_000_19A4
 
 Jump_000_1978::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     inc hl
     inc hl
@@ -4510,9 +4509,9 @@ Jump_000_1978::
     ld d, a
     ld a, [hl]
     ld [rROMB0], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
     add hl, de
     ld a, [hl+]
@@ -4535,8 +4534,8 @@ Jump_000_19A4::
 
 ; loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the highest set bit of the flag byte whose RAM address is stored in the record, decompresses that variant's tile-map stream (an array of far pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute stream into wD000 (WRAM bank 2); then runs the map's tile-replacement table (Func_084_43B8) and two map-specific fix-ups (Func_000_1B6F, Func_000_1A73); hands over to Func_061_4472 when wCC44 bit 7 is set
 ; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case00, ScriptCommand77_Run_Case01, ScriptCommandED_Run_Case07_Case02)
-; reads: wCC44, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hFFC6, hFFC7, hFFC8, ...
-; writes: rROMB0, hFFC6, hFFC7, hFFC8, hFFC9, rSVBK
+; reads: wCC44, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp0, hTemp1, hTemp2, ...
+; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
 ; points at: wScreenTileBuffer, wD000
 LoadMapScreen::
 Func_000_19A9:: ; address name
@@ -4581,9 +4580,9 @@ Jump_000_19D9::
 
 Jump_000_19E6::
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
@@ -4605,9 +4604,9 @@ Jump_000_19E6::
     add a, c
     add_a_to_hl
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     add hl, de
     ld a, [hl+]
     ld e, a
@@ -4622,9 +4621,9 @@ Jump_000_19E6::
     ld a, [wIsCGB]
     or a, a
     jr nz, Jump_000_1A36
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     inc hl
     inc hl
@@ -4632,9 +4631,9 @@ Jump_000_19E6::
     jr Jump_000_1A62
 
 Jump_000_1A36::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     inc hl
     inc hl
@@ -4645,9 +4644,9 @@ Jump_000_1A36::
     ld d, a
     ld a, [hl]
     ld [rROMB0], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
     add hl, de
     ld a, [hl+]
@@ -4674,7 +4673,7 @@ Jump_000_1A62::
 ; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
 ; reads: wCC44, hMapId, wC88E, wC891
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wC88F
 LoadMapScreen_Sub01::
 Func_000_1A73:: ; address name
@@ -4711,7 +4710,7 @@ Jump_000_1A92::
     jr nz, Jump_000_1AA9
     ld de, wC88F
     ld a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadMapScreen_Sub01_Sub01
     ret
 
@@ -4720,7 +4719,7 @@ Jump_000_1AA9::
     ld d, h
     inc de
     ld a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadMapScreen_Sub01_Sub01
     ret
 
@@ -4732,7 +4731,7 @@ Jump_000_1AB3::
 
 ; only called from LoadMapScreen_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. LoadMapScreen_Sub01)
-; reads: hMapScreenX, hMapScreenY, wIsCGB, hFFC6
+; reads: hMapScreenX, hMapScreenY, wIsCGB, hTemp0
 ; writes: rSVBK
 LoadMapScreen_Sub01_Sub01::
 Func_000_1AD6:: ; address name
@@ -4800,7 +4799,7 @@ Func_000_1AD6:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld c, $03
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $04
     jr z, Jump_000_1B5C
     cp a, $0A
@@ -4833,7 +4832,6 @@ Jump_000_1B6D::
 ; only called from LoadMapScreen (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMapScreen)
 ; reads: hMapScreenX, hMapId
-; points at: wC2E2, wC1CA
 LoadMapScreen_Sub02::
 Func_000_1B6F:: ; address name
     ld de, $012B
@@ -4845,7 +4843,7 @@ Func_000_1B6F:: ; address name
     ldh a, [hMapId]
     cp a, $0D
     jr nz, Jump_000_1B95
-    ld hl, wC2E2
+    ld hl, wScreenTileBuffer + $14A
     ld [hl], $44
     inc hl
     ld [hl], $45
@@ -4859,7 +4857,7 @@ Func_000_1B6F:: ; address name
 Jump_000_1B95::
     cp a, $05
     ret nz
-    ld hl, wC1CA
+    ld hl, wScreenTileBuffer + $32
     ld [hl], $78
     inc hl
     ld [hl], $79
@@ -4872,7 +4870,7 @@ Jump_000_1B95::
 
 ; hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196
 ; 4 call sites from 4 routines (e.g. RunWCC44Type_420D_Case07, RunWCC44Type_420D_Case06, RunWCC44Type_420D_Case03, RunWCC44Type_420D_Case02)
-; reads: hFFC6
+; reads: hTemp0
 ; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193, wC90D, wC901, wC194, ...
 LoadSpecialMapHeader::
 Func_000_1BAD:: ; address name
@@ -4880,7 +4878,7 @@ Func_000_1BAD:: ; address name
     push af
     ld a, $61
     ld [rROMB0], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
     ld h, $00
     sla l
@@ -5165,15 +5163,15 @@ Func_000_1D7F:: ; address name
 
 ; only called from DebugMapEditor_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugMapEditor_Update)
-; reads: hFFC6, wC5FA, wC5FC
-; writes: rROMB0, hFFC6
+; reads: hTemp0, wC5FA, wC5FC
+; writes: rROMB0, hTemp0
 DebugMapEditor_Update_Sub01::
 Func_000_1D90:: ; address name
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $11
     ld [rROMB0], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
     ld h, $00
     add hl, hl
@@ -5194,7 +5192,7 @@ Func_000_1D90:: ; address name
     ld a, [wC5FA]
     ld c, a
     ld a, [hl+]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     cp a, c
     jr z, Jump_000_1DC0
     jr nc, Jump_000_1DC7
@@ -5246,7 +5244,7 @@ Jump_000_1DF4::
     ld d, a
     ld a, [hl]
     ld [rROMB0], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
     sla a
     add a, c
@@ -5525,13 +5523,13 @@ Func_000_1F49:: ; address name
 
 ; copies B bytes from hFFC6 to field C of SRAM record A (SRAMRecordAddressMapped); HL and DE preserved (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: hFFC6
+; points at: hTemp0
 StoreHFFC6ToSRAMRecordBytes:: ; heuristic: follows a terminator; C0
 Func_000_1F5E:: ; address name
     push hl
     push de
     call SRAMRecordAddressMapped
-    ld de, hFFC6
+    ld de, hTemp0
 
 Jump_000_1F66::
     ld a, [de]
@@ -5545,13 +5543,13 @@ Jump_000_1F66::
 
 ; copies B bytes of field C of SRAM record A to hFFC6; HL and DE preserved (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: hFFC6
+; points at: hTemp0
 LoadSRAMRecordBytesToHFFC6:: ; heuristic: follows a terminator; C0
 Func_000_1F6F:: ; address name
     push hl
     push de
     call SRAMRecordAddressMapped
-    ld de, hFFC6
+    ld de, hTemp0
 
 Jump_000_1F77::
     ld a, [hl+]
@@ -5565,43 +5563,43 @@ Jump_000_1F77::
 
 ; A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved
 ; 102 call sites from 78 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, PersonalityIndexOfRecord, MoveIncapacitatedPartyMembersBack, BuildPartyStatusWindowRows, ...)
-; writes: hFFC6
+; writes: hTemp0
 LoadSRAMRecordByte::
 Func_000_1F80:: ; address name
     push hl
     call SRAMRecordAddress
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop hl
     ret
 
 ; like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)
 ; 98 call sites from 54 routines (e.g. LoadPlayerAndFollowerSpriteGraphics_Sub01, BuildPartyStatusWindowRows, PartyHasSpeciesLo3CTo5BWithHiSet, GameMode5_Init_Case06_Sub01, ...)
-; writes: hFFC6, hFFC7
+; writes: hTemp0, hTemp1
 LoadSRAMRecordWord::
 Func_000_1F89:: ; address name
     push hl
     call SRAMRecordAddress
     ld a, [hl+]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [hl]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     pop hl
     ret
 
 ; A = record, C = field offset (SRAMRecordAddress): copies three bytes from the record to hFFC6-hFFC8; HL kept (E-0108)
 ; 3 call sites from 2 routines (e.g. TriggerEventC9IfExpDigitsRepeat, ScriptCommandE8_Run_Case09_Case13_Sub01)
-; writes: hFFC6, hFFC7, hFFC8
+; writes: hTemp0, hTemp1, hTemp2
 LoadRecordThreeBytesToHFFC6::
 Func_000_1F95:: ; address name
     push hl
     call SRAMRecordAddress
     ld a, [hl+]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [hl+]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [hl+]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     pop hl
     ret
 
@@ -5721,7 +5719,7 @@ Func_000_1FE3:: ; address name
 
 ; copies the 6 x 6 picture attribute block of species DE (table $447E in bank $38, default $20E9) plus hFFC6 to HL in WRAM bank 2 (E-0128)
 ; 2 call sites from 2 routines (e.g. DrawRecordMonsterPictureForWC46D, Func_003_4FBB_Case01)
-; reads: hFFC6
+; reads: hTemp0
 ; writes: rROMB0, rSVBK
 LoadMonsterPictureAttributeBlock::
 Func_000_2038:: ; address name
@@ -5767,7 +5765,7 @@ Jump_000_2068::
     ld a, [de]
     push bc
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, c
     pop bc
     call WriteVRAMByteInc
@@ -5796,7 +5794,7 @@ Jump_000_2087::
 
 ; DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)
 ; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF6_Run_Case10_Case02, ScriptCommandE8_Run_Case0D_Case06, ScriptCommandE8_Run_Case09_Case05, ...)
-; reads: hFFC6
+; reads: hTemp0
 ; writes: rROMB0, rVBK
 LoadMonsterPictureAttributes::
 Func_000_2090:: ; address name
@@ -5842,7 +5840,7 @@ Jump_000_20C0::
     ld a, [de]
     push bc
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, c
     pop bc
     call WriteVRAMByteInc
@@ -5942,12 +5940,12 @@ Jump_000_2147::
 
 ; only called from WithSRAMDraw4ACEAnd4BE8_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01)
-; points at: hFFC9
+; points at: hTemp3
 WithSRAMDraw4ACEAnd4BE8_Sub01_Sub01::
 Func_000_214F:: ; address name
     push hl
     ld c, $00
-    ld hl, hFFC9
+    ld hl, hTemp3
     ld a, [hl-]
     and a, $0F
     jr z, Jump_000_2160
@@ -6196,8 +6194,8 @@ Jump_000_227F::
 
 ; only called from LoadPlayerAndFollowerSpriteGraphics (E-0047)
 ; 2 call sites from 1 routine (e.g. LoadPlayerAndFollowerSpriteGraphics)
-; reads: wC6FD, hFFC6, hFFCA, hFFCB, hFFC8, hFFC9, wIsCGB, hFFC7
-; writes: hFFCA, hFFCB, hFFC8, hFFC9, rRAMG, rROMB0
+; reads: wC6FD, hTemp0, hTemp4, hTemp5, hTemp2, hTemp3, wIsCGB, hTemp1
+; writes: hTemp4, hTemp5, hTemp2, hTemp3, rRAMG, rROMB0
 ; points at: wC701, wC6FE, wOBJPaletteBuffer
 LoadPlayerAndFollowerSpriteGraphics_Sub01::
 Func_000_228A:: ; address name
@@ -6207,14 +6205,14 @@ Func_000_228A:: ; address name
     ld b, a
     ld hl, wC701
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld hl, vTiles0 + $100
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld de, wC6FE
 
 Jump_000_22A5::
@@ -6227,14 +6225,14 @@ Jump_000_22A5::
     ld c, $55
     call LoadSRAMRecordByte
     pop de
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_000_2304
     xor a, a
     ld [rRAMG], a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld c, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld b, a
     ld a, $FF
     ld [bc], a
@@ -6242,9 +6240,9 @@ Jump_000_22A5::
     ld [bc], a
     ld de, Data_07E_545E
     ld b, $7E
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
     call DecompressToVRAM
     ld a, [wIsCGB]
@@ -6281,15 +6279,15 @@ Jump_000_2304::
     call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     ld l, e
     ld h, d
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld c, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld b, a
     ld a, l
     ld [bc], a
@@ -6312,9 +6310,9 @@ Jump_000_2304::
     ld b, a
     pop af
     ld [rROMB0], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
     call DecompressToVRAM
     ld a, [wIsCGB]
@@ -6333,9 +6331,9 @@ Jump_000_2304::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     push hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     add hl, hl
     add hl, hl
@@ -6354,15 +6352,15 @@ Jump_000_2304::
     call CopyFromBank
 
 Jump_000_2378::
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     inc a
-    ldh [hFFC9], a
-    ldh a, [hFFCA]
+    ldh [hTemp3], a
+    ldh a, [hTemp4]
     add a, $02
-    ldh [hFFCA], a
-    ldh a, [hFFCB]
+    ldh [hTemp4], a
+    ldh a, [hTemp5]
     adc a, $00
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     pop de
     inc de
     pop bc
@@ -6372,18 +6370,18 @@ Jump_000_2378::
 
 ; A = SRAM record number: grades the record's bytes at offsets $6F, $72 and $70 with GradeHFFC6 (g1, g2, g3, each 0-2) and returns A = 9 * g1 + 3 * g2 + g3, a number from 0 to 26. The status screen passes this to the string database as a personality-name index (category 7, 27 names), so it is the monster's personality index (E-0031)
 ; 4 call sites from 4 routines (e.g. DrawItemTargetStatPreview, ScriptCommand62_Run_Case00, ShowRecordPersonalityName, BuildItemScreenForWItemId_BankF1_Sub01)
-; reads: hFFCC
-; writes: hFFCC
+; reads: hTemp6
+; writes: hTemp6
 PersonalityIndexOfRecord::
 Func_000_2391:: ; address name
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld c, $6F
     call LoadSRAMRecordByte
     call GradeHFFC6
     ld a, $09
     call Multiply8
     ld b, l
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld c, $72
     call LoadSRAMRecordByte
     call GradeHFFC6
@@ -6392,7 +6390,7 @@ Func_000_2391:: ; address name
     add a, c
     add a, b
     ld b, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld c, $70
     call LoadSRAMRecordByte
     call GradeHFFC6
@@ -6402,10 +6400,10 @@ Func_000_2391:: ; address name
 
 ; C = 0 when hFFC6 >= $C0, 1 when hFFC6 >= $40, otherwise 2
 ; 3 call sites from 1 routine (e.g. PersonalityIndexOfRecord)
-; reads: hFFC6
+; reads: hTemp0
 GradeHFFC6::
 Func_000_23BD:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, $00
     cp a, $C0
     ret nc
@@ -6417,20 +6415,20 @@ Func_000_23BD:: ; address name
 
 ; writes the packed BCD number in hFFC6-hFFC9 (most significant byte last) as digits at DE without leading zeros, then $F0; zero writes a single 0 (E-0127)
 ; 9 call sites from 7 routines (e.g. ScriptCommand84_Run_Case06, ScriptCommand80_Run_Case00, ScriptCommand82_Run_Case01_Case00, ScriptCommand82_Run_Case03_Case00, ...)
-; reads: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: hFFC8
+; reads: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: hTemp2
 WritePackedBCDNoLeadingZeros::
 Func_000_23CA:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_000_23E4
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_000_23E4
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     or a, a
     jr nz, Jump_000_23E4
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     or a, a
     jr nz, Jump_000_23E4
     ld [de], a
@@ -6441,7 +6439,7 @@ Func_000_23CA:: ; address name
 
 Jump_000_23E4::
     ld c, $00
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     or a, a
     jr z, Jump_000_23EF
     ld [de], a
@@ -6450,7 +6448,7 @@ Jump_000_23E4::
 
 Jump_000_23EF::
     ld b, $03
-    ld hl, hFFC8
+    ld hl, hTemp2
 
 Jump_000_23F4::
     ld a, [hl]
@@ -6812,11 +6810,11 @@ Jump_000_2589:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: rLY, rLYC, hScrollX
 ; writes: rSCX, rLYC, rSVBK
-; points at: wC0F0
+; points at: wBGPaletteCopy
 ComputeSpriteScrollOffsets_Case02::
 Jump_000_258B:: ; address name
     ldh a, [rLY]
-    ld hl, wC0F0
+    ld hl, wBGPaletteCopy
     add_a_to_hl
     ld a, [hl]
     ldh [rSCX], a
@@ -6836,11 +6834,11 @@ Jump_000_25A6::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: rLY, rLYC, hScrollY
 ; writes: rSCY, rLYC, rSVBK
-; points at: wC0F0
+; points at: wBGPaletteCopy
 ComputeSpriteScrollOffsets_Case03::
 Jump_000_25AA:: ; address name
     ldh a, [rLY]
-    ld hl, wC0F0
+    ld hl, wBGPaletteCopy
     add_a_to_hl
     ld a, [hl]
     ldh [rSCY], a
@@ -8057,7 +8055,7 @@ Jump_000_2CB8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC533, wC534, wC537, wC538
 ; writes: wC537, wC538, wC533, wC534
-; points at: wC52B, wC130
+; points at: wC52B, wTextBuf0
 Func_000_2950_Case19::
 Jump_000_2CC5:: ; address name
     ld hl, wC52B
@@ -8076,7 +8074,7 @@ Jump_000_2CC5:: ; address name
     ld a, [wC538]
     adc a, $00
     ld [wC538], a
-    ld de, wC130
+    ld de, wTextBuf0
     ld a, [hl]
     add a, e
     ld l, a
@@ -8423,40 +8421,40 @@ Jump_000_2EC7::
 
 ; writes the 24-bit number in hFFC6-hFFC8 as decimal digits from the millions down (dividing by 1,000,000, 100,000 and 10,000), then the 16-bit remainder through the shared writer (E-0127)
 ; 2 call sites from 2 routines (e.g. Func_031_67AA_Case00, RunBattlePhaseWhenTextIdle_A0_Case03_Case08)
-; reads: hFFC6, hFFC7
-; writes: hFFCC
+; reads: hTemp0, hTemp1
+; writes: hTemp6
 WriteNumber24AsDecimalString::
 Func_000_2ECF:: ; address name
     ld a, $0F
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld e, $40
     ld d, $42
     call Quotient24ByHFFCCDE
     or a, a
     jp nz, Jump_000_2F03
     ld a, $01
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld e, $A0
     ld d, $86
     call Quotient24ByHFFCCDE
     or a, a
     jr nz, Jump_000_2F11
     ld a, $00
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld e, $10
     ld d, $27
     call Quotient24ByHFFCCDE
     or a, a
     jr nz, Jump_000_2F1F
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld b, a
     jp RunBattleActions_Case09_Case04_Sub01
 
 Jump_000_2F03::
     ld a, $0F
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld e, $40
     ld d, $42
     call Divide24ByHFFCCDE
@@ -8464,7 +8462,7 @@ Jump_000_2F03::
 
 Jump_000_2F11::
     ld a, $01
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld e, $A0
     ld d, $86
     call Divide24ByHFFCCDE
@@ -8472,72 +8470,72 @@ Jump_000_2F11::
 
 Jump_000_2F1F::
     ld a, $00
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld e, $10
     ld d, $27
     call Divide24ByHFFCCDE
     call StoreAThenTerminator
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld b, a
     jp Jump_000_2FA7
 
 ; Divide24ByHFFCCDE with hFFC6-hFFC8 restored afterwards (A = the quotient); uses wC0A0, wC0A1 and wMenuRowCount as scratch, so wMenuRowCount is overwritten (E-0090)
 ; 3 call sites from 1 routine (e.g. WriteNumber24AsDecimalString)
-; reads: hFFC6, hFFC7, hFFC8, wC0A0, wC0A1, wMenuRowCount
-; writes: wC0A0, wC0A1, wMenuRowCount, hFFC6, hFFC7, hFFC8
+; reads: hTemp0, hTemp1, hTemp2, wC0A0, wC0A1, wMenuRowCount
+; writes: wC0A0, wC0A1, wMenuRowCount, hTemp0, hTemp1, hTemp2
 Quotient24ByHFFCCDE::
 Func_000_2F36:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wC0A0], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [wC0A1], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [wMenuRowCount], a
     call Divide24ByHFFCCDE
     push af
     ld a, [wC0A0]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wC0A1]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wMenuRowCount]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     pop af
     ret
 
 ; A = the 24-bit hFFC8:hFFC7:hFFC6 divided by the 24-bit hFFCC:D:E (repeated subtraction; the quotient must fit in 8 bits); the remainder is left in hFFC6-hFFC8; HL kept (E-0090)
 ; 4 call sites from 2 routines (e.g. WriteNumber24AsDecimalString, Quotient24ByHFFCCDE)
-; reads: hFFCC, hFFC6, hFFC7, hFFC8
-; writes: hFFC6, hFFC7, hFFC8
+; reads: hTemp6, hTemp0, hTemp1, hTemp2
+; writes: hTemp0, hTemp1, hTemp2
 Divide24ByHFFCCDE::
 Func_000_2F5A:: ; address name
     push hl
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld l, a
     ld h, $FF
 
 Jump_000_2F60::
     inc h
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     sub a, e
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     sbc a, d
-    ldh [hFFC7], a
-    ldh a, [hFFC8]
+    ldh [hTemp1], a
+    ldh a, [hTemp2]
     sbc a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     jr nc, Jump_000_2F60
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, e
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, d
-    ldh [hFFC7], a
-    ldh a, [hFFC8]
+    ldh [hTemp1], a
+    ldh a, [hTemp2]
     adc a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
     pop hl
     ret
@@ -9147,9 +9145,9 @@ Jump_000_33AA::
 ; C1 (E-0018): appears to be the sound engine's update routine. It switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes the sound registers (including $FF1A). Identified from those writes and from the banks it reads at runtime ($40-$43 via the tables above); not decoded further.
 ; for each of the 6 channel slots at wSoundChannelSlots: copies the slot into HRAM $FFD8-$FFF7, reads events from the track in bank hSoundBank and writes the channel's sound registers (the per-frame sound engine; called from VBlankHandler)
 ; 3 call sites from 1 routine (e.g. VBlankHandler)
-; reads: wDD15, hSoundBank, hFFDA, hTrackPosLo, hTrackPosHi, hFFE6, hFFE7, hFFDE, ...
-; writes: wSoundChannelIndex, wDD08, rROMB0, wSoundHwChannel, wDD0D, wDD0B, wDD0C, hFFE7, ...
-; points at: wDD0E, wSoundChannelSlots, hFFDF, hFFF2
+; reads: wDD15, hSoundBank, hSndChanFlags, hTrackPosLo, hTrackPosHi, hSndVibratoDelay, hSndVibratoCounter, hSndDutyAndTempo, ...
+; writes: wSoundChannelIndex, wDD08, rROMB0, wSoundHwChannel, wDD0D, wDD0B, wDD0C, hSndVibratoCounter, ...
+; points at: wDD0E, wSoundChannelSlots, hSndTickAccum, hSndEnvTimer
 SoundTick::
 Func_000_33E8:: ; address name
     ld a, [BANK_NUMBER_BYTE]
@@ -9202,7 +9200,7 @@ Jump_000_340B::
     jr nz, Jump_000_340B
     ldh a, [hSoundBank]
     ld [rROMB0], a
-    ldh a, [hFFDA]
+    ldh a, [hSndChanFlags]
     and a, $03
     ld [wSoundHwChannel], a
     ld b, a
@@ -9227,18 +9225,18 @@ Jump_000_343C::
     jp z, Jump_000_3554
     call SoundTick_Sub04
     call SoundTick_Sub05
-    ldh a, [hFFE6]
+    ldh a, [hSndVibratoDelay]
     ld b, a
-    ldh a, [hFFE7]
+    ldh a, [hSndVibratoCounter]
     inc a
     cp a, b
     jr c, Jump_000_3460
     ld a, b
 
 Jump_000_3460::
-    ldh [hFFE7], a
-    ld hl, hFFDF
-    ldh a, [hFFDE]
+    ldh [hSndVibratoCounter], a
+    ld hl, hSndTickAccum
+    ldh a, [hSndDutyAndTempo]
     and a, $0F
     add a, [hl]
     cp a, $10
@@ -9250,55 +9248,55 @@ Jump_000_3460::
 Jump_000_3473::
     ld [hl], a
     call SoundTick_Sub03
-    ldh a, [hFFF0]
+    ldh a, [hSndNoteTimer]
     and a, a
     jr z, Jump_000_347F
     dec a
-    ldh [hFFF0], a
+    ldh [hSndNoteTimer], a
 
 Jump_000_347F::
-    ldh a, [hFFE1]
+    ldh a, [hSndWaitTicks]
     and a, a
     jr nz, Jump_000_34BA
-    ldh a, [hFFF3]
+    ldh a, [hSndEnvFlags]
     and a, $F0
     jr z, Jump_000_349C
-    ld hl, hFFF2
+    ld hl, hSndEnvTimer
     dec [hl]
     jr nz, Jump_000_34A8
-    ldh a, [hFFED]
+    ldh a, [hSndEnvelopeReload]
     and a, $F0
     ld c, a
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     and a, $0F
     or a, c
-    ldh [hFFE0], a
+    ldh [hSndEnvelope], a
 
 Jump_000_349C::
     call SoundTick_Sub01
 
 Jump_000_349F::
-    ldh a, [hFFEF]
-    ldh [hFFF0], a
+    ldh a, [hSndNoteLength]
+    ldh [hSndNoteTimer], a
     call SoundNextEvent
     jr Jump_000_34C7
 
 Jump_000_34A8::
-    ldh a, [hFFF3]
+    ldh a, [hSndEnvFlags]
     and a, $0F
     dec a
     cp a, [hl]
     jr nz, Jump_000_34C7
     call SoundTick_Sub07
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     call WriteChannelEnvelopeIfChanged
     jr Jump_000_34C7
 
 Jump_000_34BA::
     dec a
-    ldh [hFFE1], a
+    ldh [hSndWaitTicks], a
     jr nz, Jump_000_34C7
-    ldh a, [hFFF3]
+    ldh a, [hSndEnvFlags]
     and a, $F0
     jr nz, Jump_000_34C7
     jr Jump_000_349C
@@ -9320,7 +9318,7 @@ Jump_000_34C7::
     jr nz, Jump_000_3502
     ld a, [wDD17]
     ld b, a
-    ldh a, [hFFE2]
+    ldh a, [hSndSweepOrWave]
     cp a, b
     jr z, Jump_000_3502
     ld e, a
@@ -9402,7 +9400,7 @@ Jump_000_3554::
     ld a, [hl+]
     and a, $0F
     ld d, a
-    ldh [hFFDF], a
+    ldh [hSndTickAccum], a
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_3593
@@ -9413,32 +9411,32 @@ Jump_000_3554::
     or a, d
 
 Jump_000_356D::
-    ldh [hFFDE], a
+    ldh [hSndDutyAndTempo], a
     ld a, [hl+]
     swap a
-    ldh [hFFE0], a
+    ldh [hSndEnvelope], a
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_3599
     ld a, [hl+]
-    ldh [hFFE2], a
+    ldh [hSndSweepOrWave], a
 
 Jump_000_357E::
     xor a, a
-    ldh [hFFE3], a
-    ldh [hFFE4], a
-    ldh [hFFE5], a
-    ldh [hFFE8], a
+    ldh [hSndChanByteE3], a
+    ldh [hSndBranchIndex], a
+    ldh [hSndVibratoDepth], a
+    ldh [hSndPitchSlide], a
     ldh [hTrackPosHi], a
     dec a
-    ldh [hFFEE], a
+    ldh [hSndPanning], a
     ld a, $02
     ldh [hTrackPosLo], a
     jp Jump_000_349F
 
 Jump_000_3593::
     ld a, [hl+]
-    ldh [hFFE6], a
+    ldh [hSndVibratoDelay], a
     ld a, d
     jr Jump_000_356D
 
@@ -9446,20 +9444,20 @@ Jump_000_3599::
     xor a, a
     ldh [rNR30], a
     ld d, a
-    ldh a, [hFFE2]
+    ldh a, [hSndSweepOrWave]
     ld e, a
     cp a, $FF
     jr nz, Jump_000_35A8
     ld e, [hl]
     ld a, e
-    ldh [hFFE2], a
+    ldh [hSndSweepOrWave], a
 
 Jump_000_35A8::
     ld [wDD17], a
     swap e
     ld hl, $30CC
     push de
-    ldh a, [hFFF1]
+    ldh a, [hSndA8Param]
     swap a
     and a, $0F
     add a, a
@@ -9482,8 +9480,8 @@ Jump_000_35C5::
 
 ; C2 static reading and 5,154 emulated fetches agree (E-0019): fetches the next track event of the current channel. The position in $FFD8/$FFD9 counts 2-byte events from the track start ($FFDB/$FFDC), the event address is base + 2*position, and the first byte selects the command (see tools/sound_tracks.py).
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: hTrackPosLo, hTrackPosHi, hTrackBaseLo, hTrackBaseHi, hFFF3, wSoundHwChannel, hFFE2, hFFDE, ...
-; writes: hTrackPosLo, hTrackPosHi, hFFF2, hFFE1, hFFE7, rNR30, hFFEB, hFFEC, ...
+; reads: hTrackPosLo, hTrackPosHi, hTrackBaseLo, hTrackBaseHi, hSndEnvFlags, wSoundHwChannel, hSndSweepOrWave, hSndDutyAndTempo, ...
+; writes: hTrackPosLo, hTrackPosHi, hSndEnvTimer, hSndWaitTicks, hSndVibratoCounter, rNR30, hSndFreqLo, hSndFreqHi, ...
 SoundNextEvent::
 Func_000_35CD:: ; address name
     ldh a, [hTrackPosLo]
@@ -9571,10 +9569,10 @@ Jump_000_363E::
     cp a, $02
     jr z, Jump_000_364E
     ld a, b
-    ldh [hFFE8], a
+    ldh [hSndPitchSlide], a
     ld a, [hl]
-    ldh [hFFE9], a
-    ldh [hFFEA], a
+    ldh [hSndPitchSlideTime], a
+    ldh [hSndPitchSlideCounter], a
 
 Jump_000_364E::
     inc hl
@@ -9586,14 +9584,14 @@ Jump_000_3651::
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_3669
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     and a, $0F
     jr nz, Jump_000_3669
     ld a, [hl]
-    ldh [hFFE6], a
+    ldh [hSndVibratoDelay], a
     ld a, b
     swap a
-    ldh [hFFE5], a
+    ldh [hSndVibratoDepth], a
 
 Jump_000_3669::
     inc hl
@@ -9648,7 +9646,7 @@ Jump_000_36A9::
     jr nz, Jump_000_36C3
     ld a, [hl+]
     swap a
-    ldh [hFFE0], a
+    ldh [hSndEnvelope], a
     ld a, [wDD0B]
     ld b, a
     ld a, [wDD08]
@@ -9664,13 +9662,13 @@ Jump_000_36C3::
     cp a, $02
     jr z, Jump_000_36D4
     ld a, [hl+]
-    ldh [hFFE2], a
+    ldh [hSndSweepOrWave], a
     jp Jump_000_35DB
 
 Jump_000_36D4::
     ld a, [hl+]
     ld e, a
-    ldh [hFFE2], a
+    ldh [hSndSweepOrWave], a
     ld a, [wDD0B]
     ld b, a
     ld a, [wDD08]
@@ -9688,7 +9686,7 @@ Jump_000_36E5::
     swap e
     ld hl, $30CC
     push de
-    ldh a, [hFFF1]
+    ldh a, [hSndA8Param]
     swap a
     and a, $0F
     add a, a
@@ -9721,15 +9719,15 @@ Jump_000_3712::
     rrca
     and a, $C0
     ld d, a
-    ldh a, [hFFDE]
+    ldh a, [hSndDutyAndTempo]
     and a, $3F
     or a, d
-    ldh [hFFDE], a
+    ldh [hSndDutyAndTempo], a
     jp Jump_000_35DB
 
 Jump_000_372D::
     ld a, [hl+]
-    ldh [hFFE6], a
+    ldh [hSndVibratoDelay], a
     jp Jump_000_35DB
 
 Jump_000_3733::
@@ -9742,22 +9740,22 @@ Jump_000_3733::
     ld b, a
     and a, $0F
     add a, a
-    ldh [hFFEF], a
-    ldh [hFFF0], a
+    ldh [hSndNoteLength], a
+    ldh [hSndNoteTimer], a
     ld a, b
     add a, $10
     and a, $F0
     ld e, a
-    ldh a, [hFFDA]
+    ldh a, [hSndChanFlags]
     and a, $0F
     or a, e
 
 Jump_000_3751::
-    ldh [hFFDA], a
+    ldh [hSndChanFlags], a
     jp Jump_000_35DB
 
 Jump_000_3756::
-    ldh a, [hFFDA]
+    ldh a, [hSndChanFlags]
     and a, $0F
     jr Jump_000_3751
 
@@ -9767,11 +9765,11 @@ Jump_000_375C::
     ld a, [hl+]
     cp a, $01
     jr nz, Jump_000_3769
-    ldh a, [hFFEE]
+    ldh a, [hSndPanning]
     swap a
 
 Jump_000_3769::
-    ldh [hFFEE], a
+    ldh [hSndPanning], a
     jp Jump_000_35DB
 
 Jump_000_376E::
@@ -9785,7 +9783,7 @@ Jump_000_3778::
     cp a, $A7
     jr nz, Jump_000_3782
     ld a, [hl]
-    ldh [hFFE1], a
+    ldh [hSndWaitTicks], a
     jp Jump_000_3998
 
 Jump_000_3782::
@@ -9798,7 +9796,7 @@ Jump_000_3782::
     ld a, c
     and a, $F0
     or a, b
-    ldh [hFFF1], a
+    ldh [hSndA8Param], a
     jp Jump_000_35DB
 
 Jump_000_3794::
@@ -9817,7 +9815,7 @@ Jump_000_3794::
     jr z, Jump_000_37B6
     cp a, $FF
     jr nz, Jump_000_37CA
-    ldh a, [hFFE4]
+    ldh a, [hSndBranchIndex]
     jr Jump_000_37B9
 
 Jump_000_37B6::
@@ -9839,7 +9837,7 @@ Jump_000_37B9::
 Jump_000_37CA::
     cp a, $80
     jr nc, Jump_000_37D3
-    ldh [hFFE4], a
+    ldh [hSndBranchIndex], a
     jp Jump_000_35DB
 
 Jump_000_37D3::
@@ -9848,15 +9846,15 @@ Jump_000_37D3::
     jp Jump_000_35DB
 
 Jump_000_37DB::
-    ldh a, [hFFE4]
+    ldh a, [hSndBranchIndex]
     inc a
-    ldh [hFFE4], a
+    ldh [hSndBranchIndex], a
     jp Jump_000_35DB
 
 Jump_000_37E3::
-    ldh a, [hFFE4]
+    ldh a, [hSndBranchIndex]
     dec a
-    ldh [hFFE4], a
+    ldh [hSndBranchIndex], a
     jp Jump_000_35DB
 
 Jump_000_37EB::
@@ -9879,42 +9877,42 @@ Jump_000_37FF::
     and a, $F0
     jr z, Jump_000_381F
     swap a
-    ldh [hFFF2], a
+    ldh [hSndEnvTimer], a
     or a, $F0
-    ldh [hFFF3], a
+    ldh [hSndEnvFlags], a
     ld a, c
     and a, $0F
     ld c, a
-    ldh a, [hFFED]
+    ldh a, [hSndEnvelopeReload]
     and a, $F0
     or a, c
-    ldh [hFFED], a
+    ldh [hSndEnvelopeReload], a
     jp Jump_000_35DB
 
 Jump_000_381F::
     xor a, a
-    ldh [hFFF2], a
-    ldh [hFFED], a
-    ldh [hFFF3], a
+    ldh [hSndEnvTimer], a
+    ldh [hSndEnvelopeReload], a
+    ldh [hSndEnvFlags], a
     jp Jump_000_35DB
 
 Jump_000_3829::
     cp a, $AC
     jr nz, Jump_000_3867
-    ldh a, [hFFF4]
+    ldh a, [hSndLoopCount]
     sub a, $01
     jr z, Jump_000_3855
     jr nc, Jump_000_3836
     ld a, [hl]
 
 Jump_000_3836::
-    ldh [hFFF4], a
+    ldh [hSndLoopCount], a
     ldh a, [hTrackPosLo]
     sub a, $01
-    ldh [hFFF5], a
+    ldh [hSndReturnPosLo], a
     ldh a, [hTrackPosHi]
     sbc a, $00
-    ldh [hFFF6], a
+    ldh [hSndReturnPosHi], a
     inc hl
     deref_hl
     srl h
@@ -9927,7 +9925,7 @@ Jump_000_3836::
 
 Jump_000_3855::
     xor a, a
-    ldh [hFFF4], a
+    ldh [hSndLoopCount], a
     ldh a, [hTrackPosLo]
     add a, $01
     ldh [hTrackPosLo], a
@@ -9939,9 +9937,9 @@ Jump_000_3855::
 Jump_000_3867::
     cp a, $AD
     jr nz, Jump_000_3876
-    ldh a, [hFFF5]
+    ldh a, [hSndReturnPosLo]
     ldh [hTrackPosLo], a
-    ldh a, [hFFF6]
+    ldh a, [hSndReturnPosHi]
     ldh [hTrackPosHi], a
     jp SoundNextEvent
 
@@ -9951,10 +9949,10 @@ Jump_000_3876::
     ld a, [hl+]
     and a, $10
     ld b, a
-    ldh a, [hFFDE]
+    ldh a, [hSndDutyAndTempo]
     and a, $EF
     or a, b
-    ldh [hFFDE], a
+    ldh [hSndDutyAndTempo], a
     jp Jump_000_35DB
 
 Jump_000_3888::
@@ -9962,12 +9960,12 @@ Jump_000_3888::
     jr nz, Jump_000_389C
     ld a, [hl+]
     and a, $0F
-    ldh [hFFDF], a
+    ldh [hSndTickAccum], a
     ld b, a
-    ldh a, [hFFDE]
+    ldh a, [hSndDutyAndTempo]
     and a, $F0
     or a, b
-    ldh [hFFDE], a
+    ldh [hSndDutyAndTempo], a
     jp Jump_000_35DB
 
 Jump_000_389C::
@@ -9977,9 +9975,9 @@ Jump_000_389C::
 
 Jump_000_38B0::
     xor a, a
-    ldh [hFFEB], a
+    ldh [hSndFreqLo], a
     ld a, $80
-    ldh [hFFEC], a
+    ldh [hSndFreqHi], a
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_38C2
@@ -9994,23 +9992,23 @@ Jump_000_38C2::
 
 Jump_000_38C9::
     ld b, a
-    ldh a, [hFFF3]
+    ldh a, [hSndEnvFlags]
     and a, $F0
     jr z, Jump_000_38DF
     push de
-    ldh a, [hFFF3]
+    ldh a, [hSndEnvFlags]
     and a, $0F
-    ldh [hFFF2], a
+    ldh [hSndEnvTimer], a
     ld c, a
     ld a, [hl]
     sub a, c
-    ldh [hFFE1], a
+    ldh [hSndWaitTicks], a
     pop de
     jr Jump_000_38E2
 
 Jump_000_38DF::
     ld a, [hl]
-    ldh [hFFE1], a
+    ldh [hSndWaitTicks], a
 
 Jump_000_38E2::
     ld a, [wSoundHwChannel]
@@ -10043,7 +10041,7 @@ Jump_000_3905::
     jr nc, Jump_000_38B0
     add a, a
     ld e, a
-    ldh a, [hFFDE]
+    ldh a, [hSndDutyAndTempo]
     and a, $10
     jr z, Jump_000_3918
     ld a, e
@@ -10078,7 +10076,7 @@ Jump_000_3930::
 ; C2 (E-0019: formula matched 1,928 of 1,928 emulated notes): pitch for a note event. The semitone (low nibble of the first byte, 0-11) indexes the period table at $3B5C ($3B74 when $FFDE bit 4 is set), the value is shifted right by the octave (high nibble) and subtracted from $0800 to give the frequency register value in HL. Noise-channel notes use $38A0.
 Jump_000_3938::
     xor a, a
-    ldh [hFFE7], a
+    ldh [hSndVibratoCounter], a
     call ReturnTwiceIfWDD08AndWDD0B
     ld a, [wSoundHwChannel]
     cp a, $02
@@ -10093,7 +10091,7 @@ Jump_000_394C::
     pop hl
     ld a, [wSoundHwChannel]
     and a, a
-    ldh a, [hFFE2]
+    ldh a, [hSndSweepOrWave]
     ld c, $10
     call z, WriteChannelRegisterC
     ld a, l
@@ -10111,13 +10109,13 @@ Jump_000_396F::
     ld a, $02
 
 Jump_000_3971::
-    ldh [hFFEB], a
+    ldh [hSndFreqLo], a
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_39AB
     cp a, $02
     jr nc, Jump_000_3989
-    ldh a, [hFFDE]
+    ldh a, [hSndDutyAndTempo]
     and a, $C0
     or a, $3F
     ld c, $11
@@ -10129,7 +10127,7 @@ Jump_000_3989::
     or a, $80
 
 Jump_000_398E::
-    ldh [hFFEC], a
+    ldh [hSndFreqHi], a
     ld c, $14
     call WriteChannelRegisterC
     call ClearChannelLengthBits
@@ -10139,7 +10137,7 @@ Jump_000_3998::
     ld b, a
     cpl
     ld c, a
-    ldh a, [hFFEE]
+    ldh a, [hSndPanning]
     and a, b
     ld b, a
     ld a, [wDD09]
@@ -10160,29 +10158,29 @@ Jump_000_39AB::
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: wSoundHwChannel, hFFE8, hFFE0, hFFE9, wDD0D, hFFEC
-; writes: hFFEA, hFFE0
-; points at: hFFEA, hFFE8
+; reads: wSoundHwChannel, hSndPitchSlide, hSndEnvelope, hSndPitchSlideTime, wDD0D, hSndFreqHi
+; writes: hSndPitchSlideCounter, hSndEnvelope
+; points at: hSndPitchSlideCounter, hSndPitchSlide
 SoundTick_Sub03::
 Func_000_39B9:: ; address name
     ld a, [wSoundHwChannel]
     cp a, $02
     ret z
-    ldh a, [hFFE8]
+    ldh a, [hSndPitchSlide]
     and a, a
     ret z
-    ld hl, hFFEA
+    ld hl, hSndPitchSlideCounter
     dec [hl]
     ret nz
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     swap a
     cp a, $10
     ret nc
     and a, $0F
     ld b, a
-    ldh a, [hFFE9]
-    ldh [hFFEA], a
-    ld hl, hFFE8
+    ldh a, [hSndPitchSlideTime]
+    ldh [hSndPitchSlideCounter], a
+    ld hl, hSndPitchSlide
     ld a, [hl]
     bit 7, a
     jr nz, Jump_000_39EC
@@ -10190,9 +10188,9 @@ Func_000_39B9:: ; address name
     ld a, b
     cp a, $0F
     ret z
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     add a, $10
-    ldh [hFFE0], a
+    ldh [hSndEnvelope], a
     jp WriteChannelEnvelopeIfChanged
 
 Jump_000_39EC::
@@ -10200,24 +10198,24 @@ Jump_000_39EC::
     ld a, b
     and a, a
     ret z
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     sub a, $10
-    ldh [hFFE0], a
+    ldh [hSndEnvelope], a
     jr WriteChannelEnvelopeIfChanged
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: wSoundHwChannel, hFFF0, hFFDA, wDD0E, hFFEB, wDD0D
+; reads: wSoundHwChannel, hSndNoteTimer, hSndChanFlags, wDD0E, hSndFreqLo, wDD0D
 SoundTick_Sub04::
 Func_000_39F8:: ; address name
     call ReturnTwiceIfWDD08AndWDD0B
     ld a, [wSoundHwChannel]
     cp a, $03
     ret z
-    ldh a, [hFFF0]
+    ldh a, [hSndNoteTimer]
     and a, a
     ret nz
-    ldh a, [hFFDA]
+    ldh a, [hSndChanFlags]
     and a, $F0
     ret z
     sub a, $10
@@ -10229,29 +10227,29 @@ Func_000_39F8:: ; address name
     ld d, $00
     ld hl, $3C8C
     add hl, de
-    ldh a, [hFFEB]
+    ldh a, [hSndFreqLo]
     add a, [hl]
     ld c, $13
     jr WriteChannelRegisterC
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
-; reads: wSoundHwChannel, hFFE5, hFFE0, wDD0D, hFFEC, hFFE6, hFFE7, hFFF1
+; reads: wSoundHwChannel, hSndVibratoDepth, hSndEnvelope, wDD0D, hSndFreqHi, hSndVibratoDelay, hSndVibratoCounter, hSndA8Param
 ; writes: rNR32
-; points at: hFFE0
+; points at: hSndEnvelope
 SoundNextEvent_Sub01::
 Func_000_3A21:: ; address name
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_3A57
-    ldh a, [hFFE5]
+    ldh a, [hSndVibratoDepth]
     and a, a
     jr nz, Jump_000_3A94
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
 
 ; B = A (bit 3 set when the low three bits are 0); writes it to the channel envelope register (wDD0D + $12) only if it differs, then restarts the channel (E-0124)
 ; 2 call sites from 2 routines (e.g. SoundNextEvent, SoundTick)
-; reads: wDD0D, hFFEC
+; reads: wDD0D, hSndFreqHi
 WriteChannelEnvelopeIfChanged::
 Func_000_3A2F:: ; address name
     ld b, a
@@ -10270,7 +10268,7 @@ Jump_000_3A38::
     ret z
     ld a, b
     ldh [c], a
-    ldh a, [hFFEC]
+    ldh a, [hSndFreqHi]
     ld c, $14
     call WriteChannelRegisterC
     call ClearChannelLengthBits
@@ -10290,7 +10288,7 @@ Func_000_3A4E:: ; address name
     ret
 
 Jump_000_3A57::
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     ld c, $12
     jr WriteChannelRegisterC
 
@@ -10313,7 +10311,7 @@ Jump_000_3A69::
     srl a
     add a, $02
     swap a
-    ld hl, hFFE0
+    ld hl, hSndEnvelope
     cp a, [hl]
     ret c
     and a, $60
@@ -10322,16 +10320,16 @@ Jump_000_3A69::
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: hFFEB, hFFEC, wSoundHwChannel, hFFE5, hFFE6, hFFE7, hFFF1, hFFE0, ...
+; reads: hSndFreqLo, hSndFreqHi, wSoundHwChannel, hSndVibratoDepth, hSndVibratoDelay, hSndVibratoCounter, hSndA8Param, hSndEnvelope, ...
 ; writes: rNR32
-; points at: hFFE0
+; points at: hSndEnvelope
 SoundTick_Sub05::
 Func_000_3A7A:: ; address name
     call ReturnTwiceIfWDD08AndWDD0B
-    ldh a, [hFFEB]
+    ldh a, [hSndFreqLo]
     and a, a
     jr nz, Jump_000_3A89
-    ldh a, [hFFEC]
+    ldh a, [hSndFreqHi]
     and a, $7F
     jp z, SoundNextEvent_Sub02
 
@@ -10339,17 +10337,17 @@ Jump_000_3A89::
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_3A94
-    ldh a, [hFFE5]
+    ldh a, [hSndVibratoDepth]
     and a, a
     ret z
 
 Jump_000_3A94::
-    ldh a, [hFFE6]
+    ldh a, [hSndVibratoDelay]
     and a, a
     ret z
     ld e, $00
     ld c, a
-    ldh a, [hFFE7]
+    ldh a, [hSndVibratoCounter]
     ld b, $04
 
 Jump_000_3A9F::
@@ -10366,12 +10364,12 @@ Jump_000_3AA4::
     ld a, [wSoundHwChannel]
     cp a, $02
     jr z, Jump_000_3A69
-    ldh a, [hFFE5]
+    ldh a, [hSndVibratoDepth]
     or a, e
     ld e, a
     ld d, $00
     push de
-    ldh a, [hFFF1]
+    ldh a, [hSndA8Param]
     and a, $0F
     ld de, $31CE
     sla a
@@ -10393,7 +10391,7 @@ Jump_000_3AA4::
     sbc a, $00
     ld h, a
     add hl, de
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     swap a
     ld e, a
     ld a, [hl]
@@ -10466,7 +10464,7 @@ Jump_000_3B20::
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
-; reads: wDD0D, hFFEC
+; reads: wDD0D, hSndFreqHi
 SoundNextEvent_Sub02::
 Func_000_3B39:: ; address name
     call ReturnTwiceIfWDD08AndWDD0B
@@ -10513,13 +10511,13 @@ Func_000_3B51:: ; address name
 
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
-; reads: wDD17, hFFE2, hFFF1
+; reads: wDD17, hSndSweepOrWave, hSndA8Param
 ; writes: wDD17, rNR30
 SoundNextEvent_Sub04::
 Func_000_3D7C:: ; address name
     ld a, [wDD17]
     ld b, a
-    ldh a, [hFFE2]
+    ldh a, [hSndSweepOrWave]
     cp a, b
     ret z
     ld [wDD17], a
@@ -10530,13 +10528,13 @@ Func_000_3D7C:: ; address name
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: hFFF1
+; reads: hSndA8Param
 SoundTick_Sub06::
 Func_000_3D8D:: ; address name
     ld d, a
     ld hl, $30CC
     push de
-    ldh a, [hFFF1]
+    ldh a, [hSndA8Param]
     swap a
     and a, $0F
     add a, a
@@ -10586,18 +10584,18 @@ Func_000_3DAE:: ; address name
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
-; reads: hFFED, hFFE0
-; writes: hFFED, hFFE0
+; reads: hSndEnvelopeReload, hSndEnvelope
+; writes: hSndEnvelopeReload, hSndEnvelope
 SoundTick_Sub07::
 Func_000_3DC8:: ; address name
     push de
     push bc
-    ldh a, [hFFED]
+    ldh a, [hSndEnvelopeReload]
     and a, $0F
     inc a
     ld d, a
     ld bc, $0000
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     swap a
     and a, $0F
     inc a
@@ -10627,18 +10625,18 @@ Jump_000_3DDB::
 
 Jump_000_3DFB::
     swap c
-    ldh a, [hFFE0]
+    ldh a, [hSndEnvelope]
     ld d, a
     and a, $F0
     ld e, a
-    ldh a, [hFFED]
+    ldh a, [hSndEnvelopeReload]
     and a, $0F
     or a, e
-    ldh [hFFED], a
+    ldh [hSndEnvelopeReload], a
     ld a, d
     and a, $0F
     or a, c
-    ldh [hFFE0], a
+    ldh [hSndEnvelope], a
     pop bc
     pop de
     ret

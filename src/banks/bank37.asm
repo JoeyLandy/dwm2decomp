@@ -709,7 +709,6 @@ Jump_037_4D5B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7F6, wD781
 ; writes: wD7F1, wD7F2, wD7F3, wD781
-; points at: wC36C, wC386
 Func_037_4AFD_Case04_Case04::
 Jump_037_4D80:: ; address name
     farcall SetWD7F5ToWD789Cell5
@@ -724,12 +723,12 @@ Jump_037_4D80:: ; address name
     ld [wD7F1], a
     call LoadFamilyIconTileForRecordB_Bank37
     ld de, Data_037_647D
-    ld hl, wC36C
+    ld hl, wScreenTileBuffer + $1D4
     ld bc, $0C05
     call CopyRectToScreenBufferAndClearAttributes_37
     pop af
     ld [wD7F1], a
-    ld hl, wC386
+    ld hl, wScreenTileBuffer + $1EE
     ld a, l
     ld [wD7F2], a
     ld a, h
@@ -774,7 +773,7 @@ Func_037_4DC7:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_037_4AFD_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD7F5, wD7F6, hFFC6, wD781, wC6FD, wD7AB, wD7AF
+; reads: wC52B, wD7F5, wD7F6, hTemp0, wD781, wC6FD, wD7AB, wD7AF
 ; writes: rRAMG2, rRAMB, wD781, wD7B4, wD7B5, wD7B6
 ; points at: wC6FE
 Func_037_4AFD_Case04_Case11::
@@ -795,7 +794,7 @@ Jump_037_4DE9:: ; address name
     ld a, [hl]
     ld c, $56
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $0A
     jr nc, Jump_037_4E25
     pop hl
@@ -2003,7 +2002,7 @@ Jump_037_5570:: ; address name
 ; entry 18 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781, wCA36, wCA37
-; writes: wD781, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, wD7F7
+; writes: wD781, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7
 Func_037_4AFD_Case0D_Case12::
 Jump_037_5593:: ; address name
     farcall ShowPersonalityNameAndWCA3AName
@@ -2014,7 +2013,7 @@ Jump_037_5593:: ; address name
 ; entry 19 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781, wCA36, wCA37
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781, wD7F5, hFFBA, wD7F7
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781, wD7F5, hSpriteHideTile, wD7F7
 Func_037_4AFD_Case0D_Case13::
 Jump_037_55A0:: ; address name
     ld a, $6D
@@ -2034,7 +2033,7 @@ Jump_037_55A0:: ; address name
 ; entry 20 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCA36, wCA37, wD781
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, wD7F7, wD781
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7, wD781
 Func_037_4AFD_Case0D_Case14::
 Jump_037_55C6:: ; address name
     ld a, [wCA36]
@@ -2048,7 +2047,7 @@ Jump_037_55C6:: ; address name
     ld [wD7F5], a
     farcall DecompressGraphicsWD7F1ToWD7F4
     ld a, $F0
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     farcall ShowWCACFCategory11StringAtTiles2320
     call BGMapAddressAtScroll_Bank37
     ld de, $0160
@@ -2069,7 +2068,7 @@ Jump_037_55C6:: ; address name
 ; entry 21 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult, wD781
-; writes: wJoypadPressedRepeat, wMenuInputResult, hFFBA, wD781
+; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wD781
 Func_037_4AFD_Case0D_Case15::
 Jump_037_5611:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -2090,7 +2089,7 @@ Jump_037_5611:: ; address name
 
 Jump_037_5633::
     xor a, a
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     ld a, [wD781]
     inc a
     inc a
@@ -2099,7 +2098,7 @@ Jump_037_5633::
 
 Jump_037_563F::
     xor a, a
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     farcall DrawRects662BAnd653F
     ld a, $04
     ld [wD781], a
@@ -2299,12 +2298,12 @@ Jump_037_5760:: ; address name
 ; entry 31 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
-; writes: hFFBA, wD781
+; writes: hSpriteHideTile, wD781
 Func_037_4AFD_Case0D_Case1F::
 Jump_037_5789:: ; address name
     farcall RunF24C3DAnd4D72
     ld a, $F0
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -2313,7 +2312,7 @@ Jump_037_5789:: ; address name
 ; entry 32 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult
-; writes: wJoypadPressedRepeat, wMenuInputResult, hFFBA, wD781
+; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wD781
 Func_037_4AFD_Case0D_Case20::
 Jump_037_579B:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -2336,14 +2335,14 @@ Jump_037_57BD::
 
 Jump_037_57BE::
     xor a, a
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     ld a, $17
     ld [wD781], a
     ret
 
 Jump_037_57C7::
     xor a, a
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     ld a, $07
     ld [wD781], a
     ret
@@ -2856,7 +2855,7 @@ Jump_037_5AC4::
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWD09D (E-0122)
 ; 1 call site from 1 routine (e.g. Func_037_4AFD_Case04_Case04)
-; reads: hFFC6, wD7F1
+; reads: hTemp0, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
 LoadFamilyIconTileForRecordB_Bank37::
 Func_037_5AD3:: ; address name
@@ -2867,7 +2866,7 @@ Func_037_5AD3:: ; address name
     ld a, b
     ld c, $0D
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     ld [wD09D], a
     ld a, [wD7F1]

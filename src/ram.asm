@@ -42,12 +42,7 @@ DEF sBF98 EQU $BF98
 DEF sBF99 EQU $BF99
 
 ; WRAM ($C000-$DFFF)
-DEF wC000 EQU $C000
-DEF wC00B EQU $C00B
-DEF wC014 EQU $C014
-DEF wC016 EQU $C016
-DEF wC01B EQU $C01B
-DEF wC026 EQU $C026
+DEF wShadowOAM EQU $C000 ; shadow OAM: 40 four-byte sprite entries that the OAM DMA routine copies from $C000 (OamDmaRoutineTemplate starts DMA with source $C0); ClearShadowOAM clears its $A0 bytes (E-0132)
 DEF wC0A0 EQU $C0A0
 DEF wC0A1 EQU $C0A1
 DEF wMenuRowCount EQU $C0A2 ; number of cursor rows UpdateMenuCursor wraps over (E-0060) (reading (E-0060))
@@ -67,40 +62,12 @@ DEF wC0D9 EQU $C0D9
 DEF wC0DA EQU $C0DA
 DEF wC0DB EQU $C0DB
 DEF wC0DC EQU $C0DC
-DEF wC0F0 EQU $C0F0
-DEF wC0F8 EQU $C0F8
-DEF wC100 EQU $C100
-DEF wC108 EQU $C108
-DEF wC110 EQU $C110
-DEF wC114 EQU $C114
-DEF wC130 EQU $C130
-DEF wC131 EQU $C131
-DEF wC132 EQU $C132
-DEF wC134 EQU $C134
-DEF wC135 EQU $C135
-DEF wC138 EQU $C138
-DEF wC139 EQU $C139
-DEF wC13A EQU $C13A
-DEF wC13C EQU $C13C
-DEF wC13D EQU $C13D
-DEF wC13E EQU $C13E
-DEF wC140 EQU $C140
-DEF wC147 EQU $C147
-DEF wC148 EQU $C148
-DEF wC149 EQU $C149
-DEF wC14A EQU $C14A
-DEF wC14B EQU $C14B
-DEF wC14C EQU $C14C
-DEF wC150 EQU $C150
-DEF wC151 EQU $C151
-DEF wC152 EQU $C152
-DEF wC154 EQU $C154
-DEF wC158 EQU $C158
-DEF wC15C EQU $C15C
-DEF wC160 EQU $C160
-DEF wC164 EQU $C164
-DEF wC17E EQU $C17E
-DEF wC181 EQU $C181
+DEF wBGPaletteCopy EQU $C0F0 ; a 64-byte copy of the eight CGB background palettes; ScriptStepFlashScreenNegative copies it back to wBGPaletteBuffer (or its inverse) (E-0132)
+DEF wTextBuf0 EQU $C130 ; 16-byte text slot filled before a message: the actor or player name (CopyActorNameToWC130, WritePlayerNameWithFlag0SuffixToWC130); $F0-terminated (E-0132)
+DEF wTextBuf1 EQU $C140 ; 16-byte text slot: the skill or second name of a message (CopyActionSkillNameToWC140, CopyMappedSlotNameToWC140) (E-0132)
+DEF wTextBuf2 EQU $C150 ; 16-byte text slot: the target or item name of a message (CopyActionItemNameToWC150, BuildActionMessageNames) (E-0132)
+DEF wTextBuf3 EQU $C160 ; 16-byte text slot: a further name (CopyEligibleRecordNameToWC160Row, EquipItemOnRecordWD083) (E-0132)
+DEF wTextNumber EQU $C17E ; digit string of a number shown in a message (DeductGoldPenaltyAndFormatLoss writes the gold lost here as packed BCD through Func_000_23CA) (E-0132)
 DEF wMapWidthScreens EQU $C190 ; map width in screens, from the map record (2 for the ship deck, 4 for map 56) (reading + execution (E-0037))
 DEF wMapHeightScreens EQU $C191 ; map height in screens, from the map record (reading + execution (E-0037))
 DEF wMaxBlockingTile EQU $C192 ; highest tile id that blocks the player (TileBlockedAtPixel compares tile ids with it); from the map record (55 for the ship deck) (reading + execution (E-0037))
@@ -110,192 +77,6 @@ DEF wC195 EQU $C195
 DEF wC196 EQU $C196
 DEF wC197 EQU $C197
 DEF wScreenTileBuffer EQU $C198 ; screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (Func_002_59CD) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030) (reading)
-DEF wC19A EQU $C19A
-DEF wC19E EQU $C19E
-DEF wC19F EQU $C19F
-DEF wC1A0 EQU $C1A0
-DEF wC1A4 EQU $C1A4
-DEF wC1B2 EQU $C1B2
-DEF wC1B3 EQU $C1B3
-DEF wC1B8 EQU $C1B8
-DEF wC1B9 EQU $C1B9
-DEF wC1BA EQU $C1BA
-DEF wC1C1 EQU $C1C1
-DEF wC1C3 EQU $C1C3
-DEF wC1C4 EQU $C1C4
-DEF wC1C6 EQU $C1C6
-DEF wC1C7 EQU $C1C7
-DEF wC1C8 EQU $C1C8
-DEF wC1C9 EQU $C1C9
-DEF wC1CA EQU $C1CA
-DEF wC1D9 EQU $C1D9
-DEF wC1DB EQU $C1DB
-DEF wC1E5 EQU $C1E5
-DEF wC1E9 EQU $C1E9
-DEF wC1EA EQU $C1EA
-DEF wC1F8 EQU $C1F8
-DEF wC1F9 EQU $C1F9
-DEF wC1FA EQU $C1FA
-DEF wC1FB EQU $C1FB
-DEF wC200 EQU $C200
-DEF wC202 EQU $C202
-DEF wC204 EQU $C204
-DEF wC206 EQU $C206
-DEF wC208 EQU $C208
-DEF wC209 EQU $C209
-DEF wC218 EQU $C218
-DEF wC219 EQU $C219
-DEF wC225 EQU $C225
-DEF wC227 EQU $C227
-DEF wC228 EQU $C228
-DEF wC229 EQU $C229
-DEF wC22B EQU $C22B
-DEF wC238 EQU $C238
-DEF wC23B EQU $C23B
-DEF wC23F EQU $C23F
-DEF wC240 EQU $C240
-DEF wC241 EQU $C241
-DEF wC242 EQU $C242
-DEF wC243 EQU $C243
-DEF wC244 EQU $C244
-DEF wC246 EQU $C246
-DEF wC247 EQU $C247
-DEF wC248 EQU $C248
-DEF wC249 EQU $C249
-DEF wC252 EQU $C252
-DEF wC254 EQU $C254
-DEF wC255 EQU $C255
-DEF wC256 EQU $C256
-DEF wC257 EQU $C257
-DEF wC25C EQU $C25C
-DEF wC266 EQU $C266
-DEF wC267 EQU $C267
-DEF wC268 EQU $C268
-DEF wC26A EQU $C26A
-DEF wC278 EQU $C278
-DEF wC279 EQU $C279
-DEF wC27A EQU $C27A
-DEF wC27B EQU $C27B
-DEF wC27E EQU $C27E
-DEF wC27F EQU $C27F
-DEF wC281 EQU $C281
-DEF wC282 EQU $C282
-DEF wC283 EQU $C283
-DEF wC284 EQU $C284
-DEF wC285 EQU $C285
-DEF wC286 EQU $C286
-DEF wC287 EQU $C287
-DEF wC288 EQU $C288
-DEF wC28A EQU $C28A
-DEF wC290 EQU $C290
-DEF wC298 EQU $C298
-DEF wC29B EQU $C29B
-DEF wC29C EQU $C29C
-DEF wC2A2 EQU $C2A2
-DEF wC2A4 EQU $C2A4
-DEF wC2A5 EQU $C2A5
-DEF wC2A6 EQU $C2A6
-DEF wC2A9 EQU $C2A9
-DEF wC2B8 EQU $C2B8
-DEF wC2BE EQU $C2BE
-DEF wC2BF EQU $C2BF
-DEF wC2C0 EQU $C2C0
-DEF wC2C3 EQU $C2C3
-DEF wC2C4 EQU $C2C4
-DEF wC2C5 EQU $C2C5
-DEF wC2C7 EQU $C2C7
-DEF wC2C8 EQU $C2C8
-DEF wC2D9 EQU $C2D9
-DEF wC2DA EQU $C2DA
-DEF wC2DB EQU $C2DB
-DEF wC2DC EQU $C2DC
-DEF wC2DD EQU $C2DD
-DEF wC2DE EQU $C2DE
-DEF wC2DF EQU $C2DF
-DEF wC2E1 EQU $C2E1
-DEF wC2E2 EQU $C2E2
-DEF wC2E4 EQU $C2E4
-DEF wC2E5 EQU $C2E5
-DEF wC2E6 EQU $C2E6
-DEF wC2E9 EQU $C2E9
-DEF wC2F8 EQU $C2F8
-DEF wC2FB EQU $C2FB
-DEF wC300 EQU $C300
-DEF wC303 EQU $C303
-DEF wC304 EQU $C304
-DEF wC305 EQU $C305
-DEF wC307 EQU $C307
-DEF wC308 EQU $C308
-DEF wC30C EQU $C30C
-DEF wC314 EQU $C314
-DEF wC315 EQU $C315
-DEF wC319 EQU $C319
-DEF wC31A EQU $C31A
-DEF wC31B EQU $C31B
-DEF wC31D EQU $C31D
-DEF wC31F EQU $C31F
-DEF wC320 EQU $C320
-DEF wC321 EQU $C321
-DEF wC322 EQU $C322
-DEF wC323 EQU $C323
-DEF wC324 EQU $C324
-DEF wC325 EQU $C325
-DEF wC326 EQU $C326
-DEF wC327 EQU $C327
-DEF wC328 EQU $C328
-DEF wC338 EQU $C338
-DEF wC33D EQU $C33D
-DEF wC346 EQU $C346
-DEF wC35B EQU $C35B
-DEF wC35F EQU $C35F
-DEF wC363 EQU $C363
-DEF wC364 EQU $C364
-DEF wC366 EQU $C366
-DEF wC367 EQU $C367
-DEF wC368 EQU $C368
-DEF wC36B EQU $C36B
-DEF wC36C EQU $C36C
-DEF wC36D EQU $C36D
-DEF wC36E EQU $C36E
-DEF wC370 EQU $C370
-DEF wC378 EQU $C378
-DEF wC37A EQU $C37A
-DEF wC381 EQU $C381
-DEF wC385 EQU $C385
-DEF wC386 EQU $C386
-DEF wC388 EQU $C388
-DEF wC389 EQU $C389
-DEF wC38A EQU $C38A
-DEF wC38C EQU $C38C
-DEF wC393 EQU $C393
-DEF wC394 EQU $C394
-DEF wC39B EQU $C39B
-DEF wC39E EQU $C39E
-DEF wC39F EQU $C39F
-DEF wC3A0 EQU $C3A0
-DEF wC3A2 EQU $C3A2
-DEF wC3A3 EQU $C3A3
-DEF wC3A4 EQU $C3A4
-DEF wC3A7 EQU $C3A7
-DEF wC3A8 EQU $C3A8
-DEF wC3B0 EQU $C3B0
-DEF wC3B1 EQU $C3B1
-DEF wC3B4 EQU $C3B4
-DEF wC3B7 EQU $C3B7
-DEF wC3B8 EQU $C3B8
-DEF wC3BA EQU $C3BA
-DEF wC3BB EQU $C3BB
-DEF wC3BC EQU $C3BC
-DEF wC3BD EQU $C3BD
-DEF wC3C4 EQU $C3C4
-DEF wC3C6 EQU $C3C6
-DEF wC3C7 EQU $C3C7
-DEF wC3C8 EQU $C3C8
-DEF wC3C9 EQU $C3C9
-DEF wC3CA EQU $C3CA
-DEF wC3CC EQU $C3CC
-DEF wC3CE EQU $C3CE
-DEF wC3D6 EQU $C3D6
 DEF wC3DC EQU $C3DC
 DEF wC3E5 EQU $C3E5
 DEF wC3E7 EQU $C3E7
@@ -1656,29 +1437,29 @@ DEF wDFFF EQU $DFFF
 
 ; HRAM ($FF80-$FFFE)
 DEF hFF80 EQU $FF80
-DEF hFF8A EQU $FF8A
-DEF hFF8B EQU $FF8B
-DEF hFF8C EQU $FF8C
-DEF hFF8D EQU $FF8D
+DEF hPlayerSpriteVariant EQU $FF8A ; first byte of the 14 HRAM bytes saved with the game (SaveGameToSRAMWithChecksum); LoadPlayerSpriteGraphics sets it to 0 or 1 by story flag 0 and picks the player graphics with it (E-0132)
+DEF hPlayerSpriteMode EQU $FF8B ; sprite mode 0-2 chosen from story flags $19F, $25, 2 and bit 3 of hPlayerStateFlags (LoadPlayerAndFollowerSpriteGraphics); AdvanceHFF99AndRunHFF8BMode dispatches on it (E-0132)
+DEF hPlayerStateFlags EQU $FF8C ; player state bits: bit 0 = a step is in progress, bit 2 = moving, bit 1 freezes the animation counter, bits 3, 5, 6, 7 are field-state flags tested before moving, menus and warps (E-0132)
+DEF hFieldDrawFlags EQU $FF8D ; field draw flags: InitFieldScreen sets $0F; routines set and clear bits 1-3 around record-list redraws; saved and restored with the sprite state (wD7BA) (E-0132)
 DEF hPlayerX EQU $FF8E ; position along the axis that facings 1 and 3 change in CheckInteractionInFront (reading)
 DEF hMapScreenX EQU $FF8F ; column of the current screen in the map: LoadMapScreen indexes the map's array of screen streams with hMapScreenY * width + hMapScreenX (1 on the opening ship deck, a map 2 screens wide) (reading + execution (E-0037))
 DEF hMapId EQU $FF90 ; map number: indexes MapTable (bank $11); 29 on the opening ship deck; the map's name is the system string at index 10 + number ('Deck' for 29, 'NO' for the unused 30, 31, 39) (reading + execution (E-0036))
 DEF hPlayerY EQU $FF91 ; position along the axis that facings 0 and 2 change in CheckInteractionInFront (reading)
 DEF hMapScreenY EQU $FF92 ; row of the current screen in the map (0 on the opening ship deck) (reading + execution (E-0037))
-DEF hFF93 EQU $FF93
-DEF hFF94 EQU $FF94
-DEF hFF95 EQU $FF95
-DEF hFF96 EQU $FF96
-DEF hFF97 EQU $FF97
+DEF hPlayerSpriteOverride EQU $FF93 ; bit 7 set: the player uses the graphics stream in hPlayerSpriteStream and a countdown (hPlayerSpriteTimer) runs; set by script commands $A0/$A1 (E-0132)
+DEF hPlayerSpriteStreamLo EQU $FF94 ; low byte of the compressed stream used for the player graphics when bit 7 of hPlayerSpriteOverride is set (E-0132)
+DEF hPlayerSpriteStreamHi EQU $FF95 ; high byte of that stream (E-0132)
+DEF hPlayerSpriteTimerLo EQU $FF96 ; low byte of a countdown decremented each field update while the sprite override is on; when it goes negative, talk event $0A is dispatched (UpdatePlayerMovement_Sub01_Sub03) (E-0132)
+DEF hPlayerSpriteTimerHi EQU $FF97 ; high byte of that countdown (E-0132)
 DEF hPlayerFacing EQU $FF98 ; 0, 1, 2, 3: CheckInteractionInFront adds +16 to hFF91, +16 to hFF8E, -16 to hFF91, -16 to hFF8E for these values (reading)
-DEF hFF99 EQU $FF99
-DEF hFF9A EQU $FF9A
-DEF hFF9B EQU $FF9B
-DEF hFF9C EQU $FF9C
-DEF hFF9D EQU $FF9D
-DEF hFF9E EQU $FF9E
-DEF hFF9F EQU $FF9F
-DEF hFFA0 EQU $FFA0
+DEF hPlayerAnimCounter EQU $FF99 ; animation counter: +1 per field frame (+3 more while moving) unless bit 1 of hPlayerStateFlags is set (E-0132)
+DEF hPlayerTurnDelay EQU $FF9A ; frames to wait after turning in place (set to 4) before the player can step (UpdatePlayerMovement) (E-0132)
+DEF hPlayerStepDXLo EQU $FF9B ; low byte of the 16-bit horizontal step delta per frame (+$10, -$10, or screen-scroll values) set when a step starts (E-0132)
+DEF hPlayerStepDXHi EQU $FF9C ; high byte of the horizontal step delta (E-0132)
+DEF hPlayerStepDYLo EQU $FF9D ; low byte of the 16-bit vertical step delta (for example $FF80 when scrolling up a screen) (E-0132)
+DEF hPlayerStepDYHi EQU $FF9E ; high byte of the vertical step delta (E-0132)
+DEF hWindowX EQU $FF9F ; copied to rWX by CopyScrollToHardware; 7 in the field (InitFieldScreen) (E-0132)
+DEF hWindowY EQU $FFA0 ; copied to rWY by CopyScrollToHardware; $80 (off screen) in the field (E-0132)
 DEF hScrollX EQU $FFA1 ; copied to rSCX by Func_000_07E0 and by the LCD handler (reading)
 DEF hScrollXHi EQU $FFA2 ; high byte of the 16-bit horizontal scroll that starts at hScrollX (reading)
 DEF hScrollY EQU $FFA5 ; copied to rSCY by Func_000_07E0 and by the LCD handler (reading)
@@ -1692,36 +1473,36 @@ DEF hSpriteSubIndex EQU $FFAE ; second-level index into the table BuildOamFromSp
 DEF hSpriteTileOffset EQU $FFAF ; added to each entry's tile number by BuildOamFromSpriteTable (reading)
 DEF hSpriteAttrXor EQU $FFB0 ; XORed into each entry's attribute byte by BuildOamFromSpriteTable (reading)
 DEF hOamNextEntry EQU $FFB1 ; index of the next 4-byte entry BuildOamFromSpriteTable writes at $C000; it stops at $28 (reading)
-DEF hFFB3 EQU $FFB3
-DEF hFFB4 EQU $FFB4
-DEF hFFB5 EQU $FFB5
-DEF hFFB6 EQU $FFB6
-DEF hFFB7 EQU $FFB7
-DEF hFFB8 EQU $FFB8
-DEF hFFB9 EQU $FFB9
-DEF hFFBA EQU $FFBA
+DEF hMetaSpriteYLo EQU $FFB3 ; metasprite builder: low byte of origin Y plus the scroll offset, added to each entry's Y (E-0132)
+DEF hMetaSpriteYHi EQU $FFB4 ; metasprite builder: high byte of that Y, used to drop entries outside the screen (E-0132)
+DEF hMetaSpriteXLo EQU $FFB5 ; metasprite builder: low byte of origin X plus the scroll offset (E-0132)
+DEF hMetaSpriteXHi EQU $FFB6 ; metasprite builder: high byte of that X (E-0132)
+DEF hMetaSpriteXFlipLo EQU $FFB7 ; metasprite builder: X minus 8, low byte, used for horizontally flipped sets (E-0132)
+DEF hMetaSpriteXFlipHi EQU $FFB8 ; metasprite builder: high byte of X minus 8 (E-0132)
+DEF hSpriteWindowClipMode EQU $FFB9 ; non-zero makes the metasprite builders take the clipping path; set to 2 or 3 while a text window or menu is open and 0 when it closes (E-0132)
+DEF hSpriteHideTile EQU $FFBA ; BG tile id compared with the tile under a sprite point (BGTileUnderPointIsHFFBA_*); sprite parts over this tile are hidden; usually $80 (E-0132)
 DEF hDecompressMarker EQU $FFBB ; marker byte from the stream header (E-0016)
 DEF hDecompressDestLo EQU $FFBC ; destination start, low byte (E-0016)
 DEF hDecompressDestHi EQU $FFBD ; destination start, high byte (E-0016)
-DEF hFFBF EQU $FFBF
-DEF hFFC0 EQU $FFC0
-DEF hFFC1 EQU $FFC1
-DEF hFFC2 EQU $FFC2
-DEF hFFC3 EQU $FFC3
-DEF hFFC4 EQU $FFC4
-DEF hFFC5 EQU $FFC5
-DEF hFFC6 EQU $FFC6
-DEF hFFC7 EQU $FFC7
-DEF hFFC8 EQU $FFC8
-DEF hFFC9 EQU $FFC9
-DEF hFFCA EQU $FFCA
-DEF hFFCB EQU $FFCB
-DEF hFFCC EQU $FFCC
-DEF hFFCD EQU $FFCD
-DEF hFFCE EQU $FFCE
-DEF hFFCF EQU $FFCF
-DEF hFFD0 EQU $FFD0
-DEF hFFD1 EQU $FFD1
+DEF hDecompressRunCount EQU $FFBF ; decompressor: count of the current run or copy (DecompressToRAM / DecompressToVRAM) (E-0132)
+DEF hDecompressRunByte EQU $FFC0 ; decompressor: byte being repeated or the current control byte (E-0132)
+DEF hDecompressHeader1 EQU $FFC1 ; decompressor: stream header byte 1 (DecompressReadHeader) (E-0132)
+DEF hDecompressHeader2 EQU $FFC2 ; decompressor: stream header byte 2 (E-0132)
+DEF hDecompressHeader3 EQU $FFC3 ; decompressor: stream header byte 3 (E-0132)
+DEF hDecompressHeader4 EQU $FFC4 ; decompressor: stream header byte 4 (E-0132)
+DEF hVRAMByteTemp EQU $FFC5 ; byte held while waiting for VRAM access (DecompressToVRAM, CopyRectToBGMapWrapped_1C) (E-0132)
+DEF hTemp0 EQU $FFC6 ; general argument and result byte: SRAM record loads return here, field commands and many helpers take their argument here (used in 54 bank files) (E-0132)
+DEF hTemp1 EQU $FFC7 ; general argument/result byte after hTemp0 (high byte of word results) (E-0132)
+DEF hTemp2 EQU $FFC8 ; general argument/result byte (third byte of 24-bit and BCD results) (E-0132)
+DEF hTemp3 EQU $FFC9 ; general argument/result byte (E-0132)
+DEF hTemp4 EQU $FFCA ; general argument/result byte (also a VRAM destination low byte for DecompressGraphicsHFFC6ToHFFCA) (E-0132)
+DEF hTemp5 EQU $FFCB ; general argument/result byte (destination high byte for DecompressGraphicsHFFC6ToHFFCA) (E-0132)
+DEF hTemp6 EQU $FFCC ; general argument/result byte (divisor for Divide24ByHFFCCDE) (E-0132)
+DEF hTemp7 EQU $FFCD ; general scratch byte (E-0132)
+DEF hTemp8 EQU $FFCE ; general scratch byte (E-0132)
+DEF hTemp9 EQU $FFCF ; general scratch byte (E-0132)
+DEF hTempA EQU $FFD0 ; general scratch byte (E-0132)
+DEF hVRAMWriteByte EQU $FFD1 ; A saved by WriteVRAMByte / WriteVRAMByteInc while waiting for VRAM access (E-0132)
 DEF hSpriteScrollXLo EQU $FFD2 ; low byte of -(scroll X - 9) - 1, computed each frame by ComputeSpriteScrollOffsets (reading)
 DEF hSpriteScrollXHi EQU $FFD3 ; high byte of that value (reading)
 DEF hSpriteScrollYLo EQU $FFD4 ; low byte of -(scroll Y - $11) - 1 (reading)
@@ -1729,36 +1510,34 @@ DEF hSpriteScrollYHi EQU $FFD5 ; high byte of that value (reading)
 DEF hDecompressLock EQU $FFD6 ; non-zero while the decompressor is running (E-0016)
 DEF hTrackPosLo EQU $FFD8 ; low byte of the current track position, counted in 2-byte events (E-0019)
 DEF hTrackPosHi EQU $FFD9 ; high byte of the current track position (E-0019)
-DEF hFFDA EQU $FFDA
+DEF hSndChanFlags EQU $FFDA ; sound channel copy (the 32-byte slot is copied to $FFD8): low 2 bits = hardware channel, high nibble set by track command $A3 (E-0132)
 DEF hTrackBaseLo EQU $FFDB ; low byte of the current track's start address (E-0019)
 DEF hTrackBaseHi EQU $FFDC ; high byte of the current track's start address (E-0019)
 DEF hSoundBank EQU $FFDD ; ROM bank the sound engine reads tracks from (E-0018)
-DEF hFFDE EQU $FFDE
-DEF hFFDF EQU $FFDF
-DEF hFFE0 EQU $FFE0
-DEF hFFE1 EQU $FFE1
-DEF hFFE2 EQU $FFE2
-DEF hFFE3 EQU $FFE3
-DEF hFFE4 EQU $FFE4
-DEF hFFE5 EQU $FFE5
-DEF hFFE6 EQU $FFE6
-DEF hFFE7 EQU $FFE7
-DEF hFFE8 EQU $FFE8
-DEF hFFE9 EQU $FFE9
-DEF hFFEA EQU $FFEA
-DEF hFFEB EQU $FFEB
-DEF hFFEC EQU $FFEC
-DEF hFFED EQU $FFED
-DEF hFFEE EQU $FFEE
-DEF hFFEF EQU $FFEF
-DEF hFFF0 EQU $FFF0
-DEF hFFF1 EQU $FFF1
-DEF hFFF2 EQU $FFF2
-DEF hFFF3 EQU $FFF3
-DEF hFFF4 EQU $FFF4
-DEF hFFF5 EQU $FFF5
-DEF hFFF6 EQU $FFF6
-DEF hFFF7 EQU $FFF7
+DEF hSndDutyAndTempo EQU $FFDE ; sound channel copy: bits 6-7 = duty (command $A2 / track header), low nibble = tempo step added to hSndTickAccum each tick (E-0132)
+DEF hSndTickAccum EQU $FFDF ; sound channel copy: tick accumulator; the channel advances when it passes 16 (E-0132)
+DEF hSndEnvelope EQU $FFE0 ; sound channel copy: volume envelope written to NRx2 (command $A0, track header) (E-0132)
+DEF hSndWaitTicks EQU $FFE1 ; sound channel copy: ticks left before the next event (set by notes and command $A7) (E-0132)
+DEF hSndSweepOrWave EQU $FFE2 ; sound channel copy: NR10 sweep value for channel 1, wave index for channel 3 (command $A1) (E-0132)
+DEF hSndChanByteE3 EQU $FFE3 ; sound channel copy: cleared when a track starts; no other use found (E-0132)
+DEF hSndBranchIndex EQU $FFE4 ; sound channel copy: index used by command $A9 (set, increment, decrement, or jump through a table by it) (E-0132)
+DEF hSndVibratoDepth EQU $FFE5 ; sound channel copy: depth nibble from commands $Cx (E-0132)
+DEF hSndVibratoDelay EQU $FFE6 ; sound channel copy: delay value from commands $Cx (and $A2 on channel 3) (E-0132)
+DEF hSndVibratoCounter EQU $FFE7 ; sound channel copy: counts up to hSndVibratoDelay after each note (E-0132)
+DEF hSndPitchSlide EQU $FFE8 ; sound channel copy: signed pitch slide per step (commands $Dx/$Ex) (E-0132)
+DEF hSndPitchSlideTime EQU $FFE9 ; sound channel copy: slide interval reload (E-0132)
+DEF hSndPitchSlideCounter EQU $FFEA ; sound channel copy: slide interval counter (E-0132)
+DEF hSndFreqLo EQU $FFEB ; sound channel copy: frequency low byte written to NRx3 (E-0132)
+DEF hSndFreqHi EQU $FFEC ; sound channel copy: frequency high byte (with the trigger bit) written to NRx4 (E-0132)
+DEF hSndEnvelopeReload EQU $FFED ; sound channel copy: high nibble = envelope restored when the envelope timer expires (command $AA) (E-0132)
+DEF hSndPanning EQU $FFEE ; sound channel copy: panning bits merged into NR51 for this channel (command $A5) (E-0132)
+DEF hSndNoteLength EQU $FFEF ; sound channel copy: note length reload (command $A3, low nibble x 2) (E-0132)
+DEF hSndNoteTimer EQU $FFF0 ; sound channel copy: note length counter (E-0132)
+DEF hSndA8Param EQU $FFF1 ; sound channel copy: parameter of command $A8 (its high nibble picks the wave table set) (E-0132)
+DEF hSndEnvTimer EQU $FFF2 ; sound channel copy: envelope timer (command $AA) (E-0132)
+DEF hSndEnvFlags EQU $FFF3 ; sound channel copy: envelope timer flags and reload (command $AA) (E-0132)
+DEF hSndLoopCount EQU $FFF4 ; sound channel copy: repeat counter of command $AC (E-0132)
+DEF hSndReturnPosLo EQU $FFF5 ; sound channel copy: track position to return to (command $AD), low byte (E-0132)
+DEF hSndReturnPosHi EQU $FFF6 ; sound channel copy: return position, high byte (E-0132)
 DEF hFFF8 EQU $FFF8
-DEF hFFFC EQU $FFFC
 

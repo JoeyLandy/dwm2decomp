@@ -2088,7 +2088,7 @@ Func_01D_5297:: ; address name
 
 ; only called from routines of ScriptCommandE5_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommandE5_Run_Case03_Case13, ScriptCommandE5_Run_Case03_Case17)
-; reads: hFFC8, hFFC7, hFFC6, wIsCGB, wD781
+; reads: hTemp2, hTemp1, hTemp0, wIsCGB, wD781
 ; writes: wC8C0, wC8C1, wC8C2, wD7BD, wD7BE, wD7BF, wD7C0, wD7C1, ...
 ; points at: wD788, wC61A, wD7BD, wD793
 ScriptCommandE5_Run_Shared02::
@@ -2113,25 +2113,25 @@ Jump_01D_52C5::
     ld a, [hl]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $F0
     swap a
     ld [wD7BD], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $0F
     ld [wD7BE], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $F0
     swap a
     ld [wD7BF], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     ld [wD7C0], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $F0
     swap a
     ld [wD7C1], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     ld [wD7C2], a
     ld hl, wD7BD
@@ -2241,7 +2241,7 @@ Data_01D_53A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from ScriptCommandE5_Run_Case03_Case14 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case14)
-; reads: wD7CE, wD7CF, wD7D0, wD780, hFFC8, hFFC7, wD781, wC61C, ...
+; reads: wD7CE, wD7CF, wD7D0, wD780, hTemp2, hTemp1, wD781, wC61C, ...
 ; writes: wD78A, wD78B, wD78C, wC8C0, wC8C1, wC8C2, wD7D3, wD7D4, ...
 ; points at: wD788, wGoldLo, wC61A
 ScriptCommandE5_Run_Case03_Case14_Sub01::
@@ -2284,14 +2284,14 @@ Jump_01D_53C5::
     ld a, [hl]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $0F
     ld [wD7D3], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $F0
     swap a
     ld [wD7D4], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     ld [wD7D5], a
 
@@ -2335,14 +2335,14 @@ Jump_01D_5461::
     ld a, [hl]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $0F
     ld [wD7D3], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $F0
     swap a
     ld [wD7D4], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     ld [wD7D5], a
     jp Jump_01D_5427
@@ -3517,8 +3517,8 @@ Jump_01D_5B4C::
 
 ; record wD7F1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields from Data_01D_5BE6) into the screen buffer (E-0128)
 ; 4 call sites from 4 routines (e.g. ScriptCommandEB_Run_Case05_Case21, ScriptCommandEB_Run_Case06_Case04, ScriptCommandED_Run_Case07_Case0F, CallFunc5B4DInBank1D)
-; reads: wD7F1, hFFC6, wC8C1, wC8C2, hFFC7, wC8C0
-; writes: rRAMG2, rRAMB, wC386, wC389, wC38A
+; reads: wD7F1, hTemp0, wC8C1, wC8C2, hTemp1, wC8C0
+; writes: rRAMG2, rRAMB, wScreenTileBuffer
 DrawRecordStatsBoxForWD7F1::
 Func_01D_5B4D:: ; address name
     ld a, [wD7F1]
@@ -3532,27 +3532,27 @@ Func_01D_5B4D:: ; address name
     ld c, $0E
     ld b, $01
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $01
     add a, $CC
-    ld [wC386], a
+    ld [wScreenTileBuffer + $1EE], a
     pop bc
     push bc
     ld a, b
     ld c, $56
     ld b, $01
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
     ld h, $00
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigitsWC8C0
     ld a, [wC8C1]
     add a, $E0
-    ld [wC389], a
+    ld [wScreenTileBuffer + $1F1], a
     ld a, [wC8C2]
     add a, $E0
-    ld [wC38A], a
+    ld [wScreenTileBuffer + $1F2], a
     pop bc
     push bc
     ld c, $00
@@ -3566,9 +3566,9 @@ Jump_01D_5B98::
     ld a, b
     ld b, $02
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigitsWC8C0
@@ -3609,7 +3609,7 @@ Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, ScriptCommandE8_Run_Case09_Case20_Case00, ...)
 ; writes: wD7F1, wD7F2
-; points at: wRecordBuffer, wD7F1, hFFC6
+; points at: wRecordBuffer, wD7F1, hTemp0
 CallFunc6899PreservingWD7F1AndHFFC6::
 Func_01D_5BF2:: ; address name
     ld hl, wRecordBuffer
@@ -3622,7 +3622,7 @@ Jump_01D_5BFA::
     inc de
     dec b
     jr nz, Jump_01D_5BFA
-    ld de, hFFC6
+    ld de, hTemp0
     ld b, $0D
 
 Jump_01D_5C05::
@@ -3648,7 +3648,7 @@ Jump_01D_5C23::
     inc de
     dec b
     jr nz, Jump_01D_5C23
-    ld de, hFFC6
+    ld de, hTemp0
     ld b, $0D
 
 Jump_01D_5C2E::
@@ -3661,9 +3661,9 @@ Jump_01D_5C2E::
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, draws the species sprite of the record at WD789 cell 5 at ($90, $40) (Func_01D_69DA), then restores them (E-0127)
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunWD06AState_6C12_Case08_Case04, ScriptCommandE8_Run_Case09_Case15_Case00, ...)
-; reads: hFFC6, hFFC7
+; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2
-; points at: wRecordBuffer, wD7F1, hFFC6
+; points at: wRecordBuffer, wD7F1, hTemp0
 DrawWD789Cell5SpeciesSprite::
 Func_01D_5C35:: ; address name
     ld hl, wRecordBuffer
@@ -3676,7 +3676,7 @@ Jump_01D_5C3D::
     inc de
     dec b
     jr nz, Jump_01D_5C3D
-    ld de, hFFC6
+    ld de, hTemp0
     ld b, $0D
 
 Jump_01D_5C48::
@@ -3695,9 +3695,9 @@ Jump_01D_5C48::
     call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG2], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wD7F1], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [wD7F2], a
     xor a, a
     ld h, a
@@ -3716,7 +3716,7 @@ Jump_01D_5C82::
     inc de
     dec b
     jr nz, Jump_01D_5C82
-    ld de, hFFC6
+    ld de, hTemp0
     ld b, $0D
 
 Jump_01D_5C8D::
@@ -3730,7 +3730,7 @@ Jump_01D_5C8D::
 ; with SRAM bank 0 enabled reads the record at WD789 cell 5 and continues at Jump_01D_5CAF (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG2, rRAMB, wC8D9
-; points at: wC8CF, wC130
+; points at: wC8CF, wTextBuf0
 LoadWD789Cell5RecordAndContinue5CAF:: ; heuristic: follows a terminator; C0
 Func_01D_5C94:: ; address name
     call SetWD7F5ToWD789Cell5
@@ -3745,7 +3745,7 @@ Func_01D_5C94:: ; address name
 ; 1 call site from 1 routine (e.g. ScriptCommandEB_Run_Case05_Case3E)
 ; reads: wD7B4
 ; writes: rRAMG2, rRAMB, wC8D9
-; points at: wC8CF, wC130
+; points at: wC8CF, wTextBuf0
 ScriptCommandEB_Run_Case05_Case3E_Sub01::
 Func_01D_5CA3:: ; address name
     ld a, $0A
@@ -3762,7 +3762,7 @@ Jump_01D_5CAF::
     xor a, a
     ld [rRAMG2], a
     ld hl, wC8CF
-    ld de, wC130
+    ld de, wTextBuf0
     ld c, $00
 
 Jump_01D_5CC5::
@@ -3784,7 +3784,7 @@ Jump_01D_5CD3::
 
 ; record wD7F1: draws its name at vTiles1 + $780 and the name of its species (field $0B) at vTiles1 + $270 (E-0127)
 ; 11 call sites from 11 routines (e.g. ScriptCommandF4_Run_Case11_Case07, ScriptCommandEB_Run_Case05_Case23, ScriptCommandED_Run_Case04_Case06, ScriptCommandED_Run_Case07_Case11, ...)
-; reads: wD7F1, hFFC6, hFFC7, wDataBank
+; reads: wD7F1, hTemp0, hTemp1, wDataBank
 ; writes: rRAMG2, rRAMB, wC8D9, wDataBank
 ; points at: wC8CF
 DrawRecordNameAndSpeciesNameTiles::
@@ -3809,9 +3809,9 @@ Func_01D_5CD7:: ; address name
     ld c, $0B
     ld b, $02
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     push hl
     ld a, [wDataBank]
@@ -3932,7 +3932,7 @@ Func_01D_5DA1:: ; address name
 
 ; shows string (field $A4 of the record at WD789 cell 5) of category $0B at $9320 with size $0602 (E-0121)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case09_Case14)
-; reads: wD7F5, wD7F6, hFFC6
+; reads: wD7F5, wD7F6, hTemp0
 ; writes: rRAMG2, rRAMB, wStringIndex, wStringCategory
 ; points at: wC52D
 ShowCategory11StringOfWD789Cell5Record::
@@ -3949,7 +3949,7 @@ Func_01D_5DBC:: ; address name
     ld a, [hl]
     ld c, $A4
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wStringIndex], a
     ld a, $0B
     ld [wStringCategory], a
@@ -3968,7 +3968,7 @@ Func_01D_5DBC:: ; address name
 
 ; loads the species of the record at WD789 cell 5 (field $0B) and shows string [wD013] of category $0D at $9680 with size $0602 (E-0121)
 ; 1 call site from 1 routine (e.g. ScriptCommandE8_Run_Case09_Case1A)
-; reads: hFFC6, hFFC7, wD013
+; reads: hTemp0, hTemp1, wD013
 ; writes: rRAMG2, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory
 ; points at: wC52D
 ShowSpeciesCategory13StringOfWD789Cell5Record::
@@ -3983,9 +3983,9 @@ Func_01D_5DF9:: ; address name
     call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG2], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wSpeciesIdLo], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld a, [wD013]
@@ -4454,7 +4454,7 @@ Jump_01D_6075::
 
 ; for the visible entries of page wD7AF draws the species name (field $0B, category 2 of the bank-08 database) of each listed record (E-0129)
 ; 8 call sites from 8 routines (e.g. ScriptCommandEF_Run_Case0F_Case04, ScriptCommandED_Run_Case05_Case04, ScriptCommandED_Run_Case0F_Case04, ScriptCommandE8_Run_Case06_Case19, ...)
-; reads: wD7AF, wD7B1, wD7A9, hFFC6, hFFC7, wDataBank, wD7B0
+; reads: wD7AF, wD7B1, wD7A9, hTemp0, hTemp1, wDataBank, wD7B0
 ; writes: rRAMG2, rRAMB, wDataBank, wC8DE
 ; points at: wD789, wC8CF
 DrawRecordListPageSpeciesNames::
@@ -4501,9 +4501,9 @@ Jump_01D_60BB::
     ld c, $0B
     ld b, $02
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     push hl
     ld a, [wDataBank]
@@ -4775,7 +4775,7 @@ Func_01D_62FF:: ; address name
 
 ; for the visible entries of page wD7AF draws each record's mark ($CC/$CD from field $0E, or $CE for state 2) beside it (E-0130)
 ; 10 call sites from 10 routines (e.g. ScriptCommandEF_Run_Case05_Case11, ScriptCommandEF_Run_Case0F_Case05, ScriptCommandED_Run_Case05_Case05, LoadTile4990AndRun6320, ...)
-; reads: wD7AF, wD7B1, wD7A9, hFFC6, wD7F2, wD7F1, wD7B0
+; reads: wD7AF, wD7B1, wD7A9, hTemp0, wD7F2, wD7F1, wD7B0
 ; writes: rRAMG2, rRAMB
 ; points at: wD789
 DrawRecordListPageMarks::
@@ -4821,7 +4821,7 @@ Jump_01D_6353::
     ld a, [hl]
     ld c, $6E
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $02
     jr nz, Jump_01D_637F
     pop bc
@@ -4831,7 +4831,7 @@ Jump_01D_6353::
     ld a, [hl]
     ld c, $0E
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $01
     add a, $CC
     ld e, a
@@ -5656,7 +5656,7 @@ Data_01D_67EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
 ; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_Sub01, ScriptCommandE8_Run_Case0D_Case04, ScriptCommandE8_Run_Case09_Case1E, RunWD781Step_F0_5DE8_Case04)
-; reads: wD7F1, wD7F2, hFFC6, hFFC7
+; reads: wD7F1, wD7F2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wD7F3
 LoadPartySpeciesSpriteGraphics::
@@ -5677,7 +5677,7 @@ Jump_01D_683E::
     ld a, [hl]
     ld c, $0D
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $10
     jr nz, Jump_01D_6851
     ld de, Data_01D_6DE0
@@ -5702,7 +5702,7 @@ Jump_01D_685E::
     ld c, a
     ld a, [hl]
     call LoadSRAMRecordWord
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, $FF
     jr z, Jump_01D_6885
     pop bc
@@ -5743,7 +5743,7 @@ Data_01D_6890:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; for the three records listed at wD7F1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
 ; 5 call sites from 5 routines (e.g. CallFunc6899PreservingWD7F1AndHFFC6, PauseMenu_Main_Case03_Case02, ScriptCommandE8_Run_Case0D_Case07, ScriptCommandE8_Run_Case08_Case20, ...)
-; reads: wD7F1, wD7F2, hFFC6, hFFC7
+; reads: wD7F1, wD7F2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wD7F1, wD7F2
 DrawPartySpeciesSprites::
 Func_01D_6899:: ; address name
@@ -5763,7 +5763,7 @@ Jump_01D_68AD::
     ld a, [hl]
     ld c, $0D
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $10
     jr nz, Jump_01D_68C0
     ld de, Data_01D_6DE0
@@ -5788,14 +5788,14 @@ Jump_01D_68CD::
     ld c, a
     ld a, [hl]
     call LoadSRAMRecordWord
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, $FF
     jr z, Jump_01D_68FE
     pop bc
     push bc
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wD7F1], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [wD7F2], a
     ld a, c
     add a, a
@@ -5829,15 +5829,15 @@ Data_01D_6909:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; decompresses the sprite graphics of species hFFC6/7 (far pointer Data_004_4EAA + 3 * id) to the VRAM address in wD7F4/5; on CGB copies its 8-byte palette from bank $27 into wOBJPaletteBuffer + wD7F3 (E-0127)
 ; 1 call site from 1 routine (e.g. LoadPartySpeciesSpriteGraphics)
-; reads: hFFC6, hFFC7, wD7F4, wD7F5, wIsCGB, wD7F3, rSTAT
+; reads: hTemp0, hTemp1, wD7F4, wD7F5, wIsCGB, wD7F3, rSTAT
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
 LoadSpeciesSpriteGraphicsAndPalette::
 Func_01D_6915:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld d, a
     push hl

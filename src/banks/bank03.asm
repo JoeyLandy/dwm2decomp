@@ -575,14 +575,14 @@ Jump_003_4367::
 
 ; clears bit 1 of hFF8C and of the flags byte of the five objects at wCB8C, wCB9C ... (stride $10) (E-0121)
 ; 1 call site from 1 routine (e.g. ExitPauseMenuToField)
-; reads: hFF8C
-; writes: hFF8C
+; reads: hPlayerStateFlags
+; writes: hPlayerStateFlags
 ; points at: wCB8C
 ClearBit1OfPlayerAndObjectFlags_Bank03::
 Func_003_4389:: ; address name
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $FD
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld hl, wCB8C
     ld a, [hl]
     and a, $FD
@@ -677,10 +677,10 @@ Func_003_43D9:: ; address name
 
 ; copies 10 bytes from HL to wC130 and writes $F0 after them; HL advances; BC kept (E-0101)
 ; 4 call sites from 4 routines (e.g. PauseMenu_State3_Case05_Case00, WithSRAMDraw4ACEAnd4BE8_Sub01, WithSRAMRun4E02_Sub01_Sub03, WithSRAMRun4E02_Sub01_Sub02)
-; points at: wC130
+; points at: wTextBuf0
 CopyTenBytesToWC130::
 Func_003_4414:: ; address name
-    ld de, wC130
+    ld de, wTextBuf0
     push bc
     ld b, $0A
 
@@ -1275,7 +1275,7 @@ Jump_003_474B::
 ; entry 1 of the `rst $00` table in PauseMenu_Main_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A4
-; points at: wC1B9, wC0A1
+; points at: wC0A1
 PauseMenu_Main_Case01_Case01::
 Jump_003_4750:: ; address name
     ld a, [wC0A4]
@@ -1287,7 +1287,7 @@ Jump_003_4759::
     call WithSRAMDraw4ACEAnd4BE8
     ld hl, vBGMap0 + $21
     ld bc, $1311
-    ld de, wC1B9
+    ld de, wScreenTileBuffer + $21
     call CopyRectToBGMap
     call DecompressRecordSpeciesGraphicsToTiles0
     ld hl, wC0A1
@@ -1378,7 +1378,7 @@ Jump_003_47D8::
 ; entry 1 of the `rst $00` table in PauseMenu_Main_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A4
-; points at: wC1B9, wC0A1
+; points at: wC0A1
 PauseMenu_Main_Case02_Case01::
 Jump_003_47DD:: ; address name
     ld a, [wC0A4]
@@ -1390,7 +1390,7 @@ Jump_003_47E6::
     call WithSRAMShowRecordSpeciesAndSkillNames
     ld hl, vBGMap0 + $21
     ld bc, $1311
-    ld de, wC1B9
+    ld de, wScreenTileBuffer + $21
     call CopyRectToBGMap
     ld hl, wC0A1
     inc [hl]
@@ -1479,7 +1479,7 @@ Jump_003_485C::
 ; entry 1 of the `rst $00` table in PauseMenu_Main_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A4
-; points at: wC1B9, wC0A1
+; points at: wC0A1
 PauseMenu_Main_Case03_Case01::
 Jump_003_4861:: ; address name
     ld a, [wC0A4]
@@ -1491,7 +1491,7 @@ Jump_003_486A::
     call WithSRAMRun4E02
     ld hl, vBGMap0 + $21
     ld bc, $1311
-    ld de, wC1B9
+    ld de, wScreenTileBuffer + $21
     call CopyRectToBGMap
     call PauseMenu_Main_Case03_Case01_Sub01
     ld hl, wC0A1
@@ -1502,7 +1502,7 @@ Jump_003_486A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wD09D, wD09E
 ; writes: wC0A1, hOamNextEntry, wD7F1, wD7F2, wC0A4, wDataBankSave
-; points at: wC46D, wC000, wC0A0
+; points at: wC46D, wShadowOAM, wC0A0
 PauseMenu_Main_Case03_Case02::
 Jump_003_4881:: ; address name
     ld de, MenuCursorPositions_Bank03
@@ -1523,7 +1523,7 @@ Jump_003_4896::
     call QueueSoundEffect
     xor a, a
     ldh [hOamNextEntry], a
-    ld hl, wC000
+    ld hl, wShadowOAM
     ld bc, $00A0
     call FillBytes
     ld hl, wC0A0
@@ -1728,7 +1728,7 @@ Func_003_4A27:: ; address name
 ; loads the picture of the species of record wC46D & $0F at vTiles2 + $5C0; on CGB also uploads palettes and copies its 6 x 6 attribute block to vBGMap0 + $161 (E-0125)
 ; 2 call sites from 2 routines (e.g. DecompressMenuTilesTo16E0, PauseMenu_Main_Case00_Case01)
 ; reads: wC46D, wIsCGB
-; writes: wC526, hFFC6, rVBK, rSVBK
+; writes: wC526, hTemp0, rVBK, rSVBK
 ; points at: wD000
 DrawRecordMonsterPictureForWC46D::
 Func_003_4A36:: ; address name
@@ -1753,7 +1753,7 @@ Func_003_4A36:: ; address name
     call UploadBGPalettes
     pop de
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld hl, wD000
     call LoadMonsterPictureAttributeBlock
     ld a, $01
@@ -1833,11 +1833,10 @@ Func_003_4ABD:: ; address name
 ; writes record wC46D's level (field $56, marked with tile $14 at the cap in field $57), status marks from field $55 and the field $0E mark into the row at wC1C1 (E-0127)
 ; 2 call sites from 2 routines (e.g. WithSRAMDraw4ACEAnd4B52, WithSRAMDraw4ACEAnd4BE8)
 ; reads: wC46D
-; writes: wC1C1, wC1CA
-; points at: wC1C1, wC1C4
+; writes: wScreenTileBuffer
 BuildRecordLevelAndStatusRow::
 Func_003_4ACE:: ; address name
-    ld hl, wC1C1
+    ld hl, wScreenTileBuffer + $29
     ld a, $C3
     ld [hl+], a
     ld a, $EA
@@ -1862,14 +1861,14 @@ Func_003_4ACE:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    ld de, wC1C4
+    ld de, wScreenTileBuffer + $2C
     call WriteTwoDigitTilesFromWC8C1
     pop hl
     ld a, [hl+]
     cp a, [hl]
     jr c, Jump_003_4B0A
     ld a, $14
-    ld [wC1C1], a
+    ld [wScreenTileBuffer + $29], a
 
 Jump_003_4B0A::
     ld c, $55
@@ -1894,46 +1893,45 @@ Jump_003_4B27::
     ld a, [hl]
     and a, $01
     add a, $CC
-    ld [wC1CA], a
+    ld [wScreenTileBuffer + $32], a
     ret
 
 ; wC1C8 = $C2; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
-; writes: wC1C8
+; writes: wScreenTileBuffer
 SetWC1C8TileC2::
 Func_003_4B3A:: ; address name
     push af
     ld a, $C2
-    ld [wC1C8], a
+    ld [wScreenTileBuffer + $30], a
     pop af
     ret
 
 ; wC1C6 = $C0; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
-; writes: wC1C6
+; writes: wScreenTileBuffer
 SetWC1C6TileC0::
 Func_003_4B42:: ; address name
     push af
     ld a, $C0
-    ld [wC1C6], a
+    ld [wScreenTileBuffer + $2E], a
     pop af
     ret
 
 ; wC1C7 = $C1; AF kept (E-0119)
 ; 1 call site from 1 routine (e.g. BuildRecordLevelAndStatusRow)
-; writes: wC1C7
+; writes: wScreenTileBuffer
 SetWC1C7TileC1::
 Func_003_4B4A:: ; address name
     push af
     ld a, $C1
-    ld [wC1C7], a
+    ld [wScreenTileBuffer + $2F], a
     pop af
     ret
 
 ; only called from WithSRAMDraw4ACEAnd4B52 (E-0047)
 ; 1 call site from 1 routine (e.g. WithSRAMDraw4ACEAnd4B52)
 ; reads: wC46D
-; points at: wC208, wC248, wC288, wC2C8, wC308, wC364, wC368, wC3A4, ...
 WithSRAMDraw4ACEAnd4B52_Sub01::
 Func_003_4B52:: ; address name
     ld c, $63
@@ -1945,7 +1943,7 @@ Func_003_4B52:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC208
+    ld de, wScreenTileBuffer + $70
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -1954,7 +1952,7 @@ Func_003_4B52:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC248
+    ld de, wScreenTileBuffer + $B0
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -1963,7 +1961,7 @@ Func_003_4B52:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC288
+    ld de, wScreenTileBuffer + $F0
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -1972,14 +1970,14 @@ Func_003_4B52:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC2C8
+    ld de, wScreenTileBuffer + $130
     call WriteDecimalDigitTiles
     pop hl
     inc hl
     push hl
     deref_hl
     call HLToDecimalDigits
-    ld de, wC308
+    ld de, wScreenTileBuffer + $170
     call WriteDecimalDigitTiles
     pop hl
     ld a, l
@@ -1993,7 +1991,7 @@ Func_003_4B52:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC364
+    ld de, wScreenTileBuffer + $1CC
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -2002,7 +2000,7 @@ Func_003_4B52:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC368
+    ld de, wScreenTileBuffer + $1D0
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -2011,21 +2009,20 @@ Func_003_4B52:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC3A4
+    ld de, wScreenTileBuffer + $20C
     call WriteDecimalDigitTiles
     pop hl
     inc hl
     deref_hl
     call HLToDecimalDigits
-    ld de, wC3A8
+    ld de, wScreenTileBuffer + $210
     call WriteDecimalDigitTiles
     ret
 
 ; only called from WithSRAMDraw4ACEAnd4BE8 (E-0047)
 ; 1 call site from 1 routine (e.g. WithSRAMDraw4ACEAnd4BE8)
-; reads: wC46D, wC8C1, wC8C2, wD00F, hFFC8, hFFC9, hFFCA
-; writes: wStringIndex, wStringCategory, wC281, wC282, wC283, wC284, wC8C0, wC8C1, ...
-; points at: wC283, wC324, wC3A4
+; reads: wC46D, wC8C1, wC8C2, wD00F, hTemp2, hTemp3, hTemp4
+; writes: wStringIndex, wStringCategory, wScreenTileBuffer, wC8C0, wC8C1, wC8C2, wSpeciesIdLo, wSpeciesIdHi, ...
 WithSRAMDraw4ACEAnd4BE8_Sub01::
 Func_003_4BE8:: ; address name
     ld c, $A4
@@ -2116,11 +2113,11 @@ Jump_003_4C47::
     ld a, [wC46D]
     and a, $0F
     add a, $C7
-    ld [wC281], a
+    ld [wScreenTileBuffer + $E9], a
     ld a, $C3
-    ld [wC282], a
-    ld [wC283], a
-    ld [wC284], a
+    ld [wScreenTileBuffer + $EA], a
+    ld [wScreenTileBuffer + $EB], a
+    ld [wScreenTileBuffer + $EC], a
     ld c, $6D
     ld a, [wC46D]
     and a, $0F
@@ -2131,7 +2128,7 @@ Jump_003_4C47::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    ld hl, wC283
+    ld hl, wScreenTileBuffer + $EB
     ld a, [wC8C1]
     or a, a
     jr z, Jump_003_4CAD
@@ -2143,7 +2140,7 @@ Jump_003_4CAD::
     add a, $E0
     ld [hl], a
     ld a, $FC
-    ld [wC282], a
+    ld [wScreenTileBuffer + $EA], a
 
 Jump_003_4CB8::
     ld c, $0F
@@ -2169,7 +2166,7 @@ Jump_003_4CB8::
     push bc
     push de
     call Number24ToPackedBCD
-    ld de, wC324
+    ld de, wScreenTileBuffer + $18C
     call WithSRAMDraw4ACEAnd4BE8_Sub01_Sub01
     ld c, $0B
     ld a, [wC46D]
@@ -2181,13 +2178,13 @@ Jump_003_4CB8::
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld a, [wD00F]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld c, $56
     ld a, [wC46D]
     and a, $0F
     call SRAMRecordAddressMapped
     ld a, [hl]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall LoadTable4E60EntryToHFFC8
     ld c, $56
     ld a, [wC46D]
@@ -2198,13 +2195,13 @@ Jump_003_4CB8::
     ld a, [hl+]
     cp a, [hl]
     jr nc, Jump_003_4D43
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     sub a, e
     ld [wC8C0], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     sbc a, d
     ld [wC8C1], a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     sbc a, c
     ld [wC8C2], a
     jr Jump_003_4D4D
@@ -2217,7 +2214,7 @@ Jump_003_4D43::
 
 Jump_003_4D4D::
     call Number24ToPackedBCD
-    ld de, wC3A4
+    ld de, wScreenTileBuffer + $20C
     call WithSRAMDraw4ACEAnd4BE8_Sub01_Sub01
     ret
 
@@ -2319,8 +2316,8 @@ Data_003_4DF2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from WithSRAMRun4E02 (E-0047)
 ; 1 call site from 1 routine (e.g. WithSRAMRun4E02)
 ; reads: wC46D, wMenuLastPageRows
-; writes: wMenuLastPageRows, wC206, wC326
-; points at: wC202, wC322, wC130
+; writes: wMenuLastPageRows, wScreenTileBuffer
+; points at: wTextBuf0
 WithSRAMRun4E02_Sub01::
 Func_003_4E02:: ; address name
     ld c, $0D
@@ -2371,9 +2368,9 @@ Func_003_4E02:: ; address name
     call WithSRAMRun4E02_Sub01_Sub03
     ld a, [wMenuLastPageRows]
     add a, $CC
-    ld [wC206], a
+    ld [wScreenTileBuffer + $6E], a
     xor a, $01
-    ld [wC326], a
+    ld [wScreenTileBuffer + $18E], a
     ret
 
 Jump_003_4E69::
@@ -2390,19 +2387,19 @@ Jump_003_4E6F::
     or a, c
     jr nz, Jump_003_4E6F
     ld a, $C3
-    ld hl, wC202
+    ld hl, wScreenTileBuffer + $6A
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     inc hl
     ld [hl], a
-    ld hl, wC322
+    ld hl, wScreenTileBuffer + $18A
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     inc hl
     ld [hl], a
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld a, $98
     ld [hl+], a
     ld a, $98
@@ -2577,13 +2574,13 @@ Func_003_4F6F:: ; address name
     ld a, $00
     ld [wD7F6], a
     xor a, a
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ret
 
 ; only called from PauseMenu_Main_Case03_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01)
 ; reads: wC46D
-; writes: rRAMG, rRAMB, wD7F1, wD7F2, wD09D, wD09E, hFFB9
+; writes: rRAMG, rRAMB, wD7F1, wD7F2, wD09D, wD09E, hSpriteWindowClipMode
 ; points at: wC6FE
 PauseMenu_Main_Case03_Case01_Sub01::
 Func_003_4FBB:: ; address name
@@ -2606,7 +2603,7 @@ Func_003_4FBB:: ; address name
     xor a, a
     ld [rRAMG], a
     xor a, a
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ret
 
 Jump_003_4FED::
@@ -2675,7 +2672,7 @@ Jump_003_503D::
 ; entry 1 of the `rst $00` table in Func_003_4FBB
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD, wIsCGB
-; writes: rRAMG, rRAMB, hFFC6, wC52D, wC52E, wC52F, wC530, wC526
+; writes: rRAMG, rRAMB, hTemp0, wC52D, wC52E, wC52F, wC530, wC526
 ; points at: wC0A1
 Func_003_4FBB_Case01::
 Jump_003_5042:: ; address name
@@ -2720,7 +2717,7 @@ Jump_003_5057::
     ld hl, Data_003_518F
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, c
     ld hl, Data_003_5198
     add a, a
@@ -3070,7 +3067,7 @@ Jump_003_5288:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wC46E
 ; writes: wD082, wItemId, wC0A1, wC46F
-; points at: wC46E, wInventory, wC150, wC60C, wC130, wC0A0
+; points at: wC46E, wInventory, wTextBuf2, wC60C, wTextBuf0, wC0A0
 PauseMenu_Items_Case00_Case01::
 Jump_003_52A3:: ; address name
     ld a, [wInventory]
@@ -3122,10 +3119,10 @@ Jump_003_52DE::
     ld [wItemId], a
     ld l, a
     ld h, $05
-    ld de, wC150
+    ld de, wTextBuf2
     call CopyStringHLToDE
     ld de, wC60C
-    ld hl, wC130
+    ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
     farcall LoadItemRecord
     ld hl, wC0A0
@@ -3350,7 +3347,7 @@ Jump_003_542F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wC46D
 ; writes: rRAMG, rRAMB, wD083, wC0A0, wC0A1
-; points at: wC46D, wC2D9, wC140, wC0A1
+; points at: wC46D, wTextBuf1, wC0A1
 PauseMenu_Items_Case02_Case05::
 Jump_003_5449:: ; address name
     ld de, MenuCursorPositions_Bank03
@@ -3362,7 +3359,7 @@ Jump_003_5449:: ; address name
     call DrawItemTargetStatPreview
     ld hl, vBGMap0 + $141
     ld bc, $0903
-    ld de, wC2D9
+    ld de, wScreenTileBuffer + $141
     call CopyRectToBGMap
     ret
 
@@ -3383,7 +3380,7 @@ Jump_003_5469::
     call SRAMRecordAddressMapped
     ld e, l
     ld d, h
-    ld hl, wC140
+    ld hl, wTextBuf1
     call CopyFiveGlyphsPlusMarks
     xor a, a
     ld [rRAMG], a
@@ -3518,7 +3515,7 @@ Jump_003_5547:: ; address name
 
 ; entry 11 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD08E, hFFC6
+; reads: wD08E, hTemp0
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, wMenuPage, wC46E
 ; points at: wC0A1
 PauseMenu_Items_Case02_Case0B::
@@ -3547,7 +3544,7 @@ Jump_003_556E::
     ret
 
 Jump_003_5585::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr z, Jump_003_556E
     ld a, $31
@@ -3995,7 +3992,6 @@ Jump_003_581A:: ; address name
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
 ; 3 call sites from 3 routines (e.g. Func_003_4208_Case01, PauseMenu_Items_Case00_Case00, BuildScreenBlock0EWithCursor)
 ; reads: wInventory, wC0A7, wMenuPage
-; points at: wC2A6
 BuildInventoryScreenBase::
 Func_003_581E:: ; address name
     call ClearScreenTileBuffer_Bank03
@@ -4011,7 +4007,7 @@ Func_003_581E:: ; address name
     ld a, [wC0A7]
     cp a, $02
     jr c, Jump_003_585C
-    ld hl, wC2A6
+    ld hl, wScreenTileBuffer + $10E
     ld a, $C5
     ld [hl+], a
     ld a, [wMenuPage]
@@ -4413,9 +4409,8 @@ Jump_003_5AA3::
 
 ; for item wItemId (kind Data_003_5C8B) writes the target record's affected value (HP, MP or a stat word) as digits in the item screen (E-0131)
 ; 2 call sites from 2 routines (e.g. BuildItemScreenForWItemId, PauseMenu_Items_Case02_Case05)
-; reads: wC46D, wItemId, hFFC6, hFFC7
-; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hFFC6, hFFC7, wC2DE, wC2DF, ...
-; points at: wC2D9, wC319, wC31D
+; reads: wC46D, wItemId, hTemp0, hTemp1
+; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hTemp0, hTemp1, wScreenTileBuffer, wC52D, ...
 DrawItemTargetStatPreview::
 Func_003_5AA7:: ; address name
     ld a, [wC46D]
@@ -4464,7 +4459,7 @@ Jump_003_5AED::
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC319
+    ld de, wScreenTileBuffer + $181
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -4500,11 +4495,11 @@ Jump_003_5B18::
 Jump_003_5B1B::
     deref_hl
     call HLToDecimalDigits
-    ld de, wC31D
+    ld de, wScreenTileBuffer + $185
     call WriteDecimalDigitTiles
     ld a, $C3
-    ld [wC2DE], a
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $146], a
+    ld [wScreenTileBuffer + $147], a
     jp Jump_003_5BFA
 
 Jump_003_5B32::
@@ -4524,7 +4519,7 @@ Jump_003_5B32::
     ld de, $0901
     call ShowStringBank08AtTilesHL_Bank03
     pop af
-    ld hl, wC319
+    ld hl, wScreenTileBuffer + $181
     ld c, a
     ld b, c
     ld a, $1A
@@ -4582,10 +4577,10 @@ Jump_003_5B92::
     add_a_to_hl
     ld b, [hl]
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
-    ld hl, wC2D9
+    ldh [hTemp1], a
+    ld hl, wScreenTileBuffer + $141
     ld a, b
     ld c, a
     or a, a
@@ -4613,15 +4608,15 @@ Jump_003_5BCE::
     jr nz, Jump_003_5BCE
 
 Jump_003_5BD2::
-    ld hl, wC319
+    ld hl, wScreenTileBuffer + $181
     ld b, $07
     ld a, c
     or a, a
     jr z, Jump_003_5BF2
     push hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     inc hl
     ld b, [hl]
@@ -4667,29 +4662,29 @@ Jump_003_5C11::
 
 ; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
-; writes: wC2DF
+; writes: wScreenTileBuffer
 SetWC2DFTileC2_Bank03_5C16::
 Func_003_5C16:: ; address name
     ld a, $C2
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $147], a
     ret
 
 ; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
-; writes: wC2DF
+; writes: wScreenTileBuffer
 SetWC2DFTileC1_Bank03_5C1C::
 Func_003_5C1C:: ; address name
     ld a, $C1
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $147], a
     ret
 
 ; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. DrawItemTargetStatPreview)
-; writes: wC2DE
+; writes: wScreenTileBuffer
 SetWC2DETileC0_Bank03_5C22::
 Func_003_5C22:: ; address name
     ld a, $C0
-    ld [wC2DE], a
+    ld [wScreenTileBuffer + $146], a
     ret
 
 Data_003_5C28:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4937,13 +4932,13 @@ Jump_003_5F75::
 
 ; entry 2 of the `rst $00` table in PauseMenu_Skills_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC338, wC0A1
+; points at: wC0A1
 PauseMenu_Skills_Case00_Case02::
 Jump_003_5F7C:: ; address name
     call BuildScreenBlocks1CAnd0CWithCursor
     ld hl, vBGMap0 + $1A0
     ld bc, $1405
-    ld de, wC338
+    ld de, wScreenTileBuffer + $1A0
     call CopyRectToBGMap
     ld hl, wC0A1
     inc [hl]
@@ -5046,7 +5041,7 @@ Jump_003_5FFB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuRowCount, wJoypadPressed
 ; writes: rRAMG, rRAMB, wC0A0, wC46F, wC0A1, wStringIndex, wMenuPage
-; points at: wC46E, wC39E, wC0A1
+; points at: wC46E, wC0A1
 PauseMenu_Skills_Case01_Case01::
 Jump_003_601D:: ; address name
     ld de, Data_003_4617
@@ -5067,7 +5062,7 @@ Jump_003_601D:: ; address name
     ld [rRAMG], a
     ld hl, vBGMap0 + $206
     ld bc, $0301
-    ld de, wC39E
+    ld de, wScreenTileBuffer + $206
     call CopyRectToBGMap
     ret
 
@@ -5086,7 +5081,7 @@ Jump_003_6052::
     call PauseMenu_Skills_Shared05
     ld hl, vBGMap0 + $206
     ld bc, $0301
-    ld de, wC39E
+    ld de, wScreenTileBuffer + $206
     call CopyRectToBGMap
     ld a, $00
     ld [rRAMG], a
@@ -5237,7 +5232,7 @@ Jump_003_6120:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wC46F, wD083
 ; writes: rRAMG, rRAMB, wD083, wC0A1, wC0A0, wMenuPage
-; points at: wC46F, wC2D9, wC140, wC0A0
+; points at: wC46F, wTextBuf1, wC0A0
 PauseMenu_Skills_Case02_Case02::
 Jump_003_6149:: ; address name
     ld de, MenuCursorPositions_Bank03
@@ -5255,7 +5250,7 @@ Jump_003_6149:: ; address name
     ld [rRAMG], a
     ld hl, vBGMap0 + $141
     ld bc, $0703
-    ld de, wC2D9
+    ld de, wScreenTileBuffer + $141
     call CopyRectToBGMap
     ret
 
@@ -5280,7 +5275,7 @@ Jump_003_6178::
     call SRAMRecordAddressMapped
     ld e, l
     ld d, h
-    ld hl, wC140
+    ld hl, wTextBuf1
     call CopyFiveGlyphsPlusMarks
     ld a, $00
     ld [rRAMG], a
@@ -5325,7 +5320,7 @@ Jump_003_61CE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC46D, wRecordBuffer
 ; writes: rRAMG, rRAMB
-; points at: wC130, wC150, wC0A1
+; points at: wTextBuf0, wTextBuf2, wC0A1
 PauseMenu_Skills_Case03_Case00::
 Jump_003_61EA:: ; address name
     call PauseMenu_Skills_Shared01
@@ -5340,12 +5335,12 @@ Jump_003_61EA:: ; address name
     call SRAMRecordAddressMapped
     ld e, l
     ld d, h
-    ld hl, wC130
+    ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
     ld a, [wRecordBuffer]
     ld l, a
     ld h, $04
-    ld de, wC150
+    ld de, wTextBuf2
     call CopyStringHLToDE
     ld a, $00
     ld [rRAMG], a
@@ -5584,7 +5579,7 @@ Jump_003_6369:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wItemId, wD09E
 ; writes: wStringCategory, wStringIndex, wItemId, wC0A1
-; points at: wD09F, wC160, wD09E
+; points at: wD09F, wTextBuf3, wD09E
 PauseMenu_Skills_Case03_Case09::
 Jump_003_6387:: ; address name
     ld a, [wC52B]
@@ -5601,7 +5596,7 @@ Jump_003_6387:: ; address name
     ld a, h
     add a, $02
     ld h, a
-    ld de, wC160
+    ld de, wTextBuf3
     call CopyStringHLToDE
     ld a, $01
     ld [wStringCategory], a
@@ -5693,7 +5688,6 @@ Func_003_641E:: ; address name
 ; only called from routines of PauseMenu_Skills (E-0098)
 ; 8 call sites from 7 routines (e.g. PauseMenu_Skills_Case00_Case01, PauseMenu_Skills_Case00_Case00, PauseMenu_Skills_Case01_Case02, PauseMenu_Skills_Case01_Case00, ...)
 ; reads: wC46D, wC0A7, wMenuPage
-; points at: wC2A6
 PauseMenu_Skills_Shared01::
 Func_003_6432:: ; address name
     ld a, [wC46D]
@@ -5709,7 +5703,7 @@ Func_003_6432:: ; address name
 Jump_003_6443::
     ld de, Data_003_6A98
     ld bc, $0501
-    ld hl, wC2A6
+    ld hl, wScreenTileBuffer + $10E
     call CopyRectToBGMap
     ret
 
@@ -5717,7 +5711,7 @@ Jump_003_6450::
     ld a, [wC0A7]
     cp a, $01
     jr z, Jump_003_6443
-    ld hl, wC2A6
+    ld hl, wScreenTileBuffer + $10E
     ld a, $C5
     ld [hl+], a
     ld a, [wMenuPage]
@@ -5734,7 +5728,6 @@ Jump_003_6450::
 ; loads blocks $1C, $0C and $1D, writes field $5F of record wC46D & 3 as decimal digits at wC3A2 and draws the cursor for wC46D & 3 (E-0122)
 ; 2 call sites from 2 routines (e.g. BuildRecordField5FValueScreenWithCursor, PauseMenu_Skills_Case01_Case00)
 ; reads: wC46D
-; points at: wC3A2
 BuildRecordField5FValueScreen::
 Func_003_646F:: ; address name
     call LoadScreenBlocks1CAnd0C
@@ -5746,7 +5739,7 @@ Func_003_646F:: ; address name
     call SRAMRecordAddressMapped
     deref_hl
     call HLToDecimalDigits
-    ld de, wC3A2
+    ld de, wScreenTileBuffer + $20A
     call WriteDecimalDigitTiles
     ld a, [wC46D]
     and a, $03
@@ -5757,7 +5750,6 @@ Func_003_646F:: ; address name
 ; only called from PauseMenu_Skills_Case02_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case02_Case01)
 ; reads: wC46D, wRecordBufferData, wC46E, wRecordBuffer, wCFED
-; points at: wC3A2, wC39E
 PauseMenu_Skills_Case02_Case01_Sub01::
 Func_003_649C:: ; address name
     call ClearScreenTileBuffer_Bank03
@@ -5773,7 +5765,7 @@ Func_003_649C:: ; address name
     call SRAMRecordAddressMapped
     deref_hl
     call HLToDecimalDigits
-    ld de, wC3A2
+    ld de, wScreenTileBuffer + $20A
     call WriteDecimalDigitTiles
     ld a, [wRecordBufferData]
     cp a, $FF
@@ -5783,7 +5775,7 @@ Func_003_649C:: ; address name
     call HLToDecimalDigits
 
 Jump_003_64DA::
-    ld de, wC39E
+    ld de, wScreenTileBuffer + $206
     call WriteDecimalDigitTiles
     ld a, [wC46E]
     and a, $07
@@ -5924,7 +5916,6 @@ Func_003_6595:: ; address name
 ; 3 call sites from 2 routines (e.g. PauseMenu_Skills_Case01_Case01, PauseMenu_Skills_Case01_Case00)
 ; reads: wC46D, wC46E, wMenuPage, wRecordBufferData
 ; writes: wStringIndex, wRecordBuffer, wItemId, wCFED, wStringCategory
-; points at: wC39E
 PauseMenu_Skills_Shared02::
 Func_003_65E3:: ; address name
     ld a, [wC46D]
@@ -5968,7 +5959,7 @@ Jump_003_6625::
 
 Jump_003_6632::
     call HLToDecimalDigits
-    ld de, wC39E
+    ld de, wScreenTileBuffer + $206
     call WriteDecimalDigitTiles
     ld a, $09
     ld [wStringCategory], a
@@ -5980,8 +5971,7 @@ Jump_003_6632::
 ; only called from routines of PauseMenu_Skills (E-0098)
 ; 3 call sites from 2 routines (e.g. PauseMenu_Skills_Case02_Case02, PauseMenu_Skills_Case02_Case01)
 ; reads: wRecordBuffer, wCFED, wC46F
-; writes: wC2DE, wC2DF
-; points at: wC319, wC31D
+; writes: wScreenTileBuffer
 PauseMenu_Skills_Shared03::
 Func_003_664A:: ; address name
     ld a, [wRecordBuffer]
@@ -6012,21 +6002,21 @@ Jump_003_6664::
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC319
+    ld de, wScreenTileBuffer + $181
     call WriteDecimalDigitTiles
     pop hl
     inc hl
     deref_hl
     call HLToDecimalDigits
-    ld de, wC31D
+    ld de, wScreenTileBuffer + $185
     call WriteDecimalDigitTiles
     ld a, [wC46F]
     and a, $03
     ld c, $55
     call SRAMRecordAddressMapped
     ld a, $C3
-    ld [wC2DE], a
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $146], a
+    ld [wScreenTileBuffer + $147], a
     bit 7, [hl]
     call nz, SetWC2DFTileC2_Bank03
     bit 2, [hl]
@@ -6037,29 +6027,29 @@ Jump_003_6664::
 
 ; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Shared03)
-; writes: wC2DF
+; writes: wScreenTileBuffer
 SetWC2DFTileC2_Bank03::
 Func_003_66A9:: ; address name
     ld a, $C2
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $147], a
     ret
 
 ; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Shared03)
-; writes: wC2DF
+; writes: wScreenTileBuffer
 SetWC2DFTileC1_Bank03::
 Func_003_66AF:: ; address name
     ld a, $C1
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $147], a
     ret
 
 ; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Shared03)
-; writes: wC2DE
+; writes: wScreenTileBuffer
 SetWC2DETileC0_Bank03::
 Func_003_66B5:: ; address name
     ld a, $C0
-    ld [wC2DE], a
+    ld [wScreenTileBuffer + $146], a
     ret
 
 ; only called from PauseMenu_Skills_Case01_Case01 (E-0047)
@@ -6374,7 +6364,6 @@ Jump_003_6A5A::
 ; only called from routines of PauseMenu_Skills (E-0098)
 ; 8 call sites from 7 routines (e.g. PauseMenu_Skills_Case00_Case01, PauseMenu_Skills_Case01_Case02, PauseMenu_Skills_Case01_Case01, PauseMenu_Skills_Case01_Case00, ...)
 ; reads: wC46D, wC0A7, wMenuPageCount, wMenuPage
-; points at: wC2A6
 PauseMenu_Skills_Shared05::
 Func_003_6A60:: ; address name
     ld a, [wC46D]
@@ -6390,7 +6379,7 @@ Func_003_6A60:: ; address name
 Jump_003_6A71::
     ld de, Data_003_6A98
     ld bc, $0501
-    ld hl, wC2A6
+    ld hl, wScreenTileBuffer + $10E
     call CopyRectToBGMap
     ret
 
@@ -6510,11 +6499,11 @@ Jump_003_6B2C::
 ; entry 2 of the `rst $00` table in PauseMenu_State3_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
-; points at: wC338, wC0A1
+; points at: wC0A1
 PauseMenu_State3_Case00_Case02::
 Jump_003_6B33:: ; address name
     ld hl, vBGMap0 + $1A0
-    ld de, wC338
+    ld de, wScreenTileBuffer + $1A0
     ld bc, $1405
     call CopyRectToBGMap
     ld a, $08
@@ -6613,7 +6602,7 @@ Jump_003_6B8D:: ; address name
 
 ; entry 1 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD0C7, wJoypadPressed, wC836, wJoypadPressedRepeat, wMenuPageCount, wC3C7, wC46E, wModeState
+; reads: wD0C7, wJoypadPressed, wC836, wJoypadPressedRepeat, wMenuPageCount, wScreenTileBuffer, wC46E, wModeState
 ; writes: wC836, wC0A1, wC0A0, wDataBankSave
 ; points at: wC46E, wC0A1
 PauseMenu_State3_Case01_Case01::
@@ -6662,7 +6651,7 @@ Jump_003_6C10::
     ret c
     call ComputeMenuPagesForWD0C7Items
     ld hl, vBGMap0 + $22F
-    ld a, [wC3C7]
+    ld a, [wScreenTileBuffer + $22F]
     call WriteVRAMByte
     ret
 
@@ -6720,7 +6709,7 @@ Jump_003_6C6E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC46F, wC833, wCC44
 ; writes: wC0A1, wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
-; points at: wC46F, wC0A1, wC150
+; points at: wC46F, wC0A1, wTextBuf2
 PauseMenu_State3_Case01_Case03::
 Jump_003_6C90:: ; address name
     ld hl, wC46F
@@ -6776,7 +6765,7 @@ Jump_003_6CE1::
     pop af
 
 Jump_003_6CE2::
-    ld de, wC150
+    ld de, wTextBuf2
     call WriteKeyNameToDE
     ld a, $0A
     ld [wC0A1], a
@@ -6801,7 +6790,7 @@ Jump_003_6CEE::
     ld [wStringIndex], a
     ld a, $06
     ld [wStringCategory], a
-    ld hl, wC150
+    ld hl, wTextBuf2
     ld a, l
     ld [wStringDestLo], a
     ld a, h
@@ -6993,12 +6982,12 @@ Jump_003_6DF1:: ; address name
 ; entry 13 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuRowCount, wMenuPageCount, wC470
-; points at: wC278, wC0A1
+; points at: wC0A1
 PauseMenu_State3_Case01_Case0D::
 Jump_003_6DFB:: ; address name
     call BuildScreenBlocks21To25WithCursor
     ld hl, vBGMap0 + $E0
-    ld de, wC278
+    ld de, wScreenTileBuffer + $E0
     ld bc, $0605
     call CopyRectToBGMap
     ld a, $6C
@@ -7019,7 +7008,7 @@ Jump_003_6DFB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC470
 ; writes: wMenuRowCount, wMenuPageCount, wC46F, wC0A1
-; points at: wC470, wC0A1, wC218, wC338
+; points at: wC470, wC0A1
 PauseMenu_State3_Case01_Case0E::
 Jump_003_6E27:: ; address name
     ld hl, wC470
@@ -7048,11 +7037,11 @@ Jump_003_6E53::
 Jump_003_6E56::
     call BuildScreenBlocks21To24
     ld hl, vBGMap0 + $80
-    ld de, wC218
+    ld de, wScreenTileBuffer + $80
     ld bc, $0609
     call CopyRectToBGMap
     ld hl, vBGMap0 + $1A0
-    ld de, wC338
+    ld de, wScreenTileBuffer + $1A0
     ld bc, $1405
     call CopyRectToBGMap
     call PauseMenu_State3_Shared06
@@ -7084,7 +7073,7 @@ Jump_003_6E88:: ; address name
 ; entry 16 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B
-; writes: wC0A1, hFFC6, wMenuPage, wC46E
+; writes: wC0A1, hTemp0, wMenuPage, wC46E
 PauseMenu_State3_Case01_Case10::
 Jump_003_6E9D:: ; address name
     ld a, [wC52B]
@@ -7098,7 +7087,7 @@ Jump_003_6E9D:: ; address name
     and a, $3F
 
 Jump_003_6EAF::
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall DeleteKeyEntryHFFC6
     xor a, a
     ld [wMenuPage], a
@@ -7160,14 +7149,14 @@ Jump_003_6EE2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC0A8
 ; writes: rRAMG, rRAMB, wC46E
-; points at: wC286, wC282, wC0A1
+; points at: wC0A1
 PauseMenu_State3_Case02_Case01::
 Jump_003_6F00:: ; address name
     ld a, [wC0A8]
     ld hl, Data_003_6FBB
     add_a_to_hl
     ld a, [hl]
-    ld hl, wC286
+    ld hl, wScreenTileBuffer + $EE
     ld [hl+], a
     inc a
     ld [hl+], a
@@ -7178,7 +7167,7 @@ Jump_003_6F00:: ; address name
     inc a
     ld [hl], a
     ld hl, vBGMap0 + $EA
-    ld de, wC282
+    ld de, wScreenTileBuffer + $EA
     ld bc, $090A
     call CopyRectToBGMap
     ld a, $0A
@@ -7572,7 +7561,7 @@ Func_003_7145:: ; address name
 ; entry 3 of the `rst $00` table in PauseMenu_State3_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC46D
-; points at: wC2C0, wC0A1
+; points at: wC0A1
 PauseMenu_State3_Case04_Case03::
 Jump_003_716F:: ; address name
     call LoadScreenBlock21
@@ -7581,7 +7570,7 @@ Jump_003_716F:: ; address name
     ld hl, MenuCursorPositions_Bank03
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     call PauseMenu_State3_Shared01
-    ld de, wC2C0
+    ld de, wScreenTileBuffer + $128
     ld hl, vBGMap0 + $128
     ld bc, $0C09
     call CopyRectToBGMap
@@ -7670,35 +7659,34 @@ Jump_003_71FD::
 ; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case04_Case05, PauseMenu_State3_Case04_Case03, PauseMenu_State3_Case04_Case01)
 ; reads: wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, wD0A5
 ; writes: wMenuRowCount
-; points at: wC1FB, wC23B, wC27B, wC204, wC244, wC284
 PauseMenu_State3_Shared01::
 Func_003_7202:: ; address name
     call LoadScreenBlock28
     ld a, [wD09F]
     inc a
     ld [wMenuRowCount], a
-    ld de, wC1FB
+    ld de, wScreenTileBuffer + $63
     ld a, [wD0A0]
     call PauseMenu_State3_Shared01_Sub01
-    ld de, wC23B
+    ld de, wScreenTileBuffer + $A3
     ld a, [wD0A1]
     call PauseMenu_State3_Shared01_Sub01
-    ld de, wC27B
+    ld de, wScreenTileBuffer + $E3
     ld a, [wD0A2]
     call PauseMenu_State3_Shared01_Sub01
-    ld de, wC204
+    ld de, wScreenTileBuffer + $6C
     ld a, [wD0A3]
     ld b, $E1
     call PauseMenu_State3_Shared01_Sub02
-    ld de, wC244
+    ld de, wScreenTileBuffer + $AC
     ld a, [wD0A4]
     ld b, $E2
     call PauseMenu_State3_Shared01_Sub02
-    ld de, wC284
+    ld de, wScreenTileBuffer + $EC
     ld a, [wD0A5]
     ld b, $E3
     call PauseMenu_State3_Shared01_Sub02
-    ld de, wC1FB
+    ld de, wScreenTileBuffer + $63
     ld hl, vBGMap0 + $63
     ld bc, $1005
     call CopyRectToBGMap
@@ -7757,8 +7745,8 @@ Func_003_7278:: ; address name
 ; only called from routines of PauseMenu_State3 (E-0098)
 ; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case04_Case05, PauseMenu_State3_Case04_Case02, PauseMenu_State3_Case04_Case01)
 ; reads: wC46E
-; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, wC2E6, wC321
-; points at: wD0A0, wC2E9, wC364, wC368, wC3A4, wC3A8, wC2E1
+; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, wScreenTileBuffer
+; points at: wD0A0
 PauseMenu_State3_Shared02::
 Func_003_7281:: ; address name
     ld a, $0A
@@ -7787,7 +7775,7 @@ Func_003_7281:: ; address name
     ld a, [hl]
     and a, $01
     add a, $CC
-    ld [wC2E6], a
+    ld [wScreenTileBuffer + $14E], a
     ld a, l
     add a, $48
     ld l, a
@@ -7799,7 +7787,7 @@ Func_003_7281:: ; address name
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    ld de, wC2E9
+    ld de, wScreenTileBuffer + $151
     call WriteTwoDigitTilesFromWC8C1
     pop hl
     ld a, l
@@ -7813,7 +7801,7 @@ Func_003_7281:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC364
+    ld de, wScreenTileBuffer + $1CC
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -7822,7 +7810,7 @@ Func_003_7281:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC368
+    ld de, wScreenTileBuffer + $1D0
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -7831,25 +7819,25 @@ Func_003_7281:: ; address name
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC3A4
+    ld de, wScreenTileBuffer + $20C
     call WriteDecimalDigitTiles
     pop hl
     inc hl
     deref_hl
     call HLToDecimalDigits
-    ld de, wC3A8
+    ld de, wScreenTileBuffer + $210
     call WriteDecimalDigitTiles
     pop af
     push af
     add a, $C7
-    ld [wC321], a
+    ld [wScreenTileBuffer + $189], a
     pop af
-    ld de, wC2E1
+    ld de, wScreenTileBuffer + $149
     call PauseMenu_State3_Shared02_Sub01
     ld a, $00
     ld [rRAMG], a
     ld hl, vBGMap0 + $149
-    ld de, wC2E1
+    ld de, wScreenTileBuffer + $149
     ld bc, $0A07
     call CopyRectToBGMap
     ret
@@ -7938,7 +7926,7 @@ Jump_003_7398:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPlayHoursLo, wPlayHoursHi, wPlayMinutes, wD09D, wD09E, wD7F5, wD09F, wD0A0, ...
 ; writes: wD09E
-; points at: wC60C, wC200, wC204, wC243, wC249, wC283, wC31B, wC31F, ...
+; points at: wC60C, wD09D, wC0A1
 PauseMenu_State3_Case05_Case00::
 Jump_003_73A0:: ; address name
     call LoadScreenBlock2D
@@ -7954,56 +7942,56 @@ Jump_003_73A0:: ; address name
     ld a, [wPlayHoursHi]
     ld h, a
     call HLToDecimalDigits
-    ld de, wC200
+    ld de, wScreenTileBuffer + $68
     call WriteThreeDigitTilesWC8C0_Bank03
     ld a, [wPlayMinutes]
     call ByteAToDecimalDigits
-    ld de, wC204
+    ld de, wScreenTileBuffer + $6C
     call WriteTwoDigitTilesWC8C1NoBlank_Bank03
     call PauseMenu_State3_Case05_Case00_Sub01
     ld a, [wD09D]
-    ld de, wC243
+    ld de, wScreenTileBuffer + $AB
     call WriteByteAAsTwoDigitTiles
     ld a, [wD09E]
-    ld de, wC249
+    ld de, wScreenTileBuffer + $B1
     call WriteByteAAsTwoDigitTiles
     farcall CountFlaggedSRAMRecords
     ld a, [wD7F5]
-    ld de, wC283
+    ld de, wScreenTileBuffer + $EB
     call WriteByteAAsTwoDigitTiles
     farcall CountSpeciesPerFamilyFlaggedOrListed
     ld a, [wD09D]
-    ld de, wC31B
+    ld de, wScreenTileBuffer + $183
     call WriteByteAAsTwoDigitTiles
     ld a, [wD09E]
-    ld de, wC31F
+    ld de, wScreenTileBuffer + $187
     call WriteByteAAsTwoDigitTiles
     ld a, [wD09F]
-    ld de, wC323
+    ld de, wScreenTileBuffer + $18B
     call WriteByteAAsTwoDigitTiles
     ld a, [wD0A0]
-    ld de, wC327
+    ld de, wScreenTileBuffer + $18F
     call WriteByteAAsTwoDigitTiles
     ld a, [wD0A1]
-    ld de, wC35B
+    ld de, wScreenTileBuffer + $1C3
     call WriteByteAAsTwoDigitTiles
     ld a, [wD0A2]
-    ld de, wC35F
+    ld de, wScreenTileBuffer + $1C7
     call WriteByteAAsTwoDigitTiles
     ld a, [wD0A3]
-    ld de, wC363
+    ld de, wScreenTileBuffer + $1CB
     call WriteByteAAsTwoDigitTiles
     ld a, [wD0A4]
-    ld de, wC367
+    ld de, wScreenTileBuffer + $1CF
     call WriteByteAAsTwoDigitTiles
     ld a, [wD0A5]
-    ld de, wC39B
+    ld de, wScreenTileBuffer + $203
     call WriteByteAAsTwoDigitTiles
     ld a, [wD0A6]
-    ld de, wC39F
+    ld de, wScreenTileBuffer + $207
     call WriteByteAAsTwoDigitTiles
     ld a, [wD0A7]
-    ld de, wC3A3
+    ld de, wScreenTileBuffer + $20B
     call WriteByteAAsTwoDigitTiles
     ld hl, $0000
     ld de, wD09D
@@ -8016,7 +8004,7 @@ Jump_003_746C::
     dec b
     jr nz, Jump_003_746C
     call HLToDecimalDigits
-    ld de, wC2E6
+    ld de, wScreenTileBuffer + $14E
     call WriteDecimalDigitTiles
     call CopyTileBufferToBGMap
     ld hl, wC0A1
@@ -8027,7 +8015,6 @@ Jump_003_746C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wPlayFrames, wPlaySeconds, wPlayMinutes, wPlayHoursLo, wPlayHoursHi
 ; writes: wC0A0, wC0A1
-; points at: wC204, wC200
 PauseMenu_State3_Case05_Case01::
 Jump_003_7487:: ; address name
     ld a, [wJoypadPressed]
@@ -8041,16 +8028,16 @@ Jump_003_7487:: ; address name
     ret nz
     ld a, [wPlayMinutes]
     call ByteAToDecimalDigits
-    ld de, wC204
+    ld de, wScreenTileBuffer + $6C
     call WriteTwoDigitTilesWC8C1NoBlank_Bank03
     ld a, [wPlayHoursLo]
     ld l, a
     ld a, [wPlayHoursHi]
     ld h, a
     call HLToDecimalDigits
-    ld de, wC200
+    ld de, wScreenTileBuffer + $68
     call WriteThreeDigitTilesWC8C0_Bank03
-    ld de, wC200
+    ld de, wScreenTileBuffer + $68
     ld hl, vBGMap0 + $68
     ld bc, $0601
     call CopyRectToBGMap
@@ -8125,12 +8112,12 @@ Jump_003_74EF:: ; address name
 ; entry 0 of the `rst $00` table in PauseMenu_State3_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52D, wC52E, wC52F, wC530
-; writes: hFFB9, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wC1F9
+; writes: hSpriteWindowClipMode, wC52D, wC52E, wC52F, wC530, wStringCategory, wStringIndex, wScreenTileBuffer
 ; points at: wC0A1
 PauseMenu_State3_Case06_Case00::
 Jump_003_7501:: ; address name
     xor a, a
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     call PauseMenu_State3_Case06_Case00_Sub01
     ld a, [wC52D]
     ld l, a
@@ -8168,7 +8155,7 @@ Jump_003_7501:: ; address name
     ld a, h
     ld [wC52E], a
     ld a, $C3
-    ld [wC1F9], a
+    ld [wScreenTileBuffer + $61], a
     call CopyTileBufferToBGMap
     ld a, $00
     ld [wStringCategory], a
@@ -8418,7 +8405,6 @@ Func_003_76C9:: ; address name
 ; only called from routines of PauseMenu_State3 (E-0098)
 ; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_Case0A, PauseMenu_State3_Case01_Case07, PauseMenu_State3_Case01_Case04)
 ; reads: wC46F
-; points at: wC218, wC338
 PauseMenu_State3_Shared04::
 Func_003_76D5:: ; address name
     call BuildScreenBlocks21To24
@@ -8430,11 +8416,11 @@ Func_003_76D5:: ; address name
     ld hl, Data_003_4633
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld hl, vBGMap0 + $80
-    ld de, wC218
+    ld de, wScreenTileBuffer + $80
     ld bc, $0609
     call CopyRectToBGMap
     ld hl, vBGMap0 + $1A0
-    ld de, wC338
+    ld de, wScreenTileBuffer + $1A0
     ld bc, $1405
     call CopyRectToBGMap
     ret
@@ -8531,7 +8517,7 @@ Func_003_7791:: ; address name
 ; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_Case0E, PauseMenu_State3_Case01_Case01, PauseMenu_State3_Case01_Case00)
 ; reads: wMenuPage, wD0C7
 ; writes: wC52F, wC530, wStringCategory, wStringIndex, wC52D, wC52E
-; points at: wD0A7, wD0A8, wC130
+; points at: wD0A7, wD0A8, wTextBuf0
 PauseMenu_State3_Shared06::
 Func_003_779A:: ; address name
     ld hl, $0C01
@@ -8607,7 +8593,7 @@ Jump_003_77E0::
     ld a, [de]
 
 Jump_003_781C::
-    ld de, wC130
+    ld de, wTextBuf0
     call WriteKeyNameToDE
     ld a, $5B
     ld [de], a
@@ -8713,7 +8699,7 @@ Data_003_78C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 3 call sites from 2 routines (e.g. PauseMenu_State3_Case01_Case01, PauseMenu_State3_Case01_Case00)
 ; reads: wD0C7, wMenuPage, wC46E
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory
-; points at: wD0A7, wC130
+; points at: wD0A7, wTextBuf0
 PauseMenu_State3_Shared07::
 Func_003_78CB:: ; address name
     ld a, [wD0C7]
@@ -8787,7 +8773,7 @@ Jump_003_792B::
     cp a, $FE
     jr z, Jump_003_7949
     ld a, [de]
-    ld de, wC130
+    ld de, wTextBuf0
     call WriteKeyNameToDE
     ld a, $0E
     jr Jump_003_7953
@@ -8987,7 +8973,7 @@ Jump_003_7A53::
 ; from wD0C7 items computes wMenuPageCount (4 rows per page, up to 8 pages), wMenuLastPageRows and wMenuRowCount for wMenuPage, and draws the page indicator (E-0128)
 ; 2 call sites from 2 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_Case01_Case01)
 ; reads: wD0C7, wMenuPage, wMenuLastPageRows, wMenuPageCount
-; writes: wMenuLastPageRows, wMenuPageCount, wMenuRowCount, wC3C9, wC3C7, wC3C6, wC3C8, wC3CA
+; writes: wMenuLastPageRows, wMenuPageCount, wMenuRowCount, wScreenTileBuffer
 ComputeMenuPagesForWD0C7Items::
 Func_003_7A58:: ; address name
     ld a, [wD0C7]
@@ -9069,17 +9055,17 @@ Jump_003_7AC1::
     cp a, $02
     ret c
     add a, $E0
-    ld [wC3C9], a
+    ld [wScreenTileBuffer + $231], a
     ld a, [wMenuPage]
     inc a
     add a, $E0
-    ld [wC3C7], a
+    ld [wScreenTileBuffer + $22F], a
     ld a, $C5
-    ld [wC3C6], a
+    ld [wScreenTileBuffer + $22E], a
     ld a, $BE
-    ld [wC3C8], a
+    ld [wScreenTileBuffer + $230], a
     ld a, $C6
-    ld [wC3CA], a
+    ld [wScreenTileBuffer + $232], a
     ret
 
 ; shows string 2 of category 0 (ShowString_Bank09) in a window at vTiles1 + $6E0 with size $1003, then restores the default window (vTiles1, $1202) (E-0120)

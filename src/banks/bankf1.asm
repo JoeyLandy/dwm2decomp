@@ -62,7 +62,7 @@ Jump_0F1_4013:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wC46E
 ; writes: wDataBankSave, wD082, wItemId, wC0A1, wC46F
-; points at: wC46E, wInventory, wC150, wC60C, wC130, wC0A0
+; points at: wC46E, wInventory, wTextBuf2, wC60C, wTextBuf0, wC0A0
 Func_0F1_4001_Case00_Case01::
 Jump_0F1_4057:: ; address name
     ld a, [wInventory]
@@ -114,10 +114,10 @@ Jump_0F1_4092::
     ld [wItemId], a
     ld l, a
     ld h, $05
-    ld de, wC150
+    ld de, wTextBuf2
     call CopyStringHLToDE
     ld de, wC60C
-    ld hl, wC130
+    ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
     farcall LoadItemRecord
     ld hl, wC0A0
@@ -327,7 +327,6 @@ Jump_0F1_41E0:: ; address name
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
 ; 2 call sites from 2 routines (e.g. Func_0F1_4001_Case00_Case00, BuildScreenBlock32WithCursor_BankF1)
 ; reads: wInventory, wC0A7, wMenuPage
-; points at: wC2A6
 BuildInventoryScreenBase_BankF1::
 Func_0F1_41EE:: ; address name
     call ClearScreenTileBuffer_BankF1
@@ -343,7 +342,7 @@ Func_0F1_41EE:: ; address name
     ld a, [wC0A7]
     cp a, $02
     jr c, Jump_0F1_422C
-    ld hl, wC2A6
+    ld hl, wScreenTileBuffer + $10E
     ld a, $C5
     ld [hl+], a
     ld a, [wMenuPage]
@@ -703,9 +702,8 @@ Jump_0F1_442B::
 
 ; only called from BuildItemScreenForWItemId_BankF1 (E-0047)
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1)
-; reads: wC46D, wItemId, hFFC6, hFFC7
-; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hFFC6, hFFC7, wC2DE, wC2DF, ...
-; points at: wC2D9, wC319, wC31D
+; reads: wC46D, wItemId, hTemp0, hTemp1
+; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hTemp0, hTemp1, wScreenTileBuffer, wC52D, ...
 BuildItemScreenForWItemId_BankF1_Sub01:: ; heuristic: follows a terminator; C0
 Func_0F1_442F:: ; address name
     ld a, [wC46D]
@@ -754,7 +752,7 @@ Jump_0F1_4475::
     ld h, [hl]
     ld l, a
     call HLToDecimalDigits
-    ld de, wC319
+    ld de, wScreenTileBuffer + $181
     call WriteDecimalDigitTiles
     pop hl
     inc hl
@@ -790,11 +788,11 @@ Jump_0F1_44A0::
 Jump_0F1_44A3::
     deref_hl
     call HLToDecimalDigits
-    ld de, wC31D
+    ld de, wScreenTileBuffer + $185
     call WriteDecimalDigitTiles
     ld a, $C3
-    ld [wC2DE], a
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $146], a
+    ld [wScreenTileBuffer + $147], a
     jp Jump_0F1_4582
 
 Jump_0F1_44BA::
@@ -814,7 +812,7 @@ Jump_0F1_44BA::
     ld de, $0901
     call ShowStringBank08AtTilesHL_BankF1
     pop af
-    ld hl, wC319
+    ld hl, wScreenTileBuffer + $181
     ld c, a
     ld b, c
     ld a, $1A
@@ -872,10 +870,10 @@ Jump_0F1_451A::
     add_a_to_hl
     ld b, [hl]
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
-    ld hl, wC2D9
+    ldh [hTemp1], a
+    ld hl, wScreenTileBuffer + $141
     ld a, b
     ld c, a
     or a, a
@@ -903,15 +901,15 @@ Jump_0F1_4556::
     jr nz, Jump_0F1_4556
 
 Jump_0F1_455A::
-    ld hl, wC319
+    ld hl, wScreenTileBuffer + $181
     ld b, $07
     ld a, c
     or a, a
     jr z, Jump_0F1_457A
     push hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     inc hl
     ld b, [hl]
@@ -957,29 +955,29 @@ Jump_0F1_4599::
 
 ; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_Sub01)
-; writes: wC2DF
+; writes: wScreenTileBuffer
 SetWC2DFTileC2_BankF1::
 Func_0F1_459E:: ; address name
     ld a, $C2
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $147], a
     ret
 
 ; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_Sub01)
-; writes: wC2DF
+; writes: wScreenTileBuffer
 SetWC2DFTileC1_BankF1::
 Func_0F1_45A4:: ; address name
     ld a, $C1
-    ld [wC2DF], a
+    ld [wScreenTileBuffer + $147], a
     ret
 
 ; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_Sub01)
-; writes: wC2DE
+; writes: wScreenTileBuffer
 SetWC2DETileC0_BankF1::
 Func_0F1_45AA:: ; address name
     ld a, $C0
-    ld [wC2DE], a
+    ld [wScreenTileBuffer + $146], a
     ret
 
 Data_0F1_45B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1919,7 +1917,6 @@ Jump_0F1_4CE2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wD7F6, wD781
 ; writes: wD7F1, wD7F2, wD7F3, wD781
-; points at: wC36C, wC386
 RunWD780StateWhenNotFading_F1_Case04_Case04::
 Jump_0F1_4D07:: ; address name
     farcall SetWD7F5ToWD789Cell5
@@ -1934,12 +1931,12 @@ Jump_0F1_4D07:: ; address name
     ld [wD7F1], a
     call LoadFamilyIconTileForRecordB_BankF1
     ld de, Data_0F1_5A36
-    ld hl, wC36C
+    ld hl, wScreenTileBuffer + $1D4
     ld bc, $0C05
     call CopyRectTo20ByteRows_BankF1
     pop af
     ld [wD7F1], a
-    ld hl, wC386
+    ld hl, wScreenTileBuffer + $1EE
     ld a, l
     ld [wD7F2], a
     ld a, h
@@ -1983,7 +1980,7 @@ Func_0F1_4D4E:: ; address name
 
 ; entry 17 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC52B, wD7F5, wD7F6, hFFC6, wD781, wC6FD, wD7AB, wD7AF
+; reads: wC52B, wD7F5, wD7F6, hTemp0, wD781, wC6FD, wD7AB, wD7AF
 ; writes: rRAMG2, rRAMB, wD781, wD7B4, wD7B5, wD7B6
 ; points at: wC6FE
 RunWD780StateWhenNotFading_F1_Case04_Case11::
@@ -2004,7 +2001,7 @@ Jump_0F1_4D6F:: ; address name
     ld a, [hl]
     ld c, $56
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $0A
     jr nc, Jump_0F1_4DAB
     pop hl
@@ -3122,7 +3119,7 @@ Jump_0F1_5448:: ; address name
 ; entry 18 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781, wCA36, wCA37
-; writes: wD781, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, wD7F7
+; writes: wD781, wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7
 RunWD780StateWhenNotFading_F1_Case0D_Case12::
 Jump_0F1_546B:: ; address name
     farcall ShowPersonalityNameAndWCA3AName
@@ -3133,7 +3130,7 @@ Jump_0F1_546B:: ; address name
 ; entry 19 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781, wCA36, wCA37
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781, wD7F5, hFFBA, wD7F7
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD781, wD7F5, hSpriteHideTile, wD7F7
 RunWD780StateWhenNotFading_F1_Case0D_Case13::
 Jump_0F1_5478:: ; address name
     ld a, $6D
@@ -3153,7 +3150,7 @@ Jump_0F1_5478:: ; address name
 ; entry 20 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCA36, wCA37, wD781
-; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hFFBA, wD7F7, wD781
+; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, hSpriteHideTile, wD7F7, wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case14::
 Jump_0F1_549E:: ; address name
     ld a, [wCA36]
@@ -3167,7 +3164,7 @@ Jump_0F1_549E:: ; address name
     ld [wD7F5], a
     farcall DecompressGraphicsWD7F1ToWD7F4
     ld a, $F0
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     farcall ShowWCACFCategory11StringAtTiles2320
     call BGMapAddressAtScroll_BankF1
     ld de, $0160
@@ -3188,7 +3185,7 @@ Jump_0F1_549E:: ; address name
 ; entry 21 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult, wD781
-; writes: wJoypadPressedRepeat, wMenuInputResult, hFFBA, wD781
+; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case15::
 Jump_0F1_54E9:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -3209,7 +3206,7 @@ Jump_0F1_54E9:: ; address name
 
 Jump_0F1_550B::
     xor a, a
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     ld a, [wD781]
     inc a
     inc a
@@ -3218,7 +3215,7 @@ Jump_0F1_550B::
 
 Jump_0F1_5517::
     xor a, a
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     farcall DrawRects662BAnd653F
     ld a, $04
     ld [wD781], a
@@ -3407,12 +3404,12 @@ Jump_0F1_561B:: ; address name
 ; entry 31 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
-; writes: hFFBA, wD781
+; writes: hSpriteHideTile, wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case1F::
 Jump_0F1_5644:: ; address name
     farcall RunF24C3DAnd4D72
     ld a, $F0
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     ld a, [wD781]
     inc a
     ld [wD781], a
@@ -3421,7 +3418,7 @@ Jump_0F1_5644:: ; address name
 ; entry 32 of the `rst $00` table in RunWD780StateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wMenuInputResult
-; writes: wJoypadPressedRepeat, wMenuInputResult, hFFBA, wD781
+; writes: wJoypadPressedRepeat, wMenuInputResult, hSpriteHideTile, wD781
 RunWD780StateWhenNotFading_F1_Case0D_Case20::
 Jump_0F1_5656:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -3444,14 +3441,14 @@ Jump_0F1_5678::
 
 Jump_0F1_5679::
     xor a, a
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     ld a, $17
     ld [wD781], a
     ret
 
 Jump_0F1_5682::
     xor a, a
-    ldh [hFFBA], a
+    ldh [hSpriteHideTile], a
     ld a, $07
     ld [wD781], a
     ret
@@ -3948,7 +3945,7 @@ Jump_0F1_595B::
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWD09D (E-0122)
 ; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_F1_Case04_Case04)
-; reads: hFFC6, wD7F1
+; reads: hTemp0, wD7F1
 ; writes: rRAMG2, rRAMB, wD09D, wD09E
 LoadFamilyIconTileForRecordB_BankF1::
 Func_0F1_5969:: ; address name
@@ -3959,7 +3956,7 @@ Func_0F1_5969:: ; address name
     ld a, b
     ld c, $0D
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     ld [wD09D], a
     ld a, [wD7F1]
@@ -4198,7 +4195,7 @@ Jump_0F1_5B31::
 ; only called from GameMode5_Update_Case07_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
 ; reads: wD7E8, wD7EA, wD7E9
-; writes: wD7F1, wD7F2, hFFB9
+; writes: wD7F1, wD7F2, hSpriteWindowClipMode
 GameMode5_Update_Case07_Sub01_Sub02::
 Func_0F1_5B38:: ; address name
     ld a, [wD7E8]
@@ -4225,7 +4222,7 @@ Jump_0F1_5B56::
 
 Jump_0F1_5B5D::
     ld a, $01
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     farcall CallFunc6899PreservingWD7F1AndHFFC6
     ret
 
@@ -4243,7 +4240,7 @@ Jump_0F1_5B68::
     ld a, h
     ld [wD7F2], a
     ld a, $01
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     farcall DrawPartySpeciesSprites
     ret
 

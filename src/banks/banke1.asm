@@ -123,8 +123,8 @@ Data_0E1_5ABE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from RunE15AC0For5ABE (E-0047)
 ; 1 call site from 1 routine (e.g. RunE15AC0For5ABE)
 ; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
-; writes: hFFB3, hFFB4, hOamNextEntry
-; points at: hFFB5
+; writes: hMetaSpriteYLo, hMetaSpriteYHi, hOamNextEntry
+; points at: hMetaSpriteXLo
 RunE15AC0For5ABE_Sub01::
 Func_0E1_5AC0:: ; address name
     ldh a, [hOamNextEntry]
@@ -136,15 +136,15 @@ Func_0E1_5AC0:: ; address name
     ld b, a
     ldh a, [hSpriteOriginY]
     add a, c
-    ldh [hFFB3], a
+    ldh [hMetaSpriteYLo], a
     ldh a, [hSpriteOriginYHi]
     adc a, b
-    ldh [hFFB4], a
+    ldh [hMetaSpriteYHi], a
     ldh a, [hSpriteScrollXLo]
     ld c, a
     ldh a, [hSpriteScrollXHi]
     ld b, a
-    ld hl, hFFB5
+    ld hl, hMetaSpriteXLo
     ldh a, [hSpriteOriginX]
     add a, c
     ld c, a
@@ -180,7 +180,7 @@ Func_0E1_5AC0:: ; address name
     add a, a
     ld e, a
     ld d, $C0
-    ldh a, [hFFB9]
+    ldh a, [hSpriteWindowClipMode]
     or a, a
     jp nz, Jump_0E1_5C0A
     ldh a, [hSpriteTileOffset]
@@ -195,10 +195,10 @@ Jump_0E1_5B1C::
     ret z
     ld b, a
     jr nc, Jump_0E1_5B34
-    ldh a, [hFFB3]
+    ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
-    ldh a, [hFFB4]
+    ldh a, [hMetaSpriteYHi]
     adc a, $00
     jr nz, Jump_0E1_5B43
     ld a, b
@@ -207,10 +207,10 @@ Jump_0E1_5B1C::
     jr Jump_0E1_5B43
 
 Jump_0E1_5B34::
-    ldh a, [hFFB3]
+    ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
-    ldh a, [hFFB4]
+    ldh a, [hMetaSpriteYHi]
     adc a, $FF
     jr nz, Jump_0E1_5B43
     ld a, b
@@ -231,10 +231,10 @@ Jump_0E1_5B48::
     ld b, a
     rlca
     jr c, Jump_0E1_5B61
-    ldh a, [hFFB5]
+    ldh a, [hMetaSpriteXLo]
     add a, b
     ld b, a
-    ldh a, [hFFB6]
+    ldh a, [hMetaSpriteXHi]
     adc a, $00
     jr nz, Jump_0E1_5B70
     ld a, b
@@ -243,10 +243,10 @@ Jump_0E1_5B48::
     jr Jump_0E1_5B70
 
 Jump_0E1_5B61::
-    ldh a, [hFFB5]
+    ldh a, [hMetaSpriteXLo]
     add a, b
     ld b, a
-    ldh a, [hFFB6]
+    ldh a, [hMetaSpriteXHi]
     adc a, $FF
     jr nz, Jump_0E1_5B70
     ld a, b
@@ -290,10 +290,10 @@ Jump_0E1_5B92::
     ret z
     ld b, a
     jr nc, Jump_0E1_5BAA
-    ldh a, [hFFB3]
+    ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
-    ldh a, [hFFB4]
+    ldh a, [hMetaSpriteYHi]
     adc a, $00
     jr nz, Jump_0E1_5BB9
     ld a, b
@@ -302,10 +302,10 @@ Jump_0E1_5B92::
     jr Jump_0E1_5BB9
 
 Jump_0E1_5BAA::
-    ldh a, [hFFB3]
+    ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
-    ldh a, [hFFB4]
+    ldh a, [hMetaSpriteYHi]
     adc a, $FF
     jr nz, Jump_0E1_5BB9
     ld a, b
@@ -326,10 +326,10 @@ Jump_0E1_5BBE::
     ld b, a
     rlca
     jr c, Jump_0E1_5BD9
-    ldh a, [hFFB7]
+    ldh a, [hMetaSpriteXFlipLo]
     sub a, b
     ld b, a
-    ldh a, [hFFB8]
+    ldh a, [hMetaSpriteXFlipHi]
     sbc a, $00
     jr z, Jump_0E1_5BEF
     jr nz, Jump_0E1_5BE8
@@ -339,10 +339,10 @@ Jump_0E1_5BBE::
     jr Jump_0E1_5BE8
 
 Jump_0E1_5BD9::
-    ldh a, [hFFB7]
+    ldh a, [hMetaSpriteXFlipLo]
     sub a, b
     ld b, a
-    ldh a, [hFFB8]
+    ldh a, [hMetaSpriteXFlipHi]
     sbc a, $FF
     jr nz, Jump_0E1_5BE8
     ld a, b
@@ -396,16 +396,16 @@ Jump_0E1_5C10::
     dec b
 
 Jump_0E1_5C1B::
-    ldh a, [hFFB3]
+    ldh a, [hMetaSpriteYLo]
     add a, c
     ld c, a
-    ldh a, [hFFB4]
+    ldh a, [hMetaSpriteYHi]
     adc a, b
     jr nz, Jump_0E1_5C46
     ld a, c
     cp a, $B8
     jr nc, Jump_0E1_5C46
-    ldh a, [hFFB9]
+    ldh a, [hSpriteWindowClipMode]
     or a, a
     jr z, Jump_0E1_5C4B
     cp a, $01
@@ -444,10 +444,10 @@ Jump_0E1_5C4B::
     dec b
 
 Jump_0E1_5C56::
-    ldh a, [hFFB5]
+    ldh a, [hMetaSpriteXLo]
     add a, c
     ld c, a
-    ldh a, [hFFB6]
+    ldh a, [hMetaSpriteXHi]
     adc a, b
     jr nz, Jump_0E1_5C64
     ld a, c
@@ -498,16 +498,16 @@ Jump_0E1_5C8B::
     dec b
 
 Jump_0E1_5C96::
-    ldh a, [hFFB3]
+    ldh a, [hMetaSpriteYLo]
     add a, c
     ld c, a
-    ldh a, [hFFB4]
+    ldh a, [hMetaSpriteYHi]
     adc a, b
     jr nz, Jump_0E1_5CC1
     ld a, c
     cp a, $B8
     jr nc, Jump_0E1_5CC1
-    ldh a, [hFFB9]
+    ldh a, [hSpriteWindowClipMode]
     or a, a
     jr z, Jump_0E1_5CC6
     cp a, $01
@@ -546,10 +546,10 @@ Jump_0E1_5CC6::
     dec b
 
 Jump_0E1_5CD1::
-    ldh a, [hFFB7]
+    ldh a, [hMetaSpriteXFlipLo]
     sub a, c
     ld c, a
-    ldh a, [hFFB8]
+    ldh a, [hMetaSpriteXFlipHi]
     sbc a, b
     jr nz, Jump_0E1_5CDF
     ld a, c
@@ -591,7 +591,7 @@ Jump_0E1_5CE6::
 
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
 ; 2 call sites from 1 routine (e.g. RunE15AC0For5ABE_Sub01)
-; reads: hScrollY, hScrollX, hFFBA, rSTAT
+; reads: hScrollY, hScrollX, hSpriteHideTile, rSTAT
 BGTileUnderPointIsHFFBA_BankE1::
 Func_0E1_5D06:: ; address name
     push hl
@@ -623,7 +623,7 @@ Func_0E1_5D06:: ; address name
     and a, $03
     adc a, $98
     ld h, a
-    ldh a, [hFFBA]
+    ldh a, [hSpriteHideTile]
     ld b, a
     di
 

@@ -716,11 +716,11 @@ Jump_03B_4439::
 ; hFFC6 = wD890, then far-calls Func_03A_774C (E-0122)
 ; 5 call sites from 1 routine (e.g. Func_03B_42F4_Case02)
 ; reads: wD890
-; writes: hFFC6
+; writes: hTemp0
 Call774CWithWD890::
 Func_03B_444A:: ; address name
     ld a, [wD890]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall Call774CWithWD890_Sub01
     ret
 

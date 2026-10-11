@@ -484,14 +484,14 @@ Jump_013_42D0:: ; address name
 
 ; entry 15 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC26A, hFFC6
+; reads: wScreenTileBuffer, hTemp0
 DispatchTalkEvent_Case05_Case0F::
 Jump_013_42DC:: ; address name
-    ld a, [wC26A]
+    ld a, [wScreenTileBuffer + $D2]
     cp a, $68
     ret z
     farcall DispatchTalkEvent_Case05_Case0F_Sub01
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_42F4
     ld hl, $0410
@@ -594,13 +594,13 @@ Jump_013_436E::
 
 ; entry 22 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF93, wCB8A
+; reads: hPlayerSpriteOverride, wCB8A
 DispatchTalkEvent_Case05_Case16::
 Jump_013_4375:: ; address name
     ld de, $0209
     call TestFlagBit
     jr c, Jump_013_43A9
-    ldh a, [hFF93]
+    ldh a, [hPlayerSpriteOverride]
     bit 7, a
     jr z, Jump_013_4387
     and a, $01
@@ -729,10 +729,10 @@ Jump_013_441D::
 
 ; entry 31 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF93
+; reads: hPlayerSpriteOverride
 DispatchTalkEvent_Case05_Case1F::
 Jump_013_4424:: ; address name
-    ldh a, [hFF93]
+    ldh a, [hPlayerSpriteOverride]
     bit 7, a
     jr z, Jump_013_442E
     and a, $01
@@ -833,14 +833,14 @@ Jump_013_4483:: ; address name
 
 ; entry 41 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 DispatchTalkEvent_Case05_Case29::
 Jump_013_448F:: ; address name
     ld de, $00A4
     call TestFlagBit
     ret nc
     farcall DispatchTalkEvent_Case05_Case29_Sub01
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     ret z
     ld hl, $604F
@@ -976,29 +976,29 @@ Jump_013_4541::
 
 ; entry 52 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case05_Case34::
 Jump_013_4548:: ; address name
     ld de, $00C2
     call TestFlagBit
     jr c, Jump_013_459F
     ld a, $39
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4582
     ld a, $3A
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4582
     ld a, $3B
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4582
     jr Jump_013_4598
@@ -1028,8 +1028,8 @@ Jump_013_459F::
 
 ; entry 53 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case05_Case35::
 Jump_013_45A6:: ; address name
     ld de, $00C2
@@ -1039,21 +1039,21 @@ Jump_013_45A6:: ; address name
     call TestFlagBit
     jr c, Jump_013_460B
     ld a, $39
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_45E8
     ld a, $3A
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_45E8
     ld a, $3B
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_45E8
     jr Jump_013_45FE
@@ -1277,11 +1277,11 @@ Jump_013_46E8:: ; address name
 
 ; entry 71 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 DispatchTalkEvent_Case05_Case47::
 Jump_013_46EF:: ; address name
     farcall DispatchTalkEvent_Case05_Case47_Sub01
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_4701
     ld hl, $045B
@@ -1357,11 +1357,11 @@ Jump_013_474A:: ; address name
 
 ; entry 76 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 DispatchTalkEvent_Case05_Case4C::
 Jump_013_475B:: ; address name
     farcall DispatchTalkEvent_Shared01
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_476D
     ld hl, $60C7
@@ -1508,8 +1508,8 @@ Jump_013_47FF:: ; address name
 
 ; entry 90 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case05_Case5A::
 Jump_013_4806:: ; address name
     ld de, $00C2
@@ -1519,21 +1519,21 @@ Jump_013_4806:: ; address name
     call TestFlagBit
     jr c, Jump_013_4856
     ld a, $39
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4848
     ld a, $3A
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4848
     ld a, $3B
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4848
     jr Jump_013_484F
@@ -1681,29 +1681,29 @@ Jump_013_48D9:: ; address name
 
 ; entry 103 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case05_Case67::
 Jump_013_48EA:: ; address name
     ld de, $00C0
     call TestFlagBit
     jr c, Jump_013_4962
     ld a, $39
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4924
     ld a, $3A
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4924
     ld a, $3B
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_4924
     jr Jump_013_492B
@@ -1715,15 +1715,15 @@ Jump_013_4924::
 
 Jump_013_492B::
     ld a, $39
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
     farcall RemoveInventorySlotShiftDown
     ld a, $3A
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
     farcall RemoveInventorySlotShiftDown
     ld a, $3B
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
     farcall RemoveInventorySlotShiftDown
     ld hl, $6133
@@ -1792,11 +1792,11 @@ Jump_013_4995:: ; address name
 
 ; entry 110 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 DispatchTalkEvent_Case05_Case6E::
 Jump_013_499C:: ; address name
     farcall DispatchTalkEvent_Shared01
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_49AE
     ld hl, $60C7
@@ -1810,11 +1810,11 @@ Jump_013_49AE::
 
 ; entry 111 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 DispatchTalkEvent_Case05_Case6F::
 Jump_013_49B5:: ; address name
     farcall DispatchTalkEvent_Shared01
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_49C7
     ld hl, $60C7
@@ -2198,17 +2198,17 @@ Jump_013_4C1D::
 
 ; entry 11 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case04_Case0B::
 Jump_013_4C24:: ; address name
     ld de, $0081
     call TestFlagBit
     jr c, Jump_013_4C4A
     ld a, $32
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_4C43
     ld hl, $030E
@@ -2773,8 +2773,8 @@ Jump_013_4F09::
 
 ; entry 52 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case04_Case34::
 Jump_013_4F10:: ; address name
     ld de, $009D
@@ -2786,9 +2786,9 @@ Jump_013_4F10:: ; address name
 
 Jump_013_4F1F::
     ld a, $34
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_4F3C
     ld hl, $0AE6
@@ -3766,8 +3766,8 @@ Jump_013_5470::
 
 ; entry 114 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case04_Case72::
 Jump_013_5477:: ; address name
     ld de, $01E5
@@ -3790,9 +3790,9 @@ Jump_013_5497::
 
 Jump_013_549E::
     ld a, $33
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_5497
     ld hl, $5FA5
@@ -3936,17 +3936,17 @@ Jump_013_555C:: ; address name
 
 ; entry 124 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, hPlayerX
-; writes: hFFC6
+; reads: hTemp0, hPlayerX
+; writes: hTemp0
 DispatchTalkEvent_Case04_Case7C::
 Jump_013_5563:: ; address name
     ld de, $0097
     call TestFlagBit
     jr c, Jump_013_5596
     ld a, $32
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5582
     ld hl, $03B0
@@ -4073,8 +4073,8 @@ Jump_013_567E::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story flags and state; the first one in the code is $0DD8, whose string begins 'Queen Helen is wracked by awful'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 Talk0DD8_QueenHelenIsWracked:: ; heuristic: target of a pointer table; C0
 Func_013_5685:: ; address name
     ld de, $01E2
@@ -4108,9 +4108,9 @@ Jump_013_56BB::
     call TestFlagBit
     jr nc, Jump_013_56AD
     ld a, $34
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_56B4
     ld hl, $5FB8
@@ -4650,7 +4650,7 @@ Jump_013_5B34:: ; address name
 
 ; entry 2 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFFC6
+; writes: hTemp0
 DispatchTalkEvent_Case01_Case02::
 Jump_013_5B3B:: ; address name
     ld de, $0025
@@ -4691,7 +4691,7 @@ Jump_013_5B8D::
     call TestFlagBit
     jr c, Jump_013_5BAC
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     ld hl, $4FAF
     call StartScriptAtHL_B13
@@ -4760,8 +4760,8 @@ Jump_013_5C04::
 
 ; only called from DispatchTalkEvent_Case01_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_Case02)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case01_Case02_Sub01::
 Func_013_5C0B:: ; address name
     ld de, $0182
@@ -4783,9 +4783,9 @@ Func_013_5C0B:: ; address name
 
 Jump_013_5C36::
     ld a, $02
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5C4D
     ld hl, $0202
@@ -4820,9 +4820,9 @@ Jump_013_5C6D::
 
 Jump_013_5C84::
     ld a, $04
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5C9B
     ld hl, $08A5
@@ -4848,9 +4848,9 @@ Jump_013_5CA8::
 
 Jump_013_5CBF::
     ld a, $1B
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5CD6
     ld hl, $08AA
@@ -4892,9 +4892,9 @@ Jump_013_5D11::
 
 Jump_013_5D18::
     ld a, $1C
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5D2F
     ld hl, $0A27
@@ -4962,7 +4962,7 @@ Jump_013_5D76:: ; address name
 
 ; entry 7 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD, hFFC7, hFFC6
+; reads: wC6FD, hTemp1, hTemp0
 DispatchTalkEvent_Case01_Case07::
 Jump_013_5D7D:: ; address name
     ld de, $0025
@@ -5097,10 +5097,10 @@ Jump_013_5E73::
 
 Jump_013_5E7A::
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jp nz, Jump_013_5EE7
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $14
     jr nc, Jump_013_5E93
     ld hl, $0B01
@@ -5162,7 +5162,7 @@ Jump_013_5EE0::
     ret
 
 Jump_013_5EE7::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $38
     jr c, Jump_013_5EE0
     ld hl, $0DEF
@@ -5171,8 +5171,8 @@ Jump_013_5EE7::
 
 ; only called from DispatchTalkEvent_Case01_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_Case07)
-; reads: hFFC6, wC6FD, wC634
-; writes: hFFC6, hFFC7
+; reads: hTemp0, wC6FD, wC634
+; writes: hTemp0, hTemp1
 DispatchTalkEvent_Case01_Case07_Sub01::
 Func_013_5EF4:: ; address name
     ld de, $0191
@@ -5188,11 +5188,11 @@ Func_013_5EF4:: ; address name
 Jump_013_5F0C::
     ld hl, $005A
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall FindPartyIndexOfSpeciesHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_5F28
     ld hl, $52E3
@@ -5923,7 +5923,7 @@ Jump_013_6400::
 ; entry 23 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX
-; writes: hFFC6, wCBD3, wCBD4
+; writes: hTemp0, wCBD3, wCBD4
 DispatchTalkEvent_Case01_Case17::
 Jump_013_6407:: ; address name
     ld de, $0009
@@ -5960,7 +5960,7 @@ Jump_013_6438::
     ld hl, $4F8D
     call StartScriptAtHL_B13
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     ld a, $20
     ld [wCBD3], a
@@ -5990,8 +5990,8 @@ Jump_013_6474::
 
 ; entry 25 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC632, hFFC7, hFFC6
-; writes: hFFC6
+; reads: wC632, hTemp1, hTemp0
+; writes: hTemp0
 DispatchTalkEvent_Case01_Case19::
 Jump_013_647B:: ; address name
     ld de, $0025
@@ -6032,7 +6032,7 @@ Jump_013_64CF::
 
 Jump_013_64D6::
     ld a, $02
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     ld de, $0016
     call TestFlagBit
@@ -6142,12 +6142,12 @@ Jump_013_659E::
     call TestFlagBit
     jr c, Jump_013_65E5
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr z, Jump_013_65CA
     cp a, $01
     jr nz, Jump_013_65C3
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $22
     jr c, Jump_013_65D0
 
@@ -6157,7 +6157,7 @@ Jump_013_65C3::
     ret
 
 Jump_013_65CA::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FA
     jr c, Jump_013_65D7
 
@@ -6626,8 +6626,8 @@ Jump_013_68DB:: ; address name
 
 ; entry 39 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC6FD, hFFC6
-; writes: hFFC6, hFFC7
+; reads: wC6FD, hTemp0
+; writes: hTemp0, hTemp1
 DispatchTalkEvent_Case01_Case27::
 Jump_013_68E2:: ; address name
     ld de, $0025
@@ -6644,11 +6644,11 @@ Jump_013_68E2:: ; address name
     jr z, Jump_013_6915
     ld hl, $0002
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall FindPartyIndexOfSpeciesHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_691C
 
@@ -6815,7 +6815,7 @@ Jump_013_69D3::
 ; entry 51 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5, wC916
-; writes: hFFC7, hFFC8, hFFC9
+; writes: hTemp1, hTemp2, hTemp3
 DispatchTalkEvent_Case01_Case33::
 Jump_013_69DA:: ; address name
     farcall ClearWD7F5IfAtOrAboveLimitForWC7C7
@@ -6836,11 +6836,11 @@ Jump_013_69EE::
     ld a, [wC916]
     sub a, $33
     add a, $06
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wD7F5]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, $01
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     farcall CreateMonsterRecordOfKindHFFC7
     ret
 
@@ -6999,7 +6999,7 @@ Jump_013_6ACA:: ; address name
 ; entry 66 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7F5
-; writes: hFFC7, hFFC8, hFFC9
+; writes: hTemp1, hTemp2, hTemp3
 DispatchTalkEvent_Case01_Case42::
 Jump_013_6AD1:: ; address name
     ld de, $0025
@@ -7031,11 +7031,11 @@ Jump_013_6AEF::
 
 Jump_013_6B0B::
     ld a, $02
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wD7F5]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, $01
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     farcall CreateMonsterRecordOfKindHFFC7
     ld hl, $0B43
     call StartMessageCommand09HL_B13
@@ -7501,7 +7501,7 @@ Jump_013_6D61::
 
 ; entry 101 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC82C, wC892, hFFC6
+; reads: wC82C, wC892, hTemp0
 ; writes: wDataBank, wD7FB, wC892
 DispatchTalkEvent_Case01_Case65::
 Jump_013_6D68:: ; address name
@@ -7521,7 +7521,7 @@ Jump_013_6D68:: ; address name
     or a, a
     jr nz, Jump_013_6DA7
     farcall GenerateNewKeyEntry
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wC892], a
     or a, a
     jr nz, Jump_013_6DA0
@@ -7985,8 +7985,8 @@ Jump_013_7029::
 
 ; entry 127 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, wC6FD, wC634, wCB9A
-; writes: hFFC6, hFFC7, wD7FB, wDataBank
+; reads: hTemp0, wC6FD, wC634, wCB9A
+; writes: hTemp0, hTemp1, wD7FB, wDataBank
 DispatchTalkEvent_Case01_Case7F::
 Jump_013_7030:: ; address name
     ld de, $0134
@@ -8006,11 +8006,11 @@ Jump_013_7046::
 Jump_013_704D::
     ld hl, $00B9
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall FindPartyIndexOfSpeciesHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_013_7046
     ld a, [wC6FD]
@@ -8078,8 +8078,8 @@ Jump_013_70CB::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_7122; flag $00D1 set: jr to Jump_013_711B; flag $0024 set: jp to Jump_013_70F9); when none of them branches, starts message $0A3C through StartMessageCommand09HL_B13 (script command $09); that string begins 'King If you see Kameha again,' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC7, hFFC6
-; writes: hFFC6, hFFC7
+; reads: hTemp1, hTemp0
+; writes: hTemp0, hTemp1
 TalkMsg0A3C_KingIfYouSee:: ; heuristic: target of a pointer table; C0
 Func_013_70D9:: ; address name
     ld de, $0025
@@ -8128,10 +8128,10 @@ Jump_013_7122::
     call TestFlagBit
     jr c, Jump_013_7159
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_7152
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $64
     jr nc, Jump_013_7152
     ld hl, $0B7B
@@ -8151,9 +8151,9 @@ Jump_013_7159::
 Jump_013_7160::
     ld hl, $2710
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall AddGoldCapped
     ld hl, $5913
     call StartScriptAtHL_B13
@@ -8170,10 +8170,10 @@ Jump_013_7176::
     call TestFlagBit
     jr c, Jump_013_71AD
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_71A6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $78
     jr nc, Jump_013_71A6
     ld hl, $0B82
@@ -8193,9 +8193,9 @@ Jump_013_71AD::
 Jump_013_71B4::
     ld hl, $4E20
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall AddGoldCapped
     ld hl, $592D
     call StartScriptAtHL_B13
@@ -8212,10 +8212,10 @@ Jump_013_71CA::
     call TestFlagBit
     jr c, Jump_013_7201
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_71FA
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $8C
     jr nc, Jump_013_71FA
     ld hl, $0B82
@@ -8235,9 +8235,9 @@ Jump_013_7201::
 Jump_013_7208::
     ld hl, $7530
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall AddGoldCapped
     ld hl, $5947
     call StartScriptAtHL_B13
@@ -8254,10 +8254,10 @@ Jump_013_721E::
     call TestFlagBit
     jr c, Jump_013_7256
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_724F
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $A0
     jr nc, Jump_013_724F
     ld hl, $0B82
@@ -8277,9 +8277,9 @@ Jump_013_7256::
 Jump_013_725D::
     ld hl, vBGMap1 + $40
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall AddGoldCapped
     ld hl, $5961
     call StartScriptAtHL_B13
@@ -8556,7 +8556,7 @@ Jump_013_7463::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story flags and state; the first one in the code is $04CB, whose string begins 'That key, I used on my'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 Talk04CB_ThatKeyIUsed:: ; heuristic: target of a pointer table; C0
 Func_013_746A:: ; address name
     ld de, $0025
@@ -8592,7 +8592,7 @@ Jump_013_7488::
 
 Jump_013_74AD::
     farcall Talk04CB_ThatKeyIUsed_Sub01
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_74BF
     ld hl, $0B4B
@@ -8631,14 +8631,14 @@ Jump_013_74EA::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $04CE, whose string begins '0 checked the shelf. 0 found'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 Talk04CE_HeroCheckedTheShelf:: ; heuristic: target of a pointer table; C0
 Func_013_74F1:: ; address name
     ld de, $011E
     call TestFlagBit
     jr c, Jump_013_7518
     farcall GenerateNewKeyEntry
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_750B
     ld hl, $04CE
@@ -8676,8 +8676,8 @@ Jump_013_7591::
 
 ; tests story flags in turn (flag $0025 set: jr to Jump_013_75B6; flag $00D1 set: jr to Jump_013_75AF); when none of them branches, starts message $0512 through StartMessageCommand09HL_B13 (script command $09); that string begins 'Kameha Yo, 0. Thanks for coming.' (E-0082)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC7, hFFC6
-; writes: hFFC6, hFFC7
+; reads: hTemp1, hTemp0
+; writes: hTemp0, hTemp1
 TalkMsg0512_KamehaYo0Thanks:: ; heuristic: target of a pointer table; C0
 Func_013_7598:: ; address name
     ld de, $0025
@@ -8703,10 +8703,10 @@ Jump_013_75B6::
     call TestFlagBit
     jr c, Jump_013_75E5
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_75DE
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $32
     jr nc, Jump_013_75DE
     ld hl, $0D92
@@ -8720,13 +8720,13 @@ Jump_013_75DE::
 
 Jump_013_75E5::
     ld a, $07
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall KeyListHasKindHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_7624
     farcall CountKeysOrFull
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_7607
 
@@ -8737,12 +8737,12 @@ Jump_013_7600::
 
 Jump_013_7607::
     ld a, $07
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld de, $0203
     call TestFlagBit
     jr nc, Jump_013_7617
     ld a, $47
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_013_7617::
     farcall WriteKeyEntryHFFC6
@@ -8752,7 +8752,7 @@ Jump_013_7617::
 
 Jump_013_7624::
     farcall GenerateNewKeyEntry
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr z, Jump_013_7600
     ld hl, $58CD
@@ -8767,10 +8767,10 @@ Jump_013_7636::
     call TestFlagBit
     jr c, Jump_013_7665
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_765E
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $96
     jr nc, Jump_013_765E
     ld hl, $0B98
@@ -8784,13 +8784,13 @@ Jump_013_765E::
 
 Jump_013_7665::
     ld a, $09
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall KeyListHasKindHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_76A4
     farcall CountKeysOrFull
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_013_7687
 
@@ -8801,12 +8801,12 @@ Jump_013_7680::
 
 Jump_013_7687::
     ld a, $09
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld de, $0205
     call TestFlagBit
     jr nc, Jump_013_7697
     ld a, $49
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_013_7697::
     farcall WriteKeyEntryHFFC6
@@ -8816,7 +8816,7 @@ Jump_013_7697::
 
 Jump_013_76A4::
     farcall GenerateNewKeyEntry
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr z, Jump_013_7680
     ld hl, $58F9
@@ -9009,10 +9009,10 @@ Jump_013_7808::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1 constant message(s) depending on story flags and state; the first one in the code is $0037, whose string begins '0 tried to open the chest.'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC26A
+; reads: wScreenTileBuffer
 Talk0037_HeroTriedToOpen:: ; heuristic: target of a pointer table; C0
 Func_013_780F:: ; address name
-    ld a, [wC26A]
+    ld a, [wScreenTileBuffer + $D2]
     cp a, $1A
     ret nz
     ld hl, $0037
@@ -9567,7 +9567,7 @@ Func_013_7DEC:: ; address name
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story flags and state; the first one in the code is $0B56, whose string begins 'When you breed monsters with another'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB81, hFFC7, hFFC6
+; reads: wCB81, hTemp1, hTemp0
 ; writes: wDataBank, wD7FB
 Talk0B56_WhenYouBreedMonsters:: ; heuristic: target of a pointer table; C0
 Func_013_7E05:: ; address name
@@ -9599,10 +9599,10 @@ Jump_013_7E39::
     call TestFlagBit
     jr c, Jump_013_7E65
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_7E59
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $64
     jr nc, Jump_013_7E59
     ld hl, $0D8E
@@ -9626,10 +9626,10 @@ Jump_013_7E6C::
     call TestFlagBit
     jr c, Jump_013_7E98
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_7E8C
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $96
     jr nc, Jump_013_7E8C
     ld hl, $0D8F
@@ -9650,7 +9650,7 @@ Jump_013_7E98::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3 constant message(s) depending on story flags and state; the first one in the code is $0B6D, whose string begins 'Breeding fire and ice together makes'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCB81, hFFC7, hFFC6
+; reads: wCB81, hTemp1, hTemp0
 ; writes: wDataBank, wD7FB
 Talk0B6D_BreedingFireAndIce:: ; heuristic: target of a pointer table; C0
 Func_013_7E9F:: ; address name
@@ -9680,10 +9680,10 @@ Jump_013_7ECF::
     call TestFlagBit
     jr c, Jump_013_7EFB
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_7EEF
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $64
     jr nc, Jump_013_7EEF
     ld hl, $0D85
@@ -9704,17 +9704,17 @@ Jump_013_7EFB::
 
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2 constant message(s) depending on story flags and state; the first one in the code is $0D90, whose string begins 'Humph I'm Terry. Terry I'm a'; the branching is not interpreted (E-0097)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC7, hFFC6
+; reads: hTemp1, hTemp0
 Talk0D90_HumphImTerryTerry:: ; heuristic: target of a pointer table; C0
 Func_013_7F02:: ; address name
     ld de, $0038
     call TestFlagBit
     jr c, Jump_013_7F2A
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, $01
     jr z, Jump_013_7F23
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $96
     jr nc, Jump_013_7F23
     ld hl, $0D90
@@ -9733,7 +9733,7 @@ Jump_013_7F2A::
 
 ; map event: with story flag $25 set, sets wCB8A = $30 when the count from Func_085_5B04 is at least 50 (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC7, hFFC6
+; reads: hTemp1, hTemp0
 ; writes: wCB8A
 SetWCB8A30IfFlag25AndCountAtLeast50:: ; heuristic: target of a pointer table; C0
 Func_013_7F31:: ; address name
@@ -9741,10 +9741,10 @@ Func_013_7F31:: ; address name
     call TestFlagBit
     ret nc
     farcall TotalSpeciesFlaggedOrListed
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr nz, Jump_013_7F48
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $32
     ret c
 

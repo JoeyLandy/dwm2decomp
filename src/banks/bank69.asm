@@ -3,8 +3,8 @@ SECTION "Bank 69", ROMX[$4000], BANK[$69]
 
 ; clears the sprite slots; key-world maps set up their objects, other maps load the object list for hMapId (with a story-flag case on map $2F) (E-0131)
 ; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
-; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC38, hFFD0, wMapWidthScreens
-; writes: wSpriteSlotCount, wC527, hFFD0, hFFCA, hFFCB, hFFC8, hFFC6, hFFC7, ...
+; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCC38, hTempA, wMapWidthScreens
+; writes: wSpriteSlotCount, wC527, hTempA, hTemp4, hTemp5, hTemp2, hTemp0, hTemp1, ...
 ; points at: wSpriteSlots
 LoadMapObjectsForScreen::
 Func_069_4001:: ; address name
@@ -182,22 +182,22 @@ Jump_069_40F4::
 Jump_069_40FC::
     push bc
     ld a, b
-    ldh [hFFD0], a
+    ldh [hTempA], a
     xor a, a
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, [hl+]
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld a, [hl+]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     inc de
     ld [de], a
     inc de
     ld a, [hl+]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld [de], a
     inc de
     ld a, [hl+]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld [de], a
     inc de
     push de
@@ -239,7 +239,7 @@ Jump_069_413A::
     pop de
     inc de
     ld a, [hl+]
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld [de], a
     inc de
     ld a, [hl+]
@@ -248,7 +248,7 @@ Jump_069_413A::
     ld a, [hl+]
     ld [de], a
     inc de
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     and a, $03
     ld [de], a
     xor a, a

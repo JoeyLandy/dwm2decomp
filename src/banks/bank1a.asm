@@ -1087,8 +1087,8 @@ Jump_01A_60E8::
 
 ; for record wD868 finds the skills of Data_01A_4FF8 not yet known whose level and stat requirements its stats now meet (E-0131)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case03_Case01)
-; reads: wD868, hFFCC
-; writes: hFFCC, hFFC9, hFFCA, hFFCB
+; reads: wD868, hTemp6
+; writes: hTemp6, hTemp3, hTemp4, hTemp5
 FindNewlyLearnableSkills::
 Func_01A_60F1:: ; address name
     ld a, [wD868]
@@ -1224,7 +1224,7 @@ Jump_01A_6189::
     ld a, [hl]
     cp a, $FF
     jr z, Jump_01A_61B6
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld a, c
     cp a, $3D
     jr nz, Jump_01A_61AF
@@ -1280,9 +1280,9 @@ Jump_01A_61E4::
     cp a, $AA
     jp nz, Jump_01A_6100
     ld a, $FF
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, $FF
-    ldh [hFFCA], a
+    ldh [hTemp4], a
 
 Jump_01A_61FE::
     ret
@@ -1295,21 +1295,21 @@ Jump_01A_61FF::
     pop hl
     pop de
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, $00
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     jr Jump_01A_61FE
 
 Jump_01A_620F::
-    ldh a, [hFFCC]
-    ldh [hFFCB], a
+    ldh a, [hTemp6]
+    ldh [hTemp5], a
     pop bc
     pop hl
     pop de
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, $01
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     jr Jump_01A_61FE
 
 Jump_01A_621F::
@@ -1317,9 +1317,9 @@ Jump_01A_621F::
     pop hl
     pop de
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, $02
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     jr Jump_01A_61FE
 
 ; runs FindByteAtHLInEightAtDE_Bank1A_6232 (DE preserved) and continues at Jump_01A_61FE (E-0126)
@@ -1545,21 +1545,21 @@ Jump_01A_6318::
 
 ; hFFC6 = 0 and A = 0 (E-0114)
 ; 1 call site from 1 routine (e.g. Func_031_67AA_Case09_Case01)
-; writes: hFFC6
+; writes: hTemp0
 ClearHFFC6AndA::
 Func_01A_631A:: ; address name
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
     ret
 
 ; skill hFFC6: when every skill in its $FF-terminated list Data_01A_5BEC[hFFC6] is already among the eight at wD09D (or equal to C), adds it (Func_01A_636C); otherwise hFFC6 = 0 (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 TryAddSkillIfPrerequisitesKnown:: ; heuristic: follows a terminator; C0
 Func_01A_631F:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
     ld b, $00
     ld hl, Data_01A_5BEC
@@ -1583,7 +1583,7 @@ Jump_01A_633A::
 
 Jump_01A_633F::
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     jr Jump_01A_6347
 
 Jump_01A_6344::
@@ -1639,7 +1639,7 @@ Jump_01A_636A::
 
 ; stores C in the first empty slot of the eight at wD09D, skipping slots whose skill is not in the exclusion list Data_01A_5D8B[C]; hFFC6 = 0 when none (E-0126)
 ; 1 call site from 1 routine (e.g. TryAddSkillIfPrerequisitesKnown)
-; writes: hFFC7, hFFC6
+; writes: hTemp1, hTemp0
 ; points at: wD09D
 AddSkillCToFreeSlotUnlessExcluded::
 Func_01A_636C:: ; address name
@@ -1653,7 +1653,7 @@ Func_01A_636C:: ; address name
     ld b, $08
     ld hl, wD09D
     xor a, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_01A_637E::
     ld a, [hl]
@@ -1667,7 +1667,7 @@ Jump_01A_637E::
     dec b
     jr nz, Jump_01A_637E
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 Jump_01A_6393::
@@ -1701,11 +1701,11 @@ Jump_01A_63A4::
 
 ; hFFC8/9 = Data_01A_63F8[hFFC6] + the sum of the first hFFC7 bytes of row hFFC6 of the $63-byte table $6616 (E-0125)
 ; 12 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_Sub01)
-; reads: hFFC6, hFFC7
-; writes: hFFC8, hFFC9
+; reads: hTemp0, hTemp1
+; writes: hTemp2, hTemp3
 SumTable6616RowForHFFC6::
 Func_01A_63A7:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, $63
     call Multiply8
     ld a, l
@@ -1714,9 +1714,9 @@ Func_01A_63A7:: ; address name
     ld a, h
     adc a, $66
     ld h, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld b, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld de, Data_01A_63F8
     add a, e
     ld e, a
@@ -1738,9 +1738,9 @@ Jump_01A_63C7::
     dec b
     jr nz, Jump_01A_63C7
     ld a, e
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, d
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ret
     db $F0, $C6, $0E, $63, $CD, $82, $16, $7D, $C6, $16, $6F, $7C, $CE, $66, $67, $F0
     db $C7, $85, $6F, $30, $01, $24, $5E, $16, $00, $7B, $E0, $C8, $7A, $E0, $C9, $C9

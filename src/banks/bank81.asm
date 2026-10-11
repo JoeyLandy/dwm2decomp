@@ -66,21 +66,21 @@ Func_081_4001:: ; address name
     ld a, [wD2B0]
     ld d, a
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wD2B1]
     ld e, a
     ld a, [wD2B2]
     ld d, a
     ld a, e
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, d
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [wD2B4]
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, [wD2B5]
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     call CallFunc4001InBank81KeepRegs_Sub01_Sub01
     pop hl
     ld a, c
@@ -91,21 +91,21 @@ Func_081_4001:: ; address name
     ld a, [wD2B2]
     ld d, a
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wD2AF]
     ld e, a
     ld a, [wD2B0]
     ld d, a
     ld a, e
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, d
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [wD2B5]
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, [wD2B4]
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     call CallFunc4001InBank81KeepRegs_Sub01_Sub01
     ld a, c
     or a, a
@@ -124,8 +124,8 @@ Jump_081_40D8::
 
 ; only called from CallFunc4001InBank81KeepRegs_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. CallFunc4001InBank81KeepRegs_Sub01)
-; reads: hFFC6, hFFC7, hFFCB, hFFC8, hFFC9, wD2B3, wD2AD, wD2AE
-; points at: hFFCB
+; reads: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, wD2B3, wD2AD, wD2AE
+; points at: hTemp5
 CallFunc4001InBank81KeepRegs_Sub01_Sub01::
 Func_081_40E2:: ; address name
     ld a, [hl+]
@@ -140,9 +140,9 @@ Func_081_40E2:: ; address name
     jr CallFunc4001InBank81KeepRegs_Sub01_Sub01
 
 Jump_081_40F4::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, [wD2AD]
     ld c, a
@@ -151,7 +151,7 @@ Jump_081_40F4::
     call CompareHLToBC
     jr nz, Jump_081_4113
     ld a, [wD2B3]
-    ld hl, hFFCB
+    ld hl, hTemp5
     cp a, [hl]
     jr nz, Jump_081_4113
 
@@ -185,7 +185,7 @@ Jump_081_4126::
     inc hl
     bit 7, b
     jr nz, Jump_081_4136
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     cp a, c
     jp z, Jump_081_4110
     jr Jump_081_4146
@@ -193,9 +193,9 @@ Jump_081_4126::
 Jump_081_4136::
     res 7, b
     push hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
     call CompareHLToBC
     pop hl
@@ -212,9 +212,9 @@ Jump_081_414C::
     ld b, [hl]
     inc hl
     push hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     call CompareHLToBC
     pop hl

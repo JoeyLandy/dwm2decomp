@@ -400,9 +400,9 @@ Jump_005_4283::
 
 ; only called from AIScore_TakeMagic_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TakeMagic_Sub01)
-; reads: wBattleActor, wRecordBuffer, wCFED, hFFC6
+; reads: wBattleActor, wRecordBuffer, wCFED, hTemp0
 ; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
-; points at: wD988, hFFC6
+; points at: wD988, hTemp0
 AIScore_TakeMagic_Sub01_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_4286:: ; address name
     ld a, [wBattleActor]
@@ -444,7 +444,7 @@ Jump_005_42B7::
     push hl
     push bc
     push de
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, l
     ld [wD86A], a
     ld a, h
@@ -453,7 +453,7 @@ Jump_005_42B7::
     pop de
     pop bc
     pop hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 0, a
     jr nz, Jump_005_430D
     inc c
@@ -2517,9 +2517,9 @@ Jump_005_4C99::
 
 ; C = $FF in link battles or when every occupied foe's species is already flagged (TestSpeciesFlag), else $00 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, wBattleActor, hFFC6
-; writes: hFFC6, wSpeciesIdLo, wSpeciesIdHi
-; points at: wBattleMonsterId, hFFC6
+; reads: wC58A, wBattleActor, hTemp0
+; writes: hTemp0, wSpeciesIdLo, wSpeciesIdHi
+; points at: wBattleMonsterId, hTemp0
 NoUnflaggedFoeSpeciesOrLink:: ; heuristic: follows a terminator; C0
 Func_005_4C9C:: ; address name
     ld a, [wC58A]
@@ -2531,7 +2531,7 @@ Func_005_4C9C:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_005_4CAF::
     ld a, c
@@ -2550,14 +2550,14 @@ Jump_005_4CAF::
     pop bc
     or a, a
     jr nz, Jump_005_4CD6
-    ld hl, hFFC6
+    ld hl, hTemp0
     inc [hl]
 
 Jump_005_4CD6::
     inc c
     dec b
     jr nz, Jump_005_4CAF
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr z, Jump_005_4CE2
     ld c, $00
@@ -3213,8 +3213,8 @@ Func_005_5034:: ; address name
 
 ; C = $FF when wCFEF is 0 or the occupied foes' average resistance level for skill wCFEF is at least 2, else $00 (E-0128)
 ; 14 call sites from 14 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_RobMagic, AIScore_MegaMagic, ...)
-; reads: wCFEF, wBattleActor, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wCFEF, wBattleActor, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 ; points at: wDA72
 PassIfFoesAverageResistanceAtLeast2::
 Func_005_5052:: ; address name
@@ -3241,21 +3241,21 @@ Func_005_5052:: ; address name
     add a, d
     add_a_to_hl
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_5081::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5095
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call Get2BitFieldEOfHL
     ld d, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     add a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_005_5095::
     ld a, l
@@ -3267,11 +3267,11 @@ Jump_005_5095::
     inc c
     dec b
     jr nz, Jump_005_5081
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr z, Jump_005_50B1
     ld b, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call DivideBByA
     ld a, b
     cp a, $02
@@ -3318,9 +3318,9 @@ Jump_005_50E0::
 
 ; C = 1 when the AI mode is below 2; otherwise $FF when the foes' average DEF is at most twice the allies' average ATK, else $00 (E-0129)
 ; 7 call sites from 7 routines (e.g. AIScore_Sap, AIScore_ChargeUp, AIScore_HighJump, AIScore_EvilSlash, ...)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
-; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-; points at: hFFC6, hFFC9
+; reads: wBattleActor, hTemp1, hTemp2, hTemp0, hTemp4, hTemp5, hTemp3
+; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
+; points at: hTemp0, hTemp3
 PassIfFoeAverageDEFAtMostTwiceAllyATK:: ; heuristic: follows a terminator; C0
 Func_005_50E3:: ; address name
     ld a, [wBattleActor]
@@ -3333,78 +3333,78 @@ Func_005_50E3:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_005_50FF::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5117
-    ld hl, hFFC6
+    ld hl, hTemp0
     inc [hl]
     ld a, c
     call GetBattleDEF_Bank05
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     add a, l
-    ldh [hFFC7], a
-    ldh a, [hFFC8]
+    ldh [hTemp1], a
+    ldh a, [hTemp2]
     adc a, h
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_005_5117::
     inc c
     dec b
     jr nz, Jump_005_50FF
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld l, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call DivideHLByA
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
-    ldh [hFFCB], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
+    ldh [hTemp5], a
 
 Jump_005_513B::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5152
     call GetBattleATK_Bank05
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     add a, l
-    ldh [hFFCA], a
-    ldh a, [hFFCB]
+    ldh [hTemp4], a
+    ldh a, [hTemp5]
     adc a, h
-    ldh [hFFCB], a
-    ld hl, hFFC9
+    ldh [hTemp5], a
+    ld hl, hTemp3
     inc [hl]
 
 Jump_005_5152::
     inc c
     dec b
     jr nz, Jump_005_513B
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     call DivideHLByA
     sla l
     rl h
     push hl
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld l, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld h, a
     pop bc
     call CompareHLToBC
@@ -3423,8 +3423,8 @@ Jump_005_517A::
 
 ; C = 1 when the AI mode is below 2; otherwise $FF when the lowest DEF among occupied foes is below twice the actor's ATK, else $00 (E-0128)
 ; 7 call sites from 7 routines (e.g. AIScore_Sap, AIScore_Transform, AIScore_HighJump, AIScore_EvilSlash, ...)
-; reads: wBattleActor, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wBattleActor, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 PassIfTwiceATKAboveLowestFoeDEF:: ; heuristic: follows a terminator; C0
 Func_005_517D:: ; address name
     ld a, [wBattleActor]
@@ -3441,8 +3441,8 @@ Func_005_517D:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_519E::
     ld a, c
@@ -3456,9 +3456,9 @@ Jump_005_519E::
 Jump_005_51AA::
     call GetBattleDEF_Bank05
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     inc c
     dec b
     jr z, Jump_005_51D2
@@ -3468,15 +3468,15 @@ Jump_005_51B7::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_51CE
     call GetBattleDEF_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     sub a, l
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     sbc a, h
     jr nc, Jump_005_51CE
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_005_51CE::
     inc c
@@ -3484,9 +3484,9 @@ Jump_005_51CE::
     jr nz, Jump_005_51B7
 
 Jump_005_51D2::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     pop bc
     call CompareHLToBC
@@ -3510,7 +3510,7 @@ Jump_005_51E7::
 
 ; only called from AIScore_TwinHits (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TwinHits)
-; reads: wBattleActor, hFFC6, hFFC7
+; reads: wBattleActor, hTemp0, hTemp1
 AIScore_TwinHits_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_51EA:: ; address name
     ld a, [wBattleActor]
@@ -3520,9 +3520,9 @@ Func_005_51EA:: ; address name
     call AIScore_TwinHits_Shared01
     ld a, [wBattleActor]
     call GetBattleATK_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld b, a
     sla c
     rl b
@@ -3554,7 +3554,7 @@ Jump_005_5225::
 
 ; only called from AIScore_TwinHits (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TwinHits)
-; reads: wBattleActor, hFFC6, hFFC7
+; reads: wBattleActor, hTemp0, hTemp1
 AIScore_TwinHits_Sub02:: ; heuristic: follows a terminator; C0
 Func_005_5228:: ; address name
     ld a, [wBattleActor]
@@ -3572,9 +3572,9 @@ Jump_005_523D::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5266
     call GetBattleATK_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld b, a
     sla c
     rl b
@@ -3611,9 +3611,9 @@ Jump_005_5272::
 
 ; C = 1 when the AI mode is below 2; otherwise $FF when the able foes' average ATK is at most twice the allies' average DEF, else $00 (E-0129)
 ; 3 call sites from 3 routines (e.g. AIScore_Surround, AIScore_SideStep, AIScore_SandStorm)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC6, hFFCA, hFFCB, hFFC9
-; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-; points at: hFFC6, hFFC9
+; reads: wBattleActor, hTemp1, hTemp2, hTemp0, hTemp4, hTemp5, hTemp3
+; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
+; points at: hTemp0, hTemp3
 PassIfFoeAverageATKAtMostTwiceAllyDEF:: ; heuristic: follows a terminator; C0
 Func_005_5275:: ; address name
     ld a, [wBattleActor]
@@ -3626,9 +3626,9 @@ Func_005_5275:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_005_5291::
     ld a, c
@@ -3636,72 +3636,72 @@ Jump_005_5291::
     jr c, Jump_005_52AE
     call SlotStatus0Bit1OrStatus4Bits01
     jr nz, Jump_005_52AE
-    ld hl, hFFC6
+    ld hl, hTemp0
     inc [hl]
     ld a, c
     call GetBattleATK_Bank05
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     add a, l
-    ldh [hFFC7], a
-    ldh a, [hFFC8]
+    ldh [hTemp1], a
+    ldh a, [hTemp2]
     adc a, h
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_005_52AE::
     inc c
     dec b
     jr nz, Jump_005_5291
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld l, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr z, Jump_005_5311
     call DivideHLByA
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
-    ldh [hFFCB], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
+    ldh [hTemp5], a
 
 Jump_005_52D5::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_52EC
     call GetBattleDEF_Bank05
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     add a, l
-    ldh [hFFCA], a
-    ldh a, [hFFCB]
+    ldh [hTemp4], a
+    ldh a, [hTemp5]
     adc a, h
-    ldh [hFFCB], a
-    ld hl, hFFC9
+    ldh [hTemp5], a
+    ld hl, hTemp3
     inc [hl]
 
 Jump_005_52EC::
     inc c
     dec b
     jr nz, Jump_005_52D5
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     call DivideHLByA
     sla l
     rl h
     push hl
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld l, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld h, a
     pop bc
     call CompareHLToBC
@@ -3720,22 +3720,22 @@ Jump_005_5314::
 
 ; hFFC6 = battle slot: C = 0 when its HP >= 2/3 of its max HP, 1 when >= 1/2, 2 when >= 1/3, 3 when >= 1/4, 4 when >= 1/10, else 5 (GetBattleHP_Bank05, GetBattleMaxHP_Bank05, divisions rounded down) (E-0092)
 ; 8 call sites from 8 routines (e.g. AIScore_StrongD_Sub02, AIScore_AquaWall_Sub02, AIScore_SuckAll_Sub02_Sub01, AIScore_Meditate_Sub02, ...)
-; reads: hFFC6
+; reads: hTemp0
 HPBandOfSlotHFFC6::
 Func_005_5317:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     add hl, hl
     ld a, $03
     call DivideHLByA
     push hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleHP_Bank05
     pop bc
     push hl
     call CompareHLToBC
     jr nc, Jump_005_537F
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     srl h
     rr l
@@ -3745,7 +3745,7 @@ Func_005_5317:: ; address name
     push hl
     call CompareHLToBC
     jr nc, Jump_005_5383
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     ld a, $03
     call DivideHLByA
@@ -3755,7 +3755,7 @@ Func_005_5317:: ; address name
     push hl
     call CompareHLToBC
     jr nc, Jump_005_5387
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     srl h
     rr l
@@ -3767,7 +3767,7 @@ Func_005_5317:: ; address name
     push hl
     call CompareHLToBC
     jr nc, Jump_005_538B
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     ld a, $0A
     call DivideHLByA
@@ -3967,9 +3967,9 @@ Jump_005_544C::
 
 ; only called from AIScore_Transform (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Transform)
-; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
-; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
-; points at: hFFCE
+; reads: wBattleActor, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
+; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTemp7, ...
+; points at: hTemp8
 AIScore_Transform_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_544F:: ; address name
     ld a, [wBattleActor]
@@ -3979,27 +3979,27 @@ Func_005_544F:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wBattleActor]
     call GetBattleMaxMP_Bank05
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [wBattleActor]
     call GetBattleATK_Bank05
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld a, [wBattleActor]
     call GetBattleDEF_Bank05
     ld a, l
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld a, h
-    ldh [hFFCD], a
+    ldh [hTemp7], a
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4008,58 +4008,58 @@ Func_005_544F:: ; address name
 
 Jump_005_5494::
     xor a, a
-    ldh [hFFCE], a
+    ldh [hTemp8], a
     ld a, e
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_54EE
     call GetBattleMaxHP_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld b, a
     call CompareHLToBC
     jr nc, Jump_005_54AF
-    ld hl, hFFCE
+    ld hl, hTemp8
     inc [hl]
 
 Jump_005_54AF::
     ld a, e
     call GetBattleMaxMP_Bank05
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld c, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld b, a
     call CompareHLToBC
     jr nc, Jump_005_54C2
-    ld hl, hFFCE
+    ld hl, hTemp8
     inc [hl]
 
 Jump_005_54C2::
     ld a, e
     call GetBattleATK_Bank05
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld c, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld b, a
     call CompareHLToBC
     jr nc, Jump_005_54D5
-    ld hl, hFFCE
+    ld hl, hTemp8
     inc [hl]
 
 Jump_005_54D5::
     ld a, e
     call GetBattleDEF_Bank05
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld c, a
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     ld b, a
     call CompareHLToBC
     jr nc, Jump_005_54E8
-    ld hl, hFFCE
+    ld hl, hTemp8
     inc [hl]
 
 Jump_005_54E8::
-    ldh a, [hFFCE]
+    ldh a, [hTemp8]
     cp a, $03
     jr nc, Jump_005_54F4
 
@@ -4745,8 +4745,8 @@ Jump_005_585A::
 
 ; compares twice the occupied foes' average ATK with the allies' average DEF; returns $00 or $FF in C (E-0130)
 ; 4 call sites from 4 routines (e.g. AIScore_Surround, AIScore_SideStep, AIScore_SandStorm, AIScore_Upper_Sub02)
-; reads: wBattleActor, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wBattleActor, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 CompareFoeAverageATKWithAllyDEF:: ; heuristic: follows a terminator; C0
 Func_005_585D:: ; address name
     ld a, [wBattleActor]
@@ -4756,29 +4756,29 @@ Func_005_585D:: ; address name
     ld b, $03
     ld e, $00
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_586E::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_5882
     call GetBattleATK_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     inc e
 
 Jump_005_5882::
     inc c
     dec b
     jr nz, Jump_005_586E
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, e
     call DivideHLByA
@@ -4790,29 +4790,29 @@ Jump_005_5882::
     ld b, $03
     ld e, $00
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_58A1::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_58B5
     call GetBattleDEF_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     inc e
 
 Jump_005_58B5::
     inc c
     dec b
     jr nz, Jump_005_58A1
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, e
     call DivideHLByA
@@ -4835,29 +4835,29 @@ Jump_005_58B5::
     ld b, $03
     ld e, $00
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_58E3::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_58F7
     call GetBattleMaxHP_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     inc e
 
 Jump_005_58F7::
     inc c
     dec b
     jr nz, Jump_005_58E3
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, e
     srl h
@@ -5079,44 +5079,44 @@ Data_005_5A33:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from AIScore_BeDragon (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BeDragon)
-; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
-; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFCD, ...
+; reads: wBattleActor, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
+; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTemp7, ...
 AIScore_BeDragon_Sub01::
 Func_005_5BBC:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wBattleActor]
     call GetBattleMaxMP_Bank05
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [wBattleActor]
     call GetBattleATK_Bank05
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld a, [wBattleActor]
     call GetBattleDEF_Bank05
     ld a, l
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld a, h
-    ldh [hFFCD], a
+    ldh [hTemp7], a
     ld a, [wBattleActor]
     call GetBattleAGL_Bank05
     ld a, l
-    ldh [hFFCE], a
+    ldh [hTemp8], a
     ld a, h
-    ldh [hFFCF], a
+    ldh [hTemp9], a
     ld e, $00
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld bc, $03E7
     call CompareHLToBC
@@ -5124,9 +5124,9 @@ Func_005_5BBC:: ; address name
     inc e
 
 Jump_005_5C09::
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
     ld bc, $012C
     call CompareHLToBC
@@ -5134,9 +5134,9 @@ Jump_005_5C09::
     inc e
 
 Jump_005_5C18::
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
     ld bc, $012C
     call CompareHLToBC
@@ -5144,9 +5144,9 @@ Jump_005_5C18::
     inc e
 
 Jump_005_5C27::
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld l, a
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     ld h, a
     ld bc, $00C8
     call CompareHLToBC
@@ -5154,9 +5154,9 @@ Jump_005_5C27::
     inc e
 
 Jump_005_5C36::
-    ldh a, [hFFCE]
+    ldh a, [hTemp8]
     ld l, a
-    ldh a, [hFFCF]
+    ldh a, [hTemp9]
     ld h, a
     ld bc, $011E
     call CompareHLToBC
@@ -5443,13 +5443,13 @@ Jump_005_5D86::
 
 ; C = $00 when wC58A is 0 and bit 3 of hFF8C is set, else $FF (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC58A, hFF8C
+; reads: wC58A, hPlayerStateFlags
 FailIfWC58AZeroAndHFF8CBit3:: ; heuristic: follows a terminator; C0
 Func_005_5D89:: ; address name
     ld a, [wC58A]
     or a, a
     jr nz, Jump_005_5D98
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 3, a
     jr z, Jump_005_5D98
     ld c, $00
@@ -6499,22 +6499,22 @@ Jump_005_630F::
 
 ; the same instruction sequence as HPBandOfSlotHFFC6 (bank $05) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 HPBandOfSlotHFFC6_6312:: ; heuristic: follows a terminator; C0
 Func_005_6312:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     add hl, hl
     ld a, $03
     call DivideHLByA
     push hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMP_Bank05
     pop bc
     push hl
     call CompareHLToBC
     jr nc, Jump_005_637A
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     srl h
     rr l
@@ -6524,7 +6524,7 @@ Func_005_6312:: ; address name
     push hl
     call CompareHLToBC
     jr nc, Jump_005_637E
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     ld a, $03
     call DivideHLByA
@@ -6534,7 +6534,7 @@ Func_005_6312:: ; address name
     push hl
     call CompareHLToBC
     jr nc, Jump_005_6382
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     srl h
     rr l
@@ -6546,7 +6546,7 @@ Func_005_6312:: ; address name
     push hl
     call CompareHLToBC
     jr nc, Jump_005_6386
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     ld a, $0A
     call DivideHLByA
@@ -6686,9 +6686,9 @@ Jump_005_6403::
 
 ; NZ when one of slot C's skills (other than $89 and $9D) has record byte 5 matching mask D (E-0125)
 ; 1 call site from 1 routine (e.g. AnyFoeHasSkillWithFlagD)
-; reads: hFFC6
+; reads: hTemp0
 ; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer
-; points at: hFFC6, wD989
+; points at: hTemp0, wD989
 SlotCSkillFlagMatchD::
 Func_005_640A:: ; address name
     push bc
@@ -6696,7 +6696,7 @@ Func_005_640A:: ; address name
     ld [wD868], a
     ld a, $01
     ld [wD869], a
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, l
     ld [wD86A], a
     ld a, h
@@ -6720,7 +6720,7 @@ Jump_005_642E::
     farcall LoadSkillRecordPart
     pop hl
     pop bc
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, c
     jr nz, Jump_005_644F
 
@@ -6885,8 +6885,8 @@ Jump_005_64FB::
 
 ; C = 1 when the AI mode is below 2; otherwise $00 when an occupied foe's resistance field for skill wCFEF is 3; $FF when wCFEF is 0 or none is (E-0127)
 ; 21 call sites from 21 routines (e.g. AIScore_Firebal, AIScore_Beat, AIScore_Sacrifice, AIScore_Sap, ...)
-; reads: wBattleActor, wCFEF, hFFC6
-; writes: hFFC6, hFFC7
+; reads: wBattleActor, wCFEF, hTemp0
+; writes: hTemp0, hTemp1
 ; points at: wDA72
 FailIfAnyFoeFullyResistant:: ; heuristic: follows a terminator; C0
 Func_005_64FE:: ; address name
@@ -6917,16 +6917,16 @@ Func_005_64FE:: ; address name
     add a, d
     add_a_to_hl
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_6537::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6549
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call Get2BitFieldEOfHL
     cp a, $03
     jr z, Jump_005_654D
@@ -7029,8 +7029,8 @@ Func_005_65AC:: ; address name
 
 ; only called from AIScore_Sap_Sub02 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Sap_Sub02)
-; reads: wBattleActor, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wBattleActor, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 AIScore_Sap_Sub02_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_65C1:: ; address name
     ld a, [wBattleActor]
@@ -7039,29 +7039,29 @@ Func_005_65C1:: ; address name
     ld b, $03
     ld e, $00
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_65D0::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_65E4
     call GetBattleATK_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     inc e
 
 Jump_005_65E4::
     inc c
     dec b
     jr nz, Jump_005_65D0
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, e
     call DivideHLByA
@@ -7074,29 +7074,29 @@ Jump_005_65E4::
     ld b, $03
     ld e, $00
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_6605::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6619
     call GetBattleDEF_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     inc e
 
 Jump_005_6619::
     inc c
     dec b
     jr nz, Jump_005_6605
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, e
     call DivideHLByA
@@ -7120,29 +7120,29 @@ Jump_005_6619::
     ld b, $03
     ld e, $00
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_6649::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_665D
     call GetBattleHP_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     inc e
 
 Jump_005_665D::
     inc c
     dec b
     jr nz, Jump_005_6649
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, e
     srl h
@@ -7163,8 +7163,8 @@ Jump_005_667C::
 
 ; C = 1 when the AI mode is below 4 or the actor knows a heal skill; otherwise compares the stat sums of the empty and occupied ally slots and returns $00 or $FF (E-0129)
 ; 4 call sites from 4 routines (e.g. AIScore_Vivify, AIScore_Farewell, AIScore_LifeDance, AIScore_LifeSong)
-; reads: wBattleActor, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
-; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
+; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wD988
 AIGateCompareAllyStatAverages:: ; heuristic: follows a terminator; C0
 Func_005_667F:: ; address name
@@ -7185,9 +7185,9 @@ Func_005_667F:: ; address name
     ld b, $03
     ld d, $00
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_005_66AF::
     push bc
@@ -7205,27 +7205,27 @@ Jump_005_66BB::
     ld a, d
     or a, a
     jr z, Jump_005_6717
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld e, a
     ld a, d
     call Divide24ByA
     ld a, l
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, h
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
     ld d, $00
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_005_66E8::
     push bc
@@ -7239,11 +7239,11 @@ Jump_005_66F2::
     inc c
     dec b
     jr nz, Jump_005_66E8
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld e, a
     ld a, d
     call Divide24ByA
@@ -7251,9 +7251,9 @@ Jump_005_66F2::
     rr l
     srl h
     rr l
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld b, a
     call CompareHLToBCFastZero
     jr c, Jump_005_671A
@@ -7300,8 +7300,8 @@ Func_005_6720:: ; address name
 
 ; adds MaxHP + MaxMP + ATK + DEF of slot C to the 24-bit total at hFFC6-hFFC8; D += 1 (E-0121)
 ; 2 call sites from 1 routine (e.g. AIGateCompareAllyStatAverages)
-; reads: hFFC6, hFFC7, hFFC8
-; writes: hFFC6, hFFC7, hFFC8
+; reads: hTemp0, hTemp1, hTemp2
+; writes: hTemp0, hTemp1, hTemp2
 AddSlotStatSumToHFFC6::
 Func_005_6741:: ; address name
     push de
@@ -7323,15 +7323,15 @@ Func_005_6741:: ; address name
     pop de
     add hl, de
     pop de
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, h
-    ldh [hFFC7], a
-    ldh a, [hFFC8]
+    ldh [hTemp1], a
+    ldh a, [hTemp2]
     adc a, $00
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     inc d
     ret
 
@@ -7702,9 +7702,9 @@ Jump_005_6982::
 
 ; only called from AIScore_BiAttack_Sub02 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BiAttack_Sub02)
-; reads: wBattleActor, hFFCA, hFFCB, hFFC9
-; writes: hFFC9, hFFCA, hFFCB
-; points at: hFFC9
+; reads: wBattleActor, hTemp4, hTemp5, hTemp3
+; writes: hTemp3, hTemp4, hTemp5
+; points at: hTemp3
 AIScore_BiAttack_Sub02_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_6985:: ; address name
     ld a, [wBattleActor]
@@ -7713,33 +7713,33 @@ Func_005_6985:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
-    ldh [hFFCB], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
+    ldh [hTemp5], a
 
 Jump_005_6996::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_69AD
     call GetBattleDEF_Bank05
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     add a, l
-    ldh [hFFCA], a
-    ldh a, [hFFCB]
+    ldh [hTemp4], a
+    ldh a, [hTemp5]
     adc a, h
-    ldh [hFFCB], a
-    ld hl, hFFC9
+    ldh [hTemp5], a
+    ld hl, hTemp3
     inc [hl]
 
 Jump_005_69AD::
     inc c
     dec b
     jr nz, Jump_005_6996
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     call DivideHLByA
     push hl
     ld a, [wBattleActor]
@@ -7789,8 +7789,8 @@ Jump_005_69F2::
 
 ; C = 1 for the player side outside link battles; otherwise like PassIfFoesAverageResistanceAtLeast2 (E-0128)
 ; 20 call sites from 20 routines (e.g. AIScore_Beat, AIScore_Sap, AIScore_Slow, AIScore_Surround, ...)
-; reads: wC58A, wBattleActor, wCFEF, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wC58A, wBattleActor, wCFEF, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 ; points at: wDA72
 ResistanceAverageGateForAISide:: ; heuristic: follows a terminator; C0
 Func_005_69F5:: ; address name
@@ -7825,21 +7825,21 @@ Jump_005_6A03::
     add a, d
     add_a_to_hl
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_6A32::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6A46
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call Get2BitFieldEOfHL
     ld d, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     add a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_005_6A46::
     ld a, l
@@ -7851,11 +7851,11 @@ Jump_005_6A46::
     inc c
     dec b
     jr nz, Jump_005_6A32
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr z, Jump_005_6A62
     ld b, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call DivideBByA
     ld a, b
     cp a, $02
@@ -7875,8 +7875,8 @@ Jump_005_6A68::
 
 ; C = 1 in link battles, for the player side, or when the AI mode is below 3; otherwise like PassIfFoesAverageResistanceAtLeast2 (E-0128)
 ; 20 call sites from 20 routines (e.g. AIScore_Beat, AIScore_Sap, AIScore_Slow, AIScore_Surround, ...)
-; reads: wC58A, wBattleActor, wCFEF, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wC58A, wBattleActor, wCFEF, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 ; points at: wDA72
 ResistanceAverageGateForFoeAIMode3:: ; heuristic: follows a terminator; C0
 Func_005_6A6B:: ; address name
@@ -7912,21 +7912,21 @@ Func_005_6A6B:: ; address name
     add a, d
     add_a_to_hl
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_6AAF::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6AC3
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call Get2BitFieldEOfHL
     ld d, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     add a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_005_6AC3::
     ld a, l
@@ -7938,11 +7938,11 @@ Jump_005_6AC3::
     inc c
     dec b
     jr nz, Jump_005_6AAF
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr z, Jump_005_6ADF
     ld b, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call DivideBByA
     ld a, b
     cp a, $02
@@ -8213,9 +8213,9 @@ Func_005_6BF8:: ; address name
 
 ; C = slot, D = mask: walks the slot's 8 skill numbers (every other byte of the 16 bytes at wD989 + 16 * C), loading part of each skill record into hFFC6 (LoadSkillRecordPart with wD868 = 5, wD869 = 1); returns A = hFFC6 & D for the first skill with a masked bit set, else A = 0; BC kept (E-0092)
 ; 8 call sites from 8 routines (e.g. AnyActiveFoeHasSkillFlag40, AnyFoeHasSkillFlag10, AIScore_AquaWall_Sub01_Sub01, AIScore_DanceShut_Sub01_Sub01, ...)
-; reads: hFFC6
+; reads: hTemp0
 ; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer
-; points at: hFFC6, wD989
+; points at: hTemp0, wD989
 SlotHasSkillWithFlagD:: ; heuristic: follows a terminator; C0
 Func_005_6C02:: ; address name
     push bc
@@ -8223,7 +8223,7 @@ Func_005_6C02:: ; address name
     ld [wD868], a
     ld a, $01
     ld [wD869], a
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, l
     ld [wD86A], a
     ld a, h
@@ -8243,7 +8243,7 @@ Jump_005_6C26::
     farcall LoadSkillRecordPart
     pop hl
     pop bc
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, c
     jr nz, Jump_005_6C3F
     inc hl
@@ -8259,9 +8259,9 @@ Jump_005_6C3F::
 
 ; A = how many of slot C's skills have record byte 1 = 0 (flags from A) (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 ; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer
-; points at: hFFC6, wD989
+; points at: hTemp0, wD989
 CountSkillsWithZeroRecordByte1:: ; heuristic: follows a terminator; C0
 Func_005_6C42:: ; address name
     push bc
@@ -8269,7 +8269,7 @@ Func_005_6C42:: ; address name
     ld [wD868], a
     ld a, $01
     ld [wD869], a
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, l
     ld [wD86A], a
     ld a, h
@@ -8290,7 +8290,7 @@ Jump_005_6C66::
     farcall LoadSkillRecordPart
     pop hl
     pop bc
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_005_6C7E
     inc c
@@ -8360,8 +8360,8 @@ Func_005_6CA5:: ; address name
 
 ; only called from routines of AIScore_TwinHits (E-0098)
 ; 2 call sites from 2 routines (e.g. AIScore_TwinHits_Sub01, AIScore_TwinHits_Sub02)
-; reads: wBattleActor, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wBattleActor, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 AIScore_TwinHits_Shared01:: ; heuristic: follows a terminator; C0
 Func_005_6CC2:: ; address name
     ld a, [wBattleActor]
@@ -8370,8 +8370,8 @@ Func_005_6CC2:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
 
 Jump_005_6CD1::
     ld a, c
@@ -8386,9 +8386,9 @@ Jump_005_6CDD::
     ld a, c
     call GetBattleDEF_Bank05
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     inc c
     dec b
     jr z, Jump_005_6D06
@@ -8398,15 +8398,15 @@ Jump_005_6CEB::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6D02
     call GetBattleDEF_Bank05
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     sub a, l
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     sbc a, h
     jr c, Jump_005_6D02
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_005_6D02::
     inc c
@@ -8608,41 +8608,41 @@ Jump_005_6DF9::
 
 ; HL = the average AGL of the occupied slots A, A + 1, A + 2 (E-0124)
 ; 2 call sites from 1 routine (e.g. AllyAverageAGLAtLeastFoes)
-; reads: hFFC7, hFFC8, hFFC6
-; writes: hFFC6, hFFC7, hFFC8
-; points at: hFFC6
+; reads: hTemp1, hTemp2, hTemp0
+; writes: hTemp0, hTemp1, hTemp2
+; points at: hTemp0
 AverageAGLOfSideA::
 Func_005_6DFF:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_005_6E09::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_005_6E20
     call GetBattleAGL_Bank05
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     add a, l
-    ldh [hFFC7], a
-    ldh a, [hFFC8]
+    ldh [hTemp1], a
+    ldh a, [hTemp2]
     adc a, h
-    ldh [hFFC8], a
-    ld hl, hFFC6
+    ldh [hTemp2], a
+    ld hl, hTemp0
     inc [hl]
 
 Jump_005_6E20::
     inc c
     dec b
     jr nz, Jump_005_6E09
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld l, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call DivideHLByA
     ret
 
@@ -8703,7 +8703,7 @@ Func_005_6E89:: ; address name
 
 ; D = how many of slot A's skills were read, E = how many have bit 6 set in record byte 5 (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC8
+; reads: hTemp2
 ; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer
 ; points at: wD989
 CountSkillsWithFlag6:: ; heuristic: follows a terminator; C0
@@ -8735,7 +8735,7 @@ Jump_005_6EAF::
     pop hl
     pop de
     inc d
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     bit 6, [hl]
     jr z, Jump_005_6ECA
     inc e

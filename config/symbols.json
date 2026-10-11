@@ -100,12 +100,36 @@
     "note": "index of the next 4-byte entry BuildOamFromSpriteTable writes at $C000; it stops at $28",
     "evidence": "reading"
   },
-  "C0A2": {"name": "wMenuRowCount", "note": "number of cursor rows UpdateMenuCursor wraps over (E-0060)", "evidence": "reading (E-0060)"},
-  "C0A3": {"name": "wMenuPageCount", "note": "number of pages UpdateMenuCursor steps through with Left/Right; 0 or 1 disables paging (E-0060)", "evidence": "reading (E-0060)"},
-  "C0A5": {"name": "wMenuLastPageRows", "note": "rows on the last page; UpdateMenuCursor clamps the row to this minus 1 there (E-0060)", "evidence": "reading (E-0060)"},
-  "C0A6": {"name": "wMenuPage", "note": "current page index set by UpdateMenuCursor (E-0060)", "evidence": "reading (E-0060)"},
-  "C53D": {"name": "wStringDestLo", "note": "low byte of the destination CopyStringToBuffer writes the string to (E-0059)", "evidence": "reading (E-0059)"},
-  "C53E": {"name": "wStringDestHi", "note": "high byte of the destination CopyStringToBuffer writes the string to (E-0059)", "evidence": "reading (E-0059)"},
+  "C0A2": {
+    "name": "wMenuRowCount",
+    "note": "number of cursor rows UpdateMenuCursor wraps over (E-0060)",
+    "evidence": "reading (E-0060)"
+  },
+  "C0A3": {
+    "name": "wMenuPageCount",
+    "note": "number of pages UpdateMenuCursor steps through with Left/Right; 0 or 1 disables paging (E-0060)",
+    "evidence": "reading (E-0060)"
+  },
+  "C0A5": {
+    "name": "wMenuLastPageRows",
+    "note": "rows on the last page; UpdateMenuCursor clamps the row to this minus 1 there (E-0060)",
+    "evidence": "reading (E-0060)"
+  },
+  "C0A6": {
+    "name": "wMenuPage",
+    "note": "current page index set by UpdateMenuCursor (E-0060)",
+    "evidence": "reading (E-0060)"
+  },
+  "C53D": {
+    "name": "wStringDestLo",
+    "note": "low byte of the destination CopyStringToBuffer writes the string to (E-0059)",
+    "evidence": "reading (E-0059)"
+  },
+  "C53E": {
+    "name": "wStringDestHi",
+    "note": "high byte of the destination CopyStringToBuffer writes the string to (E-0059)",
+    "evidence": "reading (E-0059)"
+  },
   "C528": {
     "name": "wStringCategory",
     "note": "category index LookupString uses in the table of tables",
@@ -164,7 +188,8 @@
   "C198": {
     "name": "wScreenTileBuffer",
     "note": "screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (Func_002_59CD) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030)",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "240"
   },
   "C524": {
     "name": "wSGBActive",
@@ -426,17 +451,61 @@
     "note": "non-zero while a script runs",
     "evidence": "reading + execution (E-0038)"
   },
-  "C7CC": {"name": "wSpeciesFlags", "note": "one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070)", "evidence": "reading (E-0070)"},
-  "C617": {"name": "wGoldLo", "note": "low byte of the 24-bit gold amount: the new-game setup sets 100 (InitGoldAndClearInventory), AddGoldCapped caps it at 99,999 and DrawGoldPanel_Bank24 shows it in decimal (E-0074)", "evidence": "reading (E-0074)"},
-  "C618": {"name": "wGoldMid", "note": "middle byte of the gold amount (E-0074)", "evidence": "reading (E-0074)"},
-  "C619": {"name": "wGoldHi", "note": "high byte of the gold amount (E-0074)", "evidence": "reading (E-0074)"},
-  "C49F": {"name": "wBGPaletteBuffer", "note": "8 CGB background palettes (4 RGB555 colours each, 64 bytes) that the fade routines read and write to rBGPD (WriteAllFadedPalettesFloor/Add) (E-0076)", "evidence": "reading (E-0076)"},
-  "C4DF": {"name": "wOBJPaletteBuffer", "note": "8 CGB object palettes (64 bytes) that the fade routines write to rOBPD (E-0076)", "evidence": "reading (E-0076)"},
-  "C572": {"name": "wFadeLevel", "note": "the 5-bit level the fade routines apply to each colour component (E-0076)", "evidence": "reading (E-0076)"},
-  "C573": {"name": "wFadeDelay", "note": "frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_Sub01 and reloaded by StepCGBFade (E-0077)", "evidence": "reading (E-0077)"},
-  "C574": {"name": "wFadeDelayCounter", "note": "counts down to the next CGB fade step (StepCGBFade) (E-0077)", "evidence": "reading (E-0077)"},
-  "C707": {"name": "wKeyList", "note": "up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090)", "evidence": "reading + data (E-0090)"},
-  "C8EF": {"name": "wFollowerRecords", "note": "three 5-byte records for the monsters following the player: direction, X, Y, target X, target Y (SetFollowerTargetsFromLeader, StepFollowersTowardTargets; ScriptSetDirection and ScriptSlideObjectY address the same records) (E-0093)", "evidence": "reading (E-0093)"},
+  "C7CC": {
+    "name": "wSpeciesFlags",
+    "note": "one bit per monster id (bit id & 7 of byte id / 8; TestSpeciesFlag, SetSpeciesFlag); counted per family by CountSpeciesPerFamilyFlaggedOrListed. What the bit records (for example a library entry) is not checked (E-0070)",
+    "evidence": "reading (E-0070)"
+  },
+  "C617": {
+    "name": "wGoldLo",
+    "note": "low byte of the 24-bit gold amount: the new-game setup sets 100 (InitGoldAndClearInventory), AddGoldCapped caps it at 99,999 and DrawGoldPanel_Bank24 shows it in decimal (E-0074)",
+    "evidence": "reading (E-0074)"
+  },
+  "C618": {
+    "name": "wGoldMid",
+    "note": "middle byte of the gold amount (E-0074)",
+    "evidence": "reading (E-0074)"
+  },
+  "C619": {
+    "name": "wGoldHi",
+    "note": "high byte of the gold amount (E-0074)",
+    "evidence": "reading (E-0074)"
+  },
+  "C49F": {
+    "name": "wBGPaletteBuffer",
+    "note": "8 CGB background palettes (4 RGB555 colours each, 64 bytes) that the fade routines read and write to rBGPD (WriteAllFadedPalettesFloor/Add) (E-0076)",
+    "evidence": "reading (E-0076)"
+  },
+  "C4DF": {
+    "name": "wOBJPaletteBuffer",
+    "note": "8 CGB object palettes (64 bytes) that the fade routines write to rOBPD (E-0076)",
+    "evidence": "reading (E-0076)"
+  },
+  "C572": {
+    "name": "wFadeLevel",
+    "note": "the 5-bit level the fade routines apply to each colour component (E-0076)",
+    "evidence": "reading (E-0076)"
+  },
+  "C573": {
+    "name": "wFadeDelay",
+    "note": "frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_Sub01 and reloaded by StepCGBFade (E-0077)",
+    "evidence": "reading (E-0077)"
+  },
+  "C574": {
+    "name": "wFadeDelayCounter",
+    "note": "counts down to the next CGB fade step (StepCGBFade) (E-0077)",
+    "evidence": "reading (E-0077)"
+  },
+  "C707": {
+    "name": "wKeyList",
+    "note": "up to 32 4-byte key entries ($FF ends the list; CountKeysOrFull); bytes 1-2 of an entry pick the two words of its name (WriteKeyNameToDE reads from $C708) (E-0090)",
+    "evidence": "reading + data (E-0090)"
+  },
+  "C8EF": {
+    "name": "wFollowerRecords",
+    "note": "three 5-byte records for the monsters following the player: direction, X, Y, target X, target Y (SetFollowerTargetsFromLeader, StepFollowersTowardTargets; ScriptSetDirection and ScriptSlideObjectY address the same records) (E-0093)",
+    "evidence": "reading (E-0093)"
+  },
   "C920": {
     "name": "wScriptCommandType",
     "note": "the script command being run, 0 = none; indexes ScriptCommandHandlers (minus 1)",
@@ -507,20 +576,76 @@
     "note": "one byte per slot: 1 when the battler is defeated or absent (DefeatTarget sets it; CarryUnlessWDA63SlotEmpty reads it)",
     "evidence": "reading (E-0043)"
   },
-  "DA1C": {"name": "wBattleActionChoice", "note": "word per slot: byte 0 is the chosen action id, which ChooseActionTarget copies to wBattleActionId; byte 1 is wBattleTargetChoice (E-0061)", "evidence": "reading (E-0061)"},
-  "DA1D": {"name": "wBattleTargetChoice", "note": "byte 1 of each slot word in wBattleActionChoice: the target slot the per-action target routines write (E-0061)", "evidence": "reading (E-0061)"},
-  "D0D5": {"name": "wBattlerRecords", "note": "six 78-byte ($4E) battler records for slots 0-2 and 4-6 (BattlerRecordFieldAddress); GetBaseHP reads the HP word at offset $1D (E-0062)", "evidence": "reading (E-0062)"},
-  "D7F9": {"name": "wMenuInputResult", "note": "result of the bank-$1B/$1D menu cursor routines: $FF confirmed (A), $FE cancelled (B), $FD row moved, $FB page moved, 0 nothing (E-0068)", "evidence": "reading (E-0068)"},
-  "D7FA": {"name": "wTwoChoiceCursor", "note": "0 or 1, the selected entry of UpdateTwoChoiceCursor (E-0068)", "evidence": "reading (E-0068)"},
-  "D006": {"name": "wSpeciesIdLo", "note": "low byte of the monster id whose species record LoadSpeciesRecord loads (E-0069)", "evidence": "reading + data (E-0069)"},
-  "D007": {"name": "wSpeciesIdHi", "note": "high byte of that monster id (E-0069)", "evidence": "reading + data (E-0069)"},
-  "D008": {"name": "wSpeciesRecord", "note": "47-byte copy of a species record (LoadSpeciesRecord); byte 0 is the family (E-0069)", "evidence": "reading + data (E-0069)"},
-  "D958": {"name": "wBattleMonsterId", "note": "word per battle slot: the monster id (the species-record and monster-name number; CopyMonsterNameOfWDAABSlotToDE, GetSlotSpeciesFamily) (E-0069)", "evidence": "reading + data (E-0069)"},
-  "C924": {"name": "wMessageIndex", "note": "string index of the message RunMessageBox shows (low byte of the message word) (E-0079)", "evidence": "reading (E-0079)"},
-  "C925": {"name": "wMessageGroup", "note": "message word high byte: bits 0-5 select the message group (ShowMessageHL), bit 7 skips opening the window, bit 6 skips closing it (E-0079)", "evidence": "reading (E-0079)"},
-  "C926": {"name": "wMessageState", "note": "RunMessageBox state: 0-3 while a message runs, $FF when idle; StartMessageA sets 0 (E-0079)", "evidence": "reading (E-0079)"},
-  "C92C": {"name": "wStepArrived", "note": "1 when the last StepObjectTowardCoord or StepPlayer*TowardWC928 step reached the target coordinate in wC928, else 0 (E-0071)", "evidence": "reading (E-0071)"},
-  "DAAC": {"name": "wQueuedActionId", "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)", "evidence": "reading (E-0049)"},
+  "DA1C": {
+    "name": "wBattleActionChoice",
+    "note": "word per slot: byte 0 is the chosen action id, which ChooseActionTarget copies to wBattleActionId; byte 1 is wBattleTargetChoice (E-0061)",
+    "evidence": "reading (E-0061)"
+  },
+  "DA1D": {
+    "name": "wBattleTargetChoice",
+    "note": "byte 1 of each slot word in wBattleActionChoice: the target slot the per-action target routines write (E-0061)",
+    "evidence": "reading (E-0061)"
+  },
+  "D0D5": {
+    "name": "wBattlerRecords",
+    "note": "six 78-byte ($4E) battler records for slots 0-2 and 4-6 (BattlerRecordFieldAddress); GetBaseHP reads the HP word at offset $1D (E-0062)",
+    "evidence": "reading (E-0062)"
+  },
+  "D7F9": {
+    "name": "wMenuInputResult",
+    "note": "result of the bank-$1B/$1D menu cursor routines: $FF confirmed (A), $FE cancelled (B), $FD row moved, $FB page moved, 0 nothing (E-0068)",
+    "evidence": "reading (E-0068)"
+  },
+  "D7FA": {
+    "name": "wTwoChoiceCursor",
+    "note": "0 or 1, the selected entry of UpdateTwoChoiceCursor (E-0068)",
+    "evidence": "reading (E-0068)"
+  },
+  "D006": {
+    "name": "wSpeciesIdLo",
+    "note": "low byte of the monster id whose species record LoadSpeciesRecord loads (E-0069)",
+    "evidence": "reading + data (E-0069)"
+  },
+  "D007": {
+    "name": "wSpeciesIdHi",
+    "note": "high byte of that monster id (E-0069)",
+    "evidence": "reading + data (E-0069)"
+  },
+  "D008": {
+    "name": "wSpeciesRecord",
+    "note": "47-byte copy of a species record (LoadSpeciesRecord); byte 0 is the family (E-0069)",
+    "evidence": "reading + data (E-0069)"
+  },
+  "D958": {
+    "name": "wBattleMonsterId",
+    "note": "word per battle slot: the monster id (the species-record and monster-name number; CopyMonsterNameOfWDAABSlotToDE, GetSlotSpeciesFamily) (E-0069)",
+    "evidence": "reading + data (E-0069)"
+  },
+  "C924": {
+    "name": "wMessageIndex",
+    "note": "string index of the message RunMessageBox shows (low byte of the message word) (E-0079)",
+    "evidence": "reading (E-0079)"
+  },
+  "C925": {
+    "name": "wMessageGroup",
+    "note": "message word high byte: bits 0-5 select the message group (ShowMessageHL), bit 7 skips opening the window, bit 6 skips closing it (E-0079)",
+    "evidence": "reading (E-0079)"
+  },
+  "C926": {
+    "name": "wMessageState",
+    "note": "RunMessageBox state: 0-3 while a message runs, $FF when idle; StartMessageA sets 0 (E-0079)",
+    "evidence": "reading (E-0079)"
+  },
+  "C92C": {
+    "name": "wStepArrived",
+    "note": "1 when the last StepObjectTowardCoord or StepPlayer*TowardWC928 step reached the target coordinate in wC928, else 0 (E-0071)",
+    "evidence": "reading (E-0071)"
+  },
+  "DAAC": {
+    "name": "wQueuedActionId",
+    "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)",
+    "evidence": "reading (E-0049)"
+  },
   "D80C": {
     "name": "wBattleStatus",
     "note": "9-byte status record per slot (AddAx9ToHL), cleared when the battler is defeated",
@@ -581,5 +706,401 @@
     "note": "intelligence of the 8 battle slots, the array after wBattleAGL (assumed)",
     "evidence": "reading (E-0043)"
   },
-  "D8A6": {"name": "wBattleActionId", "note": "id of the action being resolved; the resolve steps compare it with fixed values ($13-$15, $79, $91, $D6, $D7, $DC), some above the SkillTable range of 175, so it is an action number rather than a skill index", "evidence": "reading (E-0045)"}
+  "D8A6": {
+    "name": "wBattleActionId",
+    "note": "id of the action being resolved; the resolve steps compare it with fixed values ($13-$15, $79, $91, $D6, $D7, $DC), some above the SkillTable range of 175, so it is an action number rather than a skill index",
+    "evidence": "reading (E-0045)"
+  },
+  "FF8A": {
+    "name": "hPlayerSpriteVariant",
+    "note": "first byte of the 14 HRAM bytes saved with the game (SaveGameToSRAMWithChecksum); LoadPlayerSpriteGraphics sets it to 0 or 1 by story flag 0 and picks the player graphics with it",
+    "evidence": "E-0132"
+  },
+  "FF8B": {
+    "name": "hPlayerSpriteMode",
+    "note": "sprite mode 0-2 chosen from story flags $19F, $25, 2 and bit 3 of hPlayerStateFlags (LoadPlayerAndFollowerSpriteGraphics); AdvanceHFF99AndRunHFF8BMode dispatches on it",
+    "evidence": "E-0132"
+  },
+  "FF8C": {
+    "name": "hPlayerStateFlags",
+    "note": "player state bits: bit 0 = a step is in progress, bit 2 = moving, bit 1 freezes the animation counter, bits 3, 5, 6, 7 are field-state flags tested before moving, menus and warps",
+    "evidence": "E-0132"
+  },
+  "FF8D": {
+    "name": "hFieldDrawFlags",
+    "note": "field draw flags: InitFieldScreen sets $0F; routines set and clear bits 1-3 around record-list redraws; saved and restored with the sprite state (wD7BA)",
+    "evidence": "E-0132"
+  },
+  "FF93": {
+    "name": "hPlayerSpriteOverride",
+    "note": "bit 7 set: the player uses the graphics stream in hPlayerSpriteStream and a countdown (hPlayerSpriteTimer) runs; set by script commands $A0/$A1",
+    "evidence": "E-0132"
+  },
+  "FF94": {
+    "name": "hPlayerSpriteStreamLo",
+    "note": "low byte of the compressed stream used for the player graphics when bit 7 of hPlayerSpriteOverride is set",
+    "evidence": "E-0132"
+  },
+  "FF95": {
+    "name": "hPlayerSpriteStreamHi",
+    "note": "high byte of that stream",
+    "evidence": "E-0132"
+  },
+  "FF96": {
+    "name": "hPlayerSpriteTimerLo",
+    "note": "low byte of a countdown decremented each field update while the sprite override is on; when it goes negative, talk event $0A is dispatched (UpdatePlayerMovement_Sub01_Sub03)",
+    "evidence": "E-0132"
+  },
+  "FF97": {
+    "name": "hPlayerSpriteTimerHi",
+    "note": "high byte of that countdown",
+    "evidence": "E-0132"
+  },
+  "FF99": {
+    "name": "hPlayerAnimCounter",
+    "note": "animation counter: +1 per field frame (+3 more while moving) unless bit 1 of hPlayerStateFlags is set",
+    "evidence": "E-0132"
+  },
+  "FF9A": {
+    "name": "hPlayerTurnDelay",
+    "note": "frames to wait after turning in place (set to 4) before the player can step (UpdatePlayerMovement)",
+    "evidence": "E-0132"
+  },
+  "FF9B": {
+    "name": "hPlayerStepDXLo",
+    "note": "low byte of the 16-bit horizontal step delta per frame (+$10, -$10, or screen-scroll values) set when a step starts",
+    "evidence": "E-0132"
+  },
+  "FF9C": {
+    "name": "hPlayerStepDXHi",
+    "note": "high byte of the horizontal step delta",
+    "evidence": "E-0132"
+  },
+  "FF9D": {
+    "name": "hPlayerStepDYLo",
+    "note": "low byte of the 16-bit vertical step delta (for example $FF80 when scrolling up a screen)",
+    "evidence": "E-0132"
+  },
+  "FF9E": {
+    "name": "hPlayerStepDYHi",
+    "note": "high byte of the vertical step delta",
+    "evidence": "E-0132"
+  },
+  "FF9F": {
+    "name": "hWindowX",
+    "note": "copied to rWX by CopyScrollToHardware; 7 in the field (InitFieldScreen)",
+    "evidence": "E-0132"
+  },
+  "FFA0": {
+    "name": "hWindowY",
+    "note": "copied to rWY by CopyScrollToHardware; $80 (off screen) in the field",
+    "evidence": "E-0132"
+  },
+  "FFB3": {
+    "name": "hMetaSpriteYLo",
+    "note": "metasprite builder: low byte of origin Y plus the scroll offset, added to each entry's Y",
+    "evidence": "E-0132"
+  },
+  "FFB4": {
+    "name": "hMetaSpriteYHi",
+    "note": "metasprite builder: high byte of that Y, used to drop entries outside the screen",
+    "evidence": "E-0132"
+  },
+  "FFB5": {
+    "name": "hMetaSpriteXLo",
+    "note": "metasprite builder: low byte of origin X plus the scroll offset",
+    "evidence": "E-0132"
+  },
+  "FFB6": {
+    "name": "hMetaSpriteXHi",
+    "note": "metasprite builder: high byte of that X",
+    "evidence": "E-0132"
+  },
+  "FFB7": {
+    "name": "hMetaSpriteXFlipLo",
+    "note": "metasprite builder: X minus 8, low byte, used for horizontally flipped sets",
+    "evidence": "E-0132"
+  },
+  "FFB8": {
+    "name": "hMetaSpriteXFlipHi",
+    "note": "metasprite builder: high byte of X minus 8",
+    "evidence": "E-0132"
+  },
+  "FFB9": {
+    "name": "hSpriteWindowClipMode",
+    "note": "non-zero makes the metasprite builders take the clipping path; set to 2 or 3 while a text window or menu is open and 0 when it closes",
+    "evidence": "E-0132"
+  },
+  "FFBA": {
+    "name": "hSpriteHideTile",
+    "note": "BG tile id compared with the tile under a sprite point (BGTileUnderPointIsHFFBA_*); sprite parts over this tile are hidden; usually $80",
+    "evidence": "E-0132"
+  },
+  "FFBF": {
+    "name": "hDecompressRunCount",
+    "note": "decompressor: count of the current run or copy (DecompressToRAM / DecompressToVRAM)",
+    "evidence": "E-0132"
+  },
+  "FFC0": {
+    "name": "hDecompressRunByte",
+    "note": "decompressor: byte being repeated or the current control byte",
+    "evidence": "E-0132"
+  },
+  "FFC1": {
+    "name": "hDecompressHeader1",
+    "note": "decompressor: stream header byte 1 (DecompressReadHeader)",
+    "evidence": "E-0132"
+  },
+  "FFC2": {
+    "name": "hDecompressHeader2",
+    "note": "decompressor: stream header byte 2",
+    "evidence": "E-0132"
+  },
+  "FFC3": {
+    "name": "hDecompressHeader3",
+    "note": "decompressor: stream header byte 3",
+    "evidence": "E-0132"
+  },
+  "FFC4": {
+    "name": "hDecompressHeader4",
+    "note": "decompressor: stream header byte 4",
+    "evidence": "E-0132"
+  },
+  "FFC5": {
+    "name": "hVRAMByteTemp",
+    "note": "byte held while waiting for VRAM access (DecompressToVRAM, CopyRectToBGMapWrapped_1C)",
+    "evidence": "E-0132"
+  },
+  "FFC6": {
+    "name": "hTemp0",
+    "note": "general argument and result byte: SRAM record loads return here, field commands and many helpers take their argument here (used in 54 bank files)",
+    "evidence": "E-0132"
+  },
+  "FFC7": {
+    "name": "hTemp1",
+    "note": "general argument/result byte after hTemp0 (high byte of word results)",
+    "evidence": "E-0132"
+  },
+  "FFC8": {
+    "name": "hTemp2",
+    "note": "general argument/result byte (third byte of 24-bit and BCD results)",
+    "evidence": "E-0132"
+  },
+  "FFC9": {
+    "name": "hTemp3",
+    "note": "general argument/result byte",
+    "evidence": "E-0132"
+  },
+  "FFCA": {
+    "name": "hTemp4",
+    "note": "general argument/result byte (also a VRAM destination low byte for DecompressGraphicsHFFC6ToHFFCA)",
+    "evidence": "E-0132"
+  },
+  "FFCB": {
+    "name": "hTemp5",
+    "note": "general argument/result byte (destination high byte for DecompressGraphicsHFFC6ToHFFCA)",
+    "evidence": "E-0132"
+  },
+  "FFCC": {
+    "name": "hTemp6",
+    "note": "general argument/result byte (divisor for Divide24ByHFFCCDE)",
+    "evidence": "E-0132"
+  },
+  "FFCD": {
+    "name": "hTemp7",
+    "note": "general scratch byte",
+    "evidence": "E-0132"
+  },
+  "FFCE": {
+    "name": "hTemp8",
+    "note": "general scratch byte",
+    "evidence": "E-0132"
+  },
+  "FFCF": {
+    "name": "hTemp9",
+    "note": "general scratch byte",
+    "evidence": "E-0132"
+  },
+  "FFD0": {
+    "name": "hTempA",
+    "note": "general scratch byte",
+    "evidence": "E-0132"
+  },
+  "FFD1": {
+    "name": "hVRAMWriteByte",
+    "note": "A saved by WriteVRAMByte / WriteVRAMByteInc while waiting for VRAM access",
+    "evidence": "E-0132"
+  },
+  "FFDA": {
+    "name": "hSndChanFlags",
+    "note": "sound channel copy (the 32-byte slot is copied to $FFD8): low 2 bits = hardware channel, high nibble set by track command $A3",
+    "evidence": "E-0132"
+  },
+  "FFDE": {
+    "name": "hSndDutyAndTempo",
+    "note": "sound channel copy: bits 6-7 = duty (command $A2 / track header), low nibble = tempo step added to hSndTickAccum each tick",
+    "evidence": "E-0132"
+  },
+  "FFDF": {
+    "name": "hSndTickAccum",
+    "note": "sound channel copy: tick accumulator; the channel advances when it passes 16",
+    "evidence": "E-0132"
+  },
+  "FFE0": {
+    "name": "hSndEnvelope",
+    "note": "sound channel copy: volume envelope written to NRx2 (command $A0, track header)",
+    "evidence": "E-0132"
+  },
+  "FFE1": {
+    "name": "hSndWaitTicks",
+    "note": "sound channel copy: ticks left before the next event (set by notes and command $A7)",
+    "evidence": "E-0132"
+  },
+  "FFE2": {
+    "name": "hSndSweepOrWave",
+    "note": "sound channel copy: NR10 sweep value for channel 1, wave index for channel 3 (command $A1)",
+    "evidence": "E-0132"
+  },
+  "FFE3": {
+    "name": "hSndChanByteE3",
+    "note": "sound channel copy: cleared when a track starts; no other use found",
+    "evidence": "E-0132"
+  },
+  "FFE4": {
+    "name": "hSndBranchIndex",
+    "note": "sound channel copy: index used by command $A9 (set, increment, decrement, or jump through a table by it)",
+    "evidence": "E-0132"
+  },
+  "FFE5": {
+    "name": "hSndVibratoDepth",
+    "note": "sound channel copy: depth nibble from commands $Cx",
+    "evidence": "E-0132"
+  },
+  "FFE6": {
+    "name": "hSndVibratoDelay",
+    "note": "sound channel copy: delay value from commands $Cx (and $A2 on channel 3)",
+    "evidence": "E-0132"
+  },
+  "FFE7": {
+    "name": "hSndVibratoCounter",
+    "note": "sound channel copy: counts up to hSndVibratoDelay after each note",
+    "evidence": "E-0132"
+  },
+  "FFE8": {
+    "name": "hSndPitchSlide",
+    "note": "sound channel copy: signed pitch slide per step (commands $Dx/$Ex)",
+    "evidence": "E-0132"
+  },
+  "FFE9": {
+    "name": "hSndPitchSlideTime",
+    "note": "sound channel copy: slide interval reload",
+    "evidence": "E-0132"
+  },
+  "FFEA": {
+    "name": "hSndPitchSlideCounter",
+    "note": "sound channel copy: slide interval counter",
+    "evidence": "E-0132"
+  },
+  "FFEB": {
+    "name": "hSndFreqLo",
+    "note": "sound channel copy: frequency low byte written to NRx3",
+    "evidence": "E-0132"
+  },
+  "FFEC": {
+    "name": "hSndFreqHi",
+    "note": "sound channel copy: frequency high byte (with the trigger bit) written to NRx4",
+    "evidence": "E-0132"
+  },
+  "FFED": {
+    "name": "hSndEnvelopeReload",
+    "note": "sound channel copy: high nibble = envelope restored when the envelope timer expires (command $AA)",
+    "evidence": "E-0132"
+  },
+  "FFEE": {
+    "name": "hSndPanning",
+    "note": "sound channel copy: panning bits merged into NR51 for this channel (command $A5)",
+    "evidence": "E-0132"
+  },
+  "FFEF": {
+    "name": "hSndNoteLength",
+    "note": "sound channel copy: note length reload (command $A3, low nibble x 2)",
+    "evidence": "E-0132"
+  },
+  "FFF0": {
+    "name": "hSndNoteTimer",
+    "note": "sound channel copy: note length counter",
+    "evidence": "E-0132"
+  },
+  "FFF1": {
+    "name": "hSndA8Param",
+    "note": "sound channel copy: parameter of command $A8 (its high nibble picks the wave table set)",
+    "evidence": "E-0132"
+  },
+  "FFF2": {
+    "name": "hSndEnvTimer",
+    "note": "sound channel copy: envelope timer (command $AA)",
+    "evidence": "E-0132"
+  },
+  "FFF3": {
+    "name": "hSndEnvFlags",
+    "note": "sound channel copy: envelope timer flags and reload (command $AA)",
+    "evidence": "E-0132"
+  },
+  "FFF4": {
+    "name": "hSndLoopCount",
+    "note": "sound channel copy: repeat counter of command $AC",
+    "evidence": "E-0132"
+  },
+  "FFF5": {
+    "name": "hSndReturnPosLo",
+    "note": "sound channel copy: track position to return to (command $AD), low byte",
+    "evidence": "E-0132"
+  },
+  "FFF6": {
+    "name": "hSndReturnPosHi",
+    "note": "sound channel copy: return position, high byte",
+    "evidence": "E-0132"
+  },
+  "C000": {
+    "name": "wShadowOAM",
+    "size": "A0",
+    "note": "shadow OAM: 40 four-byte sprite entries that the OAM DMA routine copies from $C000 (OamDmaRoutineTemplate starts DMA with source $C0); ClearShadowOAM clears its $A0 bytes",
+    "evidence": "E-0132"
+  },
+  "C0F0": {
+    "name": "wBGPaletteCopy",
+    "size": "40",
+    "note": "a 64-byte copy of the eight CGB background palettes; ScriptStepFlashScreenNegative copies it back to wBGPaletteBuffer (or its inverse)",
+    "evidence": "E-0132"
+  },
+  "C130": {
+    "name": "wTextBuf0",
+    "size": "10",
+    "note": "16-byte text slot filled before a message: the actor or player name (CopyActorNameToWC130, WritePlayerNameWithFlag0SuffixToWC130); $F0-terminated",
+    "evidence": "E-0132"
+  },
+  "C140": {
+    "name": "wTextBuf1",
+    "size": "10",
+    "note": "16-byte text slot: the skill or second name of a message (CopyActionSkillNameToWC140, CopyMappedSlotNameToWC140)",
+    "evidence": "E-0132"
+  },
+  "C150": {
+    "name": "wTextBuf2",
+    "size": "10",
+    "note": "16-byte text slot: the target or item name of a message (CopyActionItemNameToWC150, BuildActionMessageNames)",
+    "evidence": "E-0132"
+  },
+  "C160": {
+    "name": "wTextBuf3",
+    "size": "10",
+    "note": "16-byte text slot: a further name (CopyEligibleRecordNameToWC160Row, EquipItemOnRecordWD083)",
+    "evidence": "E-0132"
+  },
+  "C17E": {
+    "name": "wTextNumber",
+    "size": "8",
+    "note": "digit string of a number shown in a message (DeductGoldPenaltyAndFormatLoss writes the gold lost here as packed BCD through Func_000_23CA)",
+    "evidence": "E-0132"
+  }
 }

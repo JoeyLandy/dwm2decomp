@@ -332,7 +332,7 @@ Jump_0E0_41D6::
 ; 3 call sites from 2 routines (e.g. RunWC5FEState_E0_Case02, RunWC5FEState_E0_Case00)
 ; reads: wC5F9
 ; writes: wStringCategory, wStringIndex
-; points at: wC130
+; points at: wTextBuf0
 ShowSkillNumberAndName_BankE0::
 Func_0E0_41E9:: ; address name
     ld a, [wC5F9]
@@ -345,7 +345,7 @@ Func_0E0_41E9:: ; address name
     and a, $0F
     add a, $01
     call WriteVRAMByte
-    ld de, wC130
+    ld de, wTextBuf0
     ld a, [wC5F9]
     ld l, a
     ld h, $04
@@ -583,7 +583,7 @@ Jump_0E0_449A::
 
 ; C = slot: unless its wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words (Func_0E0_4593 for each) at the position from the table at $4652 (C & 3); the rest is not read (E-0112)
 ; 3 call sites from 1 routine (e.g. RunWC5FDState_E0_Case01)
-; writes: hFFC6, hFFC7
+; writes: hTemp0, hTemp1
 ; points at: wBattleSlotOut, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wD8B7, wBattleATK, wBattleDEF, ...
 DrawSlotHPMPStats_BankE0::
 Func_0E0_44B3:: ; address name
@@ -640,8 +640,8 @@ Jump_0E0_44CB::
 
 Jump_0E0_452D::
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
     call DrawSlotHPMPStats_BankE0_Sub05
     call DrawSlotHPMPStats_BankE0_Sub05
     call DrawSlotHPMPStats_BankE0_Sub05
@@ -748,11 +748,11 @@ Func_0E0_459D:: ; address name
 
 ; only called from DrawSlotHPMPStats_BankE0_Sub05 (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub05)
-; reads: hFFC7, hFFC6
+; reads: hTemp1, hTemp0
 DrawSlotHPMPStats_BankE0_Sub05_Sub01::
 Func_0E0_45AB:: ; address name
     ld b, $00
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     swap a
     and a, $0F
     or a, a
@@ -766,10 +766,10 @@ Jump_0E0_45BD::
 
 ; only called from DrawSlotHPMPStats_BankE0_Sub03 (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub03)
-; reads: hFFC7, hFFC6
+; reads: hTemp1, hTemp0
 DrawSlotHPMPStats_BankE0_Sub03_Sub01::
 Func_0E0_45BE:: ; address name
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     or a, a
     jr nz, Jump_0E0_45C9
@@ -783,7 +783,7 @@ Jump_0E0_45C9::
 
 Jump_0E0_45D0::
     inc hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     swap a
     and a, $0F
     or a, a
@@ -797,7 +797,7 @@ Jump_0E0_45DE::
 
 Jump_0E0_45E3::
     inc hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     add a, $E0
     call WriteVRAMByte
@@ -1287,7 +1287,7 @@ Func_0E0_489C:: ; address name
 
 ; only called from Run48B7ForThreeBattlerRecords (E-0047)
 ; 3 call sites from 1 routine (e.g. Run48B7ForThreeBattlerRecords)
-; reads: hFFC8, hFFC7, hFFC6
+; reads: hTemp2, hTemp1, hTemp0
 ; writes: wC8C0, wC8C1, wC8C2
 Run48B7ForThreeBattlerRecords_Sub01::
 Func_0E0_48B7:: ; address name
@@ -1313,7 +1313,7 @@ Func_0E0_48B7:: ; address name
     add_a_to_hl
     deref_hl
     ld b, $00
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $0F
     or a, a
     jr z, Jump_0E0_48EC
@@ -1323,7 +1323,7 @@ Func_0E0_48B7:: ; address name
 
 Jump_0E0_48EC::
     inc hl
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     swap a
     and a, $0F
     or a, a
@@ -1338,7 +1338,7 @@ Jump_0E0_48FA::
 
 Jump_0E0_4901::
     inc hl
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     or a, a
     jr nz, Jump_0E0_490D
@@ -1352,7 +1352,7 @@ Jump_0E0_490D::
 
 Jump_0E0_4914::
     inc hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     swap a
     and a, $0F
     or a, a
@@ -1367,7 +1367,7 @@ Jump_0E0_4922::
 
 Jump_0E0_4929::
     inc hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     add a, $E0
     call WriteVRAMByte
@@ -2440,9 +2440,9 @@ Jump_0E0_572C::
 
 ; only called from RunWC5FDState_E0_Case0D_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02)
-; reads: wBattleActor, wC58A, hFFC9, hFFC8
+; reads: wBattleActor, wC58A, hTemp3, hTemp2
 ; writes: wC52D, wC52E, wC52F, wC530, wStringIndex, wStringCategory, wC8C0, wC8C1, ...
-; points at: wDA43, wDA53, wD988, wD2AD, wBattleActionChoice, wDA3F, hFFFC, wCFDE
+; points at: wDA43, wDA53, wD988, wD2AD, wBattleActionChoice, wDA3F, wCFDE
 RunWC5FDState_E0_Case0D_Case02_Sub01::
 Func_0E0_572D:: ; address name
     call DisplayedSlotOfActor
@@ -2670,14 +2670,14 @@ Jump_0E0_5898::
     pop bc
     pop de
     pop hl
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     or a, c
     jr z, Jump_0E0_58BB
     ld a, $99
-    ldh [hFFC7], a
-    ldh [hFFC6], a
+    ldh [hTemp1], a
+    ldh [hTemp0], a
 
 Jump_0E0_58BB::
     push bc
@@ -2862,10 +2862,10 @@ Jump_0E0_59B0::
 
 ; only called from RunWC5FDState_E0_Case0D_Case02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02_Sub01)
-; reads: hFFC7, hFFC6
+; reads: hTemp1, hTemp0
 RunWC5FDState_E0_Case0D_Case02_Sub01_Sub02::
 Func_0E0_59C0:: ; address name
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $F0
     swap a
     ld b, a
@@ -2883,10 +2883,10 @@ Jump_0E0_59CE::
 
 ; only called from RunWC5FDState_E0_Case0D_Case02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02_Sub01)
-; reads: hFFC7, hFFC6
+; reads: hTemp1, hTemp0
 RunWC5FDState_E0_Case0D_Case02_Sub01_Sub03::
 Func_0E0_59D4:: ; address name
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     ld b, a
     or a, c
@@ -2900,7 +2900,7 @@ Jump_0E0_59E0::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $F0
     swap a
     ld b, a
@@ -2915,7 +2915,7 @@ Jump_0E0_59F4::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     inc a
     di

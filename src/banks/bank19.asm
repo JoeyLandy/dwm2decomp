@@ -1127,7 +1127,7 @@ Jump_019_45EC::
 
 ; for A in $0D-$13 increments (capped at 3) each byte listed in Data_019_4641 row A - $0D, relative to DE (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06_Sub01)
-; writes: hFFC6, hFFC7
+; writes: hTemp0, hTemp1
 ApplyTable4641IncrementsForA0DTo13::
 Func_019_4605:: ; address name
     or a, a
@@ -1138,9 +1138,9 @@ Func_019_4605:: ; address name
     ret nc
     push af
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     pop af
     push de
     sub a, $0D
@@ -1167,13 +1167,13 @@ Jump_019_4629::
 
 ; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (E-0118)
 ; 1 call site from 1 routine (e.g. ApplyTable4641IncrementsForA0DTo13)
-; reads: hFFC6, hFFC7
+; reads: hTemp0, hTemp1
 IncrementTableByteCappedAt3::
 Func_019_4632:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     adc a, h
     ld h, a
     ld a, [hl]
@@ -1309,7 +1309,7 @@ Func_019_470F:: ; address name
 ; only called from GameMode4_Init_Sub01_Sub07 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07)
 ; reads: wD86A, wD86B, wSpeciesIdLo, wSpeciesIdHi, wSpeciesRecord, wD009, wD010, wD011, ...
-; writes: wD86A, wD86B, wD869, hFFC7, wSpeciesIdLo, wSpeciesIdHi, hFFC6, wD868
+; writes: wD86A, wD86B, wD869, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp0, wD868
 ; points at: wCFE3, wCFDD
 GameMode4_Init_Sub01_Sub07_Sub01::
 Func_019_4752:: ; address name
@@ -1323,11 +1323,11 @@ Func_019_4752:: ; address name
     ld hl, wCFE3
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     or a, a
     jr nz, Jump_019_4771
     ld a, $01
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_019_4771::
     ld a, c
@@ -1368,7 +1368,7 @@ Jump_019_4771::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [hl+], a
     ld a, [wD035]
     ld [hl+], a
@@ -1378,7 +1378,7 @@ Jump_019_4771::
     ld [hl+], a
     push hl
     ld a, [wD014]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall SumTable6616RowForHFFC6
     pop hl
     ld a, $01
@@ -1386,7 +1386,7 @@ Jump_019_4771::
     call ScaleStatAndCapByBattleKind
     call StoreHFFC8WordAtHL_Bank19
     ld a, [wD015]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
@@ -1397,7 +1397,7 @@ Jump_019_4771::
     ld a, $02
     ld [wD868], a
     ld a, [wD016]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
@@ -1405,7 +1405,7 @@ Jump_019_4771::
     ld a, $03
     ld [wD868], a
     ld a, [wD017]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
@@ -1413,13 +1413,13 @@ Jump_019_4771::
     ld a, $00
     ld [wD868], a
     ld a, [wD018]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
     call ScaleStatAndCapByBattleKind
     ld a, [wD019]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
@@ -1499,17 +1499,17 @@ Func_019_489D:: ; address name
 
 ; scales the word hFFC8 by 101 percent and caps it at 999, 600 or 700 depending on wD868 and the battle kind wCFC5, then stores it (E-0128)
 ; 6 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
-; reads: hFFC8, hFFC9, wCFC5, wD868, wC96C, wD869, wD00B
-; writes: hFFC8, hFFC9
+; reads: hTemp2, hTemp3, wCFC5, wD868, wC96C, wD869, wD00B
+; writes: hTemp2, hTemp3
 ScaleStatAndCapByBattleKind::
 Func_019_48B1:: ; address name
     push af
     push bc
     push de
     push hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld c, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld b, a
     ld a, $01
     add a, $64
@@ -1581,8 +1581,8 @@ Jump_019_491F::
 
 ; multiplies by 6 (or 12 when wD869 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD869, hFFC8, hFFC9
-; writes: hFFC8, hFFC9
+; reads: wD869, hTemp2, hTemp3
+; writes: hTemp2, hTemp3
 ScaleWordBy6Or12Capped10000:: ; heuristic: follows a terminator; C0
 Func_019_4931:: ; address name
     ld a, [wD869]
@@ -1606,27 +1606,27 @@ Jump_019_4948::
 
 Jump_019_494B::
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
     pop de
     pop bc
     pop af
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [hl+], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld [hl+], a
     ret
 
 ; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
-; reads: hFFC8, hFFC9
+; reads: hTemp2, hTemp3
 StoreHFFC8WordAtHL_Bank19::
 Func_019_495C:: ; address name
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [hl+], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld [hl+], a
     ret
 
@@ -1704,8 +1704,8 @@ Jump_019_49A7::
 
 ; sums the stat word at record + $18 times each level 1..hFFC7 (with a /20 rounding term outside battle kind 3) into the 24-bit hFFCA-hFFCC (E-0130)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
-; reads: wD86A, wD86B, hFFC7, hFFCD, hFFCE, wCFC5, hFFCF, hFFCA, ...
-; writes: hFFCA, hFFCB, hFFCC, hFFCF, hFFCD, hFFCE
+; reads: wD86A, wD86B, hTemp1, hTemp7, hTemp8, wCFC5, hTemp9, hTemp4, ...
+; writes: hTemp4, hTemp5, hTemp6, hTemp9, hTemp7, hTemp8
 AccumulateGrowthForLevelsHFFC7::
 Func_019_49B1:: ; address name
     ld a, [wD86A]
@@ -1717,24 +1717,24 @@ Func_019_49B1:: ; address name
     push de
     push hl
     xor a, a
-    ldh [hFFCA], a
-    ldh [hFFCB], a
-    ldh [hFFCC], a
-    ldh [hFFCF], a
+    ldh [hTemp4], a
+    ldh [hTemp5], a
+    ldh [hTemp6], a
+    ldh [hTemp9], a
     deref_hl
     ld a, l
-    ldh [hFFCD], a
+    ldh [hTemp7], a
     ld a, h
-    ldh [hFFCE], a
-    ldh a, [hFFC7]
+    ldh [hTemp8], a
+    ldh a, [hTemp1]
     ld b, a
     ld c, $01
 
 Jump_019_49D6::
     push bc
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     ld l, a
-    ldh a, [hFFCE]
+    ldh a, [hTemp8]
     ld h, a
     ld e, $00
     ld a, c
@@ -1745,44 +1745,44 @@ Jump_019_49D6::
     ld a, $14
     call Divide24ByA
     ld c, a
-    ldh a, [hFFCF]
+    ldh a, [hTemp9]
     add a, c
-    ldh [hFFCF], a
+    ldh [hTemp9], a
 
 Jump_019_49F5::
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     add a, l
-    ldh [hFFCA], a
-    ldh a, [hFFCB]
+    ldh [hTemp4], a
+    ldh a, [hTemp5]
     adc a, h
-    ldh [hFFCB], a
-    ldh a, [hFFCC]
+    ldh [hTemp5], a
+    ldh a, [hTemp6]
     adc a, e
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     pop bc
     inc c
     dec b
     jr nz, Jump_019_49D6
-    ldh a, [hFFCF]
+    ldh a, [hTemp9]
     ld b, a
     ld a, $14
     call DivideBByA
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     add a, b
-    ldh [hFFCA], a
-    ldh a, [hFFCB]
+    ldh [hTemp4], a
+    ldh a, [hTemp5]
     adc a, $00
-    ldh [hFFCB], a
-    ldh a, [hFFCC]
+    ldh [hTemp5], a
+    ldh a, [hTemp6]
     adc a, $00
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     push bc
     push de
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld e, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
     ld a, $03
     call Divide24ByA
@@ -1805,18 +1805,18 @@ Jump_019_4A45::
 
 Jump_019_4A4D::
     ld a, e
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     pop de
     pop bc
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld e, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
     ld a, d
     or a, e
@@ -2605,14 +2605,14 @@ Jump_019_4E5A::
 
 ; copies the 3 bytes at $4E60 + $129 * hFFC6 + 3 * hFFC7 into hFFC8-hFFCA (E-0120)
 ; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, ScriptCommandE8_Run_Case09_Case13_Sub01, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
-; reads: hFFC6, hFFC7
-; writes: hFFC8, hFFC9, hFFCA
+; reads: hTemp0, hTemp1
+; writes: hTemp2, hTemp3, hTemp4
 LoadTable4E60EntryToHFFC8::
 Func_019_7380:: ; address name
     ld bc, $0129
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call Multiply8By16
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld c, a
     ld b, $00
     add hl, bc
@@ -2625,11 +2625,11 @@ Func_019_7380:: ; address name
     adc a, $4E
     ld h, a
     ld a, [hl+]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, [hl+]
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [hl]
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ret
 
 ; loads species record [wC991] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wC9DC] - 1)) to wC9DE (E-0121)

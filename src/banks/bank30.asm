@@ -1838,13 +1838,13 @@ Jump_030_4BFF::
 
 ; picks the largest of the ten wD2AD weights (ties at random); index 8 chooses action 0, 9 chooses $AC, others the actor's skill in that slot (E-0127)
 ; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
-; reads: wC5E7, wBattleActor, hFFC6
-; writes: hFFC6
+; reads: wC5E7, wBattleActor, hTemp0
+; writes: hTemp0
 ; points at: wD2AD, wD989
 ChooseHighestWeightedAction::
 Func_030_4C00:: ; address name
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld hl, $0000
     ld de, $0A00
 
@@ -1874,7 +1874,7 @@ Jump_030_4C2F::
     ld h, b
     ld l, c
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_030_4C34::
     inc e
@@ -1884,7 +1884,7 @@ Jump_030_4C34::
     swap a
     ld hl, wD989
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $08
     jr z, Jump_030_4C58
     cp a, $09
@@ -2748,7 +2748,7 @@ Jump_030_52B4::
 ; only called from RunBattleResolveStep_43C4_Case01 (E-0047)
 ; 2 call sites from 1 routine (e.g. RunBattleResolveStep_43C4_Case01)
 ; reads: wC58A, wBattleActor
-; writes: hFFC6, hFFC7, hFFC8, hFFC9
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD8B7, wD980
 RunBattleResolveStep_43C4_Case01_Sub04::
 Func_030_52B5:: ; address name
@@ -2759,10 +2759,10 @@ Func_030_52B5:: ; address name
     cp a, $03
     ret nc
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld bc, $0000
     ld a, [wBattleActor]
     ld hl, wD8B7
@@ -2810,14 +2810,14 @@ Jump_030_5307::
 
 ; copies four bytes from HL to hFFC6, negating each when bit 6 of the actor's wDA43 byte is set (CopyByteNegateIfCBit6) (E-0122)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub04)
-; points at: hFFC6
+; points at: hTemp0
 CopyFourBytesNegatedByActorWDA43::
 Func_030_5319:: ; address name
     push hl
     call GetActorWDA43Low2
     ld c, [hl]
     pop hl
-    ld de, hFFC6
+    ld de, hTemp0
     call CopyByteNegateIfCBit6
     inc hl
     inc de
@@ -2845,14 +2845,14 @@ Func_030_5335:: ; address name
 
 ; only called from RunBattleResolveStep_43C4_Case01_Sub04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub04)
-; reads: wDAE8, hFFC6, hFFC7, hFFC8, hFFC9, wBattleActor
-; points at: hFFC6, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wD980
+; reads: wDAE8, hTemp0, hTemp1, hTemp2, hTemp3, wBattleActor
+; points at: hTemp0, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wD980
 RunBattleResolveStep_43C4_Case01_Sub04_Sub01::
 Func_030_533E:: ; address name
     ld a, [wDAE8]
     ld c, a
     ld b, $00
-    ld hl, hFFC6
+    ld hl, hTemp0
     add hl, bc
     ld e, [hl]
     push hl
@@ -2867,19 +2867,19 @@ Func_030_533E:: ; address name
     ld [hl], e
 
 Jump_030_5357::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
     ld hl, wSlotPersonalityHi
     call Func5428ForActorEntryOfHL
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld e, a
     ld hl, wSlotPersonalityMid
     call Func5428ForActorEntryOfHL
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld e, a
     ld hl, wSlotPersonalityLo
     call Func5428ForActorEntryOfHL
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld e, a
     ld hl, wD980
 

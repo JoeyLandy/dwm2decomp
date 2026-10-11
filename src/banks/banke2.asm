@@ -5336,10 +5336,10 @@ Func_0E2_654B:: ; address name
 
 ; only called from AIScore_StrongD (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_StrongD)
-; writes: hFFC6
+; writes: hTemp0
 AIScore_StrongD_Sub02:: ; heuristic: follows a terminator; C0
 Func_0E2_656D:: ; address name
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall HPBandOfSlotHFFC6
     ld a, c
     and a, a
@@ -5385,10 +5385,10 @@ Jump_0E2_65B7::
 
 ; only called from AIScore_AquaWall (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_AquaWall)
-; writes: hFFC6
+; writes: hTemp0
 AIScore_AquaWall_Sub02:: ; heuristic: follows a terminator; C0
 Func_0E2_65B8:: ; address name
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall HPBandOfSlotHFFC6
     ld a, c
     and a, a
@@ -5434,7 +5434,7 @@ Jump_0E2_6602::
 
 ; only called from AIScore_SuckAll (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SuckAll)
-; writes: hFFC6
+; writes: hTemp0
 AIScore_SuckAll_Sub02:: ; heuristic: follows a terminator; C0
 Func_0E2_6603:: ; address name
     and a, $04
@@ -5445,7 +5445,7 @@ Jump_0E2_6608::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0E2_6615
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push bc
     call AIScore_SuckAll_Sub02_Sub01
     pop bc
@@ -5477,10 +5477,10 @@ Jump_0E2_6633::
 
 ; only called from AIScore_Meditate (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Meditate)
-; writes: hFFC6
+; writes: hTemp0
 AIScore_Meditate_Sub02:: ; heuristic: follows a terminator; C0
 Func_0E2_6634:: ; address name
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall HPBandOfSlotHFFC6
     ld a, c
     and a, a
@@ -5526,7 +5526,7 @@ Jump_0E2_667E::
 
 ; only called from AIScore_HealUs_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_HealUs_Sub01)
-; writes: hFFC6
+; writes: hTemp0
 AIScore_HealUs_Sub01_Sub01:: ; heuristic: follows a terminator; C0
 Func_0E2_667F:: ; address name
     and a, $04
@@ -5537,7 +5537,7 @@ Jump_0E2_6684::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0E2_6691
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push bc
     call AIScore_HealUs_Sub01_Sub01_Sub01
     pop bc
@@ -5580,7 +5580,7 @@ Data_0E2_66BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; for the three slots of the side in A (bit 2), runs Func_0E2_66DC with hFFC6 = slot for each occupied one (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Hustle, AIScore_LoveRain)
-; writes: hFFC6
+; writes: hTemp0
 ForEachPresentSlotOfSideRun66DC::
 Func_0E2_66C5:: ; address name
     and a, $04
@@ -5591,7 +5591,7 @@ Jump_0E2_66CA::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0E2_66D7
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push bc
     call ForEachPresentSlotOfSideRun66DC_Sub01
     pop bc
@@ -5634,10 +5634,10 @@ Data_0E2_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from AIScore_Ramming (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Ramming)
-; writes: hFFC6
+; writes: hTemp0
 AIScore_Ramming_Sub02::
 Func_0E2_670B:: ; address name
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push bc
     farcall HPBandOfSlotHFFC6
     ld a, c
@@ -5656,7 +5656,7 @@ Data_0E2_6727:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from AIScore_Cover (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Cover)
-; writes: hFFC6
+; writes: hTemp0
 AIScore_Cover_Sub02::
 Func_0E2_672D:: ; address name
     and a, $04
@@ -5667,7 +5667,7 @@ Jump_0E2_6732::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_0E2_673F
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push bc
     call AIScore_Cover_Sub02_Sub01
     pop bc

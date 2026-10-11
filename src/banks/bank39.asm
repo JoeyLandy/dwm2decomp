@@ -1651,9 +1651,9 @@ Jump_039_5553::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC6, hFFC7, hFFC8, wD86B, wD86C, wD868, wD87D, ...
-; writes: wD868, wD86B, wD86C, hFFC6, hFFC7, hFFC8, wD87D, wD87E, ...
-; points at: hFFC6, wD868, wD8A7, wBattleMaxHP, wBattleTargetChoice, wD87D, wD874, wBattleHP
+; reads: wBattleActor, hTemp0, hTemp1, hTemp2, wD86B, wD86C, wD868, wD87D, ...
+; writes: wD868, wD86B, wD86C, hTemp0, hTemp1, hTemp2, wD87D, wD87E, ...
+; points at: hTemp0, wD868, wD8A7, wBattleMaxHP, wBattleTargetChoice, wD87D, wD874, wBattleHP
 ChooseTarget_Heal_5593:: ; heuristic: target of a pointer table; C0
 Func_039_5593:: ; address name
     ld a, [wBattleActor]
@@ -1665,7 +1665,7 @@ Func_039_5593:: ; address name
     ld b, d
     ld c, e
     xor a, a
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
@@ -1701,15 +1701,15 @@ Jump_039_55D3::
     ld e, $00
 
 Jump_039_55D5::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, h
-    ldh [hFFC7], a
-    ldh a, [hFFC8]
+    ldh [hTemp1], a
+    ldh a, [hTemp2]
     adc a, e
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_039_55E4::
     ld a, [wD86B]
@@ -1719,11 +1719,11 @@ Jump_039_55E4::
     inc c
     dec b
     jr nz, Jump_039_55A8
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld e, a
     ld a, [wD868]
     call Divide24ByA
@@ -1810,9 +1810,9 @@ Jump_039_5691::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC6, wC5E7
-; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: wBattleSlotOut, hFFC7, hFFC6, wBattleTargetChoice
+; reads: wBattleActor, hTemp0, wC5E7
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: wBattleSlotOut, hTemp1, hTemp0, wBattleTargetChoice
 ChooseTarget_Vivify:: ; heuristic: target of a pointer table; C0
 Func_039_569C:: ; address name
     ld a, [wBattleActor]
@@ -1820,11 +1820,11 @@ Func_039_569C:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, $FF
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_56AF::
     ld a, c
@@ -1835,17 +1835,17 @@ Jump_039_56AF::
     jr nz, Jump_039_56CD
     ld a, c
     and a, $03
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     ld [hl], c
-    ld hl, hFFC6
+    ld hl, hTemp0
     inc [hl]
 
 Jump_039_56CD::
     inc c
     dec b
     jr nz, Jump_039_56AF
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_039_56DC
     ld a, [wBattleActor]
@@ -1853,7 +1853,7 @@ Jump_039_56CD::
     jr Jump_039_5708
 
 Jump_039_56DC::
-    ld hl, hFFC7
+    ld hl, hTemp1
     ld b, $02
     ld a, [hl+]
     cp a, $FF
@@ -1894,9 +1894,9 @@ Jump_039_5708::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wC5E7, hFFC6
-; writes: hFFC7, hFFC8, hFFC9, hFFC6
-; points at: hFFC7, wBattleStatus, wBattleTargetChoice
+; reads: wBattleActor, wC5E7, hTemp0
+; writes: hTemp1, hTemp2, hTemp3, hTemp0
+; points at: hTemp1, wBattleStatus, wBattleTargetChoice
 ChooseTarget_Antidote:: ; heuristic: target of a pointer table; C0
 Func_039_5716:: ; address name
     ld a, [wBattleActor]
@@ -1904,10 +1904,10 @@ Func_039_5716:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ld de, hFFC7
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ld de, hTemp1
 
 Jump_039_5728::
     ld a, c
@@ -1924,7 +1924,7 @@ Jump_039_5738::
     inc c
     dec b
     jr nz, Jump_039_5728
-    ld hl, hFFC7
+    ld hl, hTemp1
     ld bc, $0300
     ld d, $00
 
@@ -1932,7 +1932,7 @@ Jump_039_5745::
     bit 1, [hl]
     jr z, Jump_039_574D
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     inc d
 
 Jump_039_574D::
@@ -1955,7 +1955,7 @@ Jump_039_574D::
     jr Jump_039_57A2
 
 Jump_039_576C::
-    ld hl, hFFC7
+    ld hl, hTemp1
     ld bc, $0300
     ld d, $00
 
@@ -1963,7 +1963,7 @@ Jump_039_5774::
     bit 0, [hl]
     jr z, Jump_039_577C
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     inc d
 
 Jump_039_577C::
@@ -1976,7 +1976,7 @@ Jump_039_577C::
     jr nz, Jump_039_578E
     ld a, [wBattleActor]
     and a, $03
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     jr Jump_039_57C1
 
 Jump_039_578E::
@@ -1991,7 +1991,7 @@ Jump_039_578E::
     ld d, $01
 
 Jump_039_57A2::
-    ld hl, hFFC7
+    ld hl, hTemp1
     ld c, $00
 
 Jump_039_57A7::
@@ -2003,7 +2003,7 @@ Jump_039_57A7::
 
 Jump_039_57AE::
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     jr Jump_039_57C1
 
 Jump_039_57B3::
@@ -2012,14 +2012,14 @@ Jump_039_57B3::
     ld b, a
     ld a, $03
     call DivideBByA
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_57C1::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
     ld a, [wBattleActor]
     and a, $04
@@ -2029,8 +2029,8 @@ Jump_039_57C1::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC6, wC5E7
-; writes: hFFC6, hFFC7, hFFC8
+; reads: wBattleActor, hTemp1, hTemp2, hTemp0, wC5E7
+; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleStatus, wBattleTargetChoice
 ChooseTarget_TwinHits:: ; heuristic: follows a terminator; C0
 Func_039_57D8:: ; address name
@@ -2039,10 +2039,10 @@ Func_039_57D8:: ; address name
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_039_57E9::
     ld a, c
@@ -2058,20 +2058,20 @@ Jump_039_57E9::
     ld a, c
     call GetBattleATK_Bank39
     push bc
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
     pop bc
     jr z, Jump_039_581C
     jr c, Jump_039_5831
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     jr Jump_039_5831
 
 Jump_039_581C::
@@ -2082,28 +2082,28 @@ Jump_039_581C::
     bit 7, a
     jr z, Jump_039_5831
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_039_5831::
     inc c
     dec b
     jr nz, Jump_039_57E9
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_5840
     ld a, [wBattleActor]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5840::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
     ld a, [wBattleActor]
     and a, $04
@@ -2113,8 +2113,8 @@ Jump_039_5840::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC6
-; writes: hFFC6, hFFC7, hFFC8
+; reads: wBattleActor, hTemp1, hTemp2, hTemp0
+; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleTargetChoice
 ChooseTarget_Upper:: ; heuristic: target of a pointer table; C0
 Func_039_5857:: ; address name
@@ -2123,9 +2123,9 @@ Func_039_5857:: ; address name
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_039_5867::
     push bc
@@ -2138,27 +2138,27 @@ Jump_039_5867::
     pop bc
     call CompareHLToBC
     jr nc, Jump_039_5891
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld l, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld h, a
     call CompareHLToBC
     jr c, Jump_039_5891
     ld a, c
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, b
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     pop bc
     push bc
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5891::
     pop bc
     inc c
     dec b
     jr nz, Jump_039_5867
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_58A1
     ld a, [wBattleActor]
@@ -2179,34 +2179,34 @@ Jump_039_58A1::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD80E, wDA75
 ChooseTarget_Sap:: ; heuristic: target of a pointer table; C0
 Func_039_58B7:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_58CD::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5909
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wD80E
     call AddAx9ToHL
     bit 1, [hl]
     jr nz, Jump_039_5909
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     call GetBattleDEF_Bank39
     ld a, h
     or a, a
@@ -2224,13 +2224,13 @@ Jump_039_58EE::
     cp a, $03
     jr z, Jump_039_5909
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5909
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5909::
     inc c
@@ -2241,34 +2241,34 @@ Jump_039_5909::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD80E, wDA75
 ChooseTarget_Slow:: ; heuristic: follows a terminator; C0
 Func_039_5911:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_5927::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5963
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wD80E
     call AddAx9ToHL
     bit 1, [hl]
     jr nz, Jump_039_5963
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     call GetBattleAGL_Bank39
     ld a, h
     or a, a
@@ -2286,13 +2286,13 @@ Jump_039_5948::
     cp a, $03
     jr z, Jump_039_5963
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5963
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5963::
     inc c
@@ -2303,8 +2303,8 @@ Jump_039_5963::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC6
-; writes: hFFC6, hFFC7, hFFC8
+; reads: wBattleActor, hTemp1, hTemp2, hTemp0
+; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleTargetChoice
 ChooseTarget_Speed:: ; heuristic: follows a terminator; C0
 Func_039_596B:: ; address name
@@ -2313,9 +2313,9 @@ Func_039_596B:: ; address name
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_039_597B::
     push bc
@@ -2328,27 +2328,27 @@ Jump_039_597B::
     pop bc
     call CompareHLToBC
     jr nc, Jump_039_59A5
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld l, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld h, a
     call CompareHLToBC
     jr c, Jump_039_59A5
     ld a, c
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, b
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     pop bc
     push bc
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_59A5::
     pop bc
     inc c
     dec b
     jr nz, Jump_039_597B
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_59B5
     ld a, [wBattleActor]
@@ -2369,28 +2369,28 @@ Jump_039_59B5::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wDA74
 ChooseTarget_UltraDown:: ; heuristic: follows a terminator; C0
 Func_039_59CB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_59E1::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5A1F
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     call GetBattleDEF_Bank39
     ld a, h
     or a, a
@@ -2409,7 +2409,7 @@ Jump_039_59E1::
 
 Jump_039_5A02::
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA74
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
@@ -2417,13 +2417,13 @@ Jump_039_5A02::
     cp a, $03
     jr z, Jump_039_5A1F
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5A1F
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5A1F::
     inc c
@@ -2434,33 +2434,33 @@ Jump_039_5A1F::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFCA, hFFC7, hFFC8
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
+; reads: wBattleActor, hTemp4, hTemp1, hTemp2
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
 ChooseTarget_Cover:: ; heuristic: target of a pointer table; C0
 Func_039_5A27:: ; address name
     ld a, [wBattleActor]
     ld e, a
     and a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
-    ldh [hFFCB], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
+    ldh [hTemp5], a
 
 Jump_039_5A40::
     push bc
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5A7B
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     cp a, e
     jr z, Jump_039_5A7B
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     call GetBattleMaxHP_Bank39
     push hl
     ld a, c
@@ -2474,20 +2474,20 @@ Jump_039_5A40::
     pop bc
     call CompareHLToBC
     jr nc, Jump_039_5A7B
-    ldh a, [hFFCA]
-    ldh [hFFCB], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp4]
+    ldh [hTemp5], a
+    ldh a, [hTemp1]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
     jr nc, Jump_039_5A7B
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
-    ldh a, [hFFCA]
-    ldh [hFFC6], a
+    ldh [hTemp2], a
+    ldh a, [hTemp4]
+    ldh [hTemp0], a
 
 Jump_039_5A7B::
     pop bc
@@ -2499,39 +2499,39 @@ Jump_039_5A7B::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wD80D, wDA78
 ChooseTarget_MouthShut:: ; heuristic: target of a pointer table; C0
 Func_039_5A84:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
 
 Jump_039_5A9C::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5AD3
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     call ChooseTarget_MouthShut_Sub01
     jr z, Jump_039_5AD3
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wD80D
     call AddAx9ToHL
     bit 7, [hl]
     jr nz, Jump_039_5AD3
     ld a, c
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld hl, wDA78
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
@@ -2540,13 +2540,13 @@ Jump_039_5A9C::
     cp a, $03
     jr z, Jump_039_5AD3
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5AD3
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5AD3::
     inc c
@@ -2557,29 +2557,29 @@ Jump_039_5AD3::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus, wDA77
 ChooseTarget_SickLick:: ; heuristic: target of a pointer table; C0
 Func_039_5ADB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
 
 Jump_039_5AF3::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5B38
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     call GetBattleDEF_Bank39
     ld a, h
     or a, a
@@ -2590,7 +2590,7 @@ Jump_039_5AF3::
 
 Jump_039_5B07::
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
@@ -2602,7 +2602,7 @@ Jump_039_5B07::
     or a, a
     jr nz, Jump_039_5B38
     ld a, c
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld hl, wDA77
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
@@ -2611,13 +2611,13 @@ Jump_039_5B07::
     cp a, $03
     jr z, Jump_039_5B38
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5B38
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5B38::
     inc c
@@ -2628,35 +2628,35 @@ Jump_039_5B38::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wD8A7, wBattleStatus, wDA77
 ChooseTarget_LegSweep:: ; heuristic: target of a pointer table; C0
 Func_039_5B40:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
 
 Jump_039_5B58::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5B9D
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wD8A7
     add_a_to_hl
     bit 4, [hl]
     jr nz, Jump_039_5B9D
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
@@ -2668,7 +2668,7 @@ Jump_039_5B58::
     or a, a
     jr nz, Jump_039_5B9D
     ld a, c
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld hl, wDA77
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
@@ -2677,13 +2677,13 @@ Jump_039_5B58::
     cp a, $03
     jr z, Jump_039_5B9D
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5B9D
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5B9D::
     inc c
@@ -2694,28 +2694,28 @@ Jump_039_5B9D::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, wDA74
 ChooseTarget_NapAttack:: ; heuristic: target of a pointer table; C0
 Func_039_5BA5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_5BBB::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5BF1
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
@@ -2727,7 +2727,7 @@ Jump_039_5BBB::
     or a, a
     jr nz, Jump_039_5BF1
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA74
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
@@ -2736,13 +2736,13 @@ Jump_039_5BBB::
     cp a, $03
     jr z, Jump_039_5BF1
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5BF1
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5BF1::
     inc c
@@ -2753,34 +2753,34 @@ Jump_039_5BF1::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wDA74
 ChooseTarget_OddDance:: ; heuristic: follows a terminator; C0
 Func_039_5BF9:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_5C0F::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5C3B
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     call GetBattleMP_Bank39
     ld a, h
     or a, l
     jr z, Jump_039_5C3B
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA74
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
@@ -2789,13 +2789,13 @@ Jump_039_5C0F::
     cp a, $03
     jr z, Jump_039_5C3B
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5C3B
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5C3B::
     inc c
@@ -2806,29 +2806,29 @@ Jump_039_5C3B::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC9
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1, hTemp2, hTemp3
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD8A7
 ChooseTarget_MetalCut:: ; heuristic: target of a pointer table; C0
 Func_039_5C43:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_5C59::
     push bc
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5C8E
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wD8A7
     add_a_to_hl
     bit 0, [hl]
@@ -2840,18 +2840,18 @@ Jump_039_5C59::
     call GetBattleDEF_Bank39
     pop bc
     add hl, bc
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
     jr c, Jump_039_5C8E
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
-    ldh a, [hFFC9]
-    ldh [hFFC6], a
+    ldh [hTemp2], a
+    ldh a, [hTemp3]
+    ldh [hTemp0], a
 
 Jump_039_5C8E::
     pop bc
@@ -2935,48 +2935,48 @@ Func_039_5CC7:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, wDA76
 ChooseTarget_PoisonHit:: ; heuristic: target of a pointer table; C0
 Func_039_5CCD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_5CE3::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5D11
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
     jr nz, Jump_039_5D11
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA76
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $03
     cp a, $03
     jr z, Jump_039_5D11
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5D11
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5D11::
     inc c
@@ -2987,35 +2987,35 @@ Jump_039_5D11::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, wDA77
 ChooseTarget_Paralyze:: ; heuristic: target of a pointer table; C0
 Func_039_5D19:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_5D2F::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5D5F
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $CC
     jr nz, Jump_039_5D5F
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA77
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
@@ -3024,13 +3024,13 @@ Jump_039_5D2F::
     cp a, $03
     jr z, Jump_039_5D5F
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5D5F
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5D5F::
     inc c
@@ -3041,28 +3041,28 @@ Jump_039_5D5F::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, wDA77
 ChooseTarget_LushLicks:: ; heuristic: target of a pointer table; C0
 Func_039_5D67:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_5D7D::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5DB3
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
@@ -3074,7 +3074,7 @@ Jump_039_5D7D::
     or a, a
     jr nz, Jump_039_5DB3
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA77
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
@@ -3083,13 +3083,13 @@ Jump_039_5D7D::
     cp a, $03
     jr z, Jump_039_5DB3
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_5DB3
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5DB3::
     inc c
@@ -3100,47 +3100,47 @@ Jump_039_5DB3::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC9
-; writes: hFFD0, hFFC6, hFFC9, hFFC7, hFFC8
+; reads: wBattleActor, hTemp1, hTemp2, hTemp3
+; writes: hTempA, hTemp0, hTemp3, hTemp1, hTemp2
 ChooseTarget_Transform:: ; heuristic: target of a pointer table; C0
 Func_039_5DBB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp3], a
     xor a, a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_039_5DD2::
     push bc
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5DFA
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     call GetBattleMaxHP_Bank39
     push hl
     ld a, c
     call GetBattleMaxMP_Bank39
     pop bc
     add hl, bc
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
     jr c, Jump_039_5DFA
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
-    ldh a, [hFFC9]
-    ldh [hFFC6], a
+    ldh [hTemp2], a
+    ldh a, [hTemp3]
+    ldh [hTemp0], a
 
 Jump_039_5DFA::
     pop bc
@@ -3152,33 +3152,33 @@ Jump_039_5DFA::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFD0, hFFC9, hFFCA, hFFC6
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-; points at: wD80E, wDA74, hFFC8, wBattleTargetChoice
+; reads: wBattleActor, hTemp1, hTemp2, hTempA, hTemp3, hTemp4, hTemp0
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
+; points at: wD80E, wDA74, hTemp2, wBattleTargetChoice
 ChooseTarget_Beat:: ; heuristic: follows a terminator; C0
 Func_039_5E03:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
     xor a, a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
     ld a, $FF
-    ldh [hFFCB], a
+    ldh [hTemp5], a
 
 Jump_039_5E20::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5E53
     ld hl, wD80E
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     call AddAx9ToHL
     bit 1, [hl]
     jr nz, Jump_039_5E53
@@ -3190,29 +3190,29 @@ Jump_039_5E20::
     cp a, $03
     jr z, Jump_039_5E53
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_5E4F
     jr c, Jump_039_5E53
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     xor a, a
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_039_5E4F::
-    ld hl, hFFC8
+    ld hl, hTemp2
     inc [hl]
 
 Jump_039_5E53::
     inc c
     dec b
     jr nz, Jump_039_5E20
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     or a, a
     jr z, Jump_039_5EAC
     cp a, $01
     jr z, Jump_039_5ED8
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     ld c, a
     ld b, $03
 
@@ -3233,25 +3233,25 @@ Jump_039_5E65::
     cp a, $03
     jr z, Jump_039_5EA5
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr nz, Jump_039_5EA5
     ld a, c
     call GetBattleHP_Bank39
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld b, a
     call CompareHLToBCFastZero
     jr c, Jump_039_5EA5
     ld a, l
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, h
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     pop bc
     push bc
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5EA5::
     pop bc
@@ -3261,7 +3261,7 @@ Jump_039_5EA5::
     jr Jump_039_5EFA
 
 Jump_039_5EAC::
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     ld c, a
     ld b, $03
 
@@ -3270,20 +3270,20 @@ Jump_039_5EB1::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_5ED1
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     call GetBattleHP_Bank39
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld b, a
     call CompareHLToBCFastZero
     jr c, Jump_039_5ED1
     ld a, l
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, h
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5ED1::
     pop bc
@@ -3293,10 +3293,10 @@ Jump_039_5ED1::
     jr Jump_039_5EFA
 
 Jump_039_5ED8::
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     ld c, a
     ld b, $03
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld e, a
 
 Jump_039_5EE0::
@@ -3317,25 +3317,25 @@ Jump_039_5EF3::
 
 Jump_039_5EF7::
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_5EFA::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     ld e, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, e
     ld [hl], a
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActionId, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
-; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
-; points at: hFFCE, wD80E, wDA72, wBattleTargetChoice
+; reads: wBattleActionId, wC58A, wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, ...
+; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hTempA, hTemp0, ...
+; points at: hTemp8, wD80E, wDA72, wBattleTargetChoice
 ChooseTarget_Blaze:: ; heuristic: target of a pointer table; C0
 Func_039_5F0E:: ; address name
     ld a, [wBattleActionId]
@@ -3344,7 +3344,7 @@ Func_039_5F0E:: ; address name
     ld [wCFED], a
     ld a, $02
     ld [wD869], a
-    ld hl, hFFCE
+    ld hl, hTemp8
     ld a, l
     ld [wD86A], a
     ld a, h
@@ -3365,16 +3365,16 @@ Jump_039_5F3A::
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
-    ldh [hFFCB], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
+    ldh [hTemp5], a
     ld [wD874], a
     ld [wD875], a
     xor a, a
@@ -3386,21 +3386,21 @@ Jump_039_5F6B::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jp c, Jump_039_5FF2
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wD80E
     call AddAx9ToHL
     ld a, [hl]
     and a, $22
     jr nz, Jump_039_5FF2
     ld a, c
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld hl, wDA72
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
     jr z, Jump_039_5FF2
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     push bc
     call ChooseTarget_Blaze_Sub01
     pop bc
@@ -3410,16 +3410,16 @@ Jump_039_5F6B::
     pop bc
     call CompareHLToBC
     jr c, Jump_039_5FD9
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_5FBE
     jr c, Jump_039_5FF2
     ld a, e
-    ldh [hFFC7], a
-    ldh a, [hFFC9]
-    ldh [hFFCB], a
+    ldh [hTemp1], a
+    ldh a, [hTemp3]
+    ldh [hTemp5], a
     ld a, l
     ld [wD874], a
     ld a, h
@@ -3437,8 +3437,8 @@ Jump_039_5FBE::
     ld [wD874], a
     ld a, h
     ld [wD875], a
-    ldh a, [hFFC9]
-    ldh [hFFCB], a
+    ldh a, [hTemp3]
+    ldh [hTemp5], a
     jr Jump_039_5FF2
 
 Jump_039_5FD9::
@@ -3452,8 +3452,8 @@ Jump_039_5FD9::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
-    ldh a, [hFFC9]
-    ldh [hFFC8], a
+    ldh a, [hTemp3]
+    ldh [hTemp2], a
 
 Jump_039_5FF2::
     pop bc
@@ -3464,13 +3464,13 @@ Jump_039_5FF2::
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     cp a, $FF
     jr nz, Jump_039_6012
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     cp a, $FF
     jr nz, Jump_039_6012
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
 
 Jump_039_6012::
     ld [hl], a
@@ -3478,31 +3478,31 @@ Jump_039_6012::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 111 Ramming, 112 Kamikaze; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFCA, hFFC9, hFFC6, hFFD0, hFFC7, hFFC8
-; writes: hFFD0, hFFC6, hFFC9, hFFCA, hFFC7, hFFC8
+; reads: wBattleActor, hTemp4, hTemp3, hTemp0, hTempA, hTemp1, hTemp2
+; writes: hTempA, hTemp0, hTemp3, hTemp4, hTemp1, hTemp2
 ; points at: wD812, wDA75, wD813
 ChooseTarget_Ramming:: ; heuristic: target of a pointer table; C0
 Func_039_6014:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp0], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
     xor a, a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
 
 Jump_039_602D::
     push bc
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6079
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wD812
     call AddAx9ToHL
     ld a, [hl+]
@@ -3517,7 +3517,7 @@ Jump_039_602D::
     cp a, $03
     jr z, Jump_039_6079
     ld e, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     cp a, e
     jr z, Jump_039_6060
     jr nc, Jump_039_6079
@@ -3528,30 +3528,30 @@ Jump_039_602D::
 Jump_039_6060::
     ld a, c
     call GetBattleHP_Bank39
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
     jr c, Jump_039_6079
 
 Jump_039_606F::
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
-    ldh a, [hFFC9]
-    ldh [hFFC6], a
+    ldh [hTemp2], a
+    ldh a, [hTemp3]
+    ldh [hTemp0], a
 
 Jump_039_6079::
     pop bc
     inc c
     dec b
     jr nz, Jump_039_602D
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jp nz, Jump_039_60E9
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     ld c, a
     ld b, $03
 
@@ -3560,35 +3560,35 @@ Jump_039_608A::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_60B6
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wD813
     call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_039_60B6
     ld a, c
     call GetBattleHP_Bank39
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
     jr c, Jump_039_60B6
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
-    ldh a, [hFFC9]
-    ldh [hFFC6], a
+    ldh [hTemp2], a
+    ldh a, [hTemp3]
+    ldh [hTemp0], a
 
 Jump_039_60B6::
     pop bc
     inc c
     dec b
     jr nz, Jump_039_608A
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_60E9
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     ld c, a
     ld b, $03
 
@@ -3597,19 +3597,19 @@ Jump_039_60C6::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_60E4
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     call GetBattleHP_Bank39
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld b, a
     jr c, Jump_039_60E4
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
-    ldh a, [hFFC9]
-    ldh [hFFC6], a
+    ldh [hTemp2], a
+    ldh a, [hTemp3]
+    ldh [hTemp0], a
 
 Jump_039_60E4::
     pop bc
@@ -3623,29 +3623,29 @@ Jump_039_60E9::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus, wDA74
 ChooseTarget_Sleep:: ; heuristic: follows a terminator; C0
 Func_039_60ED:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
 
 Jump_039_6105::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6143
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
@@ -3657,12 +3657,12 @@ Jump_039_6105::
     or a, a
     jr nz, Jump_039_6143
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [hl]
     and a, $22
     jr nz, Jump_039_6143
     ld a, c
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld hl, wDA74
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
@@ -3671,13 +3671,13 @@ Jump_039_6105::
     cp a, $03
     jr z, Jump_039_6143
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_6143
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_6143::
     inc c
@@ -3688,34 +3688,34 @@ Jump_039_6143::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD80E, wDA74
 ChooseTarget_RobMagic:: ; heuristic: follows a terminator; C0
 Func_039_614B:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_6161::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6199
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     call GetBattleMP_Bank39
     ld a, h
     or a, l
     jr z, Jump_039_6199
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wD80E
     call AddAx9ToHL
     ld a, [hl]
@@ -3730,13 +3730,13 @@ Jump_039_6161::
     cp a, $03
     jr z, Jump_039_6199
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_6199
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_6199::
     inc c
@@ -3747,22 +3747,22 @@ Jump_039_6199::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA72
 ChooseTarget_FireSlash:: ; heuristic: target of a pointer table; C0
 Func_039_61A1:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -3770,7 +3770,7 @@ Jump_039_61BD::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_621A
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl+]
@@ -3780,13 +3780,13 @@ Jump_039_61BD::
     and a, $0C
     jr nz, Jump_039_621A
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA72
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_61F5
     jr c, Jump_039_621A
@@ -3794,7 +3794,7 @@ Jump_039_61BD::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_61F5::
     push bc
@@ -3817,7 +3817,7 @@ Jump_039_61F5::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_621A::
     inc c
@@ -3828,22 +3828,22 @@ Jump_039_621A::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
 ChooseTarget_BoltSlash:: ; heuristic: target of a pointer table; C0
 Func_039_6222:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -3851,7 +3851,7 @@ Jump_039_623E::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_629B
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl+]
@@ -3861,13 +3861,13 @@ Jump_039_623E::
     and a, $0C
     jr nz, Jump_039_629B
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA73
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_6276
     jr c, Jump_039_629B
@@ -3875,7 +3875,7 @@ Jump_039_623E::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_6276::
     push bc
@@ -3898,7 +3898,7 @@ Jump_039_6276::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_629B::
     inc c
@@ -3909,22 +3909,22 @@ Jump_039_629B::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
 ChooseTarget_VacuSlash:: ; heuristic: target of a pointer table; C0
 Func_039_62A3:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -3932,7 +3932,7 @@ Jump_039_62BF::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_631C
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl+]
@@ -3942,14 +3942,14 @@ Jump_039_62BF::
     and a, $0C
     jr nz, Jump_039_631C
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA73
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_62F7
     jr c, Jump_039_631C
@@ -3957,7 +3957,7 @@ Jump_039_62BF::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_62F7::
     push bc
@@ -3980,7 +3980,7 @@ Jump_039_62F7::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_631C::
     inc c
@@ -3991,22 +3991,22 @@ Jump_039_631C::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
 ChooseTarget_IceSlash:: ; heuristic: target of a pointer table; C0
 Func_039_6324:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -4014,7 +4014,7 @@ Jump_039_6340::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_639D
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl+]
@@ -4024,14 +4024,14 @@ Jump_039_6340::
     and a, $0C
     jr nz, Jump_039_639D
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA73
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_6378
     jr c, Jump_039_639D
@@ -4039,7 +4039,7 @@ Jump_039_6340::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_6378::
     push bc
@@ -4062,7 +4062,7 @@ Jump_039_6378::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_639D::
     inc c
@@ -4073,22 +4073,22 @@ Jump_039_639D::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wDA73
 ChooseTarget_WindBeast:: ; heuristic: follows a terminator; C0
 Func_039_63A5:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -4096,16 +4096,16 @@ Jump_039_63C1::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_640E
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA73
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_63E9
     jr c, Jump_039_640E
@@ -4113,7 +4113,7 @@ Jump_039_63C1::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_63E9::
     push bc
@@ -4136,7 +4136,7 @@ Jump_039_63E9::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_640E::
     inc c
@@ -4147,8 +4147,8 @@ Jump_039_640E::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 103 GigaSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wBattleTarget, hFFC7, wBattleDamageLo, wD873
-; writes: wBattleTarget, hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, wBattleTarget, hTemp1, wBattleDamageLo, wD873
+; writes: wBattleTarget, hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wBattleTargetChoice, wDA78
 ChooseTarget_GigaSlash:: ; heuristic: target of a pointer table; C0
 Func_039_6416:: ; address name
@@ -4156,14 +4156,14 @@ Func_039_6416:: ; address name
     and a, $04
     xor a, $04
     ld [wBattleTarget], a
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -4211,16 +4211,16 @@ Jump_039_646A::
     ld a, c
     call AnySlotStatusMaskSet
     jr nz, Jump_039_64C2
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA78
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_649D
     jr c, Jump_039_64C2
@@ -4228,7 +4228,7 @@ Jump_039_646A::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_649D::
     push bc
@@ -4251,7 +4251,7 @@ Jump_039_649D::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_64C2::
     inc c
@@ -4271,22 +4271,22 @@ Jump_039_64CA::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA72
 ChooseTarget_AquaCut:: ; heuristic: target of a pointer table; C0
 Func_039_64DB:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -4294,7 +4294,7 @@ Jump_039_64F7::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6554
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wD80F
     call AddAx9ToHL
     ld a, [hl+]
@@ -4304,14 +4304,14 @@ Jump_039_64F7::
     and a, $0C
     jr nz, Jump_039_6554
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA72
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_652F
     jr c, Jump_039_6554
@@ -4319,7 +4319,7 @@ Jump_039_64F7::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_652F::
     push bc
@@ -4342,7 +4342,7 @@ Jump_039_652F::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_6554::
     inc c
@@ -4353,22 +4353,22 @@ Jump_039_6554::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wDA72
 ChooseTarget_Watershot:: ; heuristic: follows a terminator; C0
 Func_039_655C:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -4376,16 +4376,16 @@ Jump_039_6578::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_65C5
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA72
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
     rlca
     rlca
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_65A0
     jr c, Jump_039_65C5
@@ -4393,7 +4393,7 @@ Jump_039_6578::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_65A0::
     push bc
@@ -4416,7 +4416,7 @@ Jump_039_65A0::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_65C5::
     inc c
@@ -4427,24 +4427,24 @@ Jump_039_65C5::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, wD874, wD875, ...
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wD874, ...
+; reads: wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, wD874, wD875, ...
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wD874, ...
 ; points at: wDA76, wBattleTargetChoice
 ChooseTarget_MegaMagic:: ; heuristic: target of a pointer table; C0
 Func_039_65CD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
-    ldh [hFFCB], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
+    ldh [hTemp5], a
     ld [wD874], a
     ld [wD875], a
     xor a, a
@@ -4456,7 +4456,7 @@ Jump_039_65F4::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jp c, Jump_039_666F
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA76
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
@@ -4465,7 +4465,7 @@ Jump_039_65F4::
     swap a
     cp a, $03
     jr z, Jump_039_666F
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     push bc
     call ChooseTarget_MegaMagic_Sub01
     pop bc
@@ -4475,16 +4475,16 @@ Jump_039_65F4::
     pop bc
     call CompareHLToBC
     jr c, Jump_039_6656
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_663B
     jr c, Jump_039_666F
     ld a, e
-    ldh [hFFC7], a
-    ldh a, [hFFC9]
-    ldh [hFFCB], a
+    ldh [hTemp1], a
+    ldh a, [hTemp3]
+    ldh [hTemp5], a
     ld a, l
     ld [wD874], a
     ld a, h
@@ -4502,8 +4502,8 @@ Jump_039_663B::
     ld [wD874], a
     ld a, h
     ld [wD875], a
-    ldh a, [hFFC9]
-    ldh [hFFCB], a
+    ldh a, [hTemp3]
+    ldh [hTemp5], a
     jr Jump_039_666F
 
 Jump_039_6656::
@@ -4517,8 +4517,8 @@ Jump_039_6656::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wD873], a
-    ldh a, [hFFC9]
-    ldh [hFFC8], a
+    ldh a, [hTemp3]
+    ldh [hTemp2], a
 
 Jump_039_666F::
     pop bc
@@ -4529,13 +4529,13 @@ Jump_039_666F::
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     cp a, $FF
     jr nz, Jump_039_668F
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     cp a, $FF
     jr nz, Jump_039_668F
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
 
 Jump_039_668F::
     ld [hl], a
@@ -4544,8 +4544,8 @@ Jump_039_668F::
 ; after AdvanceRandom, lists the present opposite slots in slot order (count in hFFC6, slots in hFFC7-hFFC9, unused entries $FF) and lets PickWeightedTargetCandidate choose (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
-; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: hFFC6, hFFC7
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: hTemp0, hTemp1
 TargetFoeWeightedBySlotOrder:: ; heuristic: target of a pointer table; C0
 Func_039_6691:: ; address name
     call AdvanceRandom
@@ -4555,20 +4555,20 @@ Func_039_6691:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, $FF
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_66A9::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_66BD
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, [hl]
     inc [hl]
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     ld [hl], c
 
@@ -4581,9 +4581,9 @@ Jump_039_66BD::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 0 (no name), 98 SquallHit, 99 BiAttack, 105 PsycheUp, 106 HighJump, 107 EvilSlash, 109 TwinSlash, 112 Kamikaze, $CC, $D2 ...; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wBattleDamageLo, wD873, wD874, wD875, hFFC7, hFFC8, wD876, ...
-; writes: hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873, wD874, wD875, ...
-; points at: hFFC6, hFFC7, wBattleDamageLo
+; reads: wBattleActor, wBattleDamageLo, wD873, wD874, wD875, hTemp1, hTemp2, wD876, ...
+; writes: hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873, wD874, wD875, ...
+; points at: hTemp0, hTemp1, wBattleDamageLo
 ChooseTarget_SquallHit_66C5:: ; heuristic: target of a pointer table; C0
 Func_039_66C5:: ; address name
     call AdvanceRandom
@@ -4593,11 +4593,11 @@ Func_039_66C5:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, $FF
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld [wD874], a
@@ -4609,10 +4609,10 @@ Jump_039_66EF::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6722
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld e, [hl]
     ld a, e
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     ld [hl], c
     ld a, e
@@ -4658,12 +4658,12 @@ Jump_039_6722::
     ld [wBattleDamageLo], a
     ld a, b
     ld [wD873], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     push af
-    ldh a, [hFFC8]
-    ldh [hFFC7], a
+    ldh a, [hTemp2]
+    ldh [hTemp1], a
     pop af
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_039_6757::
     ld a, [wD874]
@@ -4685,12 +4685,12 @@ Jump_039_6757::
     ld [wD874], a
     ld a, b
     ld [wD875], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     push af
-    ldh a, [hFFC9]
-    ldh [hFFC8], a
+    ldh a, [hTemp3]
+    ldh [hTemp2], a
     pop af
-    ldh [hFFC9], a
+    ldh [hTemp3], a
 
 Jump_039_6788::
     ld a, [wBattleDamageLo]
@@ -4704,12 +4704,12 @@ Jump_039_6788::
     call CompareHLToBC
     jr z, Jump_039_67A9
     jr c, Jump_039_67A9
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     push af
-    ldh a, [hFFC8]
-    ldh [hFFC7], a
+    ldh a, [hTemp2]
+    ldh [hTemp1], a
     pop af
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_039_67A9::
     call PickWeightedTargetCandidate
@@ -4717,9 +4717,9 @@ Jump_039_67A9::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFCB, hFFCC, hFFC7, hFFC8, hFFC6, hFFC9, hFFCA
+; reads: wBattleActor, hTemp5, hTemp6, hTemp1, hTemp2, hTemp0, hTemp3, hTemp4
 ; writes: wD09D, wD09E, wD09F, wD0A0, wD0A1, wD0A2, wD0A3, wD0A4, ...
-; points at: wD09D, hFFC7, wBattleTargetChoice
+; points at: wD09D, hTemp1, wBattleTargetChoice
 ChooseTarget_Heal_67AD:: ; heuristic: target of a pointer table; C0
 Func_039_67AD:: ; address name
     ld a, [wBattleActor]
@@ -4786,18 +4786,18 @@ Jump_039_680E::
     jr nz, Jump_039_67DB
     pop de
     ld a, $FF
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
 
 Jump_039_6820::
     ld a, e
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6895
-    ld hl, hFFC7
+    ld hl, hTemp1
     ld a, [hl+]
     or a, [hl]
     inc hl
@@ -4812,9 +4812,9 @@ Jump_039_6820::
     add a, a
     add_a_to_hl
     ld a, l
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld a, h
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld a, [hl+]
     or a, [hl]
     inc hl
@@ -4822,16 +4822,16 @@ Jump_039_6820::
     inc hl
     or a, [hl]
     jr z, Jump_039_6895
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld l, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld h, a
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld l, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld h, a
     call CompareHLToBC
     jr z, Jump_039_6864
@@ -4839,38 +4839,38 @@ Jump_039_6820::
     jr Jump_039_687A
 
 Jump_039_6864::
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld l, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld h, a
     inc hl
     inc hl
     ld a, [hl+]
     ld b, [hl]
     ld c, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld l, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld h, a
     call CompareHLToBC
     jr nc, Jump_039_6895
 
 Jump_039_687A::
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     and a, $03
     ld hl, wD09D
     add a, a
     add a, a
     add_a_to_hl
     ld a, [hl+]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [hl+]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, [hl+]
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [hl]
-    ldh [hFFCA], a
+    ldh [hTemp4], a
 
 Jump_039_6895::
     inc e
@@ -4880,7 +4880,7 @@ Jump_039_6895::
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_68AE
     ld a, [wBattleActor]
@@ -4891,9 +4891,9 @@ Jump_039_68AE::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFCA, hFFCB, hFFC6, wD876, wD877, wD874, wD875, ...
-; writes: hFFC6, hFFCA, hFFCB, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873, ...
-; points at: hFFC6, wBattleDamageLo, hFFC7, wBattleTargetChoice, wD09D
+; reads: wBattleActor, hTemp4, hTemp5, hTemp0, wD876, wD877, wD874, wD875, ...
+; writes: hTemp0, hTemp4, hTemp5, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873, ...
+; points at: hTemp0, wBattleDamageLo, hTemp1, wBattleTargetChoice, wD09D
 ChooseTarget_Heal_68B0:: ; heuristic: target of a pointer table; C0
 Func_039_68B0:: ; address name
     ld a, [wBattleActor]
@@ -4902,13 +4902,13 @@ Func_039_68B0:: ; address name
     ld d, $03
     push de
     xor a, a
-    ldh [hFFC6], a
-    ldh [hFFCA], a
-    ldh [hFFCB], a
+    ldh [hTemp0], a
+    ldh [hTemp4], a
+    ldh [hTemp5], a
     ld a, $FF
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld [wD874], a
@@ -4921,31 +4921,31 @@ Jump_039_68DA::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_68F1
     call GetBattleMaxHP_Bank39
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     add a, l
-    ldh [hFFCA], a
-    ldh a, [hFFCB]
+    ldh [hTemp4], a
+    ldh a, [hTemp5]
     adc a, h
-    ldh [hFFCB], a
-    ld hl, hFFC6
+    ldh [hTemp5], a
+    ld hl, hTemp0
     inc [hl]
 
 Jump_039_68F1::
     inc e
     dec d
     jr nz, Jump_039_68DA
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call DivideHLByA
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop de
 
 Jump_039_690A::
@@ -4953,13 +4953,13 @@ Jump_039_690A::
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_693C
     call GetBattleHP_Bank39
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld c, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld b, a
     call CompareHLToBC
     jr nc, Jump_039_693C
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld bc, wBattleDamageLo
     add a, a
     add a, c
@@ -4973,10 +4973,10 @@ Jump_039_6929::
     inc bc
     ld a, h
     ld [bc], a
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, [hl]
     inc [hl]
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     ld [hl], e
 
@@ -4984,7 +4984,7 @@ Jump_039_693C::
     inc e
     dec d
     jr nz, Jump_039_690A
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jp z, ChooseTarget_Heal_67AD
     cp a, $01
@@ -5005,8 +5005,8 @@ Jump_039_693C::
     ld [wD874], a
     ld a, h
     ld [wD875], a
-    ldh a, [hFFC9]
-    ldh [hFFC8], a
+    ldh a, [hTemp3]
+    ldh [hTemp2], a
 
 Jump_039_696F::
     ld a, [wD874]
@@ -5019,40 +5019,40 @@ Jump_039_696F::
     ld b, a
     call CompareHLToBC
     jr nc, Jump_039_6988
-    ldh a, [hFFC8]
-    ldh [hFFC7], a
+    ldh a, [hTemp2]
+    ldh [hTemp1], a
 
 Jump_039_6988::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [hl], a
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC6, wC5E7
-; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: wBattleSlotOut, hFFC7, hFFC6, wBattleTargetChoice
+; reads: wBattleActor, hTemp0, wC5E7
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: wBattleSlotOut, hTemp1, hTemp0, wBattleTargetChoice
 ChooseTarget_Vivify_6998:: ; heuristic: target of a pointer table; C0
 Func_039_6998:: ; address name
     jp ChooseTarget_Vivify
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wC5E7, hFFC6
-; writes: hFFC7, hFFC8, hFFC9, hFFC6
-; points at: hFFC7, wBattleStatus, wBattleTargetChoice
+; reads: wBattleActor, wC5E7, hTemp0
+; writes: hTemp1, hTemp2, hTemp3, hTemp0
+; points at: hTemp1, wBattleStatus, wBattleTargetChoice
 ChooseTarget_Antidote_699B:: ; heuristic: target of a pointer table; C0
 Func_039_699B:: ; address name
     jp ChooseTarget_Antidote
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC6, wC5E7
-; writes: hFFC6, hFFC7, hFFC8
+; reads: wBattleActor, hTemp1, hTemp2, hTemp0, wC5E7
+; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleStatus, wBattleTargetChoice
 ChooseTarget_TwinHits_699E:: ; heuristic: follows a terminator; C0
 Func_039_699E:: ; address name
@@ -5060,8 +5060,8 @@ Func_039_699E:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC6
-; writes: hFFC6, hFFC7, hFFC8
+; reads: wBattleActor, hTemp1, hTemp2, hTemp0
+; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleTargetChoice
 ChooseTarget_Upper_69A1:: ; heuristic: target of a pointer table; C0
 Func_039_69A1:: ; address name
@@ -5069,8 +5069,8 @@ Func_039_69A1:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD80E, wDA75
 ChooseTarget_Sap_69A4:: ; heuristic: target of a pointer table; C0
 Func_039_69A4:: ; address name
@@ -5078,8 +5078,8 @@ Func_039_69A4:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD80E, wDA75
 ChooseTarget_Slow_69A7:: ; heuristic: follows a terminator; C0
 Func_039_69A7:: ; address name
@@ -5087,8 +5087,8 @@ Func_039_69A7:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC6
-; writes: hFFC6, hFFC7, hFFC8
+; reads: wBattleActor, hTemp1, hTemp2, hTemp0
+; writes: hTemp0, hTemp1, hTemp2
 ; points at: wBattleTargetChoice
 ChooseTarget_Speed_69AA:: ; heuristic: follows a terminator; C0
 Func_039_69AA:: ; address name
@@ -5096,8 +5096,8 @@ Func_039_69AA:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wDA74
 ChooseTarget_UltraDown_69AD:: ; heuristic: follows a terminator; C0
 Func_039_69AD:: ; address name
@@ -5105,16 +5105,16 @@ Func_039_69AD:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFCA, hFFC7, hFFC8
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
+; reads: wBattleActor, hTemp4, hTemp1, hTemp2
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
 ChooseTarget_Cover_69B0:: ; heuristic: target of a pointer table; C0
 Func_039_69B0:: ; address name
     jp ChooseTarget_Cover
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wD80D, wDA78
 ChooseTarget_MouthShut_69B3:: ; heuristic: target of a pointer table; C0
 Func_039_69B3:: ; address name
@@ -5122,8 +5122,8 @@ Func_039_69B3:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus, wDA77
 ChooseTarget_SickLick_69B6:: ; heuristic: target of a pointer table; C0
 Func_039_69B6:: ; address name
@@ -5131,8 +5131,8 @@ Func_039_69B6:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wD8A7, wBattleStatus, wDA77
 ChooseTarget_LegSweep_69B9:: ; heuristic: target of a pointer table; C0
 Func_039_69B9:: ; address name
@@ -5140,8 +5140,8 @@ Func_039_69B9:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, wDA74
 ChooseTarget_NapAttack_69BC:: ; heuristic: target of a pointer table; C0
 Func_039_69BC:: ; address name
@@ -5149,8 +5149,8 @@ Func_039_69BC:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wDA74
 ChooseTarget_OddDance_69BF:: ; heuristic: follows a terminator; C0
 Func_039_69BF:: ; address name
@@ -5158,8 +5158,8 @@ Func_039_69BF:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC9
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1, hTemp2, hTemp3
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD8A7
 ChooseTarget_MetalCut_69C2:: ; heuristic: target of a pointer table; C0
 Func_039_69C2:: ; address name
@@ -5239,8 +5239,8 @@ Func_039_69F5:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, wDA76
 ChooseTarget_PoisonHit_69FB:: ; heuristic: target of a pointer table; C0
 Func_039_69FB:: ; address name
@@ -5248,8 +5248,8 @@ Func_039_69FB:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, wDA77
 ChooseTarget_Paralyze_69FE:: ; heuristic: target of a pointer table; C0
 Func_039_69FE:: ; address name
@@ -5257,8 +5257,8 @@ Func_039_69FE:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleStatus, wDA77
 ChooseTarget_LushLicks_6A01:: ; heuristic: target of a pointer table; C0
 Func_039_6A01:: ; address name
@@ -5266,34 +5266,34 @@ Func_039_6A01:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC9
-; writes: hFFD0, hFFC6, hFFC9, hFFC7, hFFC8
+; reads: wBattleActor, hTemp1, hTemp2, hTemp3
+; writes: hTempA, hTemp0, hTemp3, hTemp1, hTemp2
 ChooseTarget_Transform_6A04:: ; heuristic: target of a pointer table; C0
 Func_039_6A04:: ; address name
     jp ChooseTarget_Transform
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFD0, hFFC9, hFFCA, hFFC6
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB
-; points at: wD80E, wDA74, hFFC8, wBattleTargetChoice
+; reads: wBattleActor, hTemp1, hTemp2, hTempA, hTemp3, hTemp4, hTemp0
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
+; points at: wD80E, wDA74, hTemp2, wBattleTargetChoice
 ChooseTarget_Beat_6A07:: ; heuristic: follows a terminator; C0
 Func_039_6A07:: ; address name
     jp ChooseTarget_Beat
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActionId, wC58A, wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, ...
-; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hFFD0, hFFC6, ...
-; points at: hFFCE, wD80E, wDA72, wBattleTargetChoice
+; reads: wBattleActionId, wC58A, wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, ...
+; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hTempA, hTemp0, ...
+; points at: hTemp8, wD80E, wDA72, wBattleTargetChoice
 ChooseTarget_Blaze_6A0A:: ; heuristic: target of a pointer table; C0
 Func_039_6A0A:: ; address name
     jp ChooseTarget_Blaze
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 110 Berserker, 111 Ramming; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFCA, hFFC9, hFFC6, hFFD0, hFFC7, hFFC8
-; writes: hFFD0, hFFC6, hFFC9, hFFCA, hFFC7, hFFC8
+; reads: wBattleActor, hTemp4, hTemp3, hTemp0, hTempA, hTemp1, hTemp2
+; writes: hTempA, hTemp0, hTemp3, hTemp4, hTemp1, hTemp2
 ; points at: wD812, wDA75, wD813
 ChooseTarget_Berserker:: ; heuristic: target of a pointer table; C0
 Func_039_6A0D:: ; address name
@@ -5301,8 +5301,8 @@ Func_039_6A0D:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus, wDA74
 ChooseTarget_Sleep_6A10:: ; heuristic: follows a terminator; C0
 Func_039_6A10:: ; address name
@@ -5310,8 +5310,8 @@ Func_039_6A10:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wD80E, wDA74
 ChooseTarget_RobMagic_6A13:: ; heuristic: follows a terminator; C0
 Func_039_6A13:: ; address name
@@ -5319,8 +5319,8 @@ Func_039_6A13:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA72
 ChooseTarget_FireSlash_6A16:: ; heuristic: target of a pointer table; C0
 Func_039_6A16:: ; address name
@@ -5328,8 +5328,8 @@ Func_039_6A16:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
 ChooseTarget_BoltSlash_6A19:: ; heuristic: target of a pointer table; C0
 Func_039_6A19:: ; address name
@@ -5337,8 +5337,8 @@ Func_039_6A19:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
 ChooseTarget_VacuSlash_6A1C:: ; heuristic: target of a pointer table; C0
 Func_039_6A1C:: ; address name
@@ -5346,8 +5346,8 @@ Func_039_6A1C:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA73
 ChooseTarget_IceSlash_6A1F:: ; heuristic: target of a pointer table; C0
 Func_039_6A1F:: ; address name
@@ -5355,8 +5355,8 @@ Func_039_6A1F:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wDA73
 ChooseTarget_WindBeast_6A22:: ; heuristic: follows a terminator; C0
 Func_039_6A22:: ; address name
@@ -5364,22 +5364,22 @@ Func_039_6A22:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 103 GigaSlash; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wDA78
 ChooseTarget_GigaSlash_6A25:: ; heuristic: target of a pointer table; C0
 Func_039_6A25:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
     ld [wBattleDamageLo], a
     ld [wD873], a
 
@@ -5387,16 +5387,16 @@ Jump_039_6A41::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6A8E
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wDA78
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $0C
     rrca
     rrca
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr z, Jump_039_6A69
     jr c, Jump_039_6A8E
@@ -5404,7 +5404,7 @@ Jump_039_6A41::
     ld [wBattleDamageLo], a
     ld [wD873], a
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_039_6A69::
     push bc
@@ -5427,7 +5427,7 @@ Jump_039_6A69::
     ld a, h
     ld [wD873], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_6A8E::
     inc c
@@ -5438,8 +5438,8 @@ Jump_039_6A8E::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wD80F, wDA72
 ChooseTarget_AquaCut_6A96:: ; heuristic: target of a pointer table; C0
 Func_039_6A96:: ; address name
@@ -5447,8 +5447,8 @@ Func_039_6A96:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, wBattleDamageLo, wD873
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wBattleDamageLo, wD873
+; reads: wBattleActor, hTemp1, wBattleDamageLo, wD873
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wBattleDamageLo, wD873
 ; points at: wDA72
 ChooseTarget_Watershot_6A99:: ; heuristic: follows a terminator; C0
 Func_039_6A99:: ; address name
@@ -5456,29 +5456,29 @@ Func_039_6A99:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 173 PanicAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleStatus, wDA75
 ChooseTarget_PanicAll:: ; heuristic: target of a pointer table; C0
 Func_039_6A9C:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
 
 Jump_039_6AB4::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_6AF2
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
@@ -5490,12 +5490,12 @@ Jump_039_6AB4::
     or a, a
     jr nz, Jump_039_6AF2
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [hl]
     and a, $22
     jr nz, Jump_039_6AF2
     ld a, c
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld hl, wDA75
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $C0
@@ -5504,13 +5504,13 @@ Jump_039_6AB4::
     cp a, $03
     jr z, Jump_039_6AF2
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, e
     jr c, Jump_039_6AF2
     ld a, e
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_039_6AF2::
     inc c
@@ -5521,8 +5521,8 @@ Jump_039_6AF2::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFCC, hFFC7, hFFC9, hFFC8, hFFCB, wD874, wD875, ...
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, wD874, ...
+; reads: wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, wD874, wD875, ...
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wD874, ...
 ; points at: wDA76, wBattleTargetChoice
 ChooseTarget_MegaMagic_6AFA:: ; heuristic: target of a pointer table; C0
 Func_039_6AFA:: ; address name
@@ -5530,9 +5530,9 @@ Func_039_6AFA:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
-; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: wBattleStatus, hFFC6, hFFC7, wBattleTargetChoice
+; reads: wBattleActor, hTemp0, hTemp1, wC5E7, hTemp2
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: wBattleStatus, hTemp0, hTemp1, wBattleTargetChoice
 ChooseTarget_Antidote_6AFD:: ; heuristic: target of a pointer table; C0
 Func_039_6AFD:: ; address name
     ld a, [wBattleActor]
@@ -5543,9 +5543,9 @@ Func_039_6AFD:: ; address name
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
-; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: hFFC6, hFFC7, wBattleTargetChoice
+; reads: wBattleActor, hTemp0, hTemp1, wC5E7, hTemp2
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: hTemp0, hTemp1, wBattleTargetChoice
 ChooseTarget_Upper_6B0A:: ; heuristic: target of a pointer table; C0
 Func_039_6B0A:: ; address name
     ld a, [wBattleActor]
@@ -5553,11 +5553,11 @@ Func_039_6B0A:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, $FF
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_6B1D::
     push bc
@@ -5570,10 +5570,10 @@ Jump_039_6B1D::
     pop bc
     call CompareHLToBC
     jr z, Jump_039_6B41
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, [hl]
     inc [hl]
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     pop bc
     ld [hl], c
@@ -5584,7 +5584,7 @@ Jump_039_6B41::
     inc c
     dec b
     jr nz, Jump_039_6B1D
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jp nz, PickWeightedTargetCandidate
     ld a, [wBattleActor]
@@ -5597,9 +5597,9 @@ Jump_039_6B41::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC6, hFFC7, wC5E7, hFFC8
-; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: hFFC6, hFFC7, wBattleTargetChoice
+; reads: wBattleActor, hTemp0, hTemp1, wC5E7, hTemp2
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: hTemp0, hTemp1, wBattleTargetChoice
 ChooseTarget_Speed_6B5D:: ; heuristic: follows a terminator; C0
 Func_039_6B5D:: ; address name
     ld a, [wBattleActor]
@@ -5607,11 +5607,11 @@ Func_039_6B5D:: ; address name
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, $FF
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_6B70::
     push bc
@@ -5624,10 +5624,10 @@ Jump_039_6B70::
     pop bc
     call CompareHLToBC
     jr z, Jump_039_6B94
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, [hl]
     inc [hl]
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     pop bc
     ld [hl], c
@@ -5638,7 +5638,7 @@ Jump_039_6B94::
     inc c
     dec b
     jr nz, Jump_039_6B70
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jp nz, PickWeightedTargetCandidate
     ld a, [wBattleActor]
@@ -5651,9 +5651,9 @@ Jump_039_6B94::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC6
-; writes: hFFC6, hFFC7, hFFC8, hFFC9
-; points at: hFFC6, hFFC7
+; reads: wBattleActor, hTemp0
+; writes: hTemp0, hTemp1, hTemp2, hTemp3
+; points at: hTemp0, hTemp1
 ChooseTarget_Sap_6BB0:: ; heuristic: target of a pointer table; C0
 Func_039_6BB0:: ; address name
     ld de, GetBattleDEF_Bank39
@@ -5667,11 +5667,11 @@ Jump_039_6BE3::
     ld b, $03
     call AddAx9ToHL
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, $FF
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_6BF4::
     ld a, c
@@ -5681,10 +5681,10 @@ Jump_039_6BF4::
     and a, d
     jr z, Jump_039_6C0E
     push hl
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, [hl]
     inc [hl]
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     ld [hl], c
     pop hl
@@ -5695,7 +5695,7 @@ Jump_039_6C0E::
     inc c
     dec b
     jr nz, Jump_039_6BF4
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jp nz, PickWeightedTargetCandidate
     ld a, [wBattleActor]
@@ -5713,11 +5713,11 @@ Jump_039_6C30::
     ld c, a
     ld b, $03
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, $FF
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_6C45::
     ld a, c
@@ -5734,10 +5734,10 @@ Jump_039_6C45::
     jr c, Jump_039_6C67
 
 Jump_039_6C59::
-    ld hl, hFFC6
+    ld hl, hTemp0
     ld a, [hl]
     inc [hl]
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     ld [hl], c
 
@@ -5745,7 +5745,7 @@ Jump_039_6C67::
     inc c
     dec b
     jr nz, Jump_039_6C45
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jp z, TargetFoeWeightedBySlotOrder
     call PickWeightedTargetCandidate
@@ -5753,8 +5753,8 @@ Jump_039_6C67::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC9, hFFCA, wC5E7, hFFC6
-; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1, hTemp2, hTemp3, hTemp4, wC5E7, hTemp0
+; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleTargetChoice
 ChooseTarget_Heal_6C75:: ; heuristic: target of a pointer table; C0
 Func_039_6C75:: ; address name
@@ -5763,12 +5763,12 @@ Func_039_6C75:: ; address name
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
 
 Jump_039_6C8A::
     push bc
@@ -5781,20 +5781,20 @@ Jump_039_6C8A::
     call GetBattleMaxHP_Bank39
     pop bc
     call DivideHLByBC
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     sub a, l
     ld e, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     sbc a, h
     ld d, a
     jr c, Jump_039_6CC3
     ld a, d
     or a, e
     jr nz, Jump_039_6CD4
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     sub a, c
     ld e, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     sbc a, b
     ld d, a
     jr c, Jump_039_6CC3
@@ -5808,16 +5808,16 @@ Jump_039_6C8A::
 
 Jump_039_6CC3::
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, b
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     pop bc
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push bc
 
 Jump_039_6CD4::
@@ -5829,14 +5829,14 @@ Jump_039_6CD4::
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [hl], a
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 27 MPass, 28 MPassmore, 29 MPassmost; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, hFFC7, hFFC8, hFFC9, hFFCA, wC5E7, hFFC6
-; writes: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: wBattleActor, hTemp1, hTemp2, hTemp3, hTemp4, wC5E7, hTemp0
+; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 ; points at: wBattleTargetChoice
 ChooseTarget_MPass:: ; heuristic: target of a pointer table; C0
 Func_039_6CE9:: ; address name
@@ -5845,12 +5845,12 @@ Func_039_6CE9:: ; address name
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
-    ldh [hFFCA], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
+    ldh [hTemp4], a
 
 Jump_039_6CFE::
     push bc
@@ -5866,20 +5866,20 @@ Jump_039_6CFE::
     call GetBattleMaxMP_Bank39
     pop bc
     call DivideHLByBC
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     sub a, l
     ld e, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     sbc a, h
     ld d, a
     jr c, Jump_039_6D3D
     ld a, d
     or a, e
     jr nz, Jump_039_6D4E
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     sub a, c
     ld e, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     sbc a, b
     ld d, a
     jr c, Jump_039_6D3D
@@ -5893,16 +5893,16 @@ Jump_039_6CFE::
 
 Jump_039_6D3D::
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, b
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     pop bc
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push bc
 
 Jump_039_6D4E::
@@ -5914,7 +5914,7 @@ Jump_039_6D4E::
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_6D68
     ld a, [wBattleActor]
@@ -5936,15 +5936,15 @@ Func_039_6D6A:: ; address name
 
 ; wD87F = 0, hFFC7 = 0, stores HP + DEF of three slots from the target in wD874 and falls into PickWeakestEstimatedTarget (E-0126)
 ; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
-; reads: wBattleTarget, wD874, wD875, hFFC6, wC5E7
-; writes: wD87F, hFFC7, hFFC6
+; reads: wBattleTarget, wD874, wD875, hTemp0, wC5E7
+; writes: wD87F, hTemp1, hTemp0
 ; points at: wD874, wBattleTarget
 EstimateAndPickWeakestTarget::
 Func_039_6D74:: ; address name
     ld a, $00
     ld [wD87F], a
     xor a, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld b, $03
     ld a, [wBattleTarget]
     ld c, a
@@ -5957,13 +5957,13 @@ Jump_039_6D82::
 
 ; picks the smallest of the three wD874 estimates (ties broken randomly) and adds its index to wBattleTarget (E-0125)
 ; 3 call sites from 3 routines (e.g. EstimateThreeTargets, ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
-; reads: wD874, wD875, hFFC6, wC5E7
-; writes: hFFC6
+; reads: wD874, wD875, hTemp0, wC5E7
+; writes: hTemp0
 ; points at: wD874, wBattleTarget
 PickWeakestEstimatedTarget::
 Func_039_6D89:: ; address name
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wD874]
     ld c, a
     ld a, [wD875]
@@ -5984,7 +5984,7 @@ Jump_039_6DAB::
     ld b, h
     ld c, l
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     jr Jump_039_6DBC
 
 Jump_039_6DB2::
@@ -5998,14 +5998,14 @@ Jump_039_6DBC::
     dec d
     jr nz, Jump_039_6D97
     ld hl, wBattleTarget
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, [hl]
     ld [hl], a
     ret
 
 ; slot C: stores HP + DEF (DEF halved when hFFC7 is set and bit 2 of its wD812 byte is set) in wD874[C & 3], or $FFFF when empty (E-0124)
 ; 2 call sites from 2 routines (e.g. EstimateAndPickWeakestTarget, EstimateThreeTargets)
-; reads: hFFC7
+; reads: hTemp1
 ; points at: wD812, wD874
 StoreSlotHPPlusDEFToWD874::
 Func_039_6DC8:: ; address name
@@ -6016,7 +6016,7 @@ Func_039_6DC8:: ; address name
     push hl
     ld a, c
     call GetBattleDEF_Bank39
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr z, Jump_039_6DED
     push hl
@@ -6167,12 +6167,12 @@ Func_039_6E61:: ; address name
 ; hFFC7 = 1; for three slots from the target stores HP + DEF in wD874, or $FFFF for slots with wD80F status bits $C0 or $0C; then Func_039_6D89 (E-0124)
 ; 4 call sites from 3 routines (e.g. ChooseTarget_SquallHit_543C, ChooseTarget_GigaSlash, ChooseTarget_SquallHit)
 ; reads: wBattleTarget
-; writes: hFFC7
+; writes: hTemp1
 ; points at: wD80F
 EstimateThreeTargets::
 Func_039_6E8B:: ; address name
     ld a, $01
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld b, $03
     ld a, [wBattleTarget]
     ld c, a
@@ -6202,27 +6202,27 @@ Jump_039_6EAE::
 
 ; only called from ChooseTarget_Heal (E-0047)
 ; 1 call site from 1 routine (e.g. ChooseTarget_Heal)
-; reads: hFFC7, hFFC6, hFFC8, wBattleActor, wBattleTarget
-; writes: hFFC6, hFFC7, hFFC8, wBattleTarget
-; points at: wD874, wD87D, hFFC7, wBattleTargetChoice
+; reads: hTemp1, hTemp0, hTemp2, wBattleActor, wBattleTarget
+; writes: hTemp0, hTemp1, hTemp2, wBattleTarget
+; points at: wD874, wD87D, hTemp1, wBattleTargetChoice
 ChooseTarget_Heal_Sub01::
 Func_039_6EB6:: ; address name
     ld a, $00
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, $01
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, $02
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_039_6EC2::
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld hl, wD874
     add a, a
     add_a_to_hl
     ld c, [hl]
     inc hl
     ld b, [hl]
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld hl, wD874
     add a, a
     add_a_to_hl
@@ -6230,14 +6230,14 @@ Jump_039_6EC2::
     call CompareHLToBC
     jr c, Jump_039_6F06
     jr nz, Jump_039_6F0A
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld hl, wD87D
     add a, a
     add_a_to_hl
     ld c, [hl]
     inc hl
     ld b, [hl]
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld hl, wD87D
     add a, a
     add_a_to_hl
@@ -6246,17 +6246,17 @@ Jump_039_6EC2::
     jr nc, Jump_039_6F0A
 
 Jump_039_6F06::
-    ldh a, [hFFC7]
-    ldh [hFFC6], a
+    ldh a, [hTemp1]
+    ldh [hTemp0], a
 
 Jump_039_6F0A::
-    ld hl, hFFC7
+    ld hl, hTemp1
     inc [hl]
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     dec a
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     jr nz, Jump_039_6EC2
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
     ld a, [wBattleActor]
     and a, $04
@@ -6377,7 +6377,7 @@ Jump_039_6FC0::
 
 ; wBattleTargetChoice[2 * actor] = (hFFC6, or hFFC9 when hFFC6 is $FF) | hFFD0 (the two-choice form of SetActorTargetFromHRAMChoice) (E-0078)
 ; 5 call sites from 5 routines (e.g. TargetRandomFoeOfFamilyD, ChooseTarget_Ramming, ChooseTarget_MetalCut, TargetWeakestFoeOfFamilyD, ...)
-; reads: wBattleActor, hFFC6, hFFC9, hFFD0
+; reads: wBattleActor, hTemp0, hTemp3, hTempA
 ; points at: wBattleTargetChoice
 SetActorTargetFromHFFC6OrHFFC9::
 Func_039_6FC8:: ; address name
@@ -6385,21 +6385,21 @@ Func_039_6FC8:: ; address name
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_6FDC
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
 
 Jump_039_6FDC::
     ld e, a
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, e
     ld [hl], a
     ret
 
 ; HL = wBattleTargetChoice + 2 * wBattleActor; A = hFFC6, or hFFC9 when hFFC6 is $FF, or hFFC8 when both are $FF; stores A | hFFD0 at HL. What the bytes mean is not known (E-0060)
 ; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_LushLicks, ChooseTarget_GigaSlash, ChooseTarget_NapAttack, ...)
-; reads: wBattleActor, hFFC6, hFFC9, hFFC8, hFFD0
+; reads: wBattleActor, hTemp0, hTemp3, hTemp2, hTempA
 ; points at: wBattleTargetChoice
 SetActorTargetFromHRAMChoice::
 Func_039_6FE2:: ; address name
@@ -6407,24 +6407,24 @@ Func_039_6FE2:: ; address name
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_6FFC
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     cp a, $FF
     jr nz, Jump_039_6FFC
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
 
 Jump_039_6FFC::
     ld e, a
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, e
     ld [hl], a
     ret
 
 ; wBattleTargetChoice[2 * actor] = (the first of hFFC6, hFFCA, hFFC9 that is not $FF, else hFFC8) | hFFD0 (the four-choice form of SetActorTargetFromHRAMChoice) (E-0096)
 ; 5 call sites from 5 routines (e.g. ChooseTarget_PanicAll, ChooseTarget_MouthShut, ChooseTarget_LegSweep, ChooseTarget_SickLick, ...)
-; reads: wBattleActor, hFFC6, hFFCA, hFFC9, hFFC8, hFFD0
+; reads: wBattleActor, hTemp0, hTemp4, hTemp3, hTemp2, hTempA
 ; points at: wBattleTargetChoice
 SetActorTargetFromHRAMChoice4::
 Func_039_7002:: ; address name
@@ -6432,27 +6432,27 @@ Func_039_7002:: ; address name
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_7022
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     cp a, $FF
     jr nz, Jump_039_7022
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     cp a, $FF
     jr nz, Jump_039_7022
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
 
 Jump_039_7022::
     ld e, a
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, e
     ld [hl], a
     ret
 
 ; only called from ChooseTarget_Cover (E-0047)
 ; 1 call site from 1 routine (e.g. ChooseTarget_Cover)
-; reads: wBattleActor, hFFC6, hFFCB, hFFCA, hFFC9, hFFD0
+; reads: wBattleActor, hTemp0, hTemp5, hTemp4, hTemp3, hTempA
 ; points at: wBattleTargetChoice
 ChooseTarget_Cover_Sub01::
 Func_039_7028:: ; address name
@@ -6460,44 +6460,44 @@ Func_039_7028:: ; address name
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr nz, Jump_039_7048
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     cp a, $FF
     jr nz, Jump_039_7048
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     cp a, $FF
     jr nz, Jump_039_7048
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
 
 Jump_039_7048::
     ld e, a
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, e
     ld [hl], a
     ret
 
 ; hFFC6 = candidate count, hFFC7-hFFC9 = candidates in priority order: target = the first for one; with two the first when wC5E7 < $AB (171/256), else the second; with three the first when wC5E7 < $80, the second when < $D5, else the third (128, 85 and 43 of 256). Writes wBattleTargetChoice[2 * actor]; with no candidates it stores hFFC7 ($FF) (E-0061)
 ; 3 call sites from 3 routines (e.g. ChooseTarget_SquallHit_66C5, ChooseTarget_Sap_6BB0, TargetFoeWeightedBySlotOrder)
-; reads: hFFC6, hFFC7, wBattleActor, wC5E7, hFFC8
-; points at: wBattleTargetChoice, hFFC7
+; reads: hTemp0, hTemp1, wBattleActor, wC5E7, hTemp2
+; points at: wBattleTargetChoice, hTemp1
 PickWeightedTargetCandidate::
 Func_039_704E:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $03
     jr z, Jump_039_7069
     cp a, $02
     jr z, Jump_039_705C
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     jr Jump_039_7084
 
 Jump_039_705C::
     ld a, [wC5E7]
     cp a, $AB
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     jr c, Jump_039_7084
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     jr Jump_039_7084
 
 Jump_039_7069::
@@ -6512,7 +6512,7 @@ Jump_039_7069::
 
 Jump_039_707A::
     ld a, b
-    ld hl, hFFC7
+    ld hl, hTemp1
     add_a_to_hl
     ld a, [hl]
 
@@ -6527,22 +6527,22 @@ Jump_039_7084::
 
 ; D = family: among the actor's present opposite slots whose species family (LoadSpeciesFamily) is D, targets the one with the smallest HP + DEF; when none matches, the last present foe (hFFC9) is used (SetActorTargetFromHFFC6OrHFFC9). Used by the family-slaying moves' target routines (E-0096)
 ; 9 call sites from 9 routines (e.g. ChooseTarget_CleanCut, ChooseTarget_ZombieCut, ChooseTarget_DevilCut, ChooseTarget_Shears, ...)
-; reads: wBattleActor, wSpeciesRecord, hFFC7, hFFC8, hFFC9
-; writes: hFFD0, hFFC6, hFFC7, hFFC8, hFFC9, wSpeciesIdLo, wSpeciesIdHi
+; reads: wBattleActor, wSpeciesRecord, hTemp1, hTemp2, hTemp3
+; writes: hTempA, hTemp0, hTemp1, hTemp2, hTemp3, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleMonsterId
 TargetWeakestFoeOfFamilyD::
 Func_039_7093:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC7], a
-    ldh [hFFC8], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp1], a
+    ldh [hTemp2], a
+    ldh [hTemp3], a
 
 Jump_039_70A9::
     ld a, c
@@ -6550,7 +6550,7 @@ Jump_039_70A9::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_70F4
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
@@ -6573,18 +6573,18 @@ Jump_039_70A9::
     call GetBattleDEF_Bank39
     pop bc
     add hl, bc
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
     jr nc, Jump_039_70F4
     ld a, l
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, h
-    ldh [hFFC8], a
-    ldh a, [hFFC9]
-    ldh [hFFC6], a
+    ldh [hTemp2], a
+    ldh a, [hTemp3]
+    ldh [hTemp0], a
 
 Jump_039_70F4::
     pop bc
@@ -6596,20 +6596,20 @@ Jump_039_70F4::
 
 ; D = family: picks among the actor's present opposite slots whose species family is D, using AdvanceRandom when more than one matches (the choice rule is not read to the end); falls back to the last present foe; used by ChooseTarget routines of family-slaying moves (CleanCut, ZombieCut, DevilCut, Shears, ...) (E-0096)
 ; 9 call sites from 9 routines (e.g. ChooseTarget_CleanCut_69E3, ChooseTarget_ZombieCut_69DD, ChooseTarget_DevilCut_69D7, ChooseTarget_Shears_69F5, ...)
-; reads: wBattleActor, wSpeciesRecord, hFFC6, wC5E7, hFFC9
-; writes: hFFD0, hFFC6, hFFC9, wSpeciesIdLo, wSpeciesIdHi
+; reads: wBattleActor, wSpeciesRecord, hTemp0, wC5E7, hTemp3
+; writes: hTempA, hTemp0, hTemp3, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleMonsterId
 TargetRandomFoeOfFamilyD::
 Func_039_70FD:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld c, a
     ld b, $03
     ld a, $FF
-    ldh [hFFC6], a
-    ldh [hFFC9], a
+    ldh [hTemp0], a
+    ldh [hTemp3], a
 
 Jump_039_710F::
     ld a, c
@@ -6617,7 +6617,7 @@ Jump_039_710F::
     ld a, c
     call CarryUnlessWDA63SlotEmpty
     jr c, Jump_039_714C
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
@@ -6631,7 +6631,7 @@ Jump_039_710F::
     ld a, [wSpeciesRecord]
     cp a, d
     jr nz, Jump_039_714C
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr z, Jump_039_7148
     call AdvanceRandom
@@ -6640,8 +6640,8 @@ Jump_039_710F::
     jr z, Jump_039_714C
 
 Jump_039_7148::
-    ldh a, [hFFC9]
-    ldh [hFFC6], a
+    ldh a, [hTemp3]
+    ldh [hTemp0], a
 
 Jump_039_714C::
     pop bc
@@ -6653,13 +6653,13 @@ Jump_039_714C::
 
 ; only called from ChooseTarget_Blaze (E-0047)
 ; 1 call site from 1 routine (e.g. ChooseTarget_Blaze)
-; reads: hFFCE, hFFCF
+; reads: hTemp8, hTemp9
 ChooseTarget_Blaze_Sub01::
 Func_039_7155:: ; address name
     push af
-    ldh a, [hFFCE]
+    ldh a, [hTemp8]
     ld l, a
-    ldh a, [hFFCF]
+    ldh a, [hTemp9]
     ld h, a
     pop af
     or a, a

@@ -4,7 +4,7 @@ SECTION "Bank 11", ROMX[$4000], BANK[$11]
 ; unless a special mode is set (wCC44 bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wCCEA = 1, sound effect $60 is queued, and the entry's new hMapId, hFF8F, hFF92 and position (wC8C8/wC8C9) are stored
 ; 6 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: wCC44, hMapId, hPlayerFacing, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8CA, ...
-; writes: wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hFF8C, ...
+; writes: wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hPlayerStateFlags, ...
 ; points at: wC5E0
 CheckWarpAtPlayer::
 Func_011_4002:: ; address name
@@ -141,9 +141,9 @@ Jump_011_4088::
     ld a, [de]
     bit 7, a
     jr z, Jump_011_40F9
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $40
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, [wC8C9]
     add a, $08
     ld [wC8C9], a
@@ -167,9 +167,9 @@ Jump_011_40D2::
     ld a, [de]
     bit 7, a
     jr z, Jump_011_40F9
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $40
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, [wC8C9]
     add a, $08
     ld [wC8C9], a
@@ -196,9 +196,9 @@ Jump_011_4105::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     farcall ClearWC935IfBit7AndNot6
     pop de
     ld c, $01
@@ -206,8 +206,8 @@ Jump_011_4105::
 
 ; special maps use RunWCC44Type_596F; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
-; reads: wCC44, hMapId, hFF8C, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8C9
-; writes: hFF8C, wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
+; reads: wCC44, hMapId, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wC8C9
+; writes: hPlayerStateFlags, wC8CA, wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
 ; points at: wC5E0
 CheckWarpsAtPlayerPosition::
 Func_011_4130:: ; address name
@@ -239,7 +239,7 @@ Jump_011_4152::
     cp a, $80
     jr nz, Jump_011_4199
     pop de
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 7, a
     jr z, Jump_011_4196
     ldh a, [hMapId]
@@ -266,9 +266,9 @@ Jump_011_4152::
     jr Jump_011_4196
 
 Jump_011_4190::
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $7F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
 
 Jump_011_4196::
     ld c, $00
@@ -313,7 +313,7 @@ Jump_011_419F::
     jr nz, Jump_011_41DA
 
 Jump_011_41CD::
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 7, a
     jr z, Jump_011_41D7
     pop de
@@ -367,9 +367,9 @@ Jump_011_41E6::
     ld a, [de]
     bit 7, a
     jr z, Jump_011_4229
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $40
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, [wC8C9]
     add a, $08
     ld [wC8C9], a
@@ -399,9 +399,9 @@ Jump_011_4235::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     farcall ClearWC935IfBit7AndNot6
     pop de
     xor a, a
@@ -527,7 +527,7 @@ Jump_011_431E::
 
 ; script command: plays sound $60 and reads a warp destination at DE (wC8C8/9 from the nibbles of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wC5E0 += 1, wModeState = 4, updates hFF8C and returns C = 1 (E-0121)
 ; 1 call site from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
-; reads: hFF8C
+; reads: hPlayerStateFlags
 ; writes: wCCEA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wC8C6, wModeState, wC8C5, ...
 ; points at: wC5E0
 ScriptWarpToMapFromBytesAtDE::
@@ -562,10 +562,10 @@ Func_011_4340:: ; address name
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $20
     and a, $7F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     farcall ClearWC935IfBit7AndNot6
     pop de
     ld c, $01
@@ -573,8 +573,8 @@ Func_011_4340:: ; address name
 
 ; wC8CA = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wC8C5, updates hFF8C and sets wC8C6 = 1 (E-0124)
 ; 2 call sites from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
-; reads: hFF8C
-; writes: wC8CA, wModeState, wC8C5, hFF8C, wC8C6
+; reads: hPlayerStateFlags
+; writes: wC8CA, wModeState, wC8C5, hPlayerStateFlags, wC8C6
 StartWarpTransition::
 Func_011_438F:: ; address name
     ld a, $F0
@@ -587,21 +587,21 @@ Func_011_438F:: ; address name
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $20
     and a, $7F
-    ldh [hFF8C], a
-    ldh a, [hFF8C]
+    ldh [hPlayerStateFlags], a
+    ldh a, [hPlayerStateFlags]
     and a, $FE
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     ret
 
 ; for maps from $20 looks hMapId up in the 4-byte table Data_011_4480 and runs Func_011_43FA with its entry (or wC88F); unlisted maps clear bit 5 of hFF8C and return C = 0 (E-0125)
 ; 1 call site from 1 routine (e.g. CheckWarpsAtPlayerPosition)
-; reads: hMapId, hFF8C, wC88E, wC891
-; writes: hFF8C
+; reads: hMapId, hPlayerStateFlags, wC88E, wC891
+; writes: hPlayerStateFlags
 ; points at: wC88F
 CheckMapExitTable4480::
 Func_011_43BB:: ; address name
@@ -618,9 +618,9 @@ Jump_011_43C7::
     jr nz, Jump_011_43D5
 
 Jump_011_43CC::
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $DF
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
@@ -655,7 +655,7 @@ Jump_011_43F3::
 
 ; only called from CheckMapExitTable4480 (E-0047)
 ; 2 call sites from 1 routine (e.g. CheckMapExitTable4480)
-; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hFF8C
+; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: wCCEA, hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC88B, wC8C6, ...
 ; points at: wC5E0
 CheckMapExitTable4480_Sub01::
@@ -681,16 +681,16 @@ Func_011_43FA:: ; address name
     ld a, [de]
     cp a, c
     jr nz, Jump_011_4422
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 5, a
     jr z, Jump_011_442B
     ld c, $00
     ret
 
 Jump_011_4422::
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $DF
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
@@ -727,9 +727,9 @@ Jump_011_442B::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $20
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     farcall ClearWC935IfBit7AndNot6
     ld c, $01
     ret

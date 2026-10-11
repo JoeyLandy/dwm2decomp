@@ -112,6 +112,11 @@ class SymbolicOperands(unittest.TestCase):
                         continue  # a small negative number added to HL, not an address
                     if int(m.group(1), 16) == 0xFFFF:
                         continue  # -1 as a 16-bit number, not the interrupt-enable register
+                    nxt = [l.split(";")[0].strip() for l in lines[n:n + 6] if l.startswith("    ")][:2]
+                    low = {"hl": "l", "de": "e", "bc": "c"}.get(reg)
+                    if (int(m.group(1), 16) >= 0xFF00 and len(nxt) == 2 and nxt[0] == f"ld a, {low}"
+                            and re.search(r"\[(hPlayerStepD[XY]Lo|hFF9[BD])\]", nxt[1])):
+                        continue  # a step delta stored in the player movement bytes (E-0132)
                     if forbidden(int(m.group(1), 16), True):
                         bad.append(f"{f.name}:{n} {code}")
         self.assertGreater(symbolic, 10000, "expected the source to use many symbolic operands")

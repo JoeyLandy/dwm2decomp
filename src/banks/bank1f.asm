@@ -1220,7 +1220,7 @@ Jump_01F_7436::
     ld [wC526], a
     call UploadBGPalettes
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call BGMapAddressAtScroll_Bank1F
     ld de, $0161
     add hl, de

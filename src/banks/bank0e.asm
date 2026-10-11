@@ -2617,14 +2617,14 @@ Jump_00E_5FF4::
 
 ; for the record at HL returns 9 * grade(field $6F) + 3 * grade(field $72) + grade(field $70) (GradeHFFC6_Bank0E); compare CombinedPersonalityLevelIndex (E-0121)
 ; 2 call sites from 1 routine (e.g. PersonalityPairValueToWD7F5)
-; writes: hFFC6
+; writes: hTemp0
 CombinedPersonalityLevelIndexOfRecord::
 Func_00E_5FF9:: ; address name
     push hl
     ld a, $6F
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call GradeHFFC6_Bank0E
     ld a, $09
     call Multiply8
@@ -2634,7 +2634,7 @@ Func_00E_5FF9:: ; address name
     ld a, $72
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call GradeHFFC6_Bank0E
     ld a, c
     add a, a
@@ -2645,7 +2645,7 @@ Func_00E_5FF9:: ; address name
     ld a, $70
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call GradeHFFC6_Bank0E
     ld a, c
     add a, b
@@ -2653,10 +2653,10 @@ Func_00E_5FF9:: ; address name
 
 ; the same 13 bytes as GradeHFFC6 (00:23BD)
 ; 3 call sites from 1 routine (e.g. CombinedPersonalityLevelIndexOfRecord)
-; reads: hFFC6
+; reads: hTemp0
 GradeHFFC6_Bank0E::
 Func_00E_6032:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, $00
     cp a, $C0
     ret nc
@@ -2691,7 +2691,7 @@ Func_00E_611B:: ; address name
 
 ; loads word field wD7F5 of record A (LoadSRAMRecordWord) and falls into DrawSpeciesAndFamilyIconForHFFC6 (E-0126)
 ; 1 call site from 1 routine (e.g. LoadRecordWordFieldAndContinue710A)
-; reads: wD7F5, hFFC6, hFFC7, wD7F4
+; reads: wD7F5, hTemp0, hTemp1, wD7F4
 ; writes: wD7F6, wD7F7, wD09D, wD09E
 LoadRecordWordFieldWD7F5AndShowIcon::
 Func_00E_612E:: ; address name
@@ -2704,13 +2704,13 @@ Func_00E_612E:: ; address name
 
 ; wD7F6/7 = hFFC6/7, runs Func_00E_615A, then loads the family icon tile for wD7F5 & $0F into tile wD7F4 (E-0126)
 ; 1 call site from 1 routine (e.g. DrawSpeciesIconForWCA2BEntry)
-; reads: hFFC6, hFFC7, wD7F5, wD7F4
+; reads: hTemp0, hTemp1, wD7F5, wD7F4
 ; writes: wD7F6, wD7F7, wD09D, wD09E
 DrawSpeciesAndFamilyIconForHFFC6::
 Func_00E_6138:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wD7F6], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [wD7F7], a
     call FamilyForSpeciesIdWD7F6
     ld a, [wD7F5]

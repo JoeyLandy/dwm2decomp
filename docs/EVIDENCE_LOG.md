@@ -1494,6 +1494,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - These are the next readability fronts.
 - Binary verification: build/run93 PASS, SHA-256 8e38a742...766d4e, 0 differing bytes; tests: see the commit.
 
+### E-0132 — RAM naming begins: HRAM, buffers, constants
+
+- Kind: OBSERVATION (reading; C1) + DECISION (generator rules).
+- **Measure.** `tools/rank_unnamed.py --ram` counts RAM operands that still use an address name (`wXXXX`, `hFFXX`, `sXXXX`). Baseline: 1,611 addresses, 31,337 uses.
+- **Constants, not addresses.** `ld hl, $FFF0` / `$FF80` / `$FFF8` / `$FF70`, when immediately split with `ld a, l` into hFF9B or hFF9D, are step deltas (-16, -128, -8, -144), not HRAM or `rSVBK`. The generator now keeps them numeric, and `SymbolicOperands` accepts them.
+- **Named buffers.** A `config/symbols.json` entry may carry a `size`. Addresses inside it render as `Name + $offset` unless they have their own name. New buffers:
+  - wShadowOAM ($C000, $A0);
+  - wScreenTileBuffer ($C198, $240, the size of its clear);
+  - wBGPaletteCopy ($C0F0);
+  - the message text slots wTextBuf0-3 ($C130-$C16F) and wTextNumber ($C17E).
+- **HRAM (70 names).**
+  - Player movement: hPlayerStateFlags, hPlayerTurnDelay, hPlayerStepDX/DY.
+  - Player sprite override and its timer.
+  - Window position (hWindowX/Y, copied to rWX/rWY).
+  - Metasprite builder temporaries, decompressor header bytes, and the general argument bytes hTemp0-hTempA ($FFC6-$FFD0).
+  - The sound engine's 32-byte channel copy at $FFD8 (each slot is copied in and out by SoundTick); fields are named from the track commands that set them ($A0-$AC, $Cx, $Dx/$Ex).
+- Result: 1,313 address-named RAM addresses remain (26,306 uses).
+- Binary verification: build/run94 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

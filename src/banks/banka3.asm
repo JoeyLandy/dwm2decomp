@@ -71,12 +71,12 @@ Jump_0A3_406F::
 
 ; runs Func_0A3_414F, then wDA5B[hFFC6] = 3 (E-0122)
 ; 22 call sites from 21 routines (e.g. ApplyActionResultAndMarkFormation, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
-; reads: hFFC6
+; reads: hTemp0
 ; points at: wDA5B
 RunA3414FAndMarkWDA5B3::
 Func_0A3_413F:: ; address name
     call ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld hl, wDA5B
     add_a_to_hl
     ld [hl], $03
@@ -85,7 +85,7 @@ Func_0A3_413F:: ; address name
 ; hFFC6 = the slot for the actor through its side's wC953 formation (Data_0A3_4181), $FF when none (E-0124)
 ; 17 call sites from 14 routines (e.g. RunA3414FAndMarkWDA5B3, ApplyActionResultAndMarkFormation, CheckFormationPartnersCanAct, PayActorMPCost, ...)
 ; reads: wBattleActor
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wC953
 ActorFormationSlotToHFFC6::
 Func_0A3_414F:: ; address name
@@ -115,7 +115,7 @@ Jump_0A3_417C::
     add a, b
 
 Jump_0A3_417D::
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop bc
     ret
 
@@ -170,13 +170,13 @@ Jump_0A3_41B5::
 
 ; only called from SaveActionChoicesAndPickFormations (E-0047)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
-; reads: wBattleActor, hFFC6, wC58A
-; writes: hFFC6
+; reads: wBattleActor, hTemp0, wC58A
+; writes: hTemp0
 SaveActionChoicesAndPickFormations_Sub01::
 Func_0A3_41CF:: ; address name
     ld a, [wBattleActor]
     and a, $04
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld b, $00
     ld hl, Data_0A3_4289
 
@@ -200,10 +200,10 @@ Jump_0A3_41E4::
     ld a, [de]
     cp a, c
     jr nz, Jump_0A3_4257
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call CheckSlotStatusBlock
     jr c, Jump_0A3_4257
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_BankA3
     jr nz, Jump_0A3_4257
 
@@ -218,11 +218,11 @@ Jump_0A3_41FD::
     ld a, [de]
     cp a, c
     jr nz, Jump_0A3_4257
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
     call CheckSlotStatusBlock
     jr c, Jump_0A3_4257
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
     call SlotHasStatus3Or4Bits_BankA3
     jr nz, Jump_0A3_4257
@@ -238,12 +238,12 @@ Jump_0A3_421A::
     ld a, [de]
     cp a, c
     jr nz, Jump_0A3_4257
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
     inc a
     call CheckSlotStatusBlock
     jr c, Jump_0A3_4257
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
     inc a
     call SlotHasStatus3Or4Bits_BankA3
@@ -267,7 +267,7 @@ Jump_0A3_4239::
     or a, a
     jr z, Jump_0A3_41E0
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     jr Jump_0A3_4274
 
 Jump_0A3_4257::
@@ -289,7 +289,7 @@ Jump_0A3_4264::
     or a, a
     jp z, Jump_0A3_41E0
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_0A3_4274::
     pop hl
@@ -319,8 +319,8 @@ Data_0A3_4289:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from SaveActionChoicesAndPickFormations_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations_Sub01)
-; reads: wD981, wD982, hFFC6, wC5E7, wD980
-; writes: hFFC6
+; reads: wD981, wD982, hTemp0, wC5E7, wD980
+; writes: hTemp0
 SaveActionChoicesAndPickFormations_Sub01_Sub01::
 Func_0A3_44C4:: ; address name
     push hl
@@ -352,7 +352,7 @@ Func_0A3_44C4:: ; address name
     ld h, a
     ld a, [hl]
     inc a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wD981]
     ld c, a
     ld b, $00
@@ -388,7 +388,7 @@ Jump_0A3_4505::
     ld h, a
     ld a, [hl]
     inc a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wD980]
     ld c, a
     ld b, $00
@@ -424,7 +424,7 @@ Jump_0A3_453A::
     ld h, a
     ld a, [hl]
     inc a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wD980]
     ld c, a
     ld b, $00
@@ -435,7 +435,7 @@ Jump_0A3_453A::
     inc b
 
 Jump_0A3_456D::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call Multiply8By16
     ld c, h
     ld b, e
@@ -473,7 +473,7 @@ Data_0A3_45A3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from SaveActionChoicesAndPickFormations (E-0047)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
-; reads: hFFC6
+; reads: hTemp0
 SaveActionChoicesAndPickFormations_Sub02::
 Func_0A3_4917:: ; address name
     push bc
@@ -489,7 +489,7 @@ Func_0A3_4917:: ; address name
     jr Jump_0A3_494E
 
 Jump_0A3_4928::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [de], a
     inc de
     inc de
@@ -504,7 +504,7 @@ Jump_0A3_4928::
     ret
 
 Jump_0A3_4938::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [de], a
     inc de
     inc de
@@ -527,7 +527,7 @@ Jump_0A3_4938::
 Jump_0A3_494E::
     inc de
     inc de
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [de], a
     inc de
     inc de
@@ -544,7 +544,7 @@ Jump_0A3_494E::
 ; hFFC6 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
 ; 1 call site from 1 routine (e.g. Func_032_4ADC_Case01_Case00)
 ; reads: wBattleActor
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wBattleActionChoice
 ActorActionIsD0ToE3::
 Func_0A3_4960:: ; address name
@@ -558,12 +558,12 @@ Func_0A3_4960:: ; address name
     cp a, $E4
     jr nc, Jump_0A3_497A
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 Jump_0A3_497A::
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
@@ -628,7 +628,7 @@ Jump_0A3_49D0::
 ; only called from RollWC5E7BelowChance (E-0047)
 ; 1 call site from 1 routine (e.g. RollWC5E7BelowChance)
 ; reads: wC58A, wBattleActor
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wBattleMonsterId
 RollWC5E7BelowChance_Sub01::
 Func_0A3_49D5:: ; address name
@@ -656,7 +656,7 @@ Jump_0A3_49EE::
     deref_hl
     add hl, de
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 ; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with target $FF; others set wDA5B[target] = 3 (E-0124)

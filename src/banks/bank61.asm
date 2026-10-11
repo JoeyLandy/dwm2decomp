@@ -3,8 +3,8 @@ SECTION "Bank 61", ROMX[$4000], BANK[$61]
 
 ; wCD05 = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
 ; 2 call sites from 2 routines (e.g. RunWC903Case_Case05, ScriptCommand84_Run_Case04_Sub01)
-; reads: wC6FD, hFFC6, hFFC7, hFFCA, hFFCB
-; writes: wCD05, hFFCA, hFFCB, rRAMG
+; reads: wC6FD, hTemp0, hTemp1, hTemp4, hTemp5
+; writes: wCD05, hTemp4, hTemp5, rRAMG
 ; points at: wC6FE
 ComputePartyStrengthLevelWCD05::
 Func_061_4001:: ; address name
@@ -19,9 +19,9 @@ Jump_061_400C::
     ld b, a
     ld hl, $0000
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld hl, wC6FE
     ld a, $0A
     ld [rRAMG], a
@@ -33,17 +33,17 @@ Jump_061_401E::
     push af
     ld c, $67
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     pop af
     push af
     ld c, $69
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     sra h
@@ -52,50 +52,50 @@ Jump_061_401E::
     push af
     ld c, $63
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     pop af
     push af
     ld c, $65
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     pop af
     push af
     ld c, $5D
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     pop af
     push af
     ld c, $61
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     pop af
     ld a, $19
     call DivideHLByA
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld e, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     pop hl
     inc hl
     pop bc
@@ -103,9 +103,9 @@ Jump_061_401E::
     jp nz, Jump_061_401E
     xor a, a
     ld [rRAMG], a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
     ld a, [wC6FD]
     call DivideHLByA
@@ -127,8 +127,8 @@ Jump_061_40B0::
 
 ; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hFFCA-hFFCD and wCD05 for key generation (E-0131)
 ; 2 call sites from 2 routines (e.g. RunWC903Case_Case06, WriteKeyEntryHFFC6)
-; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, ...
-; writes: wCD05, hFFCA, hFFCB, hFFCC, hFFCD, rRAMG, hFFC8, hFFC9
+; reads: wC6FD, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
+; writes: wCD05, hTemp4, hTemp5, hTemp6, hTemp7, rRAMG, hTemp2, hTemp3
 ; points at: wC6FE
 ComputePartyStrengthForKey::
 Func_061_40B4:: ; address name
@@ -143,13 +143,13 @@ Jump_061_40BF::
     ld b, a
     ld hl, $0000
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld a, l
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld a, h
-    ldh [hFFCD], a
+    ldh [hTemp7], a
     ld hl, wC6FE
     ld a, $0A
     ld [rRAMG], a
@@ -161,23 +161,23 @@ Jump_061_40D7::
     push af
     ld c, $67
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     pop af
     push af
     ld c, $69
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     sra h
     rr l
     pop af
@@ -185,23 +185,23 @@ Jump_061_40D7::
     ld c, $63
     call LoadSRAMRecordWord
     push hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     pop af
@@ -209,23 +209,23 @@ Jump_061_40D7::
     ld c, $65
     call LoadSRAMRecordWord
     push hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     pop af
@@ -233,23 +233,23 @@ Jump_061_40D7::
     ld c, $5D
     call LoadSRAMRecordWord
     push hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     pop af
@@ -257,50 +257,50 @@ Jump_061_40D7::
     ld c, $61
     call LoadSRAMRecordWord
     push hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
     ld a, $32
     call DivideHLByA
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld e, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     pop af
     push af
     ld c, $56
     call LoadSRAMRecordByte
     push bc
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, $18
     call Multiply8
     ld e, l
     ld d, h
     pop bc
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
     ld a, l
     sub a, e
@@ -319,15 +319,15 @@ Jump_061_41C4::
     call DivideHLByA
 
 Jump_061_41C9::
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld e, a
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld a, h
-    ldh [hFFCD], a
+    ldh [hTemp7], a
     pop af
     pop hl
     inc hl
@@ -336,13 +336,13 @@ Jump_061_41C9::
     jp nz, Jump_061_40D7
     xor a, a
     ld [rRAMG], a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld l, a
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld e, a
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     ld d, a
     add hl, de
     bit 7, h
@@ -384,18 +384,18 @@ Func_061_420D:: ; address name
 
 ; entry 7 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFFC6
+; writes: hTemp0
 RunWCC44Type_420D_Case07::
 Jump_061_4223:: ; address name
     ld a, $66
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
 
 ; entry 6 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, hFFC6
-; writes: hFFC6
+; reads: wCC45, hTemp0
+; writes: hTemp0
 ; points at: wCD89, wCDAF
 RunWCC44Type_420D_Case06::
 Jump_061_422B:: ; address name
@@ -411,7 +411,7 @@ Jump_061_422B:: ; address name
     dec a
     inc a
     and a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop af
     ld hl, wCDAF
     ld a, [wCC45]
@@ -421,9 +421,9 @@ Jump_061_422B:: ; address name
     and a, $01
     add a, a
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, $50
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
 
@@ -627,21 +627,21 @@ Jump_061_4380::
 
 ; entry 2 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, hFFC6
-; writes: hFFC6, wCD06
-; points at: hFFC6
+; reads: wCC45, hTemp0
+; writes: hTemp0, wCD06
+; points at: hTemp0
 RunWCC44Type_420D_Case02::
 Jump_061_439F:: ; address name
     ld a, $61
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wCC45]
     bit 7, a
     jr z, Jump_061_43AE
-    ld hl, hFFC6
+    ld hl, hTemp0
     inc [hl]
 
 Jump_061_43AE::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     sub a, $61
     ld [wCD06], a
     call LoadSpecialMapHeader
@@ -650,7 +650,7 @@ Jump_061_43AE::
 ; entry 3 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wCDAC
 RunWCC44Type_420D_Case03::
 Jump_061_43B9:: ; address name
@@ -660,7 +660,7 @@ Jump_061_43B9:: ; address name
     add_a_to_hl
     ld a, [hl]
     and a, $7F
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
 
@@ -785,18 +785,18 @@ Func_061_4472:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFFC6
+; writes: hTemp0
 Func_061_4472_Case07::
 Jump_061_4488:: ; address name
     ld a, $66
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadMapScreenFromChunk
     ret
 
 ; entry 6 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCC45, hFFC6
-; writes: hFFC6
+; reads: wCC45, hTemp0
+; writes: hTemp0
 ; points at: wCD89, wCDAF
 Func_061_4472_Case06::
 Jump_061_4490:: ; address name
@@ -812,7 +812,7 @@ Jump_061_4490:: ; address name
     dec a
     dec a
     and a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop af
     ld hl, wCDAF
     ld a, [wCC45]
@@ -829,9 +829,9 @@ Jump_061_44BF::
     and a, $01
     sla a
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, $50
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadMapScreenFromChunk
     pop hl
     ld a, [hl]
@@ -848,7 +848,7 @@ Jump_061_44D7::
 ; 3 call sites from 3 routines (e.g. Func_061_4472_Case06, ScriptCommand86_Run_Case04, ScriptCommand86_Run_Case02)
 ; reads: wCC45, wIsCGB
 ; writes: rSVBK
-; points at: wCDAF, wC244
+; points at: wCDAF
 DrawDoorTilesForWCC45::
 Func_061_44DB:: ; address name
     ld a, [wCC45]
@@ -867,7 +867,7 @@ Jump_061_44E8::
     ld c, $1C
 
 Jump_061_44F1::
-    ld hl, wC244
+    ld hl, wScreenTileBuffer + $AC
     push hl
     ld a, c
     ld [hl+], a
@@ -912,7 +912,7 @@ Jump_061_44F1::
 ; entry 5 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45, wCC43, hMapScreenY, hMapScreenX, wIsCGB
-; writes: hFFC6, rSVBK
+; writes: hTemp0, rSVBK
 ; points at: wCDAD, wScreenTileBuffer, wD000
 Func_061_4472_Case05::
 Jump_061_4533:: ; address name
@@ -939,7 +939,7 @@ Jump_061_454E::
     adc a, $CE
     ld d, a
     ld a, [de]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld e, a
     ld d, $00
     sla e
@@ -1253,8 +1253,8 @@ Jump_061_468E::
 
 ; hFFC6 = the two nibbles at $4818 + 16 * [$CE2C + 2 * wCDAD[16 * wCC45] + 2 * wCC43] + 2 * hFFC6, packed into one byte (E-0121)
 ; 1 call site from 1 routine (e.g. WriteRandomEntryFromTable690E)
-; reads: wCC45, wCC43, hFFC6
-; writes: hFFC6
+; reads: wCC45, wCC43, hTemp0
+; writes: hTemp0
 ; points at: wCDAD
 LookupTable4818NibblePairForHFFC6::
 Func_061_4706:: ; address name
@@ -1283,7 +1283,7 @@ Func_061_4706:: ; address name
     add hl, hl
     add hl, hl
     add hl, hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, a
     add_a_to_hl
     ld a, l
@@ -1297,15 +1297,15 @@ Func_061_4706:: ; address name
     ld c, a
     ld a, [hl]
     or a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop hl
     ret
 
 ; draws the exit or stairs tile block for the current screen when it matches the area entry in wCE2D (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case05)
-; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, hFFC6, wIsCGB
-; writes: hFFC6, rSVBK
-; points at: wCD89, wCDAD, wCE2D, wC240, wD0A8
+; reads: wCC45, wCC43, hMapScreenX, hMapScreenY, hTemp0, wIsCGB
+; writes: hTemp0, rSVBK
+; points at: wCD89, wCDAD, wCE2D, wD0A8
 DrawKeyWorldExitTile::
 Func_061_474C:: ; address name
     ld a, [wCC45]
@@ -1315,7 +1315,7 @@ Func_061_474C:: ; address name
     ld hl, wCD89
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop af
     add a, a
     add a, a
@@ -1368,7 +1368,7 @@ Jump_061_47A8::
     ret
 
 Jump_061_47AD::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     dec a
     dec a
     dec a
@@ -1378,7 +1378,7 @@ Jump_061_47AD::
     jr Jump_061_47C5
 
 Jump_061_47B9::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     dec a
     dec a
     dec a
@@ -1389,7 +1389,7 @@ Jump_061_47B9::
     sub a, c
 
 Jump_061_47C5::
-    ld hl, wC240
+    ld hl, wScreenTileBuffer + $A8
     ld [hl+], a
     inc a
     ld [hl-], a
@@ -1505,16 +1505,16 @@ Jump_061_5418:: ; address name
 ; entry 2 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45
-; writes: hFFC6
-; points at: hFFC6
+; writes: hTemp0
+; points at: hTemp0
 Func_061_4472_Case02::
 Jump_061_541A:: ; address name
     ld a, $61
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wCC45]
     bit 7, a
     jr z, Jump_061_5429
-    ld hl, hFFC6
+    ld hl, hTemp0
     inc [hl]
 
 Jump_061_5429::
@@ -1524,7 +1524,7 @@ Jump_061_5429::
 ; entry 3 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCC45
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wCDAC
 Func_061_4472_Case03::
 Jump_061_542D:: ; address name
@@ -1534,7 +1534,7 @@ Jump_061_542D:: ; address name
     add_a_to_hl
     ld a, [hl]
     and a, $7F
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadMapScreenFromChunk
     ret
 
@@ -1787,7 +1787,7 @@ Jump_061_5585::
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
-; points at: wCD7B, wC240, wD0A8
+; points at: wCD7B, wD0A8
 DrawWCD7BEntryTilesForScreen::
 Func_061_55AF:: ; address name
     ld hl, wCD7B
@@ -1817,7 +1817,7 @@ Jump_061_55B2::
 
 Jump_061_55D1::
     pop hl
-    ld de, wC240
+    ld de, wScreenTileBuffer + $A8
     dec hl
     ld a, [hl]
     or a, a
@@ -1892,7 +1892,7 @@ Jump_061_562E::
 ; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
-; points at: wCD8B, wC240, wD0A8
+; points at: wCD8B, wD0A8
 DrawWCD8BObjectTilesForScreen::
 Func_061_562F:: ; address name
     ld hl, wCD8B
@@ -1919,7 +1919,7 @@ Jump_061_5632::
     cp a, c
     jp nz, Jump_061_56DA
     pop hl
-    ld de, wC240
+    ld de, wScreenTileBuffer + $A8
     dec hl
     dec hl
     ld a, [hl]
@@ -2201,8 +2201,8 @@ Jump_061_579D::
 
 ; when wCC43 is 0, the wCD89 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case05)
-; reads: wCC43, wCC45, hMapScreenX, hMapScreenY, hFF8C
-; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hFF8C, ...
+; reads: wCC43, wCC45, hMapScreenX, hMapScreenY, hPlayerStateFlags
+; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hPlayerStateFlags, ...
 ; points at: wCD89
 WarpByWCD89EntryAtScreen14::
 Func_061_57A4:: ; address name
@@ -2250,9 +2250,9 @@ Jump_061_57AD::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     ld c, $01
@@ -2260,7 +2260,7 @@ Jump_061_57AD::
 
 ; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wCDAD entry, plays sound $60, wCC44 = $83 and starts the transition; C = 1 (E-0125)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case04)
-; reads: hMapScreenY, wCC45, hFF8C
+; reads: hMapScreenY, wCC45, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wModeState, wC8C5, ...
 ; points at: wCDAD
 WarpToScreen01Event83::
@@ -2298,9 +2298,9 @@ Jump_061_5810::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $40
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     ld c, $01
@@ -2308,8 +2308,8 @@ Jump_061_5810::
 
 ; on screen row 1: warps to the screen in the wCD78 entry of wCC45 and starts the transition; C = 1 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case02)
-; reads: hMapScreenY, wCC45, hFF8C
-; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hFF8C, ...
+; reads: hMapScreenY, wCC45, hPlayerStateFlags
+; writes: hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wModeState, wC8C5, hPlayerStateFlags, ...
 ; points at: wCD78
 WarpByWCD78EntryAtScreenRow1::
 Func_061_585A:: ; address name
@@ -2352,12 +2352,12 @@ Jump_061_587C::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
-    ldh a, [hFF8C]
+    ldh [hPlayerStateFlags], a
+    ldh a, [hPlayerStateFlags]
     and a, $FE
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     ld c, $01
@@ -2365,8 +2365,8 @@ Jump_061_587C::
 
 ; checks the warp list Data_061_6566[wCDAC entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
 ; 1 call site from 1 routine (e.g. Func_061_5764_Case03)
-; reads: wCC45, hMapScreenX, hMapScreenY, hFF8C
-; writes: wC8CA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wModeState, wC8C5, hFF8C, ...
+; reads: wCC45, hMapScreenX, hMapScreenY, hPlayerStateFlags
+; writes: wC8CA, wC8C8, wC8C9, hMapScreenX, hMapScreenY, wModeState, wC8C5, hPlayerStateFlags, ...
 ; points at: wCDAC, wCD88
 CheckKeyWorldWarpTable::
 Func_061_58BC:: ; address name
@@ -2474,9 +2474,9 @@ Jump_061_594D::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     pop de
@@ -2560,7 +2560,7 @@ Jump_061_59A6:: ; address name
 
 ; only called from RunWCC44Type_596F_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case06)
-; reads: hPlayerX, hPlayerY, wCC45, wCC43, hFF8C
+; reads: hPlayerX, hPlayerY, wCC45, wCC43, hPlayerStateFlags
 ; writes: wCC43, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wC8CA, wCC44, wCCEA, ...
 ; points at: wCDAD, wCE2D
 RunWCC44Type_596F_Case06_Sub01::
@@ -2629,9 +2629,9 @@ Jump_061_59DD::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     ld c, $01
@@ -2642,8 +2642,8 @@ Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunWCC44Type_596F_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case05)
-; reads: hPlayerX, hFF8C, hPlayerY, wCC45, wCC43, hMapScreenX, hMapScreenY, hFFC7, ...
-; writes: hFF8C, hFFC6, hFFC7, wCC43, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
+; reads: hPlayerX, hPlayerStateFlags, hPlayerY, wCC45, wCC43, hMapScreenX, hMapScreenY, hTemp1, ...
+; writes: hPlayerStateFlags, hTemp0, hTemp1, wCC43, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
 ; points at: wCD89, wCDAC, wCE2D, wCD88
 RunWCC44Type_596F_Case05_Sub01::
 Func_061_5A33:: ; address name
@@ -2652,9 +2652,9 @@ Func_061_5A33:: ; address name
     jr z, Jump_061_5A42
 
 Jump_061_5A39::
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $7F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
@@ -2669,14 +2669,14 @@ Jump_061_5A42::
     ld hl, wCD89
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop af
     add a, a
     add a, a
     ld hl, wCDAC
     add_a_to_hl
     ld a, [hl+]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [hl]
     add a, a
     ld de, wCE2D
@@ -2721,9 +2721,9 @@ Jump_061_5A9B::
     ld a, [hl]
     cp a, b
     jr z, Jump_061_5B18
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $7F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
@@ -2731,7 +2731,7 @@ Jump_061_5AB5::
     ld a, [wCC43]
     or a, a
     jr nz, Jump_061_5B08
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $04
     jr nz, Jump_061_5B08
     ld a, [wCC45]
@@ -2759,9 +2759,9 @@ Jump_061_5AB5::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     ld c, $01
@@ -2784,7 +2784,7 @@ Jump_061_5B18::
     ld [wCC43], a
     inc a
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, c
     jr nz, Jump_061_5B66
     ld a, $86
@@ -2809,9 +2809,9 @@ Jump_061_5B18::
     ld [wC8C5], a
     xor a, a
     ld [wC8C7], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     ld c, $01
@@ -2848,9 +2848,9 @@ Jump_061_5B6B::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     xor a, a
@@ -2863,7 +2863,7 @@ Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunWCC44Type_596F_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case02)
-; reads: hPlayerX, hPlayerY, wC955, wCC45, hFF8C
+; reads: hPlayerX, hPlayerY, wC955, wCC45, hPlayerStateFlags
 ; writes: wC955, wCC45, wC8C8, wC8C9, wC8CA, wC914, wModeState, wC46B, ...
 RunWCC44Type_596F_Case02_Sub01::
 Func_061_5BBB:: ; address name
@@ -2900,17 +2900,17 @@ Jump_061_5BC4::
     xor a, a
     ld [wC46B], a
     ld [wC46C], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     ret
 
 ; only called from RunWCC44Type_596F_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case03)
-; reads: wCC45, hFF8C, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-; writes: hFF8C, wC8CA, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wCC44, wModeState, ...
+; reads: wCC45, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+; writes: hPlayerStateFlags, wC8CA, hMapScreenX, hMapScreenY, wC8C8, wC8C9, wCC44, wModeState, ...
 ; points at: wCDAC
 RunWCC44Type_596F_Case03_Sub01::
 Func_061_5C07:: ; address name
@@ -2938,9 +2938,9 @@ Jump_061_5C26::
     cp a, $80
     jr nz, Jump_061_5C37
     pop de
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $7F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
@@ -2978,7 +2978,7 @@ Jump_061_5C3D::
     ldh a, [hPlayerY]
     cp a, c
     jr nz, Jump_061_5C73
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 7, a
     jr z, Jump_061_5C70
     pop de
@@ -3030,9 +3030,9 @@ Jump_061_5C7E::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $03
     ld [wC8C6], a
     pop de
@@ -3052,22 +3052,22 @@ Func_061_5CCF:: ; address name
 
 ; only called from RunWCC44Type_596F_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
-; reads: hFF8C, hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hFFC8, hFFC7
-; writes: hFFC7, hFF8C, hFFC8, wCC45, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
+; reads: hPlayerStateFlags, hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hTemp2, hTemp1
+; writes: hTemp1, hPlayerStateFlags, hTemp2, wCC45, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
 ; points at: wCD8B, wCDAC, wCDAD, wCE2D
 RunWCC44Type_596F_Case00_Sub01::
 Func_061_5CD0:: ; address name
     ld hl, wCD8B
     xor a, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_061_5CD6::
     ld a, [hl]
     cp a, $FF
     jr nz, Jump_061_5CE6
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $5F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     xor a, a
     ret
 
@@ -3081,7 +3081,7 @@ Jump_061_5CE6::
     dec hl
     dec hl
     ld a, [hl]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     cp a, $04
     jr z, Jump_061_5D11
     cp a, $05
@@ -3132,19 +3132,19 @@ Jump_061_5D25::
     ldh a, [hMapScreenY]
     cp a, c
     jp nz, Jump_061_5E7A
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 7, a
     jr nz, Jump_061_5CE3
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     cp a, $04
     jp z, Jump_061_5E02
     cp a, $05
     jp z, Jump_061_5DE1
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [wCC45], a
     ld a, $83
     ld [wCC44], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     swap a
     ld hl, wCDAC
     add_a_to_hl
@@ -3206,9 +3206,9 @@ Jump_061_5D92::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $03
     ld [wC8C6], a
     farcall ClearWC935IfBit7AndNot6
@@ -3236,7 +3236,7 @@ Jump_061_5DE1::
 Jump_061_5E02::
     xor a, a
     ld [wCC43], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     swap a
     ld hl, wCDAD
     add_a_to_hl
@@ -3264,7 +3264,7 @@ Jump_061_5E02::
     ld [wC8C6], a
 
 Jump_061_5E44::
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [wCC45], a
     ld a, $85
     ld [wCC44], a
@@ -3280,9 +3280,9 @@ Jump_061_5E44::
     ld [wModeState], a
     xor a, a
     ld [wC8C5], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     farcall ClearWC935IfBit7AndNot6
     pop hl
     ld a, $01
@@ -3294,9 +3294,9 @@ Jump_061_5E7A::
     inc hl
     inc hl
     inc hl
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     inc a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     jp Jump_061_5CD6
 
 Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3305,7 +3305,7 @@ Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from RunWCC44Type_596F_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
 ; reads: wC88E, wC891, wCC42, hMapScreenX, hMapScreenY, wC890, hPlayerX, hPlayerY, ...
-; writes: wC8C7, wC8C5, wModeState, hFF8C, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
+; writes: wC8C7, wC8C5, wModeState, hPlayerStateFlags, wCC44, hMapScreenX, hMapScreenY, wC8C8, ...
 RunWCC44Type_596F_Case00_Sub02::
 Func_061_5E8D:: ; address name
     ld a, [wC88E]
@@ -3342,9 +3342,9 @@ Func_061_5E8D:: ; address name
     jr Jump_061_5EF0
 
 Jump_061_5EC7::
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $DF
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
 
 Jump_061_5ECD::
     xor a, a
@@ -3372,7 +3372,7 @@ Jump_061_5ECF::
     jr nz, Jump_061_5EC7
 
 Jump_061_5EF0::
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 5, a
     jr nz, Jump_061_5ECD
     ld a, $60
@@ -3385,9 +3385,9 @@ Jump_061_5EF0::
     ld [wC8C5], a
     ld a, $04
     ld [wModeState], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $20
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $87
     ld [wCC44], a
     xor a, a
@@ -3407,8 +3407,8 @@ Jump_061_5EF0::
 
 ; only called from RunWCC44Type_596F_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWCC44Type_596F_Case00)
-; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hFF8C
-; writes: wC8C8, wC8C9, wC8CA, wC8C7, wC8C5, wModeState, hFF8C, wCC45, ...
+; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
+; writes: wC8C8, wC8C9, wC8CA, wC8C7, wC8C5, wModeState, hPlayerStateFlags, wCC45, ...
 ; points at: wCD7B
 RunWCC44Type_596F_Case00_Sub03::
 Func_061_5F39:: ; address name
@@ -3455,7 +3455,7 @@ Jump_061_5F56::
     ldh a, [hMapScreenY]
     cp a, c
     jp nz, Jump_061_5FE0
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 7, a
     jr nz, Jump_061_5F53
     ld a, $40
@@ -3475,9 +3475,9 @@ Jump_061_5F56::
     ld [wC8C5], a
     ld a, $04
     ld [wModeState], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     inc hl
     inc hl
     ld a, [hl]
@@ -3530,7 +3530,7 @@ Jump_061_5FE0::
     ldh a, [hMapScreenY]
     cp a, c
     jp nz, Jump_061_6065
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 7, a
     jp nz, Jump_061_5F53
     ld a, $40
@@ -3548,9 +3548,9 @@ Jump_061_5FE0::
     ld [wC8C5], a
     ld a, $04
     ld [wModeState], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     inc hl
     ld a, [hl]
     or a, a
@@ -3599,7 +3599,7 @@ Jump_061_6065::
 ; hFFC6 = 1 when bit 7 of wCD07 is set; otherwise on map types $80/$85 the wCE7E entry of the current area (wCD74), else 0 (E-0129)
 ; 1 call site from 1 routine (e.g. Func_016_5D13_Case00)
 ; reads: wCD07, wCC44, wCC45, hMapScreenY, hMapScreenX
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wCD88, wCD74, wCE7E
 KeyWorldAreaEncounterIndex::
 Func_061_606D:: ; address name
@@ -3607,7 +3607,7 @@ Func_061_606D:: ; address name
     bit 7, a
     jr z, Jump_061_6079
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 Jump_061_6079::
@@ -3619,7 +3619,7 @@ Jump_061_6079::
     cp a, $85
     jr z, Jump_061_608A
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 Jump_061_608A::
@@ -3669,7 +3669,7 @@ Jump_061_60BB::
     ld hl, wCE7E
     add_a_to_hl
     ld a, [hl]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     pop de
     pop hl
     ret

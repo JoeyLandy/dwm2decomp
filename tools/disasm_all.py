@@ -912,7 +912,8 @@ class Rom:
                     while pc in ins and pc not in seen and ins[pc][0] != "dw":
                         seen.add(pc)
                         n, text, kind, tgt = ins[pc]
-                        s = self.symbolize(text)
+                        nx = ins.get(pc + n)
+                        s = self.symbolize(text, (nx[1],) if nx and nx[0] != "dw" else ())
                         m = self._SYM_MEM.search(s)
                         if m:
                             if s.startswith(("ld [", "ldh [")):
@@ -1565,9 +1566,22 @@ class Rom:
 
     def _ram_symbol(self, addr: int, prefix: str) -> str:
         info = self.symbols.get(addr)
+        if not info:
+            # inside a named buffer (a symbol with a "size"): BufferName + $offset (E-0132)
+            for base, binfo in self._sized:
+                if base < addr < base + binfo["size"]:
+                    self.ram_used[base] = binfo["name"]
+                    return f"{binfo['name']} + ${addr - base:X}"
         name = info["name"] if info else f"{prefix}{addr:04X}"
         self.ram_used[addr] = name
         return name
+
+    @property
+    def _sized(self) -> list[tuple[int, dict]]:
+        if not hasattr(self, "_sized_cache"):
+            self._sized_cache = sorted(((a, i) for a, i in self.symbols.items() if i.get("size")),
+                                       key=lambda t: t[1]["size"])  # smallest buffer first
+        return self._sized_cache
 
     def sym_name(self, addr: int, pointer: bool) -> str | None:
         """Symbol text for an absolute address, or None to keep it numeric.
@@ -1608,6 +1622,10 @@ class Rom:
             reg = m.group(1).split()[1].rstrip(",")
             if reg in ("bc", "de") and f"add hl, {reg}" in following and int(m.group(2), 16) >= 0xFF00:
                 return text  # a small negative number, not an address
+            low = {"hl": "l", "de": "e", "bc": "c"}.get(reg)
+            if (int(m.group(2), 16) >= 0xFF00 and low and len(following) > 1
+                    and following[0] == f"ld a, {low}" and re.search(r"\[\$FF9[BD]\]", following[1])):
+                return text  # a step delta (-16, -128 ...) for the movement bytes hFF9B/hFF9D, not an address (E-0132)
             if int(m.group(2), 16) == 0xFFFF:
                 return text  # -1 as a 16-bit number; rIE would only be a pointer in a memory operand
             nm = self.sym_name(int(m.group(2), 16), True)
@@ -1763,6 +1781,8 @@ def main() -> int:
     if symbols_path.exists():
         for key, info in json.loads(symbols_path.read_text(encoding="utf-8")).items():
             if not key.startswith("_"):
+                if isinstance(info.get("size"), str):
+                    info = dict(info, size=int(info["size"], 16))
                 rom.symbols[int(key, 16)] = info
         log(f"loaded {len(rom.symbols)} evidence-named RAM symbols")
     regions_path = ROOT / "config/data_regions.json"

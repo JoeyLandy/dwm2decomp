@@ -3,7 +3,7 @@ SECTION "Bank 60", ROMX[$4000], BANK[$60]
 
 ; only called from RunWC46BMenuState_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case05)
-; reads: wC833, hFFC6
+; reads: wC833, hTemp0
 ; writes: wCC42, wCD03, wCD04
 ; points at: wC787
 RunWC46BMenuState_Case05_Sub01::
@@ -22,7 +22,7 @@ Func_060_4001:: ; address name
     push hl
     call FindSRAMSlotMarkerIndex
     pop hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     ret z
     ld [wCC42], a
@@ -89,17 +89,17 @@ Func_060_4076:: ; address name
 
 ; fills 32 two-byte entries from wCD10 with random monster ids from the wCCF7 band lists (rows from Data_060_4123 by wCD02) (E-0130)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD02, wCD04, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wCD02, wCD04, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 ; points at: wCD10, wCCF7
 RollKeyWorldMonsterTableWCD10::
 Func_060_408F:: ; address name
     ld b, $20
     ld de, wCD10
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_060_409A::
     ld hl, wCCF7
@@ -187,9 +187,9 @@ Jump_060_40FA::
 Jump_060_4105::
     add a, a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     ld a, [hl+]
     ld [de], a
@@ -198,9 +198,9 @@ Jump_060_4105::
     ld [de], a
     inc de
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     pop hl
     dec b
     jp nz, Jump_060_409D
@@ -264,8 +264,8 @@ Jump_060_4267::
 
 ; fills 8 two-byte entries from wCD50 with random monster ids from the band lists (Data_060_4123 row wCD02) (E-0129)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD04, wCD02, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wCD04, wCD02, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 ; points at: wCD10
 RollKeyWorldMonsterTableWCD50::
 Func_060_4274:: ; address name
@@ -279,9 +279,9 @@ Func_060_4274:: ; address name
 
 Jump_060_4280::
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_060_4286::
     ld a, $09
@@ -349,9 +349,9 @@ Jump_060_42C9::
 Jump_060_42D4::
     sla a
     add_a_to_hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     ld a, [hl+]
     ld [de], a
@@ -360,9 +360,9 @@ Jump_060_42D4::
     ld [de], a
     inc de
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     dec b
     jp nz, Jump_060_4286
     ret
@@ -543,8 +543,8 @@ Data_060_43D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; clears wCE7B ($10 bytes) and fills a 4-byte entry per map area (from wCD7B) with a random monster id and level from the band lists (E-0128)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD05, wC96A, hFFC8
-; writes: hFFC6, hFFC8
+; reads: wCD05, wC96A, hTemp2
+; writes: hTemp0, hTemp2
 ; points at: wCE7B, wCD7B, wCD74
 RollKeyWorldEncounterTable::
 Func_060_4597:: ; address name
@@ -565,7 +565,7 @@ Jump_060_459D::
     xor a, a
 
 Jump_060_45AE::
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld hl, wCD7B
     ld de, wCE7B
 
@@ -598,7 +598,7 @@ Jump_060_45B6::
     ld c, a
     ld a, [wC96A]
     add a, c
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     push de
 
 Jump_060_45E7::
@@ -614,7 +614,7 @@ Jump_060_45E7::
     ld a, h
     ld [de], a
     inc de
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [de], a
     inc de
     xor a, a
@@ -629,8 +629,8 @@ Jump_060_45E7::
 
 ; like RollKeyWorldEncounterTable, with each entry's level from wCD05 / 5 * 7 plus the area value, capped at 99 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD05, hFFC8
-; writes: hFFC6, hFFC8
+; reads: wCD05, hTemp2
+; writes: hTemp0, hTemp2
 ; points at: wCE7B, wCD7B, wCD74
 RollKeyWorldEncounterTableLevels:: ; heuristic: follows a terminator; C0
 Func_060_4607:: ; address name
@@ -651,7 +651,7 @@ Jump_060_460D::
     xor a, a
 
 Jump_060_461E::
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld hl, wCD7B
     ld de, wCE7B
 
@@ -707,7 +707,7 @@ Jump_060_4672::
     ld a, l
     pop de
     pop hl
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     push de
 
 Jump_060_4678::
@@ -723,7 +723,7 @@ Jump_060_4678::
     ld a, h
     ld [de], a
     inc de
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [de], a
     inc de
     xor a, a
@@ -738,13 +738,13 @@ Jump_060_4678::
 
 ; picks random monster ids for the key world from the wCCF7 lists by band (Func_060_4724) into wCE72-wCE79, and wCE74/wCE77/wCE7A from wC96B (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD05, wCD03, wC96B, hFFC6
-; writes: hFFC6, wCE72, wCE73, wCE75, wCE76, wCE78, wCE79, wCE74, ...
+; reads: wCD05, wCD03, wC96B, hTemp0
+; writes: hTemp0, wCE72, wCE73, wCE75, wCE76, wCE78, wCE79, wCE74, ...
 RollKeyWorldMonsterIds::
 Func_060_4698:: ; address name
     ld a, [wCD05]
     call BandForA_4773
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_060_46A0::
     call PickRandomWCCF7Entry
@@ -770,7 +770,7 @@ Jump_060_46A0::
     jr Jump_060_46F2
 
 Jump_060_46CF::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     dec a
     dec a
     bit 7, a
@@ -778,7 +778,7 @@ Jump_060_46CF::
     xor a, a
 
 Jump_060_46D8::
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call PickRandomWCCF7Entry
     call PickRandomMonsterFromBandList
     jr nc, Jump_060_46A0
@@ -810,7 +810,7 @@ Jump_060_46FE::
 ; hFFC7 = wCCF7[random & 1], stepping back over $FF entries (E-0124)
 ; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
 ; reads: wCD03
-; writes: hFFC7
+; writes: hTemp1
 ; points at: wCCF7
 PickRandomWCCF7Entry::
 Func_060_4709:: ; address name
@@ -831,15 +831,15 @@ Jump_060_4719::
     jr Jump_060_4719
 
 Jump_060_4721::
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ret
 
 ; DE = a random entry of the list Data_060_6D6D[16 * hFFC7 + 2 * hFFC6]; carry when valid, no carry for an empty list or ids $A4, $A5 and $174 (E-0127)
 ; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
-; reads: hFFC7, hFFC6, wCD04
+; reads: hTemp1, hTemp0, wCD04
 PickRandomMonsterFromBandList::
 Func_060_4724:: ; address name
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     swap a
     ld de, Data_060_6D6D
     add a, e
@@ -848,7 +848,7 @@ Func_060_4724:: ; address name
     inc d
 
 Jump_060_4730::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, a
     add a, e
     ld e, a
@@ -984,8 +984,8 @@ Func_060_47A7:: ; address name
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: wCD05, wCD04, wCD0D, wCD0E, hFFCE, hFFCF
-; writes: wCD07, wCD0D, wMapWidthScreens, wCD0E, wMapHeightScreens, hFFCE, hFFCF, wCD0C
+; reads: wCD05, wCD04, wCD0D, wCD0E, hTemp8, hTemp9
+; writes: wCD07, wCD0D, wMapWidthScreens, wCD0E, wMapHeightScreens, hTemp8, hTemp9, wCD0C
 ; points at: wCE93, wCD63, wCD70
 DebugAutomap_Update_Sub01_Sub01_Sub02::
 Func_060_4AE5:: ; address name
@@ -1045,11 +1045,11 @@ Jump_060_4B3B::
     ld a, [wCD0D]
     srl a
     srl a
-    ldh [hFFCE], a
+    ldh [hTemp8], a
     ld a, [wCD0E]
     srl a
     srl a
-    ldh [hFFCF], a
+    ldh [hTemp9], a
     ld a, [wCD05]
     ld b, a
     ld a, $0A
@@ -1083,7 +1083,7 @@ Jump_060_4B7D::
     jr nz, Jump_060_4B7D
     ld hl, wCD63
     ld de, wCD70
-    ldh a, [hFFCE]
+    ldh a, [hTemp8]
     or a, a
     jr z, Jump_060_4BC3
     ld c, a
@@ -1119,7 +1119,7 @@ Jump_060_4BB3::
 Jump_060_4BC3::
     ld hl, wCD63
     ld de, wCD70
-    ldh a, [hFFCF]
+    ldh a, [hTemp9]
     or a, a
     jr z, Jump_060_4BF3
     ld c, a
@@ -1228,30 +1228,30 @@ Data_060_4CC1:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: hFFC6, hFFC7, hFFCB, hFFCC
-; writes: hFFC6, hFFC7, hFFCB, hFFCC, hFFCD
-; points at: wCD63, wCD70, hFFCD
+; reads: hTemp0, hTemp1, hTemp5, hTemp6
+; writes: hTemp0, hTemp1, hTemp5, hTemp6, hTemp7
+; points at: wCD63, wCD70, hTemp7
 DebugAutomap_Update_Sub01_Sub01_Sub03::
 Func_060_4DA1:: ; address name
     ld b, $00
     ld hl, wCD63
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld de, wCD70
     ld a, e
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld a, d
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     xor a, a
-    ldh [hFFCD], a
+    ldh [hTemp7], a
 
 Jump_060_4DB8::
     push bc
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, [hl]
     cp a, $FF
@@ -1261,29 +1261,29 @@ Jump_060_4DC4::
     call RunRandomPatternCase
     or a, a
     jr z, Jump_060_4DC4
-    ld hl, hFFCD
+    ld hl, hTemp7
     inc [hl]
 
 Jump_060_4DCE::
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld e, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld d, a
     inc de
     ld a, e
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld a, d
-    ldh [hFFCC], a
-    ldh a, [hFFC6]
+    ldh [hTemp6], a
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, $04
     add_a_to_hl
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     pop bc
     inc b
     ld a, b
@@ -1314,12 +1314,12 @@ Jump_060_4DFE::
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: hFFCD, wCD04, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: hTemp7, wCD04, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 ; points at: wCD70, wCD74
 DebugAutomap_Update_Sub01_Sub01_Sub05::
 Func_060_4E0A:: ; address name
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     cp a, $01
     jp z, Jump_060_4F4B
     ld c, a
@@ -1334,7 +1334,7 @@ Jump_060_4E14::
     and a, $03
     cp a, c
     jr nc, Jump_060_4E14
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_060_4E21::
     call NextRandomSeed
@@ -1343,11 +1343,11 @@ Jump_060_4E21::
     cp a, c
     jr nc, Jump_060_4E21
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, c
     jr z, Jump_060_4E6C
     ld a, c
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld hl, wCD70
     ld b, $04
 
@@ -1360,10 +1360,10 @@ Jump_060_4E3A::
     swap a
     and a, $0F
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, c
     jr nz, Jump_060_4E59
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     swap a
     ld c, a
     ld a, [hl]
@@ -1373,10 +1373,10 @@ Jump_060_4E3A::
     jr Jump_060_4E68
 
 Jump_060_4E59::
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, c
     jr nz, Jump_060_4E68
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     swap a
     ld c, a
     ld a, [hl]
@@ -1417,7 +1417,7 @@ Jump_060_4E7A::
     jr c, Jump_060_4E94
     ld e, a
     ld a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_060_4E94::
     inc hl
@@ -1425,10 +1425,10 @@ Jump_060_4E94::
     ld a, c
     cp a, $04
     jr nz, Jump_060_4E7A
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0C
     jr z, Jump_060_4EC2
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     dec a
     dec a
     ld de, wCD70
@@ -1451,10 +1451,10 @@ Jump_060_4EAD::
     jp Jump_060_4F42
 
 Jump_060_4EC2::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $01
     jr z, Jump_060_4EE6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     dec a
     ld de, wCD70
     add a, e
@@ -1476,11 +1476,11 @@ Jump_060_4ED3::
     jr Jump_060_4F42
 
 Jump_060_4EE6::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $02
     cp a, $02
     jr z, Jump_060_4F16
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
     inc a
     ld de, wCD70
@@ -1508,11 +1508,11 @@ Jump_060_4EFA::
     jr Jump_060_4F42
 
 Jump_060_4F16::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $01
     cp a, $01
     jr z, Jump_060_4F42
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
     ld de, wCD70
     add a, e
@@ -1539,7 +1539,7 @@ Jump_060_4F29::
 Jump_060_4F42::
     pop bc
     inc b
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     dec a
     cp a, b
     jp nz, Jump_060_4E72
@@ -1560,14 +1560,14 @@ Jump_060_4F53::
 
 ; swaps [DE] with the first of the four wCD70 bytes whose high nibble matches [DE]'s (E-0124)
 ; 4 call sites from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub05)
-; reads: hFFC7
-; writes: hFFC7
+; reads: hTemp1
+; writes: hTemp1
 ; points at: wCD70
 SwapDEByteWithMatchingWCD70::
 Func_060_4F5C:: ; address name
     ld a, [de]
     and a, $F0
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld c, $04
     ld hl, wCD70
 
@@ -1575,7 +1575,7 @@ Jump_060_4F66::
     push bc
     ld a, [hl]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, c
     jr nz, Jump_060_4F76
     pop bc
@@ -1596,8 +1596,8 @@ Jump_060_4F76::
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: hFFCD, hFFC6
-; writes: hFFC6, hFFC7, hFFC8
+; reads: hTemp7, hTemp0
+; writes: hTemp0, hTemp1, hTemp2
 ; points at: wCD7A, wCD78, wCD70
 DebugAutomap_Update_Sub01_Sub01_Sub06::
 Func_060_4F7C:: ; address name
@@ -1617,7 +1617,7 @@ Jump_060_4F81::
     dec b
     jr nz, Jump_060_4F81
     ld hl, wCD78
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     dec a
     jr z, Jump_060_4FE4
     ld b, a
@@ -1629,7 +1629,7 @@ Jump_060_4F98::
     ld de, wCD70
     ld b, $00
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_060_4FA2::
     push bc
@@ -1642,15 +1642,15 @@ Jump_060_4FA2::
     and a, $0F
     cp a, c
     jr nz, Jump_060_4FC3
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
     ld a, [de]
     and a, $0F
     cp a, c
     jr c, Jump_060_4FCF
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, b
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     jr Jump_060_4FCF
 
 Jump_060_4FC3::
@@ -1661,7 +1661,7 @@ Jump_060_4FC3::
     and a, $0F
     jr nz, Jump_060_4FCF
     ld a, b
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_060_4FCF::
     inc de
@@ -1690,41 +1690,41 @@ Jump_060_4FE4::
 
 ; picks two random open cells (ReadKeyWorldCellIsSolid) in the areas named by hFFC7 and hFFC8, avoiding the previous cell, and stores their positions (E-0129)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub06)
-; reads: hFFC7, wCD04, hFFCA, hFFC9, hFFC8
-; writes: hFFCA, hFFC9
+; reads: hTemp1, wCD04, hTemp4, hTemp3, hTemp2
+; writes: hTemp4, hTemp3
 PlaceTwoRandomOpenCells::
 Func_060_4FEA:: ; address name
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $FE
     add a, a
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     call NextRandomSeed
     ld a, [wCD04]
     and a, $03
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     or a, c
-    ldh [hFFCA], a
-    ldh a, [hFFC7]
+    ldh [hTemp4], a
+    ldh a, [hTemp1]
     and a, $01
     add a, a
     add a, a
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     call NextRandomSeed
     ld a, [wCD04]
     and a, $03
     ld c, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     or a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     call ReadKeyWorldCellIsSolid
     or a, a
     jr z, PlaceTwoRandomOpenCells
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $0F
     swap a
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $0F
     or a, c
     ld [hl], a
@@ -1744,37 +1744,37 @@ Jump_060_5034::
     inc hl
 
 Jump_060_5036::
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $FE
     add a, a
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     call NextRandomSeed
     ld a, [wCD04]
     and a, $03
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     or a, c
-    ldh [hFFCA], a
-    ldh a, [hFFC8]
+    ldh [hTemp4], a
+    ldh a, [hTemp2]
     and a, $01
     add a, a
     add a, a
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     call NextRandomSeed
     ld a, [wCD04]
     and a, $03
     ld c, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     or a, c
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     call ReadKeyWorldCellIsSolid
     or a, a
     jr z, Jump_060_5036
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $0F
     swap a
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $0F
     or a, c
     ld [hl+], a
@@ -1782,16 +1782,16 @@ Jump_060_5036::
 
 ; reads the cell at (hFFC9, hFFCA) from the area map chunk in wCD60; A = 1 when its byte is not $FF, else 0 (E-0128)
 ; 3 call sites from 2 routines (e.g. PlaceObjectInAreaC, PlaceTwoRandomOpenCells)
-; reads: hFFCA, hFFC9
+; reads: hTemp4, hTemp3
 ReadKeyWorldCellIsSolid::
 Func_060_5075:: ; address name
     push hl
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $FC
     add a, a
     ld l, a
     ld h, $00
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $FC
     add_a_to_hl
     ld a, l
@@ -1812,7 +1812,7 @@ Func_060_5075:: ; address name
     call Multiply8
     add hl, de
     pop bc
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $03
     ld c, a
     sla a
@@ -1820,7 +1820,7 @@ Func_060_5075:: ; address name
     sla a
     sla a
     add_a_to_hl
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $03
     ld c, a
     sla a
@@ -1866,16 +1866,16 @@ Func_060_50E4:: ; address name
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: hFFC6, hFFC7, wCD04, wCD03
-; writes: hFFC6, hFFC7
+; reads: hTemp0, hTemp1, wCD04, wCD03
+; writes: hTemp0, hTemp1
 ; points at: wCE8B, wCD8B, wCDAF
 DebugAutomap_Update_Sub01_Sub01_Sub08::
 Func_060_50E5:: ; address name
     ld hl, wCE8B
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld hl, wCD8B
     ld de, wCDAF
 
@@ -1927,36 +1927,36 @@ Jump_060_512B::
     add_a_to_hl
     ld a, [hl]
     push af
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     pop af
     ld [hl], a
     jr Jump_060_5159
 
 Jump_060_5147::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld [hl], $80
     jr Jump_060_5159
 
 Jump_060_5151::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld [hl], $81
 
 Jump_060_5159::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, $01
-    ldh [hFFC6], a
-    ldh a, [hFFC7]
+    ldh [hTemp0], a
+    ldh a, [hTemp1]
     adc a, $00
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     pop hl
     ld a, $04
     add_a_to_hl
@@ -1977,22 +1977,22 @@ Data_060_5177:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: hFFCD, hFFC6, hFFC7, wCD0C, wCD0E, wCD0D, hFFCB, hFFC8, ...
-; writes: hFFC6, hFFC7, hFFCB, hFFC8, hFFC9, hFFCE, hFFCF
+; reads: hTemp7, hTemp0, hTemp1, wCD0C, wCD0E, wCD0D, hTemp5, hTemp2, ...
+; writes: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, hTemp8, hTemp9
 ; points at: wCD70, wCD88
 DebugAutomap_Update_Sub01_Sub01_Sub09::
 Func_060_51B7:: ; address name
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     cp a, $01
     jr z, Jump_060_51F9
     ld e, a
     ld b, $00
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_060_51C3::
     xor a, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld hl, wCD70
     ld c, $04
 
@@ -2006,25 +2006,25 @@ Jump_060_51CB::
     and a, $0F
     cp a, b
     jr nz, Jump_060_51E8
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld d, a
     ld a, [hl]
     and a, $0F
     add a, d
     ld [hl], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     inc a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_060_51E8::
     inc hl
     dec c
     jr nz, Jump_060_51CB
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     add a, c
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     inc b
     ld a, b
     cp a, e
@@ -2043,7 +2043,7 @@ Jump_060_51F9::
     ld b, $84
     call ReadByteInBank
     ld a, c
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     pop bc
     ld c, $00
     ld a, [wCD0E]
@@ -2063,26 +2063,26 @@ Jump_060_5220::
     ld c, a
     dec b
     jr nz, Jump_060_5220
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld h, a
     ld l, $00
     ld a, c
     call DivideHLByA
     inc hl
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld hl, $0000
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wCD88
     ld a, l
-    ldh [hFFCE], a
+    ldh [hTemp8], a
     ld a, h
-    ldh [hFFCF], a
+    ldh [hTemp9], a
     inc hl
     inc hl
     inc hl
@@ -2091,13 +2091,13 @@ Jump_060_5220::
     ld c, $00
 
 Jump_060_5259::
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     add hl, de
 
@@ -2106,9 +2106,9 @@ Jump_060_5266::
     or a, a
     jr nz, Jump_060_5273
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     inc c
     jr Jump_060_5259
 
@@ -2121,7 +2121,7 @@ Jump_060_5273::
     pop bc
     pop hl
     inc b
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     cp a, b
     jr z, Jump_060_5286
     dec h
@@ -2138,14 +2138,14 @@ Jump_060_5288::
 
 ; finds area C in wCD70 and picks a random free cell inside it for the object (avoiding wCD7B and wCD8B entries) (E-0131)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub09)
-; reads: hFFC9, wCD04, hFFCA, hFFD0, hFFCE, hFFCF, wCD0C, hFFCC
-; writes: hFFD0, hFFCC, hFFCA, hFFC9, hFFCE, hFFCF
+; reads: hTemp3, wCD04, hTemp4, hTempA, hTemp8, hTemp9, wCD0C, hTemp6
+; writes: hTempA, hTemp6, hTemp4, hTemp3, hTemp8, hTemp9
 ; points at: wCD70, wCD7B, wCD8B
 PlaceObjectInAreaC::
 Func_060_528B:: ; address name
     push bc
     xor a, a
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld hl, wCD70
     ld b, $00
 
@@ -2168,8 +2168,8 @@ Jump_060_52A0::
     ret
 
 Jump_060_52A9::
-    ldh a, [hFFC9]
-    ldh [hFFCC], a
+    ldh a, [hTemp3]
+    ldh [hTemp6], a
 
 Jump_060_52AD::
     ld a, b
@@ -2181,7 +2181,7 @@ Jump_060_52AD::
     ld a, [wCD04]
     and a, $03
     add a, c
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, b
     and a, $01
     add a, a
@@ -2191,12 +2191,12 @@ Jump_060_52AD::
     ld a, [wCD04]
     and a, $03
     add a, c
-    ldh [hFFC9], a
-    ldh a, [hFFC9]
+    ldh [hTemp3], a
+    ldh a, [hTemp3]
     and a, $0F
     swap a
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $0F
     or a, c
     ld c, a
@@ -2242,15 +2242,15 @@ Jump_060_5310::
     pop bc
     or a, a
     jr z, Jump_060_5365
-    ldh a, [hFFCE]
+    ldh a, [hTemp8]
     ld l, a
-    ldh a, [hFFCF]
+    ldh a, [hTemp9]
     ld h, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $0F
     swap a
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $0F
     or a, c
     ld [hl+], a
@@ -2284,22 +2284,22 @@ Jump_060_5348::
     xor a, a
     ld [hl+], a
     ld a, l
-    ldh [hFFCE], a
+    ldh [hTemp8], a
     ld a, h
-    ldh [hFFCF], a
+    ldh [hTemp9], a
     inc hl
     inc hl
     inc hl
     ld [hl], $FF
-    ldh a, [hFFCC]
-    ldh [hFFC9], a
+    ldh a, [hTemp6]
+    ldh [hTemp3], a
     xor a, a
     ret
 
 Jump_060_5365::
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     inc a
-    ldh [hFFD0], a
+    ldh [hTempA], a
     cp a, $64
     jp nz, Jump_060_52AD
     pop bc
@@ -2309,7 +2309,7 @@ Jump_060_5365::
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: wCD05, wCC47
-; writes: wCD0F, wCC47, hFFC6
+; writes: wCD0F, wCC47, hTemp0
 ; points at: wCC48
 DebugAutomap_Update_Sub01_Sub01_Sub0A::
 Func_060_5373:: ; address name
@@ -2329,7 +2329,7 @@ Jump_060_538C::
     push de
     push bc
     ld a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call RollKeyWorldObjectKind
     call PlaceKeyWorldObjectAtRandomCell
     or a, a
@@ -2391,8 +2391,8 @@ Jump_060_53DF::
 
 ; picks a random open cell within wCD0D x wCD0E not used by another object and stores it for object hFFC6 (E-0130)
 ; 2 call sites from 2 routines (e.g. RefreshKeyWorldObjectsOnEntry, DebugAutomap_Update_Sub01_Sub01_Sub0A)
-; reads: wCD0D, wCD04, wCD0E, hFFC9, hFFCA, hFFC6, wCC47, hFFCB, ...
-; writes: wC94F, hFFC9, hFFCA, hFFCB
+; reads: wCD0D, wCD04, wCD0E, hTemp3, hTemp4, hTemp0, wCC47, hTemp5, ...
+; writes: wC94F, hTemp3, hTemp4, hTemp5
 ; points at: wCC4C
 PlaceKeyWorldObjectAtRandomCell::
 Func_060_53E5:: ; address name
@@ -2410,7 +2410,7 @@ Jump_060_53EE::
     and a, $0F
     cp a, c
     jr nc, Jump_060_53EE
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [wCD0E]
     ld c, a
 
@@ -2420,15 +2420,15 @@ Jump_060_53FF::
     and a, $0F
     cp a, c
     jr nc, Jump_060_53FF
-    ldh [hFFCA], a
-    ldh a, [hFFC9]
+    ldh [hTemp4], a
+    ldh a, [hTemp3]
     swap a
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     or a, c
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld b, a
     ld a, [wCC47]
     sub a, b
@@ -2446,12 +2446,12 @@ Jump_060_5424::
     jr nz, Jump_060_5424
 
 Jump_060_5433::
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $FC
     add a, a
     ld l, a
     ld h, $00
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $FC
     add_a_to_hl
     ld a, l
@@ -2472,7 +2472,7 @@ Jump_060_5433::
     call Multiply8
     add hl, de
     pop bc
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $03
     ld c, a
     add a, a
@@ -2480,7 +2480,7 @@ Jump_060_5433::
     add a, a
     add a, a
     add_a_to_hl
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $03
     ld c, a
     add a, a
@@ -2515,7 +2515,7 @@ Jump_060_5433::
     inc de
     ld [de], a
     dec de
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld [de], a
     ld a, $00
     ret
@@ -2532,8 +2532,8 @@ Jump_060_54AB::
 
 ; picks an object kind for the key level band wCD0F from the chance rows at $556F and its contents ([DE + 1]) (E-0130)
 ; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, RemoveWCC48EntryMatching, DebugAutomap_Update_Sub01_Sub01_Sub0A)
-; reads: wCD0F, wCD04, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wCD0F, wCD04, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 RollKeyWorldObjectKind::
 Func_060_54BB:: ; address name
     ld a, [wCD0F]
@@ -2614,9 +2614,9 @@ Jump_060_551B::
     jr nc, Jump_060_551B
     call Multiply8
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wCD0F]
     ld c, a
 
@@ -2627,9 +2627,9 @@ Jump_060_5534::
     cp a, $0A
     jr nc, Jump_060_5534
     call Multiply8
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld b, a
     add hl, bc
     push de
@@ -2721,8 +2721,8 @@ Data_060_555F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01, FieldModeStateDispatch_Case04_Sub02)
-; reads: wCD0F, wCD04, hFFC6, hFFC7
-; writes: hFFC6, hFFC7
+; reads: wCD0F, wCD04, hTemp0, hTemp1
+; writes: hTemp0, hTemp1
 FieldModeStateDispatch_Shared05::
 Func_060_596F:: ; address name
     ld a, [wCD0F]
@@ -2811,9 +2811,9 @@ Jump_060_59D5::
     jr nc, Jump_060_59D5
     call Multiply8
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wCD0F]
     ld c, a
 
@@ -2824,9 +2824,9 @@ Jump_060_59EE::
     cp a, $0A
     jr nc, Jump_060_59EE
     call Multiply8
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld b, a
     add hl, bc
     push de
@@ -2922,24 +2922,24 @@ Data_060_5A19:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: wCD88, hFFCA, hFFC9
-; writes: wCD08, hFFC9, hFFCA, wCD09, wCD0A
+; reads: wCD88, hTemp4, hTemp3
+; writes: wCD08, hTemp3, hTemp4, wCD09, wCD0A
 DebugAutomap_Update_Sub01_Sub01_Sub0B::
 Func_060_5E42:: ; address name
     ld a, [wCD88]
     ld [wCD08], a
     swap a
     and a, $0F
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [wCD88]
     and a, $0F
-    ldh [hFFCA], a
-    ldh a, [hFFCA]
+    ldh [hTemp4], a
+    ldh a, [hTemp4]
     and a, $FC
     add a, a
     ld l, a
     ld h, $00
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $FC
     add_a_to_hl
     ld a, l
@@ -2960,7 +2960,7 @@ Func_060_5E42:: ; address name
     call Multiply8
     add hl, de
     pop bc
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     and a, $03
     ld c, a
     sla a
@@ -2968,7 +2968,7 @@ Func_060_5E42:: ; address name
     sla a
     sla a
     add_a_to_hl
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $03
     ld c, a
     sla a
@@ -3043,8 +3043,8 @@ Func_060_5EE1:: ; address name
 
 ; entry 3 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
-; writes: hFFD0
+; reads: hTemp0, hTemp1, wCD04, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
+; writes: hTempA
 RunRandomPatternCase_Case03::
 Jump_060_5F0C:: ; address name
     ld a, b
@@ -3064,9 +3064,9 @@ Jump_060_5F15::
     ret
 
 Jump_060_5F1C::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, $04
     add_a_to_hl
@@ -3113,13 +3113,13 @@ Jump_060_5F5E::
     ld hl, $000C
     call StoreHFFC8To3BytesBeforeHLPlusHFFC6
     ld [hl], $03
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     swap a
     and a, $F0
-    ldh [hFFD0], a
-    ldh a, [hFFC8]
+    ldh [hTempA], a
+    ldh a, [hTemp2]
     ld e, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld d, a
     ld a, e
     add a, $80
@@ -3127,32 +3127,32 @@ Jump_060_5F5E::
     ld a, d
     adc a, $01
     ld d, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld b, a
     call ReadByteInBank
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld l, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld h, a
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     inc de
     call ReadByteInBank
     inc hl
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     inc de
     call ReadByteInBank
     inc hl
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     inc de
     call ReadByteInBank
     inc hl
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     ld a, $01
@@ -3160,8 +3160,8 @@ Jump_060_5F5E::
 
 ; entry 2 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
-; writes: hFFD0
+; reads: hTemp0, hTemp1, wCD04, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
+; writes: hTempA
 RunRandomPatternCase_Case02::
 Jump_060_5FBF:: ; address name
     ld a, b
@@ -3174,9 +3174,9 @@ Jump_060_5FC6::
     ret
 
 Jump_060_5FC8::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, $04
     add_a_to_hl
@@ -3203,13 +3203,13 @@ Jump_060_5FF2::
     ld hl, $0004
     call StoreHFFC8To3BytesBeforeHLPlusHFFC6
     ld [hl], $01
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     swap a
     and a, $F0
-    ldh [hFFD0], a
-    ldh a, [hFFC8]
+    ldh [hTempA], a
+    ldh a, [hTemp2]
     ld e, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld d, a
     ld a, e
     add a, $C0
@@ -3217,20 +3217,20 @@ Jump_060_5FF2::
     ld a, d
     adc a, $00
     ld d, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld b, a
     call ReadByteInBank
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld l, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld h, a
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     inc de
     call ReadByteInBank
     inc hl
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     ld a, $01
@@ -3238,8 +3238,8 @@ Jump_060_5FF2::
 
 ; entry 1 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, hFFC7, wCD04, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, ...
-; writes: hFFD0
+; reads: hTemp0, hTemp1, wCD04, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
+; writes: hTempA
 RunRandomPatternCase_Case01::
 Jump_060_6031:: ; address name
     ld a, b
@@ -3251,9 +3251,9 @@ Jump_060_6036::
     ret
 
 Jump_060_6038::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, $08
     add_a_to_hl
@@ -3278,13 +3278,13 @@ Jump_060_605E::
     ld hl, $0008
     call StoreHFFC8To3BytesBeforeHLPlusHFFC6
     ld [hl], $01
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     swap a
     and a, $F0
-    ldh [hFFD0], a
-    ldh a, [hFFC8]
+    ldh [hTempA], a
+    ldh a, [hTemp2]
     ld e, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld d, a
     ld a, e
     add a, $C0
@@ -3292,21 +3292,21 @@ Jump_060_605E::
     ld a, d
     adc a, $00
     ld d, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld b, a
     call ReadByteInBank
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld l, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld h, a
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     inc de
     call ReadByteInBank
     inc hl
     inc hl
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     ld a, $01
@@ -3314,8 +3314,8 @@ Jump_060_605E::
 
 ; entry 0 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD03, hFFCD, hFFC8, hFFC9, hFFCA, hFFCB, hFFCC, hFFD0
-; writes: hFFD0
+; reads: wCD03, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTempA
+; writes: hTempA
 RunRandomPatternCase_Case00::
 Jump_060_609E:: ; address name
     call NextRandomSeed
@@ -3333,13 +3333,13 @@ Jump_060_609E:: ; address name
 Jump_060_60B2::
     call StoreThreeBytesBeforeHFFC6Pointer
     ld [hl], $00
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     swap a
     and a, $F0
-    ldh [hFFD0], a
-    ldh a, [hFFC8]
+    ldh [hTempA], a
+    ldh a, [hTemp2]
     ld e, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld d, a
     ld a, e
     add a, $60
@@ -3347,14 +3347,14 @@ Jump_060_60B2::
     ld a, d
     adc a, $00
     ld d, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld b, a
     call ReadByteInBank
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld l, a
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld h, a
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     or a, c
     ld [hl], a
     ld a, $01
@@ -3362,13 +3362,13 @@ Jump_060_60B2::
 
 ; copies three bytes at DE to the address in hFFC6/hFFC7 minus 3 and to hFFC8-hFFCA (E-0121)
 ; 4 call sites from 4 routines (e.g. RunRandomPatternCase_Case03, RunRandomPatternCase_Case02, RunRandomPatternCase_Case01, RunRandomPatternCase_Case00)
-; reads: hFFC6, hFFC7
-; writes: hFFC8, hFFC9, hFFCA
+; reads: hTemp0, hTemp1
+; writes: hTemp2, hTemp3, hTemp4
 StoreThreeBytesBeforeHFFC6Pointer::
 Func_060_60E0:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     dec hl
     dec hl
@@ -3376,35 +3376,35 @@ Func_060_60E0:: ; address name
     ld a, [de]
     inc de
     ld [hl+], a
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, [de]
     inc de
     ld [hl+], a
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [de]
     ld [hl+], a
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ret
 
 ; HL += the word hFFC6/hFFC7, then stores hFFC8, hFFC9, hFFCA at HL - 3 onward (E-0119)
 ; 5 call sites from 3 routines (e.g. RunRandomPatternCase_Case03, RunRandomPatternCase_Case02, RunRandomPatternCase_Case01)
-; reads: hFFC6, hFFC7, hFFC8, hFFC9, hFFCA
+; reads: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4
 StoreHFFC8To3BytesBeforeHLPlusHFFC6::
 Func_060_60F8:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     adc a, h
     ld h, a
     dec hl
     dec hl
     dec hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [hl+], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld [hl+], a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     ld [hl+], a
     ret
 
@@ -3626,7 +3626,7 @@ Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; on key-world maps with bit 7 of wC893 set: sets the object count wCC47 from the band of the key level and drops objects for which Func_060_53E5 fails; marks the wC890 object (E-0129)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
 ; reads: wCC44, wC893, wC833, wCD0F, wCC47, wC88E, wC891, wCC42, ...
-; writes: wC893, wCC47, hFFC6
+; writes: wC893, wCC47, hTemp0
 ; points at: wCC48, wCC4C
 RefreshKeyWorldObjectsOnEntry::
 Func_060_62F9:: ; address name
@@ -3664,7 +3664,7 @@ Jump_060_6333::
     push de
     push bc
     ld a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call RollKeyWorldObjectKind
     call PlaceKeyWorldObjectAtRandomCell
     or a, a
@@ -3730,7 +3730,7 @@ Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; on town maps with bit 7 of wC893 set: sets the object count and band for the map, drops listed objects and marks the wC890 one (E-0130)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
 ; reads: wCC44, wC893, hMapId
-; writes: wCC47, wCD0F, hFFC6
+; writes: wCC47, wCD0F, hTemp0
 SetupTownObjectsForMap::
 Func_060_639D:: ; address name
     ld a, [wCC44]
@@ -3777,7 +3777,7 @@ Jump_060_63E0::
     ld hl, Data_060_6705
     call RemoveWCC48EntryMatching
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call MarkWCC48EntryForWC890
     ret
 
@@ -3789,7 +3789,7 @@ Jump_060_63F8::
     ld hl, $6905
     call RemoveWCC48EntryMatching
     ld a, $02
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call MarkWCC48EntryForWC890
     ret
 
@@ -3801,7 +3801,7 @@ Jump_060_6410::
     ld hl, Data_060_6B05
     call RemoveWCC48EntryMatching
     ld a, $03
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call MarkWCC48EntryForWC890
     ret
 
@@ -3813,7 +3813,7 @@ Jump_060_6428::
     ld hl, Data_060_6F85
     call RemoveWCC48EntryMatching
     ld a, $04
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call MarkWCC48EntryForWC890
     ret
 
@@ -3825,7 +3825,7 @@ Jump_060_6440::
     ld hl, Data_060_7405
     call RemoveWCC48EntryMatching
     ld a, $05
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call MarkWCC48EntryForWC890
     ret
 
@@ -3837,7 +3837,7 @@ Jump_060_6458::
     ld hl, Data_060_7525
     call RemoveWCC48EntryMatching
     ld a, $06
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call MarkWCC48EntryForWC890
     ret
 
@@ -3849,21 +3849,21 @@ Jump_060_6470::
     ld hl, Data_060_7555
     call RemoveWCC48EntryMatching
     ld a, $07
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call MarkWCC48EntryForWC890
     ret
 
 ; clears bit 7 of wC893; walks the wCC47 8-byte entries at wCC48 and drops the count at the first entry for which Func_060_64F3 returns 0 (E-0125)
 ; 7 call sites from 1 routine (e.g. SetupTownObjectsForMap)
 ; reads: wC893, wCC47
-; writes: hFFCC, hFFCD, wC893, hFFC6, wCC47
+; writes: hTemp6, hTemp7, wC893, hTemp0, wCC47
 ; points at: wCC48
 RemoveWCC48EntryMatching::
 Func_060_6488:: ; address name
     ld a, l
-    ldh [hFFCC], a
+    ldh [hTemp6], a
     ld a, h
-    ldh [hFFCD], a
+    ldh [hTemp7], a
     ld a, [wC893]
     and a, $7F
     ld [wC893], a
@@ -3875,7 +3875,7 @@ Jump_060_649D::
     push de
     push bc
     ld a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call RollKeyWorldObjectKind
     call RemoveWCC48EntryMatching_Sub01
     or a, a
@@ -3903,7 +3903,7 @@ Jump_060_64B8::
 
 ; when wC88E is set and wC891 equals hFFC6, sets bit 7 of the entry whose byte 4 equals wC890 (E-0125)
 ; 7 call sites from 1 routine (e.g. SetupTownObjectsForMap)
-; reads: wC88E, wC891, hFFC6, wC890, wCC47
+; reads: wC88E, wC891, hTemp0, wC890, wCC47
 ; points at: wCC4C
 MarkWCC48EntryForWC890::
 Func_060_64C2:: ; address name
@@ -3914,7 +3914,7 @@ Func_060_64C2:: ; address name
     bit 7, a
     ret nz
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, c
     ret nz
     ld a, [wC890]
@@ -3943,14 +3943,14 @@ Jump_060_64E8::
 
 ; only called from RemoveWCC48EntryMatching (E-0047)
 ; 1 call site from 1 routine (e.g. RemoveWCC48EntryMatching)
-; reads: wMapWidthScreens, wCD04, wMapHeightScreens, hFFC9, hFFCA, hFFC6, wCC47, hFFD0, ...
-; writes: hFFD0, hFFC9, hFFCA, hFFCB
+; reads: wMapWidthScreens, wCD04, wMapHeightScreens, hTemp3, hTemp4, hTemp0, wCC47, hTempA, ...
+; writes: hTempA, hTemp3, hTemp4, hTemp5
 ; points at: wCC4C
 RemoveWCC48EntryMatching_Sub01::
 Func_060_64F3:: ; address name
     push de
     xor a, a
-    ldh [hFFD0], a
+    ldh [hTempA], a
 
 Jump_060_64F7::
     ld a, [wMapWidthScreens]
@@ -3962,7 +3962,7 @@ Jump_060_64FB::
     and a, $0F
     cp a, c
     jr nc, Jump_060_64FB
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [wMapHeightScreens]
     ld c, a
 
@@ -3972,15 +3972,15 @@ Jump_060_650C::
     and a, $0F
     cp a, c
     jr nc, Jump_060_650C
-    ldh [hFFCA], a
-    ldh a, [hFFC9]
+    ldh [hTemp4], a
+    ldh a, [hTemp3]
     swap a
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     or a, c
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld b, a
     ld a, [wCC47]
     sub a, b
@@ -3992,9 +3992,9 @@ Jump_060_6531::
     ld a, [hl]
     cp a, c
     jr nz, Jump_060_6541
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     inc a
-    ldh [hFFD0], a
+    ldh [hTempA], a
     cp a, $64
     jr nz, Jump_060_64F7
     pop de
@@ -4013,18 +4013,18 @@ Jump_060_654B::
     add a, a
     add a, a
     ld c, a
-    ldh a, [hFFCA]
+    ldh a, [hTemp4]
     call Multiply8
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     add a, a
     add a, a
     add a, a
     add_a_to_hl
     ld e, l
     ld d, h
-    ldh a, [hFFCC]
+    ldh a, [hTemp6]
     ld l, a
-    ldh a, [hFFCD]
+    ldh a, [hTemp7]
     ld h, a
     add hl, de
 
@@ -4069,7 +4069,7 @@ Jump_060_6590::
     inc de
     ld [de], a
     dec de
-    ldh a, [hFFCB]
+    ldh a, [hTemp5]
     ld [de], a
     ld a, $01
     ret
@@ -4077,8 +4077,8 @@ Jump_060_6590::
 ; only called from FieldModeStateDispatch_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY, wCCEA, wCD04
-; writes: wCCE9, wCCEA, wCD0F, hFFC8, hFFC9
-; points at: wCCEB, hFFC9
+; writes: wCCE9, wCCEA, wCD0F, hTemp2, hTemp3
+; points at: wCCEB, hTemp3
 FieldModeStateDispatch_Case04_Sub02::
 Func_060_65AA:: ; address name
     ld a, [wCC44]
@@ -4144,13 +4144,13 @@ Jump_060_65EF::
     ld a, [hl]
     ld [wCD0F], a
     pop af
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, $03
     ld [wCCE9], a
     call NextRandomSeed
     ld a, [wCD04]
     and a, $1F
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld b, $03
     ld de, wCCEB
 
@@ -4159,7 +4159,7 @@ Jump_060_661E::
     push bc
     call FieldModeStateDispatch_Shared05
     call WriteTable669CWordForHFFC8HFFC9
-    ld hl, hFFC9
+    ld hl, hTemp3
     inc [hl]
     pop bc
     pop de
@@ -4179,12 +4179,12 @@ Data_060_663F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; DE += 2; writes the word at $669C + 16 * hFFC8 + 2 * Data_060_6677[hFFC9] at DE (E-0121)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02)
-; reads: hFFC8, hFFC9
+; reads: hTemp2, hTemp3
 WriteTable669CWordForHFFC8HFFC9::
 Func_060_664A:: ; address name
     inc de
     inc de
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld l, a
     ld h, $00
     add hl, hl
@@ -4198,7 +4198,7 @@ Func_060_664A:: ; address name
     adc a, $66
     ld h, a
     push hl
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld hl, Data_060_6677
     add_a_to_hl
     ld a, [hl]
@@ -4483,8 +4483,8 @@ Jump_060_68C2::
 
 ; DE += 2; advances the random seed; hFFC6 = wCD04 & 7; writes Data_060_690E[hFFC6] at DE, calls Func_061_4706, then writes hFFC6 at the next byte (E-0121)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01)
-; reads: wCD04, hFFC6
-; writes: hFFC6
+; reads: wCD04, hTemp0
+; writes: hTemp0
 WriteRandomEntryFromTable690E::
 Func_060_68EB:: ; address name
     inc de
@@ -4492,7 +4492,7 @@ Func_060_68EB:: ; address name
     call NextRandomSeed
     ld a, [wCD04]
     and a, $07
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld hl, Data_060_690E
     add_a_to_hl
     ld a, [hl]
@@ -4501,7 +4501,7 @@ Func_060_68EB:: ; address name
     push de
     farcall LookupTable4818NibblePairForHFFC6
     pop de
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [de], a
     ret
 
@@ -4510,12 +4510,12 @@ Data_060_690E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; hFFC9 = hFFC6; picks hFFC7 from the chance row Data_060_6969[level / 10] and hFFC8 from row Data_060_6A09 + $3C * (level / 10) (E-0125)
 ; 2 call sites from 2 routines (e.g. DebugAutomap_Update_Sub01, WriteKeyEntryHFFC6)
-; reads: hFFC6
-; writes: hFFC9, hFFC7, hFFC8
+; reads: hTemp0
+; writes: hTemp3, hTemp1, hTemp2
 RollKeyContentsForLevelHFFC6::
 Func_060_6916:: ; address name
-    ldh a, [hFFC6]
-    ldh [hFFC9], a
+    ldh a, [hTemp0]
+    ldh [hTemp3], a
     ld l, a
     ld h, $00
     ld a, $0A
@@ -4542,7 +4542,7 @@ Jump_060_693B::
 
 Jump_060_693E::
     ld a, b
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     pop af
     ld c, $3C
     call Multiply8
@@ -4561,7 +4561,7 @@ Jump_060_6951::
 
 Jump_060_6958::
     ld a, b
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ret
 
 ; repeats NextRandomSeed until wCD04 & $7F is below 100; returns A = that value (E-0116)
@@ -4587,8 +4587,8 @@ Data_060_6B05:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; hFFC6 = the index of the first of 20 SRAM-bank-2 slots ($195 bytes apart) whose marker is not $50 + index, or $FF when all match (E-0125)
 ; 3 call sites from 3 routines (e.g. RunWC46BMenuState_Case05_Sub01, DebugAutomap_Update_Sub01, RunWD780StateWhenNotFading_1B_Case01_Case21)
-; reads: hFFC6
-; writes: rRAMB, rRAMG, hFFC6
+; reads: hTemp0
+; writes: rRAMB, rRAMG, hTemp0
 ; points at: sA000
 FindSRAMSlotMarkerIndex::
 Func_060_6C61:: ; address name
@@ -4597,7 +4597,7 @@ Func_060_6C61:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld hl, sA000
     ld b, $14
     ld c, $50
@@ -4612,14 +4612,14 @@ Jump_060_6C75::
     ld a, h
     adc a, $01
     ld h, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     inc a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     inc c
     dec b
     jr nz, Jump_060_6C75
     ld a, $FF
-    ldh [hFFC6], a
+    ldh [hTemp0], a
 
 Jump_060_6C8E::
     xor a, a

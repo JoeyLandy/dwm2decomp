@@ -227,7 +227,7 @@ Jump_012_40FC:: ; address name
 ; entry 5 of the `rst $00` table in ScriptCommand99_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing, wFollowerRecords, wC8F4, wC8F9, wC8F1, wC8F6, wC8FB
-; points at: hFF8C, wScriptStep
+; points at: hPlayerStateFlags, wScriptStep
 ScriptCommand99_Run_Case05::
 Jump_012_4115:: ; address name
     ld a, $02
@@ -241,7 +241,7 @@ Jump_012_4115:: ; address name
     ld [wC8F6], a
     ld a, $C0
     ld [wC8FB], a
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     ld hl, wScriptStep
     inc [hl]
@@ -357,10 +357,10 @@ Jump_012_41CC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
-; points at: hFF8C, hPlayerY, hPlayerX, wScriptStep
+; points at: hPlayerStateFlags, hPlayerY, hPlayerX, wScriptStep
 ScriptCommand99_Run_Case00::
 Jump_012_41ED:: ; address name
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank12
@@ -397,10 +397,10 @@ Func_012_4210:: ; address name
 ; entry 11 of the `rst $00` table in ScriptCommand99_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-; points at: hFF8C
+; points at: hPlayerStateFlags
 ScriptCommand99_Run_Case0B::
 Jump_012_422C:: ; address name
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call ClearBit2AtHL_Bank12
     ld a, $80
     ld [wScriptStartRequest], a
@@ -543,7 +543,7 @@ Jump_012_42D7:: ; address name
 ; entry 5 of the `rst $00` table in ScriptCommand98_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing, wFollowerRecords, wC8F4, wC8F9, wC8F1, wC8F6, wC8FB
-; points at: hFF8C, wScriptStep
+; points at: hPlayerStateFlags, wScriptStep
 ScriptCommand98_Run_Case05::
 Jump_012_42E9:: ; address name
     ld a, $02
@@ -557,7 +557,7 @@ Jump_012_42E9:: ; address name
     ld [wC8F6], a
     ld a, $E0
     ld [wC8FB], a
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     ld hl, wScriptStep
     inc [hl]
@@ -663,10 +663,10 @@ Jump_012_438A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wScriptParam0
 ; writes: wC928, wC929, wScriptParam0
-; points at: hFF8C, hPlayerY, wScriptStep
+; points at: hPlayerStateFlags, hPlayerY, wScriptStep
 ScriptCommand98_Run_Case00::
 Jump_012_43A6:: ; address name
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
@@ -799,16 +799,16 @@ Jump_012_446D::
 
 ; entry 1 of the `rst $00` table in ScriptCommand96_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFF8D, hPlayerFacing, wC8F1, wC8F4, wC8F9, hPlayerX, wC8F0, wC8F5, ...
-; points at: hFF8C, wC94A, wScriptStep
+; writes: hFieldDrawFlags, hPlayerFacing, wC8F1, wC8F4, wC8F9, hPlayerX, wC8F0, wC8F5, ...
+; points at: hPlayerStateFlags, wC94A, wScriptStep
 ScriptCommand96_Run_Case01::
 Jump_012_447A:: ; address name
     ld a, $0E
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     xor a, a
     call RunMessageBoxThenContinue_684A
     ret nc
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     xor a, a
     ldh [hPlayerFacing], a
@@ -891,7 +891,7 @@ Func_012_44DB:: ; address name
 ; entry 25 of the `rst $00` table in ScriptCommand96_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC91C, wC91D, wC91E
-; writes: wC917, wC916, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, hFFB9, wScriptCommandType, wScriptInDataBank
+; writes: wC917, wC916, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, hSpriteWindowClipMode, wScriptCommandType, wScriptInDataBank
 ScriptCommand96_Run_Case19::
 Jump_012_4515:: ; address name
     farcall RestartMapMusic
@@ -906,7 +906,7 @@ Jump_012_4515:: ; address name
     ld a, [wC91E]
     ld [wScriptPointerHi], a
     ld a, $02
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ld a, $F7
     ld [wScriptCommandType], a
     ld a, $01
@@ -1261,11 +1261,11 @@ Jump_012_473C:: ; address name
 ; entry 2 of the `rst $00` table in ScriptCommand96_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, wScriptParam0, hPlayerY, hPlayerX, wScriptParam1
-; writes: wMessageIndex, hFF8D, hPlayerY, hPlayerFacing, hPlayerX, wFollowerRecords, wC8F4, wC8F9, ...
-; points at: hFF8C, wScriptParam0, wScriptStep
+; writes: wMessageIndex, hFieldDrawFlags, hPlayerY, hPlayerFacing, hPlayerX, wFollowerRecords, wC8F4, wC8F9, ...
+; points at: hPlayerStateFlags, wScriptParam0, wScriptStep
 ScriptCommand96_Run_Case02::
 Jump_012_474A:: ; address name
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     ld a, [wMessageIndex]
     cp a, $60
@@ -1275,21 +1275,21 @@ Jump_012_474A:: ; address name
     cp a, $10
     jr nz, Jump_012_4765
     ld a, $0C
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     jr Jump_012_4776
 
 Jump_012_4765::
     cp a, $20
     jr nz, Jump_012_476F
     ld a, $08
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     jr Jump_012_4776
 
 Jump_012_476F::
     cp a, $30
     jr nz, Jump_012_4776
     xor a, a
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
 
 Jump_012_4776::
     ld a, [wScriptParam0]
@@ -1362,7 +1362,7 @@ Jump_012_47D8::
     ldh [hPlayerY], a
     cp a, $30
     ret nz
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call ClearBit2AtHL_Bank12
     ld a, $01
     ldh [hPlayerFacing], a
@@ -1387,13 +1387,13 @@ Jump_012_47D8::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC90D
 ; writes: hPlayerFacing, wC8F1, wC8F4, wC8F9, hPlayerX, wC8F0, wC8F5, wC8FA, ...
-; points at: hFF8C, wScriptStep
+; points at: hPlayerStateFlags, wScriptStep
 ScriptCommand95_Run_Case02::
 Jump_012_4814:: ; address name
     xor a, a
     call RunMessageBoxThenContinue_684A
     ret nc
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     xor a, a
     ldh [hPlayerFacing], a
@@ -1419,7 +1419,7 @@ Jump_012_4814:: ; address name
 
 ; entry 1 of the `rst $00` table in ScriptCommand95_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFF8D
+; writes: hFieldDrawFlags
 ; points at: wScriptStep
 ScriptCommand95_Run_Case01::
 Jump_012_4850:: ; address name
@@ -1429,7 +1429,7 @@ Jump_012_4850:: ; address name
     ld a, $01
     call StartMessageFromTable48B9ByWC82C
     ld a, $0E
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1610,7 +1610,7 @@ Jump_012_499B:: ; address name
 ; entry 23 of the `rst $00` table in ScriptCommand8F_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7FB
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hFF8D, wC8C6, wC936
+; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hFieldDrawFlags, wC8C6, wC936
 ScriptCommand8F_Run_Case17::
 Jump_012_49C8:: ; address name
     ld a, [wD7FB]
@@ -1641,7 +1641,7 @@ Jump_012_49F6::
     ld a, $40
     ld [wC8C9], a
     xor a, a
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld a, $00
     ld [wC8C6], a
     farcall ScriptStartFadeAndAdvanceStep
@@ -1690,7 +1690,7 @@ Func_012_4A1E:: ; address name
 
 ; entry 17 of the `rst $00` table in ScriptCommand8D_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCB91, hFFC6, wCB92, hFFC7, hFFC8, hFFC9, hFFCA, hFFCB, ...
+; writes: wCB91, hTemp0, wCB92, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; points at: wCAD0, wScriptStep
 ScriptCommand8D_Run_Case11::
 Jump_012_4A5A:: ; address name
@@ -1699,22 +1699,22 @@ Jump_012_4A5A:: ; address name
     add_a_to_hl
     ld a, [hl+]
     ld [wCB91], a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [hl]
     ld [wCB92], a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     xor a, a
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, $06
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, vTiles0 + $600
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $0D
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     ld a, $7F
     ld [wC527], a
@@ -1780,7 +1780,7 @@ Jump_012_4AC0:: ; address name
     ld a, [wC91E]
     ld [wScriptPointerHi], a
     ld a, $02
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ld a, $ED
     ld [wScriptCommandType], a
     ld a, $01
@@ -1790,7 +1790,7 @@ Jump_012_4AC0:: ; address name
 ; entry 26 of the `rst $00` table in ScriptCommand8D_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
-; writes: hFFB9
+; writes: hSpriteWindowClipMode
 ; points at: wScriptStep
 ScriptCommand8D_Run_Case1A::
 Jump_012_4B0A:: ; address name
@@ -1800,14 +1800,14 @@ Jump_012_4B0A:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld a, [wScriptParam0]
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ret
 
 ; entry 25 of the `rst $00` table in ScriptCommand8D_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFB9
-; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi, wScriptParam0, hFFB9
-; points at: wScriptStep, wCAD0, wC151, wC17E
+; reads: hSpriteWindowClipMode
+; writes: wStringIndex, wStringCategory, wStringDestLo, wStringDestHi, wScriptParam0, hSpriteWindowClipMode
+; points at: wScriptStep, wCAD0, wTextNumber
 ScriptCommand8D_Run_Case19::
 Jump_012_4B19:: ; address name
     ld hl, wScriptStep
@@ -1821,7 +1821,7 @@ Jump_012_4B19:: ; address name
     inc a
     inc a
     ld [wStringCategory], a
-    ld de, wC151
+    ld de, wTextBuf2 + $1
     ld a, e
     ld [wStringDestLo], a
     ld a, d
@@ -1841,7 +1841,7 @@ Jump_012_4B56::
     ld b, a
     ld a, $0A
     call DivideBByA
-    ld hl, wC17E
+    ld hl, wTextNumber
     push af
     ld a, b
     or a, a
@@ -1854,10 +1854,10 @@ Jump_012_4B65::
     ld [hl], $F0
     ld a, $18
     call StartMessageA
-    ldh a, [hFFB9]
+    ldh a, [hSpriteWindowClipMode]
     ld [wScriptParam0], a
     xor a, a
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ret
 
 ; entry 21 of the `rst $00` table in ScriptCommand8D_Run
@@ -1889,12 +1889,12 @@ Jump_012_4B83::
 
 ; entry 20 of the `rst $00` table in ScriptCommand8D_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wScriptStep
 ScriptCommand8D_Run_Case14::
 Jump_012_4B9B:: ; address name
     ld a, $0E
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     ld hl, wScriptStep
     inc [hl]
@@ -1914,37 +1914,37 @@ Jump_012_4BAA:: ; address name
 
 ; entry 1 of the `rst $00` table in ScriptCommand8C_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8D
-; writes: hFFB9, hFF8D, wCB91, hFFC6, wCB92, hFFC7, hFFC8, hFFC9, ...
+; reads: hFieldDrawFlags
+; writes: hSpriteWindowClipMode, hFieldDrawFlags, wCB91, hTemp0, wCB92, hTemp1, hTemp2, hTemp3, ...
 ; points at: wCAD0, wCB8C, wScriptStep
 ScriptCommand8C_Run_Case01::
 Jump_012_4BB4:: ; address name
     xor a, a
-    ldh [hFFB9], a
-    ldh a, [hFF8D]
+    ldh [hSpriteWindowClipMode], a
+    ldh a, [hFieldDrawFlags]
     or a, $0F
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld a, $0B
     ld hl, wCAD0
     add_a_to_hl
     ld a, [hl+]
     ld [wCB91], a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [hl]
     ld [wCB92], a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     xor a, a
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, $06
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, vTiles0 + $600
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $0D
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall RunFieldCommandHFFC6
     xor a, a
     ld [wCBCF], a
@@ -2016,7 +2016,7 @@ Jump_012_4C3D:: ; address name
 
 ; entry 23 of the `rst $00` table in ScriptCommand8B_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hFF8D, wC8C6, wC936
+; writes: hMapId, hMapScreenX, hMapScreenY, wC8C8, wC8C9, hFieldDrawFlags, wC8C6, wC936
 ; points at: wScriptStep
 ScriptCommand8B_Run_Case17::
 Jump_012_4C69:: ; address name
@@ -2032,7 +2032,7 @@ Jump_012_4C69:: ; address name
     ld a, $40
     ld [wC8C9], a
     xor a, a
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld a, $00
     ld [wC8C6], a
     ld a, $0F
@@ -2227,53 +2227,53 @@ Jump_012_4D56:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand9F_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8D
-; writes: hFFB9, hFF8D, wCB91, hFFC6, wCB92, hFFC7, hFFC8, hFFC9, ...
+; reads: hFieldDrawFlags
+; writes: hSpriteWindowClipMode, hFieldDrawFlags, wCB91, hTemp0, wCB92, hTemp1, hTemp2, hTemp3, ...
 ; points at: wC986, wCA2B, wCB8C, wScriptStep
 ScriptCommand9F_Run_Case00::
 Jump_012_4D6B:: ; address name
     xor a, a
-    ldh [hFFB9], a
-    ldh a, [hFF8D]
+    ldh [hSpriteWindowClipMode], a
+    ldh a, [hFieldDrawFlags]
     or a, $0F
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld a, $0B
     ld hl, wC986
     add_a_to_hl
     ld a, [hl+]
     ld [wCB91], a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [hl]
     ld [wCB92], a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     xor a, a
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, $06
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, vTiles0 + $600
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $0B
     ld hl, wCA2B
     add_a_to_hl
     ld a, [hl+]
     ld [wCBA1], a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [hl]
     ld [wCBA2], a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     xor a, a
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, $07
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, vTiles0 + $700
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $7F
     ld [wC527], a
@@ -2367,10 +2367,10 @@ Func_012_4E55:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC8F6, wC8FB, wC8F1, hPlayerY
 ; writes: wFollowerRecords, wC8F4, wC8F9, wC8FB, wC8F6, wC8F1, hPlayerY
-; points at: hFF8C, wScriptStep
+; points at: hPlayerStateFlags, wScriptStep
 ScriptCommand93_Run_Case03::
 Jump_012_4E63:: ; address name
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit1AtHL_Bank12
     xor a, a
     ld [wFollowerRecords], a
@@ -2521,7 +2521,7 @@ Func_012_4F1E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, wC6FD
 ; writes: wScriptStartRequest
-; points at: wC8F1, hFF8C
+; points at: wC8F1, hPlayerStateFlags
 ScriptCommand94_Run_Case02::
 Jump_012_4F2E:: ; address name
     ldh a, [hPlayerY]
@@ -2541,7 +2541,7 @@ Jump_012_4F2E:: ; address name
     ldh a, [hPlayerY]
     cp a, c
     ret nz
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call ClearBit1AtHL_Bank12
     ld a, $80
     ld [wScriptStartRequest], a
@@ -2586,8 +2586,8 @@ Jump_012_4F77:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommand92_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8C
-; writes: wC468, wC46A, hFF8C, hFF9D, hFF9E
+; reads: hPlayerStateFlags
+; writes: wC468, wC46A, hPlayerStateFlags, hPlayerStepDYLo, hPlayerStepDYHi
 ; points at: hMapScreenY, hFF80, wScriptStep
 ScriptCommand92_Run_Case02::
 Jump_012_4F8E:: ; address name
@@ -2597,14 +2597,14 @@ Jump_012_4F8E:: ; address name
     ld [wC46A], a
     ld hl, hMapScreenY
     inc [hl]
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $01
-    ldh [hFF8C], a
-    ld hl, hFF80
+    ldh [hPlayerStateFlags], a
+    ld hl, $FF80
     ld a, l
-    ldh [hFF9D], a
+    ldh [hPlayerStepDYLo], a
     ld a, h
-    ldh [hFF9E], a
+    ldh [hPlayerStepDYHi], a
     farcall UpdatePlayerMovement
     farcall RunWC468ActionIfBit7
     ld hl, wScriptStep
@@ -2636,12 +2636,12 @@ Jump_012_4FBC:: ; address name
 ; entry 0 of the `rst $00` table in ScriptCommand94_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing
-; points at: hFF8C, wScriptStep
+; points at: hPlayerStateFlags, wScriptStep
 ScriptCommand94_Run_Case00::
 Jump_012_4FD7:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
-    ld hl, hFF8C
+    ld hl, hPlayerStateFlags
     call SetBit1AtHL_Bank12
     ld a, $65
     call QueueSoundEffect
@@ -2667,28 +2667,28 @@ Func_012_4FEA:: ; address name
 
 ; entry 7 of the `rst $00` table in ScriptCommandA0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFFB9, wScriptStartRequest
+; writes: hSpriteWindowClipMode, wScriptStartRequest
 ScriptCommandA0_Run_Case07::
 Jump_012_4FFE:: ; address name
     xor a, a
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
 ; entry 4 of the `rst $00` table in ScriptCommandA0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, hFF93, hPlayerFacing
-; writes: hFF93, wC527, wScriptParam0, hPlayerFacing
+; reads: wScriptParam0, hPlayerSpriteOverride, hPlayerFacing
+; writes: hPlayerSpriteOverride, wC527, wScriptParam0, hPlayerFacing
 ; points at: wScriptStep
 ScriptCommandA0_Run_Case04::
 Jump_012_5007:: ; address name
     ld a, [wScriptParam0]
     or a, a
     jr nz, ScriptCommandA0_Run_Case03
-    ldh a, [hFF93]
+    ldh a, [hPlayerSpriteOverride]
     or a, $80
-    ldh [hFF93], a
+    ldh [hPlayerSpriteOverride], a
     farcall LoadPlayerSpriteGraphics
     ld a, $7F
     ld [wC527], a
@@ -2717,8 +2717,8 @@ Jump_012_501E:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommandA0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSpriteSlotCount, wCD04, hFF93, hFF94, hFF95
-; writes: hPlayerFacing, hFF93, hFF94, hFF95, hFF96, hFF97, wScriptParam0
+; reads: wSpriteSlotCount, wCD04, hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
+; writes: hPlayerFacing, hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi, hPlayerSpriteTimerLo, hPlayerSpriteTimerHi, wScriptParam0
 ; points at: wCB8A, wScriptStep
 ScriptCommandA0_Run_Case02::
 Jump_012_5038:: ; address name
@@ -2749,26 +2749,26 @@ Jump_012_503F::
     sbc a, $00
     ld h, a
     ld a, [hl+]
-    ldh [hFF93], a
+    ldh [hPlayerSpriteOverride], a
     ld a, [hl+]
-    ldh [hFF94], a
+    ldh [hPlayerSpriteStreamLo], a
     ld a, [hl]
-    ldh [hFF95], a
-    ldh a, [hFF93]
+    ldh [hPlayerSpriteStreamHi], a
+    ldh a, [hPlayerSpriteOverride]
     cp a, $01
     jr nz, Jump_012_5080
-    ldh a, [hFF94]
+    ldh a, [hPlayerSpriteStreamLo]
     cp a, $5E
     jr nz, Jump_012_5080
-    ldh a, [hFF95]
+    ldh a, [hPlayerSpriteStreamHi]
     or a, a
     jr z, Jump_012_503F
 
 Jump_012_5080::
     ld a, $64
-    ldh [hFF96], a
+    ldh [hPlayerSpriteTimerLo], a
     xor a, a
-    ldh [hFF97], a
+    ldh [hPlayerSpriteTimerHi], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -2785,7 +2785,7 @@ Jump_012_5090:: ; address name
 ; entry 0 of the `rst $00` table in ScriptCommandA0_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wBGPaletteBuffer, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
 ScriptCommandA0_Run_Case00::
 Jump_012_5097:: ; address name
     ld a, $7A
@@ -2794,7 +2794,7 @@ Jump_012_5097:: ; address name
     or a, a
     jr z, Jump_012_50AE
     ld hl, wBGPaletteBuffer
-    ld de, wC0F0
+    ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
@@ -2816,11 +2816,11 @@ Func_012_50B3:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommandA1_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFF93, wC527, wScriptStartRequest
+; writes: hPlayerSpriteOverride, wC527, wScriptStartRequest
 ScriptCommandA1_Run_Case02::
 Jump_012_50BD:: ; address name
     xor a, a
-    ldh [hFF93], a
+    ldh [hPlayerSpriteOverride], a
     farcall LoadPlayerSpriteGraphics
     ld a, $7F
     ld [wC527], a
@@ -2947,8 +2947,8 @@ Jump_012_519E::
 
 ; only called from ScriptCommand8E_Run_Case01 (E-0047)
 ; 2 call sites from 1 routine (e.g. ScriptCommand8E_Run_Case01)
-; reads: hFF8C
-; writes: wC8C8, wC8C9, hMapScreenX, hMapScreenY, wC8C5, wC8C6, wModeState, hFF8C
+; reads: hPlayerStateFlags
+; writes: wC8C8, wC8C9, hMapScreenX, hMapScreenY, wC8C5, wC8C6, wModeState, hPlayerStateFlags
 ; points at: wC5E0
 ScriptCommand8E_Run_Case01_Sub01::
 Func_012_51B1:: ; address name
@@ -2963,8 +2963,8 @@ Func_012_51B1:: ; address name
 
 ; only called from ScriptCommand8E_Run_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand8E_Run_Case01)
-; reads: hFF8C
-; writes: hMapScreenX, hMapScreenY, wC8C5, wC8C6, wModeState, hFF8C
+; reads: hPlayerStateFlags
+; writes: hMapScreenX, hMapScreenY, wC8C5, wC8C6, wModeState, hPlayerStateFlags
 ; points at: wC5E0
 ScriptCommand8E_Run_Case01_Sub02::
 Func_012_51C0:: ; address name
@@ -2986,13 +2986,13 @@ Func_012_51C0:: ; address name
     inc [hl]
     ld a, $04
     ld [wModeState], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $F7
-    ldh [hFF8C], a
-    ldh a, [hFF8C]
+    ldh [hPlayerStateFlags], a
+    ldh a, [hPlayerStateFlags]
     or a, $20
     and a, $7F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ret
 
 ; implements script command type 8A; reached through ScriptCommand8A in bank $10 (E-0038)
@@ -3007,17 +3007,17 @@ Func_012_51F4:: ; address name
 
 ; entry 1 of the `rst $00` table in ScriptCommand8A_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8C, wCC44, wCC45, wCD0D, wCD0E, hMapId, wC88B
-; writes: wScriptStartRequest, hFF8C, wC8C6, wC8C5, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
+; reads: hPlayerStateFlags, wCC44, wCC45, wCD0D, wCD0E, hMapId, wC88B
+; writes: wScriptStartRequest, hPlayerStateFlags, wC8C6, wC8C5, hMapScreenX, hMapScreenY, wC8C8, wC8C9, ...
 ; points at: wCD88
 ScriptCommand8A_Run_Case01::
 Jump_012_51FC:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $80
     and a, $DF
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $01
     ld [wC8C6], a
     farcall ScriptStartFadeAndAdvanceStep
@@ -3104,9 +3104,9 @@ Jump_012_5275::
     ret
 
 Jump_012_52A6::
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $7F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ret
 
 Data_012_52AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3204,7 +3204,7 @@ Jump_012_5573:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand8E_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerY, wScriptParam0, wC8F1, hPlayerFacing, wC8F6, wC8FB, hFF8C
+; reads: hPlayerY, wScriptParam0, wC8F1, hPlayerFacing, wC8F6, wC8FB, hPlayerStateFlags
 ; writes: hPlayerY, hPlayerFacing, wC8F1, wFollowerRecords, wC8F6, wC8F4, wC8FB, wC8F9, ...
 ; points at: wScriptStep
 ScriptCommand8E_Run_Case00::
@@ -3259,9 +3259,9 @@ Jump_012_55D7::
     ld b, $5A
     call StepWC921Counter_Bank12
     ret nc
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $B7
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3351,7 +3351,7 @@ Jump_012_5662::
 ; entry 2 of the `rst $00` table in ScriptCommand9B_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wBGPaletteBuffer, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
 ScriptCommand9B_Run_Case02::
 Jump_012_5668:: ; address name
     xor a, a
@@ -3361,7 +3361,7 @@ Jump_012_5668:: ; address name
     or a, a
     jr z, Jump_012_567F
     ld hl, wBGPaletteBuffer
-    ld de, wC0F0
+    ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
@@ -3375,7 +3375,7 @@ Jump_012_567F::
 ; entry 4 of the `rst $00` table in ScriptCommand9B_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC6FD, wScriptParam0, wScriptStep
-; writes: rRAMG, wScriptParam0, wScriptStep, hFF8D
+; writes: rRAMG, wScriptParam0, wScriptStep, hFieldDrawFlags
 ; points at: wC6FE, wScriptStep
 ScriptCommand9B_Run_Case04::
 Jump_012_5689:: ; address name
@@ -3430,7 +3430,7 @@ Jump_012_56CE::
 
 Jump_012_56DB::
     ld a, $0E
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -3439,7 +3439,7 @@ Jump_012_56DB::
 
 ; entry 5 of the `rst $00` table in ScriptCommand9B_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC527, hFF8D
+; writes: wC527, hFieldDrawFlags
 ; points at: wScriptStep
 ScriptCommand9B_Run_Case05::
 Jump_012_56E8:: ; address name
@@ -3450,7 +3450,7 @@ Jump_012_56E8:: ; address name
     ld a, $7F
     ld [wC527], a
     xor a, a
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld hl, wScriptStep
     inc [hl]
     ld de, $002B
@@ -3570,12 +3570,12 @@ Jump_012_578D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wC6FE, wC6FF, wC700
 ; writes: wScriptParam0, wMessageIndex, wMessageGroup, wMessageState, wScriptParam1, rRAMG
-; points at: wScriptStep, wC00B, wC8CF, wC147
+; points at: wScriptStep, wC8CF
 ScriptCommand87_Run_Case03::
 Jump_012_5797:: ; address name
     ld hl, wScriptStep
     dec [hl]
-    ld de, wC00B
+    ld de, wShadowOAM + $B
     ld a, [wScriptParam0]
     dec a
     ld [wScriptParam0], a
@@ -3612,7 +3612,7 @@ Jump_012_57C2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wC6FE, wC6FF, wC700
 ; writes: wScriptParam0, wMessageIndex, wMessageGroup, wMessageState, wScriptParam1, rRAMG
-; points at: wScriptStep, wC8CF, wC147
+; points at: wScriptStep, wC8CF
 ScriptCommand87_Run_Case01::
 Jump_012_57C7:: ; address name
     ld hl, wScriptStep
@@ -3666,7 +3666,7 @@ Jump_012_5817::
     xor a, a
     ld [rRAMG], a
     ld hl, wC8CF
-    ld de, wC147
+    ld de, wTextBuf1 + $7
     ld bc, $000B
     call CopyBytes
     ret
@@ -3835,14 +3835,14 @@ Jump_012_58EF:: ; address name
 ; entry 2 of the `rst $00` table in ScriptCommand85_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-; points at: wBGPaletteBuffer, wC0F0, wScriptStep
+; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
 ScriptCommand85_Run_Case02::
 Jump_012_58F6:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_012_5908
     ld hl, wBGPaletteBuffer
-    ld de, wC0F0
+    ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
@@ -4061,15 +4061,15 @@ Jump_012_5A3D::
 ; entry 8 of the `rst $00` table in ScriptCommand84_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC956, wScriptParam1
-; writes: hFFC6, hFFC7, wC956, wScriptStartRequest, wC928
+; writes: hTemp0, hTemp1, wC956, wScriptStartRequest, wC928
 ScriptCommand84_Run_Case08::
 Jump_012_5A53:: ; address name
     ld a, [wC956]
     and a, $7F
     jr z, Jump_012_5A64
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     call AddGoldCapped
     jr Jump_012_5A70
 
@@ -4104,7 +4104,7 @@ Jump_012_5A7A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC956, wScriptParam1
 ; writes: wC8C0, wC8C1, wC8C2, wMessageGroup
-; points at: wScriptStep, wC17E, wC152
+; points at: wScriptStep, wTextNumber
 ScriptCommand84_Run_Case06::
 Jump_012_5A89:: ; address name
     ld hl, wScriptStep
@@ -4117,7 +4117,7 @@ Jump_012_5A89:: ; address name
     ld [wC8C1], a
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ld de, wC17E
+    ld de, wTextNumber
     call WritePackedBCDNoLeadingZeros
     ld a, $05
     call StartMessageA
@@ -4127,7 +4127,7 @@ Jump_012_5A89:: ; address name
 
 Jump_012_5AB1::
     ld a, [wScriptParam1]
-    ld de, wC152
+    ld de, wTextBuf2 + $2
     call CopyItemNameToDE
     ld a, $06
     call StartMessageA
@@ -4170,7 +4170,7 @@ Jump_012_5AE9:: ; address name
 ; entry 3 of the `rst $00` table in ScriptCommand84_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageGroup, wMessageIndex, wIsCGB, wCC44, hMapId
-; writes: rSVBK, hFF8D
+; writes: rSVBK, hFieldDrawFlags
 ; points at: wScriptStep
 ScriptCommand84_Run_Case03::
 Jump_012_5AF0:: ; address name
@@ -4271,7 +4271,7 @@ Jump_012_5B77::
 Jump_012_5B8C::
     farcall DrawFullScreenBufferAtScroll
     xor a, a
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4533,18 +4533,18 @@ Func_012_5CFA:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_012_5CFA
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8C, hPlayerY
-; writes: hFF8C, hFF8D, hFF8B, hPlayerY, wScriptParam0
+; reads: hPlayerStateFlags, hPlayerY
+; writes: hPlayerStateFlags, hFieldDrawFlags, hPlayerSpriteMode, hPlayerY, wScriptParam0
 ; points at: wScriptStep
 Func_012_5CFA_Case00::
 Jump_012_5D09:: ; address name
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $F7
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $0E
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     xor a, a
-    ldh [hFF8B], a
+    ldh [hPlayerSpriteMode], a
     ldh a, [hPlayerY]
     sub a, $08
     ldh [hPlayerY], a
@@ -4556,7 +4556,7 @@ Jump_012_5D09:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_012_5CFA
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, hPlayerX, hPlayerY, hPlayerFacing, hFF8C
+; reads: wScriptParam0, hPlayerX, hPlayerY, hPlayerFacing, hPlayerStateFlags
 ; writes: wC928, wC929, wScriptParam0, wC8F0, wC8F5, wC8FA, wC8F1, wC8F6, ...
 ; points at: hPlayerY, hPlayerX
 Func_012_5CFA_Case01::
@@ -4592,21 +4592,21 @@ Jump_012_5D41::
     ld [wC8F4], a
     ld [wC8F9], a
     xor a, a
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld a, $80
     ld [wScriptStartRequest], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $01
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld hl, $0000
     ld a, l
-    ldh [hFF9B], a
+    ldh [hPlayerStepDXLo], a
     ld a, h
-    ldh [hFF9C], a
+    ldh [hPlayerStepDXHi], a
     ld a, l
-    ldh [hFF9D], a
+    ldh [hPlayerStepDYLo], a
     ld a, h
-    ldh [hFF9E], a
+    ldh [hPlayerStepDYHi], a
     farcall PlayMapMusic
     ret
 
@@ -4663,8 +4663,8 @@ Func_012_5DB6:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_012_5DB6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, hPlayerY, hFF8C, hPlayerFacing
-; writes: wC928, wC929, wScriptParam0, hPlayerY, hFF8C, hFF8B, wScriptStartRequest
+; reads: wScriptParam0, hPlayerY, hPlayerStateFlags, hPlayerFacing
+; writes: wC928, wC929, wScriptParam0, hPlayerY, hPlayerStateFlags, hPlayerSpriteMode, wScriptStartRequest
 ; points at: hPlayerY, hPlayerX
 Func_012_5DB6_Case08::
 Jump_012_5DD3:: ; address name
@@ -4690,12 +4690,12 @@ Jump_012_5DEF::
     add a, $08
     and a, $F0
     ldh [hPlayerY], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $08
     and a, $5F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld a, $02
-    ldh [hFF8B], a
+    ldh [hPlayerSpriteMode], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -4770,7 +4770,7 @@ Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 3 of the `rst $00` table in Func_012_5DB6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
-; writes: wC527, wMessageIndex, wMessageGroup, hFF8D, wFollowerRecords, wC8F4, wC8F9, wScriptParam0
+; writes: wC527, wMessageIndex, wMessageGroup, hFieldDrawFlags, wFollowerRecords, wC8F4, wC8F9, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
 Func_012_5DB6_Case03::
 Jump_012_5E64:: ; address name
@@ -4836,7 +4836,7 @@ Jump_012_5EC5::
 
 Jump_012_5ECF::
     ld a, $0E
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
     ld [wC8F4], a
@@ -4920,16 +4920,16 @@ Jump_012_5F30::
 
 ; entry 9 of the `rst $00` table in Func_012_5EE7
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFF8C, wScriptParam0, hPlayerX, hPlayerY, hPlayerFacing
-; writes: wC951, hFF8C, wC928, wC929, wScriptParam0, wC8F0, wC8F5, wC8FA, ...
+; reads: hPlayerStateFlags, wScriptParam0, hPlayerX, hPlayerY, hPlayerFacing
+; writes: wC951, hPlayerStateFlags, wC928, wC929, wScriptParam0, wC8F0, wC8F5, wC8FA, ...
 ; points at: hPlayerY
 Func_012_5EE7_Case09::
 Jump_012_5F4D:: ; address name
     ld a, $01
     ld [wC951], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $A0
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld de, hPlayerY
     ld a, e
     ld [wC928], a
@@ -4948,9 +4948,9 @@ Jump_012_5F74::
     ld [wScriptParam0], a
     cp a, $20
     jr nz, Jump_012_5FC8
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     and a, $5F
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ldh a, [hPlayerX]
     ld [wC8F0], a
     ld [wC8F5], a
@@ -4964,21 +4964,21 @@ Jump_012_5F74::
     ld [wC8F4], a
     ld [wC8F9], a
     xor a, a
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ld a, $80
     ld [wScriptStartRequest], a
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     or a, $01
-    ldh [hFF8C], a
+    ldh [hPlayerStateFlags], a
     ld hl, $0000
     ld a, l
-    ldh [hFF9B], a
+    ldh [hPlayerStepDXLo], a
     ld a, h
-    ldh [hFF9C], a
+    ldh [hPlayerStepDXHi], a
     ld a, l
-    ldh [hFF9D], a
+    ldh [hPlayerStepDYLo], a
     ld a, h
-    ldh [hFF9E], a
+    ldh [hPlayerStepDYHi], a
     xor a, a
     ld [wC951], a
     ret
@@ -4988,15 +4988,15 @@ Jump_012_5FC8::
 
 ; entry 8 of the `rst $00` table in Func_012_5EE7
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wC468, hFF8C, hPlayerX, hPlayerY, hPlayerFacing, wJoypadHeld, wSpriteSlotCount, wCB8A, ...
-; writes: wJoypadHeld, hFF8B, hPlayerY, wScriptParam0, hPlayerFacing
+; reads: wC468, hPlayerStateFlags, hPlayerX, hPlayerY, hPlayerFacing, wJoypadHeld, wSpriteSlotCount, wCB8A, ...
+; writes: wJoypadHeld, hPlayerSpriteMode, hPlayerY, wScriptParam0, hPlayerFacing
 ; points at: wC910, wScriptStep
 Func_012_5EE7_Case08::
 Jump_012_5FC9:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 0, a
     ret nz
     ldh a, [hPlayerX]
@@ -5082,7 +5082,7 @@ Jump_012_6049::
     jr z, Jump_012_606A
     jr c, Jump_012_606A
     xor a, a
-    ldh [hFF8B], a
+    ldh [hPlayerSpriteMode], a
     ldh a, [hPlayerY]
     sub a, $08
     ldh [hPlayerY], a
@@ -5110,7 +5110,7 @@ Jump_012_606A::
 ; entry 7 of the `rst $00` table in Func_012_5EE7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerY, hPlayerFacing
-; writes: wC928, wC929, wScriptParam0, hPlayerY, hFF8B
+; writes: wC928, wC929, wScriptParam0, hPlayerY, hPlayerSpriteMode
 ; points at: hPlayerY, wScriptStep, hPlayerX
 Func_012_5EE7_Case07::
 Jump_012_6077:: ; address name
@@ -5137,7 +5137,7 @@ Jump_012_6093::
     and a, $F0
     ldh [hPlayerY], a
     ld a, $02
-    ldh [hFF8B], a
+    ldh [hPlayerSpriteMode], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -5178,7 +5178,7 @@ Jump_012_60D6::
 ; entry 6 of the `rst $00` table in Func_012_5DB6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
-; writes: wScriptParam0, hFF8D
+; writes: wScriptParam0, hFieldDrawFlags
 ; points at: wScriptStep
 Func_012_5DB6_Case06::
 Jump_012_60DB:: ; address name
@@ -5216,7 +5216,7 @@ Jump_012_60FD::
     ld hl, wScriptStep
     inc [hl]
     ld a, $0E
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ret
 
 ; draws metasprite set $21 (or $22 unless wC195 & $0F = 1), flipped by the player facing, at the scroll position plus (wMessageIndex + 8, wMessageGroup + $10) (E-0125)
@@ -5277,7 +5277,7 @@ Jump_012_6132::
 ; entry 3 of the `rst $00` table in Func_012_5EE7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
-; writes: wC527, wMessageIndex, wMessageGroup, hFF8D, wFollowerRecords, wC8F4, wC8F9, wScriptParam0
+; writes: wC527, wMessageIndex, wMessageGroup, hFieldDrawFlags, wFollowerRecords, wC8F4, wC8F9, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
 Func_012_5EE7_Case03::
 Jump_012_616C:: ; address name
@@ -5343,7 +5343,7 @@ Jump_012_61CD::
 
 Jump_012_61D7::
     ld a, $0E
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
     ld [wC8F4], a
@@ -5463,9 +5463,9 @@ Jump_012_628B:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand86_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wScriptParam1, wC634, wCECE, hFFC6
+; reads: wScriptParam0, wScriptParam1, wC634, wCECE, hTemp0
 ; writes: wScriptParam0, wScriptParam1, wScriptStep
-; points at: wScriptStep, wC152
+; points at: wScriptStep
 ScriptCommand86_Run_Case00::
 Jump_012_6295:: ; address name
     ld hl, wScriptStep
@@ -5485,7 +5485,7 @@ Jump_012_62A9::
     jr z, Jump_012_62DA
     cp a, $81
     jr z, Jump_012_62FC
-    ld de, wC152
+    ld de, wTextBuf2 + $2
     call CopyItemNameToDE
     ld a, [wC634]
     cp a, $FF
@@ -5510,7 +5510,7 @@ Jump_012_62C9::
 
 Jump_012_62DA::
     farcall GenerateNewKeyEntry
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr z, Jump_012_62EB
     ld a, $08
@@ -5597,7 +5597,7 @@ Jump_012_6351:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wC634
 ; writes: wScriptParam0, wScriptParam1
-; points at: wScriptStep, wC152
+; points at: wScriptStep
 ScriptCommand81_Run_Case00::
 Jump_012_635B:: ; address name
     ld hl, wScriptStep
@@ -5621,7 +5621,7 @@ Jump_012_6374::
     dec hl
     ld a, [hl]
     and a, $7F
-    ld de, wC152
+    ld de, wTextBuf2 + $2
     call CopyItemNameToDE
     ld a, [wC634]
     cp a, $FF
@@ -5707,7 +5707,7 @@ Jump_012_63D4:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommand80_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hFFC6, hFFC7, wC8FE, wScriptStartRequest
+; writes: hTemp0, hTemp1, wC8FE, wScriptStartRequest
 ScriptCommand80_Run_Case02::
 Jump_012_63F2:: ; address name
     call ScriptCommand80_Run_Shared01
@@ -5723,9 +5723,9 @@ Jump_012_63F2:: ; address name
     add hl, de
     add hl, hl
     ld a, l
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, h
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     farcall AddGoldCapped
     pop hl
     dec hl
@@ -5755,7 +5755,7 @@ Jump_012_641F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC634
 ; writes: wScriptParam0, wC8C0, wC8C1, wC8C2
-; points at: wScriptStep, wC152, wC17E
+; points at: wScriptStep, wTextNumber
 ScriptCommand80_Run_Case00::
 Jump_012_642B:: ; address name
     ld hl, wScriptStep
@@ -5773,7 +5773,7 @@ Jump_012_642B:: ; address name
 Jump_012_6441::
     inc hl
     ld a, [hl]
-    ld de, wC152
+    ld de, wTextBuf2 + $2
     call CopyItemNameToDE
     ld a, $06
     call StartMessageA
@@ -5784,7 +5784,7 @@ Jump_012_6441::
 Jump_012_6454::
     inc hl
     ld a, [hl]
-    ld de, wC152
+    ld de, wTextBuf2 + $2
     call CopyItemNameToDE
     ld a, $07
     call StartMessageA
@@ -5812,7 +5812,7 @@ Jump_012_6467::
     xor a, a
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ld de, wC17E
+    ld de, wTextNumber
     call WritePackedBCDNoLeadingZeros
     ld a, $05
     call StartMessageA
@@ -5832,7 +5832,7 @@ Jump_012_6496::
 Jump_012_64A4::
     inc hl
     ld a, [hl]
-    ld de, wC152
+    ld de, wTextBuf2 + $2
     call CopyItemNameToDE
     ld a, $02
     call StartMessageA
@@ -5843,7 +5843,7 @@ Jump_012_64A4::
 Jump_012_64B7::
     inc hl
     ld a, [hl]
-    ld de, wC152
+    ld de, wTextBuf2 + $2
     call CopyItemNameToDE
     ld a, $03
     call StartMessageA
@@ -5885,7 +5885,7 @@ Jump_012_64EA::
 
 ; with SRAM enabled sets every party record's HP to max HP, MP to max MP and field $55 to 0 (E-0125)
 ; 10 call sites from 9 routines (e.g. ScriptCommand96_Run_Case18, ScriptCommand9B_Run_Case04, RunWC8C7Phase_Case02, GameMode5_Init_Case06, ...)
-; reads: wC6FD, hFFC6, hFFC7
+; reads: wC6FD, hTemp0, hTemp1
 ; writes: rRAMG
 ; points at: wC6FE
 FullyHealParty::
@@ -5906,9 +5906,9 @@ Jump_012_6504::
     push af
     ld c, $5B
     call SRAMRecordAddress
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [hl+], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [hl], a
     pop af
     push af
@@ -5918,9 +5918,9 @@ Jump_012_6504::
     push af
     ld c, $5F
     call SRAMRecordAddress
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [hl+], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [hl], a
     pop af
     ld c, $55
@@ -5939,7 +5939,7 @@ Jump_012_6504::
 ; 7 call sites from 7 routines (e.g. ScriptCommand58_Run_Case21, ScriptCommand4A_Run_Case01, ScriptCommand41_Run_Case07, ScriptCommandA0_Run_Case01, ...)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wC526, wScriptParam0
-; points at: wC5E9, wC0F0, wBGPaletteBuffer, wScriptStep
+; points at: wC5E9, wBGPaletteCopy, wBGPaletteBuffer, wScriptStep
 ScriptStepFlashScreenNegative::
 Func_012_653F:: ; address name
     ld a, [wScriptParam0]
@@ -5957,7 +5957,7 @@ Func_012_653F:: ; address name
     ld a, [wIsCGB]
     or a, a
     jr z, Jump_012_6591
-    ld hl, wC0F0
+    ld hl, wBGPaletteCopy
     ld de, wBGPaletteBuffer
     ld bc, $0040
     call CopyBytes
@@ -5975,7 +5975,7 @@ Jump_012_656A::
     or a, a
     jr z, Jump_012_6591
     ld b, $40
-    ld hl, wC0F0
+    ld hl, wBGPaletteCopy
     ld de, wBGPaletteBuffer
 
 Jump_012_6584::
@@ -6025,7 +6025,7 @@ Jump_012_65B0::
 ; entry 4 of the `rst $00` table in ScriptCommand87_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
-; writes: wScriptParam0, hFF8D, wC527
+; writes: wScriptParam0, hFieldDrawFlags, wC527
 ; points at: wScriptStep
 ScriptCommand87_Run_Case04::
 Jump_012_65B6:: ; address name
@@ -6035,7 +6035,7 @@ Jump_012_65B6:: ; address name
     inc a
     ld [wScriptParam0], a
     ld a, $0E
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     ret
 
 Jump_012_65C5::
@@ -6046,7 +6046,7 @@ Jump_012_65C5::
     ld a, $7F
     ld [wC527], a
     xor a, a
-    ldh [hFF8D], a
+    ldh [hFieldDrawFlags], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -6123,7 +6123,7 @@ Jump_012_661A::
 ; entry 0 of the `rst $00` table in RunMessageBox_Bank12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageGroup, hMapId, hPlayerY
-; writes: wC8CB, wC8CC, hFFB9
+; writes: wC8CB, wC8CC, hSpriteWindowClipMode
 ; points at: wMessageState
 RunMessageBox_Bank12_Case00::
 Jump_012_6623:: ; address name
@@ -6150,7 +6150,7 @@ Jump_012_662D::
     cp a, $14
     jr z, Jump_012_6659
     ld a, $02
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
 
 Jump_012_6659::
     ldh a, [hPlayerY]
@@ -6159,7 +6159,7 @@ Jump_012_6659::
     ld a, $81
     ld [wC8CB], a
     ld a, $01
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
 
 Jump_012_6668::
     ld hl, wMessageState
@@ -6189,7 +6189,7 @@ Jump_012_666D:: ; address name
 ; entry 2 of the `rst $00` table in RunMessageBox_Bank12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wMessageGroup, hPlayerY
-; writes: wMessageState, wC8CB, wC8CC, hFFB9
+; writes: wMessageState, wC8CB, wC8CC, hSpriteWindowClipMode
 ; points at: wMessageState
 RunMessageBox_Bank12_Case02::
 Jump_012_668A:: ; address name
@@ -6212,7 +6212,7 @@ Jump_012_669E::
     ld a, $00
     ld [wC8CC], a
     ld a, $00
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_66BC
@@ -6269,7 +6269,7 @@ Jump_012_66E4::
 ; entry 0 of the `rst $00` table in RunMessageBoxStateIfActive_Bank12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex, hPlayerY
-; writes: wC8CB, wC8CC, hFFB9
+; writes: wC8CB, wC8CC, hSpriteWindowClipMode
 ; points at: wMessageState
 RunMessageBoxStateIfActive_Bank12_Case00::
 Jump_012_66ED:: ; address name
@@ -6293,14 +6293,14 @@ Jump_012_66F7::
     ld a, $00
     ld [wC8CC], a
     ld a, $02
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_672C
     ld a, $81
     ld [wC8CB], a
     ld a, $01
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
 
 Jump_012_672C::
     ld hl, wMessageState
@@ -6331,7 +6331,7 @@ Jump_012_6731:: ; address name
 ; entry 2 of the `rst $00` table in RunMessageBoxStateIfActive_Bank12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wMessageIndex, hPlayerY
-; writes: wMessageState, wC8CB, wC8CC, hFFB9
+; writes: wMessageState, wC8CB, wC8CC, hSpriteWindowClipMode
 ; points at: wMessageState
 RunMessageBoxStateIfActive_Bank12_Case02::
 Jump_012_6750:: ; address name
@@ -6354,7 +6354,7 @@ Jump_012_6764::
     ld a, $00
     ld [wC8CC], a
     ld a, $00
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_6782
@@ -6388,7 +6388,7 @@ Jump_012_6791::
 ; entry 0 of the `rst $00` table in Func_012_6787
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
-; writes: wC8CB, wC8CC, hFFB9
+; writes: wC8CB, wC8CC, hSpriteWindowClipMode
 ; points at: wMessageState
 Func_012_6787_Case00::
 Jump_012_679A:: ; address name
@@ -6407,14 +6407,14 @@ Jump_012_67A4::
     ld a, $00
     ld [wC8CC], a
     ld a, $02
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_67CD
     ld a, $81
     ld [wC8CB], a
     ld a, $01
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
 
 Jump_012_67CD::
     ld hl, wMessageState
@@ -6444,7 +6444,7 @@ Jump_012_67D2:: ; address name
 ; entry 2 of the `rst $00` table in Func_012_6787
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, hPlayerY
-; writes: wC8CB, wC8CC, hFFB9
+; writes: wC8CB, wC8CC, hSpriteWindowClipMode
 ; points at: wMessageState
 Func_012_6787_Case02::
 Jump_012_67EE:: ; address name
@@ -6457,7 +6457,7 @@ Jump_012_67EE:: ; address name
     ld a, $00
     ld [wC8CC], a
     ld a, $00
-    ldh [hFFB9], a
+    ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
     jr c, Jump_012_680E
@@ -6593,8 +6593,8 @@ Func_012_6893:: ; address name
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
 ; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, DispatchTalkEvent_Case01_Case65, ...)
-; reads: hFFC6, hFFC8, hFFC7, hFFD0, wC966, wCD03, wCD04, wC836
-; writes: wC966, hFFC6, hFFC7, hFFD0, wC836
+; reads: hTemp0, hTemp2, hTemp1, hTempA, wC966, wCD03, wCD04, wC836
+; writes: wC966, hTemp0, hTemp1, hTempA, wC836
 ; points at: wC70A, wC787
 GenerateNewKeyEntry::
 Func_012_689A:: ; address name
@@ -6603,22 +6603,22 @@ Func_012_689A:: ; address name
 
 Jump_012_689E::
     call FindFreeKeySlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr z, Jump_012_68AB
     xor a, a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 Jump_012_68AB::
     push af
     ld a, $FE
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     call WriteKeyEntryHFFC6
     pop af
     or a, a
     jr z, Jump_012_68FF
-    ldh [hFFD0], a
+    ldh [hTempA], a
     ld b, a
     ld hl, wC70A
 
@@ -6629,18 +6629,18 @@ Jump_012_68BD::
     jr nz, Jump_012_68F7
     ld a, [hl-]
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     cp a, c
     jr nz, Jump_012_68F7
     ld a, [hl]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, c
     jr nz, Jump_012_68E9
     pop hl
 
 Jump_012_68D2::
-    ldh a, [hFFD0]
+    ldh a, [hTempA]
     ld l, a
     ld h, $00
     add hl, hl
@@ -6678,8 +6678,8 @@ Jump_012_68F7::
 
 Jump_012_68FF::
     ld a, $01
-    ldh [hFFC6], a
-    ldh a, [hFFD0]
+    ldh [hTemp0], a
+    ldh a, [hTempA]
     add a, a
     ld hl, wC787
     add_a_to_hl
@@ -6694,7 +6694,7 @@ Jump_012_68FF::
 
 ; hFFC6 = the index of the first free wKeyList entry, or $80 when none is free or 20 entries lack bit 7 of byte 3 (E-0125)
 ; 3 call sites from 3 routines (e.g. GenerateNewKeyEntry, ScriptStepCheckKeyListFull_6A80, ScriptStepCheckKeyListFull_6B45)
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wKeyList
 FindFreeKeySlotToHFFC6::
 Func_012_691F:: ; address name
@@ -6724,27 +6724,27 @@ Jump_012_6935::
     cp a, $20
     jr nz, Jump_012_6926
     ld a, $80
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 Jump_012_6948::
     pop hl
     ld a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
     cp a, $14
     ret nz
     ld a, $80
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 ; writes key entry hFFC6: byte 0 = hFFC7 and byte 3 = $80; for kind $FE generates the remaining bytes (Func_061_40B4, Func_060_6916) from hFFC7-hFFC9 (E-0125)
 ; 12 call sites from 10 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
-; reads: hFFC6, hFFC7, wCD05, hFFC8, hFFC9
-; writes: hFFC6
+; reads: hTemp0, hTemp1, wCD05, hTemp2, hTemp3
+; writes: hTemp0
 WriteKeyEntryHFFC6::
 Func_012_6955:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
     ld h, $00
     add hl, hl
@@ -6756,7 +6756,7 @@ Func_012_6955:: ; address name
     adc a, $C7
     ld h, a
     push hl
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [hl], a
     cp a, $FE
     jr z, Jump_012_6973
@@ -6770,21 +6770,21 @@ Func_012_6955:: ; address name
 Jump_012_6973::
     farcall ComputePartyStrengthForKey
     ld a, [wCD05]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall RollKeyContentsForLevelHFFC6
     pop hl
     inc hl
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [hl+], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [hl+], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld [hl], a
     ret
 
 ; counts the 4-byte wKeyList entries before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
 ; 11 call sites from 9 routines (e.g. MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wKeyList
 CountKeysOrFull::
 Func_012_6990:: ; address name
@@ -6802,22 +6802,22 @@ Jump_012_6995::
     cp a, $20
     jr nz, Jump_012_6995
     ld a, $80
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 Jump_012_69AC::
     ld a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 ; removes key entry hFFC6: clears the matching wC88E link, marks its SRAM-bank-2 slot free and shifts the later entries down (E-0130)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_Case10, RunWD780StateWhenNotFading_1B_Case01_Case21)
-; reads: hFFC6, wC833
+; reads: hTemp0, wC833
 ; writes: rRAMB, rRAMG
 ; points at: wC783, wC787, wC833
 DeleteKeyEntryHFFC6::
 Func_012_69B0:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
     ld h, $00
     add hl, hl
@@ -6869,7 +6869,7 @@ Jump_012_69C9::
     ld [rRAMB], a
 
 Jump_012_6A03::
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $1F
     jr nz, Jump_012_6A0E
     ld hl, wC783
@@ -6921,7 +6921,7 @@ Jump_012_6A37::
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $1F
     jr z, Jump_012_6A5D
     ld c, a
@@ -6948,7 +6948,7 @@ Jump_012_6A51::
 Jump_012_6A5D::
     ld a, [wC833]
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, c
     ret nc
     ld hl, wC833
@@ -6958,7 +6958,7 @@ Jump_012_6A5D::
 ; on map $7F or $92 at screen (0, 0), or with wCC44 = $82, runs field command $12 and places objects at wCBD3/4 and wCBCF (E-0127)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
 ; reads: wCC44, hMapId, hMapScreenX, hMapScreenY
-; writes: hFFC6, wCBD3, wCBD4, wCBCF
+; writes: hTemp0, wCBD3, wCBD4, wCBCF
 PlaceSpecialMapObjectsOnEntry::
 Func_012_6A6A:: ; address name
     ld a, [wCC44]
@@ -6974,7 +6974,7 @@ Func_012_6A6A:: ; address name
     or a, a
     jr nz, Jump_012_6A98
     ld a, $12
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
@@ -6995,7 +6995,7 @@ Jump_012_6A98::
     or a, a
     ret nz
     ld a, $12
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
@@ -7010,7 +7010,7 @@ Jump_012_6ABC::
     cp a, $82
     ret nz
     ld a, $12
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call RunFieldCommandHFFC6
     ld a, $40
     ld [wCBD3], a
@@ -7022,12 +7022,12 @@ Jump_012_6ABC::
 
 ; decompresses Data_07E_5595 to vTiles0 + $300 (or + $700 when hFFC6 is set), wC949 = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125)
 ; 2 call sites from 2 routines (e.g. RunWC92DStep_7363_Case00, ScriptCommand16_Run_Case0F)
-; reads: hFFC6, wIsCGB
+; reads: hTemp0, wIsCGB
 ; writes: wC949, wC527
 ; points at: wOBJPaletteBuffer
 LoadSpriteGraphics7E5595ToTiles0::
 Func_012_6AD9:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_012_6AE3
     ld hl, vTiles0 + $300
@@ -7045,7 +7045,7 @@ Jump_012_6AE6::
     ld a, [wIsCGB]
     or a, a
     ret z
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_012_6B01
     ld a, $18
@@ -7090,11 +7090,11 @@ Func_012_6B22:: ; address name
 
 ; draws metasprite set $1B with a frame from Data_012_6B7A chosen by the frame counter / 30, at ($48, wC949 + $10) (E-0125)
 ; 11 call sites from 11 routines (e.g. RunWC92DStep_7363_Case0F, RunWC92DStep_7363_Case0D, RunWC92DStep_7363_Case0C, RunWC92DStep_7363_Case0B, ...)
-; reads: hFFC6, wFrameCounterLo, wFrameCounterHi, wC949
+; reads: hTemp0, wFrameCounterLo, wFrameCounterHi, wC949
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
 DrawAnimatedMetaSprite1B::
 Func_012_6B33:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_012_6B42
     ld a, $30
@@ -7137,10 +7137,10 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)
 ; 51 call sites from 49 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunWC8C7Phase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
-; reads: hFFC6
+; reads: hTemp0
 RunFieldCommandHFFC6::
 Func_012_6B98:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     rst $00
     dw RunFieldCommandHFFC6_Case00
     dw RunFieldCommandHFFC6_Case01
@@ -7649,12 +7649,12 @@ Jump_012_6DF0:: ; address name
 
 ; only called from routines of RunFieldCommandHFFC6 (E-0098)
 ; 18 call sites from 18 routines (e.g. RunFieldCommandHFFC6_Case14, RunFieldCommandHFFC6_Case12, RunFieldCommandHFFC6_Case11, RunFieldCommandHFFC6_Case10, ...)
-; reads: hFFC6, wIsCGB
+; reads: hTemp0, wIsCGB
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
 RunFieldCommandHFFC6_Shared01::
 Func_012_6E0B:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $7F
     add a, a
     add a, a
@@ -7705,12 +7705,12 @@ Jump_012_6E5E::
 
 ; only called from routines of RunFieldCommandHFFC6 (E-0098)
 ; 2 call sites from 2 routines (e.g. RunFieldCommandHFFC6_Case13, RunFieldCommandHFFC6_Case0D)
-; reads: hFFC6, wIsCGB
+; reads: hTemp0, wIsCGB
 ; writes: wC527
 ; points at: wOBJPaletteBuffer
 RunFieldCommandHFFC6_Shared02::
 Func_012_6E61:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $7F
     add a, a
     add a, a
@@ -8383,7 +8383,7 @@ Data_012_7313:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
-; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wC8FE, hPlayerX, hPlayerY, hPlayerFacing, ...
+; reads: wC8CB, wC468, hPlayerStateFlags, wJoypadPressed, wC8FE, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Shared02::
 Func_012_7333:: ; address name
@@ -8393,7 +8393,7 @@ Func_012_7333:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 0, a
     ret nz
     ld a, [wJoypadPressed]
@@ -8510,7 +8510,7 @@ Jump_012_73F2::
 
 ; only called from FieldModeStateDispatch_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case05)
-; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wCC44, hPlayerX, hPlayerY, hPlayerFacing, ...
+; reads: wC8CB, wC468, hPlayerStateFlags, wJoypadPressed, wCC44, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wScriptParam0, wScriptParam1, wC916, wC917, wJoypadHeld, wJoypadPressed
 ; points at: wCDB0, wCE8B
 FieldModeStateDispatch_Case05_Sub02::
@@ -8521,7 +8521,7 @@ Func_012_73F3:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 0, a
     ret nz
     ld a, [wJoypadPressed]
@@ -8926,8 +8926,8 @@ Jump_012_7691::
 
 ; with story flag $195 set and $196 clear: when the party's total HP is below 100, wC935 = $CD and carry (E-0127)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9
-; writes: hFFC8, hFFC9, rRAMG, wC935
+; reads: wC6FD, hTemp0, hTemp1, hTemp2, hTemp3
+; writes: hTemp2, hTemp3, rRAMG, wC935
 ; points at: wC6FE
 TriggerEventCDIfPartyHPTotalBelow100::
 Func_012_7693:: ; address name
@@ -8941,9 +8941,9 @@ Func_012_7693:: ; address name
     ld b, a
     ld hl, $0000
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wC6FE
     ld a, $0A
     ld [rRAMG], a
@@ -8954,19 +8954,19 @@ Jump_012_76B8::
     ld a, [hl]
     ld c, $5B
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld e, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
     inc hl
     pop bc
@@ -8974,10 +8974,10 @@ Jump_012_76B8::
     jr nz, Jump_012_76B8
     xor a, a
     ld [rRAMG], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     or a, a
     jr nz, Jump_012_76EF
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     cp a, $64
     jr nc, Jump_012_76EF
     ld a, $CD
@@ -8991,8 +8991,8 @@ Jump_012_76EF::
 
 ; with story flag $198 set and $199 clear: when the party's total MP is below 100, wC935 = $CE and carry (E-0127)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wC6FD, hFFC6, hFFC7, hFFC8, hFFC9
-; writes: hFFC8, hFFC9, rRAMG, wC935
+; reads: wC6FD, hTemp0, hTemp1, hTemp2, hTemp3
+; writes: hTemp2, hTemp3, rRAMG, wC935
 ; points at: wC6FE
 TriggerEventCEIfPartyMPTotalBelow100::
 Func_012_76F1:: ; address name
@@ -9006,9 +9006,9 @@ Func_012_76F1:: ; address name
     ld b, a
     ld hl, $0000
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wC6FE
     ld a, $0A
     ld [rRAMG], a
@@ -9019,19 +9019,19 @@ Jump_012_7716::
     ld a, [hl]
     ld c, $5F
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld e, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
     inc hl
     pop bc
@@ -9039,10 +9039,10 @@ Jump_012_7716::
     jr nz, Jump_012_7716
     xor a, a
     ld [rRAMG], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     or a, a
     jr nz, Jump_012_774D
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     cp a, $64
     jr nc, Jump_012_774D
     ld a, $CE
@@ -9056,8 +9056,8 @@ Jump_012_774D::
 
 ; with story flag $19B set and $19C clear: when the party's total level is below 100, wC935 = $CF and carry (E-0127)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wC6FD, hFFC6, hFFC8, hFFC9
-; writes: hFFC8, hFFC9, rRAMG, wC935
+; reads: wC6FD, hTemp0, hTemp2, hTemp3
+; writes: hTemp2, hTemp3, rRAMG, wC935
 ; points at: wC6FE
 TriggerEventCFIfPartyLevelTotalBelow100::
 Func_012_774F:: ; address name
@@ -9071,9 +9071,9 @@ Func_012_774F:: ; address name
     ld b, a
     ld hl, $0000
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, wC6FE
     ld a, $0A
     ld [rRAMG], a
@@ -9084,18 +9084,18 @@ Jump_012_7774::
     ld a, [hl]
     ld c, $56
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
     ld h, $00
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld e, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld d, a
     add hl, de
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
     inc hl
     pop bc
@@ -9103,10 +9103,10 @@ Jump_012_7774::
     jr nz, Jump_012_7774
     xor a, a
     ld [rRAMG], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     or a, a
     jr nz, Jump_012_77AA
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     cp a, $64
     jr nc, Jump_012_77AA
     ld a, $CF
@@ -9120,7 +9120,7 @@ Jump_012_77AA::
 
 ; with at least 1000 gold: when a party member's EXP has its last three decimal digits equal, wC935 = $C9 and carry (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, hFFC8, wGoldLo
+; reads: wGoldHi, wGoldMid, wC6FD, hTemp0, hTemp1, hTemp2, wGoldLo
 ; writes: rRAMG, wC8C0, wC8C1, wC8C2, wC935
 ; points at: wC6FE
 TriggerEventC9IfExpDigitsRepeat::
@@ -9152,26 +9152,26 @@ Jump_012_77D0::
     ld a, [hl]
     ld c, $58
     call LoadRecordThreeBytesToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, l
     ld [wC8C0], a
     ld a, h
     ld [wC8C1], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     swap a
     and a, $0F
     cp a, c
     jr nz, Jump_012_7803
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     cp a, c
     jr z, Jump_012_780B
@@ -9202,8 +9202,8 @@ Jump_012_7818::
 
 ; with at least 1000 gold: checks party members with status bits 7, 2 or 0 of field $55 against half their max HP and may set an event (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, hFFC9, hFFC8, wGoldLo
-; writes: rRAMG, hFFC8, hFFC9, wC935
+; reads: wGoldHi, wGoldMid, wC6FD, hTemp0, hTemp1, hTemp3, hTemp2, wGoldLo
+; writes: rRAMG, hTemp2, hTemp3, wC935
 ; points at: wC6FE
 TriggerEventForStatusedMemberHP_781E::
 Func_012_781E:: ; address name
@@ -9233,7 +9233,7 @@ Jump_012_7842::
     ld a, [hl]
     ld c, $55
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_012_785E
     bit 2, a
@@ -9252,28 +9252,28 @@ Jump_012_785E::
     ld a, [hl]
     ld c, $5D
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     srl d
     rr e
     ld a, e
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, d
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [hl]
     ld c, $5D
     call LoadSRAMRecordWord
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, c
     jr c, Jump_012_7857
     jr nz, Jump_012_788C
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, c
     jr c, Jump_012_7857
 
@@ -9294,7 +9294,7 @@ Jump_012_7898::
 
 ; only called from RunPeriodicFieldEventChecks (E-0047)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wC627, wGoldHi, wGoldMid, wC6FD, hFFC6, hFFC7, wGoldLo
+; reads: wC627, wGoldHi, wGoldMid, wC6FD, hTemp0, hTemp1, wGoldLo
 ; writes: rRAMG, wC935
 ; points at: wC6FE
 RunPeriodicFieldEventChecks_Sub01::
@@ -9333,9 +9333,9 @@ Jump_012_78D0::
     ld c, $5D
     call LoadSRAMRecordWord
     push hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     add hl, de
     ld e, l
@@ -9366,9 +9366,9 @@ Jump_012_7906::
     ld c, $5B
     call LoadSRAMRecordWord
     push hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     add hl, de
     ld e, l
@@ -9537,7 +9537,7 @@ Jump_012_79CD::
 
 ; with at least 5000 gold and wC634 $FF or 0: when the gold's decimal digits sum to at least 30, wC935 = $C3 and carry (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wGoldHi, wGoldMid, wC634, wGoldLo, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wGoldHi, wGoldMid, wC634, wGoldLo, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: wC8C0, wC8C1, wC8C2, wC935
 TriggerEventC3IfGoldDigitSum30::
 Func_012_79DC:: ; address name
@@ -9570,33 +9570,33 @@ Jump_012_79FD::
     ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     swap a
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     swap a
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     swap a
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $0F
     add a, c
     cp a, $1E
@@ -9614,7 +9614,7 @@ Jump_012_7A46::
 
 ; with at least 1000 gold: when every party member's HP ends in the same decimal digit, wC935 = $C2 and carry (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wGoldHi, wGoldMid, wC6FD, wC6FE, hFFC6, hFFC7, wC8C2, wC6FF, ...
+; reads: wGoldHi, wGoldMid, wC6FD, wC6FE, hTemp0, hTemp1, wC8C2, wC6FF, ...
 ; writes: rRAMG, wC935
 TriggerEventC2IfPartyHPLastDigitsMatch::
 Func_012_7A4D:: ; address name
@@ -9641,9 +9641,9 @@ Jump_012_7A66::
     ld a, [wC6FE]
     ld c, $5B
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     call HLToDecimalDigits
     ld a, [wC8C2]
@@ -9651,9 +9651,9 @@ Jump_012_7A66::
     ld a, [wC6FF]
     ld c, $5B
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     push bc
     call HLToDecimalDigits
@@ -9668,9 +9668,9 @@ Jump_012_7A66::
     ld a, [wC700]
     ld c, $5B
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     push bc
     call HLToDecimalDigits
@@ -9697,7 +9697,7 @@ Jump_012_7ACE::
 
 ; with at least 1000 gold and wC634 $FF or 0: when the gold's decimal digits sum to at most 12, wC935 = $C1 and carry (E-0128)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wC634, wGoldHi, wGoldMid, wGoldLo, hFFC6, hFFC7, hFFC8, hFFC9
+; reads: wC634, wGoldHi, wGoldMid, wGoldLo, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: wC8C0, wC8C1, wC8C2, wC935
 TriggerEventC1IfGoldDigitSumAtMost12::
 Func_012_7AD0:: ; address name
@@ -9730,33 +9730,33 @@ Jump_012_7AF3::
     ld a, [wGoldHi]
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     swap a
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     swap a
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     swap a
     and a, $0F
     add a, c
     ld c, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     and a, $0F
     add a, c
     cp a, $0C
@@ -9775,7 +9775,7 @@ Jump_012_7B3E::
 
 ; when a party member's HP has all decimal digits equal (for example 77 or 333), wC935 = $C0 and carry (E-0127)
 ; 1 call site from 1 routine (e.g. RunPeriodicFieldEventChecks)
-; reads: wC6FD, hFFC6, hFFC7, wC8C0, wC8C1, wC8C2
+; reads: wC6FD, hTemp0, hTemp1, wC8C0, wC8C1, wC8C2
 ; writes: rRAMG, wC935
 ; points at: wC6FE
 TriggerEventC0IfHPDigitsRepeat::
@@ -9792,9 +9792,9 @@ Jump_012_7B51::
     ld a, [hl]
     ld c, $5B
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     call HLToDecimalDigits
     ld a, [wC8C0]
@@ -10001,18 +10001,18 @@ Jump_012_7CA1::
     add_a_to_hl
     ld a, [hl]
     ld [wCB81], a
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, $01
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, $05
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld hl, vTiles0 + $500
     ld a, l
-    ldh [hFFCA], a
+    ldh [hTemp4], a
     ld a, h
-    ldh [hFFCB], a
+    ldh [hTemp5], a
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld a, $7F
     ld [wC527], a
@@ -10020,8 +10020,8 @@ Jump_012_7CA1::
 
 ; on map type 1, standing on tiles at or above wC196, a 1-in-8 roll sets event $0A in wC935 unless item $2C is owned or the gold is below 100; then A = 1 when any tile under the player is blocking (E-0128)
 ; 1 call site from 1 routine (e.g. RunPendingFieldEventWC935)
-; reads: wC195, wC196, wCD04, hFFC6, wC634, wGoldHi, wGoldMid, wGoldLo, ...
-; writes: hFFC6, wC935
+; reads: wC195, wC196, wCD04, hTemp0, wC634, wGoldHi, wGoldMid, wGoldLo, ...
+; writes: hTemp0, wC935
 ; points at: wC910
 RollFieldEventOnTallTiles::
 Func_012_7CD9:: ; address name
@@ -10043,9 +10043,9 @@ Jump_012_7CE6::
     and a, $07
     jr nz, Jump_012_7D2F
     ld a, $2C
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call FindHFFC6InWC61DList
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_012_7D2F
     ld a, [wC634]
@@ -10139,16 +10139,16 @@ Jump_012_7D93::
 
 ; hFFC6 = the party index whose record species (field $0B) equals the word hFFC6/7, or $80 when none (E-0125)
 ; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case07_Sub01, DispatchTalkEvent_Case01_Case27, DispatchTalkEvent_Case01_Case7F, LoadListedRecordNameTilesForHFFC6, ...)
-; reads: hFFC6, hFFC7, wC6FD
-; writes: rRAMG, hFFC6
+; reads: hTemp0, hTemp1, wC6FD
+; writes: rRAMG, hTemp0
 ; points at: wC6FE
 FindPartyIndexOfSpeciesHFFC6::
 Func_012_7D95:: ; address name
     ld a, $0A
     ld [rRAMG], a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld e, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld d, a
     ld a, [wC6FD]
     ld b, a
@@ -10158,10 +10158,10 @@ Jump_012_7DA7::
     ld a, [hl+]
     ld c, $0B
     call LoadSRAMRecordWord
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, e
     jr nz, Jump_012_7DB7
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, d
     jr z, Jump_012_7DC3
 
@@ -10169,7 +10169,7 @@ Jump_012_7DB7::
     dec b
     jr nz, Jump_012_7DA7
     ld a, $80
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
     ld [rRAMG], a
     ret
@@ -10177,19 +10177,19 @@ Jump_012_7DB7::
 Jump_012_7DC3::
     ld a, [wC6FD]
     sub a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     xor a, a
     ld [rRAMG], a
     ret
 
 ; hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches
 ; 47 call sites from 23 routines (e.g. RollFieldEventOnTallTiles, Func_004_58C2_Case4F, Func_004_58C2_Case6A, Func_004_612B_Case38, ...)
-; reads: hFFC6
-; writes: hFFC6
+; reads: hTemp0
+; writes: hTemp0
 ; points at: wInventory
 FindHFFC6InWC61DList::
 Func_012_7DCE:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld c, a
     ld b, $00
     ld hl, wInventory
@@ -10210,22 +10210,22 @@ Jump_012_7DD6::
 
 Jump_012_7DE8::
     ld a, $FF
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 Jump_012_7DED::
     ld a, b
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 ; hFFC6 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last slot keeps its old value), then wC634 = $FF; nothing moves when the slot is $17 (E-0106)
 ; 17 call sites from 10 routines (e.g. Func_004_58C2_Case6A, Func_004_612B_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
-; reads: hFFC6
+; reads: hTemp0
 ; writes: wC634
 ; points at: wInventory
 RemoveInventorySlotShiftDown::
 Func_012_7DF1:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $17
     jr z, Jump_012_7E09
     ld b, a
@@ -10251,8 +10251,8 @@ Jump_012_7E09::
 
 ; hFFC7 = the index of the first party member knowing skill $76-$7D or $92 and hFFC8 = that skill, or hFFC7 = $80 (E-0128)
 ; 1 call site from 1 routine (e.g. Func_004_58C2_Case13)
-; reads: wC6FD, hFFC7, hFFC6
-; writes: rRAMG, hFFC7, hFFC8
+; reads: wC6FD, hTemp1, hTemp0
+; writes: rRAMG, hTemp1, hTemp2
 ; points at: wC6FE
 FindPartyMemberWithSkill76To7DOr92::
 Func_012_7E0F:: ; address name
@@ -10261,11 +10261,11 @@ Func_012_7E0F:: ; address name
     ld a, [wC6FD]
     ld b, a
     xor a, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_012_7E1B::
     push bc
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld hl, wC6FE
     add_a_to_hl
     ld b, $08
@@ -10274,7 +10274,7 @@ Jump_012_7E1B::
 Jump_012_7E2A::
     ld a, [hl]
     call LoadSRAMRecordByte
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     jr z, Jump_012_7E65
     ld e, $76
@@ -10309,21 +10309,21 @@ Jump_012_7E2A::
     jr nz, Jump_012_7E2A
 
 Jump_012_7E65::
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     inc a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     pop bc
     dec b
     jr nz, Jump_012_7E1B
     ld a, $80
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     xor a, a
     ld [rRAMG], a
     ret
 
 Jump_012_7E77::
     ld a, e
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     pop bc
     xor a, a
     ld [rRAMG], a
@@ -10332,13 +10332,13 @@ Jump_012_7E77::
 
 ; wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)
 ; 5 call sites from 5 routines (e.g. ScriptCommand82_Run_Case0A_Case02, ScriptCommand82_Run_Case08_Case02, ScriptCommand82_Run_Case03_Case02, ScriptCommand82_Run_Case02_Case05, ...)
-; reads: hFFC6, hFFC7, wGoldHi, wGoldMid, wGoldLo
+; reads: hTemp0, hTemp1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
 SubtractGoldFloorZero::
 Func_012_7E84:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, [wGoldHi]
     or a, a
@@ -10375,13 +10375,13 @@ Jump_012_7EB7::
 
 ; adds the word hFFC6/hFFC7 to the 24-bit wGoldLo/Mid/Hi and caps the result at $01869F (99,999) (E-0074)
 ; 12 call sites from 5 routines (e.g. ScriptCommand84_Run_Case08, ScriptFetch0E, ScriptCommand80_Run_Case02, TalkMsg0A3C_KingIfYouSee, ...)
-; reads: hFFC6, hFFC7, wGoldLo, wGoldMid, wGoldHi
+; reads: hTemp0, hTemp1, wGoldLo, wGoldMid, wGoldHi
 ; writes: wGoldLo, wGoldMid, wGoldHi
 AddGoldCapped::
 Func_012_7EC2:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld h, a
     ld a, [wGoldLo]
     add a, l

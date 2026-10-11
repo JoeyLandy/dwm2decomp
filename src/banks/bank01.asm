@@ -1908,8 +1908,8 @@ Jump_001_517F::
 
 ; only called from DebugSkillViewer_Update (E-0047)
 ; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
-; writes: wC8C0, wC8C1, wC8C2, hFFC7, hFFC6
-; points at: hFFC9
+; writes: wC8C0, wC8C1, wC8C2, hTemp1, hTemp0
+; points at: hTemp3
 DebugSkillViewer_Update_Sub01::
 Func_001_52AF:: ; address name
     ld a, l
@@ -1919,23 +1919,23 @@ Func_001_52AF:: ; address name
     xor a, a
     ld [wC8C2], a
     call Number24ToPackedBCD
-    ld hl, hFFC9
+    ld hl, hTemp3
     ld a, [hl-]
     or a, [hl]
     ret z
     ld a, $99
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, $99
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ret
 
 ; only called from DebugSkillViewer_Update (E-0047)
 ; 4 call sites from 1 routine (e.g. DebugSkillViewer_Update)
-; reads: hFFC7, hFFC6
+; reads: hTemp1, hTemp0
 DebugSkillViewer_Update_Sub02::
 Func_001_52CD:: ; address name
     ld e, $00
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $F0
     swap a
     ld d, a
@@ -1950,7 +1950,7 @@ Jump_001_52DD::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     ld d, a
     or a, e
@@ -1964,7 +1964,7 @@ Jump_001_52EE::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $F0
     swap a
     ld d, a
@@ -1979,7 +1979,7 @@ Jump_001_5301::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     add a, b
     di
@@ -2060,7 +2060,7 @@ Data_001_5364:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugShowMonsterRecord (E-0047)
 ; 7 call sites from 1 routine (e.g. DebugShowMonsterRecord)
-; reads: hFFC8, hFFC7, hFFC6
+; reads: hTemp2, hTemp1, hTemp0
 ; writes: wC8C0, wC8C1, wC8C2
 DebugShowMonsterRecord_Sub01::
 Func_001_536C:: ; address name
@@ -2076,7 +2076,7 @@ Func_001_536C:: ; address name
     pop hl
     pop bc
     ld e, $00
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     and a, $0F
     ld d, a
     or a, e
@@ -2093,7 +2093,7 @@ Jump_001_538F::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $F0
     swap a
     ld d, a
@@ -2111,7 +2111,7 @@ Jump_001_53A4::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     and a, $0F
     ld d, a
     or a, e
@@ -2128,7 +2128,7 @@ Jump_001_53B7::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $F0
     swap a
     ld d, a
@@ -2146,7 +2146,7 @@ Jump_001_53CC::
     di
     call WriteVRAMByteInc
     ei
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     and a, $0F
     add a, b
     di
@@ -3746,13 +3746,13 @@ Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugAutomap_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update)
-; reads: wC5FA, wC5F9, wC5FD, hFFC6, hFFC7, hFFC8, hFFC9, wCD0D, ...
-; writes: hFFC6, wC833, wCC42, wCD05, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
+; reads: wC5FA, wC5F9, wC5FD, hTemp0, hTemp1, hTemp2, hTemp3, wCD0D, ...
+; writes: hTemp0, wC833, wCC42, wCD05, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
 ; points at: wModeChangeRequest
 DebugAutomap_Update_Sub01::
 Func_001_5DBA:: ; address name
     ld a, [wC5FA]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall RollKeyContentsForLevelHFFC6
     ld a, [wC5F9]
     ld [wC833], a
@@ -3772,7 +3772,7 @@ Func_001_5DBA:: ; address name
     push hl
     farcall FindSRAMSlotMarkerIndex
     pop hl
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, $FF
     ret z
     ld [hl+], a
@@ -3785,11 +3785,11 @@ Jump_001_5DEF::
 
 Jump_001_5DF3::
     ld [wCC42], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [hl+], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [hl+], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld [hl], a
     ld [wCD05], a
     farcall DebugAutomap_Update_Sub01_Sub01
@@ -3970,7 +3970,7 @@ Data_001_5F56:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; update for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wC5F9, wC5FA, wC5FB, wC5FC, wC5FD, wC5F8, wFrameCounterLo, ...
-; writes: hFFC6, hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY, wC8C7, wGameMode, ...
+; writes: hTemp0, hMapId, hMapScreenX, hPlayerX, hMapScreenY, hPlayerY, wC8C7, wGameMode, ...
 ; points at: wModeChangeRequest, wC5FE
 DebugMapEditor_Update::
 Jump_001_5FFE:: ; address name
@@ -3978,7 +3978,7 @@ Jump_001_5FFE:: ; address name
     bit 0, a
     jr z, Jump_001_604B
     ld a, [wC5F9]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call DebugMapEditor_Update_Sub01
     or a, a
     jr z, Jump_001_601F
@@ -4364,7 +4364,7 @@ Jump_001_627C::
 ; update for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wC5FD, wC5F8, wJoypadPressedRepeat, wC5FA, wC5F9, wIsCGB, wC5FC, ...
-; writes: wC5FD, wC5F8, wC5F9, wC5FA, hFFC6, wC526, wC5FC, wC527, ...
+; writes: wC5FD, wC5F8, wC5F9, wC5FA, hTemp0, wC526, wC5FC, wC527, ...
 ; points at: wC5F9, wOBJPaletteBuffer, wC5FE, wModeChangeRequest
 DebugMonsterPictureViewer_Update::
 Jump_001_6294:: ; address name
@@ -4510,7 +4510,7 @@ Jump_001_634E::
     jr z, Jump_001_6387
     ld hl, vBGMap0 + $124
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wC5F9]
     ld e, a
     ld a, [wC5FA]
@@ -5266,7 +5266,7 @@ Jump_001_687B::
 
 ; only called from DebugBattleSetup_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update)
-; reads: wC6FD, wC7C7, hFFC6
+; reads: wC6FD, wC7C7, hTemp0
 ; points at: wC6FE
 DebugBattleSetup_Update_Sub01::
 Func_001_6880:: ; address name
@@ -5304,7 +5304,7 @@ Jump_001_68A3::
 
 Jump_001_68B4::
     farcall CheckSaveData
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_001_68C6
     farcall RunSaveSteps
@@ -5776,12 +5776,12 @@ Func_001_6C1F:: ; address name
 
 ; only called from CreateMonsterRecordOfKindHFFC7_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01)
-; reads: hFFC9, wD868, wRecordBuffer, wCFED, wD869, wC5E8, wRecordBufferData, wCFEF, ...
+; reads: hTemp3, wD868, wRecordBuffer, wCFED, wD869, wC5E8, wRecordBufferData, wCFEF, ...
 ; writes: wMonsterId, wCFE7, wC9DC, wSpeciesIdLo, wSpeciesIdHi, wD09D, wD09E, wD09F, ...
 ; points at: wC60C, wD01A
 CreateMonsterRecordOfKindHFFC7_Sub01_Sub01::
 Func_001_6C48:: ; address name
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     push af
     ld a, e
     ld [wMonsterId], a
@@ -6085,7 +6085,7 @@ Jump_001_6E3E::
 
 ; with SRAM enabled creates a record from the template Data_001_7098[hFFC7] (wD869 = hFFC7, level hFFC8); kinds 1 and 2 also set field $6E = 1 (E-0124)
 ; 10 call sites from 10 routines (e.g. DispatchTalkEvent_Case01_Case33, DispatchTalkEvent_Case01_Case42, AddRecordWD7F5AsFollower, ScriptCommand2A_Run_Case10, ...)
-; reads: hFFC7, hFFC8, wD868
+; reads: hTemp1, hTemp2, wD868
 ; writes: rRAMG, rRAMB, wD869, wD86A
 CreateMonsterRecordOfKindHFFC7::
 Func_001_6E46:: ; address name
@@ -6093,7 +6093,7 @@ Func_001_6E46:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [wD869], a
     ld hl, Data_001_7098
     add a, a
@@ -6103,9 +6103,9 @@ Func_001_6E46:: ; address name
     ld d, [hl]
     xor a, a
     ld [wD86A], a
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     call CreateMonsterRecordOfKindHFFC7_Sub01
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, $01
     jr z, Jump_001_6E73
     cp a, $02
@@ -6125,14 +6125,14 @@ Jump_001_6E7D::
 ; only called from PickRandomMonsterSkipping7ETo82 (E-0047)
 ; 1 call site from 1 routine (e.g. PickRandomMonsterSkipping7ETo82)
 ; reads: wD868
-; writes: wD869, wD86A, hFFC9, wD868
+; writes: wD869, wD86A, hTemp3, wD868
 PickRandomMonsterSkipping7ETo82_Sub01::
 Func_001_6E82:: ; address name
     ld a, $FF
     ld [wD869], a
     ld [wD86A], a
     ld a, $01
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     ld a, [wD868]
 
 ; only called from CreateMonsterRecordOfKindHFFC7 (E-0047)

@@ -3565,7 +3565,7 @@ Jump_03A_6584:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC58A, wD043, wD04B
 ; writes: wBattleResolveStep, wStringIndex, wStringCategory, wBattleStep, wBattleSubPhase
-; points at: wBattleActor, wDA5B, wD891, wBattleResolveStep, wC130
+; points at: wBattleActor, wDA5B, wD891, wBattleResolveStep, wTextBuf0
 RunBattleActions_Case09_Case04::
 Jump_03A_65A4:: ; address name
     ld hl, wBattleActor
@@ -3634,9 +3634,9 @@ Jump_03A_6619::
     inc a
     ld c, a
     ld b, $00
-    ld hl, wC130
+    ld hl, wTextBuf0
     call RunBattleActions_Case09_Case04_Sub01
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld a, [hl]
     cp a, $01
     ld a, $61
@@ -5111,7 +5111,7 @@ Data_03A_74F7:: ; heuristic: target of a monotone pointer table; C0
 ; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, Func_032_4ADC_Case01_Case00, Func_032_4ADC_Case01_Case03, Func_032_5820_Case01)
 ; reads: wBattleActionId, wBattleActor, wC982
 ; writes: wC982, wD86C, wStringIndex, wStringCategory
-; points at: wBattleTargetChoice, wC150
+; points at: wBattleTargetChoice, wTextBuf2
 BuildActionMessageNames::
 Func_03A_7508:: ; address name
     push de
@@ -5127,7 +5127,7 @@ Func_03A_7508:: ; address name
     add a, a
     add_a_to_hl
     ld a, [hl]
-    ld hl, wC150
+    ld hl, wTextBuf2
     ld [wD86C], a
     call CopySlotNameToHL
     jr Jump_03A_753D
@@ -5278,12 +5278,12 @@ Data_03A_7738:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from Call774CWithWD890 (E-0047)
 ; 1 call site from 1 routine (e.g. Call774CWithWD890)
-; reads: hFFC6, wBattleTarget, wBattleStatResultLo
+; reads: hTemp0, wBattleTarget, wBattleStatResultLo
 ; writes: wBattleStatResultLo
-; points at: wC0A0, wC0A8, wC130
+; points at: wC0A0, wC0A8, wTextBuf0
 Call774CWithWD890_Sub01::
 Func_03A_774C:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld b, a
     ld a, b
     cp a, $01
@@ -5345,7 +5345,7 @@ Jump_03A_7784::
     ld a, [wBattleStatResultLo]
     cp a, l
     jr z, Jump_03A_77BE
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [hl], $16
     inc hl
     ld [hl], $32
@@ -5388,12 +5388,12 @@ Jump_03A_77CF::
 
 ; counts equal pairs among the hFFC6 target words at wC0A0 (or wC0A8 for the foe side); when not all are equal writes a message to wC130 (E-0128)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, wBattleTarget, wBattleStatResultLo
+; reads: hTemp0, wBattleTarget, wBattleStatResultLo
 ; writes: wBattleStatResultLo
-; points at: wC0A0, wC0A8, wC130
+; points at: wC0A0, wC0A8, wTextBuf0
 CheckAllTargetsSame:: ; heuristic: follows a terminator; C0
 Func_03A_77D3:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld b, a
     ld a, b
     cp a, $01
@@ -5455,7 +5455,7 @@ Jump_03A_780B::
     ld a, [wBattleStatResultLo]
     cp a, l
     jr z, Jump_03A_7845
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [hl], $16
     inc hl
     ld [hl], $32
@@ -5498,12 +5498,12 @@ Jump_03A_7856::
 
 ; when the hFFC6 targets are all the same, copies the target name to wC130; otherwise writes "The monsters" (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, wBattleTarget, wBattleStatResultLo
+; reads: hTemp0, wBattleTarget, wBattleStatResultLo
 ; writes: wBattleStatResultLo
-; points at: wC0A0, wC0A8, wC130
+; points at: wC0A0, wC0A8, wTextBuf0
 WriteTargetNameOrTheMonsters:: ; heuristic: follows a terminator; C0
 Func_03A_785A:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld b, a
     ld a, b
     cp a, $01
@@ -5565,7 +5565,7 @@ Jump_03A_7893::
     ld a, [wBattleStatResultLo]
     cp a, l
     jr z, Jump_03A_78D9
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [hl], $1D
     inc hl
     ld [hl], $2B
@@ -5618,11 +5618,11 @@ Jump_03A_78EA::
 ; 3 call sites from 2 routines (e.g. BuildActionMessageNames, ShowSpecialActionMessage)
 ; reads: wBattleActor
 ; writes: wD86C
-; points at: wC130
+; points at: wTextBuf0
 CopyActorNameToWC130::
 Func_03A_78EE:: ; address name
     ld a, [wBattleActor]
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [wD86C], a
     call CopySlotNameToHL
     ret
@@ -5631,25 +5631,25 @@ Func_03A_78EE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wD86C
-; points at: wC140
+; points at: wTextBuf1
 CopyActorNameToWC140:: ; heuristic: follows a terminator; C0
 Func_03A_78FB:: ; address name
     ld a, [wBattleActor]
-    ld hl, wC140
+    ld hl, wTextBuf1
     ld [wD86C], a
     call CopySlotNameToHL
     ret
 
 ; far-calls Func_0A3_414F (which maps the actor to a slot in hFFC6), then copies that slot's name to wC140 (CopySlotNameToHL) (E-0113)
 ; 2 call sites from 2 routines (e.g. BuildActionMessageNames, ShowSpecialActionMessage)
-; reads: hFFC6
+; reads: hTemp0
 ; writes: wD86C
-; points at: wC140
+; points at: wTextBuf1
 CopyMappedSlotNameToWC140::
 Func_03A_7908:: ; address name
     farcall ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
-    ld hl, wC140
+    ldh a, [hTemp0]
+    ld hl, wTextBuf1
     ld [wD86C], a
     call CopySlotNameToHL
     ret
@@ -5657,13 +5657,13 @@ Func_03A_7908:: ; address name
 ; copies string wBattleActionId of category 4 (skill names) to wC140 (CopyStringHLToDE) (E-0116)
 ; 1 call site from 1 routine (e.g. BuildActionMessageNames)
 ; reads: wBattleActionId
-; points at: wC140
+; points at: wTextBuf1
 CopyActionSkillNameToWC140::
 Func_03A_791A:: ; address name
     ld a, [wBattleActionId]
     ld l, a
     ld h, $04
-    ld de, wC140
+    ld de, wTextBuf1
     call CopyStringHLToDE
     ret
 
@@ -5671,11 +5671,11 @@ Func_03A_791A:: ; address name
 ; 6 call sites from 6 routines (e.g. Call774CWithWD890_Sub01, CopyTargetOrSideNameToWC130_77C3, CheckAllTargetsSame, CopyTargetOrSideNameToWC130_784A, ...)
 ; reads: wBattleTarget
 ; writes: wD86C
-; points at: wC130
+; points at: wTextBuf0
 CopyTargetNameToWC130::
 Func_03A_7927:: ; address name
     ld a, [wBattleTarget]
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [wD86C], a
     call CopySlotNameToHL
     ret
@@ -5684,11 +5684,11 @@ Func_03A_7927:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wD86C
-; points at: wC140
+; points at: wTextBuf1
 CopyTargetNameToWC140:: ; heuristic: follows a terminator; C0
 Func_03A_7934:: ; address name
     ld a, [wBattleTarget]
-    ld hl, wC140
+    ld hl, wTextBuf1
     ld [wD86C], a
     call CopySlotNameToHL
     ret
@@ -5697,11 +5697,11 @@ Func_03A_7934:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wD86C
-; points at: wC150
+; points at: wTextBuf2
 CopyTargetNameToWC150:: ; heuristic: follows a terminator; C0
 Func_03A_7941:: ; address name
     ld a, [wBattleTarget]
-    ld hl, wC150
+    ld hl, wTextBuf2
     ld [wD86C], a
     call CopySlotNameToHL
     ret
@@ -5711,46 +5711,46 @@ Func_03A_7941:: ; address name
 ; 3 call sites from 3 routines (e.g. CopyTargetOrSideNameToWC130_77C3, CopyTargetOrSideNameToWC130_784A, CopyTargetOrSideNameToWC130_78DE)
 ; reads: wBattleTarget
 ; writes: wD86C
-; points at: wC130
+; points at: wTextBuf0
 CopyTargetSideNameToWC130::
 Func_03A_795D:: ; address name
     ld a, [wBattleTarget]
     and a, $04
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [wD86C], a
     call CopySlotNameToHL
     ret
 
 ; copies the name at wC60C (5 glyphs, CopyFiveGlyphsPlusMarks) to wC130 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC60C, wC130
+; points at: wC60C, wTextBuf0
 CopyWC60CNameToWC130:: ; heuristic: follows a terminator; C0
 Func_03A_796C:: ; address name
     ld de, wC60C
-    ld hl, wC130
+    ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
     ret
 
 ; copies the name at wC60C (5 glyphs) to wC140 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC60C, wC140
+; points at: wC60C, wTextBuf1
 CopyWC60CNameToWC140:: ; heuristic: follows a terminator; C0
 Func_03A_7976:: ; address name
     ld de, wC60C
-    ld hl, wC140
+    ld hl, wTextBuf1
     call CopyFiveGlyphsPlusMarks
     ret
 
 ; copies string wBattleActionId of category 5 (item names) to wC150 (CopyStringHLToDE) (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId
-; points at: wC150
+; points at: wTextBuf2
 CopyActionItemNameToWC150:: ; heuristic: follows a terminator; C0
 Func_03A_7980:: ; address name
     ld a, [wBattleActionId]
     ld l, a
     ld h, $05
-    ld de, wC150
+    ld de, wTextBuf2
     call CopyStringHLToDE
     ret
 
@@ -5758,12 +5758,12 @@ Func_03A_7980:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wD86C
-; points at: wC130
+; points at: wTextBuf0
 CopyActorSideNameToWC130:: ; heuristic: follows a terminator; C0
 Func_03A_798D:: ; address name
     ld a, [wBattleActor]
     and a, $04
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [wD86C], a
     call CopySlotNameToHL
     ret
@@ -6159,10 +6159,10 @@ Jump_03A_7B77::
 
 ; writes the glyphs of 'Monsters' (decoded with the charmap) and $F0 to wC130 (E-0113)
 ; 3 call sites from 3 routines (e.g. CopyTargetOrSideNameToWC130_77C3, CopyTargetOrSideNameToWC130_784A, CopyTargetOrSideNameToWC130_78DE)
-; points at: wC130
+; points at: wTextBuf0
 WriteMonstersWordToWC130::
 Func_03A_7B82:: ; address name
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [hl], $16
     inc hl
     ld [hl], $32
@@ -6186,7 +6186,7 @@ Func_03A_7B82:: ; address name
 ; 3 call sites from 3 routines (e.g. RunBattleSetup_Case01_Case0C, RunBattleSetup_Case01_Case1C, RunBattleSetup_Case02_Case0C)
 ; reads: wC58A, wD869, wD86D, wD86E, wD86F, wC52D, wC52E, wC52F, ...
 ; writes: wD86C, wStringCategory, wStringIndex, wC52D, wC52E, wC52F, wC530
-; points at: wD86D, wC130
+; points at: wD86D, wTextBuf0
 RunBattleSetup_Shared06::
 Func_03A_7BA0:: ; address name
     ld a, $FF
@@ -6243,13 +6243,13 @@ Jump_03A_7BDC::
 ; 2 call sites from 1 routine (e.g. RunBattleSetup_Shared06)
 ; reads: wC52D, wC52E, wC52F, wC530
 ; writes: wD86C, wStringCategory, wStringIndex, wC52D, wC52E, wC52F, wC530
-; points at: wC130
+; points at: wTextBuf0
 RunBattleSetup_Shared06_Sub01::
 Func_03A_7BF9:: ; address name
     cp a, $FF
     jr z, Jump_03A_7C14
     push hl
-    ld hl, wC130
+    ld hl, wTextBuf0
     ld [wD86C], a
     call CopySlotNameToHL
     ld a, $08

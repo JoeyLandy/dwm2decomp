@@ -3,7 +3,7 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
 
 ; only called from FieldModeStateDispatch_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case00)
-; reads: wC8CB, wC468, hFF8C, wC918, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
+; reads: wC8CB, wC468, hPlayerStateFlags, wC918, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
 ; writes: wC918, wC916, wC917, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Case00_Sub02::
 Func_087_4001:: ; address name
@@ -13,7 +13,7 @@ Func_087_4001:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 0, a
     ret nz
     ld a, [wC918]
@@ -146,7 +146,7 @@ Jump_087_4096::
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
-; reads: wC8CB, wC468, hFF8C, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
+; reads: wC8CB, wC468, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wC916, wC917, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Shared03::
 Func_087_42A0:: ; address name
@@ -156,7 +156,7 @@ Func_087_42A0:: ; address name
     ld a, [wC468]
     bit 7, a
     ret nz
-    ldh a, [hFF8C]
+    ldh a, [hPlayerStateFlags]
     bit 0, a
     ret nz
     ld a, [wJoypadPressed]
@@ -634,8 +634,8 @@ Jump_087_4537::
 
 ; only called from FieldModeStateDispatch_Shared03 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared03)
-; reads: wSpriteSlotCount, hFFC7, hFFC6
-; writes: hFFC6, hFFC7
+; reads: wSpriteSlotCount, hTemp1, hTemp0
+; writes: hTemp0, hTemp1
 ; points at: wCB8A
 FieldModeStateDispatch_Shared03_Sub02::
 Func_087_4709:: ; address name
@@ -645,11 +645,11 @@ Func_087_4709:: ; address name
     ld a, c
     swap a
     and a, $0F
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, b
     swap a
     and a, $0F
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wSpriteSlotCount]
     ld b, a
     ld c, $01
@@ -662,7 +662,7 @@ Jump_087_4725::
     swap a
     and a, $0F
     ld c, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     cp a, c
     jr nz, Jump_087_473E
     inc hl
@@ -670,7 +670,7 @@ Jump_087_4725::
     swap a
     and a, $0F
     ld c, a
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     cp a, c
     jr z, Jump_087_474D
 

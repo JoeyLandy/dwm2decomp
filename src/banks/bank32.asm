@@ -1284,7 +1284,7 @@ Jump_032_4F00::
 
 ; for C & 7 non-zero runs Func_03A_7508 (and Func_032_5386 unless the result is 1), else shows the special action message; then sets sub-phase 7 and marks the formation slot unless it has status 3/4 bits (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6
+; reads: hTemp0
 ApplyActionResultAndMarkFormation:: ; heuristic: follows a terminator; C0
 Func_032_4F0A:: ; address name
     ld c, a
@@ -1297,7 +1297,7 @@ Func_032_4F0A:: ; address name
     call nz, CheckActionD0ToE3OrSpecial
     call SetSubPhase7AndResetSteps
     farcall ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
     farcall RunA3414FAndMarkWDA5B3
@@ -1307,7 +1307,7 @@ Jump_032_4F32::
     farcall ShowSpecialActionMessage
     call SetSubPhase7AndResetSteps
     farcall ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
     farcall RunA3414FAndMarkWDA5B3
@@ -1316,13 +1316,13 @@ Jump_032_4F32::
 
 ; entry 0 of the `rst $00` table in Func_032_4ADC_Case01
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hFFC6, wBattleActor, wBattleActionId, wCFF3
+; reads: hTemp0, wBattleActor, wBattleActionId, wCFF3
 ; writes: wBattleActionId
 ; points at: wDAD8, wBattleSubStep, wBattleStatus, wBattleActionChoice, wDAE0
 Func_032_4ADC_Case01_Case00::
 Jump_032_4F53:: ; address name
     farcall ActorActionIsD0ToE3
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     or a, a
     jr nz, Jump_032_4F00
     call LoadActorChosenActionRecord
@@ -1583,13 +1583,13 @@ Jump_032_5143::
 
 ; for the actor and its formation partner checks status blocks and MP costs of their stored actions (wDA2C) and returns flags in hFFC7 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wRecordBufferData, hFFC6, hFFC7
-; writes: hFFC7, wRecordBuffer, wCFED, hFFC8, wBattleActor
+; reads: wBattleActor, wRecordBufferData, hTemp0, hTemp1
+; writes: hTemp1, wRecordBuffer, wCFED, hTemp2, wBattleActor
 ; points at: wDA2C, wDA5B
 CheckFormationPartnersCanAct:: ; heuristic: follows a terminator; C0
 Func_032_514C:: ; address name
     xor a, a
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     ld a, [wBattleActor]
     add a, a
     ld hl, wDA2C
@@ -1599,7 +1599,7 @@ Func_032_514C:: ; address name
     ld [wCFED], a
     farcall LoadSkillRecord
     ld a, [wRecordBufferData]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, [wBattleActor]
     call CheckSlotStatusBlockWide_Bank32
     jr nc, Jump_032_5178
@@ -1612,14 +1612,14 @@ Jump_032_5178::
 
 Jump_032_517D::
     ld a, $01
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_032_5181::
     push de
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wBattleActor], a
     add a, a
     ld hl, wDA2C
@@ -1629,7 +1629,7 @@ Jump_032_5181::
     ld [wCFED], a
     farcall LoadSkillRecord
     ld a, [wRecordBufferData]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, [wBattleActor]
     call CheckSlotStatusBlockWide_Bank32
     jr c, Jump_032_51C3
@@ -1649,14 +1649,14 @@ Jump_032_51C7::
     jr c, Jump_032_51D2
 
 Jump_032_51CC::
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, $02
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_032_51D2::
     pop af
     ld [wBattleActor], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     or a, a
     jr z, Jump_032_51F3
     bit 0, a
@@ -1690,8 +1690,8 @@ Jump_032_51F3::
 
 ; for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)
 ; 6 call sites from 4 routines (e.g. Func_032_5820_Case01, Func_032_4ADC_Case01_Case04, Func_032_4ADC_Case01_Case00, CheckFormationPartnersCanAct)
-; reads: wBattleActionId, wBattleActor, hFFC8, wCFF3, wRecordBufferData
-; writes: hFFC8
+; reads: wBattleActionId, wBattleActor, hTemp2, wCFF3, wRecordBufferData
+; writes: hTemp2
 ; points at: wD80E
 CheckSkillMPCost::
 Func_032_51F9:: ; address name
@@ -1704,18 +1704,18 @@ Func_032_51F9:: ; address name
 
 Jump_032_5206::
     ld a, [wRecordBufferData]
-    ldh [hFFC8], a
+    ldh [hTemp2], a
 
 Jump_032_520B::
     ld a, [wBattleActor]
     call GetBattleMP_Bank32
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     or a, a
     jr z, Jump_032_522D
     ld a, h
     or a, l
     jp z, Jump_032_5296
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     cp a, $FF
     jr z, Jump_032_522D
     ld c, a
@@ -1982,7 +1982,7 @@ Jump_032_5384::
 
 ; actions $D0-$E3 continue at Jump_032_53C8; otherwise returns unless ActionIsSpecialBFOrC9ToCF (E-0126)
 ; 8 call sites from 8 routines (e.g. Func_032_5820_Case07, Func_032_5820_Case01, Func_032_4ADC_Case08, Func_032_4ADC_Case01_Case04, ...)
-; reads: wBattleActionId, wBattleActor, hFFC6, wRecordBufferData
+; reads: wBattleActionId, wBattleActor, hTemp0, wRecordBufferData
 ; writes: wRecordBuffer, wCFED, wBattleActor, wRecordBufferData, wD866, wD867
 ; points at: wDA2C, wBattleMP
 CheckActionD0ToE3OrSpecial::
@@ -2054,7 +2054,7 @@ Jump_032_53C8::
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wBattleActor], a
     ld hl, wDA2C
     add a, a
@@ -2076,7 +2076,7 @@ Jump_032_541A::
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wBattleActor], a
     call PayActorMPCost
     pop af
@@ -3725,7 +3725,7 @@ Func_032_5EAB:: ; address name
 
 ; entry 0 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActionId, wBattleActor, hFFC6, wCFCF, wBattleTarget
+; reads: wBattleActionId, wBattleActor, hTemp0, wCFCF, wBattleTarget
 ; writes: wBattleSubStep2, wCFCE, wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wC982, wC983, ...
 ; points at: wBattleSubStep, wBattleStatus
 ResolveStep0EEffect_Case00::
@@ -3813,7 +3813,7 @@ Jump_032_5F4B::
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wBattleActor], a
     call ResolveStep0EEffect_Case00_Sub01
     pop af
@@ -4376,7 +4376,7 @@ Jump_032_62CB:: ; address name
 
 ; entry 5 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActionId, wC983, hFFC6, wBattleSubStep2
+; reads: wBattleActionId, wC983, hTemp0, wBattleSubStep2
 ; writes: wC983, wBattleActor
 ResolveStep0EEffect_Case05::
 Jump_032_62CF:: ; address name
@@ -4391,7 +4391,7 @@ Jump_032_62CF:: ; address name
     set 7, a
     ld [wC983], a
     farcall ActorFormationSlotToHFFC6
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     ld [wBattleActor], a
 
 Jump_032_62F1::

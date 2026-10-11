@@ -638,7 +638,7 @@ Func_0A0_4344:: ; address name
 
 ; for A in $0D-$13 increments (capped at 3) each byte listed in Data_0A0_4387 row A - $0D, relative to DE (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01_Sub05_Sub01)
-; writes: hFFC6, hFFC7
+; writes: hTemp0, hTemp1
 ApplyTable4387IncrementsForA0DTo13::
 Func_0A0_434B:: ; address name
     or a, a
@@ -649,9 +649,9 @@ Func_0A0_434B:: ; address name
     ret nc
     push af
     ld a, e
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, d
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     pop af
     push de
     sub a, $0D
@@ -678,13 +678,13 @@ Jump_0A0_436F::
 
 ; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (the bank-$A0 copy of IncrementTableByteCappedAt3) (E-0118)
 ; 1 call site from 1 routine (e.g. ApplyTable4387IncrementsForA0DTo13)
-; reads: hFFC6, hFFC7
+; reads: hTemp0, hTemp1
 IncrementTableByteCappedAt3_BankA0::
 Func_0A0_4378:: ; address name
-    ldh a, [hFFC6]
+    ldh a, [hTemp0]
     add a, l
     ld l, a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     adc a, h
     ld h, a
     ld a, [hl]
@@ -1589,7 +1589,7 @@ Func_0A0_4900:: ; address name
 ; hFFC7 = min(4 * wCFE3 / 5 + 5, 99); runs Func_0A0_494F for B slots from C with wD86A = Data_0A0_4B0A[slot] (E-0125)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_Sub04)
 ; reads: wCFE3
-; writes: hFFC7, wD86A, wD86B
+; writes: hTemp1, wD86A, wD86B
 ApplyLevelScaledStatsToSlots::
 Func_0A0_4919:: ; address name
     push de
@@ -1608,7 +1608,7 @@ Func_0A0_4919:: ; address name
     ld a, $63
 
 Jump_0A0_4931::
-    ldh [hFFC7], a
+    ldh [hTemp1], a
 
 Jump_0A0_4933::
     push bc
@@ -1630,7 +1630,7 @@ Jump_0A0_4933::
 ; only called from ApplyLevelScaledStatsToSlots (E-0047)
 ; 1 call site from 1 routine (e.g. ApplyLevelScaledStatsToSlots)
 ; reads: wD86A, wD86B, wSpeciesIdLo, wSpeciesIdHi, wSpeciesRecord, wD009, wD010, wD011, ...
-; writes: wD869, wSpeciesIdLo, wSpeciesIdHi, hFFC6, wD868
+; writes: wD869, wSpeciesIdLo, wSpeciesIdHi, hTemp0, wD868
 ; points at: wCFDD
 ApplyLevelScaledStatsToSlots_Sub01::
 Func_0A0_494F:: ; address name
@@ -1674,7 +1674,7 @@ Func_0A0_494F:: ; address name
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ldh a, [hFFC7]
+    ldh a, [hTemp1]
     ld [hl+], a
     xor a, a
     ld [hl+], a
@@ -1682,7 +1682,7 @@ Func_0A0_494F:: ; address name
     ld [hl+], a
     push hl
     ld a, [wD014]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     farcall SumTable6616RowForHFFC6
     pop hl
     ld a, $01
@@ -1690,7 +1690,7 @@ Func_0A0_494F:: ; address name
     call ScaleStatByWCFE3Capped999
     call StoreHFFC8WordAtHL_BankA0
     ld a, [wD015]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
@@ -1699,25 +1699,25 @@ Func_0A0_494F:: ; address name
     call ScaleStatByWCFE3Capped999
     call StoreHFFC8WordAtHL_BankA0
     ld a, [wD016]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
     call ScaleStatByWCFE3Capped999
     ld a, [wD017]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
     call ScaleStatByWCFE3Capped999
     ld a, [wD018]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
     call ScaleStatByWCFE3Capped999
     ld a, [wD019]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     push hl
     farcall SumTable6616RowForHFFC6
     pop hl
@@ -1764,17 +1764,17 @@ Func_0A0_4A45:: ; address name
 
 ; the word hFFC8 = hFFC8 * (wCFE3 / 4 + 100) / 100, capped at 999, stored at [HL+] (E-0125)
 ; 6 call sites from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
-; reads: hFFC8, hFFC9, wCFE3
-; writes: hFFC8, hFFC9
+; reads: hTemp2, hTemp3, wCFE3
+; writes: hTemp2, hTemp3
 ScaleStatByWCFE3Capped999::
 Func_0A0_4A55:: ; address name
     push af
     push bc
     push de
     push hl
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld c, a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld b, a
     ld a, [wCFE3]
     rrca
@@ -1803,27 +1803,27 @@ Jump_0A0_4A83::
 
 Jump_0A0_4A86::
     ld a, l
-    ldh [hFFC8], a
+    ldh [hTemp2], a
     ld a, h
-    ldh [hFFC9], a
+    ldh [hTemp3], a
     pop hl
     pop de
     pop bc
     pop af
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [hl+], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld [hl+], a
     ret
 
 ; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 ; 2 call sites from 1 routine (e.g. ApplyLevelScaledStatsToSlots_Sub01)
-; reads: hFFC8, hFFC9
+; reads: hTemp2, hTemp3
 StoreHFFC8WordAtHL_BankA0::
 Func_0A0_4A97:: ; address name
-    ldh a, [hFFC8]
+    ldh a, [hTemp2]
     ld [hl+], a
-    ldh a, [hFFC9]
+    ldh a, [hTemp3]
     ld [hl+], a
     ret
 
@@ -2046,10 +2046,9 @@ Jump_0A0_4C13::
 
 ; Fills the $160 bytes at wC278 with $C3; clobbers A, BC, HL (the same 15 bytes appear in 2 banks)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC278
 FillWC278WithC3_BankA0:: ; heuristic: follows a terminator; C0
 Func_0A0_4C1D:: ; address name
-    ld hl, wC278
+    ld hl, wScreenTileBuffer + $E0
     ld bc, $0160
 
 Jump_0A0_4C23::
@@ -2073,7 +2072,6 @@ Func_0A0_4C2C:: ; address name
 ; copies rectangle Data_0A0_4DC7 to the screen buffer; unless bit 1 of wC57F is set, writes tiles $DA-$DE at wC1C3 (E-0122)
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case04)
 ; reads: wC57F
-; points at: wC1C3
 DrawRect4DC7AndWriteDATiles::
 Func_0A0_4C36:: ; address name
     ld hl, Data_0A0_4DC7
@@ -2082,7 +2080,7 @@ Func_0A0_4C36:: ; address name
     ld a, [wC57F]
     bit 1, a
     ret nz
-    ld hl, wC1C3
+    ld hl, wScreenTileBuffer + $2B
     ld b, $05
     ld a, $DA
 
@@ -2129,10 +2127,9 @@ Func_0A0_4C6A:: ; address name
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM_BankA0, as DrawWC338RowsToBGMapRow13 does in bank $31 (E-0076)
 ; 7 call sites from 7 routines (e.g. RunBattleSetup_BankA0_Case00_Case07, RunBattleSetup_BankA0_Case00_Case05, RunBattleSetup_BankA0_Case01_Case16, RunBattleSetup_BankA0_Case01_Case13, ...)
-; points at: wC338
 DrawWC338RowsToBGMapRow13_BankA0::
 Func_0A0_4C74:: ; address name
-    ld de, wC338
+    ld de, wScreenTileBuffer + $1A0
     ld hl, vBGMap0 + $1A0
     ld bc, $1405
     call CopyRect32StrideToVRAM_BankA0
@@ -2140,10 +2137,9 @@ Func_0A0_4C74:: ; address name
 
 ; only called from routines of RunBattleSetup_BankA0 (E-0098)
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_BankA0_Case00_Case03, RunBattleSetup_BankA0_Case00_Case01)
-; points at: wC338
 RunBattleSetup_BankA0_Shared01::
 Func_0A0_4C81:: ; address name
-    ld de, wC338
+    ld de, wScreenTileBuffer + $1A0
     ld hl, vBGMap0 + $1A0
     ld bc, $0E05
     call CopyRect32StrideToVRAM_BankA0
@@ -2151,10 +2147,9 @@ Func_0A0_4C81:: ; address name
 
 ; copies a 20 x 11 rectangle from wC278 to vBGMap0 + $E0 (row 7) with CopyRect32StrideToVRAM_BankA0 (E-0116)
 ; 3 call sites from 3 routines (e.g. RunBattleSetup_BankA0_Case01_Case04, RunBattleSetup_BankA0_Case01_Case03, RunBattleSetup_BankA0_Case01_Case01)
-; points at: wC278
 DrawWC278Rect20x11ToBGMapRow7_BankA0::
 Func_0A0_4C8E:: ; address name
-    ld de, wC278
+    ld de, wScreenTileBuffer + $E0
     ld hl, vBGMap0 + $E0
     ld bc, $140B
     call CopyRect32StrideToVRAM_BankA0
@@ -2162,10 +2157,9 @@ Func_0A0_4C8E:: ; address name
 
 ; copies an 11 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9) with CopyRect32StrideToVRAM_BankA0 (E-0111)
 ; 4 call sites from 4 routines (e.g. RunBattleSetup_BankA0_Case01_Case0C, RunBattleSetup_BankA0_Case01_Case08, RunBattleSetup_BankA0_Case01_Case07, RunBattleSetup_BankA0_Case01_Case05)
-; points at: wC2B8
 DrawWC2B8Rect11x9ToBGMapRow9_BankA0::
 Func_0A0_4C9B:: ; address name
-    ld de, wC2B8
+    ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     ld bc, $0B09
     call CopyRect32StrideToVRAM_BankA0
@@ -2174,10 +2168,9 @@ Func_0A0_4C9B:: ; address name
 ; copies a 20 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9), then wD868 = 1 (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wD868
-; points at: wC2B8
 DrawWC2B8RowsToBGMapRow9_BankA0:: ; heuristic: follows a terminator; C0
 Func_0A0_4CA8:: ; address name
-    ld de, wC2B8
+    ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     ld bc, $1409
     call CopyRect32StrideToVRAM_BankA0
@@ -2187,10 +2180,9 @@ Func_0A0_4CA8:: ; address name
 
 ; copies an 8 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9) (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC2B8
 DrawWC2B8LeftToBGMapRow9_BankA0:: ; heuristic: follows a terminator; C0
 Func_0A0_4CBA:: ; address name
-    ld de, wC2B8
+    ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     ld bc, $0809
     call CopyRect32StrideToVRAM_BankA0
@@ -2198,10 +2190,9 @@ Func_0A0_4CBA:: ; address name
 
 ; copies a 7 x 7 rectangle from wC2F8 to vBGMap0 + $160 (row 11) (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC2F8
 DrawWC2F8Rect7x7ToBGMapRow11_BankA0:: ; heuristic: follows a terminator; C0
 Func_0A0_4CC7:: ; address name
-    ld de, wC2F8
+    ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
     ld bc, $0707
     call CopyRect32StrideToVRAM_BankA0
@@ -2209,14 +2200,13 @@ Func_0A0_4CC7:: ; address name
 
 ; copies 7 x 1 from wC2A4 to vBGMap0 + $10C and 20 x 9 from wC2B8 to vBGMap0 + $120 (CopyRect32StrideToVRAM_BankA0) (E-0118)
 ; 3 call sites from 3 routines (e.g. RunBattleSetup_BankA0_Case01_Case10, RunBattleSetup_BankA0_Case01_Case0F, RunBattleSetup_BankA0_Case01_Case0D)
-; points at: wC2A4, wC2B8
 DrawWC2A4AndWC2B8Rects_BankA0::
 Func_0A0_4CD4:: ; address name
-    ld de, wC2A4
+    ld de, wScreenTileBuffer + $10C
     ld hl, vBGMap0 + $10C
     ld bc, $0701
     call CopyRect32StrideToVRAM_BankA0
-    ld de, wC2B8
+    ld de, wScreenTileBuffer + $120
     ld hl, vBGMap0 + $120
     ld bc, $1409
     call CopyRect32StrideToVRAM_BankA0
@@ -2224,10 +2214,9 @@ Func_0A0_4CD4:: ; address name
 
 ; copies a 13 x 7 rectangle from wC2F8 to vBGMap0 + $160 (row 11) (E-0116)
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wC2F8
 DrawWC2F8Rect13x7ToBGMapRow11_BankA0:: ; heuristic: follows a terminator; C0
 Func_0A0_4CED:: ; address name
-    ld de, wC2F8
+    ld de, wScreenTileBuffer + $160
     ld hl, vBGMap0 + $160
     ld bc, $0D07
     call CopyRect32StrideToVRAM_BankA0
@@ -2375,9 +2364,9 @@ Jump_0A0_4F19::
     ld a, $FC
     call StartPaletteFade
     ld a, $07
-    ldh [hFF9F], a
+    ldh [hWindowX], a
     ld a, $FF
-    ldh [hFFA0], a
+    ldh [hWindowY], a
     ld a, $00
     ldh [hScrollY], a
     ld a, $00
@@ -2636,7 +2625,7 @@ Jump_0A0_50AD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wD960, wD961
 ; writes: wStringIndex, wStringCategory
-; points at: wC130, wBattleStep
+; points at: wTextBuf0, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case00_Case08::
 Jump_0A0_50C8:: ; address name
     ld a, [wC52B]
@@ -2647,7 +2636,7 @@ Jump_0A0_50C8:: ; address name
     ld a, [wD961]
     add a, $02
     ld h, a
-    ld de, wC130
+    ld de, wTextBuf0
     call CopyStringHLToDE
     ld a, $03
     ld [wStringIndex], a
@@ -2661,7 +2650,7 @@ Jump_0A0_50C8:: ; address name
 ; entry 9 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD960, wD961
-; writes: hFFC6, wC526
+; writes: hTemp0, wC526
 ; points at: wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case00_Case09::
 Jump_0A0_50F2:: ; address name
@@ -2671,7 +2660,7 @@ Jump_0A0_50F2:: ; address name
     ld de, $0000
     ld hl, vBGMap0 + $E1
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     call LoadMonsterPictureAttributes
 
 Jump_0A0_5105::
@@ -2691,7 +2680,7 @@ Jump_0A0_5105::
 ; entry 10 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD78E, wIsCGB, wD960, wD961
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case00_Case0A::
 Jump_0A0_511F:: ; address name
@@ -2715,7 +2704,7 @@ Jump_0A0_512C::
 
 Jump_0A0_5144::
     ld a, $01
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wD960]
     ld e, a
     ld a, [wD961]
@@ -2731,7 +2720,7 @@ Jump_0A0_5153::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wD962, wD963
 ; writes: wStringIndex, wStringCategory
-; points at: wC130, wBattleStep
+; points at: wTextBuf0, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case00_Case0B::
 Jump_0A0_5158:: ; address name
     ld a, [wC52B]
@@ -2742,7 +2731,7 @@ Jump_0A0_5158:: ; address name
     ld a, [wD963]
     add a, $02
     ld h, a
-    ld de, wC130
+    ld de, wTextBuf0
     call CopyStringHLToDE
     ld a, $04
     ld [wStringIndex], a
@@ -2776,7 +2765,7 @@ Jump_0A0_5182:: ; address name
 ; entry 13 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD78E, wBattleStep, wIsCGB, wD962, wD963
-; writes: wBattleStep, hFFC6
+; writes: wBattleStep, hTemp0
 ; points at: wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case00_Case0D::
 Jump_0A0_519C:: ; address name
@@ -2803,7 +2792,7 @@ Jump_0A0_51B1::
 
 Jump_0A0_51C9::
     ld a, $03
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wD962]
     ld e, a
     ld a, [wD963]
@@ -2819,7 +2808,7 @@ Jump_0A0_51D8::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wD964, wD965
 ; writes: wStringIndex, wStringCategory
-; points at: wC130, wBattleStep
+; points at: wTextBuf0, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case00_Case0E::
 Jump_0A0_51DD:: ; address name
     ld a, [wC52B]
@@ -2830,7 +2819,7 @@ Jump_0A0_51DD:: ; address name
     ld a, [wD965]
     add a, $02
     ld h, a
-    ld de, wC130
+    ld de, wTextBuf0
     call CopyStringHLToDE
     ld a, $05
     ld [wStringIndex], a
@@ -2864,7 +2853,7 @@ Jump_0A0_5207:: ; address name
 ; entry 16 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD964, wD965
-; writes: hFFC6
+; writes: hTemp0
 ; points at: wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case00_Case10::
 Jump_0A0_5221:: ; address name
@@ -2876,7 +2865,7 @@ Jump_0A0_5221:: ; address name
     jr z, Jump_0A0_5241
     ld hl, vBGMap0 + $ED
     ld a, $05
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wD964]
     ld e, a
     ld a, [wD965]
@@ -3557,8 +3546,8 @@ Jump_0A0_55D1:: ; address name
 ; entry 4 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC899, wCFE3, wD04B, wCFE4, wCFE5
-; writes: wC300
-; points at: wC1F9, wC23F, wC27F, wC2BF, wC895, wC209, wBattleStep
+; writes: wScreenTileBuffer
+; points at: wC895, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case03_Case04::
 Jump_0A0_5622:: ; address name
     call DrawRect4DC7AndWriteDATiles
@@ -3569,7 +3558,7 @@ Jump_0A0_5622:: ; address name
     ld e, [hl]
     inc hl
     ld d, [hl]
-    ld hl, wC1F9
+    ld hl, wScreenTileBuffer + $61
 
 Jump_0A0_5637::
     ld [hl], d
@@ -3586,19 +3575,19 @@ Jump_0A0_5637::
 
 Jump_0A0_5647::
     ld a, [wCFE3]
-    ld hl, wC23F
+    ld hl, wScreenTileBuffer + $A7
     call WriteTwoDigitsBlankLeading_A0
     ld a, [wD04B]
-    ld hl, wC27F
+    ld hl, wScreenTileBuffer + $E7
     call WriteTwoDigitsBlankLeading_A0
     ld a, [wCFE4]
-    ld hl, wC2BF
+    ld hl, wScreenTileBuffer + $127
     call WriteTwoDigitsBlankLeading_A0
     ld a, [wCFE5]
     add a, $20
-    ld [wC300], a
+    ld [wScreenTileBuffer + $168], a
     ld de, wC895
-    ld hl, wC209
+    ld hl, wScreenTileBuffer + $71
     call RunBattlePhaseWhenTextIdle_A0_Case03_Case04_Sub01
     ld hl, wBattleStep
     inc [hl]
@@ -3689,8 +3678,8 @@ Data_0A0_56CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; entry 5 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wC13A
-; points at: wC987, wC130, wBattleStep
+; writes: wTextBuf0
+; points at: wC987, wTextBuf0, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case03_Case05::
 Jump_0A0_56D2:: ; address name
     ld hl, vBGMap0
@@ -3699,11 +3688,11 @@ Jump_0A0_56D2:: ; address name
     ld de, $1202
     call FillTilesRequest
     ld hl, wC987
-    ld de, wC130
+    ld de, wTextBuf0
     ld bc, $000A
     call CopyBytes
     ld a, $F0
-    ld [wC13A], a
+    ld [wTextBuf0 + $A], a
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -3712,7 +3701,7 @@ Jump_0A0_56D2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD0A6, wBattleSubPhase, wD0A7, wC899
 ; writes: wStringCategory, wStringIndex, wBattleSubPhase
-; points at: wBattleStep, wD0A7, wC150
+; points at: wBattleStep, wD0A7, wTextBuf2
 RunBattlePhaseWhenTextIdle_A0_Case03_Case06::
 Jump_0A0_56F7:: ; address name
     ld a, [wD0A6]
@@ -3725,7 +3714,7 @@ Jump_0A0_56F7:: ; address name
 Jump_0A0_5704::
     call CopyF0StringFromTable5A4AToWC140
     ld a, [wD0A7]
-    ld hl, wC150
+    ld hl, wTextBuf2
     call WriteDecimalByteString
     ld a, [wC899]
     cp a, $02
@@ -3748,7 +3737,7 @@ Jump_0A0_571B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wBattleSubPhase
 ; writes: wStringCategory, wStringIndex, wBattleSubPhase
-; points at: wD0A7, wC150, wBattleStep
+; points at: wD0A7, wTextBuf2, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case03_Case07::
 Jump_0A0_5732:: ; address name
     ld a, [wC52B]
@@ -3762,7 +3751,7 @@ Jump_0A0_5737::
     ld hl, wD0A7
     add_a_to_hl
     ld a, [hl]
-    ld hl, wC150
+    ld hl, wTextBuf2
     call WriteDecimalByteString
     ld a, $05
     ld [wStringCategory], a
@@ -3783,20 +3772,20 @@ Jump_0A0_5737::
 ; entry 8 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wC52B, wD0AD, wD0AE, wC899
-; writes: hFFC6, hFFC7, hFFC8, wStringCategory, wStringIndex, wBattleSubPhase, wC594
-; points at: wC150, wBattleStep
+; writes: hTemp0, hTemp1, hTemp2, wStringCategory, wStringIndex, wBattleSubPhase, wC594
+; points at: wTextBuf2, wBattleStep
 RunBattlePhaseWhenTextIdle_A0_Case03_Case08::
 Jump_0A0_5772:: ; address name
     ld a, [wC52B]
     or a, a
     ret nz
     ld a, [wD0AD]
-    ldh [hFFC6], a
+    ldh [hTemp0], a
     ld a, [wD0AE]
-    ldh [hFFC7], a
+    ldh [hTemp1], a
     xor a, a
-    ldh [hFFC8], a
-    ld hl, wC150
+    ldh [hTemp2], a
+    ld hl, wTextBuf2
     call WriteNumber24AsDecimalString
     ld a, $05
     ld [wStringCategory], a
@@ -4166,14 +4155,14 @@ Jump_0A0_59EB:: ; address name
 
 ; copies the $F0-terminated string at Data_0A0_5A4A[A] to wC140, including the terminator (E-0122)
 ; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case07, RunBattlePhaseWhenTextIdle_A0_Case03_Case06)
-; points at: wC140
+; points at: wTextBuf1
 CopyF0StringFromTable5A4AToWC140::
 Func_0A0_5A30:: ; address name
     ld hl, Data_0A0_5A4A
     add a, a
     add_a_to_hl
     deref_hl
-    ld de, wC140
+    ld de, wTextBuf1
 
 Jump_0A0_5A3F::
     ld a, [hl+]
@@ -5084,7 +5073,7 @@ Jump_0A0_5F76:: ; address name
 ; entry 0 of the `rst $00` table in RunBattleSetup_BankA0_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex, wCFD7, wCFD6, wCFD5
-; points at: wC29B, wBattleResolveStep
+; points at: wBattleResolveStep
 RunBattleSetup_BankA0_Case01_Case00::
 Jump_0A0_5FAC:: ; address name
     ld hl, vTiles1 + $6D0
@@ -5106,7 +5095,7 @@ Jump_0A0_5FAC:: ; address name
     xor a, a
     ld [wCFD5], a
     farcall CopyRectRecord747FToScreenBuffer
-    ld hl, wC29B
+    ld hl, wScreenTileBuffer + $103
     call WriteFiveTilesFromTable67D2
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5225,7 +5214,7 @@ Jump_0A0_60A0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD869, wCFD4
 ; writes: wD869, wStringCategory, wStringIndex, wC46D
-; points at: wC2DA, wDAD8, wBattleResolveStep
+; points at: wDAD8, wBattleResolveStep
 RunBattleSetup_BankA0_Case01_Case04::
 Jump_0A0_60AC:: ; address name
     ld a, [wD869]
@@ -5243,7 +5232,7 @@ Jump_0A0_60AC:: ; address name
     farcall CopyRectRecord75ABToScreenBuffer
     ld a, [wCFD4]
     and a, $03
-    ld hl, wC2DA
+    ld hl, wScreenTileBuffer + $142
     call WriteFiveTilesFromTable67D2
     ld a, [wCFD4]
     ld hl, wDAD8
@@ -5768,11 +5757,11 @@ Jump_0A0_63FE::
 ; entry 4 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
-; points at: wD05A, wC130, wBattleSubPhase
+; points at: wD05A, wTextBuf0, wBattleSubPhase
 RunBattleSetup_BankA0_Case04::
 Jump_0A0_6424:: ; address name
     ld de, wD05A
-    ld hl, wC130
+    ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
     ld a, $00
     ld [wStringCategory], a
@@ -6539,7 +6528,7 @@ Func_0A0_6871:: ; address name
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_BankA0_Case01_Case0E, RunBattleSetup_BankA0_Case01_Case0C)
 ; reads: wCFD5, wC46E, wD86A, wD86B
 ; writes: wCFD5, wC46E, wStringCategory
-; points at: wC46E, wC388
+; points at: wC46E
 RunBattleSetup_BankA0_Shared03::
 Func_0A0_6873:: ; address name
     ld a, [wCFD5]
@@ -6577,7 +6566,7 @@ Jump_0A0_688D::
     add_a_to_hl
     ld a, [hl]
     call RunBattleSetup_BankA0_Shared05
-    ld de, wC388
+    ld de, wScreenTileBuffer + $1F0
     ld hl, vBGMap0 + $1F0
     ld a, [de]
     call WriteVRAMByteInc
@@ -6643,7 +6632,7 @@ Func_0A0_68FC:: ; address name
 ; 2 call sites from 2 routines (e.g. RunBattleSetup_BankA0_Shared03, RunBattleSetup_BankA0_Case01_Case0C)
 ; reads: wRecordBufferData, wCFD4
 ; writes: wStringIndex, wRecordBuffer, wCFED
-; points at: wBattleMP, wC388
+; points at: wBattleMP
 RunBattleSetup_BankA0_Shared05::
 Func_0A0_6909:: ; address name
     push af
@@ -6673,7 +6662,7 @@ Jump_0A0_693C::
 
 Jump_0A0_6941::
     call HLToDecimalDigits
-    ld de, wC388
+    ld de, wScreenTileBuffer + $1F0
     call WriteDecimalDigitTiles
     ret
 
