@@ -2116,6 +2116,21 @@
         }
       ],
       "note": "E-0159 (C1: the lists SkillPrerequisitePointers points into; a list runs from its label to the next $FF, and several lists end in the same bytes)."
+    },
+    {
+      "bank": "69",
+      "addr": "4174",
+      "label": "MapObjectTable",
+      "count": 228,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "per-screen selector array of this map ($0000 = none)",
+          "reason": "map object screen array"
+        }
+      ],
+      "note": "E-0163 (C1: LoadMapObjectsForScreen reads the word $4174 + 2 * hMapId (`add $74` / `adc $41`); 228 words up to the first array at $433C)."
     }
   ]
 }

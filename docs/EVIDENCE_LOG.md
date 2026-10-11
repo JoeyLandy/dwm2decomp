@@ -1973,6 +1973,26 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Pointers held in tables (the `dw` heuristics) are not listed as readers.
 - Binary verification: build/run162 PASS, 0 differing bytes; tests OK.
 
+### E-0163 — Map object selectors and object lists (bank $69)
+
+- Kind: OBSERVATION (reading of LoadMapObjectsForScreen 69:4001 plus derivation; C1).
+- **Chain.**
+  - MapObjectTable ($4174, 228 words, indexed by hMapId) points to a per-screen word array, indexed by 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); each entry is a selector.
+  - A selector is tried entry by entry:
+    - flag word (high byte not $FF) + list pointer: use the list when the story flag is clear;
+    - $FFFF: no objects;
+    - $FFFE + pointer: always use the list;
+    - $FFFD + two flags + pointer;
+    - $FFFC / $FFFB + flag + two bytes: skip that many bytes when the flag is clear / set.
+  - An object list is a count followed by 11 bytes per object. The loader copies them into wSpriteSlots and decompresses each object's graphics (DecompressGraphicsTemp0ToTemp4).
+- **Validation.**
+  - Screen-array sizes come from the map records (width * height).
+  - A selector is kept only when it decodes completely, all its list pointers have a count of 1-40 that fits the bank, and it is not itself a list. Some arrays read past their real size, which this filters out.
+  - Results: 291 object lists, 135 screen arrays, 255 selectors.
+  - New macros: objsel_none, objsel_list, objsel_unless_flag, objsel_unless_flags, objsel_skip_if_clear, objsel_skip_if_set.
+- **Limits.** The 11 object bytes are not named field by field. The second skip byte's role is not read.
+- Binary verification: build/run163 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

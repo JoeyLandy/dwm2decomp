@@ -74,6 +74,33 @@ MACRO script_command
     db \1
 ENDM
 
+; Map object selectors (E-0163): entries tried in order by LoadMapObjectsForScreen.
+MACRO objsel_none
+    dw $FFFF
+ENDM
+
+MACRO objsel_list
+    dw $FFFE, \1
+ENDM
+
+MACRO objsel_unless_flag
+    dw \1, \2
+ENDM
+
+MACRO objsel_unless_flags
+    dw $FFFD, \1, \2, \3
+ENDM
+
+MACRO objsel_skip_if_clear
+    dw $FFFC, \1
+    db \2, \3
+ENDM
+
+MACRO objsel_skip_if_set
+    dw $FFFB, \1
+    db \2, \3
+ENDM
+
 ; 24-bit little-endian values in data (E-0148).
 MACRO d24
     REPT _NARG

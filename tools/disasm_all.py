@@ -134,6 +134,33 @@ MACRO script_command
     db \\1
 ENDM
 
+; Map object selectors (E-0163): entries tried in order by LoadMapObjectsForScreen.
+MACRO objsel_none
+    dw $FFFF
+ENDM
+
+MACRO objsel_list
+    dw $FFFE, \\1
+ENDM
+
+MACRO objsel_unless_flag
+    dw \\1, \\2
+ENDM
+
+MACRO objsel_unless_flags
+    dw $FFFD, \\1, \\2, \\3
+ENDM
+
+MACRO objsel_skip_if_clear
+    dw $FFFC, \\1
+    db \\2, \\3
+ENDM
+
+MACRO objsel_skip_if_set
+    dw $FFFB, \\1
+    db \\2, \\3
+ENDM
+
 ; 24-bit little-endian values in data (E-0148).
 MACRO d24
     REPT _NARG
@@ -1588,6 +1615,141 @@ class Rom:
                         self._readers[tgt].append(name)
         return self._readers.get((bank, addr), [])
 
+    def prepare_object_selectors(self) -> None:
+        """Map object data in bank $69 (E-0163).
+
+        LoadMapObjectsForScreen reads the word $4174 + 2 * hMapId, then the word at that address
+        + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX): a selector. A selector is a list of
+        entries: a story-flag word (high byte not $FF) and an object-list pointer, used when the
+        flag is clear; $FFFF ends with no objects; $FFFE + pointer always uses the list; $FFFD +
+        two flags + pointer; $FFFC / $FFFB + flag + two bytes skip that many bytes when the flag
+        is clear / set. An object list is a count, then 11 bytes per object (sprite slot fields
+        and a graphics number for DecompressGraphicsTemp0ToTemp4)."""
+        B = 0x69
+        self.objsel_at: dict[tuple[int, int], dict] = {}
+        mt = next((t for t in self.schemas if t["label"] == "MapTable"), None)
+        ot = next((t for t in self.schemas if t["label"] == "MapObjectTable"), None)
+        if not mt or not ot or ot["bank"] != B:
+            return
+        base = B * BANK - self.base(B)
+        rd = lambda a: self.data[base + a]
+        rw = lambda a: self.data[base + a] | self.data[base + a + 1] << 8
+
+        def list_ok(a: int) -> bool:
+            n = rd(a) if 0x4000 <= a < 0x8000 else 0
+            return 0 < n <= 40 and a + 1 + 11 * n <= 0x8000
+
+        def decode(s: int):
+            pc, ops = s, []
+            while len(ops) < 40 and 0x4000 <= pc < 0x7FF8:
+                e, d = rd(pc), rd(pc + 1)
+                if d != 0xFF:
+                    ops.append((pc, "flag", rw(pc), rw(pc + 2))); pc += 4; continue
+                if e == 0xFF:
+                    ops.append((pc, "end")); return ops, pc + 2
+                if e == 0xFE:
+                    ops.append((pc, "list", rw(pc + 2))); return ops, pc + 4
+                if e == 0xFD:
+                    ops.append((pc, "flags", rw(pc + 2), rw(pc + 4), rw(pc + 6))); pc += 8; continue
+                if e in (0xFC, 0xFB):
+                    ops.append((pc, "skip", e, rw(pc + 2), rd(pc + 4), rd(pc + 5))); pc += 6; continue
+                return None, pc
+            return None, pc
+
+        sels: set[int] = set()
+        arrays: dict[int, int] = {}
+        for mid in range(ot["count"]):
+            p = self._u16(B, ot["addr"] + 2 * mid)
+            rec = self._u16(mt["bank"], mt["addr"] + 2 * mid)
+            if not p or not 0x4000 <= p < 0x8000 or not mt["addr"] < rec < 0x8000:
+                continue
+            o = mt["bank"] * BANK + rec - self.base(mt["bank"])
+            n = self.data[o + 6] * self.data[o + 7]
+            arrays.setdefault(p, n)
+            arrays[p] = max(arrays[p], n)
+        lists, good = set(), {}
+        for p, n in arrays.items():
+            for i in range(n):
+                s = rw(p + 2 * i)
+                if s:
+                    sels.add(s)
+        for s in sorted(sels):
+            ops, end = decode(s) if 0x4000 <= s < 0x8000 else (None, 0)
+            if not ops:
+                continue
+            ptrs = [op[3] if op[1] == "flag" else op[2] if op[1] == "list" else op[4]
+                    for op in ops if op[1] in ("flag", "list", "flags")]
+            if all(list_ok(q) for q in ptrs):
+                good[s] = (ops, end)
+                lists |= set(ptrs)
+        good = {s: v for s, v in good.items() if s not in lists}
+        taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+
+        def free(lo: int, hi: int) -> bool:
+            return not any(b == B and a < hi and lo < e for b, a, e in taken) and \
+                not any(a in self.covered[B] for a in range(lo, hi))
+
+        nl = ns = na = 0
+        for a in sorted(lists):
+            n = rd(a)
+            if not free(a, a + 1 + 11 * n):
+                continue
+            taken.append((B, a, a + 1 + 11 * n))
+            self.schemas.append({"bank": B, "addr": a, "label": f"MapObjects_{a:04X}", "count": 1,
+                                 "fields": [{"type": "db", "size": 1, "line": True, "name": "object count"}]
+                                 + [{"type": "db", "size": 11, "line": True, "name": f"object {k}"} for k in range(n)],
+                                 "record": f"count, then {n} object(s) of 11 bytes",
+                                 "note": "E-0163 (derived: an object list of LoadMapObjectsForScreen)"})
+            nl += 1
+        for p, n in sorted(arrays.items()):
+            entries = [rw(p + 2 * i) for i in range(n)]
+            if all(e == 0 or e in good for e in entries) and free(p, p + 2 * n):
+                taken.append((B, p, p + 2 * n))
+                self.schemas.append({"bank": B, "addr": p, "label": f"MapObjectScreens_{p:04X}", "count": n,
+                                     "id_base": 0, "fields": [{"type": "ptr", "name": "selector for this screen",
+                                                               "reason": "map object selector"}],
+                                     "note": "E-0163 (derived: one selector per screen, row by row)"})
+                na += 1
+        dl = self.dlabels[B]
+        for s, (ops, end) in sorted(good.items()):
+            if not free(s, end):
+                continue
+            taken.append((B, s, end))
+            for a in [a for a in dl if s < a < end]:
+                del dl[a]
+            for k in [k for k in self.dtab[B] if s <= k < end]:
+                del self.dtab[B][k]
+            dl.setdefault(s, f"Data_{B:03X}_{s:04X}")
+            if dl[s].startswith("Data_"):
+                self.dalias.setdefault((B, s), dl[s])
+                dl[s] = f"ObjSelector_{s:04X}"
+            self.dreason[(B, s)] = "map object selector"
+            self.objsel_at[(B, s)] = {"ops": ops, "end": end}
+            ns += 1
+        log(f"map objects: {nl} object lists, {na} screen arrays, {ns} selectors")
+
+    def emit_object_selector(self, bank: int, p: int, sel: dict, out: list[str]) -> None:
+        dl = self.dlabels[bank]
+        lab = lambda a: (self.table_at[(bank, a)]["label"] if (bank, a) in self.table_at else dl.get(a, f"${a:04X}"))
+        out.append("")
+        out.append("; map object selector (E-0163): the first entry that applies picks the object list")
+        out.append(f"{dl[p]}:: ; heuristic: {self.dreason.get((bank, p), 'map object selector')}; C0")
+        if (bank, p) in self.dalias:
+            out.append(f"{self.dalias[(bank, p)]}:: ; address name")
+        for op in sel["ops"]:
+            if op[1] == "end":
+                out.append("    objsel_none")
+            elif op[1] == "list":
+                out.append(f"    objsel_list {lab(op[2])}")
+            elif op[1] == "flag":
+                out.append(f"    objsel_unless_flag ${op[2]:04X}, {lab(op[3])}")
+            elif op[1] == "flags":
+                out.append(f"    objsel_unless_flags ${op[2]:04X}, ${op[3]:04X}, {lab(op[4])}")
+            else:
+                macro = "objsel_skip_if_clear" if op[2] == 0xFC else "objsel_skip_if_set"
+                out.append(f"    {macro} ${op[3]:04X}, ${op[4]:02X}, ${op[5]:02X}")
+
     def add_rect_record_schemas(self) -> None:
         """Lay out the tile-rectangle records HL points at for the record copiers (E-0161).
 
@@ -2173,6 +2335,7 @@ class Rom:
         self.find_compressed_assets()
         self.label_data_refs()
         self.add_rect_record_schemas()
+        self.prepare_object_selectors()
         self.prepare_tables()
         self.prepare_tracks()
         self.prepare_scripts()
@@ -2211,6 +2374,9 @@ class Rom:
         for (b, a), sc in getattr(self, "script_at", {}).items():
             if b == bank:
                 mask(a, sc["end"])
+        for (b, a), sel in getattr(self, "objsel_at", {}).items():
+            if b == bank:
+                mask(a, sel["end"])
         for (b, a), (size, used) in self.streams.items():
             if b == bank:
                 mask(a, a + used)
@@ -2496,6 +2662,11 @@ class Rom:
                 tr = self.track_at[(bank, pc)]
                 self.emit_track(bank, pc, tr, out)
                 pc = tr["end"]
+                continue
+            if it is None and (bank, pc) in getattr(self, "objsel_at", {}):
+                sel = self.objsel_at[(bank, pc)]
+                self.emit_object_selector(bank, pc, sel, out)
+                pc = sel["end"]
                 continue
             if it is None and (bank, pc) in getattr(self, "script_at", {}):
                 sc = self.script_at[(bank, pc)]
