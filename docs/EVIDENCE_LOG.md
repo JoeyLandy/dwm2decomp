@@ -2212,6 +2212,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** A callee between the store and the script's next run could change wDataBank. This is not checked, so each resolution stays C1.
 - Binary verification: build/run189 PASS, 0 differing bytes; tests OK.
 
+### E-0185 — World map screen cell grids (banks $A1 and $5D)
+
+- Kind: OBSERVATION (reading; C1).
+- **WorldMapScreenCellTable (A1:$497C).** RunGameMode2State_Case04_Sub02_Sub01 reads the 4-byte record at $497C + 4 * wGameMode2Byte44 (the same index as WorldMapViewTable, E-0167).
+  - Byte 0 gives the width in screens (high nibble) and the height in screens (low nibble).
+  - Bytes 1-3 are a 24-bit pointer (address, then bank).
+  - The routine adds (hMapScreenX - 2) * 25 + (hMapScreenY - 2) * width * 25 to the pointer and reads 5 cells per row from there.
+- **Grids.** Each grid is exactly width * height * 25 bytes. The 11 grids (WorldMapScreenCells0-10, from 8 x 8 down to 1 x 2 screens) fill bank $5D from $45A5 to $7692, and only zero padding follows. Cell values are mostly $56-$58.
+- **Palettes_5D_4139.** The block is 128 bytes, but only palette 0 is copied (8 bytes, RunGameMode2State_Case01). Palette 8 is palette 0 with two colours swapped; the rest is $7C00 fill.
+- **Limits.** What each cell value draws, and which world each index is, are not read.
+- Binary verification: build/run191 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

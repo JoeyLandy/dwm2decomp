@@ -2859,6 +2859,225 @@
         }
       ],
       "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+    },
+    {
+      "bank": "A1",
+      "addr": "497C",
+      "label": "WorldMapScreenCellTable",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "size: width in screens (high nibble), height in screens (low nibble)"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 2,
+          "name": "screen cell grid: 25 bytes (5 x 5) per screen",
+          "reason": "world map screen cells"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of the cell grid"
+        }
+      ],
+      "record": "size nibbles (width, height in screens); pointer and bank of the 25-byte-per-screen cell grid",
+      "note": "E-0185 (C1: RunGameMode2State_Case04_Sub02_Sub01 reads the record at $497C + 4 * wGameMode2Byte44: width and height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692)."
+    },
+    {
+      "bank": "5D",
+      "addr": "45A5",
+      "label": "WorldMapScreenCells0",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 8 per row, 8 rows",
+      "note": "E-0185 (C1: entry 0 of WorldMapScreenCellTable, 8 x 8 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "4BE5",
+      "label": "WorldMapScreenCells1",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 8 per row, 8 rows",
+      "note": "E-0185 (C1: entry 1 of WorldMapScreenCellTable, 8 x 8 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "5225",
+      "label": "WorldMapScreenCells2",
+      "count": 144,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 12 per row, 12 rows",
+      "note": "E-0185 (C1: entry 2 of WorldMapScreenCellTable, 12 x 12 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "6035",
+      "label": "WorldMapScreenCells3",
+      "count": 144,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 12 per row, 12 rows",
+      "note": "E-0185 (C1: entry 3 of WorldMapScreenCellTable, 12 x 12 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "6E45",
+      "label": "WorldMapScreenCells4",
+      "count": 12,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 4 per row, 3 rows",
+      "note": "E-0185 (C1: entry 4 of WorldMapScreenCellTable, 4 x 3 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "6F71",
+      "label": "WorldMapScreenCells5",
+      "count": 36,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 6 per row, 6 rows",
+      "note": "E-0185 (C1: entry 5 of WorldMapScreenCellTable, 6 x 6 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "72F5",
+      "label": "WorldMapScreenCells6",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 3 per row, 2 rows",
+      "note": "E-0185 (C1: entry 6 of WorldMapScreenCellTable, 3 x 2 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "738B",
+      "label": "WorldMapScreenCells7",
+      "count": 25,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 5 per row, 5 rows",
+      "note": "E-0185 (C1: entry 7 of WorldMapScreenCellTable, 5 x 5 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "75FC",
+      "label": "WorldMapScreenCells8",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 1 per row, 2 rows",
+      "note": "E-0185 (C1: entry 8 of WorldMapScreenCellTable, 1 x 2 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "762E",
+      "label": "WorldMapScreenCells9",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 1 per row, 2 rows",
+      "note": "E-0185 (C1: entry 9 of WorldMapScreenCellTable, 1 x 2 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "7660",
+      "label": "WorldMapScreenCells10",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 25,
+          "name": "5 x 5 cells of one screen, row by row"
+        }
+      ],
+      "record": "one screen: 5 rows of 5 cells; screens run left to right, 2 per row, 1 rows",
+      "note": "E-0185 (C1: entry 10 of WorldMapScreenCellTable, 2 x 1 screens)."
+    },
+    {
+      "bank": "5D",
+      "addr": "4139",
+      "label": "Palettes_5D_4139",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 8,
+          "name": "one CGB palette: 4 BGR555 colours"
+        }
+      ],
+      "record": "one CGB palette: 4 BGR555 colours",
+      "note": "E-0185 (C1: RunGameMode2State_Case01 copies only palette 0 (8 bytes) to wBGPaletteBuffer with CopyFromBank; the block is 128 bytes, palette 8 repeats palette 0 with two colours swapped, and every other palette is $7C00 fill, read by nothing found)."
     }
   ]
 }

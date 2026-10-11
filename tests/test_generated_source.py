@@ -398,6 +398,14 @@ class DerivedLayouts(unittest.TestCase):
         self.assertIn("MapRecord1D::\n", text)
         self.assertIn("    dfar Map1DScreens0\n    dfar Map1DAttrs0\n", text)
 
+    def test_world_map_screen_cells_fill_bank_5d(self):
+        """E-0185: 11 grids of width * height screens, 25 cells each, end at $7692."""
+        self.assertIn("    db $88 ; id 0\n    dfar WorldMapScreenCells0\n",
+                      (BANKS / "banka1.asm").read_text(encoding="utf-8"))
+        text = (BANKS / "bank5d.asm").read_text(encoding="utf-8")
+        self.assertEqual(text.count("INCBIN"), 2)  # the two compressed streams
+        self.assertIn("WorldMapScreenCells10::\n", text)
+
     def test_meta_sprite_frames_end_with_80(self):
         text = (BANKS / "bank25.asm").read_text(encoding="utf-8")
         frame = text[text.index("MetaSprites25Set02Frame0::"):]

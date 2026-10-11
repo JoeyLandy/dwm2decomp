@@ -1501,28 +1501,33 @@ Jump_0A1_4954::
     ld a, h
     ldh [hMapScreenX], a
     ret
-    db $88, $A5
-    dw Data_0A1_5D45
-    db $88, $E5
-    dw Data_0A1_5D4B
-    db $CC, $25
-    dw Data_0A1_5D52
-    db $CC, $35
-    dw Data_0A1_5D60
-    db $43, $45
-    dw Data_0A1_5D6E
-    db $66, $71
-    dw Data_0A1_5D6F
-    db $32, $F5
-    dw Data_0A1_5D72
-    db $55, $8B
-    dw Data_0A1_5D73
-    db $12, $FC
-    dw Data_0A1_5D75
-    db $12, $2E
-    dw Data_0A1_5D76
-    db $21, $60
-    dw Data_0A1_5D76
+
+; E-0185 (C1: RunGameMode2State_Case04_Sub02_Sub01 reads the record at $497C + 4 * wGameMode2Byte44: width and height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692).
+; record: size nibbles (width, height in screens); pointer and bank of the 25-byte-per-screen cell grid
+WorldMapScreenCellTable::
+Data_0A1_497C:: ; heuristic: start of a structured table; C0
+    db $88 ; id 0
+    dfar WorldMapScreenCells0
+    db $88 ; id 1
+    dfar WorldMapScreenCells1
+    db $CC ; id 2
+    dfar WorldMapScreenCells2
+    db $CC ; id 3
+    dfar WorldMapScreenCells3
+    db $43 ; id 4
+    dfar WorldMapScreenCells4
+    db $66 ; id 5
+    dfar WorldMapScreenCells5
+    db $32 ; id 6
+    dfar WorldMapScreenCells6
+    db $55 ; id 7
+    dfar WorldMapScreenCells7
+    db $12 ; id 8
+    dfar WorldMapScreenCells8
+    db $12 ; id 9
+    dfar WorldMapScreenCells9
+    db $21 ; id 10
+    dfar WorldMapScreenCells10
 
 ; only called from RunGameMode2State_Case04_Sub02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub02_Sub01)
