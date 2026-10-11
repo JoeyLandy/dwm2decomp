@@ -2574,7 +2574,7 @@ Jump_03B_4F89::
     db $7A, $21, $A4, $4F, $85, $6F, $30, $01, $24, $56, $7B, $21, $0C, $D8, $CD, $25
     db $3F, $7A, $A6, $77, $C9, $DF, $FE, $00, $FD, $73, $EF, $BF
 
-; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case08)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank3B::
@@ -2586,7 +2586,7 @@ Func_03B_4FAB:: ; address name
     pop hl
     ret
 
-; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
 ; 1 call site from 1 routine (e.g. Func_03B_42F4_Case08)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank3B::
@@ -2598,7 +2598,7 @@ Func_03B_4FB8:: ; address name
     pop hl
     ret
 
-; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 4 banks)
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
 ; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case08, InflictStatus0Bit0WithBattleWordArray3FReduction)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank3B::
@@ -2610,7 +2610,7 @@ Func_03B_4FC5:: ; address name
     pop hl
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank3B:: ; heuristic: follows a terminator; C0
@@ -2669,7 +2669,7 @@ Jump_03B_5024::
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank3B:: ; heuristic: follows a terminator; C0
@@ -2699,7 +2699,7 @@ Jump_03B_5044::
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank3B:: ; heuristic: follows a terminator; C0

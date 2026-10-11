@@ -12421,6 +12421,51 @@
         }
       ],
       "note": "E-0204 (C1: RollRandomLoBelowChance_Sub01 reads the byte at $4CD7 + the actor's wBattleMonsterId for battlers 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of 0-4 in 256; 384 bytes, one per monster id)."
+    },
+    {
+      "bank": "05",
+      "addr": "408A",
+      "label": "ClearBitMaskTable_Bank05",
+      "count": 7,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "AND mask"
+        }
+      ],
+      "note": "E-0205 (C1: the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 * E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks $05, $A1 and $A3)."
+    },
+    {
+      "bank": "A1",
+      "addr": "408A",
+      "label": "ClearBitMaskTable_BankA1",
+      "count": 7,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "AND mask"
+        }
+      ],
+      "note": "E-0205 (C1: the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 * E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks $05, $A1 and $A3)."
+    },
+    {
+      "bank": "A3",
+      "addr": "408A",
+      "label": "ClearBitMaskTable_BankA3",
+      "count": 7,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "AND mask"
+        }
+      ],
+      "note": "E-0205 (C1: the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 * E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks $05, $A1 and $A3)."
     }
   ]
 }

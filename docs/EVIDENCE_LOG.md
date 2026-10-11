@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0205 — An unreferenced routine block at $4075 in banks $05, $A1 and $A3
+
+- Kind: OBSERVATION (byte comparison and decoding; C1).
+- **The block.** The 202 bytes at $4075-$413F are identical in banks $05, $A1 and $A3, between TargetOnLocalSide_Bank* and ActorCanPayMPCost_Bank*. No traced code, table or far call reaches them in any of the three banks.
+- **Decoding.** Split at each `ret`, the bytes form seven routines (configured code entries at $4075, $4091, $409E, $40AB, $40B8, $410F, $412E in each bank) and one 7-byte table, ClearBitMaskTable ($408A). The table contains $FD, an opcode the CPU does not have, so it is not code.
+  - The routine at $4075 ANDs mask [D] into wBattleStatus + 9 * E.
+  - The routines at $4091-$40B7 set bits 0-2 of wLevelUpGains + A. Existing name families already name these copies (the same 13 bytes appear in 7 banks).
+- **Limits.** Whether the game ever runs these copies is not known; they are code by structure only.
+- Binary verification: build/run231 PASS, 0 differing bytes; tests OK.
+
 ### E-0204 — SkillTable has 228 records; per-monster chance tables (bank $A3)
 
 - Kind: OBSERVATION (reading; C1).

@@ -10036,7 +10036,7 @@ Data_031_7AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_7ADA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     INCBIN "dwm2-cobi-us.gbc", $0C7ADA, $114
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case09_Sub01)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank31::
@@ -10066,7 +10066,7 @@ Jump_031_7C09::
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank31:: ; heuristic: follows a terminator; C0

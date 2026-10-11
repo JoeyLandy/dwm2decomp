@@ -122,13 +122,182 @@ Jump_005_406F::
     ld a, [wBattleTarget]
     cp a, $04
     ret
-    INCBIN "dwm2-cobi-us.gbc", $014075, $CA
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus
+Func_005_4075:: ; configured code entry (E-0205); C0
+    ld a, d
+    ld hl, ClearBitMaskTable_Bank05
+    add_a_to_hl
+    ld d, [hl]
+    ld a, e
+    ld hl, wBattleStatus
+    call AddAx9ToHL
+    ld a, d
+    and a, [hl]
+    ld [hl], a
+    ret
+
+; E-0205 (C1: the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 * E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks $05, $A1 and $A3).
+; record: AND mask
+ClearBitMaskTable_Bank05::
+Data_005_408A:: ; address name
+    db $DF ; id 0
+    db $FE ; id 1
+    db $00 ; id 2
+    db $FD ; id 3
+    db $73 ; id 4
+    db $EF ; id 5
+    db $BF ; id 6
+
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit0OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
+Func_005_4091:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 0, [hl]
+    pop hl
+    ret
+
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit1OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
+Func_005_409E:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 1, [hl]
+    pop hl
+    ret
+
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit2OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
+Func_005_40AB:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 2, [hl]
+    pop hl
+    ret
+
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+PersonalityIndexOfSlot_Bank05:: ; configured code entry (E-0205); C0
+Func_005_40B8:: ; address name
+    push hl
+    push bc
+    ld c, a
+    ld b, $00
+    ld hl, wSlotPersonalityHi
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_005_40D4
+    ld l, $09
+    cp a, $40
+    jr nc, Jump_005_40D4
+    ld l, $12
+
+Jump_005_40D4::
+    ld a, l
+    add a, b
+    ld b, a
+    ld a, c
+    ld hl, wSlotPersonalityMid
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_005_40EF
+    ld l, $03
+    cp a, $40
+    jr nc, Jump_005_40EF
+    ld l, $06
+
+Jump_005_40EF::
+    ld a, l
+    add a, b
+    ld b, a
+    ld a, c
+    ld hl, wSlotPersonalityLo
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_005_410A
+    ld l, $01
+    cp a, $40
+    jr nc, Jump_005_410A
+    ld l, $02
+
+Jump_005_410A::
+    ld a, l
+    add a, b
+    pop bc
+    pop hl
+    ret
+
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus3
+CheckSlotStatusBlockWide_Bank05:: ; configured code entry (E-0205); C0
+Func_005_410F:: ; address name
+    call CheckSlotStatusBlock
+    ret c
+    push hl
+    push bc
+    ld c, a
+    ld hl, wBattleStatus3
+    call AddAx9ToHL
+    ld a, [hl+]
+    and a, $C0
+    jr nz, Jump_005_4129
+    ld a, [hl]
+    and a, $0C
+    jr nz, Jump_005_4129
+    xor a, a
+    jr Jump_005_412A
+
+Jump_005_4129::
+    scf
+
+Jump_005_412A::
+    ld a, c
+    pop bc
+    pop hl
+    ret
+
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus3
+SlotHasStatus3Or4Bits_Bank05:: ; configured code entry (E-0205); C0
+Func_005_412E:: ; address name
+    push hl
+    ld hl, wBattleStatus3
+    call AddAx9ToHL
+    ld a, [hl+]
+    and a, $C0
+    jr nz, Jump_005_413D
+    ld a, [hl]
+    and a, $0C
+
+Jump_005_413D::
+    pop hl
+    ret
 
 ; cost = wRecordBufferData (byte 0 of the skill record): C = $FF (can pay) when the cost is 0, when the cost is $FF and the actor's MP (wBattleMP word) is non-zero, or when MP >= cost; C = 0 otherwise. Agrees with CheckSkillMPCost that equal MP and cost is enough (E-0063)
 ; 35 call sites from 35 routines (e.g. AIFireSkillUsable, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
 ; reads: wBattleActor, wRecordBufferData
 ; points at: wBattleMP
-ActorCanPayMPCost_Bank05::
+ActorCanPayMPCost_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_413F:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleMP
@@ -164,7 +333,7 @@ Jump_005_4166::
 ; 5 call sites from 5 routines (e.g. AIFireSkillUsable, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
 ; reads: wRecordBufferData, wBattleActor
 ; points at: wBattleStatus1
-SkillPassesStatus1Bit0Check::
+SkillPassesStatus1Bit0Check:: ; heuristic: follows a terminator; C0
 Func_005_4169:: ; address name
     ld a, [wRecordBufferData + $5]
     bit 6, a

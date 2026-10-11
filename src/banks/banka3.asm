@@ -67,7 +67,176 @@ Jump_0A3_406F::
     ld a, [wBattleTarget]
     cp a, $04
     ret
-    INCBIN "dwm2-cobi-us.gbc", $28C075, $CA
+
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus
+Func_0A3_4075:: ; configured code entry (E-0205); C0
+    ld a, d
+    ld hl, ClearBitMaskTable_BankA3
+    add_a_to_hl
+    ld d, [hl]
+    ld a, e
+    ld hl, wBattleStatus
+    call AddAx9ToHL
+    ld a, d
+    and a, [hl]
+    ld [hl], a
+    ret
+
+; E-0205 (C1: the routine at $4075 reads the byte at $408A + D and ANDs it into the byte at wBattleStatus + 9 * E (AddAx9ToHL); the same 202-byte block of routines and this table sit at $4075-$413F in banks $05, $A1 and $A3).
+; record: AND mask
+ClearBitMaskTable_BankA3::
+Data_0A3_408A:: ; address name
+    db $DF ; id 0
+    db $FE ; id 1
+    db $00 ; id 2
+    db $FD ; id 3
+    db $73 ; id 4
+    db $EF ; id 5
+    db $BF ; id 6
+
+; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
+Func_0A3_4091:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 0, [hl]
+    pop hl
+    ret
+
+; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
+Func_0A3_409E:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 1, [hl]
+    pop hl
+    ret
+
+; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 7 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wLevelUpGains
+SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
+Func_0A3_40AB:: ; address name
+    push hl
+    ld hl, wLevelUpGains
+    add_a_to_hl
+    set 2, [hl]
+    pop hl
+    ret
+
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
+PersonalityIndexOfSlot_BankA3:: ; configured code entry (E-0205); C0
+Func_0A3_40B8:: ; address name
+    push hl
+    push bc
+    ld c, a
+    ld b, $00
+    ld hl, wSlotPersonalityHi
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_0A3_40D4
+    ld l, $09
+    cp a, $40
+    jr nc, Jump_0A3_40D4
+    ld l, $12
+
+Jump_0A3_40D4::
+    ld a, l
+    add a, b
+    ld b, a
+    ld a, c
+    ld hl, wSlotPersonalityMid
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_0A3_40EF
+    ld l, $03
+    cp a, $40
+    jr nc, Jump_0A3_40EF
+    ld l, $06
+
+Jump_0A3_40EF::
+    ld a, l
+    add a, b
+    ld b, a
+    ld a, c
+    ld hl, wSlotPersonalityLo
+    add_a_to_hl
+    ld a, [hl]
+    ld l, $00
+    cp a, $C0
+    jr nc, Jump_0A3_410A
+    ld l, $01
+    cp a, $40
+    jr nc, Jump_0A3_410A
+    ld l, $02
+
+Jump_0A3_410A::
+    ld a, l
+    add a, b
+    pop bc
+    pop hl
+    ret
+
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus3
+CheckSlotStatusBlockWide_BankA3:: ; configured code entry (E-0205); C0
+Func_0A3_410F:: ; address name
+    call CheckSlotStatusBlock
+    ret c
+    push hl
+    push bc
+    ld c, a
+    ld hl, wBattleStatus3
+    call AddAx9ToHL
+    ld a, [hl+]
+    and a, $C0
+    jr nz, Jump_0A3_4129
+    ld a, [hl]
+    and a, $0C
+    jr nz, Jump_0A3_4129
+    xor a, a
+    jr Jump_0A3_412A
+
+Jump_0A3_4129::
+    scf
+
+Jump_0A3_412A::
+    ld a, c
+    pop bc
+    pop hl
+    ret
+
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
+; no direct call (reached through a table, a jump or a vector)
+; points at: wBattleStatus3
+SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
+Func_0A3_412E:: ; address name
+    push hl
+    ld hl, wBattleStatus3
+    call AddAx9ToHL
+    ld a, [hl+]
+    and a, $C0
+    jr nz, Jump_0A3_413D
+    ld a, [hl]
+    and a, $0C
+
+Jump_0A3_413D::
+    pop hl
+    ret
 
 ; runs Func_0A3_414F, then wDA5B[hFFC6] = 3 (E-0122)
 ; 22 call sites from 21 routines (e.g. ApplyActionResultAndMarkFormation, SetSubPhase2AndRestartResolve, ActionEffect_ActionD0, ActionEffect_ActionD1, ...)
@@ -205,7 +374,7 @@ Jump_0A3_41E4::
     call CheckSlotStatusBlock
     jr c, Jump_0A3_4257
     ldh a, [hTemp0]
-    call SlotHasStatus3Or4Bits_BankA3
+    call SlotHasStatus3Or4Bits_BankA3_4278
     jr nz, Jump_0A3_4257
 
 Jump_0A3_41FD::
@@ -225,7 +394,7 @@ Jump_0A3_41FD::
     jr c, Jump_0A3_4257
     ldh a, [hTemp0]
     inc a
-    call SlotHasStatus3Or4Bits_BankA3
+    call SlotHasStatus3Or4Bits_BankA3_4278
     jr nz, Jump_0A3_4257
 
 Jump_0A3_421A::
@@ -247,7 +416,7 @@ Jump_0A3_421A::
     ldh a, [hTemp0]
     inc a
     inc a
-    call SlotHasStatus3Or4Bits_BankA3
+    call SlotHasStatus3Or4Bits_BankA3_4278
     jr nz, Jump_0A3_4257
 
 Jump_0A3_4239::
@@ -297,10 +466,10 @@ Jump_0A3_4274::
     ld a, $01
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
 ; 3 call sites from 1 routine (e.g. FindFormationForSide)
 ; points at: wBattleStatus3
-SlotHasStatus3Or4Bits_BankA3::
+SlotHasStatus3Or4Bits_BankA3_4278::
 Func_0A3_4278:: ; address name
     push hl
     ld hl, wBattleStatus3
@@ -449,10 +618,10 @@ Func_0A3_44C4:: ; address name
     dec a
     jr z, Jump_0A3_453A
     ld a, $01
-    call PersonalityIndexOfSlot_BankA3
+    call PersonalityIndexOfSlot_BankA3_497E
     push af
     ld a, $02
-    call PersonalityIndexOfSlot_BankA3
+    call PersonalityIndexOfSlot_BankA3_497E
     ld l, a
     ld h, $00
     add hl, hl
@@ -485,10 +654,10 @@ Jump_0A3_4503::
 
 Jump_0A3_4505::
     ld a, $00
-    call PersonalityIndexOfSlot_BankA3
+    call PersonalityIndexOfSlot_BankA3_497E
     push af
     ld a, $01
-    call PersonalityIndexOfSlot_BankA3
+    call PersonalityIndexOfSlot_BankA3_497E
     ld l, a
     ld h, $00
     add hl, hl
@@ -521,10 +690,10 @@ Jump_0A3_4538::
 
 Jump_0A3_453A::
     ld a, $00
-    call PersonalityIndexOfSlot_BankA3
+    call PersonalityIndexOfSlot_BankA3_497E
     push af
     ld a, $02
-    call PersonalityIndexOfSlot_BankA3
+    call PersonalityIndexOfSlot_BankA3_497E
     ld l, a
     ld h, $00
     add hl, hl
@@ -738,10 +907,10 @@ Jump_0A3_497A::
     ldh [hTemp0], a
     ret
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
 ; 6 call sites from 1 routine (e.g. FormationCompatibilityRoll)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
-PersonalityIndexOfSlot_BankA3::
+PersonalityIndexOfSlot_BankA3_497E::
 Func_0A3_497E:: ; address name
     push hl
     push bc

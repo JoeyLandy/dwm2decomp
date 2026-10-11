@@ -4001,7 +4001,7 @@ Jump_030_5CA9::
     ret
     INCBIN "dwm2-cobi-us.gbc", $0C1CAF, $43
 
-; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 7 banks)
+; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 10 banks)
 ; 2 call sites from 2 routines (e.g. RunBattleResolveStep_43C4_Case00, AIChooseActionForActor)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_Bank30::
@@ -4060,7 +4060,7 @@ Jump_030_5D44::
     pop hl
     ret
 
-; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 7 banks)
+; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 10 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank30:: ; heuristic: follows a terminator; C0
@@ -4090,7 +4090,7 @@ Jump_030_5D64::
     pop hl
     ret
 
-; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 8 banks)
+; A = slot: with HL = wD80F + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes appear in 11 banks)
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStatus3
 SlotHasStatus3Or4Bits_Bank30:: ; heuristic: follows a terminator; C0
