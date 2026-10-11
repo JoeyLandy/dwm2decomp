@@ -1,5 +1,69 @@
 SECTION "Bank 6E", ROMX[$4000], BANK[$6E]
-    INCBIN "dwm2-cobi-us.gbc", $1B8000, $871
+    db $6E
+
+; LZSS-compressed asset: 214 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_4001:: ; heuristic: key-world room screen tile map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B8001, $D6
+
+; LZSS-compressed asset: 231 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_40D7:: ; heuristic: key-world room screen tile map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B80D7, $E7
+
+; LZSS-compressed asset: 159 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_41BE:: ; heuristic: key-world room screen tile map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B81BE, $9F
+
+; LZSS-compressed asset: 70 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_425D:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B825D, $46
+
+; LZSS-compressed asset: 84 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_42A3:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B82A3, $54
+
+; LZSS-compressed asset: 66 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_42F7:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B82F7, $42
+
+; LZSS-compressed asset: 81 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_4339:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B8339, $51
+
+; LZSS-compressed asset: 81 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_438A:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B838A, $51
+
+; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_43DB:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B83DB, $4D
+
+; LZSS-compressed asset: 83 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_4428:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B8428, $53
+
+; LZSS-compressed asset: 80 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_447B:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B847B, $50
+
+; LZSS-compressed asset: 89 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_44CB:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B84CB, $59
+
+; LZSS-compressed asset: 78 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_4524:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B8524, $4E
+
+; LZSS-compressed asset: 90 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_4572:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B8572, $1B5
+
+; LZSS-compressed asset: 80 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_4727:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B8727, $F5
+
+; LZSS-compressed asset: 85 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_481C:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B881C, $55
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 3 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
 ; LZSS-compressed asset: 916 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -82,11 +146,49 @@ Data_06E_579B:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; LZSS-compressed asset: 231 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06E_5881:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $1B9881, $19F
+    INCBIN "dwm2-cobi-us.gbc", $1B9881, $E7
+
+; LZSS-compressed asset: 53 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_5968:: ; heuristic: key-world room screen attribute map; C0
+    db $68, $01, $00, $02, $00, $00, $03, $01, $01, $01, $01, $00, $00, $04, $00, $00
+    db $0F, $4D, $00, $24, $0C, $03, $03, $03, $03, $00, $1C, $08, $00, $80, $0F, $01
+    db $00, $7E, $04, $00, $9C, $0F, $13, $00, $D2, $02, $00, $C8, $0F, $09, $00, $1C
+    db $0F, $4D, $00, $08, $1C
+
+; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_599D:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B999D, $4A
+
+; LZSS-compressed asset: 63 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_59E7:: ; heuristic: key-world room screen attribute map; C0
+    db $68, $01, $00, $02, $00, $00, $03, $01, $01, $01, $01, $00, $00, $04, $00, $00
+    db $0F, $35, $01, $01, $03, $03, $00, $4C, $0F, $0D, $00, $04, $02, $03, $03, $00
+    db $08, $0C, $00, $84, $0F, $03, $00, $58, $02, $00, $A0, $0F, $31, $00, $5A, $02
+    db $00, $9E, $0E, $00, $FC, $0F, $01, $00, $9C
 
 ; LZSS-compressed asset: 2358 bytes expand to 5391 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06E_5A20:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $1B9A20, $445
+    db $0F, $15, $00, $0C, $0F, $09
+
+; LZSS-compressed asset: 75 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_5A26:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B9A26, $4B
+
+; LZSS-compressed asset: 84 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_5A71:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B9A71, $54
+
+; LZSS-compressed asset: 73 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_5AC5:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B9AC5, $49
+
+; LZSS-compressed asset: 82 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_5B0E:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B9B0E, $52
+
+; LZSS-compressed asset: 71 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_5B60:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1B9B60, $305
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 4 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
 ; LZSS-compressed asset: 1071 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -106,6 +208,9 @@ Data_06E_6294:: ; heuristic: map type 5 BG palettes; C0
     dw $218C, $269F, $029A, $0000 ; entry 5
     dw $001B, $2BFF, $023F, $0000 ; entry 6
     dw $0000, $0000, $0000, $0000 ; entry 7
+
+; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_62D4:: ; heuristic: key-world room screen tile map; C0
     INCBIN "dwm2-cobi-us.gbc", $1BA2D4, $82
 
 ; LZSS-compressed asset: 213 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -166,7 +271,54 @@ Data_06E_6E08:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; LZSS-compressed asset: 229 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_06E_6EF4:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $1BAEF4, $5F0
+    INCBIN "dwm2-cobi-us.gbc", $1BAEF4, $E5
+
+; LZSS-compressed asset: 57 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_6FD9:: ; heuristic: key-world room screen attribute map; C0
+    db $68, $01, $00, $02, $00, $00, $03, $01, $01, $01, $01, $00, $00, $04, $00, $00
+    db $0F, $33, $03, $03, $00, $48, $0F, $09, $00, $08, $00, $00, $78, $02, $00, $6E
+    db $0F, $11, $00, $6A, $0F, $01, $00, $6A, $0E, $00, $68, $0F, $01, $00, $54, $0F
+    db $07, $00, $0A, $0F, $3D, $00, $0A, $0F, $0B
+
+; LZSS-compressed asset: 71 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_7012:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB012, $47
+
+; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_7059:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB059, $4D
+
+; LZSS-compressed asset: 90 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_70A6:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB0A6, $5A
+
+; LZSS-compressed asset: 78 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_7100:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB100, $4E
+
+; LZSS-compressed asset: 83 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_714E:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB14E, $53
+
+; LZSS-compressed asset: 79 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_71A1:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB1A1, $4F
+
+; LZSS-compressed asset: 73 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_71F0:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB1F0, $1AF
+
+; LZSS-compressed asset: 70 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_739F:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB39F, $46
+
+; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_73E5:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB3E5, $9B
+
+; LZSS-compressed asset: 100 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_06E_7480:: ; heuristic: key-world room screen attribute map; C0
+    INCBIN "dwm2-cobi-us.gbc", $1BB480, $64
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 5 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
 ; LZSS-compressed asset: 764 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)

@@ -1651,6 +1651,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** Which places use map type 5 is not read.
 - Binary verification: build/run140 PASS, 0 differing bytes; tests OK.
 
+### E-0141 — Key-world rooms in bank $72; `dfar` far pointers
+
+- Kind: OBSERVATION (reading plus decoding; C1).
+- **Source.** Func_061_4472_Case05 (61:4533) takes a room number from wKeyWorldRoomTable and reads the word at 72:$4001 + 2 * room with ReadByteInBank.
+  - It skips 3 bytes and adds 12 * hMapScreenY + 3 * hMapScreenX.
+  - It decompresses that far pointer into wScreenTileBuffer.
+  - On CGB, it decompresses the far pointer $30 bytes further on as the attribute map.
+- **Layout.** A room record is therefore a 3-byte header, 16 tile-map far pointers (a 4 x 4 grid of screens), and 16 attribute-map far pointers: $63 bytes.
+- **Checks.**
+  - KeyWorldRoomPointers: 192 words at $4001-$4180, each $0000 or $4181 + $63 * n.
+  - KeyWorldRooms: 160 records from $4181 to $7F61.
+  - All 5,056 non-zero pointers decode to 360 bytes (20 x 18): 336 distinct streams in banks $6C-$71, 219 of them new to the generator.
+  - Before this, the scan had read the table bytes as `dw`/`db` noise.
+- **Generator: `dfar`.** A new macro `dfar Label` (`dw Label` / `db BANK(Label)`) prints a far pointer in one line, with the bank taken from the label, so the bytes stay identical.
+  - The table renderer uses it wherever a pointer field's bank is the next one-byte field and the target has a label: 6,313 far pointers in all, including the monster asset tables.
+- **Limits.** The meaning of the 3-byte room header is not read; the screens are tile maps that are not described further.
+- Binary verification: build/run141 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

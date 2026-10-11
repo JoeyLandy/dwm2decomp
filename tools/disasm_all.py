@@ -75,6 +75,12 @@ MACRO farcall_b
     rst $10
 ENDM
 
+; A far pointer in data: the address, then its ROM bank (E-0141).
+MACRO dfar
+    dw \\1
+    db BANK(\\1)
+ENDM
+
 ; HL += A, the way the ROM spells it: add into L, carry into H.
 MACRO add_a_to_hl
     add a, l
@@ -1385,6 +1391,7 @@ class Rom:
                     run.clear()
 
             q = p
+            skip_bank = -1
             for fi, (f, sz) in enumerate(zip(fields, sizes)):
                 if q in dl:
                     flush()
@@ -1397,6 +1404,8 @@ class Rom:
                     out.append("    dw " + ", ".join(f"${r[j] | r[j + 1] << 8:04X}" for j in range(0, len(r), 2))
                                + ("" if tagged else tag))
                     tagged = True
+                elif skip_bank == fi:
+                    pass  # emitted by the `dfar` of the pointer before it
                 elif f["type"] == "ptr":
                     flush()
                     tb = vals[f["bank_from"]] if "bank_from" in f else bank
@@ -1405,7 +1414,13 @@ class Rom:
                     nm = nm or self.dlabels.get(tb, {}).get(tgt)
                     if nm is None and tgt in self.insn.get(tb, {}):
                         nm = self.labels[tb].get(tgt)
-                    out.append(f"    dw {nm or f'${tgt:04X}'}" + ("" if tagged else tag))
+                    nxt = fi + 1
+                    if (nm and f.get("bank_from") == nxt and nxt < len(fields) and fields[nxt]["type"] == "db"
+                            and sizes[nxt] == 1 and (q + sz) not in dl):
+                        out.append(f"    dfar {nm}" + ("" if tagged else tag))  # address and bank in one line
+                        skip_bank = nxt
+                    else:
+                        out.append(f"    dw {nm or f'${tgt:04X}'}" + ("" if tagged else tag))
                     tagged = True
                 else:
                     run.extend(raws[fi])

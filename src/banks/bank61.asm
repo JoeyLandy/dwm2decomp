@@ -504,54 +504,30 @@ Jump_061_42D7::
 ; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
 MapType5TilesetTable::
 Data_061_42DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw MapType5Tiles0 ; id 0
-    db $6D
-    dw MapType5Palettes0
-    db $6D
-    dw MapType5Tiles1 ; id 1
-    db $6D
-    dw MapType5Palettes1
-    db $6D
-    dw MapType5Tiles2 ; id 2
-    db $6D
-    dw MapType5Palettes2
-    db $6D
-    dw MapType5Tiles3 ; id 3
-    db $6E
-    dw MapType5Palettes3
-    db $6E
-    dw MapType5Tiles4 ; id 4
-    db $6E
-    dw MapType5Palettes4
-    db $6E
-    dw MapType5Tiles5 ; id 5
-    db $6E
-    dw MapType5Palettes5
-    db $6E
-    dw MapType5Tiles6 ; id 6
-    db $6F
-    dw MapType5Palettes6
-    db $6F
-    dw MapType5Tiles7 ; id 7
-    db $6F
-    dw MapType5Palettes7
-    db $6F
-    dw MapType5Tiles8 ; id 8
-    db $70
-    dw MapType5Palettes8
-    db $70
-    dw MapType5Tiles9 ; id 9
-    db $70
-    dw MapType5Palettes9
-    db $70
-    dw MapType5Tiles10 ; id 10
-    db $70
-    dw MapType5Palettes10
-    db $70
-    dw MapType5Tiles11 ; id 11
-    db $70
-    dw MapType5Palettes11
-    db $70
+    dfar MapType5Tiles0 ; id 0
+    dfar MapType5Palettes0
+    dfar MapType5Tiles1 ; id 1
+    dfar MapType5Palettes1
+    dfar MapType5Tiles2 ; id 2
+    dfar MapType5Palettes2
+    dfar MapType5Tiles3 ; id 3
+    dfar MapType5Palettes3
+    dfar MapType5Tiles4 ; id 4
+    dfar MapType5Palettes4
+    dfar MapType5Tiles5 ; id 5
+    dfar MapType5Palettes5
+    dfar MapType5Tiles6 ; id 6
+    dfar MapType5Palettes6
+    dfar MapType5Tiles7 ; id 7
+    dfar MapType5Palettes7
+    dfar MapType5Tiles8 ; id 8
+    dfar MapType5Palettes8
+    dfar MapType5Tiles9 ; id 9
+    dfar MapType5Palettes9
+    dfar MapType5Tiles10 ; id 10
+    dfar MapType5Palettes10
+    dfar MapType5Tiles11 ; id 11
+    dfar MapType5Palettes11
 
 ; entry 1 of the `rst $00` table in RunWCC44Type_420D
 ; no direct call (reached through a table, a jump or a vector)
@@ -2099,46 +2075,26 @@ Jump_061_5723::
 ; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
 KeyWorldTilesetTable::
 Data_061_5728:: ; heuristic: start of a structured table; C0
-    dw KeyWorldTiles0 ; id 0
-    db $90
-    dw KeyWorldPalettes0
-    db $90
-    dw KeyWorldTiles1 ; id 1
-    db $63
-    dw KeyWorldPalettes1
-    db $63
-    dw KeyWorldTiles2 ; id 2
-    db $64
-    dw KeyWorldPalettes2
-    db $90
-    dw KeyWorldTiles3 ; id 3
-    db $66
-    dw KeyWorldPalettes3
-    db $65
-    dw KeyWorldTiles4 ; id 4
-    db $62
-    dw KeyWorldPalettes4
-    db $62
-    dw KeyWorldTiles5 ; id 5
-    db $63
-    dw KeyWorldPalettes5
-    db $63
-    dw KeyWorldTiles6 ; id 6
-    db $64
-    dw KeyWorldPalettes6
-    db $64
-    dw KeyWorldTiles7 ; id 7
-    db $65
-    dw KeyWorldPalettes7
-    db $65
-    dw KeyWorldTiles8 ; id 8
-    db $62
-    dw KeyWorldPalettes8
-    db $62
-    dw KeyWorldTiles9 ; id 9
-    db $63
-    dw KeyWorldPalettes9
-    db $63
+    dfar KeyWorldTiles0 ; id 0
+    dfar KeyWorldPalettes0
+    dfar KeyWorldTiles1 ; id 1
+    dfar KeyWorldPalettes1
+    dfar KeyWorldTiles2 ; id 2
+    dfar KeyWorldPalettes2
+    dfar KeyWorldTiles3 ; id 3
+    dfar KeyWorldPalettes3
+    dfar KeyWorldTiles4 ; id 4
+    dfar KeyWorldPalettes4
+    dfar KeyWorldTiles5 ; id 5
+    dfar KeyWorldPalettes5
+    dfar KeyWorldTiles6 ; id 6
+    dfar KeyWorldPalettes6
+    dfar KeyWorldTiles7 ; id 7
+    dfar KeyWorldPalettes7
+    dfar KeyWorldTiles8 ; id 8
+    dfar KeyWorldPalettes8
+    dfar KeyWorldTiles9 ; id 9
+    dfar KeyWorldPalettes9
 
 ; only called from CheckWarpAtPlayer (E-0047)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer)

@@ -923,6 +923,420 @@
         }
       ],
       "note": "E-0140 (C1: entry 11 of MapType5TilesetTable; copied to wBGPaletteBuffer)."
+    },
+    {
+      "bank": "72",
+      "addr": "4001",
+      "label": "KeyWorldRoomPointers",
+      "count": 192,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "room record in KeyWorldRooms ($0000 = none)",
+          "reason": "key-world room record"
+        }
+      ],
+      "note": "E-0141 (C1: Func_061_4472_Case05 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with ReadByteInBank; every non-zero word is $4181 + $63 * n)."
+    },
+    {
+      "bank": "72",
+      "addr": "4181",
+      "label": "KeyWorldRooms",
+      "count": 160,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 3,
+          "name": "room header (3 bytes; not read here)"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 2,
+          "stream": true,
+          "name": "screen 0 (row 0, column 0): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 0"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 4,
+          "stream": true,
+          "name": "screen 1 (row 0, column 1): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 1"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 6,
+          "stream": true,
+          "name": "screen 2 (row 0, column 2): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 2"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 8,
+          "stream": true,
+          "name": "screen 3 (row 0, column 3): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 3"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 10,
+          "stream": true,
+          "name": "screen 4 (row 1, column 0): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 4"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 12,
+          "stream": true,
+          "name": "screen 5 (row 1, column 1): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 5"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 14,
+          "stream": true,
+          "name": "screen 6 (row 1, column 2): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 6"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 16,
+          "stream": true,
+          "name": "screen 7 (row 1, column 3): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 7"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 18,
+          "stream": true,
+          "name": "screen 8 (row 2, column 0): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 8"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 20,
+          "stream": true,
+          "name": "screen 9 (row 2, column 1): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 9"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 22,
+          "stream": true,
+          "name": "screen 10 (row 2, column 2): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 10"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 24,
+          "stream": true,
+          "name": "screen 11 (row 2, column 3): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 11"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 26,
+          "stream": true,
+          "name": "screen 12 (row 3, column 0): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 12"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 28,
+          "stream": true,
+          "name": "screen 13 (row 3, column 1): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 13"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 30,
+          "stream": true,
+          "name": "screen 14 (row 3, column 2): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 14"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 32,
+          "stream": true,
+          "name": "screen 15 (row 3, column 3): compressed 20 x 18 tile map",
+          "reason": "key-world room screen tile map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of screen 15"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 34,
+          "stream": true,
+          "name": "screen 0: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 0"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 36,
+          "stream": true,
+          "name": "screen 1: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 1"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 38,
+          "stream": true,
+          "name": "screen 2: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 2"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 40,
+          "stream": true,
+          "name": "screen 3: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 3"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 42,
+          "stream": true,
+          "name": "screen 4: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 4"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 44,
+          "stream": true,
+          "name": "screen 5: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 5"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 46,
+          "stream": true,
+          "name": "screen 6: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 6"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 48,
+          "stream": true,
+          "name": "screen 7: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 7"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 50,
+          "stream": true,
+          "name": "screen 8: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 8"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 52,
+          "stream": true,
+          "name": "screen 9: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 9"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 54,
+          "stream": true,
+          "name": "screen 10: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 10"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 56,
+          "stream": true,
+          "name": "screen 11: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 11"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 58,
+          "stream": true,
+          "name": "screen 12: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 12"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 60,
+          "stream": true,
+          "name": "screen 13: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 13"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 62,
+          "stream": true,
+          "name": "screen 14: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 14"
+        },
+        {
+          "type": "ptr",
+          "bank_from": 64,
+          "stream": true,
+          "name": "screen 15: compressed 20 x 18 CGB attribute map",
+          "reason": "key-world room screen attribute map"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bank of attribute map 15"
+        }
+      ],
+      "note": "E-0141 (C1: Func_061_4472_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes)."
     }
   ]
 }

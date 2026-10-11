@@ -15,6 +15,12 @@ MACRO farcall_b
     rst $10
 ENDM
 
+; A far pointer in data: the address, then its ROM bank (E-0141).
+MACRO dfar
+    dw \1
+    db BANK(\1)
+ENDM
+
 ; HL += A, the way the ROM spells it: add into L, carry into H.
 MACRO add_a_to_hl
     add a, l

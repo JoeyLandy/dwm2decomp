@@ -382,8 +382,8 @@ class MonsterAssetNames(unittest.TestCase):
 
     def test_picture_table_uses_monster_names(self):
         text = (BANKS / "bank38.asm").read_text(encoding="utf-8")
-        self.assertIn("    dw MonsterPic_SpotSlime ; id 2 SpotSlime", text)
-        self.assertIn("    dw MonsterPicAttr_", text)
+        self.assertIn("    dfar MonsterPic_SpotSlime ; id 2 SpotSlime", text)
+        self.assertIn("    dfar MonsterPicAttr_", text)
         self.assertIn("MonsterSprite_DrakSlime::", (BANKS / "bank20.asm").read_text(encoding="utf-8"))
 
 

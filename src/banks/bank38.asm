@@ -5,1551 +5,788 @@ SECTION "Bank 38", ROMX[$4000], BANK[$38]
 ; record: compressed picture stream (36 tiles, drawn 6 x 6); ROM bank of that data
 MonsterPictureTable::
 Data_038_4001:: ; heuristic: start of a structured table; C0
-    dw MonsterPic_DrakSlime ; id 0
-    db $74
-    dw MonsterPic_DrakSlime ; id 1 DrakSlime
-    db $74
-    dw MonsterPic_SpotSlime ; id 2 SpotSlime
-    db $74
-    dw MonsterPic_WingSlime ; id 3 WingSlime
-    db $74
-    dw MonsterPic_TreeSlime ; id 4 TreeSlime
-    db $74
-    dw MonsterPic_Snaily ; id 5 Snaily
-    db $74
-    dw MonsterPic_SlimeNite ; id 6 SlimeNite
-    db $74
-    dw MonsterPic_Babble ; id 7 Babble
-    db $74
-    dw MonsterPic_BoxSlime ; id 8 BoxSlime
-    db $74
-    dw MonsterPic_PearlGel ; id 9 PearlGel
-    db $74
-    dw MonsterPic_Slime ; id 10 Slime
-    db $74
-    dw MonsterPic_Healer ; id 11 Healer
-    db $74
-    dw MonsterPic_FangSlime ; id 12 FangSlime
-    db $74
-    dw MonsterPic_RockSlime ; id 13 RockSlime
-    db $74
-    dw MonsterPic_SlimeBorg ; id 14 SlimeBorg
-    db $74
-    dw MonsterPic_Slabbit ; id 15 Slabbit
-    db $74
-    dw MonsterPic_KingSlime ; id 16 KingSlime
-    db $74
-    dw MonsterPic_Metaly ; id 17 Metaly
-    db $74
-    dw MonsterPic_Metabble ; id 18 Metabble
-    db $74
-    dw MonsterPic_SpotKing ; id 19 SpotKing
-    db $74
-    dw MonsterPic_TropicGel ; id 20 TropicGel
-    db $74
-    dw MonsterPic_MimeSlime ; id 21 MimeSlime
-    db $74
-    dw MonsterPic_HaloSlime ; id 22 HaloSlime
-    db $74
-    dw MonsterPic_MetalKing ; id 23 MetalKing
-    db $74
-    dw MonsterPic_GoldSlime ; id 24 GoldSlime
-    db $74
-    dw MonsterPic_GranSlime ; id 25 GranSlime
-    db $74
-    dw MonsterPic_WonderEgg ; id 26 WonderEgg
-    db $74
-    dw MonsterPic_SpotSlime ; id 27 Butch
-    db $74
-    dw MonsterPic_DrakSlime ; id 28 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 29 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 30 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 31 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 32 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 33 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 34 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 35 ?
-    db $74
-    dw MonsterPic_DragonKid ; id 36 DragonKid
-    db $74
-    dw MonsterPic_Tortragon ; id 37 Tortragon
-    db $74
-    dw MonsterPic_Pteranod ; id 38 Pteranod
-    db $74
-    dw MonsterPic_Gasgon ; id 39 Gasgon
-    db $74
-    dw MonsterPic_FairyDrak ; id 40 FairyDrak
-    db $74
-    dw MonsterPic_LizardMan ; id 41 LizardMan
-    db $74
-    dw MonsterPic_Poisongon ; id 42 Poisongon
-    db $74
-    dw MonsterPic_Swordgon ; id 43 Swordgon
-    db $74
-    dw MonsterPic_Drygon ; id 44 Drygon
-    db $74
-    dw MonsterPic_Dragon ; id 45 Dragon
-    db $74
-    dw MonsterPic_MiniDrak ; id 46 MiniDrak
-    db $74
-    dw MonsterPic_MadDragon ; id 47 MadDragon
-    db $74
-    dw MonsterPic_Rayburn ; id 48 Rayburn
-    db $74
-    dw MonsterPic_Chamelgon ; id 49 Chamelgon
-    db $74
-    dw MonsterPic_LizardFly ; id 50 LizardFly
-    db $74
-    dw MonsterPic_Andreal ; id 51 Andreal
-    db $74
-    dw MonsterPic_KingCobra ; id 52 KingCobra
-    db $74
-    dw MonsterPic_Vampirus ; id 53 Vampirus
-    db $74
-    dw MonsterPic_SnakeBat ; id 54 SnakeBat
-    db $74
-    dw MonsterPic_Spikerous ; id 55 Spikerous
-    db $74
-    dw MonsterPic_GreatDrak ; id 56 GreatDrak
-    db $74
-    dw MonsterPic_Crestpent ; id 57 Crestpent
-    db $74
-    dw MonsterPic_WingSnake ; id 58 WingSnake
-    db $74
-    dw MonsterPic_Coatol ; id 59 Coatol
-    db $74
-    dw MonsterPic_Orochi ; id 60 Orochi
-    db $74
-    dw MonsterPic_BattleRex ; id 61 BattleRex
-    db $74
-    dw MonsterPic_SkyDragon ; id 62 SkyDragon
-    db $75
-    dw MonsterPic_Serpentia ; id 63 Serpentia
-    db $75
-    dw MonsterPic_Divinegon ; id 64 Divinegon
-    db $75
-    dw MonsterPic_Orligon ; id 65 Orligon
-    db $75
-    dw MonsterPic_GigaDraco ; id 66 GigaDraco
-    db $75
-    dw MonsterPic_DrakSlime ; id 67 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 68 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 69 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 70 ?
-    db $74
-    dw MonsterPic_Tonguella ; id 71 Tonguella
-    db $75
-    dw MonsterPic_Almiraj ; id 72 Almiraj
-    db $75
-    dw MonsterPic_CatFly ; id 73 CatFly
-    db $75
-    dw MonsterPic_PillowRat ; id 74 PillowRat
-    db $75
-    dw MonsterPic_Saccer ; id 75 Saccer
-    db $75
-    dw MonsterPic_GulpBeast ; id 76 GulpBeast
-    db $75
-    dw MonsterPic_Skullroo ; id 77 Skullroo
-    db $75
-    dw MonsterPic_WindBeast ; id 78 WindBeast
-    db $75
-    dw MonsterPic_Beavern ; id 79 Beavern
-    db $75
+    dfar MonsterPic_DrakSlime ; id 0
+    dfar MonsterPic_DrakSlime ; id 1 DrakSlime
+    dfar MonsterPic_SpotSlime ; id 2 SpotSlime
+    dfar MonsterPic_WingSlime ; id 3 WingSlime
+    dfar MonsterPic_TreeSlime ; id 4 TreeSlime
+    dfar MonsterPic_Snaily ; id 5 Snaily
+    dfar MonsterPic_SlimeNite ; id 6 SlimeNite
+    dfar MonsterPic_Babble ; id 7 Babble
+    dfar MonsterPic_BoxSlime ; id 8 BoxSlime
+    dfar MonsterPic_PearlGel ; id 9 PearlGel
+    dfar MonsterPic_Slime ; id 10 Slime
+    dfar MonsterPic_Healer ; id 11 Healer
+    dfar MonsterPic_FangSlime ; id 12 FangSlime
+    dfar MonsterPic_RockSlime ; id 13 RockSlime
+    dfar MonsterPic_SlimeBorg ; id 14 SlimeBorg
+    dfar MonsterPic_Slabbit ; id 15 Slabbit
+    dfar MonsterPic_KingSlime ; id 16 KingSlime
+    dfar MonsterPic_Metaly ; id 17 Metaly
+    dfar MonsterPic_Metabble ; id 18 Metabble
+    dfar MonsterPic_SpotKing ; id 19 SpotKing
+    dfar MonsterPic_TropicGel ; id 20 TropicGel
+    dfar MonsterPic_MimeSlime ; id 21 MimeSlime
+    dfar MonsterPic_HaloSlime ; id 22 HaloSlime
+    dfar MonsterPic_MetalKing ; id 23 MetalKing
+    dfar MonsterPic_GoldSlime ; id 24 GoldSlime
+    dfar MonsterPic_GranSlime ; id 25 GranSlime
+    dfar MonsterPic_WonderEgg ; id 26 WonderEgg
+    dfar MonsterPic_SpotSlime ; id 27 Butch
+    dfar MonsterPic_DrakSlime ; id 28 ?
+    dfar MonsterPic_DrakSlime ; id 29 ?
+    dfar MonsterPic_DrakSlime ; id 30 ?
+    dfar MonsterPic_DrakSlime ; id 31 ?
+    dfar MonsterPic_DrakSlime ; id 32 ?
+    dfar MonsterPic_DrakSlime ; id 33 ?
+    dfar MonsterPic_DrakSlime ; id 34 ?
+    dfar MonsterPic_DrakSlime ; id 35 ?
+    dfar MonsterPic_DragonKid ; id 36 DragonKid
+    dfar MonsterPic_Tortragon ; id 37 Tortragon
+    dfar MonsterPic_Pteranod ; id 38 Pteranod
+    dfar MonsterPic_Gasgon ; id 39 Gasgon
+    dfar MonsterPic_FairyDrak ; id 40 FairyDrak
+    dfar MonsterPic_LizardMan ; id 41 LizardMan
+    dfar MonsterPic_Poisongon ; id 42 Poisongon
+    dfar MonsterPic_Swordgon ; id 43 Swordgon
+    dfar MonsterPic_Drygon ; id 44 Drygon
+    dfar MonsterPic_Dragon ; id 45 Dragon
+    dfar MonsterPic_MiniDrak ; id 46 MiniDrak
+    dfar MonsterPic_MadDragon ; id 47 MadDragon
+    dfar MonsterPic_Rayburn ; id 48 Rayburn
+    dfar MonsterPic_Chamelgon ; id 49 Chamelgon
+    dfar MonsterPic_LizardFly ; id 50 LizardFly
+    dfar MonsterPic_Andreal ; id 51 Andreal
+    dfar MonsterPic_KingCobra ; id 52 KingCobra
+    dfar MonsterPic_Vampirus ; id 53 Vampirus
+    dfar MonsterPic_SnakeBat ; id 54 SnakeBat
+    dfar MonsterPic_Spikerous ; id 55 Spikerous
+    dfar MonsterPic_GreatDrak ; id 56 GreatDrak
+    dfar MonsterPic_Crestpent ; id 57 Crestpent
+    dfar MonsterPic_WingSnake ; id 58 WingSnake
+    dfar MonsterPic_Coatol ; id 59 Coatol
+    dfar MonsterPic_Orochi ; id 60 Orochi
+    dfar MonsterPic_BattleRex ; id 61 BattleRex
+    dfar MonsterPic_SkyDragon ; id 62 SkyDragon
+    dfar MonsterPic_Serpentia ; id 63 Serpentia
+    dfar MonsterPic_Divinegon ; id 64 Divinegon
+    dfar MonsterPic_Orligon ; id 65 Orligon
+    dfar MonsterPic_GigaDraco ; id 66 GigaDraco
+    dfar MonsterPic_DrakSlime ; id 67 ?
+    dfar MonsterPic_DrakSlime ; id 68 ?
+    dfar MonsterPic_DrakSlime ; id 69 ?
+    dfar MonsterPic_DrakSlime ; id 70 ?
+    dfar MonsterPic_Tonguella ; id 71 Tonguella
+    dfar MonsterPic_Almiraj ; id 72 Almiraj
+    dfar MonsterPic_CatFly ; id 73 CatFly
+    dfar MonsterPic_PillowRat ; id 74 PillowRat
+    dfar MonsterPic_Saccer ; id 75 Saccer
+    dfar MonsterPic_GulpBeast ; id 76 GulpBeast
+    dfar MonsterPic_Skullroo ; id 77 Skullroo
+    dfar MonsterPic_WindBeast ; id 78 WindBeast
+    dfar MonsterPic_Beavern ; id 79 Beavern
 Data_038_40F1:: ; heuristic: label inside a table; C0
-    dw MonsterPic_Antbear ; id 80 Antbear
-    db $75
-    dw MonsterPic_SuperTen ; id 81 SuperTen
-    db $75
-    dw MonsterPic_IronTurt ; id 82 IronTurt
-    db $75
-    dw MonsterPic_Mommonja ; id 83 Mommonja
-    db $75
-    dw MonsterPic_HammerMan ; id 84 HammerMan
-    db $75
-    dw MonsterPic_Grizzly ; id 85 Grizzly
-    db $75
-    dw MonsterPic_Yeti ; id 86 Yeti
-    db $75
-    dw MonsterPic_ArrowDog ; id 87 ArrowDog
-    db $75
-    dw MonsterPic_NoctoKing ; id 88 NoctoKing
-    db $75
-    dw MonsterPic_BeastNite ; id 89 BeastNite
-    db $75
-    dw MonsterPic_MadGopher ; id 90 MadGopher
-    db $75
-    dw MonsterPic_FairyRat ; id 91 FairyRat
-    db $75
-    dw MonsterPic_Unicorn ; id 92 Unicorn
-    db $75
-    dw MonsterPic_Goategon ; id 93 Goategon
-    db $75
-    dw MonsterPic_WildApe ; id 94 WildApe
-    db $75
-    dw MonsterPic_Trumpeter ; id 95 Trumpeter
-    db $75
-    dw MonsterPic_KingLeo ; id 96 KingLeo
-    db $75
-    dw MonsterPic_DarkHorn ; id 97 DarkHorn
-    db $75
-    dw MonsterPic_MadCat ; id 98 MadCat
-    db $75
-    dw MonsterPic_BigEye ; id 99 BigEye
-    db $75
-    dw MonsterPic_Gorago ; id 100 Gorago
-    db $75
-    dw MonsterPic_CatMage ; id 101 CatMage
-    db $75
-    dw MonsterPic_Dumbira ; id 102 Dumbira
-    db $75
-    dw MonsterPic_DrakSlime ; id 103 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 104 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 105 ?
-    db $74
-    dw MonsterPic_Picky ; id 106 Picky
-    db $77
-    dw MonsterPic_Wyvern ; id 107 Wyvern
-    db $75
-    dw MonsterPic_BullBird ; id 108 BullBird
-    db $75
-    dw MonsterPic_Florajay ; id 109 Florajay
-    db $75
-    dw MonsterPic_DuckKite ; id 110 DuckKite
-    db $75
-    dw MonsterPic_MadPecker ; id 111 MadPecker
-    db $76
-    dw MonsterPic_MadRaven ; id 112 MadRaven
-    db $76
-    dw MonsterPic_MistyWing ; id 113 MistyWing
-    db $76
-    dw MonsterPic_AquaHawk ; id 114 AquaHawk
-    db $76
-    dw MonsterPic_Dracky ; id 115 Dracky
-    db $76
-    dw MonsterPic_KiteHawk ; id 116 KiteHawk
-    db $76
-    dw MonsterPic_BigRoost ; id 117 BigRoost
-    db $76
-    dw MonsterPic_StubBird ; id 118 StubBird
-    db $76
-    dw MonsterPic_LandOwl ; id 119 LandOwl
-    db $76
-    dw MonsterPic_MadGoose ; id 120 MadGoose
-    db $76
-    dw MonsterPic_MadCondor ; id 121 MadCondor
-    db $76
-    dw MonsterPic_Emyu ; id 122 Emyu
-    db $76
-    dw MonsterPic_Blizzardy ; id 123 Blizzardy
-    db $76
-    dw MonsterPic_Phoenix ; id 124 Phoenix
-    db $76
-    dw MonsterPic_ZapBird ; id 125 ZapBird
-    db $76
-    dw MonsterPic_Garudian ; id 126 Garudian
-    db $76
-    dw MonsterPic_WhipBird ; id 127 WhipBird
-    db $76
-    dw MonsterPic_FunkyBird ; id 128 FunkyBird
-    db $76
-    dw MonsterPic_RainHawk ; id 129 RainHawk
-    db $76
-    dw MonsterPic_Azurile ; id 130 Azurile
-    db $76
-    dw MonsterPic_Shantak ; id 131 Shantak
-    db $76
-    dw MonsterPic_CragDevil ; id 132 CragDevil
-    db $76
-    dw MonsterPic_DrakSlime ; id 133 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 134 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 135 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 136 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 137 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 138 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 139 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 140 ?
-    db $74
-    dw MonsterPic_MadPlant ; id 141 MadPlant
-    db $7A
-    dw MonsterPic_FireWeed ; id 142 FireWeed
-    db $76
-    dw MonsterPic_FloraMan ; id 143 FloraMan
-    db $76
-    dw MonsterPic_WingTree ; id 144 WingTree
-    db $76
-    dw MonsterPic_CactiBall ; id 145 CactiBall
-    db $76
-    dw MonsterPic_Gulpple ; id 146 Gulpple
-    db $76
-    dw MonsterPic_Toadstool ; id 147 Toadstool
-    db $76
-    dw MonsterPic_AmberWeed ; id 148 AmberWeed
-    db $76
-    dw MonsterPic_Slurperon ; id 149 Slurperon
-    db $76
-    dw MonsterPic_Stubsuck ; id 150 Stubsuck
-    db $76
-    dw MonsterPic_Oniono ; id 151 Oniono
-    db $76
-    dw MonsterPic_DanceVegi ; id 152 DanceVegi
-    db $76
-    dw MonsterPic_TreeBoy ; id 153 TreeBoy
-    db $76
-    dw MonsterPic_Devipine ; id 154 Devipine
-    db $76
-    dw MonsterPic_FaceTree ; id 155 FaceTree
-    db $76
-    dw MonsterPic_HerbMan ; id 156 HerbMan
-    db $76
-    dw MonsterPic_BeanMan ; id 157 BeanMan
-    db $76
-    dw MonsterPic_EvilSeed ; id 158 EvilSeed
-    db $76
-    dw MonsterPic_ManEater ; id 159 ManEater
-    db $76
-    dw MonsterPic_Snapper ; id 160 Snapper
-    db $76
-    dw MonsterPic_GhosTree ; id 161 GhosTree
-    db $76
-    dw MonsterPic_Rosevine ; id 162 Rosevine
-    db $76
-    dw MonsterPic_Egdracil ; id 163 Egdracil
-    db $77
-    dw MonsterPic_Warubou ; id 164 Warubou
-    db $77
-    dw MonsterPic_Watabou ; id 165 Watabou
-    db $77
-    dw MonsterPic_Eggplaton ; id 166 Eggplaton
-    db $77
-    dw MonsterPic_FooHero ; id 167 FooHero
-    db $77
-    dw MonsterPic_DrakSlime ; id 168 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 169 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 170 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 171 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 172 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 173 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 174 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 175 ?
-    db $74
-    dw MonsterPic_GiantSlug ; id 176 GiantSlug
-    db $77
-    dw MonsterPic_Catapila ; id 177 Catapila
-    db $77
-    dw MonsterPic_Gophecada ; id 178 Gophecada
-    db $77
-    dw MonsterPic_Butterfly ; id 179 Butterfly
-    db $77
-    dw MonsterPic_WeedBug ; id 180 WeedBug
-    db $77
-    dw MonsterPic_GiantWorm ; id 181 GiantWorm
-    db $77
-    dw MonsterPic_Lipsy ; id 182 Lipsy
-    db $77
-    dw MonsterPic_StagBug ; id 183 StagBug
-    db $77
-    dw MonsterPic_Pyuro ; id 184 Pyuro
-    db $77
-    dw MonsterPic_ArmyAnt ; id 185 ArmyAnt
-    db $77
-    dw MonsterPic_GoHopper ; id 186 GoHopper
-    db $77
-    dw MonsterPic_TailEater ; id 187 TailEater
-    db $77
-    dw MonsterPic_ArmorPede ; id 188 ArmorPede
-    db $77
-    dw MonsterPic_Eyeder ; id 189 Eyeder
-    db $77
-    dw MonsterPic_GiantMoth ; id 190 GiantMoth
-    db $77
-    dw MonsterPic_Droll ; id 191 Droll
-    db $77
-    dw MonsterPic_ArmyCrab ; id 192 ArmyCrab
-    db $77
-    dw MonsterPic_MadHornet ; id 193 MadHornet
-    db $77
-    dw MonsterPic_Belzebub ; id 194 Belzebub
-    db $77
-    dw MonsterPic_WarMantis ; id 195 WarMantis
-    db $77
-    dw MonsterPic_HornBeet ; id 196 HornBeet
-    db $77
-    dw MonsterPic_Sickler ; id 197 Sickler
-    db $77
-    dw MonsterPic_Armorpion ; id 198 Armorpion
-    db $77
-    dw MonsterPic_Digster ; id 199 Digster
-    db $77
-    dw MonsterPic_Skularach ; id 200 Skularach
-    db $77
-    dw MonsterPic_MultiEyes ; id 201 MultiEyes
-    db $77
-    dw MonsterPic_DrakSlime ; id 202 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 203 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 204 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 205 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 206 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 207 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 208 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 209 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 210 ?
-    db $74
-    dw MonsterPic_Pixy ; id 211 Pixy
-    db $78
-    dw MonsterPic_MedusaEye ; id 212 MedusaEye
-    db $78
-    dw MonsterPic_AgDevil ; id 213 AgDevil
-    db $78
-    dw MonsterPic_Demonite ; id 214 Demonite
-    db $78
-    dw MonsterPic_DarkEye ; id 215 DarkEye
-    db $78
-    dw MonsterPic_EyeBall ; id 216 EyeBall
-    db $78
-    dw MonsterPic_SkulRider ; id 217 SkulRider
-    db $78
-    dw MonsterPic_EvilBeast ; id 218 EvilBeast
-    db $78
-    dw MonsterPic_Bubblemon ; id 219 Bubblemon
-    db $78
-    dw MonsterPic_1EyeClown ; id 220 1EyeClown
-    db $78
-    dw MonsterPic_Gremlin ; id 221 Gremlin
-    db $78
-    dw MonsterPic_ArcDemon ; id 222 ArcDemon
-    db $78
-    dw MonsterPic_Lionex ; id 223 Lionex
-    db $78
-    dw MonsterPic_GoatHorn ; id 224 GoatHorn
-    db $78
+    dfar MonsterPic_Antbear ; id 80 Antbear
+    dfar MonsterPic_SuperTen ; id 81 SuperTen
+    dfar MonsterPic_IronTurt ; id 82 IronTurt
+    dfar MonsterPic_Mommonja ; id 83 Mommonja
+    dfar MonsterPic_HammerMan ; id 84 HammerMan
+    dfar MonsterPic_Grizzly ; id 85 Grizzly
+    dfar MonsterPic_Yeti ; id 86 Yeti
+    dfar MonsterPic_ArrowDog ; id 87 ArrowDog
+    dfar MonsterPic_NoctoKing ; id 88 NoctoKing
+    dfar MonsterPic_BeastNite ; id 89 BeastNite
+    dfar MonsterPic_MadGopher ; id 90 MadGopher
+    dfar MonsterPic_FairyRat ; id 91 FairyRat
+    dfar MonsterPic_Unicorn ; id 92 Unicorn
+    dfar MonsterPic_Goategon ; id 93 Goategon
+    dfar MonsterPic_WildApe ; id 94 WildApe
+    dfar MonsterPic_Trumpeter ; id 95 Trumpeter
+    dfar MonsterPic_KingLeo ; id 96 KingLeo
+    dfar MonsterPic_DarkHorn ; id 97 DarkHorn
+    dfar MonsterPic_MadCat ; id 98 MadCat
+    dfar MonsterPic_BigEye ; id 99 BigEye
+    dfar MonsterPic_Gorago ; id 100 Gorago
+    dfar MonsterPic_CatMage ; id 101 CatMage
+    dfar MonsterPic_Dumbira ; id 102 Dumbira
+    dfar MonsterPic_DrakSlime ; id 103 ?
+    dfar MonsterPic_DrakSlime ; id 104 ?
+    dfar MonsterPic_DrakSlime ; id 105 ?
+    dfar MonsterPic_Picky ; id 106 Picky
+    dfar MonsterPic_Wyvern ; id 107 Wyvern
+    dfar MonsterPic_BullBird ; id 108 BullBird
+    dfar MonsterPic_Florajay ; id 109 Florajay
+    dfar MonsterPic_DuckKite ; id 110 DuckKite
+    dfar MonsterPic_MadPecker ; id 111 MadPecker
+    dfar MonsterPic_MadRaven ; id 112 MadRaven
+    dfar MonsterPic_MistyWing ; id 113 MistyWing
+    dfar MonsterPic_AquaHawk ; id 114 AquaHawk
+    dfar MonsterPic_Dracky ; id 115 Dracky
+    dfar MonsterPic_KiteHawk ; id 116 KiteHawk
+    dfar MonsterPic_BigRoost ; id 117 BigRoost
+    dfar MonsterPic_StubBird ; id 118 StubBird
+    dfar MonsterPic_LandOwl ; id 119 LandOwl
+    dfar MonsterPic_MadGoose ; id 120 MadGoose
+    dfar MonsterPic_MadCondor ; id 121 MadCondor
+    dfar MonsterPic_Emyu ; id 122 Emyu
+    dfar MonsterPic_Blizzardy ; id 123 Blizzardy
+    dfar MonsterPic_Phoenix ; id 124 Phoenix
+    dfar MonsterPic_ZapBird ; id 125 ZapBird
+    dfar MonsterPic_Garudian ; id 126 Garudian
+    dfar MonsterPic_WhipBird ; id 127 WhipBird
+    dfar MonsterPic_FunkyBird ; id 128 FunkyBird
+    dfar MonsterPic_RainHawk ; id 129 RainHawk
+    dfar MonsterPic_Azurile ; id 130 Azurile
+    dfar MonsterPic_Shantak ; id 131 Shantak
+    dfar MonsterPic_CragDevil ; id 132 CragDevil
+    dfar MonsterPic_DrakSlime ; id 133 ?
+    dfar MonsterPic_DrakSlime ; id 134 ?
+    dfar MonsterPic_DrakSlime ; id 135 ?
+    dfar MonsterPic_DrakSlime ; id 136 ?
+    dfar MonsterPic_DrakSlime ; id 137 ?
+    dfar MonsterPic_DrakSlime ; id 138 ?
+    dfar MonsterPic_DrakSlime ; id 139 ?
+    dfar MonsterPic_DrakSlime ; id 140 ?
+    dfar MonsterPic_MadPlant ; id 141 MadPlant
+    dfar MonsterPic_FireWeed ; id 142 FireWeed
+    dfar MonsterPic_FloraMan ; id 143 FloraMan
+    dfar MonsterPic_WingTree ; id 144 WingTree
+    dfar MonsterPic_CactiBall ; id 145 CactiBall
+    dfar MonsterPic_Gulpple ; id 146 Gulpple
+    dfar MonsterPic_Toadstool ; id 147 Toadstool
+    dfar MonsterPic_AmberWeed ; id 148 AmberWeed
+    dfar MonsterPic_Slurperon ; id 149 Slurperon
+    dfar MonsterPic_Stubsuck ; id 150 Stubsuck
+    dfar MonsterPic_Oniono ; id 151 Oniono
+    dfar MonsterPic_DanceVegi ; id 152 DanceVegi
+    dfar MonsterPic_TreeBoy ; id 153 TreeBoy
+    dfar MonsterPic_Devipine ; id 154 Devipine
+    dfar MonsterPic_FaceTree ; id 155 FaceTree
+    dfar MonsterPic_HerbMan ; id 156 HerbMan
+    dfar MonsterPic_BeanMan ; id 157 BeanMan
+    dfar MonsterPic_EvilSeed ; id 158 EvilSeed
+    dfar MonsterPic_ManEater ; id 159 ManEater
+    dfar MonsterPic_Snapper ; id 160 Snapper
+    dfar MonsterPic_GhosTree ; id 161 GhosTree
+    dfar MonsterPic_Rosevine ; id 162 Rosevine
+    dfar MonsterPic_Egdracil ; id 163 Egdracil
+    dfar MonsterPic_Warubou ; id 164 Warubou
+    dfar MonsterPic_Watabou ; id 165 Watabou
+    dfar MonsterPic_Eggplaton ; id 166 Eggplaton
+    dfar MonsterPic_FooHero ; id 167 FooHero
+    dfar MonsterPic_DrakSlime ; id 168 ?
+    dfar MonsterPic_DrakSlime ; id 169 ?
+    dfar MonsterPic_DrakSlime ; id 170 ?
+    dfar MonsterPic_DrakSlime ; id 171 ?
+    dfar MonsterPic_DrakSlime ; id 172 ?
+    dfar MonsterPic_DrakSlime ; id 173 ?
+    dfar MonsterPic_DrakSlime ; id 174 ?
+    dfar MonsterPic_DrakSlime ; id 175 ?
+    dfar MonsterPic_GiantSlug ; id 176 GiantSlug
+    dfar MonsterPic_Catapila ; id 177 Catapila
+    dfar MonsterPic_Gophecada ; id 178 Gophecada
+    dfar MonsterPic_Butterfly ; id 179 Butterfly
+    dfar MonsterPic_WeedBug ; id 180 WeedBug
+    dfar MonsterPic_GiantWorm ; id 181 GiantWorm
+    dfar MonsterPic_Lipsy ; id 182 Lipsy
+    dfar MonsterPic_StagBug ; id 183 StagBug
+    dfar MonsterPic_Pyuro ; id 184 Pyuro
+    dfar MonsterPic_ArmyAnt ; id 185 ArmyAnt
+    dfar MonsterPic_GoHopper ; id 186 GoHopper
+    dfar MonsterPic_TailEater ; id 187 TailEater
+    dfar MonsterPic_ArmorPede ; id 188 ArmorPede
+    dfar MonsterPic_Eyeder ; id 189 Eyeder
+    dfar MonsterPic_GiantMoth ; id 190 GiantMoth
+    dfar MonsterPic_Droll ; id 191 Droll
+    dfar MonsterPic_ArmyCrab ; id 192 ArmyCrab
+    dfar MonsterPic_MadHornet ; id 193 MadHornet
+    dfar MonsterPic_Belzebub ; id 194 Belzebub
+    dfar MonsterPic_WarMantis ; id 195 WarMantis
+    dfar MonsterPic_HornBeet ; id 196 HornBeet
+    dfar MonsterPic_Sickler ; id 197 Sickler
+    dfar MonsterPic_Armorpion ; id 198 Armorpion
+    dfar MonsterPic_Digster ; id 199 Digster
+    dfar MonsterPic_Skularach ; id 200 Skularach
+    dfar MonsterPic_MultiEyes ; id 201 MultiEyes
+    dfar MonsterPic_DrakSlime ; id 202 ?
+    dfar MonsterPic_DrakSlime ; id 203 ?
+    dfar MonsterPic_DrakSlime ; id 204 ?
+    dfar MonsterPic_DrakSlime ; id 205 ?
+    dfar MonsterPic_DrakSlime ; id 206 ?
+    dfar MonsterPic_DrakSlime ; id 207 ?
+    dfar MonsterPic_DrakSlime ; id 208 ?
+    dfar MonsterPic_DrakSlime ; id 209 ?
+    dfar MonsterPic_DrakSlime ; id 210 ?
+    dfar MonsterPic_Pixy ; id 211 Pixy
+    dfar MonsterPic_MedusaEye ; id 212 MedusaEye
+    dfar MonsterPic_AgDevil ; id 213 AgDevil
+    dfar MonsterPic_Demonite ; id 214 Demonite
+    dfar MonsterPic_DarkEye ; id 215 DarkEye
+    dfar MonsterPic_EyeBall ; id 216 EyeBall
+    dfar MonsterPic_SkulRider ; id 217 SkulRider
+    dfar MonsterPic_EvilBeast ; id 218 EvilBeast
+    dfar MonsterPic_Bubblemon ; id 219 Bubblemon
+    dfar MonsterPic_1EyeClown ; id 220 1EyeClown
+    dfar MonsterPic_Gremlin ; id 221 Gremlin
+    dfar MonsterPic_ArcDemon ; id 222 ArcDemon
+    dfar MonsterPic_Lionex ; id 223 Lionex
+    dfar MonsterPic_GoatHorn ; id 224 GoatHorn
 Data_038_42A4:: ; heuristic: label inside a table; C0
-    dw MonsterPic_Orc ; id 225 Orc
-    db $78
-    dw MonsterPic_Ogre ; id 226 Ogre
-    db $78
-    dw MonsterPic_GateGuard ; id 227 GateGuard
-    db $78
-    dw MonsterPic_ChopClown ; id 228 ChopClown
-    db $78
-    dw MonsterPic_BossTroll ; id 229 BossTroll
-    db $78
-    dw MonsterPic_Grendal ; id 230 Grendal
-    db $78
-    dw MonsterPic_Akubar ; id 231 Akubar
-    db $78
-    dw MonsterPic_MadKnight ; id 232 MadKnight
-    db $78
-    dw MonsterPic_EvilWell ; id 233 EvilWell
-    db $78
-    dw MonsterPic_Gigantes ; id 234 Gigantes
-    db $78
-    dw MonsterPic_Centasaur ; id 235 Centasaur
-    db $78
-    dw MonsterPic_EvilArmor ; id 236 EvilArmor
-    db $78
-    dw MonsterPic_Jamirus ; id 237 Jamirus
-    db $78
-    dw MonsterPic_Durran ; id 238 Durran
-    db $78
-    dw MonsterPic_Titanis ; id 239 Titanis
-    db $78
-    dw MonsterPic_LampGenie ; id 240 LampGenie
-    db $78
-    dw MonsterPic_DrakSlime ; id 241 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 242 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 243 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 244 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 245 ?
-    db $74
-    dw MonsterPic_Spooky ; id 246 Spooky
-    db $78
-    dw MonsterPic_Skullgon ; id 247 Skullgon
-    db $78
-    dw MonsterPic_PutrePup ; id 248 PutrePup
-    db $78
-    dw MonsterPic_RotRaven ; id 249 RotRaven
-    db $78
-    dw MonsterPic_Mummy ; id 250 Mummy
-    db $78
-    dw MonsterPic_DarkCrab ; id 251 DarkCrab
-    db $78
-    dw MonsterPic_DeadNite ; id 252 DeadNite
-    db $78
-    dw MonsterPic_Shadow ; id 253 Shadow
-    db $78
-    dw MonsterPic_Skulpent ; id 254 Skulpent
-    db $78
-    dw MonsterPic_Hork ; id 255 Hork
-    db $78
-    dw MonsterPic_Mudron ; id 256 Mudron
-    db $78
-    dw MonsterPic_NiteWhip ; id 257 NiteWhip
-    db $78
-    dw MonsterPic_WindMerge ; id 258 WindMerge
-    db $78
-    dw MonsterPic_Reaper ; id 259 Reaper
-    db $79
-    dw MonsterPic_Inverzon ; id 260 Inverzon
-    db $79
-    dw MonsterPic_FoxFire ; id 261 FoxFire
-    db $79
-    dw MonsterPic_CaptDead ; id 262 CaptDead
-    db $79
-    dw MonsterPic_DeadNoble ; id 263 DeadNoble
-    db $79
-    dw MonsterPic_WhiteKing ; id 264 WhiteKing
-    db $79
-    dw MonsterPic_BoneSlave ; id 265 BoneSlave
-    db $79
-    dw MonsterPic_Skeletor ; id 266 Skeletor
-    db $79
-    dw MonsterPic_Servant ; id 267 Servant
-    db $79
-    dw MonsterPic_Lazamanus ; id 268 Lazamanus
-    db $79
-    dw MonsterPic_Copycat ; id 269 Copycat
-    db $79
-    dw MonsterPic_MadSpirit ; id 270 MadSpirit
-    db $79
-    dw MonsterPic_PomPomBom ; id 271 PomPomBom
-    db $79
-    dw MonsterPic_Niterich ; id 272 Niterich
-    db $79
-    dw MonsterPic_DrakSlime ; id 273 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 274 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 275 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 276 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 277 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 278 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 279 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 280 ?
-    db $74
-    dw MonsterPic_JewelBag ; id 281 JewelBag
-    db $79
-    dw MonsterPic_EvilWand ; id 282 EvilWand
-    db $79
-    dw MonsterPic_MadCandle ; id 283 MadCandle
-    db $79
-    dw MonsterPic_CoilBird ; id 284 CoilBird
-    db $79
-    dw MonsterPic_Facer ; id 285 Facer
-    db $79
-    dw MonsterPic_SpikyBoy ; id 286 SpikyBoy
-    db $79
-    dw MonsterPic_MadMirror ; id 287 MadMirror
-    db $79
-    dw MonsterPic_RogueNite ; id 288 RogueNite
-    db $79
-    dw MonsterPic_Puppetor ; id 289 Puppetor
-    db $79
-    dw MonsterPic_Goopi ; id 290 Goopi
-    db $79
-    dw MonsterPic_Voodoll ; id 291 Voodoll
-    db $79
-    dw MonsterPic_MetalDrak ; id 292 MetalDrak
-    db $79
-    dw MonsterPic_Balzak ; id 293 Balzak
-    db $79
-    dw MonsterPic_SabreMan ; id 294 SabreMan
-    db $79
-    dw MonsterPic_CurseLamp ; id 295 CurseLamp
-    db $79
-    dw MonsterPic_Brushead ; id 296 Brushead
-    db $79
-    dw MonsterPic_Roboster ; id 297 Roboster
-    db $79
-    dw MonsterPic_Roboster2 ; id 298 Roboster2
-    db $79
-    dw MonsterPic_EvilPot ; id 299 EvilPot
-    db $79
-    dw MonsterPic_Gismo ; id 300 Gismo
-    db $79
-    dw MonsterPic_LavaMan ; id 301 LavaMan
-    db $79
-    dw MonsterPic_IceMan ; id 302 IceMan
-    db $79
-    dw MonsterPic_Mimic ; id 303 Mimic
-    db $79
-    dw MonsterPic_Exaucers ; id 304 Exaucers
-    db $79
-    dw MonsterPic_MudDoll ; id 305 MudDoll
-    db $79
-    dw MonsterPic_Golem ; id 306 Golem
-    db $79
-    dw MonsterPic_StoneMan ; id 307 StoneMan
-    db $79
-    dw MonsterPic_BombCrag ; id 308 BombCrag
-    db $79
-    dw MonsterPic_GoldGolem ; id 309 GoldGolem
-    db $79
-    dw MonsterPic_DarkMate ; id 310 DarkMate
-    db $79
-    dw MonsterPic_ProtoMech ; id 311 ProtoMech
-    db $79
-    dw MonsterPic_CloudKing ; id 312 CloudKing
-    db $79
-    dw MonsterPic_DrakSlime ; id 313 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 314 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 315 ?
-    db $74
-    dw MonsterPic_Petiteel ; id 316 Petiteel
-    db $77
-    dw MonsterPic_Moray ; id 317 Moray
-    db $77
-    dw MonsterPic_WalrusMan ; id 318 WalrusMan
-    db $77
-    dw MonsterPic_RayGigas ; id 319 RayGigas
-    db $77
-    dw MonsterPic_Anemon ; id 320 Anemon
-    db $77
-    dw MonsterPic_Aquarella ; id 321 Aquarella
-    db $77
-    dw MonsterPic_Merman ; id 322 Merman
-    db $77
-    dw MonsterPic_Octokid ; id 323 Octokid
-    db $77
-    dw MonsterPic_PutreFish ; id 324 PutreFish
-    db $77
-    dw MonsterPic_Octoreach ; id 325 Octoreach
-    db $77
-    dw MonsterPic_Angleron ; id 326 Angleron
-    db $77
-    dw MonsterPic_FishRider ; id 327 FishRider
-    db $77
-    dw MonsterPic_RushFish ; id 328 RushFish
-    db $77
-    dw MonsterPic_Gamanian ; id 329 Gamanian
-    db $77
-    dw MonsterPic_Clawster ; id 330 Clawster
-    db $77
-    dw MonsterPic_CancerMan ; id 331 CancerMan
-    db $77
-    dw MonsterPic_RogueWave ; id 332 RogueWave
-    db $77
-    dw MonsterPic_Scallopa ; id 333 Scallopa
-    db $77
-    dw MonsterPic_SeaHorse ; id 334 SeaHorse
-    db $77
-    dw MonsterPic_HoodSquid ; id 335 HoodSquid
-    db $77
-    dw MonsterPic_MerTiger ; id 336 MerTiger
-    db $7A
-    dw MonsterPic_AxeShark ; id 337 AxeShark
-    db $7A
-    dw MonsterPic_Octogon ; id 338 Octogon
-    db $7A
-    dw MonsterPic_KingSquid ; id 339 KingSquid
-    db $7A
-    dw MonsterPic_Digong ; id 340 Digong
-    db $7A
-    dw MonsterPic_WhaleMage ; id 341 WhaleMage
-    db $7A
-    dw MonsterPic_Aquadon ; id 342 Aquadon
-    db $7A
-    dw MonsterPic_Octoraid ; id 343 Octoraid
-    db $7A
-    dw MonsterPic_Grakos ; id 344 Grakos
-    db $7A
-    dw MonsterPic_Poseidon ; id 345 Poseidon
-    db $7A
-    dw MonsterPic_Pumpoise ; id 346 Pumpoise
-    db $7A
-    dw MonsterPic_Starfish ; id 347 Starfish
-    db $7A
-    dw MonsterPic_DrakSlime ; id 348 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 349 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 350 ?
-    db $74
-    dw MonsterPic_DracoLord ; id 351 DracoLord
-    db $7A
-    dw MonsterPic_DracoLord_160 ; id 352 DracoLord
-    db $7A
-    dw MonsterPic_LordDraco ; id 353 LordDraco
-    db $7A
-    dw MonsterPic_Hargon ; id 354 Hargon
-    db $7A
-    dw MonsterPic_Sidoh ; id 355 Sidoh
-    db $7A
-    dw MonsterPic_Genosidoh ; id 356 Genosidoh
-    db $7A
-    dw MonsterPic_Baramos ; id 357 Baramos
-    db $7A
-    dw MonsterPic_Zoma ; id 358 Zoma
-    db $7A
-    dw MonsterPic_AsuraZoma ; id 359 AsuraZoma
-    db $7A
-    dw MonsterPic_Pizzaro ; id 360 Pizzaro
-    db $7A
-    dw MonsterPic_PsychoPiz ; id 361 PsychoPiz
-    db $7A
-    dw MonsterPic_Esterk ; id 362 Esterk
-    db $7A
-    dw MonsterPic_Mirudraas ; id 363 Mirudraas
-    db $7A
-    dw MonsterPic_Mirudraas_16C ; id 364 Mirudraas
-    db $7A
-    dw MonsterPic_Mudou ; id 365 Mudou
-    db $7A
-    dw MonsterPic_DeathMore ; id 366 DeathMore
-    db $7A
-    dw MonsterPic_DeathMore_16F ; id 367 DeathMore
-    db $7A
-    dw MonsterPic_DeathMore_170 ; id 368 DeathMore
-    db $7A
-    dw MonsterPic_Darkdrium ; id 369 Darkdrium
-    db $7A
-    dw MonsterPic_Orgodemir ; id 370 Orgodemir
-    db $7A
-    dw MonsterPic_Orgodemir_173 ; id 371 Orgodemir
-    db $7A
-    dw MonsterPic_Darck ; id 372 Darck
-    db $7A
-    dw MonsterPic_DrakSlime ; id 373 Tatsu
-    db $74
-    dw MonsterPic_DrakSlime ; id 374 Diago
-    db $74
-    dw MonsterPic_DrakSlime ; id 375 Samsi
-    db $74
-    dw MonsterPic_DrakSlime ; id 376 Bazoo
-    db $74
-    dw MonsterPic_DrakSlime ; id 377 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 378 ?
-    db $74
-    dw MonsterPic_DrakSlime ; id 379 ?
-    db $74
-    dw MonsterPic_Lamia ; id 380 Lamia
-    db $76
-    dw MonsterPic_Dimensaur ; id 381 Dimensaur
-    db $7B
-    dw MonsterPic_Kagebou ; id 382 Kagebou
-    db $75
+    dfar MonsterPic_Orc ; id 225 Orc
+    dfar MonsterPic_Ogre ; id 226 Ogre
+    dfar MonsterPic_GateGuard ; id 227 GateGuard
+    dfar MonsterPic_ChopClown ; id 228 ChopClown
+    dfar MonsterPic_BossTroll ; id 229 BossTroll
+    dfar MonsterPic_Grendal ; id 230 Grendal
+    dfar MonsterPic_Akubar ; id 231 Akubar
+    dfar MonsterPic_MadKnight ; id 232 MadKnight
+    dfar MonsterPic_EvilWell ; id 233 EvilWell
+    dfar MonsterPic_Gigantes ; id 234 Gigantes
+    dfar MonsterPic_Centasaur ; id 235 Centasaur
+    dfar MonsterPic_EvilArmor ; id 236 EvilArmor
+    dfar MonsterPic_Jamirus ; id 237 Jamirus
+    dfar MonsterPic_Durran ; id 238 Durran
+    dfar MonsterPic_Titanis ; id 239 Titanis
+    dfar MonsterPic_LampGenie ; id 240 LampGenie
+    dfar MonsterPic_DrakSlime ; id 241 ?
+    dfar MonsterPic_DrakSlime ; id 242 ?
+    dfar MonsterPic_DrakSlime ; id 243 ?
+    dfar MonsterPic_DrakSlime ; id 244 ?
+    dfar MonsterPic_DrakSlime ; id 245 ?
+    dfar MonsterPic_Spooky ; id 246 Spooky
+    dfar MonsterPic_Skullgon ; id 247 Skullgon
+    dfar MonsterPic_PutrePup ; id 248 PutrePup
+    dfar MonsterPic_RotRaven ; id 249 RotRaven
+    dfar MonsterPic_Mummy ; id 250 Mummy
+    dfar MonsterPic_DarkCrab ; id 251 DarkCrab
+    dfar MonsterPic_DeadNite ; id 252 DeadNite
+    dfar MonsterPic_Shadow ; id 253 Shadow
+    dfar MonsterPic_Skulpent ; id 254 Skulpent
+    dfar MonsterPic_Hork ; id 255 Hork
+    dfar MonsterPic_Mudron ; id 256 Mudron
+    dfar MonsterPic_NiteWhip ; id 257 NiteWhip
+    dfar MonsterPic_WindMerge ; id 258 WindMerge
+    dfar MonsterPic_Reaper ; id 259 Reaper
+    dfar MonsterPic_Inverzon ; id 260 Inverzon
+    dfar MonsterPic_FoxFire ; id 261 FoxFire
+    dfar MonsterPic_CaptDead ; id 262 CaptDead
+    dfar MonsterPic_DeadNoble ; id 263 DeadNoble
+    dfar MonsterPic_WhiteKing ; id 264 WhiteKing
+    dfar MonsterPic_BoneSlave ; id 265 BoneSlave
+    dfar MonsterPic_Skeletor ; id 266 Skeletor
+    dfar MonsterPic_Servant ; id 267 Servant
+    dfar MonsterPic_Lazamanus ; id 268 Lazamanus
+    dfar MonsterPic_Copycat ; id 269 Copycat
+    dfar MonsterPic_MadSpirit ; id 270 MadSpirit
+    dfar MonsterPic_PomPomBom ; id 271 PomPomBom
+    dfar MonsterPic_Niterich ; id 272 Niterich
+    dfar MonsterPic_DrakSlime ; id 273 ?
+    dfar MonsterPic_DrakSlime ; id 274 ?
+    dfar MonsterPic_DrakSlime ; id 275 ?
+    dfar MonsterPic_DrakSlime ; id 276 ?
+    dfar MonsterPic_DrakSlime ; id 277 ?
+    dfar MonsterPic_DrakSlime ; id 278 ?
+    dfar MonsterPic_DrakSlime ; id 279 ?
+    dfar MonsterPic_DrakSlime ; id 280 ?
+    dfar MonsterPic_JewelBag ; id 281 JewelBag
+    dfar MonsterPic_EvilWand ; id 282 EvilWand
+    dfar MonsterPic_MadCandle ; id 283 MadCandle
+    dfar MonsterPic_CoilBird ; id 284 CoilBird
+    dfar MonsterPic_Facer ; id 285 Facer
+    dfar MonsterPic_SpikyBoy ; id 286 SpikyBoy
+    dfar MonsterPic_MadMirror ; id 287 MadMirror
+    dfar MonsterPic_RogueNite ; id 288 RogueNite
+    dfar MonsterPic_Puppetor ; id 289 Puppetor
+    dfar MonsterPic_Goopi ; id 290 Goopi
+    dfar MonsterPic_Voodoll ; id 291 Voodoll
+    dfar MonsterPic_MetalDrak ; id 292 MetalDrak
+    dfar MonsterPic_Balzak ; id 293 Balzak
+    dfar MonsterPic_SabreMan ; id 294 SabreMan
+    dfar MonsterPic_CurseLamp ; id 295 CurseLamp
+    dfar MonsterPic_Brushead ; id 296 Brushead
+    dfar MonsterPic_Roboster ; id 297 Roboster
+    dfar MonsterPic_Roboster2 ; id 298 Roboster2
+    dfar MonsterPic_EvilPot ; id 299 EvilPot
+    dfar MonsterPic_Gismo ; id 300 Gismo
+    dfar MonsterPic_LavaMan ; id 301 LavaMan
+    dfar MonsterPic_IceMan ; id 302 IceMan
+    dfar MonsterPic_Mimic ; id 303 Mimic
+    dfar MonsterPic_Exaucers ; id 304 Exaucers
+    dfar MonsterPic_MudDoll ; id 305 MudDoll
+    dfar MonsterPic_Golem ; id 306 Golem
+    dfar MonsterPic_StoneMan ; id 307 StoneMan
+    dfar MonsterPic_BombCrag ; id 308 BombCrag
+    dfar MonsterPic_GoldGolem ; id 309 GoldGolem
+    dfar MonsterPic_DarkMate ; id 310 DarkMate
+    dfar MonsterPic_ProtoMech ; id 311 ProtoMech
+    dfar MonsterPic_CloudKing ; id 312 CloudKing
+    dfar MonsterPic_DrakSlime ; id 313 ?
+    dfar MonsterPic_DrakSlime ; id 314 ?
+    dfar MonsterPic_DrakSlime ; id 315 ?
+    dfar MonsterPic_Petiteel ; id 316 Petiteel
+    dfar MonsterPic_Moray ; id 317 Moray
+    dfar MonsterPic_WalrusMan ; id 318 WalrusMan
+    dfar MonsterPic_RayGigas ; id 319 RayGigas
+    dfar MonsterPic_Anemon ; id 320 Anemon
+    dfar MonsterPic_Aquarella ; id 321 Aquarella
+    dfar MonsterPic_Merman ; id 322 Merman
+    dfar MonsterPic_Octokid ; id 323 Octokid
+    dfar MonsterPic_PutreFish ; id 324 PutreFish
+    dfar MonsterPic_Octoreach ; id 325 Octoreach
+    dfar MonsterPic_Angleron ; id 326 Angleron
+    dfar MonsterPic_FishRider ; id 327 FishRider
+    dfar MonsterPic_RushFish ; id 328 RushFish
+    dfar MonsterPic_Gamanian ; id 329 Gamanian
+    dfar MonsterPic_Clawster ; id 330 Clawster
+    dfar MonsterPic_CancerMan ; id 331 CancerMan
+    dfar MonsterPic_RogueWave ; id 332 RogueWave
+    dfar MonsterPic_Scallopa ; id 333 Scallopa
+    dfar MonsterPic_SeaHorse ; id 334 SeaHorse
+    dfar MonsterPic_HoodSquid ; id 335 HoodSquid
+    dfar MonsterPic_MerTiger ; id 336 MerTiger
+    dfar MonsterPic_AxeShark ; id 337 AxeShark
+    dfar MonsterPic_Octogon ; id 338 Octogon
+    dfar MonsterPic_KingSquid ; id 339 KingSquid
+    dfar MonsterPic_Digong ; id 340 Digong
+    dfar MonsterPic_WhaleMage ; id 341 WhaleMage
+    dfar MonsterPic_Aquadon ; id 342 Aquadon
+    dfar MonsterPic_Octoraid ; id 343 Octoraid
+    dfar MonsterPic_Grakos ; id 344 Grakos
+    dfar MonsterPic_Poseidon ; id 345 Poseidon
+    dfar MonsterPic_Pumpoise ; id 346 Pumpoise
+    dfar MonsterPic_Starfish ; id 347 Starfish
+    dfar MonsterPic_DrakSlime ; id 348 ?
+    dfar MonsterPic_DrakSlime ; id 349 ?
+    dfar MonsterPic_DrakSlime ; id 350 ?
+    dfar MonsterPic_DracoLord ; id 351 DracoLord
+    dfar MonsterPic_DracoLord_160 ; id 352 DracoLord
+    dfar MonsterPic_LordDraco ; id 353 LordDraco
+    dfar MonsterPic_Hargon ; id 354 Hargon
+    dfar MonsterPic_Sidoh ; id 355 Sidoh
+    dfar MonsterPic_Genosidoh ; id 356 Genosidoh
+    dfar MonsterPic_Baramos ; id 357 Baramos
+    dfar MonsterPic_Zoma ; id 358 Zoma
+    dfar MonsterPic_AsuraZoma ; id 359 AsuraZoma
+    dfar MonsterPic_Pizzaro ; id 360 Pizzaro
+    dfar MonsterPic_PsychoPiz ; id 361 PsychoPiz
+    dfar MonsterPic_Esterk ; id 362 Esterk
+    dfar MonsterPic_Mirudraas ; id 363 Mirudraas
+    dfar MonsterPic_Mirudraas_16C ; id 364 Mirudraas
+    dfar MonsterPic_Mudou ; id 365 Mudou
+    dfar MonsterPic_DeathMore ; id 366 DeathMore
+    dfar MonsterPic_DeathMore_16F ; id 367 DeathMore
+    dfar MonsterPic_DeathMore_170 ; id 368 DeathMore
+    dfar MonsterPic_Darkdrium ; id 369 Darkdrium
+    dfar MonsterPic_Orgodemir ; id 370 Orgodemir
+    dfar MonsterPic_Orgodemir_173 ; id 371 Orgodemir
+    dfar MonsterPic_Darck ; id 372 Darck
+    dfar MonsterPic_DrakSlime ; id 373 Tatsu
+    dfar MonsterPic_DrakSlime ; id 374 Diago
+    dfar MonsterPic_DrakSlime ; id 375 Samsi
+    dfar MonsterPic_DrakSlime ; id 376 Bazoo
+    dfar MonsterPic_DrakSlime ; id 377 ?
+    dfar MonsterPic_DrakSlime ; id 378 ?
+    dfar MonsterPic_DrakSlime ; id 379 ?
+    dfar MonsterPic_Lamia ; id 380 Lamia
+    dfar MonsterPic_Dimensaur ; id 381 Dimensaur
+    dfar MonsterPic_Kagebou ; id 382 Kagebou
 
 ; E-0041 (C1: Func_000_2090 indexes it with the monster id; the 36 bytes it points at are added to hFFC6 and written to VRAM bank 1 as the picture's tile attributes). Far pointers: address, bank.
 ; record: raw 6 x 6 attribute map for the picture (a zero entry selects a default); ROM bank of that data
 MonsterAttributeMapTable::
 Data_038_447E:: ; heuristic: start of a structured table; C0
-    dw JumpTable ; id 0
-    db $00
-    dw JumpTable ; id 1 DrakSlime
-    db $00
-    dw JumpTable ; id 2 SpotSlime
-    db $00
-    dw MonsterPicAttr_WingSlime ; id 3 WingSlime
-    db $7B
-    dw MonsterPicAttr_TreeSlime ; id 4 TreeSlime
-    db $7B
-    dw MonsterPicAttr_Snaily ; id 5 Snaily
-    db $7B
-    dw MonsterPicAttr_SlimeNite ; id 6 SlimeNite
-    db $7B
-    dw JumpTable ; id 7 Babble
-    db $00
-    dw JumpTable ; id 8 BoxSlime
-    db $00
-    dw MonsterPicAttr_PearlGel ; id 9 PearlGel
-    db $7B
-    dw JumpTable ; id 10 Slime
-    db $00
-    dw JumpTable ; id 11 Healer
-    db $00
-    dw MonsterPicAttr_FangSlime ; id 12 FangSlime
-    db $7B
-    dw JumpTable ; id 13 RockSlime
-    db $00
-    dw MonsterPicAttr_SlimeBorg ; id 14 SlimeBorg
-    db $7B
-    dw JumpTable ; id 15 Slabbit
-    db $00
-    dw MonsterPicAttr_KingSlime ; id 16 KingSlime
-    db $7B
-    dw JumpTable ; id 17 Metaly
-    db $00
-    dw JumpTable ; id 18 Metabble
-    db $00
-    dw MonsterPicAttr_SpotKing ; id 19 SpotKing
-    db $7B
-    dw MonsterPicAttr_TropicGel ; id 20 TropicGel
-    db $7B
-    dw MonsterPicAttr_MimeSlime ; id 21 MimeSlime
-    db $7B
-    dw MonsterPicAttr_HaloSlime ; id 22 HaloSlime
-    db $7B
-    dw MonsterPicAttr_MetalKing ; id 23 MetalKing
-    db $7B
-    dw MonsterPicAttr_GoldSlime ; id 24 GoldSlime
-    db $7B
-    dw MonsterPicAttr_GranSlime ; id 25 GranSlime
-    db $7B
-    dw MonsterPicAttr_WonderEgg ; id 26 WonderEgg
-    db $7B
-    dw JumpTable ; id 27 Butch
-    db $00
-    dw JumpTable ; id 28 ?
-    db $00
-    dw JumpTable ; id 29 ?
-    db $00
-    dw JumpTable ; id 30 ?
-    db $00
-    dw JumpTable ; id 31 ?
-    db $00
-    dw JumpTable ; id 32 ?
-    db $00
-    dw JumpTable ; id 33 ?
-    db $00
-    dw JumpTable ; id 34 ?
-    db $00
-    dw JumpTable ; id 35 ?
-    db $00
-    dw MonsterPicAttr_DragonKid ; id 36 DragonKid
-    db $7B
-    dw MonsterPicAttr_Tortragon ; id 37 Tortragon
-    db $7B
-    dw MonsterPicAttr_Pteranod ; id 38 Pteranod
-    db $7B
-    dw JumpTable ; id 39 Gasgon
-    db $00
-    dw MonsterPicAttr_FairyDrak ; id 40 FairyDrak
-    db $7B
+    dfar JumpTable ; id 0
+    dfar JumpTable ; id 1 DrakSlime
+    dfar JumpTable ; id 2 SpotSlime
+    dfar MonsterPicAttr_WingSlime ; id 3 WingSlime
+    dfar MonsterPicAttr_TreeSlime ; id 4 TreeSlime
+    dfar MonsterPicAttr_Snaily ; id 5 Snaily
+    dfar MonsterPicAttr_SlimeNite ; id 6 SlimeNite
+    dfar JumpTable ; id 7 Babble
+    dfar JumpTable ; id 8 BoxSlime
+    dfar MonsterPicAttr_PearlGel ; id 9 PearlGel
+    dfar JumpTable ; id 10 Slime
+    dfar JumpTable ; id 11 Healer
+    dfar MonsterPicAttr_FangSlime ; id 12 FangSlime
+    dfar JumpTable ; id 13 RockSlime
+    dfar MonsterPicAttr_SlimeBorg ; id 14 SlimeBorg
+    dfar JumpTable ; id 15 Slabbit
+    dfar MonsterPicAttr_KingSlime ; id 16 KingSlime
+    dfar JumpTable ; id 17 Metaly
+    dfar JumpTable ; id 18 Metabble
+    dfar MonsterPicAttr_SpotKing ; id 19 SpotKing
+    dfar MonsterPicAttr_TropicGel ; id 20 TropicGel
+    dfar MonsterPicAttr_MimeSlime ; id 21 MimeSlime
+    dfar MonsterPicAttr_HaloSlime ; id 22 HaloSlime
+    dfar MonsterPicAttr_MetalKing ; id 23 MetalKing
+    dfar MonsterPicAttr_GoldSlime ; id 24 GoldSlime
+    dfar MonsterPicAttr_GranSlime ; id 25 GranSlime
+    dfar MonsterPicAttr_WonderEgg ; id 26 WonderEgg
+    dfar JumpTable ; id 27 Butch
+    dfar JumpTable ; id 28 ?
+    dfar JumpTable ; id 29 ?
+    dfar JumpTable ; id 30 ?
+    dfar JumpTable ; id 31 ?
+    dfar JumpTable ; id 32 ?
+    dfar JumpTable ; id 33 ?
+    dfar JumpTable ; id 34 ?
+    dfar JumpTable ; id 35 ?
+    dfar MonsterPicAttr_DragonKid ; id 36 DragonKid
+    dfar MonsterPicAttr_Tortragon ; id 37 Tortragon
+    dfar MonsterPicAttr_Pteranod ; id 38 Pteranod
+    dfar JumpTable ; id 39 Gasgon
+    dfar MonsterPicAttr_FairyDrak ; id 40 FairyDrak
 Data_038_44F9:: ; heuristic: label inside a table; C0
-    dw MonsterPicAttr_LizardMan ; id 41 LizardMan
-    db $7B
-    dw MonsterPicAttr_Poisongon ; id 42 Poisongon
-    db $7B
-    dw MonsterPicAttr_Swordgon ; id 43 Swordgon
-    db $7B
-    dw JumpTable ; id 44 Drygon
-    db $00
-    dw MonsterPicAttr_Dragon ; id 45 Dragon
-    db $7B
-    dw MonsterPicAttr_MiniDrak ; id 46 MiniDrak
-    db $7B
-    dw MonsterPicAttr_MadDragon ; id 47 MadDragon
-    db $7B
-    dw MonsterPicAttr_Rayburn ; id 48 Rayburn
-    db $7B
-    dw JumpTable ; id 49 Chamelgon
-    db $00
-    dw JumpTable ; id 50 LizardFly
-    db $00
-    dw MonsterPicAttr_Andreal ; id 51 Andreal
-    db $7B
-    dw JumpTable ; id 52 KingCobra
-    db $00
-    dw MonsterPicAttr_Vampirus ; id 53 Vampirus
-    db $7B
-    dw MonsterPicAttr_SnakeBat ; id 54 SnakeBat
-    db $7B
-    dw MonsterPicAttr_Spikerous ; id 55 Spikerous
-    db $7B
-    dw JumpTable ; id 56 GreatDrak
-    db $00
-    dw MonsterPicAttr_Crestpent ; id 57 Crestpent
-    db $7B
-    dw MonsterPicAttr_WingSnake ; id 58 WingSnake
-    db $7B
-    dw MonsterPicAttr_Coatol ; id 59 Coatol
-    db $7B
-    dw MonsterPicAttr_Orochi ; id 60 Orochi
-    db $7B
-    dw MonsterPicAttr_BattleRex ; id 61 BattleRex
-    db $7B
-    dw JumpTable ; id 62 SkyDragon
-    db $00
-    dw MonsterPicAttr_Serpentia ; id 63 Serpentia
-    db $7B
-    dw MonsterPicAttr_Divinegon ; id 64 Divinegon
-    db $7B
-    dw MonsterPicAttr_Orligon ; id 65 Orligon
-    db $7B
-    dw MonsterPicAttr_GigaDraco ; id 66 GigaDraco
-    db $7B
-    dw JumpTable ; id 67 ?
-    db $00
-    dw JumpTable ; id 68 ?
-    db $00
-    dw JumpTable ; id 69 ?
-    db $00
-    dw JumpTable ; id 70 ?
-    db $00
-    dw MonsterPicAttr_Tonguella ; id 71 Tonguella
-    db $7B
-    dw JumpTable ; id 72 Almiraj
-    db $00
-    dw JumpTable ; id 73 CatFly
-    db $00
-    dw MonsterPicAttr_PillowRat ; id 74 PillowRat
-    db $7B
-    dw MonsterPicAttr_Saccer ; id 75 Saccer
-    db $7B
-    dw MonsterPicAttr_GulpBeast ; id 76 GulpBeast
-    db $7B
-    dw MonsterPicAttr_Skullroo ; id 77 Skullroo
-    db $7B
-    dw JumpTable ; id 78 WindBeast
-    db $00
-    dw MonsterPicAttr_Beavern ; id 79 Beavern
-    db $7B
-    dw MonsterPicAttr_Antbear ; id 80 Antbear
-    db $7B
-    dw MonsterPicAttr_SuperTen ; id 81 SuperTen
-    db $7B
-    dw MonsterPicAttr_IronTurt ; id 82 IronTurt
-    db $7B
-    dw JumpTable ; id 83 Mommonja
-    db $00
-    dw MonsterPicAttr_HammerMan ; id 84 HammerMan
-    db $7B
-    dw JumpTable ; id 85 Grizzly
-    db $00
-    dw MonsterPicAttr_Yeti ; id 86 Yeti
-    db $7B
-    dw MonsterPicAttr_ArrowDog ; id 87 ArrowDog
-    db $7B
-    dw MonsterPicAttr_NoctoKing ; id 88 NoctoKing
-    db $7B
-    dw MonsterPicAttr_BeastNite ; id 89 BeastNite
-    db $7B
-    dw JumpTable ; id 90 MadGopher
-    db $00
-    dw MonsterPicAttr_FairyRat ; id 91 FairyRat
-    db $7B
-    dw MonsterPicAttr_Unicorn ; id 92 Unicorn
-    db $7B
-    dw MonsterPicAttr_Goategon ; id 93 Goategon
-    db $7B
-    dw JumpTable ; id 94 WildApe
-    db $00
-    dw JumpTable ; id 95 Trumpeter
-    db $00
-    dw JumpTable ; id 96 KingLeo
-    db $00
-    dw MonsterPicAttr_DarkHorn ; id 97 DarkHorn
-    db $7B
-    dw MonsterPicAttr_MadCat ; id 98 MadCat
-    db $7B
-    dw MonsterPicAttr_BigEye ; id 99 BigEye
-    db $7B
-    dw MonsterPicAttr_Gorago ; id 100 Gorago
-    db $7B
-    dw MonsterPicAttr_CatMage ; id 101 CatMage
-    db $7B
+    dfar MonsterPicAttr_LizardMan ; id 41 LizardMan
+    dfar MonsterPicAttr_Poisongon ; id 42 Poisongon
+    dfar MonsterPicAttr_Swordgon ; id 43 Swordgon
+    dfar JumpTable ; id 44 Drygon
+    dfar MonsterPicAttr_Dragon ; id 45 Dragon
+    dfar MonsterPicAttr_MiniDrak ; id 46 MiniDrak
+    dfar MonsterPicAttr_MadDragon ; id 47 MadDragon
+    dfar MonsterPicAttr_Rayburn ; id 48 Rayburn
+    dfar JumpTable ; id 49 Chamelgon
+    dfar JumpTable ; id 50 LizardFly
+    dfar MonsterPicAttr_Andreal ; id 51 Andreal
+    dfar JumpTable ; id 52 KingCobra
+    dfar MonsterPicAttr_Vampirus ; id 53 Vampirus
+    dfar MonsterPicAttr_SnakeBat ; id 54 SnakeBat
+    dfar MonsterPicAttr_Spikerous ; id 55 Spikerous
+    dfar JumpTable ; id 56 GreatDrak
+    dfar MonsterPicAttr_Crestpent ; id 57 Crestpent
+    dfar MonsterPicAttr_WingSnake ; id 58 WingSnake
+    dfar MonsterPicAttr_Coatol ; id 59 Coatol
+    dfar MonsterPicAttr_Orochi ; id 60 Orochi
+    dfar MonsterPicAttr_BattleRex ; id 61 BattleRex
+    dfar JumpTable ; id 62 SkyDragon
+    dfar MonsterPicAttr_Serpentia ; id 63 Serpentia
+    dfar MonsterPicAttr_Divinegon ; id 64 Divinegon
+    dfar MonsterPicAttr_Orligon ; id 65 Orligon
+    dfar MonsterPicAttr_GigaDraco ; id 66 GigaDraco
+    dfar JumpTable ; id 67 ?
+    dfar JumpTable ; id 68 ?
+    dfar JumpTable ; id 69 ?
+    dfar JumpTable ; id 70 ?
+    dfar MonsterPicAttr_Tonguella ; id 71 Tonguella
+    dfar JumpTable ; id 72 Almiraj
+    dfar JumpTable ; id 73 CatFly
+    dfar MonsterPicAttr_PillowRat ; id 74 PillowRat
+    dfar MonsterPicAttr_Saccer ; id 75 Saccer
+    dfar MonsterPicAttr_GulpBeast ; id 76 GulpBeast
+    dfar MonsterPicAttr_Skullroo ; id 77 Skullroo
+    dfar JumpTable ; id 78 WindBeast
+    dfar MonsterPicAttr_Beavern ; id 79 Beavern
+    dfar MonsterPicAttr_Antbear ; id 80 Antbear
+    dfar MonsterPicAttr_SuperTen ; id 81 SuperTen
+    dfar MonsterPicAttr_IronTurt ; id 82 IronTurt
+    dfar JumpTable ; id 83 Mommonja
+    dfar MonsterPicAttr_HammerMan ; id 84 HammerMan
+    dfar JumpTable ; id 85 Grizzly
+    dfar MonsterPicAttr_Yeti ; id 86 Yeti
+    dfar MonsterPicAttr_ArrowDog ; id 87 ArrowDog
+    dfar MonsterPicAttr_NoctoKing ; id 88 NoctoKing
+    dfar MonsterPicAttr_BeastNite ; id 89 BeastNite
+    dfar JumpTable ; id 90 MadGopher
+    dfar MonsterPicAttr_FairyRat ; id 91 FairyRat
+    dfar MonsterPicAttr_Unicorn ; id 92 Unicorn
+    dfar MonsterPicAttr_Goategon ; id 93 Goategon
+    dfar JumpTable ; id 94 WildApe
+    dfar JumpTable ; id 95 Trumpeter
+    dfar JumpTable ; id 96 KingLeo
+    dfar MonsterPicAttr_DarkHorn ; id 97 DarkHorn
+    dfar MonsterPicAttr_MadCat ; id 98 MadCat
+    dfar MonsterPicAttr_BigEye ; id 99 BigEye
+    dfar MonsterPicAttr_Gorago ; id 100 Gorago
+    dfar MonsterPicAttr_CatMage ; id 101 CatMage
 Data_038_45B0:: ; heuristic: label inside a table; C0
-    dw MonsterPicAttr_Dumbira ; id 102 Dumbira
-    db $7B
-    dw JumpTable ; id 103 ?
-    db $00
-    dw JumpTable ; id 104 ?
-    db $00
-    dw JumpTable ; id 105 ?
-    db $00
-    dw MonsterPicAttr_Picky ; id 106 Picky
-    db $7B
-    dw MonsterPicAttr_Wyvern ; id 107 Wyvern
-    db $7B
-    dw MonsterPicAttr_BullBird ; id 108 BullBird
-    db $7B
-    dw MonsterPicAttr_Florajay ; id 109 Florajay
-    db $7B
-    dw MonsterPicAttr_DuckKite ; id 110 DuckKite
-    db $7B
-    dw MonsterPicAttr_MadPecker ; id 111 MadPecker
-    db $7B
-    dw MonsterPicAttr_MadRaven ; id 112 MadRaven
-    db $7B
-    dw JumpTable ; id 113 MistyWing
-    db $00
-    dw MonsterPicAttr_AquaHawk ; id 114 AquaHawk
-    db $7B
-    dw JumpTable ; id 115 Dracky
-    db $00
-    dw MonsterPicAttr_KiteHawk ; id 116 KiteHawk
-    db $7B
-    dw MonsterPicAttr_BigRoost ; id 117 BigRoost
-    db $7B
-    dw MonsterPicAttr_StubBird ; id 118 StubBird
-    db $7B
-    dw JumpTable ; id 119 LandOwl
-    db $00
-    dw MonsterPicAttr_MadGoose ; id 120 MadGoose
-    db $7B
-    dw MonsterPicAttr_MadCondor ; id 121 MadCondor
-    db $7B
-    dw MonsterPicAttr_Emyu ; id 122 Emyu
-    db $7B
-    dw MonsterPicAttr_Blizzardy ; id 123 Blizzardy
-    db $7B
-    dw JumpTable ; id 124 Phoenix
-    db $00
-    dw MonsterPicAttr_ZapBird ; id 125 ZapBird
-    db $7B
-    dw MonsterPicAttr_Garudian ; id 126 Garudian
-    db $7B
-    dw MonsterPicAttr_WhipBird ; id 127 WhipBird
-    db $7B
-    dw MonsterPicAttr_FunkyBird ; id 128 FunkyBird
-    db $7B
-    dw MonsterPicAttr_RainHawk ; id 129 RainHawk
-    db $7B
-    dw MonsterPicAttr_Azurile ; id 130 Azurile
-    db $7B
-    dw MonsterPicAttr_Shantak ; id 131 Shantak
-    db $7B
-    dw MonsterPicAttr_CragDevil ; id 132 CragDevil
-    db $7B
-    dw JumpTable ; id 133 ?
-    db $00
-    dw JumpTable ; id 134 ?
-    db $00
-    dw JumpTable ; id 135 ?
-    db $00
-    dw JumpTable ; id 136 ?
-    db $00
-    dw JumpTable ; id 137 ?
-    db $00
-    dw JumpTable ; id 138 ?
-    db $00
-    dw JumpTable ; id 139 ?
-    db $00
-    dw JumpTable ; id 140 ?
-    db $00
-    dw MonsterPicAttr_MadPlant ; id 141 MadPlant
-    db $7B
-    dw MonsterPicAttr_FireWeed ; id 142 FireWeed
-    db $7B
-    dw MonsterPicAttr_FloraMan ; id 143 FloraMan
-    db $7B
-    dw MonsterPicAttr_WingTree ; id 144 WingTree
-    db $7B
-    dw MonsterPicAttr_CactiBall ; id 145 CactiBall
-    db $7B
-    dw MonsterPicAttr_Gulpple ; id 146 Gulpple
-    db $7B
-    dw MonsterPicAttr_Toadstool ; id 147 Toadstool
-    db $7B
-    dw MonsterPicAttr_AmberWeed ; id 148 AmberWeed
-    db $7B
-    dw MonsterPicAttr_Slurperon ; id 149 Slurperon
-    db $7B
-    dw MonsterPicAttr_Stubsuck ; id 150 Stubsuck
-    db $7B
-    dw MonsterPicAttr_Oniono ; id 151 Oniono
-    db $7B
-    dw MonsterPicAttr_DanceVegi ; id 152 DanceVegi
-    db $7B
-    dw MonsterPicAttr_TreeBoy ; id 153 TreeBoy
-    db $7B
-    dw MonsterPicAttr_Devipine ; id 154 Devipine
-    db $7B
-    dw MonsterPicAttr_FaceTree ; id 155 FaceTree
-    db $7B
-    dw MonsterPicAttr_HerbMan ; id 156 HerbMan
-    db $7B
-    dw MonsterPicAttr_BeanMan ; id 157 BeanMan
-    db $7B
-    dw MonsterPicAttr_EvilSeed ; id 158 EvilSeed
-    db $7B
-    dw MonsterPicAttr_ManEater ; id 159 ManEater
-    db $7B
-    dw MonsterPicAttr_Snapper ; id 160 Snapper
-    db $7B
-    dw MonsterPicAttr_GhosTree ; id 161 GhosTree
-    db $7B
+    dfar MonsterPicAttr_Dumbira ; id 102 Dumbira
+    dfar JumpTable ; id 103 ?
+    dfar JumpTable ; id 104 ?
+    dfar JumpTable ; id 105 ?
+    dfar MonsterPicAttr_Picky ; id 106 Picky
+    dfar MonsterPicAttr_Wyvern ; id 107 Wyvern
+    dfar MonsterPicAttr_BullBird ; id 108 BullBird
+    dfar MonsterPicAttr_Florajay ; id 109 Florajay
+    dfar MonsterPicAttr_DuckKite ; id 110 DuckKite
+    dfar MonsterPicAttr_MadPecker ; id 111 MadPecker
+    dfar MonsterPicAttr_MadRaven ; id 112 MadRaven
+    dfar JumpTable ; id 113 MistyWing
+    dfar MonsterPicAttr_AquaHawk ; id 114 AquaHawk
+    dfar JumpTable ; id 115 Dracky
+    dfar MonsterPicAttr_KiteHawk ; id 116 KiteHawk
+    dfar MonsterPicAttr_BigRoost ; id 117 BigRoost
+    dfar MonsterPicAttr_StubBird ; id 118 StubBird
+    dfar JumpTable ; id 119 LandOwl
+    dfar MonsterPicAttr_MadGoose ; id 120 MadGoose
+    dfar MonsterPicAttr_MadCondor ; id 121 MadCondor
+    dfar MonsterPicAttr_Emyu ; id 122 Emyu
+    dfar MonsterPicAttr_Blizzardy ; id 123 Blizzardy
+    dfar JumpTable ; id 124 Phoenix
+    dfar MonsterPicAttr_ZapBird ; id 125 ZapBird
+    dfar MonsterPicAttr_Garudian ; id 126 Garudian
+    dfar MonsterPicAttr_WhipBird ; id 127 WhipBird
+    dfar MonsterPicAttr_FunkyBird ; id 128 FunkyBird
+    dfar MonsterPicAttr_RainHawk ; id 129 RainHawk
+    dfar MonsterPicAttr_Azurile ; id 130 Azurile
+    dfar MonsterPicAttr_Shantak ; id 131 Shantak
+    dfar MonsterPicAttr_CragDevil ; id 132 CragDevil
+    dfar JumpTable ; id 133 ?
+    dfar JumpTable ; id 134 ?
+    dfar JumpTable ; id 135 ?
+    dfar JumpTable ; id 136 ?
+    dfar JumpTable ; id 137 ?
+    dfar JumpTable ; id 138 ?
+    dfar JumpTable ; id 139 ?
+    dfar JumpTable ; id 140 ?
+    dfar MonsterPicAttr_MadPlant ; id 141 MadPlant
+    dfar MonsterPicAttr_FireWeed ; id 142 FireWeed
+    dfar MonsterPicAttr_FloraMan ; id 143 FloraMan
+    dfar MonsterPicAttr_WingTree ; id 144 WingTree
+    dfar MonsterPicAttr_CactiBall ; id 145 CactiBall
+    dfar MonsterPicAttr_Gulpple ; id 146 Gulpple
+    dfar MonsterPicAttr_Toadstool ; id 147 Toadstool
+    dfar MonsterPicAttr_AmberWeed ; id 148 AmberWeed
+    dfar MonsterPicAttr_Slurperon ; id 149 Slurperon
+    dfar MonsterPicAttr_Stubsuck ; id 150 Stubsuck
+    dfar MonsterPicAttr_Oniono ; id 151 Oniono
+    dfar MonsterPicAttr_DanceVegi ; id 152 DanceVegi
+    dfar MonsterPicAttr_TreeBoy ; id 153 TreeBoy
+    dfar MonsterPicAttr_Devipine ; id 154 Devipine
+    dfar MonsterPicAttr_FaceTree ; id 155 FaceTree
+    dfar MonsterPicAttr_HerbMan ; id 156 HerbMan
+    dfar MonsterPicAttr_BeanMan ; id 157 BeanMan
+    dfar MonsterPicAttr_EvilSeed ; id 158 EvilSeed
+    dfar MonsterPicAttr_ManEater ; id 159 ManEater
+    dfar MonsterPicAttr_Snapper ; id 160 Snapper
+    dfar MonsterPicAttr_GhosTree ; id 161 GhosTree
     dw MonsterPicAttr_Rosevine ; id 162 Rosevine
 Data_038_4666:: ; heuristic: label inside a table; C0
     db $7B
-    dw MonsterPicAttr_Egdracil ; id 163 Egdracil
-    db $7B
-    dw MonsterPicAttr_Warubou ; id 164 Warubou
-    db $7B
-    dw JumpTable ; id 165 Watabou
-    db $00
-    dw JumpTable ; id 166 Eggplaton
-    db $00
-    dw MonsterPicAttr_FooHero ; id 167 FooHero
-    db $7B
-    dw JumpTable ; id 168 ?
-    db $00
-    dw JumpTable ; id 169 ?
-    db $00
-    dw JumpTable ; id 170 ?
-    db $00
-    dw JumpTable ; id 171 ?
-    db $00
-    dw JumpTable ; id 172 ?
-    db $00
-    dw JumpTable ; id 173 ?
-    db $00
-    dw JumpTable ; id 174 ?
-    db $00
-    dw JumpTable ; id 175 ?
-    db $00
-    dw MonsterPicAttr_GiantSlug ; id 176 GiantSlug
-    db $7B
-    dw MonsterPicAttr_Catapila ; id 177 Catapila
-    db $7B
-    dw JumpTable ; id 178 Gophecada
-    db $00
-    dw MonsterPicAttr_Butterfly ; id 179 Butterfly
-    db $7B
-    dw MonsterPicAttr_WeedBug ; id 180 WeedBug
-    db $7B
-    dw JumpTable ; id 181 GiantWorm
-    db $00
-    dw MonsterPicAttr_Lipsy ; id 182 Lipsy
-    db $7B
-    dw MonsterPicAttr_StagBug ; id 183 StagBug
-    db $7B
-    dw MonsterPicAttr_Pyuro ; id 184 Pyuro
-    db $7B
-    dw JumpTable ; id 185 ArmyAnt
-    db $00
-    dw MonsterPicAttr_GoHopper ; id 186 GoHopper
-    db $7B
-    dw MonsterPicAttr_TailEater ; id 187 TailEater
-    db $7B
-    dw MonsterPicAttr_ArmorPede ; id 188 ArmorPede
-    db $7B
-    dw MonsterPicAttr_Eyeder ; id 189 Eyeder
-    db $7B
-    dw MonsterPicAttr_GiantMoth ; id 190 GiantMoth
-    db $7B
-    dw MonsterPicAttr_Droll ; id 191 Droll
-    db $7B
-    dw JumpTable ; id 192 ArmyCrab
-    db $00
-    dw JumpTable ; id 193 MadHornet
-    db $00
-    dw MonsterPicAttr_Belzebub ; id 194 Belzebub
-    db $7B
-    dw MonsterPicAttr_WarMantis ; id 195 WarMantis
-    db $7B
-    dw MonsterPicAttr_HornBeet ; id 196 HornBeet
-    db $7B
-    dw MonsterPicAttr_Sickler ; id 197 Sickler
-    db $7B
-    dw JumpTable ; id 198 Armorpion
-    db $00
-    dw MonsterPicAttr_Digster ; id 199 Digster
-    db $7B
-    dw MonsterPicAttr_Skularach ; id 200 Skularach
-    db $7B
-    dw MonsterPicAttr_MultiEyes ; id 201 MultiEyes
-    db $7B
-    dw JumpTable ; id 202 ?
-    db $00
-    dw JumpTable ; id 203 ?
-    db $00
-    dw JumpTable ; id 204 ?
-    db $00
-    dw JumpTable ; id 205 ?
-    db $00
-    dw JumpTable ; id 206 ?
-    db $00
-    dw JumpTable ; id 207 ?
-    db $00
-    dw JumpTable ; id 208 ?
-    db $00
-    dw JumpTable ; id 209 ?
-    db $00
-    dw JumpTable ; id 210 ?
-    db $00
-    dw MonsterPicAttr_Pixy ; id 211 Pixy
-    db $7B
-    dw JumpTable ; id 212 MedusaEye
-    db $00
-    dw JumpTable ; id 213 AgDevil
-    db $00
-    dw MonsterPicAttr_Demonite ; id 214 Demonite
-    db $7B
-    dw JumpTable ; id 215 DarkEye
-    db $00
-    dw JumpTable ; id 216 EyeBall
-    db $00
-    dw MonsterPicAttr_SkulRider ; id 217 SkulRider
-    db $7B
-    dw JumpTable ; id 218 EvilBeast
-    db $00
-    dw MonsterPicAttr_Bubblemon ; id 219 Bubblemon
-    db $7B
-    dw MonsterPicAttr_1EyeClown ; id 220 1EyeClown
-    db $7B
-    dw JumpTable ; id 221 Gremlin
-    db $00
-    dw MonsterPicAttr_ArcDemon ; id 222 ArcDemon
-    db $7B
-    dw MonsterPicAttr_Lionex ; id 223 Lionex
-    db $7B
-    dw MonsterPicAttr_GoatHorn ; id 224 GoatHorn
-    db $7B
-    dw MonsterPicAttr_Orc ; id 225 Orc
-    db $7B
-    dw MonsterPicAttr_Ogre ; id 226 Ogre
-    db $7B
-    dw MonsterPicAttr_GateGuard ; id 227 GateGuard
-    db $7B
-    dw MonsterPicAttr_ChopClown ; id 228 ChopClown
-    db $7B
-    dw MonsterPicAttr_BossTroll ; id 229 BossTroll
-    db $7B
-    dw MonsterPicAttr_Grendal ; id 230 Grendal
-    db $7B
-    dw MonsterPicAttr_Akubar ; id 231 Akubar
-    db $7B
-    dw MonsterPicAttr_MadKnight ; id 232 MadKnight
-    db $7B
-    dw MonsterPicAttr_EvilWell ; id 233 EvilWell
-    db $7B
-    dw MonsterPicAttr_Gigantes ; id 234 Gigantes
-    db $7B
-    dw MonsterPicAttr_Centasaur ; id 235 Centasaur
-    db $7B
-    dw MonsterPicAttr_EvilArmor ; id 236 EvilArmor
-    db $7B
-    dw MonsterPicAttr_Jamirus ; id 237 Jamirus
-    db $7B
-    dw MonsterPicAttr_Durran ; id 238 Durran
-    db $7B
-    dw MonsterPicAttr_Titanis ; id 239 Titanis
-    db $7B
-    dw MonsterPicAttr_LampGenie ; id 240 LampGenie
-    db $7B
-    dw JumpTable ; id 241 ?
-    db $00
-    dw JumpTable ; id 242 ?
-    db $00
-    dw JumpTable ; id 243 ?
-    db $00
-    dw JumpTable ; id 244 ?
-    db $00
-    dw JumpTable ; id 245 ?
-    db $00
-    dw MonsterPicAttr_Spooky ; id 246 Spooky
-    db $7B
-    dw MonsterPicAttr_Skullgon ; id 247 Skullgon
-    db $7B
-    dw JumpTable ; id 248 PutrePup
-    db $00
-    dw MonsterPicAttr_RotRaven ; id 249 RotRaven
-    db $7B
-    dw MonsterPicAttr_Mummy ; id 250 Mummy
-    db $7B
+    dfar MonsterPicAttr_Egdracil ; id 163 Egdracil
+    dfar MonsterPicAttr_Warubou ; id 164 Warubou
+    dfar JumpTable ; id 165 Watabou
+    dfar JumpTable ; id 166 Eggplaton
+    dfar MonsterPicAttr_FooHero ; id 167 FooHero
+    dfar JumpTable ; id 168 ?
+    dfar JumpTable ; id 169 ?
+    dfar JumpTable ; id 170 ?
+    dfar JumpTable ; id 171 ?
+    dfar JumpTable ; id 172 ?
+    dfar JumpTable ; id 173 ?
+    dfar JumpTable ; id 174 ?
+    dfar JumpTable ; id 175 ?
+    dfar MonsterPicAttr_GiantSlug ; id 176 GiantSlug
+    dfar MonsterPicAttr_Catapila ; id 177 Catapila
+    dfar JumpTable ; id 178 Gophecada
+    dfar MonsterPicAttr_Butterfly ; id 179 Butterfly
+    dfar MonsterPicAttr_WeedBug ; id 180 WeedBug
+    dfar JumpTable ; id 181 GiantWorm
+    dfar MonsterPicAttr_Lipsy ; id 182 Lipsy
+    dfar MonsterPicAttr_StagBug ; id 183 StagBug
+    dfar MonsterPicAttr_Pyuro ; id 184 Pyuro
+    dfar JumpTable ; id 185 ArmyAnt
+    dfar MonsterPicAttr_GoHopper ; id 186 GoHopper
+    dfar MonsterPicAttr_TailEater ; id 187 TailEater
+    dfar MonsterPicAttr_ArmorPede ; id 188 ArmorPede
+    dfar MonsterPicAttr_Eyeder ; id 189 Eyeder
+    dfar MonsterPicAttr_GiantMoth ; id 190 GiantMoth
+    dfar MonsterPicAttr_Droll ; id 191 Droll
+    dfar JumpTable ; id 192 ArmyCrab
+    dfar JumpTable ; id 193 MadHornet
+    dfar MonsterPicAttr_Belzebub ; id 194 Belzebub
+    dfar MonsterPicAttr_WarMantis ; id 195 WarMantis
+    dfar MonsterPicAttr_HornBeet ; id 196 HornBeet
+    dfar MonsterPicAttr_Sickler ; id 197 Sickler
+    dfar JumpTable ; id 198 Armorpion
+    dfar MonsterPicAttr_Digster ; id 199 Digster
+    dfar MonsterPicAttr_Skularach ; id 200 Skularach
+    dfar MonsterPicAttr_MultiEyes ; id 201 MultiEyes
+    dfar JumpTable ; id 202 ?
+    dfar JumpTable ; id 203 ?
+    dfar JumpTable ; id 204 ?
+    dfar JumpTable ; id 205 ?
+    dfar JumpTable ; id 206 ?
+    dfar JumpTable ; id 207 ?
+    dfar JumpTable ; id 208 ?
+    dfar JumpTable ; id 209 ?
+    dfar JumpTable ; id 210 ?
+    dfar MonsterPicAttr_Pixy ; id 211 Pixy
+    dfar JumpTable ; id 212 MedusaEye
+    dfar JumpTable ; id 213 AgDevil
+    dfar MonsterPicAttr_Demonite ; id 214 Demonite
+    dfar JumpTable ; id 215 DarkEye
+    dfar JumpTable ; id 216 EyeBall
+    dfar MonsterPicAttr_SkulRider ; id 217 SkulRider
+    dfar JumpTable ; id 218 EvilBeast
+    dfar MonsterPicAttr_Bubblemon ; id 219 Bubblemon
+    dfar MonsterPicAttr_1EyeClown ; id 220 1EyeClown
+    dfar JumpTable ; id 221 Gremlin
+    dfar MonsterPicAttr_ArcDemon ; id 222 ArcDemon
+    dfar MonsterPicAttr_Lionex ; id 223 Lionex
+    dfar MonsterPicAttr_GoatHorn ; id 224 GoatHorn
+    dfar MonsterPicAttr_Orc ; id 225 Orc
+    dfar MonsterPicAttr_Ogre ; id 226 Ogre
+    dfar MonsterPicAttr_GateGuard ; id 227 GateGuard
+    dfar MonsterPicAttr_ChopClown ; id 228 ChopClown
+    dfar MonsterPicAttr_BossTroll ; id 229 BossTroll
+    dfar MonsterPicAttr_Grendal ; id 230 Grendal
+    dfar MonsterPicAttr_Akubar ; id 231 Akubar
+    dfar MonsterPicAttr_MadKnight ; id 232 MadKnight
+    dfar MonsterPicAttr_EvilWell ; id 233 EvilWell
+    dfar MonsterPicAttr_Gigantes ; id 234 Gigantes
+    dfar MonsterPicAttr_Centasaur ; id 235 Centasaur
+    dfar MonsterPicAttr_EvilArmor ; id 236 EvilArmor
+    dfar MonsterPicAttr_Jamirus ; id 237 Jamirus
+    dfar MonsterPicAttr_Durran ; id 238 Durran
+    dfar MonsterPicAttr_Titanis ; id 239 Titanis
+    dfar MonsterPicAttr_LampGenie ; id 240 LampGenie
+    dfar JumpTable ; id 241 ?
+    dfar JumpTable ; id 242 ?
+    dfar JumpTable ; id 243 ?
+    dfar JumpTable ; id 244 ?
+    dfar JumpTable ; id 245 ?
+    dfar MonsterPicAttr_Spooky ; id 246 Spooky
+    dfar MonsterPicAttr_Skullgon ; id 247 Skullgon
+    dfar JumpTable ; id 248 PutrePup
+    dfar MonsterPicAttr_RotRaven ; id 249 RotRaven
+    dfar MonsterPicAttr_Mummy ; id 250 Mummy
 Data_038_476F:: ; heuristic: label inside a table; C0
-    dw MonsterPicAttr_DarkCrab ; id 251 DarkCrab
-    db $7B
-    dw MonsterPicAttr_DeadNite ; id 252 DeadNite
-    db $7B
-    dw JumpTable ; id 253 Shadow
-    db $00
-    dw JumpTable ; id 254 Skulpent
-    db $00
-    dw MonsterPicAttr_Hork ; id 255 Hork
-    db $7B
-    dw JumpTable ; id 256 Mudron
-    db $00
-    dw JumpTable ; id 257 NiteWhip
-    db $00
-    dw JumpTable ; id 258 WindMerge
-    db $00
-    dw JumpTable ; id 259 Reaper
-    db $00
-    dw MonsterPicAttr_Inverzon ; id 260 Inverzon
-    db $7B
-    dw JumpTable ; id 261 FoxFire
-    db $00
-    dw MonsterPicAttr_CaptDead ; id 262 CaptDead
-    db $7B
-    dw MonsterPicAttr_DeadNoble ; id 263 DeadNoble
-    db $7B
-    dw MonsterPicAttr_WhiteKing ; id 264 WhiteKing
-    db $7B
-    dw MonsterPicAttr_BoneSlave ; id 265 BoneSlave
-    db $7B
-    dw MonsterPicAttr_Skeletor ; id 266 Skeletor
-    db $7B
-    dw MonsterPicAttr_Servant ; id 267 Servant
-    db $7B
-    dw MonsterPicAttr_Lazamanus ; id 268 Lazamanus
-    db $7B
-    dw JumpTable ; id 269 Copycat
-    db $00
-    dw JumpTable ; id 270 MadSpirit
-    db $00
-    dw MonsterPicAttr_PomPomBom ; id 271 PomPomBom
-    db $7B
-    dw JumpTable ; id 272 Niterich
-    db $00
-    dw JumpTable ; id 273 ?
-    db $00
-    dw JumpTable ; id 274 ?
-    db $00
-    dw JumpTable ; id 275 ?
-    db $00
-    dw JumpTable ; id 276 ?
-    db $00
-    dw JumpTable ; id 277 ?
-    db $00
-    dw JumpTable ; id 278 ?
-    db $00
-    dw JumpTable ; id 279 ?
-    db $00
-    dw JumpTable ; id 280 ?
-    db $00
-    dw MonsterPicAttr_JewelBag ; id 281 JewelBag
-    db $7B
-    dw JumpTable ; id 282 EvilWand
-    db $00
-    dw MonsterPicAttr_MadCandle ; id 283 MadCandle
-    db $7B
+    dfar MonsterPicAttr_DarkCrab ; id 251 DarkCrab
+    dfar MonsterPicAttr_DeadNite ; id 252 DeadNite
+    dfar JumpTable ; id 253 Shadow
+    dfar JumpTable ; id 254 Skulpent
+    dfar MonsterPicAttr_Hork ; id 255 Hork
+    dfar JumpTable ; id 256 Mudron
+    dfar JumpTable ; id 257 NiteWhip
+    dfar JumpTable ; id 258 WindMerge
+    dfar JumpTable ; id 259 Reaper
+    dfar MonsterPicAttr_Inverzon ; id 260 Inverzon
+    dfar JumpTable ; id 261 FoxFire
+    dfar MonsterPicAttr_CaptDead ; id 262 CaptDead
+    dfar MonsterPicAttr_DeadNoble ; id 263 DeadNoble
+    dfar MonsterPicAttr_WhiteKing ; id 264 WhiteKing
+    dfar MonsterPicAttr_BoneSlave ; id 265 BoneSlave
+    dfar MonsterPicAttr_Skeletor ; id 266 Skeletor
+    dfar MonsterPicAttr_Servant ; id 267 Servant
+    dfar MonsterPicAttr_Lazamanus ; id 268 Lazamanus
+    dfar JumpTable ; id 269 Copycat
+    dfar JumpTable ; id 270 MadSpirit
+    dfar MonsterPicAttr_PomPomBom ; id 271 PomPomBom
+    dfar JumpTable ; id 272 Niterich
+    dfar JumpTable ; id 273 ?
+    dfar JumpTable ; id 274 ?
+    dfar JumpTable ; id 275 ?
+    dfar JumpTable ; id 276 ?
+    dfar JumpTable ; id 277 ?
+    dfar JumpTable ; id 278 ?
+    dfar JumpTable ; id 279 ?
+    dfar JumpTable ; id 280 ?
+    dfar MonsterPicAttr_JewelBag ; id 281 JewelBag
+    dfar JumpTable ; id 282 EvilWand
+    dfar MonsterPicAttr_MadCandle ; id 283 MadCandle
     dw MonsterPicAttr_CoilBird ; id 284 CoilBird
 Data_038_47D4:: ; heuristic: label inside a table; C0
     db $7B
-    dw MonsterPicAttr_Facer ; id 285 Facer
-    db $7B
-    dw JumpTable ; id 286 SpikyBoy
-    db $00
-    dw JumpTable ; id 287 MadMirror
-    db $00
-    dw MonsterPicAttr_RogueNite ; id 288 RogueNite
-    db $7B
-    dw MonsterPicAttr_Puppetor ; id 289 Puppetor
-    db $7B
-    dw JumpTable ; id 290 Goopi
-    db $00
-    dw JumpTable ; id 291 Voodoll
-    db $00
-    dw MonsterPicAttr_MetalDrak ; id 292 MetalDrak
-    db $7B
-    dw MonsterPicAttr_Balzak ; id 293 Balzak
-    db $7B
-    dw JumpTable ; id 294 SabreMan
-    db $00
-    dw MonsterPicAttr_CurseLamp ; id 295 CurseLamp
-    db $7B
-    dw MonsterPicAttr_Brushead ; id 296 Brushead
-    db $7B
-    dw MonsterPicAttr_Roboster ; id 297 Roboster
-    db $7B
-    dw MonsterPicAttr_Roboster2 ; id 298 Roboster2
-    db $7B
-    dw JumpTable ; id 299 EvilPot
-    db $00
-    dw JumpTable ; id 300 Gismo
-    db $00
-    dw JumpTable ; id 301 LavaMan
-    db $00
-    dw JumpTable ; id 302 IceMan
-    db $00
-    dw MonsterPicAttr_Mimic ; id 303 Mimic
-    db $7B
-    dw MonsterPicAttr_Exaucers ; id 304 Exaucers
-    db $7B
-    dw JumpTable ; id 305 MudDoll
-    db $00
-    dw JumpTable ; id 306 Golem
-    db $00
-    dw JumpTable ; id 307 StoneMan
-    db $00
-    dw JumpTable ; id 308 BombCrag
-    db $00
-    dw MonsterPicAttr_GoldGolem ; id 309 GoldGolem
-    db $7B
-    dw MonsterPicAttr_DarkMate ; id 310 DarkMate
-    db $7B
-    dw MonsterPicAttr_ProtoMech ; id 311 ProtoMech
-    db $7B
-    dw MonsterPicAttr_CloudKing ; id 312 CloudKing
-    db $7B
-    dw JumpTable ; id 313 ?
-    db $00
-    dw JumpTable ; id 314 ?
-    db $00
-    dw JumpTable ; id 315 ?
-    db $00
-    dw MonsterPicAttr_Petiteel ; id 316 Petiteel
-    db $7B
-    dw MonsterPicAttr_Moray ; id 317 Moray
-    db $7B
-    dw JumpTable ; id 318 WalrusMan
-    db $00
-    dw JumpTable ; id 319 RayGigas
-    db $00
-    dw MonsterPicAttr_Anemon ; id 320 Anemon
-    db $7B
-    dw MonsterPicAttr_Aquarella ; id 321 Aquarella
-    db $7B
-    dw JumpTable ; id 322 Merman
-    db $00
-    dw MonsterPicAttr_Octokid ; id 323 Octokid
-    db $7B
-    dw MonsterPicAttr_PutreFish ; id 324 PutreFish
-    db $7B
-    dw JumpTable ; id 325 Octoreach
-    db $00
-    dw MonsterPicAttr_Angleron ; id 326 Angleron
-    db $7B
-    dw MonsterPicAttr_FishRider ; id 327 FishRider
-    db $7B
-    dw MonsterPicAttr_RushFish ; id 328 RushFish
-    db $7B
-    dw MonsterPicAttr_Gamanian ; id 329 Gamanian
-    db $7B
-    dw MonsterPicAttr_Clawster ; id 330 Clawster
-    db $7B
-    dw JumpTable ; id 331 CancerMan
-    db $00
-    dw MonsterPicAttr_RogueWave ; id 332 RogueWave
-    db $7B
-    dw MonsterPicAttr_Scallopa ; id 333 Scallopa
-    db $7B
-    dw JumpTable ; id 334 SeaHorse
-    db $00
-    dw MonsterPicAttr_HoodSquid ; id 335 HoodSquid
-    db $7B
+    dfar MonsterPicAttr_Facer ; id 285 Facer
+    dfar JumpTable ; id 286 SpikyBoy
+    dfar JumpTable ; id 287 MadMirror
+    dfar MonsterPicAttr_RogueNite ; id 288 RogueNite
+    dfar MonsterPicAttr_Puppetor ; id 289 Puppetor
+    dfar JumpTable ; id 290 Goopi
+    dfar JumpTable ; id 291 Voodoll
+    dfar MonsterPicAttr_MetalDrak ; id 292 MetalDrak
+    dfar MonsterPicAttr_Balzak ; id 293 Balzak
+    dfar JumpTable ; id 294 SabreMan
+    dfar MonsterPicAttr_CurseLamp ; id 295 CurseLamp
+    dfar MonsterPicAttr_Brushead ; id 296 Brushead
+    dfar MonsterPicAttr_Roboster ; id 297 Roboster
+    dfar MonsterPicAttr_Roboster2 ; id 298 Roboster2
+    dfar JumpTable ; id 299 EvilPot
+    dfar JumpTable ; id 300 Gismo
+    dfar JumpTable ; id 301 LavaMan
+    dfar JumpTable ; id 302 IceMan
+    dfar MonsterPicAttr_Mimic ; id 303 Mimic
+    dfar MonsterPicAttr_Exaucers ; id 304 Exaucers
+    dfar JumpTable ; id 305 MudDoll
+    dfar JumpTable ; id 306 Golem
+    dfar JumpTable ; id 307 StoneMan
+    dfar JumpTable ; id 308 BombCrag
+    dfar MonsterPicAttr_GoldGolem ; id 309 GoldGolem
+    dfar MonsterPicAttr_DarkMate ; id 310 DarkMate
+    dfar MonsterPicAttr_ProtoMech ; id 311 ProtoMech
+    dfar MonsterPicAttr_CloudKing ; id 312 CloudKing
+    dfar JumpTable ; id 313 ?
+    dfar JumpTable ; id 314 ?
+    dfar JumpTable ; id 315 ?
+    dfar MonsterPicAttr_Petiteel ; id 316 Petiteel
+    dfar MonsterPicAttr_Moray ; id 317 Moray
+    dfar JumpTable ; id 318 WalrusMan
+    dfar JumpTable ; id 319 RayGigas
+    dfar MonsterPicAttr_Anemon ; id 320 Anemon
+    dfar MonsterPicAttr_Aquarella ; id 321 Aquarella
+    dfar JumpTable ; id 322 Merman
+    dfar MonsterPicAttr_Octokid ; id 323 Octokid
+    dfar MonsterPicAttr_PutreFish ; id 324 PutreFish
+    dfar JumpTable ; id 325 Octoreach
+    dfar MonsterPicAttr_Angleron ; id 326 Angleron
+    dfar MonsterPicAttr_FishRider ; id 327 FishRider
+    dfar MonsterPicAttr_RushFish ; id 328 RushFish
+    dfar MonsterPicAttr_Gamanian ; id 329 Gamanian
+    dfar MonsterPicAttr_Clawster ; id 330 Clawster
+    dfar JumpTable ; id 331 CancerMan
+    dfar MonsterPicAttr_RogueWave ; id 332 RogueWave
+    dfar MonsterPicAttr_Scallopa ; id 333 Scallopa
+    dfar JumpTable ; id 334 SeaHorse
+    dfar MonsterPicAttr_HoodSquid ; id 335 HoodSquid
     dw MonsterPicAttr_MerTiger ; id 336 MerTiger
 Data_038_4870:: ; heuristic: label inside a table; C0
     db $7B
-    dw MonsterPicAttr_AxeShark ; id 337 AxeShark
-    db $7B
-    dw JumpTable ; id 338 Octogon
-    db $00
-    dw MonsterPicAttr_KingSquid ; id 339 KingSquid
-    db $7B
-    dw MonsterPicAttr_Digong ; id 340 Digong
-    db $7B
-    dw MonsterPicAttr_WhaleMage ; id 341 WhaleMage
-    db $7B
-    dw MonsterPicAttr_Aquadon ; id 342 Aquadon
-    db $7B
-    dw MonsterPicAttr_Octoraid ; id 343 Octoraid
-    db $7B
-    dw MonsterPicAttr_Grakos ; id 344 Grakos
-    db $7B
-    dw MonsterPicAttr_Poseidon ; id 345 Poseidon
-    db $7B
-    dw MonsterPicAttr_Pumpoise ; id 346 Pumpoise
-    db $7B
-    dw JumpTable ; id 347 Starfish
-    db $00
-    dw JumpTable ; id 348 ?
-    db $00
-    dw JumpTable ; id 349 ?
-    db $00
-    dw JumpTable ; id 350 ?
-    db $00
-    dw MonsterPicAttr_DracoLord ; id 351 DracoLord
-    db $7B
-    dw MonsterPicAttr_DracoLord_160 ; id 352 DracoLord
-    db $7B
-    dw MonsterPicAttr_LordDraco ; id 353 LordDraco
-    db $7B
-    dw MonsterPicAttr_Hargon ; id 354 Hargon
-    db $7B
-    dw JumpTable ; id 355 Sidoh
-    db $00
-    dw MonsterPicAttr_Genosidoh ; id 356 Genosidoh
-    db $7B
-    dw MonsterPicAttr_Baramos ; id 357 Baramos
-    db $7B
-    dw MonsterPicAttr_Zoma ; id 358 Zoma
-    db $7B
-    dw MonsterPicAttr_AsuraZoma ; id 359 AsuraZoma
-    db $7B
-    dw JumpTable ; id 360 Pizzaro
-    db $00
-    dw MonsterPicAttr_PsychoPiz ; id 361 PsychoPiz
-    db $7B
-    dw MonsterPicAttr_Esterk ; id 362 Esterk
-    db $7B
-    dw MonsterPicAttr_Mirudraas ; id 363 Mirudraas
-    db $7B
-    dw JumpTable ; id 364 Mirudraas
-    db $00
-    dw MonsterPicAttr_Mudou ; id 365 Mudou
-    db $7B
-    dw MonsterPicAttr_DeathMore ; id 366 DeathMore
-    db $7B
-    dw JumpTable ; id 367 DeathMore
-    db $00
-    dw MonsterPicAttr_DeathMore_170 ; id 368 DeathMore
-    db $7B
-    dw MonsterPicAttr_Darkdrium ; id 369 Darkdrium
-    db $7B
-    dw MonsterPicAttr_Orgodemir ; id 370 Orgodemir
-    db $7B
-    dw MonsterPicAttr_Orgodemir_173 ; id 371 Orgodemir
-    db $7B
-    dw MonsterPicAttr_Darck ; id 372 Darck
-    db $7B
-    dw JumpTable ; id 373 Tatsu
-    db $00
-    dw JumpTable ; id 374 Diago
-    db $00
-    dw JumpTable ; id 375 Samsi
-    db $00
-    dw JumpTable ; id 376 Bazoo
-    db $00
-    dw JumpTable ; id 377 ?
-    db $00
-    dw JumpTable ; id 378 ?
-    db $00
-    dw JumpTable ; id 379 ?
-    db $00
-    dw MonsterPicAttr_Lamia ; id 380 Lamia
-    db $7B
-    dw MonsterPicAttr_Dimensaur ; id 381 Dimensaur
-    db $7B
-    dw MonsterPicAttr_Kagebou ; id 382 Kagebou
-    db $7B
+    dfar MonsterPicAttr_AxeShark ; id 337 AxeShark
+    dfar JumpTable ; id 338 Octogon
+    dfar MonsterPicAttr_KingSquid ; id 339 KingSquid
+    dfar MonsterPicAttr_Digong ; id 340 Digong
+    dfar MonsterPicAttr_WhaleMage ; id 341 WhaleMage
+    dfar MonsterPicAttr_Aquadon ; id 342 Aquadon
+    dfar MonsterPicAttr_Octoraid ; id 343 Octoraid
+    dfar MonsterPicAttr_Grakos ; id 344 Grakos
+    dfar MonsterPicAttr_Poseidon ; id 345 Poseidon
+    dfar MonsterPicAttr_Pumpoise ; id 346 Pumpoise
+    dfar JumpTable ; id 347 Starfish
+    dfar JumpTable ; id 348 ?
+    dfar JumpTable ; id 349 ?
+    dfar JumpTable ; id 350 ?
+    dfar MonsterPicAttr_DracoLord ; id 351 DracoLord
+    dfar MonsterPicAttr_DracoLord_160 ; id 352 DracoLord
+    dfar MonsterPicAttr_LordDraco ; id 353 LordDraco
+    dfar MonsterPicAttr_Hargon ; id 354 Hargon
+    dfar JumpTable ; id 355 Sidoh
+    dfar MonsterPicAttr_Genosidoh ; id 356 Genosidoh
+    dfar MonsterPicAttr_Baramos ; id 357 Baramos
+    dfar MonsterPicAttr_Zoma ; id 358 Zoma
+    dfar MonsterPicAttr_AsuraZoma ; id 359 AsuraZoma
+    dfar JumpTable ; id 360 Pizzaro
+    dfar MonsterPicAttr_PsychoPiz ; id 361 PsychoPiz
+    dfar MonsterPicAttr_Esterk ; id 362 Esterk
+    dfar MonsterPicAttr_Mirudraas ; id 363 Mirudraas
+    dfar JumpTable ; id 364 Mirudraas
+    dfar MonsterPicAttr_Mudou ; id 365 Mudou
+    dfar MonsterPicAttr_DeathMore ; id 366 DeathMore
+    dfar JumpTable ; id 367 DeathMore
+    dfar MonsterPicAttr_DeathMore_170 ; id 368 DeathMore
+    dfar MonsterPicAttr_Darkdrium ; id 369 Darkdrium
+    dfar MonsterPicAttr_Orgodemir ; id 370 Orgodemir
+    dfar MonsterPicAttr_Orgodemir_173 ; id 371 Orgodemir
+    dfar MonsterPicAttr_Darck ; id 372 Darck
+    dfar JumpTable ; id 373 Tatsu
+    dfar JumpTable ; id 374 Diago
+    dfar JumpTable ; id 375 Samsi
+    dfar JumpTable ; id 376 Bazoo
+    dfar JumpTable ; id 377 ?
+    dfar JumpTable ; id 378 ?
+    dfar JumpTable ; id 379 ?
+    dfar MonsterPicAttr_Lamia ; id 380 Lamia
+    dfar MonsterPicAttr_Dimensaur ; id 381 Dimensaur
+    dfar MonsterPicAttr_Kagebou ; id 382 Kagebou
     ds $5C, $00
 
 Data_038_4957:: ; heuristic: target of a monotone pointer table; C0

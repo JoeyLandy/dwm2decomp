@@ -1,466 +1,5590 @@
 SECTION "Bank 72", ROMX[$4000], BANK[$72]
-    db $72, $70, $43, $70, $43
-    dw Data_072_4247
-    db $70, $43
-    dw Data_072_4370
-    db $0D, $43
-    dw Data_072_43D3
-    db $70, $43
-    dw Data_072_4436
-    db $25, $46
-    dw Data_072_4625
-    db $25, $46
-    dw Data_072_4625
-    db $99, $44
-    dw Data_072_4688
-    db $25, $46
-    dw Data_072_46EB
-    db $DA, $48
-    dw Data_072_48DA
-    db $DA, $48
-    dw Data_072_48DA
-    db $77, $48
-    dw Data_072_493D
-    db $DA, $48
-    dw Data_072_49A0
-    db $8F, $4B
-    dw Data_072_4B8F
-    db $8F, $4B
-    dw Data_072_4B8F
-    db $03, $4A
-    dw Data_072_4BF2
-    db $8F, $4B
-    dw Data_072_4C55
-    db $44, $4E
-    dw Data_072_4E44
-    db $44, $4E
-    dw Data_072_4E44
-    db $E1, $4D
-    dw Data_072_4EA7
-    db $44, $4E
-    dw Data_072_50F9
-    db $6D, $4F
-    dw Data_072_50F9
-    db $F9, $50
-    dw Data_072_50F9
-    db $0A, $4F
-    dw Data_072_515C
-    db $F9, $50
-    dw Data_072_53AE
-    db $AE, $53
-    dw Data_072_53AE
-    db $E8, $52
-    dw Data_072_53AE
-    db $BF, $51
-    dw Data_072_5411
-    db $AE, $53
-    dw Data_072_5663
-    db $63, $56
-    dw Data_072_5663
-    db $63, $56
-    dw Data_072_5600
-    db $3A, $55
-    dw Data_072_56C6
-    db $63, $56
-    dw Data_072_5729
-    db $18, $59
-    dw Data_072_5918
-    db $18, $59
-    dw Data_072_5918
-    db $52, $58
-    dw Data_072_597B
-    db $18, $59
-    dw Data_072_5BCD
-    db $41, $5A
-    dw Data_072_5BCD
-    db $CD, $5B
-    dw Data_072_5BCD
-    db $A4, $5A
-    dw Data_072_5C30
-    db $CD, $5B
-    dw Data_072_5C93
-    db $82, $5E
-    dw Data_072_5E82
-    db $82, $5E
-    dw Data_072_5E82
-    db $59, $5D
-    dw Data_072_5EE5
-    db $82, $5E
-    dw Data_072_6137
-    db $AB, $5F
-    dw Data_072_6137
-    db $37, $61
-    dw Data_072_6137
-    db $D4, $60
-    dw Data_072_619A
-    db $37, $61
-    dw Data_072_63EC
-    db $EC, $63
-    dw Data_072_63EC
-    db $26, $63
-    dw Data_072_63EC
-    db $60, $62
-    dw Data_072_644F
-    db $EC, $63
-    dw Data_072_66A1
-    db $A1, $66
-    dw Data_072_66A1
-    db $A1, $66
-    dw Data_072_663E
-    db $DB, $65, $04, $67
-    dw Data_072_66A1
-    db $56, $69, $56, $69
-    dw Data_072_682D
-    db $56, $69, $56, $69
-    dw Data_072_68F3
-    db $B9, $69, $56, $69
-    dw Data_072_6A1C
-    db $0B, $6C, $0B, $6C
-    dw Data_072_6C0B
-    db $0B, $6C, $7F, $6A
-    dw Data_072_6C6E
-    db $0B, $6C, $C0, $6E
-    dw Data_072_6EC0
-    db $C0, $6E, $C0, $6E
-    dw Data_072_6E5D
-    db $FA, $6D
-    dw Data_072_6F23
-    db $C0, $6E
-    dw Data_072_7175
-    db $75, $71
-    dw Data_072_7175
-    db $AF, $70
-    dw Data_072_7175
-    db $86, $6F
-    dw Data_072_71D8
-    db $75, $71
-    dw Data_072_742A
-    db $9E, $72
-    dw Data_072_742A
-    db $2A, $74
-    dw Data_072_742A
-    db $01, $73
-    dw Data_072_748D
-    db $2A, $74
-    dw Data_072_76DF
-    db $DF, $76
-    dw Data_072_76DF
-    db $19, $76
-    dw Data_072_76DF
-    db $B6, $75
-    dw Data_072_7742
-    db $DF, $76
-    dw Data_072_77A5
-    db $08, $78
-    dw Data_072_786B
-    db $CE, $78
-    dw Data_072_7931
-    INCBIN "dwm2-cobi-us.gbc", $1C814B, $FC
+    db $72
 
-; LZSS-compressed asset: 70 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4247:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8247, $129
+; E-0141 (C1: Func_061_4472_Case05 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with ReadByteInBank; every non-zero word is $4181 + $63 * n).
+; record: room record in KeyWorldRooms ($0000 = none)
+KeyWorldRoomPointers::
+Data_072_4001:: ; heuristic: start of a structured table; C0
+    dw Data_072_4370 ; id 0
+    dw Data_072_4370 ; id 1
+    dw Data_072_4247 ; id 2
+    dw Data_072_4370 ; id 3
+    dw Data_072_4370 ; id 4
+    dw Data_072_430D ; id 5
+    dw Data_072_43D3 ; id 6
+    dw Data_072_4370 ; id 7
+    dw Data_072_4436 ; id 8
+    dw Data_072_4625 ; id 9
+    dw Data_072_4625 ; id 10
+    dw Data_072_4625 ; id 11
+    dw Data_072_4625 ; id 12
+    dw Data_072_4499 ; id 13
+    dw Data_072_4688 ; id 14
+    dw Data_072_4625 ; id 15
+    dw Data_072_46EB ; id 16
+    dw Data_072_48DA ; id 17
+    dw Data_072_48DA ; id 18
+    dw Data_072_48DA ; id 19
+    dw Data_072_48DA ; id 20
+    dw Data_072_4877 ; id 21
+    dw Data_072_493D ; id 22
+    dw Data_072_48DA ; id 23
+    dw Data_072_49A0 ; id 24
+    dw Data_072_4B8F ; id 25
+    dw Data_072_4B8F ; id 26
+    dw Data_072_4B8F ; id 27
+    dw Data_072_4B8F ; id 28
+    dw Data_072_4A03 ; id 29
+    dw Data_072_4BF2 ; id 30
+    dw Data_072_4B8F ; id 31
+    dw Data_072_4C55 ; id 32
+    dw Data_072_4E44 ; id 33
+    dw Data_072_4E44 ; id 34
+    dw Data_072_4E44 ; id 35
+    dw Data_072_4E44 ; id 36
+    dw Data_072_4DE1 ; id 37
+    dw Data_072_4EA7 ; id 38
+    dw Data_072_4E44 ; id 39
+    dw Data_072_50F9 ; id 40
+    dw Data_072_4F6D ; id 41
+    dw Data_072_50F9 ; id 42
+    dw Data_072_50F9 ; id 43
+    dw Data_072_50F9 ; id 44
+    dw Data_072_4F0A ; id 45
+    dw Data_072_515C ; id 46
+    dw Data_072_50F9 ; id 47
+    dw Data_072_53AE ; id 48
+    dw Data_072_53AE ; id 49
+    dw Data_072_53AE ; id 50
+    dw Data_072_52E8 ; id 51
+    dw Data_072_53AE ; id 52
+    dw Data_072_51BF ; id 53
+    dw Data_072_5411 ; id 54
+    dw Data_072_53AE ; id 55
+    dw Data_072_5663 ; id 56
+    dw Data_072_5663 ; id 57
+    dw Data_072_5663 ; id 58
+    dw Data_072_5663 ; id 59
+    dw Data_072_5600 ; id 60
+    dw Data_072_553A ; id 61
+    dw Data_072_56C6 ; id 62
+    dw Data_072_5663 ; id 63
+    dw Data_072_5729 ; id 64
+    dw Data_072_5918 ; id 65
+    dw Data_072_5918 ; id 66
+    dw Data_072_5918 ; id 67
+    dw Data_072_5918 ; id 68
+    dw Data_072_5852 ; id 69
+    dw Data_072_597B ; id 70
+    dw Data_072_5918 ; id 71
+    dw Data_072_5BCD ; id 72
+    dw Data_072_5A41 ; id 73
+    dw Data_072_5BCD ; id 74
+    dw Data_072_5BCD ; id 75
+    dw Data_072_5BCD ; id 76
+    dw Data_072_5AA4 ; id 77
+    dw Data_072_5C30 ; id 78
+    dw Data_072_5BCD ; id 79
+    dw Data_072_5C93 ; id 80
+    dw Data_072_5E82 ; id 81
+    dw Data_072_5E82 ; id 82
+    dw Data_072_5E82 ; id 83
+    dw Data_072_5E82 ; id 84
+    dw Data_072_5D59 ; id 85
+    dw Data_072_5EE5 ; id 86
+    dw Data_072_5E82 ; id 87
+    dw Data_072_6137 ; id 88
+    dw Data_072_5FAB ; id 89
+    dw Data_072_6137 ; id 90
+    dw Data_072_6137 ; id 91
+    dw Data_072_6137 ; id 92
+    dw Data_072_60D4 ; id 93
+    dw Data_072_619A ; id 94
+    dw Data_072_6137 ; id 95
+    dw Data_072_63EC ; id 96
+    dw Data_072_63EC ; id 97
+    dw Data_072_63EC ; id 98
+    dw Data_072_6326 ; id 99
+    dw Data_072_63EC ; id 100
+    dw Data_072_6260 ; id 101
+    dw Data_072_644F ; id 102
+    dw Data_072_63EC ; id 103
+    dw Data_072_66A1 ; id 104
+    dw Data_072_66A1 ; id 105
+    dw Data_072_66A1 ; id 106
+    dw Data_072_66A1 ; id 107
+    dw Data_072_663E ; id 108
+    dw Data_072_65DB ; id 109
+    dw Data_072_6704 ; id 110
+    dw Data_072_66A1 ; id 111
+    dw Data_072_6956 ; id 112
+    dw Data_072_6956 ; id 113
+    dw Data_072_682D ; id 114
+    dw Data_072_6956 ; id 115
+    dw Data_072_6956 ; id 116
+    dw Data_072_68F3 ; id 117
+    dw Data_072_69B9 ; id 118
+    dw Data_072_6956 ; id 119
+    dw Data_072_6A1C ; id 120
+    dw Data_072_6C0B ; id 121
+    dw Data_072_6C0B ; id 122
+    dw Data_072_6C0B ; id 123
+    dw Data_072_6C0B ; id 124
+    dw Data_072_6A7F ; id 125
+    dw Data_072_6C6E ; id 126
+    dw Data_072_6C0B ; id 127
+    dw Data_072_6EC0 ; id 128
+    dw Data_072_6EC0 ; id 129
+    dw Data_072_6EC0 ; id 130
+    dw Data_072_6EC0 ; id 131
+    dw Data_072_6E5D ; id 132
+    dw Data_072_6DFA ; id 133
+    dw Data_072_6F23 ; id 134
+    dw Data_072_6EC0 ; id 135
+    dw Data_072_7175 ; id 136
+    dw Data_072_7175 ; id 137
+    dw Data_072_7175 ; id 138
+    dw Data_072_70AF ; id 139
+    dw Data_072_7175 ; id 140
+    dw Data_072_6F86 ; id 141
+    dw Data_072_71D8 ; id 142
+    dw Data_072_7175 ; id 143
+    dw Data_072_742A ; id 144
+    dw Data_072_729E ; id 145
+    dw Data_072_742A ; id 146
+    dw Data_072_742A ; id 147
+    dw Data_072_742A ; id 148
+    dw Data_072_7301 ; id 149
+    dw Data_072_748D ; id 150
+    dw Data_072_742A ; id 151
+    dw Data_072_76DF ; id 152
+    dw Data_072_76DF ; id 153
+    dw Data_072_76DF ; id 154
+    dw Data_072_7619 ; id 155
+    dw Data_072_76DF ; id 156
+    dw Data_072_75B6 ; id 157
+    dw Data_072_7742 ; id 158
+    dw Data_072_76DF ; id 159
+    dw Data_072_77A5 ; id 160
+    dw Data_072_7808 ; id 161
+    dw Data_072_786B ; id 162
+    dw Data_072_78CE ; id 163
+    dw Data_072_7931 ; id 164
+    dw $0000 ; id 165
+    dw $0000 ; id 166
+    dw $0000 ; id 167
+    dw Data_072_7994 ; id 168
+    dw Data_072_79F7 ; id 169
+    dw Data_072_7A5A ; id 170
+    dw Data_072_7ABD ; id 171
+    dw Data_072_7B20 ; id 172
+    dw $0000 ; id 173
+    dw $0000 ; id 174
+    dw $0000 ; id 175
+    dw Data_072_7B83 ; id 176
+    dw Data_072_7BE6 ; id 177
+    dw Data_072_7C49 ; id 178
+    dw Data_072_7CAC ; id 179
+    dw Data_072_7D0F ; id 180
+    dw $0000 ; id 181
+    dw $0000 ; id 182
+    dw $0000 ; id 183
+    dw Data_072_7D72 ; id 184
+    dw Data_072_7DD5 ; id 185
+    dw Data_072_7E38 ; id 186
+    dw Data_072_7E9B ; id 187
+    dw Data_072_7EFE ; id 188
+    dw $0000 ; id 189
+    dw $0000 ; id 190
+    dw $0000 ; id 191
 
-; LZSS-compressed asset: 163 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4370:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8370, $63
-
-; LZSS-compressed asset: 81 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_43D3:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C83D3, $63
-
-; LZSS-compressed asset: 251 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4436:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8436, $1EF
-
-; LZSS-compressed asset: 257 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4625:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8625, $63
-
-; LZSS-compressed asset: 259 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4688:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8688, $63
-
-; LZSS-compressed asset: 243 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_46EB:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C86EB, $1EF
-
-; LZSS-compressed asset: 245 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_48DA:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C88DA, $63
-
-; LZSS-compressed asset: 244 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_493D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C893D, $63
-
-; LZSS-compressed asset: 241 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_49A0:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C89A0, $1EF
-
-; LZSS-compressed asset: 255 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4B8F:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8B8F, $63
-
-; LZSS-compressed asset: 259 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4BF2:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8BF2, $63
-
-; LZSS-compressed asset: 477 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4C55:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8C55, $1EF
-
-; LZSS-compressed asset: 501 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4E44:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8E44, $63
-
-; LZSS-compressed asset: 515 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_4EA7:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C8EA7, $252
-
-; LZSS-compressed asset: 350 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_50F9:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C90F9, $63
-
-; LZSS-compressed asset: 364 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_515C:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C915C, $252
-
-; LZSS-compressed asset: 501 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_53AE:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C93AE, $63
-
-; LZSS-compressed asset: 515 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5411:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C9411, $1EF
-
-; LZSS-compressed asset: 575 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5600:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C9600, $63
-
-; LZSS-compressed asset: 577 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5663:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C9663, $63
-
-; LZSS-compressed asset: 590 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_56C6:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C96C6, $63
-
-; LZSS-compressed asset: 719 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5729:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C9729, $1EF
-
-; LZSS-compressed asset: 716 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5918:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C9918, $63
-
-; LZSS-compressed asset: 725 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_597B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C997B, $252
-
-; LZSS-compressed asset: 1023 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5BCD:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C9BCD, $63
-
-; LZSS-compressed asset: 1027 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5C30:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C9C30, $63
-
-; LZSS-compressed asset: 486 bytes expand to 513 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5C93:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1C9C93, $1EF
-
-; LZSS-compressed asset: 503 bytes expand to 513 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5E82:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $03, $77, $7C, $71, $77, $7C, $71, $D2, $55, $6F, $A5
-    dw Data_072_715D
-    db $77, $7C, $71, $E8
-    dw Data_072_716C
-    db $F4, $6E, $6E, $77
-    dw Data_072_717C
-    db $77, $7C, $71, $77
-    dw Data_072_717C
-    db $01, $40, $71, $77
-    dw Data_072_717C
-    db $77, $7C, $71, $77
-    dw Data_072_717C
-    db $77, $7C, $71, $77
-    dw Data_072_717C
-    db $8A, $7E, $71, $8A
-    dw Data_072_717E
-    db $24, $60, $6F, $CC, $68, $71, $8A, $7E, $71, $9B, $78, $71, $80, $74, $6E, $8A
-    db $7E, $71, $8A, $7E, $71, $8A, $7E, $71, $F4, $4B, $71, $8A, $7E, $71, $8A, $7E
-    db $71, $8A, $7E, $71, $8A, $7E, $71, $8A, $7E, $71
-
-; LZSS-compressed asset: 516 bytes expand to 513 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_5EE5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $03, $77, $7C, $71, $77, $7C, $71, $77, $7C, $71, $CC, $50, $71, $77
-    db $7C, $71, $CC, $50, $71, $48, $75, $71, $3B, $6D, $6E, $77, $7C, $71, $F6, $47
-    db $70, $01
-    dw Data_072_6F40
-    db $A6
-    dw Data_072_7056
-    db $77
-    dw Data_072_717C
-    db $77
-    dw Data_072_717C
-    db $77
-    dw Data_072_717C
-    db $77
-    dw Data_072_717C
-    db $8A
-    dw Data_072_717E
-    db $8A
-    dw Data_072_717E
-    db $8A
-    dw Data_072_717E
-    INCBIN "dwm2-cobi-us.gbc", $1C9F21, $216
-
-; LZSS-compressed asset: 415 bytes expand to 513 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_6137:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CA137, $63
-
-; LZSS-compressed asset: 428 bytes expand to 513 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_619A:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CA19A, $252
-
-; LZSS-compressed asset: 501 bytes expand to 513 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_63EC:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CA3EC, $63
-
-; LZSS-compressed asset: 514 bytes expand to 513 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_644F:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CA44F, $1EF
-
-; LZSS-compressed asset: 519 bytes expand to 769 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_663E:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CA63E, $63
-
-; LZSS-compressed asset: 468 bytes expand to 769 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_66A1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $03, $04, $77, $7C, $71, $77, $7C, $71, $77, $7C, $71, $CC, $50, $71, $77
-    db $7C, $71, $77, $7C, $71, $77, $7C, $71, $5D, $6D, $70, $77, $7C, $71, $38, $57
-    db $6F, $59
-    dw Data_072_6F40
-    db $A6, $56, $70, $E8
-    dw Data_072_716C
-    db $A6, $56, $70, $77
-    dw Data_072_717C
-    db $77, $7C, $71, $8A
-    dw Data_072_717E
-    db $8A, $7E, $71, $8A
-    dw Data_072_717E
-    db $2B, $5A, $71, $8A
-    dw Data_072_717E
-    db $8A, $7E, $71, $8A
-    dw Data_072_717E
-    db $45, $77, $70, $8A
-    dw Data_072_717E
-    INCBIN "dwm2-cobi-us.gbc", $1CA6EF, $13E
-
-; LZSS-compressed asset: 585 bytes expand to 769 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_682D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CA82D, $C6
-
-; LZSS-compressed asset: 591 bytes expand to 769 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_68F3:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CA8F3, $129
-
-; LZSS-compressed asset: 957 bytes expand to 1025 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_6A1C:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CAA1C, $1EF
-
-; LZSS-compressed asset: 983 bytes expand to 1025 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_6C0B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CAC0B, $63
-
-; LZSS-compressed asset: 989 bytes expand to 1025 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_6C6E:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CAC6E, $1EF
-
-; LZSS-compressed asset: 541 bytes expand to 770 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_6E5D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CAE5D, $63
-
-; LZSS-compressed asset: 595 bytes expand to 770 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_6EC0:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $03, $04, $77, $7C, $71, $77, $7C, $71, $77, $7C, $71, $77, $7C, $71, $77
-    db $7C, $71, $31, $6D, $71, $90, $66, $6F, $77, $7C, $71, $77, $7C, $71, $77, $7C
-    db $71, $C4, $6A, $70, $77, $7C, $71, $31, $6D, $71, $01
-    dw Data_072_6F40
-    db $A6
-    dw Data_072_7056
-    db $77
-    dw Data_072_717C
-    db $8A
-    dw Data_072_717E
-    db $8A
-    dw Data_072_717E
-    db $8A
-    dw Data_072_717E
-    db $8A
-    dw Data_072_717E
-    db $8A
-    dw Data_072_717E
-    db $B9, $78, $71, $CD, $72, $6F, $8A, $7E, $71, $8A, $7E, $71, $8A, $7E, $71, $52
-    db $76, $70, $8A, $7E, $71, $B9, $78, $71, $CE, $4B, $6F, $21, $63, $70, $8A, $7E
-    db $71
-
-; LZSS-compressed asset: 511 bytes expand to 770 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_6F23:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $03, $04, $3E, $53, $6F, $99, $5B, $6D, $F0, $71, $6F, $77, $7C, $71, $FE
-    db $72, $70, $FE, $6A, $70, $5D, $6D, $70, $77, $7C, $71, $C4, $6A
-
-Data_072_6F40:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CAF40, $116
-
-Data_072_7056:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB056, $107
-
-Data_072_715D:: ; heuristic: target of a monotone pointer table; C0
-    db $4B, $5A, $71, $A3, $50, $70, $39, $43, $6E, $00, $71, $6E, $25, $50, $70
-
-Data_072_716C:: ; heuristic: target of a monotone pointer table; C0
-    db $BA, $4C, $6F, $53, $4D, $6F, $21, $63, $70
-
-; LZSS-compressed asset: 724 bytes expand to 770 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_7175:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $03, $05, $77, $7C, $71, $77
-
-Data_072_717C:: ; heuristic: target of a monotone pointer table; C0
-    db $7C, $71
-
-Data_072_717E:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB17E, $5A
-
-; LZSS-compressed asset: 724 bytes expand to 770 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_71D8:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB1D8, $252
-
-; LZSS-compressed asset: 820 bytes expand to 1026 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_742A:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB42A, $63
-
-; LZSS-compressed asset: 768 bytes expand to 1026 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_748D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB48D, $252
-
-; LZSS-compressed asset: 798 bytes expand to 1027 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_76DF:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB6DF, $63
-
-; LZSS-compressed asset: 802 bytes expand to 1027 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_7742:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB742, $63
-
-; LZSS-compressed asset: 169 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_77A5:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB7A5, $C6
-
-; LZSS-compressed asset: 259 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_786B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB86B, $C6
-
-; LZSS-compressed asset: 493 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_072_7931:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1CB931, $630
+; E-0141 (C1: Func_061_4472_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes).
+; record: room header (3 bytes; not read here); screen 0 (row 0, column 0): compressed 20 x 18 tile map; bank of screen 0; screen 1 (row 0, column 1): compressed 20 x 18 tile map; bank of screen 1; screen 2 (row 0, column 2): compressed 20 x 18 tile map; bank of screen 2; screen 3 (row 0, column 3): compressed 20 x 18 tile map; bank of screen 3; screen 4 (row 1, column 0): compressed 20 x 18 tile map; bank of screen 4; screen 5 (row 1, column 1): compressed 20 x 18 tile map; bank of screen 5; screen 6 (row 1, column 2): compressed 20 x 18 tile map; bank of screen 6; screen 7 (row 1, column 3): compressed 20 x 18 tile map; bank of screen 7; screen 8 (row 2, column 0): compressed 20 x 18 tile map; bank of screen 8; screen 9 (row 2, column 1): compressed 20 x 18 tile map; bank of screen 9; screen 10 (row 2, column 2): compressed 20 x 18 tile map; bank of screen 10; screen 11 (row 2, column 3): compressed 20 x 18 tile map; bank of screen 11; screen 12 (row 3, column 0): compressed 20 x 18 tile map; bank of screen 12; screen 13 (row 3, column 1): compressed 20 x 18 tile map; bank of screen 13; screen 14 (row 3, column 2): compressed 20 x 18 tile map; bank of screen 14; screen 15 (row 3, column 3): compressed 20 x 18 tile map; bank of screen 15; screen 0: compressed 20 x 18 CGB attribute map; bank of attribute map 0; screen 1: compressed 20 x 18 CGB attribute map; bank of attribute map 1; screen 2: compressed 20 x 18 CGB attribute map; bank of attribute map 2; screen 3: compressed 20 x 18 CGB attribute map; bank of attribute map 3; screen 4: compressed 20 x 18 CGB attribute map; bank of attribute map 4; screen 5: compressed 20 x 18 CGB attribute map; bank of attribute map 5; screen 6: compressed 20 x 18 CGB attribute map; bank of attribute map 6; screen 7: compressed 20 x 18 CGB attribute map; bank of attribute map 7; screen 8: compressed 20 x 18 CGB attribute map; bank of attribute map 8; screen 9: compressed 20 x 18 CGB attribute map; bank of attribute map 9; screen 10: compressed 20 x 18 CGB attribute map; bank of attribute map 10; screen 11: compressed 20 x 18 CGB attribute map; bank of attribute map 11; screen 12: compressed 20 x 18 CGB attribute map; bank of attribute map 12; screen 13: compressed 20 x 18 CGB attribute map; bank of attribute map 13; screen 14: compressed 20 x 18 CGB attribute map; bank of attribute map 14; screen 15: compressed 20 x 18 CGB attribute map; bank of attribute map 15
+KeyWorldRooms::
+Data_072_4181:: ; heuristic: start of a structured table; C0
+    db $00, $01, $02 ; id 0
+    dfar Data_06F_53C6
+    dfar Data_06F_4001
+    dfar Data_06F_4059
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_06F_53C6
+    dfar Data_06F_6690
+    dfar Data_070_6AFE
+    dfar Data_070_6AFE
+    dfar Data_06E_4C45
+    dfar Data_070_5731
+    dfar Data_070_6AC4
+    dfar Data_070_430D
+    dfar Data_06D_712C
+    dfar Data_071_5D62
+    dfar Data_071_404F
+    dfar Data_06F_5F5C
+    dfar Data_06F_4BCE
+    dfar Data_06F_4BF8
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_06F_5F5C
+    dfar Data_06F_72CD
+    dfar Data_070_7673
+    dfar Data_070_7673
+    dfar Data_06E_5968
+    dfar Data_070_6356
+    dfar Data_070_7652
+    dfar Data_070_4F2C
+    dfar Data_06E_438A
+    dfar Data_071_68AD
+    dfar Data_071_4C19
+    db $00, $01, $02 ; id 1
+    dfar Data_06F_533E
+    dfar Data_06D_5A36
+    dfar Data_06D_5A36
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_070_430D
+    dfar Data_06E_62D4
+    dfar Data_070_6BB8
+    dfar Data_06E_4C45
+    dfar Data_06F_67D7
+    dfar Data_070_442A
+    dfar Data_06E_642B
+    dfar Data_070_4500
+    dfar Data_06D_7079
+    dfar Data_06F_4001
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06D_67C7
+    dfar Data_06D_67C7
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_070_4F2C
+    dfar Data_06E_6FD9
+    dfar Data_070_76AD
+    dfar Data_06E_5968
+    dfar Data_06F_734E
+    dfar Data_070_4F94
+    dfar Data_06E_7059
+    dfar Data_070_4FDB
+    dfar Data_06E_4339
+    dfar Data_06F_4BCE
+    dfar Data_070_6321
+Data_072_4247:: ; heuristic: key-world room record; C0
+    db $00, $01, $02 ; id 2
+    dfar Data_071_50CC
+    dfar Data_071_6CE8
+    dfar Data_06D_5A36
+    dfar Data_06F_6690
+    dfar Data_06E_4DA2
+    dfar Data_06F_671E
+    dfar Data_070_6C86
+    dfar Data_070_6D5D
+    dfar Data_070_6DFE
+    dfar Data_070_45D5
+    dfar Data_06D_71F8
+    dfar Data_06E_6511
+    dfar Data_070_4675
+    dfar Data_06F_4059
+    dfar Data_06F_40F4
+    dfar Data_070_57E8
+    dfar Data_071_5A2B
+    dfar Data_071_789B
+    dfar Data_06D_67C7
+    dfar Data_06F_72CD
+    dfar Data_06E_59E7
+    dfar Data_06F_7302
+    dfar Data_070_76F4
+    dfar Data_070_7745
+    dfar Data_070_777F
+    dfar Data_070_5025
+    dfar Data_06E_43DB
+    dfar Data_06E_70A6
+    dfar Data_070_5065
+    dfar Data_06F_4BF8
+    dfar Data_06F_4C39
+    dfar Data_070_6398
+    db $00, $01, $02 ; id 3
+    dfar Data_06F_53C6
+    dfar Data_06F_419F
+    dfar Data_06F_427B
+    dfar Data_06F_671E
+    dfar Data_070_6EE3
+    dfar Data_06F_533E
+    dfar Data_06F_6ADA
+    dfar Data_070_6F9C
+    dfar Data_070_6AFE
+    dfar Data_070_471C
+    dfar Data_06D_72CD
+    dfar Data_070_58C1
+    dfar Data_070_47F6
+    dfar Data_06F_4349
+    dfar Data_06F_4433
+    dfar Data_071_5D62
+    dfar Data_06F_5F5C
+    dfar Data_06F_4C75
+    dfar Data_06F_4CBA
+    dfar Data_06F_7302
+    dfar Data_070_77CD
+    dfar Data_06F_5F1D
+    dfar Data_06F_7448
+    dfar Data_070_780C
+    dfar Data_070_7673
+    dfar Data_070_50A3
+    dfar Data_06E_4428
+    dfar Data_070_63D5
+    dfar Data_070_50ED
+    dfar Data_06F_4CFD
+    dfar Data_06F_4D53
+    dfar Data_071_68AD
+Data_072_430D:: ; heuristic: key-world room record; C0
+    db $00, $01, $02 ; id 4
+    dfar Data_071_5113
+    dfar Data_071_6DC6
+    dfar Data_06F_4504
+    dfar Data_06F_6690
+    dfar Data_070_6BB8
+    dfar Data_071_6D31
+    dfar Data_06D_5A36
+    dfar Data_06E_65E7
+    dfar Data_070_6C86
+    dfar Data_071_6F28
+    dfar Data_070_596A
+    dfar Data_070_6D5D
+    dfar Data_070_4384
+    dfar Data_06F_4059
+    dfar Data_06F_40F4
+    dfar Data_070_5A2C
+    dfar Data_071_5A4B
+    dfar Data_071_78F3
+    dfar Data_06F_4D8F
+    dfar Data_06F_72CD
+    dfar Data_070_76AD
+    dfar Data_071_78B9
+    dfar Data_06D_67C7
+    dfar Data_06E_7100
+    dfar Data_070_76F4
+    dfar Data_071_795C
+    dfar Data_070_6421
+    dfar Data_070_7745
+    dfar Data_070_4F56
+    dfar Data_06F_4BF8
+    dfar Data_06F_4C39
+    dfar Data_070_646A
+Data_072_4370:: ; heuristic: key-world room record; C0
+    db $00, $01, $02 ; id 5
+    dfar Data_071_6CE8
+    dfar Data_06D_6707
+    dfar Data_06F_419F
+    dfar Data_071_5D62
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_789B
+    dfar Data_06D_6C65
+    dfar Data_06F_4C75
+    dfar Data_071_68AD
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_43D3:: ; heuristic: key-world room record; C0
+    db $00, $01, $02 ; id 6
+    dfar Data_06F_53C6
+    dfar Data_071_5E55
+    dfar Data_071_6CE8
+    dfar Data_06F_671E
+    dfar Data_070_471C
+    dfar Data_06D_5AD8
+    dfar Data_06D_6613
+    dfar Data_070_596A
+    dfar Data_071_7C77
+    dfar Data_070_6EE3
+    dfar Data_070_4500
+    dfar Data_071_6733
+    dfar Data_071_7C77
+    dfar Data_071_4891
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5F5C
+    dfar Data_071_690E
+    dfar Data_071_789B
+    dfar Data_06F_7302
+    dfar Data_070_50A3
+    dfar Data_06D_680B
+    dfar Data_06D_6C13
+    dfar Data_070_6421
+    dfar Data_071_7E8A
+    dfar Data_070_77CD
+    dfar Data_070_4FDB
+    dfar Data_071_6C52
+    dfar Data_071_7E8A
+    dfar Data_071_4F8F
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_4436:: ; heuristic: key-world room record; C0
+    db $00, $01, $03 ; id 7
+    dfar Data_06F_533E
+    dfar Data_06F_4059
+    dfar Data_06D_5A36
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06D_5A36
+    dfar Data_06D_4496
+    dfar Data_06E_62D4
+    dfar Data_070_6AC4
+    dfar Data_06E_4CC5
+    dfar Data_070_56A6
+    dfar Data_070_6AFE
+    dfar Data_070_4384
+    dfar Data_06D_7079
+    dfar Data_06F_4059
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06F_4BF8
+    dfar Data_06D_67C7
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06D_67C7
+    dfar Data_06D_5178
+    dfar Data_06E_6FD9
+    dfar Data_070_7652
+    dfar Data_06E_599D
+    dfar Data_070_6321
+    dfar Data_070_7673
+    dfar Data_070_4F56
+    dfar Data_06E_4339
+    dfar Data_06F_4BF8
+    dfar Data_070_6321
+Data_072_4499:: ; heuristic: key-world room record; C0
+    db $00, $01, $03 ; id 8
+    dfar Data_06F_53C6
+    dfar Data_06D_5B99
+    dfar Data_06D_5C84
+    dfar Data_06F_671E
+    dfar Data_06E_4E57
+    dfar Data_06D_43EB
+    dfar Data_06D_73DE
+    dfar Data_070_5B18
+    dfar Data_06E_4F37
+    dfar Data_06D_4566
+    dfar Data_06D_5AD8
+    dfar Data_06F_67D7
+    dfar Data_071_4001
+    dfar Data_071_410A
+    dfar Data_070_442A
+    dfar Data_070_5C06
+    dfar Data_06F_5F5C
+    dfar Data_06D_6840
+    dfar Data_06D_688C
+    dfar Data_06F_7302
+    dfar Data_06E_5A26
+    dfar Data_06D_513D
+    dfar Data_06E_447B
+    dfar Data_070_64B5
+    dfar Data_06E_5A71
+    dfar Data_06D_51BC
+    dfar Data_06D_680B
+    dfar Data_06F_734E
+    dfar Data_071_4BF4
+    dfar Data_071_4C63
+    dfar Data_070_4F94
+    dfar Data_070_650E
+    db $00, $01, $03 ; id 9
+    dfar Data_06F_53C6
+    dfar Data_06D_5E62
+    dfar Data_06F_419F
+    dfar Data_06F_671E
+    dfar Data_070_6DFE
+    dfar Data_06E_501C
+    dfar Data_06F_6952
+    dfar Data_070_6EE3
+    dfar Data_070_6F9C
+    dfar Data_06E_50F8
+    dfar Data_070_5731
+    dfar Data_070_6AC4
+    dfar Data_070_4500
+    dfar Data_06D_74CC
+    dfar Data_06F_427B
+    dfar Data_070_57E8
+    dfar Data_06F_5F5C
+    dfar Data_06D_6938
+    dfar Data_06F_4C75
+    dfar Data_06F_7302
+    dfar Data_070_777F
+    dfar Data_06E_5AC5
+    dfar Data_06F_73C7
+    dfar Data_070_77CD
+    dfar Data_070_780C
+    dfar Data_06E_5B0E
+    dfar Data_070_6356
+    dfar Data_070_7652
+    dfar Data_070_4FDB
+    dfar Data_06E_44CB
+    dfar Data_06F_4CBA
+    dfar Data_070_6398
+    db $00, $01, $03 ; id 10
+    dfar Data_06F_53C6
+    dfar Data_06D_5F4F
+    dfar Data_06D_603B
+    dfar Data_06F_671E
+    dfar Data_070_45D5
+    dfar Data_06E_66C1
+    dfar Data_06E_51DE
+    dfar Data_06E_67A5
+    dfar Data_06F_581B
+    dfar Data_06E_687C
+    dfar Data_070_6AFE
+    dfar Data_070_6C86
+    dfar Data_070_4675
+    dfar Data_06D_75DD
+    dfar Data_06D_76E6
+    dfar Data_070_58C1
+    dfar Data_06F_5F5C
+    dfar Data_06D_698A
+    dfar Data_06D_69D0
+    dfar Data_06F_7302
+    dfar Data_070_5025
+    dfar Data_06E_714E
+    dfar Data_06E_5B60
+    dfar Data_06E_71A1
+    dfar Data_06F_60F7
+    dfar Data_06E_71F0
+    dfar Data_070_7673
+    dfar Data_070_76F4
+    dfar Data_070_5065
+    dfar Data_06E_4524
+    dfar Data_06E_4572
+    dfar Data_070_63D5
+    db $00, $01, $03 ; id 11
+    dfar Data_06F_53C6
+    dfar Data_06F_6ADA
+    dfar Data_06F_5473
+    dfar Data_06F_671E
+    dfar Data_070_471C
+    dfar Data_06E_6356
+    dfar Data_06E_4CC5
+    dfar Data_06E_642B
+    dfar Data_06F_54FE
+    dfar Data_06D_4654
+    dfar Data_070_5731
+    dfar Data_070_6D5D
+    dfar Data_071_41DF
+    dfar Data_070_47F6
+    dfar Data_06F_4349
+    dfar Data_070_5A2C
+    dfar Data_06F_5F5C
+    dfar Data_06F_7448
+    dfar Data_06F_5FA0
+    dfar Data_06F_7302
+    dfar Data_070_50A3
+    dfar Data_06E_7012
+    dfar Data_06E_599D
+    dfar Data_06E_7059
+    dfar Data_06F_5FDA
+    dfar Data_06D_520E
+    dfar Data_070_6356
+    dfar Data_070_7745
+    dfar Data_071_4CA8
+    dfar Data_070_50ED
+    dfar Data_06F_4CFD
+    dfar Data_070_646A
+Data_072_4625:: ; heuristic: key-world room record; C0
+    db $00, $01, $03 ; id 12
+    dfar Data_071_6CE8
+    dfar Data_06F_671E
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_070_430D
+    dfar Data_06D_5AD8
+    dfar Data_070_5731
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_789B
+    dfar Data_06F_7302
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_070_4F2C
+    dfar Data_06D_680B
+    dfar Data_070_6356
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_4688:: ; heuristic: key-world room record; C0
+    db $00, $01, $03 ; id 13
+    dfar Data_071_5113
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_5113
+    dfar Data_070_72FE
+    dfar Data_06F_533E
+    dfar Data_06F_493F
+    dfar Data_06E_66C1
+    dfar Data_070_4675
+    dfar Data_06E_62D4
+    dfar Data_071_6D31
+    dfar Data_070_57E8
+    dfar Data_071_7C77
+    dfar Data_071_4B4E
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_5A4B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A4B
+    dfar Data_070_796E
+    dfar Data_06F_5F1D
+    dfar Data_06F_4F43
+    dfar Data_06E_714E
+    dfar Data_070_5065
+    dfar Data_06E_6FD9
+    dfar Data_071_78B9
+    dfar Data_070_6398
+    dfar Data_071_7E8A
+    dfar Data_071_5088
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_46EB:: ; heuristic: key-world room record; C0
+    db $00, $01, $04 ; id 14
+    dfar Data_06F_53C6
+    dfar Data_06F_6690
+    dfar Data_06F_53C6
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_070_4384
+    dfar Data_06E_62D4
+    dfar Data_070_6AFE
+    dfar Data_070_6AFE
+    dfar Data_06F_533E
+    dfar Data_06D_4496
+    dfar Data_06E_62D4
+    dfar Data_070_430D
+    dfar Data_070_5731
+    dfar Data_071_4001
+    dfar Data_071_404F
+    dfar Data_06F_5F5C
+    dfar Data_06F_72CD
+    dfar Data_06F_5F5C
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_070_4F56
+    dfar Data_06E_6FD9
+    dfar Data_070_7673
+    dfar Data_070_7673
+    dfar Data_06F_5F1D
+    dfar Data_06D_5178
+    dfar Data_06E_6FD9
+    dfar Data_070_4F2C
+    dfar Data_070_6356
+    dfar Data_071_4BF4
+    dfar Data_071_4C19
+    db $00, $01, $04 ; id 15
+    dfar Data_071_6D31
+    dfar Data_06F_6690
+    dfar Data_06F_55D2
+    dfar Data_071_5DA5
+    dfar Data_06F_5664
+    dfar Data_06D_712C
+    dfar Data_06D_71F8
+    dfar Data_06F_67D7
+    dfar Data_070_430D
+    dfar Data_06D_5AD8
+    dfar Data_06D_5B99
+    dfar Data_070_5B18
+    dfar Data_071_6D31
+    dfar Data_070_5C06
+    dfar Data_070_4384
+    dfar Data_071_5E55
+    dfar Data_071_78B9
+    dfar Data_06F_72CD
+    dfar Data_06F_6024
+    dfar Data_071_68CC
+    dfar Data_06F_6060
+    dfar Data_06E_438A
+    dfar Data_06E_43DB
+    dfar Data_06F_734E
+    dfar Data_070_4F2C
+    dfar Data_06D_680B
+    dfar Data_06D_6840
+    dfar Data_070_64B5
+    dfar Data_071_78B9
+    dfar Data_070_650E
+    dfar Data_070_4F56
+    dfar Data_071_690E
+    db $00, $01, $04 ; id 16
+    dfar Data_071_5113
+    dfar Data_071_527F
+    dfar Data_071_5359
+    dfar Data_071_5113
+    dfar Data_070_442A
+    dfar Data_06E_6511
+    dfar Data_06E_4DA2
+    dfar Data_070_56A6
+    dfar Data_06F_5738
+    dfar Data_06D_470F
+    dfar Data_06D_47EC
+    dfar Data_06F_6888
+    dfar Data_070_4384
+    dfar Data_070_5731
+    dfar Data_070_45D5
+    dfar Data_070_57E8
+    dfar Data_071_5A4B
+    dfar Data_071_5AD6
+    dfar Data_071_5B15
+    dfar Data_071_5A4B
+    dfar Data_070_4F94
+    dfar Data_06E_70A6
+    dfar Data_06E_59E7
+    dfar Data_070_6321
+    dfar Data_06F_60AA
+    dfar Data_06D_5252
+    dfar Data_06D_529E
+    dfar Data_06F_738B
+    dfar Data_070_4F56
+    dfar Data_070_6356
+    dfar Data_070_5025
+    dfar Data_070_6398
+    db $00, $01, $04 ; id 17
+    dfar Data_06F_53C6
+    dfar Data_06F_6952
+    dfar Data_071_5516
+    dfar Data_071_5113
+    dfar Data_070_4675
+    dfar Data_06D_72CD
+    dfar Data_06D_48D5
+    dfar Data_06E_65E7
+    dfar Data_06F_533E
+    dfar Data_06F_6A2D
+    dfar Data_071_429C
+    dfar Data_070_6DFE
+    dfar Data_071_404F
+    dfar Data_070_471C
+    dfar Data_06F_4433
+    dfar Data_070_58C1
+    dfar Data_06F_5F5C
+    dfar Data_06F_73C7
+    dfar Data_071_5B90
+    dfar Data_071_5A4B
+    dfar Data_070_5065
+    dfar Data_06E_4428
+    dfar Data_06D_5300
+    dfar Data_06E_7100
+    dfar Data_06F_5F1D
+    dfar Data_06F_740D
+    dfar Data_071_4CFD
+    dfar Data_070_777F
+    dfar Data_071_4C19
+    dfar Data_070_50A3
+    dfar Data_06F_4D53
+    dfar Data_070_63D5
+Data_072_4877:: ; heuristic: key-world room record; C0
+    db $00, $01, $04 ; id 18
+    dfar Data_071_50CC
+    dfar Data_06F_5473
+    dfar Data_06F_6ADA
+    dfar Data_071_5113
+    dfar Data_070_47F6
+    dfar Data_06E_66C1
+    dfar Data_06E_4E57
+    dfar Data_070_596A
+    dfar Data_06F_54FE
+    dfar Data_06E_67A5
+    dfar Data_06E_4F37
+    dfar Data_06F_6BA4
+    dfar Data_071_404F
+    dfar Data_070_430D
+    dfar Data_070_5A2C
+    dfar Data_071_44EC
+    dfar Data_071_5A2B
+    dfar Data_06F_5FA0
+    dfar Data_06F_7448
+    dfar Data_071_5A4B
+    dfar Data_070_50ED
+    dfar Data_06E_714E
+    dfar Data_06E_5A26
+    dfar Data_070_6421
+    dfar Data_06F_5FDA
+    dfar Data_06E_71A1
+    dfar Data_06E_5A71
+    dfar Data_06F_748C
+    dfar Data_071_4C19
+    dfar Data_070_4F2C
+    dfar Data_070_646A
+    dfar Data_071_4DCE
+Data_072_48DA:: ; heuristic: key-world room record; C0
+    db $00, $01, $04 ; id 19
+    dfar Data_071_6CE8
+    dfar Data_06D_5A36
+    dfar Data_06F_427B
+    dfar Data_071_5D62
+    dfar Data_071_7C77
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5473
+    dfar Data_070_596A
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_789B
+    dfar Data_06D_67C7
+    dfar Data_06F_4CBA
+    dfar Data_071_68AD
+    dfar Data_071_7E8A
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_5FA0
+    dfar Data_070_6421
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_493D:: ; heuristic: key-world room record; C0
+    db $00, $01, $04 ; id 20
+    dfar Data_071_6D31
+    dfar Data_06D_5A36
+    dfar Data_06D_6707
+    dfar Data_071_5DA5
+    dfar Data_071_7C77
+    dfar Data_070_4D66
+    dfar Data_06E_62D4
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7548
+    dfar Data_06D_4566
+    dfar Data_071_5E55
+    dfar Data_071_6D31
+    dfar Data_06F_4433
+    dfar Data_070_596A
+    dfar Data_071_7C77
+    dfar Data_071_78B9
+    dfar Data_06D_67C7
+    dfar Data_06D_6C65
+    dfar Data_071_68CC
+    dfar Data_071_7E8A
+    dfar Data_070_5344
+    dfar Data_06E_6FD9
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7B41
+    dfar Data_06D_51BC
+    dfar Data_071_690E
+    dfar Data_071_78B9
+    dfar Data_06F_4D53
+    dfar Data_070_6421
+    dfar Data_071_7E8A
+Data_072_49A0:: ; heuristic: key-world room record; C0
+    db $00, $01, $05 ; id 21
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_06F_533E
+    dfar Data_071_5DA5
+    dfar Data_070_4384
+    dfar Data_06D_43EB
+    dfar Data_06D_712C
+    dfar Data_071_5D62
+    dfar Data_06F_533E
+    dfar Data_06D_4496
+    dfar Data_06D_5A36
+    dfar Data_071_5DA5
+    dfar Data_070_4384
+    dfar Data_070_56A6
+    dfar Data_070_4384
+    dfar Data_071_5D62
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_06F_5F1D
+    dfar Data_071_68CC
+    dfar Data_070_4F56
+    dfar Data_06D_513D
+    dfar Data_06E_438A
+    dfar Data_071_68AD
+    dfar Data_06F_5F1D
+    dfar Data_06D_5178
+    dfar Data_06D_67C7
+    dfar Data_071_68CC
+    dfar Data_070_4F56
+    dfar Data_070_6321
+    dfar Data_070_4F56
+    dfar Data_071_68AD
+Data_072_4A03:: ; heuristic: key-world room record; C0
+    db $00, $01, $05 ; id 22
+    dfar Data_071_6D31
+    dfar Data_06F_671E
+    dfar Data_06F_55D2
+    dfar Data_06F_671E
+    dfar Data_06F_5664
+    dfar Data_070_5B18
+    dfar Data_06E_501C
+    dfar Data_070_5C06
+    dfar Data_070_6EE3
+    dfar Data_071_6D31
+    dfar Data_06D_49AC
+    dfar Data_071_5F2C
+    dfar Data_070_442A
+    dfar Data_06F_4504
+    dfar Data_06D_73DE
+    dfar Data_071_5DA5
+    dfar Data_071_78B9
+    dfar Data_06F_7302
+    dfar Data_06F_6024
+    dfar Data_06F_7302
+    dfar Data_06F_6060
+    dfar Data_070_64B5
+    dfar Data_06E_5AC5
+    dfar Data_070_650E
+    dfar Data_070_77CD
+    dfar Data_071_78B9
+    dfar Data_06D_535E
+    dfar Data_071_6949
+    dfar Data_070_4F94
+    dfar Data_06F_4D8F
+    dfar Data_06E_447B
+    dfar Data_071_68CC
+    db $00, $01, $05 ; id 23
+    dfar Data_06F_53C6
+    dfar Data_06F_6888
+    dfar Data_071_5359
+    dfar Data_071_5113
+    dfar Data_06E_50F8
+    dfar Data_06E_687C
+    dfar Data_070_6F9C
+    dfar Data_070_6AFE
+    dfar Data_06E_51DE
+    dfar Data_06D_43EB
+    dfar Data_06D_4566
+    dfar Data_06E_62D4
+    dfar Data_070_4500
+    dfar Data_06D_74CC
+    dfar Data_06D_75DD
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_738B
+    dfar Data_071_5B15
+    dfar Data_071_5A4B
+    dfar Data_06E_5B0E
+    dfar Data_06E_71F0
+    dfar Data_070_780C
+    dfar Data_070_7673
+    dfar Data_06E_5B60
+    dfar Data_06D_513D
+    dfar Data_06D_51BC
+    dfar Data_06E_6FD9
+    dfar Data_070_4FDB
+    dfar Data_06E_44CB
+    dfar Data_06E_4524
+    dfar Data_070_6356
+    db $00, $01, $05 ; id 24
+    dfar Data_071_5113
+    dfar Data_06F_581B
+    dfar Data_06D_5C84
+    dfar Data_071_5DA5
+    dfar Data_06E_4C45
+    dfar Data_06E_642B
+    dfar Data_070_6BB8
+    dfar Data_071_5516
+    dfar Data_06E_4DA2
+    dfar Data_06E_6511
+    dfar Data_06E_4E57
+    dfar Data_06E_65E7
+    dfar Data_070_45D5
+    dfar Data_070_57E8
+    dfar Data_070_4675
+    dfar Data_070_5731
+    dfar Data_071_5A4B
+    dfar Data_06F_60F7
+    dfar Data_06D_688C
+    dfar Data_071_68CC
+    dfar Data_06E_5968
+    dfar Data_06E_7059
+    dfar Data_070_76AD
+    dfar Data_071_5B90
+    dfar Data_06E_59E7
+    dfar Data_06E_70A6
+    dfar Data_06E_5A26
+    dfar Data_06E_7100
+    dfar Data_070_5025
+    dfar Data_070_6398
+    dfar Data_070_5065
+    dfar Data_070_6356
+    db $00, $01, $05 ; id 25
+    dfar Data_071_6D31
+    dfar Data_06F_6952
+    dfar Data_071_6E5C
+    dfar Data_06F_671E
+    dfar Data_071_55EA
+    dfar Data_070_471C
+    dfar Data_06F_6ADA
+    dfar Data_070_6C86
+    dfar Data_070_6D5D
+    dfar Data_071_5113
+    dfar Data_070_47F6
+    dfar Data_06E_66C1
+    dfar Data_070_4384
+    dfar Data_06D_76E6
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_071_78B9
+    dfar Data_06F_73C7
+    dfar Data_071_7915
+    dfar Data_06F_7302
+    dfar Data_071_5BBA
+    dfar Data_070_50A3
+    dfar Data_06F_7448
+    dfar Data_070_76F4
+    dfar Data_070_7745
+    dfar Data_071_5A4B
+    dfar Data_070_50ED
+    dfar Data_06E_714E
+    dfar Data_070_4F56
+    dfar Data_06E_4572
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+Data_072_4B8F:: ; heuristic: key-world room record; C0
+    db $00, $01, $05 ; id 26
+    dfar Data_071_6CE8
+    dfar Data_06F_4001
+    dfar Data_06F_6ADA
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_4675
+    dfar Data_06E_6511
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_72FE
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_789B
+    dfar Data_06F_4BCE
+    dfar Data_06F_7448
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_5065
+    dfar Data_06E_70A6
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_796E
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+Data_072_4BF2:: ; heuristic: key-world room record; C0
+    db $00, $01, $05 ; id 27
+    dfar Data_06F_533E
+    dfar Data_071_6572
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_070_430D
+    dfar Data_06F_6690
+    dfar Data_070_4D66
+    dfar Data_06E_62D4
+    dfar Data_071_7C77
+    dfar Data_070_4C9E
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_071_7003
+    dfar Data_06D_7079
+    dfar Data_070_5731
+    dfar Data_06F_5F1D
+    dfar Data_071_6BB8
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_070_4F2C
+    dfar Data_06F_72CD
+    dfar Data_070_5344
+    dfar Data_06E_6FD9
+    dfar Data_071_7E8A
+    dfar Data_070_52F6
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_071_799C
+    dfar Data_06E_4339
+    dfar Data_070_6356
+Data_072_4C55:: ; heuristic: key-world room record; C0
+    db $00, $02, $03 ; id 28
+    dfar Data_071_5113
+    dfar Data_071_50CC
+    dfar Data_071_5113
+    dfar Data_071_50CC
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_06E_4CC5
+    dfar Data_06D_43EB
+    dfar Data_06D_712C
+    dfar Data_06E_62D4
+    dfar Data_070_430D
+    dfar Data_06D_712C
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_071_5A4B
+    dfar Data_071_5A2B
+    dfar Data_071_5A4B
+    dfar Data_071_5A2B
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_06E_599D
+    dfar Data_06D_513D
+    dfar Data_06E_438A
+    dfar Data_06E_6FD9
+    dfar Data_070_4F2C
+    dfar Data_06E_438A
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+    db $00, $02, $03 ; id 29
+    dfar Data_071_6D31
+    dfar Data_06D_5D70
+    dfar Data_06F_6BA4
+    dfar Data_071_51A4
+    dfar Data_071_7003
+    dfar Data_06D_4496
+    dfar Data_06D_712C
+    dfar Data_06E_67A5
+    dfar Data_06F_53C6
+    dfar Data_070_5A2C
+    dfar Data_06F_53C6
+    dfar Data_06E_687C
+    dfar Data_071_404F
+    dfar Data_071_70DC
+    dfar Data_06D_71F8
+    dfar Data_070_57E8
+    dfar Data_071_78B9
+    dfar Data_06D_68E7
+    dfar Data_06F_748C
+    dfar Data_071_5A8A
+    dfar Data_071_799C
+    dfar Data_06D_5178
+    dfar Data_06E_438A
+    dfar Data_06E_71A1
+    dfar Data_06F_5F5C
+    dfar Data_070_646A
+    dfar Data_06F_5F5C
+    dfar Data_06E_71F0
+    dfar Data_071_4C19
+    dfar Data_071_79C4
+    dfar Data_06E_43DB
+    dfar Data_070_6398
+    db $00, $02, $03 ; id 30
+    dfar Data_06F_53C6
+    dfar Data_071_612A
+    dfar Data_06F_55D2
+    dfar Data_06F_6690
+    dfar Data_070_6DFE
+    dfar Data_06F_53C6
+    dfar Data_06D_470F
+    dfar Data_070_5B18
+    dfar Data_06E_4F37
+    dfar Data_06E_6356
+    dfar Data_06E_4CC5
+    dfar Data_06F_67D7
+    dfar Data_071_410A
+    dfar Data_070_4500
+    dfar Data_06D_72CD
+    dfar Data_070_5C06
+    dfar Data_06F_5F5C
+    dfar Data_071_6A07
+    dfar Data_06F_6024
+    dfar Data_06F_72CD
+    dfar Data_070_777F
+    dfar Data_06F_5F5C
+    dfar Data_06D_5252
+    dfar Data_070_64B5
+    dfar Data_06E_5A71
+    dfar Data_06E_7012
+    dfar Data_06E_599D
+    dfar Data_06F_734E
+    dfar Data_071_4C63
+    dfar Data_070_4FDB
+    dfar Data_06E_4428
+    dfar Data_070_650E
+    db $00, $02, $03 ; id 31
+    dfar Data_071_6D31
+    dfar Data_06F_4059
+    dfar Data_06D_5E62
+    dfar Data_06F_6888
+    dfar Data_071_6CE8
+    dfar Data_06F_4059
+    dfar Data_06D_47EC
+    dfar Data_06E_642B
+    dfar Data_06F_5738
+    dfar Data_06D_5F4F
+    dfar Data_06D_4496
+    dfar Data_06E_6511
+    dfar Data_070_45D5
+    dfar Data_06D_73DE
+    dfar Data_06D_74CC
+    dfar Data_070_56A6
+    dfar Data_071_78B9
+    dfar Data_06F_4BF8
+    dfar Data_06D_6938
+    dfar Data_06F_738B
+    dfar Data_071_789B
+    dfar Data_06F_4BF8
+    dfar Data_06D_529E
+    dfar Data_06E_7059
+    dfar Data_06F_60AA
+    dfar Data_06D_698A
+    dfar Data_06D_5178
+    dfar Data_06E_70A6
+    dfar Data_070_5025
+    dfar Data_06E_447B
+    dfar Data_06E_44CB
+    dfar Data_070_6321
+Data_072_4DE1:: ; heuristic: key-world room record; C0
+    db $00, $02, $03 ; id 32
+    dfar Data_06F_53C6
+    dfar Data_06F_419F
+    dfar Data_06D_603B
+    dfar Data_06F_6952
+    dfar Data_071_41DF
+    dfar Data_06F_533E
+    dfar Data_070_57E8
+    dfar Data_070_6EE3
+    dfar Data_06F_5473
+    dfar Data_070_58C1
+    dfar Data_071_6D31
+    dfar Data_06E_65E7
+    dfar Data_071_429C
+    dfar Data_071_6E5C
+    dfar Data_06F_427B
+    dfar Data_070_596A
+    dfar Data_06F_5F5C
+    dfar Data_06F_4C75
+    dfar Data_06D_69D0
+    dfar Data_06F_73C7
+    dfar Data_071_4CA8
+    dfar Data_06F_5F1D
+    dfar Data_070_6398
+    dfar Data_070_77CD
+    dfar Data_06F_5FA0
+    dfar Data_070_63D5
+    dfar Data_071_78B9
+    dfar Data_06E_7100
+    dfar Data_071_4CFD
+    dfar Data_071_7915
+    dfar Data_06F_4CBA
+    dfar Data_070_6421
+Data_072_4E44:: ; heuristic: key-world room record; C0
+    db $00, $02, $03 ; id 33
+    dfar Data_071_6CE8
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_430D
+    dfar Data_071_5D62
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_789B
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_4F2C
+    dfar Data_071_68AD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_4EA7:: ; heuristic: key-world room record; C0
+    db $00, $02, $03 ; id 34
+    dfar Data_071_6D31
+    dfar Data_06F_40F4
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_53C6
+    dfar Data_06D_7DC6
+    dfar Data_06F_6ADA
+    dfar Data_071_6DC6
+    dfar Data_06E_6C83
+    dfar Data_06F_53C6
+    dfar Data_070_5A2C
+    dfar Data_071_7C77
+    dfar Data_070_4675
+    dfar Data_070_58C1
+    dfar Data_071_7C77
+    dfar Data_071_78B9
+    dfar Data_06F_4C39
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_5F5C
+    dfar Data_06E_481C
+    dfar Data_06F_7448
+    dfar Data_071_78F3
+    dfar Data_06E_739F
+    dfar Data_06F_5F5C
+    dfar Data_070_646A
+    dfar Data_071_7E8A
+    dfar Data_070_5065
+    dfar Data_070_63D5
+    dfar Data_071_7E8A
+Data_072_4F0A:: ; heuristic: key-world room record; C0
+    db $00, $02, $04 ; id 35
+    dfar Data_071_6CE8
+    dfar Data_06F_4059
+    dfar Data_06D_5A36
+    dfar Data_06F_671E
+    dfar Data_071_6D31
+    dfar Data_06D_5A36
+    dfar Data_06D_4496
+    dfar Data_070_56A6
+    dfar Data_071_50CC
+    dfar Data_071_404F
+    dfar Data_06E_4C45
+    dfar Data_071_5DA5
+    dfar Data_070_4384
+    dfar Data_06F_4001
+    dfar Data_06D_712C
+    dfar Data_071_5D62
+    dfar Data_071_789B
+    dfar Data_06F_4BF8
+    dfar Data_06D_67C7
+    dfar Data_06F_7302
+    dfar Data_071_78B9
+    dfar Data_06D_67C7
+    dfar Data_06D_5178
+    dfar Data_070_6321
+    dfar Data_071_5A2B
+    dfar Data_071_4C19
+    dfar Data_06E_5968
+    dfar Data_071_68CC
+    dfar Data_070_4F56
+    dfar Data_06F_4BCE
+    dfar Data_06E_438A
+    dfar Data_071_68AD
+Data_072_4F6D:: ; heuristic: key-world room record; C0
+    db $00, $02, $04 ; id 36
+    dfar Data_06F_53C6
+    dfar Data_06F_4349
+    dfar Data_06D_5AD8
+    dfar Data_06F_6A2D
+    dfar Data_071_4348
+    dfar Data_06F_53C6
+    dfar Data_070_5A2C
+    dfar Data_070_6F9C
+    dfar Data_071_527F
+    dfar Data_070_4675
+    dfar Data_06F_6ADA
+    dfar Data_070_6AFE
+    dfar Data_070_4384
+    dfar Data_06F_4433
+    dfar Data_06D_75DD
+    dfar Data_070_5B18
+    dfar Data_06F_5F5C
+    dfar Data_06F_4CFD
+    dfar Data_06D_680B
+    dfar Data_06F_740D
+    dfar Data_071_4D36
+    dfar Data_06F_5F5C
+    dfar Data_070_646A
+    dfar Data_070_780C
+    dfar Data_071_5AD6
+    dfar Data_070_5065
+    dfar Data_06F_7448
+    dfar Data_070_7673
+    dfar Data_070_4F56
+    dfar Data_06F_4D53
+    dfar Data_06E_4524
+    dfar Data_070_64B5
+    db $00, $02, $04 ; id 37
+    dfar Data_06F_53C6
+    dfar Data_071_6216
+    dfar Data_071_543D
+    dfar Data_071_5359
+    dfar Data_070_6BB8
+    dfar Data_071_6D31
+    dfar Data_06E_66C1
+    dfar Data_070_6C86
+    dfar Data_06E_50F8
+    dfar Data_06D_5B99
+    dfar Data_06D_49AC
+    dfar Data_06E_67A5
+    dfar Data_071_404F
+    dfar Data_071_44EC
+    dfar Data_070_47F6
+    dfar Data_070_5C06
+    dfar Data_06F_5F5C
+    dfar Data_071_6A42
+    dfar Data_071_5B4C
+    dfar Data_071_5B15
+    dfar Data_070_76AD
+    dfar Data_071_78B9
+    dfar Data_06E_714E
+    dfar Data_070_76F4
+    dfar Data_06E_5B0E
+    dfar Data_06D_6840
+    dfar Data_06D_535E
+    dfar Data_06E_71A1
+    dfar Data_071_4C19
+    dfar Data_071_4DCE
+    dfar Data_070_50ED
+    dfar Data_070_650E
+    db $00, $02, $04 ; id 38
+    dfar Data_06F_53C6
+    dfar Data_06D_5C84
+    dfar Data_06D_5D70
+    dfar Data_06F_6BA4
+    dfar Data_070_6D5D
+    dfar Data_070_430D
+    dfar Data_06D_4496
+    dfar Data_06E_687C
+    dfar Data_070_6DFE
+    dfar Data_06F_581B
+    dfar Data_06E_62D4
+    dfar Data_071_4001
+    dfar Data_070_4384
+    dfar Data_06D_76E6
+    dfar Data_06D_712C
+    dfar Data_071_5DA5
+    dfar Data_06F_5F5C
+    dfar Data_06D_688C
+    dfar Data_06D_68E7
+    dfar Data_06F_748C
+    dfar Data_070_7745
+    dfar Data_070_4F2C
+    dfar Data_06D_5178
+    dfar Data_06E_71F0
+    dfar Data_070_777F
+    dfar Data_06F_60F7
+    dfar Data_06E_6FD9
+    dfar Data_071_4BF4
+    dfar Data_070_4F56
+    dfar Data_06E_4572
+    dfar Data_06E_438A
+    dfar Data_071_68CC
+    db $00, $02, $04 ; id 39
+    dfar Data_06F_53C6
+    dfar Data_06D_5E62
+    dfar Data_06D_5F4F
+    dfar Data_06F_671E
+    dfar Data_070_6EE3
+    dfar Data_06E_4CC5
+    dfar Data_06E_6356
+    dfar Data_070_6F9C
+    dfar Data_06E_4CC5
+    dfar Data_06D_71F8
+    dfar Data_06D_73DE
+    dfar Data_06E_642B
+    dfar Data_070_4384
+    dfar Data_06F_4504
+    dfar Data_06F_4059
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06D_6938
+    dfar Data_06D_698A
+    dfar Data_06F_7302
+    dfar Data_070_77CD
+    dfar Data_06E_599D
+    dfar Data_06E_7012
+    dfar Data_070_780C
+    dfar Data_06E_599D
+    dfar Data_06E_43DB
+    dfar Data_06E_447B
+    dfar Data_06E_7059
+    dfar Data_070_4F56
+    dfar Data_06F_4D8F
+    dfar Data_06F_4BF8
+    dfar Data_070_6356
+Data_072_50F9:: ; heuristic: key-world room record; C0
+    db $00, $02, $04 ; id 40
+    dfar Data_06F_533E
+    dfar Data_06F_6BA4
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_6EE3
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_6BB8
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5F1D
+    dfar Data_06F_748C
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_77CD
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_76AD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_515C:: ; heuristic: key-world room record; C0
+    db $00, $02, $04 ; id 41
+    dfar Data_071_6D31
+    dfar Data_06F_4504
+    dfar Data_06F_6888
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_6D31
+    dfar Data_06D_4F87
+    dfar Data_06F_67D7
+    dfar Data_071_7C77
+    dfar Data_071_70DC
+    dfar Data_06D_49AC
+    dfar Data_070_6170
+    dfar Data_071_6D31
+    dfar Data_06F_419F
+    dfar Data_070_57E8
+    dfar Data_071_7C77
+    dfar Data_071_78B9
+    dfar Data_06F_4D8F
+    dfar Data_06F_738B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_78B9
+    dfar Data_06D_55BF
+    dfar Data_06F_734E
+    dfar Data_071_7E8A
+    dfar Data_071_79C4
+    dfar Data_06D_535E
+    dfar Data_070_6758
+    dfar Data_071_78B9
+    dfar Data_06F_4C75
+    dfar Data_070_6398
+    dfar Data_071_7E8A
+Data_072_51BF:: ; heuristic: key-world room record; C0
+    db $00, $02, $05 ; id 42
+    dfar Data_06F_53C6
+    dfar Data_06F_4001
+    dfar Data_071_5DA5
+    dfar Data_071_50CC
+    dfar Data_070_6AC4
+    dfar Data_06F_53C6
+    dfar Data_06D_5A36
+    dfar Data_070_5731
+    dfar Data_070_6AFE
+    dfar Data_070_430D
+    dfar Data_06D_4496
+    dfar Data_06F_6690
+    dfar Data_070_430D
+    dfar Data_06F_4059
+    dfar Data_06D_7079
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_4BCE
+    dfar Data_071_68CC
+    dfar Data_071_5A2B
+    dfar Data_070_7652
+    dfar Data_06F_5F5C
+    dfar Data_06D_67C7
+    dfar Data_070_6356
+    dfar Data_070_7673
+    dfar Data_070_4F2C
+    dfar Data_06D_5178
+    dfar Data_06F_72CD
+    dfar Data_070_4F2C
+    dfar Data_06F_4BF8
+    dfar Data_06E_4339
+    dfar Data_070_6356
+    db $00, $02, $05 ; id 43
+    dfar Data_06F_53C6
+    dfar Data_071_5E55
+    dfar Data_071_7003
+    dfar Data_06F_67D7
+    dfar Data_070_6AC4
+    dfar Data_06F_533E
+    dfar Data_06F_6888
+    dfar Data_070_6AFE
+    dfar Data_06E_4E57
+    dfar Data_070_57E8
+    dfar Data_070_45D5
+    dfar Data_06E_642B
+    dfar Data_070_4675
+    dfar Data_06F_419F
+    dfar Data_06F_40F4
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_071_690E
+    dfar Data_071_799C
+    dfar Data_06F_734E
+    dfar Data_070_7652
+    dfar Data_06F_5F1D
+    dfar Data_06F_738B
+    dfar Data_070_7673
+    dfar Data_06E_5A26
+    dfar Data_070_6398
+    dfar Data_070_5025
+    dfar Data_06E_7059
+    dfar Data_070_5065
+    dfar Data_06F_4C75
+    dfar Data_06F_4C39
+    dfar Data_070_6356
+    db $00, $02, $05 ; id 44
+    dfar Data_06F_533E
+    dfar Data_071_5F2C
+    dfar Data_06F_533E
+    dfar Data_06F_6952
+    dfar Data_070_6D5D
+    dfar Data_06F_53C6
+    dfar Data_06E_65E7
+    dfar Data_070_6DFE
+    dfar Data_070_6EE3
+    dfar Data_06E_4E57
+    dfar Data_070_596A
+    dfar Data_070_6F9C
+    dfar Data_070_471C
+    dfar Data_06D_72CD
+    dfar Data_06F_427B
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_071_6949
+    dfar Data_06F_5F1D
+    dfar Data_06F_73C7
+    dfar Data_070_7745
+    dfar Data_06F_5F5C
+    dfar Data_06E_7100
+    dfar Data_070_777F
+    dfar Data_070_77CD
+    dfar Data_06E_5A26
+    dfar Data_070_6421
+    dfar Data_070_780C
+    dfar Data_070_50A3
+    dfar Data_06E_4428
+    dfar Data_06F_4CBA
+    dfar Data_070_6321
+Data_072_52E8:: ; heuristic: key-world room record; C0
+    db $00, $02, $05 ; id 45
+    dfar Data_06F_53C6
+    dfar Data_06F_4349
+    dfar Data_06D_603B
+    dfar Data_071_5FBA
+    dfar Data_070_6AFE
+    dfar Data_06F_533E
+    dfar Data_06E_66C1
+    dfar Data_071_5516
+    dfar Data_070_6BB8
+    dfar Data_070_4384
+    dfar Data_070_5B18
+    dfar Data_070_6C86
+    dfar Data_070_47F6
+    dfar Data_06F_4504
+    dfar Data_06F_4433
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_4CFD
+    dfar Data_06D_69D0
+    dfar Data_071_697F
+    dfar Data_070_7673
+    dfar Data_06F_5F1D
+    dfar Data_06E_714E
+    dfar Data_071_5B90
+    dfar Data_070_76AD
+    dfar Data_070_4F56
+    dfar Data_070_64B5
+    dfar Data_070_76F4
+    dfar Data_070_50ED
+    dfar Data_06F_4D8F
+    dfar Data_06F_4D53
+    dfar Data_070_6356
+    db $00, $02, $05 ; id 46
+    dfar Data_06F_533E
+    dfar Data_06F_40F4
+    dfar Data_06F_4059
+    dfar Data_06F_6ADA
+    dfar Data_070_6DFE
+    dfar Data_06F_53C6
+    dfar Data_06F_6A2D
+    dfar Data_070_6D5D
+    dfar Data_06E_4F37
+    dfar Data_06D_74CC
+    dfar Data_06D_76E6
+    dfar Data_06E_67A5
+    dfar Data_070_442A
+    dfar Data_06F_427B
+    dfar Data_06F_419F
+    dfar Data_070_5731
+    dfar Data_06F_5F1D
+    dfar Data_06F_4C39
+    dfar Data_06F_4BF8
+    dfar Data_06F_7448
+    dfar Data_070_777F
+    dfar Data_06F_5F5C
+    dfar Data_06F_740D
+    dfar Data_070_7745
+    dfar Data_06E_5A71
+    dfar Data_06E_44CB
+    dfar Data_06E_4572
+    dfar Data_06E_71A1
+    dfar Data_070_4F94
+    dfar Data_06F_4CBA
+    dfar Data_06F_4C75
+    dfar Data_070_6356
+Data_072_53AE:: ; heuristic: key-world room record; C0
+    db $00, $02, $05 ; id 47
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_430D
+    dfar Data_06F_671E
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_430D
+    dfar Data_06F_671E
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_430D
+    dfar Data_071_5D62
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_4F2C
+    dfar Data_06F_7302
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_4F2C
+    dfar Data_06F_7302
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_4F2C
+    dfar Data_071_68AD
+Data_072_5411:: ; heuristic: key-world room record; C0
+    db $00, $02, $05 ; id 48
+    dfar Data_071_6D31
+    dfar Data_06F_4001
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_6D31
+    dfar Data_06D_507D
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4B4E
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_404F
+    dfar Data_071_78B9
+    dfar Data_06F_4BCE
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_78B9
+    dfar Data_06D_561F
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5088
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4C19
+    db $00, $03, $04 ; id 49
+    dfar Data_071_6CE8
+    dfar Data_06F_671E
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_071_6D31
+    dfar Data_06D_43EB
+    dfar Data_06D_4496
+    dfar Data_06E_62D4
+    dfar Data_071_50CC
+    dfar Data_070_4384
+    dfar Data_070_56A6
+    dfar Data_070_6AFE
+    dfar Data_070_4384
+    dfar Data_06F_4001
+    dfar Data_06F_4059
+    dfar Data_070_56A6
+    dfar Data_071_789B
+    dfar Data_06F_7302
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_071_78B9
+    dfar Data_06D_513D
+    dfar Data_06D_5178
+    dfar Data_06E_6FD9
+    dfar Data_071_5A2B
+    dfar Data_070_4F56
+    dfar Data_070_6321
+    dfar Data_070_7673
+    dfar Data_070_4F56
+    dfar Data_06F_4BCE
+    dfar Data_06F_4BF8
+    dfar Data_070_6321
+    db $00, $03, $04 ; id 50
+    dfar Data_06F_53C6
+    dfar Data_06D_5A36
+    dfar Data_06D_5B99
+    dfar Data_071_6079
+    dfar Data_071_410A
+    dfar Data_06E_501C
+    dfar Data_06D_4566
+    dfar Data_071_612A
+    dfar Data_071_70DC
+    dfar Data_06E_687C
+    dfar Data_06E_4CC5
+    dfar Data_06F_6BA4
+    dfar Data_071_6D31
+    dfar Data_070_57E8
+    dfar Data_070_4500
+    dfar Data_070_58C1
+    dfar Data_06F_5F5C
+    dfar Data_06D_67C7
+    dfar Data_06D_6840
+    dfar Data_071_69C4
+    dfar Data_071_4C63
+    dfar Data_06E_5AC5
+    dfar Data_06D_51BC
+    dfar Data_071_6A07
+    dfar Data_071_79C4
+    dfar Data_06E_71F0
+    dfar Data_06E_599D
+    dfar Data_06F_748C
+    dfar Data_071_78B9
+    dfar Data_070_6398
+    dfar Data_070_4FDB
+    dfar Data_070_63D5
+Data_072_553A:: ; heuristic: key-world room record; C0
+    db $00, $03, $04 ; id 51
+    dfar Data_06F_533E
+    dfar Data_06D_5C84
+    dfar Data_06F_4349
+    dfar Data_06F_6690
+    dfar Data_070_6EE3
+    dfar Data_070_6F9C
+    dfar Data_071_6D31
+    dfar Data_06E_62D4
+    dfar Data_070_45D5
+    dfar Data_06D_4654
+    dfar Data_06F_4059
+    dfar Data_06E_642B
+    dfar Data_071_6CE8
+    dfar Data_06D_75DD
+    dfar Data_06F_4433
+    dfar Data_070_596A
+    dfar Data_06F_5F1D
+    dfar Data_06D_688C
+    dfar Data_06F_4CFD
+    dfar Data_06F_72CD
+    dfar Data_070_77CD
+    dfar Data_070_780C
+    dfar Data_071_78B9
+    dfar Data_06E_6FD9
+    dfar Data_070_5025
+    dfar Data_06D_520E
+    dfar Data_06F_4BF8
+    dfar Data_06E_7059
+    dfar Data_071_789B
+    dfar Data_06E_4524
+    dfar Data_06F_4D53
+    dfar Data_070_6421
+    db $00, $03, $04 ; id 52
+    dfar Data_071_5113
+    dfar Data_071_5113
+    dfar Data_06F_5664
+    dfar Data_06F_67D7
+    dfar Data_070_4675
+    dfar Data_06E_6511
+    dfar Data_070_6AFE
+    dfar Data_071_41DF
+    dfar Data_071_6E5C
+    dfar Data_06D_470F
+    dfar Data_070_5731
+    dfar Data_071_51A4
+    dfar Data_071_6D31
+    dfar Data_06D_712C
+    dfar Data_06F_4059
+    dfar Data_070_5B18
+    dfar Data_071_5A4B
+    dfar Data_071_5A4B
+    dfar Data_06F_6060
+    dfar Data_06F_734E
+    dfar Data_070_5065
+    dfar Data_06E_70A6
+    dfar Data_070_7673
+    dfar Data_071_4CA8
+    dfar Data_071_7915
+    dfar Data_06D_5252
+    dfar Data_070_6356
+    dfar Data_071_5A8A
+    dfar Data_071_78B9
+    dfar Data_06E_438A
+    dfar Data_06F_4BF8
+    dfar Data_070_64B5
+Data_072_5600:: ; heuristic: key-world room record; C0
+    db $00, $03, $04 ; id 53
+    dfar Data_06F_533E
+    dfar Data_06F_40F4
+    dfar Data_06D_5D70
+    dfar Data_06F_6888
+    dfar Data_06E_51DE
+    dfar Data_06F_419F
+    dfar Data_06E_65E7
+    dfar Data_070_6C86
+    dfar Data_071_429C
+    dfar Data_06F_581B
+    dfar Data_070_5731
+    dfar Data_070_6BB8
+    dfar Data_071_6CE8
+    dfar Data_06D_71F8
+    dfar Data_06F_427B
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06F_4C39
+    dfar Data_06D_68E7
+    dfar Data_06F_738B
+    dfar Data_06E_5B60
+    dfar Data_06F_4C75
+    dfar Data_06E_7100
+    dfar Data_070_76F4
+    dfar Data_071_4CFD
+    dfar Data_06F_60F7
+    dfar Data_070_6356
+    dfar Data_070_76AD
+    dfar Data_071_789B
+    dfar Data_06E_43DB
+    dfar Data_06F_4CBA
+    dfar Data_070_6321
+Data_072_5663:: ; heuristic: key-world room record; C0
+    db $00, $03, $04 ; id 54
+    dfar Data_071_5113
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_430D
+    dfar Data_06F_6BA4
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06E_4C45
+    dfar Data_071_5DA5
+    dfar Data_071_7C77
+    dfar Data_071_6D31
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_5A4B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_4F2C
+    dfar Data_06F_748C
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06E_5968
+    dfar Data_071_68CC
+    dfar Data_071_7E8A
+    dfar Data_071_78B9
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_56C6:: ; heuristic: key-world room record; C0
+    db $00, $03, $04 ; id 55
+    dfar Data_071_6CE8
+    dfar Data_06F_6690
+    dfar Data_06E_40D7
+    dfar Data_071_7C77
+    dfar Data_06F_533E
+    dfar Data_06D_507D
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_070_7575
+    dfar Data_070_430D
+    dfar Data_06F_4001
+    dfar Data_071_6816
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_789B
+    dfar Data_06F_72CD
+    dfar Data_06E_42A3
+    dfar Data_071_7E8A
+    dfar Data_06F_5F1D
+    dfar Data_06D_561F
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+    dfar Data_070_7A52
+    dfar Data_070_4F2C
+    dfar Data_06F_4BCE
+    dfar Data_071_6CA5
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_5729:: ; heuristic: key-world room record; C0
+    db $00, $03, $05 ; id 56
+    dfar Data_06F_53C6
+    dfar Data_06F_4001
+    dfar Data_06D_5AD8
+    dfar Data_071_5D62
+    dfar Data_06E_4C45
+    dfar Data_06F_671E
+    dfar Data_070_430D
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06D_43EB
+    dfar Data_071_5DA5
+    dfar Data_070_6AC4
+    dfar Data_071_4001
+    dfar Data_070_4384
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_4BCE
+    dfar Data_06D_680B
+    dfar Data_071_68AD
+    dfar Data_06E_5968
+    dfar Data_06F_7302
+    dfar Data_070_4F2C
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06D_513D
+    dfar Data_071_68CC
+    dfar Data_070_7652
+    dfar Data_071_4BF4
+    dfar Data_070_4F56
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+    db $00, $03, $05 ; id 57
+    dfar Data_071_6CE8
+    dfar Data_06F_6ADA
+    dfar Data_071_70DC
+    dfar Data_06F_6952
+    dfar Data_06F_53C6
+    dfar Data_06D_47EC
+    dfar Data_06F_6A2D
+    dfar Data_070_6DFE
+    dfar Data_06E_4CC5
+    dfar Data_06D_72CD
+    dfar Data_070_5731
+    dfar Data_070_6D5D
+    dfar Data_070_471C
+    dfar Data_06F_4349
+    dfar Data_06F_4504
+    dfar Data_070_56A6
+    dfar Data_071_789B
+    dfar Data_06F_7448
+    dfar Data_071_79C4
+    dfar Data_06F_73C7
+    dfar Data_06F_5F5C
+    dfar Data_06D_529E
+    dfar Data_06F_740D
+    dfar Data_070_777F
+    dfar Data_06E_599D
+    dfar Data_06E_4428
+    dfar Data_070_6356
+    dfar Data_070_7745
+    dfar Data_070_50A3
+    dfar Data_06F_4CFD
+    dfar Data_06F_4D8F
+    dfar Data_070_6321
+    db $00, $03, $05 ; id 58
+    dfar Data_06F_53C6
+    dfar Data_06D_5E62
+    dfar Data_06F_4433
+    dfar Data_06F_6BA4
+    dfar Data_070_47F6
+    dfar Data_06D_48D5
+    dfar Data_06F_671E
+    dfar Data_070_6F9C
+    dfar Data_06F_54FE
+    dfar Data_06D_49AC
+    dfar Data_070_56A6
+    dfar Data_070_6EE3
+    dfar Data_071_4348
+    dfar Data_071_441D
+    dfar Data_071_71B8
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06D_6938
+    dfar Data_06F_4D53
+    dfar Data_06F_748C
+    dfar Data_070_50ED
+    dfar Data_06D_5300
+    dfar Data_06F_7302
+    dfar Data_070_780C
+    dfar Data_06F_5FDA
+    dfar Data_06D_535E
+    dfar Data_070_6321
+    dfar Data_070_77CD
+    dfar Data_071_4D36
+    dfar Data_071_4D89
+    dfar Data_071_7A02
+    dfar Data_070_6356
+Data_072_5852:: ; heuristic: key-world room record; C0
+    db $00, $03, $05 ; id 59
+    dfar Data_071_6CE8
+    dfar Data_06F_6888
+    dfar Data_06F_55D2
+    dfar Data_06F_67D7
+    dfar Data_071_527F
+    dfar Data_06E_4DA2
+    dfar Data_06D_43EB
+    dfar Data_06E_66C1
+    dfar Data_070_6AFE
+    dfar Data_070_442A
+    dfar Data_070_5731
+    dfar Data_070_6AC4
+    dfar Data_070_430D
+    dfar Data_06F_4059
+    dfar Data_06F_419F
+    dfar Data_070_56A6
+    dfar Data_071_789B
+    dfar Data_06F_738B
+    dfar Data_06F_6024
+    dfar Data_06F_734E
+    dfar Data_071_5AD6
+    dfar Data_06E_59E7
+    dfar Data_06D_513D
+    dfar Data_06E_714E
+    dfar Data_070_7673
+    dfar Data_070_4F94
+    dfar Data_070_6356
+    dfar Data_070_7652
+    dfar Data_070_4F2C
+    dfar Data_06F_4BF8
+    dfar Data_06F_4C75
+    dfar Data_070_6321
+    db $00, $03, $05 ; id 60
+    dfar Data_06F_53C6
+    dfar Data_06D_5F4F
+    dfar Data_06F_40F4
+    dfar Data_06F_6A2D
+    dfar Data_070_6D5D
+    dfar Data_06E_4E57
+    dfar Data_06F_6952
+    dfar Data_070_6C86
+    dfar Data_071_44EC
+    dfar Data_071_404F
+    dfar Data_071_4001
+    dfar Data_070_6BB8
+    dfar Data_071_6D31
+    dfar Data_06F_4349
+    dfar Data_06F_427B
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06D_698A
+    dfar Data_06F_4C39
+    dfar Data_06F_740D
+    dfar Data_070_7745
+    dfar Data_06E_5A26
+    dfar Data_06F_73C7
+    dfar Data_070_76F4
+    dfar Data_071_4DCE
+    dfar Data_071_4C19
+    dfar Data_071_4BF4
+    dfar Data_070_76AD
+    dfar Data_071_78B9
+    dfar Data_06F_4CFD
+    dfar Data_06F_4CBA
+    dfar Data_070_6356
+Data_072_5918:: ; heuristic: key-world room record; C0
+    db $00, $03, $05 ; id 61
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_4675
+    dfar Data_06F_4A06
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_430D
+    dfar Data_06F_71F0
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_5065
+    dfar Data_06F_4F89
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_4F2C
+    dfar Data_06F_76F8
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+Data_072_597B:: ; heuristic: key-world room record; C0
+    db $00, $03, $05 ; id 62
+    dfar Data_071_6CE8
+    dfar Data_06F_4AC6
+    dfar Data_06F_6A2D
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_73BB
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5664
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_4D66
+    dfar Data_06F_4504
+    dfar Data_071_5D62
+    dfar Data_071_789B
+    dfar Data_06F_4FD4
+    dfar Data_06F_740D
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_79BA
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_6060
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_5344
+    dfar Data_06F_4D8F
+    dfar Data_071_68AD
+    db $00, $04, $05 ; id 63
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_071_6CE8
+    dfar Data_06F_671E
+    dfar Data_070_4384
+    dfar Data_06E_62D4
+    dfar Data_06F_53C6
+    dfar Data_06E_62D4
+    dfar Data_06F_533E
+    dfar Data_06E_6356
+    dfar Data_070_6AC4
+    dfar Data_071_404F
+    dfar Data_071_404F
+    dfar Data_070_430D
+    dfar Data_06D_712C
+    dfar Data_071_5D62
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_071_789B
+    dfar Data_06F_7302
+    dfar Data_070_4F56
+    dfar Data_06E_6FD9
+    dfar Data_06F_5F5C
+    dfar Data_06E_6FD9
+    dfar Data_06F_5F1D
+    dfar Data_06E_7012
+    dfar Data_070_7652
+    dfar Data_071_4C19
+    dfar Data_071_4C19
+    dfar Data_070_4F2C
+    dfar Data_06E_438A
+    dfar Data_071_68AD
+Data_072_5A41:: ; heuristic: key-world room record; C0
+    db $00, $04, $05 ; id 64
+    dfar Data_071_6D31
+    dfar Data_06D_603B
+    dfar Data_06F_4433
+    dfar Data_06F_6BA4
+    dfar Data_06F_5738
+    dfar Data_06D_73DE
+    dfar Data_06F_6ADA
+    dfar Data_071_41DF
+    dfar Data_06E_4F37
+    dfar Data_06D_5AD8
+    dfar Data_06D_4566
+    dfar Data_06F_67D7
+    dfar Data_070_4384
+    dfar Data_070_5731
+    dfar Data_070_45D5
+    dfar Data_070_5731
+    dfar Data_071_78B9
+    dfar Data_06D_69D0
+    dfar Data_06F_4D53
+    dfar Data_06F_748C
+    dfar Data_06F_60AA
+    dfar Data_06E_447B
+    dfar Data_06F_7448
+    dfar Data_071_4CA8
+    dfar Data_06E_5A71
+    dfar Data_06D_680B
+    dfar Data_06D_51BC
+    dfar Data_06F_734E
+    dfar Data_070_4F56
+    dfar Data_070_6356
+    dfar Data_070_5025
+    dfar Data_070_6356
+Data_072_5AA4:: ; heuristic: key-world room record; C0
+    db $00, $04, $05 ; id 65
+    dfar Data_071_5113
+    dfar Data_06F_581B
+    dfar Data_06F_4504
+    dfar Data_06F_6690
+    dfar Data_070_4675
+    dfar Data_06D_4654
+    dfar Data_06D_5B99
+    dfar Data_06E_67A5
+    dfar Data_06F_533E
+    dfar Data_070_596A
+    dfar Data_070_6EE3
+    dfar Data_070_6DFE
+    dfar Data_070_430D
+    dfar Data_071_6216
+    dfar Data_070_47F6
+    dfar Data_070_56A6
+    dfar Data_071_5A4B
+    dfar Data_06F_60F7
+    dfar Data_06F_4D8F
+    dfar Data_06F_72CD
+    dfar Data_070_5065
+    dfar Data_06D_520E
+    dfar Data_06D_6840
+    dfar Data_06E_71A1
+    dfar Data_06F_5F1D
+    dfar Data_070_6421
+    dfar Data_070_77CD
+    dfar Data_070_777F
+    dfar Data_070_4F2C
+    dfar Data_071_6A42
+    dfar Data_070_50ED
+    dfar Data_070_6321
+    db $00, $04, $05 ; id 66
+    dfar Data_06F_533E
+    dfar Data_06F_4001
+    dfar Data_06D_5C84
+    dfar Data_06F_6888
+    dfar Data_070_6F9C
+    dfar Data_06F_54FE
+    dfar Data_06E_687C
+    dfar Data_071_429C
+    dfar Data_070_6BB8
+    dfar Data_070_4384
+    dfar Data_070_5C06
+    dfar Data_071_543D
+    dfar Data_070_430D
+    dfar Data_06F_419F
+    dfar Data_06F_4059
+    dfar Data_070_5731
+    dfar Data_06F_5F1D
+    dfar Data_06F_4BCE
+    dfar Data_06D_688C
+    dfar Data_06F_738B
+    dfar Data_070_780C
+    dfar Data_06F_5FDA
+    dfar Data_06E_71F0
+    dfar Data_071_4CFD
+    dfar Data_070_76AD
+    dfar Data_070_4F56
+    dfar Data_070_650E
+    dfar Data_071_5B4C
+    dfar Data_070_4F2C
+    dfar Data_06F_4C75
+    dfar Data_06F_4BF8
+    dfar Data_070_6356
+    db $00, $04, $05 ; id 67
+    dfar Data_06F_533E
+    dfar Data_06F_427B
+    dfar Data_06F_40F4
+    dfar Data_06F_6888
+    dfar Data_071_4348
+    dfar Data_06F_5664
+    dfar Data_06F_6952
+    dfar Data_070_6C86
+    dfar Data_06F_5738
+    dfar Data_06D_470F
+    dfar Data_06E_6356
+    dfar Data_070_6AFE
+    dfar Data_071_4001
+    dfar Data_070_4500
+    dfar Data_06D_74CC
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06F_4CBA
+    dfar Data_06F_4C39
+    dfar Data_06F_738B
+    dfar Data_071_4D36
+    dfar Data_06F_6060
+    dfar Data_06F_73C7
+    dfar Data_070_76F4
+    dfar Data_06F_60AA
+    dfar Data_06D_5252
+    dfar Data_06E_7012
+    dfar Data_070_7673
+    dfar Data_071_4BF4
+    dfar Data_070_4FDB
+    dfar Data_06E_44CB
+    dfar Data_070_6321
+Data_072_5BCD:: ; heuristic: key-world room record; C0
+    db $00, $04, $05 ; id 68
+    dfar Data_071_6D31
+    dfar Data_06F_704B
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_6D5D
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5C81
+    dfar Data_06D_76E6
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_071_404F
+    dfar Data_071_7C77
+    dfar Data_070_442A
+    dfar Data_071_5DA5
+    dfar Data_071_78B9
+    dfar Data_06F_7660
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_7745
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_62D2
+    dfar Data_06E_4572
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_071_4C19
+    dfar Data_071_7E8A
+    dfar Data_070_4F94
+    dfar Data_071_68CC
+Data_072_5C30:: ; heuristic: key-world room record; C0
+    db $00, $04, $05 ; id 69
+    dfar Data_06F_533E
+    dfar Data_071_6733
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_45D5
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_06E_4001
+    dfar Data_06F_54FE
+    dfar Data_06D_7DC6
+    dfar Data_06F_419F
+    dfar Data_06E_67A5
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_06F_5F1D
+    dfar Data_071_6C52
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_5025
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_06E_425D
+    dfar Data_06F_5FDA
+    dfar Data_06E_481C
+    dfar Data_06F_4C75
+    dfar Data_06E_71A1
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+Data_072_5C93:: ; heuristic: key-world room record; C0
+    db $01, $02, $03 ; id 70
+    dfar Data_06F_53C6
+    dfar Data_06F_6690
+    dfar Data_06F_53C6
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_071_404F
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_06E_4CC5
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_070_6AC4
+    dfar Data_070_430D
+    dfar Data_06F_4059
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_72CD
+    dfar Data_06F_5F5C
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_071_4C19
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_06E_599D
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+    dfar Data_070_7652
+    dfar Data_070_4F2C
+    dfar Data_06F_4BF8
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+    db $01, $02, $03 ; id 71
+    dfar Data_06F_581B
+    dfar Data_06F_6A2D
+    dfar Data_06F_53C6
+    dfar Data_06F_671E
+    dfar Data_06E_4F37
+    dfar Data_070_5731
+    dfar Data_070_4675
+    dfar Data_06E_65E7
+    dfar Data_06E_501C
+    dfar Data_06F_6BA4
+    dfar Data_06F_53C6
+    dfar Data_06E_642B
+    dfar Data_070_471C
+    dfar Data_06D_75DD
+    dfar Data_06D_7079
+    dfar Data_070_58C1
+    dfar Data_06F_60F7
+    dfar Data_06F_740D
+    dfar Data_06F_5F5C
+    dfar Data_06F_7302
+    dfar Data_06E_5A71
+    dfar Data_070_6356
+    dfar Data_070_5065
+    dfar Data_06E_7100
+    dfar Data_06E_5AC5
+    dfar Data_06F_748C
+    dfar Data_06F_5F5C
+    dfar Data_06E_7059
+    dfar Data_070_50A3
+    dfar Data_06E_4524
+    dfar Data_06E_4339
+    dfar Data_070_63D5
+Data_072_5D59:: ; heuristic: key-world room record; C0
+    db $01, $02, $03 ; id 72
+    dfar Data_06F_54FE
+    dfar Data_06F_4349
+    dfar Data_06D_5D70
+    dfar Data_06F_671E
+    dfar Data_06E_50F8
+    dfar Data_06F_671E
+    dfar Data_06E_51DE
+    dfar Data_06E_6511
+    dfar Data_06E_4C45
+    dfar Data_06E_62D4
+    dfar Data_06E_4CC5
+    dfar Data_06E_66C1
+    dfar Data_070_47F6
+    dfar Data_06D_71F8
+    dfar Data_070_5A2C
+    dfar Data_071_44EC
+    dfar Data_06F_5FDA
+    dfar Data_06F_4CFD
+    dfar Data_06D_68E7
+    dfar Data_06F_7302
+    dfar Data_06E_5B0E
+    dfar Data_06F_7302
+    dfar Data_06E_5B60
+    dfar Data_06E_70A6
+    dfar Data_06E_5968
+    dfar Data_06E_6FD9
+    dfar Data_06E_599D
+    dfar Data_06E_714E
+    dfar Data_070_50ED
+    dfar Data_06E_43DB
+    dfar Data_070_646A
+    dfar Data_071_4DCE
+    db $01, $02, $03 ; id 73
+    dfar Data_06F_5664
+    dfar Data_06F_4433
+    dfar Data_06F_6888
+    dfar Data_071_5113
+    dfar Data_070_6EE3
+    dfar Data_06F_53C6
+    dfar Data_06E_65E7
+    dfar Data_070_6F9C
+    dfar Data_070_6D5D
+    dfar Data_070_430D
+    dfar Data_070_5731
+    dfar Data_070_6DFE
+    dfar Data_070_442A
+    dfar Data_06F_4504
+    dfar Data_06F_40F4
+    dfar Data_070_56A6
+    dfar Data_06F_6060
+    dfar Data_06F_4D53
+    dfar Data_06F_738B
+    dfar Data_071_5A4B
+    dfar Data_070_77CD
+    dfar Data_06F_5F5C
+    dfar Data_06E_7100
+    dfar Data_070_780C
+    dfar Data_070_7745
+    dfar Data_070_4F2C
+    dfar Data_070_6356
+    dfar Data_070_777F
+    dfar Data_070_4F94
+    dfar Data_06F_4D8F
+    dfar Data_06F_4C39
+    dfar Data_070_6321
+    db $01, $02, $03 ; id 74
+    dfar Data_06F_581B
+    dfar Data_06F_419F
+    dfar Data_06F_4059
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_06F_53C6
+    dfar Data_06F_427B
+    dfar Data_070_5B18
+    dfar Data_06E_4E57
+    dfar Data_070_57E8
+    dfar Data_06F_53C6
+    dfar Data_06F_6952
+    dfar Data_070_4500
+    dfar Data_06F_4349
+    dfar Data_06D_72CD
+    dfar Data_070_58C1
+    dfar Data_06F_60F7
+    dfar Data_06F_4C75
+    dfar Data_06F_4BF8
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_06F_5F5C
+    dfar Data_06F_4CBA
+    dfar Data_070_64B5
+    dfar Data_06E_5A26
+    dfar Data_070_6398
+    dfar Data_06F_5F5C
+    dfar Data_06F_73C7
+    dfar Data_070_4FDB
+    dfar Data_06F_4CFD
+    dfar Data_06E_4428
+    dfar Data_070_63D5
+Data_072_5E82:: ; heuristic: key-world room record; C0
+    db $01, $02, $03 ; id 75
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_55D2
+    dfar Data_071_5DA5
+    dfar Data_071_7C77
+    dfar Data_071_6CE8
+    dfar Data_06E_6EF4
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_6024
+    dfar Data_071_68CC
+    dfar Data_071_7E8A
+    dfar Data_071_789B
+    dfar Data_06E_7480
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_5EE5:: ; heuristic: key-world room record; C0
+    db $01, $02, $03 ; id 76
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7548
+    dfar Data_06E_6D3B
+    dfar Data_071_7C77
+    dfar Data_070_47F6
+    dfar Data_06F_4001
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7B41
+    dfar Data_06E_73E5
+    dfar Data_071_7E8A
+    dfar Data_070_50ED
+    dfar Data_06F_4BCE
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    db $01, $02, $04 ; id 77
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06D_7079
+    dfar Data_070_5731
+    dfar Data_070_6AC4
+    dfar Data_070_430D
+    dfar Data_06D_5AD8
+    dfar Data_06D_5A36
+    dfar Data_06E_6356
+    dfar Data_071_6D31
+    dfar Data_06D_7079
+    dfar Data_06D_712C
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06E_4339
+    dfar Data_070_6356
+    dfar Data_070_7652
+    dfar Data_070_4F2C
+    dfar Data_06D_680B
+    dfar Data_06D_67C7
+    dfar Data_06E_7012
+    dfar Data_071_78B9
+    dfar Data_06E_4339
+    dfar Data_06E_438A
+    dfar Data_070_6321
+Data_072_5FAB:: ; heuristic: key-world room record; C0
+    db $01, $02, $04 ; id 78
+    dfar Data_071_6E5C
+    dfar Data_06F_6ADA
+    dfar Data_071_5113
+    dfar Data_071_5113
+    dfar Data_071_51A4
+    dfar Data_070_4384
+    dfar Data_06D_47EC
+    dfar Data_06E_67A5
+    dfar Data_06E_4F37
+    dfar Data_06F_6BA4
+    dfar Data_06E_501C
+    dfar Data_070_596A
+    dfar Data_070_430D
+    dfar Data_06D_73DE
+    dfar Data_06D_75DD
+    dfar Data_071_5D62
+    dfar Data_071_7915
+    dfar Data_06F_7448
+    dfar Data_071_5A4B
+    dfar Data_071_5A4B
+    dfar Data_071_5A8A
+    dfar Data_070_4F56
+    dfar Data_06D_529E
+    dfar Data_06E_71A1
+    dfar Data_06E_5A71
+    dfar Data_06F_748C
+    dfar Data_06E_5AC5
+    dfar Data_070_6421
+    dfar Data_070_4F2C
+    dfar Data_06E_447B
+    dfar Data_06E_4524
+    dfar Data_071_68AD
+    db $01, $02, $04 ; id 79
+    dfar Data_06F_5473
+    dfar Data_06D_5E62
+    dfar Data_06F_4433
+    dfar Data_06F_6690
+    dfar Data_070_6C86
+    dfar Data_070_4384
+    dfar Data_06F_6888
+    dfar Data_070_6BB8
+    dfar Data_06E_50F8
+    dfar Data_06F_67D7
+    dfar Data_070_6DFE
+    dfar Data_070_6D5D
+    dfar Data_070_4384
+    dfar Data_070_5B18
+    dfar Data_070_430D
+    dfar Data_070_5A2C
+    dfar Data_06F_5FA0
+    dfar Data_06D_6938
+    dfar Data_06F_4D53
+    dfar Data_06F_72CD
+    dfar Data_070_76F4
+    dfar Data_070_4F56
+    dfar Data_06F_738B
+    dfar Data_070_76AD
+    dfar Data_06E_5B0E
+    dfar Data_06F_734E
+    dfar Data_070_777F
+    dfar Data_070_7745
+    dfar Data_070_4F56
+    dfar Data_070_64B5
+    dfar Data_070_4F2C
+    dfar Data_070_646A
+    db $01, $02, $04 ; id 80
+    dfar Data_06F_54FE
+    dfar Data_06F_6952
+    dfar Data_06F_55D2
+    dfar Data_071_5DA5
+    dfar Data_071_4001
+    dfar Data_070_4384
+    dfar Data_06D_48D5
+    dfar Data_06F_6A2D
+    dfar Data_06F_5664
+    dfar Data_06F_4504
+    dfar Data_06E_687C
+    dfar Data_070_6EE3
+    dfar Data_070_430D
+    dfar Data_06F_4001
+    dfar Data_06D_74CC
+    dfar Data_070_5C06
+    dfar Data_06F_5FDA
+    dfar Data_06F_73C7
+    dfar Data_06F_6024
+    dfar Data_071_68CC
+    dfar Data_071_4BF4
+    dfar Data_070_4F56
+    dfar Data_06D_5300
+    dfar Data_06F_740D
+    dfar Data_06F_6060
+    dfar Data_06F_4D8F
+    dfar Data_06E_71F0
+    dfar Data_070_77CD
+    dfar Data_070_4F2C
+    dfar Data_06F_4BCE
+    dfar Data_06E_44CB
+    dfar Data_070_650E
+Data_072_60D4:: ; heuristic: key-world room record; C0
+    db $01, $02, $04 ; id 81
+    dfar Data_071_527F
+    dfar Data_071_543D
+    dfar Data_071_5516
+    dfar Data_071_5113
+    dfar Data_06E_51DE
+    dfar Data_06D_712C
+    dfar Data_06D_72CD
+    dfar Data_06E_6356
+    dfar Data_06E_4CC5
+    dfar Data_06D_5F4F
+    dfar Data_06F_40F4
+    dfar Data_06E_6511
+    dfar Data_070_4384
+    dfar Data_06D_71F8
+    dfar Data_06F_419F
+    dfar Data_070_56A6
+    dfar Data_071_5AD6
+    dfar Data_071_5B4C
+    dfar Data_071_5B90
+    dfar Data_071_5A4B
+    dfar Data_06E_5B60
+    dfar Data_06E_438A
+    dfar Data_06E_4428
+    dfar Data_06E_7012
+    dfar Data_06E_599D
+    dfar Data_06D_698A
+    dfar Data_06F_4C39
+    dfar Data_06E_70A6
+    dfar Data_070_4F56
+    dfar Data_06E_43DB
+    dfar Data_06F_4C75
+    dfar Data_070_6321
+Data_072_6137:: ; heuristic: key-world room record; C0
+    db $01, $02, $04 ; id 82
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5473
+    dfar Data_071_5D62
+    dfar Data_071_7C77
+    dfar Data_06F_533E
+    dfar Data_070_6170
+    dfar Data_071_7C77
+    dfar Data_06F_5E41
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_5FA0
+    dfar Data_071_68AD
+    dfar Data_071_7E8A
+    dfar Data_06F_5F1D
+    dfar Data_070_6758
+    dfar Data_071_7E8A
+    dfar Data_06F_635E
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_619A:: ; heuristic: key-world room record; C0
+    db $01, $02, $04 ; id 83
+    dfar Data_071_7C77
+    dfar Data_06E_4001
+    dfar Data_071_7C77
+    dfar Data_071_5113
+    dfar Data_071_761C
+    dfar Data_06D_4496
+    dfar Data_06F_4A06
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_070_72FE
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_6D31
+    dfar Data_070_5A2C
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7E8A
+    dfar Data_06E_425D
+    dfar Data_071_7E8A
+    dfar Data_071_5A4B
+    dfar Data_071_7B8F
+    dfar Data_06D_5178
+    dfar Data_06F_4F89
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+    dfar Data_070_796E
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_78B9
+    dfar Data_070_646A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    db $01, $02, $05 ; id 84
+    dfar Data_06F_53C6
+    dfar Data_06D_5A36
+    dfar Data_06F_4059
+    dfar Data_071_5D62
+    dfar Data_06E_4C45
+    dfar Data_06D_4496
+    dfar Data_06F_4001
+    dfar Data_071_5DA5
+    dfar Data_070_6AFE
+    dfar Data_06E_4C45
+    dfar Data_06F_4059
+    dfar Data_071_6079
+    dfar Data_070_430D
+    dfar Data_06D_712C
+    dfar Data_06F_4001
+    dfar Data_071_5DA5
+    dfar Data_06F_5F5C
+    dfar Data_06D_67C7
+    dfar Data_06F_4BF8
+    dfar Data_071_68AD
+    dfar Data_06E_5968
+    dfar Data_06D_5178
+    dfar Data_06F_4BCE
+    dfar Data_071_68CC
+    dfar Data_070_7673
+    dfar Data_06E_5968
+    dfar Data_06F_4BF8
+    dfar Data_071_69C4
+    dfar Data_070_4F2C
+    dfar Data_06E_438A
+    dfar Data_06F_4BCE
+    dfar Data_071_68CC
+Data_072_6260:: ; heuristic: key-world room record; C0
+    db $01, $02, $05 ; id 85
+    dfar Data_06F_5738
+    dfar Data_06D_603B
+    dfar Data_06D_5A36
+    dfar Data_071_5DA5
+    dfar Data_06E_4DA2
+    dfar Data_06E_6356
+    dfar Data_06E_4E57
+    dfar Data_071_6079
+    dfar Data_070_6F9C
+    dfar Data_070_6AFE
+    dfar Data_06E_4F37
+    dfar Data_071_5FBA
+    dfar Data_070_45D5
+    dfar Data_06D_72CD
+    dfar Data_06D_73DE
+    dfar Data_071_5D62
+    dfar Data_06F_60AA
+    dfar Data_06D_69D0
+    dfar Data_06D_67C7
+    dfar Data_071_68CC
+    dfar Data_06E_59E7
+    dfar Data_06E_7012
+    dfar Data_06E_5A26
+    dfar Data_071_69C4
+    dfar Data_070_780C
+    dfar Data_070_7673
+    dfar Data_06E_5A71
+    dfar Data_071_697F
+    dfar Data_070_5025
+    dfar Data_06E_4428
+    dfar Data_06E_447B
+    dfar Data_071_68AD
+    db $01, $02, $05 ; id 86
+    dfar Data_06F_533E
+    dfar Data_06F_4504
+    dfar Data_06F_4349
+    dfar Data_071_5DA5
+    dfar Data_070_6D5D
+    dfar Data_06F_53C6
+    dfar Data_06F_6BA4
+    dfar Data_071_55EA
+    dfar Data_070_6BB8
+    dfar Data_070_471C
+    dfar Data_06D_74CC
+    dfar Data_06E_65E7
+    dfar Data_070_4675
+    dfar Data_06F_4433
+    dfar Data_06F_427B
+    dfar Data_070_5731
+    dfar Data_06F_5F1D
+    dfar Data_06F_4D8F
+    dfar Data_06F_4CFD
+    dfar Data_071_68CC
+    dfar Data_070_7745
+    dfar Data_06F_5F5C
+    dfar Data_06F_748C
+    dfar Data_071_5BBA
+    dfar Data_070_76AD
+    dfar Data_070_50A3
+    dfar Data_06E_44CB
+    dfar Data_06E_7100
+    dfar Data_070_5065
+    dfar Data_06F_4D53
+    dfar Data_06F_4CBA
+    dfar Data_070_6356
+Data_072_6326:: ; heuristic: key-world room record; C0
+    db $01, $02, $05 ; id 87
+    dfar Data_06F_5473
+    dfar Data_06F_4059
+    dfar Data_06F_4349
+    dfar Data_06F_671E
+    dfar Data_06E_501C
+    dfar Data_06D_5AD8
+    dfar Data_06F_40F4
+    dfar Data_070_58C1
+    dfar Data_070_6C86
+    dfar Data_06E_50F8
+    dfar Data_06F_427B
+    dfar Data_06F_6690
+    dfar Data_070_47F6
+    dfar Data_06D_75DD
+    dfar Data_06F_419F
+    dfar Data_070_5731
+    dfar Data_06F_5FA0
+    dfar Data_06F_4BF8
+    dfar Data_06F_4CFD
+    dfar Data_06F_7302
+    dfar Data_06E_5AC5
+    dfar Data_06D_680B
+    dfar Data_06F_4C39
+    dfar Data_070_63D5
+    dfar Data_070_76F4
+    dfar Data_06E_5B0E
+    dfar Data_06F_4CBA
+    dfar Data_06F_72CD
+    dfar Data_070_50ED
+    dfar Data_06E_4524
+    dfar Data_06F_4C75
+    dfar Data_070_6356
+    db $01, $02, $05 ; id 88
+    dfar Data_06F_54FE
+    dfar Data_06D_5B99
+    dfar Data_06D_5C84
+    dfar Data_071_5D62
+    dfar Data_070_6EE3
+    dfar Data_070_6AFE
+    dfar Data_06E_51DE
+    dfar Data_071_5DA5
+    dfar Data_06E_4CC5
+    dfar Data_06D_49AC
+    dfar Data_06E_66C1
+    dfar Data_071_5113
+    dfar Data_070_4384
+    dfar Data_06D_76E6
+    dfar Data_06D_72CD
+    dfar Data_070_56A6
+    dfar Data_06F_5FDA
+    dfar Data_06D_6840
+    dfar Data_06D_688C
+    dfar Data_071_68AD
+    dfar Data_070_77CD
+    dfar Data_070_7673
+    dfar Data_06E_5B60
+    dfar Data_071_68CC
+    dfar Data_06E_599D
+    dfar Data_06D_535E
+    dfar Data_06E_714E
+    dfar Data_071_5A4B
+    dfar Data_070_4F56
+    dfar Data_06E_4572
+    dfar Data_06E_4428
+    dfar Data_070_6321
+Data_072_63EC:: ; heuristic: key-world room record; C0
+    db $01, $02, $05 ; id 89
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_6CE8
+    dfar Data_06D_5A36
+    dfar Data_070_57E8
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_7575
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_4675
+    dfar Data_071_5DA5
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_789B
+    dfar Data_06D_67C7
+    dfar Data_070_6398
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_7A52
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_5065
+    dfar Data_071_68CC
+Data_072_644F:: ; heuristic: key-world room record; C0
+    db $01, $02, $05 ; id 90
+    dfar Data_071_7C77
+    dfar Data_06E_40D7
+    dfar Data_071_7C77
+    dfar Data_071_5113
+    dfar Data_071_7C77
+    dfar Data_06E_4CC5
+    dfar Data_071_6659
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_06E_4F37
+    dfar Data_06F_4349
+    dfar Data_06E_6EF4
+    dfar Data_071_7C77
+    dfar Data_071_4891
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7E8A
+    dfar Data_06E_42A3
+    dfar Data_071_7E8A
+    dfar Data_071_5A4B
+    dfar Data_071_7E8A
+    dfar Data_06E_599D
+    dfar Data_071_6C05
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_06E_5A71
+    dfar Data_06F_4CFD
+    dfar Data_06E_7480
+    dfar Data_071_7E8A
+    dfar Data_071_4F8F
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    db $01, $03, $04 ; id 91
+    dfar Data_06F_533E
+    dfar Data_06F_4059
+    dfar Data_06D_5A36
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06D_5A36
+    dfar Data_06E_6356
+    dfar Data_070_6AC4
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_070_4384
+    dfar Data_070_56A6
+    dfar Data_070_4384
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06F_4BF8
+    dfar Data_06D_67C7
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06D_67C7
+    dfar Data_06E_7012
+    dfar Data_070_7652
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_070_4F56
+    dfar Data_070_6321
+    dfar Data_070_4F56
+    dfar Data_070_6321
+    db $01, $03, $04 ; id 92
+    dfar Data_071_5359
+    dfar Data_071_51A4
+    dfar Data_06F_55D2
+    dfar Data_071_5D62
+    dfar Data_06E_4DA2
+    dfar Data_06D_4496
+    dfar Data_06D_712C
+    dfar Data_071_5E55
+    dfar Data_070_6F9C
+    dfar Data_070_45D5
+    dfar Data_06F_4059
+    dfar Data_06F_67D7
+    dfar Data_070_430D
+    dfar Data_071_5FBA
+    dfar Data_071_6F28
+    dfar Data_070_5A2C
+    dfar Data_071_5B15
+    dfar Data_071_5A8A
+    dfar Data_06F_6024
+    dfar Data_071_68AD
+    dfar Data_06E_59E7
+    dfar Data_06D_5178
+    dfar Data_06E_438A
+    dfar Data_071_690E
+    dfar Data_070_780C
+    dfar Data_070_5025
+    dfar Data_06F_4BF8
+    dfar Data_06F_734E
+    dfar Data_070_4F2C
+    dfar Data_071_697F
+    dfar Data_071_795C
+    dfar Data_070_646A
+    db $01, $03, $04 ; id 93
+    dfar Data_06F_5664
+    dfar Data_06D_5E62
+    dfar Data_06F_4504
+    dfar Data_06F_671E
+    dfar Data_06E_4E57
+    dfar Data_06D_4566
+    dfar Data_06F_4001
+    dfar Data_06E_67A5
+    dfar Data_06E_4F37
+    dfar Data_06D_71F8
+    dfar Data_06D_5AD8
+    dfar Data_06E_62D4
+    dfar Data_070_4384
+    dfar Data_071_6079
+    dfar Data_071_410A
+    dfar Data_071_404F
+    dfar Data_06F_6060
+    dfar Data_06D_6938
+    dfar Data_06F_4D8F
+    dfar Data_06F_7302
+    dfar Data_06E_5A26
+    dfar Data_06D_51BC
+    dfar Data_06F_4BCE
+    dfar Data_06E_71A1
+    dfar Data_06E_5A71
+    dfar Data_06E_43DB
+    dfar Data_06D_680B
+    dfar Data_06E_6FD9
+    dfar Data_070_4F56
+    dfar Data_071_69C4
+    dfar Data_071_4C63
+    dfar Data_071_4C19
+Data_072_65DB:: ; heuristic: key-world room record; C0
+    db $01, $03, $04 ; id 94
+    dfar Data_06F_581B
+    dfar Data_06F_6ADA
+    dfar Data_06F_5738
+    dfar Data_06F_6690
+    dfar Data_06E_501C
+    dfar Data_06D_4654
+    dfar Data_06D_470F
+    dfar Data_06E_687C
+    dfar Data_070_6AFE
+    dfar Data_070_4675
+    dfar Data_070_56A6
+    dfar Data_070_6BB8
+    dfar Data_070_430D
+    dfar Data_06F_40F4
+    dfar Data_06F_4349
+    dfar Data_070_5B18
+    dfar Data_06F_60F7
+    dfar Data_06F_7448
+    dfar Data_06F_60AA
+    dfar Data_06F_72CD
+    dfar Data_06E_5AC5
+    dfar Data_06D_520E
+    dfar Data_06D_5252
+    dfar Data_06E_71F0
+    dfar Data_070_7673
+    dfar Data_070_5065
+    dfar Data_070_6321
+    dfar Data_070_76AD
+    dfar Data_070_4F2C
+    dfar Data_06F_4C39
+    dfar Data_06F_4CFD
+    dfar Data_070_64B5
+Data_072_663E:: ; heuristic: key-world room record; C0
+    db $01, $03, $04 ; id 95
+    dfar Data_071_7003
+    dfar Data_06F_6A2D
+    dfar Data_071_543D
+    dfar Data_071_5113
+    dfar Data_06F_53C6
+    dfar Data_06D_47EC
+    dfar Data_06D_72CD
+    dfar Data_06E_642B
+    dfar Data_070_6C86
+    dfar Data_06E_50F8
+    dfar Data_06F_4059
+    dfar Data_06E_65E7
+    dfar Data_070_4384
+    dfar Data_06D_73DE
+    dfar Data_06F_427B
+    dfar Data_070_57E8
+    dfar Data_071_799C
+    dfar Data_06F_740D
+    dfar Data_071_5B4C
+    dfar Data_071_5A4B
+    dfar Data_06F_5F5C
+    dfar Data_06D_529E
+    dfar Data_06E_4428
+    dfar Data_06E_7059
+    dfar Data_070_76F4
+    dfar Data_06E_5B0E
+    dfar Data_06F_4BF8
+    dfar Data_06E_7100
+    dfar Data_070_4F56
+    dfar Data_06E_447B
+    dfar Data_06F_4CBA
+    dfar Data_070_6398
+Data_072_66A1:: ; heuristic: key-world room record; C0
+    db $01, $03, $04 ; id 96
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_6D5D
+    dfar Data_071_7C77
+    dfar Data_06F_5738
+    dfar Data_06F_4059
+    dfar Data_070_56A6
+    dfar Data_071_6CE8
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_7745
+    dfar Data_071_7E8A
+    dfar Data_06F_60AA
+    dfar Data_06F_4BF8
+    dfar Data_070_6321
+    dfar Data_071_789B
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_6704:: ; heuristic: key-world room record; C0
+    db $01, $03, $04 ; id 97
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5C81
+    dfar Data_071_5D62
+    dfar Data_06E_41BE
+    dfar Data_071_7C77
+    dfar Data_06E_501C
+    dfar Data_071_6659
+    dfar Data_06E_4DA2
+    dfar Data_06F_4504
+    dfar Data_06E_62D4
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_4A5E
+    dfar Data_071_7C77
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_62D2
+    dfar Data_071_68AD
+    dfar Data_06E_42F7
+    dfar Data_071_7E8A
+    dfar Data_06E_5AC5
+    dfar Data_071_6C05
+    dfar Data_06E_59E7
+    dfar Data_06F_4D8F
+    dfar Data_06E_6FD9
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_503C
+    dfar Data_071_7E8A
+    db $01, $03, $05 ; id 98
+    dfar Data_06F_53C6
+    dfar Data_06D_5A36
+    dfar Data_06F_4059
+    dfar Data_071_5D62
+    dfar Data_070_6AC4
+    dfar Data_06E_4CC5
+    dfar Data_06F_4001
+    dfar Data_06F_671E
+    dfar Data_070_6AFE
+    dfar Data_071_4001
+    dfar Data_071_5113
+    dfar Data_070_6AC4
+    dfar Data_070_430D
+    dfar Data_06F_4059
+    dfar Data_070_56A6
+    dfar Data_071_404F
+    dfar Data_06F_5F5C
+    dfar Data_06D_67C7
+    dfar Data_06F_4BF8
+    dfar Data_071_68AD
+    dfar Data_070_7652
+    dfar Data_06E_599D
+    dfar Data_06F_4BCE
+    dfar Data_06F_7302
+    dfar Data_070_7673
+    dfar Data_071_4BF4
+    dfar Data_071_5A4B
+    dfar Data_070_7652
+    dfar Data_070_4F2C
+    dfar Data_06F_4BF8
+    dfar Data_070_6321
+    dfar Data_071_4C19
+    db $01, $03, $05 ; id 99
+    dfar Data_06F_5473
+    dfar Data_06D_603B
+    dfar Data_06D_5AD8
+    dfar Data_06F_6690
+    dfar Data_06E_51DE
+    dfar Data_06E_6511
+    dfar Data_070_6DFE
+    dfar Data_070_6D5D
+    dfar Data_06E_4CC5
+    dfar Data_070_5731
+    dfar Data_06E_4C45
+    dfar Data_06E_66C1
+    dfar Data_070_430D
+    dfar Data_06F_4433
+    dfar Data_070_58C1
+    dfar Data_071_4001
+    dfar Data_06F_5FA0
+    dfar Data_06D_69D0
+    dfar Data_06D_680B
+    dfar Data_06F_72CD
+    dfar Data_06E_5B60
+    dfar Data_06E_70A6
+    dfar Data_070_777F
+    dfar Data_070_7745
+    dfar Data_06E_599D
+    dfar Data_070_6356
+    dfar Data_06E_5968
+    dfar Data_06E_714E
+    dfar Data_070_4F2C
+    dfar Data_06F_4D53
+    dfar Data_070_63D5
+    dfar Data_071_4BF4
+Data_072_682D:: ; heuristic: key-world room record; C0
+    db $01, $03, $05 ; id 100
+    dfar Data_071_5516
+    dfar Data_06F_54FE
+    dfar Data_06F_4059
+    dfar Data_071_5DA5
+    dfar Data_070_6EE3
+    dfar Data_070_6AC4
+    dfar Data_071_70DC
+    dfar Data_06F_671E
+    dfar Data_06E_4E57
+    dfar Data_06D_74CC
+    dfar Data_071_5DA5
+    dfar Data_070_6F9C
+    dfar Data_070_442A
+    dfar Data_06F_40F4
+    dfar Data_06F_4504
+    dfar Data_070_5731
+    dfar Data_071_5B90
+    dfar Data_06F_5FDA
+    dfar Data_06F_4BF8
+    dfar Data_071_68CC
+    dfar Data_070_77CD
+    dfar Data_070_7652
+    dfar Data_071_79C4
+    dfar Data_06F_7302
+    dfar Data_06E_5A26
+    dfar Data_06E_44CB
+    dfar Data_071_68CC
+    dfar Data_070_780C
+    dfar Data_070_4F94
+    dfar Data_06F_4C39
+    dfar Data_06F_4D8F
+    dfar Data_070_6356
+    db $01, $03, $05 ; id 101
+    dfar Data_06F_55D2
+    dfar Data_06F_4349
+    dfar Data_06D_5B99
+    dfar Data_071_5D62
+    dfar Data_06E_4F37
+    dfar Data_06F_427B
+    dfar Data_06D_75DD
+    dfar Data_06F_67D7
+    dfar Data_06E_501C
+    dfar Data_06D_5C84
+    dfar Data_071_5DA5
+    dfar Data_070_6BB8
+    dfar Data_070_4500
+    dfar Data_06D_76E6
+    dfar Data_06F_419F
+    dfar Data_070_56A6
+    dfar Data_06F_6024
+    dfar Data_06F_4CFD
+    dfar Data_06D_6840
+    dfar Data_071_68AD
+    dfar Data_06E_5A71
+    dfar Data_06F_4CBA
+    dfar Data_06E_4524
+    dfar Data_06F_734E
+    dfar Data_06E_5AC5
+    dfar Data_06D_688C
+    dfar Data_071_68CC
+    dfar Data_070_76AD
+    dfar Data_070_4FDB
+    dfar Data_06E_4572
+    dfar Data_06F_4C75
+    dfar Data_070_6321
+Data_072_68F3:: ; heuristic: key-world room record; C0
+    db $01, $03, $05 ; id 102
+    dfar Data_06F_5738
+    dfar Data_06D_5D70
+    dfar Data_06F_4433
+    dfar Data_06F_671E
+    dfar Data_070_45D5
+    dfar Data_06D_48D5
+    dfar Data_06F_6888
+    dfar Data_070_6AFE
+    dfar Data_06F_5664
+    dfar Data_06D_49AC
+    dfar Data_070_5731
+    dfar Data_070_6C86
+    dfar Data_070_4675
+    dfar Data_06D_7079
+    dfar Data_06F_4504
+    dfar Data_070_56A6
+    dfar Data_06F_60AA
+    dfar Data_06D_68E7
+    dfar Data_06F_4D53
+    dfar Data_06F_7302
+    dfar Data_070_5025
+    dfar Data_06D_5300
+    dfar Data_06F_738B
+    dfar Data_070_7673
+    dfar Data_06F_6060
+    dfar Data_06D_535E
+    dfar Data_070_6356
+    dfar Data_070_76F4
+    dfar Data_070_5065
+    dfar Data_06E_4339
+    dfar Data_06F_4D8F
+    dfar Data_070_6321
+Data_072_6956:: ; heuristic: key-world room record; C0
+    db $01, $03, $05 ; id 103
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5D48
+    dfar Data_070_5C06
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_4384
+    dfar Data_06F_7105
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_6317
+    dfar Data_070_650E
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_4F56
+    dfar Data_06F_76A7
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+Data_072_69B9:: ; heuristic: key-world room record; C0
+    db $01, $03, $05 ; id 104
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_533E
+    dfar Data_071_5DA5
+    dfar Data_071_7C77
+    dfar Data_071_7548
+    dfar Data_06E_66C1
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_4E5C
+    dfar Data_071_5DA5
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_5F1D
+    dfar Data_071_68CC
+    dfar Data_071_7E8A
+    dfar Data_071_7B41
+    dfar Data_06E_714E
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_5392
+    dfar Data_071_68CC
+Data_072_6A1C:: ; heuristic: key-world room record; C0
+    db $01, $04, $05 ; id 105
+    dfar Data_071_6CE8
+    dfar Data_06F_671E
+    dfar Data_06F_533E
+    dfar Data_071_5DA5
+    dfar Data_06F_53C6
+    dfar Data_06E_62D4
+    dfar Data_070_6AFE
+    dfar Data_071_50CC
+    dfar Data_06E_4C45
+    dfar Data_06D_712C
+    dfar Data_06D_43EB
+    dfar Data_06E_6356
+    dfar Data_070_4384
+    dfar Data_071_5D62
+    dfar Data_070_4384
+    dfar Data_070_56A6
+    dfar Data_071_789B
+    dfar Data_06F_7302
+    dfar Data_06F_5F1D
+    dfar Data_071_68CC
+    dfar Data_06F_5F5C
+    dfar Data_06E_6FD9
+    dfar Data_070_7673
+    dfar Data_071_5A2B
+    dfar Data_06E_5968
+    dfar Data_06E_438A
+    dfar Data_06D_513D
+    dfar Data_06E_7012
+    dfar Data_070_4F56
+    dfar Data_071_68AD
+    dfar Data_070_4F56
+    dfar Data_070_6321
+Data_072_6A7F:: ; heuristic: key-world room record; C0
+    db $01, $04, $05 ; id 106
+    dfar Data_071_55EA
+    dfar Data_071_71B8
+    dfar Data_06D_5E62
+    dfar Data_06F_6690
+    dfar Data_06E_51DE
+    dfar Data_06F_6ADA
+    dfar Data_06E_4DA2
+    dfar Data_06E_687C
+    dfar Data_06E_4CC5
+    dfar Data_06D_43EB
+    dfar Data_06D_71F8
+    dfar Data_06E_67A5
+    dfar Data_070_430D
+    dfar Data_070_5B18
+    dfar Data_071_6D31
+    dfar Data_070_56A6
+    dfar Data_071_5BBA
+    dfar Data_071_7A02
+    dfar Data_06D_6938
+    dfar Data_06F_72CD
+    dfar Data_06E_5B60
+    dfar Data_06F_7448
+    dfar Data_06E_59E7
+    dfar Data_06E_71F0
+    dfar Data_06E_599D
+    dfar Data_06D_513D
+    dfar Data_06E_43DB
+    dfar Data_06E_71A1
+    dfar Data_070_4F2C
+    dfar Data_070_64B5
+    dfar Data_071_78B9
+    dfar Data_070_6321
+    db $01, $04, $05 ; id 107
+    dfar Data_071_51A4
+    dfar Data_071_5113
+    dfar Data_06F_581B
+    dfar Data_06F_671E
+    dfar Data_06E_4E57
+    dfar Data_06D_4566
+    dfar Data_06D_72CD
+    dfar Data_070_58C1
+    dfar Data_06E_4F37
+    dfar Data_06D_73DE
+    dfar Data_06D_5F4F
+    dfar Data_06F_6690
+    dfar Data_070_4384
+    dfar Data_071_5E55
+    dfar Data_071_429C
+    dfar Data_071_404F
+    dfar Data_071_5A8A
+    dfar Data_071_5A4B
+    dfar Data_06F_60F7
+    dfar Data_06F_7302
+    dfar Data_06E_5A26
+    dfar Data_06D_51BC
+    dfar Data_06E_4428
+    dfar Data_070_63D5
+    dfar Data_06E_5A71
+    dfar Data_06E_447B
+    dfar Data_06D_698A
+    dfar Data_06F_72CD
+    dfar Data_070_4F56
+    dfar Data_071_690E
+    dfar Data_071_4CFD
+    dfar Data_071_4C19
+    db $01, $04, $05 ; id 108
+    dfar Data_06F_53C6
+    dfar Data_06D_603B
+    dfar Data_06F_4001
+    dfar Data_06F_671E
+    dfar Data_06E_501C
+    dfar Data_06D_74CC
+    dfar Data_06F_40F4
+    dfar Data_06E_642B
+    dfar Data_06E_50F8
+    dfar Data_06D_5A36
+    dfar Data_06D_5B99
+    dfar Data_06E_6356
+    dfar Data_070_4384
+    dfar Data_070_5A2C
+    dfar Data_070_4384
+    dfar Data_070_56A6
+    dfar Data_06F_5F5C
+    dfar Data_06D_69D0
+    dfar Data_06F_4BCE
+    dfar Data_06F_7302
+    dfar Data_06E_5AC5
+    dfar Data_06E_44CB
+    dfar Data_06F_4C39
+    dfar Data_06E_7059
+    dfar Data_06E_5B0E
+    dfar Data_06D_67C7
+    dfar Data_06D_6840
+    dfar Data_06E_7012
+    dfar Data_070_4F56
+    dfar Data_070_646A
+    dfar Data_070_4F56
+    dfar Data_070_6321
+    db $01, $04, $05 ; id 109
+    dfar Data_06F_54FE
+    dfar Data_06D_5C84
+    dfar Data_06F_419F
+    dfar Data_06F_6690
+    dfar Data_070_45D5
+    dfar Data_06D_75DD
+    dfar Data_06F_67D7
+    dfar Data_070_6D5D
+    dfar Data_06F_5473
+    dfar Data_06D_5D70
+    dfar Data_06D_4654
+    dfar Data_070_5B18
+    dfar Data_070_430D
+    dfar Data_070_5C06
+    dfar Data_070_4675
+    dfar Data_071_5D62
+    dfar Data_06F_5FDA
+    dfar Data_06D_688C
+    dfar Data_06F_4C75
+    dfar Data_06F_72CD
+    dfar Data_070_5025
+    dfar Data_06E_4524
+    dfar Data_06F_734E
+    dfar Data_070_7745
+    dfar Data_06F_5FA0
+    dfar Data_06D_68E7
+    dfar Data_06D_520E
+    dfar Data_070_64B5
+    dfar Data_070_4F2C
+    dfar Data_070_650E
+    dfar Data_070_5065
+    dfar Data_071_68AD
+Data_072_6C0B:: ; heuristic: key-world room record; C0
+    db $01, $04, $05 ; id 110
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5664
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_73BB
+    dfar Data_071_7C77
+    dfar Data_071_6CE8
+    dfar Data_06F_4A06
+    dfar Data_06D_75DD
+    dfar Data_071_5D62
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_6060
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_79BA
+    dfar Data_071_7E8A
+    dfar Data_071_789B
+    dfar Data_06F_4F89
+    dfar Data_06E_4524
+    dfar Data_071_68AD
+Data_072_6C6E:: ; heuristic: key-world room record; C0
+    db $01, $04, $05 ; id 111
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_533E
+    dfar Data_071_5DA5
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_06F_533E
+    dfar Data_06F_7105
+    dfar Data_070_430D
+    dfar Data_06F_6ADA
+    dfar Data_071_404F
+    dfar Data_070_47F6
+    dfar Data_06F_4AC6
+    dfar Data_070_56A6
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_5F1D
+    dfar Data_071_68CC
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_06F_5F1D
+    dfar Data_06F_76A7
+    dfar Data_070_4F2C
+    dfar Data_06F_7448
+    dfar Data_071_4C19
+    dfar Data_070_50ED
+    dfar Data_06F_4FD4
+    dfar Data_070_6321
+    db $02, $03, $04 ; id 112
+    dfar Data_06F_53C6
+    dfar Data_06F_4001
+    dfar Data_06D_5AD8
+    dfar Data_06F_6690
+    dfar Data_06E_4C45
+    dfar Data_06D_5AD8
+    dfar Data_070_56A6
+    dfar Data_070_6AFE
+    dfar Data_06E_4CC5
+    dfar Data_070_56A6
+    dfar Data_06F_53C6
+    dfar Data_06E_62D4
+    dfar Data_070_430D
+    dfar Data_06F_4059
+    dfar Data_06D_7079
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_4BCE
+    dfar Data_06D_680B
+    dfar Data_06F_72CD
+    dfar Data_06E_5968
+    dfar Data_06D_680B
+    dfar Data_070_6321
+    dfar Data_070_7673
+    dfar Data_06E_599D
+    dfar Data_070_6321
+    dfar Data_06F_5F5C
+    dfar Data_06E_6FD9
+    dfar Data_070_4F2C
+    dfar Data_06F_4BF8
+    dfar Data_06E_4339
+    dfar Data_070_6356
+    db $02, $03, $04 ; id 113
+    dfar Data_071_527F
+    dfar Data_06F_5664
+    dfar Data_06F_427B
+    dfar Data_06F_6952
+    dfar Data_06E_51DE
+    dfar Data_070_5731
+    dfar Data_071_5359
+    dfar Data_070_6DFE
+    dfar Data_070_6EE3
+    dfar Data_06F_55D2
+    dfar Data_06D_4496
+    dfar Data_070_57E8
+    dfar Data_070_4384
+    dfar Data_06D_712C
+    dfar Data_06D_76E6
+    dfar Data_071_5FBA
+    dfar Data_071_5AD6
+    dfar Data_06F_6060
+    dfar Data_06F_4CBA
+    dfar Data_06F_73C7
+    dfar Data_06E_5B60
+    dfar Data_070_6356
+    dfar Data_071_5B15
+    dfar Data_070_777F
+    dfar Data_070_77CD
+    dfar Data_06F_6024
+    dfar Data_06D_5178
+    dfar Data_070_6398
+    dfar Data_070_4F56
+    dfar Data_06E_438A
+    dfar Data_06E_4572
+    dfar Data_071_697F
+    db $02, $03, $04 ; id 114
+    dfar Data_06F_5738
+    dfar Data_06D_5E62
+    dfar Data_06D_5F4F
+    dfar Data_06F_6A2D
+    dfar Data_070_6F9C
+    dfar Data_071_4001
+    dfar Data_070_6AC4
+    dfar Data_070_6AC4
+    dfar Data_06E_4C45
+    dfar Data_06F_4433
+    dfar Data_06D_43EB
+    dfar Data_06E_6511
+    dfar Data_070_430D
+    dfar Data_06F_4349
+    dfar Data_070_58C1
+    dfar Data_071_44EC
+    dfar Data_06F_60AA
+    dfar Data_06D_6938
+    dfar Data_06D_698A
+    dfar Data_06F_740D
+    dfar Data_070_780C
+    dfar Data_071_4BF4
+    dfar Data_070_7652
+    dfar Data_070_7652
+    dfar Data_06E_5968
+    dfar Data_06F_4D53
+    dfar Data_06D_513D
+    dfar Data_06E_70A6
+    dfar Data_070_4F2C
+    dfar Data_06F_4CFD
+    dfar Data_070_63D5
+    dfar Data_071_4DCE
+Data_072_6DFA:: ; heuristic: key-world room record; C0
+    db $02, $03, $04 ; id 115
+    dfar Data_06F_581B
+    dfar Data_06D_603B
+    dfar Data_06D_5B99
+    dfar Data_06F_6ADA
+    dfar Data_070_6C86
+    dfar Data_06E_4CC5
+    dfar Data_06E_66C1
+    dfar Data_070_6BB8
+    dfar Data_070_6DFE
+    dfar Data_06E_4DA2
+    dfar Data_06E_6356
+    dfar Data_070_6C86
+    dfar Data_070_430D
+    dfar Data_06D_71F8
+    dfar Data_06D_73DE
+    dfar Data_070_596A
+    dfar Data_06F_60F7
+    dfar Data_06D_69D0
+    dfar Data_06D_6840
+    dfar Data_06F_7448
+    dfar Data_070_76F4
+    dfar Data_06E_599D
+    dfar Data_06E_714E
+    dfar Data_070_76AD
+    dfar Data_070_777F
+    dfar Data_06E_59E7
+    dfar Data_06E_7012
+    dfar Data_070_76F4
+    dfar Data_070_4F2C
+    dfar Data_06E_43DB
+    dfar Data_06E_447B
+    dfar Data_070_6421
+Data_072_6E5D:: ; heuristic: key-world room record; C0
+    db $02, $03, $04 ; id 116
+    dfar Data_06F_533E
+    dfar Data_06D_5AD8
+    dfar Data_071_6079
+    dfar Data_071_543D
+    dfar Data_071_404F
+    dfar Data_070_4384
+    dfar Data_06F_4504
+    dfar Data_06E_67A5
+    dfar Data_06F_5473
+    dfar Data_06D_5C84
+    dfar Data_06D_5AD8
+    dfar Data_070_5A2C
+    dfar Data_070_430D
+    dfar Data_070_5B18
+    dfar Data_070_4500
+    dfar Data_071_612A
+    dfar Data_06F_5F1D
+    dfar Data_06D_680B
+    dfar Data_071_69C4
+    dfar Data_071_5B4C
+    dfar Data_071_4C19
+    dfar Data_070_4F56
+    dfar Data_06F_4D8F
+    dfar Data_06E_71A1
+    dfar Data_06F_5FA0
+    dfar Data_06D_688C
+    dfar Data_06D_680B
+    dfar Data_070_646A
+    dfar Data_070_4F2C
+    dfar Data_070_64B5
+    dfar Data_070_4FDB
+    dfar Data_071_6A07
+Data_072_6EC0:: ; heuristic: key-world room record; C0
+    db $02, $03, $04 ; id 117
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_6D31
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_071_6D31
+    dfar Data_06F_4001
+    dfar Data_070_56A6
+    dfar Data_071_7C77
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_78B9
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_071_78B9
+    dfar Data_06F_4BCE
+    dfar Data_070_6321
+    dfar Data_071_7E8A
+Data_072_6F23:: ; heuristic: key-world room record; C0
+    db $02, $03, $04 ; id 118
+    dfar Data_06F_533E
+    dfar Data_06D_5B99
+    dfar Data_06F_71F0
+    dfar Data_071_7C77
+    dfar Data_070_72FE
+    dfar Data_070_6AFE
+    dfar Data_070_6D5D
+    dfar Data_071_7C77
+    dw Data_070_6AC4
+Data_072_6F40:: ; heuristic: label inside a table; C0
+    db $70
+    dfar Data_071_4978
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5F1D
+    dfar Data_06D_6840
+    dfar Data_06F_76F8
+    dfar Data_071_7E8A
+    dfar Data_070_796E
+    dfar Data_070_7673
+    dfar Data_070_7745
+    dfar Data_071_7E8A
+    dfar Data_070_7652
+    dfar Data_071_4FEA
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+Data_072_6F86:: ; heuristic: key-world room record; C0
+    db $02, $03, $05 ; id 119
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_06F_54FE
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06D_43EB
+    dfar Data_06E_6356
+    dfar Data_070_6AC4
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_070_4384
+    dfar Data_06D_7079
+    dfar Data_06D_712C
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_06F_5FDA
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06D_513D
+    dfar Data_06E_7012
+    dfar Data_070_7652
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_070_4F56
+    dfar Data_06E_4339
+    dfar Data_06E_438A
+    dfar Data_070_6321
+    db $02, $03, $05 ; id 120
+    dfar Data_06F_5664
+    dfar Data_06F_4349
+    dfar Data_06F_427B
+    dfar Data_06F_671E
+    dfar Data_070_47F6
+    dfar Data_06D_5AD8
+    dfar Data_06F_419F
+    dfar Data_06E_6356
+    dfar Data_06F_581B
+    dfar Data_06D_48D5
+    dfar Data_06F_4059
+    dfar Data_06E_687C
+    dfar Data_070_471C
+    dfar Data_06D_72CD
+    dfar Data_06F_4433
+    dfar Data_070_5731
+    dfar Data_06F_6060
+    dfar Data_06F_4CFD
+    dfar Data_06F_4CBA
+    dfar Data_06F_7302
+    dfar Data_070_50ED
+    dfar Data_06D_680B
+    dfar Data_06F_4C75
+    dfar Data_06E_7012
+    dfar Data_06F_60F7
+    dfar Data_06D_5300
+    dfar Data_06F_4BF8
+    dfar Data_06E_71F0
+    dfar Data_070_50A3
+    dfar Data_06E_4428
+    dfar Data_06F_4D53
+    dfar Data_070_6356
+    db $02, $03, $05 ; id 121
+    dfar Data_071_5516
+    dfar Data_071_6DC6
+    dfar Data_06F_4349
+    dfar Data_06F_67D7
+    dfar Data_06E_4E57
+    dfar Data_06D_5A36
+    dfar Data_06F_6BA4
+    dfar Data_070_6F9C
+    dfar Data_070_6EE3
+    dfar Data_070_430D
+    dfar Data_070_5731
+    dfar Data_070_6AFE
+    dfar Data_070_4675
+    dfar Data_06F_4504
+    dfar Data_06F_419F
+    dfar Data_070_56A6
+    dfar Data_071_5B90
+    dfar Data_071_78F3
+    dfar Data_06F_4CFD
+    dfar Data_06F_734E
+    dfar Data_06E_5A26
+    dfar Data_06D_67C7
+    dfar Data_06F_748C
+    dfar Data_070_780C
+    dfar Data_070_77CD
+    dfar Data_070_4F2C
+    dfar Data_070_6356
+    dfar Data_070_7673
+    dfar Data_070_5065
+    dfar Data_06F_4D8F
+    dfar Data_06F_4C75
+    dfar Data_070_6321
+Data_072_70AF:: ; heuristic: key-world room record; C0
+    db $02, $03, $05 ; id 122
+    dfar Data_06F_5738
+    dfar Data_06D_603B
+    dfar Data_071_6216
+    dfar Data_071_55EA
+    dfar Data_06E_4F37
+    dfar Data_06D_4496
+    dfar Data_06D_5AD8
+    dfar Data_06E_642B
+    dfar Data_06E_50F8
+    dfar Data_070_58C1
+    dfar Data_070_4384
+    dfar Data_06E_6511
+    dfar Data_070_4500
+    dfar Data_06F_4059
+    dfar Data_06F_40F4
+    dfar Data_070_5731
+    dfar Data_06F_60AA
+    dfar Data_06D_69D0
+    dfar Data_071_6A42
+    dfar Data_071_5BBA
+    dfar Data_06E_5A71
+    dfar Data_06D_5178
+    dfar Data_06D_680B
+    dfar Data_06E_7059
+    dfar Data_06E_5B0E
+    dfar Data_070_63D5
+    dfar Data_070_4F56
+    dfar Data_06E_70A6
+    dfar Data_070_4FDB
+    dfar Data_06F_4BF8
+    dfar Data_06F_4C39
+    dfar Data_070_6356
+    db $02, $03, $05 ; id 123
+    dfar Data_06F_53C6
+    dfar Data_06F_4504
+    dfar Data_06F_4349
+    dfar Data_06F_6888
+    dfar Data_070_4675
+    dfar Data_06D_5A36
+    dfar Data_06F_6A2D
+    dfar Data_070_6BB8
+    dfar Data_071_5113
+    dfar Data_070_471C
+    dfar Data_06D_7079
+    dfar Data_06E_65E7
+    dfar Data_070_45D5
+    dfar Data_06F_427B
+    dfar Data_06F_4433
+    dfar Data_070_56A6
+    dfar Data_06F_5F5C
+    dfar Data_06F_4D8F
+    dfar Data_06F_4CFD
+    dfar Data_06F_738B
+    dfar Data_070_5065
+    dfar Data_06D_67C7
+    dfar Data_06F_740D
+    dfar Data_070_76AD
+Data_072_715D:: ; heuristic: label inside a table; C0
+    dfar Data_071_5A4B
+    dfar Data_070_50A3
+    dfar Data_06E_4339
+    dfar Data_06E_7100
+    dfar Data_070_5025
+Data_072_716C:: ; heuristic: label inside a table; C0
+    dfar Data_06F_4CBA
+    dfar Data_06F_4D53
+    dfar Data_070_6321
+Data_072_7175:: ; heuristic: key-world room record; C0
+    db $02, $03, $05 ; id 124
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+Data_072_717E:: ; heuristic: label inside a table; C0
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_430D
+    dfar Data_06F_4059
+    dfar Data_06F_6690
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_4F2C
+    dfar Data_06F_4BF8
+    dfar Data_06F_72CD
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+Data_072_71D8:: ; heuristic: key-world room record; C0
+    db $02, $03, $05 ; id 125
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_071_6D31
+    dfar Data_06F_4349
+    dfar Data_06E_66C1
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_533E
+    dfar Data_06E_6C83
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4891
+    dfar Data_071_404F
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_071_78B9
+    dfar Data_06F_4CFD
+    dfar Data_06E_714E
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_5F1D
+    dfar Data_06E_739F
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4F8F
+    dfar Data_071_4C19
+    db $02, $04, $05 ; id 126
+    dfar Data_06F_53C6
+    dfar Data_06F_4001
+    dfar Data_06D_5AD8
+    dfar Data_071_5D62
+    dfar Data_070_430D
+    dfar Data_06D_5AD8
+    dfar Data_06D_43EB
+    dfar Data_071_5DA5
+    dfar Data_06F_53C6
+    dfar Data_070_56A6
+    dfar Data_070_4384
+    dfar Data_06F_6690
+    dfar Data_070_430D
+    dfar Data_06F_4059
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_4BCE
+    dfar Data_06D_680B
+    dfar Data_071_68AD
+    dfar Data_070_4F2C
+    dfar Data_06D_680B
+    dfar Data_06D_513D
+    dfar Data_071_68CC
+    dfar Data_06F_5F5C
+    dfar Data_070_6321
+    dfar Data_070_4F56
+    dfar Data_06F_72CD
+    dfar Data_070_4F2C
+    dfar Data_06F_4BF8
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+Data_072_729E:: ; heuristic: key-world room record; C0
+    db $02, $04, $05 ; id 127
+    dfar Data_06F_5473
+    dfar Data_06F_40F4
+    dfar Data_06F_4001
+    dfar Data_06F_6952
+    dfar Data_070_47F6
+    dfar Data_06F_4059
+    dfar Data_06F_6ADA
+    dfar Data_070_6DFE
+    dfar Data_06F_55D2
+    dfar Data_071_5D62
+    dfar Data_070_6D5D
+    dfar Data_070_6C86
+    dfar Data_070_4384
+    dfar Data_06F_419F
+    dfar Data_06D_75DD
+    dfar Data_070_5731
+    dfar Data_06F_5FA0
+    dfar Data_06F_4C39
+    dfar Data_06F_4BCE
+    dfar Data_06F_73C7
+    dfar Data_070_50ED
+    dfar Data_06F_4BF8
+    dfar Data_06F_7448
+    dfar Data_070_777F
+    dfar Data_06F_6024
+    dfar Data_071_68AD
+    dfar Data_070_7745
+    dfar Data_070_76F4
+    dfar Data_070_4F56
+    dfar Data_06F_4C75
+    dfar Data_06E_4524
+    dfar Data_070_6356
+Data_072_7301:: ; heuristic: key-world room record; C0
+    db $02, $04, $05 ; id 128
+    dfar Data_06F_54FE
+    dfar Data_06F_4349
+    dfar Data_06D_5C84
+    dfar Data_06F_6BA4
+    dfar Data_06E_501C
+    dfar Data_06D_5A36
+    dfar Data_06E_67A5
+    dfar Data_070_6EE3
+    dfar Data_06E_51DE
+    dfar Data_06D_76E6
+    dfar Data_06E_66C1
+    dfar Data_070_6F9C
+    dfar Data_070_430D
+    dfar Data_06F_4433
+    dfar Data_06D_712C
+    dfar Data_070_56A6
+    dfar Data_06F_5FDA
+    dfar Data_06F_4CFD
+    dfar Data_06D_688C
+    dfar Data_06F_748C
+    dfar Data_06E_5AC5
+    dfar Data_06D_67C7
+    dfar Data_06E_71A1
+    dfar Data_070_77CD
+    dfar Data_06E_5B60
+    dfar Data_06E_4572
+    dfar Data_06E_714E
+    dfar Data_070_780C
+    dfar Data_070_4F2C
+    dfar Data_06F_4D53
+    dfar Data_06E_438A
+    dfar Data_070_6321
+    db $02, $04, $05 ; id 129
+    dfar Data_06F_5664
+    dfar Data_06D_5E62
+    dfar Data_06D_5F4F
+    dfar Data_06F_6690
+    dfar Data_06E_4CC5
+    dfar Data_06D_712C
+    dfar Data_06E_687C
+    dfar Data_071_410A
+    dfar Data_071_41DF
+    dfar Data_06F_5738
+    dfar Data_06D_4496
+    dfar Data_06F_671E
+    dfar Data_071_6D31
+    dfar Data_06D_73DE
+    dfar Data_06D_72CD
+    dfar Data_070_5731
+    dfar Data_06F_6060
+    dfar Data_06D_6938
+    dfar Data_06D_698A
+    dfar Data_06F_72CD
+    dfar Data_06E_599D
+    dfar Data_06E_438A
+    dfar Data_06E_71F0
+    dfar Data_071_4C63
+    dfar Data_071_4CA8
+    dfar Data_06F_60AA
+    dfar Data_06D_5178
+    dfar Data_06F_7302
+    dfar Data_071_78B9
+    dfar Data_06E_447B
+    dfar Data_06E_4428
+    dfar Data_070_6356
+    db $02, $04, $05 ; id 130
+    dfar Data_071_51A4
+    dfar Data_071_6F28
+    dfar Data_06D_603B
+    dfar Data_06F_67D7
+    dfar Data_06E_4DA2
+    dfar Data_06F_4001
+    dfar Data_06D_74CC
+    dfar Data_070_596A
+    dfar Data_070_4500
+    dfar Data_06D_5AD8
+    dfar Data_06D_5C84
+    dfar Data_06F_6952
+    dfar Data_071_6CE8
+    dfar Data_06D_76E6
+    dfar Data_06D_75DD
+    dfar Data_070_56A6
+    dfar Data_071_5A8A
+    dfar Data_071_795C
+    dfar Data_06D_69D0
+    dfar Data_06F_734E
+    dfar Data_06E_59E7
+    dfar Data_06F_4BCE
+    dfar Data_06E_44CB
+    dfar Data_070_6421
+    dfar Data_070_4FDB
+    dfar Data_06D_680B
+    dfar Data_06D_688C
+    dfar Data_06F_73C7
+    dfar Data_071_789B
+    dfar Data_06E_4572
+    dfar Data_06E_4524
+    dfar Data_070_6321
+Data_072_742A:: ; heuristic: key-world room record; C0
+    db $02, $04, $05 ; id 131
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_5E41
+    dfar Data_06F_4001
+    dfar Data_06F_6BA4
+    dfar Data_071_7C77
+    dfar Data_070_6AC4
+    dfar Data_071_7C77
+    dfar Data_070_4D66
+    dfar Data_06F_6888
+    dfar Data_071_404F
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_4001
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_635E
+    dfar Data_06F_4BCE
+    dfar Data_06F_748C
+    dfar Data_071_7E8A
+    dfar Data_070_7652
+    dfar Data_071_7E8A
+    dfar Data_070_5344
+    dfar Data_06F_738B
+    dfar Data_071_4C19
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4BF4
+Data_072_748D:: ; heuristic: key-world room record; C0
+    db $02, $04, $05 ; id 132
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_50CC
+    dfar Data_071_7C77
+    dfar Data_06E_41BE
+    dfar Data_06F_5738
+    dfar Data_06D_7DC6
+    dfar Data_06F_4001
+    dfar Data_06E_642B
+    dfar Data_071_4001
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_404F
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5A2B
+    dfar Data_071_7E8A
+    dfar Data_06E_42F7
+    dfar Data_06F_60AA
+    dfar Data_06E_481C
+    dfar Data_06F_4BCE
+    dfar Data_06E_7059
+    dfar Data_071_4BF4
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_4C19
+    db $03, $04, $05 ; id 133
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_06F_533E
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06E_62D4
+    dfar Data_06E_4CC5
+    dfar Data_070_56A6
+    dfar Data_06E_4C45
+    dfar Data_06D_4496
+    dfar Data_06D_43EB
+    dfar Data_071_5DA5
+    dfar Data_070_4384
+    dfar Data_06D_7079
+    dfar Data_06D_712C
+    dfar Data_071_5D62
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_06F_5F1D
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06E_6FD9
+    dfar Data_06E_599D
+    dfar Data_070_6321
+    dfar Data_06E_5968
+    dfar Data_06D_5178
+    dfar Data_06D_513D
+    dfar Data_071_68CC
+    dfar Data_070_4F56
+    dfar Data_06E_4339
+    dfar Data_06E_438A
+    dfar Data_071_68AD
+    db $03, $04, $05 ; id 134
+    dfar Data_06F_581B
+    dfar Data_06D_5B99
+    dfar Data_06F_4059
+    dfar Data_06F_6A2D
+    dfar Data_06E_4E57
+    dfar Data_06D_4566
+    dfar Data_06F_6ADA
+    dfar Data_070_6AFE
+    dfar Data_070_6BB8
+    dfar Data_06E_4F37
+    dfar Data_06D_712C
+    dfar Data_06E_62D4
+    dfar Data_070_4384
+    dfar Data_06D_71F8
+    dfar Data_06F_40F4
+    dfar Data_070_5731
+    dfar Data_06F_60F7
+    dfar Data_06D_6840
+    dfar Data_06F_4BF8
+    dfar Data_06F_740D
+    dfar Data_06E_5A26
+    dfar Data_06D_51BC
+    dfar Data_06F_7448
+    dfar Data_070_7673
+    dfar Data_070_76AD
+    dfar Data_06E_5A71
+    dfar Data_06E_438A
+    dfar Data_06E_6FD9
+    dfar Data_070_4F56
+    dfar Data_06E_43DB
+    dfar Data_06F_4C39
+    dfar Data_070_6356
+Data_072_75B6:: ; heuristic: key-world room record; C0
+    db $03, $04, $05 ; id 135
+    dfar Data_071_71B8
+    dfar Data_06D_5D70
+    dfar Data_06D_5E62
+    dfar Data_06F_6BA4
+    dfar Data_071_70DC
+    dfar Data_06E_6356
+    dfar Data_070_6D5D
+    dfar Data_070_6C86
+    dfar Data_06F_533E
+    dfar Data_06D_4654
+    dfar Data_06D_7079
+    dfar Data_06E_642B
+    dfar Data_071_4001
+    dfar Data_070_45D5
+    dfar Data_06F_419F
+    dfar Data_070_56A6
+    dfar Data_071_7A02
+    dfar Data_06D_68E7
+    dfar Data_06D_6938
+    dfar Data_06F_748C
+    dfar Data_071_79C4
+    dfar Data_06E_7012
+    dfar Data_070_7745
+    dfar Data_070_76F4
+    dfar Data_06F_5F1D
+    dfar Data_06D_520E
+    dfar Data_06E_4339
+    dfar Data_06E_7059
+    dfar Data_071_4BF4
+    dfar Data_070_5025
+    dfar Data_06F_4C75
+    dfar Data_070_6321
+Data_072_7619:: ; heuristic: key-world room record; C0
+    db $03, $04, $05 ; id 136
+    dfar Data_06F_5473
+    dfar Data_06F_427B
+    dfar Data_06F_4504
+    dfar Data_06F_6888
+    dfar Data_06E_501C
+    dfar Data_06D_5F4F
+    dfar Data_06D_5B99
+    dfar Data_06E_65E7
+    dfar Data_06E_50F8
+    dfar Data_06D_73DE
+    dfar Data_06D_7079
+    dfar Data_06E_6511
+    dfar Data_070_4384
+    dfar Data_06F_4433
+    dfar Data_06F_4349
+    dfar Data_070_5731
+    dfar Data_06F_5FA0
+    dfar Data_06F_4CBA
+    dfar Data_06F_4D8F
+    dfar Data_06F_738B
+    dfar Data_06E_5AC5
+    dfar Data_06D_698A
+    dfar Data_06D_6840
+    dfar Data_06E_7100
+    dfar Data_06E_5B0E
+    dfar Data_06E_447B
+    dfar Data_06E_4339
+    dfar Data_06E_70A6
+    dfar Data_070_4F56
+    dfar Data_06F_4D53
+    dfar Data_06F_4CFD
+    dfar Data_070_6356
+    db $03, $04, $05 ; id 137
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06F_533E
+    dfar Data_06D_6707
+    dfar Data_06F_4001
+    dfar Data_06F_6690
+    dfar Data_071_404F
+    dfar Data_071_4B4E
+    dfar Data_071_7C77
+    dfar Data_071_404F
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06F_5F1D
+    dfar Data_06D_6C65
+    dfar Data_06F_4BCE
+    dfar Data_06F_72CD
+    dfar Data_071_4C19
+    dfar Data_071_5088
+    dfar Data_071_7E8A
+    dfar Data_071_4C19
+Data_072_76DF:: ; heuristic: key-world room record; C0
+    db $03, $04, $05 ; id 138
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_594B
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_06E_501C
+    dfar Data_06F_671E
+    dfar Data_06E_40D7
+    dfar Data_071_6CE8
+    dfar Data_06D_73DE
+    dfar Data_06D_75DD
+    dfar Data_070_56A6
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_5D1A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_06E_5AC5
+    dfar Data_06F_7302
+    dfar Data_06E_42A3
+    dfar Data_071_789B
+    dfar Data_06E_447B
+    dfar Data_06E_4524
+    dfar Data_070_6321
+Data_072_7742:: ; heuristic: key-world room record; C0
+    db $03, $04, $05 ; id 139
+    dfar Data_06F_533E
+    dfar Data_06F_704B
+    dfar Data_071_7C77
+    dfar Data_071_7C77
+    dfar Data_070_7575
+    dfar Data_06E_51DE
+    dfar Data_06F_4001
+    dfar Data_06F_7105
+    dfar Data_070_6AC4
+    dfar Data_06E_4C45
+    dfar Data_071_5DA5
+    dfar Data_070_6EE3
+    dfar Data_070_4384
+    dfar Data_06D_7B39
+    dfar Data_06F_48DB
+    dfar Data_070_5731
+    dfar Data_06F_5F1D
+    dfar Data_06F_7660
+    dfar Data_071_7E8A
+    dfar Data_071_7E8A
+    dfar Data_070_7A52
+    dfar Data_06E_5B60
+    dfar Data_06F_4BCE
+    dfar Data_06F_76A7
+    dfar Data_070_7652
+    dfar Data_06E_5968
+    dfar Data_071_68CC
+    dfar Data_070_77CD
+    dfar Data_070_4F56
+    dfar Data_06E_4727
+    dfar Data_06F_4F17
+    dfar Data_070_6356
+Data_072_77A5:: ; heuristic: key-world room record; C0
+    db $00, $01, $02 ; id 140
+    dfar Data_06F_53C6
+    dfar Data_071_5D62
+    dfar Data_06F_53C6
+    dfar Data_071_5D62
+    dfar Data_06E_4C45
+    dfar Data_06F_4059
+    dfar Data_06D_43EB
+    dfar Data_071_5DA5
+    dfar Data_06E_4CC5
+    dfar Data_06F_4001
+    dfar Data_06E_6356
+    dfar Data_071_50CC
+    dfar Data_070_430D
+    dfar Data_06C_79E8
+    dfar Data_06D_7079
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_071_68AD
+    dfar Data_06F_5F5C
+    dfar Data_071_68AD
+    dfar Data_06E_5968
+    dfar Data_06F_4BF8
+    dfar Data_06D_513D
+    dfar Data_071_68CC
+    dfar Data_06E_599D
+    dfar Data_06F_4BCE
+    dfar Data_06E_7012
+    dfar Data_071_5A2B
+    dfar Data_070_4F2C
+    dfar Data_06C_7A85
+    dfar Data_06E_4339
+    dfar Data_070_6356
+Data_072_7808:: ; heuristic: key-world room record; C0
+    db $00, $01, $03 ; id 141
+    dfar Data_071_6CE8
+    dfar Data_06F_4059
+    dfar Data_06D_5A36
+    dfar Data_06F_671E
+    dfar Data_071_5113
+    dfar Data_06F_533E
+    dfar Data_06E_6356
+    dfar Data_071_4001
+    dfar Data_06E_4C45
+    dfar Data_06E_6356
+    dfar Data_06E_4C45
+    dfar Data_071_5DA5
+    dfar Data_070_4384
+    dfar Data_06C_7BB3
+    dfar Data_070_4384
+    dfar Data_071_5D62
+    dfar Data_071_789B
+    dfar Data_06F_4BF8
+    dfar Data_06D_67C7
+    dfar Data_06F_7302
+    dfar Data_071_5A4B
+    dfar Data_06F_5F1D
+    dfar Data_06E_7012
+    dfar Data_071_4BF4
+    dfar Data_06E_5968
+    dfar Data_06E_7012
+    dfar Data_06E_5968
+    dfar Data_071_68CC
+    dfar Data_070_4F56
+    dfar Data_06C_7C5F
+    dfar Data_070_4F56
+    dfar Data_071_68AD
+Data_072_786B:: ; heuristic: key-world room record; C0
+    db $00, $01, $04 ; id 142
+    dfar Data_071_6D31
+    dfar Data_06D_5A36
+    dfar Data_06F_671E
+    dfar Data_071_50CC
+    dfar Data_06F_533E
+    dfar Data_06E_6356
+    dfar Data_071_4001
+    dfar Data_070_6AFE
+    dfar Data_070_6AFE
+    dfar Data_06E_4C45
+    dfar Data_06F_4059
+    dfar Data_06E_62D4
+    dfar Data_071_4001
+    dfar Data_06C_7AC1
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_071_78B9
+    dfar Data_06D_67C7
+    dfar Data_06F_7302
+    dfar Data_071_5A2B
+    dfar Data_06F_5F1D
+    dfar Data_06E_7012
+    dfar Data_071_4BF4
+    dfar Data_070_7673
+    dfar Data_070_7673
+    dfar Data_06E_5968
+    dfar Data_06F_4BF8
+    dfar Data_06E_6FD9
+    dfar Data_071_4BF4
+    dfar Data_06C_7B71
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+Data_072_78CE:: ; heuristic: key-world room record; C0
+    db $00, $01, $05 ; id 143
+    dfar Data_071_6CE8
+    dfar Data_06D_5AD8
+    dfar Data_071_5D62
+    dfar Data_071_5113
+    dfar Data_071_5113
+    dfar Data_06E_4C45
+    dfar Data_06F_4059
+    dfar Data_070_56A6
+    dfar Data_06E_4C45
+    dfar Data_06D_4496
+    dfar Data_06D_5A36
+    dfar Data_06F_671E
+    dfar Data_070_4384
+    dfar Data_06C_78F2
+    dfar Data_070_5731
+    dfar Data_071_4001
+    dfar Data_071_789B
+    dfar Data_06D_680B
+    dfar Data_071_68AD
+    dfar Data_071_5A4B
+    dfar Data_071_5A4B
+    dfar Data_06E_5968
+    dfar Data_06F_4BF8
+    dfar Data_070_6321
+    dfar Data_06E_5968
+    dfar Data_06D_5178
+    dfar Data_06D_67C7
+    dfar Data_06F_7302
+    dfar Data_070_4F56
+    dfar Data_06C_79A2
+    dfar Data_070_6356
+    dfar Data_071_4BF4
+Data_072_7931:: ; heuristic: key-world room record; C0
+    db $00, $02, $03 ; id 144
+    dfar Data_071_6D31
+    dfar Data_06F_4001
+    dfar Data_06D_5AD8
+    dfar Data_06F_6690
+    dfar Data_06F_533E
+    dfar Data_06F_4059
+    dfar Data_06D_7079
+    dfar Data_06E_6356
+    dfar Data_06E_4CC5
+    dfar Data_071_5D62
+    dfar Data_071_6D31
+    dfar Data_06E_62D4
+    dfar Data_070_430D
+    dfar Data_06C_79E8
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_071_78B9
+    dfar Data_06F_4BCE
+    dfar Data_06D_680B
+    dfar Data_06F_72CD
+    dfar Data_06F_5F1D
+    dfar Data_06F_4BF8
+    dfar Data_06E_4339
+    dfar Data_06E_7012
+    dfar Data_06E_599D
+    dfar Data_071_68AD
+    dfar Data_071_78B9
+    dfar Data_06E_6FD9
+    dfar Data_070_4F2C
+    dfar Data_06C_7A85
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+Data_072_7994:: ; heuristic: key-world room record; C0
+    db $00, $02, $04 ; id 145
+    dfar Data_071_6CE8
+    dfar Data_06F_4059
+    dfar Data_06D_5A36
+    dfar Data_071_5DA5
+    dfar Data_06F_53C6
+    dfar Data_06D_5A36
+    dfar Data_070_5731
+    dfar Data_071_50CC
+    dfar Data_070_6AC4
+    dfar Data_070_4384
+    dfar Data_06D_5A36
+    dfar Data_06E_6356
+    dfar Data_071_404F
+    dfar Data_06C_7CA2
+    dfar Data_070_5731
+    dfar Data_071_4001
+    dfar Data_071_789B
+    dfar Data_06F_4BF8
+    dfar Data_06D_67C7
+    dfar Data_071_68CC
+    dfar Data_06F_5F5C
+    dfar Data_06D_67C7
+    dfar Data_070_6356
+    dfar Data_071_5A2B
+    dfar Data_070_7652
+    dfar Data_070_4F56
+    dfar Data_06D_67C7
+    dfar Data_06E_7012
+    dfar Data_071_4C19
+    dfar Data_06C_7D3B
+    dfar Data_070_6356
+    dfar Data_071_4BF4
+Data_072_79F7:: ; heuristic: key-world room record; C0
+    db $00, $02, $05 ; id 146
+    dfar Data_06F_53C6
+    dfar Data_06D_5A36
+    dfar Data_06F_4059
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_070_4384
+    dfar Data_071_5D62
+    dfar Data_070_6AFE
+    dfar Data_06E_4CC5
+    dfar Data_06F_4001
+    dfar Data_06D_5AD8
+    dfar Data_06E_62D4
+    dfar Data_070_430D
+    dfar Data_06C_79E8
+    dfar Data_070_56A6
+    dfar Data_071_404F
+    dfar Data_06F_5F5C
+    dfar Data_06D_67C7
+    dfar Data_06F_4BF8
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_070_4F56
+    dfar Data_071_68AD
+    dfar Data_070_7673
+    dfar Data_06E_599D
+    dfar Data_06F_4BCE
+    dfar Data_06D_680B
+    dfar Data_06E_6FD9
+    dfar Data_070_4F2C
+    dfar Data_06C_7A85
+    dfar Data_070_6321
+    dfar Data_071_4C19
+Data_072_7A5A:: ; heuristic: key-world room record; C0
+    db $00, $03, $04 ; id 147
+    dfar Data_06F_533E
+    dfar Data_06D_5AD8
+    dfar Data_06F_6690
+    dfar Data_071_5113
+    dfar Data_06E_4CC5
+    dfar Data_06D_43EB
+    dfar Data_06D_712C
+    dfar Data_06E_62D4
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_071_6CE8
+    dfar Data_06E_6356
+    dfar Data_071_404F
+    dfar Data_06C_7AC1
+    dfar Data_06F_4059
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06D_680B
+    dfar Data_06F_72CD
+    dfar Data_071_5A4B
+    dfar Data_06E_599D
+    dfar Data_06D_513D
+    dfar Data_06E_438A
+    dfar Data_06E_6FD9
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_071_789B
+    dfar Data_06E_7012
+    dfar Data_071_4C19
+    dfar Data_06C_7B71
+    dfar Data_06F_4BF8
+    dfar Data_070_6321
+Data_072_7ABD:: ; heuristic: key-world room record; C0
+    db $00, $03, $05 ; id 148
+    dfar Data_06F_53C6
+    dfar Data_06F_4001
+    dfar Data_06D_5AD8
+    dfar Data_071_5D62
+    dfar Data_070_430D
+    dfar Data_06D_5AD8
+    dfar Data_06D_7079
+    dfar Data_06F_671E
+    dfar Data_071_5113
+    dfar Data_070_6AC4
+    dfar Data_071_6D31
+    dfar Data_06E_62D4
+    dfar Data_070_430D
+    dfar Data_06C_7BB3
+    dfar Data_071_6CE8
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_4BCE
+    dfar Data_06D_680B
+    dfar Data_071_68AD
+    dfar Data_070_4F2C
+    dfar Data_06D_680B
+    dfar Data_06E_4339
+    dfar Data_06F_7302
+    dfar Data_071_5A4B
+    dfar Data_070_7652
+    dfar Data_071_78B9
+    dfar Data_06E_6FD9
+    dfar Data_070_4F2C
+    dfar Data_06C_7C5F
+    dfar Data_071_789B
+    dfar Data_070_6356
+Data_072_7B20:: ; heuristic: key-world room record; C0
+    db $00, $04, $05 ; id 149
+    dfar Data_06F_533E
+    dfar Data_071_5DA5
+    dfar Data_071_6CE8
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06F_6690
+    dfar Data_06F_53C6
+    dfar Data_06E_62D4
+    dfar Data_070_6AC4
+    dfar Data_070_4384
+    dfar Data_06D_43EB
+    dfar Data_06E_6356
+    dfar Data_071_404F
+    dfar Data_06C_7CA2
+    dfar Data_070_5731
+    dfar Data_071_4001
+    dfar Data_06F_5F1D
+    dfar Data_071_68CC
+    dfar Data_071_789B
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06F_72CD
+    dfar Data_06F_5F5C
+    dfar Data_06E_6FD9
+    dfar Data_070_7652
+    dfar Data_070_4F56
+    dfar Data_06D_513D
+    dfar Data_06E_7012
+    dfar Data_071_4C19
+    dfar Data_06C_7D3B
+    dfar Data_070_6356
+    dfar Data_071_4BF4
+Data_072_7B83:: ; heuristic: key-world room record; C0
+    db $01, $02, $03 ; id 150
+    dfar Data_071_6D31
+    dfar Data_06F_4001
+    dfar Data_06F_671E
+    dfar Data_071_50CC
+    dfar Data_071_50CC
+    dfar Data_06F_53C6
+    dfar Data_06D_43EB
+    dfar Data_06E_6356
+    dfar Data_06E_4CC5
+    dfar Data_070_56A6
+    dfar Data_070_6AFE
+    dfar Data_070_6AC4
+    dfar Data_070_430D
+    dfar Data_06C_7D71
+    dfar Data_071_4001
+    dfar Data_071_404F
+    dfar Data_071_78B9
+    dfar Data_06F_4BCE
+    dfar Data_06F_7302
+    dfar Data_071_5A2B
+    dfar Data_071_5A2B
+    dfar Data_06F_5F5C
+    dfar Data_06D_513D
+    dfar Data_06E_7012
+    dfar Data_06E_599D
+    dfar Data_070_6321
+    dfar Data_070_7673
+    dfar Data_070_7652
+    dfar Data_070_4F2C
+    dfar Data_06C_7E05
+    dfar Data_071_4BF4
+    dfar Data_071_4C19
+Data_072_7BE6:: ; heuristic: key-world room record; C0
+    db $01, $02, $04 ; id 151
+    dfar Data_06F_533E
+    dfar Data_06F_4059
+    dfar Data_06D_5A36
+    dfar Data_071_5DA5
+    dfar Data_06E_4CC5
+    dfar Data_06F_4001
+    dfar Data_06D_712C
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_071_5113
+    dfar Data_071_50CC
+    dfar Data_070_6AFE
+    dfar Data_071_404F
+    dfar Data_06C_7AC1
+    dfar Data_06D_712C
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06F_4BF8
+    dfar Data_06D_67C7
+    dfar Data_071_68CC
+    dfar Data_06E_599D
+    dfar Data_06F_4BCE
+    dfar Data_06E_438A
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_071_5A4B
+    dfar Data_071_5A2B
+    dfar Data_070_7673
+    dfar Data_071_4C19
+    dfar Data_06C_7B71
+    dfar Data_06E_438A
+    dfar Data_070_6321
+Data_072_7C49:: ; heuristic: key-world room record; C0
+    db $01, $02, $05 ; id 152
+    dfar Data_071_5113
+    dfar Data_071_6CE8
+    dfar Data_06D_5AD8
+    dfar Data_071_5D62
+    dfar Data_070_6AC4
+    dfar Data_071_6D31
+    dfar Data_06D_43EB
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06F_4001
+    dfar Data_06D_4496
+    dfar Data_070_56A6
+    dfar Data_070_430D
+    dfar Data_06C_7D71
+    dfar Data_070_430D
+    dfar Data_071_5DA5
+    dfar Data_071_5A4B
+    dfar Data_071_789B
+    dfar Data_06D_680B
+    dfar Data_071_68AD
+    dfar Data_070_7652
+    dfar Data_071_78B9
+    dfar Data_06D_513D
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06F_4BCE
+    dfar Data_06D_5178
+    dfar Data_070_6321
+    dfar Data_070_4F2C
+    dfar Data_06C_7E05
+    dfar Data_070_4F2C
+    dfar Data_071_68CC
+Data_072_7CAC:: ; heuristic: key-world room record; C0
+    db $01, $03, $04 ; id 153
+    dfar Data_071_50CC
+    dfar Data_071_5113
+    dfar Data_071_50CC
+    dfar Data_071_5113
+    dfar Data_06E_4CC5
+    dfar Data_06D_43EB
+    dfar Data_06D_4496
+    dfar Data_06E_62D4
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_071_404F
+    dfar Data_06C_7E3F
+    dfar Data_071_404F
+    dfar Data_071_4001
+    dfar Data_071_5A2B
+    dfar Data_071_5A4B
+    dfar Data_071_5A2B
+    dfar Data_071_5A4B
+    dfar Data_06E_599D
+    dfar Data_06D_513D
+    dfar Data_06D_5178
+    dfar Data_06E_6FD9
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_071_4C19
+    dfar Data_06C_7EE4
+    dfar Data_071_4C19
+    dfar Data_071_4BF4
+Data_072_7D0F:: ; heuristic: key-world room record; C0
+    db $01, $03, $05 ; id 154
+    dfar Data_071_5113
+    dfar Data_06F_533E
+    dfar Data_06F_4059
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_06E_4CC5
+    dfar Data_06F_4001
+    dfar Data_06E_6356
+    dfar Data_06E_4CC5
+    dfar Data_06E_62D4
+    dfar Data_06F_53C6
+    dfar Data_06E_62D4
+    dfar Data_070_430D
+    dfar Data_06C_7BB3
+    dfar Data_070_430D
+    dfar Data_070_5731
+    dfar Data_071_5A4B
+    dfar Data_06F_5F1D
+    dfar Data_06F_4BF8
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_06E_599D
+    dfar Data_06F_4BCE
+    dfar Data_06E_7012
+    dfar Data_06E_599D
+    dfar Data_06E_6FD9
+    dfar Data_06F_5F5C
+    dfar Data_06E_6FD9
+    dfar Data_070_4F2C
+    dfar Data_06C_7C5F
+    dfar Data_070_4F2C
+    dfar Data_070_6356
+Data_072_7D72:: ; heuristic: key-world room record; C0
+    db $01, $04, $05 ; id 155
+    dfar Data_071_6CE8
+    dfar Data_06F_671E
+    dfar Data_06F_533E
+    dfar Data_071_5DA5
+    dfar Data_06F_53C6
+    dfar Data_06D_43EB
+    dfar Data_06D_4496
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_06E_4CC5
+    dfar Data_06E_62D4
+    dfar Data_070_6AFE
+    dfar Data_071_404F
+    dfar Data_06C_7AC1
+    dfar Data_070_5731
+    dfar Data_071_4001
+    dfar Data_071_789B
+    dfar Data_06F_7302
+    dfar Data_06F_5F1D
+    dfar Data_071_68CC
+    dfar Data_06F_5F5C
+    dfar Data_06D_513D
+    dfar Data_06D_5178
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_06E_599D
+    dfar Data_06E_6FD9
+    dfar Data_070_7673
+    dfar Data_071_4C19
+    dfar Data_06C_7B71
+    dfar Data_070_6356
+    dfar Data_071_4BF4
+Data_072_7DD5:: ; heuristic: key-world room record; C0
+    db $02, $03, $04 ; id 156
+    dfar Data_06F_53C6
+    dfar Data_06F_4001
+    dfar Data_06D_5AD8
+    dfar Data_06F_6690
+    dfar Data_070_6AC4
+    dfar Data_06F_53C6
+    dfar Data_06E_62D4
+    dfar Data_070_6AFE
+    dfar Data_06E_4CC5
+    dfar Data_06D_7079
+    dfar Data_070_5731
+    dfar Data_070_6AC4
+    dfar Data_071_4001
+    dfar Data_06C_7CA2
+    dfar Data_06F_4001
+    dfar Data_070_5731
+    dfar Data_06F_5F5C
+    dfar Data_06F_4BCE
+    dfar Data_06D_680B
+    dfar Data_06F_72CD
+    dfar Data_070_7652
+    dfar Data_06F_5F5C
+    dfar Data_06E_6FD9
+    dfar Data_070_7673
+    dfar Data_06E_599D
+    dfar Data_06E_4339
+    dfar Data_070_6356
+    dfar Data_070_7652
+    dfar Data_071_4BF4
+    dfar Data_06C_7D3B
+    dfar Data_06F_4BCE
+    dfar Data_070_6356
+Data_072_7E38:: ; heuristic: key-world room record; C0
+    db $02, $03, $05 ; id 157
+    dfar Data_06F_533E
+    dfar Data_06D_5AD8
+    dfar Data_06F_4001
+    dfar Data_06F_671E
+    dfar Data_070_6AFE
+    dfar Data_06E_4C45
+    dfar Data_06F_4059
+    dfar Data_06E_62D4
+    dfar Data_06E_4C45
+    dfar Data_06D_712C
+    dfar Data_06D_5A36
+    dfar Data_06E_6356
+    dfar Data_070_4384
+    dfar Data_06C_7D71
+    dfar Data_070_4384
+    dfar Data_070_56A6
+    dfar Data_06F_5F1D
+    dfar Data_06D_680B
+    dfar Data_06F_4BCE
+    dfar Data_06F_7302
+    dfar Data_070_7673
+    dfar Data_06E_5968
+    dfar Data_06F_4BF8
+    dfar Data_06E_6FD9
+    dfar Data_06E_5968
+    dfar Data_06E_438A
+    dfar Data_06D_67C7
+    dfar Data_06E_7012
+    dfar Data_070_4F56
+    dfar Data_06C_7E05
+    dfar Data_070_4F56
+    dfar Data_070_6321
+Data_072_7E9B:: ; heuristic: key-world room record; C0
+    db $02, $04, $05 ; id 158
+    dfar Data_06F_53C6
+    dfar Data_06D_5A36
+    dfar Data_06D_5AD8
+    dfar Data_071_5D62
+    dfar Data_06E_4C45
+    dfar Data_06D_712C
+    dfar Data_06D_43EB
+    dfar Data_06F_671E
+    dfar Data_070_6AFE
+    dfar Data_06F_533E
+    dfar Data_06D_4496
+    dfar Data_070_56A6
+    dfar Data_071_4001
+    dfar Data_06C_7E3F
+    dfar Data_070_430D
+    dfar Data_071_5DA5
+    dfar Data_06F_5F5C
+    dfar Data_06D_67C7
+    dfar Data_06D_680B
+    dfar Data_071_68AD
+    dfar Data_06E_5968
+    dfar Data_06E_438A
+    dfar Data_06D_513D
+    dfar Data_06F_7302
+    dfar Data_070_7673
+    dfar Data_06F_5F1D
+    dfar Data_06D_5178
+    dfar Data_070_6321
+    dfar Data_071_4BF4
+    dfar Data_06C_7EE4
+    dfar Data_070_4F2C
+    dfar Data_071_68CC
+Data_072_7EFE:: ; heuristic: key-world room record; C0
+    db $03, $04, $05 ; id 159
+    dfar Data_06F_533E
+    dfar Data_06D_5AD8
+    dfar Data_06D_5A36
+    dfar Data_06F_671E
+    dfar Data_06E_4CC5
+    dfar Data_06E_62D4
+    dfar Data_06E_4CC5
+    dfar Data_06E_62D4
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_070_6AC4
+    dfar Data_070_6AFE
+    dfar Data_071_404F
+    dfar Data_06C_7E3F
+    dfar Data_071_404F
+    dfar Data_071_4001
+    dfar Data_06F_5F1D
+    dfar Data_06D_680B
+    dfar Data_06D_67C7
+    dfar Data_06F_7302
+    dfar Data_06E_599D
+    dfar Data_06E_6FD9
+    dfar Data_06E_599D
+    dfar Data_06E_6FD9
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_070_7652
+    dfar Data_070_7673
+    dfar Data_071_4C19
+    dfar Data_06C_7EE4
+    dfar Data_071_4C19
+    dfar Data_071_4BF4
     ds $9F, $00

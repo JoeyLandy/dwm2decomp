@@ -10645,17 +10645,13 @@ Jump_000_3DFB::
 SoundBankTable::
 Data_000_3E13:: ; heuristic: start of a structured table; C0
     db $00 ; entry 0
-    dw SoundRecords_Bank40
-    db $40
+    dfar SoundRecords_Bank40
     db $1C ; entry 1
-    dw SoundRecords_Bank41
-    db $41
+    dfar SoundRecords_Bank41
     db $31 ; entry 2
-    dw SoundRecords_Bank42
-    db $42
+    dfar SoundRecords_Bank42
     db $A8 ; entry 3
-    dw SoundRecords_Bank43
-    db $43
+    dfar SoundRecords_Bank43
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessWDA63SlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
