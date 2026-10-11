@@ -320,11 +320,521 @@ Data_01A_40D4:: ; heuristic: start of a structured table; C0
     ds $21, $00
     INCBIN "dwm2-cobi-us.gbc", $068E56, $1A2
 
+; E-0156 (C1: CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the record's; BattleEnd_Step3_Sub02_Sub02 scans the five bytes at +13 of all 170 records ($5005, stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end exactly at the prerequisite pointer table $5BEC).
+; record: required level; six required stat words (battler record +$1D, +$21, +$23, +$25, +$27, +$29); five skill numbers ($FF = none)
+SkillRequirementTable::
 Data_01A_4FF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
+    db $00 ; id 0
+    dw 0, 0, 0, 0, 0, 0
 Data_01A_5005:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $069005, $BE7
+    db $FF, $FF, $FF, $FF, $FF
+    db $01 ; id 1
+    dw 0, 7, 0, 0, 0, 36
+    db $FF, $FF, $FF, $FF, $FF
+    db $0D ; id 2
+    dw 0, 46, 0, 0, 0, 116
+    db $01, $FF, $FF, $FF, $FF
+    db $1C ; id 3
+    dw 0, 112, 0, 0, 0, 263
+    db $02, $FF, $FF, $FF, $FF
+    db $03 ; id 4
+    dw 0, 11, 0, 0, 0, 42
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 5
+    dw 0, 34, 0, 0, 0, 94
+    db $04, $FF, $FF, $FF, $FF
+    db $1A ; id 6
+    dw 0, 96, 0, 0, 0, 220
+    db $05, $FF, $FF, $FF, $FF
+    db $04 ; id 7
+    dw 0, 13, 0, 0, 0, 47
+    db $FF, $FF, $FF, $FF, $FF
+    db $0E ; id 8
+    dw 0, 50, 0, 0, 0, 123
+    db $07, $FF, $FF, $FF, $FF
+    db $1D ; id 9
+    dw 0, 120, 0, 0, 0, 285
+    db $08, $FF, $FF, $FF, $FF
+    db $02 ; id 10
+    dw 0, 10, 0, 0, 0, 38
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 11
+    dw 0, 38, 0, 0, 0, 101
+    db $0A, $FF, $FF, $FF, $FF
+    db $15 ; id 12
+    dw 0, 104, 0, 0, 0, 242
+    db $0B, $FF, $FF, $FF, $FF
+    db $06 ; id 13
+    dw 0, 20, 0, 0, 0, 63
+    db $FF, $FF, $FF, $FF, $FF
+    db $0F ; id 14
+    dw 0, 54, 0, 0, 0, 130
+    db $0D, $FF, $FF, $FF, $FF
+    db $1E ; id 15
+    dw 0, 128, 0, 0, 0, 306
+    db $0E, $FF, $FF, $FF, $FF
+    db $05 ; id 16
+    dw 0, 16, 0, 0, 0, 54
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 17
+    dw 0, 42, 0, 0, 0, 108
+    db $10, $FF, $FF, $FF, $FF
+    db $19 ; id 18
+    dw 0, 88, 0, 0, 0, 198
+    db $11, $FF, $FF, $FF, $FF
+    db $10 ; id 19
+    dw 0, 58, 0, 0, 0, 137
+    db $FF, $FF, $FF, $FF, $FF
+    db $18 ; id 20
+    dw 0, 80, 0, 0, 0, 177
+    db $13, $FF, $FF, $FF, $FF
+    db $1C ; id 21
+    dw 0, 40, 0, 140, 0, 78
+    db $FF, $FF, $FF, $FF, $FF
+    db $01 ; id 22
+    dw 0, 7, 0, 0, 0, 11
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 23
+    dw 0, 52, 0, 0, 0, 87
+    db $16, $FF, $FF, $FF, $FF
+    db $10 ; id 24
+    dw 0, 82, 0, 0, 0, 144
+    db $17, $FF, $FF, $FF, $FF
+    db $14 ; id 25
+    dw 0, 140, 0, 0, 0, 216
+    db $FF, $FF, $FF, $FF, $FF
+    db $1C ; id 26
+    dw 0, 196, 0, 0, 0, 288
+    db $19, $FF, $FF, $FF, $FF
+    db $01 ; id 27
+    dw 0, 55, 0, 0, 0, 11
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 28
+    dw 0, 120, 0, 0, 0, 87
+    db $1B, $FF, $FF, $FF, $FF
+    db $10 ; id 29
+    dw 0, 82, 0, 0, 0, 144
+    db $1C, $FF, $FF, $FF, $FF
+    db $0E ; id 30
+    dw 0, 63, 0, 0, 0, 98
+    db $FF, $FF, $FF, $FF, $FF
+    db $1B ; id 31
+    dw 0, 174, 0, 0, 0, 274
+    db $1E, $FF, $FF, $FF, $FF
+    db $20 ; id 32
+    dw 0, 188, 0, 0, 0, 317
+    db $FF, $15, $1F, $FF, $FF
+    db $05 ; id 33
+    dw 0, 21, 0, 0, 0, 47
+    db $FF, $FF, $FF, $FF, $FF
+    db $06 ; id 34
+    dw 0, 24, 0, 0, 0, 47
+    db $FF, $FF, $FF, $FF, $FF
+    db $08 ; id 35
+    dw 0, 30, 0, 0, 0, 47
+    db $FF, $FF, $FF, $FF, $FF
+    db $07 ; id 36
+    dw 0, 27, 0, 0, 0, 44
+    db $FF, $FF, $FF, $FF, $FF
+    db $02 ; id 37
+    dw 0, 14, 0, 0, 0, 22
+    db $FF, $FF, $FF, $FF, $FF
+    db $06 ; id 38
+    dw 0, 27, 0, 0, 0, 44
+    db $25, $FF, $FF, $FF, $FF
+    db $04 ; id 39
+    dw 0, 18, 0, 0, 0, 27
+    db $FF, $FF, $FF, $FF, $FF
+    db $08 ; id 40
+    dw 0, 36, 0, 0, 0, 58
+    db $27, $FF, $FF, $FF, $FF
+    db $01 ; id 41
+    dw 0, 10, 0, 0, 0, 15
+    db $FF, $FF, $FF, $FF, $FF
+    db $05 ; id 42
+    dw 0, 24, 0, 0, 0, 36
+    db $29, $FF, $FF, $FF, $FF
+    db $03 ; id 43
+    dw 0, 16, 0, 0, 0, 26
+    db $FF, $FF, $FF, $FF, $FF
+    db $07 ; id 44
+    dw 0, 32, 0, 0, 0, 51
+    db $2B, $FF, $FF, $FF, $FF
+    db $11 ; id 45
+    dw 0, 72, 0, 0, 0, 119
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 46
+    dw 0, 47, 0, 0, 0, 74
+    db $FF, $FF, $FF, $FF, $FF
+    db $04 ; id 47
+    dw 0, 24, 0, 0, 0, 29
+    db $FF, $FF, $FF, $FF, $FF
+    db $0B ; id 48
+    dw 0, 52, 0, 0, 0, 83
+    db $2F, $FF, $FF, $FF, $FF
+    db $0D ; id 49
+    dw 0, 58, 0, 0, 0, 94
+    db $FF, $FF, $FF, $FF, $FF
+    db $07 ; id 50
+    dw 0, 32, 0, 0, 0, 51
+    db $FF, $FF, $FF, $FF, $FF
+    db $09 ; id 51
+    dw 0, 44, 0, 0, 0, 69
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 52
+    dw 0, 56, 0, 0, 0, 89
+    db $FF, $FF, $FF, $FF, $FF
+    db $0F ; id 53
+    dw 0, 62, 0, 0, 0, 87
+    db $FF, $FF, $FF, $FF, $FF
+    db $10 ; id 54
+    dw 0, 68, 0, 0, 0, 112
+    db $FF, $FF, $FF, $FF, $FF
+    db $14 ; id 55
+    dw 0, 84, 0, 0, 0, 141
+    db $36, $FF, $FF, $FF, $FF
+    db $12 ; id 56
+    dw 0, 76, 0, 0, 0, 126
+    db $FF, $FF, $FF, $FF, $FF
+    db $13 ; id 57
+    dw 0, 80, 0, 0, 0, 134
+    db $FF, $FF, $FF, $FF, $FF
+    db $15 ; id 58
+    dw 0, 92, 0, 0, 0, 159
+    db $FF, $FF, $FF, $FF, $FF
+    db $17 ; id 59
+    dw 0, 72, 0, 0, 0, 162
+    db $FF, $FF, $FF, $FF, $FF
+    db $28 ; id 60
+    dw 0, 224, 0, 0, 0, 420
+    db $FF, $FF, $FF, $FF, $FF
+    db $26 ; id 61
+    dw 0, 210, 0, 0, 0, 794
+    db $03, $06, $09, $0C, $12
+    db $24 ; id 62
+    dw 196, 196, 0, 0, 0, 612
+    db $FF, $09, $43, $47, $FF
+    db $22 ; id 63
+    dw 184, 184, 0, 0, 0, 538
+    db $FF, $0F, $4A, $FF, $FF
+    db $03 ; id 64
+    dw 21, 0, 0, 0, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 65
+    dw 70, 0, 0, 0, 0, 0
+    db $40, $FF, $FF, $FF, $FF
+    db $14 ; id 66
+    dw 140, 0, 0, 0, 0, 0
+    db $41, $FF, $FF, $FF, $FF
+    db $14 ; id 67
+    dw 210, 0, 0, 0, 0, 0
+    db $42, $FF, $FF, $FF, $FF
+    db $03 ; id 68
+    dw 21, 0, 0, 0, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 69
+    dw 70, 0, 0, 0, 0, 0
+    db $44, $FF, $FF, $FF, $FF
+    db $14 ; id 70
+    dw 140, 0, 0, 0, 0, 0
+    db $45, $FF, $FF, $FF, $FF
+    db $14 ; id 71
+    dw 210, 0, 0, 0, 0, 0
+    db $46, $FF, $FF, $FF, $FF
+    db $0D ; id 72
+    dw 74, 0, 60, 0, 84, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $13 ; id 73
+    dw 112, 0, 114, 0, 132, 0
+    db $48, $FF, $FF, $FF, $FF
+    db $0A ; id 74
+    dw 65, 0, 90, 0, 52, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $10 ; id 75
+    dw 124, 0, 102, 0, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0D ; id 76
+    dw 74, 0, 60, 0, 84, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $13 ; id 77
+    dw 112, 0, 114, 0, 132, 0
+    db $4C, $FF, $FF, $FF, $FF
+    db $11 ; id 78
+    dw 84, 42, 0, 0, 68, 98
+    db $FF, $FF, $FF, $FF, $FF
+    db $17 ; id 79
+    dw 128, 64, 0, 0, 82, 134
+    db $4E, $FF, $FF, $FF, $FF
+    db $0B ; id 80
+    dw 77, 34, 66, 0, 0, 98
+    db $FF, $02, $68, $FF, $FF
+    db $0B ; id 81
+    dw 77, 34, 66, 0, 0, 76
+    db $FF, $48, $68, $FF, $FF
+    db $0B ; id 82
+    dw 77, 34, 66, 0, 0, 76
+    db $FF, $4A, $68, $FF, $FF
+    db $0B ; id 83
+    dw 77, 34, 66, 0, 0, 76
+    db $FF, $11, $68, $FF, $FF
+    db $0C ; id 84
+    dw 62, 0, 68, 0, 72, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 85
+    dw 62, 0, 72, 0, 62, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 86
+    dw 62, 0, 68, 0, 62, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 87
+    dw 62, 0, 68, 0, 72, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 88
+    dw 68, 0, 72, 0, 62, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 89
+    dw 68, 0, 62, 0, 72, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 90
+    dw 64, 0, 58, 0, 62, 87
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 91
+    dw 64, 0, 58, 0, 62, 87
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 92
+    dw 68, 0, 72, 0, 62, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 93
+    dw 68, 0, 72, 0, 62, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 94
+    dw 68, 0, 72, 0, 62, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $05 ; id 95
+    dw 35, 0, 50, 0, 0, 90
+    db $FF, $FF, $FF, $FF, $FF
+    db $09 ; id 96
+    dw 63, 0, 54, 0, 0, 98
+    db $FF, $5F, $61, $FF, $FF
+    db $07 ; id 97
+    dw 49, 0, 42, 0, 0, 76
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 98
+    dw 72, 0, 68, 0, 82, 0
+    db $FF, $2A, $68, $FF, $FF
+    db $13 ; id 99
+    dw 98, 0, 88, 0, 112, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $18 ; id 100
+    dw 124, 0, 112, 0, 136, 0
+    db $63, $FF, $FF, $FF, $FF
+    db $0F ; id 101
+    dw 92, 0, 90, 0, 96, 0
+    db $FF, $62, $63, $FF, $FF
+    db $1C ; id 102
+    dw 154, 140, 168, 0, 168, 572
+    db $FF, $49, $5B, $FF, $FF
+    db $21 ; id 103
+    dw 231, 164, 198, 0, 198, 608
+    db $FF, $50, $51, $52, $53
+    db $0E ; id 104
+    dw 98, 0, 0, 84, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 105
+    dw 74, 0, 82, 68, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $14 ; id 106
+    dw 75, 0, 70, 0, 48, 80
+    db $FF, $FF, $FF, $FF, $FF
+    db $0F ; id 107
+    dw 106, 0, 90, 0, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 108
+    dw 84, 0, 72, 0, 72, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $08 ; id 109
+    dw 80, 0, 80, 0, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0E ; id 110
+    dw 98, 0, 84, 84, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 111
+    dw 70, 0, 0, 0, 70, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $12 ; id 112
+    dw 126, 0, 108, 108, 0, 0
+    db $FF, $68, $6F, $FF, $FF
+    db $0A ; id 113
+    dw 70, 0, 0, 0, 0, 108
+    db $FF, $FF, $FF, $FF, $FF
+    db $10 ; id 114
+    dw 112, 0, 0, 0, 0, 173
+    db $FF, $71, $74, $FF, $FF
+    db $09 ; id 115
+    dw 63, 0, 0, 0, 0, 98
+    db $FF, $FF, $FF, $FF, $FF
+    db $0E ; id 116
+    dw 98, 0, 0, 0, 0, 152
+    db $73, $FF, $FF, $FF, $FF
+    db $0F ; id 117
+    dw 0, 65, 0, 0, 82, 148
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 118
+    dw 54, 27, 0, 0, 63, 89
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 119
+    dw 68, 39, 0, 0, 85, 110
+    db $76, $FF, $FF, $FF, $FF
+    db $0D ; id 120
+    dw 74, 0, 0, 0, 78, 141
+    db $FF, $FF, $FF, $FF, $FF
+    db $14 ; id 121
+    dw 140, 72, 0, 0, 120, 216
+    db $FF, $75, $7A, $FF, $FF
+    db $0E ; id 122
+    dw 84, 0, 0, 0, 98, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $1E ; id 123
+    dw 210, 0, 0, 0, 180, 446
+    db $FF, $15, $7C, $FF, $FF
+    db $12 ; id 124
+    dw 114, 0, 0, 0, 130, 173
+    db $FF, $18, $7D, $FF, $FF
+    db $09 ; id 125
+    dw 63, 0, 0, 0, 54, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 126
+    dw 70, 0, 0, 0, 70, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 127
+    dw 0, 42, 0, 0, 72, 130
+    db $FF, $FF, $FF, $FF, $FF
+    db $0E ; id 128
+    dw 0, 65, 0, 0, 84, 152
+    db $FF, $75, $7F, $FF, $FF
+    db $17 ; id 129
+    dw 0, 130, 0, 0, 0, 306
+    db $FF, $21, $22, $23, $24
+    db $15 ; id 130
+    dw 0, 110, 0, 0, 0, 270
+    db $FF, $28, $2C, $2E, $FF
+    db $14 ; id 131
+    dw 0, 100, 0, 0, 0, 252
+    db $FF, $81, $82, $FF, $FF
+    db $16 ; id 132
+    dw 0, 120, 0, 0, 0, 288
+    db $FF, $FF, $FF, $FF, $FF
+    db $14 ; id 133
+    dw 0, 70, 0, 0, 0, 100
+    db $FF, $FF, $FF, $FF, $FF
+    db $19 ; id 134
+    dw 0, 100, 0, 0, 0, 250
+    db $85, $FF, $FF, $FF, $FF
+    db $1E ; id 135
+    dw 0, 130, 0, 0, 0, 400
+    db $86, $FF, $FF, $FF, $FF
+    db $23 ; id 136
+    dw 0, 160, 0, 0, 0, 550
+    db $87, $FF, $FF, $FF, $FF
+    db $11 ; id 137
+    dw 119, 0, 0, 102, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $12 ; id 138
+    dw 126, 0, 0, 108, 108, 195
+    db $FF, $68, $89, $9F, $FF
+    db $07 ; id 139
+    dw 55, 0, 0, 0, 67, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0D ; id 140
+    dw 81, 0, 0, 0, 94, 0
+    db $8B, $FF, $FF, $FF, $FF
+    db $06 ; id 141
+    dw 32, 0, 31, 0, 48, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 142
+    dw 66, 0, 63, 0, 77, 0
+    db $8D, $FF, $FF, $FF, $FF
+    db $0A ; id 143
+    dw 0, 0, 60, 0, 60, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0E ; id 144
+    dw 120, 0, 0, 0, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $16 ; id 145
+    dw 140, 120, 120, 0, 120, 288
+    db $FF, $4B, $6A, $FF, $FF
+    db $10 ; id 146
+    dw 100, 0, 0, 0, 120, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $11 ; id 147
+    dw 120, 0, 100, 0, 140, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0E ; id 148
+    dw 98, 0, 0, 84, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $12 ; id 149
+    dw 126, 0, 108, 108, 108, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0E ; id 150
+    dw 98, 0, 84, 84, 84, 0
+    db $FF, $6D, $94, $FF, $FF
+    db $05 ; id 151
+    dw 35, 0, 0, 30, 30, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $0C ; id 152
+    dw 84, 0, 0, 72, 72, 0
+    db $97, $FF, $FF, $FF, $FF
+    db $0B ; id 153
+    dw 75, 0, 0, 84, 70, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $13 ; id 154
+    dw 140, 0, 0, 126, 140, 0
+    db $99, $FF, $FF, $FF, $FF
+    db $14 ; id 155
+    dw 100, 94, 0, 84, 0, 202
+    db $FF, $37, $4D, $FF, $FF
+    db $23 ; id 156
+    dw 87, 160, 0, 0, 0, 794
+    db $FF, $33, $92, $93, $FF
+    db $0D ; id 157
+    dw 91, 0, 0, 78, 0, 0
+    db $FF, $FF, $FF, $FF, $FF
+    db $15 ; id 158
+    dw 147, 147, 126, 126, 126, 227
+    db $FF, $3A, $8A, $FF, $FF
+    db $1A ; id 159
+    dw 182, 0, 0, 156, 0, 281
+    db $FF, $94, $98, $FF, $FF
+    db $1B ; id 160
+    dw 198, 94, 0, 0, 145, 292
+    db $FF, $1F, $90, $FF, $FF
+    db $18 ; id 161
+    dw 116, 96, 0, 0, 78, 263
+    db $FF, $9F, $A0, $FF, $FF
+    db $04 ; id 162
+    dw 0, 28, 0, 0, 0, 44
+    db $FF, $FF, $FF, $FF, $FF
+    db $04 ; id 163
+    dw 0, 28, 0, 0, 0, 44
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 164
+    dw 0, 40, 0, 0, 0, 62
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 165
+    dw 0, 40, 0, 0, 0, 62
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 166
+    dw 0, 40, 0, 0, 0, 62
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 167
+    dw 0, 40, 0, 0, 0, 62
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 168
+    dw 0, 40, 0, 0, 0, 62
+    db $FF, $FF, $FF, $FF, $FF
+    db $0A ; id 169
+    dw 0, 40, 0, 0, 0, 62
+    db $FF, $FF, $FF, $FF, $FF
 
 Data_01A_5BEC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $5D

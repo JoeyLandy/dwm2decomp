@@ -1942,6 +1942,33 @@
         }
       ],
       "note": "E-0151 (C1: ApplyMapScreenFlagEvents walks these 8-byte entries until $FF; when hMapId and hMapScreenX/Y match and the story flag is set, ApplyMapScreenFlagEvents_Sub01 writes the tile and tile + 1 at wScreenTileBuffer + offset (tile $FF takes another path); 108 entries)."
+    },
+    {
+      "bank": "1A",
+      "addr": "4FF8",
+      "label": "SkillRequirementTable",
+      "count": 170,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "required level (compared with battler record +$17)"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "decimal": true,
+          "name": "six required stat words, compared with battler record +$1D (base HP, E-0062), +$21, +$23, +$25, +$27, +$29"
+        },
+        {
+          "type": "db",
+          "size": 5,
+          "name": "skills this one follows from ($FF = none)"
+        }
+      ],
+      "record": "required level; six required stat words (battler record +$1D, +$21, +$23, +$25, +$27, +$29); five skill numbers ($FF = none)",
+      "note": "E-0156 (C1: CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the record's; BattleEnd_Step3_Sub02_Sub02 scans the five bytes at +13 of all 170 records ($5005, stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end exactly at the prerequisite pointer table $5BEC)."
     }
   ]
 }

@@ -1892,6 +1892,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** Of 9,100 code labels, 148 still carry a raw RAM token (borrowed scratch bytes, and addresses inside sized buffers that have no exact name); 5,337 remain structural (Parent_CaseNN / _SubNN / _SharedNN).
 - Binary verification: build/run155 PASS, 0 differing bytes; tests OK.
 
+### E-0156 — The skill requirement table (bank $1A)
+
+- Kind: OBSERVATION (byte-level reading of CheckSkillsLearnableAtLevel 1A:5FA7 and BattleEnd_Step3_Sub02_Sub02 1A:62D0; C1 for the field meanings).
+- **CheckSkillsLearnableAtLevel.** It walks 18-byte records from $4FF8. It compares the battler's byte at +$17 with the record's byte 0, and its words at +$1D, +$21, +$23, +$25, +$27, +$29 with the record's six words (a borrow rejects the skill).
+- **BattleEnd_Step3_Sub02_Sub02.** It compares a skill with bytes 13-17 of all 170 records (it starts at $5005 = $4FF8 + 13, stride 18). On a match it hands the record number to BattleEnd_Step3_Shared01, which looks for it among the eight skills at wRecordBufA + $34.
+- **Bounds.** 170 * 18 bytes end exactly at the table at $5BEC (TryAddSkillIfPrerequisitesKnown's lists).
+- **Declared.** SkillRequirementTable: a level byte, six stat words in decimal (a new `decimal` option for word fields), and five skill numbers ($FF = none). These 3 KB had been an INCBIN slice.
+- **Limits.** Battler record +$17 as the level and +$1D as base HP rest on E-0131/E-0062; the other four words' stats are not named. Record N is taken to be skill N because of the lookup at wRecordBufA + $34, which was not executed.
+- Binary verification: build/run156 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.
