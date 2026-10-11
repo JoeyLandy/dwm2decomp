@@ -777,9 +777,9 @@ class Rom:
                                 else self.data[t["bank"] * BANK + q - self.base(t["bank"])])
                     q += sz
                 for fi, f in enumerate(fields):
-                    if f.get("stream"):
+                    if f.get("stream") or f.get("stream_skip"):
                         tb = vals[f["bank_from"]] if "bank_from" in f else int(f.get("target_bank", "%X" % t["bank"]), 16)
-                        from_tables += register(tb, vals[fi], f.get("reason", "stream named by a table field"))
+                        from_tables += register(tb, vals[fi] + f.get("stream_skip", 0), f.get("stream_reason", f.get("reason", "stream named by a table field")))
         log(f"compressed assets from table fields: {from_tables} new streams")
 
     def _decompress_entries(self) -> set[int]:
@@ -1309,7 +1309,9 @@ class Rom:
                 if f.get("bank_from", 0) is None:
                     f["bank_from"] = i + 1
             self.schemas.append({"bank": b11, "addr": r, "label": f"MapRecord{first:02X}", "count": 1,
-                                 "fields": fields, "note": f"E-0142 (derived: map record of map ${first:02X}, "
+                                 "fields": fields, "record": "tileset; palettes; width, height, wMaxBlockingTile, "
+                                 "wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes; "
+                                 "variant flag byte; then per variant: screen array, attribute array", "note": f"E-0142 (derived: map record of map ${first:02X}, "
                                  f"{wd} x {ht} screens, {k} decoded variant(s))"})
             added += 1
         sm = next((t for t in self.schemas if t["label"] == "SpecialMapRecords"), None)
@@ -1328,6 +1330,31 @@ class Rom:
                     tb, ta = fp(sm["bank"], r + j)
                     if screens_ok(tb, ta, wd * ht):
                         arrays.setdefault((tb, ta), (wd * ht, f"SpecialMap{i:02X}{kind}"))
+        kc = next((t for t in self.schemas if t["label"] == "KeyWorldChunkLists"), None)
+        chunk_groups: list[tuple[int, int, int]] = []
+        if kc:  # key-world chunk groups (E-0146): n sub-chunks of $60 bytes, then n order bytes
+            starts = sorted({fp(kc["bank"], kc["addr"] + 3 * i) for i in range(kc["count"])})
+            for (bank, addr), nxt in zip(starts, starts[1:] + [(None, None)]):
+                if nxt[0] == bank and (nxt[1] - addr) % 0x61 == 0:
+                    n = (nxt[1] - addr) // 0x61
+                else:  # the last group of a bank: its order bytes are a permutation of 0..n-1
+                    n = next((k for k in range(1, 10) if addr + 0x61 * k <= 0x8000 and sorted(
+                        self.data[bank * BANK + addr + 0x60 * k - self.base(bank) + j] for j in range(k)) == list(range(k))), 0)
+                def screen_ok(sb: int, sa: int) -> bool:
+                    if not (0 < sb < nb and 0x4000 <= sa < 0x7FF0):
+                        return False
+                    try:
+                        out, _, ev = decompress(self.data, sb, sa)
+                    except IndexError:
+                        return False
+                    return not ev["unwritten_reads"] and len(out) == 360
+
+                ok = n and all(
+                    screen_ok(fp(bank, addr + 0x60 * k + 3 * i)[0], fp(bank, addr + 0x60 * k + 3 * i)[1] + 8)
+                    and screen_ok(*fp(bank, addr + 0x60 * k + 0x30 + 3 * i))
+                    for k in range(n) for i in range(16))
+                if ok:
+                    chunk_groups.append((bank, addr, n))
         taken: list[tuple[int, int, int]] = []  # config layouts win over derived ones
         for t in self.schemas:
             if not t["label"].startswith(("MapRecord",)):
@@ -1342,6 +1369,30 @@ class Rom:
                                  "note": f"E-0142 (derived: {n} screen far pointers, row by row)"})
             self.schemas[-1]["fields"][0]["bank_from"] = 1
             added += 1
+        for g, (bank, addr, n) in enumerate(chunk_groups):
+            if any(b == bank and lo < addr + 0x61 * n and addr < hi for b, lo, hi in taken):
+                continue
+            taken.append((bank, addr, addr + 0x61 * n))
+            fields = []
+            for i in range(16):
+                fields += [{"type": "ptr", "bank_from": len(fields) + 1, "stream_skip": 8,
+                            "name": f"screen {i}: 8-byte header, then the compressed tile map",
+                            "reason": "key-world screen header", "stream_reason": "key-world screen tile map"},
+                           {"type": "db", "size": 1, "name": "its ROM bank"}]
+            for i in range(16):
+                fields += [{"type": "ptr", "bank_from": len(fields) + 1, "stream": True,
+                            "name": f"screen {i}: compressed attribute map", "reason": "key-world screen attribute map"},
+                           {"type": "db", "size": 1, "name": "its ROM bank"}]
+            self.schemas.append({"bank": bank, "addr": addr, "label": f"KeyWorldChunkGroup{g:02X}", "count": n,
+                                 "fields": fields, "id_base": 0,
+                                 "record": "16 far pointers to screen tile maps (each behind an 8-byte header), "
+                                           "then 16 to their attribute maps",
+                                 "note": f"E-0146 (derived: {n} sub-chunk(s) of a 4 x 4 grid of screens; "
+                                 "Func_061_4472_Case00 skips the 8-byte header before each tile map)"})
+            self.schemas.append({"bank": bank, "addr": addr + 0x60 * n, "label": f"KeyWorldChunkGroup{g:02X}Order",
+                                 "count": 1, "fields": [{"type": "db", "size": n, "name": "sub-chunk order"}],
+                                 "note": "E-0146 (derived: a permutation of the sub-chunk numbers)"})
+            added += 1
         npal = 0
         for (bank, addr), label in sorted(palettes.items()):
             if not (0 < bank < nb and 0x4000 <= addr <= 0x8000 - 0x40) or any(
@@ -1352,7 +1403,8 @@ class Rom:
                                  "fields": [{"type": "words", "size": 8, "name": "one CGB palette: 4 BGR555 colours"}],
                                  "note": "E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)"})
             npal += 1
-        log(f"map layouts derived from MapTable: {len(recs)} records, {len(arrays)} screen arrays, {npal} palette sets")
+        log(f"map layouts derived from MapTable: {len(recs)} records, {len(arrays)} screen arrays, {npal} palette sets, "
+            f"{len(chunk_groups)} key-world chunk groups")
 
     def prepare_tables(self) -> None:
         """Validate config/tables.json against the ROM and register data labels for their
@@ -1489,7 +1541,7 @@ class Rom:
         fields, sizes, stride = t["fields"], t["sizes"], t["stride"]
         out.append("")
         out.append(f"; {t['note']}")
-        out.append("; record: " + "; ".join(f["name"] for f in fields))
+        out.append("; record: " + (t.get("record") or "; ".join(f["name"] for f in fields)))
         out.append(f"{t['label']}::")
         for i in range(t["count"]):
             p = t["addr"] + i * stride

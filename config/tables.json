@@ -1,5 +1,5 @@
 {
-  "_comment": "Understood table layouts, emitted field by field by tools/disasm_all.py. Each table: bank, addr (hex CPU address), label (an alias; Data_BBB_AAAA labels are kept), count, id_base (optional; record index + id_base is shown in comments), id_names (\"monster\" appends the monster name to the id comment), fields (db N bytes | words N bytes shown as little-endian dw values | ptr = 16-bit pointer into the same bank, or into the bank given by the field bank_from indexes; \"stream\": true registers the target as a compressed stream), and note. Every layout cites its evidence in docs/EVIDENCE_LOG.md. Field names state only what the evidence supports.",
+  "_comment": "Understood table layouts, emitted field by field by tools/disasm_all.py. Each table: bank, addr (hex CPU address), label (an alias; Data_BBB_AAAA labels are kept), count, id_base (optional; record index + id_base is shown in comments), id_names (\"monster\" appends the monster name to the id comment), fields (db N bytes | words N bytes shown as little-endian dw values | ptr = 16-bit pointer into the same bank, or into the bank given by the field bank_from indexes; \"stream\": true registers the target as a compressed stream),, optional record (a short description printed instead of the list of field names), and note. Every layout cites its evidence in docs/EVIDENCE_LOG.md. Field names state only what the evidence supports.",
   "tables": [
     {
       "bank": "36",
@@ -1336,7 +1336,8 @@
           "name": "bank of attribute map 15"
         }
       ],
-      "note": "E-0141 (C1: Func_061_4472_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes)."
+      "note": "E-0141 (C1: Func_061_4472_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes).",
+      "record": "3-byte header; 16 far pointers to compressed screen tile maps (4 x 4 grid, row by row); 16 far pointers to their attribute maps"
     },
     {
       "bank": "04",
@@ -1628,6 +1629,27 @@
         }
       ],
       "note": "E-0145 (C1: ScriptCommand79_Run_Case01 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes after them do not)."
+    },
+    {
+      "bank": "60",
+      "addr": "610D",
+      "label": "KeyWorldChunkLists",
+      "count": 164,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "name": "chunk group in bank $67/$68",
+          "reason": "key-world chunk group"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "its ROM bank"
+        }
+      ],
+      "note": "E-0146 (C1: RunRandomPatternCase_Case00/01/02 pick entry (random & $1F) of the lists at $610D, $616D and $61E5 and store the far pointer in the key-world area data; the far pointers run to $62F8 and all point at chunk groups ($61 bytes per sub-chunk))."
     }
   ]
 }

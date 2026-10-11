@@ -1,166 +1,4091 @@
 SECTION "Bank 68", ROMX[$4000], BANK[$68]
-    INCBIN "dwm2-cobi-us.gbc", $1A0000, $8B7
-    dw Data_068_655F
-    db $B3, $42, $62, $65
-    dw Data_068_656D
-    db $59, $48, $66, $17
-    dw Data_068_6649
-    db $8E, $47, $66, $7D
-    dw Data_068_664D
-    db $C8, $5C, $66, $C8
-    dw Data_068_665C
-    db $C8, $5C, $66, $C8
-    dw Data_068_665C
-    db $C8, $5C, $66, $C8
-    dw Data_068_665C
-    db $C8, $5C, $66, $C8
-    dw Data_068_665C
-    db $4A, $74, $62, $91
-    dw Data_068_6563
-    db $67, $49, $62, $90
-    dw Data_068_6572
-    db $04, $4C, $66, $37
-    dw Data_068_664C
-    db $C0, $4B, $66, $C5
-    dw Data_068_6652
-    db $5D, $61, $66, $5D
-    dw Data_068_6661
-    db $5D, $61, $66, $5D
-    dw Data_068_6661
-    db $5D, $61, $66, $5D
-    dw Data_068_6661
-    db $5D, $61, $66, $5D
-    dw Data_068_6661
-    INCBIN "dwm2-cobi-us.gbc", $1A0913, $514
-    dw Data_068_6243
-    db $2E
-    dw Data_068_6266
-    db $34
-    dw Data_068_645A
-    db $D4
-    dw Data_068_645A
-    db $BD
-    dw Data_068_6543
-    db $EA
-    dw Data_068_656A
-    db $11
-    dw Data_068_657B
-    db $5D
-    dw Data_068_6661
-    db $5A, $5B, $66, $2F, $49, $62, $34, $73, $65, $0F, $5B, $66, $91, $63, $65, $43
-    db $46, $65, $09, $74, $62, $4B, $63, $65, $AA
-    dw Data_068_6249
-    db $E8
-    dw Data_068_626A
-    db $47
-    dw Data_068_645E
-    db $8E
-    dw Data_068_645E
-    db $0B
-    dw Data_068_6547
-    db $CA
-    dw Data_068_6564
-    db $46
-    dw Data_068_6565
-    db $46
-    dw Data_068_6565
-    db $ED
-    dw Data_068_6576
-    INCBIN "dwm2-cobi-us.gbc", $1A0E71, $E17
-    dw Data_068_6479
-    db $35
-    dw Data_068_6646
-    db $C8
-    dw Data_068_665C
-    db $C8
-    dw Data_068_665C
-    db $C8
-    dw Data_068_665C
-    db $C8
-    dw Data_068_665C
-    db $5D
-    dw Data_068_6661
-    db $5D
-    dw Data_068_6661
-    INCBIN "dwm2-cobi-us.gbc", $1A1C9F, $5A4
+    db $68
 
-Data_068_6243:: ; heuristic: target of a monotone pointer table; C0
-    db $4E, $66, $5D, $61, $66, $00
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup44::
+Data_068_4001:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_54FD ; id 0
+    dfar Data_065_6693
+    dfar Data_065_6736
+    dfar Data_065_76ED
+    dfar Data_062_75B0
+    dfar Data_062_5337
+    dfar Data_065_431E
+    dfar Data_062_6F90
+    dfar Data_062_7626
+    dfar Data_064_4734
+    dfar Data_063_47D4
+    dfar Data_062_528E
+    dfar Data_064_7848
+    dfar Data_063_6DB3
+    dfar Data_062_42B3
+    dfar Data_064_46A7
+    dfar Data_066_5A5F
+    dfar Data_065_6B2C
+    dfar Data_065_6B50
+    dfar Data_065_7B11
+    dfar Data_062_7B66
+    dfar Data_062_573B
+    dfar Data_065_46BF
+    dfar Data_062_73E8
+    dfar Data_062_7B96
+    dfar Data_064_4B1E
+    dfar Data_063_4B70
+    dfar Data_062_56FE
+    dfar Data_064_7DFB
+    dfar Data_063_722B
+    dfar Data_062_4967
+    dfar Data_064_4AD9
+    dfar Data_066_5658 ; id 1
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_5E8C
+    dfar Data_062_6E33
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_064_5A34
+    dfar Data_065_416D
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_063_6636
+    dfar Data_064_5218
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_066_5AE7
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_065_6301
+    dfar Data_062_737B
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_064_5E47
+    dfar Data_065_4643
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_063_69E0
+    dfar Data_064_56B0
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 2
+    dfar Data_064_7A7D
+    dfar Data_066_478E
+    dfar Data_063_6E4E
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_77EB
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_774A
+    dfar Data_066_5CC8
+    dfar Data_066_5705
+    dfar Data_065_6736
+    dfar Data_065_5F42
+    dfar Data_066_615D
+    dfar Data_064_7EB0
+    dfar Data_066_4BC0
+    dfar Data_063_7250
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7C25
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7BFD
+    dfar Data_066_615D
+    dfar Data_066_5B0F
+    dfar Data_065_6B50
+    dfar Data_065_634B
+    dfar Data_063_60DA ; id 3
+    dfar Data_064_544D
+    dfar Data_062_6EDC
+    dfar Data_065_751D
+    dfar Data_063_6148
+    dfar Data_062_68C2
+    dfar Data_065_41F0
+    dfar Data_065_6D65
+    dfar Data_064_4843
+    dfar Data_063_6744
+    dfar Data_064_5284
+    dfar Data_065_6D0D
+    dfar Data_062_5485
+    dfar Data_062_613E
+    dfar Data_063_468C
+    dfar Data_065_6C81
+    dfar Data_063_63CF
+    dfar Data_064_5794
+    dfar Data_062_73A7
+    dfar Data_065_7A80
+    dfar Data_063_63FE
+    dfar Data_062_6BF7
+    dfar Data_065_4662
+    dfar Data_065_7290
+    dfar Data_064_4B88
+    dfar Data_063_6A61
+    dfar Data_064_56E0
+    dfar Data_065_7279
+    dfar Data_062_57A2
+    dfar Data_062_64F0
+    dfar Data_063_4AF5
+    dfar Data_065_7251
+    dfar Data_066_5560 ; id 4
+    dfar Data_065_5DD4
+    dfar Data_062_5337
+    dfar Data_064_5A34
+    dfar Data_062_7626
+    dfar Data_062_41C9
+    dfar Data_063_5F99
+    dfar Data_064_6145
+    dfar Data_064_78B1
+    dfar Data_063_6D0B
+    dfar Data_064_4734
+    dfar Data_063_472D
+    dfar Data_066_5CC8
+    dfar Data_064_7945
+    dfar Data_066_46C5
+    dfar Data_066_478E
+    dfar Data_066_5A87
+    dfar Data_065_62D2
+    dfar Data_062_573B
+    dfar Data_064_5E47
+    dfar Data_062_7B96
+    dfar Data_062_492F
+    dfar Data_063_633B
+    dfar Data_064_6509
+    dfar Data_064_7E22
+    dfar Data_063_71F3
+    dfar Data_064_4B1E
+    dfar Data_063_4B25
+    dfar Data_066_615D
+    dfar Data_064_7E51
+    dfar Data_066_4B6F
+    dfar Data_066_4BC0
+    dfar Data_065_5737 ; id 5
+    dfar Data_064_5394
+    dfar Data_064_6797
+    dfar Data_066_4D7D
+    dfar Data_063_5437
+    dfar Data_063_47D4
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_064_697E
+    dfar Data_066_478E
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_4F98
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_5A75
+    dfar Data_064_5742
+    dfar Data_064_6D09
+    dfar Data_066_52C5
+    dfar Data_063_57D1
+    dfar Data_063_4B70
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_064_6D86
+    dfar Data_066_4BC0
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_066_5366
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
 
-Data_068_6249:: ; heuristic: target of a monotone pointer table; C0
-    db $7F, $64, $F3, $71, $63, $64, $6D, $64, $5D, $61, $66, $5D, $61, $66, $96, $7B
-    db $62, $A7, $73, $62, $5D, $61, $66, $5D, $61, $66, $25, $7C, $62
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup44Order::
+Data_068_4241:: ; heuristic: start of a structured table; C0
+    db $04, $05, $03, $02, $00, $01 ; entry 0
 
-Data_068_6266:: ; heuristic: target of a monotone pointer table; C0
-    db $28, $6D, $64, $5D
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup45::
+Data_068_4247:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5560 ; id 0
+    dfar Data_065_6546
+    dfar Data_065_64CA
+    dfar Data_065_6808
+    dfar Data_062_7626
+    dfar Data_062_40EE
+    dfar Data_062_43CA
+    dfar Data_062_4365
+    dfar Data_062_75B0
+    dfar Data_062_41C9
+    dfar Data_064_6AEC
+    dfar Data_066_4859
+    dfar Data_064_78B1
+    dfar Data_066_4917
+    dfar Data_064_73B7
+    dfar Data_065_77A4
+    dfar Data_066_5A87
+    dfar Data_065_6AC6
+    dfar Data_065_6A8F
+    dfar Data_065_6B9F
+    dfar Data_062_7B96
+    dfar Data_062_48DA
+    dfar Data_062_49C6
+    dfar Data_062_49AA
+    dfar Data_062_7B66
+    dfar Data_062_492F
+    dfar Data_064_6DFE
+    dfar Data_066_4C04
+    dfar Data_064_7E22
+    dfar Data_066_4C37
+    dfar Data_064_7730
+    dfar Data_065_7B60
+    dfar Data_065_751D ; id 1
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_6F90
+    dfar Data_065_743F
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_46C5
+    dfar Data_066_4CD6
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5477
+    dfar Data_065_76ED
+    dfar Data_066_5CC8
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_73E8
+    dfar Data_065_7A30
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_4B6F
+    dfar Data_066_52A0
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5A3B
+    dfar Data_065_7B11
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 2
+    dfar Data_066_5CC8
+    dfar Data_064_7C14
+    dfar Data_064_720E
+    dfar Data_066_5CC8
+    dfar Data_066_589C
+    dfar Data_065_68B7
+    dfar Data_065_5F42
+    dfar Data_066_589C
+    dfar Data_065_5C71
+    dfar Data_062_4365
+    dfar Data_064_697E
+    dfar Data_062_76AE
+    dfar Data_064_6797
+    dfar Data_066_478E
+    dfar Data_066_4F98
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7F35
+    dfar Data_064_76A3
+    dfar Data_066_615D
+    dfar Data_066_5B97
+    dfar Data_065_6BD1
+    dfar Data_065_634B
+    dfar Data_066_5B97
+    dfar Data_065_6244
+    dfar Data_062_49AA
+    dfar Data_064_6D86
+    dfar Data_062_7BC5
+    dfar Data_064_6D09
+    dfar Data_066_4BC0
+    dfar Data_066_5366
+    dfar Data_065_6693 ; id 3
+    dfar Data_065_5D1D
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_062_423A
+    dfar Data_062_41C9
+    dfar Data_065_6C81
+    dfar Data_066_5CC8
+    dfar Data_066_45B4
+    dfar Data_063_6D0B
+    dfar Data_062_6E33
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_062_76AE
+    dfar Data_062_40EE
+    dfar Data_065_6D65
+    dfar Data_065_6B2C
+    dfar Data_065_6293
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_062_494B
+    dfar Data_062_492F
+    dfar Data_065_7251
+    dfar Data_066_615D
+    dfar Data_066_4B1A
+    dfar Data_063_71F3
+    dfar Data_062_737B
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_062_7BC5
+    dfar Data_062_48DA
+    dfar Data_065_7290
+    dfar Data_062_76AE ; id 4
+    dfar Data_062_6D6B
+    dfar Data_065_751D
+    dfar Data_066_5658
+    dfar Data_062_7626
+    dfar Data_062_406A
+    dfar Data_065_6DE3
+    dfar Data_064_79CF
+    dfar Data_064_7848
+    dfar Data_063_6BCD
+    dfar Data_062_6EDC
+    dfar Data_065_6736
+    dfar Data_066_5CC8
+    dfar Data_064_77CC
+    dfar Data_066_45B4
+    dfar Data_066_478E
+    dfar Data_062_7BC5
+    dfar Data_062_732E
+    dfar Data_065_7A80
+    dfar Data_066_5AE7
+    dfar Data_062_7B96
+    dfar Data_062_48C0
+    dfar Data_065_72B2
+    dfar Data_064_7E84
+    dfar Data_064_7DFB
+    dfar Data_063_7181
+    dfar Data_062_73A7
+    dfar Data_065_6B50
+    dfar Data_066_615D
+    dfar Data_064_7DD4
+    dfar Data_066_4B1A
+    dfar Data_066_4BC0
+    dfar Data_065_75A3 ; id 5
+    dfar Data_064_7945
+    dfar Data_063_6C79
+    dfar Data_065_6D0D
+    dfar Data_066_4EF7
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_065_6D65
+    dfar Data_065_6693
+    dfar Data_065_6546
+    dfar Data_063_74A4
+    dfar Data_066_4D7D
+    dfar Data_066_46C5
+    dfar Data_066_45B4
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_065_7AAA
+    dfar Data_064_7E51
+    dfar Data_063_71D4
+    dfar Data_065_7279
+    dfar Data_066_5342
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_065_7290
+    dfar Data_065_6B2C
+    dfar Data_065_6AC6
+    dfar Data_063_7ADE
+    dfar Data_066_52C5
+    dfar Data_066_4B6F
+    dfar Data_066_4B1A
+    dfar Data_066_52E9
+    dfar Data_066_615D
 
-Data_068_626A:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1A226A, $1F0
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup45Order::
+Data_068_4487:: ; heuristic: start of a structured table; C0
+    db $00, $02, $01, $03, $04, $05 ; entry 0
 
-Data_068_645A:: ; heuristic: target of a monotone pointer table; C0
-    db $62, $AA, $7A, $65
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup46::
+Data_068_448D:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5658
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_066_5658
+    dfar Data_065_5E8C
+    dfar Data_062_6E33
+    dfar Data_065_75A3
+    dfar Data_062_774A
+    dfar Data_064_68E4
+    dfar Data_066_45B4
+    dfar Data_066_4E6E
+    dfar Data_062_77EB
+    dfar Data_065_6F70
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_6301
+    dfar Data_062_737B
+    dfar Data_065_7AAA
+    dfar Data_062_7BFD
+    dfar Data_064_6D64
+    dfar Data_066_4B1A
+    dfar Data_066_5311
+    dfar Data_062_7C25
+    dfar Data_065_7334
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 1
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5705
+    dfar Data_065_76ED
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_77EB
+    dfar Data_062_702C
+    dfar Data_065_76ED
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5B0F
+    dfar Data_065_7B11
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7C25
+    dfar Data_062_7409
+    dfar Data_065_7B11
+    dfar Data_064_7848 ; id 2
+    dfar Data_064_73B7
+    dfar Data_065_743F
+    dfar Data_066_5CC8
+    dfar Data_066_5560
+    dfar Data_065_5FE5
+    dfar Data_062_6D6B
+    dfar Data_065_77A4
+    dfar Data_062_76AE
+    dfar Data_062_41C9
+    dfar Data_064_6797
+    dfar Data_066_4F98
+    dfar Data_062_774A
+    dfar Data_062_42B3
+    dfar Data_065_6DE3
+    dfar Data_066_5658
+    dfar Data_064_7DFB
+    dfar Data_064_7730
+    dfar Data_065_7A30
+    dfar Data_066_615D
+    dfar Data_066_5A87
+    dfar Data_065_6391
+    dfar Data_062_732E
+    dfar Data_065_7B60
+    dfar Data_062_7BC5
+    dfar Data_062_492F
+    dfar Data_064_6D09
+    dfar Data_066_5366
+    dfar Data_062_7BFD
+    dfar Data_062_4967
+    dfar Data_065_72B2
+    dfar Data_066_5AE7
+    dfar Data_066_5CC8 ; id 3
+    dfar Data_064_7B56
+    dfar Data_063_6DB3
+    dfar Data_065_6D65
+    dfar Data_066_589C
+    dfar Data_065_6808
+    dfar Data_065_5E8C
+    dfar Data_065_6DE3
+    dfar Data_062_7985
+    dfar Data_064_6A43
+    dfar Data_066_46C5
+    dfar Data_066_4E6E
+    dfar Data_065_60A2
+    dfar Data_062_70C1
+    dfar Data_065_65EA
+    dfar Data_065_75A3
+    dfar Data_066_615D
+    dfar Data_064_7F00
+    dfar Data_063_722B
+    dfar Data_065_7290
+    dfar Data_066_5B97
+    dfar Data_065_6B9F
+    dfar Data_065_6301
+    dfar Data_065_72B2
+    dfar Data_062_7CBA
+    dfar Data_064_6DC8
+    dfar Data_066_4B6F
+    dfar Data_066_5311
+    dfar Data_065_63C6
+    dfar Data_062_744A
+    dfar Data_065_6AEA
+    dfar Data_065_7AAA
+    dfar Data_064_7848 ; id 4
+    dfar Data_063_6C79
+    dfar Data_062_6EDC
+    dfar Data_065_5DD4
+    dfar Data_066_54FD
+    dfar Data_065_5D1D
+    dfar Data_062_41C9
+    dfar Data_062_528E
+    dfar Data_064_7848
+    dfar Data_066_45B4
+    dfar Data_063_6D0B
+    dfar Data_064_46A7
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7945
+    dfar Data_066_4635
+    dfar Data_064_7DFB
+    dfar Data_063_71D4
+    dfar Data_062_73A7
+    dfar Data_065_62D2
+    dfar Data_066_5A5F
+    dfar Data_065_6293
+    dfar Data_062_492F
+    dfar Data_062_56FE
+    dfar Data_064_7DFB
+    dfar Data_066_4B1A
+    dfar Data_063_71F3
+    dfar Data_064_4AD9
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E51
+    dfar Data_066_4B3B
+    dfar Data_062_423A ; id 5
+    dfar Data_064_6797
+    dfar Data_063_6B43
+    dfar Data_065_6D0D
+    dfar Data_065_41F0
+    dfar Data_065_6D0D
+    dfar Data_064_7848
+    dfar Data_066_4D7D
+    dfar Data_063_468C
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_45B4
+    dfar Data_066_4D7D
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_494B
+    dfar Data_064_6D09
+    dfar Data_063_7151
+    dfar Data_065_7279
+    dfar Data_065_4662
+    dfar Data_065_7279
+    dfar Data_064_7DFB
+    dfar Data_066_52C5
+    dfar Data_063_4AF5
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_4B1A
+    dfar Data_066_52C5
+    dfar Data_066_615D
+    dfar Data_066_615D
 
-Data_068_645E:: ; heuristic: target of a monotone pointer table; C0
-    db $48, $78, $64, $0B, $6D, $63, $8E, $52, $62, $D0, $57, $65, $C8, $5C, $66, $D4
-    db $5D, $65, $A7, $46, $64, $37, $54, $63, $B0, $75, $62
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup46Order::
+Data_068_46CD:: ; heuristic: start of a structured table; C0
+    db $05, $04, $03, $02, $01, $00 ; entry 0
 
-Data_068_6479:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1A2479, $CA
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup47::
+Data_068_46D3:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5CC8
+    dfar Data_066_5477
+    dfar Data_065_643F
+    dfar Data_066_5CC8
+    dfar Data_066_589C
+    dfar Data_065_60A2
+    dfar Data_062_5209
+    dfar Data_066_5560
+    dfar Data_065_5D1D
+    dfar Data_062_5209
+    dfar Data_065_55E2
+    dfar Data_062_75B0
+    dfar Data_062_40EE
+    dfar Data_063_5F99
+    dfar Data_064_6272
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5A3B
+    dfar Data_065_6A71
+    dfar Data_066_615D
+    dfar Data_066_5B97
+    dfar Data_065_63C6
+    dfar Data_062_56DF
+    dfar Data_066_5A87
+    dfar Data_065_6293
+    dfar Data_062_56DF
+    dfar Data_065_59E9
+    dfar Data_062_7B66
+    dfar Data_062_48DA
+    dfar Data_063_633B
+    dfar Data_064_657E
+    dfar Data_065_6693 ; id 1
+    dfar Data_065_65EA
+    dfar Data_065_6808
+    dfar Data_065_74B6
+    dfar Data_064_5AD4
+    dfar Data_064_59BA
+    dfar Data_065_416D
+    dfar Data_065_6D65
+    dfar Data_064_6145
+    dfar Data_063_531D
+    dfar Data_063_453F
+    dfar Data_065_6DE3
+    dfar Data_063_47D4
+    dfar Data_064_6828
+    dfar Data_066_4635
+    dfar Data_066_4EF7
+    dfar Data_065_6B2C
+    dfar Data_065_6AEA
+    dfar Data_065_6B9F
+    dfar Data_065_7A51
+    dfar Data_064_5E8E
+    dfar Data_064_5E12
+    dfar Data_065_4643
+    dfar Data_065_7290
+    dfar Data_064_6509
+    dfar Data_063_5769
+    dfar Data_063_4A65
+    dfar Data_065_72B2
+    dfar Data_063_4B70
+    dfar Data_064_6D28
+    dfar Data_066_4B3B
+    dfar Data_066_5342
+    dfar Data_062_7517 ; id 2
+    dfar Data_062_5337
+    dfar Data_062_5FBC
+    dfar Data_063_4867
+    dfar Data_062_75B0
+    dfar Data_064_46A7
+    dfar Data_065_75A3
+    dfar Data_065_43BD
+    dfar Data_064_78B1
+    dfar Data_063_6C79
+    dfar Data_063_5EAF
+    dfar Data_064_544D
+    dfar Data_066_54FD
+    dfar Data_065_5C71
+    dfar Data_063_5E57
+    dfar Data_064_5394
+    dfar Data_062_7B3B
+    dfar Data_062_573B
+    dfar Data_062_6450
+    dfar Data_063_4BB7
+    dfar Data_062_7B66
+    dfar Data_064_4AD9
+    dfar Data_065_7AAA
+    dfar Data_065_470B
+    dfar Data_064_7E22
+    dfar Data_063_71D4
+    dfar Data_063_62DE
+    dfar Data_064_5794
+    dfar Data_066_5A5F
+    dfar Data_065_6244
+    dfar Data_063_62C3
+    dfar Data_064_5742
+    dfar Data_062_41C9 ; id 3
+    dfar Data_065_6DE3
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_40EE
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_6828
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_6D0D
+    dfar Data_066_54FD
+    dfar Data_065_6693
+    dfar Data_065_751D
+    dfar Data_062_492F
+    dfar Data_065_72B2
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_48DA
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_6D28
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_065_7279
+    dfar Data_066_5A5F
+    dfar Data_065_6B2C
+    dfar Data_065_7A80
+    dfar Data_062_7985 ; id 4
+    dfar Data_062_5209
+    dfar Data_065_5056
+    dfar Data_063_472D
+    dfar Data_062_78C0
+    dfar Data_063_5E57
+    dfar Data_064_6272
+    dfar Data_064_68E4
+    dfar Data_062_76AE
+    dfar Data_064_46A7
+    dfar Data_063_4867
+    dfar Data_065_7023
+    dfar Data_064_7848
+    dfar Data_066_478E
+    dfar Data_066_4859
+    dfar Data_066_505C
+    dfar Data_062_7CBA
+    dfar Data_062_56DF
+    dfar Data_065_5414
+    dfar Data_063_4B25
+    dfar Data_062_7C82
+    dfar Data_063_62C3
+    dfar Data_064_657E
+    dfar Data_064_6D64
+    dfar Data_062_7BC5
+    dfar Data_064_4AD9
+    dfar Data_063_4BB7
+    dfar Data_065_737C
+    dfar Data_064_7DFB
+    dfar Data_066_4BC0
+    dfar Data_066_4C04
+    dfar Data_066_53AD
+    dfar Data_062_70C1 ; id 5
+    dfar Data_065_5FE5
+    dfar Data_062_42B3
+    dfar Data_065_6D65
+    dfar Data_066_4859
+    dfar Data_066_4917
+    dfar Data_066_478E
+    dfar Data_066_4D7D
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_744A
+    dfar Data_065_6391
+    dfar Data_062_4967
+    dfar Data_065_7290
+    dfar Data_066_4C04
+    dfar Data_066_4C37
+    dfar Data_066_4BC0
+    dfar Data_066_52C5
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
 
-Data_068_6543:: ; heuristic: target of a monotone pointer table; C0
-    db $5B, $65, $11, $63
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup47Order::
+Data_068_4913:: ; heuristic: start of a structured table; C0
+    db $01, $00, $02, $03, $05, $04 ; entry 0
 
-Data_068_6547:: ; heuristic: target of a monotone pointer table; C0
-    db $64, $8C, $46, $63, $70, $6F, $65, $11, $6A, $63, $19, $57, $64, $28, $6D, $64
-    db $11, $53, $66, $CF, $63, $63, $42, $57
+; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup48::
+Data_068_4919:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_55DC ; id 0
+    dfar Data_065_6693
+    dfar Data_065_64CA
+    dfar Data_065_76ED
+    dfar Data_062_7626
+    dfar Data_062_423A
+    dfar Data_062_423A
+    dfar Data_062_702C
+    dfar Data_064_7848
+    dfar Data_063_6DB3
+    dfar Data_062_41C9
+    dfar Data_064_697E
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_066_46C5
+    dfar Data_066_4F98
+    dfar Data_066_5AB9
+    dfar Data_065_6B2C
+    dfar Data_065_6A8F
+    dfar Data_065_7B11
+    dfar Data_062_7B96
+    dfar Data_062_494B
+    dfar Data_062_494B
+    dfar Data_062_7409
+    dfar Data_064_7DFB
+    dfar Data_063_722B
+    dfar Data_062_492F
+    dfar Data_064_6D86
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_066_4B6F
+    dfar Data_066_5366
+    dfar Data_066_5560 ; id 1
+    dfar Data_065_7641
+    dfar Data_066_5CC8
+    dfar Data_066_5658
+    dfar Data_065_5E8C
+    dfar Data_062_702C
+    dfar Data_065_6546
+    dfar Data_063_7626
+    dfar Data_066_4635
+    dfar Data_063_6EFF
+    dfar Data_064_6797
+    dfar Data_066_4E6E
+    dfar Data_066_5CC8
+    dfar Data_064_7C14
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5A87
+    dfar Data_065_7AE1
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_6301
+    dfar Data_062_7409
+    dfar Data_065_6AC6
+    dfar Data_063_7B4F
+    dfar Data_066_4B3B
+    dfar Data_063_729A
+    dfar Data_064_6D09
+    dfar Data_066_5311
+    dfar Data_066_615D
+    dfar Data_064_7F35
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_065_65EA ; id 2
+    dfar Data_065_6808
+    dfar Data_065_74B6
+    dfar Data_066_5CC8
+    dfar Data_063_6DB3
+    dfar Data_064_6AEC
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_062_77EB
+    dfar Data_065_6F70
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7B56
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_6AEA
+    dfar Data_065_6B9F
+    dfar Data_065_7A51
+    dfar Data_066_615D
+    dfar Data_063_722B
+    dfar Data_064_6DFE
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_062_7C25
+    dfar Data_065_7334
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7F00
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_066_615D
 
-Data_068_655F:: ; heuristic: target of a monotone pointer table; C0
-    db $64, $A7, $73, $62
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup48Order::
+Data_068_4A39:: ; heuristic: start of a structured table; C0
+    db $00, $01, $02 ; entry 0
 
-Data_068_6563:: ; heuristic: target of a monotone pointer table; C0
-    db $AA
+; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup49::
+Data_068_4A3C:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_54FD ; id 0
+    dfar Data_065_6693
+    dfar Data_065_77A4
+    dfar Data_066_5705
+    dfar Data_064_77CC
+    dfar Data_063_6E4E
+    dfar Data_062_6EDC
+    dfar Data_063_7626
+    dfar Data_066_5CC8
+    dfar Data_064_7A7D
+    dfar Data_063_6C79
+    dfar Data_062_6EDC
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7A7D
+    dfar Data_066_4546
+    dfar Data_066_5A5F
+    dfar Data_065_6B2C
+    dfar Data_065_7B60
+    dfar Data_066_5B0F
+    dfar Data_064_7DD4
+    dfar Data_063_7250
+    dfar Data_062_73A7
+    dfar Data_063_7B4F
+    dfar Data_066_615D
+    dfar Data_064_7EB0
+    dfar Data_063_71D4
+    dfar Data_062_73A7
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7EB0
+    dfar Data_066_4AF5
+    dfar Data_065_6546 ; id 1
+    dfar Data_065_64CA
+    dfar Data_065_6693
+    dfar Data_065_7878
+    dfar Data_063_6E4E
+    dfar Data_062_5337
+    dfar Data_065_416D
+    dfar Data_062_6EDC
+    dfar Data_065_5FE5
+    dfar Data_064_48DA
+    dfar Data_063_4867
+    dfar Data_064_697E
+    dfar Data_066_45B4
+    dfar Data_066_4635
+    dfar Data_066_46C5
+    dfar Data_066_4DE4
+    dfar Data_065_6AC6
+    dfar Data_065_6A8F
+    dfar Data_065_6B2C
+    dfar Data_065_7B9E
+    dfar Data_063_7250
+    dfar Data_062_573B
+    dfar Data_065_4643
+    dfar Data_062_73A7
+    dfar Data_065_6391
+    dfar Data_064_4BC1
+    dfar Data_063_4BB7
+    dfar Data_064_6D86
+    dfar Data_066_4B1A
+    dfar Data_066_4B3B
+    dfar Data_066_4B6F
+    dfar Data_066_52E9
+    dfar Data_066_5705 ; id 2
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_5FE5
+    dfar Data_065_6DE3
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_4635
+    dfar Data_064_720E
+    dfar Data_065_74B6
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7945
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5B0F
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_065_6391
+    dfar Data_065_72B2
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_4B3B
+    dfar Data_064_76A3
+    dfar Data_065_7A51
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E51
+    dfar Data_066_52E9
+    dfar Data_066_615D
 
-Data_068_6564:: ; heuristic: target of a monotone pointer table; C0
-    db $7A
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup49Order::
+Data_068_4B5C:: ; heuristic: start of a structured table; C0
+    db $02, $01, $00 ; entry 0
 
-Data_068_6565:: ; heuristic: target of a monotone pointer table; C0
-    db $65, $F8, $5A, $65, $2D
+; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup4A::
+Data_068_4B5F:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5658
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_066_5705
+    dfar Data_065_5E8C
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_064_7A7D
+    dfar Data_063_6DB3
+    dfar Data_062_6E33
+    dfar Data_065_68B7
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_066_45B4
+    dfar Data_066_4917
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_066_5B0F
+    dfar Data_065_6301
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_064_7EB0
+    dfar Data_063_722B
+    dfar Data_062_737B
+    dfar Data_065_6BD1
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_066_4B1A
+    dfar Data_066_4C37
+    dfar Data_066_57D9 ; id 1
+    dfar Data_065_77A4
+    dfar Data_066_5CC8
+    dfar Data_066_5477
+    dfar Data_062_78C0
+    dfar Data_062_70C1
+    dfar Data_065_75A3
+    dfar Data_062_7626
+    dfar Data_065_5FE5
+    dfar Data_064_6A43
+    dfar Data_064_706F
+    dfar Data_065_5D1D
+    dfar Data_066_4859
+    dfar Data_066_505C
+    dfar Data_064_7945
+    dfar Data_066_45B4
+    dfar Data_066_5B5A
+    dfar Data_065_7B60
+    dfar Data_066_615D
+    dfar Data_066_5A3B
+    dfar Data_062_7C82
+    dfar Data_062_744A
+    dfar Data_065_7AAA
+    dfar Data_062_7B96
+    dfar Data_065_6391
+    dfar Data_064_6DC8
+    dfar Data_064_761D
+    dfar Data_065_6293
+    dfar Data_066_4C04
+    dfar Data_066_53AD
+    dfar Data_064_7E51
+    dfar Data_066_4B1A
+    dfar Data_065_64CA ; id 2
+    dfar Data_065_6693
+    dfar Data_065_68B7
+    dfar Data_065_7878
+    dfar Data_062_5209
+    dfar Data_064_5AD4
+    dfar Data_065_445B
+    dfar Data_065_70BD
+    dfar Data_064_46A7
+    dfar Data_063_54F8
+    dfar Data_063_48FA
+    dfar Data_065_7023
+    dfar Data_066_46C5
+    dfar Data_066_4546
+    dfar Data_066_4917
+    dfar Data_066_5115
+    dfar Data_065_6A8F
+    dfar Data_065_6B2C
+    dfar Data_065_6BD1
+    dfar Data_065_7B9E
+    dfar Data_062_56DF
+    dfar Data_064_5E8E
+    dfar Data_065_473E
+    dfar Data_065_73A8
+    dfar Data_064_4AD9
+    dfar Data_063_5822
+    dfar Data_063_4BF0
+    dfar Data_065_737C
+    dfar Data_066_4B6F
+    dfar Data_066_4AF5
+    dfar Data_066_4C37
+    dfar Data_066_53DF
 
-Data_068_656A:: ; heuristic: target of a monotone pointer table; C0
-    db $6C, $62, $62
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup4AOrder::
+Data_068_4C7F:: ; heuristic: start of a structured table; C0
+    db $01, $00, $02 ; entry 0
 
-Data_068_656D:: ; heuristic: target of a monotone pointer table; C0
-    db $46, $65, $B2, $72, $65
+; E-0146 (derived: 3 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup4B::
+Data_068_4C82:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_54FD ; id 0
+    dfar Data_065_64CA
+    dfar Data_065_643F
+    dfar Data_065_6808
+    dfar Data_062_7626
+    dfar Data_062_5209
+    dfar Data_064_594F
+    dfar Data_065_416D
+    dfar Data_062_76AE
+    dfar Data_064_46A7
+    dfar Data_063_531D
+    dfar Data_063_468C
+    dfar Data_064_79CF
+    dfar Data_066_46C5
+    dfar Data_066_478E
+    dfar Data_066_4546
+    dfar Data_066_5A5F
+    dfar Data_065_6A8F
+    dfar Data_065_6A71
+    dfar Data_065_6B9F
+    dfar Data_062_7B96
+    dfar Data_062_56DF
+    dfar Data_064_5DEE
+    dfar Data_065_4643
+    dfar Data_062_7BC5
+    dfar Data_064_4AD9
+    dfar Data_063_5769
+    dfar Data_063_4AF5
+    dfar Data_064_7E84
+    dfar Data_066_4B6F
+    dfar Data_066_4BC0
+    dfar Data_066_4AF5
+    dfar Data_065_7878 ; id 1
+    dfar Data_066_5560
+    dfar Data_065_74B6
+    dfar Data_066_589C
+    dfar Data_062_6E33
+    dfar Data_065_5D1D
+    dfar Data_062_6E33
+    dfar Data_065_5D1D
+    dfar Data_064_6828
+    dfar Data_066_4635
+    dfar Data_066_4635
+    dfar Data_063_6D0B
+    dfar Data_066_4EF7
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_065_7B9E
+    dfar Data_066_5A87
+    dfar Data_065_7A51
+    dfar Data_066_5B97
+    dfar Data_062_737B
+    dfar Data_065_6293
+    dfar Data_062_737B
+    dfar Data_065_6293
+    dfar Data_064_6D28
+    dfar Data_066_4B3B
+    dfar Data_066_4B3B
+    dfar Data_063_71F3
+    dfar Data_066_5342
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_065_6546 ; id 2
+    dfar Data_065_7878
+    dfar Data_066_57D9
+    dfar Data_065_7641
+    dfar Data_064_6828
+    dfar Data_066_505C
+    dfar Data_062_77EB
+    dfar Data_065_6DE3
+    dfar Data_062_6F90
+    dfar Data_065_6736
+    dfar Data_065_5E8C
+    dfar Data_065_6D65
+    dfar Data_066_4859
+    dfar Data_066_46C5
+    dfar Data_066_4635
+    dfar Data_066_4D7D
+    dfar Data_065_6AC6
+    dfar Data_065_7B9E
+    dfar Data_066_5B5A
+    dfar Data_065_7AE1
+    dfar Data_064_6D28
+    dfar Data_066_53AD
+    dfar Data_062_7C25
+    dfar Data_065_72B2
+    dfar Data_062_73E8
+    dfar Data_065_6B50
+    dfar Data_065_6301
+    dfar Data_065_7290
+    dfar Data_066_4C04
+    dfar Data_066_4B6F
+    dfar Data_066_4B3B
+    dfar Data_066_52C5
 
-Data_068_6572:: ; heuristic: target of a monotone pointer table; C0
-    db $BD, $5B, $65, $BC
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup4BOrder::
+Data_068_4DA2:: ; heuristic: start of a structured table; C0
+    db $02, $00, $01 ; entry 0
 
-Data_068_6576:: ; heuristic: target of a monotone pointer table; C0
-    db $65, $64, $F5, $4A, $63
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup4C::
+Data_068_4DA5:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5477
+    dfar Data_066_5CC8
+    dfar Data_066_5658
+    dfar Data_065_6693
+    dfar Data_065_5C71
+    dfar Data_066_55DC
+    dfar Data_065_5DD4
+    dfar Data_062_5337
+    dfar Data_064_58E6
+    dfar Data_062_7626
+    dfar Data_062_40EE
+    dfar Data_064_4734
+    dfar Data_063_64F3
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5A3B
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_6B2C
+    dfar Data_065_6244
+    dfar Data_066_5AB9
+    dfar Data_065_62D2
+    dfar Data_062_573B
+    dfar Data_064_5DC8
+    dfar Data_062_7B96
+    dfar Data_062_48DA
+    dfar Data_064_4B1E
+    dfar Data_063_694D
+    dfar Data_065_65EA ; id 1
+    dfar Data_065_76ED
+    dfar Data_066_5CC8
+    dfar Data_066_57D9
+    dfar Data_062_41C9
+    dfar Data_065_6F70
+    dfar Data_066_5705
+    dfar Data_065_5FE5
+    dfar Data_065_416D
+    dfar Data_062_702C
+    dfar Data_065_5F42
+    dfar Data_062_4365
+    dfar Data_062_662E
+    dfar Data_064_5A34
+    dfar Data_064_5AD4
+    dfar Data_065_43BD
+    dfar Data_065_6AEA
+    dfar Data_065_7B11
+    dfar Data_066_615D
+    dfar Data_066_5B5A
+    dfar Data_062_492F
+    dfar Data_065_7334
+    dfar Data_066_5B0F
+    dfar Data_065_6391
+    dfar Data_065_4643
+    dfar Data_062_7409
+    dfar Data_065_634B
+    dfar Data_062_49AA
+    dfar Data_062_6AE8
+    dfar Data_064_5E47
+    dfar Data_064_5E8E
+    dfar Data_065_470B
+    dfar Data_065_64CA ; id 2
+    dfar Data_065_6546
+    dfar Data_065_6546
+    dfar Data_065_76ED
+    dfar Data_062_5166
+    dfar Data_064_594F
+    dfar Data_065_41F0
+    dfar Data_065_6E8B
+    dfar Data_063_5EAF
+    dfar Data_064_6073
+    dfar Data_063_4867
+    dfar Data_065_70BD
+    dfar Data_063_5E57
+    dfar Data_064_54EA
+    dfar Data_064_68E4
+    dfar Data_066_505C
+    dfar Data_065_6A8F
+    dfar Data_065_6AC6
+    dfar Data_065_6AC6
+    dfar Data_065_7B11
+    dfar Data_062_569C
+    dfar Data_064_5DEE
+    dfar Data_065_4662
+    dfar Data_065_72E6
+    dfar Data_063_62DE
+    dfar Data_064_64A7
+    dfar Data_063_4BB7
+    dfar Data_065_73A8
+    dfar Data_063_62C3
+    dfar Data_064_57CD
+    dfar Data_064_6D64
+    dfar Data_066_53AD
+    dfar Data_064_7B56 ; id 3
+    dfar Data_063_6BCD
+    dfar Data_062_5209
+    dfar Data_065_56B8
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_063_5EAF
+    dfar Data_064_6145
+    dfar Data_066_5CC8
+    dfar Data_062_76AE
+    dfar Data_064_46A7
+    dfar Data_063_44A8
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_066_4635
+    dfar Data_066_4917
+    dfar Data_064_7F00
+    dfar Data_063_7181
+    dfar Data_062_56DF
+    dfar Data_065_5A4D
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_063_62DE
+    dfar Data_064_6509
+    dfar Data_066_615D
+    dfar Data_062_7BC5
+    dfar Data_064_4AD9
+    dfar Data_063_4A36
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_066_4B3B
+    dfar Data_066_4C37
+    dfar Data_064_61C5 ; id 4
+    dfar Data_063_65BE
+    dfar Data_064_6073
+    dfar Data_065_4D49
+    dfar Data_063_468C
+    dfar Data_064_4843
+    dfar Data_063_472D
+    dfar Data_064_47BD
+    dfar Data_064_68E4
+    dfar Data_066_4917
+    dfar Data_066_4635
+    dfar Data_063_6D0B
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_064_6532
+    dfar Data_063_69A8
+    dfar Data_064_64A7
+    dfar Data_065_52C8
+    dfar Data_063_4AF5
+    dfar Data_064_4B88
+    dfar Data_063_4B25
+    dfar Data_064_4B43
+    dfar Data_064_6D64
+    dfar Data_066_4C37
+    dfar Data_066_4B3B
+    dfar Data_063_71F3
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_065_5587 ; id 5
+    dfar Data_064_5218
+    dfar Data_062_6EDC
+    dfar Data_065_7878
+    dfar Data_063_557A
+    dfar Data_065_4FAD
+    dfar Data_065_416D
+    dfar Data_065_70BD
+    dfar Data_062_423A
+    dfar Data_064_454F
+    dfar Data_063_453F
+    dfar Data_065_7023
+    dfar Data_066_45B4
+    dfar Data_066_4859
+    dfar Data_066_46C5
+    dfar Data_066_5115
+    dfar Data_065_59BF
+    dfar Data_064_56B0
+    dfar Data_062_73A7
+    dfar Data_065_7B9E
+    dfar Data_063_5855
+    dfar Data_065_53BE
+    dfar Data_065_4643
+    dfar Data_065_73A8
+    dfar Data_062_494B
+    dfar Data_064_4A58
+    dfar Data_063_4A65
+    dfar Data_065_737C
+    dfar Data_066_4B1A
+    dfar Data_066_4C04
+    dfar Data_066_4B6F
+    dfar Data_066_53DF
 
-Data_068_657B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1A257B, $CB
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup4COrder::
+Data_068_4FE5:: ; heuristic: start of a structured table; C0
+    db $00, $02, $05, $01, $03, $04 ; entry 0
 
-Data_068_6646:: ; heuristic: target of a monotone pointer table; C0
-    db $65, $BD, $70
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup4D::
+Data_068_4FEB:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_55DC ; id 0
+    dfar Data_065_7641
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_062_6F90
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_064_7848
+    dfar Data_063_6DB3
+    dfar Data_062_6EDC
+    dfar Data_065_6546
+    dfar Data_066_5CC8
+    dfar Data_062_774A
+    dfar Data_062_5166
+    dfar Data_065_416D
+    dfar Data_066_5AB9
+    dfar Data_065_7AE1
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_062_73E8
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_064_7DFB
+    dfar Data_063_722B
+    dfar Data_062_73A7
+    dfar Data_065_6AC6
+    dfar Data_066_615D
+    dfar Data_062_7BFD
+    dfar Data_062_569C
+    dfar Data_065_4643
+    dfar Data_066_5705 ; id 1
+    dfar Data_065_77A4
+    dfar Data_066_5CC8
+    dfar Data_066_54FD
+    dfar Data_062_78C0
+    dfar Data_062_6E33
+    dfar Data_065_6693
+    dfar Data_065_5C71
+    dfar Data_065_60A2
+    dfar Data_062_5166
+    dfar Data_064_59BA
+    dfar Data_065_40C4
+    dfar Data_062_40EE
+    dfar Data_064_44CC
+    dfar Data_063_52A2
+    dfar Data_063_453F
+    dfar Data_066_5B0F
+    dfar Data_065_7B60
+    dfar Data_066_615D
+    dfar Data_066_5A5F
+    dfar Data_062_7C82
+    dfar Data_062_737B
+    dfar Data_065_6B2C
+    dfar Data_065_6244
+    dfar Data_065_63C6
+    dfar Data_062_569C
+    dfar Data_064_5E12
+    dfar Data_065_45EE
+    dfar Data_062_48DA
+    dfar Data_064_4A2C
+    dfar Data_063_5744
+    dfar Data_063_4A65
+    dfar Data_065_6546 ; id 2
+    dfar Data_065_6693
+    dfar Data_065_65EA
+    dfar Data_065_74B6
+    dfar Data_062_41C9
+    dfar Data_064_68E4
+    dfar Data_066_45B4
+    dfar Data_066_4D7D
+    dfar Data_064_697E
+    dfar Data_066_4EF7
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_6F90
+    dfar Data_065_65EA
+    dfar Data_065_6736
+    dfar Data_065_751D
+    dfar Data_065_6AC6
+    dfar Data_065_6B2C
+    dfar Data_065_6AEA
+    dfar Data_065_7A51
+    dfar Data_062_492F
+    dfar Data_064_6D64
+    dfar Data_066_4B1A
+    dfar Data_066_52C5
+    dfar Data_064_6D86
+    dfar Data_066_5342
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_73E8
+    dfar Data_065_6AEA
+    dfar Data_065_6B50
+    dfar Data_065_7A80
+    dfar Data_066_5705 ; id 3
+    dfar Data_065_5C71
+    dfar Data_064_454F
+    dfar Data_063_468C
+    dfar Data_062_7985
+    dfar Data_062_40EE
+    dfar Data_062_40EE
+    dfar Data_064_6797
+    dfar Data_064_78B1
+    dfar Data_066_4859
+    dfar Data_063_6C79
+    dfar Data_062_6D6B
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_78B1
+    dfar Data_066_46C5
+    dfar Data_066_5B0F
+    dfar Data_065_6244
+    dfar Data_064_4A58
+    dfar Data_063_4AF5
+    dfar Data_062_7CBA
+    dfar Data_062_48DA
+    dfar Data_062_48DA
+    dfar Data_064_6D09
+    dfar Data_064_7E22
+    dfar Data_066_4C04
+    dfar Data_063_71D4
+    dfar Data_062_732E
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E22
+    dfar Data_066_4B6F
+    dfar Data_064_66F6 ; id 4
+    dfar Data_066_4917
+    dfar Data_063_6FC0
+    dfar Data_062_4365
+    dfar Data_066_4D7D
+    dfar Data_066_589C
+    dfar Data_065_5DD4
+    dfar Data_064_697E
+    dfar Data_065_74B6
+    dfar Data_064_7C14
+    dfar Data_066_45B4
+    dfar Data_066_4EF7
+    dfar Data_066_4CD6
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_6CC4
+    dfar Data_066_4C37
+    dfar Data_063_72C9
+    dfar Data_062_49AA
+    dfar Data_066_52C5
+    dfar Data_066_5B97
+    dfar Data_065_62D2
+    dfar Data_064_6D86
+    dfar Data_065_7A51
+    dfar Data_064_7F35
+    dfar Data_066_4B1A
+    dfar Data_066_5342
+    dfar Data_066_52A0
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_406A ; id 5
+    dfar Data_062_40EE
+    dfar Data_062_40EE
+    dfar Data_065_6DE3
+    dfar Data_063_6BCD
+    dfar Data_064_6797
+    dfar Data_066_45B4
+    dfar Data_066_4E6E
+    dfar Data_062_75B0
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_77CC
+    dfar Data_066_4CD6
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_48C0
+    dfar Data_062_48DA
+    dfar Data_062_48DA
+    dfar Data_065_72B2
+    dfar Data_063_7181
+    dfar Data_064_6D09
+    dfar Data_066_4B1A
+    dfar Data_066_5311
+    dfar Data_062_7B66
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7DD4
+    dfar Data_066_52A0
+    dfar Data_066_615D
+    dfar Data_066_615D
 
-Data_068_6649:: ; heuristic: target of a monotone pointer table; C0
-    db $65, $44, $67
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup4DOrder::
+Data_068_522B:: ; heuristic: start of a structured table; C0
+    db $05, $02, $01, $04, $03, $00 ; entry 0
 
-Data_068_664C:: ; heuristic: target of a monotone pointer table; C0
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup4E::
+Data_068_5231:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5658 ; id 0
+    dfar Data_065_6693
+    dfar Data_065_7641
+    dfar Data_066_5CC8
+    dfar Data_062_774A
+    dfar Data_062_423A
+    dfar Data_062_6F90
+    dfar Data_065_65EA
+    dfar Data_064_79CF
+    dfar Data_063_6DB3
+    dfar Data_062_41C9
+    dfar Data_064_6828
+    dfar Data_066_5CC8
+    dfar Data_062_7517
+    dfar Data_064_6828
+    dfar Data_066_4E6E
+    dfar Data_066_5AE7
+    dfar Data_065_6B2C
+    dfar Data_065_7AE1
+    dfar Data_066_615D
+    dfar Data_062_7BFD
+    dfar Data_062_494B
+    dfar Data_062_73E8
+    dfar Data_065_6AEA
+    dfar Data_064_7E84
+    dfar Data_063_722B
+    dfar Data_062_492F
+    dfar Data_064_6D28
+    dfar Data_066_615D
+    dfar Data_062_7B3B
+    dfar Data_064_6D28
+    dfar Data_066_5311
+    dfar Data_066_5CC8 ; id 1
+    dfar Data_066_5560
+    dfar Data_065_6736
+    dfar Data_065_6808
+    dfar Data_065_6546
+    dfar Data_065_5D1D
+    dfar Data_062_406A
+    dfar Data_062_5485
+    dfar Data_063_6C79
+    dfar Data_062_40EE
+    dfar Data_062_5166
+    dfar Data_065_55E2
+    dfar Data_064_78B1
+    dfar Data_063_6C79
+    dfar Data_064_454F
+    dfar Data_063_64F3
+    dfar Data_066_615D
+    dfar Data_066_5A87
+    dfar Data_065_6B50
+    dfar Data_065_6B9F
+    dfar Data_065_6AC6
+    dfar Data_065_6293
+    dfar Data_062_48C0
+    dfar Data_062_57A2
+    dfar Data_063_71D4
+    dfar Data_062_48DA
+    dfar Data_062_569C
+    dfar Data_065_59E9
+    dfar Data_064_7E22
+    dfar Data_063_71D4
+    dfar Data_064_4A58
+    dfar Data_063_694D
+    dfar Data_065_64CA ; id 2
+    dfar Data_065_5F42
+    dfar Data_065_70BD
+    dfar Data_066_5CC8
+    dfar Data_065_416D
+    dfar Data_063_6EFF
+    dfar Data_062_70C1
+    dfar Data_065_75A3
+    dfar Data_064_5284
+    dfar Data_062_7985
+    dfar Data_062_41C9
+    dfar Data_065_6D65
+    dfar Data_062_6784
+    dfar Data_064_7C14
+    dfar Data_066_45B4
+    dfar Data_066_4D7D
+    dfar Data_065_6A8F
+    dfar Data_065_634B
+    dfar Data_065_73A8
+    dfar Data_066_615D
+    dfar Data_065_4643
+    dfar Data_063_729A
+    dfar Data_062_744A
+    dfar Data_065_7AAA
+    dfar Data_064_56E0
+    dfar Data_062_7CBA
+    dfar Data_062_492F
+    dfar Data_065_7290
+    dfar Data_062_6B76
+    dfar Data_064_7F35
+    dfar Data_066_4B1A
+    dfar Data_066_52C5
+    dfar Data_066_5477 ; id 3
+    dfar Data_065_5F42
+    dfar Data_065_6F70
+    dfar Data_066_5CC8
+    dfar Data_064_7A7D
+    dfar Data_063_6E4E
+    dfar Data_062_702C
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_062_77EB
+    dfar Data_062_42B3
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_064_7A7D
+    dfar Data_066_478E
+    dfar Data_066_4DE4
+    dfar Data_066_5A3B
+    dfar Data_065_634B
+    dfar Data_065_7334
+    dfar Data_066_615D
+    dfar Data_064_7EB0
+    dfar Data_063_7250
+    dfar Data_062_7409
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_062_7C25
+    dfar Data_062_4967
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_064_7EB0
+    dfar Data_066_4BC0
+    dfar Data_066_52E9
+    dfar Data_066_5CC8 ; id 4
+    dfar Data_062_76AE
+    dfar Data_062_528E
+    dfar Data_065_56B8
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_064_44CC
+    dfar Data_063_531D
+    dfar Data_066_5CC8
+    dfar Data_064_78B1
+    dfar Data_063_6D0B
+    dfar Data_062_41C9
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7945
+    dfar Data_066_4635
+    dfar Data_066_615D
+    dfar Data_062_7BC5
+    dfar Data_062_56FE
+    dfar Data_065_5A4D
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_064_4A2C
+    dfar Data_063_5769
+    dfar Data_066_615D
+    dfar Data_064_7E22
+    dfar Data_063_71F3
+    dfar Data_062_492F
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E51
+    dfar Data_066_4B3B
+    dfar Data_065_5B98 ; id 5
+    dfar Data_062_68C2
+    dfar Data_065_4291
+    dfar Data_065_6D65
+    dfar Data_063_64F3
+    dfar Data_064_6272
+    dfar Data_063_468C
+    dfar Data_065_6D65
+    dfar Data_064_48DA
+    dfar Data_063_4867
+    dfar Data_064_6828
+    dfar Data_066_4DE4
+    dfar Data_066_4917
+    dfar Data_066_4859
+    dfar Data_066_505C
+    dfar Data_066_5CC8
+    dfar Data_065_5BBD
+    dfar Data_062_6BF7
+    dfar Data_065_469B
+    dfar Data_065_7290
+    dfar Data_063_694D
+    dfar Data_064_657E
+    dfar Data_063_4AF5
+    dfar Data_065_7290
+    dfar Data_064_4BC1
+    dfar Data_063_4BB7
+    dfar Data_064_6D28
+    dfar Data_066_52E9
+    dfar Data_066_4C37
+    dfar Data_066_4C04
+    dfar Data_066_53AD
+    dfar Data_066_615D
+
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup4EOrder::
+Data_068_5471:: ; heuristic: start of a structured table; C0
+    db $01, $02, $05, $00, $03, $04 ; entry 0
+
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup4F::
+Data_068_5477:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5705
+    dfar Data_066_5705
+    dfar Data_065_65EA
+    dfar Data_065_75A3
+    dfar Data_062_77EB
+    dfar Data_062_774A
+    dfar Data_064_6797
+    dfar Data_064_7139
+    dfar Data_063_76CB
+    dfar Data_064_7A7D
+    dfar Data_066_4D7D
+    dfar Data_062_77EB
+    dfar Data_062_702C
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5B0F
+    dfar Data_066_5B0F
+    dfar Data_065_6AEA
+    dfar Data_065_7AAA
+    dfar Data_062_7C25
+    dfar Data_062_7BFD
+    dfar Data_064_6D09
+    dfar Data_064_7661
+    dfar Data_063_7B7B
+    dfar Data_064_7EB0
+    dfar Data_066_52C5
+    dfar Data_062_7C25
+    dfar Data_062_7409
+    dfar Data_065_6736 ; id 1
+    dfar Data_065_6736
+    dfar Data_065_77A4
+    dfar Data_066_57D9
+    dfar Data_064_697E
+    dfar Data_063_6E4E
+    dfar Data_065_6F70
+    dfar Data_066_5705
+    dfar Data_066_4F98
+    dfar Data_062_77EB
+    dfar Data_065_7023
+    dfar Data_062_77EB
+    dfar Data_065_6693
+    dfar Data_063_76CB
+    dfar Data_066_505C
+    dfar Data_062_78C0
+    dfar Data_065_6B50
+    dfar Data_065_6B50
+    dfar Data_065_7B60
+    dfar Data_066_5B5A
+    dfar Data_064_6D86
+    dfar Data_063_7250
+    dfar Data_065_7334
+    dfar Data_066_5B0F
+    dfar Data_066_5366
+    dfar Data_062_7C25
+    dfar Data_065_737C
+    dfar Data_062_7C25
+    dfar Data_065_6B2C
+    dfar Data_063_7B7B
+    dfar Data_066_53AD
+    dfar Data_062_7C82
+    dfar Data_066_5CC8 ; id 2
+    dfar Data_066_5560
+    dfar Data_065_75A3
+    dfar Data_066_5CC8
+    dfar Data_065_6546
+    dfar Data_065_5D1D
+    dfar Data_062_6EDC
+    dfar Data_065_7641
+    dfar Data_062_40EE
+    dfar Data_062_41C9
+    dfar Data_062_41C9
+    dfar Data_065_6E8B
+    dfar Data_064_6797
+    dfar Data_063_6C79
+    dfar Data_062_423A
+    dfar Data_065_6D65
+    dfar Data_066_615D
+    dfar Data_066_5A87
+    dfar Data_065_7AAA
+    dfar Data_066_615D
+    dfar Data_065_6AC6
+    dfar Data_065_6293
+    dfar Data_062_73A7
+    dfar Data_065_7AE1
+    dfar Data_062_48DA
+    dfar Data_062_492F
+    dfar Data_062_492F
+    dfar Data_065_72E6
+    dfar Data_064_6D09
+    dfar Data_063_71D4
+    dfar Data_062_494B
+    dfar Data_065_7290
+    dfar Data_066_589C ; id 3
+    dfar Data_065_68B7
+    dfar Data_065_5DD4
+    dfar Data_062_406A
+    dfar Data_062_7985
+    dfar Data_064_6AEC
+    dfar Data_063_6EFF
+    dfar Data_062_40EE
+    dfar Data_064_7C14
+    dfar Data_066_5115
+    dfar Data_062_7985
+    dfar Data_064_6797
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7C14
+    dfar Data_066_4DE4
+    dfar Data_066_5B97
+    dfar Data_065_6BD1
+    dfar Data_065_62D2
+    dfar Data_062_48C0
+    dfar Data_062_7CBA
+    dfar Data_064_6DFE
+    dfar Data_063_729A
+    dfar Data_062_48DA
+    dfar Data_064_7F35
+    dfar Data_066_53DF
+    dfar Data_062_7CBA
+    dfar Data_064_6D09
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7F35
+    dfar Data_066_52E9
+    dfar Data_062_406A ; id 4
+    dfar Data_062_6E33
+    dfar Data_065_6546
+    dfar Data_063_73F8
+    dfar Data_062_40EE
+    dfar Data_062_41C9
+    dfar Data_064_6828
+    dfar Data_064_6F23
+    dfar Data_063_6BCD
+    dfar Data_062_423A
+    dfar Data_065_6E8B
+    dfar Data_062_75B0
+    dfar Data_064_7848
+    dfar Data_066_4635
+    dfar Data_066_4E6E
+    dfar Data_064_7848
+    dfar Data_062_48C0
+    dfar Data_062_737B
+    dfar Data_065_6AC6
+    dfar Data_063_7A89
+    dfar Data_062_48DA
+    dfar Data_062_492F
+    dfar Data_064_6D28
+    dfar Data_064_75A9
+    dfar Data_063_7181
+    dfar Data_062_494B
+    dfar Data_065_72E6
+    dfar Data_062_7B66
+    dfar Data_064_7DFB
+    dfar Data_066_4B3B
+    dfar Data_066_5311
+    dfar Data_064_7DFB
+    dfar Data_066_4DE4 ; id 5
+    dfar Data_064_78B1
+    dfar Data_063_6DB3
+    dfar Data_065_6F70
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_062_77EB
+    dfar Data_065_7023
+    dfar Data_062_6E33
+    dfar Data_065_6546
+    dfar Data_063_7793
+    dfar Data_066_5115
+    dfar Data_066_45B4
+    dfar Data_066_4635
+    dfar Data_066_5115
+    dfar Data_066_5CC8
+    dfar Data_066_52E9
+    dfar Data_064_7E22
+    dfar Data_063_722B
+    dfar Data_065_7334
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_062_7C25
+    dfar Data_065_737C
+    dfar Data_062_737B
+    dfar Data_065_6AC6
+    dfar Data_063_7BD2
+    dfar Data_066_53DF
+    dfar Data_066_4B1A
+    dfar Data_066_4B3B
+    dfar Data_066_53DF
+    dfar Data_066_615D
+
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup4FOrder::
+Data_068_56B7:: ; heuristic: start of a structured table; C0
+    db $04, $03, $00, $05, $02, $01 ; entry 0
+
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup50::
+Data_068_56BD:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_54FD ; id 0
+    dfar Data_065_65EA
+    dfar Data_065_6736
+    dfar Data_065_75A3
+    dfar Data_062_7626
+    dfar Data_062_41C9
+    dfar Data_062_423A
+    dfar Data_062_6E33
+    dfar Data_062_76AE
+    dfar Data_062_40EE
+    dfar Data_062_42B3
+    dfar Data_062_41C9
+    dfar Data_064_7945
+    dfar Data_063_6D0B
+    dfar Data_062_53C7
+    dfar Data_065_416D
+    dfar Data_066_5A5F
+    dfar Data_065_6AEA
+    dfar Data_065_6B50
+    dfar Data_065_7AAA
+    dfar Data_062_7B96
+    dfar Data_062_492F
+    dfar Data_062_494B
+    dfar Data_062_737B
+    dfar Data_062_7BC5
+    dfar Data_062_48DA
+    dfar Data_062_4967
+    dfar Data_062_492F
+    dfar Data_064_7E51
+    dfar Data_063_71F3
+    dfar Data_062_5761
+    dfar Data_065_4643
+    dfar Data_066_5CC8 ; id 1
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_743F
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_774A
+    dfar Data_065_6C81
+    dfar Data_066_5477
+    dfar Data_065_74B6
+    dfar Data_062_77EB
+    dfar Data_062_6CE1
+    dfar Data_065_5BD1
+    dfar Data_062_6D6B
+    dfar Data_065_5FE5
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_065_7A30
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7BFD
+    dfar Data_065_7251
+    dfar Data_066_5A3B
+    dfar Data_065_7A51
+    dfar Data_062_7C25
+    dfar Data_062_7306
+    dfar Data_065_6216
+    dfar Data_062_732E
+    dfar Data_065_6391
+    dfar Data_065_64CA ; id 2
+    dfar Data_065_68B7
+    dfar Data_065_77A4
+    dfar Data_066_5CC8
+    dfar Data_062_5166
+    dfar Data_065_43BD
+    dfar Data_062_70C1
+    dfar Data_065_751D
+    dfar Data_063_5E57
+    dfar Data_062_68C2
+    dfar Data_065_43BD
+    dfar Data_065_6D65
+    dfar Data_063_5EAF
+    dfar Data_064_6272
+    dfar Data_063_4867
+    dfar Data_065_6E8B
+    dfar Data_065_6A8F
+    dfar Data_065_6BD1
+    dfar Data_065_7B60
+    dfar Data_066_615D
+    dfar Data_062_569C
+    dfar Data_065_470B
+    dfar Data_062_744A
+    dfar Data_065_7A80
+    dfar Data_063_62C3
+    dfar Data_062_6BF7
+    dfar Data_065_470B
+    dfar Data_065_7290
+    dfar Data_063_62DE
+    dfar Data_064_657E
+    dfar Data_063_4BB7
+    dfar Data_065_72E6
+    dfar Data_066_5560 ; id 3
+    dfar Data_065_5F42
+    dfar Data_063_5DED
+    dfar Data_062_694C
+    dfar Data_064_7848
+    dfar Data_063_6DB3
+    dfar Data_064_44CC
+    dfar Data_063_53B1
+    dfar Data_066_5CC8
+    dfar Data_064_7B56
+    dfar Data_063_6DB3
+    dfar Data_064_6828
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_066_505C
+    dfar Data_066_5A87
+    dfar Data_065_634B
+    dfar Data_063_6298
+    dfar Data_062_6C2D
+    dfar Data_064_7DFB
+    dfar Data_063_722B
+    dfar Data_064_4A2C
+    dfar Data_063_57AC
+    dfar Data_066_615D
+    dfar Data_064_7F00
+    dfar Data_063_722B
+    dfar Data_064_6D28
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_066_53AD
+    dfar Data_064_59BA ; id 4
+    dfar Data_065_43BD
+    dfar Data_062_53C7
+    dfar Data_064_59BA
+    dfar Data_063_52A2
+    dfar Data_065_4FAD
+    dfar Data_065_5587
+    dfar Data_064_60D8
+    dfar Data_063_6DB3
+    dfar Data_064_454F
+    dfar Data_063_52A2
+    dfar Data_063_468C
+    dfar Data_064_77CC
+    dfar Data_066_46C5
+    dfar Data_066_4917
+    dfar Data_066_4635
+    dfar Data_064_5E12
+    dfar Data_065_470B
+    dfar Data_062_5761
+    dfar Data_064_5E12
+    dfar Data_063_5744
+    dfar Data_065_53BE
+    dfar Data_065_59BF
+    dfar Data_064_64DA
+    dfar Data_063_722B
+    dfar Data_064_4A58
+    dfar Data_063_5744
+    dfar Data_063_4AF5
+    dfar Data_064_7DD4
+    dfar Data_066_4B6F
+    dfar Data_066_4C37
+    dfar Data_066_4B3B
+    dfar Data_062_5E91 ; id 5
+    dfar Data_063_453F
+    dfar Data_064_697E
+    dfar Data_066_4CD6
+    dfar Data_063_45E3
+    dfar Data_062_406A
+    dfar Data_065_6E8B
+    dfar Data_066_5CC8
+    dfar Data_064_6797
+    dfar Data_066_4546
+    dfar Data_066_4E6E
+    dfar Data_066_5CC8
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_63DA
+    dfar Data_063_4A65
+    dfar Data_064_6D86
+    dfar Data_066_52A0
+    dfar Data_063_4AB5
+    dfar Data_062_48C0
+    dfar Data_065_72E6
+    dfar Data_066_615D
+    dfar Data_064_6D09
+    dfar Data_066_4AF5
+    dfar Data_066_5311
+    dfar Data_066_615D
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup50Order::
+Data_068_58FD:: ; heuristic: start of a structured table; C0
+    db $01, $02, $05, $00, $03, $04 ; entry 0
+
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup51::
+Data_068_5903:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_55DC
+    dfar Data_065_65EA
+    dfar Data_065_6546
+    dfar Data_066_5477
+    dfar Data_065_5DD4
+    dfar Data_062_41C9
+    dfar Data_064_6797
+    dfar Data_062_77EB
+    dfar Data_064_6828
+    dfar Data_066_4635
+    dfar Data_066_4DE4
+    dfar Data_062_774A
+    dfar Data_062_6EDC
+    dfar Data_065_75A3
+    dfar Data_066_5CC8
+    dfar Data_066_615D
+    dfar Data_066_5AB9
+    dfar Data_065_6AEA
+    dfar Data_065_6AC6
+    dfar Data_066_5A3B
+    dfar Data_065_62D2
+    dfar Data_062_492F
+    dfar Data_064_6D09
+    dfar Data_062_7C25
+    dfar Data_064_6D28
+    dfar Data_066_4B3B
+    dfar Data_066_52E9
+    dfar Data_062_7BFD
+    dfar Data_062_73A7
+    dfar Data_065_7AAA
+    dfar Data_066_615D
+    dfar Data_065_68B7 ; id 1
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_4635
+    dfar Data_064_6FCF
+    dfar Data_065_77A4
+    dfar Data_066_57D9
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_062_6E33
+    dfar Data_065_5D1D
+    dfar Data_066_55DC
+    dfar Data_065_5D1D
+    dfar Data_062_41C9
+    dfar Data_064_6828
+    dfar Data_065_6BD1
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_4B3B
+    dfar Data_064_75F2
+    dfar Data_065_7B60
+    dfar Data_066_5B5A
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_062_737B
+    dfar Data_065_6293
+    dfar Data_066_5AB9
+    dfar Data_065_6293
+    dfar Data_062_492F
+    dfar Data_064_6D28
+    dfar Data_066_5CC8 ; id 2
+    dfar Data_066_5477
+    dfar Data_065_743F
+    dfar Data_066_5CC8
+    dfar Data_065_6808
+    dfar Data_065_5C71
+    dfar Data_062_6E33
+    dfar Data_065_751D
+    dfar Data_062_41C9
+    dfar Data_062_406A
+    dfar Data_062_40EE
+    dfar Data_065_6D65
+    dfar Data_066_45B4
+    dfar Data_063_6BCD
+    dfar Data_064_6797
+    dfar Data_066_4DE4
+    dfar Data_066_615D
+    dfar Data_066_5A3B
+    dfar Data_065_7A30
+    dfar Data_066_615D
+    dfar Data_065_6B9F
+    dfar Data_065_6244
+    dfar Data_062_737B
+    dfar Data_065_7A80
+    dfar Data_062_492F
+    dfar Data_062_48C0
+    dfar Data_062_48DA
+    dfar Data_065_7290
+    dfar Data_066_4B1A
+    dfar Data_063_7181
+    dfar Data_064_6D09
+    dfar Data_066_52E9
+    dfar Data_062_75B0 ; id 3
+    dfar Data_064_6659
+    dfar Data_064_706F
+    dfar Data_065_7641
+    dfar Data_062_7626
+    dfar Data_065_6E8B
+    dfar Data_064_78B1
+    dfar Data_066_4E6E
+    dfar Data_064_7848
+    dfar Data_064_720E
+    dfar Data_065_64CA
+    dfar Data_065_6736
+    dfar Data_066_5CC8
+    dfar Data_064_7B56
+    dfar Data_066_4546
+    dfar Data_066_4859
+    dfar Data_062_7B66
+    dfar Data_064_6C95
+    dfar Data_064_761D
+    dfar Data_065_7AE1
+    dfar Data_062_7B96
+    dfar Data_065_72E6
+    dfar Data_064_7E22
+    dfar Data_066_5311
+    dfar Data_064_7DFB
+    dfar Data_064_76A3
+    dfar Data_065_6A8F
+    dfar Data_065_6B50
+    dfar Data_066_615D
+    dfar Data_064_7F00
+    dfar Data_066_4AF5
+    dfar Data_066_4C04
+    dfar Data_062_774A ; id 4
+    dfar Data_064_6797
+    dfar Data_066_4917
+    dfar Data_066_4DE4
+    dfar Data_062_77EB
+    dfar Data_065_6F70
+    dfar Data_066_5CC8
+    dfar Data_066_5477
+    dfar Data_065_60A2
+    dfar Data_065_6D0D
+    dfar Data_066_5CC8
+    dfar Data_064_78B1
+    dfar Data_066_4635
+    dfar Data_066_4E6E
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_7BFD
+    dfar Data_064_6D09
+    dfar Data_066_4C37
+    dfar Data_066_52E9
+    dfar Data_062_7C25
+    dfar Data_065_7334
+    dfar Data_066_615D
+    dfar Data_066_5A3B
+    dfar Data_065_63C6
+    dfar Data_065_7279
+    dfar Data_066_615D
+    dfar Data_064_7E22
+    dfar Data_066_4B3B
+    dfar Data_066_5311
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 5
+    dfar Data_062_75B0
+    dfar Data_065_6D0D
+    dfar Data_066_5CC8
+    dfar Data_065_65EA
+    dfar Data_063_73F8
+    dfar Data_064_6F23
+    dfar Data_065_751D
+    dfar Data_066_478E
+    dfar Data_066_4D7D
+    dfar Data_064_7848
+    dfar Data_066_4D7D
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_615D
+    dfar Data_062_7B66
+    dfar Data_065_7279
+    dfar Data_066_615D
+    dfar Data_065_6AEA
+    dfar Data_063_7A89
+    dfar Data_064_75A9
+    dfar Data_065_7A80
+    dfar Data_066_4BC0
+    dfar Data_066_52C5
+    dfar Data_064_7DFB
+    dfar Data_066_52C5
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup51Order::
+Data_068_5B43:: ; heuristic: start of a structured table; C0
+    db $00, $03, $04, $01, $02, $05 ; entry 0
+
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup52::
+Data_068_5B49:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5658
+    dfar Data_065_6693
+    dfar Data_065_6546
+    dfar Data_066_589C
+    dfar Data_065_5E8C
+    dfar Data_062_423A
+    dfar Data_064_6797
+    dfar Data_064_7C14
+    dfar Data_063_6DB3
+    dfar Data_064_68E4
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_066_4EF7
+    dfar Data_066_5C32
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_6B2C
+    dfar Data_065_6AC6
+    dfar Data_066_5B97
+    dfar Data_065_6301
+    dfar Data_062_494B
+    dfar Data_064_6D09
+    dfar Data_064_7F35
+    dfar Data_063_722B
+    dfar Data_064_6D64
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_066_5342
+    dfar Data_066_6138
+    dfar Data_065_751D ; id 1
+    dfar Data_066_5560
+    dfar Data_065_74B6
+    dfar Data_066_5CC8
+    dfar Data_064_6FCF
+    dfar Data_065_5D1D
+    dfar Data_062_6D6B
+    dfar Data_062_75B0
+    dfar Data_062_7626
+    dfar Data_064_6797
+    dfar Data_063_6BCD
+    dfar Data_062_406A
+    dfar Data_064_78B1
+    dfar Data_066_4D7D
+    dfar Data_064_7848
+    dfar Data_063_6BCD
+    dfar Data_065_7A80
+    dfar Data_066_5A87
+    dfar Data_065_7A51
+    dfar Data_066_615D
+    dfar Data_064_75F2
+    dfar Data_065_6293
+    dfar Data_062_732E
+    dfar Data_062_7B66
+    dfar Data_062_7B96
+    dfar Data_064_6D09
+    dfar Data_063_7181
+    dfar Data_062_48C0
+    dfar Data_064_7E22
+    dfar Data_066_52C5
+    dfar Data_064_7DFB
+    dfar Data_063_7181
+    dfar Data_066_5658 ; id 2
+    dfar Data_065_7641
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_5E8C
+    dfar Data_062_702C
+    dfar Data_065_6546
+    dfar Data_065_74B6
+    dfar Data_062_5337
+    dfar Data_064_5AD4
+    dfar Data_065_416D
+    dfar Data_065_6D0D
+    dfar Data_064_4734
+    dfar Data_063_5437
+    dfar Data_063_45E3
+    dfar Data_065_6D65
+    dfar Data_066_5AE7
+    dfar Data_065_7AE1
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_065_6301
+    dfar Data_062_7409
+    dfar Data_065_6AC6
+    dfar Data_065_7A51
+    dfar Data_062_573B
+    dfar Data_064_5E8E
+    dfar Data_065_4643
+    dfar Data_065_7279
+    dfar Data_064_4B1E
+    dfar Data_063_57D1
+    dfar Data_063_4AB5
+    dfar Data_065_7290
+    dfar Data_066_5CC8 ; id 3
+    dfar Data_066_5CC8
+    dfar Data_066_5658
+    dfar Data_065_75A3
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_76AE
+    dfar Data_062_6EDC
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7945
+    dfar Data_066_4635
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_7AAA
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7BC5
+    dfar Data_062_73A7
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E51
+    dfar Data_066_4B3B
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 4
+    dfar Data_066_5CC8
+    dfar Data_066_54FD
+    dfar Data_065_5FE5
+    dfar Data_065_6693
+    dfar Data_065_751D
+    dfar Data_062_75B0
+    dfar Data_064_6A43
+    dfar Data_063_6DB3
+    dfar Data_062_6E33
+    dfar Data_063_73F8
+    dfar Data_066_505C
+    dfar Data_064_79CF
+    dfar Data_066_45B4
+    dfar Data_066_4D7D
+    dfar Data_066_5CC8
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5A5F
+    dfar Data_065_6391
+    dfar Data_065_6B2C
+    dfar Data_065_7A80
+    dfar Data_062_7B66
+    dfar Data_064_6DC8
+    dfar Data_063_722B
+    dfar Data_062_737B
+    dfar Data_063_7A89
+    dfar Data_066_53AD
+    dfar Data_064_7E84
+    dfar Data_066_4B1A
+    dfar Data_066_52C5
+    dfar Data_066_615D
+    dfar Data_062_43CA ; id 5
+    dfar Data_064_6828
+    dfar Data_066_45B4
+    dfar Data_066_4EF7
+    dfar Data_063_6FC0
+    dfar Data_062_6EDC
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_062_7985
+    dfar Data_062_41C9
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_064_7C14
+    dfar Data_066_4635
+    dfar Data_066_4D7D
+    dfar Data_066_5CC8
+    dfar Data_062_49C6
+    dfar Data_064_6D28
+    dfar Data_066_4B1A
+    dfar Data_066_5342
+    dfar Data_063_72C9
+    dfar Data_062_73A7
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_062_7CBA
+    dfar Data_062_492F
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_064_7F35
+    dfar Data_066_4B3B
+    dfar Data_066_52C5
+    dfar Data_066_615D
+
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup52Order::
+Data_068_5D89:: ; heuristic: start of a structured table; C0
+    db $05, $02, $01, $04, $03, $00 ; entry 0
+
+; E-0146 (derived: 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup53::
+Data_068_5D8F:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5CC8
+    dfar Data_066_5705
+    dfar Data_065_65EA
+    dfar Data_066_5477
+    dfar Data_065_6808
+    dfar Data_065_5FE5
+    dfar Data_062_423A
+    dfar Data_062_78C0
+    dfar Data_062_5485
+    dfar Data_064_5B93
+    dfar Data_065_41F0
+    dfar Data_062_76AE
+    dfar Data_064_4843
+    dfar Data_063_6744
+    dfar Data_062_6784
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5B0F
+    dfar Data_065_6AEA
+    dfar Data_066_5A3B
+    dfar Data_065_6B9F
+    dfar Data_065_6391
+    dfar Data_062_494B
+    dfar Data_062_7C82
+    dfar Data_062_57A2
+    dfar Data_064_5ED5
+    dfar Data_065_4662
+    dfar Data_062_7BC5
+    dfar Data_064_4B88
+    dfar Data_063_6A61
+    dfar Data_062_6B76
+    dfar Data_065_75A3 ; id 1
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5658
+    dfar Data_065_6E8B
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_77EB
+    dfar Data_062_6EDC
+    dfar Data_065_6546
+    dfar Data_065_76ED
+    dfar Data_064_7A7D
+    dfar Data_065_4291
+    dfar Data_062_41C9
+    dfar Data_062_702C
+    dfar Data_065_6736
+    dfar Data_065_7AAA
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_72E6
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7C25
+    dfar Data_062_73A7
+    dfar Data_065_6AC6
+    dfar Data_065_7B11
+    dfar Data_064_7EB0
+    dfar Data_065_469B
+    dfar Data_062_492F
+    dfar Data_062_7409
+    dfar Data_065_6B50
+    dfar Data_065_6546 ; id 2
+    dfar Data_065_643F
+    dfar Data_065_75A3
+    dfar Data_066_5CC8
+    dfar Data_062_40EE
+    dfar Data_062_406A
+    dfar Data_065_6DE3
+    dfar Data_066_5CC8
+    dfar Data_063_6C79
+    dfar Data_064_66F6
+    dfar Data_066_4E6E
+    dfar Data_066_5CC8
+    dfar Data_065_5D1D
+    dfar Data_062_6D6B
+    dfar Data_065_75A3
+    dfar Data_066_5CC8
+    dfar Data_065_6AC6
+    dfar Data_065_6A71
+    dfar Data_065_7AAA
+    dfar Data_066_615D
+    dfar Data_062_48DA
+    dfar Data_062_48C0
+    dfar Data_065_72B2
+    dfar Data_066_615D
+    dfar Data_063_71D4
+    dfar Data_064_6CC4
+    dfar Data_066_5311
+    dfar Data_066_615D
+    dfar Data_065_6293
+    dfar Data_062_732E
+    dfar Data_065_7AAA
+    dfar Data_066_615D
+    dfar Data_064_7848 ; id 3
+    dfar Data_063_6D0B
+    dfar Data_063_60DA
+    dfar Data_065_5B98
+    dfar Data_066_54FD
+    dfar Data_065_5DD4
+    dfar Data_064_4843
+    dfar Data_063_54F8
+    dfar Data_064_78B1
+    dfar Data_066_4635
+    dfar Data_063_6EFF
+    dfar Data_062_4365
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_77CC
+    dfar Data_066_4859
+    dfar Data_064_7DFB
+    dfar Data_063_71F3
+    dfar Data_063_63CF
+    dfar Data_065_5BBD
+    dfar Data_066_5A5F
+    dfar Data_065_62D2
+    dfar Data_064_4B88
+    dfar Data_063_5822
+    dfar Data_064_7E22
+    dfar Data_066_4B3B
+    dfar Data_063_729A
+    dfar Data_062_49AA
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7DD4
+    dfar Data_066_4C04
+    dfar Data_062_6807 ; id 4
+    dfar Data_063_6B43
+    dfar Data_062_53C7
+    dfar Data_064_5B93
+    dfar Data_063_6636
+    dfar Data_064_5284
+    dfar Data_064_454F
+    dfar Data_063_54F8
+    dfar Data_064_46A7
+    dfar Data_063_45E3
+    dfar Data_064_66F6
+    dfar Data_063_6DB3
+    dfar Data_066_44A5
+    dfar Data_066_4546
+    dfar Data_066_4D7D
+    dfar Data_064_78B1
+    dfar Data_062_6BA6
+    dfar Data_063_7151
+    dfar Data_062_5761
+    dfar Data_064_5ED5
+    dfar Data_063_69E0
+    dfar Data_064_56E0
+    dfar Data_064_4A58
+    dfar Data_063_5822
+    dfar Data_064_4AD9
+    dfar Data_063_4AB5
+    dfar Data_064_6CC4
+    dfar Data_063_722B
+    dfar Data_066_4AD3
+    dfar Data_066_4AF5
+    dfar Data_066_52C5
+    dfar Data_064_7E22
+    dfar Data_064_5B93 ; id 5
+    dfar Data_065_416D
+    dfar Data_062_6F90
+    dfar Data_065_74B6
+    dfar Data_063_531D
+    dfar Data_063_45E3
+    dfar Data_062_406A
+    dfar Data_065_6D0D
+    dfar Data_062_40EE
+    dfar Data_064_6797
+    dfar Data_066_4546
+    dfar Data_066_4D7D
+    dfar Data_066_4859
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_5ED5
+    dfar Data_065_4643
+    dfar Data_062_73E8
+    dfar Data_065_7A51
+    dfar Data_063_5769
+    dfar Data_063_4AB5
+    dfar Data_062_48C0
+    dfar Data_065_7279
+    dfar Data_062_48DA
+    dfar Data_064_6D09
+    dfar Data_066_4AF5
+    dfar Data_066_52C5
+    dfar Data_066_4C04
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_066_615D
+
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup53Order::
+Data_068_5FCF:: ; heuristic: start of a structured table; C0
+    db $04, $03, $00, $05, $02, $01 ; entry 0
+
+; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup54::
+Data_068_5FD5:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5CC8
+    dfar Data_066_589C
+    dfar Data_065_77A4
+    dfar Data_066_5CC8
+    dfar Data_066_5705
+    dfar Data_065_5FE5
+    dfar Data_062_70C1
+    dfar Data_066_5658
+    dfar Data_065_5E8C
+    dfar Data_062_53C7
+    dfar Data_064_5B93
+    dfar Data_062_77EB
+    dfar Data_062_423A
+    dfar Data_064_4734
+    dfar Data_063_54F8
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5B97
+    dfar Data_065_7B60
+    dfar Data_066_615D
+    dfar Data_066_5B0F
+    dfar Data_065_6391
+    dfar Data_062_744A
+    dfar Data_066_5AE7
+    dfar Data_065_6301
+    dfar Data_062_5761
+    dfar Data_064_5ED5
+    dfar Data_062_7C25
+    dfar Data_062_494B
+    dfar Data_064_4B1E
+    dfar Data_063_5822
+    dfar Data_066_5CC8 ; id 1
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_55DC
+    dfar Data_065_65EA
+    dfar Data_065_6808
+    dfar Data_065_7641
+    dfar Data_064_78B1
+    dfar Data_064_58E6
+    dfar Data_065_43BD
+    dfar Data_062_6EDC
+    dfar Data_065_751D
+    dfar Data_063_6744
+    dfar Data_062_668A
+    dfar Data_065_416D
+    dfar Data_065_6D0D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5AB9
+    dfar Data_065_6AEA
+    dfar Data_065_6B9F
+    dfar Data_065_7AE1
+    dfar Data_064_7E22
+    dfar Data_064_5DC8
+    dfar Data_065_470B
+    dfar Data_062_73A7
+    dfar Data_065_7A80
+    dfar Data_063_6A61
+    dfar Data_062_6B10
+    dfar Data_065_4643
+    dfar Data_065_7279
+    dfar Data_065_64CA ; id 2
+    dfar Data_065_643F
+    dfar Data_065_68B7
+    dfar Data_065_7641
+    dfar Data_063_6BCD
+    dfar Data_062_5166
+    dfar Data_065_41F0
+    dfar Data_065_70BD
+    dfar Data_062_75B0
+    dfar Data_063_5EAF
+    dfar Data_064_5218
+    dfar Data_065_6D65
+    dfar Data_062_7626
+    dfar Data_064_460E
+    dfar Data_063_45E3
+    dfar Data_065_6E8B
+    dfar Data_065_6A8F
+    dfar Data_065_6A71
+    dfar Data_065_6BD1
+    dfar Data_065_7AE1
+    dfar Data_063_7181
+    dfar Data_062_569C
+    dfar Data_065_4662
+    dfar Data_065_73A8
+    dfar Data_062_7B66
+    dfar Data_063_62DE
+    dfar Data_064_56B0
+    dfar Data_065_7290
+    dfar Data_062_7B96
+    dfar Data_064_4AA9
+    dfar Data_063_4AB5
+    dfar Data_065_72E6
+    dfar Data_062_7626 ; id 3
+    dfar Data_064_66F6
+    dfar Data_066_45B4
+    dfar Data_063_6C79
+    dfar Data_064_7945
+    dfar Data_064_6F23
+    dfar Data_065_751D
+    dfar Data_062_7626
+    dfar Data_066_5CC8
+    dfar Data_062_75B0
+    dfar Data_062_6E33
+    dfar Data_065_5D1D
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_062_40EE
+    dfar Data_062_40EE
+    dfar Data_062_7B96
+    dfar Data_064_6CC4
+    dfar Data_066_4B1A
+    dfar Data_063_71D4
+    dfar Data_064_7E51
+    dfar Data_064_75A9
+    dfar Data_065_7A80
+    dfar Data_062_7B96
+    dfar Data_066_615D
+    dfar Data_062_7B66
+    dfar Data_062_737B
+    dfar Data_065_6293
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_062_48DA
+    dfar Data_062_48DA
+    dfar Data_063_6047 ; id 4
+    dfar Data_064_6145
+    dfar Data_063_453F
+    dfar Data_065_6C81
+    dfar Data_064_4734
+    dfar Data_063_468C
+    dfar Data_064_66F6
+    dfar Data_066_4CD6
+    dfar Data_064_697E
+    dfar Data_066_45B4
+    dfar Data_066_4D7D
+    dfar Data_066_5477
+    dfar Data_065_6E8B
+    dfar Data_066_5658
+    dfar Data_065_64CA
+    dfar Data_065_5BD1
+    dfar Data_063_6383
+    dfar Data_064_6509
+    dfar Data_063_4A65
+    dfar Data_065_7251
+    dfar Data_064_4B1E
+    dfar Data_063_4AF5
+    dfar Data_064_6CC4
+    dfar Data_066_52A0
+    dfar Data_064_6D86
+    dfar Data_066_4B1A
+    dfar Data_066_52C5
+    dfar Data_066_5A3B
+    dfar Data_065_72E6
+    dfar Data_066_5AE7
+    dfar Data_065_6A8F
+    dfar Data_065_6216
+    dfar Data_064_7945 ; id 5
+    dfar Data_063_6EFF
+    dfar Data_064_6828
+    dfar Data_066_4E6E
+    dfar Data_066_5CC8
+    dfar Data_064_7A7D
+    dfar Data_064_706F
+    dfar Data_065_751D
+    dfar Data_065_65EA
+    dfar Data_065_6693
+    dfar Data_063_7545
+    dfar Data_066_4EF7
+    dfar Data_062_5337
+    dfar Data_065_431E
+    dfar Data_065_6DE3
+    dfar Data_066_5CC8
+    dfar Data_064_7E51
+    dfar Data_063_729A
+    dfar Data_064_6D28
+    dfar Data_066_5311
+    dfar Data_066_615D
+    dfar Data_064_7EB0
+    dfar Data_064_761D
+    dfar Data_065_7A80
+    dfar Data_065_6AEA
+    dfar Data_065_6B2C
+    dfar Data_063_7B05
+    dfar Data_066_5342
+    dfar Data_062_573B
+    dfar Data_065_46BF
+    dfar Data_065_72B2
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 6
+    dfar Data_064_7B56
+    dfar Data_063_6D0B
+    dfar Data_064_68E4
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_062_6EDC
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_77EB
+    dfar Data_064_6828
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7C14
+    dfar Data_066_4E6E
+    dfar Data_066_615D
+    dfar Data_064_7F00
+    dfar Data_063_71F3
+    dfar Data_064_6D64
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_062_73A7
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7C25
+Data_068_6266:: ; heuristic: label inside a table; C0
+    dfar Data_064_6D28
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7F35
+    dfar Data_066_5311
+    dfar Data_066_4F98 ; id 7
+    dfar Data_062_7985
+    dfar Data_062_5519
+    dfar Data_064_5A34
+    dfar Data_065_65EA
+    dfar Data_065_5FE5
+    dfar Data_063_60DA
+    dfar Data_064_60D8
+    dfar Data_066_46C5
+    dfar Data_063_6EFF
+    dfar Data_064_4843
+    dfar Data_063_468C
+    dfar Data_066_5CC8
+    dfar Data_064_7B56
+    dfar Data_066_4859
+    dfar Data_066_4635
+    dfar Data_066_5366
+    dfar Data_062_7CBA
+    dfar Data_062_57D8
+    dfar Data_064_5E47
+    dfar Data_065_6AEA
+    dfar Data_065_6391
+    dfar Data_063_63CF
+    dfar Data_064_64DA
+    dfar Data_066_4B6F
+    dfar Data_063_729A
+    dfar Data_064_4B88
+    dfar Data_063_4AF5
+    dfar Data_066_615D
+    dfar Data_064_7F00
+    dfar Data_066_4C04
+    dfar Data_066_4B3B
+    dfar Data_062_5E91 ; id 8
+    dfar Data_063_45E3
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_063_45E3
+    dfar Data_064_6797
+    dfar Data_066_4E6E
+    dfar Data_066_5CC8
+    dfar Data_064_6797
+    dfar Data_066_4E6E
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_63DA
+    dfar Data_063_4AB5
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_063_4AB5
+    dfar Data_064_6D09
+    dfar Data_066_5311
+    dfar Data_066_615D
+    dfar Data_064_6D09
+    dfar Data_066_5311
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup54Order::
+Data_068_6335:: ; heuristic: start of a structured table; C0
+    db $00, $02, $03, $01, $04, $07, $05, $06, $08 ; entry 0
+
+; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup55::
+Data_068_633E:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_54FD
+    dfar Data_065_65EA
+    dfar Data_065_64CA
+    dfar Data_066_5658
+    dfar Data_065_5C71
+    dfar Data_062_528E
+    dfar Data_065_40C4
+    dfar Data_062_78C0
+    dfar Data_062_406A
+    dfar Data_064_46A7
+    dfar Data_065_4D49
+    dfar Data_062_774A
+    dfar Data_062_40EE
+    dfar Data_062_41C9
+    dfar Data_063_5E57
+    dfar Data_066_615D
+    dfar Data_066_5A5F
+    dfar Data_065_6AEA
+    dfar Data_065_6A8F
+    dfar Data_066_5AE7
+    dfar Data_065_6244
+    dfar Data_062_56FE
+    dfar Data_065_45EE
+    dfar Data_062_7C82
+    dfar Data_062_48C0
+    dfar Data_064_4AD9
+    dfar Data_065_52C8
+    dfar Data_062_7BFD
+    dfar Data_062_48DA
+    dfar Data_062_492F
+    dfar Data_063_62C3
+    dfar Data_065_6546 ; id 1
+    dfar Data_065_74B6
+    dfar Data_066_5CC8
+    dfar Data_066_589C
+    dfar Data_062_40EE
+    dfar Data_062_6EDC
+    dfar Data_065_6808
+    dfar Data_065_5FE5
+    dfar Data_064_594F
+    dfar Data_064_5A34
+    dfar Data_064_5B93
+    dfar Data_065_43BD
+    dfar Data_064_6073
+    dfar Data_063_5437
+    dfar Data_063_54F8
+    dfar Data_065_50F6
+    dfar Data_065_6AC6
+    dfar Data_065_7A51
+    dfar Data_066_615D
+    dfar Data_066_5B97
+    dfar Data_062_48DA
+    dfar Data_062_73A7
+    dfar Data_065_6B9F
+    dfar Data_065_6391
+    dfar Data_064_5DEE
+    dfar Data_064_5E47
+    dfar Data_064_5ED5
+    dfar Data_065_470B
+    dfar Data_064_64A7
+    dfar Data_063_57D1
+    dfar Data_063_5822
+    dfar Data_065_5457
+    dfar Data_065_643F ; id 2
+    dfar Data_065_6546
+    dfar Data_065_68B7
+    dfar Data_065_75A3
+    dfar Data_062_528E
+    dfar Data_065_416D
+    dfar Data_064_68E4
+    dfar Data_066_4E6E
+    dfar Data_063_5EAF
+    dfar Data_064_5218
+    dfar Data_065_6E8B
+    dfar Data_066_5CC8
+    dfar Data_065_5587
+    dfar Data_064_51A5
+    dfar Data_062_6F90
+    dfar Data_065_75A3
+    dfar Data_065_6A71
+    dfar Data_065_6AC6
+    dfar Data_065_6BD1
+    dfar Data_065_7AAA
+    dfar Data_062_56FE
+    dfar Data_065_4643
+    dfar Data_064_6D64
+    dfar Data_066_5311
+    dfar Data_063_62DE
+    dfar Data_064_56B0
+    dfar Data_065_72E6
+    dfar Data_066_615D
+    dfar Data_065_59BF
+    dfar Data_064_567F
+    dw Data_062_73E8
+Data_068_645A:: ; heuristic: label inside a table; C0
+    db $62
+    dfar Data_065_7AAA
+Data_068_645E:: ; heuristic: label inside a table; C0
+    dfar Data_064_7848 ; id 3
+    dfar Data_063_6D0B
+    dfar Data_062_528E
+    dfar Data_065_57D0
+    dfar Data_066_5CC8
+    dfar Data_065_5DD4
+    dfar Data_064_46A7
+    dfar Data_063_5437
+    dfar Data_062_75B0
+Data_068_6479:: ; heuristic: label inside a table; C0
+    dfar Data_062_41C9
+    dfar Data_062_406A
+    dfar Data_064_697E
+    dfar Data_064_79CF
+    dfar Data_066_4635
+    dfar Data_066_4635
+    dfar Data_066_4F98
+    dfar Data_064_7DFB
+    dfar Data_063_71F3
+    dfar Data_062_56FE
+    dfar Data_065_5AC0
+    dfar Data_066_615D
+    dfar Data_065_62D2
+    dfar Data_064_4AD9
+    dfar Data_063_57D1
+    dfar Data_062_7B66
+    dfar Data_062_492F
+    dfar Data_062_48C0
+    dfar Data_064_6D86
+    dfar Data_064_7E84
+    dfar Data_066_4B3B
+    dfar Data_066_4B3B
+    dfar Data_066_5366
+    dfar Data_064_5218 ; id 4
+    dfar Data_062_41C9
+    dfar Data_062_42B3
+    dfar Data_062_6E33
+    dfar Data_063_45E3
+    dfar Data_064_6828
+    dfar Data_063_6D0B
+    dfar Data_062_40EE
+    dfar Data_066_45B4
+    dfar Data_066_4E6E
+    dfar Data_062_76AE
+    dfar Data_064_68E4
+    dfar Data_066_5CC8
+    dfar Data_066_55DC
+    dfar Data_065_5DD4
+    dfar Data_065_6E8B
+    dfar Data_064_56B0
+    dfar Data_062_492F
+    dfar Data_062_4967
+    dfar Data_062_737B
+    dfar Data_063_4AB5
+    dfar Data_064_6D28
+    dfar Data_063_71F3
+    dfar Data_062_48DA
+    dfar Data_066_4B1A
+    dfar Data_066_5311
+    dfar Data_062_7BC5
+    dfar Data_064_6D64
+    dfar Data_066_615D
+    dfar Data_066_5AB9
+    dfar Data_065_62D2
+    dfar Data_065_72E6
+    dfar Data_063_66AF ; id 5
+    dfar Data_064_5310
+    dfar Data_064_6828
+    dfar Data_066_4E6E
+    dfar Data_063_60DA
+    dfar Data_064_5394
+    dfar Data_062_6EDC
+    dfar Data_065_75A3
+    dfar Data_065_5852
+    dfar Data_062_694C
+    dfar Data_065_41F0
+    dfar Data_065_6DE3
+    dfar Data_065_5B98
+    dw Data_064_6311
+Data_068_6547:: ; heuristic: label inside a table; C0
+    db $64
+    dfar Data_063_468C
+    dfar Data_065_6F70
+    dfar Data_063_6A11
+    dfar Data_064_5719
+    dfar Data_064_6D28
+    dfar Data_066_5311
+    dfar Data_063_63CF
+    dw Data_064_5742
+Data_068_655F:: ; heuristic: label inside a table; C0
+    db $64
+    dfar Data_062_73A7
+Data_068_6563:: ; heuristic: label inside a table; C0
+    dw Data_065_7AAA
+Data_068_6565:: ; heuristic: label inside a table; C0
+    db $65
+    dfar Data_065_5AF8
+    dfar Data_062_6C2D
+    dfar Data_065_4662
+    dfar Data_065_72B2
+Data_068_6572:: ; heuristic: label inside a table; C0
+    dfar Data_065_5BBD
+    dfar Data_064_65BC
+    dfar Data_063_4AF5
+Data_068_657B:: ; heuristic: label inside a table; C0
+    dfar Data_065_7334
+    dfar Data_066_5CC8 ; id 6
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 7
+    dfar Data_062_7517
+    dfar Data_062_53C7
+    dfar Data_065_55E2
+    dfar Data_066_5CC8
+    dfar Data_062_774A
+    dfar Data_064_47BD
+    dfar Data_063_52A2
+    dfar Data_066_5CC8
+    dfar Data_064_78B1
+    dfar Data_066_478E
+    dfar Data_063_6C79
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_77CC
+    dfar Data_066_615D
+    dfar Data_062_7B3B
+    dfar Data_062_5761
+    dfar Data_065_59E9
+    dfar Data_066_615D
+    dfar Data_062_7BFD
+    dfar Data_064_4B43
+    dfar Data_063_5744
+    dfar Data_066_615D
+    dfar Data_064_7E22
+    dfar Data_066_4BC0
+    dfar Data_063_71D4
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7DD4
+    dfar Data_065_5B98 ; id 8
+    dfar Data_062_68C2
+    dw Data_065_416D
+Data_068_6646:: ; heuristic: label inside a table; C0
+    db $65
+    dw Data_065_70BD
+Data_068_6649:: ; heuristic: label inside a table; C0
+    db $65
+    dw Data_063_6744
+Data_068_664C:: ; heuristic: label inside a table; C0
     db $63
+Data_068_664D:: ; heuristic: label inside a table; C0
+    dfar Data_064_6272
+    dw Data_063_468C
+Data_068_6652:: ; heuristic: label inside a table; C0
+    db $63
+    dfar Data_065_7023
+    dfar Data_064_4843
+    dfar Data_063_4867
+Data_068_665C:: ; heuristic: label inside a table; C0
+    dfar Data_064_6828
+    dw Data_066_4DE4
+Data_068_6661:: ; heuristic: label inside a table; C0
+    db $66
+    dfar Data_066_4859
+    dfar Data_066_4917
+    dfar Data_066_4EF7
+    dfar Data_066_5CC8
+    dfar Data_065_5BBD
+    dfar Data_062_6BF7
+    dfar Data_065_4643
+    dfar Data_065_73A8
+    dfar Data_063_6A61
+    dfar Data_064_657E
+    dfar Data_063_4AF5
+    dfar Data_065_737C
+    dfar Data_064_4B88
+    dfar Data_063_4BB7
+    dfar Data_064_6D28
+    dfar Data_066_52E9
+    dfar Data_066_4C04
+    dfar Data_066_4C37
+    dfar Data_066_5342
+    dfar Data_066_615D
 
-Data_068_664D:: ; heuristic: target of a monotone pointer table; C0
-    db $72, $62, $64, $8C, $46
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup55Order::
+Data_068_669E:: ; heuristic: start of a structured table; C0
+    db $08, $07, $03, $06, $04, $02, $04, $01, $00 ; entry 0
 
-Data_068_6652:: ; heuristic: target of a monotone pointer table; C0
-    db $63, $23, $70, $65, $43, $48, $64, $67, $48, $63
+; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup56::
+Data_068_66A7:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_5560
+    dfar Data_065_6693
+    dfar Data_065_64CA
+    dfar Data_066_589C
+    dfar Data_065_5C71
+    dfar Data_062_528E
+    dfar Data_065_40C4
+    dfar Data_062_7985
+    dfar Data_062_5166
+    dfar Data_065_564B
+    dfar Data_064_51A5
+    dfar Data_062_78C0
+    dfar Data_064_454F
+    dfar Data_063_65BE
+    dfar Data_064_5218
+    dfar Data_066_615D
+    dfar Data_066_5A87
+    dfar Data_065_6B2C
+    dfar Data_065_6A8F
+    dfar Data_066_5B97
+    dfar Data_065_6244
+    dfar Data_062_56FE
+    dfar Data_065_45EE
+    dfar Data_062_7CBA
+    dfar Data_062_569C
+    dfar Data_065_5A18
+    dfar Data_064_567F
+    dfar Data_062_7C82
+    dfar Data_064_4A58
+    dfar Data_063_69A8
+    dfar Data_064_56B0
+    dfar Data_065_77A4 ; id 1
+    dfar Data_066_5CC8
+    dfar Data_066_5658
+    dfar Data_065_6546
+    dfar Data_062_702C
+    dfar Data_065_65EA
+    dfar Data_065_5E8C
+    dfar Data_064_6828
+    dfar Data_064_6A43
+    dfar Data_066_45B4
+    dfar Data_063_6DB3
+    dfar Data_062_6F90
+    dfar Data_062_702C
+    dfar Data_065_64CA
+    dfar Data_063_7626
+    dfar Data_066_46C5
+    dfar Data_065_7B60
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_6AC6
+    dfar Data_062_7409
+    dfar Data_065_6AEA
+    dfar Data_065_6301
+    dfar Data_064_6D28
+    dfar Data_064_6DC8
+    dfar Data_066_4B1A
+    dfar Data_063_722B
+    dfar Data_062_73E8
+    dfar Data_062_7409
+    dfar Data_065_6A8F
+    dfar Data_063_7B4F
+    dfar Data_066_4B6F
+    dfar Data_065_65EA ; id 2
+    dfar Data_065_75A3
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_4635
+    dfar Data_064_706F
+    dfar Data_065_6546
+    dfar Data_065_74B6
+    dfar Data_065_75A3
+    dfar Data_062_76AE
+    dfar Data_062_40EE
+    dfar Data_065_6D0D
+    dfar Data_064_706F
+    dfar Data_063_7545
+    dfar Data_066_45B4
+    dfar Data_066_4D7D
+    dfar Data_065_6AEA
+    dfar Data_065_7AAA
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_4B3B
+    dfar Data_064_761D
+    dfar Data_065_6AC6
+    dfar Data_065_7A51
+    dfar Data_065_7AAA
+    dfar Data_062_7BC5
+    dfar Data_062_48DA
+    dfar Data_065_7279
+    dfar Data_064_761D
+    dfar Data_063_7B05
+    dfar Data_066_4B1A
+    dfar Data_066_52C5
+    dfar Data_064_79CF ; id 3
+    dfar Data_063_6D0B
+    dfar Data_064_460E
+    dfar Data_063_468C
+    dfar Data_066_5705
+    dfar Data_063_74A4
+    dfar Data_066_4546
+    dfar Data_066_4635
+    dfar Data_064_7A7D
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5560
+    dfar Data_065_74B6
+    dfar Data_066_55DC
+    dfar Data_064_7E84
+    dfar Data_063_71F3
+    dfar Data_064_4AA9
+    dfar Data_063_4AF5
+    dfar Data_066_5B0F
+    dfar Data_063_7ADE
+    dfar Data_066_4AF5
+    dfar Data_066_4B3B
+    dfar Data_064_7EB0
+    dfar Data_066_52E9
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5A87
+    dfar Data_065_7A51
+    dfar Data_066_5AB9
+    dfar Data_062_423A ; id 4
+    dfar Data_062_4365
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_063_6E4E
+    dfar Data_064_6A43
+    dfar Data_066_4DE4
+    dfar Data_066_5477
+    dfar Data_064_78B1
+    dfar Data_064_72E0
+    dfar Data_065_6546
+    dfar Data_065_5BD1
+    dfar Data_065_6736
+    dfar Data_065_5FE5
+    dfar Data_062_5209
+    dfar Data_065_4041
+    dfar Data_062_494B
+    dfar Data_062_49AA
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_063_7250
+    dfar Data_064_6DC8
+    dfar Data_066_52E9
+    dfar Data_066_5A3B
+    dfar Data_064_7E22
+    dfar Data_064_76F7
+    dfar Data_065_6AC6
+    dfar Data_065_6216
+    dfar Data_065_6B50
+    dfar Data_065_6391
+    dfar Data_062_56DF
+    dfar Data_065_45C0
+    dfar Data_062_75B0 ; id 5
+    dfar Data_065_70BD
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_063_73F8
+    dfar Data_066_5115
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_6D0D
+    dfar Data_066_5CC8
+    dfar Data_066_55DC
+    dfar Data_065_751D
+    dfar Data_062_6D6B
+    dfar Data_065_68B7
+    dfar Data_065_5DD4
+    dfar Data_065_6D65
+    dfar Data_062_7B66
+    dfar Data_065_73A8
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_063_7A89
+    dfar Data_066_53DF
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_065_7279
+    dfar Data_066_615D
+    dfar Data_066_5AB9
+    dfar Data_065_7A80
+    dfar Data_062_732E
+    dfar Data_065_6BD1
+    dfar Data_065_62D2
+    dfar Data_065_7290
+    dfar Data_066_5CC8 ; id 6
+    dfar Data_062_774A
+    dfar Data_062_6D6B
+    dfar Data_065_5F42
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_063_6C79
+    dfar Data_062_53C7
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_75B0
+    dfar Data_064_47BD
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_78B1
+    dfar Data_066_44A5
+    dfar Data_066_615D
+    dfar Data_062_7BFD
+    dfar Data_062_732E
+    dfar Data_065_634B
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_063_71D4
+    dfar Data_062_5761
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7B66
+    dfar Data_064_4B43
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7E22
+    dfar Data_066_4AD3
+    dfar Data_062_5337 ; id 7
+    dfar Data_065_43BD
+    dfar Data_063_5F99
+    dfar Data_062_668A
+    dfar Data_062_6083
+    dfar Data_063_4867
+    dfar Data_064_46A7
+    dfar Data_063_64F3
+    dfar Data_063_472D
+    dfar Data_064_6A43
+    dfar Data_063_6DB3
+    dfar Data_064_460E
+    dfar Data_066_478E
+    dfar Data_066_505C
+    dfar Data_064_7B56
+    dfar Data_066_4635
+    dfar Data_062_573B
+    dfar Data_065_470B
+    dfar Data_063_633B
+    dfar Data_062_6B10
+    dfar Data_062_6496
+    dfar Data_063_4BB7
+    dfar Data_064_4AD9
+    dfar Data_063_694D
+    dfar Data_063_4B25
+    dfar Data_064_6DC8
+    dfar Data_063_722B
+    dfar Data_064_4AA9
+    dfar Data_066_4BC0
+    dfar Data_066_53AD
+    dfar Data_064_7F00
+    dfar Data_066_4B3B
+    dfar Data_065_445B ; id 8
+    dfar Data_062_5519
+    dfar Data_065_41F0
+    dfar Data_065_6D0D
+    dfar Data_062_694C
+    dfar Data_065_5852
+    dfar Data_064_5284
+    dfar Data_065_70BD
+    dfar Data_063_557A
+    dfar Data_063_5437
+    dfar Data_063_468C
+    dfar Data_065_6E8B
+    dfar Data_066_4917
+    dfar Data_066_46C5
+    dfar Data_066_45B4
+    dfar Data_066_4D7D
+    dfar Data_065_473E
+    dfar Data_062_57D8
+    dfar Data_065_4662
+    dfar Data_065_7279
+    dfar Data_062_6C2D
+    dfar Data_065_5AF8
+    dfar Data_064_56E0
+    dfar Data_065_73A8
+    dfar Data_063_5855
+    dfar Data_063_57D1
+    dfar Data_063_4AF5
+    dfar Data_065_72E6
+    dfar Data_066_4C37
+    dfar Data_066_4B6F
+    dfar Data_066_4B1A
+    dfar Data_066_52C5
 
-Data_068_665C:: ; heuristic: target of a monotone pointer table; C0
-    db $28, $68, $64, $E4, $4D
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup56Order::
+Data_068_6A07:: ; heuristic: start of a structured table; C0
+    db $03, $02, $00, $07, $04, $01, $08, $06, $05 ; entry 0
 
-Data_068_6661:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1A2661, $718
+; E-0146 (derived: 9 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before each tile map)
+; record: 16 far pointers to screen tile maps (each behind an 8-byte header), then 16 to their attribute maps
+KeyWorldChunkGroup57::
+Data_068_6A10:: ; heuristic: key-world chunk group; C0
+    dfar Data_066_5CC8 ; id 0
+    dfar Data_066_589C
+    dfar Data_065_68B7
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_062_43CA
+    dfar Data_065_6C81
+    dfar Data_066_57D9
+    dfar Data_065_5D1D
+    dfar Data_062_4365
+    dfar Data_062_6E33
+    dfar Data_064_7848
+    dfar Data_066_45B4
+    dfar Data_063_6FC0
+    dfar Data_062_40EE
+    dfar Data_066_615D
+    dfar Data_066_5B97
+    dfar Data_065_6BD1
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_062_49C6
+    dfar Data_065_7251
+    dfar Data_066_5B5A
+    dfar Data_065_6293
+    dfar Data_062_49AA
+    dfar Data_062_737B
+    dfar Data_064_7DFB
+    dfar Data_066_4B1A
+    dfar Data_063_72C9
+    dfar Data_062_48DA
+    dfar Data_066_5CC8 ; id 1
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_065_75A3
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_55DC
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_065_7AAA
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5AB9
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_066_5CC8 ; id 2
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_5658
+    dfar Data_065_6693
+    dfar Data_065_751D
+    dfar Data_066_5CC8
+    dfar Data_065_5E8C
+    dfar Data_062_41C9
+    dfar Data_065_6E8B
+    dfar Data_066_5CC8
+    dfar Data_062_423A
+    dfar Data_064_68E4
+    dfar Data_066_4F98
+    dfar Data_066_5CC8
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5AE7
+    dfar Data_065_6B2C
+    dfar Data_065_7A80
+    dfar Data_066_615D
+    dfar Data_065_6301
+    dfar Data_062_492F
+    dfar Data_065_72E6
+    dfar Data_066_615D
+    dfar Data_062_494B
+    dfar Data_064_6D64
+    dfar Data_066_5366
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 3
+    dfar Data_066_5CC8
+    dfar Data_064_77CC
+    dfar Data_066_4635
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_54FD
+    dfar Data_065_6736
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_75B0
+    dfar Data_062_4365
+    dfar Data_066_5CC8
+    dfar Data_066_5477
+    dfar Data_065_5C71
+    dfar Data_062_40EE
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7DD4
+    dfar Data_066_4B3B
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5A5F
+    dfar Data_065_6B50
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7B66
+    dfar Data_062_49AA
+    dfar Data_066_615D
+    dfar Data_066_5A3B
+    dfar Data_065_6244
+    dfar Data_062_48DA
+    dfar Data_064_6F23 ; id 4
+    dfar Data_065_75A3
+    dfar Data_066_5658
+    dfar Data_065_5D1D
+    dfar Data_063_73F8
+    dfar Data_066_4E6E
+    dfar Data_064_79CF
+    dfar Data_063_6C79
+    dfar Data_065_6D0D
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_062_7626
+    dfar Data_062_6D6B
+    dfar Data_065_65EA
+    dfar Data_065_7641
+    dfar Data_062_7517
+    dfar Data_064_75A9
+    dfar Data_065_7AAA
+    dfar Data_066_5AE7
+    dfar Data_065_6293
+    dfar Data_063_7A89
+    dfar Data_066_5311
+    dfar Data_064_7E84
+    dfar Data_063_71D4
+    dfar Data_065_7279
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_062_7B96
+    dfar Data_062_732E
+    dfar Data_065_6AEA
+    dfar Data_065_7AE1
+    dfar Data_062_7B3B
+    dfar Data_064_6828 ; id 5
+    dfar Data_066_4E6E
+    dfar Data_066_5560
+    dfar Data_065_751D
+    dfar Data_062_774A
+    dfar Data_066_55DC
+    dfar Data_065_5D1D
+    dfar Data_065_6D65
+    dfar Data_062_6F90
+    dfar Data_065_5DD4
+    dfar Data_064_6797
+    dfar Data_066_4DE4
+    dfar Data_062_423A
+    dfar Data_062_41C9
+    dfar Data_065_6D65
+    dfar Data_066_5CC8
+    dfar Data_064_6D28
+    dfar Data_066_5311
+    dfar Data_066_5A87
+    dfar Data_065_7A80
+    dfar Data_062_7BFD
+    dfar Data_066_5AB9
+    dfar Data_065_6293
+    dfar Data_065_7290
+    dfar Data_062_73E8
+    dfar Data_065_62D2
+    dfar Data_064_6D09
+    dfar Data_066_52E9
+    dfar Data_062_494B
+    dfar Data_062_492F
+    dfar Data_065_7290
+    dfar Data_066_615D
+    dfar Data_066_5CC8 ; id 6
+    dfar Data_062_78C0
+    dfar Data_064_68E4
+    dfar Data_066_45B4
+    dfar Data_066_5CC8
+    dfar Data_064_79CF
+    dfar Data_066_4F98
+    dfar Data_066_5560
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_066_57D9
+    dfar Data_065_5D1D
+    dfar Data_066_5CC8
+    dfar Data_066_5CC8
+    dfar Data_064_7C14
+    dfar Data_066_4917
+    dfar Data_066_615D
+    dfar Data_062_7C82
+    dfar Data_064_6D64
+    dfar Data_066_4B1A
+    dfar Data_066_615D
+    dfar Data_064_7E84
+    dfar Data_066_5366
+    dfar Data_066_5A87
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_066_5B5A
+    dfar Data_065_6293
+    dfar Data_066_615D
+    dfar Data_066_615D
+    dfar Data_064_7F35
+    dfar Data_066_4C37
+    dfar Data_063_6EFF ; id 7
+    dfar Data_064_6AEC
+    dfar Data_064_706F
+    dfar Data_063_7626
+    dfar Data_065_5DD4
+    dfar Data_065_7023
+    dfar Data_064_79CF
+    dfar Data_066_4DE4
+    dfar Data_062_42B3
+    dfar Data_065_70BD
+    dfar Data_066_5CC8
+    dfar Data_066_55DC
+    dfar Data_066_4859
+    dfar Data_066_5115
+    dfar Data_066_5CC8
+    dfar Data_064_7A7D
+    dfar Data_063_729A
+    dfar Data_064_6DFE
+    dfar Data_064_761D
+    dfar Data_063_7B4F
+    dfar Data_065_62D2
+    dfar Data_065_737C
+    dfar Data_064_7E84
+    dfar Data_066_52E9
+    dfar Data_062_4967
+    dfar Data_065_73A8
+    dfar Data_066_615D
+    dfar Data_066_5AB9
+    dfar Data_066_4C04
+    dfar Data_066_53DF
+    dfar Data_066_615D
+    dfar Data_064_7EB0
+    dfar Data_063_6DB3 ; id 8
+    dfar Data_062_4001
+    dfar Data_062_6E33
+    dfar Data_065_75A3
+    dfar Data_062_76AE
+    dfar Data_062_406A
+    dfar Data_062_40EE
+    dfar Data_065_6D65
+    dfar Data_065_5C71
+    dfar Data_062_43CA
+    dfar Data_064_6797
+    dfar Data_066_4EF7
+    dfar Data_066_45B4
+    dfar Data_066_4635
+    dfar Data_066_4DE4
+    dfar Data_066_5CC8
+    dfar Data_063_722B
+    dfar Data_062_48AC
+    dfar Data_062_737B
+    dfar Data_065_7AAA
+    dfar Data_062_7BC5
+    dfar Data_062_48C0
+    dfar Data_062_48DA
+    dfar Data_065_7290
+    dfar Data_065_6244
+    dfar Data_062_49C6
+    dfar Data_064_6D09
+    dfar Data_066_5342
+    dfar Data_066_4B1A
+    dfar Data_066_4B3B
+    dfar Data_066_52E9
+    dfar Data_066_615D
+
+; E-0146 (derived: a permutation of the sub-chunk numbers)
+; record: sub-chunk order
+KeyWorldChunkGroup57Order::
+Data_068_6D70:: ; heuristic: start of a structured table; C0
+    db $05, $06, $08, $01, $04, $07, $00, $02, $03 ; entry 0
 
 ; compressed tileset of map $A2 (the first map record using it)
 ; LZSS-compressed asset: 1435 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)

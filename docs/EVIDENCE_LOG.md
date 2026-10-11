@@ -1734,6 +1734,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Generator.** Derived map layouts now give way to layouts already in config/tables.json. Map00Palettes at 48:4001 is AreaPalettes0.
 - Binary verification: build/run145 PASS, 0 differing bytes; tests OK.
 
+### E-0146 — Key-world chunk groups
+
+- Kind: OBSERVATION (reading of RunRandomPatternCase_Case00-02 (bank $60) and Func_061_4472_Case00 (61:5443), plus decoding; C1).
+- **The lists.** The key-world generator picks entry (random & $1F) of far-pointer lists at 60:$610D, $616D and $61E5 and stores the far pointer in the area data (StoreThreeBytesBeforeHFFC6Pointer). The lists run on to $62F8: 164 far pointers to 88 chunk groups in banks $67 and $68.
+- **The groups.** Func_061_4472_Case00 reads the stored far pointer and adds $60 * the area's sub-chunk byte, then 12 * (hMapScreenY & 3) + 3 * (hMapScreenX & 3).
+  - It reads a far pointer there, skips 8 bytes, and decompresses the rest into wScreenTileBuffer.
+  - On CGB it decompresses the far pointer $30 bytes later into wScreenAttrBuffer.
+  - A group of n sub-chunks is therefore n * $60 bytes of these grids followed by n bytes. The generator reads +$60 (one sub-chunk) or +$C0/$C1 (two).
+  - In every group the trailing bytes are a permutation of 0..n-1; that fixes the size of the last group in each bank (6 and 9).
+- **Checks.** All 88 groups (n = 1, 2, 3, 4, 6, 9) validate: every tile map (after its 8-byte header) and every attribute map decodes to 360 bytes.
+- **What changed.**
+  - config/tables.json declares KeyWorldChunkLists. add_map_schemas derives KeyWorldChunkGroupNN and KeyWorldChunkGroupNNOrder.
+  - A pointer option `stream_skip` registers the stream N bytes past the target (488 new streams). The 8-byte headers stay as labelled `db`.
+  - A table option `record` replaces the long field-name lists in the `; record:` comment.
+- **Limits.** The meaning of the 8-byte screen headers (they look like exit or connection bytes) and of the order bytes is not read.
+- Binary verification: build/run146 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

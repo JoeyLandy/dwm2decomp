@@ -3404,220 +3404,177 @@ Func_060_60F8:: ; address name
     ld [hl+], a
     ret
 
+; E-0146 (C1: RunRandomPatternCase_Case00/01/02 pick entry (random & $1F) of the lists at $610D, $616D and $61E5 and store the far pointer in the key-world area data; the far pointers run to $62F8 and all point at chunk groups ($61 bytes per sub-chunk)).
+; record: chunk group in bank $67/$68; its ROM bank
+KeyWorldChunkLists::
 Data_060_610D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $01
-    dw Data_060_6740
-    db $62
-    dw Data_060_6740
-    db $C3
-    dw Data_060_6740
-    db $24
-    dw Data_060_6741
-    db $85
-    dw Data_060_6741
-    db $E6
-    dw Data_060_6741
-    db $47
-    dw Data_060_6742
-    db $A8
-    dw Data_060_6742
-    db $09
-    dw Data_060_6743
-    db $6A
-    dw Data_060_6743
-    db $CB
-    dw Data_060_6743
-    db $2C
-    dw Data_060_6744
-    db $8D
-    dw Data_060_6744
-    db $EE
-    dw Data_060_6744
-    db $4F
-    dw Data_060_6745
-    db $B0
-    dw Data_060_6745
-    db $B0
-    dw Data_060_6745
-    db $4F
-    dw Data_060_6745
-    db $EE, $44, $67, $8D, $44, $67, $2C, $44, $67, $CB, $43, $67, $6A, $43, $67, $09
-    db $43, $67, $A8, $42, $67, $47, $42, $67, $E6, $41, $67, $85, $41, $67, $24, $41
-    db $67, $C3
-    dw Data_060_6740
-    db $62
-    dw Data_060_6740
-    db $01
-    dw Data_060_6740
-
+    dfar KeyWorldChunkGroup00 ; id 0
+    dfar KeyWorldChunkGroup01 ; id 1
+    dfar KeyWorldChunkGroup02 ; id 2
+    dfar KeyWorldChunkGroup03 ; id 3
+    dfar KeyWorldChunkGroup04 ; id 4
+    dfar KeyWorldChunkGroup05 ; id 5
+    dfar KeyWorldChunkGroup06 ; id 6
+    dfar KeyWorldChunkGroup07 ; id 7
+    dfar KeyWorldChunkGroup08 ; id 8
+    dfar KeyWorldChunkGroup09 ; id 9
+    dfar KeyWorldChunkGroup0A ; id 10
+    dfar KeyWorldChunkGroup0B ; id 11
+    dfar KeyWorldChunkGroup0C ; id 12
+    dfar KeyWorldChunkGroup0D ; id 13
+    dfar KeyWorldChunkGroup0E ; id 14
+    dfar KeyWorldChunkGroup0F ; id 15
+    dfar KeyWorldChunkGroup0F ; id 16
+    dfar KeyWorldChunkGroup0E ; id 17
+    dfar KeyWorldChunkGroup0D ; id 18
+    dfar KeyWorldChunkGroup0C ; id 19
+    dfar KeyWorldChunkGroup0B ; id 20
+    dfar KeyWorldChunkGroup0A ; id 21
+    dfar KeyWorldChunkGroup09 ; id 22
+    dfar KeyWorldChunkGroup08 ; id 23
+    dfar KeyWorldChunkGroup07 ; id 24
+    dfar KeyWorldChunkGroup06 ; id 25
+    dfar KeyWorldChunkGroup05 ; id 26
+    dfar KeyWorldChunkGroup04 ; id 27
+    dfar KeyWorldChunkGroup03 ; id 28
+    dfar KeyWorldChunkGroup02 ; id 29
+    dfar KeyWorldChunkGroup01 ; id 30
+    dfar KeyWorldChunkGroup00 ; id 31
 Data_060_616D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $11
-    dw Data_060_6746
-    db $D3
-    dw Data_060_6746
-    db $95
-    dw Data_060_6747
-    db $57
-    dw Data_060_6748
-    db $19
-    dw Data_060_6749
-    db $DB
-    dw Data_060_6749
-    db $9D
-    dw Data_060_674A
-    db $5F
-    dw Data_060_674B
-    db $21
-    dw Data_060_674C
-    db $E3
-    dw Data_060_674C
-    db $A5
-    dw Data_060_674D
-    db $67
-    dw Data_060_674E
-    db $29
-    dw Data_060_674F
-    db $EB
-    dw Data_060_674F
-    db $AD
-    dw Data_060_6750
-    db $6F
-    dw Data_060_6751
-    db $6F
-    dw Data_060_6751
-    db $AD, $50, $67, $EB, $4F, $67, $29, $4F, $67, $67, $4E, $67, $A5, $4D, $67, $E3
-    db $4C, $67, $21, $4C, $67, $5F, $4B, $67, $9D, $4A, $67, $DB, $49, $67, $19, $49
-    db $67, $57, $48, $67, $95, $47, $67, $D3
-    dw Data_060_6746
-    db $11
-    dw Data_060_6746
-    db $31
-    dw Data_060_6752
-    db $31
-    dw Data_060_6752
-    db $31
-    dw Data_060_6752
-    db $31
-    dw Data_060_6752
-    db $31
-    dw Data_060_6752
-    db $31
-    dw Data_060_6752
-    db $31
-    dw Data_060_6752
-    db $31
-    dw Data_060_6752
-
+    dfar KeyWorldChunkGroup10 ; id 32
+    dfar KeyWorldChunkGroup11 ; id 33
+    dfar KeyWorldChunkGroup12 ; id 34
+    dfar KeyWorldChunkGroup13 ; id 35
+    dfar KeyWorldChunkGroup14 ; id 36
+    dfar KeyWorldChunkGroup15 ; id 37
+    dfar KeyWorldChunkGroup16 ; id 38
+    dfar KeyWorldChunkGroup17 ; id 39
+    dfar KeyWorldChunkGroup18 ; id 40
+    dfar KeyWorldChunkGroup19 ; id 41
+    dfar KeyWorldChunkGroup1A ; id 42
+    dfar KeyWorldChunkGroup1B ; id 43
+    dfar KeyWorldChunkGroup1C ; id 44
+    dfar KeyWorldChunkGroup1D ; id 45
+    dfar KeyWorldChunkGroup1E ; id 46
+    dfar KeyWorldChunkGroup1F ; id 47
+    dfar KeyWorldChunkGroup1F ; id 48
+    dfar KeyWorldChunkGroup1E ; id 49
+    dfar KeyWorldChunkGroup1D ; id 50
+    dfar KeyWorldChunkGroup1C ; id 51
+    dfar KeyWorldChunkGroup1B ; id 52
+    dfar KeyWorldChunkGroup1A ; id 53
+    dfar KeyWorldChunkGroup19 ; id 54
+    dfar KeyWorldChunkGroup18 ; id 55
+    dfar KeyWorldChunkGroup17 ; id 56
+    dfar KeyWorldChunkGroup16 ; id 57
+    dfar KeyWorldChunkGroup15 ; id 58
+    dfar KeyWorldChunkGroup14 ; id 59
+    dfar KeyWorldChunkGroup13 ; id 60
+    dfar KeyWorldChunkGroup12 ; id 61
+    dfar KeyWorldChunkGroup11 ; id 62
+    dfar KeyWorldChunkGroup10 ; id 63
+    dfar KeyWorldChunkGroup20 ; id 64
+    dfar KeyWorldChunkGroup20 ; id 65
+    dfar KeyWorldChunkGroup20 ; id 66
+    dfar KeyWorldChunkGroup20 ; id 67
+    dfar KeyWorldChunkGroup20 ; id 68
+    dfar KeyWorldChunkGroup20 ; id 69
+    dfar KeyWorldChunkGroup20 ; id 70
+    dfar KeyWorldChunkGroup20 ; id 71
 Data_060_61E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $31
-    dw Data_060_6752
-    db $F3
-    dw Data_060_6752
-    db $B5
-    dw Data_060_6753
-    db $77
-    dw Data_060_6754
-    db $39
-    dw Data_060_6755
-    db $FB
-    dw Data_060_6755
-    db $BD
-    dw Data_060_6756
-    db $7F
-    dw Data_060_6757
-    db $41
-    dw Data_060_6758
-    db $03
-    dw Data_060_6759
-    db $C5
-    dw Data_060_6759
-    db $87
-    dw Data_060_675A
-    db $49
-    dw Data_060_675B
-    db $0B
-    dw Data_060_675C
-    db $CD
-    dw Data_060_675C
-    db $8F
-    dw Data_060_675D
-    db $8F
-    dw Data_060_675D
-    db $CD, $5C, $67, $0B, $5C, $67, $49, $5B, $67, $87, $5A, $67, $C5, $59, $67, $03
-    db $59, $67, $41, $58, $67, $7F, $57, $67, $BD, $56, $67, $FB, $55, $67, $39, $55
-    db $67, $77, $54, $67, $B5, $53, $67, $F3
-    dw Data_060_6752
-    db $31
-    dw Data_060_6752
-
+    dfar KeyWorldChunkGroup20 ; id 72
+    dfar KeyWorldChunkGroup21 ; id 73
+    dfar KeyWorldChunkGroup22 ; id 74
+    dfar KeyWorldChunkGroup23 ; id 75
+    dfar KeyWorldChunkGroup24 ; id 76
+    dfar KeyWorldChunkGroup25 ; id 77
+    dfar KeyWorldChunkGroup26 ; id 78
+    dfar KeyWorldChunkGroup27 ; id 79
+    dfar KeyWorldChunkGroup28 ; id 80
+    dfar KeyWorldChunkGroup29 ; id 81
+    dfar KeyWorldChunkGroup2A ; id 82
+    dfar KeyWorldChunkGroup2B ; id 83
+    dfar KeyWorldChunkGroup2C ; id 84
+    dfar KeyWorldChunkGroup2D ; id 85
+    dfar KeyWorldChunkGroup2E ; id 86
+    dfar KeyWorldChunkGroup2F ; id 87
+    dfar KeyWorldChunkGroup2F ; id 88
+    dfar KeyWorldChunkGroup2E ; id 89
+    dfar KeyWorldChunkGroup2D ; id 90
+    dfar KeyWorldChunkGroup2C ; id 91
+    dfar KeyWorldChunkGroup2B ; id 92
+    dfar KeyWorldChunkGroup2A ; id 93
+    dfar KeyWorldChunkGroup29 ; id 94
+    dfar KeyWorldChunkGroup28 ; id 95
+    dfar KeyWorldChunkGroup27 ; id 96
+    dfar KeyWorldChunkGroup26 ; id 97
+    dfar KeyWorldChunkGroup25 ; id 98
+    dfar KeyWorldChunkGroup24 ; id 99
+    dfar KeyWorldChunkGroup23 ; id 100
+    dfar KeyWorldChunkGroup22 ; id 101
+    dfar KeyWorldChunkGroup21 ; id 102
+    dfar KeyWorldChunkGroup20 ; id 103
 Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $51
-    dw Data_060_675E
-    db $D5
-    dw Data_060_675F
-    db $59
-    dw Data_060_6761
-    db $DD
-    dw Data_060_6762
-    db $61
-    dw Data_060_6764
-    db $E5
-    dw Data_060_6765
-    db $69
-    dw Data_060_6767
-    db $ED
-    dw Data_060_6768
-    db $71
-    dw Data_060_676A
-    db $F5
-    dw Data_060_676B
-    db $79
-    dw Data_060_676D
-    db $FD
-    dw Data_060_676E
-    db $81
-    dw Data_060_6770
-    db $05
-    dw Data_060_6772
-    db $89
-    dw Data_060_6773
-    db $0D
-    dw Data_060_6775
-    db $0D
-    dw Data_060_6775
-    db $89, $73, $67, $05, $72, $67, $81, $70, $67, $FD, $6E, $67, $79, $6D, $67, $F5
-    db $6B, $67, $71, $6A, $67, $ED, $68, $67, $69, $67, $67, $E5, $65, $67, $61, $64
-    db $67, $DD, $62, $67, $59, $61, $67, $D5
-    dw Data_060_675F
-    db $51, $5E, $67, $91
-    dw Data_060_6776
-    db $D7, $78, $67, $1D
-    dw Data_060_677B
-    db $63, $7D, $67, $01
-    dw Data_060_6840
-    db $47, $42, $68, $8D
-    dw Data_060_6844
-    db $D3, $46, $68, $19
-    dw Data_060_6849
-    db $19, $49, $68, $19
-    dw Data_060_6849
-    db $19, $49, $68, $19
-    dw Data_060_6849
-    db $3C, $4A, $68, $5F
-    dw Data_060_684B
-    db $82, $4C, $68, $A5
-    dw Data_060_684D
-    db $EB, $4F, $68, $31
-    dw Data_060_6852
-    db $77, $54, $68, $BD
-    dw Data_060_6856
-    db $03, $59, $68, $49
-    dw Data_060_685B
-    db $8F, $5D, $68, $D5
-    dw Data_060_685F
-    db $3E, $63, $68, $A7
-    dw Data_060_6866
-    db $10, $6A, $68
+    dfar KeyWorldChunkGroup30 ; id 104
+    dfar KeyWorldChunkGroup31 ; id 105
+    dfar KeyWorldChunkGroup32 ; id 106
+    dfar KeyWorldChunkGroup33 ; id 107
+    dfar KeyWorldChunkGroup34 ; id 108
+    dfar KeyWorldChunkGroup35 ; id 109
+    dfar KeyWorldChunkGroup36 ; id 110
+    dfar KeyWorldChunkGroup37 ; id 111
+    dfar KeyWorldChunkGroup38 ; id 112
+    dfar KeyWorldChunkGroup39 ; id 113
+    dfar KeyWorldChunkGroup3A ; id 114
+    dfar KeyWorldChunkGroup3B ; id 115
+    dfar KeyWorldChunkGroup3C ; id 116
+    dfar KeyWorldChunkGroup3D ; id 117
+    dfar KeyWorldChunkGroup3E ; id 118
+    dfar KeyWorldChunkGroup3F ; id 119
+    dfar KeyWorldChunkGroup3F ; id 120
+    dfar KeyWorldChunkGroup3E ; id 121
+    dfar KeyWorldChunkGroup3D ; id 122
+    dfar KeyWorldChunkGroup3C ; id 123
+    dfar KeyWorldChunkGroup3B ; id 124
+    dfar KeyWorldChunkGroup3A ; id 125
+    dfar KeyWorldChunkGroup39 ; id 126
+    dfar KeyWorldChunkGroup38 ; id 127
+    dfar KeyWorldChunkGroup37 ; id 128
+    dfar KeyWorldChunkGroup36 ; id 129
+    dfar KeyWorldChunkGroup35 ; id 130
+    dfar KeyWorldChunkGroup34 ; id 131
+    dfar KeyWorldChunkGroup33 ; id 132
+    dfar KeyWorldChunkGroup32 ; id 133
+    dfar KeyWorldChunkGroup31 ; id 134
+    dfar KeyWorldChunkGroup30 ; id 135
+    dfar KeyWorldChunkGroup40 ; id 136
+    dfar KeyWorldChunkGroup41 ; id 137
+    dfar KeyWorldChunkGroup42 ; id 138
+    dfar KeyWorldChunkGroup43 ; id 139
+    dfar KeyWorldChunkGroup44 ; id 140
+    dfar KeyWorldChunkGroup45 ; id 141
+    dfar KeyWorldChunkGroup46 ; id 142
+    dfar KeyWorldChunkGroup47 ; id 143
+    dfar KeyWorldChunkGroup48 ; id 144
+    dfar KeyWorldChunkGroup48 ; id 145
+    dfar KeyWorldChunkGroup48 ; id 146
+    dfar KeyWorldChunkGroup48 ; id 147
+    dfar KeyWorldChunkGroup48 ; id 148
+    dfar KeyWorldChunkGroup49 ; id 149
+    dfar KeyWorldChunkGroup4A ; id 150
+    dfar KeyWorldChunkGroup4B ; id 151
+    dfar KeyWorldChunkGroup4C ; id 152
+    dfar KeyWorldChunkGroup4D ; id 153
+    dfar KeyWorldChunkGroup4E ; id 154
+    dfar KeyWorldChunkGroup4F ; id 155
+    dfar KeyWorldChunkGroup50 ; id 156
+    dfar KeyWorldChunkGroup51 ; id 157
+    dfar KeyWorldChunkGroup52 ; id 158
+    dfar KeyWorldChunkGroup53 ; id 159
+    dfar KeyWorldChunkGroup54 ; id 160
+    dfar KeyWorldChunkGroup55 ; id 161
+    dfar KeyWorldChunkGroup56 ; id 162
+    dfar KeyWorldChunkGroup57 ; id 163
 
 ; on key-world maps with bit 7 of wC893 set: sets the object count wCC47 from the band of the key level and drops objects for which Func_060_53E5 fails; marks the wC890 object (E-0129)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
