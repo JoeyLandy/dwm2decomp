@@ -1467,8 +1467,8 @@ Data_001_4E54:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; update for debug-mode state 10: the screen shows the monster record viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wJoypadPressedRepeat, wJoypadHeld, wDebugCursor, wDebugValue0, wMonsterId, wCFE7, wTextWindowTileLo, ...
-; writes: wGameMode, wModeState, wDebugCursor, wDebugValue0, wMonsterId, wCFE7, wStringCategory, wStringIndex, ...
+; reads: wJoypadPressed, wJoypadPressedRepeat, wJoypadHeld, wDebugCursor, wDebugValue0, wMonsterId, wTextWindowTileLo, wTextWindowTileHi, ...
+; writes: wGameMode, wModeState, wDebugCursor, wDebugValue0, wMonsterId, wStringCategory, wStringIndex, wTextWindowTileLo, ...
 ; points at: wModeChangeRequest
 DebugMonsterRecordViewer_Update::
 Jump_001_4ED4:: ; address name
@@ -1567,8 +1567,8 @@ Jump_001_4F6D::
 
 ; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wC5F8/wC5F9 and wMonsterId/wCFE7, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen
 ; 1 call site from 1 routine (e.g. DebugMonsterRecordViewer_Init)
-; reads: wMonsterId, wCFE7, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wRecordBuffer, wCFED, ...
-; writes: wDebugCursor, wDebugValue0, wMonsterId, wCFE7, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, ...
+; reads: wMonsterId, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wRecordBuffer, wRecordBufferData
+; writes: wDebugCursor, wDebugValue0, wMonsterId, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, ...
 DebugShowMonsterRecord::
 Func_001_4F80:: ; address name
     ld a, l
@@ -1578,16 +1578,16 @@ Func_001_4F80:: ; address name
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
     ld a, [wMonsterId]
     ld hl, vBGMap0 + $24
     ld bc, $0100
     call WriteHexByteTilesAtHL
-    ld a, [wCFE7]
+    ld a, [wMonsterId + $1]
     ld hl, vBGMap0 + $24
     call DebugShowMonsterRecord_Sub02
-    ld a, [wCFE7]
+    ld a, [wMonsterId + $1]
     ld [wStringCategory], a
     ld a, [wMonsterId]
     ld [wStringIndex], a
@@ -1626,92 +1626,92 @@ Func_001_4F80:: ; address name
     ld hl, vBGMap0 + $4F
     ld bc, $0100
     call WriteHexByteTilesAtHL
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld hl, vBGMap0 + $4F
     call DebugShowMonsterRecord_Sub02
     ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $66
     ld bc, $0100
     call WriteHexByteTilesAtHL
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     inc hl
     call WriteHexByteTilesAtHL
-    ld a, [wCFF0]
+    ld a, [wRecordBufferData + $2]
     inc hl
     call WriteHexByteTilesAtHL
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     inc hl
     call WriteHexByteTilesAtHL
-    ld a, [wCFF2]
+    ld a, [wRecordBufferData + $4]
     ld e, a
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     ld d, a
     ld hl, vBGMap0 + $8D
     ld bc, $0100
     call DebugShowMonsterRecord_Sub01
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     ld hl, vBGMap0 + $AF
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     ld hl, vBGMap0 + $CF
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld e, a
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld d, a
     ld hl, vBGMap0 + $ED
     ld bc, $0100
     call DebugShowMonsterRecord_Sub01
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld e, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld d, a
     ld hl, vBGMap0 + $10D
     ld bc, $0100
     call DebugShowMonsterRecord_Sub01
-    ld a, [wCFFA]
+    ld a, [wRecordBufferData + $C]
     ld e, a
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld d, a
     ld hl, vBGMap0 + $12D
     ld bc, $0100
     call DebugShowMonsterRecord_Sub01
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld e, a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     ld d, a
     ld hl, vBGMap0 + $14D
     ld bc, $0100
     call DebugShowMonsterRecord_Sub01
-    ld a, [wCFFE]
+    ld a, [wRecordBufferData + $10]
     ld e, a
-    ld a, [wCFFF]
+    ld a, [wRecordBufferData + $11]
     ld d, a
     ld hl, vBGMap0 + $16D
     ld bc, $0100
     call DebugShowMonsterRecord_Sub01
-    ld a, [wD000]
+    ld a, [wRecordBufferData + $12]
     ld e, a
-    ld a, [wD001]
+    ld a, [wRecordBufferData + $13]
     ld d, a
     ld hl, vBGMap0 + $18D
     ld bc, $0100
     call DebugShowMonsterRecord_Sub01
-    ld a, [wD002]
+    ld a, [wRecordBufferData + $14]
     ld hl, vBGMap0 + $1AF
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
-    ld a, [wD003]
+    ld a, [wRecordBufferData + $15]
     ld hl, vBGMap0 + $1CF
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
-    ld a, [wD004]
+    ld a, [wRecordBufferData + $16]
     ld hl, vBGMap0 + $1EF
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
-    ld a, [wD005]
+    ld a, [wRecordBufferData + $17]
     ld hl, vBGMap0 + $20F
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
@@ -1721,8 +1721,8 @@ Jump_001_50EC::
 
 ; update for debug-mode state 9: the screen shows the skill viewer (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugCursor, wRecordBufferData, wRecordBuffer, wCFEF, wCFF0, wCFF1, ...
-; writes: wGameMode, wModeState, wDebugCursor, wRecordBuffer, wCFED, wD868, wD869, wD86A, ...
+; reads: wJoypadPressed, wJoypadPressedRepeat, wDebugCursor, wRecordBufferData, wRecordBuffer
+; writes: wGameMode, wModeState, wDebugCursor, wRecordBuffer, wD868, wD869, wD86A, wD86B, ...
 ; points at: wModeChangeRequest, wDebugCursor, wRecordBufferData
 DebugSkillViewer_Update::
 Jump_001_50ED:: ; address name
@@ -1772,7 +1772,7 @@ Jump_001_512D::
     ld a, [wDebugCursor]
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     xor a, a
     ld [wD868], a
     ld a, $11
@@ -1804,7 +1804,7 @@ Jump_001_517F::
     farcall ShowString_Bank08
     ld a, $12
     ld [wStringCategory], a
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     ld [wStringIndex], a
     ld hl, vTiles1
     ld de, $0501
@@ -1812,7 +1812,7 @@ Jump_001_517F::
     farcall ShowString_Bank08
     ld a, $13
     ld [wStringCategory], a
-    ld a, [wCFF0]
+    ld a, [wRecordBufferData + $2]
     ld [wStringIndex], a
     ld hl, vTiles1 + $50
     ld de, $0401
@@ -1820,7 +1820,7 @@ Jump_001_517F::
     farcall ShowString_Bank08
     ld a, $14
     ld [wStringCategory], a
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     and a, $03
     ld [wStringIndex], a
     ld hl, vTiles1 + $90
@@ -1829,7 +1829,7 @@ Jump_001_517F::
     farcall ShowString_Bank08
     ld a, $10
     ld [wStringCategory], a
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     and a, $F0
     swap a
     ld [wStringIndex], a
@@ -1839,65 +1839,65 @@ Jump_001_517F::
     farcall ShowString_Bank08
     ld a, $11
     ld [wStringCategory], a
-    ld a, [wCFF2]
+    ld a, [wRecordBufferData + $4]
     call DebugSkillViewer_Update_Sub03
     ld [wStringIndex], a
     ld hl, vTiles1 + $150
     ld de, $0801
     call FillTilesRequest
     farcall ShowString_Bank08
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     ld hl, vBGMap0 + $14B
     ld bc, $0801
     call DebugSkillViewer_Update_Sub04
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     ld hl, vBGMap0 + $16B
     ld bc, $0801
     call DebugSkillViewer_Update_Sub04
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     ld hl, vBGMap0 + $18B
     ld bc, $0801
     call DebugSkillViewer_Update_Sub04
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld hl, vBGMap0 + $1AB
     ld bc, $0801
     call DebugSkillViewer_Update_Sub04
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld l, a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld h, a
     call DebugSkillViewer_Update_Sub01
     ld hl, vBGMap0 + $1EA
     ld bc, $0100
     call DebugSkillViewer_Update_Sub02
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld l, a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld h, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld e, a
-    ld a, [wCFFA]
+    ld a, [wRecordBufferData + $C]
     ld d, a
     add hl, de
     call DebugSkillViewer_Update_Sub01
     ld hl, vBGMap0 + $1EF
     ld bc, $0100
     call DebugSkillViewer_Update_Sub02
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld l, a
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld h, a
     call DebugSkillViewer_Update_Sub01
     ld hl, vBGMap0 + $20A
     ld bc, $0100
     call DebugSkillViewer_Update_Sub02
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld l, a
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld h, a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     ld e, a
-    ld a, [wCFFE]
+    ld a, [wRecordBufferData + $10]
     ld d, a
     add hl, de
     call DebugSkillViewer_Update_Sub01
@@ -2542,7 +2542,7 @@ Jump_001_55D8::
     call WriteThreeHexDigitsAtDE
     xor a, a
     ld [wD780], a
-    ld [wCFA8], a
+    ld [wNameEntryState], a
     ret
 
 Jump_001_561F::
@@ -2638,7 +2638,7 @@ Jump_001_56B7::
     ld [wD7F1], a
     xor a, a
     ld [wD780], a
-    ld [wCFA8], a
+    ld [wNameEntryState], a
     ret
 
 ; only called from DebugResultsDisplay_Update_Sub02_Sub01 (E-0047)
@@ -3257,7 +3257,7 @@ Jump_001_5A99::
     inc a
     ld [wD780], a
     xor a, a
-    ld [wCFA8], a
+    ld [wNameEntryState], a
     ret
 
 ; debug: wC5FF += 1; below $10 continues at Func_001_5AC0, below $18 at Jump_001_5B45, then wraps to 0 (E-0126)
@@ -3489,7 +3489,7 @@ Jump_001_5BED::
 
 ; update for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wDebugState, wDebugSubState, wDebugValue0, wDebugValue2, wDebugValue3, wCD0D, wCD0E, ...
+; reads: wJoypadPressed, wDebugState, wDebugSubState, wDebugValue0, wDebugValue2, wDebugValue3, wKeyWorldWidth, wKeyWorldHeight, ...
 ; writes: wCurrentKeyIndex, hMapScreenX, hMapScreenY, hMapId, wMapType, wScriptRunning, wGameMode, wModeState, ...
 ; points at: wModeChangeRequest
 DebugAutomap_Update::
@@ -3552,9 +3552,9 @@ Jump_001_5C5B::
     ld [wMapType], a
     xor a, a
     ld [wScriptRunning], a
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     ld [wMapHeightScreens], a
     ld a, $01
     ld [wGameMode], a
@@ -3746,8 +3746,8 @@ Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugAutomap_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update)
-; reads: wDebugValue1, wDebugValue0, wDebugState, hTemp0, hTemp1, hTemp2, hTemp3, wCD0D, ...
-; writes: hTemp0, wCurrentKeyIndex, wKeyWorldSlot, wCD05, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
+; reads: wDebugValue1, wDebugValue0, wDebugState, hTemp0, hTemp1, hTemp2, hTemp3, wKeyWorldWidth, ...
+; writes: hTemp0, wCurrentKeyIndex, wKeyWorldSlot, wPartyStrength, wMapWidthScreens, wMapHeightScreens, hPlayerFacing, hMapScreenX, ...
 ; points at: wModeChangeRequest
 DebugAutomap_Update_Sub01::
 Func_001_5DBA:: ; address name
@@ -3791,25 +3791,25 @@ Jump_001_5DF3::
     ld [hl+], a
     ldh a, [hTemp3]
     ld [hl], a
-    ld [wCD05], a
+    ld [wPartyStrength], a
     farcall DebugAutomap_Update_Sub01_Sub01
     farcall SaveWCD07RecordToSRAMSlotWCC42
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     ld [wMapHeightScreens], a
     xor a, a
     ldh [hPlayerFacing], a
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     swap a
     and a, $0F
     ldh [hMapScreenX], a
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     and a, $0F
     ldh [hMapScreenY], a
-    ld a, [wCD09]
+    ld a, [wKeyWorldGoalPos]
     ldh [hPlayerX], a
-    ld a, [wCD0A]
+    ld a, [wKeyWorldGoalPos2]
     ldh [hPlayerY], a
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
@@ -4894,21 +4894,21 @@ Data_001_65FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; update for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0041)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wD09D, wD0A5, wMenuState, wJoypadPressedRepeat, wJoypadHeld, wFrameCounterLo
-; writes: wCFDC, wCFC5, wMenuState, wDebugCursor, wDebugValue0, wDebugValue1, wGameMode, wModeState, ...
-; points at: wCFDD, wD09F, wModeChangeRequest, wD066, wD0A9, wD09D
+; writes: wEncounterKind, wBattleKind, wMenuState, wDebugCursor, wDebugValue0, wDebugValue1, wGameMode, wModeState, ...
+; points at: wEncounterMonsters, wD09F, wModeChangeRequest, wD066, wD0A9, wD09D
 DebugBattleSetup_Update::
 Jump_001_6652:: ; address name
     ld a, [wJoypadPressed]
     and a, $08
     jp z, Jump_001_66E8
     ld a, [wD09D]
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ld a, [wD0A5]
     sra a
-    ld [wCFC5], a
+    ld [wBattleKind], a
     or a, a
     jr nz, Jump_001_66BD
-    ld hl, wCFDD
+    ld hl, wEncounterMonsters
     ld de, wD09F
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
@@ -4966,25 +4966,25 @@ Func_001_66AD:: ; address name
 Jump_001_66BD::
     ld hl, wD0A9
     ld a, [hl+]
-    ld [wCFDD], a
+    ld [wEncounterMonsters], a
     ld a, [hl+]
-    ld [wCFDE], a
+    ld [wEncounterMonsters + $1], a
     ld a, [hl+]
-    ld [wCFE3], a
+    ld [wWildLevel], a
     inc hl
     ld a, [hl+]
-    ld [wCFDF], a
+    ld [wEncounterMonsters + $2], a
     ld a, [hl+]
-    ld [wCFE0], a
+    ld [wEncounterMonsters + $3], a
     ld a, [hl+]
-    ld [wCFE4], a
+    ld [wWildBand], a
     inc hl
     ld a, [hl+]
-    ld [wCFE1], a
+    ld [wEncounterMonsters + $4], a
     ld a, [hl+]
-    ld [wCFE2], a
+    ld [wEncounterMonsters + $5], a
     ld a, [hl+]
-    ld [wCFE5], a
+    ld [wWildByteE5], a
     jr Jump_001_667A
 
 Jump_001_66E8::
@@ -5005,8 +5005,8 @@ Jump_001_6701::
     and a, $02
     jr z, Jump_001_6734
     ld a, [wD09D]
-    ld [wCFDC], a
-    ld hl, wCFDD
+    ld [wEncounterKind], a
+    ld hl, wEncounterMonsters
     ld de, wD09F
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
@@ -5776,8 +5776,8 @@ Func_001_6C1F:: ; address name
 
 ; only called from CreateMonsterRecordOfKindHFFC7_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. CreateMonsterRecordOfKindHFFC7_Sub01)
-; reads: hTemp3, wD868, wRecordBuffer, wCFED, wD869, wRandomHi, wRecordBufferData, wCFEF, ...
-; writes: wMonsterId, wCFE7, wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wD09D, wD09E, wD09F, ...
+; reads: hTemp3, wD868, wRecordBuffer, wD869, wRandomHi, wRecordBufferData, wD86A, wRandomLo, ...
+; writes: wMonsterId, wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wD09D, wD09E, wD09F, wD0A0
 ; points at: wPlayerName, wD01A
 CreateMonsterRecordOfKindHFFC7_Sub01_Sub01::
 Func_001_6C48:: ; address name
@@ -5786,7 +5786,7 @@ Func_001_6C48:: ; address name
     ld a, e
     ld [wMonsterId], a
     ld a, d
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
     ld a, [wD868]
     ld c, $00
@@ -5801,7 +5801,7 @@ Func_001_6C48:: ; address name
     ld h, a
     ld a, [wRecordBuffer]
     ld [hl+], a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld [hl+], a
     inc hl
     ld a, [wD869]
@@ -5832,11 +5832,11 @@ Jump_001_6C8D::
     call WriteUnknownNamePlaceholder_Bank01
     ld a, [wRecordBufferData]
     ld [hl+], a
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     ld [hl+], a
-    ld a, [wCFF0]
+    ld a, [wRecordBufferData + $2]
     ld [hl+], a
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     ld [hl+], a
     ld a, $FF
     ld [hl+], a
@@ -5851,7 +5851,7 @@ Jump_001_6C8D::
     ld h, a
     xor a, a
     ld [hl+], a
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     ld [hl+], a
     ld [wRecordBufA + $56], a
     ld a, l
@@ -5860,9 +5860,9 @@ Jump_001_6C8D::
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld e, a
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld d, a
     ld a, d
     cp a, $04
@@ -5878,29 +5878,29 @@ Jump_001_6CE1::
     ld [hl+], a
     ld a, d
     ld [hl+], a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld [hl+], a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld [hl+], a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld [hl+], a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld [hl+], a
-    ld a, [wCFFA]
+    ld a, [wRecordBufferData + $C]
     ld [hl+], a
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld [hl+], a
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld [hl+], a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     ld [hl+], a
-    ld a, [wCFFE]
+    ld a, [wRecordBufferData + $10]
     ld [hl+], a
-    ld a, [wCFFF]
+    ld a, [wRecordBufferData + $11]
     ld [hl+], a
-    ld a, [wD000]
+    ld a, [wRecordBufferData + $12]
     ld [hl+], a
-    ld a, [wD001]
+    ld a, [wRecordBufferData + $13]
     ld [hl+], a
     ld a, [wD86A]
     or a, a
@@ -5924,17 +5924,17 @@ Jump_001_6D33::
     xor a, a
     ld [hl+], a
     ld [hl+], a
-    ld a, [wD002]
+    ld a, [wRecordBufferData + $14]
     ld [hl+], a
-    ld a, [wD003]
+    ld a, [wRecordBufferData + $15]
     ld [hl+], a
-    ld a, [wD004]
+    ld a, [wRecordBufferData + $16]
     ld [hl+], a
-    ld a, [wD005]
+    ld a, [wRecordBufferData + $17]
     ld [hl+], a
     ld a, [wRecordBuffer]
     ld l, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a

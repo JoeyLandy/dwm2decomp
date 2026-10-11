@@ -4,7 +4,7 @@ SECTION "Bank 11", ROMX[$4000], BANK[$11]
 ; unless a special mode is set (wCC44 bit 7 hands over to Func_061_5764): walks the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its screen nibbles starts a map change: wCCEA = 1, sound effect $60 is queued, and the entry's new hMapId, hFF8F, hFF92 and position (wC8C8/wC8C9) are stored
 ; 6 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: wMapType, hMapId, hPlayerFacing, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestFacing, ...
-; writes: wWarpDestFacing, wCCEA, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, hPlayerStateFlags, ...
+; writes: wWarpDestFacing, wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, hPlayerStateFlags, ...
 ; points at: wFieldInitStage
 CheckWarpAtPlayer::
 Func_011_4002:: ; address name
@@ -109,7 +109,7 @@ Jump_011_407D::
 
 Jump_011_4088::
     ld a, $01
-    ld [wCCEA], a
+    ld [wWarpPending], a
     ld a, $60
     call QueueSoundEffect
     ld a, [de]
@@ -207,7 +207,7 @@ Jump_011_4105::
 ; special maps use RunWCC44Type_596F; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunWC468ActionIfBit7_Case03)
 ; reads: wMapType, hMapId, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestY
-; writes: hPlayerStateFlags, wWarpDestFacing, wCCEA, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
+; writes: hPlayerStateFlags, wWarpDestFacing, wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
 ; points at: wFieldInitStage
 CheckWarpsAtPlayerPosition::
 Func_011_4130:: ; address name
@@ -338,7 +338,7 @@ Jump_011_41DA::
 
 Jump_011_41E6::
     ld a, $01
-    ld [wCCEA], a
+    ld [wWarpPending], a
     ld a, $60
     call QueueSoundEffect
     ld a, [de]
@@ -411,7 +411,7 @@ Jump_011_4235::
 
 ; unless bit 7 of wCC44 is set, looks hMapId up in Data_011_42AC; when listed, sets the linked map from Data_011_42B8 and warps (using wC88F when wC891 selects it), C = 1; otherwise C = 0 (E-0125)
 ; 2 call sites from 2 routines (e.g. UpdatePlayerMovement, CallF4268OnScreenY1)
-; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoal, wKeyWorldGoalCell, wCD09, ...
+; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoal, wKeyWorldGoalCell, wKeyWorldGoalPos, ...
 ; writes: hMapId, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY
 ; points at: wKeyWorldGoal
 WarpToLinkedMapForCurrentMap::
@@ -510,15 +510,15 @@ Jump_011_42E0::
     ret
 
 Jump_011_431E::
-    ld a, [wCD09]
+    ld a, [wKeyWorldGoalPos]
     ld [wWarpDestX], a
-    ld a, [wCD0A]
+    ld a, [wKeyWorldGoalPos2]
     ld [wWarpDestY], a
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     and a, $F0
     swap a
     ldh [hMapScreenX], a
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     and a, $0F
     ldh [hMapScreenY], a
     call StartWarpTransition
@@ -528,12 +528,12 @@ Jump_011_431E::
 ; script command: plays sound $60 and reads a warp destination at DE (wC8C8/9 from the nibbles of byte 0, hMapScreenX/Y from byte 1), starts palette fade 4, wC5E0 += 1, wModeState = 4, updates hFF8C and returns C = 1 (E-0121)
 ; 1 call site from 1 routine (e.g. WarpToLinkedMapForCurrentMap)
 ; reads: hPlayerStateFlags
-; writes: wCCEA, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wFieldTransitionKind, wModeState, wFieldTransitionStep, ...
+; writes: wWarpPending, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wFieldTransitionKind, wModeState, wFieldTransitionStep, ...
 ; points at: wFieldInitStage
 ScriptWarpToMapFromBytesAtDE::
 Func_011_4340:: ; address name
     ld a, $01
-    ld [wCCEA], a
+    ld [wWarpPending], a
     ld a, $60
     call QueueSoundEffect
     ld a, [de]
@@ -656,7 +656,7 @@ Jump_011_43F3::
 ; only called from CheckMapExitTable4480 (E-0047)
 ; 2 call sites from 1 routine (e.g. CheckMapExitTable4480)
 ; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
-; writes: wCCEA, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wLastWarpIndex, wFieldTransitionKind, ...
+; writes: wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wLastWarpIndex, wFieldTransitionKind, ...
 ; points at: wFieldInitStage
 CheckMapExitTable4480_Sub01::
 Func_011_43FA:: ; address name
@@ -696,7 +696,7 @@ Jump_011_4422::
 
 Jump_011_442B::
     ld a, $01
-    ld [wCCEA], a
+    ld [wWarpPending], a
     ld a, $60
     call QueueSoundEffect
     inc de

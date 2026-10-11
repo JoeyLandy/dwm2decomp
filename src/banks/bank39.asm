@@ -3334,14 +3334,14 @@ Jump_039_5EFA::
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wLinkMode, wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, ...
-; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hTempA, hTemp0, ...
+; writes: wRecordBuffer, wD869, wD86A, wD86B, wD868, hTempA, hTemp0, hTemp1, ...
 ; points at: hTemp8, wD80E, wDA72, wBattleTargetChoice
 ChooseTarget_Blaze:: ; heuristic: target of a pointer table; C0
 Func_039_5F0E:: ; address name
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $02
     ld [wD869], a
     ld hl, hTemp8
@@ -5284,7 +5284,7 @@ Func_039_6A07:: ; address name
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wLinkMode, wBattleActor, hTemp6, hTemp1, hTemp3, hTemp2, hTemp5, ...
-; writes: wRecordBuffer, wCFED, wD869, wD86A, wD86B, wD868, hTempA, hTemp0, ...
+; writes: wRecordBuffer, wD869, wD86A, wD86B, wD868, hTempA, hTemp0, hTemp1, ...
 ; points at: hTemp8, wD80E, wDA72, wBattleTargetChoice
 ChooseTarget_Blaze_6A0A:: ; heuristic: target of a pointer table; C0
 Func_039_6A0A:: ; address name

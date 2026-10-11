@@ -554,7 +554,6 @@ Jump_087_44FC::
 ; only called from FieldModeStateDispatch_Shared03 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared03)
 ; reads: wKeyWorldFloor
-; points at: wCD89
 FieldModeStateDispatch_Shared03_Sub01::
 Func_087_4507:: ; address name
     cp a, $84
@@ -569,7 +568,7 @@ Jump_087_4511::
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
-    ld hl, wCD89
+    ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     ld a, [hl]
     cp a, $02

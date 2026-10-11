@@ -12,10 +12,10 @@ Func_034_4001:: ; address name
 
 ; copies hFFC6 bytes of the 26-byte entry of monster wMonsterId/wCFE7 plus C from $4075 to DE; ids from $250 use CopyMonsterTableBytesFrom4056 in bank $A2 (E-0125)
 ; 2 call sites from 2 routines (e.g. LoadEncounterMonsterIdsToWD09D, SetupMap0BMonsterObjects)
-; reads: wCFE7, wMonsterId, hTemp0
+; reads: wMonsterId, hTemp0
 CopyMonsterTableBytesFrom4075::
 Func_034_4008:: ; address name
-    ld a, [wCFE7]
+    ld a, [wMonsterId + $1]
     cp a, $02
     jr c, Jump_034_401D
     ld a, [wMonsterId]
@@ -29,7 +29,7 @@ Jump_034_401D::
     push bc
     ld a, [wMonsterId]
     ld c, a
-    ld a, [wCFE7]
+    ld a, [wMonsterId + $1]
     ld b, a
     ld a, $1A
     call Multiply8By16
@@ -50,10 +50,10 @@ Jump_034_401D::
 
 ; DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE]
 ; 1 call site from 1 routine (e.g. LoadMonsterRecord)
-; reads: wCFE7, wMonsterId
+; reads: wMonsterId
 LoadMonsterRecordTo::
 Func_034_4040:: ; address name
-    ld a, [wCFE7]
+    ld a, [wMonsterId + $1]
     cp a, $02
     jr c, Jump_034_4055
     ld a, [wMonsterId]
@@ -66,7 +66,7 @@ Jump_034_4055::
     push de
     ld a, [wMonsterId]
     ld c, a
-    ld a, [wCFE7]
+    ld a, [wMonsterId + $1]
     ld b, a
     ld a, $1A
     call Multiply8By16

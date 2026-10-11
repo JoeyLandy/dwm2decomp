@@ -3,14 +3,14 @@ SECTION "Bank 84", ROMX[$4000], BANK[$84]
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: wCD0C, hTemp8, hTemp9
+; reads: wKeyWorldAreaCount, hTemp8, hTemp9
 ; writes: wKeyWorldByte46, hTemp8, hTemp9, hTemp0
-; points at: wCD8B, wCDAC
+; points at: wKeyWorldFloorState
 DebugAutomap_Update_Sub01_Sub01_Sub0C::
 Func_084_4001:: ; address name
     xor a, a
     ld [wKeyWorldByte46], a
-    ld a, [wCD0C]
+    ld a, [wKeyWorldAreaCount]
     add a, a
     ld hl, Data_084_4CCB
     add_a_to_hl
@@ -24,8 +24,8 @@ Func_084_4001:: ; address name
     ldh a, [hTemp9]
     adc a, $00
     ldh [hTemp9], a
-    ld hl, wCD8B
-    ld de, wCDAC
+    ld hl, wKeyWorldFloorInfo + $3
+    ld de, wKeyWorldFloorState
 
 Jump_084_4029::
     ld a, [hl]
@@ -92,11 +92,11 @@ Jump_084_406E:: ; address name
 
 ; entry 1 of the `rst $00` table in RunDebugAutomapCaseHFFC6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD0B, hTemp8, hTemp9
+; reads: wKeyWorldGoalKind, hTemp8, hTemp9
 RunDebugAutomapCaseHFFC6_Case01::
 Jump_084_4072:: ; address name
     ld hl, Data_084_41AE
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -119,17 +119,17 @@ Jump_084_408A::
 
 ; entry 2 of the `rst $00` table in RunDebugAutomapCaseHFFC6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD0B, wCD04, hTemp8, hTemp9
+; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
 RunDebugAutomapCaseHFFC6_Case02::
 Jump_084_4091:: ; address name
     ld hl, Data_084_41B8
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
     add a, $20
     ld [de], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     srl a
     and a, $01
     jr z, Jump_084_40B0
@@ -157,17 +157,17 @@ Jump_084_40BB::
 
 ; entry 3 of the `rst $00` table in RunDebugAutomapCaseHFFC6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD0B, wCD04, hTemp8, hTemp9
+; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
 RunDebugAutomapCaseHFFC6_Case03::
 Jump_084_40C2:: ; address name
     ld hl, Data_084_41B8
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
     add a, $40
     ld [de], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     srl a
     and a, $01
     jr z, Jump_084_40E1
@@ -195,7 +195,7 @@ Jump_084_40EC::
 
 ; entry 4 of the `rst $00` table in RunDebugAutomapCaseHFFC6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp8, hTemp9, wKeyWorldByte46, wCD0B, wCD04
+; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyWorldGoalKind, wKeyRandomHi
 ; writes: hTemp0
 RunDebugAutomapCaseHFFC6_Case04::
 Jump_084_40F3:: ; address name
@@ -212,13 +212,13 @@ Jump_084_40F3:: ; address name
     ld a, [wKeyWorldByte46]
     ld [de], a
     inc de
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     add a, a
     add a, a
     ld hl, Data_084_41CA
     add_a_to_hl
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     add_a_to_hl
     ld a, [hl]
@@ -240,7 +240,7 @@ Jump_084_4126::
     cp a, $FF
     jr z, Jump_084_4150
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     inc de
     inc de
@@ -251,7 +251,7 @@ Jump_084_4126::
     cp a, $FF
     jr z, Jump_084_4150
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     inc de
     inc de
@@ -264,7 +264,7 @@ Jump_084_4150::
 
 ; entry 5 of the `rst $00` table in RunDebugAutomapCaseHFFC6
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp8, hTemp9, wKeyWorldByte46, wCD04
+; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyRandomHi
 ; writes: hTemp0
 RunDebugAutomapCaseHFFC6_Case05::
 Jump_084_4156:: ; address name
@@ -282,7 +282,7 @@ Jump_084_4156:: ; address name
     ld [de], a
     inc de
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     ld hl, Data_084_41C2
     add_a_to_hl
@@ -305,7 +305,7 @@ Jump_084_417F::
     cp a, $FF
     jr z, Jump_084_41A9
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     inc de
     inc de
@@ -316,7 +316,7 @@ Jump_084_417F::
     cp a, $FF
     jr z, Jump_084_41A9
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     inc de
     inc de
@@ -345,13 +345,13 @@ Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseHFFC6_Case05, RunDebugAutomapCaseHFFC6_Case04)
 ; reads: wKeyWorldByte46, hTemp2, hTemp4, hTemp0, hTemp3
 ; writes: hTemp2, hTemp3, wKeyWorldByte46
-; points at: wCE2C
+; points at: wKeyWorldRoomTable
 RunDebugAutomapCaseHFFC6_Shared01::
 Func_084_41F2:: ; address name
     push af
     ld a, [wKeyWorldByte46]
     add a, a
-    ld hl, wCE2C
+    ld hl, wKeyWorldRoomTable
     add_a_to_hl
     pop af
     or a, a
@@ -586,11 +586,11 @@ Jump_084_438C::
 
 ; repeats NextRandomSeed until wCD04 & $0F is below C (C must be 1-16); returns A = that value (E-0077)
 ; 5 call sites from 1 routine (e.g. RunDebugAutomapCaseHFFC6_Shared01)
-; reads: wCD04
+; reads: wKeyRandomHi
 RandomBelowC::
 Func_084_43AC:: ; address name
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
     jr nc, RandomBelowC
@@ -742,7 +742,7 @@ Data_084_4461:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. ItemUsable_LogTwig)
 ; reads: hPlayerStateFlags, wMapType, hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wKeyWorldActive, ...
 ; writes: hTempA, wSpriteSnapshot, wSnapshotByte3C, wSnapshotByte3D, wSnapshotByte3E, wKeyWorldActive, wKeyWorldGoal, wKeyWorldGoalCell, ...
-; points at: wCD7B, wCD8B
+; points at: wKeyWorldObjects
 ItemUsable_LogTwig_Sub01::
 Func_084_47C2:: ; address name
     xor a, a
@@ -903,7 +903,7 @@ Jump_084_48A9::
     ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_084_48E4
-    ld hl, wCD7B
+    ld hl, wKeyWorldObjects
 
 Jump_084_48C9::
     push hl
@@ -933,7 +933,7 @@ Jump_084_48E4::
     ldh a, [hPlayerY]
     cp a, $40
     jr nz, Jump_084_491A
-    ld hl, wCD8B
+    ld hl, wKeyWorldFloorInfo + $3
 
 Jump_084_48ED::
     push hl
@@ -1006,15 +1006,15 @@ Jump_084_491A::
     ret
 
 Jump_084_495F::
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     cp a, c
     jr nz, Jump_084_4978
-    ld a, [wCD09]
+    ld a, [wKeyWorldGoalPos]
     ld b, a
     ldh a, [hPlayerX]
     cp a, b
     jr nz, Jump_084_4978
-    ld a, [wCD0A]
+    ld a, [wKeyWorldGoalPos2]
     ld b, a
     ldh a, [hPlayerY]
     cp a, b
@@ -1170,13 +1170,13 @@ Jump_084_4AFE::
     jr Jump_084_4B46
 
 Jump_084_4B2C::
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     cp a, c
     jr nz, Jump_084_4B46
-    ld a, [wCD09]
+    ld a, [wKeyWorldGoalPos]
     and a, $F0
     ld c, a
-    ld a, [wCD0A]
+    ld a, [wKeyWorldGoalPos2]
     and a, $F0
     swap a
     or a, c

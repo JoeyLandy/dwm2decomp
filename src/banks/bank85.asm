@@ -556,12 +556,11 @@ Jump_085_4389::
 ; entry 9 of the `rst $00` table in ScriptCommand2A_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStep
-; points at: wCD56
 ScriptCommand2A_Run_Case09::
 Jump_085_4390:: ; address name
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
-    ld hl, wCD56
+    ld hl, wKeyWorldBossMonsters + $6
     call StartMessageHL_B85
     farcall ClearBit1OfPlayerAndObjectFlags
     ld a, $01
@@ -788,7 +787,7 @@ Func_085_44D2:: ; address name
 ; 2 call sites from 2 routines (e.g. ScriptCommand4D_Run_Case07, ScriptCommand2A_Run_Case07)
 ; reads: wIsCGB
 ; writes: rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 ShowBoxFromTable4583::
 Func_085_4505:: ; address name
     farcall SaveScreenBufferToBGMap1
@@ -816,7 +815,7 @@ Jump_085_4516::
     jr z, Jump_085_454C
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     ld b, $09
 
 Jump_085_4536::
@@ -2187,7 +2186,7 @@ Func_085_4DA6:: ; address name
 
 ; entry 3 of the `rst $00` table in ScriptCommand79_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wCD03, wCD04
+; reads: wScriptParam0, wKeyRandomLo, wKeyRandomHi
 ; writes: wScriptParam0, wScriptStartRequest
 ScriptCommand79_Run_Case03::
 Jump_085_4DB2:: ; address name
@@ -2195,14 +2194,14 @@ Jump_085_4DB2:: ; address name
     and a, $07
     jr nz, Jump_085_4DD8
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $03
     swap a
     ld hl, wSpriteSlots + $7
     add_a_to_hl
     push hl
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $01
     add a, a
     inc a
@@ -2259,7 +2258,7 @@ Jump_085_4E06::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wScriptParam0, wIsCGB
 ; writes: rSVBK, wScriptParam0
-; points at: wScreenTileBuffer, wD000, wScriptStep
+; points at: wScreenTileBuffer, wScriptStep
 ScriptCommand79_Run_Case01::
 Jump_085_4E1F:: ; address name
     ld a, [wScriptParam1]
@@ -2292,7 +2291,7 @@ Jump_085_4E1F:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $93
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
@@ -3549,7 +3548,7 @@ Jump_085_5562:: ; address name
 
 ; entry 3 of the `rst $00` table in ScriptCommand24_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wCD03, wRandomHi
+; reads: wScriptParam0, wKeyRandomLo, wRandomHi
 ; writes: wScriptParam0, wObject1, wObject2, wObject3
 ; points at: wScriptStep
 ScriptCommand24_Run_Case03::
@@ -3558,7 +3557,7 @@ Jump_085_5581:: ; address name
     and a, $0F
     jr nz, Jump_085_55A9
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $03
     inc a
     swap a
@@ -4521,9 +4520,9 @@ Jump_085_5B4E::
 
 ; on map $0B places four monster objects and picks the monster for the wC82C / wD7FF entry (table $5C5E) or a random one (E-0130)
 ; 3 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommand96_Run_Case07)
-; reads: hMapId, wArenaFlags, wD7FF, wArenaRank, hTemp0, hTemp1, wCD04
+; reads: hMapId, wArenaFlags, wD7FF, wArenaRank, hTemp0, hTemp1, wKeyRandomHi
 ; writes: wSpriteSlots, wObject1, wObject2, wObject3, wFollowerRecords, wSpriteSlotCount, hTemp0, hTemp1, ...
-; points at: wCFDD, hTemp0
+; points at: wEncounterMonsters, hTemp0
 SetupMap0BMonsterObjects::
 Func_085_5B53:: ; address name
     ldh a, [hMapId]
@@ -4587,7 +4586,7 @@ Jump_085_5BA9::
 
 Jump_085_5BD0::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $1F
     ld hl, $5C72
     add_a_to_hl
@@ -4609,7 +4608,7 @@ Jump_085_5BE9::
     ldh [hTemp5], a
     farcall DecompressGraphicsHFFC6ToHFFCA
     ld b, $00
-    ld de, wCFDD
+    ld de, wEncounterMonsters
     ld hl, vTiles0 + $500
 
 Jump_085_5C08::
@@ -4627,7 +4626,7 @@ Jump_085_5C08::
     ld [wMonsterId], a
     inc de
     ld a, [de]
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     ld a, $02
     ldh [hTemp0], a
     ld de, hTemp0
@@ -4669,7 +4668,7 @@ Jump_085_5C08::
 
 ; only called from ScriptCommand84_Run_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand84_Run_Case04)
-; reads: wTriggerKind, wPendingFieldEvent, wInventory, wRandomLo, wMapSpriteKind, wMessageIndex, wMessageGroup, wCD04, ...
+; reads: wTriggerKind, wPendingFieldEvent, wInventory, wRandomLo, wMapSpriteKind, wMessageIndex, wMessageGroup, wKeyRandomHi, ...
 ; writes: wTriggerMarkerFlags, wScriptStartRequest, wScriptParam1, wTriggerKind, wTriggerCell, wTriggerIndex, wScriptParam0
 ; points at: wScriptStep
 ScriptCommand84_Run_Case04_Sub01::
@@ -4716,11 +4715,11 @@ Jump_085_5CBE::
 Jump_085_5CD8::
     farcall ComputePartyStrengthLevelWCD05
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $1F
     sub a, $10
     ld c, a
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     add a, c
     bit 7, a
     jr z, Jump_085_5CF3
@@ -4803,11 +4802,11 @@ Jump_085_5D41::
 
 ; only called from ScriptCommand84_Run_Case04_Sub01 (E-0047)
 ; 2 call sites from 1 routine (e.g. ScriptCommand84_Run_Case04_Sub01)
-; reads: wCD03
+; reads: wKeyRandomLo
 ScriptCommand84_Run_Case04_Sub01_Sub02::
 Func_085_5D6F:: ; address name
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $7F
     cp a, $63
     jr nc, ScriptCommand84_Run_Case04_Sub01_Sub02

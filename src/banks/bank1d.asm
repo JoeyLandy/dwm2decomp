@@ -1839,8 +1839,8 @@ Jump_01D_5083::
 
 ; only called from ScriptCommandE5_Run_Case03_Case0E (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E)
-; reads: wD7B6, wD7B5, wD7B0, wCF8B, wD781, wD7BC
-; writes: wTwoChoiceCursor, wD7C3, wD7C5, wCF8B, wD781
+; reads: wD7B6, wD7B5, wD7B0, wCounterPtr0Lo, wD781, wD7BC
+; writes: wTwoChoiceCursor, wD7C3, wD7C5, wCounterPtr0Lo, wD781
 ; points at: wItemStorage, wInventory
 ScriptCommandE5_Run_Case03_Case0E_Sub01::
 Func_01D_508B:: ; address name
@@ -1926,8 +1926,8 @@ Jump_01D_50F9::
 
 ; only called from ScriptCommandE5_Run_Case03_Case0E (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E)
-; reads: wCF8B, wD781, wD7C5
-; writes: wTwoChoiceCursor, wD7C3, wD7C5, wCF8B, wD781
+; reads: wCounterPtr0Lo, wD781, wD7C5
+; writes: wTwoChoiceCursor, wD7C3, wD7C5, wCounterPtr0Lo, wD781
 ; points at: wInventory, wItemStorage
 ScriptCommandE5_Run_Case03_Case0E_Sub02::
 Func_01D_5101:: ; address name
@@ -2014,10 +2014,10 @@ Jump_01D_5168::
     xor a, a
     ld [wD7C3], a
     ld [wD7C5], a
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     inc a
     and a, $01
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     farcall Run64C7UnlessWD780Is3
     ld a, [wD781]
     inc a

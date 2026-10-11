@@ -25,7 +25,7 @@ Jump_0F1_400B:: ; address name
 ; entry 0 of the `rst $00` table in Func_0F1_4001_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD095
-; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wCF8B
+; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wCounterPtr0Lo
 ; points at: wTemp1
 Func_0F1_4001_Case00_Case00::
 Jump_0F1_4013:: ; address name
@@ -55,7 +55,7 @@ Jump_0F1_4013:: ; address name
     ld hl, wTemp1
     inc [hl]
     xor a, a
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     ret
 
 ; entry 1 of the `rst $00` table in Func_0F1_4001_Case00
@@ -224,7 +224,7 @@ Jump_0F1_414E:: ; address name
 ; entry 0 of the `rst $00` table in Func_0F1_4001_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemId, wD082
-; writes: wD7F1, wCF8B, wDataBankSave, wStringIndex
+; writes: wD7F1, wCounterPtr0Lo, wDataBankSave, wStringIndex
 ; points at: wInventory, wTemp1
 Func_0F1_4001_Case02_Case00::
 Jump_0F1_415A:: ; address name
@@ -264,7 +264,7 @@ Jump_0F1_4187::
     ld [wD7F1], a
     farcall RollWCEC2ChanceAndRun72C8
     ld a, $FF
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     ld a, $69
     call QueueSoundEffect
     ld a, [wD082]
@@ -1475,7 +1475,7 @@ Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 6 call sites from 6 routines (e.g. GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, RunWD06AState_6C12_Case06_Sub01, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 ClearScreenBufferAndAttributes_BankF1::
 Func_0F1_4AA8:: ; address name
     ld hl, wScreenTileBuffer
@@ -1493,7 +1493,7 @@ Jump_0F1_4AAE::
     ret z
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     ld bc, $02D0
 
 Jump_0F1_4AC5::
@@ -3846,7 +3846,7 @@ Data_0F1_58F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 2 call sites from 2 routines (e.g. RunFunc58FAAt024FAndDrawBox_BankF1, RunFunc58FAAt0278AndStep_BankF1)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 CopyScreenBufferRectWithAttrs_F1::
 Func_0F1_58FA:: ; address name
     push bc
@@ -3874,12 +3874,12 @@ Func_0F1_58FA:: ; address name
     jr z, Jump_0F1_593B
     push hl
     push de
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h
@@ -4026,7 +4026,7 @@ Jump_0F1_59B8::
 ; 4 call sites from 4 routines (e.g. RunWD780StateWhenNotFading_F1_Case04_Case19, RunFunc58FAAt024FAndDrawBox_BankF1, RunWD780StateWhenNotFading_F1_Case04_Case17, RunWD780StateWhenNotFading_F1_Case04_Case12)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawScreenBufferRect_BankF1::
 Func_0F1_59CA:: ; address name
     push de
@@ -4058,7 +4058,7 @@ Func_0F1_59CA:: ; address name
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h
@@ -4259,20 +4259,20 @@ Func_0F1_5B8E:: ; address name
 
 ; only called from GameMode5_Update_Case07_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_Sub01)
-; reads: wCEDC, wCEDB, wCED9, wCEDA, wD7F5
+; reads: wCEDC, wTopSpeciesByte, wTopSpeciesLo, wTopSpeciesHi, wD7F5
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5, wRecordBufB, wD7EE
-; points at: wNameGlyphBuf, wCECF, wCECE, wRecordBufB, wCE9B
+; points at: wNameGlyphBuf, wCECF, wGM2Mode, wRecordBufB, wGM2TimerFrames
 GameMode5_Update_Case07_Sub01_Sub04::
 Func_0F1_5BA5:: ; address name
     ld a, $01
     ld [wD7F1], a
     ld a, [wCEDC]
     ld [wD7F2], a
-    ld a, [wCEDB]
+    ld a, [wTopSpeciesByte]
     ld [wD7F3], a
-    ld a, [wCED9]
+    ld a, [wTopSpeciesLo]
     ld [wD7F4], a
-    ld a, [wCEDA]
+    ld a, [wTopSpeciesHi]
     ld [wD7F5], a
     farcall RunWCFA8StateWhenNotFading
     ld a, [wD7F5]
@@ -4297,7 +4297,7 @@ Jump_0F1_5BE2::
     ld [de], a
 
 Jump_0F1_5BE5::
-    ld hl, wCECE
+    ld hl, wGM2Mode
     ld de, wRecordBufB
     ld b, $A5
 
@@ -4307,7 +4307,7 @@ Jump_0F1_5BED::
     inc de
     dec b
     jr nz, Jump_0F1_5BED
-    ld hl, wCE9B
+    ld hl, wGM2TimerFrames
     ld b, $D8
 
 Jump_0F1_5BF8::

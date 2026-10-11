@@ -933,41 +933,41 @@ Func_003_454C:: ; address name
 
 ; only called from GameMode2_Update (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode2_Update)
-; reads: wCE9B, wPlayHoursLo, wPlayHoursHi, wPlayMinutes, wCE9C, wCE9D
-; writes: wCE9B, wCE9C, wCE9D
+; reads: wGM2TimerFrames, wPlayHoursLo, wPlayHoursHi, wPlayMinutes, wGM2TimerSeconds, wGM2TimerMinutes
+; writes: wGM2TimerFrames, wGM2TimerSeconds, wGM2TimerMinutes
 ; points at: wPlayFrames
 GameMode2_Update_Sub01::
 Func_003_4596:: ; address name
-    ld a, [wCE9B]
+    ld a, [wGM2TimerFrames]
     inc a
     cp a, $3C
     jr nc, Jump_003_45A3
-    ld [wCE9B], a
+    ld [wGM2TimerFrames], a
     jr Jump_003_45C9
 
 Jump_003_45A3::
     xor a, a
-    ld [wCE9B], a
-    ld a, [wCE9C]
+    ld [wGM2TimerFrames], a
+    ld a, [wGM2TimerSeconds]
     inc a
     cp a, $3C
     jr nc, Jump_003_45B4
-    ld [wCE9C], a
+    ld [wGM2TimerSeconds], a
     jr Jump_003_45C9
 
 Jump_003_45B4::
     xor a, a
-    ld [wCE9C], a
-    ld a, [wCE9D]
+    ld [wGM2TimerSeconds], a
+    ld a, [wGM2TimerMinutes]
     inc a
     cp a, $3C
     jr nc, Jump_003_45C5
-    ld [wCE9D], a
+    ld [wGM2TimerMinutes], a
     jr Jump_003_45C9
 
 Jump_003_45C5::
     xor a, a
-    ld [wCE9D], a
+    ld [wGM2TimerMinutes], a
 
 Jump_003_45C9::
     ld a, [wPlayHoursLo]
@@ -1728,7 +1728,6 @@ Func_003_4A27:: ; address name
 ; 2 call sites from 2 routines (e.g. DecompressMenuTilesTo16E0, PauseMenu_Main_Case00_Case01)
 ; reads: wMenuSelectedMember, wIsCGB
 ; writes: wBGPaletteUploadRequest, hTemp0, rVBK, rSVBK
-; points at: wD000
 DrawRecordMonsterPictureForWC46D::
 Func_003_4A36:: ; address name
     ld c, $0B
@@ -1753,14 +1752,14 @@ Func_003_4A36:: ; address name
     pop de
     ld a, $01
     ldh [hTemp0], a
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call LoadMonsterPictureAttributeBlock
     ld a, $01
     ldh [rVBK], a
     ld a, $02
     ldh [rSVBK], a
     ld hl, vBGMap0 + $161
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     ld bc, $0606
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, $00
@@ -2898,7 +2897,7 @@ Data_003_51AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wPartyCount
 ; writes: rVBK, rSVBK
-; points at: wD000, wD080, wD100, wTemp1
+; points at: wD080, wD100, wTemp1
 Func_003_4FBB_Case02::
 Jump_003_51B0:: ; address name
     call CopyTileBufferToBGMap
@@ -2911,7 +2910,7 @@ Jump_003_51B0:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld hl, vBGMap0 + $E1
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     call CopyRectToVRAMSourceStrideBPlus14_Bank03
     ld a, [wPartyCount]
     cp a, $01
@@ -5183,11 +5182,11 @@ Jump_003_60F9:: ; address name
 
 ; entry 0 of the `rst $00` table in PauseMenu_Skills_Case02
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFF2
+; reads: wRecordBufferData
 ; points at: wTemp0, wTemp1
 PauseMenu_Skills_Case02_Case00::
 Jump_003_6103:: ; address name
-    ld a, [wCFF2]
+    ld a, [wRecordBufferData + $4]
     cp a, $21
     jr z, Jump_003_611B
     call BuildRecordField5FValueScreenWithCursor
@@ -5748,7 +5747,7 @@ Func_003_646F:: ; address name
 
 ; only called from PauseMenu_Skills_Case02_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case02_Case01)
-; reads: wMenuSelectedMember, wRecordBufferData, wMenuCursor, wRecordBuffer, wCFED
+; reads: wMenuSelectedMember, wRecordBufferData, wMenuCursor, wRecordBuffer
 PauseMenu_Skills_Case02_Case01_Sub01::
 Func_003_649C:: ; address name
     call ClearScreenTileBuffer_Bank03
@@ -5782,7 +5781,7 @@ Jump_003_64DA::
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wRecordBuffer]
     ld l, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
     add a, $51
@@ -5815,7 +5814,7 @@ Func_003_650C:: ; address name
 
 ; fills the screen tile buffer: blocks $20 and $0C, cursor marks for wC46E and wC46F, the rectangle chosen by the skill wRecordBuffer (table $6851 to Data_003_6921), then block $10 (E-0121)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case02_Case02)
-; reads: wMenuCursor, wSubMenuCursor, wRecordBuffer, wCFED
+; reads: wMenuCursor, wSubMenuCursor, wRecordBuffer
 BuildSkillScreenTileBuffer::
 Func_003_6526:: ; address name
     call FillTilesFromRequest
@@ -5834,7 +5833,7 @@ Func_003_6526:: ; address name
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wRecordBuffer]
     ld l, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
     add a, $51
@@ -5914,7 +5913,7 @@ Func_003_6595:: ; address name
 ; only called from routines of PauseMenu_Skills (E-0098)
 ; 3 call sites from 2 routines (e.g. PauseMenu_Skills_Case01_Case01, PauseMenu_Skills_Case01_Case00)
 ; reads: wMenuSelectedMember, wMenuCursor, wMenuPage, wRecordBufferData
-; writes: wStringIndex, wRecordBuffer, wItemId, wCFED, wStringCategory
+; writes: wStringIndex, wRecordBuffer, wItemId, wStringCategory
 PauseMenu_Skills_Shared02::
 Func_003_65E3:: ; address name
     ld a, [wMenuSelectedMember]
@@ -5940,7 +5939,7 @@ Jump_003_6606::
     ld [wRecordBuffer], a
     ld [wItemId], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
     ld a, [wRecordBufferData]
     cp a, $FF
@@ -5969,13 +5968,13 @@ Jump_003_6632::
 
 ; only called from routines of PauseMenu_Skills (E-0098)
 ; 3 call sites from 2 routines (e.g. PauseMenu_Skills_Case02_Case02, PauseMenu_Skills_Case02_Case01)
-; reads: wRecordBuffer, wCFED, wSubMenuCursor
+; reads: wRecordBuffer, wSubMenuCursor
 ; writes: wScreenTileBuffer
 PauseMenu_Skills_Shared03::
 Func_003_664A:: ; address name
     ld a, [wRecordBuffer]
     ld l, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
     add a, $51

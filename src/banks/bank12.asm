@@ -57,7 +57,7 @@ Jump_012_4026:: ; address name
 
 ; implements script command type 9A; reached through ScriptCommand9A in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9A)
-; reads: wScriptStep, wMapType, wCD03
+; reads: wScriptStep, wMapType, wKeyRandomLo
 ; writes: wScriptStartRequest, wBattleIntroKind, wBattleTransitionSubStep
 ; points at: wScriptStep
 ScriptCommand9A_Run::
@@ -80,7 +80,7 @@ Jump_012_403C::
 
 Jump_012_404C::
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $01
     sla a
     ld [wBattleTransitionSubStep], a
@@ -2711,7 +2711,7 @@ Jump_012_501E:: ; address name
 
 ; entry 2 of the `rst $00` table in ScriptCommandA0_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSpriteSlotCount, wCD04, hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
+; reads: wSpriteSlotCount, wKeyRandomHi, hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
 ; writes: hPlayerFacing, hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi, hPlayerSpriteTimerLo, hPlayerSpriteTimerHi, wScriptParam0
 ; points at: wScriptStep
 ScriptCommandA0_Run_Case02::
@@ -2723,7 +2723,7 @@ Jump_012_5038:: ; address name
 
 Jump_012_503F::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     cp a, c
     jr nc, Jump_012_503F
@@ -2857,9 +2857,9 @@ Func_012_50E5:: ; address name
 
 ; entry 1 of the `rst $00` table in ScriptCommand8E_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wCD09, wCD0A
+; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalPos, wKeyWorldGoalPos2
 ; writes: wScriptStartRequest, hMapId, wWarpDestX, wWarpDestY
-; points at: wKeyWorldGoal, wCD08
+; points at: wKeyWorldGoal, wKeyWorldGoalScreen
 ScriptCommand8E_Run_Case01::
 Jump_012_50ED:: ; address name
     ld a, $80
@@ -2931,11 +2931,11 @@ Jump_012_5181::
     ret
 
 Jump_012_519E::
-    ld a, [wCD09]
+    ld a, [wKeyWorldGoalPos]
     ld [wWarpDestX], a
-    ld a, [wCD0A]
+    ld a, [wKeyWorldGoalPos2]
     ld [wWarpDestY], a
-    ld de, wCD08
+    ld de, wKeyWorldGoalScreen
     call ScriptCommand8E_Run_Case01_Sub02
     ret
 
@@ -3001,9 +3001,9 @@ Func_012_51F4:: ; address name
 
 ; entry 1 of the `rst $00` table in ScriptCommand8A_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hPlayerStateFlags, wMapType, wKeyWorldFloor, wCD0D, wCD0E, hMapId, wLastWarpIndex
+; reads: hPlayerStateFlags, wMapType, wKeyWorldFloor, wKeyWorldWidth, wKeyWorldHeight, hMapId, wLastWarpIndex
 ; writes: wScriptStartRequest, hPlayerStateFlags, wFieldTransitionKind, wFieldTransitionStep, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
-; points at: wCD88
+; points at: wKeyWorldFloorInfo
 ScriptCommand8A_Run_Case01::
 Jump_012_51FC:: ; address name
     ld a, $80
@@ -3023,7 +3023,7 @@ Jump_012_51FC:: ; address name
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
-    ld hl, wCD88
+    ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     push af
@@ -3038,9 +3038,9 @@ Jump_012_51FC:: ; address name
     ld [wWarpDestY], a
     xor a, a
     ld [wWarpDestFacing], a
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     ld [wMapHeightScreens], a
     ld a, $80
     ld [wMapType], a
@@ -3711,15 +3711,14 @@ Func_012_5854:: ; address name
 
 ; entry 7 of the `rst $00` table in ScriptCommand85_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD07, wCurrentKeyIndex
-; writes: wCD07, wScriptStartRequest
-; points at: wCE7E
+; reads: wKeyWorldFlags, wCurrentKeyIndex
+; writes: wKeyWorldFlags, wScriptStartRequest
 ScriptCommand85_Run_Case07::
 Jump_012_5868:: ; address name
-    ld a, [wCD07]
+    ld a, [wKeyWorldFlags]
     or a, $80
-    ld [wCD07], a
-    ld hl, wCE7E
+    ld [wKeyWorldFlags], a
+    ld hl, wKeyWorldEncounterTable + $3
     ld b, $04
 
 Jump_012_5875::
@@ -3847,8 +3846,8 @@ Jump_012_5908::
 
 ; entry 1 of the `rst $00` table in ScriptCommand85_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCE75, wCE76, wCE72, wCE73, wCE74, wCE77, wCE78, wCE79, ...
-; writes: wBattleIntroKind, wCFDD, wCFDE, wCFE3, wCFDC, wBattleTransitionSubStep, wCFDF, wCFE0, ...
+; reads: wKeyWorldEncounter
+; writes: wBattleIntroKind, wEncounterMonsters, wWildLevel, wEncounterKind, wBattleTransitionSubStep, wWildBand, wWildByteE5
 ; points at: wScriptStep
 ScriptCommand85_Run_Case01::
 Jump_012_590D:: ; address name
@@ -3859,58 +3858,58 @@ Jump_012_590D:: ; address name
     inc [hl]
     ld a, $03
     ld [wBattleIntroKind], a
-    ld a, [wCE75]
+    ld a, [wKeyWorldEncounter + $3]
     ld c, a
-    ld a, [wCE76]
+    ld a, [wKeyWorldEncounter + $4]
     or a, c
     jr nz, Jump_012_5941
-    ld a, [wCE72]
+    ld a, [wKeyWorldEncounter]
     ld l, a
-    ld a, [wCE73]
+    ld a, [wKeyWorldEncounter + $1]
     ld h, a
     ld a, l
-    ld [wCFDD], a
+    ld [wEncounterMonsters], a
     ld a, h
-    ld [wCFDE], a
-    ld a, [wCE74]
-    ld [wCFE3], a
+    ld [wEncounterMonsters + $1], a
+    ld a, [wKeyWorldEncounter + $2]
+    ld [wWildLevel], a
     xor a, a
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     jr Jump_012_5988
 
 Jump_012_5941::
-    ld a, [wCE75]
+    ld a, [wKeyWorldEncounter + $3]
     ld l, a
-    ld a, [wCE76]
+    ld a, [wKeyWorldEncounter + $4]
     ld h, a
     ld a, l
-    ld [wCFDD], a
+    ld [wEncounterMonsters], a
     ld a, h
-    ld [wCFDE], a
-    ld a, [wCE77]
-    ld [wCFE3], a
-    ld a, [wCE72]
+    ld [wEncounterMonsters + $1], a
+    ld a, [wKeyWorldEncounter + $5]
+    ld [wWildLevel], a
+    ld a, [wKeyWorldEncounter]
     ld l, a
-    ld a, [wCE73]
+    ld a, [wKeyWorldEncounter + $1]
     ld h, a
     ld a, l
-    ld [wCFDF], a
+    ld [wEncounterMonsters + $2], a
     ld a, h
-    ld [wCFE0], a
-    ld a, [wCE74]
-    ld [wCFE4], a
-    ld a, [wCE78]
+    ld [wEncounterMonsters + $3], a
+    ld a, [wKeyWorldEncounter + $2]
+    ld [wWildBand], a
+    ld a, [wKeyWorldEncounter + $6]
     ld l, a
-    ld a, [wCE79]
+    ld a, [wKeyWorldEncounter + $7]
     ld h, a
     ld a, l
-    ld [wCFE1], a
+    ld [wEncounterMonsters + $4], a
     ld a, h
-    ld [wCFE2], a
-    ld a, [wCE7A]
-    ld [wCFE5], a
+    ld [wEncounterMonsters + $5], a
+    ld a, [wKeyWorldEncounter + $8]
+    ld [wWildByteE5], a
     ld a, $02
-    ld [wCFDC], a
+    ld [wEncounterKind], a
 
 Jump_012_5988::
     ld a, $01
@@ -3920,12 +3919,12 @@ Jump_012_5988::
 
 ; entry 0 of the `rst $00` table in ScriptCommand85_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD04
+; reads: wKeyRandomHi
 ; points at: wScriptStep
 ScriptCommand85_Run_Case00::
 Jump_012_5994:: ; address name
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     ld hl, $00D0
     add_a_to_hl
@@ -3952,14 +3951,13 @@ Func_012_59AC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: wScriptStartRequest
-; points at: wCE7E
 ScriptCommand9E_Run_Case05::
 Jump_012_59BC:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $7F
     add a, a
     add a, a
-    ld hl, wCE7E
+    ld hl, wKeyWorldEncounterTable + $3
     add_a_to_hl
     ld [hl], $01
     ld a, $80
@@ -3980,8 +3978,8 @@ Jump_012_59D3:: ; address name
 ; entry 1 of the `rst $00` table in ScriptCommand9E_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
-; writes: wBattleIntroKind, wCFDD, wCFDE, wCFE3, wCFDC, wBattleTransitionSubStep
-; points at: wScriptStep, wCE7B
+; writes: wBattleIntroKind, wEncounterMonsters, wWildLevel, wEncounterKind, wBattleTransitionSubStep
+; points at: wScriptStep, wKeyWorldEncounterTable
 ScriptCommand9E_Run_Case01::
 Jump_012_59DE:: ; address name
     xor a, a
@@ -3995,16 +3993,16 @@ Jump_012_59DE:: ; address name
     and a, $7F
     add a, a
     add a, a
-    ld hl, wCE7B
+    ld hl, wKeyWorldEncounterTable
     add_a_to_hl
     ld a, [hl+]
-    ld [wCFDD], a
+    ld [wEncounterMonsters], a
     ld a, [hl+]
-    ld [wCFDE], a
+    ld [wEncounterMonsters + $1], a
     ld a, [hl]
-    ld [wCFE3], a
+    ld [wWildLevel], a
     xor a, a
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ld a, $01
     ld [wBattleTransitionSubStep], a
     farcall SetModeState3AndSaveScreen
@@ -4012,12 +4010,12 @@ Jump_012_59DE:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand9E_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD04
+; reads: wKeyRandomHi
 ; points at: wScriptStep
 ScriptCommand9E_Run_Case00::
 Jump_012_5A17:: ; address name
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     ld hl, $00E0
     add_a_to_hl
@@ -5388,13 +5386,12 @@ Func_012_6211:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: wScriptStartRequest
-; points at: wCDAF
 ScriptCommand86_Run_Case04::
 Jump_012_621F:: ; address name
     farcall ScriptCommand86_Run_Case04_Sub01
     ld a, [wKeyWorldFloor]
     swap a
-    ld hl, wCDAF
+    ld hl, wKeyWorldFloorState + $3
     add_a_to_hl
     ld a, $FF
     ld [hl], a
@@ -5408,7 +5405,6 @@ Jump_012_621F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wKeyWorldFloor
 ; writes: wScriptStartRequest, wStepPtrLo
-; points at: wCDAF
 ScriptCommand86_Run_Case02::
 Jump_012_6247:: ; address name
     ld a, [wScriptParam0]
@@ -5424,7 +5420,7 @@ Jump_012_6257::
     push hl
     ld a, [wKeyWorldFloor]
     swap a
-    ld hl, wCDAF
+    ld hl, wKeyWorldFloorState + $3
     add_a_to_hl
     ld a, $FF
     ld [hl], a
@@ -5457,7 +5453,7 @@ Jump_012_628B:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand86_Run
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wScriptParam1, wInventory, wCECE, hTemp0
+; reads: wScriptParam0, wScriptParam1, wInventory, wGM2Mode, hTemp0
 ; writes: wScriptParam0, wScriptParam1, wScriptStep
 ; points at: wScriptStep
 ScriptCommand86_Run_Case00::
@@ -5522,7 +5518,7 @@ Jump_012_62EB::
     ret
 
 Jump_012_62FC::
-    ld a, [wCECE]
+    ld a, [wGM2Mode]
     cp a, $01
     jr z, Jump_012_62DA
     ld a, $19
@@ -5854,11 +5850,11 @@ Jump_012_64CA::
 
 ; only called from routines of ScriptCommand80_Run (E-0098)
 ; 4 call sites from 4 routines (e.g. ScriptCommand80_Run_Case04, ScriptCommand80_Run_Case03, ScriptCommand80_Run_Case02, ScriptCommand80_Run_Case00)
-; reads: wCCE9, wTriggerIndex
-; points at: wMapObjects, wCCEB
+; reads: wScreenTriggerCount, wTriggerIndex
+; points at: wMapObjects, wScreenTriggers
 ScriptCommand80_Run_Shared01::
 Func_012_64D5:: ; address name
-    ld a, [wCCE9]
+    ld a, [wScreenTriggerCount]
     or a, a
     jr nz, Jump_012_64EA
     ld a, [wTriggerIndex]
@@ -5873,7 +5869,7 @@ Jump_012_64EA::
     ld a, [wTriggerIndex]
     add a, a
     add a, a
-    ld hl, wCCEB
+    ld hl, wScreenTriggers
     add_a_to_hl
     ret
 
@@ -6587,7 +6583,7 @@ Func_012_6893:: ; address name
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
 ; 11 call sites from 10 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case24, ScriptCommand86_Run_Case00, DispatchTalkEvent_Case01_Case65, ...)
-; reads: hTemp0, hTemp2, hTemp1, hTempA, wKeyRetryCount, wCD03, wCD04, wGameFlags836
+; reads: hTemp0, hTemp2, hTemp1, hTempA, wKeyRetryCount, wKeyRandomLo, wKeyRandomHi, wGameFlags836
 ; writes: wKeyRetryCount, hTemp0, hTemp1, hTempA, wGameFlags836
 ; points at: wKeySeeds
 GenerateNewKeyEntry::
@@ -6677,9 +6673,9 @@ Jump_012_68FF::
     add a, a
     ld hl, wKeySeeds
     add_a_to_hl
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     ld [hl+], a
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     ld [hl], a
     ld a, [wGameFlags836]
     set 7, a
@@ -6734,7 +6730,7 @@ Jump_012_6948::
 
 ; writes key entry hFFC6: byte 0 = hFFC7 and byte 3 = $80; for kind $FE generates the remaining bytes (Func_061_40B4, Func_060_6916) from hFFC7-hFFC9 (E-0125)
 ; 12 call sites from 10 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ScriptCommandF7_Run_Case24, ScriptCommand58_Run_Case2B, ...)
-; reads: hTemp0, hTemp1, wCD05, hTemp2, hTemp3
+; reads: hTemp0, hTemp1, wPartyStrength, hTemp2, hTemp3
 ; writes: hTemp0
 WriteKeyEntryHFFC6::
 Func_012_6955:: ; address name
@@ -6763,7 +6759,7 @@ Func_012_6955:: ; address name
 
 Jump_012_6973::
     farcall ComputePartyStrengthForKey
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     ldh [hTemp0], a
     farcall RollKeyContentsForLevelHFFC6
     pop hl
@@ -8062,9 +8058,9 @@ Jump_012_7101::
 
 ; on maps from $30 (or special map $85) finds the wCCEB entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case02)
-; reads: wMapType, hMapId, wCCE9, hMapScreenX, hMapScreenY, wTriggerKind, wIsCGB
-; writes: wCCE9, wTriggerIndex, wTriggerCell, wTriggerKind, wOBJPaletteUploadRequest
-; points at: wCCEB, wOBJPaletteBuffer
+; reads: wMapType, hMapId, wScreenTriggerCount, hMapScreenX, hMapScreenY, wTriggerKind, wIsCGB
+; writes: wScreenTriggerCount, wTriggerIndex, wTriggerCell, wTriggerKind, wOBJPaletteUploadRequest
+; points at: wScreenTriggers, wOBJPaletteBuffer
 FindTriggerEntryForCurrentScreen_WCCEB::
 Func_012_710A:: ; address name
     ld a, [wMapType]
@@ -8074,25 +8070,25 @@ Func_012_710A:: ; address name
     cp a, $30
     jr nc, Jump_012_712A
     xor a, a
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     ret
 
 Jump_012_711C::
     cp a, $85
     ret nz
-    ld a, [wCCE9]
+    ld a, [wScreenTriggerCount]
     or a, a
     ret z
     ld b, a
-    ld hl, wCCEB
+    ld hl, wScreenTriggers
     jr Jump_012_7134
 
 Jump_012_712A::
-    ld a, [wCCE9]
+    ld a, [wScreenTriggerCount]
     or a, a
     ret z
     ld b, $03
-    ld hl, wCCEB
+    ld hl, wScreenTriggers
 
 Jump_012_7134::
     ldh a, [hMapScreenX]
@@ -8122,7 +8118,7 @@ Jump_012_7149::
     ret
 
 Jump_012_7155::
-    ld a, [wCCE9]
+    ld a, [wScreenTriggerCount]
     sub a, b
     ld [wTriggerIndex], a
     jr Jump_012_715E
@@ -8201,7 +8197,7 @@ Data_012_71E8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; unless bit 7 of wC468 is set or no trigger is active (wC8FE = $FF), draws the trigger marker sprite (Data_012_7308) at the trigger cell wC8FF (E-0130)
 ; 2 call sites from 2 routines (e.g. RunFunc722AAnd6EB7, FieldModeStateDispatch_Case07)
-; reads: wFieldActionRequest, wTriggerKind, wTriggerMarkerFlags, wCCE9, wMapType, hScrollX, hScrollXHi, wTriggerCell, ...
+; reads: wFieldActionRequest, wTriggerKind, wTriggerMarkerFlags, wScreenTriggerCount, wMapType, hScrollX, hScrollXHi, wTriggerCell, ...
 ; writes: hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 DrawTriggerMarkerSprite::
 Func_012_722A:: ; address name
@@ -8224,7 +8220,7 @@ Func_012_722A:: ; address name
     ld a, [wTriggerMarkerFlags]
     bit 7, a
     jp nz, Jump_012_72D5
-    ld a, [wCCE9]
+    ld a, [wScreenTriggerCount]
     or a, a
     jr nz, Jump_012_7261
     ld a, [wMapType]
@@ -8484,7 +8480,7 @@ Jump_012_73F2::
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case05)
 ; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wMapType, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wScriptParam0, wScriptParam1, wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
-; points at: wCDB0, wCE8B
+; points at: wKeyWorldByte8B
 FieldModeStateDispatch_Case05_Sub02::
 Func_012_73F3:: ; address name
     ld a, [wTextWindowState]
@@ -8579,7 +8575,7 @@ Jump_012_7479::
     ld b, a
     ld a, [wKeyWorldFloor]
     swap a
-    ld hl, wCDB0
+    ld hl, wKeyWorldFloorState + $4
     add_a_to_hl
     ld a, [wKeyWorldArea]
     ld c, a
@@ -8663,7 +8659,7 @@ Jump_012_74FB::
 
 Jump_012_7508::
     ld a, [wKeyWorldFloor]
-    ld hl, wCE8B
+    ld hl, wKeyWorldByte8B
     add_a_to_hl
     ld a, [hl]
     ld [wScriptParam0], a
@@ -9992,7 +9988,7 @@ Jump_012_7CA1::
 
 ; on map type 1, standing on tiles at or above wC196, a 1-in-8 roll sets event $0A in wC935 unless item $2C is owned or the gold is below 100; then A = 1 when any tile under the player is blocking (E-0128)
 ; 1 call site from 1 routine (e.g. RunPendingFieldEventWC935)
-; reads: wMapSpriteKind, wMapTallTileMin, wCD04, hTemp0, wInventory, wGoldHi, wGoldMid, wGoldLo, ...
+; reads: wMapSpriteKind, wMapTallTileMin, wKeyRandomHi, hTemp0, wInventory, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: hTemp0, wPendingFieldEvent
 ; points at: wTilesUnderPoint
 RollFieldEventOnTallTiles::
@@ -10011,7 +10007,7 @@ Jump_012_7CE6::
     cp a, c
     jr c, Jump_012_7D2C
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     jr nz, Jump_012_7D2F
     ld a, $2C

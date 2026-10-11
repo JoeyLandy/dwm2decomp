@@ -376,17 +376,20 @@
   "CFEC": {
     "name": "wRecordBuffer",
     "note": "scratch buffer shared by the record loaders: LoadSkillRecord reads its first word as the skill number and writes 17 bytes after it; LoadMonsterRecord stores a 26-byte monster record here",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "2"
   },
   "CFEE": {
     "name": "wRecordBufferData",
     "note": "where LoadSkillRecord puts the 17 bytes of a skill record (byte 2 of the buffer)",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "18"
   },
   "CFE6": {
     "name": "wMonsterId",
     "note": "16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads",
-    "evidence": "reading"
+    "evidence": "reading",
+    "size": "2"
   },
   "D081": {
     "name": "wItemId",
@@ -2811,5 +2814,540 @@
     "size": "8",
     "note": "field object 5 (its entry stops at the story flags at $CBD7)",
     "evidence": "E-0134"
+  },
+  "CCE9": {
+    "name": "wScreenTriggerCount",
+    "note": "number of 4-byte screen trigger entries at wScreenTriggers (FindTriggerEntryForCurrentScreen_WCCEB)",
+    "evidence": "E-0135"
+  },
+  "CCEA": {
+    "name": "wWarpPending",
+    "note": "set by the warp routines (CheckWarpAtPlayer, ScriptWarpToMapFromBytesAtDE); read by the transition state",
+    "evidence": "E-0135"
+  },
+  "CCEB": {
+    "name": "wScreenTriggers",
+    "note": "screen trigger entries (4 bytes each: flags, cell, ...)",
+    "evidence": "E-0135",
+    "size": "C"
+  },
+  "CCF7": {
+    "name": "wKeyWorldMonsterBands",
+    "note": "$FF-terminated list of monster band indexes for the key world (LoadKeyWorldParamsForWC833)",
+    "evidence": "E-0135",
+    "size": "B"
+  },
+  "CD02": {
+    "name": "wKeyWorldBandAdjust",
+    "note": "band adjustment from the key world level (LoadKeyWorldParamsForWC833)",
+    "evidence": "E-0135"
+  },
+  "CD03": {
+    "name": "wKeyRandomLo",
+    "note": "key-world random value, low byte (NextRandomSeed); saved with the key so its world is rebuilt the same",
+    "evidence": "E-0135"
+  },
+  "CD04": {
+    "name": "wKeyRandomHi",
+    "note": "key-world random value, high byte",
+    "evidence": "E-0135"
+  },
+  "CD05": {
+    "name": "wPartyStrength",
+    "note": "party strength value (ComputePartyStrengthLevelWCD05); used for key and encounter levels",
+    "evidence": "E-0135"
+  },
+  "CD06": {
+    "name": "wKeyWorldByte06",
+    "note": "key-world setting read by SetupKeyWorldObjectsForMapType",
+    "evidence": "E-0135"
+  },
+  "CD07": {
+    "name": "wKeyWorldFlags",
+    "note": "key-world flags (bit 7 = boss or cleared state)",
+    "evidence": "E-0135"
+  },
+  "CD08": {
+    "name": "wKeyWorldGoalScreen",
+    "note": "screen of the key-world goal (x and y nibbles)",
+    "evidence": "E-0135"
+  },
+  "CD09": {
+    "name": "wKeyWorldGoalPos",
+    "note": "goal position bytes",
+    "evidence": "E-0135"
+  },
+  "CD0A": {
+    "name": "wKeyWorldGoalPos2",
+    "note": "goal position bytes",
+    "evidence": "E-0135"
+  },
+  "CD0B": {
+    "name": "wKeyWorldGoalKind",
+    "note": "kind of the key-world goal object (PickRandomNonzeroFromTable4CC1)",
+    "evidence": "E-0135"
+  },
+  "CD0C": {
+    "name": "wKeyWorldAreaCount",
+    "note": "number of areas",
+    "evidence": "E-0135"
+  },
+  "CD0D": {
+    "name": "wKeyWorldWidth",
+    "note": "key-world width in screens",
+    "evidence": "E-0135"
+  },
+  "CD0E": {
+    "name": "wKeyWorldHeight",
+    "note": "key-world height in screens",
+    "evidence": "E-0135"
+  },
+  "CD0F": {
+    "name": "wKeyWorldBand",
+    "note": "key-world level band 0-15 (SetWCD0FBandForA)",
+    "evidence": "E-0135"
+  },
+  "CD10": {
+    "name": "wKeyWorldMonsters",
+    "note": "32 two-byte monster entries (id, then level * 2 ORed in) rolled for the key world",
+    "evidence": "E-0135",
+    "size": "40"
+  },
+  "CD50": {
+    "name": "wKeyWorldBossMonsters",
+    "note": "8 two-byte monster entries for the deeper areas (FillWCD51LevelsForWCD05)",
+    "evidence": "E-0135",
+    "size": "10"
+  },
+  "CD60": {
+    "name": "wKeyWorldChunks",
+    "note": "area map chunk pointers of the key world (ReadKeyWorldCellIsSolid)",
+    "evidence": "E-0135",
+    "size": "10"
+  },
+  "CD70": {
+    "name": "wKeyWorldAreas",
+    "note": "four area bytes of the key world",
+    "evidence": "E-0135",
+    "size": "4"
+  },
+  "CD74": {
+    "name": "wKeyWorldAreaInfo",
+    "note": "per-area info bytes",
+    "evidence": "E-0135",
+    "size": "4"
+  },
+  "CD78": {
+    "name": "wKeyWorldAreaExits",
+    "note": "per-area exit bytes",
+    "evidence": "E-0135",
+    "size": "3"
+  },
+  "CD7B": {
+    "name": "wKeyWorldObjects",
+    "note": "key-world object list (4 bytes each: cell, kind ...)",
+    "evidence": "E-0135",
+    "size": "D"
+  },
+  "CD88": {
+    "name": "wKeyWorldFloorInfo",
+    "note": "per-floor info entries (4 bytes each)",
+    "evidence": "E-0135",
+    "size": "24"
+  },
+  "CDAC": {
+    "name": "wKeyWorldFloorState",
+    "note": "per-floor state entries (16 bytes each)",
+    "evidence": "E-0135",
+    "size": "20"
+  },
+  "CDCC": {
+    "name": "wNameBufAlt",
+    "note": "alternative name buffer (PickNameBufferForFirstByte)",
+    "evidence": "E-0135",
+    "size": "10"
+  },
+  "CE2C": {
+    "name": "wKeyWorldRoomTable",
+    "note": "room table of the key world",
+    "evidence": "E-0135",
+    "size": "46"
+  },
+  "CE72": {
+    "name": "wKeyWorldEncounter",
+    "note": "monster ids and levels of the key-world encounters ($CE72-$CE7A; RollKeyWorldMonsterIds)",
+    "evidence": "E-0135",
+    "size": "9"
+  },
+  "CE7B": {
+    "name": "wKeyWorldEncounterTable",
+    "note": "per-area encounter entries (4 bytes each: id, level, ...)",
+    "evidence": "E-0135",
+    "size": "10"
+  },
+  "CE8B": {
+    "name": "wKeyWorldByte8B",
+    "note": "key-world byte",
+    "evidence": "E-0135"
+  },
+  "CE93": {
+    "name": "wVisitedScreens",
+    "note": "visited-screen bitmap of the key world (8 bytes; MarkVisitedMapScreenInWCE93)",
+    "evidence": "E-0135",
+    "size": "8"
+  },
+  "CE9B": {
+    "name": "wGM2TimerFrames",
+    "note": "first byte of the $D8-byte block saved to SRAM bank 1 by SaveWCE9BBlockToSRAMBank1; a timer byte (CallF072B4WhenWCE9DIs59)",
+    "evidence": "E-0135"
+  },
+  "CE9C": {
+    "name": "wGM2TimerSeconds",
+    "note": "timer byte of that block",
+    "evidence": "E-0135"
+  },
+  "CE9D": {
+    "name": "wGM2TimerMinutes",
+    "note": "timer byte of that block (59 triggers Func_0F0_72B4)",
+    "evidence": "E-0135"
+  },
+  "CE9E": {
+    "name": "wFamilyBitCount",
+    "note": "count of bits set in wFamilyBits (MarkBitBInWCE9FAndCount)",
+    "evidence": "E-0135"
+  },
+  "CE9F": {
+    "name": "wFamilyBits",
+    "note": "bit array marked by MarkBitBInWCE9FAndCount",
+    "evidence": "E-0135",
+    "size": "20"
+  },
+  "CEBF": {
+    "name": "wLastMarkedBit",
+    "note": "last bit index marked",
+    "evidence": "E-0135"
+  },
+  "CEC0": {
+    "name": "wMarkChangeCount",
+    "note": "count of changes of the marked bit",
+    "evidence": "E-0135"
+  },
+  "CEC1": {
+    "name": "wRollState",
+    "note": "state byte of the bank-$F0 roll (RollWCEC2ChanceAndRun72C8)",
+    "evidence": "E-0135"
+  },
+  "CEC2": {
+    "name": "wRollCounter",
+    "note": "counter for the bank-$F0 roll (up to $0F)",
+    "evidence": "E-0135"
+  },
+  "CEC3": {
+    "name": "wFamilyScores",
+    "note": "11 scores (one per family) ranked by RankWCEC3ScoresIntoWCF7E",
+    "evidence": "E-0135",
+    "size": "B"
+  },
+  "CECE": {
+    "name": "wGM2Mode",
+    "note": "mode byte of the $CE9B block (0 or 1 allow saving it)",
+    "evidence": "E-0135"
+  },
+  "CED9": {
+    "name": "wTopSpeciesLo",
+    "note": "species picked from the ranking, low byte",
+    "evidence": "E-0135"
+  },
+  "CEDA": {
+    "name": "wTopSpeciesHi",
+    "note": "species picked from the ranking, high byte",
+    "evidence": "E-0135"
+  },
+  "CEDB": {
+    "name": "wTopSpeciesByte",
+    "note": "byte stored with the picked species",
+    "evidence": "E-0135"
+  },
+  "CEE7": {
+    "name": "wGM2Byte",
+    "note": "byte of the $CE9B block",
+    "evidence": "E-0135"
+  },
+  "CF0A": {
+    "name": "wTopSpeciesGrowth",
+    "note": "species growth bytes copied by LoadWCED9SpeciesStatsToWCF0A ($CF0A-$CF0C)",
+    "evidence": "E-0135",
+    "size": "3"
+  },
+  "CF29": {
+    "name": "wTopStat0",
+    "note": "stat copied from wCF2B",
+    "evidence": "E-0135"
+  },
+  "CF2B": {
+    "name": "wTopStat1",
+    "note": "stat byte of the copied species data",
+    "evidence": "E-0135"
+  },
+  "CF2D": {
+    "name": "wTopStat2",
+    "note": "stat copied from wCF2F",
+    "evidence": "E-0135"
+  },
+  "CF2F": {
+    "name": "wTopStat3",
+    "note": "stat byte of the copied species data",
+    "evidence": "E-0135"
+  },
+  "CF31": {
+    "name": "wTopStat4",
+    "note": "stat byte of the copied species data",
+    "evidence": "E-0135"
+  },
+  "CF33": {
+    "name": "wTopStat5",
+    "note": "stat byte of the copied species data",
+    "evidence": "E-0135"
+  },
+  "CF35": {
+    "name": "wTopStat6",
+    "note": "stat byte of the copied species data",
+    "evidence": "E-0135"
+  },
+  "CF37": {
+    "name": "wTopStat7",
+    "note": "stat byte of the copied species data",
+    "evidence": "E-0135"
+  },
+  "CF41": {
+    "name": "wResistanceLevels",
+    "note": "27 resistance levels raised by RaiseRandomLowestResistance",
+    "evidence": "E-0135",
+    "size": "1B"
+  },
+  "CF73": {
+    "name": "wFamilyRankTaken",
+    "note": "11 flags marking families already ranked",
+    "evidence": "E-0135",
+    "size": "B"
+  },
+  "CF7E": {
+    "name": "wFamilyRanking",
+    "note": "11 family indexes in rank order",
+    "evidence": "E-0135",
+    "size": "B"
+  },
+  "CF89": {
+    "name": "wRankIndex",
+    "note": "index used while ranking",
+    "evidence": "E-0135"
+  },
+  "CF8A": {
+    "name": "wRankBand",
+    "note": "band of wFamilyBitCount (BandOfWCE9E)",
+    "evidence": "E-0135"
+  },
+  "CF8B": {
+    "name": "wCounterPtr0Lo",
+    "note": "pointer to a counter incremented by IncrementTwoCountersCappedAt99, low byte (also a scratch word)",
+    "evidence": "E-0135"
+  },
+  "CF8C": {
+    "name": "wCounterPtr0Hi",
+    "note": "that pointer, high byte",
+    "evidence": "E-0135"
+  },
+  "CF8D": {
+    "name": "wCounterArg0",
+    "note": "byte stored before the first counter",
+    "evidence": "E-0135"
+  },
+  "CF8E": {
+    "name": "wCounterPtr1Lo",
+    "note": "pointer to the second counter of IncrementTwoCountersCappedAt99, low byte",
+    "evidence": "E-0135"
+  },
+  "CF8F": {
+    "name": "wCounterPtr1Hi",
+    "note": "that pointer, high byte",
+    "evidence": "E-0135"
+  },
+  "CF90": {
+    "name": "wCounterArg1",
+    "note": "byte stored before the second counter",
+    "evidence": "E-0135"
+  },
+  "CFA7": {
+    "name": "wLowestResistCount",
+    "note": "count of lowest-level resistances (RaiseRandomLowestResistance)",
+    "evidence": "E-0135"
+  },
+  "CFA8": {
+    "name": "wNameEntryState",
+    "note": "state of the name-entry and naming screens (RunWCFA8StateWhenNotFading); also set by breeding",
+    "evidence": "E-0135"
+  },
+  "CFA9": {
+    "name": "wNameEntrySubState",
+    "note": "sub-state of the name-entry screen",
+    "evidence": "E-0135"
+  },
+  "CFAA": {
+    "name": "wNameEntryStep",
+    "note": "step of the name-entry screen (state 2)",
+    "evidence": "E-0135"
+  },
+  "CFAB": {
+    "name": "wNameEntryTimer",
+    "note": "timer of the name-entry screen",
+    "evidence": "E-0135"
+  },
+  "CFAC": {
+    "name": "wNameEntryByteAC",
+    "note": "name-entry work byte",
+    "evidence": "E-0135"
+  },
+  "CFAD": {
+    "name": "wNameEntryText",
+    "note": "the name being entered ($F0-terminated; $9F marks the cursor end; voicing marks $8D/$8E follow a glyph)",
+    "evidence": "E-0135",
+    "size": "F"
+  },
+  "CFBC": {
+    "name": "wNameEntryByteBC",
+    "note": "name-entry work byte",
+    "evidence": "E-0135"
+  },
+  "CFBD": {
+    "name": "wNameEntryMenuCursor",
+    "note": "cursor of the name-entry menu row",
+    "evidence": "E-0135"
+  },
+  "CFBE": {
+    "name": "wNameEntryBlink",
+    "note": "cursor blink counter of the name-entry screen (BlinkCursorWCFBE_Bank14)",
+    "evidence": "E-0135"
+  },
+  "CFBF": {
+    "name": "wNameEntryCursorX",
+    "note": "name-entry grid cursor column",
+    "evidence": "E-0135"
+  },
+  "CFC0": {
+    "name": "wNameEntryCursorY",
+    "note": "name-entry grid cursor row",
+    "evidence": "E-0135"
+  },
+  "CFC1": {
+    "name": "wNameEntryCursorByte",
+    "note": "name-entry cursor work byte",
+    "evidence": "E-0135"
+  },
+  "CFC2": {
+    "name": "wNameEntryLength",
+    "note": "number of glyphs entered",
+    "evidence": "E-0135"
+  },
+  "CFC3": {
+    "name": "wNameEntryByteC3",
+    "note": "name-entry work byte",
+    "evidence": "E-0135"
+  },
+  "CFC4": {
+    "name": "wNameEntryByteC4",
+    "note": "name-entry work byte",
+    "evidence": "E-0135"
+  },
+  "CFC5": {
+    "name": "wBattleKind",
+    "note": "kind of battle (0-1 ordinary, 2-3 and 4-5 special kinds that the AI and the battle end check)",
+    "evidence": "E-0135"
+  },
+  "CFCE": {
+    "name": "wEffectSubStep",
+    "note": "sub-step of the effect resolution (RunWCFCEStep, ResolveStep0EEffect)",
+    "evidence": "E-0135"
+  },
+  "CFCF": {
+    "name": "wBattleScreenFlags",
+    "note": "battle screen flags (bit 0 set by some action effects; cleared at battle start)",
+    "evidence": "E-0135"
+  },
+  "CFD0": {
+    "name": "wListPageSize",
+    "note": "entries per page of the paged list (MovePagedListCursor)",
+    "evidence": "E-0135"
+  },
+  "CFD1": {
+    "name": "wListPage",
+    "note": "current page of the paged list",
+    "evidence": "E-0135"
+  },
+  "CFD2": {
+    "name": "wListPageCount",
+    "note": "number of pages of the paged list",
+    "evidence": "E-0135"
+  },
+  "CFD3": {
+    "name": "wListLastPageSize",
+    "note": "entries on the last page (also the command count in battle)",
+    "evidence": "E-0135"
+  },
+  "CFD4": {
+    "name": "wCommandMonster",
+    "note": "monster whose command is being chosen in battle (skill lists use wD989 + 16 * it)",
+    "evidence": "E-0135"
+  },
+  "CFD5": {
+    "name": "wCommandCursor",
+    "note": "battle command cursor (also the page of the skill or item list)",
+    "evidence": "E-0135"
+  },
+  "CFD6": {
+    "name": "wCommandCursorMax",
+    "note": "battle command cursor limit",
+    "evidence": "E-0135"
+  },
+  "CFD7": {
+    "name": "wCommandPageCount",
+    "note": "page count of the battle skill or item list (DrawInventoryPageIndicator)",
+    "evidence": "E-0135"
+  },
+  "CFD8": {
+    "name": "wBattleSetupD8",
+    "note": "battle set-up work bytes ($CFD8-$CFDA)",
+    "evidence": "E-0135",
+    "size": "3"
+  },
+  "CFDB": {
+    "name": "wBattleSetupDB",
+    "note": "set by the battle set-up",
+    "evidence": "E-0135"
+  },
+  "CFDC": {
+    "name": "wEncounterKind",
+    "note": "encounter entry byte 0 (StartScriptedEncounterHFFC6 copies the entry from $481C + 8 * id)",
+    "evidence": "E-0135"
+  },
+  "CFDD": {
+    "name": "wEncounterMonsters",
+    "note": "monster ids of the encounter (three words)",
+    "evidence": "E-0135",
+    "size": "6"
+  },
+  "CFE3": {
+    "name": "wWildLevel",
+    "note": "level of the wild monsters (ComputeWildEncounterLevel)",
+    "evidence": "E-0135"
+  },
+  "CFE4": {
+    "name": "wWildBand",
+    "note": "encounter band (ComputeWildEncounterLevel, PickRandomBand0To10)",
+    "evidence": "E-0135"
+  },
+  "CFE5": {
+    "name": "wWildByteE5",
+    "note": "encounter work byte",
+    "evidence": "E-0135"
   }
 }

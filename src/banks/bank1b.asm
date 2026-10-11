@@ -1894,7 +1894,7 @@ Jump_01B_53DB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD781
 ; writes: wD781
-; points at: wScreenTileBuffer, wD1CC, wD000
+; points at: wScreenTileBuffer, wD1CC
 RunWD780StateWhenNotFading_1B_Case00_Case00::
 Jump_01B_53E9:: ; address name
     ld hl, wWindowTileBuffer + $64
@@ -1905,7 +1905,7 @@ Jump_01B_53E9:: ; address name
     and a, a
     jr z, Jump_01B_5407
     ld hl, wD1CC
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     ld bc, $0104
     call CopyLow3BitsToWRAMBank2_Bank1B
 
@@ -4355,7 +4355,7 @@ Jump_01B_625F::
 ; 18 call sites from 17 routines (e.g. RunWD780StateWhenNotFading_1B_Case01_Case17, RunWD780StateWhenNotFading_1B_Case01_Case13, RunWD780StateWhenNotFading_1B_Case01_Case12, RunWD780StateWhenNotFading_1B_Shared01, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawScreenBufferRectToBGMap_1B::
 Func_01B_6277:: ; address name
     push de
@@ -4399,7 +4399,7 @@ Func_01B_6277:: ; address name
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld a, l
     ld e, a
@@ -4582,7 +4582,7 @@ Jump_01B_6360::
 ; only called from RunWD780StateWhenNotFading_1B_Shared01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWD780StateWhenNotFading_1B_Shared01)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 RunWD780StateWhenNotFading_1B_Shared01_Sub01::
 Func_01B_6371:: ; address name
     push bc
@@ -4612,12 +4612,12 @@ Func_01B_6371:: ; address name
     jr z, Jump_01B_63B6
     push hl
     push de
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld a, l
     ld e, a

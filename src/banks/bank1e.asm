@@ -17,7 +17,7 @@ Func_01E_4001:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD788
 ; writes: wD788
-; points at: wScreenTileBuffer, wD1CC, wD000
+; points at: wScreenTileBuffer, wD1CC
 ScriptCommandE9_Run_Case00::
 Jump_01E_400D:: ; address name
     ld hl, wWindowTileBuffer + $64
@@ -28,7 +28,7 @@ Jump_01E_400D:: ; address name
     and a, a
     jr z, Jump_01E_402B
     ld hl, wD1CC
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     ld bc, $0104
     call CopyLow3BitsToWRAMBank2_Bank1E
 
@@ -101,7 +101,7 @@ Func_01E_4069:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wD7F0, hSpriteHideTile, wD7FC, wScriptCommandType, wScriptStartRequest
-; points at: wD780, wScreenTileBuffer, wD1CC, wD000
+; points at: wD780, wScreenTileBuffer, wD1CC
 ScriptCommandE8_Run_Case00::
 Jump_01E_408B:: ; address name
     ld hl, wD780
@@ -122,7 +122,7 @@ Jump_01E_4091::
     and a, a
     jr z, Jump_01E_40B6
     ld hl, wD1CC
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     ld bc, $0104
     call CopyLow3BitsToWRAMBank2_Bank1E
 
@@ -7076,13 +7076,13 @@ Jump_01E_70C3::
 
 ; BC = wCCCD when the byte at DE is $98 (the '???' placeholder), else wCDCC (E-0122)
 ; 2 call sites from 1 routine (e.g. DrawRecordFamilyEntries_6FEB)
-; points at: wCDCC, wCCCD
+; points at: wNameBufAlt, wCCCD
 PickNameBufferForFirstByte::
 Func_01E_70C9:: ; address name
     ld a, [de]
     cp a, $98
     jr z, Jump_01E_70D3
-    ld bc, wCDCC
+    ld bc, wNameBufAlt
     jr Jump_01E_70D6
 
 Jump_01E_70D3::
@@ -7869,7 +7869,7 @@ Jump_01E_74B6::
 ; 38 call sites from 33 routines (e.g. ScriptCommandE9_Run_Case00, ScriptCommandE8_Run_Case01_Case03, ScriptCommandE8_Run_Case04_Case27, ScriptCommandE8_Run_Case04_Case22, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawScreenBufferRect_Bank1E::
 Func_01E_74C8:: ; address name
     push de
@@ -7909,7 +7909,7 @@ Jump_01E_74EE::
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h
@@ -8102,7 +8102,7 @@ Func_01E_75EB:: ; address name
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 5 call sites from 5 routines (e.g. DrawBox4718AndMenuAndStep_1E, ScriptCommandE8_Run_Shared03, ScriptCommandE8_Run_Case04_Case06, ScriptCommandE8_Run_Case06_Case0D, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 CopyScreenBufferRectWithAttrs_1E::
 Func_01E_75F2:: ; address name
     push bc
@@ -8130,12 +8130,12 @@ Func_01E_75F2:: ; address name
     jr z, Jump_01E_7633
     push hl
     push de
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h

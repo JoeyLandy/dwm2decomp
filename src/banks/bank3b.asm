@@ -3,8 +3,8 @@ SECTION "Bank 3B", ROMX[$4000], BANK[$3B]
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base HP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's HP word (wCFF6) is returned; otherwise the word at offset $1D of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ActionEffect_Transform_Sub01_Sub01)
-; reads: wCFF6, wCFF7
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wDAAE
 GetBaseHP::
 Func_03B_4001:: ; address name
@@ -30,11 +30,11 @@ Jump_03B_4013::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld c, a
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld b, a
 
 Jump_03B_403C::
@@ -46,8 +46,8 @@ Jump_03B_403C::
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base MP: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's MP word (wCFF8) is returned; otherwise the word at offset $21 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, ActionEffect_Transform_Sub01_Sub02)
-; reads: wCFF8, wCFF9
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wDAAE
 GetBaseMP::
 Func_03B_4045:: ; address name
@@ -73,11 +73,11 @@ Jump_03B_4057::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld c, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld b, a
 
 Jump_03B_4080::
@@ -89,8 +89,8 @@ Jump_03B_4080::
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base ATK: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's ATK word (wCFFA) is returned; otherwise the word at offset $23 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 3 call sites from 3 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01, GetBaseATKOfSlotA)
-; reads: wCFFA, wCFFB
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wDAAE
 GetBaseATK::
 Func_03B_4089:: ; address name
@@ -116,11 +116,11 @@ Jump_03B_409B::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wCFFA]
+    ld a, [wRecordBufferData + $C]
     ld c, a
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld b, a
 
 Jump_03B_40C4::
@@ -132,8 +132,8 @@ Jump_03B_40C4::
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base DEF: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's DEF word (wCFFC) is returned; otherwise the word at offset $25 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 7 call sites from 7 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, ResetTargetAGLAndDEFToBase, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_Sub01, ...)
-; reads: wCFFC, wCFFD
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wDAAE
 GetBaseDEF::
 Func_03B_40CD:: ; address name
@@ -159,11 +159,11 @@ Jump_03B_40DF::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld c, a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     ld b, a
 
 Jump_03B_4108::
@@ -175,8 +175,8 @@ Jump_03B_4108::
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base AGL: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's AGL word (wCFFE) is returned; otherwise the word at offset $27 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 7 call sites from 7 routines (e.g. AIScore_Speed_Sub01_Sub01_Sub01, ResetTargetAGLAndDEFToBase, RecomputeTargetMaxHPAndMP, ActionEffect_Surge_Sub01, ...)
-; reads: wCFFE, wCFFF
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wDAAE
 GetBaseAGL::
 Func_03B_4111:: ; address name
@@ -202,11 +202,11 @@ Jump_03B_4123::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wCFFE]
+    ld a, [wRecordBufferData + $10]
     ld c, a
-    ld a, [wCFFF]
+    ld a, [wRecordBufferData + $11]
     ld b, a
 
 Jump_03B_414C::
@@ -218,8 +218,8 @@ Jump_03B_414C::
 
 ; C = battle slot: returns in wBattleStatResultLo/Hi the slot's base INT: for slot numbers whose low two bits are 3 (slots 3 and 7) the monster id from wDAAE is loaded with LoadMonsterRecord and the monster record's INT word (wD000) is returned; otherwise the word at offset $29 of the slot's 78-byte battler record (wBattlerRecords, BattlerRecordFieldAddress). The stat order is confirmed by the pause menu's INFO panel (E-0046)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01)
-; reads: wD000, wD001
-; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wBattleStatResultHi, wMonsterId
 ; points at: wDAAE
 GetBaseINT::
 Func_03B_4155:: ; address name
@@ -245,11 +245,11 @@ Jump_03B_4167::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wD000]
+    ld a, [wRecordBufferData + $12]
     ld c, a
-    ld a, [wD001]
+    ld a, [wRecordBufferData + $13]
     ld b, a
 
 Jump_03B_4190::
@@ -261,8 +261,8 @@ Jump_03B_4190::
 
 ; slot C: the byte at battler record field $17, or for slot 3/7 byte wCFF5 of its monster record; stored in wBattleStatResultLo (E-0124)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01)
-; reads: wCFF5
-; writes: wBattleStatResultLo, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wMonsterId
 ; points at: wDAAE
 SlotField17OrMonsterCFF5::
 Func_03B_4199:: ; address name
@@ -288,9 +288,9 @@ Jump_03B_41A9::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     ld c, a
 
 Jump_03B_41CE::
@@ -300,8 +300,8 @@ Jump_03B_41CE::
 
 ; slot C: the byte at battler record field $2D, or for slot 3/7 byte wD002 of its monster record; stored in wBattleStatResultLo (E-0124)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01)
-; reads: wD002
-; writes: wBattleStatResultLo, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wMonsterId
 ; points at: wDAAE
 SlotField2DOrMonsterD002::
 Func_03B_41D3:: ; address name
@@ -327,9 +327,9 @@ Jump_03B_41E3::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wD002]
+    ld a, [wRecordBufferData + $14]
     ld c, a
 
 Jump_03B_4208::
@@ -339,8 +339,8 @@ Jump_03B_4208::
 
 ; slot C: the byte at battler record field $30, or for slot 3/7 byte wD004 of its monster record; stored in wBattleStatResultLo (E-0124)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01)
-; reads: wD004
-; writes: wBattleStatResultLo, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wMonsterId
 ; points at: wDAAE
 SlotField30OrMonsterD004::
 Func_03B_420D:: ; address name
@@ -366,9 +366,9 @@ Jump_03B_421D::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wD004]
+    ld a, [wRecordBufferData + $16]
     ld c, a
 
 Jump_03B_4242::
@@ -378,8 +378,8 @@ Jump_03B_4242::
 
 ; slot C: the byte at battler record field $2E, or for slot 3/7 byte wD003 of its monster record; stored in wBattleStatResultLo (E-0124)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01)
-; reads: wD003
-; writes: wBattleStatResultLo, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wMonsterId
 ; points at: wDAAE
 SlotField2EOrMonsterD003::
 Func_03B_4247:: ; address name
@@ -405,9 +405,9 @@ Jump_03B_4257::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wD003]
+    ld a, [wRecordBufferData + $15]
     ld c, a
 
 Jump_03B_427C::
@@ -417,8 +417,8 @@ Jump_03B_427C::
 
 ; slot C: the byte at battler record field $2F, or for slot 3/7 byte wD005 of its monster record; stored in wBattleStatResultLo (E-0124)
 ; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, Func_036_4A38_Case01)
-; reads: wD005
-; writes: wBattleStatResultLo, wMonsterId, wCFE7
+; reads: wRecordBufferData
+; writes: wBattleStatResultLo, wMonsterId
 ; points at: wDAAE
 SlotField2FOrMonsterD005::
 Func_03B_4281:: ; address name
@@ -444,9 +444,9 @@ Jump_03B_4291::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wD005]
+    ld a, [wRecordBufferData + $17]
     ld c, a
 
 Jump_03B_42B6::
@@ -612,7 +612,7 @@ Jump_03B_437F:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActionId, wCFC5, wBattleTarget
+; reads: wBattleActionId, wBattleKind, wBattleTarget
 ; writes: wDAD2, wBattleResolveStep
 ; points at: wBattleResolveStep, wD8A1, wBattleStatus
 Func_03B_42F4_Case02::
@@ -626,7 +626,7 @@ Jump_03B_438A:: ; address name
     jr nc, Jump_03B_43E9
     call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_43E9
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $03
     jr z, Jump_03B_43F5
     ld a, [wBattleTarget]
@@ -1098,7 +1098,7 @@ Jump_03B_466C::
 
 ; only called from RunOnce4650Then4673 (E-0047)
 ; 1 call site from 1 routine (e.g. RunOnce4650Then4673)
-; reads: wBattleTarget, wCFF2
+; reads: wBattleTarget, wRecordBufferData
 ; points at: wDABA
 RunOnce4650Then4673_Sub02::
 Func_03B_4673:: ; address name
@@ -1112,7 +1112,7 @@ Func_03B_4673:: ; address name
     ret z
 
 Jump_03B_4680::
-    ld a, [wCFF2]
+    ld a, [wRecordBufferData + $4]
     cp a, $80
     jr nz, Jump_03B_4694
     ld a, c
@@ -1135,7 +1135,7 @@ Jump_03B_469B::
 
 ; entry 11 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDAC1, wD808, wD893, wCFD5, wMenuOption, wItemId, wD087
+; reads: wDAC1, wD808, wD893, wCommandCursor, wMenuOption, wItemId, wD087
 ; writes: wItemId, wD082
 ; points at: wBattleResolveStep
 Func_03B_42F4_Case0B::
@@ -1152,7 +1152,7 @@ Jump_03B_469E:: ; address name
 Jump_03B_46AE::
     ld a, [wD893]
     ld [wItemId], a
-    ld a, [wCFD5]
+    ld a, [wCommandCursor]
     and a, $0F
     add a, a
     add a, a

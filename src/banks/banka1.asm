@@ -473,9 +473,9 @@ Func_0A1_437D:: ; address name
 
 ; only called from RunBattleCommandEntry_BankA1_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_BankA1_Case04)
-; reads: wD868, wD869, wD86A, wD86B, wCFF3, wRandomLo
-; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
-; points at: wBattleActionChoice, wCFF3
+; reads: wD868, wD869, wD86A, wD86B, wRecordBufferData, wRandomLo
+; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
+; points at: wBattleActionChoice
 RunBattleCommandEntry_BankA1_Case04_Sub02::
 Func_0A1_43A1:: ; address name
     push de
@@ -496,7 +496,7 @@ Func_0A1_43A1:: ; address name
     push hl
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, [wD868]
     ld l, a
     ld a, [wD869]
@@ -511,7 +511,7 @@ Func_0A1_43A1:: ; address name
     ld [wD868], a
     ld a, $01
     ld [wD869], a
-    ld hl, wCFF3
+    ld hl, wRecordBufferData + $5
     ld a, l
     ld [wD86A], a
     ld a, h
@@ -531,7 +531,7 @@ Func_0A1_43A1:: ; address name
     pop de
     pop bc
     pop af
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 2, a
     jr nz, Jump_0A1_4418
     ld hl, $000A
@@ -568,7 +568,7 @@ Jump_0A1_4433::
 ; on map type $80 sets the bit for the current map screen in the visited-screen bitmap wCE93 (E-0125)
 ; 6 call sites from 3 routines (e.g. MarkVisitedScreens5x5AroundPlayer, RunWC468ActionIfBit7_Case01, RunWC46BMenuState_Case05)
 ; reads: wMapType, hMapScreenY, hMapScreenX
-; points at: wCE93
+; points at: wVisitedScreens
 MarkVisitedMapScreenInWCE93::
 Func_0A1_4435:: ; address name
     ld a, [wMapType]
@@ -578,7 +578,7 @@ Func_0A1_4435:: ; address name
     ret nz
     ldh a, [hMapScreenY]
     and a, $FC
-    ld hl, wCE93
+    ld hl, wVisitedScreens
     add_a_to_hl
     ldh a, [hMapScreenX]
     srl a
@@ -615,10 +615,10 @@ Jump_0A1_4470::
 ; only called from RunWC46BMenuState_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case05)
 ; reads: wKeyWorldFloor
-; points at: wCD78, wCE93
+; points at: wKeyWorldAreaExits, wVisitedScreens
 RunWC46BMenuState_Case05_Sub02::
 Func_0A1_4474:: ; address name
-    ld hl, wCD78
+    ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
     bit 7, a
     jr z, Jump_0A1_447F
@@ -633,7 +633,7 @@ Jump_0A1_447F::
     push af
     and a, $0F
     and a, $FC
-    ld hl, wCE93
+    ld hl, wVisitedScreens
     add_a_to_hl
     pop af
     push af
@@ -676,7 +676,7 @@ Jump_0A1_44C5::
 
 ; marks the 5 x 5 map screens around the current one (within wCD0D x wCD0E) as visited (E-0127)
 ; 1 call site from 1 routine (e.g. Func_016_53E6_Case13)
-; reads: hMapScreenX, hMapScreenY, wCD0E, wCD0D, hTemp0, hTemp1
+; reads: hMapScreenX, hMapScreenY, wKeyWorldHeight, wKeyWorldWidth, hTemp0, hTemp1
 ; writes: hTemp0, hMapScreenX, hTemp1, hMapScreenY
 ; points at: hMapScreenX, hMapScreenY
 MarkVisitedScreens5x5AroundPlayer::
@@ -697,14 +697,14 @@ Jump_0A1_44DB::
     ld b, $05
 
 Jump_0A1_44DD::
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     ld d, a
     ldh a, [hMapScreenY]
     bit 7, a
     jr nz, Jump_0A1_4503
     cp a, d
     jr nc, Jump_0A1_4503
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     ld d, a
     ldh a, [hMapScreenX]
     bit 7, a
@@ -1025,7 +1025,7 @@ Func_0A1_4640:: ; address name
 
 ; only called from RunWC5DDState_Case04_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case04_Sub01)
-; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wCD0D, wCD0E
+; reads: hPlayerX, hMapScreenX, hPlayerY, hMapScreenY, wKeyWorldWidth, wKeyWorldHeight
 ; writes: hTemp3, hTemp4, hTemp7, hTemp8, hTemp5, hTemp6, hPlayerY, hMapScreenY, ...
 ; points at: hTemp7, hTemp8
 RunWC5DDState_Case04_Sub01_Sub02::
@@ -1041,9 +1041,9 @@ Func_0A1_46DF:: ; address name
     ld h, a
     push hl
     call RunWCC44Type_A1_4744
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     ldh [hTemp3], a
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     ldh [hTemp4], a
     ldh a, [hMapScreenX]
     dec a
@@ -1123,14 +1123,14 @@ Jump_0A1_475A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-; points at: wCD78
+; points at: wKeyWorldAreaExits
 RunWCC44Type_A1_4744_Case01::
 Jump_0A1_475B:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
     add a, a
     add a, a
-    ld hl, wCD78
+    ld hl, wKeyWorldAreaExits
     add_a_to_hl
     ld a, [wKeyWorldFloor]
     bit 7, a
@@ -1145,21 +1145,21 @@ Jump_0A1_4772::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
-; points at: wCD88
+; points at: wKeyWorldFloorInfo
 RunWCC44Type_A1_4744_Case03::
 Jump_0A1_4775:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
     add a, a
     add a, a
-    ld hl, wCD88
+    ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
 ; entry 7 of the `rst $00` table in RunWCC44Type_A1_4744
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoal, wCD08, wCD09, wCD0A
+; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoal, wKeyWorldGoalScreen, wKeyWorldGoalPos, wKeyWorldGoalPos2
 ; writes: hPlayerX, hPlayerY
 RunWCC44Type_A1_4744_Case07::
 Jump_0A1_4787:: ; address name
@@ -1186,11 +1186,11 @@ Jump_0A1_4787:: ; address name
     ret
 
 Jump_0A1_47B4::
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     call SetMapScreenFromAAndCenterPlayer
-    ld a, [wCD09]
+    ld a, [wKeyWorldGoalPos]
     ldh [hPlayerX], a
-    ld a, [wCD0A]
+    ld a, [wKeyWorldGoalPos2]
     ldh [hPlayerY], a
     ret
 
@@ -1742,7 +1742,7 @@ Jump_0A1_4ADC::
 
 ; only called from RunWC5DDState_Case02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
-; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldGoal, wKeyWorldSlot, wCD08, ...
+; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldGoal, wKeyWorldSlot, wKeyWorldGoalScreen, ...
 ; writes: hTemp1, hTemp2
 RunWC5DDState_Case02_Sub01_Sub01::
 Func_0A1_4AEC:: ; address name
@@ -1830,12 +1830,12 @@ Jump_0A1_4B64::
     ret
 
 Jump_0A1_4B88::
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     ldh [hTemp1], a
-    ld a, [wCD09]
+    ld a, [wKeyWorldGoalPos]
     and a, $F0
     ld c, a
-    ld a, [wCD0A]
+    ld a, [wKeyWorldGoalPos2]
     and a, $F0
     swap a
     or a, c
@@ -2159,7 +2159,6 @@ Jump_0A1_4D8E::
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
 ; reads: wMapType, wGameMode2Byte44, wCursorCellY, wCursorCellH, wCursorCellX, hSpriteOriginX, wCursorCellW, hSpriteOriginY, ...
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
-; points at: wCD8B
 RunWC5DDState_Case02_Sub01_Sub03::
 Func_0A1_4DA4:: ; address name
     ld a, [wMapType]
@@ -2270,7 +2269,7 @@ Jump_0A1_4E44::
     ret
 
 Jump_0A1_4E4D::
-    ld de, wCD8B
+    ld de, wKeyWorldFloorInfo + $3
 
 Jump_0A1_4E50::
     push de
@@ -2376,13 +2375,13 @@ Jump_0A1_4EDF::
 ; only called from RunWC5DDState_Case02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02_Sub01)
 ; reads: wMapType
-; points at: wCD7B
+; points at: wKeyWorldObjects
 RunWC5DDState_Case02_Sub01_Sub04::
 Func_0A1_4EE7:: ; address name
     ld a, [wMapType]
     bit 7, a
     ret z
-    ld de, wCD7B
+    ld de, wKeyWorldObjects
 
 Jump_0A1_4EF0::
     push de
@@ -2686,14 +2685,14 @@ Jump_0A1_50BB:: ; address name
 
 ; only called from RunWC5DDState_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case01)
-; reads: wCD0E, wCD0D, hTemp4, hTemp5, hTemp0, hTemp1, hTemp2, hTemp3, ...
+; reads: wKeyWorldHeight, wKeyWorldWidth, hTemp4, hTemp5, hTemp0, hTemp1, hTemp2, hTemp3, ...
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTemp7
-; points at: wCE93, wCD60, wNameGlyphBuf
+; points at: wVisitedScreens, wKeyWorldChunks, wNameGlyphBuf
 RunWC5DDState_Case01_Sub01::
 Func_0A1_50BF:: ; address name
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     ld c, a
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     ld b, a
     call CenteredBGMapOriginForSizeBC
     ld a, l
@@ -2704,7 +2703,7 @@ Func_0A1_50BF:: ; address name
     ldh [hTemp2], a
     ld a, h
     ldh [hTemp3], a
-    ld hl, wCE93
+    ld hl, wVisitedScreens
     ld a, l
     ldh [hTemp4], a
     ld a, h
@@ -2713,15 +2712,15 @@ Func_0A1_50BF:: ; address name
     ldh [hTemp6], a
     ld a, h
     ldh [hTemp7], a
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     srl a
     srl a
     ld c, a
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     srl a
     srl a
     ld b, a
-    ld hl, wCD60
+    ld hl, wKeyWorldChunks
 
 Jump_0A1_50F8::
     push bc
@@ -3122,7 +3121,7 @@ Jump_0A1_5333::
 
 ; only called from RunWC5DDState_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
-; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldSlot, wCD08
+; reads: wMapType, hMapId, wKeyWorldActive, wKeyWorldKey, wKeyWorldGoalCell, wKeyWorldSlot, wKeyWorldGoalScreen
 ; writes: hTemp1
 RunWC5DDState_Case02_Sub02::
 Func_0A1_5394:: ; address name
@@ -3204,7 +3203,7 @@ Jump_0A1_5406::
     ret
 
 Jump_0A1_5425::
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     ldh [hTemp1], a
     call DrawCursorSpriteAtHFFC7Cell
     ret
@@ -3394,14 +3393,14 @@ Jump_0A1_553D::
     ret
 
 Jump_0A1_5565::
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     and a, $F0
     swap a
     add a, a
     add a, a
     add a, a
     call SetSpriteXFromWC945
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     and a, $0F
     add a, a
     add a, a
@@ -3458,14 +3457,14 @@ Jump_0A1_55A1::
 ; entry 1 of the `rst $00` table in SetSpriteYFromWC946
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
-; points at: wCD78
+; points at: wKeyWorldAreaExits
 SetSpriteYFromWC946_Case01::
 Jump_0A1_55B7:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
     sla a
     sla a
-    ld hl, wCD78
+    ld hl, wKeyWorldAreaExits
     add_a_to_hl
     ld a, [wKeyWorldFloor]
     bit 7, a
@@ -3480,14 +3479,14 @@ Jump_0A1_55D0::
 ; entry 3 of the `rst $00` table in SetSpriteYFromWC946
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
-; points at: wCD88
+; points at: wKeyWorldFloorInfo
 SetSpriteYFromWC946_Case03::
 Jump_0A1_55D5:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
     add a, a
     add a, a
-    ld hl, wCD88
+    ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     call SetSpriteXYFromCellA
@@ -3495,7 +3494,7 @@ Jump_0A1_55D5:: ; address name
 
 ; entry 7 of the `rst $00` table in SetSpriteYFromWC946
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wCD08
+; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoalScreen
 SetSpriteYFromWC946_Case07::
 Jump_0A1_55E9:: ; address name
     ld a, [wKeyWorldActive]
@@ -3514,7 +3513,7 @@ Jump_0A1_55E9:: ; address name
     ret
 
 Jump_0A1_5606::
-    ld a, [wCD08]
+    ld a, [wKeyWorldGoalScreen]
     call SetSpriteXYFromCellA
     ret
 
@@ -3572,7 +3571,6 @@ Func_0A1_5639:: ; address name
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
 ; reads: wMapType, wGameMode2Byte44, wCursorCellX, wCursorCellY, wGameMode2Byte50
 ; writes: hSpriteOriginX, hSpriteOriginY
-; points at: wCD8B
 RunWC5DDState_Case02_Sub04::
 Func_0A1_5654:: ; address name
     ld a, [wMapType]
@@ -3622,7 +3620,7 @@ Jump_0A1_5670::
     ret
 
 Jump_0A1_5694::
-    ld de, wCD8B
+    ld de, wKeyWorldFloorInfo + $3
 
 Jump_0A1_5697::
     ld a, [de]
@@ -3702,13 +3700,13 @@ Func_0A1_56DC:: ; address name
 ; only called from RunWC5DDState_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC5DDState_Case02)
 ; reads: wMapType
-; points at: wCD7B
+; points at: wKeyWorldObjects
 RunWC5DDState_Case02_Sub05::
 Func_0A1_56F7:: ; address name
     ld a, [wMapType]
     bit 7, a
     ret z
-    ld de, wCD7B
+    ld de, wKeyWorldObjects
 
 Jump_0A1_5700::
     ld a, [de]
@@ -3944,7 +3942,7 @@ Func_0A1_5898:: ; address name
 ; 5 call sites from 5 routines (e.g. RunWC5DDState_Case02_Sub01_Sub04_Sub01, RunWC5DDState_Case02_Sub01_Sub03, RunWC5DDState_Case04_Sub01, RunWC5DDState_Case02_Sub05_Sub01, ...)
 ; reads: hTemp0
 ; writes: hTemp0
-; points at: wCE93
+; points at: wVisitedScreens
 IsMapScreenAVisited::
 Func_0A1_58BA:: ; address name
     push bc
@@ -3952,7 +3950,7 @@ Func_0A1_58BA:: ; address name
     ldh [hTemp0], a
     and a, $0F
     and a, $FC
-    ld hl, wCE93
+    ld hl, wVisitedScreens
     add_a_to_hl
     ldh a, [hTemp0]
     swap a

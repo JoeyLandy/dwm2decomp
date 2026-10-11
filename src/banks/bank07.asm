@@ -1829,7 +1829,7 @@ Jump_007_5910:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD06B, wIsCGB
 ; writes: rSVBK, wD09D, wD09E
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wD06B
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wD06B
 GameMode5_Update_Case00_Case00_Case00::
 Jump_007_591A:: ; address name
     ld a, [wD06B]
@@ -1850,7 +1850,7 @@ Jump_007_591A:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_40FB
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -1939,7 +1939,7 @@ Jump_007_59B6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD06B, wIsCGB
 ; writes: rSVBK, wD09D, wD09E
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wD06B
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wD06B
 GameMode5_Update_Case00_Case01_Case00::
 Jump_007_59C0:: ; address name
     ld a, [wD06B]
@@ -1960,7 +1960,7 @@ Jump_007_59C0:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_45FC
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -2049,7 +2049,7 @@ Jump_007_5A5C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD06B, wIsCGB
 ; writes: rSVBK, wD09D, wD09E
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wD06B
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wD06B
 GameMode5_Update_Case00_Case02_Case00::
 Jump_007_5A66:: ; address name
     ld a, [wD06B]
@@ -2070,7 +2070,7 @@ Jump_007_5A66:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_49BE
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -2354,7 +2354,7 @@ Jump_007_5C40:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD0E7, wFadeState, wIsCGB, wD09E, wD06B
 ; writes: rSVBK, wD09D
-; points at: wD09F, wScreenTileBuffer, wD000, wBGPaletteBuffer, wD06B
+; points at: wD09F, wScreenTileBuffer, wBGPaletteBuffer, wD06B
 RunWD06BSubState_5B14_Case04::
 Jump_007_5C5F:: ; address name
     ld a, [wD0E7]
@@ -2378,7 +2378,7 @@ Jump_007_5C5F:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_5974
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -2809,7 +2809,7 @@ Jump_007_5EFF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB
 ; writes: rSVBK, wD09D, wD09E, hScrollY
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wOBJPaletteBuffer, wD06B
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wD06B
 GameMode5_Update_Case00_Case04_Case00::
 Jump_007_5F09:: ; address name
     ld a, [wFadeState]
@@ -2838,7 +2838,7 @@ Jump_007_5F09:: ; address name
     ldh [rSVBK], a
     ld b, $E1
     ld de, Data_0E1_58C3
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -3400,7 +3400,7 @@ Jump_007_62E9::
 
 ; entry 2 of the `rst $00` table in RunWD06BSubState_60E9_Case02_Case00
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wSaveStep, wMapType, wCD0D, wCD0E, hPlayerFacing, hPlayerX, hPlayerY
+; reads: wSaveStep, wMapType, wKeyWorldWidth, wKeyWorldHeight, hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wMapWidthScreens, wMapHeightScreens, wFieldReturnPhase, wD069, wD091, wFollowerRecords, wD06A
 RunWD06BSubState_60E9_Case02_Case00_Case02::
 Jump_007_62ED:: ; address name
@@ -3415,9 +3415,9 @@ Jump_007_62ED:: ; address name
     jr z, Jump_007_6319
     cp a, $80
     jr nz, Jump_007_6319
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     ld [wMapHeightScreens], a
 
 Jump_007_6319::
@@ -4193,7 +4193,7 @@ Jump_007_684C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB, wSGBActive
 ; writes: rSVBK, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-; points at: wScreenTileBuffer, wD000, wOBJPaletteBuffer, wD06B
+; points at: wScreenTileBuffer, wOBJPaletteBuffer, wD06B
 GameMode5_Update_Case01_Case06_Case01::
 Jump_007_6856:: ; address name
     ld a, [wFadeState]
@@ -4209,7 +4209,7 @@ Jump_007_6856:: ; address name
     ld a, $02
     ldh [rSVBK], a
     xor a, a
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     ld bc, $02D0
     call FillBytes
     xor a, a
@@ -4386,8 +4386,8 @@ Func_007_695A:: ; address name
 
 ; only called from GameMode5_Update_Case01_Case06_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case01_Case06_Case06)
-; reads: wRecordBuffer, wCFED, wRecordBufferData, wCFEF, wCFF0, wCFF1, wCFF5, wCFF6, ...
-; writes: rRAMG, rRAMB, wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi
+; reads: wRecordBuffer, wRecordBufferData, wSpeciesRecord, wD010, wD011, wD012, wD00E
+; writes: rRAMG, rRAMB, wMonsterId, wSpeciesIdLo, wSpeciesIdHi
 ; points at: sA000, wPlayerName, sA00D, wD01A, sA08E, sA099, sA01E, sA029
 GameMode5_Update_Case01_Case06_Case06_Sub01::
 Func_007_6975:: ; address name
@@ -4399,7 +4399,7 @@ Func_007_6975:: ; address name
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
     ld hl, sA000
     ld a, $02
@@ -4423,7 +4423,7 @@ Func_007_6975:: ; address name
     ld [hl+], a
     ld a, [wRecordBuffer]
     ld [hl+], a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld [hl+], a
     inc hl
     xor a, a
@@ -4444,11 +4444,11 @@ Func_007_6975:: ; address name
     ld h, a
     ld a, [wRecordBufferData]
     ld [hl+], a
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     ld [hl+], a
-    ld a, [wCFF0]
+    ld a, [wRecordBufferData + $2]
     ld [hl+], a
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     ld [hl+], a
     ld a, $FF
     ld [hl+], a
@@ -4463,7 +4463,7 @@ Func_007_6975:: ; address name
     ld h, a
     xor a, a
     ld [hl+], a
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     ld [hl+], a
     ld a, l
     add a, $04
@@ -4471,54 +4471,54 @@ Func_007_6975:: ; address name
     ld a, h
     adc a, $00
     ld h, a
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld [hl+], a
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld [hl+], a
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld [hl+], a
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld [hl+], a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld [hl+], a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld [hl+], a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld [hl+], a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld [hl+], a
-    ld a, [wCFFA]
+    ld a, [wRecordBufferData + $C]
     ld [hl+], a
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld [hl+], a
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld [hl+], a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     ld [hl+], a
-    ld a, [wCFFE]
+    ld a, [wRecordBufferData + $10]
     ld [hl+], a
-    ld a, [wCFFF]
+    ld a, [wRecordBufferData + $11]
     ld [hl+], a
-    ld a, [wD000]
+    ld a, [wRecordBufferData + $12]
     ld [hl+], a
-    ld a, [wD001]
+    ld a, [wRecordBufferData + $13]
     ld [hl+], a
     xor a, a
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
     ld [hl+], a
-    ld a, [wD002]
+    ld a, [wRecordBufferData + $14]
     ld [hl+], a
-    ld a, [wD003]
+    ld a, [wRecordBufferData + $15]
     ld [hl+], a
-    ld a, [wD004]
+    ld a, [wRecordBufferData + $16]
     ld [hl+], a
-    ld a, [wD005]
+    ld a, [wRecordBufferData + $17]
     ld [hl+], a
     ld a, [wRecordBuffer]
     ld l, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -4942,7 +4942,7 @@ Jump_007_6CB8:: ; address name
 ; entry 1 of the `rst $00` table in RunWD06AState_6C12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wJoypadPressed, wMenuState
-; writes: wD06B, wD06C, wLinkSendByte, wCFC5, wD059, wD06A
+; writes: wD06B, wD06C, wLinkSendByte, wBattleKind, wD059, wD06A
 ; points at: wD06A, wMenuState
 RunWD06AState_6C12_Case01::
 Jump_007_6CCD:: ; address name
@@ -4963,7 +4963,7 @@ Jump_007_6CEA::
     cp a, $FD
     jr nz, Jump_007_6D06
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld hl, wD06A
     inc [hl]
     ld hl, wD06A
@@ -4979,7 +4979,7 @@ Jump_007_6D06::
     jr nz, Jump_007_6D19
     call InitWD043PresetB
     ld a, $09
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $01
     ld [wD059], a
     jr Jump_007_6D2A
@@ -4989,7 +4989,7 @@ Jump_007_6D19::
     jr nz, Jump_007_6D32
     call InitWD043PresetA
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $00
     ld [wD059], a
 
@@ -5017,14 +5017,14 @@ Jump_007_6D32::
     jr z, Jump_007_6D76
     call LoadInvertedBit7FlagsToWD09D
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld de, $FD03
     jr Jump_007_6D86
 
 Jump_007_6D64::
     call InitWD043PresetA
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $00
     ld [wD059], a
     ld de, $FB05
@@ -5033,7 +5033,7 @@ Jump_007_6D64::
 Jump_007_6D76::
     call InitWD043PresetB
     ld a, $09
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $01
     ld [wD059], a
     ld de, $FC05
@@ -5169,7 +5169,7 @@ Jump_007_6E16:: ; address name
 ; entry 0 of the `rst $00` table in RunWD06AState_6C12_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wLinkRole
-; writes: wCFC5, wD06A, wLinkSendByte, wD059
+; writes: wBattleKind, wD06A, wLinkSendByte, wD059
 ; points at: wD06B
 RunWD06AState_6C12_Case02_Case00::
 Jump_007_6E2A:: ; address name
@@ -5192,7 +5192,7 @@ Jump_007_6E42::
     jr z, Jump_007_6E8C
     call InitWD043PresetA
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $00
     ld [wD059], a
     ld a, $05
@@ -5205,7 +5205,7 @@ Jump_007_6E5C::
     jr z, Jump_007_6E8C
     call InitWD043PresetB
     ld a, $09
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $01
     ld [wD059], a
     ld a, $05
@@ -5217,7 +5217,7 @@ Jump_007_6E76::
     bit 1, a
     jr z, Jump_007_6E8C
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $04
     ld [wD06A], a
     xor a, a
@@ -5402,7 +5402,7 @@ Jump_007_6F34:: ; address name
 ; entry 0 of the `rst $00` table in RunWD06AState_6C12_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wLinkRole
-; writes: wSubMenuCursor, wLinkSendByte, wCFC5, wD059, wD06A, wD06B, wD06C
+; writes: wSubMenuCursor, wLinkSendByte, wBattleKind, wD059, wD06A, wD06B, wD06C
 ; points at: wD06B
 RunWD06AState_6C12_Case03_Case00::
 Jump_007_6F76:: ; address name
@@ -5436,7 +5436,7 @@ Jump_007_6FA7::
     bit 1, a
     jr z, Jump_007_6FF1
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $04
     ld [wD06A], a
     xor a, a
@@ -5449,7 +5449,7 @@ Jump_007_6FBD::
     jr z, Jump_007_6FF1
     call InitWD043PresetA
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $00
     ld [wD059], a
     ld a, $05
@@ -5462,7 +5462,7 @@ Jump_007_6FD7::
     jr z, Jump_007_6FF1
     call InitWD043PresetB
     ld a, $09
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $01
     ld [wD059], a
     ld a, $05
@@ -6900,7 +6900,7 @@ Jump_007_7864:: ; address name
 ; entry 0 of the `rst $00` table in RunWD06AState_6C12_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
-; writes: wCFC5, wD06A, wD059
+; writes: wBattleKind, wD06A, wD059
 ; points at: wD06B
 RunWD06AState_6C12_Case04_Case00::
 Jump_007_7880:: ; address name
@@ -6916,7 +6916,7 @@ Jump_007_7880:: ; address name
 Jump_007_7891::
     call InitWD043PresetA
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $00
     ld [wD059], a
     ld a, $05
@@ -6926,7 +6926,7 @@ Jump_007_7891::
 Jump_007_78A4::
     call InitWD043PresetB
     ld a, $09
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $01
     ld [wD059], a
     ld a, $05
@@ -6935,7 +6935,7 @@ Jump_007_78A4::
 
 Jump_007_78B7::
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $04
     ld [wD06A], a
     ret
@@ -7175,7 +7175,7 @@ Jump_007_79E9:: ; address name
 ; entry 5 of the `rst $00` table in RunWD06AState_6C12
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD06B, wLinkMessage, wMenuState, wLinkRole
-; writes: wLinkSendByte, wLinkReady, wD06A, wD06B, wCFC5, wD059, wD06C
+; writes: wLinkSendByte, wLinkReady, wD06A, wD06B, wBattleKind, wD059, wD06C
 ; points at: wScreenTileBuffer, wD06A
 RunWD06AState_6C12_Case05::
 Jump_007_79FC:: ; address name
@@ -7211,7 +7211,7 @@ Jump_007_7A2F::
     bit 1, a
     jr z, Jump_007_7A9C
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $04
     ld [wD06A], a
     xor a, a
@@ -7238,7 +7238,7 @@ Jump_007_7A52::
     jr z, Jump_007_7A9C
     call InitWD043PresetA
     ld a, $08
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $00
     ld [wD059], a
     ld a, $05
@@ -7254,7 +7254,7 @@ Jump_007_7A7A::
     jr z, Jump_007_7A9C
     call InitWD043PresetB
     ld a, $09
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ld a, $01
     ld [wD059], a
     ld a, $05

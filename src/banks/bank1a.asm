@@ -3,13 +3,13 @@ SECTION "Bank 1A", ROMX[$4000], BANK[$1A]
 
 ; wCFEC/wCFED (the first word of the record buffer) = skill number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wCFEE
 ; 17 call sites from 15 routines (e.g. PauseMenu_Skills_Shared02, AddSkillBaseWeightAndLoadSkill, RunBattleSetup_Shared07, LoadSelectedSkillRecord_Bank31, ...)
-; reads: wRecordBuffer, wCFED
+; reads: wRecordBuffer
 ; points at: wRecordBufferData
 LoadSkillRecord::
 Func_01A_4001:: ; address name
     ld a, [wRecordBuffer]
     ld c, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld b, a
     ld a, $11
     call Multiply8By16
@@ -32,12 +32,12 @@ Jump_01A_401B::
 
 ; like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead
 ; 17 call sites from 16 routines (e.g. DebugSkillViewer_Update, AIScore_TakeMagic_Sub01_Sub01, SlotCSkillFlagMatchD, SlotHasSkillWithFlagD, ...)
-; reads: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
+; reads: wRecordBuffer, wD868, wD869, wD86A, wD86B
 LoadSkillRecordPart::
 Func_01A_4022:: ; address name
     ld a, [wRecordBuffer]
     ld c, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld b, a
     ld a, c
     cp a, $FF

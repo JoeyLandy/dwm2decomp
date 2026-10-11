@@ -688,12 +688,12 @@ Jump_0F0_4D99::
 
 ; entry 5 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCECE
+; reads: wGM2Mode
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-; points at: wCF73, wTextWindowTileLo, wD781
+; points at: wFamilyRankTaken, wTextWindowTileLo, wD781
 Func_0F0_4CA0_Table2_Case05::
 Jump_0F0_4DA4:: ; address name
-    ld hl, wCF73
+    ld hl, wFamilyRankTaken
     ld b, $35
 
 Jump_0F0_4DA9::
@@ -724,7 +724,7 @@ Jump_0F0_4DA9::
     ld a, $02
     ld [hl+], a
     ld [hl], $12
-    ld a, [wCECE]
+    ld a, [wGM2Mode]
     and a, a
     jr z, Jump_0F0_4DE7
     ld a, $01
@@ -1507,19 +1507,19 @@ Jump_0F0_525D:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCECE, wD781
+; reads: wGM2Mode, wD781
 ; writes: wD781, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
-; points at: wRecordBufA, wCECE
+; points at: wRecordBufA, wGM2Mode
 Func_0F0_4CA0_Table5_Case09::
 Jump_0F0_527B:: ; address name
-    ld a, [wCECE]
+    ld a, [wGM2Mode]
     and a, a
     jr nz, Jump_0F0_5286
     ld hl, Data_0F0_6A58
     jr Jump_0F0_5289
 
 Jump_0F0_5286::
-    ld hl, wCECE
+    ld hl, wGM2Mode
 
 Jump_0F0_5289::
     ld a, [wD781]
@@ -1549,13 +1549,13 @@ Jump_0F0_5289::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781
 ; writes: wD781, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
-; points at: wCE9B, wRecordBufB
+; points at: wGM2TimerFrames, wRecordBufB
 Func_0F0_4CA0_Table5_Case0D::
 Jump_0F0_52B9:: ; address name
     ld a, [wD781]
     inc a
     ld [wD781], a
-    ld hl, wCE9B
+    ld hl, wGM2TimerFrames
     ld a, l
     ld [wLinkTimeoutLo], a
     ld a, h
@@ -1578,8 +1578,8 @@ Jump_0F0_52B9:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBankF0Byte99, wCE9E, wCF8A, wCED9, wCEDA, wCEDB, wD781
-; writes: wBankF0BlockA7, wCE9E, wBankF0ByteA8, wBankF0ByteA9, wBankF0ByteAA, wD781, wLinkTimeoutLo, wLinkTimeoutHi, ...
+; reads: wBankF0Byte99, wFamilyBitCount, wRankBand, wTopSpeciesLo, wTopSpeciesHi, wTopSpeciesByte, wD781
+; writes: wBankF0BlockA7, wFamilyBitCount, wBankF0ByteA8, wBankF0ByteA9, wBankF0ByteAA, wD781, wLinkTimeoutLo, wLinkTimeoutHi, ...
 ; points at: wPlayerName, wBankF0BlockAB, wBankF0BlockA7, wBankF0BlockC7
 Func_0F0_4CA0_Table5_Case11::
 Jump_0F0_52EC:: ; address name
@@ -1599,9 +1599,9 @@ Jump_0F0_52F9::
     jp z, Jump_0F0_5323
     call RankWCEC3ScoresIntoWCF7E
     call LoadWCED9SpeciesStatsToWCF0A
-    ld a, [wCE9E]
+    ld a, [wFamilyBitCount]
     ld c, a
-    ld a, [wCF8A]
+    ld a, [wRankBand]
     ld b, a
     ld a, $08
     sub a, b
@@ -1609,15 +1609,15 @@ Jump_0F0_52F9::
     ld a, $05
     call DivideHLByA
     ld a, l
-    ld [wCE9E], a
+    ld [wFamilyBitCount], a
     call RaiseRandomLowestResistance
 
 Jump_0F0_5323::
-    ld a, [wCED9]
+    ld a, [wTopSpeciesLo]
     ld [wBankF0ByteA8], a
-    ld a, [wCEDA]
+    ld a, [wTopSpeciesHi]
     ld [wBankF0ByteA9], a
-    ld a, [wCEDB]
+    ld a, [wTopSpeciesByte]
     ld [wBankF0ByteAA], a
     ld hl, wPlayerName
     ld de, wBankF0BlockAB
@@ -1686,13 +1686,13 @@ Jump_0F0_5386:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7EC, wCECE, wBankF0ByteA3, wD781
+; reads: wD7EC, wGM2Mode, wBankF0ByteA3, wD781
 ; writes: wLinkRecvBuffer, wBattleSetupByte98, wBankF0Byte99, wD781
 Func_0F0_4CA0_Table5_Case00::
 Jump_0F0_5398:: ; address name
     ld a, [wD7EC]
     ld [wLinkRecvBuffer], a
-    ld a, [wCECE]
+    ld a, [wGM2Mode]
     ld [wBattleSetupByte98], a
     ld a, [wBankF0ByteA3]
     ld b, a
@@ -1755,12 +1755,12 @@ Jump_0F0_53EC:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCECE, wLinkPartnerByte1, wD781
+; reads: wGM2Mode, wLinkPartnerByte1, wD781
 ; writes: wD781
 ; points at: wD781
 Func_0F0_4CA0_Table5_Case05::
 Jump_0F0_5402:: ; address name
-    ld a, [wCECE]
+    ld a, [wGM2Mode]
     and a, a
     jr nz, Jump_0F0_5410
     ld a, [wLinkPartnerByte1]
@@ -1810,7 +1810,7 @@ Jump_0F0_5433:: ; address name
 
 ; entry 19 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBankF0Byte99, wLinkPartnerByte2, wCECE
+; reads: wBankF0Byte99, wLinkPartnerByte2, wGM2Mode
 ; writes: wD7EC
 ; points at: wD781
 Func_0F0_4CA0_Table5_Case13::
@@ -1821,7 +1821,7 @@ Jump_0F0_5447:: ; address name
     ld a, [wLinkPartnerByte2]
     and a, a
     jr nz, Jump_0F0_5461
-    ld a, [wCECE]
+    ld a, [wGM2Mode]
     and a, a
     jr nz, Jump_0F0_5465
     ld a, $01
@@ -1848,7 +1848,7 @@ Jump_0F0_5466::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7EC
 ; writes: wD7DC
-; points at: wD781, wRecordBufA, wCECE, wRecordBufB, wCE9B
+; points at: wD781, wRecordBufA, wGM2Mode, wRecordBufB, wGM2TimerFrames
 Func_0F0_4CA0_Table5_Case14::
 Jump_0F0_546E:: ; address name
     ld a, [wD7EC]
@@ -1863,7 +1863,7 @@ Jump_0F0_546E:: ; address name
     jr Jump_0F0_54B0
 
 Jump_0F0_5483::
-    ld hl, wCE9B
+    ld hl, wGM2TimerFrames
     ld b, $D8
 
 Jump_0F0_5488::
@@ -1877,7 +1877,7 @@ Jump_0F0_548F::
     ld hl, wRecordBufA
     ld a, $01
     ld [hl], a
-    ld de, wCECE
+    ld de, wGM2Mode
     ld b, $A5
 
 Jump_0F0_549A::
@@ -1887,7 +1887,7 @@ Jump_0F0_549A::
     dec b
     jr nz, Jump_0F0_549A
     ld hl, wRecordBufB
-    ld de, wCE9B
+    ld de, wGM2TimerFrames
     ld b, $33
 
 Jump_0F0_54A8::
@@ -2360,7 +2360,7 @@ Jump_0F0_5742:: ; address name
 ; entry 31 of the `rst $00` table in Func_0F0_4CA0_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782
-; writes: wD782, wD092, wSpriteSlotCount, wCFA8, wCFA9, wD7EE
+; writes: wD782, wD092, wSpriteSlotCount, wNameEntryState, wNameEntrySubState, wD7EE
 Func_0F0_4CA0_Case0A_Case1F::
 Jump_0F0_5752:: ; address name
     ld de, Data_0F0_68E6
@@ -2374,8 +2374,8 @@ Jump_0F0_5752:: ; address name
     ld [wD092], a
     ld [wSpriteSlotCount], a
     xor a, a
-    ld [wCFA8], a
-    ld [wCFA9], a
+    ld [wNameEntryState], a
+    ld [wNameEntrySubState], a
     ld a, $01
     ld [wD7EE], a
     ret
@@ -2384,7 +2384,7 @@ Jump_0F0_5752:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD780, wD781, wD782, wD7E8, wD7E9, wD7EA, wModeChangeRequest
 ; writes: wD780, wD781, wD782, wD7E8, wD7E9, wD7EA, wModeChangeRequest, wGameMode, ...
-; points at: wCE9B
+; points at: wGM2TimerFrames
 Func_0F0_4CA0_Case0A_Case21::
 Jump_0F0_5779:: ; address name
     ld a, [wD780]
@@ -2429,7 +2429,7 @@ Jump_0F0_5779:: ; address name
     ld [wD781], a
     ld a, $22
     ld [wD782], a
-    ld hl, wCE9B
+    ld hl, wGM2TimerFrames
     ld bc, $00D8
 
 Jump_0F0_57E1::
@@ -4128,7 +4128,7 @@ Jump_0F0_62E0::
 ; 12 call sites from 11 routines (e.g. Func_0F0_4CA0_Table2_Case06, RunWD781Step_F0_5B50_Case08, RunWD781Step_F0_5B50_Case03, RunWD781Step_F0_5B50_Case01, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawScreenBufferRect_BankF0::
 Func_0F0_62F2:: ; address name
     push de
@@ -4160,7 +4160,7 @@ Func_0F0_62F2:: ; address name
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h
@@ -4337,7 +4337,7 @@ Jump_0F0_63E0::
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
 ; 2 call sites from 2 routines (e.g. RunWD781Step_F0_5B50_Case07, Func_0F0_4CA0_Table4_Case00)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 CopyScreenBufferRectWithAttrs_F0::
 Func_0F0_63EE:: ; address name
     push bc
@@ -4365,12 +4365,12 @@ Func_0F0_63EE:: ; address name
     jr z, Jump_0F0_642F
     push hl
     push de
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h
@@ -4853,15 +4853,15 @@ Data_0F0_6A58:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; while wCE9E > 0 and some resistance at wCF41 is below 3: picks at random one of the lowest-level resistances (levels 0, then 1, 2) and raises it (E-0129)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case11)
-; reads: wCE9E, wCF8B, wCFA7, wCF8C
-; writes: wCE9E, wCF8B, wCFA7
-; points at: wCF41, wCF8C
+; reads: wFamilyBitCount, wCounterPtr0Lo, wLowestResistCount, wCounterPtr0Hi
+; writes: wFamilyBitCount, wCounterPtr0Lo, wLowestResistCount
+; points at: wResistanceLevels, wCounterPtr0Hi
 RaiseRandomLowestResistance::
 Func_0F0_6AFE:: ; address name
-    ld a, [wCE9E]
+    ld a, [wFamilyBitCount]
     and a, a
     ret z
-    ld hl, wCF41
+    ld hl, wResistanceLevels
     ld b, $00
 
 Jump_0F0_6B08::
@@ -4871,9 +4871,9 @@ Jump_0F0_6B08::
     ld a, [hl]
     cp a, $03
     jr z, Jump_0F0_6B1C
-    ld a, [wCE9E]
+    ld a, [wFamilyBitCount]
     dec a
-    ld [wCE9E], a
+    ld [wFamilyBitCount], a
     jp Jump_0F0_6B24
 
 Jump_0F0_6B1C::
@@ -4886,10 +4886,10 @@ Jump_0F0_6B1C::
 
 Jump_0F0_6B24::
     xor a, a
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
 
 Jump_0F0_6B28::
-    ld hl, wCF8C
+    ld hl, wCounterPtr0Hi
     ld bc, $001C
 
 Jump_0F0_6B2E::
@@ -4899,22 +4899,22 @@ Jump_0F0_6B2E::
     ld a, b
     or a, c
     jr nz, Jump_0F0_6B2E
-    ld hl, wCF41
-    ld de, wCF8C
+    ld hl, wResistanceLevels
+    ld de, wCounterPtr0Hi
     ld b, $00
 
 Jump_0F0_6B3D::
     ld a, [hl]
     ld c, a
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     cp a, c
     jr nz, Jump_0F0_6B4F
     ld a, b
     ld [de], a
     inc de
-    ld a, [wCFA7]
+    ld a, [wLowestResistCount]
     inc a
-    ld [wCFA7], a
+    ld [wLowestResistCount], a
 
 Jump_0F0_6B4F::
     inc hl
@@ -4922,18 +4922,18 @@ Jump_0F0_6B4F::
     ld a, b
     cp a, $1B
     jr c, Jump_0F0_6B3D
-    ld a, [wCFA7]
+    ld a, [wLowestResistCount]
     and a, a
     jr nz, Jump_0F0_6B68
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     cp a, $02
     ret z
     inc a
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     jr Jump_0F0_6B28
 
 Jump_0F0_6B68::
-    ld a, [wCFA7]
+    ld a, [wLowestResistCount]
     cp a, $01
     jr z, Jump_0F0_6B90
     ld b, a
@@ -4953,7 +4953,7 @@ Jump_0F0_6B7C::
     dec a
 
 Jump_0F0_6B80::
-    ld hl, wCF8C
+    ld hl, wCounterPtr0Hi
     add_a_to_hl
     ld a, [hl]
     cp a, $0F
@@ -4961,10 +4961,10 @@ Jump_0F0_6B80::
     jr Jump_0F0_6B93
 
 Jump_0F0_6B90::
-    ld a, [wCF8C]
+    ld a, [wCounterPtr0Hi]
 
 Jump_0F0_6B93::
-    ld hl, wCF41
+    ld hl, wResistanceLevels
     add_a_to_hl
     ld a, [hl]
     inc a
@@ -4973,24 +4973,24 @@ Jump_0F0_6B93::
 
 ; loads species wCED9 and copies its bytes wD010-wD012 to wCF0A and the 27 bytes at wD01A to wCF41; wCF29 = wCF2B, wCF2D = wCF2F (E-0124)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case11)
-; reads: wCED9, wCEDA, wD010, wD011, wD012, wCF2B, wCF2F
-; writes: wSpeciesIdLo, wSpeciesIdHi, wCF0A, wCF0B, wCF0C, wCF29, wCF2D
-; points at: wD01A, wCF41
+; reads: wTopSpeciesLo, wTopSpeciesHi, wD010, wD011, wD012, wTopStat1, wTopStat3
+; writes: wSpeciesIdLo, wSpeciesIdHi, wTopSpeciesGrowth, wTopStat0, wTopStat2
+; points at: wD01A, wResistanceLevels
 LoadWCED9SpeciesStatsToWCF0A::
 Func_0F0_6BA1:: ; address name
-    ld a, [wCED9]
+    ld a, [wTopSpeciesLo]
     ld [wSpeciesIdLo], a
-    ld a, [wCEDA]
+    ld a, [wTopSpeciesHi]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld a, [wD010]
-    ld [wCF0A], a
+    ld [wTopSpeciesGrowth], a
     ld a, [wD011]
-    ld [wCF0B], a
+    ld [wTopSpeciesGrowth + $1], a
     ld a, [wD012]
-    ld [wCF0C], a
+    ld [wTopSpeciesGrowth + $2], a
     ld hl, wD01A
-    ld de, wCF41
+    ld de, wResistanceLevels
     ld c, $1B
 
 Jump_0F0_6BCD::
@@ -4999,24 +4999,24 @@ Jump_0F0_6BCD::
     inc de
     dec c
     jr nz, Jump_0F0_6BCD
-    ld a, [wCF2B]
-    ld [wCF29], a
-    ld a, [wCF2F]
-    ld [wCF2D], a
+    ld a, [wTopStat1]
+    ld [wTopStat0], a
+    ld a, [wTopStat3]
+    ld [wTopStat2], a
     ret
 
 ; ranks the 11 scores at wCEC3 in descending order (ties at random) into wCF7E, then wCF8A = BandOfWCE9E (E-0130)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case11)
-; reads: wCF89, wCF8A
-; writes: wCF89, wCF8A, wCED9, wCEDA, wCEDB
-; points at: wCEC3, wCF73, wCF7E
+; reads: wRankIndex, wRankBand
+; writes: wRankIndex, wRankBand, wTopSpeciesLo, wTopSpeciesHi, wTopSpeciesByte
+; points at: wFamilyScores, wFamilyRankTaken, wFamilyRanking
 RankWCEC3ScoresIntoWCF7E::
 Func_0F0_6BE0:: ; address name
     xor a, a
-    ld [wCF89], a
+    ld [wRankIndex], a
 
 Jump_0F0_6BE4::
-    ld hl, wCEC3
+    ld hl, wFamilyScores
     ld c, $00
     ld b, $00
     ld e, $00
@@ -5024,7 +5024,7 @@ Jump_0F0_6BE4::
 Jump_0F0_6BED::
     push hl
     ld a, c
-    ld hl, wCF73
+    ld hl, wFamilyRankTaken
     add_a_to_hl
     ld a, [hl]
     bit 7, a
@@ -5059,26 +5059,26 @@ Jump_0F0_6C15::
     ld a, c
     cp a, $0B
     jr c, Jump_0F0_6BED
-    ld hl, wCF7E
-    ld a, [wCF89]
+    ld hl, wFamilyRanking
+    ld a, [wRankIndex]
     add_a_to_hl
     ld a, e
     ld [hl], a
-    ld hl, wCF73
+    ld hl, wFamilyRankTaken
     ld a, e
     add_a_to_hl
     set 7, a
     ld [hl], a
-    ld a, [wCF89]
+    ld a, [wRankIndex]
     inc a
-    ld [wCF89], a
+    ld [wRankIndex], a
     cp a, $0B
     jr c, Jump_0F0_6BE4
     call BandOfWCE9E
-    ld [wCF8A], a
+    ld [wRankBand], a
     xor a, a
-    ld [wCF89], a
-    ld hl, wCF7E
+    ld [wRankIndex], a
+    ld hl, wFamilyRanking
     ld b, $0A
 
 Jump_0F0_6C4F::
@@ -5099,7 +5099,7 @@ Jump_0F0_6C5D::
     inc de
     ld a, [de]
     ld h, a
-    ld a, [wCF8A]
+    ld a, [wRankBand]
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -5132,11 +5132,11 @@ Jump_0F0_6C89::
     dec b
     jp nz, Jump_0F0_6C4F
     ld a, $0A
-    ld [wCEDB], a
+    ld [wTopSpeciesByte], a
     ld a, $74
-    ld [wCED9], a
+    ld [wTopSpeciesLo], a
     ld a, $01
-    ld [wCEDA], a
+    ld [wTopSpeciesHi], a
     ret
 
 Jump_0F0_6CA0::
@@ -5149,14 +5149,14 @@ Jump_0F0_6CA4::
 
 Jump_0F0_6CA5::
     ld a, [de]
-    ld [wCED9], a
+    ld [wTopSpeciesLo], a
     inc de
     ld a, [de]
-    ld [wCEDA], a
+    ld [wTopSpeciesHi], a
     pop bc
     pop hl
     ld a, [hl]
-    ld [wCEDB], a
+    ld [wTopSpeciesByte], a
     ret
 
 Data_0F0_6CB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5645,10 +5645,10 @@ Func_0F0_7097:: ; address name
 
 ; A = 4, 5, 6 or 7 for wCE9E < 4, < 6, < $0A, or more (E-0124)
 ; 1 call site from 1 routine (e.g. RankWCEC3ScoresIntoWCF7E)
-; reads: wCE9E
+; reads: wFamilyBitCount
 BandOfWCE9E::
 Func_0F0_70AA:: ; address name
-    ld a, [wCE9E]
+    ld a, [wFamilyBitCount]
     cp a, $04
     jr c, Jump_0F0_70BC
     cp a, $06
@@ -5673,41 +5673,41 @@ Jump_0F0_70C2::
 
 ; wCEC0 counts changes of B (wCEBF); if bit B of the wCE9F array is new, sets it, wCE9E += 1 and C = 0; otherwise C = $FF (E-0125)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case00)
-; reads: wCEBF, wCEC0, wCE9E
-; writes: wCEC0, wCEBF, wCE9E
-; points at: wCE9F
+; reads: wLastMarkedBit, wMarkChangeCount, wFamilyBitCount
+; writes: wMarkChangeCount, wLastMarkedBit, wFamilyBitCount
+; points at: wFamilyBits
 MarkBitBInWCE9FAndCount::
 Func_0F0_7245:: ; address name
-    ld a, [wCEBF]
+    ld a, [wLastMarkedBit]
     cp a, b
     jr z, Jump_0F0_7256
-    ld a, [wCEC0]
+    ld a, [wMarkChangeCount]
     cp a, $FF
     jr z, Jump_0F0_7253
     inc a
 
 Jump_0F0_7253::
-    ld [wCEC0], a
+    ld [wMarkChangeCount], a
 
 Jump_0F0_7256::
     ld a, b
-    ld [wCEBF], a
-    ld hl, wCE9F
+    ld [wLastMarkedBit], a
+    ld hl, wFamilyBits
     ld e, a
     ld d, $00
     call TestBitDEOfBitArrayHL
     cp a, $FF
     jr z, Jump_0F0_7281
-    ld a, [wCEBF]
-    ld hl, wCE9F
+    ld a, [wLastMarkedBit]
+    ld hl, wFamilyBits
     ld e, a
     ld d, $00
     call OrDIntoFunc7CD4Byte
-    ld a, [wCE9E]
+    ld a, [wFamilyBitCount]
     cp a, $FF
     jr nc, Jump_0F0_727E
     inc a
-    ld [wCE9E], a
+    ld [wFamilyBitCount], a
 
 Jump_0F0_727E::
     ld c, $00
@@ -5719,21 +5719,21 @@ Jump_0F0_7281::
 
 ; wCEC2 += 1 up to $0F; when wCEC1 is set, runs Func_0F0_72C8 if a random value is below 100 - 5 * wCEC2; then wCEC1 = wD7F1 (E-0124)
 ; 1 call site from 1 routine (e.g. Func_0F1_4001_Case02_Case00)
-; reads: wCEC2, wCEC1, wD7F1
-; writes: wCEC2, wCEC1
+; reads: wRollCounter, wRollState, wD7F1
+; writes: wRollCounter, wRollState
 RollWCEC2ChanceAndRun72C8::
 Func_0F0_7284:: ; address name
-    ld a, [wCEC2]
+    ld a, [wRollCounter]
     cp a, $0F
     jr nc, Jump_0F0_728F
     inc a
-    ld [wCEC2], a
+    ld [wRollCounter], a
 
 Jump_0F0_728F::
-    ld a, [wCEC1]
+    ld a, [wRollState]
     and a, a
     jr z, Jump_0F0_72AD
-    ld a, [wCEC2]
+    ld a, [wRollCounter]
     ld c, $05
     call Multiply8
     ld a, $64
@@ -5749,33 +5749,33 @@ Jump_0F0_728F::
 
 Jump_0F0_72AD::
     ld a, [wD7F1]
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; when wCE9D = $3B and wCE9C = wCE9B = 0, clears wCEC2 and falls through (E-0122)
 ; 1 call site from 1 routine (e.g. CallF072B4WhenWCE9DIs59)
-; reads: wCE9D, wCE9C, wCE9B, wCEC1
-; writes: wCEC2
+; reads: wGM2TimerMinutes, wGM2TimerSeconds, wGM2TimerFrames, wRollState
+; writes: wRollCounter
 ClearWCEC2WhenWCE9DIs59::
 Func_0F0_72B4:: ; address name
-    ld a, [wCE9D]
+    ld a, [wGM2TimerMinutes]
     cp a, $3B
     ret nz
-    ld a, [wCE9C]
+    ld a, [wGM2TimerSeconds]
     and a, a
     ret nz
-    ld a, [wCE9B]
+    ld a, [wGM2TimerFrames]
     and a, a
     ret nz
     xor a, a
-    ld [wCEC2], a
+    ld [wRollCounter], a
 
 ; only called from RollWCEC2ChanceAndRun72C8 (E-0047)
 ; 1 call site from 1 routine (e.g. RollWCEC2ChanceAndRun72C8)
-; reads: wCEC1
+; reads: wRollState
 RollWCEC2ChanceAndRun72C8_Sub01::
 Func_0F0_72C8:: ; address name
-    ld a, [wCEC1]
+    ld a, [wRollState]
     rst $00
     dw Func_0F0_72C8_Case00
     dw Func_0F0_72C8_Case01
@@ -5878,10 +5878,9 @@ Func_0F0_72C8:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; points at: wCECA
 Func_0F0_72C8_Case00::
 Jump_0F0_7390:: ; address name
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $01
     ld c, $FE
     call AddBClampedToC
@@ -5889,1441 +5888,1438 @@ Jump_0F0_7390:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC3, wCECA
+; writes: wRollState
+; points at: wTopStat1, wFamilyScores
 Func_0F0_72C8_Case01::
 Jump_0F0_739B:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC3
+    ld hl, wFamilyScores
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 2 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCECC, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case02::
 Jump_0F0_73BD:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECC
+    ld hl, wFamilyScores + $9
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 3 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC4, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case03::
 Jump_0F0_73DF:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC4
+    ld hl, wFamilyScores + $1
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 4 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC9, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case04::
 Jump_0F0_7401:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC9
+    ld hl, wFamilyScores + $6
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 5 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC7, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case05::
 Jump_0F0_7423:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC7
+    ld hl, wFamilyScores + $4
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 6 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCECA
+; writes: wRollState
 Func_0F0_72C8_Case06::
 Jump_0F0_7445:: ; address name
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 7 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC5, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case07::
 Jump_0F0_7452:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC5
+    ld hl, wFamilyScores + $2
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 8 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCEC6, wCECA
+; writes: wRollState
+; points at: wTopStat5
 Func_0F0_72C8_Case08::
 Jump_0F0_7474:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC6
+    ld hl, wFamilyScores + $3
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 9 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCEC8, wCECA
+; writes: wRollState
+; points at: wTopStat6
 Func_0F0_72C8_Case09::
 Jump_0F0_7496:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC8
+    ld hl, wFamilyScores + $5
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 10 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCECB, wCECA
+; writes: wRollState
+; points at: wTopStat7
 Func_0F0_72C8_Case0A::
 Jump_0F0_74B8:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECB
+    ld hl, wFamilyScores + $8
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 11 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCECB, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case0B::
 Jump_0F0_74DA:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECB
+    ld hl, wFamilyScores + $8
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 12 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC7, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case0C::
 Jump_0F0_74FC:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC7
+    ld hl, wFamilyScores + $4
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 13 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case0D::
 Jump_0F0_751E:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 14 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCECA
+; writes: wRollState
+; points at: wTopStat5
 Func_0F0_72C8_Case0E::
 Jump_0F0_7536:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 15 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCECA
+; writes: wRollState
+; points at: wTopStat6
 Func_0F0_72C8_Case0F::
 Jump_0F0_754E:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 16 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCECA
+; writes: wRollState
+; points at: wTopStat7
 Func_0F0_72C8_Case10::
 Jump_0F0_7566:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 17 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case11::
 Jump_0F0_757E:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 18 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case12::
 Jump_0F0_7596:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 19 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC4, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case13::
 Jump_0F0_75AE:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC4
+    ld hl, wFamilyScores + $1
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 20 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCEC5, wCECA
+; writes: wRollState
+; points at: wTopStat5
 Func_0F0_72C8_Case14::
 Jump_0F0_75D0:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC5
+    ld hl, wFamilyScores + $2
     ld b, $05
     ld c, $FA
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 21 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC6, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case15::
 Jump_0F0_75F2:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC6
+    ld hl, wFamilyScores + $3
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 22 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCEC9, wCECA
+; writes: wRollState
+; points at: wTopStat6
 Func_0F0_72C8_Case16::
 Jump_0F0_7614:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC9
+    ld hl, wFamilyScores + $6
     ld b, $05
     ld c, $FA
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 23 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCEC7, wCECA
+; writes: wRollState
+; points at: wTopStat7
 Func_0F0_72C8_Case17::
 Jump_0F0_7636:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC7
+    ld hl, wFamilyScores + $4
     ld b, $05
     ld c, $FA
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 24 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC3, wCECA
+; writes: wRollState
+; points at: wTopStat3, wFamilyScores
 Func_0F0_72C8_Case18::
 Jump_0F0_7658:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC3
+    ld hl, wFamilyScores
     ld b, $05
     ld c, $FA
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 25 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case19::
 Jump_0F0_767A:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 26 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCECB, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case1A::
 Jump_0F0_7692:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECB
+    ld hl, wFamilyScores + $8
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 27 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC8, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case1B::
 Jump_0F0_76B4:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC8
+    ld hl, wFamilyScores + $5
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 28 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCECC, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case1C::
 Jump_0F0_76D6:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECC
+    ld hl, wFamilyScores + $9
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 29 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case1D::
 Jump_0F0_76F8:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $05
     ld c, $FA
     call AddBClampedToC
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 30 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCECD, wCECA
+; writes: wRollState
 Func_0F0_72C8_Case1E::
 Jump_0F0_7712:: ; address name
-    ld hl, wCECD
+    ld hl, wFamilyScores + $A
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 31 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
+; writes: wRollState
 Func_0F0_72C8_Case1F::
 Jump_0F0_7729:: ; address name
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 32 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case20::
 Jump_0F0_772E:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 33 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
+; writes: wRollState
 Func_0F0_72C8_Case21::
 Jump_0F0_7746:: ; address name
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 34 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC9, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case22::
 Jump_0F0_774B:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC9
+    ld hl, wFamilyScores + $6
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 35 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC5, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case23::
 Jump_0F0_776D:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC5
+    ld hl, wFamilyScores + $2
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 36 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCEC3, wCECA
+; writes: wRollState
+; points at: wTopStat5, wFamilyScores
 Func_0F0_72C8_Case24::
 Jump_0F0_778F:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC3
+    ld hl, wFamilyScores
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 37 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCEC7, wCECA
+; writes: wRollState
+; points at: wTopStat6
 Func_0F0_72C8_Case25::
 Jump_0F0_77B1:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC7
+    ld hl, wFamilyScores + $4
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 38 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCEC8, wCECA
+; writes: wRollState
+; points at: wTopStat7
 Func_0F0_72C8_Case26::
 Jump_0F0_77D3:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC8
+    ld hl, wFamilyScores + $5
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 39 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC4, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case27::
 Jump_0F0_77F5:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC4
+    ld hl, wFamilyScores + $1
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 40 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCECC, wCECA
+; writes: wRollState
+; points at: wTopStat5
 Func_0F0_72C8_Case28::
 Jump_0F0_7817:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECC
+    ld hl, wFamilyScores + $9
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 41 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCEC6, wCECA
+; writes: wRollState
+; points at: wTopStat6
 Func_0F0_72C8_Case29::
 Jump_0F0_7839:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC6
+    ld hl, wFamilyScores + $3
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 42 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCECB, wCECA
+; writes: wRollState
+; points at: wTopStat7
 Func_0F0_72C8_Case2A::
 Jump_0F0_785B:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECB
+    ld hl, wFamilyScores + $8
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 43 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
+; writes: wRollState
 Func_0F0_72C8_Case2B::
 Jump_0F0_787D:: ; address name
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 44 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
+; writes: wRollState
 Func_0F0_72C8_Case2C::
 Jump_0F0_7882:: ; address name
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 45 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
+; writes: wRollState
 Func_0F0_72C8_Case2D::
 Jump_0F0_7887:: ; address name
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 46 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCECA
+; writes: wRollState
 Func_0F0_72C8_Case2E::
 Jump_0F0_788C:: ; address name
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 64 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC8, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case40::
 Jump_0F0_7899:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC8
+    ld hl, wFamilyScores + $5
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 65 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC8, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case41::
 Jump_0F0_78BB:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $08
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC8
+    ld hl, wFamilyScores + $5
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 66 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC7, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case42::
 Jump_0F0_78DD:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC7
+    ld hl, wFamilyScores + $4
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 67 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC7, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case43::
 Jump_0F0_78FF:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $08
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC7
+    ld hl, wFamilyScores + $4
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 68 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC5, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case44::
 Jump_0F0_7921:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC5
+    ld hl, wFamilyScores + $2
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 69 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC5, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case45::
 Jump_0F0_7943:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC5
+    ld hl, wFamilyScores + $2
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 70 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCECC, wCECA
+; writes: wRollState
+; points at: wTopStat5
 Func_0F0_72C8_Case46::
 Jump_0F0_7965:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECC
+    ld hl, wFamilyScores + $9
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 71 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCECC, wCECA
+; writes: wRollState
+; points at: wTopStat5
 Func_0F0_72C8_Case47::
 Jump_0F0_7987:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECC
+    ld hl, wFamilyScores + $9
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 72 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCEC3, wCECA
+; writes: wRollState
+; points at: wTopStat6, wFamilyScores
 Func_0F0_72C8_Case48::
 Jump_0F0_79A9:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC3
+    ld hl, wFamilyScores
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 73 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCEC3, wCECA
+; writes: wRollState
+; points at: wTopStat6, wFamilyScores
 Func_0F0_72C8_Case49::
 Jump_0F0_79CB:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC3
+    ld hl, wFamilyScores
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 74 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCEC9, wCECA
+; writes: wRollState
+; points at: wTopStat7
 Func_0F0_72C8_Case4A::
 Jump_0F0_79ED:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC9
+    ld hl, wFamilyScores + $6
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 75 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCEC9, wCECA
+; writes: wRollState
+; points at: wTopStat7
 Func_0F0_72C8_Case4B::
 Jump_0F0_7A0F:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC9
+    ld hl, wFamilyScores + $6
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 76 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC6, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case4C::
 Jump_0F0_7A31:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $08
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC6
+    ld hl, wFamilyScores + $3
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 77 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC4, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case4D::
 Jump_0F0_7A53:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC4
+    ld hl, wFamilyScores + $1
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 78 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCECB, wCECA
+; writes: wRollState
+; points at: wTopStat6
 Func_0F0_72C8_Case4E::
 Jump_0F0_7A75:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECB
+    ld hl, wFamilyScores + $8
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 79 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCECB, wCECA
+; writes: wRollState
+; points at: wTopStat7
 Func_0F0_72C8_Case4F::
 Jump_0F0_7A97:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECB
+    ld hl, wFamilyScores + $8
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 80 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCECD, wCECA
+; writes: wRollState
+; points at: wTopStat5
 Func_0F0_72C8_Case50::
 Jump_0F0_7AB9:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECD
+    ld hl, wFamilyScores + $A
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 81 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCECC, wCECA
+; writes: wRollState
+; points at: wTopStat6
 Func_0F0_72C8_Case51::
 Jump_0F0_7ADB:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECC
+    ld hl, wFamilyScores + $9
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 82 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC5, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case52::
 Jump_0F0_7AFD:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC5
+    ld hl, wFamilyScores + $2
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 83 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC4, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case53::
 Jump_0F0_7B1F:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC4
+    ld hl, wFamilyScores + $1
     ld b, $01
     ld c, $FE
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 90 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCEC8, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case5A::
 Jump_0F0_7B41:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC8
+    ld hl, wFamilyScores + $5
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 91 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC7, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case5B::
 Jump_0F0_7B63:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC7
+    ld hl, wFamilyScores + $4
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 92 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2B, wCECC, wCECA
+; writes: wRollState
+; points at: wTopStat1
 Func_0F0_72C8_Case5C::
 Jump_0F0_7B85:: ; address name
-    ld hl, wCF2B
+    ld hl, wTopStat1
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECC
+    ld hl, wFamilyScores + $9
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 93 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF2F, wCEC9, wCECA
+; writes: wRollState
+; points at: wTopStat3
 Func_0F0_72C8_Case5D::
 Jump_0F0_7BA7:: ; address name
-    ld hl, wCF2F
+    ld hl, wTopStat3
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC9
+    ld hl, wFamilyScores + $6
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 94 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF31, wCEC5, wCECA
+; writes: wRollState
+; points at: wTopStat4
 Func_0F0_72C8_Case5E::
 Jump_0F0_7BC9:: ; address name
-    ld hl, wCF31
+    ld hl, wTopStat4
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC5
+    ld hl, wFamilyScores + $2
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 95 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF33, wCECB, wCECA
+; writes: wRollState
+; points at: wTopStat5
 Func_0F0_72C8_Case5F::
 Jump_0F0_7BEB:: ; address name
-    ld hl, wCF33
+    ld hl, wTopStat5
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCECB
+    ld hl, wFamilyScores + $8
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 96 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF35, wCEC6, wCECA
+; writes: wRollState
+; points at: wTopStat6
 Func_0F0_72C8_Case60::
 Jump_0F0_7C0D:: ; address name
-    ld hl, wCF35
+    ld hl, wTopStat6
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC6
+    ld hl, wFamilyScores + $3
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; entry 97 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCEC1
-; points at: wCF37, wCEC3, wCECA
+; writes: wRollState
+; points at: wTopStat7, wFamilyScores
 Func_0F0_72C8_Case61::
 Jump_0F0_7C2F:: ; address name
-    ld hl, wCF37
+    ld hl, wTopStat7
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
-    ld hl, wCEC3
+    ld hl, wFamilyScores
     ld b, $02
     ld c, $FD
     call AddBClampedToC
-    ld hl, wCECA
+    ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wCEC1], a
+    ld [wRollState], a
     ret
 
 ; [HL] = min([HL] + B, C) (8-bit add, no overflow check); clobbers A, C
@@ -7512,10 +7508,10 @@ Func_0F0_7D03:: ; address name
 ; only called from ScriptCommand86_Run_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommand86_Run_Case04)
 ; reads: wSaveByte16
-; points at: wCE9B, wCECE, wPlayerName, wCEE7
+; points at: wGM2TimerFrames, wGM2Mode, wPlayerName, wGM2Byte
 ScriptCommand86_Run_Case04_Sub01::
 Func_0F0_7D0A:: ; address name
-    ld hl, wCE9B
+    ld hl, wGM2TimerFrames
     ld bc, $00D8
 
 Jump_0F0_7D10::
@@ -7525,7 +7521,7 @@ Jump_0F0_7D10::
     ld a, b
     or a, c
     jr nz, Jump_0F0_7D10
-    ld hl, wCECE
+    ld hl, wGM2Mode
     ld a, $01
     ld [hl+], a
     ld c, $0A
@@ -7565,7 +7561,7 @@ Jump_0F0_7D47::
     ld [hl+], a
 
 Jump_0F0_7D4A::
-    ld hl, wCEE7
+    ld hl, wGM2Byte
     ld a, [wSaveByte16]
     ld [hl+], a
     ld a, $FF
@@ -7782,10 +7778,10 @@ Jump_0F0_7E64::
 
 ; A = 1 with a chance growing with wCEC0 (none below 5, 10 per step to 80 from 13), else 0 (E-0124)
 ; 1 call site from 1 routine (e.g. Func_0F0_4CA0_Table5_Case00)
-; reads: wCEC0
+; reads: wMarkChangeCount
 RollWCEC0Chance::
 Func_0F0_7E69:: ; address name
-    ld a, [wCEC0]
+    ld a, [wMarkChangeCount]
     cp a, $05
     jr nc, Jump_0F0_7E72
 

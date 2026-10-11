@@ -3638,7 +3638,7 @@ Jump_016_5759::
 ; HL = wCD10 + 2 * an index from the current map screen and the wCD70 table (index $20 when bit 3 of hFF8C is set) (E-0127)
 ; 1 call site from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F)
 ; reads: hPlayerStateFlags, wMapType, hMapScreenY, hMapScreenX, wKeyWorldFloor
-; points at: wCD70, wCD10, wCD88
+; points at: wKeyWorldAreas, wKeyWorldMonsters, wKeyWorldFloorInfo
 AddressOfWCD10EntryForCurrentScreen::
 Func_016_5766:: ; address name
     ldh a, [hPlayerStateFlags]
@@ -3660,7 +3660,7 @@ Jump_016_5778::
     srl a
     srl a
     add a, c
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
     add_a_to_hl
     ld a, [hl]
     add a, a
@@ -3673,7 +3673,7 @@ Jump_016_5795::
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
-    ld hl, wCD88
+    ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     push af
@@ -3687,7 +3687,7 @@ Jump_016_5795::
     srl a
     srl a
     add a, c
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
     add_a_to_hl
     ld a, [hl]
     add a, a
@@ -3702,7 +3702,7 @@ Jump_016_57C4::
 Jump_016_57C6::
     ld a, c
     add a, a
-    ld hl, wCD10
+    ld hl, wKeyWorldMonsters
     add_a_to_hl
     ret
 
@@ -4319,7 +4319,7 @@ Jump_016_5B61::
 
 ; only called from BattleEnd_Step5_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case00)
-; reads: wLinkMode, wCFC5, wDAAB, wRandomLo, wRandomHi, wD00C, wD894, wD89F, ...
+; reads: wLinkMode, wBattleKind, wDAAB, wRandomLo, wRandomHi, wD00C, wD894, wD89F, ...
 ; writes: wD890, wSpeciesIdLo, wSpeciesIdHi, wDAAB
 ; points at: wD8A1, wBattleMonsterId
 BattleEnd_Step5_Case00_Sub01::
@@ -4329,7 +4329,7 @@ Func_016_5B7E:: ; address name
     ld a, [wLinkMode]
     or a, a
     jp nz, Jump_016_5CF5
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $03
     jp z, Jump_016_5CF5
     cp a, $04
@@ -4581,8 +4581,8 @@ Func_016_5D13:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFC5, hTemp0
-; writes: wStringIndex, wSubMenuCursor2, wMenuOption, wCFD6
+; reads: wBattleKind, hTemp0
+; writes: wStringIndex, wSubMenuCursor2, wMenuOption, wCommandCursorMax
 ; points at: wBattleSubStep, wTextBuf0
 Func_016_5D13_Case00::
 Jump_016_5D51:: ; address name
@@ -4590,7 +4590,7 @@ Jump_016_5D51:: ; address name
     inc [hl]
     ld de, wTextBuf0
     call CopyBattleMonsterNameWithLetterSuffix
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $08
     jr nc, Jump_016_5D71
     and a, $01
@@ -4611,7 +4611,7 @@ Jump_016_5D7A::
     xor a, a
     ld [wSubMenuCursor2], a
     ld [wMenuOption], a
-    ld [wCFD6], a
+    ld [wCommandCursorMax], a
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -4654,7 +4654,7 @@ Jump_016_5DA0:: ; address name
 ; entry 3 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
-; writes: wMenuState, wCFD0, wCFD1, wCFD2, wCFD3
+; writes: wMenuState, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
 Func_016_5D13_Case03::
 Jump_016_5DB2:: ; address name
@@ -4669,13 +4669,13 @@ Jump_016_5DB2:: ; address name
     xor a, a
     ld [wMenuState], a
     ld a, $02
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $02
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -4769,7 +4769,7 @@ Jump_016_5E48:: ; address name
 ; entry 10 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
-; writes: wMenuState, wCFD0, wCFD1, wCFD2, wCFD3
+; writes: wMenuState, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wScreenTileBuffer, wBattleSubStep
 Func_016_5D13_Case0A::
 Jump_016_5E5A:: ; address name
@@ -4787,13 +4787,13 @@ Jump_016_5E5A:: ; address name
     xor a, a
     ld [wMenuState], a
     ld a, $02
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $02
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -4801,7 +4801,7 @@ Jump_016_5E5A:: ; address name
 ; entry 11 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wSubMenuCursor2, wTemp1
-; writes: wMenuState, wCFD1, wStringIndex, wBattleSubStep
+; writes: wMenuState, wListPage, wStringIndex, wBattleSubStep
 ; points at: wMenuState, wBattleSubStep, wScreenTileBuffer
 Func_016_5D13_Case0B::
 Jump_016_5E96:: ; address name
@@ -4817,7 +4817,7 @@ Jump_016_5E96:: ; address name
     xor a, a
     ld [wMenuState], a
     ld a, [wSubMenuCursor2]
-    ld [wCFD1], a
+    ld [wListPage], a
     ld hl, wBattleSubStep
     inc [hl]
     ld a, e
@@ -4878,7 +4878,7 @@ Jump_016_5EEC:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wJoypadPressed, wCFD1
+; reads: wJoypadPressedRepeat, wJoypadPressed, wListPage
 ; writes: wSubMenuCursor2, wBattleSubStep
 ; points at: wMenuState, wBattleSubStep
 Func_016_5D13_Case0D::
@@ -4896,7 +4896,7 @@ Jump_016_5F38::
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_016_5F4D
-    ld a, [wCFD1]
+    ld a, [wListPage]
     ld [wSubMenuCursor2], a
     call ShowRecordNameString12
     ld hl, wBattleSubStep
@@ -4906,7 +4906,7 @@ Jump_016_5F38::
 Jump_016_5F4D::
     bit 1, a
     ret z
-    ld a, [wCFD1]
+    ld a, [wListPage]
     ld [wSubMenuCursor2], a
     ld a, $09
     ld [wBattleSubStep], a
@@ -4915,7 +4915,7 @@ Jump_016_5F4D::
 ; entry 14 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuState
-; writes: wScreenTileBuffer, wMenuSubState, wCFD0, wCFD1, wCFD2, wCFD3
+; writes: wScreenTileBuffer, wMenuSubState, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
 Func_016_5D13_Case0E::
 Jump_016_5F5C:: ; address name
@@ -4936,13 +4936,13 @@ Jump_016_5F5C:: ; address name
     xor a, a
     ld [wMenuSubState], a
     ld a, $02
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $02
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -4950,7 +4950,7 @@ Jump_016_5F5C:: ; address name
 ; entry 15 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuSubState, wSubMenuCursor2
-; writes: wScreenTileBuffer, wWindowTileBuffer, wCFD1, wBattleSubStep
+; writes: wScreenTileBuffer, wWindowTileBuffer, wListPage, wBattleSubStep
 ; points at: wMenuSubState, wBattleSubStep
 Func_016_5D13_Case0F::
 Jump_016_5FA4:: ; address name
@@ -4998,7 +4998,7 @@ Jump_016_5FC7::
     ld bc, $0A05
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wSubMenuCursor2]
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $0C
     ld [wBattleSubStep], a
     ret
@@ -5036,7 +5036,7 @@ Jump_016_6017:: ; address name
 ; entry 17 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD7AB, wD7AF
-; writes: wMenuState, wSubMenuCursor2, wCFD1, wScreenTileBuffer, wCFD0, wCFD2, wCFD3, wBattleSubStep
+; writes: wMenuState, wSubMenuCursor2, wListPage, wScreenTileBuffer, wListPageSize, wListPageCount, wListLastPageSize, wBattleSubStep
 ; points at: wScreenTileBuffer
 Func_016_5D13_Case11::
 Jump_016_6058:: ; address name
@@ -5050,7 +5050,7 @@ Jump_016_6058:: ; address name
     ld [hl], $BC
     ld a, [wD7AF]
     ld [wSubMenuCursor2], a
-    ld [wCFD1], a
+    ld [wListPage], a
     farcall CopyRectRecord787EAndPlaySound6C
     ld a, $BB
     ld [wScreenTileBuffer + $12D], a
@@ -5062,13 +5062,13 @@ Jump_016_6058:: ; address name
     call CopyRect32StrideToVRAM_Bank16
     call ShowRecordNameString12
     ld a, $02
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $02
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld a, $0F
     ld [wBattleSubStep], a
     ret
@@ -5251,8 +5251,8 @@ Jump_016_61A8::
 
 ; entry 22 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTemp1, wMenuOption, wCFD6
-; writes: wWindowTileBuffer, wStringIndex, wD7A9, wCFD3, wCFD7, wCFD2, wCFD0, wCFD1, ...
+; reads: wTemp1, wMenuOption, wCommandCursorMax
+; writes: wWindowTileBuffer, wStringIndex, wD7A9, wListLastPageSize, wCommandPageCount, wListPageCount, wListPageSize, wListPage, ...
 ; points at: wScreenTileBuffer, wBattleSubStep
 Func_016_5D13_Case16::
 Jump_016_61D2:: ; address name
@@ -5274,14 +5274,14 @@ Jump_016_61D2:: ; address name
     ld b, a
     and a, $03
     inc a
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld a, b
     and a, $FC
     rrca
     rrca
-    ld [wCFD7], a
+    ld [wCommandPageCount], a
     inc a
-    ld [wCFD2], a
+    ld [wListPageCount], a
     cp a, $02
     jr c, Jump_016_622B
     add a, $E0
@@ -5295,10 +5295,10 @@ Jump_016_61D2:: ; address name
 
 Jump_016_622B::
     ld a, $04
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, [wMenuOption]
-    ld [wCFD1], a
-    ld a, [wCFD6]
+    ld [wListPage], a
+    ld a, [wCommandCursorMax]
     ld [wMenuState], a
     call DrawFourListEntriesForPageWCFD1
     ld hl, vBGMap0
@@ -5311,8 +5311,8 @@ Jump_016_622B::
 
 ; entry 23 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressedRepeat, wWindowTileBuffer, wJoypadPressed, wMenuState, wCFD1
-; writes: wCFD6, wMenuOption, wBattleSubStep
+; reads: wJoypadPressedRepeat, wWindowTileBuffer, wJoypadPressed, wMenuState, wListPage
+; writes: wCommandCursorMax, wMenuOption, wBattleSubStep
 ; points at: wMenuState, wBattleSubStep, wScreenTileBuffer
 Func_016_5D13_Case17::
 Jump_016_6250:: ; address name
@@ -5337,8 +5337,8 @@ Jump_016_6279::
     bit 0, a
     jr z, Jump_016_6291
     ld a, [wMenuState]
-    ld [wCFD6], a
-    ld a, [wCFD1]
+    ld [wCommandCursorMax], a
+    ld a, [wListPage]
     ld [wMenuOption], a
     ld hl, wBattleSubStep
     inc [hl]
@@ -5358,15 +5358,15 @@ Jump_016_6291::
 
 ; entry 24 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFD2, wCFD6
-; writes: wWindowTileBuffer, wMenuSelectedMember, wCFD0, wCFD1, wCFD2, wCFD3
+; reads: wListPageCount, wCommandCursorMax
+; writes: wWindowTileBuffer, wMenuSelectedMember, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wScreenTileBuffer, wBattleSubStep
 Func_016_5D13_Case18::
 Jump_016_62A9:: ; address name
     call BuildBattleMenuScreen_733F
     farcall CopyRectRecord78AAToScreenBuffer
     farcall CopyRectRecord787EAndPlaySound6C
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     cp a, $02
     jr c, Jump_016_62D3
     add a, $E0
@@ -5380,7 +5380,7 @@ Jump_016_62A9:: ; address name
 
 Jump_016_62D3::
     call DrawFourListEntriesForPageWCFD1
-    ld a, [wCFD6]
+    ld a, [wCommandCursorMax]
     ld hl, Data_016_66EF
     add a, a
     add_a_to_hl
@@ -5399,13 +5399,13 @@ Jump_016_62D3::
     xor a, a
     ld [wMenuSelectedMember], a
     ld a, $02
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $02
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     call ShowListedRecordNameMessage
     ld hl, wBattleSubStep
     inc [hl]
@@ -5413,7 +5413,7 @@ Jump_016_62D3::
 
 ; entry 25 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wJoypadPressed, wMenuOption, wCFD6
+; reads: wJoypadPressed, wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wStringIndex, wBattleSubStep
 ; points at: wMenuSelectedMember, wBattleSubStep, wD789, wTextBuf1
 Func_016_5D13_Case19::
@@ -5437,7 +5437,7 @@ Jump_016_631B:: ; address name
     add a, a
     add a, a
     ld b, a
-    ld a, [wCFD6]
+    ld a, [wCommandCursorMax]
     add a, b
     ld hl, wD789
     add_a_to_hl
@@ -5498,15 +5498,15 @@ Jump_016_637E:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD7AB, wD7AF, wCFD7
-; writes: wMenuState, wCFD6, wMenuOption, wCFD1, wScreenTileBuffer, wWindowTileBuffer, wCFD0, wCFD2, ...
+; reads: wD7AB, wD7AF, wCommandPageCount
+; writes: wMenuState, wCommandCursorMax, wMenuOption, wListPage, wScreenTileBuffer, wWindowTileBuffer, wListPageSize, wListPageCount, ...
 ; points at: wScreenTileBuffer
 Func_016_5D13_Case1B::
 Jump_016_63B9:: ; address name
     farcall CopyRectRecord78AAToScreenBuffer
     ld a, [wD7AB]
     ld [wMenuState], a
-    ld [wCFD6], a
+    ld [wCommandCursorMax], a
     ld hl, Data_016_66EF
     add a, a
     add_a_to_hl
@@ -5520,11 +5520,11 @@ Jump_016_63B9:: ; address name
     ld [hl], $BC
     ld a, [wD7AF]
     ld [wMenuOption], a
-    ld [wCFD1], a
+    ld [wListPage], a
     farcall CopyRectRecord787EAndPlaySound6C
     ld a, $BB
     ld [wScreenTileBuffer + $12D], a
-    ld a, [wCFD7]
+    ld a, [wCommandPageCount]
     inc a
     cp a, $02
     jr c, Jump_016_640E
@@ -5545,13 +5545,13 @@ Jump_016_640E::
     ld bc, $1412
     call CopyRect32StrideToVRAM_Bank16
     ld a, $02
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $02
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     call ShowListedRecordNameMessage
     ld a, $19
     ld [wBattleSubStep], a
@@ -5559,7 +5559,7 @@ Jump_016_640E::
 
 ; entry 28 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wTextFlags, wMenuOption, wCFD6
+; reads: wTextFlags, wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wD7F1, wD7F2, wBattleResolveStep, wBattleSubStep
 ; points at: wD789, wBattleSubPhase
 Func_016_5D13_Case1C::
@@ -5571,7 +5571,7 @@ Jump_016_643D:: ; address name
     add a, a
     add a, a
     ld b, a
-    ld a, [wCFD6]
+    ld a, [wCommandCursorMax]
     add a, b
     ld hl, wD789
     add_a_to_hl
@@ -5670,8 +5670,8 @@ Jump_016_64C4::
 
 ; lists the party records and then the stored records (state 1, field $6E clear) in wD789 and sets the page counts wCFD0-wCFD3 (E-0130)
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0C)
-; reads: wPartyCount, wTemp0, wFarmLevel, wSubMenuCursor2, wCFD2
-; writes: rRAMG, rRAMB, wTemp0, wCFD3, wCFD2, wCFD0, wScreenTileBuffer
+; reads: wPartyCount, wTemp0, wFarmLevel, wSubMenuCursor2, wListPageCount
+; writes: rRAMG, rRAMB, wTemp0, wListLastPageSize, wListPageCount, wListPageSize, wScreenTileBuffer
 ; points at: wD789, wPartyList, sA000
 ListPartyAndStoredRecordsForPage::
 Func_016_64DC:: ; address name
@@ -5742,12 +5742,12 @@ Jump_016_652E::
     ld a, $05
     call DivideBByA
     inc a
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld a, b
     inc a
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $05
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, [wSubMenuCursor2]
     or a, a
     jr nz, Jump_016_657B
@@ -5778,7 +5778,7 @@ Jump_016_6585::
     ld [wScreenTileBuffer + $A0], a
 
 Jump_016_658A::
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     cp a, $02
     jr c, Jump_016_65B0
     ld a, $C5
@@ -5790,7 +5790,7 @@ Jump_016_658A::
     ld a, [wSubMenuCursor2]
     add a, $E1
     ld [wScreenTileBuffer + $143], a
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     add a, $E0
     ld [wScreenTileBuffer + $145], a
 
@@ -5855,8 +5855,8 @@ Jump_016_65EE::
 
 ; up/down/left/right move the cursor at [DE] and the page wCFD1 within the page sizes wCFD0/wCFD3 and page count wCFD2 (E-0130)
 ; 8 call sites from 8 routines (e.g. Func_016_6C16_Case0C, Func_016_6C16_Case0A, Func_016_6C16_Case02, Func_016_5D13_Case19, ...)
-; reads: wJoypadPressedRepeat, wCFD2, wCFD1, wCFD3, wCFD0, wFrameCounterLo
-; writes: wFrameCounterLo, wCFD1
+; reads: wJoypadPressedRepeat, wListPageCount, wListPage, wListLastPageSize, wListPageSize, wFrameCounterLo
+; writes: wFrameCounterLo, wListPage
 MovePagedListCursor::
 Func_016_65FF:: ; address name
     ld a, [wJoypadPressedRepeat]
@@ -5866,22 +5866,22 @@ Func_016_65FF:: ; address name
     ld a, [de]
     sub a, $01
     jp nc, Jump_016_6691
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     cp a, $02
     jr c, Jump_016_661E
     ld b, a
-    ld a, [wCFD1]
+    ld a, [wListPage]
     inc a
     cp a, b
     jr nz, Jump_016_6625
 
 Jump_016_661E::
-    ld a, [wCFD3]
+    ld a, [wListLastPageSize]
     dec a
     jp Jump_016_6691
 
 Jump_016_6625::
-    ld a, [wCFD0]
+    ld a, [wListPageSize]
     dec a
     jr Jump_016_6691
 
@@ -5889,17 +5889,17 @@ Jump_016_662B::
     bit 7, a
     jr z, Jump_016_664E
     call BlankTileAtTableEntryDE
-    ld a, [wCFD1]
+    ld a, [wListPage]
     inc a
     ld b, a
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     cp a, b
     jr nz, Jump_016_6642
-    ld a, [wCFD3]
+    ld a, [wListLastPageSize]
     jr Jump_016_6645
 
 Jump_016_6642::
-    ld a, [wCFD0]
+    ld a, [wListPageSize]
 
 Jump_016_6645::
     ld b, a
@@ -5911,18 +5911,18 @@ Jump_016_6645::
     jr Jump_016_6691
 
 Jump_016_664E::
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     cp a, $02
     jr c, Jump_016_6682
     ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, Jump_016_666D
     call BlankTileAtTableEntryDE
-    ld a, [wCFD1]
+    ld a, [wListPage]
     dec a
     cp a, $FF
     jr nz, Jump_016_669B
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     dec a
     jr Jump_016_669B
 
@@ -5930,9 +5930,9 @@ Jump_016_666D::
     bit 4, a
     jr z, Jump_016_6682
     call BlankTileAtTableEntryDE
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     ld b, a
-    ld a, [wCFD1]
+    ld a, [wListPage]
     inc a
     cp a, b
     jr c, Jump_016_669B
@@ -5956,13 +5956,13 @@ Jump_016_6691::
     ret
 
 Jump_016_669B::
-    ld [wCFD1], a
+    ld [wListPage], a
     ld b, a
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     dec a
     cp a, b
     jr nz, Jump_016_66B1
-    ld a, [wCFD3]
+    ld a, [wListLastPageSize]
     ld b, a
     ld a, [de]
     cp a, b
@@ -6025,7 +6025,7 @@ Data_016_6701:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; shows five record names of page wCFD1 at vTiles2 + $3B0 and the slot numbers ($E1-$E3) or marks ($B6) beside them (E-0128)
 ; 3 call sites from 3 routines (e.g. Func_016_5D13_Case11, Func_016_5D13_Case0D, Func_016_5D13_Case0C)
-; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wCFD1, wPartyCount, wCFD2
+; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wListPage, wPartyCount, wListPageCount
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wD789
 DrawRecordListPageWithNumbers::
@@ -6045,7 +6045,7 @@ Func_016_6705:: ; address name
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld a, [wCFD1]
+    ld a, [wListPage]
     ld b, a
     add a, a
     add a, a
@@ -6066,7 +6066,7 @@ Func_016_6705:: ; address name
     ld [wTextWindowTileLo], a
     ld a, h
     ld [wTextWindowTileHi], a
-    ld a, [wCFD1]
+    ld a, [wListPage]
     or a, a
     jr nz, Jump_016_677A
     ld a, $E1
@@ -6102,10 +6102,10 @@ Jump_016_678A::
     call WriteVRAMByte
 
 Jump_016_6792::
-    ld a, [wCFD2]
+    ld a, [wListPageCount]
     cp a, $02
     jr c, Jump_016_67A4
-    ld a, [wCFD1]
+    ld a, [wListPage]
     add a, $E1
     ld hl, vBGMap0 + $143
     call WriteVRAMByte
@@ -6211,7 +6211,7 @@ Jump_016_6810::
 
 ; for the four entries of WD789 page wCFD1 runs Func_016_6891 with wD868 = 0-3, draws the page digit, then restores the default window (E-0121)
 ; 4 call sites from 4 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case18, Func_016_5D13_Case17, Func_016_5D13_Case16)
-; reads: wCFD1
+; reads: wListPage
 ; writes: wTextWindowRows, wTextWindowWidth, rRAMG, rRAMB, wD868, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wD789
 DrawFourListEntriesForPageWCFD1::
@@ -6225,7 +6225,7 @@ Func_016_682F:: ; address name
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    ld a, [wCFD1]
+    ld a, [wListPage]
     add a, a
     add a, a
     ld hl, wD789
@@ -6356,14 +6356,14 @@ Data_016_690F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; when wD7A9 is 5 or more: wC320 = $E1 + wCFD1 (the page number tile) (E-0119)
 ; 1 call site from 1 routine (e.g. DrawFourListEntriesForPageWCFD1)
-; reads: wD7A9, wCFD1
+; reads: wD7A9, wListPage
 ; writes: wWindowTileBuffer
 DrawListPageDigitIfLong::
 Func_016_6917:: ; address name
     ld a, [wD7A9]
     cp a, $05
     ret c
-    ld a, [wCFD1]
+    ld a, [wListPage]
     add a, $E1
     ld [wWindowTileBuffer + $20], a
     ret
@@ -6472,7 +6472,7 @@ Jump_016_6995::
 
 ; copies the monster name of record wD789[wC471 * 4 + wCFD6] (its id word at field $0B) into wC140, then shows string $17 of category 5 (ShowStringCategory5Immediate_Bank16) (E-0120)
 ; 2 call sites from 2 routines (e.g. Func_016_5D13_Case1B, Func_016_5D13_Case18)
-; reads: wMenuOption, wCFD6
+; reads: wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wD789, wTextBuf1
 ShowListedRecordNameMessage::
@@ -6481,7 +6481,7 @@ Func_016_69AB:: ; address name
     add a, a
     add a, a
     ld b, a
-    ld a, [wCFD6]
+    ld a, [wCommandCursorMax]
     add a, b
     ld hl, wD789
     add_a_to_hl
@@ -6617,13 +6617,13 @@ Jump_016_6A5C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wDAAB
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wSpeciesIdLo, wD7F5, wSpeciesIdHi, wTextWindowTileLo, ...
-; points at: wCFA8, wD8AF, wRecordBufA, wScreenTileBuffer, wBattleSubStep
+; points at: wNameEntryState, wD8AF, wRecordBufA, wScreenTileBuffer, wBattleSubStep
 RunBattleSubStep_6A4E_Case01::
 Jump_016_6A6F:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    ld hl, wCFA8
+    ld hl, wNameEntryState
     ld bc, $001D
     xor a, a
     call FillBytes
@@ -6679,7 +6679,7 @@ Jump_016_6A6F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDAAB, wD7F5
 ; writes: wD7F1, wD7F2, wD7F3, wD7F4, wD7F5
-; points at: wD8AF, wRecordBufA, wCFCF, wD09E, wNameGlyphBuf, wBattleSubStep
+; points at: wD8AF, wRecordBufA, wBattleScreenFlags, wD09E, wNameGlyphBuf, wBattleSubStep
 RunBattleSubStep_6A4E_Case02::
 Jump_016_6AE3:: ; address name
     ld a, $01
@@ -6721,7 +6721,7 @@ Jump_016_6AE3:: ; address name
     ld de, Data_031_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToVRAM
-    ld hl, wCFCF
+    ld hl, wBattleScreenFlags
     inc [hl]
     ld hl, wD09E
     ld de, wNameGlyphBuf
@@ -6962,7 +6962,7 @@ Jump_016_6C7A::
 ; entry 1 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
-; writes: wCFD0, wCFD1, wCFD2, wCFD3
+; writes: wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
 Func_016_6C16_Case01::
 Jump_016_6C9E:: ; address name
@@ -6974,13 +6974,13 @@ Jump_016_6C9E:: ; address name
     ld bc, $0605
     call CopyRect32StrideToVRAM_Bank16
     ld a, $02
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $02
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -7149,7 +7149,7 @@ Jump_016_6D8D:: ; address name
 ; entry 9 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wMenuSubState
-; writes: wCFD0, wCFD1, wCFD2, wCFD3
+; writes: wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wScreenTileBuffer, wBattleSubStep
 Func_016_6C16_Case09::
 Jump_016_6DA6:: ; address name
@@ -7157,13 +7157,13 @@ Jump_016_6DA6:: ; address name
     or a, a
     ret nz
     ld a, $04
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $04
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     ld bc, $140D
@@ -7231,7 +7231,7 @@ Jump_016_6E22::
 ; entry 11 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSubState
-; writes: wMenuSelectedMember, wCFD0, wCFD1, wCFD2, wCFD3
+; writes: wMenuSelectedMember, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
 Func_016_6C16_Case0B::
 Jump_016_6E38:: ; address name
@@ -7242,13 +7242,13 @@ Jump_016_6E38:: ; address name
     ld bc, $0805
     call CopyRect32StrideToVRAM_Bank16
     ld a, $02
-    ld [wCFD0], a
+    ld [wListPageSize], a
     ld a, $00
-    ld [wCFD1], a
+    ld [wListPage], a
     ld a, $01
-    ld [wCFD2], a
+    ld [wListPageCount], a
     ld a, $02
-    ld [wCFD3], a
+    ld [wListLastPageSize], a
     ld hl, Data_016_66F7
     ld a, [wMenuSubState]
     add a, a
@@ -7367,7 +7367,7 @@ Jump_016_6F01::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD781, wD7BC, wD7BA, wD7BB
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wSpriteSlotCount
-; points at: wCFCF, wBattleSubStep
+; points at: wBattleScreenFlags, wBattleSubStep
 Func_016_6C16_Case0E::
 Jump_016_6F30:: ; address name
     farcall ScriptCommandE8_Run
@@ -7390,7 +7390,7 @@ Jump_016_6F30:: ; address name
     ld de, Data_031_7DFB
     ld hl, vTiles1 + $5F0
     call DecompressToVRAM
-    ld hl, wCFCF
+    ld hl, wBattleScreenFlags
     inc [hl]
     ld hl, wBattleSubStep
     inc [hl]
@@ -7846,12 +7846,12 @@ Func_016_733F:: ; address name
 
 ; only called from BattleEnd_Step3 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
-; reads: wCFC5, wRecordBufA, wD00E, wRecordBufAByte71, wRandomLo, wRandomHi
+; reads: wBattleKind, wRecordBufA, wD00E, wRecordBufAByte71, wRandomLo, wRandomHi
 ; writes: wRecordBufA, wSpeciesIdLo, wSpeciesIdHi, wRecordBufAByte71
 ; points at: wD09D
 BattleEnd_Step3_Sub01::
 Func_016_7364:: ; address name
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $02
     jr nz, Jump_016_736F
     ld c, $00
@@ -7904,7 +7904,7 @@ Jump_016_7397::
 Jump_016_73BB::
     ld a, c
     ld [wRecordBufA + $57], a
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $02
     jp z, Jump_016_7456
     ld a, [wRecordBufA + $5D]

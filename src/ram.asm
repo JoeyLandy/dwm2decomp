@@ -450,193 +450,119 @@ DEF wKeyWorldByte46 EQU $CC46 ; key-world byte (E-0134)
 DEF wMapObjectCount EQU $CC47 ; number of 8-byte map objects at wMapObjects (E-0134)
 DEF wMapObjects EQU $CC48 ; map objects (8 bytes each) of town and key-world maps (E-0134)
 DEF wCCCD EQU $CCCD
-DEF wCCE9 EQU $CCE9
-DEF wCCEA EQU $CCEA
-DEF wCCEB EQU $CCEB
-DEF wCCED EQU $CCED
-DEF wCCEE EQU $CCEE
-DEF wCCF1 EQU $CCF1
-DEF wCCF2 EQU $CCF2
-DEF wCCF7 EQU $CCF7
-DEF wCD02 EQU $CD02
-DEF wCD03 EQU $CD03
-DEF wCD04 EQU $CD04
-DEF wCD05 EQU $CD05
-DEF wCD06 EQU $CD06
-DEF wCD07 EQU $CD07
-DEF wCD08 EQU $CD08
-DEF wCD09 EQU $CD09
-DEF wCD0A EQU $CD0A
-DEF wCD0B EQU $CD0B
-DEF wCD0C EQU $CD0C
-DEF wCD0D EQU $CD0D
-DEF wCD0E EQU $CD0E
-DEF wCD0F EQU $CD0F
-DEF wCD10 EQU $CD10
-DEF wCD11 EQU $CD11
-DEF wCD56 EQU $CD56
-DEF wCD60 EQU $CD60
-DEF wCD63 EQU $CD63
-DEF wCD70 EQU $CD70
-DEF wCD74 EQU $CD74
-DEF wCD78 EQU $CD78
-DEF wCD7A EQU $CD7A
-DEF wCD7B EQU $CD7B
-DEF wCD88 EQU $CD88
-DEF wCD89 EQU $CD89
-DEF wCD8B EQU $CD8B
-DEF wCDAC EQU $CDAC
-DEF wCDAD EQU $CDAD
-DEF wCDAE EQU $CDAE
-DEF wCDAF EQU $CDAF
-DEF wCDB0 EQU $CDB0
-DEF wCDCC EQU $CDCC
-DEF wCE2C EQU $CE2C
-DEF wCE2D EQU $CE2D
-DEF wCE72 EQU $CE72
-DEF wCE73 EQU $CE73
-DEF wCE74 EQU $CE74
-DEF wCE75 EQU $CE75
-DEF wCE76 EQU $CE76
-DEF wCE77 EQU $CE77
-DEF wCE78 EQU $CE78
-DEF wCE79 EQU $CE79
-DEF wCE7A EQU $CE7A
-DEF wCE7B EQU $CE7B
-DEF wCE7E EQU $CE7E
-DEF wCE8B EQU $CE8B
-DEF wCE93 EQU $CE93
-DEF wCE94 EQU $CE94
-DEF wCE95 EQU $CE95
-DEF wCE96 EQU $CE96
-DEF wCE97 EQU $CE97
-DEF wCE98 EQU $CE98
-DEF wCE99 EQU $CE99
-DEF wCE9A EQU $CE9A
-DEF wCE9B EQU $CE9B
-DEF wCE9C EQU $CE9C
-DEF wCE9D EQU $CE9D
-DEF wCE9E EQU $CE9E
-DEF wCE9F EQU $CE9F
-DEF wCEBF EQU $CEBF
-DEF wCEC0 EQU $CEC0
-DEF wCEC1 EQU $CEC1
-DEF wCEC2 EQU $CEC2
-DEF wCEC3 EQU $CEC3
-DEF wCEC4 EQU $CEC4
-DEF wCEC5 EQU $CEC5
-DEF wCEC6 EQU $CEC6
-DEF wCEC7 EQU $CEC7
-DEF wCEC8 EQU $CEC8
-DEF wCEC9 EQU $CEC9
-DEF wCECA EQU $CECA
-DEF wCECB EQU $CECB
-DEF wCECC EQU $CECC
-DEF wCECD EQU $CECD
-DEF wCECE EQU $CECE
+DEF wScreenTriggerCount EQU $CCE9 ; number of 4-byte screen trigger entries at wScreenTriggers (FindTriggerEntryForCurrentScreen_WCCEB) (E-0135)
+DEF wWarpPending EQU $CCEA ; set by the warp routines (CheckWarpAtPlayer, ScriptWarpToMapFromBytesAtDE); read by the transition state (E-0135)
+DEF wScreenTriggers EQU $CCEB ; screen trigger entries (4 bytes each: flags, cell, ...) (E-0135)
+DEF wKeyWorldMonsterBands EQU $CCF7 ; $FF-terminated list of monster band indexes for the key world (LoadKeyWorldParamsForWC833) (E-0135)
+DEF wKeyWorldBandAdjust EQU $CD02 ; band adjustment from the key world level (LoadKeyWorldParamsForWC833) (E-0135)
+DEF wKeyRandomLo EQU $CD03 ; key-world random value, low byte (NextRandomSeed); saved with the key so its world is rebuilt the same (E-0135)
+DEF wKeyRandomHi EQU $CD04 ; key-world random value, high byte (E-0135)
+DEF wPartyStrength EQU $CD05 ; party strength value (ComputePartyStrengthLevelWCD05); used for key and encounter levels (E-0135)
+DEF wKeyWorldByte06 EQU $CD06 ; key-world setting read by SetupKeyWorldObjectsForMapType (E-0135)
+DEF wKeyWorldFlags EQU $CD07 ; key-world flags (bit 7 = boss or cleared state) (E-0135)
+DEF wKeyWorldGoalScreen EQU $CD08 ; screen of the key-world goal (x and y nibbles) (E-0135)
+DEF wKeyWorldGoalPos EQU $CD09 ; goal position bytes (E-0135)
+DEF wKeyWorldGoalPos2 EQU $CD0A ; goal position bytes (E-0135)
+DEF wKeyWorldGoalKind EQU $CD0B ; kind of the key-world goal object (PickRandomNonzeroFromTable4CC1) (E-0135)
+DEF wKeyWorldAreaCount EQU $CD0C ; number of areas (E-0135)
+DEF wKeyWorldWidth EQU $CD0D ; key-world width in screens (E-0135)
+DEF wKeyWorldHeight EQU $CD0E ; key-world height in screens (E-0135)
+DEF wKeyWorldBand EQU $CD0F ; key-world level band 0-15 (SetWCD0FBandForA) (E-0135)
+DEF wKeyWorldMonsters EQU $CD10 ; 32 two-byte monster entries (id, then level * 2 ORed in) rolled for the key world (E-0135)
+DEF wKeyWorldBossMonsters EQU $CD50 ; 8 two-byte monster entries for the deeper areas (FillWCD51LevelsForWCD05) (E-0135)
+DEF wKeyWorldChunks EQU $CD60 ; area map chunk pointers of the key world (ReadKeyWorldCellIsSolid) (E-0135)
+DEF wKeyWorldAreas EQU $CD70 ; four area bytes of the key world (E-0135)
+DEF wKeyWorldAreaInfo EQU $CD74 ; per-area info bytes (E-0135)
+DEF wKeyWorldAreaExits EQU $CD78 ; per-area exit bytes (E-0135)
+DEF wKeyWorldObjects EQU $CD7B ; key-world object list (4 bytes each: cell, kind ...) (E-0135)
+DEF wKeyWorldFloorInfo EQU $CD88 ; per-floor info entries (4 bytes each) (E-0135)
+DEF wKeyWorldFloorState EQU $CDAC ; per-floor state entries (16 bytes each) (E-0135)
+DEF wNameBufAlt EQU $CDCC ; alternative name buffer (PickNameBufferForFirstByte) (E-0135)
+DEF wKeyWorldRoomTable EQU $CE2C ; room table of the key world (E-0135)
+DEF wKeyWorldEncounter EQU $CE72 ; monster ids and levels of the key-world encounters ($CE72-$CE7A; RollKeyWorldMonsterIds) (E-0135)
+DEF wKeyWorldEncounterTable EQU $CE7B ; per-area encounter entries (4 bytes each: id, level, ...) (E-0135)
+DEF wKeyWorldByte8B EQU $CE8B ; key-world byte (E-0135)
+DEF wVisitedScreens EQU $CE93 ; visited-screen bitmap of the key world (8 bytes; MarkVisitedMapScreenInWCE93) (E-0135)
+DEF wGM2TimerFrames EQU $CE9B ; first byte of the $D8-byte block saved to SRAM bank 1 by SaveWCE9BBlockToSRAMBank1; a timer byte (CallF072B4WhenWCE9DIs59) (E-0135)
+DEF wGM2TimerSeconds EQU $CE9C ; timer byte of that block (E-0135)
+DEF wGM2TimerMinutes EQU $CE9D ; timer byte of that block (59 triggers Func_0F0_72B4) (E-0135)
+DEF wFamilyBitCount EQU $CE9E ; count of bits set in wFamilyBits (MarkBitBInWCE9FAndCount) (E-0135)
+DEF wFamilyBits EQU $CE9F ; bit array marked by MarkBitBInWCE9FAndCount (E-0135)
+DEF wLastMarkedBit EQU $CEBF ; last bit index marked (E-0135)
+DEF wMarkChangeCount EQU $CEC0 ; count of changes of the marked bit (E-0135)
+DEF wRollState EQU $CEC1 ; state byte of the bank-$F0 roll (RollWCEC2ChanceAndRun72C8) (E-0135)
+DEF wRollCounter EQU $CEC2 ; counter for the bank-$F0 roll (up to $0F) (E-0135)
+DEF wFamilyScores EQU $CEC3 ; 11 scores (one per family) ranked by RankWCEC3ScoresIntoWCF7E (E-0135)
+DEF wGM2Mode EQU $CECE ; mode byte of the $CE9B block (0 or 1 allow saving it) (E-0135)
 DEF wCECF EQU $CECF
-DEF wCED9 EQU $CED9
-DEF wCEDA EQU $CEDA
-DEF wCEDB EQU $CEDB
+DEF wTopSpeciesLo EQU $CED9 ; species picked from the ranking, low byte (E-0135)
+DEF wTopSpeciesHi EQU $CEDA ; species picked from the ranking, high byte (E-0135)
+DEF wTopSpeciesByte EQU $CEDB ; byte stored with the picked species (E-0135)
 DEF wCEDC EQU $CEDC
-DEF wCEE7 EQU $CEE7
-DEF wCF0A EQU $CF0A
-DEF wCF0B EQU $CF0B
-DEF wCF0C EQU $CF0C
-DEF wCF29 EQU $CF29
-DEF wCF2B EQU $CF2B
-DEF wCF2D EQU $CF2D
-DEF wCF2F EQU $CF2F
-DEF wCF31 EQU $CF31
-DEF wCF33 EQU $CF33
-DEF wCF35 EQU $CF35
-DEF wCF37 EQU $CF37
-DEF wCF41 EQU $CF41
-DEF wCF73 EQU $CF73
-DEF wCF7E EQU $CF7E
-DEF wCF89 EQU $CF89
-DEF wCF8A EQU $CF8A
-DEF wCF8B EQU $CF8B
-DEF wCF8C EQU $CF8C
-DEF wCF8D EQU $CF8D
-DEF wCF8E EQU $CF8E
-DEF wCF8F EQU $CF8F
-DEF wCF90 EQU $CF90
-DEF wCFA7 EQU $CFA7
-DEF wCFA8 EQU $CFA8
-DEF wCFA9 EQU $CFA9
-DEF wCFAA EQU $CFAA
-DEF wCFAB EQU $CFAB
-DEF wCFAC EQU $CFAC
-DEF wCFAD EQU $CFAD
-DEF wCFBC EQU $CFBC
-DEF wCFBD EQU $CFBD
-DEF wCFBE EQU $CFBE
-DEF wCFBF EQU $CFBF
-DEF wCFC0 EQU $CFC0
-DEF wCFC1 EQU $CFC1
-DEF wCFC2 EQU $CFC2
-DEF wCFC3 EQU $CFC3
-DEF wCFC4 EQU $CFC4
-DEF wCFC5 EQU $CFC5
+DEF wGM2Byte EQU $CEE7 ; byte of the $CE9B block (E-0135)
+DEF wTopSpeciesGrowth EQU $CF0A ; species growth bytes copied by LoadWCED9SpeciesStatsToWCF0A ($CF0A-$CF0C) (E-0135)
+DEF wTopStat0 EQU $CF29 ; stat copied from wCF2B (E-0135)
+DEF wTopStat1 EQU $CF2B ; stat byte of the copied species data (E-0135)
+DEF wTopStat2 EQU $CF2D ; stat copied from wCF2F (E-0135)
+DEF wTopStat3 EQU $CF2F ; stat byte of the copied species data (E-0135)
+DEF wTopStat4 EQU $CF31 ; stat byte of the copied species data (E-0135)
+DEF wTopStat5 EQU $CF33 ; stat byte of the copied species data (E-0135)
+DEF wTopStat6 EQU $CF35 ; stat byte of the copied species data (E-0135)
+DEF wTopStat7 EQU $CF37 ; stat byte of the copied species data (E-0135)
+DEF wResistanceLevels EQU $CF41 ; 27 resistance levels raised by RaiseRandomLowestResistance (E-0135)
+DEF wFamilyRankTaken EQU $CF73 ; 11 flags marking families already ranked (E-0135)
+DEF wFamilyRanking EQU $CF7E ; 11 family indexes in rank order (E-0135)
+DEF wRankIndex EQU $CF89 ; index used while ranking (E-0135)
+DEF wRankBand EQU $CF8A ; band of wFamilyBitCount (BandOfWCE9E) (E-0135)
+DEF wCounterPtr0Lo EQU $CF8B ; pointer to a counter incremented by IncrementTwoCountersCappedAt99, low byte (also a scratch word) (E-0135)
+DEF wCounterPtr0Hi EQU $CF8C ; that pointer, high byte (E-0135)
+DEF wCounterArg0 EQU $CF8D ; byte stored before the first counter (E-0135)
+DEF wCounterPtr1Lo EQU $CF8E ; pointer to the second counter of IncrementTwoCountersCappedAt99, low byte (E-0135)
+DEF wCounterPtr1Hi EQU $CF8F ; that pointer, high byte (E-0135)
+DEF wCounterArg1 EQU $CF90 ; byte stored before the second counter (E-0135)
+DEF wLowestResistCount EQU $CFA7 ; count of lowest-level resistances (RaiseRandomLowestResistance) (E-0135)
+DEF wNameEntryState EQU $CFA8 ; state of the name-entry and naming screens (RunWCFA8StateWhenNotFading); also set by breeding (E-0135)
+DEF wNameEntrySubState EQU $CFA9 ; sub-state of the name-entry screen (E-0135)
+DEF wNameEntryStep EQU $CFAA ; step of the name-entry screen (state 2) (E-0135)
+DEF wNameEntryTimer EQU $CFAB ; timer of the name-entry screen (E-0135)
+DEF wNameEntryByteAC EQU $CFAC ; name-entry work byte (E-0135)
+DEF wNameEntryText EQU $CFAD ; the name being entered ($F0-terminated; $9F marks the cursor end; voicing marks $8D/$8E follow a glyph) (E-0135)
+DEF wNameEntryByteBC EQU $CFBC ; name-entry work byte (E-0135)
+DEF wNameEntryMenuCursor EQU $CFBD ; cursor of the name-entry menu row (E-0135)
+DEF wNameEntryBlink EQU $CFBE ; cursor blink counter of the name-entry screen (BlinkCursorWCFBE_Bank14) (E-0135)
+DEF wNameEntryCursorX EQU $CFBF ; name-entry grid cursor column (E-0135)
+DEF wNameEntryCursorY EQU $CFC0 ; name-entry grid cursor row (E-0135)
+DEF wNameEntryCursorByte EQU $CFC1 ; name-entry cursor work byte (E-0135)
+DEF wNameEntryLength EQU $CFC2 ; number of glyphs entered (E-0135)
+DEF wNameEntryByteC3 EQU $CFC3 ; name-entry work byte (E-0135)
+DEF wNameEntryByteC4 EQU $CFC4 ; name-entry work byte (E-0135)
+DEF wBattleKind EQU $CFC5 ; kind of battle (0-1 ordinary, 2-3 and 4-5 special kinds that the AI and the battle end check) (E-0135)
 DEF wBattlePhase EQU $CFC8 ; battle phase, a 3-entry dispatch in Func_031_40CC: 1 = the fight, 2 = after the fight (victory message, rewards, recruiting); 0 at start (E-0044) (execution (E-0042))
 DEF wBattleStep EQU $CFC9 ; step within the battle phase: in phase 1, 1 = set-up, 2 = command entry (a loop over the party), 3 = executing the chosen actions; in phase 2, 0-5 = the end-of-battle sequence (E-0044) (execution (E-0042))
 DEF wBattleSubPhase EQU $CFCA ; index within the battle step: during step 3 of phase 1 it counts the actions being executed (0, 1, 2, ...); during command entry it alternates 1 and 2 (E-0044) (reading (E-0043))
 DEF wBattleResolveStep EQU $CFCB ; step of RunBattleResolveStep (16 cases, 0-15) for the action wBattleSubPhase is executing; ApplyDamageToTarget advances or rewinds it (E-0044) (reading (E-0043))
 DEF wBattleSubStep EQU $CFCC ; nested step used by Func_032_5EAB (10 cases) and cleared by ApplyDamageToTarget (reading (E-0043))
 DEF wBattleSubStep2 EQU $CFCD ; nested step used by Func_032_5A3A (3 cases) (reading (E-0043))
-DEF wCFCE EQU $CFCE
-DEF wCFCF EQU $CFCF
-DEF wCFD0 EQU $CFD0
-DEF wCFD1 EQU $CFD1
-DEF wCFD2 EQU $CFD2
-DEF wCFD3 EQU $CFD3
-DEF wCFD4 EQU $CFD4
-DEF wCFD5 EQU $CFD5
-DEF wCFD6 EQU $CFD6
-DEF wCFD7 EQU $CFD7
-DEF wCFD8 EQU $CFD8
-DEF wCFD9 EQU $CFD9
-DEF wCFDA EQU $CFDA
-DEF wCFDB EQU $CFDB
-DEF wCFDC EQU $CFDC
-DEF wCFDD EQU $CFDD
-DEF wCFDE EQU $CFDE
-DEF wCFDF EQU $CFDF
-DEF wCFE0 EQU $CFE0
-DEF wCFE1 EQU $CFE1
-DEF wCFE2 EQU $CFE2
-DEF wCFE3 EQU $CFE3
-DEF wCFE4 EQU $CFE4
-DEF wCFE5 EQU $CFE5
+DEF wEffectSubStep EQU $CFCE ; sub-step of the effect resolution (RunWCFCEStep, ResolveStep0EEffect) (E-0135)
+DEF wBattleScreenFlags EQU $CFCF ; battle screen flags (bit 0 set by some action effects; cleared at battle start) (E-0135)
+DEF wListPageSize EQU $CFD0 ; entries per page of the paged list (MovePagedListCursor) (E-0135)
+DEF wListPage EQU $CFD1 ; current page of the paged list (E-0135)
+DEF wListPageCount EQU $CFD2 ; number of pages of the paged list (E-0135)
+DEF wListLastPageSize EQU $CFD3 ; entries on the last page (also the command count in battle) (E-0135)
+DEF wCommandMonster EQU $CFD4 ; monster whose command is being chosen in battle (skill lists use wD989 + 16 * it) (E-0135)
+DEF wCommandCursor EQU $CFD5 ; battle command cursor (also the page of the skill or item list) (E-0135)
+DEF wCommandCursorMax EQU $CFD6 ; battle command cursor limit (E-0135)
+DEF wCommandPageCount EQU $CFD7 ; page count of the battle skill or item list (DrawInventoryPageIndicator) (E-0135)
+DEF wBattleSetupD8 EQU $CFD8 ; battle set-up work bytes ($CFD8-$CFDA) (E-0135)
+DEF wBattleSetupDB EQU $CFDB ; set by the battle set-up (E-0135)
+DEF wEncounterKind EQU $CFDC ; encounter entry byte 0 (StartScriptedEncounterHFFC6 copies the entry from $481C + 8 * id) (E-0135)
+DEF wEncounterMonsters EQU $CFDD ; monster ids of the encounter (three words) (E-0135)
+DEF wWildLevel EQU $CFE3 ; level of the wild monsters (ComputeWildEncounterLevel) (E-0135)
+DEF wWildBand EQU $CFE4 ; encounter band (ComputeWildEncounterLevel, PickRandomBand0To10) (E-0135)
+DEF wWildByteE5 EQU $CFE5 ; encounter work byte (E-0135)
 DEF wMonsterId EQU $CFE6 ; 16-bit monster id (wCFE7 is the high byte) that LoadMonsterRecord reads (reading)
-DEF wCFE7 EQU $CFE7
 DEF wRecordBuffer EQU $CFEC ; scratch buffer shared by the record loaders: LoadSkillRecord reads its first word as the skill number and writes 17 bytes after it; LoadMonsterRecord stores a 26-byte monster record here (reading)
-DEF wCFED EQU $CFED
 DEF wRecordBufferData EQU $CFEE ; where LoadSkillRecord puts the 17 bytes of a skill record (byte 2 of the buffer) (reading)
-DEF wCFEF EQU $CFEF
-DEF wCFF0 EQU $CFF0
-DEF wCFF1 EQU $CFF1
-DEF wCFF2 EQU $CFF2
-DEF wCFF3 EQU $CFF3
-DEF wCFF4 EQU $CFF4
-DEF wCFF5 EQU $CFF5
-DEF wCFF6 EQU $CFF6
-DEF wCFF7 EQU $CFF7
-DEF wCFF8 EQU $CFF8
-DEF wCFF9 EQU $CFF9
-DEF wCFFA EQU $CFFA
-DEF wCFFB EQU $CFFB
-DEF wCFFC EQU $CFFC
-DEF wCFFD EQU $CFFD
-DEF wCFFE EQU $CFFE
-DEF wCFFF EQU $CFFF
-DEF wD000 EQU $D000
-DEF wD001 EQU $D001
-DEF wD002 EQU $D002
-DEF wD003 EQU $D003
-DEF wD004 EQU $D004
-DEF wD005 EQU $D005
 DEF wSpeciesIdLo EQU $D006 ; low byte of the monster id whose species record LoadSpeciesRecord loads (E-0069) (reading + data (E-0069))
 DEF wSpeciesIdHi EQU $D007 ; high byte of that monster id (E-0069) (reading + data (E-0069))
 DEF wSpeciesRecord EQU $D008 ; 47-byte copy of a species record (LoadSpeciesRecord); byte 0 is the family (E-0069) (reading + data (E-0069))

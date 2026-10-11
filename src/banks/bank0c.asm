@@ -569,7 +569,7 @@ Jump_00C_433D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wD799, wD79A, wD780
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wD780, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
-; points at: wScreenTileBuffer, wD1CC, wD000
+; points at: wScreenTileBuffer, wD1CC
 ScriptCommandF6_Run_Case07::
 Jump_00C_4360:: ; address name
     ld hl, wWindowTileBuffer + $64
@@ -580,7 +580,7 @@ Jump_00C_4360:: ; address name
     and a, a
     jr z, Jump_00C_437E
     ld hl, wD1CC
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     ld bc, $0104
     call CopyLow3BitsToWRAMBank2_Bank0C
 
@@ -2675,7 +2675,7 @@ Jump_00C_51E3::
 ; 29 call sites from 22 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case18, ...)
 ; reads: wStringIndex, wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawScreenBufferRect_Bank0C::
 Func_00C_51F5:: ; address name
     push de
@@ -2718,7 +2718,7 @@ Jump_00C_5226::
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h
@@ -3448,7 +3448,7 @@ Jump_00C_66C0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wArenaRank, wD7FB, wD780
 ; writes: wD7F0, wD780, wTwoChoiceCursor, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, ...
-; points at: wD780, wScreenTileBuffer, wD1CC, wD000
+; points at: wD780, wScreenTileBuffer, wD1CC
 ScriptCommandF7_Run_Case00::
 Jump_00C_66D7:: ; address name
     ld hl, wD780
@@ -3467,7 +3467,7 @@ Jump_00C_66DC::
     and a, a
     jr z, Jump_00C_66FF
     ld hl, wD1CC
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     ld bc, $0104
     call CopyLow3BitsToWRAMBank2_Bank0C
 
@@ -5342,7 +5342,7 @@ Data_00C_72C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
 ; 7 call sites from 6 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case13, ...)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 CopyScreenBufferRectWithAttrs_0C::
 Func_00C_72CC:: ; address name
     push bc
@@ -5372,12 +5372,12 @@ Func_00C_72CC:: ; address name
     jr z, Jump_00C_7311
     push hl
     push de
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld a, l
     ld e, a
@@ -5544,7 +5544,7 @@ Func_00C_73C6:: ; address name
 ; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case1A)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD588
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
-; points at: wD5B1, wCFDD
+; points at: wD5B1, wEncounterMonsters
 ScriptCommandF7_Run_Case1A_Sub01::
 Func_00C_73C7:: ; address name
     ld a, [wScriptStartRequest]
@@ -5567,20 +5567,20 @@ Func_00C_73C7:: ; address name
 ; only called from routines of ScriptCommand96_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
 ; reads: wD588
-; writes: wBattleIntroKind, wCFDC
-; points at: wD5B1, wCFDD
+; writes: wBattleIntroKind, wEncounterKind
+; points at: wD5B1, wEncounterMonsters
 ScriptCommand96_Run_Shared01::
 Func_00C_73F5:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
     ld a, $02
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     call ScriptCommand96_Run_Shared01_Sub01
 
 ; only called from ScriptCommandF7_Run_Case1C (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case1C)
 ; reads: wD588
-; points at: wD5B1, wCFDD
+; points at: wD5B1, wEncounterMonsters
 ScriptCommandF7_Run_Case1C_Sub01::
 Func_00C_7402:: ; address name
     ld a, [wD588]
@@ -5590,7 +5590,7 @@ Func_00C_7402:: ; address name
     add a, b
     ld hl, wD5B1
     add_a_to_hl
-    ld de, wCFDD
+    ld de, wEncounterMonsters
     ld b, $06
 
 Jump_00C_7418::
@@ -5605,7 +5605,7 @@ Jump_00C_7418::
 ; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case21, ScriptCommandF7_Run_Case1E)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD78E
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
-; points at: wCFDD
+; points at: wEncounterMonsters
 ScriptCommandF7_Run_Shared03::
 Func_00C_741F:: ; address name
     ld a, [wScriptStartRequest]
@@ -5628,14 +5628,14 @@ Func_00C_741F:: ; address name
 ; only called from routines of ScriptCommand95_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wD78E
-; writes: wBattleIntroKind, wCFDC
-; points at: wCFDD
+; writes: wBattleIntroKind, wEncounterKind
+; points at: wEncounterMonsters
 ScriptCommand95_Run_Shared01::
 Func_00C_744D:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
     ld a, $02
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ld hl, Data_00C_787D
     ld e, [hl]
     inc hl
@@ -5653,7 +5653,7 @@ Jump_00C_7467::
     inc de
     ld a, [de]
     ld h, a
-    ld de, wCFDD
+    ld de, wEncounterMonsters
     ld b, $06
 
 Jump_00C_7471::
@@ -5668,7 +5668,7 @@ Jump_00C_7471::
 ; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case0A, ScriptCommandF7_Run_Case07)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wD786, wD78E
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
-; points at: wCFDD
+; points at: wEncounterMonsters
 ScriptCommandF7_Run_Shared04::
 Func_00C_7478:: ; address name
     ld a, [wScriptStartRequest]
@@ -5691,14 +5691,14 @@ Func_00C_7478:: ; address name
 ; only called from routines of ScriptCommand95_Run (E-0098)
 ; 2 call sites from 2 routines (e.g. ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wD786, wD78E
-; writes: wBattleIntroKind, wCFDC
-; points at: wCFDD
+; writes: wBattleIntroKind, wEncounterKind
+; points at: wEncounterMonsters
 ScriptCommand95_Run_Shared02::
 Func_00C_74A6:: ; address name
     ld a, $04
     ld [wBattleIntroKind], a
     ld a, $02
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ld a, [wD786]
     sla a
     ld hl, Data_00C_7897
@@ -5719,7 +5719,7 @@ Jump_00C_74CA::
     inc de
     ld a, [de]
     ld h, a
-    ld de, wCFDD
+    ld de, wEncounterMonsters
     ld b, $06
 
 Jump_00C_74D4::

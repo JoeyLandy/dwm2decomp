@@ -1540,15 +1540,15 @@ Func_000_095B:: ; address name
 
 ; 16-bit seed in wCD03/wCD04 becomes seed * 5 + 11
 ; 81 call sites from 51 routines (e.g. VBlankHandler, PickRandomWC902FromTable478F, TickRandomEncounterCounter, RunWC903Case_Case06, ...)
-; reads: wCD03, wCD04
-; writes: wCD03, wCD04
+; reads: wKeyRandomLo, wKeyRandomHi
+; writes: wKeyRandomLo, wKeyRandomHi
 NextRandomSeed::
 Func_000_09F3:: ; address name
     push hl
     push bc
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     ld l, a
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     ld h, a
     ld c, l
     ld b, h
@@ -1559,10 +1559,10 @@ Func_000_09F3:: ; address name
     add hl, bc
     ld a, $0B
     add a, l
-    ld [wCD03], a
+    ld [wKeyRandomLo], a
     ld a, h
     adc a, $00
-    ld [wCD04], a
+    ld [wKeyRandomHi], a
     pop bc
     pop hl
     ret
@@ -4418,7 +4418,7 @@ Func_000_18D6:: ; address name
 ; 4 call sites from 4 routines (e.g. Func_061_4472_Case07, Func_061_4472_Case06, Func_061_4472_Case03, Func_061_4472_Case02)
 ; reads: hTemp0, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp1, hTemp2, hTemp3
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 LoadMapScreenFromChunk::
 Func_000_1906:: ; address name
     ld a, [BANK_NUMBER_BYTE]
@@ -4522,7 +4522,7 @@ Jump_000_1978::
     ld b, a
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
@@ -4536,7 +4536,7 @@ Jump_000_19A4::
 ; 4 call sites from 4 routines (e.g. InitFieldScreen, RunWC468ActionIfBit7_Case00, ScriptCommand77_Run_Case01, ScriptCommandED_Run_Case07_Case02)
 ; reads: wMapType, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp0, hTemp1, hTemp2, ...
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 LoadMapScreen::
 Func_000_19A9:: ; address name
     ld a, [wMapType]
@@ -4657,7 +4657,7 @@ Jump_000_1A36::
     ld b, a
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a
@@ -5277,7 +5277,7 @@ Jump_000_1E23::
 ; 16 call sites from 16 routines (e.g. InitFieldScreen, RedrawScreenBufferIfWC8CDBit7, FieldModeStateDispatch_Case02_Sub01_Sub02, GameMode5_Update_Case01_Case06_Case01, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawFullScreenBufferToBGMap::
 Func_000_1E29:: ; address name
     push hl
@@ -5327,7 +5327,7 @@ Jump_000_1E5B::
     ldh [rVBK], a
     ld a, $02
     ldh [rSVBK], a
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     ld bc, $1412
 
 Jump_000_1E6F::

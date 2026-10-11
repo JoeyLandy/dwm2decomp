@@ -4,7 +4,7 @@ SECTION "Bank 60", ROMX[$4000], BANK[$60]
 ; only called from RunWC46BMenuState_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunWC46BMenuState_Case05)
 ; reads: wCurrentKeyIndex, hTemp0
-; writes: wKeyWorldSlot, wCD03, wCD04
+; writes: wKeyWorldSlot, wKeyRandomLo, wKeyRandomHi
 ; points at: wKeySeeds
 RunWC46BMenuState_Case05_Sub01::
 Func_060_4001:: ; address name
@@ -33,9 +33,9 @@ Func_060_4001:: ; address name
     ld hl, wKeySeeds
     add_a_to_hl
     ld a, [hl+]
-    ld [wCD03], a
+    ld [wKeyRandomLo], a
     ld a, [hl]
-    ld [wCD04], a
+    ld [wKeyRandomHi], a
 
 ; only called from DebugAutomap_Update_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01)
@@ -89,20 +89,20 @@ Func_060_4076:: ; address name
 
 ; fills 32 two-byte entries from wCD10 with random monster ids from the wCCF7 band lists (rows from Data_060_4123 by wCD02) (E-0130)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD02, wCD04, hTemp0, hTemp1
+; reads: wKeyWorldBandAdjust, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-; points at: wCD10, wCCF7
+; points at: wKeyWorldMonsters, wKeyWorldMonsterBands
 RollKeyWorldMonsterTableWCD10::
 Func_060_408F:: ; address name
     ld b, $20
-    ld de, wCD10
+    ld de, wKeyWorldMonsters
     ld a, e
     ldh [hTemp0], a
     ld a, d
     ldh [hTemp1], a
 
 Jump_060_409A::
-    ld hl, wCCF7
+    ld hl, wKeyWorldMonsterBands
 
 Jump_060_409D::
     ld a, [hl+]
@@ -110,7 +110,7 @@ Jump_060_409D::
     jr z, Jump_060_409A
     push hl
     push af
-    ld a, [wCD02]
+    ld a, [wKeyWorldBandAdjust]
     cp a, $10
     jr c, Jump_060_40AD
     ld a, $10
@@ -133,7 +133,7 @@ Jump_060_40AD::
     adc a, $41
     ld d, a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     add a, e
     ld e, a
@@ -179,7 +179,7 @@ Jump_060_40F5::
 
 Jump_060_40FA::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     cp a, c
     jr nc, Jump_060_40FA
@@ -212,12 +212,11 @@ Data_060_4123:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; for 32 entries from wCD11 ORs 2 * min(wC969 + (32 - n) * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0125)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wKeyWorldLevelBase, wCD05
-; points at: wCD11
+; reads: wKeyWorldLevelBase, wPartyStrength
 FillWCD11LevelsForWCD05::
 Func_060_4233:: ; address name
     ld b, $20
-    ld de, wCD11
+    ld de, wKeyWorldMonsters + $1
     ld a, [wKeyWorldLevelBase]
     ld c, a
 
@@ -228,7 +227,7 @@ Jump_060_423C::
     ld a, $20
     sub a, b
     ld c, a
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     add a, $0A
     call Multiply8
     ld a, $96
@@ -264,14 +263,14 @@ Jump_060_4267::
 
 ; fills 8 two-byte entries from wCD50 with random monster ids from the band lists (Data_060_4123 row wCD02) (E-0129)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD04, wCD02, hTemp0, hTemp1
+; reads: wKeyRandomHi, wKeyWorldBandAdjust, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-; points at: wCD10
+; points at: wKeyWorldMonsters
 RollKeyWorldMonsterTableWCD50::
 Func_060_4274:: ; address name
     ld b, $08
     ld a, $40
-    ld de, wCD10
+    ld de, wKeyWorldMonsters
     add a, e
     ld e, a
     jr nc, Jump_060_4280
@@ -295,7 +294,7 @@ Jump_060_4286::
 Jump_060_4292::
     push de
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     ld de, Data_060_4123
     add a, e
@@ -304,7 +303,7 @@ Jump_060_4292::
     inc d
 
 Jump_060_42A3::
-    ld a, [wCD02]
+    ld a, [wKeyWorldBandAdjust]
     sla a
     sla a
     sla a
@@ -341,7 +340,7 @@ Jump_060_42C4::
 
 Jump_060_42C9::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     cp a, c
     jr nc, Jump_060_42C9
@@ -369,13 +368,12 @@ Jump_060_42D4::
 
 ; for 8 entries from wCD51 ORs 2 * min(wC969 + 15 * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wKeyWorldLevelBase, wCD05
-; points at: wCD11
+; reads: wKeyWorldLevelBase, wPartyStrength
 FillWCD51LevelsSlope::
 Func_060_42F2:: ; address name
     ld b, $08
     ld a, $40
-    ld de, wCD11
+    ld de, wKeyWorldMonsters + $1
     add a, e
     ld e, a
     jr nc, Jump_060_42FE
@@ -390,7 +388,7 @@ Jump_060_4302::
     push bc
     push de
     ld c, $0F
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     add a, $0A
     call Multiply8
     ld a, $96
@@ -426,11 +424,10 @@ Jump_060_432B::
 
 ; for 8 entries from wCD51 ORs 2 * min(wCD05 + 3 * (wCD05 / 10), 99) into every other byte (E-0125)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD05
-; points at: wCD11
+; reads: wPartyStrength
 FillWCD51LevelsForWCD05:: ; heuristic: follows a terminator; C0
 Func_060_4338:: ; address name
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     ld b, a
     ld a, $0A
     call DivideBByA
@@ -438,12 +435,12 @@ Func_060_4338:: ; address name
     add a, a
     add a, b
     ld c, a
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     add a, c
     ld c, a
     ld b, $08
     ld a, $40
-    ld de, wCD11
+    ld de, wKeyWorldMonsters + $1
     add a, e
     ld e, a
     jr nc, Jump_060_4356
@@ -471,9 +468,9 @@ Jump_060_435E::
 
 ; from the wC708 entry wC833: wCD02 = Data_060_43C7[byte 0] plus a row adjustment, and copies the $FF-terminated list of Data_060_43D7 row byte 1 to wCCF7 (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCurrentKeyIndex, wCD02
-; writes: wCD02
-; points at: wCCF7
+; reads: wCurrentKeyIndex, wKeyWorldBandAdjust
+; writes: wKeyWorldBandAdjust
+; points at: wKeyWorldMonsterBands
 LoadKeyWorldParamsForWC833::
 Func_060_436B:: ; address name
     ld a, [wCurrentKeyIndex]
@@ -488,12 +485,12 @@ Func_060_436B:: ; address name
     adc a, $C7
     ld h, a
     ld a, [hl]
-    ld de, wCCF7
+    ld de, wKeyWorldMonsterBands
     push hl
     ld hl, Data_060_43C7
     add_a_to_hl
     ld a, [hl]
-    ld [wCD02], a
+    ld [wKeyWorldBandAdjust], a
     pop hl
     inc hl
     ld a, [hl]
@@ -507,7 +504,7 @@ Func_060_436B:: ; address name
     rl h
     ld de, Data_060_43D7
     add hl, de
-    ld de, wCCF7
+    ld de, wKeyWorldMonsterBands
     push hl
 
 Jump_060_43A6::
@@ -523,7 +520,7 @@ Jump_060_43AF::
     pop hl
     ld a, $06
     add_a_to_hl
-    ld a, [wCD02]
+    ld a, [wKeyWorldBandAdjust]
     ld c, a
     ld a, [hl]
     add a, c
@@ -532,7 +529,7 @@ Jump_060_43AF::
     xor a, a
 
 Jump_060_43C3::
-    ld [wCD02], a
+    ld [wKeyWorldBandAdjust], a
     ret
 
 Data_060_43C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -543,20 +540,20 @@ Data_060_43D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; clears wCE7B ($10 bytes) and fills a 4-byte entry per map area (from wCD7B) with a random monster id and level from the band lists (E-0128)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD05, wKeyWorldLevelArea, hTemp2
+; reads: wPartyStrength, wKeyWorldLevelArea, hTemp2
 ; writes: hTemp0, hTemp2
-; points at: wCE7B, wCD7B, wCD74
+; points at: wKeyWorldEncounterTable, wKeyWorldObjects, wKeyWorldAreaInfo
 RollKeyWorldEncounterTable::
 Func_060_4597:: ; address name
     ld b, $10
-    ld hl, wCE7B
+    ld hl, wKeyWorldEncounterTable
     xor a, a
 
 Jump_060_459D::
     ld [hl+], a
     dec b
     jr nz, Jump_060_459D
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     call BandForA_4773
     dec a
     dec a
@@ -566,8 +563,8 @@ Jump_060_459D::
 
 Jump_060_45AE::
     ldh [hTemp0], a
-    ld hl, wCD7B
-    ld de, wCE7B
+    ld hl, wKeyWorldObjects
+    ld de, wKeyWorldEncounterTable
 
 Jump_060_45B6::
     ld a, [hl]
@@ -589,7 +586,7 @@ Jump_060_45B6::
     srl a
     add a, a
     add a, c
-    ld hl, wCD74
+    ld hl, wKeyWorldAreaInfo
     add_a_to_hl
     ld a, [hl]
     and a, $F0
@@ -629,20 +626,20 @@ Jump_060_45E7::
 
 ; like RollKeyWorldEncounterTable, with each entry's level from wCD05 / 5 * 7 plus the area value, capped at 99 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD05, hTemp2
+; reads: wPartyStrength, hTemp2
 ; writes: hTemp0, hTemp2
-; points at: wCE7B, wCD7B, wCD74
+; points at: wKeyWorldEncounterTable, wKeyWorldObjects, wKeyWorldAreaInfo
 RollKeyWorldEncounterTableLevels:: ; heuristic: follows a terminator; C0
 Func_060_4607:: ; address name
     ld b, $10
-    ld hl, wCE7B
+    ld hl, wKeyWorldEncounterTable
     xor a, a
 
 Jump_060_460D::
     ld [hl+], a
     dec b
     jr nz, Jump_060_460D
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     call BandForA_4773
     dec a
     dec a
@@ -652,8 +649,8 @@ Jump_060_460D::
 
 Jump_060_461E::
     ldh [hTemp0], a
-    ld hl, wCD7B
-    ld de, wCE7B
+    ld hl, wKeyWorldObjects
+    ld de, wKeyWorldEncounterTable
 
 Jump_060_4626::
     ld a, [hl]
@@ -675,7 +672,7 @@ Jump_060_4626::
     srl a
     add a, a
     add a, c
-    ld hl, wCD74
+    ld hl, wKeyWorldAreaInfo
     add_a_to_hl
     ld a, [hl]
     and a, $F0
@@ -684,7 +681,7 @@ Jump_060_4626::
     push hl
     push de
     push af
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     ld b, a
     ld a, $05
     call DivideBByA
@@ -738,11 +735,11 @@ Jump_060_4678::
 
 ; picks random monster ids for the key world from the wCCF7 lists by band (Func_060_4724) into wCE72-wCE79, and wCE74/wCE77/wCE7A from wC96B (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD05, wCD03, wKeyWorldLevelMonster, hTemp0
-; writes: hTemp0, wCE72, wCE73, wCE75, wCE76, wCE78, wCE79, wCE74, ...
+; reads: wPartyStrength, wKeyRandomLo, wKeyWorldLevelMonster, hTemp0
+; writes: hTemp0, wKeyWorldEncounter
 RollKeyWorldMonsterIds::
 Func_060_4698:: ; address name
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     call BandForA_4773
     ldh [hTemp0], a
 
@@ -751,22 +748,22 @@ Jump_060_46A0::
     call PickRandomMonsterFromBandList
     jr nc, Jump_060_46A0
     ld a, e
-    ld [wCE72], a
+    ld [wKeyWorldEncounter], a
     ld a, d
-    ld [wCE73], a
+    ld [wKeyWorldEncounter + $1], a
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $07
     jr nz, Jump_060_46CF
     ld hl, $0000
     ld a, l
-    ld [wCE75], a
+    ld [wKeyWorldEncounter + $3], a
     ld a, h
-    ld [wCE76], a
+    ld [wKeyWorldEncounter + $4], a
     ld a, l
-    ld [wCE78], a
+    ld [wKeyWorldEncounter + $6], a
     ld a, h
-    ld [wCE79], a
+    ld [wKeyWorldEncounter + $7], a
     jr Jump_060_46F2
 
 Jump_060_46CF::
@@ -783,17 +780,17 @@ Jump_060_46D8::
     call PickRandomMonsterFromBandList
     jr nc, Jump_060_46A0
     ld a, e
-    ld [wCE75], a
+    ld [wKeyWorldEncounter + $3], a
     ld a, d
-    ld [wCE76], a
+    ld [wKeyWorldEncounter + $4], a
     ld a, e
-    ld [wCE78], a
+    ld [wKeyWorldEncounter + $6], a
     ld a, d
-    ld [wCE79], a
+    ld [wKeyWorldEncounter + $7], a
 
 Jump_060_46F2::
     ld a, [wKeyWorldLevelMonster]
-    ld [wCE74], a
+    ld [wKeyWorldEncounter + $2], a
     cp a, $05
     jr nc, Jump_060_46FE
     ld a, $05
@@ -803,21 +800,21 @@ Jump_060_46FE::
     dec a
     dec a
     dec a
-    ld [wCE77], a
-    ld [wCE7A], a
+    ld [wKeyWorldEncounter + $5], a
+    ld [wKeyWorldEncounter + $8], a
     ret
 
 ; hFFC7 = wCCF7[random & 1], stepping back over $FF entries (E-0124)
 ; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
-; reads: wCD03
+; reads: wKeyRandomLo
 ; writes: hTemp1
-; points at: wCCF7
+; points at: wKeyWorldMonsterBands
 PickRandomWCCF7Entry::
 Func_060_4709:: ; address name
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $01
-    ld hl, wCCF7
+    ld hl, wKeyWorldMonsterBands
     add a, l
     ld l, a
     jr nc, Jump_060_4719
@@ -836,7 +833,7 @@ Jump_060_4721::
 
 ; DE = a random entry of the list Data_060_6D6D[16 * hFFC7 + 2 * hFFC6]; carry when valid, no carry for an empty list or ids $A4, $A5 and $174 (E-0127)
 ; 4 call sites from 3 routines (e.g. RollKeyWorldEncounterTable, RollKeyWorldMonsterIds, RollKeyWorldEncounterTableLevels)
-; reads: hTemp1, hTemp0, wCD04
+; reads: hTemp1, hTemp0, wKeyRandomHi
 PickRandomMonsterFromBandList::
 Func_060_4724:: ; address name
     ldh a, [hTemp1]
@@ -877,7 +874,7 @@ Jump_060_4743::
 
 Jump_060_4748::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     cp a, c
     jr nc, Jump_060_4748
@@ -957,11 +954,11 @@ Jump_060_47A4::
 
 ; copies three bytes of entry wCD05 of the 8-byte table at $47C5 to wC969-wC96B (E-0121)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
-; reads: wCD05
+; reads: wPartyStrength
 ; writes: wKeyWorldLevelBase, wKeyWorldLevelArea, wKeyWorldLevelMonster
 LoadWC969TripleForWCD05::
 Func_060_47A7:: ; address name
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     ld l, a
     ld h, $00
     add hl, hl
@@ -984,16 +981,16 @@ Func_060_47A7:: ; address name
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: wCD05, wCD04, wCD0D, wCD0E, hTemp8, hTemp9
-; writes: wCD07, wCD0D, wMapWidthScreens, wCD0E, wMapHeightScreens, hTemp8, hTemp9, wCD0C
-; points at: wCE93, wCD63, wCD70
+; reads: wPartyStrength, wKeyRandomHi, wKeyWorldWidth, wKeyWorldHeight, hTemp8, hTemp9
+; writes: wKeyWorldFlags, wKeyWorldWidth, wMapWidthScreens, wKeyWorldHeight, wMapHeightScreens, hTemp8, hTemp9, wKeyWorldAreaCount
+; points at: wVisitedScreens, wKeyWorldAreas
 DebugAutomap_Update_Sub01_Sub01_Sub02::
 Func_060_4AE5:: ; address name
     xor a, a
-    ld [wCD07], a
+    ld [wKeyWorldFlags], a
     call ClearWC88EWhenWC891MatchesWCC42
     xor a, a
-    ld hl, wCE93
+    ld hl, wVisitedScreens
     ld b, $08
 
 Jump_060_4AF2::
@@ -1001,20 +998,20 @@ Jump_060_4AF2::
     dec b
     jr nz, Jump_060_4AF2
     call PickRandomNonzeroFromTable4CC1
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     ld l, a
     ld h, $00
     ld a, $0A
     call DivideHLByA
     ld c, a
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     sub a, c
     ld l, a
     ld h, $00
 
 Jump_060_4B0C::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, $0A
     jr nc, Jump_060_4B0C
@@ -1032,7 +1029,7 @@ Jump_060_4B0C::
     ld a, $0A
 
 Jump_060_4B2E::
-    ld [wCD0D], a
+    ld [wKeyWorldWidth], a
     ld [wMapWidthScreens], a
     ld a, [hl]
     and a, $0F
@@ -1040,17 +1037,17 @@ Jump_060_4B2E::
     ld a, $0A
 
 Jump_060_4B3B::
-    ld [wCD0E], a
+    ld [wKeyWorldHeight], a
     ld [wMapHeightScreens], a
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     srl a
     srl a
     ldh [hTemp8], a
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     srl a
     srl a
     ldh [hTemp9], a
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     ld b, a
     ld a, $0A
     call DivideBByA
@@ -1063,12 +1060,12 @@ Jump_060_4B3B::
     ld a, [hl]
     ld c, a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, c
     add a, b
-    ld [wCD0C], a
-    ld hl, wCD63
-    ld de, wCD70
+    ld [wKeyWorldAreaCount], a
+    ld hl, wKeyWorldChunks + $3
+    ld de, wKeyWorldAreas
     ld b, $04
 
 Jump_060_4B7D::
@@ -1081,8 +1078,8 @@ Jump_060_4B7D::
     inc de
     dec b
     jr nz, Jump_060_4B7D
-    ld hl, wCD63
-    ld de, wCD70
+    ld hl, wKeyWorldChunks + $3
+    ld de, wKeyWorldAreas
     ldh a, [hTemp8]
     or a, a
     jr z, Jump_060_4BC3
@@ -1117,8 +1114,8 @@ Jump_060_4BB3::
     jr nz, Jump_060_4B9C
 
 Jump_060_4BC3::
-    ld hl, wCD63
-    ld de, wCD70
+    ld hl, wKeyWorldChunks + $3
+    ld de, wKeyWorldAreas
     ldh a, [hTemp9]
     or a, a
     jr z, Jump_060_4BF3
@@ -1186,12 +1183,12 @@ Func_060_4C6C:: ; address name
 
 ; repeatedly picks entry (wCD03 & 3) of the 4-byte row of Data_060_4CC1 selected by the second byte of the wC708 entry wC833 until it is non-zero; wCD0B = entry - 1 (E-0121)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub02)
-; reads: wCD03, wCurrentKeyIndex
-; writes: wCD0B
+; reads: wKeyRandomLo, wCurrentKeyIndex
+; writes: wKeyWorldGoalKind
 PickRandomNonzeroFromTable4CC1::
 Func_060_4C85:: ; address name
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $07
     push af
     ld a, [wCurrentKeyIndex]
@@ -1220,7 +1217,7 @@ Func_060_4C85:: ; address name
     or a, a
     jr z, PickRandomNonzeroFromTable4CC1
     dec a
-    ld [wCD0B], a
+    ld [wKeyWorldGoalKind], a
     ret
 
 Data_060_4CC1:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1230,16 +1227,16 @@ Data_060_4CC1:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: hTemp0, hTemp1, hTemp5, hTemp6
 ; writes: hTemp0, hTemp1, hTemp5, hTemp6, hTemp7
-; points at: wCD63, wCD70, hTemp7
+; points at: wKeyWorldAreas, hTemp7
 DebugAutomap_Update_Sub01_Sub01_Sub03::
 Func_060_4DA1:: ; address name
     ld b, $00
-    ld hl, wCD63
+    ld hl, wKeyWorldChunks + $3
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    ld de, wCD70
+    ld de, wKeyWorldAreas
     ld a, e
     ldh [hTemp5], a
     ld a, d
@@ -1293,12 +1290,12 @@ Jump_060_4DCE::
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; points at: wCD70, wCD74
+; points at: wKeyWorldAreas, wKeyWorldAreaInfo
 DebugAutomap_Update_Sub01_Sub01_Sub04::
 Func_060_4DF6:: ; address name
     ld b, $04
-    ld hl, wCD70
-    ld de, wCD74
+    ld hl, wKeyWorldAreas
+    ld de, wKeyWorldAreaInfo
 
 Jump_060_4DFE::
     ld a, [hl+]
@@ -1314,9 +1311,9 @@ Jump_060_4DFE::
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: hTemp7, wCD04, hTemp0, hTemp1
+; reads: hTemp7, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-; points at: wCD70, wCD74
+; points at: wKeyWorldAreas, wKeyWorldAreaInfo
 DebugAutomap_Update_Sub01_Sub01_Sub05::
 Func_060_4E0A:: ; address name
     ldh a, [hTemp7]
@@ -1330,7 +1327,7 @@ Jump_060_4E13::
 
 Jump_060_4E14::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     cp a, c
     jr nc, Jump_060_4E14
@@ -1338,7 +1335,7 @@ Jump_060_4E14::
 
 Jump_060_4E21::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     cp a, c
     jr nc, Jump_060_4E21
@@ -1348,7 +1345,7 @@ Jump_060_4E21::
     jr z, Jump_060_4E6C
     ld a, c
     ldh [hTemp1], a
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
     ld b, $04
 
 Jump_060_4E3A::
@@ -1397,7 +1394,7 @@ Jump_060_4E6C::
 
 Jump_060_4E72::
     push bc
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
     ld e, $00
     ld c, $00
 
@@ -1431,7 +1428,7 @@ Jump_060_4E94::
     ldh a, [hTemp0]
     dec a
     dec a
-    ld de, wCD70
+    ld de, wKeyWorldAreas
     add a, e
     ld e, a
     jr nc, Jump_060_4EAD
@@ -1456,7 +1453,7 @@ Jump_060_4EC2::
     jr z, Jump_060_4EE6
     ldh a, [hTemp0]
     dec a
-    ld de, wCD70
+    ld de, wKeyWorldAreas
     add a, e
     ld e, a
     jr nc, Jump_060_4ED3
@@ -1483,7 +1480,7 @@ Jump_060_4EE6::
     ldh a, [hTemp0]
     inc a
     inc a
-    ld de, wCD70
+    ld de, wKeyWorldAreas
     add a, e
     ld e, a
     jr nc, Jump_060_4EFA
@@ -1514,7 +1511,7 @@ Jump_060_4F16::
     jr z, Jump_060_4F42
     ldh a, [hTemp0]
     inc a
-    ld de, wCD70
+    ld de, wKeyWorldAreas
     add a, e
     ld e, a
     jr nc, Jump_060_4F29
@@ -1546,8 +1543,8 @@ Jump_060_4F42::
 
 Jump_060_4F4B::
     ld b, $04
-    ld hl, wCD70
-    ld de, wCD74
+    ld hl, wKeyWorldAreas
+    ld de, wKeyWorldAreaInfo
 
 Jump_060_4F53::
     ld a, [hl+]
@@ -1562,14 +1559,14 @@ Jump_060_4F53::
 ; 4 call sites from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub05)
 ; reads: hTemp1
 ; writes: hTemp1
-; points at: wCD70
+; points at: wKeyWorldAreas
 SwapDEByteWithMatchingWCD70::
 Func_060_4F5C:: ; address name
     ld a, [de]
     and a, $F0
     ldh [hTemp1], a
     ld c, $04
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
 
 Jump_060_4F66::
     push bc
@@ -1598,10 +1595,10 @@ Jump_060_4F76::
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
 ; reads: hTemp7, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2
-; points at: wCD7A, wCD78, wCD70
+; points at: wKeyWorldAreaExits, wKeyWorldAreas
 DebugAutomap_Update_Sub01_Sub01_Sub06::
 Func_060_4F7C:: ; address name
-    ld hl, wCD7A
+    ld hl, wKeyWorldAreaExits + $2
     ld b, $05
 
 Jump_060_4F81::
@@ -1616,7 +1613,7 @@ Jump_060_4F81::
     inc hl
     dec b
     jr nz, Jump_060_4F81
-    ld hl, wCD78
+    ld hl, wKeyWorldAreaExits
     ldh a, [hTemp7]
     dec a
     jr z, Jump_060_4FE4
@@ -1626,7 +1623,7 @@ Jump_060_4F81::
 Jump_060_4F98::
     push bc
     push hl
-    ld de, wCD70
+    ld de, wKeyWorldAreas
     ld b, $00
     xor a, a
     ldh [hTemp0], a
@@ -1690,7 +1687,7 @@ Jump_060_4FE4::
 
 ; picks two random open cells (ReadKeyWorldCellIsSolid) in the areas named by hFFC7 and hFFC8, avoiding the previous cell, and stores their positions (E-0129)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub06)
-; reads: hTemp1, wCD04, hTemp4, hTemp3, hTemp2
+; reads: hTemp1, wKeyRandomHi, hTemp4, hTemp3, hTemp2
 ; writes: hTemp4, hTemp3
 PlaceTwoRandomOpenCells::
 Func_060_4FEA:: ; address name
@@ -1699,7 +1696,7 @@ Func_060_4FEA:: ; address name
     add a, a
     ldh [hTemp4], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     ld c, a
     ldh a, [hTemp4]
@@ -1711,7 +1708,7 @@ Func_060_4FEA:: ; address name
     add a, a
     ldh [hTemp3], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     ld c, a
     ldh a, [hTemp3]
@@ -1749,7 +1746,7 @@ Jump_060_5036::
     add a, a
     ldh [hTemp4], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     ld c, a
     ldh a, [hTemp4]
@@ -1761,7 +1758,7 @@ Jump_060_5036::
     add a, a
     ldh [hTemp3], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     ld c, a
     ldh a, [hTemp3]
@@ -1866,18 +1863,18 @@ Func_060_50E4:: ; address name
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: hTemp0, hTemp1, wCD04, wCD03
+; reads: hTemp0, hTemp1, wKeyRandomHi, wKeyRandomLo
 ; writes: hTemp0, hTemp1
-; points at: wCE8B, wCD8B, wCDAF
+; points at: wKeyWorldByte8B
 DebugAutomap_Update_Sub01_Sub01_Sub08::
 Func_060_50E5:: ; address name
-    ld hl, wCE8B
+    ld hl, wKeyWorldByte8B
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    ld hl, wCD8B
-    ld de, wCDAF
+    ld hl, wKeyWorldFloorInfo + $3
+    ld de, wKeyWorldFloorState + $3
 
 Jump_060_50F4::
     ld a, [hl]
@@ -1902,7 +1899,7 @@ Jump_060_5106::
 
 Jump_060_510D::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
     jr nc, Jump_060_510D
@@ -1921,7 +1918,7 @@ Jump_060_5122::
 
 Jump_060_512B::
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $3F
     ld hl, Data_060_5177
     add_a_to_hl
@@ -1977,9 +1974,9 @@ Data_060_5177:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: hTemp7, hTemp0, hTemp1, wCD0C, wCD0E, wCD0D, hTemp5, hTemp2, ...
+; reads: hTemp7, hTemp0, hTemp1, wKeyWorldAreaCount, wKeyWorldHeight, wKeyWorldWidth, hTemp5, hTemp2, ...
 ; writes: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, hTemp8, hTemp9
-; points at: wCD70, wCD88
+; points at: wKeyWorldAreas, wKeyWorldFloorInfo
 DebugAutomap_Update_Sub01_Sub01_Sub09::
 Func_060_51B7:: ; address name
     ldh a, [hTemp7]
@@ -1993,7 +1990,7 @@ Func_060_51B7:: ; address name
 Jump_060_51C3::
     xor a, a
     ldh [hTemp1], a
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
     ld c, $04
 
 Jump_060_51CB::
@@ -2031,7 +2028,7 @@ Jump_060_51E8::
     jr nz, Jump_060_51C3
 
 Jump_060_51F9::
-    ld a, [wCD0C]
+    ld a, [wKeyWorldAreaCount]
     sla a
     ld hl, Data_060_6D0D
     add_a_to_hl
@@ -2046,7 +2043,7 @@ Jump_060_51F9::
     ldh [hTemp5], a
     pop bc
     ld c, $00
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     dec a
     srl a
     srl a
@@ -2054,7 +2051,7 @@ Jump_060_51F9::
     ld b, a
 
 Jump_060_5220::
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     dec a
     srl a
     srl a
@@ -2078,7 +2075,7 @@ Jump_060_5220::
     ldh [hTemp2], a
     ld a, h
     ldh [hTemp3], a
-    ld hl, wCD88
+    ld hl, wKeyWorldFloorInfo
     ld a, l
     ldh [hTemp8], a
     ld a, h
@@ -2138,15 +2135,15 @@ Jump_060_5288::
 
 ; finds area C in wCD70 and picks a random free cell inside it for the object (avoiding wCD7B and wCD8B entries) (E-0131)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub09)
-; reads: hTemp3, wCD04, hTemp4, hTempA, hTemp8, hTemp9, wCD0C, hTemp6
+; reads: hTemp3, wKeyRandomHi, hTemp4, hTempA, hTemp8, hTemp9, wKeyWorldAreaCount, hTemp6
 ; writes: hTempA, hTemp6, hTemp4, hTemp3, hTemp8, hTemp9
-; points at: wCD70, wCD7B, wCD8B
+; points at: wKeyWorldAreas, wKeyWorldObjects
 PlaceObjectInAreaC::
 Func_060_528B:: ; address name
     push bc
     xor a, a
     ldh [hTempA], a
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
     ld b, $00
 
 Jump_060_5294::
@@ -2178,7 +2175,7 @@ Jump_060_52AD::
     add a, a
     ld c, a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     add a, c
     ldh [hTemp4], a
@@ -2188,7 +2185,7 @@ Jump_060_52AD::
     add a, a
     ld c, a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     add a, c
     ldh [hTemp3], a
@@ -2200,7 +2197,7 @@ Jump_060_52AD::
     and a, $0F
     or a, c
     ld c, a
-    ld hl, wCD7B
+    ld hl, wKeyWorldObjects
 
 Jump_060_52DF::
     ld a, [hl]
@@ -2220,7 +2217,7 @@ Jump_060_52DF::
     jr Jump_060_52DF
 
 Jump_060_52F8::
-    ld hl, wCD8B
+    ld hl, wKeyWorldFloorInfo + $3
 
 Jump_060_52FB::
     ld a, [hl]
@@ -2256,7 +2253,7 @@ Jump_060_5310::
     ld [hl+], a
     pop bc
     push hl
-    ld a, [wCD0C]
+    ld a, [wKeyWorldAreaCount]
     sla a
     ld hl, Data_060_6D0D
     add_a_to_hl
@@ -2308,16 +2305,16 @@ Jump_060_5365::
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: wCD05, wMapObjectCount
-; writes: wCD0F, wMapObjectCount, hTemp0
+; reads: wPartyStrength, wMapObjectCount
+; writes: wKeyWorldBand, wMapObjectCount, hTemp0
 ; points at: wMapObjects
 DebugAutomap_Update_Sub01_Sub01_Sub0A::
 Func_060_5373:: ; address name
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     call SetWCD0FBandForA
 
 Jump_060_5379::
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ld hl, Data_060_53B3
     add_a_to_hl
     ld a, [hl]
@@ -2361,7 +2358,7 @@ Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; wCD0F = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
 ; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, FieldModeStateDispatch_Case04_Sub02_Sub01, DebugAutomap_Update_Sub01_Sub01_Sub0A)
-; writes: wCD0F
+; writes: wKeyWorldBand
 SetWCD0FBandForA::
 Func_060_53C3:: ; address name
     cp a, $0B
@@ -2386,12 +2383,12 @@ Jump_060_53D3::
 
 Jump_060_53DF::
     and a, $0F
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ret
 
 ; picks a random open cell within wCD0D x wCD0E not used by another object and stores it for object hFFC6 (E-0130)
 ; 2 call sites from 2 routines (e.g. RefreshKeyWorldObjectsOnEntry, DebugAutomap_Update_Sub01_Sub01_Sub0A)
-; reads: wCD0D, wCD04, wCD0E, hTemp3, hTemp4, hTemp0, wMapObjectCount, hTemp5, ...
+; reads: wKeyWorldWidth, wKeyRandomHi, wKeyWorldHeight, hTemp3, hTemp4, hTemp0, wMapObjectCount, hTemp5, ...
 ; writes: wKeyWorldPlaceFlag, hTemp3, hTemp4, hTemp5
 PlaceKeyWorldObjectAtRandomCell::
 Func_060_53E5:: ; address name
@@ -2400,22 +2397,22 @@ Func_060_53E5:: ; address name
     push de
 
 Jump_060_53EA::
-    ld a, [wCD0D]
+    ld a, [wKeyWorldWidth]
     ld c, a
 
 Jump_060_53EE::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
     jr nc, Jump_060_53EE
     ldh [hTemp3], a
-    ld a, [wCD0E]
+    ld a, [wKeyWorldHeight]
     ld c, a
 
 Jump_060_53FF::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
     jr nc, Jump_060_53FF
@@ -2496,7 +2493,7 @@ Jump_060_5433::
     call ReadByteInBank
     ld b, c
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     inc a
     add_a_to_hl
@@ -2531,11 +2528,11 @@ Jump_060_54AB::
 
 ; picks an object kind for the key level band wCD0F from the chance rows at $556F and its contents ([DE + 1]) (E-0130)
 ; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, RemoveWCC48EntryMatching, DebugAutomap_Update_Sub01_Sub01_Sub0A)
-; reads: wCD0F, wCD04, hTemp0, hTemp1
+; reads: wKeyWorldBand, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 RollKeyWorldObjectKind::
 Func_060_54BB:: ; address name
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     ld l, a
     ld h, $00
     add hl, hl
@@ -2553,7 +2550,7 @@ Func_060_54BB:: ; address name
 
 Jump_060_54CF::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
     jr nc, Jump_060_54CF
@@ -2586,12 +2583,12 @@ Jump_060_54E8::
 
 Jump_060_54F5::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
     jr nc, Jump_060_54F5
     ld c, a
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     ld hl, Data_060_555F
     add_a_to_hl
     xor a, a
@@ -2602,12 +2599,12 @@ Jump_060_54F5::
 Jump_060_5514::
     ld a, $01
     ld [de], a
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     ld c, a
 
 Jump_060_551B::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
     jr nc, Jump_060_551B
@@ -2616,12 +2613,12 @@ Jump_060_551B::
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     ld c, a
 
 Jump_060_5534::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, $0A
     jr nc, Jump_060_5534
@@ -2720,11 +2717,11 @@ Data_060_555F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01, FieldModeStateDispatch_Case04_Sub02)
-; reads: wCD0F, wCD04, hTemp0, hTemp1
+; reads: wKeyWorldBand, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 FieldModeStateDispatch_Shared05::
 Func_060_596F:: ; address name
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     and a, $0F
     ld l, a
     ld h, $00
@@ -2743,7 +2740,7 @@ Func_060_596F:: ; address name
 
 Jump_060_5985::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
     jr nc, Jump_060_5985
@@ -2776,12 +2773,12 @@ Jump_060_599E::
 
 Jump_060_59AB::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
     jr nc, Jump_060_59AB
     ld c, a
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     ld hl, Data_060_5A19
     add_a_to_hl
     ld a, [hl]
@@ -2799,12 +2796,12 @@ Jump_060_59CA::
 Jump_060_59CE::
     ld a, $01
     ld [de], a
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     ld c, a
 
 Jump_060_59D5::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
     jr nc, Jump_060_59D5
@@ -2813,12 +2810,12 @@ Jump_060_59D5::
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     ld c, a
 
 Jump_060_59EE::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, $0A
     jr nc, Jump_060_59EE
@@ -2921,16 +2918,16 @@ Data_060_5A19:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-; reads: wCD88, hTemp4, hTemp3
-; writes: wCD08, hTemp3, hTemp4, wCD09, wCD0A
+; reads: wKeyWorldFloorInfo, hTemp4, hTemp3
+; writes: wKeyWorldGoalScreen, hTemp3, hTemp4, wKeyWorldGoalPos, wKeyWorldGoalPos2
 DebugAutomap_Update_Sub01_Sub01_Sub0B::
 Func_060_5E42:: ; address name
-    ld a, [wCD88]
-    ld [wCD08], a
+    ld a, [wKeyWorldFloorInfo]
+    ld [wKeyWorldGoalScreen], a
     swap a
     and a, $0F
     ldh [hTemp3], a
-    ld a, [wCD88]
+    ld a, [wKeyWorldFloorInfo]
     and a, $0F
     ldh [hTemp4], a
     ldh a, [hTemp4]
@@ -3005,9 +3002,9 @@ Jump_060_5EBE::
     ld hl, Data_060_5ED1
     add_a_to_hl
     ld a, [hl+]
-    ld [wCD09], a
+    ld [wKeyWorldGoalPos], a
     ld a, [hl]
-    ld [wCD0A], a
+    ld [wKeyWorldGoalPos2], a
     ret
 
 Data_060_5ED1:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3015,11 +3012,11 @@ Data_060_5ED1:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; runs one of four routines chosen by random & $0F through a 16-entry table (E-0124)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub03)
-; reads: wCD04
+; reads: wKeyRandomHi
 RunRandomPatternCase::
 Func_060_5EE1:: ; address name
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     rst $00
     dw RunRandomPatternCase_Case00
@@ -3042,7 +3039,7 @@ Func_060_5EE1:: ; address name
 
 ; entry 3 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, hTemp1, wCD04, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
+; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
 RunRandomPatternCase_Case03::
 Jump_060_5F0C:: ; address name
@@ -3089,7 +3086,7 @@ Jump_060_5F1C::
     cp a, $FE
     jr z, Jump_060_5F13
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $1F
     ld c, a
     add a, a
@@ -3159,7 +3156,7 @@ Jump_060_5F5E::
 
 ; entry 2 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, hTemp1, wCD04, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
+; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
 RunRandomPatternCase_Case02::
 Jump_060_5FBF:: ; address name
@@ -3185,7 +3182,7 @@ Jump_060_5FC8::
     cp a, $FF
     jr nz, Jump_060_5FC6
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $1F
     ld c, a
     sla a
@@ -3237,7 +3234,7 @@ Jump_060_5FF2::
 
 ; entry 1 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: hTemp0, hTemp1, wCD04, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
+; reads: hTemp0, hTemp1, wKeyRandomHi, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, ...
 ; writes: hTempA
 RunRandomPatternCase_Case01::
 Jump_060_6031:: ; address name
@@ -3260,7 +3257,7 @@ Jump_060_6038::
     cp a, $FE
     jr z, Jump_060_6036
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $1F
     ld c, a
     sla a
@@ -3313,12 +3310,12 @@ Jump_060_605E::
 
 ; entry 0 of the `rst $00` table in RunRandomPatternCase
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD03, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTempA
+; reads: wKeyRandomLo, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTempA
 ; writes: hTempA
 RunRandomPatternCase_Case00::
 Jump_060_609E:: ; address name
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $1F
     ld c, a
     sla a
@@ -3624,7 +3621,7 @@ Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; on key-world maps with bit 7 of wC893 set: sets the object count wCC47 from the band of the key level and drops objects for which Func_060_53E5 fails; marks the wC890 object (E-0129)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
-; reads: wMapType, wKeyWorldRefresh, wCurrentKeyIndex, wCD0F, wMapObjectCount, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, ...
+; reads: wMapType, wKeyWorldRefresh, wCurrentKeyIndex, wKeyWorldBand, wMapObjectCount, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, ...
 ; writes: wKeyWorldRefresh, wMapObjectCount, hTemp0
 ; points at: wMapObjects
 RefreshKeyWorldObjectsOnEntry::
@@ -3650,7 +3647,7 @@ Func_060_62F9:: ; address name
     ld h, a
     ld a, [hl]
     call SetWCD0FBandForA
-    ld a, [wCD0F]
+    ld a, [wKeyWorldBand]
     and a, $0F
     ld hl, Data_060_638D
     add_a_to_hl
@@ -3729,7 +3726,7 @@ Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; on town maps with bit 7 of wC893 set: sets the object count and band for the map, drops listed objects and marks the wC890 one (E-0130)
 ; 2 call sites from 2 routines (e.g. InitFieldScreen, ScriptCommandE0_Run_Case07)
 ; reads: wMapType, wKeyWorldRefresh, hMapId
-; writes: wMapObjectCount, wCD0F, hTemp0
+; writes: wMapObjectCount, wKeyWorldBand, hTemp0
 SetupTownObjectsForMap::
 Func_060_639D:: ; address name
     ld a, [wMapType]
@@ -3772,7 +3769,7 @@ Jump_060_63E0::
     ld a, $0A
     ld [wMapObjectCount], a
     ld a, $00
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ld hl, Data_060_6705
     call RemoveWCC48EntryMatching
     ld a, $01
@@ -3784,7 +3781,7 @@ Jump_060_63F8::
     ld a, $0A
     ld [wMapObjectCount], a
     ld a, $03
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ld hl, $6905
     call RemoveWCC48EntryMatching
     ld a, $02
@@ -3796,7 +3793,7 @@ Jump_060_6410::
     ld a, $0F
     ld [wMapObjectCount], a
     ld a, $06
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ld hl, Data_060_6B05
     call RemoveWCC48EntryMatching
     ld a, $03
@@ -3808,7 +3805,7 @@ Jump_060_6428::
     ld a, $0F
     ld [wMapObjectCount], a
     ld a, $09
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ld hl, Data_060_6F85
     call RemoveWCC48EntryMatching
     ld a, $04
@@ -3820,7 +3817,7 @@ Jump_060_6440::
     ld a, $0A
     ld [wMapObjectCount], a
     ld a, $0B
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ld hl, Data_060_7405
     call RemoveWCC48EntryMatching
     ld a, $05
@@ -3832,7 +3829,7 @@ Jump_060_6458::
     ld a, $02
     ld [wMapObjectCount], a
     ld a, $0B
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ld hl, Data_060_7525
     call RemoveWCC48EntryMatching
     ld a, $06
@@ -3844,7 +3841,7 @@ Jump_060_6470::
     ld a, $08
     ld [wMapObjectCount], a
     ld a, $0D
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     ld hl, Data_060_7555
     call RemoveWCC48EntryMatching
     ld a, $07
@@ -3941,7 +3938,7 @@ Jump_060_64E8::
 
 ; only called from RemoveWCC48EntryMatching (E-0047)
 ; 1 call site from 1 routine (e.g. RemoveWCC48EntryMatching)
-; reads: wMapWidthScreens, wCD04, wMapHeightScreens, hTemp3, hTemp4, hTemp0, wMapObjectCount, hTempA, ...
+; reads: wMapWidthScreens, wKeyRandomHi, wMapHeightScreens, hTemp3, hTemp4, hTemp0, wMapObjectCount, hTempA, ...
 ; writes: hTempA, hTemp3, hTemp4, hTemp5
 RemoveWCC48EntryMatching_Sub01::
 Func_060_64F3:: ; address name
@@ -3955,7 +3952,7 @@ Jump_060_64F7::
 
 Jump_060_64FB::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
     jr nc, Jump_060_64FB
@@ -3965,7 +3962,7 @@ Jump_060_64FB::
 
 Jump_060_650C::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
     jr nc, Jump_060_650C
@@ -4028,7 +4025,7 @@ Jump_060_654B::
 Jump_060_656A::
     push hl
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $03
     add a, a
     add_a_to_hl
@@ -4073,9 +4070,9 @@ Jump_060_6590::
 
 ; only called from FieldModeStateDispatch_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04)
-; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wCCEA, wCD04
-; writes: wCCE9, wCCEA, wCD0F, hTemp2, hTemp3
-; points at: wCCEB, hTemp3
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wWarpPending, wKeyRandomHi
+; writes: wScreenTriggerCount, wWarpPending, wKeyWorldBand, hTemp2, hTemp3
+; points at: wScreenTriggers, hTemp3
 FieldModeStateDispatch_Case04_Sub02::
 Func_060_65AA:: ; address name
     ld a, [wMapType]
@@ -4119,7 +4116,7 @@ Jump_060_65DF::
 
 Jump_060_65E4::
     xor a, a
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     ret
 
 Jump_060_65E9::
@@ -4129,27 +4126,27 @@ Jump_060_65E9::
     jr Jump_060_65DF
 
 Jump_060_65EF::
-    ld a, [wCCEA]
+    ld a, [wWarpPending]
     or a, a
     jr z, Jump_060_65E4
     xor a, a
-    ld [wCCEA], a
+    ld [wWarpPending], a
     ld a, b
     push af
     ld hl, Data_060_6634
     add_a_to_hl
     ld a, [hl]
-    ld [wCD0F], a
+    ld [wKeyWorldBand], a
     pop af
     ldh [hTemp2], a
     ld a, $03
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $1F
     ldh [hTemp3], a
     ld b, $03
-    ld de, wCCEB
+    ld de, wScreenTriggers
 
 Jump_060_661E::
     push de
@@ -4394,9 +4391,9 @@ Data_060_6866:: ; heuristic: target of a monotone pointer table; C0
 
 ; only called from FieldModeStateDispatch_Case04_Sub02 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02)
-; reads: wMapType, wKeyWorldArea, wKeyWorldFloor, wCCEA, wCurrentKeyIndex, wCCED, wCCF1, wCCEE, ...
-; writes: wCCE9, wCCEA
-; points at: wCDB0, wCCEB
+; reads: wMapType, wKeyWorldArea, wKeyWorldFloor, wWarpPending, wCurrentKeyIndex, wScreenTriggers
+; writes: wScreenTriggerCount, wWarpPending
+; points at: wScreenTriggers
 FieldModeStateDispatch_Case04_Sub02_Sub01::
 Func_060_686C:: ; address name
     ld a, [wMapType]
@@ -4406,7 +4403,7 @@ Func_060_686C:: ; address name
 
 Jump_060_6875::
     xor a, a
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     ret
 
 Jump_060_687A::
@@ -4416,7 +4413,7 @@ Jump_060_687A::
     ld c, a
     ld a, [wKeyWorldFloor]
     swap a
-    ld hl, wCDB0
+    ld hl, wKeyWorldFloorState + $4
     add_a_to_hl
     ld a, [hl]
     cp a, c
@@ -4428,11 +4425,11 @@ Jump_060_687A::
     ld a, [hl]
     cp a, c
     jr z, Jump_060_6875
-    ld a, [wCCEA]
+    ld a, [wWarpPending]
     or a, a
     jr z, Jump_060_6875
     xor a, a
-    ld [wCCEA], a
+    ld [wWarpPending], a
     ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
@@ -4447,9 +4444,9 @@ Jump_060_687A::
     ld a, [hl]
     call SetWCD0FBandForA
     ld a, $02
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     ld b, $02
-    ld de, wCCEB
+    ld de, wScreenTriggers
 
 Jump_060_68C2::
     push de
@@ -4464,30 +4461,30 @@ Jump_060_68C2::
     inc de
     dec b
     jr nz, Jump_060_68C2
-    ld a, [wCCED]
+    ld a, [wScreenTriggers + $2]
     ld c, a
-    ld a, [wCCF1]
+    ld a, [wScreenTriggers + $6]
     cp a, c
     ret nz
-    ld a, [wCCEE]
+    ld a, [wScreenTriggers + $3]
     ld c, a
-    ld a, [wCCF2]
+    ld a, [wScreenTriggers + $7]
     cp a, c
     ret nz
     ld a, $01
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     ret
 
 ; DE += 2; advances the random seed; hFFC6 = wCD04 & 7; writes Data_060_690E[hFFC6] at DE, calls Func_061_4706, then writes hFFC6 at the next byte (E-0121)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01)
-; reads: wCD04, hTemp0
+; reads: wKeyRandomHi, hTemp0
 ; writes: hTemp0
 WriteRandomEntryFromTable690E::
 Func_060_68EB:: ; address name
     inc de
     inc de
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     ldh [hTemp0], a
     ld hl, Data_060_690E
@@ -4563,11 +4560,11 @@ Jump_060_6958::
 
 ; repeats NextRandomSeed until wCD04 & $7F is below 100; returns A = that value (E-0116)
 ; 2 call sites from 1 routine (e.g. RollKeyContentsForLevelHFFC6)
-; reads: wCD04
+; reads: wKeyRandomHi
 RandomBelow100::
 Func_060_695C:: ; address name
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
     jr nc, RandomBelow100
@@ -4628,7 +4625,7 @@ Jump_060_6C8E::
 ; 7 call sites from 6 routines (e.g. DebugAutomap_Update_Sub01, RunWC8C7Phase_Case02, Func_002_4F4C_Case07, RunWC46BMenuState_Case05, ...)
 ; reads: wKeyWorldSlot
 ; writes: rRAMB, rRAMG
-; points at: wCD07
+; points at: wKeyWorldFlags
 SaveWCD07RecordToSRAMSlotWCC42::
 Func_060_6C96:: ; address name
     ld a, [wKeyWorldSlot]
@@ -4647,7 +4644,7 @@ Func_060_6C96:: ; address name
     ld h, a
     ld e, l
     ld d, h
-    ld hl, wCD07
+    ld hl, wKeyWorldFlags
     ld a, $0A
     ld [rRAMG], a
     ld a, [wKeyWorldSlot]
@@ -4665,7 +4662,7 @@ Func_060_6C96:: ; address name
 ; 8 call sites from 8 routines (e.g. DebugAutomap_Update, RunWC46BMenuState_Case05, GameMode5_Init_Case02, GameMode5_Init_Case03, ...)
 ; reads: wKeyWorldSlot
 ; writes: rRAMB, rRAMG
-; points at: wCD07
+; points at: wKeyWorldFlags
 LoadWCD07RecordFromSRAMSlotWCC42::
 Func_060_6CD1:: ; address name
     ld a, [wKeyWorldSlot]
@@ -4682,7 +4679,7 @@ Func_060_6CD1:: ; address name
     ld a, h
     adc a, $A0
     ld h, a
-    ld de, wCD07
+    ld de, wKeyWorldFlags
     ld a, $0A
     ld [rRAMG], a
     ld a, [wKeyWorldSlot]

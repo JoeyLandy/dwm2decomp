@@ -3,14 +3,14 @@ SECTION "Bank A2", ROMX[$4000], BANK[$A2]
 
 ; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hFFC6 bytes from HL to DE (E-0121)
 ; 1 call site from 1 routine (e.g. CopyMonsterTableBytesFrom4075)
-; reads: wMonsterId, wCFE7, hTemp0
+; reads: wMonsterId, hTemp0
 CopyMonsterTableBytesFrom4056::
 Func_0A2_4001:: ; address name
     push de
     push bc
     ld a, [wMonsterId]
     ld c, a
-    ld a, [wCFE7]
+    ld a, [wMonsterId + $1]
     ld b, a
     ld a, c
     sub a, $50
@@ -38,13 +38,13 @@ Func_0A2_4001:: ; address name
 
 ; only called from LoadMonsterRecordTo (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMonsterRecordTo)
-; reads: wMonsterId, wCFE7
+; reads: wMonsterId
 LoadMonsterRecordTo_Sub01::
 Func_0A2_402D:: ; address name
     push de
     ld a, [wMonsterId]
     ld c, a
-    ld a, [wCFE7]
+    ld a, [wMonsterId + $1]
     ld b, a
     ld a, c
     sub a, $50

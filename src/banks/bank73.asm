@@ -501,24 +501,24 @@ Jump_073_42D8:: ; address name
 
 ; entry 4 of the `rst $00` table in ScriptCommand82_Run_Case0A
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD04, wIsCGB
+; reads: wKeyRandomHi, wIsCGB
 ; writes: wMenuState, wMenuSubState, wMenuSelectedMember, wMenuCursor, rSVBK
 ; points at: wScreenTileBuffer, wScriptStep
 ScriptCommand82_Run_Case0A_Case04::
 Jump_073_42F1:: ; address name
     farcall SaveScreenBufferToBGMap1
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     swap a
     ld [wMenuState], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     swap a
     ld [wMenuSubState], a
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $07
     swap a
     ld [wMenuSelectedMember], a
@@ -875,7 +875,7 @@ Jump_073_45E4:: ; address name
 ; entry 2 of the `rst $00` table in ScriptCommand82_Run_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
-; writes: wCE93, wCE94, wCE95, wCE96, wCE97, wCE98, wCE99, wCE9A, ...
+; writes: wVisitedScreens, hTemp0, hTemp1, wScriptStep
 ; points at: wScriptStep
 ScriptCommand82_Run_Case08_Case02::
 Jump_073_45EF:: ; address name
@@ -885,14 +885,14 @@ Jump_073_45EF:: ; address name
     ld hl, vTiles0 + $23
     call StartMessageHL_B73
     ld a, $FF
-    ld [wCE93], a
-    ld [wCE94], a
-    ld [wCE95], a
-    ld [wCE96], a
-    ld [wCE97], a
-    ld [wCE98], a
-    ld [wCE99], a
-    ld [wCE9A], a
+    ld [wVisitedScreens], a
+    ld [wVisitedScreens + $1], a
+    ld [wVisitedScreens + $2], a
+    ld [wVisitedScreens + $3], a
+    ld [wVisitedScreens + $4], a
+    ld [wVisitedScreens + $5], a
+    ld [wVisitedScreens + $6], a
+    ld [wVisitedScreens + $7], a
     ld hl, $00C8
     ld a, l
     ldh [hTemp0], a
@@ -946,13 +946,13 @@ Jump_073_4647:: ; address name
 
 ; entry 4 of the `rst $00` table in ScriptCommand82_Run_Case06
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD03, wMenuState, wMenuSubState, wScriptParam1, wDigits, wGoldLo, wGoldMid, wGoldHi, ...
+; reads: wKeyRandomLo, wMenuState, wMenuSubState, wScriptParam1, wDigits, wGoldLo, wGoldMid, wGoldHi, ...
 ; writes: wMenuSubState, wDigits, wGoldLo, wGoldMid, wGoldHi, wScriptParam1, wMenuSelectedMember, wStepPtrLo, ...
 ; points at: wTextNumber, wScriptStep
 ScriptCommand82_Run_Case06_Case04::
 Jump_073_46B3:: ; address name
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $0F
     cp a, $0D
     jr nc, ScriptCommand82_Run_Case06_Case04
@@ -1017,7 +1017,7 @@ Jump_073_470A::
 
 Jump_073_473F::
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $03
     ld hl, $4822
     add_a_to_hl
@@ -1110,13 +1110,13 @@ Jump_073_47F1::
 
 ; entry 0 of the `rst $00` table in ScriptCommand82_Run_Case06
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD03
+; reads: wKeyRandomLo
 ; writes: wScriptParam0
 ; points at: wScriptStep
 ScriptCommand82_Run_Case06_Case00::
 Jump_073_47FD:: ; address name
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $03
     ld hl, $4822
     add_a_to_hl
@@ -1585,7 +1585,7 @@ Jump_073_4AD7::
 
 ; entry 7 of the `rst $00` table in ScriptCommand82_Run_Case07
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wD092, wCD03, wStepPtrLo, wInventory
+; reads: wD092, wKeyRandomLo, wStepPtrLo, wInventory
 ; writes: wStepPtrLo, wScriptStep
 ; points at: wScriptStep
 ScriptCommand82_Run_Case07_Case07::
@@ -1596,7 +1596,7 @@ Jump_073_4ADE:: ; address name
     or a, a
     jr nz, Jump_073_4B21
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $03
     add a, $19
     ld [wStepPtrLo], a
@@ -1628,13 +1628,13 @@ Jump_073_4B21::
 
 ; entry 11 of the `rst $00` table in ScriptCommand82_Run_Case07
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD03, wStepPtrLo, wInventory
+; reads: wKeyRandomLo, wStepPtrLo, wInventory
 ; writes: wStepPtrLo, wScriptStep
 ; points at: wScriptStep
 ScriptCommand82_Run_Case07_Case0B::
 Jump_073_4B2B:: ; address name
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $03
     add a, $19
     ld [wStepPtrLo], a
@@ -6771,7 +6771,6 @@ Func_073_6875:: ; address name
 ; 5 call sites from 3 routines (e.g. ScriptCommand35_Run_Case11, ScriptCommand35_Run_Case0A, ScriptCommand35_Run_Case03)
 ; reads: wIsCGB
 ; writes: rSVBK
-; points at: wD000
 ScriptCommand35_Run_Shared01::
 Func_073_6882:: ; address name
     ld a, [wIsCGB]
@@ -6779,7 +6778,7 @@ Func_073_6882:: ; address name
     ret z
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToVRAM
     ld a, $00
     ldh [rSVBK], a

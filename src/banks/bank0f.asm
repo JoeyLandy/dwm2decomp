@@ -275,7 +275,7 @@ Jump_00F_4171:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wSGBActive, wSGBPaletteSet
 ; writes: wSpriteSlotCount, wObject5, hPlayerX, wFollowerRecords, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
-; points at: wScreenTileBuffer, wD000, wScriptStep
+; points at: wScreenTileBuffer, wScriptStep
 ScriptCommand5F_Run_Case29::
 Jump_00F_418E:: ; address name
     xor a, a
@@ -318,7 +318,7 @@ Jump_00F_41D4::
     jr z, Jump_00F_41F1
     ld a, $02
     ldh [rSVBK], a
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     xor a, a
     ld bc, $0168
     call FillBytes
@@ -2625,7 +2625,7 @@ Jump_00F_50D2:: ; address name
 
 ; entry 11 of the `rst $00` table in ScriptCommand5E_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wCCE9, wScriptSubStep
+; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wScreenTriggerCount, wScriptSubStep
 ScriptCommand5E_Run_Case0B::
 Jump_00F_50D9:: ; address name
     ld a, $05
@@ -2641,7 +2641,7 @@ Jump_00F_50D9:: ; address name
     ld a, $04
     ld [wFieldTransitionKind], a
     xor a, a
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     farcall ScriptStartFadeAndAdvanceStep
     ld hl, $0533
     call StartMessageHL_B0F
@@ -3633,7 +3633,7 @@ Jump_00F_5889:: ; address name
 
 ; entry 17 of the `rst $00` table in ScriptCommand4B_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wCCE9, wScriptSubStep
+; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wScreenTriggerCount, wScriptSubStep
 ; points at: hPlayerStateFlags
 ScriptCommand4B_Run_Case11::
 Jump_00F_5890:: ; address name
@@ -3650,7 +3650,7 @@ Jump_00F_5890:: ; address name
     ld a, $01
     ld [wFieldTransitionKind], a
     xor a, a
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     farcall ScriptStartFadeAndAdvanceStep
     ld hl, $02A7
     call StartMessageHL_B0F
@@ -6292,7 +6292,7 @@ Jump_00F_6894:: ; address name
 ; entry 44 of the `rst $00` table in ScriptCommand39_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags
-; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wCCE9, wObject5, ...
+; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wScreenTriggerCount, wObject5, ...
 ; points at: hPlayerStateFlags
 ScriptCommand39_Run_Case2C::
 Jump_00F_689B:: ; address name
@@ -6309,7 +6309,7 @@ Jump_00F_689B:: ; address name
     ld a, $01
     ld [wFieldTransitionKind], a
     xor a, a
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     farcall ScriptStartFadeAndAdvanceStep
     ld a, $50
     ld [wObject5 + $4], a
@@ -8101,7 +8101,7 @@ Jump_00F_7397:: ; address name
 
 ; entry 30 of the `rst $00` table in ScriptCommand27_Run
 ; no direct call (reached through a table, a jump or a vector)
-; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wCCE9, wScriptSubStep
+; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind, wScreenTriggerCount, wScriptSubStep
 ScriptCommand27_Run_Case1E::
 Jump_00F_739E:: ; address name
     ld a, $05
@@ -8117,7 +8117,7 @@ Jump_00F_739E:: ; address name
     ld a, $01
     ld [wFieldTransitionKind], a
     xor a, a
-    ld [wCCE9], a
+    ld [wScreenTriggerCount], a
     farcall ScriptStartFadeAndAdvanceStep
     ld hl, $0125
     call StartMessageHL_B0F

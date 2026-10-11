@@ -27,7 +27,7 @@ Func_036_4001:: ; address name
 
 ; resolve step $00: advances wBattleResolveStep and clears wBattleSubStep. When wDABD is zero, wCFF3 bit 7 is set, the target is present and bit 5 of the target's wD854 byte is set, it farcalls RunBattleResolveStep_Case00_Sub01 (not read), stores the result in wC971 when it is not $FF, shows message $33 and returns; otherwise it clears that bit and continues into ResolveStepTargetAndSubEffects (E-0053)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDABD, wCFF3, wBattleTarget, wBattleSubStep
+; reads: wDABD, wRecordBufferData, wBattleTarget, wBattleSubStep
 ; writes: wBattleSubStep, wResolveByte71
 ; points at: wBattleResolveStep, wD854
 ResolveStepBegin::
@@ -39,7 +39,7 @@ Jump_036_4025:: ; address name
     ld a, [wDABD]
     or a, a
     jr nz, Jump_036_4069
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 7, a
     jr z, Jump_036_4069
     ld a, [wBattleTarget]
@@ -79,7 +79,7 @@ Jump_036_4077:: ; address name
 
 ; entry 0 of the `rst $00` table in ResolveStepTargetAndSubEffects
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDABD, wCFF2, wCFF3, wBattleTarget, wBattleActor, wDAC0
+; reads: wDABD, wRecordBufferData, wBattleTarget, wBattleActor, wDAC0
 ; writes: wResolveByte81, wDAB2, wBattleTarget, wBattleSubStep, wDABE, wDAC0
 ; points at: wD80A, wBattleTargetChoice, wBattleSubStep, wBattleResolveStep, wD80E
 ResolveStepTargetAndSubEffects_Case00::
@@ -89,13 +89,13 @@ Jump_036_407F:: ; address name
     ld a, [wDABD]
     or a, a
     jp nz, Jump_036_411F
-    ld a, [wCFF2]
+    ld a, [wRecordBufferData + $4]
     cp a, $40
     jp z, ResolveStepTargetAndSubEffects_Case01
     and a, $F0
     cp a, $20
     jp z, ResolveStepTargetAndSubEffects_Case01
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 4, a
     jr z, Jump_036_40ED
     ld a, [wBattleTarget]
@@ -140,7 +140,7 @@ Jump_036_407F:: ; address name
 Jump_036_40ED::
     ld hl, wBattleSubStep
     inc [hl]
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 7, a
     jr nz, Jump_036_4102
     bit 4, a
@@ -182,7 +182,7 @@ Jump_036_411F::
 
 ; entry 1 of the `rst $00` table in ResolveStepTargetAndSubEffects
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wCFF3, wDAC0
+; reads: wBattleTarget, wRecordBufferData, wDAC0
 ; writes: wBattleSubStep, wDABE, wDAC0
 ; points at: wBattleResolveStep, wD80E
 ResolveStepTargetAndSubEffects_Case01::
@@ -196,7 +196,7 @@ Jump_036_4127:: ; address name
     call AddAx9ToHL
     bit 3, [hl]
     ret z
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 3, a
     ret z
     res 3, [hl]
@@ -217,7 +217,7 @@ Jump_036_414B::
 
 ; only called from ResolveStepTargetAndSubEffects_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00)
-; reads: wBattleTarget, wCFF5, wBattleActionId, wBattleActor
+; reads: wBattleTarget, wRecordBufferData, wBattleActionId, wBattleActor
 ; writes: wDAD1, wBattleTarget
 ; points at: wD812, wD854, wD810, wBattleTargetChoice, wDABF
 ResolveStepTargetAndSubEffects_Case00_Sub01::
@@ -225,7 +225,7 @@ Func_036_4162:: ; address name
     ld a, [wBattleTarget]
     call SlotHasStatus3Or4Bits_Bank36
     jr z, Jump_036_4191
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     bit 5, a
     jr z, Jump_036_4191
     ld a, [wBattleActionId]
@@ -358,7 +358,7 @@ Jump_036_4255::
 
 ; only called from ResolveStepTargetAndSubEffects_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00)
-; reads: wBattleTarget, wCFF5, wBattleActor
+; reads: wBattleTarget, wRecordBufferData, wBattleActor
 ; writes: wDABE, wResolveByte81
 ; points at: wD80E
 ResolveStepTargetAndSubEffects_Case00_Sub03::
@@ -371,7 +371,7 @@ Func_036_425A:: ; address name
     ld a, [hl]
     and a, $22
     jr z, Jump_036_42A3
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     bit 7, a
     jr z, Jump_036_42A3
     bit 1, [hl]
@@ -409,13 +409,13 @@ Jump_036_42A5::
 
 ; only called from ResolveStepTargetAndSubEffects_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00)
-; reads: wBattleTarget, wCFF5
+; reads: wBattleTarget, wRecordBufferData
 ResolveStepTargetAndSubEffects_Case00_Sub04::
 Func_036_42AA:: ; address name
     ld a, [wBattleTarget]
     call SlotHasStatus3Or4Bits_Bank36
     jr z, Jump_036_42CB
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     bit 5, a
     jr z, Jump_036_42CB
     ld a, $84
@@ -434,7 +434,7 @@ Jump_036_42CB::
 
 ; only called from routines of ResolveStepTargetAndSubEffects (E-0098)
 ; 4 call sites from 4 routines (e.g. ResolveStepTargetAndSubEffects_Case00_Sub04, ResolveStepTargetAndSubEffects_Case00_Sub03, ResolveStepTargetAndSubEffects_Case00_Sub02, ResolveStepTargetAndSubEffects_Case00_Sub01)
-; reads: wBattleTarget, wCFF4, wBattleActor
+; reads: wBattleTarget, wRecordBufferData, wBattleActor
 ; writes: wDAD1, wBattleTarget, wResolveByte81
 ; points at: wD812, wBattleTargetChoice, wDABF
 ResolveStepTargetAndSubEffects_Shared01::
@@ -444,7 +444,7 @@ Func_036_42D3:: ; address name
     call AddAx9ToHL
     bit 4, [hl]
     jr z, Jump_036_4315
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 0, a
     jr z, Jump_036_4315
     inc hl
@@ -481,7 +481,7 @@ Jump_036_4317::
 
 ; resolve step $02: advances wBattleResolveStep; when wDABD is non-zero and wDAB2 is zero and ActionIs91AndStatusBit6Set is not set, it stores $82 in wDAD2 and farcalls 3A:4001. When wDABD is zero or wDAB2 is non-zero it continues as ResolveStepFlagBit7Effect; when ActionIs91AndStatusBit6Set is set it returns (E-0050)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wDABD, wDAB2, wBattleTarget, wCFF4, wBattleActionId, wBattleActor, wDAC0, wCFF3, ...
+; reads: wDABD, wDAB2, wBattleTarget, wRecordBufferData, wBattleActionId, wBattleActor, wDAC0, wRandomLo
 ; writes: wDAD2, wDAC0
 ; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wBattleAGL
 ResolveStepCallEffect82::
@@ -523,7 +523,7 @@ Jump_036_4347::
 
 ; resolve step $03: advances wBattleResolveStep. When wBattleTarget is present (Func_036_7F3C does not set carry), wCFF4 bit 6 is set, and the target's wD854 byte has bit 7 set, it farcalls 3A:6EE5 with D = $35, calls Func_036_4FD1 and queues sound $84; otherwise it goes on to case 4 (E-0050)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wCFF4, wBattleActionId, wBattleActor, wDAC0, wCFF3, wRandomLo
+; reads: wBattleTarget, wRecordBufferData, wBattleActionId, wBattleActor, wDAC0, wRandomLo
 ; writes: wDAC0
 ; points at: wBattleResolveStep, wD854, wD810, wD811, wD80F, wD80D, wBattleStatus, wBattleAGL
 ResolveStepFlagBit7Effect::
@@ -533,7 +533,7 @@ Jump_036_4356:: ; address name
     ld a, [wBattleTarget]
     call CheckSlotStatusBlockWide_Bank36
     jr c, ResolveStepEffectChecks
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 6, a
     jr z, ResolveStepEffectChecks
     ld a, [wBattleTarget]
@@ -551,7 +551,7 @@ Jump_036_4356:: ; address name
 
 ; resolve step $04: runs RunBattleResolveStep_Case04_Sub01 (returns on action $35) and, when the target is present, advances the step. Then it selects one of several effects from wCFF4 bits 1, 6 and wCFF3 bits 7 and 0 and the status bytes of the actor and target: messages $66, $68 and $D2 (with sound $84) and calls to RunBattleResolveStep_Case04_Sub03 when the roll is below a threshold. The threshold for the roll comes from the actor's AGL minus the target's AGL, in bands of $320, $258, $190, $C8 and $64 (values $80 down to $01); the roll is AdvanceRandom's wC5E7 (E-0054)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleTarget, wCFF4, wBattleActionId, wBattleActor, wDAC0, wCFF3, wRandomLo
+; reads: wBattleTarget, wRecordBufferData, wBattleActionId, wBattleActor, wDAC0, wRandomLo
 ; writes: wDAC0
 ; points at: wBattleResolveStep, wD810, wD811, wD80F, wD80D, wD854, wBattleStatus, wBattleAGL
 ResolveStepEffectChecks::
@@ -569,7 +569,7 @@ Jump_036_439B::
     inc [hl]
     call ResolveStepEffectChecks_Sub02
     ret z
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 1, a
     jr z, Jump_036_43D8
     ld a, [wBattleActionId]
@@ -594,7 +594,7 @@ Jump_036_43BF::
     jp Jump_036_4543
 
 Jump_036_43D8::
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 7, a
     jr z, Jump_036_4431
     ld a, [wBattleTarget]
@@ -637,7 +637,7 @@ Jump_036_4416::
     jr Jump_036_4406
 
 Jump_036_4431::
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 0, a
     jr z, Jump_036_447F
     ld a, [wBattleActor]
@@ -674,7 +674,7 @@ Jump_036_4469::
     jp Jump_036_4543
 
 Jump_036_447F::
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 6, a
     jp z, Jump_036_4542
     ld a, [wBattleTarget]
@@ -846,13 +846,13 @@ Func_036_4582:: ; address name
 
 ; resolve step $05: advances wBattleResolveStep. With wCFF4 bits 3-4 both clear it continues into case 6. Bit 4 with the actor's status byte 1 bit 2 set continues into case 6. With wCFF4 bit 3 set and wD854 bit 0 (target) and status byte 1 bit 3 (actor) both clear, it rolls RollWC5E7BelowChance: on success it sets bit 7 of the actor's status byte 2 (wD80E), calls Func_036_7E6C, shows message $9C (carry) or $9D through 3A:7193, queues sound $83 and advances the step again; on failure, or when bit 3 is clear, it clears that bit (E-0052)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFF4, wBattleActor
+; reads: wRecordBufferData, wBattleActor
 ; points at: wBattleResolveStep, wD80D, wD854, wD80E
 ResolveStepChanceRoll::
 Jump_036_458E:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     and a, $18
     jr z, ResolveStepActionEffect
     bit 4, a
@@ -864,7 +864,7 @@ Jump_036_458E:: ; address name
     jr nz, ResolveStepActionEffect
 
 Jump_036_45AA::
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 3, a
     jr z, Jump_036_45F7
     ld a, [wBattleActor]
@@ -918,7 +918,7 @@ Jump_036_4603:: ; address name
 
 ; resolve step $07: waits for the sound channels in wDC20 when the actor's wD80E bit 7 is set; advances the step; then works on the damage in wBattleDamageLo/Hi and wD873: doubles it for several status bits (wD80D bit 2, wD810 bits 0 and 4 with wCFF3 and wCFF4), rerolls it from the actor's ATK through Func_036_4930 when wCFF4 bit 3 and wD80E bit 7 are set, adds half again for wD854 bit 6, and halves or doubles it on the target's wD813 and wD812 bits (E-0054)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBattleActor, wSoundChannelSlots, wCFF4, wBattleDamageLo, wD873, wBattleTarget, wCFF3, wBattleActionId
+; reads: wBattleActor, wSoundChannelSlots, wRecordBufferData, wBattleDamageLo, wD873, wBattleTarget, wBattleActionId
 ; writes: wBattleDamageLo, wD873
 ; points at: wD80E, wDC20, wBattleResolveStep, wD80D, wD854, wD813, wD812, wD810
 ResolveStepComputeDamage::
@@ -937,7 +937,7 @@ Jump_036_460B:: ; address name
 Jump_036_4622::
     ld hl, wBattleResolveStep
     inc [hl]
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 4, a
     jr z, Jump_036_464D
     ld a, [wBattleActor]
@@ -957,7 +957,7 @@ Jump_036_4622::
     jr Jump_036_46C7
 
 Jump_036_464D::
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 3, a
     jr z, Jump_036_4679
     ld a, [wBattleActor]
@@ -977,7 +977,7 @@ Jump_036_464D::
     jr Jump_036_46EB
 
 Jump_036_4679::
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 5, a
     jr z, Jump_036_46A0
     ld a, [wBattleActor]
@@ -997,7 +997,7 @@ Jump_036_4679::
     jr Jump_036_46C7
 
 Jump_036_46A0::
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 1, a
     jr z, Jump_036_46C7
     ld a, [wBattleActor]
@@ -1049,7 +1049,7 @@ Jump_036_46EB::
     ld a, [wD873]
     ld h, a
     jr nz, Jump_036_4713
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 7, a
     jr z, Jump_036_4742
 
@@ -1059,7 +1059,7 @@ Jump_036_470D::
     jr Jump_036_4723
 
 Jump_036_4713::
-    ld a, [wCFF4]
+    ld a, [wRecordBufferData + $6]
     bit 7, a
     jr z, Jump_036_4742
     bit 0, c
@@ -1096,7 +1096,7 @@ Jump_036_4742::
     call AddAx9ToHL
     bit 2, [hl]
     jr z, Jump_036_4775
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 7, a
     jr z, Jump_036_4775
     ld a, [wBattleActionId]
@@ -3823,8 +3823,8 @@ Jump_036_56FF::
 
 ; only called from ActionEffect_Transform (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Transform)
-; reads: wBattleTarget, wBattleActor, wLinkMode, wCFF1
-; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer, wCFED
+; reads: wBattleTarget, wBattleActor, wLinkMode, wRecordBufferData
+; writes: wD868, wD869, wD86A, wD86B, wRecordBuffer
 ; points at: wD8A7, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wBattleATK, wBattleDEF, wBattleAGL, ...
 ActionEffect_Transform_Sub01::
 Func_036_5703:: ; address name
@@ -3989,12 +3989,12 @@ Jump_036_5823::
     push bc
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
     pop bc
     pop de
     pop hl
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     swap a
     and a, $0F
     ld [de], a
@@ -4302,14 +4302,14 @@ Jump_036_59D3::
 
 ; only called from ActionEffect_MultiCut (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_MultiCut)
-; reads: wBattleActionId, wLinkMode, wBattleActor, wCFFB, wCFFC, wCFFD, wBattleDamageLo, wD873, ...
-; writes: wRecordBuffer, wCFED, wD86A, wBattleDamageLo, wD873
+; reads: wBattleActionId, wLinkMode, wBattleActor, wRecordBufferData, wBattleDamageLo, wD873
+; writes: wRecordBuffer, wD86A, wBattleDamageLo, wD873
 ActionEffect_MultiCut_Sub01::
 Func_036_5A08:: ; address name
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
     ld a, [wLinkMode]
     cp a, $01
@@ -4317,19 +4317,19 @@ Func_036_5A08:: ; address name
     ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_036_5A33
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld l, a
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld h, a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     jr Jump_036_5A3E
 
 Jump_036_5A33::
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld l, a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld h, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
 
 Jump_036_5A3E::
     ld [wD86A], a
@@ -4390,7 +4390,7 @@ Func_036_5A7A:: ; address name
 
 ; only called from ActionEffect_Kamikaze (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Kamikaze)
-; reads: wBattleActor, wLinkMode, wCFC5, wBattleTarget, wBattleDamageLo, wD873
+; reads: wBattleActor, wLinkMode, wBattleKind, wBattleTarget, wBattleDamageLo, wD873
 ; writes: wBattleDamageLo, wD873
 ActionEffect_Kamikaze_Sub01::
 Func_036_5A98:: ; address name
@@ -4417,7 +4417,7 @@ Jump_036_5ABF::
     ld a, [wLinkMode]
     or a, a
     jr nz, Jump_036_5AD8
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     or a, a
     jr z, Jump_036_5ACF
     cp a, $01
@@ -4599,8 +4599,8 @@ Jump_036_5BC2::
 
 ; only called from ActionEffect_TatsuCall (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_TatsuCall)
-; reads: wD871, wRecordBuffer, wCFED, wCFF5, wCFF6, wCFF7, wCFF8, wCFF9, ...
-; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi, wD868, wD869, wD86A, wD86B
+; reads: wD871, wRecordBuffer, wRecordBufferData
+; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi, wD868, wD869, wD86A, wD86B
 ; points at: wBattleStatus, wBattleSlotOut, wDAAE, wBattleMonsterId, wD8B7, wBattleHP, wBattleMaxHP, wBattleMP, ...
 ActionEffect_TatsuCall_Sub01::
 Func_036_5BC4:: ; address name
@@ -4632,82 +4632,82 @@ Func_036_5BC4:: ; address name
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
     ld a, [wRecordBuffer]
     ld c, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld b, a
     ld hl, wBattleMonsterId
     call StoreBCAtWordEntryWD871
-    ld a, [wCFF5]
+    ld a, [wRecordBufferData + $7]
     ld c, a
     ld hl, wD8B7
     call ActionEffect_TatsuCall_Sub01_Sub02
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld c, a
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld b, a
     ld hl, wBattleHP
     call StoreBCAtWordEntryWD871
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld c, a
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld b, a
     ld hl, wBattleMaxHP
     call StoreBCAtWordEntryWD871
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld c, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld b, a
     ld hl, wBattleMP
     call StoreBCAtWordEntryWD871
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld c, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld b, a
     ld hl, wBattleMaxMP
     call StoreBCAtWordEntryWD871
-    ld a, [wCFFA]
+    ld a, [wRecordBufferData + $C]
     ld c, a
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld b, a
     ld hl, wBattleATK
     call StoreBCAtWordEntryWD871
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld c, a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     ld b, a
     ld hl, wBattleDEF
     call StoreBCAtWordEntryWD871
-    ld a, [wCFFE]
+    ld a, [wRecordBufferData + $10]
     ld c, a
-    ld a, [wCFFF]
+    ld a, [wRecordBufferData + $11]
     ld b, a
     ld hl, wBattleAGL
     call StoreBCAtWordEntryWD871
-    ld a, [wD000]
+    ld a, [wRecordBufferData + $12]
     ld c, a
-    ld a, [wD001]
+    ld a, [wRecordBufferData + $13]
     ld b, a
     ld hl, wBattleINT
     call StoreBCAtWordEntryWD871
     ld bc, $03E7
     ld hl, wD93F
     call StoreBCAtWordEntryWD871
-    ld a, [wD002]
+    ld a, [wRecordBufferData + $14]
     ld c, a
     ld hl, wSlotPersonalityHi
     call ActionEffect_TatsuCall_Sub01_Sub02
-    ld a, [wD003]
+    ld a, [wRecordBufferData + $15]
     ld c, a
     ld hl, wSlotPersonalityLo
     call ActionEffect_TatsuCall_Sub01_Sub02
-    ld a, [wD004]
+    ld a, [wRecordBufferData + $16]
     ld c, a
     ld hl, wSlotPersonalityMid
     call ActionEffect_TatsuCall_Sub01_Sub02
-    ld a, [wD005]
+    ld a, [wRecordBufferData + $17]
     ld c, a
     ld hl, wD980
     call ActionEffect_TatsuCall_Sub01_Sub02
@@ -4722,7 +4722,7 @@ Func_036_5BC4:: ; address name
     farcall SetSlotAIModeFromINT
     ld a, [wRecordBuffer]
     ld l, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -4762,9 +4762,9 @@ Jump_036_5D0B::
 
 ; only called from ActionEffect_TatsuCall_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_TatsuCall_Sub01)
-; reads: wD871, wCFF1
-; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wD989, wCFF1
+; reads: wD871, wRecordBufferData
+; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
+; points at: wD989
 ActionEffect_TatsuCall_Sub01_Sub01::
 Func_036_5D2C:: ; address name
     ld b, $04
@@ -4790,16 +4790,16 @@ Jump_036_5D3B::
     ld a, $03
     ld [wD868], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $01
     ld [wD869], a
-    ld hl, wCFF1
+    ld hl, wRecordBufferData + $3
     ld a, l
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
     farcall LoadSkillRecordPart
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     swap a
     and a, $0F
     pop de
@@ -5117,8 +5117,8 @@ Jump_036_5F17::
 
 ; only called from ActionEffect_BeDragon (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_BeDragon)
-; reads: wBattleActionId, wCFF6, wCFF7, wBattleActor, wCFF8, wCFF9, wCFFA, wCFFB, ...
-; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi, wD868, wD869, wD86A, wD86B
+; reads: wBattleActionId, wRecordBufferData, wBattleActor, wRecordBuffer
+; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi, wD868, wD869, wD86A, wD86B
 ; points at: wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, wBattleDEF, wBattleAGL, wBattleINT, ...
 ActionEffect_BeDragon_Sub02::
 Func_036_5F25:: ; address name
@@ -5132,53 +5132,53 @@ Jump_036_5F32::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     ld c, a
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld b, a
     ld hl, wBattleMaxHP
     call StoreBCAtActorWordEntry
     ld a, [wBattleActor]
     ld hl, wBattleHP
     call ActionEffect_BeDragon_Sub02_Sub02
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld c, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld b, a
     ld hl, wBattleMaxMP
     call StoreBCAtActorWordEntry
     ld a, [wBattleActor]
     ld hl, wBattleMP
     call ActionEffect_BeDragon_Sub02_Sub02
-    ld a, [wCFFA]
+    ld a, [wRecordBufferData + $C]
     ld c, a
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld b, a
     ld hl, wBattleATK
     call StoreBCAtActorWordEntry
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld c, a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     ld b, a
     ld hl, wBattleDEF
     call StoreBCAtActorWordEntry
-    ld a, [wCFFE]
+    ld a, [wRecordBufferData + $10]
     ld c, a
-    ld a, [wCFFF]
+    ld a, [wRecordBufferData + $11]
     ld b, a
     ld hl, wBattleAGL
     call StoreBCAtActorWordEntry
-    ld a, [wD000]
+    ld a, [wRecordBufferData + $12]
     ld c, a
-    ld a, [wD001]
+    ld a, [wRecordBufferData + $13]
     ld b, a
     ld hl, wBattleINT
     call StoreBCAtActorWordEntry
     ld a, [wRecordBuffer]
     ld l, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -5228,9 +5228,9 @@ Jump_036_5FE1::
 
 ; only called from ActionEffect_BeDragon_Sub02 (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_BeDragon_Sub02)
-; reads: wBattleActor, wCFF1
-; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wTemp0, wD989, wCFF1
+; reads: wBattleActor, wRecordBufferData
+; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
+; points at: wTemp0, wD989
 ActionEffect_BeDragon_Sub02_Sub01::
 Func_036_6018:: ; address name
     ld hl, wTemp0
@@ -5261,16 +5261,16 @@ Jump_036_6034::
     ld a, $03
     ld [wD868], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $01
     ld [wD869], a
-    ld hl, wCFF1
+    ld hl, wRecordBufferData + $3
     ld a, l
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
     farcall LoadSkillRecordPart
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     swap a
     and a, $0F
     pop de
@@ -5466,10 +5466,10 @@ Jump_036_613D::
 
 ; A = 0 and Z when wCFC5 is 2 or 3 and the actor is an ally (slot < 4); otherwise A = 1 and NZ (E-0122)
 ; 3 call sites from 3 routines (e.g. RollTargetWDA72Byte2Bits45Chance, RollTargetWDA72Byte5Bits67ChanceToE, ActionEffect_Sacrifice_Sub01)
-; reads: wCFC5, wBattleActor
+; reads: wBattleKind, wBattleActor
 ZIfAllyActorInWCFC5Mode2Or3::
 Func_036_6141:: ; address name
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $02
     jr z, Jump_036_614C
     cp a, $03
@@ -5489,7 +5489,7 @@ Jump_036_6155::
 
 ; picks a base and spread from the loaded skill record: wCFFB/wCFFC and wCFFD for actors in slots 4-7 when wC58A is not 1, otherwise wCFF7/wCFF8 and wCFF9; the spread goes to wD86A and RollDamageBaseToBasePlusWD86A sets the damage word; then falls into HLToWD814EntryOfWD8A5_Bank36 (E-0095)
 ; 15 call sites from 15 routines (e.g. SkillDamageScaledByWDA72Byte6Bits32, ActionEffect_Watershot_Sub01, ActionEffect_RockThrow_Sub01, HealTargetHP, ...)
-; reads: wLinkMode, wBattleActor, wCFFB, wCFFC, wCFFD, wBattleTarget, wCFF7, wCFF8, ...
+; reads: wLinkMode, wBattleActor, wRecordBufferData, wBattleTarget
 ; writes: wD86A
 ; points at: wD814
 RollSkillDamageFromRecord::
@@ -5500,19 +5500,19 @@ Func_036_6159:: ; address name
     ld a, [wBattleActor]
     bit 2, a
     jr z, Jump_036_6174
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld l, a
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld h, a
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     jr Jump_036_617F
 
 Jump_036_6174::
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld l, a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld h, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
 
 Jump_036_617F::
     ld [wD86A], a
@@ -6655,8 +6655,8 @@ Func_036_6646:: ; address name
 
 ; only called from ActionEffect_Transform_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Transform_Sub01)
-; reads: wRecordBuffer, wCFED
-; writes: wMonsterId, wCFE7, wSpeciesIdLo, wSpeciesIdHi
+; reads: wRecordBuffer
+; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wDAAE, wD01A
 ActionEffect_Transform_Sub01_Sub03::
 Func_036_6658:: ; address name
@@ -6681,11 +6681,11 @@ Jump_036_6667::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
     ld a, [wRecordBuffer]
     ld [wSpeciesIdLo], a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld hl, wD01A
@@ -6695,7 +6695,7 @@ Jump_036_669D::
 
 ; only called from ActionEffect_Transform_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Transform_Sub01)
-; writes: wMonsterId, wCFE7
+; writes: wMonsterId
 ; points at: wDAAE, wRecordBufferData
 ActionEffect_Transform_Sub01_Sub04::
 Func_036_669E:: ; address name
@@ -6721,7 +6721,7 @@ Jump_036_66AF::
     ld a, l
     ld [wMonsterId], a
     ld a, h
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
     ld hl, wRecordBufferData
     ld b, $04
@@ -8508,7 +8508,7 @@ Jump_036_7147::
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 60 Chance; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
-; writes: wBattleActionId, wRecordBuffer, wCFED, wBattleTarget, wBattleSubPhase, wBattleResolveStep
+; writes: wBattleActionId, wRecordBuffer, wBattleTarget, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleActionChoice, wBattleTargetChoice
 ActionEffect_Chance:: ; code pointer of the table ActionEffectTable; C0
 Func_036_714F:: ; address name
@@ -8522,7 +8522,7 @@ Func_036_714F:: ; address name
     ld [wBattleActionId], a
     ld [wRecordBuffer], a
     ld a, $00
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -9224,7 +9224,7 @@ Jump_036_749D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDABA, wRandomLo
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep
-; points at: wCFCF
+; points at: wBattleScreenFlags
 ActionEffect_LifeDance:: ; code pointer of the table ActionEffectTable; C0
 Func_036_74A0:: ; address name
     ld a, [wDABA]
@@ -9242,7 +9242,7 @@ Func_036_74A0:: ; address name
     ld [wBattleResolveStep], a
     ld a, $00
     ld [wBattleSubStep], a
-    ld hl, wCFCF
+    ld hl, wBattleScreenFlags
     set 0, [hl]
     ret
 

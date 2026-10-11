@@ -31,9 +31,9 @@ Func_004_4008:: ; address name
 
 ; for key-world map types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the wCD89/wCDAC entries (E-0130)
 ; 1 call site from 1 routine (e.g. LoadMapObjectsForScreen)
-; reads: wMapType, wKeyWorldFloor, wCD06, wCD07, wCD0B, wKeyWorldObjFlag
+; reads: wMapType, wKeyWorldFloor, wKeyWorldByte06, wKeyWorldFlags, wKeyWorldGoalKind, wKeyWorldObjFlag
 ; writes: wKeyWorldObjFlag, hTemp9, wSpriteSlotCount
-; points at: wCE7E, wCDAF, wCD89, wCDAC
+; points at: wKeyWorldFloorState
 SetupKeyWorldObjectsForMapType::
 Func_004_4025:: ; address name
     xor a, a
@@ -54,7 +54,7 @@ Jump_004_4041::
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
-    ld hl, wCD89
+    ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     xor a, a
     ldh [hTemp9], a
@@ -74,7 +74,7 @@ Jump_004_4041::
 Jump_004_4068::
     ld a, [wKeyWorldFloor]
     swap a
-    ld hl, wCDAC
+    ld hl, wKeyWorldFloorState
     add_a_to_hl
     ld a, [hl]
     bit 7, a
@@ -88,7 +88,7 @@ Jump_004_407D::
     jr Jump_004_4093
 
 Jump_004_4082::
-    ld a, [wCD07]
+    ld a, [wKeyWorldFlags]
     bit 7, a
     jr z, Jump_004_408E
     xor a, a
@@ -116,7 +116,7 @@ Jump_004_40A9::
     xor a, a
     ldh [hTemp9], a
     ld c, $06
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     cp a, $07
     jr nz, Jump_004_40B7
     ld c, $0E
@@ -131,7 +131,7 @@ Jump_004_40B7::
 Jump_004_40C4::
     ld a, [wKeyWorldFloor]
     swap a
-    ld hl, wCDAF
+    ld hl, wKeyWorldFloorState + $3
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
@@ -145,7 +145,7 @@ Jump_004_40DA::
     ret
 
 Jump_004_40DF::
-    ld a, [wCD07]
+    ld a, [wKeyWorldFlags]
     bit 7, a
     jr nz, Jump_004_40DA
     ld a, $01
@@ -162,12 +162,12 @@ Jump_004_40F8::
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
-    ld hl, wCE7E
+    ld hl, wKeyWorldEncounterTable + $3
     add_a_to_hl
     ld a, [hl]
     or a, a
     jr nz, Jump_004_4112
-    ld a, [wCD06]
+    ld a, [wKeyWorldByte06]
     or a, a
     jr z, Jump_004_4117
 
@@ -187,9 +187,9 @@ Jump_004_4117::
 
 ; only called from SetupKeyWorldObjectsForMapType (E-0047)
 ; 4 call sites from 1 routine (e.g. SetupKeyWorldObjectsForMapType)
-; reads: wMapWidthScreens, hMapScreenY, hMapScreenX, hTemp9, hTemp2, hTemp0, wCD0B, hTempA, ...
+; reads: wMapWidthScreens, hMapScreenY, hMapScreenX, hTemp9, hTemp2, hTemp0, wKeyWorldGoalKind, hTempA, ...
 ; writes: wSpriteSlotCount, hTempA, hTemp4, hTemp5, hTemp2, hTemp0, hTemp1, hTemp3, ...
-; points at: wSpriteSlots, wCE7B
+; points at: wSpriteSlots, wKeyWorldEncounterTable
 SetupKeyWorldObjectsForMapType_Sub01::
 Func_004_4129:: ; address name
     ld a, [hl+]
@@ -274,11 +274,11 @@ Jump_004_418E::
     jr nz, Jump_004_41A3
     inc hl
     inc hl
-    ld a, [wCE72]
+    ld a, [wKeyWorldEncounter]
     ldh [hTemp0], a
     ld [de], a
     inc de
-    ld a, [wCE73]
+    ld a, [wKeyWorldEncounter + $1]
     ldh [hTemp1], a
     ld [de], a
     inc de
@@ -292,7 +292,7 @@ Jump_004_41A3::
     and a, $0F
     add a, a
     add a, a
-    ld hl, wCE7B
+    ld hl, wKeyWorldEncounterTable
     add_a_to_hl
     ld a, [hl+]
     ldh [hTemp0], a
@@ -315,7 +315,7 @@ Jump_004_41C0::
     swap a
     ld hl, $423D
     add_a_to_hl
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
@@ -405,7 +405,7 @@ Jump_004_420B::
 
 ; on map screen (0, 0) or (1, 0) sets wCB8A/wCB8B and wCB86 for wCD0B values 1, 7, 8 or 9 (E-0125)
 ; 1 call site from 1 routine (e.g. SetupKeyWorldObjectsForMapType)
-; reads: hMapScreenY, hMapScreenX, wCD0B
+; reads: hMapScreenY, hMapScreenX, wKeyWorldGoalKind
 ; writes: wSpriteSlots
 PlaceObjectCB86ForWCD0B::
 Func_004_42CD:: ; address name
@@ -417,7 +417,7 @@ Func_004_42CD:: ; address name
     jr nz, Jump_004_4309
     ld a, $20
     ld [wSpriteSlots + $C], a
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     cp a, $01
     jr nz, Jump_004_42ED
     ld a, $20
@@ -445,7 +445,7 @@ Jump_004_42FC::
     ret
 
 Jump_004_4309::
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     cp a, $09
     ret nz
     ld a, $70
@@ -9420,7 +9420,7 @@ Jump_004_7B3F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: wDataBank, wD7FB
-; points at: wCD89, wCDAC
+; points at: wKeyWorldFloorState
 Func_004_7B29_Case01::
 Jump_004_7B46:: ; address name
     ld a, $10
@@ -9429,7 +9429,7 @@ Jump_004_7B46:: ; address name
     add a, a
     add a, a
     push af
-    ld hl, wCD89
+    ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     ld a, [hl]
     cp a, $03
@@ -9444,7 +9444,7 @@ Jump_004_7B46:: ; address name
 Jump_004_7B6B::
     pop af
     add a, a
-    ld hl, wCDAC
+    ld hl, wKeyWorldFloorState
     ld a, $12
     bit 7, [hl]
     jr z, Jump_004_7B78
@@ -9488,10 +9488,10 @@ Jump_004_7B9C::
 
 ; A = 1 when the player stands on one of the trigger columns for wCD0B (1, 7, 8 or 9) on the matching map screen, else 0 (E-0127)
 ; 1 call site from 1 routine (e.g. Func_004_7B29_Case02)
-; reads: wCD0B, hMapScreenX, hPlayerX
+; reads: wKeyWorldGoalKind, hMapScreenX, hPlayerX
 IsPlayerAtWCD0BTriggerColumn::
 Func_004_7BAB:: ; address name
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     cp a, $01
     jr nz, Jump_004_7BC3
     ldh a, [hMapScreenX]
@@ -9569,10 +9569,10 @@ Jump_004_7C05:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD0B
+; reads: wKeyWorldGoalKind
 Func_004_7B29_Case06::
 Jump_004_7C0C:: ; address name
-    ld a, [wCD0B]
+    ld a, [wKeyWorldGoalKind]
     cp a, $05
     ret z
     cp a, $07

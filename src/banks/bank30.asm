@@ -341,9 +341,9 @@ Func_030_41DF:: ; address name
 
 ; only called from RunBattleCommandEntry_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_Case04)
-; reads: wD868, wD869, wD86A, wD86B, wCFF3, wRandomLo
-; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
-; points at: wBattleActionChoice, wCFF3
+; reads: wD868, wD869, wD86A, wD86B, wRecordBufferData, wRandomLo
+; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
+; points at: wBattleActionChoice
 RunBattleCommandEntry_Case04_Sub02::
 Func_030_4203:: ; address name
     push de
@@ -364,7 +364,7 @@ Func_030_4203:: ; address name
     push hl
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, [wD868]
     ld l, a
     ld a, [wD869]
@@ -379,7 +379,7 @@ Func_030_4203:: ; address name
     ld [wD868], a
     ld a, $01
     ld [wD869], a
-    ld hl, wCFF3
+    ld hl, wRecordBufferData + $5
     ld a, l
     ld [wD86A], a
     ld a, h
@@ -399,7 +399,7 @@ Func_030_4203:: ; address name
     pop de
     pop bc
     pop af
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 2, a
     jr nz, Jump_030_427A
     ld hl, $000A
@@ -1757,7 +1757,7 @@ Jump_030_4B9D::
 
 ; A = [HL], then falls into ScoreSkillForAI (E-0126)
 ; 1 call site from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
-; reads: wCFF1, wDA6B, wDA6C, wDA6E, wDA6F, wDA70, wDA71
+; reads: wRecordBufferData, wDA6B, wDA6C, wDA6E, wDA6F, wDA70, wDA71
 ; writes: wDA6E, wDA6F, wDA70, wDA71
 ScoreSkillAtHLForAI::
 Func_030_4B9F:: ; address name
@@ -1765,7 +1765,7 @@ Func_030_4B9F:: ; address name
 
 ; A = skill number ($FF skips): AddSkillBaseWeightAndLoadSkill; when wCFF1 bit 0 (in the skill record) is set, clears wDA6E-wDA71 and far-calls the skill's AI scoring routine from the table in wDA6B/wDA6C (AIScoreRoutineTableA or B), then folds the accumulated weights into the word at DE (the rest is not fully read) (E-0083)
 ; 2 call sites from 1 routine (e.g. ScoreActionsWithAIScoreTableA)
-; reads: wCFF1, wDA6B, wDA6C, wDA6E, wDA6F, wDA70, wDA71
+; reads: wRecordBufferData, wDA6B, wDA6C, wDA6E, wDA6F, wDA70, wDA71
 ; writes: wDA6E, wDA6F, wDA70, wDA71
 ScoreSkillForAI::
 Func_030_4BA0:: ; address name
@@ -1775,7 +1775,7 @@ Func_030_4BA0:: ; address name
     call AddSkillBaseWeightAndLoadSkill
     ld e, a
     ld d, $00
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     bit 0, a
     jr z, Jump_030_4BFA
     ld a, [wDA6B]
@@ -1964,7 +1964,7 @@ Jump_030_4C96::
 
 ; A = skill number: when the word at $55F3 + 2 * A (a per-skill weight table in this bank) is non-zero it is added to the word at DE and Func_030_4CDB adds a random adjustment; then the skill record is loaded (wRecordBuffer = A, wCFED = 0, LoadSkillRecord); A and DE kept (E-0083)
 ; 1 call site from 1 routine (e.g. ScoreSkillForAI)
-; writes: wRecordBuffer, wCFED
+; writes: wRecordBuffer
 AddSkillBaseWeightAndLoadSkill::
 Func_030_4CAB:: ; address name
     push de
@@ -1997,7 +1997,7 @@ Jump_030_4CC9::
     push af
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
     pop af
     pop de
@@ -2419,9 +2419,9 @@ Jump_030_50CD::
 
 ; only called from RunBattleResolveStep_43C4_Case01_Sub03 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub03)
-; reads: wBattleActor, wCFF1
-; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
-; points at: wD989, wCFF1, wTemp0
+; reads: wBattleActor, wRecordBufferData
+; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
+; points at: wD989, wTemp0
 RunBattleResolveStep_43C4_Case01_Sub03_Sub01::
 Func_030_50D2:: ; address name
     ld a, [wBattleActor]
@@ -2441,16 +2441,16 @@ Jump_030_50E3::
     ld a, $03
     ld [wD868], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $01
     ld [wD869], a
-    ld hl, wCFF1
+    ld hl, wRecordBufferData + $3
     ld a, l
     ld [wD86A], a
     ld a, h
     ld [wD86B], a
     farcall LoadSkillRecordPart
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     and a, $03
     cp a, $02
     pop bc
@@ -2478,7 +2478,7 @@ Jump_030_5123::
 ; wBattleActor selects the actor; its MP word is at wD8DF + 2 * actor. For each of the 8 skill numbers in wC0A0 it loads the record (LoadSkillRecordPart) and keeps the number only when byte 0 of the record is below that MP word; otherwise it writes $FF to that slot. The comparison is strict: a skill whose cost equals the MP is dropped. Executed on the emulator for MP 0-40 against the ROM's costs (E-0048)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub03)
 ; reads: wBattleActor, wRecordBufferData
-; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
+; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wBattleMP, wTemp0, wRecordBufferData, wPauseMenuStep
 FilterSkillListByMP::
 Func_030_5129:: ; address name
@@ -2504,7 +2504,7 @@ Jump_030_513F::
     ld a, $00
     ld [wD868], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $01
     ld [wD869], a
     ld hl, wRecordBufferData
@@ -2635,7 +2635,7 @@ Jump_030_5207::
 ; only called from RunBattleResolveStep_43C4_Case01_Sub03 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleResolveStep_43C4_Case01_Sub03)
 ; reads: wTemp0, wRecordBufferData
-; writes: wRecordBuffer, wD868, wCFED, wD869, wD86A, wD86B
+; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wRecordBufferData, wTemp1, wTemp0
 RunBattleResolveStep_43C4_Case01_Sub03_Sub03::
 Func_030_5209:: ; address name
@@ -2644,7 +2644,7 @@ Func_030_5209:: ; address name
     ld a, $00
     ld [wD868], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $01
     ld [wD869], a
     ld hl, wRecordBufferData
@@ -2670,7 +2670,7 @@ Jump_030_523A::
     ld a, $00
     ld [wD868], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $01
     ld [wD869], a
     ld hl, wRecordBufferData
@@ -3009,11 +3009,11 @@ Func_030_5472:: ; address name
 
 ; only called from AIChooseActionForActor_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIChooseActionForActor_Sub01)
-; reads: wCFF1
+; reads: wRecordBufferData
 ; points at: wDA3E, wDA3D, wDA3C
 AIChooseActionForActor_Sub01_Sub01::
 Func_030_54B5:: ; address name
-    ld a, [wCFF1]
+    ld a, [wRecordBufferData + $3]
     and a, $F0
     cp a, $10
     jr z, Jump_030_54C8

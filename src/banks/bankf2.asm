@@ -524,7 +524,7 @@ Func_0F2_434E:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawScreenBufferRectToBGMap_1B_BankF2::
 Func_0F2_436F:: ; address name
     push de
@@ -568,7 +568,7 @@ Func_0F2_436F:: ; address name
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld a, l
     ld e, a
@@ -1525,13 +1525,13 @@ Jump_0F2_4E25::
 
 ; BC = wCCCD when the byte at DE is $98 (the ??? placeholder), else wCDCC (E-0122)
 ; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_Sub02)
-; points at: wCDCC, wCCCD
+; points at: wNameBufAlt, wCCCD
 PickNameBufferForFirstByte_BankF2::
 Func_0F2_4E26:: ; address name
     ld a, [de]
     cp a, $98
     jr z, Jump_0F2_4E30
-    ld bc, wCDCC
+    ld bc, wNameBufAlt
     jr Jump_0F2_4E33
 
 Jump_0F2_4E30::
@@ -2645,8 +2645,8 @@ Jump_0F2_643C::
 
 ; in state 3 continues at Jump_0F2_6470; otherwise runs Func_0F2_64C7 (E-0126)
 ; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, ScriptCommandE5_Run_Case03_Case0B_Sub01, ScriptCommandE5_Run_Case03_Case0E_Sub02)
-; reads: wD780, wCF8B
-; writes: wCF8B
+; reads: wD780, wCounterPtr0Lo
+; writes: wCounterPtr0Lo
 ; points at: wD09D, wInventory, wD7D5
 Run64C7UnlessWD780Is3::
 Func_0F2_6449:: ; address name
@@ -2658,7 +2658,7 @@ Func_0F2_6449:: ; address name
 
 ; only called from ScriptCommandE5_Run_Case03_Case0E (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E)
-; reads: wCF8B
+; reads: wCounterPtr0Lo
 ; points at: wD09D
 ScriptCommandE5_Run_Case03_Case0E_Sub03::
 Func_0F2_6454:: ; address name
@@ -2670,7 +2670,7 @@ Jump_0F2_6459::
     ld [hl+], a
     dec b
     jr nz, Jump_0F2_6459
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     and a, a
     jr nz, Jump_0F2_6469
     ld de, Data_0F2_6586
@@ -2692,7 +2692,7 @@ Jump_0F2_6475::
     ld [hl+], a
     dec b
     jr nz, Jump_0F2_6475
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     and a, a
     jr nz, Jump_0F2_6487
     ld de, Data_0F2_6526
@@ -2704,7 +2704,7 @@ Jump_0F2_6487::
     xor a, a
 
 Jump_0F2_648B::
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
 
 ; only called from ScriptCommandE5_Run_Case03_Case0E_Sub03 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E_Sub03)
@@ -2764,8 +2764,8 @@ Jump_0F2_64C0::
 
 ; only called from Run64C7UnlessWD780Is3 (E-0047)
 ; 1 call site from 1 routine (e.g. Run64C7UnlessWD780Is3)
-; reads: wCF8B
-; writes: wCF8B
+; reads: wCounterPtr0Lo
+; writes: wCounterPtr0Lo
 ; points at: wD09D, wItemStorage
 Run64C7UnlessWD780Is3_Sub01::
 Func_0F2_64C7:: ; address name
@@ -2777,7 +2777,7 @@ Jump_0F2_64CC::
     ld [hl+], a
     dec b
     jr nz, Jump_0F2_64CC
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     and a, a
     jr nz, Jump_0F2_64DE
     ld de, Data_0F2_6526
@@ -2789,7 +2789,7 @@ Jump_0F2_64DE::
     xor a, a
 
 Jump_0F2_64E2::
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     ld b, $00
 
 Jump_0F2_64E7::
@@ -2855,8 +2855,8 @@ Data_0F2_6586:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; for each party record sets HP (field $5B) and MP (field $5F) down to their maxima when they exceed them (E-0129)
 ; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub01, BattleEnd_Step7_Case02_Sub01)
-; reads: wPartyCount, wCF8B, wCF8C
-; writes: wCF8B, wCF8C
+; reads: wPartyCount, wCounterPtr0Lo, wCounterPtr0Hi
+; writes: wCounterPtr0Lo, wCounterPtr0Hi
 ; points at: wPartyList
 ClampPartyHPAndMPToMax::
 Func_0F2_65E6:: ; address name
@@ -2873,9 +2873,9 @@ Jump_0F2_65EF::
     ld c, $5B
     call SRAMRecordAddress
     ld a, [hl+]
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     ld a, [hl]
-    ld [wCF8C], a
+    ld [wCounterPtr0Hi], a
     pop hl
     push hl
     ld a, [hl]
@@ -2885,14 +2885,14 @@ Jump_0F2_65EF::
     inc hl
     ld h, [hl]
     ld l, e
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     ld e, a
-    ld a, [wCF8C]
+    ld a, [wCounterPtr0Hi]
     ld d, a
     ld a, l
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     ld a, h
-    ld [wCF8C], a
+    ld [wCounterPtr0Hi], a
     call CompareHLWithDE_BankF2
     ld a, c
     and a, a
@@ -2902,9 +2902,9 @@ Jump_0F2_65EF::
     ld a, [hl]
     ld c, $5B
     call SRAMRecordAddress
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     ld [hl+], a
-    ld a, [wCF8C]
+    ld a, [wCounterPtr0Hi]
     ld [hl], a
 
 Jump_0F2_6632::
@@ -2914,9 +2914,9 @@ Jump_0F2_6632::
     ld c, $5F
     call SRAMRecordAddress
     ld a, [hl+]
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     ld a, [hl]
-    ld [wCF8C], a
+    ld [wCounterPtr0Hi], a
     pop hl
     push hl
     ld a, [hl]
@@ -2926,14 +2926,14 @@ Jump_0F2_6632::
     inc hl
     ld h, [hl]
     ld l, e
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     ld e, a
-    ld a, [wCF8C]
+    ld a, [wCounterPtr0Hi]
     ld d, a
     ld a, l
-    ld [wCF8B], a
+    ld [wCounterPtr0Lo], a
     ld a, h
-    ld [wCF8C], a
+    ld [wCounterPtr0Hi], a
     call CompareHLWithDE_BankF2
     ld a, c
     and a, a
@@ -2943,9 +2943,9 @@ Jump_0F2_6632::
     ld a, [hl]
     ld c, $5F
     call SRAMRecordAddress
-    ld a, [wCF8B]
+    ld a, [wCounterPtr0Lo]
     ld [hl+], a
-    ld a, [wCF8C]
+    ld a, [wCounterPtr0Hi]
     ld [hl], a
 
 Jump_0F2_6675::

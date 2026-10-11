@@ -162,11 +162,11 @@ Jump_005_4166::
 
 ; C = 0 when bit 6 of wCFF3 (skill record buffer) is set and the actor's status byte 1 (wD80D) bit 0 is set, else $FF (compare refusal code 3 of CheckSkillMPCost) (E-0071)
 ; 5 call sites from 5 routines (e.g. AIFireSkillUsable, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
-; reads: wCFF3, wBattleActor
+; reads: wRecordBufferData, wBattleActor
 ; points at: wD80D
 SkillPassesStatus1Bit0Check::
 Func_005_4169:: ; address name
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 6, a
     jr z, Jump_005_4180
     ld a, [wBattleActor]
@@ -183,11 +183,11 @@ Jump_005_4180::
 
 ; C = $00 when bit 4 of wCFF3 and bit 7 of the actor's status byte 0 are both set, else $FF (E-0122)
 ; 4 call sites from 4 routines (e.g. AIScore_FireAir_Sub02, AIFunc770AAndPassUnlessWCFF3Bit4, AIScore_Curse_Sub01, AIScore_SuckAir_Sub01)
-; reads: wCFF3, wBattleActor
+; reads: wRecordBufferData, wBattleActor
 ; points at: wD80D
 PassUnlessWCFF3Bit4AndActorStatusBit7:: ; heuristic: follows a terminator; C0
 Func_005_4183:: ; address name
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 4, a
     jr z, Jump_005_419B
     ld a, [wBattleActor]
@@ -204,11 +204,11 @@ Jump_005_419B::
 
 ; C = $00 when bit 5 of wCFF3 and bit 6 of the actor's status byte 0 are both set, else $FF (E-0122)
 ; 5 call sites from 5 routines (e.g. AIDanceUsable, AIScore_LifeDance_Sub01, AIScore_Hustle_Sub01, AIScore_SideStep_Sub01, ...)
-; reads: wCFF3, wBattleActor
+; reads: wRecordBufferData, wBattleActor
 ; points at: wD80D
 PassUnlessWCFF3Bit5AndActorStatusBit6:: ; heuristic: follows a terminator; C0
 Func_005_419E:: ; address name
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 5, a
     jr z, Jump_005_41B6
     ld a, [wBattleActor]
@@ -225,7 +225,7 @@ Jump_005_41B6::
 
 ; when bit 3 is set in wD80A or wD80B (either side), C = 0 if the skill wRecordBuffer is $84 or wCFF3 bit 6 is set; otherwise C = $FF (compare refusal code 4 of CheckSkillMPCost, which tests only the actor's side) (E-0071)
 ; 6 call sites from 6 routines (e.g. AIFireSkillUsable, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
-; reads: wRecordBuffer, wCFF3
+; reads: wRecordBuffer, wRecordBufferData
 ; points at: wD80A
 SkillPassesSideFlagBit3Check::
 Func_005_41B9:: ; address name
@@ -237,7 +237,7 @@ Func_005_41B9:: ; address name
     ld a, [wRecordBuffer]
     cp a, $84
     jr z, Jump_005_41D0
-    ld a, [wCFF3]
+    ld a, [wRecordBufferData + $5]
     bit 6, a
     jr z, Jump_005_41D3
 
@@ -251,10 +251,10 @@ Jump_005_41D3::
 
 ; when bit 7 of wCFF6 (in the skill record buffer) is set and the skill wRecordBuffer is the queued action (QueuedActionMatches), C = 0; otherwise C = $FF (E-0071)
 ; 20 call sites from 20 routines (e.g. AIFireSkillUsable, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
-; reads: wCFF6, wRecordBuffer
+; reads: wRecordBufferData, wRecordBuffer
 SkillPassesRepeatCheck::
 Func_005_41D6:: ; address name
-    ld a, [wCFF6]
+    ld a, [wRecordBufferData + $8]
     bit 7, a
     jr z, Jump_005_41E8
     ld a, [wRecordBuffer]
@@ -400,8 +400,8 @@ Jump_005_4283::
 
 ; only called from AIScore_TakeMagic_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TakeMagic_Sub01)
-; reads: wBattleActor, wRecordBuffer, wCFED, hTemp0
-; writes: wRecordBuffer, wCFED, wD868, wD869, wD86A, wD86B
+; reads: wBattleActor, wRecordBuffer, hTemp0
+; writes: wRecordBuffer, wD868, wD869, wD86A, wD86B
 ; points at: wD988, hTemp0
 AIScore_TakeMagic_Sub01_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_4286:: ; address name
@@ -411,7 +411,7 @@ Func_005_4286:: ; address name
     jp c, Jump_005_4319
     ld a, [wRecordBuffer]
     ld l, a
-    ld a, [wCFED]
+    ld a, [wRecordBuffer + $1]
     ld h, a
     push hl
     ld b, $03
@@ -436,7 +436,7 @@ Jump_005_42B7::
     jr z, Jump_005_42F4
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $07
     ld [wD868], a
     ld a, $01
@@ -481,7 +481,7 @@ Jump_005_42FD::
     ld a, l
     ld [wRecordBuffer], a
     ld a, h
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld c, $00
     ret
 
@@ -490,7 +490,7 @@ Jump_005_430D::
     ld a, l
     ld [wRecordBuffer], a
     ld a, h
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld c, $FF
     ret
 
@@ -662,11 +662,11 @@ Jump_005_43EF::
 
 ; C = $FF when wCFEF is 0 or an occupied foe's resistance field for skill wCFEF is below 3, else $00 (E-0127)
 ; 11 call sites from 11 routines (e.g. AIFireSkillUsable, AIScore_Beat_Sub01, AIScore_Sacrifice_Sub02, AIAttackSkillUsable_74D1, ...)
-; reads: wCFEF, wBattleActor
+; reads: wRecordBufferData, wBattleActor
 ; points at: wDA72
 AnyFoeNotFullyResistant::
 Func_005_43F2:: ; address name
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     or a, a
     jr z, Jump_005_4438
     dec a
@@ -2814,10 +2814,10 @@ Jump_005_4E0C::
 
 ; C = 0 when wCFC5 is 4 or 5, else C = $FF (E-0094)
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCFC5
+; reads: wBattleKind
 CheckWCFC5Not4Or5:: ; heuristic: follows a terminator; C0
 Func_005_4E0F:: ; address name
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $04
     jr z, Jump_005_4E1A
     cp a, $05
@@ -2912,7 +2912,7 @@ Jump_005_4E79::
 
 ; only called from FailIfFoeWD2C1AtLeastEstimate (E-0047)
 ; 1 call site from 1 routine (e.g. FailIfFoeWD2C1AtLeastEstimate)
-; reads: wRecordBuffer, wCFF7, wCFF9, wCFF8, wCFFA, wBattleActor, wLinkMode
+; reads: wRecordBuffer, wRecordBufferData, wBattleActor, wLinkMode
 ; points at: wD8B7
 FailIfFoeWD2C1AtLeastEstimate_Sub01::
 Func_005_4E7C:: ; address name
@@ -2935,14 +2935,14 @@ Func_005_4E7C:: ; address name
     jp z, Jump_005_5010
     cp a, $53
     jp z, Jump_005_5010
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld l, a
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     add a, l
     ld l, a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld h, a
-    ld a, [wCFFA]
+    ld a, [wRecordBufferData + $C]
     adc a, h
     ld h, a
     ret
@@ -3213,12 +3213,12 @@ Func_005_5034:: ; address name
 
 ; C = $FF when wCFEF is 0 or the occupied foes' average resistance level for skill wCFEF is at least 2, else $00 (E-0128)
 ; 14 call sites from 14 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_RobMagic, AIScore_MegaMagic, ...)
-; reads: wCFEF, wBattleActor, hTemp0, hTemp1
+; reads: wRecordBufferData, wBattleActor, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 ; points at: wDA72
 PassIfFoesAverageResistanceAtLeast2::
 Func_005_5052:: ; address name
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     or a, a
     jr z, Jump_005_50B4
     dec a
@@ -5278,10 +5278,10 @@ Jump_005_5CCB::
 
 ; C = 0 when wCFC5 is 2 or 3, else C = $FF (E-0100)
 ; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Beat_Sub01, AIScore_PalsyAir_Sub01, AIScore_BigBang)
-; reads: wCFC5
+; reads: wBattleKind
 CheckWCFC5Not2Or3::
 Func_005_5CCE:: ; address name
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $02
     jr z, Jump_005_5CDB
     cp a, $03
@@ -6781,13 +6781,13 @@ Jump_005_647E::
 
 ; C = 0 when wC58A is 0 and wCFC5 is below 2, else C = $FF (E-0100)
 ; 5 call sites from 5 routines (e.g. AIScore_MegaMagic_Sub04, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
-; reads: wLinkMode, wCFC5
+; reads: wLinkMode, wBattleKind
 CheckWCFC5AtLeast2OrWC58ASet::
 Func_005_6481:: ; address name
     ld a, [wLinkMode]
     or a, a
     jr nz, Jump_005_6491
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $02
     jr nc, Jump_005_6491
     ld c, $00
@@ -6885,7 +6885,7 @@ Jump_005_64FB::
 
 ; C = 1 when the AI mode is below 2; otherwise $00 when an occupied foe's resistance field for skill wCFEF is 3; $FF when wCFEF is 0 or none is (E-0127)
 ; 21 call sites from 21 routines (e.g. AIScore_Firebal, AIScore_Beat, AIScore_Sacrifice, AIScore_Sap, ...)
-; reads: wBattleActor, wCFEF, hTemp0
+; reads: wBattleActor, wRecordBufferData, hTemp0
 ; writes: hTemp0, hTemp1
 ; points at: wDA72
 FailIfAnyFoeFullyResistant:: ; heuristic: follows a terminator; C0
@@ -6894,7 +6894,7 @@ Func_005_64FE:: ; address name
     call ReadWDA53Indexed_Bank05
     cp a, $02
     jr c, Jump_005_6553
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     or a, a
     jr z, Jump_005_6550
     dec a
@@ -7465,7 +7465,7 @@ Jump_005_681D::
 
 ; only called from AIScore_Ramming (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Ramming)
-; reads: wBattleActor, wCFEF
+; reads: wBattleActor, wRecordBufferData
 ; points at: wDA72
 AIScore_Ramming_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_6820:: ; address name
@@ -7496,7 +7496,7 @@ Jump_005_6840::
     cp a, $02
     jr c, Jump_005_6896
     ld c, e
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     or a, a
     jr z, Jump_005_6896
     push de
@@ -7547,7 +7547,7 @@ Jump_005_6899::
 
 ; only called from AIScore_Kamikaze (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Kamikaze)
-; reads: wBattleActor, wLinkMode, wCFC5, wD2CC, wCFEF
+; reads: wBattleActor, wLinkMode, wBattleKind, wD2CC, wRecordBufferData
 ; points at: wDA5B, wDA72
 AIScore_Kamikaze_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_689C:: ; address name
@@ -7558,7 +7558,7 @@ Func_005_689C:: ; address name
     ld a, [wLinkMode]
     or a, a
     jp nz, Jump_005_696C
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $02
     jp nc, Jump_005_696C
     ld a, [wD2CC]
@@ -7638,7 +7638,7 @@ Jump_005_6920::
     pop hl
     pop bc
     jr c, Jump_005_6963
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     or a, a
     jr z, Jump_005_696C
     push bc
@@ -7789,7 +7789,7 @@ Jump_005_69F2::
 
 ; C = 1 for the player side outside link battles; otherwise like PassIfFoesAverageResistanceAtLeast2 (E-0128)
 ; 20 call sites from 20 routines (e.g. AIScore_Beat, AIScore_Sap, AIScore_Slow, AIScore_Surround, ...)
-; reads: wLinkMode, wBattleActor, wCFEF, hTemp0, hTemp1
+; reads: wLinkMode, wBattleActor, wRecordBufferData, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 ; points at: wDA72
 ResistanceAverageGateForAISide:: ; heuristic: follows a terminator; C0
@@ -7802,7 +7802,7 @@ Func_005_69F5:: ; address name
     jr nc, Jump_005_6A68
 
 Jump_005_6A03::
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     or a, a
     jr z, Jump_005_6A65
     dec a
@@ -7875,7 +7875,7 @@ Jump_005_6A68::
 
 ; C = 1 in link battles, for the player side, or when the AI mode is below 3; otherwise like PassIfFoesAverageResistanceAtLeast2 (E-0128)
 ; 20 call sites from 20 routines (e.g. AIScore_Beat, AIScore_Sap, AIScore_Slow, AIScore_Surround, ...)
-; reads: wLinkMode, wBattleActor, wCFEF, hTemp0, hTemp1
+; reads: wLinkMode, wBattleActor, wRecordBufferData, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 ; points at: wDA72
 ResistanceAverageGateForFoeAIMode3:: ; heuristic: follows a terminator; C0
@@ -7889,7 +7889,7 @@ Func_005_6A6B:: ; address name
     call ReadWDA53Indexed_Bank05
     cp a, $03
     jr c, Jump_005_6AE5
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     or a, a
     jr z, Jump_005_6AE2
     dec a
@@ -9017,10 +9017,10 @@ Func_005_701B:: ; address name
 
 ; A = wCFEF, Z set when it is zero (E-0114)
 ; 2 call sites from 2 routines (e.g. AIGateFoeStatus1Mask22, AIScore_FireAir_Sub01)
-; reads: wCFEF
+; reads: wRecordBufferData
 TestWCFEF::
 Func_005_702D:: ; address name
-    ld a, [wCFEF]
+    ld a, [wRecordBufferData + $1]
     or a, a
     ret
 

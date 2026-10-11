@@ -2203,7 +2203,7 @@ Jump_024_4E3F::
 ; 18 call sites from 15 routines (e.g. GameMode6_Init, GameMode6_Update_Case01, GameMode6_Update_Case00_Case00, GameMode6_Update_Case02_Case0C, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawScreenBufferRectToBGMap_24::
 Func_024_4E57:: ; address name
     push de
@@ -2247,7 +2247,7 @@ Func_024_4E57:: ; address name
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld a, l
     ld e, a
@@ -4844,7 +4844,7 @@ Jump_024_659A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wD782, wIsCGB, wD781, wD783, wD784
 ; writes: hSpriteWindowClipMode, wD782, wD781, wD783, wD784
-; points at: wScreenTileBuffer, wWindowTileBuffer, wD1CC, wD000, wD168, wD104
+; points at: wScreenTileBuffer, wWindowTileBuffer, wD1CC, wD168, wD104
 ScriptCommandF8_Run_Case02_Case0B::
 Jump_024_65B1:: ; address name
     ld a, [wD782]
@@ -4896,7 +4896,7 @@ Jump_024_65F4::
     and a, a
     jr z, Jump_024_662A
     ld hl, wD1CC
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     ld bc, $0104
     call CopyLow3BitsToWRAMBank2_Bank24
     ld hl, wD168
@@ -5261,7 +5261,7 @@ Jump_024_6825::
 ; 9 call sites from 8 routines (e.g. ScriptCommandF8_Run_Case01_Case02, ScriptCommandF8_Run_Case02_Case0F, ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Case02_Case0A, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 DrawScreenBufferRectNoOrigin_Bank24::
 Func_024_6837:: ; address name
     push de
@@ -5285,7 +5285,7 @@ Func_024_6837:: ; address name
     ld a, $02
     ldh [rSVBK], a
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h
@@ -5707,7 +5707,7 @@ Data_024_6A8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from ScriptCommandF8_Run_Case02_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case04)
 ; reads: wD7F1, wD7F2, wIsCGB
-; points at: wScreenTileBuffer, wD000
+; points at: wScreenTileBuffer
 ScriptCommandF8_Run_Case02_Case04_Sub01::
 Func_024_6A90:: ; address name
     push bc
@@ -5735,12 +5735,12 @@ Func_024_6A90:: ; address name
     jr z, Jump_024_6AD1
     push hl
     push de
-    ld de, wD000
+    ld de, wRecordBufferData + $12
     add hl, de
     pop de
     push de
     push hl
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     add hl, de
     ld e, l
     ld d, h

@@ -873,7 +873,7 @@ Jump_00A_44D3::
     xor a, a
     ld [wBattleTransitionStep], a
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $01
     sla a
     ld [wBattleTransitionSubStep], a
@@ -945,9 +945,9 @@ Func_00A_465D:: ; address name
 
 ; entry 6 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wPendingFieldEvent, wCD05, wCD04, hTemp0, hTemp1
-; writes: hTemp0, hTemp1, wCFDC, wCFC5
-; points at: wCFDD
+; reads: wPendingFieldEvent, wPartyStrength, wKeyRandomHi, hTemp0, hTemp1
+; writes: hTemp0, hTemp1, wEncounterKind, wBattleKind
+; points at: wEncounterMonsters
 RunWC903Case_Case06::
 Jump_00A_4677:: ; address name
     ld a, [wPendingFieldEvent]
@@ -955,7 +955,7 @@ Jump_00A_4677:: ; address name
     cp a, $0C
     jr nc, Jump_00A_46D0
     farcall ComputePartyStrengthForKey
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     ld b, a
     ld a, $05
     call DivideBByA
@@ -973,12 +973,12 @@ Jump_00A_4699::
     inc de
     ld a, [de]
     ldh [hTemp1], a
-    ld hl, wCFDD
+    ld hl, wEncounterMonsters
     ld b, $03
 
 Jump_00A_46A5::
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $0F
     cp a, $0A
     jr nc, Jump_00A_46A5
@@ -1003,9 +1003,9 @@ Jump_00A_46BE::
 
 Jump_00A_46C5::
     ld a, $02
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ld a, $06
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ret
 
 Jump_00A_46D0::
@@ -1021,7 +1021,7 @@ Jump_00A_46D0::
     inc d
 
 Jump_00A_46DE::
-    ld hl, wCFDD
+    ld hl, wEncounterMonsters
     ld b, $03
 
 Jump_00A_46E3::
@@ -1046,13 +1046,13 @@ Data_00A_4716:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; entry 5 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wCD05
-; writes: wCFDD, wCFDE, wCFDC, wCFC5
+; reads: wPartyStrength
+; writes: wEncounterMonsters, wEncounterKind, wBattleKind
 RunWC903Case_Case05::
 Jump_00A_472E:: ; address name
     farcall ComputePartyStrengthLevelWCD05
     ld c, $76
-    ld a, [wCD05]
+    ld a, [wPartyStrength]
     cp a, $05
     jr c, Jump_00A_475C
     inc c
@@ -1077,23 +1077,23 @@ Jump_00A_472E:: ; address name
 
 Jump_00A_475C::
     ld a, c
-    ld [wCFDD], a
+    ld [wEncounterMonsters], a
     xor a, a
-    ld [wCFDE], a
+    ld [wEncounterMonsters + $1], a
     xor a, a
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ld a, $02
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ret
 
 ; draws random values until wCD04 & $3F is below 100, then wC902 = 2 * Data_00A_478F[value / 5] (E-0122)
 ; 5 call sites from 5 routines (e.g. TickRandomEncounterCounter, RunWD06BSubState_60E9_Case02_Case00_Case02, StartScriptedEncounterHFFC6, SetModeState3AndSaveScreen, ...)
-; reads: wCD04
+; reads: wKeyRandomHi
 ; writes: wEncounterCountdown
 PickRandomWC902FromTable478F::
 Func_00A_476E:: ; address name
     call NextRandomSeed
-    ld a, [wCD04]
+    ld a, [wKeyRandomHi]
     and a, $3F
     cp a, $64
     jr nc, PickRandomWC902FromTable478F
@@ -1115,7 +1115,7 @@ Data_00A_478F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; loads encounter entry $481C + 8 * hFFC6 into wCFDC-wCFE2, sets the battle intro (wC903 = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the battle transition (E-0128)
 ; 14 call sites from 14 routines (e.g. ScriptCommand4A_Run_Case05, ScriptCommand66_Run_Case05, ScriptCommand48_Run_Case06, ScriptCommand41_Run_Case03, ...)
 ; reads: hTemp0
-; writes: wCFDC, wCFDD, wCFDE, wCFDF, wCFE0, wCFE1, wCFE2, wBattleIntroKind, ...
+; writes: wEncounterKind, wEncounterMonsters, wBattleIntroKind, wModeState, wBattleTransitionStep, wBattleTransitionSubStep, wFieldReturnPhase
 StartScriptedEncounterHFFC6::
 Func_00A_47A4:: ; address name
     push hl
@@ -1135,20 +1135,20 @@ Func_00A_47A4:: ; address name
     adc a, $48
     ld h, a
     ld a, [hl+]
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     inc hl
     ld a, [hl+]
-    ld [wCFDD], a
+    ld [wEncounterMonsters], a
     ld a, [hl+]
-    ld [wCFDE], a
+    ld [wEncounterMonsters + $1], a
     ld a, [hl+]
-    ld [wCFDF], a
+    ld [wEncounterMonsters + $2], a
     ld a, [hl+]
-    ld [wCFE0], a
+    ld [wEncounterMonsters + $3], a
     ld a, [hl+]
-    ld [wCFE1], a
+    ld [wEncounterMonsters + $4], a
     ld a, [hl]
-    ld [wCFE2], a
+    ld [wEncounterMonsters + $5], a
     ld a, $02
     ld [wBattleIntroKind], a
     ldh a, [hTemp0]
@@ -1630,8 +1630,8 @@ Jump_00A_4CB1::
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
 ; 48 call sites from 1 routine (e.g. RunWC903Case_Case00)
 ; reads: hMapScreenY, hMapScreenX, wRandomLo, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
-; writes: wCFDC, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wCFC5
-; points at: wCFDD
+; writes: wEncounterKind, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wBattleKind
+; points at: wEncounterMonsters
 ReadMapCellWordForScreenXY::
 Func_00A_4CBA:: ; address name
     sla a
@@ -1651,15 +1651,15 @@ Func_00A_4CBA:: ; address name
 
 ; only called from RunWC903Case_Case00 (E-0047)
 ; 5 call sites from 1 routine (e.g. RunWC903Case_Case00)
-; reads: wRandomLo, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wCFDC
-; writes: wCFDC, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wCFC5
-; points at: wCFDD
+; reads: wRandomLo, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wEncounterKind
+; writes: wEncounterKind, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, wBattleKind
+; points at: wEncounterMonsters
 RunWC903Case_Case00_Sub01::
 Func_00A_4CD4:: ; address name
     ld a, [de]
     inc de
     dec a
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ld a, [de]
     inc de
     ldh [hTemp0], a
@@ -1678,7 +1678,7 @@ Func_00A_4CD4:: ; address name
     ld a, [de]
     inc de
     ldh [hTemp5], a
-    ld hl, wCFDD
+    ld hl, wEncounterMonsters
     ld b, $03
 
 Jump_00A_4CF7::
@@ -1734,8 +1734,8 @@ Jump_00A_4D31::
 
 Jump_00A_4D38::
     xor a, a
-    ld [wCFC5], a
-    ld a, [wCFDC]
+    ld [wBattleKind], a
+    ld a, [wEncounterKind]
     or a, a
     ret z
     dec a
@@ -1752,7 +1752,7 @@ Jump_00A_4D4C::
     and a, $03
     add_a_to_hl
     ld a, [hl]
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ret
 
 ; only called from CollectUniqueEncounterIdsToWD09F (E-0047)
@@ -2195,7 +2195,7 @@ Jump_00A_504E::
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through (E-0122)
 ; 48 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_Sub01)
 ; reads: hMapScreenY, hMapScreenX, wD09D, hTemp0, hTemp1
-; writes: wD09D, wD09E, wMonsterId, wCFE7, hTemp0
+; writes: wD09D, wD09E, wMonsterId, hTemp0
 ; points at: wD09F, hTemp0
 ReadMapCellWordForScreenXY_5057::
 Func_00A_5057:: ; address name
@@ -2217,7 +2217,7 @@ Func_00A_5057:: ; address name
 ; DE += 2; wD09D = the number of non-zero entries (up to 5); copies their monster ids to wD09F and replaces each with two bytes of its monster table entry (E-0127)
 ; 4 call sites from 1 routine (e.g. CollectUniqueEncounterIdsToWD09F_Sub01)
 ; reads: wD09D, hTemp0, hTemp1
-; writes: wD09D, wD09E, wMonsterId, wCFE7, hTemp0
+; writes: wD09D, wD09E, wMonsterId, hTemp0
 ; points at: wD09F, hTemp0
 LoadEncounterMonsterIdsToWD09D::
 Func_00A_5071:: ; address name
@@ -2270,7 +2270,7 @@ Jump_00A_50A6::
     ld a, [hl+]
     ld [wMonsterId], a
     ld a, [hl-]
-    ld [wCFE7], a
+    ld [wMonsterId + $1], a
     push hl
     ld a, $02
     ldh [hTemp0], a
@@ -2289,18 +2289,18 @@ Jump_00A_50A6::
 
 ; entry 2 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFC5
+; writes: wBattleKind
 RunWC903Case_Case02::
 Jump_00A_50CB:: ; address name
     ld a, $02
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ret
 
 ; entry 1 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo, wMapType, hMapScreenY, hMapScreenX, wKeyWorldFloor
-; writes: wCFDC, wCFC5
-; points at: wCD70, wCD88
+; writes: wEncounterKind, wBattleKind
+; points at: wKeyWorldAreas, wKeyWorldFloorInfo
 RunWC903Case_Case01::
 Jump_00A_50D1:: ; address name
     call NextTableByte
@@ -2309,7 +2309,7 @@ Jump_00A_50D1:: ; address name
     ld hl, Data_00A_514C
     add_a_to_hl
     ld a, [hl]
-    ld [wCFDC], a
+    ld [wEncounterKind], a
     ld a, [wMapType]
     and a, $07
     cp a, $01
@@ -2326,7 +2326,7 @@ Jump_00A_50F1::
     srl a
     srl a
     add a, c
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -2336,14 +2336,14 @@ Jump_00A_50F1::
     ld c, a
     call RunWC903Case_Case01_Sub01
     ld a, $01
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ret
 
 Jump_00A_5116::
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
-    ld hl, wCD88
+    ld hl, wKeyWorldFloorInfo
     add_a_to_hl
     ld a, [hl]
     push af
@@ -2357,7 +2357,7 @@ Jump_00A_5116::
     srl a
     srl a
     add a, c
-    ld hl, wCD70
+    ld hl, wKeyWorldAreas
     add_a_to_hl
     ld a, [hl]
     add a, a
@@ -2366,7 +2366,7 @@ Jump_00A_5116::
     ld c, a
     call RunWC903Case_Case01_Sub01
     ld a, $01
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ret
 
 Data_00A_514C:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -2377,20 +2377,20 @@ Data_00A_5150:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from RunWC903Case_Case01 (E-0047)
 ; 2 call sites from 1 routine (e.g. RunWC903Case_Case01)
-; reads: hPlayerStateFlags, wCD03
-; points at: wCFDD, wCD10
+; reads: hPlayerStateFlags, wKeyRandomLo
+; points at: wEncounterMonsters, wKeyWorldMonsters
 RunWC903Case_Case01_Sub01::
 Func_00A_5154:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, Jump_00A_519F
     ld b, $03
-    ld de, wCFDD
+    ld de, wEncounterMonsters
 
 Jump_00A_515F::
     push bc
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $07
     add a, c
     cp a, $20
@@ -2399,7 +2399,7 @@ Jump_00A_515F::
 
 Jump_00A_516F::
     add a, a
-    ld hl, wCD10
+    ld hl, wKeyWorldMonsters
     add_a_to_hl
     ld a, [hl+]
     ld [de], a
@@ -2434,16 +2434,16 @@ Jump_00A_516F::
 
 Jump_00A_519F::
     ld b, $03
-    ld de, wCFDD
+    ld de, wEncounterMonsters
 
 Jump_00A_51A4::
     push bc
     call NextRandomSeed
-    ld a, [wCD03]
+    ld a, [wKeyRandomLo]
     and a, $07
     add a, $20
     add a, a
-    ld hl, wCD10
+    ld hl, wKeyWorldMonsters
     add_a_to_hl
     ld a, [hl+]
     ld [de], a
@@ -2479,7 +2479,7 @@ Jump_00A_51A4::
 ; entry 3 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType
-; writes: wBattleIntroFlag, wCFC5
+; writes: wBattleIntroFlag, wBattleKind
 RunWC903Case_Case03::
 Jump_00A_51DF:: ; address name
     ld a, [wMapType]
@@ -2490,25 +2490,25 @@ Jump_00A_51DF:: ; address name
 
 Jump_00A_51EB::
     ld a, $03
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ret
 
 ; entry 4 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFC5
+; writes: wBattleKind
 RunWC903Case_Case04::
 Jump_00A_51F1:: ; address name
     ld a, $04
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ret
 
 ; entry 7 of the `rst $00` table in RunWC903Case
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wCFC5
+; writes: wBattleKind
 RunWC903Case_Case07::
 Jump_00A_51F7:: ; address name
     ld a, $05
-    ld [wCFC5], a
+    ld [wBattleKind], a
     ret
 
 ; runs the routine for wC904 (jump table of three); field mode state 3 (E-0122)

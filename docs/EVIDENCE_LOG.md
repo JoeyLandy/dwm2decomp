@@ -1549,6 +1549,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - Result: 691 address-named RAM addresses remain (14,424 uses).
 - Binary verification: build/run96 PASS, 0 differing bytes; tests OK.
 
+### E-0135 — WRAM $CC49-$CFFF
+
+- Kind: OBSERVATION (reading; C1).
+- **What is named.**
+  - The key-world state: random value (wKeyRandomLo/Hi, from NextRandomSeed), size, band, monster tables, areas, objects, encounters, and the visited-screen bitmap.
+  - The $D8-byte block saved separately (from $CE9B): timer bytes, a family bit array and its count, 11 family scores and their ranking.
+  - The name-entry screen (state, cursor, entered text with voicing marks).
+  - wBattleKind; the battle command and list paging bytes; the encounter entry and wild level/band.
+  - The record buffers as sized symbols (wMonsterId, wRecordBuffer, wRecordBufferData).
+- **Limits.** The $CE9B block and its timer are named by structure only: which game feature uses them (game mode 2 and the bank-$F0 screens) is not read.
+- Result: 515 address-named RAM addresses remain (12,425 uses); all of $C000-$CFFF and HRAM is named.
+- Binary verification: build/run97 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

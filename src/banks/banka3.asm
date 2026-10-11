@@ -790,7 +790,7 @@ Jump_0A3_4A99::
 
 ; only called from ActionEffect_Chance (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Chance)
-; reads: wRandomLo, wLinkMode, wCFC5, wBattleActor
+; reads: wRandomLo, wLinkMode, wBattleKind, wBattleActor
 ActionEffect_Chance_Sub01::
 Func_0A3_4AAF:: ; address name
     call AdvanceRandom
@@ -805,7 +805,7 @@ Func_0A3_4AAF:: ; address name
     ld a, [wLinkMode]
     or a, a
     jr nz, Jump_0A3_4AF3
-    ld a, [wCFC5]
+    ld a, [wBattleKind]
     cp a, $02
     jr z, Jump_0A3_4AE2
     cp a, $03

@@ -2106,7 +2106,7 @@ Func_0E0_4FCE:: ; address name
 ; loads skill wC5F9's first record byte (LoadSkillRecordPart) and writes it as three digit tiles at vBGMap0 + $204 (E-0121)
 ; 1 call site from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9)
 ; reads: wDebugValue0, wRecordBufferData, wDigits
-; writes: wD868, wRecordBuffer, wCFED, wD869, wD86A, wD86B
+; writes: wD868, wRecordBuffer, wD869, wD86A, wD86B
 ; points at: wRecordBufferData
 DrawSkillRecordByte0DigitsForWC5F9::
 Func_0E0_4FDB:: ; address name
@@ -2115,7 +2115,7 @@ Func_0E0_4FDB:: ; address name
     ld a, [wDebugValue0]
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     ld a, $01
     ld [wD869], a
     ld hl, wRecordBufferData
@@ -2144,18 +2144,18 @@ Func_0E0_4FDB:: ; address name
 
 ; only called from DrawSkillByte0AndRun502BAnd53B9 (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9)
-; reads: wDebugValue0, wCFF7, wCFF8, wDigits, wCFF9, wCFFB, wCFFC, wCFFD
-; writes: wRecordBuffer, wCFED
+; reads: wDebugValue0, wRecordBufferData, wDigits
+; writes: wRecordBuffer
 DrawSkillByte0AndRun502BAnd53B9_Sub02::
 Func_0E0_502B:: ; address name
     ld a, [wDebugValue0]
     ld [wRecordBuffer], a
     xor a, a
-    ld [wCFED], a
+    ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
-    ld a, [wCFF7]
+    ld a, [wRecordBufferData + $9]
     ld l, a
-    ld a, [wCFF8]
+    ld a, [wRecordBufferData + $A]
     ld h, a
     push hl
     call HLToDecimalDigits
@@ -2172,7 +2172,7 @@ Func_0E0_502B:: ; address name
     ld hl, vBGMap0 + $1C5
     call WriteVRAMByte
     pop hl
-    ld a, [wCFF9]
+    ld a, [wRecordBufferData + $B]
     ld c, a
     ld b, $00
     add hl, bc
@@ -2189,9 +2189,9 @@ Func_0E0_502B:: ; address name
     add a, $E0
     ld hl, vBGMap0 + $1E5
     call WriteVRAMByte
-    ld a, [wCFFB]
+    ld a, [wRecordBufferData + $D]
     ld l, a
-    ld a, [wCFFC]
+    ld a, [wRecordBufferData + $E]
     ld h, a
     push hl
     call HLToDecimalDigits
@@ -2208,7 +2208,7 @@ Func_0E0_502B:: ; address name
     ld hl, vBGMap0 + $1C9
     call WriteVRAMByte
     pop hl
-    ld a, [wCFFD]
+    ld a, [wRecordBufferData + $F]
     ld c, a
     ld b, $00
     add hl, bc
@@ -2442,7 +2442,7 @@ Jump_0E0_572C::
 ; 1 call site from 1 routine (e.g. RunWC5FDState_E0_Case0D_Case02)
 ; reads: wBattleActor, wLinkMode, hTemp3, hTemp2
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wDigits, hTemp1, ...
-; points at: wDA43, wDA53, wD988, wD2AD, wBattleActionChoice, wDA3F, wCFDE
+; points at: wDA43, wDA53, wD988, wD2AD, wBattleActionChoice, wDA3F
 RunWC5FDState_E0_Case0D_Case02_Sub01::
 Func_0E0_572D:: ; address name
     call DisplayedSlotOfActor
@@ -2541,7 +2541,7 @@ Jump_0E0_57DE::
     jr Jump_0E0_581A
 
 Jump_0E0_57F0::
-    ld de, wCFDE
+    ld de, wEncounterMonsters + $1
     add a, a
     add a, e
     ld e, a
@@ -3069,7 +3069,7 @@ Jump_0E0_5AF2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount, wFieldEventKind
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
 Func_0E0_5AD3_Case00_Case00::
 Jump_0E0_5B16:: ; address name
     ld b, $7D
@@ -3103,7 +3103,7 @@ Jump_0E0_5B16:: ; address name
     ldh [rSVBK], a
     ld b, $46
     ld de, Data_046_5301
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -3590,7 +3590,7 @@ Jump_0E0_5E4B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount, wFieldEventKind
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
 Func_0E0_5AD3_Case01_Case00::
 Jump_0E0_5E83:: ; address name
     ld b, $7D
@@ -3620,7 +3620,7 @@ Jump_0E0_5E83:: ; address name
     ldh [rSVBK], a
     ld b, $46
     ld de, Data_046_7A9D
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -4222,7 +4222,7 @@ Jump_0E0_6266:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
 Func_0E0_5AD3_Case02_Case00::
 Jump_0E0_62A0:: ; address name
     ld b, $7D
@@ -4264,7 +4264,7 @@ Jump_0E0_62A0:: ; address name
     ldh [rSVBK], a
     ld b, $48
     ld de, Data_048_54BF
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -5090,7 +5090,7 @@ Jump_0E0_6841:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
 Func_0E0_5AD3_Case03_Case00::
 Jump_0E0_685B:: ; address name
     ld b, $7D
@@ -5136,7 +5136,7 @@ Jump_0E0_685B:: ; address name
     ldh [rSVBK], a
     ld b, $48
     ld de, Data_048_61F2
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
@@ -5634,7 +5634,7 @@ Jump_0E0_6C0A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount
-; points at: wScreenTileBuffer, wD000, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
+; points at: wScreenTileBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots, wD09E
 Func_0E0_5AD3_Case04_Case00::
 Jump_0E0_6C2C:: ; address name
     ld b, $7D
@@ -5668,7 +5668,7 @@ Jump_0E0_6C2C:: ; address name
     ldh [rSVBK], a
     ld b, $49
     ld de, Data_049_572D
-    ld hl, wD000
+    ld hl, wRecordBufferData + $12
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a

@@ -64,7 +64,6 @@ Func_013_4049:: ; address name
 ; 39 call sites from 26 routines (e.g. RunWC8C7Phase_Case02, RunWC8C7Phase_Case01, FieldModeStateDispatch_Shared01_Sub02, FieldModeStateDispatch_Shared01_Sub03, ...)
 ; reads: wMapType, wTalkEventIndex, wKeyWorldFloor, wTalkEventGroup
 ; writes: wScriptStartRequest, wModeState, wTalkEventIndex, wTalkEventGroup, wScriptParam0, wScriptParam1, wScriptCommandType, wScriptRunning, ...
-; points at: wCD89, wCDAE
 DispatchTalkEvent::
 Func_013_405C:: ; address name
     ld a, [wMapType]
@@ -89,7 +88,7 @@ Func_013_405C:: ; address name
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
-    ld hl, wCD89
+    ld hl, wKeyWorldFloorInfo + $1
     add_a_to_hl
     ld a, [hl]
     cp a, $06
@@ -102,7 +101,7 @@ Jump_013_409E::
     ld [wModeState], a
     ld a, [wKeyWorldFloor]
     swap a
-    ld hl, wCDAE
+    ld hl, wKeyWorldFloorState + $2
     add_a_to_hl
     ld a, [wTalkEventGroup]
     cp a, $FD
