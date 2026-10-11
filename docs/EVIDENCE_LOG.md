@@ -1767,7 +1767,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - each set's frame-pointer list, which ends where its first frame begins;
   - each frame: rows of 4 bytes, one per line, plus the $80 terminator, through a new table option `tail`;
   - a new field option `line` puts each row on its own `db` line.
-  - Results: 512 sets and 3,397 frames. Later (build/run171) frames of up to 127 sprites are accepted: the builders stop drawing at 40 OAM entries, but 49 frames hold 40 or more sprites before their $80, which the first limit had rejected (3,446 frames).
+  - Results: 512 sets and 3,397 frames. Later (build/run171) frames of up to 127 sprites are accepted: the builders stop drawing at 40 OAM entries, but 49 frames hold 40 or more sprites before their $80, which the first limit had rejected (3,447 frames).
   - Sets are labelled `<table>SetNN`, numbered by the first set index that uses them, and frames `<table>SetNNFrameK`.
 - **Effect.** Unidentified INCBIN fell from 284,366 to 197,278 bytes.
 - **Limits.** Which monster or object each set draws is not read (banks $25-$27 hold 383 sets, close to the 384 monster sprites, but no mapping was checked).
