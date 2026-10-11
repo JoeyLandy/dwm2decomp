@@ -1751,6 +1751,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Limits.** The meaning of the 8-byte screen headers (they look like exit or connection bytes) and of the order bytes is not read.
 - Binary verification: build/run146 PASS, 0 differing bytes; tests OK.
 
+### E-0147 — Meta-sprite sets and frames
+
+- Kind: OBSERVATION (reading of DrawMetaSpriteSet_Bank25_Sub01 and its copies, BuildOamFromSpriteTable_*, and DrawMetaSpriteAt; C1).
+- **Format.** Every builder takes DE = a word table of sets and reads three levels:
+  - the set: the word at DE + 2 * hSpriteSetIndex;
+  - the frame: the word at set + 2 * hSpriteSubIndex;
+  - the sprites: 4-byte entries (Y offset, X offset, tile, attribute), drawn until a $80 in the Y position (or 40 OAM entries).
+- **Tables.**
+  - $25, $26, $27 at $401E (128, 128 and 127 sets). Each has an attribute table after it ($411E, $411E, $411C), whose bit 0 enables ORing the high nibble into hSpriteAttrXor.
+  - 3B:507C, 3D:4077, 3E:4024, 3F:407E and 92:4024: the tables the BuildOamFromSpriteTable copies receive.
+  - 7F:4008 (DrawMetaSprite4008) and 7F:7011 (DrawMetaSprite).
+  - The counts run to the code or table that follows each table.
+- **Generator.** add_metasprite_schemas derives, under tables marked `"metasprite"`:
+  - each set's frame-pointer list, which ends where its first frame begins;
+  - each frame: rows of 4 bytes, one per line, plus the $80 terminator, through a new table option `tail`;
+  - a new field option `line` puts each row on its own `db` line.
+  - Results: 512 sets and 3,397 frames.
+  - Sets are labelled `<table>SetNN`, numbered by the first set index that uses them, and frames `<table>SetNNFrameK`.
+- **Effect.** Unidentified INCBIN fell from 284,366 to 197,278 bytes.
+- **Limits.** Which monster or object each set draws is not read (banks $25-$27 hold 383 sets, close to the 384 monster sprites, but no mapping was checked).
+- Binary verification: build/run147 PASS, 0 differing bytes; tests OK.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

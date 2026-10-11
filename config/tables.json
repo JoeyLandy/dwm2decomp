@@ -1650,6 +1650,211 @@
         }
       ],
       "note": "E-0146 (C1: RunRandomPatternCase_Case00/01/02 pick entry (random & $1F) of the lists at $610D, $616D and $61E5 and store the far pointer in the key-world area data; the far pointers run to $62F8 and all point at chunk groups ($61 bytes per sub-chunk))."
+    },
+    {
+      "bank": "25",
+      "addr": "401E",
+      "label": "MetaSprites25Table",
+      "count": 128,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: DrawMetaSpriteSet_Bank25 passes DE = $25:401E to the builder, which takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 128 words up to the attribute table at $411E)."
+    },
+    {
+      "bank": "26",
+      "addr": "401E",
+      "label": "MetaSprites26Table",
+      "count": 128,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: DrawMetaSpriteSet_Bank26 passes DE = $26:401E to the builder, which takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 128 words up to the attribute table at $411E)."
+    },
+    {
+      "bank": "27",
+      "addr": "401E",
+      "label": "MetaSprites27Table",
+      "count": 127,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: DrawMetaSpriteSet_Bank27 passes DE = $27:401E to the builder, which takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 127 words up to the attribute table at $411C)."
+    },
+    {
+      "bank": "25",
+      "addr": "411E",
+      "label": "MetaSprites25Attrs",
+      "count": 128,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bit 0 set: OR the high nibble into hSpriteAttrXor"
+        }
+      ],
+      "note": "E-0147 (C1: DrawMetaSpriteSet_Bank25 reads the byte $411E + hSpriteSetIndex; when bit 0 is set it ORs its high nibble into hSpriteAttrXor before drawing)."
+    },
+    {
+      "bank": "26",
+      "addr": "411E",
+      "label": "MetaSprites26Attrs",
+      "count": 128,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bit 0 set: OR the high nibble into hSpriteAttrXor"
+        }
+      ],
+      "note": "E-0147 (C1: DrawMetaSpriteSet_Bank26 reads the byte $411E + hSpriteSetIndex; when bit 0 is set it ORs its high nibble into hSpriteAttrXor before drawing)."
+    },
+    {
+      "bank": "27",
+      "addr": "411C",
+      "label": "MetaSprites27Attrs",
+      "count": 127,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "bit 0 set: OR the high nibble into hSpriteAttrXor"
+        }
+      ],
+      "note": "E-0147 (C1: DrawMetaSpriteSet_Bank27 reads the byte $411C + hSpriteSetIndex; when bit 0 is set it ORs its high nibble into hSpriteAttrXor before drawing)."
+    },
+    {
+      "bank": "3B",
+      "addr": "507C",
+      "label": "MetaSprites3B_507CTable",
+      "count": 51,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: the caller of BuildOamFromSpriteTable_Bank3B passes DE = $3B:507C; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 51 words, up to the next code or data)."
+    },
+    {
+      "bank": "3D",
+      "addr": "4077",
+      "label": "MetaSprites3D_4077Table",
+      "count": 45,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: the caller of BuildOamFromSpriteTable_Bank3D passes DE = $3D:4077; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 45 words, up to the next code or data)."
+    },
+    {
+      "bank": "3E",
+      "addr": "4024",
+      "label": "MetaSprites3E_4024Table",
+      "count": 14,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: the caller of BuildOamFromSpriteTable_Bank3E passes DE = $3E:4024; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 14 words, up to the next code or data)."
+    },
+    {
+      "bank": "3F",
+      "addr": "407E",
+      "label": "MetaSprites3F_407ETable",
+      "count": 32,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: the caller of BuildOamFromSpriteTable_Bank3F passes DE = $3F:407E; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 32 words, up to the next code or data)."
+    },
+    {
+      "bank": "92",
+      "addr": "4024",
+      "label": "MetaSprites92_4024Table",
+      "count": 60,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: the caller of BuildOamFromSpriteTable_Bank92 passes DE = $92:4024; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 60 words, up to the next code or data)."
+    },
+    {
+      "bank": "7F",
+      "addr": "4008",
+      "label": "MetaSprites7F_4008Table",
+      "count": 98,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: the caller of DrawMetaSprite4008 passes DE = $7F:4008; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 98 words, up to the next code or data)."
+    },
+    {
+      "bank": "7F",
+      "addr": "7011",
+      "label": "MetaSprites7F_7011Table",
+      "count": 42,
+      "id_base": 0,
+      "metasprite": true,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "meta-sprite set",
+          "reason": "meta-sprite set"
+        }
+      ],
+      "note": "E-0147 (C1: the caller of DrawMetaSprite passes DE = $7F:7011; the builder takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 42 words, up to the next code or data)."
     }
   ]
 }

@@ -727,7 +727,7 @@ class Rom:
         # (config/observed_streams.json) and runs of six or more back-to-back streams
         # (config/stream_chains.json). Every one is re-checked with the decompressor and skipped
         # when it starts inside decoded code or a structured table.
-        in_table = [(t["bank"], t["addr"], t["addr"] + t["count"] * sum(
+        in_table = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
             2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
 
         def usable(bnk: int, addr: int) -> bool:
@@ -1358,7 +1358,7 @@ class Rom:
         taken: list[tuple[int, int, int]] = []  # config layouts win over derived ones
         for t in self.schemas:
             if not t["label"].startswith(("MapRecord",)):
-                size = sum(2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"]) * t["count"]
+                size = sum(2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"]) * t["count"] + t.get("tail", 0)
                 taken.append((t["bank"], t["addr"], t["addr"] + size))
         for (bank, addr), (n, label) in sorted(arrays.items()):
             if any(b == bank and lo < addr + 3 * n and addr < hi for b, lo, hi in taken):
@@ -1406,6 +1406,59 @@ class Rom:
         log(f"map layouts derived from MapTable: {len(recs)} records, {len(arrays)} screen arrays, {npal} palette sets, "
             f"{len(chunk_groups)} key-world chunk groups")
 
+    def add_metasprite_schemas(self) -> None:
+        """Derive set, frame-list and frame layouts below tables marked "metasprite" (E-0147).
+
+        The meta-sprite builders (DrawMetaSpriteSet_Bank25 and its copies, DrawMetaSpriteAt)
+        take a word table of sets; a set is a list of frame pointers (hSpriteSubIndex indexes
+        it; it ends where the first frame begins); a frame is 4-byte sprites (Y offset,
+        X offset, tile, attribute) until a byte $80 in the Y position."""
+        taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+
+        def free(bank: int, lo: int, hi: int) -> bool:
+            return not any(b == bank and a < hi and lo < e for b, a, e in taken)
+
+        sets = frames = 0
+        for t in [t for t in self.schemas if t.get("metasprite")]:
+            bank, prefix = t["bank"], t["label"].removesuffix("Table")
+            base = bank * BANK - self.base(bank)
+            words = [self._u16(bank, t["addr"] + 2 * i) for i in range(t["count"])]
+            for a in sorted(set(words)):
+                si = words.index(a) + t.get("id_base", 0)  # numbered by the first set index that uses it
+                if not 0x4000 <= a < 0x8000:
+                    continue
+                ptrs, lo = [], 0x8000
+                while a + 2 * len(ptrs) < lo:
+                    w = self._u16(bank, a + 2 * len(ptrs))
+                    if not a < w < 0x8000:
+                        ptrs = []
+                        break
+                    ptrs.append(w)
+                    lo = min(lo, w)
+                if not ptrs or a + 2 * len(ptrs) != lo or not free(bank, a, lo):
+                    continue
+                taken.append((bank, a, lo))
+                self.schemas.append({"bank": bank, "addr": a, "label": f"{prefix}Set{si:02X}", "count": len(ptrs),
+                                     "fields": [{"type": "ptr", "name": "frame", "reason": "meta-sprite frame"}],
+                                     "note": f"E-0147 (derived: meta-sprite set {si} of {t['label']}: "
+                                             f"{len(ptrs)} frame pointer(s), chosen by hSpriteSubIndex)"})
+                sets += 1
+                for fi, fa in enumerate(sorted(set(ptrs))):
+                    n = 0
+                    while n < 40 and fa + 4 * n < 0x8000 and self.data[base + fa + 4 * n] != 0x80:
+                        n += 1
+                    if n == 40 or fa + 4 * n >= 0x8000 or not free(bank, fa, fa + 4 * n + 1):
+                        continue
+                    taken.append((bank, fa, fa + 4 * n + 1))
+                    self.schemas.append({"bank": bank, "addr": fa, "label": f"{prefix}Set{si:02X}Frame{fi}",
+                                         "count": n, "tail": 1,
+                                         "fields": [{"type": "db", "size": 4, "line": True,
+                                                     "name": "sprite: Y offset, X offset, tile, attribute"}],
+                                         "note": f"E-0147 (derived: frame {fi} of {prefix}Set{si:02X}; ends with $80)"})
+                    frames += 1
+        log(f"meta-sprite layouts: {sets} sets, {frames} frames")
+
     def prepare_tables(self) -> None:
         """Validate config/tables.json against the ROM and register data labels for their
         pointer targets. Raises if a layout overlaps code or an existing label would fall in
@@ -1415,7 +1468,7 @@ class Rom:
             fields = t["fields"]
             sizes = [2 if f["type"] == "ptr" else f.get("size", 1) for f in fields]
             stride = sum(sizes)
-            end = addr + stride * count
+            end = addr + stride * count + t.get("tail", 0)  # "tail": bytes after the records, e.g. a terminator
             cov, dt, dl = self.covered[bank], self.dtab[bank], self.dlabels[bank]
             ins = self.insn[bank]
             for a in [a for a in ins if addr <= a < end and ins[a][0] == "dw"]:
@@ -1598,9 +1651,16 @@ class Rom:
                         out.append(f"    dw {nm or f'${tgt:04X}'}" + ("" if tagged else tag))
                     tagged = True
                 else:
+                    if f.get("line"):
+                        flush()  # a field marked "line" gets a db line of its own
                     run.extend(raws[fi])
+                    if f.get("line"):
+                        flush()
                 q += sz
             flush()
+        if t.get("tail"):
+            o = bank * BANK + t["addr"] + t["count"] * stride - self.base(bank)
+            out.append("    db " + ", ".join(f"${v:02X}" for v in self.data[o:o + t["tail"]]) + " ; end")
 
     def summary(self) -> str:
         code = sum(v[0] if v[0] != "dw" else 2 for ins in self.insn.values() for v in ins.values())
@@ -2093,6 +2153,7 @@ def main() -> int:
             rom.schemas.append(dict(t, bank=int(t["bank"], 16), addr=int(t["addr"], 16)))
         log(f"loaded {len(rom.schemas)} table layouts from {tables_path.name}")
     rom.add_map_schemas()
+    rom.add_metasprite_schemas()
     rom.run()
     if "--export-streams" in sys.argv:
         dest = Path(sys.argv[sys.argv.index("--export-streams") + 1])

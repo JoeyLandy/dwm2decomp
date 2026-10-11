@@ -389,6 +389,24 @@ class MonsterAssetNames(unittest.TestCase):
         self.assertIn("MonsterSprite_DrakSlime::", (BANKS / "bank20.asm").read_text(encoding="utf-8"))
 
 
+class DerivedLayouts(unittest.TestCase):
+    """Map records, key-world chunks and meta-sprites are laid out field by field (E-0142 to E-0147)."""
+
+    def test_map_record_uses_far_pointers(self):
+        text = (BANKS / "bank11.asm").read_text(encoding="utf-8")
+        self.assertIn("MapRecord1D::\n", text)
+        self.assertIn("    dfar Map1DScreens0\n    dfar Map1DAttrs0\n", text)
+
+    def test_meta_sprite_frames_end_with_80(self):
+        text = (BANKS / "bank25.asm").read_text(encoding="utf-8")
+        frame = text[text.index("MetaSprites25Set02Frame0::"):]
+        self.assertRegex(frame, r"^MetaSprites25Set02Frame0::\n.*\n(    db \$[0-9A-F]{2}, \$[0-9A-F]{2}, \$[0-9A-F]{2}, \$[0-9A-F]{2}( ; entry \d+)?\n)+    db \$80 ; end\n")
+
+    def test_key_world_chunks_skip_the_screen_header(self):
+        text = (BANKS / "bank67.asm").read_text(encoding="utf-8")
+        self.assertIn("KeyWorldChunkGroup00::", text)
+
+
 class BufferOffsetAliases(unittest.TestCase):
     """An "of" symbol renders as an offset into the buffer it names (E-0136)."""
 

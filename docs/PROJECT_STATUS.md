@@ -65,8 +65,8 @@ Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/ru
 | `call`/`farcall` operands that reach a named routine | 100% of 22,058 |
 | Evidence-named routines in `config/names.json` | 3,227, plus families, `_CaseNN`/`_SubNN`/`_SharedNN` structural names |
 | RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 (from 1,611 before E-0132); buffers print as `Name + $offset`, and WRAM-bank-2 attribute positions use `of` aliases (E-0132 to E-0137) |
-| Data decoded from tables (E-0138 to E-0142) | monster pictures, sprites and palettes named by monster; key-world tilesets and rooms; all 183 map records with their screen arrays and palettes; far pointers print as `dfar Label` |
-| `INCBIN` bytes not inside a known compressed stream | 405,041 (from about 645,000 before E-0139) |
+| Data decoded from tables (E-0138 to E-0142) | monster pictures, sprites and palettes named by monster; key-world tilesets and rooms; all 183 map records and 35 special maps with their screen arrays and palettes; key-world chunk groups; 512 meta-sprite sets with 3,397 frames; far pointers print as `dfar Label` |
+| `INCBIN` bytes not inside a known compressed stream | 197,278 (from about 645,000 before E-0139) |
 | Immediates kept numeric although they look like addresses | step deltas, battle message bytes, sprite positions (E-0132, E-0137) |
 
 Most routine and RAM names are C1 readings, and many describe mechanics or which routines use a byte rather than game meaning (for example wScreenByteB2, wBattleTemp7A). Proven data is kept out of code through `config/data_regions.json`, and code pointer tables through `config/tables.json`.
