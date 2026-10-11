@@ -313,7 +313,7 @@ Jump_004_41C0::
     jr nc, Jump_004_41E7
     push hl
     swap a
-    ld hl, $423D
+    ld hl, KeyWorldGoalGraphicsTable
     add_a_to_hl
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
@@ -401,7 +401,20 @@ Jump_004_420B::
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $01023D, $90
+
+; E-0221 (C1: SetupKeyWorldObjectsForMapType_Sub01, for an object whose graphics number (hTemp0) is below 9 and whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 + wKeyWorldGoalKind; 9 rows end at the code at $42CD).
+; record: replacement graphics number for each goal kind 0-9, then six zero bytes
+KeyWorldGoalGraphicsTable::
+Data_004_423D:: ; address name
+    db $0E, $0E, $0E, $0E, $0E, $0E, $0E, $44, $0E, $0E, $00, $00, $00, $00, $00, $00 ; id 0
+    db $10, $52, $52, $4D, $10, $10, $10, $44, $10, $10, $00, $00, $00, $00, $00, $00 ; id 1
+    db $08, $08, $2E, $24, $08, $08, $37, $44, $3C, $33, $00, $00, $00, $00, $00, $00 ; id 2
+    db $09, $09, $2F, $25, $09, $09, $38, $44, $1B, $34, $00, $00, $00, $00, $00, $00 ; id 3
+    db $0C, $0C, $30, $26, $0C, $0C, $39, $44, $1E, $35, $00, $00, $00, $00, $00, $00 ; id 4
+    db $06, $06, $2D, $23, $06, $06, $36, $44, $18, $31, $00, $00, $00, $00, $00, $00 ; id 5
+    db $12, $12, $12, $12, $12, $12, $12, $44, $12, $12, $00, $00, $00, $00, $00, $00 ; id 6
+    db $15, $15, $15, $15, $15, $15, $15, $44, $15, $15, $00, $00, $00, $00, $00, $00 ; id 7
+    db $00, $16, $00, $00, $00, $00, $00, $44, $16, $33, $00, $00, $00, $00, $00, $00 ; id 8
 
 ; on map screen (0, 0) or (1, 0) sets wCB8A/wCB8B and wCB86 for wCD0B values 1, 7, 8 or 9 (E-0125)
 ; 1 call site from 1 routine (e.g. SetupKeyWorldObjectsForMapType)

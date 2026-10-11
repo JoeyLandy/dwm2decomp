@@ -2197,6 +2197,23 @@ class Rom:
                     if a in self.insn[b] and a <= self.base(b) + BANK - 16 and sig16(b, a) in fam_sigs}
         taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
             2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+        def add_record(cb: int, src: int) -> bool:
+            o = cb * BANK + src - self.base(cb)
+            w, rows = self.data[o + 2], self.data[o + 3]
+            end = src + 4 + w * rows
+            if not (0 < w <= 32 and 0 < rows <= 32) or end > 0x8000 or                     any(p in self.covered[cb] for p in range(src, end)) or                     any(b == cb and lo < end and src < hi for b, lo, hi in taken) or                     any(b == cb and a2 < end and src < a2 + used for (b, a2), (_, used) in self.streams.items()):
+                return False
+            taken.append((cb, src, end))
+            off = self.data[o] | self.data[o + 1] << 8
+            self.schemas.append({
+                "bank": cb, "addr": src, "label": f"TileRect_{cb:02X}_{src:04X}", "count": 1,
+                "fields": [{"type": "words", "size": 2, "name": "offset into wScreenTileBuffer"},
+                           {"type": "db", "size": 2, "line": True, "name": "width, rows"}]
+                          + [{"type": "db", "size": w, "line": True, "name": f"row {r}"} for r in range(rows)],
+                "record": f"offset ${off:04X} (row {off // 32}, column {off % 32}); {w} x {rows} tiles",
+                "note": "E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)"})
+            return True
+
         ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")
         found = 0
         for cb in range(self.nbanks):
@@ -2213,26 +2230,36 @@ class Rom:
                     if (m := ld_hl.match(ins[x][1])):
                         src = int(m.group(1), 16)
                         break
+                if src is None and k >= 3 and [ins[order[k - j]][1] for j in (3, 2, 1)] ==                         ["ld a, [hl+]", "ld h, [hl]", "ld l, a"]:
+                    # E-0221: HL = word n of a table of records (ld hl, T / index / deref)
+                    for x in reversed(order[max(0, k - 10):k - 3]):
+                        if ins[x][2] in SETUP_BARRIER:
+                            break
+                        if (m := ld_hl.match(ins[x][1])):
+                            tab = int(m.group(1), 16)
+                            recs = []
+                            while 0x4000 <= tab + 2 * len(recs) < 0x8000 and len(recs) < 64:
+                                r = self._u16(cb, tab + 2 * len(recs))
+                                if not (tab < r < 0x8000) or (recs and tab + 2 * len(recs) >= min(recs)):
+                                    break
+                                recs.append(r)
+                            if recs and tab + 2 * len(recs) <= min(recs) and                                     not any(b == cb and lo < tab + 2 * len(recs) and tab < hi for b, lo, hi in taken)                                     and not any(q in self.covered[cb] for q in range(tab, tab + 2 * len(recs))):
+                                good = [r for r in recs if add_record(cb, r)]
+                                if good:
+                                    taken.append((cb, tab, tab + 2 * len(recs)))
+                                    self.schemas.append({
+                                        "bank": cb, "addr": tab, "label": f"TileRectTable_{cb:02X}_{tab:04X}",
+                                        "count": len(recs), "id_base": 0,
+                                        "fields": [{"type": "ptr", "name": "rectangle record", "reason": "rectangle record"}],
+                                        "note": "E-0221 (derived: a word table of tile-rectangle records; the code "
+                                                "derefs one entry into HL for a record copier)"})
+                                    found += len(good)
+                            break
+                    continue
                 if src is None or not 0x4000 <= src < 0x8000:
                     continue
-                o = cb * BANK + src - self.base(cb)
-                w, rows = self.data[o + 2], self.data[o + 3]
-                end = src + 4 + w * rows
-                if not (0 < w <= 32 and 0 < rows <= 32) or end > 0x8000 or \
-                        any(p in self.covered[cb] for p in range(src, end)) or \
-                        any(b == cb and lo < end and src < hi for b, lo, hi in taken) or \
-                        any(b == cb and a2 < end and src < a2 + used for (b, a2), (_, used) in self.streams.items()):
-                    continue
-                taken.append((cb, src, end))
-                off = self.data[o] | self.data[o + 1] << 8
-                self.schemas.append({
-                    "bank": cb, "addr": src, "label": f"TileRect_{cb:02X}_{src:04X}", "count": 1,
-                    "fields": [{"type": "words", "size": 2, "name": "offset into wScreenTileBuffer"},
-                               {"type": "db", "size": 2, "line": True, "name": "width, rows"}]
-                              + [{"type": "db", "size": w, "line": True, "name": f"row {r}"} for r in range(rows)],
-                    "record": f"offset ${off:04X} (row {off // 32}, column {off % 32}); {w} x {rows} tiles",
-                    "note": "E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)"})
-                found += 1
+                found += add_record(cb, src)
+
         log(f"tile-rectangle records: {found}")
         # Raw rectangles (E-0161): DE = packed source, B = width, C = rows, for the copiers whose
         # source rows are contiguous. Copies of a canonical routine (same first 16 bytes) count too.

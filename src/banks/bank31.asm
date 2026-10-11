@@ -8771,7 +8771,7 @@ CopyRectRecordForBattlePartyCount_Bank31::
 Func_031_72AC:: ; address name
     ld a, [wBattlePartyCount]
     dec a
-    ld hl, Data_031_72C3
+    ld hl, PartyCountRects
     add a, a
     add_a_to_hl
     deref_hl
@@ -8779,9 +8779,13 @@ Func_031_72AC:: ; address name
     call CopyRectToStride32_Bank31
     ret
 
-; address loaded by CopyRectRecordForBattlePartyCount_Bank31
-Data_031_72C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $7C, $75, $B8, $75, $1E, $76
+; E-0221 (C1: CopyRectRecordForBattlePartyCount_Bank31 reads word wD88F - 1 of $72C3 and copies that record into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31); three records, for 1-3 party monsters).
+; record: rectangle record for this party count
+PartyCountRects::
+Data_031_72C3:: ; address name
+    dw TileRect_31_757C ; id 1
+    dw TileRect_31_75B8 ; id 2
+    dw TileRect_31_761E ; id 3
 
 ; FillWC278WithC3_Bank31, then falls into LayoutTileBlocksForBattleFoeCount (E-0071)
 ; 16 call sites from 10 routines (e.g. RunBattleSetup_BankA0_Case00_Case00, RunBattleSetup_BankA0_Case00_Case02, RunBattleSetup_BankA0_Case00_Case07, RunBattleSetup_BankA0_Case01_Case02, ...)
@@ -9329,17 +9333,48 @@ Jump_031_756C::
     dec c
     jr nz, CopyRectToStride32_Bank31
     ret
-    INCBIN "dwm2-cobi-us.gbc", $0C757C, $A7
-    ds $12, $B1
-    db $B2, $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $DA, $DB
-    db $DC, $DD, $DE, $C3, $B7, $B8
-    ds $12, $B9
-    db $BA, $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3
-    db $C3, $C3, $C3, $C3, $B7, $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3
-    db $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $EA, $AF, $C3, $C3, $C3, $C3
-    db $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $B7, $B3
-    ds $12, $B4
-    db $B5
+
+; E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles)).
+; record: offset $0000; 8 x 7 tiles
+TileRect_31_757C::
+Data_031_757C:: ; address name
+    dw $0000 ; entry 0
+    db $08, $07
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $B7
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles)).
+; record: offset $0000; 14 x 7 tiles
+TileRect_31_75B8::
+Data_031_75B8:: ; address name
+    dw $0000 ; entry 0
+    db $0E, $07
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $B7
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles)).
+; record: offset $0000; 20 x 7 tiles
+TileRect_31_761E::
+Data_031_761E:: ; address name
+    dw $0000 ; entry 0
+    db $14, $07
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $B7
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: draws the slot's status markers from its status bytes (the per-status part is not read to its end) (E-0111)
 ; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, Func_031_67AA_Case02_Case00, ...)

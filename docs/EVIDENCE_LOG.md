@@ -2430,6 +2430,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0221 — Key-world goal graphics (bank $04); party-count rectangles (bank $31)
+
+- Kind: OBSERVATION (reading; C1) and TOOL.
+- **KeyWorldGoalGraphicsTable (04:$423D).** 9 rows of 16 bytes. SetupKeyWorldObjectsForMapType_Sub01 replaces an object's graphics number n < 9 (when hTemp2 is set) with the byte at $423D + 16 * n + wKeyWorldGoalKind. Each row has 10 entries and 6 zero bytes.
+- **PartyCountRects (31:$72C3, 3 words) and TileRect_31_757C / _75B8 / _761E.** CopyRectRecordForBattlePartyCount_Bank31 picks word wD88F - 1 and copies that record: 8, 14 or 20 columns by 7 rows.
+- **Generator.** The rectangle derivation also follows `ld hl, T` / index / `ld a, [hl+] / ld h, [hl] / ld l, a` before a record copier: T is laid out as a word table of records, up to its first record. It found no tables beyond the ones declared here.
+- Binary verification: build/run267 PASS, 0 differing bytes.
+
 ### E-0220 — Random byte table (bank 0); save-check rectangles and cursor positions (bank $07)
 
 - Kind: OBSERVATION (reading; C1).

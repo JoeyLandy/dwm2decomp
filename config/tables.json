@@ -13926,6 +13926,231 @@
       ],
       "record": "60 BG map addresses, used in runs of up to 8 by the menus of bank $07",
       "note": "E-0220 (C1: menu code in bank $07 passes $5086, $5096, $509E, $50AA ... $50FA to WriteBCTileAtWordTableEntry_Bank07, EraseCursorAtEntryHL_Bank07 and MoveVerticalCursorInListHL; each run indexed by a menu position; 60 words in all)."
+    },
+    {
+      "bank": "04",
+      "addr": "423D",
+      "label": "KeyWorldGoalGraphicsTable",
+      "count": 9,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 10,
+          "name": "graphics number for wKeyWorldGoalKind 0-9"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "name": "not read (zero)"
+        }
+      ],
+      "record": "replacement graphics number for each goal kind 0-9, then six zero bytes",
+      "note": "E-0221 (C1: SetupKeyWorldObjectsForMapType_Sub01, for an object whose graphics number (hTemp0) is below 9 and whose hTemp2 is non-zero, replaces it with the byte at $423D + 16 * hTemp0 + wKeyWorldGoalKind; 9 rows end at the code at $42CD)."
+    },
+    {
+      "bank": "31",
+      "addr": "72C3",
+      "label": "PartyCountRects",
+      "count": 3,
+      "id_base": 1,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "rectangle record for this party count",
+          "reason": "rectangle record"
+        }
+      ],
+      "note": "E-0221 (C1: CopyRectRecordForBattlePartyCount_Bank31 reads word wD88F - 1 of $72C3 and copies that record into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31); three records, for 1-3 party monsters)."
+    },
+    {
+      "bank": "31",
+      "addr": "757C",
+      "label": "TileRect_31_757C",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0000; 8 x 7 tiles",
+      "note": "E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles))."
+    },
+    {
+      "bank": "31",
+      "addr": "75B8",
+      "label": "TileRect_31_75B8",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0000; 14 x 7 tiles",
+      "note": "E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles))."
+    },
+    {
+      "bank": "31",
+      "addr": "761E",
+      "label": "TileRect_31_761E",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0000; 20 x 7 tiles",
+      "note": "E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles))."
     }
   ]
 }

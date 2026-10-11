@@ -5851,7 +5851,7 @@ Jump_003_64DA::
     adc a, $68
     ld h, a
     ld a, [hl]
-    ld hl, Data_003_6921
+    ld hl, TileRectTable_03_6921
     add a, a
     add_a_to_hl
     deref_hl
@@ -5903,7 +5903,7 @@ Func_003_6526:: ; address name
     adc a, $68
     ld h, a
     ld a, [hl]
-    ld hl, Data_003_6921
+    ld hl, TileRectTable_03_6921
     add a, a
     add_a_to_hl
     deref_hl
@@ -6276,9 +6276,36 @@ Jump_003_681F::
     db $01, $01, $01
     ds $B2, $00
 
-; address loaded by PauseMenu_Skills_Case02_Case01_Sub01, BuildSkillScreenTileBuffer
-Data_003_6921:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $00E921, $66
+; E-0221 (derived: a word table of tile-rectangle records; the code derefs one entry into HL for a record copier)
+; record: rectangle record
+TileRectTable_03_6921::
+Data_003_6921:: ; address name
+    dw TileRect_03_6925 ; id 0
+    dw TileRect_03_6956 ; id 1
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0120 (row 9, column 0); 9 x 5 tiles
+TileRect_03_6925::
+Data_003_6925:: ; address name
+    dw $0120 ; entry 0
+    db $09, $05
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $F3, $F4, $ED, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+
+; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
+; record: offset $0120 (row 9, column 0); 9 x 5 tiles
+TileRect_03_6956::
+Data_003_6956:: ; address name
+    dw $0120 ; entry 0
+    db $09, $05
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
+    db $B6, $F5, $F6, $ED, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
+    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; address loaded by PauseMenu_Skills_Case03_Case01
 Data_003_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
