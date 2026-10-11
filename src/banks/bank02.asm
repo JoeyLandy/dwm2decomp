@@ -6369,7 +6369,7 @@ Data_002_695E:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 5
 
 ; while wC8CB & 3 is set: copies the text window rows to or from wC300 (with CGB attributes) and redraws them at the scroll position (E-0130)
-; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case01, GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, ...)
+; 10 call sites from 10 routines (e.g. FieldModeStateDispatch_Case01, GameMode5_Init_Case02, GameMode5_Init_Case03, GameMode5_Init_Case06, ...)
 ; reads: wTextWindowState, wIsCGB, hScrollY, hScrollX, wTextWindowStep
 ; writes: rSVBK
 ; points at: wWindowTileBuffer, wScreenTileBuffer, wTextWindowStep
@@ -6595,7 +6595,7 @@ Jump_002_6B04::
     ret
 
 ; copies a rectangle of the screen buffer wC300 to the BG map (CopyRectFromBankToBGMapWrapped) and sets wC554 = HL + $21 (wrapped in the map); on CGB also copies the attributes from wD168 in VRAM bank 1 (E-0121)
-; 7 call sites from 4 routines (e.g. OpenFieldMenuOnA, StepTextWindowOpenClose_Case02, StepTextWindowOpenClose_Case01, StepTextWindowOpenClose_Case00)
+; 7 call sites from 4 routines (e.g. StepTextWindowOpenClose_Case02, StepTextWindowOpenClose_Case01, StepTextWindowOpenClose_Case00, OpenFieldMenuOnA)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wWindowTileBuffer, wWindowAttrBuffer

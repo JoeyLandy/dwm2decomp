@@ -480,7 +480,8 @@
           "type": "ptr",
           "bank_from": 1,
           "name": "compressed picture stream (36 tiles, drawn 6 x 6)",
-          "reason": "monster picture stream"
+          "reason": "monster picture stream",
+          "stream": true
         },
         {
           "type": "db",
@@ -524,7 +525,8 @@
           "type": "ptr",
           "bank_from": 1,
           "name": "compressed small-sprite stream (32 or 256 bytes)",
-          "reason": "monster sprite stream"
+          "reason": "monster sprite stream",
+          "stream": true
         },
         {
           "type": "db",
@@ -7517,6 +7519,539 @@
       ],
       "record": "count 1, then 1 object records of 11 bytes (the map object layout of E-0176)",
       "note": "E-0196 (C1: the count goes to wSpriteSlotCount; each record fills a sprite slot like a bank-$69 map object record: bytes 0-1 to hTemp5/hTemp2, bytes 2-3 the graphics number, replaced by the key-world encounter when hTemp9 is set)."
+    },
+    {
+      "bank": "1B",
+      "addr": "5190",
+      "label": "Text_1B_5190",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "$EA, $45 (window control bytes, as at the other entries of this pointer table)"
+        },
+        {
+          "type": "text",
+          "size": 36,
+          "name": "message"
+        }
+      ],
+      "note": "E-0197 (C1: the last target of the bank-$1B message pointer table, laid out like its other entries: two control bytes, then text up to $F0)."
+    },
+    {
+      "bank": "1B",
+      "addr": "51B6",
+      "label": "RejectedNameListCopy_1B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 0"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 1"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 2"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 3"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 4"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 5"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 6"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 7"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 8"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 9"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 10"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 11"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 12"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 13"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 14"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 15"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 16"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 17"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 18"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 19"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 20"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 21"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 22"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 23"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 24"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 25"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 26"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 27"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 28"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 29"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 30"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 31"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 32"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 33"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 34"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 35"
+        },
+        {
+          "type": "text",
+          "size": 6,
+          "line": true,
+          "name": "word 36"
+        },
+        {
+          "type": "text",
+          "size": 6,
+          "line": true,
+          "name": "word 37"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 38"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 39"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 40"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 41"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 42"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 43"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 44"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 45"
+        },
+        {
+          "type": "text",
+          "size": 6,
+          "line": true,
+          "name": "word 46"
+        },
+        {
+          "type": "text",
+          "size": 6,
+          "line": true,
+          "name": "word 47"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 48"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 49"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 50"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 51"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 52"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 53"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 54"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 55"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 56"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 57"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 58"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 59"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 60"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 61"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 62"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 63"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 64"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 65"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 66"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 67"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 68"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 69"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 70"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 71"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 72"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 73"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 74"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 75"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 76"
+        },
+        {
+          "type": "text",
+          "size": 4,
+          "line": true,
+          "name": "word 77"
+        },
+        {
+          "type": "text",
+          "size": 6,
+          "line": true,
+          "name": "word 78"
+        },
+        {
+          "type": "text",
+          "size": 6,
+          "line": true,
+          "name": "word 79"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 80"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 81"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 82"
+        },
+        {
+          "type": "text",
+          "size": 5,
+          "line": true,
+          "name": "word 83"
+        }
+      ],
+      "record": "84 $F0-terminated words, the same as RejectedNameList (14:$70F0) without padding",
+      "note": "E-0197 (C1: no reader found; the 84 words match RejectedNameList in bank $14 in order, each ending in $F0 with no padding; an unreferenced routine follows at $5352)."
     }
   ]
 }

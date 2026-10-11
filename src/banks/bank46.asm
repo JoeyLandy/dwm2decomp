@@ -1,7 +1,7 @@
 SECTION "Bank 46", ROMX[$4000], BANK[$46]
     db $46
 
-; address loaded by GameMode1_Init, GameMode5_Init_Case00, GameMode5_Init_Case01, GameMode5_Init_Case02 and 14 more
+; address loaded by GameMode1_Init, GameMode5_Init_Case00, GameMode5_Init_Case01, GameMode5_Init_Case02 and 15 more
 ; LZSS-compressed asset: 644 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_046_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $118001, $284

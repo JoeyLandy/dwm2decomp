@@ -2,6 +2,7 @@ SECTION "Bank 7B", ROMX[$4000], BANK[$7B]
     db $7B
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $17D (Dimensaur) (MonsterPictureTable / MonsterAttributeMapTable)
+; LZSS-compressed asset: 520 bytes expand to 576 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 MonsterPic_Dimensaur:: ; heuristic: monster picture stream; C0
 Data_07B_4001:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1EC001, $208

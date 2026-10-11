@@ -2368,6 +2368,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Tool.** A load whose value is the exact start of a declared table in the caller's own bank now names it, even in banks where the generic same-bank guess is withheld. This renamed 11 operands, each matching the loader in that table's note (for example `ld hl, KeyWorldObjectGridTable` ×4 and `ld hl, WorldMapViewTable`).
 - Binary verification: build/run213 PASS, 0 differing bytes.
 
+### E-0197 — Bank $1B word list and an unreferenced routine; one more monster picture stream
+
+- Kind: OBSERVATION (reading and a byte comparison; C1).
+- **Text_1B_5190.** This is the last target of the bank-$1B message pointer table: $EA, $45, then " Accessories will / be in the Vault." up to $F0.
+- **RejectedNameListCopy_1B ($51B6-$5352).** 84 $F0-terminated words, identical in order to RejectedNameList (14:$70F0, E-0191) without the zero padding. A script compared all 84. No reader was found.
+- **Func_01B_5352.** No traced code, pointer or far call reaches it; a search for `cd 52 53`, `ld hl, $5352` with `ld b, $1B`, and the word $5352 in bank $1B found only unrelated bytes.
+  - Its bytes decode as one routine that ends in `jp $077A`. The routine clears $6F bytes from wScreenState, decompresses bank $46 $4001 to $8800, far-calls F1:$4AA8 and LoadPalette0FromData53C6, then waits on wC8CB.
+  - It is a configured code entry (config/code_entries.json) and carries an annotation. Whether the game can run it is not known.
+- **MonsterPic_Dimensaur (7B:$4001).** The pointer fields of MonsterPictureTable and MonsterSpriteTable are now marked `stream`.
+  - The one picture no back-to-back run had found is now a verified stream (520 bytes expanding to 576).
+- Binary verification: build/run215 PASS, 0 differing bytes.
+
 ## Reusable investigation record
 
 Copy this structure into a new entry or a future `docs/evidence/E-NNNN.md` file. Keep IDs unique. Required fields may say `unknown`, with a reason; unknown target identity prevents promotion to C2/C3.

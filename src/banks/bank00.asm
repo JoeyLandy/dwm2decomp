@@ -801,7 +801,7 @@ Jump_000_05C7::
     jp StartSerialTransferInternalClock
 
 ; returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step
-; 44 call sites from 15 routines (e.g. BootAndMainLoop, DetectSGB, StepFade_Sub01, StartPaletteFade, ...)
+; 44 call sites from 15 routines (e.g. BootAndMainLoop, DetectSGB, StepFade_Sub01, ClearSGBPacketBuffer_Sub01, ...)
 ; reads: wSGBActive
 SpinDelay::
 Func_000_05D1:: ; address name
@@ -1408,7 +1408,7 @@ Func_000_08BA:: ; address name
     ret
 
 ; rSC = 0, rSB = A
-; 2 call sites from 2 routines (e.g. SerialSendByte, StartSerialTransferInternalClock)
+; 2 call sites from 2 routines (e.g. StartSerialTransferInternalClock, SerialSendByte)
 ; writes: rSC, rSB
 LoadSerialByte::
 Func_000_08C7:: ; address name
@@ -2055,7 +2055,7 @@ Jump_000_0C4E::
     ret
 
 ; C2 static reading (E-0016): takes the lock byte $FFD6 (spins while it is non-zero), calls Func_000_0C69, then clears the lock.
-; 33 call sites from 20 routines (e.g. SGBTransferCompressed, GameMode5_Init_Case06, GameMode5_Init_Case04, GameMode5_Init_Case03, ...)
+; 34 call sites from 21 routines (e.g. SGBTransferCompressed, GameMode5_Init_Case06, GameMode5_Init_Case04, GameMode5_Init_Case03, ...)
 ; reads: hDecompressLock
 ; writes: hDecompressLock
 DecompressToRAMLocked::
@@ -2410,7 +2410,7 @@ Jump_000_0DDB::
     ret
 
 ; A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference
-; 91 call sites from 79 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, SendSGBFieldPaletteSet, RunFieldReturnPhase_Case00, ...)
+; 92 call sites from 80 routines (e.g. GameMode0_Init, DebugBattleSetup_Update, SendSGBFieldPaletteSet, RunFieldReturnPhase_Case00, ...)
 ; reads: wIsCGB, wSGBActive, wFadeState, wFadeMode, wFadeMask, wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1
 ; writes: wFadeState, wFadeLevel, wFadeDelay, wFadeDelayCounter
 ; points at: wOBJPaletteBuffer, wSGBPacketBuffer, wFadeDMGPalettes, wDMGPaletteBGP
@@ -3734,7 +3734,7 @@ Jump_000_1606::
     ret
 
 ; A = ROM bank, DE = source in that bank, B = width, C = rows, HL = BG map address: switches to the bank and copies the rectangle with WriteVRAMByteInc (interrupts off per byte), wrapping columns inside each 32-entry row and rows inside $9800-$9BFF (H &= $9B); restores the bank (E-0090)
-; 8 call sites from 4 routines (e.g. DrawBottomWindowWC364AtScroll, CopyScreenRectToBGMapSetTextCursorLo, DrawScreenBufferRectToBGMap_33, DrawScreenBufferRectToBGMap_37)
+; 8 call sites from 4 routines (e.g. CopyScreenRectToBGMapSetTextCursorLo, DrawBottomWindowWC364AtScroll, DrawScreenBufferRectToBGMap_33, DrawScreenBufferRectToBGMap_37)
 ; writes: rROMB0
 CopyRectFromBankToBGMapWrapped::
 Func_000_160B:: ; address name
@@ -7387,7 +7387,7 @@ Func_000_28F4:: ; address name
     ret
 
 ; fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero
-; 110 call sites from 74 routines (e.g. Func_000_2950_Case12, BeginStringDisplay, FillTilesRequest, DebugResultsDisplay_Update_Sub02_Sub01, ...)
+; 110 call sites from 74 routines (e.g. Func_000_2950_Case12, FillTilesRequest, BeginStringDisplay, DebugResultsDisplay_Update_Sub02_Sub01, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowWidth, wTextWindowRows, rSTAT
 ; points at: wTextWindowRows
 FillTilesFromRequest::
@@ -8369,7 +8369,7 @@ Func_000_2E81:: ; address name
     ret
 
 ; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
-; 46 call sites from 29 routines (e.g. GameMode0_Init, DebugSkillViewer_Update, PauseMenu_State4, GameMode5_Init_Case06, ...)
+; 47 call sites from 30 routines (e.g. GameMode0_Init, DebugSkillViewer_Update, PauseMenu_State4, GameMode5_Init_Case06, ...)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 FillTilesRequest::
 Func_000_2E98:: ; address name

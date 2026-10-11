@@ -1596,7 +1596,7 @@ Data_01B_4C9D:: ; heuristic: target of a monotone pointer table; C0
     dw Data_01B_5143
     dw Data_01B_515A
     dw Data_01B_517A
-    dw Data_01B_5190
+    dw Text_1B_5190
 
 Data_01B_4CF1:: ; heuristic: target of a monotone pointer table; C0
     db $EA, $45
@@ -1843,11 +1843,153 @@ Data_01B_517A:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Unused.", $F0, "No save data.", $F0
 
-Data_01B_5190:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $06D190, $21F
+; E-0197 (C1: the last target of the bank-$1B message pointer table, laid out like its other entries: two control bytes, then text up to $F0).
+; record: $EA, $45 (window control bytes, as at the other entries of this pointer table); message
+Text_1B_5190::
+Data_01B_5190:: ; address name
+    db $EA, $45 ; entry 0
+    db " Accessories will", $F1, "be in the Vault.", $F7, $F0
+
+; E-0197 (C1: no reader found; the 84 words match RejectedNameList in bank $14 in order, each ending in $F0 with no padding; an unreferenced routine follows at $5352).
+; record: 84 $F0-terminated words, the same as RejectedNameList (14:$70F0) without padding
+RejectedNameListCopy_1B::
+Data_01B_51B6:: ; address name
+    db "Ass", $F0 ; entry 0
+    db "ASS", $F0
+    db "Dink", $F0
+    db "DINK", $F0
+    db "Dork", $F0
+    db "DORK", $F0
+    db "Cunt", $F0
+    db "CUNT", $F0
+    db "Kunt", $F0
+    db "KUNT", $F0
+    db "Fuck", $F0
+    db "FUCK", $F0
+    db "Shit", $F0
+    db "SHIT", $F0
+    db "Sex", $F0
+    db "SEX", $F0
+    db "Poop", $F0
+    db "POOP", $F0
+    db "Dong", $F0
+    db "DONG", $F0
+    db "Pene", $F0
+    db "PENE", $F0
+    db "Clit", $F0
+    db "CLIT", $F0
+    db "Twat", $F0
+    db "TWAT", $F0
+    db "Snot", $F0
+    db "SNOT", $F0
+    db "Fag", $F0
+    db "FAG", $F0
+    db "Homo", $F0
+    db "HOMO", $F0
+    db "Poon", $F0
+    db "POON", $F0
+    db "Piss", $F0
+    db "PISS", $F0
+    db "Prick", $F0
+    db "PRICK", $F0
+    db "Fukk", $F0
+    db "FUKK", $F0
+    db "Coon", $F0
+    db "COON", $F0
+    db "Nazi", $F0
+    db "NAZI", $F0
+    db "Niga", $F0
+    db "NIGA", $F0
+    db "Nigga", $F0
+    db "NIGGA", $F0
+    db "Jap", $F0
+    db "JAP", $F0
+    db "Jew", $F0
+    db "JEW", $F0
+    db "Wop", $F0
+    db "WOP", $F0
+    db "Spic", $F0
+    db "SPIC", $F0
+    db "Butt", $F0
+    db "BUTT", $F0
+    db "Perv", $F0
+    db "PERV", $F0
+    db "Dumb", $F0
+    db "DUMB", $F0
+    db "Dolt", $F0
+    db "DOLT", $F0
+    db "Anus", $F0
+    db "ANUS", $F0
+    db "Anal", $F0
+    db "ANAL", $F0
+    db "Jerk", $F0
+    db "JERK", $F0
+    db "Puke", $F0
+    db "PUKE", $F0
+    db "Snot", $F0
+    db "SNOT", $F0
+    db "Barf", $F0
+    db "BARF", $F0
+    db "Pus", $F0
+    db "PUS", $F0
+    db "Pussy", $F0
+    db "PUSSY", $F0
+    db "Bung", $F0
+    db "BUNG", $F0
+    db "Suck", $F0
+    db "SUCK", $F0
+
+; C1 static reading (E-0197): not reached from any traced code, pointer or far call found; the bytes after the word list at $51B6 decode as one routine: clear $6F bytes from wScreenState, decompress bank $46 $4001 to $8800, far-call F1:$4AA8, LoadPalette0FromData53C6, then wait on wC8CB and jp $077A
+; no direct call (reached through a table, a jump or a vector)
+; reads: wTextWindowState
+; writes: hScrollY, hScrollX, wTextWindowState, wTextWindowStep, hSpriteWindowClipMode, wLCDCShadow
+; points at: wScreenState
+Func_01B_5352:: ; configured code entry (E-0197); C0
+    ld hl, wScreenState
+    ld bc, $006F
+
+Jump_01B_5358::
+    xor a, a
+    ld [hl+], a
+    dec bc
+    ld a, b
+    or a, c
+    jr nz, Jump_01B_5358
+    ld b, $46
+    ld de, Data_046_4001
+    ld hl, vTiles1
+    call DecompressToRAMLocked
+    farcall ClearScreenBufferAndAttributes_BankF1
+    call LoadPalette0FromData53C6
+    xor a, a
+    ldh [hScrollY], a
+    ldh [hScrollX], a
+    ld a, $FC
+    call StartPaletteFade
+    ld a, $01
+    ld [wTextWindowState], a
+    ld a, $00
+    ld [wTextWindowStep], a
+    ld a, $02
+    ldh [hSpriteWindowClipMode], a
+
+Jump_01B_538B::
+    farcall StepTextWindowOpenClose
+    ld a, [wTextWindowState]
+    and a, $03
+    jr nz, Jump_01B_538B
+    ld hl, vTiles1
+    ld de, $1202
+    call FillTilesRequest
+    ld a, $02
+    ldh [hSpriteWindowClipMode], a
+    ld a, $03
+    ld [wLCDCShadow], a
+    ld a, $01
+    jp Jump_000_077A
 
 ; on CGB copies the 8-byte palette Data_01B_53C6 into wBGPaletteBuffer and sets wC526 = $7F (E-0118)
-; 2 call sites from 2 routines (e.g. GameMode6_Init, GameMode8_Init)
+; 3 call sites from 3 routines (e.g. Func_01B_5352, GameMode6_Init, GameMode8_Init)
 ; reads: wIsCGB
 ; writes: wBGPaletteUploadRequest
 ; points at: wBGPaletteBuffer
