@@ -2,7 +2,7 @@ SECTION "Bank 16", ROMX[$4000], BANK[$16]
     db $16, $F0, $C6, $CD, $92, $4A, $C9
 
 ; wItemId (wD081) = item id: copies the 13-byte ItemTable record to wItemRecord (wD084)
-; 4 call sites from 4 routines (e.g. PauseMenu_Items_Case00_UpdateMenuCursor, LoadSelectedInventoryItemRecord, RunBattleActions_UseItem_LoadItemRecord, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
+; 4 call sites from 4 routines (e.g. PauseMenu_Items_MemberList_UpdateMenuCursor, LoadSelectedInventoryItemRecord, RunBattleActions_UseItem_LoadItemRecord, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wItemId
 ; points at: wItemRecord
 LoadItemRecord::
@@ -2535,7 +2535,7 @@ Func_016_4C1D:: ; address name
     ret
 
 ; copies the 24 wInventory bytes to wD09D, refills wInventory with $FF, then copies back every byte that is neither $FF nor $00, closing the gaps (E-0063)
-; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, EquipItemOnRecordTargetRecord, RemoveWItemIdFromInventory, PauseMenu_Items_Case03_BeginStringDisplay_Bank08, ...)
+; 6 call sites from 6 routines (e.g. ConsumeSelectedItemByChance, EquipItemOnRecordTargetRecord, RemoveWItemIdFromInventory, PauseMenu_Items_SubMenu_BeginStringDisplay_Bank08, ...)
 ; points at: wWorkBuf, wInventory
 CompactInventory::
 Func_016_4C48:: ; address name
@@ -4284,7 +4284,7 @@ Func_016_5906:: ; address name
     ret
 
 ; toggles the sort order in wC836 and sorts the 24 inventory slots by the key table Data_016_599E or Data_016_5A0E (empty slots last) (E-0128)
-; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case00_UpdateMenuCursor, RunBattleSetup_Case02_MoveBattleCommandCursor, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_MemberList_UpdateMenuCursor, RunBattleSetup_Case02_MoveBattleCommandCursor, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wGameFlags836, wWorkBuf
 ; writes: wWorkBuf, wGameFlags836
 ; points at: wInventory
@@ -4679,7 +4679,7 @@ Func_016_5AAF:: ; address name
     ret
 
 ; zeroes the 11 per-family counters at wD09D, then for monster ids 0-372 ($175 is the end) skips unused ids (family $FF) and adds 1 to wD09D[family] when the species' flag is set (TestSpeciesFlag) or, when it is not, when Func_015_68FA finds the id in the list at wC7FC (wD7F5 not $FF). Leaves wSpeciesIdLo/Hi = 373 (E-0070)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_LoadScreenBlock2D, TotalSpeciesFlaggedOrListed)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, TotalSpeciesFlaggedOrListed)
 ; reads: wSpeciesRecord, wSpeciesIdLo, wSpeciesIdHi, wArg5
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wArg1, wArg2, wArg3, wArg4
 ; points at: wWorkBuf, wMonsterLibraryBuf
@@ -5034,7 +5034,7 @@ Data_016_5D0B:: ; address name
     db $00, $11, $12, $13, $14, $15, $16, $07
 
 ; by wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to join you?' (category 5 string $0B), then the follow-ups ($0D 'But there is no more room! Release a monster to make room?', $0E 'Which will you choose?')
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_ToBattleEnd_AskToJoin)
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_DrawThenAskToJoin_ToBattleEnd_AskToJoin)
 ; reads: wBattleSubStep
 BattleEnd_AskToJoin::
 Func_016_5D13:: ; address name
@@ -9829,7 +9829,7 @@ Func_016_7A48:: ; address name
     ret
 
 ; writes the $B0 bytes at Data_016_7ACD (the eleven family icon tiles) to VRAM from tile wD09E; corrected in E-0124 (E-0122)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_LoadScreenBlock2D, GameMode5_Init_SendSGBPaletteSetPacket_Case04)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, GameMode5_Init_SendSGBPaletteSetPacket_Case04)
 LoadAllFamilyIconTiles::
 Func_016_7A5B:: ; address name
     ld de, FamilyIconTiles
@@ -9838,7 +9838,7 @@ Func_016_7A5B:: ; address name
     ret
 
 ; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wC6FD entries; then disables SRAM (E-0103)
-; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, PauseMenu_State4_Sub01_LoadBlankedBlocks00To03WithCursor, PauseMenu_State3_Case00_LoadScreenBlock21, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, ...)
+; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, PauseMenu_State4_Sub01_LoadBlankedBlocks00To03WithCursor, PauseMenu_State3_Block21Menu_LoadScreenBlock21, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, ...)
 ; reads: wPartyCount
 ; writes: rRAMG, rRAMB
 LoadTilesForPartyRecords::

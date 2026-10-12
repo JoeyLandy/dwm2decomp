@@ -1211,7 +1211,7 @@ Jump_031_46CA:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
     dw BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc
-    dw BattleEnd_Step5_Case01
+    dw BattleEnd_Step5_DrawThenAskToJoin
     dw BattleEnd_Step5_SwapMonstersMenu
     dw BattleEnd_Step5_BuildAndDrawBattleScreen
     dw BattleEnd_Step5_BattleEnd_AddJoinedMonster
@@ -1256,20 +1256,20 @@ Jump_031_46D8:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in BattleEnd_Step5
+; copies a rectangle to VRAM, then BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-BattleEnd_Step5_Case01::
+BattleEnd_Step5_DrawThenAskToJoin::
 Jump_031_471C:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw BattleEnd_Step5_Case01_CopyRect32StrideToVRAM
-    dw BattleEnd_Step5_Case01_ToBattleEnd_AskToJoin
+    dw BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM
+    dw BattleEnd_Step5_DrawThenAskToJoin_ToBattleEnd_AskToJoin
 
-; entry 0 of the `rst $00` table in BattleEnd_Step5_Case01
+; entry 0 of the `rst $00` table in BattleEnd_Step5_DrawThenAskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenTileBuffer, wBattleResolveStep
-BattleEnd_Step5_Case01_CopyRect32StrideToVRAM::
+BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM::
 Jump_031_4724:: ; address name
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -1286,9 +1286,9 @@ Jump_031_4724:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in BattleEnd_Step5_Case01
+; entry 1 of the `rst $00` table in BattleEnd_Step5_DrawThenAskToJoin
 ; no direct call (reached through a table, a jump or a vector)
-BattleEnd_Step5_Case01_ToBattleEnd_AskToJoin::
+BattleEnd_Step5_DrawThenAskToJoin_ToBattleEnd_AskToJoin::
 Jump_031_474A:: ; address name
     farcall BattleEnd_AskToJoin
     ret
@@ -1378,7 +1378,7 @@ Func_031_47C7:: ; address name
     ret
 
 ; loads the picture of battle monster wDAAB at vTiles2 + $140, uploads palettes, loads name tiles and shows string 5 of category 2 (bank 09) at vTiles1 + $6D0, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. BattleEnd_Step5_BattleEnd_AddJoinedMonster, BattleEnd_Step5_BuildAndDrawBattleScreen, BuildBattleScreenBuffer, BattleEnd_Step5_Case01_CopyRect32StrideToVRAM)
+; 4 call sites from 4 routines (e.g. BattleEnd_Step5_BattleEnd_AddJoinedMonster, BattleEnd_Step5_BuildAndDrawBattleScreen, BuildBattleScreenBuffer, BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM)
 ; reads: wDisplaySlot
 ; writes: wBattleScreenFlags, wBGPaletteUploadRequest, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ; points at: wBattleMonsterId
@@ -8891,7 +8891,7 @@ Data_031_731D:: ; address name
     db $82, $C2, $7F, $C2
 
 ; on CGB loads the picture attribute blocks for one, two or three battle monsters (wD960, or wBattleMonsterId when bit 1 of wC57F is set) at vBGMap0 + $E1-$ED (E-0125)
-; 4 call sites from 4 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case01_CopyRect32StrideToVRAM, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31)
+; 4 call sites from 4 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31)
 ; reads: wIsCGB, wLinkRole, wBattleFoeCount
 ; points at: wBattlePictureIds, wBattleMonsterId
 LoadBattleMonsterPictureAttributes::

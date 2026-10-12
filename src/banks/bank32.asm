@@ -4955,7 +4955,7 @@ Func_032_5EAB:: ; address name
     dw ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc
     dw ResolveStep0EEffect_ShowBattleText
     dw ResolveStep0EEffect_SetBattleSubStep
-    dw ResolveStep0EEffect_Case03
+    dw ResolveStep0EEffect_Scale80Percent
     dw ResolveStep0EEffect_Brutalize
     dw ResolveStep0EEffect_ActorFormationSlotToTemp0
     dw ResolveStep0EEffect_Return
@@ -5238,23 +5238,23 @@ Jump_032_60AB:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ResolveStep0EEffect
+; skips an absent actor, scales HL to 80 percent (ScaleHLTo80Percent_Bank32), then the effect sub-step
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubStep2
-ResolveStep0EEffect_Case03::
+ResolveStep0EEffect_Scale80Percent::
 Jump_032_60B4:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
-    dw ResolveStep0EEffect_Case03_SkipTurnIfActorAbsent
-    dw ResolveStep0EEffect_Case03_ScaleHLTo80Percent_Bank32
-    dw ResolveStep0EEffect_Case03_RunEffectSubStep_618A
+    dw ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent
+    dw ResolveStep0EEffect_Scale80Percent_ScaleHLTo80Percent_Bank32
+    dw ResolveStep0EEffect_Scale80Percent_RunEffectSubStep_618A
     dw SetBattleSubStep1
 
-; entry 0 of the `rst $00` table in ResolveStep0EEffect_Case03
+; entry 0 of the `rst $00` table in ResolveStep0EEffect_Scale80Percent
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectFlags, wEffectFlags2
 ; points at: wBattleSubStep2
-ResolveStep0EEffect_Case03_SkipTurnIfActorAbsent::
+ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent::
 Jump_032_60C0:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5268,12 +5268,12 @@ Jump_032_60C0:: ; address name
     farcall SelectEffectByEffectFlags2Flags
     ret
 
-; entry 1 of the `rst $00` table in ResolveStep0EEffect_Case03
+; entry 1 of the `rst $00` table in ResolveStep0EEffect_Scale80Percent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wBattleDamageLo, wBattleDamageHi, wEffectTemp0, wEffectTemp1, wTemp0, wLoadSlot
 ; writes: wEffectTemp0, wEffectTemp1, wEffectSubStep, wTemp0, wLoadSlot, wBattleTarget, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleSubStep2, wBattleHP, wTemp0
-ResolveStep0EEffect_Case03_ScaleHLTo80Percent_Bank32::
+ResolveStep0EEffect_Scale80Percent_ScaleHLTo80Percent_Bank32::
 Jump_032_60DF:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5358,11 +5358,11 @@ Jump_032_60DF:: ; address name
     call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
-; entry 2 of the `rst $00` table in ResolveStep0EEffect_Case03
+; entry 2 of the `rst $00` table in ResolveStep0EEffect_Scale80Percent
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor, wLoadSlot
 ; writes: wLoadSlot, wBattleTarget
-ResolveStep0EEffect_Case03_RunEffectSubStep_618A::
+ResolveStep0EEffect_Scale80Percent_RunEffectSubStep_618A::
 Jump_032_6174:: ; address name
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
@@ -5374,7 +5374,7 @@ Jump_032_6174:: ; address name
     ret
 
 ; runs the routine for wCFCE (jump table of three) (E-0122)
-; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case03_RunEffectSubStep_618A)
+; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Scale80Percent_RunEffectSubStep_618A)
 ; reads: wEffectSubStep
 RunEffectSubStep_618A::
 Func_032_618A:: ; address name
@@ -5542,27 +5542,27 @@ Jump_032_6266:: ; address name
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call ResolveStep0EEffect_Brutalize_Case02_Sub01
+    call ResolveStep0EEffect_Brutalize_DefeatTarget
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
 
-; only called from ResolveStep0EEffect_Brutalize_Case02 (E-0047)
+; defeats the target, blanks its picture and sets bit 2 of its level-up gains entry ('0 was brutalized!')
 ; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Brutalize_WriteLoadSlotAndBattleTarget)
 ; reads: wEffectSubStep
-ResolveStep0EEffect_Brutalize_Case02_Sub01::
+ResolveStep0EEffect_Brutalize_DefeatTarget::
 Func_032_627C:: ; address name
     ld a, [wEffectSubStep]
     rst $00
-    dw ResolveStep0EEffect_Brutalize_Case02_Sub01_DefeatTarget
-    dw ResolveStep0EEffect_Brutalize_Case02_Sub01_ToBlankTargetMonsterPictureAndStep
-    dw ResolveStep0EEffect_Brutalize_Case02_Sub01_SetBit2OfLevelUpGainsIndexed_Bank32
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_DefeatTarget
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_ToBlankTargetMonsterPictureAndStep
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_SetBit2OfLevelUpGainsIndexed_Bank32
 
-; entry 0 of the `rst $00` table in Func_032_627C
+; entry 0 of the `rst $00` table in ResolveStep0EEffect_Brutalize_DefeatTarget
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wEffectSubStep, wSlotMarks
-ResolveStep0EEffect_Brutalize_Case02_Sub01_DefeatTarget::
+ResolveStep0EEffect_Brutalize_DefeatTarget_DefeatTarget::
 Jump_032_6286:: ; address name
     ld hl, wEffectSubStep
     inc [hl]
@@ -5573,22 +5573,22 @@ Jump_032_6286:: ; address name
     call DefeatTarget
     ret
 
-; entry 1 of the `rst $00` table in Func_032_627C
+; entry 1 of the `rst $00` table in ResolveStep0EEffect_Brutalize_DefeatTarget
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wEffectSubStep
-ResolveStep0EEffect_Brutalize_Case02_Sub01_ToBlankTargetMonsterPictureAndStep::
+ResolveStep0EEffect_Brutalize_DefeatTarget_ToBlankTargetMonsterPictureAndStep::
 Jump_032_629B:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_032_627C
+; entry 2 of the `rst $00` table in ResolveStep0EEffect_Brutalize_DefeatTarget
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wTemp0
 ; writes: wTemp0, wEffectSubStep
 ; points at: wBattleSubStep2
-ResolveStep0EEffect_Brutalize_Case02_Sub01_SetBit2OfLevelUpGainsIndexed_Bank32::
+ResolveStep0EEffect_Brutalize_DefeatTarget_SetBit2OfLevelUpGainsIndexed_Bank32::
 Jump_032_62A3:: ; address name
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
@@ -5639,31 +5639,31 @@ Jump_032_62CF:: ; address name
 .read_battle_sub_step2:
     ld a, [wBattleSubStep2]
     rst $00
-    dw ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case00
-    dw ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case01
-    dw ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case02
-    dw ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case03
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_Case00
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_Case01
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_RunEffectSubStep_63C2
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_Case03
 
-; entry 0 of the `rst $00` table in Func_032_627C
+; entry 0 of the `rst $00` table in ResolveStep0EEffect_Brutalize_DefeatTarget
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleActionId, wSavedActorByte, wSavedActorSlot
 ; writes: wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep2, wSavedActorByte, wEffectSubStep
 ; points at: wBattleSubStep2
-ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case00::
+ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_Case00::
 Jump_032_62FD:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case03
+    jp c, ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_Case03
     ret
 
-; entry 1 of the `rst $00` table in Func_032_627C
+; entry 1 of the `rst $00` table in ResolveStep0EEffect_Brutalize_DefeatTarget
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRandomLo, wBattleDamageLo, wBattleDamageHi, wBattleTarget, wLoadSlot
 ; writes: wBattleDamageLo, wBattleDamageHi, wEffectSubStep, wLoadSlot, wBattleTarget
 ; points at: wBattleSubStep2, wBattleHP
-ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case01::
+ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_Case01::
 Jump_032_630B:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5762,11 +5762,11 @@ Jump_032_630B:: ; address name
 .return:
     ret
 
-; entry 2 of the `rst $00` table in Func_032_627C
+; entry 2 of the `rst $00` table in ResolveStep0EEffect_Brutalize_DefeatTarget
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor, wLoadSlot
 ; writes: wLoadSlot, wBattleTarget
-ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case02::
+ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_RunEffectSubStep_63C2::
 Jump_032_63AC:: ; address name
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
@@ -5778,7 +5778,7 @@ Jump_032_63AC:: ; address name
     ret
 
 ; runs the routine for wCFCE (jump table of three) (E-0122)
-; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case02)
+; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_RunEffectSubStep_63C2)
 ; reads: wEffectSubStep
 RunEffectSubStep_63C2::
 Func_032_63C2:: ; address name
@@ -5835,11 +5835,11 @@ Jump_032_63E9:: ; address name
     xor a, a
     ld [wEffectSubStep], a
 
-; entry 3 of the `rst $00` table in Func_032_627C
+; entry 3 of the `rst $00` table in ResolveStep0EEffect_Brutalize_DefeatTarget
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wSavedActorByte, wSavedActorSlot
 ; writes: wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep2, wSavedActorByte, wEffectSubStep
-ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case03::
+ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_Case03::
 Jump_032_640B:: ; address name
     ld a, [wBattleActionId]
     cp a, $D6
@@ -6408,7 +6408,7 @@ Jump_032_6718:: ; address name
     ret
 
 ; when the actor's slot is absent (CarryUnlessBattleSlotOutSlotEmpty) runs SetBattleSubStep1 and returns carry set; otherwise returns carry clear (E-0115)
-; 3 call sites from 3 routines (e.g. ResolveStep0EEffect_Case03_SkipTurnIfActorAbsent, ResolveStep0EEffect_Brutalize_SkipTurnIfActorAbsent, ResolveStep0EEffect_Case09_SkipTurnIfActorAbsent)
+; 3 call sites from 3 routines (e.g. ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent, ResolveStep0EEffect_Brutalize_SkipTurnIfActorAbsent, ResolveStep0EEffect_Case09_SkipTurnIfActorAbsent)
 ; reads: wBattleActor
 SkipTurnIfActorAbsent::
 Func_032_6749:: ; address name
@@ -6420,7 +6420,7 @@ Func_032_6749:: ; address name
     ret
 
 ; HL = HL * 8 / 10 (24-bit intermediate; Multiply8By16 then Divide24ByA), A = the remainder; DE kept (E-0067) (the same 15 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case03_ScaleHLTo80Percent_Bank32)
+; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Scale80Percent_ScaleHLTo80Percent_Bank32)
 ScaleHLTo80Percent_Bank32::
 Func_032_6755:: ; address name
     push de
@@ -6556,7 +6556,7 @@ Func_032_67FE:: ; address name
     jr ReadSlotAIModeIndexed_Bank32_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
-; 4 call sites from 4 routines (e.g. RecomputeTargetMaxHPAndMP, RunBattleActions_StatusChecks_StartAction_RollStatusTickEffect, RollStatusTickEffect, ResolveStep0EEffect_Brutalize_Case02_Sub01_Table2_Case01)
+; 4 call sites from 4 routines (e.g. RecomputeTargetMaxHPAndMP, RunBattleActions_StatusChecks_StartAction_RollStatusTickEffect, RollStatusTickEffect, ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_Case01)
 ; points at: wBattleHP
 GetBattleHP_Bank32::
 Func_032_6803:: ; address name
@@ -6598,7 +6598,7 @@ Func_032_6826:: ; address name
     ret
 
 ; carry set when wBattleActor < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleActor >= 4). Which side is local is inferred from the reversal, not checked (E-0064) (the same 27 bytes appear in 12 banks)
-; 9 call sites from 9 routines (e.g. RunBattleSubStep_6662_AddDoubleAToHL_Bank32, RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32, RunBattleSubStep2_66F1_SetBit2OfLevelUpGainsIndexed_Bank32, ResolveStep0EEffect_Case03_ScaleHLTo80Percent_Bank32, ...)
+; 9 call sites from 9 routines (e.g. RunBattleSubStep_6662_AddDoubleAToHL_Bank32, RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32, RunBattleSubStep2_66F1_SetBit2OfLevelUpGainsIndexed_Bank32, ResolveStep0EEffect_Scale80Percent_ScaleHLTo80Percent_Bank32, ...)
 ; reads: wLinkMode, wLinkRole, wBattleActor
 ActorOnLocalSide_Bank32::
 Func_032_682D:: ; address name
@@ -6661,7 +6661,7 @@ Data_032_6878:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 7 call sites from 7 routines (e.g. RunBattleSubStep_6662_AddDoubleAToHL_Bank32, RollStatusTickEffect, ApplyDamageToTarget, ResolveStep0EEffect_Case03_ScaleHLTo80Percent_Bank32, ...)
+; 7 call sites from 7 routines (e.g. RunBattleSubStep_6662_AddDoubleAToHL_Bank32, RollStatusTickEffect, ApplyDamageToTarget, ResolveStep0EEffect_Scale80Percent_ScaleHLTo80Percent_Bank32, ...)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank32::
 Func_032_687F:: ; address name

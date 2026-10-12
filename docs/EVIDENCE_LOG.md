@@ -2431,6 +2431,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0303 — 34 small dispatchers named from their steps
+
+- Kind: STATIC (C1, or C2 where the name only lists what the steps build).
+- **What these are.** Dispatchers of two to five steps, named from what their steps do.
+- **Screen-block menus**, named by the screen blocks they build:
+  - PauseMenu_Main_Blocks00To03, _Blocks04To06 (which draws the INFO panel's meta-sprite, E-0046), _Blocks07And08, _Blocks09And0A.
+  - PauseMenu_State3_Block21Menu, _TileBufferMenu, _Blocks21And2C, _PagedMenu, _Block2DNumber.
+  - PauseMenu_Items_MemberList, PauseMenu_Items_SubMenu.
+- **Waits and transitions:**
+  - the two LinkBreed `_WaitTextThenPartner` dispatchers;
+  - RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut and _BlankPartnerRecord;
+  - BattleEnd_Step5_DrawThenAskToJoin;
+  - RunBattleTransitionStep_Case01_CheckStage and _SetCounts;
+  - GameMode5_Update_LoadScreens;
+  - RunLinkSession4ScreenState_ResetAndSignal;
+  - RunLinkSession8Exchange_ShowMessage, RunLinkSession5Exchange_ShowMessages.
+- **List redraws:** SwapMonstersMenu_ShowMonsterDetails(3)_CursorThenRedrawList, _CursorThenRedrawList2 and 3, and _SpriteThenRedrawList.
+- **Battle:** ResolveStep0EEffect_Scale80Percent (ScaleHLTo80Percent_Bank32) and ResolveStep0EEffect_Brutalize_DefeatTarget.
+- **Other:** PriestMenu_PayForService_CopyBuffers, GameMode6_Update_Case04_PageList.
+- **Counts.** Bare dispatchers: 61 → 27. Labels under them: 349 → 213. Structural labels the generator leaves unnamed: 133.
+- Binary verification: build/run418 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0302 — SwapMonstersMenu and HibernateMenu screen states named from their option handlers
 
 - Kind: STATIC (C1).

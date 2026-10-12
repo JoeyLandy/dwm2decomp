@@ -735,7 +735,7 @@ Func_000_04ED:: ; address name
     db $CD, $CC, $0B, $C9
 
 ; in link mode: counts frames (resetting the game after an overflow), saves the joypad state and starts the next serial transfer of the queued byte or the joypad (E-0128)
-; 8 call sites from 8 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, GameMode5_Update_LinkExchangeJoypadPerFrame_Case03, GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, ...)
+; 8 call sites from 8 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, GameMode5_Update_LinkExchangeJoypadPerFrame_Case03, GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, ...)
 ; reads: wLinkMode, wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkRole, wLinkSession, wVBlankFlags, wJoypadHeld, wJoypadHeldPrev, ...
 ; writes: wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkSavedJoypadHeld, wLinkSavedJoypadHeldPrev, wLinkExchangeState, wLinkTimeoutLo, wLinkTimeoutHi, rVBK, ...
 ; points at: wLinkBufferCountLo, wGameMode, wScreenShakeTimer
@@ -5753,7 +5753,7 @@ Func_000_1FD1:: ; address name
     ret
 
 ; DE = monster id, HL = VRAM destination, C = palette slot: decompresses the id's picture stream (MonsterPictureTable, bank $38) to HL; on CGB also copies the 16-byte palette from MonsterPaletteTable (bank $7B) to slot C of wC49F
-; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params, ...)
+; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
 ; points at: wBGPaletteBuffer
@@ -5810,7 +5810,7 @@ Func_000_1FE3:: ; address name
     ret
 
 ; copies the 6 x 6 picture attribute block of species DE (table $447E in bank $38, default $20E9) plus hFFC6 to HL in WRAM bank 2 (E-0128)
-; 2 call sites from 2 routines (e.g. DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize)
+; 2 call sites from 2 routines (e.g. DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Blocks09And0A_Case01_Sub01_LoadScreenBlockForPartySize)
 ; reads: hTemp0
 ; writes: rROMB0, rSVBK
 LoadMonsterPictureAttributeBlock::
@@ -5962,7 +5962,7 @@ Func_000_2090:: ; address name
     ds $24, $00
 
 ; DE = destination: writes wC8C1 as tile $E0 + digit, or blank tile $C3 when it is 0, then wC8C2 as $E0 + digit; DE ends past the second tile; HL kept (E-0077)
-; 7 call sites from 7 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_ShowStringBank08AtTilesHL_Bank03, WriteByteAAsTwoDigitTiles, ...)
+; 7 call sites from 7 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_PagedMenu_ShowStringBank08AtTilesHL_Bank03, WriteByteAAsTwoDigitTiles, ...)
 WriteTwoDigitTilesFromWC8C1::
 Func_000_210D:: ; address name
     push hl
@@ -5986,7 +5986,7 @@ Func_000_210D:: ; address name
     ret
 
 ; DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third
-; 36 call sites from 19 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_ShowStringBank08AtTilesHL_Bank03, PauseMenu_State3_Case05_LoadScreenBlock2D, ...)
+; 36 call sites from 19 routines (e.g. BuildPartyStatusWindowRows, DrawRecordHPMPAndLevelForRowC, PauseMenu_State3_PagedMenu_ShowStringBank08AtTilesHL_Bank03, PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, ...)
 ; points at: wDigits
 WriteDecimalDigitTiles::
 Func_000_2123:: ; address name
@@ -6225,7 +6225,7 @@ Func_000_21A1:: ; address name
     ret
 
 ; fills wC8CF with five $90 glyphs and an $F0 terminator and draws it at vTiles1 + $500, $550 and $5A0 (three blank 5-tile slots); enables SRAM (rRAMG = $0A); then for each of the wC6FD record numbers listed at wC6FE copies that record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it into the next slot ($50 bytes apart); disables SRAM after the loop. With wC6FD = 0 it returns with SRAM still enabled (E-0059)
-; 24 call sites from 24 routines (e.g. InitFieldScreen, RunFieldReturnPhase_ResetLeadRecordFields55And5B, PauseMenu_State3_Case00_LoadScreenBlock21, RefreshRecordListAndNameTiles, ...)
+; 24 call sites from 24 routines (e.g. InitFieldScreen, RunFieldReturnPhase_ResetLeadRecordFields55And5B, PauseMenu_State3_Block21Menu_LoadScreenBlock21, RefreshRecordListAndNameTiles, ...)
 ; reads: wPartyCount
 ; writes: wNameGlyphBuf, rRAMG
 ; points at: wPartyList
@@ -8462,7 +8462,7 @@ Func_000_2E72:: ; address name
     ret
 
 ; H = string category, L = string index, DE = destination: stores them in wStringDestLo/Hi, wStringCategory and wStringIndex and far-calls CopyStringToBuffer_Bank08, which copies the string with its $F0 terminator to DE (categories 9 and above go to Func_095_465F) (E-0059)
-; 24 call sites from 23 routines (e.g. PauseMenu_Skills_UseFieldSkill_CopyStringHLToDE, PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap, PauseMenu_Items_Case00_UpdateMenuCursor, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_NextTableByte, ...)
+; 24 call sites from 23 routines (e.g. PauseMenu_Skills_UseFieldSkill_CopyStringHLToDE, PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap, PauseMenu_Items_MemberList_UpdateMenuCursor, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_NextTableByte, ...)
 ; writes: wStringDestLo, wStringDestHi, wStringCategory, wStringIndex
 CopyStringHLToDE::
 Func_000_2E81:: ; address name
@@ -8737,7 +8737,7 @@ Func_000_2FDC:: ; address name
     ret
 
 ; copies from DE to HL until 5 glyphs other than $8D and $8E have been copied ($8D/$8E, which have no charmap entry, are copied without counting); a $8D or $8E right after the fifth glyph is copied too; then writes $F0. Clobbers A, B; DE and HL advance (E-0072)
-; 16 call sites from 16 routines (e.g. PauseMenu_Skills_ChooseTarget_UpdateMenuCursor, PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap, PauseMenu_Items_Case00_UpdateMenuCursor, PauseMenu_Items_UseItem_UpdateMenuCursor, ...)
+; 16 call sites from 16 routines (e.g. PauseMenu_Skills_ChooseTarget_UpdateMenuCursor, PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap, PauseMenu_Items_MemberList_UpdateMenuCursor, PauseMenu_Items_UseItem_UpdateMenuCursor, ...)
 CopyFiveGlyphsPlusMarks::
 Func_000_2FE1:: ; address name
     ld b, $05

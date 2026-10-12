@@ -1783,7 +1783,7 @@ Jump_0F1_4B9F:: ; address name
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowPleaseWait
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_Case0B
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK
     dw RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case0E
@@ -2752,21 +2752,21 @@ Jump_0F1_51DC:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 11 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed
+; waits for the text, then for the partner's link message
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-RunScreenStateWhenNotFading_F1_LinkBreed_Case0B::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner::
 Jump_0F1_51F2:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_Case0B_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_Case0B_WaitLinkMessage
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitTextFlags
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitLinkMessage
 
-; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed_Case0B
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunScreenStateWhenNotFading_F1_LinkBreed_Case0B_WaitTextFlags::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitTextFlags::
 Jump_0F1_51FA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2778,11 +2778,11 @@ Jump_0F1_51FA:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed_Case0B
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wScreenStep, wScreenState
-RunScreenStateWhenNotFading_F1_LinkBreed_Case0B_WaitLinkMessage::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
 Jump_0F1_520C:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -3642,7 +3642,7 @@ Jump_0F1_56DC:: ; address name
     ret
 
 ; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
 ; reads: wRecordBufB
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawWCA36SpritePart_BankF1::

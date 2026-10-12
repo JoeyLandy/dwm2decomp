@@ -7852,7 +7852,7 @@ Func_01B_7600:: ; address name
     ret
 
 ; copies the name of the record at WD789 cell 5 (11 bytes) to wC130 (E-0124)
-; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo, EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN, GameMode6_Update_Case04_Case08_UpdatePagedListCursor, GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor)
+; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo, EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN, GameMode6_Update_Case04_PageList_UpdatePagedListCursor, GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wNameGlyphBuf, wTextBuf0

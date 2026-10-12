@@ -776,7 +776,7 @@ Func_0F0_4CA0:: ; address name
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case01
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case02
     dw RunLinkSession8Exchange_Case01_Sub01_ToRunLinkSession8Case03Steps
-    dw RunLinkSession8Exchange_Case01_Sub01_Case04
+    dw RunLinkSession8Exchange_ShowMessage
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case05
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case06
     dw RunLinkSession8Exchange_ObjectSceneThenSave
@@ -1310,23 +1310,23 @@ Jump_0F0_4FED:: ; address name
     call RunLinkSession8Case03Steps
     ret
 
-; entry 4 of the `rst $00` table in Func_0F0_4CA0
+; shows a category-0 string, then text waits
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case04::
+RunLinkSession8Exchange_ShowMessage::
 Jump_0F0_4FF1:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case04_BeginString_BankF0_Cat0
-    dw RunLinkSession8Exchange_Case01_Sub01_Case04_WaitTextFlags_Case01
-    dw RunLinkSession8Exchange_Case01_Sub01_Case04_WaitTextFlags_Case02
-    dw RunLinkSession8Exchange_Case01_Sub01_Case04_WaitTextFlags
+    dw RunLinkSession8Exchange_ShowMessage_BeginString_BankF0_Cat0
+    dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_Case01
+    dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_Case02
+    dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags
 
-; entry 1 of the `rst $00` table in Func_0F0_4CA0_Case04
+; entry 1 of the `rst $00` table in RunLinkSession8Exchange_ShowMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case04_WaitTextFlags_Case01::
+RunLinkSession8Exchange_ShowMessage_WaitTextFlags_Case01::
 Jump_0F0_4FFD:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -1338,11 +1338,11 @@ Jump_0F0_4FFD:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in Func_0F0_4CA0_Case04
+; entry 2 of the `rst $00` table in RunLinkSession8Exchange_ShowMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case04_WaitTextFlags_Case02::
+RunLinkSession8Exchange_ShowMessage_WaitTextFlags_Case02::
 Jump_0F0_5010:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -1357,12 +1357,12 @@ Jump_0F0_5010:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 0 of the `rst $00` table in Func_0F0_4CA0_Case04
+; entry 0 of the `rst $00` table in RunLinkSession8Exchange_ShowMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wLinkSendByte, wLinkRole
 ; writes: wLinkSendByte
 ; points at: wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case04_BeginString_BankF0_Cat0::
+RunLinkSession8Exchange_ShowMessage_BeginString_BankF0_Cat0::
 Jump_0F0_5028:: ; address name
     ld a, [wLinkMessage]
     cp a, $BB
@@ -1393,12 +1393,12 @@ Jump_0F0_5028:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_0F0_4CA0_Case04
+; entry 3 of the `rst $00` table in RunLinkSession8Exchange_ShowMessage
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: rSVBK, wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
-RunLinkSession8Exchange_Case01_Sub01_Case04_WaitTextFlags::
+RunLinkSession8Exchange_ShowMessage_WaitTextFlags::
 Jump_0F0_5055:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -3167,7 +3167,7 @@ Jump_0F0_5ACE:: ; address name
     dw RunLinkSession8Exchange_WaitForPartner_ToBeginString_BankF0_Cat0AndStep
     dw RunLinkSession8Exchange_WaitForPartner_SetScreenStep
     dw RunLinkSession8Exchange_WaitForPartner_WaitLinkMessage
-    dw RunLinkSession8Exchange_Case01_Sub01_Case04_WaitTextFlags
+    dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags
 
 ; entry 0 of the `rst $00` table in RunLinkSession8Exchange_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)

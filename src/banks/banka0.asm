@@ -3437,8 +3437,8 @@ Jump_0A0_54DD:: ; address name
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1_Case07
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut
 
 ; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
@@ -3880,22 +3880,22 @@ Jump_0A0_5772:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
+; waits for the text, then fills record buffer B with '???' names and $FF species (WriteUnknownNamePlaceholder)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord::
 Jump_0A0_57B1:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WaitTextFlags
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord_WaitTextFlags
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord_WaitLinkMessage
 
-; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09
+; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wLinkSendByte
 ; points at: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WaitTextFlags::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord_WaitTextFlags::
 Jump_0A0_57B9:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3906,12 +3906,12 @@ Jump_0A0_57B9:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09
+; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wRecordBufB
 ; writes: wBattleScene, wLinkRules, wRecordBufB, wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wScreenState, ...
 ; points at: wRecordBufA, wRecordBufB, wModeChangeRequest, wBGFillFlag
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord_WaitLinkMessage::
 Jump_0A0_57C8:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -4057,7 +4057,7 @@ Jump_0A0_57C8:: ; address name
     ret
 
 ; HL >>= 2 (arithmetic), and 1 when that leaves 0 (E-0118)
-; 6 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder)
+; 6 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord_WaitLinkMessage)
 QuarterHLAtLeast1::
 Func_0A0_590B:: ; address name
     sra h
@@ -4071,7 +4071,7 @@ Func_0A0_590B:: ; address name
     ret
 
 ; writes '???' ($98 three times, the charmap '?') followed by seven $F0 bytes at HL: a 10-byte name field holding a placeholder (E-0111)
-; 4 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder)
+; 4 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord_WaitLinkMessage)
 WriteUnknownNamePlaceholder::
 Func_0A0_591A:: ; address name
     ld a, $98
@@ -4097,7 +4097,7 @@ Func_0A0_591A:: ; address name
     ret
 
 ; appends the eight skills at wCA5F (mapped through the pair list Data_0A0_597A) to the first free slot of wCA67, then clears wCA5F (E-0127)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord_WaitLinkMessage)
 AppendMappedSkillsToWCA67::
 Func_0A0_5939:: ; address name
     ld de, wRecordBufB + MON_SKILL_LIST
@@ -4209,22 +4209,22 @@ Data_0A0_597A:: ; address name
     db $9A, $99 ; id 43
     db $FF, $FF ; end
 
-; entry 10 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
+; waits for the text, then starts the palette fade
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut::
 Jump_0A0_59D4:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A_WaitTextFlags
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A_StartPaletteFade
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_WaitTextFlags
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_StartPaletteFade
 
-; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A
+; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wLinkSendByte
 ; points at: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A_WaitTextFlags::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_WaitTextFlags::
 Jump_0A0_59DC:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -4235,12 +4235,12 @@ Jump_0A0_59DC:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A
+; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wScreenState, wLinkSession, wLinkExchangeState, wLinkRole, ...
 ; points at: wModeChangeRequest
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A_StartPaletteFade::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_StartPaletteFade::
 Jump_0A0_59EB:: ; address name
     ld a, [wLinkMessage]
     cp a, $01

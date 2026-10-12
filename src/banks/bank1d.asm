@@ -4005,7 +4005,7 @@ Data_01D_5BEA:: ; address name
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, SwapMonstersMenu_ShowMonsterDetails_Case20_UpdatePagedListCursor, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor, ...)
 ; writes: wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
 CallDrawPartySpeciesSpritesPreservingArg1AndTemp0::
@@ -4058,7 +4058,7 @@ Func_01D_5BF2:: ; address name
     ret
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, draws the species sprite of the record at WD789 cell 5 at ($90, $40) (Func_01D_69DA), then restores them (E-0127)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, SwapMonstersMenu_ShowMonsterDetails_Case15_DrawListEntriesCell5SpeciesSprite, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_Case04, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_Case00, ...)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
@@ -6183,7 +6183,7 @@ Data_01D_67EE:: ; address name
     db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
 
 ; for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
-; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_LoadPartySpeciesSpriteGraphics, SwapMonstersMenu_ShowParents2_UploadTilesFromData6D20, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_Case1E, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
+; 4 call sites from 4 routines (e.g. PauseMenu_Main_Blocks09And0A_Case01_LoadPartySpeciesSpriteGraphics, SwapMonstersMenu_ShowParents2_UploadTilesFromData6D20, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_Case1E, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wArg3
@@ -6272,7 +6272,7 @@ Data_01D_6890:: ; address name
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three records listed at wD7F1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
-; 5 call sites from 5 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, PauseMenu_Main_Case03_UpdateMenuCursor, SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case20, ...)
+; 5 call sites from 5 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, PauseMenu_Main_Blocks09And0A_UpdateMenuCursor, SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case20, ...)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 DrawPartySpeciesSprites::
@@ -6573,7 +6573,7 @@ Func_01D_6A36:: ; address name
     jr DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
 
 ; C = 0, then falls into the sprite part draw (Func_01D_6A36 body) (E-0122)
-; 6 call sites from 6 routines (e.g. PauseMenu_Main_Case01_DrawMetaSpritePartC0, RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc, SwapMonstersMenu_ShowPartyMemberDetails_GetListEntriesCell5Address, DrawWCA36SpritePart, ...)
+; 6 call sites from 6 routines (e.g. PauseMenu_Main_Blocks04To06_DrawMetaSpritePartC0, RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc, SwapMonstersMenu_ShowPartyMemberDetails_GetListEntriesCell5Address, DrawWCA36SpritePart, ...)
 ; reads: wArg6, wFrameCounterLo, wArg3, wArg4, hScrollX, hScrollXHi, wArg5, hScrollY, ...
 ; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSetIndex
 DrawMetaSpritePartC0::
@@ -7050,7 +7050,7 @@ Jump_01D_6CB2:: ; address name
     ret
 
 ; copies tiles from Data_01D_6D20: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank1D) (E-0118)
-; 4 call sites from 4 routines (e.g. SwapMonstersMenu_ShowMonsterDetails_Case1B_UpdatePagedListCursor, SwapMonstersMenu_ShowParents2_UploadTilesFromData6D20, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case1B, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
+; 4 call sites from 4 routines (e.g. SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor, SwapMonstersMenu_ShowParents2_UploadTilesFromData6D20, SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_Case1B, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 UploadTilesFromData6D20::
 Func_01D_6D07:: ; address name
     ld hl, Tiles_1D_6D20
@@ -7123,7 +7123,7 @@ Data_01D_6DE3:: ; address name
     db $8C, $B0, $8C, $FF, $FF
 
 ; wD7F5 = the number of SRAM records (29 in bank 0 from sB356 plus one in bank 1) with bit 7 of byte 0 set (E-0125)
-; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case05_LoadScreenBlock2D, HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, StartRecordListOrNoneMessage)
+; 4 call sites from 3 routines (e.g. PauseMenu_State3_Block2DNumber_LoadScreenBlock2D, HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, StartRecordListOrNoneMessage)
 ; writes: rRAMG2, rRAMB, wArg5
 ; points at: sCompactRecords, sRecords
 CountFlaggedSRAMRecords::

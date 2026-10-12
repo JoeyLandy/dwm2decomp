@@ -743,7 +743,7 @@ Func_037_4AFD:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_ToSwapMonstersMenuAndStep
     dw RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags
     dw RunLinkSession5Exchange_Case01_Sub01_SetScreenState
-    dw RunLinkSession5Exchange_Case01_Sub01_Case03
+    dw RunLinkSession5Exchange_ShowMessages
     dw RunLinkSession5Exchange_LinkBreed
     dw RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags_Case05
     dw RunLinkSession5Exchange_Case01_Sub01_WaitLinkMessage
@@ -846,23 +846,23 @@ Jump_037_4B7A:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_037_4AFD
+; text waits around two strings (ShowStringIndexA_Bank37)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case03::
+RunLinkSession5Exchange_ShowMessages::
 Jump_037_4B8B:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession5Exchange_Case01_Sub01_Case03_WaitTextFlags
-    dw RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37_Case01
-    dw RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Case03_WaitTextFlags_Case03
+    dw RunLinkSession5Exchange_ShowMessages_WaitTextFlags
+    dw RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_Case01
+    dw RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37
+    dw RunLinkSession5Exchange_ShowMessages_WaitTextFlags_Case03
 
-; entry 0 of the `rst $00` table in Func_037_4AFD_Case03
+; entry 0 of the `rst $00` table in RunLinkSession5Exchange_ShowMessages
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case03_WaitTextFlags::
+RunLinkSession5Exchange_ShowMessages_WaitTextFlags::
 Jump_037_4B97:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -872,11 +872,11 @@ Jump_037_4B97:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_037_4AFD_Case03
+; entry 1 of the `rst $00` table in RunLinkSession5Exchange_ShowMessages
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage, wScreenStep
 ; writes: wScreenState, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37_Case01::
+RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_Case01::
 Jump_037_4BA4:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -900,11 +900,11 @@ Jump_037_4BA4:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in Func_037_4AFD_Case03
+; entry 2 of the `rst $00` table in RunLinkSession5Exchange_ShowMessages
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37::
+RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37::
 Jump_037_4BC9:: ; address name
     xor a, a
     ld [wLinkSendByte], a
@@ -915,11 +915,11 @@ Jump_037_4BC9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in Func_037_4AFD_Case03
+; entry 3 of the `rst $00` table in RunLinkSession5Exchange_ShowMessages
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenState
 ; writes: wScreenStep, wScreenState
-RunLinkSession5Exchange_Case01_Sub01_Case03_WaitTextFlags_Case03::
+RunLinkSession5Exchange_ShowMessages_WaitTextFlags_Case03::
 Jump_037_4BDA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -949,7 +949,7 @@ Jump_037_4BEB:: ; address name
     dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37
     dw RunLinkSession5Exchange_LinkBreed_WaitLinkMessage
     dw RunLinkSession5Exchange_LinkBreed_WaitTextFlags
-    dw RunLinkSession5Exchange_LinkBreed_Case0B
+    dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner
     dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case0C
     dw RunLinkSession5Exchange_LinkBreed_BreedMenu
     dw RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case0E
@@ -1949,22 +1949,22 @@ Jump_037_525F:: ; address name
     xor a, a
     ld [wScreenSubStep], a
 
-; entry 11 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed
+; waits for the text, then for the partner's link message
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-RunLinkSession5Exchange_LinkBreed_Case0B::
+RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner::
 Jump_037_526F:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw RunLinkSession5Exchange_LinkBreed_Case0B_WaitTextFlags
-    dw RunLinkSession5Exchange_LinkBreed_Case0B_WaitLinkMessage
+    dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitTextFlags
+    dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitLinkMessage
 
-; entry 0 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed_Case0B
+; entry 0 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep, wLinkRole, wAIFlag
 ; writes: wScreenSubStep, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
 ; points at: wWorkBuf
-RunLinkSession5Exchange_LinkBreed_Case0B_WaitTextFlags::
+RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitTextFlags::
 Jump_037_5277:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2003,12 +2003,12 @@ Jump_037_5277:: ; address name
     ld [wLinkReady], a
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed_Case0B
+; entry 1 of the `rst $00` table in RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkReady, wGameMode, wModeState, wModeChangeRequest, wLinkSendByte
 ; points at: wScreenState
-RunLinkSession5Exchange_LinkBreed_Case0B_WaitLinkMessage::
+RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
 Jump_037_52BF:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -3098,7 +3098,7 @@ Func_037_5976:: ; address name
     ret
 
 ; wStringIndex = A (wStringCategory unchanged), then far-calls BeginStringDisplay_Bank0E (E-0066)
-; 22 call sites from 16 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37, RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37_Case01, RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case1C, RunLinkSession5Exchange_LinkBreed_UpdateTwoChoiceCursor_Bank1D, ...)
+; 22 call sites from 16 routines (e.g. RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37, RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_Case01, RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case1C, RunLinkSession5Exchange_LinkBreed_UpdateTwoChoiceCursor_Bank1D, ...)
 ; writes: wStringIndex
 ShowStringIndexA_Bank37::
 Func_037_5999:: ; address name
