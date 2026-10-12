@@ -19850,6 +19850,21 @@
         }
       ],
       "note": "E-0254 (C1: the 140 six-byte names of NameEntrySuggestionTable, $7A37-$7D7F)."
+    },
+    {
+      "bank": "24",
+      "addr": "7158",
+      "label": "ItemDescriptionTable",
+      "count": 99,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "description text",
+          "reason": "item description"
+        }
+      ],
+      "note": "E-0255 (C1: StepItemDescriptionText reads the word at $7158 + 2 * the item number under the item grid cursor and shows the text from there plus wTextCounter1/2; 99 words, one per ItemTable entry)."
     }
   ]
 }

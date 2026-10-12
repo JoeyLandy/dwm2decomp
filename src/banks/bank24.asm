@@ -6128,7 +6128,7 @@ Jump_024_707A::
     ld d, $00
     sla e
     rl d
-    ld hl, Data_024_7158
+    ld hl, ItemDescriptionTable
     add hl, de
     ld e, [hl]
     inc hl
@@ -6249,474 +6249,549 @@ Jump_024_7139::
     ld [wTextCounter4], a
     jp StepItemDescriptionText
 
-; address loaded by StepItemDescriptionText
-Data_024_7158:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_024_721E
-    dw Data_024_721E
-    dw Data_024_7243
-    dw Data_024_7268
-    dw Data_024_728B
-    dw Data_024_72B0
-    dw Data_024_72D2
-    dw Data_024_72F0
-    dw Data_024_7301
-    dw Data_024_7320
-    dw Data_024_733C
-    dw Data_024_735E
-    dw Data_024_7384
-    dw Data_024_739C
-    dw Data_024_73AD
-    dw Data_024_73BE
-    dw Data_024_73CF
-    dw Data_024_73E0
-    dw Data_024_73F5
-    dw Data_024_740A
-    dw Data_024_7423
-    dw Data_024_7443
-    dw Data_024_7461
-    dw Data_024_747C
-    dw Data_024_749E
-    dw Data_024_74BE
-    dw Data_024_74DC
-    dw Data_024_74F9
-    dw Data_024_750F
-    dw Data_024_7529
-    dw Data_024_754D
-    dw Data_024_7568
-    dw Data_024_758D
-    dw Data_024_75AF
-    dw Data_024_75D0
-    dw Data_024_75EC
-    dw Data_024_760B
-    dw Data_024_762E
-    dw Data_024_764F
-    dw Data_024_7671
-    dw Data_024_7692
-    dw Data_024_76B6
-    dw Data_024_76D3
-    dw Data_024_76F0
-    dw Data_024_770F
-    dw Data_024_7731
-    dw Data_024_7755
-    dw Data_024_776C
-    dw Data_024_776C
-    dw Data_024_7781
-    dw Data_024_77A5
-    dw Data_024_77C8
-    dw Data_024_77E5
-    dw Data_024_7807
-    dw Data_024_7827
-    dw Data_024_784C
-    dw Data_024_7867
-    dw Data_024_7883
-    dw Data_024_78A7
-    dw Data_024_78CB
-    dw Data_024_78F0
-    dw Data_024_7911
-    dw Data_024_7928
-    dw Data_024_7928
-    dw Data_024_7933
-    dw Data_024_7949
-    dw Data_024_795F
-    dw Data_024_7975
-    dw Data_024_798B
-    dw Data_024_799D
-    dw Data_024_79AF
-    dw Data_024_79C1
-    dw Data_024_79D3
-    dw Data_024_79E5
-    dw Data_024_79F7
-    dw Data_024_7A09
-    dw Data_024_7A1C
-    dw Data_024_7A40
-    dw Data_024_7A63
-    dw Data_024_7A86
-    dw Data_024_7AA2
-    dw Data_024_7AC4
-    dw Data_024_7AE7
-    dw Data_024_7B0A
-    dw Data_024_7B1B
-    dw Data_024_7B1B
-    dw Data_024_7B1B
-    dw Data_024_7B1B
-    dw Data_024_7B1B
-    dw Data_024_7B1B
-    dw Data_024_7B26
-    dw Data_024_7B46
-    dw Data_024_7B66
-    dw Data_024_7B7D
-    dw Data_024_7B94
-    dw Data_024_7BB5
-    dw Data_024_7BD6
-    dw Data_024_7BF7
-    dw Data_024_7C18
+; E-0255 (C1: StepItemDescriptionText reads the word at $7158 + 2 * the item number under the item grid cursor and shows the text from there plus wTextCounter1/2; 99 words, one per ItemTable entry).
+; record: description text
+ItemDescriptionTable::
+Data_024_7158:: ; address name
+    dw ItemDescription_Herb ; id 0
+    dw ItemDescription_Herb ; id 1
+    dw ItemDescription_LoveWater ; id 2
+    dw ItemDescription_WorldDew ; id 3
+    dw ItemDescription_Potion ; id 4
+    dw ItemDescription_ElfWater ; id 5
+    dw ItemDescription_Antidote ; id 6
+    dw ItemDescription_MoonHerb ; id 7
+    dw ItemDescription_Laurel ; id 8
+    dw ItemDescription_AwakeSand ; id 9
+    dw ItemDescription_SkyBell ; id 10
+    dw ItemDescription_SageRock ; id 11
+    dw ItemDescription_WorldLeaf ; id 12
+    dw ItemDescription_ATKseed ; id 13
+    dw ItemDescription_DEFseed ; id 14
+    dw ItemDescription_AGLseed ; id 15
+    dw ItemDescription_INTseed ; id 16
+    dw ItemDescription_LifeAcorn ; id 17
+    dw ItemDescription_MysticNut ; id 18
+    dw ItemDescription_Quest ; id 19
+    dw ItemDescription_Horror ; id 20
+    dw ItemDescription_BeNice ; id 21
+    dw ItemDescription_Cheater ; id 22
+    dw ItemDescription_Smart ; id 23
+    dw ItemDescription_Comedy ; id 24
+    dw ItemDescription_BeefJerky ; id 25
+    dw ItemDescription_PorkChop ; id 26
+    dw ItemDescription_Rib ; id 27
+    dw ItemDescription_Sirloin ; id 28
+    dw ItemDescription_BadMeat ; id 29
+    dw ItemDescription_MeteOrb ; id 30
+    dw ItemDescription_BeastTail ; id 31
+    dw ItemDescription_Repellent ; id 32
+    dw ItemDescription_ShinyHarp ; id 33
+    dw ItemDescription_Mist ; id 34
+    dw ItemDescription_Friend ; id 35
+    dw ItemDescription_Wind ; id 36
+    dw ItemDescription_Bolt ; id 37
+    dw ItemDescription_Snow ; id 38
+    dw ItemDescription_Fire ; id 39
+    dw ItemDescription_Warp ; id 40
+    dw ItemDescription_WarpWing ; id 41
+    dw ItemDescription_ExitBell ; id 42
+    dw ItemDescription_Bookmark ; id 43
+    dw ItemDescription_TinyMedal ; id 44
+    dw ItemDescription_GoldPass ; id 45
+    dw ItemDescription_LogTwig ; id 46
+    dw ItemDescription_2F ; id 47
+    dw ItemDescription_2F ; id 48
+    dw ItemDescription_MoonRock ; id 49
+    dw ItemDescription_Crest ; id 50
+    dw ItemDescription_YunaSoul ; id 51
+    dw ItemDescription_SleepHerb ; id 52
+    dw ItemDescription_Change ; id 53
+    dw ItemDescription_TidalBell ; id 54
+    dw ItemDescription_HarMirror ; id 55
+    dw ItemDescription_Sky ; id 56
+    dw ItemDescription_Heaven ; id 57
+    dw Data_024_78A7 ; id 58
+    dw Data_024_78CB ; id 59
+    dw ItemDescription_WizStone ; id 60
+    dw ItemDescription_Pretty ; id 61
+    dw ItemDescription_Accessory ; id 62
+    dw ItemDescription_Accessory ; id 63
+    dw ItemDescription_VITbelt ; id 64
+    dw ItemDescription_DracoBelt ; id 65
+    dw ItemDescription_MagicBelt ; id 66
+    dw ItemDescription_OddBelt ; id 67
+    dw ItemDescription_StoneFang ; id 68
+    dw ItemDescription_SteelFang ; id 69
+    dw ItemDescription_MermScale ; id 70
+    dw ItemDescription_DrakScale ; id 71
+    dw ItemDescription_AGL ; id 72
+    dw ItemDescription_Starry ; id 73
+    dw Data_024_79F7 ; id 74
+    dw ItemDescription_Wise ; id 75
+    dw ItemDescription_MagicCape ; id 76
+    dw ItemDescription_DracoCape ; id 77
+    dw ItemDescription_SilvrCape ; id 78
+    dw ItemDescription_GoldCape ; id 79
+    dw ItemDescription_PltnmCape ; id 80
+    dw ItemDescription_OrcaCape ; id 81
+    dw ItemDescription_BraveCape ; id 82
+    dw ItemDescription_DScale ; id 83
+    dw ItemDescription_None ; id 84
+    dw ItemDescription_None ; id 85
+    dw ItemDescription_None ; id 86
+    dw ItemDescription_None ; id 87
+    dw ItemDescription_None ; id 88
+    dw ItemDescription_None ; id 89
+    dw ItemDescription_Life ; id 90
+    dw ItemDescription_Divine ; id 91
+    dw ItemDescription_War ; id 92
+    dw ItemDescription_Mage ; id 93
+    dw ItemDescription_Fight ; id 94
+    dw ItemDescription_Sailor ; id 95
+    dw ItemDescription_Thief ; id 96
+    dw ItemDescription_Cleric ; id 97
+    dw ItemDescription_62 ; id 98
 
-Data_024_721E:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Herb:: ; heuristic: item description; C0
+Data_024_721E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Restores HP of one", $F1
     db "monster by "
     db $03, $00, $9D, $04, $00, $B5, $F0
 
-Data_024_7243:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_LoveWater:: ; heuristic: item description; C0
+Data_024_7243:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Restores HP of one", $F1
     db "monster by "
     db $06, $00, $9D, $07, $00, $B5, $F0
 
-Data_024_7268:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_WorldDew:: ; heuristic: item description; C0
+Data_024_7268:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Fully restores HP", $F1
     db "of all monsters.", $F0
 
-Data_024_728B:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Potion:: ; heuristic: item description; C0
+Data_024_728B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Restores MP of one", $F1
     db "monster by "
     db $02, $00, $9D, $03, $00, $B5, $F0
 
-Data_024_72B0:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_ElfWater:: ; heuristic: item description; C0
+Data_024_72B0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Fully restores MP", $F1
     db "of one monster.", $F0
 
-Data_024_72D2:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Antidote:: ; heuristic: item description; C0
+Data_024_72D2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Removes all traces", $F1
     db "of poison.", $F0
 
-Data_024_72F0:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_MoonHerb:: ; heuristic: item description; C0
+Data_024_72F0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Cures paralysis.", $F0
 
-Data_024_7301:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Laurel:: ; heuristic: item description; C0
+Data_024_7301:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Lifts a curse off", $F1
     db "one monster.", $F0
 
-Data_024_7320:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_AwakeSand:: ; heuristic: item description; C0
+Data_024_7320:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Awakens a sleeping", $F1
     db "monster.", $F0
 
-Data_024_733C:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_SkyBell:: ; heuristic: item description; C0
+Data_024_733C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Snaps a monster", $F1
     db "out of confusion.", $F0
 
-Data_024_735E:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_SageRock:: ; heuristic: item description; C0
+Data_024_735E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Restores HP of all", $F1
     db "monsters by "
     db $06, $00, $9D, $07, $00, $B5, $F0
 
-Data_024_7384:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_WorldLeaf:: ; heuristic: item description; C0
+Data_024_7384:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Revives a dead", $F1
     db "monster.", $F0
 
-Data_024_739C:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_ATKseed:: ; heuristic: item description; C0
+Data_024_739C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises ATK by 3.", $F0
 
-Data_024_73AD:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_DEFseed:: ; heuristic: item description; C0
+Data_024_73AD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises DEF by 3.", $F0
 
-Data_024_73BE:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_AGLseed:: ; heuristic: item description; C0
+Data_024_73BE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises AGL by 3.", $F0
 
-Data_024_73CF:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_INTseed:: ; heuristic: item description; C0
+Data_024_73CF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises INT by 3.", $F0
 
-Data_024_73E0:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_LifeAcorn:: ; heuristic: item description; C0
+Data_024_73E0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises max. HP", $F1
     db "by 5.", $F0
 
-Data_024_73F5:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_MysticNut:: ; heuristic: item description; C0
+Data_024_73F5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises max. MP", $F1
     db "by 5.", $F0
 
-Data_024_740A:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Quest:: ; heuristic: item description; C0
+Data_024_740A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Makes the reader", $F1
     db "braver.", $F0
 
-Data_024_7423:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Horror:: ; heuristic: item description; C0
+Data_024_7423:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Makes the reader", $F1
     db "more cowardly.", $F0
 
-Data_024_7443:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_BeNice:: ; heuristic: item description; C0
+Data_024_7443:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Makes the reader", $F1
     db "more kindly.", $F0
 
-Data_024_7461:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Cheater:: ; heuristic: item description; C0
+Data_024_7461:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Makes the reader", $F1
     db "more sly.", $F0
 
-Data_024_747C:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Smart:: ; heuristic: item description; C0
+Data_024_747C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Makes the reader", $F1
     db "more thoughtful.", $F0
 
-Data_024_749E:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Comedy:: ; heuristic: item description; C0
+Data_024_749E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Makes the reader", $F1
     db "simple-minded.", $F0
 
-Data_024_74BE:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_BeefJerky:: ; heuristic: item description; C0
+Data_024_74BE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Tames monsters", $F1
     db "just a little.", $F0
 
-Data_024_74DC:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_PorkChop:: ; heuristic: item description; C0
+Data_024_74DC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Tames monsters a", $F1
     db "little bit.", $F0
 
-Data_024_74F9:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Rib:: ; heuristic: item description; C0
+Data_024_74F9:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Tames monsters a", $F1
     db "lot.", $F0
 
-Data_024_750F:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Sirloin:: ; heuristic: item description; C0
+Data_024_750F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Tames monsters", $F1
     db "very much.", $F0
 
-Data_024_7529:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_BadMeat:: ; heuristic: item description; C0
+Data_024_7529:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Tames a tiny bit,", $F1
     db "but also poisons.", $F0
 
-Data_024_754D:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_MeteOrb:: ; heuristic: item description; C0
+Data_024_754D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Tames monsters", $F1
     db "incredibly.", $F0
 
-Data_024_7568:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_BeastTail:: ; heuristic: item description; C0
+Data_024_7568:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Checks if monster", $F1
     db "was caught before.", $F0
 
-Data_024_758D:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Repellent:: ; heuristic: item description; C0
+Data_024_758D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Prevents monsters", $F1
     db "from appearing.", $F0
 
-Data_024_75AF:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_ShinyHarp:: ; heuristic: item description; C0
+Data_024_75AF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Attracts monsters", $F1
     db "when strummed.", $F0
 
-Data_024_75D0:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Mist:: ; heuristic: item description; C0
+Data_024_75D0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Prevents casting", $F1
     db "of spells.", $F0
 
-Data_024_75EC:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Friend:: ; heuristic: item description; C0
+Data_024_75EC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Doubles physical", $F1
     db "power of one.", $F0
 
-Data_024_760B:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Wind:: ; heuristic: item description; C0
+Data_024_760B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Hits all enemies", $F1
     db "with a windstorm.", $F0
 
-Data_024_762E:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Bolt:: ; heuristic: item description; C0
+Data_024_762E:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Hits all enemies", $F1
     db "with lightning.", $F0
 
-Data_024_764F:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Snow:: ; heuristic: item description; C0
+Data_024_764F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Hits all enemies", $F1
     db "with a blizzard.", $F0
 
-Data_024_7671:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Fire:: ; heuristic: item description; C0
+Data_024_7671:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Hits one target", $F1
     db "with a fireball.", $F0
 
-Data_024_7692:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Warp:: ; heuristic: item description; C0
+Data_024_7692:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Instantly warps to", $F1
     db "the Door Shrine.", $F0
 
-Data_024_76B6:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_WarpWing:: ; heuristic: item description; C0
+Data_024_76B6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Instantly warps to", $F1
     db "GreatLog.", $F0
 
-Data_024_76D3:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_ExitBell:: ; heuristic: item description; C0
+Data_024_76D3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Instantly warps to", $F1
     db "the exit.", $F0
 
-Data_024_76F0:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Bookmark:: ; heuristic: item description; C0
+Data_024_76F0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Enables saving in", $F1
     db "the Journal.", $F0
 
-Data_024_770F:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_TinyMedal:: ; heuristic: item description; C0
+Data_024_770F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Collect and trade", $F1
     db "for rare gifts.", $F0
 
-Data_024_7731:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_GoldPass:: ; heuristic: item description; C0
+Data_024_7731:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Get a 10-percent", $F1
     db "discount at shops.", $F0
 
-Data_024_7755:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_LogTwig:: ; heuristic: item description; C0
+Data_024_7755:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Moves the Door", $F1
     db "Shrine.", $F0
 
-Data_024_776C:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_2F:: ; heuristic: item description; C0
+Data_024_776C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Reveals Mirage", $F1
     db "Lake.", $F0
 
-Data_024_7781:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_MoonRock:: ; heuristic: item description; C0
+Data_024_7781:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A magic stone that", $F1
     db "raises the tide.", $F0
 
-Data_024_77A5:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Crest:: ; heuristic: item description; C0
+Data_024_77A5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A medal from the", $F1
     db "elemental spirit.", $F0
 
-Data_024_77C8:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_YunaSoul:: ; heuristic: item description; C0
+Data_024_77C8:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "The lost soul of a", $F1
     db "princess.", $F0
 
-Data_024_77E5:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_SleepHerb:: ; heuristic: item description; C0
+Data_024_77E5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A blue flower that", $F1
     db "grows in snow.", $F0
 
-Data_024_7807:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Change:: ; heuristic: item description; C0
+Data_024_7807:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Transforms users", $F1
     db "into monsters.", $F0
 
-Data_024_7827:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_TidalBell:: ; heuristic: item description; C0
+Data_024_7827:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Summons a clam for", $F1
     db "crossing the sea.", $F0
 
-Data_024_784C:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_HarMirror:: ; heuristic: item description; C0
+Data_024_784C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Destroys what it", $F1
     db "reflects.", $F0
 
-Data_024_7867:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Sky:: ; heuristic: item description; C0
+Data_024_7867:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Summons a cloud", $F1
     db "for flying.", $F0
 
-Data_024_7883:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Heaven:: ; heuristic: item description; C0
+Data_024_7883:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A legendary helmet", $F1
     db "found in a cave.", $F0
 
-Data_024_78A7:: ; heuristic: target of a monotone pointer table; C0
+Data_024_78A7:: ; heuristic: item description; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A legendary armor", $F1
     db "found in a tower.", $F0
 
-Data_024_78CB:: ; heuristic: target of a monotone pointer table; C0
+Data_024_78CB:: ; heuristic: item description; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A legendary sword", $F1
     db "found in a castle.", $F0
 
-Data_024_78F0:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_WizStone:: ; heuristic: item description; C0
+Data_024_78F0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A magical stone", $F1
     db "that glows blue.", $F0
 
-Data_024_7911:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Pretty:: ; heuristic: item description; C0
+Data_024_7911:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A beautiful gold", $F1
     db "ring.", $F0
 
-Data_024_7928:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Accessory:: ; heuristic: item description; C0
+Data_024_7928:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Undefined.", $F0
 
-Data_024_7933:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_VITbelt:: ; heuristic: item description; C0
+Data_024_7933:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises max. HP", $F1
     db "by 30.", $F0
 
-Data_024_7949:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_DracoBelt:: ; heuristic: item description; C0
+Data_024_7949:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises max. HP", $F1
     db "by 80.", $F0
 
-Data_024_795F:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_MagicBelt:: ; heuristic: item description; C0
+Data_024_795F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises max. MP", $F1
     db "by 30.", $F0
 
-Data_024_7975:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_OddBelt:: ; heuristic: item description; C0
+Data_024_7975:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises max. MP", $F1
     db "by 80.", $F0
 
-Data_024_798B:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_StoneFang:: ; heuristic: item description; C0
+Data_024_798B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises ATK by 10.", $F0
 
-Data_024_799D:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_SteelFang:: ; heuristic: item description; C0
+Data_024_799D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises ATK by 50.", $F0
 
-Data_024_79AF:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_MermScale:: ; heuristic: item description; C0
+Data_024_79AF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises DEF by 10.", $F0
 
-Data_024_79C1:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_DrakScale:: ; heuristic: item description; C0
+Data_024_79C1:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises DEF by 50.", $F0
 
-Data_024_79D3:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_AGL:: ; heuristic: item description; C0
+Data_024_79D3:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises AGL by 10.", $F0
 
-Data_024_79E5:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Starry:: ; heuristic: item description; C0
+Data_024_79E5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises AGL by 50.", $F0
 
-Data_024_79F7:: ; heuristic: target of a monotone pointer table; C0
+Data_024_79F7:: ; heuristic: item description; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises INT by 50.", $F0
 
-Data_024_7A09:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Wise:: ; heuristic: item description; C0
+Data_024_7A09:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises INT by 100.", $F0
 
-Data_024_7A1C:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_MagicCape:: ; heuristic: item description; C0
+Data_024_7A1C:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises resistance", $F1
     db "to attack spells.", $F0
 
-Data_024_7A40:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_DracoCape:: ; heuristic: item description; C0
+Data_024_7A40:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises resistance", $F1
     db "to fire and ice.", $F0
 
-Data_024_7A63:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_SilvrCape:: ; heuristic: item description; C0
+Data_024_7A63:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Resists confusion,", $F1
     db "poison "
@@ -6724,12 +6799,14 @@ Data_024_7A63:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " sleep.", $F0
 
-Data_024_7A86:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_GoldCape:: ; heuristic: item description; C0
+Data_024_7A86:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Resists most", $F1
     db "status skills.", $F0
 
-Data_024_7AA2:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_PltnmCape:: ; heuristic: item description; C0
+Data_024_7AA2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Resists curse,", $F1
     db "paralysis "
@@ -6737,65 +6814,78 @@ Data_024_7AA2:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " death.", $F0
 
-Data_024_7AC4:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_OrcaCape:: ; heuristic: item description; C0
+Data_024_7AC4:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises resistance", $F1
     db "to water skills.", $F0
 
-Data_024_7AE7:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_BraveCape:: ; heuristic: item description; C0
+Data_024_7AE7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Prevents skills", $F1
     db "from being sealed.", $F0
 
-Data_024_7B0A:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_DScale:: ; heuristic: item description; C0
+Data_024_7B0A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises DEF by 5.", $F0
 
-Data_024_7B1B:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_None:: ; heuristic: item description; C0
+Data_024_7B1B:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Undefined.", $F0
 
-Data_024_7B26:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Life:: ; heuristic: item description; C0
+Data_024_7B26:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Restores HP by 1", $F1
     db "on every step.", $F0
 
-Data_024_7B46:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Divine:: ; heuristic: item description; C0
+Data_024_7B46:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Restores MP by 1", $F1
     db "on every step.", $F0
 
-Data_024_7B66:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_War:: ; heuristic: item description; C0
+Data_024_7B66:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Promotes max. HP", $F1
     db "gain.", $F0
 
-Data_024_7B7D:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Mage:: ; heuristic: item description; C0
+Data_024_7B7D:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Promotes max.", $F1
     db "MP gain.", $F0
 
-Data_024_7B94:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Fight:: ; heuristic: item description; C0
+Data_024_7B94:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Promotes ATK gain", $F1
     db "while growing.", $F0
 
-Data_024_7BB5:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Sailor:: ; heuristic: item description; C0
+Data_024_7BB5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Promotes DEF gain", $F1
     db "while growing.", $F0
 
-Data_024_7BD6:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Thief:: ; heuristic: item description; C0
+Data_024_7BD6:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Promotes AGL gain", $F1
     db "while growing.", $F0
 
-Data_024_7BF7:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_Cleric:: ; heuristic: item description; C0
+Data_024_7BF7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Promotes INT gain", $F1
     db "while growing.", $F0
 
-Data_024_7C18:: ; heuristic: target of a monotone pointer table; C0
+ItemDescription_62:: ; heuristic: item description; C0
+Data_024_7C18:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Undefined.", $F0
     ds $3DD, $00

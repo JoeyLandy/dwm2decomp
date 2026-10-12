@@ -3157,6 +3157,17 @@ class Rom:
             if m:
                 for i in range(t["count"]):
                     give(t["bank"], self._u16(t["bank"], t["addr"] + 2 * i), f"DefaultName_{m.group(1)}_{i:02X}")
+        it = next((t for t in self.schemas if t["label"] == "ItemDescriptionTable"), None)
+        if it:  # E-0255: item descriptions, by item name (StringTable_ItemNames, 08:$4716)
+            for i in list(range(1, it["count"])) + [0]:  # item 0 has no name; a named item wins a shared text
+                q = 8 * BANK + self._u16(8, 0x4716 + 2 * i) - BANK
+                nm = ""
+                while self.data[q] != 0xF0 and len(nm) < 16:
+                    nm += gb_text.BYTE_TO_TEXT.get(self.data[q], "")
+                    q += 1
+                nm = re.sub(r"[^A-Za-z0-9]", "", nm)
+                give(it["bank"], self._u16(it["bank"], it["addr"] + 2 * i),
+                     f"ItemDescription_{nm}" if nm else f"ItemDescription_{i:02X}")
         ns = next((t for t in self.schemas if t["label"] == "NameEntrySuggestionTable"), None)
         if ns:
             for i in range(ns["count"]):

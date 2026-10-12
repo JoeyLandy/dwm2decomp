@@ -2430,6 +2430,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0255 — Item descriptions
+
+- Kind: OBSERVATION (reading; C1).
+- **ItemDescriptionTable (24:$7158, 99 words).** StepItemDescriptionText reads the word for the item number under the item grid cursor and shows the text from there, plus its counters wTextCounter1/2. There is one entry per ItemTable item.
+- Each description is labelled ItemDescription_<item>, using the name from StringTable_ItemNames (08:$4716). When items share a description, a named item takes it over nameless item 0; for example Herb and item 0 share "Restores HP of one...".
+- Binary verification: build/run328 PASS, 0 differing bytes; tests OK.
+
 ### E-0254 — Default monster names by family; name entry suggestions
 
 - Kind: OBSERVATION (reading; C1).
