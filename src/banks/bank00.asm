@@ -123,7 +123,27 @@ ROMEntryPoint::
 Func_000_0100:: ; address name
     nop
     jp BootAndMainLoop
-    INCBIN "dwm2-cobi-us.gbc", $000104, $4C
+
+; E-0239 (HARDWARE: the standard Game Boy cartridge header layout; the byte values are those of the reference ROM and are kept exactly, checksums included; ASCII fields are written as numbers because charmap.inc maps letters to the game's encoding).
+; record: cartridge header $0104-$014F, one field per line: Nintendo logo (3 lines); title "DWM2-C" padded with $00; manufacturer "BQLE"; CGB flag $80; new licensee "B4"; SGB flag $03; cartridge type $1B (MBC5 + RAM + battery); ROM size $07 (4 MiB); RAM size $03 (32 KiB); destination $01 (overseas); old licensee $33 (use the new code); version $00; header checksum; global checksum (big-endian)
+CartridgeHeader::
+Data_000_0104:: ; address name
+    db $CE, $ED, $66, $66, $CC, $0D, $00, $0B, $03, $73, $00, $83, $00, $0C, $00, $0D ; id 0
+    db $00, $08, $11, $1F, $88, $89, $00, $0E, $DC, $CC, $6E, $E6, $DD, $DD, $D9, $99
+    db $BB, $BB, $67, $63, $6E, $0E, $EC, $CC, $DD, $DC, $99, $9F, $BB, $B9, $33, $3E
+    db $44, $57, $4D, $32, $2D, $43, $00, $00, $00, $00, $00
+    db $42, $51, $4C, $45
+    db $80
+    db $42, $34
+    db $03
+    db $1B
+    db $07
+    db $03
+    db $01
+    db $33
+    db $00
+    db $E7
+    db $85, $9E
 
 ; entry after the header jump: wIsCGB = 1 when A was $11 at power-on; disables interrupts, sets the stack, clears RAM, installs the OAM DMA routine, clears VRAM, sets game mode 5 and the MBC banks, then runs the main loop (E-0131)
 ; no direct call (reached through a table, a jump or a vector)
@@ -3330,7 +3350,56 @@ Jump_000_1329::
 
 Jump_000_1338::
     ret
-    INCBIN "dwm2-cobi-us.gbc", $001339, $44
+
+; a lone ret after the sound-effect request step's ret; nothing reaches it (E-0239)
+; no direct call (reached through a table, a jump or a vector)
+UnreferencedReturn_00_1339:: ; configured code entry (E-0239); C0
+Func_000_1339:: ; address name
+    ret
+
+; with B = A: unless wFieldInitStage is set or A is 0 or has bit 7 set, stores A (halved when wSGBActive is 0) to wSoundFadeLevel and, when rNR50 bits 7 and 3 are clear and rNR50 is non-zero, sets wSoundFadeTarget to it, wSoundFadeTimer = 8 and wSoundFadeNR50 = rNR50; otherwise clears wSoundFadeLevel; no caller found (E-0239)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wFieldInitStage, wSGBActive, wSoundFadeLevel, rNR50
+; writes: wSoundFadeLevel, wSoundFadeTarget, wSoundFadeTimer, wSoundFadeNR50
+UnreferencedStartSoundFadeA:: ; configured code entry (E-0239); C0
+Func_000_133A:: ; address name
+    ld b, a
+    ld a, [wFieldInitStage]
+    or a, a
+    jr nz, Jump_000_1378
+    ld a, b
+    bit 7, a
+    jr nz, Jump_000_1378
+    or a, a
+    jr z, Jump_000_1378
+    ld [wSoundFadeLevel], a
+    ld a, [wSGBActive]
+    or a, a
+    jr nz, Jump_000_135A
+    ld a, [wSoundFadeLevel]
+    sra a
+    ld [wSoundFadeLevel], a
+
+Jump_000_135A::
+    ldh a, [rNR50]
+    bit 7, a
+    jr nz, Jump_000_1378
+    bit 3, a
+    jr nz, Jump_000_1378
+    or a, a
+    jr z, Jump_000_1378
+    ld a, [wSoundFadeLevel]
+    ld [wSoundFadeTarget], a
+    ld a, $08
+    ld [wSoundFadeTimer], a
+    ldh a, [rNR50]
+    ld [wSoundFadeNR50], a
+    ret
+
+Jump_000_1378::
+    xor a, a
+    ld [wSoundFadeLevel], a
+    ret
 
 ; only called from StepFade (E-0047)
 ; 1 call site from 1 routine (e.g. StepFade)
@@ -8199,7 +8268,7 @@ Func_000_2D4A:: ; address name
     ld b, $0E
     call AdvanceBGMapColumnsByB
     push hl
-    ld de, $2DFA
+    ld de, TextPromptWindowTiles
 
 Jump_000_2D76::
     push hl
@@ -8235,7 +8304,7 @@ Jump_000_2D9A::
     ld a, [wIsCGB]
     or a, a
     ret z
-    ld de, $2E1D
+    ld de, TextPromptWindowAttrs
     push bc
     ld a, $01
     ldh [rVBK], a
@@ -8306,7 +8375,26 @@ Func_000_2DED:: ; address name
     dec c
     jr nz, CopyCBytesToVRAMWaitSTAT
     ret
-    INCBIN "dwm2-cobi-us.gbc", $002DFA, $46
+
+; E-0239 (C1: AcknowledgeTextPrompt_Sub01 writes these bytes to the BG map (WriteVRAMByte) from 14 columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6).
+; record: one 6-tile row and its separator
+TextPromptWindowTiles::
+Data_000_2DFA:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B2, $FD ; id 0
+    db $B6, $C3, $CE, $CF, $DF, $B7, $FD ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $B7, $FD ; id 2
+    db $B6, $C3, $EE, $EF, $C3, $B7, $FD ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B5, $FE ; id 4
+
+; E-0239 (C1: AcknowledgeTextPrompt_Sub01 writes these bytes to the BG map in VRAM bank 1 (CGB only) from 14 columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6).
+; record: one 6-tile row and its separator
+TextPromptWindowAttrs::
+Data_000_2E1D:: ; address name
+    db $00, $00, $00, $00, $00, $00, $FD ; id 0
+    db $00, $00, $00, $00, $00, $00, $FD ; id 1
+    db $00, $00, $00, $00, $00, $00, $FD ; id 2
+    db $00, $00, $00, $00, $00, $00, $FD ; id 3
+    db $00, $00, $00, $00, $00, $00, $FE ; id 4
 
 ; DE = table of 16-bit pointers, one per category; wC528 = category, wC529 = index; returns DE = the string pointer; stores the current ROM bank in wC52A
 ; 2 call sites from 2 routines (e.g. BeginStringDisplay, CopyStringToBuffer)

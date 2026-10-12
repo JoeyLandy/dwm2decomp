@@ -865,7 +865,7 @@ Jump_0F1_451A::
     ld de, $0901
     call ShowStringBank08AtTilesHL_BankF1
     pop af
-    ld hl, Data_0F1_45CB
+    ld hl, RecordA4StringTileCounts_F1
     add a, a
     add_a_to_hl
     ld b, [hl]
@@ -985,9 +985,46 @@ Data_0F1_45B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
 
-; address loaded by BuildItemScreenForWItemId_BankF1_Sub01
-Data_0F1_45CB:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $3C45CB, $48
+; E-0239 (C1: after showing string category 5, index (record byte $A4) + $3F (when non-zero) into tiles from vTiles2 + $1A0, the code reads the pair at 2 * (record byte $A4): byte 0 tiles from $1A go into wScreenTileBuffer + $141 (the rest of 7 filled with $C3), byte 1 continues the tile numbers at wWindowTileBuffer + $19; 36 pairs; the bank $03 and $F1 copies are identical).
+; record: tiles of the first row, tiles of the second row
+RecordA4StringTileCounts_F1::
+Data_0F1_45CB:: ; address name
+    db $00, $00 ; id 0
+    db $03, $04 ; id 1
+    db $05, $04 ; id 2
+    db $05, $04 ; id 3
+    db $03, $04 ; id 4
+    db $05, $04 ; id 5
+    db $05, $04 ; id 6
+    db $04, $05 ; id 7
+    db $04, $05 ; id 8
+    db $04, $00 ; id 9
+    db $07, $00 ; id 10
+    db $06, $00 ; id 11
+    db $05, $00 ; id 12
+    db $05, $04 ; id 13
+    db $05, $04 ; id 14
+    db $05, $04 ; id 15
+    db $04, $04 ; id 16
+    db $05, $04 ; id 17
+    db $04, $04 ; id 18
+    db $05, $04 ; id 19
+    db $07, $00 ; id 20
+    db $00, $00 ; id 21
+    db $00, $00 ; id 22
+    db $00, $00 ; id 23
+    db $00, $00 ; id 24
+    db $00, $00 ; id 25
+    db $00, $00 ; id 26
+    db $05, $00 ; id 27
+    db $07, $00 ; id 28
+    db $04, $00 ; id 29
+    db $05, $00 ; id 30
+    db $06, $00 ; id 31
+    db $07, $00 ; id 32
+    db $06, $00 ; id 33
+    db $07, $00 ; id 34
+    db $00, $00 ; id 35
 
 ; address loaded by BuildItemScreenForWItemId_BankF1, BuildItemScreenForWItemId_BankF1_Sub01
 Data_0F1_4613:: ; heuristic: pointer load in the same bank (bank assumed); C0

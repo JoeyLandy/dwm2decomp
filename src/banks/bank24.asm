@@ -2993,7 +2993,7 @@ Func_024_52CE:: ; address name
 ; points at: wRecordBufB
 CopyDefaultRecordToRecordBufB:: ; heuristic: follows a terminator; C0
 Func_024_52DE:: ; address name
-    ld hl, Data_024_52ED
+    ld hl, DefaultMonsterRecord
     ld de, wRecordBufB
     ld b, $A5
 
@@ -3005,14 +3005,23 @@ Jump_024_52E6::
     jr nz, Jump_024_52E6
     ret
 
-; address loaded by CopyDefaultRecordToRecordBufB
-Data_024_52ED:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $D4, $00, $07, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $16, $1B, $40
-    ds $1F, $00
-    INCBIN "dwm2-cobi-us.gbc", $091343, $4F
+; E-0239 (C1: CopyDefaultRecordToRecordBufB copies these $A5 bytes to wRecordBufB; laid out like PresetMonsterRecords (E-0235): byte 0 = 1, both names "???").
+; record: one $A5-byte monster record in the SRAM record format
+DefaultMonsterRecord::
+Data_024_52ED:: ; address name
+    db $01 ; id 0
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $D4, $00, $07, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $16, $1B, $40, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $12, $2D, $00
+    db $00, $00, $83, $00, $83, $00, $28, $00, $28, $00, $8A, $00, $5D, $00, $45, $00
+    db $7F, $01, $00, $00, $00, $00, $C8, $C8, $96, $50, $01, $01, $01, $00, $00, $02
+    db $02, $02, $02, $00, $00, $02, $00, $00, $03, $00, $00, $02, $02, $02, $02, $00
+    db $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
 ; 3 call sites from 3 routines (e.g. GameMode6_Update_Case05_Case02, GameMode6_Update_Case0E_Case01, GameMode6_Update_Case0F_Case01)

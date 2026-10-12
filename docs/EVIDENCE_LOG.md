@@ -2430,6 +2430,26 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0239 — Action-id effect table (bank $3B), cartridge header, prompt window, glyph tile tables (bank $1D), trigger sprites, remaining small layouts
+
+- Kind: OBSERVATION (reading; C1, code entries C0), HARDWARE (header layout) and a correction.
+- **ActionIdEffectTable_3B ($4B11, 64 code words).** Func_03B_4B02 jumps to the word at 2 * wBattleActionId. Entries 0 ($4B91) and the 12 at $4C94 are lone `ret`s (ActionIdEffectNone_*).
+  - **Correction:** two entries are $4E60 and $4E66, which E-0236 had named Unreferenced*. They are renamed RollTableDamageWithMessage35 and RaiseWord3FAndRestoreHP; E-0236 is annotated.
+  - The search for references there had looked only for labels, and this table was a `dw`/`db` run rendered from an `ld hl, $4B11` literal.
+- **CartridgeHeader (00:$0104-$014F).** Laid out by the standard header fields: logo, title "DWM2-C", manufacturer "BQLE", CGB flag $80, licensee "B4", SGB $03, type $1B, ROM $07, RAM $03, destination $01, old licensee $33, version 0, and both checksums as stored. The bytes are unchanged.
+- **TextPromptWindowTiles/Attrs (00:$2DFA, $2E1D).** AcknowledgeTextPrompt_Sub01 writes 5 rows of 6 bytes ($FD = next row, $FE = end) to the BG map; the attributes go to VRAM bank 1 on CGB.
+- **Bank $00 code.** UnreferencedReturn_00_1339 is a lone `ret`. UnreferencedStartSoundFadeA ($133A) sets the sound fade level, target, timer and NR50 copy from A; no reference to it was found.
+- **DefaultMonsterRecord (24:$52ED).** CopyDefaultRecordToRecordBufB copies it to wRecordBufB; it has the E-0235 record layout.
+- **RecordA4StringTileCounts_F1/_03 (F1:$45CB, 03:$5C43; identical, 36 pairs).** These are the tile counts for the two rows of the string selected by record byte $A4.
+- **GlyphTileDestTable_1D_0-4 ($61D9-$62AD).** The bank-$1D copy of the E-0235 selector; it has five tables (wArg5 0-3, else).
+- **TileRect_85_4583.** An unreferenced 8 x 9 frame.
+- **TriggerSpriteRecord0/TriggerSpriteTable (12:$71E8, 11 x 6).** ScriptCommand84_Run_Case04_Sub01_Sub01 indexes the records with wTriggerKind and reads:
+  - a far pointer to sprite graphics, decompressed to vTiles0 + $400;
+  - a palette byte offset from 7E:$4BBD (copied on CGB).
+  - Record 0 is all zero.
+- Unidentified INCBIN went from 1,598 to 798 bytes.
+- Binary verification: build/run299 PASS, 0 differing bytes; tests OK.
+
 ### E-0238 — OBJ palettes (bank $7E), field command sprites, shop item lists, sound test tables, map exit warps, tile upload runs
 
 - Kind: OBSERVATION (reading; C1, code entries C0) and TOOL.
@@ -2465,8 +2485,8 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 
 - Kind: OBSERVATION (reading; C1, code entries C0) and TOOL.
 - **Bank $3B code ($4E60-$4ECF).** Bytes after `jp Jump_03B_4F15` at $4E5D decode as two unreferenced routines; configured code entries at $4E60 and $4EB8.
-  - UnreferencedRollDamageWithMessage35 ($4E60).
-  - UnreferencedRaiseWord3FAndRestoreHP ($4E66).
+  - UnreferencedRollDamageWithMessage35 ($4E60). **Superseded by E-0239:** ActionIdEffectTable_3B points at it, and it is now RollTableDamageWithMessage35.
+  - UnreferencedRaiseWord3FAndRestoreHP ($4E66). **Superseded by E-0239:** also a table entry, now RaiseWord3FAndRestoreHP.
   - $4EB8 is a 6-byte `ld hl, $D035 / ld bc, $88A8` that the `jr` before it skips; it falls into the message store at $4EBE (UnreferencedStoreResolveMessage35D0).
   - The new caller turned $483A from a structural `_Sub01` into a shared routine, now named RestoreTargetHPByActionAmount: max HP for action $03, a random 30-40 for actions $01/$38, else a random 60-70, added to HP and capped at max HP.
 - **IncrementOffsetRows_A0 (A0:$4387) and IncrementOffsetRows_19 (19:$4641).** These are 7 identical rows of 16 bytes. ApplyTable4387IncrementsForA0DTo13 (and the bank $19 copy for $4641) takes row A - $0D and, for each byte before $80, increments the byte at DE + $FF00 + byte, capped at 3.

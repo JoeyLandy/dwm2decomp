@@ -8327,7 +8327,7 @@ Func_012_7179:: ; address name
     add a, a
     add a, c
     add a, a
-    ld hl, Data_012_71E8
+    ld hl, TriggerSpriteRecord0
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -8366,9 +8366,36 @@ Data_012_71BB:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
     db $05, $00, $09, $09, $09, $09, $09, $09, $09, $0A, $06, $00, $01
 
-; address loaded by ScriptCommand84_Run_Case04_Sub01_Sub01
-Data_012_71E8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $04B1E8, $42
+; E-0239 (C1: record 0 of the 6-byte records ScriptCommand84_Run_Case04_Sub01_Sub01 reads at $71E8 + 6 * wTriggerKind (TriggerSpriteTable holds 1-10); all six bytes are zero).
+; record: record 0 of the trigger sprite records: all zero
+TriggerSpriteRecord0::
+Data_012_71E8:: ; address name
+    db $00, $00, $00, $00, $00, $00 ; id 0
+
+; E-0239 (C1: ScriptCommand84_Run_Case04_Sub01_Sub01 reads the 6-byte record at $71E8 + 6 * wTriggerKind, decompresses the far-pointed stream to vTiles0 + $400 (DecompressToVRAM) and on CGB copies the 8 bytes at 7E:$4BBD + byte 3 to wOBJPaletteBuffer + $20; records 1-10 here; record 0 is TriggerSpriteRecord0).
+; record: graphics stream, bank; palette offset; two bytes
+TriggerSpriteTable::
+Data_012_71EE:: ; address name
+    dfar Data_07E_4EF1 ; id 1
+    db $48, $00, $00
+    dfar Data_07E_4D1A ; id 2
+    db $08, $00, $00
+    dfar Data_07E_4D1A ; id 3
+    db $08, $00, $00
+    dfar Data_07E_4D4F ; id 4
+    db $10, $00, $00
+    dfar Data_07E_4D8A ; id 5
+    db $18, $00, $00
+    dfar Data_07E_4DCC ; id 6
+    db $20, $00, $00
+    dfar Data_07E_4E06 ; id 7
+    db $28, $00, $00
+    dfar Data_07E_4E37 ; id 8
+    db $30, $00, $00
+    dfar Data_07E_4E79 ; id 9
+    db $38, $00, $00
+    dfar Data_07E_4EB3 ; id 10
+    db $40, $00, $00
 
 ; unless bit 7 of wC468 is set or no trigger is active (wC8FE = $FF), draws the trigger marker sprite (Data_012_7308) at the trigger cell wC8FF (E-0130)
 ; 2 call sites from 2 routines (e.g. RunFunc722AAnd6EB7, FieldModeStateDispatch_Case07)

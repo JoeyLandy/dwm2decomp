@@ -18682,6 +18682,595 @@
       ],
       "record": "map, new map, key; destination position and screen",
       "note": "E-0238 (C1: the code at Jump_012_50ED walks 5-byte records up to $FF for the one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to ScriptCommand8E_Run_Case01_Sub01 (high nibble to wWarpDestX, low nibble * 16 to wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey - 1 equals byte 2; 16 records and $FF)."
+    },
+    {
+      "bank": "3B",
+      "addr": "4B11",
+      "label": "ActionIdEffectTable_3B",
+      "count": 64,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "code": true,
+          "name": "effect routine for this wBattleActionId",
+          "reason": "action id effect"
+        }
+      ],
+      "note": "E-0239 (C1: Func_03B_4B02 jumps (JumpToWordAtHL) to the word at $4B11 + 2 * wBattleActionId; 64 words up to the first target at $4B91, a lone ret)."
+    },
+    {
+      "bank": "24",
+      "addr": "52ED",
+      "label": "DefaultMonsterRecord",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "record byte 0 (0 = empty, 1 or 2 = in use, E-0104)"
+        },
+        {
+          "type": "text",
+          "size": 10,
+          "name": "name, bytes 1-10 (E-0034)"
+        },
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "bytes 11-14"
+        },
+        {
+          "type": "text",
+          "size": 10,
+          "name": "second name, bytes 15-24 (E-0034)"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 25-40"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 41-56"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 57-72"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 73-88"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 89-104"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 105-120"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 121-136"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 137-152"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "bytes 153-164"
+        }
+      ],
+      "record": "one $A5-byte monster record in the SRAM record format",
+      "note": "E-0239 (C1: CopyDefaultRecordToRecordBufB copies these $A5 bytes to wRecordBufB; laid out like PresetMonsterRecords (E-0235): byte 0 = 1, both names \"???\")."
+    },
+    {
+      "bank": "00",
+      "addr": "0104",
+      "label": "CartridgeHeader",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "Nintendo logo bytes 0-15"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "Nintendo logo bytes 16-31"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "Nintendo logo bytes 32-47"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "title, ASCII \"DWM2-C\" padded with $00"
+        },
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "manufacturer code, ASCII \"BQLE\""
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "CGB flag ($80 = CGB features, also runs on DMG)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "new licensee code, ASCII \"B4\""
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "SGB flag ($03 = SGB functions)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "cartridge type ($1B = MBC5 + RAM + battery)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "ROM size ($07 = 4 MiB, 256 banks)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "RAM size ($03 = 32 KiB)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "destination ($01 = overseas)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "old licensee ($33 = use the new licensee code)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "version ($00)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "line": true,
+          "name": "header checksum (as stored)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "global checksum, big-endian (as stored)"
+        }
+      ],
+      "record": "cartridge header $0104-$014F, one field per line: Nintendo logo (3 lines); title \"DWM2-C\" padded with $00; manufacturer \"BQLE\"; CGB flag $80; new licensee \"B4\"; SGB flag $03; cartridge type $1B (MBC5 + RAM + battery); ROM size $07 (4 MiB); RAM size $03 (32 KiB); destination $01 (overseas); old licensee $33 (use the new code); version $00; header checksum; global checksum (big-endian)",
+      "note": "E-0239 (HARDWARE: the standard Game Boy cartridge header layout; the byte values are those of the reference ROM and are kept exactly, checksums included; ASCII fields are written as numbers because charmap.inc maps letters to the game's encoding)."
+    },
+    {
+      "bank": "00",
+      "addr": "2DFA",
+      "label": "TextPromptWindowTiles",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "six tile numbers, then $FD (next row) or $FE (end)"
+        }
+      ],
+      "record": "one 6-tile row and its separator",
+      "note": "E-0239 (C1: AcknowledgeTextPrompt_Sub01 writes these bytes to the BG map (WriteVRAMByte) from 14 columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6)."
+    },
+    {
+      "bank": "00",
+      "addr": "2E1D",
+      "label": "TextPromptWindowAttrs",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "six CGB attributes, then $FD (next row) or $FE (end)"
+        }
+      ],
+      "record": "one 6-tile row and its separator",
+      "note": "E-0239 (C1: AcknowledgeTextPrompt_Sub01 writes these bytes to the BG map in VRAM bank 1 (CGB only) from 14 columns right of scroll + $100, moving to the next 32-byte row at $FD and stopping at $FE; 5 rows of 6)."
+    },
+    {
+      "bank": "F1",
+      "addr": "45CB",
+      "label": "RecordA4StringTileCounts_F1",
+      "count": 36,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "tiles of the first row, tiles of the second row"
+        }
+      ],
+      "note": "E-0239 (C1: after showing string category 5, index (record byte $A4) + $3F (when non-zero) into tiles from vTiles2 + $1A0, the code reads the pair at 2 * (record byte $A4): byte 0 tiles from $1A go into wScreenTileBuffer + $141 (the rest of 7 filled with $C3), byte 1 continues the tile numbers at wWindowTileBuffer + $19; 36 pairs; the bank $03 and $F1 copies are identical)."
+    },
+    {
+      "bank": "03",
+      "addr": "5C43",
+      "label": "RecordA4StringTileCounts_03",
+      "count": 36,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "tiles of the first row, tiles of the second row"
+        }
+      ],
+      "note": "E-0239 (C1: after showing string category 5, index (record byte $A4) + $3F (when non-zero) into tiles from vTiles2 + $1A0, the code reads the pair at 2 * (record byte $A4): byte 0 tiles from $1A go into wScreenTileBuffer + $141 (the rest of 7 filled with $C3), byte 1 continues the tile numbers at wWindowTileBuffer + $19; 36 pairs; the bank $03 and $F1 copies are identical)."
+    },
+    {
+      "bank": "1D",
+      "addr": "61D9",
+      "label": "GlyphTileDestTable_1D_0",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+    },
+    {
+      "bank": "1D",
+      "addr": "61E1",
+      "label": "GlyphTileDests_1D_0_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 0 of GlyphTileDestTable_1D_0; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "61F3",
+      "label": "GlyphTileDests_1D_0_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 1 of GlyphTileDestTable_1D_0; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6205",
+      "label": "GlyphTileDests_1D_0_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 2 of GlyphTileDestTable_1D_0; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6217",
+      "label": "GlyphTileDests_1D_0_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 3 of GlyphTileDestTable_1D_0; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6229",
+      "label": "GlyphTileDestTable_1D_1",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+    },
+    {
+      "bank": "1D",
+      "addr": "6231",
+      "label": "GlyphTileDests_1D_1_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 0 of GlyphTileDestTable_1D_1; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6243",
+      "label": "GlyphTileDests_1D_1_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 1 of GlyphTileDestTable_1D_1; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6255",
+      "label": "GlyphTileDests_1D_1_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 2 of GlyphTileDestTable_1D_1; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6267",
+      "label": "GlyphTileDests_1D_1_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 3 of GlyphTileDestTable_1D_1; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6279",
+      "label": "GlyphTileDestTable_1D_2",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+    },
+    {
+      "bank": "1D",
+      "addr": "627B",
+      "label": "GlyphTileDests_1D_2_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 0 of GlyphTileDestTable_1D_2; 5 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6285",
+      "label": "GlyphTileDestTable_1D_3",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+    },
+    {
+      "bank": "1D",
+      "addr": "6287",
+      "label": "GlyphTileDests_1D_3_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 0 of GlyphTileDestTable_1D_3; 9 words)."
+    },
+    {
+      "bank": "1D",
+      "addr": "6299",
+      "label": "GlyphTileDestTable_1D_4",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+    },
+    {
+      "bank": "1D",
+      "addr": "629B",
+      "label": "GlyphTileDests_1D_4_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0239 (C1: list 0 of GlyphTileDestTable_1D_4; 9 words)."
+    },
+    {
+      "bank": "85",
+      "addr": "4583",
+      "label": "TileRect_85_4583",
+      "count": 9,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "8 x 9 tiles, one row per line",
+      "note": "E-0239 (C1: no reference found; the bytes form an 8 x 9 window frame ($B0 $B1.. $B2 top, $B6/$B7 sides with $E1-$E3 in the left column of rows 1, 3 and 5, $B3 $B4.. $B5 bottom), after the ret of the routine that ends at $4582)."
+    },
+    {
+      "bank": "12",
+      "addr": "71EE",
+      "label": "TriggerSpriteTable",
+      "count": 10,
+      "id_base": 1,
+      "fields": [
+        {
+          "type": "ptr",
+          "bank_from": 1,
+          "stream": true,
+          "name": "compressed sprite graphics",
+          "reason": "trigger sprite graphics"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "ROM bank of that data"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "not read here"
+        }
+      ],
+      "record": "graphics stream, bank; palette offset; two bytes",
+      "note": "E-0239 (C1: ScriptCommand84_Run_Case04_Sub01_Sub01 reads the 6-byte record at $71E8 + 6 * wTriggerKind, decompresses the far-pointed stream to vTiles0 + $400 (DecompressToVRAM) and on CGB copies the 8 bytes at 7E:$4BBD + byte 3 to wOBJPaletteBuffer + $20; records 1-10 here; record 0 is TriggerSpriteRecord0)."
+    },
+    {
+      "bank": "12",
+      "addr": "71E8",
+      "label": "TriggerSpriteRecord0",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "name": "record 0 of the trigger sprite records: all zero"
+        }
+      ],
+      "note": "E-0239 (C1: record 0 of the 6-byte records ScriptCommand84_Run_Case04_Sub01_Sub01 reads at $71E8 + 6 * wTriggerKind (TriggerSpriteTable holds 1-10); all six bytes are zero)."
     }
   ]
 }

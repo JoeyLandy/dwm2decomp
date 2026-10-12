@@ -5003,23 +5003,23 @@ Func_01D_617F:: ; address name
     jr z, Jump_01D_61AC
     cp a, $03
     jr z, Jump_01D_61A7
-    ld de, Data_01D_6299
+    ld de, GlyphTileDestTable_1D_4
     jr Jump_01D_61B9
 
 Jump_01D_61A7::
-    ld de, Data_01D_6285
+    ld de, GlyphTileDestTable_1D_3
     jr Jump_01D_61B9
 
 Jump_01D_61AC::
-    ld de, Data_01D_6279
+    ld de, GlyphTileDestTable_1D_2
     jr Jump_01D_61B9
 
 Jump_01D_61B1::
-    ld de, Data_01D_6229
+    ld de, GlyphTileDestTable_1D_1
     jr Jump_01D_61B9
 
 Jump_01D_61B6::
-    ld de, Data_01D_61D9
+    ld de, GlyphTileDestTable_1D_0
 
 Jump_01D_61B9::
     ld a, c
@@ -5048,27 +5048,117 @@ Jump_01D_61C0::
     ld c, $10
     ret
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
-Data_01D_61D9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0761D9, $50
+; E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235)).
+; record: list of VRAM tile addresses
+GlyphTileDestTable_1D_0::
+Data_01D_61D9:: ; address name
+    dw GlyphTileDests_1D_0_0 ; id 0
+    dw GlyphTileDests_1D_0_1 ; id 1
+    dw GlyphTileDests_1D_0_2 ; id 2
+    dw GlyphTileDests_1D_0_3 ; id 3
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
-Data_01D_6229:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $076229, $50
+; E-0239 (C1: list 0 of GlyphTileDestTable_1D_0; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_0_0::
+Data_01D_61E1:: ; address name
+    dw vTiles1 + $500, vTiles1 + $510, vTiles1 + $520, vTiles1 + $530, vTiles1 + $540, vTiles1 + $550 ; entry 0
+    dw vTiles1 + $560, vTiles1 + $570, vTiles1 + $580
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
-Data_01D_6279:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $7B, $62, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
+; E-0239 (C1: list 1 of GlyphTileDestTable_1D_0; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_0_1::
+Data_01D_61F3:: ; address name
+    dw vTiles1 + $590, vTiles1 + $5A0, vTiles1 + $5B0, vTiles1 + $5C0, vTiles1 + $5D0, vTiles1 + $5E0 ; entry 0
+    dw vTiles1 + $400, vTiles1 + $410, vTiles1 + $420
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
-Data_01D_6285:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $87, $62, $70, $97, $80, $97, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97
-    db $50, $97, $60, $97
+; E-0239 (C1: list 2 of GlyphTileDestTable_1D_0; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_0_2::
+Data_01D_6205:: ; address name
+    dw vTiles1 + $750, vTiles1 + $760, vTiles1 + $770, vTiles1 + $780, vTiles1 + $790, vTiles1 + $7A0 ; entry 0
+    dw vTiles1 + $7B0, vTiles1 + $7C0, vTiles1 + $3F0
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01
-Data_01D_6299:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $9B, $62, $C0, $97, $D0, $97, $E0, $97, $F0, $97, $00, $8C, $10, $8C, $20, $8C
-    db $A0, $8C, $B0, $8C
+; E-0239 (C1: list 3 of GlyphTileDestTable_1D_0; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_0_3::
+Data_01D_6217:: ; address name
+    dw vTiles1 + $470, vTiles1 + $480, vTiles1 + $490, vTiles1 + $4A0, vTiles1 + $4B0, vTiles1 + $6A0 ; entry 0
+    dw vTiles1 + $6B0, vTiles1 + $6C0, vTiles1 + $6D0
+
+; E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235)).
+; record: list of VRAM tile addresses
+GlyphTileDestTable_1D_1::
+Data_01D_6229:: ; address name
+    dw GlyphTileDests_1D_1_0 ; id 0
+    dw GlyphTileDests_1D_1_1 ; id 1
+    dw GlyphTileDests_1D_1_2 ; id 2
+    dw GlyphTileDests_1D_1_3 ; id 3
+
+; E-0239 (C1: list 0 of GlyphTileDestTable_1D_1; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_1_0::
+Data_01D_6231:: ; address name
+    dw vTiles1 + $500, vTiles1 + $510, vTiles1 + $520, vTiles1 + $530, vTiles1 + $540, vTiles1 + $550 ; entry 0
+    dw vTiles1 + $560, vTiles1 + $570, vTiles1 + $580
+
+; E-0239 (C1: list 1 of GlyphTileDestTable_1D_1; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_1_1::
+Data_01D_6243:: ; address name
+    dw vTiles1 + $590, vTiles1 + $5A0, vTiles1 + $5B0, vTiles1 + $5C0, vTiles1 + $5D0, vTiles1 + $5E0 ; entry 0
+    dw vTiles1 + $790, vTiles1 + $7A0, vTiles1 + $7B0
+
+; E-0239 (C1: list 2 of GlyphTileDestTable_1D_1; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_1_2::
+Data_01D_6255:: ; address name
+    dw vTiles1 + $700, vTiles1 + $710, vTiles1 + $720, vTiles1 + $730, vTiles1 + $740, vTiles1 + $750 ; entry 0
+    dw vTiles1 + $760, vTiles1 + $770, vTiles1 + $780
+
+; E-0239 (C1: list 3 of GlyphTileDestTable_1D_1; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_1_3::
+Data_01D_6267:: ; address name
+    dw vTiles1 + $400, vTiles1 + $410, vTiles1 + $420, vTiles1 + $470, vTiles1 + $480, vTiles1 + $490 ; entry 0
+    dw vTiles1 + $4A0, vTiles1 + $4B0, vTiles1 + $7C0
+
+; E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235)).
+; record: list of VRAM tile addresses
+GlyphTileDestTable_1D_2::
+Data_01D_6279:: ; address name
+    dw GlyphTileDests_1D_2_0 ; id 0
+
+; E-0239 (C1: list 0 of GlyphTileDestTable_1D_2; 5 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_2_0::
+Data_01D_627B:: ; address name
+    dw vTiles1 + $750, vTiles1 + $760, vTiles1 + $770, vTiles1 + $7D0, vTiles1 + $7E0 ; entry 0
+
+; E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235)).
+; record: list of VRAM tile addresses
+GlyphTileDestTable_1D_3::
+Data_01D_6285:: ; address name
+    dw GlyphTileDests_1D_3_0 ; id 0
+
+; E-0239 (C1: list 0 of GlyphTileDestTable_1D_3; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_3_0::
+Data_01D_6287:: ; address name
+    dw vTiles2 + $770, vTiles2 + $780, vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730 ; entry 0
+    dw vTiles2 + $740, vTiles2 + $750, vTiles2 + $760
+
+; E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235)).
+; record: list of VRAM tile addresses
+GlyphTileDestTable_1D_4::
+Data_01D_6299:: ; address name
+    dw GlyphTileDests_1D_4_0 ; id 0
+
+; E-0239 (C1: list 0 of GlyphTileDestTable_1D_4; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests_1D_4_0::
+Data_01D_629B:: ; address name
+    dw vTiles2 + $7C0, vTiles2 + $7D0, vTiles2 + $7E0, vTiles2 + $7F0, vTiles1 + $400, vTiles1 + $410 ; entry 0
+    dw vTiles1 + $420, vTiles1 + $4A0, vTiles1 + $4B0
 
 ; with SRAM enabled, for each of the wC6FD record numbers in wC6FE copies the record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it as glyph tiles at the VRAM address from Data_01D_62F9 (CopyGlyphTilesToVRAM); then disables SRAM (E-0106)
 ; 6 call sites from 6 routines (e.g. ScriptCommandF6_Run_Case08, ScriptCommandEC_Run_Case03, ScriptCommandEB_Run_Case05_Case0E, ScriptCommandEE_Run_Case03, ...)

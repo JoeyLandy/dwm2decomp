@@ -1406,7 +1406,7 @@ Jump_03B_4834::
     ret
 
 ; sets the damage word to the target's max HP for action $03, a random 30-40 for actions $01 and $38, else a random 60-70; adds it to the target's HP capped at max HP (the damage word becomes the amount actually added when capped) (E-0236)
-; 2 call sites from 2 routines (e.g. UnreferencedRaiseWord3FAndRestoreHP, RestoreTargetHPIfHurt)
+; 2 call sites from 2 routines (e.g. RaiseWord3FAndRestoreHP, RestoreTargetHPIfHurt)
 ; reads: wBattleActionId, wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleHP, wBattleMaxHP
@@ -1474,7 +1474,7 @@ Jump_03B_4896::
 ; reads: wBattleActionId, wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleMP, wBattleMaxMP
-RestoreTargetMPIfLow_Sub01:: ; heuristic: follows a terminator; C0
+RestoreTargetMPIfLow_Sub01::
 Func_03B_489B:: ; address name
     ld a, [wBattleActionId]
     cp a, $05
@@ -1546,7 +1546,7 @@ Func_03B_48E9:: ; address name
 ; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction)
 ; reads: wBattleTarget, wBattleActionId
 ; points at: wBattleWordArray3F
-SubtractActionAmountFromTargetBattleWordArray3F:: ; heuristic: follows a terminator; C0
+SubtractActionAmountFromTargetBattleWordArray3F::
 Func_03B_48FA:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleWordArray3F
@@ -1602,7 +1602,7 @@ Data_03B_4949:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $00, $1E, $00, $64, $00, $E7, $03, $05, $00
 
 ; wD89F += HL, capped at $0708 (1800) (E-0122)
-; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case05, AddActionAmountToBattleMeter)
+; 2 call sites from 2 routines (e.g. AddActionAmountToBattleMeter, Func_03B_42F4_Case05)
 ; reads: wBattleMeter
 ; writes: wBattleMeter
 AddHLToBattleMeterCappedAt1800::
@@ -1654,7 +1654,7 @@ Jump_03B_4987::
     ret
 
 ; actions $24 onward: damage = random in the range from Data_03B_4A24[action - $24], then scaled by the target's resistance level for that element (85 percent at level 1, less above) (E-0129)
-; 1 call site from 1 routine (e.g. UnreferencedRollDamageWithMessage35)
+; 1 call site from 1 routine (e.g. RollTableDamageWithMessage35)
 ; reads: wBattleActionId, wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleDamageLo, wBattleDamageHi
 RollTableDamageScaledByResistance::
@@ -1772,7 +1772,7 @@ Func_03B_4A34:: ; address name
     ret
 
 ; wBattleDamageLo/wD873 = RandomInRange(HL, BC) (E-0116)
-; 4 call sites from 3 routines (e.g. RollTableDamageScaledByResistance, RestoreTargetHPByActionAmount, RestoreTargetMPIfLow_Sub01)
+; 4 call sites from 3 routines (e.g. RestoreTargetHPByActionAmount, RestoreTargetMPIfLow_Sub01, RollTableDamageScaledByResistance)
 ; writes: wBattleDamageLo, wBattleDamageHi
 SetDamageRandomInRange::
 Func_03B_4A40:: ; address name
@@ -1787,7 +1787,7 @@ Func_03B_4A40:: ; address name
 ; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_Sub01)
 ; reads: wBattleTarget
 ; points at: wBattleStatus8
-HLToBattleStatus8EntryOfBattleTarget_Bank3B:: ; heuristic: follows a terminator; C0
+HLToBattleStatus8EntryOfBattleTarget_Bank3B::
 Func_03B_4A4C:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
@@ -1814,7 +1814,7 @@ Func_03B_4A5B:: ; address name
 ; A = byte 2 of the target's 7-byte wDA72 record (wDA74 + 7 * target) (E-0124)
 ; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_Sub01)
 ; reads: wBattleTarget
-TargetWDA74Byte:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 36:61B0; C0
+TargetWDA74Byte::
 Func_03B_4A60:: ; address name
     ld de, wSlotResistances + $2
     jr Jump_03B_4A77
@@ -1845,7 +1845,7 @@ Jump_03B_4A84::
 
 ; bit 6 of [HL]: Func_03B_4ABF; else bit 7: RollChanceByLevel_100_100_75_0_Bank3B; else RollChanceForLevelA_Bank3B (E-0122)
 ; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_Sub01)
-RollChanceByHLBits6And7_Bank3B:: ; heuristic: follows a terminator; C0
+RollChanceByHLBits6And7_Bank3B::
 Func_03B_4A86:: ; address name
     bit 6, [hl]
     jr z, Jump_03B_4A8F
@@ -1979,36 +1979,88 @@ Func_03B_4B02:: ; address name
     add hl, bc
     call JumpToWordAtHL
     ret
-    db $91, $4B
-    dw RestoreTargetHPIfHurt
-    dw RestoreTargetHPIfHurt
-    dw RestoreTargetHPIfHurt
-    dw RestoreTargetMPIfLow
-    dw RestoreTargetMPIfLow
-    dw CureTargetStatus0Bits01
-    dw CureTargetStatus0Bit6
-    dw CureTargetStatus0Bit5
-    dw CureTargetStatus0Bits237
-    dw CureTargetStatus0Bit4
-    dw RestoreTargetHPIfHurt
-    dw ApplyTargetMaxHPIfPresent
-    db $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C, $94, $4C
-    db $94, $4C, $94, $4C, $94, $4C, $94, $4C
-    dw ApplyTargetBattleWordArray3FReduction
-    dw ApplyTargetBattleWordArray3FReduction
-    dw ApplyTargetBattleWordArray3FReduction
-    dw ApplyTargetBattleWordArray3FReduction
-    dw InflictStatus0Bit0WithBattleWordArray3FReduction
-    dw SetBattleEndFlagAndMessage98
-    dw JumpToEffectFailurePath4F15
-    INCBIN "dwm2-cobi-us.gbc", $0ECB51, $41
+
+; E-0239 (C1: Func_03B_4B02 jumps (JumpToWordAtHL) to the word at $4B11 + 2 * wBattleActionId; 64 words up to the first target at $4B91, a lone ret).
+; record: effect routine for this wBattleActionId
+ActionIdEffectTable_3B::
+Data_03B_4B11:: ; address name
+    dw ActionIdEffectNone_3B_4B91 ; id 0
+    dw RestoreTargetHPIfHurt ; id 1
+    dw RestoreTargetHPIfHurt ; id 2
+    dw RestoreTargetHPIfHurt ; id 3
+    dw RestoreTargetMPIfLow ; id 4
+    dw RestoreTargetMPIfLow ; id 5
+    dw CureTargetStatus0Bits01 ; id 6
+    dw CureTargetStatus0Bit6 ; id 7
+    dw CureTargetStatus0Bit5 ; id 8
+    dw CureTargetStatus0Bits237 ; id 9
+    dw CureTargetStatus0Bit4 ; id 10
+    dw RestoreTargetHPIfHurt ; id 11
+    dw ApplyTargetMaxHPIfPresent ; id 12
+    dw ActionIdEffectNone_3B_4C94 ; id 13
+    dw ActionIdEffectNone_3B_4C94 ; id 14
+    dw ActionIdEffectNone_3B_4C94 ; id 15
+    dw ActionIdEffectNone_3B_4C94 ; id 16
+    dw ActionIdEffectNone_3B_4C94 ; id 17
+    dw ActionIdEffectNone_3B_4C94 ; id 18
+    dw ActionIdEffectNone_3B_4C94 ; id 19
+    dw ActionIdEffectNone_3B_4C94 ; id 20
+    dw ActionIdEffectNone_3B_4C94 ; id 21
+    dw ActionIdEffectNone_3B_4C94 ; id 22
+    dw ActionIdEffectNone_3B_4C94 ; id 23
+    dw ActionIdEffectNone_3B_4C94 ; id 24
+    dw ApplyTargetBattleWordArray3FReduction ; id 25
+    dw ApplyTargetBattleWordArray3FReduction ; id 26
+    dw ApplyTargetBattleWordArray3FReduction ; id 27
+    dw ApplyTargetBattleWordArray3FReduction ; id 28
+    dw InflictStatus0Bit0WithBattleWordArray3FReduction ; id 29
+    dw SetBattleEndFlagAndMessage98 ; id 30
+    dw JumpToEffectFailurePath4F15 ; id 31
+    dw ActionIdEffectNone_3B_4C94 ; id 32
+    dw ActionIdEffectNone_3B_4C94 ; id 33
+    dw InflictTargetStatus0Bit0 ; id 34
+    dw InflictTargetStatus0Bit2 ; id 35
+    dw RollTableDamageWithMessage35 ; id 36
+    dw RollTableDamageWithMessage35 ; id 37
+    dw RollTableDamageWithMessage35 ; id 38
+    dw RollTableDamageWithMessage35 ; id 39
+    dw ActionIdEffectNone_3B_4C94 ; id 40
+    dw ActionIdEffectNone_3B_4C94 ; id 41
+    dw ActionIdEffectNone_3B_4C94 ; id 42
+    dw ActionIdEffectNone_3B_4C94 ; id 43
+    dw ActionIdEffectNone_3B_4C94 ; id 44
+    dw ActionIdEffectNone_3B_4C94 ; id 45
+    dw ActionIdEffectNone_3B_4C94 ; id 46
+    dw ActionIdEffectNone_3B_4C94 ; id 47
+    dw ActionIdEffectNone_3B_4C94 ; id 48
+    dw ActionIdEffectNone_3B_4C94 ; id 49
+    dw ActionIdEffectNone_3B_4C94 ; id 50
+    dw ActionIdEffectNone_3B_4C94 ; id 51
+    dw ActionIdEffectNone_3B_4C94 ; id 52
+    dw ActionIdEffectNone_3B_4C94 ; id 53
+    dw ActionIdEffectNone_3B_4C94 ; id 54
+    dw RaiseWord3FAndRestoreHP ; id 55
+    dw RaiseWord3FAndRestoreHP ; id 56
+    dw ActionIdEffectNone_3B_4C94 ; id 57
+    dw ActionIdEffectNone_3B_4C94 ; id 58
+    dw ActionIdEffectNone_3B_4C94 ; id 59
+    dw ActionIdEffectNone_3B_4C94 ; id 60
+    dw ActionIdEffectNone_3B_4C94 ; id 61
+    dw ActionIdEffectNone_3B_4C94 ; id 62
+    dw ActionIdEffectNone_3B_4C94 ; id 63
+
+; a lone ret: entry 0 of ActionIdEffectTable_3B (E-0239)
+; no direct call (reached through a table, a jump or a vector)
+ActionIdEffectNone_3B_4B91:: ; code pointer of the table ActionIdEffectTable_3B; C0
+Func_03B_4B91:: ; address name
+    ret
 
 ; if the target's HP is below its max, runs Func_03B_483A and shows message $37; otherwise the no-effect path (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wBattleHP, wBattleMaxHP
-RestoreTargetHPIfHurt:: ; heuristic: target of a pointer table; C0
+RestoreTargetHPIfHurt:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4B92:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleHP
@@ -2035,7 +2087,7 @@ Jump_03B_4BBA::
 ; reads: wBattleTarget
 ; writes: wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wBattleMP, wBattleMaxMP
-RestoreTargetMPIfLow:: ; heuristic: target of a pointer table; C0
+RestoreTargetMPIfLow:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4BBD:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -2060,7 +2112,7 @@ Jump_03B_4BE5::
 ; clears status byte 0 bits 0-1 of the target when set (message $4E); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-CureTargetStatus0Bits01:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bits01:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4BE8:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $03
@@ -2080,7 +2132,7 @@ Jump_03B_4BFB::
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wSlotMarks
-CureTargetStatus0Bit6:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bit6:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4BFE:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $40
@@ -2102,7 +2154,7 @@ Jump_03B_4C1E::
 ; clears status byte 0 bit 5 of the target when set (message $51); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
-CureTargetStatus0Bit5:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bit5:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4C21:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $20
@@ -2122,7 +2174,7 @@ Jump_03B_4C34::
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wSlotMarks
-CureTargetStatus0Bits237:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bits237:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4C37:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $8C
@@ -2146,7 +2198,7 @@ Jump_03B_4C57::
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wSlotMarks
-CureTargetStatus0Bit4:: ; heuristic: target of a pointer table; C0
+CureTargetStatus0Bit4:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4C5A:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $10
@@ -2169,7 +2221,7 @@ Jump_03B_4C7A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleResolveStep, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
-ApplyTargetMaxHPIfPresent:: ; heuristic: target of a pointer table; C0
+ApplyTargetMaxHPIfPresent:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4C7D:: ; address name
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -2183,14 +2235,19 @@ Jump_03B_4C8E::
 
 Jump_03B_4C91::
     jp Jump_03B_4F15
-    db $C9
+
+; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239)
+; no direct call (reached through a table, a jump or a vector)
+ActionIdEffectNone_3B_4C94:: ; code pointer of the table ActionIdEffectTable_3B; C0
+Func_03B_4C94:: ; address name
+    ret
 
 ; for local targets adds the action amount to wD89F; for others checks status, block and resistance and subtracts the amount from the target's wD93F; then stores message $95 or $FD (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wBattleStatus
-ApplyTargetBattleWordArray3FReduction:: ; heuristic: target of a pointer table; C0
+ApplyTargetBattleWordArray3FReduction:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4C95:: ; address name
     call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_4C9F
@@ -2261,7 +2318,7 @@ Jump_03B_4D0E::
 ; reads: wDefeatFlagsBA, wBattleTarget
 ; writes: wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wBattleStatus
-InflictStatus0Bit0WithBattleWordArray3FReduction:: ; heuristic: target of a pointer table; C0
+InflictStatus0Bit0WithBattleWordArray3FReduction:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4D1C:: ; address name
     call TargetOnLocalSide_Bank3B
     jr c, Jump_03B_4D2C
@@ -2375,7 +2432,7 @@ Jump_03B_4DFC::
 ; wD894 = 1 and stores message $98 (ClearDamageAndStoreResolveMsgFlags_Bank3B) (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleEndFlag, wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg
-SetBattleEndFlagAndMessage98:: ; heuristic: target of a pointer table; C0
+SetBattleEndFlagAndMessage98:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4E0A:: ; address name
     ld a, $01
     ld [wBattleEndFlag], a
@@ -2387,7 +2444,7 @@ Func_03B_4E0A:: ; address name
 ; effect table entry that goes straight to the failure path Jump_03B_4F15 (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
-JumpToEffectFailurePath4F15:: ; heuristic: target of a pointer table; C0
+JumpToEffectFailurePath4F15:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4E18:: ; address name
     jp Jump_03B_4F15
 
@@ -2396,7 +2453,7 @@ Func_03B_4E18:: ; address name
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget, wBattleResolveStep
 ; points at: wBattleStatus1
-InflictTargetStatus0Bit0:: ; heuristic: follows a terminator; C0
+InflictTargetStatus0Bit0:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4E1B:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
@@ -2424,7 +2481,7 @@ Jump_03B_4E43::
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wBattleResolveStep
 ; points at: wBattleStatus1
-InflictTargetStatus0Bit2:: ; heuristic: follows a terminator; C0
+InflictTargetStatus0Bit2:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4E46:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
@@ -2439,20 +2496,20 @@ Func_03B_4E46:: ; address name
 Jump_03B_4E5D::
     jp Jump_03B_4F15
 
-; calls RollTableDamageScaledByResistance, then stores resolve message $35 (wResolveMsgActor/Target = $35/$B5, flags $A8, arg $80); no caller found (E-0236)
+; calls RollTableDamageScaledByResistance, then stores resolve message $35 (wResolveMsgActor/Target = $35/$B5, flags $A8, arg $80); entry of ActionIdEffectTable_3B (E-0239; E-0236 had found no caller)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
-UnreferencedRollDamageWithMessage35:: ; configured code entry (E-0236); C0
+RollTableDamageWithMessage35:: ; configured code entry (E-0236); C0
 Func_03B_4E60:: ; address name
     call RollTableDamageScaledByResistance
     jp Jump_03B_4EB0
 
-; adds 30 to the target's wBattleWordArray3F word capped at 999, then if its HP is below max runs RestoreTargetHPByActionAmount and shows message $37, otherwise takes the no-effect path; no caller found (E-0236)
+; adds 30 to the target's wBattleWordArray3F word capped at 999, then if its HP is below max runs RestoreTargetHPByActionAmount and shows message $37, otherwise takes the no-effect path; entry of ActionIdEffectTable_3B (E-0239; E-0236 had found no caller)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; writes: wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wBattleWordArray3F, wBattleHP, wBattleMaxHP
-UnreferencedRaiseWord3FAndRestoreHP:: ; heuristic: follows a terminator; C0
+RaiseWord3FAndRestoreHP:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4E66:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleWordArray3F
@@ -2570,7 +2627,7 @@ Jump_03B_4EFA::
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus
-ClearDamageAndReadTargetStatus0:: ; heuristic: follows a terminator; C0
+ClearDamageAndReadTargetStatus0::
 Func_03B_4F03:: ; address name
     xor a, a
     ld [wBattleDamageLo], a
@@ -2625,7 +2682,7 @@ Jump_03B_4F48::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; 13 call sites from 7 routines (e.g. Func_03B_42F4_Case08, UnreferencedRaiseWord3FAndRestoreHP, RestoreTargetHPByActionAmount, SubtractActionAmountFromTargetBattleWordArray3F, ...)
+; 13 call sites from 7 routines (e.g. RaiseWord3FAndRestoreHP, RestoreTargetHPByActionAmount, SubtractActionAmountFromTargetBattleWordArray3F, RestoreTargetMPIfLow, ...)
 AddDoubleAToHL_Bank3B::
 Func_03B_4F52:: ; address name
     add a, a
@@ -2654,7 +2711,7 @@ Jump_03B_4F6E::
     ret
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
-; 3 call sites from 3 routines (e.g. Func_03B_42F4_Case02, InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction)
+; 3 call sites from 3 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction, Func_03B_42F4_Case02)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank3B::
 Func_03B_4F74:: ; address name
@@ -2719,7 +2776,7 @@ Func_03B_4FB8:: ; address name
     ret
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case08, InflictStatus0Bit0WithBattleWordArray3FReduction)
+; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, Func_03B_42F4_Case08)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank3B::
 Func_03B_4FC5:: ; address name

@@ -792,7 +792,7 @@ ShowBoxFromTable4583::
 Func_085_4505:: ; address name
     farcall SaveScreenBufferToBGMap1
     ld hl, wScreenTileBuffer
-    ld de, $4583
+    ld de, TileRect_85_4583
     ld b, $09
 
 Jump_085_4513::
@@ -877,7 +877,20 @@ Jump_085_457D::
     ld h, d
     call DrawScreenBufferToBGMapWithAttrs
     ret
-    INCBIN "dwm2-cobi-us.gbc", $214583, $48
+
+; E-0239 (C1: no reference found; the bytes form an 8 x 9 window frame ($B0 $B1.. $B2 top, $B6/$B7 sides with $E1-$E3 in the left column of rows 1, 3 and 5, $B3 $B4.. $B5 bottom), after the ret of the routine that ends at $4582).
+; record: 8 x 9 tiles, one row per line
+TileRect_85_4583::
+Data_085_4583:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $E1, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $E2, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $E3, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; id 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
+    db $B6, $C3, $EE, $EF, $F0, $F1, $F2, $B7 ; id 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; for record wC6FE[A]: field $5B = word field $5D, field $5F = word field $61, field $55 = 0, field 0 = 1 (E-0121)
 ; 2 call sites from 2 routines (e.g. ScriptCommand4D_Run_Case0D, ScriptCommand2A_Run_Case0D)
