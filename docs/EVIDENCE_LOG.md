@@ -2431,6 +2431,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0273 — Scene steps named after the message they show
+
+- Kind: TOOL (C1 names from the E-0243 lookup).
+- In the E-0272 shape rule, when the target is a message routine (names matching MessageHL or MessageCommand09HL) and the step loads HL with a constant message word, the routine is named Parent_MsgWWWW_<first four words>. Examples: SceneDarckDefeated_Msg053B_KingIThankYou, SceneThreeItems_Msg0A7C_KamehaIIHave.
+- 34 cutscene steps are named this way. The quotes use the normal ShowMessageHL path, as in E-0248.
+- Binary verification: build/run354 PASS, 0 differing bytes; tests OK.
+
 ### E-0272 — Single-purpose structural routines named from their shape
 
 - Kind: TOOL (structural naming from the instructions; C2 for what each does).

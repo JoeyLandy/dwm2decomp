@@ -72,7 +72,7 @@ Func_085_4047:: ; address name
     dw SceneWatchOut_Case02
     dw SceneWatchOut_Case03
     dw SceneWatchOut_Case01
-    dw SceneWatchOut_ToStartMessageHL_B85AndStep
+    dw SceneWatchOut_Msg4D50_PickTheMonsterTo
     dw SceneWatchOut_Case01
     dw SceneWatchOut_Case07
     dw SceneWatchOut_Case08
@@ -319,7 +319,7 @@ Func_085_4207:: ; address name
     dw SceneWaterReward_Case02
     dw SceneWatchOut_Case03
     dw SceneWatchOut_Case01
-    dw SceneWatchOut_ToStartMessageHL_B85AndStep
+    dw SceneWatchOut_Msg4D50_PickTheMonsterTo
     dw SceneWatchOut_Case01
     dw SceneWaterReward_Case07
     dw SceneWatchOut_Case08
@@ -594,7 +594,7 @@ Jump_085_43AF:: ; address name
 ; entry 5 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneWatchOut_ToStartMessageHL_B85AndStep::
+SceneWatchOut_Msg4D50_PickTheMonsterTo::
 Jump_085_43CA:: ; address name
     ld hl, $4D50 ; 'Pick the monster to go to'
     call StartMessageHL_B85
@@ -1803,7 +1803,7 @@ Func_085_4B0F:: ; address name
     dw SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85
     dw SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85
     dw SceneWatchOut_Case01
-    dw SceneLimboMonster2_ToStartMessageHL_B85AndStep
+    dw SceneLimboMonster2_Msg0BA7_WarubouWaheyMyKid
     dw SceneWatchOut_Case01
     dw SceneLimboMonster2_Case0E
     dw SceneLimboMonster2_Case0F
@@ -1881,7 +1881,7 @@ Jump_085_4B94::
 ; entry 12 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneLimboMonster2_ToStartMessageHL_B85AndStep::
+SceneLimboMonster2_Msg0BA7_WarubouWaheyMyKid::
 Jump_085_4BB2:: ; address name
     ld hl, $0BA7 ; 'Warubou Wa-hey, my kid has a'
     call StartMessageHL_B85
@@ -3648,7 +3648,7 @@ Func_085_55F5:: ; address name
     rst $00
     dw SceneCanalGate_Case00
     dw SceneCanalGate_Case00
-    dw SceneCanalGate_ToStartMessageHL_B85AndStep
+    dw SceneCanalGate_Msg0172_KingArrghIKnow
     dw SceneWatchOut_Case01
     dw SceneCanalGate_Case04
     dw SceneCanalGate_Case05
@@ -3723,7 +3723,7 @@ Jump_085_5647:: ; address name
 ; entry 2 of the `rst $00` table in SceneCanalGate
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneCanalGate_ToStartMessageHL_B85AndStep::
+SceneCanalGate_Msg0172_KingArrghIKnow::
 Jump_085_5664:: ; address name
     ld hl, $0172 ; 'King Arrgh! I know that! I'
     call StartMessageHL_B85

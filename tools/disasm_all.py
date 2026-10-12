@@ -1391,6 +1391,13 @@ class Rom:
                             if tname and not tname.startswith(("Func_", "Jump_")) and not (
                                     pat.match(tname) and tname.startswith(parent)):
                                 new = f"{parent}_To{tname}" + ("AndStep" if step is not None else "")
+                            hlw = next((int(t[8:], 16) for t in loads if re.match(r"ld hl, \$[0-9A-F]{4}$", t)), None)
+                            if tname and hlw is not None and self.MESSAGE_HL_CALLEE.search(tname):
+                                text = self.message_preview(hlw)  # E-0273: a step that shows one message
+                                if text:
+                                    tag = "".join(w[:1].upper() + w[1:] for w in re.sub(
+                                        r"[^A-Za-z0-9 ]", "", text.replace("0", "Hero ")).split()[:4])
+                                    new = f"{parent}_Msg{hlw:04X}_{tag}"
                 if not new or len(new) > 80:
                     continue
                 if new in used:

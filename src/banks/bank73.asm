@@ -108,7 +108,7 @@ Talk08Event_Case0B::
 Jump_073_4098:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk08Event_Case0B_ToStartMessageHL_B73AndStep
+    dw Talk08Event_Case0B_Msg4037_HeroTriedToOpen
     dw Talk08Event_Case0C_Case01
     dw Talk08Event_Case0B_Case02
     dw Talk08Event_Case0C_Case01
@@ -127,7 +127,7 @@ Jump_073_4098:: ; address name
 ; entry 0 of the `rst $00` table in Talk08Event_Case0B
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk08Event_Case0B_ToStartMessageHL_B73AndStep::
+Talk08Event_Case0B_Msg4037_HeroTriedToOpen::
 Jump_073_40BA:: ; address name
     ld hl, $4037 ; '0 tried to open the chest.'
     call StartMessageHL_B73
@@ -993,7 +993,7 @@ Jump_073_45D0:: ; address name
     dw Talk08Event_Case08_Case02
     dw Talk08Event_Case08_Case03
     dw Talk08Event_Case08_ToScriptStepFlashScreenNegative
-    dw Talk08Event_Case08_ToStartMessageHL_B73AndStep
+    dw Talk08Event_Case08_Msg0052_OhMyTheWell
     dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
 
@@ -1056,7 +1056,7 @@ Jump_073_4635:: ; address name
 ; entry 5 of the `rst $00` table in Talk08Event_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk08Event_Case08_ToStartMessageHL_B73AndStep::
+Talk08Event_Case08_Msg0052_OhMyTheWell::
 Jump_073_463C:: ; address name
     ld hl, $0052 ; 'Oh my, the well isn't safe!'
     call StartMessageHL_B73
@@ -2309,7 +2309,7 @@ Talk08Event_Case00::
 Jump_073_4E03:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk08Event_Case00_ToStartMessageHL_B73AndStep
+    dw Talk08Event_Case00_Msg0000_InTheMiddleOf
     dw Talk08Event_Case08_Case03
     dw Talk08Event_Case0B_ToScriptStepFlashScreenNegative
     dw Talk08Event_Case0B_Case08
@@ -2320,7 +2320,7 @@ Jump_073_4E03:: ; address name
 ; entry 0 of the `rst $00` table in Talk08Event_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk08Event_Case00_ToStartMessageHL_B73AndStep::
+Talk08Event_Case00_Msg0000_InTheMiddleOf::
 Jump_073_4E15:: ; address name
     ld hl, $0000 ; 'In the middle of the sea'
     call StartMessageHL_B73
@@ -2464,7 +2464,7 @@ Jump_073_4EC4::
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 80 call sites from 44 routines (e.g. Talk08Event_Case00_ToStartMessageHL_B73AndStep, Talk08Event_Case01_Case02, Talk08Event_Case01_Case00, Talk08Event_Case02_Case05, ...)
+; 80 call sites from 44 routines (e.g. Talk08Event_Case00_Msg0000_InTheMiddleOf, Talk08Event_Case01_Case02, Talk08Event_Case01_Case00, Talk08Event_Case02_Case05, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B73::
 Func_073_4ED8:: ; address name
@@ -3395,19 +3395,19 @@ Func_073_5449:: ; address name
     rst $00
     dw SceneWizstone_Case00
     dw SceneWizstone_Case01
-    dw SceneWizstone_ToStartMessageHL_B73bAndStep
+    dw SceneWizstone_Msg0780_ProfessorKiralUsedThe
     dw SceneChestBattle_Case01
     dw SceneWizstone_AdvanceScriptStep
-    dw SceneWizstone_ToStartMessageHL_B73bAndStep_Case05
+    dw SceneWizstone_Msg0781_KiralYesYesSuccess
     dw SceneChestBattle_Case01
     dw SceneWizstone_Case07
-    dw SceneWizstone_ToStartMessageHL_B73bAndStep_Case08
+    dw SceneWizstone_Msg0782_HeroReceivedTheSmartBook
     dw SceneWizstone_Case09
 
 ; entry 8 of the `rst $00` table in SceneWizstone
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneWizstone_ToStartMessageHL_B73bAndStep_Case08::
+SceneWizstone_Msg0782_HeroReceivedTheSmartBook::
 Jump_073_5461:: ; address name
     ld hl, $0782 ; '0 received the SmartBook.'
     call StartMessageHL_B73b
@@ -3457,7 +3457,7 @@ Jump_073_5488::
 ; entry 5 of the `rst $00` table in SceneWizstone
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneWizstone_ToStartMessageHL_B73bAndStep_Case05::
+SceneWizstone_Msg0781_KiralYesYesSuccess::
 Jump_073_54AF:: ; address name
     ld hl, $0781 ; 'Kiral Yes! Yes! Success! I owe'
     call StartMessageHL_B73b
@@ -3477,7 +3477,7 @@ Jump_073_54BA:: ; address name
 ; entry 2 of the `rst $00` table in SceneWizstone
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneWizstone_ToStartMessageHL_B73bAndStep::
+SceneWizstone_Msg0780_ProfessorKiralUsedThe::
 Jump_073_54BF:: ; address name
     ld hl, $0780 ; 'Professor Kiral used the WizStone on'
     call StartMessageHL_B73b
@@ -4384,7 +4384,7 @@ Func_073_5A16:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneThreeItemsBattle_Case00
-    dw SceneThreeItemsBattle_ToStartMessageHL_B73bAndStep
+    dw SceneThreeItemsBattle_Msg0480_GwaahYouEBeaten
     dw SceneChestBattle_Case01
     dw SceneThreeItemsBattle_Case03
 
@@ -4411,7 +4411,7 @@ Jump_073_5A22:: ; address name
 ; entry 1 of the `rst $00` table in SceneThreeItemsBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItemsBattle_ToStartMessageHL_B73bAndStep::
+SceneThreeItemsBattle_Msg0480_GwaahYouEBeaten::
 Jump_073_5A3D:: ; address name
     ld hl, $0480 ; 'Gwaah! You e beaten me fairly!'
     call StartMessageHL_B73b
@@ -5025,13 +5025,13 @@ Func_073_5DDD:: ; address name
     dw SceneMadcondorCry_Case01
     dw SceneMadcondorCry_Case02
     dw SceneMadcondorCry_Case03
-    dw SceneMadcondorCry_ToStartMessageHL_B73bAndStep
+    dw SceneMadcondorCry_Msg0433_Kweeeeeh
     dw SceneWizstone_Case09
 
 ; entry 4 of the `rst $00` table in SceneMadcondorCry
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneMadcondorCry_ToStartMessageHL_B73bAndStep::
+SceneMadcondorCry_Msg0433_Kweeeeeh::
 Jump_073_5DED:: ; address name
     ld hl, $0433 ; 'Kweeeeeh!'
     call StartMessageHL_B73b
@@ -7868,7 +7868,7 @@ UnreferencedScriptStepDispatch_73_6D52:: ; configured code entry (E-0214); C0
 Func_073_6D52:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw UnreferencedScriptStepDispatch_73_6D52_ToStartMessageHL_B73bAndStep
+    dw UnreferencedScriptStepDispatch_73_6D52_Msg4D0F_HmYouAreQuite
     dw SceneChestBattle_Case01
     dw UnreferencedScriptStepDispatch_73_6D52_Case02
     dw SceneWizstone_Case09
@@ -7963,7 +7963,7 @@ Jump_073_6E05::
 ; entry 0 of the `rst $00` table in UnreferencedScriptStepDispatch_73_6D52
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-UnreferencedScriptStepDispatch_73_6D52_ToStartMessageHL_B73bAndStep::
+UnreferencedScriptStepDispatch_73_6D52_Msg4D0F_HmYouAreQuite::
 Jump_073_6E0C:: ; address name
     ld hl, $4D0F ; 'Hm, you are quite strong I'
     call StartMessageHL_B73b
@@ -10043,7 +10043,7 @@ Func_073_7A7F:: ; address name
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 29 call sites from 24 routines (e.g. UnreferencedScriptStepDispatch_73_6D52_Case02, UnreferencedScriptStepDispatch_73_6D52_ToStartMessageHL_B73bAndStep, SceneChestBattle_Shared01, SceneWizstone_ToStartMessageHL_B73bAndStep_Case08, ...)
+; 29 call sites from 24 routines (e.g. UnreferencedScriptStepDispatch_73_6D52_Case02, UnreferencedScriptStepDispatch_73_6D52_Msg4D0F_HmYouAreQuite, SceneChestBattle_Shared01, SceneWizstone_Msg0782_HeroReceivedTheSmartBook, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B73b::
 Func_073_7AA5:: ; address name

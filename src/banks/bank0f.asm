@@ -196,7 +196,7 @@ Func_00F_40E9:: ; address name
     dw SceneHomecoming_Case1B
     dw SceneHomecoming_Case1C
     dw SceneHomecoming_Case1D
-    dw SceneHomecoming_ToStartMessageHL_B0FAndStep
+    dw SceneHomecoming_Msg0DB8_WarubouWaheyIHave
     dw SceneHomecoming_Case03
     dw SceneHomecoming_Case20
     dw SceneHomecoming_Case21
@@ -473,7 +473,7 @@ Jump_00F_42B5:: ; address name
 ; entry 30 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneHomecoming_ToStartMessageHL_B0FAndStep::
+SceneHomecoming_Msg0DB8_WarubouWaheyIHave::
 Jump_00F_42CA:: ; address name
     ld hl, $0DB8 ; 'Warubou Wa-hey I have seen this'
     call StartMessageHL_B0F
@@ -924,9 +924,9 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case06
-    dw SceneDarckDefeated_ToStartMessageHL_B0FAndStep
+    dw SceneDarckDefeated_Msg055A_AVoiceEchoedFrom
     dw SceneHomecoming_Case03
-    dw SceneDarckDefeated_ToStartMessageHL_B0FAndStep_Case09
+    dw SceneDarckDefeated_Msg055B_WaheyCanYouHear
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case0B
     dw SceneDarckDefeated_ToRunSceneScriptSubStep
@@ -1061,7 +1061,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case8F
-    dw SceneDarckDefeated_ToStartMessageHL_B0FAndStep_Case90
+    dw SceneDarckDefeated_Msg053B_KingIThankYou
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case92
     dw SceneDarckDefeated_Case93
@@ -1113,7 +1113,7 @@ Jump_00F_46E8::
 ; entry 144 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneDarckDefeated_ToStartMessageHL_B0FAndStep_Case90::
+SceneDarckDefeated_Msg053B_KingIThankYou::
 Jump_00F_46FE:: ; address name
     ld hl, $053B ; 'King I thank you all for'
     call StartMessageHL_B0F
@@ -2800,7 +2800,7 @@ Jump_00F_50D9:: ; address name
 ; entry 9 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneDarckDefeated_ToStartMessageHL_B0FAndStep_Case09::
+SceneDarckDefeated_Msg055B_WaheyCanYouHear::
 Jump_00F_5108:: ; address name
     ld hl, $055B ; 'Wa-hey! can you hear me, 0?'
     call StartMessageHL_B0F
@@ -2811,7 +2811,7 @@ Jump_00F_5108:: ; address name
 ; entry 7 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneDarckDefeated_ToStartMessageHL_B0FAndStep::
+SceneDarckDefeated_Msg055A_AVoiceEchoedFrom::
 Jump_00F_5113:: ; address name
     ld hl, $055A ; 'A voice echoed from nowhere'
     call StartMessageHL_B0F
@@ -3117,23 +3117,23 @@ Func_00F_5404:: ; address name
     rst $00
     dw SceneThreeItems_ToRedrawColumnsBesideScreenAndStep
     dw SceneThreeItems_ToScriptStepShakeScreen
-    dw SceneThreeItems_ToStartMessageHL_B0FAndStep
+    dw SceneThreeItems_Msg0483_KamehaWhawhaWhaaaatWhat
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case04
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_ToStartMessageHL_B0FAndStep_Case06
+    dw SceneThreeItems_Msg0485_GreetingsIAmDarck
     dw SceneHomecoming_Case03
     dw SceneThreeItems_ToScriptStepDeltaThenMessage
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_ToStartMessageHL_B0FAndStep_Case0A
+    dw SceneThreeItems_Msg4487_DarckWellForMe
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case0C
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case0E
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_ToStartMessageHL_B0FAndStep_Case10
+    dw SceneThreeItems_Msg048D_HeroReceivedTheLimbo
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_ToStartMessageHL_B0FAndStep_Case12
+    dw SceneThreeItems_Msg048E_DarckIWillBe
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case14
     dw SceneThreeItems_Case15
@@ -3141,9 +3141,9 @@ Func_00F_5404:: ; address name
     dw SceneThreeItems_Case17
     dw SceneThreeItems_ToScriptStepDeltaThenMessage_Case18
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_ToStartMessageHL_B0FAndStep_Case1A
+    dw SceneThreeItems_Msg0490_AVoiceEchoedFrom
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_ToStartMessageHL_B0FAndStep_Case1C
+    dw SceneThreeItems_Msg0491_WaheyCanYouHear
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case1E
     dw SceneHomecoming_Case03
@@ -3153,7 +3153,7 @@ Func_00F_5404:: ; address name
     dw SceneHomecoming_Case03
     dw SceneThreeItems_ToRedrawColumnsBesideScreenAndStep
     dw SceneThreeItems_ToScriptStepShakeScreen
-    dw SceneThreeItems_ToStartMessageHL_B0FAndStep_Case26
+    dw SceneThreeItems_Msg0A7C_KamehaIIHave
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case28
     dw SceneHomecoming_Case03
@@ -3227,7 +3227,7 @@ Jump_00F_549F:: ; address name
 ; entry 38 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItems_ToStartMessageHL_B0FAndStep_Case26::
+SceneThreeItems_Msg0A7C_KamehaIIHave::
 Jump_00F_54D5:: ; address name
     ld hl, $0A7C ; 'Kameha I I have to go'
     call StartMessageHL_B0F
@@ -3281,7 +3281,7 @@ Jump_00F_550B:: ; address name
 ; entry 28 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItems_ToStartMessageHL_B0FAndStep_Case1C::
+SceneThreeItems_Msg0491_WaheyCanYouHear::
 Jump_00F_5538:: ; address name
     ld hl, $0491 ; 'Wa-hey! Can you hear me, 0?'
     call StartMessageHL_B0F
@@ -3292,7 +3292,7 @@ Jump_00F_5538:: ; address name
 ; entry 26 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItems_ToStartMessageHL_B0FAndStep_Case1A::
+SceneThreeItems_Msg0490_AVoiceEchoedFrom::
 Jump_00F_5543:: ; address name
     ld hl, $0490 ; 'A voice echoed from nowhere'
     call StartMessageHL_B0F
@@ -3407,7 +3407,7 @@ Jump_00F_55CA::
 ; entry 18 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItems_ToStartMessageHL_B0FAndStep_Case12::
+SceneThreeItems_Msg048E_DarckIWillBe::
 Jump_00F_55CF:: ; address name
     ld hl, $048E ; 'Darck I will be readying a'
     call StartMessageHL_B0F
@@ -3418,7 +3418,7 @@ Jump_00F_55CF:: ; address name
 ; entry 16 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItems_ToStartMessageHL_B0FAndStep_Case10::
+SceneThreeItems_Msg048D_HeroReceivedTheLimbo::
 Jump_00F_55DA:: ; address name
     ld hl, $048D ; '0 received the Limbo Key.'
     call StartMessageHL_B0F
@@ -3493,7 +3493,7 @@ Jump_00F_5623::
 ; entry 10 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItems_ToStartMessageHL_B0FAndStep_Case0A::
+SceneThreeItems_Msg4487_DarckWellForMe::
 Jump_00F_5642:: ; address name
     ld hl, $4487 ; 'Darck Well, for me, anything that'
     call StartMessageHL_B0F
@@ -3513,7 +3513,7 @@ Jump_00F_564D:: ; address name
 ; entry 6 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItems_ToStartMessageHL_B0FAndStep_Case06::
+SceneThreeItems_Msg0485_GreetingsIAmDarck::
 Jump_00F_5657:: ; address name
     ld hl, $0485 ; 'Greetings! I am Darck, the King'
     call StartMessageHL_B0F
@@ -3580,7 +3580,7 @@ Jump_00F_569B::
 ; entry 2 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneThreeItems_ToStartMessageHL_B0FAndStep::
+SceneThreeItems_Msg0483_KamehaWhawhaWhaaaatWhat::
 Jump_00F_56B1:: ; address name
     ld hl, $0483 ; 'Kameha Wha-wha whaaaat? What just happened'
     call StartMessageHL_B0F
@@ -4342,7 +4342,7 @@ Func_00F_5AF3:: ; address name
     dw SceneHomecoming_Case03
     dw SceneShieldGuardian_Case04
     dw SceneShieldGuardian_Case05
-    dw SceneShieldGuardian_ToStartMessageHL_B0FAndStep
+    dw SceneShieldGuardian_Msg0AF0_WhatLoseToA
     dw SceneHomecoming_Case03
     dw SceneShieldGuardian_Case08
     dw SceneHomecoming_Case03
@@ -4431,7 +4431,7 @@ Jump_00F_5B5F:: ; address name
 ; entry 6 of the `rst $00` table in SceneShieldGuardian
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneShieldGuardian_ToStartMessageHL_B0FAndStep::
+SceneShieldGuardian_Msg0AF0_WhatLoseToA::
 Jump_00F_5B86:: ; address name
     ld hl, $0AF0 ; 'What? Lose to a child's monsters?'
     call StartMessageHL_B0F
@@ -4758,7 +4758,7 @@ Func_00F_5D9D:: ; address name
     dw ScenePrincessMedicine_Case04
     dw SceneHomecoming_Case03
     dw ScenePrincessMedicine_Case06
-    dw ScenePrincessMedicine_ToStartMessageHL_B0FAndStep
+    dw ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS
     dw SceneHomecoming_Case03
     dw ScenePrincessMedicine_Case09
     dw SceneHomecoming_Case03
@@ -4804,7 +4804,7 @@ Jump_00F_5DCC:: ; address name
 ; entry 7 of the `rst $00` table in ScenePrincessMedicine
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScenePrincessMedicine_ToStartMessageHL_B0FAndStep::
+ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS::
 Jump_00F_5DED:: ; address name
     ld hl, $0AD4 ; 'H-HOW BUT I THIS ISN T'
     call StartMessageHL_B0F
@@ -5319,7 +5319,7 @@ Func_00F_60E6:: ; address name
     dw SceneExplosion_Case01
     dw SceneExplosion_Case02
     dw SceneExplosion_Case03
-    dw SceneExplosion_ToStartMessageHL_B0FAndStep
+    dw SceneExplosion_Msg0348_DarnTakeThisSACRIFICE
     dw SceneHomecoming_Case03
     dw SceneExplosion_Case06
     dw SceneExplosion_Case07
@@ -5426,7 +5426,7 @@ Jump_00F_6189::
 ; entry 4 of the `rst $00` table in SceneExplosion
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneExplosion_ToStartMessageHL_B0FAndStep::
+SceneExplosion_Msg0348_DarnTakeThisSACRIFICE::
 Jump_00F_619D:: ; address name
     ld hl, $0348 ; 'Darn! Take this! SACRIFICE!'
     call StartMessageHL_B0F
@@ -5970,7 +5970,7 @@ Func_00F_64F3:: ; address name
     dw SceneReportToKing_Case00
     dw SceneReportToKing_Case01
     dw SceneReportToKing_Case02
-    dw SceneReportToKing_ToStartMessageHL_B0FAndStep
+    dw SceneReportToKing_Msg035A_WhatIsItYou
     dw SceneHomecoming_Case03
     dw SceneReportToKing_Case05
     dw SceneReportToKing_Case06
@@ -6221,7 +6221,7 @@ Jump_00F_666A:: ; address name
 ; entry 3 of the `rst $00` table in SceneReportToKing
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneReportToKing_ToStartMessageHL_B0FAndStep::
+SceneReportToKing_Msg035A_WhatIsItYou::
 Jump_00F_6676:: ; address name
     ld hl, $035A ; 'What is it, you whelp!? You'
     call StartMessageHL_B0F
@@ -6460,7 +6460,7 @@ Func_00F_67BA:: ; address name
     dw SceneMermaidKingdom_Case27
     dw SceneMermaidKingdom_Case28
     dw SceneHomecoming_Case03
-    dw SceneMermaidKingdom_ToStartMessageHL_B0FAndStep
+    dw SceneMermaidKingdom_Msg0873_WaheyHeroHearMe
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case2C
     dw SceneMermaidKingdom_ToRunSceneScriptSubStep
@@ -6588,7 +6588,7 @@ Jump_00F_689B:: ; address name
 ; entry 42 of the `rst $00` table in SceneMermaidKingdom
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneMermaidKingdom_ToStartMessageHL_B0FAndStep::
+SceneMermaidKingdom_Msg0873_WaheyHeroHearMe::
 Jump_00F_68E0:: ; address name
     ld hl, $0873 ; 'Wa-hey! 0, hear me? I felt'
     call StartMessageHL_B0F
@@ -8252,10 +8252,10 @@ Func_00F_72D9:: ; address name
     dw SceneRivalDefeated_Case07
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case09
-    dw SceneRivalDefeated_ToStartMessageHL_B0FAndStep
+    dw SceneRivalDefeated_Msg019B_AiyeehHelpMeBoss
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case09
-    dw SceneRivalDefeated_ToStartMessageHL_B0FAndStep_Case0D
+    dw SceneRivalDefeated_Msg019C_UrgahMercyISurrender
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case0F
     dw SceneRivalDefeated_Case10
@@ -8266,11 +8266,11 @@ Func_00F_72D9:: ; address name
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case16
     dw SceneHomecoming_Case03
-    dw SceneRivalDefeated_ToStartMessageHL_B0FAndStep_Case18
+    dw SceneRivalDefeated_Msg01A0_KingIEBeen
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case1A
     dw SceneHomecoming_Case03
-    dw SceneRivalDefeated_ToStartMessageHL_B0FAndStep_Case1C
+    dw SceneRivalDefeated_Msg01A2_WaheyCanYouHear
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case1E
     dw SceneRivalDefeated_ToRunSceneScriptSubStep
@@ -8387,7 +8387,7 @@ Jump_00F_739E:: ; address name
 ; entry 28 of the `rst $00` table in SceneRivalDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneRivalDefeated_ToStartMessageHL_B0FAndStep_Case1C::
+SceneRivalDefeated_Msg01A2_WaheyCanYouHear::
 Jump_00F_73CD:: ; address name
     ld hl, $01A2 ; 'Wa-hey! Can you hear me? I'
     call StartMessageHL_B0F
@@ -8423,7 +8423,7 @@ Jump_00F_73D8:: ; address name
 ; entry 24 of the `rst $00` table in SceneRivalDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneRivalDefeated_ToStartMessageHL_B0FAndStep_Case18::
+SceneRivalDefeated_Msg01A0_KingIEBeen::
 Jump_00F_7401:: ; address name
     ld hl, $01A0 ; 'King I e been a burden'
     call StartMessageHL_B0F
@@ -8598,7 +8598,7 @@ Jump_00F_74F7:: ; address name
 ; entry 13 of the `rst $00` table in SceneRivalDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneRivalDefeated_ToStartMessageHL_B0FAndStep_Case0D::
+SceneRivalDefeated_Msg019C_UrgahMercyISurrender::
 Jump_00F_7530:: ; address name
     ld hl, $019C ; 'Urgah! Mercy! I surrender!'
     call StartMessageHL_B0F
@@ -8609,7 +8609,7 @@ Jump_00F_7530:: ; address name
 ; entry 10 of the `rst $00` table in SceneRivalDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneRivalDefeated_ToStartMessageHL_B0FAndStep::
+SceneRivalDefeated_Msg019B_AiyeehHelpMeBoss::
 Jump_00F_753B:: ; address name
     ld hl, $019B ; 'Aiyeeh! Help me, boss!'
     call StartMessageHL_B0F
