@@ -105,7 +105,7 @@ Data_07E_485F:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F885F, $77
 
 ; compressed sprite graphics number $5F of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero)
-; address loaded by Func_0E0_5AD3_Case02_Case00
+; address loaded by DebugStaffRoll_Update_Sub01_Case02_Case00
 ; LZSS-compressed asset: 231 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 FieldSpriteGfx5F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07E_48D6:: ; address name
@@ -269,7 +269,7 @@ Data_07E_4EF1:: ; heuristic: stream in a run of back-to-back compressed streams;
     db $03, $07, $01, $FF, $F3, $D8, $30, $D8, $30, $B8, $60, $F0, $C0, $E0, $01, $A0
     db $F3
 
-; address loaded by Func_0E0_5AD3_Case00_Case00
+; address loaded by DebugStaffRoll_Update_Sub01_Case00_Case00
 ; LZSS-compressed asset: 65 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07E_4F22:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F8F22, $41
@@ -326,7 +326,7 @@ Data_07E_5285:: ; heuristic: stream in a run of back-to-back compressed streams;
     db $06, $00, $3F, $20, $1F, $13, $1C, $14, $18, $18, $01, $FE, $F0, $01, $16, $00
     db $F8, $08, $F0, $F0, $01, $A0, $F4
 
-; address loaded by Func_0E0_5AD3_Case03_Case00
+; address loaded by DebugStaffRoll_Update_Sub01_Case03_Case00
 ; LZSS-compressed asset: 61 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07E_52BC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $40, $00, $01, $00, $00, $1F, $1F, $3F, $20, $7D, $43, $7F, $43, $7D, $43, $7F
@@ -381,12 +381,12 @@ Data_07E_5756:: ; heuristic: stream decompressed while the game ran on the emula
 Data_07E_5870:: ; heuristic: stream in a run of back-to-back compressed streams; C0
     INCBIN "dwm2-cobi-us.gbc", $1F9870, $8F
 
-; address loaded by LoadAltObjectGraphicsIfPlayerStateFlagsBit3, Func_012_5DB6_Case03
+; address loaded by LoadAltObjectGraphicsIfPlayerStateFlagsBit3, ScriptCommand83_Run_Sub02_Case03
 ; LZSS-compressed asset: 75 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07E_58FF:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F98FF, $4B
 
-; address loaded by Func_012_5EE7_Case03
+; address loaded by ScriptCommand83_Run_Sub03_Case03
 ; LZSS-compressed asset: 74 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07E_594A:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F994A, $4A

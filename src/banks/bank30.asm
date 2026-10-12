@@ -3434,7 +3434,7 @@ Jump_030_543E::
     ret
 
 ; wPersonalityIndex = PersonalityIndexOfSlot_Bank30(actor); resets the AI workspace (Func_030_5472); with wD2CC = 1 runs the routine for the actor's AI mode (Data_030_45D0 indexed by wDA53[actor], JumpToHL) and stores its result B as the actor's chosen action; runs Func_030_4CFC; wD2CC = 0 (E-0120)
-; 3 call sites from 2 routines (e.g. Func_032_4ADC_Case01_Case00, RunDebugState_E0_Case0D_Case05_Sub01)
+; 3 call sites from 2 routines (e.g. RunBattleActions_Case00_Sub01_Case01_Case00, RunDebugState_E0_Case0D_Case05_Sub01)
 ; reads: wBattleActor
 ; writes: wPersonalityIndex, wAIFlag
 ; points at: wSlotAIMode

@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0245 — Cutscene and action script commands named; structural names re-prefixed by their parents
+
+- Kind: OBSERVATION (C1) and TOOL.
+- **121 more command types in config/script_commands.json.**
+  - Action commands are read from the code: SCRIPT_CHECK_ITEM, SHAKE_SCREEN, WARP_MAP41, GIVE_ITEM_BLINK, TAKE_ITEM, GIVE_MONSTER, GATHER_FOLLOWERS, FOLLOWER_FACE_PLAYER, HIDE_SPRITES, BLINK_SPRITES, SAVE_SCREEN, SET_FLAG_322, SET_FLAG_REDRAW, SET_TILES_FLAG_310, SET_TILES_D2, KEY_BOSS_BEATEN, REWARD_ITEM_OR_KEY, PERSONALITY_MESSAGE, GROWTH_LIMIT_INFO and DESK_KEY.
+  - One-off cutscene steps are named SCRIPT_SCENE_* after the scene their only script shows. Each note quotes the dialogue before and after the command, for example SCRIPT_SCENE_WATER_SHORTAGE ("King The town's water shortage seems...").
+  - The implementations are renamed to match (SceneWaterShortage, GiveMonster, ...).
+  - These scene names identify a scene; they are not a reading of what each step's code does.
+  - Still numbered: $29 (no quoted context) and the key-world field events $80-$A1 in bank $12. The latter run from DispatchTalkEvent's group cases, and $80 is the treasure chest (gold = byte * 10, an item, or a battle with intro 5). They need a reading each.
+- **Tool.** rename_address_prefixed_children runs after name_single_caller_helpers. Structural names derived from a parent's address name (Func_004_6892_Case00) now take the parent's name (DispatchTalkEvent_Case00_Sub01_Case00): 1,050 labels, with 0 address-prefixed structural labels left. Config notes and one test are updated.
+- Binary verification: build/run311 PASS, 0 differing bytes; tests OK.
+
 ### E-0244 — The menu script commands named
 
 - Kind: OBSERVATION (C1: the messages the scripts show around each command, quoted under the E-0242/E-0243 message modes, plus the tables and routines the implementations use).

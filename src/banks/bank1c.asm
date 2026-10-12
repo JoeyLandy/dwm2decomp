@@ -5950,7 +5950,7 @@ Data_01C_679D:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 6 call sites from 4 routines (e.g. VaultMenu_Case01_Case00, ClearRect147AndAskTwoChoice, VaultMenu_Case03_Case12, Func_01C_6AF7_Case00)
+; 6 call sites from 4 routines (e.g. VaultMenu_Case01_Case00, ClearRect147AndAskTwoChoice, VaultMenu_Case03_Case12, ShopMenu_Shared01_Case00)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank1C::
 Func_01C_679E:: ; address name
@@ -6661,16 +6661,16 @@ Jump_01C_6B38::
     ld [wTextTimer], a
     ld a, [wTextCounter0]
     rst $00
-    dw Func_01C_6AF7_Case00
-    dw Func_01C_6AF7_Case01
-    dw Func_01C_6AF7_Case02
-    dw Func_01C_6AF7_Case03
+    dw ShopMenu_Shared01_Case00
+    dw ShopMenu_Shared01_Case01
+    dw ShopMenu_Shared01_Case02
+    dw ShopMenu_Shared01_Case03
 
 ; entry 0 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextCounter0
 ; writes: wTextCounter0
-Func_01C_6AF7_Case00::
+ShopMenu_Shared01_Case00::
 Jump_01C_6B53:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $01A0
@@ -6691,7 +6691,7 @@ Jump_01C_6B68::
     ld a, [wTextCounter0]
     inc a
     ld [wTextCounter0], a
-    jp Func_01C_6AF7_Case01
+    jp ShopMenu_Shared01_Case01
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 5 tiles, one row per line
@@ -6713,7 +6713,7 @@ Data_01C_6BE1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextCounter0
 ; writes: wTextCounter0
-Func_01C_6AF7_Case01::
+ShopMenu_Shared01_Case01::
 Jump_01C_6BF1:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $01A0
@@ -6724,7 +6724,7 @@ Jump_01C_6BF1:: ; address name
     ld a, [wTextCounter0]
     inc a
     ld [wTextCounter0], a
-    jp Func_01C_6AF7_Case02
+    jp ShopMenu_Shared01_Case02
     db $C9
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -6739,14 +6739,14 @@ Data_01C_6C0C:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
-Func_01C_6AF7_Case02::
+ShopMenu_Shared01_Case02::
 Jump_01C_6C70:: ; address name
     farcall StepItemDescriptionText
     ret
 
 ; entry 3 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
-Func_01C_6AF7_Case03::
+ShopMenu_Shared01_Case03::
 Jump_01C_6C77:: ; address name
     ret
 

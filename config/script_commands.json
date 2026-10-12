@@ -1,6 +1,732 @@
 {
   "_comment": "Script command types (wScriptCommandType) with names: the constant script lines use, the name of the implementation routine (the ScriptCommandXX_Run it replaces), and the evidence. Meanings are C1 readings of the messages the scripts show around the command and of the code (see the evidence entry).",
   "commands": {
+    "11": {
+      "const": "SCRIPT_SCENE_FARM_KIDS",
+      "routine": "SceneFarmKids",
+      "note": "a cutscene step named after the scene its only script shows: 'You must be the farm kids.' ... 'Warubou Wha? I smell something!'",
+      "evidence": "E-0245"
+    },
+    "12": {
+      "const": "SCRIPT_SCENE_LEARN_QUICK",
+      "routine": "SceneLearnQuick",
+      "note": "a cutscene step named after the scene its only script shows: 'Wow, you kids sure learn quick!' ... 'Oh It's all spinning around'",
+      "evidence": "E-0245"
+    },
+    "13": {
+      "const": "SCRIPT_SCENE_SPINNING",
+      "routine": "SceneSpinning",
+      "note": "a cutscene step named after the scene its only script shows: 'Oh It's all spinning around' ... 'You must be the farm kids.'",
+      "evidence": "E-0245"
+    },
+    "14": {
+      "const": "SCRIPT_SCENE_WARUBOU_SMELLS",
+      "routine": "SceneWarubouSmells",
+      "note": "a cutscene step named after the scene its only script shows: 'Warubou Wha? I smell something!' ... 'What is this? Food? Perfect!'",
+      "evidence": "E-0245"
+    },
+    "15": {
+      "const": "SCRIPT_SCENE_WARUBOU_FOOD",
+      "routine": "SceneWarubouFood",
+      "note": "a cutscene step named after the scene its only script shows: 'Warubou What is this? Food? Perfect!' ... 'Calm down and listen!'",
+      "evidence": "E-0245"
+    },
+    "16": {
+      "const": "SCRIPT_SCENE_WARUBOU_FOOD_2",
+      "routine": "SceneWarubouFood2",
+      "note": "a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_WARUBOU_FOOD",
+      "evidence": "E-0245"
+    },
+    "17": {
+      "const": "SCRIPT_SCENE_PACKAGE",
+      "routine": "ScenePackage",
+      "note": "a cutscene step named after the scene its only script shows: 'Did you get the package from...' ... 'Oh goodness, you're filthy!'",
+      "evidence": "E-0245"
+    },
+    "18": {
+      "const": "SCRIPT_SCENE_GREATLOG_KEY",
+      "routine": "SceneGreatlogKey",
+      "note": "a cutscene step named after the scene its only script shows: before '0 received the GreatLog Key.'",
+      "evidence": "E-0245"
+    },
+    "19": {
+      "const": "SCRIPT_SCENE_WARUBOU_MAGIC_KEY",
+      "routine": "SceneWarubouMagicKey",
+      "note": "a cutscene step named after the scene its only script shows: 'Warubou Wa-hey! Good, good, good!' ... 'This here is a Magic...'",
+      "evidence": "E-0245"
+    },
+    "1A": {
+      "const": "SCRIPT_SCENE_OASIS_KEY",
+      "routine": "SceneOasisKey",
+      "note": "a cutscene step named after the scene its only script shows: 'This here is a Magic...' ... '0 received the Oasis Key.'",
+      "evidence": "E-0245"
+    },
+    "1B": {
+      "const": "SCRIPT_SCENE_WARUBOU_LEAVES",
+      "routine": "SceneWarubouLeaves",
+      "note": "a cutscene step named after the scene its only script shows: 'C'mon, Warubou!' ... 'Have you heard about Magic Keys?'",
+      "evidence": "E-0245"
+    },
+    "1C": {
+      "const": "SCRIPT_SCENE_WARUBOU_WARNING",
+      "routine": "SceneWarubouWarning",
+      "note": "a cutscene step named after the scene its only script shows: 'Warubou Dangerous are other worlds!' ... 'Slash Hey, why the long faces?'",
+      "evidence": "E-0245"
+    },
+    "1D": {
+      "const": "SCRIPT_SCENE_LONG_FACES",
+      "routine": "SceneLongFaces",
+      "note": "a cutscene step named after the scene its only script shows: 'Slash Hey, why the long faces?'",
+      "evidence": "E-0245"
+    },
+    "1E": {
+      "const": "SCRIPT_CHECK_ITEM",
+      "routine": "CheckItem",
+      "note": "sets wGameFlags836 from whether item hTemp0 is in the inventory (FindTemp0InInventoryList)",
+      "evidence": "E-0245"
+    },
+    "1F": {
+      "const": "SCRIPT_SCENE_MONSTER_INSPECTION",
+      "routine": "SceneMonsterInspection",
+      "note": "a cutscene step named after the scene its only script shows: 'Ah, three healthy monsters! Very well' ... 'Very good show! That was splendid'",
+      "evidence": "E-0245"
+    },
+    "21": {
+      "const": "SCRIPT_SCENE_KING_AUDIENCE",
+      "routine": "SceneKingAudience",
+      "note": "a cutscene step named after the scene its only script shows: 'King You wish to see our...' ... 'King I see. This is what...'",
+      "evidence": "E-0245"
+    },
+    "22": {
+      "const": "SCRIPT_SCENE_CANAL_GATE",
+      "routine": "SceneCanalGate",
+      "note": "a cutscene step named after the scene its only script shows: 'What? Open the Canal Gate more?'",
+      "evidence": "E-0245"
+    },
+    "23": {
+      "const": "SCRIPT_SCENE_WATER_SHORTAGE",
+      "routine": "SceneWaterShortage",
+      "note": "a cutscene step named after the scene its only script shows: 'King The town's water shortage seems...' ... 'King Wha-what? What happened?'",
+      "evidence": "E-0245"
+    },
+    "24": {
+      "const": "SCRIPT_SCENE_TREASURE_THEFT",
+      "routine": "SceneTreasureTheft",
+      "note": "a cutscene step named after the scene its only script shows: 'King What? Arrrrgh! Round up all...' ... 'King I apologize, but my treasures...'",
+      "evidence": "E-0245"
+    },
+    "25": {
+      "const": "SCRIPT_SCENE_WATER_SOLVED",
+      "routine": "SceneWaterSolved",
+      "note": "a cutscene step named after the scene its only script shows: 'You will? So we can go...' ... 'King This should solve the water...'",
+      "evidence": "E-0245"
+    },
+    "26": {
+      "const": "SCRIPT_SCENE_MONSTERS_IN_TOW",
+      "routine": "SceneMonstersInTow",
+      "note": "a cutscene step named after the scene its only script shows: 'That will help you for certain.' ... 'Heh, you have monsters in tow?'",
+      "evidence": "E-0245"
+    },
+    "27": {
+      "const": "SCRIPT_SCENE_RIVAL_DEFEATED",
+      "routine": "SceneRivalDefeated",
+      "note": "a cutscene step named after the scene its only script shows: 'You defeated my monster? Urggh' ... 'You again! You're determined!'",
+      "evidence": "E-0245"
+    },
+    "28": {
+      "const": "SCRIPT_SHAKE_SCREEN",
+      "routine": "ShakeScreen",
+      "note": "shakes the screen (ScriptStepShakeScreen) with a sound effect",
+      "evidence": "E-0245"
+    },
+    "2A": {
+      "const": "SCRIPT_SCENE_WATCH_OUT",
+      "routine": "SceneWatchOut",
+      "note": "a cutscene step named after the scene its only script shows: 'You can keep trying, but you're...' ... 'Zzz Zzz Huh! Watch out!'",
+      "evidence": "E-0245"
+    },
+    "2B": {
+      "const": "SCRIPT_SCENE_MERMAID_SONG",
+      "routine": "SceneMermaidSong",
+      "note": "a cutscene step named after the scene its only script shows: 'Then I'll sing! Lalala lala la' ... 'In the past, mermaids are said...'",
+      "evidence": "E-0245"
+    },
+    "2C": {
+      "const": "SCRIPT_SCENE_DANCING",
+      "routine": "SceneDancing",
+      "note": "a cutscene step named after the scene its only script shows: 'Then I'll sing! Lalala lala la' ... 'Erm The sense of rhythm just...'",
+      "evidence": "E-0245"
+    },
+    "2D": {
+      "const": "SCRIPT_SCENE_MERMAID_SONG_2",
+      "routine": "SceneMermaidSong2",
+      "note": "a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_MERMAID_SONG (two objects moved by table)",
+      "evidence": "E-0245"
+    },
+    "2E": {
+      "const": "SCRIPT_WARP_MAP41",
+      "routine": "WarpMap41",
+      "note": "warps to map $41 (WarpToMap41); used after 'Close your eyes a little while.'",
+      "evidence": "E-0245"
+    },
+    "2F": {
+      "const": "SCRIPT_SCENE_TENTACLES",
+      "routine": "SceneTentacles",
+      "note": "a cutscene step named after the scene its only script shows: 'Close your eyes for a little...' ... 'Thick, suction-cupped tentacles snaked out'",
+      "evidence": "E-0245"
+    },
+    "30": {
+      "const": "SCRIPT_SCENE_SAILOR_RING",
+      "routine": "SceneSailorRing",
+      "note": "a cutscene step named after the scene its only script shows: after '0 received the Sailor Ring.'",
+      "evidence": "E-0245"
+    },
+    "31": {
+      "const": "SCRIPT_SCENE_PIRATE_GHOSTS",
+      "routine": "ScenePirateGhosts",
+      "note": "a cutscene step named after the scene its only script shows: 'How could we die before enjoying...' ... 'The treasures are ours'",
+      "evidence": "E-0245"
+    },
+    "32": {
+      "const": "SCRIPT_GIVE_ITEM_BLINK",
+      "routine": "GiveItemBlink",
+      "note": "adds item wC928 to the inventory (AppendItemWC928ToInventory) and blinks object hTemp0; '0 obtained YunaSoul.'",
+      "evidence": "E-0245"
+    },
+    "33": {
+      "const": "SCRIPT_SCENE_CRATE",
+      "routine": "SceneCrate",
+      "note": "a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' ... '0 checked the crate.'",
+      "evidence": "E-0245"
+    },
+    "34": {
+      "const": "SCRIPT_SET_TILES_FLAG_310",
+      "routine": "SetTilesFlag310",
+      "note": "writes tiles $58-$5B into a 2 x 2 block of wScreenTileBuffer ($AA, $AB, $BE, $BF), redraws the screen and sets story flag $310",
+      "evidence": "E-0245"
+    },
+    "35": {
+      "const": "SCRIPT_SCENE_KAMEHA_ESCAPE",
+      "routine": "SceneKamehaEscape",
+      "note": "a cutscene step named after the scene its only script shows: '0 checked the crate.' ... 'Kameha Wahahahah! Thanks for guiding me'",
+      "evidence": "E-0245"
+    },
+    "36": {
+      "const": "SCRIPT_SCENE_KAMEHA_CAUGHT",
+      "routine": "SceneKamehaCaught",
+      "note": "a cutscene step named after the scene its only script shows: 'Kameha Wahahahah! Thanks for guiding me' ... 'Kameha Urk! How you catch up?'",
+      "evidence": "E-0245"
+    },
+    "37": {
+      "const": "SCRIPT_SCENE_CREW_FOLLOWS",
+      "routine": "SceneCrewFollows",
+      "note": "a cutscene step named after the scene its only script shows: 'Aye, aye, sir! Right behind you!'",
+      "evidence": "E-0245"
+    },
+    "38": {
+      "const": "SCRIPT_SCENE_KAMEHA_FLEES",
+      "routine": "SceneKamehaFlees",
+      "note": "a cutscene step named after the scene its only script shows: 'Kameha Arrrrh, clear the way!' ... 'Kameha Aiyeeeeeh'",
+      "evidence": "E-0245"
+    },
+    "39": {
+      "const": "SCRIPT_SCENE_MERMAID_KINGDOM",
+      "routine": "SceneMermaidKingdom",
+      "note": "a cutscene step named after the scene its only script shows: 'Kameha Aiyeeeeeh' ... 'This is the mermaid kingdom.'",
+      "evidence": "E-0245"
+    },
+    "3A": {
+      "const": "SCRIPT_SCENE_MASTER_THANKS",
+      "routine": "SceneMasterThanks",
+      "note": "a cutscene step named after the scene its only script shows: 'R Really? Wow! Thank you!' ... 'I became a master because I...'",
+      "evidence": "E-0245"
+    },
+    "3C": {
+      "const": "SCRIPT_REWARD_ITEM_OR_KEY",
+      "routine": "RewardItemOrKey",
+      "note": "gives an item or a key entry (AppendItemWC928ToInventory, WriteKeyEntryTemp0); 'Great, 0! Thanks a lot!' ... 'Here, 0! You hold onto it.'",
+      "evidence": "E-0245"
+    },
+    "3D": {
+      "const": "SCRIPT_REWARD_ITEM_OR_KEY_2",
+      "routine": "RewardItemOrKey2",
+      "note": "the same rewards as SCRIPT_REWARD_ITEM_OR_KEY in another scene: 'Fantastic! I can open my shop' ... 'I like you to have this.'",
+      "evidence": "E-0245"
+    },
+    "3E": {
+      "const": "SCRIPT_SCENE_STRONGEST_MASTER",
+      "routine": "SceneStrongestMaster",
+      "note": "a cutscene step named after the scene its only script shows: 'The strongest master I've ever...'",
+      "evidence": "E-0245"
+    },
+    "3F": {
+      "const": "SCRIPT_BLINK_SPRITES",
+      "routine": "BlinkSprites",
+      "note": "shows the first sprite slot only on alternate groups of four frames (wSpriteSlotCount by wFrameCounterLo bit 2)",
+      "evidence": "E-0245"
+    },
+    "40": {
+      "const": "SCRIPT_SCENE_SPIRIT_ENVOY",
+      "routine": "SceneSpiritEnvoy",
+      "note": "a cutscene step named after the scene its only script shows: 'Ah, you are the spirit's envoy.' ... 'We reported to the King that...'",
+      "evidence": "E-0245"
+    },
+    "41": {
+      "const": "SCRIPT_SCENE_EXPLOSION",
+      "routine": "SceneExplosion",
+      "note": "a cutscene step named after the scene its only script shows: 'What? What was that explosion?' (screen shake and flash)",
+      "evidence": "E-0245"
+    },
+    "42": {
+      "const": "SCRIPT_SCENE_REPORT_TO_KING",
+      "routine": "SceneReportToKing",
+      "note": "a cutscene step named after the scene its only script shows: 'We reported to the King that...'",
+      "evidence": "E-0245"
+    },
+    "43": {
+      "const": "SCRIPT_SCENE_WALL_EXIT",
+      "routine": "SceneWallExit",
+      "note": "a cutscene step named after the scene its only script shows: '0 tapped on the wall.' ... 'Kameha That's it! That's the exit!'",
+      "evidence": "E-0245"
+    },
+    "44": {
+      "const": "SCRIPT_SCENE_REAL_KING",
+      "routine": "SceneRealKing",
+      "note": "a cutscene step named after the scene its only script shows: before 'I'm the real King, you fake!'",
+      "evidence": "E-0245"
+    },
+    "45": {
+      "const": "SCRIPT_SCENE_PLAN_RUINED",
+      "routine": "ScenePlanRuined",
+      "note": "a cutscene step named after the scene its only script shows: 'Arrgh, you've ruined my plan' ... 'Bravo! We're saved!' (starts a scripted encounter)",
+      "evidence": "E-0245"
+    },
+    "46": {
+      "const": "SCRIPT_SCENE_CHEER_YUNA",
+      "routine": "SceneCheerYuna",
+      "note": "a cutscene step named after the scene its only script shows: 'You're here to cheer Lady Yuna.' ... 'King Magnificent!'",
+      "evidence": "E-0245"
+    },
+    "47": {
+      "const": "SCRIPT_SCENE_SPIRIT_ENVOY_2",
+      "routine": "SceneSpiritEnvoy2",
+      "note": "a cutscene step named after the scene its only script shows: 'Oh? An envoy from the spirit!' ... 'You startled me'",
+      "evidence": "E-0245"
+    },
+    "48": {
+      "const": "SCRIPT_SCENE_PRINCESS_MEDICINE",
+      "routine": "ScenePrincessMedicine",
+      "note": "a cutscene step named after the scene its only script shows: 'STOP DON'T MEDDLE' ... 'Pardon me? You have medicine?' (encounter, removes an item)",
+      "evidence": "E-0245"
+    },
+    "49": {
+      "const": "SCRIPT_SCENE_MEDICINE_GIVEN",
+      "routine": "SceneMedicineGiven",
+      "note": "a cutscene step named after the scene its only script shows: after 'Pardon me? You have medicine?'",
+      "evidence": "E-0245"
+    },
+    "4A": {
+      "const": "SCRIPT_SCENE_SHIELD",
+      "routine": "SceneShield",
+      "note": "a cutscene step named after the scene its only script shows: after '0 checked the shield.' (starts a scripted encounter)",
+      "evidence": "E-0245"
+    },
+    "4B": {
+      "const": "SCRIPT_SCENE_SHIELD_2",
+      "routine": "SceneShield2",
+      "note": "a cutscene step named after the scene its only script shows: after '0 checked the shield.'",
+      "evidence": "E-0245"
+    },
+    "4D": {
+      "const": "SCRIPT_SCENE_WATER_REWARD",
+      "routine": "SceneWaterReward",
+      "note": "a cutscene step named after the scene its only script shows: 'King This should solve the water...' (creates a monster record)",
+      "evidence": "E-0245"
+    },
+    "4E": {
+      "const": "SCRIPT_SCENE_GRAVE",
+      "routine": "SceneGrave",
+      "note": "a cutscene step named after the scene its only script shows: '0 checked the grave.' ... 'Fine! You've done well...'",
+      "evidence": "E-0245"
+    },
+    "4F": {
+      "const": "SCRIPT_SET_TILES_D2",
+      "routine": "SetTilesD2",
+      "note": "writes tiles $68-$6B into a 2 x 2 block of wScreenTileBuffer ($D2, $D3, $E6, $E7) and redraws the screen",
+      "evidence": "E-0245"
+    },
+    "50": {
+      "const": "SCRIPT_SCENE_MADCONDOR",
+      "routine": "SceneMadcondor",
+      "note": "a cutscene step named after the scene its only script shows: 'Look! A MadCondor! It has something!'",
+      "evidence": "E-0245"
+    },
+    "51": {
+      "const": "SCRIPT_SCENE_MADCONDOR_CRY",
+      "routine": "SceneMadcondorCry",
+      "note": "a cutscene step named after the scene its only script shows: 'Kweeeeeh!'",
+      "evidence": "E-0245"
+    },
+    "52": {
+      "const": "SCRIPT_SCENE_SMALL_HOLE",
+      "routine": "SceneSmallHole",
+      "note": "a cutscene step named after the scene its only script shows: '0 checked the small hole.' ... 'You can take this treasure, but...'",
+      "evidence": "E-0245"
+    },
+    "53": {
+      "const": "SCRIPT_SCENE_JUSTICE",
+      "routine": "SceneJustice",
+      "note": "a cutscene step named after the scene its only script shows: 'Let the power of justice smite...' ... '0 checked the gravestone.'",
+      "evidence": "E-0245"
+    },
+    "54": {
+      "const": "SCRIPT_SCENE_GRAVESTONE",
+      "routine": "SceneGravestone",
+      "note": "a cutscene step named after the scene its only script shows: before '0 checked the gravestone.'",
+      "evidence": "E-0245"
+    },
+    "55": {
+      "const": "SCRIPT_SET_FLAG_322",
+      "routine": "SetFlag322",
+      "note": "sets story flag $322 (wStoryFlags + $64 bit 2); 'A door opened somewhere'",
+      "evidence": "E-0245"
+    },
+    "56": {
+      "const": "SCRIPT_SCENE_BEATEN_FAIRLY",
+      "routine": "SceneBeatenFairly",
+      "note": "a cutscene step named after the scene its only script shows: 'You've beaten me fairly Take...'",
+      "evidence": "E-0245"
+    },
+    "57": {
+      "const": "SCRIPT_SCENE_THREE_ITEMS_BATTLE",
+      "routine": "SceneThreeItemsBattle",
+      "note": "a cutscene step named after the scene its only script shows: 'Good. You have brought the three...' ... 'Don't you ever give up?' (encounter)",
+      "evidence": "E-0245"
+    },
+    "58": {
+      "const": "SCRIPT_SCENE_THREE_ITEMS",
+      "routine": "SceneThreeItems",
+      "note": "a cutscene step named after the scene its only script shows: 'Kameha If the three items that...'",
+      "evidence": "E-0245"
+    },
+    "59": {
+      "const": "SCRIPT_SCENE_SAW_KAMEHA",
+      "routine": "SceneSawKameha",
+      "note": "a cutscene step named after the scene its only script shows: 'What's that? You saw Prince Kameha' ... 'Sire, this child claims to know'",
+      "evidence": "E-0245"
+    },
+    "5A": {
+      "const": "SCRIPT_SCENE_KAMEHA_BACK",
+      "routine": "SceneKamehaBack",
+      "note": "a cutscene step named after the scene its only script shows: runs SceneSawKameha's code: '... Prince Kameha came back!'",
+      "evidence": "E-0245"
+    },
+    "5B": {
+      "const": "SCRIPT_SCENE_LIMBO",
+      "routine": "SceneLimbo",
+      "note": "a cutscene step named after the scene its only script shows: 'Warubou Wa-hey! Take the treasures that...' ... 'Limbo is the King's domain!'",
+      "evidence": "E-0245"
+    },
+    "5C": {
+      "const": "SCRIPT_TAKE_ITEM",
+      "routine": "TakeItem",
+      "note": "removes item hTemp0 from the inventory (FindTemp0InInventoryList, RemoveInventorySlotShiftDown); '0 handed over the TidalBell.'",
+      "evidence": "E-0245"
+    },
+    "5D": {
+      "const": "SCRIPT_SCENE_DARCK_TAUNT",
+      "routine": "SceneDarckTaunt",
+      "note": "a cutscene step named after the scene its only script shows: 'N No How could my monsters' ... 'Darck Fawahahah!'",
+      "evidence": "E-0245"
+    },
+    "5E": {
+      "const": "SCRIPT_SCENE_DARCK_DEFEATED",
+      "routine": "SceneDarckDefeated",
+      "note": "a cutscene step named after the scene its only script shows: 'Darck Wha What? How could I' ... 'Darck Fwahahahah! Bravo! Splendid!'",
+      "evidence": "E-0245"
+    },
+    "5F": {
+      "const": "SCRIPT_SCENE_HOMECOMING",
+      "routine": "SceneHomecoming",
+      "note": "a cutscene step named after the scene its only script shows: 'Hehehe, no need to worry there!' ... 'Tara 0, congratulations! I was sad'",
+      "evidence": "E-0245"
+    },
+    "61": {
+      "const": "SCRIPT_SCENE_KAMEHA_STOLE",
+      "routine": "SceneKamehaStole",
+      "note": "a cutscene step named after the scene its only script shows: 'King Kameha made off with the...'",
+      "evidence": "E-0245"
+    },
+    "62": {
+      "const": "SCRIPT_PERSONALITY_MESSAGE",
+      "routine": "PersonalityMessage",
+      "note": "shows a message chosen by a party monster's personality (PersonalityIndexOfRecord)",
+      "evidence": "E-0245"
+    },
+    "63": {
+      "const": "SCRIPT_SCENE_RIVAL_FADE",
+      "routine": "SceneRivalFade",
+      "note": "a cutscene step named after the scene its only script shows: 'You defeated my monster? Urggh' (palette fade)",
+      "evidence": "E-0245"
+    },
+    "64": {
+      "const": "SCRIPT_GATHER_FOLLOWERS",
+      "routine": "GatherFollowers",
+      "note": "moves the followers onto the leader (ScriptStepMoveFollowersToLeader)",
+      "evidence": "E-0245"
+    },
+    "65": {
+      "const": "SCRIPT_GROWTH_LIMIT_INFO",
+      "routine": "GrowthLimitInfo",
+      "note": "shows a monster's name and a record byte as digits: 'Everyone has a growth limit. Whether...'",
+      "evidence": "E-0245"
+    },
+    "66": {
+      "const": "SCRIPT_SCENE_SHIELD_GUARDIAN",
+      "routine": "SceneShieldGuardian",
+      "note": "a cutscene step named after the scene its only script shows: before '0 checked the shield.' (encounter)",
+      "evidence": "E-0245"
+    },
+    "67": {
+      "const": "SCRIPT_SCENE_JUSTICE_2",
+      "routine": "SceneJustice2",
+      "note": "a cutscene step named after the scene its only script shows: 'Let the power of justice smite...'",
+      "evidence": "E-0245"
+    },
+    "68": {
+      "const": "SCRIPT_SCENE_FOUND_ME",
+      "routine": "SceneFoundMe",
+      "note": "a cutscene step named after the scene its only script shows: 'I'm surprised anyone managed to find...'",
+      "evidence": "E-0245"
+    },
+    "69": {
+      "const": "SCRIPT_SCENE_FOUND_ME_BATTLE",
+      "routine": "SceneFoundMeBattle",
+      "note": "a cutscene step named after the scene its only script shows: 'I'm surprised anyone managed to find...' ... 'Ah, so good of you to...' (encounter)",
+      "evidence": "E-0245"
+    },
+    "6A": {
+      "const": "SCRIPT_SCENE_HORSING_AROUND",
+      "routine": "SceneHorsingAround",
+      "note": "a cutscene step named after the scene its only script shows: before 'Listen you two! Quit your horsing...'",
+      "evidence": "E-0245"
+    },
+    "6B": {
+      "const": "SCRIPT_SCENE_VAULT_SETTLED",
+      "routine": "SceneVaultSettled",
+      "note": "a cutscene step named after the scene its only script shows: 'You've come at the right...' ... 'Good, that's settled then. The Vault...'",
+      "evidence": "E-0245"
+    },
+    "6C": {
+      "const": "SCRIPT_GIVE_MONSTER",
+      "routine": "GiveMonster",
+      "note": "creates a monster record of kind hTemp1 (CreateMonsterRecordOfKindTemp1); 'You'll take it? Excellent! I'll send...'",
+      "evidence": "E-0245"
+    },
+    "6D": {
+      "const": "SCRIPT_SCENE_LIMBO_MONSTER",
+      "routine": "SceneLimboMonster",
+      "note": "a cutscene step named after the scene its only script shows: 'Limbo is the King's domain!' ... 'Prince Kameha has been missing' (creates a monster record)",
+      "evidence": "E-0245"
+    },
+    "6E": {
+      "const": "SCRIPT_SCENE_LIMBO_MONSTER_2",
+      "routine": "SceneLimboMonster2",
+      "note": "a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_LIMBO_MONSTER",
+      "evidence": "E-0245"
+    },
+    "6F": {
+      "const": "SCRIPT_DESK_KEY",
+      "routine": "DeskKey",
+      "note": "the desk animation before '0 obtained the Brawn/Baffle/Soul/Magic Key.'",
+      "evidence": "E-0245"
+    },
+    "70": {
+      "const": "SCRIPT_SCENE_TERRY",
+      "routine": "SceneTerry",
+      "note": "a cutscene step named after the scene its only script shows: '0 obtained the Magic Key.' ... 'Humph I'm Terry. I'm a master'",
+      "evidence": "E-0245"
+    },
+    "71": {
+      "const": "SCRIPT_SCENE_KAMEHA_KEY_BATTLE",
+      "routine": "SceneKamehaKeyBattle",
+      "note": "a cutscene step named after the scene its only script shows: 'Kameha So you're confident, huh?' (key entry and encounter)",
+      "evidence": "E-0245"
+    },
+    "72": {
+      "const": "SCRIPT_SCENE_KAMEHA_KEY_BATTLE_2",
+      "routine": "SceneKamehaKeyBattle2",
+      "note": "a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_KAMEHA_KEY_BATTLE",
+      "evidence": "E-0245"
+    },
+    "73": {
+      "const": "SCRIPT_FOLLOWER_FACE_PLAYER",
+      "routine": "FollowerFacePlayer",
+      "note": "copies hPlayerFacing to the first follower record",
+      "evidence": "E-0245"
+    },
+    "74": {
+      "const": "SCRIPT_SET_FLAG_REDRAW",
+      "routine": "SetFlagRedraw",
+      "note": "sets a story flag, applies the map-screen flag events and redraws the screen (treasure chests)",
+      "evidence": "E-0245"
+    },
+    "75": {
+      "const": "SCRIPT_SCENE_AT_SEA",
+      "routine": "SceneAtSea",
+      "note": "a cutscene step named after the scene its only script shows: after 'In the middle of the sea'",
+      "evidence": "E-0245"
+    },
+    "77": {
+      "const": "SCRIPT_SCENE_LAND_HO",
+      "routine": "SceneLandHo",
+      "note": "a cutscene step named after the scene its only script shows: 'Land ho! There's GreatLog!'",
+      "evidence": "E-0245"
+    },
+    "78": {
+      "const": "SCRIPT_SAVE_SCREEN",
+      "routine": "SaveScreen",
+      "note": "saves the screen buffer to BG map 1 (SaveScreenBufferToBGMap1)",
+      "evidence": "E-0245"
+    },
+    "79": {
+      "const": "SCRIPT_SCENE_POOR_CHURCH",
+      "routine": "ScenePoorChurch",
+      "note": "a cutscene step named after the scene its only script shows: ... 'Our church is impoverished, so I...'",
+      "evidence": "E-0245"
+    },
+    "7A": {
+      "const": "SCRIPT_SCENE_KAMEHA_MISSING",
+      "routine": "SceneKamehaMissing",
+      "note": "a cutscene step named after the scene its only script shows: before 'Prince Kameha has been missing from...'",
+      "evidence": "E-0245"
+    },
+    "7B": {
+      "const": "SCRIPT_SCENE_ARENA_CHALLENGE",
+      "routine": "SceneArenaChallenge",
+      "note": "a cutscene step named after the scene its only script shows: 'Really? Let's go to the Arena!' (encounter)",
+      "evidence": "E-0245"
+    },
+    "7C": {
+      "const": "SCRIPT_SCENE_TERRY_BATTLE",
+      "routine": "SceneTerryBattle",
+      "note": "a cutscene step named after the scene its only script shows: 'Terry Humph Confident, huh?' (encounter)",
+      "evidence": "E-0245"
+    },
+    "7D": {
+      "const": "SCRIPT_SCENE_THIS_WAY",
+      "routine": "SceneThisWay",
+      "note": "a cutscene step named after the scene its only script shows: 'This way Here Here' ... 'I heard from Lord Darck, but...'",
+      "evidence": "E-0245"
+    },
+    "7E": {
+      "const": "SCRIPT_SCENE_GOT_TO",
+      "routine": "SceneGotTo",
+      "note": "a cutscene step named after the scene its only script shows: 'That's true I've got to...'",
+      "evidence": "E-0245"
+    },
+    "7F": {
+      "const": "SCRIPT_SCENE_CHEST_SERVANT",
+      "routine": "SceneChestServant",
+      "note": "a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' ... 'How may we serve your mortal...'",
+      "evidence": "E-0245"
+    },
+    "C0": {
+      "const": "SCRIPT_SCENE_ROLT_ELDER",
+      "routine": "SceneRoltElder",
+      "note": "a cutscene step named after the scene its only script shows: 'I'm the village's elder.' ... 'Rolt That was fast, 0.'",
+      "evidence": "E-0245"
+    },
+    "C1": {
+      "const": "SCRIPT_SCENE_TOO_STRONG",
+      "routine": "SceneTooStrong",
+      "note": "a cutscene step named after the scene its only script shows: 'Too strong Arroooh!' ... 'Rolt What? Cyal was abducted?'",
+      "evidence": "E-0245"
+    },
+    "C2": {
+      "const": "SCRIPT_SCENE_GIVE_BACK_CYAL",
+      "routine": "SceneGiveBackCyal",
+      "note": "a cutscene step named after the scene its only script shows: 'Rolt Shut up! Give back Cyal!'",
+      "evidence": "E-0245"
+    },
+    "C3": {
+      "const": "SCRIPT_KEY_BOSS_BEATEN",
+      "routine": "KeyBossBeaten",
+      "note": "marks key entry kind hTemp0 with bit 6 (MarkKeyEntryKindTemp0Bit6) and blinks an object: 'Wh-what? I Lost to a child?'",
+      "evidence": "E-0245"
+    },
+    "C4": {
+      "const": "SCRIPT_SCENE_BARREL",
+      "routine": "SceneBarrel",
+      "note": "a cutscene step named after the scene its only script shows: '0 peered into the barrel.' ... 'Kiral Ah! Back!' (encounter)",
+      "evidence": "E-0245"
+    },
+    "C5": {
+      "const": "SCRIPT_SCENE_WIZSTONE",
+      "routine": "SceneWizstone",
+      "note": "a cutscene step named after the scene its only script shows: 'Kiral This stone, the WizStone, it...'",
+      "evidence": "E-0245"
+    },
+    "C6": {
+      "const": "SCRIPT_SCENE_CYAL_ROLT",
+      "routine": "SceneCyalRolt",
+      "note": "a cutscene step named after the scene its only script shows: 'Rolt 0, I'm sorry we put...' ... 'I'm glad that Cyal and Rolt...'",
+      "evidence": "E-0245"
+    },
+    "C7": {
+      "const": "SCRIPT_SCENE_PENDANT_SELLER",
+      "routine": "ScenePendantSeller",
+      "note": "a cutscene step named after the scene its only script shows: 'This pendant is yours for 38,000G' ... 'You're going to regret seeing us.'",
+      "evidence": "E-0245"
+    },
+    "C8": {
+      "const": "SCRIPT_SCENE_MERCY",
+      "routine": "SceneMercy",
+      "note": "a cutscene step named after the scene its only script shows: 'Please! Mercy! Spare us! Take back...'",
+      "evidence": "E-0245"
+    },
+    "C9": {
+      "const": "SCRIPT_SCENE_MILAYOU_FOREST",
+      "routine": "SceneMilayouForest",
+      "note": "a cutscene step named after the scene its only script shows: 'Milayou I thought this forest looked...'",
+      "evidence": "E-0245"
+    },
+    "CA": {
+      "const": "SCRIPT_KEY_BOSS_BEATEN_2",
+      "routine": "KeyBossBeaten2",
+      "note": "the same as SCRIPT_KEY_BOSS_BEATEN for another boss: 'But No! I lost to this'",
+      "evidence": "E-0245"
+    },
+    "CB": {
+      "const": "SCRIPT_SCENE_CHEST_BATTLE",
+      "routine": "SceneChestBattle",
+      "note": "a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' (key entry mark and encounter)",
+      "evidence": "E-0245"
+    },
+    "CC": {
+      "const": "SCRIPT_SCENE_CYAL_SHINE",
+      "routine": "SceneCyalShine",
+      "note": "a cutscene step named after the scene its only script shows: ... 'So Cyal took a shine to...'",
+      "evidence": "E-0245"
+    },
+    "CD": {
+      "const": "SCRIPT_SCENE_YOU_DID_IT",
+      "routine": "SceneYouDidIt",
+      "note": "a cutscene step named after the scene its only script shows: ... 'Warubou Wa-hey! You did it, 0!'",
+      "evidence": "E-0245"
+    },
+    "CE": {
+      "const": "SCRIPT_HIDE_SPRITES",
+      "routine": "HideSprites",
+      "note": "wSpriteSlotCount = 0",
+      "evidence": "E-0245"
+    },
+    "CF": {
+      "const": "SCRIPT_SCENE_KEY_SHOP",
+      "routine": "SceneKeyShop",
+      "note": "a cutscene step named after the scene its only script shows: 'How good of you to overcome' ... 'Welcome to my Key Shop!'",
+      "evidence": "E-0245"
+    },
     "E0": {
       "const": "SCRIPT_INN",
       "routine": "InnMenu",

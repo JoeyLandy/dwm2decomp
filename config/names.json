@@ -1395,78 +1395,78 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:79F4": {
-    "name": "ScriptCommand11_Run",
-    "note": "implements script command type 11; reached through ScriptCommand11 in bank $10 (E-0038)",
+    "name": "SceneFarmKids",
+    "note": "implements script command type 11 (SCRIPT_SCENE_FARM_KIDS): a cutscene step named after the scene its only script shows: 'You must be the farm kids.' ... 'Warubou Wha? I smell something!'; reached through ScriptCommand11 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:77CC": {
-    "name": "ScriptCommand12_Run",
-    "note": "implements script command type 12; reached through ScriptCommand12 in bank $10 (E-0038)",
+    "name": "SceneLearnQuick",
+    "note": "implements script command type 12 (SCRIPT_SCENE_LEARN_QUICK): a cutscene step named after the scene its only script shows: 'Wow, you kids sure learn quick!' ... 'Oh It's all spinning around'; reached through ScriptCommand12 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:765D": {
-    "name": "ScriptCommand13_Run",
-    "note": "implements script command type 13; reached through ScriptCommand13 in bank $10 (E-0038)",
+    "name": "SceneSpinning",
+    "note": "implements script command type 13 (SCRIPT_SCENE_SPINNING): a cutscene step named after the scene its only script shows: 'Oh It's all spinning around' ... 'You must be the farm kids.'; reached through ScriptCommand13 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:75DD": {
-    "name": "ScriptCommand14_Run",
-    "note": "implements script command type 14; reached through ScriptCommand14 in bank $10 (E-0038)",
+    "name": "SceneWarubouSmells",
+    "note": "implements script command type 14 (SCRIPT_SCENE_WARUBOU_SMELLS): a cutscene step named after the scene its only script shows: 'Warubou Wha? I smell something!' ... 'What is this? Food? Perfect!'; reached through ScriptCommand14 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:73A0": {
-    "name": "ScriptCommand15_Run",
-    "note": "implements script command type 15; reached through ScriptCommand15 in bank $10 (E-0038)",
+    "name": "SceneWarubouFood",
+    "note": "implements script command type 15 (SCRIPT_SCENE_WARUBOU_FOOD): a cutscene step named after the scene its only script shows: 'Warubou What is this? Food? Perfect!' ... 'Calm down and listen!'; reached through ScriptCommand15 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:7024": {
-    "name": "ScriptCommand16_Run",
-    "note": "implements script command type 16; reached through ScriptCommand16 in bank $10 (E-0038)",
+    "name": "SceneWarubouFood2",
+    "note": "implements script command type 16 (SCRIPT_SCENE_WARUBOU_FOOD_2): a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_WARUBOU_FOOD; reached through ScriptCommand16 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:758C": {
-    "name": "ScriptCommand17_Run",
-    "note": "implements script command type 17; reached through ScriptCommand17 in bank $10 (E-0038)",
+    "name": "ScenePackage",
+    "note": "implements script command type 17 (SCRIPT_SCENE_PACKAGE): a cutscene step named after the scene its only script shows: 'Did you get the package from...' ... 'Oh goodness, you're filthy!'; reached through ScriptCommand17 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:567B": {
-    "name": "ScriptCommand18_Run",
-    "note": "implements script command type 18; reached through ScriptCommand18 in bank $10 (E-0038)",
+    "name": "SceneGreatlogKey",
+    "note": "implements script command type 18 (SCRIPT_SCENE_GREATLOG_KEY): a cutscene step named after the scene its only script shows: before '0 received the GreatLog Key.'; reached through ScriptCommand18 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6F5B": {
-    "name": "ScriptCommand19_Run",
-    "note": "implements script command type 19; reached through ScriptCommand19 in bank $10 (E-0038)",
+    "name": "SceneWarubouMagicKey",
+    "note": "implements script command type 19 (SCRIPT_SCENE_WARUBOU_MAGIC_KEY): a cutscene step named after the scene its only script shows: 'Warubou Wa-hey! Good, good, good!' ... 'This here is a Magic...'; reached through ScriptCommand19 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6F14": {
-    "name": "ScriptCommand1A_Run",
-    "note": "implements script command type 1A; reached through ScriptCommand1A in bank $10 (E-0038)",
+    "name": "SceneOasisKey",
+    "note": "implements script command type 1A (SCRIPT_SCENE_OASIS_KEY): a cutscene step named after the scene its only script shows: 'This here is a Magic...' ... '0 received the Oasis Key.'; reached through ScriptCommand1A in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4617": {
-    "name": "ScriptCommand1B_Run",
-    "note": "implements script command type 1B; reached through ScriptCommand1B in bank $10 (E-0038)",
+    "name": "SceneWarubouLeaves",
+    "note": "implements script command type 1B (SCRIPT_SCENE_WARUBOU_LEAVES): a cutscene step named after the scene its only script shows: 'C'mon, Warubou!' ... 'Have you heard about Magic Keys?'; reached through ScriptCommand1B in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7A2D": {
-    "name": "ScriptCommand1C_Run",
-    "note": "implements script command type 1C; reached through ScriptCommand1C in bank $10 (E-0038)",
+    "name": "SceneWarubouWarning",
+    "note": "implements script command type 1C (SCRIPT_SCENE_WARUBOU_WARNING): a cutscene step named after the scene its only script shows: 'Warubou Dangerous are other worlds!' ... 'Slash Hey, why the long faces?'; reached through ScriptCommand1C in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:786F": {
-    "name": "ScriptCommand1D_Run",
-    "note": "implements script command type 1D; reached through ScriptCommand1D in bank $10 (E-0038)",
+    "name": "SceneLongFaces",
+    "note": "implements script command type 1D (SCRIPT_SCENE_LONG_FACES): a cutscene step named after the scene its only script shows: 'Slash Hey, why the long faces?'; reached through ScriptCommand1D in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6E5F": {
-    "name": "ScriptCommand1E_Run",
-    "note": "implements script command type 1E; reached through ScriptCommand1E in bank $10 (E-0038)",
+    "name": "CheckItem",
+    "note": "implements script command type 1E (SCRIPT_CHECK_ITEM): sets wGameFlags836 from whether item hTemp0 is in the inventory (FindTemp0InInventoryList); reached through ScriptCommand1E in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:772E": {
-    "name": "ScriptCommand1F_Run",
-    "note": "implements script command type 1F; reached through ScriptCommand1F in bank $10 (E-0038)",
+    "name": "SceneMonsterInspection",
+    "note": "implements script command type 1F (SCRIPT_SCENE_MONSTER_INSPECTION): a cutscene step named after the scene its only script shows: 'Ah, three healthy monsters! Very well' ... 'Very good show! That was splendid'; reached through ScriptCommand1F in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6F7C": {
@@ -1475,43 +1475,43 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6EE7": {
-    "name": "ScriptCommand21_Run",
-    "note": "implements script command type 21; reached through ScriptCommand21 in bank $10 (E-0038)",
+    "name": "SceneKingAudience",
+    "note": "implements script command type 21 (SCRIPT_SCENE_KING_AUDIENCE): a cutscene step named after the scene its only script shows: 'King You wish to see our...' ... 'King I see. This is what...'; reached through ScriptCommand21 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:55F5": {
-    "name": "ScriptCommand22_Run",
-    "note": "implements script command type 22; reached through ScriptCommand22 in bank $10 (E-0038)",
+    "name": "SceneCanalGate",
+    "note": "implements script command type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene its only script shows: 'What? Open the Canal Gate more?'; reached through ScriptCommand22 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7625": {
-    "name": "ScriptCommand23_Run",
-    "note": "implements script command type 23; reached through ScriptCommand23 in bank $10 (E-0038)",
+    "name": "SceneWaterShortage",
+    "note": "implements script command type 23 (SCRIPT_SCENE_WATER_SHORTAGE): a cutscene step named after the scene its only script shows: 'King The town's water shortage seems...' ... 'King Wha-what? What happened?'; reached through ScriptCommand23 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:546F": {
-    "name": "ScriptCommand24_Run",
-    "note": "implements script command type 24; reached through ScriptCommand24 in bank $10 (E-0038)",
+    "name": "SceneTreasureTheft",
+    "note": "implements script command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only script shows: 'King What? Arrrrgh! Round up all...' ... 'King I apologize, but my treasures...'; reached through ScriptCommand24 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6EBA": {
-    "name": "ScriptCommand25_Run",
-    "note": "implements script command type 25; reached through ScriptCommand25 in bank $10 (E-0038)",
+    "name": "SceneWaterSolved",
+    "note": "implements script command type 25 (SCRIPT_SCENE_WATER_SOLVED): a cutscene step named after the scene its only script shows: 'You will? So we can go...' ... 'King This should solve the water...'; reached through ScriptCommand25 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6E17": {
-    "name": "ScriptCommand26_Run",
-    "note": "implements script command type 26; reached through ScriptCommand26 in bank $10 (E-0038)",
+    "name": "SceneMonstersInTow",
+    "note": "implements script command type 26 (SCRIPT_SCENE_MONSTERS_IN_TOW): a cutscene step named after the scene its only script shows: 'That will help you for certain.' ... 'Heh, you have monsters in tow?'; reached through ScriptCommand26 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:72D9": {
-    "name": "ScriptCommand27_Run",
-    "note": "implements script command type 27; reached through ScriptCommand27 in bank $10 (E-0038)",
+    "name": "SceneRivalDefeated",
+    "note": "implements script command type 27 (SCRIPT_SCENE_RIVAL_DEFEATED): a cutscene step named after the scene its only script shows: 'You defeated my monster? Urggh' ... 'You again! You're determined!'; reached through ScriptCommand27 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7271": {
-    "name": "ScriptCommand28_Run",
-    "note": "implements script command type 28; reached through ScriptCommand28 in bank $10 (E-0038)",
+    "name": "ShakeScreen",
+    "note": "implements script command type 28 (SCRIPT_SHAKE_SCREEN): shakes the screen (ScriptStepShakeScreen) with a sound effect; reached through ScriptCommand28 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:70EC": {
@@ -1520,168 +1520,168 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4047": {
-    "name": "ScriptCommand2A_Run",
-    "note": "implements script command type 2A; reached through ScriptCommand2A in bank $10 (E-0038)",
+    "name": "SceneWatchOut",
+    "note": "implements script command type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can keep trying, but you're...' ... 'Zzz Zzz Huh! Watch out!'; reached through ScriptCommand2A in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6B98": {
-    "name": "ScriptCommand2B_Run",
-    "note": "implements script command type 2B; reached through ScriptCommand2B in bank $10 (E-0038)",
+    "name": "SceneMermaidSong",
+    "note": "implements script command type 2B (SCRIPT_SCENE_MERMAID_SONG): a cutscene step named after the scene its only script shows: 'Then I'll sing! Lalala lala la' ... 'In the past, mermaids are said...'; reached through ScriptCommand2B in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6B5B": {
-    "name": "ScriptCommand2C_Run",
-    "note": "implements script command type 2C; reached through ScriptCommand2C in bank $10 (E-0038)",
+    "name": "SceneDancing",
+    "note": "implements script command type 2C (SCRIPT_SCENE_DANCING): a cutscene step named after the scene its only script shows: 'Then I'll sing! Lalala lala la' ... 'Erm The sense of rhythm just...'; reached through ScriptCommand2C in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6AFF": {
-    "name": "ScriptCommand2D_Run",
-    "note": "implements script command type 2D; reached through ScriptCommand2D in bank $10 (E-0038)",
+    "name": "SceneMermaidSong2",
+    "note": "implements script command type 2D (SCRIPT_SCENE_MERMAID_SONG_2): a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_MERMAID_SONG (two objects moved by table); reached through ScriptCommand2D in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6AEF": {
-    "name": "ScriptCommand2E_Run",
-    "note": "implements script command type 2E; reached through ScriptCommand2E in bank $10 (E-0038)",
+    "name": "WarpMap41",
+    "note": "implements script command type 2E (SCRIPT_WARP_MAP41): warps to map $41 (WarpToMap41); used after 'Close your eyes a little while.'; reached through ScriptCommand2E in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6ABE": {
-    "name": "ScriptCommand2F_Run",
-    "note": "implements script command type 2F; reached through ScriptCommand2F in bank $10 (E-0038)",
+    "name": "SceneTentacles",
+    "note": "implements script command type 2F (SCRIPT_SCENE_TENTACLES): a cutscene step named after the scene its only script shows: 'Close your eyes for a little...' ... 'Thick, suction-cupped tentacles snaked out'; reached through ScriptCommand2F in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6A91": {
-    "name": "ScriptCommand30_Run",
-    "note": "implements script command type 30; reached through ScriptCommand30 in bank $10 (E-0038)",
+    "name": "SceneSailorRing",
+    "note": "implements script command type 30 (SCRIPT_SCENE_SAILOR_RING): a cutscene step named after the scene its only script shows: after '0 received the Sailor Ring.'; reached through ScriptCommand30 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:5421": {
-    "name": "ScriptCommand31_Run",
-    "note": "implements script command type 31; reached through ScriptCommand31 in bank $10 (E-0038)",
+    "name": "ScenePirateGhosts",
+    "note": "implements script command type 31 (SCRIPT_SCENE_PIRATE_GHOSTS): a cutscene step named after the scene its only script shows: 'How could we die before enjoying...' ... 'The treasures are ours'; reached through ScriptCommand31 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7093": {
-    "name": "ScriptCommand32_Run",
-    "note": "implements script command type 32; reached through ScriptCommand32 in bank $10 (E-0038)",
+    "name": "GiveItemBlink",
+    "note": "implements script command type 32 (SCRIPT_GIVE_ITEM_BLINK): adds item wC928 to the inventory (AppendItemWC928ToInventory) and blinks object hTemp0; '0 obtained YunaSoul.'; reached through ScriptCommand32 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6969": {
-    "name": "ScriptCommand33_Run",
-    "note": "implements script command type 33; reached through ScriptCommand33 in bank $10 (E-0038)",
+    "name": "SceneCrate",
+    "note": "implements script command type 33 (SCRIPT_SCENE_CRATE): a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' ... '0 checked the crate.'; reached through ScriptCommand33 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6941": {
-    "name": "ScriptCommand34_Run",
-    "note": "implements script command type 34; reached through ScriptCommand34 in bank $10 (E-0038)",
+    "name": "SetTilesFlag310",
+    "note": "implements script command type 34 (SCRIPT_SET_TILES_FLAG_310): writes tiles $58-$5B into a 2 x 2 block of wScreenTileBuffer ($AA, $AB, $BE, $BF), redraws the screen and sets story flag $310; reached through ScriptCommand34 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:679F": {
-    "name": "ScriptCommand35_Run",
-    "note": "implements script command type 35; reached through ScriptCommand35 in bank $10 (E-0038)",
+    "name": "SceneKamehaEscape",
+    "note": "implements script command type 35 (SCRIPT_SCENE_KAMEHA_ESCAPE): a cutscene step named after the scene its only script shows: '0 checked the crate.' ... 'Kameha Wahahahah! Thanks for guiding me'; reached through ScriptCommand35 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7049": {
-    "name": "ScriptCommand36_Run",
-    "note": "implements script command type 36; reached through ScriptCommand36 in bank $10 (E-0038)",
+    "name": "SceneKamehaCaught",
+    "note": "implements script command type 36 (SCRIPT_SCENE_KAMEHA_CAUGHT): a cutscene step named after the scene its only script shows: 'Kameha Wahahahah! Thanks for guiding me' ... 'Kameha Urk! How you catch up?'; reached through ScriptCommand36 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:6F65": {
-    "name": "ScriptCommand37_Run",
-    "note": "implements script command type 37; reached through ScriptCommand37 in bank $10 (E-0038)",
+    "name": "SceneCrewFollows",
+    "note": "implements script command type 37 (SCRIPT_SCENE_CREW_FOLLOWS): a cutscene step named after the scene its only script shows: 'Aye, aye, sir! Right behind you!'; reached through ScriptCommand37 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:6D2B": {
-    "name": "ScriptCommand38_Run",
-    "note": "implements script command type 38; reached through ScriptCommand38 in bank $10 (E-0038)",
+    "name": "SceneKamehaFlees",
+    "note": "implements script command type 38 (SCRIPT_SCENE_KAMEHA_FLEES): a cutscene step named after the scene its only script shows: 'Kameha Arrrrh, clear the way!' ... 'Kameha Aiyeeeeeh'; reached through ScriptCommand38 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:67BA": {
-    "name": "ScriptCommand39_Run",
+    "name": "SceneMermaidKingdom",
     "note": "implements script command type 39 (also 3B); reached through ScriptCommand39 in bank $10 (E-0038)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:65B0": {
-    "name": "ScriptCommand3A_Run",
-    "note": "implements script command type 3A; reached through ScriptCommand3A in bank $10 (E-0038)",
+    "name": "SceneMasterThanks",
+    "note": "implements script command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only script shows: 'R Really? Wow! Thank you!' ... 'I became a master because I...'; reached through ScriptCommand3A in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:630F": {
-    "name": "ScriptCommand3C_Run",
-    "note": "implements script command type 3C; reached through ScriptCommand3C in bank $10 (E-0038)",
+    "name": "RewardItemOrKey",
+    "note": "implements script command type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry (AppendItemWC928ToInventory, WriteKeyEntryTemp0); 'Great, 0! Thanks a lot!' ... 'Here, 0! You hold onto it.'; reached through ScriptCommand3C in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:61A7": {
-    "name": "ScriptCommand3D_Run",
-    "note": "implements script command type 3D; reached through ScriptCommand3D in bank $10 (E-0038)",
+    "name": "RewardItemOrKey2",
+    "note": "implements script command type 3D (SCRIPT_REWARD_ITEM_OR_KEY_2): the same rewards as SCRIPT_REWARD_ITEM_OR_KEY in another scene: 'Fantastic! I can open my shop' ... 'I like you to have this.'; reached through ScriptCommand3D in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6126": {
-    "name": "ScriptCommand3E_Run",
-    "note": "implements script command type 3E; reached through ScriptCommand3E in bank $10 (E-0038)",
+    "name": "SceneStrongestMaster",
+    "note": "implements script command type 3E (SCRIPT_SCENE_STRONGEST_MASTER): a cutscene step named after the scene its only script shows: 'The strongest master I've ever...'; reached through ScriptCommand3E in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:60FE": {
-    "name": "ScriptCommand3F_Run",
-    "note": "implements script command type 3F; reached through ScriptCommand3F in bank $10 (E-0038)",
+    "name": "BlinkSprites",
+    "note": "implements script command type 3F (SCRIPT_BLINK_SPRITES): shows the first sprite slot only on alternate groups of four frames (wSpriteSlotCount by wFrameCounterLo bit 2); reached through ScriptCommand3F in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:6681": {
-    "name": "ScriptCommand40_Run",
-    "note": "implements script command type 40; reached through ScriptCommand40 in bank $10 (E-0038)",
+    "name": "SceneSpiritEnvoy",
+    "note": "implements script command type 40 (SCRIPT_SCENE_SPIRIT_ENVOY): a cutscene step named after the scene its only script shows: 'Ah, you are the spirit's envoy.' ... 'We reported to the King that...'; reached through ScriptCommand40 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:60E6": {
-    "name": "ScriptCommand41_Run",
-    "note": "implements script command type 41; reached through ScriptCommand41 in bank $10 (E-0038)",
+    "name": "SceneExplosion",
+    "note": "implements script command type 41 (SCRIPT_SCENE_EXPLOSION): a cutscene step named after the scene its only script shows: 'What? What was that explosion?' (screen shake and flash); reached through ScriptCommand41 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:64F3": {
-    "name": "ScriptCommand42_Run",
-    "note": "implements script command type 42; reached through ScriptCommand42 in bank $10 (E-0038)",
+    "name": "SceneReportToKing",
+    "note": "implements script command type 42 (SCRIPT_SCENE_REPORT_TO_KING): a cutscene step named after the scene its only script shows: 'We reported to the King that...'; reached through ScriptCommand42 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:631F": {
-    "name": "ScriptCommand43_Run",
-    "note": "implements script command type 43; reached through ScriptCommand43 in bank $10 (E-0038)",
+    "name": "SceneWallExit",
+    "note": "implements script command type 43 (SCRIPT_SCENE_WALL_EXIT): a cutscene step named after the scene its only script shows: '0 tapped on the wall.' ... 'Kameha That's it! That's the exit!'; reached through ScriptCommand43 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6079": {
-    "name": "ScriptCommand44_Run",
-    "note": "implements script command type 44; reached through ScriptCommand44 in bank $10 (E-0038)",
+    "name": "SceneRealKing",
+    "note": "implements script command type 44 (SCRIPT_SCENE_REAL_KING): a cutscene step named after the scene its only script shows: before 'I'm the real King, you fake!'; reached through ScriptCommand44 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:6277": {
-    "name": "ScriptCommand45_Run",
-    "note": "implements script command type 45; reached through ScriptCommand45 in bank $10 (E-0038)",
+    "name": "ScenePlanRuined",
+    "note": "implements script command type 45 (SCRIPT_SCENE_PLAN_RUINED): a cutscene step named after the scene its only script shows: 'Arrgh, you've ruined my plan' ... 'Bravo! We're saved!' (starts a scripted encounter); reached through ScriptCommand45 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:5F06": {
-    "name": "ScriptCommand46_Run",
-    "note": "implements script command type 46; reached through ScriptCommand46 in bank $10 (E-0038)",
+    "name": "SceneCheerYuna",
+    "note": "implements script command type 46 (SCRIPT_SCENE_CHEER_YUNA): a cutscene step named after the scene its only script shows: 'You're here to cheer Lady Yuna.' ... 'King Magnificent!'; reached through ScriptCommand46 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:6038": {
-    "name": "ScriptCommand47_Run",
-    "note": "implements script command type 47; reached through ScriptCommand47 in bank $10 (E-0038)",
+    "name": "SceneSpiritEnvoy2",
+    "note": "implements script command type 47 (SCRIPT_SCENE_SPIRIT_ENVOY_2): a cutscene step named after the scene its only script shows: 'Oh? An envoy from the spirit!' ... 'You startled me'; reached through ScriptCommand47 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:5D9D": {
-    "name": "ScriptCommand48_Run",
-    "note": "implements script command type 48; reached through ScriptCommand48 in bank $10 (E-0038)",
+    "name": "ScenePrincessMedicine",
+    "note": "implements script command type 48 (SCRIPT_SCENE_PRINCESS_MEDICINE): a cutscene step named after the scene its only script shows: 'STOP DON'T MEDDLE' ... 'Pardon me? You have medicine?' (encounter, removes an item); reached through ScriptCommand48 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:5C3B": {
-    "name": "ScriptCommand49_Run",
-    "note": "implements script command type 49; reached through ScriptCommand49 in bank $10 (E-0038)",
+    "name": "SceneMedicineGiven",
+    "note": "implements script command type 49 (SCRIPT_SCENE_MEDICINE_GIVEN): a cutscene step named after the scene its only script shows: after 'Pardon me? You have medicine?'; reached through ScriptCommand49 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:59E6": {
-    "name": "ScriptCommand4A_Run",
-    "note": "implements script command type 4A; reached through ScriptCommand4A in bank $10 (E-0038)",
+    "name": "SceneShield",
+    "note": "implements script command type 4A (SCRIPT_SCENE_SHIELD): a cutscene step named after the scene its only script shows: after '0 checked the shield.' (starts a scripted encounter); reached through ScriptCommand4A in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:57EA": {
-    "name": "ScriptCommand4B_Run",
-    "note": "implements script command type 4B; reached through ScriptCommand4B in bank $10 (E-0038)",
+    "name": "SceneShield2",
+    "note": "implements script command type 4B (SCRIPT_SCENE_SHIELD_2): a cutscene step named after the scene its only script shows: after '0 checked the shield.'; reached through ScriptCommand4B in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5FBC": {
@@ -1690,93 +1690,93 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4207": {
-    "name": "ScriptCommand4D_Run",
-    "note": "implements script command type 4D; reached through ScriptCommand4D in bank $10 (E-0038)",
+    "name": "SceneWaterReward",
+    "note": "implements script command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script shows: 'King This should solve the water...' (creates a monster record); reached through ScriptCommand4D in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:56CD": {
-    "name": "ScriptCommand4E_Run",
-    "note": "implements script command type 4E; reached through ScriptCommand4E in bank $10 (E-0038)",
+    "name": "SceneGrave",
+    "note": "implements script command type 4E (SCRIPT_SCENE_GRAVE): a cutscene step named after the scene its only script shows: '0 checked the grave.' ... 'Fine! You've done well...'; reached through ScriptCommand4E in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5F39": {
-    "name": "ScriptCommand4F_Run",
-    "note": "implements script command type 4F; reached through ScriptCommand4F in bank $10 (E-0038)",
+    "name": "SetTilesD2",
+    "note": "implements script command type 4F (SCRIPT_SET_TILES_D2): writes tiles $68-$6B into a 2 x 2 block of wScreenTileBuffer ($D2, $D3, $E6, $E7) and redraws the screen; reached through ScriptCommand4F in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5EB3": {
-    "name": "ScriptCommand50_Run",
-    "note": "implements script command type 50; reached through ScriptCommand50 in bank $10 (E-0038)",
+    "name": "SceneMadcondor",
+    "note": "implements script command type 50 (SCRIPT_SCENE_MADCONDOR): a cutscene step named after the scene its only script shows: 'Look! A MadCondor! It has something!'; reached through ScriptCommand50 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5DDD": {
-    "name": "ScriptCommand51_Run",
-    "note": "implements script command type 51; reached through ScriptCommand51 in bank $10 (E-0038)",
+    "name": "SceneMadcondorCry",
+    "note": "implements script command type 51 (SCRIPT_SCENE_MADCONDOR_CRY): a cutscene step named after the scene its only script shows: 'Kweeeeeh!'; reached through ScriptCommand51 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5DAF": {
-    "name": "ScriptCommand52_Run",
-    "note": "implements script command type 52; reached through ScriptCommand52 in bank $10 (E-0038)",
+    "name": "SceneSmallHole",
+    "note": "implements script command type 52 (SCRIPT_SCENE_SMALL_HOLE): a cutscene step named after the scene its only script shows: '0 checked the small hole.' ... 'You can take this treasure, but...'; reached through ScriptCommand52 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5C5F": {
-    "name": "ScriptCommand53_Run",
-    "note": "implements script command type 53; reached through ScriptCommand53 in bank $10 (E-0038)",
+    "name": "SceneJustice",
+    "note": "implements script command type 53 (SCRIPT_SCENE_JUSTICE): a cutscene step named after the scene its only script shows: 'Let the power of justice smite...' ... '0 checked the gravestone.'; reached through ScriptCommand53 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5AE4": {
-    "name": "ScriptCommand54_Run",
-    "note": "implements script command type 54; reached through ScriptCommand54 in bank $10 (E-0038)",
+    "name": "SceneGravestone",
+    "note": "implements script command type 54 (SCRIPT_SCENE_GRAVESTONE): a cutscene step named after the scene its only script shows: before '0 checked the gravestone.'; reached through ScriptCommand54 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5AD6": {
-    "name": "ScriptCommand55_Run",
-    "note": "implements script command type 55; reached through ScriptCommand55 in bank $10 (E-0038)",
+    "name": "SetFlag322",
+    "note": "implements script command type 55 (SCRIPT_SET_FLAG_322): sets story flag $322 (wStoryFlags + $64 bit 2); 'A door opened somewhere'; reached through ScriptCommand55 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5ABB": {
-    "name": "ScriptCommand56_Run",
-    "note": "implements script command type 56; reached through ScriptCommand56 in bank $10 (E-0038)",
+    "name": "SceneBeatenFairly",
+    "note": "implements script command type 56 (SCRIPT_SCENE_BEATEN_FAIRLY): a cutscene step named after the scene its only script shows: 'You've beaten me fairly Take...'; reached through ScriptCommand56 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5A16": {
-    "name": "ScriptCommand57_Run",
-    "note": "implements script command type 57; reached through ScriptCommand57 in bank $10 (E-0038)",
+    "name": "SceneThreeItemsBattle",
+    "note": "implements script command type 57 (SCRIPT_SCENE_THREE_ITEMS_BATTLE): a cutscene step named after the scene its only script shows: 'Good. You have brought the three...' ... 'Don't you ever give up?' (encounter); reached through ScriptCommand57 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:5404": {
-    "name": "ScriptCommand58_Run",
-    "note": "implements script command type 58; reached through ScriptCommand58 in bank $10 (E-0038)",
+    "name": "SceneThreeItems",
+    "note": "implements script command type 58 (SCRIPT_SCENE_THREE_ITEMS): a cutscene step named after the scene its only script shows: 'Kameha If the three items that...'; reached through ScriptCommand58 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5987": {
-    "name": "ScriptCommand59_Run",
+    "name": "SceneSawKameha",
     "note": "implements script command type 59 (also 5A); reached through ScriptCommand59 in bank $10 (E-0038)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:5248": {
-    "name": "ScriptCommand5B_Run",
-    "note": "implements script command type 5B; reached through ScriptCommand5B in bank $10 (E-0038)",
+    "name": "SceneLimbo",
+    "note": "implements script command type 5B (SCRIPT_SCENE_LIMBO): a cutscene step named after the scene its only script shows: 'Warubou Wa-hey! Take the treasures that...' ... 'Limbo is the King's domain!'; reached through ScriptCommand5B in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5919": {
-    "name": "ScriptCommand5C_Run",
-    "note": "implements script command type 5C; reached through ScriptCommand5C in bank $10 (E-0038)",
+    "name": "TakeItem",
+    "note": "implements script command type 5C (SCRIPT_TAKE_ITEM): removes item hTemp0 from the inventory (FindTemp0InInventoryList, RemoveInventorySlotShiftDown); '0 handed over the TidalBell.'; reached through ScriptCommand5C in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:58FE": {
-    "name": "ScriptCommand5D_Run",
-    "note": "implements script command type 5D; reached through ScriptCommand5D in bank $10 (E-0038)",
+    "name": "SceneDarckTaunt",
+    "note": "implements script command type 5D (SCRIPT_SCENE_DARCK_TAUNT): a cutscene step named after the scene its only script shows: 'N No How could my monsters' ... 'Darck Fawahahah!'; reached through ScriptCommand5D in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:4595": {
-    "name": "ScriptCommand5E_Run",
-    "note": "implements script command type 5E; reached through ScriptCommand5E in bank $10 (E-0038)",
+    "name": "SceneDarckDefeated",
+    "note": "implements script command type 5E (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the scene its only script shows: 'Darck Wha What? How could I' ... 'Darck Fwahahahah! Bravo! Splendid!'; reached through ScriptCommand5E in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:40E9": {
-    "name": "ScriptCommand5F_Run",
-    "note": "implements script command type 5F; reached through ScriptCommand5F in bank $10 (E-0038)",
+    "name": "SceneHomecoming",
+    "note": "implements script command type 5F (SCRIPT_SCENE_HOMECOMING): a cutscene step named after the scene its only script shows: 'Hehehe, no need to worry there!' ... 'Tara 0, congratulations! I was sad'; reached through ScriptCommand5F in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:587A": {
@@ -1785,108 +1785,108 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5761": {
-    "name": "ScriptCommand61_Run",
-    "note": "implements script command type 61; reached through ScriptCommand61 in bank $10 (E-0038)",
+    "name": "SceneKamehaStole",
+    "note": "implements script command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script shows: 'King Kameha made off with the...'; reached through ScriptCommand61 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:409A": {
-    "name": "ScriptCommand62_Run",
-    "note": "implements script command type 62; reached through ScriptCommand62 in bank $10 (E-0038)",
+    "name": "PersonalityMessage",
+    "note": "implements script command type 62 (SCRIPT_PERSONALITY_MESSAGE): shows a message chosen by a party monster's personality (PersonalityIndexOfRecord); reached through ScriptCommand62 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:572F": {
-    "name": "ScriptCommand63_Run",
-    "note": "implements script command type 63; reached through ScriptCommand63 in bank $10 (E-0038)",
+    "name": "SceneRivalFade",
+    "note": "implements script command type 63 (SCRIPT_SCENE_RIVAL_FADE): a cutscene step named after the scene its only script shows: 'You defeated my monster? Urggh' (palette fade); reached through ScriptCommand63 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:571D": {
-    "name": "ScriptCommand64_Run",
-    "note": "implements script command type 64; reached through ScriptCommand64 in bank $10 (E-0038)",
+    "name": "GatherFollowers",
+    "note": "implements script command type 64 (SCRIPT_GATHER_FOLLOWERS): moves the followers onto the leader (ScriptStepMoveFollowersToLeader); reached through ScriptCommand64 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:5065": {
-    "name": "ScriptCommand65_Run",
-    "note": "implements script command type 65; reached through ScriptCommand65 in bank $10 (E-0038)",
+    "name": "GrowthLimitInfo",
+    "note": "implements script command type 65 (SCRIPT_GROWTH_LIMIT_INFO): shows a monster's name and a record byte as digits: 'Everyone has a growth limit. Whether...'; reached through ScriptCommand65 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:5AF3": {
-    "name": "ScriptCommand66_Run",
-    "note": "implements script command type 66; reached through ScriptCommand66 in bank $10 (E-0038)",
+    "name": "SceneShieldGuardian",
+    "note": "implements script command type 66 (SCRIPT_SCENE_SHIELD_GUARDIAN): a cutscene step named after the scene its only script shows: before '0 checked the shield.' (encounter); reached through ScriptCommand66 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5D71": {
-    "name": "ScriptCommand67_Run",
-    "note": "implements script command type 67; reached through ScriptCommand67 in bank $10 (E-0038)",
+    "name": "SceneJustice2",
+    "note": "implements script command type 67 (SCRIPT_SCENE_JUSTICE_2): a cutscene step named after the scene its only script shows: 'Let the power of justice smite...'; reached through ScriptCommand67 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5A57": {
-    "name": "ScriptCommand68_Run",
-    "note": "implements script command type 68; reached through ScriptCommand68 in bank $10 (E-0038)",
+    "name": "SceneFoundMe",
+    "note": "implements script command type 68 (SCRIPT_SCENE_FOUND_ME): a cutscene step named after the scene its only script shows: 'I'm surprised anyone managed to find...'; reached through ScriptCommand68 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:532C": {
-    "name": "ScriptCommand69_Run",
-    "note": "implements script command type 69; reached through ScriptCommand69 in bank $10 (E-0038)",
+    "name": "SceneFoundMeBattle",
+    "note": "implements script command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only script shows: 'I'm surprised anyone managed to find...' ... 'Ah, so good of you to...' (encounter); reached through ScriptCommand69 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7D97": {
-    "name": "ScriptCommand6A_Run",
-    "note": "implements script command type 6A; reached through ScriptCommand6A in bank $10 (E-0038)",
+    "name": "SceneHorsingAround",
+    "note": "implements script command type 6A (SCRIPT_SCENE_HORSING_AROUND): a cutscene step named after the scene its only script shows: before 'Listen you two! Quit your horsing...'; reached through ScriptCommand6A in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7D62": {
-    "name": "ScriptCommand6B_Run",
-    "note": "implements script command type 6B; reached through ScriptCommand6B in bank $10 (E-0038)",
+    "name": "SceneVaultSettled",
+    "note": "implements script command type 6B (SCRIPT_SCENE_VAULT_SETTLED): a cutscene step named after the scene its only script shows: 'You've come at the right...' ... 'Good, that's settled then. The Vault...'; reached through ScriptCommand6B in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4D8D": {
-    "name": "ScriptCommand6C_Run",
-    "note": "implements script command type 6C; reached through ScriptCommand6C in bank $10 (E-0038)",
+    "name": "GiveMonster",
+    "note": "implements script command type 6C (SCRIPT_GIVE_MONSTER): creates a monster record of kind hTemp1 (CreateMonsterRecordOfKindTemp1); 'You'll take it? Excellent! I'll send...'; reached through ScriptCommand6C in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4C24": {
-    "name": "ScriptCommand6D_Run",
-    "note": "implements script command type 6D; reached through ScriptCommand6D in bank $10 (E-0038)",
+    "name": "SceneLimboMonster",
+    "note": "implements script command type 6D (SCRIPT_SCENE_LIMBO_MONSTER): a cutscene step named after the scene its only script shows: 'Limbo is the King's domain!' ... 'Prince Kameha has been missing' (creates a monster record); reached through ScriptCommand6D in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4B0F": {
-    "name": "ScriptCommand6E_Run",
-    "note": "implements script command type 6E; reached through ScriptCommand6E in bank $10 (E-0038)",
+    "name": "SceneLimboMonster2",
+    "note": "implements script command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_LIMBO_MONSTER; reached through ScriptCommand6E in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4AEE": {
-    "name": "ScriptCommand6F_Run",
-    "note": "implements script command type 6F; reached through ScriptCommand6F in bank $10 (E-0038)",
+    "name": "DeskKey",
+    "note": "implements script command type 6F (SCRIPT_DESK_KEY): the desk animation before '0 obtained the Brawn/Baffle/Soul/Magic Key.'; reached through ScriptCommand6F in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4A6D": {
-    "name": "ScriptCommand70_Run",
-    "note": "implements script command type 70; reached through ScriptCommand70 in bank $10 (E-0038)",
+    "name": "SceneTerry",
+    "note": "implements script command type 70 (SCRIPT_SCENE_TERRY): a cutscene step named after the scene its only script shows: '0 obtained the Magic Key.' ... 'Humph I'm Terry. I'm a master'; reached through ScriptCommand70 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:494D": {
-    "name": "ScriptCommand71_Run",
-    "note": "implements script command type 71; reached through ScriptCommand71 in bank $10 (E-0038)",
+    "name": "SceneKamehaKeyBattle",
+    "note": "implements script command type 71 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE): a cutscene step named after the scene its only script shows: 'Kameha So you're confident, huh?' (key entry and encounter); reached through ScriptCommand71 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:48A0": {
-    "name": "ScriptCommand72_Run",
-    "note": "implements script command type 72; reached through ScriptCommand72 in bank $10 (E-0038)",
+    "name": "SceneKamehaKeyBattle2",
+    "note": "implements script command type 72 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE_2): a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_KAMEHA_KEY_BATTLE; reached through ScriptCommand72 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:505A": {
-    "name": "ScriptCommand73_Run",
-    "note": "implements script command type 73; reached through ScriptCommand73 in bank $10 (E-0038)",
+    "name": "FollowerFacePlayer",
+    "note": "implements script command type 73 (SCRIPT_FOLLOWER_FACE_PLAYER): copies hPlayerFacing to the first follower record; reached through ScriptCommand73 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4858": {
-    "name": "ScriptCommand74_Run",
-    "note": "implements script command type 74; reached through ScriptCommand74 in bank $10 (E-0038)",
+    "name": "SetFlagRedraw",
+    "note": "implements script command type 74 (SCRIPT_SET_FLAG_REDRAW): sets a story flag, applies the map-screen flag events and redraws the screen (treasure chests); reached through ScriptCommand74 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7CFB": {
-    "name": "ScriptCommand75_Run",
-    "note": "implements script command type 75; reached through ScriptCommand75 in bank $10 (E-0038)",
+    "name": "SceneAtSea",
+    "note": "implements script command type 75 (SCRIPT_SCENE_AT_SEA): a cutscene step named after the scene its only script shows: after 'In the middle of the sea'; reached through ScriptCommand75 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7CA5": {
@@ -1895,128 +1895,128 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:7AC6": {
-    "name": "ScriptCommand77_Run",
-    "note": "implements script command type 77; reached through ScriptCommand77 in bank $10 (E-0038)",
+    "name": "SceneLandHo",
+    "note": "implements script command type 77 (SCRIPT_SCENE_LAND_HO): a cutscene step named after the scene its only script shows: 'Land ho! There's GreatLog!'; reached through ScriptCommand77 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4717": {
-    "name": "ScriptCommand78_Run",
-    "note": "implements script command type 78; reached through ScriptCommand78 in bank $10 (E-0038)",
+    "name": "SaveScreen",
+    "note": "implements script command type 78 (SCRIPT_SAVE_SCREEN): saves the screen buffer to BG map 1 (SaveScreenBufferToBGMap1); reached through ScriptCommand78 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4DA6": {
-    "name": "ScriptCommand79_Run",
-    "note": "implements script command type 79; reached through ScriptCommand79 in bank $10 (E-0038)",
+    "name": "ScenePoorChurch",
+    "note": "implements script command type 79 (SCRIPT_SCENE_POOR_CHURCH): a cutscene step named after the scene its only script shows: ... 'Our church is impoverished, so I...'; reached through ScriptCommand79 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:46E4": {
-    "name": "ScriptCommand7A_Run",
-    "note": "implements script command type 7A; reached through ScriptCommand7A in bank $10 (E-0038)",
+    "name": "SceneKamehaMissing",
+    "note": "implements script command type 7A (SCRIPT_SCENE_KAMEHA_MISSING): a cutscene step named after the scene its only script shows: before 'Prince Kameha has been missing from...'; reached through ScriptCommand7A in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:49FA": {
-    "name": "ScriptCommand7B_Run",
-    "note": "implements script command type 7B; reached through ScriptCommand7B in bank $10 (E-0038)",
+    "name": "SceneArenaChallenge",
+    "note": "implements script command type 7B (SCRIPT_SCENE_ARENA_CHALLENGE): a cutscene step named after the scene its only script shows: 'Really? Let's go to the Arena!' (encounter); reached through ScriptCommand7B in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4A2B": {
-    "name": "ScriptCommand7C_Run",
-    "note": "implements script command type 7C; reached through ScriptCommand7C in bank $10 (E-0038)",
+    "name": "SceneTerryBattle",
+    "note": "implements script command type 7C (SCRIPT_SCENE_TERRY_BATTLE): a cutscene step named after the scene its only script shows: 'Terry Humph Confident, huh?' (encounter); reached through ScriptCommand7C in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4755": {
-    "name": "ScriptCommand7D_Run",
-    "note": "implements script command type 7D; reached through ScriptCommand7D in bank $10 (E-0038)",
+    "name": "SceneThisWay",
+    "note": "implements script command type 7D (SCRIPT_SCENE_THIS_WAY): a cutscene step named after the scene its only script shows: 'This way Here Here' ... 'I heard from Lord Darck, but...'; reached through ScriptCommand7D in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:481C": {
-    "name": "ScriptCommand7E_Run",
-    "note": "implements script command type 7E; reached through ScriptCommand7E in bank $10 (E-0038)",
+    "name": "SceneGotTo",
+    "note": "implements script command type 7E (SCRIPT_SCENE_GOT_TO): a cutscene step named after the scene its only script shows: 'That's true I've got to...'; reached through ScriptCommand7E in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:479B": {
-    "name": "ScriptCommand7F_Run",
-    "note": "implements script command type 7F; reached through ScriptCommand7F in bank $10 (E-0038)",
+    "name": "SceneChestServant",
+    "note": "implements script command type 7F (SCRIPT_SCENE_CHEST_SERVANT): a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' ... 'How may we serve your mortal...'; reached through ScriptCommand7F in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:568E": {
-    "name": "ScriptCommandC0_Run",
-    "note": "implements script command type C0; reached through ScriptCommandC0 in bank $10 (E-0038)",
+    "name": "SceneRoltElder",
+    "note": "implements script command type C0 (SCRIPT_SCENE_ROLT_ELDER): a cutscene step named after the scene its only script shows: 'I'm the village's elder.' ... 'Rolt That was fast, 0.'; reached through ScriptCommandC0 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:55C5": {
-    "name": "ScriptCommandC1_Run",
-    "note": "implements script command type C1; reached through ScriptCommandC1 in bank $10 (E-0038)",
+    "name": "SceneTooStrong",
+    "note": "implements script command type C1 (SCRIPT_SCENE_TOO_STRONG): a cutscene step named after the scene its only script shows: 'Too strong Arroooh!' ... 'Rolt What? Cyal was abducted?'; reached through ScriptCommandC1 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4F14": {
-    "name": "ScriptCommandC2_Run",
-    "note": "implements script command type C2; reached through ScriptCommandC2 in bank $10 (E-0038)",
+    "name": "SceneGiveBackCyal",
+    "note": "implements script command type C2 (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only script shows: 'Rolt Shut up! Give back Cyal!'; reached through ScriptCommandC2 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:55A4": {
-    "name": "ScriptCommandC3_Run",
-    "note": "implements script command type C3; reached through ScriptCommandC3 in bank $10 (E-0038)",
+    "name": "KeyBossBeaten",
+    "note": "implements script command type C3 (SCRIPT_KEY_BOSS_BEATEN): marks key entry kind hTemp0 with bit 6 (MarkKeyEntryKindTemp0Bit6) and blinks an object: 'Wh-what? I Lost to a child?'; reached through ScriptCommandC3 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5577": {
-    "name": "ScriptCommandC6_Run",
-    "note": "implements script command type C6; reached through ScriptCommandC6 in bank $10 (E-0038)",
+    "name": "SceneCyalRolt",
+    "note": "implements script command type C6 (SCRIPT_SCENE_CYAL_ROLT): a cutscene step named after the scene its only script shows: 'Rolt 0, I'm sorry we put...' ... 'I'm glad that Cyal and Rolt...'; reached through ScriptCommandC6 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:50F2": {
-    "name": "ScriptCommandC4_Run",
-    "note": "implements script command type C4; reached through ScriptCommandC4 in bank $10 (E-0038)",
+    "name": "SceneBarrel",
+    "note": "implements script command type C4 (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into the barrel.' ... 'Kiral Ah! Back!' (encounter); reached through ScriptCommandC4 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5449": {
-    "name": "ScriptCommandC5_Run",
-    "note": "implements script command type C5; reached through ScriptCommandC5 in bank $10 (E-0038)",
+    "name": "SceneWizstone",
+    "note": "implements script command type C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral This stone, the WizStone, it...'; reached through ScriptCommandC5 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0F:4001": {
-    "name": "ScriptCommandC7_Run",
-    "note": "implements script command type C7; reached through ScriptCommandC7 in bank $10 (E-0038)",
+    "name": "ScenePendantSeller",
+    "note": "implements script command type C7 (SCRIPT_SCENE_PENDANT_SELLER): a cutscene step named after the scene its only script shows: 'This pendant is yours for 38,000G' ... 'You're going to regret seeing us.'; reached through ScriptCommandC7 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:541D": {
-    "name": "ScriptCommandC8_Run",
-    "note": "implements script command type C8; reached through ScriptCommandC8 in bank $10 (E-0038)",
+    "name": "SceneMercy",
+    "note": "implements script command type C8 (SCRIPT_SCENE_MERCY): a cutscene step named after the scene its only script shows: 'Please! Mercy! Spare us! Take back...'; reached through ScriptCommandC8 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:53AB": {
-    "name": "ScriptCommandC9_Run",
-    "note": "implements script command type C9; reached through ScriptCommandC9 in bank $10 (E-0038)",
+    "name": "SceneMilayouForest",
+    "note": "implements script command type C9 (SCRIPT_SCENE_MILAYOU_FOREST): a cutscene step named after the scene its only script shows: 'Milayou I thought this forest looked...'; reached through ScriptCommandC9 in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5378": {
-    "name": "ScriptCommandCA_Run",
-    "note": "implements script command type CA; reached through ScriptCommandCA in bank $10 (E-0038)",
+    "name": "KeyBossBeaten2",
+    "note": "implements script command type CA (SCRIPT_KEY_BOSS_BEATEN_2): the same as SCRIPT_KEY_BOSS_BEATEN for another boss: 'But No! I lost to this'; reached through ScriptCommandCA in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:51BD": {
-    "name": "ScriptCommandCB_Run",
-    "note": "implements script command type CB; reached through ScriptCommandCB in bank $10 (E-0038)",
+    "name": "SceneChestBattle",
+    "note": "implements script command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' (key entry mark and encounter); reached through ScriptCommandCB in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "73:5546": {
-    "name": "ScriptCommandCC_Run",
-    "note": "implements script command type CC; reached through ScriptCommandCC in bank $10 (E-0038)",
+    "name": "SceneCyalShine",
+    "note": "implements script command type CC (SCRIPT_SCENE_CYAL_SHINE): a cutscene step named after the scene its only script shows: ... 'So Cyal took a shine to...'; reached through ScriptCommandCC in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:501A": {
-    "name": "ScriptCommandCD_Run",
-    "note": "implements script command type CD; reached through ScriptCommandCD in bank $10 (E-0038)",
+    "name": "SceneYouDidIt",
+    "note": "implements script command type CD (SCRIPT_SCENE_YOU_DID_IT): a cutscene step named after the scene its only script shows: ... 'Warubou Wa-hey! You did it, 0!'; reached through ScriptCommandCD in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:403D": {
-    "name": "ScriptCommandCE_Run",
-    "note": "implements script command type CE; reached through ScriptCommandCE in bank $10 (E-0038)",
+    "name": "HideSprites",
+    "note": "implements script command type CE (SCRIPT_HIDE_SPRITES): wSpriteSlotCount = 0; reached through ScriptCommandCE in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "85:4001": {
-    "name": "ScriptCommandCF_Run",
-    "note": "implements script command type CF; reached through ScriptCommandCF in bank $10 (E-0038)",
+    "name": "SceneKeyShop",
+    "note": "implements script command type CF (SCRIPT_SCENE_KEY_SHOP): a cutscene step named after the scene its only script shows: 'How good of you to overcome' ... 'Welcome to my Key Shop!'; reached through ScriptCommandCF in bank $10 (E-0038, E-0245)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1C:4075": {

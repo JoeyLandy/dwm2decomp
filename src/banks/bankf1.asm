@@ -8,26 +8,26 @@ PauseMenu_State4_Sub02::
 Func_0F1_4001:: ; address name
     ld a, [wTemp0]
     rst $00
-    dw Func_0F1_4001_Case00
-    dw Func_0F1_4001_Case01
-    dw Func_0F1_4001_Case02
+    dw PauseMenu_State4_Sub02_Case00
+    dw PauseMenu_State4_Sub02_Case01
+    dw PauseMenu_State4_Sub02_Case02
 
 ; entry 0 of the `rst $00` table in Func_0F1_4001
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1
-Func_0F1_4001_Case00::
+PauseMenu_State4_Sub02_Case00::
 Jump_0F1_400B:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw Func_0F1_4001_Case00_Case00
-    dw Func_0F1_4001_Case00_Case01
+    dw PauseMenu_State4_Sub02_Case00_Case00
+    dw PauseMenu_State4_Sub02_Case00_Case01
 
 ; entry 0 of the `rst $00` table in Func_0F1_4001_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLevelUpGains
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wCounterPtr0Lo
 ; points at: wTemp1
-Func_0F1_4001_Case00_Case00::
+PauseMenu_State4_Sub02_Case00_Case00::
 Jump_0F1_4013:: ; address name
     ld a, [wLevelUpGains]
     or a, a
@@ -63,7 +63,7 @@ Jump_0F1_4013:: ; address name
 ; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wMenuCursor
 ; writes: wDataBankSave, wInventorySlot, wItemId, wTemp1, wSubMenuCursor
 ; points at: wMenuCursor, wInventory, wTextBuf2, wPlayerName, wTextBuf0, wTemp0
-Func_0F1_4001_Case00_Case01::
+PauseMenu_State4_Sub02_Case00_Case01::
 Jump_0F1_4057:: ; address name
     ld a, [wInventory]
     or a, a
@@ -147,18 +147,18 @@ Jump_0F1_40EC::
 ; entry 1 of the `rst $00` table in Func_0F1_4001
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1
-Func_0F1_4001_Case01::
+PauseMenu_State4_Sub02_Case01::
 Jump_0F1_40FC:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw Func_0F1_4001_Case01_Case00
-    dw Func_0F1_4001_Case01_Case01
+    dw PauseMenu_State4_Sub02_Case01_Case00
+    dw PauseMenu_State4_Sub02_Case01_Case01
 
 ; entry 0 of the `rst $00` table in Func_0F1_4001_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuRowCount, wMenuPageCount
 ; points at: wTemp1
-Func_0F1_4001_Case01_Case00::
+PauseMenu_State4_Sub02_Case01_Case00::
 Jump_0F1_4104:: ; address name
     call BuildScreenBlock32WithCursor_BankF1
     call CopyTileBufferToBGMap_BankF1
@@ -175,7 +175,7 @@ Jump_0F1_4104:: ; address name
 ; reads: wJoypadPressed, wSubMenuCursor
 ; writes: wTemp1, wTemp0
 ; points at: wSubMenuCursor, wTemp0
-Func_0F1_4001_Case01_Case01::
+PauseMenu_State4_Sub02_Case01_Case01::
 Jump_0F1_4119:: ; address name
     ld de, Data_0F1_4A72
     ld hl, wSubMenuCursor
@@ -212,21 +212,21 @@ Jump_0F1_4145::
 ; entry 2 of the `rst $00` table in Func_0F1_4001
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1
-Func_0F1_4001_Case02::
+PauseMenu_State4_Sub02_Case02::
 Jump_0F1_414E:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw Func_0F1_4001_Case02_Case00
-    dw Func_0F1_4001_Case02_Case01
-    dw Func_0F1_4001_Case02_Case02
-    dw Func_0F1_4001_Case02_Case03
+    dw PauseMenu_State4_Sub02_Case02_Case00
+    dw PauseMenu_State4_Sub02_Case02_Case01
+    dw PauseMenu_State4_Sub02_Case02_Case02
+    dw PauseMenu_State4_Sub02_Case02_Case03
 
 ; entry 0 of the `rst $00` table in Func_0F1_4001_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemId, wInventorySlot
 ; writes: wArg1, wCounterPtr0Lo, wDataBankSave, wStringIndex
 ; points at: wInventory, wTemp1
-Func_0F1_4001_Case02_Case00::
+PauseMenu_State4_Sub02_Case02_Case00::
 Jump_0F1_415A:: ; address name
     ld a, [wItemId]
     cp a, $1F
@@ -288,7 +288,7 @@ Jump_0F1_41B9::
 ; entry 1 of the `rst $00` table in Func_0F1_4001_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-Func_0F1_4001_Case02_Case01::
+PauseMenu_State4_Sub02_Case02_Case01::
 Jump_0F1_41C6:: ; address name
     call ClearWindowAndBuildBlock32WithCursor_BankF1
     call CopyTileBufferToBGMap_BankF1
@@ -300,7 +300,7 @@ Jump_0F1_41C6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory
 ; points at: wTemp1
-Func_0F1_4001_Case02_Case02::
+PauseMenu_State4_Sub02_Case02_Case02::
 Jump_0F1_41D1:: ; address name
     xor a, a
     ld [wStringCategory], a
@@ -313,7 +313,7 @@ Jump_0F1_41D1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wTemp0, wTemp1
-Func_0F1_4001_Case02_Case03::
+PauseMenu_State4_Sub02_Case02_Case03::
 Jump_0F1_41E0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -325,7 +325,7 @@ Jump_0F1_41E0:: ; address name
     ret
 
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
-; 2 call sites from 2 routines (e.g. Func_0F1_4001_Case00_Case00, BuildScreenBlock32WithCursor_BankF1)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case00, BuildScreenBlock32WithCursor_BankF1)
 ; reads: wInventory, wMenuItemCount, wMenuPage
 BuildInventoryScreenBase_BankF1::
 Func_0F1_41EE:: ; address name
@@ -359,7 +359,7 @@ Jump_0F1_422C::
     ret
 
 ; runs Func_0F1_41EE, copies block $32 and draws the cursor for wC46E & 7 (E-0122)
-; 4 call sites from 4 routines (e.g. Func_0F1_4001_Case01_Case00, ClearWindowAndBuildBlock32WithCursor_BankF1, BuildItemScreenForWItemId_BankF1, BuildScreenBlocks32And0F_BankF1)
+; 4 call sites from 4 routines (e.g. PauseMenu_State4_Sub02_Case01_Case00, ClearWindowAndBuildBlock32WithCursor_BankF1, BuildItemScreenForWItemId_BankF1, BuildScreenBlocks32And0F_BankF1)
 ; reads: wMenuCursor
 BuildScreenBlock32WithCursor_BankF1::
 Func_0F1_422D:: ; address name
@@ -434,7 +434,7 @@ Func_0F1_429C:: ; address name
     ret
 
 ; clears the default window, fills tiles, builds block $32, copies block $10 and draws the cursor for wC46F & 3 (E-0122)
-; 1 call site from 1 routine (e.g. Func_0F1_4001_Case02_Case01)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case02_Case01)
 ; reads: wSubMenuCursor
 ClearWindowAndBuildBlock32WithCursor_BankF1::
 Func_0F1_42B6:: ; address name
@@ -452,7 +452,7 @@ Func_0F1_42B6:: ; address name
     ret
 
 ; the same instruction sequence as ShowSelectedItemDescription (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 2 routines (e.g. Func_0F1_4001_Case00_Case01, Func_0F1_4001_Case00_Case00)
+; 4 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case01, PauseMenu_State4_Sub02_Case00_Case00)
 ; reads: wMenuPage, wMenuCursor
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory
@@ -485,7 +485,7 @@ Jump_0F1_42F5::
     ret
 
 ; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wC61E entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
-; 2 call sites from 1 routine (e.g. Func_0F1_4001_Case00_Case01)
+; 2 call sites from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_Case01)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wInventory, wMenuPage
 ; writes: wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wInventory
@@ -580,7 +580,7 @@ Jump_0F1_436E::
     ret
 
 ; when wMenuPageCount is non-zero, writes tile $E1 + (wMenuPage & $0F) at vBGMap0 + $10F (E-0067) (the same 20 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_0F1_4001_Case00_Case01)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_Case01)
 ; reads: wMenuPageCount, wMenuPage
 DrawMenuPageNumber_BankF1::
 Func_0F1_43A0:: ; address name
@@ -597,7 +597,7 @@ Jump_0F1_43B3::
     ret
 
 ; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. Func_0F1_4001_Case00_Case01, Func_0F1_4001_Case00_Case00)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case01, PauseMenu_State4_Sub02_Case00_Case00)
 ; reads: wMenuItemCount, wMenuPage, wMenuLastPageRows, wMenuCursor
 ; writes: wMenuRowCount, wMenuCursor
 ; points at: wMenuPage
@@ -631,7 +631,7 @@ Jump_0F1_43DA::
     ret
 
 ; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. Func_0F1_4001_Case00_Case00)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_Case00)
 ; reads: wMenuPage, wMenuLastPageRows
 ; writes: wMenuPageCount, wMenuItemCount, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
@@ -1097,7 +1097,7 @@ Data_0F1_47C8:: ; heuristic: target of a monotone pointer table; C0
     db $C9
 
 ; the same 57 bytes as CopyTileBufferToBGMap (03:42DA)
-; 3 call sites from 3 routines (e.g. Func_0F1_4001_Case00_Case00, Func_0F1_4001_Case01_Case00, Func_0F1_4001_Case02_Case01)
+; 3 call sites from 3 routines (e.g. PauseMenu_State4_Sub02_Case00_Case00, PauseMenu_State4_Sub02_Case01_Case00, PauseMenu_State4_Sub02_Case02_Case01)
 ; points at: wScreenTileBuffer
 CopyTileBufferToBGMap_BankF1::
 Func_0F1_4811:: ; address name
@@ -1175,7 +1175,7 @@ Jump_0F1_484C::
     ret
 
 ; far-calls Func_002_5E82 and reloads the record list name tiles (E-0122)
-; 1 call site from 1 routine (e.g. Func_0F1_4001_Case00_Case00)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_Case00)
 RefreshRecordListAndNameTiles_BankF1::
 Func_0F1_4866:: ; address name
     farcall RunFunc5E85Twice
@@ -1183,7 +1183,7 @@ Func_0F1_4866:: ; address name
     ret
 
 ; the same instruction sequence as UpdateMenuCursor (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 2 call sites from 2 routines (e.g. Func_0F1_4001_Case00_Case01, Func_0F1_4001_Case01_Case01)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_Sub02_Case00_Case01, PauseMenu_State4_Sub02_Case01_Case01)
 ; reads: wJoypadPressedRepeat, wMenuRowCount, wMenuPageCount, wMenuPage, wMenuLastPageRows, wFrameCounterLo
 ; writes: wFrameCounterLo, wMenuPage
 UpdateMenuCursor_BankF1::
@@ -1536,11 +1536,11 @@ Func_0F1_4A23:: ; address name
 Data_0F1_4A5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $98, $A1, $98, $E1, $98, $21, $99, $61, $99, $A1, $99
 
-; address loaded by Func_0F1_4001_Case00_Case01, BuildScreenBlock32WithCursor_BankF1
+; address loaded by PauseMenu_State4_Sub02_Case00_Case01, BuildScreenBlock32WithCursor_BankF1
 Data_0F1_4A6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $98, $69, $98, $A9, $98, $E9, $98
 
-; address loaded by Func_0F1_4001_Case01_Case01, BuildScreenBlocks32And0FWithCursor_BankF1, ClearWindowAndBuildBlock32WithCursor_BankF1
+; address loaded by PauseMenu_State4_Sub02_Case01_Case01, BuildScreenBlocks32And0FWithCursor_BankF1, ClearWindowAndBuildBlock32WithCursor_BankF1
 Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $98, $E1, $98, $21, $99, $61, $99, $47, $99, $87, $99, $C7, $99, $07, $9A
     db $61, $98, $A1, $98, $4A, $99, $8A, $99, $CA, $99, $0A, $9A, $64, $98, $A4, $98
@@ -1584,7 +1584,7 @@ Jump_0F1_4AC5::
     ret
 
 ; unless a fade is running, runs the routine for wD780 (jump table of eighteen) (E-0124)
-; 3 call sites from 3 routines (e.g. RunLinkExchangeState_4431_Case01, EggServiceMenu_Bank1B_Case0D, Func_033_5215_Table2_Case0D)
+; 3 call sites from 3 routines (e.g. RunLinkExchangeState_4431_Case01, EggServiceMenu_Bank1B_Case0D, RunLinkExchangeState_450D_Case01_Sub01_Table2_Case0D)
 ; reads: wFadeState, wScreenState
 RunScreenStateWhenNotFading_F1::
 Func_0F1_4AD0:: ; address name
@@ -3791,7 +3791,7 @@ Func_0F1_5834:: ; address name
     ret
 
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
-; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18, EggServiceMenu_Bank1B_Case05_Case07, Func_033_5215_Table2_Case05_Case06)
+; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18, EggServiceMenu_Bank1B_Case05_Case07, RunLinkExchangeState_450D_Case01_Sub01_Table2_Case05_Case06)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
 HandleThreeChoiceCursorInput_F1::

@@ -4386,7 +4386,7 @@ Jump_012_5B8C::
     ret
 
 ; wScriptParam1 = wScriptParam0 / 6 (capped at 4), draws the script sprite, and advances wScriptStep after $1E frames (E-0125)
-; 1 call site from 1 routine (e.g. ScriptCommand3E_Run_Case02)
+; 1 call site from 1 routine (e.g. SceneStrongestMaster_Case02)
 ; reads: wScriptParam0
 ; writes: wScriptParam1
 ; points at: wScriptStep
@@ -4477,7 +4477,7 @@ Func_012_5BD9:: ; address name
     ret
 
 ; QueueSoundEffect $83, then wScriptStep += 1 (E-0114)
-; 1 call site from 1 routine (e.g. ScriptCommand3E_Run_Case01)
+; 1 call site from 1 routine (e.g. SceneStrongestMaster_Case01)
 ; points at: wScriptStep
 PlaySound83AndAdvanceScriptStep::
 Func_012_5C27:: ; address name
@@ -4488,7 +4488,7 @@ Func_012_5C27:: ; address name
     ret
 
 ; A = wC195 >> 4, DE = ScriptCommand85_Run_Case00, B = $7E, then continues at Jump_012_5C4E (E-0126)
-; 1 call site from 1 routine (e.g. ScriptCommand3E_Run_Case00)
+; 1 call site from 1 routine (e.g. SceneStrongestMaster_Case00)
 ; reads: wMapSpriteKind, wIsCGB, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wOBJPaletteUploadRequest, wMessageIndex, wMessageGroup, wFollowerRecords, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
@@ -4637,15 +4637,15 @@ Func_012_5CFA:: ; address name
     ld [wJoypadPressed], a
     ld a, [wScriptStep]
     rst $00
-    dw Func_012_5CFA_Case00
-    dw Func_012_5CFA_Case01
+    dw ScriptCommand83_Run_Sub01_Case00
+    dw ScriptCommand83_Run_Sub01_Case01
 
 ; entry 0 of the `rst $00` table in Func_012_5CFA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, hPlayerY
 ; writes: hPlayerStateFlags, hFieldDrawFlags, hPlayerSpriteMode, hPlayerY, wScriptParam0
 ; points at: wScriptStep
-Func_012_5CFA_Case00::
+ScriptCommand83_Run_Sub01_Case00::
 Jump_012_5D09:: ; address name
     ldh a, [hPlayerStateFlags]
     and a, $F7
@@ -4668,7 +4668,7 @@ Jump_012_5D09:: ; address name
 ; reads: wScriptParam0, hPlayerX, hPlayerY, hPlayerFacing, hPlayerStateFlags
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0, wFollowerRecords, hFieldDrawFlags, wScriptStartRequest, hPlayerStateFlags, hPlayerStepDXLo, ...
 ; points at: hPlayerY, hPlayerX
-Func_012_5CFA_Case01::
+ScriptCommand83_Run_Sub01_Case01::
 Jump_012_5D25:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -4763,19 +4763,19 @@ Func_012_5DB6:: ; address name
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
-    dw Func_012_5DB6_Case03
-    dw Func_012_5DB6_Case04
-    dw Func_012_5DB6_Case05
-    dw Func_012_5DB6_Case06
-    dw Func_012_5DB6_Case07
-    dw Func_012_5DB6_Case08
+    dw ScriptCommand83_Run_Sub02_Case03
+    dw ScriptCommand83_Run_Sub02_Case04
+    dw ScriptCommand83_Run_Sub02_Case05
+    dw ScriptCommand83_Run_Sub02_Case06
+    dw ScriptCommand83_Run_Sub02_Case07
+    dw ScriptCommand83_Run_Sub02_Case08
 
 ; entry 8 of the `rst $00` table in Func_012_5DB6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerY, hPlayerStateFlags, hPlayerFacing
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0, hPlayerY, hPlayerStateFlags, hPlayerSpriteMode, wScriptStartRequest
 ; points at: hPlayerY, hPlayerX
-Func_012_5DB6_Case08::
+ScriptCommand83_Run_Sub02_Case08::
 Jump_012_5DD3:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -4844,7 +4844,7 @@ Jump_012_5E37::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, hMapId
 ; points at: wScriptStep
-Func_012_5DB6_Case07::
+ScriptCommand83_Run_Sub02_Case07::
 Jump_012_5E3C:: ; address name
     call DrawScriptMetaSprite21AtScrollOffset
     ld hl, wScriptStep
@@ -4873,7 +4873,7 @@ Jump_012_5E5C::
     call QueueMusic
     ret
 
-; address loaded by Func_012_5DB6_Case07
+; address loaded by ScriptCommand83_Run_Sub02_Case07
 Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $FF
 
@@ -4882,7 +4882,7 @@ Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wOBJPaletteUploadRequest, wMessageIndex, wMessageGroup, hFieldDrawFlags, wFollowerRecords, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
-Func_012_5DB6_Case03::
+ScriptCommand83_Run_Sub02_Case03::
 Jump_012_5E64:: ; address name
     ld de, Data_07E_58FF
     ld b, $7E
@@ -4971,18 +4971,18 @@ Func_012_5EE7:: ; address name
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
-    dw Func_012_5EE7_Case03
-    dw Func_012_5DB6_Case04
-    dw Func_012_5DB6_Case05
-    dw Func_012_5DB6_Case06
-    dw Func_012_5EE7_Case07
-    dw Func_012_5EE7_Case08
-    dw Func_012_5EE7_Case09
+    dw ScriptCommand83_Run_Sub03_Case03
+    dw ScriptCommand83_Run_Sub02_Case04
+    dw ScriptCommand83_Run_Sub02_Case05
+    dw ScriptCommand83_Run_Sub02_Case06
+    dw ScriptCommand83_Run_Sub03_Case07
+    dw ScriptCommand83_Run_Sub03_Case08
+    dw ScriptCommand83_Run_Sub03_Case09
 
 ; entry 4 of the `rst $00` table in Func_012_5DB6
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Func_012_5DB6_Case04::
+ScriptCommand83_Run_Sub02_Case04::
 Jump_012_5F06:: ; address name
     ld b, $1E
     call StepScriptParam0Counter_Bank12
@@ -4996,7 +4996,7 @@ Jump_012_5F06:: ; address name
 ; reads: wScriptParam0, hPlayerFacing, wFollowerRecords
 ; writes: wStepPtrLo, wStepPtrHi, hPlayerFacing, wScriptParam0
 ; points at: hPlayerY, wScriptStep
-Func_012_5DB6_Case05::
+ScriptCommand83_Run_Sub02_Case05::
 Jump_012_5F11:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -5033,7 +5033,7 @@ Jump_012_5F30::
 ; reads: hPlayerStateFlags, wScriptParam0, hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wTriggerEnable, hPlayerStateFlags, wStepPtrLo, wStepPtrHi, wScriptParam0, wFollowerRecords, hFieldDrawFlags, wScriptStartRequest, ...
 ; points at: hPlayerY
-Func_012_5EE7_Case09::
+ScriptCommand83_Run_Sub03_Case09::
 Jump_012_5F4D:: ; address name
     ld a, $01
     ld [wTriggerEnable], a
@@ -5101,7 +5101,7 @@ Jump_012_5FC8::
 ; reads: wFieldActionRequest, hPlayerStateFlags, hPlayerX, hPlayerY, hPlayerFacing, wJoypadHeld, wSpriteSlotCount, wSpriteSlots, ...
 ; writes: wJoypadHeld, hPlayerSpriteMode, hPlayerY, wScriptParam0, hPlayerFacing
 ; points at: wTilesUnderPoint, wScriptStep
-Func_012_5EE7_Case08::
+ScriptCommand83_Run_Sub03_Case08::
 Jump_012_5FC9:: ; address name
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -5222,7 +5222,7 @@ Jump_012_606A::
 ; reads: wScriptParam0, hPlayerY, hPlayerFacing
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0, hPlayerY, hPlayerSpriteMode
 ; points at: hPlayerY, wScriptStep, hPlayerX
-Func_012_5EE7_Case07::
+ScriptCommand83_Run_Sub03_Case07::
 Jump_012_6077:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -5290,7 +5290,7 @@ Jump_012_60D6::
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags
 ; points at: wScriptStep
-Func_012_5DB6_Case06::
+ScriptCommand83_Run_Sub02_Case06::
 Jump_012_60DB:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
@@ -5330,7 +5330,7 @@ Jump_012_60FD::
     ret
 
 ; draws metasprite set $21 (or $22 unless wC195 & $0F = 1), flipped by the player facing, at the scroll position plus (wMessageIndex + 8, wMessageGroup + $10) (E-0125)
-; 4 call sites from 4 routines (e.g. Func_012_5EE7_Case07, Func_012_5DB6_Case08, Func_012_5DB6_Case07, Func_012_5DB6_Case06)
+; 4 call sites from 4 routines (e.g. ScriptCommand83_Run_Sub03_Case07, ScriptCommand83_Run_Sub02_Case08, ScriptCommand83_Run_Sub02_Case07, ScriptCommand83_Run_Sub02_Case06)
 ; reads: wMapSpriteKind, hPlayerFacing, hScrollX, hScrollXHi, wMessageIndex, hScrollY, hScrollYHi, wMessageGroup
 ; writes: hSpriteSetIndex, hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi
 ; points at: hSpriteSetIndex
@@ -5389,7 +5389,7 @@ Jump_012_6132::
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wOBJPaletteUploadRequest, wMessageIndex, wMessageGroup, hFieldDrawFlags, wFollowerRecords, wScriptParam0
 ; points at: wOBJPaletteBuffer, wScriptStep
-Func_012_5EE7_Case03::
+ScriptCommand83_Run_Sub03_Case03::
 Jump_012_616C:: ; address name
     ld de, Data_07E_594A
     ld b, $7E
@@ -5465,7 +5465,7 @@ Jump_012_61D7::
     ret
 
 ; script step: first frame sets the follower targets from the leader; later frames step the followers until the wC921 counter reaches $11, then advances wScriptStep (E-0122)
-; 7 call sites from 7 routines (e.g. ScriptCommand43_Run_Case04, ScriptCommand38_Run_Case00, ScriptCommand61_Run_Case00, ScriptCommand64_Run_Case00, ...)
+; 7 call sites from 7 routines (e.g. SceneWallExit_Case04, SceneKamehaFlees_Case00, SceneKamehaStole_Case00, GatherFollowers_Case00, ...)
 ; reads: wScriptParam0
 ; points at: wScriptParam0, wScriptStep
 ScriptStepMoveFollowersToLeader::
@@ -6044,7 +6044,7 @@ Jump_012_6504::
     ret
 
 ; for 30 frames alternates every 4 frames between the normal palettes and their inverse (DMG palettes $D2/$E2 and $2D/$1D), then advances wScriptStep (E-0127)
-; 7 call sites from 7 routines (e.g. ScriptCommand58_Run_Case21, ScriptCommand4A_Run_Case01, ScriptCommand41_Run_Case07, ScriptCommandA0_Run_Case01, ...)
+; 7 call sites from 7 routines (e.g. SceneThreeItems_Case21, SceneShield_Case01, SceneExplosion_Case07, ScriptCommandA0_Run_Case01, ...)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wBGPaletteUploadRequest, wScriptParam0
 ; points at: wDMGPaletteBGP, wBGPaletteCopy, wBGPaletteBuffer, wScriptStep
@@ -6488,9 +6488,9 @@ Func_012_6787:: ; address name
 
 Jump_012_6791::
     rst $00
-    dw Func_012_6787_Case00
-    dw Func_012_6787_Case01
-    dw Func_012_6787_Case02
+    dw ScriptCommand85_Run_Case05_Sub01_Sub01_Case00
+    dw ScriptCommand85_Run_Case05_Sub01_Sub01_Case01
+    dw ScriptCommand85_Run_Case05_Sub01_Sub01_Case02
     dw RunMessageBox_Bank12_Case03
 
 ; entry 0 of the `rst $00` table in Func_012_6787
@@ -6498,7 +6498,7 @@ Jump_012_6791::
 ; reads: hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wMessageState
-Func_012_6787_Case00::
+ScriptCommand85_Run_Case05_Sub01_Sub01_Case00::
 Jump_012_679A:: ; address name
     pop af
     or a, a
@@ -6534,7 +6534,7 @@ Jump_012_67CD::
 ; reads: wTextWindowState, wMessageIndex
 ; writes: wStringIndex, wStringCategory
 ; points at: wMessageState
-Func_012_6787_Case01::
+ScriptCommand85_Run_Case05_Sub01_Sub01_Case01::
 Jump_012_67D2:: ; address name
     pop af
     ld a, [wTextWindowState]
@@ -6554,7 +6554,7 @@ Jump_012_67D2:: ; address name
 ; reads: wTextFlags, hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wMessageState
-Func_012_6787_Case02::
+ScriptCommand85_Run_Case05_Sub01_Sub01_Case02::
 Jump_012_67EE:: ; address name
     pop af
     ld a, [wTextFlags]
@@ -6653,7 +6653,7 @@ Func_012_684F:: ; address name
     jr Jump_012_683F
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. Func_012_5EE7_Case08)
+; 1 call site from 1 routine (e.g. ScriptCommand83_Run_Sub03_Case08)
 ; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank12_6854::
 Func_012_6854:: ; address name
@@ -6847,7 +6847,7 @@ Jump_012_6948::
     ret
 
 ; writes key entry hFFC6: byte 0 = hFFC7 and byte 3 = $80; for kind $FE generates the remaining bytes (Func_061_40B4, Func_060_6916) from hFFC7-hFFC9 (E-0125)
-; 15 call sites from 11 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ArenaMenu_Case24, ScriptCommand58_Run_Case2B, ...)
+; 15 call sites from 11 routines (e.g. GenerateNewKeyEntry, MapEventCountKeysAndStartScript5039, ArenaMenu_Case24, SceneThreeItems_Case2B, ...)
 ; reads: hTemp0, hTemp1, wPartyStrength, hTemp2, hTemp3
 ; writes: hTemp0
 WriteKeyEntryTemp0::
@@ -6891,7 +6891,7 @@ Jump_012_6973::
     ret
 
 ; counts the 4-byte wKeyList entries before the first $FF: hFFC6 = the count, or $80 when all 32 are in use (E-0074)
-; 14 call sites from 10 routines (e.g. MapEventCountKeysAndStartScript5039, ArenaMenu_Case24, ScriptCommand58_Run_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
+; 14 call sites from 10 routines (e.g. MapEventCountKeysAndStartScript5039, ArenaMenu_Case24, SceneThreeItems_Case2B, TalkMsg0512_KamehaYo0Thanks, ...)
 ; writes: hTemp0
 ; points at: wKeyList
 CountKeysOrFull::
@@ -7129,7 +7129,7 @@ Jump_012_6ABC::
     ret
 
 ; decompresses Data_07E_5595 to vTiles0 + $300 (or + $700 when hFFC6 is set), wC949 = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125)
-; 2 call sites from 2 routines (e.g. RunScriptSubStep_7363_Case00, ScriptCommand16_Run_Case0F)
+; 2 call sites from 2 routines (e.g. RunScriptSubStep_7363_Case00, SceneWarubouFood2_Case0F)
 ; reads: hTemp0, wIsCGB
 ; writes: wSpriteFloatY, wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
@@ -10359,7 +10359,7 @@ Jump_012_7DC3::
     ret
 
 ; hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches
-; 48 call sites from 24 routines (e.g. RollFieldEventOnTallTiles, Func_004_58C2_Case4F, Func_004_58C2_Case6A, Func_004_612B_Case38, ...)
+; 48 call sites from 24 routines (e.g. RollFieldEventOnTallTiles, DispatchTalkEvent_Case03_Sub01_Case4F, DispatchTalkEvent_Case03_Sub01_Case6A, DispatchTalkEvent_Case02_Sub01_Case38, ...)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wInventory
@@ -10395,7 +10395,7 @@ Jump_012_7DED::
     ret
 
 ; hFFC6 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last slot keeps its old value), then wC634 = $FF; nothing moves when the slot is $17 (E-0106)
-; 18 call sites from 11 routines (e.g. Func_004_58C2_Case6A, Func_004_612B_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
+; 18 call sites from 11 routines (e.g. DispatchTalkEvent_Case03_Sub01_Case6A, DispatchTalkEvent_Case02_Sub01_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
 ; reads: hTemp0
 ; writes: wInventory
 ; points at: wInventory
@@ -10426,7 +10426,7 @@ Jump_012_7E09::
     ret
 
 ; hFFC7 = the index of the first party member knowing skill $76-$7D or $92 and hFFC8 = that skill, or hFFC7 = $80 (E-0128)
-; 1 call site from 1 routine (e.g. Func_004_58C2_Case13)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case03_Sub01_Case13)
 ; reads: wPartyCount, hTemp1, hTemp0
 ; writes: rRAMG, hTemp1, hTemp2
 ; points at: wPartyList

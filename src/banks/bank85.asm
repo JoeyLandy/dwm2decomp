@@ -1,21 +1,21 @@
 SECTION "Bank 85", ROMX[$4000], BANK[$85]
     db $85
 
-; implements script command type CF; reached through ScriptCommandCF in bank $10 (E-0038)
+; implements script command type CF (SCRIPT_SCENE_KEY_SHOP): a cutscene step named after the scene its only script shows: 'How good of you to overcome' ... 'Welcome to my Key Shop!'; reached through ScriptCommandCF in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommandCF)
 ; reads: wScriptStep
-ScriptCommandCF_Run::
+SceneKeyShop::
 Func_085_4001:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommandCF_Run_Case00
-    dw ScriptCommandCF_Run_Case01
+    dw SceneKeyShop_Case00
+    dw SceneKeyShop_Case01
 
-; entry 1 of the `rst $00` table in ScriptCommandCF_Run
+; entry 1 of the `rst $00` table in SceneKeyShop
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wSpriteSlots, wScriptStartRequest
-ScriptCommandCF_Run_Case01::
+SceneKeyShop_Case01::
 Jump_085_4009:: ; address name
     ld a, $00
     ld [wStepPtrHi], a
@@ -33,12 +33,12 @@ Jump_085_4009:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommandCF_Run
+; entry 0 of the `rst $00` table in SceneKeyShop
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wScriptStartRequest
 ; points at: wScriptStep
-ScriptCommandCF_Run_Case00::
+SceneKeyShop_Case00::
 Jump_085_402D:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -49,10 +49,10 @@ Jump_085_402D:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type CE; reached through ScriptCommandCE in bank $10 (E-0038)
+; implements script command type CE (SCRIPT_HIDE_SPRITES): wSpriteSlotCount = 0; reached through ScriptCommandCE in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommandCE)
 ; writes: wSpriteSlotCount, wScriptStartRequest
-ScriptCommandCE_Run::
+HideSprites::
 Func_085_403D:: ; address name
     xor a, a
     ld [wSpriteSlotCount], a
@@ -60,39 +60,39 @@ Func_085_403D:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 2A; reached through ScriptCommand2A in bank $10 (E-0038)
+; implements script command type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can keep trying, but you're...' ... 'Zzz Zzz Huh! Watch out!'; reached through ScriptCommand2A in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand2A)
 ; reads: wScriptStep
-ScriptCommand2A_Run::
+SceneWatchOut::
 Func_085_4047:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand2A_Run_Case00
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand2A_Run_Case02
-    dw ScriptCommand2A_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand2A_Run_Case05
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand2A_Run_Case07
-    dw ScriptCommand2A_Run_Case08
-    dw ScriptCommand2A_Run_Case09
-    dw ScriptCommand2A_Run_Case0A
-    dw ScriptCommand2A_Run_Case0A
-    dw ScriptCommand2A_Run_Case0A
-    dw ScriptCommand2A_Run_Case0D
-    dw ScriptCommand2A_Run_Case0E
-    dw ScriptCommand2A_Run_Case0F
-    dw ScriptCommand2A_Run_Case10
-    dw ScriptCommand2A_Run_Case11
-    dw ScriptCommand2A_Run_Case12
+    dw SceneWatchOut_Case00
+    dw SceneWatchOut_Case01
+    dw SceneWatchOut_Case02
+    dw SceneWatchOut_Case03
+    dw SceneWatchOut_Case01
+    dw SceneWatchOut_Case05
+    dw SceneWatchOut_Case01
+    dw SceneWatchOut_Case07
+    dw SceneWatchOut_Case08
+    dw SceneWatchOut_Case09
+    dw SceneWatchOut_Case0A
+    dw SceneWatchOut_Case0A
+    dw SceneWatchOut_Case0A
+    dw SceneWatchOut_Case0D
+    dw SceneWatchOut_Case0E
+    dw SceneWatchOut_Case0F
+    dw SceneWatchOut_Case10
+    dw SceneWatchOut_Case11
+    dw SceneWatchOut_Case12
 
-; entry 16 of the `rst $00` table in ScriptCommand2A_Run
+; entry 16 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5
 ; writes: hTemp1, hTemp2, hTemp3
 ; points at: wSpriteSlotCount, wScriptStep
-ScriptCommand2A_Run_Case10::
+SceneWatchOut_Case10::
 Jump_085_4071:: ; address name
     ld a, $05
     ldh [hTemp1], a
@@ -109,11 +109,11 @@ Jump_085_4071:: ; address name
     dec [hl]
     ret
 
-; entry 15 of the `rst $00` table in ScriptCommand2A_Run
+; entry 15 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hSpriteWindowClipMode, wScriptStartRequest
 ; points at: wSpriteSlotCount
-ScriptCommand2A_Run_Case0F::
+SceneWatchOut_Case0F::
 Jump_085_4093:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank85
@@ -132,12 +132,12 @@ Jump_085_4093:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 14 of the `rst $00` table in ScriptCommand2A_Run
+; entry 14 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wScriptMsgSelect, wSpriteSlots
 ; writes: hTemp1, hTemp2, hTemp3, wOBJPaletteUploadRequest
 ; points at: wPartyCount, wFollowerRecords, wPartyList, wSpriteSlotCount, wScriptStep
-ScriptCommand2A_Run_Case0E::
+SceneWatchOut_Case0E::
 Jump_085_40C3:: ; address name
     ld a, $05
     ldh [hTemp1], a
@@ -182,12 +182,12 @@ Jump_085_40C3:: ; address name
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommand2A_Run
+; entry 13 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptMsgSelect, wArg5, wSpriteSlots
 ; writes: wScriptStep, hTemp1, hTemp2, hTemp3, wOBJPaletteUploadRequest
 ; points at: wScriptMsgSelect, wPartyCount, wScriptStep, wFollowerRecords, wPartyList, wSpriteSlotCount
-ScriptCommand2A_Run_Case0D::
+SceneWatchOut_Case0D::
 Jump_085_412F:: ; address name
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
@@ -208,13 +208,13 @@ Jump_085_4145::
     dec [hl]
     ld hl, wScriptStep
     inc [hl]
-    jp ScriptCommand2A_Run_Case0E
+    jp SceneWatchOut_Case0E
 
-; entry 7 of the `rst $00` table in ScriptCommand2A_Run
+; entry 7 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptSubStep, wScriptMsgSelect
 ; points at: wScriptStep
-ScriptCommand2A_Run_Case07::
+SceneWatchOut_Case07::
 Jump_085_4159:: ; address name
     ld de, vTiles1 + $6E0
     call CopyGlyphTilesToVRAM
@@ -227,12 +227,12 @@ Jump_085_4159:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand2A_Run
+; entry 2 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wArg5, wPartyCount
 ; writes: wScriptMsgSelect, wScriptStep
 ; points at: wScriptStep
-ScriptCommand2A_Run_Case02::
+SceneWatchOut_Case02::
 Jump_085_4174:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -277,11 +277,11 @@ Jump_085_41C1::
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand2A_Run
+; entry 0 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wNameGlyphBuf, wTextBuf1
 ; points at: wScriptStep
-ScriptCommand2A_Run_Case00::
+SceneWatchOut_Case00::
 Jump_085_41CC:: ; address name
     ld a, $1C
     ld [wNameGlyphBuf], a
@@ -307,37 +307,37 @@ Jump_085_41CC:: ; address name
     inc [hl]
     ret
 
-; implements script command type 4D; reached through ScriptCommand4D in bank $10 (E-0038)
+; implements script command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script shows: 'King This should solve the water...' (creates a monster record); reached through ScriptCommand4D in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand4D)
 ; reads: wScriptStep
-ScriptCommand4D_Run::
+SceneWaterReward::
 Func_085_4207:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand4D_Run_Case00
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand4D_Run_Case02
-    dw ScriptCommand2A_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand2A_Run_Case05
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand4D_Run_Case07
-    dw ScriptCommand2A_Run_Case08
-    dw ScriptCommand2A_Run_Case09
-    dw ScriptCommand2A_Run_Case0A
-    dw ScriptCommand2A_Run_Case0A
-    dw ScriptCommand2A_Run_Case0A
-    dw ScriptCommand4D_Run_Case0D
-    dw ScriptCommand4D_Run_Case0E
-    dw ScriptCommand4D_Run_Case0F
-    dw ScriptCommand4D_Run_Case10
-    dw ScriptCommand2A_Run_Case11
-    dw ScriptCommand2A_Run_Case12
+    dw SceneWaterReward_Case00
+    dw SceneWatchOut_Case01
+    dw SceneWaterReward_Case02
+    dw SceneWatchOut_Case03
+    dw SceneWatchOut_Case01
+    dw SceneWatchOut_Case05
+    dw SceneWatchOut_Case01
+    dw SceneWaterReward_Case07
+    dw SceneWatchOut_Case08
+    dw SceneWatchOut_Case09
+    dw SceneWatchOut_Case0A
+    dw SceneWatchOut_Case0A
+    dw SceneWatchOut_Case0A
+    dw SceneWaterReward_Case0D
+    dw SceneWaterReward_Case0E
+    dw SceneWaterReward_Case0F
+    dw SceneWaterReward_Case10
+    dw SceneWatchOut_Case11
+    dw SceneWatchOut_Case12
 
-; entry 18 of the `rst $00` table in ScriptCommand2A_Run
+; entry 18 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStep
-ScriptCommand2A_Run_Case12::
+SceneWatchOut_Case12::
 Jump_085_4231:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank85
@@ -346,10 +346,10 @@ Jump_085_4231:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 17 of the `rst $00` table in ScriptCommand2A_Run
+; entry 17 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand2A_Run_Case11::
+SceneWatchOut_Case11::
 Jump_085_423C:: ; address name
     ld hl, wObject1 + $7
     call StepObjectCoordByDirection16Frames
@@ -359,12 +359,12 @@ Jump_085_423C:: ; address name
     inc [hl]
     ret
 
-; entry 16 of the `rst $00` table in ScriptCommand4D_Run
+; entry 16 of the `rst $00` table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5
 ; writes: hTemp1, hTemp2, hTemp3
 ; points at: wSpriteSlotCount, wScriptStep
-ScriptCommand4D_Run_Case10::
+SceneWaterReward_Case10::
 Jump_085_4249:: ; address name
     ld a, $00
     ldh [hTemp1], a
@@ -381,11 +381,11 @@ Jump_085_4249:: ; address name
     dec [hl]
     ret
 
-; entry 15 of the `rst $00` table in ScriptCommand4D_Run
+; entry 15 of the `rst $00` table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hSpriteWindowClipMode, wScriptStartRequest
 ; points at: wSpriteSlotCount
-ScriptCommand4D_Run_Case0F::
+SceneWaterReward_Case0F::
 Jump_085_426B:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank85
@@ -404,12 +404,12 @@ Jump_085_426B:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 14 of the `rst $00` table in ScriptCommand4D_Run
+; entry 14 of the `rst $00` table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wScriptMsgSelect, wObject1
 ; writes: hTemp1, hTemp2, hTemp3, wOBJPaletteUploadRequest
 ; points at: wPartyCount, wFollowerRecords, wPartyList, wSpriteSlotCount, wScriptStep
-ScriptCommand4D_Run_Case0E::
+SceneWaterReward_Case0E::
 Jump_085_429B:: ; address name
     ld a, $00
     ldh [hTemp1], a
@@ -454,12 +454,12 @@ Jump_085_429B:: ; address name
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommand4D_Run
+; entry 13 of the `rst $00` table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptMsgSelect, wArg5, wObject1
 ; writes: wScriptStep, hTemp1, hTemp2, hTemp3, wOBJPaletteUploadRequest
 ; points at: wScriptMsgSelect, wPartyCount, wScriptStep, wFollowerRecords, wPartyList, wSpriteSlotCount
-ScriptCommand4D_Run_Case0D::
+SceneWaterReward_Case0D::
 Jump_085_4307:: ; address name
     ld hl, wObject1 + $7
     call StepObjectCoordByDirection16Frames
@@ -484,10 +484,10 @@ Jump_085_4325::
     dec [hl]
     ld hl, wScriptStep
     inc [hl]
-    jp ScriptCommand4D_Run_Case0E
+    jp SceneWaterReward_Case0E
 
 ; moves the object at HL one unit in direction [HL] (bytes 4/5); A = 1 after 16 steps, else 0 (E-0125)
-; 2 call sites from 2 routines (e.g. ScriptCommand4D_Run_Case0D, ScriptCommand2A_Run_Case11)
+; 2 call sites from 2 routines (e.g. SceneWaterReward_Case0D, SceneWatchOut_Case11)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 StepObjectCoordByDirection16Frames::
@@ -536,11 +536,11 @@ Jump_085_4376::
     ld a, $01
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommand2A_Run
+; entry 10 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptMsgSelect
 ; points at: wScriptStep
-ScriptCommand2A_Run_Case0A::
+SceneWatchOut_Case0A::
 Jump_085_437D:: ; address name
     ld a, [wScriptMsgSelect]
     cp a, $03
@@ -553,10 +553,10 @@ Jump_085_4389::
     farcall ScriptStepMoveFollowersToLeader
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommand2A_Run
+; entry 9 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStep
-ScriptCommand2A_Run_Case09::
+SceneWatchOut_Case09::
 Jump_085_4390:: ; address name
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
@@ -567,18 +567,18 @@ Jump_085_4390:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommand2A_Run
+; entry 8 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand2A_Run_Case08::
+SceneWatchOut_Case08::
 Jump_085_43AB:: ; address name
-    call ScriptCommand2A_Run_Case08_Sub01
+    call SceneWatchOut_Case08_Sub01
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommand4D_Run
+; entry 7 of the `rst $00` table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptSubStep, wScriptMsgSelect
 ; points at: wScriptStep
-ScriptCommand4D_Run_Case07::
+SceneWaterReward_Case07::
 Jump_085_43AF:: ; address name
     ld de, vTiles1 + $6E0
     call CopyGlyphTilesToVRAM
@@ -591,10 +591,10 @@ Jump_085_43AF:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand2A_Run
+; entry 5 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand2A_Run_Case05::
+SceneWatchOut_Case05::
 Jump_085_43CA:: ; address name
     ld hl, $4D50
     call StartMessageHL_B85
@@ -602,12 +602,12 @@ Jump_085_43CA:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand4D_Run
+; entry 2 of the `rst $00` table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wArg5, wPartyCount
 ; writes: wScriptMsgSelect, wScriptStep
 ; points at: wScriptStep
-ScriptCommand4D_Run_Case02::
+SceneWaterReward_Case02::
 Jump_085_43D5:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -652,11 +652,11 @@ Jump_085_4422::
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand4D_Run
+; entry 0 of the `rst $00` table in SceneWaterReward
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wNameGlyphBuf, wTextBuf1
 ; points at: wScriptStep
-ScriptCommand4D_Run_Case00::
+SceneWaterReward_Case00::
 Jump_085_442D:: ; address name
     ld a, $0B
     ld [wNameGlyphBuf], a
@@ -684,11 +684,11 @@ Jump_085_442D:: ; address name
     inc [hl]
     ret
 
-; only called from ScriptCommand2A_Run_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand2A_Run_Case08)
+; only called from SceneWatchOut_Case08 (E-0047)
+; 1 call site from 1 routine (e.g. SceneWatchOut_Case08)
 ; reads: wJoypadPressed, wFrameCounterLo
 ; points at: wScriptStep, wScriptMsgSelect
-ScriptCommand2A_Run_Case08_Sub01::
+SceneWatchOut_Case08_Sub01::
 Func_085_446D:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
@@ -700,7 +700,7 @@ Func_085_446D:: ; address name
 Jump_085_4479::
     bit 0, a
     jr z, Jump_085_4493
-    call ScriptCommand2A_Run_Case08_Sub01_Sub01
+    call SceneWatchOut_Case08_Sub01_Sub01
     ld a, $BC
     call WriteVRAMByte
     ld a, $69
@@ -714,7 +714,7 @@ Jump_085_4479::
 Jump_085_4493::
     bit 6, a
     jr z, Jump_085_44AA
-    call ScriptCommand2A_Run_Case08_Sub01_Sub01
+    call SceneWatchOut_Case08_Sub01_Sub01
     ld a, $C3
     call WriteVRAMByte
     ld hl, wScriptMsgSelect
@@ -726,7 +726,7 @@ Jump_085_4493::
 Jump_085_44AA::
     bit 7, a
     jr z, Jump_085_44BF
-    call ScriptCommand2A_Run_Case08_Sub01_Sub01
+    call SceneWatchOut_Case08_Sub01_Sub01
     ld a, $C3
     call WriteVRAMByte
     ld hl, wScriptMsgSelect
@@ -735,7 +735,7 @@ Jump_085_44AA::
     call QueueSoundEffect
 
 Jump_085_44BF::
-    call ScriptCommand2A_Run_Case08_Sub01_Sub01
+    call SceneWatchOut_Case08_Sub01_Sub01
     ld c, $BB
     ld a, [wFrameCounterLo]
     bit 3, a
@@ -747,11 +747,11 @@ Jump_085_44CD::
     call WriteVRAMByte
     ret
 
-; only called from ScriptCommand2A_Run_Case08_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. ScriptCommand2A_Run_Case08_Sub01)
+; only called from SceneWatchOut_Case08_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. SceneWatchOut_Case08_Sub01)
 ; reads: wScriptMsgSelect, hScrollY, hScrollX
 ; writes: wScriptMsgSelect
-ScriptCommand2A_Run_Case08_Sub01_Sub01::
+SceneWatchOut_Case08_Sub01_Sub01::
 Func_085_44D2:: ; address name
     ld a, [wScriptMsgSelect]
     and a, $03
@@ -784,7 +784,7 @@ Func_085_44D2:: ; address name
     ret
 
 ; saves the screen buffer to vBGMap1, copies the 8 x 9 box $4583 to wScreenTileBuffer (clearing CGB attributes), draws it and plays sound $6C (E-0125)
-; 2 call sites from 2 routines (e.g. ScriptCommand4D_Run_Case07, ScriptCommand2A_Run_Case07)
+; 2 call sites from 2 routines (e.g. SceneWaterReward_Case07, SceneWatchOut_Case07)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -842,7 +842,7 @@ Jump_085_454C::
     ret
 
 ; draws the screen buffer at the BG map address of the scroll position (Func_000_1EA5) (E-0125)
-; 4 call sites from 4 routines (e.g. ScriptCommand4D_Run_Case0D, ShowBoxFromTable4583, ScriptCommand2A_Run_Case0D, ScriptCommand2A_Run_Case09)
+; 4 call sites from 4 routines (e.g. SceneWaterReward_Case0D, ShowBoxFromTable4583, SceneWatchOut_Case0D, SceneWatchOut_Case09)
 ; reads: hScrollY, hScrollX
 DrawScreenBufferAtScrollOrigin::
 Func_085_4555:: ; address name
@@ -893,7 +893,7 @@ Data_085_4583:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; for record wC6FE[A]: field $5B = word field $5D, field $5F = word field $61, field $55 = 0, field 0 = 1 (E-0121)
-; 2 call sites from 2 routines (e.g. ScriptCommand4D_Run_Case0D, ScriptCommand2A_Run_Case0D)
+; 2 call sites from 2 routines (e.g. SceneWaterReward_Case0D, SceneWatchOut_Case0D)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG
 ; points at: wPartyList
@@ -942,23 +942,23 @@ Func_085_45CB:: ; address name
     ld [rRAMG], a
     ret
 
-; implements script command type 1B; reached through ScriptCommand1B in bank $10 (E-0038)
+; implements script command type 1B (SCRIPT_SCENE_WARUBOU_LEAVES): a cutscene step named after the scene its only script shows: 'C'mon, Warubou!' ... 'Have you heard about Magic Keys?'; reached through ScriptCommand1B in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand1B)
 ; reads: wScriptStep
-ScriptCommand1B_Run::
+SceneWarubouLeaves::
 Func_085_4617:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand1B_Run_Case00
-    dw ScriptCommand1B_Run_Case01
-    dw ScriptCommand1B_Run_Case02
-    dw ScriptCommand1B_Run_Case03
+    dw SceneWarubouLeaves_Case00
+    dw SceneWarubouLeaves_Case01
+    dw SceneWarubouLeaves_Case02
+    dw SceneWarubouLeaves_Case03
 
-; entry 3 of the `rst $00` table in ScriptCommand1B_Run
+; entry 3 of the `rst $00` table in SceneWarubouLeaves
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wScriptStartRequest
-ScriptCommand1B_Run_Case03::
+SceneWarubouLeaves_Case03::
 Jump_085_4623:: ; address name
     ld a, $01
     ld [wStepPtrHi], a
@@ -981,12 +981,12 @@ Jump_085_4623:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand1B_Run
+; entry 2 of the `rst $00` table in SceneWarubouLeaves
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo
 ; points at: wScriptStep
-ScriptCommand1B_Run_Case02::
+SceneWarubouLeaves_Case02::
 Jump_085_4658:: ; address name
     ld a, $01
     ld [wStepPtrHi], a
@@ -1004,12 +1004,12 @@ Jump_085_4658:: ; address name
     farcall StepObjectTowardCoord
     jr Jump_085_46DA
 
-; entry 1 of the `rst $00` table in ScriptCommand1B_Run
+; entry 1 of the `rst $00` table in SceneWarubouLeaves
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo
 ; points at: wScriptStep
-ScriptCommand1B_Run_Case01::
+SceneWarubouLeaves_Case01::
 Jump_085_4684:: ; address name
     ld a, $02
     ld [wStepPtrHi], a
@@ -1027,12 +1027,12 @@ Jump_085_4684:: ; address name
     farcall StepObjectTowardCoord
     jr Jump_085_46DA
 
-; entry 0 of the `rst $00` table in ScriptCommand1B_Run
+; entry 0 of the `rst $00` table in SceneWarubouLeaves
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo
 ; points at: wScriptStep
-ScriptCommand1B_Run_Case00::
+SceneWarubouLeaves_Case00::
 Jump_085_46B0:: ; address name
     ld a, $01
     ld [wStepPtrHi], a
@@ -1057,12 +1057,12 @@ Jump_085_46DA::
     inc [hl]
     ret
 
-; implements script command type 7A; reached through ScriptCommand7A in bank $10 (E-0038)
+; implements script command type 7A (SCRIPT_SCENE_KAMEHA_MISSING): a cutscene step named after the scene its only script shows: before 'Prince Kameha has been missing from...'; reached through ScriptCommand7A in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand7A)
 ; reads: wScriptStep, wScriptParam0
 ; writes: hTemp0, wObject5, wScriptParam0, wScriptStartRequest
 ; points at: wScriptStep
-ScriptCommand7A_Run::
+SceneKamehaMissing::
 Func_085_46E4:: ; address name
     ld a, [wScriptStep]
     or a, a
@@ -1090,30 +1090,30 @@ Jump_085_4703::
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 78; reached through ScriptCommand78 in bank $10 (E-0038)
+; implements script command type 78 (SCRIPT_SAVE_SCREEN): saves the screen buffer to BG map 1 (SaveScreenBufferToBGMap1); reached through ScriptCommand78 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand78)
 ; reads: wScriptStep
-ScriptCommand78_Run::
+SaveScreen::
 Func_085_4717:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand78_Run_Case00
-    dw ScriptCommand78_Run_Case01
+    dw SaveScreen_Case00
+    dw SaveScreen_Case01
 
-; entry 1 of the `rst $00` table in ScriptCommand78_Run
+; entry 1 of the `rst $00` table in SaveScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-ScriptCommand78_Run_Case01::
+SaveScreen_Case01::
 Jump_085_471F:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand78_Run
+; entry 0 of the `rst $00` table in SaveScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldReturnPhase, wGameMode, wModeState, wGameMode2State, wTemp0, wTemp1, wJoypadHeld, wJoypadPressed, ...
 ; points at: wScriptStep
-ScriptCommand78_Run_Case00::
+SaveScreen_Case00::
 Jump_085_4725:: ; address name
     farcall SaveScreenBufferToBGMap1
     ld a, $01
@@ -1136,11 +1136,11 @@ Jump_085_4725:: ; address name
     inc [hl]
     ret
 
-; implements script command type 7D; reached through ScriptCommand7D in bank $10 (E-0038)
+; implements script command type 7D (SCRIPT_SCENE_THIS_WAY): a cutscene step named after the scene its only script shows: 'This way Here Here' ... 'I heard from Lord Darck, but...'; reached through ScriptCommand7D in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand7D)
 ; reads: hMapScreenY, hMapScreenX
 ; writes: wScriptStartRequest
-ScriptCommand7D_Run::
+SceneThisWay::
 Func_085_4755:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
@@ -1176,33 +1176,33 @@ Jump_085_4774::
     db $00, $00, $01, $FF, $00, $FF, $FF, $FF, $03, $01, $00, $FF, $01, $03, $02, $FF
     db $01, $FF, $FF, $FF, $02, $02, $01, $FF
 
-; implements script command type 7F; reached through ScriptCommand7F in bank $10 (E-0038)
+; implements script command type 7F (SCRIPT_SCENE_CHEST_SERVANT): a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' ... 'How may we serve your mortal...'; reached through ScriptCommand7F in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand7F)
 ; reads: wScriptStep
-ScriptCommand7F_Run::
+SceneChestServant::
 Func_085_479B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand7F_Run_Case00
-    dw ScriptCommand7F_Run_Case01
-    dw ScriptCommand7F_Run_Case01
-    dw ScriptCommand7F_Run_Case01
-    dw ScriptCommand7F_Run_Case04
-    dw ScriptCommand7F_Run_Case05
+    dw SceneChestServant_Case00
+    dw SceneChestServant_Case01
+    dw SceneChestServant_Case01
+    dw SceneChestServant_Case01
+    dw SceneChestServant_Case04
+    dw SceneChestServant_Case05
 
-; entry 5 of the `rst $00` table in ScriptCommand7F_Run
+; entry 5 of the `rst $00` table in SceneChestServant
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-ScriptCommand7F_Run_Case05::
+SceneChestServant_Case05::
 Jump_085_47AB:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand7F_Run
+; entry 4 of the `rst $00` table in SceneChestServant
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerX, wFollowerRecords, hFieldDrawFlags, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
-ScriptCommand7F_Run_Case04::
+SceneChestServant_Case04::
 Jump_085_47B1:: ; address name
     ld a, $E0
     ldh [hPlayerX], a
@@ -1226,12 +1226,12 @@ Jump_085_47B1:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand7F_Run
+; entry 1 of the `rst $00` table in SceneChestServant
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wStepArrived, hFieldDrawFlags
 ; writes: wStepPtrLo, hFieldDrawFlags
 ; points at: wScriptParam0, wScriptStep
-ScriptCommand7F_Run_Case01::
+SceneChestServant_Case01::
 Jump_085_47E3:: ; address name
     ld a, [wScriptParam0]
     swap a
@@ -1253,11 +1253,11 @@ Jump_085_47E3:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand7F_Run
+; entry 0 of the `rst $00` table in SceneChestServant
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hFieldDrawFlags, wScriptParam0
 ; points at: wScriptStep
-ScriptCommand7F_Run_Case00::
+SceneChestServant_Case00::
 Jump_085_480A:: ; address name
     ld a, $65
     call QueueSoundEffect
@@ -1269,11 +1269,11 @@ Jump_085_480A:: ; address name
     inc [hl]
     ret
 
-; implements script command type 7E; reached through ScriptCommand7E in bank $10 (E-0038)
+; implements script command type 7E (SCRIPT_SCENE_GOT_TO): a cutscene step named after the scene its only script shows: 'That's true I've got to...'; reached through ScriptCommand7E in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand7E)
 ; reads: wScriptParam0
 ; writes: wObject5, wScriptParam0, wScriptStartRequest
-ScriptCommand7E_Run::
+SceneGotTo::
 Func_085_481C:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
@@ -1315,11 +1315,11 @@ Jump_085_4844::
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 74; reached through ScriptCommand74 in bank $10 (E-0038)
+; implements script command type 74 (SCRIPT_SET_FLAG_REDRAW): sets a story flag, applies the map-screen flag events and redraws the screen (treasure chests); reached through ScriptCommand74 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand74)
 ; reads: hPlayerX, hPlayerFacing
 ; writes: wScriptStartRequest
-ScriptCommand74_Run::
+SetFlagRedraw::
 Func_085_4858:: ; address name
     ld b, $00
     ldh a, [hPlayerX]
@@ -1370,24 +1370,24 @@ Jump_085_4887::
     ret
     db $20, $40, $50, $80
 
-; implements script command type 72; reached through ScriptCommand72 in bank $10 (E-0038)
+; implements script command type 72 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE_2): a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_KAMEHA_KEY_BATTLE; reached through ScriptCommand72 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand72)
 ; reads: wScriptStep
-ScriptCommand72_Run::
+SceneKamehaKeyBattle2::
 Func_085_48A0:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand72_Run_Case00
-    dw ScriptCommand72_Run_Case01
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand72_Run_Case03
-    dw ScriptCommand2A_Run_Case03
+    dw SceneKamehaKeyBattle2_Case00
+    dw SceneKamehaKeyBattle2_Case01
+    dw SceneWatchOut_Case01
+    dw SceneKamehaKeyBattle2_Case03
+    dw SceneWatchOut_Case03
 
-; entry 3 of the `rst $00` table in ScriptCommand72_Run
+; entry 3 of the `rst $00` table in SceneKamehaKeyBattle2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; points at: wScriptStep
-ScriptCommand72_Run_Case03::
+SceneKamehaKeyBattle2_Case03::
 Jump_085_48AE:: ; address name
     ld hl, $0B9D
     ld a, [wScriptParam0]
@@ -1401,12 +1401,12 @@ Jump_085_48BA::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand72_Run
+; entry 1 of the `rst $00` table in SceneKamehaKeyBattle2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, hTemp0
 ; writes: hTemp0, wScriptStep, hTemp1, wScriptParam0
 ; points at: wScriptStep
-ScriptCommand72_Run_Case01::
+SceneKamehaKeyBattle2_Case01::
 Jump_085_48C2:: ; address name
     ld a, [wBattleScene]
     or a, a
@@ -1470,11 +1470,11 @@ Jump_085_4932::
     ld [wScriptStep], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand72_Run
+; entry 0 of the `rst $00` table in SceneKamehaKeyBattle2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-ScriptCommand72_Run_Case00::
+SceneKamehaKeyBattle2_Case00::
 Jump_085_493E:: ; address name
     ld a, $30
     ldh [hTemp0], a
@@ -1483,24 +1483,24 @@ Jump_085_493E:: ; address name
     inc [hl]
     ret
 
-; implements script command type 71; reached through ScriptCommand71 in bank $10 (E-0038)
+; implements script command type 71 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE): a cutscene step named after the scene its only script shows: 'Kameha So you're confident, huh?' (key entry and encounter); reached through ScriptCommand71 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand71)
 ; reads: wScriptStep
-ScriptCommand71_Run::
+SceneKamehaKeyBattle::
 Func_085_494D:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand71_Run_Case00
-    dw ScriptCommand71_Run_Case01
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand71_Run_Case03
-    dw ScriptCommand2A_Run_Case03
+    dw SceneKamehaKeyBattle_Case00
+    dw SceneKamehaKeyBattle_Case01
+    dw SceneWatchOut_Case01
+    dw SceneKamehaKeyBattle_Case03
+    dw SceneWatchOut_Case03
 
-; entry 3 of the `rst $00` table in ScriptCommand71_Run
+; entry 3 of the `rst $00` table in SceneKamehaKeyBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; points at: wScriptStep
-ScriptCommand71_Run_Case03::
+SceneKamehaKeyBattle_Case03::
 Jump_085_495B:: ; address name
     ld hl, $0B93
     ld a, [wScriptParam0]
@@ -1514,12 +1514,12 @@ Jump_085_4967::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand71_Run
+; entry 1 of the `rst $00` table in SceneKamehaKeyBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, hTemp0
 ; writes: hTemp0, wScriptStep, hTemp1, wScriptParam0
 ; points at: wScriptStep
-ScriptCommand71_Run_Case01::
+SceneKamehaKeyBattle_Case01::
 Jump_085_496F:: ; address name
     ld a, [wBattleScene]
     or a, a
@@ -1583,11 +1583,11 @@ Jump_085_49DF::
     ld [wScriptStep], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand71_Run
+; entry 0 of the `rst $00` table in SceneKamehaKeyBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-ScriptCommand71_Run_Case00::
+SceneKamehaKeyBattle_Case00::
 Jump_085_49EB:: ; address name
     ld a, $2F
     ldh [hTemp0], a
@@ -1596,22 +1596,22 @@ Jump_085_49EB:: ; address name
     inc [hl]
     ret
 
-; implements script command type 7B; reached through ScriptCommand7B in bank $10 (E-0038)
+; implements script command type 7B (SCRIPT_SCENE_ARENA_CHALLENGE): a cutscene step named after the scene its only script shows: 'Really? Let's go to the Arena!' (encounter); reached through ScriptCommand7B in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand7B)
 ; reads: wScriptStep
-ScriptCommand7B_Run::
+SceneArenaChallenge::
 Func_085_49FA:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand7B_Run_Case00
-    dw ScriptCommand7B_Run_Case01
-    dw ScriptCommand2A_Run_Case03
+    dw SceneArenaChallenge_Case00
+    dw SceneArenaChallenge_Case01
+    dw SceneWatchOut_Case03
 
-; entry 1 of the `rst $00` table in ScriptCommand7B_Run
+; entry 1 of the `rst $00` table in SceneArenaChallenge
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-ScriptCommand7B_Run_Case01::
+SceneArenaChallenge_Case01::
 Jump_085_4A04:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1627,11 +1627,11 @@ Jump_085_4A15::
     call StartMessageHL_B85
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand7B_Run
+; entry 0 of the `rst $00` table in SceneArenaChallenge
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-ScriptCommand7B_Run_Case00::
+SceneArenaChallenge_Case00::
 Jump_085_4A1C:: ; address name
     ld a, $15
     ldh [hTemp0], a
@@ -1640,23 +1640,23 @@ Jump_085_4A1C:: ; address name
     inc [hl]
     ret
 
-; implements script command type 7C; reached through ScriptCommand7C in bank $10 (E-0038)
+; implements script command type 7C (SCRIPT_SCENE_TERRY_BATTLE): a cutscene step named after the scene its only script shows: 'Terry Humph Confident, huh?' (encounter); reached through ScriptCommand7C in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand7C)
 ; reads: wScriptStep
-ScriptCommand7C_Run::
+SceneTerryBattle::
 Func_085_4A2B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand7C_Run_Case00
-    dw ScriptCommand7C_Run_Case01
-    dw ScriptCommand2A_Run_Case03
+    dw SceneTerryBattle_Case00
+    dw SceneTerryBattle_Case01
+    dw SceneWatchOut_Case03
 
-; entry 1 of the `rst $00` table in ScriptCommand7C_Run
+; entry 1 of the `rst $00` table in SceneTerryBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; writes: wLinkByte94
 ; points at: wScriptStep
-ScriptCommand7C_Run_Case01::
+SceneTerryBattle_Case01::
 Jump_085_4A35:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1676,11 +1676,11 @@ Jump_085_4A51::
     call StartMessageHL_B85
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand7C_Run
+; entry 0 of the `rst $00` table in SceneTerryBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-ScriptCommand7C_Run_Case00::
+SceneTerryBattle_Case00::
 Jump_085_4A58:: ; address name
     ld de, $0037
     call SetFlagBit
@@ -1691,11 +1691,11 @@ Jump_085_4A58:: ; address name
     inc [hl]
     ret
 
-; implements script command type 70; reached through ScriptCommand70 in bank $10 (E-0038)
+; implements script command type 70 (SCRIPT_SCENE_TERRY): a cutscene step named after the scene its only script shows: '0 obtained the Magic Key.' ... 'Humph I'm Terry. I'm a master'; reached through ScriptCommand70 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand70)
 ; reads: wScriptStep, hPlayerX
 ; writes: wScriptStartRequest, hMapScreenX, hMapScreenY, wWarpDestY, wFieldTransitionKind, hMapId, wWarpDestX
-ScriptCommand70_Run::
+SceneTerry::
 Func_085_4A6D:: ; address name
     ld a, [wScriptStep]
     or a, a
@@ -1758,12 +1758,12 @@ Jump_085_4AD9::
     call StartPaletteFade
     ret
 
-; implements script command type 6F; reached through ScriptCommand6F in bank $10 (E-0038)
+; implements script command type 6F (SCRIPT_DESK_KEY): the desk animation before '0 obtained the Brawn/Baffle/Soul/Magic Key.'; reached through ScriptCommand6F in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand6F)
 ; reads: wScriptStep
 ; writes: wSpriteSlotCount, wScriptStartRequest
 ; points at: wScriptStep
-ScriptCommand6F_Run::
+DeskKey::
 Func_085_4AEE:: ; address name
     ld a, [wScriptStep]
     or a, a
@@ -1784,35 +1784,35 @@ Jump_085_4B09::
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 6E; reached through ScriptCommand6E in bank $10 (E-0038)
+; implements script command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only script shows: the same scene as SCRIPT_SCENE_LIMBO_MONSTER; reached through ScriptCommand6E in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand6E)
 ; reads: wScriptStep
-ScriptCommand6E_Run::
+SceneLimboMonster2::
 Func_085_4B0F:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand6E_Run_Case00
-    dw ScriptCommand2A_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand6E_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand6E_Run_Case05
-    dw ScriptCommand6E_Run_Case05
-    dw ScriptCommand6E_Run_Case05
-    dw ScriptCommand6E_Run_Case08
-    dw ScriptCommand6E_Run_Case09
-    dw ScriptCommand6E_Run_Case09
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand6E_Run_Case0C
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand6E_Run_Case0E
-    dw ScriptCommand6E_Run_Case0F
+    dw SceneLimboMonster2_Case00
+    dw SceneWatchOut_Case03
+    dw SceneWatchOut_Case01
+    dw SceneLimboMonster2_Case03
+    dw SceneWatchOut_Case01
+    dw SceneLimboMonster2_Case05
+    dw SceneLimboMonster2_Case05
+    dw SceneLimboMonster2_Case05
+    dw SceneLimboMonster2_Case08
+    dw SceneLimboMonster2_Case09
+    dw SceneLimboMonster2_Case09
+    dw SceneWatchOut_Case01
+    dw SceneLimboMonster2_Case0C
+    dw SceneWatchOut_Case01
+    dw SceneLimboMonster2_Case0E
+    dw SceneLimboMonster2_Case0F
 
-; entry 15 of the `rst $00` table in ScriptCommand6E_Run
+; entry 15 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived, wArg5
 ; writes: hFieldDrawFlags, wStepTarget, wStepPtrHi, wStepPtrLo, hTemp1, hTemp2, hTemp3, wScriptStartRequest
-ScriptCommand6E_Run_Case0F::
+SceneLimboMonster2_Case0F::
 Jump_085_4B33:: ; address name
     xor a, a
     ldh [hFieldDrawFlags], a
@@ -1839,12 +1839,12 @@ Jump_085_4B33:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 14 of the `rst $00` table in ScriptCommand6E_Run
+; entry 14 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wScriptParam0
 ; points at: wScriptParam0, wScriptStep
-ScriptCommand6E_Run_Case0E::
+SceneLimboMonster2_Case0E::
 Jump_085_4B6F:: ; address name
     ld a, $01
     ld [wStepPtrHi], a
@@ -1878,10 +1878,10 @@ Jump_085_4B94::
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in ScriptCommand6E_Run
+; entry 12 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand6E_Run_Case0C::
+SceneLimboMonster2_Case0C::
 Jump_085_4BB2:: ; address name
     ld hl, $0BA7
     call StartMessageHL_B85
@@ -1889,21 +1889,21 @@ Jump_085_4BB2:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommand6E_Run
+; entry 9 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand6E_Run_Case09::
+SceneLimboMonster2_Case09::
 Jump_085_4BBD:: ; address name
     ld de, wObject2 + $C
     ld hl, $0BA6
     call ScriptStepAdjust32TimesThenMessage_Bank85
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand6E_Run
+; entry 3 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wObject1
 ; writes: wObject2, wScriptStep
 ; points at: wScriptStep
-ScriptCommand6E_Run_Case03::
+SceneLimboMonster2_Case03::
 Jump_085_4BC7:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1930,12 +1930,12 @@ Jump_085_4BEC::
     ret
     db $D0, $10, $C0, $20, $D0, $30, $E0, $20
 
-; entry 0 of the `rst $00` table in ScriptCommand6E_Run
+; entry 0 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5
 ; writes: wScriptStep
 ; points at: wScriptStep
-ScriptCommand6E_Run_Case00::
+SceneLimboMonster2_Case00::
 Jump_085_4C00:: ; address name
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -1954,35 +1954,35 @@ Jump_085_4C18::
     ld [wScriptStep], a
     ret
 
-; implements script command type 6D; reached through ScriptCommand6D in bank $10 (E-0038)
+; implements script command type 6D (SCRIPT_SCENE_LIMBO_MONSTER): a cutscene step named after the scene its only script shows: 'Limbo is the King's domain!' ... 'Prince Kameha has been missing' (creates a monster record); reached through ScriptCommand6D in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand6D)
 ; reads: wScriptStep
-ScriptCommand6D_Run::
+SceneLimboMonster::
 Func_085_4C24:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand6D_Run_Case00
-    dw ScriptCommand2A_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand6D_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand6E_Run_Case05
-    dw ScriptCommand6E_Run_Case05
-    dw ScriptCommand6E_Run_Case05
-    dw ScriptCommand6E_Run_Case08
-    dw ScriptCommand6D_Run_Case09
-    dw ScriptCommand6D_Run_Case09
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand6D_Run_Case0C
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand2A_Run_Case03
+    dw SceneLimboMonster_Case00
+    dw SceneWatchOut_Case03
+    dw SceneWatchOut_Case01
+    dw SceneLimboMonster_Case03
+    dw SceneWatchOut_Case01
+    dw SceneLimboMonster2_Case05
+    dw SceneLimboMonster2_Case05
+    dw SceneLimboMonster2_Case05
+    dw SceneLimboMonster2_Case08
+    dw SceneLimboMonster_Case09
+    dw SceneLimboMonster_Case09
+    dw SceneWatchOut_Case01
+    dw SceneLimboMonster_Case0C
+    dw SceneWatchOut_Case01
+    dw SceneWatchOut_Case03
 
-; entry 12 of the `rst $00` table in ScriptCommand6D_Run
+; entry 12 of the `rst $00` table in SceneLimboMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2, wArg5
 ; writes: wScriptParam0, wStepPtrLo, wStepPtrHi, wObject2, hTemp1, hTemp2, hTemp3, hFieldDrawFlags
 ; points at: wScriptStep
-ScriptCommand6D_Run_Case0C::
+SceneLimboMonster_Case0C::
 Jump_085_4C46:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -2040,21 +2040,21 @@ Jump_085_4C7F::
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommand6D_Run
+; entry 9 of the `rst $00` table in SceneLimboMonster
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand6D_Run_Case09::
+SceneLimboMonster_Case09::
 Jump_085_4CBC:: ; address name
     ld de, wObject2 + $C
     ld hl, $0B2B
     call ScriptStepAdjust32TimesThenMessage_Bank85
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommand6E_Run
+; entry 8 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2, wObject1
 ; writes: hFieldDrawFlags, wScriptParam0, wStepPtrLo, wStepPtrHi, wObject2
 ; points at: wScriptStep
-ScriptCommand6E_Run_Case08::
+SceneLimboMonster2_Case08::
 Jump_085_4CC6:: ; address name
     ld a, $0E
     ldh [hFieldDrawFlags], a
@@ -2105,19 +2105,19 @@ Jump_085_4D03::
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand6E_Run
+; entry 5 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand6E_Run_Case05::
+SceneLimboMonster2_Case05::
 Jump_085_4D29:: ; address name
     farcall ScriptStepMoveFollowersToLeader
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand6D_Run
+; entry 3 of the `rst $00` table in SceneLimboMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wObject1
 ; writes: wObject2, wScriptStep
 ; points at: wScriptStep
-ScriptCommand6D_Run_Case03::
+SceneLimboMonster_Case03::
 Jump_085_4D30:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -2144,12 +2144,12 @@ Jump_085_4D55::
     ret
     db $D0, $10, $C0, $20, $D0, $30, $E0, $20
 
-; entry 0 of the `rst $00` table in ScriptCommand6D_Run
+; entry 0 of the `rst $00` table in SceneLimboMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5
 ; writes: wScriptStep
 ; points at: wScriptStep
-ScriptCommand6D_Run_Case00::
+SceneLimboMonster_Case00::
 Jump_085_4D69:: ; address name
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -2168,11 +2168,11 @@ Jump_085_4D81::
     ld [wScriptStep], a
     ret
 
-; implements script command type 6C; reached through ScriptCommand6C in bank $10 (E-0038)
+; implements script command type 6C (SCRIPT_GIVE_MONSTER): creates a monster record of kind hTemp1 (CreateMonsterRecordOfKindTemp1); 'You'll take it? Excellent! I'll send...'; reached through ScriptCommand6C in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand6C)
 ; reads: wArg5
 ; writes: hTemp1, hTemp2, hTemp3, wScriptStartRequest
-ScriptCommand6C_Run::
+GiveMonster::
 Func_085_4D8D:: ; address name
     ld a, $01
     ldh [hTemp1], a
@@ -2185,23 +2185,23 @@ Func_085_4D8D:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 79; reached through ScriptCommand79 in bank $10 (E-0038)
+; implements script command type 79 (SCRIPT_SCENE_POOR_CHURCH): a cutscene step named after the scene its only script shows: ... 'Our church is impoverished, so I...'; reached through ScriptCommand79 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand79)
 ; reads: wScriptStep
-ScriptCommand79_Run::
+ScenePoorChurch::
 Func_085_4DA6:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand79_Run_Case00
-    dw ScriptCommand79_Run_Case01
-    dw ScriptCommand79_Run_Case02
-    dw ScriptCommand79_Run_Case03
+    dw ScenePoorChurch_Case00
+    dw ScenePoorChurch_Case01
+    dw ScenePoorChurch_Case02
+    dw ScenePoorChurch_Case03
 
-; entry 3 of the `rst $00` table in ScriptCommand79_Run
+; entry 3 of the `rst $00` table in ScenePoorChurch
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wKeyRandomLo, wKeyRandomHi
 ; writes: wScriptParam0, wScriptStartRequest
-ScriptCommand79_Run_Case03::
+ScenePoorChurch_Case03::
 Jump_085_4DB2:: ; address name
     ld a, [wScriptParam0]
     and a, $07
@@ -2231,12 +2231,12 @@ Jump_085_4DD8::
     ld [wScriptStartRequest], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand79_Run
+; entry 2 of the `rst $00` table in ScenePoorChurch
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wStoryFlags
 ; writes: wScriptParam0, wScriptParam1, wStoryFlags, wScriptStartRequest
 ; points at: wScriptStep
-ScriptCommand79_Run_Case02::
+ScenePoorChurch_Case02::
 Jump_085_4DE8:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -2267,12 +2267,12 @@ Jump_085_4E06::
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand79_Run
+; entry 1 of the `rst $00` table in ScenePoorChurch
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wScriptParam0, wIsCGB
 ; writes: rSVBK, wScriptParam0
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wScriptStep
-ScriptCommand79_Run_Case01::
+ScenePoorChurch_Case01::
 Jump_085_4E1F:: ; address name
     ld a, [wScriptParam1]
     add a, a
@@ -2322,7 +2322,7 @@ Jump_085_4E61::
     inc [hl]
     ret
 
-; E-0145 (C1: ScriptCommand79_Run_Case01 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes after them do not).
+; E-0145 (C1: ScenePoorChurch_Case01 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes after them do not).
 ; record: frame 0 tile map (bank $93); frame 0 attribute map; frame 1 tile map; frame 1 attribute map
 ScreenAnimationTable::
 Data_085_4E7A:: ; address name
@@ -2351,12 +2351,12 @@ Data_085_4E7A:: ; address name
     dw Data_093_5E96
     dw Data_093_6266
 
-; entry 0 of the `rst $00` table in ScriptCommand79_Run
+; entry 0 of the `rst $00` table in ScenePoorChurch
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wScriptParam1
 ; points at: wScriptStep
-ScriptCommand79_Run_Case00::
+ScenePoorChurch_Case00::
 Jump_085_4EAA:: ; address name
     ld de, $0056
     call TestFlagBit
@@ -2400,48 +2400,48 @@ Jump_085_4F0B::
     inc [hl]
     ret
 
-; implements script command type C2; reached through ScriptCommandC2 in bank $10 (E-0038)
+; implements script command type C2 (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only script shows: 'Rolt Shut up! Give back Cyal!'; reached through ScriptCommandC2 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommandC2)
 ; reads: wScriptStep
-ScriptCommandC2_Run::
+SceneGiveBackCyal::
 Func_085_4F14:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommandC2_Run_Case00
-    dw ScriptCommandC2_Run_Case00
-    dw ScriptCommandC2_Run_Case00
-    dw ScriptCommandC2_Run_Case00
-    dw ScriptCommandC2_Run_Case00
-    dw ScriptCommandC2_Run_Case05
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommandC2_Run_Case07
-    dw ScriptCommandC2_Run_Case08
-    dw ScriptCommandC2_Run_Case09
-    dw ScriptCommandC2_Run_Case0A
+    dw SceneGiveBackCyal_Case00
+    dw SceneGiveBackCyal_Case00
+    dw SceneGiveBackCyal_Case00
+    dw SceneGiveBackCyal_Case00
+    dw SceneGiveBackCyal_Case00
+    dw SceneGiveBackCyal_Case05
+    dw SceneWatchOut_Case01
+    dw SceneGiveBackCyal_Case07
+    dw SceneGiveBackCyal_Case08
+    dw SceneGiveBackCyal_Case09
+    dw SceneGiveBackCyal_Case0A
 
-; entry 10 of the `rst $00` table in ScriptCommandC2_Run
+; entry 10 of the `rst $00` table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-ScriptCommandC2_Run_Case0A::
+SceneGiveBackCyal_Case0A::
 Jump_085_4F2E:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommandC2_Run
+; entry 9 of the `rst $00` table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommandC2_Run_Case09::
+SceneGiveBackCyal_Case09::
 Jump_085_4F34:: ; address name
     ld b, $1E
-    call ScriptCommandC2_Run_Case09_Sub01
+    call SceneGiveBackCyal_Case09_Sub01
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommandC2_Run
+; entry 8 of the `rst $00` table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject2
 ; writes: wObject2
 ; points at: wScriptStep
-ScriptCommandC2_Run_Case08::
+SceneGiveBackCyal_Case08::
 Jump_085_4F3A:: ; address name
     ld a, [wObject2 + $B]
     inc a
@@ -2457,12 +2457,12 @@ Jump_085_4F3A:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandC2_Run
+; entry 7 of the `rst $00` table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wSpriteSlots, wScriptParam0, wObject2
 ; points at: wScriptStep
-ScriptCommandC2_Run_Case07::
+SceneGiveBackCyal_Case07::
 Jump_085_4F52:: ; address name
     ld a, $03
     ld [wSpriteSlots + $7], a
@@ -2493,11 +2493,11 @@ Jump_085_4F52:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandC2_Run
+; entry 5 of the `rst $00` table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptStep
-ScriptCommandC2_Run_Case05::
+SceneGiveBackCyal_Case05::
 Jump_085_4F8E:: ; address name
     ld a, $03
     ld [wSpriteSlots + $7], a
@@ -2507,12 +2507,12 @@ Jump_085_4F8E:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommandC2_Run
+; entry 0 of the `rst $00` table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wObject2
 ; writes: wObject2, wScriptParam0
 ; points at: wScriptParam0, wScriptStep
-ScriptCommandC2_Run_Case00::
+SceneGiveBackCyal_Case00::
 Jump_085_4F9E:: ; address name
     ld hl, wObject2 + $D
     call SetBit2AtHL_B0F_Bank85
@@ -2544,12 +2544,12 @@ Jump_085_4FBE::
     inc [hl]
     ret
 
-; only called from ScriptCommandC2_Run_Case09 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandC2_Run_Case09)
+; only called from SceneGiveBackCyal_Case09 (E-0047)
+; 1 call site from 1 routine (e.g. SceneGiveBackCyal_Case09)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi, wScriptParam0
 ; writes: hScrollX, hScrollXHi, wScriptParam0
 ; points at: wScriptStep
-ScriptCommandC2_Run_Case09_Sub01::
+SceneGiveBackCyal_Case09_Sub01::
 Func_085_4FD8:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2594,21 +2594,21 @@ Jump_085_5003::
     inc [hl]
     ret
 
-; implements script command type CD; reached through ScriptCommandCD in bank $10 (E-0038)
+; implements script command type CD (SCRIPT_SCENE_YOU_DID_IT): a cutscene step named after the scene its only script shows: ... 'Warubou Wa-hey! You did it, 0!'; reached through ScriptCommandCD in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommandCD)
 ; reads: wScriptStep
-ScriptCommandCD_Run::
+SceneYouDidIt::
 Func_085_501A:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommandCD_Run_Case00
-    dw ScriptCommand2A_Run_Case03
+    dw SceneYouDidIt_Case00
+    dw SceneWatchOut_Case03
 
-; entry 0 of the `rst $00` table in ScriptCommandCD_Run
+; entry 0 of the `rst $00` table in SceneYouDidIt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId
 ; points at: wScriptStep
-ScriptCommandCD_Run_Case00::
+SceneYouDidIt_Case00::
 Jump_085_5022:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2637,11 +2637,11 @@ Jump_085_5038::
     db $CA, $4A, $CB, $4B, $CC, $4C, $CD, $4D, $D3, $4E, $D4, $4F, $D5, $50, $D6, $51
     db $DC, $52, $DD, $53, $DE, $54, $DF, $55, $FF
 
-; implements script command type 73; reached through ScriptCommand73 in bank $10 (E-0038)
+; implements script command type 73 (SCRIPT_FOLLOWER_FACE_PLAYER): copies hPlayerFacing to the first follower record; reached through ScriptCommand73 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand73)
 ; reads: hPlayerFacing
 ; writes: wFollowerRecords, wScriptStartRequest
-ScriptCommand73_Run::
+FollowerFacePlayer::
 Func_085_505A:: ; address name
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
@@ -2649,22 +2649,22 @@ Func_085_505A:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 65; reached through ScriptCommand65 in bank $10 (E-0038)
+; implements script command type 65 (SCRIPT_GROWTH_LIMIT_INFO): shows a monster's name and a record byte as digits: 'Everyone has a growth limit. Whether...'; reached through ScriptCommand65 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand65)
 ; reads: wScriptStep
-ScriptCommand65_Run::
+GrowthLimitInfo::
 Func_085_5065:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand65_Run_Case00
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand65_Run_Case02
+    dw GrowthLimitInfo_Case00
+    dw SceneWatchOut_Case01
+    dw GrowthLimitInfo_Case02
 
-; entry 2 of the `rst $00` table in ScriptCommand65_Run
+; entry 2 of the `rst $00` table in GrowthLimitInfo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wPartyCount
 ; writes: wScriptStep, wScriptParam1, wScriptStartRequest
-ScriptCommand65_Run_Case02::
+GrowthLimitInfo_Case02::
 Jump_085_506F:: ; address name
     xor a, a
     ld [wScriptStep], a
@@ -2679,12 +2679,12 @@ Jump_085_506F:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand65_Run
+; entry 0 of the `rst $00` table in GrowthLimitInfo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, hTemp0, wDigits
 ; writes: rRAMG
 ; points at: wScriptStep, wPartyList, wNameGlyphBuf, wTextNumber
-ScriptCommand65_Run_Case00::
+GrowthLimitInfo_Case00::
 Jump_085_5086:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2748,29 +2748,29 @@ Jump_085_50E3::
     call StartMessageHL_B85
     ret
 
-; implements script command type C4; reached through ScriptCommandC4 in bank $10 (E-0038)
+; implements script command type C4 (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into the barrel.' ... 'Kiral Ah! Back!' (encounter); reached through ScriptCommandC4 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommandC4)
 ; reads: wScriptStep
-ScriptCommandC4_Run::
+SceneBarrel::
 Func_085_50F2:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommandC4_Run_Case00
-    dw ScriptCommandC4_Run_Case01
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommandC4_Run_Case03
-    dw ScriptCommandC4_Run_Case04
-    dw ScriptCommandC4_Run_Case05
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommandC4_Run_Case07
-    dw ScriptCommandC4_Run_Case08
-    dw ScriptCommand2A_Run_Case03
+    dw SceneBarrel_Case00
+    dw SceneBarrel_Case01
+    dw SceneWatchOut_Case01
+    dw SceneBarrel_Case03
+    dw SceneBarrel_Case04
+    dw SceneBarrel_Case05
+    dw SceneWatchOut_Case01
+    dw SceneBarrel_Case07
+    dw SceneBarrel_Case08
+    dw SceneWatchOut_Case03
 
-; entry 8 of the `rst $00` table in ScriptCommandC4_Run
+; entry 8 of the `rst $00` table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots, wObject1, wScriptParam0
 ; points at: wScriptStep
-ScriptCommandC4_Run_Case08::
+SceneBarrel_Case08::
 Jump_085_510A:: ; address name
     ld a, $E0
     ld [wSpriteSlots + $C], a
@@ -2784,12 +2784,12 @@ Jump_085_510A:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandC4_Run
+; entry 7 of the `rst $00` table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wSpriteSlots, wObject1, wScriptParam0
 ; points at: wScriptStep
-ScriptCommandC4_Run_Case07::
+SceneBarrel_Case07::
 Jump_085_5123:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
@@ -2839,19 +2839,19 @@ Jump_085_5156::
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandC4_Run
+; entry 5 of the `rst $00` table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptStep
-ScriptCommandC4_Run_Case05::
+SceneBarrel_Case05::
 Jump_085_5173:: ; address name
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
     and a, $01
     jr z, Jump_085_5181
-    call ScriptCommandC4_Run_Case05_Sub01
+    call SceneBarrel_Case05_Sub01
 
 Jump_085_5181::
     ld a, [wScriptParam0]
@@ -2863,17 +2863,17 @@ Jump_085_5181::
     inc [hl]
     ret
 
-; only called from ScriptCommandC4_Run_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandC4_Run_Case05)
+; only called from SceneBarrel_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. SceneBarrel_Case05)
 ; reads: wRandomHi
 ; writes: wObject1
-ScriptCommandC4_Run_Case05_Sub01::
+SceneBarrel_Case05_Sub01::
 Func_085_5190:: ; address name
     call NextTableByte
     ld a, [wRandomHi]
     and a, $03
     cp a, $03
-    jr z, ScriptCommandC4_Run_Case05_Sub01
+    jr z, SceneBarrel_Case05_Sub01
     dec a
     ld c, a
     ld a, $40
@@ -2881,12 +2881,12 @@ Func_085_5190:: ; address name
     ld [wObject1 + $B], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandC4_Run
+; entry 4 of the `rst $00` table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; writes: wScriptStartRequest, wScriptParam0
 ; points at: wScriptStep
-ScriptCommandC4_Run_Case04::
+SceneBarrel_Case04::
 Jump_085_51A5:: ; address name
     ld a, [wScriptParam1]
     and a, $03
@@ -2920,12 +2920,12 @@ Jump_085_51C7::
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandC4_Run
+; entry 3 of the `rst $00` table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; writes: hTemp0
 ; points at: wScriptStep
-ScriptCommandC4_Run_Case03::
+SceneBarrel_Case03::
 Jump_085_51DC:: ; address name
     ld a, [wScriptParam1]
     and a, $03
@@ -2944,11 +2944,11 @@ Jump_085_51E9::
     ret
     db $0D, $0E, $0F, $10
 
-; entry 1 of the `rst $00` table in ScriptCommandC4_Run
+; entry 1 of the `rst $00` table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; points at: wScriptStep
-ScriptCommandC4_Run_Case01::
+SceneBarrel_Case01::
 Jump_085_51FB:: ; address name
     ld a, [wScriptParam1]
     and a, $03
@@ -2971,11 +2971,11 @@ Jump_085_5209::
     ret
     db $6C, $07, $6F, $07, $72, $07, $75, $07
 
-; entry 0 of the `rst $00` table in ScriptCommandC4_Run
+; entry 0 of the `rst $00` table in SceneBarrel
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam1
 ; points at: wScriptStep, wScriptParam1
-ScriptCommandC4_Run_Case00::
+SceneBarrel_Case00::
 Jump_085_521E:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2998,36 +2998,36 @@ Jump_085_521E:: ; address name
     inc [hl]
     ret
 
-; implements script command type 5B; reached through ScriptCommand5B in bank $10 (E-0038)
+; implements script command type 5B (SCRIPT_SCENE_LIMBO): a cutscene step named after the scene its only script shows: 'Warubou Wa-hey! Take the treasures that...' ... 'Limbo is the King's domain!'; reached through ScriptCommand5B in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand5B)
 ; reads: wScriptStep
-ScriptCommand5B_Run::
+SceneLimbo::
 Func_085_5248:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand5B_Run_Case00
-    dw ScriptCommand5B_Run_Case01
-    dw ScriptCommand5B_Run_Case02
-    dw ScriptCommand5B_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand5B_Run_Case00
-    dw ScriptCommand5B_Run_Case01
-    dw ScriptCommand5B_Run_Case02
-    dw ScriptCommand5B_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand5B_Run_Case00
-    dw ScriptCommand5B_Run_Case01
-    dw ScriptCommand5B_Run_Case02
-    dw ScriptCommand5B_Run_Case03
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand5B_Run_Case0F
+    dw SceneLimbo_Case00
+    dw SceneLimbo_Case01
+    dw SceneLimbo_Case02
+    dw SceneLimbo_Case03
+    dw SceneWatchOut_Case01
+    dw SceneLimbo_Case00
+    dw SceneLimbo_Case01
+    dw SceneLimbo_Case02
+    dw SceneLimbo_Case03
+    dw SceneWatchOut_Case01
+    dw SceneLimbo_Case00
+    dw SceneLimbo_Case01
+    dw SceneLimbo_Case02
+    dw SceneLimbo_Case03
+    dw SceneWatchOut_Case01
+    dw SceneLimbo_Case0F
 
-; entry 15 of the `rst $00` table in ScriptCommand5B_Run
+; entry 15 of the `rst $00` table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836, wScriptStartRequest
 ; points at: wInventory
-ScriptCommand5B_Run_Case0F::
+SceneLimbo_Case0F::
 Jump_085_526C:: ; address name
     ld hl, wInventory
 
@@ -3053,12 +3053,12 @@ Jump_085_527A::
     ld [wScriptStartRequest], a
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand5B_Run
+; entry 3 of the `rst $00` table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wObject5
 ; writes: wObject5
 ; points at: wScriptStep
-ScriptCommand5B_Run_Case03::
+SceneLimbo_Case03::
 Jump_085_5290:: ; address name
     ld a, [wSpriteSlots + $7]
     or a, a
@@ -3096,12 +3096,12 @@ Jump_085_52B8::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand5B_Run
+; entry 2 of the `rst $00` table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1
 ; writes: wScriptParam0
 ; points at: wScriptParam1, wScriptStep
-ScriptCommand5B_Run_Case02::
+SceneLimbo_Case02::
 Jump_085_52C8:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -3120,11 +3120,11 @@ Jump_085_52C8:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand5B_Run
+; entry 1 of the `rst $00` table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-ScriptCommand5B_Run_Case01::
+SceneLimbo_Case01::
 Jump_085_52ED:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -3137,12 +3137,12 @@ Jump_085_52ED:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand5B_Run
+; entry 0 of the `rst $00` table in SceneLimbo
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; writes: hTemp0, wObject5
 ; points at: wScriptStep
-ScriptCommand5B_Run_Case00::
+SceneLimbo_Case00::
 Jump_085_5302:: ; address name
     ld a, [wScriptParam1]
     ld hl, $5329
@@ -3161,25 +3161,25 @@ Jump_085_5302:: ; address name
     ret
     db $03, $08, $0A
 
-; implements script command type 69; reached through ScriptCommand69 in bank $10 (E-0038)
+; implements script command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only script shows: 'I'm surprised anyone managed to find...' ... 'Ah, so good of you to...' (encounter); reached through ScriptCommand69 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand69)
 ; reads: wScriptStep
-ScriptCommand69_Run::
+SceneFoundMeBattle::
 Func_085_532C:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand69_Run_Case00
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand69_Run_Case02
-    dw ScriptCommand69_Run_Case03
-    dw ScriptCommand69_Run_Case04
-    dw ScriptCommand69_Run_Case05
+    dw SceneFoundMeBattle_Case00
+    dw SceneWatchOut_Case01
+    dw SceneFoundMeBattle_Case02
+    dw SceneFoundMeBattle_Case03
+    dw SceneFoundMeBattle_Case04
+    dw SceneFoundMeBattle_Case05
 
-; entry 5 of the `rst $00` table in ScriptCommand69_Run
+; entry 5 of the `rst $00` table in SceneFoundMeBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId, hMapScreenX
 ; writes: wSpriteSlotCount, wScriptStartRequest
-ScriptCommand69_Run_Case05::
+SceneFoundMeBattle_Case05::
 Jump_085_533C:: ; address name
     xor a, a
     ld [wSpriteSlotCount], a
@@ -3205,12 +3205,12 @@ Jump_085_5358::
     ld [wScriptStartRequest], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand69_Run
+; entry 4 of the `rst $00` table in SceneFoundMeBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId, wStepArrived
 ; writes: wStepPtrLo, wStepPtrHi, wStepTarget, wSpriteSlots
 ; points at: wScriptStep
-ScriptCommand69_Run_Case04::
+SceneFoundMeBattle_Case04::
 Jump_085_5361:: ; address name
     ld a, $E0
     ld [wStepPtrLo], a
@@ -3244,11 +3244,11 @@ Jump_085_5389::
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand69_Run
+; entry 3 of the `rst $00` table in SceneFoundMeBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId, hTemp0
 ; writes: hTemp1, hTemp0, wScriptStep
-ScriptCommand69_Run_Case03::
+SceneFoundMeBattle_Case03::
 Jump_085_53A2:: ; address name
     ld a, $20
     ldh [hTemp1], a
@@ -3269,12 +3269,12 @@ Jump_085_53B0::
     ld [wScriptStep], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand69_Run
+; entry 2 of the `rst $00` table in SceneFoundMeBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1
 ; writes: wScriptStep, hTemp0
 ; points at: wScriptStep
-ScriptCommand69_Run_Case02::
+SceneFoundMeBattle_Case02::
 Jump_085_53C3:: ; address name
     ld a, [wScriptParam1]
     cp a, $01
@@ -3291,12 +3291,12 @@ Jump_085_53D0::
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand69_Run
+; entry 0 of the `rst $00` table in SceneFoundMeBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerSpriteOverride, hPlayerSpriteStreamHi, hPlayerSpriteStreamLo
 ; writes: wScriptParam1
 ; points at: wScriptStep
-ScriptCommand69_Run_Case00::
+SceneFoundMeBattle_Case00::
 Jump_085_53DF:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -3335,22 +3335,22 @@ Jump_085_5411::
     call StartMessageHL_B85
     ret
 
-; implements script command type 31; reached through ScriptCommand31 in bank $10 (E-0038)
+; implements script command type 31 (SCRIPT_SCENE_PIRATE_GHOSTS): a cutscene step named after the scene its only script shows: 'How could we die before enjoying...' ... 'The treasures are ours'; reached through ScriptCommand31 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand31)
 ; reads: wScriptStep
-ScriptCommand31_Run::
+ScenePirateGhosts::
 Func_085_5421:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand31_Run_Case00
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand31_Run_Case02
+    dw ScenePirateGhosts_Case00
+    dw SceneWatchOut_Case01
+    dw ScenePirateGhosts_Case02
 
-; entry 0 of the `rst $00` table in ScriptCommand31_Run
+; entry 0 of the `rst $00` table in ScenePirateGhosts
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId
 ; points at: wScriptStep
-ScriptCommand31_Run_Case00::
+ScenePirateGhosts_Case00::
 Jump_085_542B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -3366,11 +3366,11 @@ Jump_085_543A::
     call StartMessageHL_B85
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand31_Run
+; entry 2 of the `rst $00` table in ScenePirateGhosts
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapId, hTemp0
 ; writes: hTemp1, hTemp0, wSpriteSlotCount, wScriptStartRequest
-ScriptCommand31_Run_Case02::
+ScenePirateGhosts_Case02::
 Jump_085_5441:: ; address name
     ldh a, [hMapId]
     cp a, $37
@@ -3401,29 +3401,29 @@ Jump_085_5455::
     ld [wScriptStartRequest], a
     ret
 
-; implements script command type 24; reached through ScriptCommand24 in bank $10 (E-0038)
+; implements script command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only script shows: 'King What? Arrrrgh! Round up all...' ... 'King I apologize, but my treasures...'; reached through ScriptCommand24 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand24)
 ; reads: wScriptStep
-ScriptCommand24_Run::
+SceneTreasureTheft::
 Func_085_546F:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand24_Run_Case00
-    dw ScriptCommand24_Run_Case01
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand24_Run_Case03
-    dw ScriptCommand24_Run_Case04
-    dw ScriptCommand24_Run_Case05
-    dw ScriptCommand24_Run_Case06
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand24_Run_Case08
+    dw SceneTreasureTheft_Case00
+    dw SceneTreasureTheft_Case01
+    dw SceneWatchOut_Case01
+    dw SceneTreasureTheft_Case03
+    dw SceneTreasureTheft_Case04
+    dw SceneTreasureTheft_Case05
+    dw SceneTreasureTheft_Case06
+    dw SceneWatchOut_Case01
+    dw SceneTreasureTheft_Case08
 
-; entry 8 of the `rst $00` table in ScriptCommand24_Run
+; entry 8 of the `rst $00` table in SceneTreasureTheft
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject3, wScriptParam0, wObject4, wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo, wScriptParam0, wSpriteSlotCount, hFieldDrawFlags, wScriptStartRequest
 ; points at: wStepPtrHi
-ScriptCommand24_Run_Case08::
+SceneTreasureTheft_Case08::
 Jump_085_5485:: ; address name
     ld a, $01
     ld [wStepPtrHi], a
@@ -3496,12 +3496,12 @@ Jump_085_54F1::
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommand24_Run
+; entry 6 of the `rst $00` table in SceneTreasureTheft
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepTarget, wStepPtrLo, wStepPtrHi
 ; points at: wScriptStep
-ScriptCommand24_Run_Case06::
+SceneTreasureTheft_Case06::
 Jump_085_5514:: ; address name
     ld a, $02
     ld [wStepTarget], a
@@ -3525,12 +3525,12 @@ Jump_085_5514:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand24_Run
+; entry 5 of the `rst $00` table in SceneTreasureTheft
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptStep
-ScriptCommand24_Run_Case05::
+SceneTreasureTheft_Case05::
 Jump_085_554F:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -3543,12 +3543,12 @@ Jump_085_554F:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand24_Run
+; entry 4 of the `rst $00` table in SceneTreasureTheft
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo
 ; points at: wScriptStep
-ScriptCommand24_Run_Case04::
+SceneTreasureTheft_Case04::
 Jump_085_5562:: ; address name
     ld a, $02
     ld [wStepPtrHi], a
@@ -3564,12 +3564,12 @@ Jump_085_5562:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand24_Run
+; entry 3 of the `rst $00` table in SceneTreasureTheft
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wKeyRandomLo, wRandomHi
 ; writes: wScriptParam0, wObject1, wObject2, wObject3
 ; points at: wScriptStep
-ScriptCommand24_Run_Case03::
+SceneTreasureTheft_Case03::
 Jump_085_5581:: ; address name
     ld a, [wScriptParam0]
     and a, $0F
@@ -3606,11 +3606,11 @@ Jump_085_55A9::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand24_Run
+; entry 1 of the `rst $00` table in SceneTreasureTheft
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hFieldDrawFlags
 ; points at: wScriptStep
-ScriptCommand24_Run_Case01::
+SceneTreasureTheft_Case01::
 Jump_085_55C7:: ; address name
     ld a, $0E
     ldh [hFieldDrawFlags], a
@@ -3618,10 +3618,10 @@ Jump_085_55C7:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand24_Run
+; entry 0 of the `rst $00` table in SceneTreasureTheft
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
-ScriptCommand24_Run_Case00::
+SceneTreasureTheft_Case00::
 Jump_085_55D0:: ; address name
     ld a, $26
     ldh [hMapId], a
@@ -3639,26 +3639,26 @@ Jump_085_55D0:: ; address name
     call StartMessageHL_B85
     ret
 
-; implements script command type 22; reached through ScriptCommand22 in bank $10 (E-0038)
+; implements script command type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene its only script shows: 'What? Open the Canal Gate more?'; reached through ScriptCommand22 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand22)
 ; reads: wScriptStep
-ScriptCommand22_Run::
+SceneCanalGate::
 Func_085_55F5:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand22_Run_Case00
-    dw ScriptCommand22_Run_Case00
-    dw ScriptCommand22_Run_Case02
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand22_Run_Case04
-    dw ScriptCommand22_Run_Case05
-    dw ScriptCommand22_Run_Case06
+    dw SceneCanalGate_Case00
+    dw SceneCanalGate_Case00
+    dw SceneCanalGate_Case02
+    dw SceneWatchOut_Case01
+    dw SceneCanalGate_Case04
+    dw SceneCanalGate_Case05
+    dw SceneCanalGate_Case06
 
-; entry 6 of the `rst $00` table in ScriptCommand22_Run
+; entry 6 of the `rst $00` table in SceneCanalGate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1
 ; writes: wObject1, wScriptStartRequest
-ScriptCommand22_Run_Case06::
+SceneCanalGate_Case06::
 Jump_085_5607:: ; address name
     ld a, [wObject1 + $C]
     dec a
@@ -3672,12 +3672,12 @@ Jump_085_5607:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommand22_Run
+; entry 5 of the `rst $00` table in SceneCanalGate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStepArrived
 ; writes: wStepPtrHi, wStepTarget, wStepPtrLo
 ; points at: wScriptStep
-ScriptCommand22_Run_Case05::
+SceneCanalGate_Case05::
 Jump_085_561E:: ; address name
     xor a, a
     ld [wStepPtrHi], a
@@ -3697,12 +3697,12 @@ Jump_085_561E:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand22_Run
+; entry 4 of the `rst $00` table in SceneCanalGate
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wSpriteSlots
 ; writes: wScriptParam0, wSpriteSlots
 ; points at: wScriptStep
-ScriptCommand22_Run_Case04::
+SceneCanalGate_Case04::
 Jump_085_5647:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -3720,10 +3720,10 @@ Jump_085_5647:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand22_Run
+; entry 2 of the `rst $00` table in SceneCanalGate
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand22_Run_Case02::
+SceneCanalGate_Case02::
 Jump_085_5664:: ; address name
     ld hl, $0172
     call StartMessageHL_B85
@@ -3731,10 +3731,10 @@ Jump_085_5664:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand22_Run
+; entry 0 of the `rst $00` table in SceneCanalGate
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand22_Run_Case00::
+SceneCanalGate_Case00::
 Jump_085_566F:: ; address name
     ld de, wSpriteSlots + $C
     call ScriptApplyStepDeltaAtDE_Bank85
@@ -3743,24 +3743,24 @@ Jump_085_566F:: ; address name
     inc [hl]
     ret
 
-; implements script command type 18; reached through ScriptCommand18 in bank $10 (E-0038)
+; implements script command type 18 (SCRIPT_SCENE_GREATLOG_KEY): a cutscene step named after the scene its only script shows: before '0 received the GreatLog Key.'; reached through ScriptCommand18 in bank $10 (E-0038, E-0245)
 ; 1 call site from 1 routine (e.g. ScriptCommand18)
 ; reads: wScriptStep
-ScriptCommand18_Run::
+SceneGreatlogKey::
 Func_085_567B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand18_Run_Case00
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand18_Run_Case02
-    dw ScriptCommand2A_Run_Case01
-    dw ScriptCommand18_Run_Case04
+    dw SceneGreatlogKey_Case00
+    dw SceneWatchOut_Case01
+    dw SceneGreatlogKey_Case02
+    dw SceneWatchOut_Case01
+    dw SceneGreatlogKey_Case04
 
-; entry 4 of the `rst $00` table in ScriptCommand18_Run
+; entry 4 of the `rst $00` table in SceneGreatlogKey
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wObject5
 ; writes: wObject5, wStepPtrLo, wStepPtrHi, wScriptParam0, wScriptStartRequest
-ScriptCommand18_Run_Case04::
+SceneGreatlogKey_Case04::
 Jump_085_5689:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -3808,11 +3808,11 @@ Jump_085_56B3::
     db $42, $45, $47, $4A, $4C, $4F, $51, $54, $56, $59, $5B, $5E, $60, $63, $65, $68
     db $6A, $6D, $6F, $72, $74, $77, $79, $7C, $7E, $81, $83, $86, $88, $8B, $8D, $90
 
-; entry 2 of the `rst $00` table in ScriptCommand18_Run
+; entry 2 of the `rst $00` table in SceneGreatlogKey
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-ScriptCommand18_Run_Case02::
+SceneGreatlogKey_Case02::
 Jump_085_56FF:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -3827,12 +3827,12 @@ Jump_085_56FF:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommand18_Run
+; entry 0 of the `rst $00` table in SceneGreatlogKey
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: hTemp0, wObject5, hPlayerFacing, wFollowerRecords, wSpriteSlots, wScriptParam1
 ; points at: wScriptStep
-ScriptCommand18_Run_Case00::
+SceneGreatlogKey_Case00::
 Jump_085_571A:: ; address name
     ld a, $02
     ldh [hTemp0], a
@@ -3868,7 +3868,7 @@ Jump_085_574E::
     ret
 
 ; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
-; 2 call sites from 2 routines (e.g. ScriptCommandC2_Run_Case07, ScriptCommand22_Run_Case05)
+; 2 call sites from 2 routines (e.g. SceneGiveBackCyal_Case07, SceneCanalGate_Case05)
 SetBit1AtHL_Bank85::
 Func_085_5760:: ; address name
     ld a, [hl]
@@ -3877,7 +3877,7 @@ Func_085_5760:: ; address name
     ret
 
 ; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
-; 2 call sites from 2 routines (e.g. ScriptCommandC2_Run_Case08, ScriptCommand22_Run_Case06)
+; 2 call sites from 2 routines (e.g. SceneGiveBackCyal_Case08, SceneCanalGate_Case06)
 ClearBit1AtHL_Bank85::
 Func_085_5765:: ; address name
     ld a, [hl]
@@ -3886,7 +3886,7 @@ Func_085_5765:: ; address name
     ret
 
 ; the same 5 bytes as SetBit2AtHL_B0F (0F:7ECE)
-; 1 call site from 1 routine (e.g. ScriptCommandC2_Run_Case00)
+; 1 call site from 1 routine (e.g. SceneGiveBackCyal_Case00)
 SetBit2AtHL_B0F_Bank85::
 Func_085_576A:: ; address name
     ld a, [hl]
@@ -3895,7 +3895,7 @@ Func_085_576A:: ; address name
     ret
 
 ; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
-; 1 call site from 1 routine (e.g. ScriptCommandC2_Run_Case07)
+; 1 call site from 1 routine (e.g. SceneGiveBackCyal_Case07)
 ClearBit2AtHL_Bank85::
 Func_085_576F:: ; address name
     ld a, [hl]
@@ -3918,7 +3918,7 @@ Func_085_5774:: ; address name
     ret
 
 ; the same 34 bytes as ScriptApplyStepDeltaAtDE (0F:7EE9)
-; 5 call sites from 5 routines (e.g. ScriptCommand6F_Run, ScriptCommand5B_Run_Case03, ScriptCommand5B_Run_Case01, ScriptCommand22_Run_Case00, ...)
+; 5 call sites from 5 routines (e.g. DeskKey, SceneLimbo_Case03, SceneLimbo_Case01, SceneCanalGate_Case00, ...)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ScriptApplyStepDeltaAtDE_Bank85::
@@ -3944,7 +3944,7 @@ Jump_085_579C::
     ret
 
 ; stores DE in wC928/9 and far-calls AddStepDeltaToPointedByte each frame; after 32 frames starts message HL, clears wScriptParam0 and advances wScriptStep (E-0121)
-; 2 call sites from 2 routines (e.g. ScriptCommand6E_Run_Case09, ScriptCommand6D_Run_Case09)
+; 2 call sites from 2 routines (e.g. SceneLimboMonster2_Case09, SceneLimboMonster_Case09)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptStep
@@ -3970,7 +3970,7 @@ Func_085_57A2:: ; address name
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 56 call sites from 37 routines (e.g. ScriptCommandCD_Run_Case00, ScriptCommandC4_Run_Case08, ScriptCommandC4_Run_Case04, ScriptCommandC4_Run_Case01, ...)
+; 56 call sites from 37 routines (e.g. SceneYouDidIt_Case00, SceneBarrel_Case08, SceneBarrel_Case04, SceneBarrel_Case01, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B85::
 Func_085_57C8:: ; address name
@@ -3983,7 +3983,7 @@ Func_085_57C8:: ; address name
     ret
 
 ; wC928 = A, far-calls RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079) (the same 20 bytes appear in 4 banks)
-; 5 call sites from 5 routines (e.g. ScriptCommand4D_Run_Case0F, ScriptCommand2A_Run_Case12, ScriptCommand2A_Run_Case0F, ScriptCommand2A_Run_Case03, ...)
+; 5 call sites from 5 routines (e.g. SceneWaterReward_Case0F, SceneWatchOut_Case12, SceneWatchOut_Case0F, SceneWatchOut_Case03, ...)
 ; reads: wMessageState
 ; writes: wStepPtrLo
 RunMessageBoxFar_Bank85::
@@ -4000,10 +4000,10 @@ Jump_085_57E7::
     scf
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommand2A_Run
+; entry 1 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ScriptCommand2A_Run_Case01::
+SceneWatchOut_Case01::
 Jump_085_57E9:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank85
@@ -4012,10 +4012,10 @@ Jump_085_57E9:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand2A_Run
+; entry 3 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-ScriptCommand2A_Run_Case03::
+SceneWatchOut_Case03::
 Jump_085_57F3:: ; address name
     xor a, a
     call RunMessageBoxFar_Bank85
@@ -4472,7 +4472,7 @@ Data_085_5B00:: ; heuristic: target of a monotone pointer table; C0
     db $74, $01, $00, $00
 
 ; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wD09D into hFFC6/hFFC7 (E-0122)
-; 14 call sites from 9 routines (e.g. Func_004_5616_Case0A, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case19, TalkMsg0A3C_KingIfYouSee, ...)
+; 14 call sites from 9 routines (e.g. DispatchTalkEvent_Case0A_Sub01_Case0A, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case19, TalkMsg0A3C_KingIfYouSee, ...)
 ; writes: hTemp0, hTemp1
 ; points at: wWorkBuf
 TotalSpeciesFlaggedOrListed::
@@ -4495,7 +4495,7 @@ Jump_085_5B12::
     ret
 
 ; hFFC6 = 1 when a used key entry has kind hFFC6, else 0 (E-0125)
-; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, DispatchTalkEvent_Case01_CaseDB, ScriptCommand72_Run_Case01, ScriptCommand71_Run_Case01)
+; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, DispatchTalkEvent_Case01_CaseDB, SceneKamehaKeyBattle2_Case01, SceneKamehaKeyBattle_Case01)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wKeyList

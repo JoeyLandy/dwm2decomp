@@ -4551,7 +4551,7 @@ Jump_01D_5F1B::
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789 and wD7BE (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many in-use records had byte $6E set (E-0104)
-; 13 call sites from 13 routines (e.g. HibernateMenu_Case03, BreedMenu_Case04_Case02, BreedMenu_Case11_Case02, Func_016_5D13_Case10, ...)
+; 13 call sites from 13 routines (e.g. HibernateMenu_Case03, BreedMenu_Case04_Case02, BreedMenu_Case11_Case02, BattleEnd_Step5_Case01_Case01_Sub01_Case10, ...)
 ; reads: wRecordCapacity, wListCount, wPartyCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wPartyList

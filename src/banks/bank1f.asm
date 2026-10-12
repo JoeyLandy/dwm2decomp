@@ -2026,7 +2026,7 @@ Data_01F_720D:: ; address name
     db $C3, $1E, $1F, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $66, $67, $68, $69, $6A, $6B, $C3
 
 ; copies 16 glyph tiles (Data_01F_73BC) from bank $1F to the VRAM addresses in Data_01F_73CC (E-0127)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_Case01)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_Case01)
 LoadSixteenGlyphTilesFromTable73BC::
 Func_01F_7375:: ; address name
     ld c, $00
@@ -2092,7 +2092,7 @@ Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
 ; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wCA36 at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case05, RunScreenStateWhenNotFading_F1_Case0D_Case05)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case05, RunScreenStateWhenNotFading_F1_Case0D_Case05)
 ; reads: wScreenSubStep, wRecordBufB, wIsCGB, wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenSubStep, ...
 DrawWCA36MonsterPictureInTwoSteps::
@@ -2179,7 +2179,7 @@ Jump_01F_745C::
     ret
 
 ; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3), then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121; fill, not a tile map: E-0186)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case00, RunScreenStateWhenNotFading_F1_Case0D_Case00)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case00, RunScreenStateWhenNotFading_F1_Case0D_Case00)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 ClearBGMapAndLoadFrameTiles::
 Func_01F_7494:: ; address name
@@ -2218,7 +2218,7 @@ Func_01F_7494:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_662B (12 x 15 at scroll + $68) and Data_01F_653F (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case15, RunScreenStateWhenNotFading_F1_Case0D_Case15)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case15, RunScreenStateWhenNotFading_F1_Case0D_Case15)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects662BAnd653F::
 Func_01F_74E3:: ; address name
@@ -2263,7 +2263,7 @@ Func_01F_74E3:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_6B4F (12 x 18 at scroll + 8) and Data_01F_6C27 (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case17, RunScreenStateWhenNotFading_F1_Case0D_Case17)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case17, RunScreenStateWhenNotFading_F1_Case0D_Case17)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects6B4FAnd6C27::
 Func_01F_753A:: ; address name
@@ -2308,7 +2308,7 @@ Func_01F_753A:: ; address name
     ret
 
 ; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles Data_01F_6C5F (12 x 18) and Data_01F_6D37 (8 x 7) (E-0127)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case18, RunScreenStateWhenNotFading_F1_Case0D_Case18)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case18, RunScreenStateWhenNotFading_F1_Case0D_Case18)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wArg5, wArg6, wArg1, wArg2, ...
 ClearTilesAndDrawRects6C5FAnd6D37::
 Func_01F_7591:: ; address name
@@ -2364,7 +2364,7 @@ Func_01F_7591:: ; address name
     ret
 
 ; shows the eight skill names of the record at wCA2B (field $34) in rows from vTiles2 + $200, or string $0E of category 8 when it has none (E-0129)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case19, RunScreenStateWhenNotFading_F1_Case0D_Case19)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case19, RunScreenStateWhenNotFading_F1_Case0D_Case19)
 ; reads: wRecordBufB
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
 ; points at: wRecordBufB
@@ -2470,7 +2470,7 @@ Jump_01F_769E::
     ret
 
 ; draws the tile rectangles Data_01F_6E47 and Data_01F_6D6F, clears tile rows and sets up the summary text window (E-0128)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1B, RunScreenStateWhenNotFading_F1_Case0D_Case1B)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case1B, RunScreenStateWhenNotFading_F1_Case0D_Case1B)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wTextWindowTileLo, ...
 DrawSummaryFrames6E47And6D6F::
 Func_01F_76B5:: ; address name
@@ -2547,7 +2547,7 @@ Func_01F_76B5:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_5E13 (12 x 3 at scroll + 8) and Data_01F_66DF (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. Func_037_4AFD_Case0D_Case1C, RunScreenStateWhenNotFading_F1_Case0D_Case1C)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case1C, RunScreenStateWhenNotFading_F1_Case0D_Case1C)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects5E13And66DF::
 Func_01F_7754:: ; address name

@@ -1745,18 +1745,18 @@ Jump_036_4B0A::
 Jump_036_4B16::
     ld a, [wBattleSubStep]
     rst $00
-    dw Func_036_4A38_Case00
-    dw Func_036_4A38_Case01
-    dw Func_036_4A38_Case02
-    dw Func_036_4A38_Case03
-    dw Func_036_4A38_Case04
-    dw Func_036_4A38_Case05
+    dw ResolveStepDamageMessage_Sub04_Case00
+    dw ResolveStepDamageMessage_Sub04_Case01
+    dw ResolveStepDamageMessage_Sub04_Case02
+    dw ResolveStepDamageMessage_Sub04_Case03
+    dw ResolveStepDamageMessage_Sub04_Case04
+    dw ResolveStepDamageMessage_Sub04_Case05
 
 ; entry 0 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wBattleSubStep, wBattleStatus2
-Func_036_4A38_Case00::
+ResolveStepDamageMessage_Sub04_Case00::
 Jump_036_4B26:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -1775,7 +1775,7 @@ Jump_036_4B26:: ; address name
 ; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
 ; writes: wBattleArg0
 ; points at: wBattleSubStep, wBattleStatus1, wSideControl, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, ...
-Func_036_4A38_Case01::
+ResolveStepDamageMessage_Sub04_Case01::
 Jump_036_4B41:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -1968,7 +1968,7 @@ Jump_036_4CCF::
     ret
 
 ; for a target other than slot 3/7: wD868 = its record field $31 address, wD86A = its wDA72 record, then far-calls Func_019_44B9 (E-0124)
-; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
+; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_Case01)
 ; reads: wBattleTarget
 ; writes: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wSlotResistances
@@ -2010,7 +2010,7 @@ Jump_036_4D33::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wLinkMode
 ; points at: wBattleSubStep, wBattleMonsterId, wSlotMarks, wSlotNameBytes
-Func_036_4A38_Case02::
+ResolveStepDamageMessage_Sub04_Case02::
 Jump_036_4D42:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -2047,7 +2047,7 @@ Jump_036_4D53::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wBattleSubStep, wBattleSlotOut, wSlotMarks, wBattleStatus, wSideFlags0
-Func_036_4A38_Case03::
+ResolveStepDamageMessage_Sub04_Case03::
 Jump_036_4D7F:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -2095,7 +2095,7 @@ Jump_036_4D7F:: ; address name
 ; reads: wBattleTarget
 ; writes: wQueuedActionId, wBattleByteAD
 ; points at: wBattleSubStep, wBattleStatus8
-Func_036_4A38_Case04::
+ResolveStepDamageMessage_Sub04_Case04::
 Jump_036_4DD6:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -2116,7 +2116,7 @@ Jump_036_4DD6:: ; address name
 ; reads: wSideFlags0, wSideFlags1, wBattleActionId
 ; writes: wBattleResolveStep, wBattleSubStep, wSideFlags0, wSideFlags1
 ; points at: wBattleSubPhase
-Func_036_4A38_Case05::
+ResolveStepDamageMessage_Sub04_Case05::
 Jump_036_4DF3:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
@@ -2142,7 +2142,7 @@ Jump_036_4DF3:: ; address name
     ret
 
 ; loads the picture of battle slot B (species at DE) into its picture area at vTiles2 + $140 + $240 * position and, on CGB, its attributes (E-0128)
-; 5 call sites from 4 routines (e.g. ActionEffect_Vivify, ResolveStepDamageMessage_Sub02, ResolveStepDamageMessage, Func_036_4A38_Case02)
+; 5 call sites from 4 routines (e.g. ActionEffect_Vivify, ResolveStepDamageMessage_Sub02, ResolveStepDamageMessage, ResolveStepDamageMessage_Sub04_Case02)
 ; reads: wLinkMode, wLinkRole, wIsCGB, wBattleFoeCount, wSide1Flag, wSide0Flag
 ; writes: wBGPaletteUploadRequest, hTemp0
 LoadBattleMonsterPictureForSlotB::
@@ -10906,7 +10906,7 @@ Func_036_7E42:: ; address name
     jr ReadBattleWordFromArray
 
 ; A = battle slot: HL = the word for that slot in the array at wBattleMP (Func_036_7E5B)
-; 3 call sites from 3 routines (e.g. ActionEffect_RobMagic, ActionEffect_RobMagic_Sub01_Sub01, Func_036_4A38_Case01)
+; 3 call sites from 3 routines (e.g. ActionEffect_RobMagic, ActionEffect_RobMagic_Sub01_Sub01, ResolveStepDamageMessage_Sub04_Case01)
 ; points at: wBattleMP
 GetBattleMP::
 Func_036_7E47:: ; address name
@@ -10991,7 +10991,7 @@ Func_036_7EA2:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 3 call sites from 3 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, Func_036_4A38_Case01)
+; 3 call sites from 3 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage_Sub04_Case01)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank36::
 Func_036_7EBE:: ; address name
@@ -11003,7 +11003,7 @@ Func_036_7EBE:: ; address name
     ret
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 5 call sites from 4 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage, Func_036_4A38_Case01)
+; 5 call sites from 4 routines (e.g. ActionEffect_BeDragon_Sub02, ActionEffect_Transform_Sub01, ResolveStepDamageMessage, ResolveStepDamageMessage_Sub04_Case01)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank36::
 Func_036_7ECB:: ; address name

@@ -303,7 +303,7 @@ Data_05F_68C8:: ; heuristic: stream in a run of back-to-back compressed streams;
     INCBIN "dwm2-cobi-us.gbc", $17E8C8, $6E
 
 ; wMessageState ($FF = idle) steps a message: 0 opens the message window (unless wMessageGroup bit 7) at the bottom, or at the top when hPlayerY >= $48, with sound $69; 1 waits for the window, then ShowMessageFromMessageIndex starts the text; 2 waits until wC52B bit 0 clears (text done), then closes the window (unless wMessageGroup bit 6); 3 waits for the close. When wC928 is 0, state 0 also calls Func_004_4470 and state 3 ClearBit1OfPlayerAndObjectFlags (probably freezing and releasing the player and objects). The steps after state 3 are not read (E-0079)
-; 6 call sites from 6 routines (e.g. RunMessageBoxCarryWhenIdle_Bank5F, RunMessageBoxFar_Bank0F, RunMessageBoxFar_Bank12, ScriptCommand16_Run_Case17, ...)
+; 6 call sites from 6 routines (e.g. RunMessageBoxCarryWhenIdle_Bank5F, RunMessageBoxFar_Bank0F, RunMessageBoxFar_Bank12, SceneWarubouFood2_Case17, ...)
 ; reads: wMessageState
 RunMessageBox::
 Func_05F_6936:: ; address name
@@ -577,7 +577,7 @@ Jump_05F_6A85::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 0; calls Func_05F_6B43 with the coordinate; then hPlayerY += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 11 call sites from 9 routines (e.g. ScriptCommand5E_Run_Case23, ScriptCommand40_Run_Case06, ScriptCommand40_Run_Case04, ScriptCommand39_Run_Case21, ...)
+; 11 call sites from 9 routines (e.g. SceneDarckDefeated_Case23, SceneSpiritEnvoy_Case06, SceneSpiritEnvoy_Case04, SceneMermaidKingdom_Case21, ...)
 ; reads: hPlayerStateFlags, hPlayerY, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerY, wStepArrived
 StepPlayerDownTowardWC928::
@@ -609,7 +609,7 @@ Jump_05F_6AB3::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 1; calls Func_05F_6B43 with the coordinate; then hPlayerX += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 7 call sites from 6 routines (e.g. ScriptCommand5E_Run_Case23, ScriptCommand49_Run_Case03, ScriptCommand39_Run_Case21, ScriptCommand6A_Run_Shared01, ...)
+; 7 call sites from 6 routines (e.g. SceneDarckDefeated_Case23, SceneMedicineGiven_Case03, SceneMermaidKingdom_Case21, SceneHorsingAround_Shared01, ...)
 ; reads: hPlayerStateFlags, hPlayerX, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerX, wStepArrived
 StepPlayerRightTowardWC928::
@@ -641,7 +641,7 @@ Jump_05F_6ADF::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 2; calls Func_05F_6B43 with the coordinate; then hPlayerY -= 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 15 call sites from 12 routines (e.g. ScriptCommand5E_Run_Case02, ScriptCommand49_Run_Case03, ScriptCommand49_Run_Case02, ScriptCommand49_Run_Case00, ...)
+; 15 call sites from 12 routines (e.g. SceneDarckDefeated_Case02, SceneMedicineGiven_Case03, SceneMedicineGiven_Case02, SceneMedicineGiven_Case00, ...)
 ; reads: hPlayerStateFlags, hPlayerY, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerY, wStepArrived
 StepPlayerUpTowardWC928::
@@ -673,7 +673,7 @@ Jump_05F_6B0B::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 3; calls Func_05F_6B43 with the coordinate; then hPlayerX -= 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 16 call sites from 13 routines (e.g. ScriptCommand5F_Run_Case14, ScriptCommand5E_Run_Case02, ScriptCommand49_Run_Case02, ScriptCommand49_Run_Case00, ...)
+; 16 call sites from 13 routines (e.g. SceneHomecoming_Case14, SceneDarckDefeated_Case02, SceneMedicineGiven_Case02, SceneMedicineGiven_Case00, ...)
 ; reads: hPlayerStateFlags, hPlayerX, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerX, wStepArrived
 StepPlayerLeftTowardWC928::
@@ -717,7 +717,7 @@ Jump_05F_6B4D::
     ret
 
 ; wC929 = object number (16-byte entries): sets bit 2 of wCB8C + 16n, stores direction wC92A & 3 at wCB86 + 16n and moves the object one pixel, two when wC92A bit 7 is set: direction 0 adds the step to Y (wCB8B + 16n), 1 adds it to X (wCB8A + 16n), 2 subtracts it from Y, 3 from X. When the moved coordinate equals wC928 it clears bit 2 and sets wC92C = 1, else wC92C = 0 (E-0061)
-; 145 call sites from 78 routines (e.g. ScriptCommandC7_Run_Case01, ScriptCommand5F_Run_Case17, ScriptStepMoveObjects2And3To81B0, ScriptStepMoveObjects2And3To0340, ...)
+; 145 call sites from 78 routines (e.g. ScenePendantSeller_Case01, SceneHomecoming_Case17, ScriptStepMoveObjects2And3To81B0, ScriptStepMoveObjects2And3To0340, ...)
 ; reads: wStepPtrHi, wStepTarget, wStepPtrLo
 ; writes: wStepArrived
 StepObjectTowardCoord::
@@ -847,7 +847,7 @@ Data_05F_6BE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
 ; for $78 frames blinks object hFFC6 by alternating byte wCB8B[16 * obj] between hFFC7 and $E0 (hidden) at a slowing rate; hFFC6 = 1 when done (E-0127)
-; 20 call sites from 19 routines (e.g. ScriptCommand5E_Run_Case00, ScriptCommand4E_Run_Case04, ScriptCommand4A_Run_Case08, ScriptCommand66_Run_Case08, ...)
+; 20 call sites from 19 routines (e.g. SceneDarckDefeated_Case00, SceneGrave_Case04, SceneShield_Case08, SceneShieldGuardian_Case08, ...)
 ; reads: wScriptParam0, hTemp0, hTemp1
 ; writes: wScriptParam0, hTemp0
 ScriptStepBlinkObjectTemp0::
@@ -910,7 +910,7 @@ Jump_05F_6C43::
     ret
 
 ; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
-; 53 call sites from 50 routines (e.g. ScriptCommand5E_Run_Case8F, ScriptCommand5E_Run_Shared01, ScriptCommand5E_Run_Case0B, ScriptCommand58_Run_Case1E, ...)
+; 53 call sites from 50 routines (e.g. SceneDarckDefeated_Case8F, SceneDarckDefeated_Shared01, SceneDarckDefeated_Case0B, SceneThreeItems_Case1E, ...)
 ; writes: wModeState, wFieldTransitionStep, wScriptParam0
 ; points at: wScriptStep
 ScriptStartFadeAndAdvanceStep::
@@ -943,7 +943,7 @@ Func_05F_6C71:: ; address name
     ret
 
 ; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
-; 19 call sites from 18 routines (e.g. ScriptCommand32_Run_Case00, ScriptCommand84_Run_Case08, ScriptCommand86_Run_Case02, ScriptCommand81_Run_Case02, ...)
+; 19 call sites from 18 routines (e.g. GiveItemBlink_Case00, ScriptCommand84_Run_Case08, ScriptCommand86_Run_Case02, ScriptCommand81_Run_Case02, ...)
 ; reads: wStepPtrLo, wGameFlags836
 ; writes: wGameFlags836
 ; points at: wInventory
@@ -971,7 +971,7 @@ Jump_05F_6C9B::
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
-; 5 call sites from 4 routines (e.g. Func_004_58C2_Case13, Func_004_612B_Case18, DispatchTalkEvent_Case04_Case6F, ScriptCommand82_Run_Shared05)
+; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_Case13, DispatchTalkEvent_Case02_Sub01_Case18, DispatchTalkEvent_Case04_Case6F, ScriptCommand82_Run_Shared05)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
@@ -1091,7 +1091,7 @@ Jump_05F_6D35::
     ret
 
 ; with hFF8D bits 1-3 set: wD7F1 = wC6FE[hFFC6] (bank 0 record), far-calls Func_014_7E96, LoadRecordListNameTiles and Func_004_4AA8, wC527 = $7F, then clears hFF8D bits 1-3 (E-0121)
-; 3 call sites from 3 routines (e.g. ScriptCommand3D_Run_Case03, ScriptCommand3C_Run_Case0D, ScriptCommand3A_Run_Case0A)
+; 3 call sites from 3 routines (e.g. RewardItemOrKey2_Case03, RewardItemOrKey_Case0D, SceneMasterThanks_Case0A)
 ; reads: hFieldDrawFlags, hTemp0
 ; writes: hFieldDrawFlags, wArg1, wArg2, wOBJPaletteUploadRequest
 ; points at: wPartyList
@@ -1150,7 +1150,7 @@ Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E, $1E
 
 ; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hFFC6 (E-0125)
-; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, ScriptCommand5E_Run_Case93, ScriptCommand58_Run_Case2B, ScriptCommand4B_Run_Case16, ...)
+; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, SceneDarckDefeated_Case93, SceneThreeItems_Case2B, SceneShield2_Case16, ...)
 ; reads: hTemp0
 ; points at: wKeyList
 MarkKeyEntryKindTemp0Bit6::
@@ -1199,7 +1199,7 @@ Jump_05F_6DD6::
     ret
 
 ; HL = the BG map entry at the scroll origin ((hScrollY & $F8) * 4 + $9800, rows wrapped by & $9B, + hScrollX / 8), then DrawFullScreenBufferToBGMap (E-0093)
-; 23 call sites from 23 routines (e.g. ScriptCommand5F_Run_Case29, ScriptCommand5E_Run_Case02, ScriptCommand43_Run_Case0A, ScriptCommand42_Run_Case08, ...)
+; 23 call sites from 23 routines (e.g. SceneHomecoming_Case29, SceneDarckDefeated_Case02, SceneWallExit_Case0A, SceneReportToKing_Case08, ...)
 ; reads: hScrollY, hScrollX
 DrawFullScreenBufferAtScroll::
 Func_05F_6DDB:: ; address name
@@ -1236,7 +1236,7 @@ Jump_05F_6E03::
     ret
 
 ; DE = the BG map row at hScrollY (& $F8); calls Func_05F_6E35 for the columns at hScrollX - 8 and hScrollX + $A0, just off the left and right edges (E-0121)
-; 9 call sites from 9 routines (e.g. ScriptCommand5E_Run_Case0D, ScriptCommand58_Run_Case00, ScriptCommand41_Run_Case00, ScriptCommand43_Run_Case00, ...)
+; 9 call sites from 9 routines (e.g. SceneDarckDefeated_Case0D, SceneThreeItems_Case00, SceneExplosion_Case00, SceneWallExit_Case00, ...)
 ; reads: hScrollY, hScrollX
 RedrawColumnsBesideScreen::
 Func_05F_6E09:: ; address name
@@ -1296,36 +1296,36 @@ Jump_05F_6E44::
     jr nz, Jump_05F_6E44
     ret
 
-; only called from ScriptCommand2C_Run_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand2C_Run_Case06)
+; only called from SceneDancing_Case06 (E-0047)
+; 1 call site from 1 routine (e.g. SceneDancing_Case06)
 ; reads: wScriptSubStep
-ScriptCommand2C_Run_Case06_Sub01::
+SceneDancing_Case06_Sub01::
 Func_05F_6E58:: ; address name
     ld a, [wScriptSubStep]
     rst $00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case02
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case05
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case08
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case0B
-    dw Func_05F_6E58_Case0C
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case10
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case02
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case05
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case08
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case0B
+    dw SceneDancing_Case06_Sub01_Case0C
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case10
 
 ; entry 11 of the `rst $00` table in Func_05F_6E58
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing, wFollowerRecords
 ; points at: wScriptSubStep
-Func_05F_6E58_Case0B::
+SceneDancing_Case06_Sub01_Case0B::
 Jump_05F_6E7E:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
@@ -1341,7 +1341,7 @@ Jump_05F_6E7E:: ; address name
 ; reads: hPlayerStateFlags, wScriptParam0
 ; writes: hPlayerFacing, wFollowerRecords, hPlayerStateFlags, wScriptParam0
 ; points at: wScriptSubStep
-Func_05F_6E58_Case08::
+SceneDancing_Case06_Sub01_Case08::
 Jump_05F_6E8F:: ; address name
     ld a, $02
     jr Jump_05F_6E99
@@ -1351,7 +1351,7 @@ Jump_05F_6E8F:: ; address name
 ; reads: hPlayerStateFlags, wScriptParam0
 ; writes: hPlayerFacing, wFollowerRecords, hPlayerStateFlags, wScriptParam0
 ; points at: wScriptSubStep
-Func_05F_6E58_Case05::
+SceneDancing_Case06_Sub01_Case05::
 Jump_05F_6E93:: ; address name
     ld a, $01
     jr Jump_05F_6E99
@@ -1361,7 +1361,7 @@ Jump_05F_6E93:: ; address name
 ; reads: hPlayerStateFlags, wScriptParam0
 ; writes: hPlayerFacing, wFollowerRecords, hPlayerStateFlags, wScriptParam0
 ; points at: wScriptSubStep
-Func_05F_6E58_Case02::
+SceneDancing_Case06_Sub01_Case02::
 Jump_05F_6E97:: ; address name
     ld a, $03
 
@@ -1387,34 +1387,34 @@ Jump_05F_6E99::
     inc [hl]
     ret
 
-; only called from ScriptCommand2D_Run_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand2D_Run_Case05)
+; only called from SceneMermaidSong2_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05)
 ; reads: wScriptSubStep
-ScriptCommand2D_Run_Case05_Sub01::
+SceneMermaidSong2_Case05_Sub01::
 Func_05F_6EC3:: ; address name
     ld a, [wScriptSubStep]
     rst $00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6EC3_Case02
-    dw Func_05F_6EC3_Case03
-    dw Func_05F_6EC3_Case04
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6EC3_Case07
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case0C
-    dw Func_05F_6EC3_Case07
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case00
-    dw Func_05F_6E58_Case10
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneMermaidSong2_Case05_Sub01_Case02
+    dw SceneMermaidSong2_Case05_Sub01_Case03
+    dw SceneMermaidSong2_Case05_Sub01_Case04
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneMermaidSong2_Case05_Sub01_Case07
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case0C
+    dw SceneMermaidSong2_Case05_Sub01_Case07
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case00
+    dw SceneDancing_Case06_Sub01_Case10
 
 ; entry 16 of the `rst $00` table in Func_05F_6E58
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags
 ; writes: hPlayerStateFlags
 ; points at: wScriptStep
-Func_05F_6E58_Case10::
+SceneDancing_Case06_Sub01_Case10::
 Jump_05F_6EE3:: ; address name
     ldh a, [hPlayerStateFlags]
     and a, $FD
@@ -1428,7 +1428,7 @@ Jump_05F_6EE3:: ; address name
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptSubStep
-Func_05F_6E58_Case0C::
+SceneDancing_Case06_Sub01_Case0C::
 Jump_05F_6EEE:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -1471,7 +1471,7 @@ Jump_05F_6EEE:: ; address name
 ; reads: wScriptParam0, hPlayerFacing
 ; writes: wScriptParam0, hPlayerFacing, wFollowerRecords
 ; points at: wScriptSubStep
-Func_05F_6EC3_Case07::
+SceneMermaidSong2_Case05_Sub01_Case07::
 Jump_05F_6F46:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -1498,7 +1498,7 @@ Jump_05F_6F46:: ; address name
 ; reads: wScriptParam0, hPlayerFacing, wFollowerRecords, hPlayerStateFlags
 ; writes: hPlayerFacing, wFollowerRecords, wScriptParam0, hPlayerStateFlags
 ; points at: hPlayerX, wScriptSubStep, wScriptParam0
-Func_05F_6EC3_Case04::
+SceneMermaidSong2_Case05_Sub01_Case04::
 Jump_05F_6F6B:: ; address name
     ld a, [wScriptParam0]
     and a, $07
@@ -1573,7 +1573,7 @@ Jump_05F_6FDC::
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-Func_05F_6EC3_Case03::
+SceneMermaidSong2_Case05_Sub01_Case03::
 Jump_05F_6FE7:: ; address name
     ld de, wFollowerRecords + $7
     ld a, e
@@ -1593,7 +1593,7 @@ Jump_05F_6FE7:: ; address name
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptSubStep
-Func_05F_6E58_Case00::
+SceneDancing_Case06_Sub01_Case00::
 Jump_05F_7009:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -1611,7 +1611,7 @@ Jump_05F_7009:: ; address name
 ; reads: wScriptParam0, hPlayerFacing
 ; writes: hPlayerFacing, wFollowerRecords
 ; points at: hPlayerX
-Func_05F_6EC3_Case02::
+SceneMermaidSong2_Case05_Sub01_Case02::
 Jump_05F_701C:: ; address name
     ld a, [wScriptParam0]
     and a, $07
@@ -1639,7 +1639,7 @@ Jump_05F_703D::
     ret
 
 ; every fourth step moves wC8F5/wC8F6 and wC8FA/wC8FB in opposite directions by the table at HL; after 32 steps advances wC92D (E-0125)
-; 1 call site from 1 routine (e.g. Func_05F_6EC3_Case02)
+; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05_Sub01_Case02)
 ; reads: wScriptParam0, wFollowerRecords
 ; writes: wFollowerRecords, wScriptParam0
 ; points at: wScriptSubStep, wScriptParam0
@@ -1685,7 +1685,7 @@ Jump_05F_708D::
     inc [hl]
     ret
 
-; address loaded by Func_05F_6EC3_Case04, Func_05F_6EC3_Case02
+; address loaded by SceneMermaidSong2_Case05_Sub01_Case04, SceneMermaidSong2_Case05_Sub01_Case02
 Data_05F_7092:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $00, $FF, $00, $FE, $FF, $FF, $FF, $FF, $FF, $FF, $FE, $00, $FF, $00, $FE
     db $00, $FE, $00, $FF, $01, $FE, $01, $FF, $01, $FF, $02, $FF, $01, $00, $02, $00
@@ -1693,7 +1693,7 @@ Data_05F_7092:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $02, $00, $01, $FF, $02, $FF, $01, $FF, $01, $FE, $01, $FF, $00, $FE, $00
 
 ; runs the routine for wC92D (jump table of eight) (E-0122)
-; 2 call sites from 2 routines (e.g. ScriptCommand46_Run_Case0F, ScriptCommand1F_Run_Case07)
+; 2 call sites from 2 routines (e.g. SceneCheerYuna_Case0F, SceneMonsterInspection_Case07)
 ; reads: wScriptSubStep
 RunScriptSubStep::
 Func_05F_70D2:: ; address name
@@ -2099,7 +2099,7 @@ Jump_05F_7345:: ; address name
     ret
 
 ; runs the routine for wC92D (jump table of eighteen) (E-0124)
-; 4 call sites from 4 routines (e.g. ScriptCommand5E_Run_Case0C, ScriptCommand4B_Run_Case12, ScriptCommand39_Run_Case2D, ScriptCommand27_Run_Case1F)
+; 4 call sites from 4 routines (e.g. SceneDarckDefeated_Case0C, SceneShield2_Case12, SceneMermaidKingdom_Case2D, SceneRivalDefeated_Case1F)
 ; reads: wScriptSubStep
 RunScriptSubStep_7363::
 Func_05F_7363:: ; address name

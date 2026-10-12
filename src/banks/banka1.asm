@@ -879,7 +879,7 @@ Jump_0A1_44C5::
     ret
 
 ; marks the 5 x 5 map screens around the current one (within wCD0D x wCD0E) as visited (E-0127)
-; 1 call site from 1 routine (e.g. Func_016_53E6_Case13)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_Case13)
 ; reads: hMapScreenX, hMapScreenY, wKeyWorldHeight, wKeyWorldWidth, hTemp0, hTemp1
 ; writes: hTemp0, hMapScreenX, hTemp1, hMapScreenY
 ; points at: hMapScreenX, hMapScreenY

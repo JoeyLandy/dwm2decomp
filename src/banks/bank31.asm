@@ -6862,23 +6862,23 @@ BattleEnd_Step4_Sub02::
 Func_031_67AA:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw Func_031_67AA_Case00
-    dw Func_031_67AA_Case01
-    dw Func_031_67AA_Case02
-    dw Func_031_67AA_Case03
-    dw Func_031_67AA_Case04
-    dw Func_031_67AA_Case05
-    dw Func_031_67AA_Case06
-    dw Func_031_67AA_Case07
-    dw Func_031_67AA_Case08
-    dw Func_031_67AA_Case09
+    dw BattleEnd_Step4_Sub02_Case00
+    dw BattleEnd_Step4_Sub02_Case01
+    dw BattleEnd_Step4_Sub02_Case02
+    dw BattleEnd_Step4_Sub02_Case03
+    dw BattleEnd_Step4_Sub02_Case04
+    dw BattleEnd_Step4_Sub02_Case05
+    dw BattleEnd_Step4_Sub02_Case06
+    dw BattleEnd_Step4_Sub02_Case07
+    dw BattleEnd_Step4_Sub02_Case08
+    dw BattleEnd_Step4_Sub02_Case09
 
 ; entry 0 of the `rst $00` table in Func_031_67AA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleKind, wLinkMode, wBattleExpAward
 ; writes: wBattleResolveStep, wBattleSubPhase, hTemp0, wBattleExpAward, hTemp1, hTemp2
 ; points at: wBattleSlotOut, wTextBuf0, wBattleSubPhase
-Func_031_67AA_Case00::
+BattleEnd_Step4_Sub02_Case00::
 Jump_031_67C2:: ; address name
     ld a, [wBattleKind]
     cp a, $04
@@ -6949,7 +6949,7 @@ Jump_031_67F7::
 ; reads: wTextFlags
 ; writes: rRAMG, rRAMB, wBattleResolveStep, wBattleArg0
 ; points at: wBattleSlotOut, wBattleSubPhase
-Func_031_67AA_Case01::
+BattleEnd_Step4_Sub02_Case01::
 Jump_031_6851:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6981,7 +6981,7 @@ Jump_031_6862::
     ret
 
 ; adds the 24-bit wDA6B-wDA6D to the 3-byte field $58 of record C, capped at 9,999,999 ($98967F) (E-0125)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case01)
 ; reads: wBattleExpAward
 AddExpToRecordCCapped::
 Func_031_6885:: ; address name
@@ -7026,19 +7026,19 @@ Jump_031_68B1::
 ; entry 2 of the `rst $00` table in Func_031_67AA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-Func_031_67AA_Case02::
+BattleEnd_Step4_Sub02_Case02::
 Jump_031_68B8:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw Func_031_67AA_Case02_Case00
-    dw Func_031_67AA_Case02_Case01
+    dw BattleEnd_Step4_Sub02_Case02_Case00
+    dw BattleEnd_Step4_Sub02_Case02_Case01
 
 ; entry 0 of the `rst $00` table in Func_031_67AA_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattleArg0, wPartyCount
 ; writes: wBattleArg0, wBattleEndTimer
 ; points at: wBattleSlotOut, wPartyList, wBattleSubPhase, wBattleLevel, wBattleResolveStep
-Func_031_67AA_Case02_Case00::
+BattleEnd_Step4_Sub02_Case02_Case00::
 Jump_031_68C0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7095,7 +7095,7 @@ Jump_031_6901::
 ; reads: wBattleArg0
 ; writes: rRAMG, rRAMB, wBattleArg1, wBattleResolveStep
 ; points at: wPartyList, wBattleSubPhase
-Func_031_67AA_Case02_Case01::
+BattleEnd_Step4_Sub02_Case02_Case01::
 Jump_031_6925:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -7127,21 +7127,21 @@ Jump_031_6925:: ; address name
 ; entry 3 of the `rst $00` table in Func_031_67AA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-Func_031_67AA_Case03::
+BattleEnd_Step4_Sub02_Case03::
 Jump_031_6966:: ; address name
     call CountDownBattleEndTimerWhenSoundIdle
     ld a, [wBattleResolveStep]
     rst $00
-    dw Func_031_67AA_Case03_Case00
-    dw Func_031_67AA_Case03_Case01
-    dw Func_031_67AA_Case03_Case02
+    dw BattleEnd_Step4_Sub02_Case03_Case00
+    dw BattleEnd_Step4_Sub02_Case03_Case01
+    dw BattleEnd_Step4_Sub02_Case03_Case02
 
 ; entry 0 of the `rst $00` table in Func_031_67AA_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattleArg0
 ; writes: rRAMG, rRAMB
 ; points at: wWorkBuf, wBattleResolveStep
-Func_031_67AA_Case03_Case00::
+BattleEnd_Step4_Sub02_Case03_Case00::
 Jump_031_6973:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7175,7 +7175,7 @@ Jump_031_6999::
 ; reads: wTextFlags, hTemp3, hTemp4, hTemp5
 ; writes: wBattleSubStep
 ; points at: wTextBuf2, wTextBuf3, wWorkBuf, wBattleResolveStep
-Func_031_67AA_Case03_Case01::
+BattleEnd_Step4_Sub02_Case03_Case01::
 Jump_031_69A4:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7239,7 +7239,7 @@ Jump_031_69FA::
 
 ; entry 2 of the `rst $00` table in Func_031_67AA_Case03
 ; no direct call (reached through a table, a jump or a vector)
-Func_031_67AA_Case03_Case02::
+BattleEnd_Step4_Sub02_Case03_Case02::
 Jump_031_6A06:: ; address name
     call RunBattleSubStep_6E67
     ret
@@ -7248,7 +7248,7 @@ Jump_031_6A06:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG, rRAMB, wBattleResolveStep
 ; points at: wBattleSubPhase
-Func_031_67AA_Case04::
+BattleEnd_Step4_Sub02_Case04::
 Jump_031_6A0A:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -7268,7 +7268,7 @@ Jump_031_6A0A:: ; address name
     ret
 
 ; record wD868: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case04)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case04)
 ; reads: wBattleArg0, wLevelUpGains
 ApplyLevelUpToRecordBattleArg0::
 Func_031_6A2D:: ; address name
@@ -7338,7 +7338,7 @@ Func_031_6A8B:: ; address name
     ret
 
 ; for record wD868: if field $56 (level) >= field $57, begins showing string $0A of category 5 (BeginStringDisplay_Bank2F) (E-0122)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case04)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case04)
 ; reads: wBattleArg0
 ; writes: wStringIndex, wStringCategory
 ShowString0ACat5IfField56AtLeast57::
@@ -7357,7 +7357,7 @@ Func_031_6A92:: ; address name
     ret
 
 ; copies the 8 bytes at wD09D to the skill list (field $34) of record wD868 (E-0122)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case04)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case04)
 ; reads: wBattleArg0
 ; points at: wWorkBuf
 StoreWorkBufToRecordSkills::
@@ -7380,7 +7380,7 @@ Jump_031_6ABB::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG, rRAMB
 ; points at: sRecords, wBattleSubPhase
-Func_031_67AA_Case05::
+BattleEnd_Step4_Sub02_Case05::
 Jump_031_6AC2:: ; address name
     call DivideBattleExpAwardByModeFactor
     ld a, $0A
@@ -7424,7 +7424,7 @@ Jump_031_6AE9::
     ret
 
 ; divides the 24-bit wDA6B-wDA6D by 20, 15 or 10 for wC7C7 = 0, 1 or other (E-0124)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case05)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case05)
 ; reads: wBattleExpAward, wFarmLevel
 ; writes: wBattleExpAward
 DivideBattleExpAwardByModeFactor::
@@ -7461,7 +7461,7 @@ Jump_031_6B1E::
     ret
 
 ; adds the 24-bit wDA6B-wDA6D to the 3-byte field $58 of the record at HL, capped at 9,999,999 ($98967F) (E-0125)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case05)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case05)
 ; reads: wBattleExpAward
 AddExpToRecordHLCapped::
 Func_031_6B2E:: ; address name
@@ -7512,7 +7512,7 @@ Jump_031_6B5D::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG, rRAMB, wBattleArg1
 ; points at: sRecords, wBattleSubPhase
-Func_031_67AA_Case06::
+BattleEnd_Step4_Sub02_Case06::
 Jump_031_6B65:: ; address name
     ld hl, sRecords
     ld b, $1E
@@ -7566,7 +7566,7 @@ Jump_031_6B9F::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG, rRAMB
 ; points at: wBattleSubPhase
-Func_031_67AA_Case07::
+BattleEnd_Step4_Sub02_Case07::
 Jump_031_6BAC:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -7582,7 +7582,7 @@ Jump_031_6BAC:: ; address name
     ret
 
 ; record wD869: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case07)
 ; reads: wBattleArg1, wLevelUpGains
 ApplyLevelUpToRecordBattleArg1::
 Func_031_6BCA:: ; address name
@@ -7652,7 +7652,7 @@ Func_031_6C28:: ; address name
     ret
 
 ; for SRAM record wD869: field $5B = word field $5D, field $5F = word field $61, field $55 = 0 (E-0121)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case07)
 ; reads: wBattleArg1
 CopyRecordFields5DTo5BAnd61To5F::
 Func_031_6C2F:: ; address name
@@ -7698,7 +7698,7 @@ Func_031_6C2F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase
 ; points at: wBattleStep
-Func_031_67AA_Case08::
+BattleEnd_Step4_Sub02_Case08::
 Jump_031_6C5E:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -7709,20 +7709,20 @@ Jump_031_6C5E:: ; address name
 ; entry 9 of the `rst $00` table in Func_031_67AA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-Func_031_67AA_Case09::
+BattleEnd_Step4_Sub02_Case09::
 Jump_031_6C67:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw Func_031_67AA_Case09_Case00
-    dw Func_031_67AA_Case09_Case01
-    dw Func_031_67AA_Case09_Case02
+    dw BattleEnd_Step4_Sub02_Case09_Case00
+    dw BattleEnd_Step4_Sub02_Case09_Case01
+    dw BattleEnd_Step4_Sub02_Case09_Case02
 
 ; entry 0 of the `rst $00` table in Func_031_67AA_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank, wBattlePartyCount, wBattleByte93
 ; writes: wBattleByte93, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep, wBattleStep
-Func_031_67AA_Case09_Case00::
+BattleEnd_Step4_Sub02_Case09_Case00::
 Jump_031_6C71:: ; address name
     ld a, [wArenaRank]
     cp a, $05
@@ -7757,7 +7757,7 @@ Jump_031_6C93::
 ; reads: wBattleByte93, wPartyList, hTemp0
 ; writes: hTemp0, rRAMG, rRAMB, wBattleSubPhase, wBattleResolveStep, wStringCategory, wStringIndex
 ; points at: wWorkBuf, wBattleStep, wTextBuf1, wTextBuf0, wBattleResolveStep
-Func_031_67AA_Case09_Case01::
+BattleEnd_Step4_Sub02_Case09_Case01::
 Jump_031_6CA0:: ; address name
     ld a, [wBattleByte93]
     ldh [hTemp0], a
@@ -7825,7 +7825,7 @@ Jump_031_6CF8::
 ; reads: wTextFlags
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleStep
-Func_031_67AA_Case09_Case02::
+BattleEnd_Step4_Sub02_Case09_Case02::
 Jump_031_6D17:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7844,7 +7844,7 @@ Func_031_6D1F:: ; address name
     ret
 
 ; record A below its level cap: C = 1 when its EXP (field $58) has reached the next level's total from the species growth table, else 0 (E-0127)
-; 2 call sites from 2 routines (e.g. Func_031_67AA_Case06, Func_031_67AA_Case02_Case00)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_Case06, BattleEnd_Step4_Sub02_Case02_Case00)
 ; reads: wSpeciesExpCurve, hTemp2, hTemp3, hTemp4
 ; writes: rRAMG, rRAMB, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp0
 RecordReachedNextLevelExp::
@@ -7911,7 +7911,7 @@ Jump_031_6D82::
     ret
 
 ; copies 10 bytes from HL to wC130 and appends a $F0 terminator (E-0122)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case02_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case02_Case01)
 ; points at: wTextBuf0
 CopyTenByteNameToTextBuf0::
 Func_031_6D87:: ; address name
@@ -7929,7 +7929,7 @@ Jump_031_6D8C::
     ret
 
 ; writes [HL + $4B] + 1 to wC140 and wD095-wD09A to wC150-wC164 as decimal strings (E-0121)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case02_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case02_Case01)
 ; reads: wLevelUpGains
 ; points at: wTextBuf1, wTextBuf2, wTextBuf3
 WriteRecordField4BAndStatsDecimal::
@@ -7965,7 +7965,7 @@ Func_031_6D96:: ; address name
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank2F (E-0110)
-; 6 call sites from 6 routines (e.g. Func_031_67AA_Case00, Func_031_67AA_Case02_Case01, Func_031_67AA_Case03_Case01, RunBattleSubStep_6E67_Case05, ...)
+; 6 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case00, BattleEnd_Step4_Sub02_Case02_Case01, BattleEnd_Step4_Sub02_Case03_Case01, RunBattleSubStep_6E67_Case05, ...)
 ; writes: wStringCategory, wStringIndex
 ShowStringHL_Bank31::
 Func_031_6DDD:: ; address name
@@ -7977,7 +7977,7 @@ Func_031_6DDD:: ; address name
     ret
 
 ; with SRAM enabled runs Func_031_6E18 for each of the 30 records ($A5 bytes from sA000) whose first byte is non-zero (E-0124)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case03_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_Case01)
 ; writes: rRAMG, rRAMB
 ; points at: sRecords
 ForEachSRAMRecordRun6E18::
@@ -8090,7 +8090,7 @@ Jump_031_6E62::
     ret
 
 ; runs the routine for wBattleSubStep (jump table of seven) (E-0122)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case03_Case02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_Case02)
 ; reads: wBattleSubStep
 RunBattleSubStep_6E67::
 Func_031_6E67:: ; address name
@@ -8599,7 +8599,7 @@ Func_031_71B6:: ; address name
     ret
 
 ; when every sound channel slot flag is $FF (all idle), decrements wD2CE (E-0121)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03)
 ; reads: wSoundChannelSlots, wBattleEndTimer
 ; writes: wBattleEndTimer
 ; points at: wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5
@@ -9377,7 +9377,7 @@ Data_031_761E:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: draws the slot's status markers from its status bytes (the per-status part is not read to its end) (E-0111)
-; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, Func_031_67AA_Case02_Case00, ...)
+; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, BattleEnd_Step4_Sub02_Case02_Case00, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleStatus
 DrawSlotStatusMarks::
@@ -9581,7 +9581,7 @@ Data_031_77B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3D, $C2, $43, $C2, $49, $C2
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: copies the slot's 5-tile panel row from wScreenTileBuffer to the same position of vBGMap0 (offset from Data_031_7ADA, WriteVRAMByteInc) (E-0111)
-; 7 call sites from 6 routines (e.g. Func_031_67AA_Case02_Case00, CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, ...)
+; 7 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case02_Case00, CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wScreenTileBuffer
 CopySlotPanelRowToVRAM::
@@ -10415,12 +10415,12 @@ Jump_031_7C1C::
     pop hl
     ret
 
-; address loaded by GameMode5_Init_Case04, RunBattleSubStep_6A4E_Case02, Func_016_6C16_Case0E, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_Case04, RunBattleSubStep_6A4E_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 477 bytes expand to 704 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_031_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
 
-; address loaded by GameMode5_Init_Case04, RunBattleSubStep_6A4E_Case02, Func_016_6C16_Case0E, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_Case04, RunBattleSubStep_6A4E_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 151 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_031_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $0C7DFB, $97

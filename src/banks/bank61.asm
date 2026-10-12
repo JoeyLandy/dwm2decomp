@@ -753,19 +753,19 @@ Func_061_4472:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw Func_061_4472_Case00
-    dw Func_061_4472_Case01
-    dw Func_061_4472_Case02
-    dw Func_061_4472_Case03
-    dw Func_061_4472_Case03
-    dw Func_061_4472_Case05
-    dw Func_061_4472_Case06
-    dw Func_061_4472_Case07
+    dw LoadMapScreen_Sub03_Case00
+    dw LoadMapScreen_Sub03_Case01
+    dw LoadMapScreen_Sub03_Case02
+    dw LoadMapScreen_Sub03_Case03
+    dw LoadMapScreen_Sub03_Case03
+    dw LoadMapScreen_Sub03_Case05
+    dw LoadMapScreen_Sub03_Case06
+    dw LoadMapScreen_Sub03_Case07
 
 ; entry 7 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-Func_061_4472_Case07::
+LoadMapScreen_Sub03_Case07::
 Jump_061_4488:: ; address name
     ld a, $66
     ldh [hTemp0], a
@@ -776,7 +776,7 @@ Jump_061_4488:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0
-Func_061_4472_Case06::
+LoadMapScreen_Sub03_Case06::
 Jump_061_4490:: ; address name
     ld a, [wKeyWorldFloor]
     sla a
@@ -823,7 +823,7 @@ Jump_061_44D7::
     ret
 
 ; writes a 2 x 2 tile block ($1A or $1C by the wCDAF entry, then $1E) at wC244, with CGB attribute 5 (E-0127)
-; 3 call sites from 3 routines (e.g. Func_061_4472_Case06, ScriptCommand86_Run_Case04, ScriptCommand86_Run_Case02)
+; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_Case06, ScriptCommand86_Run_Case04, ScriptCommand86_Run_Case02)
 ; reads: wKeyWorldFloor, wIsCGB
 ; writes: rSVBK
 DrawDoorTilesForKeyWorldFloor::
@@ -891,7 +891,7 @@ Jump_061_44F1::
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenY, hMapScreenX, wIsCGB
 ; writes: hTemp0, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-Func_061_4472_Case05::
+LoadMapScreen_Sub03_Case05::
 Jump_061_4533:: ; address name
     ld a, [wKeyWorldFloor]
     swap a
@@ -1007,7 +1007,7 @@ Jump_061_45E1::
     ret
 
 ; for the two wCDB0 entries of wCC45 matching wCC43 runs Func_061_462F with C = $80 or the stored value (E-0127)
-; 2 call sites from 2 routines (e.g. Func_061_4472_Case05, ScriptCommand81_Run_Case02)
+; 2 call sites from 2 routines (e.g. LoadMapScreen_Sub03_Case05, ScriptCommand81_Run_Case02)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 CheckTwoWCDB0EntriesForKeyWorldArea::
@@ -1276,7 +1276,7 @@ Func_061_4706:: ; address name
     ret
 
 ; draws the exit or stairs tile block for the current screen when it matches the area entry in wCE2D (E-0130)
-; 1 call site from 1 routine (e.g. Func_061_4472_Case05)
+; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_Case05)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp0, wIsCGB
 ; writes: hTemp0, rSVBK
 DrawKeyWorldExitTile::
@@ -1622,7 +1622,7 @@ Data_061_4818:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
-Func_061_4472_Case01::
+LoadMapScreen_Sub03_Case01::
 Jump_061_5418:: ; address name
     ret
     db $C9
@@ -1632,7 +1632,7 @@ Jump_061_5418:: ; address name
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: hTemp0
-Func_061_4472_Case02::
+LoadMapScreen_Sub03_Case02::
 Jump_061_541A:: ; address name
     ld a, $61
     ldh [hTemp0], a
@@ -1651,7 +1651,7 @@ Jump_061_5429::
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: wKeyWorldFloorState
-Func_061_4472_Case03::
+LoadMapScreen_Sub03_Case03::
 Jump_061_542D:: ; address name
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
@@ -1668,7 +1668,7 @@ Jump_061_542D:: ; address name
 ; reads: hMapScreenY, hMapScreenX, wIsCGB
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-Func_061_4472_Case00::
+LoadMapScreen_Sub03_Case00::
 Jump_061_5443:: ; address name
     ldh a, [hMapScreenY]
     and a, $FC
@@ -1778,7 +1778,7 @@ Jump_061_54E2::
     ret
 
 ; on key-world maps draws the goal object for the current screen (from wC88F when the wC891 key matches, else from wCD0A) (E-0130)
-; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
+; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_Case00)
 ; reads: wMapType, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, hMapScreenX, hMapScreenY, wKeyWorldGoalCell, wKeyWorldGoal, ...
 ; writes: rSVBK
 DrawKeyWorldGoalAtScreen::
@@ -1909,7 +1909,7 @@ Jump_061_5585::
     ret
 
 ; for the wCD7B entry on the current screen writes its 2 x 2 tile block ($46, or $70-$73) at wC240 with CGB attribute 5 (E-0129)
-; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
+; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 ; points at: wKeyWorldObjects
@@ -2014,7 +2014,7 @@ Jump_061_562E::
     ret
 
 ; for the wCD8B object on the current screen draws its 4 x 2 or 2 x 2 tile blocks by kind (E-0130)
-; 1 call site from 1 routine (e.g. Func_061_4472_Case00)
+; 1 call site from 1 routine (e.g. LoadMapScreen_Sub03_Case00)
 ; reads: hMapScreenX, hMapScreenY, wIsCGB
 ; writes: rSVBK
 DrawWCD8BObjectTilesForScreen::
@@ -2257,66 +2257,66 @@ Func_061_5764:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw Func_061_5764_Case00
-    dw Func_061_5764_Case01
-    dw Func_061_5764_Case02
-    dw Func_061_5764_Case03
-    dw Func_061_5764_Case04
-    dw Func_061_5764_Case05
-    dw Func_061_5764_Case00
-    dw Func_061_5764_Case07
+    dw CheckWarpAtPlayer_Sub01_Case00
+    dw CheckWarpAtPlayer_Sub01_Case01
+    dw CheckWarpAtPlayer_Sub01_Case02
+    dw CheckWarpAtPlayer_Sub01_Case03
+    dw CheckWarpAtPlayer_Sub01_Case04
+    dw CheckWarpAtPlayer_Sub01_Case05
+    dw CheckWarpAtPlayer_Sub01_Case00
+    dw CheckWarpAtPlayer_Sub01_Case07
 
 ; entry 0 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-Func_061_5764_Case00::
+CheckWarpAtPlayer_Sub01_Case00::
 Jump_061_577A:: ; address name
     ld c, $00
     ret
 
 ; entry 1 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-Func_061_5764_Case01::
+CheckWarpAtPlayer_Sub01_Case01::
 Jump_061_577D:: ; address name
     ld c, $00
     ret
 
 ; entry 2 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-Func_061_5764_Case02::
+CheckWarpAtPlayer_Sub01_Case02::
 Jump_061_5780:: ; address name
     call WarpByKeyWorldAreaExitsEntryAtScreenRow1
     ret
 
 ; entry 3 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-Func_061_5764_Case03::
+CheckWarpAtPlayer_Sub01_Case03::
 Jump_061_5784:: ; address name
     call CheckKeyWorldWarpTable
     ret
 
 ; entry 4 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-Func_061_5764_Case04::
+CheckWarpAtPlayer_Sub01_Case04::
 Jump_061_5788:: ; address name
     call WarpToScreen01Event83
     ret
 
 ; entry 5 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-Func_061_5764_Case05::
+CheckWarpAtPlayer_Sub01_Case05::
 Jump_061_578C:: ; address name
     call WarpByWCD89EntryAtScreen14
     ret
 
 ; entry 7 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-Func_061_5764_Case07::
+CheckWarpAtPlayer_Sub01_Case07::
 Jump_061_5790:: ; address name
     call CallF4268OnScreenY1
     ret
 
 ; C = 0 unless hMapScreenY = 1, in which case far-calls Func_011_4268 (E-0122)
-; 1 call site from 1 routine (e.g. Func_061_5764_Case07)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case07)
 ; reads: hMapScreenY
 CallF4268OnScreenY1::
 Func_061_5794:: ; address name
@@ -2331,7 +2331,7 @@ Jump_061_579D::
     ret
 
 ; when wCC43 is 0, the wCD89 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
-; 1 call site from 1 routine (e.g. Func_061_5764_Case05)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case05)
 ; reads: wKeyWorldArea, wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 WarpByWCD89EntryAtScreen14::
@@ -2389,7 +2389,7 @@ Jump_061_57AD::
     ret
 
 ; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wCDAD entry, plays sound $60, wCC44 = $83 and starts the transition; C = 1 (E-0125)
-; 1 call site from 1 routine (e.g. Func_061_5764_Case04)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case04)
 ; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wModeState, wFieldTransitionStep, ...
 WarpToScreen01Event83::
@@ -2436,7 +2436,7 @@ Jump_061_5810::
     ret
 
 ; on screen row 1: warps to the screen in the wCD78 entry of wCC45 and starts the transition; C = 1 (E-0127)
-; 1 call site from 1 routine (e.g. Func_061_5764_Case02)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case02)
 ; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wKeyWorldAreaExits
@@ -2493,7 +2493,7 @@ Jump_061_587C::
     ret
 
 ; checks the warp list Data_061_6566[wCDAC entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
-; 1 call site from 1 routine (e.g. Func_061_5764_Case03)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case03)
 ; reads: wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: wWarpDestFacing, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wKeyWorldFloorState, wKeyWorldFloorInfo
@@ -3728,7 +3728,7 @@ Jump_061_6065::
     jp Jump_061_5F4C
 
 ; hFFC6 = 1 when bit 7 of wCD07 is set; otherwise on map types $80/$85 the wCE7E entry of the current area (wCD74), else 0 (E-0129)
-; 1 call site from 1 routine (e.g. Func_016_5D13_Case00)
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case00)
 ; reads: wKeyWorldFlags, wMapType, wKeyWorldFloor, hMapScreenY, hMapScreenX
 ; writes: hTemp0
 ; points at: wKeyWorldFloorInfo, wKeyWorldAreaInfo

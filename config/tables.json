@@ -962,7 +962,7 @@
           "reason": "key-world room record"
         }
       ],
-      "note": "E-0141 (C1: Func_061_4472_Case05 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with ReadByteInBank; every non-zero word is $4181 + $63 * n)."
+      "note": "E-0141 (C1: LoadMapScreen_Sub03_Case05 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with ReadByteInBank; every non-zero word is $4181 + $63 * n)."
     },
     {
       "bank": "72",
@@ -1361,7 +1361,7 @@
           "name": "bank of attribute map 15"
         }
       ],
-      "note": "E-0141 (C1: Func_061_4472_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes).",
+      "note": "E-0141 (C1: LoadMapScreen_Sub03_Case05 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes).",
       "record": "3-byte header; 16 far pointers to compressed screen tile maps (4 x 4 grid, row by row); 16 far pointers to their attribute maps"
     },
     {
@@ -1653,7 +1653,7 @@
           "reason": "script screen animation attribute map"
         }
       ],
-      "note": "E-0145 (C1: ScriptCommand79_Run_Case01 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes after them do not)."
+      "note": "E-0145 (C1: ScenePoorChurch_Case01 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes after them do not)."
     },
     {
       "bank": "60",
@@ -12506,7 +12506,7 @@
         }
       ],
       "record": "24 steps of two bytes (wObject5 + 5, wObject5 + 4), 12 per line",
-      "note": "E-0206 (C1: ScriptCommand5E_Run_Case28_Case00 reads, every other frame, the pair at $5284 + $30 * ((wScriptParam1 & $70) >> 4) + 2 * step into wObject5 + 5 and + 4, for 23 steps per path; 8 paths end at ScriptCommand58_Run)."
+      "note": "E-0206 (C1: SceneDarckDefeated_Case28_Case00 reads, every other frame, the pair at $5284 + $30 * ((wScriptParam1 & $70) >> 4) + 2 * step into wObject5 + 5 and + 4, for 23 steps per path; 8 paths end at SceneThreeItems)."
     },
     {
       "bank": "16",
@@ -12522,7 +12522,7 @@
           "name": "class 0-7"
         }
       ],
-      "note": "E-0206 (C1: BattleMonsterTable71ACAtLeast6 reads the byte at $71AC + the wBattleMonsterId of wDisplaySlot and returns A = 1 when it is 6 or more; Func_016_6C16_Case03 and _Case05 call it; 373 bytes (monster ids 0-$174) end at the rectangle copier after them; what the classes mean is not read)."
+      "note": "E-0206 (C1: BattleMonsterTable71ACAtLeast6 reads the byte at $71AC + the wBattleMonsterId of wDisplaySlot and returns A = 1 when it is 6 or more; BattleEnd_Step5_Case04_Sub01_Case03 and _Case05 call it; 373 bytes (monster ids 0-$174) end at the rectangle copier after them; what the classes mean is not read)."
     },
     {
       "bank": "0C",
@@ -13210,7 +13210,7 @@
         ],
         "record": "first byte to wWorkBuf + 4, then count/value pairs; $FE and $FF are markers"
       },
-      "note": "E-0213 (C1: Func_0E0_5AD3_Table2_Case00 reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read)."
+      "note": "E-0213 (C1: DebugStaffRoll_Update_Sub01_Table2_Case00 reads word wWorkBuf + 2 - 1 of $7649 (ReadWordTableEntry_Bank00), stores the first byte in wWorkBuf + 4 and walks the rest as count/value pairs ($FE starts a section, $FF ends one); the five lists run to $76E0; the pair meaning is not read)."
     },
     {
       "bank": "73",
@@ -13302,7 +13302,7 @@
           "name": "message word ($0000 = none)"
         }
       ],
-      "note": "E-0214 (C1: ScriptCommandCB_Run_Case00 passes $530C to ScriptCommandCB_Run_Shared01, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at ScriptCommandCA_Run)."
+      "note": "E-0214 (C1: SceneChestBattle_Case00 passes $530C to SceneChestBattle_Shared01, which reads the word at DE + 2 * (hMapId - $C8) and starts that message (StartMessageHL_B73b); 54 words, one per map from $C8 (id = map number); the table ends at KeyBossBeaten2)."
     },
     {
       "bank": "A1",

@@ -918,7 +918,7 @@ Jump_0A3_494E::
     ret
 
 ; hFFC6 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
-; 1 call site from 1 routine (e.g. Func_032_4ADC_Case01_Case00)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case00_Sub01_Case01_Case00)
 ; reads: wBattleActor
 ; writes: hTemp0
 ; points at: wBattleActionChoice
@@ -1036,7 +1036,7 @@ Jump_0A3_49EE::
     ret
 
 ; unless the target's chosen action is 0, $AC or $CC-$CF: actions below $D0 are replaced by 0 with target $FF; others set wDA5B[target] = 3 (E-0124)
-; 1 call site from 1 routine (e.g. Func_036_4A38_Case01)
+; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_Sub04_Case01)
 ; reads: wBattleTarget
 ; points at: wBattleActionChoice, wSlotMarks
 CancelTargetActionUnlessSpecial::

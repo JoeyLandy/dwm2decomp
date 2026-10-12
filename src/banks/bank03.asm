@@ -273,17 +273,17 @@ Func_003_4208:: ; address name
     ld a, [wModeState]
     and a, $07
     rst $00
-    dw Func_003_4208_Case00
-    dw Func_003_4208_Case01
-    dw Func_003_4208_Case02
-    dw Func_003_4208_Case03
-    dw Func_003_4208_Case01
+    dw PauseMenu_State4_Sub01_Case00
+    dw PauseMenu_State4_Sub01_Case01
+    dw PauseMenu_State4_Sub01_Case02
+    dw PauseMenu_State4_Sub01_Case03
+    dw PauseMenu_State4_Sub01_Case01
 
 ; entry 0 of the `rst $00` table in Func_003_4208
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount
 ; writes: wMenuRowCount, wMenuPageCount, wMenuPage
-Func_003_4208_Case00::
+PauseMenu_State4_Sub01_Case00::
 Jump_003_4218:: ; address name
     call LoadBlankedBlocks00To03WithCursor
     call DecompressMenuTilesTo16E0
@@ -298,7 +298,7 @@ Jump_003_4218:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_003_4208
 ; no direct call (reached through a table, a jump or a vector)
-Func_003_4208_Case01::
+PauseMenu_State4_Sub01_Case01::
 Jump_003_4235:: ; address name
     call ResetInventoryMenuToFirstPage
     call BuildInventoryScreenBase
@@ -308,7 +308,7 @@ Jump_003_4235:: ; address name
 ; entry 2 of the `rst $00` table in Func_003_4208
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuPageCount, wMenuPage, wMenuItemCount, wMenuSelectedMember, wMenuCursor, wSubMenuCursor
-Func_003_4208_Case02::
+PauseMenu_State4_Sub01_Case02::
 Jump_003_423F:: ; address name
     call LoadScreenBlocks1CAnd0C
     call ShowString1Bank09AtTiles16E0ThenDetails
@@ -325,7 +325,7 @@ Jump_003_423F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wModeState
 ; writes: wTemp0
-Func_003_4208_Case03::
+PauseMenu_State4_Sub01_Case03::
 Jump_003_4259:: ; address name
     ld a, [wModeState]
     bit 3, a
@@ -443,7 +443,7 @@ Jump_003_42CB::
     ret
 
 ; copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC = $1412)
-; 36 call sites from 33 routines (e.g. PauseMenu_State4, Func_003_4FBB_Case02, ExitPauseMenuToField, PauseMenu_State3_Case00_Case00, ...)
+; 36 call sites from 33 routines (e.g. PauseMenu_State4, PauseMenu_Main_Case03_Case01_Sub01_Case02, ExitPauseMenuToField, PauseMenu_State3_Case00_Case00, ...)
 ; points at: wScreenTileBuffer
 CopyTileBufferToBGMap::
 Func_003_42DA:: ; address name
@@ -497,7 +497,7 @@ Jump_003_42F9::
     ret
 
 ; B = width, C = rows, DE = source, HL = VRAM with rows 32 bytes apart: copies B bytes per row with WriteVRAMByteInc, then skips 14 source bytes (rows B + 14 bytes apart, 20 for a 6-wide rectangle); B kept, C = 0 (E-0067) (the same 28 bytes appear in 2 banks)
-; 4 call sites from 2 routines (e.g. DrawRecordMonsterPictureForMenuSelectedMember, Func_003_4FBB_Case02)
+; 4 call sites from 2 routines (e.g. DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Case03_Case01_Sub01_Case02)
 CopyRectToVRAMSourceStrideBPlus14_Bank03::
 Func_003_4313:: ; address name
     push bc
@@ -1680,7 +1680,7 @@ Func_003_495F:: ; address name
     ret
 
 ; clears the screen tile buffer, copies block $2D + wC6FD and block $31, then wC0A4 += 1 (E-0117)
-; 1 call site from 1 routine (e.g. Func_003_4FBB_Case01)
+; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01_Sub01_Case01)
 ; reads: wPartyCount
 ; points at: wPauseMenuScreen
 LoadScreenBlockForPartySize::
@@ -1697,7 +1697,7 @@ Func_003_497F:: ; address name
     ret
 
 ; clears the screen tile buffer, copies blocks $00-$03 with CopyBlockToTileBufferBlankingText, then DrawMenuCursorTileInBuffer (E-0117)
-; 2 call sites from 2 routines (e.g. Func_003_4208_Case00, PauseMenu_Main_Case00_Case00)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_Sub01_Case00, PauseMenu_Main_Case00_Case00)
 LoadBlankedBlocks00To03WithCursor::
 Func_003_499B:: ; address name
     call ClearScreenTileBuffer_Bank03
@@ -1757,7 +1757,7 @@ Func_003_4A08:: ; address name
     ret
 
 ; decompresses Data_016_7B7D (bank $16) to vTiles1 + $6E0, then runs Func_003_4A36 (E-0122)
-; 1 call site from 1 routine (e.g. Func_003_4208_Case00)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub01_Case00)
 DecompressMenuTilesTo16E0::
 Func_003_4A27:: ; address name
     ld b, $16
@@ -2657,18 +2657,18 @@ Func_003_4FBB:: ; address name
 Jump_003_4FED::
     ld a, [wTemp1]
     rst $00
-    dw Func_003_4FBB_Case00
-    dw Func_003_4FBB_Case01
-    dw Func_003_4FBB_Case02
-    dw Func_003_4FBB_Case03
-    dw Func_003_4FBB_Case04
+    dw PauseMenu_Main_Case03_Case01_Sub01_Case00
+    dw PauseMenu_Main_Case03_Case01_Sub01_Case01
+    dw PauseMenu_Main_Case03_Case01_Sub01_Case02
+    dw PauseMenu_Main_Case03_Case01_Sub01_Case03
+    dw PauseMenu_Main_Case03_Case01_Sub01_Case04
 
 ; entry 0 of the `rst $00` table in Func_003_4FBB
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rVBK
 ; points at: wTemp1
-Func_003_4FBB_Case00::
+PauseMenu_Main_Case03_Case01_Sub01_Case00::
 Jump_003_4FFB:: ; address name
     ld hl, vBGMap0
     ld bc, $1412
@@ -2722,7 +2722,7 @@ Jump_003_503D::
 ; reads: wPartyCount, wIsCGB
 ; writes: rRAMG, rRAMB, hTemp0, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wBGPaletteUploadRequest
 ; points at: wTemp1
-Func_003_4FBB_Case01::
+PauseMenu_Main_Case03_Case01_Sub01_Case01::
 Jump_003_5042:: ; address name
     call LoadScreenBlockForPartySize
     call FillTilesFromRequest
@@ -2806,7 +2806,7 @@ Jump_003_50AC::
     ret
 
 ; for record C writes HP (field $5B), MP (field $5F) and level (field $56) as digits at the screen-buffer position Data_003_519E[C] (E-0127)
-; 1 call site from 1 routine (e.g. Func_003_4FBB_Case01)
+; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01_Sub01_Case01)
 DrawRecordHPMPAndLevelForRowC::
 Func_003_50DD:: ; address name
     push bc
@@ -2871,7 +2871,7 @@ Func_003_50DD:: ; address name
     ret
 
 ; shows the species name (field $0B) of SRAM record C in the window from Data_003_51A4[C], size $0109 (E-0121)
-; 1 call site from 1 routine (e.g. Func_003_4FBB_Case01)
+; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01_Sub01_Case01)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
 ShowRecordSpeciesNameForRowC::
 Func_003_5137:: ; address name
@@ -2904,7 +2904,7 @@ Func_003_5137:: ; address name
     ret
 
 ; C = record: writes tile $CC + (bit 0 of record byte $0E) at the address from Data_003_51AA[C]; BC kept (E-0120)
-; 1 call site from 1 routine (e.g. Func_003_4FBB_Case01)
+; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01_Sub01_Case01)
 DrawRecordByte0EMarkTile::
 Func_003_5171:: ; address name
     push bc
@@ -2925,15 +2925,15 @@ Func_003_5171:: ; address name
     pop bc
     ret
 
-; address loaded by Func_003_4FBB_Case01
+; address loaded by PauseMenu_Main_Case03_Case01_Sub01_Case01
 Data_003_518F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $03, $05
 
-; address loaded by Func_003_4FBB_Case01
+; address loaded by PauseMenu_Main_Case03_Case01_Sub01_Case01
 Data_003_5192:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $91, $80, $93, $C0, $95
 
-; address loaded by Func_003_4FBB_Case01
+; address loaded by PauseMenu_Main_Case03_Case01_Sub01_Case01
 Data_003_5198:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $00, $00, $01
 
@@ -2954,7 +2954,7 @@ Data_003_51AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wIsCGB, wPartyCount
 ; writes: rVBK, rSVBK
 ; points at: wScreenAttrBuffer, wTemp1
-Func_003_4FBB_Case02::
+PauseMenu_Main_Case03_Case01_Sub01_Case02::
 Jump_003_51B0:: ; address name
     call CopyTileBufferToBGMap
     ld a, [wIsCGB]
@@ -2998,7 +2998,7 @@ Jump_003_51FB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; points at: wTemp1
-Func_003_4FBB_Case03::
+PauseMenu_Main_Case03_Case01_Sub01_Case03::
 Jump_003_5200:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
@@ -3011,7 +3011,7 @@ Jump_003_5200:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rVBK, wDataBankSave, wTemp1, wPauseMenuScreen
-Func_003_4FBB_Case04::
+PauseMenu_Main_Case03_Case01_Sub01_Case04::
 Jump_003_520B:: ; address name
     ld hl, vBGMap0
     ld bc, $1412
@@ -3040,7 +3040,7 @@ Jump_003_522E::
     ret
 
 ; D = tile, B = first-row width, C = rows: writes D with WriteVRAMByteInc; after each row moves 12 entries on (to the next 32-entry row) and uses width 20 (E-0117)
-; 2 call sites from 1 routine (e.g. Func_003_4FBB_Case04)
+; 2 call sites from 1 routine (e.g. PauseMenu_Main_Case03_Case01_Sub01_Case04)
 FillVRAMRowsWithD::
 Func_003_523E:: ; address name
     ld a, d
@@ -3059,7 +3059,7 @@ Func_003_523E:: ; address name
     ret
 
 ; writes the 16 bytes at Data_003_5264 to vTiles2 + $140 (E-0122)
-; 1 call site from 1 routine (e.g. Func_003_4FBB_Case04)
+; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01_Sub01_Case04)
 WriteSixteenTilesFrom5264AtTiles2140::
 Func_003_5253:: ; address name
     ld de, Data_003_5264
@@ -4045,7 +4045,7 @@ Jump_003_581A:: ; address name
     ret
 
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
-; 3 call sites from 3 routines (e.g. Func_003_4208_Case01, PauseMenu_Items_Case00_Case00, BuildScreenBlock0EWithCursor)
+; 3 call sites from 3 routines (e.g. PauseMenu_State4_Sub01_Case01, PauseMenu_Items_Case00_Case00, BuildScreenBlock0EWithCursor)
 ; reads: wInventory, wMenuItemCount, wMenuPage
 BuildInventoryScreenBase::
 Func_003_581E:: ; address name
@@ -4348,7 +4348,7 @@ Jump_003_5A01::
     ret
 
 ; shows string 0 of category 0 (ShowString_Bank09) at vTiles1 + $6E0 with size $0127, preserving the window, then ShowSelectedItemDescription and Func_003_592E (E-0121)
-; 1 call site from 1 routine (e.g. Func_003_4208_Case01)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub01_Case01)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ShowString0Bank09AtTiles16E0ThenItemDescription::
@@ -4856,7 +4856,7 @@ Data_003_5E40:: ; heuristic: target of a monotone pointer table; C0
     ds $24, $C3
 
 ; wMenuPage = 0, wC46E = 0, sets up the inventory pages, clamps the page, runs Func_003_592E and clears wC0A0/1 (E-0124)
-; 5 call sites from 5 routines (e.g. Func_003_4208_Case01, PauseMenu_Items_Case02_Case21, PauseMenu_Items_Case02_Case0A, PauseMenu_Items_Case03_Case06, ...)
+; 5 call sites from 5 routines (e.g. PauseMenu_State4_Sub01_Case01, PauseMenu_Items_Case02_Case21, PauseMenu_Items_Case02_Case0A, PauseMenu_Items_Case03_Case06, ...)
 ; writes: wMenuPage, wMenuCursor, wTemp0, wTemp1
 ; points at: wMenuPage
 ResetInventoryMenuToFirstPage::
@@ -5771,7 +5771,7 @@ Jump_003_640F::
     ret
 
 ; clears the screen tile buffer and copies blocks $1C and $0C into it (CopyBlockToTileBuffer) (E-0101)
-; 4 call sites from 4 routines (e.g. Func_003_4208_Case02, BuildScreenBlocks1CAnd0CWithCursor, PauseMenu_Skills_Case00_Case00, BuildRecordField5FValueScreen)
+; 4 call sites from 4 routines (e.g. PauseMenu_State4_Sub01_Case02, BuildScreenBlocks1CAnd0CWithCursor, PauseMenu_Skills_Case00_Case00, BuildRecordField5FValueScreen)
 LoadScreenBlocks1CAnd0C::
 Func_003_641E:: ; address name
     call ClearScreenTileBuffer_Bank03
@@ -5965,7 +5965,7 @@ Func_003_657B:: ; address name
     ret
 
 ; shows string 1 of category 0 (ShowString_Bank09) at vTiles1 + $6E0 with size $0107, preserving the window, then Func_003_67B0 (E-0121)
-; 1 call site from 1 routine (e.g. Func_003_4208_Case02)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub01_Case02)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ShowString1Bank09AtTiles16E0ThenDetails::
@@ -8487,7 +8487,7 @@ Jump_003_7689::
     ret
 
 ; clears the screen tile buffer (ClearScreenTileBuffer_Bank03) and copies block $21 into it (CopyBlockToTileBuffer, E = $21) (E-0101)
-; 4 call sites from 4 routines (e.g. Func_003_4208_Case03, PauseMenu_State3_Case00_Case00, LoadScreenBlock21WithCursor, PauseMenu_State3_Case04_Case03)
+; 4 call sites from 4 routines (e.g. PauseMenu_State4_Sub01_Case03, PauseMenu_State3_Case00_Case00, LoadScreenBlock21WithCursor, PauseMenu_State3_Case04_Case03)
 LoadScreenBlock21::
 Func_003_7692:: ; address name
     call ClearScreenTileBuffer_Bank03
@@ -9201,7 +9201,7 @@ Jump_003_7AC1::
     ret
 
 ; shows string 2 of category 0 (ShowString_Bank09) in a window at vTiles1 + $6E0 with size $1003, then restores the default window (vTiles1, $1202) (E-0120)
-; 1 call site from 1 routine (e.g. Func_003_4208_Case03)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub01_Case03)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ShowString2Bank09InWindowThenDefault::
 Func_003_7AE8:: ; address name

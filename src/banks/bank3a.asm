@@ -2,7 +2,7 @@ SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
     db $3A
 
 ; reads the effect flags in wDAD2. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88, it returns unless wDAD2 bit 0 or bit 6 is set. Then it tests bits 7, 6, 5, 4, 3, 2 in that order and selects one of six tables (Data_03A_40CC, Data_03A_4294, Data_03A_445C, Data_03A_47EC, Data_03A_486C; bit 4 has its own branch) indexed by wBattleActionId. An entry of $FF returns; other entries go on to Jump_03A_48EC or the effect code, which is not read (E-0057)
-; 15 call sites from 13 routines (e.g. Func_032_4ADC_Case05, Func_032_5820_Case03, ResolveStep0EEffect_Case00, ResolveStep0EEffect_Case03_Case00, ...)
+; 15 call sites from 13 routines (e.g. RunBattleActions_Case00_Sub01_Case05, RunBattleStep4_Case00_Sub01_Case03, ResolveStep0EEffect_Case00, ResolveStep0EEffect_Case03_Case00, ...)
 ; reads: wBattleTarget, wBattleActionId, wEffectFlags, wDefeatByteBF, wRecordBufferData, wBattleActor, wBattleArg0, wEffectTileOffset
 ; writes: wBattleActor, wEffectRoutine, wEffectId, wEffectFrameCounter, wEffectFlags52, wBattleArg0, wEffectTileOffset, wEffectByteB5, ...
 ; points at: wEffectSpriteX, wEffectStep, wEffectByteB3, wEffectFlags
@@ -1842,7 +1842,7 @@ Jump_03A_4D2A::
     ret
 
 ; copies rows of wD805 bytes from VRAM at HL (WaitForVRAMAccess, interrupts off per byte) to DE, C rows, the destination rows 32 bytes apart (the source-row step is not read) (E-0113)
-; 4 call sites from 4 routines (e.g. RunEffectRoutineEffectEvery5Frames_Table2_Case01, RunEffectRoutineEffectEvery5Frames_Table2_Case00, Func_03A_50D9_Case01, Func_03A_50D9_Case00)
+; 4 call sites from 4 routines (e.g. RunEffectRoutineEffectEvery5Frames_Table2_Case01, RunEffectRoutineEffectEvery5Frames_Table2_Case00, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00)
 ; reads: wEffectStep
 CopyVRAMRectToBuffer::
 Func_03A_4D2B:: ; address name
@@ -1872,7 +1872,7 @@ Jump_03A_4D45::
     jr CopyVRAMRectToBuffer
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
-; 8 call sites from 4 routines (e.g. RunEffectRoutineEffectEvery5Frames_Table2_Case01, RunEffectRoutineEffectEvery5Frames_Table2_Case00, Func_03A_50D9_Case01, Func_03A_50D9_Case00)
+; 8 call sites from 4 routines (e.g. RunEffectRoutineEffectEvery5Frames_Table2_Case01, RunEffectRoutineEffectEvery5Frames_Table2_Case00, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00)
 ReadWordTableEntry_Bank3A::
 Func_03A_4D47:: ; address name
     add a, a
@@ -1884,7 +1884,7 @@ Func_03A_4D47:: ; address name
     deref_hl
     ret
 
-; address loaded by RunEffectRoutineEffectEvery5Frames_Table2_Case00, RunEffectRoutineEffectEvery5Frames_Table2_Case01, Func_03A_50D9_Case00, Func_03A_50D9_Case01
+; address loaded by RunEffectRoutineEffectEvery5Frames_Table2_Case00, RunEffectRoutineEffectEvery5Frames_Table2_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01
 Data_03A_4D52:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E7, $00, $E4, $00, $EA, $00, $E1, $00, $ED, $00
 
@@ -2358,39 +2358,39 @@ Func_03A_4FB4:: ; address name
     ret nz
     ld a, [wEffectStep]
     rst $00
-    dw Func_03A_4FB4_Case00
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case02
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case00
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case02
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case00
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case02
-    dw Func_03A_4FB4_Case00
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case02
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case00
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case02
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case00
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case02
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case00
-    dw Func_03A_4FB4_Case01
-    dw Func_03A_4FB4_Case02
-    dw Func_03A_4FB4_Case1A
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case02
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case02
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case02
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case02
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case02
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case02
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case02
+    dw RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case1A
 
 ; entry 0 of the `rst $00` table in Func_03A_4FB4
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wEffectStep
-Func_03A_4FB4_Case00::
+RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case00::
 Jump_03A_4FF3:: ; address name
     ld a, $04
     ldh [hScrollY], a
@@ -2404,7 +2404,7 @@ Jump_03A_4FF3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wEffectStep
-Func_03A_4FB4_Case02::
+RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case02::
 Jump_03A_5000:: ; address name
     ld a, $00
     ldh [hScrollY], a
@@ -2418,7 +2418,7 @@ Jump_03A_5000:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wEffectStep
-Func_03A_4FB4_Case01::
+RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case01::
 Jump_03A_500D:: ; address name
     xor a, a
     ldh [hScrollY], a
@@ -2431,7 +2431,7 @@ Jump_03A_500D:: ; address name
 ; entry 26 of the `rst $00` table in Func_03A_4FB4
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectSpriteX, hScrollY, hScrollX, wEffectStep
-Func_03A_4FB4_Case1A::
+RunEffectRoutineEffectEvery5Frames_Case08_Sub01_Case1A::
 Jump_03A_5018:: ; address name
     ld a, $01
     ld [wEffectSpriteX], a
@@ -2849,36 +2849,36 @@ Jump_03A_51DF:: ; address name
     ld c, a
     ld a, [wBattleActor]
     cp a, $07
-    jr nc, Func_03A_50D9_Case04
+    jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
     cp a, $03
-    jr z, Func_03A_50D9_Case04
+    jr z, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
     dec c
     jr nz, Jump_03A_51FB
     cp a, $04
-    jr nc, Func_03A_50D9_Case04
+    jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
     jr Jump_03A_51FF
 
 Jump_03A_51FB::
     cp a, $04
-    jr c, Func_03A_50D9_Case04
+    jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
 
 Jump_03A_51FF::
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Func_03A_50D9_Case04
+    jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
     ld a, [wEffectSpriteX]
     rst $00
-    dw Func_03A_50D9_Case00
-    dw Func_03A_50D9_Case01
-    dw Func_03A_50D9_Case00
-    dw Func_03A_50D9_Case01
-    dw Func_03A_50D9_Case04
+    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01
+    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
 
 ; entry 0 of the `rst $00` table in Func_03A_50D9
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectStep
 ; points at: wEffectSpriteX
-Func_03A_50D9_Case00::
+RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00::
 Jump_03A_5215:: ; address name
     ld a, $06
     ld [wEffectStep], a
@@ -2903,7 +2903,7 @@ Jump_03A_5215:: ; address name
 ; reads: wBattleActor
 ; writes: wEffectStep
 ; points at: wEffectSpriteX
-Func_03A_50D9_Case01::
+RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01::
 Jump_03A_523B:: ; address name
     ld a, $06
     ld [wEffectStep], a
@@ -2927,7 +2927,7 @@ Jump_03A_523B:: ; address name
 ; entry 4 of the `rst $00` table in Func_03A_50D9
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX, wEffectStep
-Func_03A_50D9_Case04::
+RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04::
 Jump_03A_5264:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2938,7 +2938,7 @@ Jump_03A_5264:: ; address name
     ret
 
 ; A = a 0-4 position index from wD890 (side count) and the actor's slot (E-0124)
-; 2 call sites from 2 routines (e.g. Func_03A_50D9_Case01, Func_03A_50D9_Case00)
+; 2 call sites from 2 routines (e.g. RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00)
 ; reads: wBattleFoeCount, wBattleActor
 EffectPositionIndexForActor::
 Func_03A_5272:: ; address name
@@ -3765,7 +3765,7 @@ Data_03A_575E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $04, $00, $06
 
 ; reads the effect flags in wDAD3 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and 2 set wBattleActor to wBattleTarget and select a table (Data_03A_60B7 or Data_03A_6107) for the display; bits 7, 6, 5 and 3 go to routines not read (E-0057)
-; 15 call sites from 12 routines (e.g. RunBattleEffectAnimation, Func_032_4ADC_Case03, Func_032_5820_Case02, ResolveStep0EEffect_Case00, ...)
+; 15 call sites from 12 routines (e.g. RunBattleEffectAnimation, RunBattleActions_Case00_Sub01_Case03, RunBattleStep4_Case00_Sub01_Case02, ResolveStep0EEffect_Case00, ...)
 ; reads: wEffectFlags2, wBattleTarget, wBattleActionId
 ; writes: wBattleActor
 SelectEffectByEffectFlags2Flags::
@@ -7204,7 +7204,7 @@ Jump_03A_6D71::
     ret
 
 ; D = Data_03A_6DAA[wBattleActionId]; returns at once when it is $FF; for action $CF first runs Func_03A_6D91; then ShowBattleText (E-0118)
-; 2 call sites from 2 routines (e.g. Func_032_4ADC_Case03, Func_032_5820_Case02)
+; 2 call sites from 2 routines (e.g. RunBattleActions_Case00_Sub01_Case03, RunBattleStep4_Case00_Sub01_Case02)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
 ShowActionBattleTextFrom6DAA::
@@ -7480,7 +7480,7 @@ Data_03A_6DAA:: ; address name
     db $FF ; id 231
 
 ; D = Data_03A_6EA5[wBattleActionId]; returns at once when it is $FF, otherwise ShowBattleText (E-0116)
-; 2 call sites from 2 routines (e.g. Func_03B_42F4_Case00, Func_03B_42F4_Case01)
+; 2 call sites from 2 routines (e.g. RunBattleActions_Case08_Sub01_Case00, RunBattleActions_Case08_Sub01_Case01)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
 ShowActionBattleText::
@@ -7564,7 +7564,7 @@ Data_03A_6EA5:: ; address name
     db $D6 ; id 63
 
 ; D = message index. The same as ShowBattleText, but it stores 0 in wStringCategory: the entry at Data_03A_6F06 + 2 * D is called first when non-zero, then BeginStringDisplay_Bank2F shows category 0 (E-0056)
-; 22 call sites from 14 routines (e.g. RunBattleResolveStep_43C4_Case01, Func_032_4ADC_Case00_Case01, Func_032_4ADC_Case00_Case03, ShowActorStatusRecoveryMessage, ...)
+; 22 call sites from 14 routines (e.g. RunBattleResolveStep_43C4_Case01, RunBattleActions_Case00_Sub01_Case00_Case01, RunBattleActions_Case00_Sub01_Case00_Case03, ShowActorStatusRecoveryMessage, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleTextCategory0::
 Func_03A_6EE5:: ; address name
@@ -8039,7 +8039,7 @@ Func_03A_7183:: ; address name
     ret
 
 ; D = message index. If the 16-bit entry at Data_03A_71B4 + 2 * D is non-zero it is called first through Func_000_000B (a per-message routine, not read). Then it stores D in wStringIndex, 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category 1 (E-0056)
-; 66 call sites from 56 routines (e.g. Func_032_4ADC_Case01_Case09, Func_032_4ADC_Case06_Case01, Func_032_4ADC_Case06_Case02, Func_032_4ADC_Case09_Case00, ...)
+; 66 call sites from 56 routines (e.g. RunBattleActions_Case00_Sub01_Case01_Case09, RunBattleActions_Case00_Sub01_Case06_Case01, RunBattleActions_Case00_Sub01_Case06_Case02, RunBattleActions_Case00_Sub01_Case09_Case00, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleText::
 Func_03A_7193:: ; address name
@@ -8637,7 +8637,7 @@ Func_03A_74FE:: ; address name
     ret
 
 ; copies the actor, skill and target names to wC130/wC140/wC150 and picks the action message from Data_03A_7603 (or special messages $49-$4C) (E-0129)
-; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, Func_032_4ADC_Case01_Case00, Func_032_4ADC_Case01_Case03, Func_032_5820_Case01)
+; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, RunBattleActions_Case00_Sub01_Case01_Case00, RunBattleActions_Case00_Sub01_Case01_Case03, RunBattleStep4_Case00_Sub01_Case01)
 ; reads: wBattleActionId, wBattleActor, wSavedActorSlot
 ; writes: wSavedActorSlot, wNameSlot, wStringIndex, wStringCategory
 ; points at: wBattleTargetChoice, wTextBuf2

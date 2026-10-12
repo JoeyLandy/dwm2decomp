@@ -1322,6 +1322,30 @@ class Rom:
                         pc += n
                 self.ram_use[(b, e)] = (list(reads), list(writes), list(ptrs))
 
+    def rename_address_prefixed_children(self) -> None:
+        """E-0245: structural names (`_CaseNN`, `_SubNN`, `_SharedNN`) are derived before
+        name_single_caller_helpers names some parents, so their children keep the parent's address
+        name as a prefix (Func_004_6892_Case00). Replace that prefix with the parent's name."""
+        pat = re.compile(r"^Func_0([0-9A-F]{2})_([0-9A-F]{4})_(.*)$")
+        used = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
+        renamed = 0
+        for b in range(self.nbanks):
+            for a, lab in list(self.labels[b].items()):
+                m = pat.match(lab)
+                if not m:
+                    continue
+                pb, pa = int(m.group(1), 16), int(m.group(2), 16)
+                parent = self.labels.get(pb, {}).get(pa) if pb < self.nbanks else None
+                if not parent or parent.startswith(("Func_", "Jump_")):
+                    continue
+                new = f"{parent}_{m.group(3)}"
+                if new in used:
+                    continue
+                used.add(new)
+                self.labels[b][a] = new
+                renamed += 1
+        log(f"structural names re-prefixed with their parent's name: {renamed}")
+
     def name_single_caller_helpers(self) -> None:
         """Name a routine that has exactly one calling routine `Parent_SubNN` (E-0047).
 
@@ -1343,7 +1367,8 @@ class Rom:
             shared: dict[str, list[tuple[int, int]]] = {}
             for (b, a), sites in self.callers.items():
                 label = self.labels[b].get(a, "")
-                if not label.startswith("Func_") or (b, a) in self.names or a not in self.insn[b]                         or (b, a) in table_targets:
+                if not label.startswith("Func_") or (b, a) in self.names or a not in self.insn[b] \
+                        or (b, a) in table_targets:
                     continue
                 parents = set()
                 for cb, ca in sites:
@@ -3586,6 +3611,7 @@ class Rom:
         self.name_copies()
         self.build_xrefs()
         self.name_single_caller_helpers()
+        self.rename_address_prefixed_children()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")
 

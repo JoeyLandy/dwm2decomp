@@ -609,7 +609,7 @@ Func_084_43AC:: ; address name
     ret
 
 ; for each 8-byte entry of Data_084_4461 matching hMapId and the screen position, with its story flag set, runs Func_084_43F2 (hFFC6 = its value) (E-0125)
-; 3 call sites from 3 routines (e.g. LoadMapScreen, ScriptCommand0A_Run_Case04, ScriptCommand74_Run)
+; 3 call sites from 3 routines (e.g. LoadMapScreen, ScriptCommand0A_Run_Case04, SetFlagRedraw)
 ; reads: hMapId, hMapScreenX, hMapScreenY
 ; writes: hTemp0
 ApplyMapScreenFlagEvents::

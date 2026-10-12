@@ -2036,101 +2036,101 @@ Jump_010_4B2D::
     ld [wStringCategory], a
     ld a, h
     rst $00
-    dw Func_010_4AD0_Case00
-    dw Func_010_4AD0_Case01
-    dw Func_010_4AD0_Case02
-    dw Func_010_4AD0_Case03
-    dw Func_010_4AD0_Case04
-    dw Func_010_4AD0_Case05
-    dw Func_010_4AD0_Case06
-    dw Func_010_4AD0_Case06
-    dw Func_010_4AD0_Case08
-    dw Func_010_4AD0_Case09
-    dw Func_010_4AD0_Case09
-    dw Func_010_4AD0_Case0B
-    dw Func_010_4AD0_Case0C
-    dw Func_010_4AD0_Case0D
+    dw ScriptCommand09_Case01_Sub01_Case00
+    dw ScriptCommand09_Case01_Sub01_Case01
+    dw ScriptCommand09_Case01_Sub01_Case02
+    dw ScriptCommand09_Case01_Sub01_Case03
+    dw ScriptCommand09_Case01_Sub01_Case04
+    dw ScriptCommand09_Case01_Sub01_Case05
+    dw ScriptCommand09_Case01_Sub01_Case06
+    dw ScriptCommand09_Case01_Sub01_Case06
+    dw ScriptCommand09_Case01_Sub01_Case08
+    dw ScriptCommand09_Case01_Sub01_Case09
+    dw ScriptCommand09_Case01_Sub01_Case09
+    dw ScriptCommand09_Case01_Sub01_Case0B
+    dw ScriptCommand09_Case01_Sub01_Case0C
+    dw ScriptCommand09_Case01_Sub01_Case0D
 
 ; entry 0 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case00::
+ScriptCommand09_Case01_Sub01_Case00::
 Jump_010_4B53:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
 ; entry 1 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case01::
+ScriptCommand09_Case01_Sub01_Case01::
 Jump_010_4B5A:: ; address name
     farcall BeginStringDisplay_Bank29
     ret
 
 ; entry 2 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case02::
+ScriptCommand09_Case01_Sub01_Case02::
 Jump_010_4B61:: ; address name
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; entry 3 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case03::
+ScriptCommand09_Case01_Sub01_Case03::
 Jump_010_4B68:: ; address name
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; entry 4 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case04::
+ScriptCommand09_Case01_Sub01_Case04::
 Jump_010_4B6F:: ; address name
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; entry 5 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case05::
+ScriptCommand09_Case01_Sub01_Case05::
 Jump_010_4B76:: ; address name
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; entry 6 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case06::
+ScriptCommand09_Case01_Sub01_Case06::
 Jump_010_4B7D:: ; address name
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; entry 8 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case08::
+ScriptCommand09_Case01_Sub01_Case08::
 Jump_010_4B84:: ; address name
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; entry 9 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case09::
+ScriptCommand09_Case01_Sub01_Case09::
 Jump_010_4B8B:: ; address name
     farcall BeginStringDisplay_Bank80
     ret
 
 ; entry 11 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case0B::
+ScriptCommand09_Case01_Sub01_Case0B::
 Jump_010_4B92:: ; address name
     farcall BeginStringDisplay_Bank82
     ret
 
 ; entry 12 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case0C::
+ScriptCommand09_Case01_Sub01_Case0C::
 Jump_010_4B99:: ; address name
     farcall BeginStringDisplay_Bank86
     ret
 
 ; entry 13 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-Func_010_4AD0_Case0D::
+ScriptCommand09_Case01_Sub01_Case0D::
 Jump_010_4BA0:: ; address name
     farcall BeginStringDisplay_Bank89
     ret
@@ -2174,105 +2174,105 @@ Func_010_4BD4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand11:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4BDB:: ; address name
-    farcall ScriptCommand11_Run
+    farcall SceneFarmKids
     ret
 
 ; runs one frame of script command type 12 (entry 17 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand12:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4BE2:: ; address name
-    farcall ScriptCommand12_Run
+    farcall SceneLearnQuick
     ret
 
 ; runs one frame of script command type 13 (entry 18 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand13:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4BE9:: ; address name
-    farcall ScriptCommand13_Run
+    farcall SceneSpinning
     ret
 
 ; runs one frame of script command type 14 (entry 19 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand14:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4BF0:: ; address name
-    farcall ScriptCommand14_Run
+    farcall SceneWarubouSmells
     ret
 
 ; runs one frame of script command type 15 (entry 20 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand15:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4BF7:: ; address name
-    farcall ScriptCommand15_Run
+    farcall SceneWarubouFood
     ret
 
 ; runs one frame of script command type 16 (entry 21 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand16:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4BFE:: ; address name
-    farcall ScriptCommand16_Run
+    farcall SceneWarubouFood2
     ret
 
 ; runs one frame of script command type 17 (entry 22 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand17:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C05:: ; address name
-    farcall ScriptCommand17_Run
+    farcall ScenePackage
     ret
 
 ; runs one frame of script command type 18 (entry 23 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand18:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C0C:: ; address name
-    farcall ScriptCommand18_Run
+    farcall SceneGreatlogKey
     ret
 
 ; runs one frame of script command type 19 (entry 24 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand19:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C13:: ; address name
-    farcall ScriptCommand19_Run
+    farcall SceneWarubouMagicKey
     ret
 
 ; runs one frame of script command type 1A (entry 25 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand1A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C1A:: ; address name
-    farcall ScriptCommand1A_Run
+    farcall SceneOasisKey
     ret
 
 ; runs one frame of script command type 1B (entry 26 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand1B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C21:: ; address name
-    farcall ScriptCommand1B_Run
+    farcall SceneWarubouLeaves
     ret
 
 ; runs one frame of script command type 1C (entry 27 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand1C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C28:: ; address name
-    farcall ScriptCommand1C_Run
+    farcall SceneWarubouWarning
     ret
 
 ; runs one frame of script command type 1D (entry 28 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand1D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C2F:: ; address name
-    farcall ScriptCommand1D_Run
+    farcall SceneLongFaces
     ret
 
 ; runs one frame of script command type 1E (entry 29 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand1E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C36:: ; address name
-    farcall ScriptCommand1E_Run
+    farcall CheckItem
     ret
 
 ; runs one frame of script command type 1F (entry 30 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand1F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C3D:: ; address name
-    farcall ScriptCommand1F_Run
+    farcall SceneMonsterInspection
     ret
 
 ; runs one frame of script command type 20 (entry 31 of ScriptCommandHandlers)
@@ -2286,56 +2286,56 @@ Func_010_4C44:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand21:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C4B:: ; address name
-    farcall ScriptCommand21_Run
+    farcall SceneKingAudience
     ret
 
 ; runs one frame of script command type 22 (entry 33 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand22:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C52:: ; address name
-    farcall ScriptCommand22_Run
+    farcall SceneCanalGate
     ret
 
 ; runs one frame of script command type 23 (entry 34 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand23:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C59:: ; address name
-    farcall ScriptCommand23_Run
+    farcall SceneWaterShortage
     ret
 
 ; runs one frame of script command type 24 (entry 35 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand24:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C60:: ; address name
-    farcall ScriptCommand24_Run
+    farcall SceneTreasureTheft
     ret
 
 ; runs one frame of script command type 25 (entry 36 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand25:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C67:: ; address name
-    farcall ScriptCommand25_Run
+    farcall SceneWaterSolved
     ret
 
 ; runs one frame of script command type 26 (entry 37 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand26:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C6E:: ; address name
-    farcall ScriptCommand26_Run
+    farcall SceneMonstersInTow
     ret
 
 ; runs one frame of script command type 27 (entry 38 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand27:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C75:: ; address name
-    farcall ScriptCommand27_Run
+    farcall SceneRivalDefeated
     ret
 
 ; runs one frame of script command type 28 (entry 39 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand28:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C7C:: ; address name
-    farcall ScriptCommand28_Run
+    farcall ShakeScreen
     ret
 
 ; runs one frame of script command type 29 (entry 40 of ScriptCommandHandlers)
@@ -2349,238 +2349,238 @@ Func_010_4C83:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C8A:: ; address name
-    farcall ScriptCommand2A_Run
+    farcall SceneWatchOut
     ret
 
 ; runs one frame of script command type 2B (entry 42 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C91:: ; address name
-    farcall ScriptCommand2B_Run
+    farcall SceneMermaidSong
     ret
 
 ; runs one frame of script command type 2C (entry 43 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C98:: ; address name
-    farcall ScriptCommand2C_Run
+    farcall SceneDancing
     ret
 
 ; runs one frame of script command type 2D (entry 44 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4C9F:: ; address name
-    farcall ScriptCommand2D_Run
+    farcall SceneMermaidSong2
     ret
 
 ; runs one frame of script command type 2E (entry 45 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CA6:: ; address name
-    farcall ScriptCommand2E_Run
+    farcall WarpMap41
     ret
 
 ; runs one frame of script command type 2F (entry 46 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand2F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CAD:: ; address name
-    farcall ScriptCommand2F_Run
+    farcall SceneTentacles
     ret
 
 ; runs one frame of script command type 30 (entry 47 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand30:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CB4:: ; address name
-    farcall ScriptCommand30_Run
+    farcall SceneSailorRing
     ret
 
 ; runs one frame of script command type 31 (entry 48 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand31:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CBB:: ; address name
-    farcall ScriptCommand31_Run
+    farcall ScenePirateGhosts
     ret
 
 ; runs one frame of script command type 32 (entry 49 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand32:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CC2:: ; address name
-    farcall ScriptCommand32_Run
+    farcall GiveItemBlink
     ret
 
 ; runs one frame of script command type 33 (entry 50 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand33:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CC9:: ; address name
-    farcall ScriptCommand33_Run
+    farcall SceneCrate
     ret
 
 ; runs one frame of script command type 34 (entry 51 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand34:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CD0:: ; address name
-    farcall ScriptCommand34_Run
+    farcall SetTilesFlag310
     ret
 
 ; runs one frame of script command type 35 (entry 52 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand35:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CD7:: ; address name
-    farcall ScriptCommand35_Run
+    farcall SceneKamehaEscape
     ret
 
 ; runs one frame of script command type 36 (entry 53 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand36:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CDE:: ; address name
-    farcall ScriptCommand36_Run
+    farcall SceneKamehaCaught
     ret
 
 ; runs one frame of script command type 37 (entry 54 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand37:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CE5:: ; address name
-    farcall ScriptCommand37_Run
+    farcall SceneCrewFollows
     ret
 
 ; runs one frame of script command type 38 (entry 55 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand38:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CEC:: ; address name
-    farcall ScriptCommand38_Run
+    farcall SceneKamehaFlees
     ret
 
 ; runs one frame of script command type 39 (entry 56 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand39:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CF3:: ; address name
-    farcall ScriptCommand39_Run
+    farcall SceneMermaidKingdom
     ret
 
 ; runs one frame of script command type 3A (entry 57 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand3A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4CFA:: ; address name
-    farcall ScriptCommand3A_Run
+    farcall SceneMasterThanks
     ret
 
 ; runs one frame of script command type 3B (entry 58 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand3B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D01:: ; address name
-    farcall ScriptCommand39_Run
+    farcall SceneMermaidKingdom
     ret
 
 ; runs one frame of script command type 3C (entry 59 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand3C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D08:: ; address name
-    farcall ScriptCommand3C_Run
+    farcall RewardItemOrKey
     ret
 
 ; runs one frame of script command type 3D (entry 60 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand3D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D0F:: ; address name
-    farcall ScriptCommand3D_Run
+    farcall RewardItemOrKey2
     ret
 
 ; runs one frame of script command type 3E (entry 61 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand3E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D16:: ; address name
-    farcall ScriptCommand3E_Run
+    farcall SceneStrongestMaster
     ret
 
 ; runs one frame of script command type 3F (entry 62 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand3F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D1D:: ; address name
-    farcall ScriptCommand3F_Run
+    farcall BlinkSprites
     ret
 
 ; runs one frame of script command type 40 (entry 63 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand40:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D24:: ; address name
-    farcall ScriptCommand40_Run
+    farcall SceneSpiritEnvoy
     ret
 
 ; runs one frame of script command type 41 (entry 64 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand41:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D2B:: ; address name
-    farcall ScriptCommand41_Run
+    farcall SceneExplosion
     ret
 
 ; runs one frame of script command type 42 (entry 65 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand42:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D32:: ; address name
-    farcall ScriptCommand42_Run
+    farcall SceneReportToKing
     ret
 
 ; runs one frame of script command type 43 (entry 66 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand43:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D39:: ; address name
-    farcall ScriptCommand43_Run
+    farcall SceneWallExit
     ret
 
 ; runs one frame of script command type 44 (entry 67 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand44:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D40:: ; address name
-    farcall ScriptCommand44_Run
+    farcall SceneRealKing
     ret
 
 ; runs one frame of script command type 45 (entry 68 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand45:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D47:: ; address name
-    farcall ScriptCommand45_Run
+    farcall ScenePlanRuined
     ret
 
 ; runs one frame of script command type 46 (entry 69 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand46:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D4E:: ; address name
-    farcall ScriptCommand46_Run
+    farcall SceneCheerYuna
     ret
 
 ; runs one frame of script command type 47 (entry 70 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand47:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D55:: ; address name
-    farcall ScriptCommand47_Run
+    farcall SceneSpiritEnvoy2
     ret
 
 ; runs one frame of script command type 48 (entry 71 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand48:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D5C:: ; address name
-    farcall ScriptCommand48_Run
+    farcall ScenePrincessMedicine
     ret
 
 ; runs one frame of script command type 49 (entry 72 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand49:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D63:: ; address name
-    farcall ScriptCommand49_Run
+    farcall SceneMedicineGiven
     ret
 
 ; runs one frame of script command type 4A (entry 73 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand4A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D6A:: ; address name
-    farcall ScriptCommand4A_Run
+    farcall SceneShield
     ret
 
 ; runs one frame of script command type 4B (entry 74 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand4B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D71:: ; address name
-    farcall ScriptCommand4B_Run
+    farcall SceneShield2
     ret
 
 ; runs one frame of script command type 4C (entry 75 of ScriptCommandHandlers)
@@ -2594,133 +2594,133 @@ Func_010_4D78:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand4D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D7F:: ; address name
-    farcall ScriptCommand4D_Run
+    farcall SceneWaterReward
     ret
 
 ; runs one frame of script command type 4E (entry 77 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand4E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D86:: ; address name
-    farcall ScriptCommand4E_Run
+    farcall SceneGrave
     ret
 
 ; runs one frame of script command type 4F (entry 78 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand4F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D8D:: ; address name
-    farcall ScriptCommand4F_Run
+    farcall SetTilesD2
     ret
 
 ; runs one frame of script command type 50 (entry 79 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand50:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D94:: ; address name
-    farcall ScriptCommand50_Run
+    farcall SceneMadcondor
     ret
 
 ; runs one frame of script command type 51 (entry 80 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand51:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4D9B:: ; address name
-    farcall ScriptCommand51_Run
+    farcall SceneMadcondorCry
     ret
 
 ; runs one frame of script command type 52 (entry 81 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand52:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DA2:: ; address name
-    farcall ScriptCommand52_Run
+    farcall SceneSmallHole
     ret
 
 ; runs one frame of script command type 53 (entry 82 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand53:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DA9:: ; address name
-    farcall ScriptCommand53_Run
+    farcall SceneJustice
     ret
 
 ; runs one frame of script command type 54 (entry 83 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand54:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DB0:: ; address name
-    farcall ScriptCommand54_Run
+    farcall SceneGravestone
     ret
 
 ; runs one frame of script command type 55 (entry 84 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand55:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DB7:: ; address name
-    farcall ScriptCommand55_Run
+    farcall SetFlag322
     ret
 
 ; runs one frame of script command type 56 (entry 85 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand56:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DBE:: ; address name
-    farcall ScriptCommand56_Run
+    farcall SceneBeatenFairly
     ret
 
 ; runs one frame of script command type 57 (entry 86 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand57:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DC5:: ; address name
-    farcall ScriptCommand57_Run
+    farcall SceneThreeItemsBattle
     ret
 
 ; runs one frame of script command type 58 (entry 87 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand58:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DCC:: ; address name
-    farcall ScriptCommand58_Run
+    farcall SceneThreeItems
     ret
 
 ; runs one frame of script command type 59 (entry 88 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand59:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DD3:: ; address name
-    farcall ScriptCommand59_Run
+    farcall SceneSawKameha
     ret
 
 ; runs one frame of script command type 5A (entry 89 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand5A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DDA:: ; address name
-    farcall ScriptCommand59_Run
+    farcall SceneSawKameha
     ret
 
 ; runs one frame of script command type 5B (entry 90 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand5B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DE1:: ; address name
-    farcall ScriptCommand5B_Run
+    farcall SceneLimbo
     ret
 
 ; runs one frame of script command type 5C (entry 91 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand5C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DE8:: ; address name
-    farcall ScriptCommand5C_Run
+    farcall TakeItem
     ret
 
 ; runs one frame of script command type 5D (entry 92 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand5D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DEF:: ; address name
-    farcall ScriptCommand5D_Run
+    farcall SceneDarckTaunt
     ret
 
 ; runs one frame of script command type 5E (entry 93 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand5E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DF6:: ; address name
-    farcall ScriptCommand5E_Run
+    farcall SceneDarckDefeated
     ret
 
 ; runs one frame of script command type 5F (entry 94 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand5F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4DFD:: ; address name
-    farcall ScriptCommand5F_Run
+    farcall SceneHomecoming
     ret
 
 ; runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
@@ -2734,147 +2734,147 @@ Func_010_4E04:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand61:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E0B:: ; address name
-    farcall ScriptCommand61_Run
+    farcall SceneKamehaStole
     ret
 
 ; runs one frame of script command type 62 (entry 97 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand62:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E12:: ; address name
-    farcall ScriptCommand62_Run
+    farcall PersonalityMessage
     ret
 
 ; runs one frame of script command type 63 (entry 98 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand63:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E19:: ; address name
-    farcall ScriptCommand63_Run
+    farcall SceneRivalFade
     ret
 
 ; runs one frame of script command type 64 (entry 99 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand64:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E20:: ; address name
-    farcall ScriptCommand64_Run
+    farcall GatherFollowers
     ret
 
 ; runs one frame of script command type 65 (entry 100 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand65:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E27:: ; address name
-    farcall ScriptCommand65_Run
+    farcall GrowthLimitInfo
     ret
 
 ; runs one frame of script command type 66 (entry 101 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand66:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E2E:: ; address name
-    farcall ScriptCommand66_Run
+    farcall SceneShieldGuardian
     ret
 
 ; runs one frame of script command type 67 (entry 102 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand67:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E35:: ; address name
-    farcall ScriptCommand67_Run
+    farcall SceneJustice2
     ret
 
 ; runs one frame of script command type 68 (entry 103 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand68:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E3C:: ; address name
-    farcall ScriptCommand68_Run
+    farcall SceneFoundMe
     ret
 
 ; runs one frame of script command type 69 (entry 104 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand69:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E43:: ; address name
-    farcall ScriptCommand69_Run
+    farcall SceneFoundMeBattle
     ret
 
 ; runs one frame of script command type 6A (entry 105 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand6A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E4A:: ; address name
-    farcall ScriptCommand6A_Run
+    farcall SceneHorsingAround
     ret
 
 ; runs one frame of script command type 6B (entry 106 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand6B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E51:: ; address name
-    farcall ScriptCommand6B_Run
+    farcall SceneVaultSettled
     ret
 
 ; runs one frame of script command type 6C (entry 107 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand6C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E58:: ; address name
-    farcall ScriptCommand6C_Run
+    farcall GiveMonster
     ret
 
 ; runs one frame of script command type 6D (entry 108 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand6D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E5F:: ; address name
-    farcall ScriptCommand6D_Run
+    farcall SceneLimboMonster
     ret
 
 ; runs one frame of script command type 6E (entry 109 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand6E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E66:: ; address name
-    farcall ScriptCommand6E_Run
+    farcall SceneLimboMonster2
     ret
 
 ; runs one frame of script command type 6F (entry 110 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand6F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E6D:: ; address name
-    farcall ScriptCommand6F_Run
+    farcall DeskKey
     ret
 
 ; runs one frame of script command type 70 (entry 111 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand70:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E74:: ; address name
-    farcall ScriptCommand70_Run
+    farcall SceneTerry
     ret
 
 ; runs one frame of script command type 71 (entry 112 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand71:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E7B:: ; address name
-    farcall ScriptCommand71_Run
+    farcall SceneKamehaKeyBattle
     ret
 
 ; runs one frame of script command type 72 (entry 113 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand72:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E82:: ; address name
-    farcall ScriptCommand72_Run
+    farcall SceneKamehaKeyBattle2
     ret
 
 ; runs one frame of script command type 73 (entry 114 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand73:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E89:: ; address name
-    farcall ScriptCommand73_Run
+    farcall FollowerFacePlayer
     ret
 
 ; runs one frame of script command type 74 (entry 115 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand74:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E90:: ; address name
-    farcall ScriptCommand74_Run
+    farcall SetFlagRedraw
     ret
 
 ; runs one frame of script command type 75 (entry 116 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand75:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4E97:: ; address name
-    farcall ScriptCommand75_Run
+    farcall SceneAtSea
     ret
 
 ; runs one frame of script command type 76 (entry 117 of ScriptCommandHandlers)
@@ -2888,175 +2888,175 @@ Func_010_4E9E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand77:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EA5:: ; address name
-    farcall ScriptCommand77_Run
+    farcall SceneLandHo
     ret
 
 ; runs one frame of script command type 78 (entry 119 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand78:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EAC:: ; address name
-    farcall ScriptCommand78_Run
+    farcall SaveScreen
     ret
 
 ; runs one frame of script command type 79 (entry 120 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand79:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EB3:: ; address name
-    farcall ScriptCommand79_Run
+    farcall ScenePoorChurch
     ret
 
 ; runs one frame of script command type 7A (entry 121 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand7A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EBA:: ; address name
-    farcall ScriptCommand7A_Run
+    farcall SceneKamehaMissing
     ret
 
 ; runs one frame of script command type 7B (entry 122 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand7B:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EC1:: ; address name
-    farcall ScriptCommand7B_Run
+    farcall SceneArenaChallenge
     ret
 
 ; runs one frame of script command type 7C (entry 123 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand7C:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EC8:: ; address name
-    farcall ScriptCommand7C_Run
+    farcall SceneTerryBattle
     ret
 
 ; runs one frame of script command type 7D (entry 124 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand7D:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4ECF:: ; address name
-    farcall ScriptCommand7D_Run
+    farcall SceneThisWay
     ret
 
 ; runs one frame of script command type 7E (entry 125 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand7E:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4ED6:: ; address name
-    farcall ScriptCommand7E_Run
+    farcall SceneGotTo
     ret
 
 ; runs one frame of script command type 7F (entry 126 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand7F:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EDD:: ; address name
-    farcall ScriptCommand7F_Run
+    farcall SceneChestServant
     ret
 
 ; runs one frame of script command type C0 (entry 191 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC0:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EE4:: ; address name
-    farcall ScriptCommandC0_Run
+    farcall SceneRoltElder
     ret
 
 ; runs one frame of script command type C1 (entry 192 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC1:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EEB:: ; address name
-    farcall ScriptCommandC1_Run
+    farcall SceneTooStrong
     ret
 
 ; runs one frame of script command type C2 (entry 193 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC2:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EF2:: ; address name
-    farcall ScriptCommandC2_Run
+    farcall SceneGiveBackCyal
     ret
 
 ; runs one frame of script command type C3 (entry 194 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC3:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4EF9:: ; address name
-    farcall ScriptCommandC3_Run
+    farcall KeyBossBeaten
     ret
 
 ; runs one frame of script command type C6 (entry 197 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC6:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F00:: ; address name
-    farcall ScriptCommandC6_Run
+    farcall SceneCyalRolt
     ret
 
 ; runs one frame of script command type C4 (entry 195 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC4:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F07:: ; address name
-    farcall ScriptCommandC4_Run
+    farcall SceneBarrel
     ret
 
 ; runs one frame of script command type C5 (entry 196 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC5:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F0E:: ; address name
-    farcall ScriptCommandC5_Run
+    farcall SceneWizstone
     ret
 
 ; runs one frame of script command type C7 (entry 198 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC7:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F15:: ; address name
-    farcall ScriptCommandC7_Run
+    farcall ScenePendantSeller
     ret
 
 ; runs one frame of script command type C8 (entry 199 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC8:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F1C:: ; address name
-    farcall ScriptCommandC8_Run
+    farcall SceneMercy
     ret
 
 ; runs one frame of script command type C9 (entry 200 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandC9:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F23:: ; address name
-    farcall ScriptCommandC9_Run
+    farcall SceneMilayouForest
     ret
 
 ; runs one frame of script command type CA (entry 201 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandCA:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F2A:: ; address name
-    farcall ScriptCommandCA_Run
+    farcall KeyBossBeaten2
     ret
 
 ; runs one frame of script command type CB (entry 202 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandCB:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F31:: ; address name
-    farcall ScriptCommandCB_Run
+    farcall SceneChestBattle
     ret
 
 ; runs one frame of script command type CC (entry 203 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandCC:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F38:: ; address name
-    farcall ScriptCommandCC_Run
+    farcall SceneCyalShine
     ret
 
 ; runs one frame of script command type CD (entry 204 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandCD:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F3F:: ; address name
-    farcall ScriptCommandCD_Run
+    farcall SceneYouDidIt
     ret
 
 ; runs one frame of script command type CE (entry 205 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandCE:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F46:: ; address name
-    farcall ScriptCommandCE_Run
+    farcall HideSprites
     ret
 
 ; runs one frame of script command type CF (entry 206 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandCF:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4F4D:: ; address name
-    farcall ScriptCommandCF_Run
+    farcall SceneKeyShop
     ret
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -3065,7 +3065,7 @@ Script_4F54:: ; heuristic: event script entry or jump target; C0
     script_message $0030 ; 'Heh, so these are the newcomers?'
     script_face $81, 1
     script_message $0031 ; 'C'mon, Warubou!'
-    script_command $1B
+    script_command SCRIPT_SCENE_WARUBOU_LEAVES
     script_sound $FF
     script_set_flag $0015
     script_end
@@ -3079,51 +3079,51 @@ Script_4F6F:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_4F73:: ; heuristic: event script entry or jump target; C0
     script_sound $28
-    script_command $12
+    script_command SCRIPT_SCENE_LEARN_QUICK
     script_message $0033 ; 'Oh It's all spinning around That'
     script_sound $FF
     script_end
 Script_4F7C:: ; heuristic: event script entry or jump target; C0
     script_sound $28
     script_wait 100
-    script_command $13
+    script_command SCRIPT_SCENE_SPINNING
     script_wait 30
     script_sound $FF
     script_end
 Script_4F88:: ; heuristic: event script entry or jump target; C0
     script_message $0045 ; 'You must be the farm kids.'
-    script_command $11
+    script_command SCRIPT_SCENE_FARM_KIDS
     script_end
 Script_4F8D:: ; heuristic: event script entry or jump target; C0
     script_slide_y $82
     script_message $0050 ; 'Warubou Wha ? I smell something!'
-    script_command $14
+    script_command SCRIPT_SCENE_WARUBOU_SMELLS
     script_message $0051 ; 'Warubou What is this? Food? Perfect!'
     script_set_flag $000A
-    script_command $15
+    script_command SCRIPT_SCENE_WARUBOU_FOOD
     script_sound $FF
     script_end
 Script_4F9D:: ; heuristic: event script entry or jump target; C0
     script_sound $28
-    script_command $16
+    script_command SCRIPT_SCENE_WARUBOU_FOOD_2
     script_message $005D ; 'Warubou Calm down and listen! What'
     script_end
 Script_4FA4:: ; heuristic: event script entry or jump target; C0
     script_message $001E ; 'You e come at the right'
-    script_command $6B
+    script_command SCRIPT_SCENE_VAULT_SETTLED
     script_message $0020 ; 'Good, that's settled then. The Vault'
     script_set_flag $0003
     script_end
 Script_4FAF:: ; heuristic: event script entry or jump target; C0
     script_message $006A ; 'Did you get the package from'
-    script_command $17
+    script_command SCRIPT_SCENE_PACKAGE
     script_message $006B ; 'Oh goodness, you're filthy! What happened'
     script_end
 Script_4FB7:: ; heuristic: event script entry or jump target; C0
     script_message $4028 ; 'I e heard that there are'
     script_skip_if_no Script_4FCC
     script_message $802A ; 'Monster masters are those people who'
-    script_command $73
+    script_command SCRIPT_FOLLOWER_FACE_PLAYER
     script_slide_y $01
     script_message $002D ; 'Tara Big brother can't do it'
     script_message $002C ; 'I aspired to be one long'
@@ -3168,9 +3168,9 @@ Script_5006:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5017:: ; heuristic: event script entry or jump target; C0
     script_message $807F ; 'Warubou Wa-hey! Good, good, good! In'
-    script_command $19
+    script_command SCRIPT_SCENE_WARUBOU_MAGIC_KEY
     script_message $0080 ; 'Warubou This here is a Magic'
-    script_command $1A
+    script_command SCRIPT_SCENE_OASIS_KEY
     script_message $0081 ; '0 received the Oasis Key.'
     script_message $0082 ; 'Warubou Wa-hey! I trust you! Go!'
     script_set_flag $001A
@@ -3187,10 +3187,10 @@ Script_5036:: ; heuristic: event script entry or jump target; C0
 Script_5039:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0011
     script_set_flag $0017
-    script_command $18
+    script_command SCRIPT_SCENE_GREATLOG_KEY
     script_message $0085 ; '0 received the GreatLog Key.'
     script_message $0086 ; 'Warubou Dangerous are other worlds! So'
-    script_command $1C
+    script_command SCRIPT_SCENE_WARUBOU_WARNING
     script_walk 0, 2, 3
     script_walk 0, 1, 2
     script_face $80, 2
@@ -3199,12 +3199,12 @@ Script_5039:: ; heuristic: event script entry or jump target; C0
     script_message $008C ; 'Slash Hey, why the long faces?'
     script_face $00, 1
     script_face $01, 3
-    script_command $1D
+    script_command SCRIPT_SCENE_LONG_FACES
     script_end
 Script_5063:: ; heuristic: event script entry or jump target; C0
     script_wait 30
     script_message $0000 ; 'In the middle of the sea'
-    script_command $75
+    script_command SCRIPT_SCENE_AT_SEA
     script_wait 60
     script_walk 3, 0, 1
     script_face $81, 2
@@ -3225,7 +3225,7 @@ Script_5063:: ; heuristic: event script entry or jump target; C0
 Script_509F:: ; heuristic: event script entry or jump target; C0
     script_wait 30
     script_message $0000 ; 'In the middle of the sea'
-    script_command $75
+    script_command SCRIPT_SCENE_AT_SEA
     script_wait 60
     script_walk 3, 0, 1
     script_face $81, 2
@@ -3253,7 +3253,7 @@ Script_50DB:: ; heuristic: event script entry or jump target; C0
     script_face $00, 1
     script_slide_y $82
     script_wait 120
-    script_command $77
+    script_command SCRIPT_SCENE_LAND_HO
     script_end
 Script_50F6:: ; heuristic: event script entry or jump target; C0
     script_message $0011 ; 'Cobi 0! They said GreatLog will'
@@ -3265,10 +3265,10 @@ Script_50F6:: ; heuristic: event script entry or jump target; C0
     script_face $00, 1
     script_slide_y $82
     script_wait 120
-    script_command $77
+    script_command SCRIPT_SCENE_LAND_HO
     script_end
 Script_5111:: ; heuristic: event script entry or jump target; C0
-    script_command $6A
+    script_command SCRIPT_SCENE_HORSING_AROUND
     script_message $0015 ; 'Listen you two! Quit your horsing'
     script_walk 0, 2, 5
     script_face $80, 1
@@ -3588,7 +3588,7 @@ Script_52F3:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_52FC:: ; heuristic: event script entry or jump target; C0
     script_message $88B4 ; 'Great, 0! Thanks a lot! This'
-    script_command $3C
+    script_command SCRIPT_REWARD_ITEM_OR_KEY
     script_message $0D17 ; 'Here, 0! You need this!'
     script_message $0D18 ; '0 received the Ice Key.'
     script_message $0D19 ; 'Be careful when you're traveling in'
@@ -3601,7 +3601,7 @@ Script_530D:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5316:: ; heuristic: event script entry or jump target; C0
     script_message $88B4 ; 'Great, 0! Thanks a lot! This'
-    script_command $3C
+    script_command SCRIPT_REWARD_ITEM_OR_KEY
     script_message $0D48 ; 'Here, 0! You hold onto it.'
     script_set_flag $01A3
     script_set_flag $0191
@@ -3613,7 +3613,7 @@ Script_5324:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_532D:: ; heuristic: event script entry or jump target; C0
     script_message $88B4 ; 'Great, 0! Thanks a lot! This'
-    script_command $3C
+    script_command SCRIPT_REWARD_ITEM_OR_KEY
     script_message $0D47 ; 'Here, 0! You hold onto it.'
     script_message $0D41 ; '0 received a TinyMedal!'
     script_message $0D19 ; 'Be careful when you're traveling in'
@@ -3691,15 +3691,15 @@ Script_53BA:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_53C3:: ; heuristic: event script entry or jump target; C0
     script_message $852B ; 'Warubou Wa-hey! Take the treasures that'
-    script_command $5B
+    script_command SCRIPT_SCENE_LIMBO
     script_message $052F ; 'Warubou Limbo is the King's domain!'
     script_set_flag $013B
     script_end
 Script_53CE:: ; heuristic: event script entry or jump target; C0
-    script_command $6D
+    script_command SCRIPT_SCENE_LIMBO_MONSTER
     script_end
 Script_53D0:: ; heuristic: event script entry or jump target; C0
-    script_command $6E
+    script_command SCRIPT_SCENE_LIMBO_MONSTER_2
     script_end
 Script_53D2:: ; heuristic: event script entry or jump target; C0
     script_message $4A36 ; 'Prince Kameha has been missing from'
@@ -3709,7 +3709,7 @@ Script_53D2:: ; heuristic: event script entry or jump target; C0
 Script_53DB:: ; heuristic: event script entry or jump target; C0
     script_message $8A37 ; 'What's that? You saw Prince Kameha'
     script_set_flag $0117
-    script_command $59
+    script_command SCRIPT_SCENE_SAW_KAMEHA
     script_message $0A3A ; 'Sire, this child claims to know'
     script_message $0A3B ; 'King What's that? Is that so?'
     script_walk 0, 0, 1
@@ -3723,13 +3723,13 @@ Script_53FA:: ; heuristic: event script entry or jump target; C0
     script_message $4504 ; 'If the island sink, is no'
     script_skip_if_no Script_540D
     script_message $8506 ; 'Hey! You're the kid who said'
-    script_command $5A
+    script_command SCRIPT_SCENE_KAMEHA_BACK
     script_message $0507 ; 'Prince Kameha came back! What with'
     script_set_flag $0122
     script_end
 Script_540D:: ; heuristic: event script entry or jump target; C0
     script_message $8505 ; 'People have been saying that they'
-    script_command $5A
+    script_command SCRIPT_SCENE_KAMEHA_BACK
     script_message $0507 ; 'Prince Kameha came back! What with'
     script_set_flag $0122
     script_end
@@ -3745,7 +3745,7 @@ Script_5422:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_542B:: ; heuristic: event script entry or jump target; C0
     script_message $8265 ; 'R Really? Wow! Thank you! I'
-    script_command $3A
+    script_command SCRIPT_SCENE_MASTER_THANKS
     script_set_flag $012D
     script_end
 Script_5433:: ; heuristic: event script entry or jump target; C0
@@ -3755,7 +3755,7 @@ Script_5433:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_543C:: ; heuristic: event script entry or jump target; C0
     script_message $8D80 ; 'Really? Let's go to the Arena!'
-    script_command $7B
+    script_command SCRIPT_SCENE_ARENA_CHALLENGE
     script_end
 Script_5441:: ; heuristic: event script entry or jump target; C0
     script_message $4227 ; '0 checked the pedestal. It's the'
@@ -4065,7 +4065,7 @@ Script_5600:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5609:: ; heuristic: event script entry or jump target; C0
     script_message $88C9 ; 'Fantastic! I can open my shop'
-    script_command $3D
+    script_command SCRIPT_REWARD_ITEM_OR_KEY_2
     script_message $0D40 ; 'I like you to have this.'
     script_message $0D18 ; '0 received the Ice Key.'
     script_message $0D42 ; 'I'll pray for your safety. Take'
@@ -4078,7 +4078,7 @@ Script_561A:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5623:: ; heuristic: event script entry or jump target; C0
     script_message $88C9 ; 'Fantastic! I can open my shop'
-    script_command $3D
+    script_command SCRIPT_REWARD_ITEM_OR_KEY_2
     script_message $0D43 ; 'I like you to have this.'
     script_set_flag $01A5
     script_set_flag $0134
@@ -4090,7 +4090,7 @@ Script_5631:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_563A:: ; heuristic: event script entry or jump target; C0
     script_message $88C9 ; 'Fantastic! I can open my shop'
-    script_command $3D
+    script_command SCRIPT_REWARD_ITEM_OR_KEY_2
     script_message $0D40 ; 'I like you to have this.'
     script_message $0D41 ; '0 received a TinyMedal!'
     script_message $0D42 ; 'I'll pray for your safety. Take'
@@ -4153,12 +4153,12 @@ Script_569C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_56A0:: ; heuristic: event script entry or jump target; C0
     script_message $0B4C ; 'Oh! Goodness! I'm surprised! I e'
-    script_command $CF
+    script_command SCRIPT_SCENE_KEY_SHOP
     script_set_flag $002F
     script_end
 Script_56A8:: ; heuristic: event script entry or jump target; C0
     script_message $0BBF ; 'How good of you to overcome'
-    script_command $CF
+    script_command SCRIPT_SCENE_KEY_SHOP
     script_end
 Script_56AD:: ; heuristic: event script entry or jump target; C0
     script_set_flag $011F
@@ -4217,7 +4217,7 @@ Script_56F5:: ; heuristic: event script entry or jump target; C0
     script_wait 60
     script_sound $28
     script_message $0547 ; 'Hehehe, no need to worry there!'
-    script_command $5F
+    script_command SCRIPT_SCENE_HOMECOMING
     script_end
 Script_5709:: ; heuristic: event script entry or jump target; C0
     script_walk 2, 3, 2
@@ -4226,7 +4226,7 @@ Script_5709:: ; heuristic: event script entry or jump target; C0
     script_wait 60
     script_sound $28
     script_message $0547 ; 'Hehehe, no need to worry there!'
-    script_command $5F
+    script_command SCRIPT_SCENE_HOMECOMING
     script_end
 Script_571D:: ; heuristic: event script entry or jump target; C0
     script_message $4111 ; 'Want to know how the farm'
@@ -4258,7 +4258,7 @@ Script_5744:: ; heuristic: event script entry or jump target; C0
     script_message $8A58 ; 'Everyone has a growth limit. Whether'
     script_end
 Script_574D:: ; heuristic: event script entry or jump target; C0
-    script_command $65
+    script_command SCRIPT_GROWTH_LIMIT_INFO
     script_message $8A57 ; 'Once a monster reaches its growth'
     script_end
 Script_5752:: ; heuristic: event script entry or jump target; C0
@@ -4270,7 +4270,7 @@ Script_575B:: ; heuristic: event script entry or jump target; C0
     script_message $828A ; 'The strongest master I e ever'
     script_end
 Script_575F:: ; heuristic: event script entry or jump target; C0
-    script_command $3E
+    script_command SCRIPT_SCENE_STRONGEST_MASTER
     script_set_flag $012B
     script_end
     db $00, $70, $4A, $06, $04, $00, $73, $8A, $FF, $00, $72, $8A, $FF, $00, $70, $4A
@@ -4282,7 +4282,7 @@ Script_575F:: ; heuristic: event script entry or jump target; C0
 Script_57A2:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0138
     script_wait 30
-    script_command $7A
+    script_command SCRIPT_SCENE_KAMEHA_MISSING
     script_walk_fast 0, 0, 5
     script_message $4A36 ; 'Prince Kameha has been missing from'
     script_skip_if_no Script_57BD
@@ -4293,7 +4293,7 @@ Script_57A2:: ; heuristic: event script entry or jump target; C0
 Script_57BD:: ; heuristic: event script entry or jump target; C0
     script_message $8A37 ; 'What's that? You saw Prince Kameha'
     script_set_flag $0117
-    script_command $59
+    script_command SCRIPT_SCENE_SAW_KAMEHA
     script_message $0A3A ; 'Sire, this child claims to know'
     script_message $0A3B ; 'King What's that? Is that so?'
     script_walk 0, 0, 1
@@ -4304,18 +4304,18 @@ Script_57BD:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_57DC:: ; heuristic: event script entry or jump target; C0
     script_face $00, 3
-    script_command $61
+    script_command SCRIPT_SCENE_KAMEHA_STOLE
     script_end
 Script_57E1:: ; heuristic: event script entry or jump target; C0
-    script_command $62
+    script_command SCRIPT_PERSONALITY_MESSAGE
     script_end
 Script_57E3:: ; heuristic: event script entry or jump target; C0
     script_message $0D60 ; 'What will you give to the'
-    script_command $78
+    script_command SCRIPT_SAVE_SCREEN
     script_end
 Script_57E8:: ; heuristic: event script entry or jump target; C0
     script_message $0D61 ; 'Y has been given to the'
-    script_command $78
+    script_command SCRIPT_SAVE_SCREEN
     script_end
 Script_57ED:: ; heuristic: event script entry or jump target; C0
 Data_010_57ED:: ; address name
@@ -4346,7 +4346,7 @@ Script_580B:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5814:: ; heuristic: event script entry or jump target; C0
     script_message $8B22 ; 'You'll take it? Excellent! I'll send'
-    script_command $6C
+    script_command SCRIPT_GIVE_MONSTER
     script_set_flag $0029
     script_end
 Script_581C:: ; heuristic: event script entry or jump target; C0
@@ -4406,30 +4406,30 @@ Script_5865:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_586C:: ; heuristic: event script entry or jump target; C0
     script_message $0BC3 ; '0 checked the desk.'
-    script_command $6F
+    script_command SCRIPT_DESK_KEY
     script_message $0B4E ; '0 obtained the Brawn Key.'
     script_set_flag $003D
     script_end
 Script_5877:: ; heuristic: event script entry or jump target; C0
     script_message $0BC3 ; '0 checked the desk.'
-    script_command $6F
+    script_command SCRIPT_DESK_KEY
     script_message $0BB5 ; '0 obtained the Baffle Key.'
     script_set_flag $003D
     script_end
 Script_5882:: ; heuristic: event script entry or jump target; C0
     script_message $0BC3 ; '0 checked the desk.'
-    script_command $6F
+    script_command SCRIPT_DESK_KEY
     script_message $0BB7 ; '0 obtained the Soul Key.'
     script_set_flag $00C8
     script_end
 Script_588D:: ; heuristic: event script entry or jump target; C0
     script_message $0BC3 ; '0 checked the desk.'
-    script_command $6F
+    script_command SCRIPT_DESK_KEY
     script_message $0BC0 ; '0 obtained the Magic Key.'
     script_end
 Script_5895:: ; heuristic: event script entry or jump target; C0
     script_sound $60
-    script_command $70
+    script_command SCRIPT_SCENE_TERRY
     script_end
 Script_5899:: ; heuristic: event script entry or jump target; C0
     script_message $4BAD ; 'Humph I'm Terry. I'm a master'
@@ -4438,7 +4438,7 @@ Script_5899:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_58A2:: ; heuristic: event script entry or jump target; C0
     script_message $8BAE ; 'Terry Humph Confident, huh? I'll tell'
-    script_command $7C
+    script_command SCRIPT_SCENE_TERRY_BATTLE
     script_end
     db $00, $B0, $4B, $06, $04, $00, $AF, $8B, $FF, $00, $AE, $8B, $7C, $FF
 
@@ -4450,7 +4450,7 @@ Script_58B5:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_58BE:: ; heuristic: event script entry or jump target; C0
     script_message $8B90 ; 'Kameha So you're confident, huh? Let's'
-    script_command $71
+    script_command SCRIPT_SCENE_KAMEHA_KEY_BATTLE
     script_end
 Script_58C3:: ; heuristic: event script entry or jump target; C0
     script_message $0B95 ; 'Kameha What? Oh, it's 0. Did'
@@ -4472,7 +4472,7 @@ Script_58E1:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_58EA:: ; heuristic: event script entry or jump target; C0
     script_message $8B90 ; 'Kameha So you're confident, huh? Let's'
-    script_command $72
+    script_command SCRIPT_SCENE_KAMEHA_KEY_BATTLE_2
     script_end
 Script_58EF:: ; heuristic: event script entry or jump target; C0
     script_message $0B95 ; 'Kameha What? Oh, it's 0. Did'
@@ -4622,7 +4622,7 @@ Script_59DD:: ; heuristic: event script entry or jump target; C0
 Script_59E6:: ; heuristic: event script entry or jump target; C0
     script_message $8149 ; 'Did you say yes? Yes, yes,'
     script_set_flag $0042
-    script_command $1F
+    script_command SCRIPT_SCENE_MONSTER_INSPECTION
     script_face $83, 2
     script_message $0153 ; 'Very good show! That was splendid'
     script_set_flag $0043
@@ -4647,7 +4647,7 @@ Script_5A10:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5A17:: ; heuristic: event script entry or jump target; C0
     script_message $014D ; 'Ah, three healthy monsters! Very well'
-    script_command $1F
+    script_command SCRIPT_SCENE_MONSTER_INSPECTION
     script_face $83, 2
     script_message $0153 ; 'Very good show! That was splendid'
     script_set_flag $0043
@@ -4666,7 +4666,7 @@ Script_5A2C:: ; heuristic: event script entry or jump target; C0
 Script_5A35:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0044
     script_message $8D02 ; 'King You wish to see our'
-    script_command $21
+    script_command SCRIPT_SCENE_KING_AUDIENCE
     script_message $4161 ; 'King I see. This is what'
     script_skip_if_no Script_5A45
     script_message $8163 ; 'King Oh You won't? Then, I'
@@ -4704,7 +4704,7 @@ Script_5A5C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5A95:: ; heuristic: event script entry or jump target; C0
     script_message $0171 ; 'What? Open the Canal Gate more?'
-    script_command $22
+    script_command SCRIPT_SCENE_CANAL_GATE
     script_wait 30
     script_walk_fast 0, 2, 2
     script_walk_fast 0, 3, 1
@@ -4722,13 +4722,13 @@ Script_5AAB:: ; heuristic: event script entry or jump target; C0
     script_message $0178 ; 'You will? So we can go'
     script_hide_object $01
     script_set_flag $0053
-    script_command $25
+    script_command SCRIPT_SCENE_WATER_SOLVED
     script_set_flag $0054
     script_message $0179 ; 'King This should solve the water'
     script_walk 0, 0, 3
     script_end
 Script_5AD2:: ; heuristic: event script entry or jump target; C0
-    script_command $4D
+    script_command SCRIPT_SCENE_WATER_REWARD
     script_end
     db $4D, $FF
 
@@ -4737,7 +4737,7 @@ Script_5AD6:: ; heuristic: event script entry or jump target; C0
     script_message $0181 ; 'King The town's water shortage seems'
     script_set_flag $0055
     script_walk 1, 0, 8
-    script_command $23
+    script_command SCRIPT_SCENE_WATER_SHORTAGE
     script_walk_fast 0, 1, 3
     script_face $80, 2
     script_message $0182 ; 'King Wha-what? What happened?'
@@ -4745,7 +4745,7 @@ Script_5AD6:: ; heuristic: event script entry or jump target; C0
     script_message $0183 ; 'We We were jumped by thieves'
     script_slide_y $80
     script_message $0184 ; 'King What? Arrrrgh! Round up all'
-    script_command $24
+    script_command SCRIPT_SCENE_TREASURE_THEFT
     script_walk 0, 0, 1
     script_walk 0, 1, 1
     script_face $00, 3
@@ -4772,29 +4772,29 @@ Script_5B26:: ; heuristic: event script entry or jump target; C0
     script_message $018A ; 'Munch, munch Chew, gulp Fwoaar, that'
     script_message $018B ; '0 received a WaterCall.'
     script_message $0D03 ; 'That will help you for certain.'
-    script_command $1E
+    script_command SCRIPT_CHECK_ITEM
     script_set_flag $0057
     script_end
 Script_5B37:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0058
-    script_command $26
+    script_command SCRIPT_SCENE_MONSTERS_IN_TOW
     script_end
 Script_5B3C:: ; heuristic: event script entry or jump target; C0
     script_message $0196 ; 'Heh, you have monsters in tow?'
     script_set_flag $0059
     script_encounter $00
     script_message $0198 ; 'You defeated my monster? Urggh Time'
-    script_command $27
+    script_command SCRIPT_SCENE_RIVAL_DEFEATED
     script_end
 Script_5B49:: ; heuristic: event script entry or jump target; C0
     script_message $0197 ; 'You again! You're determined! But it'
     script_encounter $00
     script_message $0198 ; 'You defeated my monster? Urggh Time'
-    script_command $27
+    script_command SCRIPT_SCENE_RIVAL_DEFEATED
     script_end
 Script_5B53:: ; heuristic: event script entry or jump target; C0
     script_sound $60
-    script_command $63
+    script_command SCRIPT_SCENE_RIVAL_FADE
     script_end
 Script_5B57:: ; heuristic: event script entry or jump target; C0
     script_message $415C ; 'Why are you snooping around? Are'
@@ -4814,7 +4814,7 @@ Script_5B6D:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5B71:: ; heuristic: event script entry or jump target; C0
     script_wait 20
-    script_command $79
+    script_command SCRIPT_SCENE_POOR_CHURCH
     script_end
 Script_5B76:: ; heuristic: event script entry or jump target; C0
     script_message $4DA0 ; 'Our church is impoverished, so I'
@@ -4830,7 +4830,7 @@ Script_5B7D:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5B84:: ; heuristic: event script entry or jump target; C0
     script_message $0806 ; 'The birds are noisy It's a'
-    script_command $28
+    script_command SCRIPT_SHAKE_SCREEN
     script_message $0807 ; 'See? What did I just say?'
     script_end
 Script_5B8C:: ; heuristic: event script entry or jump target; C0
@@ -4893,17 +4893,17 @@ Script_5BC4:: ; heuristic: event script entry or jump target; C0
 Script_5BE8:: ; heuristic: event script entry or jump target; C0
     script_message $0838 ; 'Who are you? This is our'
     script_encounter $01
-    script_command $2A
+    script_command SCRIPT_SCENE_WATCH_OUT
     script_set_flag $0066
     script_end
 Script_5BF2:: ; heuristic: event script entry or jump target; C0
     script_message $0839 ; 'You can keep trying, but you're'
     script_encounter $01
-    script_command $2A
+    script_command SCRIPT_SCENE_WATCH_OUT
     script_set_flag $0066
     script_end
 Script_5BFC:: ; heuristic: event script entry or jump target; C0
-    script_command $2A
+    script_command SCRIPT_SCENE_WATCH_OUT
     script_end
 Script_5BFE:: ; heuristic: event script entry or jump target; C0
     script_message $083A ; 'Zzz Zzz Huh! Watch out!'
@@ -4938,7 +4938,7 @@ Script_5C2F:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5C38:: ; heuristic: event script entry or jump target; C0
     script_message $8811 ; 'Then I'll sing! Lalala lala la'
-    script_command $2C
+    script_command SCRIPT_SCENE_DANCING
     script_message $0816 ; 'Erm The sense of rhythm just'
     script_end
 Script_5C40:: ; heuristic: event script entry or jump target; C0
@@ -4948,7 +4948,7 @@ Script_5C40:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5C49:: ; heuristic: event script entry or jump target; C0
     script_message $8811 ; 'Then I'll sing! Lalala lala la'
-    script_command $2B
+    script_command SCRIPT_SCENE_MERMAID_SONG
     script_end
 Script_5C4E:: ; heuristic: event script entry or jump target; C0
     script_message $4810 ; 'In the past, mermaids are said'
@@ -4957,7 +4957,7 @@ Script_5C4E:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5C57:: ; heuristic: event script entry or jump target; C0
     script_message $8811 ; 'Then I'll sing! Lalala lala la'
-    script_command $2D
+    script_command SCRIPT_SCENE_MERMAID_SONG_2
     script_end
 Script_5C5C:: ; heuristic: event script entry or jump target; C0
     script_message $4810 ; 'In the past, mermaids are said'
@@ -4974,7 +4974,7 @@ Script_5C69:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5C72:: ; heuristic: event script entry or jump target; C0
     script_message $884C ; 'Close your eyes a little while.'
-    script_command $2E
+    script_command SCRIPT_WARP_MAP41
     script_end
 Script_5C77:: ; heuristic: event script entry or jump target; C0
     script_message $0855 ; 'Welcome, young human. I heard that'
@@ -4986,56 +4986,56 @@ Script_5C7E:: ; heuristic: event script entry or jump target; C0
     script_set_flag $005E
     script_end
 Script_5C88:: ; heuristic: event script entry or jump target; C0
-    script_command $30
+    script_command SCRIPT_SCENE_SAILOR_RING
     script_end
 Script_5C8A:: ; heuristic: event script entry or jump target; C0
     script_message $0859 ; 'How could we die before enjoying'
     script_encounter $17
     script_set_flag $0071
-    script_command $31
+    script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5C94:: ; heuristic: event script entry or jump target; C0
     script_message $085A ; 'The treasures are ours No one'
     script_encounter $17
     script_set_flag $0072
-    script_command $31
+    script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5C9E:: ; heuristic: event script entry or jump target; C0
     script_message $085C ; 'It nags and nags that we'
     script_encounter $17
     script_set_flag $0073
-    script_command $31
+    script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5CA8:: ; heuristic: event script entry or jump target; C0
     script_message $085E ; 'Who disturbs us in our sleep'
     script_encounter $02
     script_message $0860 ; 'Child We have lost Finally, we'
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_set_flag $0075
     script_end
 Script_5CB5:: ; heuristic: event script entry or jump target; C0
     script_message $085F ; 'You seem to not understand The'
     script_encounter $02
     script_message $0860 ; 'Child We have lost Finally, we'
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_set_flag $0075
     script_end
 Script_5CC2:: ; heuristic: event script entry or jump target; C0
     script_message $0887 ; '0 checked the treasure chest. 0'
-    script_command $33
+    script_command SCRIPT_SCENE_CRATE
     script_set_flag $0076
     script_end
 Script_5CCA:: ; heuristic: event script entry or jump target; C0
     script_message $0863 ; '0 checked the crate. There was'
-    script_command $34
+    script_command SCRIPT_SET_TILES_FLAG_310
     script_end
 Script_5CCF:: ; heuristic: event script entry or jump target; C0
-    script_command $35
+    script_command SCRIPT_SCENE_KAMEHA_ESCAPE
     script_end
 Script_5CD1:: ; heuristic: event script entry or jump target; C0
     script_sound $28
     script_message $0868 ; 'Kameha Wahahahah! Thanks for guiding me'
-    script_command $36
+    script_command SCRIPT_SCENE_KAMEHA_CAUGHT
     script_wait 30
     script_sound $FF
     script_end
@@ -5051,7 +5051,7 @@ Script_5CDD:: ; heuristic: event script entry or jump target; C0
     script_walk_fast 2, 0, 3
     script_face $82, 1
     script_message $086A ; 'Aye, aye, sir! Right behind you!'
-    script_command $37
+    script_command SCRIPT_SCENE_CREW_FOLLOWS
     script_sound $65
     script_hide_object $00
     script_wait 15
@@ -5067,7 +5067,7 @@ Script_5CDD:: ; heuristic: event script entry or jump target; C0
 Script_5D1C:: ; heuristic: event script entry or jump target; C0
     script_sound $28
     script_message $086B ; 'Kameha Arrrrh, clear the way! I'm'
-    script_command $38
+    script_command SCRIPT_SCENE_KAMEHA_FLEES
     script_sound $00
     script_message $0891 ; 'Kameha Aiyeeeeeh'
     script_sound $65
@@ -5076,7 +5076,7 @@ Script_5D1C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5D2F:: ; heuristic: event script entry or jump target; C0
     script_wait 140
-    script_command $39
+    script_command SCRIPT_SCENE_MERMAID_KINGDOM
     script_sound $FF
     script_end
 Script_5D36:: ; heuristic: event script entry or jump target; C0
@@ -5086,7 +5086,7 @@ Script_5D36:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5D3F:: ; heuristic: event script entry or jump target; C0
     script_message $888F ; 'Close your eyes for a little'
-    script_command $2F
+    script_command SCRIPT_SCENE_TENTACLES
     script_end
 Script_5D44:: ; heuristic: event script entry or jump target; C0
     script_message $0893 ; 'Thick, suction- cupped tentacles snaked out'
@@ -5134,7 +5134,7 @@ Script_5D76:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5D82:: ; heuristic: event script entry or jump target; C0
     script_message $8318 ; 'You will? No words of thanks'
-    script_command $3F
+    script_command SCRIPT_BLINK_SPRITES
     script_set_flag $01E8
     script_end
 Script_5D8A:: ; heuristic: event script entry or jump target; C0
@@ -5146,13 +5146,13 @@ Script_5D8A:: ; heuristic: event script entry or jump target; C0
 Script_5D97:: ; heuristic: event script entry or jump target; C0
     script_message $0321 ; 'Ah, you are the spirit's envoy.'
     script_set_flag $0083
-    script_command $40
+    script_command SCRIPT_SCENE_SPIRIT_ENVOY
     script_walk 1, 0, 2
     script_set_flag $0082
     script_end
 Script_5DA6:: ; heuristic: event script entry or jump target; C0
     script_message $0359 ; 'We reported to the King that'
-    script_command $42
+    script_command SCRIPT_SCENE_REPORT_TO_KING
     script_sound $28
     script_set_flag $0087
     script_end
@@ -5191,7 +5191,7 @@ Script_5DCC:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5DD3:: ; heuristic: event script entry or jump target; C0
     script_sound $65
-    script_command $41
+    script_command SCRIPT_SCENE_EXPLOSION
     script_walk_fast 1, 3, 4
     script_walk_fast 2, 1, 3
     script_slide_y $81
@@ -5205,11 +5205,11 @@ Script_5DD3:: ; heuristic: event script entry or jump target; C0
     script_walk_fast 2, 3, 3
     script_message $034D ; 'That's true I e got to'
     script_walk_fast 1, 1, 4
-    script_command $7E
+    script_command SCRIPT_SCENE_GOT_TO
     script_set_flag $0086
     script_end
 Script_5E02:: ; heuristic: event script entry or jump target; C0
-    script_command $41
+    script_command SCRIPT_SCENE_EXPLOSION
     script_walk_fast 1, 3, 4
     script_walk_fast 2, 1, 3
     script_slide_y $81
@@ -5223,18 +5223,18 @@ Script_5E02:: ; heuristic: event script entry or jump target; C0
     script_walk_fast 2, 3, 3
     script_message $034D ; 'That's true I e got to'
     script_walk_fast 1, 1, 4
-    script_command $7E
+    script_command SCRIPT_SCENE_GOT_TO
     script_set_flag $0086
     script_end
 Script_5E2F:: ; heuristic: event script entry or jump target; C0
     script_message $0360 ; '0 tapped on the wall. The'
     script_face $81, 2
-    script_command $43
+    script_command SCRIPT_SCENE_WALL_EXIT
     script_end
 Script_5E37:: ; heuristic: event script entry or jump target; C0
     script_message $0363 ; '0 tapped on the wall. Sound'
     script_face $81, 2
-    script_command $43
+    script_command SCRIPT_SCENE_WALL_EXIT
     script_message $0364 ; 'Kameha That's it! That's the exit!'
     script_walk_fast 1, 2, 3
     script_hide_object $01
@@ -5246,7 +5246,7 @@ Script_5E37:: ; heuristic: event script entry or jump target; C0
     script_hide_object $00
     script_end
 Script_5E5A:: ; heuristic: event script entry or jump target; C0
-    script_command $44
+    script_command SCRIPT_SCENE_REAL_KING
     script_message $0365 ; 'I'm the real King, you fake!'
     script_slide_y $81
     script_message $0366 ; 'What? How dare you, impostor! I'm'
@@ -5254,7 +5254,7 @@ Script_5E5A:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5E67:: ; heuristic: event script entry or jump target; C0
     script_message $0370 ; 'Arrgh, you e ruined my plan'
-    script_command $45
+    script_command SCRIPT_SCENE_PLAN_RUINED
     script_face $81, 2
     script_slide_y $81
     script_message $0374 ; 'Bravo! We're saved! Thank you for'
@@ -5262,7 +5262,7 @@ Script_5E67:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5E77:: ; heuristic: event script entry or jump target; C0
     script_message $0372 ; 'It almost worked to perfection! It's'
-    script_command $45
+    script_command SCRIPT_SCENE_PLAN_RUINED
     script_face $81, 2
     script_slide_y $81
     script_message $0374 ; 'Bravo! We're saved! Thank you for'
@@ -5284,7 +5284,7 @@ Data_010_5E8E:: ; address name
 Script_5E95:: ; heuristic: event script entry or jump target; C0
     script_message $0394 ; '0 read the sign. Come all'
     script_sound $28
-    script_command $64
+    script_command SCRIPT_GATHER_FOLLOWERS
     script_wait 90
     script_walk_fast 3, 2, 4
     script_face $83, 1
@@ -5318,7 +5318,7 @@ Script_5EE6:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5EF5:: ; heuristic: event script entry or jump target; C0
     script_sound $28
-    script_command $46
+    script_command SCRIPT_SCENE_CHEER_YUNA
     script_message $03A2 ; 'King Magnificent! Don't you agree?'
     script_face $80, 1
     script_message $03A3
@@ -5364,11 +5364,11 @@ Script_5F38:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0097
     script_end
 Script_5F4A:: ; heuristic: event script entry or jump target; C0
-    script_command $47
+    script_command SCRIPT_SCENE_SPIRIT_ENVOY_2
     script_end
 Script_5F4C:: ; heuristic: event script entry or jump target; C0
     script_message $0D4C ; '? You startled me I don't'
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_set_flag $009A
     script_end
 Script_5F54:: ; heuristic: event script entry or jump target; C0
@@ -5376,12 +5376,12 @@ Script_5F54:: ; heuristic: event script entry or jump target; C0
     script_set_flag $009A
     script_skip_if_no Script_5F61
     script_message $8AC9 ; 'Oh How terribly disappointing. I'll have'
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_end
 Script_5F61:: ; heuristic: event script entry or jump target; C0
     script_message $8AB6 ; 'You will? Thank you! Let me'
     script_set_flag $009B
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_message $0AB7 ; '0 obtained YunaSoul.'
     script_end
 Script_5F6C:: ; heuristic: event script entry or jump target; C0
@@ -5389,32 +5389,32 @@ Script_5F6C:: ; heuristic: event script entry or jump target; C0
     script_set_flag $009A
     script_skip_if_no Script_5F79
     script_message $8AC9 ; 'Oh How terribly disappointing. I'll have'
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_end
 Script_5F79:: ; heuristic: event script entry or jump target; C0
     script_message $8AC8 ; 'You will? Thank you! Let me'
     script_end
 Script_5F7D:: ; heuristic: event script entry or jump target; C0
     script_message $0D4D ; 'I don't remember who I am,'
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_end
 Script_5F82:: ; heuristic: event script entry or jump target; C0
     script_message $4ACA ; 'I don't remember who I am,'
     script_skip_if_no Script_5F8C
     script_message $8AC9 ; 'Oh How terribly disappointing. I'll have'
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_end
 Script_5F8C:: ; heuristic: event script entry or jump target; C0
     script_message $8AB6 ; 'You will? Thank you! Let me'
     script_set_flag $009B
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_message $0AB7 ; '0 obtained YunaSoul.'
     script_end
 Script_5F97:: ; heuristic: event script entry or jump target; C0
     script_message $4ACA ; 'I don't remember who I am,'
     script_skip_if_no Script_5FA1
     script_message $8AC9 ; 'Oh How terribly disappointing. I'll have'
-    script_command $32
+    script_command SCRIPT_GIVE_ITEM_BLINK
     script_end
 Script_5FA1:: ; heuristic: event script entry or jump target; C0
     script_message $8AC8 ; 'You will? Thank you! Let me'
@@ -5422,37 +5422,37 @@ Script_5FA1:: ; heuristic: event script entry or jump target; C0
 Script_5FA5:: ; heuristic: event script entry or jump target; C0
     script_message $0D3C ; '!'
     script_message $0AD1 ; 'STOP DON T MEDDLE'
-    script_command $48
+    script_command SCRIPT_SCENE_PRINCESS_MEDICINE
     script_end
 Script_5FAD:: ; heuristic: event script entry or jump target; C0
     script_message $03A3
     script_message $0DD2 ; 'The princess did not reply. But'
     script_message $0AD3 ; 'FOOLHARDY. BRAVE BUT FOOLISH.'
-    script_command $48
+    script_command SCRIPT_SCENE_PRINCESS_MEDICINE
     script_end
 Script_5FB8:: ; heuristic: event script entry or jump target; C0
     script_message $0AEA ; 'Pardon me? You have medicine? This'
     script_walk 2, 1, 2
     script_hide_object $02
     script_hold_dpad $01, 3
-    script_command $49
+    script_command SCRIPT_SCENE_MEDICINE_GIVEN
     script_set_flag $01F1
     script_end
 Script_5FC9:: ; heuristic: event script entry or jump target; C0
-    script_command $66
+    script_command SCRIPT_SCENE_SHIELD_GUARDIAN
     script_end
 Script_5FCB:: ; heuristic: event script entry or jump target; C0
-    script_command $66
+    script_command SCRIPT_SCENE_SHIELD_GUARDIAN
     script_end
 Script_5FCD:: ; heuristic: event script entry or jump target; C0
     script_message $0A01 ; '0 checked the shield.'
-    script_command $4A
+    script_command SCRIPT_SCENE_SHIELD
     script_end
 Script_5FD2:: ; heuristic: event script entry or jump target; C0
-    script_command $4A
+    script_command SCRIPT_SCENE_SHIELD
     script_end
 Script_5FD4:: ; heuristic: event script entry or jump target; C0
-    script_command $4B
+    script_command SCRIPT_SCENE_SHIELD_2
     script_end
 Script_5FD6:: ; heuristic: event script entry or jump target; C0
     script_message $4820 ; 'How may our church serve you?'
@@ -5466,7 +5466,7 @@ Script_5FDD:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0080
     script_end
 Script_5FE6:: ; heuristic: event script entry or jump target; C0
-    script_command $7F
+    script_command SCRIPT_SCENE_CHEST_SERVANT
     script_end
 Script_5FE8:: ; heuristic: event script entry or jump target; C0
     script_message $442E ; 'How may we serve your mortal'
@@ -5476,17 +5476,17 @@ Script_5FE8:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5FEF:: ; heuristic: event script entry or jump target; C0
     script_message $040B ; '0 checked the grave. There was'
-    script_command $4E
+    script_command SCRIPT_SCENE_GRAVE
     script_set_flag $00A0
     script_end
 Script_5FF7:: ; heuristic: event script entry or jump target; C0
     script_message $040B ; '0 checked the grave. There was'
-    script_command $4E
+    script_command SCRIPT_SCENE_GRAVE
     script_end
 Script_5FFC:: ; heuristic: event script entry or jump target; C0
     script_message $0411 ; 'Fine! You e done well to'
     script_sound $66
-    script_command $4F
+    script_command SCRIPT_SET_TILES_D2
     script_end
 Script_6003:: ; heuristic: event script entry or jump target; C0
 Data_010_6003:: ; address name
@@ -5498,7 +5498,7 @@ Data_010_6003:: ; address name
 Script_600A:: ; heuristic: event script entry or jump target; C0
     script_message $0412 ; 'Kweeeeh!'
     script_message $0DE6 ; 'Look! A MadCondor! It has something!'
-    script_command $50
+    script_command SCRIPT_SCENE_MADCONDOR
     script_set_flag $00A4
     script_end
 Script_6015:: ; heuristic: event script entry or jump target; C0
@@ -5544,7 +5544,7 @@ Data_010_6048:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_604F:: ; heuristic: event script entry or jump target; C0
     script_message $0433 ; 'Kweeeeeh!'
-    script_command $51
+    script_command SCRIPT_SCENE_MADCONDOR_CRY
     script_encounter $05
     script_set_flag $00A8
     script_end
@@ -5584,7 +5584,7 @@ Script_6083:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6091:: ; heuristic: event script entry or jump target; C0
     script_message $045A ; '0 checked the small hole. It'
-    script_command $52
+    script_command SCRIPT_SCENE_SMALL_HOLE
     script_end
 Script_6096:: ; heuristic: event script entry or jump target; C0
     script_message $045D ; 'You can take this treasure, but'
@@ -5595,7 +5595,7 @@ Script_6096:: ; heuristic: event script entry or jump target; C0
     script_walk 0, 3, 2
     script_hide_object $00
     script_set_flag $00AE
-    script_command $CE
+    script_command SCRIPT_HIDE_SPRITES
     script_end
 Script_60B0:: ; heuristic: event script entry or jump target; C0
     script_message $045E ; 'I'm up for your challenge anytime!'
@@ -5605,19 +5605,19 @@ Script_60B0:: ; heuristic: event script entry or jump target; C0
     script_walk 0, 3, 2
     script_hide_object $00
     script_set_flag $00AE
-    script_command $CE
+    script_command SCRIPT_HIDE_SPRITES
     script_end
 Script_60C7:: ; heuristic: event script entry or jump target; C0
     script_message $0460 ; 'Let the power of justice smite'
     script_encounter $07
-    script_command $67
+    script_command SCRIPT_SCENE_JUSTICE_2
     script_end
 Script_60CE:: ; heuristic: event script entry or jump target; C0
-    script_command $53
+    script_command SCRIPT_SCENE_JUSTICE
     script_end
 Script_60D0:: ; heuristic: event script entry or jump target; C0
     script_sound $9B
-    script_command $54
+    script_command SCRIPT_SCENE_GRAVESTONE
     script_end
 Script_60D4:: ; heuristic: event script entry or jump target; C0
     script_message $4464 ; '0 checked the gravestone. There was'
@@ -5628,7 +5628,7 @@ Script_60DD:: ; heuristic: event script entry or jump target; C0
     script_sound $66
     script_wait 60
     script_message $8465 ; 'A door opened somewhere'
-    script_command $55
+    script_command SCRIPT_SET_FLAG_322
     script_set_flag $00B2
     script_end
 Script_60EA:: ; heuristic: event script entry or jump target; C0
@@ -5636,7 +5636,7 @@ Script_60EA:: ; heuristic: event script entry or jump target; C0
     script_set_flag $00B3
     script_encounter $08
     script_message $0468 ; 'You e beaten me fairly Take'
-    script_command $56
+    script_command SCRIPT_SCENE_BEATEN_FAIRLY
     script_set_flag $00B4
     script_set_flag $00C5
     script_set_flag $00C6
@@ -5646,7 +5646,7 @@ Script_6103:: ; heuristic: event script entry or jump target; C0
     script_message $0467 ; 'Wahahahah! Here again, are you? I'
     script_encounter $08
     script_message $0468 ; 'You e beaten me fairly Take'
-    script_command $56
+    script_command SCRIPT_SCENE_BEATEN_FAIRLY
     script_set_flag $00B4
     script_set_flag $00C5
     script_set_flag $00C6
@@ -5660,12 +5660,12 @@ Script_6119:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6126:: ; heuristic: event script entry or jump target; C0
     script_message $0471 ; 'I'm surprised anyone managed to find'
-    script_command $68
+    script_command SCRIPT_SCENE_FOUND_ME
     script_face $80, 0
     script_set_flag $00B8
     script_end
 Script_6131:: ; heuristic: event script entry or jump target; C0
-    script_command $69
+    script_command SCRIPT_SCENE_FOUND_ME_BATTLE
     script_end
 Script_6133:: ; heuristic: event script entry or jump target; C0
     script_message $047A ; 'Ah, so good of you to'
@@ -5674,12 +5674,12 @@ Script_6133:: ; heuristic: event script entry or jump target; C0
     script_message $847D ; '0 handed over the Heaven Sword.'
     script_message $047E ; 'Good. You have brought the three'
     script_set_flag $00C0
-    script_command $57
+    script_command SCRIPT_SCENE_THREE_ITEMS_BATTLE
     script_set_flag $00C1
     script_end
 Script_614A:: ; heuristic: event script entry or jump target; C0
     script_message $047F ; 'Fwahahaha! Don't you ever give up?'
-    script_command $57
+    script_command SCRIPT_SCENE_THREE_ITEMS_BATTLE
     script_set_flag $00C1
     script_end
 Script_6152:: ; heuristic: event script entry or jump target; C0
@@ -5700,7 +5700,7 @@ Script_6152:: ; heuristic: event script entry or jump target; C0
     script_wait 20
     script_face $80, 0
     script_message $0482 ; 'Kameha If the three items that'
-    script_command $58
+    script_command SCRIPT_SCENE_THREE_ITEMS
     script_end
 Script_618B:: ; heuristic: event script entry or jump target; C0
     script_sound $65
@@ -5710,7 +5710,7 @@ Script_618B:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6198:: ; heuristic: event script entry or jump target; C0
     script_message $04A7 ; 'This way Here Here'
-    script_command $7D
+    script_command SCRIPT_SCENE_THIS_WAY
     script_end
 Script_619D:: ; heuristic: event script entry or jump target; C0
     script_message $4550 ; 'I heard from Lord Darck, but'
@@ -5729,7 +5729,7 @@ Script_61B3:: ; heuristic: event script entry or jump target; C0
     script_message $8551 ; 'Surprisingly obedient, are you? Hand over'
     script_message $0552 ; '0 handed over the TidalBell. 0'
     script_face $80, 2
-    script_command $5C
+    script_command SCRIPT_TAKE_ITEM
     script_message $0553 ; 'Take these to Lord Darck now.'
     script_walk 1, 2, 5
     script_wait 30
@@ -5739,14 +5739,14 @@ Script_61B3:: ; heuristic: event script entry or jump target; C0
     script_set_flag $00D2
     script_encounter $1D
     script_message $0556 ; 'N No How could my monsters'
-    script_command $5D
+    script_command SCRIPT_SCENE_DARCK_TAUNT
     script_set_flag $00D3
     script_end
 Script_61DC:: ; heuristic: event script entry or jump target; C0
     script_message $0555 ; 'You seem to still not realize'
     script_encounter $1D
     script_message $0556 ; 'N No How could my monsters'
-    script_command $5D
+    script_command SCRIPT_SCENE_DARCK_TAUNT
     script_set_flag $00D3
     script_end
 Script_61E9:: ; heuristic: event script entry or jump target; C0
@@ -5754,17 +5754,17 @@ Script_61E9:: ; heuristic: event script entry or jump target; C0
     script_set_flag $00D0
     script_encounter $0A
     script_message $0559 ; 'Darck Wha What? How could I'
-    script_command $5E
+    script_command SCRIPT_SCENE_DARCK_DEFEATED
     script_end
 Script_61F6:: ; heuristic: event script entry or jump target; C0
     script_message $0558 ; 'Darck Fwahahahah! Bravo! Splendid! You e'
     script_encounter $0A
     script_message $0559 ; 'Darck Wha What? How could I'
-    script_command $5E
+    script_command SCRIPT_SCENE_DARCK_DEFEATED
     script_end
 Script_6200:: ; heuristic: event script entry or jump target; C0
     script_face $80, 0
-    script_command $CC
+    script_command SCRIPT_SCENE_CYAL_SHINE
     script_walk 0, 2, 5
     script_set_flag $0140
     script_end
@@ -5776,7 +5776,7 @@ Script_620C:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6218:: ; heuristic: event script entry or jump target; C0
     script_message $0710 ; 'Well, well, a human here is'
-    script_command $C0
+    script_command SCRIPT_SCENE_ROLT_ELDER
     script_message $0711 ; 'Rolt That was fast, 0. I'
     script_slide_y $82
     script_message $0712 ; 'Cyal 0, let's play! I want'
@@ -5785,7 +5785,7 @@ Script_6218:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_622C:: ; heuristic: event script entry or jump target; C0
     script_message $0713 ; 'I'm the village's elder. What's that?'
-    script_command $C0
+    script_command SCRIPT_SCENE_ROLT_ELDER
     script_message $0711 ; 'Rolt That was fast, 0. I'
     script_slide_y $82
     script_message $0712 ; 'Cyal 0, let's play! I want'
@@ -5828,14 +5828,14 @@ Script_6290:: ; heuristic: event script entry or jump target; C0
     script_set_flag $014A
     script_encounter $09
     script_message $0754 ; 'Too strong Arroooh!'
-    script_command $C1
+    script_command SCRIPT_SCENE_TOO_STRONG
     script_set_flag $014B
     script_end
 Script_62A0:: ; heuristic: event script entry or jump target; C0
     script_message $0727 ; 'You e come back again, ruff?'
     script_encounter $09
     script_message $0754 ; 'Too strong Arroooh!'
-    script_command $C1
+    script_command SCRIPT_SCENE_TOO_STRONG
     script_set_flag $014B
     script_end
 Script_62AD:: ; heuristic: event script entry or jump target; C0
@@ -5849,7 +5849,7 @@ Script_62BD:: ; heuristic: event script entry or jump target; C0
     script_message $4739 ; 'The human in the forest again?'
     script_encounter $0B
     script_message $073B ; 'Wh-what? I Lost to a child?'
-    script_command $C3
+    script_command SCRIPT_KEY_BOSS_BEATEN
     script_message $073C ; 'Rolt Wow 0, you're tough. Oh!'
     script_walk_fast 2, 3, 1
     script_walk_fast 2, 2, 1
@@ -5872,7 +5872,7 @@ Script_62BD:: ; heuristic: event script entry or jump target; C0
     script_message $0740 ; 'Rolt 0, I'm sorry we put'
     script_set_flag $0151
     script_set_flag $0203
-    script_command $C6
+    script_command SCRIPT_SCENE_CYAL_ROLT
     script_face $80, 3
     script_message $0741 ; 'I'm glad that Cyal and Rolt'
     script_end
@@ -5880,7 +5880,7 @@ Script_6313:: ; heuristic: event script entry or jump target; C0
     script_message $073A ; 'What, you again? Rude, rude, rude!'
     script_encounter $0B
     script_message $073B ; 'Wh-what? I Lost to a child?'
-    script_command $C3
+    script_command SCRIPT_KEY_BOSS_BEATEN
     script_message $073C ; 'Rolt Wow 0, you're tough. Oh!'
     script_walk_fast 2, 3, 1
     script_walk_fast 2, 2, 1
@@ -5903,7 +5903,7 @@ Script_6313:: ; heuristic: event script entry or jump target; C0
     script_message $0740 ; 'Rolt 0, I'm sorry we put'
     script_set_flag $0151
     script_set_flag $0203
-    script_command $C6
+    script_command SCRIPT_SCENE_CYAL_ROLT
     script_face $80, 3
     script_message $0741 ; 'I'm glad that Cyal and Rolt'
     script_end
@@ -5912,7 +5912,7 @@ Script_6369:: ; heuristic: event script entry or jump target; C0
     script_message $0735 ; 'Kikiki, what just you? That's utterly'
     script_message $0736 ; 'Rolt Shut up! Give back Cyal!'
     script_walk_fast 2, 2, 2
-    script_command $C2
+    script_command SCRIPT_SCENE_GIVE_BACK_CYAL
     script_set_flag $014F
     script_end
 Script_637B:: ; heuristic: event script entry or jump target; C0
@@ -5998,14 +5998,14 @@ Script_6409:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6416:: ; heuristic: event script entry or jump target; C0
     script_message $076B ; '0 peered into the barrel. There'
-    script_command $C4
+    script_command SCRIPT_SCENE_BARREL
     script_end
 Script_641B:: ; heuristic: event script entry or jump target; C0
     script_message $077D ; 'Kiral Ah! Back! Is Rob-N Did'
     script_message $077E ; '0 handed over the blue stone.'
     script_message $077F ; 'Kiral This stone, the WizStone, it'
     script_walk_fast 0, 1, 3
-    script_command $C5
+    script_command SCRIPT_SCENE_WIZSTONE
     script_set_flag $0165
     script_set_flag $0204
     script_end
@@ -6064,7 +6064,7 @@ Script_648A:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_648E:: ; heuristic: event script entry or jump target; C0
     script_message $07B6 ; 'This pendant is yours for 38,000G'
-    script_command $C7
+    script_command SCRIPT_SCENE_PENDANT_SELLER
     script_set_flag $01B9
     script_end
 Script_6496:: ; heuristic: event script entry or jump target; C0
@@ -6072,14 +6072,14 @@ Script_6496:: ; heuristic: event script entry or jump target; C0
     script_message $07B9 ; 'You're going to regret seeing us.'
     script_encounter $11
     script_message $07BC ; 'Please! Mercy! Spare us! Take back'
-    script_command $C8
+    script_command SCRIPT_SCENE_MERCY
     script_set_flag $01BB
     script_end
 Script_64A6:: ; heuristic: event script entry or jump target; C0
     script_message $07BB ; 'We'll smash you as often as'
     script_encounter $11
     script_message $07BC ; 'Please! Mercy! Spare us! Take back'
-    script_command $C8
+    script_command SCRIPT_SCENE_MERCY
     script_set_flag $01BB
     script_end
 Script_64B3:: ; heuristic: event script entry or jump target; C0
@@ -6113,7 +6113,7 @@ Script_64E3:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_64ED:: ; heuristic: event script entry or jump target; C0
     script_message $07DA ; 'What? Where I get my wares?'
-    script_command $C7
+    script_command SCRIPT_SCENE_PENDANT_SELLER
     script_walk_fast 1, 0, 2
     script_walk_fast 1, 1, 1
     script_walk_fast 1, 0, 4
@@ -6121,7 +6121,7 @@ Script_64ED:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6501:: ; heuristic: event script entry or jump target; C0
     script_message $07DC ; 'Milayou I thought this forest looked'
-    script_command $C9
+    script_command SCRIPT_SCENE_MILAYOU_FOREST
     script_set_flag $01C1
     script_end
 Script_6509:: ; heuristic: event script entry or jump target; C0
@@ -6129,7 +6129,7 @@ Script_6509:: ; heuristic: event script entry or jump target; C0
     script_message $0CDE ; 'What is it, you little brat?'
     script_encounter $12
     script_message $0CE0 ; 'But No! I lost to this'
-    script_command $CA
+    script_command SCRIPT_KEY_BOSS_BEATEN_2
     script_walk 1, 2, 2
     script_face $00, 0
     script_message $0CE1 ; 'Milayou You are really special. I'
@@ -6142,7 +6142,7 @@ Script_652C:: ; heuristic: event script entry or jump target; C0
     script_message $0CDF ; 'What is it, you little brat?'
     script_encounter $12
     script_message $0CE0 ; 'But No! I lost to this'
-    script_command $CA
+    script_command SCRIPT_KEY_BOSS_BEATEN_2
     script_walk 1, 2, 2
     script_face $00, 0
     script_message $0CE1 ; 'Milayou You are really special. I'
@@ -6187,14 +6187,14 @@ Script_6581:: ; heuristic: event script entry or jump target; C0
 Script_6595:: ; heuristic: event script entry or jump target; C0
     script_message $0C48 ; '0 checked the treasure chest. The'
     script_encounter $32
-    script_command $74
+    script_command SCRIPT_SET_FLAG_REDRAW
     script_end
 Script_659C:: ; heuristic: event script entry or jump target; C0
-    script_command $CB
+    script_command SCRIPT_SCENE_CHEST_BATTLE
     script_end
 Script_659E:: ; heuristic: event script entry or jump target; C0
     script_message $0C49 ; '0 checked the treasure chest. It'
-    script_command $CD
+    script_command SCRIPT_SCENE_YOU_DID_IT
     script_end
 Script_65A3:: ; heuristic: event script entry or jump target; C0
     script_message $4123 ; 'Warubou Wa-hey! You did it, 0!'

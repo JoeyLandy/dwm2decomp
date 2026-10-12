@@ -667,7 +667,7 @@
   },
   "DAAC": {
     "name": "wQueuedActionId",
-    "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (Func_036_4A38_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)",
+    "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (ResolveStepDamageMessage_Sub04_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)",
     "evidence": "reading (E-0049)"
   },
   "D80C": {
@@ -3377,12 +3377,12 @@
   },
   "D080": {
     "of": "D000",
-    "note": "attribute rectangle copied by Func_003_4FBB_Case02 (row 6, column 8)",
+    "note": "attribute rectangle copied by PauseMenu_Main_Case03_Case01_Sub01_Case02 (row 6, column 8)",
     "evidence": "E-0136"
   },
   "D100": {
     "of": "D000",
-    "note": "attribute rectangle copied by Func_003_4FBB_Case02 (row 12, column 16)",
+    "note": "attribute rectangle copied by PauseMenu_Main_Case03_Case01_Sub01_Case02 (row 12, column 16)",
     "evidence": "E-0136"
   },
   "D104": {
@@ -3470,7 +3470,7 @@
   },
   "D05A": {
     "name": "wLinkSeedCopy",
-    "note": "11 bytes copied from wRandomSeed2Hi onward at the start of a link exchange (Func_033_5215_Table2_Case05_Case0D)",
+    "note": "11 bytes copied from wRandomSeed2Hi onward at the start of a link exchange (RunLinkExchangeState_450D_Case01_Sub01_Table2_Case05_Case0D)",
     "evidence": "E-0136",
     "size": "B"
   },
@@ -3556,7 +3556,7 @@
   },
   "D093": {
     "name": "wBattleByte93",
-    "note": "battle byte tested by Func_031_67AA_Case09_Case00",
+    "note": "battle byte tested by BattleEnd_Step4_Sub02_Case09_Case00",
     "evidence": "E-0136"
   },
   "D095": {
@@ -4690,7 +4690,7 @@
   },
   "DAB2": {
     "name": "wResolveFlagB2",
-    "note": "resolve flag (bit 0 skips the action text in Func_032_5820_Case02)",
+    "note": "resolve flag (bit 0 skips the action text in RunBattleStep4_Case00_Sub01_Case02)",
     "evidence": "E-0137"
   },
   "DAB3": {
@@ -4755,7 +4755,7 @@
   },
   "DAC9": {
     "name": "wSavedActorTarget",
-    "note": "actor and target saved by Func_032_5820_Case00",
+    "note": "actor and target saved by RunBattleStep4_Case00_Sub01_Case00",
     "evidence": "E-0137"
   },
   "DAD1": {
@@ -5045,7 +5045,7 @@
   },
   "C53F": {
     "name": "wPlayerNameText",
-    "note": "the player name copied with a $F0 terminator for text output (Func_000_2950_Case16)",
+    "note": "the player name copied with a $F0 terminator for text output (StepStringDisplayUntilDone_Sub01_Sub02_Case16)",
     "evidence": "E-0137"
   },
   "C570": {

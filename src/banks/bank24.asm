@@ -143,7 +143,7 @@ Jump_024_40EA::
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 6
-; 2 call sites from 2 routines (e.g. RunGameModeUpdate_Case06, Func_0F0_4CA0_Case0A_Case21)
+; 2 call sites from 2 routines (e.g. RunGameModeUpdate_Case06, RunLinkExchangeState_457B_Case01_Sub01_Case0A_Case21)
 ; reads: wFadeState, wTextFlags, wScreenState, wScreenStep, wScreenSubStep
 GameMode6_Update::
 Func_024_4117:: ; address name
@@ -2343,7 +2343,7 @@ Func_024_4EE8:: ; address name
     ret
 
 ; HL = wCA2C, then copies up to 10 name bytes to wC130 with a $F0 terminator (E-0124)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case05, Func_024_5553_Case08)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case05, GameMode6_Update_Case02_Case0E_Sub01_Case08)
 ; points at: wTextBuf0
 CopyWCA2CNameToTextBuf0::
 Func_024_4F0C:: ; address name
@@ -2351,7 +2351,7 @@ Func_024_4F0C:: ; address name
     jp Jump_024_4F15
 
 ; copies up to 10 name bytes from wC987 (stopping at $F0) to wC130 with a $F0 terminator (E-0124)
-; 1 call site from 1 routine (e.g. Func_024_5434_Case08)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case03_Case01_Sub01_Case08)
 ; points at: wTextBuf0
 CopyWC987NameToTextBuf0::
 Func_024_4F12:: ; address name
@@ -3118,26 +3118,26 @@ GameMode6_Update_Case03_Case01_Sub01::
 Func_024_5434:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw Func_024_5434_Case00
-    dw Func_024_5434_Case01
-    dw Func_024_5434_Case00
-    dw Func_024_5434_Case03
-    dw Func_024_5434_Case00
-    dw Func_024_5434_Case05
-    dw Func_024_5434_Case00
-    dw Func_024_5434_Case07
-    dw Func_024_5434_Case08
-    dw Func_024_5434_Case00
-    dw Func_024_5434_Case00
-    dw Func_024_5434_Case0B
-    dw Func_024_5434_Case0C
-    dw Func_024_5434_Case0D
+    dw GameMode6_Update_Case03_Case01_Sub01_Case00
+    dw GameMode6_Update_Case03_Case01_Sub01_Case01
+    dw GameMode6_Update_Case03_Case01_Sub01_Case00
+    dw GameMode6_Update_Case03_Case01_Sub01_Case03
+    dw GameMode6_Update_Case03_Case01_Sub01_Case00
+    dw GameMode6_Update_Case03_Case01_Sub01_Case05
+    dw GameMode6_Update_Case03_Case01_Sub01_Case00
+    dw GameMode6_Update_Case03_Case01_Sub01_Case07
+    dw GameMode6_Update_Case03_Case01_Sub01_Case08
+    dw GameMode6_Update_Case03_Case01_Sub01_Case00
+    dw GameMode6_Update_Case03_Case01_Sub01_Case00
+    dw GameMode6_Update_Case03_Case01_Sub01_Case0B
+    dw GameMode6_Update_Case03_Case01_Sub01_Case0C
+    dw GameMode6_Update_Case03_Case01_Sub01_Case0D
 
 ; entry 1 of the `rst $00` table in Func_024_5434
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wObject2, wScreenSubStep
 ; writes: wObject2, wSpriteSlots, wScreenSubStep
-Func_024_5434_Case01::
+GameMode6_Update_Case03_Case01_Sub01_Case01::
 Jump_024_5454:: ; address name
     ld a, [wSpriteSlots + $9]
     and a, $03
@@ -3160,7 +3160,7 @@ Jump_024_5454:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep
-Func_024_5434_Case00::
+GameMode6_Update_Case03_Case01_Sub01_Case00::
 Jump_024_5474:: ; address name
     ld a, [wScreenCounter]
     inc a
@@ -3178,7 +3178,7 @@ Jump_024_5474:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject1, wScreenSubStep
-Func_024_5434_Case03::
+GameMode6_Update_Case03_Case01_Sub01_Case03::
 Jump_024_548A:: ; address name
     ld a, [wObject1 + $9]
     and a, $03
@@ -3198,7 +3198,7 @@ Jump_024_548A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wScreenSubStep
 ; writes: wObject5, wScreenSubStep
-Func_024_5434_Case05::
+GameMode6_Update_Case03_Case01_Sub01_Case05::
 Jump_024_54A3:: ; address name
     ld a, [wRecordBufB + $6E]
     and a, a
@@ -3216,7 +3216,7 @@ Jump_024_54AE::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wObject2, wScreenSubStep
 ; writes: wObject2, wScreenSubStep
-Func_024_5434_Case07::
+GameMode6_Update_Case03_Case01_Sub01_Case07::
 Jump_024_54B6:: ; address name
     ld a, [wRecordBufB + $6E]
     and a, a
@@ -3243,7 +3243,7 @@ Jump_024_54D2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep
-Func_024_5434_Case08::
+GameMode6_Update_Case03_Case01_Sub01_Case08::
 Jump_024_54DA:: ; address name
     call CopyWC987NameToTextBuf0
     ld a, $03
@@ -3257,7 +3257,7 @@ Jump_024_54DA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject5, wObject1, wScreenSubStep
-Func_024_5434_Case0B::
+GameMode6_Update_Case03_Case01_Sub01_Case0B::
 Jump_024_54EA:: ; address name
     xor a, a
     ld [wObject5], a
@@ -3281,7 +3281,7 @@ Jump_024_54EA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wObject2, wScreenSubStep
 ; writes: wObject2, wObject1, wScreenSubStep
-Func_024_5434_Case0C::
+GameMode6_Update_Case03_Case01_Sub01_Case0C::
 Jump_024_550C:: ; address name
     ld a, $03
     ld [wObject2 + $7], a
@@ -3306,7 +3306,7 @@ Jump_024_550C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenStep
 ; writes: wSpriteSlots, wScreenSubStep, wScreenStep
-Func_024_5434_Case0D::
+GameMode6_Update_Case03_Case01_Sub01_Case0D::
 Jump_024_5531:: ; address name
     ld a, $01
     ld [wSpriteSlots + $7], a
@@ -3333,26 +3333,26 @@ GameMode6_Update_Case02_Case0E_Sub01::
 Func_024_5553:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw Func_024_5553_Case00
-    dw Func_024_5553_Case01
-    dw Func_024_5553_Case00
-    dw Func_024_5553_Case03
-    dw Func_024_5553_Case00
-    dw Func_024_5553_Case05
-    dw Func_024_5553_Case00
-    dw Func_024_5553_Case07
-    dw Func_024_5553_Case08
-    dw Func_024_5553_Case00
-    dw Func_024_5553_Case00
-    dw Func_024_5553_Case0B
-    dw Func_024_5553_Case0C
-    dw Func_024_5553_Case0D
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case00
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case01
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case00
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case03
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case00
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case05
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case00
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case07
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case08
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case00
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case00
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case0B
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case0C
+    dw GameMode6_Update_Case02_Case0E_Sub01_Case0D
 
 ; entry 1 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wSpriteSlots, wScreenSubStep
-Func_024_5553_Case01::
+GameMode6_Update_Case02_Case0E_Sub01_Case01::
 Jump_024_5573:: ; address name
     ld a, [wSpriteSlots + $9]
     and a, $03
@@ -3374,7 +3374,7 @@ Jump_024_5573:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wObject2, wScreenSubStep
 ; writes: wObject2, wObject1, wScreenSubStep
-Func_024_5553_Case03::
+GameMode6_Update_Case02_Case0E_Sub01_Case03::
 Jump_024_5591:: ; address name
     ld a, [wObject1 + $9]
     and a, $03
@@ -3397,7 +3397,7 @@ Jump_024_5591:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep
-Func_024_5553_Case00::
+GameMode6_Update_Case02_Case0E_Sub01_Case00::
 Jump_024_55B1:: ; address name
     ld a, [wScreenCounter]
     inc a
@@ -3415,7 +3415,7 @@ Jump_024_55B1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wScreenSubStep
 ; writes: wObject5, wScreenSubStep
-Func_024_5553_Case05::
+GameMode6_Update_Case02_Case0E_Sub01_Case05::
 Jump_024_55C7:: ; address name
     ld a, [wRecordBufB + $6E]
     and a, a
@@ -3433,7 +3433,7 @@ Jump_024_55D2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wObject2, wScreenSubStep
 ; writes: wObject2, wScreenSubStep
-Func_024_5553_Case07::
+GameMode6_Update_Case02_Case0E_Sub01_Case07::
 Jump_024_55DA:: ; address name
     ld a, [wRecordBufB + $6E]
     and a, a
@@ -3462,7 +3462,7 @@ Jump_024_55FB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep
-Func_024_5553_Case08::
+GameMode6_Update_Case02_Case0E_Sub01_Case08::
 Jump_024_5603:: ; address name
     call CopyWCA2CNameToTextBuf0
     ld a, $04
@@ -3476,7 +3476,7 @@ Jump_024_5603:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject1, wScreenSubStep
-Func_024_5553_Case0B::
+GameMode6_Update_Case02_Case0E_Sub01_Case0B::
 Jump_024_5613:: ; address name
     ld a, $03
     ld [wObject1 + $7], a
@@ -3498,7 +3498,7 @@ Jump_024_5613:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wObject5, wSpriteSlots, wScreenSubStep
-Func_024_5553_Case0C::
+GameMode6_Update_Case02_Case0E_Sub01_Case0C::
 Jump_024_5631:: ; address name
     xor a, a
     ld [wObject5], a
@@ -3522,7 +3522,7 @@ Jump_024_5631:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wObject2, wScreenStep
 ; writes: wObject2, wSpriteSlots, wScreenSubStep, wScreenStep
-Func_024_5553_Case0D::
+GameMode6_Update_Case02_Case0E_Sub01_Case0D::
 Jump_024_5653:: ; address name
     ld a, $01
     ld [wObject2 + $7], a
@@ -6067,7 +6067,7 @@ Data_024_6F4E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
 
 ; draws the next glyph of the description of the item at wD7D5[4 * wD7B6 + wD7B5] (text table Data_024_7158), handling the $F0 and $F1 control bytes (E-0131)
-; 1 call site from 1 routine (e.g. Func_01C_6AF7_Case02)
+; 1 call site from 1 routine (e.g. ShopMenu_Shared01_Case02)
 ; reads: wTextCounter6, wScreenState, wItemGridY, wItemGridX, wTextCounter2, wTextCounter1, wCursorBlinkB8, wTextCounter4, ...
 ; writes: wCursorBlinkB8, wTextCounter2, wTextCounter1, wTextCounter3, wTextCounter4, wTextCounter0
 ; points at: wItemGrid

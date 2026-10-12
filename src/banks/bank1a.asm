@@ -1807,7 +1807,7 @@ Jump_01A_60E8::
     ret
 
 ; for record wD868 finds the skills of Data_01A_4FF8 not yet known whose level and stat requirements its stats now meet (E-0131)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case03_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_Case01)
 ; reads: wBattleArg0, hTemp6
 ; writes: hTemp6, hTemp3, hTemp4, hTemp5
 FindNewlyLearnableSkills::
@@ -2264,7 +2264,7 @@ Jump_01A_6318::
     ret
 
 ; hFFC6 = 0 and A = 0 (E-0114)
-; 1 call site from 1 routine (e.g. Func_031_67AA_Case09_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case09_Case01)
 ; writes: hTemp0
 ClearTemp0AndA::
 Func_01A_631A:: ; address name
@@ -2526,7 +2526,7 @@ Data_01A_63F8:: ; address name
     db $10 ; id 31
 
 ; for record wD869 below its level cap: computes the stat gains from its species growth rows (table $6616) into wD095-wD09A (E-0127)
-; 2 call sites from 2 routines (e.g. Func_031_67AA_Case02_Case01, Func_031_67AA_Case07)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_Case02_Case01, BattleEnd_Step4_Sub02_Case07)
 ; reads: wBattleArg1, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wLevelUpGains
 ; points at: wLevelUpGains
@@ -3272,7 +3272,7 @@ Func_01A_72C9:: ; address name
     ret
 
 ; copies a tile from bank $1F to vTiles1 + $6D0, copies rectangle Data_01A_7826 to the screen buffer and plays sound $6C (E-0122)
-; 7 call sites from 7 routines (e.g. Func_016_5D13_Case03, Func_016_6C16_Case00, Func_016_6C16_Case0C, Func_016_6C16_Case10, ...)
+; 7 call sites from 7 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case03, BattleEnd_Step5_Case04_Sub01_Case00, BattleEnd_Step5_Case04_Sub01_Case0C, BattleEnd_Step5_Case04_Sub01_Case10, ...)
 LoadCursorTileAndRect7826::
 Func_01A_72DB:: ; address name
     ld de, Data_01F_4330
@@ -3287,7 +3287,7 @@ Func_01A_72DB:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7848 (E-0115)
-; 3 call sites from 3 routines (e.g. Func_016_5D13_Case0A, Func_016_5D13_Case0F, Func_016_5D13_Case16)
+; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case0A, BattleEnd_Step5_Case01_Case01_Sub01_Case0F, BattleEnd_Step5_Case01_Case01_Sub01_Case16)
 CopyRectRecord7848ToScreenBuffer::
 Func_01A_72F4:: ; address name
     ld hl, TileRect_1A_7848
@@ -3295,7 +3295,7 @@ Func_01A_72F4:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_787E, then QueueSoundEffect $6C (E-0079)
-; 6 call sites from 6 routines (e.g. Func_016_5D13_Case0E, Func_016_5D13_Case11, Func_016_5D13_Case18, Func_016_5D13_Case1B, ...)
+; 6 call sites from 6 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case0E, BattleEnd_Step5_Case01_Case01_Sub01_Case11, BattleEnd_Step5_Case01_Case01_Sub01_Case18, BattleEnd_Step5_Case01_Case01_Sub01_Case1B, ...)
 CopyRectRecord787EAndPlaySound6C::
 Func_01A_72FB:: ; address name
     ld hl, TileRect_1A_787E
@@ -3305,7 +3305,7 @@ Func_01A_72FB:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_78AA (E-0115)
-; 3 call sites from 3 routines (e.g. Func_016_5D13_Case16, Func_016_5D13_Case18, Func_016_5D13_Case1B)
+; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case16, BattleEnd_Step5_Case01_Case01_Sub01_Case18, BattleEnd_Step5_Case01_Case01_Sub01_Case1B)
 CopyRectRecord78AAToScreenBuffer::
 Func_01A_7307:: ; address name
     ld hl, TileRect_1A_78AA
@@ -3321,7 +3321,7 @@ Func_01A_730E:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_796F, then QueueSoundEffect $6C (E-0115)
-; 2 call sites from 2 routines (e.g. Func_016_5D13_Case0C, Func_016_5D13_Case11)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case0C, BattleEnd_Step5_Case01_Case01_Sub01_Case11)
 CopyRectRecord796FToScreenBufferAndPlaySound6C::
 Func_01A_7315:: ; address name
     ld hl, TileRect_1A_796F

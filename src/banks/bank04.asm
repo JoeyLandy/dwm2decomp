@@ -470,7 +470,7 @@ Jump_004_4309::
     ret
 
 ; hFFC6/hFFC7 = graphics number, hFFCA/hFFCB = VRAM destination: with hFFC8 = 0 the source and bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not read) (E-0093)
-; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, LoadPlayerAndFollowerSpriteGraphics, SetupKeyWorldObjectsForMapType_Sub01, ScriptCommand41_Run_Case09, ...)
+; 25 call sites from 15 routines (e.g. LoadPlayerSpriteGraphics, LoadPlayerAndFollowerSpriteGraphics, SetupKeyWorldObjectsForMapType_Sub01, SceneExplosion_Case09, ...)
 ; reads: hTemp2, hTemp0, hTemp1, hTemp4, hTemp5, wIsCGB, hTemp3
 ; points at: wOBJPaletteBuffer
 DecompressGraphicsTemp0ToTemp4::
@@ -3364,7 +3364,7 @@ Func_004_55DF:: ; address name
     ret
 
 ; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)
-; 187 call sites from 129 routines (e.g. MapEventCountKeysAndStartScript5039, Func_004_5616_Case0A, Func_004_5616_Case09, Talk0046_ThanksForComingBy, ...)
+; 187 call sites from 129 routines (e.g. MapEventCountKeysAndStartScript5039, DispatchTalkEvent_Case0A_Sub01_Case0A, DispatchTalkEvent_Case0A_Sub01_Case09, Talk0046_ThanksForComingBy, ...)
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
 StartScriptAtHL_B04::
 Func_004_5603:: ; address name
@@ -3385,32 +3385,32 @@ DispatchTalkEvent_Case0A_Sub01::
 Func_004_5616:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw Func_004_5616_Case00
-    dw Func_004_5616_Case01
-    dw Func_004_5616_Case02
+    dw DispatchTalkEvent_Case0A_Sub01_Case00
+    dw DispatchTalkEvent_Case0A_Sub01_Case01
+    dw DispatchTalkEvent_Case0A_Sub01_Case02
     dw $0000 ; unused index (E-0207)
     dw StartScript4F73AndSetFlag5
     dw StartScript4F7CAndSetFlag06
     dw IfFlag000AStartScript4F9D
     dw Talk0046_ThanksForComingBy
-    dw Func_004_5616_Case08
-    dw Func_004_5616_Case09
-    dw Func_004_5616_Case0A
-    dw Func_004_5616_Case0B
-    dw Func_004_5616_Case0C
-    dw Func_004_5616_Case0D
-    dw Func_004_5616_Case0E
-    dw Func_004_5616_Case0F
-    dw Func_004_5616_Case10
-    dw Func_004_5616_Case11
-    dw Func_004_5616_Case12
-    dw Func_004_5616_Case13
-    dw Func_004_5616_Case14
-    dw Func_004_5616_Case15
-    dw Func_004_5616_Case16
-    dw Func_004_5616_Case17
-    dw Func_004_5616_Case18
-    dw Func_004_5616_Case19
+    dw DispatchTalkEvent_Case0A_Sub01_Case08
+    dw DispatchTalkEvent_Case0A_Sub01_Case09
+    dw DispatchTalkEvent_Case0A_Sub01_Case0A
+    dw DispatchTalkEvent_Case0A_Sub01_Case0B
+    dw DispatchTalkEvent_Case0A_Sub01_Case0C
+    dw DispatchTalkEvent_Case0A_Sub01_Case0D
+    dw DispatchTalkEvent_Case0A_Sub01_Case0E
+    dw DispatchTalkEvent_Case0A_Sub01_Case0F
+    dw DispatchTalkEvent_Case0A_Sub01_Case10
+    dw DispatchTalkEvent_Case0A_Sub01_Case11
+    dw DispatchTalkEvent_Case0A_Sub01_Case12
+    dw DispatchTalkEvent_Case0A_Sub01_Case13
+    dw DispatchTalkEvent_Case0A_Sub01_Case14
+    dw DispatchTalkEvent_Case0A_Sub01_Case15
+    dw DispatchTalkEvent_Case0A_Sub01_Case16
+    dw DispatchTalkEvent_Case0A_Sub01_Case17
+    dw DispatchTalkEvent_Case0A_Sub01_Case18
+    dw DispatchTalkEvent_Case0A_Sub01_Case19
     dw MapEventCountKeysAndStartScript5039
     dw IfFlag00D1Msg0D33_YouSavedUsAll
     dw IfFlag00D1Msg0D34_PleaseEatUpEat
@@ -3423,7 +3423,7 @@ Func_004_5616:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case00::
+DispatchTalkEvent_Case0A_Sub01_Case00::
 Jump_004_5660:: ; address name
     ld de, $0001
     call TestFlagBit
@@ -3439,7 +3439,7 @@ Jump_004_566F::
 
 ; entry 1 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case01::
+DispatchTalkEvent_Case0A_Sub01_Case01::
 Jump_004_5676:: ; address name
     ld hl, Script_4F54
     call StartScriptAtHL_B04
@@ -3447,7 +3447,7 @@ Jump_004_5676:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case02::
+DispatchTalkEvent_Case0A_Sub01_Case02::
 Jump_004_567D:: ; address name
     ld hl, Script_5111
     call StartScriptAtHL_B04
@@ -3552,7 +3552,7 @@ Jump_004_571D::
 
 ; entry 8 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case08::
+DispatchTalkEvent_Case0A_Sub01_Case08::
 Jump_004_5731:: ; address name
     ld hl, $0047
     call StartMessageCommand09HL_B04
@@ -3560,7 +3560,7 @@ Jump_004_5731:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case09::
+DispatchTalkEvent_Case0A_Sub01_Case09::
 Jump_004_5738:: ; address name
     ld hl, Script_5441
     call StartScriptAtHL_B04
@@ -3570,7 +3570,7 @@ Jump_004_5738:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hTemp1, hTemp0
 ; writes: wSpriteSlots, wDataBank
-Func_004_5616_Case0A::
+DispatchTalkEvent_Case0A_Sub01_Case0A::
 Jump_004_573F:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
@@ -3629,7 +3629,7 @@ Jump_004_5795::
 
 ; entry 11 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case0B::
+DispatchTalkEvent_Case0A_Sub01_Case0B::
 Jump_004_57A4:: ; address name
     ld hl, $0233
     call StartMessageCommand09HL_B04
@@ -3637,7 +3637,7 @@ Jump_004_57A4:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case0C::
+DispatchTalkEvent_Case0A_Sub01_Case0C::
 Jump_004_57AB:: ; address name
     ld hl, $0234
     call StartMessageCommand09HL_B04
@@ -3645,7 +3645,7 @@ Jump_004_57AB:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case0D::
+DispatchTalkEvent_Case0A_Sub01_Case0D::
 Jump_004_57B2:: ; address name
     ld hl, $0235
     call StartMessageCommand09HL_B04
@@ -3653,7 +3653,7 @@ Jump_004_57B2:: ; address name
 
 ; entry 14 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case0E::
+DispatchTalkEvent_Case0A_Sub01_Case0E::
 Jump_004_57B9:: ; address name
     ld hl, $0236
     call StartMessageCommand09HL_B04
@@ -3661,7 +3661,7 @@ Jump_004_57B9:: ; address name
 
 ; entry 15 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case0F::
+DispatchTalkEvent_Case0A_Sub01_Case0F::
 Jump_004_57C0:: ; address name
     ld hl, $0237
     call StartMessageCommand09HL_B04
@@ -3669,7 +3669,7 @@ Jump_004_57C0:: ; address name
 
 ; entry 16 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case10::
+DispatchTalkEvent_Case0A_Sub01_Case10::
 Jump_004_57C7:: ; address name
     ld hl, $0238
     call StartMessageCommand09HL_B04
@@ -3677,7 +3677,7 @@ Jump_004_57C7:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case11::
+DispatchTalkEvent_Case0A_Sub01_Case11::
 Jump_004_57CE:: ; address name
     ld hl, $0239
     call StartMessageCommand09HL_B04
@@ -3685,7 +3685,7 @@ Jump_004_57CE:: ; address name
 
 ; entry 18 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case12::
+DispatchTalkEvent_Case0A_Sub01_Case12::
 Jump_004_57D5:: ; address name
     ld hl, $023A
     call StartMessageCommand09HL_B04
@@ -3693,7 +3693,7 @@ Jump_004_57D5:: ; address name
 
 ; entry 19 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case13::
+DispatchTalkEvent_Case0A_Sub01_Case13::
 Jump_004_57DC:: ; address name
     ld hl, $023B
     call StartMessageCommand09HL_B04
@@ -3701,7 +3701,7 @@ Jump_004_57DC:: ; address name
 
 ; entry 20 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case14::
+DispatchTalkEvent_Case0A_Sub01_Case14::
 Jump_004_57E3:: ; address name
     ld hl, $023C
     call StartMessageCommand09HL_B04
@@ -3709,7 +3709,7 @@ Jump_004_57E3:: ; address name
 
 ; entry 21 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case15::
+DispatchTalkEvent_Case0A_Sub01_Case15::
 Jump_004_57EA:: ; address name
     ld hl, $023D
     call StartMessageCommand09HL_B04
@@ -3717,7 +3717,7 @@ Jump_004_57EA:: ; address name
 
 ; entry 22 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case16::
+DispatchTalkEvent_Case0A_Sub01_Case16::
 Jump_004_57F1:: ; address name
     ld hl, $023E
     call StartMessageCommand09HL_B04
@@ -3725,7 +3725,7 @@ Jump_004_57F1:: ; address name
 
 ; entry 23 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case17::
+DispatchTalkEvent_Case0A_Sub01_Case17::
 Jump_004_57F8:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -3741,7 +3741,7 @@ Jump_004_5807::
 
 ; entry 24 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case18::
+DispatchTalkEvent_Case0A_Sub01_Case18::
 Jump_004_580E:: ; address name
     ld hl, $0010
     call StartMessageCommand09HL_B04
@@ -3749,7 +3749,7 @@ Jump_004_580E:: ; address name
 
 ; entry 25 of the `rst $00` table in Func_004_5616
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_5616_Case19::
+DispatchTalkEvent_Case0A_Sub01_Case19::
 Jump_004_5815:: ; address name
     ld hl, $000F
     call StartMessageCommand09HL_B04
@@ -3874,120 +3874,120 @@ DispatchTalkEvent_Case03_Sub01::
 Func_004_58C2:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw Func_004_58C2_Case00
-    dw Func_004_58C2_Case01
-    dw Func_004_58C2_Case02
-    dw Func_004_58C2_Case03
-    dw Func_004_58C2_Case04
-    dw Func_004_58C2_Case05
-    dw Func_004_58C2_Case06
-    dw Func_004_58C2_Case07
-    dw Func_004_58C2_Case08
-    dw Func_004_58C2_Case09
-    dw Func_004_58C2_Case0A
-    dw Func_004_58C2_Case0B
-    dw Func_004_58C2_Case0C
-    dw Func_004_58C2_Case0D
-    dw Func_004_58C2_Case0E
-    dw Func_004_58C2_Case0F
-    dw Func_004_58C2_Case10
-    dw Func_004_58C2_Case11
-    dw Func_004_58C2_Case12
-    dw Func_004_58C2_Case13
-    dw Func_004_58C2_Case14
-    dw Func_004_58C2_Case15
-    dw Func_004_58C2_Case16
-    dw Func_004_58C2_Case17
-    dw Func_004_58C2_Case18
-    dw Func_004_58C2_Case19
-    dw Func_004_58C2_Case1A
-    dw Func_004_58C2_Case1B
-    dw Func_004_58C2_Case1C
-    dw Func_004_58C2_Case1D
-    dw Func_004_58C2_Case1E
-    dw Func_004_58C2_Case1F
-    dw Func_004_58C2_Case20
-    dw Func_004_58C2_Case21
-    dw Func_004_58C2_Case22
-    dw Func_004_58C2_Case23
-    dw Func_004_58C2_Case24
-    dw Func_004_58C2_Case25
-    dw Func_004_58C2_Case26
-    dw Func_004_58C2_Case27
-    dw Func_004_58C2_Case28
-    dw Func_004_58C2_Case29
-    dw Func_004_58C2_Case2A
-    dw Func_004_58C2_Case2B
-    dw Func_004_58C2_Case2C
-    dw Func_004_58C2_Case2D
-    dw Func_004_58C2_Case2E
-    dw Func_004_58C2_Case2F
-    dw Func_004_58C2_Case30
-    dw Func_004_58C2_Case31
-    dw Func_004_58C2_Case32
-    dw Func_004_58C2_Case33
-    dw Func_004_58C2_Case34
-    dw Func_004_58C2_Case35
-    dw Func_004_58C2_Case36
-    dw Func_004_58C2_Case37
-    dw Func_004_58C2_Case38
-    dw Func_004_58C2_Case39
-    dw Func_004_58C2_Case3A
-    dw Func_004_58C2_Case3B
-    dw Func_004_58C2_Case3C
-    dw Func_004_58C2_Case3D
-    dw Func_004_58C2_Case3E
-    dw Func_004_58C2_Case3F
-    dw Func_004_58C2_Case40
-    dw Func_004_58C2_Case41
-    dw Func_004_58C2_Case42
-    dw Func_004_58C2_Case43
-    dw Func_004_58C2_Case44
-    dw Func_004_58C2_Case45
-    dw Func_004_58C2_Case46
-    dw Func_004_58C2_Case47
-    dw Func_004_58C2_Case48
-    dw Func_004_58C2_Case49
-    dw Func_004_58C2_Case4A
-    dw Func_004_58C2_Case4B
-    dw Func_004_58C2_Case4C
-    dw Func_004_58C2_Case4D
-    dw Func_004_58C2_Case4E
-    dw Func_004_58C2_Case4F
-    dw Func_004_58C2_Case50
-    dw Func_004_58C2_Case51
-    dw Func_004_58C2_Case52
-    dw Func_004_58C2_Case53
-    dw Func_004_58C2_Case54
-    dw Func_004_58C2_Case55
-    dw Func_004_58C2_Case56
-    dw Func_004_58C2_Case57
-    dw Func_004_58C2_Case58
-    dw Func_004_58C2_Case59
-    dw Func_004_58C2_Case5A
-    dw Func_004_58C2_Case5B
-    dw Func_004_58C2_Case5C
-    dw Func_004_58C2_Case5D
-    dw Func_004_58C2_Case5E
-    dw Func_004_58C2_Case5F
-    dw Func_004_58C2_Case60
-    dw Func_004_58C2_Case61
-    dw Func_004_58C2_Case62
-    dw Func_004_58C2_Case63
-    dw Func_004_58C2_Case64
-    dw Func_004_58C2_Case65
-    dw Func_004_58C2_Case66
-    dw Func_004_58C2_Case67
-    dw Func_004_58C2_Case68
-    dw Func_004_58C2_Case69
-    dw Func_004_58C2_Case6A
-    dw Func_004_58C2_Case6B
-    dw Func_004_58C2_Case6C
-    dw Func_004_58C2_Case6D
+    dw DispatchTalkEvent_Case03_Sub01_Case00
+    dw DispatchTalkEvent_Case03_Sub01_Case01
+    dw DispatchTalkEvent_Case03_Sub01_Case02
+    dw DispatchTalkEvent_Case03_Sub01_Case03
+    dw DispatchTalkEvent_Case03_Sub01_Case04
+    dw DispatchTalkEvent_Case03_Sub01_Case05
+    dw DispatchTalkEvent_Case03_Sub01_Case06
+    dw DispatchTalkEvent_Case03_Sub01_Case07
+    dw DispatchTalkEvent_Case03_Sub01_Case08
+    dw DispatchTalkEvent_Case03_Sub01_Case09
+    dw DispatchTalkEvent_Case03_Sub01_Case0A
+    dw DispatchTalkEvent_Case03_Sub01_Case0B
+    dw DispatchTalkEvent_Case03_Sub01_Case0C
+    dw DispatchTalkEvent_Case03_Sub01_Case0D
+    dw DispatchTalkEvent_Case03_Sub01_Case0E
+    dw DispatchTalkEvent_Case03_Sub01_Case0F
+    dw DispatchTalkEvent_Case03_Sub01_Case10
+    dw DispatchTalkEvent_Case03_Sub01_Case11
+    dw DispatchTalkEvent_Case03_Sub01_Case12
+    dw DispatchTalkEvent_Case03_Sub01_Case13
+    dw DispatchTalkEvent_Case03_Sub01_Case14
+    dw DispatchTalkEvent_Case03_Sub01_Case15
+    dw DispatchTalkEvent_Case03_Sub01_Case16
+    dw DispatchTalkEvent_Case03_Sub01_Case17
+    dw DispatchTalkEvent_Case03_Sub01_Case18
+    dw DispatchTalkEvent_Case03_Sub01_Case19
+    dw DispatchTalkEvent_Case03_Sub01_Case1A
+    dw DispatchTalkEvent_Case03_Sub01_Case1B
+    dw DispatchTalkEvent_Case03_Sub01_Case1C
+    dw DispatchTalkEvent_Case03_Sub01_Case1D
+    dw DispatchTalkEvent_Case03_Sub01_Case1E
+    dw DispatchTalkEvent_Case03_Sub01_Case1F
+    dw DispatchTalkEvent_Case03_Sub01_Case20
+    dw DispatchTalkEvent_Case03_Sub01_Case21
+    dw DispatchTalkEvent_Case03_Sub01_Case22
+    dw DispatchTalkEvent_Case03_Sub01_Case23
+    dw DispatchTalkEvent_Case03_Sub01_Case24
+    dw DispatchTalkEvent_Case03_Sub01_Case25
+    dw DispatchTalkEvent_Case03_Sub01_Case26
+    dw DispatchTalkEvent_Case03_Sub01_Case27
+    dw DispatchTalkEvent_Case03_Sub01_Case28
+    dw DispatchTalkEvent_Case03_Sub01_Case29
+    dw DispatchTalkEvent_Case03_Sub01_Case2A
+    dw DispatchTalkEvent_Case03_Sub01_Case2B
+    dw DispatchTalkEvent_Case03_Sub01_Case2C
+    dw DispatchTalkEvent_Case03_Sub01_Case2D
+    dw DispatchTalkEvent_Case03_Sub01_Case2E
+    dw DispatchTalkEvent_Case03_Sub01_Case2F
+    dw DispatchTalkEvent_Case03_Sub01_Case30
+    dw DispatchTalkEvent_Case03_Sub01_Case31
+    dw DispatchTalkEvent_Case03_Sub01_Case32
+    dw DispatchTalkEvent_Case03_Sub01_Case33
+    dw DispatchTalkEvent_Case03_Sub01_Case34
+    dw DispatchTalkEvent_Case03_Sub01_Case35
+    dw DispatchTalkEvent_Case03_Sub01_Case36
+    dw DispatchTalkEvent_Case03_Sub01_Case37
+    dw DispatchTalkEvent_Case03_Sub01_Case38
+    dw DispatchTalkEvent_Case03_Sub01_Case39
+    dw DispatchTalkEvent_Case03_Sub01_Case3A
+    dw DispatchTalkEvent_Case03_Sub01_Case3B
+    dw DispatchTalkEvent_Case03_Sub01_Case3C
+    dw DispatchTalkEvent_Case03_Sub01_Case3D
+    dw DispatchTalkEvent_Case03_Sub01_Case3E
+    dw DispatchTalkEvent_Case03_Sub01_Case3F
+    dw DispatchTalkEvent_Case03_Sub01_Case40
+    dw DispatchTalkEvent_Case03_Sub01_Case41
+    dw DispatchTalkEvent_Case03_Sub01_Case42
+    dw DispatchTalkEvent_Case03_Sub01_Case43
+    dw DispatchTalkEvent_Case03_Sub01_Case44
+    dw DispatchTalkEvent_Case03_Sub01_Case45
+    dw DispatchTalkEvent_Case03_Sub01_Case46
+    dw DispatchTalkEvent_Case03_Sub01_Case47
+    dw DispatchTalkEvent_Case03_Sub01_Case48
+    dw DispatchTalkEvent_Case03_Sub01_Case49
+    dw DispatchTalkEvent_Case03_Sub01_Case4A
+    dw DispatchTalkEvent_Case03_Sub01_Case4B
+    dw DispatchTalkEvent_Case03_Sub01_Case4C
+    dw DispatchTalkEvent_Case03_Sub01_Case4D
+    dw DispatchTalkEvent_Case03_Sub01_Case4E
+    dw DispatchTalkEvent_Case03_Sub01_Case4F
+    dw DispatchTalkEvent_Case03_Sub01_Case50
+    dw DispatchTalkEvent_Case03_Sub01_Case51
+    dw DispatchTalkEvent_Case03_Sub01_Case52
+    dw DispatchTalkEvent_Case03_Sub01_Case53
+    dw DispatchTalkEvent_Case03_Sub01_Case54
+    dw DispatchTalkEvent_Case03_Sub01_Case55
+    dw DispatchTalkEvent_Case03_Sub01_Case56
+    dw DispatchTalkEvent_Case03_Sub01_Case57
+    dw DispatchTalkEvent_Case03_Sub01_Case58
+    dw DispatchTalkEvent_Case03_Sub01_Case59
+    dw DispatchTalkEvent_Case03_Sub01_Case5A
+    dw DispatchTalkEvent_Case03_Sub01_Case5B
+    dw DispatchTalkEvent_Case03_Sub01_Case5C
+    dw DispatchTalkEvent_Case03_Sub01_Case5D
+    dw DispatchTalkEvent_Case03_Sub01_Case5E
+    dw DispatchTalkEvent_Case03_Sub01_Case5F
+    dw DispatchTalkEvent_Case03_Sub01_Case60
+    dw DispatchTalkEvent_Case03_Sub01_Case61
+    dw DispatchTalkEvent_Case03_Sub01_Case62
+    dw DispatchTalkEvent_Case03_Sub01_Case63
+    dw DispatchTalkEvent_Case03_Sub01_Case64
+    dw DispatchTalkEvent_Case03_Sub01_Case65
+    dw DispatchTalkEvent_Case03_Sub01_Case66
+    dw DispatchTalkEvent_Case03_Sub01_Case67
+    dw DispatchTalkEvent_Case03_Sub01_Case68
+    dw DispatchTalkEvent_Case03_Sub01_Case69
+    dw DispatchTalkEvent_Case03_Sub01_Case6A
+    dw DispatchTalkEvent_Case03_Sub01_Case6B
+    dw DispatchTalkEvent_Case03_Sub01_Case6C
+    dw DispatchTalkEvent_Case03_Sub01_Case6D
 
 ; entry 0 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case00::
+DispatchTalkEvent_Case03_Sub01_Case00::
 Jump_004_59A2:: ; address name
     ld hl, $0800
     call StartMessageCommand09HL_B04
@@ -3995,7 +3995,7 @@ Jump_004_59A2:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case01::
+DispatchTalkEvent_Case03_Sub01_Case01::
 Jump_004_59A9:: ; address name
     ld hl, $0801
     call StartMessageCommand09HL_B04
@@ -4003,7 +4003,7 @@ Jump_004_59A9:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case02::
+DispatchTalkEvent_Case03_Sub01_Case02::
 Jump_004_59B0:: ; address name
     ld hl, $0802
     call StartMessageCommand09HL_B04
@@ -4011,7 +4011,7 @@ Jump_004_59B0:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case03::
+DispatchTalkEvent_Case03_Sub01_Case03::
 Jump_004_59B7:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4027,7 +4027,7 @@ Jump_004_59C6::
 
 ; entry 4 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case04::
+DispatchTalkEvent_Case03_Sub01_Case04::
 Jump_004_59CD:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4043,7 +4043,7 @@ Jump_004_59DC::
 
 ; entry 5 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case05::
+DispatchTalkEvent_Case03_Sub01_Case05::
 Jump_004_59E3:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4059,7 +4059,7 @@ Jump_004_59F2::
 
 ; entry 6 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case06::
+DispatchTalkEvent_Case03_Sub01_Case06::
 Jump_004_59F9:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4086,7 +4086,7 @@ Jump_004_5A1D::
 ; entry 7 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-Func_004_58C2_Case07::
+DispatchTalkEvent_Case03_Sub01_Case07::
 Jump_004_5A24:: ; address name
     ld a, $04
     ld [wScreenTableIndex], a
@@ -4098,7 +4098,7 @@ Jump_004_5A24:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case08::
+DispatchTalkEvent_Case03_Sub01_Case08::
 Jump_004_5A35:: ; address name
     ld hl, $080A
     call StartMessageCommand09HL_B04
@@ -4106,7 +4106,7 @@ Jump_004_5A35:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case09::
+DispatchTalkEvent_Case03_Sub01_Case09::
 Jump_004_5A3C:: ; address name
     ld hl, $080B
     call StartMessageCommand09HL_B04
@@ -4115,7 +4115,7 @@ Jump_004_5A3C:: ; address name
 ; entry 10 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case0A::
+DispatchTalkEvent_Case03_Sub01_Case0A::
 Jump_004_5A43:: ; address name
     ld a, $02
     ld [wScriptParam0], a
@@ -4128,7 +4128,7 @@ Jump_004_5A43:: ; address name
 ; entry 11 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case0B::
+DispatchTalkEvent_Case03_Sub01_Case0B::
 Jump_004_5A54:: ; address name
     ld a, $02
     ld [wScriptParam0], a
@@ -4140,7 +4140,7 @@ Jump_004_5A54:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case0C::
+DispatchTalkEvent_Case03_Sub01_Case0C::
 Jump_004_5A65:: ; address name
     ld hl, $088A
     call StartMessageCommand09HL_B04
@@ -4148,7 +4148,7 @@ Jump_004_5A65:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case0D::
+DispatchTalkEvent_Case03_Sub01_Case0D::
 Jump_004_5A6C:: ; address name
     ld hl, $0889
     call StartMessageCommand09HL_B04
@@ -4156,7 +4156,7 @@ Jump_004_5A6C:: ; address name
 
 ; entry 14 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case0E::
+DispatchTalkEvent_Case03_Sub01_Case0E::
 Jump_004_5A73:: ; address name
     ld hl, $0037
     call StartMessageCommand09HL_B04
@@ -4164,7 +4164,7 @@ Jump_004_5A73:: ; address name
 
 ; entry 15 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case0F::
+DispatchTalkEvent_Case03_Sub01_Case0F::
 Jump_004_5A7A:: ; address name
     ld hl, $080C
     call StartMessageCommand09HL_B04
@@ -4172,7 +4172,7 @@ Jump_004_5A7A:: ; address name
 
 ; entry 16 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case10::
+DispatchTalkEvent_Case03_Sub01_Case10::
 Jump_004_5A81:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4188,7 +4188,7 @@ Jump_004_5A90::
 
 ; entry 17 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case11::
+DispatchTalkEvent_Case03_Sub01_Case11::
 Jump_004_5A97:: ; address name
     ld hl, $080E
     call StartMessageCommand09HL_B04
@@ -4196,7 +4196,7 @@ Jump_004_5A97:: ; address name
 
 ; entry 18 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case12::
+DispatchTalkEvent_Case03_Sub01_Case12::
 Jump_004_5A9E:: ; address name
     ld hl, $080F
     call StartMessageCommand09HL_B04
@@ -4207,7 +4207,7 @@ Jump_004_5A9E:: ; address name
 ; reads: hTemp1, wStepArrived, hTemp2
 ; writes: rRAMG
 ; points at: wPartyList, wNameGlyphBuf
-Func_004_58C2_Case13::
+DispatchTalkEvent_Case03_Sub01_Case13::
 Jump_004_5AA5:: ; address name
     ld de, $006F
     call TestFlagBit
@@ -4267,7 +4267,7 @@ Jump_004_5B16::
 ; entry 20 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_58C2_Case14::
+DispatchTalkEvent_Case03_Sub01_Case14::
 Jump_004_5B1D:: ; address name
     ld hl, Script_5B94
     call StartScriptAtHL_B04
@@ -4277,7 +4277,7 @@ Jump_004_5B1D:: ; address name
 
 ; entry 21 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case15::
+DispatchTalkEvent_Case03_Sub01_Case15::
 Jump_004_5B29:: ; address name
     ld hl, Script_5B9B
     call StartScriptAtHL_B04
@@ -4285,7 +4285,7 @@ Jump_004_5B29:: ; address name
 
 ; entry 22 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case16::
+DispatchTalkEvent_Case03_Sub01_Case16::
 Jump_004_5B30:: ; address name
     ld hl, $081B
     call StartMessageCommand09HL_B04
@@ -4293,7 +4293,7 @@ Jump_004_5B30:: ; address name
 
 ; entry 23 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case17::
+DispatchTalkEvent_Case03_Sub01_Case17::
 Jump_004_5B37:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4309,7 +4309,7 @@ Jump_004_5B46::
 
 ; entry 24 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case18::
+DispatchTalkEvent_Case03_Sub01_Case18::
 Jump_004_5B4D:: ; address name
     ld hl, $088B
     call StartMessageCommand09HL_B04
@@ -4317,7 +4317,7 @@ Jump_004_5B4D:: ; address name
 
 ; entry 25 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case19::
+DispatchTalkEvent_Case03_Sub01_Case19::
 Jump_004_5B54:: ; address name
     ld hl, $0889
     call StartMessageCommand09HL_B04
@@ -4325,7 +4325,7 @@ Jump_004_5B54:: ; address name
 
 ; entry 26 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case1A::
+DispatchTalkEvent_Case03_Sub01_Case1A::
 Jump_004_5B5B:: ; address name
     ld hl, $081D
     call StartMessageCommand09HL_B04
@@ -4333,7 +4333,7 @@ Jump_004_5B5B:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case1B::
+DispatchTalkEvent_Case03_Sub01_Case1B::
 Jump_004_5B62:: ; address name
     ld de, $007A
     call TestFlagBit
@@ -4349,7 +4349,7 @@ Jump_004_5B71::
 
 ; entry 28 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case1C::
+DispatchTalkEvent_Case03_Sub01_Case1C::
 Jump_004_5B78:: ; address name
     ld hl, $081F
     call StartMessageCommand09HL_B04
@@ -4358,7 +4358,7 @@ Jump_004_5B78:: ; address name
 ; entry 29 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_58C2_Case1D::
+DispatchTalkEvent_Case03_Sub01_Case1D::
 Jump_004_5B7F:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -4368,7 +4368,7 @@ Jump_004_5B7F:: ; address name
 
 ; entry 30 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case1E::
+DispatchTalkEvent_Case03_Sub01_Case1E::
 Jump_004_5B8B:: ; address name
     ld hl, $0821
     call StartMessageCommand09HL_B04
@@ -4376,7 +4376,7 @@ Jump_004_5B8B:: ; address name
 
 ; entry 31 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case1F::
+DispatchTalkEvent_Case03_Sub01_Case1F::
 Jump_004_5B92:: ; address name
     ld hl, $0822
     call StartMessageCommand09HL_B04
@@ -4385,7 +4385,7 @@ Jump_004_5B92:: ; address name
 ; entry 32 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-Func_004_58C2_Case20::
+DispatchTalkEvent_Case03_Sub01_Case20::
 Jump_004_5B99:: ; address name
     ld a, $06
     ld [wScreenTableIndex], a
@@ -4397,7 +4397,7 @@ Jump_004_5B99:: ; address name
 
 ; entry 33 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case21::
+DispatchTalkEvent_Case03_Sub01_Case21::
 Jump_004_5BAA:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4413,7 +4413,7 @@ Jump_004_5BB9::
 
 ; entry 34 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case22::
+DispatchTalkEvent_Case03_Sub01_Case22::
 Jump_004_5BC0:: ; address name
     ld hl, $0825
     call StartMessageCommand09HL_B04
@@ -4421,7 +4421,7 @@ Jump_004_5BC0:: ; address name
 
 ; entry 35 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case23::
+DispatchTalkEvent_Case03_Sub01_Case23::
 Jump_004_5BC7:: ; address name
     ld hl, $0826
     call StartMessageCommand09HL_B04
@@ -4429,7 +4429,7 @@ Jump_004_5BC7:: ; address name
 
 ; entry 36 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case24::
+DispatchTalkEvent_Case03_Sub01_Case24::
 Jump_004_5BCE:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4445,7 +4445,7 @@ Jump_004_5BDD::
 
 ; entry 37 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case25::
+DispatchTalkEvent_Case03_Sub01_Case25::
 Jump_004_5BE4:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4461,7 +4461,7 @@ Jump_004_5BF3::
 
 ; entry 38 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case26::
+DispatchTalkEvent_Case03_Sub01_Case26::
 Jump_004_5BFA:: ; address name
     ld de, $007A
     call TestFlagBit
@@ -4477,7 +4477,7 @@ Jump_004_5C09::
 
 ; entry 39 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case27::
+DispatchTalkEvent_Case03_Sub01_Case27::
 Jump_004_5C10:: ; address name
     ld hl, $082B
     call StartMessageCommand09HL_B04
@@ -4485,7 +4485,7 @@ Jump_004_5C10:: ; address name
 
 ; entry 40 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case28::
+DispatchTalkEvent_Case03_Sub01_Case28::
 Jump_004_5C17:: ; address name
     ld hl, $088D
     call StartMessageCommand09HL_B04
@@ -4493,7 +4493,7 @@ Jump_004_5C17:: ; address name
 
 ; entry 41 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case29::
+DispatchTalkEvent_Case03_Sub01_Case29::
 Jump_004_5C1E:: ; address name
     ld hl, Script_5BB6
     call StartScriptAtHL_B04
@@ -4501,7 +4501,7 @@ Jump_004_5C1E:: ; address name
 
 ; entry 42 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case2A::
+DispatchTalkEvent_Case03_Sub01_Case2A::
 Jump_004_5C25:: ; address name
     ld hl, $082E
     call StartMessageCommand09HL_B04
@@ -4510,7 +4510,7 @@ Jump_004_5C25:: ; address name
 ; entry 43 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case2B::
+DispatchTalkEvent_Case03_Sub01_Case2B::
 Jump_004_5C2C:: ; address name
     ld a, $02
     ld [wScriptParam0], a
@@ -4523,7 +4523,7 @@ Jump_004_5C2C:: ; address name
 ; entry 44 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_58C2_Case2C::
+DispatchTalkEvent_Case03_Sub01_Case2C::
 Jump_004_5C3D:: ; address name
     ld hl, Script_5BBD
     call StartScriptAtHL_B04
@@ -4533,7 +4533,7 @@ Jump_004_5C3D:: ; address name
 
 ; entry 45 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case2D::
+DispatchTalkEvent_Case03_Sub01_Case2D::
 Jump_004_5C49:: ; address name
     ld de, $007A
     call TestFlagBit
@@ -4549,7 +4549,7 @@ Jump_004_5C58::
 
 ; entry 46 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case2E::
+DispatchTalkEvent_Case03_Sub01_Case2E::
 Jump_004_5C5F:: ; address name
     ld hl, $0830
     call StartMessageCommand09HL_B04
@@ -4557,7 +4557,7 @@ Jump_004_5C5F:: ; address name
 
 ; entry 47 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case2F::
+DispatchTalkEvent_Case03_Sub01_Case2F::
 Jump_004_5C66:: ; address name
     ld hl, Script_5BC4
     call StartScriptAtHL_B04
@@ -4565,7 +4565,7 @@ Jump_004_5C66:: ; address name
 
 ; entry 48 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case30::
+DispatchTalkEvent_Case03_Sub01_Case30::
 Jump_004_5C6D:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4589,7 +4589,7 @@ Jump_004_5C8B::
 
 ; entry 49 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case31::
+DispatchTalkEvent_Case03_Sub01_Case31::
 Jump_004_5C92:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4613,7 +4613,7 @@ Jump_004_5CB0::
 
 ; entry 50 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case32::
+DispatchTalkEvent_Case03_Sub01_Case32::
 Jump_004_5CB7:: ; address name
     ld hl, $0836
     call StartMessageCommand09HL_B04
@@ -4622,7 +4622,7 @@ Jump_004_5CB7:: ; address name
 ; entry 51 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject3
-Func_004_58C2_Case33::
+DispatchTalkEvent_Case03_Sub01_Case33::
 Jump_004_5CBE:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4671,7 +4671,7 @@ Jump_004_5D0D::
     ret
 
 ; carry when a party record has a species word with a non-zero high byte and low byte $3C-$5B (E-0124)
-; 2 call sites from 1 routine (e.g. Func_004_58C2_Case33)
+; 2 call sites from 1 routine (e.g. DispatchTalkEvent_Case03_Sub01_Case33)
 ; reads: wPartyCount, hTemp1, hTemp0
 ; writes: rRAMG
 ; points at: wPartyList
@@ -4712,7 +4712,7 @@ Jump_004_5D3E::
 
 ; entry 52 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case34::
+DispatchTalkEvent_Case03_Sub01_Case34::
 Jump_004_5D44:: ; address name
     ld de, $0066
     call TestFlagBit
@@ -4739,7 +4739,7 @@ Jump_004_5D68::
 ; entry 53 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case35::
+DispatchTalkEvent_Case03_Sub01_Case35::
 Jump_004_5D6F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -4752,7 +4752,7 @@ Jump_004_5D6F:: ; address name
 ; entry 54 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case36::
+DispatchTalkEvent_Case03_Sub01_Case36::
 Jump_004_5D80:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -4765,7 +4765,7 @@ Jump_004_5D80:: ; address name
 ; entry 55 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case37::
+DispatchTalkEvent_Case03_Sub01_Case37::
 Jump_004_5D91:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -4778,7 +4778,7 @@ Jump_004_5D91:: ; address name
 ; entry 56 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case38::
+DispatchTalkEvent_Case03_Sub01_Case38::
 Jump_004_5DA2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -4791,7 +4791,7 @@ Jump_004_5DA2:: ; address name
 ; entry 57 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case39::
+DispatchTalkEvent_Case03_Sub01_Case39::
 Jump_004_5DB3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -4804,7 +4804,7 @@ Jump_004_5DB3:: ; address name
 ; entry 58 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case3A::
+DispatchTalkEvent_Case03_Sub01_Case3A::
 Jump_004_5DC4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -4816,7 +4816,7 @@ Jump_004_5DC4:: ; address name
 
 ; entry 59 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case3B::
+DispatchTalkEvent_Case03_Sub01_Case3B::
 Jump_004_5DD5:: ; address name
     ld hl, $0843
     call StartMessageCommand09HL_B04
@@ -4824,7 +4824,7 @@ Jump_004_5DD5:: ; address name
 
 ; entry 60 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case3C::
+DispatchTalkEvent_Case03_Sub01_Case3C::
 Jump_004_5DDC:: ; address name
     ld hl, $0844
     call StartMessageCommand09HL_B04
@@ -4832,7 +4832,7 @@ Jump_004_5DDC:: ; address name
 
 ; entry 61 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case3D::
+DispatchTalkEvent_Case03_Sub01_Case3D::
 Jump_004_5DE3:: ; address name
     ld de, $006F
     call TestFlagBit
@@ -4843,7 +4843,7 @@ Jump_004_5DE3:: ; address name
 
 ; entry 62 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case3E::
+DispatchTalkEvent_Case03_Sub01_Case3E::
 Jump_004_5DF1:: ; address name
     ld de, $00F1
     call TestFlagBit
@@ -4861,7 +4861,7 @@ Jump_004_5E06::
 
 ; entry 63 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case3F::
+DispatchTalkEvent_Case03_Sub01_Case3F::
 Jump_004_5E0D:: ; address name
     ld de, $0076
     call TestFlagBit
@@ -4877,7 +4877,7 @@ Jump_004_5E1C::
 
 ; entry 64 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case40::
+DispatchTalkEvent_Case03_Sub01_Case40::
 Jump_004_5E23:: ; address name
     ld de, $0076
     call TestFlagBit
@@ -4893,7 +4893,7 @@ Jump_004_5E32::
 
 ; entry 65 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case41::
+DispatchTalkEvent_Case03_Sub01_Case41::
 Jump_004_5E39:: ; address name
     ld hl, $0851
     call StartMessageCommand09HL_B04
@@ -4901,7 +4901,7 @@ Jump_004_5E39:: ; address name
 
 ; entry 66 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case42::
+DispatchTalkEvent_Case03_Sub01_Case42::
 Jump_004_5E40:: ; address name
     ld hl, $0852
     call StartMessageCommand09HL_B04
@@ -4909,7 +4909,7 @@ Jump_004_5E40:: ; address name
 
 ; entry 67 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case43::
+DispatchTalkEvent_Case03_Sub01_Case43::
 Jump_004_5E47:: ; address name
     ld de, $0076
     call TestFlagBit
@@ -4925,7 +4925,7 @@ Jump_004_5E56::
 
 ; entry 68 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case44::
+DispatchTalkEvent_Case03_Sub01_Case44::
 Jump_004_5E5D:: ; address name
     ld de, $0076
     call TestFlagBit
@@ -4943,7 +4943,7 @@ Jump_004_5E6C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836
-Func_004_58C2_Case45::
+DispatchTalkEvent_Case03_Sub01_Case45::
 Jump_004_5E73:: ; address name
     ld de, $005E
     call TestFlagBit
@@ -4986,7 +4986,7 @@ Jump_004_5EB6::
 
 ; entry 70 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case46::
+DispatchTalkEvent_Case03_Sub01_Case46::
 Jump_004_5EBD:: ; address name
     ld hl, Script_5C88
     call StartScriptAtHL_B04
@@ -4994,7 +4994,7 @@ Jump_004_5EBD:: ; address name
 
 ; entry 71 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case47::
+DispatchTalkEvent_Case03_Sub01_Case47::
 Jump_004_5EC4:: ; address name
     ld hl, Script_5C8A
     call StartScriptAtHL_B04
@@ -5002,7 +5002,7 @@ Jump_004_5EC4:: ; address name
 
 ; entry 72 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case48::
+DispatchTalkEvent_Case03_Sub01_Case48::
 Jump_004_5ECB:: ; address name
     ld hl, Script_5C94
     call StartScriptAtHL_B04
@@ -5010,7 +5010,7 @@ Jump_004_5ECB:: ; address name
 
 ; entry 73 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case49::
+DispatchTalkEvent_Case03_Sub01_Case49::
 Jump_004_5ED2:: ; address name
     ld hl, Script_5C9E
     call StartScriptAtHL_B04
@@ -5018,7 +5018,7 @@ Jump_004_5ED2:: ; address name
 
 ; entry 74 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case4A::
+DispatchTalkEvent_Case03_Sub01_Case4A::
 Jump_004_5ED9:: ; address name
     ld de, $0074
     call TestFlagBit
@@ -5038,7 +5038,7 @@ Jump_004_5EEE::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836
-Func_004_58C2_Case4B::
+DispatchTalkEvent_Case03_Sub01_Case4B::
 Jump_004_5EF5:: ; address name
     call InventoryHasFreeSlotCheck
     jr c, Jump_004_5F01
@@ -5057,7 +5057,7 @@ Jump_004_5F01::
 
 ; entry 76 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case4C::
+DispatchTalkEvent_Case03_Sub01_Case4C::
 Jump_004_5F12:: ; address name
     ld hl, Script_5CCA
     call StartScriptAtHL_B04
@@ -5068,7 +5068,7 @@ Jump_004_5F12:: ; address name
 ; entry 77 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
-Func_004_58C2_Case4D::
+DispatchTalkEvent_Case03_Sub01_Case4D::
 Jump_004_5F1F:: ; address name
     xor a, a
     ld [wSpriteSlots + $7], a
@@ -5077,7 +5077,7 @@ Jump_004_5F1F:: ; address name
 ; entry 78 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case4E::
+DispatchTalkEvent_Case03_Sub01_Case4E::
 Jump_004_5F24:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5091,7 +5091,7 @@ Jump_004_5F24:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-Func_004_58C2_Case4F::
+DispatchTalkEvent_Case03_Sub01_Case4F::
 Jump_004_5F35:: ; address name
     ld de, $007A
     call TestFlagBit
@@ -5115,7 +5115,7 @@ Jump_004_5F53::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, hPlayerX
 ; writes: wSpriteSlots, wObject1, wObject2
-Func_004_58C2_Case50::
+DispatchTalkEvent_Case03_Sub01_Case50::
 Jump_004_5F5A:: ; address name
     ldh a, [hPlayerY]
     cp a, $30
@@ -5135,7 +5135,7 @@ Jump_004_5F5A:: ; address name
 
 ; entry 81 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case51::
+DispatchTalkEvent_Case03_Sub01_Case51::
 Jump_004_5F7C:: ; address name
     ld hl, Script_5CDD
     call StartScriptAtHL_B04
@@ -5143,7 +5143,7 @@ Jump_004_5F7C:: ; address name
 
 ; entry 82 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case52::
+DispatchTalkEvent_Case03_Sub01_Case52::
 Jump_004_5F83:: ; address name
     ld hl, Script_5D1C
     call StartScriptAtHL_B04
@@ -5151,7 +5151,7 @@ Jump_004_5F83:: ; address name
 
 ; entry 83 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case53::
+DispatchTalkEvent_Case03_Sub01_Case53::
 Jump_004_5F8A:: ; address name
     ld hl, Script_5D2F
     call StartScriptAtHL_B04
@@ -5160,7 +5160,7 @@ Jump_004_5F8A:: ; address name
 ; entry 84 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case54::
+DispatchTalkEvent_Case03_Sub01_Case54::
 Jump_004_5F91:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5173,7 +5173,7 @@ Jump_004_5F91:: ; address name
 ; entry 85 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case55::
+DispatchTalkEvent_Case03_Sub01_Case55::
 Jump_004_5FA2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5186,7 +5186,7 @@ Jump_004_5FA2:: ; address name
 ; entry 86 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case56::
+DispatchTalkEvent_Case03_Sub01_Case56::
 Jump_004_5FB3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5199,7 +5199,7 @@ Jump_004_5FB3:: ; address name
 ; entry 87 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case57::
+DispatchTalkEvent_Case03_Sub01_Case57::
 Jump_004_5FC4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5212,7 +5212,7 @@ Jump_004_5FC4:: ; address name
 ; entry 88 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case58::
+DispatchTalkEvent_Case03_Sub01_Case58::
 Jump_004_5FD5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5224,7 +5224,7 @@ Jump_004_5FD5:: ; address name
 
 ; entry 89 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case59::
+DispatchTalkEvent_Case03_Sub01_Case59::
 Jump_004_5FE6:: ; address name
     ld hl, $088C
     call StartMessageCommand09HL_B04
@@ -5233,7 +5233,7 @@ Jump_004_5FE6:: ; address name
 ; entry 90 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case5A::
+DispatchTalkEvent_Case03_Sub01_Case5A::
 Jump_004_5FED:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5246,7 +5246,7 @@ Jump_004_5FED:: ; address name
 ; entry 91 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case5B::
+DispatchTalkEvent_Case03_Sub01_Case5B::
 Jump_004_5FFE:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5259,7 +5259,7 @@ Jump_004_5FFE:: ; address name
 ; entry 92 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case5C::
+DispatchTalkEvent_Case03_Sub01_Case5C::
 Jump_004_600F:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -5272,7 +5272,7 @@ Jump_004_600F:: ; address name
 ; entry 93 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case5D::
+DispatchTalkEvent_Case03_Sub01_Case5D::
 Jump_004_6020:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -5285,7 +5285,7 @@ Jump_004_6020:: ; address name
 ; entry 94 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case5E::
+DispatchTalkEvent_Case03_Sub01_Case5E::
 Jump_004_6031:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -5297,7 +5297,7 @@ Jump_004_6031:: ; address name
 
 ; entry 95 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case5F::
+DispatchTalkEvent_Case03_Sub01_Case5F::
 Jump_004_6042:: ; address name
     ld hl, $0861
     call StartMessageCommand09HL_B04
@@ -5306,7 +5306,7 @@ Jump_004_6042:: ; address name
 ; entry 96 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case60::
+DispatchTalkEvent_Case03_Sub01_Case60::
 Jump_004_6049:: ; address name
     ld a, $02
     ld [wScriptParam0], a
@@ -5319,7 +5319,7 @@ Jump_004_6049:: ; address name
 ; entry 97 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case61::
+DispatchTalkEvent_Case03_Sub01_Case61::
 Jump_004_605A:: ; address name
     ld a, $02
     ld [wScriptParam0], a
@@ -5332,7 +5332,7 @@ Jump_004_605A:: ; address name
 ; entry 98 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case62::
+DispatchTalkEvent_Case03_Sub01_Case62::
 Jump_004_606B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5345,7 +5345,7 @@ Jump_004_606B:: ; address name
 ; entry 99 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case63::
+DispatchTalkEvent_Case03_Sub01_Case63::
 Jump_004_607C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5358,7 +5358,7 @@ Jump_004_607C:: ; address name
 ; entry 100 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case64::
+DispatchTalkEvent_Case03_Sub01_Case64::
 Jump_004_608D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5371,7 +5371,7 @@ Jump_004_608D:: ; address name
 ; entry 101 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case65::
+DispatchTalkEvent_Case03_Sub01_Case65::
 Jump_004_609E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -5384,7 +5384,7 @@ Jump_004_609E:: ; address name
 ; entry 102 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case66::
+DispatchTalkEvent_Case03_Sub01_Case66::
 Jump_004_60AF:: ; address name
     ld a, $02
     ld [wScriptParam0], a
@@ -5397,7 +5397,7 @@ Jump_004_60AF:: ; address name
 ; entry 103 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_58C2_Case67::
+DispatchTalkEvent_Case03_Sub01_Case67::
 Jump_004_60C0:: ; address name
     ld a, $02
     ld [wScriptParam0], a
@@ -5409,7 +5409,7 @@ Jump_004_60C0:: ; address name
 
 ; entry 104 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case68::
+DispatchTalkEvent_Case03_Sub01_Case68::
 Jump_004_60D1:: ; address name
     ld hl, $0862
     call StartMessageCommand09HL_B04
@@ -5417,7 +5417,7 @@ Jump_004_60D1:: ; address name
 
 ; entry 105 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case69::
+DispatchTalkEvent_Case03_Sub01_Case69::
 Jump_004_60D8:: ; address name
     ld hl, $0864
     call StartMessageCommand09HL_B04
@@ -5426,7 +5426,7 @@ Jump_004_60D8:: ; address name
 ; entry 106 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-Func_004_58C2_Case6A::
+DispatchTalkEvent_Case03_Sub01_Case6A::
 Jump_004_60DF:: ; address name
     ld hl, Script_5CCF
     call StartScriptAtHL_B04
@@ -5440,7 +5440,7 @@ Jump_004_60DF:: ; address name
 
 ; entry 107 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case6B::
+DispatchTalkEvent_Case03_Sub01_Case6B::
 Jump_004_60FC:: ; address name
     ld hl, $00FF
     call StartMessageCommand09HL_B04
@@ -5448,7 +5448,7 @@ Jump_004_60FC:: ; address name
 
 ; entry 108 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_58C2_Case6C::
+DispatchTalkEvent_Case03_Sub01_Case6C::
 Jump_004_6103:: ; address name
     ld hl, Script_5D44
     call StartScriptAtHL_B04
@@ -5457,7 +5457,7 @@ Jump_004_6103:: ; address name
 ; entry 109 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_58C2_Case6D::
+DispatchTalkEvent_Case03_Sub01_Case6D::
 Jump_004_610A:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -5482,80 +5482,80 @@ DispatchTalkEvent_Case02_Sub01::
 Func_004_612B:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw Func_004_612B_Case00
-    dw Func_004_612B_Case01
-    dw Func_004_612B_Case02
-    dw Func_004_612B_Case03
-    dw Func_004_612B_Case04
-    dw Func_004_612B_Case05
-    dw Func_004_612B_Case06
-    dw Func_004_612B_Case07
-    dw Func_004_612B_Case08
-    dw Func_004_612B_Case09
-    dw Func_004_612B_Case0A
-    dw Func_004_612B_Case0B
-    dw Func_004_612B_Case0C
-    dw Func_004_612B_Case0D
-    dw Func_004_612B_Case0E
-    dw Func_004_612B_Case0F
-    dw Func_004_612B_Case10
-    dw Func_004_612B_Case11
-    dw Func_004_612B_Case12
-    dw Func_004_612B_Case13
-    dw Func_004_612B_Case14
-    dw Func_004_612B_Case15
-    dw Func_004_612B_Case16
-    dw Func_004_612B_Case17
-    dw Func_004_612B_Case18
-    dw Func_004_612B_Case19
-    dw Func_004_612B_Case1A
-    dw Func_004_612B_Case1B
-    dw Func_004_612B_Case1C
-    dw Func_004_612B_Case1D
-    dw Func_004_612B_Case1E
-    dw Func_004_612B_Case1F
-    dw Func_004_612B_Case20
-    dw Func_004_612B_Case21
-    dw Func_004_612B_Case22
-    dw Func_004_612B_Case23
-    dw Func_004_612B_Case24
-    dw Func_004_612B_Case25
-    dw Func_004_612B_Case26
-    dw Func_004_612B_Case27
-    dw Func_004_612B_Case28
-    dw Func_004_612B_Case29
-    dw Func_004_612B_Case2A
-    dw Func_004_612B_Case2B
-    dw Func_004_612B_Case2C
-    dw Func_004_612B_Case2D
-    dw Func_004_612B_Case2E
-    dw Func_004_612B_Case2F
-    dw Func_004_612B_Case30
-    dw Func_004_612B_Case31
-    dw Func_004_612B_Case32
-    dw Func_004_612B_Case33
-    dw Func_004_612B_Case34
-    dw Func_004_612B_Case35
-    dw Func_004_612B_Case36
-    dw Func_004_612B_Case37
-    dw Func_004_612B_Case38
-    dw Func_004_612B_Case39
-    dw Func_004_612B_Case3A
-    dw Func_004_612B_Case3B
-    dw Func_004_612B_Case3C
-    dw Func_004_612B_Case3D
-    dw Func_004_612B_Case3E
-    dw Func_004_612B_Case3F
-    dw Func_004_612B_Case40
-    dw Func_004_612B_Case41
-    dw Func_004_612B_Case42
-    dw Func_004_612B_Case43
-    dw Func_004_612B_Case44
-    dw Func_004_612B_Case45
+    dw DispatchTalkEvent_Case02_Sub01_Case00
+    dw DispatchTalkEvent_Case02_Sub01_Case01
+    dw DispatchTalkEvent_Case02_Sub01_Case02
+    dw DispatchTalkEvent_Case02_Sub01_Case03
+    dw DispatchTalkEvent_Case02_Sub01_Case04
+    dw DispatchTalkEvent_Case02_Sub01_Case05
+    dw DispatchTalkEvent_Case02_Sub01_Case06
+    dw DispatchTalkEvent_Case02_Sub01_Case07
+    dw DispatchTalkEvent_Case02_Sub01_Case08
+    dw DispatchTalkEvent_Case02_Sub01_Case09
+    dw DispatchTalkEvent_Case02_Sub01_Case0A
+    dw DispatchTalkEvent_Case02_Sub01_Case0B
+    dw DispatchTalkEvent_Case02_Sub01_Case0C
+    dw DispatchTalkEvent_Case02_Sub01_Case0D
+    dw DispatchTalkEvent_Case02_Sub01_Case0E
+    dw DispatchTalkEvent_Case02_Sub01_Case0F
+    dw DispatchTalkEvent_Case02_Sub01_Case10
+    dw DispatchTalkEvent_Case02_Sub01_Case11
+    dw DispatchTalkEvent_Case02_Sub01_Case12
+    dw DispatchTalkEvent_Case02_Sub01_Case13
+    dw DispatchTalkEvent_Case02_Sub01_Case14
+    dw DispatchTalkEvent_Case02_Sub01_Case15
+    dw DispatchTalkEvent_Case02_Sub01_Case16
+    dw DispatchTalkEvent_Case02_Sub01_Case17
+    dw DispatchTalkEvent_Case02_Sub01_Case18
+    dw DispatchTalkEvent_Case02_Sub01_Case19
+    dw DispatchTalkEvent_Case02_Sub01_Case1A
+    dw DispatchTalkEvent_Case02_Sub01_Case1B
+    dw DispatchTalkEvent_Case02_Sub01_Case1C
+    dw DispatchTalkEvent_Case02_Sub01_Case1D
+    dw DispatchTalkEvent_Case02_Sub01_Case1E
+    dw DispatchTalkEvent_Case02_Sub01_Case1F
+    dw DispatchTalkEvent_Case02_Sub01_Case20
+    dw DispatchTalkEvent_Case02_Sub01_Case21
+    dw DispatchTalkEvent_Case02_Sub01_Case22
+    dw DispatchTalkEvent_Case02_Sub01_Case23
+    dw DispatchTalkEvent_Case02_Sub01_Case24
+    dw DispatchTalkEvent_Case02_Sub01_Case25
+    dw DispatchTalkEvent_Case02_Sub01_Case26
+    dw DispatchTalkEvent_Case02_Sub01_Case27
+    dw DispatchTalkEvent_Case02_Sub01_Case28
+    dw DispatchTalkEvent_Case02_Sub01_Case29
+    dw DispatchTalkEvent_Case02_Sub01_Case2A
+    dw DispatchTalkEvent_Case02_Sub01_Case2B
+    dw DispatchTalkEvent_Case02_Sub01_Case2C
+    dw DispatchTalkEvent_Case02_Sub01_Case2D
+    dw DispatchTalkEvent_Case02_Sub01_Case2E
+    dw DispatchTalkEvent_Case02_Sub01_Case2F
+    dw DispatchTalkEvent_Case02_Sub01_Case30
+    dw DispatchTalkEvent_Case02_Sub01_Case31
+    dw DispatchTalkEvent_Case02_Sub01_Case32
+    dw DispatchTalkEvent_Case02_Sub01_Case33
+    dw DispatchTalkEvent_Case02_Sub01_Case34
+    dw DispatchTalkEvent_Case02_Sub01_Case35
+    dw DispatchTalkEvent_Case02_Sub01_Case36
+    dw DispatchTalkEvent_Case02_Sub01_Case37
+    dw DispatchTalkEvent_Case02_Sub01_Case38
+    dw DispatchTalkEvent_Case02_Sub01_Case39
+    dw DispatchTalkEvent_Case02_Sub01_Case3A
+    dw DispatchTalkEvent_Case02_Sub01_Case3B
+    dw DispatchTalkEvent_Case02_Sub01_Case3C
+    dw DispatchTalkEvent_Case02_Sub01_Case3D
+    dw DispatchTalkEvent_Case02_Sub01_Case3E
+    dw DispatchTalkEvent_Case02_Sub01_Case3F
+    dw DispatchTalkEvent_Case02_Sub01_Case40
+    dw DispatchTalkEvent_Case02_Sub01_Case41
+    dw DispatchTalkEvent_Case02_Sub01_Case42
+    dw DispatchTalkEvent_Case02_Sub01_Case43
+    dw DispatchTalkEvent_Case02_Sub01_Case44
+    dw DispatchTalkEvent_Case02_Sub01_Case45
 
 ; entry 0 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case00::
+DispatchTalkEvent_Case02_Sub01_Case00::
 Jump_004_61BB:: ; address name
     ld hl, $0130
     call StartMessageCommand09HL_B04
@@ -5563,7 +5563,7 @@ Jump_004_61BB:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case01::
+DispatchTalkEvent_Case02_Sub01_Case01::
 Jump_004_61C2:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5579,7 +5579,7 @@ Jump_004_61D1::
 
 ; entry 2 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case02::
+DispatchTalkEvent_Case02_Sub01_Case02::
 Jump_004_61D8:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5595,7 +5595,7 @@ Jump_004_61E7::
 
 ; entry 3 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case03::
+DispatchTalkEvent_Case02_Sub01_Case03::
 Jump_004_61EE:: ; address name
     ld hl, $0133
     call StartMessageCommand09HL_B04
@@ -5603,7 +5603,7 @@ Jump_004_61EE:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case04::
+DispatchTalkEvent_Case02_Sub01_Case04::
 Jump_004_61F5:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5619,7 +5619,7 @@ Jump_004_6204::
 
 ; entry 5 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case05::
+DispatchTalkEvent_Case02_Sub01_Case05::
 Jump_004_620B:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5635,7 +5635,7 @@ Jump_004_621A::
 
 ; entry 6 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case06::
+DispatchTalkEvent_Case02_Sub01_Case06::
 Jump_004_6221:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5651,7 +5651,7 @@ Jump_004_6230::
 
 ; entry 7 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case07::
+DispatchTalkEvent_Case02_Sub01_Case07::
 Jump_004_6237:: ; address name
     ld hl, $0137
     call StartMessageCommand09HL_B04
@@ -5660,7 +5660,7 @@ Jump_004_6237:: ; address name
 ; entry 8 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case08::
+DispatchTalkEvent_Case02_Sub01_Case08::
 Jump_004_623E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -5672,7 +5672,7 @@ Jump_004_623E:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case09::
+DispatchTalkEvent_Case02_Sub01_Case09::
 Jump_004_624F:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5706,7 +5706,7 @@ Jump_004_627C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: wSpriteSlots, wDataBank
-Func_004_612B_Case0A::
+DispatchTalkEvent_Case02_Sub01_Case0A::
 Jump_004_6283:: ; address name
     ldh a, [hPlayerX]
     cp a, $30
@@ -5727,7 +5727,7 @@ Jump_004_6290::
 
 ; entry 11 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case0B::
+DispatchTalkEvent_Case02_Sub01_Case0B::
 Jump_004_629F:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5743,7 +5743,7 @@ Jump_004_62AE::
 
 ; entry 12 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case0C::
+DispatchTalkEvent_Case02_Sub01_Case0C::
 Jump_004_62B5:: ; address name
     ld hl, $013A
     call StartMessageCommand09HL_B04
@@ -5751,7 +5751,7 @@ Jump_004_62B5:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case0D::
+DispatchTalkEvent_Case02_Sub01_Case0D::
 Jump_004_62BC:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5767,7 +5767,7 @@ Jump_004_62CB::
 
 ; entry 14 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case0E::
+DispatchTalkEvent_Case02_Sub01_Case0E::
 Jump_004_62D2:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5783,7 +5783,7 @@ Jump_004_62E1::
 
 ; entry 15 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case0F::
+DispatchTalkEvent_Case02_Sub01_Case0F::
 Jump_004_62E8:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5825,7 +5825,7 @@ Jump_004_632A::
 
 ; entry 16 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case10::
+DispatchTalkEvent_Case02_Sub01_Case10::
 Jump_004_6331:: ; address name
     ld hl, $013E
     call StartMessageCommand09HL_B04
@@ -5833,7 +5833,7 @@ Jump_004_6331:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case11::
+DispatchTalkEvent_Case02_Sub01_Case11::
 Jump_004_6338:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -5850,7 +5850,7 @@ Jump_004_6347::
 ; entry 18 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-Func_004_612B_Case12::
+DispatchTalkEvent_Case02_Sub01_Case12::
 Jump_004_634E:: ; address name
     ld a, $03
     ld [wScreenTableIndex], a
@@ -5872,7 +5872,7 @@ Jump_004_636D::
 
 ; entry 19 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case13::
+DispatchTalkEvent_Case02_Sub01_Case13::
 Jump_004_6374:: ; address name
     ld de, $0043
     call TestFlagBit
@@ -5888,7 +5888,7 @@ Jump_004_6383::
 
 ; entry 20 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case14::
+DispatchTalkEvent_Case02_Sub01_Case14::
 Jump_004_638A:: ; address name
     ld de, $0053
     call TestFlagBit
@@ -5912,7 +5912,7 @@ Jump_004_63A8::
 
 ; entry 21 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case15::
+DispatchTalkEvent_Case02_Sub01_Case15::
 Jump_004_63AF:: ; address name
     ld de, $0053
     call TestFlagBit
@@ -5928,7 +5928,7 @@ Jump_004_63BE::
 
 ; entry 22 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case16::
+DispatchTalkEvent_Case02_Sub01_Case16::
 Jump_004_63C5:: ; address name
     ld hl, $0143
     call StartMessageCommand09HL_B04
@@ -5937,7 +5937,7 @@ Jump_004_63C5:: ; address name
 ; entry 23 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_612B_Case17::
+DispatchTalkEvent_Case02_Sub01_Case17::
 Jump_004_63CC:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -5958,7 +5958,7 @@ Jump_004_63E6::
 ; entry 24 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, wStepArrived
-Func_004_612B_Case18::
+DispatchTalkEvent_Case02_Sub01_Case18::
 Jump_004_63ED:: ; address name
     ld de, $0042
     call TestFlagBit
@@ -6003,7 +6003,7 @@ Jump_004_6437::
 
 ; entry 25 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case19::
+DispatchTalkEvent_Case02_Sub01_Case19::
 Jump_004_643E:: ; address name
     ld hl, $014F
     call StartMessageCommand09HL_B04
@@ -6012,7 +6012,7 @@ Jump_004_643E:: ; address name
 ; entry 26 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case1A::
+DispatchTalkEvent_Case02_Sub01_Case1A::
 Jump_004_6445:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -6024,7 +6024,7 @@ Jump_004_6445:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case1B::
+DispatchTalkEvent_Case02_Sub01_Case1B::
 Jump_004_6456:: ; address name
     ld hl, $0137
     call StartMessageCommand09HL_B04
@@ -6032,7 +6032,7 @@ Jump_004_6456:: ; address name
 
 ; entry 28 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case1C::
+DispatchTalkEvent_Case02_Sub01_Case1C::
 Jump_004_645D:: ; address name
     ld de, $0056
     call TestFlagBit
@@ -6043,7 +6043,7 @@ Jump_004_645D:: ; address name
 
 ; entry 29 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case1D::
+DispatchTalkEvent_Case02_Sub01_Case1D::
 Jump_004_646B:: ; address name
     ld hl, $01BE
     call StartMessageCommand09HL_B04
@@ -6051,7 +6051,7 @@ Jump_004_646B:: ; address name
 
 ; entry 30 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case1E::
+DispatchTalkEvent_Case02_Sub01_Case1E::
 Jump_004_6472:: ; address name
     ld hl, $0037
     call StartMessageCommand09HL_B04
@@ -6060,7 +6060,7 @@ Jump_004_6472:: ; address name
 ; entry 31 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_612B_Case1F::
+DispatchTalkEvent_Case02_Sub01_Case1F::
 Jump_004_6479:: ; address name
     ld hl, Script_5A25
     call StartScriptAtHL_B04
@@ -6070,7 +6070,7 @@ Jump_004_6479:: ; address name
 
 ; entry 32 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case20::
+DispatchTalkEvent_Case02_Sub01_Case20::
 Jump_004_6485:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6086,7 +6086,7 @@ Jump_004_6494::
 
 ; entry 33 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case21::
+DispatchTalkEvent_Case02_Sub01_Case21::
 Jump_004_649B:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6102,7 +6102,7 @@ Jump_004_64AA::
 
 ; entry 34 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case22::
+DispatchTalkEvent_Case02_Sub01_Case22::
 Jump_004_64B1:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6118,7 +6118,7 @@ Jump_004_64C0::
 
 ; entry 35 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case23::
+DispatchTalkEvent_Case02_Sub01_Case23::
 Jump_004_64C7:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6134,7 +6134,7 @@ Jump_004_64D6::
 
 ; entry 36 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case24::
+DispatchTalkEvent_Case02_Sub01_Case24::
 Jump_004_64DD:: ; address name
     ld hl, $0157
     call StartMessageCommand09HL_B04
@@ -6142,7 +6142,7 @@ Jump_004_64DD:: ; address name
 
 ; entry 37 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case25::
+DispatchTalkEvent_Case02_Sub01_Case25::
 Jump_004_64E4:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6166,7 +6166,7 @@ Jump_004_6502::
 
 ; entry 38 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case26::
+DispatchTalkEvent_Case02_Sub01_Case26::
 Jump_004_6509:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6198,7 +6198,7 @@ Jump_004_6536::
 
 ; entry 39 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case27::
+DispatchTalkEvent_Case02_Sub01_Case27::
 Jump_004_653D:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6222,7 +6222,7 @@ Jump_004_655B::
 
 ; entry 40 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case28::
+DispatchTalkEvent_Case02_Sub01_Case28::
 Jump_004_6562:: ; address name
     ld de, $0053
     call TestFlagBit
@@ -6247,7 +6247,7 @@ Jump_004_6580::
 ; entry 41 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
-Func_004_612B_Case29::
+DispatchTalkEvent_Case02_Sub01_Case29::
 Jump_004_6587:: ; address name
     ld a, [wStoryFlags + $61]
     bit 3, a
@@ -6258,7 +6258,7 @@ Jump_004_6587:: ; address name
 
 ; entry 42 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case2A::
+DispatchTalkEvent_Case02_Sub01_Case2A::
 Jump_004_6594:: ; address name
     ld hl, $015F
     call StartMessageCommand09HL_B04
@@ -6266,7 +6266,7 @@ Jump_004_6594:: ; address name
 
 ; entry 43 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case2B::
+DispatchTalkEvent_Case02_Sub01_Case2B::
 Jump_004_659B:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6330,7 +6330,7 @@ Jump_004_6604::
 
 ; entry 44 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case2C::
+DispatchTalkEvent_Case02_Sub01_Case2C::
 Jump_004_660B:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6346,7 +6346,7 @@ Jump_004_661A::
 
 ; entry 45 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case2D::
+DispatchTalkEvent_Case02_Sub01_Case2D::
 Jump_004_6621:: ; address name
     ld de, $0056
     call TestFlagBit
@@ -6362,7 +6362,7 @@ Jump_004_6630::
 
 ; entry 46 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case2E::
+DispatchTalkEvent_Case02_Sub01_Case2E::
 Jump_004_6637:: ; address name
     ld de, $0049
     call TestFlagBit
@@ -6376,7 +6376,7 @@ Jump_004_6637:: ; address name
 ; entry 47 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case2F::
+DispatchTalkEvent_Case02_Sub01_Case2F::
 Jump_004_664B:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -6389,7 +6389,7 @@ Jump_004_664B:: ; address name
 ; entry 48 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case30::
+DispatchTalkEvent_Case02_Sub01_Case30::
 Jump_004_665C:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -6402,7 +6402,7 @@ Jump_004_665C:: ; address name
 ; entry 49 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case31::
+DispatchTalkEvent_Case02_Sub01_Case31::
 Jump_004_666D:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -6415,7 +6415,7 @@ Jump_004_666D:: ; address name
 ; entry 50 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case32::
+DispatchTalkEvent_Case02_Sub01_Case32::
 Jump_004_667E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -6428,7 +6428,7 @@ Jump_004_667E:: ; address name
 ; entry 51 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case33::
+DispatchTalkEvent_Case02_Sub01_Case33::
 Jump_004_668F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -6441,7 +6441,7 @@ Jump_004_668F:: ; address name
 ; entry 52 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case34::
+DispatchTalkEvent_Case02_Sub01_Case34::
 Jump_004_66A0:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -6454,7 +6454,7 @@ Jump_004_66A0:: ; address name
 ; entry 53 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case35::
+DispatchTalkEvent_Case02_Sub01_Case35::
 Jump_004_66B1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -6467,7 +6467,7 @@ Jump_004_66B1:: ; address name
 ; entry 54 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case36::
+DispatchTalkEvent_Case02_Sub01_Case36::
 Jump_004_66C2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -6479,7 +6479,7 @@ Jump_004_66C2:: ; address name
 
 ; entry 55 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case37::
+DispatchTalkEvent_Case02_Sub01_Case37::
 Jump_004_66D3:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6497,7 +6497,7 @@ Jump_004_66E2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-Func_004_612B_Case38::
+DispatchTalkEvent_Case02_Sub01_Case38::
 Jump_004_66E9:: ; address name
     ld de, $0056
     call TestFlagBit
@@ -6547,7 +6547,7 @@ Jump_004_6746::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: wStoryFlags, hTemp0
-Func_004_612B_Case39::
+DispatchTalkEvent_Case02_Sub01_Case39::
 Jump_004_674D:: ; address name
     ld a, [wStoryFlags + $61]
     set 4, a
@@ -6562,7 +6562,7 @@ Jump_004_674D:: ; address name
 
 ; entry 58 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case3A::
+DispatchTalkEvent_Case02_Sub01_Case3A::
 Jump_004_676C:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6578,7 +6578,7 @@ Jump_004_677B::
 
 ; entry 59 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case3B::
+DispatchTalkEvent_Case02_Sub01_Case3B::
 Jump_004_6782:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6595,7 +6595,7 @@ Jump_004_6791::
 ; entry 60 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-Func_004_612B_Case3C::
+DispatchTalkEvent_Case02_Sub01_Case3C::
 Jump_004_6798:: ; address name
     ld a, $03
     ldh [hTemp0], a
@@ -6614,7 +6614,7 @@ Jump_004_67B1::
 
 ; entry 61 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case3D::
+DispatchTalkEvent_Case02_Sub01_Case3D::
 Jump_004_67B8:: ; address name
     ld hl, $01B5
     call StartMessageCommand09HL_B04
@@ -6622,7 +6622,7 @@ Jump_004_67B8:: ; address name
 
 ; entry 62 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case3E::
+DispatchTalkEvent_Case02_Sub01_Case3E::
 Jump_004_67BF:: ; address name
     ld hl, $01BC
     call StartMessageCommand09HL_B04
@@ -6630,7 +6630,7 @@ Jump_004_67BF:: ; address name
 
 ; entry 63 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case3F::
+DispatchTalkEvent_Case02_Sub01_Case3F::
 Jump_004_67C6:: ; address name
     ld hl, $01BD
     call StartMessageCommand09HL_B04
@@ -6638,7 +6638,7 @@ Jump_004_67C6:: ; address name
 
 ; entry 64 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case40::
+DispatchTalkEvent_Case02_Sub01_Case40::
 Jump_004_67CD:: ; address name
     ld hl, $01C0
     call StartMessageCommand09HL_B04
@@ -6646,7 +6646,7 @@ Jump_004_67CD:: ; address name
 
 ; entry 65 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case41::
+DispatchTalkEvent_Case02_Sub01_Case41::
 Jump_004_67D4:: ; address name
     ld hl, $01BF
     call StartMessageCommand09HL_B04
@@ -6655,7 +6655,7 @@ Jump_004_67D4:: ; address name
 ; entry 66 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_612B_Case42::
+DispatchTalkEvent_Case02_Sub01_Case42::
 Jump_004_67DB:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -6667,7 +6667,7 @@ Jump_004_67DB:: ; address name
 
 ; entry 67 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_612B_Case43::
+DispatchTalkEvent_Case02_Sub01_Case43::
 Jump_004_67EC:: ; address name
     ld de, $0058
     call TestFlagBit
@@ -6680,7 +6680,7 @@ Jump_004_67EC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: wStoryFlags
-Func_004_612B_Case44::
+DispatchTalkEvent_Case02_Sub01_Case44::
 Jump_004_67FA:: ; address name
     ld a, [wStoryFlags + $61]
     bit 4, a
@@ -6692,7 +6692,7 @@ Jump_004_67FA:: ; address name
 ; entry 69 of the `rst $00` table in Func_004_612B
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_612B_Case45::
+DispatchTalkEvent_Case02_Sub01_Case45::
 Jump_004_6806:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -6717,14 +6717,14 @@ DispatchTalkEvent_Case06_Sub01::
 Func_004_6827:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw Func_004_6827_Case00
-    dw Func_004_6827_Case01
+    dw DispatchTalkEvent_Case06_Sub01_Case00
+    dw DispatchTalkEvent_Case06_Sub01_Case01
 
 ; entry 0 of the `rst $00` table in Func_004_6827
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-Func_004_6827_Case00::
+DispatchTalkEvent_Case06_Sub01_Case00::
 Jump_004_682F:: ; address name
     ld de, $00D2
     call TestFlagBit
@@ -6763,7 +6763,7 @@ Jump_004_6875::
 
 ; entry 1 of the `rst $00` table in Func_004_6827
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6827_Case01::
+DispatchTalkEvent_Case06_Sub01_Case01::
 Jump_004_687C:: ; address name
     ld de, $00D0
     call TestFlagBit
@@ -6784,50 +6784,50 @@ DispatchTalkEvent_Case00_Sub01::
 Func_004_6892:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw Func_004_6892_Case00
-    dw Func_004_6892_Case01
-    dw Func_004_6892_Case02
-    dw Func_004_6892_Case00
-    dw Func_004_6892_Case04
-    dw Func_004_6892_Case05
-    dw Func_004_6892_Case06
-    dw Func_004_6892_Case07
-    dw Func_004_6892_Case08
-    dw Func_004_6892_Case09
-    dw Func_004_6892_Case0A
-    dw Func_004_6892_Case0B
-    dw Func_004_6892_Case0B
-    dw Func_004_6892_Case0B
-    dw Func_004_6892_Case0E
-    dw Func_004_6892_Case0F
-    dw Func_004_6892_Case10
-    dw Func_004_6892_Case11
-    dw Func_004_6892_Case12
-    dw Func_004_6892_Case13
-    dw Func_004_6892_Case14
-    dw Func_004_6892_Case15
-    dw Func_004_6892_Case16
-    dw Func_004_6892_Case17
-    dw Func_004_6892_Case18
-    dw Func_004_6892_Case19
-    dw Func_004_6892_Case1A
-    dw Func_004_6892_Case1B
-    dw Func_004_6892_Case1C
-    dw Func_004_6892_Case1D
-    dw Func_004_6892_Case1E
-    dw Func_004_6892_Case1F
-    dw Func_004_6892_Case20
-    dw Func_004_6892_Case21
-    dw Func_004_6892_Case22
-    dw Func_004_6892_Case23
-    dw Func_004_6892_Case24
-    dw Func_004_6892_Case25
-    dw Func_004_6892_Case26
-    dw Func_004_6892_Case00
+    dw DispatchTalkEvent_Case00_Sub01_Case00
+    dw DispatchTalkEvent_Case00_Sub01_Case01
+    dw DispatchTalkEvent_Case00_Sub01_Case02
+    dw DispatchTalkEvent_Case00_Sub01_Case00
+    dw DispatchTalkEvent_Case00_Sub01_Case04
+    dw DispatchTalkEvent_Case00_Sub01_Case05
+    dw DispatchTalkEvent_Case00_Sub01_Case06
+    dw DispatchTalkEvent_Case00_Sub01_Case07
+    dw DispatchTalkEvent_Case00_Sub01_Case08
+    dw DispatchTalkEvent_Case00_Sub01_Case09
+    dw DispatchTalkEvent_Case00_Sub01_Case0A
+    dw DispatchTalkEvent_Case00_Sub01_Case0B
+    dw DispatchTalkEvent_Case00_Sub01_Case0B
+    dw DispatchTalkEvent_Case00_Sub01_Case0B
+    dw DispatchTalkEvent_Case00_Sub01_Case0E
+    dw DispatchTalkEvent_Case00_Sub01_Case0F
+    dw DispatchTalkEvent_Case00_Sub01_Case10
+    dw DispatchTalkEvent_Case00_Sub01_Case11
+    dw DispatchTalkEvent_Case00_Sub01_Case12
+    dw DispatchTalkEvent_Case00_Sub01_Case13
+    dw DispatchTalkEvent_Case00_Sub01_Case14
+    dw DispatchTalkEvent_Case00_Sub01_Case15
+    dw DispatchTalkEvent_Case00_Sub01_Case16
+    dw DispatchTalkEvent_Case00_Sub01_Case17
+    dw DispatchTalkEvent_Case00_Sub01_Case18
+    dw DispatchTalkEvent_Case00_Sub01_Case19
+    dw DispatchTalkEvent_Case00_Sub01_Case1A
+    dw DispatchTalkEvent_Case00_Sub01_Case1B
+    dw DispatchTalkEvent_Case00_Sub01_Case1C
+    dw DispatchTalkEvent_Case00_Sub01_Case1D
+    dw DispatchTalkEvent_Case00_Sub01_Case1E
+    dw DispatchTalkEvent_Case00_Sub01_Case1F
+    dw DispatchTalkEvent_Case00_Sub01_Case20
+    dw DispatchTalkEvent_Case00_Sub01_Case21
+    dw DispatchTalkEvent_Case00_Sub01_Case22
+    dw DispatchTalkEvent_Case00_Sub01_Case23
+    dw DispatchTalkEvent_Case00_Sub01_Case24
+    dw DispatchTalkEvent_Case00_Sub01_Case25
+    dw DispatchTalkEvent_Case00_Sub01_Case26
+    dw DispatchTalkEvent_Case00_Sub01_Case00
 
 ; entry 30 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case1E::
+DispatchTalkEvent_Case00_Sub01_Case1E::
 Jump_004_68E6:: ; address name
     ld hl, Script_5173
     call StartScriptAtHL_B04
@@ -6835,7 +6835,7 @@ Jump_004_68E6:: ; address name
 
 ; entry 29 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case1D::
+DispatchTalkEvent_Case00_Sub01_Case1D::
 Jump_004_68ED:: ; address name
     ld hl, Script_5171
     call StartScriptAtHL_B04
@@ -6843,7 +6843,7 @@ Jump_004_68ED:: ; address name
 
 ; entry 28 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case1C::
+DispatchTalkEvent_Case00_Sub01_Case1C::
 Jump_004_68F4:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -6857,7 +6857,7 @@ Jump_004_68FD::
 
 ; entry 27 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case1B::
+DispatchTalkEvent_Case00_Sub01_Case1B::
 Jump_004_6904:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -6871,7 +6871,7 @@ Jump_004_690D::
 
 ; entry 26 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case1A::
+DispatchTalkEvent_Case00_Sub01_Case1A::
 Jump_004_6914:: ; address name
     ld hl, Script_516B
     call StartScriptAtHL_B04
@@ -6879,7 +6879,7 @@ Jump_004_6914:: ; address name
 
 ; entry 25 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case19::
+DispatchTalkEvent_Case00_Sub01_Case19::
 Jump_004_691B:: ; address name
     ld hl, Script_5169
     call StartScriptAtHL_B04
@@ -6887,7 +6887,7 @@ Jump_004_691B:: ; address name
 
 ; entry 24 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case18::
+DispatchTalkEvent_Case00_Sub01_Case18::
 Jump_004_6922:: ; address name
     ld hl, Script_515F
     call StartScriptAtHL_B04
@@ -6895,7 +6895,7 @@ Jump_004_6922:: ; address name
 
 ; entry 31 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case1F::
+DispatchTalkEvent_Case00_Sub01_Case1F::
 Jump_004_6929:: ; address name
     ld hl, Script_5164
     call StartScriptAtHL_B04
@@ -6903,7 +6903,7 @@ Jump_004_6929:: ; address name
 
 ; entry 21 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case15::
+DispatchTalkEvent_Case00_Sub01_Case15::
 Jump_004_6930:: ; address name
     ld hl, Script_5155
     call StartScriptAtHL_B04
@@ -6911,7 +6911,7 @@ Jump_004_6930:: ; address name
 
 ; entry 22 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case16::
+DispatchTalkEvent_Case00_Sub01_Case16::
 Jump_004_6937:: ; address name
     ld hl, Script_5157
     call StartScriptAtHL_B04
@@ -6919,7 +6919,7 @@ Jump_004_6937:: ; address name
 
 ; entry 23 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case17::
+DispatchTalkEvent_Case00_Sub01_Case17::
 Jump_004_693E:: ; address name
     ld hl, Script_5159
     call StartScriptAtHL_B04
@@ -6927,7 +6927,7 @@ Jump_004_693E:: ; address name
 
 ; entry 32 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case20::
+DispatchTalkEvent_Case00_Sub01_Case20::
 Jump_004_6945:: ; address name
     ld hl, Script_515B
     call StartScriptAtHL_B04
@@ -6935,7 +6935,7 @@ Jump_004_6945:: ; address name
 
 ; entry 33 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case21::
+DispatchTalkEvent_Case00_Sub01_Case21::
 Jump_004_694C:: ; address name
     ld hl, Script_515D
     call StartScriptAtHL_B04
@@ -6945,7 +6945,7 @@ Jump_004_694C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-Func_004_6892_Case22::
+DispatchTalkEvent_Case00_Sub01_Case22::
 Jump_004_6953:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -6965,7 +6965,7 @@ Jump_004_6953:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, wPartyCount, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-Func_004_6892_Case23::
+DispatchTalkEvent_Case00_Sub01_Case23::
 Jump_004_696C:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -6988,7 +6988,7 @@ Jump_004_696C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, wPartyCount, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-Func_004_6892_Case24::
+DispatchTalkEvent_Case00_Sub01_Case24::
 Jump_004_698B:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7012,7 +7012,7 @@ Jump_004_698B:: ; address name
 ; entry 37 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay
-Func_004_6892_Case25::
+DispatchTalkEvent_Case00_Sub01_Case25::
 Jump_004_69AC:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7024,7 +7024,7 @@ Jump_004_69AC:: ; address name
 ; entry 38 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFollowerDelay
-Func_004_6892_Case26::
+DispatchTalkEvent_Case00_Sub01_Case26::
 Jump_004_69B8:: ; address name
     xor a, a
     ld [wFollowerDelay], a
@@ -7032,7 +7032,7 @@ Jump_004_69B8:: ; address name
 
 ; entry 16 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case10::
+DispatchTalkEvent_Case00_Sub01_Case10::
 Jump_004_69BD:: ; address name
     ld hl, Script_514B
     call StartScriptAtHL_B04
@@ -7040,7 +7040,7 @@ Jump_004_69BD:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case11::
+DispatchTalkEvent_Case00_Sub01_Case11::
 Jump_004_69C4:: ; address name
     ld hl, Script_514D
     call StartScriptAtHL_B04
@@ -7048,7 +7048,7 @@ Jump_004_69C4:: ; address name
 
 ; entry 18 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case12::
+DispatchTalkEvent_Case00_Sub01_Case12::
 Jump_004_69CB:: ; address name
     ld hl, Script_514F
     call StartScriptAtHL_B04
@@ -7056,7 +7056,7 @@ Jump_004_69CB:: ; address name
 
 ; entry 19 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case13::
+DispatchTalkEvent_Case00_Sub01_Case13::
 Jump_004_69D2:: ; address name
     ld hl, Script_5151
     call StartScriptAtHL_B04
@@ -7064,7 +7064,7 @@ Jump_004_69D2:: ; address name
 
 ; entry 20 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case14::
+DispatchTalkEvent_Case00_Sub01_Case14::
 Jump_004_69D9:: ; address name
     ld hl, Script_5153
     call StartScriptAtHL_B04
@@ -7072,13 +7072,13 @@ Jump_004_69D9:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case00::
+DispatchTalkEvent_Case00_Sub01_Case00::
 Jump_004_69E0:: ; address name
     ret
 
 ; entry 1 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case01::
+DispatchTalkEvent_Case00_Sub01_Case01::
 Jump_004_69E1:: ; address name
     ld hl, Script_512F
     call StartScriptAtHL_B04
@@ -7086,7 +7086,7 @@ Jump_004_69E1:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case02::
+DispatchTalkEvent_Case00_Sub01_Case02::
 Jump_004_69E8:: ; address name
     ld hl, Script_5131
     call StartScriptAtHL_B04
@@ -7094,7 +7094,7 @@ Jump_004_69E8:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case04::
+DispatchTalkEvent_Case00_Sub01_Case04::
 Jump_004_69EF:: ; address name
     ld hl, Script_5137
     call StartScriptAtHL_B04
@@ -7102,7 +7102,7 @@ Jump_004_69EF:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case05::
+DispatchTalkEvent_Case00_Sub01_Case05::
 Jump_004_69F6:: ; address name
     ld hl, Script_5139
     call StartScriptAtHL_B04
@@ -7110,7 +7110,7 @@ Jump_004_69F6:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case06::
+DispatchTalkEvent_Case00_Sub01_Case06::
 Jump_004_69FD:: ; address name
     ld hl, Script_513B
     call StartScriptAtHL_B04
@@ -7118,7 +7118,7 @@ Jump_004_69FD:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case07::
+DispatchTalkEvent_Case00_Sub01_Case07::
 Jump_004_6A04:: ; address name
     ld hl, Script_513D
     call StartScriptAtHL_B04
@@ -7126,7 +7126,7 @@ Jump_004_6A04:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case08::
+DispatchTalkEvent_Case00_Sub01_Case08::
 Jump_004_6A0B:: ; address name
     ld hl, Script_513F
     call StartScriptAtHL_B04
@@ -7134,7 +7134,7 @@ Jump_004_6A0B:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case09::
+DispatchTalkEvent_Case00_Sub01_Case09::
 Jump_004_6A12:: ; address name
     ld hl, Script_5141
     call StartScriptAtHL_B04
@@ -7142,7 +7142,7 @@ Jump_004_6A12:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case0A::
+DispatchTalkEvent_Case00_Sub01_Case0A::
 Jump_004_6A19:: ; address name
     ld hl, Script_5143
     call StartScriptAtHL_B04
@@ -7150,7 +7150,7 @@ Jump_004_6A19:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case0B::
+DispatchTalkEvent_Case00_Sub01_Case0B::
 Jump_004_6A20:: ; address name
     ld hl, Script_5145
     call StartScriptAtHL_B04
@@ -7158,7 +7158,7 @@ Jump_004_6A20:: ; address name
 
 ; entry 14 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case0E::
+DispatchTalkEvent_Case00_Sub01_Case0E::
 Jump_004_6A27:: ; address name
     ld hl, Script_5147
     call StartScriptAtHL_B04
@@ -7166,7 +7166,7 @@ Jump_004_6A27:: ; address name
 
 ; entry 15 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6892_Case0F::
+DispatchTalkEvent_Case00_Sub01_Case0F::
 Jump_004_6A2E:: ; address name
     ld hl, Script_5149
     call StartScriptAtHL_B04
@@ -7179,54 +7179,54 @@ DispatchTalkEvent_Case07_Sub01::
 Func_004_6A35:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw Func_004_6A35_Case00
-    dw Func_004_6A35_Case01
-    dw Func_004_6A35_Case02
-    dw Func_004_6A35_Case03
-    dw Func_004_6A35_Case04
-    dw Func_004_6A35_Case05
-    dw Func_004_6A35_Case06
-    dw Func_004_6A35_Case07
-    dw Func_004_6A35_Case08
-    dw Func_004_6A35_Case09
-    dw Func_004_6A35_Case0A
-    dw Func_004_6A35_Case0B
-    dw Func_004_6A35_Case0C
-    dw Func_004_6A35_Case0D
-    dw Func_004_6A35_Case0E
-    dw Func_004_6A35_Case0F
-    dw Func_004_6A35_Case10
-    dw Func_004_6A35_Case11
-    dw Func_004_6A35_Case12
-    dw Func_004_6A35_Case13
-    dw Func_004_6A35_Case14
-    dw Func_004_6A35_Case15
-    dw Func_004_6A35_Case16
-    dw Func_004_6A35_Case17
-    dw Func_004_6A35_Case18
-    dw Func_004_6A35_Case19
-    dw Func_004_6A35_Case1A
-    dw Func_004_6A35_Case1B
+    dw DispatchTalkEvent_Case07_Sub01_Case00
+    dw DispatchTalkEvent_Case07_Sub01_Case01
+    dw DispatchTalkEvent_Case07_Sub01_Case02
+    dw DispatchTalkEvent_Case07_Sub01_Case03
+    dw DispatchTalkEvent_Case07_Sub01_Case04
+    dw DispatchTalkEvent_Case07_Sub01_Case05
+    dw DispatchTalkEvent_Case07_Sub01_Case06
+    dw DispatchTalkEvent_Case07_Sub01_Case07
+    dw DispatchTalkEvent_Case07_Sub01_Case08
+    dw DispatchTalkEvent_Case07_Sub01_Case09
+    dw DispatchTalkEvent_Case07_Sub01_Case0A
+    dw DispatchTalkEvent_Case07_Sub01_Case0B
+    dw DispatchTalkEvent_Case07_Sub01_Case0C
+    dw DispatchTalkEvent_Case07_Sub01_Case0D
+    dw DispatchTalkEvent_Case07_Sub01_Case0E
+    dw DispatchTalkEvent_Case07_Sub01_Case0F
+    dw DispatchTalkEvent_Case07_Sub01_Case10
+    dw DispatchTalkEvent_Case07_Sub01_Case11
+    dw DispatchTalkEvent_Case07_Sub01_Case12
+    dw DispatchTalkEvent_Case07_Sub01_Case13
+    dw DispatchTalkEvent_Case07_Sub01_Case14
+    dw DispatchTalkEvent_Case07_Sub01_Case15
+    dw DispatchTalkEvent_Case07_Sub01_Case16
+    dw DispatchTalkEvent_Case07_Sub01_Case17
+    dw DispatchTalkEvent_Case07_Sub01_Case18
+    dw DispatchTalkEvent_Case07_Sub01_Case19
+    dw DispatchTalkEvent_Case07_Sub01_Case1A
+    dw DispatchTalkEvent_Case07_Sub01_Case1B
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw Talk075F_KiralFetchMeMy
     dw Talk075A_PiiGgzzPiiiiii
-    dw Func_004_6A35_Case22
-    dw Func_004_6A35_Case23
-    dw Func_004_6A35_Case24
-    dw Func_004_6A35_Case25
-    dw Func_004_6A35_Case26
-    dw Func_004_6A35_Case27
-    dw Func_004_6A35_Case28
-    dw Func_004_6A35_Case29
-    dw Func_004_6A35_Case2A
+    dw DispatchTalkEvent_Case07_Sub01_Case22
+    dw DispatchTalkEvent_Case07_Sub01_Case23
+    dw DispatchTalkEvent_Case07_Sub01_Case24
+    dw DispatchTalkEvent_Case07_Sub01_Case25
+    dw DispatchTalkEvent_Case07_Sub01_Case26
+    dw DispatchTalkEvent_Case07_Sub01_Case27
+    dw DispatchTalkEvent_Case07_Sub01_Case28
+    dw DispatchTalkEvent_Case07_Sub01_Case29
+    dw DispatchTalkEvent_Case07_Sub01_Case2A
     dw Talk0768_HeroPeeredIntoThe
     dw Talk0768_HeroPeeredIntoThe_70FC
     dw Talk078E_RobosterStoppedMovingEntirely
     dw Talk077B_HeroPeeredIntoThe
-    dw Func_004_6A35_Case2F
+    dw DispatchTalkEvent_Case07_Sub01_Case2F
     dw TalkMsg078F_ThisIsTheTown
     dw TalkMsg0790_AreYouFriendsWith
     dw TalkMsg0791_WowYouHaveMonsters
@@ -7243,7 +7243,7 @@ Func_004_6A35:: ; address name
     dw StartScript6445ByPlayerX30
     dw TalkMsg079F_IfYouTravelWest
     dw Talk07D7_MilayouIEBeen
-    dw Func_004_6A35_Case40
+    dw DispatchTalkEvent_Case07_Sub01_Case40
     dw TalkMsg07AA_ThatDealerHowExpensive
     dw Talk07C1_WhatMonstersAttackedYou
     dw TalkMsg07AE_ThatDealersWaresCould
@@ -7254,17 +7254,17 @@ Func_004_6A35:: ; address name
     dw StartScript6509Or652CByFlag1C2
     dw Msg01C8_ThisIsAGreat
     dw Msg01C9_ThisIsAGreat
-    dw Func_004_6A35_Case4B
-    dw Func_004_6A35_Case4C
-    dw Func_004_6A35_Case4D
-    dw Func_004_6A35_Case4E
-    dw Func_004_6A35_Case4F
+    dw DispatchTalkEvent_Case07_Sub01_Case4B
+    dw DispatchTalkEvent_Case07_Sub01_Case4C
+    dw DispatchTalkEvent_Case07_Sub01_Case4D
+    dw DispatchTalkEvent_Case07_Sub01_Case4E
+    dw DispatchTalkEvent_Case07_Sub01_Case4F
     dw Msg01CB_ThisIsAGreat
     dw TalkMsg0CFE
     dw Msg01CC_ThisIsAGreat
     dw Msg01CD_ThisIsAGreat
     dw Msg01CE_ThisIsAGreat
-    dw Func_004_6A35_Case55
+    dw DispatchTalkEvent_Case07_Sub01_Case55
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -7275,13 +7275,13 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw Func_004_6A35_Case60
-    dw Func_004_6A35_Case61
-    dw Func_004_6A35_Case62
-    dw Func_004_6A35_Case63
-    dw Func_004_6A35_Case63
-    dw Func_004_6A35_Case63
-    dw Func_004_6A35_Case63
+    dw DispatchTalkEvent_Case07_Sub01_Case60
+    dw DispatchTalkEvent_Case07_Sub01_Case61
+    dw DispatchTalkEvent_Case07_Sub01_Case62
+    dw DispatchTalkEvent_Case07_Sub01_Case63
+    dw DispatchTalkEvent_Case07_Sub01_Case63
+    dw DispatchTalkEvent_Case07_Sub01_Case63
+    dw DispatchTalkEvent_Case07_Sub01_Case63
     dw Talk0C17
     dw Msg01D5
     dw Msg01D6
@@ -7299,7 +7299,7 @@ Func_004_6A35:: ; address name
     dw Msg0170_IFeelBadlyFor
     dw Msg0171_WhatOpenTheCanal
     dw Msg0172_KingArrghIKnow
-    dw Func_004_6A35_Case78
+    dw DispatchTalkEvent_Case07_Sub01_Case78
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -7307,13 +7307,13 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw Func_004_6A35_Case80
-    dw Func_004_6A35_Case81
-    dw Func_004_6A35_Case82
-    dw Func_004_6A35_Case83
-    dw Func_004_6A35_Case83
-    dw Func_004_6A35_Case83
-    dw Func_004_6A35_Case83
+    dw DispatchTalkEvent_Case07_Sub01_Case80
+    dw DispatchTalkEvent_Case07_Sub01_Case81
+    dw DispatchTalkEvent_Case07_Sub01_Case82
+    dw DispatchTalkEvent_Case07_Sub01_Case83
+    dw DispatchTalkEvent_Case07_Sub01_Case83
+    dw DispatchTalkEvent_Case07_Sub01_Case83
+    dw DispatchTalkEvent_Case07_Sub01_Case83
     dw Talk0C2F
     dw Msg0175_ImMakingANew
     dw Msg0176_GaahYoureTooStrong
@@ -7339,13 +7339,13 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw Func_004_6A35_CaseA0
-    dw Func_004_6A35_CaseA1
-    dw Func_004_6A35_CaseA2
-    dw Func_004_6A35_CaseA3
-    dw Func_004_6A35_CaseA3
-    dw Func_004_6A35_CaseA3
-    dw Func_004_6A35_CaseA3
+    dw DispatchTalkEvent_Case07_Sub01_CaseA0
+    dw DispatchTalkEvent_Case07_Sub01_CaseA1
+    dw DispatchTalkEvent_Case07_Sub01_CaseA2
+    dw DispatchTalkEvent_Case07_Sub01_CaseA3
+    dw DispatchTalkEvent_Case07_Sub01_CaseA3
+    dw DispatchTalkEvent_Case07_Sub01_CaseA3
+    dw DispatchTalkEvent_Case07_Sub01_CaseA3
     dw Talk0C47
     dw Msg00F5_ItIsAnItem
     dw Msg00F6_HelloWhatCanI
@@ -7367,7 +7367,7 @@ Func_004_6A35:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case00::
+DispatchTalkEvent_Case07_Sub01_Case00::
 Jump_004_6BB9:: ; address name
     ld de, $0140
     call TestFlagBit
@@ -7389,7 +7389,7 @@ Jump_004_6BC8::
 
 ; entry 1 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case01::
+DispatchTalkEvent_Case07_Sub01_Case01::
 Jump_004_6BDD:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7457,7 +7457,7 @@ Jump_004_6C52::
 
 ; entry 2 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case02::
+DispatchTalkEvent_Case07_Sub01_Case02::
 Jump_004_6C59:: ; address name
     ld de, $0152
     call TestFlagBit
@@ -7501,7 +7501,7 @@ Jump_004_6CA1::
 
 ; entry 3 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case03::
+DispatchTalkEvent_Case07_Sub01_Case03::
 Jump_004_6CA8:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7533,7 +7533,7 @@ Jump_004_6CD5::
 
 ; entry 4 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case04::
+DispatchTalkEvent_Case07_Sub01_Case04::
 Jump_004_6CDC:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7557,7 +7557,7 @@ Jump_004_6CFA::
 
 ; entry 5 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case05::
+DispatchTalkEvent_Case07_Sub01_Case05::
 Jump_004_6D01:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7573,7 +7573,7 @@ Jump_004_6D10::
 
 ; entry 6 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case06::
+DispatchTalkEvent_Case07_Sub01_Case06::
 Jump_004_6D17:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7605,7 +7605,7 @@ Jump_004_6D44::
 
 ; entry 7 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case07::
+DispatchTalkEvent_Case07_Sub01_Case07::
 Jump_004_6D4B:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7621,7 +7621,7 @@ Jump_004_6D5A::
 
 ; entry 8 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case08::
+DispatchTalkEvent_Case07_Sub01_Case08::
 Jump_004_6D61:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7653,7 +7653,7 @@ Jump_004_6D8E::
 
 ; entry 9 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case09::
+DispatchTalkEvent_Case07_Sub01_Case09::
 Jump_004_6D95:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7686,7 +7686,7 @@ Jump_004_6DC2::
 ; entry 10 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-Func_004_6A35_Case0A::
+DispatchTalkEvent_Case07_Sub01_Case0A::
 Jump_004_6DC9:: ; address name
     ld a, $10
     ld [wScreenTableIndex], a
@@ -7698,7 +7698,7 @@ Jump_004_6DC9:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case0B::
+DispatchTalkEvent_Case07_Sub01_Case0B::
 Jump_004_6DDA:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7766,7 +7766,7 @@ Jump_004_6E4F::
 
 ; entry 12 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case0C::
+DispatchTalkEvent_Case07_Sub01_Case0C::
 Jump_004_6E56:: ; address name
     ld de, $0148
     call TestFlagBit
@@ -7777,7 +7777,7 @@ Jump_004_6E56:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case0D::
+DispatchTalkEvent_Case07_Sub01_Case0D::
 Jump_004_6E64:: ; address name
     ld de, $014A
     call TestFlagBit
@@ -7793,7 +7793,7 @@ Jump_004_6E73::
 
 ; entry 14 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case0E::
+DispatchTalkEvent_Case07_Sub01_Case0E::
 Jump_004_6E7A:: ; address name
     ld de, $014A
     call TestFlagBit
@@ -7809,7 +7809,7 @@ Jump_004_6E89::
 
 ; entry 15 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case0F::
+DispatchTalkEvent_Case07_Sub01_Case0F::
 Jump_004_6E90:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7843,7 +7843,7 @@ Jump_004_6EC3::
 
 ; entry 16 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case10::
+DispatchTalkEvent_Case07_Sub01_Case10::
 Jump_004_6ECA:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7867,7 +7867,7 @@ Jump_004_6EE8::
 
 ; entry 17 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case11::
+DispatchTalkEvent_Case07_Sub01_Case11::
 Jump_004_6EEF:: ; address name
     ld de, $0150
     call TestFlagBit
@@ -7885,7 +7885,7 @@ Jump_004_6F04::
 
 ; entry 18 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case12::
+DispatchTalkEvent_Case07_Sub01_Case12::
 Jump_004_6F0B:: ; address name
     ld de, $014C
     call TestFlagBit
@@ -7899,7 +7899,7 @@ Jump_004_6F0B:: ; address name
 ; entry 19 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case13::
+DispatchTalkEvent_Case07_Sub01_Case13::
 Jump_004_6F1F:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -7912,7 +7912,7 @@ Jump_004_6F1F:: ; address name
 ; entry 20 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case14::
+DispatchTalkEvent_Case07_Sub01_Case14::
 Jump_004_6F30:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -7925,7 +7925,7 @@ Jump_004_6F30:: ; address name
 ; entry 21 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case15::
+DispatchTalkEvent_Case07_Sub01_Case15::
 Jump_004_6F41:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -7937,7 +7937,7 @@ Jump_004_6F41:: ; address name
 
 ; entry 22 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case16::
+DispatchTalkEvent_Case07_Sub01_Case16::
 Jump_004_6F52:: ; address name
     ld hl, $0756
     call StartMessageCommand09HL_B04
@@ -7945,7 +7945,7 @@ Jump_004_6F52:: ; address name
 
 ; entry 23 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case17::
+DispatchTalkEvent_Case07_Sub01_Case17::
 Jump_004_6F59:: ; address name
     ld hl, $0758
     call StartMessageCommand09HL_B04
@@ -7954,7 +7954,7 @@ Jump_004_6F59:: ; address name
 ; entry 24 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case18::
+DispatchTalkEvent_Case07_Sub01_Case18::
 Jump_004_6F60:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -7967,7 +7967,7 @@ Jump_004_6F60:: ; address name
 ; entry 25 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case19::
+DispatchTalkEvent_Case07_Sub01_Case19::
 Jump_004_6F71:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -7980,7 +7980,7 @@ Jump_004_6F71:: ; address name
 ; entry 26 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case1A::
+DispatchTalkEvent_Case07_Sub01_Case1A::
 Jump_004_6F82:: ; address name
     ld a, $00
     ld [wScriptParam0], a
@@ -7992,7 +7992,7 @@ Jump_004_6F82:: ; address name
 
 ; entry 27 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case1B::
+DispatchTalkEvent_Case07_Sub01_Case1B::
 Jump_004_6F93:: ; address name
     ld hl, $0757
     call StartMessageCommand09HL_B04
@@ -8133,7 +8133,7 @@ Jump_004_708C::
 
 ; entry 34 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case22::
+DispatchTalkEvent_Case07_Sub01_Case22::
 Jump_004_7093:: ; address name
     ld hl, $0760
     call StartMessageCommand09HL_B04
@@ -8141,7 +8141,7 @@ Jump_004_7093:: ; address name
 
 ; entry 35 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case23::
+DispatchTalkEvent_Case07_Sub01_Case23::
 Jump_004_709A:: ; address name
     ld hl, $0761
     call StartMessageCommand09HL_B04
@@ -8150,7 +8150,7 @@ Jump_004_709A:: ; address name
 ; entry 36 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case24::
+DispatchTalkEvent_Case07_Sub01_Case24::
 Jump_004_70A1:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -8162,7 +8162,7 @@ Jump_004_70A1:: ; address name
 
 ; entry 37 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case25::
+DispatchTalkEvent_Case07_Sub01_Case25::
 Jump_004_70B2:: ; address name
     ld hl, $0762
     call StartMessageCommand09HL_B04
@@ -8170,7 +8170,7 @@ Jump_004_70B2:: ; address name
 
 ; entry 38 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case26::
+DispatchTalkEvent_Case07_Sub01_Case26::
 Jump_004_70B9:: ; address name
     ld hl, $0763
     call StartMessageCommand09HL_B04
@@ -8178,7 +8178,7 @@ Jump_004_70B9:: ; address name
 
 ; entry 39 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case27::
+DispatchTalkEvent_Case07_Sub01_Case27::
 Jump_004_70C0:: ; address name
     ld hl, $0764
     call StartMessageCommand09HL_B04
@@ -8186,7 +8186,7 @@ Jump_004_70C0:: ; address name
 
 ; entry 40 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case28::
+DispatchTalkEvent_Case07_Sub01_Case28::
 Jump_004_70C7:: ; address name
     ld hl, $0765
     call StartMessageCommand09HL_B04
@@ -8195,7 +8195,7 @@ Jump_004_70C7:: ; address name
 ; entry 41 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case29::
+DispatchTalkEvent_Case07_Sub01_Case29::
 Jump_004_70CE:: ; address name
     ld a, $02
     ld [wScriptParam0], a
@@ -8207,7 +8207,7 @@ Jump_004_70CE:: ; address name
 
 ; entry 42 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case2A::
+DispatchTalkEvent_Case07_Sub01_Case2A::
 Jump_004_70DF:: ; address name
     ld hl, $0766
     call StartMessageCommand09HL_B04
@@ -8334,7 +8334,7 @@ Jump_004_719E::
 
 ; entry 47 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case2F::
+DispatchTalkEvent_Case07_Sub01_Case2F::
 Jump_004_71A5:: ; address name
     ld hl, $07B7
     call StartMessageCommand09HL_B04
@@ -8808,7 +8808,7 @@ Jump_004_7490::
 
 ; entry 64 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case40::
+DispatchTalkEvent_Case07_Sub01_Case40::
 Jump_004_7497:: ; address name
     ld hl, $07A9
     call StartMessageCommand09HL_B04
@@ -9115,7 +9115,7 @@ Jump_004_767E:: ; address name
 
 ; entry 75 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case4B::
+DispatchTalkEvent_Case07_Sub01_Case4B::
 Jump_004_768F:: ; address name
     ld hl, $0CFB
     call StartMessageCommand09HL_B04
@@ -9123,7 +9123,7 @@ Jump_004_768F:: ; address name
 
 ; entry 76 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case4C::
+DispatchTalkEvent_Case07_Sub01_Case4C::
 Jump_004_7696:: ; address name
     ld hl, $0CFA
     call StartMessageCommand09HL_B04
@@ -9131,7 +9131,7 @@ Jump_004_7696:: ; address name
 
 ; entry 77 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case4D::
+DispatchTalkEvent_Case07_Sub01_Case4D::
 Jump_004_769D:: ; address name
     ld hl, $0CFC
     call StartMessageCommand09HL_B04
@@ -9140,7 +9140,7 @@ Jump_004_769D:: ; address name
 ; entry 78 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Func_004_6A35_Case4E::
+DispatchTalkEvent_Case07_Sub01_Case4E::
 Jump_004_76A4:: ; address name
     ld a, $01
     ld [wScriptParam0], a
@@ -9152,7 +9152,7 @@ Jump_004_76A4:: ; address name
 
 ; entry 79 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case4F::
+DispatchTalkEvent_Case07_Sub01_Case4F::
 Jump_004_76B5:: ; address name
     ld hl, $0CFD
     call StartMessageCommand09HL_B04
@@ -9228,7 +9228,7 @@ Jump_004_7705:: ; address name
 
 ; entry 85 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case55::
+DispatchTalkEvent_Case07_Sub01_Case55::
 Jump_004_7716:: ; address name
     ld hl, Script_6595
     call StartScriptAtHL_B04
@@ -9236,7 +9236,7 @@ Jump_004_7716:: ; address name
 
 ; entry 96 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case60::
+DispatchTalkEvent_Case07_Sub01_Case60::
 Jump_004_771D:: ; address name
     ld hl, $0C03
     call StartMessageCommand09HL_B04
@@ -9244,7 +9244,7 @@ Jump_004_771D:: ; address name
 
 ; entry 97 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case61::
+DispatchTalkEvent_Case07_Sub01_Case61::
 Jump_004_7724:: ; address name
     ld hl, $0C02
     call StartMessageCommand09HL_B04
@@ -9252,7 +9252,7 @@ Jump_004_7724:: ; address name
 
 ; entry 98 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case62::
+DispatchTalkEvent_Case07_Sub01_Case62::
 Jump_004_772B:: ; address name
     ld de, $01D3
     call TestFlagBit
@@ -9270,7 +9270,7 @@ Jump_004_7740::
 
 ; entry 99 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case63::
+DispatchTalkEvent_Case07_Sub01_Case63::
 Jump_004_7747:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
@@ -9502,7 +9502,7 @@ Jump_004_7863:: ; address name
 
 ; entry 120 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case78::
+DispatchTalkEvent_Case07_Sub01_Case78::
 Jump_004_7874:: ; address name
     ld hl, Script_659E
     call StartScriptAtHL_B04
@@ -9510,7 +9510,7 @@ Jump_004_7874:: ; address name
 
 ; entry 128 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case80::
+DispatchTalkEvent_Case07_Sub01_Case80::
 Jump_004_787B:: ; address name
     ld hl, $0C1B
     call StartMessageCommand09HL_B04
@@ -9518,7 +9518,7 @@ Jump_004_787B:: ; address name
 
 ; entry 129 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case81::
+DispatchTalkEvent_Case07_Sub01_Case81::
 Jump_004_7882:: ; address name
     ld hl, $0C1A
     call StartMessageCommand09HL_B04
@@ -9526,7 +9526,7 @@ Jump_004_7882:: ; address name
 
 ; entry 130 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case82::
+DispatchTalkEvent_Case07_Sub01_Case82::
 Jump_004_7889:: ; address name
     ld de, $0173
     call TestFlagBit
@@ -9544,7 +9544,7 @@ Jump_004_789E::
 
 ; entry 131 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_Case83::
+DispatchTalkEvent_Case07_Sub01_Case83::
 Jump_004_78A5:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
@@ -9776,7 +9776,7 @@ Jump_004_79C1:: ; address name
 
 ; entry 160 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_CaseA0::
+DispatchTalkEvent_Case07_Sub01_CaseA0::
 Jump_004_79D2:: ; address name
     ld hl, $0C33
     call StartMessageCommand09HL_B04
@@ -9784,7 +9784,7 @@ Jump_004_79D2:: ; address name
 
 ; entry 161 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_CaseA1::
+DispatchTalkEvent_Case07_Sub01_CaseA1::
 Jump_004_79D9:: ; address name
     ld hl, $0C32
     call StartMessageCommand09HL_B04
@@ -9792,7 +9792,7 @@ Jump_004_79D9:: ; address name
 
 ; entry 162 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_CaseA2::
+DispatchTalkEvent_Case07_Sub01_CaseA2::
 Jump_004_79E0:: ; address name
     ld de, $00DE
     call TestFlagBit
@@ -9810,7 +9810,7 @@ Jump_004_79F5::
 
 ; entry 163 of the `rst $00` table in Func_004_6A35
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_6A35_CaseA3::
+DispatchTalkEvent_Case07_Sub01_CaseA3::
 Jump_004_79FC:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
@@ -10047,19 +10047,19 @@ DispatchTalkEvent_Case09_Sub01::
 Func_004_7B29:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw Func_004_7B29_Case00
-    dw Func_004_7B29_Case01
-    dw Func_004_7B29_Case02
-    dw Func_004_7B29_Case03
-    dw Func_004_7B29_Case04
-    dw Func_004_7B29_Case05
-    dw Func_004_7B29_Case06
-    dw Func_004_7B29_Case07
-    dw Func_004_7B29_Case08
+    dw DispatchTalkEvent_Case09_Sub01_Case00
+    dw DispatchTalkEvent_Case09_Sub01_Case01
+    dw DispatchTalkEvent_Case09_Sub01_Case02
+    dw DispatchTalkEvent_Case09_Sub01_Case03
+    dw DispatchTalkEvent_Case09_Sub01_Case04
+    dw DispatchTalkEvent_Case09_Sub01_Case05
+    dw DispatchTalkEvent_Case09_Sub01_Case06
+    dw DispatchTalkEvent_Case09_Sub01_Case07
+    dw DispatchTalkEvent_Case09_Sub01_Case08
 
 ; entry 0 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7B29_Case00::
+DispatchTalkEvent_Case09_Sub01_Case00::
 Jump_004_7B3F:: ; address name
     ld hl, Script_5133
     call StartScriptAtHL_B04
@@ -10070,7 +10070,7 @@ Jump_004_7B3F:: ; address name
 ; reads: wKeyWorldFloor
 ; writes: wDataBank, wScreenTableIndex
 ; points at: wKeyWorldFloorState
-Func_004_7B29_Case01::
+DispatchTalkEvent_Case09_Sub01_Case01::
 Jump_004_7B46:: ; address name
     ld a, $10
     ld [wDataBank], a
@@ -10109,7 +10109,7 @@ Jump_004_7B78::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, hPlayerFacing
 ; writes: wSpriteSlots, wDataBank
-Func_004_7B29_Case02::
+DispatchTalkEvent_Case09_Sub01_Case02::
 Jump_004_7B82:: ; address name
     ld a, [wMapType]
     cp a, $84
@@ -10136,7 +10136,7 @@ Jump_004_7B9C::
     ret
 
 ; A = 1 when the player stands on one of the trigger columns for wCD0B (1, 7, 8 or 9) on the matching map screen, else 0 (E-0127)
-; 1 call site from 1 routine (e.g. Func_004_7B29_Case02)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case09_Sub01_Case02)
 ; reads: wKeyWorldGoalKind, hMapScreenX, hPlayerX
 IsPlayerAtKeyWorldGoalKindTriggerColumn::
 Func_004_7BAB:: ; address name
@@ -10194,7 +10194,7 @@ Jump_004_7BF5::
 
 ; entry 3 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7B29_Case03::
+DispatchTalkEvent_Case09_Sub01_Case03::
 Jump_004_7BF7:: ; address name
     ld hl, Script_5135
     call StartScriptAtHL_B04
@@ -10202,7 +10202,7 @@ Jump_004_7BF7:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7B29_Case04::
+DispatchTalkEvent_Case09_Sub01_Case04::
 Jump_004_7BFE:: ; address name
     ld hl, $0120
     call StartMessageCommand09HL_B04
@@ -10210,7 +10210,7 @@ Jump_004_7BFE:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
-Func_004_7B29_Case05::
+DispatchTalkEvent_Case09_Sub01_Case05::
 Jump_004_7C05:: ; address name
     ld hl, $0122
     call StartMessageCommand09HL_B04
@@ -10219,7 +10219,7 @@ Jump_004_7C05:: ; address name
 ; entry 6 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind
-Func_004_7B29_Case06::
+DispatchTalkEvent_Case09_Sub01_Case06::
 Jump_004_7C0C:: ; address name
     ld a, [wKeyWorldGoalKind]
     cp a, $05
@@ -10235,7 +10235,7 @@ Jump_004_7C0C:: ; address name
 ; entry 7 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_7B29_Case07::
+DispatchTalkEvent_Case09_Sub01_Case07::
 Jump_004_7C1F:: ; address name
     ld a, $10
     ld [wDataBank], a
@@ -10246,7 +10246,7 @@ Jump_004_7C1F:: ; address name
 ; entry 8 of the `rst $00` table in Func_004_7B29
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-Func_004_7B29_Case08::
+DispatchTalkEvent_Case09_Sub01_Case08::
 Jump_004_7C2B:: ; address name
     ld a, $1F
     ld [wDataBank], a

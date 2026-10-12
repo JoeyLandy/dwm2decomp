@@ -2425,18 +2425,18 @@ Func_002_4F4C:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw Func_002_4F4C_Case00
-    dw Func_002_4F4C_Case00
-    dw Func_002_4F4C_Case00
-    dw Func_002_4F4C_Case03
-    dw Func_002_4F4C_Case00
-    dw Func_002_4F4C_Case00
-    dw Func_002_4F4C_Case00
-    dw Func_002_4F4C_Case07
+    dw FieldModeStateDispatch_Case05_Sub01_Case00
+    dw FieldModeStateDispatch_Case05_Sub01_Case00
+    dw FieldModeStateDispatch_Case05_Sub01_Case00
+    dw FieldModeStateDispatch_Case05_Sub01_Case03
+    dw FieldModeStateDispatch_Case05_Sub01_Case00
+    dw FieldModeStateDispatch_Case05_Sub01_Case00
+    dw FieldModeStateDispatch_Case05_Sub01_Case00
+    dw FieldModeStateDispatch_Case05_Sub01_Case07
 
 ; entry 0 of the `rst $00` table in Func_002_4F4C
 ; no direct call (reached through a table, a jump or a vector)
-Func_002_4F4C_Case00::
+FieldModeStateDispatch_Case05_Sub01_Case00::
 Jump_002_4F7E:: ; address name
     ret
 
@@ -2444,7 +2444,7 @@ Jump_002_4F7E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, hPlayerFacing, hMapScreenY, hPlayerX, hPlayerY
 ; writes: wFieldReturnPhase, wGameMode, wModeState, wGameMode2State, wJoypadHeld, wJoypadPressed
-Func_002_4F4C_Case03::
+FieldModeStateDispatch_Case05_Sub01_Case03::
 Jump_002_4F7F:: ; address name
     ld a, [wKeyWorldFloor]
     add a, a
@@ -2477,7 +2477,7 @@ Jump_002_4FAA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wFieldReturnPhase, wGameMode, wModeState, wGameMode2State, wJoypadHeld, wJoypadPressed
-Func_002_4F4C_Case07::
+FieldModeStateDispatch_Case05_Sub01_Case07::
 Jump_002_4FAB:: ; address name
     ldh a, [hPlayerFacing]
     cp a, $02
@@ -3226,7 +3226,7 @@ Jump_002_5408::
     ret
 
 ; does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hFF9A, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)
-; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case00, ScriptCommand49_Run_Case01, ...)
+; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case00, SceneMedicineGiven_Case01, ...)
 ; reads: wFadeState, hPlayerTurnDelay, hPlayerStateFlags, wFieldActionRequest, wJoypadPressed, hPlayerFacing, hPlayerX, wScriptRunning, ...
 ; writes: hPlayerTurnDelay, hPlayerFacing, hPlayerStateFlags, hPlayerStepDXLo, hPlayerStepDXHi, hMapScreenX, wFieldActionRequest, wScreenScrollDir, ...
 ; points at: hSndNoteTimer, hMapScreenX, hMapScreenY, hFF80, hFFF8
@@ -4401,7 +4401,7 @@ Data_002_5B89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $85, $10, $50, $60, $FF
 
 ; clears wC8CE; if bit 7 of wC8CD is set, draws the full screen buffer to the BG map at the scroll position and clears wC8CD and wC8CE (E-0121)
-; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, UpdatePlayerMovement_Sub01, Func_002_4F4C_Case07, ...)
+; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, UpdatePlayerMovement_Sub01, FieldModeStateDispatch_Case05_Sub01_Case07, ...)
 ; reads: wPartyWindowFlags, hScrollY, hScrollX
 ; writes: wPartyWindowTimer, wPartyWindowFlags
 RedrawScreenBufferIfPartyWindowFlagsBit7::
@@ -4436,7 +4436,7 @@ Func_002_5B9E:: ; address name
     ret
 
 ; if bit 7 of wC468 is set, runs the routine for wC468 & 3 (jump table) (E-0122)
-; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case00, ScriptCommand49_Run_Case01, ...)
+; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case01, FieldModeStateDispatch_Case00, SceneMedicineGiven_Case01, ...)
 ; reads: wFieldActionRequest
 RunFieldActionRequestActionIfBit7::
 Func_002_5BD7:: ; address name
@@ -4858,7 +4858,7 @@ Func_002_5E82:: ; address name
     call MoveIncapacitatedPartyMembersBack
 
 ; reorders the party list so a member with bit 7 of field $55 set moves behind one without it (second/third and first/second pairs) (E-0127)
-; 23 call sites from 12 routines (e.g. InitFieldScreen, RunFunc5E85Twice, ScriptCommand58_Run_Case22, ScriptCommand9B_Run_Case05, ...)
+; 23 call sites from 12 routines (e.g. InitFieldScreen, RunFunc5E85Twice, SceneThreeItems_Case22, ScriptCommand9B_Run_Case05, ...)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
 MoveIncapacitatedPartyMembersBack::
@@ -4918,7 +4918,7 @@ Jump_002_5EE9::
     ret
 
 ; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wD000 to wD2D0 (rSVBK = 2); saves wSpriteSlotCount in wCB7E. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
-; 23 call sites from 21 routines (e.g. CheckInteractionInFront, Func_002_4F4C_Case07, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
+; 23 call sites from 21 routines (e.g. CheckInteractionInFront, FieldModeStateDispatch_Case05_Sub01_Case07, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wScreenSavedFlag
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wSavedScreenAttrs
@@ -4954,7 +4954,7 @@ Jump_002_5F1B::
     ret
 
 ; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wD2D0 back to wD000 (rSVBK = 2); restores wSpriteSlotCount from wCB7E (E-0066)
-; 7 call sites from 7 routines (e.g. InitFieldScreen, ScriptCommand82_Run_Case0A_Case08, ScriptCommand2A_Run_Case0F, ScriptCommand2A_Run_Case0D, ...)
+; 7 call sites from 7 routines (e.g. InitFieldScreen, ScriptCommand82_Run_Case0A_Case08, SceneWatchOut_Case0F, SceneWatchOut_Case0D, ...)
 ; reads: wIsCGB, wScreenSavedFlag
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wSavedScreenAttrs, wScreenAttrBuffer
@@ -5148,7 +5148,7 @@ Jump_002_6045::
     ret
 
 ; wC608 = $FF (no current music), then falls into PlayMapMusic so the map's music always restarts (E-0122)
-; 11 call sites from 11 routines (e.g. GameMode1_Init, InitFieldScreen, Func_000_2950_Case09, RunMenuStateMenuState_Case05, ...)
+; 11 call sites from 11 routines (e.g. GameMode1_Init, InitFieldScreen, StepStringDisplayUntilDone_Sub01_Sub02_Case09, RunMenuStateMenuState_Case05, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 ; writes: wCurrentMusic
 RestartMapMusic::
@@ -5157,7 +5157,7 @@ Func_002_604B:: ; address name
     ld [wCurrentMusic], a
 
 ; chooses the music for the current map (by wCC44 and hMapId, with story-flag cases) and queues it unless it is already wC608 (E-0122)
-; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case04, RunFieldReturnPhase_Case02, ScriptCommand58_Run_Case28, ScriptCommand46_Run_Case0A, ...)
+; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_Case04, RunFieldReturnPhase_Case02, SceneThreeItems_Case28, SceneCheerYuna_Case0A, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 PlayMapMusic::
 Func_002_6050:: ; address name
@@ -8713,7 +8713,7 @@ Data_002_75F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00
 
 ; SRAM bank 1: C = $FF when sBB00 is not $55 or the checksum of the four saved blocks plus $9753 differs from sBF98; otherwise loads them and returns with C unchanged (E-0127)
-; 1 call site from 1 routine (e.g. Func_033_5215_Table2_Case05_Case0C)
+; 1 call site from 1 routine (e.g. RunLinkExchangeState_450D_Case01_Sub01_Table2_Case05_Case0C)
 ; reads: sSaveSignature, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3
 ; points at: sSaveData, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
@@ -8797,7 +8797,7 @@ Func_002_7674:: ; address name
     ret
 
 ; SRAM bank 1: copies hFF8A ($0E bytes), wC60C ($291), wCBD7 ($6B) and wCC42 ($B5) to sBB01 onward while summing them; stores sum + $9753 at sBF98 and $55 at sBB00 (E-0121)
-; 2 call sites from 2 routines (e.g. Func_033_5215_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_Case03_Case01)
+; 2 call sites from 2 routines (e.g. RunLinkExchangeState_450D_Case01_Sub01_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_Case03_Case01)
 ; reads: hTemp2, hTemp3
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi, sSaveSignature
 ; points at: sSaveData, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
