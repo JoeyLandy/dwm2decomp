@@ -2431,6 +2431,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0315 — Helpers from E-0305 executed in tools/sm83.py; two palette quirks
+
+- Kind: EMULATION (our own emulator; not checked against hardware).
+- **New tests.** tests/test_helpers_behaviour.py (7 tests) runs helpers named by reading and compares them with their notes. These agree as written:
+  - KeyWorldDoorItem_ModuloBPlusOne: DE = (L mod B) + 1.
+  - BattleEnd_Step3_RecordKnowsSkill: A = $FF when the skill is among record buffer A's eight skills, else A is unchanged.
+  - GameMode4_Init_CountBattlerRecords: 1, 2 or 3 by the in-use bytes $4E and $9C on.
+  - MedalPrizeMenu_CountItem2C (count, or $FF when none) and MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot.
+  - RunBattleSetup_FleeCommand_SubtractFloor0 and ApplyMeatToRecordField6B_SubtractDEFloor0.
+- **Palette routines.** Both walk the three DMG palette bytes from wDMGPaletteBGP. Execution revealed two quirks that the notes did not mention.
+  - **C is never cleared.** C collects the three low shades of each byte and carries into the next one, so the second and third bytes also get the earlier bytes' low shades ORed in. This affects both LightenDMGPaletteOneStep and RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep.
+  - **Darkening wraps the top shade.** The top shade goes from 3 to 0, because $C0 + $40 overflows to $00 and passes the `cp $C1` cap check. Palette $E4 becomes $39.
+  - An exact model of both routines matches 60 random palettes each. The routine notes are rewritten, and the two quirks are recorded as likely game bugs (C2).
+- Binary verification: build/run434 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0314 — Readings executed in tools/sm83.py; the battle result has four counters (correction to E-0289)
 
 - Kind: EMULATION (our own SM83 emulator against the reference ROM; it has not been checked against hardware) and a correction.
