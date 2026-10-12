@@ -3976,7 +3976,7 @@ Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor, ...)
 ; writes: wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
 CallDrawPartySpeciesSpritesPreservingArg1AndTemp0::
@@ -4029,7 +4029,7 @@ Jump_01D_5C2E::
     ret
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, draws the species sprite of the record at WD789 cell 5 at ($90, $40) (Func_01D_69DA), then restores them (E-0127)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case15_DrawListEntriesCell5SpeciesSprite, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, SwapMonstersMenu_Case09_Case15_DrawListEntriesCell5SpeciesSprite, ...)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0

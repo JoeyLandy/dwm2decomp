@@ -1944,8 +1944,8 @@ Jump_0A1_4AD7::
 Jump_0A1_4ADC::
     call DrawBlinkingMetaSprite8
     call RunGameMode2State_Case02_Sub01_Sub03
-    call RunGameMode2State_Case02_Sub01_Sub04
-    call RunGameMode2State_Case02_Sub01_Sub02
+    call RunGameMode2State_Case02_Sub01_WaitMapType
+    call RunGameMode2State_Case02_Sub01_WaitGameMode2Byte50
     call RunGameMode2State_Case02_Sub01_Sub01
     ret
 
@@ -2139,7 +2139,7 @@ Jump_0A1_4C2D::
 ; reads: wGameMode2Byte50, wMapType, wMapObjectCount, wCursorCellY, wCursorCellH, wCursorCellX, hSpriteOriginX, wCursorCellW, ...
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 ; points at: wMapObjects
-RunGameMode2State_Case02_Sub01_Sub02::
+RunGameMode2State_Case02_Sub01_WaitGameMode2Byte50::
 Func_0A1_4C2E:: ; address name
     ld a, [wGameMode2Byte50]
     or a, a
@@ -2585,7 +2585,7 @@ Jump_0A1_4EDF::
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_UploadBGPalettes)
 ; reads: wMapType
 ; points at: wKeyWorldObjects
-RunGameMode2State_Case02_Sub01_Sub04::
+RunGameMode2State_Case02_Sub01_WaitMapType::
 Func_0A1_4EE7:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -2615,7 +2615,7 @@ Jump_0A1_4EF8::
     jp Jump_0A1_4EF0
 
 ; only called from RunGameMode2State_Case02_Sub01_Sub04 (E-0047)
-; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub01_Sub04)
+; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub01_WaitMapType)
 ; reads: wCursorCellY, wCursorCellH, wGameMode2Byte50, wCursorCellX, hSpriteOriginX, wCursorCellW, hSpriteOriginY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 RunGameMode2State_Case02_Sub01_Sub04_Multiply8::
@@ -2879,9 +2879,9 @@ Jump_0A1_50A5::
     ret
 
 Jump_0A1_50AE::
-    call RunGameMode2State_Case02_Sub03
+    call RunGameMode2State_Case02_WaitFrameCounterLo
     call RunGameMode2State_Case02_Sub04
-    call RunGameMode2State_Case02_Sub05
+    call RunGameMode2State_Case02_WaitMapType
     call RunGameMode2State_Case02_Sub02
     ret
 
@@ -3502,7 +3502,7 @@ Func_0A1_542E:: ; address name
 ; only called from RunGameMode2State_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)
 ; reads: wFrameCounterLo, wMapType, hMapId, wLastWarpIndex, hMapScreenX, hMapScreenY, wKeyWorldActive, wKeyWorldKey, ...
-RunGameMode2State_Case02_Sub03::
+RunGameMode2State_Case02_WaitFrameCounterLo::
 Func_0A1_5479:: ; address name
     ld a, [wFrameCounterLo]
     bit 5, a
@@ -3656,7 +3656,7 @@ Jump_0A1_5565::
     ret
 
 ; hSpriteOriginX = 8 * wC945 + A + 6 (E-0122)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_WaitFrameCounterLo, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
 ; reads: wCursorCellX
 ; writes: hSpriteOriginX
 SetSpriteXFromCursorCellX::
@@ -3672,7 +3672,7 @@ Func_0A1_5581:: ; address name
     ret
 
 ; hSpriteOriginY = 8 * wC946 + A + 6; the next entry dispatches on wCC44 & 7 (E-0124)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_WaitFrameCounterLo, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
 ; reads: wCursorCellY
 ; writes: hSpriteOriginY
 SetSpriteYFromCursorCellY::
@@ -3795,7 +3795,7 @@ Func_0A1_560D:: ; address name
     ldh [hSpriteOriginY], a
 
 ; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0) (E-0118)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_WaitFrameCounterLo, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawMetaSpriteSet08::
 Func_0A1_5639:: ; address name
@@ -3947,7 +3947,7 @@ Func_0A1_56DC:: ; address name
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)
 ; reads: wMapType
 ; points at: wKeyWorldObjects
-RunGameMode2State_Case02_Sub05::
+RunGameMode2State_Case02_WaitMapType::
 Func_0A1_56F7:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -3976,7 +3976,7 @@ Jump_0A1_5717::
     jr Jump_0A1_5700
 
 ; only called from RunGameMode2State_Case02_Sub05 (E-0047)
-; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub05)
+; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_WaitMapType)
 ; reads: wGameMode2Byte50, wCursorCellX, wCursorCellY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 RunGameMode2State_Case02_Sub05_IsMapScreenAVisited::

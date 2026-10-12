@@ -4760,7 +4760,7 @@ Jump_060_6C8E::
     ret
 
 ; when wCC42 < 20, writes wCC42 + $50 and the $194 bytes at wCD07 to SRAM bank 2 at $A000 + $195 * wCC42 (E-0121)
-; 7 call sites from 6 routines (e.g. DebugAutomap_Update_RollKeyContentsForLevelTemp0, RunFieldReturnPhase_ResetLeadRecordFields55And5B, FieldModeStateDispatch_Case05_Sub01_Case07, RunMenuStateMenuState_InitSoundHardware, ...)
+; 7 call sites from 6 routines (e.g. DebugAutomap_Update_RollKeyContentsForLevelTemp0, RunFieldReturnPhase_ResetLeadRecordFields55And5B, FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing, RunMenuStateMenuState_InitSoundHardware, ...)
 ; reads: wKeyWorldSlot
 ; writes: rRAMB, rRAMG
 ; points at: wKeyWorldFlags

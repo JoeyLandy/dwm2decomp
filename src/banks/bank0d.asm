@@ -6869,7 +6869,7 @@ Jump_00D_7159:: ; address name
     dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_ToBreedMenu
-    dw NpcBreedMenu_Case04_Case09
+    dw NpcBreedMenu_Case04_SetTwoChoiceCursor
     dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_BreedMenu
@@ -6950,7 +6950,7 @@ Jump_00D_71BD:: ; address name
 ; entry 9 of the `rst $00` table in NpcBreedMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-NpcBreedMenu_Case04_Case09::
+NpcBreedMenu_Case04_SetTwoChoiceCursor::
 Jump_00D_71FF:: ; address name
     ld a, $01
     ld [wTwoChoiceCursor], a

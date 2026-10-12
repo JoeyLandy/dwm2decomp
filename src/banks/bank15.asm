@@ -430,7 +430,7 @@ Jump_015_422B:: ; address name
     dw BreedMenu_Case04_CopyFromBankWaitVRAM
     dw BreedMenu_Case04_CopyFromBankWaitVRAM_Case3E
     dw BreedMenu_Case04_UpdateTwoChoiceCursor_Bank1D_Case3F
-    dw BreedMenu_Case04_Case40
+    dw BreedMenu_Case04_SetScreenStep
     dw BreedMenu_Case04_TenTimesTemp0PlusTen
 
 ; entry 0 of the `rst $00` table in BreedMenu_Case04
@@ -1788,7 +1788,7 @@ Jump_015_4C26::
 ; points at: wTextWindowTileLo
 BreedMenu_Case04_DrawBottomBoxForLinkAndSetScreenSubStep::
 Jump_015_4C2E:: ; address name
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
     ld a, [wScreenSubStep]
     cp a, $02
     jr z, Jump_015_4C4D
@@ -1898,7 +1898,7 @@ Jump_015_4CE3:: ; address name
     jr z, Jump_015_4CFE
     cp a, $FF
     jr z, Jump_015_4D14
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
     ret
 
 Jump_015_4CFE::
@@ -1917,7 +1917,7 @@ Jump_015_4D14::
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, Jump_015_4CFE
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
 
 Jump_015_4D1E::
     ld a, [wScreenStep]
@@ -2125,7 +2125,7 @@ Jump_015_4E47:: ; address name
     ld a, [wTextFlags]
     and a, a
     jr z, Jump_015_4E5F
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
     ret
 
 Jump_015_4E5F::
@@ -2137,7 +2137,7 @@ Jump_015_4E5F::
     ret
 
 Jump_015_4E6B::
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
     ld a, [wLinkMode]
     and a, a
     jr z, Jump_015_4E7F
@@ -2152,7 +2152,7 @@ Jump_015_4E7F::
     ret
 
 Jump_015_4E87::
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
     ld a, [wLinkMode]
     and a, a
     jr z, Jump_015_4E9C
@@ -2174,7 +2174,7 @@ Jump_015_4E9C::
     ret
 
 Jump_015_4EB1::
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
     ld a, [wSelectedRecord]
     ld b, a
     farcall SetArg5ToListEntriesCell5
@@ -2397,7 +2397,7 @@ Jump_015_5003::
 ; entry 64 of the `rst $00` table in BreedMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenState, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case04_Case40::
+BreedMenu_Case04_SetScreenStep::
 Jump_015_501D:: ; address name
     xor a, a
     ld [wScreenStep], a
@@ -3544,7 +3544,7 @@ Jump_015_57CB:: ; address name
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
     ld a, $6C
     call QueueSoundEffect
     ld de, TileRect_15_73AB
@@ -5025,7 +5025,7 @@ Jump_015_61F5:: ; address name
 ; writes: wScreenStep
 BreedMenu_Case04_CopyFromBankWaitVRAM::
 Jump_015_6203:: ; address name
-    call BreedMenu_Shared01
+    call BreedMenu_WaitLinkMode
     ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles1 + $4E0
     ld b, $1F
@@ -5322,7 +5322,7 @@ Func_015_63B8:: ; address name
 ; reads: wLinkMode, wScreenState, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 ; points at: sSavedPlayerName
-BreedMenu_Shared01::
+BreedMenu_WaitLinkMode::
 Func_015_63D3:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -5353,7 +5353,7 @@ Jump_015_63F5::
     jr nc, Jump_015_63ED
 
 ; with SRAM disabled draws sprite part $0090 at ($88, $28) (Func_01D_6A3F, C = 1) (E-0124)
-; 2 call sites from 2 routines (e.g. KeyAppraisalMenu_Shared02, GameMode5_Update_Case07_Sub01_Sub01)
+; 2 call sites from 2 routines (e.g. KeyAppraisalMenu_Shared02, GameMode5_Update_Case07_Sub01_WaitPickCount)
 ; writes: rRAMB, rRAMG2, wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawSpritePart9000At88_28::
 Func_015_6403:: ; address name
@@ -7135,7 +7135,7 @@ Func_015_6E14:: ; address name
     ret
 
 ; for each of the pointers wCF8B and wCF8E (when set): increments the byte it points to, up to 99, and stores wCF8D / wCF90 in the byte before (E-0125)
-; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case36, NpcBreedMenu_Case04_Case17, RunScreenStateWhenNotFading_F1_Case04_Case1E)
+; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case36, NpcBreedMenu_Case04_Case17, RunScreenStateWhenNotFading_F1_Case04_WaitTextFlags_Case1E)
 ; reads: wCounterPtr0Hi, wCounterPtr0Lo, wCounterArg0, wCounterPtr1Hi, wCounterPtr1Lo, wCounterArg1
 ; points at: wCounterPtr0Lo, wCounterPtr1Lo
 IncrementTwoCountersCappedAt99::

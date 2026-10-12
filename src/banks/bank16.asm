@@ -30,7 +30,7 @@ Jump_016_401E::
     ret
 
 ; returns when wItemId is $FF; otherwise jumps through a table with one usability check per item id (a check refuses by setting wItemId = $FF; ApplyItemEffect then performs the use, E-0089) (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
-; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_CheckItemUsable, PauseMenu_Items_Case02_CheckItemUsable_Case16, PauseMenu_Items_Case02_ShowButItCouldntBe)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_CheckItemUsable, PauseMenu_Items_Case02_CheckItemUsable_WaitTextFlags, PauseMenu_Items_Case02_ShowButItCouldntBe)
 ; reads: wItemId
 CheckItemUsable::
 Func_016_4025:: ; address name
@@ -3001,7 +3001,7 @@ Data_016_51C9:: ; address name
     db $00 ; id 255
 
 ; only called from PauseMenu_Skills_Case03_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_WaitTextFlags)
 ; reads: wInventorySlot
 ; writes: wItemId
 PauseMenu_Skills_Case03_Case02_Sub01::
@@ -3243,7 +3243,7 @@ Func_016_53DA:: ; address name
 ; only called from PauseMenu_Skills_Case03_Case07 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07)
 ; reads: wItemId, wInventorySlot
-PauseMenu_Skills_Case03_Case07_Sub01::
+PauseMenu_Skills_Case03_Case07_WaitItemId::
 Func_016_53E6:: ; address name
     ld a, [wItemId]
     cp a, $FF
@@ -3262,13 +3262,13 @@ Func_016_53E6:: ; address name
     dw PauseMenu_Skills_Case03_Case07_Sub01_FullHealRecordTargetRecord
     dw PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped
     dw PauseMenu_Skills_Case03_Case07_Sub01_ClearPartyRecordFlag55Bit0
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case0C
+    dw PauseMenu_Skills_Case03_Case07_Sub01_SetDataBankSave
     dw PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped_Case0D
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case0E
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case0F
+    dw PauseMenu_Skills_Case03_Case07_Sub01_SetTalkCountdown
+    dw PauseMenu_Skills_Case03_Case07_Sub01_SetDataBankSave_Case0F
     dw PauseMenu_Skills_Case03_Case07_Sub01_SetItemMessageTo0B
     dw PauseMenu_Skills_Case03_Case07_Sub01_NextTableByte
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case12
+    dw PauseMenu_Skills_Case03_Case07_Sub01_SetGameMode2Byte50
     dw PauseMenu_Skills_Case03_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer
 
 ; entry 0 of the `rst $00` table in Func_016_53E6
@@ -3540,7 +3540,7 @@ Func_016_555C:: ; address name
 ; entry 12 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_Case0C::
+PauseMenu_Skills_Case03_Case07_Sub01_SetDataBankSave::
 Jump_016_5573:: ; address name
     ld a, $01
     ld [wDataBankSave], a
@@ -3575,7 +3575,7 @@ Jump_016_5583:: ; address name
 ; entry 14 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTalkCountdown, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_Case0E::
+PauseMenu_Skills_Case03_Case07_Sub01_SetTalkCountdown::
 Jump_016_55A5:: ; address name
     ld a, $C8
     ld [wTalkCountdown], a
@@ -3588,7 +3588,7 @@ Jump_016_55A5:: ; address name
 ; entry 15 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_Case0F::
+PauseMenu_Skills_Case03_Case07_Sub01_SetDataBankSave_Case0F::
 Jump_016_55B5:: ; address name
     ld a, $04
     ld [wDataBankSave], a
@@ -3718,7 +3718,7 @@ Jump_016_5688::
 ; entry 18 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wGameMode2Byte50, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_Case12::
+PauseMenu_Skills_Case03_Case07_Sub01_SetGameMode2Byte50::
 Jump_016_568E:: ; address name
     ld a, $01
     ld [wGameMode2Byte50], a
@@ -5037,15 +5037,15 @@ Func_016_5D13:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix
-    dw BattleEnd_Step5_Case01_Case01_Sub01_Case01
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case02
+    dw BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags
+    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags
     dw BattleEnd_Step5_Case01_Case01_Sub01_LoadCursorTileAndRect7826
     dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton
     dw BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte
     dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16AndStep
     dw BattleEnd_Step5_Case01_Case01_Sub01_LoadCursorTileAndRect7826
     dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case09
+    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags_Case09
     dw BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F
     dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case0C
@@ -5057,14 +5057,14 @@ Func_016_5D13:: ; address name
     dw BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case12
     dw BattleEnd_Step5_Case01_Case01_Sub01_AdvanceBattleSubStep
     dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16
-    dw BattleEnd_Step5_Case01_Case01_Sub01_Case15
+    dw BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case15
     dw BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case16
     dw BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17
     dw BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18
     dw BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case19
     dw BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor4
     dw BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer
-    dw BattleEnd_Step5_Case01_Case01_Sub01_Case1C
+    dw BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case1C
 
 ; entry 0 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
@@ -5108,7 +5108,7 @@ Jump_016_5D7A::
 ; reads: wTextFlags
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleStep
-BattleEnd_Step5_Case01_Case01_Sub01_Case01::
+BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags::
 Jump_016_5D8C:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5126,7 +5126,7 @@ Jump_016_5D8C:: ; address name
 ; reads: wTextFlags
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case02::
+BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags::
 Jump_016_5DA0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5241,7 +5241,7 @@ Jump_016_5E3B:: ; address name
 ; reads: wTextFlags
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case09::
+BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags_Case09::
 Jump_016_5E48:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5677,7 +5677,7 @@ Jump_016_6151:: ; address name
 ; reads: wTextFlags, wSubMenuCursor2, wMenuState, wPartyCount, wPartyList
 ; writes: rRAMG, rRAMB, wArg1, wArg2, wBattlePartyCount, wPartyList, wTemp0, wTemp1, ...
 ; points at: wListEntries, wBattleSubPhase
-BattleEnd_Step5_Case01_Case01_Sub01_Case15::
+BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case15::
 Jump_016_615E:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6049,7 +6049,7 @@ Jump_016_640E::
 ; reads: wTextFlags, wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wArg1, wArg2, wBattleResolveStep, wBattleSubStep
 ; points at: wListEntries, wBattleSubPhase
-BattleEnd_Step5_Case01_Case01_Sub01_Case1C::
+BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case1C::
 Jump_016_643D:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6508,7 +6508,7 @@ Data_016_66EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_66EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $98, $E1, $98, $21, $99, $61, $99
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A and 1 more
+; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags_Case09, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A and 1 more
 Data_016_66F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $98, $61, $98, $A1, $98, $E1, $98, $21, $99
 
@@ -7377,15 +7377,15 @@ Func_016_6C16:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case01
+    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags
     dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor
     dw BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6
-    dw BattleEnd_Step5_Case04_Sub01_Case04
+    dw BattleEnd_Step5_Case04_Sub01_SetBattleStep
     dw BattleEnd_Step5_Case04_Sub01_Case05
     dw BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB
     dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16
     dw BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09
+    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags_Case09
     dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A
     dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case0B
     dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C
@@ -7458,7 +7458,7 @@ Jump_016_6C7A::
 ; reads: wTextFlags
 ; writes: wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case01::
+BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags::
 Jump_016_6C9E:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7537,7 +7537,7 @@ Jump_016_6D08::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleSubStep
 ; points at: wBattleStep
-BattleEnd_Step5_Case04_Sub01_Case04::
+BattleEnd_Step5_Case04_Sub01_SetBattleStep::
 Jump_016_6D11:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -7645,7 +7645,7 @@ Jump_016_6D8D:: ; address name
 ; reads: wTextFlags, wMenuSubState
 ; writes: wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wScreenTileBuffer, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09::
+BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags_Case09::
 Jump_016_6DA6:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -8118,7 +8118,7 @@ Func_016_70C6:: ; address name
     ret
 
 ; with SRAM enabled runs Func_016_710F for each of the first one to three party records (E-0124)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully, BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB, BattleEnd_Step5_Case01_Case01_Sub01_Case15)
+; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully, BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB, BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case15)
 ; reads: wPartyList, wPartyCount
 ; writes: rRAMG, rRAMB
 RunFunc710FForPartyMembers::

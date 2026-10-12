@@ -1443,7 +1443,7 @@ RunFieldReturnPhase_OpenFieldMenuOnA::
 Jump_002_48C3:: ; address name
     xor a, a
     ld [wFieldReturnPhase], a
-    call RunFieldReturnPhase_Case01_Sub01
+    call RunFieldReturnPhase_Case01_WaitMapType
     ld a, [wDataBankSave]
     cp a, $40
     jr nz, Jump_002_48D9
@@ -1681,7 +1681,7 @@ Func_002_4A53:: ; address name
 ; 1 call site from 1 routine (e.g. RunFieldReturnPhase_OpenFieldMenuOnA)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wGM2Mode, wCounterPtr0Lo
 ; writes: wObject5, wCounterPtr0Lo, hTemp0
-RunFieldReturnPhase_Case01_Sub01::
+RunFieldReturnPhase_Case01_WaitMapType::
 Func_002_4A7A:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -1801,17 +1801,17 @@ Jump_002_4AFB:: ; address name
     ret nz
 
 Jump_002_4B13::
-    farcall FieldModeStateDispatch_Case00_Sub02
-    call FieldModeStateDispatch_Case00_Sub01
+    farcall FieldModeStateDispatch_Case00_WaitTextWindowState
+    call FieldModeStateDispatch_Case00_WaitFadeState
     call UpdatePlayerMovement
     call RunFieldActionRequestActionIfBit7
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_002_4B44
     call CheckInteractionInFront
-    farcall FieldModeStateDispatch_Shared02
-    farcall FieldModeStateDispatch_Shared03
-    call FieldModeStateDispatch_Shared01
+    farcall FieldModeStateDispatch_WaitTextWindowState
+    farcall FieldModeStateDispatch_WaitTextWindowState_Shared03
+    call FieldModeStateDispatch_WaitMapSpriteKind
     xor a, a
     ldh [hTemp8], a
     farcall OpenFieldMenuOnA
@@ -2074,11 +2074,11 @@ Jump_002_4D3F::
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, Jump_002_4D6D
-    call FieldModeStateDispatch_Case05_Sub01
-    farcall FieldModeStateDispatch_Shared02
-    farcall FieldModeStateDispatch_Case05_Sub02
-    farcall FieldModeStateDispatch_Shared03
-    call FieldModeStateDispatch_Shared01
+    call FieldModeStateDispatch_Case05_WaitFadeState
+    farcall FieldModeStateDispatch_WaitTextWindowState
+    farcall FieldModeStateDispatch_Case05_WaitTextWindowState
+    farcall FieldModeStateDispatch_WaitTextWindowState_Shared03
+    call FieldModeStateDispatch_WaitMapSpriteKind
     xor a, a
     ldh [hTemp8], a
     farcall OpenFieldMenuOnA
@@ -2155,7 +2155,7 @@ Func_002_4DD6:: ; address name
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_UpdatePlayerMovement)
 ; reads: wMapSpriteKind, wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, hPlayerX, hPlayerY, ...
 ; writes: wFieldStateByte34
-FieldModeStateDispatch_Shared01::
+FieldModeStateDispatch_WaitMapSpriteKind::
 Func_002_4DED:: ; address name
     ld a, [wMapSpriteKind]
     or a, a
@@ -2247,7 +2247,7 @@ Jump_002_4E6D::
     ret
 
 ; A = 1 if story flag $1F is set, else 0 (E-0122)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitMapSpriteKind)
 TestFlag1FAsBool::
 Func_002_4E71:: ; address name
     ld de, $001F
@@ -2261,7 +2261,7 @@ Jump_002_4E7B::
     ret
 
 ; only called from FieldModeStateDispatch_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitMapSpriteKind)
 ; reads: wMapSpriteKind
 FieldModeStateDispatch_Shared01_TestFlagBit::
 Func_002_4E7E:: ; address name
@@ -2288,7 +2288,7 @@ Jump_002_4E9B::
     ret
 
 ; only called from FieldModeStateDispatch_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitMapSpriteKind)
 ; reads: hPlayerStateFlags, wMapHeaderByte11, wTilesUnderPoint, wPartyWindowFlags
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Shared01_Sub02::
@@ -2325,7 +2325,7 @@ Jump_002_4ED3::
     ret
 
 ; only called from FieldModeStateDispatch_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Shared01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitMapSpriteKind)
 ; reads: hPlayerStateFlags, wMapTallTileMin, wPartyWindowFlags, wMaxBlockingTile
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 ; points at: wTilesUnderPoint
@@ -2405,7 +2405,7 @@ Jump_002_4F29::
 ; only called from FieldModeStateDispatch_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05)
 ; reads: wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wMapType
-FieldModeStateDispatch_Case05_Sub01::
+FieldModeStateDispatch_Case05_WaitFadeState::
 Func_002_4F4C:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -2432,7 +2432,7 @@ Func_002_4F4C:: ; address name
     dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_Return
-    dw FieldModeStateDispatch_Case05_Sub01_Case07
+    dw FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing
 
 ; entry 0 of the `rst $00` table in Func_002_4F4C
 ; no direct call (reached through a table, a jump or a vector)
@@ -2477,7 +2477,7 @@ Jump_002_4FAA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wFieldReturnPhase, wGameMode, wModeState, wGameMode2State, wJoypadHeld, wJoypadPressed
-FieldModeStateDispatch_Case05_Sub01_Case07::
+FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing::
 Jump_002_4FAB:: ; address name
     ldh a, [hPlayerFacing]
     cp a, $02
@@ -2624,19 +2624,19 @@ Func_002_5074:: ; address name
     dw RunFieldEventFieldEventKind_Return
     dw AnimateTilesByRotatingVTiles2
     dw AnimateTilesByRotatingVTiles2
-    dw RunFieldEventFieldEventKind_Case03
-    dw RunFieldEventFieldEventKind_Case04
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case04
     dw RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2
     dw RunFieldEventFieldEventKind_TestFlagBit
     dw RunFieldEventFieldEventKind_Case07
     dw RunFieldEventFieldEventKind_Case08
-    dw RunFieldEventFieldEventKind_Case09
-    dw RunFieldEventFieldEventKind_Case0A
-    dw RunFieldEventFieldEventKind_Case0B
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case09
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case0A
+    dw RunFieldEventFieldEventKind_WaitMapScreenY
     dw RunFieldEventFieldEventKind_Case0C
     dw RunFieldEventFieldEventKind_WriteVRAMByteInc
-    dw RunFieldEventFieldEventKind_WriteVRAMByteInc_Case0E
-    dw RunFieldEventFieldEventKind_Case0F
+    dw RunFieldEventFieldEventKind_WriteVRAMByteInc_WaitFrameCounterLo
+    dw RunFieldEventFieldEventKind_WaitMapScreenX
 
 ; entry 12 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
@@ -2719,7 +2719,7 @@ Jump_002_50E0::
 ; entry 14 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_WriteVRAMByteInc_Case0E::
+RunFieldEventFieldEventKind_WriteVRAMByteInc_WaitFrameCounterLo::
 Jump_002_50EE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $07
@@ -2753,7 +2753,7 @@ Jump_002_510B::
 ; entry 3 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_Case03::
+RunFieldEventFieldEventKind_WaitFrameCounterLo::
 Jump_002_5119:: ; address name
     ld a, [wFrameCounterLo]
     and a, $0F
@@ -2765,7 +2765,7 @@ Jump_002_5119:: ; address name
 ; entry 4 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_Case04::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_Case04::
 Jump_002_5128:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2790,7 +2790,7 @@ Jump_002_5136:: ; address name
 ; entry 9 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_Case09::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_Case09::
 Jump_002_5147:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2802,7 +2802,7 @@ Jump_002_5147:: ; address name
 ; entry 10 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_Case0A::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_Case0A::
 Jump_002_5155:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2814,7 +2814,7 @@ Jump_002_5155:: ; address name
 ; entry 15 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX, wFrameCounterLo
-RunFieldEventFieldEventKind_Case0F::
+RunFieldEventFieldEventKind_WaitMapScreenX::
 Jump_002_5163:: ; address name
     ldh a, [hMapScreenX]
     cp a, $01
@@ -2969,7 +2969,7 @@ Data_002_5254:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 11 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenY, wFrameCounterLo
-RunFieldEventFieldEventKind_Case0B::
+RunFieldEventFieldEventKind_WaitMapScreenY::
 Jump_002_5284:: ; address name
     ldh a, [hMapScreenY]
     or a, a
@@ -2993,7 +2993,7 @@ Jump_002_5284:: ; address name
     ld l, c
     jp Jump_002_52B8
 
-; address loaded by RunFieldEventFieldEventKind_Case0B
+; address loaded by RunFieldEventFieldEventKind_WaitMapScreenY
 Data_002_52A8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E0, $94, $00, $95, $F0, $94, $10, $95, $40, $95, $60, $95, $50, $95, $70, $95
 
@@ -3702,7 +3702,7 @@ Jump_002_5729::
     jp Jump_002_5892
 
 Jump_002_5747::
-    call UpdatePlayerMovement_Sub01_Sub01
+    call UpdatePlayerMovement_Sub01_WaitFollowerDelay
     ldh a, [hPlayerStepDXLo]
     ld l, a
     ldh a, [hPlayerStepDXHi]
@@ -3748,7 +3748,7 @@ Jump_002_5784::
     jp Jump_002_5892
 
 Jump_002_57A2::
-    call UpdatePlayerMovement_Sub01_Sub01
+    call UpdatePlayerMovement_Sub01_WaitFollowerDelay
     ldh a, [hPlayerStepDXLo]
     ld l, a
     ldh a, [hPlayerStepDXHi]
@@ -3798,7 +3798,7 @@ Jump_002_57E0::
     jp Jump_002_5892
 
 Jump_002_57FE::
-    call UpdatePlayerMovement_Sub01_Sub01
+    call UpdatePlayerMovement_Sub01_WaitFollowerDelay
     ldh a, [hPlayerStepDYLo]
     ld l, a
     ldh a, [hPlayerStepDYHi]
@@ -3844,7 +3844,7 @@ Jump_002_583A::
     jr Jump_002_5892
 
 Jump_002_5857::
-    call UpdatePlayerMovement_Sub01_Sub01
+    call UpdatePlayerMovement_Sub01_WaitFollowerDelay
     ldh a, [hPlayerStepDYLo]
     ld l, a
     ldh a, [hPlayerStepDYHi]
@@ -3909,7 +3909,7 @@ Jump_002_58BF::
     farcall UpdatePlayerMovement_Sub01_TestFlagBit
     farcall AdvanceStepCounterAndUpdateStoredRecords
     farcall RunPeriodicFieldEventChecks
-    farcall UpdatePlayerMovement_Sub01_Sub03
+    farcall UpdatePlayerMovement_Sub01_WaitPlayerSpriteOverride
     farcall TickRandomEncounterCounter
     farcall CheckStepTriggerAndDispatchTalk
     farcall CheckWarpsAtPlayerPosition
@@ -3922,7 +3922,7 @@ Jump_002_58BF::
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7)
 ; reads: wFollowerDelay, hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wFollowerRecords
-UpdatePlayerMovement_Sub01_Sub01::
+UpdatePlayerMovement_Sub01_WaitFollowerDelay::
 Func_002_58FC:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -4078,7 +4078,7 @@ Jump_002_59C9::
     ret
 
 ; B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wC910-wC913; returns A = 1 when any of them is at most wC192, else A = 0 (a different pair of comparisons with wC196 runs when hFF8C bit 3 is set)
-; 6 call sites from 3 routines (e.g. FieldModeStateDispatch_Shared01, CheckInteractionInFront, UpdatePlayerMovement)
+; 6 call sites from 3 routines (e.g. FieldModeStateDispatch_WaitMapSpriteKind, CheckInteractionInFront, UpdatePlayerMovement)
 ; reads: hPlayerStateFlags, wMaxBlockingTile, wMapTallTileMin
 ; writes: wTilesUnderPoint
 ; points at: wTilesUnderPoint
@@ -4328,7 +4328,7 @@ Data_002_5B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_UpdatePlayerMovement)
 ; reads: wFadeState, hPlayerStateFlags, wJoypadHeld, hMapScreenX, hMapScreenY, hMapId, hPlayerX, hPlayerY
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
-FieldModeStateDispatch_Case00_Sub01::
+FieldModeStateDispatch_Case00_WaitFadeState::
 Func_002_5B2A:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -4395,13 +4395,13 @@ Jump_002_5B81::
     inc b
     jr Jump_002_5B4B
 
-; address loaded by FieldModeStateDispatch_Case00_Sub01
+; address loaded by FieldModeStateDispatch_Case00_WaitFadeState
 Data_002_5B89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1A, $10, $70, $70
     db $85, $10, $50, $60, $FF
 
 ; clears wC8CE; if bit 7 of wC8CD is set, draws the full screen buffer to the BG map at the scroll position and clears wC8CD and wC8CE (E-0121)
-; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, FieldModeStateDispatch_Case05_Sub01_Case07, ...)
+; 15 call sites from 9 routines (e.g. CheckInteractionInFront, UpdatePlayerMovement, UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7, FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing, ...)
 ; reads: wPartyWindowFlags, hScrollY, hScrollX
 ; writes: wPartyWindowTimer, wPartyWindowFlags
 RedrawScreenBufferIfPartyWindowFlagsBit7::
@@ -4918,7 +4918,7 @@ Jump_002_5EE9::
     ret
 
 ; copies the first $168 bytes (20 x 18) of wScreenTileBuffer to vBGMap1 with WriteVRAMByteInc; on CGB also copies the $168 attribute bytes at wD000 to wD2D0 (rSVBK = 2); saves wSpriteSlotCount in wCB7E. RestoreScreenBufferFromBGMap1 undoes it (E-0066)
-; 23 call sites from 21 routines (e.g. CheckInteractionInFront, FieldModeStateDispatch_Case05_Sub01_Case07, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
+; 23 call sites from 21 routines (e.g. CheckInteractionInFront, FieldModeStateDispatch_Case05_Sub01_WaitPlayerFacing, OpenFieldMenuOnA, TickRandomEncounterCounter, ...)
 ; reads: wIsCGB, wSpriteSlotCount
 ; writes: rSVBK, wScreenSavedFlag
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wSavedScreenAttrs

@@ -398,7 +398,7 @@ Jump_01E_4234:: ; address name
     dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
     dw SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
-    dw SwapMonstersMenu_Case04_Case09
+    dw SwapMonstersMenu_Case04_SetScreenStep
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case0A
     dw SwapMonstersMenu_Case04_CopyRectTo20ByteRows_Bank1E_Case0B
     dw SwapMonstersMenu_Case04_BlinkCursorBlinkAE_Bank1E
@@ -735,7 +735,7 @@ Jump_01E_4493:: ; address name
 ; entry 9 of the `rst $00` table in SwapMonstersMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenState, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case04_Case09::
+SwapMonstersMenu_Case04_SetScreenStep::
 Jump_01E_44A1:: ; address name
     ld a, $03
     ld [wScreenStep], a
@@ -3278,7 +3278,7 @@ Jump_01E_568E:: ; address name
     dw SwapMonstersMenu_Case07_ListRecordsInUseWithByte6EClear_Case2F
     dw SwapMonstersMenu_Case07_ListRecordsInUseWithByte6ESet
     dw SwapMonstersMenu_Case07_StoreBAtWordTableEntry_Bank1E_Case31
-    dw SwapMonstersMenu_Case07_Case32
+    dw SwapMonstersMenu_Case07_SetScreenStep
     dw SwapMonstersMenu_Case07_DeleteSRAMRecordAndCompact_Case33
     dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
     dw SwapMonstersMenu_Case07_CopyRectTo20ByteRows_Bank1E
@@ -3709,7 +3709,7 @@ Jump_01E_59D4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case07_Case32::
+SwapMonstersMenu_Case07_SetScreenStep::
 Jump_01E_5A05:: ; address name
     ld a, [wScreenStep]
     inc a

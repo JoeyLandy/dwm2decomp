@@ -358,7 +358,7 @@ Jump_024_424D:: ; address name
     dw GameMode6_Update_Case02_DecompressToVRAM
     dw GameMode6_Update_Case02_ToGameMode6_Update_Shared07AndStep
     dw GameMode6_Update_Case02_GameMode6_Update_UpdateAndDrawSpriteSlots
-    dw GameMode6_Update_Case02_Case0F
+    dw GameMode6_Update_Case02_SetScreenStep
 
 ; entry 0 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
@@ -680,7 +680,7 @@ Jump_024_445F:: ; address name
     jr Jump_024_4477
 
 Jump_024_4474::
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_WaitLinkByteEB
 
 Jump_024_4477::
     call BGMapAddressAtScroll_Bank24
@@ -777,7 +777,7 @@ Jump_024_4519:: ; address name
 ; entry 15 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep
-GameMode6_Update_Case02_Case0F::
+GameMode6_Update_Case02_SetScreenStep::
 Jump_024_4520:: ; address name
     xor a, a
     ld [wScreenStep], a
@@ -794,7 +794,7 @@ Jump_024_452A:: ; address name
     rst $00
     dw GameMode6_Update_Case03_ToGameMode6_Update_Shared07AndStep
     dw GameMode6_Update_Case03_GameMode6_Update_UpdateAndDrawSpriteSlots
-    dw GameMode6_Update_Case03_Case02
+    dw GameMode6_Update_Case03_SetSaveStep
     dw GameMode6_Update_Case03_RunSaveGameSteps
 
 ; entry 0 of the `rst $00` table in GameMode6_Update_Case03
@@ -821,7 +821,7 @@ Jump_024_4541:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wSaveStep, wSaveRecordIndex, wScreenStep
-GameMode6_Update_Case03_Case02::
+GameMode6_Update_Case03_SetSaveStep::
 Jump_024_4548:: ; address name
     xor a, a
     ld [wSaveStep], a
@@ -922,7 +922,7 @@ Jump_024_45C7:: ; address name
     rst $00
     dw GameMode6_Update_Case04_Case08_UpdatePagedListCursor
     dw GameMode6_Update_Case04_Case08_CopyRectTo20ByteRowsJp_Bank24
-    dw GameMode6_Update_Case04_Case08_Case02
+    dw GameMode6_Update_Case04_Case08_SetScreenSubStep
 
 ; entry 0 of the `rst $00` table in GameMode6_Update_Case04_Case08
 ; no direct call (reached through a table, a jump or a vector)
@@ -1047,7 +1047,7 @@ Jump_024_4678::
 ; entry 2 of the `rst $00` table in GameMode6_Update_Case04_Case08
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep
-GameMode6_Update_Case04_Case08_Case02::
+GameMode6_Update_Case04_Case08_SetScreenSubStep::
 Jump_024_46B5:: ; address name
     xor a, a
     ld [wScreenSubStep], a
@@ -1672,7 +1672,7 @@ Jump_024_4AA4:: ; address name
     jr Jump_024_4AEF
 
 Jump_024_4AEC::
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_WaitLinkByteEB
 
 Jump_024_4AEF::
     ld de, TileRect_24_5B10
@@ -1874,7 +1874,7 @@ Jump_024_4C2C:: ; address name
     ld a, [wBattleScene]
     cp a, $08
     jr z, Jump_024_4C69
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_WaitLinkByteEB
 
 Jump_024_4C69::
     ld a, [wBattleScene]
@@ -1985,7 +1985,7 @@ Jump_024_4CF2:: ; address name
 ; only called from routines of GameMode6_Update (E-0098)
 ; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_ReturnStub_51A3, GameMode6_Update_Case0E_ShowInfoOKYesN, GameMode6_Update_Case0F_ShowInfoOKYesN)
 ; reads: wLinkByteEB
-GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01::
+GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_WaitLinkByteEB::
 Func_024_4D21:: ; address name
     ld a, [wLinkByteEB]
     and a, a
@@ -2561,7 +2561,7 @@ Func_024_4FD9:: ; address name
     ret
 
 ; only called from GameMode6_Update_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01)
+; 1 call site from 1 routine (e.g. GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_WaitLinkByteEB)
 GameMode6_Update_Shared01_DecompressToVRAM::
 Func_024_504C:: ; address name
     and a, $01

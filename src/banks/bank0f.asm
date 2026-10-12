@@ -206,7 +206,7 @@ Func_00F_40E9:: ; address name
     dw SceneHomecoming_Case1C
     dw SceneHomecoming_ScriptApplyStepDeltaAtDE_Case26
     dw SceneHomecoming_ToStartPaletteFadeAndStep
-    dw SceneHomecoming_Case28
+    dw SceneHomecoming_WaitFadeState
     dw SceneHomecoming_ShowTHEEND
     dw SceneHomecoming_Case2A
     dw SceneHomecoming_Case2B
@@ -389,7 +389,7 @@ Data_00F_425E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; points at: wScriptStep
-SceneHomecoming_Case28::
+SceneHomecoming_WaitFadeState::
 Jump_00F_4266:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -942,7 +942,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_ShowWarubouWawaheyWeWere
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneDarckDefeated_ScriptStepDeltaThenNextStep
-    dw SceneDarckDefeated_Case19
+    dw SceneDarckDefeated_SetFieldEventArg
     dw SceneDarckDefeated_StepObjectTowardCoord
     dw SceneDarckDefeated_StepObjectTowardCoord_Case1B
     dw SceneDarckDefeated_StepObjectTowardCoord
@@ -1057,7 +1057,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_RunFieldCommandTemp0_Case89
     dw SceneDarckDefeated_Case8A
     dw SceneDarckDefeated_Case8A
-    dw SceneDarckDefeated_Case8C
+    dw SceneDarckDefeated_SetObject5
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case8F
@@ -1151,7 +1151,7 @@ Jump_00F_4709:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-SceneDarckDefeated_Case8C::
+SceneDarckDefeated_SetObject5::
 Jump_00F_4737:: ; address name
     xor a, a
     ld [wObject5], a
@@ -2719,7 +2719,7 @@ Jump_00F_5097:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldEventArg
 ; points at: wScriptStep
-SceneDarckDefeated_Case19::
+SceneDarckDefeated_SetFieldEventArg::
 Jump_00F_50A0:: ; address name
     xor a, a
     ld [wFieldEventArg], a
@@ -5005,7 +5005,7 @@ Func_00F_5F06:: ; address name
     dw SceneCheerYuna_Case0B
     dw SceneCheerYuna_ShowIAmTheKing
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneCheerYuna_Case0E
+    dw SceneCheerYuna_SetScriptSubStep
     dw SceneCheerYuna_ToRunScriptSubStep
     dw SceneCheerYuna_Case10
 
@@ -5031,7 +5031,7 @@ Jump_00F_5F36:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptSubStep, wScriptParam0
 ; points at: wScriptStep
-SceneCheerYuna_Case0E::
+SceneCheerYuna_SetScriptSubStep::
 Jump_00F_5F3D:: ; address name
     xor a, a
     ld [wScriptSubStep], a
@@ -9531,7 +9531,7 @@ Func_00F_7AC6:: ; address name
     dw SceneLandHo_ComputeSpriteScrollOffsets
     dw SceneLandHo_ComputeSpriteScrollOffsets
     dw SceneLandHo_ComputeSpriteScrollOffsets
-    dw SceneLandHo_Case09
+    dw SceneLandHo_SetFieldActionStep
     dw SceneLandHo_Case0A
     dw SceneLandHo_ShowThisIsATale
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
@@ -9748,7 +9748,7 @@ Jump_00F_7C03::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldActionStep
 ; points at: wScriptStep
-SceneLandHo_Case09::
+SceneLandHo_SetFieldActionStep::
 Jump_00F_7C19:: ; address name
     xor a, a
     ld [wFieldActionStep], a

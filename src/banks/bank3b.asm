@@ -523,7 +523,7 @@ Func_03B_42F4:: ; address name
     dw RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764
     dw RunBattleActions_Case08_Sub01_Case0A
     dw RunBattleActions_Case08_Sub01_LoadItemRecord
-    dw RunBattleActions_Case08_Sub01_Case0C
+    dw RunBattleActions_Case08_Sub01_SetDefeatFlagsBA
     dw RunBattleActions_Case08_Sub01_ShowButNothingHappened
 
 ; entry 0 of the `rst $00` table in Func_03B_42F4
@@ -1182,7 +1182,7 @@ Jump_03B_46E6::
 ; entry 12 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDefeatFlagsBA, wBattleSubPhase, wBattleResolveStep
-RunBattleActions_Case08_Sub01_Case0C::
+RunBattleActions_Case08_Sub01_SetDefeatFlagsBA::
 Jump_03B_46EF:: ; address name
     xor a, a
     ld [wDefeatFlagsBA], a

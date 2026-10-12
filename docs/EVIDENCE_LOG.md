@@ -2431,6 +2431,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0281 — Wait steps and constant-store steps
+
+- Kind: TOOL (structural naming from the instructions; C2).
+- A structural step that starts `ld a, [V]` (or `ldh`), then `or a` / `and` / `cp` / `bit`, then `ret z/nz/c/nc` is named Parent_Wait<V>, for example ..._WaitTextFlags. The name only records that the step returns early unless V passes the test.
+- A step made only of constant stores to RAM (`ld a, n` or `xor a`, then stores, `ld [hl], n`, `inc hl`, a counter increment), then `ret`, is named Parent_Set<first V>.
+- 226 wait steps and 95 store steps are renamed. Bare structural labels (a root followed only by CaseNN/SubNN/SharedNN parts) go from 1,631 to 1,395.
+- Binary verification: build/run363 PASS, 0 differing bytes; tests OK.
+
 ### E-0280 — Branching steps named after their main call
 
 - Kind: TOOL (structural naming from the instructions; C2 that the step makes the call, not that the call is all it does).

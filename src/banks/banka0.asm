@@ -2485,12 +2485,12 @@ RunBattlePhaseWhenTextIdle_A0_Case00::
 Jump_0A0_4F9F:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case00
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case01
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitFadeState
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case02
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case03
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case04
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case05
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case03
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_SetBattleStep
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case05
     dw RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel_Case06
     dw RunBattlePhaseWhenTextIdle_A0_Case00_BeginStringDisplay_Bank07
     dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheFirstMonsterIs
@@ -2503,14 +2503,14 @@ Jump_0A0_4F9F:: ; address name
     dw RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAndStep_Case0F
     dw RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes_Case10
     dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowPleaseWait
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case12
+    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case12
 
 ; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; writes: wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case00::
+RunBattlePhaseWhenTextIdle_A0_Case00_WaitFadeState::
 Jump_0A0_4FC9:: ; address name
     ld a, [wFadeState]
     and a, a
@@ -2526,7 +2526,7 @@ Jump_0A0_4FC9:: ; address name
 ; reads: wLinkMessage
 ; writes: wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case01::
+RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage::
 Jump_0A0_4FD8:: ; address name
     ld a, [wLinkMessage]
     cp a, $0C
@@ -2573,7 +2573,7 @@ Jump_0A0_4FE7:: ; address name
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wLinkReady
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case03::
+RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case03::
 Jump_0A0_501D:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -2590,7 +2590,7 @@ Jump_0A0_501D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case04::
+RunBattlePhaseWhenTextIdle_A0_Case00_SetBattleStep::
 Jump_0A0_5030:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -2603,7 +2603,7 @@ Jump_0A0_5030:: ; address name
 ; reads: wLinkMessage, wLinkRole, wRandomLo, wRandomHi, wLinkPartnerName, wLinkPartnerByte1
 ; writes: wLinkSendByte, wLinkPartnerName, wRandomSeed2Lo, wRandomLo, wLinkPartnerByte1, wRandomSeed2Hi, wRandomHi
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case05::
+RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case05::
 Jump_0A0_503A:: ; address name
     ld a, [wLinkMessage]
     cp a, $03
@@ -2972,7 +2972,7 @@ Jump_0A0_5246:: ; address name
 ; reads: wLinkMessage
 ; writes: wBattleStep, wLinkSendByte
 ; points at: wBattlePhase
-RunBattlePhaseWhenTextIdle_A0_Case00_Case12::
+RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case12::
 Jump_0A0_5265:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -3066,21 +3066,21 @@ RunBattlePhaseWhenTextIdle_A0_Case02::
 Jump_0A0_52C0:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case02_Case00
-    dw RunBattlePhaseWhenTextIdle_A0_Case02_Case01
-    dw RunBattlePhaseWhenTextIdle_A0_Case02_Case02
+    dw RunBattlePhaseWhenTextIdle_A0_Case02_SetLinkSendByte
+    dw RunBattlePhaseWhenTextIdle_A0_Case02_WaitLinkMessage
+    dw RunBattlePhaseWhenTextIdle_A0_Case02_WaitLinkMessage_Case02
     dw RunBattlePhaseWhenTextIdle_A0_Case02_AddAx9ToHL
     dw RunBattlePhaseWhenTextIdle_A0_Case02_Case04_CarryUnlessBattleSlotOutSlotEmpty_Case04
     dw RunBattlePhaseWhenTextIdle_A0_Case02_Case05
     dw RunBattlePhaseWhenTextIdle_A0_Case02_Case06
-    dw RunBattlePhaseWhenTextIdle_A0_Case02_Case07
-    dw RunBattlePhaseWhenTextIdle_A0_Case02_Case08
+    dw RunBattlePhaseWhenTextIdle_A0_Case02_SetBattleStep
+    dw RunBattlePhaseWhenTextIdle_A0_Case02_WaitLinkMessage_Case08
 
 ; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case02_Case00::
+RunBattlePhaseWhenTextIdle_A0_Case02_SetLinkSendByte::
 Jump_0A0_52D6:: ; address name
     ld a, $01
     ld [wLinkSendByte], a
@@ -3093,7 +3093,7 @@ Jump_0A0_52D6:: ; address name
 ; reads: wLinkMessage
 ; writes: wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkSendByte
 ; points at: wBattleSlotOut, wLinkPartnerName, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case02_Case01::
+RunBattlePhaseWhenTextIdle_A0_Case02_WaitLinkMessage::
 Jump_0A0_52E0:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -3121,7 +3121,7 @@ Jump_0A0_52E0:: ; address name
 ; reads: wLinkMessage, wLinkRole, wLinkPartnerByte1, wLinkPartnerName
 ; writes: wBattleSlotOut, wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case02_Case02::
+RunBattlePhaseWhenTextIdle_A0_Case02_WaitLinkMessage_Case02::
 Jump_0A0_530B:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -3333,7 +3333,7 @@ Jump_0A0_546F::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case02_Case07::
+RunBattlePhaseWhenTextIdle_A0_Case02_SetBattleStep::
 Jump_0A0_5474:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -3345,7 +3345,7 @@ Jump_0A0_5474:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wBattlePhase, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case02_Case08::
+RunBattlePhaseWhenTextIdle_A0_Case02_WaitLinkMessage_Case08::
 Jump_0A0_547E:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -3882,7 +3882,7 @@ RunBattlePhaseWhenTextIdle_A0_Case03_Case09::
 Jump_0A0_57B1:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case09_Case00
+    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WaitTextFlags
     dw RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WriteUnknownNamePlaceholder
 
 ; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03_Case09
@@ -3890,7 +3890,7 @@ Jump_0A0_57B1:: ; address name
 ; reads: wTextFlags
 ; writes: wLinkSendByte
 ; points at: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_Case03_Case09_Case00::
+RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WaitTextFlags::
 Jump_0A0_57B9:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -4211,7 +4211,7 @@ RunBattlePhaseWhenTextIdle_A0_Case03_Case0A::
 Jump_0A0_59D4:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_Case00
+    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_WaitTextFlags
     dw RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_StartPaletteFade
 
 ; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03_Case0A
@@ -4219,7 +4219,7 @@ Jump_0A0_59D4:: ; address name
 ; reads: wTextFlags
 ; writes: wLinkSendByte
 ; points at: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_Case00::
+RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_WaitTextFlags::
 Jump_0A0_59DC:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -4930,9 +4930,9 @@ Func_0A0_5E07:: ; address name
     dw RunBattleSetup_BankA0_ClearAndLayoutTileBlocksForBattleFoeCount
     dw RunBattleSetup_BankA0_ShowSelectingHeroSMove
     dw RunBattleSetup_BankA0_AdvanceRandom
-    dw RunBattleSetup_BankA0_Case06
-    dw RunBattleSetup_BankA0_Case07
-    dw RunBattleSetup_BankA0_Case08
+    dw RunBattleSetup_BankA0_WaitLinkMessage
+    dw RunBattleSetup_BankA0_SetBattleSubPhase
+    dw RunBattleSetup_BankA0_WaitLinkMessage_Case08
     dw RunBattleSetup_BankA0_Case09
     dw RunBattleSetup_BankA0_Case0A
     dw RunBattleSetup_BankA0_Case0B
@@ -5190,7 +5190,7 @@ Jump_0A0_5F76:: ; address name
     dw RunBattleSetup_BankA0_Case01_DrawWC338RowsToBGMapRow13_BankA0AndStep
     dw RunBattleSetup_BankA0_Case01_ClearAndLayoutTileBlocksForBattleFoeCount_Case12
     dw RunBattleSetup_BankA0_Case01_DrawWC338RowsToBGMapRow13_BankA0_Case13
-    dw RunBattleSetup_BankA0_Case01_Case14
+    dw RunBattleSetup_BankA0_Case01_SetBattleResolveStep
     dw RunBattleSetup_BankA0_Case01_DrawWC2B8Rect11x9ToBGMapRow9_BankA0AndStep
     dw RunBattleSetup_BankA0_Case01_ShowButThereIsNo
     dw RunBattleSetup_BankA0_Case01_ClearAndLayoutTileBlocksForBattleFoeCount_Case0A
@@ -5835,7 +5835,7 @@ Jump_0A0_63DF:: ; address name
 ; entry 20 of the `rst $00` table in RunBattleSetup_BankA0_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep, wBattleSubPhase
-RunBattleSetup_BankA0_Case01_Case14::
+RunBattleSetup_BankA0_Case01_SetBattleResolveStep::
 Jump_0A0_63E8:: ; address name
     xor a, a
     ld [wBattleResolveStep], a
@@ -5952,7 +5952,7 @@ Jump_0A0_6442:: ; address name
 ; reads: wLinkMessage
 ; writes: wLinkBufferCountHi, wLinkBufferCountLo, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi
 ; points at: wBattleSubPhase, wLinkRecvBuffer, wLinkPartnerName
-RunBattleSetup_BankA0_Case06::
+RunBattleSetup_BankA0_WaitLinkMessage::
 Jump_0A0_6497:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -5979,7 +5979,7 @@ Jump_0A0_6497:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte, wLinkReady
 ; points at: wBattleSubPhase
-RunBattleSetup_BankA0_Case07::
+RunBattleSetup_BankA0_SetBattleSubPhase::
 Jump_0A0_64C1:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
@@ -5994,7 +5994,7 @@ Jump_0A0_64C1:: ; address name
 ; reads: wLinkMessage, wLinkRole, wBattleSetupFlagsLo, wBattleSetupFlagsHi
 ; writes: wLinkSendByte, wLinkReady, wCommandBytesE9, wCommandByteEA, wSlotTactic, wSideControl, wBattleActionChoice, wMenuState, ...
 ; points at: wLinkPartnerName, wBattleSubPhase, wMenuState, wSlotTactic, wSlotLastTactic
-RunBattleSetup_BankA0_Case08::
+RunBattleSetup_BankA0_WaitLinkMessage_Case08::
 Jump_0A0_64D0:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0

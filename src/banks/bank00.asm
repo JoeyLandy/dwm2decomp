@@ -734,7 +734,7 @@ Jump_000_0530::
     db $CD, $CC, $0B, $C9
 
 ; in link mode: counts frames (resetting the game after an overflow), saves the joypad state and starts the next serial transfer of the queued byte or the joypad (E-0128)
-; 8 call sites from 8 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, GameMode5_Update_LinkExchangeJoypadPerFrame_Case03, GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_Case04, ...)
+; 8 call sites from 8 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, GameMode5_Update_LinkExchangeJoypadPerFrame_Case03, GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, ...)
 ; reads: wLinkMode, wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkRole, wLinkSession, wVBlankFlags, wJoypadHeld, wJoypadHeldPrev, ...
 ; writes: wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkSavedJoypadHeld, wLinkSavedJoypadHeldPrev, wLinkExchangeState, wLinkTimeoutLo, wLinkTimeoutHi, rVBK, ...
 ; points at: wLinkBufferCountLo, wGameMode, wScreenShakeTimer
@@ -1771,7 +1771,7 @@ Jump_000_0B0C::
     ret
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
-; 5 call sites from 4 routines (e.g. RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_Case07, RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest, RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
+; 5 call sites from 4 routines (e.g. RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_WaitFadeState, RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest, RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
 ReadWordTableEntry_Bank00::
 Func_000_0B0D:: ; address name
     add a, a
@@ -6627,7 +6627,7 @@ Jump_000_244C::
     ret
 
 ; A = key slot, or $FE: writes 'Magic Key' to DE; otherwise writes the name of key A in wKeyList (4-byte entries from $C708): the word numbered byte 0 + 1, then the word numbered byte 1 + $11 (CopyKeyNameWordToDE), then $F0 (E-0090)
-; 7 call sites from 7 routines (e.g. DebugAutomap_Update_CopyGlyphTilesToVRAM, PauseMenu_State3_Shared06, PauseMenu_State3_Case01_UpdateMenuCursor_Case03, PauseMenu_State3_Shared07, ...)
+; 7 call sites from 7 routines (e.g. DebugAutomap_Update_CopyGlyphTilesToVRAM, PauseMenu_State3_Shared06, PauseMenu_State3_Case01_UpdateMenuCursor_Case03, PauseMenu_State3_WaitPauseListCount, ...)
 WriteKeyNameToDE::
 Func_000_2458:: ; address name
     cp a, $FE
@@ -9400,7 +9400,7 @@ Jump_000_3460::
 
 Jump_000_3473::
     ld [hl], a
-    call SoundTick_Sub03
+    call SoundTick_WaitSoundHwChannel
     ldh a, [hSndNoteTimer]
     and a, a
     jr z, Jump_000_347F
@@ -10314,7 +10314,7 @@ Jump_000_39AB::
 ; reads: wSoundHwChannel, hSndPitchSlide, hSndEnvelope, hSndPitchSlideTime, wSoundRegBase, hSndFreqHi
 ; writes: hSndPitchSlideCounter, hSndEnvelope
 ; points at: hSndPitchSlideCounter, hSndPitchSlide
-SoundTick_Sub03::
+SoundTick_WaitSoundHwChannel::
 Func_000_39B9:: ; address name
     ld a, [wSoundHwChannel]
     cp a, $02

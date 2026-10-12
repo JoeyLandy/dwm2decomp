@@ -1773,8 +1773,8 @@ Jump_032_4AF4:: ; address name
     dw RunBattleActions_Case00_Sub01_Case00_ShowBattleTextCategory0
     dw RunBattleActions_Case00_Sub01_Case00_RollStatusTickEffect
     dw RunBattleActions_Case00_Sub01_Case00_PickRandomActionWhenUncontrolled
-    dw RunBattleActions_Case00_Sub01_Case00_Case04
-    dw RunBattleActions_Case00_Sub01_Case00_Case05
+    dw RunBattleActions_Case00_Sub01_Case00_SetBattleResolveStep
+    dw RunBattleActions_Case00_Sub01_Case00_SetBattleSubPhase
 
 ; entry 0 of the `rst $00` table in Func_032_4ADC_Case00
 ; no direct call (reached through a table, a jump or a vector)
@@ -1960,7 +1960,7 @@ Jump_032_4C0A:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit 4, [hl]
-    jr z, RunBattleActions_Case00_Sub01_Case00_Case04
+    jr z, RunBattleActions_Case00_Sub01_Case00_SetBattleResolveStep
     call PickRandomActionWhenUncontrolled
     ld d, $14
     farcall ShowBattleTextCategory0
@@ -1970,7 +1970,7 @@ Jump_032_4C0A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubStep
 ; points at: wBattleResolveStep
-RunBattleActions_Case00_Sub01_Case00_Case04::
+RunBattleActions_Case00_Sub01_Case00_SetBattleResolveStep::
 Jump_032_4C27:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1981,7 +1981,7 @@ Jump_032_4C27:: ; address name
 ; entry 5 of the `rst $00` table in Func_032_4ADC_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep
-RunBattleActions_Case00_Sub01_Case00_Case05::
+RunBattleActions_Case00_Sub01_Case00_SetBattleSubPhase::
 Jump_032_4C30:: ; address name
     ld a, $09
     ld [wBattleSubPhase], a
@@ -3886,7 +3886,7 @@ Func_032_5820:: ; address name
     dw RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable
     dw RunBattleStep4_Case00_Sub01_SelectEffectByEffectFlags
     dw RunBattleStep4_Case00_Sub01_Case04
-    dw RunBattleStep4_Case00_Sub01_Case05
+    dw RunBattleStep4_Case00_Sub01_SetBattleSubPhase
     dw RunBattleStep4_Case00_Sub01_ToCheckLinkRuleViolation
     dw RunBattleStep4_Case00_Sub01_CheckActionD0ToE3OrSpecial
 
@@ -4046,7 +4046,7 @@ Jump_032_5915:: ; address name
     dw RunBattleStep4_Case00_Sub01_Case04_ReadByteAtHLPlusA
     dw RunBattleStep4_Case00_Sub01_Case04_ShowGWasShattered
     dw RunBattleStep4_Case00_Sub01_Case04_ShowSealPrayWasBroken
-    dw RunBattleStep4_Case00_Sub01_Case04_Case03
+    dw RunBattleStep4_Case00_Sub01_Case04_SetBattleResolveStep
 
 ; entry 0 of the `rst $00` table in Func_032_5820_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -4156,7 +4156,7 @@ Jump_032_59A0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubStep
 ; points at: wBattleResolveStep
-RunBattleStep4_Case00_Sub01_Case04_Case03::
+RunBattleStep4_Case00_Sub01_Case04_SetBattleResolveStep::
 Jump_032_59B8:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4167,7 +4167,7 @@ Jump_032_59B8:: ; address name
 ; entry 5 of the `rst $00` table in Func_032_5820
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep
-RunBattleStep4_Case00_Sub01_Case05::
+RunBattleStep4_Case00_Sub01_SetBattleSubPhase::
 Jump_032_59C1:: ; address name
     ld a, $05
     ld [wBattleSubPhase], a
@@ -4312,7 +4312,7 @@ Jump_032_5A63:: ; address name
     ld [wBattleSubStep2], a
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
-    call RunDefeatSequence_Case02_Sub01
+    call RunDefeatSequence_Case02_WaitBattleActionId
     ret z
     ld a, [wBattleActionId]
     cp a, $91
@@ -4339,7 +4339,7 @@ Jump_032_5A8E::
 ; 1 call site from 1 routine (e.g. RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32)
 ; reads: wBattleActionId
 ; points at: wBattleDamageLo
-RunDefeatSequence_Case02_Sub01::
+RunDefeatSequence_Case02_WaitBattleActionId::
 Func_032_5A95:: ; address name
     ld a, [wBattleActionId]
     cp a, $13
@@ -4944,7 +4944,7 @@ Func_032_5EAB:: ; address name
     rst $00
     dw ResolveStep0EEffect_Case00
     dw ResolveStep0EEffect_ShowBattleText
-    dw ResolveStep0EEffect_Case02
+    dw ResolveStep0EEffect_SetBattleSubStep
     dw ResolveStep0EEffect_Case03
     dw ResolveStep0EEffect_Case04
     dw ResolveStep0EEffect_ActorFormationSlotToTemp0
@@ -5208,7 +5208,7 @@ ResolveStep0EEffect_ShowBattleText::
 Jump_032_6099:: ; address name
     ld a, [wEffectSubStep]
     or a, a
-    jr z, ResolveStep0EEffect_Case02
+    jr z, ResolveStep0EEffect_SetBattleSubStep
     ld d, a
     farcall ShowBattleText
     ld hl, wBattleSubStep
@@ -5219,7 +5219,7 @@ Jump_032_6099:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubStep
 ; points at: wBattleResolveStep
-ResolveStep0EEffect_Case02::
+ResolveStep0EEffect_SetBattleSubStep::
 Jump_032_60AB:: ; address name
     xor a, a
     ld [wBattleSubStep], a

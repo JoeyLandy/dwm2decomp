@@ -1044,7 +1044,7 @@ Jump_01C_4611:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 CloseShopMenu_Case01::
 Jump_01C_4615:: ; address name
-    call CloseShopMenu_Case01_Sub01
+    call CloseShopMenu_Case01_SetGlyphListPos
     ret
 
 ; entry 2 of the `rst $00` table in CloseShopMenu
@@ -1190,7 +1190,7 @@ Jump_01C_46F4:: ; address name
     dw ShopMenu_Setup_ToCopyTileListFromBank1F_1C
     dw ShopMenu_Setup_ToInitItemListScreenListAndCount
     dw ShopMenu_Setup_DrawScreenListBoxAtWC370AndStep
-    dw ShopMenu_Setup_Case04
+    dw ShopMenu_Setup_SetScreenStep
 
 ; entry 0 of the `rst $00` table in ShopMenu_Setup
 ; no direct call (reached through a table, a jump or a vector)
@@ -1254,7 +1254,7 @@ Data_01C_4738:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wScreenState
-ShopMenu_Setup_Case04::
+ShopMenu_Setup_SetScreenStep::
 Jump_01C_4770:: ; address name
     xor a, a
     ld [wScreenStep], a
@@ -6637,7 +6637,7 @@ Func_01C_6A71:: ; address name
 ; 1 call site from 1 routine (e.g. CloseShopMenu_Case01)
 ; writes: wGlyphListPos, wScreenCounter, wScreenState, wScreenStep, wMenuState, wScriptCommandType, wScriptStartRequest
 ; points at: wGridCursorY
-CloseShopMenu_Case01_Sub01::
+CloseShopMenu_Case01_SetGlyphListPos::
 Func_01C_6A8E:: ; address name
     xor a, a
     ld [wGlyphListPos], a
@@ -7288,7 +7288,7 @@ Jump_01C_6F27:: ; address name
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
     dw VaultMenu_Store_LoadThreeTilesAndDrawRows4603To460B
     dw VaultMenu_Store_Case03
-    dw VaultMenu_Store_Case04
+    dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
     dw VaultMenu_Store_Case07
@@ -7360,7 +7360,7 @@ Jump_01C_6F93:: ; address name
 ; entry 4 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenState, wScreenStep, wTwoChoiceCursor, wScreenByteED, wScriptCommandType, wScriptStartRequest
-VaultMenu_Store_Case04::
+VaultMenu_Store_SetScreenState::
 Jump_01C_6F9A:: ; address name
     ld a, $01
     ld [wScreenState], a
@@ -7782,7 +7782,7 @@ Jump_01C_720E:: ; address name
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
     dw VaultMenu_Store_LoadThreeTilesAndDrawRows4603To460B
     dw VaultMenu_TakeOut_Case03
-    dw VaultMenu_Store_Case04
+    dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
     dw VaultMenu_Store_Case07

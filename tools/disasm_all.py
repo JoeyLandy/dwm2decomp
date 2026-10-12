@@ -1567,6 +1567,59 @@ class Rom:
                 self.labels[b][a] = new
                 branched += 1
         log(f"branching steps named after their main call: {branched}")
+        # E-0281: steps that start by testing one variable and returning early (a wait/guard), and steps made
+        # only of constant stores to RAM: Parent_Wait<V> and Parent_Set<V>
+        guards = stores = 0
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for a, lab in list(self.labels[b].items()):
+                m = pat.match(lab)
+                if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
+                    continue
+                seq, pc = [], a
+                for _ in range(16):
+                    v = ins.get(pc)
+                    if not v or v[0] == "dw" or (pc != a and pc in self.labels[b] and
+                                                 not self.labels[b][pc].startswith("Jump_")):
+                        break
+                    seq.append(v)
+                    if v[2] in ("ret", "jp", "jphl", "bad") and "," not in v[1]:
+                        break
+                    pc += v[0]
+                texts = [v[1] for v in seq]
+                parent, new = m.group(1), None
+                mv = re.match(r"ldh? a, \[\$([0-9A-F]{2,4})\]$", texts[0]) if texts else None
+                if mv and len(texts) >= 3 and re.match(r"(or a, a|and a, (a|\$[0-9A-F]{2})|cp a, \$[0-9A-F]{2}|bit \d, a)$", texts[1]) \
+                        and re.match(r"ret n?[zc]$", texts[2]):
+                    addr = int(mv.group(1), 16)
+                    new = f"{parent}_Wait{stem(addr if addr > 0xFF else 0xFF00 + addr)}"
+                    guards += 1
+                elif texts and texts[-1] == "ret" and len(texts) >= 3:
+                    body = texts[:-1]
+                    ok, first = True, None
+                    for t in body:
+                        if re.match(r"(ld a, \$[0-9A-F]{2}|xor a, a|inc hl|ld \[hl\], \$[0-9A-F]{2}|ld \[hl\+\], a|ld \[hl\], a|"
+                                    r"inc \[hl\]|inc a)$", t):
+                            continue
+                        mm = re.match(r"(?:ld hl, \$([0-9A-F]{4})|ld \[\$([0-9A-F]{4})\], a|ldh \[\$([0-9A-F]{2})\], a|ld a, \[\$([0-9A-F]{4})\])$", t)
+                        if not mm:
+                            ok = False
+                            break
+                        g = mm.group(1) or mm.group(2) or mm.group(3)
+                        if g and first is None and not mm.group(4):
+                            first = int(g, 16) if len(g) == 4 else 0xFF00 + int(g, 16)
+                    if ok and first is not None:
+                        new = f"{parent}_Set{stem(first)}"
+                        stores += 1
+                if not new or len(new) > 80:
+                    continue
+                if new in used:
+                    new = f"{new}_{lab[len(parent) + 1:]}"
+                    if new in used:
+                        continue
+                used.add(new)
+                self.labels[b][a] = new
+        log(f"wait/guard steps: {guards}; constant-store steps: {stores}")
         # E-0275: an entry that only loads one register with a constant and falls through, or `jr`s, into
         # other code is that code with the register preset: <Target>With<R><n>
         entries = 0

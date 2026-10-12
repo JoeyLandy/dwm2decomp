@@ -556,7 +556,7 @@ Jump_036_4356:: ; address name
 ; points at: wBattleResolveStep, wBattleStatus4, wBattleStatus5, wBattleStatus3, wBattleStatus1, wSlotFlags854, wBattleStatus, wBattleAGL
 ResolveStepEffectChecks::
 Jump_036_438A:: ; address name
-    call ResolveStepEffectChecks_Sub01
+    call ResolveStepEffectChecks_WaitBattleActionId
     jr z, Jump_036_439B
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -567,7 +567,7 @@ Jump_036_438A:: ; address name
 Jump_036_439B::
     ld hl, wBattleResolveStep
     inc [hl]
-    call ResolveStepEffectChecks_Sub02
+    call ResolveStepEffectChecks_WaitBattleActionId_Sub02
     ret z
     ld a, [wRecordBufferData + $6]
     bit 1, a
@@ -795,7 +795,7 @@ Jump_036_4543::
 ; only called from ResolveStepEffectChecks (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
 ; reads: wBattleActionId
-ResolveStepEffectChecks_Sub01::
+ResolveStepEffectChecks_WaitBattleActionId::
 Func_036_454F:: ; address name
     ld a, [wBattleActionId]
     cp a, $35
@@ -834,7 +834,7 @@ Func_036_454F:: ; address name
 ; only called from ResolveStepEffectChecks (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
 ; reads: wBattleActionId
-ResolveStepEffectChecks_Sub02::
+ResolveStepEffectChecks_WaitBattleActionId_Sub02::
 Func_036_4582:: ; address name
     ld a, [wBattleActionId]
     cp a, $6A
@@ -1289,7 +1289,7 @@ Jump_036_4885::
     ld a, [wBattleActor]
     ld b, a
     call LoadBattleMonsterPictureForSlotB
-    call ResolveStepDamageMessage_Sub05
+    call ResolveStepDamageMessage_WaitLinkMode
     ret
 
 Jump_036_4890::
@@ -8434,7 +8434,7 @@ Func_036_70CC:: ; address name
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage)
 ; reads: wLinkMode, wBattleActor, wBattleTarget
 ; points at: wSlotNameBytes
-ResolveStepDamageMessage_Sub05::
+ResolveStepDamageMessage_WaitLinkMode::
 Func_036_70F4:: ; address name
     ld a, [wLinkMode]
     cp a, $01

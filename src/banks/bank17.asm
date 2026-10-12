@@ -5,7 +5,7 @@ SECTION "Bank 17", ROMX[$4000], BANK[$17]
 ; 1 call site from 1 routine (e.g. SendSGBPaletteSetPacket)
 ; reads: wSGBActive, wSGBPacketIndex
 ; points at: wSGBPacketBuffer
-SendSGBPaletteSetPacket_Sub01::
+SendSGBPaletteSetPacket_WaitSGBActive::
 Func_017_4001:: ; address name
     ld a, [wSGBActive]
     or a, a
@@ -73,7 +73,7 @@ Jump_017_403B::
     call SpinDelay
     jr Jump_017_4026
 
-; address loaded by SendSGBPaletteSetPacket_Sub01
+; address loaded by SendSGBPaletteSetPacket_WaitSGBActive
 Data_017_4055:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FF, $40, $0F, $41
     dw Data_017_407F
@@ -198,7 +198,7 @@ Jump_017_41F4::
     call LoadSGBObjectPalettesFromPointers
     ld a, $FF
     ld [wSGBPacketIndex], a
-    farcall_b SendSGBPaletteSetPacket_Sub01
+    farcall_b SendSGBPaletteSetPacket_WaitSGBActive
     call SpinDelay
     ret
 

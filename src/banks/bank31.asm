@@ -173,8 +173,8 @@ Jump_031_4106:: ; address name
     jp z, Jump_031_418E
     ld a, [wArg1]
     rst $00
-    dw BattlePhase0_Step2_Case00
-    dw BattlePhase0_Step2_Case01
+    dw BattlePhase0_Step2_SetArg1
+    dw BattlePhase0_Step2_WaitLinkMessage
     dw BattlePhase0_Step2_Case02
     dw BattlePhase0_Step2_CopyFiveGlyphsPlusMarks
 
@@ -182,7 +182,7 @@ Jump_031_4106:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg1
 ; writes: wArg1, wLinkSendByte
-BattlePhase0_Step2_Case00::
+BattlePhase0_Step2_SetArg1::
 Jump_031_4119:: ; address name
     ld a, [wArg1]
     inc a
@@ -195,7 +195,7 @@ Jump_031_4119:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wArg1
 ; writes: wLinkSendByte, wArg1
-BattlePhase0_Step2_Case01::
+BattlePhase0_Step2_WaitLinkMessage::
 Jump_031_4126:: ; address name
     ld a, [wLinkMessage]
     cp a, $D2
@@ -846,7 +846,7 @@ Jump_031_44D1::
     ld a, [wLinkMode]
     or a, a
     call z, BattleEnd_Step3_Sub05
-    call BattleEnd_Step3_Sub06
+    call BattleEnd_Step3_WaitBattleKind
     ld a, [wDisplaySlot]
     dec a
     ld c, $4E
@@ -1041,7 +1041,7 @@ Data_031_45EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wBattleKind, wBattleFoeCount, wEncounterMonsters
 ; writes: hTemp0, hTemp1, wDisplaySlot, wScreenSavedFlag
 ; points at: wEncounterMonsters
-BattleEnd_Step3_Sub06::
+BattleEnd_Step3_WaitBattleKind::
 Func_031_45F2:: ; address name
     ld a, [wBattleKind]
     cp a, $02
@@ -1131,7 +1131,7 @@ Jump_031_4680::
     ret
 
 ; only called from BattleEnd_Step3_Sub06 (E-0047)
-; 5 call sites from 1 routine (e.g. BattleEnd_Step3_Sub06)
+; 5 call sites from 1 routine (e.g. BattleEnd_Step3_WaitBattleKind)
 ; reads: hTemp0, hTemp1
 BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01::
 Func_031_4681:: ; address name
@@ -1425,7 +1425,7 @@ Jump_031_4840:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
     dw BattleEnd_Step6_QueueMusic
-    dw BattleEnd_Step6_Case01
+    dw BattleEnd_Step6_WaitFadeState
     dw BattleEnd_Step6_QueueMusic_Case02
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step6
@@ -1460,7 +1460,7 @@ Jump_031_485D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; points at: wBattleSubPhase
-BattleEnd_Step6_Case01::
+BattleEnd_Step6_WaitFadeState::
 Jump_031_486E:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -1539,7 +1539,7 @@ Jump_031_48E5:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
     dw BattleEnd_Step7_Case00
-    dw BattleEnd_Step7_Case01
+    dw BattleEnd_Step7_WaitLinkMessage
     dw BattleEnd_Step7_StartPaletteFade
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step7
@@ -1587,7 +1587,7 @@ Jump_031_48EF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; points at: wBattleSubPhase
-BattleEnd_Step7_Case01::
+BattleEnd_Step7_WaitLinkMessage::
 Jump_031_4926:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -1966,16 +1966,16 @@ Jump_031_4B2E:: ; address name
     dw RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep
     dw RunBattleSetup_Case00_Case05
     dw RunBattleSetup_Case00_ClearWindowAndCopyRect7345FarAndStep
-    dw RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07
+    dw RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags
     dw RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far
     dw RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_Case0A
+    dw RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_WaitTextFlags
     dw RunBattleSetup_Case00_ShowRetireNow
     dw RunBattleSetup_Case00_LoadCursorTileAndRect7826
     dw RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D
-    dw RunBattleSetup_Case00_Case0E
+    dw RunBattleSetup_Case00_WaitTextFlags
     dw RunBattleSetup_Case00_ShowNoFleeingFromThis
-    dw RunBattleSetup_Case00_Case10
+    dw RunBattleSetup_Case00_WaitTextFlags_Case10
 
 ; entry 0 of the `rst $00` table in RunBattleSetup_Case00
 ; no direct call (reached through a table, a jump or a vector)
@@ -2323,7 +2323,7 @@ Jump_031_4D3D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleResolveStep
-RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07::
+RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags::
 Jump_031_4D4E:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2590,7 +2590,7 @@ Data_031_4ED6:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wTextFlags, wBattlePartyCount
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wSlotMarks
-RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_Case0A::
+RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_WaitTextFlags::
 Jump_031_4EE6:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2712,7 +2712,7 @@ Data_031_4FA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wDataBankSave
 ; writes: wBattleScene, wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wDataBank, wDataBankSave
-RunBattleSetup_Case00_Case0E::
+RunBattleSetup_Case00_WaitTextFlags::
 Jump_031_4FA8:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2753,7 +2753,7 @@ Jump_031_4FCE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleResolveStep
-RunBattleSetup_Case00_Case10::
+RunBattleSetup_Case00_WaitTextFlags_Case10::
 Jump_031_4FE9:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2779,7 +2779,7 @@ Jump_031_4FF4:: ; address name
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case07
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep
     dw RunBattleSetup_Case01_ShowItHasNoUsable
-    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0A
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C
     dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0D
@@ -2791,7 +2791,7 @@ Jump_031_4FF4:: ; address name
     dw RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects
     dw RunBattleSetup_Case01_FillWC278WithC3_Bank31AndStep
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep
-    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags_Case16
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13
     dw RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31AndStep
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_Case19
@@ -2803,7 +2803,7 @@ Jump_031_4FF4:: ; address name
     dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11
     dw RunBattleSetup_Case01_Case20
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_DrawWC338RowsToBGMapRow13
-    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags_Case16
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13_Case23
 
 ; entry 0 of the `rst $00` table in RunBattleSetup_Case01
@@ -3205,7 +3205,7 @@ Jump_031_52CF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0A::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags::
 Jump_031_52E7:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3683,7 +3683,7 @@ Jump_031_55E0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags_Case16::
 Jump_031_55F2:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6870,7 +6870,7 @@ Func_031_67AA:: ; address name
     dw BattleEnd_Step4_Sub02_AddExpToRecordHLCapped
     dw BattleEnd_Step4_Sub02_RecordReachedNextLevelExp
     dw BattleEnd_Step4_Sub02_ComputeLevelUpStatGainsForBattleArg1
-    dw BattleEnd_Step4_Sub02_Case08
+    dw BattleEnd_Step4_Sub02_SetBattleStep
     dw BattleEnd_Step4_Sub02_Case09
 
 ; entry 0 of the `rst $00` table in Func_031_67AA
@@ -7698,7 +7698,7 @@ Func_031_6C2F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase
 ; points at: wBattleStep
-BattleEnd_Step4_Sub02_Case08::
+BattleEnd_Step4_Sub02_SetBattleStep::
 Jump_031_6C5E:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -7715,7 +7715,7 @@ Jump_031_6C67:: ; address name
     rst $00
     dw BattleEnd_Step4_Sub02_Case09_Case00
     dw BattleEnd_Step4_Sub02_Case09_ClearTemp0AndA
-    dw BattleEnd_Step4_Sub02_Case09_Case02
+    dw BattleEnd_Step4_Sub02_Case09_WaitTextFlags
 
 ; entry 0 of the `rst $00` table in Func_031_67AA_Case09
 ; no direct call (reached through a table, a jump or a vector)
@@ -7825,7 +7825,7 @@ Jump_031_6CF8::
 ; reads: wTextFlags
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleStep
-BattleEnd_Step4_Sub02_Case09_Case02::
+BattleEnd_Step4_Sub02_Case09_WaitTextFlags::
 Jump_031_6D17:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -8102,7 +8102,7 @@ Func_031_6E67:: ; address name
     dw RunBattleEndStep4SubSteps_CopyRectRecord7345ToScreenBuffer
     dw RunBattleEndStep4SubSteps_LoadCursorTileAndRect7826
     dw RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink
-    dw RunBattleEndStep4SubSteps_Case06
+    dw RunBattleEndStep4SubSteps_WaitTextFlags
 
 ; entry 0 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
@@ -8375,7 +8375,7 @@ Jump_031_7054::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleSubStep
-RunBattleEndStep4SubSteps_Case06::
+RunBattleEndStep4SubSteps_WaitTextFlags::
 Jump_031_705A:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -8683,7 +8683,7 @@ Jump_031_7221::
     ret
 
 ; Fills the $160 bytes at wC278 with $C3; clobbers A, BC, HL (the same 15 bytes appear in 2 banks)
-; 39 call sites from 22 routines (e.g. RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink, ...)
+; 39 call sites from 22 routines (e.g. RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink, ...)
 FillWC278WithC3_Bank31::
 Func_031_722A:: ; address name
     ld hl, wScreenTileBuffer + $E0
@@ -8795,7 +8795,7 @@ Func_031_72C9:: ; address name
     call FillWC278WithC3_Bank31
 
 ; wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)
-; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, ...)
+; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags, ...)
 ; reads: wBattleFoeCount
 LayoutTileBlocksForBattleFoeCount::
 Func_031_72CC:: ; address name
@@ -9106,7 +9106,7 @@ Func_031_746F:: ; address name
     ret
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM (E-0073)
-; 13 call sites from 13 routines (e.g. RunBattleSetup_Case00_ShowNoFleeingFromThis, RunBattleSetup_Case00_ShowRetireNow, RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, ...)
+; 13 call sites from 13 routines (e.g. RunBattleSetup_Case00_ShowNoFleeingFromThis, RunBattleSetup_Case00_ShowRetireNow, RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far, RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags, ...)
 DrawWC338RowsToBGMapRow13::
 Func_031_7479:: ; address name
     ld de, wWindowTileBuffer + $38
@@ -9116,7 +9116,7 @@ Func_031_7479:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, RunBattleSetup_Case00_FillWC278WithC3_Bank31)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags, RunBattleSetup_Case00_FillWC278WithC3_Bank31)
 RunBattleSetup_CopyRectRecord73ADToScreenBuffer::
 Func_031_7486:: ; address name
     farcall CopyRectRecord73ADToScreenBuffer

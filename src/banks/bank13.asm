@@ -2067,7 +2067,7 @@ Jump_013_4A23:: ; address name
     dw TalkMsg0A16_MyMaidIsAngryThatI
     dw DispatchTalkEvent_Case04_TestFlagBit_Case9C
     dw ChestMagicKey_Flag01E0
-    dw DispatchTalkEvent_Case04_Case9E
+    dw DispatchTalkEvent_Case04_SetObject2Plus7
     dw TalkScript5FD2
     dw DispatchTalkEvent_Case04_ShowHeroCheckedTheTreasure
     dw DispatchTalkEvent_Case04_FindTemp0InInventoryList
@@ -4547,7 +4547,7 @@ Jump_013_585A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject2
 ; starts Script_5FD2
-DispatchTalkEvent_Case04_Case9E::
+DispatchTalkEvent_Case04_SetObject2Plus7::
 Jump_013_586B:: ; address name
     xor a, a
     ld [wObject2 + $7], a
@@ -4954,9 +4954,9 @@ Jump_013_5941:: ; address name
     dw TalkMsg055E_HeroCheckedTheBookshelfMagic
     dw TalkMsg0DD5_MonsterSkillsArePassedOn
     dw DispatchTalkEvent_Case01_RunFieldCommandTemp0
-    dw DispatchTalkEvent_Case01_StartScriptAtHL_B13_CaseE5
+    dw DispatchTalkEvent_Case01_StartScriptAtHL_B13_WaitGM2Mode
     dw DispatchTalkEvent_Case01_StartMessageCommand09HL_B13
-    dw DispatchTalkEvent_Case01_CaseE7
+    dw DispatchTalkEvent_Case01_SetScriptByte68
     dw $0000 ; unused index (E-0207)
     dw TalkMsg029B_IFoundAKey
     dw Talk0DE3_TheSeaIsHuge
@@ -10480,7 +10480,7 @@ Jump_013_7D2F:: ; address name
 ; entry 229 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGM2Mode, wRollState
-DispatchTalkEvent_Case01_StartScriptAtHL_B13_CaseE5::
+DispatchTalkEvent_Case01_StartScriptAtHL_B13_WaitGM2Mode::
 Jump_013_7D45:: ; address name
     ld a, [wGM2Mode]
     cp a, $01
@@ -10530,7 +10530,7 @@ Jump_013_7D82::
 ; entry 231 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptByte68
-DispatchTalkEvent_Case01_CaseE7::
+DispatchTalkEvent_Case01_SetScriptByte68::
 Jump_013_7D8C:: ; address name
     xor a, a
     ld [wScriptByte68], a

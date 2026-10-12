@@ -75,13 +75,13 @@ BGPaletteBufferData_E1_49D2:: ; heuristic: argument of a bank-switching copy hel
 Data_0E1_49D2:: ; address name
     db $0F, $3E, $BF, $73, $D7, $56, $00, $00
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06, GameMode5_Update_Case00_Case04_DecompressToVRAM
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WaitFadeState, GameMode5_Update_Case00_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 1165 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Gfx_E1_49DA:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_49DA:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $3849DA, $48D
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06, GameMode5_Update_Case00_Case04_DecompressToVRAM
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WaitFadeState, GameMode5_Update_Case00_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 1438 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_E1_4E67:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_4E67:: ; address name
@@ -124,13 +124,13 @@ Data_0E1_5974:: ; address name
     db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
     db $1F, $1F, $35
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WaitFadeState
 ; LZSS-compressed asset: 112 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 BGMap0Gfx_E1_5987:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_5987:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $385987, $70
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WaitFadeState
 ; LZSS-compressed asset: 48 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 BGMap0Gfx_E1_59F7:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_59F7:: ; address name
@@ -138,7 +138,7 @@ Data_0E1_59F7:: ; address name
     db $00, $20, $1F, $4D, $00, $80, $1F, $4D, $00, $E0, $1F, $4D, $00, $40, $2F, $4D
     db $00, $A0, $2F, $4D, $00, $00, $3F, $4D, $00, $60, $3F, $4D, $00, $A0, $3F, $2C
 
-; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06, GameMode5_Update_Case00_Case04_DecompressToVRAM
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_WaitFadeState, GameMode5_Update_Case00_Case04_DecompressToVRAM
 BGPaletteBufferData_E1_5A27:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_5A27:: ; address name
     db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09
@@ -164,7 +164,7 @@ Data_0E1_5AA7:: ; address name
 RunE15AC0For5ABE::
 Func_0E1_5AB7:: ; address name
     ld de, Data_0E1_5ABE
-    call RunE15AC0For5ABE_Sub01
+    call RunE15AC0For5ABE_WaitOamNextEntry
     ret
 
 ; address loaded by RunE15AC0For5ABE
@@ -176,7 +176,7 @@ Data_0E1_5ABE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hMetaSpriteYLo, hMetaSpriteYHi, hOamNextEntry
 ; points at: hMetaSpriteXLo
-RunE15AC0For5ABE_Sub01::
+RunE15AC0For5ABE_WaitOamNextEntry::
 Func_0E1_5AC0:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $27
@@ -641,7 +641,7 @@ Jump_0E1_5CE6::
     ret
 
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
-; 2 call sites from 1 routine (e.g. RunE15AC0For5ABE_Sub01)
+; 2 call sites from 1 routine (e.g. RunE15AC0For5ABE_WaitOamNextEntry)
 ; reads: hScrollY, hScrollX, hSpriteHideTile, rSTAT
 BGTileUnderPointIsSpriteHideTile_BankE1::
 Func_0E1_5D06:: ; address name

@@ -803,7 +803,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case04_ShowStringIndexA_Bank37_Case16, RunLinkSession5Exchange_Case01_Sub01_Case0E_Case08, RunScreenStateWhenNotFading_F1_Case04_BeginString_Bank0E_Cat0_Case16, RunScreenStateWhenNotFading_F1_Case0E_ShowString_Bank0E, ...)
+; 6 call sites from 6 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case04_ShowStringIndexA_Bank37_Case16, RunLinkSession5Exchange_Case01_Sub01_Case0E_Case08, RunScreenStateWhenNotFading_F1_Case04_BeginString_Bank0E_Cat0_WaitTextFlags_Case16, RunScreenStateWhenNotFading_F1_Case0E_ShowString_Bank0E, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E
@@ -2571,7 +2571,7 @@ Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
 ; wD7F5 = the 2-bit entry of the matrix Data_00E_603F for the combined personality indexes of wC986 and wCA2B (E-0128)
-; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunScreenStateWhenNotFading_F1_Case04_BeginString_Bank0E_Cat0_Case16)
+; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunScreenStateWhenNotFading_F1_Case04_BeginString_Bank0E_Cat0_WaitTextFlags_Case16)
 ; writes: wArg5
 ; points at: wRecordBufA, wRecordBufB
 PersonalityPairValueToArg5::

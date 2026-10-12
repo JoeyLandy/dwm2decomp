@@ -397,7 +397,7 @@ Jump_073_4250::
 ; points at: wMenuState, wScriptStep, wMenuSubState, wMenuSelectedMember
 Talk08Event_Case0A_Case07::
 Jump_073_4269:: ; address name
-    call Talk08Event_Shared01
+    call Talk08Event_WaitFrameCounterLo
     ld a, [wFrameCounterLo]
     and a, $01
     jr z, Jump_073_42A7
@@ -475,7 +475,7 @@ Jump_073_42C2:: ; address name
     inc [hl]
 
 Jump_073_42D1::
-    call Talk08Event_Shared01
+    call Talk08Event_WaitFrameCounterLo
     call Talk08Event_Shared02
     ret
 
@@ -486,7 +486,7 @@ Jump_073_42D1::
 ; points at: wScriptStep
 Talk08Event_Case0A_Case05::
 Jump_073_42D8:: ; address name
-    call Talk08Event_Shared01
+    call Talk08Event_WaitFrameCounterLo
     call Talk08Event_Shared02
     ld a, [wScriptParam0]
     inc a
@@ -630,7 +630,7 @@ Jump_073_43B3:: ; address name
 ; 3 call sites from 3 routines (e.g. Talk08Event_Case0A_Case07, Talk08Event_Case0A_Case06, Talk08Event_Case0A_Case05)
 ; reads: wFrameCounterLo, wMenuCursor, wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: wMenuState, wMenuSubState, wMenuSelectedMember
-Talk08Event_Shared01::
+Talk08Event_WaitFrameCounterLo::
 Func_073_43BE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $01
@@ -9535,7 +9535,7 @@ SceneLearnQuick::
 Func_073_77CC:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneLearnQuick_Case00
+    dw SceneLearnQuick_SetMessageIndex
     dw SceneLearnQuick_StepScriptParam0Counter_Bank73
     dw SceneLearnQuick_StepScriptParam0Counter_Bank73_Case02
     dw SceneLearnQuick_StepObjectTowardCoord
@@ -9701,7 +9701,7 @@ Jump_073_78CC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMessageIndex, wMessageGroup
 ; points at: wScriptStep
-SceneLearnQuick_Case00::
+SceneLearnQuick_SetMessageIndex::
 Jump_073_78E7:: ; address name
     ld a, $01
     ld [wMessageIndex], a

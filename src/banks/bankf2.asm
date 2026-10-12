@@ -99,11 +99,11 @@ Jump_0F2_40B0::
     dw GameMode8_Update_Case01
     dw GameMode8_Update_Case02
     dw GameMode8_Update_Case01
-    dw GameMode8_Update_Case04
+    dw GameMode8_Update_SetObject5
     dw GameMode8_Update_Case05
     dw GameMode8_Update_Case01
     dw GameMode8_Update_Case01
-    dw GameMode8_Update_Case08
+    dw GameMode8_Update_SetObject5_Case08
     dw GameMode8_Update_Case01
     dw GameMode8_Update_Case01
     dw GameMode8_Update_Case0B
@@ -169,7 +169,7 @@ Jump_0F2_40F6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject5, wArg1, wScreenSubStep
-GameMode8_Update_Case04::
+GameMode8_Update_SetObject5::
 Jump_0F2_411C:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -207,7 +207,7 @@ Jump_0F2_412E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject5, wArg1, wScreenSubStep
-GameMode8_Update_Case08::
+GameMode8_Update_SetObject5_Case08::
 Jump_0F2_414F:: ; address name
     ld a, $00
     ld [wObject5], a
@@ -1708,7 +1708,7 @@ Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three species words of wCA2B draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
 ; reads: wRecordBufB, hTemp1, hTemp0
 ; writes: hTemp0, wArg1, wArg2
 ; points at: wArg3

@@ -19,12 +19,12 @@ Func_00A_4001:: ; address name
     or a, a
     jr nz, Jump_00A_4021
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte
-    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
+    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_WaitStatusStepFlags
     jr Jump_00A_4027
 
 Jump_00A_4021::
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02
-    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
+    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_WaitStatusStepFlags
 
 Jump_00A_4027::
     xor a, a
@@ -56,7 +56,7 @@ Jump_00A_404F::
 ; 2 call sites from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
 ; reads: wStatusStepFlags, wPartyCount, hTemp0, hTemp1
 ; points at: wPartyList
-FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01::
+FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_WaitStatusStepFlags::
 Func_00A_4055:: ; address name
     ld a, [wStatusStepFlags]
     and a, $01
@@ -3807,7 +3807,7 @@ Jump_00A_573E::
 ; 1 call site from 1 routine (e.g. UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7)
 ; reads: hPlayerSpriteOverride, wScriptRunning, hPlayerSpriteTimerLo, hPlayerSpriteTimerHi
 ; writes: hPlayerSpriteTimerLo, hPlayerSpriteTimerHi, wTalkEventGroup, wTalkEventIndex
-UpdatePlayerMovement_Sub01_Sub03::
+UpdatePlayerMovement_Sub01_WaitPlayerSpriteOverride::
 Func_00A_5748:: ; address name
     ldh a, [hPlayerSpriteOverride]
     bit 7, a

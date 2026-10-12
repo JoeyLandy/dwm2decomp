@@ -23,7 +23,7 @@ Func_027_4001:: ; address name
 
 Jump_027_4017::
     ld de, MetaSprites27Table
-    call DrawMetaSpriteSet_Bank27_Sub01
+    call DrawMetaSpriteSet_Bank27_WaitOamNextEntry
     ret
 
 ; E-0147 (C1: DrawMetaSpriteSet_Bank27 passes DE = $27:401E to the builder, which takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 127 words up to the attribute table at $411C).
@@ -296,7 +296,7 @@ Data_027_411C:: ; address name
 ; reads: hOamNextEntry, hSpriteScrollYLo, hSpriteScrollYHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteScrollXLo, hSpriteScrollXHi, hSpriteOriginX, ...
 ; writes: hMetaSpriteYLo, hMetaSpriteYHi, hOamNextEntry
 ; points at: hMetaSpriteXLo
-DrawMetaSpriteSet_Bank27_Sub01::
+DrawMetaSpriteSet_Bank27_WaitOamNextEntry::
 Func_027_419C:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $27
@@ -761,7 +761,7 @@ Jump_027_43C2::
     ret
 
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
-; 2 call sites from 1 routine (e.g. DrawMetaSpriteSet_Bank27_Sub01)
+; 2 call sites from 1 routine (e.g. DrawMetaSpriteSet_Bank27_WaitOamNextEntry)
 ; reads: hScrollY, hScrollX, hSpriteHideTile, rSTAT
 BGTileUnderPointIsSpriteHideTile_Bank27::
 Func_027_43E2:: ; address name

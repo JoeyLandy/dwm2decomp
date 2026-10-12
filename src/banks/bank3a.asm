@@ -1250,7 +1250,7 @@ Jump_03A_492E::
     ld [wEffectTileOffset], a
     ld [wEffectByteB5], a
     ld b, a
-    call SelectEffectByEffectFlags_Sub02
+    call SelectEffectByEffectFlags_WaitEffectFlags
     jr z, Jump_03A_4962
     ld a, b
     cp a, $09
@@ -1342,7 +1342,7 @@ Jump_03A_4A00::
 ; only called from SelectEffectByEffectFlags (E-0047)
 ; 1 call site from 1 routine (e.g. SelectEffectByEffectFlags)
 ; reads: wEffectFlags, wBattleActionId
-SelectEffectByEffectFlags_Sub02::
+SelectEffectByEffectFlags_WaitEffectFlags::
 Func_03A_4A06:: ; address name
     ld a, [wEffectFlags]
     bit 3, a
@@ -1674,8 +1674,8 @@ Func_03A_4C26:: ; address name
     ld [wEffectFrameCounter], a
     ld a, [wEffectRoutine]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case00
+    dw RunEffectRoutineEffectEvery5Frames_SetEffectId
+    dw RunEffectRoutineEffectEvery5Frames_SetEffectId
     dw RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty
     dw RunEffectRoutineEffectEvery5Frames_Case03
     dw RunEffectRoutineEffectEvery5Frames_Case04
@@ -1692,7 +1692,7 @@ Func_03A_4C26:: ; address name
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case00::
+RunEffectRoutineEffectEvery5Frames_SetEffectId::
 Jump_03A_4C54:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -1709,7 +1709,7 @@ Jump_03A_4C5E:: ; address name
     ld a, [wBattleTarget]
     and a, $03
     cp a, $03
-    jp z, RunEffectRoutineEffectEvery5Frames_Table2_Case04
+    jp z, RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
     ld a, [wLinkMode]
     cp a, $01
     jr nz, Jump_03A_4C7F
@@ -1718,25 +1718,25 @@ Jump_03A_4C5E:: ; address name
     jr z, Jump_03A_4C7F
     ld a, [wBattleTarget]
     cp a, $04
-    jr nc, RunEffectRoutineEffectEvery5Frames_Table2_Case04
+    jr nc, RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
     jr Jump_03A_4C86
 
 Jump_03A_4C7F::
     ld a, [wBattleTarget]
     cp a, $04
-    jr c, RunEffectRoutineEffectEvery5Frames_Table2_Case04
+    jr c, RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
 
 Jump_03A_4C86::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, RunEffectRoutineEffectEvery5Frames_Table2_Case04
+    jr c, RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
     ld a, [wEffectSpriteX]
     rst $00
     dw RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget
     dw RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01
     dw RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget
     dw RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Table2_Case04
+    dw RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
 
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
@@ -1791,7 +1791,7 @@ Jump_03A_4CC2:: ; address name
 ; entry 4 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX, wEffectStep
-RunEffectRoutineEffectEvery5Frames_Table2_Case04::
+RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId::
 Jump_03A_4CEB:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2017,18 +2017,18 @@ RunEffectRoutineEffectEvery5Frames_Case04::
 Jump_03A_4E35:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
     dw RunEffectRoutineEffectEvery5Frames_Case04_Case06
 
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case04_Case00::
+RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP::
 Jump_03A_4E47:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $00
@@ -2076,8 +2076,8 @@ Jump_03A_4E74:: ; address name
     rst $00
     dw RunEffectRoutineEffectEvery5Frames_Case05_Case00
     dw RunEffectRoutineEffectEvery5Frames_Case05_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Case05_Case02
-    dw RunEffectRoutineEffectEvery5Frames_Case05_Case03
+    dw RunEffectRoutineEffectEvery5Frames_Case05_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_Case05_SetEffectId
 
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case05
 ; no direct call (reached through a table, a jump or a vector)
@@ -2119,7 +2119,7 @@ Jump_03A_4E96:: ; address name
 ; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case05_Case02::
+RunEffectRoutineEffectEvery5Frames_Case05_SetDMGPaletteBGP::
 Jump_03A_4EA9:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $D2
@@ -2134,7 +2134,7 @@ Jump_03A_4EA9:: ; address name
 ; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case05_Case03::
+RunEffectRoutineEffectEvery5Frames_Case05_SetEffectId::
 Jump_03A_4EB9:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2217,7 +2217,7 @@ Jump_03A_4F06:: ; address name
     dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
     dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
     dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case0C
+    dw RunEffectRoutineEffectEvery5Frames_Case06_SetEffectId
 
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case06
 ; no direct call (reached through a table, a jump or a vector)
@@ -2241,7 +2241,7 @@ Jump_03A_4F24:: ; address name
 ; entry 12 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case06_Case0C::
+RunEffectRoutineEffectEvery5Frames_Case06_SetEffectId::
 Jump_03A_4F38:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2258,11 +2258,11 @@ Jump_03A_4F42:: ; address name
     rst $00
     dw RunEffectRoutineEffectEvery5Frames_Case07_Case00
     dw RunEffectRoutineEffectEvery5Frames_Case07_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Case07_Case02
+    dw RunEffectRoutineEffectEvery5Frames_Case07_SetDMGPaletteBGP
     dw RunEffectRoutineEffectEvery5Frames_Case07_Case00
     dw RunEffectRoutineEffectEvery5Frames_Case07_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Case07_Case02
-    dw RunEffectRoutineEffectEvery5Frames_Case07_Case06
+    dw RunEffectRoutineEffectEvery5Frames_Case07_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_Case07_SetEffectId
 
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case07
 ; no direct call (reached through a table, a jump or a vector)
@@ -2304,7 +2304,7 @@ Jump_03A_4F6A:: ; address name
 ; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case07_Case02::
+RunEffectRoutineEffectEvery5Frames_Case07_SetDMGPaletteBGP::
 Jump_03A_4F7D:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $D2
@@ -2319,7 +2319,7 @@ Jump_03A_4F7D:: ; address name
 ; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case07
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case07_Case06::
+RunEffectRoutineEffectEvery5Frames_Case07_SetEffectId::
 Jump_03A_4F8D:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2335,7 +2335,7 @@ RunEffectRoutineEffectEvery5Frames_RunEffectStep::
 Jump_03A_4F97:: ; address name
     ld a, [wEffectSpriteX]
     or a, a
-    call z, RunEffectRoutineEffectEvery5Frames_Case08_Sub01
+    call z, RunEffectRoutineEffectEvery5Frames_Case08_WaitEffectSpriteX
     call RunEffectStep
     ld a, [wEffectSpriteX]
     or a, a
@@ -2351,7 +2351,7 @@ Jump_03A_4F97:: ; address name
 ; only called from RunEffectRoutineEffectEvery5Frames_Case08 (E-0047)
 ; 1 call site from 1 routine (e.g. RunEffectRoutineEffectEvery5Frames_RunEffectStep)
 ; reads: wEffectSpriteX, wEffectStep
-RunEffectRoutineEffectEvery5Frames_Case08_Sub01::
+RunEffectRoutineEffectEvery5Frames_Case08_WaitEffectSpriteX::
 Func_03A_4FB4:: ; address name
     ld a, [wEffectSpriteX]
     or a, a
@@ -2450,38 +2450,38 @@ RunEffectStep::
 Func_03A_5028:: ; address name
     ld a, [wEffectStep]
     rst $00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
-    dw RunEffectStep_Case09
-    dw RunEffectStep_Case00
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
+    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP
 
 ; entry 9 of the `rst $00` table in RunEffectStep
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP
-RunEffectStep_Case09::
+RunEffectStep_SetDMGPaletteBGP_Case09::
 Jump_03A_5062:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $00
@@ -2494,7 +2494,7 @@ Jump_03A_5062:: ; address name
 ; entry 0 of the `rst $00` table in RunEffectStep
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP
-RunEffectStep_Case00::
+RunEffectStep_SetDMGPaletteBGP::
 Jump_03A_506E:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $D2
@@ -2531,8 +2531,8 @@ Jump_03A_508A:: ; address name
     rst $00
     dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00
     dw RunEffectRoutineEffectEvery5Frames_Case0A_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case02
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case03
+    dw RunEffectRoutineEffectEvery5Frames_Case0A_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_Case0A_SetEffectId
 
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0A
 ; no direct call (reached through a table, a jump or a vector)
@@ -2574,7 +2574,7 @@ Jump_03A_50AC:: ; address name
 ; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A_Case02::
+RunEffectRoutineEffectEvery5Frames_Case0A_SetDMGPaletteBGP::
 Jump_03A_50BF:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $D2
@@ -2589,7 +2589,7 @@ Jump_03A_50BF:: ; address name
 ; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A_Case03::
+RunEffectRoutineEffectEvery5Frames_Case0A_SetEffectId::
 Jump_03A_50CF:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2656,21 +2656,21 @@ RunEffectRoutineEffectEvery5Frames_Case0B::
 Jump_03A_5114:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
     dw RunEffectRoutineEffectEvery5Frames_Case04_Case06
 
@@ -2849,30 +2849,30 @@ Jump_03A_51DF:: ; address name
     ld c, a
     ld a, [wBattleActor]
     cp a, $07
-    jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
+    jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
     cp a, $03
-    jr z, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
+    jr z, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
     dec c
     jr nz, Jump_03A_51FB
     cp a, $04
-    jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
+    jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
     jr Jump_03A_51FF
 
 Jump_03A_51FB::
     cp a, $04
-    jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
+    jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
 
 Jump_03A_51FF::
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
+    jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
     ld a, [wEffectSpriteX]
     rst $00
     dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00
     dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01
     dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case00
     dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04
+    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
 
 ; entry 0 of the `rst $00` table in Func_03A_50D9
 ; no direct call (reached through a table, a jump or a vector)
@@ -2927,7 +2927,7 @@ Jump_03A_523B:: ; address name
 ; entry 4 of the `rst $00` table in Func_03A_50D9
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX, wEffectStep
-RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_Case04::
+RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId::
 Jump_03A_5264:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -5138,7 +5138,7 @@ Jump_03A_6172::
     dw RunBattleActions_CheckActionBDOrRun63B2And63D2
     dw RunBattleActions_Case08
     dw RunBattleActions_Case09
-    dw RunBattleActions_Case0A
+    dw RunBattleActions_SetBattlePhase
 
 ; entry 0 of the `rst $00` table in RunBattleActions
 ; no direct call (reached through a table, a jump or a vector)
@@ -5565,7 +5565,7 @@ Jump_03A_640F:: ; address name
     dw RunBattleActions_Case09_AddAx9ToHL
     dw RunBattleActions_Case09_ShowHeroDroppedDead
     dw RunBattleActions_Case09_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleActions_Case09_Case05
+    dw RunBattleActions_Case09_WaitTextFlags
     dw RunBattleActions_Case09_QueueMusic
 
 ; entry 0 of the `rst $00` table in RunBattleActions_Case09
@@ -5978,7 +5978,7 @@ Jump_03A_6660::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleStep, wBattleSubPhase, wBattleResolveStep
-RunBattleActions_Case09_Case05::
+RunBattleActions_Case09_WaitTextFlags::
 Jump_03A_6665:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6017,7 +6017,7 @@ Jump_03A_6677:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleStep, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattlePhase
-RunBattleActions_Case0A::
+RunBattleActions_SetBattlePhase::
 Jump_03A_6698:: ; address name
     ld hl, wBattlePhase
     inc [hl]

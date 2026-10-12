@@ -13,7 +13,7 @@ Func_0E0_4001:: ; address name
     dw RunDebugSubState_E0_Case02
     dw RunDebugSubState_E0_Case03
     dw RunDebugSubState_E0_Case04
-    dw RunDebugSubState_E0_Case05
+    dw RunDebugSubState_E0_SetDebugSubState
 
 ; entry 0 of the `rst $00` table in RunDebugSubState_E0
 ; no direct call (reached through a table, a jump or a vector)
@@ -295,7 +295,7 @@ Jump_0E0_41AC::
 ; entry 5 of the `rst $00` table in RunDebugSubState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState, wDebugState
-RunDebugSubState_E0_Case05::
+RunDebugSubState_E0_SetDebugSubState::
 Jump_0E0_41BD:: ; address name
     xor a, a
     ld [wDebugSubState], a
@@ -517,10 +517,10 @@ Func_0E0_443B:: ; address name
     dw RunDebugState_E0_WriteVRAMByteInc
     dw RunDebugState_E0_ToDrawTileMap4946AndStep
     dw RunDebugState_E0_DrawPacked2BitFieldsInRows
-    dw RunDebugState_E0_Case06
+    dw RunDebugState_E0_WaitJoypadPressed
     dw DrawTileMap4946AndStep
     dw RunDebugState_E0_DrawEightBytesAsHexColumns
-    dw RunDebugState_E0_Case09
+    dw RunDebugState_E0_WaitJoypadPressed_Case09
     dw RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A
     dw RunDebugState_E0_BlinkWC0A0Tile
     dw RunDebugState_E0_ToRunDebugSubState_E0
@@ -1143,7 +1143,7 @@ Jump_0E0_47F1::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; writes: wDebugState
-RunDebugState_E0_Case06::
+RunDebugState_E0_WaitJoypadPressed::
 Jump_0E0_47F9:: ; address name
     ld a, [wJoypadPressed]
     and a, $01
@@ -1378,7 +1378,7 @@ Jump_0E0_4929::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; writes: wDebugState
-RunDebugState_E0_Case09::
+RunDebugState_E0_WaitJoypadPressed_Case09::
 Jump_0E0_493B:: ; address name
     ld a, [wJoypadPressed]
     and a, $02
@@ -6303,14 +6303,14 @@ Jump_0E0_6FF7::
     rst $00
     dw DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest
     dw DebugStaffRoll_Update_Sub01_Table2_Case01
-    dw DebugStaffRoll_Update_Sub01_Table2_Case02
+    dw DebugStaffRoll_Update_Sub01_Table2_WaitFadeState
 
 Jump_0E0_7007::
     ld a, [wWorkBuf + $1]
     rst $00
     dw DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest
     dw DebugStaffRoll_Update_Sub01_Table3_StartPaletteFade
-    dw DebugStaffRoll_Update_Sub01_Table3_Case02
+    dw DebugStaffRoll_Update_Sub01_Table3_WaitFadeState
 
 ; entry 0 of the `rst $00` table in Func_0E0_5AD3
 ; no direct call (reached through a table, a jump or a vector)
@@ -6783,7 +6783,7 @@ Jump_0E0_732E::
 ; reads: wFadeState, wWorkBuf
 ; writes: wWorkBuf
 ; points at: wWorkBuf
-DebugStaffRoll_Update_Sub01_Table2_Case02::
+DebugStaffRoll_Update_Sub01_Table2_WaitFadeState::
 Jump_0E0_733E:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -6895,7 +6895,7 @@ Jump_0E0_73DC:: ; address name
 ; reads: wFadeState
 ; writes: wWorkBuf
 ; points at: wWorkBuf
-DebugStaffRoll_Update_Sub01_Table3_Case02::
+DebugStaffRoll_Update_Sub01_Table3_WaitFadeState::
 Jump_0E0_73FC:: ; address name
     ld a, [wFadeState]
     or a, a

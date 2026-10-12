@@ -3959,7 +3959,7 @@ Func_004_58C2:: ; address name
     dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case4A
     dw DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedTheTreasure
     dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case4C
-    dw DispatchTalkEvent_Case03_Sub01_Case4D
+    dw DispatchTalkEvent_Case03_Sub01_SetSpriteSlotsPlus7
     dw ChestItem_LogTwig
     dw DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedThePedestal
     dw DispatchTalkEvent_Case03_Sub01_SetFlagBit
@@ -5091,7 +5091,7 @@ Jump_004_5F12:: ; address name
 ; entry 77 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
-DispatchTalkEvent_Case03_Sub01_Case4D::
+DispatchTalkEvent_Case03_Sub01_SetSpriteSlotsPlus7::
 Jump_004_5F1F:: ; address name
     xor a, a
     ld [wSpriteSlots + $7], a
@@ -5553,7 +5553,7 @@ Func_004_612B:: ; address name
     dw TalkMsg0159_WhatSeeHisMajestysTreasure
     dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case27
     dw TalkMsg015A_HisMajestyIsHonestAndMost
-    dw DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case29
+    dw DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_WaitStoryFlagsPlus61
     dw TalkMsg015F_HeroCheckedTheDresserThere
     dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case2B
     dw TalkMsg0166_ThatFoolIsATerribleSwindler
@@ -5580,7 +5580,7 @@ Func_004_612B:: ; address name
     dw TalkMsg01BF_HeroPeeredIntoTheVaseThe
     dw VaseItem_BeefJerky
     dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case43
-    dw DispatchTalkEvent_Case02_Sub01_Case44
+    dw DispatchTalkEvent_Case02_Sub01_WaitStoryFlagsPlus61
     dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case45
 
 ; starts message $0130 through StartMessageCommand09HL (script command $09); that string begins 'This is Kalka, an oasis village.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case00)
@@ -6280,7 +6280,7 @@ Jump_004_6580::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; starts Script_5B71
-DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case29::
+DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_WaitStoryFlagsPlus61::
 Jump_004_6587:: ; address name
     ld a, [wStoryFlags + $61]
     bit 3, a
@@ -6717,7 +6717,7 @@ Jump_004_67EC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: wStoryFlags
-DispatchTalkEvent_Case02_Sub01_Case44::
+DispatchTalkEvent_Case02_Sub01_WaitStoryFlagsPlus61::
 Jump_004_67FA:: ; address name
     ld a, [wStoryFlags + $61]
     bit 4, a
@@ -6857,10 +6857,10 @@ Func_004_6892:: ; address name
     dw TalkScript515B
     dw TalkScript515D
     dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case23
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case24
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case25
-    dw DispatchTalkEvent_Case00_Sub01_Case26
+    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay
+    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay_Case24
+    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay_Case25
+    dw DispatchTalkEvent_Case00_Sub01_SetFollowerDelay
     dw DispatchTalkEvent_Case00_Sub01_Return
 
 ; starts Script_5173 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1E)
@@ -7014,7 +7014,7 @@ Jump_004_6953:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, wPartyCount, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case23::
+DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay::
 Jump_004_696C:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7037,7 +7037,7 @@ Jump_004_696C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, wPartyCount, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case24::
+DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay_Case24::
 Jump_004_698B:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7062,7 +7062,7 @@ Jump_004_698B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay
 ; starts Script_57DC
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case25::
+DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay_Case25::
 Jump_004_69AC:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7075,7 +7075,7 @@ Jump_004_69AC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFollowerDelay
 ; starts Script_514B
-DispatchTalkEvent_Case00_Sub01_Case26::
+DispatchTalkEvent_Case00_Sub01_SetFollowerDelay::
 Jump_004_69B8:: ; address name
     xor a, a
     ld [wFollowerDelay], a

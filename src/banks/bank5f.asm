@@ -3374,7 +3374,7 @@ Jump_05F_7AC8::
     dw ScriptCommand0E_Run_Return
     dw ScriptCommand0E_Run_Return
     dw ScriptCommand0E_Run_Return
-    dw ScriptCommand0E_Run_Case1E
+    dw ScriptCommand0E_Run_SetSpriteSlotCount
     dw ScriptCommand0E_Run_Return
     dw ScriptCommand0E_Run_Return
     dw ScriptCommand0E_Run_Return
@@ -3399,7 +3399,7 @@ Jump_05F_7AC8::
 ; entry 30 of the `rst $00` table in ScriptCommand0E_Run
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlotCount
-ScriptCommand0E_Run_Case1E::
+ScriptCommand0E_Run_SetSpriteSlotCount::
 Jump_05F_7B3B:: ; address name
     xor a, a
     ld [wSpriteSlotCount], a

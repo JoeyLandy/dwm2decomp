@@ -1528,17 +1528,17 @@ Func_012_4919:: ; address name
     dw Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12
     dw Talk00Event21_ClearBit2AtHL_Bank12
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_Case12
+    dw Talk00Event21_SetObject5
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
     dw Talk00Event21_SetBit2AtHL_B12
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_Case16
+    dw Talk00Event21_SetSaveStateFlag
 
 ; entry 22 of the `rst $00` table in Talk00Event21
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptByte65
 ; writes: wSaveStateFlag, wGameMode, wModeState, wModeChangeRequest, wScriptRunning
-Talk00Event21_Case16::
+Talk00Event21_SetSaveStateFlag::
 Jump_012_494B:: ; address name
     ld a, [wScriptByte65]
     ld [wSaveStateFlag], a
@@ -1578,7 +1578,7 @@ Func_012_4965:: ; address name
     dw Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12
     dw Talk00Event21_ClearBit2AtHL_Bank12
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_Case12
+    dw Talk00Event21_SetObject5
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
     dw Talk00Event21_SetBit2AtHL_B12
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
@@ -1736,7 +1736,7 @@ Func_012_4A9A:: ; address name
     dw Talk00Event16_Case01
     dw Talk00Event21_ClearBit2AtHL_Bank12
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event16_Case04
+    dw Talk00Event16_SetObject5
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
     dw Talk00Event21_SetBit2AtHL_B12
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
@@ -1907,7 +1907,7 @@ Jump_012_4B9B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-Talk00Event16_Case04::
+Talk00Event16_SetObject5::
 Jump_012_4BAA:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -1985,18 +1985,18 @@ Func_012_4C07:: ; address name
     dw Talk00Event21_RunMessageBoxCarryWhenIdle_Bank12
     dw Talk00Event21_ClearBit2AtHL_Bank12
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
-    dw Talk00Event21_Case12
+    dw Talk00Event21_SetObject5
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
     dw Talk00Event21_SetBit2AtHL_B12
     dw Talk00Event21_StepScriptParam0Counter_Bank12_Case03
     dw Talk00Event15_StartPaletteFade
-    dw Talk00Event15_Case18
+    dw Talk00Event15_WaitFadeState
 
 ; entry 24 of the `rst $00` table in Talk00Event15
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScriptReturnBank, wScriptReturnLo, wScriptReturnHi
 ; writes: wTalkEventIndex, wTalkEventGroup, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptCommandType, wScriptInDataBank
-Talk00Event15_Case18::
+Talk00Event15_WaitFadeState::
 Jump_012_4C3D:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -2050,7 +2050,7 @@ Jump_012_4C69:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject5
 ; points at: wScriptStep
-Talk00Event21_Case12::
+Talk00Event21_SetObject5::
 Jump_012_4C97:: ; address name
     xor a, a
     ld [wObject5], a
@@ -4992,7 +4992,7 @@ Func_012_5EE7:: ; address name
     dw Talk00Event01_Sub02_AddStepDeltaToPointedByte
     dw Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset
     dw Talk00Event01_Sub03_AddStepDeltaToPointedByte
-    dw Talk00Event01_Sub03_Case08
+    dw Talk00Event01_Sub03_WaitFieldActionRequest
     dw Talk00Event01_Sub03_AddStepDeltaToPointedByte_Case09
 
 ; entry 4 of the `rst $00` table in Func_012_5DB6
@@ -5117,7 +5117,7 @@ Jump_012_5FC8::
 ; reads: wFieldActionRequest, hPlayerStateFlags, hPlayerX, hPlayerY, hPlayerFacing, wJoypadHeld, wSpriteSlotCount, wSpriteSlots, ...
 ; writes: wJoypadHeld, hPlayerSpriteMode, hPlayerY, wScriptParam0, hPlayerFacing
 ; points at: wTilesUnderPoint, wScriptStep
-Talk00Event01_Sub03_Case08::
+Talk00Event01_Sub03_WaitFieldActionRequest::
 Jump_012_5FC9:: ; address name
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -6669,7 +6669,7 @@ Func_012_684F:: ; address name
     jr Jump_012_683F
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. Talk00Event01_Sub03_Case08)
+; 1 call site from 1 routine (e.g. Talk00Event01_Sub03_WaitFieldActionRequest)
 ; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank12_6854::
 Func_012_6854:: ; address name
@@ -6712,7 +6712,7 @@ Func_012_6854:: ; address name
 RunFunc722AAnd6EB7::
 Func_012_6893:: ; address name
     call DrawTriggerMarkerSprite
-    call RunFunc722AAnd6EB7_Sub01
+    call RunFunc722AAnd6EB7_WaitFieldActionRequest
     ret
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
@@ -6935,7 +6935,7 @@ Jump_012_69AC::
     ret
 
 ; removes key entry hFFC6: clears the matching wC88E link, marks its SRAM-bank-2 slot free and shifts the later entries down (E-0130)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_TestListEntryBit7_Case10, RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_TestListEntryBit7_WaitTextFlags, RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21)
 ; reads: hTemp0, wCurrentKeyIndex
 ; writes: rRAMB, rRAMG
 ; points at: wKeySeeds, wCurrentKeyIndex
@@ -7261,7 +7261,7 @@ Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
 ; runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)
-; 53 call sites from 51 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunFieldReturnPhase_Case01_Sub01, StartScript4F7CAndSetFlag06, ...)
+; 53 call sites from 51 routines (e.g. PlaceSpecialMapObjectsOnEntry, InitFieldScreen, RunFieldReturnPhase_Case01_WaitMapType, StartScript4F7CAndSetFlag06, ...)
 ; reads: hTemp0
 RunFieldCommandTemp0::
 Func_012_6B98:: ; address name
@@ -7869,7 +7869,7 @@ Jump_012_6EB4::
 ; reads: wFieldActionRequest, hScrollX, hScrollXHi, hScrollY, hScrollYHi
 ; writes: hSpriteTileOffset, hSpriteSetIndex, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex
 ; points at: wObject5
-RunFunc722AAnd6EB7_Sub01::
+RunFunc722AAnd6EB7_WaitFieldActionRequest::
 Func_012_6EB7:: ; address name
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -8583,7 +8583,7 @@ Data_012_7313:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_Case05)
 ; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wTriggerKind, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
-FieldModeStateDispatch_Shared02::
+FieldModeStateDispatch_WaitTextWindowState::
 Func_012_7333:: ; address name
     ld a, [wTextWindowState]
     and a, $03
@@ -8711,7 +8711,7 @@ Jump_012_73F2::
 ; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wMapType, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wScriptParam0, wScriptParam1, wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 ; points at: wKeyWorldByte8B
-FieldModeStateDispatch_Case05_Sub02::
+FieldModeStateDispatch_Case05_WaitTextWindowState::
 Func_012_73F3:: ; address name
     ld a, [wTextWindowState]
     and a, $03
@@ -8903,12 +8903,12 @@ Jump_012_7508::
     ld [wJoypadPressed], a
     ret
 
-; address loaded by FieldModeStateDispatch_Case05_Sub02
+; address loaded by FieldModeStateDispatch_Case05_WaitTextWindowState
 Data_012_752E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $10, $12, $13, $20, $21, $23, $32
 
 ; A = 1 when the player cell (B, C high nibbles) equals the trigger cell wC8FF (or its Data_012_7581 entry on special maps), else 0 (E-0127)
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Shared02, CheckStepTriggerAndDispatchTalk)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_WaitTextWindowState, CheckStepTriggerAndDispatchTalk)
 ; reads: wMapType, wTriggerCell
 IsPlayerOnTriggerCell::
 Func_012_7536:: ; address name
@@ -8970,7 +8970,7 @@ Data_012_7581:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries); copies the 2 x 2 entries there to wC910, wC911 (top row) and wC912, wC913 (bottom row); HL ends on the bottom-right entry (E-0064) (the same 63 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. RunPendingFieldEventPendingFieldEvent, FieldModeStateDispatch_Case05_Sub02)
+; 2 call sites from 2 routines (e.g. RunPendingFieldEventPendingFieldEvent, FieldModeStateDispatch_Case05_WaitTextWindowState)
 ; writes: wTilesUnderPoint
 ReadTileBuffer2x2AtPixel_Bank12::
 Func_012_75A1:: ; address name

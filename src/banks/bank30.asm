@@ -308,7 +308,7 @@ Jump_030_41D2::
     inc e
     dec d
     jp nz, Jump_030_4196
-    call RunBattleCommandEntry_Case04_Sub03
+    call RunBattleCommandEntry_Case04_WaitBattleFlag92
     ld hl, wBattleSubPhase
     inc [hl]
     ret
@@ -437,7 +437,7 @@ Jump_030_4295::
 ; 1 call site from 1 routine (e.g. RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_Case04)
 ; reads: wBattleFlag92, wLoadSlot
 ; points at: wBattleTemp7A, wBattleArg0
-RunBattleCommandEntry_Case04_Sub03::
+RunBattleCommandEntry_Case04_WaitBattleFlag92::
 Func_030_4297:: ; address name
     ld a, [wBattleFlag92]
     cp a, $FF
@@ -764,7 +764,7 @@ Jump_030_4480::
     ld hl, wResolveBytesE0
     add_a_to_hl
     ld [hl], $00
-    call RunCommandEntryResolveStep_Case01_Sub04
+    call RunCommandEntryResolveStep_Case01_WaitLinkMode
     jr Jump_030_44DF
 
 Jump_030_4497::
@@ -784,7 +784,7 @@ Jump_030_4497::
     ld hl, wSideControl
     add_a_to_hl
     set 7, [hl]
-    call RunCommandEntryResolveStep_Case01_Sub04
+    call RunCommandEntryResolveStep_Case01_WaitLinkMode
     call RunCommandEntryResolveStep_Case01_IncBIfActorEntryBelow40
     ld a, $03
     ld [wBattleResolveStep], a
@@ -3178,7 +3178,7 @@ Jump_030_52B4::
 ; reads: wLinkMode, wBattleActor
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: wBattleLevel, wSlotTrait
-RunCommandEntryResolveStep_Case01_Sub04::
+RunCommandEntryResolveStep_Case01_WaitLinkMode::
 Func_030_52B5:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -3237,7 +3237,7 @@ Jump_030_5307::
     ret
 
 ; copies four bytes from HL to hFFC6, negating each when bit 6 of the actor's wDA43 byte is set (CopyByteNegateIfCBit6) (E-0122)
-; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_Case01_Sub04)
+; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_Case01_WaitLinkMode)
 ; points at: hTemp0
 CopyFourBytesNegatedByActorSlotTactic::
 Func_030_5319:: ; address name
@@ -3272,7 +3272,7 @@ Func_030_5335:: ; address name
     ret
 
 ; only called from RunCommandEntryResolveStep_Case01_Sub04 (E-0047)
-; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_Case01_Sub04)
+; 1 call site from 1 routine (e.g. RunCommandEntryResolveStep_Case01_WaitLinkMode)
 ; reads: wCommandByteE8, hTemp0, hTemp1, hTemp2, hTemp3, wBattleActor
 ; points at: hTemp0, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo, wSlotTrait
 RunCommandEntryResolveStep_Case01_Sub04_GetActorSlotTacticLow2::
@@ -4433,7 +4433,7 @@ Func_030_5C54:: ; address name
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
 ; the same 10 bytes as ReadBattleWordFromArray (36:7E5B)
-; 5 call sites from 5 routines (e.g. AIRunNextChoice, AIChooseActionResolveStep, RunCommandEntryResolveStep_Case01_Sub04, RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2, ...)
+; 5 call sites from 5 routines (e.g. AIRunNextChoice, AIChooseActionResolveStep, RunCommandEntryResolveStep_Case01_WaitLinkMode, RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2, ...)
 ReadBattleWordFromArray_Bank30::
 Func_030_5C68:: ; address name
     add a, a

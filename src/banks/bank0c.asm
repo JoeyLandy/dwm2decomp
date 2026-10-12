@@ -5574,14 +5574,14 @@ Func_00C_659F:: ; address name
     dw ArenaMenu_Case0A
     dw ArenaMenu_ShowTwoChoiceBoxAtWC412
     dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C
-    dw ArenaMenu_AdvanceScreenState_Case0D
-    dw ArenaMenu_Case0E
+    dw ArenaMenu_AdvanceScreenState_SetScreenState
+    dw ArenaMenu_SetScreenState
     dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C
     dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case10
     dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11
     dw ArenaMenu_Case12
     dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case13
-    dw ArenaMenu_AdvanceScreenState_Case14
+    dw ArenaMenu_AdvanceScreenState_SetScreenState_Case14
     dw ArenaMenu_Case15
     dw ShowTwoChoiceBoxAtWC412
     dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17
@@ -6387,7 +6387,7 @@ Jump_00C_6AF2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ArenaMenu_AdvanceScreenState_Case0D::
+ArenaMenu_AdvanceScreenState_SetScreenState::
 Jump_00C_6B10:: ; address name
     ld a, [wScreenState]
     inc a
@@ -6398,7 +6398,7 @@ Jump_00C_6B10:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-ArenaMenu_Case0E::
+ArenaMenu_SetScreenState::
 Jump_00C_6B18:: ; address name
     ld a, [wScreenState]
     inc a
@@ -6688,7 +6688,7 @@ Jump_00C_6CD0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ArenaMenu_AdvanceScreenState_Case14::
+ArenaMenu_AdvanceScreenState_SetScreenState_Case14::
 Jump_00C_6D05:: ; address name
     ld a, [wScreenState]
     inc a
